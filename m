@@ -1,91 +1,95 @@
 From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH v5 7/8] phy: miphy28lp: Tune tx impedance across Soc cuts
-Date: Tue,  4 Nov 2014 11:51:23 +0100
-Message-ID: <1415098284-11182-8-git-send-email-gabriel.fernandez@linaro.org>
+Subject: [PATCH v5 6/8] phy: miphy28lp: Add SSC support for PCIE
+Date: Tue,  4 Nov 2014 11:51:22 +0100
+Message-ID: <1415098284-11182-7-git-send-email-gabriel.fernandez@linaro.org>
 References: <1415098284-11182-1-git-send-email-gabriel.fernandez@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1415098284-11182-1-git-send-email-gabriel.fernandez@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Grant Likely <grant.likely@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Giuseppe Condorelli <giuseppe.condorelli@st.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Harsh Gupta <harsh.gupta@st.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch to compensate tx impedance (Sata, PCIe)
-depending on Soc cuts the kernel is built for.
+SSC is the technique of modulating the operating frequency of a signal
+slightly to spread its radiated emissions over a range of frequencies.
+This reduction in the maximum emission for a given frequency helps meet
+radiated emission requirements.
+These settings are applicable for PCIE with Internal clock.
 
-Signed-off-by: Giuseppe Condorelli <giuseppe.condorelli@st.com>
+Signed-off-by: Harsh Gupta <harsh.gupta@st.com>
 Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 ---
- Documentation/devicetree/bindings/phy/phy-miphy28lp.txt |  1 +
- drivers/phy/phy-miphy28lp.c                             | 16 ++++++++++++++++
- 2 files changed, 17 insertions(+)
+ drivers/phy/phy-miphy28lp.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-miphy28lp.txt b/Documentation/devicetree/bindings/phy/phy-miphy28lp.txt
-index 4a3b4af..46a135d 100644
---- a/Documentation/devicetree/bindings/phy/phy-miphy28lp.txt
-+++ b/Documentation/devicetree/bindings/phy/phy-miphy28lp.txt
-@@ -40,6 +40,7 @@ Optional properties (port (child) node):
- - st,px_rx_pol_inv	: to invert polarity of RXn/RXp (respectively negative line and positive
- 			  line).
- - st,scc-on		: enable ssc to reduce effects of EMI (only for sata or PCIe).
-+- st,tx-impedance-comp	: to compensate tx impedance avoiding out of range values.
- 
- example:
- 
 diff --git a/drivers/phy/phy-miphy28lp.c b/drivers/phy/phy-miphy28lp.c
-index d8ff895..87dcc9a 100644
+index d2f797c..d8ff895 100644
 --- a/drivers/phy/phy-miphy28lp.c
 +++ b/drivers/phy/phy-miphy28lp.c
-@@ -204,6 +204,7 @@ struct miphy28lp_phy {
- 	bool osc_rdy;
- 	bool px_rx_pol_inv;
- 	bool ssc;
-+	bool tx_impedance;
+@@ -192,6 +192,7 @@
+ #define SATA_SPDMODE		1
  
- 	struct reset_control *miphy_rst;
+ #define MIPHY_SATA_BANK_NB	3
++#define MIPHY_PCIE_BANK_NB	2
  
-@@ -632,6 +633,12 @@ static void miphy_pcie_tune_ssc(struct miphy28lp_phy *miphy_phy)
+ struct miphy28lp_phy {
+ 	struct phy *phy;
+@@ -591,6 +592,46 @@ static void miphy_sata_tune_ssc(struct miphy28lp_phy *miphy_phy)
  	}
  }
  
-+static inline void miphy_tune_tx_impedance(struct miphy28lp_phy *miphy_phy)
++static void miphy_pcie_tune_ssc(struct miphy28lp_phy *miphy_phy)
 +{
++	void __iomem *base = miphy_phy->base;
++	u8 val;
++
 +	/* Compensate Tx impedance to avoid out of range values */
-+	writeb_relaxed(0x02, miphy_phy->base + MIPHY_COMP_POSTP);
++	/*
++	 * Enable the SSC on PLL for all banks
++	 * SSC Modulation @ 31 KHz and 4000 ppm modulation amp
++	 */
++	val = readb_relaxed(base + MIPHY_BOUNDARY_2);
++	val |= SSC_EN_SW;
++	writeb_relaxed(val, base + MIPHY_BOUNDARY_2);
++
++	val = readb_relaxed(base + MIPHY_BOUNDARY_SEL);
++	val |= SSC_SEL;
++	writeb_relaxed(val, base + MIPHY_BOUNDARY_SEL);
++
++	for (val = 0; val < MIPHY_PCIE_BANK_NB; val++) {
++		writeb_relaxed(val, base + MIPHY_CONF);
++
++		/* Validate Step component */
++		writeb_relaxed(0x69, base + MIPHY_PLL_SBR_3);
++		writeb_relaxed(0x21, base + MIPHY_PLL_SBR_4);
++
++		/* Validate Period component */
++		writeb_relaxed(0x3c, base + MIPHY_PLL_SBR_2);
++		writeb_relaxed(0x21, base + MIPHY_PLL_SBR_4);
++
++		/* Clear any previous request */
++		writeb_relaxed(0x00, base + MIPHY_PLL_SBR_1);
++
++		/* requests the PLL to take in account new parameters */
++		writeb_relaxed(SET_NEW_CHANGE, base + MIPHY_PLL_SBR_1);
++
++		/* To be sure there is no other pending requests */
++		writeb_relaxed(0x00, base + MIPHY_PLL_SBR_1);
++	}
 +}
 +
  static inline int miphy28lp_configure_sata(struct miphy28lp_phy *miphy_phy)
  {
  	void __iomem *base = miphy_phy->base;
-@@ -670,6 +677,9 @@ static inline int miphy28lp_configure_sata(struct miphy28lp_phy *miphy_phy)
- 	if (miphy_phy->ssc)
- 		miphy_sata_tune_ssc(miphy_phy);
+@@ -659,6 +700,9 @@ static inline int miphy28lp_configure_pcie(struct miphy28lp_phy *miphy_phy)
+ 	if (err)
+ 		return err;
  
-+	if (miphy_phy->tx_impedance)
-+		miphy_tune_tx_impedance(miphy_phy);
++	if (miphy_phy->ssc)
++		miphy_pcie_tune_ssc(miphy_phy);
 +
  	return 0;
  }
  
-@@ -703,6 +713,9 @@ static inline int miphy28lp_configure_pcie(struct miphy28lp_phy *miphy_phy)
- 	if (miphy_phy->ssc)
- 		miphy_pcie_tune_ssc(miphy_phy);
- 
-+	if (miphy_phy->tx_impedance)
-+		miphy_tune_tx_impedance(miphy_phy);
-+
- 	return 0;
- }
- 
-@@ -1154,6 +1167,9 @@ static int miphy28lp_of_probe(struct device_node *np,
- 
- 	miphy_phy->ssc = of_property_read_bool(np, "st,ssc-on");
- 
-+	miphy_phy->tx_impedance =
-+		of_property_read_bool(np, "st,tx-impedance-comp");
-+
- 	of_property_read_u32(np, "st,sata-gen", &miphy_phy->sata_gen);
- 	if (!miphy_phy->sata_gen)
- 		miphy_phy->sata_gen = SATA_GEN1;
 -- 
 1.9.1
