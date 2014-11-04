@@ -1,38 +1,45 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH v4 11/14] regulator: max77802: Document binding for regulator
- operating modes
-Date: Tue, 04 Nov 2014 12:10:43 +0100
-Message-ID: <5458B433.50706@collabora.co.uk>
-References: <1415025649-8119-1-git-send-email-javier.martinez@collabora.co.uk> <1415025649-8119-12-git-send-email-javier.martinez@collabora.co.uk> <1415098229.7941.12.camel@AMDC1943>
+From: Vignesh R <vigneshr@ti.com>
+Subject: [PATCH v2 0/3] Add support for ADC on am437x-gp and am43x-epos-evm
+Date: Tue, 4 Nov 2014 16:45:25 +0530
+Message-ID: <1415099728-10959-1-git-send-email-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1415098229.7941.12.camel@AMDC1943>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Mark Brown <broonie@kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Vignesh R <vigneshr@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+This series of patches enable ADC on am437x-gp-evm and am43x-epos-evm.
+The ADC clock hwmod data of am33xx has been moved to commom place so that
+both am43xx and am33xx can reuse them.
+tscadc DT node has been adided to am437x-gp and am43x-epos dt files.
+With these patches, ADC functionalities are now available on am43xx.
 
-On 11/04/2014 11:50 AM, Krzysztof Kozlowski wrote:
->> +
->> +The possible values for "regulator-initial-mode" and "regulator-mode" are:
->> +	1: Normal regulator voltage output mode.
->> +	3: Low Power which reduces the quiescent current down to only 1uA
->> +
->> +The list of valid modes are defined in the dt-bindings/regulator/regulator.h
->> +header and can be included by device tree source files.
-> 
-> The more he looked inside, the more regulator.h wasn't there.
-> 
+Changelog:
 
-Right, that's a typo from when the documentation was updated since previous
-versions used the standard modes instead of hardware specific modes.
+v2:
+Removed phy addresses in hwmod. Using DT instead.
+Removed unused "ti,am4372" compatible string.
+Use macro to set clk domain name.
+Fixed subject format of all patches
 
-Should say that are defined in include/dt-bindings/regulator/maxim,max77802.h
-instead, sorry about that.
+Vignesh R (3):
+  ARM: OMAP2+: hwmod: AM335x/AM43x: Move am33xx_l4_hs_hwmod to
+    ipblock_data
+  ARM: OMAP2+: hwmod: AM335x/AM43x: add hwmod support for tscadc on
+    am43x-evm
+  ARM: dts: AM43xx: add tscadc DT entries for am437x-evm and
+    am43x-epos-evm
 
-Best regards,
-Javier
+ arch/arm/boot/dts/am4372.dtsi                      | 20 ++++++
+ arch/arm/boot/dts/am437x-gp-evm.dts                |  8 +++
+ arch/arm/boot/dts/am43x-epos-evm.dts               |  8 +++
+ .../mach-omap2/omap_hwmod_33xx_43xx_common_data.h  |  2 +
+ .../mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c | 71 ++++++++++++++++++++++
+ arch/arm/mach-omap2/omap_hwmod_33xx_data.c         | 64 -------------------
+ arch/arm/mach-omap2/omap_hwmod_43xx_data.c         |  1 +
+ 7 files changed, 110 insertions(+), 64 deletions(-)
+
+-- 
+1.9.1
