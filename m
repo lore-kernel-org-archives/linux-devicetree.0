@@ -1,32 +1,46 @@
-From: "Lennart Sorensen" <lsorense@csclub.uwaterloo.ca>
-Subject: Re: [PATCH 11/13] arm: dts: dra7: add DMA properties for UART
-Date: Tue, 4 Nov 2014 16:03:15 -0500
-Message-ID: <20141104210315.GF24112@csclub.uwaterloo.ca>
-References: <1412014009-13315-1-git-send-email-bigeasy@linutronix.de>
- <1412014009-13315-12-git-send-email-bigeasy@linutronix.de>
- <20141104170233.GB24112@csclub.uwaterloo.ca>
- <5459079D.7080703@linutronix.de>
- <20141104172117.GC24112@csclub.uwaterloo.ca>
- <20141104183315.GD24112@csclub.uwaterloo.ca>
+From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Subject: Re: [PATCH v6 02/12] Driver core: Unified device properties interface for platform firmware
+Date: Tue, 04 Nov 2014 22:29:08 +0100
+Message-ID: <3275773.HN9MNfIOOq@vostro.rjw.lan>
+References: <13750506.S2yVlRRDa2@vostro.rjw.lan> <3645687.BsyGDrJDrU@vostro.rjw.lan> <CACxGe6uv0TmoZivL3ESw+oRW-OjqakLP4KBnDrwJXzQ2ku8ZLA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141104183315.GD24112@csclub.uwaterloo.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, balbi@ti.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACxGe6uv0TmoZivL3ESw+oRW-OjqakLP4KBnDrwJXzQ2ku8ZLA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Darren Hart <darren.hart-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 04, 2014 at 01:33:15PM -0500, Lennart Sorensen wrote:
-> Well it doesn't work, because I don't have the dma croassbar patches
-> from ti-linux-3.14.y which are required to use the full range of dma
-> channels on the dra7.
+On Tuesday, November 04, 2014 05:01:04 PM Grant Likely wrote:
+> On Mon, Nov 3, 2014 at 10:04 PM, Rafael J. Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org> wrote:
+> >> I also found that this parser code doesn't correctly handle malformed
+> >> (unterminated) string properties. It will overflow. The existing
+> >> functions have the same problem, so it isn't something that you've
+> >> added. I've got a fix, and as a side effect the fix creates the _array
+> >> version basically for free as part of reworking
+> >> of_property_count_strings() and of_property_read_string_index()
+> >
+> > OK
+> >
+> > So can you please point me to a git branch containing the fix?  I'll rebase the
+> > patch on top of that then and everything should merge just fine.
 > 
-> I will see how well it works without dma at least.
+> git://git.kernel.org/pub/scm/linux/kernel/git/glikely/linux.git devicetree/merge
+> 
+> I'm going to let the patch sit in there for a few days to get
+> linux-next exposure before I ask Linus to pull. The pull req will go
+> out before the end of the week.
 
-So it seems to be working on our board so far.  Will stress test it
-some more.  No DMA of course for now, but oh well.
+OK, thanks!
 
--- 
-Len Sorensen
+Pulled, rebased my device-properties branch, merged into linux-pm.git/linux-next
+and pushed back.
+
+Rafael
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
