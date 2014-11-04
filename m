@@ -1,53 +1,57 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 0/2] make imx hdmi publicly used by dw hdmi compatible
- platform
-Date: Tue, 4 Nov 2014 14:29:09 +0000
-Message-ID: <20141104142908.GG4042@n2100.arm.linux.org.uk>
-References: <1415107992-34289-1-git-send-email-andy.yan@rock-chips.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESUBMIT PATCH v6 1/8] mfd: Add support for Skyworks SKY81452
+ driver
+Date: Tue, 4 Nov 2014 14:35:59 +0000
+Message-ID: <20141104143559.GQ17577@x1>
+References: <1414393369-31583-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1414739322-12487-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1414739322-12487-2-git-send-email-jack.yoo@skyworksinc.com>
+ <20141103171451.GG12011@x1>
+ <1415050088.20372.72.camel@x220>
+ <20141103223022.GE13359@x1>
+ <1415091946.20372.136.camel@x220>
+ <20141104091609.GI17577@x1>
+ <20141104113833.GI3815@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1415107992-34289-1-git-send-email-andy.yan@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: heiko@sntech.de, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com
+In-Reply-To: <20141104113833.GI3815-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBOb3YgMDQsIDIwMTQgYXQgMDk6MzM6MTBQTSArMDgwMCwgQW5keSBZYW4gd3JvdGU6
-Cj4gRnJvbTogQW5keSB5YW4gPGFuZHkueWFuQHJvY2stY2hpcHMuY29tPgo+IAo+IFdlIGZvdW5k
-IGZyZWVzY2FsZSBpbXg2IGFuZCByb2NrY2hpcCByazMyODggYW5kIEluZ2VuaWMgSlo0NzgwIChY
-YnVyc3QvTUlQUykKPiB1c2UgdGhlIGludGVyZmFjZSBjb21wYXRpYmxlIERlc2lnbndhcmUgSERN
-SSBJUCwgYnV0IHRoZXkgYWxzbyBoYXZlIHNvbWUKPiBsaWdodGx5IGRpZmZlcmVuY2UsIHN1Y2gg
-YXMgcGh5IHBsbCBjb25maWd1cmF0aW9uLCByZWdpc3RlciB3aWR0aChpbXggaGRtaQo+IHJlZ2lz
-dGVyIGlzIG9uZSBieXRlLCBidXQgcmszMjg4IGlzIDQgYnl0ZXMgd2lkdGggYW5kIGNhbiBvbmx5
-IGFjY2VzcyBieSB3b3JkKSwKPiA0SyBzdXBwb3J0KGlteDYgZG9lc24ndCBzdXBwb3J0IDRrLCBi
-dXQgcmszMjg4IGRvZXMpLgo+IAo+IFRvIHJldXNlIHRoZSBpbXgtaGRtaSBkcml2ZXIsIHdlIGRv
-IHRoaXMgcGF0Y2ggc2V0Ogo+IHBhdGNoICgxKTogc3BsaXQgb3V0IGlteC1zb2MgY29kZSBmcm9t
-IGlteC1oZG1pIHRvIGR3X2hkbWktaW14LmMKPiBwYXRjaCAoMik6IG1vdmUgaW14LWhkbWkgdG8g
-YnJpZGdlLywgYW5kIHJlbmFtZSB0byBkdy1oZG1pIHRvCj4gbWFrZSB0aGlzIGRyaXZlciBpbmRl
-cGVudCBvZiBkcm0taW14IC4gQW5kIHdlIHdpbGwgYWRkIHJvY2tjaGlwIAo+IHBsYXRmb3JtIHNw
-ZWNpZmljIGNvZGUgZHdfaGRtaS1yb2NrY2hpcC5jIGxhdGVyLCB0aGlzIGlzIGRlcGVuZAo+IG9u
-IGRybS1yb2NrY2hpcC4KCkdyZWF0IC0gSSBmdWxseSBhZ3JlZSB0aGF0IHRoaXMgbmVlZHMgdG8g
-YmUgcmVuYW1lZCBhcyBpdCBpcyBhIERlc2lnbndhcmUKSVAuCgpTaG91bGQgaXQgYmUgbW92ZWQg
-aW50byBicmlkZ2UvID8gIEl0IGlzbid0IGltcGxlbWVudGVkIGFzIGEgRFJNIGJyaWRnZQpkcml2
-ZXIgYXQgcHJlc2VudCwgc28gdGhpcyBzZWVtcyBpbGxvZ2ljYWwuICBJcyB0aGUgbG9uZ2VyIHRl
-cm0gcGxhbiB0bwpjb252ZXJ0IGl0IHRvIGJlIGEgRFJNIGJyaWRnZT8KClNlY29uZGx5LCBpZiB5
-b3Ugd2FudCBIRE1JIGF1ZGlvIHN1cHBvcnQsIHlvdSBtYXkgZmluZCB0aGUgcGF0Y2hlcyBJCm1h
-aW50YWluIGZvciB0aGUgU29saWRSdW4gZGV2aWNlcyB1c2VmdWwsIHdoaWNoIGFkZCB0aGlzIGFz
-IGEgc3RhbmRhcmQKQUxTQSBkZXZpY2UuICBJIGFsc28gaGF2ZSBDRUMgc3VwcG9ydCBmb3IgaXQg
-YXMgd2VsbC4gIElmIHlvdSdyZQppbnRlcmVzdGVkLCBJJ2xsIGVtYWlsIHRob3NlLgoKLS0gCkZU
-VEMgYnJvYWRiYW5kIGZvciAwLjhtaWxlIGxpbmU6IGN1cnJlbnRseSBhdCA5LjVNYnBzIGRvd24g
-NDAwa2JwcyB1cAphY2NvcmRpbmcgdG8gc3BlZWR0ZXN0Lm5ldC4KX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Tue, 04 Nov 2014, Mark Brown wrote:
+
+> On Tue, Nov 04, 2014 at 09:16:09AM +0000, Lee Jones wrote:
+> > On Tue, 04 Nov 2014, Paul Bolle wrote:
+>=20
+> > > Nothing will break. But I think Mark prefers the dependency renam=
+e, now
+> > > done in 7/8, to be done as part of this patch.
+>=20
+> > I don't agree.  The rename should be taken independantly by Mark.
+> > The regulator driver won't build until they match anyway, so there'=
+s
+> > no hard dependency.  Unless someone can give me a really good reaso=
+n
+> > to revert it, I'm applying this driver now.
+>=20
+> The important thing is that the dependency rename isn't silently thro=
+wn
+> into an unrelated patch.
+
+That I agree with.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
