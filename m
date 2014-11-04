@@ -1,38 +1,40 @@
-From: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v6 04/12] misc: at25: Make use of device property API
-Date: Tue, 4 Nov 2014 18:07:35 +0200
-Message-ID: <20141104160735.GO1618@lahna.fi.intel.com>
-References: <13750506.S2yVlRRDa2@vostro.rjw.lan>
- <20141104143801.GM1618@lahna.fi.intel.com>
- <CACxGe6u5ppSjHc-Wa7K_NWQ9YEZ_V3ys9fdsECss_bPabUTN+g@mail.gmail.com>
- <4645043.WOkgNMSUuO@vostro.rjw.lan>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH] of/platform: Move platform devices under
+ /sys/devices/platform
+Date: Tue, 4 Nov 2014 08:07:16 -0800
+Message-ID: <20141104160716.GA1630@kroah.com>
+References: <1415097920-30014-1-git-send-email-grant.likely@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4645043.WOkgNMSUuO-sKB8Sp2ER+y1GS7QM15AGw@public.gmane.org>
+In-Reply-To: <1415097920-30014-1-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Darren Hart <darren.hart-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 04, 2014 at 05:19:02PM +0100, Rafael J. Wysocki wrote:
-> > > I think np->name is "at25" in this case? The binding file
-> > > Documentation/devicetree/bindings/misc/at25.txt also has the same name.
-> > >
-> > > Are you OK, if we add something like below to the changelog?
-> > >
-> > >  In addition we hard-code the name of the chip to be "at25" for the
-> > >  reason that there is no common mechanism to fetch name of the firmware
-> > >  node. The only existing user (arch/arm/boot/dts/phy3250.dts) uses the
-> > >  same name so it should continue to work.
-> > 
-> > Yes. If somebody complains, then we can reinstate the previous
-> > behaviour, but assume it isn't necessary for now.
+On Tue, Nov 04, 2014 at 10:45:20AM +0000, Grant Likely wrote:
+> Currently the devices created by drivers/of/platform.c get created at
+> the root of /sys/devices. This goes against the typical pattern for
+> sysfs where the top level /sys/devices structure contains categories of
+> devices, and the structure of devices is placed below that. To fix this,
+> make the code in drivers/of/platform.c follow the drivers/base/platform.c
+> behaviour, and use &platform_bus as the default parent for all new
+> platform_devices and amba_devices.
 > 
-> OK, done in my tree. 
+> This change has been discussed for a long time, but nobody has actually
+> acted on it. Userspace code that expects to find devices under a fixed
+> /sys/devices/... path will be affected. It isn't /supposed/ to do that,
+> but if anyone complains then I'll add a default-off workaround option to
+> put them back into the root.
+> 
+> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 
-Thanks Rafael!
+Acked-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
