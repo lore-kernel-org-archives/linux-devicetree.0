@@ -1,117 +1,43 @@
-From: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2 00/13] clk: mmp: clock device tree support
-Date: Tue, 4 Nov 2014 16:15:55 +0800
-Message-ID: <CAN1soZyqWtKUajbW_R-_uTwSbN4Apo0+NJ9WupS+YLOP_nGJ3w@mail.gmail.com>
-References: <1414721633-29508-1-git-send-email-chao.xie@marvell.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 00/14] genirq endian fixes; bcm7120/brcmstb IRQ updates
+Date: Tue, 04 Nov 2014 09:18:17 +0100
+Message-ID: <2690630.v59x1FdWZd@wuerfel>
+References: <1414890241-9938-1-git-send-email-cernekee@gmail.com> <2217077.1aQXS9nJph@wuerfel> <alpine.DEB.2.11.1411032117050.5308@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414721633-29508-1-git-send-email-chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Cc: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, xiechao_mail-9Onoh4P/yGk@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.11.1411032117050.5308@nanos>
+Sender: linux-sh-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Kevin Cernekee <cernekee@gmail.com>, f.fainelli@gmail.com, jason@lakedaemon.net, ralf@linux-mips.org, linux-sh@vger.kernel.org, sergei.shtylyov@cogentembedded.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 31, 2014 at 10:13 AM, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> wrote:
-> From: Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
->
-> The patch set focuses at support device tree for clock.
->
-> The first part of the patches
->   clk: mmp: add prefix "mmp" for structures defined for clk-frac
->   clk: mmp: add spin lock for clk-frac
->   clk: mmp: add init callback for clk-frac
->   clk: mmp: move definiton of mmp_clk_frac to clk.h It enhances the clk-frac.
->
-> The second part of the patches
->   clk: mmp: add clock type mix
->   clk: mmp: add mmp private gate clock
->
-> The third part of the patches
->   clk: mmp: add basic support functions for DT support
->   clk: mmp: add reset support
->   clk: mmp: add pxa168 DT support for clock driver
->   clk: mmp: add pxa910 DT support for clock driver
->   clk: mmp: add mmp2 DT support for clock driver
-> It add the device tree support for pxa168, pxa910 and mmp2.
->
-> V1 -> V2:
->   Add reset support for the clocks that have reset bit.
->
-> Chao Xie (13):
->   clk: mmp: add prefix "mmp" for structures defined for clk-frac
->   clk: mmp: add spin lock for clk-frac
->   clk: mmp: add init callback for clk-frac
->   clk: mmp: move definiton of mmp_clk_frac to clk.h
->   clk: mmp: add clock type mix
->   clk: mmp: add mmp private gate clock
->   clk: mmp: add basic support functions for DT support
->   clk: mmp: add reset support
->   clk: mmp: add pxa168 DT support for clock driver
->   clk: mmp: add pxa910 DT support for clock driver
->   clk: mmp: add mmp2 DT support for clock driver
->   arm: mmp: Make all the dts file to be compiled by Makefile
->   arm: mmp: Make use of the DT supported clock
->
->  .../devicetree/bindings/clock/marvell,mmp2.txt     |  21 +
->  .../devicetree/bindings/clock/marvell,pxa168.txt   |  21 +
->  .../devicetree/bindings/clock/marvell,pxa910.txt   |  21 +
->  arch/arm/boot/dts/Makefile                         |   3 +
->  arch/arm/boot/dts/mmp2-brownstone.dts              |   2 +-
->  arch/arm/boot/dts/mmp2.dtsi                        |  29 +-
->  arch/arm/boot/dts/pxa168-aspenite.dts              |   2 +-
->  arch/arm/boot/dts/pxa168.dtsi                      |  27 +-
->  arch/arm/boot/dts/pxa910-dkb.dts                   |   2 +-
->  arch/arm/boot/dts/pxa910.dtsi                      |  28 +-
->  arch/arm/mach-mmp/Kconfig                          |  12 +-
->  arch/arm/mach-mmp/mmp-dt.c                         |  57 +--
->  arch/arm/mach-mmp/mmp2-dt.c                        |  26 +-
->  drivers/clk/mmp/Makefile                           |   7 +-
->  drivers/clk/mmp/clk-frac.c                         |  74 ++-
->  drivers/clk/mmp/clk-gate.c                         | 133 ++++++
->  drivers/clk/mmp/clk-mix.c                          | 513 +++++++++++++++++++++
->  drivers/clk/mmp/clk-mmp2.c                         |   6 +-
->  drivers/clk/mmp/clk-of-mmp2.c                      | 334 ++++++++++++++
->  drivers/clk/mmp/clk-of-pxa168.c                    | 279 +++++++++++
->  drivers/clk/mmp/clk-of-pxa910.c                    | 301 ++++++++++++
->  drivers/clk/mmp/clk-pxa168.c                       |   6 +-
->  drivers/clk/mmp/clk-pxa910.c                       |   6 +-
->  drivers/clk/mmp/clk.c                              | 192 ++++++++
->  drivers/clk/mmp/clk.h                              | 226 ++++++++-
->  drivers/clk/mmp/reset.c                            |  99 ++++
->  drivers/clk/mmp/reset.h                            |  31 ++
->  include/dt-bindings/clock/marvell,mmp2.h           |  74 +++
->  include/dt-bindings/clock/marvell,pxa168.h         |  57 +++
->  include/dt-bindings/clock/marvell,pxa910.h         |  54 +++
->  30 files changed, 2538 insertions(+), 105 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/marvell,mmp2.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/marvell,pxa168.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/marvell,pxa910.txt
->  create mode 100644 drivers/clk/mmp/clk-gate.c
->  create mode 100644 drivers/clk/mmp/clk-mix.c
->  create mode 100644 drivers/clk/mmp/clk-of-mmp2.c
->  create mode 100644 drivers/clk/mmp/clk-of-pxa168.c
->  create mode 100644 drivers/clk/mmp/clk-of-pxa910.c
->  create mode 100644 drivers/clk/mmp/clk.c
->  create mode 100644 drivers/clk/mmp/reset.c
->  create mode 100644 drivers/clk/mmp/reset.h
->  create mode 100644 include/dt-bindings/clock/marvell,mmp2.h
->  create mode 100644 include/dt-bindings/clock/marvell,pxa168.h
->  create mode 100644 include/dt-bindings/clock/marvell,pxa910.h
->
-> --
-> 1.8.3.2
->
+On Monday 03 November 2014 21:18:20 Thomas Gleixner wrote:
+> On Mon, 3 Nov 2014, Arnd Bergmann wrote:
+> > On Saturday 01 November 2014 18:03:47 Kevin Cernekee wrote:
+> > > V2->V3:
+> > > 
+> > >  - Move updated irq_reg_{readl,writel} functions back into <linux/irq.h>
+> > >    so they can be called by irqchip drivers
+> > > 
+> > >  - Add gc->reg_{readl,writel} function pointers so that irqchip
+> > >    drivers like arch/sh/boards/mach-se/{7343,7722}/irq.c can override them
+> > > 
+> > >  - CC: linux-sh list in lieu of Paul's defunct linux-sh.org email address
+> > > 
+> > >  - Fix handling of zero L2 status in bcm7120-l2.c
+> > > 
+> > >  - Rebase on Linus' head of tree
+> > 
+> > Looks all great. I also looked at the series now and am very happy
+> > about how it turned out.
+> 
+> Does that translate to an Acked-by on the whole lot?
+> 
+> Jason, can you please pick that lot up with an Acked-by-me on the
+> changes to the existing infrastructure?
 
-Acked-by: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Yes, I should have been more explicit:
 
-Mike,
-Please merge all mach-mmp patches with clock together. Otherwise, it
-may result in build issue.
-
-Best Regards
-Haojian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Arnd Bergmann <arnd@arndb.de>
