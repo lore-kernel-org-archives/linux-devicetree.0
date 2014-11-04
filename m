@@ -1,76 +1,280 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v1 1/3] usb: phy: device-tree documentation for gpio-vbus
-Date: Tue, 04 Nov 2014 22:27:09 +0100
-Message-ID: <87wq7a1wsy.fsf@free.fr>
-References: <1414951910-16075-1-git-send-email-robert.jarzmik@free.fr>
-	<CA+gwMcco4-aOHd4tQRFkUts+C9G5+ymxEhGXYB_FaeuBLQSBrw@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [RFCv2 5/8] [media] si4713: add device tree support
+Date: Tue, 04 Nov 2014 23:47:14 +0200
+Message-ID: <54594962.2090207@iki.fi>
+References: <1413904027-16767-1-git-send-email-sre@kernel.org> <1413904027-16767-6-git-send-email-sre@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+gwMcco4-aOHd4tQRFkUts+C9G5+ymxEhGXYB_FaeuBLQSBrw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-	(Philipp Zabel's message of "Tue, 4 Nov 2014 09:20:55 +0100")
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1413904027-16767-6-git-send-email-sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+Hi Sebastian,
 
-> Hi Robert,
->
-> On Sun, Nov 2, 2014 at 7:11 PM, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote:
+Nice set of patches! Thanks! :-)
 
-> Maybe duplicate the comment from the driver here how his is about
-> B peripheral only devices
-Yeah sure, for v2.
+On Tue, Oct 21, 2014 at 05:07:04PM +0200, Sebastian Reichel wrote:
+> Add device tree support by changing the device registration order.
+> In the device tree the si4713 node is a normal I2C device, which
+> will be probed as such. Thus the V4L device must be probed from
+> the I2C device and not the other way around.
+> 
+> Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/media/radio/si4713/radio-platform-si4713.c | 28 ++++--------------
+>  drivers/media/radio/si4713/si4713.c                | 34 ++++++++++++++++++++--
+>  drivers/media/radio/si4713/si4713.h                |  6 ++++
+>  include/media/radio-si4713.h                       | 30 -------------------
+>  include/media/si4713.h                             |  1 +
+>  5 files changed, 45 insertions(+), 54 deletions(-)
+>  delete mode 100644 include/media/radio-si4713.h
+> 
+> diff --git a/drivers/media/radio/si4713/radio-platform-si4713.c b/drivers/media/radio/si4713/radio-platform-si4713.c
+> index a47502a..2de5439 100644
+> --- a/drivers/media/radio/si4713/radio-platform-si4713.c
+> +++ b/drivers/media/radio/si4713/radio-platform-si4713.c
+> @@ -34,7 +34,7 @@
+>  #include <media/v4l2-fh.h>
+>  #include <media/v4l2-ctrls.h>
+>  #include <media/v4l2-event.h>
+> -#include <media/radio-si4713.h>
+> +#include "si4713.h"
+>  
+>  /* module parameters */
+>  static int radio_nr = -1;	/* radio device minor (-1 ==> auto assign) */
+> @@ -153,7 +153,6 @@ static int radio_si4713_pdriver_probe(struct platform_device *pdev)
+>  {
+>  	struct radio_si4713_platform_data *pdata = pdev->dev.platform_data;
+>  	struct radio_si4713_device *rsdev;
+> -	struct i2c_adapter *adapter;
+>  	struct v4l2_subdev *sd;
+>  	int rval = 0;
+>  
+> @@ -177,20 +176,11 @@ static int radio_si4713_pdriver_probe(struct platform_device *pdev)
+>  		goto exit;
+>  	}
+>  
+> -	adapter = i2c_get_adapter(pdata->i2c_bus);
+> -	if (!adapter) {
+> -		dev_err(&pdev->dev, "Cannot get i2c adapter %d\n",
+> -			pdata->i2c_bus);
+> -		rval = -ENODEV;
+> -		goto unregister_v4l2_dev;
+> -	}
+> -
+> -	sd = v4l2_i2c_new_subdev_board(&rsdev->v4l2_dev, adapter,
+> -				       pdata->subdev_board_info, NULL);
+> -	if (!sd) {
+> +	sd = i2c_get_clientdata(pdata->subdev);
+> +	rval = v4l2_device_register_subdev(&rsdev->v4l2_dev, sd);
+> +	if (rval) {
+>  		dev_err(&pdev->dev, "Cannot get v4l2 subdevice\n");
+> -		rval = -ENODEV;
+> -		goto put_adapter;
+> +		goto unregister_v4l2_dev;
+>  	}
+>  
+>  	rsdev->radio_dev = radio_si4713_vdev_template;
+> @@ -202,14 +192,12 @@ static int radio_si4713_pdriver_probe(struct platform_device *pdev)
+>  	if (video_register_device(&rsdev->radio_dev, VFL_TYPE_RADIO, radio_nr)) {
+>  		dev_err(&pdev->dev, "Could not register video device.\n");
+>  		rval = -EIO;
+> -		goto put_adapter;
+> +		goto unregister_v4l2_dev;
+>  	}
+>  	dev_info(&pdev->dev, "New device successfully probed\n");
+>  
+>  	goto exit;
+>  
+> -put_adapter:
+> -	i2c_put_adapter(adapter);
+>  unregister_v4l2_dev:
+>  	v4l2_device_unregister(&rsdev->v4l2_dev);
+>  exit:
+> @@ -220,14 +208,10 @@ exit:
+>  static int radio_si4713_pdriver_remove(struct platform_device *pdev)
+>  {
+>  	struct v4l2_device *v4l2_dev = platform_get_drvdata(pdev);
+> -	struct v4l2_subdev *sd = list_entry(v4l2_dev->subdevs.next,
+> -					    struct v4l2_subdev, list);
+> -	struct i2c_client *client = v4l2_get_subdevdata(sd);
+>  	struct radio_si4713_device *rsdev;
+>  
+>  	rsdev = container_of(v4l2_dev, struct radio_si4713_device, v4l2_dev);
+>  	video_unregister_device(&rsdev->radio_dev);
+> -	i2c_put_adapter(client->adapter);
+>  	v4l2_device_unregister(&rsdev->v4l2_dev);
+>  
+>  	return 0;
+> diff --git a/drivers/media/radio/si4713/si4713.c b/drivers/media/radio/si4713/si4713.c
+> index ebec16d..94fe3c6 100644
+> --- a/drivers/media/radio/si4713/si4713.c
+> +++ b/drivers/media/radio/si4713/si4713.c
+> @@ -1446,9 +1446,13 @@ static int si4713_probe(struct i2c_client *client,
+>  					const struct i2c_device_id *id)
+>  {
+>  	struct si4713_device *sdev;
+> -	struct si4713_platform_data *pdata = client->dev.platform_data;
+>  	struct v4l2_ctrl_handler *hdl;
+> -	int rval, i;
+> +	struct si4713_platform_data *pdata = client->dev.platform_data;
+> +	struct device_node *np = client->dev.of_node;
+> +	int rval;
+> +
 
->> +Required properties:
->> +- compatible : should be "generic,phy-gpio-vbus"
->
-> I'm not sure about the compatible value. I have not seen the "generic,"
-> vendor prefix, and all the other generic gpio-something bindings don't
-> use any prefix: "gpio-gate-clock", "gpio-leds", "gpio-beeper",
-> "pps-gpio", etc.
-Okay, so we'll probably end up on "phy-gpio-vbus" then.
+Why empty line here?
 
->> +- #phy-cells : from the generic PHY bindings, must be 1.
->> +- gpios      : set of 2 gpio properties (see gpio.txt for gpio properties format)
->> +               first gpio is required, it's the VBus sensing input gpio
->> +              second gpio is optional, it's the D+ pullup controlling output
->> +              gpio
->> +
->> +Optional properties:
->> +- wakeup     : boolean, if true the VBus gpio will wakeup the platform
->
-> The vbus_draw regulator should be part of this binding, I think.
-Indeed. It should be optional, right ? Schedules for v2.
+It's not a bad practice to declare short temporary variables etc. as last.
 
->> +Example:
->> +       usb2phy : gpio-vbus@13 {
->> +               compatible = "generic,phy-gpio-vbus";
->> +               gpios = <&gpio 13 GPIO_ACTIVE_LOW>;
->> +               wakeup;
->
-> This on the other hand might be too generic.
-> I'd like to see just wakeup used here, but the other bindings prefix
-> "linux," (or "gpio-key,").
-If I write this, would you change to better suit you ?
-	usb2phy : gpio-vbus@13 {
-		compatible = "phy-gpio-vbus";
-		regulator-vbus: regulator@0 {
-                	regulator-min-microvolt = <5000000>;
-                	regulator-max-microvolt = <5000000>;
-			regulator-always-on;
-		};
-		vbus-gpio = <&gpio 13 GPIO_ACTIVE_LOW>;
-		wakeup;
-	};               
+> +	struct radio_si4713_platform_data si4713_pdev_pdata;
+> +	struct platform_device *si4713_pdev;
+>  
+>  	sdev = devm_kzalloc(&client->dev, sizeof(*sdev), GFP_KERNEL);
+>  	if (!sdev) {
+> @@ -1608,8 +1612,31 @@ static int si4713_probe(struct i2c_client *client,
+>  		goto free_ctrls;
+>  	}
+>  
+> +	if ((pdata && pdata->is_platform_device) || np) {
+> +		si4713_pdev = platform_device_alloc("radio-si4713", -1);
 
-Cheers.
+You could declare si4713_pdev here since you're not using it elsewhere.
+
+> +		if (!si4713_pdev)
+> +			goto put_main_pdev;
+> +
+> +		si4713_pdev_pdata.subdev = client;
+> +		rval = platform_device_add_data(si4713_pdev, &si4713_pdev_pdata,
+> +						sizeof(si4713_pdev_pdata));
+> +		if (rval)
+> +			goto put_main_pdev;
+> +
+> +		rval = platform_device_add(si4713_pdev);
+> +		if (rval)
+> +			goto put_main_pdev;
+> +
+> +		sdev->pd = si4713_pdev;
+> +	} else {
+> +		sdev->pd = NULL;
+
+sdev->pd is NULL already here. You could simply return in if () and
+proceed to create the platform device if need be.
+
+Speaking of which --- I wonder if there are other than historical
+reasons to create the platform device. I guess that's out of the scope
+of the set anyway.
+
+> +	}
+> +
+>  	return 0;
+>  
+> +put_main_pdev:
+> +	platform_device_put(si4713_pdev);
+> +	v4l2_device_unregister_subdev(&sdev->sd);
+>  free_ctrls:
+>  	v4l2_ctrl_handler_free(hdl);
+>  exit:
+> @@ -1622,6 +1649,9 @@ static int si4713_remove(struct i2c_client *client)
+>  	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+>  	struct si4713_device *sdev = to_si4713_device(sd);
+>  
+> +	if (sdev->pd)
+> +		platform_device_unregister(sdev->pd);
+
+platform_device_unregister() may be safely called with NULL argument.
+
+> +
+>  	if (sdev->power_state)
+>  		si4713_set_power_state(sdev, POWER_DOWN);
+>  
+> diff --git a/drivers/media/radio/si4713/si4713.h b/drivers/media/radio/si4713/si4713.h
+> index 7c2479f..8a376e1 100644
+> --- a/drivers/media/radio/si4713/si4713.h
+> +++ b/drivers/media/radio/si4713/si4713.h
+> @@ -15,6 +15,7 @@
+>  #ifndef SI4713_I2C_H
+>  #define SI4713_I2C_H
+>  
+> +#include <linux/platform_device.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/gpio/consumer.h>
+>  #include <media/v4l2-subdev.h>
+> @@ -238,6 +239,7 @@ struct si4713_device {
+>  	struct regulator *vdd;
+>  	struct regulator *vio;
+>  	struct gpio_desc *gpio_reset;
+> +	struct platform_device *pd;
+>  	u32 power_state;
+>  	u32 rds_enabled;
+>  	u32 frequency;
+> @@ -245,4 +247,8 @@ struct si4713_device {
+>  	u32 stereo;
+>  	u32 tune_rnl;
+>  };
+> +
+> +struct radio_si4713_platform_data {
+> +	struct i2c_client *subdev;
+> +};
+>  #endif /* ifndef SI4713_I2C_H */
+> diff --git a/include/media/radio-si4713.h b/include/media/radio-si4713.h
+> deleted file mode 100644
+> index f6aae29..0000000
+> --- a/include/media/radio-si4713.h
+> +++ /dev/null
+> @@ -1,30 +0,0 @@
+> -/*
+> - * include/media/radio-si4713.h
+> - *
+> - * Board related data definitions for Si4713 radio transmitter chip.
+> - *
+> - * Copyright (c) 2009 Nokia Corporation
+> - * Contact: Eduardo Valentin <eduardo.valentin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+> - *
+> - * This file is licensed under the terms of the GNU General Public License
+> - * version 2. This program is licensed "as is" without any warranty of any
+> - * kind, whether express or implied.
+> - *
+> - */
+> -
+> -#ifndef RADIO_SI4713_H
+> -#define RADIO_SI4713_H
+> -
+> -#include <linux/i2c.h>
+> -
+> -#define SI4713_NAME "radio-si4713"
+> -
+> -/*
+> - * Platform dependent definition
+> - */
+> -struct radio_si4713_platform_data {
+> -	int i2c_bus;
+> -	struct i2c_board_info *subdev_board_info;
+> -};
+> -
+> -#endif /* ifndef RADIO_SI4713_H*/
+> diff --git a/include/media/si4713.h b/include/media/si4713.h
+> index f98a0a7..343b8fb5 100644
+> --- a/include/media/si4713.h
+> +++ b/include/media/si4713.h
+> @@ -26,6 +26,7 @@ struct si4713_platform_data {
+>  	const char * const *supply_names;
+>  	unsigned supplies;
+>  	int gpio_reset; /* < 0 if not used */
+> +	bool is_platform_device;
+>  };
+>  
+>  /*
 
 -- 
-Robert
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
