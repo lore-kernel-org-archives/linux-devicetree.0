@@ -1,34 +1,39 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 2/2] move imx-hdmi to bridge/dw-hdmi
-Date: Tue, 4 Nov 2014 08:03:45 -0800
-Message-ID: <20141104160345.GB1503@kroah.com>
-References: <1415108398-34376-1-git-send-email-andy.yan@rock-chips.com>
+From: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v6 04/12] misc: at25: Make use of device property API
+Date: Tue, 4 Nov 2014 18:07:35 +0200
+Message-ID: <20141104160735.GO1618@lahna.fi.intel.com>
+References: <13750506.S2yVlRRDa2@vostro.rjw.lan>
+ <20141104143801.GM1618@lahna.fi.intel.com>
+ <CACxGe6u5ppSjHc-Wa7K_NWQ9YEZ_V3ys9fdsECss_bPabUTN+g@mail.gmail.com>
+ <4645043.WOkgNMSUuO@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1415108398-34376-1-git-send-email-andy.yan@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: heiko@sntech.de, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, rmk+kernel@arm.linux.org.uk, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, linux-kernel@vger.kernel.org, djkurtz@google.com
+In-Reply-To: <4645043.WOkgNMSUuO-sKB8Sp2ER+y1GS7QM15AGw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Darren Hart <darren.hart-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBOb3YgMDQsIDIwMTQgYXQgMDk6Mzk6NThQTSArMDgwMCwgQW5keSBZYW4gd3JvdGU6
-Cj4gRnJvbTogQW5keSB5YW4gPGFuZHkueWFuQHJvY2stY2hpcHMuY29tPgo+IAo+IHRoZSBvcmln
-aW5hbCBpbXggaGRtaSBkcml2ZXIgaXMgdW5kZXIgc3RhZ2luZy9pbXgtZHJtLAo+IHdoaWNoIGRl
-cGVuZHMgb24gaW14LWRybSwgc28gbW92ZSB0aGUgaW14IGhkbWkgZHJ2aWVyIG91dAo+IHRvIGRy
-bS9icmlkZ2UgYW5kIHJlbmFtZSBpbXgtaGRtaSB0byBkdy1oZG1pCj4gCj4gQ2hhbmdlLUlkOiBJ
-NWY0MTczNzJmMjU2YWEyNmNkMDBhM2NkMDE2MDc0MTY4MGFmZDM5ZAoKTmV2ZXIgaW5jbHVkZSB0
-aGlzIGxpbmUgaW4gYSBwdWJsaWMgcGF0Y2gsIGl0IG1lYW5zIG5vdGhpbmcgdG8gdXMsCnNvcnJ5
-Li4uCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Tue, Nov 04, 2014 at 05:19:02PM +0100, Rafael J. Wysocki wrote:
+> > > I think np->name is "at25" in this case? The binding file
+> > > Documentation/devicetree/bindings/misc/at25.txt also has the same name.
+> > >
+> > > Are you OK, if we add something like below to the changelog?
+> > >
+> > >  In addition we hard-code the name of the chip to be "at25" for the
+> > >  reason that there is no common mechanism to fetch name of the firmware
+> > >  node. The only existing user (arch/arm/boot/dts/phy3250.dts) uses the
+> > >  same name so it should continue to work.
+> > 
+> > Yes. If somebody complains, then we can reinstate the previous
+> > behaviour, but assume it isn't necessary for now.
+> 
+> OK, done in my tree. 
+
+Thanks Rafael!
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
