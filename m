@@ -1,41 +1,39 @@
-From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Subject: Re: [PATCH v6 2/2] clk: shmobile: document DIV6 clock parent bindings
-Date: Tue, 4 Nov 2014 11:24:19 +0100
-Message-ID: <CAO3366wGrHU0pYjpKxCakFLtjP-a1BLRMJXPkyphAVp-9xO5rw@mail.gmail.com>
-References: <1415030496-26054-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-	<1415030496-26054-3-git-send-email-ulrich.hecht+renesas@gmail.com>
-	<CAMuHMdVAXFXjkim6OtvUDxCSrMQqYzc6KmE+pHUfrCfyGOZyVg@mail.gmail.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: [PATCH v3 0/2] ASoC: simple-card: Add multi-CODEC
+	support
+Date: Tue, 4 Nov 2014 11:25:05 +0100
+Message-ID: <cover.1415096705.git.moinejf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVAXFXjkim6OtvUDxCSrMQqYzc6KmE+pHUfrCfyGOZyVg@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Mike Turquette <mturquette@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Jyri Sarha <jsarha@ti.com>, Xiubo Li <Li.Xiubo@freescale.com>, Benoit Cousson <bcousson@baylibre.com>, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 3, 2014 at 6:24 PM, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Mon, Nov 3, 2014 at 5:01 PM, Ulrich Hecht
-> <ulrich.hecht+renesas@gmail.com> wrote:
-[...]
->> -  - clocks: Reference to the parent clock
->> +  - clocks: Reference to the parent clock(s); if there are multiple parent
->> +    clocks, one must be specified for each possible parent clock setting
->> +    in the clock register. Invalid settings must be specified as "<0>".
->> +    Trailing invalid settings may be omitted.
->
-> Is there a possibility that omitting trailing invalid settings will cause 4
-> or less entries for a clock with 8 parents? That would change its class,
-> and the corresponding src_width and src_shift.
+This patch set adds multi-CODEC support to the simple card.
 
-I checked that, and all these clocks actually have more than four
-possible parents. However, ...
+v3: rebase on broonie git 2014/11/03
+v2: accept list of CODECs in 'sound-dais' (Benoit Cousson)
 
-> So I'm inclined to say the number of parent clocks must be one of 1, 4, or 8,
-> i.e. no omissions, to remove this ambiguity.
+Jean-Francois Moine (2):
+  ASoC: core: add multi-codec support in DT
+  ASoC: simple-card: add multi-CODECs in DT
 
-... considering that we don't know what future SoCs may bring, that
-indeed looks like the better option to me.
+ .../devicetree/bindings/sound/simple-card.txt      |  28 ++---
+ include/sound/soc.h                                |   3 +
+ sound/soc/generic/simple-card.c                    | 135 +++++++++++++--------
+ sound/soc/soc-core.c                               |  75 +++++++++---
+ 4 files changed, 157 insertions(+), 84 deletions(-)
 
-CU
-Uli
+-- 
+2.1.1
