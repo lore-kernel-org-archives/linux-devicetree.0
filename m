@@ -1,90 +1,149 @@
-From: Emil Medve <Emilian.Medve@Freescale.com>
-Subject: [PATCH v3 2/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan portal(s)
-Date: Wed, 5 Nov 2014 09:18:52 -0600
-Message-ID: <1415200734-6978-3-git-send-email-Emilian.Medve@Freescale.com>
-References: <1415200734-6978-1-git-send-email-Emilian.Medve@Freescale.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 1/3] iio: exyno-adc: use syscon for PMU register access
+Date: Wed, 05 Nov 2014 15:29:03 +0000
+Message-ID: <545A423F.1040709@kernel.org>
+References: <1410857931-4980-1-git-send-email-ch.naveen@samsung.com> <1410857931-4980-2-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1415200734-6978-1-git-send-email-Emilian.Medve@Freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: scottwood@Freescale.com, galak@kernel.crashing.org, corbet@lwn.net, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, grant.likely@linaro.org, Geoff.Thorpe@Freescale.com, linuxppc-dev@ozlabs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: Emil Medve <Emilian.Medve@Freescale.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1410857931-4980-2-git-send-email-ch.naveen@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-iio@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, cw00.choi@samsung.com, gregkh@linuxfoundation.org, naveenkrishna.ch@gmail.com, lars@metafoo.de, cpgs@samsung.com, grundler@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-Portals are memory mapped interfaces to BMan that allow low-latency,
-lock-less interaction by software running on processor cores, accelerators
-and network interfaces with the BMan
+On 16/09/14 09:58, Naveen Krishna Chatradhi wrote:
+> This patch updates the IIO based ADC driver to use syscon and regmap
+> APIs to access and use PMU registers instead of remapping the PMU
+> registers in the driver.
+> 
+> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+> To: linux-iio@vger.kernel.org
+Applied to the togreg branch of iio.git - initially pushed out as testing
+for the autobuilders to play.
 
-Signed-off-by: Emil Medve <Emilian.Medve@Freescale.com>
-Change-Id: I6d245ffc14ba3d0e91d403ac7c3b91b75a9e6a95
----
- .../devicetree/bindings/soc/fsl/bman-portals.txt   | 56 ++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/fsl/bman-portals.txt
 
-diff --git a/Documentation/devicetree/bindings/soc/fsl/bman-portals.txt b/Documentation/devicetree/bindings/soc/fsl/bman-portals.txt
-new file mode 100644
-index 0000000..2a00e14
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/fsl/bman-portals.txt
-@@ -0,0 +1,56 @@
-+QorIQ DPAA Buffer Manager Portals Device Tree Binding
-+
-+Copyright (C) 2008 - 2014 Freescale Semiconductor Inc.
-+
-+CONTENTS
-+
-+	- BMan Portal
-+	- Example
-+
-+BMan Portal Node
-+
-+Portals are memory mapped interfaces to BMan that allow low-latency, lock-less
-+interaction by software running on processor cores, accelerators and network
-+interfaces with the BMan
-+
-+PROPERTIES
-+
-+- compatible
-+	Usage:		Required
-+	Value type:	<stringlist>
-+	Definition:	Must include "fsl,bman-portal-<hardware revision>"
-+			May include "fsl,<SoC>-bman-portal" or "fsl,bman-portal"
-+
-+- reg
-+	Usage:		Required
-+	Value type:	<prop-encoded-array>
-+	Definition:	Two regions. The first is the cache-enabled region of
-+			the portal. The second is the cache-inhibited region of
-+			the portal
-+
-+- interrupts
-+	Usage:		Required
-+	Value type:	<prop-encoded-array>
-+	Definition:	Standard property
-+
-+EXAMPLE
-+
-+The example below shows a (P4080) BMan portals container/bus node with two portals
-+
-+	bman-portals@ff4000000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		ranges = <0 0xf 0xf4000000 0x200000>;
-+
-+		bman-portal@0 {
-+			compatible = "fsl,bman-portal-1.0.0", "fsl,bman-portal";
-+			reg = <0x0 0x4000>, <0x100000 0x1000>;
-+			interrupts = <105 2 0 0>;
-+		};
-+		bman-portal@4000 {
-+			compatible = "fsl,bman-portal-1.0.0", "fsl,bman-portal";
-+			reg = <0x4000 0x4000>, <0x101000 0x1000>;
-+			interrupts = <107 2 0 0>;
-+		};
-+	};
--- 
-2.1.3
-
+> ---
+> Changes since v1:
+> Rebased on top of togreg branch of IIO git
+> 
+>  drivers/iio/adc/exynos_adc.c |   30 +++++++++++++++++++++---------
+>  1 file changed, 21 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
+> index 43620fd..fe03177 100644
+> --- a/drivers/iio/adc/exynos_adc.c
+> +++ b/drivers/iio/adc/exynos_adc.c
+> @@ -39,6 +39,8 @@
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/machine.h>
+>  #include <linux/iio/driver.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/regmap.h>
+>  
+>  /* S3C/EXYNOS4412/5250 ADC_V1 registers definitions */
+>  #define ADC_V1_CON(x)		((x) + 0x00)
+> @@ -90,11 +92,14 @@
+>  
+>  #define EXYNOS_ADC_TIMEOUT	(msecs_to_jiffies(100))
+>  
+> +#define EXYNOS_ADCV1_PHY_OFFSET	0x0718
+> +#define EXYNOS_ADCV2_PHY_OFFSET	0x0720
+> +
+>  struct exynos_adc {
+>  	struct exynos_adc_data	*data;
+>  	struct device		*dev;
+>  	void __iomem		*regs;
+> -	void __iomem		*enable_reg;
+> +	struct regmap		*pmu_map;
+>  	struct clk		*clk;
+>  	struct clk		*sclk;
+>  	unsigned int		irq;
+> @@ -110,6 +115,7 @@ struct exynos_adc_data {
+>  	int num_channels;
+>  	bool needs_sclk;
+>  	bool needs_adc_phy;
+> +	int phy_offset;
+>  	u32 mask;
+>  
+>  	void (*init_hw)(struct exynos_adc *info);
+> @@ -183,7 +189,7 @@ static void exynos_adc_v1_init_hw(struct exynos_adc *info)
+>  	u32 con1;
+>  
+>  	if (info->data->needs_adc_phy)
+> -		writel(1, info->enable_reg);
+> +		regmap_write(info->pmu_map, info->data->phy_offset, 1);
+>  
+>  	/* set default prescaler values and Enable prescaler */
+>  	con1 =  ADC_V1_CON_PRSCLV(49) | ADC_V1_CON_PRSCEN;
+> @@ -198,7 +204,7 @@ static void exynos_adc_v1_exit_hw(struct exynos_adc *info)
+>  	u32 con;
+>  
+>  	if (info->data->needs_adc_phy)
+> -		writel(0, info->enable_reg);
+> +		regmap_write(info->pmu_map, info->data->phy_offset, 0);
+>  
+>  	con = readl(ADC_V1_CON(info->regs));
+>  	con |= ADC_V1_CON_STANDBY;
+> @@ -225,6 +231,7 @@ static const struct exynos_adc_data exynos_adc_v1_data = {
+>  	.num_channels	= MAX_ADC_V1_CHANNELS,
+>  	.mask		= ADC_DATX_MASK,	/* 12 bit ADC resolution */
+>  	.needs_adc_phy	= true,
+> +	.phy_offset	= EXYNOS_ADCV1_PHY_OFFSET,
+>  
+>  	.init_hw	= exynos_adc_v1_init_hw,
+>  	.exit_hw	= exynos_adc_v1_exit_hw,
+> @@ -314,7 +321,7 @@ static void exynos_adc_v2_init_hw(struct exynos_adc *info)
+>  	u32 con1, con2;
+>  
+>  	if (info->data->needs_adc_phy)
+> -		writel(1, info->enable_reg);
+> +		regmap_write(info->pmu_map, info->data->phy_offset, 1);
+>  
+>  	con1 = ADC_V2_CON1_SOFT_RESET;
+>  	writel(con1, ADC_V2_CON1(info->regs));
+> @@ -332,7 +339,7 @@ static void exynos_adc_v2_exit_hw(struct exynos_adc *info)
+>  	u32 con;
+>  
+>  	if (info->data->needs_adc_phy)
+> -		writel(0, info->enable_reg);
+> +		regmap_write(info->pmu_map, info->data->phy_offset, 0);
+>  
+>  	con = readl(ADC_V2_CON1(info->regs));
+>  	con &= ~ADC_CON_EN_START;
+> @@ -362,6 +369,7 @@ static const struct exynos_adc_data exynos_adc_v2_data = {
+>  	.num_channels	= MAX_ADC_V2_CHANNELS,
+>  	.mask		= ADC_DATX_MASK, /* 12 bit ADC resolution */
+>  	.needs_adc_phy	= true,
+> +	.phy_offset	= EXYNOS_ADCV2_PHY_OFFSET,
+>  
+>  	.init_hw	= exynos_adc_v2_init_hw,
+>  	.exit_hw	= exynos_adc_v2_exit_hw,
+> @@ -374,6 +382,7 @@ static const struct exynos_adc_data exynos3250_adc_data = {
+>  	.mask		= ADC_DATX_MASK, /* 12 bit ADC resolution */
+>  	.needs_sclk	= true,
+>  	.needs_adc_phy	= true,
+> +	.phy_offset	= EXYNOS_ADCV1_PHY_OFFSET,
+>  
+>  	.init_hw	= exynos_adc_v2_init_hw,
+>  	.exit_hw	= exynos_adc_v2_exit_hw,
+> @@ -558,10 +567,13 @@ static int exynos_adc_probe(struct platform_device *pdev)
+>  
+>  
+>  	if (info->data->needs_adc_phy) {
+> -		mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> -		info->enable_reg = devm_ioremap_resource(&pdev->dev, mem);
+> -		if (IS_ERR(info->enable_reg))
+> -			return PTR_ERR(info->enable_reg);
+> +		info->pmu_map = syscon_regmap_lookup_by_phandle(
+> +					pdev->dev.of_node,
+> +					"samsung,syscon-phandle");
+> +		if (IS_ERR(info->pmu_map)) {
+> +			dev_err(&pdev->dev, "syscon regmap lookup failed.\n");
+> +			return PTR_ERR(info->pmu_map);
+> +		}
+>  	}
+>  
+>  	irq = platform_get_irq(pdev, 0);
+> 
