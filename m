@@ -1,7 +1,7 @@
 From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 10/11] ARM: at91/dt: add EBI (External Bus Interface) node in sama5d3 dtsi
-Date: Wed,  5 Nov 2014 17:01:26 +0100
-Message-ID: <1415203287-21517-11-git-send-email-boris.brezillon@free-electrons.com>
+Subject: [PATCH v2 03/11] mfd: syscon: Add atmel-smc registers definition
+Date: Wed,  5 Nov 2014 17:01:19 +0100
+Message-ID: <1415203287-21517-4-git-send-email-boris.brezillon@free-electrons.com>
 References: <1415203287-21517-1-git-send-email-boris.brezillon@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1415203287-21517-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,114 +10,83 @@ To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee
 Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add EBI node and EBI pin muxing.
+Atmel AT91 SoCs have a memory range reserved for SMC (Static Memory
+Controller) configuration.
+Expose those registers so that drivers can make use of the smc syscon
+declared in at91 DTs.
 
 Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/sama5d3.dtsi | 83 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 83 insertions(+)
+ include/linux/mfd/syscon/atmel-smc.h | 60 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+ create mode 100644 include/linux/mfd/syscon/atmel-smc.h
 
-diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-index d49dab7..d011ade 100644
---- a/arch/arm/boot/dts/sama5d3.dtsi
-+++ b/arch/arm/boot/dts/sama5d3.dtsi
-@@ -530,6 +530,63 @@
- 					};
- 				};
- 
-+				ebi {
-+					pinctrl_ebi_addr: ebi-addr-0 {
-+						atmel,pins =
-+							<AT91_PIOE 0 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 1 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 2 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 3 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 4 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 5 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 6 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 7 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 8 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 9 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 10 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 11 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 12 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 13 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 14 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 15 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 16 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 17 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 18 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 19 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 20 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 21 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 22 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 23 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 24 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 25 AT91_PERIPH_A AT91_PINCTRL_NONE>;
-+					};
+diff --git a/include/linux/mfd/syscon/atmel-smc.h b/include/linux/mfd/syscon/atmel-smc.h
+new file mode 100644
+index 0000000..430f486
+--- /dev/null
++++ b/include/linux/mfd/syscon/atmel-smc.h
+@@ -0,0 +1,60 @@
++/*
++ * Atmel SMC (Static Memory Controller) register offsets and bit definitions.
++ *
++ * Copyright (C) 2014 Atmel
++ * Copyright (C) 2014 Free Electrons
++ *
++ * Author: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
 +
-+					pinctrl_ebi_cs0: ebi-cs0-0 {
-+						atmel,pins =
-+							<AT91_PIOE 26 AT91_PERIPH_A AT91_PINCTRL_NONE>;
-+					};
++#ifndef _LINUX_MFD_SYSCON_ATMEL_SMC_H_
++#define _LINUX_MFD_SYSCON_ATMEL_SMC_H_
 +
-+					pinctrl_ebi_cs1: ebi-cs1-0 {
-+						atmel,pins =
-+							<AT91_PIOE 27 AT91_PERIPH_A AT91_PINCTRL_NONE>;
-+					};
++#include <linux/regmap.h>
 +
-+					pinctrl_ebi_cs2: ebi-cs2-0 {
-+						atmel,pins =
-+							<AT91_PIOE 28 AT91_PERIPH_A AT91_PINCTRL_NONE>;
-+					};
++#define AT91SAM9_SMC_GENERIC_OFFSET	0x00
++#define AT91SAM9_SMC_GENERIC_BLK_SZ	0x10
 +
-+					pinctrl_ebi_nwr1_nbs1: ebi-nwr1-nbs1-0 {
-+						atmel,pins =
-+							<AT91_PIOE 29 AT91_PERIPH_A AT91_PINCTRL_NONE>;
-+					};
++#define SAMA5_SMC_GENERIC_OFFSET	0x600
++#define SAMA5_SMC_GENERIC_BLK_SZ	0x14
 +
-+					pinctrl_ebi_nwait: ebi-nwait-0 {
-+						atmel,pins =
-+							<AT91_PIOE 30 AT91_PERIPH_A AT91_PINCTRL_NONE>;
-+					};
-+				};
++#define AT91SAM9_SMC_SETUP(o)		((o) + 0x00)
++#define AT91SAM9_SMC_NWESETUP_SHFT	0
++#define AT91SAM9_SMC_NCS_WRSETUP_SHFT	8
++#define AT91SAM9_SMC_NRDSETUP_SHFT	16
++#define AT91SAM9_SMC_NCS_NRDSETUP_SHFT	24
 +
- 				i2c0 {
- 					pinctrl_i2c0: i2c0-0 {
- 						atmel,pins =
-@@ -1407,6 +1464,32 @@
- 			status = "disabled";
- 		};
- 
-+		ebi: ebi@10000000 {
-+			compatible = "atmel,sama5d3-ebi", "simple-bus";
-+			#address-cells = <2>;
-+			#size-cells = <1>;
-+			atmel,smc = <&hsmc>;
-+			atmel,matrix = <&matrix>;
-+			reg = <0x10000000 0x10000000
-+			       0x40000000 0x30000000>;
-+			ranges = <0x0 0x0 0x10000000 0x10000000
-+				  0x1 0x0 0x40000000 0x10000000
-+				  0x2 0x0 0x50000000 0x10000000
-+				  0x3 0x0 0x60000000 0x10000000>;
-+			clocks = <&mck>;
++#define AT91SAM9_SMC_PULSE(o)		((o) + 0x04)
 +
-+			/*
-+			 * TODO: EBI pins should be referenced here, but they
-+			 * conflict with NAND pins, which should actually be a
-+			 * sub device of the EBI bus and thus should not
-+			 * request it's own set of pins as they are shared
-+			 * with other devices connected on the EBI bus.
-+			 *
-+			 * pinctrl-names = "default";
-+			 * pinctrl-0 = <&pinctrl_ebi_addr>;
-+			 */
-+		};
++#define AT91SAM9_SMC_CYCLE(o)		((o) + 0x08)
 +
- 		nand0: nand@60000000 {
- 			compatible = "atmel,at91rm9200-nand";
- 			#address-cells = <1>;
++#define AT91SAM9_SMC_MODE(o)		((o) + 0x0c)
++#define SAMA5_SMC_MODE(o)		((o) + 0x10)
++#define AT91_SMC_READMODE		BIT(0)
++#define AT91_SMC_WRITEMODE		BIT(1)
++#define AT91_SMC_EXNWMODE		GENMASK(5, 4)
++#define AT91_SMC_EXNWMODE_DISABLE	(0 << 4)
++#define AT91_SMC_EXNWMODE_FROZEN	(2 << 4)
++#define AT91_SMC_EXNWMODE_READY		(3 << 4)
++#define AT91_SMC_BAT			BIT(8)
++#define AT91_SMC_BAT_SELECT		(0 << 8)
++#define AT91_SMC_BAT_WRITE		(1 << 8)
++#define AT91_SMC_DBW			GENMASK(13, 12)
++#define AT91_SMC_DBW_8			(0 << 12)
++#define AT91_SMC_DBW_16			(1 << 12)
++#define AT91_SMC_DBW_32			(2 << 12)
++#define AT91_SMC_TDF			GENMASK(19, 16)
++#define AT91_SMC_TDF_(x)		(((x) & 0xf) << 16)
++#define AT91_SMC_TDFMODE		BIT(20)
++#define AT91_SMC_PMEN			BIT(24)
++#define AT91_SMC_PS			GENMASK(29, 28)
++#define AT91_SMC_PS_4			(0 << 28)
++#define AT91_SMC_PS_8			(1 << 28)
++#define AT91_SMC_PS_16			(2 << 28)
++#define AT91_SMC_PS_32			(3 << 28)
++
++#endif /* _LINUX_MFD_SYSCON_ATMEL_SMC_H_ */
 -- 
 1.9.1
 
