@@ -1,42 +1,101 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v3 00/10] ARM: dts: TI: Add CAN support
-Date: Wed, 5 Nov 2014 13:06:28 +0200
-Message-ID: <545A04B4.1010508@ti.com>
-References: <1415098134-26405-1-git-send-email-rogerq@ti.com> <20141104155502.GS31454@atomide.com>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 0/3] new Atmel DMA controller
+Date: Wed, 5 Nov 2014 12:10:55 +0100
+Message-ID: <20141105111054.GX20550@ldesroches-Latitude-E6320>
+References: <1413991340-11617-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <20141104155502.GS31454@atomide.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: wg@grandegger.com, mkl@pengutronix.de, wsa@the-dreams.de, mugunthanvnm@ti.com, george.cherian@ti.com, balbi@ti.com, nsekhar@ti.comnm@ti.com, sergei.shtylyov@cogentembedded.com, linux-omap@vger.kernel.org, linux-can@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1413991340-11617-1-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/04/2014 05:55 PM, Tony Lindgren wrote:
-> * Roger Quadros <rogerq@ti.com> [141104 02:50]:
->> Hi Tony,
->>
->> These patches add CAN support for am33xx, am43xx and dra7 platforms.
->> They must go in together with CAN driver RAMINIT Syscon support [1].
+Hi Vinod,
+
+Does this new version meet your expectations? I would not like to delay
+xdma inclusion to 3.20 because we still have no DMA on sama5d4, that is
+not very convenient.
+
+Regards
+
+Ludovic
+
+On Wed, Oct 22, 2014 at 05:22:17PM +0200, Ludovic Desroches wrote:
+> Hi,
 > 
-> Can you make this series not depend on [1] for most part without
-> breaking existing functionality?
-
-I just checked that we haven't enabled DCAN on any of the boards
-so we don't risk breaking anything even if these 2 series don't go in
-together. 
-
+> This set of patches introduces support for the new Atmel DMA controller know as
+> XDMAC and available on SAMA5D4.
 > 
-> Then we can do a single follow-up patch to enable things after [1]
-> has been merged.
+> Changes from:
+> - v6
+>   - change binding: merge the two dma-cells
+>   - no more use direction in slave config
+>   - remove cookie init
+>   - return an error on a bad maxburst value
+> - v5
+>   - fix a bug when doing memcpy, condition to set the NDE was inverted
+>   - replace irqsave locks by bh variant
+>   - unmask channel errors
+> - v4
+>   - compile the driver if COMPILE_TEST is selected
+>   - merge header file into at_xdmac.c
+>   - use write memory barriers before starting the channel
+>   - init active_xfer to false when taking a descriptor from the free
+>   descriptors list
+>   - remove dma capabilities mask
+>   - use CONFIG_PM instead of CONFIG_PM_SLEEP for prepare function
+>   - style fixes
+>   - update documentation to add the <chip> compatible description
+> - v3
+>   - use dma_get_any_slave_channel instead of dma_request_channel
+>   - fix tx_status behavior for non active transfers
+>   - rename at_xdmac_terminate_xfer
+>   - replace suspend/resume no irq variants by late/early variants
+>   - no more use dev res to request the irq, use the legacy way
+>   - add slave capabilities
+> - v2
+>   - documentation updated
+>   - fix locking issues
+> - v1
+>   - add power management stuff
+>   - check maxburst value
+>   - revert subsys_initcall remove, EPROBE_DEFER not yet available on the kernel
+>   version I use to do the tests, moreover other devices are not ready to use it
+> - RFC:
+>   - DMA_SUCCESS replaced by DMA_COMPLETE
+>   - fix memcpy issue caused by a mistake in interfaces used
+>   - add filter function
+>   - remove some parameters from device tree since we can get them through the
+>   dma slave configuration
+>   - use readl/writel relaxed
+>   - remove subsys_initcall
+>   - synchronize irq before killing tasklets
+>   - use BIT macro
+>   - misc cleanup
 > 
-> That would remove a dependency between driver changes and .dts changes.
-
-Apart from patches 1, 3 and 8, that add the control module nodes the rest
-pretty much depend on the driver DT binding changes.
-
-I can send them separately if needed.
-
-cheers,
--roger
+> 
+> Ludovic Desroches (3):
+>   dma: at_xdmac: creation of the atmel eXtended DMA Controller driver
+>   ARM: dts: at_xdmac: add bindings documentation
+>   MAINTAINERS: add entry for Atmel XDMA driver
+> 
+>  .../devicetree/bindings/dma/atmel-xdma.txt         |   54 +
+>  MAINTAINERS                                        |    7 +
+>  drivers/dma/Kconfig                                |    7 +
+>  drivers/dma/Makefile                               |    1 +
+>  drivers/dma/at_xdmac.c                             | 1510 ++++++++++++++++++++
+>  include/dt-bindings/dma/at91.h                     |   25 +
+>  6 files changed, 1604 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/atmel-xdma.txt
+>  create mode 100644 drivers/dma/at_xdmac.c
+> 
+> -- 
+> 2.0.3
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
