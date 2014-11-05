@@ -1,26 +1,53 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v7 3/3] ARM: dts: rk3288: add VOP iommu nodes
-Date: Wed, 05 Nov 2014 21:30:30 +0100
-Message-ID: <1838591.iyIlAuCyiq@diego>
-References: <1414983209-2472-1-git-send-email-djkurtz@chromium.org> <1414983209-2472-4-git-send-email-djkurtz@chromium.org>
+From: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Subject: [PATCHv0 0/3] rtc: rtc-isl12057: fixes and alarm support
+Date: Wed, 05 Nov 2014 22:42:11 +0100
+Message-ID: <cover.1415222752.git.arno@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414983209-2472-4-git-send-email-djkurtz@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Kurtz <djkurtz@chromium.org>
-Cc: Joerg Roedel <joro@8bytes.org>, Simon Xue <xxm@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "moderated list:ARM/Rockchip SoC..." <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Peter Huewe <peter.huewe-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 3. November 2014, 10:53:29 schrieb Daniel Kurtz:
-> Add device nodes for the VOP iommus.
-> Device nodes for other iommus will be added in later patches.
-> 
-> The iommu nodes use the #iommu-cells property as described in:
->   Documentation/devicetree/bindings/iommu/iommu.txt
-> 
-> Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
-> Signed-off-by: Simon Xue <xxm@rock-chips.com>
+Hi,
 
-I've applied this patch to my dts branch for 3.19
+This series includes three patches for Intersil ISL12057 driver.
+
+ - first patch is a fix for masking issues which dates back to driver
+   inclusion. Even if those issues are not critical per se, the patch is
+   a good candidate for stable down to 3.14.
+
+ - second patch fixes remaining places where 'isl' is used instead of the
+   expected NASDAQ symbol for Intersil (i.e. isil) after commit
+   7a6540ca856ae ("ARM: mvebu: Change vendor prefix for Intersil 
+   Corporation to isil"). 
+
+ - third patch provides alarm support for Intersil ISL12057. This
+   support was not added when the driver was initially pushed in 3.14
+   kernel due to the inability to check interrupt support. After some
+   soldering, this tests have been performed.
+
+Comments are welcome,
+
+Cheers,
+
+a+
+
+Arnaud Ebalard (3):
+  rtc: rtc-isl12057: fix masking of register values
+  rtc: rtc-isl12057: fix isil vs isl naming for intersil
+  rtc: rtc-isl12057: add alarm support to Intersil ISL12057 RTC driver
+
+ .../devicetree/bindings/i2c/trivial-devices.txt    |   2 +-
+ .../devicetree/bindings/vendor-prefixes.txt        |   2 +-
+ drivers/rtc/rtc-isl12057.c                         | 319 ++++++++++++++++++++-
+ 3 files changed, 309 insertions(+), 14 deletions(-)
+
+-- 
+2.1.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
