@@ -1,1734 +1,1105 @@
-From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH V2 1/2] imx-drm: imx-hdmi: split imx soc specific code from imx-hdmi
-Date: Wed,  5 Nov 2014 20:59:45 +0800
-Message-ID: <1415192385-6572-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: airlied-cv59FeDIM0c@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Josh Boyer <jwboyer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v4 2/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
+Date: Wed, 05 Nov 2014 13:09:35 +0000
+Message-ID: <545A218F.5060301@kernel.org>
+References: <1415028270-25860-1-git-send-email-iivanov@mm-sol.com> <1415028270-25860-3-git-send-email-iivanov@mm-sol.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1415028270-25860-3-git-send-email-iivanov@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>
+Cc: Stanimir Varbanov <svarbanov@mm-sol.com>, Angelo Compagnucci <angelo.compagnucci@gmail.com>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-imx6 and rockchip rk3288 and JZ4780 (Ingenic Xburst/MIPS)
-use the interface compatible Designware HDMI IP, but they
-also have some lightly difference, such as phy pll configuration,
-register width(imx hdmi register is one byte, but rk3288 is 4
-bytes width), 4K support(imx6 doesn't support 4k, but rk3288 does),
-clk useage,and the crtc mux configuration is also platform specific.
+On 03/11/14 15:24, Ivan T. Ivanov wrote:
+> From: Stanimir Varbanov <svarbanov@mm-sol.com>
+>
+> The voltage ADC is peripheral of Qualcomm SPMI PMIC chips. It has
+> 15 bits resolution and register space inside PMIC accessible across
+> SPMI bus.
+>
+> The vadc driver registers itself through IIO interface.
+>
+> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+Hi Ivan,
 
-To reuse the imx hdmi driver, split the platform specific code out
-to dw_hdmi-imx.c.
+Couple of utterly tiny bits inline.  The biggest one is that
+you store some info about the calibration that you never actually
+use... Left over from some debugging perhaps?
 
-Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
- drivers/staging/imx-drm/Makefile      |   2 +-
- drivers/staging/imx-drm/dw_hdmi-imx.c | 214 ++++++++++
- drivers/staging/imx-drm/imx-hdmi.c    | 726 ++++++++++++++--------------------
- include/drm/bridge/dw_hdmi.h          | 114 ++++++
- 4 files changed, 634 insertions(+), 422 deletions(-)
- create mode 100644 drivers/staging/imx-drm/dw_hdmi-imx.c
- create mode 100644 include/drm/bridge/dw_hdmi.h
+Jonathan
+> ---
+>  drivers/iio/adc/Kconfig          |   14 +
+>  drivers/iio/adc/Makefile         |    1 +
+>  drivers/iio/adc/qcom-spmi-vadc.c | 1015 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 1030 insertions(+)
+>  create mode 100644 drivers/iio/adc/qcom-spmi-vadc.c
+>
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 88bdc8f..af6e10b 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -206,6 +206,20 @@ config NAU7802
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called nau7802.
+>
+> +config QCOM_SPMI_VADC
+> +	tristate "Qualcomm SPMI PMIC voltage ADC"
+> +	depends on SPMI
+> +	select REGMAP_SPMI
+> +	help
+> +	  This is the IIO Voltage ADC driver for Qualcomm QPNP VADC Chip.
+> +
+> +	  The driver supports multiple channels read. The VADC is a 15-bit
+> +	  sigma-delta ADC. Some of the channels are internally used for
+> +	  calibration.
+> +
+> +	  To compile this driver as a module, choose M here: the module will
+> +	  be called qcom-spmi-vadc.
+> +
+>  config ROCKCHIP_SARADC
+>  	tristate "Rockchip SARADC driver"
+>  	depends on ARCH_ROCKCHIP || (ARM && COMPILE_TEST)
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index cb88a6a..479b457 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -22,6 +22,7 @@ obj-$(CONFIG_MCP320X) += mcp320x.o
+>  obj-$(CONFIG_MCP3422) += mcp3422.o
+>  obj-$(CONFIG_MEN_Z188_ADC) += men_z188_adc.o
+>  obj-$(CONFIG_NAU7802) += nau7802.o
+> +obj-$(CONFIG_QCOM_SPMI_VADC) += qcom-spmi-vadc.o
+>  obj-$(CONFIG_ROCKCHIP_SARADC) += rockchip_saradc.o
+>  obj-$(CONFIG_TI_ADC081C) += ti-adc081c.o
+>  obj-$(CONFIG_TI_ADC128S052) += ti-adc128s052.o
+> diff --git a/drivers/iio/adc/qcom-spmi-vadc.c b/drivers/iio/adc/qcom-spmi-vadc.c
+> new file mode 100644
+> index 0000000..6e6881c
+> --- /dev/null
+> +++ b/drivers/iio/adc/qcom-spmi-vadc.c
+> @@ -0,0 +1,1015 @@
+> +/*
+> + * Copyright (c) 2012-2014, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/completion.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +#include <linux/log2.h>
+> +
+> +#include <dt-bindings/iio/qcom,spmi-vadc.h>
+> +
+> +/* VADC register and bit definitions */
+> +#define VADC_REVISION2				0x1
+> +#define VADC_REVISION2_SUPPORTED_VADC		1
+> +
+> +#define VADC_PERPH_TYPE				0x4
+> +#define VADC_PERPH_TYPE_ADC			8
+> +
+> +#define VADC_PERPH_SUBTYPE			0x5
+> +#define VADC_PERPH_SUBTYPE_VADC			1
+> +
+> +#define VADC_STATUS1				0x8
+> +#define VADC_STATUS1_OP_MODE			4
+> +#define VADC_STATUS1_REQ_STS			BIT(1)
+> +#define VADC_STATUS1_EOC			BIT(0)
+> +#define VADC_STATUS1_REQ_STS_EOC_MASK		0x3
+> +
+> +#define VADC_MODE_CTL				0x40
+> +#define VADC_OP_MODE_SHIFT			3
+> +#define VADC_OP_MODE_NORMAL			0
+> +#define VADC_AMUX_TRIM_EN			BIT(1)
+> +#define VADC_ADC_TRIM_EN			BIT(0)
+> +
+> +#define VADC_EN_CTL1				0x46
+> +#define VADC_EN_CTL1_SET			BIT(7)
+> +
+> +#define VADC_ADC_CH_SEL_CTL			0x48
+> +
+> +#define VADC_ADC_DIG_PARAM			0x50
+> +#define VADC_ADC_DIG_DEC_RATIO_SEL_SHIFT	2
+> +
+> +#define VADC_HW_SETTLE_DELAY			0x51
+> +
+> +#define VADC_CONV_REQ				0x52
+> +#define VADC_CONV_REQ_SET			BIT(7)
+> +
+> +#define VADC_FAST_AVG_CTL			0x5a
+> +#define VADC_FAST_AVG_EN			0x5b
+> +#define VADC_FAST_AVG_EN_SET			BIT(7)
+> +
+> +#define VADC_ACCESS				0xd0
+> +#define VADC_ACCESS_DATA			0xa5
+> +
+> +#define VADC_PERH_RESET_CTL3			0xda
+> +#define VADC_FOLLOW_WARM_RB			BIT(2)
+> +
+> +#define VADC_DATA				0x60	/* 16 bits */
+> +
+> +#define VADC_CONV_TIME_MIN_US			2000
+> +#define VADC_CONV_TIME_MAX_US			2100
+> +
+> +/* Min ADC code represents 0V */
+> +#define VADC_MIN_ADC_CODE			0x6000
+> +/* Max ADC code represents full-scale range of 1.8V */
+> +#define VADC_MAX_ADC_CODE			0xa800
+> +
+> +#define VADC_ABSOLUTE_RANGE_UV			625000
+> +#define VADC_RATIOMETRIC_RANGE_UV		1800000
+> +
+> +#define VADC_DEF_PRESCALING			0 /* 1:1 */
+> +#define VADC_DEF_DECIMATION			0 /* 512 */
+> +#define VADC_DEF_HW_SETTLE_TIME			0 /* 0 us */
+> +#define VADC_DEF_AVG_SAMPLES			0 /* 1 sample */
+> +#define VADC_DEF_CALIB_TYPE			VADC_CALIB_ABSOLUTE
+> +
+> +#define VADC_DECIMATION_MIN			512
+> +#define VADC_DECIMATION_MAX			4096
+> +
+> +#define VADC_HW_SETTLE_DELAY_MAX		10000
+> +#define VADC_AVG_SAMPLES_MAX			512
+> +
+> +#define KELVINMIL_CELSIUSMIL			273150
+> +
+> +#define VADC_CHAN_MIN			VADC_USBIN
+> +#define VADC_CHAN_MAX			VADC_LR_MUX3_BUF_PU1_PU2_XO_THERM
+> +
+> +/*
+> + * VADC_CALIB_ABSOLUTE: uses the 625mV and 1.25V as reference channels.
+> + * VADC_CALIB_RATIOMETRIC: uses the reference voltage (1.8V) and GND for
+> + * calibration.
+> + */
+> +enum vadc_calibration {
+> +	VADC_CALIB_ABSOLUTE = 0,
+> +	VADC_CALIB_RATIOMETRIC
+> +};
+> +
+> +/**
+> + * struct vadc_linear_graph - Represent ADC characteristics.
+> + * @dy: numerator slope to calculate the gain.
+As dy is always equal to vref-gnd you could drop it and use those
+directly...
 
-diff --git a/drivers/staging/imx-drm/Makefile b/drivers/staging/imx-drm/Makefile
-index 582c438..809027d 100644
---- a/drivers/staging/imx-drm/Makefile
-+++ b/drivers/staging/imx-drm/Makefile
-@@ -9,4 +9,4 @@ obj-$(CONFIG_DRM_IMX_LDB) += imx-ldb.o
- 
- imx-ipuv3-crtc-objs  := ipuv3-crtc.o ipuv3-plane.o
- obj-$(CONFIG_DRM_IMX_IPUV3)	+= imx-ipuv3-crtc.o
--obj-$(CONFIG_DRM_IMX_HDMI) += imx-hdmi.o
-+obj-$(CONFIG_DRM_IMX_HDMI) += imx-hdmi.o dw_hdmi-imx.o
-diff --git a/drivers/staging/imx-drm/dw_hdmi-imx.c b/drivers/staging/imx-drm/dw_hdmi-imx.c
-new file mode 100644
-index 0000000..71ac859
---- /dev/null
-+++ b/drivers/staging/imx-drm/dw_hdmi-imx.c
-@@ -0,0 +1,214 @@
-+/*
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
-+#include <drm/bridge/dw_hdmi.h>
-+#include <video/imx-ipu-v3.h>
-+#include <linux/regmap.h>
-+#include <linux/clk.h>
-+
-+#include "imx-drm.h"
-+
-+struct imx_hdmi_priv {
-+	struct device *dev;
-+	struct clk *isfr_clk;
-+	struct clk *iahb_clk;
-+	struct regmap *regmap;
-+};
-+
-+static const struct mpll_config imx_mpll_cfg[] = {
-+	{
-+		45250000, {
-+			{ 0x01e0, 0x0000 },
-+			{ 0x21e1, 0x0000 },
-+			{ 0x41e2, 0x0000 }
-+		},
-+	}, {
-+		92500000, {
-+			{ 0x0140, 0x0005 },
-+			{ 0x2141, 0x0005 },
-+			{ 0x4142, 0x0005 },
-+	},
-+	}, {
-+		148500000, {
-+			{ 0x00a0, 0x000a },
-+			{ 0x20a1, 0x000a },
-+			{ 0x40a2, 0x000a },
-+		},
-+	}, {
-+		~0UL, {
-+			{ 0x00a0, 0x000a },
-+			{ 0x2001, 0x000f },
-+			{ 0x4002, 0x000f },
-+		},
-+	}
-+};
-+
-+static const struct curr_ctrl imx_cur_ctr[] = {
-+	/*      pixelclk     bpp8    bpp10   bpp12 */
-+	{
-+		54000000, { 0x091c, 0x091c, 0x06dc },
-+	}, {
-+		58400000, { 0x091c, 0x06dc, 0x06dc },
-+	}, {
-+		72000000, { 0x06dc, 0x06dc, 0x091c },
-+	}, {
-+		74250000, { 0x06dc, 0x0b5c, 0x091c },
-+	}, {
-+		118800000, { 0x091c, 0x091c, 0x06dc },
-+	}, {
-+		216000000, { 0x06dc, 0x0b5c, 0x091c },
-+	}
-+};
-+
-+static int imx_hdmi_parse_dt(struct imx_hdmi_priv *hdmi)
-+{
-+	struct device_node *np = hdmi->dev->of_node;
-+
-+	hdmi->regmap = syscon_regmap_lookup_by_phandle(np, "gpr");
-+	if (IS_ERR(hdmi->regmap)) {
-+		dev_err(hdmi->dev, "Unable to get gpr\n");
-+		return PTR_ERR(hdmi->regmap);
-+	}
-+
-+	hdmi->isfr_clk = devm_clk_get(hdmi->dev, "isfr");
-+	if (IS_ERR(hdmi->isfr_clk)) {
-+		dev_err(hdmi->dev, "Unable to get HDMI isfr clk\n");
-+		return PTR_ERR(hdmi->isfr_clk);
-+	}
-+
-+	hdmi->iahb_clk = devm_clk_get(hdmi->dev, "iahb");
-+	if (IS_ERR(hdmi->iahb_clk)) {
-+		dev_err(hdmi->dev, "Unable to get HDMI iahb clk\n");
-+		return PTR_ERR(hdmi->iahb_clk);
-+	}
-+
-+	return 0;
-+}
-+
-+static void *imx_hdmi_imx_setup(struct platform_device *pdev)
-+{
-+	struct imx_hdmi_priv *hdmi;
-+	int ret;
-+
-+	hdmi = devm_kzalloc(&pdev->dev, sizeof(*hdmi), GFP_KERNEL);
-+	if (!hdmi)
-+		return ERR_PTR(-ENOMEM);
-+	hdmi->dev = &pdev->dev;
-+
-+	ret = imx_hdmi_parse_dt(hdmi);
-+	if (ret < 0)
-+		return ERR_PTR(ret);
-+	ret = clk_prepare_enable(hdmi->isfr_clk);
-+	if (ret) {
-+		dev_err(hdmi->dev,
-+			"Cannot enable HDMI isfr clock: %d\n", ret);
-+		return ERR_PTR(ret);
-+	}
-+
-+	ret = clk_prepare_enable(hdmi->iahb_clk);
-+	if (ret) {
-+		dev_err(hdmi->dev,
-+			"Cannot enable HDMI iahb clock: %d\n", ret);
-+		return ERR_PTR(ret);
-+	}
-+
-+	return hdmi;
-+}
-+
-+static void imx_hdmi_imx_exit(void *priv)
-+{
-+	struct imx_hdmi_priv *hdmi = (struct imx_hdmi_priv *)priv;
-+
-+	clk_disable_unprepare(hdmi->isfr_clk);
-+
-+	clk_disable_unprepare(hdmi->iahb_clk);
-+}
-+
-+static void imx_hdmi_imx_set_crtc_mux(void *priv, struct drm_encoder *encoder)
-+{
-+	struct imx_hdmi_priv *hdmi = (struct imx_hdmi_priv *)priv;
-+	int mux = imx_drm_encoder_get_mux_id(hdmi->dev->of_node, encoder);
-+
-+	regmap_update_bits(hdmi->regmap, IOMUXC_GPR3,
-+			   IMX6Q_GPR3_HDMI_MUX_CTL_MASK,
-+			   mux << IMX6Q_GPR3_HDMI_MUX_CTL_SHIFT);
-+}
-+
-+static void imx_hdmi_imx_encoder_prepare(struct drm_connector *connector,
-+					struct drm_encoder *encoder)
-+{
-+	imx_drm_panel_format(encoder, V4L2_PIX_FMT_RGB24);
-+}
-+
-+static struct imx_hdmi_plat_data imx6q_hdmi_drv_data = {
-+	.setup			= imx_hdmi_imx_setup,
-+	.exit			= imx_hdmi_imx_exit,
-+	.set_crtc_mux		= imx_hdmi_imx_set_crtc_mux,
-+	.encoder_prepare	= imx_hdmi_imx_encoder_prepare,
-+	.mpll_cfg		= imx_mpll_cfg,
-+	.cur_ctr		= imx_cur_ctr,
-+	.dev_type		= IMX6Q_HDMI,
-+};
-+
-+static struct imx_hdmi_plat_data imx6dl_hdmi_drv_data = {
-+	.setup			= imx_hdmi_imx_setup,
-+	.exit			= imx_hdmi_imx_exit,
-+	.set_crtc_mux		= imx_hdmi_imx_set_crtc_mux,
-+	.encoder_prepare	= imx_hdmi_imx_encoder_prepare,
-+	.mpll_cfg		= imx_mpll_cfg,
-+	.cur_ctr		= imx_cur_ctr,
-+	.dev_type		= IMX6DL_HDMI,
-+};
-+
-+static const struct of_device_id imx_hdmi_imx_ids[] = {
-+	{ .compatible = "fsl,imx6q-hdmi",
-+	  .data = &imx6q_hdmi_drv_data
-+	}, {
-+	  .compatible = "fsl,imx6dl-hdmi",
-+	  .data = &imx6dl_hdmi_drv_data
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, imx_hdmi_imx_dt_ids);
-+
-+static int imx_hdmi_imx_probe(struct platform_device *pdev)
-+{
-+	const struct imx_hdmi_plat_data *plat_data;
-+	const struct of_device_id *match;
-+
-+	if (!pdev->dev.of_node)
-+		return -ENODEV;
-+
-+	match = of_match_node(imx_hdmi_imx_ids, pdev->dev.of_node);
-+	plat_data = match->data;
-+
-+	return imx_hdmi_pltfm_register(pdev, plat_data);
-+}
-+
-+static int imx_hdmi_imx_remove(struct platform_device *pdev)
-+{
-+	return imx_hdmi_pltfm_unregister(pdev);
-+}
-+
-+static struct platform_driver imx_hdmi_imx_pltfm_driver = {
-+	.probe  = imx_hdmi_imx_probe,
-+	.remove = imx_hdmi_imx_remove,
-+	.driver = {
-+		.name = "dwhdmi-imx",
-+		.owner = THIS_MODULE,
-+		.of_match_table = imx_hdmi_imx_ids,
-+	},
-+};
-+
-+module_platform_driver(imx_hdmi_imx_pltfm_driver);
-+
-+MODULE_AUTHOR("Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
-+MODULE_DESCRIPTION("IMX6 Specific DW-HDMI Driver Extension");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:dwhdmi-imx");
-diff --git a/drivers/staging/imx-drm/imx-hdmi.c b/drivers/staging/imx-drm/imx-hdmi.c
-index aaec6b2..138706c 100644
---- a/drivers/staging/imx-drm/imx-hdmi.c
-+++ b/drivers/staging/imx-drm/imx-hdmi.c
-@@ -16,23 +16,16 @@
- #include <linux/irq.h>
- #include <linux/delay.h>
- #include <linux/err.h>
--#include <linux/clk.h>
- #include <linux/hdmi.h>
--#include <linux/regmap.h>
--#include <linux/mfd/syscon.h>
--#include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
- #include <linux/of_device.h>
--
-+#include <drm/drm_of.h>
- #include <drm/drmP.h>
- #include <drm/drm_crtc_helper.h>
- #include <drm/drm_edid.h>
- #include <drm/drm_encoder_slave.h>
--#include <video/imx-ipu-v3.h>
-+#include <drm/bridge/dw_hdmi.h>
- 
- #include "imx-hdmi.h"
--#include "imx-drm.h"
--
--#define HDMI_EDID_LEN		512
- 
- #define RGB			0
- #define YCBCR444		1
-@@ -54,11 +47,6 @@ enum hdmi_datamap {
- 	YCbCr422_12B = 0x12,
- };
- 
--enum imx_hdmi_devtype {
--	IMX6Q_HDMI,
--	IMX6DL_HDMI,
--};
--
- static const u16 csc_coeff_default[3][4] = {
- 	{ 0x2000, 0x0000, 0x0000, 0x0000 },
- 	{ 0x0000, 0x2000, 0x0000, 0x0000 },
-@@ -89,72 +77,44 @@ static const u16 csc_coeff_rgb_in_eitu709[3][4] = {
- 	{ 0x6756, 0x78ab, 0x2000, 0x0200 }
- };
- 
--struct hdmi_vmode {
--	bool mdvi;
--	bool mhsyncpolarity;
--	bool mvsyncpolarity;
--	bool minterlaced;
--	bool mdataenablepolarity;
--
--	unsigned int mpixelclock;
--	unsigned int mpixelrepetitioninput;
--	unsigned int mpixelrepetitionoutput;
--};
--
--struct hdmi_data_info {
--	unsigned int enc_in_format;
--	unsigned int enc_out_format;
--	unsigned int enc_color_depth;
--	unsigned int colorimetry;
--	unsigned int pix_repet_factor;
--	unsigned int hdcp_enable;
--	struct hdmi_vmode video_mode;
--};
--
--struct imx_hdmi {
--	struct drm_connector connector;
--	struct drm_encoder encoder;
--
--	enum imx_hdmi_devtype dev_type;
--	struct device *dev;
--	struct clk *isfr_clk;
--	struct clk *iahb_clk;
--
--	struct hdmi_data_info hdmi_data;
--	int vic;
--
--	u8 edid[HDMI_EDID_LEN];
--	bool cable_plugin;
-+/*On rockchip platform, no-word access to the hdmi
-+ * register will causes an imprecise external abort
-+ */
-+static inline void hdmi_writel(struct imx_hdmi *hdmi, u32 val, int offset)
-+{
-+	writel(val, hdmi->regs + (offset << 2));
-+}
- 
--	bool phy_enabled;
--	struct drm_display_mode previous_mode;
-+static inline u32 hdmi_readl(struct imx_hdmi *hdmi, int offset)
-+{
-+	return readl(hdmi->regs + (offset << 2));
-+}
- 
--	struct regmap *regmap;
--	struct i2c_adapter *ddc;
--	void __iomem *regs;
-+static void hdmi_modl(struct imx_hdmi *hdmi, u32 data, u32 mask, unsigned reg)
-+{
-+	u32 val = hdmi_readl(hdmi, reg) & ~mask;
- 
--	unsigned int sample_rate;
--	int ratio;
--};
-+	val |= data & mask;
-+	hdmi_writel(hdmi, val, reg);
-+}
- 
--static void imx_hdmi_set_ipu_di_mux(struct imx_hdmi *hdmi, int ipu_di)
-+static void hdmi_mask_writel(struct imx_hdmi *hdmi, u32 data, unsigned int reg,
-+			     u32 shift, u32 mask)
- {
--	regmap_update_bits(hdmi->regmap, IOMUXC_GPR3,
--			   IMX6Q_GPR3_HDMI_MUX_CTL_MASK,
--			   ipu_di << IMX6Q_GPR3_HDMI_MUX_CTL_SHIFT);
-+	hdmi_modl(hdmi, data << shift, mask, reg);
- }
- 
--static inline void hdmi_writeb(struct imx_hdmi *hdmi, u8 val, int offset)
-+static inline void hdmi_writeb(struct imx_hdmi *hdmi, u32 val, int offset)
- {
- 	writeb(val, hdmi->regs + offset);
- }
- 
--static inline u8 hdmi_readb(struct imx_hdmi *hdmi, int offset)
-+static inline u32 hdmi_readb(struct imx_hdmi *hdmi, int offset)
- {
- 	return readb(hdmi->regs + offset);
- }
- 
--static void hdmi_modb(struct imx_hdmi *hdmi, u8 data, u8 mask, unsigned reg)
-+static void hdmi_modb(struct imx_hdmi *hdmi, u32 data, u32 mask, unsigned reg)
- {
- 	u8 val = hdmi_readb(hdmi, reg) & ~mask;
- 
-@@ -162,8 +122,8 @@ static void hdmi_modb(struct imx_hdmi *hdmi, u8 data, u8 mask, unsigned reg)
- 	hdmi_writeb(hdmi, val, reg);
- }
- 
--static void hdmi_mask_writeb(struct imx_hdmi *hdmi, u8 data, unsigned int reg,
--		      u8 shift, u8 mask)
-+static void hdmi_mask_writeb(struct imx_hdmi *hdmi, u32 data, unsigned int reg,
-+		      u32 shift, u32 mask)
- {
- 	hdmi_modb(hdmi, data << shift, mask, reg);
- }
-@@ -171,22 +131,22 @@ static void hdmi_mask_writeb(struct imx_hdmi *hdmi, u8 data, unsigned int reg,
- static void hdmi_set_clock_regenerator_n(struct imx_hdmi *hdmi,
- 					 unsigned int value)
- {
--	hdmi_writeb(hdmi, value & 0xff, HDMI_AUD_N1);
--	hdmi_writeb(hdmi, (value >> 8) & 0xff, HDMI_AUD_N2);
--	hdmi_writeb(hdmi, (value >> 16) & 0x0f, HDMI_AUD_N3);
-+	hdmi->write(hdmi, value & 0xff, HDMI_AUD_N1);
-+	hdmi->write(hdmi, (value >> 8) & 0xff, HDMI_AUD_N2);
-+	hdmi->write(hdmi, (value >> 16) & 0x0f, HDMI_AUD_N3);
- 
- 	/* nshift factor = 0 */
--	hdmi_modb(hdmi, 0, HDMI_AUD_CTS3_N_SHIFT_MASK, HDMI_AUD_CTS3);
-+	hdmi->mod(hdmi, 0, HDMI_AUD_CTS3_N_SHIFT_MASK, HDMI_AUD_CTS3);
- }
- 
- static void hdmi_regenerate_cts(struct imx_hdmi *hdmi, unsigned int cts)
- {
- 	/* Must be set/cleared first */
--	hdmi_modb(hdmi, 0, HDMI_AUD_CTS3_CTS_MANUAL, HDMI_AUD_CTS3);
-+	hdmi->mod(hdmi, 0, HDMI_AUD_CTS3_CTS_MANUAL, HDMI_AUD_CTS3);
- 
--	hdmi_writeb(hdmi, cts & 0xff, HDMI_AUD_CTS1);
--	hdmi_writeb(hdmi, (cts >> 8) & 0xff, HDMI_AUD_CTS2);
--	hdmi_writeb(hdmi, ((cts >> 16) & HDMI_AUD_CTS3_AUDCTS19_16_MASK) |
-+	hdmi->write(hdmi, cts & 0xff, HDMI_AUD_CTS1);
-+	hdmi->write(hdmi, (cts >> 8) & 0xff, HDMI_AUD_CTS2);
-+	hdmi->write(hdmi, ((cts >> 16) & HDMI_AUD_CTS3_AUDCTS19_16_MASK) |
- 		    HDMI_AUD_CTS3_CTS_MANUAL, HDMI_AUD_CTS3);
- }
- 
-@@ -323,6 +283,7 @@ static unsigned int hdmi_compute_cts(unsigned int freq, unsigned long pixel_clk,
- 	}
- 	if (ratio == 100)
- 		return cts;
-+
- 	return (cts * ratio) / 100;
- }
- 
-@@ -338,7 +299,7 @@ static void hdmi_set_clk_regenerator(struct imx_hdmi *hdmi,
- 
- 	if (!clk_cts) {
- 		dev_dbg(hdmi->dev, "%s: pixel clock not supported: %lu\n",
--			 __func__, pixel_clk);
-+			__func__, pixel_clk);
- 		return;
- 	}
- 
-@@ -408,19 +369,19 @@ static void hdmi_video_sample(struct imx_hdmi *hdmi)
- 	val = HDMI_TX_INVID0_INTERNAL_DE_GENERATOR_DISABLE |
- 		((color_format << HDMI_TX_INVID0_VIDEO_MAPPING_OFFSET) &
- 		HDMI_TX_INVID0_VIDEO_MAPPING_MASK);
--	hdmi_writeb(hdmi, val, HDMI_TX_INVID0);
-+	hdmi->write(hdmi, val, HDMI_TX_INVID0);
- 
- 	/* Enable TX stuffing: When DE is inactive, fix the output data to 0 */
- 	val = HDMI_TX_INSTUFFING_BDBDATA_STUFFING_ENABLE |
- 		HDMI_TX_INSTUFFING_RCRDATA_STUFFING_ENABLE |
- 		HDMI_TX_INSTUFFING_GYDATA_STUFFING_ENABLE;
--	hdmi_writeb(hdmi, val, HDMI_TX_INSTUFFING);
--	hdmi_writeb(hdmi, 0x0, HDMI_TX_GYDATA0);
--	hdmi_writeb(hdmi, 0x0, HDMI_TX_GYDATA1);
--	hdmi_writeb(hdmi, 0x0, HDMI_TX_RCRDATA0);
--	hdmi_writeb(hdmi, 0x0, HDMI_TX_RCRDATA1);
--	hdmi_writeb(hdmi, 0x0, HDMI_TX_BCBDATA0);
--	hdmi_writeb(hdmi, 0x0, HDMI_TX_BCBDATA1);
-+	hdmi->write(hdmi, val, HDMI_TX_INSTUFFING);
-+	hdmi->write(hdmi, 0x0, HDMI_TX_GYDATA0);
-+	hdmi->write(hdmi, 0x0, HDMI_TX_GYDATA1);
-+	hdmi->write(hdmi, 0x0, HDMI_TX_RCRDATA0);
-+	hdmi->write(hdmi, 0x0, HDMI_TX_RCRDATA1);
-+	hdmi->write(hdmi, 0x0, HDMI_TX_BCBDATA0);
-+	hdmi->write(hdmi, 0x0, HDMI_TX_BCBDATA1);
- }
- 
- static int is_color_space_conversion(struct imx_hdmi *hdmi)
-@@ -477,17 +438,17 @@ static void imx_hdmi_update_csc_coeffs(struct imx_hdmi *hdmi)
- 		u16 coeff_b = (*csc_coeff)[1][i];
- 		u16 coeff_c = (*csc_coeff)[2][i];
- 
--		hdmi_writeb(hdmi, coeff_a & 0xff,
-+		hdmi->write(hdmi, coeff_a & 0xff,
- 			HDMI_CSC_COEF_A1_LSB + i * 2);
--		hdmi_writeb(hdmi, coeff_a >> 8, HDMI_CSC_COEF_A1_MSB + i * 2);
--		hdmi_writeb(hdmi, coeff_b & 0xff, HDMI_CSC_COEF_B1_LSB + i * 2);
--		hdmi_writeb(hdmi, coeff_b >> 8, HDMI_CSC_COEF_B1_MSB + i * 2);
--		hdmi_writeb(hdmi, coeff_c & 0xff,
-+		hdmi->write(hdmi, coeff_a >> 8, HDMI_CSC_COEF_A1_MSB + i * 2);
-+		hdmi->write(hdmi, coeff_b & 0xff, HDMI_CSC_COEF_B1_LSB + i * 2);
-+		hdmi->write(hdmi, coeff_b >> 8, HDMI_CSC_COEF_B1_MSB + i * 2);
-+		hdmi->write(hdmi, coeff_c & 0xff,
- 			HDMI_CSC_COEF_C1_LSB + i * 2);
--		hdmi_writeb(hdmi, coeff_c >> 8, HDMI_CSC_COEF_C1_MSB + i * 2);
-+		hdmi->write(hdmi, coeff_c >> 8, HDMI_CSC_COEF_C1_MSB + i * 2);
- 	}
- 
--	hdmi_modb(hdmi, csc_scale, HDMI_CSC_SCALE_CSCSCALE_MASK,
-+	hdmi->mod(hdmi, csc_scale, HDMI_CSC_SCALE_CSCSCALE_MASK,
- 		  HDMI_CSC_SCALE);
- }
- 
-@@ -515,8 +476,8 @@ static void hdmi_video_csc(struct imx_hdmi *hdmi)
- 		return;
- 
- 	/* Configure the CSC registers */
--	hdmi_writeb(hdmi, interpolation | decimation, HDMI_CSC_CFG);
--	hdmi_modb(hdmi, color_depth, HDMI_CSC_SCALE_CSC_COLORDE_PTH_MASK,
-+	hdmi->write(hdmi, interpolation | decimation, HDMI_CSC_CFG);
-+	hdmi->mod(hdmi, color_depth, HDMI_CSC_SCALE_CSC_COLORDE_PTH_MASK,
- 		  HDMI_CSC_SCALE);
- 
- 	imx_hdmi_update_csc_coeffs(hdmi);
-@@ -535,21 +496,22 @@ static void hdmi_video_packetize(struct imx_hdmi *hdmi)
- 	struct hdmi_data_info *hdmi_data = &hdmi->hdmi_data;
- 	u8 val, vp_conf;
- 
--	if (hdmi_data->enc_out_format == RGB
--		|| hdmi_data->enc_out_format == YCBCR444) {
--		if (!hdmi_data->enc_color_depth)
-+	if (hdmi_data->enc_out_format == RGB ||
-+	    hdmi_data->enc_out_format == YCBCR444) {
-+		if (!hdmi_data->enc_color_depth) {
- 			output_select = HDMI_VP_CONF_OUTPUT_SELECTOR_BYPASS;
--		else if (hdmi_data->enc_color_depth == 8) {
-+		} else if (hdmi_data->enc_color_depth == 8) {
- 			color_depth = 4;
- 			output_select = HDMI_VP_CONF_OUTPUT_SELECTOR_BYPASS;
--		} else if (hdmi_data->enc_color_depth == 10)
-+		} else if (hdmi_data->enc_color_depth == 10) {
- 			color_depth = 5;
--		else if (hdmi_data->enc_color_depth == 12)
-+		} else if (hdmi_data->enc_color_depth == 12) {
- 			color_depth = 6;
--		else if (hdmi_data->enc_color_depth == 16)
-+		} else if (hdmi_data->enc_color_depth == 16) {
- 			color_depth = 7;
--		else
-+		} else {
- 			return;
-+		}
- 	} else if (hdmi_data->enc_out_format == YCBCR422_8BITS) {
- 		if (!hdmi_data->enc_color_depth ||
- 		    hdmi_data->enc_color_depth == 8)
-@@ -561,8 +523,9 @@ static void hdmi_video_packetize(struct imx_hdmi *hdmi)
- 		else
- 			return;
- 		output_select = HDMI_VP_CONF_OUTPUT_SELECTOR_YCC422;
--	} else
-+	} else {
- 		return;
-+	}
- 
- 	/* set the packetizer registers */
- 	val = ((color_depth << HDMI_VP_PR_CD_COLOR_DEPTH_OFFSET) &
-@@ -570,9 +533,9 @@ static void hdmi_video_packetize(struct imx_hdmi *hdmi)
- 		((hdmi_data->pix_repet_factor <<
- 		HDMI_VP_PR_CD_DESIRED_PR_FACTOR_OFFSET) &
- 		HDMI_VP_PR_CD_DESIRED_PR_FACTOR_MASK);
--	hdmi_writeb(hdmi, val, HDMI_VP_PR_CD);
-+	hdmi->write(hdmi, val, HDMI_VP_PR_CD);
- 
--	hdmi_modb(hdmi, HDMI_VP_STUFF_PR_STUFFING_STUFFING_MODE,
-+	hdmi->mod(hdmi, HDMI_VP_STUFF_PR_STUFFING_STUFFING_MODE,
- 		  HDMI_VP_STUFF_PR_STUFFING_MASK, HDMI_VP_STUFF);
- 
- 	/* Data from pixel repeater block */
-@@ -584,14 +547,14 @@ static void hdmi_video_packetize(struct imx_hdmi *hdmi)
- 			  HDMI_VP_CONF_BYPASS_SELECT_VID_PACKETIZER;
- 	}
- 
--	hdmi_modb(hdmi, vp_conf,
-+	hdmi->mod(hdmi, vp_conf,
- 		  HDMI_VP_CONF_PR_EN_MASK |
- 		  HDMI_VP_CONF_BYPASS_SELECT_MASK, HDMI_VP_CONF);
- 
--	hdmi_modb(hdmi, 1 << HDMI_VP_STUFF_IDEFAULT_PHASE_OFFSET,
-+	hdmi->mod(hdmi, 1 << HDMI_VP_STUFF_IDEFAULT_PHASE_OFFSET,
- 		  HDMI_VP_STUFF_IDEFAULT_PHASE_MASK, HDMI_VP_STUFF);
- 
--	hdmi_writeb(hdmi, remap_size, HDMI_VP_REMAP);
-+	hdmi->write(hdmi, remap_size, HDMI_VP_REMAP);
- 
- 	if (output_select == HDMI_VP_CONF_OUTPUT_SELECTOR_PP) {
- 		vp_conf = HDMI_VP_CONF_BYPASS_EN_DISABLE |
-@@ -609,55 +572,55 @@ static void hdmi_video_packetize(struct imx_hdmi *hdmi)
- 		return;
- 	}
- 
--	hdmi_modb(hdmi, vp_conf,
-+	hdmi->mod(hdmi, vp_conf,
- 		  HDMI_VP_CONF_BYPASS_EN_MASK | HDMI_VP_CONF_PP_EN_ENMASK |
- 		  HDMI_VP_CONF_YCC422_EN_MASK, HDMI_VP_CONF);
- 
--	hdmi_modb(hdmi, HDMI_VP_STUFF_PP_STUFFING_STUFFING_MODE |
-+	hdmi->mod(hdmi, HDMI_VP_STUFF_PP_STUFFING_STUFFING_MODE |
- 			HDMI_VP_STUFF_YCC422_STUFFING_STUFFING_MODE,
- 		  HDMI_VP_STUFF_PP_STUFFING_MASK |
- 		  HDMI_VP_STUFF_YCC422_STUFFING_MASK, HDMI_VP_STUFF);
- 
--	hdmi_modb(hdmi, output_select, HDMI_VP_CONF_OUTPUT_SELECTOR_MASK,
-+	hdmi->mod(hdmi, output_select, HDMI_VP_CONF_OUTPUT_SELECTOR_MASK,
- 		  HDMI_VP_CONF);
- }
- 
- static inline void hdmi_phy_test_clear(struct imx_hdmi *hdmi,
- 						unsigned char bit)
- {
--	hdmi_modb(hdmi, bit << HDMI_PHY_TST0_TSTCLR_OFFSET,
-+	hdmi->mod(hdmi, bit << HDMI_PHY_TST0_TSTCLR_OFFSET,
- 		  HDMI_PHY_TST0_TSTCLR_MASK, HDMI_PHY_TST0);
- }
- 
- static inline void hdmi_phy_test_enable(struct imx_hdmi *hdmi,
- 						unsigned char bit)
- {
--	hdmi_modb(hdmi, bit << HDMI_PHY_TST0_TSTEN_OFFSET,
-+	hdmi->mod(hdmi, bit << HDMI_PHY_TST0_TSTEN_OFFSET,
- 		  HDMI_PHY_TST0_TSTEN_MASK, HDMI_PHY_TST0);
- }
- 
- static inline void hdmi_phy_test_clock(struct imx_hdmi *hdmi,
- 						unsigned char bit)
- {
--	hdmi_modb(hdmi, bit << HDMI_PHY_TST0_TSTCLK_OFFSET,
-+	hdmi->mod(hdmi, bit << HDMI_PHY_TST0_TSTCLK_OFFSET,
- 		  HDMI_PHY_TST0_TSTCLK_MASK, HDMI_PHY_TST0);
- }
- 
- static inline void hdmi_phy_test_din(struct imx_hdmi *hdmi,
- 						unsigned char bit)
- {
--	hdmi_writeb(hdmi, bit, HDMI_PHY_TST1);
-+	hdmi->write(hdmi, bit, HDMI_PHY_TST1);
- }
- 
- static inline void hdmi_phy_test_dout(struct imx_hdmi *hdmi,
- 						unsigned char bit)
- {
--	hdmi_writeb(hdmi, bit, HDMI_PHY_TST2);
-+	hdmi->write(hdmi, bit, HDMI_PHY_TST2);
- }
- 
- static bool hdmi_phy_wait_i2c_done(struct imx_hdmi *hdmi, int msec)
- {
--	while ((hdmi_readb(hdmi, HDMI_IH_I2CMPHY_STAT0) & 0x3) == 0) {
-+	while ((hdmi->read(hdmi, HDMI_IH_I2CMPHY_STAT0) & 0x3) == 0) {
- 		if (msec-- == 0)
- 			return false;
- 		udelay(1000);
-@@ -668,13 +631,13 @@ static bool hdmi_phy_wait_i2c_done(struct imx_hdmi *hdmi, int msec)
- static void __hdmi_phy_i2c_write(struct imx_hdmi *hdmi, unsigned short data,
- 			      unsigned char addr)
- {
--	hdmi_writeb(hdmi, 0xFF, HDMI_IH_I2CMPHY_STAT0);
--	hdmi_writeb(hdmi, addr, HDMI_PHY_I2CM_ADDRESS_ADDR);
--	hdmi_writeb(hdmi, (unsigned char)(data >> 8),
-+	hdmi->write(hdmi, 0xFF, HDMI_IH_I2CMPHY_STAT0);
-+	hdmi->write(hdmi, addr, HDMI_PHY_I2CM_ADDRESS_ADDR);
-+	hdmi->write(hdmi, (unsigned char)(data >> 8),
- 		HDMI_PHY_I2CM_DATAO_1_ADDR);
--	hdmi_writeb(hdmi, (unsigned char)(data >> 0),
-+	hdmi->write(hdmi, (unsigned char)(data >> 0),
- 		HDMI_PHY_I2CM_DATAO_0_ADDR);
--	hdmi_writeb(hdmi, HDMI_PHY_I2CM_OPERATION_ADDR_WRITE,
-+	hdmi->write(hdmi, HDMI_PHY_I2CM_OPERATION_ADDR_WRITE,
- 		HDMI_PHY_I2CM_OPERATION_ADDR);
- 	hdmi_phy_wait_i2c_done(hdmi, 1000);
- }
-@@ -688,116 +651,53 @@ static int hdmi_phy_i2c_write(struct imx_hdmi *hdmi, unsigned short data,
- 
- static void imx_hdmi_phy_enable_power(struct imx_hdmi *hdmi, u8 enable)
- {
--	hdmi_mask_writeb(hdmi, enable, HDMI_PHY_CONF0,
-+	hdmi->mask_write(hdmi, enable, HDMI_PHY_CONF0,
- 			 HDMI_PHY_CONF0_PDZ_OFFSET,
- 			 HDMI_PHY_CONF0_PDZ_MASK);
- }
- 
- static void imx_hdmi_phy_enable_tmds(struct imx_hdmi *hdmi, u8 enable)
- {
--	hdmi_mask_writeb(hdmi, enable, HDMI_PHY_CONF0,
-+	hdmi->mask_write(hdmi, enable, HDMI_PHY_CONF0,
- 			 HDMI_PHY_CONF0_ENTMDS_OFFSET,
- 			 HDMI_PHY_CONF0_ENTMDS_MASK);
- }
- 
- static void imx_hdmi_phy_gen2_pddq(struct imx_hdmi *hdmi, u8 enable)
- {
--	hdmi_mask_writeb(hdmi, enable, HDMI_PHY_CONF0,
-+	hdmi->mask_write(hdmi, enable, HDMI_PHY_CONF0,
- 			 HDMI_PHY_CONF0_GEN2_PDDQ_OFFSET,
- 			 HDMI_PHY_CONF0_GEN2_PDDQ_MASK);
- }
- 
- static void imx_hdmi_phy_gen2_txpwron(struct imx_hdmi *hdmi, u8 enable)
- {
--	hdmi_mask_writeb(hdmi, enable, HDMI_PHY_CONF0,
-+	hdmi->mask_write(hdmi, enable, HDMI_PHY_CONF0,
- 			 HDMI_PHY_CONF0_GEN2_TXPWRON_OFFSET,
- 			 HDMI_PHY_CONF0_GEN2_TXPWRON_MASK);
- }
- 
- static void imx_hdmi_phy_sel_data_en_pol(struct imx_hdmi *hdmi, u8 enable)
- {
--	hdmi_mask_writeb(hdmi, enable, HDMI_PHY_CONF0,
-+	hdmi->mask_write(hdmi, enable, HDMI_PHY_CONF0,
- 			 HDMI_PHY_CONF0_SELDATAENPOL_OFFSET,
- 			 HDMI_PHY_CONF0_SELDATAENPOL_MASK);
- }
- 
- static void imx_hdmi_phy_sel_interface_control(struct imx_hdmi *hdmi, u8 enable)
- {
--	hdmi_mask_writeb(hdmi, enable, HDMI_PHY_CONF0,
-+	hdmi->mask_write(hdmi, enable, HDMI_PHY_CONF0,
- 			 HDMI_PHY_CONF0_SELDIPIF_OFFSET,
- 			 HDMI_PHY_CONF0_SELDIPIF_MASK);
- }
- 
--enum {
--	RES_8,
--	RES_10,
--	RES_12,
--	RES_MAX,
--};
--
--struct mpll_config {
--	unsigned long mpixelclock;
--	struct {
--		u16 cpce;
--		u16 gmp;
--	} res[RES_MAX];
--};
--
--static const struct mpll_config mpll_config[] = {
--	{
--		45250000, {
--			{ 0x01e0, 0x0000 },
--			{ 0x21e1, 0x0000 },
--			{ 0x41e2, 0x0000 }
--		},
--	}, {
--		92500000, {
--			{ 0x0140, 0x0005 },
--			{ 0x2141, 0x0005 },
--			{ 0x4142, 0x0005 },
--		},
--	}, {
--		148500000, {
--			{ 0x00a0, 0x000a },
--			{ 0x20a1, 0x000a },
--			{ 0x40a2, 0x000a },
--		},
--	}, {
--		~0UL, {
--			{ 0x00a0, 0x000a },
--			{ 0x2001, 0x000f },
--			{ 0x4002, 0x000f },
--		},
--	}
--};
--
--struct curr_ctrl {
--	unsigned long mpixelclock;
--	u16 curr[RES_MAX];
--};
--
--static const struct curr_ctrl curr_ctrl[] = {
--	/*	pixelclk     bpp8    bpp10   bpp12 */
--	{
--		 54000000, { 0x091c, 0x091c, 0x06dc },
--	}, {
--		 58400000, { 0x091c, 0x06dc, 0x06dc },
--	}, {
--		 72000000, { 0x06dc, 0x06dc, 0x091c },
--	}, {
--		 74250000, { 0x06dc, 0x0b5c, 0x091c },
--	}, {
--		118800000, { 0x091c, 0x091c, 0x06dc },
--	}, {
--		216000000, { 0x06dc, 0x0b5c, 0x091c },
--	}
--};
--
- static int hdmi_phy_configure(struct imx_hdmi *hdmi, unsigned char prep,
- 			      unsigned char res, int cscon)
- {
- 	unsigned res_idx, i;
- 	u8 val, msec;
-+	const struct mpll_config *mpll_cfg = hdmi->plat_data->mpll_cfg;
-+	const struct curr_ctrl   *curr_ctr = hdmi->plat_data->cur_ctr;
- 
- 	if (prep)
- 		return -EINVAL;
-@@ -823,7 +723,7 @@ static int hdmi_phy_configure(struct imx_hdmi *hdmi, unsigned char prep,
- 	else
- 		val = HDMI_MC_FLOWCTRL_FEED_THROUGH_OFF_CSC_BYPASS;
- 
--	hdmi_writeb(hdmi, val, HDMI_MC_FLOWCTRL);
-+	hdmi->write(hdmi, val, HDMI_MC_FLOWCTRL);
- 
- 	/* gen2 tx power off */
- 	imx_hdmi_phy_gen2_txpwron(hdmi, 0);
-@@ -832,39 +732,38 @@ static int hdmi_phy_configure(struct imx_hdmi *hdmi, unsigned char prep,
- 	imx_hdmi_phy_gen2_pddq(hdmi, 1);
- 
- 	/* PHY reset */
--	hdmi_writeb(hdmi, HDMI_MC_PHYRSTZ_DEASSERT, HDMI_MC_PHYRSTZ);
--	hdmi_writeb(hdmi, HDMI_MC_PHYRSTZ_ASSERT, HDMI_MC_PHYRSTZ);
-+	hdmi->write(hdmi, HDMI_MC_PHYRSTZ_DEASSERT, HDMI_MC_PHYRSTZ);
-+	hdmi->write(hdmi, HDMI_MC_PHYRSTZ_ASSERT, HDMI_MC_PHYRSTZ);
- 
--	hdmi_writeb(hdmi, HDMI_MC_HEACPHY_RST_ASSERT, HDMI_MC_HEACPHY_RST);
-+	hdmi->write(hdmi, HDMI_MC_HEACPHY_RST_ASSERT, HDMI_MC_HEACPHY_RST);
- 
- 	hdmi_phy_test_clear(hdmi, 1);
--	hdmi_writeb(hdmi, HDMI_PHY_I2CM_SLAVE_ADDR_PHY_GEN2,
-+	hdmi->write(hdmi, HDMI_PHY_I2CM_SLAVE_ADDR_PHY_GEN2,
- 			HDMI_PHY_I2CM_SLAVE_ADDR);
- 	hdmi_phy_test_clear(hdmi, 0);
- 
- 	/* PLL/MPLL Cfg - always match on final entry */
--	for (i = 0; i < ARRAY_SIZE(mpll_config) - 1; i++)
-+	for (i = 0; mpll_cfg[i].mpixelclock != (~0UL); i++)
- 		if (hdmi->hdmi_data.video_mode.mpixelclock <=
--		    mpll_config[i].mpixelclock)
-+		    mpll_cfg[i].mpixelclock)
- 			break;
-+	hdmi_phy_i2c_write(hdmi, mpll_cfg[i].res[res_idx].cpce, 0x06);
-+	hdmi_phy_i2c_write(hdmi, mpll_cfg[i].res[res_idx].gmp, 0x15);
- 
--	hdmi_phy_i2c_write(hdmi, mpll_config[i].res[res_idx].cpce, 0x06);
--	hdmi_phy_i2c_write(hdmi, mpll_config[i].res[res_idx].gmp, 0x15);
--
--	for (i = 0; i < ARRAY_SIZE(curr_ctrl); i++)
-+	for (i = 0; curr_ctr[i].mpixelclock != (~0UL); i++)
- 		if (hdmi->hdmi_data.video_mode.mpixelclock <=
--		    curr_ctrl[i].mpixelclock)
-+		    curr_ctr[i].mpixelclock)
- 			break;
- 
--	if (i >= ARRAY_SIZE(curr_ctrl)) {
-+	if (curr_ctr[i].mpixelclock == (~0UL)) {
- 		dev_err(hdmi->dev,
--				"Pixel clock %d - unsupported by HDMI\n",
--				hdmi->hdmi_data.video_mode.mpixelclock);
-+			"Pixel clock %d - unsupported by HDMI\n",
-+			hdmi->hdmi_data.video_mode.mpixelclock);
- 		return -EINVAL;
- 	}
- 
- 	/* CURRCTRL */
--	hdmi_phy_i2c_write(hdmi, curr_ctrl[i].curr[res_idx], 0x10);
-+	hdmi_phy_i2c_write(hdmi, curr_ctr[i].curr[res_idx], 0x10);
- 
- 	hdmi_phy_i2c_write(hdmi, 0x0000, 0x13);  /* PLLPHBYCTRL */
- 	hdmi_phy_i2c_write(hdmi, 0x0006, 0x17);
-@@ -890,7 +789,7 @@ static int hdmi_phy_configure(struct imx_hdmi *hdmi, unsigned char prep,
- 	/*Wait for PHY PLL lock */
- 	msec = 5;
- 	do {
--		val = hdmi_readb(hdmi, HDMI_PHY_STAT0) & HDMI_PHY_TX_PHY_LOCK;
-+		val = hdmi->read(hdmi, HDMI_PHY_STAT0) & HDMI_PHY_TX_PHY_LOCK;
- 		if (!val)
- 			break;
- 
-@@ -942,12 +841,12 @@ static void hdmi_tx_hdcp_config(struct imx_hdmi *hdmi)
- 		de = HDMI_A_VIDPOLCFG_DATAENPOL_ACTIVE_LOW;
- 
- 	/* disable rx detect */
--	hdmi_modb(hdmi, HDMI_A_HDCPCFG0_RXDETECT_DISABLE,
-+	hdmi->mod(hdmi, HDMI_A_HDCPCFG0_RXDETECT_DISABLE,
- 		  HDMI_A_HDCPCFG0_RXDETECT_MASK, HDMI_A_HDCPCFG0);
- 
--	hdmi_modb(hdmi, de, HDMI_A_VIDPOLCFG_DATAENPOL_MASK, HDMI_A_VIDPOLCFG);
-+	hdmi->mod(hdmi, de, HDMI_A_VIDPOLCFG_DATAENPOL_MASK, HDMI_A_VIDPOLCFG);
- 
--	hdmi_modb(hdmi, HDMI_A_HDCPCFG1_ENCRYPTIONDISABLE_DISABLE,
-+	hdmi->mod(hdmi, HDMI_A_HDCPCFG1_ENCRYPTIONDISABLE_DISABLE,
- 		  HDMI_A_HDCPCFG1_ENCRYPTIONDISABLE_MASK, HDMI_A_HDCPCFG1);
- }
- 
-@@ -977,7 +876,7 @@ static void hdmi_config_AVI(struct imx_hdmi *hdmi)
- 		HDMI_FC_AVICONF0_ACTIVE_FMT_INFO_PRESENT |
- 		HDMI_FC_AVICONF0_BAR_DATA_NO_DATA;
- 
--	hdmi_writeb(hdmi, val, HDMI_FC_AVICONF0);
-+	hdmi->write(hdmi, val, HDMI_FC_AVICONF0);
- 
- 	/* AVI Data Byte 2 -Set the Aspect Ratio */
- 	if (aspect_16_9) {
-@@ -1009,16 +908,16 @@ static void hdmi_config_AVI(struct imx_hdmi *hdmi)
- 	}
- 
- 	val = colorimetry | coded_ratio | act_ratio;
--	hdmi_writeb(hdmi, val, HDMI_FC_AVICONF1);
-+	hdmi->write(hdmi, val, HDMI_FC_AVICONF1);
- 
- 	/* AVI Data Byte 3 */
- 	val = HDMI_FC_AVICONF2_IT_CONTENT_NO_DATA | ext_colorimetry |
- 		HDMI_FC_AVICONF2_RGB_QUANT_DEFAULT |
- 		HDMI_FC_AVICONF2_SCALING_NONE;
--	hdmi_writeb(hdmi, val, HDMI_FC_AVICONF2);
-+	hdmi->write(hdmi, val, HDMI_FC_AVICONF2);
- 
- 	/* AVI Data Byte 4 */
--	hdmi_writeb(hdmi, hdmi->vic, HDMI_FC_AVIVID);
-+	hdmi->write(hdmi, hdmi->vic, HDMI_FC_AVIVID);
- 
- 	/* AVI Data Byte 5- set up input and output pixel repetition */
- 	val = (((hdmi->hdmi_data.video_mode.mpixelrepetitioninput + 1) <<
-@@ -1027,22 +926,22 @@ static void hdmi_config_AVI(struct imx_hdmi *hdmi)
- 		((hdmi->hdmi_data.video_mode.mpixelrepetitionoutput <<
- 		HDMI_FC_PRCONF_OUTPUT_PR_FACTOR_OFFSET) &
- 		HDMI_FC_PRCONF_OUTPUT_PR_FACTOR_MASK);
--	hdmi_writeb(hdmi, val, HDMI_FC_PRCONF);
-+	hdmi->write(hdmi, val, HDMI_FC_PRCONF);
- 
- 	/* IT Content and quantization range = don't care */
- 	val = HDMI_FC_AVICONF3_IT_CONTENT_TYPE_GRAPHICS |
- 		HDMI_FC_AVICONF3_QUANT_RANGE_LIMITED;
--	hdmi_writeb(hdmi, val, HDMI_FC_AVICONF3);
-+	hdmi->write(hdmi, val, HDMI_FC_AVICONF3);
- 
- 	/* AVI Data Bytes 6-13 */
--	hdmi_writeb(hdmi, 0, HDMI_FC_AVIETB0);
--	hdmi_writeb(hdmi, 0, HDMI_FC_AVIETB1);
--	hdmi_writeb(hdmi, 0, HDMI_FC_AVISBB0);
--	hdmi_writeb(hdmi, 0, HDMI_FC_AVISBB1);
--	hdmi_writeb(hdmi, 0, HDMI_FC_AVIELB0);
--	hdmi_writeb(hdmi, 0, HDMI_FC_AVIELB1);
--	hdmi_writeb(hdmi, 0, HDMI_FC_AVISRB0);
--	hdmi_writeb(hdmi, 0, HDMI_FC_AVISRB1);
-+	hdmi->write(hdmi, 0, HDMI_FC_AVIETB0);
-+	hdmi->write(hdmi, 0, HDMI_FC_AVIETB1);
-+	hdmi->write(hdmi, 0, HDMI_FC_AVISBB0);
-+	hdmi->write(hdmi, 0, HDMI_FC_AVISBB1);
-+	hdmi->write(hdmi, 0, HDMI_FC_AVIELB0);
-+	hdmi->write(hdmi, 0, HDMI_FC_AVIELB1);
-+	hdmi->write(hdmi, 0, HDMI_FC_AVISRB0);
-+	hdmi->write(hdmi, 0, HDMI_FC_AVISRB1);
- }
- 
- static void hdmi_av_composer(struct imx_hdmi *hdmi,
-@@ -1091,42 +990,42 @@ static void hdmi_av_composer(struct imx_hdmi *hdmi,
- 		HDMI_FC_INVIDCONF_DVI_MODEZ_DVI_MODE :
- 		HDMI_FC_INVIDCONF_DVI_MODEZ_HDMI_MODE);
- 
--	hdmi_writeb(hdmi, inv_val, HDMI_FC_INVIDCONF);
-+	hdmi->write(hdmi, inv_val, HDMI_FC_INVIDCONF);
- 
- 	/* Set up horizontal active pixel width */
--	hdmi_writeb(hdmi, mode->hdisplay >> 8, HDMI_FC_INHACTV1);
--	hdmi_writeb(hdmi, mode->hdisplay, HDMI_FC_INHACTV0);
-+	hdmi->write(hdmi, mode->hdisplay >> 8, HDMI_FC_INHACTV1);
-+	hdmi->write(hdmi, mode->hdisplay, HDMI_FC_INHACTV0);
- 
- 	/* Set up vertical active lines */
--	hdmi_writeb(hdmi, mode->vdisplay >> 8, HDMI_FC_INVACTV1);
--	hdmi_writeb(hdmi, mode->vdisplay, HDMI_FC_INVACTV0);
-+	hdmi->write(hdmi, mode->vdisplay >> 8, HDMI_FC_INVACTV1);
-+	hdmi->write(hdmi, mode->vdisplay, HDMI_FC_INVACTV0);
- 
- 	/* Set up horizontal blanking pixel region width */
- 	hblank = mode->htotal - mode->hdisplay;
--	hdmi_writeb(hdmi, hblank >> 8, HDMI_FC_INHBLANK1);
--	hdmi_writeb(hdmi, hblank, HDMI_FC_INHBLANK0);
-+	hdmi->write(hdmi, hblank >> 8, HDMI_FC_INHBLANK1);
-+	hdmi->write(hdmi, hblank, HDMI_FC_INHBLANK0);
- 
- 	/* Set up vertical blanking pixel region width */
- 	vblank = mode->vtotal - mode->vdisplay;
--	hdmi_writeb(hdmi, vblank, HDMI_FC_INVBLANK);
-+	hdmi->write(hdmi, vblank, HDMI_FC_INVBLANK);
- 
- 	/* Set up HSYNC active edge delay width (in pixel clks) */
- 	h_de_hs = mode->hsync_start - mode->hdisplay;
--	hdmi_writeb(hdmi, h_de_hs >> 8, HDMI_FC_HSYNCINDELAY1);
--	hdmi_writeb(hdmi, h_de_hs, HDMI_FC_HSYNCINDELAY0);
-+	hdmi->write(hdmi, h_de_hs >> 8, HDMI_FC_HSYNCINDELAY1);
-+	hdmi->write(hdmi, h_de_hs, HDMI_FC_HSYNCINDELAY0);
- 
- 	/* Set up VSYNC active edge delay (in lines) */
- 	v_de_vs = mode->vsync_start - mode->vdisplay;
--	hdmi_writeb(hdmi, v_de_vs, HDMI_FC_VSYNCINDELAY);
-+	hdmi->write(hdmi, v_de_vs, HDMI_FC_VSYNCINDELAY);
- 
- 	/* Set up HSYNC active pulse width (in pixel clks) */
- 	hsync_len = mode->hsync_end - mode->hsync_start;
--	hdmi_writeb(hdmi, hsync_len >> 8, HDMI_FC_HSYNCINWIDTH1);
--	hdmi_writeb(hdmi, hsync_len, HDMI_FC_HSYNCINWIDTH0);
-+	hdmi->write(hdmi, hsync_len >> 8, HDMI_FC_HSYNCINWIDTH1);
-+	hdmi->write(hdmi, hsync_len, HDMI_FC_HSYNCINWIDTH0);
- 
- 	/* Set up VSYNC active edge delay (in lines) */
- 	vsync_len = mode->vsync_end - mode->vsync_start;
--	hdmi_writeb(hdmi, vsync_len, HDMI_FC_VSYNCINWIDTH);
-+	hdmi->write(hdmi, vsync_len, HDMI_FC_VSYNCINWIDTH);
- }
- 
- static void imx_hdmi_phy_disable(struct imx_hdmi *hdmi)
-@@ -1146,33 +1045,33 @@ static void imx_hdmi_enable_video_path(struct imx_hdmi *hdmi)
- 	u8 clkdis;
- 
- 	/* control period minimum duration */
--	hdmi_writeb(hdmi, 12, HDMI_FC_CTRLDUR);
--	hdmi_writeb(hdmi, 32, HDMI_FC_EXCTRLDUR);
--	hdmi_writeb(hdmi, 1, HDMI_FC_EXCTRLSPAC);
-+	hdmi->write(hdmi, 12, HDMI_FC_CTRLDUR);
-+	hdmi->write(hdmi, 32, HDMI_FC_EXCTRLDUR);
-+	hdmi->write(hdmi, 1, HDMI_FC_EXCTRLSPAC);
- 
- 	/* Set to fill TMDS data channels */
--	hdmi_writeb(hdmi, 0x0B, HDMI_FC_CH0PREAM);
--	hdmi_writeb(hdmi, 0x16, HDMI_FC_CH1PREAM);
--	hdmi_writeb(hdmi, 0x21, HDMI_FC_CH2PREAM);
-+	hdmi->write(hdmi, 0x0B, HDMI_FC_CH0PREAM);
-+	hdmi->write(hdmi, 0x16, HDMI_FC_CH1PREAM);
-+	hdmi->write(hdmi, 0x21, HDMI_FC_CH2PREAM);
- 
- 	/* Enable pixel clock and tmds data path */
- 	clkdis = 0x7F;
- 	clkdis &= ~HDMI_MC_CLKDIS_PIXELCLK_DISABLE;
--	hdmi_writeb(hdmi, clkdis, HDMI_MC_CLKDIS);
-+	hdmi->write(hdmi, clkdis, HDMI_MC_CLKDIS);
- 
- 	clkdis &= ~HDMI_MC_CLKDIS_TMDSCLK_DISABLE;
--	hdmi_writeb(hdmi, clkdis, HDMI_MC_CLKDIS);
-+	hdmi->write(hdmi, clkdis, HDMI_MC_CLKDIS);
- 
- 	/* Enable csc path */
- 	if (is_color_space_conversion(hdmi)) {
- 		clkdis &= ~HDMI_MC_CLKDIS_CSCCLK_DISABLE;
--		hdmi_writeb(hdmi, clkdis, HDMI_MC_CLKDIS);
-+		hdmi->write(hdmi, clkdis, HDMI_MC_CLKDIS);
- 	}
- }
- 
- static void hdmi_enable_audio_clk(struct imx_hdmi *hdmi)
- {
--	hdmi_modb(hdmi, 0, HDMI_MC_CLKDIS_AUDCLK_DISABLE, HDMI_MC_CLKDIS);
-+	hdmi->mod(hdmi, 0, HDMI_MC_CLKDIS_AUDCLK_DISABLE, HDMI_MC_CLKDIS);
- }
- 
- /* Workaround to clear the overflow condition */
-@@ -1182,27 +1081,27 @@ static void imx_hdmi_clear_overflow(struct imx_hdmi *hdmi)
- 	u8 val;
- 
- 	/* TMDS software reset */
--	hdmi_writeb(hdmi, (u8)~HDMI_MC_SWRSTZ_TMDSSWRST_REQ, HDMI_MC_SWRSTZ);
-+	hdmi->write(hdmi, (u8)~HDMI_MC_SWRSTZ_TMDSSWRST_REQ, HDMI_MC_SWRSTZ);
- 
--	val = hdmi_readb(hdmi, HDMI_FC_INVIDCONF);
-+	val = hdmi->read(hdmi, HDMI_FC_INVIDCONF);
- 	if (hdmi->dev_type == IMX6DL_HDMI) {
--		hdmi_writeb(hdmi, val, HDMI_FC_INVIDCONF);
-+		hdmi->write(hdmi, val, HDMI_FC_INVIDCONF);
- 		return;
- 	}
- 
- 	for (count = 0; count < 4; count++)
--		hdmi_writeb(hdmi, val, HDMI_FC_INVIDCONF);
-+		hdmi->write(hdmi, val, HDMI_FC_INVIDCONF);
- }
- 
- static void hdmi_enable_overflow_interrupts(struct imx_hdmi *hdmi)
- {
--	hdmi_writeb(hdmi, 0, HDMI_FC_MASK2);
--	hdmi_writeb(hdmi, 0, HDMI_IH_MUTE_FC_STAT2);
-+	hdmi->write(hdmi, 0, HDMI_FC_MASK2);
-+	hdmi->write(hdmi, 0, HDMI_IH_MUTE_FC_STAT2);
- }
- 
- static void hdmi_disable_overflow_interrupts(struct imx_hdmi *hdmi)
- {
--	hdmi_writeb(hdmi, HDMI_IH_MUTE_FC_STAT2_OVERFLOW_MASK,
-+	hdmi->write(hdmi, HDMI_IH_MUTE_FC_STAT2_OVERFLOW_MASK,
- 		    HDMI_IH_MUTE_FC_STAT2);
- }
- 
-@@ -1223,21 +1122,21 @@ static int imx_hdmi_setup(struct imx_hdmi *hdmi, struct drm_display_mode *mode)
- 	}
- 
- 	if ((hdmi->vic == 6) || (hdmi->vic == 7) ||
--		(hdmi->vic == 21) || (hdmi->vic == 22) ||
--		(hdmi->vic == 2) || (hdmi->vic == 3) ||
--		(hdmi->vic == 17) || (hdmi->vic == 18))
-+	    (hdmi->vic == 21) || (hdmi->vic == 22) ||
-+	    (hdmi->vic == 2) || (hdmi->vic == 3) ||
-+	    (hdmi->vic == 17) || (hdmi->vic == 18))
- 		hdmi->hdmi_data.colorimetry = HDMI_COLORIMETRY_ITU_601;
- 	else
- 		hdmi->hdmi_data.colorimetry = HDMI_COLORIMETRY_ITU_709;
- 
- 	if ((hdmi->vic == 10) || (hdmi->vic == 11) ||
--		(hdmi->vic == 12) || (hdmi->vic == 13) ||
--		(hdmi->vic == 14) || (hdmi->vic == 15) ||
--		(hdmi->vic == 25) || (hdmi->vic == 26) ||
--		(hdmi->vic == 27) || (hdmi->vic == 28) ||
--		(hdmi->vic == 29) || (hdmi->vic == 30) ||
--		(hdmi->vic == 35) || (hdmi->vic == 36) ||
--		(hdmi->vic == 37) || (hdmi->vic == 38))
-+	    (hdmi->vic == 12) || (hdmi->vic == 13) ||
-+	    (hdmi->vic == 14) || (hdmi->vic == 15) ||
-+	    (hdmi->vic == 25) || (hdmi->vic == 26) ||
-+	    (hdmi->vic == 27) || (hdmi->vic == 28) ||
-+	    (hdmi->vic == 29) || (hdmi->vic == 30) ||
-+	    (hdmi->vic == 35) || (hdmi->vic == 36) ||
-+	    (hdmi->vic == 37) || (hdmi->vic == 38))
- 		hdmi->hdmi_data.video_mode.mpixelrepetitionoutput = 1;
- 	else
- 		hdmi->hdmi_data.video_mode.mpixelrepetitionoutput = 0;
-@@ -1266,9 +1165,9 @@ static int imx_hdmi_setup(struct imx_hdmi *hdmi, struct drm_display_mode *mode)
- 	imx_hdmi_enable_video_path(hdmi);
- 
- 	/* not for DVI mode */
--	if (hdmi->hdmi_data.video_mode.mdvi)
-+	if (hdmi->hdmi_data.video_mode.mdvi) {
- 		dev_dbg(hdmi->dev, "%s DVI mode\n", __func__);
--	else {
-+	} else {
- 		dev_dbg(hdmi->dev, "%s CEA mode\n", __func__);
- 
- 		/* HDMI Initialization Step E - Configure audio */
-@@ -1294,18 +1193,18 @@ static int imx_hdmi_setup(struct imx_hdmi *hdmi, struct drm_display_mode *mode)
- /* Wait until we are registered to enable interrupts */
- static int imx_hdmi_fb_registered(struct imx_hdmi *hdmi)
- {
--	hdmi_writeb(hdmi, HDMI_PHY_I2CM_INT_ADDR_DONE_POL,
-+	hdmi->write(hdmi, HDMI_PHY_I2CM_INT_ADDR_DONE_POL,
- 		    HDMI_PHY_I2CM_INT_ADDR);
- 
--	hdmi_writeb(hdmi, HDMI_PHY_I2CM_CTLINT_ADDR_NAC_POL |
-+	hdmi->write(hdmi, HDMI_PHY_I2CM_CTLINT_ADDR_NAC_POL |
- 		    HDMI_PHY_I2CM_CTLINT_ADDR_ARBITRATION_POL,
- 		    HDMI_PHY_I2CM_CTLINT_ADDR);
- 
- 	/* enable cable hot plug irq */
--	hdmi_writeb(hdmi, (u8)~HDMI_PHY_HPD, HDMI_PHY_MASK0);
-+	hdmi->write(hdmi, (u8)~HDMI_PHY_HPD, HDMI_PHY_MASK0);
- 
- 	/* Clear Hotplug interrupts */
--	hdmi_writeb(hdmi, HDMI_IH_PHY_STAT0_HPD, HDMI_IH_PHY_STAT0);
-+	hdmi->write(hdmi, HDMI_IH_PHY_STAT0_HPD, HDMI_IH_PHY_STAT0);
- 
- 	return 0;
- }
-@@ -1321,45 +1220,45 @@ static void initialize_hdmi_ih_mutes(struct imx_hdmi *hdmi)
- 	 *
- 	 * Disable top level interrupt bits in HDMI block
- 	 */
--	ih_mute = hdmi_readb(hdmi, HDMI_IH_MUTE) |
-+	ih_mute = hdmi->read(hdmi, HDMI_IH_MUTE) |
- 		  HDMI_IH_MUTE_MUTE_WAKEUP_INTERRUPT |
- 		  HDMI_IH_MUTE_MUTE_ALL_INTERRUPT;
- 
--	hdmi_writeb(hdmi, ih_mute, HDMI_IH_MUTE);
-+	hdmi->write(hdmi, ih_mute, HDMI_IH_MUTE);
- 
- 	/* by default mask all interrupts */
--	hdmi_writeb(hdmi, 0xff, HDMI_VP_MASK);
--	hdmi_writeb(hdmi, 0xff, HDMI_FC_MASK0);
--	hdmi_writeb(hdmi, 0xff, HDMI_FC_MASK1);
--	hdmi_writeb(hdmi, 0xff, HDMI_FC_MASK2);
--	hdmi_writeb(hdmi, 0xff, HDMI_PHY_MASK0);
--	hdmi_writeb(hdmi, 0xff, HDMI_PHY_I2CM_INT_ADDR);
--	hdmi_writeb(hdmi, 0xff, HDMI_PHY_I2CM_CTLINT_ADDR);
--	hdmi_writeb(hdmi, 0xff, HDMI_AUD_INT);
--	hdmi_writeb(hdmi, 0xff, HDMI_AUD_SPDIFINT);
--	hdmi_writeb(hdmi, 0xff, HDMI_AUD_HBR_MASK);
--	hdmi_writeb(hdmi, 0xff, HDMI_GP_MASK);
--	hdmi_writeb(hdmi, 0xff, HDMI_A_APIINTMSK);
--	hdmi_writeb(hdmi, 0xff, HDMI_CEC_MASK);
--	hdmi_writeb(hdmi, 0xff, HDMI_I2CM_INT);
--	hdmi_writeb(hdmi, 0xff, HDMI_I2CM_CTLINT);
-+	hdmi->write(hdmi, 0xff, HDMI_VP_MASK);
-+	hdmi->write(hdmi, 0xff, HDMI_FC_MASK0);
-+	hdmi->write(hdmi, 0xff, HDMI_FC_MASK1);
-+	hdmi->write(hdmi, 0xff, HDMI_FC_MASK2);
-+	hdmi->write(hdmi, 0xff, HDMI_PHY_MASK0);
-+	hdmi->write(hdmi, 0xff, HDMI_PHY_I2CM_INT_ADDR);
-+	hdmi->write(hdmi, 0xff, HDMI_PHY_I2CM_CTLINT_ADDR);
-+	hdmi->write(hdmi, 0xff, HDMI_AUD_INT);
-+	hdmi->write(hdmi, 0xff, HDMI_AUD_SPDIFINT);
-+	hdmi->write(hdmi, 0xff, HDMI_AUD_HBR_MASK);
-+	hdmi->write(hdmi, 0xff, HDMI_GP_MASK);
-+	hdmi->write(hdmi, 0xff, HDMI_A_APIINTMSK);
-+	hdmi->write(hdmi, 0xff, HDMI_CEC_MASK);
-+	hdmi->write(hdmi, 0xff, HDMI_I2CM_INT);
-+	hdmi->write(hdmi, 0xff, HDMI_I2CM_CTLINT);
- 
- 	/* Disable interrupts in the IH_MUTE_* registers */
--	hdmi_writeb(hdmi, 0xff, HDMI_IH_MUTE_FC_STAT0);
--	hdmi_writeb(hdmi, 0xff, HDMI_IH_MUTE_FC_STAT1);
--	hdmi_writeb(hdmi, 0xff, HDMI_IH_MUTE_FC_STAT2);
--	hdmi_writeb(hdmi, 0xff, HDMI_IH_MUTE_AS_STAT0);
--	hdmi_writeb(hdmi, 0xff, HDMI_IH_MUTE_PHY_STAT0);
--	hdmi_writeb(hdmi, 0xff, HDMI_IH_MUTE_I2CM_STAT0);
--	hdmi_writeb(hdmi, 0xff, HDMI_IH_MUTE_CEC_STAT0);
--	hdmi_writeb(hdmi, 0xff, HDMI_IH_MUTE_VP_STAT0);
--	hdmi_writeb(hdmi, 0xff, HDMI_IH_MUTE_I2CMPHY_STAT0);
--	hdmi_writeb(hdmi, 0xff, HDMI_IH_MUTE_AHBDMAAUD_STAT0);
-+	hdmi->write(hdmi, 0xff, HDMI_IH_MUTE_FC_STAT0);
-+	hdmi->write(hdmi, 0xff, HDMI_IH_MUTE_FC_STAT1);
-+	hdmi->write(hdmi, 0xff, HDMI_IH_MUTE_FC_STAT2);
-+	hdmi->write(hdmi, 0xff, HDMI_IH_MUTE_AS_STAT0);
-+	hdmi->write(hdmi, 0xff, HDMI_IH_MUTE_PHY_STAT0);
-+	hdmi->write(hdmi, 0xff, HDMI_IH_MUTE_I2CM_STAT0);
-+	hdmi->write(hdmi, 0xff, HDMI_IH_MUTE_CEC_STAT0);
-+	hdmi->write(hdmi, 0xff, HDMI_IH_MUTE_VP_STAT0);
-+	hdmi->write(hdmi, 0xff, HDMI_IH_MUTE_I2CMPHY_STAT0);
-+	hdmi->write(hdmi, 0xff, HDMI_IH_MUTE_AHBDMAAUD_STAT0);
- 
- 	/* Enable top level interrupt bits in HDMI block */
- 	ih_mute &= ~(HDMI_IH_MUTE_MUTE_WAKEUP_INTERRUPT |
- 		    HDMI_IH_MUTE_MUTE_ALL_INTERRUPT);
--	hdmi_writeb(hdmi, ih_mute, HDMI_IH_MUTE);
-+	hdmi->write(hdmi, ih_mute, HDMI_IH_MUTE);
- }
- 
- static void imx_hdmi_poweron(struct imx_hdmi *hdmi)
-@@ -1378,7 +1277,7 @@ static enum drm_connector_status imx_hdmi_connector_detect(struct drm_connector
- 	struct imx_hdmi *hdmi = container_of(connector, struct imx_hdmi,
- 					     connector);
- 
--	return hdmi_readb(hdmi, HDMI_PHY_STAT0) & HDMI_PHY_HPD ?
-+	return hdmi->read(hdmi, HDMI_PHY_STAT0) & HDMI_PHY_HPD ?
- 		connector_status_connected : connector_status_disconnected;
- }
- 
-@@ -1454,21 +1353,40 @@ static void imx_hdmi_encoder_prepare(struct drm_encoder *encoder)
- 	struct imx_hdmi *hdmi = container_of(encoder, struct imx_hdmi, encoder);
- 
- 	imx_hdmi_poweroff(hdmi);
--	imx_drm_panel_format(encoder, V4L2_PIX_FMT_RGB24);
-+
-+	if (hdmi->plat_data->encoder_prepare)
-+		hdmi->plat_data->encoder_prepare(&hdmi->connector, encoder);
- }
- 
- static void imx_hdmi_encoder_commit(struct drm_encoder *encoder)
- {
- 	struct imx_hdmi *hdmi = container_of(encoder, struct imx_hdmi, encoder);
--	int mux = imx_drm_encoder_get_mux_id(hdmi->dev->of_node, encoder);
- 
--	imx_hdmi_set_ipu_di_mux(hdmi, mux);
-+	if (hdmi->plat_data->set_crtc_mux)
-+		hdmi->plat_data->set_crtc_mux(hdmi->priv, encoder);
- 
- 	imx_hdmi_poweron(hdmi);
- }
- 
-+void imx_hdmi_connector_destroy(struct drm_connector *connector)
-+{
-+	drm_connector_unregister(connector);
-+	drm_connector_cleanup(connector);
-+}
-+
-+static int imx_hdmi_connector_mode_valid(struct drm_connector *connector,
-+					 struct drm_display_mode *mode)
-+{
-+	struct imx_hdmi *hdmi = container_of(connector, struct imx_hdmi,
-+					     connector);
-+	if (hdmi->plat_data->mode_valid)
-+		return hdmi->plat_data->mode_valid(connector, mode);
-+
-+	return MODE_OK;
-+}
-+
- static struct drm_encoder_funcs imx_hdmi_encoder_funcs = {
--	.destroy = imx_drm_encoder_destroy,
-+	.destroy = drm_encoder_cleanup,
- };
- 
- static struct drm_encoder_helper_funcs imx_hdmi_encoder_helper_funcs = {
-@@ -1484,11 +1402,12 @@ static struct drm_connector_funcs imx_hdmi_connector_funcs = {
- 	.dpms = drm_helper_connector_dpms,
- 	.fill_modes = drm_helper_probe_single_connector_modes,
- 	.detect = imx_hdmi_connector_detect,
--	.destroy = imx_drm_connector_destroy,
-+	.destroy = imx_hdmi_connector_destroy,
- };
- 
- static struct drm_connector_helper_funcs imx_hdmi_connector_helper_funcs = {
- 	.get_modes = imx_hdmi_connector_get_modes,
-+	.mode_valid = imx_hdmi_connector_mode_valid,
- 	.best_encoder = imx_hdmi_connector_best_encoder,
- };
- 
-@@ -1497,9 +1416,9 @@ static irqreturn_t imx_hdmi_hardirq(int irq, void *dev_id)
- 	struct imx_hdmi *hdmi = dev_id;
- 	u8 intr_stat;
- 
--	intr_stat = hdmi_readb(hdmi, HDMI_IH_PHY_STAT0);
-+	intr_stat = hdmi->read(hdmi, HDMI_IH_PHY_STAT0);
- 	if (intr_stat)
--		hdmi_writeb(hdmi, ~0, HDMI_IH_MUTE_PHY_STAT0);
-+		hdmi->write(hdmi, ~0, HDMI_IH_MUTE_PHY_STAT0);
- 
- 	return intr_stat ? IRQ_WAKE_THREAD : IRQ_NONE;
- }
-@@ -1510,21 +1429,21 @@ static irqreturn_t imx_hdmi_irq(int irq, void *dev_id)
- 	u8 intr_stat;
- 	u8 phy_int_pol;
- 
--	intr_stat = hdmi_readb(hdmi, HDMI_IH_PHY_STAT0);
-+	intr_stat = hdmi->read(hdmi, HDMI_IH_PHY_STAT0);
- 
--	phy_int_pol = hdmi_readb(hdmi, HDMI_PHY_POL0);
-+	phy_int_pol = hdmi->read(hdmi, HDMI_PHY_POL0);
- 
- 	if (intr_stat & HDMI_IH_PHY_STAT0_HPD) {
- 		if (phy_int_pol & HDMI_PHY_HPD) {
- 			dev_dbg(hdmi->dev, "EVENT=plugin\n");
- 
--			hdmi_modb(hdmi, 0, HDMI_PHY_HPD, HDMI_PHY_POL0);
-+			hdmi->mod(hdmi, 0, HDMI_PHY_HPD, HDMI_PHY_POL0);
- 
- 			imx_hdmi_poweron(hdmi);
- 		} else {
- 			dev_dbg(hdmi->dev, "EVENT=plugout\n");
- 
--			hdmi_modb(hdmi, HDMI_PHY_HPD, HDMI_PHY_HPD,
-+			hdmi->mod(hdmi, HDMI_PHY_HPD, HDMI_PHY_HPD,
- 				HDMI_PHY_POL0);
- 
- 			imx_hdmi_poweroff(hdmi);
-@@ -1532,20 +1451,18 @@ static irqreturn_t imx_hdmi_irq(int irq, void *dev_id)
- 		drm_helper_hpd_irq_event(hdmi->connector.dev);
- 	}
- 
--	hdmi_writeb(hdmi, intr_stat, HDMI_IH_PHY_STAT0);
--	hdmi_writeb(hdmi, ~HDMI_IH_PHY_STAT0_HPD, HDMI_IH_MUTE_PHY_STAT0);
-+	hdmi->write(hdmi, intr_stat, HDMI_IH_PHY_STAT0);
-+	hdmi->write(hdmi, ~HDMI_IH_PHY_STAT0_HPD, HDMI_IH_MUTE_PHY_STAT0);
- 
- 	return IRQ_HANDLED;
- }
- 
- static int imx_hdmi_register(struct drm_device *drm, struct imx_hdmi *hdmi)
- {
--	int ret;
-+	struct drm_encoder *encoder = &hdmi->encoder;
-+	struct device *dev = hdmi->dev;
- 
--	ret = imx_drm_encoder_parse_of(drm, &hdmi->encoder,
--				       hdmi->dev->of_node);
--	if (ret)
--		return ret;
-+	encoder->possible_crtcs = drm_of_find_possible_crtcs(drm, dev->of_node);
- 
- 	hdmi->connector.polled = DRM_CONNECTOR_POLL_HPD;
- 
-@@ -1554,7 +1471,7 @@ static int imx_hdmi_register(struct drm_device *drm, struct imx_hdmi *hdmi)
- 			 DRM_MODE_ENCODER_TMDS);
- 
- 	drm_connector_helper_add(&hdmi->connector,
--			&imx_hdmi_connector_helper_funcs);
-+				 &imx_hdmi_connector_helper_funcs);
- 	drm_connector_init(drm, &hdmi->connector, &imx_hdmi_connector_funcs,
- 			   DRM_MODE_CONNECTOR_HDMIA);
- 
-@@ -1565,55 +1482,47 @@ static int imx_hdmi_register(struct drm_device *drm, struct imx_hdmi *hdmi)
- 	return 0;
- }
- 
--static struct platform_device_id imx_hdmi_devtype[] = {
--	{
--		.name = "imx6q-hdmi",
--		.driver_data = IMX6Q_HDMI,
--	}, {
--		.name = "imx6dl-hdmi",
--		.driver_data = IMX6DL_HDMI,
--	}, { /* sentinel */ }
--};
--MODULE_DEVICE_TABLE(platform, imx_hdmi_devtype);
--
--static const struct of_device_id imx_hdmi_dt_ids[] = {
--{ .compatible = "fsl,imx6q-hdmi", .data = &imx_hdmi_devtype[IMX6Q_HDMI], },
--{ .compatible = "fsl,imx6dl-hdmi", .data = &imx_hdmi_devtype[IMX6DL_HDMI], },
--{ /* sentinel */ }
--};
--MODULE_DEVICE_TABLE(of, imx_hdmi_dt_ids);
--
- static int imx_hdmi_bind(struct device *dev, struct device *master, void *data)
- {
- 	struct platform_device *pdev = to_platform_device(dev);
--	const struct of_device_id *of_id =
--				of_match_device(imx_hdmi_dt_ids, dev);
-+	struct imx_hdmi *hdmi = platform_get_drvdata(pdev);
- 	struct drm_device *drm = data;
- 	struct device_node *np = dev->of_node;
- 	struct device_node *ddc_node;
--	struct imx_hdmi *hdmi;
- 	struct resource *iores;
- 	int ret, irq;
--
--	hdmi = devm_kzalloc(dev, sizeof(*hdmi), GFP_KERNEL);
--	if (!hdmi)
--		return -ENOMEM;
--
--	hdmi->dev = dev;
--	hdmi->sample_rate = 48000;
--	hdmi->ratio = 100;
--
--	if (of_id) {
--		const struct platform_device_id *device_id = of_id->data;
--
--		hdmi->dev_type = device_id->driver_data;
-+	u32 val;
-+
-+	if (!of_property_read_u32(np, "reg-io-width", &val)) {
-+		switch (val) {
-+		case 4:
-+			hdmi->write = hdmi_writel;
-+			hdmi->read = hdmi_readl;
-+			hdmi->mod = hdmi_modl;
-+			hdmi->mask_write = hdmi_mask_writel;
-+			break;
-+		default:
-+			hdmi->write = hdmi_writeb;
-+			hdmi->read = hdmi_readb;
-+			hdmi->mod = hdmi_modb;
-+			hdmi->mask_write = hdmi_mask_writeb;
-+			break;
-+		}
-+	} else {
-+		hdmi->write = hdmi_writeb;
-+		hdmi->read = hdmi_readb;
-+		hdmi->mod = hdmi_modb;
-+		hdmi->mask_write = hdmi_mask_writeb;
- 	}
- 
- 	ddc_node = of_parse_phandle(np, "ddc-i2c-bus", 0);
- 	if (ddc_node) {
- 		hdmi->ddc = of_find_i2c_adapter_by_node(ddc_node);
--		if (!hdmi->ddc)
-+		if (!hdmi->ddc) {
- 			dev_dbg(hdmi->dev, "failed to read ddc node\n");
-+			of_node_put(ddc_node);
-+			return -EPROBE_DEFER;
-+		}
- 
- 		of_node_put(ddc_node);
- 	} else {
-@@ -1635,47 +1544,15 @@ static int imx_hdmi_bind(struct device *dev, struct device *master, void *data)
- 	if (IS_ERR(hdmi->regs))
- 		return PTR_ERR(hdmi->regs);
- 
--	hdmi->regmap = syscon_regmap_lookup_by_phandle(np, "gpr");
--	if (IS_ERR(hdmi->regmap))
--		return PTR_ERR(hdmi->regmap);
--
--	hdmi->isfr_clk = devm_clk_get(hdmi->dev, "isfr");
--	if (IS_ERR(hdmi->isfr_clk)) {
--		ret = PTR_ERR(hdmi->isfr_clk);
--		dev_err(hdmi->dev,
--			"Unable to get HDMI isfr clk: %d\n", ret);
--		return ret;
--	}
--
--	ret = clk_prepare_enable(hdmi->isfr_clk);
--	if (ret) {
--		dev_err(hdmi->dev,
--			"Cannot enable HDMI isfr clock: %d\n", ret);
--		return ret;
--	}
--
--	hdmi->iahb_clk = devm_clk_get(hdmi->dev, "iahb");
--	if (IS_ERR(hdmi->iahb_clk)) {
--		ret = PTR_ERR(hdmi->iahb_clk);
--		dev_err(hdmi->dev,
--			"Unable to get HDMI iahb clk: %d\n", ret);
--		goto err_isfr;
--	}
--
--	ret = clk_prepare_enable(hdmi->iahb_clk);
--	if (ret) {
--		dev_err(hdmi->dev,
--			"Cannot enable HDMI iahb clock: %d\n", ret);
--		goto err_isfr;
--	}
--
-+	if (hdmi->plat_data->setup)
-+		hdmi->priv = hdmi->plat_data->setup(pdev);
- 	/* Product and revision IDs */
- 	dev_info(dev,
--		"Detected HDMI controller 0x%x:0x%x:0x%x:0x%x\n",
--		hdmi_readb(hdmi, HDMI_DESIGN_ID),
--		hdmi_readb(hdmi, HDMI_REVISION_ID),
--		hdmi_readb(hdmi, HDMI_PRODUCT_ID0),
--		hdmi_readb(hdmi, HDMI_PRODUCT_ID1));
-+		 "Detected HDMI controller 0x%x:0x%x:0x%x:0x%x\n",
-+		 hdmi->read(hdmi, HDMI_DESIGN_ID),
-+		 hdmi->read(hdmi, HDMI_REVISION_ID),
-+		 hdmi->read(hdmi, HDMI_PRODUCT_ID0),
-+		 hdmi->read(hdmi, HDMI_PRODUCT_ID1));
- 
- 	initialize_hdmi_ih_mutes(hdmi);
- 
-@@ -1689,32 +1566,25 @@ static int imx_hdmi_bind(struct device *dev, struct device *master, void *data)
- 	 * Configure registers related to HDMI interrupt
- 	 * generation before registering IRQ.
- 	 */
--	hdmi_writeb(hdmi, HDMI_PHY_HPD, HDMI_PHY_POL0);
-+	hdmi->write(hdmi, HDMI_PHY_HPD, HDMI_PHY_POL0);
- 
- 	/* Clear Hotplug interrupts */
--	hdmi_writeb(hdmi, HDMI_IH_PHY_STAT0_HPD, HDMI_IH_PHY_STAT0);
-+	hdmi->write(hdmi, HDMI_IH_PHY_STAT0_HPD, HDMI_IH_PHY_STAT0);
- 
- 	ret = imx_hdmi_fb_registered(hdmi);
- 	if (ret)
--		goto err_iahb;
-+		return ret;
- 
- 	ret = imx_hdmi_register(drm, hdmi);
- 	if (ret)
--		goto err_iahb;
-+		return ret;
- 
- 	/* Unmute interrupts */
--	hdmi_writeb(hdmi, ~HDMI_IH_PHY_STAT0_HPD, HDMI_IH_MUTE_PHY_STAT0);
-+	hdmi->write(hdmi, ~HDMI_IH_PHY_STAT0_HPD, HDMI_IH_MUTE_PHY_STAT0);
- 
- 	dev_set_drvdata(dev, hdmi);
- 
- 	return 0;
--
--err_iahb:
--	clk_disable_unprepare(hdmi->iahb_clk);
--err_isfr:
--	clk_disable_unprepare(hdmi->isfr_clk);
--
--	return ret;
- }
- 
- static void imx_hdmi_unbind(struct device *dev, struct device *master,
-@@ -1723,13 +1593,12 @@ static void imx_hdmi_unbind(struct device *dev, struct device *master,
- 	struct imx_hdmi *hdmi = dev_get_drvdata(dev);
- 
- 	/* Disable all interrupts */
--	hdmi_writeb(hdmi, ~0, HDMI_IH_MUTE_PHY_STAT0);
-+	hdmi->write(hdmi, ~0, HDMI_IH_MUTE_PHY_STAT0);
- 
- 	hdmi->connector.funcs->destroy(&hdmi->connector);
- 	hdmi->encoder.funcs->destroy(&hdmi->encoder);
--
--	clk_disable_unprepare(hdmi->iahb_clk);
--	clk_disable_unprepare(hdmi->isfr_clk);
-+	if (hdmi->plat_data->exit)
-+		hdmi->plat_data->exit(hdmi->priv);
- 	i2c_put_adapter(hdmi->ddc);
- }
- 
-@@ -1749,17 +1618,32 @@ static int imx_hdmi_platform_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static struct platform_driver imx_hdmi_driver = {
--	.probe  = imx_hdmi_platform_probe,
--	.remove = imx_hdmi_platform_remove,
--	.driver = {
--		.name = "imx-hdmi",
--		.owner = THIS_MODULE,
--		.of_match_table = imx_hdmi_dt_ids,
--	},
--};
-+int imx_hdmi_pltfm_register(struct platform_device *pdev,
-+			    const struct imx_hdmi_plat_data *plat_data)
-+{
-+	struct imx_hdmi *hdmi;
- 
--module_platform_driver(imx_hdmi_driver);
-+	hdmi = devm_kzalloc(&pdev->dev, sizeof(*hdmi), GFP_KERNEL);
-+	if (!hdmi)
-+		return -ENOMEM;
-+
-+	hdmi->plat_data = plat_data;
-+	hdmi->dev = &pdev->dev;
-+	hdmi->dev_type = plat_data->dev_type;
-+	hdmi->sample_rate = 48000;
-+	hdmi->ratio = 100;
-+
-+	platform_set_drvdata(pdev, hdmi);
-+
-+	return imx_hdmi_platform_probe(pdev);
-+}
-+EXPORT_SYMBOL_GPL(imx_hdmi_pltfm_register);
-+
-+int imx_hdmi_pltfm_unregister(struct platform_device *pdev)
-+{
-+	return imx_hdmi_platform_remove(pdev);
-+}
-+EXPORT_SYMBOL_GPL(imx_hdmi_pltfm_unregister);
- 
- MODULE_AUTHOR("Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>");
- MODULE_DESCRIPTION("i.MX6 HDMI transmitter driver");
-diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
-new file mode 100644
-index 0000000..e7e8285
---- /dev/null
-+++ b/include/drm/bridge/dw_hdmi.h
-@@ -0,0 +1,114 @@
-+/*
-+ * Copyright (C) 2011 Freescale Semiconductor, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#ifndef __DW_HDMI_H__
-+#define __DW_HDMI_H__
-+
-+#include <drm/drmP.h>
-+
-+#define HDMI_EDID_LEN           512
-+
-+enum {
-+	RES_8,
-+	RES_10,
-+	RES_12,
-+	RES_MAX,
-+};
-+
-+enum imx_hdmi_devtype {
-+	IMX6Q_HDMI,
-+	IMX6DL_HDMI,
-+};
-+
-+struct mpll_config {
-+	unsigned long mpixelclock;
-+	struct {
-+		u16 cpce;
-+		u16 gmp;
-+	} res[RES_MAX];
-+};
-+
-+struct curr_ctrl {
-+	unsigned long mpixelclock;
-+	u16 curr[RES_MAX];
-+};
-+
-+struct hdmi_vmode {
-+	bool mdvi;
-+	bool mhsyncpolarity;
-+	bool mvsyncpolarity;
-+	bool minterlaced;
-+	bool mdataenablepolarity;
-+
-+	unsigned int mpixelclock;
-+	unsigned int mpixelrepetitioninput;
-+	unsigned int mpixelrepetitionoutput;
-+};
-+
-+struct hdmi_data_info {
-+	unsigned int enc_in_format;
-+	unsigned int enc_out_format;
-+	unsigned int enc_color_depth;
-+	unsigned int colorimetry;
-+	unsigned int pix_repet_factor;
-+	unsigned int hdcp_enable;
-+	struct hdmi_vmode video_mode;
-+};
-+
-+
-+struct imx_hdmi {
-+	struct drm_connector connector;
-+	struct drm_encoder encoder;
-+
-+	enum imx_hdmi_devtype dev_type;
-+	struct device *dev;
-+
-+	struct hdmi_data_info hdmi_data;
-+	const struct imx_hdmi_plat_data *plat_data;
-+	void *priv;
-+
-+	int vic;
-+
-+	u8 edid[HDMI_EDID_LEN];
-+	bool cable_plugin;
-+
-+	bool phy_enabled;
-+	struct drm_display_mode previous_mode;
-+
-+	struct i2c_adapter *ddc;
-+	void __iomem *regs;
-+
-+	unsigned int sample_rate;
-+	int ratio;
-+
-+	void (*write)(struct imx_hdmi *hdmi, u32 val, int offset);
-+	u32 (*read)(struct imx_hdmi *hdmi, int offset);
-+	void (*mod)(struct imx_hdmi *hdmi, u32 data, u32 mask, unsigned reg);
-+	void (*mask_write)(struct imx_hdmi *hdmi, u32 data, unsigned int reg,
-+			      u32 shift, u32 mask);
-+};
-+
-+struct imx_hdmi_plat_data {
-+	void * (*setup)(struct platform_device *pdev);
-+	void (*exit)(void *priv);
-+	void (*set_crtc_mux)(void *priv, struct drm_encoder *encoder);
-+	void (*encoder_prepare)(struct drm_connector *connector,
-+				struct drm_encoder *encoder);
-+	enum drm_mode_status (*mode_valid)(struct drm_connector *connector,
-+					   struct drm_display_mode *mode);
-+	const struct mpll_config *mpll_cfg;
-+	const struct curr_ctrl *cur_ctr;
-+	enum imx_hdmi_devtype dev_type;
-+
-+};
-+
-+int imx_hdmi_pltfm_register(struct platform_device *pdev,
-+			    const struct imx_hdmi_plat_data *plat_data);
-+int imx_hdmi_pltfm_unregister(struct platform_device *pdev);
-+#endif /* __IMX_HDMI_H__ */
--- 
-1.9.1
+Conversly you store vref or grnd and never use them...
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> + * @dx: denominator slope to calculate the gain.
+> + * @vref: A/D word of the voltage reference used for the channel.
+> + * @gnd: A/D word of the ground reference used for the channel.
+> + *
+> + * Each ADC device has different offset and gain parameters which are
+> + * computed to calibrate the device.
+> + */
+> +struct vadc_linear_graph {
+> +	s32 dy;
+> +	s32 dx;
+> +	s32 vref;
+> +	s32 gnd;
+> +};
+> +
+> +/**
+> + * struct vadc_prescale_ratio - Represent scaling ratio for ADC input.
+> + * @num: the inverse numerator of the gain applied to the input channel.
+> + * @den: the inverse denominator of the gain applied to the input channel.
+> + */
+> +struct vadc_prescale_ratio {
+> +	u32 num;
+> +	u32 den;
+> +};
+> +
+> +/**
+> + * struct vadc_channel_prop - VADC channel property.
+> + * @channel: channel number, refer to the channel list.
+> + * @calibration: calibration type.
+> + * @decimation: sampling rate supported for the channel.
+> + * @prescale: channel scaling performed on the input signal.
+> + * @hw_settle_time: the time between AMUX being configured and the
+> + *	start of conversion.
+> + * @avg_samples: ability to provide single result from the ADC
+> + *	that is an average of multiple measurements.
+> + */
+> +struct vadc_channel_prop {
+> +	unsigned int channel;
+> +	enum vadc_calibration calibration;
+> +	unsigned int decimation;
+> +	unsigned int prescale;
+> +	unsigned int hw_settle_time;
+> +	unsigned int avg_samples;
+> +};
+> +
+> +/**
+> + * struct vadc_priv - VADC private structure.
+> + * @regmap: pointer to struct regmap.
+> + * @dev: pointer to struct device.
+> + * @base: base address for the ADC peripheral.
+> + * @nchannels: number of VADC channels.
+> + * @chan_props: array of VADC channel properties.
+> + * @iio_chans: array of IIO channels specification.
+> + * @are_ref_measured: are reference points measured.
+> + * @poll_eoc: use polling instead of interrupt.
+> + * @complete: VADC result notification after interrupt is received.
+> + * @graph: store parameters for calibration.
+> + */
+> +struct vadc_priv {
+> +	struct regmap		 *regmap;
+> +	struct device		 *dev;
+> +	u16			 base;
+> +	unsigned int		 nchannels;
+> +	struct vadc_channel_prop *chan_props;
+> +	struct iio_chan_spec	 *iio_chans;
+> +	bool			 are_ref_measured;
+> +	bool			 poll_eoc;
+> +	struct completion	 complete;
+> +	struct vadc_linear_graph graph[2];
+> +};
+> +
+> +static const struct vadc_prescale_ratio vadc_prescale_ratios[] = {
+> +	{.num =  1, .den =  1},
+> +	{.num =  1, .den =  3},
+> +	{.num =  1, .den =  4},
+> +	{.num =  1, .den =  6},
+> +	{.num =  1, .den = 20},
+> +	{.num =  1, .den =  8},
+> +	{.num = 10, .den = 81},
+> +	{.num =  1, .den = 10}
+> +};
+> +
+> +static int vadc_read(struct vadc_priv *vadc, u16 offset, u8 *data)
+> +{
+> +	return regmap_bulk_read(vadc->regmap, vadc->base + offset, data, 1);
+> +}
+> +
+> +static int vadc_write(struct vadc_priv *vadc, u16 offset, u8 data)
+> +{
+> +	return regmap_write(vadc->regmap, vadc->base + offset, data);
+> +}
+> +
+> +static int vadc_reset(struct vadc_priv *vadc)
+> +{
+> +	u8 data;
+> +	int ret;
+> +
+> +	ret = vadc_write(vadc, VADC_ACCESS, VADC_ACCESS_DATA);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = vadc_read(vadc, VADC_PERH_RESET_CTL3, &data);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = vadc_write(vadc, VADC_ACCESS, VADC_ACCESS_DATA);
+> +	if (ret)
+> +		return ret;
+> +
+> +	data |= VADC_FOLLOW_WARM_RB;
+> +
+> +	return vadc_write(vadc, VADC_PERH_RESET_CTL3, data);
+> +}
+> +
+> +static int vadc_set_state(struct vadc_priv *vadc, bool state)
+> +{
+> +	return vadc_write(vadc, VADC_EN_CTL1, state ? VADC_EN_CTL1_SET : 0);
+> +}
+> +
+> +static void vadc_show_status(struct vadc_priv *vadc)
+> +{
+> +	u8 mode, sta1, chan, dig, en, req;
+> +	int ret;
+> +
+> +	ret = vadc_read(vadc, VADC_MODE_CTL, &mode);
+> +	if (ret)
+> +		return;
+> +
+> +	ret = vadc_read(vadc, VADC_ADC_DIG_PARAM, &dig);
+> +	if (ret)
+> +		return;
+> +
+> +	ret = vadc_read(vadc, VADC_ADC_CH_SEL_CTL, &chan);
+> +	if (ret)
+> +		return;
+> +
+> +	ret = vadc_read(vadc, VADC_CONV_REQ, &req);
+> +	if (ret)
+> +		return;
+> +
+> +	ret = vadc_read(vadc, VADC_STATUS1, &sta1);
+> +	if (ret)
+> +		return;
+> +
+> +	ret = vadc_read(vadc, VADC_EN_CTL1, &en);
+> +	if (ret)
+> +		return;
+> +
+> +	dev_err(vadc->dev,
+> +		"mode:%02x en:%02x chan:%02x dig:%02x req:%02x sta1:%02x\n",
+> +		mode, en, chan, dig, req, sta1);
+> +}
+> +
+> +static int vadc_configure(struct vadc_priv *vadc,
+> +			  struct vadc_channel_prop *prop)
+> +{
+> +	u8 decimation, mode_ctrl;
+> +	int ret;
+> +
+> +	/* Mode selection */
+> +	mode_ctrl = (VADC_OP_MODE_NORMAL << VADC_OP_MODE_SHIFT) |
+> +		     VADC_ADC_TRIM_EN | VADC_AMUX_TRIM_EN;
+> +	ret = vadc_write(vadc, VADC_MODE_CTL, mode_ctrl);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Channel selection */
+> +	ret = vadc_write(vadc, VADC_ADC_CH_SEL_CTL, prop->channel);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Digital parameter setup */
+> +	decimation = prop->decimation << VADC_ADC_DIG_DEC_RATIO_SEL_SHIFT;
+> +	ret = vadc_write(vadc, VADC_ADC_DIG_PARAM, decimation);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* HW settle time delay */
+> +	ret = vadc_write(vadc, VADC_HW_SETTLE_DELAY, prop->hw_settle_time);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = vadc_write(vadc, VADC_FAST_AVG_CTL, prop->avg_samples);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (prop->avg_samples)
+> +		ret = vadc_write(vadc, VADC_FAST_AVG_EN, VADC_FAST_AVG_EN_SET);
+> +	else
+> +		ret = vadc_write(vadc, VADC_FAST_AVG_EN, 0);
+> +
+> +	return ret;
+> +}
+> +
+> +static int vadc_poll_wait_eoc(struct vadc_priv *vadc, unsigned int interval_us)
+> +{
+> +	unsigned int count, retry;
+> +	u8 sta1;
+> +	int ret;
+> +
+> +	retry = interval_us / VADC_CONV_TIME_MIN_US;
+> +
+> +	for (count = 0; count < retry; count++) {
+> +		ret = vadc_read(vadc, VADC_STATUS1, &sta1);
+> +		if (ret)
+> +			return ret;
+> +
+> +		sta1 &= VADC_STATUS1_REQ_STS_EOC_MASK;
+> +		if (sta1 == VADC_STATUS1_EOC)
+> +			return 0;
+> +
+> +		usleep_range(VADC_CONV_TIME_MIN_US, VADC_CONV_TIME_MAX_US);
+> +	}
+> +
+> +	vadc_show_status(vadc);
+> +
+> +	return -ETIMEDOUT;
+> +}
+> +
+> +static int vadc_read_result(struct vadc_priv *vadc, u16 *data)
+> +{
+> +	int ret;
+> +
+> +	ret = regmap_bulk_read(vadc->regmap, vadc->base + VADC_DATA, data, 2);
+> +	if (ret)
+> +		return ret;
+> +
+> +	*data = clamp_t(u16, *data, VADC_MIN_ADC_CODE, VADC_MAX_ADC_CODE);
+utter nitpick.  A blank line here would be perfect ;)
+> +	return 0;
+> +}
+> +
+> +static struct vadc_channel_prop *vadc_get_channel(struct vadc_priv *vadc,
+> +						  unsigned int num)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < vadc->nchannels; i++)
+> +		if (vadc->chan_props[i].channel == num)
+> +			return &vadc->chan_props[i];
+> +
+> +	dev_dbg(vadc->dev, "no such channel %02x\n", num);
+> +
+> +	return NULL;
+> +}
+> +
+> +static int vadc_do_conversion(struct vadc_priv *vadc,
+> +			      struct vadc_channel_prop *prop, u16 *data)
+> +{
+> +	unsigned int timeout;
+> +	int ret;
+> +
+> +	ret = vadc_configure(vadc, prop);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!vadc->poll_eoc)
+> +		reinit_completion(&vadc->complete);
+> +
+> +	ret = vadc_set_state(vadc, true);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = vadc_write(vadc, VADC_CONV_REQ, VADC_CONV_REQ_SET);
+> +	if (ret)
+> +		goto err_disable;
+> +
+> +	timeout = BIT(prop->avg_samples) * VADC_CONV_TIME_MIN_US * 2;
+> +
+> +	if (vadc->poll_eoc) {
+> +		ret = vadc_poll_wait_eoc(vadc, timeout);
+> +	} else {
+> +		ret = wait_for_completion_timeout(&vadc->complete, timeout);
+> +		if (!ret) {
+> +			ret = -ETIMEDOUT;
+> +			goto err_disable;
+> +		}
+> +
+> +		/* Double check conversion status */
+> +		ret = vadc_poll_wait_eoc(vadc, VADC_CONV_TIME_MIN_US);
+> +		if (ret)
+> +			goto err_disable;
+> +	}
+> +
+> +	ret = vadc_read_result(vadc, data);
+> +
+> +err_disable:
+> +	vadc_set_state(vadc, false);
+> +	if (ret)
+> +		dev_err(vadc->dev, "conversion failed\n");
+> +
+> +	return ret;
+> +}
+> +
+> +static int vadc_measure_ref_points(struct vadc_priv *vadc)
+> +{
+> +	struct vadc_channel_prop *prop;
+> +	u16 read_1, read_2;
+> +	int ret;
+> +
+> +	vadc->graph[VADC_CALIB_RATIOMETRIC].dx = VADC_RATIOMETRIC_RANGE_UV;
+> +	vadc->graph[VADC_CALIB_ABSOLUTE].dx = VADC_ABSOLUTE_RANGE_UV;
+> +
+> +	prop = vadc_get_channel(vadc, VADC_REF_1250MV);
+> +	ret = vadc_do_conversion(vadc, prop, &read_1);
+> +	if (ret)
+> +		goto err;
+> +
+> +	/* Try with buffered 625mV channel first */
+> +	prop = vadc_get_channel(vadc, VADC_SPARE1);
+> +	if (!prop)
+> +		prop = vadc_get_channel(vadc, VADC_REF_625MV);
+> +
+> +	ret = vadc_do_conversion(vadc, prop, &read_2);
+> +	if (ret)
+> +		goto err;
+> +
+> +	if (read_1 == read_2) {
+> +		ret = -EINVAL;
+> +		goto err;
+> +	}
+> +
+> +	vadc->graph[VADC_CALIB_ABSOLUTE].dy = read_1 - read_2;
+> +	vadc->graph[VADC_CALIB_ABSOLUTE].vref = read_1;
+> +	vadc->graph[VADC_CALIB_ABSOLUTE].gnd = read_2;
+> +
+> +	/* Ratiometric calibration */
+> +	prop = vadc_get_channel(vadc, VADC_VDD_VADC);
+> +	ret = vadc_do_conversion(vadc, prop, &read_1);
+> +	if (ret)
+> +		goto err;
+> +
+> +	prop = vadc_get_channel(vadc, VADC_GND_REF);
+> +	ret = vadc_do_conversion(vadc, prop, &read_2);
+> +	if (ret)
+> +		goto err;
+> +
+> +	if (read_1 == read_2) {
+> +		ret = -EINVAL;
+> +		goto err;
+> +	}
+> +
+> +	vadc->graph[VADC_CALIB_RATIOMETRIC].dy = read_1 - read_2;
+> +	vadc->graph[VADC_CALIB_RATIOMETRIC].vref = read_1;
+> +	vadc->graph[VADC_CALIB_RATIOMETRIC].gnd = read_2;
+> +err:
+> +	if (ret)
+> +		dev_err(vadc->dev, "measure reference points failed\n");
+> +
+> +	return ret;
+> +}
+> +
+> +static s32 vadc_calibrate(struct vadc_priv *vadc,
+> +			  const struct vadc_channel_prop *prop, u16 adc_code)
+> +{
+> +	const struct vadc_prescale_ratio *prescale;
+> +	s32 voltage;
+> +
+> +	voltage = adc_code - vadc->graph[prop->calibration].gnd;
+> +	voltage *= vadc->graph[prop->calibration].dx;
+> +	voltage = voltage / vadc->graph[prop->calibration].dy;
+> +
+> +	if (prop->calibration == VADC_CALIB_ABSOLUTE)
+> +		voltage += vadc->graph[prop->calibration].dx;
+> +
+> +	if (voltage < 0)
+> +		voltage = 0;
+> +
+> +	prescale = &vadc_prescale_ratios[prop->prescale];
+> +
+> +	voltage = voltage * prescale->den;
+> +
+> +	return voltage / prescale->num;
+> +}
+> +
+> +static int vadc_decimation_from_dt(u32 value)
+> +{
+> +	if (!is_power_of_2(value) || value < VADC_DECIMATION_MIN ||
+> +	    value > VADC_DECIMATION_MAX)
+> +		return -EINVAL;
+> +
+> +	return __ffs64(value / VADC_DECIMATION_MIN);
+> +}
+> +
+> +static int vadc_prescaling_from_dt(u32 num, u32 den)
+> +{
+> +	unsigned int pre;
+> +
+> +	for (pre = 0; pre < ARRAY_SIZE(vadc_prescale_ratios); pre++)
+> +		if (vadc_prescale_ratios[pre].num == num &&
+> +		    vadc_prescale_ratios[pre].den == den)
+> +			break;
+> +
+> +	if (pre == ARRAY_SIZE(vadc_prescale_ratios))
+> +		return -EINVAL;
+> +
+> +	return pre;
+> +}
+> +
+> +static int vadc_hw_settle_time_from_dt(u32 value)
+> +{
+> +	if ((value <= 1000 && value % 100) || (value > 1000 && value % 2000))
+> +		return -EINVAL;
+> +
+> +	if (value <= 1000)
+> +		value /= 100;
+> +	else
+> +		value = value / 2000 + 10;
+> +
+> +	return value;
+> +}
+> +
+> +static int vadc_avg_samples_from_dt(u32 value)
+> +{
+> +	if (!is_power_of_2(value) || value > VADC_AVG_SAMPLES_MAX)
+> +		return -EINVAL;
+> +
+> +	return __ffs64(value);
+> +}
+> +
+> +static int vadc_read_raw(struct iio_dev *indio_dev,
+> +			 struct iio_chan_spec const *chan, int *val, int *val2,
+> +			 long mask)
+> +{
+> +	struct vadc_priv *vadc = iio_priv(indio_dev);
+> +	struct vadc_channel_prop *prop;
+> +	u16 adc_code;
+> +	int ret;
+> +
+> +	if (!vadc->are_ref_measured) {
+> +		ret = vadc_measure_ref_points(vadc);
+> +		if (ret)
+> +			return ret;
+> +
+> +		vadc->are_ref_measured = true;
+> +	}
+> +
+> +	if (mask == IIO_CHAN_INFO_PROCESSED || mask == IIO_CHAN_INFO_RAW) {
+> +		prop = &vadc->chan_props[chan->address];
+> +		ret = vadc_do_conversion(vadc, prop, &adc_code);
+> +		if (ret)
+> +			return ret;
+> +
+> +		*val = vadc_calibrate(vadc, prop, adc_code);
+> +	}
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_PROCESSED:
+> +		if (chan->type != IIO_TEMP && chan->channel != VADC_DIE_TEMP)
+> +			return -EINVAL;
+> +
+> +		/* 2mV/K, return milli Celsius */
+> +		*val /= 2;
+> +		*val -= KELVINMIL_CELSIUSMIL;
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_RAW:
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		*val = 0;
+> +		*val2 = 1000;
+> +		return IIO_VAL_INT_PLUS_MICRO;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int vadc_of_xlate(struct iio_dev *indio_dev,
+> +			 const struct of_phandle_args *iiospec)
+> +{
+> +	struct vadc_priv *vadc = iio_priv(indio_dev);
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < vadc->nchannels; i++)
+> +		if (vadc->iio_chans[i].channel == iiospec->args[0])
+> +			return i;
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static const struct iio_info vadc_info = {
+> +	.read_raw = vadc_read_raw,
+> +	.of_xlate = vadc_of_xlate,
+> +	.driver_module = THIS_MODULE,
+> +};
+> +
+> +struct vadc_channels {
+> +	const char *datasheet_name;
+> +	unsigned int prescale_index;
+> +	enum iio_chan_type type;
+> +	long info_mask;
+> +};
+> +
+> +#define VADC_CHAN(_dname, _type, _mask, _pre)				\
+> +	[VADC_##_dname] = {						\
+> +		.datasheet_name = __stringify(_dname),			\
+> +		.prescale_index = _pre,					\
+> +		.type = _type,						\
+> +		.info_mask = _mask					\
+> +	},								\
+> +
+> +#define VADC_CHAN_TEMP(_dname, _pre)					\
+> +	VADC_CHAN(_dname, IIO_TEMP, BIT(IIO_CHAN_INFO_PROCESSED), _pre)	\
+> +
+> +#define VADC_CHAN_VOLT(_dname, _pre)					\
+> +	VADC_CHAN(_dname, IIO_VOLTAGE,					\
+> +		  BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE),	\
+> +		  _pre)							\
+> +
+> +/*
+> + * The array represents all possible ADC channels found in the supported PMICs.
+> + * Every index in the array is equal to the channel number per datasheet. The
+> + * gaps in the array should be treated as reserved channels.
+> + */
+> +static const struct vadc_channels vadc_chans[] = {
+> +	VADC_CHAN_VOLT(USBIN, 4)
+> +	VADC_CHAN_VOLT(DCIN, 4)
+> +	VADC_CHAN_VOLT(VCHG_SNS, 3)
+> +	VADC_CHAN_VOLT(SPARE1_03, 1)
+> +	VADC_CHAN_VOLT(USB_ID_MV, 1)
+> +	VADC_CHAN_VOLT(VCOIN, 1)
+> +	VADC_CHAN_VOLT(VBAT_SNS, 1)
+> +	VADC_CHAN_VOLT(VSYS, 1)
+> +	VADC_CHAN_TEMP(DIE_TEMP, 0)
+> +	VADC_CHAN_VOLT(REF_625MV, 0)
+> +	VADC_CHAN_VOLT(REF_1250MV, 0)
+> +	VADC_CHAN_VOLT(CHG_TEMP, 0)
+> +	VADC_CHAN_VOLT(SPARE1, 0)
+> +	VADC_CHAN_VOLT(SPARE2, 0)
+> +	VADC_CHAN_VOLT(GND_REF, 0)
+> +	VADC_CHAN_VOLT(VDD_VADC, 0)
+> +
+> +	VADC_CHAN_VOLT(P_MUX1_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX2_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX3_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX4_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX5_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX6_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX7_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX8_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX9_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX10_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX11_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX12_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX13_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX14_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX15_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX16_1_1, 0)
+> +
+> +	VADC_CHAN_VOLT(P_MUX1_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX2_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX3_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX4_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX5_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX6_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX7_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX8_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX9_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX10_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX11_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX12_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX13_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX14_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX15_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX16_1_3, 1)
+> +
+> +	VADC_CHAN_VOLT(LR_MUX1_BAT_THERM, 0)
+> +	VADC_CHAN_VOLT(LR_MUX2_BAT_ID, 0)
+> +	VADC_CHAN_VOLT(LR_MUX3_XO_THERM, 0)
+> +	VADC_CHAN_VOLT(LR_MUX4_AMUX_THM1, 0)
+> +	VADC_CHAN_VOLT(LR_MUX5_AMUX_THM2, 0)
+> +	VADC_CHAN_VOLT(LR_MUX6_AMUX_THM3, 0)
+> +	VADC_CHAN_VOLT(LR_MUX7_HW_ID, 0)
+> +	VADC_CHAN_VOLT(LR_MUX8_AMUX_THM4, 0)
+> +	VADC_CHAN_VOLT(LR_MUX9_AMUX_THM5, 0)
+> +	VADC_CHAN_VOLT(LR_MUX10_USB_ID, 0)
+> +	VADC_CHAN_VOLT(AMUX_PU1, 0)
+> +	VADC_CHAN_VOLT(AMUX_PU2, 0)
+> +	VADC_CHAN_VOLT(LR_MUX3_BUF_XO_THERM, 0)
+> +
+> +	VADC_CHAN_VOLT(LR_MUX1_PU1_BAT_THERM, 0)
+> +	VADC_CHAN_VOLT(LR_MUX2_PU1_BAT_ID, 0)
+> +	VADC_CHAN_VOLT(LR_MUX3_PU1_XO_THERM, 0)
+> +	VADC_CHAN_VOLT(LR_MUX4_PU1_AMUX_THM1, 0)
+> +	VADC_CHAN_VOLT(LR_MUX5_PU1_AMUX_THM2, 0)
+> +	VADC_CHAN_VOLT(LR_MUX6_PU1_AMUX_THM3, 0)
+> +	VADC_CHAN_VOLT(LR_MUX7_PU1_AMUX_HW_ID, 0)
+> +	VADC_CHAN_VOLT(LR_MUX8_PU1_AMUX_THM4, 0)
+> +	VADC_CHAN_VOLT(LR_MUX9_PU1_AMUX_THM5, 0)
+> +	VADC_CHAN_VOLT(LR_MUX10_PU1_AMUX_USB_ID, 0)
+> +	VADC_CHAN_VOLT(LR_MUX3_BUF_PU1_XO_THERM, 0)
+> +
+> +	VADC_CHAN_VOLT(LR_MUX1_PU2_BAT_THERM, 0)
+> +	VADC_CHAN_VOLT(LR_MUX2_PU2_BAT_ID, 0)
+> +	VADC_CHAN_VOLT(LR_MUX3_PU2_XO_THERM, 0)
+> +	VADC_CHAN_VOLT(LR_MUX4_PU2_AMUX_THM1, 0)
+> +	VADC_CHAN_VOLT(LR_MUX5_PU2_AMUX_THM2, 0)
+> +	VADC_CHAN_VOLT(LR_MUX6_PU2_AMUX_THM3, 0)
+> +	VADC_CHAN_VOLT(LR_MUX7_PU2_AMUX_HW_ID, 0)
+> +	VADC_CHAN_VOLT(LR_MUX8_PU2_AMUX_THM4, 0)
+> +	VADC_CHAN_VOLT(LR_MUX9_PU2_AMUX_THM5, 0)
+> +	VADC_CHAN_VOLT(LR_MUX10_PU2_AMUX_USB_ID, 0)
+> +	VADC_CHAN_VOLT(LR_MUX3_BUF_PU2_XO_THERM, 0)
+> +
+> +	VADC_CHAN_VOLT(LR_MUX1_PU1_PU2_BAT_THERM, 0)
+> +	VADC_CHAN_VOLT(LR_MUX2_PU1_PU2_BAT_ID, 0)
+> +	VADC_CHAN_VOLT(LR_MUX3_PU1_PU2_XO_THERM, 0)
+> +	VADC_CHAN_VOLT(LR_MUX4_PU1_PU2_AMUX_THM1, 0)
+> +	VADC_CHAN_VOLT(LR_MUX5_PU1_PU2_AMUX_THM2, 0)
+> +	VADC_CHAN_VOLT(LR_MUX6_PU1_PU2_AMUX_THM3, 0)
+> +	VADC_CHAN_VOLT(LR_MUX7_PU1_PU2_AMUX_HW_ID, 0)
+> +	VADC_CHAN_VOLT(LR_MUX8_PU1_PU2_AMUX_THM4, 0)
+> +	VADC_CHAN_VOLT(LR_MUX9_PU1_PU2_AMUX_THM5, 0)
+> +	VADC_CHAN_VOLT(LR_MUX10_PU1_PU2_AMUX_USB_ID, 0)
+> +	VADC_CHAN_VOLT(LR_MUX3_BUF_PU1_PU2_XO_THERM, 0)
+> +};
+> +
+> +static int vadc_get_dt_channel_data(struct device *dev,
+> +				    struct vadc_channel_prop *prop,
+> +				    struct device_node *node)
+> +{
+> +	const char *name = node->name;
+> +	u32 chan, value, varr[2];
+> +	int ret;
+> +
+> +	ret = of_property_read_u32(node, "reg", &chan);
+> +	if (ret) {
+> +		dev_err(dev, "invalid channel number %s\n", name);
+> +		return ret;
+> +	}
+> +
+> +	if (chan > VADC_CHAN_MAX || chan < VADC_CHAN_MIN) {
+> +		dev_err(dev, "%s invalid channel number %d\n", name, chan);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* the channel has DT description */
+> +	prop->channel = chan;
+> +
+> +	ret = of_property_read_u32(node, "qcom,decimation", &value);
+> +	if (!ret) {
+> +		ret = vadc_decimation_from_dt(value);
+> +		if (ret < 0) {
+> +			dev_err(dev, "%02x invalid decimation %d\n",
+> +				chan, value);
+> +			return ret;
+> +		}
+> +		prop->decimation = ret;
+> +	} else {
+> +		prop->decimation = VADC_DEF_DECIMATION;
+> +	}
+> +
+> +	ret = of_property_read_u32_array(node, "qcom,pre-scaling", varr, 2);
+> +	if (!ret) {
+> +		ret = vadc_prescaling_from_dt(varr[0], varr[1]);
+> +		if (ret < 0) {
+> +			dev_err(dev, "%02x invalid pre-scaling <%d %d>\n",
+> +				chan, varr[0], varr[1]);
+> +			return ret;
+> +		}
+> +		prop->prescale = ret;
+> +	} else {
+> +		prop->prescale = vadc_chans[prop->channel].prescale_index;
+> +	}
+> +
+> +	ret = of_property_read_u32(node, "qcom,hw-settle-time", &value);
+> +	if (!ret) {
+> +		ret = vadc_hw_settle_time_from_dt(value);
+> +		if (ret < 0) {
+> +			dev_err(dev, "%02x invalid hw-settle-time %d us\n",
+> +				chan, value);
+> +			return ret;
+> +		}
+> +		prop->hw_settle_time = ret;
+> +	} else {
+> +		prop->hw_settle_time = VADC_DEF_HW_SETTLE_TIME;
+> +	}
+> +
+> +	ret = of_property_read_u32(node, "qcom,avg-samples", &value);
+> +	if (!ret) {
+> +		ret = vadc_avg_samples_from_dt(value);
+> +		if (ret < 0) {
+> +			dev_err(dev, "%02x invalid avg-samples %d\n",
+> +				chan, value);
+> +			return ret;
+> +		}
+> +		prop->avg_samples = ret;
+> +	} else {
+> +		prop->avg_samples = VADC_DEF_AVG_SAMPLES;
+> +	}
+> +
+> +	if (of_property_read_bool(node, "qcom,ratiometric"))
+> +		prop->calibration = VADC_CALIB_RATIOMETRIC;
+> +	else
+> +		prop->calibration = VADC_CALIB_ABSOLUTE;
+> +
+> +	dev_dbg(dev, "%02x name %s\n", chan, name);
+> +
+> +	return 0;
+> +}
+> +
+> +static int vadc_get_dt_data(struct vadc_priv *vadc, struct device_node *node)
+> +{
+> +	const struct vadc_channels *vadc_chan;
+> +	struct iio_chan_spec *iio_chan;
+> +	struct vadc_channel_prop prop;
+> +	struct device_node *child;
+> +	unsigned int index = 0;
+> +	int ret;
+> +
+> +	vadc->nchannels = of_get_available_child_count(node);
+> +	if (!vadc->nchannels)
+> +		return -EINVAL;
+> +
+> +	vadc->iio_chans = devm_kcalloc(vadc->dev, vadc->nchannels,
+> +				       sizeof(*vadc->iio_chans), GFP_KERNEL);
+> +	if (!vadc->iio_chans)
+> +		return -ENOMEM;
+> +
+> +	vadc->chan_props = devm_kcalloc(vadc->dev, vadc->nchannels,
+> +					sizeof(*vadc->chan_props), GFP_KERNEL);
+> +	if (!vadc->chan_props)
+> +		return -ENOMEM;
+> +
+> +	iio_chan = vadc->iio_chans;
+> +
+> +	for_each_available_child_of_node(node, child) {
+> +		ret = vadc_get_dt_channel_data(vadc->dev, &prop, child);
+> +		if (ret)
+> +			return ret;
+> +
+> +		vadc->chan_props[index] = prop;
+> +
+> +		vadc_chan = &vadc_chans[prop.channel];
+> +
+> +		iio_chan->channel = prop.channel;
+> +		iio_chan->datasheet_name = vadc_chan->datasheet_name;
+> +		iio_chan->info_mask_separate = vadc_chan->info_mask;
+> +		iio_chan->type = vadc_chan->type;
+> +		iio_chan->indexed = 1;
+> +		iio_chan->address = index++;
+> +
+> +		iio_chan++;
+> +	}
+> +
+> +	/* These channels are mandatory, they are used as reference points */
+> +	if (!vadc_get_channel(vadc, VADC_REF_1250MV)) {
+> +		dev_err(vadc->dev, "Please define 1.25V channel\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (!vadc_get_channel(vadc, VADC_REF_625MV)) {
+> +		dev_err(vadc->dev, "Please define 0.625V channel\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (!vadc_get_channel(vadc, VADC_VDD_VADC)) {
+> +		dev_err(vadc->dev, "Please define VDD channel\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (!vadc_get_channel(vadc, VADC_GND_REF)) {
+> +		dev_err(vadc->dev, "Please define GND channel\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static irqreturn_t vadc_isr(int irq, void *dev_id)
+> +{
+> +	struct vadc_priv *vadc = dev_id;
+> +
+> +	complete(&vadc->complete);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int vadc_check_revision(struct vadc_priv *vadc)
+> +{
+> +	u8 val;
+> +	int ret;
+> +
+> +	ret = vadc_read(vadc, VADC_PERPH_TYPE, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (val < VADC_PERPH_TYPE_ADC) {
+> +		dev_err(vadc->dev, "%d is not ADC\n", val);
+> +		return -ENODEV;
+> +	}
+> +
+> +	ret = vadc_read(vadc, VADC_PERPH_SUBTYPE, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (val < VADC_PERPH_SUBTYPE_VADC) {
+> +		dev_err(vadc->dev, "%d is not VADC\n", val);
+> +		return -ENODEV;
+> +	}
+> +
+> +	ret = vadc_read(vadc, VADC_REVISION2, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (val < VADC_REVISION2_SUPPORTED_VADC) {
+> +		dev_err(vadc->dev, "revision %d not supported\n", val);
+> +		return -ENODEV;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int vadc_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *node = pdev->dev.of_node;
+> +	struct device *dev = &pdev->dev;
+> +	struct iio_dev *indio_dev;
+> +	struct vadc_priv *vadc;
+> +	struct regmap *regmap;
+> +	int ret, irq_eoc;
+> +	u32 res;
+> +
+> +	regmap = dev_get_regmap(dev->parent, NULL);
+> +	if (!regmap)
+> +		return -ENODEV;
+> +
+> +	ret = of_property_read_u32(node, "reg", &res);
+> +	if (ret < 0)
+> +		return -ENODEV;
+> +
+> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*vadc));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	vadc = iio_priv(indio_dev);
+> +	vadc->regmap = regmap;
+> +	vadc->dev = dev;
+> +	vadc->base = res;
+> +	vadc->are_ref_measured = false;
+> +	init_completion(&vadc->complete);
+> +
+> +	ret = vadc_check_revision(vadc);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = vadc_get_dt_data(vadc, node);
+> +	if (ret)
+> +		return ret;
+> +
+> +	irq_eoc = platform_get_irq(pdev, 0);
+> +	if (irq_eoc < 0) {
+> +		if (irq_eoc == -EPROBE_DEFER || irq_eoc == -EINVAL)
+> +			return irq_eoc;
+> +		vadc->poll_eoc = true;
+> +	} else {
+> +		ret = devm_request_irq(dev, irq_eoc, vadc_isr, 0,
+> +				       "spmi-vadc", vadc);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	ret = vadc_reset(vadc);
+> +	if (ret) {
+> +		dev_err(dev, "reset failed\n");
+> +		return ret;
+> +	}
+> +
+> +	indio_dev->dev.parent = dev;
+> +	indio_dev->dev.of_node = node;
+> +	indio_dev->name = pdev->name;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->info = &vadc_info;
+> +	indio_dev->channels = vadc->iio_chans;
+> +	indio_dev->num_channels = vadc->nchannels;
+> +
+> +	return devm_iio_device_register(dev, indio_dev);
+> +}
+> +
+> +static const struct of_device_id vadc_match_table[] = {
+> +	{ .compatible = "qcom,spmi-vadc" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, vadc_match_table);
+> +
+> +static struct platform_driver vadc_driver = {
+> +	.driver = {
+> +		   .name = "qcom-spmi-vadc",
+> +		   .of_match_table = vadc_match_table,
+> +	},
+> +	.probe = vadc_probe,
+> +};
+> +module_platform_driver(vadc_driver);
+> +
+> +MODULE_ALIAS("platform:qcom-spmi-vadc");
+> +MODULE_DESCRIPTION("Qualcomm SPMI PMIC voltage ADC driver");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_AUTHOR("Stanimir Varbanov <svarbanov@mm-sol.com>");
+> +MODULE_AUTHOR("Ivan T. Ivanov <iivanov@mm-sol.com>");
+>
