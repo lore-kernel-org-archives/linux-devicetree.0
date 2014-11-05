@@ -1,49 +1,83 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/1] of/fdt: simplify early_init_dt_verify
-Date: Wed, 5 Nov 2014 13:52:07 +0000
-Message-ID: <CACxGe6tkOWtqtt9nVk2R=NqsEVZBDCV-1deVhEXf1pAGS7YhFA@mail.gmail.com>
-References: <1414497065-9808-1-git-send-email-thunder.leizhen@huawei.com>
- <20141104162054.4CC9BC423D0@trevor.secretlab.ca> <CAErSpo6Upf=QPn7=Cd=XDazXVnSPhb-9gDZjH9_CcY37-xUKLw@mail.gmail.com>
- <5459740B.6000906@huawei.com>
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
+Date: Wed, 05 Nov 2014 15:57:35 +0200
+Message-ID: <1415195855.3660.4.camel@mm-sol.com>
+References: <1415028270-25860-1-git-send-email-iivanov@mm-sol.com>
+	 <1415028270-25860-3-git-send-email-iivanov@mm-sol.com>
+	 <545A218F.5060301@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5459740B.6000906-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: leizhen <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <545A218F.5060301-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 5, 2014 at 12:49 AM, leizhen <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
-> On 2014/11/5 1:03, Bjorn Helgaas wrote:
->> On Tue, Nov 4, 2014 at 9:20 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>> On Tue, 28 Oct 2014 19:51:05 +0800
->>> , Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->>>  wrote:
->>>> put off initial_boot_params = params; until all checks finished. If any check
->>>> failed, initial_boot_params is equal NULL, base upon bss segment initial value.
->>>>
->>>> Signed-off-by: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->>>
->>> Interesting. I received exactly the same patch from Bjorn Helgaas. Were
->>> the two of you working together, or is this merely a coincedence?
->>
->> LOL, that's really funny.  We're not working together, so it's a total
->> coincidence :)
->>
-> Haha!!!
->
-> Hi, Bjorn Helgaas. Nice to meet you.
 
-I've applied Bjorn's version, but since the diffstat is *identical*,
-I've put both of your s-o-b lines into it.
+On Wed, 2014-11-05 at 13:09 +0000, Jonathan Cameron wrote:
+> On 03/11/14 15:24, Ivan T. Ivanov wrote:
+> > From: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+> > 
+> > The voltage ADC is peripheral of Qualcomm SPMI PMIC chips. It has
+> > 15 bits resolution and register space inside PMIC accessible across
+> > SPMI bus.
+> > 
+> > The vadc driver registers itself through IIO interface.
+> > 
+> > Signed-off-by: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+> > Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+> Hi Ivan,
+> 
+> Couple of utterly tiny bits inline.  The biggest one is that
+> you store some info about the calibration that you never actually
+> use... Left over from some debugging perhaps?
+> 
+> Jonathan
 
-BTW Lei, what prompted you to write this patch? Was there a bug you
-were fixing, or did you just notice the inconsistency and decide to
-fix it?
+<snip>
 
-g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +
+> > +/*
+> > + * VADC_CALIB_ABSOLUTE: uses the 625mV and 1.25V as reference channels.
+> > + * VADC_CALIB_RATIOMETRIC: uses the reference voltage (1.8V) and GND for
+> > + * calibration.
+> > + */
+> > +enum vadc_calibration {
+> > +       VADC_CALIB_ABSOLUTE = 0,
+> > +       VADC_CALIB_RATIOMETRIC
+> > +};
+> > +
+> > +/**
+> > + * struct vadc_linear_graph - Represent ADC characteristics.
+> > + * @dy: numerator slope to calculate the gain.
+> As dy is always equal to vref-gnd you could drop it and use those
+> directly...
+> 
+> Conversly you store vref or grnd and never use them...
+
+I am not sure I am following you. Please take a look in 
+vadc_measure_ref_points() and vadc_calibrate().
+
+> 
+> > + * @dx: denominator slope to calculate the gain.
+> > + * @vref: A/D word of the voltage reference used for the channel.
+> > + * @gnd: A/D word of the ground reference used for the channel.
+> > + *
+> > + * Each ADC device has different offset and gain parameters which are
+> > + * computed to calibrate the device.
+> > + */
+> > +struct vadc_linear_graph {
+> > +       s32 dy;
+> > +       s32 dx;
+> > +       s32 vref;
+> > +       s32 gnd;
+> > +};
+> > +
+> > 
+
+Will address blank line comment.
+
+Regards,
+Ivan
