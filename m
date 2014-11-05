@@ -1,144 +1,149 @@
-From: Romain Perier <romain.perier@gmail.com>
-Subject: Re: [PATCH 0/4] poweroff-source DT property renaming
-Date: Wed, 5 Nov 2014 16:53:16 +0100
-Message-ID: <CABgxDoKgXLSGwDzH=xHDnccZemnbwWQuD5qaD-YhvmSb9MKDvg@mail.gmail.com>
-References: <1414568135-8311-1-git-send-email-romain.perier@gmail.com>
-	<20141105093912.GM31358@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20141105093912.GM31358@localhost>
-Sender: linux-pm-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Felipe Balbi <balbi@ti.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 01/11] mfd: syscon: Add atmel-matrix registers definition
+Date: Wed,  5 Nov 2014 17:01:17 +0100
+Message-ID: <1415203287-21517-2-git-send-email-boris.brezillon@free-electrons.com>
+References: <1415203287-21517-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415203287-21517-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-(did not include all in previous reply)
+AT91 SoCs have a memory range reserved for internal bus configuration.
+Expose those registers so that drivers can make use of the matrix syscon
+declared in at91 DTs.
 
-Hi Johan,
+Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ include/linux/mfd/syscon/atmel-matrix.h | 114 ++++++++++++++++++++++++++++++++
+ 1 file changed, 114 insertions(+)
+ create mode 100644 include/linux/mfd/syscon/atmel-matrix.h
 
-2014-11-05 10:39 GMT+01:00 Johan Hovold <johan@kernel.org>:
-> Please mention (here and in the commit message) that this is a rename
-> back to the old and fairly established property name, but without the
-> vendor prefix.
+diff --git a/include/linux/mfd/syscon/atmel-matrix.h b/include/linux/mfd/syscon/atmel-matrix.h
+new file mode 100644
+index 0000000..c3faa18
+--- /dev/null
++++ b/include/linux/mfd/syscon/atmel-matrix.h
+@@ -0,0 +1,114 @@
++/*
++ *  Copyright (C) 2007 Atmel Corporation.
++ *
++ * Memory Controllers (MATRIX, EBI) - System peripherals registers.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#ifndef _LINUX_MFD_SYSCON_ATMEL_MATRIX_H
++#define _LINUX_MFD_SYSCON_ATMEL_MATRIX_H
++
++#define AT91SAM9260_MATRIX_MCFG_OFF	0x00
++#define AT91SAM9260_MATRIX_SCFG_OFF	0x40
++#define AT91SAM9260_MATRIX_PRS_OFF	0x80
++#define AT91SAM9260_MATRIX_MRCR_OFF	0x100
++#define AT91SAM9260_MATRIX_EBICSA_OFF	0x11c
++
++#define AT91SAM9261_MATRIX_MRCR_OFF	0x0
++#define AT91SAM9261_MATRIX_SCFG_OFF	0x4
++#define AT91SAM9261_MATRIX_TCR_OFF	0x24
++#define AT91SAM9261_MATRIX_EBICSA_OFF	0x30
++#define AT91SAM9261_MATRIX_USBPUCR_OFF	0x34
++
++#define AT91SAM9263_MATRIX_MCFG_OFF	0x00
++#define AT91SAM9263_MATRIX_SCFG_OFF	0x40
++#define AT91SAM9263_MATRIX_PRS_OFF	0x80
++#define AT91SAM9263_MATRIX_MRCR_OFF	0x100
++#define AT91SAM9263_MATRIX_TCR_OFF	0x114
++#define AT91SAM9263_MATRIX_EBI0CSA_OFF	0x120
++#define AT91SAM9263_MATRIX_EBI1CSA_OFF	0x124
++
++#define AT91SAM9G45_MATRIX_MCFG_OFF	0x00
++#define AT91SAM9G45_MATRIX_SCFG_OFF	0x40
++#define AT91SAM9G45_MATRIX_PRS_OFF	0x80
++#define AT91SAM9G45_MATRIX_MRCR_OFF	0x100
++#define AT91SAM9G45_MATRIX_TCR_OFF	0x110
++#define AT91SAM9G45_MATRIX_DDRMPR_OFF	0x118
++#define AT91SAM9G45_MATRIX_EBICSA_OFF	0x128
++
++#define AT91SAM9N12_MATRIX_MCFG_OFF	0x00
++#define AT91SAM9N12_MATRIX_SCFG_OFF	0x40
++#define AT91SAM9N12_MATRIX_PRS_OFF	0x80
++#define AT91SAM9N12_MATRIX_MRCR_OFF	0x100
++#define AT91SAM9N12_MATRIX_EBICSA_OFF	0x118
++
++#define AT91SAM9X5_MATRIX_MCFG_OFF	0x00
++#define AT91SAM9X5_MATRIX_SCFG_OFF	0x40
++#define AT91SAM9X5_MATRIX_PRS_OFF	0x80
++#define AT91SAM9X5_MATRIX_MRCR_OFF	0x100
++#define AT91SAM9X5_MATRIX_EBICSA_OFF	0x120
++
++#define SAMA5D3_MATRIX_MCFG_OFF		0x00
++#define SAMA5D3_MATRIX_SCFG_OFF		0x40
++#define SAMA5D3_MATRIX_PRS_OFF		0x80
++#define SAMA5D3_MATRIX_MRCR_OFF		0x100
++
++#define AT91_MATRIX_MCFG(o, x)		((o) + ((x) * 0x4))
++#define AT91_MATRIX_ULBT		(7 << 0)
++#define AT91_MATRIX_ULBT_INFINITE	(0 << 0)
++#define AT91_MATRIX_ULBT_SINGLE		(1 << 0)
++#define AT91_MATRIX_ULBT_FOUR		(2 << 0)
++#define AT91_MATRIX_ULBT_EIGHT		(3 << 0)
++#define AT91_MATRIX_ULBT_SIXTEEN	(4 << 0)
++
++#define AT91_MATRIX_SCFG(o, x)		((o) + ((x) * 0x4))
++#define AT91_MATRIX_SLOT_CYCLE		(0xff <<  0)
++#define AT91_MATRIX_DEFMSTR_TYPE	(3 << 16)
++#define AT91_MATRIX_DEFMSTR_TYPE_NONE	(0 << 16)
++#define AT91_MATRIX_DEFMSTR_TYPE_LAST	(1 << 16)
++#define AT91_MATRIX_DEFMSTR_TYPE_FIXED	(2 << 16)
++#define AT91_MATRIX_FIXED_DEFMSTR	(7 << 18)
++#define AT91_MATRIX_ARBT		(3 << 24)
++#define AT91_MATRIX_ARBT_ROUND_ROBIN	(0 << 24)
++#define AT91_MATRIX_ARBT_FIXED_PRIORITY	(1 << 24)
++
++#define AT91_MATRIX_TCR(o)		(o)
++#define AT91_MATRIX_ITCM_SIZE		(0xf << 0)
++#define AT91_MATRIX_ITCM_0		(0 << 0)
++#define AT91_MATRIX_ITCM_16		(5 << 0)
++#define AT91_MATRIX_ITCM_32		(6 << 0)
++#define AT91_MATRIX_ITCM_64		(7 << 0)
++#define	AT91_MATRIX_DTCM_SIZE		(0xf << 4)
++#define	AT91_MATRIX_DTCM_0		(0 << 4)
++#define	AT91_MATRIX_DTCM_16		(5 << 4)
++#define AT91_MATRIX_DTCM_32		(6 << 4)
++#define AT91_MATRIX_DTCM_64		(7 << 4)
++
++#define AT91_MATRIX_PRAS(o, x)		((o) + ((x) * 0x8))
++#define AT91_MATRIX_PRBS(o, x)		((o) + ((x) * 0x8) + 0x4)
++#define AT91_MATRIX_MPR_MSK(x)		(3 << ((x) * 0x4))
++
++#define AT91_MATRIX_MRC(o)		(o)
++#define AT91_MATRIX_RCB(x)		BIT(x)
++
++#define AT91_MATRIX_EBICSA(o)		(o)
++#define AT91_MATRIX_CSA(cs, val)	(val << (cs))
++#define AT91_MATRIX_DBPUC		BIT(8)
++#define AT91_MATRIX_DBPDC		BIT(9)
++#define AT91_MATRIX_VDDIOMSEL		BIT(16)
++#define AT91_MATRIX_VDDIOMSEL_1_8V	(0 << 16)
++#define AT91_MATRIX_VDDIOMSEL_3_3V	(1 << 16)
++#define AT91_MATRIX_EBI_IOSR		BIT(17)
++#define AT91_MATRIX_DDR_IOSR		BIT(18)
++#define AT91_MATRIX_NFD0_SELECT		BIT(24)
++#define AT91_MATRIX_DDR_MP_EN		BIT(25)
++#define AT91_MATRIX_EBI_NUM_CS		8
++
++#define AT91_MATRIX_WPMR(o)		(o)
++#define AT91_MATRIX_WPSR(o)		(o)
++
++#endif /* _LINUX_MFD_SYSCON_ATMEL_MATRIX_H */
+-- 
+1.9.1
 
-Ok will do.
-
->
-> Essentially, it is a revert of a commit that is only in the regulator
-> tree.
-
-In regulator and mfd tree, afaik.
-
->
->> Changes and explanations since v1:
->>
->>   - The first patch defines "of_is_system_power_controller" which is compatible
->>     with both "vendor,system-power-controller" and "system-power-controller"
->>     properties. Also, It keeps the old helper function of_system_has_poweroff_source
->>     for source compatibility until everything is renamed (in this way, bisections
->>     are not broken and change is made "atomically" between each commit)
->>
->>     Note: the property "poweroff-source" itself is not used in dts files yet.
->>     Before this patch tps65910 was broken due to missing backward compatibility
->>     with "vendor,system-power-controller". As the old helper uses the new one,
->>     it works again.
->
-> What patch broke tps65910? Please refer to it using commit id and
-> summary (in parenthesis).
-
-commit 645d10214b2867d26dd97cafb43a3a8b3ec1da66 (mfd: tps65910:
-Convert ti,system-power-controller DT property to poweroff-source)
-
-It breaks backward compatibility with existing dts files, the driver
-itself is not broken.
-
->
-> Is that commit currently only in the regulator tree? If so, that could
-> be an argument for not doing this change incrementally (but that's not
-> my decision to make).
-
-As I said, in mfd and regulator tree. But it might have been
-cross-merged somewhere... no ? (and not in "next" yet)
-
-> I think you should squash the last three patches (i.e. update the
-> drivers and remove the helper in one patch).
-
-If it does not create drama and does not cause compat issues, I also
-think that this is the simpler solution.
-
->
->> Romain Perier (4):
->>   of: Rename "poweroff-source" property to "system-power-controller"
->>   regulator: act8865: Convert poweroff-source DT property to
->>     system-power-controller
->>   mfd: tps65910: Convert poweroff-source DT property to
->>     system-power-controller
->>   of: Remove of_system_has_poweroff_source helper function
->
-> Please do not mix patch revisions in your Subject lines when submitting
-> an updated series. Update the revision number for the series and all
-> patches in it even if a single patch happens to be unchanged (or new as
-> patch 4/4).
-
-Arf, did not know... sorry ^^ . I will try my best next time.
-
-
-Thanks for your feedbacks,
-Romain
-
-2014-11-05 10:39 GMT+01:00 Johan Hovold <johan@kernel.org>:
-> On Wed, Oct 29, 2014 at 07:35:31AM +0000, Romain Perier wrote:
->> The goal of this serie is to rename the property "poweroff-source" to
->> "system-power-controller" and to fix things incrementally.
->
-> Please mention (here and in the commit message) that this is a rename
-> back to the old and fairly established property name, but without the
-> vendor prefix.
->
-> Essentially, it is a revert of a commit that is only in the regulator
-> tree.
->
->> Changes and explanations since v1:
->>
->>   - The first patch defines "of_is_system_power_controller" which is compatible
->>     with both "vendor,system-power-controller" and "system-power-controller"
->>     properties. Also, It keeps the old helper function of_system_has_poweroff_source
->>     for source compatibility until everything is renamed (in this way, bisections
->>     are not broken and change is made "atomically" between each commit)
->>
->>     Note: the property "poweroff-source" itself is not used in dts files yet.
->>     Before this patch tps65910 was broken due to missing backward compatibility
->>     with "vendor,system-power-controller". As the old helper uses the new one,
->>     it works again.
->
-> What patch broke tps65910? Please refer to it using commit id and
-> summary (in parenthesis).
->
-> Is that commit currently only in the regulator tree? If so, that could
-> be an argument for not doing this change incrementally (but that's not
-> my decision to make).
->
->>
->>   - act8865 and tps65910 are ported to the new helper function
->>
->>   - The last commit removes the olf helper which was only used for
->>   source compatibility
->
-> I think you should squash the last three patches (i.e. update the
-> drivers and remove the helper in one patch).
->
->> Romain Perier (4):
->>   of: Rename "poweroff-source" property to "system-power-controller"
->>   regulator: act8865: Convert poweroff-source DT property to
->>     system-power-controller
->>   mfd: tps65910: Convert poweroff-source DT property to
->>     system-power-controller
->>   of: Remove of_system_has_poweroff_source helper function
->
-> Please do not mix patch revisions in your Subject lines when submitting
-> an updated series. Update the revision number for the series and all
-> patches in it even if a single patch happens to be unchanged (or new as
-> patch 4/4).
->
-> Johan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
