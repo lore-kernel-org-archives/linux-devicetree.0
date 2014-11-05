@@ -1,75 +1,71 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [PATCH] mfd: qcom-spmi-pmic: Add support for more chips versions
-Date: Wed, 5 Nov 2014 10:11:50 -0800
-Message-ID: <CAJAp7OgU64=KCuDhYEZTYppVeBz6wKvTDsof5vDRznfdZgAfZw@mail.gmail.com>
-References: <1415108003-16387-1-git-send-email-iivanov@mm-sol.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [RESEND PATCH 1/2] extcon: gpio: Add dt support for the driver
+Date: Wed, 5 Nov 2014 12:30:26 -0600
+Message-ID: <20141105183026.GC6548@saruman>
+References: <1415201388-32060-1-git-send-email-george.cherian@ti.com>
+ <1415201388-32060-2-git-send-email-george.cherian@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7qSK/uQB79J36Y4o"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415108003-16387-1-git-send-email-iivanov@mm-sol.com>
+Content-Disposition: inline
+In-Reply-To: <1415201388-32060-2-git-send-email-george.cherian@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+To: George Cherian <george.cherian@ti.com>
+Cc: myungjoo.ham@samsung.com, cw00.choi@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rongjun.ying@csr.com, Baohua.Song@csr.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 4, 2014 at 5:33 AM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
-[..]
-> @@ -28,11 +144,27 @@ static int pmic_spmi_probe(struct spmi_device *sdev)
->  {
->         struct device_node *root = sdev->dev.of_node;
->         struct regmap *regmap;
-> +       struct property *prop;
-> +       int major, minor, ret;
-> +       char *name, compatible[32];
->
->         regmap = devm_regmap_init_spmi_ext(sdev, &spmi_regmap_config);
->         if (IS_ERR(regmap))
->                 return PTR_ERR(regmap);
->
-> +       ret = pmic_spmi_read_revid(regmap, &name, &major, &minor);
-> +       if (!ret) {
-> +               snprintf(compatible, ARRAY_SIZE(compatible), "qcom,%s-v%d.%d",
-> +                        name, major, minor);
-> +               prop = kzalloc(sizeof(*prop), GFP_KERNEL);
-> +               if (prop) {
-> +                       prop->name = kstrdup("compatible", GFP_KERNEL);
-> +                       prop->value = kstrdup(compatible, GFP_KERNEL);
-> +                       prop->length = strlen(prop->value);
-> +                       of_update_property(root, prop);
-> +               }
-> +       }
-> +
+--7qSK/uQB79J36Y4o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Why would you do this?
-What benefit does it give to patch the of_node to have a more specific
-compatible?
+On Wed, Nov 05, 2014 at 08:59:47PM +0530, George Cherian wrote:
+> Add device tree support to extcon-gpio driver.
+> Add devicetree binding documentation
+>=20
+> While at that
+> 	- Cleanup the pdata as there are no users for the same.
 
-It is no longer matching any compatible defined in the kernel and is
-anyone actually looking at this?
+should be a patch of its own.
 
-Reading out the revid information and providing that in some way to
-the children could be beneficial, except for qpnp already giving you
-this version information per block.
+> 	- Convert the driver to use gpiod_* API's.
 
-[..]
-> @@ -45,7 +177,17 @@ static const struct of_device_id pmic_spmi_id_table[] = {
->         { .compatible = "qcom,spmi-pmic" },
->         { .compatible = "qcom,pm8941" },
->         { .compatible = "qcom,pm8841" },
-> +       { .compatible = "qcom,pm8019" },
-> +       { .compatible = "qcom,pm8226" },
-> +       { .compatible = "qcom,pm8110" },
->         { .compatible = "qcom,pma8084" },
-> +       { .compatible = "qcom,pmi8962" },
-> +       { .compatible = "qcom,pmd9635" },
-> +       { .compatible = "qcom,pm8994" },
-> +       { .compatible = "qcom,pmi8994" },
-> +       { .compatible = "qcom,pm8916" },
-> +       { .compatible = "qcom,pm8004" },
-> +       { .compatible = "qcom,pm8909" },
->         { }
+should be a patch of its own.
 
-This part is good, please send this out on it's own.
+> 	- Some gpio's can sleep while reading, so always use gpio_get_value_cans=
+leep
 
-Regards,
-Bjorn
+doesn't explain the fact that you have such a platform. Make it clear
+that you have a platform supported in mainline which uses a GPIO from an
+external i2c I/O expander and because of that you need to use can_sleep.
+
+Should also be a patch of its own, as it was before.
+
+--=20
+balbi
+
+--7qSK/uQB79J36Y4o
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUWmzCAAoJEIaOsuA1yqREQ20P/R3oqUJThSfW64y5/iUmktV6
+ybsse3B11iCc+wsp4Ki7u3AzjCJRzPisGoStbWct2Xzbp/Fh2QNa1q8/AjAye408
+g1Gjdxifxcgc/Y55dKmWuKA9K4tMnpceJJzG9LY4Pc3ekenZrENMhw57gvXqvE6C
+0qS85aHLPG9DgdlTjSW6RwD3wKuVF4clKAoF0toOA81Ad06c+MTbAkcX/6tAqE6+
+OcCkTLpeZjTUDrWFdd9PJHviOqKB3nV2rmf+34qWltE05L2xSBDMpKdXqdoDlrd9
+g0jUbPt5BTMTKakFTa5faArue+XRfqa3UNq9UHO8cqqq4tWvK8D9aVnudFazqmVl
+Uuh3t/uOTtYVGA8s83ExA9HZh118H9tLXOM+TSI3v7gokB60TZzD9tEJm4BU17FK
+8N0HW+e09PoLOnBqo6oB3VtIA/erCrgqTIzDTfDqYDHd1yfR8j4R/bHr4JdL54d1
+8FKRbMDdshDT7Og3e1WFwaUZd0e3L6Jc0PO5XUkDCtIyPbz3RSauu1dMoB5WtOcC
+geOlllq04rjiEB8P1vYdU4DpcO/SWMBwFLBWnaXD6I/3sdP6NFz2SUVmWuRugnvw
+2F1SvzfZU3tgovw+CprmxfOq/RNfBT/NXdxDWNttZxs4LOBH/KmiawXBXeA2R/YR
+LwtZlnizuX5fNEqaC/rf
+=vrlQ
+-----END PGP SIGNATURE-----
+
+--7qSK/uQB79J36Y4o--
