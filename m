@@ -1,128 +1,60 @@
-From: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH] mfd: qcom-spmi-pmic: Add support for more chips versions
-Date: Wed, 05 Nov 2014 13:49:22 +0100
-Message-ID: <545A1CD2.4030407@suse.de>
-References: <1415108003-16387-1-git-send-email-iivanov@mm-sol.com>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH V2 0/2] make imx hdmi publicly used by dw hdmi compatible
+ platform
+Date: Wed,  5 Nov 2014 20:54:59 +0800
+Message-ID: <1415192101-6404-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="3bW1g6qLJVV2UXRiCS4FGmJrGsC6Dtguj"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1415108003-16387-1-git-send-email-iivanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, ykk@rock-chips.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, Dave Airlie <airlied@redhat.com>, Grant Likely <grant.likely@linaro.org>, Andy yan <andy.yan@rock-chips.com>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---3bW1g6qLJVV2UXRiCS4FGmJrGsC6Dtguj
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: quoted-printable
+We found freescale imx6 and rockchip rk3288 and Ingenic JZ4780 (Xburst/MIPS)
+use the interface compatible Designware HDMI IP, but they also have some
+lightly difference, such as phy pll configuration, register width(imx hdmi
+register is one byte, but rk3288 is 4 bytes width and can only access by word),
+4K support(imx6 doesn't support 4k, but rk3288 does).
 
-Hi,
+To reuse the imx-hdmi driver, we do this patch set:
+patch (1): split out imx-soc code from imx-hdmi to dw_hdmi-imx.c
+patch (2): move imx-hdmi to bridge/, and rename to dw-hdmi to
+make this driver indepent of drm-imx . And we will add rockchip
+platform specific code dw_hdmi-rockchip.c later, this is depend
+on drm-rockchip.
 
-Am 04.11.2014 um 14:33 schrieb Ivan T. Ivanov:
-> Update compatible string with runtime detected chip revision
-> information, for example qcom,pm8941 will become qcom,pm8941-v1.0.
+Changes in V2:
+- use git format-patch -M to generate these patch
+- remove change-id
+- remove from
 
-That's not what the patch does though?
+Andy Yan (2):
+  imx-drm: imx-hdmi: split imx soc specific code from imx-hdmi
+  move imx-hdmi to bridge/dw-hdmi
 
->=20
-> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-> ---
->  .../devicetree/bindings/mfd/qcom,spmi-pmic.txt     |  18 ++-
->  drivers/mfd/qcom-spmi-pmic.c                       | 142 +++++++++++++=
-++++++++
->  2 files changed, 156 insertions(+), 4 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt b=
-/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-> index 7182b88..bbe7db8 100644
-> --- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-> +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-> @@ -15,10 +15,20 @@ each. A function can consume one or more of these f=
-ixed-size register regions.
-> =20
->  Required properties:
->  - compatible:      Should contain one of:
-> -                     "qcom,pm8941"
-> -                     "qcom,pm8841"
-> -                     "qcom,pma8084"
-> -                     or generalized "qcom,spmi-pmic".
-> +                   qcom,pm8941,
-> +                   qcom,pm8841,
-> +                   qcom,pm8019,
-> +                   qcom,pm8226,
-> +                   qcom,pm8110,
-> +                   qcom,pma8084,
-> +                   qcom,pmi8962,
-> +                   qcom,pmd9635,
-> +                   qcom,pm8994,
-> +                   qcom,pmi8994,
-> +                   qcom,pm8916,
-> +                   qcom,pm8004,
-> +                   qcom,pm8909,
+ drivers/gpu/drm/bridge/Kconfig                     |   5 +
+ drivers/gpu/drm/bridge/Makefile                    |   1 +
+ .../imx-hdmi.c => gpu/drm/bridge/dw_hdmi.c}        | 964 +++++++++------------
+ .../imx-hdmi.h => gpu/drm/bridge/dw_hdmi.h}        |   0
+ drivers/staging/imx-drm/Kconfig                    |   1 +
+ drivers/staging/imx-drm/Makefile                   |   2 +-
+ drivers/staging/imx-drm/dw_hdmi-imx.c              | 214 +++++
+ include/drm/bridge/dw_hdmi.h                       | 114 +++
+ 8 files changed, 760 insertions(+), 541 deletions(-)
+ rename drivers/{staging/imx-drm/imx-hdmi.c => gpu/drm/bridge/dw_hdmi.c} (57%)
+ rename drivers/{staging/imx-drm/imx-hdmi.h => gpu/drm/bridge/dw_hdmi.h} (100%)
+ create mode 100644 drivers/staging/imx-drm/dw_hdmi-imx.c
+ create mode 100644 include/drm/bridge/dw_hdmi.h
 
-Please either keep the strings consistently quoted, or drop the trailing
-comma to avoid any confusion of where it terminates.
-
-> +                   or generalized "qcom,spmi-pmic".
->  - reg:             Specifies the SPMI USID slave address for this devi=
-ce.
->                     For more information see:
->                     Documentation/devicetree/bindings/spmi/spmi.txt
-
-Regards,
-Andreas
-
-[...]
-> @@ -45,7 +177,17 @@ static const struct of_device_id pmic_spmi_id_table=
-[] =3D {
->  	{ .compatible =3D "qcom,spmi-pmic" },
->  	{ .compatible =3D "qcom,pm8941" },
->  	{ .compatible =3D "qcom,pm8841" },
-> +	{ .compatible =3D "qcom,pm8019" },
-> +	{ .compatible =3D "qcom,pm8226" },
-> +	{ .compatible =3D "qcom,pm8110" },
->  	{ .compatible =3D "qcom,pma8084" },
-> +	{ .compatible =3D "qcom,pmi8962" },
-> +	{ .compatible =3D "qcom,pmd9635" },
-> +	{ .compatible =3D "qcom,pm8994" },
-> +	{ .compatible =3D "qcom,pmi8994" },
-> +	{ .compatible =3D "qcom,pm8916" },
-> +	{ .compatible =3D "qcom,pm8004" },
-> +	{ .compatible =3D "qcom,pm8909" },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(of, pmic_spmi_id_table);
-
---=20
-SUSE LINUX GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 21284 AG N=FCrnbe=
-rg
-
-
---3bW1g6qLJVV2UXRiCS4FGmJrGsC6Dtguj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJUWhzSAAoJEPou0S0+fgE/5eMP/0zmEwZJhpaMDqMZkwGouGxz
-aB0AEJowJh1spKHN9RsmhmCt4yf8zdxEF9fGyITPRdTLZVzW7KUO/ULdV1Eb/jKl
-192foPIxgoBTDU1TzJcLWFpvN6R66d+NRt1SaiyvicRyj6uO7fzmnfOf6I9NDIX2
-upv7okSsNtWU91f+KMGkWNZpib9+azM+l9k1pAZi8m18S+1+YJewskxtzjNN0YeF
-USmY239sfcgbxiAGiJ1uRfuVc/V2TQFO/xhiybiSA1xcOQDq4x7ei1vRdp3fe9A/
-OxTaO1ov2GQiLR/o5/TMzVmv2W61V3xOPd3IrFFP69zEltzopmnrjVcuWv4K5EWw
-saCvKZUXmTsszWnHFQCBc7VrH1GFrU9Ra22PPGF5PwzjwtFC5yt1mpI0gT34chnC
-G6A4aDfiFzqaS/fndCTzJxKO0Nml4nD5fjVQDmH9VZhQwaqgkfqnpzuLwLjVqvxX
-G1cyZAeZEN6hXWDsMWUK8zTwH6YEuz8VyuriXoPdSvcaCfNwEDbATNU2MxTpjIcH
-dBpep614PEyvuFePlRs+N833IVMykIrq0gjk9PXz58tt3zYKg8swv5CmQCshx6Cy
-WZMG2G4A0n+wTCW/GAwcDkOGP4nlqg/UrgRUIl7+c8AkEpbNx9Oj4zjpv9Kp3iIs
-B521/LNLf5+07wIxG+kq
-=opW0
------END PGP SIGNATURE-----
-
---3bW1g6qLJVV2UXRiCS4FGmJrGsC6Dtguj--
+-- 
+1.9.1
