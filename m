@@ -1,47 +1,66 @@
-From: "Lennart Sorensen" <lsorense-1wCw9BSqJbv44Nm34jS7GywD8/FfD2ys@public.gmane.org>
-Subject: Re: [PATCH 11/13] arm: dts: dra7: add DMA properties for UART
-Date: Tue, 4 Nov 2014 20:15:06 -0500
-Message-ID: <20141105011506.GG24112@csclub.uwaterloo.ca>
-References: <1412014009-13315-1-git-send-email-bigeasy@linutronix.de>
- <1412014009-13315-12-git-send-email-bigeasy@linutronix.de>
- <20141104170233.GB24112@csclub.uwaterloo.ca>
- <5459079D.7080703@linutronix.de>
- <20141104172117.GC24112@csclub.uwaterloo.ca>
- <20141104183315.GD24112@csclub.uwaterloo.ca>
- <20141104210315.GF24112@csclub.uwaterloo.ca>
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 2/2] move imx-hdmi to bridge/dw-hdmi
+Date: Wed, 05 Nov 2014 09:55:14 +0800
+Message-ID: <54598382.7040407@rock-chips.com>
+References: <1415108398-34376-1-git-send-email-andy.yan@rock-chips.com> <5458D9B9.5030606@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141104210315.GF24112-1wCw9BSqJbv44Nm34jS7GywD8/FfD2ys@public.gmane.org>
+In-Reply-To: <5458D9B9.5030606-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, airlied-cv59FeDIM0c@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Josh Boyer <jwboyer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 04, 2014 at 04:03:15PM -0500, Lennart Sorensen wrote:
-> So it seems to be working on our board so far.  Will stress test it
-> some more.  No DMA of course for now, but oh well.
-
-Well 4 hours running with multiple reboots (our testsuite reboots every
-30 minutes to test the watchdog).  So far it has only lost 70 bytes out
-of 40MB of data sent between uart7 and uart8 (and we are pretty sure
-the serial test has a small bug that causes a few bytes to be lost right
-after a reboot sometimes).
-
-The reason I am even trying the new driver today is that we were seeing
-soft lockups on the CPU whenever the serial ports were being tested,
-usually in less than 5 minutes, so 4 hours without a lockup is a good
-sign.  No idea what might be wrong with the old omap serial driver, but
-it seems something is (unless of course we managed to break it somehow
-when we tried to solve its habit of dropping characters).
-
-I think I will stick with this new driver.  Better long term future
-anyhow.
-
--- 
-Len Sorensen
+Hi ZubairLK:
+On 2014=E5=B9=B411=E6=9C=8804=E6=97=A5 21:50, Zubair Lutfullah Kakakhel=
+ wrote:
+> Hi,
+>
+> On 04/11/14 13:39, Andy Yan wrote:
+>> From: Andy yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>
+>> the original imx hdmi driver is under staging/imx-drm,
+>> which depends on imx-drm, so move the imx hdmi drvier out
+>> to drm/bridge and rename imx-hdmi to dw-hdmi
+>>
+>> Change-Id: I5f417372f256aa26cd00a3cd0160741680afd39d
+>> ---
+>>   drivers/gpu/drm/bridge/Kconfig        |    5 +
+>>   drivers/gpu/drm/bridge/Makefile       |    1 +
+>>   drivers/gpu/drm/bridge/dw_hdmi.c      | 1651 +++++++++++++++++++++=
+++++++++++++
+>>   drivers/gpu/drm/bridge/dw_hdmi.h      | 1032 +++++++++++++++++++++
+>>   drivers/staging/imx-drm/Kconfig       |    1 +
+>>   drivers/staging/imx-drm/Makefile      |    2 +-
+>>   drivers/staging/imx-drm/dw_hdmi-imx.c |   66 +-
+>>   drivers/staging/imx-drm/imx-hdmi.c    | 1651 ---------------------=
+------------
+>>   drivers/staging/imx-drm/imx-hdmi.h    | 1032 ---------------------
+>>   include/drm/bridge/dw_hdmi.h          |   26 +-
+>>   10 files changed, 2737 insertions(+), 2730 deletions(-)
+>>   create mode 100644 drivers/gpu/drm/bridge/dw_hdmi.c
+>>   create mode 100644 drivers/gpu/drm/bridge/dw_hdmi.h
+>>   delete mode 100644 drivers/staging/imx-drm/imx-hdmi.c
+>>   delete mode 100644 drivers/staging/imx-drm/imx-hdmi.h
+>>
+>
+> Could you try generating this patch with the -M option?
+>
+> git format-patch should then understand its a rename.
+> Then it should generate a smaller patch that is possible to review ea=
+sily.
+>
+> Thanks
+> ZubairLK
+>
+>
+>
+ok, I will do it .
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
