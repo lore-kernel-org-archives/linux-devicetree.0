@@ -1,107 +1,66 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 3/5] of: Only call notifiers when node is attached
-Date: Wed, 05 Nov 2014 21:39:25 +0000
-Message-ID: <20141105213925.3790BC41C40@trevor.secretlab.ca>
-References: <1414528433-9650-1-git-send-email-pantelis.antoniou@konsulko.com>
-	<1414528433-9650-4-git-send-email-pantelis.antoniou@konsulko.com>
+From: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Subject: [PATCHv0 1/3] rtc: rtc-isl12057: fix masking of register values
+Date: Wed, 05 Nov 2014 22:42:25 +0100
+Message-ID: <917b6e5e869fce697dec8a1597dfd2f671bf5c46.1415222752.git.arno@natisbad.org>
+References: <cover.1415222752.git.arno@natisbad.org>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414528433-9650-4-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <cover.1415222752.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pete Popov <pete.popov-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Dan Malek <dan.malek-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Georgi Vlaev <georgi.vlaev-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Pantelis
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Peter Huewe <peter.huewe-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 28 Oct 2014 22:33:51 +0200
-, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
- wrote:
-> Make sure we call notifier only when the node is attached.
-> When a detatched tree is being constructed we do not want the
-> notifiers to fire at all.
 
-The description does not match what the patch does. The patch moves the
-test into of_{add,remove,update}_property() and out of
-of_property_notify() itself. That leaves one other caller of
-of_property_notify(); __of_changeset_entry_notify(). The effect of this
-patch is that applying a changeset will cause notifiers to be fired for
-each property modified in a changeset. The comment says nothing about
-the change in behaviour and it sounds like it is a bug fix when it
-doesn't actually change the behaviour at all for the
-of_{add,remove,update}_property() paths.
+When Intersil ISL12057 support was added by commit 70e123373c05 ("rtc:
+Add support for Intersil ISL12057 I2C RTC chip"), two masks for time
+registers values imported from the device were either wrong or
+omitted, leading to additional bits from those registers to impact
+read values:
 
-This needs a better changelog. It needs to describe what the effects of
-the patch are and why the change is being made. When someone is
-bisecting a problem and they land on this change, the changelog needs to
-give them a good idea about what is going on and why.
+ - mask for hour register value when reading it in AM/PM mode. As
+   AM/PM mode is not the usual mode used by the driver, this error
+   would only have an impact on an externally configured RTC hour
+   later read by the driver.
+ - mask for month value. The lack of masking would provide an
+   erroneous value if century bit is set.
 
-g.
+This patch fixes those two masks.
 
-> 
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/of/base.c    | 9 ++++++---
->  drivers/of/dynamic.c | 5 +----
->  2 files changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 2305dc0..a79d4ee 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1695,7 +1695,8 @@ int of_add_property(struct device_node *np, struct property *prop)
->  
->  	mutex_unlock(&of_mutex);
->  
-> -	if (!rc)
-> +	/* only call notifiers if the node is attached and no error occurred */
-> +	if (of_node_is_attached(np) && !rc)
->  		of_property_notify(OF_RECONFIG_ADD_PROPERTY, np, prop, NULL);
->  
->  	return rc;
-> @@ -1754,7 +1755,8 @@ int of_remove_property(struct device_node *np, struct property *prop)
->  
->  	mutex_unlock(&of_mutex);
->  
-> -	if (!rc)
-> +	/* only call notifiers if the node is attached and no error occurred */
-> +	if (of_node_is_attached(np) && !rc)
->  		of_property_notify(OF_RECONFIG_REMOVE_PROPERTY, np, prop, NULL);
->  
->  	return rc;
-> @@ -1830,7 +1832,8 @@ int of_update_property(struct device_node *np, struct property *newprop)
->  
->  	mutex_unlock(&of_mutex);
->  
-> -	if (!rc)
-> +	/* only call notifiers if the node is attached and no error occurred */
-> +	if (of_node_is_attached(np) && !rc)
->  		of_property_notify(OF_RECONFIG_UPDATE_PROPERTY, np, newprop, oldprop);
->  
->  	return rc;
-> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-> index f297891..8e8b614 100644
-> --- a/drivers/of/dynamic.c
-> +++ b/drivers/of/dynamic.c
-> @@ -90,10 +90,6 @@ int of_property_notify(int action, struct device_node *np,
->  {
->  	struct of_prop_reconfig pr;
->  
-> -	/* only call notifiers if the node is attached */
-> -	if (!of_node_is_attached(np))
-> -		return 0;
-> -
->  	pr.dn = np;
->  	pr.prop = prop;
->  	pr.old_prop = oldprop;
-> @@ -138,6 +134,7 @@ int of_attach_node(struct device_node *np)
->  	__of_attach_node_sysfs(np);
->  	mutex_unlock(&of_mutex);
->  
-> +	/* node is guaranteed to be attached at this point */
->  	of_reconfig_notify(OF_RECONFIG_ATTACH_NODE, np);
->  
->  	return 0;
-> -- 
-> 1.7.12
-> 
+Fixes: 70e123373c05 ("rtc: Add support for Intersil ISL12057 I2C RTC chip")
+Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+---
+ drivers/rtc/rtc-isl12057.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/rtc/rtc-isl12057.c b/drivers/rtc/rtc-isl12057.c
+index 455b601d731d..8132fbc7e10a 100644
+--- a/drivers/rtc/rtc-isl12057.c
++++ b/drivers/rtc/rtc-isl12057.c
+@@ -88,7 +88,7 @@ static void isl12057_rtc_regs_to_tm(struct rtc_time *tm, u8 *regs)
+ 	tm->tm_min = bcd2bin(regs[ISL12057_REG_RTC_MN]);
+ 
+ 	if (regs[ISL12057_REG_RTC_HR] & ISL12057_REG_RTC_HR_MIL) { /* AM/PM */
+-		tm->tm_hour = bcd2bin(regs[ISL12057_REG_RTC_HR] & 0x0f);
++		tm->tm_hour = bcd2bin(regs[ISL12057_REG_RTC_HR] & 0x1f);
+ 		if (regs[ISL12057_REG_RTC_HR] & ISL12057_REG_RTC_HR_PM)
+ 			tm->tm_hour += 12;
+ 	} else {					    /* 24 hour mode */
+@@ -96,8 +96,8 @@ static void isl12057_rtc_regs_to_tm(struct rtc_time *tm, u8 *regs)
+ 	}
+ 
+ 	tm->tm_mday = bcd2bin(regs[ISL12057_REG_RTC_DT]);
+-	tm->tm_wday = bcd2bin(regs[ISL12057_REG_RTC_DW]) - 1; /* starts at 1 */
+-	tm->tm_mon  = bcd2bin(regs[ISL12057_REG_RTC_MO]) - 1; /* starts at 1 */
++	tm->tm_wday = bcd2bin(regs[ISL12057_REG_RTC_DW]) - 1;  /* starts at 1 */
++	tm->tm_mon  = bcd2bin(regs[ISL12057_REG_RTC_MO] & 0x1f) - 1; /* ditto */
+ 	tm->tm_year = bcd2bin(regs[ISL12057_REG_RTC_YR]) + 100;
+ }
+ 
+-- 
+2.1.1
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
