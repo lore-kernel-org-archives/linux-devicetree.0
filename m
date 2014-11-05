@@ -1,275 +1,310 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 11/13] v4l: xilinx: Add Xilinx Video IP core
-Date: Wed, 05 Nov 2014 17:18:08 +0200
-Message-ID: <2617888.RhoObV0iJg@avalon>
-References: <1414940018-3016-1-git-send-email-laurent.pinchart@ideasonboard.com> <1414940018-3016-12-git-send-email-laurent.pinchart@ideasonboard.com> <545754FF.9020208@xs4all.nl>
+Subject: Re: [PATCH 09/11] v4l: xilinx: Add Xilinx Video IP core
+Date: Wed, 05 Nov 2014 17:31:38 +0200
+Message-ID: <3247865.A0OzyR2cH4@avalon>
+References: <1412022477-28749-1-git-send-email-laurent.pinchart@ideasonboard.com> <1753132.KBqocWzxIH@avalon> <54574F17.5070208@xs4all.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <545754FF.9020208@xs4all.nl>
+In-Reply-To: <54574F17.5070208@xs4all.nl>
 Sender: linux-media-owner@vger.kernel.org
 To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, Chris Kohn <christian.kohn@xilinx.com>, Hyun Kwon <hyun.kwon@xilinx.com>, devicetree@vger.kernel.org
+Cc: linux-media@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, Chris Kohn <christian.kohn@xilinx.com>, Hyun Kwon <hyun.kwon@xilinx.com>, Radhey Shyam Pandey <radheys@xilinx.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Hans,
 
-On Monday 03 November 2014 11:12:15 Hans Verkuil wrote:
-> Hi Laurent,
+On Monday 03 November 2014 10:47:03 Hans Verkuil wrote:
+> On 11/01/2014 02:24 PM, Laurent Pinchart wrote:
+> > Hi Hans,
+> > 
+> > Thank you for the review. I've fixed most of the issues you've pointed
+> > out, please find my replies to the remaining ones below.
+> > 
+> > On Tuesday 30 September 2014 16:03:34 Hans Verkuil wrote:
+> >> On 09/29/14 22:27, Laurent Pinchart wrote:
+> >>> Xilinx platforms have no hardwired video capture or video processing
+> >>> interface. Users create capture and memory to memory processing
+> >>> pipelines in the FPGA fabric to suit their particular needs, by
+> >>> instantiating video IP cores from a large library.
+> >>> 
+> >>> The Xilinx Video IP core is a framework that models a video pipeline
+> >>> described in the device tree and expose the pipeline to userspace
+> >>> through the media controller and V4L2 APIs.
+> >>> 
+> >>> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> >>> Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
+> >>> Signed-off-by: Radhey Shyam Pandey <radheys@xilinx.com>
+> >>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> >>> ---
+> >>> 
+> >>>  .../devicetree/bindings/media/xilinx/video.txt     |  52 ++
+> >>>  .../bindings/media/xilinx/xlnx,video.txt           |  55 ++
+> >>>  MAINTAINERS                                        |   9 +
+> >>>  drivers/media/platform/Kconfig                     |   1 +
+> >>>  drivers/media/platform/Makefile                    |   2 +
+> >>>  drivers/media/platform/xilinx/Kconfig              |  10 +
+> >>>  drivers/media/platform/xilinx/Makefile             |   3 +
+> >>>  drivers/media/platform/xilinx/xilinx-dma.c         | 995 ++++++++++++++
+> >>>  drivers/media/platform/xilinx/xilinx-dma.h         | 109 +++
+> >>>  drivers/media/platform/xilinx/xilinx-vip.c         | 269 ++++++
+> >>>  drivers/media/platform/xilinx/xilinx-vip.h         | 227 +++++
+> >>>  drivers/media/platform/xilinx/xilinx-vipp.c        | 666 ++++++++++++++
+> >>>  drivers/media/platform/xilinx/xilinx-vipp.h        |  47 +
+> >>>  13 files changed, 2445 insertions(+)
+> >>>  create mode 100644
+> >>>  Documentation/devicetree/bindings/media/xilinx/video.txt
+> >>>  create mode 100644
+> >>>  Documentation/devicetree/bindings/media/xilinx/xlnx,video.txt create
+> >>>  mode 100644 drivers/media/platform/xilinx/Kconfig
+> >>>  create mode 100644 drivers/media/platform/xilinx/Makefile
+> >>>  create mode 100644 drivers/media/platform/xilinx/xilinx-dma.c
+> >>>  create mode 100644 drivers/media/platform/xilinx/xilinx-dma.h
+> >>>  create mode 100644 drivers/media/platform/xilinx/xilinx-vip.c
+> >>>  create mode 100644 drivers/media/platform/xilinx/xilinx-vip.h
+> >>>  create mode 100644 drivers/media/platform/xilinx/xilinx-vipp.c
+> >>>  create mode 100644 drivers/media/platform/xilinx/xilinx-vipp.h
+> >>> 
+> >>> Cc: devicetree@vger.kernel.org
+> > 
+> > [snip]
+> > 
+> >>> diff --git a/drivers/media/platform/xilinx/xilinx-dma.c
+> >>> b/drivers/media/platform/xilinx/xilinx-dma.c new file mode 100644
+> >>> index 0000000..e09e8bd
+> >>> --- /dev/null
+> >>> +++ b/drivers/media/platform/xilinx/xilinx-dma.c
+> > 
+> > [snip]
+> > 
+> >>> +static void
+> >>> +__xvip_dma_try_format(struct xvip_dma *dma, struct v4l2_pix_format
+> >>> *pix,
+> >>> +		      const struct xvip_video_format **fmtinfo)
+> >>> +{
+> >>> +	const struct xvip_video_format *info;
+> >>> +	unsigned int min_width;
+> >>> +	unsigned int max_width;
+> >>> +	unsigned int min_bpl;
+> >>> +	unsigned int max_bpl;
+> >>> +	unsigned int width;
+> >>> +	unsigned int align;
+> >>> +	unsigned int bpl;
+> >>> +
+> >>> +	/* Retrieve format information and select the default format if the
+> >>> +	 * requested format isn't supported.
+> >>> +	 */
+> >>> +	info = xvip_get_format_by_fourcc(pix->pixelformat);
+> >>> +	if (IS_ERR(info))
+> >>> +		info = xvip_get_format_by_fourcc(XVIP_DMA_DEF_FORMAT);
+> >>> +
+> >>> +	pix->pixelformat = info->fourcc;
+> >>> +	pix->colorspace = V4L2_COLORSPACE_SRGB;
+> >> 
+> >> Colorspace information can be tricky: for capture the colorspace should
+> >> come from the subdevs (e.g. the HDMI receiver), for output the colorspace
+> >> is set by the application and passed on to the transmitter.
+> > 
+> > I agree with you. However, in the general case, this will be impossible to
+> > implement.
+> > 
+> > Imagine for instance a pipeline with two inputs, one from an HDMI decoder
+> > and one from a sensor. They are both connected to a composing unit that
+> > writes the resulting image to memory. The colorspace on the capture video
+> > node is then undefined.
+> > 
+> > Given that this driver is media controller based and relies on userspace
+> > to propagate formats through the pipeline during configuration, I believe
+> > it should also be userspace's responsibility to retrieve colorspace
+> > information from the correct subdev(s).
 > 
-> Some small nitpicks...
-> 
-> On 11/02/2014 03:53 PM, Laurent Pinchart wrote:
-> > Xilinx platforms have no hardwired video capture or video processing
-> > interface. Users create capture and memory to memory processing
-> > pipelines in the FPGA fabric to suit their particular needs, by
-> > instantiating video IP cores from a large library.
-> > 
-> > The Xilinx Video IP core is a framework that models a video pipeline
-> > described in the device tree and expose the pipeline to userspace
-> > through the media controller and V4L2 APIs.
-> > 
-> > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
-> > Signed-off-by: Radhey Shyam Pandey <radheys@xilinx.com>
-> > Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> > 
-> > ---
-> > 
-> > Cc: devicetree@vger.kernel.org
-> > 
-> > Changes since v1:
-> > 
-> > - Remove unnecessary fields from struct xvip_dma_buffer
-> > - Fix querycap capabilities and bus_info reporting
-> > - Refuse to set format when the queue is busy
-> > - Return buffers to vb2 when start_streaming fails
-> > - Use vb2 fops and ioctl ops
-> > 
-> > v1 was made of the following individual patches.
-> > 
-> > media: xilinx: vip: Add yuv444 and bayer formats
-> > media: xilinx: vip: Remove _TIMING_ from register definition
-> > media: xilinx: dma: Add vidioc_enum_fmt_vid_cap callback
-> > media: xilinx: dma: Fix alignments of xvip_dma_fops definition
-> > media: xilinx: dma: Workaround for bytesperline
-> > media: xilinx: vip: Add default min/max height/width definitions
-> > media: xilinx: vip: Add common sink/source pad IDs
-> > media: xilinx: vip: Add xvip_set_format_size()
-> > media: xilinx: vip: Add xvip_enum_mbus_code()
-> > media: xilinx: vip: Add xvip_enum_frame_size()
-> > media: xilinx: vip: Add register clear and set functions
-> > media: xilinx: vip: Add xvip_start()
-> > media: xilinx: vip: Add xvip_stop()
-> > media: xilinx: vip: Add xvip_set_frame_size()
-> > media: xilinx: vip: Add enable/disable reg update functions
-> > media: xilinx: vip: Add xvip_print_version()
-> > media: xilinx: vip: Add xvip_reset()
-> > media: xilinx: vip: Add xvip_get_frame_size()
-> > media: xilinx: vip: Add suspend/resume helper functions
-> > media: xilinx: vip: Change the return value of xvip_get_format_by_code()
-> > media: xilinx: vip: Change the return value of xvip_of_get_format()
-> > media: xilinx: vip: Change the return value of xvip_get_format_by_fourcc()
-> > media: xilinx: vipp: Remove of_match_ptr()
-> > media: xilinx: vipp: Add control to inherit subdevice controls
-> > media: xilinx: Make disconnected video nodes return -EPIPE at stream on
-> > media: xilinx: Make links configurable
-> > media: xilinx: Rename xvip_pipeline_entity to xvip_graph_entity
-> > media: xilinx: Rename xvip_pipeline to xvip_composite_device
-> > media: xilinx: Rename xvipp_pipeline_* functions to xvip_graph_*
-> > media: xilinx: Rename xvipp_v4l2_* functions to xvip_composite_v4l2_*
-> > media: xilinx: Rename xvipp_* functions to xvip_composite_*
-> > media: xilinx: Move pipeline management code to xilinx-dma.c
-> > media: xilinx: Add missing mutex_destroy call
-> > media: xilinx: Create xvip_pipeline structure
-> > media: xilinx: Support more than two VDMAs in DT
-> > media: xilinx: dma: Change vdma configuration to cyclic-mode
-> > Revert "media: xilinx: dma: Workaround for bytesperline"
-> > media: xilinx: Added DMA error handling
-> > media: xilinx: Fix error handling
-> > media: xilinx: Reordered mutexes initialization
-> > media: xilinx: vipp: Add devicetree bindings documentation
-> > media: xilinx: Reordered mutexes initialization
-> > media: xilinx: Set format description in enum_fmt
-> > media: xilinx: Remove global control handler
-> > media: xilinx: dma: Use the interleaved dmaengine API
-> > xilinx: Remove .owner field for drivers
-> > v4l: xilinx: video: Rename compatible string to xlnx,video
-> > v4l: xilinx: Remove axi- prefix from DT properties
-> > v4l: xilinx: dma: Give back queued buffers at streamoff time
-> > ---
-> > 
-> >  .../devicetree/bindings/media/xilinx/video.txt     |  52 ++
-> >  .../bindings/media/xilinx/xlnx,video.txt           |  55 ++
-> >  MAINTAINERS                                        |   9 +
-> >  drivers/media/platform/Kconfig                     |   1 +
-> >  drivers/media/platform/Makefile                    |   2 +
-> >  drivers/media/platform/xilinx/Kconfig              |  10 +
-> >  drivers/media/platform/xilinx/Makefile             |   3 +
-> >  drivers/media/platform/xilinx/xilinx-dma.c         | 770 ++++++++++++++++
-> >  drivers/media/platform/xilinx/xilinx-dma.h         | 109 +++
-> >  drivers/media/platform/xilinx/xilinx-vip.c         | 269 +++++++
-> >  drivers/media/platform/xilinx/xilinx-vip.h         | 227 ++++++
-> >  drivers/media/platform/xilinx/xilinx-vipp.c        | 669 ++++++++++++++++
-> >  drivers/media/platform/xilinx/xilinx-vipp.h        |  49 ++
-> >  13 files changed, 2225 insertions(+)
-> >  create mode 100644
-> >  Documentation/devicetree/bindings/media/xilinx/video.txt
-> >  create mode 100644
-> >  Documentation/devicetree/bindings/media/xilinx/xlnx,video.txt create
-> >  mode 100644 drivers/media/platform/xilinx/Kconfig
-> >  create mode 100644 drivers/media/platform/xilinx/Makefile
-> >  create mode 100644 drivers/media/platform/xilinx/xilinx-dma.c
-> >  create mode 100644 drivers/media/platform/xilinx/xilinx-dma.h
-> >  create mode 100644 drivers/media/platform/xilinx/xilinx-vip.c
-> >  create mode 100644 drivers/media/platform/xilinx/xilinx-vip.h
-> >  create mode 100644 drivers/media/platform/xilinx/xilinx-vipp.c
-> >  create mode 100644 drivers/media/platform/xilinx/xilinx-vipp.h
-> 
-> <snip>
-> 
-> > diff --git a/drivers/media/platform/xilinx/xilinx-dma.c
-> > b/drivers/media/platform/xilinx/xilinx-dma.c new file mode 100644
-> > index 0000000..a438e4a
-> > --- /dev/null
-> > +++ b/drivers/media/platform/xilinx/xilinx-dma.c
-> 
-> <snip>
-> 
-> > +/* ----------------------------------------------------------------------
-> > + * V4L2 ioctls
-> > + */
-> > +
-> > +static int
-> > +xvip_dma_querycap(struct file *file, void *fh, struct v4l2_capability
-> > *cap)
-> > +{
-> > +	struct v4l2_fh *vfh = file->private_data;
-> > +	struct xvip_dma *dma = to_xvip_dma(vfh->vdev);
-> > +
-> > +	cap->capabilities = V4L2_CAP_DEVICE_CAPS | V4L2_CAP_STREAMING
-> > +			  | dma->xdev->v4l2_caps;
-> > +
-> > +	if (dma->queue.type == V4L2_BUF_TYPE_VIDEO_CAPTURE)
-> > +		cap->device_caps = V4L2_CAP_VIDEO_CAPTURE | V4L2_CAP_STREAMING;
-> > +	else
-> > +		cap->device_caps = V4L2_CAP_VIDEO_OUTPUT | V4L2_CAP_STREAMING;
-> > +
-> > +	strlcpy(cap->driver, "xilinx-vipp", sizeof(cap->driver));
-> > +	strlcpy(cap->card, dma->video.name, sizeof(cap->card));
-> > +	snprintf(cap->bus_info, sizeof(cap->bus_info), "platform:%s:%u",
-> > +		 dma->xdev->dev->of_node->name, dma->port);
-> > +	cap->bus_info[sizeof(cap->bus_info) - 1] = '\0';
-> 
-> I'm fairly certain that snprintf (at least the kernel version) will always
-> 0-terminate the string.
+> But so can your driver. The DMA engine is streaming from/to a subdev, so it
+> should ask/set the colorspace from that subdev. This driver certainly does
+> not know the colorspace, so setting it to some random value is simply
+> wrong.
 
-Indeed. I'll fix that.
+That's not how format propagation works. The video node and the subdev it's 
+connected to are configured separately, and the configurations are verified to 
+match at streamon time.
 
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +/* FIXME: without this callback function, some applications are not
-> > configured
-> > + * with correct formats, and it results in frames in wrong format.
-> > Whether this
-> > + * callback needs to be required is not clearly defined, so it should be
-> > + * clarified through the mailing list.
-> > + */
-> > +static int
-> > +xvip_dma_enum_format(struct file *file, void *fh, struct v4l2_fmtdesc *f)
-> > +{
-> > +	struct v4l2_fh *vfh = file->private_data;
-> > +	struct xvip_dma *dma = to_xvip_dma(vfh->vdev);
-> > +
-> > +	if (f->index > 0)
-> > +		return -EINVAL;
-> > +
-> > +	f->pixelformat = dma->format.pixelformat;
-> > +	strlcpy(f->description, dma->fmtinfo->description,
-> > +		sizeof(f->description));
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int
-> > +xvip_dma_get_format(struct file *file, void *fh, struct v4l2_format
-> > *format)
-> > +{
-> > +	struct v4l2_fh *vfh = file->private_data;
-> > +	struct xvip_dma *dma = to_xvip_dma(vfh->vdev);
-> > +
-> > +	format->fmt.pix = dma->format;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void
-> > +__xvip_dma_try_format(struct xvip_dma *dma, struct v4l2_pix_format *pix,
-> > +		      const struct xvip_video_format **fmtinfo)
-> > +{
-> > +	const struct xvip_video_format *info;
-> > +	unsigned int min_width;
-> > +	unsigned int max_width;
-> > +	unsigned int min_bpl;
-> > +	unsigned int max_bpl;
-> > +	unsigned int width;
-> > +	unsigned int align;
-> > +	unsigned int bpl;
-> > +
-> > +	/* Retrieve format information and select the default format if the
-> > +	 * requested format isn't supported.
-> > +	 */
-> > +	info = xvip_get_format_by_fourcc(pix->pixelformat);
-> > +	if (IS_ERR(info))
-> > +		info = xvip_get_format_by_fourcc(XVIP_DMA_DEF_FORMAT);
-> > +
-> > +	pix->pixelformat = info->fourcc;
-> > +	pix->colorspace = V4L2_COLORSPACE_SRGB;
-> 
-> See my reply to your reply :-)
-> 
-> > +	pix->field = V4L2_FIELD_NONE;
-> 
-> Interlaced formats are not supported at the moment?
+Setting the colorspace on the connected subdev in response to S_FMT for a 
+video output node will not help much as the subdev won't propagate the 
+colorspace through the pipeline. Similarly, getting the colorspace from the 
+connected subdev for video capture nodes won't help much either, as the 
+colorspace might not have been propagated through the pipeline by userspace 
+yet.
 
-No they're not.
+I thus propose removing the hardcoded colorspace value (except for the initial 
+value set at probe time, as I need to select one there) and accepting the 
+colorspace set by userspace, with an additional check at streamon time to make 
+sure the colorspaces on the video node and its connected subdev match (the 
+driver already validates the pixel format, width and height, but the 
+colorspace is missing there).
 
-> > +
-> > +	/* The transfer alignment requirements are expressed in bytes.
-> > Compute
-> > +	 * the minimum and maximum values, clamp the requested width and
-> > convert
-> > +	 * it back to pixels.
-> > +	 */
-> > +	align = lcm(dma->align, info->bpp);
-> > +	min_width = roundup(XVIP_DMA_MIN_WIDTH, align);
-> > +	max_width = rounddown(XVIP_DMA_MAX_WIDTH, align);
-> > +	width = rounddown(pix->width * info->bpp, align);
-> > +
-> > +	pix->width = clamp(width, min_width, max_width) / info->bpp;
-> > +	pix->height = clamp(pix->height, XVIP_DMA_MIN_HEIGHT,
-> > +			    XVIP_DMA_MAX_HEIGHT);
-> > +
-> > +	/* Clamp the requested bytes per line value. If the maximum bytes per
-> > +	 * line value is zero, the module doesn't support user configurable
-> > line
-> > +	 * sizes. Override the requested value with the minimum in that case.
-> > +	 */
-> > +	min_bpl = pix->width * info->bpp;
-> > +	max_bpl = rounddown(XVIP_DMA_MAX_WIDTH, dma->align);
-> > +	bpl = rounddown(pix->bytesperline, dma->align);
-> > +
-> > +	pix->bytesperline = clamp(bpl, min_bpl, max_bpl);
-> > +	pix->sizeimage = pix->bytesperline * pix->height;
-> > +
-> > +	if (fmtinfo)
-> > +		*fmtinfo = info;
-> > +}
+> I know that if you have a compositor hardware module things will become much
+> more complicated, but that is indeed up to userspace to correct (although
+> in practice I suspect the whole issue will be ignored). Actually, unless
+> the hardware compositor can do the correct colorspace conversion I think
+> the only way to do this correctly would be with openGL shaders if your GPU
+> is powerful enough.
 > 
-> <snip>
+> Anyway, even compositors should set a colorspace. If different input streams
+> have different colorspaces, then it is up to the subdev to decide what
+> colorspace to return. I would expect it to be the colorspace of the
+> background color and that it would just leave it up to userspace to correct
+> the colorspace of the composed windows.
+> 
+> The only compositors I know are in the video output path and I don't think
+> they have any colorspace conversion capabilities at all.
+> 
+> >> I'll have a presentation on this topic during the media mini-summit.
+> > 
+> > It was very interesting, thanks again :-)
+> > 
+> >>> +	pix->field = V4L2_FIELD_NONE;
+> >>> +
+> >>> +	/* The transfer alignment requirements are expressed in bytes.
+> >>> Compute
+> >>> +	 * the minimum and maximum values, clamp the requested width and
+> >>> convert
+> >>> +	 * it back to pixels.
+> >>> +	 */
+> >>> +	align = lcm(dma->align, info->bpp);
+> >>> +	min_width = roundup(XVIP_DMA_MIN_WIDTH, align);
+> >>> +	max_width = rounddown(XVIP_DMA_MAX_WIDTH, align);
+> >>> +	width = rounddown(pix->width * info->bpp, align);
+> >>> +
+> >>> +	pix->width = clamp(width, min_width, max_width) / info->bpp;
+> >>> +	pix->height = clamp(pix->height, XVIP_DMA_MIN_HEIGHT,
+> >>> +			    XVIP_DMA_MAX_HEIGHT);
+> >>> +
+> >>> +	/* Clamp the requested bytes per line value. If the maximum bytes per
+> >>> +	 * line value is zero, the module doesn't support user configurable
+> >>> line
+> >>> +	 * sizes. Override the requested value with the minimum in that case.
+> >>> +	 */
+> >>> +	min_bpl = pix->width * info->bpp;
+> >>> +	max_bpl = rounddown(XVIP_DMA_MAX_WIDTH, dma->align);
+> >>> +	bpl = rounddown(pix->bytesperline, dma->align);
+> >>> +
+> >>> +	pix->bytesperline = clamp(bpl, min_bpl, max_bpl);
+> >>> +	pix->sizeimage = pix->bytesperline * pix->height;
+> >>> +
+> >>> +	if (fmtinfo)
+> >>> +		*fmtinfo = info;
+> >>> +}
+> > 
+> > [snip]
+> > 
+> >>> +int xvip_dma_init(struct xvip_composite_device *xdev, struct xvip_dma
+> >>> *dma,
+> >>> +		  enum v4l2_buf_type type, unsigned int port)
+> >>> +{
+> >>> +	char name[14];
+> >>> +	int ret;
+> >>> +
+> >>> +	dma->xdev = xdev;
+> >>> +	dma->port = port;
+> >>> +	mutex_init(&dma->lock);
+> >>> +	mutex_init(&dma->pipe.lock);
+> >>> +	INIT_LIST_HEAD(&dma->queued_bufs);
+> >>> +	spin_lock_init(&dma->queued_lock);
+> >>> +
+> >>> +	dma->fmtinfo = xvip_get_format_by_fourcc(XVIP_DMA_DEF_FORMAT);
+> >>> +	dma->format.pixelformat = dma->fmtinfo->fourcc;
+> >>> +	dma->format.colorspace = V4L2_COLORSPACE_SRGB;
+> >>> +	dma->format.field = V4L2_FIELD_NONE;
+> >>> +	dma->format.width = XVIP_DMA_DEF_WIDTH;
+> >>> +	dma->format.height = XVIP_DMA_DEF_HEIGHT;
+> >>> +	dma->format.bytesperline = dma->format.width * dma->fmtinfo->bpp;
+> >>> +	dma->format.sizeimage = dma->format.bytesperline *
+> >>> dma->format.height;
+> >>> +
+> >>> +	/* Initialize the media entity... */
+> >>> +	dma->pad.flags = type == V4L2_BUF_TYPE_VIDEO_CAPTURE
+> >>> +		       ? MEDIA_PAD_FL_SINK : MEDIA_PAD_FL_SOURCE;
+> >>> +
+> >>> +	ret = media_entity_init(&dma->video.entity, 1, &dma->pad, 0);
+> >>> +	if (ret < 0)
+> >>> +		goto error;
+> >>> +
+> >>> +	/* ... and the video node... */
+> >>> +	dma->video.v4l2_dev = &xdev->v4l2_dev;
+> >>> +	dma->video.fops = &xvip_dma_fops;
+> >>> +	snprintf(dma->video.name, sizeof(dma->video.name), "%s %s %u",
+> >>> +		 xdev->dev->of_node->name,
+> >>> +		 type == V4L2_BUF_TYPE_VIDEO_CAPTURE ? "output" : "input",
+> >>> +		 port);
+> >>> +	dma->video.vfl_type = VFL_TYPE_GRABBER;
+> >>> +	dma->video.vfl_dir = type == V4L2_BUF_TYPE_VIDEO_CAPTURE
+> >>> +			   ? VFL_DIR_RX : VFL_DIR_TX;
+> >>> +	dma->video.release = video_device_release_empty;
+> >>> +	dma->video.ioctl_ops = &xvip_dma_ioctl_ops;
+> >> 
+> >> Set dma->video.queue to &dma->queue. That's all you need to be able to
+> >> use the vb2 helper functions.
+> >> 
+> >>> +
+> >>> +	video_set_drvdata(&dma->video, dma);
+> >>> +
+> >>> +	/* ... and the buffers queue... */
+> >>> +	dma->alloc_ctx = vb2_dma_contig_init_ctx(dma->xdev->dev);
+> >>> +	if (IS_ERR(dma->alloc_ctx))
+> >>> +		goto error;
+> >>> +
+> >>> +	dma->queue.type = type;
+> >>> +	dma->queue.io_modes = VB2_MMAP | VB2_USERPTR | VB2_DMABUF;
+> >> 
+> >> Add VB2_READ/WRITE. It's basically for free, so why not?
+> > 
+> > Because we want to discourage the users from using it ? :-)
+> 
+> Why? I've used it often enough to quickly test the output by just running
+> 'cat /dev/video0 >x.raw'. No need to compile special programs, works great.
+> As I said, you get it for free, it doesn't allocate additional resources,
+> so why not?
+
+You won't be able to test the output without an application as you need to 
+configure the format through the pipeline anyway, so read/write doesn't bring 
+much. I'm thus not very keen on exposing that API as applications shouldn't 
+use it with this driver.
+
+> >>> +	dma->queue.drv_priv = dma;
+> >>> +	dma->queue.buf_struct_size = sizeof(struct xvip_dma_buffer);
+> >>> +	dma->queue.ops = &xvip_dma_queue_qops;
+> >>> +	dma->queue.mem_ops = &vb2_dma_contig_memops;
+> >>> +	dma->queue.timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC
+> >>> +				   | V4L2_BUF_FLAG_TSTAMP_SRC_EOF;
+> >>> +	ret = vb2_queue_init(&dma->queue);
+> >>> +	if (ret < 0) {
+> >>> +		dev_err(dma->xdev->dev, "failed to initialize VB2 queue\n");
+> >>> +		goto error;
+> >>> +	}
+> >>> +
+> >>> +	/* ... and the DMA channel. */
+> >>> +	sprintf(name, "port%u", port);
+> >>> +	dma->dma = dma_request_slave_channel(dma->xdev->dev, name);
+> >>> +	if (dma->dma == NULL) {
+> >>> +		dev_err(dma->xdev->dev, "no VDMA channel found\n");
+> >>> +		ret = -ENODEV;
+> >>> +		goto error;
+> >>> +	}
+> >>> +
+> >>> +	dma->align = 1 << dma->dma->device->copy_align;
+> >>> +
+> >>> +	ret = video_register_device(&dma->video, VFL_TYPE_GRABBER, -1);
+> >>> +	if (ret < 0) {
+> >>> +		dev_err(dma->xdev->dev, "failed to register video device\n");
+> >>> +		goto error;
+> >>> +	}
+> >>> +
+> >>> +	return 0;
+> >>> +
+> >>> +error:
+> >>> +	xvip_dma_cleanup(dma);
+> >>> +	return ret;
+> >>> +}
 
 -- 
 Regards,
