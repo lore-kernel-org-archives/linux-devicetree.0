@@ -1,88 +1,57 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: Re: [PATCH V2 1/2] imx-drm: imx-hdmi: split imx soc specific code
- from imx-hdmi
-Date: Wed, 5 Nov 2014 13:30:40 +0000
-Message-ID: <545A2680.2@imgtec.com>
-References: <1415192385-6572-1-git-send-email-andy.yan@rock-chips.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] DT: iio: adc: Add CC_10001 binding documentation
+Date: Wed, 05 Nov 2014 13:40:06 +0000
+Message-ID: <545A28B6.9000902@kernel.org>
+References: <1414615531-26172-1-git-send-email-ezequiel.garcia@imgtec.com> <1414615531-26172-3-git-send-email-ezequiel.garcia@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1415192385-6572-1-git-send-email-andy.yan@rock-chips.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Andy Yan <andy.yan@rock-chips.com>, airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, ykk@rock-chips.com, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414615531-26172-3-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Cc: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-This one patch does too much to be reviewed easily.
-
-One patch is supposed to modify/add one thing at a time in the kernel.
-
-Separating platform specific code from imx-drm/imx-hdmi is one thing.
-
-Adding support for multi-byte register access is something different.
-
-i.e. Something like.
-1/3 split platform specific code out.
-2/3 move/rename imx-hdmi outside the folder
-3/3 add support for multi byte register width access.
-
-If there are other things that are not directly relevant to the patch,
-it goes in a different patch. Bug fixes are also separate.
-
-This should result in readable patches that can be reviewed easily.
-
-Also, the approach with 4 byte access is ok. But you could use reg-shifts as well perhaps.
-Then you won't have to change so much of the code.
-
-static inline void hdmi_writeb(struct dwc_hdmi *hdmi, u8 val, int offset)
-+{
-+ writeb(val, hdmi->regs + (offset << hdmi->reg_shift));
-+}
-+
-+static inline u8 hdmi_readb(struct dwc_hdmi *hdmi, int offset)
-+{
-+ return readb(hdmi->regs + (offset << hdmi->reg_shift));
-+}
-
-And then in probe
-
-+hdmi->reg_shift = 0;
-+
-+ if (of_property_read_u32(np, "reg-shift", &hdmi->reg_shift))
-+ dev_warn(hdmi->dev, "No reg-shift\n");
-
-This way the reg-shift property can be defined using DT
-
-Cheers,
-ZubairLK
-
-On 05/11/14 12:59, Andy Yan wrote:
-> imx6 and rockchip rk3288 and JZ4780 (Ingenic Xburst/MIPS)
-> use the interface compatible Designware HDMI IP, but they
-> also have some lightly difference, such as phy pll configuration,
-> register width(imx hdmi register is one byte, but rk3288 is 4
-> bytes width), 4K support(imx6 doesn't support 4k, but rk3288 does),
-> clk useage,and the crtc mux configuration is also platform specific.
+On 29/10/14 20:45, Ezequiel Garcia wrote:
+> From: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 > 
-> To reuse the imx hdmi driver, split the platform specific code out
-> to dw_hdmi-imx.c.
+> Add the devicetree binding document for Cosmic Circuits 10001 ADC device.
 > 
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+> Signed-off-by: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> [Ezequiel: minor style cleaning]
+> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Looks fine, but as with all bindings needs to go to the device tree list
+and maintainers for them to take a look.
 > ---
->  drivers/staging/imx-drm/Makefile      |   2 +-
->  drivers/staging/imx-drm/dw_hdmi-imx.c | 214 ++++++++++
->  drivers/staging/imx-drm/imx-hdmi.c    | 726 ++++++++++++++--------------------
->  include/drm/bridge/dw_hdmi.h          | 114 ++++++
->  4 files changed, 634 insertions(+), 422 deletions(-)
->  create mode 100644 drivers/staging/imx-drm/dw_hdmi-imx.c
->  create mode 100644 include/drm/bridge/dw_hdmi.h
+>  .../devicetree/bindings/iio/adc/cc_10001_adc.txt      | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/cc_10001_adc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/cc_10001_adc.txt b/Documentation/devicetree/bindings/iio/adc/cc_10001_adc.txt
+> new file mode 100644
+> index 0000000..6491839
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/cc_10001_adc.txt
+> @@ -0,0 +1,19 @@
+> +* Cosmic Circuits - Analog to Digital Converter (CC-10001-ADC)
+> +
+> +Required properties:
+> +  - compatible: Should be "cosmic,10001-adc"
+> +  - reg: Should contain adc registers location and length.
+> +  - cosmic,adc-available-channels: Bitmask of the channels currently enabled.
+> +  - clock-names: Should contain "adc".
+> +  - clocks: phandles to input clocks.
+> +  - vref-supply: The regulator supply ADC reference voltage.
+> +
+> +Example:
+> +adc: adc@18101600 {
+> +	compatible = "cosmic,10001-adc";
+> +	reg = <0x18101600 0x24>;
+> +	cosmic,adc-available-channels = <0xa>;
+> +	clocks = <&adc_clk>;
+> +	clock-names = "adc";
+> +	vref-supply = <&reg_1v8>;
+> +};
+> 
