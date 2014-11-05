@@ -1,312 +1,75 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 09/11] v4l: xilinx: Add Xilinx Video IP core
-Date: Wed, 05 Nov 2014 17:31:38 +0200
-Message-ID: <3247865.A0OzyR2cH4@avalon>
-References: <1412022477-28749-1-git-send-email-laurent.pinchart@ideasonboard.com> <1753132.KBqocWzxIH@avalon> <54574F17.5070208@xs4all.nl>
+From: Bjorn Andersson <bjorn@kryo.se>
+Subject: Re: [PATCH] mfd: qcom-spmi-pmic: Add support for more chips versions
+Date: Wed, 5 Nov 2014 10:11:50 -0800
+Message-ID: <CAJAp7OgU64=KCuDhYEZTYppVeBz6wKvTDsof5vDRznfdZgAfZw@mail.gmail.com>
+References: <1415108003-16387-1-git-send-email-iivanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <54574F17.5070208@xs4all.nl>
-Sender: linux-media-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, Chris Kohn <christian.kohn@xilinx.com>, Hyun Kwon <hyun.kwon@xilinx.com>, Radhey Shyam Pandey <radheys@xilinx.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1415108003-16387-1-git-send-email-iivanov@mm-sol.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+On Tue, Nov 4, 2014 at 5:33 AM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
+[..]
+> @@ -28,11 +144,27 @@ static int pmic_spmi_probe(struct spmi_device *sdev)
+>  {
+>         struct device_node *root = sdev->dev.of_node;
+>         struct regmap *regmap;
+> +       struct property *prop;
+> +       int major, minor, ret;
+> +       char *name, compatible[32];
+>
+>         regmap = devm_regmap_init_spmi_ext(sdev, &spmi_regmap_config);
+>         if (IS_ERR(regmap))
+>                 return PTR_ERR(regmap);
+>
+> +       ret = pmic_spmi_read_revid(regmap, &name, &major, &minor);
+> +       if (!ret) {
+> +               snprintf(compatible, ARRAY_SIZE(compatible), "qcom,%s-v%d.%d",
+> +                        name, major, minor);
+> +               prop = kzalloc(sizeof(*prop), GFP_KERNEL);
+> +               if (prop) {
+> +                       prop->name = kstrdup("compatible", GFP_KERNEL);
+> +                       prop->value = kstrdup(compatible, GFP_KERNEL);
+> +                       prop->length = strlen(prop->value);
+> +                       of_update_property(root, prop);
+> +               }
+> +       }
+> +
 
-On Monday 03 November 2014 10:47:03 Hans Verkuil wrote:
-> On 11/01/2014 02:24 PM, Laurent Pinchart wrote:
-> > Hi Hans,
-> > 
-> > Thank you for the review. I've fixed most of the issues you've pointed
-> > out, please find my replies to the remaining ones below.
-> > 
-> > On Tuesday 30 September 2014 16:03:34 Hans Verkuil wrote:
-> >> On 09/29/14 22:27, Laurent Pinchart wrote:
-> >>> Xilinx platforms have no hardwired video capture or video processing
-> >>> interface. Users create capture and memory to memory processing
-> >>> pipelines in the FPGA fabric to suit their particular needs, by
-> >>> instantiating video IP cores from a large library.
-> >>> 
-> >>> The Xilinx Video IP core is a framework that models a video pipeline
-> >>> described in the device tree and expose the pipeline to userspace
-> >>> through the media controller and V4L2 APIs.
-> >>> 
-> >>> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> >>> Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
-> >>> Signed-off-by: Radhey Shyam Pandey <radheys@xilinx.com>
-> >>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> >>> ---
-> >>> 
-> >>>  .../devicetree/bindings/media/xilinx/video.txt     |  52 ++
-> >>>  .../bindings/media/xilinx/xlnx,video.txt           |  55 ++
-> >>>  MAINTAINERS                                        |   9 +
-> >>>  drivers/media/platform/Kconfig                     |   1 +
-> >>>  drivers/media/platform/Makefile                    |   2 +
-> >>>  drivers/media/platform/xilinx/Kconfig              |  10 +
-> >>>  drivers/media/platform/xilinx/Makefile             |   3 +
-> >>>  drivers/media/platform/xilinx/xilinx-dma.c         | 995 ++++++++++++++
-> >>>  drivers/media/platform/xilinx/xilinx-dma.h         | 109 +++
-> >>>  drivers/media/platform/xilinx/xilinx-vip.c         | 269 ++++++
-> >>>  drivers/media/platform/xilinx/xilinx-vip.h         | 227 +++++
-> >>>  drivers/media/platform/xilinx/xilinx-vipp.c        | 666 ++++++++++++++
-> >>>  drivers/media/platform/xilinx/xilinx-vipp.h        |  47 +
-> >>>  13 files changed, 2445 insertions(+)
-> >>>  create mode 100644
-> >>>  Documentation/devicetree/bindings/media/xilinx/video.txt
-> >>>  create mode 100644
-> >>>  Documentation/devicetree/bindings/media/xilinx/xlnx,video.txt create
-> >>>  mode 100644 drivers/media/platform/xilinx/Kconfig
-> >>>  create mode 100644 drivers/media/platform/xilinx/Makefile
-> >>>  create mode 100644 drivers/media/platform/xilinx/xilinx-dma.c
-> >>>  create mode 100644 drivers/media/platform/xilinx/xilinx-dma.h
-> >>>  create mode 100644 drivers/media/platform/xilinx/xilinx-vip.c
-> >>>  create mode 100644 drivers/media/platform/xilinx/xilinx-vip.h
-> >>>  create mode 100644 drivers/media/platform/xilinx/xilinx-vipp.c
-> >>>  create mode 100644 drivers/media/platform/xilinx/xilinx-vipp.h
-> >>> 
-> >>> Cc: devicetree@vger.kernel.org
-> > 
-> > [snip]
-> > 
-> >>> diff --git a/drivers/media/platform/xilinx/xilinx-dma.c
-> >>> b/drivers/media/platform/xilinx/xilinx-dma.c new file mode 100644
-> >>> index 0000000..e09e8bd
-> >>> --- /dev/null
-> >>> +++ b/drivers/media/platform/xilinx/xilinx-dma.c
-> > 
-> > [snip]
-> > 
-> >>> +static void
-> >>> +__xvip_dma_try_format(struct xvip_dma *dma, struct v4l2_pix_format
-> >>> *pix,
-> >>> +		      const struct xvip_video_format **fmtinfo)
-> >>> +{
-> >>> +	const struct xvip_video_format *info;
-> >>> +	unsigned int min_width;
-> >>> +	unsigned int max_width;
-> >>> +	unsigned int min_bpl;
-> >>> +	unsigned int max_bpl;
-> >>> +	unsigned int width;
-> >>> +	unsigned int align;
-> >>> +	unsigned int bpl;
-> >>> +
-> >>> +	/* Retrieve format information and select the default format if the
-> >>> +	 * requested format isn't supported.
-> >>> +	 */
-> >>> +	info = xvip_get_format_by_fourcc(pix->pixelformat);
-> >>> +	if (IS_ERR(info))
-> >>> +		info = xvip_get_format_by_fourcc(XVIP_DMA_DEF_FORMAT);
-> >>> +
-> >>> +	pix->pixelformat = info->fourcc;
-> >>> +	pix->colorspace = V4L2_COLORSPACE_SRGB;
-> >> 
-> >> Colorspace information can be tricky: for capture the colorspace should
-> >> come from the subdevs (e.g. the HDMI receiver), for output the colorspace
-> >> is set by the application and passed on to the transmitter.
-> > 
-> > I agree with you. However, in the general case, this will be impossible to
-> > implement.
-> > 
-> > Imagine for instance a pipeline with two inputs, one from an HDMI decoder
-> > and one from a sensor. They are both connected to a composing unit that
-> > writes the resulting image to memory. The colorspace on the capture video
-> > node is then undefined.
-> > 
-> > Given that this driver is media controller based and relies on userspace
-> > to propagate formats through the pipeline during configuration, I believe
-> > it should also be userspace's responsibility to retrieve colorspace
-> > information from the correct subdev(s).
-> 
-> But so can your driver. The DMA engine is streaming from/to a subdev, so it
-> should ask/set the colorspace from that subdev. This driver certainly does
-> not know the colorspace, so setting it to some random value is simply
-> wrong.
+Why would you do this?
+What benefit does it give to patch the of_node to have a more specific
+compatible?
 
-That's not how format propagation works. The video node and the subdev it's 
-connected to are configured separately, and the configurations are verified to 
-match at streamon time.
+It is no longer matching any compatible defined in the kernel and is
+anyone actually looking at this?
 
-Setting the colorspace on the connected subdev in response to S_FMT for a 
-video output node will not help much as the subdev won't propagate the 
-colorspace through the pipeline. Similarly, getting the colorspace from the 
-connected subdev for video capture nodes won't help much either, as the 
-colorspace might not have been propagated through the pipeline by userspace 
-yet.
+Reading out the revid information and providing that in some way to
+the children could be beneficial, except for qpnp already giving you
+this version information per block.
 
-I thus propose removing the hardcoded colorspace value (except for the initial 
-value set at probe time, as I need to select one there) and accepting the 
-colorspace set by userspace, with an additional check at streamon time to make 
-sure the colorspaces on the video node and its connected subdev match (the 
-driver already validates the pixel format, width and height, but the 
-colorspace is missing there).
+[..]
+> @@ -45,7 +177,17 @@ static const struct of_device_id pmic_spmi_id_table[] = {
+>         { .compatible = "qcom,spmi-pmic" },
+>         { .compatible = "qcom,pm8941" },
+>         { .compatible = "qcom,pm8841" },
+> +       { .compatible = "qcom,pm8019" },
+> +       { .compatible = "qcom,pm8226" },
+> +       { .compatible = "qcom,pm8110" },
+>         { .compatible = "qcom,pma8084" },
+> +       { .compatible = "qcom,pmi8962" },
+> +       { .compatible = "qcom,pmd9635" },
+> +       { .compatible = "qcom,pm8994" },
+> +       { .compatible = "qcom,pmi8994" },
+> +       { .compatible = "qcom,pm8916" },
+> +       { .compatible = "qcom,pm8004" },
+> +       { .compatible = "qcom,pm8909" },
+>         { }
 
-> I know that if you have a compositor hardware module things will become much
-> more complicated, but that is indeed up to userspace to correct (although
-> in practice I suspect the whole issue will be ignored). Actually, unless
-> the hardware compositor can do the correct colorspace conversion I think
-> the only way to do this correctly would be with openGL shaders if your GPU
-> is powerful enough.
-> 
-> Anyway, even compositors should set a colorspace. If different input streams
-> have different colorspaces, then it is up to the subdev to decide what
-> colorspace to return. I would expect it to be the colorspace of the
-> background color and that it would just leave it up to userspace to correct
-> the colorspace of the composed windows.
-> 
-> The only compositors I know are in the video output path and I don't think
-> they have any colorspace conversion capabilities at all.
-> 
-> >> I'll have a presentation on this topic during the media mini-summit.
-> > 
-> > It was very interesting, thanks again :-)
-> > 
-> >>> +	pix->field = V4L2_FIELD_NONE;
-> >>> +
-> >>> +	/* The transfer alignment requirements are expressed in bytes.
-> >>> Compute
-> >>> +	 * the minimum and maximum values, clamp the requested width and
-> >>> convert
-> >>> +	 * it back to pixels.
-> >>> +	 */
-> >>> +	align = lcm(dma->align, info->bpp);
-> >>> +	min_width = roundup(XVIP_DMA_MIN_WIDTH, align);
-> >>> +	max_width = rounddown(XVIP_DMA_MAX_WIDTH, align);
-> >>> +	width = rounddown(pix->width * info->bpp, align);
-> >>> +
-> >>> +	pix->width = clamp(width, min_width, max_width) / info->bpp;
-> >>> +	pix->height = clamp(pix->height, XVIP_DMA_MIN_HEIGHT,
-> >>> +			    XVIP_DMA_MAX_HEIGHT);
-> >>> +
-> >>> +	/* Clamp the requested bytes per line value. If the maximum bytes per
-> >>> +	 * line value is zero, the module doesn't support user configurable
-> >>> line
-> >>> +	 * sizes. Override the requested value with the minimum in that case.
-> >>> +	 */
-> >>> +	min_bpl = pix->width * info->bpp;
-> >>> +	max_bpl = rounddown(XVIP_DMA_MAX_WIDTH, dma->align);
-> >>> +	bpl = rounddown(pix->bytesperline, dma->align);
-> >>> +
-> >>> +	pix->bytesperline = clamp(bpl, min_bpl, max_bpl);
-> >>> +	pix->sizeimage = pix->bytesperline * pix->height;
-> >>> +
-> >>> +	if (fmtinfo)
-> >>> +		*fmtinfo = info;
-> >>> +}
-> > 
-> > [snip]
-> > 
-> >>> +int xvip_dma_init(struct xvip_composite_device *xdev, struct xvip_dma
-> >>> *dma,
-> >>> +		  enum v4l2_buf_type type, unsigned int port)
-> >>> +{
-> >>> +	char name[14];
-> >>> +	int ret;
-> >>> +
-> >>> +	dma->xdev = xdev;
-> >>> +	dma->port = port;
-> >>> +	mutex_init(&dma->lock);
-> >>> +	mutex_init(&dma->pipe.lock);
-> >>> +	INIT_LIST_HEAD(&dma->queued_bufs);
-> >>> +	spin_lock_init(&dma->queued_lock);
-> >>> +
-> >>> +	dma->fmtinfo = xvip_get_format_by_fourcc(XVIP_DMA_DEF_FORMAT);
-> >>> +	dma->format.pixelformat = dma->fmtinfo->fourcc;
-> >>> +	dma->format.colorspace = V4L2_COLORSPACE_SRGB;
-> >>> +	dma->format.field = V4L2_FIELD_NONE;
-> >>> +	dma->format.width = XVIP_DMA_DEF_WIDTH;
-> >>> +	dma->format.height = XVIP_DMA_DEF_HEIGHT;
-> >>> +	dma->format.bytesperline = dma->format.width * dma->fmtinfo->bpp;
-> >>> +	dma->format.sizeimage = dma->format.bytesperline *
-> >>> dma->format.height;
-> >>> +
-> >>> +	/* Initialize the media entity... */
-> >>> +	dma->pad.flags = type == V4L2_BUF_TYPE_VIDEO_CAPTURE
-> >>> +		       ? MEDIA_PAD_FL_SINK : MEDIA_PAD_FL_SOURCE;
-> >>> +
-> >>> +	ret = media_entity_init(&dma->video.entity, 1, &dma->pad, 0);
-> >>> +	if (ret < 0)
-> >>> +		goto error;
-> >>> +
-> >>> +	/* ... and the video node... */
-> >>> +	dma->video.v4l2_dev = &xdev->v4l2_dev;
-> >>> +	dma->video.fops = &xvip_dma_fops;
-> >>> +	snprintf(dma->video.name, sizeof(dma->video.name), "%s %s %u",
-> >>> +		 xdev->dev->of_node->name,
-> >>> +		 type == V4L2_BUF_TYPE_VIDEO_CAPTURE ? "output" : "input",
-> >>> +		 port);
-> >>> +	dma->video.vfl_type = VFL_TYPE_GRABBER;
-> >>> +	dma->video.vfl_dir = type == V4L2_BUF_TYPE_VIDEO_CAPTURE
-> >>> +			   ? VFL_DIR_RX : VFL_DIR_TX;
-> >>> +	dma->video.release = video_device_release_empty;
-> >>> +	dma->video.ioctl_ops = &xvip_dma_ioctl_ops;
-> >> 
-> >> Set dma->video.queue to &dma->queue. That's all you need to be able to
-> >> use the vb2 helper functions.
-> >> 
-> >>> +
-> >>> +	video_set_drvdata(&dma->video, dma);
-> >>> +
-> >>> +	/* ... and the buffers queue... */
-> >>> +	dma->alloc_ctx = vb2_dma_contig_init_ctx(dma->xdev->dev);
-> >>> +	if (IS_ERR(dma->alloc_ctx))
-> >>> +		goto error;
-> >>> +
-> >>> +	dma->queue.type = type;
-> >>> +	dma->queue.io_modes = VB2_MMAP | VB2_USERPTR | VB2_DMABUF;
-> >> 
-> >> Add VB2_READ/WRITE. It's basically for free, so why not?
-> > 
-> > Because we want to discourage the users from using it ? :-)
-> 
-> Why? I've used it often enough to quickly test the output by just running
-> 'cat /dev/video0 >x.raw'. No need to compile special programs, works great.
-> As I said, you get it for free, it doesn't allocate additional resources,
-> so why not?
+This part is good, please send this out on it's own.
 
-You won't be able to test the output without an application as you need to 
-configure the format through the pipeline anyway, so read/write doesn't bring 
-much. I'm thus not very keen on exposing that API as applications shouldn't 
-use it with this driver.
-
-> >>> +	dma->queue.drv_priv = dma;
-> >>> +	dma->queue.buf_struct_size = sizeof(struct xvip_dma_buffer);
-> >>> +	dma->queue.ops = &xvip_dma_queue_qops;
-> >>> +	dma->queue.mem_ops = &vb2_dma_contig_memops;
-> >>> +	dma->queue.timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC
-> >>> +				   | V4L2_BUF_FLAG_TSTAMP_SRC_EOF;
-> >>> +	ret = vb2_queue_init(&dma->queue);
-> >>> +	if (ret < 0) {
-> >>> +		dev_err(dma->xdev->dev, "failed to initialize VB2 queue\n");
-> >>> +		goto error;
-> >>> +	}
-> >>> +
-> >>> +	/* ... and the DMA channel. */
-> >>> +	sprintf(name, "port%u", port);
-> >>> +	dma->dma = dma_request_slave_channel(dma->xdev->dev, name);
-> >>> +	if (dma->dma == NULL) {
-> >>> +		dev_err(dma->xdev->dev, "no VDMA channel found\n");
-> >>> +		ret = -ENODEV;
-> >>> +		goto error;
-> >>> +	}
-> >>> +
-> >>> +	dma->align = 1 << dma->dma->device->copy_align;
-> >>> +
-> >>> +	ret = video_register_device(&dma->video, VFL_TYPE_GRABBER, -1);
-> >>> +	if (ret < 0) {
-> >>> +		dev_err(dma->xdev->dev, "failed to register video device\n");
-> >>> +		goto error;
-> >>> +	}
-> >>> +
-> >>> +	return 0;
-> >>> +
-> >>> +error:
-> >>> +	xvip_dma_cleanup(dma);
-> >>> +	return ret;
-> >>> +}
-
--- 
 Regards,
-
-Laurent Pinchart
+Bjorn
