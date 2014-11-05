@@ -1,153 +1,209 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 5/5] of: of_reconfig_get_state_change() of notifier
- helper.
-Date: Wed, 05 Nov 2014 20:07:31 +0000
-Message-ID: <20141105200731.C44B4C41C40@trevor.secretlab.ca>
-References: <1414528433-9650-1-git-send-email-pantelis.antoniou@konsulko.com>
-	<1414528433-9650-6-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414528433-9650-6-git-send-email-pantelis.antoniou@konsulko.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>, Pantelis
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 4/5] of: Add old prop argument on OF_RECONFIG_UPDATE_PROPERTY
+Date: Wed, 5 Nov 2014 22:08:18 +0200
+Message-ID: <E0B33C12-EBD6-465C-813C-7FD8553A3CB8@konsulko.com>
+References: <1414528433-9650-1-git-send-email-pantelis.antoniou@konsulko.com> <1414528433-9650-5-git-send-email-pantelis.antoniou@konsulko.com> <20141105200129.B4438C41C40@trevor.secretlab.ca>
+Mime-Version: 1.0 (Mac OS X Mail 8.0 \(1990.1\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141105200129.B4438C41C40-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pete Popov <pete.popov-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Dan Malek <dan.malek-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Georgi Vlaev <georgi.vlaev@konsulko>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 28 Oct 2014 22:33:53 +0200
-, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
- wrote:
-> Introduce of_reconfig_get_state_change() which allows an of notifier
-> to query about device state changes.
-> 
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Hi Grant,
 
-Applied, thanks.
+> On Nov 5, 2014, at 22:01 , Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> w=
+rote:
+>=20
+> On Tue, 28 Oct 2014 22:33:52 +0200
+> , Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> wrote:
+>> The notifier now includes the old_prop argument when updating
+>> properties, propagate this API to changeset internals while
+>> also retaining the old behaviour of retrieving the old_property
+>> when NULL is passed.
+>>=20
+>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>=20
+> I'm still fuzzy on the need for this patch. Is this just an optimizat=
+ion
+> so that the property doesn't get looked up twice? Or is there a reaso=
+n
+> when the oldprop really needs to be passed in explicitly?
+>=20
 
-g.
+In the case of overlay=E2=80=99s applying a property change the old pro=
+perty has
+been already retrieved. Passing it as an argument saves us a traversal =
+of the
+property list.
 
-> ---
->  drivers/of/dynamic.c | 96 ++++++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/of.h   |  1 +
->  2 files changed, 97 insertions(+)
-> 
-> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-> index 9eb8528..303a59b 100644
-> --- a/drivers/of/dynamic.c
-> +++ b/drivers/of/dynamic.c
-> @@ -85,6 +85,102 @@ int of_reconfig_notify(unsigned long action, void *p)
->  	return notifier_to_errno(rc);
->  }
->  
-> +/*
-> + * of_reconfig_get_state_change()	- Returns new state of device
-> + * @action	- action of the of notifier
-> + * @arg		- argument of the of notifier
-> + *
-> + * Returns the new state of a device based on the notifier used.
-> + * Returns 0 on device going from enabled to disabled, 1 on device
-> + * going from disabled to enabled and -1 on no change.
-> + */
-> +int of_reconfig_get_state_change(unsigned long action, void *arg)
-> +{
-> +	struct device_node *dn;
-> +	struct property *prop, *old_prop;
-> +	struct of_prop_reconfig *pr;
-> +	int is_status, status_state, old_status_state, prev_state, new_state;
-> +
-> +	/* figure out if a device should be created or destroyed */
-> +	dn = NULL;
-> +	prop = old_prop = NULL;
-> +	switch (action) {
-> +	case OF_RECONFIG_ATTACH_NODE:
-> +	case OF_RECONFIG_DETACH_NODE:
-> +		dn = arg;
-> +		prop = of_find_property(dn, "status", NULL);
-> +		break;
-> +	case OF_RECONFIG_ADD_PROPERTY:
-> +	case OF_RECONFIG_REMOVE_PROPERTY:
-> +		pr = arg;
-> +		dn = pr->dn;
-> +		prop = pr->prop;
-> +		break;
-> +	case OF_RECONFIG_UPDATE_PROPERTY:
-> +		pr = arg;
-> +		dn = pr->dn;
-> +		prop = pr->prop;
-> +		old_prop = pr->old_prop;
-> +		break;
-> +	default:
-> +		return -1;	/* don't care */
-> +	}
-> +
-> +	is_status = 0;
-> +	status_state = -1;
-> +	old_status_state = -1;
-> +	prev_state = -1;
-> +	new_state = -1;
-> +
-> +	if (prop && !strcmp(prop->name, "status")) {
-> +		is_status = 1;
-> +		status_state = !strcmp(prop->value, "okay") ||
-> +			       !strcmp(prop->value, "ok");
-> +		if (old_prop)
-> +			old_status_state = !strcmp(old_prop->value, "okay") ||
-> +					   !strcmp(old_prop->value, "ok");
-> +	}
-> +
-> +	switch (action) {
-> +	case OF_RECONFIG_ATTACH_NODE:
-> +		prev_state = 0;
-> +		/* -1 & 0 status either missing or okay */
-> +		new_state = status_state != 0;
-> +		break;
-> +	case OF_RECONFIG_DETACH_NODE:
-> +		/* -1 & 0 status either missing or okay */
-> +		prev_state = status_state != 0;
-> +		new_state = 0;
-> +		break;
-> +	case OF_RECONFIG_ADD_PROPERTY:
-> +		if (is_status) {
-> +			/* no status property -> enabled (legacy) */
-> +			prev_state = 1;
-> +			new_state = status_state;
-> +		}
-> +		break;
-> +	case OF_RECONFIG_REMOVE_PROPERTY:
-> +		if (is_status) {
-> +			prev_state = status_state;
-> +			/* no status property -> enabled (legacy) */
-> +			new_state = 1;
-> +		}
-> +		break;
-> +	case OF_RECONFIG_UPDATE_PROPERTY:
-> +		if (is_status) {
-> +			prev_state = old_status_state != 0;
-> +			new_state = status_state != 0;
-> +		}
-> +		break;
-> +	}
-> +
-> +	if (prev_state == new_state)
-> +		return -1;
-> +
-> +	return new_state;
-> +}
-> +EXPORT_SYMBOL_GPL(of_reconfig_get_state_change);
-> +
->  int of_property_notify(int action, struct device_node *np,
->  		       struct property *prop, struct property *oldprop)
->  {
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 71d25aa..9ff1ec5 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -328,6 +328,7 @@ struct of_prop_reconfig {
->  extern int of_reconfig_notifier_register(struct notifier_block *);
->  extern int of_reconfig_notifier_unregister(struct notifier_block *);
->  extern int of_reconfig_notify(unsigned long, void *);
-> +extern int of_reconfig_get_state_change(unsigned long action, void *arg);
->  
->  extern int of_attach_node(struct device_node *);
->  extern int of_detach_node(struct device_node *);
-> -- 
-> 1.7.12
-> 
+On the original series were removal was supported, the old property was=
+ required
+since you can=E2=80=99t find the old property anymore on the node (it w=
+as on another list).=20
+
+When we go back to revisit the removal case, that API is useful.
+
+> g.
+>=20
+
+Regards
+
+=E2=80=94 Pantelis
+
+>> ---
+>> drivers/of/dynamic.c  | 18 ++++++++++++++----
+>> drivers/of/selftest.c |  2 +-
+>> include/linux/of.h    | 20 +++++++++++++-------
+>> 3 files changed, 28 insertions(+), 12 deletions(-)
+>>=20
+>> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+>> index 8e8b614..9eb8528 100644
+>> --- a/drivers/of/dynamic.c
+>> +++ b/drivers/of/dynamic.c
+>> @@ -627,6 +627,7 @@ int of_changeset_revert(struct of_changeset *ocs=
+)
+>>  * @action:	action to perform
+>>  * @np:		Pointer to device node
+>>  * @prop:	Pointer to property
+>> + * @old_prop:	Pointer to old property (if updating)
+>>  *
+>>  * On action being one of:
+>>  * + OF_RECONFIG_ATTACH_NODE
+>> @@ -637,10 +638,21 @@ int of_changeset_revert(struct of_changeset *o=
+cs)
+>>  * Returns 0 on success, a negative error value in case of an error.
+>>  */
+>> int of_changeset_action(struct of_changeset *ocs, unsigned long acti=
+on,
+>> -		struct device_node *np, struct property *prop)
+>> +		struct device_node *np, struct property *prop,
+>> +		struct property *oldprop)
+>> {
+>> 	struct of_changeset_entry *ce;
+>>=20
+>> +	/* in case someone passed NULL as old_prop, find it */
+>> +	if (action =3D=3D OF_RECONFIG_UPDATE_PROPERTY && prop && !oldprop)=
+ {
+>> +		oldprop =3D of_find_property(np, prop->name, NULL);
+>> +		if (!oldprop) {
+>> +			pr_err("%s: Failed to find old_prop for \"%s/%s\"\n",
+>> +					__func__, np->full_name, prop->name);
+>> +			return -EINVAL;
+>> +		}
+>> +	}
+>> +
+>> 	ce =3D kzalloc(sizeof(*ce), GFP_KERNEL);
+>> 	if (!ce) {
+>> 		pr_err("%s: Failed to allocate\n", __func__);
+>> @@ -650,9 +662,7 @@ int of_changeset_action(struct of_changeset *ocs=
+, unsigned long action,
+>> 	ce->action =3D action;
+>> 	ce->np =3D of_node_get(np);
+>> 	ce->prop =3D prop;
+>> -
+>> -	if (action =3D=3D OF_RECONFIG_UPDATE_PROPERTY && prop)
+>> -		ce->old_prop =3D of_find_property(np, prop->name, NULL);
+>> +	ce->old_prop =3D oldprop;
+>>=20
+>> 	/* add it to the list */
+>> 	list_add_tail(&ce->node, &ocs->entries);
+>> diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
+>> index 7800127..16102fd 100644
+>> --- a/drivers/of/selftest.c
+>> +++ b/drivers/of/selftest.c
+>> @@ -427,7 +427,7 @@ static void __init of_selftest_changeset(void)
+>> 	selftest(!of_changeset_detach_node(&chgset, nremove), "fail remove =
+node\n");
+>> 	selftest(!of_changeset_attach_node(&chgset, n21), "fail attach n21\=
+n");
+>> 	selftest(!of_changeset_add_property(&chgset, parent, ppadd), "fail =
+add prop\n");
+>> -	selftest(!of_changeset_update_property(&chgset, parent, ppupdate),=
+ "fail update prop\n");
+>> +	selftest(!of_changeset_update_property(&chgset, parent, ppupdate, =
+NULL), "fail update prop\n");
+>> 	selftest(!of_changeset_remove_property(&chgset, parent, ppremove), =
+"fail remove prop\n");
+>> 	mutex_lock(&of_mutex);
+>> 	selftest(!of_changeset_apply(&chgset), "apply failed\n");
+>> diff --git a/include/linux/of.h b/include/linux/of.h
+>> index 6545e7a..71d25aa 100644
+>> --- a/include/linux/of.h
+>> +++ b/include/linux/of.h
+>> @@ -830,36 +830,42 @@ extern int of_changeset_apply(struct of_change=
+set *ocs);
+>> extern int of_changeset_revert(struct of_changeset *ocs);
+>> extern int of_changeset_action(struct of_changeset *ocs,
+>> 		unsigned long action, struct device_node *np,
+>> -		struct property *prop);
+>> +		struct property *prop, struct property *old_prop);
+>>=20
+>> static inline int of_changeset_attach_node(struct of_changeset *ocs,
+>> 		struct device_node *np)
+>> {
+>> -	return of_changeset_action(ocs, OF_RECONFIG_ATTACH_NODE, np, NULL)=
+;
+>> +	return of_changeset_action(ocs, OF_RECONFIG_ATTACH_NODE, np, NULL,
+>> +			NULL);
+>> }
+>>=20
+>> static inline int of_changeset_detach_node(struct of_changeset *ocs,
+>> 		struct device_node *np)
+>> {
+>> -	return of_changeset_action(ocs, OF_RECONFIG_DETACH_NODE, np, NULL)=
+;
+>> +	return of_changeset_action(ocs, OF_RECONFIG_DETACH_NODE, np, NULL,
+>> +			NULL);
+>> }
+>>=20
+>> static inline int of_changeset_add_property(struct of_changeset *ocs=
+,
+>> 		struct device_node *np, struct property *prop)
+>> {
+>> -	return of_changeset_action(ocs, OF_RECONFIG_ADD_PROPERTY, np, prop=
+);
+>> +	return of_changeset_action(ocs, OF_RECONFIG_ADD_PROPERTY, np, prop=
+,
+>> +			NULL);
+>> }
+>>=20
+>> static inline int of_changeset_remove_property(struct of_changeset *=
+ocs,
+>> 		struct device_node *np, struct property *prop)
+>> {
+>> -	return of_changeset_action(ocs, OF_RECONFIG_REMOVE_PROPERTY, np, p=
+rop);
+>> +	return of_changeset_action(ocs, OF_RECONFIG_REMOVE_PROPERTY, np, p=
+rop,
+>> +			NULL);
+>> }
+>>=20
+>> static inline int of_changeset_update_property(struct of_changeset *=
+ocs,
+>> -		struct device_node *np, struct property *prop)
+>> +		struct device_node *np, struct property *prop,
+>> +		struct property *old_prop)
+>> {
+>> -	return of_changeset_action(ocs, OF_RECONFIG_UPDATE_PROPERTY, np, p=
+rop);
+>> +	return of_changeset_action(ocs, OF_RECONFIG_UPDATE_PROPERTY, np, p=
+rop,
+>> +			old_prop);
+>> }
+>> #endif
+>>=20
+>> --=20
+>> 1.7.12
+>>=20
+>=20
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
