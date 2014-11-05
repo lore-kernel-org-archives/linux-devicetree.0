@@ -1,183 +1,76 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 1/2] imx-drm: imx-hdmi: split imx soc specific code from
- imx-hdmi
-Date: Wed, 05 Nov 2014 14:41:22 +0100
-Message-ID: <1415194882.5696.9.camel@pengutronix.de>
-References: <1415192101-6404-1-git-send-email-andy.yan@rock-chips.com>
- <1415192101-6404-2-git-send-email-andy.yan@rock-chips.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH] mfd: qcom-spmi-pmic: Add support for more chips versions
+Date: Wed, 05 Nov 2014 15:50:29 +0200
+Message-ID: <1415195429.3660.2.camel@mm-sol.com>
+References: <1415108003-16387-1-git-send-email-iivanov@mm-sol.com>
+	 <545A1CD2.4030407@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1415192101-6404-2-git-send-email-andy.yan@rock-chips.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, rmk+kernel@arm.linux.org.uk, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <545A1CD2.4030407@suse.de>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
 
-I think separating the core from the SoC specific part is a good step
-into the right direction.
+On Wed, 2014-11-05 at 13:49 +0100, Andreas F=C3=A4rber wrote:
+> Hi,
+>=20
+> Am 04.11.2014 um 14:33 schrieb Ivan T. Ivanov:
+> > Update compatible string with runtime detected chip revision
+> > information, for example qcom,pm8941 will become qcom,pm8941-v1.0.
+>=20
+> That's not what the patch does though?
 
-Am Mittwoch, den 05.11.2014, 20:55 +0800 schrieb Andy Yan:
-> imx6 and rockchip rk3288 and JZ4780 (Ingenic Xburst/MIPS)
-> use the interface compatible Designware HDMI IP, but they
-> also have some lightly difference, such as phy pll configuration,
-> register width(imx hdmi register is one byte, but rk3288 is 4
-> bytes width), 4K support(imx6 doesn't support 4k, but rk3288 does),
-> clk useage,and the crtc mux configuration is also platform specific.
-> 
-> To reuse the imx hdmi driver, split the platform specific code out
-> to dw_hdmi-imx.c.
-> 
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-[...]
-> +static int imx_hdmi_parse_dt(struct imx_hdmi_priv *hdmi)
-> +{
-> +	struct device_node *np = hdmi->dev->of_node;
-> +
-> +	hdmi->regmap = syscon_regmap_lookup_by_phandle(np, "gpr");
-> +	if (IS_ERR(hdmi->regmap)) {
-> +		dev_err(hdmi->dev, "Unable to get gpr\n");
-> +		return PTR_ERR(hdmi->regmap);
-> +	}
-> +
-> +	hdmi->isfr_clk = devm_clk_get(hdmi->dev, "isfr");
-> +	if (IS_ERR(hdmi->isfr_clk)) {
-> +		dev_err(hdmi->dev, "Unable to get HDMI isfr clk\n");
-> +		return PTR_ERR(hdmi->isfr_clk);
-> +	}
-> +
-> +	hdmi->iahb_clk = devm_clk_get(hdmi->dev, "iahb");
-> +	if (IS_ERR(hdmi->iahb_clk)) {
-> +		dev_err(hdmi->dev, "Unable to get HDMI iahb clk\n");
-> +		return PTR_ERR(hdmi->iahb_clk);
-> +	}
+Patch add support for more chips and make compatible property more spec=
+ific.
+Will correct description.
 
-Surely this IP core needs to be clocked regardless of the SoC? How are
-clocks controlled on rk3288 and jz4780?
+>=20
+> > Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+> > ---
+> >  .../devicetree/bindings/mfd/qcom,spmi-pmic.txt     |  18 ++-
+> >  drivers/mfd/qcom-spmi-pmic.c                       | 142 +++++++++=
+++++++++++++
+> >  2 files changed, 156 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.t=
+xt=20
+> > b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+> > index 7182b88..bbe7db8 100644
+> > --- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+> > +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+> > @@ -15,10 +15,20 @@ each. A function can consume one or more of the=
+se fixed-size register=20
+> > regions.
+> >=20
+> >  Required properties:
+> >  - compatible:      Should contain one of:
+> > -                     "qcom,pm8941"
+> > -                     "qcom,pm8841"
+> > -                     "qcom,pma8084"
+> > -                     or generalized "qcom,spmi-pmic".
+> > +                   qcom,pm8941,
+> > +                   qcom,pm8841,
+> > +                   qcom,pm8019,
+> > +                   qcom,pm8226,
+> > +                   qcom,pm8110,
+> > +                   qcom,pma8084,
+> > +                   qcom,pmi8962,
+> > +                   qcom,pmd9635,
+> > +                   qcom,pm8994,
+> > +                   qcom,pmi8994,
+> > +                   qcom,pm8916,
+> > +                   qcom,pm8004,
+> > +                   qcom,pm8909,
+>=20
+> Please either keep the strings consistently quoted, or drop the trail=
+ing
+> comma to avoid any confusion of where it terminates.
 
-[...]
-> +/*On rockchip platform, no-word access to the hdmi
-> + * register will causes an imprecise external abort
-> + */
-> +static inline void hdmi_writel(struct imx_hdmi *hdmi, u32 val, int offset)
-> +{
-> +	writel(val, hdmi->regs + (offset << 2));
-> +}
->  
-> -	bool phy_enabled;
-> -	struct drm_display_mode previous_mode;
-> +static inline u32 hdmi_readl(struct imx_hdmi *hdmi, int offset)
-> +{
-> +	return readl(hdmi->regs + (offset << 2));
-> +}
->  
-> -	struct regmap *regmap;
-> -	struct i2c_adapter *ddc;
-> -	void __iomem *regs;
-> +static void hdmi_modl(struct imx_hdmi *hdmi, u32 data, u32 mask, unsigned reg)
-> +{
-> +	u32 val = hdmi_readl(hdmi, reg) & ~mask;
->  
-> -	unsigned int sample_rate;
-> -	int ratio;
-> -};
-> +	val |= data & mask;
-> +	hdmi_writel(hdmi, val, reg);
-> +}
->  
-> -static void imx_hdmi_set_ipu_di_mux(struct imx_hdmi *hdmi, int ipu_di)
-> +static void hdmi_mask_writel(struct imx_hdmi *hdmi, u32 data, unsigned int reg,
-> +			     u32 shift, u32 mask)
->  {
-> -	regmap_update_bits(hdmi->regmap, IOMUXC_GPR3,
-> -			   IMX6Q_GPR3_HDMI_MUX_CTL_MASK,
-> -			   ipu_di << IMX6Q_GPR3_HDMI_MUX_CTL_SHIFT);
-> +	hdmi_modl(hdmi, data << shift, mask, reg);
->  }
->  
-> -static inline void hdmi_writeb(struct imx_hdmi *hdmi, u8 val, int offset)
-> +static inline void hdmi_writeb(struct imx_hdmi *hdmi, u32 val, int offset)
->  {
->  	writeb(val, hdmi->regs + offset);
->  }
->  
-> -static inline u8 hdmi_readb(struct imx_hdmi *hdmi, int offset)
-> +static inline u32 hdmi_readb(struct imx_hdmi *hdmi, int offset)
->  {
->  	return readb(hdmi->regs + offset);
->  }
->  
-> -static void hdmi_modb(struct imx_hdmi *hdmi, u8 data, u8 mask, unsigned reg)
-> +static void hdmi_modb(struct imx_hdmi *hdmi, u32 data, u32 mask, unsigned reg)
->  {
->  	u8 val = hdmi_readb(hdmi, reg) & ~mask;
+Sure, will fix it.
 
-Do you really need to use readl instead of readb? In my opinion it would
-be better then to convert the driver to use regmap for register access
-(in a separate patch) and then let the SoC specific driver extension
-provide the regmap to the core driver.
-
-[...]
-> diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
-> new file mode 100644
-> index 0000000..e7e8285
-> --- /dev/null
-> +++ b/include/drm/bridge/dw_hdmi.h
-> @@ -0,0 +1,114 @@
-> +/*
-> + * Copyright (C) 2011 Freescale Semiconductor, Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#ifndef __DW_HDMI_H__
-> +#define __DW_HDMI_H__
-> +
-> +#include <drm/drmP.h>
-> +
-> +#define HDMI_EDID_LEN           512
-> +
-> +enum {
-> +	RES_8,
-> +	RES_10,
-> +	RES_12,
-> +	RES_MAX,
-> +};
-> +
-> +enum imx_hdmi_devtype {
-> +	IMX6Q_HDMI,
-> +	IMX6DL_HDMI,
-> +};
-> +
-> +struct mpll_config {
-> +	unsigned long mpixelclock;
-> +	struct {
-> +		u16 cpce;
-> +		u16 gmp;
-> +	} res[RES_MAX];
-> +};
-> +
-> +struct curr_ctrl {
-> +	unsigned long mpixelclock;
-> +	u16 curr[RES_MAX];
-> +};
-
-For a header file in include/drm/bridge maybe these struct names are a
-bit too generic now.
-
-regards
-Philipp
+Thank you,
+Ivan
