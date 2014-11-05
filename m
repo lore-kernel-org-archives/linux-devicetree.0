@@ -1,119 +1,64 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v1 2/3] usb: phy: convert gpio-vbus to gpio_desc
-Date: Wed, 5 Nov 2014 14:09:42 -0600
-Message-ID: <20141105200942.GW6548@saruman>
-References: <1414951910-16075-1-git-send-email-robert.jarzmik@free.fr>
- <1414951910-16075-2-git-send-email-robert.jarzmik@free.fr>
- <20141105192957.GM6548@saruman>
- <87sihx1lcd.fsf@free.fr>
- <20141105195015.GU6548@saruman>
- <87oasl1kn7.fsf@free.fr>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 0/2] i2c: Imagination Technologies I2C adapter driver
+Date: Wed, 5 Nov 2014 17:21:57 -0300
+Message-ID: <1415218919-9085-1-git-send-email-ezequiel.garcia@imgtec.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="EDT6MSV0B3GxyNyZ"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87oasl1kn7.fsf-GANU6spQydw@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---EDT6MSV0B3GxyNyZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Changes from v2:
 
-Hi,
+  * Removed support for the "linux,i2c-index" devicetree property.
 
-On Wed, Nov 05, 2014 at 09:02:04PM +0100, Robert Jarzmik wrote:
-> Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> writes:
->=20
-> > On Wed, Nov 05, 2014 at 08:46:58PM +0100, Robert Jarzmik wrote:
-> > Well, let's add that :-) Just make it optional. It's pointless to have
-> > 80% duplicated code just because of 20% missing in phy-generic :-)
-> >
-> > Then we avoid adding gpio-vbus specific DT properties too.
-> OK, got it.
->=20
-> It will take me a couple of days. Philipp, am I missing something apart t=
-he
-> detection and connect stuff ? While I'm at making my board work with
-> phy-generic, let's thing ahead.
->=20
-> Felipe, that will mean at least this for phy-generic :
->  - usb_phy_gen_create_phy() will be enhanced
->    =3D> struct usb_phy_generic_platform_data will get a :
->      - int gpio_vbus field (or whatever name you wish)
->      - int gpio_vbus_inverted (or maybe we could go directly for gpio des=
-c)
+Changes from v1:
 
-Actually, you might want to first convert phy-generic to gpio_desc and
-avoid the inverted field.
+  * Cleaned-up the clock filter configuration by adding some macros.
 
->      - int gpio_pullup field (I'm not sure here, maybe we should just dro=
-p that)
->      - bool wakeup field (or another name)
+  * Dropped the ISR_ATOMIC macro since it wasn't used anywhere and
+    instead just return 0.
 
-sonds good to me.
+  * Rename some functions with the img_i2c_ prefix to follow the rest
+    of the driver style.
 
->    =3D> device tree will get :
->      - a vbus-gpio (or another name)
->      - a pullup-gpio (or nothing if we drop)
+  * Make img_i2c_{readl,writel} receive a struct img_i2c argument,
+    instead of the register base.
 
-fine by me, as long as their all optional and agreed with devicetree
-folks. I think we still have time for v3.19 if you manage to finish this
-before next week's end.
+  * Removed a duplicated flag in INT_ENABLE_MASK_ATOMIC macro definition.
 
->  - there will be a request_irq() and a workqueue (mostly taken from gpio-=
-vbus)
->    =3D> will call usb_gadget_vbus_connect()
->    =3D> will call usb_gadget_vbus_disconnect()
+  * Added the system clock to the devicetree binding. Improved the binding
+    document.
 
-the workqueue should be unnecessary if you use
-devm_request_threaded_irq() without a top half.
+  * Added an explanation by James Hogan with details about the timer-based
+    abort condition detection.
 
-> I'm writing all this just to be sure I have the good picture before I
-> start coding.
+This patchset adds a new adapter driver supporting the Imagination Technologies
+I2C Serial Control Bus (SCB) controller.
 
-sounds good to me :-)
+The driver supports the usual FIFO-based mode of operation (so-called automatic
+in the driver), and also a set lower-level modes of operation that is used
+for 0-length writes and for bus recovery routines.
 
-When it comes to DT, let's try to keep things as generic as possible so
-we can just move phy-generic.c into drivers/phy/ later on without much
-effort ;-)
+The recently merged bus recovery infrastructure is not used, given this driver
+already implements a fairly complex bus recovery, and has been tested
+extensively with it.
 
-I guess everything that you need already has existent bindings.
+Based on v3.18-rc2.
 
-cheers
+James Hogan (2):
+  i2c: Add Imagination Technologies I2C SCB driver
+  DT: i2c: Add binding document for IMG I2C SCB
 
---=20
-balbi
+ .../devicetree/bindings/i2c/i2c-img-scb.txt        |   29 +
+ drivers/i2c/busses/Kconfig                         |   10 +
+ drivers/i2c/busses/Makefile                        |    1 +
+ drivers/i2c/busses/i2c-img-scb.c                   | 1397 ++++++++++++++++++++
+ 4 files changed, 1437 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-img-scb.txt
+ create mode 100644 drivers/i2c/busses/i2c-img-scb.c
 
---EDT6MSV0B3GxyNyZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUWoQGAAoJEIaOsuA1yqREcvMP/3GA7kwa3YlVn6ogS16i+9bq
-yrejKMgtmhUaXQNRPEq4jIwIPb2BLlLtqMl4k4iQ8HLmcvjL06ipvEiahjfPB8LA
-Ee++5vbEO5xE2j7R1jnKXpWtCy08LwV8MGQGwoXhTv0I53893CXq/DLhFbK4oBjR
-cYk+yZcC6xH5mwVO4L6TmLa+6EIXktoFXEdAqshrrvw/acmW54T4ihpzQIwSHyOv
-WrpK6s/XeepFmicnK6+Wt9Dw4JgDYwa0PBqAnQfVuuHsqqOnTKKvtTPSsIVzWsgD
-jb3SararQe50ZiyhrU6dLqKUWcQ53hYG1QwQ+md4TOprydlWeUBv8P+xOKNUOPgf
-MjyNEAKdOrQOzPC++K8rJfTZDtlLKmkgxOarYimGp8M0Zg4UkxYiMWhL5Qe/vTET
-FxmZv3mkBkApJu5smHL6Tr+oEaWzoXnYbZpxMmJqkD2kyZIAJ7nbCNIbQeVzoxLD
-Hsn38ph8jlZQW0FNOFZtvWvnUrvrOX89di2LkZHMjXKbi5bpDaNPKJ48aW+Qd//Y
-OpacfzKGZdZVkYgHO6I/QqJNM/oLCUBf8pl/qPeRhknOKkWyXEnLwWKOmmjM0zg/
-wBXPpNtygEAA3Fq9J3mmLHPTgJ3jvD1EV1cmgEAqYAcWQ2J+ceVVd2SfMECkfFLH
-PYxE8epdU/AAaJgCps9D
-=oFWb
------END PGP SIGNATURE-----
-
---EDT6MSV0B3GxyNyZ--
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.1.0
