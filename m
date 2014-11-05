@@ -1,175 +1,160 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 1/3] iio: exyno-adc: use syscon for PMU register access
-Date: Wed, 05 Nov 2014 15:25:43 +0000
-Message-ID: <545A4177.90803@kernel.org>
-References: <1410857931-4980-1-git-send-email-ch.naveen@samsung.com>	<1410857931-4980-2-git-send-email-ch.naveen@samsung.com> <CAFp+6iH77ToXfOG1bXpCi60JpuzhhxOqaz99=9v4_9DppkSCNw@mail.gmail.com>
+From: Emil Medve <Emilian.Medve@Freescale.com>
+Subject: [PATCH v3 1/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan
+Date: Wed, 5 Nov 2014 09:18:51 -0600
+Message-ID: <1415200734-6978-2-git-send-email-Emilian.Medve@Freescale.com>
+References: <1415200734-6978-1-git-send-email-Emilian.Medve@Freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAFp+6iH77ToXfOG1bXpCi60JpuzhhxOqaz99=9v4_9DppkSCNw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vivek Gautam <gautam.vivek@samsung.com>, linux-iio@vger.kernel.org
-Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, cw00.choi@samsung.com, Greg KH <gregkh@linuxfoundation.org>, naveenkrishna.ch@gmail.com, lars@metafoo.de, CPGS <cpgs@samsung.com>, grundler@chromium.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1415200734-6978-1-git-send-email-Emilian.Medve@Freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: scottwood@Freescale.com, galak@kernel.crashing.org, corbet@lwn.net, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, grant.likely@linaro.org, Geoff.Thorpe@Freescale.com, linuxppc-dev@ozlabs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Emil Medve <Emilian.Medve@Freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On 28/10/14 12:31, Vivek Gautam wrote:
-> Hi all,
-> 
-> 
-> CC'ing Naveen's gmail id, since the Samsung id is invalid now.
-> 
-> 
-> On Tue, Sep 16, 2014 at 2:28 PM, Naveen Krishna Chatradhi
-> <ch.naveen@samsung.com> wrote:
->> This patch updates the IIO based ADC driver to use syscon and regmap
->> APIs to access and use PMU registers instead of remapping the PMU
->> registers in the driver.
->>
->> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
->> To: linux-iio@vger.kernel.org
->> ---
->> Changes since v1:
->> Rebased on top of togreg branch of IIO git
-> 
-> If the changes look good, then first two patches of this series can be
-> picked up ?
-> The last dt patch then belongs to samsung tree.
-Given the interlinked nature of the patches and Kukjin Kim's ack I'll
-take the lot. Obviously if someone wants to pull the 3rd patch into
-Samsung's tree as well, then git will deal with it just fine at merge
-time!
+The Buffer Manager is part of the Data-Path Acceleration Architecture (DPAA).
+BMan supports hardware allocation and deallocation of buffers belonging to
+pools originally created by software with configurable depletion thresholds.
+This binding covers the CCSR space programming model
 
-Thanks,
+Signed-off-by: Emil Medve <Emilian.Medve@Freescale.com>
+Change-Id: I3ec479bfb3c91951e96902f091f5d7d2adbef3b2
+---
+ Documentation/devicetree/bindings/soc/fsl/bman.txt | 125 +++++++++++++++++++++
+ 1 file changed, 125 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/fsl/bman.txt
 
-Jonathan
-> 
->>
->>  drivers/iio/adc/exynos_adc.c |   30 +++++++++++++++++++++---------
->>  1 file changed, 21 insertions(+), 9 deletions(-)
->>
->> diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
->> index 43620fd..fe03177 100644
->> --- a/drivers/iio/adc/exynos_adc.c
->> +++ b/drivers/iio/adc/exynos_adc.c
->> @@ -39,6 +39,8 @@
->>  #include <linux/iio/iio.h>
->>  #include <linux/iio/machine.h>
->>  #include <linux/iio/driver.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/regmap.h>
->>
->>  /* S3C/EXYNOS4412/5250 ADC_V1 registers definitions */
->>  #define ADC_V1_CON(x)          ((x) + 0x00)
->> @@ -90,11 +92,14 @@
->>
->>  #define EXYNOS_ADC_TIMEOUT     (msecs_to_jiffies(100))
->>
->> +#define EXYNOS_ADCV1_PHY_OFFSET        0x0718
->> +#define EXYNOS_ADCV2_PHY_OFFSET        0x0720
->> +
->>  struct exynos_adc {
->>         struct exynos_adc_data  *data;
->>         struct device           *dev;
->>         void __iomem            *regs;
->> -       void __iomem            *enable_reg;
->> +       struct regmap           *pmu_map;
->>         struct clk              *clk;
->>         struct clk              *sclk;
->>         unsigned int            irq;
->> @@ -110,6 +115,7 @@ struct exynos_adc_data {
->>         int num_channels;
->>         bool needs_sclk;
->>         bool needs_adc_phy;
->> +       int phy_offset;
->>         u32 mask;
->>
->>         void (*init_hw)(struct exynos_adc *info);
->> @@ -183,7 +189,7 @@ static void exynos_adc_v1_init_hw(struct exynos_adc *info)
->>         u32 con1;
->>
->>         if (info->data->needs_adc_phy)
->> -               writel(1, info->enable_reg);
->> +               regmap_write(info->pmu_map, info->data->phy_offset, 1);
->>
->>         /* set default prescaler values and Enable prescaler */
->>         con1 =  ADC_V1_CON_PRSCLV(49) | ADC_V1_CON_PRSCEN;
->> @@ -198,7 +204,7 @@ static void exynos_adc_v1_exit_hw(struct exynos_adc *info)
->>         u32 con;
->>
->>         if (info->data->needs_adc_phy)
->> -               writel(0, info->enable_reg);
->> +               regmap_write(info->pmu_map, info->data->phy_offset, 0);
->>
->>         con = readl(ADC_V1_CON(info->regs));
->>         con |= ADC_V1_CON_STANDBY;
->> @@ -225,6 +231,7 @@ static const struct exynos_adc_data exynos_adc_v1_data = {
->>         .num_channels   = MAX_ADC_V1_CHANNELS,
->>         .mask           = ADC_DATX_MASK,        /* 12 bit ADC resolution */
->>         .needs_adc_phy  = true,
->> +       .phy_offset     = EXYNOS_ADCV1_PHY_OFFSET,
->>
->>         .init_hw        = exynos_adc_v1_init_hw,
->>         .exit_hw        = exynos_adc_v1_exit_hw,
->> @@ -314,7 +321,7 @@ static void exynos_adc_v2_init_hw(struct exynos_adc *info)
->>         u32 con1, con2;
->>
->>         if (info->data->needs_adc_phy)
->> -               writel(1, info->enable_reg);
->> +               regmap_write(info->pmu_map, info->data->phy_offset, 1);
->>
->>         con1 = ADC_V2_CON1_SOFT_RESET;
->>         writel(con1, ADC_V2_CON1(info->regs));
->> @@ -332,7 +339,7 @@ static void exynos_adc_v2_exit_hw(struct exynos_adc *info)
->>         u32 con;
->>
->>         if (info->data->needs_adc_phy)
->> -               writel(0, info->enable_reg);
->> +               regmap_write(info->pmu_map, info->data->phy_offset, 0);
->>
->>         con = readl(ADC_V2_CON1(info->regs));
->>         con &= ~ADC_CON_EN_START;
->> @@ -362,6 +369,7 @@ static const struct exynos_adc_data exynos_adc_v2_data = {
->>         .num_channels   = MAX_ADC_V2_CHANNELS,
->>         .mask           = ADC_DATX_MASK, /* 12 bit ADC resolution */
->>         .needs_adc_phy  = true,
->> +       .phy_offset     = EXYNOS_ADCV2_PHY_OFFSET,
->>
->>         .init_hw        = exynos_adc_v2_init_hw,
->>         .exit_hw        = exynos_adc_v2_exit_hw,
->> @@ -374,6 +382,7 @@ static const struct exynos_adc_data exynos3250_adc_data = {
->>         .mask           = ADC_DATX_MASK, /* 12 bit ADC resolution */
->>         .needs_sclk     = true,
->>         .needs_adc_phy  = true,
->> +       .phy_offset     = EXYNOS_ADCV1_PHY_OFFSET,
->>
->>         .init_hw        = exynos_adc_v2_init_hw,
->>         .exit_hw        = exynos_adc_v2_exit_hw,
->> @@ -558,10 +567,13 @@ static int exynos_adc_probe(struct platform_device *pdev)
->>
->>
->>         if (info->data->needs_adc_phy) {
->> -               mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
->> -               info->enable_reg = devm_ioremap_resource(&pdev->dev, mem);
->> -               if (IS_ERR(info->enable_reg))
->> -                       return PTR_ERR(info->enable_reg);
->> +               info->pmu_map = syscon_regmap_lookup_by_phandle(
->> +                                       pdev->dev.of_node,
->> +                                       "samsung,syscon-phandle");
->> +               if (IS_ERR(info->pmu_map)) {
->> +                       dev_err(&pdev->dev, "syscon regmap lookup failed.\n");
->> +                       return PTR_ERR(info->pmu_map);
->> +               }
->>         }
->>
->>         irq = platform_get_irq(pdev, 0);
->> --
->> 1.7.9.5
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> 
-> 
+diff --git a/Documentation/devicetree/bindings/soc/fsl/bman.txt b/Documentation/devicetree/bindings/soc/fsl/bman.txt
+new file mode 100644
+index 0000000..9f80bf8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/fsl/bman.txt
+@@ -0,0 +1,125 @@
++QorIQ DPAA Buffer Manager Device Tree Bindings
++
++Copyright (C) 2008 - 2014 Freescale Semiconductor Inc.
++
++CONTENTS
++
++	- BMan Node
++	- BMan Private Memory Node
++	- Example
++
++BMan Node
++
++The Buffer Manager is part of the Data-Path Acceleration Architecture (DPAA).
++BMan supports hardware allocation and deallocation of buffers belonging to pools
++originally created by software with configurable depletion thresholds. This
++binding covers the CCSR space programming model
++
++PROPERTIES
++
++- compatible
++	Usage:		Required
++	Value type:	<stringlist>
++	Definition:	Must include "fsl,bman"
++			May include "fsl,<SoC>-bman"
++
++- reg
++	Usage:		Required
++	Value type:	<prop-encoded-array>
++	Definition:	Registers region within the CCSR address space
++
++The BMan revision information is located in the BMAN_IP_REV_1/2 registers which
++are located at offsets 0xbf8 and 0xbfc
++
++- interrupts
++	Usage:		Required
++	Value type:	<prop-encoded-array>
++	Definition:	Standard property. The error interrupt
++
++- fsl,liodn
++	Usage:		See pamu.txt
++	Value type:	<prop-encoded-array>
++	Definition:	PAMU property used for static LIODN assignment
++
++- fsl,iommu-parent
++	Usage:		See pamu.txt
++	Value type:	<phandle>
++	Definition:	PAMU property used for dynamic LIODN assignment
++
++	For additional details about the PAMU/LIODN binding(s) see pamu.txt
++
++Devices connected to a BMan instance via Direct Connect Portals (DCP) must link
++to the respective BMan instance
++
++- fsl,bman
++	Usage:		Required
++	Value type:	<prop-encoded-array>
++	Description:	List of phandle and DCP index pairs, to the BMan instance
++			to which this device is connected via the DCP
++
++BMan Private Memory Node
++
++BMan requires a contiguous range of physical memory used for the backing store
++for BMan Free Buffer Proxy Records (FBPR). This memory is reserved/allocated as a
++node under the /reserved-memory node
++
++The BMan FBPR memory node must be named "bman-fbpr"
++
++PROPERTIES
++
++- compatible
++	Usage:		required
++	Value type:	<stringlist>
++	Definition:	Must inclide "fsl,bman-fbpr"
++
++The following constraints are relevant to the FBPR private memory:
++	- The size must be 2^(size + 1), with size = 11..33. That is 4 KiB to
++	  16 GiB
++	- The alignment must be a muliptle of the memory size
++
++The size of the FBPR must be chosen by observing the hardware features configured
++via the Reset Configuration Word (RCW) and that are relevant to a specific board
++(e.g. number of MAC(s) pinned-out, number of offline/host command FMan ports,
++etc.). The size configured in the DT must reflect the hardware capabilities and
++not the specific needs of an application
++
++For additional details about reserved memory regions see reserved-memory.txt
++
++EXAMPLE
++
++The example below shows a BMan FBPR dynamic allocation memory node
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		bman_fbpr: bman-fbpr {
++			compatible = "fsl,bman-fbpr";
++			alloc-ranges = <0 0 0xf 0xffffffff>;
++			size = <0 0x1000000>;
++			alignment = <0 0x1000000>;
++		};
++	};
++
++The example below shows a (P4080) BMan CCSR-space node
++
++	crypto@300000 {
++		...
++		fsl,bman = <&bman, 2>;
++		...
++	};
++
++	bman: bman@31a000 {
++		compatible = "fsl,bman";
++		reg = <0x31a000 0x1000>;
++		interrupts = <16 2 1 2>;
++		fsl,liodn = <0x17>;
++		memory-region = <&bman_fbpr>;
++	};
++
++	fman@400000 {
++		...
++		fsl,bman = <&bman, 0>;
++		...
++	};
+-- 
+2.1.3
+
