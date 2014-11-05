@@ -1,149 +1,78 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 1/3] iio: exyno-adc: use syscon for PMU register access
-Date: Wed, 05 Nov 2014 15:29:03 +0000
-Message-ID: <545A423F.1040709@kernel.org>
-References: <1410857931-4980-1-git-send-email-ch.naveen@samsung.com> <1410857931-4980-2-git-send-email-ch.naveen@samsung.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
+Date: Wed, 05 Nov 2014 15:32:10 +0000
+Message-ID: <545A42FA.7090501@kernel.org>
+References: <1415028270-25860-1-git-send-email-iivanov@mm-sol.com>		 <1415028270-25860-3-git-send-email-iivanov@mm-sol.com>		 <545A218F.5060301@kernel.org> <1415195855.3660.4.camel@mm-sol.com>	 <545A2EDB.5040801@kernel.org> <1415199681.3660.8.camel@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1410857931-4980-2-git-send-email-ch.naveen@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-iio@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, cw00.choi@samsung.com, gregkh@linuxfoundation.org, naveenkrishna.ch@gmail.com, lars@metafoo.de, cpgs@samsung.com, grundler@chromium.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415199681.3660.8.camel-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 16/09/14 09:58, Naveen Krishna Chatradhi wrote:
-> This patch updates the IIO based ADC driver to use syscon and regmap
-> APIs to access and use PMU registers instead of remapping the PMU
-> registers in the driver.
+On 05/11/14 15:01, Ivan T. Ivanov wrote:
 > 
-> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-> To: linux-iio@vger.kernel.org
-Applied to the togreg branch of iio.git - initially pushed out as testing
-for the autobuilders to play.
+> On Wed, 2014-11-05 at 14:06 +0000, Jonathan Cameron wrote:
+>> On 05/11/14 13:57, Ivan T. Ivanov wrote:
+>>> On Wed, 2014-11-05 at 13:09 +0000, Jonathan Cameron wrote:
+>>>> On 03/11/14 15:24, Ivan T. Ivanov wrote:
+>>>>> From: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+>>>>>
+>>>>> The voltage ADC is peripheral of Qualcomm SPMI PMIC chips. It has
+>>>>> 15 bits resolution and register space inside PMIC accessible across
+>>>>> SPMI bus.
+>>>>>
+>>>>> The vadc driver registers itself through IIO interface.
+>>>>>
+>>>>> Signed-off-by: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+>>>>> Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+>>>> Hi Ivan,
+>>>>
+>>>> Couple of utterly tiny bits inline.  The biggest one is that
+>>>> you store some info about the calibration that you never actually
+>>>> use... Left over from some debugging perhaps?
+>>>>
+>>>> Jonathan
+>>>
+>>> <snip>
+>>>
+>>>>> +
+>>>>> +/*
+>>>>> + * VADC_CALIB_ABSOLUTE: uses the 625mV and 1.25V as reference channels.
+>>>>> + * VADC_CALIB_RATIOMETRIC: uses the reference voltage (1.8V) and GND for
+>>>>> + * calibration.
+>>>>> + */
+>>>>> +enum vadc_calibration {
+>>>>> +       VADC_CALIB_ABSOLUTE = 0,
+>>>>> +       VADC_CALIB_RATIOMETRIC
+>>>>> +};
+>>>>> +
+>>>>> +/**
+>>>>> + * struct vadc_linear_graph - Represent ADC characteristics.
+>>>>> + * @dy: numerator slope to calculate the gain.
+>>>> As dy is always equal to vref-gnd you could drop it and use those
+>>>> directly...
+>>>>
+>>>> Conversly you store vref or grnd and never use them...
+>>>
+>>> I am not sure I am following you. Please take a look in
+>>> vadc_measure_ref_points() and vadc_calibrate().
+>> Good point on grnd, but vref is set but never read anywhere that I can find..
+>>
+> 
+> Right. At this point it is not used. Driver right now provide basic per
+> channel voltage measurements. The plan is to add temperature compensation for the
+> measurements and additional scaling functions which are specific per channel.
+> 
+> I could drop this field from initial driver version if you like.
+Probably best as otherwise some compiler in a clever mood will give
+a warning and I'll get an irritating patch to remove it!
 
-
-> ---
-> Changes since v1:
-> Rebased on top of togreg branch of IIO git
+J
 > 
->  drivers/iio/adc/exynos_adc.c |   30 +++++++++++++++++++++---------
->  1 file changed, 21 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
-> index 43620fd..fe03177 100644
-> --- a/drivers/iio/adc/exynos_adc.c
-> +++ b/drivers/iio/adc/exynos_adc.c
-> @@ -39,6 +39,8 @@
->  #include <linux/iio/iio.h>
->  #include <linux/iio/machine.h>
->  #include <linux/iio/driver.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/regmap.h>
->  
->  /* S3C/EXYNOS4412/5250 ADC_V1 registers definitions */
->  #define ADC_V1_CON(x)		((x) + 0x00)
-> @@ -90,11 +92,14 @@
->  
->  #define EXYNOS_ADC_TIMEOUT	(msecs_to_jiffies(100))
->  
-> +#define EXYNOS_ADCV1_PHY_OFFSET	0x0718
-> +#define EXYNOS_ADCV2_PHY_OFFSET	0x0720
-> +
->  struct exynos_adc {
->  	struct exynos_adc_data	*data;
->  	struct device		*dev;
->  	void __iomem		*regs;
-> -	void __iomem		*enable_reg;
-> +	struct regmap		*pmu_map;
->  	struct clk		*clk;
->  	struct clk		*sclk;
->  	unsigned int		irq;
-> @@ -110,6 +115,7 @@ struct exynos_adc_data {
->  	int num_channels;
->  	bool needs_sclk;
->  	bool needs_adc_phy;
-> +	int phy_offset;
->  	u32 mask;
->  
->  	void (*init_hw)(struct exynos_adc *info);
-> @@ -183,7 +189,7 @@ static void exynos_adc_v1_init_hw(struct exynos_adc *info)
->  	u32 con1;
->  
->  	if (info->data->needs_adc_phy)
-> -		writel(1, info->enable_reg);
-> +		regmap_write(info->pmu_map, info->data->phy_offset, 1);
->  
->  	/* set default prescaler values and Enable prescaler */
->  	con1 =  ADC_V1_CON_PRSCLV(49) | ADC_V1_CON_PRSCEN;
-> @@ -198,7 +204,7 @@ static void exynos_adc_v1_exit_hw(struct exynos_adc *info)
->  	u32 con;
->  
->  	if (info->data->needs_adc_phy)
-> -		writel(0, info->enable_reg);
-> +		regmap_write(info->pmu_map, info->data->phy_offset, 0);
->  
->  	con = readl(ADC_V1_CON(info->regs));
->  	con |= ADC_V1_CON_STANDBY;
-> @@ -225,6 +231,7 @@ static const struct exynos_adc_data exynos_adc_v1_data = {
->  	.num_channels	= MAX_ADC_V1_CHANNELS,
->  	.mask		= ADC_DATX_MASK,	/* 12 bit ADC resolution */
->  	.needs_adc_phy	= true,
-> +	.phy_offset	= EXYNOS_ADCV1_PHY_OFFSET,
->  
->  	.init_hw	= exynos_adc_v1_init_hw,
->  	.exit_hw	= exynos_adc_v1_exit_hw,
-> @@ -314,7 +321,7 @@ static void exynos_adc_v2_init_hw(struct exynos_adc *info)
->  	u32 con1, con2;
->  
->  	if (info->data->needs_adc_phy)
-> -		writel(1, info->enable_reg);
-> +		regmap_write(info->pmu_map, info->data->phy_offset, 1);
->  
->  	con1 = ADC_V2_CON1_SOFT_RESET;
->  	writel(con1, ADC_V2_CON1(info->regs));
-> @@ -332,7 +339,7 @@ static void exynos_adc_v2_exit_hw(struct exynos_adc *info)
->  	u32 con;
->  
->  	if (info->data->needs_adc_phy)
-> -		writel(0, info->enable_reg);
-> +		regmap_write(info->pmu_map, info->data->phy_offset, 0);
->  
->  	con = readl(ADC_V2_CON1(info->regs));
->  	con &= ~ADC_CON_EN_START;
-> @@ -362,6 +369,7 @@ static const struct exynos_adc_data exynos_adc_v2_data = {
->  	.num_channels	= MAX_ADC_V2_CHANNELS,
->  	.mask		= ADC_DATX_MASK, /* 12 bit ADC resolution */
->  	.needs_adc_phy	= true,
-> +	.phy_offset	= EXYNOS_ADCV2_PHY_OFFSET,
->  
->  	.init_hw	= exynos_adc_v2_init_hw,
->  	.exit_hw	= exynos_adc_v2_exit_hw,
-> @@ -374,6 +382,7 @@ static const struct exynos_adc_data exynos3250_adc_data = {
->  	.mask		= ADC_DATX_MASK, /* 12 bit ADC resolution */
->  	.needs_sclk	= true,
->  	.needs_adc_phy	= true,
-> +	.phy_offset	= EXYNOS_ADCV1_PHY_OFFSET,
->  
->  	.init_hw	= exynos_adc_v2_init_hw,
->  	.exit_hw	= exynos_adc_v2_exit_hw,
-> @@ -558,10 +567,13 @@ static int exynos_adc_probe(struct platform_device *pdev)
->  
->  
->  	if (info->data->needs_adc_phy) {
-> -		mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> -		info->enable_reg = devm_ioremap_resource(&pdev->dev, mem);
-> -		if (IS_ERR(info->enable_reg))
-> -			return PTR_ERR(info->enable_reg);
-> +		info->pmu_map = syscon_regmap_lookup_by_phandle(
-> +					pdev->dev.of_node,
-> +					"samsung,syscon-phandle");
-> +		if (IS_ERR(info->pmu_map)) {
-> +			dev_err(&pdev->dev, "syscon regmap lookup failed.\n");
-> +			return PTR_ERR(info->pmu_map);
-> +		}
->  	}
->  
->  	irq = platform_get_irq(pdev, 0);
+> Regards,
+> Ivan
 > 
