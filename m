@@ -1,44 +1,82 @@
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [PATCH 11/13] arm: dts: dra7: add DMA properties for UART
-Date: Wed, 05 Nov 2014 17:30:51 +0100
-Message-ID: <545A50BB.2020307@linutronix.de>
-References: <1412014009-13315-1-git-send-email-bigeasy@linutronix.de> <1412014009-13315-12-git-send-email-bigeasy@linutronix.de> <20141104170233.GB24112@csclub.uwaterloo.ca> <5459079D.7080703@linutronix.de> <20141104172117.GC24112@csclub.uwaterloo.ca> <20141104183315.GD24112@csclub.uwaterloo.ca> <20141104210315.GF24112@csclub.uwaterloo.ca> <20141105011506.GG24112@csclub.uwaterloo.ca> <5459DBB7.1090702@linutronix.de> <20141105153307.GN24110@csclub.uwaterloo.ca> <20141105162024.GH24112@csclub.uwaterloo.ca>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v2 06/11] memory: atmel-ebi: add DT bindings
+ documentation
+Date: Wed, 5 Nov 2014 17:39:57 +0100
+Message-ID: <20141105173957.1726d369@bbrezillon>
+References: <1415203287-21517-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1415203287-21517-7-git-send-email-boris.brezillon@free-electrons.com>
+	<CACh+v5N8dXaH3ZNGr=MKXbQRU7nOMPLvxT0rEsZrbSKj20b_Dg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141105162024.GH24112@csclub.uwaterloo.ca>
+In-Reply-To: <CACh+v5N8dXaH3ZNGr=MKXbQRU7nOMPLvxT0rEsZrbSKj20b_Dg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lennart Sorensen <lsorense@csclub.uwaterloo.ca>
-Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, balbi@ti.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org
+To: Jean-Jacques Hiblot <jjhiblot@traphandler.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/05/2014 05:20 PM, Lennart Sorensen wrote:
-> On Wed, Nov 05, 2014 at 10:33:15AM -0500, Lennart Sorensen wrote:
->> Two systems ran 16 hours each so far with no issues.  Pushed 170MB o=
-f
->> data through the pair of serial ports on one system at 230400.
->=20
-> The console on uart3 doesn't appear to be using the dma assuming the
-> values in /sys for the dma controller and bytes transferred mean anyt=
-hing.
-> It does mention in dmesg that it allocated dma channels for uart3 tho=
-ugh.
+On Wed, 5 Nov 2014 17:22:57 +0100
+Jean-Jacques Hiblot <jjhiblot@traphandler.com> wrote:
 
-Then it should use it :)
+> Hi Boris,
+> 
+> 2014-11-05 17:01 GMT+01:00 Boris Brezillon <boris.brezillon@free-electrons.com>:
+> > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> > ---
+> >  .../bindings/memory-controllers/atmel-ebi.txt      | 153 +++++++++++++++++++++
+> >  1 file changed, 153 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/memory-controllers/atmel-ebi.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/memory-controllers/atmel-ebi.txt b/Documentation/devicetree/bindings/memory-controllers/atmel-ebi.txt
+> > new file mode 100644
+> > index 0000000..dc2c34f
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/memory-controllers/atmel-ebi.txt
+> > @@ -0,0 +1,153 @@
+> > +* Device tree bindings for Atmel EBI
+> > +
+> > +The External Bus Interface (EBI) controller is a bus where you can connect
+> > +asynchronous (NAND, NOR, SRAM, ....) and synchronous memories (SDR/DDR SDRAMs).
+> > +The EBI provides a glue-less interface to asynchronous memories though the SMC
+> > +(Static Memory Controller).
+> > +Synchronous memories (and some asynchronous memories like NANDs) can be
+> > +attached to specialized controllers which are responsible for configuring the
+> > +bus appropriately according to the connected device.
+> > +In the other hand, the bus interface can be automated for simple asynchronous
+> > +devices.
 
-> How do you tell if it is using dma?
+[...]
 
-There is omap_8250_tx_dma() and omap_8250_rx_dma(). Both setup
-callbacks (the rx+tx _complete). Upon successful DMA transfer you
-should see them invoked with bytes transfered (>0).
-=46or RX transfer you need at least trigger bytes in the FIFO within a
-given time frame (I think it was 46 bytes and the delay may be up to 2
-bytes). If you miss this then DMA for RX won't wire and you purge the
-=46IFO manually via "timeout-interrupt" (the callback will be invoked
-with an error condition and 0 bytes).
+> > +
+> > +Optional child cs node properties:
+> > +- atmel,generic-dev            boolean property specifying if the device is
+> > +                               a generic device.
+> > +                               The following properties are only parsed if
+> > +                               this property is present.
+> > +                               Specialized devices are attached to specialized
+> > +                               controllers which should configure the bus
+> > +                               appropriately.
+> 
+> What do you mean by specialized devices ? Can you give an example ?
 
-Assuming this works for you then one should figure out why the counters
-in /sys are not updated=85
+The ones I have in mind are NAND chips: the NAND controller can
+automatically discover the required timings and configure the SMC
+accordingly. In that case there's no need to specify timings in the DT,
+because they will/should be dynalically configured by the NAND
+controller driver.
 
-Sebastian
+But more generally, the datasheet describe 2 modes for some CS ports:
+1) the generic mode, which bind the device to the generic SMC engine
+2) the specialized mode which binds it to a specific HW block
+
+This mode can be configured in CCFG_EBICSA, and the specialized mode
+supported by each CS depends on each SoC.
+For example, for the at91sam9x5:
+CS1 => DDR2SDR controller
+CS3 => NAND Flash Controller/Logic
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
