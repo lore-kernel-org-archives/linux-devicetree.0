@@ -1,206 +1,201 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v2 1/4] of: Rename "poweroff-source" property to
- "system-power-controller"
-Date: Wed, 5 Nov 2014 11:08:27 +0100
-Message-ID: <20141105100827.GP31358@localhost>
-References: <1414568135-8311-1-git-send-email-romain.perier@gmail.com>
- <1414568135-8311-2-git-send-email-romain.perier@gmail.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC 09/10] drm/tegra: Add IOMMU support
+Date: Wed, 5 Nov 2014 11:26:59 +0100
+Message-ID: <20141105102657.GB12458@ulmo.nvidia.com>
+References: <1403815790-8548-1-git-send-email-thierry.reding@gmail.com>
+	<1403815790-8548-10-git-send-email-thierry.reding@gmail.com>
+	<CAOw6vbJy6oy7cibH4f332UM=kS56KUMcnYdUTG0pEYXyQkFDoQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1414568135-8311-2-git-send-email-romain.perier@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Romain Perier <romain.perier@gmail.com>
-Cc: heiko@sntech.de, grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org, johan@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Felipe Balbi <balbi@ti.com>
+Content-Type: multipart/mixed; boundary="===============9163662779363646341=="
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <CAOw6vbJy6oy7cibH4f332UM=kS56KUMcnYdUTG0pEYXyQkFDoQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Sean Paul <seanpaul-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Allen Martin <amartin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?utf-8?B?U3TDqXBoYW5l?= Marchesin <marcheu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rhyland Klein <rklein@nvidia>
 List-Id: devicetree@vger.kernel.org
 
-[ Resend with lkml, arm, Felipe on CC -- why were these dropped from CC? ]
 
-On Wed, Oct 29, 2014 at 07:35:32AM +0000, Romain Perier wrote:
-> As discussed on the mailing list, it makes more sense to rename this property
-> to "system-power-controller". 
+--===============9163662779363646341==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="cmJC7u66zC7hs+87"
+Content-Disposition: inline
 
-Please also refer to the commit in the regulator tree renaming it to
-"poweroff-source", and that this in effect is a revert to the old name
-but without the vendor prefix.
 
-> Problem being that the word "source" usually tends
-> to be used for inputs and that is out of control of the OS. The poweroff
-> capability is an output which simply turns the system-power off. Also, this
-> property might be used by drivers which power-off the system and power back on
-> subsequent RTC alarms. This seems to suggest to remove "poweroff" from the
-> property name and to choose "system-power-controller" as the more generic name.
-> This patchs adds the required renaming changes and defines an helper function
-> which is compatible with both properties, the old one prefixed by a vendor name
-> and the new one without any prefix.
-> 
-> Signed-off-by: Romain Perier <romain.perier@gmail.com>
+--cmJC7u66zC7hs+87
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-First of all, always run your patches through checkpatch.pl before
-submitting. There's a few warnings there for you to fix.
+On Tue, Sep 30, 2014 at 02:48:35PM -0400, Sean Paul wrote:
+> On Thu, Jun 26, 2014 at 4:49 PM, Thierry Reding
+> <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >
+> > When an IOMMU device is available on the platform bus, allocate an IOMMU
+> > domain and attach the display controllers to it. The display controllers
+> > can then scan out non-contiguous buffers by mapping them through the
+> > IOMMU.
+> >
+>=20
+> Hi Thierry,
+> A few comments from St=C3=A9phane and myself that came up while we were
+> reviewing this for our tree.
 
-> ---
->  .../devicetree/bindings/power/power-controller.txt | 18 ++++++++++++
->  .../devicetree/bindings/power/poweroff.txt         | 18 ------------
->  drivers/of/base.c                                  | 34 ++++++++++++++++++++++
->  include/linux/of.h                                 | 10 ++-----
->  4 files changed, 55 insertions(+), 25 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/power/power-controller.txt
->  delete mode 100644 Documentation/devicetree/bindings/power/poweroff.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/power-controller.txt b/Documentation/devicetree/bindings/power/power-controller.txt
-> new file mode 100644
-> index 0000000..942f955
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/power-controller.txt
-> @@ -0,0 +1,18 @@
-> +* Generic system power control capability
-> +
-> +Power-management integrated circuits or miscellaneous harware components are
-> +sometimes able to control the system power. The device driver associated to these
+I just realized that I hadn't integrated these comments completely yet,
+but I've done so now in my local tree. I'm running a couple of tests to
+verify that it's all handled correctly.
 
-s/to/with/
+> > Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > ---
+> >  drivers/gpu/drm/tegra/dc.c  |  21 ++++
+> >  drivers/gpu/drm/tegra/drm.c |  17 ++++
+> >  drivers/gpu/drm/tegra/drm.h |   3 +
+> >  drivers/gpu/drm/tegra/fb.c  |  16 ++-
+> >  drivers/gpu/drm/tegra/gem.c | 236 ++++++++++++++++++++++++++++++++++++=
++++-----
+> >  drivers/gpu/drm/tegra/gem.h |   4 +
+> >  6 files changed, 273 insertions(+), 24 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
+> > index afcca04f5367..0f7452d04811 100644
+> > --- a/drivers/gpu/drm/tegra/dc.c
+> > +++ b/drivers/gpu/drm/tegra/dc.c
+> > @@ -9,6 +9,7 @@
+> >
+> >  #include <linux/clk.h>
+> >  #include <linux/debugfs.h>
+> > +#include <linux/iommu.h>
+> >  #include <linux/reset.h>
+> >
+> >  #include "dc.h"
+> > @@ -1283,8 +1284,18 @@ static int tegra_dc_init(struct host1x_client *c=
+lient)
+> >  {
+> >         struct drm_device *drm =3D dev_get_drvdata(client->parent);
+> >         struct tegra_dc *dc =3D host1x_client_to_dc(client);
+> > +       struct tegra_drm *tegra =3D drm->dev_private;
+> >         int err;
+> >
+> > +       if (tegra->domain) {
+> > +               err =3D iommu_attach_device(tegra->domain, dc->dev);
+> > +               if (err < 0) {
+> > +                       dev_err(dc->dev, "failed to attach to IOMMU: %d=
+\n",
+> > +                               err);
+> > +                       return err;
+> > +               }
+>=20
+> [from St=C3=A9phane]
+>=20
+> shouldn't we call detach in the error paths below?
 
-> +components might needs to define this capability, 
+This was mostly rewritten for universal plane support, but I've made
+sure that the DC properly detaches from the IOMMU in case of failure
+during the code below.
 
-s/needs/need/
+> > diff --git a/drivers/gpu/drm/tegra/drm.c b/drivers/gpu/drm/tegra/drm.c
+[...]
+> > @@ -8,6 +8,7 @@
+> >   */
+> >
+> >  #include <linux/host1x.h>
+> > +#include <linux/iommu.h>
+> >
+> >  #include "drm.h"
+> >  #include "gem.h"
+> > @@ -33,6 +34,16 @@ static int tegra_drm_load(struct drm_device *drm, un=
+signed long flags)
+> >         if (!tegra)
+> >                 return -ENOMEM;
+> >
+> > +       if (iommu_present(&platform_bus_type)) {
+> > +               tegra->domain =3D iommu_domain_alloc(&platform_bus_type=
+);
+> > +               if (IS_ERR(tegra->domain)) {
+> > +                       kfree(tegra);
+> > +                       return PTR_ERR(tegra->domain);
+> > +               }
+> > +
+> > +               drm_mm_init(&tegra->mm, 0, SZ_2G);
+>=20
+>=20
+> [from St=C3=A9phane]:
+>=20
+> none of these are freed in the error path below (iommu_domain_free and
+> drm_mm_takedown)
+>=20
+> also |tegra| isn't freed either?
 
-> which tells to the kernel
+None of the resources were actually being cleaned up, but I think I have
+it all handled properly now.
 
-s/to the/the/
+> > @@ -108,22 +240,33 @@ struct tegra_bo *tegra_bo_create(struct drm_devic=
+e *drm, unsigned int size,
+> >         host1x_bo_init(&bo->base, &tegra_bo_ops);
+> >         size =3D round_up(size, PAGE_SIZE);
+> >
+> > -       bo->vaddr =3D dma_alloc_writecombine(drm->dev, size, &bo->paddr,
+> > -                                          GFP_KERNEL | __GFP_NOWARN);
+> > -       if (!bo->vaddr) {
+> > -               dev_err(drm->dev, "failed to allocate buffer with size =
+%u\n",
+> > -                       size);
+> > -               err =3D -ENOMEM;
+> > -               goto err_dma;
+> > -       }
+> > -
+> >         err =3D drm_gem_object_init(drm, &bo->gem, size);
+> >         if (err)
+> > -               goto err_init;
+> > +               goto free;
+> >
+> >         err =3D drm_gem_create_mmap_offset(&bo->gem);
+>=20
+> We need to call drm_gem_free_mmap_offset if one of the calls below
+> fails, otherwise we'll try to free the mmap_offset on an already
+> destroyed bo.
 
-> howto switch off the system. 
+drm_gem_object_release() (below) already calls drm_gem_free_mmap_offset()
+for us implicitly.
 
-this should be something like "that it can be used to switch off...".
+Thierry
 
-> The corresponding driver must have the standard
+--cmJC7u66zC7hs+87
+Content-Type: application/pgp-signature
 
-It's the device that has the property, not the driver.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-> +property "system-power-controller" in its device node. This property marks the
-> +device as able to controller the system-power. In order to test if this property
+iQIcBAEBAgAGBQJUWftxAAoJEN0jrNd/PrOhKrMP/RtRTVZ8WPiMpDpeOkQNJHP/
+lVlWCiev/lXnsRrYLpZJ+1I2fNsprZZ9P3wkoBXY9pBYHeAbjUuat5kKuh45dsOd
+poUVVpZHVagFD6rVrsfR3IKUFPgFcwQObggbDBP4GyY3KkyTmL/Kbuj1rvnqzxoI
+N8HZwSWUMzkWqRujIl8qSkO12ulXArYR4KOlUfeKKP2DylyBSRtfmt+SgT+Z9ztT
+r7Bm1ddx+kHkEgOICkEzDEccmaiLY+m+6qVxNtZrkOWDvS7OAKo5wvNOddsxX4bQ
+07r3FwjBPGvsMsKNloVMc/ZdbOm9ch7lfy907RwWr7APA5flatAlFm+HpuBemY9v
+mCEhV2v9l+zrt6cu4xIl2ArN7jU1sTFGCfXTeVZKZB/6bnKFR0uiyY1fvC55f9pB
+tqxf9/2JiaKSePenJfuTyOuMZfbMj8TEY2/Rdl62SqBrR5pKqE1pPG7Ua4xQGdvy
+VRb+SuvswSdfRCh+UgbpGSy7XAS/bP7RavJ3BhUgi9r6I3XJOeLZtD3y6L0Ka9ym
+8ScEypIWB3L0/R3x52YiJBND7W8Mfvn+BiyAPl5rHI4AXU91yo83aQvTw/vIuwyM
+5ar7L9i82XKIh8eFQ+NOCZFf4SwXbHDHOyiqKhwlyCc+PSXFn8du1l4726XJFFZU
+2nWtMnH1dkWLV7rQ5Vhi
+=XtvN
+-----END PGP SIGNATURE-----
 
-s/controller/control/
-s/system-power/system power/
+--cmJC7u66zC7hs+87--
 
-> +is found programmatically, use the helper function "of_is_system_power_controller"
-> +from of.h .
-> +
-> +Example:
-> +
-> +act8846: act8846@5 {
-> +	 compatible = "active-semi,act8846";
-> +	 status = "okay";
-> +	 system-power-controller;
-> +}
-> diff --git a/Documentation/devicetree/bindings/power/poweroff.txt b/Documentation/devicetree/bindings/power/poweroff.txt
-> deleted file mode 100644
-> index 845868b..0000000
-> --- a/Documentation/devicetree/bindings/power/poweroff.txt
-> +++ /dev/null
-> @@ -1,18 +0,0 @@
-> -* Generic Poweroff capability
-> -
-> -Power-management integrated circuits or miscellaneous harware components are
-> -sometimes able to control the system power. The device driver associated to these
-> -components might needs to define poweroff capability, which tells to the kernel
-> -how to switch off the system. The corresponding driver must have the standard
-> -property "poweroff-source" in its device node. This property marks the device as
-> -able to shutdown the system. In order to test if this property is found
-> -programmatically, use the helper function "of_system_has_poweroff_source" from
-> -of.h .
-> -
-> -Example:
-> -
-> -act8846: act8846@5 {
-> -	 compatible = "active-semi,act8846";
-> -	 status = "okay";
-> -	 poweroff-source;
-> -}
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 74ab1b8..438e405 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -2260,3 +2260,37 @@ struct device_node *of_graph_get_remote_port(const struct device_node *node)
->  	return of_get_next_parent(np);
->  }
->  EXPORT_SYMBOL(of_graph_get_remote_port);
-> +
-> +/**
-> + * of_is_system_power_controller() - Tells if the property for controlling system
-> + * power is found in device_node.
-> + * @np: Pointer to the given device_node
-> + *
-> + * Return: true if present false otherwise
-> + */
-> +bool of_is_system_power_controller(const struct device_node *np)
-> +{
-> +	struct property *pp;
-> +	unsigned long flags;
-> +	char *sep;
-> +	bool found = false;
-> +
-> +	raw_spin_lock_irqsave(&devtree_lock, flags);
-> +	for_each_property_of_node(np, pp) {
-> +		if (of_prop_cmp(pp->name, "system-power-controller") == 0) {
-> +			found = true;
-> +			break;
-> +		}
-> +		/* Backward compatibility with previous property "vendor,system-power-controller",
-> +		 * we just check that an non-empty vendor-prefix exists here
-> +		 */
-> +		sep = strchr(pp->name, ',');
-> +		if (sep && sep - pp->name && of_prop_cmp(sep + 1, "system-power-controller") == 0) {
-> +			found = true;
-> +			break;
-> +		}
-> +	}
-> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +	return found;
-> +}
-> +EXPORT_SYMBOL(of_is_system_power_controller);
+--===============9163662779363646341==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-I think this is the wrong approach. This way any driver will recognise
-the old deprecated vendor prefixes. But not only those -- also
-misspelled vendor prefixes.
 
-Keep it simple and only parse the new property name (inline in the
-header file).
-
-If we need to support the old property names with vendor prefix (we have
-dropped vendor prefixes in the past), then you could add a second helper
-
-	of_is_system_power_controller_compat(np, compat_propname)
-
-where you pass in the whole old property name (e.g.
-"ti,system-power-controller") and use that name as a fall back.
-
-This way it will be clear which drivers are still supporting the
-deprecated property names, and we can make sure that no new ones will.
-
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 868fdad..e7177b3 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -910,15 +910,11 @@ static inline int of_changeset_update_property(struct of_changeset *ocs,
->  /* CONFIG_OF_RESOLVE api */
->  extern int of_resolve_phandles(struct device_node *tree);
->  
-> -/**
-> - * of_system_has_poweroff_source - Tells if poweroff-source is found for device_node
-> - * @np: Pointer to the given device_node
-> - *
-> - * return true if present false otherwise
-> - */
-> +bool of_is_system_power_controller(const struct device_node *np);
-> +
->  static inline bool of_system_has_poweroff_source(const struct device_node *np)
->  {
-> -	return of_property_read_bool(np, "poweroff-source");
-> +	return of_is_system_power_controller(np);
->  }
->  
->  #endif /* _LINUX_OF_H */
-
-Johan
+--===============9163662779363646341==--
