@@ -1,65 +1,76 @@
-From: George Cherian <george.cherian@ti.com>
-Subject: [RESEND PATCH 2/2] extcon: gpio: Add support for using cable names
-Date: Wed, 5 Nov 2014 20:59:48 +0530
-Message-ID: <1415201388-32060-3-git-send-email-george.cherian@ti.com>
-References: <1415201388-32060-1-git-send-email-george.cherian@ti.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 2/3] Documentation: dt-bindings: update exynos-adc.txt
+ with syscon handle
+Date: Wed, 05 Nov 2014 15:34:55 +0000
+Message-ID: <545A439F.6080404@kernel.org>
+References: <1410857931-4980-1-git-send-email-ch.naveen@samsung.com> <1410857931-4980-3-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415201388-32060-1-git-send-email-george.cherian@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: myungjoo.ham@samsung.com, cw00.choi@samsung.com
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rongjun.ying@csr.com, Baohua.Song@csr.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, George Cherian <george.cherian@ti.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1410857931-4980-3-git-send-email-ch.naveen@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-iio@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, cw00.choi@samsung.com, gregkh@linuxfoundation.org, naveenkrishna.ch@gmail.com, lars@metafoo.de, cpgs@samsung.com, grundler@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for using cable names. Enables other drivers to register interest
-and get notified using extcon provided notifier call backs.
+On 16/09/14 09:58, Naveen Krishna Chatradhi wrote:
+> This patch updates the DT bindings for ADC in exynos-adc.txt with the
+> syscon phandle to the ADC nodes.
+> 
+> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+> To: devicetree@vger.kernel.org
+Applied to the togreg branch of iio.git - initially pushed out as testing.
 
-Signed-off-by: George Cherian <george.cherian@ti.com>
----
- Documentation/devicetree/bindings/extcon/extcon-gpio.txt | 2 ++
- drivers/extcon/extcon-gpio.c                             | 4 ++++
- 2 files changed, 6 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-index 30aa2e1..2c9d29f 100644
---- a/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-+++ b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-@@ -7,6 +7,7 @@ Required Properties:
-  - compatible: should be:
- 	* "linux,extcon-gpio"
-  - gpios: specifies the gpio pin used.
-+ - cable-name: Name of the cable used.
- 
- Optional Properties:
-  - debounce: Debounce time for GPIO IRQ in ms
-@@ -18,4 +19,5 @@ Eg:
- 		compatible = "linux,extcon-gpio";
- 		gpios = <&gpio3 12 GPIO_ACTIVE_HIGH>;
- 		debounce = <20>;
-+		cable-name = "USB-HOST";
- 		};
-diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
-index 85795de..0e1b3e8 100644
---- a/drivers/extcon/extcon-gpio.c
-+++ b/drivers/extcon/extcon-gpio.c
-@@ -38,6 +38,7 @@ struct gpio_extcon_data {
- 	int irq;
- 	struct delayed_work work;
- 	unsigned long debounce_jiffies;
-+	const char *cable_name[1];
- };
- 
- static void gpio_extcon_work(struct work_struct *work)
-@@ -100,6 +101,9 @@ static int gpio_extcon_probe(struct platform_device *pdev)
- 				msecs_to_jiffies(debounce);
- 	}
- 
-+	of_property_read_string_index(np, "cable-name", 0,
-+				      extcon_data->cable_name);
-+	extcon_data->edev->supported_cable = extcon_data->cable_name;
- 	ret = devm_extcon_dev_register(&pdev->dev, extcon_data->edev);
- 	if (ret < 0)
- 		return ret;
--- 
-1.8.3.1
+Thanks,
+> ---
+>  .../devicetree/bindings/arm/samsung/exynos-adc.txt |    9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+> index 709efaa..c368210 100644
+> --- a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+> @@ -43,13 +43,16 @@ Required properties:
+>  				   compatible ADC block)
+>  - vdd-supply		VDD input supply.
+>  
+> +- samsung,syscon-phandle Contains the PMU system controller node
+> +			(To access the ADC_PHY register on Exynos5250/5420/5800/3250)
+> +
+>  Note: child nodes can be added for auto probing from device tree.
+>  
+>  Example: adding device info in dtsi file
+>  
+>  adc: adc@12D10000 {
+>  	compatible = "samsung,exynos-adc-v1";
+> -	reg = <0x12D10000 0x100>, <0x10040718 0x4>;
+> +	reg = <0x12D10000 0x100>;
+>  	interrupts = <0 106 0>;
+>  	#io-channel-cells = <1>;
+>  	io-channel-ranges;
+> @@ -58,13 +61,14 @@ adc: adc@12D10000 {
+>  	clock-names = "adc";
+>  
+>  	vdd-supply = <&buck5_reg>;
+> +	samsung,syscon-phandle = <&pmu_system_controller>;
+>  };
+>  
+>  Example: adding device info in dtsi file for Exynos3250 with additional sclk
+>  
+>  adc: adc@126C0000 {
+>  	compatible = "samsung,exynos3250-adc", "samsung,exynos-adc-v2;
+> -	reg = <0x126C0000 0x100>, <0x10020718 0x4>;
+> +	reg = <0x126C0000 0x100>;
+>  	interrupts = <0 137 0>;
+>  	#io-channel-cells = <1>;
+>  	io-channel-ranges;
+> @@ -73,6 +77,7 @@ adc: adc@126C0000 {
+>  	clock-names = "adc", "sclk";
+>  
+>  	vdd-supply = <&buck5_reg>;
+> +	samsung,syscon-phandle = <&pmu_system_controller>;
+>  };
+>  
+>  Example: Adding child nodes in dts file
+> 
