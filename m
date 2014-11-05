@@ -1,7 +1,7 @@
 From: Emil Medve <Emilian.Medve@Freescale.com>
-Subject: [PATCH v3 1/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan
-Date: Wed, 5 Nov 2014 09:18:51 -0600
-Message-ID: <1415200734-6978-2-git-send-email-Emilian.Medve@Freescale.com>
+Subject: [PATCH v3 4/4] dt/bindings: Introduce the FSL QorIQ DPAA QMan portal(s)
+Date: Wed, 5 Nov 2014 09:18:54 -0600
+Message-ID: <1415200734-6978-5-git-send-email-Emilian.Medve@Freescale.com>
 References: <1415200734-6978-1-git-send-email-Emilian.Medve@Freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,61 +12,90 @@ To: scottwood@Freescale.com, galak@kernel.crashing.org, corbet@lwn.net, robh+dt@
 Cc: Emil Medve <Emilian.Medve@Freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-The Buffer Manager is part of the Data-Path Acceleration Architecture (DPAA).
-BMan supports hardware allocation and deallocation of buffers belonging to
-pools originally created by software with configurable depletion thresholds.
-This binding covers the CCSR space programming model
+Portals are memory mapped interfaces to QMan that allow low-latency,
+lock-less interaction by software running on processor cores,
+accelerators and network interfaces with the QMan
 
 Signed-off-by: Emil Medve <Emilian.Medve@Freescale.com>
-Change-Id: I3ec479bfb3c91951e96902f091f5d7d2adbef3b2
+Change-Id: I29764fa8093b5ce65460abc879446795c50d7185
 ---
- Documentation/devicetree/bindings/soc/fsl/bman.txt | 125 +++++++++++++++++++++
- 1 file changed, 125 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/fsl/bman.txt
+ .../devicetree/bindings/soc/fsl/qman-portals.txt   | 154 +++++++++++++++++++++
+ 1 file changed, 154 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/fsl/qman-portals.txt
 
-diff --git a/Documentation/devicetree/bindings/soc/fsl/bman.txt b/Documentation/devicetree/bindings/soc/fsl/bman.txt
+diff --git a/Documentation/devicetree/bindings/soc/fsl/qman-portals.txt b/Documentation/devicetree/bindings/soc/fsl/qman-portals.txt
 new file mode 100644
-index 0000000..9f80bf8
+index 0000000..48c4dae
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/fsl/bman.txt
-@@ -0,0 +1,125 @@
-+QorIQ DPAA Buffer Manager Device Tree Bindings
++++ b/Documentation/devicetree/bindings/soc/fsl/qman-portals.txt
+@@ -0,0 +1,154 @@
++QorIQ DPAA Queue Manager Portals Device Tree Binding
 +
 +Copyright (C) 2008 - 2014 Freescale Semiconductor Inc.
 +
 +CONTENTS
 +
-+	- BMan Node
-+	- BMan Private Memory Node
++	- QMan Portal
++	- QMan Pool Channel
 +	- Example
 +
-+BMan Node
++QMan Portal Node
 +
-+The Buffer Manager is part of the Data-Path Acceleration Architecture (DPAA).
-+BMan supports hardware allocation and deallocation of buffers belonging to pools
-+originally created by software with configurable depletion thresholds. This
-+binding covers the CCSR space programming model
++Portals are memory mapped interfaces to QMan that allow low-latency, lock-less
++interaction by software running on processor cores, accelerators and network
++interfaces with the QMan
 +
 +PROPERTIES
 +
 +- compatible
 +	Usage:		Required
 +	Value type:	<stringlist>
-+	Definition:	Must include "fsl,bman"
-+			May include "fsl,<SoC>-bman"
++	Definition:	Must include "fsl,qman-portal-<hardware revision>"
++			May include "fsl,<SoC>-qman-portal" or "fsl,qman-portal"
 +
 +- reg
 +	Usage:		Required
 +	Value type:	<prop-encoded-array>
-+	Definition:	Registers region within the CCSR address space
-+
-+The BMan revision information is located in the BMAN_IP_REV_1/2 registers which
-+are located at offsets 0xbf8 and 0xbfc
++	Definition:	Two regions. The first is the cache-enabled region of
++			the portal. The second is the cache-inhibited region of
++			the portal
 +
 +- interrupts
 +	Usage:		Required
 +	Value type:	<prop-encoded-array>
-+	Definition:	Standard property. The error interrupt
++	Definition:	Standard property
++
++- fsl,liodn
++	Usage:		See pamu.txt
++	Value type:	<prop-encoded-array>
++	Definition:	Two LIODN(s). DQRR LIODN (DLIODN) and Frame LIODN
++			(FLIODN)
++
++- fsl,iommu-parent
++	Usage:		See pamu.txt
++	Value type:	<phandle>
++	Definition:	PAMU property used for dynamic LIODN assignment
++
++	For additional details about the PAMU/LIODN binding(s) see pamu.txt
++
++- fsl,qman-channel-id
++	Usage:		Required
++	Value type:	<u32>
++	Definition:	The hardware index of the channel. This can also be
++			determined by dividing any of the channel's 8 work queue
++			IDs by 8
++
++In addition to these properties the qman-portals should have sub-nodes to
++represent the HW devices/portals that are connected to the software portal
++described here
++
++The currently supported sub-nodes are:
++	* fman0
++	* fman1
++	* pme
++	* crypto
++
++These subnodes should have the following properties:
 +
 +- fsl,liodn
 +	Usage:		See pamu.txt
@@ -78,82 +107,81 @@ index 0000000..9f80bf8
 +	Value type:	<phandle>
 +	Definition:	PAMU property used for dynamic LIODN assignment
 +
-+	For additional details about the PAMU/LIODN binding(s) see pamu.txt
-+
-+Devices connected to a BMan instance via Direct Connect Portals (DCP) must link
-+to the respective BMan instance
-+
-+- fsl,bman
++- dev-handle
 +	Usage:		Required
-+	Value type:	<prop-encoded-array>
-+	Description:	List of phandle and DCP index pairs, to the BMan instance
-+			to which this device is connected via the DCP
++	Value type:	<phandle>
++	Definition:	The phandle to the particular hardware device that this
++			portal is connected to.
 +
-+BMan Private Memory Node
++DPAA QMan Pool Channel Nodes
 +
-+BMan requires a contiguous range of physical memory used for the backing store
-+for BMan Free Buffer Proxy Records (FBPR). This memory is reserved/allocated as a
-+node under the /reserved-memory node
-+
-+The BMan FBPR memory node must be named "bman-fbpr"
++Pool Channels are defined with the following properties.
 +
 +PROPERTIES
 +
 +- compatible
-+	Usage:		required
++	Usage:		Required
 +	Value type:	<stringlist>
-+	Definition:	Must inclide "fsl,bman-fbpr"
++	Definition:	Must include "fsl,qman-pool-channel"
++			May include "fsl,<SoC>-qman-pool-channel"
 +
-+The following constraints are relevant to the FBPR private memory:
-+	- The size must be 2^(size + 1), with size = 11..33. That is 4 KiB to
-+	  16 GiB
-+	- The alignment must be a muliptle of the memory size
-+
-+The size of the FBPR must be chosen by observing the hardware features configured
-+via the Reset Configuration Word (RCW) and that are relevant to a specific board
-+(e.g. number of MAC(s) pinned-out, number of offline/host command FMan ports,
-+etc.). The size configured in the DT must reflect the hardware capabilities and
-+not the specific needs of an application
-+
-+For additional details about reserved memory regions see reserved-memory.txt
++- fsl,qman-channel-id
++	Usage:		Required
++	Value type:	<u32>
++	Definition:	The hardware index of the channel. This can also be
++			determined by dividing any of the channel's 8 work queue
++			IDs by 8
 +
 +EXAMPLE
 +
-+The example below shows a BMan FBPR dynamic allocation memory node
++The example below shows a (P4080) QMan portals container/bus node with two portals
 +
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
++	qman-portals@ff4200000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "simple-bus";
++		ranges = <0 0xf 0xf4200000 0x200000>;
 +
-+		bman_fbpr: bman-fbpr {
-+			compatible = "fsl,bman-fbpr";
-+			alloc-ranges = <0 0 0xf 0xffffffff>;
-+			size = <0 0x1000000>;
-+			alignment = <0 0x1000000>;
++		qman-portal@0 {
++			compatible = "fsl,qman-portal-1.2.0", "fsl,qman-portal";
++			reg = <0 0x4000>, <0x100000 0x1000>;
++			interrupts = <104 2 0 0>;
++			fsl,liodn = <1 2>;
++			fsl,qman-channel-id = <0>;
++
++			fman0 {
++				fsl,liodn = <0x21>;
++				dev-handle = <&fman0>;
++			};
++			fman1 {
++				fsl,liodn = <0xa1>;
++				dev-handle = <&fman1>;
++			};
++			crypto {
++				fsl,liodn = <0x41 0x66>;
++				dev-handle = <&crypto>;
++			};
 +		};
-+	};
++		qman-portal@4000 {
++			compatible = "fsl,qman-portal-1.2.0", "fsl,qman-portal";
++			reg = <0x4000 0x4000>, <0x101000 0x1000>;
++			interrupts = <106 2 0 0>;
++			fsl,liodn = <3 4>;
++			fsl,qman-channel-id = <1>;
 +
-+The example below shows a (P4080) BMan CCSR-space node
-+
-+	crypto@300000 {
-+		...
-+		fsl,bman = <&bman, 2>;
-+		...
-+	};
-+
-+	bman: bman@31a000 {
-+		compatible = "fsl,bman";
-+		reg = <0x31a000 0x1000>;
-+		interrupts = <16 2 1 2>;
-+		fsl,liodn = <0x17>;
-+		memory-region = <&bman_fbpr>;
-+	};
-+
-+	fman@400000 {
-+		...
-+		fsl,bman = <&bman, 0>;
-+		...
++			fman0 {
++				fsl,liodn = <0x22>;
++				dev-handle = <&fman0>;
++			};
++			fman1 {
++				fsl,liodn = <0xa2>;
++				dev-handle = <&fman1>;
++			};
++			crypto {
++				fsl,liodn = <0x42 0x67>;
++				dev-handle = <&crypto>;
++			};
++		};
 +	};
 -- 
 2.1.3
