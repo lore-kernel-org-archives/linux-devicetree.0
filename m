@@ -1,61 +1,39 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH v2] pinctrl: dra: dt-bindings: Fix output pull up/down
-Date: Wed, 5 Nov 2014 11:10:29 -0600
-Message-ID: <545A5A05.6050500@ti.com>
-References: <1414752745-13696-1-git-send-email-rogerq@ti.com> <1415009392-6627-1-git-send-email-rogerq@ti.com>
+From: Juergen Borleis <juergen127@kreuzholzen.de>
+Subject: Re: Samsung S3C6410 SoC/devicetree: how to describe RTC interrupts connected to two different interrupt parents?
+Date: Wed, 5 Nov 2014 18:17:47 +0100
+Message-ID: <201411051817.47990.juergen127@kreuzholzen.de>
+References: <201411042104.45632.juergen127@kreuzholzen.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1415009392-6627-1-git-send-email-rogerq@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, tony@atomide.com
-Cc: balbi@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <201411042104.45632.juergen127@kreuzholzen.de>
+Content-Disposition: inline
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 11/03/2014 04:09 AM, Roger Quadros wrote:
-> For PIN_OUTPUT_PULLUP and PIN_OUTPUT_PULLDOWN we must not set the
-> PULL_DIS bit which disables the PULLs.
-> 
-> PULL_ENA is a 0 and using it in an OR operation is a NOP, so don't
-> use it in the PIN_OUTPUT_PULLUP/DOWN macros.
-> 
-> Fixes: 23d9cec07c58 ("pinctrl: dra: dt-bindings: Fix pull enable/disable")
-> 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
->  include/dt-bindings/pinctrl/dra.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/dt-bindings/pinctrl/dra.h b/include/dt-bindings/pinctrl/dra.h
-> index 3d33794..7448edf 100644
-> --- a/include/dt-bindings/pinctrl/dra.h
-> +++ b/include/dt-bindings/pinctrl/dra.h
-> @@ -40,8 +40,8 @@
->  
->  /* Active pin states */
->  #define PIN_OUTPUT		(0 | PULL_DIS)
-> -#define PIN_OUTPUT_PULLUP	(PIN_OUTPUT | PULL_ENA | PULL_UP)
-> -#define PIN_OUTPUT_PULLDOWN	(PIN_OUTPUT | PULL_ENA)
-> +#define PIN_OUTPUT_PULLUP	(PULL_UP)
-> +#define PIN_OUTPUT_PULLDOWN	(0)
->  #define PIN_INPUT		(INPUT_EN | PULL_DIS)
->  #define PIN_INPUT_SLEW		(INPUT_EN | SLEWCONTROL)
->  #define PIN_INPUT_PULLUP	(PULL_ENA | INPUT_EN | PULL_UP)
-> 
+Myself wrote:
+> the Samsung S3C6410 SoC comes with an RTC with two interrupts connected to
+> two different interrupt controllers.
+>
+> The old platform code uses this resource to describe it:
+>
+> static struct resource s3c_rtc_resource[] = {
+> 	[0] = DEFINE_RES_MEM(S3C24XX_PA_RTC, SZ_256),
+> 	[1] = DEFINE_RES_IRQ(IRQ_RTC),  <-- channel 2 at VIC0
+> 	[2] = DEFINE_RES_IRQ(IRQ_TICK), <-- channel 28 at VIC1
+> };
+>
+> In the devicetree I can define multiple interrupt channels with the
+> keyword 'interrupts' but it seems all of them must share the same interrupt
+> parent defined via 'interrupt-parent'. How to handle the special S3C6410
+> case?
+> The file "Documentation/devicetree/bindings/rtc/s3c-rtc.txt" isn't really
+> helpful.
 
+Ahh, "interrupts-extended" is the keyword... solved.
 
-There might be additional updates needed to DRA7 pinctrl sequencing
-requirements based on latest documentation:
-
-http://www.ti.com/lit/ug/spruhz6/spruhz6.pdf#page=4004&zoom=auto,0,274.1
-
-But, that has nothing to do with the bug that is currently being fixed
-in this patch,.
-
-So, for the record:
-Acked-by: Nishanth Menon <nm@ti.com>
-
--- 
-Regards,
-Nishanth Menon
+jbo
