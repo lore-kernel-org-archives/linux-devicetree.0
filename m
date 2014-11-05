@@ -1,62 +1,69 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v1 3/3] usb: phy: add device-tree support for gpio-vbus
-Date: Wed, 5 Nov 2014 13:31:26 -0600
-Message-ID: <20141105193126.GN6548@saruman>
-References: <1414951910-16075-1-git-send-email-robert.jarzmik@free.fr>
- <1414951910-16075-3-git-send-email-robert.jarzmik@free.fr>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+From: "Lennart Sorensen" <lsorense@csclub.uwaterloo.ca>
+Subject: Re: [PATCH 11/13] arm: dts: dra7: add DMA properties for UART
+Date: Wed, 5 Nov 2014 14:43:23 -0500
+Message-ID: <20141105194323.GI24112@csclub.uwaterloo.ca>
+References: <20141104170233.GB24112@csclub.uwaterloo.ca>
+ <5459079D.7080703@linutronix.de>
+ <20141104172117.GC24112@csclub.uwaterloo.ca>
+ <20141104183315.GD24112@csclub.uwaterloo.ca>
+ <20141104210315.GF24112@csclub.uwaterloo.ca>
+ <20141105011506.GG24112@csclub.uwaterloo.ca>
+ <5459DBB7.1090702@linutronix.de>
+ <20141105153307.GN24110@csclub.uwaterloo.ca>
+ <20141105162024.GH24112@csclub.uwaterloo.ca>
+ <545A50BB.2020307@linutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="XLsjFikA86nwwlhe"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1414951910-16075-3-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <545A50BB.2020307@linutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, balbi@ti.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---XLsjFikA86nwwlhe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Nov 02, 2014 at 07:11:50PM +0100, Robert Jarzmik wrote:
-> Add device-tree support for the generic gpio-vbus driver.
+On Wed, Nov 05, 2014 at 05:30:51PM +0100, Sebastian Andrzej Siewior wro=
+te:
+> On 11/05/2014 05:20 PM, Lennart Sorensen wrote:
+> > On Wed, Nov 05, 2014 at 10:33:15AM -0500, Lennart Sorensen wrote:
+> >> Two systems ran 16 hours each so far with no issues.  Pushed 170MB=
+ of
+> >> data through the pair of serial ports on one system at 230400.
+> >=20
+> > The console on uart3 doesn't appear to be using the dma assuming th=
+e
+> > values in /sys for the dma controller and bytes transferred mean an=
+ything.
+> > It does mention in dmesg that it allocated dma channels for uart3 t=
+hough.
 >=20
-> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
+> Then it should use it :)
 
-I would rather see you converting to a fixed-regulator with phy-generic.
+I managed to get something dma related on uart3.  But it isn't happy:
+
+[   95.577401] DMA misaligned error with device 53
+repeated many times.
+
+I wonder if the dma support isn't quite working for the omap572x yet in
+this tree (ti's 3.12.y tree), or maybe it is picky and the driver still
+needs a bit of work.
+
+I have had no issues on uart7 and 8 without dma.
+
+> There is omap_8250_tx_dma() and omap_8250_rx_dma(). Both setup
+> callbacks (the rx+tx _complete). Upon successful DMA transfer you
+> should see them invoked with bytes transfered (>0).
+> For RX transfer you need at least trigger bytes in the FIFO within a
+> given time frame (I think it was 46 bytes and the delay may be up to =
+2
+> bytes). If you miss this then DMA for RX won't wire and you purge the
+> FIFO manually via "timeout-interrupt" (the callback will be invoked
+> with an error condition and 0 bytes).
+>=20
+> Assuming this works for you then one should figure out why the counte=
+rs
+> in /sys are not updated=E2=80=A6
 
 --=20
-balbi
-
---XLsjFikA86nwwlhe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUWnsOAAoJEIaOsuA1yqREYwAP/1U4D5soJdJY/jy5w+c/nUvr
-Nja+uVRUWtG7Zh2SSLpu85pgPxbqVe7/snKlEqq3fSYJL6sfCTI48MOs082cRCjh
-pSDxMWYXHsQNDHtJZde9+sTSntqRfItjuoqjY4OhWS14/gv7jOiTS0aFrHlJNwR5
-UIkcHwJ3QcvkedIVbrAi0QqEy8GMnYD98EVp+pTivPp5DQT7ZUXMR3mMAX4TizBP
-0LU5FQL85r6l1Cu/zGiWo5FcLbK5kIgacvCUrczv6yuyRtf0WAIe4KmOxH1ASdsF
-4JpG8uN0CJXkmrJdmi57nI4DIt7tTmVowYMXO6yJCPGYtF7aKcNXBDv7/+m5wMhD
-1QRW+MMmBiWwc1o8k2+x0FA2EY0vCDZbIn4kyhF6KgSKMwvpWe5MFWHpo56dGN4j
-aYLrNqcRMkqg5H3UMpT23Ps5Ic57gMbDnjJfEGG8E5JvaIJTCcQPN6n8k3m3DFkY
-ytjtZ1bxZ1xDpIc/1WyIIpcK1lymRpm5GdNAWGzVKMUwUCzAk+V/bm9kFw5I3P6W
-psbrQgCFux9DJjNaszoT6a7f/LcYkEbBDKeQ+9xjVik9k6sO+giWWpJ8eAIs8fxT
-z9Q1D3OlORqRPPqL5YSpKRh5fXMu3fASAmCkouyWTry8K4oxMOhnHoORQaDD6aN0
-IvwRVoLs4MjcvUG24s+h
-=p61d
------END PGP SIGNATURE-----
-
---XLsjFikA86nwwlhe--
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Len Sorensen
