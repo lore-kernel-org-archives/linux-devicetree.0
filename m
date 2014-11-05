@@ -1,57 +1,183 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] DT: iio: adc: Add CC_10001 binding documentation
-Date: Wed, 05 Nov 2014 13:40:06 +0000
-Message-ID: <545A28B6.9000902@kernel.org>
-References: <1414615531-26172-1-git-send-email-ezequiel.garcia@imgtec.com> <1414615531-26172-3-git-send-email-ezequiel.garcia@imgtec.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 1/2] imx-drm: imx-hdmi: split imx soc specific code from
+ imx-hdmi
+Date: Wed, 05 Nov 2014 14:41:22 +0100
+Message-ID: <1415194882.5696.9.camel@pengutronix.de>
+References: <1415192101-6404-1-git-send-email-andy.yan@rock-chips.com>
+ <1415192101-6404-2-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414615531-26172-3-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-Cc: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1415192101-6404-2-git-send-email-andy.yan@rock-chips.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, rmk+kernel@arm.linux.org.uk, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On 29/10/14 20:45, Ezequiel Garcia wrote:
-> From: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Hi Andy,
+
+I think separating the core from the SoC specific part is a good step
+into the right direction.
+
+Am Mittwoch, den 05.11.2014, 20:55 +0800 schrieb Andy Yan:
+> imx6 and rockchip rk3288 and JZ4780 (Ingenic Xburst/MIPS)
+> use the interface compatible Designware HDMI IP, but they
+> also have some lightly difference, such as phy pll configuration,
+> register width(imx hdmi register is one byte, but rk3288 is 4
+> bytes width), 4K support(imx6 doesn't support 4k, but rk3288 does),
+> clk useage,and the crtc mux configuration is also platform specific.
 > 
-> Add the devicetree binding document for Cosmic Circuits 10001 ADC device.
+> To reuse the imx hdmi driver, split the platform specific code out
+> to dw_hdmi-imx.c.
 > 
-> Signed-off-by: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> [Ezequiel: minor style cleaning]
-> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Looks fine, but as with all bindings needs to go to the device tree list
-and maintainers for them to take a look.
-> ---
->  .../devicetree/bindings/iio/adc/cc_10001_adc.txt      | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/cc_10001_adc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/cc_10001_adc.txt b/Documentation/devicetree/bindings/iio/adc/cc_10001_adc.txt
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+[...]
+> +static int imx_hdmi_parse_dt(struct imx_hdmi_priv *hdmi)
+> +{
+> +	struct device_node *np = hdmi->dev->of_node;
+> +
+> +	hdmi->regmap = syscon_regmap_lookup_by_phandle(np, "gpr");
+> +	if (IS_ERR(hdmi->regmap)) {
+> +		dev_err(hdmi->dev, "Unable to get gpr\n");
+> +		return PTR_ERR(hdmi->regmap);
+> +	}
+> +
+> +	hdmi->isfr_clk = devm_clk_get(hdmi->dev, "isfr");
+> +	if (IS_ERR(hdmi->isfr_clk)) {
+> +		dev_err(hdmi->dev, "Unable to get HDMI isfr clk\n");
+> +		return PTR_ERR(hdmi->isfr_clk);
+> +	}
+> +
+> +	hdmi->iahb_clk = devm_clk_get(hdmi->dev, "iahb");
+> +	if (IS_ERR(hdmi->iahb_clk)) {
+> +		dev_err(hdmi->dev, "Unable to get HDMI iahb clk\n");
+> +		return PTR_ERR(hdmi->iahb_clk);
+> +	}
+
+Surely this IP core needs to be clocked regardless of the SoC? How are
+clocks controlled on rk3288 and jz4780?
+
+[...]
+> +/*On rockchip platform, no-word access to the hdmi
+> + * register will causes an imprecise external abort
+> + */
+> +static inline void hdmi_writel(struct imx_hdmi *hdmi, u32 val, int offset)
+> +{
+> +	writel(val, hdmi->regs + (offset << 2));
+> +}
+>  
+> -	bool phy_enabled;
+> -	struct drm_display_mode previous_mode;
+> +static inline u32 hdmi_readl(struct imx_hdmi *hdmi, int offset)
+> +{
+> +	return readl(hdmi->regs + (offset << 2));
+> +}
+>  
+> -	struct regmap *regmap;
+> -	struct i2c_adapter *ddc;
+> -	void __iomem *regs;
+> +static void hdmi_modl(struct imx_hdmi *hdmi, u32 data, u32 mask, unsigned reg)
+> +{
+> +	u32 val = hdmi_readl(hdmi, reg) & ~mask;
+>  
+> -	unsigned int sample_rate;
+> -	int ratio;
+> -};
+> +	val |= data & mask;
+> +	hdmi_writel(hdmi, val, reg);
+> +}
+>  
+> -static void imx_hdmi_set_ipu_di_mux(struct imx_hdmi *hdmi, int ipu_di)
+> +static void hdmi_mask_writel(struct imx_hdmi *hdmi, u32 data, unsigned int reg,
+> +			     u32 shift, u32 mask)
+>  {
+> -	regmap_update_bits(hdmi->regmap, IOMUXC_GPR3,
+> -			   IMX6Q_GPR3_HDMI_MUX_CTL_MASK,
+> -			   ipu_di << IMX6Q_GPR3_HDMI_MUX_CTL_SHIFT);
+> +	hdmi_modl(hdmi, data << shift, mask, reg);
+>  }
+>  
+> -static inline void hdmi_writeb(struct imx_hdmi *hdmi, u8 val, int offset)
+> +static inline void hdmi_writeb(struct imx_hdmi *hdmi, u32 val, int offset)
+>  {
+>  	writeb(val, hdmi->regs + offset);
+>  }
+>  
+> -static inline u8 hdmi_readb(struct imx_hdmi *hdmi, int offset)
+> +static inline u32 hdmi_readb(struct imx_hdmi *hdmi, int offset)
+>  {
+>  	return readb(hdmi->regs + offset);
+>  }
+>  
+> -static void hdmi_modb(struct imx_hdmi *hdmi, u8 data, u8 mask, unsigned reg)
+> +static void hdmi_modb(struct imx_hdmi *hdmi, u32 data, u32 mask, unsigned reg)
+>  {
+>  	u8 val = hdmi_readb(hdmi, reg) & ~mask;
+
+Do you really need to use readl instead of readb? In my opinion it would
+be better then to convert the driver to use regmap for register access
+(in a separate patch) and then let the SoC specific driver extension
+provide the regmap to the core driver.
+
+[...]
+> diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
 > new file mode 100644
-> index 0000000..6491839
+> index 0000000..e7e8285
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/cc_10001_adc.txt
-> @@ -0,0 +1,19 @@
-> +* Cosmic Circuits - Analog to Digital Converter (CC-10001-ADC)
+> +++ b/include/drm/bridge/dw_hdmi.h
+> @@ -0,0 +1,114 @@
+> +/*
+> + * Copyright (C) 2011 Freescale Semiconductor, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
 > +
-> +Required properties:
-> +  - compatible: Should be "cosmic,10001-adc"
-> +  - reg: Should contain adc registers location and length.
-> +  - cosmic,adc-available-channels: Bitmask of the channels currently enabled.
-> +  - clock-names: Should contain "adc".
-> +  - clocks: phandles to input clocks.
-> +  - vref-supply: The regulator supply ADC reference voltage.
+> +#ifndef __DW_HDMI_H__
+> +#define __DW_HDMI_H__
 > +
-> +Example:
-> +adc: adc@18101600 {
-> +	compatible = "cosmic,10001-adc";
-> +	reg = <0x18101600 0x24>;
-> +	cosmic,adc-available-channels = <0xa>;
-> +	clocks = <&adc_clk>;
-> +	clock-names = "adc";
-> +	vref-supply = <&reg_1v8>;
+> +#include <drm/drmP.h>
+> +
+> +#define HDMI_EDID_LEN           512
+> +
+> +enum {
+> +	RES_8,
+> +	RES_10,
+> +	RES_12,
+> +	RES_MAX,
 > +};
-> 
+> +
+> +enum imx_hdmi_devtype {
+> +	IMX6Q_HDMI,
+> +	IMX6DL_HDMI,
+> +};
+> +
+> +struct mpll_config {
+> +	unsigned long mpixelclock;
+> +	struct {
+> +		u16 cpce;
+> +		u16 gmp;
+> +	} res[RES_MAX];
+> +};
+> +
+> +struct curr_ctrl {
+> +	unsigned long mpixelclock;
+> +	u16 curr[RES_MAX];
+> +};
+
+For a header file in include/drm/bridge maybe these struct names are a
+bit too generic now.
+
+regards
+Philipp
