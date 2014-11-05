@@ -1,76 +1,49 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH] mfd: qcom-spmi-pmic: Add support for more chips versions
-Date: Wed, 05 Nov 2014 15:50:29 +0200
-Message-ID: <1415195429.3660.2.camel@mm-sol.com>
-References: <1415108003-16387-1-git-send-email-iivanov@mm-sol.com>
-	 <545A1CD2.4030407@suse.de>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/1] of/fdt: simplify early_init_dt_verify
+Date: Wed, 5 Nov 2014 13:52:07 +0000
+Message-ID: <CACxGe6tkOWtqtt9nVk2R=NqsEVZBDCV-1deVhEXf1pAGS7YhFA@mail.gmail.com>
+References: <1414497065-9808-1-git-send-email-thunder.leizhen@huawei.com>
+ <20141104162054.4CC9BC423D0@trevor.secretlab.ca> <CAErSpo6Upf=QPn7=Cd=XDazXVnSPhb-9gDZjH9_CcY37-xUKLw@mail.gmail.com>
+ <5459740B.6000906@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <545A1CD2.4030407@suse.de>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5459740B.6000906-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: leizhen <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Nov 5, 2014 at 12:49 AM, leizhen <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+> On 2014/11/5 1:03, Bjorn Helgaas wrote:
+>> On Tue, Nov 4, 2014 at 9:20 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>> On Tue, 28 Oct 2014 19:51:05 +0800
+>>> , Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>>>  wrote:
+>>>> put off initial_boot_params = params; until all checks finished. If any check
+>>>> failed, initial_boot_params is equal NULL, base upon bss segment initial value.
+>>>>
+>>>> Signed-off-by: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>>>
+>>> Interesting. I received exactly the same patch from Bjorn Helgaas. Were
+>>> the two of you working together, or is this merely a coincedence?
+>>
+>> LOL, that's really funny.  We're not working together, so it's a total
+>> coincidence :)
+>>
+> Haha!!!
+>
+> Hi, Bjorn Helgaas. Nice to meet you.
 
-On Wed, 2014-11-05 at 13:49 +0100, Andreas F=C3=A4rber wrote:
-> Hi,
->=20
-> Am 04.11.2014 um 14:33 schrieb Ivan T. Ivanov:
-> > Update compatible string with runtime detected chip revision
-> > information, for example qcom,pm8941 will become qcom,pm8941-v1.0.
->=20
-> That's not what the patch does though?
+I've applied Bjorn's version, but since the diffstat is *identical*,
+I've put both of your s-o-b lines into it.
 
-Patch add support for more chips and make compatible property more spec=
-ific.
-Will correct description.
+BTW Lei, what prompted you to write this patch? Was there a bug you
+were fixing, or did you just notice the inconsistency and decide to
+fix it?
 
->=20
-> > Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-> > ---
-> >  .../devicetree/bindings/mfd/qcom,spmi-pmic.txt     |  18 ++-
-> >  drivers/mfd/qcom-spmi-pmic.c                       | 142 +++++++++=
-++++++++++++
-> >  2 files changed, 156 insertions(+), 4 deletions(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.t=
-xt=20
-> > b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-> > index 7182b88..bbe7db8 100644
-> > --- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-> > +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-> > @@ -15,10 +15,20 @@ each. A function can consume one or more of the=
-se fixed-size register=20
-> > regions.
-> >=20
-> >  Required properties:
-> >  - compatible:      Should contain one of:
-> > -                     "qcom,pm8941"
-> > -                     "qcom,pm8841"
-> > -                     "qcom,pma8084"
-> > -                     or generalized "qcom,spmi-pmic".
-> > +                   qcom,pm8941,
-> > +                   qcom,pm8841,
-> > +                   qcom,pm8019,
-> > +                   qcom,pm8226,
-> > +                   qcom,pm8110,
-> > +                   qcom,pma8084,
-> > +                   qcom,pmi8962,
-> > +                   qcom,pmd9635,
-> > +                   qcom,pm8994,
-> > +                   qcom,pmi8994,
-> > +                   qcom,pm8916,
-> > +                   qcom,pm8004,
-> > +                   qcom,pm8909,
->=20
-> Please either keep the strings consistently quoted, or drop the trail=
-ing
-> comma to avoid any confusion of where it terminates.
-
-Sure, will fix it.
-
-Thank you,
-Ivan
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
