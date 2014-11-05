@@ -1,40 +1,69 @@
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH 2/2] move imx-hdmi to bridge/dw-hdmi
-Date: Wed, 5 Nov 2014 12:30:12 +0300
-Message-ID: <20141105093012.GN6879@mwanda>
-References: <1415108398-34376-1-git-send-email-andy.yan@rock-chips.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH 0/4] poweroff-source DT property renaming
+Date: Wed, 5 Nov 2014 10:39:12 +0100
+Message-ID: <20141105093912.GM31358@localhost>
+References: <1414568135-8311-1-git-send-email-romain.perier@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1415108398-34376-1-git-send-email-andy.yan@rock-chips.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, rmk+kernel@arm.linux.org.uk, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
+In-Reply-To: <1414568135-8311-1-git-send-email-romain.perier@gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Romain Perier <romain.perier@gmail.com>
+Cc: heiko@sntech.de, grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org, johan@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, Felipe Balbi <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 04, 2014 at 09:39:58PM +0800, Andy Yan wrote:
-> From: Andy yan <andy.yan@rock-chips.com>
+On Wed, Oct 29, 2014 at 07:35:31AM +0000, Romain Perier wrote:
+> The goal of this serie is to rename the property "poweroff-source" to 
+> "system-power-controller" and to fix things incrementally.
 
-Leave this out.  It's for when you are forwarding a patch from someone
-else.  Also it has a typo and your email From: header is correct.
+Please mention (here and in the commit message) that this is a rename
+back to the old and fairly established property name, but without the
+vendor prefix.
+
+Essentially, it is a revert of a commit that is only in the regulator
+tree.
+
+> Changes and explanations since v1:
+> 
+>   - The first patch defines "of_is_system_power_controller" which is compatible
+>     with both "vendor,system-power-controller" and "system-power-controller"
+>     properties. Also, It keeps the old helper function of_system_has_poweroff_source
+>     for source compatibility until everything is renamed (in this way, bisections
+>     are not broken and change is made "atomically" between each commit)
+> 
+>     Note: the property "poweroff-source" itself is not used in dts files yet.
+>     Before this patch tps65910 was broken due to missing backward compatibility
+>     with "vendor,system-power-controller". As the old helper uses the new one,
+>     it works again.
+
+What patch broke tps65910? Please refer to it using commit id and
+summary (in parenthesis).
+
+Is that commit currently only in the regulator tree? If so, that could
+be an argument for not doing this change incrementally (but that's not
+my decision to make).
 
 > 
-> the original imx hdmi driver is under staging/imx-drm,
-> which depends on imx-drm, so move the imx hdmi drvier out
-> to drm/bridge and rename imx-hdmi to dw-hdmi
+>   - act8865 and tps65910 are ported to the new helper function
 > 
+>   - The last commit removes the olf helper which was only used for
+>   source compatibility
 
-No Signed-off-by: line.
+I think you should squash the last three patches (i.e. update the
+drivers and remove the helper in one patch).
 
-regards,
-dan carpenter
+> Romain Perier (4):
+>   of: Rename "poweroff-source" property to "system-power-controller"
+>   regulator: act8865: Convert poweroff-source DT property to
+>     system-power-controller
+>   mfd: tps65910: Convert poweroff-source DT property to
+>     system-power-controller
+>   of: Remove of_system_has_poweroff_source helper function
+
+Please do not mix patch revisions in your Subject lines when submitting
+an updated series. Update the revision number for the series and all
+patches in it even if a single patch happens to be unchanged (or new as
+patch 4/4).
+
+Johan
