@@ -1,113 +1,175 @@
-From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/6] uio: Add new UIO_MEM_PHYS_CACHE type for mem regions
-Date: Wed, 5 Nov 2014 09:09:04 -0600
-Message-ID: <F22784D5-5BB7-4053-91FD-554A7E1B3901@codeaurora.org>
-References: <1413871011-4101-1-git-send-email-ankit.jindal@linaro.org> <1413871011-4101-3-git-send-email-ankit.jindal@linaro.org> <6D33D50E-2DD1-482C-B05E-45B237F3B779@codeaurora.org> <CAPTm99W0J-Q6CwCDVaYe4eyEWrruWuY5pzpHoESyVu9N3cFA=g@mail.gmail.com> <4B098F57-E202-412C-B54D-085A46792EDC@codeaurora.org> <CAPTm99UUA0Oe40uH73Rj8_hvyMYwuxcKhFvU_KVZxmKpR1jn2Q@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPTm99UUA0Oe40uH73Rj8_hvyMYwuxcKhFvU_KVZxmKpR1jn2Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tushar Jagad <tushar.jagad-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 1/3] iio: exyno-adc: use syscon for PMU register access
+Date: Wed, 05 Nov 2014 15:25:43 +0000
+Message-ID: <545A4177.90803@kernel.org>
+References: <1410857931-4980-1-git-send-email-ch.naveen@samsung.com>	<1410857931-4980-2-git-send-email-ch.naveen@samsung.com> <CAFp+6iH77ToXfOG1bXpCi60JpuzhhxOqaz99=9v4_9DppkSCNw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAFp+6iH77ToXfOG1bXpCi60JpuzhhxOqaz99=9v4_9DppkSCNw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Vivek Gautam <gautam.vivek@samsung.com>, linux-iio@vger.kernel.org
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, cw00.choi@samsung.com, Greg KH <gregkh@linuxfoundation.org>, naveenkrishna.ch@gmail.com, lars@metafoo.de, CPGS <cpgs@samsung.com>, grundler@chromium.org
 List-Id: devicetree@vger.kernel.org
 
+On 28/10/14 12:31, Vivek Gautam wrote:
+> Hi all,
+> 
+> 
+> CC'ing Naveen's gmail id, since the Samsung id is invalid now.
+> 
+> 
+> On Tue, Sep 16, 2014 at 2:28 PM, Naveen Krishna Chatradhi
+> <ch.naveen@samsung.com> wrote:
+>> This patch updates the IIO based ADC driver to use syscon and regmap
+>> APIs to access and use PMU registers instead of remapping the PMU
+>> registers in the driver.
+>>
+>> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+>> To: linux-iio@vger.kernel.org
+>> ---
+>> Changes since v1:
+>> Rebased on top of togreg branch of IIO git
+> 
+> If the changes look good, then first two patches of this series can be
+> picked up ?
+> The last dt patch then belongs to samsung tree.
+Given the interlinked nature of the patches and Kukjin Kim's ack I'll
+take the lot. Obviously if someone wants to pull the 3rd patch into
+Samsung's tree as well, then git will deal with it just fine at merge
+time!
 
-On Nov 5, 2014, at 6:55 AM, Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrot=
-e:
+Thanks,
 
-> Hi Kumar,
->=20
-> On 31 October 2014 19:09, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->>=20
->> On Oct 31, 2014, at 4:30 AM, Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> =
-wrote:
->>=20
->>> Hi Kumar,
->>>=20
->>> On 21 October 2014 12:08, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->>>>=20
->>>> On Oct 21, 2014, at 7:56 AM, Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org=
-> wrote:
->>>>=20
->>>>> Currently, three types of mem regions are supported: UIO_MEM_PHYS=
-,
->>>>> UIO_MEM_LOGICAL and UIO_MEM_VIRTUAL. Among these UIO_MEM_PHYS hel=
-ps
->>>>> UIO driver export physcial memory to user space as non-cacheable
->>>>> user memory. Typcially memory-mapped registers of a device are ex=
-ported
->>>>> to user space as UIO_MEM_PHYS type mem region. The UIO_MEM_PHYS t=
-ype
->>>>> is not efficient if dma-capable devices are capable of maintainin=
-g coherency
->>>>> with CPU caches.
->>>>>=20
->>>>> This patch adds new type UIO_MEM_PHYS_CACHE for mem regions to en=
-able
->>>>> cacheable access to physical memory from user space.
->>>>>=20
->>>>> Signed-off-by: Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>> Signed-off-by: Tushar Jagad <tushar.jagad-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>> ---
->>>>> drivers/uio/uio.c          |   11 ++++++++---
->>>>> include/linux/uio_driver.h |    1 +
->>>>> 2 files changed, 9 insertions(+), 3 deletions(-)
->>>>=20
->>>> Rather than adding a new type, why not allow the driver to set the=
- pgprot value, this way one has full control and we don=92t need to kee=
-p adding types for various different cache attributions in the future.
->>>=20
->>> Do you mean to add a new field pgprot_t in the memtype structure an=
-d
->>> uio_mmap_physical will set vma->vm_page_prot to this value provided=
- by
->>> driver ? If this is the case then we will need to change all the
->>> current uio based drivers which was the reason I preferred to have =
-a
->>> new mem type.
->>>=20
->>> Please let me know if I have misunderstood anything.
->>=20
->> I=92m suggeting in uio_mmap_physical to do something like:
->>=20
->> if (idev->info->set_pgprot)
->>        idev->info->set_pgprot(vma->vm_page_prot)
->> else
->>        vma->vm_page_prot =3D pgprot_noncached(vma->vm_page_prot);
->>=20
->> And add a set_prprot callback to 'struct uio_info=92.
->>=20
->> Here=92s patch from several years ago:
->>=20
->> http://patchwork.ozlabs.org/patch/119224/
->=20
-> The suggested solution looks okey but not sure whether there is any
-> available drivers using different combinations. Also, I looked at the
-> available pgprot routines, looks like only pgprot_noncached and
-> pgprot_writecombine are the available ones. So if we are not going to
-> use these pgprot routines then driver might have architecture
-> dependent switches, which we should avoid.
-
-There are cases that are arch/driver specific that do not fall into pgp=
-rot_noncached or pgprot_writecombine.  So I don=92t see why we should l=
-imit them.  For example the Freescale networking guys need cacheable-no=
-ncoherent for some of their UIO work.
-
-We can deal with arch specific issues during review of the UIO driver t=
-hemselves.
-
-- k
-
---=20
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora For=
-um,
-a Linux Foundation Collaborative Project
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jonathan
+> 
+>>
+>>  drivers/iio/adc/exynos_adc.c |   30 +++++++++++++++++++++---------
+>>  1 file changed, 21 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
+>> index 43620fd..fe03177 100644
+>> --- a/drivers/iio/adc/exynos_adc.c
+>> +++ b/drivers/iio/adc/exynos_adc.c
+>> @@ -39,6 +39,8 @@
+>>  #include <linux/iio/iio.h>
+>>  #include <linux/iio/machine.h>
+>>  #include <linux/iio/driver.h>
+>> +#include <linux/mfd/syscon.h>
+>> +#include <linux/regmap.h>
+>>
+>>  /* S3C/EXYNOS4412/5250 ADC_V1 registers definitions */
+>>  #define ADC_V1_CON(x)          ((x) + 0x00)
+>> @@ -90,11 +92,14 @@
+>>
+>>  #define EXYNOS_ADC_TIMEOUT     (msecs_to_jiffies(100))
+>>
+>> +#define EXYNOS_ADCV1_PHY_OFFSET        0x0718
+>> +#define EXYNOS_ADCV2_PHY_OFFSET        0x0720
+>> +
+>>  struct exynos_adc {
+>>         struct exynos_adc_data  *data;
+>>         struct device           *dev;
+>>         void __iomem            *regs;
+>> -       void __iomem            *enable_reg;
+>> +       struct regmap           *pmu_map;
+>>         struct clk              *clk;
+>>         struct clk              *sclk;
+>>         unsigned int            irq;
+>> @@ -110,6 +115,7 @@ struct exynos_adc_data {
+>>         int num_channels;
+>>         bool needs_sclk;
+>>         bool needs_adc_phy;
+>> +       int phy_offset;
+>>         u32 mask;
+>>
+>>         void (*init_hw)(struct exynos_adc *info);
+>> @@ -183,7 +189,7 @@ static void exynos_adc_v1_init_hw(struct exynos_adc *info)
+>>         u32 con1;
+>>
+>>         if (info->data->needs_adc_phy)
+>> -               writel(1, info->enable_reg);
+>> +               regmap_write(info->pmu_map, info->data->phy_offset, 1);
+>>
+>>         /* set default prescaler values and Enable prescaler */
+>>         con1 =  ADC_V1_CON_PRSCLV(49) | ADC_V1_CON_PRSCEN;
+>> @@ -198,7 +204,7 @@ static void exynos_adc_v1_exit_hw(struct exynos_adc *info)
+>>         u32 con;
+>>
+>>         if (info->data->needs_adc_phy)
+>> -               writel(0, info->enable_reg);
+>> +               regmap_write(info->pmu_map, info->data->phy_offset, 0);
+>>
+>>         con = readl(ADC_V1_CON(info->regs));
+>>         con |= ADC_V1_CON_STANDBY;
+>> @@ -225,6 +231,7 @@ static const struct exynos_adc_data exynos_adc_v1_data = {
+>>         .num_channels   = MAX_ADC_V1_CHANNELS,
+>>         .mask           = ADC_DATX_MASK,        /* 12 bit ADC resolution */
+>>         .needs_adc_phy  = true,
+>> +       .phy_offset     = EXYNOS_ADCV1_PHY_OFFSET,
+>>
+>>         .init_hw        = exynos_adc_v1_init_hw,
+>>         .exit_hw        = exynos_adc_v1_exit_hw,
+>> @@ -314,7 +321,7 @@ static void exynos_adc_v2_init_hw(struct exynos_adc *info)
+>>         u32 con1, con2;
+>>
+>>         if (info->data->needs_adc_phy)
+>> -               writel(1, info->enable_reg);
+>> +               regmap_write(info->pmu_map, info->data->phy_offset, 1);
+>>
+>>         con1 = ADC_V2_CON1_SOFT_RESET;
+>>         writel(con1, ADC_V2_CON1(info->regs));
+>> @@ -332,7 +339,7 @@ static void exynos_adc_v2_exit_hw(struct exynos_adc *info)
+>>         u32 con;
+>>
+>>         if (info->data->needs_adc_phy)
+>> -               writel(0, info->enable_reg);
+>> +               regmap_write(info->pmu_map, info->data->phy_offset, 0);
+>>
+>>         con = readl(ADC_V2_CON1(info->regs));
+>>         con &= ~ADC_CON_EN_START;
+>> @@ -362,6 +369,7 @@ static const struct exynos_adc_data exynos_adc_v2_data = {
+>>         .num_channels   = MAX_ADC_V2_CHANNELS,
+>>         .mask           = ADC_DATX_MASK, /* 12 bit ADC resolution */
+>>         .needs_adc_phy  = true,
+>> +       .phy_offset     = EXYNOS_ADCV2_PHY_OFFSET,
+>>
+>>         .init_hw        = exynos_adc_v2_init_hw,
+>>         .exit_hw        = exynos_adc_v2_exit_hw,
+>> @@ -374,6 +382,7 @@ static const struct exynos_adc_data exynos3250_adc_data = {
+>>         .mask           = ADC_DATX_MASK, /* 12 bit ADC resolution */
+>>         .needs_sclk     = true,
+>>         .needs_adc_phy  = true,
+>> +       .phy_offset     = EXYNOS_ADCV1_PHY_OFFSET,
+>>
+>>         .init_hw        = exynos_adc_v2_init_hw,
+>>         .exit_hw        = exynos_adc_v2_exit_hw,
+>> @@ -558,10 +567,13 @@ static int exynos_adc_probe(struct platform_device *pdev)
+>>
+>>
+>>         if (info->data->needs_adc_phy) {
+>> -               mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>> -               info->enable_reg = devm_ioremap_resource(&pdev->dev, mem);
+>> -               if (IS_ERR(info->enable_reg))
+>> -                       return PTR_ERR(info->enable_reg);
+>> +               info->pmu_map = syscon_regmap_lookup_by_phandle(
+>> +                                       pdev->dev.of_node,
+>> +                                       "samsung,syscon-phandle");
+>> +               if (IS_ERR(info->pmu_map)) {
+>> +                       dev_err(&pdev->dev, "syscon regmap lookup failed.\n");
+>> +                       return PTR_ERR(info->pmu_map);
+>> +               }
+>>         }
+>>
+>>         irq = platform_get_irq(pdev, 0);
+>> --
+>> 1.7.9.5
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
+> 
