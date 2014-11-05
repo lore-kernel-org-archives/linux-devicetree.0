@@ -1,63 +1,80 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH V3 4/4] clocksource: mips-gic: Add device-tree support
-Date: Tue, 4 Nov 2014 15:49:16 -0800
-Message-ID: <CAL1qeaG0EpxdbV+QxAsdYgAWc19yWf8eLW0mfVxevQaJDxER6w@mail.gmail.com>
-References: <1414541562-10076-1-git-send-email-abrestic@chromium.org>
-	<1414541562-10076-5-git-send-email-abrestic@chromium.org>
-	<20141029175142.GC26471@leverpostej>
+From: leizhen <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/1] of/fdt: simplify early_init_dt_verify
+Date: Wed, 5 Nov 2014 08:49:15 +0800
+Message-ID: <5459740B.6000906@huawei.com>
+References: <1414497065-9808-1-git-send-email-thunder.leizhen@huawei.com> <20141104162054.4CC9BC423D0@trevor.secretlab.ca> <CAErSpo6Upf=QPn7=Cd=XDazXVnSPhb-9gDZjH9_CcY37-xUKLw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141029175142.GC26471@leverpostej>
+In-Reply-To: <CAErSpo6Upf=QPn7=Cd=XDazXVnSPhb-9gDZjH9_CcY37-xUKLw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On 2014/11/5 1:03, Bjorn Helgaas wrote:
+> On Tue, Nov 4, 2014 at 9:20 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On Tue, 28 Oct 2014 19:51:05 +0800
+>> , Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>>  wrote:
+>>> put off initial_boot_params = params; until all checks finished. If any check
+>>> failed, initial_boot_params is equal NULL, base upon bss segment initial value.
+>>>
+>>> Signed-off-by: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>>
+>> Interesting. I received exactly the same patch from Bjorn Helgaas. Were
+>> the two of you working together, or is this merely a coincedence?
+> 
+> LOL, that's really funny.  We're not working together, so it's a total
+> coincidence :)
+> 
+Haha!!!
 
->> +static void __init gic_clocksource_of_init(struct device_node *node)
->> +{
->> +     if (of_property_read_u32(node, "clock-frequency", &gic_frequency)) {
->> +             pr_err("GIC frequency not specified.\n");
->> +             return;
->> +     }
->> +     gic_timer_irq = irq_of_parse_and_map(node, 0);
->> +     if (!gic_timer_irq) {
->> +             pr_err("GIC timer IRQ not specified.\n");
->> +             return;
->> +     }
->> +
->> +     __gic_clocksource_init();
->> +}
->> +CLOCKSOURCE_OF_DECLARE(mips_gic_timer, "mti,interaptiv-gic-timer",
->> +                    gic_clocksource_of_init);
->
-> Your binding document expected the timer node under the GIC node, and it
-> looks like this relies on GIC internals. Hwoever, this allows for people
-> to put the timer node anywhere (and it turns out people are _really_ bad
-> at putting things together as the binding author expected).
->
-> It might be better if the GIC driver detected the sub node and probed
-> the clocksource driver (or registered a platform device that the
-> clocksource driver gets registered from). that could prevent some
-> horrible issues with probe ordering and/or bad dts.
+Hi, Bjorn Helgaas. Nice to meet you.
 
-Probing the clocksource during probe of the irqchip doesn't work
-because time-keeping isn't set up at the time.  Registering a platform
-device for the timer pushes back GIC timer registration to later in
-the boot process (assuming it now becomes a module_platform_driver)
-and makes it rather non-parallel to how it's done in the non-DT case
-(this could be changed, though IMO it's a lot of churn just to thwart
-bad DT authors).
+>>> ---
+>>>  drivers/of/fdt.c | 10 ++++------
+>>>  1 file changed, 4 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+>>> index d1ffca8..325c638 100644
+>>> --- a/drivers/of/fdt.c
+>>> +++ b/drivers/of/fdt.c
+>>> @@ -994,14 +994,12 @@ bool __init early_init_dt_verify(void *params)
+>>>       if (!params)
+>>>               return false;
+>>>
+>>> -     /* Setup flat device-tree pointer */
+>>> -     initial_boot_params = params;
+>>> -
+>>>       /* check device tree validity */
+>>> -     if (fdt_check_header(params)) {
+>>> -             initial_boot_params = NULL;
+>>> +     if (fdt_check_header(params))
+>>>               return false;
+>>> -     }
+>>> +
+>>> +     /* Setup flat device-tree pointer */
+>>> +     initial_boot_params = params;
+>>>
+>>>       return true;
+>>>  }
+>>> --
+>>> 1.8.0
+>>>
+>>>
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+>>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>> Please read the FAQ at  http://www.tux.org/lkml/
+>>
+> 
+> .
+> 
 
-Probe ordering shouldn't be an issue because irqchips are probed
-before clocksources.  Perhaps checking for the presence of GIC
-(there's the global gic_present) and node->parent (to enforce the
-parent-child relationship) would be sufficient?
 
-Thanks,
-Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
