@@ -1,40 +1,53 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v5 4/4] crypto: Add Allwinner Security System crypto
- accelerator
-Date: Thu, 6 Nov 2014 22:32:18 +0800
-Message-ID: <20141106143217.GA3636@gondor.apana.org.au>
-References: <544A9FEA.6020304@gmail.com>
- <20141030171933.GR21251@lukather>
- <20141031072030.GA7563@gondor.apana.org.au>
- <20141031081323.GS21251@lukather>
- <20141031081803.GA8012@gondor.apana.org.au>
- <20141031095706.GA8054@lukather>
- <20141031100522.GA8655@gondor.apana.org.au>
- <20141103093446.GG11263@lukather>
- <20141103103528.GA30154@gondor.apana.org.au>
- <20141106142633.GK2989@lukather>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] PCI: add missing DT binding for linux,pci-domain property
+Date: Thu, 6 Nov 2014 08:57:35 -0600
+Message-ID: <CAL_JsqK-g2qW12jatyZBLeBEtpr80o=WWZVet5+OgMtzAAXHJQ@mail.gmail.com>
+References: <1415101660-26450-1-git-send-email-l.stach@pengutronix.de>
+ <20141105231743.GI6168@google.com> <20141106100518.GI8916@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141106142633.GK2989@lukather>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Corentin LABBE <clabbe.montjoie@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, davem@davemloft.net, grant.likely@linaro.org, akpm@linux-foundation.org, gregkh@linuxfoundation.org, joe@perches.com, mchehab@osg.samsung.com, crope@iki.fi, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-sunxi@googlegroups.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20141106100518.GI8916@e106497-lin.cambridge.arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Lucas Stach <l.stach@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 06, 2014 at 03:26:33PM +0100, Maxime Ripard wrote:
-> 
-> But you still haven't explain why the driver, while it doesn't handle
-> the user space buffer at any time, should be worried that the data the
-> framework has given him are actually mapped.
+On Thu, Nov 6, 2014 at 4:05 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+> On Wed, Nov 05, 2014 at 11:17:43PM +0000, Bjorn Helgaas wrote:
+>> On Tue, Nov 04, 2014 at 12:47:40PM +0100, Lucas Stach wrote:
+>> > This property was added by 41e5c0f81d3e
+>> > (of/pci: Add pci_get_new_domain_nr() and of_get_pci_domain_nr())
+>> > without the required binding documentation. As this property
+>> > will be supported by a number of host bridge drivers going forward,
+>> > add it to the common PCI binding doc.
+>> >
+>> > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+>>
+>> I merged 41e5c0f81d3e through my tree, and I could merge something like
+>> this if a consensus develops with some acks.  But I'll just let you guys
+>> handle it unless you poke me again.
+>
+> While I think the "linux,pci-domain" property *must* be documented, I
+> would like to get a consensus first on the usage. If we agree that
+> the property is mandatory to all host bridge drivers that use OF then
+> we need to patch existing drivers (partially done through Lorenzo's
+> patches, but other arches are ignoring it). If we say all *new* drivers
+> need to use it then we also need to come up with a strategy on how to
+> deal with old vs new school drivers.
+>
+> My preferred approach is the 3rd way: "linux,pci-domain" becomes part of
+> the core PCI infrastructure (and we find the common ground with ACPI).
+> That way the host bridge drivers don't have to do anything, but the DT
+> creators have to specify a value.
 
-Encryption is used by IPsec and SKBs can be allocated in highmem.
-algif also exposes all ciphers to user-space memory which can also
-be in highmem.
+I'm okay with it being in the core. It was the mixture of using the
+property and automatic numbering that I had issues with. Any mixture
+whether in DT or in drivers should be an error. Also, I think having a
+mixture of root bus host drivers would be rare, so I'm not too
+concerned about some drivers supporting the property and others not.
+In any case, these issues are all with the kernel and not really the
+concern for the binding. For the binding, simply all hosts set the
+domain or none of them do.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Rob
