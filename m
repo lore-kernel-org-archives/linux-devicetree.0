@@ -1,58 +1,73 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 3/5] of: Only call notifiers when node is attached
-Date: Thu, 6 Nov 2014 12:47:19 +0000
-Message-ID: <CACxGe6vaPBcU++_JWJYVcD5r-Z2c2ZjxWfrmo4Qmetbg+E-3oA@mail.gmail.com>
-References: <1414528433-9650-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1414528433-9650-4-git-send-email-pantelis.antoniou@konsulko.com>
- <20141105213925.3790BC41C40@trevor.secretlab.ca> <EE6F3801-A76A-4D95-B841-A7935FA7FCF9@konsulko.com>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH V3 0/4] dw-hdmi: make imx hdmi publicly used by dw hdmi
+ compatible platform
+Date: Thu,  6 Nov 2014 19:21:53 +0800
+Message-ID: <1415272913-56889-1-git-send-email-andy.yan@rock-chips.com>
+References: <1415192101-6404-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <EE6F3801-A76A-4D95-B841-A7935FA7FCF9@konsulko.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Geor
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1415192101-6404-1-git-send-email-andy.yan@rock-chips.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, ykk@rock-chips.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, Dave Airlie <airlied@redhat.com>, Grant Likely <grant.likely@linaro.org>, Andy yan <andy.yan@rock-chips.com>, Shawn Guo <shawn.guo@linaro.org>, jay.xu@rock-chips.com, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 6, 2014 at 12:33 PM, Pantelis Antoniou
-<pantelis.antoniou@konsulko.com> wrote:
-> Hi Grant,
->
->> On Nov 5, 2014, at 23:39 , Grant Likely <grant.likely@secretlab.ca> wrote:
->>
->> On Tue, 28 Oct 2014 22:33:51 +0200
->> , Pantelis Antoniou <pantelis.antoniou@konsulko.com>
->> wrote:
->>> Make sure we call notifier only when the node is attached.
->>> When a detatched tree is being constructed we do not want the
->>> notifiers to fire at all.
->>
->> The description does not match what the patch does. The patch moves the
->> test into of_{add,remove,update}_property() and out of
->> of_property_notify() itself. That leaves one other caller of
->> of_property_notify(); __of_changeset_entry_notify(). The effect of this
->> patch is that applying a changeset will cause notifiers to be fired for
->> each property modified in a changeset. The comment says nothing about
->> the change in behaviour and it sounds like it is a bug fix when it
->> doesn't actually change the behaviour at all for the
->> of_{add,remove,update}_property() paths.
->>
->> This needs a better changelog. It needs to describe what the effects of
->> the patch are and why the change is being made. When someone is
->> bisecting a problem and they land on this change, the changelog needs to
->> give them a good idea about what is going on and why.
->>
->
-> Valid points. In fact I performed some tests and with this reverted things
-> still work.
->
-> The rationale behind this is for when nodes/properties are removed in the overlay,
-> but since we don't support this for now, we never hit the case where it was
-> needed.
->
-> Please remove from the patch series, I'll revisit this when I add the removal
-> functionality.
+We found freescale imx6 and rockchip rk3288 and Ingenic JZ4780 (Xburst/MIPS)
+use the interface compatible Designware HDMI IP, but they also have some
+lightly difference, such as phy pll configuration, register width(imx hdmi
+register is one byte, but rk3288 is 4 bytes width and can only access by word),
+4K support(imx6 doesn't support 4k, but rk3288 does).
 
-Cool, thanks.
+To reuse the imx-hdmi driver, we do this patch set:
+patch (1): split out imx-soc code from imx-hdmi to dw_hdmi-imx.c
+patch (2): move imx-hdmi to bridge/, and rename to dw-hdmi to
+patch (3): add multi byte register access support
+make this driver indepent of drm-imx . And we will add rockchip
+platform specific code dw_hdmi-rockchip.c later, this is depend
+on drm-rockchip.
 
-g.
+Changes in V3:
+- refactor multi byte register access, and split it
+  to one indepent patch
+- convert it to a drm_bridge driver
+
+Changes in V2:
+- use git format-patch -M to generate these patch
+- remove change-id
+- remove from
+
+
+Andy Yan (3):
+  imx-drm: imx-hdmi: split imx soc specific code from imx-hdmi
+  dw-hdmi: move imx-hdmi to bridge/dw-hdmi
+  dw-hdmi: add support for multi byte register width access
+
+ykk (1):
+  dw-hdmi: convert dw-hdmi to drm_bridge mode
+
+ drivers/gpu/drm/bridge/Kconfig                     |   5 +
+ drivers/gpu/drm/bridge/Makefile                    |   1 +
+ .../imx-hdmi.c => gpu/drm/bridge/dw_hdmi.c}        | 619 +++++++++------------
+ .../imx-hdmi.h => gpu/drm/bridge/dw_hdmi.h}        |   5 +-
+ drivers/staging/imx-drm/Kconfig                    |   1 +
+ drivers/staging/imx-drm/Makefile                   |   2 +-
+ drivers/staging/imx-drm/dw_hdmi-imx.c              | 263 +++++++++
+ include/drm/bridge/dw_hdmi.h                       |  52 ++
+ 8 files changed, 575 insertions(+), 373 deletions(-)
+ rename drivers/{staging/imx-drm/imx-hdmi.c => gpu/drm/bridge/dw_hdmi.c} (75%)
+ rename drivers/{staging/imx-drm/imx-hdmi.h => gpu/drm/bridge/dw_hdmi.h} (99%)
+ create mode 100644 drivers/staging/imx-drm/dw_hdmi-imx.c
+ create mode 100644 include/drm/bridge/dw_hdmi.h
+
+-- 
+1.9.1
