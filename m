@@ -1,114 +1,78 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v3 04/13] of: document new emc-timings subnode in nvidia,tegra124-car
-Date: Thu, 6 Nov 2014 09:12:13 -0600
-Message-ID: <CAL_JsqKYSF3JVrXH_dkqRXQrgUU3igzvoK1C2k1Caz-4UuHX6Q@mail.gmail.com>
-References: <1414599796-30597-1-git-send-email-tomeu.vizoso@collabora.com>
- <1414599796-30597-5-git-send-email-tomeu.vizoso@collabora.com> <545B172C.4060105@nvidia.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH RESEND v3 0/4] power/mfd: Add max77693 charger driver
+Date: Thu, 06 Nov 2014 16:11:56 +0100
+Message-ID: <1415286720-6358-1-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <545B172C.4060105@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-api@vger.kernel.org
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 6, 2014 at 12:37 AM, Alexandre Courbot <acourbot@nvidia.com> wrote:
-> On 10/30/2014 01:22 AM, Tomeu Vizoso wrote:
->>
->> The EMC clock needs some extra information for changing its rate.
->>
->> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
->> ---
->>   .../bindings/clock/nvidia,tegra124-car.txt         | 46
->> +++++++++++++++++++++-
->>   1 file changed, 44 insertions(+), 2 deletions(-)
->>
->> diff --git
->> a/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
->> b/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
->> index ded5d62..42e0588 100644
->> --- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
->> +++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
->> @@ -19,12 +19,35 @@ Required properties :
->>     In clock consumers, this cell represents the bit number in the CAR's
->>     array of CLK_RST_CONTROLLER_RST_DEVICES_* registers.
->>
->> +The node should contain a "emc-timings" subnode for each supported RAM
->> type (see
->> +field RAM_CODE in register PMC_STRAPPING_OPT_A), with its unit address
->> being its
->> +RAM_CODE.
->> +
->> +Required properties for "emc-timings" nodes :
->> +- nvidia,ram-code : Should contain the value of RAM_CODE this timing set
->> +  is used for.
->> +
->> +Each "emc-timings" node should contain a "timing" subnode for every
->> supported
->> +EMC clock rate. The "timing" subnodes should have the clock rate in Hz as
->> their
->> +unit address.
->
->
-> This seems to be a quite liberal use of unit addresses (same in the next
-> patch) - is this allowed by DT?
 
-No, unit address should match a reg property.
+Hi,
 
->> +
->> +Required properties for "timing" nodes :
->> +- clock-frequency : Should contain the memory clock rate to which this
->> timing
->> +relates.
->> +- nvidia,parent-clock-frequency : Should contain the rate at which the
->> current
->> +parent of the EMC clock should be running at this timing.
->> +- clocks : Must contain an entry for each entry in clock-names.
->> +  See ../clocks/clock-bindings.txt for details.
->> +- clock-names : Must include the following entries:
->> +  - emc-parent : the clock that should be the parent of the EMC clock at
->> this
->> +timing.
->> +
->>   Example SoC include file:
->>
->>   / {
->> -       tegra_car: clock {
->> +       tegra_car: clock@0,60006000 {
 
-The comma here is wrong. Commas should be used when you have something
-like PCI bus:dev:func for addressing.
+I got ack from Sebastian [1] but only for charger driver patch. This
+means that I still need an ack for documentation (bindings, sysfs)...
 
->>                 compatible = "nvidia,tegra124-car";
->> -               reg = <0x60006000 0x1000>;
->> +               reg = <0x0 0x60006000 0x0 0x1000>;
 
-The number of cell's is really irrelevant to the example.
+Changes since v2
+================
+1. Add ack from Sebastian Reichel (charger driver).
+2. Drop patch "mfd: max77693: Map charger device to its own of_node"
+   (applied by Lee Jones).
 
->>                 #clock-cells = <1>;
->>                 #reset-cells = <1>;
->>         };
->> @@ -60,4 +83,23 @@ Example board file:
->>         &tegra_car {
->>                 clocks = <&clk_32k> <&osc>;
->>         };
->> +
->> +       clock@0,60006000 {
->> +               emc-timings@3 {
->> +                       nvidia,ram-code = <3>;
->> +
->> +                       timing@12750000 {
->> +                               clock-frequency = <12750000>;
->> +                               nvidia,parent-clock-frequency =
->> <408000000>;
->> +                               clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
->> +                               clock-names = "emc-parent";
 
-Why do you need both clocks and hardcoded values? clock-frequency is
-the desired freq you want to set TEGRA124_CLK_PLL_P to?
+Changes since v1
+================
+1. Add patch 2/5: mfd: max77693: Map charger device to its own of_node
+   (forgot to send it in v1)
+2. Remove patches for DTS and configs. I'll send them later.
+3. Add ack from Lee Jones (patch 3/5).
 
-The clocks property really belongs as part of the memory controller
-node or a memory device node.
 
-Rob
+Description
+===========
+The patchset adds max77693 charger driver present on Trats2 board
+(and Galaxy S III). The driver configures battery charger and exposes
+power supply interface.
+
+Driver is necessary to provide full charging stack on Trats2 device
+(extcon, charger-manager etc.).
+
+[1] https://lkml.org/lkml/2014/10/27/774
+
+
+Best regards,
+Krzysztof
+
+
+Krzysztof Kozlowski (4):
+  devicetree: power/mfd: max77693: Document new bindings for charger
+  mfd: max77693: Add defines for MAX77693 charger driver
+  power: max77693: Add charger driver for Maxim 77693
+  Documentation: power: max77693-charger: Document exported sysfs entry
+
+ Documentation/ABI/testing/sysfs-class-power        |  42 ++
+ Documentation/devicetree/bindings/mfd/max77693.txt |  45 ++
+ drivers/power/Kconfig                              |   6 +
+ drivers/power/Makefile                             |   1 +
+ drivers/power/max77693_charger.c                   | 763 +++++++++++++++++++++
+ include/linux/mfd/max77693-private.h               | 108 +++
+ include/linux/mfd/max77693.h                       |   8 +
+ 7 files changed, 973 insertions(+)
+ create mode 100644 drivers/power/max77693_charger.c
+
+-- 
+1.9.1
