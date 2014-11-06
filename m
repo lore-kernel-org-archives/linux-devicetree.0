@@ -1,126 +1,45 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] PM / clock_ops: make __pm_clk_enable more generic
-Date: Thu, 6 Nov 2014 09:31:56 -0800
-Message-ID: <20141106173156.GD34214@dtor-ws>
-References: <1415281862-23764-1-git-send-email-grygorii.strashko@ti.com>
- <1415281862-23764-3-git-send-email-grygorii.strashko@ti.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH] ARM: dts: zynq: Enable PL clocks for Parallella
+Date: Thu, 6 Nov 2014 09:33:54 -0800
+Message-ID: <e78290abdb85497081f502e5886bf045@BL2FFO11FD057.protection.gbl>
+References: <1415294531-8942-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1415281862-23764-3-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Cc: ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+In-Reply-To: <1415294531-8942-1-git-send-email-afaerber@suse.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open
+ list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Andreas Olofsson <andreas@adapteva.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Michal Simek <michal.simek@xilinx.com>, stable@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, Olof Johansson <olof@lixom.net>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 06, 2014 at 03:51:01PM +0200, Grygorii Strashko wrote:
-> Now there are two places in code which do the same things,
-> so allow __pm_clk_enable() to accept pointer on pm_clock_entry
-> structure as second parameter instead of pointer on clock and
-> remove duplicated code.
-> 
-> Also, updated function intended to be used by following patch.
-> 
-> CC: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> CC: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> CC: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> CC: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-> CC: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-
-Reviewed-by: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-> ---
->  drivers/base/power/clock_ops.c | 38 ++++++++++++++++----------------------
->  1 file changed, 16 insertions(+), 22 deletions(-)
-> 
-> diff --git a/drivers/base/power/clock_ops.c b/drivers/base/power/clock_ops.c
-> index f061eaa..b32b5d4 100644
-> --- a/drivers/base/power/clock_ops.c
-> +++ b/drivers/base/power/clock_ops.c
-> @@ -35,14 +35,20 @@ struct pm_clock_entry {
->  /**
->   * pm_clk_enable - Enable a clock, reporting any errors
->   * @dev: The device for the given clock
-> - * @clk: The clock being enabled.
-> + * @ce: PM clock entry corresponding to the clock.
->   */
-> -static inline int __pm_clk_enable(struct device *dev, struct clk *clk)
-> +static inline int __pm_clk_enable(struct device *dev, struct pm_clock_entry *ce)
->  {
-> -	int ret = clk_enable(clk);
-> -	if (ret)
-> -		dev_err(dev, "%s: failed to enable clk %p, error %d\n",
-> -			__func__, clk, ret);
-> +	int ret;
-> +
-> +	if (ce->status < PCE_STATUS_ERROR) {
-> +		ret = clk_enable(ce->clk);
-> +		if (!ret)
-> +			ce->status = PCE_STATUS_ENABLED;
-> +		else
-> +			dev_err(dev, "%s: failed to enable clk %p, error %d\n",
-> +				__func__, ce->clk, ret);
-> +	}
->  
->  	return ret;
->  }
-> @@ -293,7 +299,6 @@ int pm_clk_resume(struct device *dev)
->  	struct pm_subsys_data *psd = dev_to_psd(dev);
->  	struct pm_clock_entry *ce;
->  	unsigned long flags;
-> -	int ret;
->  
->  	dev_dbg(dev, "%s()\n", __func__);
->  
-> @@ -302,13 +307,8 @@ int pm_clk_resume(struct device *dev)
->  
->  	spin_lock_irqsave(&psd->lock, flags);
->  
-> -	list_for_each_entry(ce, &psd->clock_list, node) {
-> -		if (ce->status < PCE_STATUS_ERROR) {
-> -			ret = __pm_clk_enable(dev, ce->clk);
-> -			if (!ret)
-> -				ce->status = PCE_STATUS_ENABLED;
-> -		}
-> -	}
-> +	list_for_each_entry(ce, &psd->clock_list, node)
-> +		__pm_clk_enable(dev, ce);
->  
->  	spin_unlock_irqrestore(&psd->lock, flags);
->  
-> @@ -417,7 +417,6 @@ int pm_clk_resume(struct device *dev)
->  	struct pm_subsys_data *psd = dev_to_psd(dev);
->  	struct pm_clock_entry *ce;
->  	unsigned long flags;
-> -	int ret;
->  
->  	dev_dbg(dev, "%s()\n", __func__);
->  
-> @@ -427,13 +426,8 @@ int pm_clk_resume(struct device *dev)
->  
->  	spin_lock_irqsave(&psd->lock, flags);
->  
-> -	list_for_each_entry(ce, &psd->clock_list, node) {
-> -		if (ce->status < PCE_STATUS_ERROR) {
-> -			ret = __pm_clk_enable(dev, ce->clk);
-> -			if (!ret)
-> -				ce->status = PCE_STATUS_ENABLED;
-> -		}
-> -	}
-> +	list_for_each_entry(ce, &psd->clock_list, node)
-> +		__pm_clk_enable(dev, ce);
->  
->  	spin_unlock_irqrestore(&psd->lock, flags);
->  
-> -- 
-> 1.9.1
-> 
-
--- 
-Dmitry
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgQW5kcmVhcywKCk9uIFRodSwgMjAxNC0xMS0wNiBhdCAwNjoyMlBNICswMTAwLCBBbmRyZWFz
+IEbDpHJiZXIgd3JvdGU6Cj4gVGhlIFBhcmFsbGVsbGEgYm9hcmQgY29tZXMgd2l0aCBhIFUtQm9v
+dCBib290bG9hZGVyIHRoYXQgbG9hZHMgb25lIG9mCj4gdHdvIHByZWRlZmluZWQgRlBHQSBiaXRz
+dHJlYW1zIGJlZm9yZSBib290aW5nIHRoZSBrZXJuZWwuIEJvdGggZGVmaW5lIGFuCj4gQVhJIGlu
+dGVyZmFjZSB0byB0aGUgb24tYm9hcmQgRXBpcGhhbnkgcHJvY2Vzc29yLgo+IAo+IEVuYWJsZSBj
+bG9ja3MgRkNMSzAuLkZDTEszIGZvciB0aGUgUHJvZ3JhbW1hYmxlIExvZ2ljIGJ5IGRlZmF1bHQu
+Cj4gCj4gT3RoZXJ3aXNlIGFjY2Vzc2luZywgZS5nLiwgdGhlIEVTWVNSRVNFVCByZWdpc3RlciBm
+cmVlemVzIHRoZSBib2FyZCwKPiBhcyBzZWVuIHdpdGggdGhlIEVwaXBoYW55IFNESyB0b29scyBl
+LXJlc2V0IGFuZCBlLWh3LXJldiwgdXNpbmcgL2Rldi9tZW0uCgpZZWFoLCB0aGlzIGlzIHRoZSBw
+cm9ibGVtLiBCeXBhc3NpbmcgdGhlIGtlcm5lbCBiYW5naW5nIG9uIG1lbW9yeQpkaXJlY3RseSB0
+aHJvdWdoIC9kZXYvbWVtIGRvZXMgbm90IGxlYXZlIGFueSBjaGFuY2Ugb2YgZW5hYmxpbmcgY2xv
+Y2tzIG9uCmRlbWFuZCB0aHJvdWdoIHRoZSBwcm9wZXIgaW50ZXJmYWNlcy4KClRob3VnaCwgdGhp
+cyBpcyBhIHZhbGlkIHdvcmthcm91bmQgZm9yIHRoZSBpbW1lZGlhdGUgcHJvYmxlbSwgbG9uZ2Vy
+CnRlcm0sIHlvdSBzaG91bGQgY29uc2lkZXIgYWRkaW5nIHNvbWUga2luZCBvZiBwcm9wZXIga2Vy
+bmVsIGRyaXZlciBmb3IKdGhpcyBpbnRlcmZhY2UgdGhhdCB3b3VsZCB0aGVuIHVzZSB0aGUgY2xv
+Y2sgZnJhbWV3b3JrIHRvIGNvbnRyb2wgdGhlCnJlcXVpcmVkIGNsb2NrcyBkeW5hbWljYWxseS4K
+CglTw7ZyZW4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
+cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
+bnV4LWFybS1rZXJuZWwK
