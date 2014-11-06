@@ -1,54 +1,145 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCHv0 3/3] rtc: rtc-isl12057: add alarm support to Intersil
- ISL12057 RTC driver
-Date: Thu, 6 Nov 2014 06:07:16 +0000
-Message-ID: <20141106060716.GS8509@sirena.org.uk>
-References: <cover.1415222752.git.arno@natisbad.org>
- <148403c0ab1d556cbb99d9242c65f714a77843e5.1415222752.git.arno@natisbad.org>
- <20141106055017.GL8509@sirena.org.uk>
- <545B0E53.4020003@roeck-us.net>
+From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [PATCH v3 05/13] of: Document timings subnode of nvidia,tegra-mc
+Date: Thu, 6 Nov 2014 11:32:47 +0100
+Message-ID: <CAAObsKD_XxP2Ny7X8=NsB2YqnAJqFHZs=xz8TWt6S8mJ41nsYA@mail.gmail.com>
+References: <1414599796-30597-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1414599796-30597-6-git-send-email-tomeu.vizoso@collabora.com> <545B2D6B.9030001@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ABd7dauUP597Mpr3"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <545B0E53.4020003@roeck-us.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Arnaud Ebalard <arno@natisbad.org>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <545B2D6B.9030001-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 6 November 2014 09:12, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> On 10/30/2014 01:22 AM, Tomeu Vizoso wrote:
+>>
+>> The MC driver needs some timing-specific information to program the EMEM
+>> during
+>> a rate change of the EMC clock.
+>>
+>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>> ---
+>>   .../memory-controllers/nvidia,tegra-mc.txt         | 46
+>> +++++++++++++++++++++-
+>>   1 file changed, 44 insertions(+), 2 deletions(-)
+>>
+>> diff --git
+>> a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-mc.txt
+>> b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-mc.txt
+>> index f3db93c..8467b8c 100644
+>> ---
+>> a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-mc.txt
+>> +++
+>> b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-mc.txt
+>> @@ -15,9 +15,26 @@ Required properties:
+>>   This device implements an IOMMU that complies with the generic IOMMU
+>> binding.
+>>   See ../iommu/iommu.txt for details.
+>>
+>> -Example:
+>> ---------
+>> +The node should contain a "timings" subnode for each supported RAM type
+>> (see
+>> +field RAM_CODE in register PMC_STRAPPING_OPT_A), with its unit address
+>> being its
+>> +RAM_CODE.
+>>
+>> +Required properties for "timings" nodes :
+>> +- nvidia,ram-code : Should contain the value of RAM_CODE this timing set
+>> is used
+>> +for.
+>> +
+>> +Each "timings" node should contain a "timing" subnode for every supported
+>> EMC
+>> +clock rate. The "timing" subnodes should have the clock rate in Hz as
+>> their unit
+>> +address.
+>
+>
+> In patch 04, a similar sub-node is named "emc-timings". Shouldn't the same
+> name be used here for consistency?
 
---ABd7dauUP597Mpr3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yeah, agreed.
 
-On Wed, Nov 05, 2014 at 09:59:47PM -0800, Guenter Roeck wrote:
-> On 11/05/2014 09:50 PM, Mark Brown wrote:
+> Also, it seems like there is a need for timing nodes in the MC to have match
+> timing nodes in the CAR. It would be nice to add that information in all
+> related bindings files.
 
-> >I can't help but think that toggle is a confusing name for this.
-> >enable?
+Well, rather than the timing subnodes in a node having to match the
+ones in another nodes, I think that all of them should match the
+frequencies at which the EMC can run, which I think is clear enough
+like this (already in each of the three bindings):
 
-> If I recall correctly we had this argument before. Problem is that the
-> function can also _disable_ the alarm, so to name it enable is just
-> as misleading or confusing. update_alarm, maybe ?
++Each "timings" node should contain a "timing" subnode for every
+supported EMC clock rate.
 
-update seems reasonable, yes.  toggle I'd expect to invert the state.
+>> +
+>> +Required properties for "timing" nodes :
+>> +- clock-frequency : Should contain the memory clock rate in Hz.
+>> +- nvidia,emem-configuration : Values to be written to the EMEM register
+>> block,
+>> +as specified by the board documentation.
+>
+>
+> Could you add some more information about which range of registers we are
+> talking about, and whether they must all be specified or only part of them?
+>
+>
+>> +
+>> +Example SoC include file:
+>> +
+>> +/ {
+>>         mc: memory-controller@0,70019000 {
+>>                 compatible = "nvidia,tegra124-mc";
+>>                 reg = <0x0 0x70019000 0x0 0x1000>;
+>> @@ -34,3 +51,28 @@ Example:
+>>                 ...
+>>                 iommus = <&mc TEGRA_SWGROUP_SDMMC1A>;
+>>         };
+>> +};
+>> +
+>> +Example board file:
+>> +
+>> +/ {
+>> +       memory-controller@0,70019000 {
+>> +               timings@3 {
+>> +                       nvidia,ram-code = <3>;
+>> +
+>> +                       timing@12750000 {
+>> +                               clock-frequency = <12750000>;
+>> +
+>> +                               nvidia,emem-configuration = <
+>> +                                       0x40040001 /* MC_EMEM_ARB_CFG */
+>> +                                       0x8000000a /*
+>> MC_EMEM_ARB_OUTSTANDING_REQ */
+>> +                                       0x00000001 /*
+>> MC_EMEM_ARB_TIMING_RCD */
+>> +                                       0x00000001 /*
+>> MC_EMEM_ARB_TIMING_RP */
+>> +                                       0x00000002 /*
+>> MC_EMEM_ARB_TIMING_RC */
+>> +                                       0x00000000 /*
+>> MC_EMEM_ARB_TIMING_RAS */
+>> +                                       0x00000002 /*
+>> MC_EMEM_ARB_TIMING_FAW */
+>> +                               >;
+>
+>
+> Looking at the actual board files I suppose this example here is incomplete.
+> It would be nice to make this explicit, maybe by adding "..." on a new line
+> to indicate more registers are expected.
 
---ABd7dauUP597Mpr3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Sounds good.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Thanks!
 
-iQEcBAEBAgAGBQJUWxATAAoJECTWi3JdVIfQVf0H+wddQ6du6ZGmqMpaNZw2umDq
-WnBpZW8YPeoMtbcleARYNmY1I1zftVH4dOlaAntdqMVZUiHkFespg9yLhZI8WzwY
-uEvARCirtowMz7lY86l/3lDUK8/xO2e6i7+c5giV9ZbAUo+7eYQB/gU061J4oiB7
-wwPs4fi0zmbtGOIHebNKRCjUcpIsv4t7FtVmv1amdBQRnt0bsvrLFVGJRaudhyrG
-HW9oaC8ur1iu8j2tkCFhp2Q9/9UWYzRBuKbilNur6EfSaanTPlG+dmTXuIKtbFqG
-ohv9UdEUcQj5hhI6joFalcIYEWtBNvz4IZ+t7H/E/pkpZCMlIliwWXEKY94VLTI=
-=D6Id
------END PGP SIGNATURE-----
+Tomeu
 
---ABd7dauUP597Mpr3--
+
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-tegra" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
