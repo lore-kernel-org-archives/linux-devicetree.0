@@ -1,151 +1,90 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 3/5] of: Only call notifiers when node is attached
-Date: Thu, 6 Nov 2014 14:33:29 +0200
-Message-ID: <EE6F3801-A76A-4D95-B841-A7935FA7FCF9@konsulko.com>
-References: <1414528433-9650-1-git-send-email-pantelis.antoniou@konsulko.com> <1414528433-9650-4-git-send-email-pantelis.antoniou@konsulko.com> <20141105213925.3790BC41C40@trevor.secretlab.ca>
-Mime-Version: 1.0 (Mac OS X Mail 8.0 \(1990.1\))
-Content-Type: text/plain; charset=utf-8
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH] PCI: add missing DT binding for linux,pci-domain property
+Date: Thu, 6 Nov 2014 12:36:42 +0000
+Message-ID: <20141106123642.GT8916@e106497-lin.cambridge.arm.com>
+References: <1415101660-26450-1-git-send-email-l.stach@pengutronix.de>
+ <20141105231743.GI6168@google.com>
+ <20141106100518.GI8916@e106497-lin.cambridge.arm.com>
+ <3491668.yjzKoIEZd4@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141105213925.3790BC41C40-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pete Popov <pete.popov-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Dan Malek <dan.malek-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Georgi Vlaev <georgi.vlaev@konsulko>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <3491668.yjzKoIEZd4@wuerfel>
+Content-Disposition: inline
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Lucas Stach <l.stach@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
-
-> On Nov 5, 2014, at 23:39 , Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> w=
-rote:
+On Thu, Nov 06, 2014 at 11:42:41AM +0000, Arnd Bergmann wrote:
+> On Thursday 06 November 2014 10:05:18 Liviu Dudau wrote:
+> > On Wed, Nov 05, 2014 at 11:17:43PM +0000, Bjorn Helgaas wrote:
+> > > On Tue, Nov 04, 2014 at 12:47:40PM +0100, Lucas Stach wrote:
+> > > > This property was added by 41e5c0f81d3e
+> > > > (of/pci: Add pci_get_new_domain_nr() and of_get_pci_domain_nr()=
+)
+> > > > without the required binding documentation. As this property
+> > > > will be supported by a number of host bridge drivers going forw=
+ard,
+> > > > add it to the common PCI binding doc.
+> > > >=20
+> > > > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> > >=20
+> > > I merged 41e5c0f81d3e through my tree, and I could merge somethin=
+g like
+> > > this if a consensus develops with some acks.  But I'll just let y=
+ou guys
+> > > handle it unless you poke me again.
+> >=20
+> > While I think the "linux,pci-domain" property *must* be documented,=
+ I
+> > would like to get a consensus first on the usage. If we agree that
+> > the property is mandatory to all host bridge drivers that use OF th=
+en
+> > we need to patch existing drivers (partially done through Lorenzo's
+> > patches, but other arches are ignoring it). If we say all *new* dri=
+vers
+> > need to use it then we also need to come up with a strategy on how =
+to
+> > deal with old vs new school drivers.
+> >=20
+> > My preferred approach is the 3rd way: "linux,pci-domain" becomes pa=
+rt of
+> > the core PCI infrastructure (and we find the common ground with ACP=
+I).
+> > That way the host bridge drivers don't have to do anything, but the=
+ DT
+> > creators have to specify a value.
+> >=20
+> > Pinging Rob to try to get a peek on this thoughts.
 >=20
-> On Tue, 28 Oct 2014 22:33:51 +0200
-> , Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> wrote:
->> Make sure we call notifier only when the node is attached.
->> When a detatched tree is being constructed we do not want the
->> notifiers to fire at all.
+> Parsing "linux,pci-domain" from the PCI core code seems like the best
+> solution to me, but we still have to support dtbs that don't contain
+> it. Lorenzo's patch gets this right I think.
+
+Agree. But we are not covering other architectures that use OF yet.
+
 >=20
-> The description does not match what the patch does. The patch moves t=
-he
-> test into of_{add,remove,update}_property() and out of
-> of_property_notify() itself. That leaves one other caller of
-> of_property_notify(); __of_changeset_entry_notify(). The effect of th=
-is
-> patch is that applying a changeset will cause notifiers to be fired f=
-or
-> each property modified in a changeset. The comment says nothing about
-> the change in behaviour and it sounds like it is a bug fix when it
-> doesn't actually change the behaviour at all for the
-> of_{add,remove,update}_property() paths.
+> ACPI is easy here, because it already requires the domain to be
+> explicit.
+
+I was thinking more along the line of code sharing.
+
+Best regards,
+Liviu
+
 >=20
-> This needs a better changelog. It needs to describe what the effects =
-of
-> the patch are and why the change is being made. When someone is
-> bisecting a problem and they land on this change, the changelog needs=
- to
-> give them a good idea about what is going on and why.
+> 	Arnd
 >=20
-
-Valid points. In fact I performed some tests and with this reverted thi=
-ngs
-still work.
-
-The rationale behind this is for when nodes/properties are removed in t=
-he overlay,
-but since we don=E2=80=99t support this for now, we never hit the case =
-where it was
-needed.
-
-Please remove from the patch series, I=E2=80=99ll revisit this when I a=
-dd the removal
-functionality.
-
-> g.
->=20
-
-Regards
-
-=E2=80=94 Pantelis
-
->>=20
->> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->> ---
->> drivers/of/base.c    | 9 ++++++---
->> drivers/of/dynamic.c | 5 +----
->> 2 files changed, 7 insertions(+), 7 deletions(-)
->>=20
->> diff --git a/drivers/of/base.c b/drivers/of/base.c
->> index 2305dc0..a79d4ee 100644
->> --- a/drivers/of/base.c
->> +++ b/drivers/of/base.c
->> @@ -1695,7 +1695,8 @@ int of_add_property(struct device_node *np, st=
-ruct property *prop)
->>=20
->> 	mutex_unlock(&of_mutex);
->>=20
->> -	if (!rc)
->> +	/* only call notifiers if the node is attached and no error occurr=
-ed */
->> +	if (of_node_is_attached(np) && !rc)
->> 		of_property_notify(OF_RECONFIG_ADD_PROPERTY, np, prop, NULL);
->>=20
->> 	return rc;
->> @@ -1754,7 +1755,8 @@ int of_remove_property(struct device_node *np,=
- struct property *prop)
->>=20
->> 	mutex_unlock(&of_mutex);
->>=20
->> -	if (!rc)
->> +	/* only call notifiers if the node is attached and no error occurr=
-ed */
->> +	if (of_node_is_attached(np) && !rc)
->> 		of_property_notify(OF_RECONFIG_REMOVE_PROPERTY, np, prop, NULL);
->>=20
->> 	return rc;
->> @@ -1830,7 +1832,8 @@ int of_update_property(struct device_node *np,=
- struct property *newprop)
->>=20
->> 	mutex_unlock(&of_mutex);
->>=20
->> -	if (!rc)
->> +	/* only call notifiers if the node is attached and no error occurr=
-ed */
->> +	if (of_node_is_attached(np) && !rc)
->> 		of_property_notify(OF_RECONFIG_UPDATE_PROPERTY, np, newprop, oldpr=
-op);
->>=20
->> 	return rc;
->> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
->> index f297891..8e8b614 100644
->> --- a/drivers/of/dynamic.c
->> +++ b/drivers/of/dynamic.c
->> @@ -90,10 +90,6 @@ int of_property_notify(int action, struct device_=
-node *np,
->> {
->> 	struct of_prop_reconfig pr;
->>=20
->> -	/* only call notifiers if the node is attached */
->> -	if (!of_node_is_attached(np))
->> -		return 0;
->> -
->> 	pr.dn =3D np;
->> 	pr.prop =3D prop;
->> 	pr.old_prop =3D oldprop;
->> @@ -138,6 +134,7 @@ int of_attach_node(struct device_node *np)
->> 	__of_attach_node_sysfs(np);
->> 	mutex_unlock(&of_mutex);
->>=20
->> +	/* node is guaranteed to be attached at this point */
->> 	of_reconfig_notify(OF_RECONFIG_ATTACH_NODE, np);
->>=20
->> 	return 0;
->> --=20
->> 1.7.12
->>=20
 >=20
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
