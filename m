@@ -1,80 +1,166 @@
-From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] i2c: Add Imagination Technologies I2C SCB driver
-Date: Thu, 6 Nov 2014 14:21:50 -0300
-Message-ID: <545BAE2E.8010608@imgtec.com>
-References: <1415218919-9085-1-git-send-email-ezequiel.garcia@imgtec.com> <1415218919-9085-2-git-send-email-ezequiel.garcia@imgtec.com> <545BA6F9.3090207@mentor.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v4 1/3] PM / clock_ops: Add pm_clk_add_clk()
+Date: Thu, 6 Nov 2014 09:31:28 -0800
+Message-ID: <20141106173128.GC34214@dtor-ws>
+References: <1415281862-23764-1-git-send-email-grygorii.strashko@ti.com>
+ <1415281862-23764-2-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <545BA6F9.3090207-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1415281862-23764-2-git-send-email-grygorii.strashko@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, khilman@linaro.org, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Ulf Hansson <ulf.hansson@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Nov 06, 2014 at 03:51:00PM +0200, Grygorii Strashko wrote:
+> From: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> The existing pm_clk_add() allows to pass a clock by con_id. However,
+> when referring to a specific clock from DT, no con_id is available.
+> 
+> Add pm_clk_add_clk(), which allows to specify the struct clk * directly.
+> The will will increment refcount on clock pointer, so the caller has
+> to use clk_put() on clock pointer when done.
+> 
+> CC: Ulf Hansson <ulf.hansson@linaro.org>
+> CC: Geert Uytterhoeven <geert@linux-m68k.org>
+> CC: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Reviewed-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> Reviewed-by: Kevin Hilman <khilman@linaro.org>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 
+Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-On 11/06/2014 01:51 PM, Vladimir Zapolskiy wrote:
-> Hi Ezequiel,
+> ---
+>  drivers/base/power/clock_ops.c | 47 +++++++++++++++++++++++++++++++++---------
+>  include/linux/pm_clock.h       |  8 +++++++
+>  2 files changed, 45 insertions(+), 10 deletions(-)
 > 
-> On 05.11.2014 22:21, Ezequiel Garcia wrote:
->> From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
->>
->> Add support for the IMG I2C Serial Control Bus (SCB) found on the
->> Pistachio and TZ1090 SoCs.
->>
->> Signed-off-by: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
->> [Ezequiel: code cleaning and rebasing]
->> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
->> ---
->>  drivers/i2c/busses/Kconfig       |   10 +
->>  drivers/i2c/busses/Makefile      |    1 +
->>  drivers/i2c/busses/i2c-img-scb.c | 1397 ++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 1408 insertions(+)
->>  create mode 100644 drivers/i2c/busses/i2c-img-scb.c
->>
+> diff --git a/drivers/base/power/clock_ops.c b/drivers/base/power/clock_ops.c
+> index 7836930..f061eaa 100644
+> --- a/drivers/base/power/clock_ops.c
+> +++ b/drivers/base/power/clock_ops.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/pm.h>
+>  #include <linux/pm_clock.h>
+>  #include <linux/clk.h>
+> +#include <linux/clkdev.h>
+>  #include <linux/slab.h>
+>  #include <linux/err.h>
+>  
+> @@ -53,7 +54,8 @@ static inline int __pm_clk_enable(struct device *dev, struct clk *clk)
+>   */
+>  static void pm_clk_acquire(struct device *dev, struct pm_clock_entry *ce)
+>  {
+> -	ce->clk = clk_get(dev, ce->con_id);
+> +	if (!ce->clk)
+> +		ce->clk = clk_get(dev, ce->con_id);
+>  	if (IS_ERR(ce->clk)) {
+>  		ce->status = PCE_STATUS_ERROR;
+>  	} else {
+> @@ -63,15 +65,8 @@ static void pm_clk_acquire(struct device *dev, struct pm_clock_entry *ce)
+>  	}
+>  }
+>  
+> -/**
+> - * pm_clk_add - Start using a device clock for power management.
+> - * @dev: Device whose clock is going to be used for power management.
+> - * @con_id: Connection ID of the clock.
+> - *
+> - * Add the clock represented by @con_id to the list of clocks used for
+> - * the power management of @dev.
+> - */
+> -int pm_clk_add(struct device *dev, const char *con_id)
+> +static int __pm_clk_add(struct device *dev, const char *con_id,
+> +			struct clk *clk)
+>  {
+>  	struct pm_subsys_data *psd = dev_to_psd(dev);
+>  	struct pm_clock_entry *ce;
+> @@ -93,6 +88,12 @@ int pm_clk_add(struct device *dev, const char *con_id)
+>  			kfree(ce);
+>  			return -ENOMEM;
+>  		}
+> +	} else {
+> +		if (IS_ERR(ce->clk) || !__clk_get(clk)) {
+> +			kfree(ce);
+> +			return -ENOENT;
+> +		}
+> +		ce->clk = clk;
+>  	}
+>  
+>  	pm_clk_acquire(dev, ce);
+> @@ -104,6 +105,32 @@ int pm_clk_add(struct device *dev, const char *con_id)
+>  }
+>  
+>  /**
+> + * pm_clk_add - Start using a device clock for power management.
+> + * @dev: Device whose clock is going to be used for power management.
+> + * @con_id: Connection ID of the clock.
+> + *
+> + * Add the clock represented by @con_id to the list of clocks used for
+> + * the power management of @dev.
+> + */
+> +int pm_clk_add(struct device *dev, const char *con_id)
+> +{
+> +	return __pm_clk_add(dev, con_id, NULL);
+> +}
+> +
+> +/**
+> + * pm_clk_add_clk - Start using a device clock for power management.
+> + * @dev: Device whose clock is going to be used for power management.
+> + * @clk: Clock pointer
+> + *
+> + * Add the clock to the list of clocks used for the power management of @dev.
+> + * It will increment refcount on clock pointer, use clk_put() on it when done.
+> + */
+> +int pm_clk_add_clk(struct device *dev, struct clk *clk)
+> +{
+> +	return __pm_clk_add(dev, NULL, clk);
+> +}
+> +
+> +/**
+>   * __pm_clk_remove - Destroy PM clock entry.
+>   * @ce: PM clock entry to destroy.
+>   */
+> diff --git a/include/linux/pm_clock.h b/include/linux/pm_clock.h
+> index 8348866..0b00396 100644
+> --- a/include/linux/pm_clock.h
+> +++ b/include/linux/pm_clock.h
+> @@ -18,6 +18,8 @@ struct pm_clk_notifier_block {
+>  	char *con_ids[];
+>  };
+>  
+> +struct clk;
+> +
+>  #ifdef CONFIG_PM_CLK
+>  static inline bool pm_clk_no_clocks(struct device *dev)
+>  {
+> @@ -29,6 +31,7 @@ extern void pm_clk_init(struct device *dev);
+>  extern int pm_clk_create(struct device *dev);
+>  extern void pm_clk_destroy(struct device *dev);
+>  extern int pm_clk_add(struct device *dev, const char *con_id);
+> +extern int pm_clk_add_clk(struct device *dev, struct clk *clk);
+>  extern void pm_clk_remove(struct device *dev, const char *con_id);
+>  extern int pm_clk_suspend(struct device *dev);
+>  extern int pm_clk_resume(struct device *dev);
+> @@ -51,6 +54,11 @@ static inline int pm_clk_add(struct device *dev, const char *con_id)
+>  {
+>  	return -EINVAL;
+>  }
+> +
+> +static inline int pm_clk_add_clk(struct device *dev, struct clk *clk)
+> +{
+> +	return -EINVAL;
+> +}
+>  static inline void pm_clk_remove(struct device *dev, const char *con_id)
+>  {
+>  }
+> -- 
+> 1.9.1
 > 
-> [snip]
-> 
->> +static int img_i2c_xfer(struct i2c_adapter *i2c_adap, struct i2c_msg *msgs,
->> +			int num)
->> +{
->> +	struct img_i2c *i2c = i2c_get_adapdata(i2c_adap);
->> +	bool atomic = false;
->> +	int i;
->> +
->> +	if (i2c->mode == MODE_SUSPEND) {
->> +		WARN(1, "refusing to service transaction in suspended state\n");
->> +		return -EIO;
->> +	}
->> +
->> +	if (i2c->mode == MODE_FATAL)
->> +		return -EIO;
->> +
->> +	for (i = 0; i < num; i++) {
->> +		if (likely(msgs[i].len))
->> +			continue;
->> +		/*
->> +		 * 0 byte reads are not possible because the slave could try
->> +		 * and pull the data line low, preventing a stop bit.
->> +		 */
->> +		if (unlikely(msgs[i].flags & I2C_M_RD))
->> +			return -EIO;
->> +		/*
->> +		 * 0 byte writes are possible and used for probing, but we
->> +		 * cannot do them in automatic mode, so use atomic mode
->> +		 * instead.
->> +		 */
->> +		atomic = true;
->> +	}
->> +
->> +	clk_prepare_enable(i2c->scb_clk);
-> 
-> Does it make sense to add a check for returned error here?
-> 
-
-Right, that makes sense.
 
 -- 
-Ezequiel
+Dmitry
