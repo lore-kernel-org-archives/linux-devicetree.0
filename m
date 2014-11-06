@@ -1,68 +1,63 @@
-From: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 0/2] mtd: hisilicon: add a new driver for NAND
- controller of hisilicon hip04 Soc
-Date: Thu, 6 Nov 2014 11:05:46 +0800
-Message-ID: <CAN1soZzW8UgHsqR89jKswbjkm9cO-LXUEQ+svc=68+A_avj0hw@mail.gmail.com>
-References: <1415105221-7732-1-git-send-email-wangzhou.bry@gmail.com>
+From: Chris Kohn <christian.kohn@xilinx.com>
+Subject: RE: [PATCH v3 11/13] v4l: xilinx: Add Xilinx Video IP core
+Date: Thu, 6 Nov 2014 03:05:27 +0000
+Message-ID: <678b94ef89b04748accfa49858f6cb47@BN1BFFO11FD030.protection.gbl>
+References: <1414940018-3016-12-git-send-email-laurent.pinchart@ideasonboard.com>
+ <1415212587-5003-1-git-send-email-laurent.pinchart@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415105221-7732-1-git-send-email-wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, caizhiyong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, "xuwei (O)" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1415212587-5003-1-git-send-email-laurent.pinchart@ideasonboard.com>
+Content-Language: en-US
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Cc: Michal Simek <michals@xilinx.com>, Hyun Kwon <hyunk@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 4, 2014 at 8:46 PM, Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> This patchset adds the support for NAND controller of hisilicon hip04 Soc.
-> The NAND controller IP was developed by hisilicon and needs a new driver to
-> support it. This patchset is based on v3.18-rc1. I have tested that NAND flash
-> controller works fine in Hip04 D01 board.
->
-> Changes in v4:
-> - add mtd->dev.parent = &pdev->dev, thanks Frans Klaver.
-> Changes in v3:
-> - Modify code to eliminate some code style warnings.
-> - add ecc-bits input check.
-> - avoid using waterfall style in hisi_nfc_cmdfunc().
-> Changes in v2:
-> - Remove the patch for device tree, now patchset only has the driver and its
->   device tree binding documentation.
-> - Change the file name: hisi_nand.c to hisi504_nand.c.
-> Changes in v1:
-> - Remove callback functions out of struct hinfc_host, and call them directly
->   in relative functions.
-> - Change hinfc_read and hinfc_write from macros to inline functions.
-> - Instead of putting pointers, embed struct nand_chip and struct mtd_info in
->   struct hinfc_host directly.
-> - rewrite some unclear lines in device tree binding document, correct some
->   code style error.
->
-> Link on v3:
-> - https://lkml.org/lkml/2014/10/28/386
-> Link on v2:
-> - https://www.mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg750071.html
-> Link on v1:
-> - https://lkml.org/lkml/2014/7/15/198
->
-> Zhou Wang (2):
->   mtd: hisilicon: add a new NAND controller driver for hisilicon hip04 Soc
->   mtd: hisilicon: add device tree binding documentation
->
->  .../devicetree/bindings/mtd/hisi504-nand.txt       |   40 +
->  drivers/mtd/nand/Kconfig                           |    5 +
->  drivers/mtd/nand/Makefile                          |    1 +
->  drivers/mtd/nand/hisi504_nand.c                    |  846 ++++++++++++++++++++
->  4 files changed, 892 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/hisi504-nand.txt
->  create mode 100644 drivers/mtd/nand/hisi504_nand.c
->
-> --
-> 1.7.9.5
->
+Laurent,
 
-Acked-by: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -----Original Message-----
+> From: Laurent Pinchart [mailto:laurent.pinchart@ideasonboard.com]
+> Sent: Wednesday, November 05, 2014 10:36 AM
+> To: linux-media@vger.kernel.org
+> Cc: Michal Simek; Chris Kohn; Hyun Kwon; devicetree@vger.kernel.org
+> Subject: [PATCH v3 11/13] v4l: xilinx: Add Xilinx Video IP core
+>
+> Xilinx platforms have no hardwired video capture or video processing
+> interface. Users create capture and memory to memory processing
+> pipelines in the FPGA fabric to suit their particular needs, by
+> instantiating video IP cores from a large library.
+>
+> The Xilinx Video IP core is a framework that models a video pipeline
+> described in the device tree and expose the pipeline to userspace
+> through the media controller and V4L2 APIs.
+>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
+> Signed-off-by: Radhey Shyam Pandey <radheys@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+>
+> ---
+>
+> I'd appreciate if DT reviewers could have a look at the xlnx,video-format and
+> xlnx,video-width properties if nothing else.
+>
+> Changes since v2:
+>
+> - Remove explicit trailing \0 after snprintf
+> - Don't hardcode colorspace
+
+I've split these two up based on the individual patches in the tree you pointed me to yesterday. The first one I squashed into
+
+v4l: xilinx: dma: Fix querycap capabilities and bus_info reporting
+
+for the colorspace I created a new patch. I don't want to take credit for it, so if you can send me a patch I'll apply it to my local branch.
+
+Other than that, it's working fine on my end.
+
+Cheers,
+Chris
+
+
+This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
