@@ -1,80 +1,35 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v2] PCI: add missing DT binding for linux,pci-domain
- property
-Date: Thu, 6 Nov 2014 15:40:50 +0000
-Message-ID: <20141106154050.GW8916@e106497-lin.cambridge.arm.com>
-References: <1415287400-30426-1-git-send-email-l.stach@pengutronix.de>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH V3 4/4] dw-hdmi: convert dw-hdmi to drm_bridge mode
+Date: Thu, 6 Nov 2014 07:54:10 -0800
+Message-ID: <20141106155410.GB19811@kroah.com>
+References: <1415273118-57045-1-git-send-email-andy.yan@rock-chips.com>
+ <1415273176-57096-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1415287400-30426-1-git-send-email-l.stach@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
+In-Reply-To: <1415273176-57096-1-git-send-email-andy.yan@rock-chips.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: heiko@sntech.de, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, rmk+kernel@arm.linux.org.uk, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, linux-kernel@vger.kernel.org, djkurtz@google.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 06, 2014 at 03:23:20PM +0000, Lucas Stach wrote:
-> This property was added by 41e5c0f81d3e
-> (of/pci: Add pci_get_new_domain_nr() and of_get_pci_domain_nr())
-> without the required binding documentation. As this property
-> will be supported by a number of host bridge drivers going forward,
-> add it to the common PCI binding doc.
->=20
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> ---
-> This is a non-critical fix, but may still qualify for 3.18-rc as
-> the property was added in this release cycle.
->=20
-> v2:
-> - emphasize that the property must be present and unique systemwide
->   if used
-> ---
->  Documentation/devicetree/bindings/pci/pci.txt | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Document=
-ation/devicetree/bindings/pci/pci.txt
-> index 41aeed38926d..68c364e2f5e5 100644
-> --- a/Documentation/devicetree/bindings/pci/pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/pci.txt
-> @@ -7,3 +7,14 @@ And for the interrupt mapping part:
-> =20
->  Open Firmware Recommended Practice: Interrupt Mapping
->  http://www.openfirmware.org/1275/practice/imap/imap0_9d.pdf
-> +
-> +Additionally to the properties specified in the above standards a ho=
-st bridge
-> +driver implementation may support the following properties:
-> +
-> +- linux,pci-domain:
-> +   If present this property assigns a fixed PCI domain number to a h=
-ost bridge,
-> +   otherwise an unstable (across boots) unique number will be assign=
-ed.
-> +   It is required to either not set this property at all or set it f=
-or all
-> +   host bridges in the system, otherwise potentially conflicting dom=
-ain numbers
-> +   may be assigned to root buses behind different host bridges. The =
-domain
-> +   number for each host bridge in the system must be unique.
-> --=20
-> 2.1.1
->=20
->=20
-
-Acked-by: Liviu Dudau <Liviu.Dudau@arm.com>
-
-Liviu
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+T24gVGh1LCBOb3YgMDYsIDIwMTQgYXQgMDc6MjY6MTZQTSArMDgwMCwgQW5keSBZYW4gd3JvdGU6
+Cj4gRnJvbTogeWtrIDx5a2tAcm9jay1jaGlwcy5jb20+CgpXZSBuZWVkIGEgInJlYWwiIG5hbWUg
+aGVyZSwgc29ycnkuCgo+IAo+IGR3LWhkbWkgaXMgdW5kZXIgZHJtL2JyaWRnZSwgc28gaXQgc2hv
+dWxkIGJlIHRoZSBicmlkZ2UgbW9kZS4KPiBoYW5nZSBvZmYgdGhlIGVuY29kZXIgdG8gZHdfaGRt
+aS1pbXguYywga2VlcCB0aGUgY29ubmVjdG9yICYKPiBiaXJkZ2UgaW4gZHdfaGRtaS5jCj4gCj4g
+U2lnbmVkLW9mZi1ieTogeWtrIDx5a2tAcm9jay1jaGlwcy5jb20+CgpTYW1lIGhlcmUuCgp0aGFu
+a3MsCgpncmVnIGstaApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
