@@ -1,35 +1,60 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH V3 4/4] dw-hdmi: convert dw-hdmi to drm_bridge mode
-Date: Thu, 6 Nov 2014 07:54:10 -0800
-Message-ID: <20141106155410.GB19811@kroah.com>
-References: <1415273118-57045-1-git-send-email-andy.yan@rock-chips.com>
- <1415273176-57096-1-git-send-email-andy.yan@rock-chips.com>
+From: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v2 3/3] powerpc/dts: Add node(s) for the platform PLL
+Date: Thu, 6 Nov 2014 09:48:13 -0600
+Message-ID: <1415288893-4457-3-git-send-email-Emilian.Medve@Freescale.com>
+References: <1415288893-4457-1-git-send-email-Emilian.Medve@Freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1415273176-57096-1-git-send-email-andy.yan@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: heiko@sntech.de, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, rmk+kernel@arm.linux.org.uk, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, linux-kernel@vger.kernel.org, djkurtz@google.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415288893-4457-1-git-send-email-Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: scottwood-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org, yuantian.tang-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBOb3YgMDYsIDIwMTQgYXQgMDc6MjY6MTZQTSArMDgwMCwgQW5keSBZYW4gd3JvdGU6
-Cj4gRnJvbTogeWtrIDx5a2tAcm9jay1jaGlwcy5jb20+CgpXZSBuZWVkIGEgInJlYWwiIG5hbWUg
-aGVyZSwgc29ycnkuCgo+IAo+IGR3LWhkbWkgaXMgdW5kZXIgZHJtL2JyaWRnZSwgc28gaXQgc2hv
-dWxkIGJlIHRoZSBicmlkZ2UgbW9kZS4KPiBoYW5nZSBvZmYgdGhlIGVuY29kZXIgdG8gZHdfaGRt
-aS1pbXguYywga2VlcCB0aGUgY29ubmVjdG9yICYKPiBiaXJkZ2UgaW4gZHdfaGRtaS5jCj4gCj4g
-U2lnbmVkLW9mZi1ieTogeWtrIDx5a2tAcm9jay1jaGlwcy5jb20+CgpTYW1lIGhlcmUuCgp0aGFu
-a3MsCgpncmVnIGstaApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+Signed-off-by: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Change-Id: If76cd705a01813abe53396c1486bc13c4289ee92
+---
+ arch/powerpc/boot/dts/fsl/qoriq-clockgen1.dtsi | 7 +++++++
+ arch/powerpc/boot/dts/fsl/qoriq-clockgen2.dtsi | 7 +++++++
+ 2 files changed, 14 insertions(+)
+
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-clockgen1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-clockgen1.dtsi
+index 4871048..4ece1ed 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-clockgen1.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-clockgen1.dtsi
+@@ -75,4 +75,11 @@ global-utilities@e1000 {
+ 		clock-names = "pll0", "pll0-div2", "pll1", "pll1-div2";
+ 		clock-output-names = "cmux1";
+ 	};
++	platform_pll: platform-pll@c00 {
++		#clock-cells = <1>;
++		reg = <0xc00 0x4>;
++		compatible = "fsl,qoriq-platform-pll-1.0";
++		clocks = <&sysclk>;
++		clock-output-names = "platform-pll", "platform-pll-div2";
++	};
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-clockgen2.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-clockgen2.dtsi
+index 5d18d2a..48e0b6e 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-clockgen2.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-clockgen2.dtsi
+@@ -58,4 +58,11 @@ global-utilities@e1000 {
+ 		clocks = <&sysclk>;
+ 		clock-output-names = "pll1", "pll1-div2", "pll1-div4";
+ 	};
++	platform_pll: platform-pll@c00 {
++		#clock-cells = <1>;
++		reg = <0xc00 0x4>;
++		compatible = "fsl,qoriq-platform-pll-2.0";
++		clocks = <&sysclk>;
++		clock-output-names = "platform-pll", "platform-pll-div2";
++	};
+ };
+-- 
+2.1.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
