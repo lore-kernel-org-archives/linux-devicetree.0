@@ -1,77 +1,56 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 0/5] simplefb: add clock handling code
-Date: Thu, 6 Nov 2014 16:18:32 +0200
-Message-ID: <545B8338.8060908@ti.com>
-References: <1413996311-4287-1-git-send-email-hdegoede@redhat.com> <54534523.8080801@ti.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="IphvcSFB3B0gjC66LFiLCkv3nLlx4icoE"
-Return-path: <linux-sunxi+bncBCGMHFOOT4LBBR4G52RAKGQEBBOKX5Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <54534523.8080801-l0cyMroinI0@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Romain Perier <romain.perier@gmail.com>
+Subject: [PATCH v3 0/2] poweroff-source DT property renaming
+Date: Thu,  6 Nov 2014 14:23:01 +0000
+Message-ID: <1415283784-10885-1-git-send-email-romain.perier@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de
+Cc: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org, johan@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balbi@ti.com
 List-Id: devicetree@vger.kernel.org
 
---IphvcSFB3B0gjC66LFiLCkv3nLlx4icoE
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+The goal of this serie is to rename the property "poweroff-source" to
+"system-power-controller". After discussions, it makes more sense to rename back
+to the old established property name. This patches serie reverts
+commit a4b4e0461ec5 ("of: Add standard property for poweroff capability").
 
-On 31/10/14 10:15, Tomi Valkeinen wrote:
-> Hi Hans,
->=20
-> On 22/10/14 19:45, Hans de Goede wrote:
->=20
->> -We will add a clocks property to the simplefb devicetree bindings, so=
+Changes since v2:
+  - of_is_system_power_controller is inline in of.h and only supports
+    backward compatibility with device drivers which used this helper
+    (which is tps65910)
+  - Quashed all changes into a single patch (except documentation)
+  - Add a separated commit to fix typos and mispellings in documentation
 
->>  that u-boot setup framebuffers passed to the kernel (for early consol=
-e
->>  support) can properly list the clocks used, and simplefb can claim th=
-em to
->>  avoid them getting turned off, thereby breaking the early console
->=20
-> Perhaps this has been discussed earlier, but I started to wonder if
-> managing clocks is enough.
->=20
-> What about regulators (to power the LCD), gpios (to keep the LCD
-> enabled) and pinctrl (for video signals)? I guess any those could be
-> reset by the kernel if no driver uses them.
+Changes since v1:
 
-Hans, ping. Have these been already discussed?
+  - The first patch defines "of_is_system_power_controller" which is compatible
+    with both "vendor,system-power-controller" and "system-power-controller"
+    properties. Also, It keeps the old helper function of_system_has_poweroff_source
+    for source compatibility until everything is renamed (in this way, bisections
+    are not broken and change is made "atomically" between each commit)
 
- Tomi
+    Note: the property "poweroff-source" itself is not used in dts files yet.
+    Before this patch tps65910 was broken due to missing backward compatibility
+    with "vendor,system-power-controller". As the old helper uses the new one,
+    it works again.
 
+  - act8865 and tps65910 are ported to the new helper function
 
+  - The last commit removes the olf helper which was only used for source compatibility
 
---IphvcSFB3B0gjC66LFiLCkv3nLlx4icoE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Romain Perier (2):
+  of: Rename "poweroff-source" property to "system-power-controller"
+  dt-bindings: Update documentation for "system-power-controller" and
+    fix misspellings
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+ .../devicetree/bindings/power/power-controller.txt     | 18 ++++++++++++++++++
+ Documentation/devicetree/bindings/power/poweroff.txt   | 18 ------------------
+ .../bindings/regulator/act8865-regulator.txt           |  4 ++--
+ drivers/mfd/tps65910.c                                 |  2 +-
+ drivers/regulator/act8865-regulator.c                  |  2 +-
+ include/linux/of.h                                     |  8 +++++---
+ 6 files changed, 27 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/power-controller.txt
+ delete mode 100644 Documentation/devicetree/bindings/power/poweroff.txt
 
-iQIcBAEBAgAGBQJUW4M4AAoJEPo9qoy8lh718cQP/3ThDuUm0A1wtqSE/90n26yE
-njDY6ZeNa5bw5xKjnk6LGOf2GwNzXFCdEop7P+U8FqKLvlDZWG6Md8NhwITBIYyh
-Xa8mqf06P5gWoV9d3tpkUp69h6Wuwdk8Xb0+P9DNPqMTWbhk8T2TGwW1HBWclXhv
-Fo1g45fFdXCx6H7h343PlhJShGmz+9t+rdP3uS/jga2beUlLpliOXk2YuX81Kro/
-SNU+QawCXrN/Efv8JBREblhkTzxvXqRsZP7g5so/HhhTqmnOeNKHkIelCfvhDkmQ
-jHCwqwZNvbmrKRv+GfQawVy6X/+tUesjRMgsTTN0j+k52jVFR//GIznz1/1kMpUZ
-gAquwlOFogow2Dxu7O91FCEhzM6nNj5AlPu/eSguf6g2y2eAb0zxyk6p/JQKENYz
-sUxBWX59uHFPY37QfSOtY3wEmJTl/5BzbxyFnRGSIinaU0JQ8KYlE0I7NncXRNqw
-M6BmTjO7//dwvzqRRjuEG2GTCPMfGFrb34eqRvb+zgTJtLlFXo5nTp7BN6wUR1Fx
-Sbyg/bnFNUISXJfZBdoTT8O3LMGfqZ1owO7vaHmoF7qghKBLEN17xEyIOw70JhlM
-bZPIH3Paa9Xmj0uSxp44tr0R9Sm5ShoRnO3v2Wz6CQ35rcBPzNj4NKnWVUWVNQxT
-owpCViiN7evgM2EeLHd3
-=CC0L
------END PGP SIGNATURE-----
-
---IphvcSFB3B0gjC66LFiLCkv3nLlx4icoE--
+-- 
+1.9.1
