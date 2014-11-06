@@ -1,735 +1,92 @@
-From: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v2 1/3] powerpc/dts: Factorize the clock control node
-Date: Thu, 6 Nov 2014 09:48:11 -0600
-Message-ID: <1415288893-4457-1-git-send-email-Emilian.Medve@Freescale.com>
+From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v5 2/8] phy: miphy28lp: Add PHY header file for DT x Driver
+ defines
+Date: Thu, 6 Nov 2014 17:17:25 +0100
+Message-ID: <545B9F15.5070404@st.com>
+References: <1415098284-11182-1-git-send-email-gabriel.fernandez@linaro.org> <1415098284-11182-3-git-send-email-gabriel.fernandez@linaro.org> <545B1C53.9010406@ti.com> <545B3FA4.8040109@st.com> <20141106112825.GC26543@x1> <545B6144.2020503@st.com> <20141106153659.GD26543@x1>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141106153659.GD26543@x1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: scottwood-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org, yuantian.tang-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Change-Id: I25ce24a25862b4ca460164159867abefe00ccdd1
----
 
-v2: Whitespace fixes
+On 11/06/2014 04:36 PM, Lee Jones wrote:
+> On Thu, 06 Nov 2014, Maxime Coquelin wrote:
+>> On 11/06/2014 12:28 PM, Lee Jones wrote:
+>>> On Thu, 06 Nov 2014, Maxime Coquelin wrote:
+>>>
+>>>> Hi Kishon,
+>>>> On 11/06/2014 07:59 AM, Kishon Vijay Abraham I wrote:
+>>>>> Hi,
+>>>>>
+>>>>> On Tuesday 04 November 2014 04:21 PM, Gabriel FERNANDEZ wrote:
+>>>>>> This provides the shared header file which will be reference from both
+>>>>>> PHY driver and its associated Device Tree node(s).
+>>>>>>
+>>>>>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>>>> ---
+>>>>>>   include/dt-bindings/phy/phy.h | 18 ++++++++++++++++++
+>>>>> I don't see this being used in device tree file. Are you planning to add this
+>>>>> after -rc1 is tagged. Or else I have to create a separate branch for this file
+>>>>> which will be merged by both me and the dt maintainer. Let me know.
+>>>> I think we don't need to create a branch we will merged by both of us.
+>>>>
+>>>> What we can do that both of us apply this patch in our trees.
+>>>> It will avoid dependencies on each others.
+>>>>
+>>>> What do you think?
+>>> This makes no sense to me.  Can you find another way to explain this
+>>> please?
+>> I apply the patch on my STi tree.
+>> Kishon applies the patch on his phy tree.
+>>
+>> At the end, both STi and phy branches will be merged in Linus tree,
+>> with no conflicts.
+>>
+>> This is what we are doing for the STiH407 reset DT bindings with Philipp Z.
+> If you do that, you will almost certainly get conflicts.  The commits
+> have to share the same SHA1 for Git to know for sure that they are the
+> same patch.  One of you needs to create a branch and tag it.  The
+> other can then merge the tag _then_ you won't get conflicts.
 
- arch/powerpc/boot/dts/b4860emu.dts             |  4 +-
- arch/powerpc/boot/dts/fsl/b4420si-post.dtsi    | 28 +--------
- arch/powerpc/boot/dts/fsl/b4860si-post.dtsi    | 28 +--------
- arch/powerpc/boot/dts/fsl/p2041si-post.dtsi    | 48 +---------------
- arch/powerpc/boot/dts/fsl/p3041si-post.dtsi    | 48 +---------------
- arch/powerpc/boot/dts/fsl/p4080si-post.dtsi    | 48 +---------------
- arch/powerpc/boot/dts/fsl/p5020si-post.dtsi    | 48 +---------------
- arch/powerpc/boot/dts/fsl/p5040si-post.dtsi    | 48 +---------------
- arch/powerpc/boot/dts/fsl/qoriq-clockgen1.dtsi | 78 ++++++++++++++++++++++++++
- arch/powerpc/boot/dts/fsl/qoriq-clockgen2.dtsi | 61 ++++++++++++++++++++
- arch/powerpc/boot/dts/fsl/t1040si-post.dtsi    | 30 +---------
- arch/powerpc/boot/dts/fsl/t2081si-post.dtsi    | 29 +---------
- arch/powerpc/boot/dts/fsl/t4240si-post.dtsi    | 29 +---------
- arch/powerpc/boot/dts/t4240emu.dts             |  4 +-
- 14 files changed, 163 insertions(+), 368 deletions(-)
- create mode 100644 arch/powerpc/boot/dts/fsl/qoriq-clockgen1.dtsi
- create mode 100644 arch/powerpc/boot/dts/fsl/qoriq-clockgen2.dtsi
+Just made the test on my side, and I don't get any conflict.
+In my test, the two SHA-1 were different.
 
-diff --git a/arch/powerpc/boot/dts/b4860emu.dts b/arch/powerpc/boot/dts/b4860emu.dts
-index 85646b4..2aa5cd3 100644
---- a/arch/powerpc/boot/dts/b4860emu.dts
-+++ b/arch/powerpc/boot/dts/b4860emu.dts
-@@ -193,9 +193,9 @@
- 		fsl,liodn-bits = <12>;
- 	};
- 
--	clockgen: global-utilities@e1000 {
-+/include/ "fsl/qoriq-clockgen2.dtsi"
-+	global-utilities@e1000 {
- 		compatible = "fsl,b4-clockgen", "fsl,qoriq-clockgen-2.0";
--		reg = <0xe1000 0x1000>;
- 	};
- 
- /include/ "fsl/qoriq-dma-0.dtsi"
-diff --git a/arch/powerpc/boot/dts/fsl/b4420si-post.dtsi b/arch/powerpc/boot/dts/fsl/b4420si-post.dtsi
-index b34c62e..aced374 100644
---- a/arch/powerpc/boot/dts/fsl/b4420si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/b4420si-post.dtsi
-@@ -80,33 +80,9 @@
- 		compatible = "fsl,b4420-device-config", "fsl,qoriq-device-config-2.0";
- 	};
- 
--	clockgen: global-utilities@e1000 {
-+/include/ "qoriq-clockgen2.dtsi"
-+	global-utilities@e1000 {
- 		compatible = "fsl,b4420-clockgen", "fsl,qoriq-clockgen-2.0";
--		ranges = <0x0 0xe1000 0x1000>;
--		#address-cells = <1>;
--		#size-cells = <1>;
--
--		sysclk: sysclk {
--			#clock-cells = <0>;
--			compatible = "fsl,qoriq-sysclk-2.0";
--			clock-output-names = "sysclk";
--		};
--
--		pll0: pll0@800 {
--			#clock-cells = <1>;
--			reg = <0x800 0x4>;
--			compatible = "fsl,qoriq-core-pll-2.0";
--			clocks = <&sysclk>;
--			clock-output-names = "pll0", "pll0-div2", "pll0-div4";
--		};
--
--		pll1: pll1@820 {
--			#clock-cells = <1>;
--			reg = <0x820 0x4>;
--			compatible = "fsl,qoriq-core-pll-2.0";
--			clocks = <&sysclk>;
--			clock-output-names = "pll1", "pll1-div2", "pll1-div4";
--		};
- 
- 		mux0: mux0@0 {
- 			#clock-cells = <0>;
-diff --git a/arch/powerpc/boot/dts/fsl/b4860si-post.dtsi b/arch/powerpc/boot/dts/fsl/b4860si-post.dtsi
-index 256fac8..3b9bb37 100644
---- a/arch/powerpc/boot/dts/fsl/b4860si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/b4860si-post.dtsi
-@@ -273,33 +273,9 @@
- 		compatible = "fsl,b4860-device-config", "fsl,qoriq-device-config-2.0";
- 	};
- 
--	clockgen: global-utilities@e1000 {
-+/include/ "qoriq-clockgen2.dtsi"
-+	global-utilities@e1000 {
- 		compatible = "fsl,b4860-clockgen", "fsl,qoriq-clockgen-2.0";
--		ranges = <0x0 0xe1000 0x1000>;
--		#address-cells = <1>;
--		#size-cells = <1>;
--
--		sysclk: sysclk {
--			#clock-cells = <0>;
--			compatible = "fsl,qoriq-sysclk-2.0";
--			clock-output-names = "sysclk";
--		};
--
--		pll0: pll0@800 {
--			#clock-cells = <1>;
--			reg = <0x800 0x4>;
--			compatible = "fsl,qoriq-core-pll-2.0";
--			clocks = <&sysclk>;
--			clock-output-names = "pll0", "pll0-div2", "pll0-div4";
--		};
--
--		pll1: pll1@820 {
--			#clock-cells = <1>;
--			reg = <0x820 0x4>;
--			compatible = "fsl,qoriq-core-pll-2.0";
--			clocks = <&sysclk>;
--			clock-output-names = "pll1", "pll1-div2", "pll1-div4";
--		};
- 
- 		mux0: mux0@0 {
- 			#clock-cells = <0>;
-diff --git a/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi b/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi
-index f297514..3320341 100644
---- a/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi
-@@ -313,53 +313,9 @@
- 		#sleep-cells = <2>;
- 	};
- 
--	clockgen: global-utilities@e1000 {
-+/include/ "qoriq-clockgen1.dtsi"
-+	global-utilities@e1000 {
- 		compatible = "fsl,p2041-clockgen", "fsl,qoriq-clockgen-1.0";
--		ranges = <0x0 0xe1000 0x1000>;
--		reg = <0xe1000 0x1000>;
--		clock-frequency = <0>;
--		#address-cells = <1>;
--		#size-cells = <1>;
--
--		sysclk: sysclk {
--			#clock-cells = <0>;
--			compatible = "fsl,qoriq-sysclk-1.0";
--			clock-output-names = "sysclk";
--		};
--
--		pll0: pll0@800 {
--			#clock-cells = <1>;
--			reg = <0x800 0x4>;
--			compatible = "fsl,qoriq-core-pll-1.0";
--			clocks = <&sysclk>;
--			clock-output-names = "pll0", "pll0-div2";
--		};
--
--		pll1: pll1@820 {
--			#clock-cells = <1>;
--			reg = <0x820 0x4>;
--			compatible = "fsl,qoriq-core-pll-1.0";
--			clocks = <&sysclk>;
--			clock-output-names = "pll1", "pll1-div2";
--		};
--
--		mux0: mux0@0 {
--			#clock-cells = <0>;
--			reg = <0x0 0x4>;
--			compatible = "fsl,qoriq-core-mux-1.0";
--			clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
--			clock-names = "pll0", "pll0-div2", "pll1", "pll1-div2";
--			clock-output-names = "cmux0";
--		};
--
--		mux1: mux1@20 {
--			#clock-cells = <0>;
--			reg = <0x20 0x4>;
--			compatible = "fsl,qoriq-core-mux-1.0";
--			clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
--			clock-names = "pll0", "pll0-div2", "pll1", "pll1-div2";
--			clock-output-names = "cmux1";
--		};
- 
- 		mux2: mux2@40 {
- 			#clock-cells = <0>;
-diff --git a/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi b/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi
-index b3f89ce..b28964f 100644
---- a/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi
-@@ -340,53 +340,9 @@
- 		#sleep-cells = <2>;
- 	};
- 
--	clockgen: global-utilities@e1000 {
-+/include/ "qoriq-clockgen1.dtsi"
-+	global-utilities@e1000 {
- 		compatible = "fsl,p3041-clockgen", "fsl,qoriq-clockgen-1.0";
--		ranges = <0x0 0xe1000 0x1000>;
--		reg = <0xe1000 0x1000>;
--		clock-frequency = <0>;
--		#address-cells = <1>;
--		#size-cells = <1>;
--
--		sysclk: sysclk {
--			#clock-cells = <0>;
--			compatible = "fsl,qoriq-sysclk-1.0";
--			clock-output-names = "sysclk";
--		};
--
--		pll0: pll0@800 {
--			#clock-cells = <1>;
--			reg = <0x800 0x4>;
--			compatible = "fsl,qoriq-core-pll-1.0";
--			clocks = <&sysclk>;
--			clock-output-names = "pll0", "pll0-div2";
--		};
--
--		pll1: pll1@820 {
--			#clock-cells = <1>;
--			reg = <0x820 0x4>;
--			compatible = "fsl,qoriq-core-pll-1.0";
--			clocks = <&sysclk>;
--			clock-output-names = "pll1", "pll1-div2";
--		};
--
--		mux0: mux0@0 {
--			#clock-cells = <0>;
--			reg = <0x0 0x4>;
--			compatible = "fsl,qoriq-core-mux-1.0";
--			clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
--			clock-names = "pll0", "pll0-div2", "pll1", "pll1-div2";
--			clock-output-names = "cmux0";
--		};
--
--		mux1: mux1@20 {
--			#clock-cells = <0>;
--			reg = <0x20 0x4>;
--			compatible = "fsl,qoriq-core-mux-1.0";
--			clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
--			clock-names = "pll0", "pll0-div2", "pll1", "pll1-div2";
--			clock-output-names = "cmux1";
--		};
- 
- 		mux2: mux2@40 {
- 			#clock-cells = <0>;
-diff --git a/arch/powerpc/boot/dts/fsl/p4080si-post.dtsi b/arch/powerpc/boot/dts/fsl/p4080si-post.dtsi
-index e410b15..eb043a7 100644
---- a/arch/powerpc/boot/dts/fsl/p4080si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p4080si-post.dtsi
-@@ -360,35 +360,9 @@
- 		#sleep-cells = <2>;
- 	};
- 
--	clockgen: global-utilities@e1000 {
-+/include/ "qoriq-clockgen1.dtsi"
-+	global-utilities@e1000 {
- 		compatible = "fsl,p4080-clockgen", "fsl,qoriq-clockgen-1.0";
--		ranges = <0x0 0xe1000 0x1000>;
--		reg = <0xe1000 0x1000>;
--		clock-frequency = <0>;
--		#address-cells = <1>;
--		#size-cells = <1>;
--
--		sysclk: sysclk {
--			#clock-cells = <0>;
--			compatible = "fsl,qoriq-sysclk-1.0";
--			clock-output-names = "sysclk";
--		};
--
--		pll0: pll0@800 {
--			#clock-cells = <1>;
--			reg = <0x800 0x4>;
--			compatible = "fsl,qoriq-core-pll-1.0";
--			clocks = <&sysclk>;
--			clock-output-names = "pll0", "pll0-div2";
--		};
--
--		pll1: pll1@820 {
--			#clock-cells = <1>;
--			reg = <0x820 0x4>;
--			compatible = "fsl,qoriq-core-pll-1.0";
--			clocks = <&sysclk>;
--			clock-output-names = "pll1", "pll1-div2";
--		};
- 
- 		pll2: pll2@840 {
- 			#clock-cells = <1>;
-@@ -406,24 +380,6 @@
- 			clock-output-names = "pll3", "pll3-div2";
- 		};
- 
--		mux0: mux0@0 {
--			#clock-cells = <0>;
--			reg = <0x0 0x4>;
--			compatible = "fsl,qoriq-core-mux-1.0";
--			clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
--			clock-names = "pll0", "pll0-div2", "pll1", "pll1-div2";
--			clock-output-names = "cmux0";
--		};
--
--		mux1: mux1@20 {
--			#clock-cells = <0>;
--			reg = <0x20 0x4>;
--			compatible = "fsl,qoriq-core-mux-1.0";
--			clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
--			clock-names = "pll0", "pll0-div2", "pll1", "pll1-div2";
--			clock-output-names = "cmux1";
--		};
--
- 		mux2: mux2@40 {
- 			#clock-cells = <0>;
- 			reg = <0x40 0x4>;
-diff --git a/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi b/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi
-index d07c771..b70c8c3 100644
---- a/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi
-@@ -345,53 +345,9 @@
- 		#sleep-cells = <2>;
- 	};
- 
--	clockgen: global-utilities@e1000 {
-+/include/ "qoriq-clockgen1.dtsi"
-+	global-utilities@e1000 {
- 		compatible = "fsl,p5020-clockgen", "fsl,qoriq-clockgen-1.0";
--		ranges = <0x0 0xe1000 0x1000>;
--		reg = <0xe1000 0x1000>;
--		clock-frequency = <0>;
--		#address-cells = <1>;
--		#size-cells = <1>;
--
--		sysclk: sysclk {
--			#clock-cells = <0>;
--			compatible = "fsl,qoriq-sysclk-1.0";
--			clock-output-names = "sysclk";
--		};
--
--		pll0: pll0@800 {
--			#clock-cells = <1>;
--			reg = <0x800 0x4>;
--			compatible = "fsl,qoriq-core-pll-1.0";
--			clocks = <&sysclk>;
--			clock-output-names = "pll0", "pll0-div2";
--		};
--
--		pll1: pll1@820 {
--			#clock-cells = <1>;
--			reg = <0x820 0x4>;
--			compatible = "fsl,qoriq-core-pll-1.0";
--			clocks = <&sysclk>;
--			clock-output-names = "pll1", "pll1-div2";
--		};
--
--		mux0: mux0@0 {
--			#clock-cells = <0>;
--			reg = <0x0 0x4>;
--			compatible = "fsl,qoriq-core-mux-1.0";
--			clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
--			clock-names = "pll0", "pll0-div2", "pll1", "pll1-div2";
--			clock-output-names = "cmux0";
--		};
--
--		mux1: mux1@20 {
--			#clock-cells = <0>;
--			reg = <0x20 0x4>;
--			compatible = "fsl,qoriq-core-mux-1.0";
--			clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
--			clock-names = "pll0", "pll0-div2", "pll1", "pll1-div2";
--			clock-output-names = "cmux1";
--		};
- 	};
- 
- 	rcpm: global-utilities@e2000 {
-diff --git a/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi b/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi
-index 243574b..b459b7e 100644
---- a/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi
-@@ -305,53 +305,9 @@
- 		#sleep-cells = <2>;
- 	};
- 
--	clockgen: global-utilities@e1000 {
-+/include/ "qoriq-clockgen1.dtsi"
-+	global-utilities@e1000 {
- 		compatible = "fsl,p5040-clockgen", "fsl,qoriq-clockgen-1.0";
--		ranges = <0x0 0xe1000 0x1000>;
--		reg = <0xe1000 0x1000>;
--		clock-frequency = <0>;
--		#address-cells = <1>;
--		#size-cells = <1>;
--
--		sysclk: sysclk {
--			#clock-cells = <0>;
--			compatible = "fsl,qoriq-sysclk-1.0";
--			clock-output-names = "sysclk";
--		};
--
--		pll0: pll0@800 {
--			#clock-cells = <1>;
--			reg = <0x800 0x4>;
--			compatible = "fsl,qoriq-core-pll-1.0";
--			clocks = <&sysclk>;
--			clock-output-names = "pll0", "pll0-div2";
--		};
--
--		pll1: pll1@820 {
--			#clock-cells = <1>;
--			reg = <0x820 0x4>;
--			compatible = "fsl,qoriq-core-pll-1.0";
--			clocks = <&sysclk>;
--			clock-output-names = "pll1", "pll1-div2";
--		};
--
--		mux0: mux0@0 {
--			#clock-cells = <0>;
--			reg = <0x0 0x4>;
--			compatible = "fsl,qoriq-core-mux-1.0";
--			clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
--			clock-names = "pll0", "pll0-div2", "pll1", "pll1-div2";
--			clock-output-names = "cmux0";
--		};
--
--		mux1: mux1@20 {
--			#clock-cells = <0>;
--			reg = <0x20 0x4>;
--			compatible = "fsl,qoriq-core-mux-1.0";
--			clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
--			clock-names = "pll0", "pll0-div2", "pll1", "pll1-div2";
--			clock-output-names = "cmux1";
--		};
- 
- 		mux2: mux2@40 {
- 			#clock-cells = <0>;
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-clockgen1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-clockgen1.dtsi
-new file mode 100644
-index 0000000..4871048
---- /dev/null
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-clockgen1.dtsi
-@@ -0,0 +1,78 @@
-+/*
-+ * QorIQ clock control device tree stub [ controller @ offset 0xe1000 ]
-+ *
-+ * Copyright 2014 Freescale Semiconductor Inc.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions are met:
-+ *     * Redistributions of source code must retain the above copyright
-+ *	 notice, this list of conditions and the following disclaimer.
-+ *     * Redistributions in binary form must reproduce the above copyright
-+ *	 notice, this list of conditions and the following disclaimer in the
-+ *	 documentation and/or other materials provided with the distribution.
-+ *     * Neither the name of Freescale Semiconductor nor the
-+ *	 names of its contributors may be used to endorse or promote products
-+ *	 derived from this software without specific prior written permission.
-+ *
-+ *
-+ * ALTERNATIVELY, this software may be distributed under the terms of the
-+ * GNU General Public License ("GPL") as published by the Free Software
-+ * Foundation, either version 2 of that License or (at your option) any
-+ * later version.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
-+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-+ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
-+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+global-utilities@e1000 {
-+	compatible = "fsl,qoriq-clockgen-1.0";
-+	ranges = <0x0 0xe1000 0x1000>;
-+	reg = <0xe1000 0x1000>;
-+	clock-frequency = <0>;
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	sysclk: sysclk {
-+		#clock-cells = <0>;
-+		compatible = "fsl,qoriq-sysclk-1.0", "fixed-clock";
-+		clock-output-names = "sysclk";
-+	};
-+	pll0: pll0@800 {
-+		#clock-cells = <1>;
-+		reg = <0x800 0x4>;
-+		compatible = "fsl,qoriq-core-pll-1.0";
-+		clocks = <&sysclk>;
-+		clock-output-names = "pll0", "pll0-div2";
-+	};
-+	pll1: pll1@820 {
-+		#clock-cells = <1>;
-+		reg = <0x820 0x4>;
-+		compatible = "fsl,qoriq-core-pll-1.0";
-+		clocks = <&sysclk>;
-+		clock-output-names = "pll1", "pll1-div2";
-+	};
-+	mux0: mux0@0 {
-+		#clock-cells = <0>;
-+		reg = <0x0 0x4>;
-+		compatible = "fsl,qoriq-core-mux-1.0";
-+		clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
-+		clock-names = "pll0", "pll0-div2", "pll1", "pll1-div2";
-+		clock-output-names = "cmux0";
-+	};
-+	mux1: mux1@20 {
-+		#clock-cells = <0>;
-+		reg = <0x20 0x4>;
-+		compatible = "fsl,qoriq-core-mux-1.0";
-+		clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
-+		clock-names = "pll0", "pll0-div2", "pll1", "pll1-div2";
-+		clock-output-names = "cmux1";
-+	};
-+};
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-clockgen2.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-clockgen2.dtsi
-new file mode 100644
-index 0000000..5d18d2a
---- /dev/null
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-clockgen2.dtsi
-@@ -0,0 +1,61 @@
-+/*
-+ * QorIQ clock control device tree stub [ controller @ offset 0xe1000 ]
-+ *
-+ * Copyright 2014 Freescale Semiconductor Inc.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions are met:
-+ *     * Redistributions of source code must retain the above copyright
-+ *	 notice, this list of conditions and the following disclaimer.
-+ *     * Redistributions in binary form must reproduce the above copyright
-+ *	 notice, this list of conditions and the following disclaimer in the
-+ *	 documentation and/or other materials provided with the distribution.
-+ *     * Neither the name of Freescale Semiconductor nor the
-+ *	 names of its contributors may be used to endorse or promote products
-+ *	 derived from this software without specific prior written permission.
-+ *
-+ *
-+ * ALTERNATIVELY, this software may be distributed under the terms of the
-+ * GNU General Public License ("GPL") as published by the Free Software
-+ * Foundation, either version 2 of that License or (at your option) any
-+ * later version.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
-+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-+ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
-+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+global-utilities@e1000 {
-+	compatible = "fsl,qoriq-clockgen-2.0";
-+	ranges = <0x0 0xe1000 0x1000>;
-+	reg = <0xe1000 0x1000>;
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	sysclk: sysclk {
-+		#clock-cells = <0>;
-+		compatible = "fsl,qoriq-sysclk-2.0", "fixed-clock";
-+		clock-output-names = "sysclk";
-+	};
-+	pll0: pll0@800 {
-+		#clock-cells = <1>;
-+		reg = <0x800 0x4>;
-+		compatible = "fsl,qoriq-core-pll-2.0";
-+		clocks = <&sysclk>;
-+		clock-output-names = "pll0", "pll0-div2", "pll0-div4";
-+	};
-+	pll1: pll1@820 {
-+		#clock-cells = <1>;
-+		reg = <0x820 0x4>;
-+		compatible = "fsl,qoriq-core-pll-2.0";
-+		clocks = <&sysclk>;
-+		clock-output-names = "pll1", "pll1-div2", "pll1-div4";
-+	};
-+};
-diff --git a/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi b/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
-index e989b6a..b726be1 100644
---- a/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
-@@ -432,35 +432,9 @@
- 		fsl,liodn-bits = <12>;
- 	};
- 
--	clockgen: global-utilities@e1000 {
-+/include/ "qoriq-clockgen2.dtsi"
-+	global-utilities@e1000 {
- 		compatible = "fsl,t1040-clockgen", "fsl,qoriq-clockgen-2.0";
--		ranges = <0x0 0xe1000 0x1000>;
--		reg = <0xe1000 0x1000>;
--		#address-cells = <1>;
--		#size-cells = <1>;
--
--		sysclk: sysclk {
--			#clock-cells = <0>;
--			compatible = "fsl,qoriq-sysclk-2.0";
--			clock-output-names = "sysclk", "fixed-clock";
--		};
--
--
--		pll0: pll0@800 {
--			#clock-cells = <1>;
--			reg = <0x800 4>;
--			compatible = "fsl,qoriq-core-pll-2.0";
--			clocks = <&sysclk>;
--			clock-output-names = "pll0", "pll0-div2", "pll0-div4";
--		};
--
--		pll1: pll1@820 {
--			#clock-cells = <1>;
--			reg = <0x820 4>;
--			compatible = "fsl,qoriq-core-pll-2.0";
--			clocks = <&sysclk>;
--			clock-output-names = "pll1", "pll1-div2", "pll1-div4";
--		};
- 
- 		mux0: mux0@0 {
- 			#clock-cells = <0>;
-diff --git a/arch/powerpc/boot/dts/fsl/t2081si-post.dtsi b/arch/powerpc/boot/dts/fsl/t2081si-post.dtsi
-index dfbe499..b71dd1c 100644
---- a/arch/powerpc/boot/dts/fsl/t2081si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/t2081si-post.dtsi
-@@ -553,34 +553,9 @@
- 		fsl,liodn-bits = <12>;
- 	};
- 
--	clockgen: global-utilities@e1000 {
-+/include/ "qoriq-clockgen2.dtsi"
-+	global-utilities@e1000 {
- 		compatible = "fsl,t2080-clockgen", "fsl,qoriq-clockgen-2.0";
--		ranges = <0x0 0xe1000 0x1000>;
--		reg = <0xe1000 0x1000>;
--		#address-cells = <1>;
--		#size-cells = <1>;
--
--		sysclk: sysclk {
--			#clock-cells = <0>;
--			compatible = "fsl,qoriq-sysclk-2.0";
--			clock-output-names = "sysclk", "fixed-clock";
--		};
--
--		pll0: pll0@800 {
--			#clock-cells = <1>;
--			reg = <0x800 4>;
--			compatible = "fsl,qoriq-core-pll-2.0";
--			clocks = <&sysclk>;
--			clock-output-names = "pll0", "pll0-div2", "pll0-div4";
--		};
--
--		pll1: pll1@820 {
--			#clock-cells = <1>;
--			reg = <0x820 4>;
--			compatible = "fsl,qoriq-core-pll-2.0";
--			clocks = <&sysclk>;
--			clock-output-names = "pll1", "pll1-div2", "pll1-div4";
--		};
- 
- 		mux0: mux0@0 {
- 			#clock-cells = <0>;
-diff --git a/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi b/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
-index d2ecd86..c0fcd6b 100644
---- a/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
-@@ -1032,34 +1032,9 @@
- 		fsl,liodn-bits = <12>;
- 	};
- 
--	clockgen: global-utilities@e1000 {
-+/include/ "qoriq-clockgen2.dtsi"
-+	global-utilities@e1000 {
- 		compatible = "fsl,t4240-clockgen", "fsl,qoriq-clockgen-2.0";
--		ranges = <0x0 0xe1000 0x1000>;
--		reg = <0xe1000 0x1000>;
--		#address-cells = <1>;
--		#size-cells = <1>;
--
--		sysclk: sysclk {
--			#clock-cells = <0>;
--			compatible = "fsl,qoriq-sysclk-2.0";
--			clock-output-names = "sysclk";
--		};
--
--		pll0: pll0@800 {
--			#clock-cells = <1>;
--			reg = <0x800 0x4>;
--			compatible = "fsl,qoriq-core-pll-2.0";
--			clocks = <&sysclk>;
--			clock-output-names = "pll0", "pll0-div2", "pll0-div4";
--		};
--
--		pll1: pll1@820 {
--			#clock-cells = <1>;
--			reg = <0x820 0x4>;
--			compatible = "fsl,qoriq-core-pll-2.0";
--			clocks = <&sysclk>;
--			clock-output-names = "pll1", "pll1-div2", "pll1-div4";
--		};
- 
- 		pll2: pll2@840 {
- 			#clock-cells = <1>;
-diff --git a/arch/powerpc/boot/dts/t4240emu.dts b/arch/powerpc/boot/dts/t4240emu.dts
-index bc12127a..decaf35 100644
---- a/arch/powerpc/boot/dts/t4240emu.dts
-+++ b/arch/powerpc/boot/dts/t4240emu.dts
-@@ -250,9 +250,9 @@
- 		fsl,liodn-bits = <12>;
- 	};
- 
--	clockgen: global-utilities@e1000 {
-+/include/ "fsl/qoriq-clockgen2.dtsi"
-+	global-utilities@e1000 {
- 		compatible = "fsl,t4240-clockgen", "fsl,qoriq-clockgen-2.0";
--		reg = <0xe1000 0x1000>;
- 	};
- 
- /include/ "fsl/qoriq-dma-0.dtsi"
--- 
-2.1.3
+>>>>> Thanks
+>>>>> Kishon
+>>>>>>   1 file changed, 18 insertions(+)
+>>>>>>   create mode 100644 include/dt-bindings/phy/phy.h
+>>>>>>
+>>>>>> diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
+>>>>>> new file mode 100644
+>>>>>> index 0000000..e8c6a3f
+>>>>>> --- /dev/null
+>>>>>> +++ b/include/dt-bindings/phy/phy.h
+>>>>>> @@ -0,0 +1,18 @@
+>>>>>> +/*
+>>>>>> + *
+>>>>>> + * This header provides constants for the phy framework
+>>>>>> + *
+>>>>>> + * Copyright (C) 2014 STMicroelectronics
+>>>>>> + * Author: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+>>>>>> + * License terms:  GNU General Public License (GPL), version 2
+>>>>>> + */
+>>>>>> +
+>>>>>> +#ifndef _DT_BINDINGS_PHY
+>>>>>> +#define _DT_BINDINGS_PHY
+>>>>>> +
+>>>>>> +#define PHY_TYPE_SATA		1
+>>>>>> +#define PHY_TYPE_PCIE		2
+>>>>>> +#define PHY_TYPE_USB2		3
+>>>>>> +#define PHY_TYPE_USB3		4
+>>>>>> +
+>>>>>> +#endif /* _DT_BINDINGS_PHY */
+>>>>>>
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
