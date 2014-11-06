@@ -1,39 +1,171 @@
 From: arno@natisbad.org (Arnaud Ebalard)
-Subject: Re: [PATCHv0 3/3] rtc: rtc-isl12057: add alarm support to Intersil
- ISL12057 RTC driver
-Date: Thu, 06 Nov 2014 23:47:00 +0100
-Message-ID: <87wq78lzff.fsf@natisbad.org>
+Subject: Re: [PATCHv0 3/3] rtc: rtc-isl12057: add alarm support to Intersil ISL12057 RTC driver
+Date: Fri, 07 Nov 2014 00:30:48 +0100
+Message-ID: <87ppcznbyv.fsf@natisbad.org>
 References: <cover.1415222752.git.arno@natisbad.org>
- <148403c0ab1d556cbb99d9242c65f714a77843e5.1415222752.git.arno@natisbad.org>
- <20141106084910.GA10432@pengutronix.de>
+	<148403c0ab1d556cbb99d9242c65f714a77843e5.1415222752.git.arno@natisbad.org>
+	<20141106055017.GL8509@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Stephen Warren <swarren@wwwdotorg.org>, Pawel Moll <pawel.moll@arm.com>, rtc-linux@googlegroups.com, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-doc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mark Brown <broonie@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>, linux-arm-kernel@lists.infradead.org, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Peter Huewe <peter.huewe@infineon.com>, Thierry Reding <treding@nvidia.com>, Guenter Roeck <linux@roeck-us.net>, Jason Cooper <jason@lakedaemon.net>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgVXdlLAoKVXdlIEtsZWluZS1Lw7ZuaWcgPHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRyb25peC5k
-ZT4gd3JpdGVzOgoKPiBPbiBXZWQsIE5vdiAwNSwgMjAxNCBhdCAxMDo0Mjo1MlBNICswMTAwLCBB
-cm5hdWQgRWJhbGFyZCB3cm90ZToKPj4gKyNpZmRlZiBDT05GSUdfUE1fU0xFRVAKPj4gK3N0YXRp
-YyBpbnQgaXNsMTIwNTdfcnRjX3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2KQo+PiArewo+PiAr
-CXN0cnVjdCBpc2wxMjA1N19ydGNfZGF0YSAqcnRjX2RhdGEgPSBkZXZfZ2V0X2RydmRhdGEoJmNs
-aWVudC0+ZGV2KTsKPiBkcml2ZXJzL3J0Yy9ydGMtaXNsMTIwNTcuYzogSW4gZnVuY3Rpb24gJ2lz
-bDEyMDU3X3J0Y19zdXNwZW5kJzoKPiBkcml2ZXJzL3J0Yy9ydGMtaXNsMTIwNTcuYzo1NTE6NTY6
-IGVycm9yOiAnY2xpZW50JyB1bmRlY2xhcmVkIChmaXJzdAo+IHVzZSBpbiB0aGlzIGZ1bmN0aW9u
-KQoKSSBndWVzcyBJIGZvcmdvdCB0byBkbyBhIGdpdCBjb21taXQgYWZ0ZXIgbXkgbGFzdCBxdWls
-dCByZWZyZXNoIGJlZm9yZQpwdXNoaW5nIHRoZSBwYXRjaGVzLiBTb3JyeSBmb3IgdGhhdC4KCkNo
-ZWVycywKCmErCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
-ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9s
-aW51eC1hcm0ta2VybmVsCg==
+Hi,
+
+Mark Brown <broonie@kernel.org> writes:
+
+> On Wed, Nov 05, 2014 at 10:42:52PM +0100, Arnaud Ebalard wrote:
+>
+>> +static int _isl12057_rtc_toggle_alarm(struct device *dev, int enable)
+>> +{
+>> +	struct isl12057_rtc_data *data = dev_get_drvdata(dev);
+>
+> I can't help but think that toggle is a confusing name for this.
+> enable?
+
+I'll fix the name to use update_alarm, as proposed by Guenter.
+
+
+>> +	ret = regmap_update_bits(data->regmap, ISL12057_REG_INT,
+>> +				 ISL12057_REG_INT_A1IE,
+>> +				 enable ? ISL12057_REG_INT_A1IE : 0);
+>> +	if (ret)
+>> +		dev_err(dev, "%s: writing INT failed\n", __func__);
+>
+> It's generally helpful to log the error code as well.
+
+WILCO
+
+
+>> +static int _isl12057_rtc_read_time(struct device *dev, struct rtc_time *tm)
+>>  {
+>>  	struct isl12057_rtc_data *data = dev_get_drvdata(dev);
+>>  	u8 regs[ISL12057_RTC_SEC_LEN];
+>>  	int ret;
+>>  
+>> -	mutex_lock(&data->lock);
+>>  	ret = regmap_bulk_read(data->regmap, ISL12057_REG_RTC_SC, regs,
+>>  			       ISL12057_RTC_SEC_LEN);
+>> -	mutex_unlock(&data->lock);
+>> -
+>
+> This is a perfectly sensible change (there's no need for the lock,
+> regmap locks the physical I/O and there's no other interaction) but it's
+> not related to enabling alarm functionality so should be in a separate
+> patch.
+>
+>> +static int isl12057_rtc_read_time(struct device *dev, struct rtc_time *tm)
+>> +{
+>> +	struct isl12057_rtc_data *data = dev_get_drvdata(dev);
+>> +	int ret;
+>> +
+>> +	mutex_lock(&data->lock);
+>> +	ret = _isl12057_rtc_read_time(dev, tm);
+>> +	mutex_unlock(&data->lock);
+>
+> Why lock?  I guess this is due to the above change but it seems better
+> to just not lock since it's redundant.
+
+I am aware regmap has an inner lock to protect access. But later in the
+patch, there are functions (e.g. isl12057_rtc_set_alarm()) which need to
+do various consecutive accesses to the device; the main purpose of the
+mutex is to protect those multiple accesses. In those functions, I cannot
+call functions which do try and get the lock, hence the creation of an
+underscore version (_isl12057_rtc_read_time()) which does not lock.
+
+That being said, regarding isl12057_rtc_read_time() (the version I
+declare in rtc_ops structure), I agree that it does not need to get the
+lock as it only reads (and does not modify the device) and the regmap
+inner lock protection is ok in that context. As it is the only one to be
+in that case (read_alarm() is more complex and needs the lock).
+
+
+>> +	ret = rtc_tm_to_time(&rtc_tm, &rtc_secs);
+>> +	if (ret)
+>> +		goto err_unlock;
+>> +
+>> +	ret = rtc_tm_to_time(alarm_tm, &alarm_secs);
+>> +	if (ret)
+>> +		goto err_unlock;
+>> +
+>> +	/* If alarm time is before current time, disable the alarm */
+>> +	if (!alarm->enabled || alarm_secs <= rtc_secs) {
+>> +		enable = 0;
+>
+> Shouldn't there be some margin for time rolling forwards when checking
+> for alarm times in the past (or just refuse to set them, I've not
+> checked if this is following existing practice for RTC drivers)?
+
+No strong feeling on that point. ISL12008 on which this driver is based
+has a similar logic.
+
+
+>> +	if (client->irq > 0) {
+>> +		ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
+>> +						isl12057_rtc_interrupt,
+>> +						IRQF_SHARED|IRQF_ONESHOT,
+>> +						DRV_NAME, client);
+>> +		if (!ret) {
+>> +			device_init_wakeup(&client->dev, true);
+>> +		} else {
+>> +			dev_err(dev, "irq %d unavailable, no alarm support\n",
+>> +				client->irq);
+>> +			client->irq = 0;
+>> +		}
+>> +	}
+>> +
+>
+> None of the alarm functionality checks to see if there's actually an IRQ
+> - is that OK? I'd at least expect the alarm interrupt enable call to
+> check if the interrupt is wired up.
+
+I can add those check BUT I would like some directions in order to
+support the following use case too.
+
+Current three in-tree users of ISL12057 are NAS devices (Netgear
+ReadyNAS 102, 104 and 2120). All of them *do not have* the interrupt pin
+of the RTC chip connected to an interrupt line of the SoC. Nonetheless,
+the IRQ line of the chip being connected to a PMIC on the board (TI
+TPS65251 [1] on ReadyNAS 102 and 104, I do not know for ReadyNAS
+2120). When the device is off and the alarm rings, the device gets
+powered on. AFAICT, the IRQ coming on the TPS65251 is not replicated on
+any line of the SoC.
+
+I think it's possible w/ some soldering to get somewhere where the RTC
+framework wants me to be and finish the alarm part to have it merged
+upstream but that's of limited interest if in-tree user cannot use it to
+fit their need, i.e. configure an alarm value and enable the associated
+interrupt which is routed externally, i.e. not visible by the SoC.
+
+FWIW, we had a similar discussion a while ago, during driver inclusion:
+
+  http://marc.info/?l=devicetree&m=138109313118504&w=2
+
+Uwe, any idea?
+
+> It's also bad form to overwrite client->irq - it's possible a future
+> probe might work (eg, if the driver for the interrupt controller gets
+> loaded).  Ideally we'd handle deferred probe, though I don't think the
+> interrupt core supports that yet.
+
+I'll add a field in my private structure to reference the irq, modify it
+at will and leave client->irq alone.
+
+
+>> +err:
+>> +	if (client->irq > 0)
+>> +		free_irq(client->irq, client);
+>
+> The whole point with devm_ is that you don't need to manually free
+> anything, remove this (and the entire remove function).
+
+good point. I'll remove the free_irq() call. I'll keep remove function
+though for other reasons; I think I will need to have a conditional call
+to device_init_wakeup() in it. 
+
+a+
+
+[1]: http://natisbad.org/NAS/refs/tps65251.pdf
