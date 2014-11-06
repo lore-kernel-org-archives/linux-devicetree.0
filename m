@@ -1,89 +1,85 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH 1/4] input: touchscreen: ti_am335x_tsc Interchange
- touchscreen and ADC steps
-Date: Thu, 6 Nov 2014 15:19:17 +0100
-Message-ID: <20141106141916.GA17151@netboy>
-References: <1414408111-2631-1-git-send-email-vigneshr@ti.com>
- <1414408111-2631-2-git-send-email-vigneshr@ti.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 4/4] crypto: Add Allwinner Security
+ System crypto accelerator
+Date: Thu, 6 Nov 2014 15:26:33 +0100
+Message-ID: <20141106142633.GK2989@lukather>
+References: <20141021191149.GQ21108@lukather>
+ <544A9FEA.6020304@gmail.com>
+ <20141030171933.GR21251@lukather>
+ <20141031072030.GA7563@gondor.apana.org.au>
+ <20141031081323.GS21251@lukather>
+ <20141031081803.GA8012@gondor.apana.org.au>
+ <20141031095706.GA8054@lukather>
+ <20141031100522.GA8655@gondor.apana.org.au>
+ <20141103093446.GG11263@lukather>
+ <20141103103528.GA30154@gondor.apana.org.au>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="JvUS8mwutKMHKosv"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB3UL52RAKGQEK3MT2WQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1414408111-2631-2-git-send-email-vigneshr@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Paul Gortmaker <paul.gortmaker@windriver.com>, Peter Meerwald <pmeerw@pmeerw.net>, Lee Jones <lee.jones@linaro.org>, Lars-Peter Clausen <lars@metafoo.de>, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, linux-iio@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, Brad Griffis <bgriffis@ti.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hartmut Knaack <knaack.h@gmx.de>, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jan Kardell <jan.kardell@telliq.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Benoit Cousson <bcousson@baylibre.com>, Kumar Gala <galak@>
+In-Reply-To: <20141103103528.GA30154-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Cc: Corentin LABBE <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, crope-X3B1VOXEql0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 27, 2014 at 04:38:28PM +0530, Vignesh R wrote:
 
-...
+--JvUS8mwutKMHKosv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> @@ -209,6 +214,7 @@ static void titsc_read_coordinates(struct titsc *ts_dev,
->  	unsigned int read, diff;
->  	unsigned int i, channel;
->  	unsigned int creads = ts_dev->coordinate_readouts;
-> +	unsigned int first_step = TOTAL_STEPS - (creads * 2 + 2);
->  
->  	*z1 = *z2 = 0;
->  	if (fifocount % (creads * 2 + 2))
-> @@ -226,7 +232,7 @@ static void titsc_read_coordinates(struct titsc *ts_dev,
->  
->  		channel = (read & 0xf0000) >> 16;
->  		read &= 0xfff;
-> -		if (channel < creads) {
-> +		if (channel > first_step + creads + 2) {
->  			diff = abs(read - prev_val_x);
->  			if (diff < prev_diff_x) {
->  				prev_diff_x = diff;
-> @@ -234,19 +240,19 @@ static void titsc_read_coordinates(struct titsc *ts_dev,
->  			}
->  			prev_val_x = read;
->  
-> -		} else if (channel < creads * 2) {
-> +		} else if (channel == first_step + creads + 1) {
-> +			*z1 = read;
-> +
-> +		} else if (channel == first_step + creads + 2) {
-> +			*z2 = read;
-> +
-> +		} else if (channel > first_step) {
->  			diff = abs(read - prev_val_y);
->  			if (diff < prev_diff_y) {
->  				prev_diff_y = diff;
->  				*y = read;
+On Mon, Nov 03, 2014 at 06:35:28PM +0800, Herbert Xu wrote:
+> On Mon, Nov 03, 2014 at 10:34:46AM +0100, Maxime Ripard wrote:
+> > What I mean is that since you are saying that drivers should do the
+> > kmap themselves, then *all* of the drivers are broken if they are not
+> > using it. And all of them are missing this kmap.
+>=20
+> kmap is used by the software implementations to map the input/output
+> into virtual address space.  Drivers typically use DMA and operate
+> on physical addresses so they don't need kmap.
 
-While you are at it, please get rid of the this "delta filter"
-nonsense.
+Yes, plus all memory allocated with GFP_KERNEL is in lowmem.
 
-Thanks,
-Richard
+But you still haven't explain why the driver, while it doesn't handle
+the user space buffer at any time, should be worried that the data the
+framework has given him are actually mapped.
 
->  			}
->  			prev_val_y = read;
-> -
-> -		} else if (channel < creads * 2 + 1) {
-> -			*z1 = read;
-> -
-> -		} else if (channel < creads * 2 + 2) {
-> -			*z2 = read;
->  		}
->  	}
->  }
-> -- 
-> 1.9.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--JvUS8mwutKMHKosv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUW4UZAAoJEBx+YmzsjxAgDMcP/1PI8AbGVPKn44oM9vlitRY2
+zkR4bqd8Ka52kpPFiDzz8BMFjYXyLYxGZRydtAk78XM5WZy0diY5raC8TmU/nWVP
+oWjWlPbj9xmHTuUXhawzw71uSfNSAqyDaXGPGBDCovgi7Y5XD9mZmybDx9xqY73V
+FNNXyTmmkX+mn3i8pPMVzgPjWS/eWhs6zt3Sy8I8aI6BU+lnUmJAhutCX+F8+XX1
+klD7+KQ1ABwaXed1nj3cHYx4pzDfqsCVx04GSuHD0DmLT5/bEv0WYM54kQ2gmXKy
+2748Ec7hd07IH0ybcEXYQYCEV0hokF4udABo4XZpp8sqdz+O1jaYW7BLbGco8//g
+P+4wlHvHYMMNgqaKZHT9cBNKdB1pHP8iAaYlF3Gk4ekHZWq5K5sSRb8Z0elBJf/m
+Wk+XptdoX6Egrxg9O9wj9Ph29s5uDaLEP6Xtm6tmRjynSPWQqf3WEPuIGihD7CCP
+7GPZ40LRUXK+9u7DxeBqZPAFBomtRQ1MEhTFjWNQV4wLFPxAEb752s5B8mETwJoo
+bqgD60RLVU1FT35VCpnZMcj9tgudR5cZ7O/TzeimUQsDgReix5CWCd25JKU5K8tR
+b/d2BIIa9iok6mttNXqCabQeROEdSPnUCDkGX8Ur4EBCwg0vhSOZzFnyPgYZ9vUH
+udGNo+6MjczuQVcXdlHu
+=AyfL
+-----END PGP SIGNATURE-----
+
+--JvUS8mwutKMHKosv--
