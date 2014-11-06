@@ -1,63 +1,42 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: Re: [PATCH v3 0/2] Add DRA7xx CPSW Ethernet support in Device Tree
-Date: Thu, 6 Nov 2014 22:33:42 +0530
-Message-ID: <545BA9EE.1040905@ti.com>
-References: <1413885661-4850-1-git-send-email-mugunthanvnm@ti.com> <54463063.80207@ti.com> <20141021172223.GA12943@kahuna> <20141103162722.GN27425@saruman>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] of: Add vendor prefix for Hitachi Ltd. Corporation
+Date: Thu, 6 Nov 2014 11:18:32 -0600
+Message-ID: <CAL_JsqLSsmCe0=X3wM6cSCGxcOm5Rr+_gsinGf1O876QfrA5yw@mail.gmail.com>
+References: <1415292275-29726-1-git-send-email-l.stach@pengutronix.de> <1415292275-29726-2-git-send-email-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20141103162722.GN27425@saruman>
-Sender: linux-omap-owner@vger.kernel.org
-To: balbi@ti.com, Nishanth Menon <nm@ti.com>
-Cc: bcousson@baylibre.com, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415292275-29726-2-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Tony
+On Thu, Nov 6, 2014 at 10:44 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-On Monday 03 November 2014 09:57 PM, Felipe Balbi wrote:
-> On Tue, Oct 21, 2014 at 12:22:23PM -0500, Nishanth Menon wrote:
->> On 15:37-20141021, Mugunthan V N wrote:
->>> Nishanth
->>>
->>> On Tuesday 21 October 2014 03:30 PM, Mugunthan V N wrote:
->>>> Adding device tree entry for CPSW to make it work in Dual EMAC mode.
->>>> These patches were tested with DRA7 hwmod patches on top of linux-next.
->>>> Patches are tested on top of Nishanth's PM tree for v3.17 [1] and pushed
->>>> my tree to [2].
->>>>
->>>> Did a boot test with CPSW and ping test with suspend/resume, the boot logs
->>>> on DRA7xx EVM are posted at [3]
->>>>
->>>> [1] git://github.com/nmenon/linux-2.6-playground.git testing/v3.17/cpu-idle-suspend-dra7-omap5-framework
->>>> [2] git://git.ti.com/~mugunthanvnm/ti-linux-kernel/linux.git v3.17/dra7-evm-cpsw-v3
->>>> [3] http://pastebin.ubuntu.com/8613072/
->>>>
->>>> Changes from v2:
->>>> * Changed pinctrl comments to hold mode0-name.mode-selected-name
->>>> * Changes slave numbers in the pinctrl comments
->>>> * Added cpsw and cpts clocks
->>>>
->>>
->>> I have not added support for dra72x-evm as it has only slave no 2 pinned
->>> out and having issues with bringing up the interface, need some more
->>> time to submit the patch, in the mean time I have submitted dra7-evm
->>> support only so that people can use dra7-evm on linux-next.
->>
->> Quickly tested as well:
->> http://slexy.org/raw/s2vISJxYrR
->>
->> Please feel free to add:
->> Tested-by: Nishanth Menon <nm@ti.com>
->> Acked-by: Nishanth Menon <nm@ti.com>
-> 
-> I've used these patches with X15 (DRA7xx-based yet-to-be-released board)
-> with v3.18-rc2.
-> 
-> Tested-by: Felipe Balbi <balbi@ti.com>
-> 
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Ping on this
-
-Regards
-Mugunthan V N
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 723999d73744..fed0c8d60748 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -66,6 +66,7 @@ gumstix       Gumstix, Inc.
+>  gw     Gateworks Corporation
+>  haoyu  Haoyu Microelectronic Co. Ltd.
+>  hisilicon      Hisilicon Limited.
+> +hit    Hitachi Ltd.
+>  honeywell      Honeywell
+>  hp     Hewlett Packard
+>  i2se   I2SE GmbH
+> --
+> 2.1.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
