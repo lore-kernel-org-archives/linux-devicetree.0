@@ -1,99 +1,105 @@
-From: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 05/13] of: Document timings subnode of nvidia,tegra-mc
-Date: Thu, 6 Nov 2014 17:12:27 +0900
-Message-ID: <545B2D6B.9030001@nvidia.com>
-References: <1414599796-30597-1-git-send-email-tomeu.vizoso@collabora.com> <1414599796-30597-6-git-send-email-tomeu.vizoso@collabora.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCHv0 1/3] rtc: rtc-isl12057: fix masking of register values
+Date: Thu, 6 Nov 2014 09:29:46 +0100
+Message-ID: <20141106082946.GN8316@pengutronix.de>
+References: <cover.1415222752.git.arno@natisbad.org>
+ <917b6e5e869fce697dec8a1597dfd2f671bf5c46.1415222752.git.arno@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414599796-30597-6-git-send-email-tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <917b6e5e869fce697dec8a1597dfd2f671bf5c46.1415222752.git.arno@natisbad.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnaud Ebalard <arno@natisbad.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-doc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>, linux-arm-kernel@lists.infradead.org, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Jason Cooper <jason@lakedaemon.net>
 List-Id: devicetree@vger.kernel.org
 
-On 10/30/2014 01:22 AM, Tomeu Vizoso wrote:
-> The MC driver needs some timing-specific information to program the EMEM during
-> a rate change of the EMC clock.
->
-> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Hello Arnaud,
+
+On Wed, Nov 05, 2014 at 10:42:25PM +0100, Arnaud Ebalard wrote:
+> When Intersil ISL12057 support was added by commit 70e123373c05 ("rtc=
+:
+> Add support for Intersil ISL12057 I2C RTC chip"), two masks for time
+> registers values imported from the device were either wrong or
+> omitted, leading to additional bits from those registers to impact
+> read values:
+>=20
+>  - mask for hour register value when reading it in AM/PM mode. As
+>    AM/PM mode is not the usual mode used by the driver, this error
+>    would only have an impact on an externally configured RTC hour
+>    later read by the driver.
+>  - mask for month value. The lack of masking would provide an
+>    erroneous value if century bit is set.
+>=20
+> This patch fixes those two masks.
+>=20
+> Fixes: 70e123373c05 ("rtc: Add support for Intersil ISL12057 I2C RTC =
+chip")
+> Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
 > ---
->   .../memory-controllers/nvidia,tegra-mc.txt         | 46 +++++++++++++++++++++-
->   1 file changed, 44 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-mc.txt b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-mc.txt
-> index f3db93c..8467b8c 100644
-> --- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-mc.txt
-> +++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-mc.txt
-> @@ -15,9 +15,26 @@ Required properties:
->   This device implements an IOMMU that complies with the generic IOMMU binding.
->   See ../iommu/iommu.txt for details.
->
-> -Example:
-> ---------
-> +The node should contain a "timings" subnode for each supported RAM type (see
-> +field RAM_CODE in register PMC_STRAPPING_OPT_A), with its unit address being its
-> +RAM_CODE.
->
-> +Required properties for "timings" nodes :
-> +- nvidia,ram-code : Should contain the value of RAM_CODE this timing set is used
-> +for.
-> +
-> +Each "timings" node should contain a "timing" subnode for every supported EMC
-> +clock rate. The "timing" subnodes should have the clock rate in Hz as their unit
-> +address.
+>  drivers/rtc/rtc-isl12057.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/rtc/rtc-isl12057.c b/drivers/rtc/rtc-isl12057.c
+> index 455b601d731d..8132fbc7e10a 100644
+> --- a/drivers/rtc/rtc-isl12057.c
+> +++ b/drivers/rtc/rtc-isl12057.c
+> @@ -88,7 +88,7 @@ static void isl12057_rtc_regs_to_tm(struct rtc_time=
+ *tm, u8 *regs)
+>  	tm->tm_min =3D bcd2bin(regs[ISL12057_REG_RTC_MN]);
+> =20
+>  	if (regs[ISL12057_REG_RTC_HR] & ISL12057_REG_RTC_HR_MIL) { /* AM/PM=
+ */
+> -		tm->tm_hour =3D bcd2bin(regs[ISL12057_REG_RTC_HR] & 0x0f);
+> +		tm->tm_hour =3D bcd2bin(regs[ISL12057_REG_RTC_HR] & 0x1f);
+>  		if (regs[ISL12057_REG_RTC_HR] & ISL12057_REG_RTC_HR_PM)
+>  			tm->tm_hour +=3D 12;
+>  	} else {					    /* 24 hour mode */
+> @@ -96,8 +96,8 @@ static void isl12057_rtc_regs_to_tm(struct rtc_time=
+ *tm, u8 *regs)
+>  	}
+> =20
+>  	tm->tm_mday =3D bcd2bin(regs[ISL12057_REG_RTC_DT]);
+> -	tm->tm_wday =3D bcd2bin(regs[ISL12057_REG_RTC_DW]) - 1; /* starts a=
+t 1 */
+> +	tm->tm_wday =3D bcd2bin(regs[ISL12057_REG_RTC_DW]) - 1;  /* starts =
+at 1 */
+unrelated change?
 
-In patch 04, a similar sub-node is named "emc-timings". Shouldn't the 
-same name be used here for consistency?
+> -	tm->tm_mon  =3D bcd2bin(regs[ISL12057_REG_RTC_MO]) - 1; /* starts a=
+t 1 */
+> +	tm->tm_mon  =3D bcd2bin(regs[ISL12057_REG_RTC_MO] & 0x1f) - 1; /* d=
+itto */
+>  	tm->tm_year =3D bcd2bin(regs[ISL12057_REG_RTC_YR]) + 100;
+>  }
+This patch definitly improves the driver, still I see room for more
+improvement (all but the first issue are unrelated to this patch):
 
-Also, it seems like there is a need for timing nodes in the MC to have 
-match timing nodes in the CAR. It would be nice to add that information 
-in all related bindings files.
+ - There is a century bit in the RTC_MO driver that is now correctly
+   masked to determine the month. Shouldn't it be used to flag if year
+   is >=3D 2100? That seems to match the hardware leap year handling.
+   (I.e. it considers RTC_YR=3D0 not to be a leap year iff RTC_MO_CENTU=
+RY
+   is set.)
 
-> +
-> +Required properties for "timing" nodes :
-> +- clock-frequency : Should contain the memory clock rate in Hz.
-> +- nvidia,emem-configuration : Values to be written to the EMEM register block,
-> +as specified by the board documentation.
+ - I wonder how tm_wday should be handled. It seems to be hardly used b=
+y
+   callers of rtc_read_time. Is it better to report the hardware state
+   here or the weekday matching year/month/day?
 
-Could you add some more information about which range of registers we 
-are talking about, and whether they must all be specified or only part 
-of them?
+ - IMHO the probe function shouldn't clear the OSCILLATOR FAILURE BIT
+   (OSF). It's an indicator that the stored time is wrong. Instead this
+   bit should be evaluated in the read_time callback. (If it's set,
+   return -ENODATA.) And only clear the bit in .set_time when the
+   registers were updated. I think most drivers get that wrong.
 
-> +
-> +Example SoC include file:
-> +
-> +/ {
->   	mc: memory-controller@0,70019000 {
->   		compatible = "nvidia,tegra124-mc";
->   		reg = <0x0 0x70019000 0x0 0x1000>;
-> @@ -34,3 +51,28 @@ Example:
->   		...
->   		iommus = <&mc TEGRA_SWGROUP_SDMMC1A>;
->   	};
-> +};
-> +
-> +Example board file:
-> +
-> +/ {
-> +	memory-controller@0,70019000 {
-> +		timings@3 {
-> +			nvidia,ram-code = <3>;
-> +
-> +			timing@12750000 {
-> +				clock-frequency = <12750000>;
-> +
-> +				nvidia,emem-configuration = <
-> +					0x40040001 /* MC_EMEM_ARB_CFG */
-> +					0x8000000a /* MC_EMEM_ARB_OUTSTANDING_REQ */
-> +					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
-> +					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
-> +					0x00000002 /* MC_EMEM_ARB_TIMING_RC */
-> +					0x00000000 /* MC_EMEM_ARB_TIMING_RAS */
-> +					0x00000002 /* MC_EMEM_ARB_TIMING_FAW */
-> +				>;
+Best regards
+Uwe
 
-Looking at the actual board files I suppose this example here is 
-incomplete. It would be nice to make this explicit, maybe by adding 
-"..." on a new line to indicate more registers are expected.
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
