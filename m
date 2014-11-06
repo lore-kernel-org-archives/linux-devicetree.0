@@ -1,113 +1,60 @@
-From: Caesar Wang <caesar.wang@rock-chips.com>
-Subject: [PATCH v8 3/3] ARM: dts: add rk3288 power-domain node
-Date: Thu,  6 Nov 2014 14:22:41 +0800
-Message-ID: <1415254961-5746-4-git-send-email-caesar.wang@rock-chips.com>
-References: <1415254961-5746-1-git-send-email-caesar.wang@rock-chips.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v5 2/8] phy: miphy28lp: Add PHY header file for DT x Driver
+ defines
+Date: Thu, 6 Nov 2014 12:29:31 +0530
+Message-ID: <545B1C53.9010406@ti.com>
+References: <1415098284-11182-1-git-send-email-gabriel.fernandez@linaro.org> <1415098284-11182-3-git-send-email-gabriel.fernandez@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415254961-5746-1-git-send-email-caesar.wang@rock-chips.com>
+In-Reply-To: <1415098284-11182-3-git-send-email-gabriel.fernandez@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, Russell King <linux@arm.linux.org.uk>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, Ulf Hansson <ulf.hansson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, fzf@rock-chips.com, cf@rock-chips.com, caesar.wang@rock-chips.com, Jack Dai <jack.dai@rock-chips.com>, "jinkun.hong" <jinkun.hong@rock-chips.com>
+To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jack Dai <jack.dai@rock-chips.com>
-Signed-off-by: jinkun.hong <jinkun.hong@rock-chips.com>
-Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+Hi,
 
----
+On Tuesday 04 November 2014 04:21 PM, Gabriel FERNANDEZ wrote:
+> This provides the shared header file which will be reference from both
+> PHY driver and its associated Device Tree node(s).
+> 
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+> ---
+>  include/dt-bindings/phy/phy.h | 18 ++++++++++++++++++
 
-Changes in v8:
-    - DTS go back to v2
+I don't see this being used in device tree file. Are you planning to add this
+after -rc1 is tagged. Or else I have to create a separate branch for this file
+which will be merged by both me and the dt maintainer. Let me know.
 
-Changes in v7: None
-Changes in v6: None
-Changes in v5: None
-Changes in v4: None
-Changes in v3:
-    - Decomposition power-controller, changed to multiple controller
-    (gpu-power-controller, hevc-power-controller)
-
-Changes in v2:
-    - make pd_vio clocks all one entry per line and alphabetize.
-    - power: power-controller move back to pinctrl: pinctrl.
-
- arch/arm/boot/dts/rk3288.dtsi | 66 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 66 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index cb18bb4..9cd269a 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -989,4 +989,70 @@
- 			};
- 		};
- 	};
-+
-+	power: power-controller {
-+		compatible = "rockchip,rk3288-power-controller";
-+		#power-domain-cells = <1>;
-+		rockchip,pmu = <&pmu>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		pd_gpu {
-+			reg = <RK3288_PD_GPU>;
-+			clocks = <&cru ACLK_GPU>;
-+		};
-+
-+		pd_hevc {
-+			reg = <RK3288_PD_HEVC>;
-+			clocks = <&cru ACLK_HEVC>,
-+				 <&cru SCLK_HEVC_CABAC>,
-+				 <&cru SCLK_HEVC_CORE>,
-+				 <&cru HCLK_HEVC>;
-+		};
-+
-+		pd_vio {
-+			reg = <RK3288_PD_VIO>;
-+			clocks = <&cru ACLK_IEP>,
-+				 <&cru ACLK_ISP>,
-+				 <&cru ACLK_RGA_NIU>,
-+				 <&cru ACLK_RGA>,
-+				 <&cru ACLK_VIO0_NIU>,
-+				 <&cru ACLK_VIO1_NIU>,
-+				 <&cru ACLK_VIP>,
-+				 <&cru ACLK_VOP0>,
-+				 <&cru ACLK_VOP1>,
-+				 <&cru DCLK_VOP0>,
-+				 <&cru DCLK_VOP1>,
-+				 <&cru HCLK_IEP>,
-+				 <&cru HCLK_ISP>,
-+				 <&cru HCLK_RGA>,
-+				 <&cru HCLK_VIO_AHB_ARBI>,
-+				 <&cru HCLK_VIO_NIU>,
-+				 <&cru HCLK_VIO2_H2P>,
-+				 <&cru HCLK_VIP>,
-+				 <&cru HCLK_VOP0>,
-+				 <&cru HCLK_VOP1>,
-+				 <&cru PCLK_EDP_CTRL>,
-+				 <&cru PCLK_HDMI_CTRL>,
-+				 <&cru PCLK_LVDS_PHY>,
-+				 <&cru PCLK_MIPI_CSI>,
-+				 <&cru PCLK_MIPI_DSI0>,
-+				 <&cru PCLK_MIPI_DSI1>,
-+				 <&cru PCLK_VIO2_H2P>,
-+				 <&cru SCLK_EDP_24M>,
-+				 <&cru SCLK_EDP>,
-+				 <&cru SCLK_HDMI_CEC>,
-+				 <&cru SCLK_HDMI_HDCP>,
-+				 <&cru SCLK_ISP_JPE>,
-+				 <&cru SCLK_ISP>,
-+				 <&cru SCLK_RGA>;
-+		};
-+
-+		pd_video {
-+			reg = <RK3288_PD_VIDEO>;
-+			/* FIXME: add clocks */
-+			clocks = <&cru ACLK_VCODEC>,
-+				 <&cru HCLK_VCODEC>;
-+		};
-+	};
- };
--- 
-1.9.1
+Thanks
+Kishon
+>  1 file changed, 18 insertions(+)
+>  create mode 100644 include/dt-bindings/phy/phy.h
+> 
+> diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
+> new file mode 100644
+> index 0000000..e8c6a3f
+> --- /dev/null
+> +++ b/include/dt-bindings/phy/phy.h
+> @@ -0,0 +1,18 @@
+> +/*
+> + *
+> + * This header provides constants for the phy framework
+> + *
+> + * Copyright (C) 2014 STMicroelectronics
+> + * Author: Gabriel Fernandez <gabriel.fernandez@st.com>
+> + * License terms:  GNU General Public License (GPL), version 2
+> + */
+> +
+> +#ifndef _DT_BINDINGS_PHY
+> +#define _DT_BINDINGS_PHY
+> +
+> +#define PHY_TYPE_SATA		1
+> +#define PHY_TYPE_PCIE		2
+> +#define PHY_TYPE_USB2		3
+> +#define PHY_TYPE_USB3		4
+> +
+> +#endif /* _DT_BINDINGS_PHY */
+> 
