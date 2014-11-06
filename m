@@ -1,7 +1,7 @@
 From: Keerthy <j-keerthy@ti.com>
-Subject: [PATCH 2/3] ARM: dts: AM437x-GP-EVM: Fix DCDC3 voltage
-Date: Thu, 6 Nov 2014 16:20:03 +0530
-Message-ID: <1415271004-10935-3-git-send-email-j-keerthy@ti.com>
+Subject: [PATCH 3/3] ARM: dts: AM437x-SK-EVM: Fix DCDC3 voltage
+Date: Thu, 6 Nov 2014 16:20:04 +0530
+Message-ID: <1415271004-10935-4-git-send-email-j-keerthy@ti.com>
 References: <1415271004-10935-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -18,17 +18,17 @@ in random hangs.
 
 Signed-off-by: Keerthy <j-keerthy@ti.com>
 ---
- arch/arm/boot/dts/am437x-gp-evm.dts |    4 ++--
+ arch/arm/boot/dts/am437x-sk-evm.dts |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
-index e7ac47f..a521ac0 100644
---- a/arch/arm/boot/dts/am437x-gp-evm.dts
-+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-@@ -291,8 +291,8 @@
+diff --git a/arch/arm/boot/dts/am437x-sk-evm.dts b/arch/arm/boot/dts/am437x-sk-evm.dts
+index 859ff3d..87aa4f3 100644
+--- a/arch/arm/boot/dts/am437x-sk-evm.dts
++++ b/arch/arm/boot/dts/am437x-sk-evm.dts
+@@ -363,8 +363,8 @@
  		dcdc3: regulator-dcdc3 {
  			compatible = "ti,tps65218-dcdc3";
- 			regulator-name = "vdcdc3";
+ 			regulator-name = "vdds_ddr";
 -			regulator-min-microvolt = <1350000>;
 -			regulator-max-microvolt = <1350000>;
 +			regulator-min-microvolt = <1500000>;
