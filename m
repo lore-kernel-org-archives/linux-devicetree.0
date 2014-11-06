@@ -1,30 +1,37 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] PCI: add missing DT binding for linux,pci-domain property
-Date: Thu, 06 Nov 2014 14:29:55 +0100
-Message-ID: <2623446.GSBHC8coOR@wuerfel>
-References: <1415101660-26450-1-git-send-email-l.stach@pengutronix.de> <3491668.yjzKoIEZd4@wuerfel> <20141106123642.GT8916@e106497-lin.cambridge.arm.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH 0/3] ARM: dts: AM43x: Fix DCDC3 regulator voltage
+Date: Thu, 6 Nov 2014 07:45:00 -0600
+Message-ID: <545B7B5C.8040506@ti.com>
+References: <1415271004-10935-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20141106123642.GT8916@e106497-lin.cambridge.arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Lucas Stach <l.stach@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1415271004-10935-1-git-send-email-j-keerthy@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Keerthy <j-keerthy@ti.com>, tony@atomide.com, linux-omap@vger.kernel.org
+Cc: devicetree@vger.kernel.org, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 06 November 2014 12:36:42 Liviu Dudau wrote:
-> > ACPI is easy here, because it already requires the domain to be
-> > explicit.
+On 11/06/2014 04:50 AM, Keerthy wrote:
+> Fix DCDC3 volatge to 1.5V which is the right value to be supplied by
+> DCDC3 for all the boards.
 > 
-> I was thinking more along the line of code sharing.
+> Keerthy (3):
+>   ARM: dts: AM43x-EPOS-EVM: Fix DCDC3 voltage
+>   ARM: dts: AM437x-GP-EVM: Fix DCDC3 voltage
+>   ARM: dts: AM437x-SK-EVM: Fix DCDC3 voltage
 > 
+>  arch/arm/boot/dts/am437x-gp-evm.dts  |    4 ++--
+>  arch/arm/boot/dts/am437x-sk-evm.dts  |    4 ++--
+>  arch/arm/boot/dts/am43x-epos-evm.dts |    4 ++--
+>  3 files changed, 6 insertions(+), 6 deletions(-)
+> 
+If Tony suggests, we might want to squash these to a single patch
+since it hits every AM437x evm platform... but anyways..
 
-I don't think it's worth it here. In general, it's a good idea,
-but the way that ACPI represents PCI is very different. In particular,
-it doesn't support multiple kinds of host controllers, only ECAM
-config space registers with no special setup code for other hardware
-registers. The domain is part of the addressing mechanism for finding
-the right ECAM register.
+Acked-by: Nishanth Menon <nm@ti.com>
 
-	Arnd
+-- 
+Regards,
+Nishanth Menon
