@@ -1,145 +1,60 @@
-From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH v3 05/13] of: Document timings subnode of nvidia,tegra-mc
-Date: Thu, 6 Nov 2014 11:32:47 +0100
-Message-ID: <CAAObsKD_XxP2Ny7X8=NsB2YqnAJqFHZs=xz8TWt6S8mJ41nsYA@mail.gmail.com>
-References: <1414599796-30597-1-git-send-email-tomeu.vizoso@collabora.com>
- <1414599796-30597-6-git-send-email-tomeu.vizoso@collabora.com> <545B2D6B.9030001@nvidia.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [V10 PATCH 2/2] irqchip: gicv2m: Add supports for ARM GICv2m
+ MSI(-X)
+Date: Thu, 6 Nov 2014 11:42:32 +0100 (CET)
+Message-ID: <alpine.DEB.2.11.1411061131330.24960@nanos>
+References: <1415052977-26036-1-git-send-email-suravee.suthikulpanit@amd.com> <1415052977-26036-3-git-send-email-suravee.suthikulpanit@amd.com> <5458CE31.3040404@linux.intel.com> <545ABB4C.8010103@amd.com> <545ABF6C.1000308@amd.com>
+ <alpine.DEB.2.11.1411060146050.24960@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <545B2D6B.9030001-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.11.1411060146050.24960@nanos>
+Sender: linux-doc-owner@vger.kernel.org
+To: Suravee Suthikulanit <suravee.suthikulpanit@amd.com>
+Cc: Jiang Liu <jiang.liu@linux.intel.com>, marc.zyngier@arm.com, mark.rutland@arm.com, jason@lakedaemon.net, Catalin.Marinas@arm.com, Will.Deacon@arm.com, liviu.dudau@arm.com, Harish.Kasiviswanathan@amd.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 6 November 2014 09:12, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> On 10/30/2014 01:22 AM, Tomeu Vizoso wrote:
->>
->> The MC driver needs some timing-specific information to program the EMEM
->> during
->> a rate change of the EMC clock.
->>
->> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->> ---
->>   .../memory-controllers/nvidia,tegra-mc.txt         | 46
->> +++++++++++++++++++++-
->>   1 file changed, 44 insertions(+), 2 deletions(-)
->>
->> diff --git
->> a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-mc.txt
->> b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-mc.txt
->> index f3db93c..8467b8c 100644
->> ---
->> a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-mc.txt
->> +++
->> b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-mc.txt
->> @@ -15,9 +15,26 @@ Required properties:
->>   This device implements an IOMMU that complies with the generic IOMMU
->> binding.
->>   See ../iommu/iommu.txt for details.
->>
->> -Example:
->> ---------
->> +The node should contain a "timings" subnode for each supported RAM type
->> (see
->> +field RAM_CODE in register PMC_STRAPPING_OPT_A), with its unit address
->> being its
->> +RAM_CODE.
->>
->> +Required properties for "timings" nodes :
->> +- nvidia,ram-code : Should contain the value of RAM_CODE this timing set
->> is used
->> +for.
->> +
->> +Each "timings" node should contain a "timing" subnode for every supported
->> EMC
->> +clock rate. The "timing" subnodes should have the clock rate in Hz as
->> their unit
->> +address.
->
->
-> In patch 04, a similar sub-node is named "emc-timings". Shouldn't the same
-> name be used here for consistency?
+On Thu, 6 Nov 2014, Thomas Gleixner wrote:
+> On Wed, 5 Nov 2014, Suravee Suthikulanit wrote:
+> > On 11/5/2014 6:05 PM, Suravee Suthikulanit wrote:
+> > > - Overall, it seems that msi_domain_alloc() could be quite different
+> > > across architectures. Would it be possible to declare this function as
+> > > weak, and allow arch to override (similar to arch_setup_msi_irq)?
+> > 
+> > Actually, declaring "msi_domain_ops" as non-static, and allow other code to
+> > override the .alloc and .free?
+> 
+> Why do you want to do that?
 
-Yeah, agreed.
+I know why. Because you want to spare a level of hierarchy. But thats
+wrong simply because MSI itself is an interrupt chip at the device
+level.
 
-> Also, it seems like there is a need for timing nodes in the MC to have match
-> timing nodes in the CAR. It would be nice to add that information in all
-> related bindings files.
+[ MSI ] ---> [ GIC-MSI ] ---> [ GIC ]
 
-Well, rather than the timing subnodes in a node having to match the
-ones in another nodes, I think that all of them should match the
-frequencies at which the EMC can run, which I think is clear enough
-like this (already in each of the three bindings):
+So the MSI level only cares about the allocation of the virq
+space. GIC-MSI allocates out of the bitmap which handles the hard
+wired range of MSI capable GIC interrupts and GIC handles the
+underlying functionality.
 
-+Each "timings" node should contain a "timing" subnode for every
-supported EMC clock rate.
+And this makes a lot of sense, if you think about interrupt
+remapping. If ARM ever grows that you simply insert it into the chain:
 
->> +
->> +Required properties for "timing" nodes :
->> +- clock-frequency : Should contain the memory clock rate in Hz.
->> +- nvidia,emem-configuration : Values to be written to the EMEM register
->> block,
->> +as specified by the board documentation.
->
->
-> Could you add some more information about which range of registers we are
-> talking about, and whether they must all be specified or only part of them?
->
->
->> +
->> +Example SoC include file:
->> +
->> +/ {
->>         mc: memory-controller@0,70019000 {
->>                 compatible = "nvidia,tegra124-mc";
->>                 reg = <0x0 0x70019000 0x0 0x1000>;
->> @@ -34,3 +51,28 @@ Example:
->>                 ...
->>                 iommus = <&mc TEGRA_SWGROUP_SDMMC1A>;
->>         };
->> +};
->> +
->> +Example board file:
->> +
->> +/ {
->> +       memory-controller@0,70019000 {
->> +               timings@3 {
->> +                       nvidia,ram-code = <3>;
->> +
->> +                       timing@12750000 {
->> +                               clock-frequency = <12750000>;
->> +
->> +                               nvidia,emem-configuration = <
->> +                                       0x40040001 /* MC_EMEM_ARB_CFG */
->> +                                       0x8000000a /*
->> MC_EMEM_ARB_OUTSTANDING_REQ */
->> +                                       0x00000001 /*
->> MC_EMEM_ARB_TIMING_RCD */
->> +                                       0x00000001 /*
->> MC_EMEM_ARB_TIMING_RP */
->> +                                       0x00000002 /*
->> MC_EMEM_ARB_TIMING_RC */
->> +                                       0x00000000 /*
->> MC_EMEM_ARB_TIMING_RAS */
->> +                                       0x00000002 /*
->> MC_EMEM_ARB_TIMING_FAW */
->> +                               >;
->
->
-> Looking at the actual board files I suppose this example here is incomplete.
-> It would be nice to make this explicit, maybe by adding "..." on a new line
-> to indicate more registers are expected.
+[ MSI ] ---> [ Remap] ---> [ GIC-MSI ] ---> [ GIC ]
 
-Sounds good.
+If you look at Jiangs x86 implementation it does exactly that.
 
-Thanks!
+[ MSI ] ---> [ Vector ]
 
-Tomeu
+[ MSI ] ---> [ Remap ] ---> [ Vector ]
+
+And because ARM has this intermediate layer of GIC-MSI you need to
+represent it in the hierarchy whether you like it or not. If you'd try
+to bolt the GIC-MSI magic into the MSI layer itself, then interrupt
+remapping would never work.
+
+Thanks,
+
+	tglx
 
 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-tegra" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
