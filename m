@@ -1,114 +1,112 @@
-From: arno@natisbad.org (Arnaud Ebalard)
-Subject: Re: [PATCHv0 1/3] rtc: rtc-isl12057: fix masking of register values
-Date: Fri, 07 Nov 2014 00:34:41 +0100
-Message-ID: <87ioirnbse.fsf@natisbad.org>
-References: <cover.1415222752.git.arno@natisbad.org>
-	<917b6e5e869fce697dec8a1597dfd2f671bf5c46.1415222752.git.arno@natisbad.org>
-	<20141106082946.GN8316@pengutronix.de>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH v3] thermal: Add QPNP PMIC temperature alarm driver
+Date: Thu, 6 Nov 2014 19:48:15 -0400
+Message-ID: <20141106234812.GB8176@developer>
+References: <1412178817-20371-1-git-send-email-iivanov@mm-sol.com>
+ <20141027201602.GC6088@developer>
+ <1414596776.32383.2.camel@mm-sol.com>
+ <1414677345.12674.1.camel@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-doc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>, linux-arm-kernel@lists.infradead.org, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Jason Cooper <jason@lakedaemon.net>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+g7M9IMkV8truYOl"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1414677345.12674.1.camel@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, David Collins <collinsd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> writes:
+--+g7M9IMkV8truYOl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Hello Arnaud,
->
-> On Wed, Nov 05, 2014 at 10:42:25PM +0100, Arnaud Ebalard wrote:
->> When Intersil ISL12057 support was added by commit 70e123373c05 ("rt=
-c:
->> Add support for Intersil ISL12057 I2C RTC chip"), two masks for time
->> registers values imported from the device were either wrong or
->> omitted, leading to additional bits from those registers to impact
->> read values:
->>=20
->>  - mask for hour register value when reading it in AM/PM mode. As
->>    AM/PM mode is not the usual mode used by the driver, this error
->>    would only have an impact on an externally configured RTC hour
->>    later read by the driver.
->>  - mask for month value. The lack of masking would provide an
->>    erroneous value if century bit is set.
->>=20
->> This patch fixes those two masks.
->>=20
->> Fixes: 70e123373c05 ("rtc: Add support for Intersil ISL12057 I2C RTC=
- chip")
->> Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
->> ---
->>  drivers/rtc/rtc-isl12057.c | 6 +++---
->>  1 file changed, 3 insertions(+), 3 deletions(-)
->>=20
->> diff --git a/drivers/rtc/rtc-isl12057.c b/drivers/rtc/rtc-isl12057.c
->> index 455b601d731d..8132fbc7e10a 100644
->> --- a/drivers/rtc/rtc-isl12057.c
->> +++ b/drivers/rtc/rtc-isl12057.c
->> @@ -88,7 +88,7 @@ static void isl12057_rtc_regs_to_tm(struct rtc_tim=
-e *tm, u8 *regs)
->>  	tm->tm_min =3D bcd2bin(regs[ISL12057_REG_RTC_MN]);
->> =20
->>  	if (regs[ISL12057_REG_RTC_HR] & ISL12057_REG_RTC_HR_MIL) { /* AM/P=
-M */
->> -		tm->tm_hour =3D bcd2bin(regs[ISL12057_REG_RTC_HR] & 0x0f);
->> +		tm->tm_hour =3D bcd2bin(regs[ISL12057_REG_RTC_HR] & 0x1f);
->>  		if (regs[ISL12057_REG_RTC_HR] & ISL12057_REG_RTC_HR_PM)
->>  			tm->tm_hour +=3D 12;
->>  	} else {					    /* 24 hour mode */
->> @@ -96,8 +96,8 @@ static void isl12057_rtc_regs_to_tm(struct rtc_tim=
-e *tm, u8 *regs)
->>  	}
->> =20
->>  	tm->tm_mday =3D bcd2bin(regs[ISL12057_REG_RTC_DT]);
->> -	tm->tm_wday =3D bcd2bin(regs[ISL12057_REG_RTC_DW]) - 1; /* starts =
-at 1 */
->> +	tm->tm_wday =3D bcd2bin(regs[ISL12057_REG_RTC_DW]) - 1;  /* starts=
- at 1 */
-> unrelated change?
+On Thu, Oct 30, 2014 at 03:55:45PM +0200, Ivan T. Ivanov wrote:
+>=20
+> On Wed, 2014-10-29 at 17:32 +0200, Ivan T. Ivanov wrote:
+> >=20
+> +
+> > > > +       chip->tz_dev =3D thermal_zone_device_register(node->name, T=
+RIP_NUM, 0,
+> > > > +       chip, &qpnp_tz_ops, NULL,
+> > >=20
+> > > Have you considered using of-thermal instead of doing your own specif=
+ic thermal
+> > > zone registration? Having a glance look in this driver, most of the
+> > > operation are covered by of-thermal. Ahy concerns using of-thermal in
+> > > your case?
+> > >=20
+> >=20
+> > I just followed implementation found in "armada_thermal", "db8500-therm=
+al",
+> > "dove_thermal", "imx_thermal", "kirkwood_thermal"...
+> >=20
+> > Will look at of-thermal.
+> >=20
+>=20
+> Hm, the 15 drivers, which register its own thermal zone, against 4, which=
+=20
 
-yep, will remove it.
+Yes, and the reasoning is pretty simple: of-thermal is not imposed
+standard, and not all platform have decided to move to using it.
+However, DT is being used more and more frequently. So, given you
+already have DT support, considering using of-thermal is a good thing to do=
+=2E=20
+
+Besides, you are with hands on your driver, might make sense to add its
+support while you are there.=20
+
+> use of-thermal registration and one of them is OMAP, which have fallback
+> to its own zone registration :-). Anyway. I am afraid that if I use just
+
+The fallback is because non-dt booting has not been dropped from OMAP,
+AFAIK.
+
+> thermal_zone_of_sensor_register(), driver will lost ability to switch off=
+=20
+> hardware controlled shutdown sequence, which make it useless IMHO.
+
+Any special sequence or callback you want to consider to improve
+of-thermal support?
 
 
->> -	tm->tm_mon  =3D bcd2bin(regs[ISL12057_REG_RTC_MO]) - 1; /* starts =
-at 1 */
->> +	tm->tm_mon  =3D bcd2bin(regs[ISL12057_REG_RTC_MO] & 0x1f) - 1; /* =
-ditto */
->>  	tm->tm_year =3D bcd2bin(regs[ISL12057_REG_RTC_YR]) + 100;
->>  }
-> This patch definitly improves the driver, still I see room for more
-> improvement (all but the first issue are unrelated to this patch):
->
->  - There is a century bit in the RTC_MO driver that is now correctly
->    masked to determine the month. Shouldn't it be used to flag if yea=
-r
->    is >=3D 2100? That seems to match the hardware leap year handling.
->    (I.e. it considers RTC_YR=3D0 not to be a leap year iff RTC_MO_CEN=
-TURY
->    is set.)
->
->  - I wonder how tm_wday should be handled. It seems to be hardly used=
- by
->    callers of rtc_read_time. Is it better to report the hardware stat=
-e
->    here or the weekday matching year/month/day?
->
->  - IMHO the probe function shouldn't clear the OSCILLATOR FAILURE BIT
->    (OSF). It's an indicator that the stored time is wrong. Instead th=
-is
->    bit should be evaluated in the read_time callback. (If it's set,
->    return -ENODATA.) And only clear the bit in .set_time when the
->    registers were updated. I think most drivers get that wrong.
-
-Thanks for your feedback. I will take a look at those after alarm
-support is ok.
-
-Cheers,
-
-a+
+For instance, getting a callback for mode change events would enable you
+to get a better support for hardware controlled shutdown sequence?
 
 
+>=20
+> I don't see how driver can benefits from nice things provided by of-therm=
+al.
+> There is no colling device associated with PMIC chip, pooling delays are =
+of
+> no use, device uses interrupt, trip pints are predefined in hardware...
 
+I see. However, using it may make this driver even simpler, as you would
+simply describe it in DT and the notification you want would be taken
+care by the core part of the framework.
+
+>=20
+> Please advice.
+>=20
+> Regards,
+> Ivan
+
+--+g7M9IMkV8truYOl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUXAizAAoJEMLUO4d9pOJWTkwH/2XInDMeeJuIOK6CWM5WDUYV
+HCjuNs3AGlNys9Z/m8BAGcMkT+KiQqWN+utfN3ltWI4YlvEmonUEksk/HRc1nyON
+t6Q4UGdNf8O0e9DfuyNESCZUbaleVQEkjgdfOm6EPjna+moUJ0BAzlbAKwGb9JtI
+WMT28qn000QGxVw4aSHzJiftKIEN00txLym727vtmPGebd6ci0lHQQrZ3JCvbj5z
+HMogP7nV6u1ZnVAF7XXqf83WacqxBNBKTT1uYE8EE2PACC+CMFnBr1HH3p5uL+he
+d3GyN2pG1F9XoV6e96G3TPYzzo9c5O6wTiPMClUQsX5XE8N6A3oEf6e7MftRaQY=
+=Emhb
+-----END PGP SIGNATURE-----
+
+--+g7M9IMkV8truYOl--
