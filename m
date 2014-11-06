@@ -1,41 +1,107 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCHv0 3/3] rtc: rtc-isl12057: add alarm support to Intersil
- ISL12057 RTC driver
-Date: Wed, 05 Nov 2014 21:59:47 -0800
-Message-ID: <545B0E53.4020003@roeck-us.net>
-References: <cover.1415222752.git.arno@natisbad.org>
- <148403c0ab1d556cbb99d9242c65f714a77843e5.1415222752.git.arno@natisbad.org>
- <20141106055017.GL8509@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20141106055017.GL8509@sirena.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Brown <broonie@kernel.org>, Arnaud Ebalard <arno@natisbad.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Linus Walleij <linus.walleij@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-doc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, devicetree@vger.kernel.org, =?windows-1252?Q?Uwe_Kleine-K=F6nig?= <uwe@kleine-koenig.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Peter Huewe <peter.huewe@infineon.com>, Thierry Reding <treding@nvidia.com>, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>
+From: Caesar Wang <caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v8 0/3]     ARM: rk3288 : Add PM Domain support
+Date: Thu,  6 Nov 2014 14:22:38 +0800
+Message-ID: <1415254961-5746-1-git-send-email-caesar.wang@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, fzf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, "jinkun.hong" <jinkun.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jack Dai <jack.dai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/05/2014 09:50 PM, Mark Brown wrote:
-> On Wed, Nov 05, 2014 at 10:42:52PM +0100, Arnaud Ebalard wrote:
->
->> +static int _isl12057_rtc_toggle_alarm(struct device *dev, int enable)
->> +{
->> +	struct isl12057_rtc_data *data = dev_get_drvdata(dev);
->
-> I can't help but think that toggle is a confusing name for this.
-> enable?
->
-If I recall correctly we had this argument before. Problem is that the
-function can also _disable_ the alarm, so to name it enable is just
-as misleading or confusing. update_alarm, maybe ?
+    Add power domain drivers based on generic power domain for
+    Rockchip platform, and support RK3288.
 
-Guenter
+    https://chromium-review.googlesource.com/#/c/220253/9
+    This is the GPU driver, add the following information in DT,
+    and it can support the PMDOMAIN
+
+gpu: gpu@ffa30000 {
+                    compatible = "arm,malit764",
+                                 "arm,malit76x",
+                                 "arm,malit7xx",
+                                 "arm,mali-midgard";
+                    reg = <0xffa30000 0x10000>;
+                    interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+                                 <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
+                                 <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+                    interrupt-names = "JOB", "MMU", "GPU";
+                    clocks = <&cru ACLK_GPU>;
+                    clock-names = "aclk_gpu";
+                    operating-points = <
+                            /* KHz uV */
+                            100000 800000
+                            200000 850000
+                            300000 950000
+                            400000 1000000
+                            600000 1150000
+                    >;
+                    power-domains = <&power RK3288_PD_GPU>;
+                    status = "disabled";
+};
+
+Based on:
+    - [PATCH v1 1/4] PM / clock_ops: Add pm_clk_add_clk()
+    http://www.mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg735599.html
+
+Changes in v8:
+    - This reconciles the v2 and v7 code so that we power domain have
+    lists of clocks they toggle on and off during power transitions and
+    independently from power domains clocks we attach clocks to devices
+    comprising power domain and prepare them so they are turned on and off
+    by runtime PM.
+    - document go back to v2
+    - DTS go back to v2
+
+Changes in v7:
+    - Delete unused variables
+
+Changes in v6:
+    - delete pmu_lock
+    - modify dev_lock using mutex
+    - pm_clk_resume(pd->dev) change to pm_clk_resume(ed->dev)
+    - pm_clk_suspend(pd->dev) change to pm_clk_suspend(ed->dev)
+    - add devm_kfree(pd->dev, de) in rockchip_pm_domain_detach_dev
+
+Changes in v5:
+    - delete idle_lock
+    - add timeout in rockchip_pmu_set_idle_request()
+
+Changes in v4:
+    - use list storage dev
+
+Changes in v3:
+    - change use pm_clk_resume() and pm_clk_suspend()
+    - DT structure has changed
+    - Decomposition power-controller, changed to multiple controller
+    (gpu-power-controller, hevc-power-controller)
+
+Changes in v2:
+    - remove the "pd->pd.of_node = np"
+    - move clocks to "optional"
+    - make pd_vio clocks all one entry per line and alphabetize.
+    - power: power-controller move back to pinctrl: pinctrl.
+
+Caesar Wang (3):
+  power-domain: rockchip: add power domain drivers
+  dt-bindings: add document of Rockchip power domain
+  ARM: dts: add rk3288 power-domain node
+
+ .../bindings/arm/rockchip/power_domain.txt         |  48 +++
+ arch/arm/boot/dts/rk3288.dtsi                      |  66 +++
+ arch/arm/mach-rockchip/Kconfig                     |   1 +
+ arch/arm/mach-rockchip/Makefile                    |   1 +
+ arch/arm/mach-rockchip/pm_domains.c                | 469 +++++++++++++++++++++
+ include/dt-bindings/power-domain/rk3288.h          |  11 +
+ 6 files changed, 596 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/rockchip/power_domain.txt
+ create mode 100644 arch/arm/mach-rockchip/pm_domains.c
+ create mode 100644 include/dt-bindings/power-domain/rk3288.h
+
+-- 
+1.9.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
