@@ -1,88 +1,130 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] drm/panel: simple: Add AUO B116XW03 panel support
-Date: Thu, 6 Nov 2014 10:10:35 +0100
-Message-ID: <20141106091034.GF26297@ulmo>
-References: <1409566202-7946-1-git-send-email-ajaykumar.rs@samsung.com>
+From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [PATCH v3 04/13] of: document new emc-timings subnode in nvidia,tegra124-car
+Date: Thu, 6 Nov 2014 10:11:00 +0100
+Message-ID: <CAAObsKBe8kigKfEs_ER+1X5fqLw3dZD69XHicEn4cVuQTyoFAw@mail.gmail.com>
+References: <1414599796-30597-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1414599796-30597-5-git-send-email-tomeu.vizoso@collabora.com> <545B172C.4060105@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0742848459=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1409566202-7946-1-git-send-email-ajaykumar.rs@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Ajay Kumar <ajaykumar.rs@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, seanpaul@google.com, joshi@samsung.com, dri-devel@lists.freedesktop.org, ajaynumb@gmail.com, prashanth.g@samsung.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <545B172C.4060105-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 6 November 2014 07:37, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> On 10/30/2014 01:22 AM, Tomeu Vizoso wrote:
+>>
+>> The EMC clock needs some extra information for changing its rate.
+>>
+>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>> ---
+>>   .../bindings/clock/nvidia,tegra124-car.txt         | 46
+>> +++++++++++++++++++++-
+>>   1 file changed, 44 insertions(+), 2 deletions(-)
+>>
+>> diff --git
+>> a/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
+>> b/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
+>> index ded5d62..42e0588 100644
+>> --- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
+>> +++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
+>> @@ -19,12 +19,35 @@ Required properties :
+>>     In clock consumers, this cell represents the bit number in the CAR's
+>>     array of CLK_RST_CONTROLLER_RST_DEVICES_* registers.
+>>
+>> +The node should contain a "emc-timings" subnode for each supported RAM
+>> type (see
+>> +field RAM_CODE in register PMC_STRAPPING_OPT_A), with its unit address
+>> being its
+>> +RAM_CODE.
+>> +
+>> +Required properties for "emc-timings" nodes :
+>> +- nvidia,ram-code : Should contain the value of RAM_CODE this timing set
+>> +  is used for.
+>> +
+>> +Each "emc-timings" node should contain a "timing" subnode for every
+>> supported
+>> +EMC clock rate. The "timing" subnodes should have the clock rate in Hz as
+>> their
+>> +unit address.
+>
+>
+> This seems to be a quite liberal use of unit addresses (same in the next
+> patch) - is this allowed by DT?
 
---===============0742848459==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="65ImJOski3p8EhYV"
-Content-Disposition: inline
+Well, it's not that different from using the register address. I think
+it helps with readability more than an arbitrary index.
 
+>> +
+>> +Required properties for "timing" nodes :
+>> +- clock-frequency : Should contain the memory clock rate to which this
+>> timing
+>> +relates.
+>> +- nvidia,parent-clock-frequency : Should contain the rate at which the
+>> current
+>> +parent of the EMC clock should be running at this timing.
+>> +- clocks : Must contain an entry for each entry in clock-names.
+>> +  See ../clocks/clock-bindings.txt for details.
+>> +- clock-names : Must include the following entries:
+>> +  - emc-parent : the clock that should be the parent of the EMC clock at
+>> this
+>> +timing.
+>> +
+>>   Example SoC include file:
+>>
+>>   / {
+>> -       tegra_car: clock {
+>> +       tegra_car: clock@0,60006000 {
+>>                 compatible = "nvidia,tegra124-car";
+>> -               reg = <0x60006000 0x1000>;
+>> +               reg = <0x0 0x60006000 0x0 0x1000>;
+>>                 #clock-cells = <1>;
+>>                 #reset-cells = <1>;
+>>         };
+>> @@ -60,4 +83,23 @@ Example board file:
+>>         &tegra_car {
+>>                 clocks = <&clk_32k> <&osc>;
+>>         };
+>> +
+>> +       clock@0,60006000 {
+>> +               emc-timings@3 {
+>> +                       nvidia,ram-code = <3>;
+>> +
+>> +                       timing@12750000 {
+>> +                               clock-frequency = <12750000>;
+>> +                               nvidia,parent-clock-frequency =
+>> <408000000>;
+>> +                               clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
+>> +                               clock-names = "emc-parent";
+>> +                       };
+>> +                       timing@20400000 {
+>> +                               clock-frequency = <20400000>;
+>> +                               nvidia,parent-clock-frequency =
+>> <408000000>;
+>> +                               clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
+>> +                               clock-names = "emc-parent";
+>> +                       };
+>> +               };
+>> +       };
+>
+>
+> At first it seems confusing to see a top-level node without a compatible
+> property, until you realize it has already been defined before.
+>
+> In patch 05, you put "Example board file:" above a similar node, which is
+> enough to lift that ambiguity - could you do the same here?
 
---65ImJOski3p8EhYV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Oh, actually it was already in the file. I took this idea from here
+for patch 05.
 
-On Mon, Sep 01, 2014 at 03:40:02PM +0530, Ajay Kumar wrote:
-> The AUO B116XW03 is a 11.6" HD TFT LCD panel connecting to a LVDS
-> interface and with an integrated LED backlight unit.
->=20
-> This panel is used on the Samsung Chromebook(XE303C12).
->=20
-> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
-> ---
->  .../devicetree/bindings/panel/auo,b116xw03.txt     |    7 ++++++
->  drivers/gpu/drm/panel/panel-simple.c               |   25 ++++++++++++++=
-++++++
->  2 files changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/panel/auo,b116xw03.=
-txt
+Thanks,
 
-Applied after adding the missing .bpc field in the panel descriptor. I
-set it to 6 according to the datasheet.
+Tomeu
 
-Thierry
-
---65ImJOski3p8EhYV
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUWzsKAAoJEN0jrNd/PrOh56YP/2wbdvrBQG4qUai5OuSOpbL/
-M3EYXSklKBH7aG5urF4zKVG2FO3NWBo5jHTFJ4KUVMxRaGbisnF+mBIp8EO/cTUf
-bC5/wxQVpo3hQBV8XhpuOGDCCWuVZ+MmWPYj7uvxU8UlRBEqN+Kgk24mUO7gJghy
-DyhMMSbnXWROrbMA/yIAWjty1VD4O568kHeFDKTb79mDLXHRkA0hmJ/ELJTwlxFU
-mzz7FHTgOEtaZfzgv0elOXOw1awYbwAbJAr4XqrHfaqkxmgE3jIbFT8xphMWkxiH
-+xBeVVrTSFFGZq89a5PuU3srU3+Giz3FzYV8j3q8eeGbY1TBK3xE1gf//hiAd50Y
-mSUiwMNyUuyOBM2+Pcf6YNxIQQTpgCuSKDE+KGGlTXhm1EQ9V8NtGfQMj6CJwGmo
-KWjm1qB1p1BpCQAfDoC9mbtm6FCWFgw9W9nJ5oza1bfE8cyRxUYyKWjTufuV17e1
-R0bj67+4nJR0Neu3nkhbUK6fFZGSq7kuYzjSvbSaygbWxTKzcurwxyjpjzLVFwEg
-48Rrg6dwGYsMNkGQLN/oQ5NsMf4ucgBkKCtcvuMVdJmkzgS04FA0vW9mofbgIJT9
-u2KRiNe8GfA0KMzNUAOUqJ7DdSENJh1CyXXg4kCYiT83OShsFsc2Nyy2+5dph2HP
-O/K0XLQmlPNhQKLcttFM
-=o+nO
------END PGP SIGNATURE-----
-
---65ImJOski3p8EhYV--
-
---===============0742848459==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
-
---===============0742848459==--
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
