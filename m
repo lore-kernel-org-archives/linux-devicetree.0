@@ -1,69 +1,50 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: [PATCH 1/3] drm/panel: add support for Innolux G121I1-L01 12.1" TFT
- LCD panel
-Date: Thu,  6 Nov 2014 17:44:33 +0100
-Message-ID: <1415292275-29726-1-git-send-email-l.stach@pengutronix.de>
+From: "Gerald Coley" <gerald@granddesignsgroup.com>
+Subject: RE: [PATCH] ARM: dts: Add am57xx-beagle-x15
+Date: Thu, 6 Nov 2014 10:44:40 -0600
+Message-ID: <006201cff9e0$f6661730$e3324590$@granddesignsgroup.com>
+References: <1415290702-11353-1-git-send-email-nm@ti.com> <20141106164148.GJ24112@csclub.uwaterloo.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, dri-devel@lists.freedesktop.org
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141106164148.GJ24112@csclub.uwaterloo.ca>
+Content-Language: en-us
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Lennart Sorensen' <lsorense@csclub.uwaterloo.ca>, 'Nishanth Menon' <nm@ti.com>
+Cc: 'Tony Lindgren' <tony@atomide.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, balbi@ti.com, fcooper@ti.com, beagleboard@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIHRoZSBJbm5vbHV4IEcxMjFJMS1MMDEgMTIuMSIg
-VEZUIExDRCBwYW5lbAp0byB0aGUgc2ltcGxlLXBhbmVsIGRyaXZlci4KClRoaXMgcGFuZWwgaXMg
-Y29ubmVjdGVkIHZpYSBMVkRTIGFuZCB1c2VzIHRoZSBkYXRhIGVuYWJsZSBzaWduYWwgZm9yCnRp
-bWluZy4gU2luY2UgSFNZTkMvVlNZTkMgYXJlIGlnbm9yZWQsIHRoZSBzcGxpdCBiZXR3ZWVuIHN5
-bmMgbGVuZ3RoIGFuZApwb3JjaGVzIGlzIGFyYml0cmFyeSwgYXMgbG9uZyBhcyB0aGUgY29tcGxl
-dGUgaG9yaXpvbnRhbCBibGFua2luZyBpbnRlcnZhbAppcyAxNjAgY2xvY2tzLCBhbmQgdGhlIHZl
-cnRpY2FsIGJsYW5raW5nIGludGVydmFsIGlzIDI0IGxpbmVzLgoKU2lnbmVkLW9mZi1ieTogTHVj
-YXMgU3RhY2ggPGwuc3RhY2hAcGVuZ3V0cm9uaXguZGU+Ci0tLQogLi4uL2JpbmRpbmdzL3BhbmVs
-L2lubm9sdXgsZzEyMWkxLWwwMS50eHQgICAgICAgICAgfCAgNyArKysrKysKIGRyaXZlcnMvZ3B1
-L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyAgICAgICAgICAgICAgIHwgMjYgKysrKysrKysrKysr
-KysrKysrKysrKwogMiBmaWxlcyBjaGFuZ2VkLCAzMyBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9k
-ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BhbmVsL2lubm9sdXgs
-ZzEyMWkxLWwwMS50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvcGFuZWwvaW5ub2x1eCxnMTIxaTEtbDAxLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9wYW5lbC9pbm5vbHV4LGcxMjFpMS1sMDEudHh0Cm5ldyBmaWxlIG1vZGUg
-MTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAwMC4uMjc0M2IwN2NkMmYyCi0tLSAvZGV2L251bGwKKysr
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BhbmVsL2lubm9sdXgsZzEyMWkx
-LWwwMS50eHQKQEAgLTAsMCArMSw3IEBACitJbm5vbHV4IENvcnBvcmF0aW9uIDEyLjEiIFdYR0Eg
-KDEyODB4ODAwKSBURlQgTENEIHBhbmVsCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBh
-dGlibGU6IHNob3VsZCBiZSAiaW5ub2x1eCxnMTIxaTEtbDAxIgorCitUaGlzIGJpbmRpbmcgaXMg
-Y29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywgd2hpY2ggaXMgc3BlY2lm
-aWVkCitpbiBzaW1wbGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5LgpkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIGIvZHJpdmVycy9ncHUvZHJtL3Bh
-bmVsL3BhbmVsLXNpbXBsZS5jCmluZGV4IDIzZGUyMmY4YzgyMC4uMTU5ZmQ4NzgxZjk5IDEwMDY0
-NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKKysrIGIvZHJpdmVy
-cy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCkBAIC01NDIsNiArNTQyLDI5IEBAIHN0YXRp
-YyBjb25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyBmb3hsaW5rX2ZsNTAwd3ZyMDBfYTB0ID0gewogCX0s
-CiB9OwogCitzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgaW5ub2x1eF9nMTIx
-aTFfbDAxX21vZGUgPSB7CisJLmNsb2NrID0gNzEwMDAsCisJLmhkaXNwbGF5ID0gMTI4MCwKKwku
-aHN5bmNfc3RhcnQgPSAxMjgwICsgNjQsCisJLmhzeW5jX2VuZCA9IDEyODAgKyA2NCArIDMyLAor
-CS5odG90YWwgPSAxMjgwICsgNjQgKyAzMiArIDY0LAorCS52ZGlzcGxheSA9IDgwMCwKKwkudnN5
-bmNfc3RhcnQgPSA4MDAgKyA5LAorCS52c3luY19lbmQgPSA4MDAgKyA5ICsgNiwKKwkudnRvdGFs
-ID0gODAwICsgOSArIDYgKyA5LAorCS52cmVmcmVzaCA9IDYwLAorfTsKKworc3RhdGljIGNvbnN0
-IHN0cnVjdCBwYW5lbF9kZXNjIGlubm9sdXhfZzEyMWkxX2wwMSA9IHsKKwkubW9kZXMgPSAmaW5u
-b2x1eF9nMTIxaTFfbDAxX21vZGUsCisJLm51bV9tb2RlcyA9IDEsCisJLmJwYyA9IDYsCisJLnNp
-emUgPSB7CisJCS53aWR0aCA9IDI2MSwKKwkJLmhlaWdodCA9IDE2MywKKwl9LAorfTsKKwogc3Rh
-dGljIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIGlubm9sdXhfbjExNmJnZV9tb2RlID0g
-ewogCS5jbG9jayA9IDcxMDAwLAogCS5oZGlzcGxheSA9IDEzNjYsCkBAIC02NjcsNiArNjkwLDkg
-QEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgcGxhdGZvcm1fb2ZfbWF0Y2hbXSA9
-IHsKIAkJLmNvbXBhdGlibGUgPSAiZm94bGluayxmbDUwMHd2cjAwLWEwdCIsCiAJCS5kYXRhID0g
-JmZveGxpbmtfZmw1MDB3dnIwMF9hMHQsCiAJfSwgeworCQkuY29tcGF0aWJsZSA9Imlubm9sdXgs
-ZzEyMWkxLWwwMSIsCisJCS5kYXRhID0gJmlubm9sdXhfZzEyMWkxX2wwMQorCX0sIHsKIAkJLmNv
-bXBhdGlibGUgPSAiaW5ub2x1eCxuMTE2YmdlIiwKIAkJLmRhdGEgPSAmaW5ub2x1eF9uMTE2Ymdl
-LAogCX0sIHsKLS0gCjIuMS4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbAo=
+Yes. We have three USB 3.0 ports.
+
+Gerald
+
+
+-----Original Message-----
+From: Lennart Sorensen [mailto:lsorense@csclub.uwaterloo.ca] 
+Sent: Thursday, November 6, 2014 10:42 AM
+To: Nishanth Menon
+Cc: Tony Lindgren; linux-kernel@vger.kernel.org;
+linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
+linux-omap@vger.kernel.org; balbi@ti.com; gerald@granddesignsgroup.com;
+fcooper@ti.com; beagleboard@googlegroups.com
+Subject: Re: [PATCH] ARM: dts: Add am57xx-beagle-x15
+
+On Thu, Nov 06, 2014 at 10:18:22AM -0600, Nishanth Menon wrote:
+> BeagleBoard-X15 is the next generation Open Source Hardware 
+> BeagleBoard based on TI's AM5728 SoC featuring dual core 1.5GHZ A15 
+> processor. The platform features 2GB DDR3L (w/dual 32bit busses), 
+> eSATA, 3 USB3.0 ports, integrated HDMI (1920x108@60), separate LCD 
+> port, video In port, 4GB eMMC, uSD, Analog audio in/out, dual 1G 
+> Ethernet.
+
+Oh neat, you put a USB3 hub on the board?
+
+I really should cleanup and submit my patch to make the system time not run
+576ppm too fast on the AM57xx.
+
+This will sure be a nice board when you get it released.  I will have to get
+one.
+
+--
+Len Sorensen
