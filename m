@@ -1,87 +1,56 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH RESEND v3 4/4] Documentation: power: max77693-charger: Document
- exported sysfs entry
-Date: Thu, 06 Nov 2014 16:12:00 +0100
-Message-ID: <1415286720-6358-5-git-send-email-k.kozlowski@samsung.com>
-References: <1415286720-6358-1-git-send-email-k.kozlowski@samsung.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] of: Add vendor prefix for HannStar Display Corporation
+Date: Thu, 6 Nov 2014 09:13:42 -0600
+Message-ID: <CAL_JsqJYEbC2fsVAUp9CWZxrvXp62dhWL4N1MPJttemoTgWjtg@mail.gmail.com>
+References: <1414074666-3783-1-git-send-email-p.zabel@pengutronix.de> <20141106085840.GD26297@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <1415286720-6358-1-git-send-email-k.kozlowski@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-api@vger.kernel.org
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141106085840.GD26297@ulmo>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the settings exported by max77693 charger driver through sysfs
-entries:
- - fast_charge_timer
- - top_off_threshold_current
- - top_off_timer
+On Thu, Nov 6, 2014 at 2:58 AM, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Thu, Oct 23, 2014 at 04:31:05PM +0200, Philipp Zabel wrote:
+>> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> ---
+>> Changes since v1:
+>>  - Rebased onto v3.18-rc1
+>> ---
+>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>>  1 file changed, 1 insertion(+)
+>
+> Rob,
+>
+> Will you take this patch via the DT tree or can you ack it so that I can
+> take it through the drm/panel tree along with patch 2/2?
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
----
- Documentation/ABI/testing/sysfs-class-power | 42 +++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-index 909e7602c717..369d2a2d7d3e 100644
---- a/Documentation/ABI/testing/sysfs-class-power
-+++ b/Documentation/ABI/testing/sysfs-class-power
-@@ -32,3 +32,45 @@ Description:
- 		Valid values:
- 		- 5, 6 or 7 (hours),
- 		- 0: disabled.
-+
-+What:		/sys/class/power_supply/max77693-charger/device/fast_charge_timer
-+Date:		January 2015
-+KernelVersion:	3.19.0
-+Contact:	Krzysztof Kozlowski <k.kozlowski@samsung.com>
-+Description:
-+		This entry shows and sets the maximum time the max77693
-+		charger operates in fast-charge mode. When the timer expires
-+		the device will terminate fast-charge mode (charging current
-+		will drop to 0 A) and will trigger interrupt.
-+
-+		Valid values:
-+		- 4 - 16 (hours), step by 2 (rounded down)
-+		- 0: disabled.
-+
-+What:		/sys/class/power_supply/max77693-charger/device/top_off_threshold_current
-+Date:		January 2015
-+KernelVersion:	3.19.0
-+Contact:	Krzysztof Kozlowski <k.kozlowski@samsung.com>
-+Description:
-+		This entry shows and sets the charging current threshold for
-+		entering top-off charging mode. When charging current in fast
-+		charge mode drops below this value, the charger will trigger
-+		interrupt and start top-off charging mode.
-+
-+		Valid values:
-+		- 100000 - 200000 (microamps), step by 25000 (rounded down)
-+		- 200000 - 350000 (microamps), step by 50000 (rounded down)
-+		- 0: disabled.
-+
-+What:		/sys/class/power_supply/max77693-charger/device/top_off_timer
-+Date:		January 2015
-+KernelVersion:	3.19.0
-+Contact:	Krzysztof Kozlowski <k.kozlowski@samsung.com>
-+Description:
-+		This entry shows and sets the maximum time the max77693
-+		charger operates in top-off charge mode. When the timer expires
-+		the device will terminate top-off charge mode (charging current
-+		will drop to 0 A) and will trigger interrupt.
-+
-+		Valid values:
-+		- 0 - 70 (minutes), step by 10 (rounded down)
--- 
-1.9.1
+Rob
+
+>
+> Thierry
+>
+>>
+>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> index 723999d..9863039 100644
+>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> @@ -64,6 +64,7 @@ gmt Global Mixed-mode Technology, Inc.
+>>  google       Google, Inc.
+>>  gumstix      Gumstix, Inc.
+>>  gw   Gateworks Corporation
+>> +hannstar     HannStar Display Corporation
+>>  haoyu        Haoyu Microelectronic Co. Ltd.
+>>  hisilicon    Hisilicon Limited.
+>>  honeywell    Honeywell
+>> --
+>> 2.1.1
+>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
