@@ -1,112 +1,89 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 5/5] ARM: shmobile: r8a73a4 dtsi: Add SoC-specific IIC compatible properties
-Date: Thu,  6 Nov 2014 12:52:10 +0100
-Message-ID: <1415274730-310-6-git-send-email-geert+renesas@glider.be>
-References: <1415274730-310-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415274730-310-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v5 2/8] phy: miphy28lp: Add PHY header file for DT x Driver
+ defines
+Date: Thu, 6 Nov 2014 12:53:40 +0100
+Message-ID: <545B6144.2020503@st.com>
+References: <1415098284-11182-1-git-send-email-gabriel.fernandez@linaro.org> <1415098284-11182-3-git-send-email-gabriel.fernandez@linaro.org> <545B1C53.9010406@ti.com> <545B3FA4.8040109@st.com> <20141106112825.GC26543@x1>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141106112825.GC26543@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The IIC nodes used the generic compatible properties only.
-This may cause the driver to fail when using Standard Speed on IIC
-masters where the operational clock is driven by the 130 MHz HP clock.
 
-Add the SoC-specific compatible property to fix this.
+On 11/06/2014 12:28 PM, Lee Jones wrote:
+> On Thu, 06 Nov 2014, Maxime Coquelin wrote:
+>
+>> Hi Kishon,
+>> On 11/06/2014 07:59 AM, Kishon Vijay Abraham I wrote:
+>>> Hi,
+>>>
+>>> On Tuesday 04 November 2014 04:21 PM, Gabriel FERNANDEZ wrote:
+>>>> This provides the shared header file which will be reference from both
+>>>> PHY driver and its associated Device Tree node(s).
+>>>>
+>>>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>> ---
+>>>>   include/dt-bindings/phy/phy.h | 18 ++++++++++++++++++
+>>> I don't see this being used in device tree file. Are you planning to add this
+>>> after -rc1 is tagged. Or else I have to create a separate branch for this file
+>>> which will be merged by both me and the dt maintainer. Let me know.
+>> I think we don't need to create a branch we will merged by both of us.
+>>
+>> What we can do that both of us apply this patch in our trees.
+>> It will avoid dependencies on each others.
+>>
+>> What do you think?
+> This makes no sense to me.  Can you find another way to explain this
+> please?
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
-Untested due to lack of hardware
+I apply the patch on my STi tree.
+Kishon applies the patch on his phy tree.
 
- arch/arm/boot/dts/r8a73a4.dtsi | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+At the end, both STi and phy branches will be merged in Linus tree,
+with no conflicts.
 
-diff --git a/arch/arm/boot/dts/r8a73a4.dtsi b/arch/arm/boot/dts/r8a73a4.dtsi
-index 7f57dc7f392aad30..5ac57babc3b95c99 100644
---- a/arch/arm/boot/dts/r8a73a4.dtsi
-+++ b/arch/arm/boot/dts/r8a73a4.dtsi
-@@ -106,7 +106,7 @@
- 	i2c5: i2c@e60b0000 {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--		compatible = "renesas,rmobile-iic";
-+		compatible = "renesas,iic-r8a73a4", "renesas,rmobile-iic";
- 		reg = <0 0xe60b0000 0 0x428>;
- 		interrupts = <0 179 IRQ_TYPE_LEVEL_HIGH>;
- 
-@@ -205,7 +205,7 @@
- 	i2c0: i2c@e6500000 {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--		compatible = "renesas,rmobile-iic";
-+		compatible = "renesas,iic-r8a73a4", "renesas,rmobile-iic";
- 		reg = <0 0xe6500000 0 0x428>;
- 		interrupts = <0 174 IRQ_TYPE_LEVEL_HIGH>;
- 		status = "disabled";
-@@ -214,7 +214,7 @@
- 	i2c1: i2c@e6510000 {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--		compatible = "renesas,rmobile-iic";
-+		compatible = "renesas,iic-r8a73a4", "renesas,rmobile-iic";
- 		reg = <0 0xe6510000 0 0x428>;
- 		interrupts = <0 175 IRQ_TYPE_LEVEL_HIGH>;
- 		status = "disabled";
-@@ -223,7 +223,7 @@
- 	i2c2: i2c@e6520000 {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--		compatible = "renesas,rmobile-iic";
-+		compatible = "renesas,iic-r8a73a4", "renesas,rmobile-iic";
- 		reg = <0 0xe6520000 0 0x428>;
- 		interrupts = <0 176 IRQ_TYPE_LEVEL_HIGH>;
- 		status = "disabled";
-@@ -232,7 +232,7 @@
- 	i2c3: i2c@e6530000 {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--		compatible = "renesas,rmobile-iic";
-+		compatible = "renesas,iic-r8a73a4", "renesas,rmobile-iic";
- 		reg = <0 0xe6530000 0 0x428>;
- 		interrupts = <0 177 IRQ_TYPE_LEVEL_HIGH>;
- 		status = "disabled";
-@@ -241,7 +241,7 @@
- 	i2c4: i2c@e6540000 {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--		compatible = "renesas,rmobile-iic";
-+		compatible = "renesas,iic-r8a73a4", "renesas,rmobile-iic";
- 		reg = <0 0xe6540000 0 0x428>;
- 		interrupts = <0 178 IRQ_TYPE_LEVEL_HIGH>;
- 		status = "disabled";
-@@ -250,7 +250,7 @@
- 	i2c6: i2c@e6550000 {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--		compatible = "renesas,rmobile-iic";
-+		compatible = "renesas,iic-r8a73a4", "renesas,rmobile-iic";
- 		reg = <0 0xe6550000 0 0x428>;
- 		interrupts = <0 184 IRQ_TYPE_LEVEL_HIGH>;
- 		status = "disabled";
-@@ -259,7 +259,7 @@
- 	i2c7: i2c@e6560000 {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--		compatible = "renesas,rmobile-iic";
-+		compatible = "renesas,iic-r8a73a4", "renesas,rmobile-iic";
- 		reg = <0 0xe6560000 0 0x428>;
- 		interrupts = <0 185 IRQ_TYPE_LEVEL_HIGH>;
- 		status = "disabled";
-@@ -268,7 +268,7 @@
- 	i2c8: i2c@e6570000 {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--		compatible = "renesas,rmobile-iic";
-+		compatible = "renesas,iic-r8a73a4", "renesas,rmobile-iic";
- 		reg = <0 0xe6570000 0 0x428>;
- 		interrupts = <0 173 IRQ_TYPE_LEVEL_HIGH>;
- 		status = "disabled";
--- 
-1.9.1
+This is what we are doing for the STiH407 reset DT bindings with Philipp Z.
+
+Regards,
+Maxime
+>
+>>> Thanks
+>>> Kishon
+>>>>   1 file changed, 18 insertions(+)
+>>>>   create mode 100644 include/dt-bindings/phy/phy.h
+>>>>
+>>>> diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
+>>>> new file mode 100644
+>>>> index 0000000..e8c6a3f
+>>>> --- /dev/null
+>>>> +++ b/include/dt-bindings/phy/phy.h
+>>>> @@ -0,0 +1,18 @@
+>>>> +/*
+>>>> + *
+>>>> + * This header provides constants for the phy framework
+>>>> + *
+>>>> + * Copyright (C) 2014 STMicroelectronics
+>>>> + * Author: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+>>>> + * License terms:  GNU General Public License (GPL), version 2
+>>>> + */
+>>>> +
+>>>> +#ifndef _DT_BINDINGS_PHY
+>>>> +#define _DT_BINDINGS_PHY
+>>>> +
+>>>> +#define PHY_TYPE_SATA		1
+>>>> +#define PHY_TYPE_PCIE		2
+>>>> +#define PHY_TYPE_USB2		3
+>>>> +#define PHY_TYPE_USB3		4
+>>>> +
+>>>> +#endif /* _DT_BINDINGS_PHY */
+>>>>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
