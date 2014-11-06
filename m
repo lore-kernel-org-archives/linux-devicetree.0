@@ -1,63 +1,48 @@
-From: Chris Kohn <christian.kohn@xilinx.com>
-Subject: RE: [PATCH v3 11/13] v4l: xilinx: Add Xilinx Video IP core
-Date: Thu, 6 Nov 2014 03:05:27 +0000
-Message-ID: <678b94ef89b04748accfa49858f6cb47@BN1BFFO11FD030.protection.gbl>
-References: <1414940018-3016-12-git-send-email-laurent.pinchart@ideasonboard.com>
- <1415212587-5003-1-git-send-email-laurent.pinchart@ideasonboard.com>
+From: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RESUBMIT PATCH v6 7/8] regulator: sky81452: Add compatible
+ string for device binding
+Date: Thu, 6 Nov 2014 13:38:29 +0900
+Message-ID: <20141106043828.GA5068@jack-ThinkPad-T520>
+References: <1414393369-31583-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1414739322-12487-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1414739322-12487-8-git-send-email-jack.yoo@skyworksinc.com>
+ <20141031164418.GC18557@sirena.org.uk>
+ <20141104004333.GA2965@jack-ThinkPad-T520>
+ <20141104005329.GA3815@sirena.org.uk>
+ <20141104054534.GA4108@jack-ThinkPad-T520>
+ <20141104114120.GJ3815@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1415212587-5003-1-git-send-email-laurent.pinchart@ideasonboard.com>
-Content-Language: en-US
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
-Cc: Michal Simek <michals@xilinx.com>, Hyun Kwon <hyunk@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141104114120.GJ3815-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Laurent,
+On Tue, Nov 04, 2014 at 11:41:20AM +0000, Mark Brown wrote:
+> On Tue, Nov 04, 2014 at 02:45:34PM +0900, Gyungoh Yoo wrote:
+> > On Tue, Nov 04, 2014 at 12:53:29AM +0000, Mark Brown wrote:
+> 
+> > > I'm having a hard time understanding why it is difficult to split the
+> > > two changes - they are in completely separate files.
+> 
+> > I am sorry for the hard time.
+> 
+> > That was because the symbol changes had a dependency with 1/8.
+> > In this case, Should Kconfig symbol change back from MFD_SKY81452
+> > to SKY81452 in this patch series? And then should I submit to change to MFD_SKY81452
+> > with seperate patch?
+> 
+> No, what I'm saying is that if you want to rename the Kconfig symbol you
+> should do that as part of a separate patch to changing the DT stuff.
 
-> -----Original Message-----
-> From: Laurent Pinchart [mailto:laurent.pinchart@ideasonboard.com]
-> Sent: Wednesday, November 05, 2014 10:36 AM
-> To: linux-media@vger.kernel.org
-> Cc: Michal Simek; Chris Kohn; Hyun Kwon; devicetree@vger.kernel.org
-> Subject: [PATCH v3 11/13] v4l: xilinx: Add Xilinx Video IP core
->
-> Xilinx platforms have no hardwired video capture or video processing
-> interface. Users create capture and memory to memory processing
-> pipelines in the FPGA fabric to suit their particular needs, by
-> instantiating video IP cores from a large library.
->
-> The Xilinx Video IP core is a framework that models a video pipeline
-> described in the device tree and expose the pipeline to userspace
-> through the media controller and V4L2 APIs.
->
-> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
-> Signed-off-by: Radhey Shyam Pandey <radheys@xilinx.com>
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->
-> ---
->
-> I'd appreciate if DT reviewers could have a look at the xlnx,video-format and
-> xlnx,video-width properties if nothing else.
->
-> Changes since v2:
->
-> - Remove explicit trailing \0 after snprintf
-> - Don't hardcode colorspace
-
-I've split these two up based on the individual patches in the tree you pointed me to yesterday. The first one I squashed into
-
-v4l: xilinx: dma: Fix querycap capabilities and bus_info reporting
-
-for the colorspace I created a new patch. I don't want to take credit for it, so if you can send me a patch I'll apply it to my local branch.
-
-Other than that, it's working fine on my end.
-
-Cheers,
-Chris
-
-
-This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
+I see.
+I will split this patch. One is for DT stuff and the other is for Kconfig
+symbol rename.
+Thank you for your comment.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
