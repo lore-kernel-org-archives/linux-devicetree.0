@@ -1,49 +1,58 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 4/5] of: Add old prop argument on OF_RECONFIG_UPDATE_PROPERTY
-Date: Thu, 6 Nov 2014 12:46:15 +0000
-Message-ID: <CACxGe6tvRJP3J=7ccmH-CtjwSaZVx23KnkcMb6zgzG-pOkanXA@mail.gmail.com>
+Subject: Re: [PATCH 3/5] of: Only call notifiers when node is attached
+Date: Thu, 6 Nov 2014 12:47:19 +0000
+Message-ID: <CACxGe6vaPBcU++_JWJYVcD5r-Z2c2ZjxWfrmo4Qmetbg+E-3oA@mail.gmail.com>
 References: <1414528433-9650-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1414528433-9650-5-git-send-email-pantelis.antoniou@konsulko.com>
- <20141105200129.B4438C41C40@trevor.secretlab.ca> <E0B33C12-EBD6-465C-813C-7FD8553A3CB8@konsulko.com>
+ <1414528433-9650-4-git-send-email-pantelis.antoniou@konsulko.com>
+ <20141105213925.3790BC41C40@trevor.secretlab.ca> <EE6F3801-A76A-4D95-B841-A7935FA7FCF9@konsulko.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <E0B33C12-EBD6-465C-813C-7FD8553A3CB8@konsulko.com>
+In-Reply-To: <EE6F3801-A76A-4D95-B841-A7935FA7FCF9@konsulko.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Geor
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 5, 2014 at 8:08 PM, Pantelis Antoniou
+On Thu, Nov 6, 2014 at 12:33 PM, Pantelis Antoniou
 <pantelis.antoniou@konsulko.com> wrote:
 > Hi Grant,
 >
->> On Nov 5, 2014, at 22:01 , Grant Likely <grant.likely@secretlab.ca> wrote:
+>> On Nov 5, 2014, at 23:39 , Grant Likely <grant.likely@secretlab.ca> wrote:
 >>
->> On Tue, 28 Oct 2014 22:33:52 +0200
+>> On Tue, 28 Oct 2014 22:33:51 +0200
 >> , Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 >> wrote:
->>> The notifier now includes the old_prop argument when updating
->>> properties, propagate this API to changeset internals while
->>> also retaining the old behaviour of retrieving the old_property
->>> when NULL is passed.
->>>
->>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+>>> Make sure we call notifier only when the node is attached.
+>>> When a detatched tree is being constructed we do not want the
+>>> notifiers to fire at all.
 >>
->> I'm still fuzzy on the need for this patch. Is this just an optimization
->> so that the property doesn't get looked up twice? Or is there a reason
->> when the oldprop really needs to be passed in explicitly?
+>> The description does not match what the patch does. The patch moves the
+>> test into of_{add,remove,update}_property() and out of
+>> of_property_notify() itself. That leaves one other caller of
+>> of_property_notify(); __of_changeset_entry_notify(). The effect of this
+>> patch is that applying a changeset will cause notifiers to be fired for
+>> each property modified in a changeset. The comment says nothing about
+>> the change in behaviour and it sounds like it is a bug fix when it
+>> doesn't actually change the behaviour at all for the
+>> of_{add,remove,update}_property() paths.
+>>
+>> This needs a better changelog. It needs to describe what the effects of
+>> the patch are and why the change is being made. When someone is
+>> bisecting a problem and they land on this change, the changelog needs to
+>> give them a good idea about what is going on and why.
 >>
 >
-> In the case of overlay's applying a property change the old property has
-> been already retrieved. Passing it as an argument saves us a traversal of the
-> property list.
+> Valid points. In fact I performed some tests and with this reverted things
+> still work.
 >
-> On the original series were removal was supported, the old property was required
-> since you can't find the old property anymore on the node (it was on another list).
+> The rationale behind this is for when nodes/properties are removed in the overlay,
+> but since we don't support this for now, we never hit the case where it was
+> needed.
 >
-> When we go back to revisit the removal case, that API is useful.
+> Please remove from the patch series, I'll revisit this when I add the removal
+> functionality.
 
-Since we're not doing removal anymore, lets drop this patch.
+Cool, thanks.
 
 g.
