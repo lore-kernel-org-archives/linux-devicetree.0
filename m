@@ -1,107 +1,127 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/4] dmaengine: device tree bindings for PL08x
-Date: Thu, 6 Nov 2014 10:11:58 +0100
-Message-ID: <CACRpkdZ_R26-PnUycjkvvK3ZuU=2KvupHmvK+H+kUD-Ty=rtqQ@mail.gmail.com>
-References: <1410507442-32451-1-git-send-email-linus.walleij@linaro.org>
-	<201409161821.26348.arnd@arndb.de>
+From: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 04/13] of: document new emc-timings subnode in nvidia,tegra124-car
+Date: Thu, 6 Nov 2014 18:15:38 +0900
+Message-ID: <545B3C3A.3090902@nvidia.com>
+References: <1414599796-30597-1-git-send-email-tomeu.vizoso@collabora.com> <1414599796-30597-5-git-send-email-tomeu.vizoso@collabora.com> <545B172C.4060105@nvidia.com> <CAAObsKBe8kigKfEs_ER+1X5fqLw3dZD69XHicEn4cVuQTyoFAw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201409161821.26348.arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <CAAObsKBe8kigKfEs_ER+1X5fqLw3dZD69XHicEn4cVuQTyoFAw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 16, 2014 at 6:21 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Friday 12 September 2014, Linus Walleij wrote:
-
->> This introduces device tree bindings for the PL08x DMA controllers
->> when used with fixed signal assignment per channel, i.e. if each
->> channel on the PL08x is assigned precisely one burst/single signal
->> set.
-(...)
-> If the mux handling is really simple, we could it part of the
-> pl08 driver and key it off the compatible string -- for any
-> of the known variants that use a mux, we then have the driver
-> implement the muxing directly.
-
-I am also leaning toward this solution. Probably moving the
-mux handling to a separate file and Kconfig symbol with some
-header stubs that get compiled out unless explicitly enabled.
-
-> Or it could be done the other way round: Have a binding for the
-> mux that implements the generic dma binding, and a driver for
-> it that registers with of_dma and forwards any
-> dma_request_slave_channel() call to the underlying driver.
-> That would even make the mux driver independent of pl08.
-
-Yeah that is the big hammer. This is what we did for IRQ line
-muxes in drivers/irqchip/irq-crossbar.c, but maybe it's overkill.
-
->> +Optional sub-nodes:
->> +The slave transfer channels are assigned in consecutive order and
->> +identified by one child node per channel, assuming a fixed-signal
->> +per channel assignment and each with the following properties:
->> +
->> +Required properties:
->> +- signal: the name of the on-chip signal line handled by this channel
->> +- bus-interface-ahb1 or bus-interface-ahb2: tells the driver which
->> +  bus interface(s) that is eligible for this specific channel. At least
->> +  one of the interfaces must be specified, it is perfectly legal to
->> +  specify both if the hardware supports using either interface.
+On 11/06/2014 06:11 PM, Tomeu Vizoso wrote:
+> On 6 November 2014 07:37, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>> On 10/30/2014 01:22 AM, Tomeu Vizoso wrote:
+>>>
+>>> The EMC clock needs some extra information for changing its rate.
+>>>
+>>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>>> ---
+>>>    .../bindings/clock/nvidia,tegra124-car.txt         | 46
+>>> +++++++++++++++++++++-
+>>>    1 file changed, 44 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
+>>> b/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
+>>> index ded5d62..42e0588 100644
+>>> --- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
+>>> +++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
+>>> @@ -19,12 +19,35 @@ Required properties :
+>>>      In clock consumers, this cell represents the bit number in the CAR's
+>>>      array of CLK_RST_CONTROLLER_RST_DEVICES_* registers.
+>>>
+>>> +The node should contain a "emc-timings" subnode for each supported RAM
+>>> type (see
+>>> +field RAM_CODE in register PMC_STRAPPING_OPT_A), with its unit address
+>>> being its
+>>> +RAM_CODE.
+>>> +
+>>> +Required properties for "emc-timings" nodes :
+>>> +- nvidia,ram-code : Should contain the value of RAM_CODE this timing set
+>>> +  is used for.
+>>> +
+>>> +Each "emc-timings" node should contain a "timing" subnode for every
+>>> supported
+>>> +EMC clock rate. The "timing" subnodes should have the clock rate in Hz as
+>>> their
+>>> +unit address.
+>>
+>>
+>> This seems to be a quite liberal use of unit addresses (same in the next
+>> patch) - is this allowed by DT?
 >
-> I'd really like to avoid this and move all of it into the dma specifier.
-> I understand where you are coming from with this given the existing
-> code, but I'd rather change the driver code to allow a simpler binding.
+> Well, it's not that different from using the register address. I think
+> it helps with readability more than an arbitrary index.
 >
->> +     saa0@dmac0 {
->> +             signal = "saa0";
->> +             bus-interface-ahb1;
->> +     };
+>>> +
+>>> +Required properties for "timing" nodes :
+>>> +- clock-frequency : Should contain the memory clock rate to which this
+>>> timing
+>>> +relates.
+>>> +- nvidia,parent-clock-frequency : Should contain the rate at which the
+>>> current
+>>> +parent of the EMC clock should be running at this timing.
+>>> +- clocks : Must contain an entry for each entry in clock-names.
+>>> +  See ../clocks/clock-bindings.txt for details.
+>>> +- clock-names : Must include the following entries:
+>>> +  - emc-parent : the clock that should be the parent of the EMC clock at
+>>> this
+>>> +timing.
+>>> +
+>>>    Example SoC include file:
+>>>
+>>>    / {
+>>> -       tegra_car: clock {
+>>> +       tegra_car: clock@0,60006000 {
+>>>                  compatible = "nvidia,tegra124-car";
+>>> -               reg = <0x60006000 0x1000>;
+>>> +               reg = <0x0 0x60006000 0x0 0x1000>;
+>>>                  #clock-cells = <1>;
+>>>                  #reset-cells = <1>;
+>>>          };
+>>> @@ -60,4 +83,23 @@ Example board file:
+>>>          &tegra_car {
+>>>                  clocks = <&clk_32k> <&osc>;
+>>>          };
+>>> +
+>>> +       clock@0,60006000 {
+>>> +               emc-timings@3 {
+>>> +                       nvidia,ram-code = <3>;
+>>> +
+>>> +                       timing@12750000 {
+>>> +                               clock-frequency = <12750000>;
+>>> +                               nvidia,parent-clock-frequency =
+>>> <408000000>;
+>>> +                               clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
+>>> +                               clock-names = "emc-parent";
+>>> +                       };
+>>> +                       timing@20400000 {
+>>> +                               clock-frequency = <20400000>;
+>>> +                               nvidia,parent-clock-frequency =
+>>> <408000000>;
+>>> +                               clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
+>>> +                               clock-names = "emc-parent";
+>>> +                       };
+>>> +               };
+>>> +       };
+>>
+>>
+>> At first it seems confusing to see a top-level node without a compatible
+>> property, until you realize it has already been defined before.
+>>
+>> In patch 05, you put "Example board file:" above a similar node, which is
+>> enough to lift that ambiguity - could you do the same here?
 >
-> The main value-add this gives you is a name of the signal, but nobody else
-> does this, and it seems this is only an artifact of the way the driver today
-> matches devices that come from platform data.
->
-> If you want it just for migration purposes, we can probably put the names
-> in the platform, but the bus-interface-* should IMHO be expressed in the
-> dma specifier, the same way we do for the designware part.
+> Oh, actually it was already in the file. I took this idea from here
+> for patch 05.
 
-The main requirement is telling which master to use for each
-channel, really, I can do without the naming (though it is very helpful
-for debugging).
+My bad, missed it!
 
-I don't know how to provide a specifier for eligible bus interfaces
-in some elegant way with the DMA specifier, I could of course use
-two cells containing a plain number, specifying 0 for any interface,
-1 for ahb1 and 2 for ahb2 like that:
-
-#define BUS_AHB_ANY 0
-#define BUS_AHB1 1
-#define BUS_AHB2 2
-
-uart1: uart@101fb000 {
-        compatible = "arm,pl011", "arm,primecell";
-        (...)
-        dmas = <&dmac1 22 BUS_AHB1>,
-               <&dmac1 23 BUS_AHB1>;
-        dma-names = "rx", "tx";
-};
-
-The problem is that this is just so wrong: the bus master arbitration
-is a property of the DMA controller, not the consuming device. The DMA
-controller side is where the lines to the external buses are connected,
-and it is performing the work on behalf of the device.
-
-This way the knowledge is put in the totally wrong place. People get
-the impression that this is a property of the consumer...
-
-When it comes to the actual DMA signal line that is more natural to
-have in the specifier.
-
-Yours,
-Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
