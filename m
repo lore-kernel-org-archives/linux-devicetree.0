@@ -1,60 +1,28 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [V10 PATCH 2/2] irqchip: gicv2m: Add supports for ARM GICv2m
- MSI(-X)
-Date: Thu, 6 Nov 2014 11:42:32 +0100 (CET)
-Message-ID: <alpine.DEB.2.11.1411061131330.24960@nanos>
-References: <1415052977-26036-1-git-send-email-suravee.suthikulpanit@amd.com> <1415052977-26036-3-git-send-email-suravee.suthikulpanit@amd.com> <5458CE31.3040404@linux.intel.com> <545ABB4C.8010103@amd.com> <545ABF6C.1000308@amd.com>
- <alpine.DEB.2.11.1411060146050.24960@nanos>
+From: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH 0/3] ARM: dts: AM43x: Fix DCDC3 regulator voltage
+Date: Thu, 6 Nov 2014 16:20:01 +0530
+Message-ID: <1415271004-10935-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.11.1411060146050.24960@nanos>
-Sender: linux-doc-owner@vger.kernel.org
-To: Suravee Suthikulanit <suravee.suthikulpanit@amd.com>
-Cc: Jiang Liu <jiang.liu@linux.intel.com>, marc.zyngier@arm.com, mark.rutland@arm.com, jason@lakedaemon.net, Catalin.Marinas@arm.com, Will.Deacon@arm.com, liviu.dudau@arm.com, Harish.Kasiviswanathan@amd.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: tony@atomide.com, linux-omap@vger.kernel.org
+Cc: devicetree@vger.kernel.org, j-keerthy@ti.com, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 6 Nov 2014, Thomas Gleixner wrote:
-> On Wed, 5 Nov 2014, Suravee Suthikulanit wrote:
-> > On 11/5/2014 6:05 PM, Suravee Suthikulanit wrote:
-> > > - Overall, it seems that msi_domain_alloc() could be quite different
-> > > across architectures. Would it be possible to declare this function as
-> > > weak, and allow arch to override (similar to arch_setup_msi_irq)?
-> > 
-> > Actually, declaring "msi_domain_ops" as non-static, and allow other code to
-> > override the .alloc and .free?
-> 
-> Why do you want to do that?
+Fix DCDC3 volatge to 1.5V which is the right value to be supplied by
+DCDC3 for all the boards.
 
-I know why. Because you want to spare a level of hierarchy. But thats
-wrong simply because MSI itself is an interrupt chip at the device
-level.
+Keerthy (3):
+  ARM: dts: AM43x-EPOS-EVM: Fix DCDC3 voltage
+  ARM: dts: AM437x-GP-EVM: Fix DCDC3 voltage
+  ARM: dts: AM437x-SK-EVM: Fix DCDC3 voltage
 
-[ MSI ] ---> [ GIC-MSI ] ---> [ GIC ]
+ arch/arm/boot/dts/am437x-gp-evm.dts  |    4 ++--
+ arch/arm/boot/dts/am437x-sk-evm.dts  |    4 ++--
+ arch/arm/boot/dts/am43x-epos-evm.dts |    4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-So the MSI level only cares about the allocation of the virq
-space. GIC-MSI allocates out of the bitmap which handles the hard
-wired range of MSI capable GIC interrupts and GIC handles the
-underlying functionality.
-
-And this makes a lot of sense, if you think about interrupt
-remapping. If ARM ever grows that you simply insert it into the chain:
-
-[ MSI ] ---> [ Remap] ---> [ GIC-MSI ] ---> [ GIC ]
-
-If you look at Jiangs x86 implementation it does exactly that.
-
-[ MSI ] ---> [ Vector ]
-
-[ MSI ] ---> [ Remap ] ---> [ Vector ]
-
-And because ARM has this intermediate layer of GIC-MSI you need to
-represent it in the hierarchy whether you like it or not. If you'd try
-to bolt the GIC-MSI magic into the MSI layer itself, then interrupt
-remapping would never work.
-
-Thanks,
-
-	tglx
-
+-- 
+1.7.9.5
 
