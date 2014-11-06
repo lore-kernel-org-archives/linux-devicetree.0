@@ -1,57 +1,89 @@
-From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 2/2] dt-bindings: Update documentation for "system-power-controller" and fix misspellings
-Date: Thu,  6 Nov 2014 14:23:03 +0000
-Message-ID: <1415283784-10885-3-git-send-email-romain.perier@gmail.com>
-References: <1415283784-10885-1-git-send-email-romain.perier@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415283784-10885-1-git-send-email-romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH 1/4] input: touchscreen: ti_am335x_tsc Interchange
+ touchscreen and ADC steps
+Date: Thu, 6 Nov 2014 15:19:17 +0100
+Message-ID: <20141106141916.GA17151@netboy>
+References: <1414408111-2631-1-git-send-email-vigneshr@ti.com>
+ <1414408111-2631-2-git-send-email-vigneshr@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1414408111-2631-2-git-send-email-vigneshr@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vignesh R <vigneshr@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Paul Gortmaker <paul.gortmaker@windriver.com>, Peter Meerwald <pmeerw@pmeerw.net>, Lee Jones <lee.jones@linaro.org>, Lars-Peter Clausen <lars@metafoo.de>, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, linux-iio@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, Brad Griffis <bgriffis@ti.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hartmut Knaack <knaack.h@gmx.de>, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jan Kardell <jan.kardell@telliq.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Benoit Cousson <bcousson@baylibre.com>, Kumar Gala <galak@>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- .../devicetree/bindings/power/power-controller.txt   | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+On Mon, Oct 27, 2014 at 04:38:28PM +0530, Vignesh R wrote:
 
-diff --git a/Documentation/devicetree/bindings/power/power-controller.txt b/Documentation/devicetree/bindings/power/power-controller.txt
-index 845868b..9afa847 100644
---- a/Documentation/devicetree/bindings/power/power-controller.txt
-+++ b/Documentation/devicetree/bindings/power/power-controller.txt
-@@ -1,18 +1,18 @@
--* Generic Poweroff capability
-+* Generic system power control capability
- 
--Power-management integrated circuits or miscellaneous harware components are
--sometimes able to control the system power. The device driver associated to these
--components might needs to define poweroff capability, which tells to the kernel
--how to switch off the system. The corresponding driver must have the standard
--property "poweroff-source" in its device node. This property marks the device as
--able to shutdown the system. In order to test if this property is found
--programmatically, use the helper function "of_system_has_poweroff_source" from
--of.h .
-+Power-management integrated circuits or miscellaneous hardware components are
-+sometimes able to control the system power. The device driver associated with these
-+components might need to define this capability, which tells the kernel that
-+it can be used to switch off the system. The corresponding device must have the
-+standard property "system-power-controller" in its device node. This property
-+marks the device as able to control the system power. In order to test if this
-+property is found programmatically, use the helper function
-+"of_is_system_power_controller" from of.h .
- 
- Example:
- 
- act8846: act8846@5 {
- 	 compatible = "active-semi,act8846";
- 	 status = "okay";
--	 poweroff-source;
-+	 system-power-controller;
- }
--- 
-1.9.1
+...
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> @@ -209,6 +214,7 @@ static void titsc_read_coordinates(struct titsc *ts_dev,
+>  	unsigned int read, diff;
+>  	unsigned int i, channel;
+>  	unsigned int creads = ts_dev->coordinate_readouts;
+> +	unsigned int first_step = TOTAL_STEPS - (creads * 2 + 2);
+>  
+>  	*z1 = *z2 = 0;
+>  	if (fifocount % (creads * 2 + 2))
+> @@ -226,7 +232,7 @@ static void titsc_read_coordinates(struct titsc *ts_dev,
+>  
+>  		channel = (read & 0xf0000) >> 16;
+>  		read &= 0xfff;
+> -		if (channel < creads) {
+> +		if (channel > first_step + creads + 2) {
+>  			diff = abs(read - prev_val_x);
+>  			if (diff < prev_diff_x) {
+>  				prev_diff_x = diff;
+> @@ -234,19 +240,19 @@ static void titsc_read_coordinates(struct titsc *ts_dev,
+>  			}
+>  			prev_val_x = read;
+>  
+> -		} else if (channel < creads * 2) {
+> +		} else if (channel == first_step + creads + 1) {
+> +			*z1 = read;
+> +
+> +		} else if (channel == first_step + creads + 2) {
+> +			*z2 = read;
+> +
+> +		} else if (channel > first_step) {
+>  			diff = abs(read - prev_val_y);
+>  			if (diff < prev_diff_y) {
+>  				prev_diff_y = diff;
+>  				*y = read;
+
+While you are at it, please get rid of the this "delta filter"
+nonsense.
+
+Thanks,
+Richard
+
+>  			}
+>  			prev_val_y = read;
+> -
+> -		} else if (channel < creads * 2 + 1) {
+> -			*z1 = read;
+> -
+> -		} else if (channel < creads * 2 + 2) {
+> -			*z2 = read;
+>  		}
+>  	}
+>  }
+> -- 
+> 1.9.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
