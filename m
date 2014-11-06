@@ -1,53 +1,58 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH v4 0/5] simplefb: add clock handling code
-Date: Thu, 06 Nov 2014 16:05:13 +0100
-Message-ID: <545B8E29.90807@redhat.com>
-References: <1413996311-4287-1-git-send-email-hdegoede@redhat.com> <54534523.8080801@ti.com> <545B8338.8060908@ti.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH] PCI: add missing DT binding for linux,pci-domain
+ property
+Date: Thu, 06 Nov 2014 16:08:57 +0100
+Message-ID: <1415286537.671.3.camel@pengutronix.de>
+References: <1415101660-26450-1-git-send-email-l.stach@pengutronix.de>
+	 <20141104120052.GE11102@e106497-lin.cambridge.arm.com>
+	 <2606632.6m38glseTk@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBM4452RAKGQEJTLCZ6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <545B8338.8060908-l0cyMroinI0@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2606632.6m38glseTk@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 11/06/2014 03:18 PM, Tomi Valkeinen wrote:
-> On 31/10/14 10:15, Tomi Valkeinen wrote:
->> Hi Hans,
->>
->> On 22/10/14 19:45, Hans de Goede wrote:
->>
->>> -We will add a clocks property to the simplefb devicetree bindings, so
->>>  that u-boot setup framebuffers passed to the kernel (for early console
->>>  support) can properly list the clocks used, and simplefb can claim them to
->>>  avoid them getting turned off, thereby breaking the early console
->>
->> Perhaps this has been discussed earlier, but I started to wonder if
->> managing clocks is enough.
->>
->> What about regulators (to power the LCD), gpios (to keep the LCD
->> enabled) and pinctrl (for video signals)? I guess any those could be
->> reset by the kernel if no driver uses them.
+Am Dienstag, den 04.11.2014, 13:07 +0100 schrieb Arnd Bergmann:
+> On Tuesday 04 November 2014 12:00:52 Liviu Dudau wrote:
+> > 
+> > While the description is potentially correct, what it fails to explain is that the
+> > choice of using the property or generating an unstable (across boots) unique
+> > number is actually the choice of the host bridge driver at the moment. I know that
+> > my earlier implementations were defaulting to the automatic numbering, but that has
+> > been dropped from the final series as Rob Herring was objecting to it.
+> > 
+> > There is still scope to adopt a wide policy here, but for now it should say something
+> > to the tune:
+> > 
+> >    If present this property assigns a fixed PCI domain number to a host bridge,
+> >    otherwise an unstable (across boots) unique number will be assigned.
+> >    If you decide to use the property to assign a fixed PCI domain number to a host
+> >    bridge you have to ensure that all the host bridge drivers present in the system
+> >    follow the same policy. Otherwise, potentially conflicting domain numbers
+> >    may be assigned to root busses behind different host bridges.
 > 
-> Hans, ping. Have these been already discussed?
-
-Yes, and I already responded to your original mail on this on Oct. 31th,
-for some reason my mail client drops you from the CC, when I do a reply-to-all
-to one of your mails (I've added you manually this time).
-
-My replies did go to simple-fb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org .I'll forward my 2 mails on this
-to you.
+> But with the latest change to the domain handling, all drivers would implement
+> this. I would just mention that Linux kernels older than 3.19 are probably
+> going to ignore this property.
+> 
+Hm, I don't think we should stick those things into the binding docs, as
+those should not be Linux specific. IMHO the time when the parsing of a
+property gets implemented is a implementation detail that has nothing to
+do with the binding. Besides vendors always screw with this timeframes
+by doing backports.
 
 Regards,
+Lucas
 
-Hans
+-- 
+Pengutronix e.K.             | Lucas Stach                 |
+Industrial Linux Solutions   | http://www.pengutronix.de/  |
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
