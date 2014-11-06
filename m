@@ -1,40 +1,50 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 0/3] ARM: dts: AM43x: Fix DCDC3 regulator voltage
-Date: Thu, 6 Nov 2014 10:25:27 -0800
-Message-ID: <20141106182526.GC31454@atomide.com>
-References: <1415271004-10935-1-git-send-email-j-keerthy@ti.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] serial: of-serial: zero-out struct of_serial_info
+Date: Thu, 6 Nov 2014 10:33:34 -0800
+Message-ID: <20141106183334.GB24232@kroah.com>
+References: <1414703913-1343-1-git-send-email-f.fainelli@gmail.com>
+ <5481851.EJfv4DSzbT@wuerfel>
+ <545919B5.9020905@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <linux-serial-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1415271004-10935-1-git-send-email-j-keerthy@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com
+In-Reply-To: <545919B5.9020905@gmail.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, jslaby@suse.cz, devicetree@vger.kernel.org, jingchang.lu@freescale.com, gregory.0xf0@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-* Keerthy <j-keerthy@ti.com> [141106 02:55]:
-> Fix DCDC3 volatge to 1.5V which is the right value to be supplied by
-> DCDC3 for all the boards.
-
-Hmm so what about the comments for similar beaglebone changes
-in thread "[PATCH] ARM: dts: am335x-boneblack: set dcdc1 regulator
-for 1.35v ddr3"?
-
-Regards,
-
-Tony
- 
-> Keerthy (3):
->   ARM: dts: AM43x-EPOS-EVM: Fix DCDC3 voltage
->   ARM: dts: AM437x-GP-EVM: Fix DCDC3 voltage
->   ARM: dts: AM437x-SK-EVM: Fix DCDC3 voltage
+On Tue, Nov 04, 2014 at 10:23:49AM -0800, Florian Fainelli wrote:
+> On 10/30/2014 02:55 PM, Arnd Bergmann wrote:
+> > On Thursday 30 October 2014 14:18:33 Florian Fainelli wrote:
+> >> of_platform_serial_probe() invokes of_platform_serial_setup() with a
+> >> kmalloc'd struct of_serial_info cookie, which is not much of a problem
+> >> for most of the struct of_serial_info fields we access but info->clk.
+> >>
+> >> On platforms which do not provide a clock phandle for their UART nodes
+> >> but do provide a 'clock-frequency' property, we basically leave the
+> >> info->clk variable uninitialized, and this craps out during
+> >> suspend/resume with oopses, crashes or warnings in the clock code.
+> >>
+> >> Fix this by using kzalloc() which also zeroes-out the structure and
+> >> provides an initialized info->clk member set to NULL.
+> >>
+> >> Fixes: 2dea53bf57783 ("serial: of-serial: add PM suspend/resume support")
+> >> Fixes: e34b9c94b6e8d ("[POWERPC] of_serial: add port type checking")
+> >> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> >>
+> > 
+> > I thought I'd acked this patch before, maybe someone else sent the same
+> > one. This is definitely required, so
+> > 
+> > Acked-by: Arnd Bergmann <arnd@arndb.de>
+> > 
 > 
->  arch/arm/boot/dts/am437x-gp-evm.dts  |    4 ++--
->  arch/arm/boot/dts/am437x-sk-evm.dts  |    4 ++--
->  arch/arm/boot/dts/am43x-epos-evm.dts |    4 ++--
->  3 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> -- 
-> 1.7.9.5
-> 
+> Thanks, so who's taking that patch? Let me know if I need to resubmit
+> targeting a specific tree.
+
+Someone else sent this before you did, and I took that version instead,
+sorry.
+
+greg k-h
