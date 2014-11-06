@@ -1,56 +1,49 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] of: Add vendor prefix for HannStar Display Corporation
-Date: Thu, 6 Nov 2014 09:13:42 -0600
-Message-ID: <CAL_JsqJYEbC2fsVAUp9CWZxrvXp62dhWL4N1MPJttemoTgWjtg@mail.gmail.com>
-References: <1414074666-3783-1-git-send-email-p.zabel@pengutronix.de> <20141106085840.GD26297@ulmo>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141106085840.GD26297@ulmo>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH v2] PCI: add missing DT binding for linux,pci-domain property
+Date: Thu,  6 Nov 2014 16:23:20 +0100
+Message-ID: <1415287400-30426-1-git-send-email-l.stach@pengutronix.de>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Liviu Dudau <Liviu.Dudau@arm.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 6, 2014 at 2:58 AM, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Thu, Oct 23, 2014 at 04:31:05PM +0200, Philipp Zabel wrote:
->> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> ---
->> Changes since v1:
->>  - Rebased onto v3.18-rc1
->> ---
->>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->>  1 file changed, 1 insertion(+)
->
-> Rob,
->
-> Will you take this patch via the DT tree or can you ack it so that I can
-> take it through the drm/panel tree along with patch 2/2?
+This property was added by 41e5c0f81d3e
+(of/pci: Add pci_get_new_domain_nr() and of_get_pci_domain_nr())
+without the required binding documentation. As this property
+will be supported by a number of host bridge drivers going forward,
+add it to the common PCI binding doc.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+---
+This is a non-critical fix, but may still qualify for 3.18-rc as
+the property was added in this release cycle.
 
-Rob
+v2:
+- emphasize that the property must be present and unique systemwide
+  if used
+---
+ Documentation/devicetree/bindings/pci/pci.txt | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
->
-> Thierry
->
->>
->> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> index 723999d..9863039 100644
->> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
->> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> @@ -64,6 +64,7 @@ gmt Global Mixed-mode Technology, Inc.
->>  google       Google, Inc.
->>  gumstix      Gumstix, Inc.
->>  gw   Gateworks Corporation
->> +hannstar     HannStar Display Corporation
->>  haoyu        Haoyu Microelectronic Co. Ltd.
->>  hisilicon    Hisilicon Limited.
->>  honeywell    Honeywell
->> --
->> 2.1.1
->>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
+index 41aeed38926d..68c364e2f5e5 100644
+--- a/Documentation/devicetree/bindings/pci/pci.txt
++++ b/Documentation/devicetree/bindings/pci/pci.txt
+@@ -7,3 +7,14 @@ And for the interrupt mapping part:
+ 
+ Open Firmware Recommended Practice: Interrupt Mapping
+ http://www.openfirmware.org/1275/practice/imap/imap0_9d.pdf
++
++Additionally to the properties specified in the above standards a host bridge
++driver implementation may support the following properties:
++
++- linux,pci-domain:
++   If present this property assigns a fixed PCI domain number to a host bridge,
++   otherwise an unstable (across boots) unique number will be assigned.
++   It is required to either not set this property at all or set it for all
++   host bridges in the system, otherwise potentially conflicting domain numbers
++   may be assigned to root buses behind different host bridges. The domain
++   number for each host bridge in the system must be unique.
+-- 
+2.1.1
