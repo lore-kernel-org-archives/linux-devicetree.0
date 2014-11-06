@@ -1,73 +1,143 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 4/5] of: Add old prop argument on OF_RECONFIG_UPDATE_PROPERTY
-Date: Thu, 6 Nov 2014 15:14:13 +0200
-Message-ID: <EAE4A1B8-2019-4073-A26F-90E73C2ED394@konsulko.com>
-References: <1414528433-9650-1-git-send-email-pantelis.antoniou@konsulko.com> <1414528433-9650-5-git-send-email-pantelis.antoniou@konsulko.com> <20141105200129.B4438C41C40@trevor.secretlab.ca> <E0B33C12-EBD6-465C-813C-7FD8553A3CB8@konsulko.com> <CACxGe6tvRJP3J=7ccmH-CtjwSaZVx23KnkcMb6zgzG-pOkanXA@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.0 \(1990.1\))
-Content-Type: text/plain; charset=windows-1252
+From: Caesar Wang <caesar.wang@rock-chips.com>
+Subject: Re: [PATCH v8 3/3] ARM: dts: add rk3288 power-domain node
+Date: Thu, 06 Nov 2014 21:19:56 +0800
+Message-ID: <545B757C.2060307@rock-chips.com>
+References: <1415254961-5746-1-git-send-email-caesar.wang@rock-chips.com> <1415254961-5746-4-git-send-email-caesar.wang@rock-chips.com> <545B3518.2090409@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6tvRJP3J=7ccmH-CtjwSaZVx23KnkcMb6zgzG-pOkanXA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pete Popov <pete.popov-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Dan Malek <dan.malek-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Geor
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <545B3518.2090409@rock-chips.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kever Yang <kever.yang@rock-chips.com>, linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, Russell King <linux@arm.linux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "jinkun.hong" <jinkun.hong@rock-chips.com>, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, fzf@rock-chips.com, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, cf@rock-chips.com, Jack Dai <jack.dai@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
 
-> On Nov 6, 2014, at 14:46 , Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> w=
-rote:
->=20
-> On Wed, Nov 5, 2014 at 8:08 PM, Pantelis Antoniou
-> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->> Hi Grant,
->>=20
->>> On Nov 5, 2014, at 22:01 , Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>=
- wrote:
->>>=20
->>> On Tue, 28 Oct 2014 22:33:52 +0200
->>> , Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->>> wrote:
->>>> The notifier now includes the old_prop argument when updating
->>>> properties, propagate this API to changeset internals while
->>>> also retaining the old behaviour of retrieving the old_property
->>>> when NULL is passed.
->>>>=20
->>>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->>>=20
->>> I'm still fuzzy on the need for this patch. Is this just an optimiz=
-ation
->>> so that the property doesn't get looked up twice? Or is there a rea=
-son
->>> when the oldprop really needs to be passed in explicitly?
->>>=20
->>=20
->> In the case of overlay's applying a property change the old property=
- has
->> been already retrieved. Passing it as an argument saves us a travers=
-al of the
->> property list.
->>=20
->> On the original series were removal was supported, the old property =
-was required
->> since you can't find the old property anymore on the node (it was on=
- another list).
->>=20
->> When we go back to revisit the removal case, that API is useful.
->=20
-> Since we're not doing removal anymore, lets drop this patch.
->=20
+=E5=9C=A8 2014=E5=B9=B411=E6=9C=8806=E6=97=A5 16:45, Kever Yang =E5=86=99=
+=E9=81=93:
+> Hi Caesar,
+>
+> On 11/06/2014 02:22 PM, Caesar Wang wrote:
+>> Signed-off-by: Jack Dai <jack.dai@rock-chips.com>
+>> Signed-off-by: jinkun.hong <jinkun.hong@rock-chips.com>
+>> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+> pls detail the reason why you need to add all the clocks into=20
+> power-controller node.
 
-=46ine, I=92ll have to rework the overlay patches however.
+OK, I will fix in next patch v9 if there is no other problems in 1-2 da=
+ys.
 
-> g.
+>> ---
+>>
+>> Changes in v8:
+>>      - DTS go back to v2
+>>
+>> Changes in v7: None
+>> Changes in v6: None
+>> Changes in v5: None
+>> Changes in v4: None
+>> Changes in v3:
+>>      - Decomposition power-controller, changed to multiple controlle=
+r
+>>      (gpu-power-controller, hevc-power-controller)
+>>
+>> Changes in v2:
+>>      - make pd_vio clocks all one entry per line and alphabetize.
+>>      - power: power-controller move back to pinctrl: pinctrl.
+>>
+>>   arch/arm/boot/dts/rk3288.dtsi | 66=20
+>> +++++++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 66 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/rk3288.dtsi=20
+>> b/arch/arm/boot/dts/rk3288.dtsi
+>> index cb18bb4..9cd269a 100644
+>> --- a/arch/arm/boot/dts/rk3288.dtsi
+>> +++ b/arch/arm/boot/dts/rk3288.dtsi
+>> @@ -989,4 +989,70 @@
+>>               };
+>>           };
+>>       };
+>> +
+>> +    power: power-controller {
+>> +        compatible =3D "rockchip,rk3288-power-controller";
+>> +        #power-domain-cells =3D <1>;
+>> +        rockchip,pmu =3D <&pmu>;
+>> +        #address-cells =3D <1>;
+>> +        #size-cells =3D <0>;
+>> +
+>> +        pd_gpu {
+>> +            reg =3D <RK3288_PD_GPU>;
+>> +            clocks =3D <&cru ACLK_GPU>;
+>> +        };
+>> +
+>> +        pd_hevc {
+>> +            reg =3D <RK3288_PD_HEVC>;
+>> +            clocks =3D <&cru ACLK_HEVC>,
+>> +                 <&cru SCLK_HEVC_CABAC>,
+>> +                 <&cru SCLK_HEVC_CORE>,
+>> +                 <&cru HCLK_HEVC>;
+>> +        };
+>> +
+>> +        pd_vio {
+>> +            reg =3D <RK3288_PD_VIO>;
+>> +            clocks =3D <&cru ACLK_IEP>,
+>> +                 <&cru ACLK_ISP>,
+>> +                 <&cru ACLK_RGA_NIU>,
+>> +                 <&cru ACLK_RGA>,
+>> +                 <&cru ACLK_VIO0_NIU>,
+>> +                 <&cru ACLK_VIO1_NIU>,
+>> +                 <&cru ACLK_VIP>,
+>> +                 <&cru ACLK_VOP0>,
+>> +                 <&cru ACLK_VOP1>,
+>> +                 <&cru DCLK_VOP0>,
+>> +                 <&cru DCLK_VOP1>,
+>> +                 <&cru HCLK_IEP>,
+>> +                 <&cru HCLK_ISP>,
+>> +                 <&cru HCLK_RGA>,
+>> +                 <&cru HCLK_VIO_AHB_ARBI>,
+>> +                 <&cru HCLK_VIO_NIU>,
+>> +                 <&cru HCLK_VIO2_H2P>,
+>> +                 <&cru HCLK_VIP>,
+>> +                 <&cru HCLK_VOP0>,
+>> +                 <&cru HCLK_VOP1>,
+>> +                 <&cru PCLK_EDP_CTRL>,
+>> +                 <&cru PCLK_HDMI_CTRL>,
+>> +                 <&cru PCLK_LVDS_PHY>,
+>> +                 <&cru PCLK_MIPI_CSI>,
+>> +                 <&cru PCLK_MIPI_DSI0>,
+>> +                 <&cru PCLK_MIPI_DSI1>,
+>> +                 <&cru PCLK_VIO2_H2P>,
+>> +                 <&cru SCLK_EDP_24M>,
+>> +                 <&cru SCLK_EDP>,
+>> +                 <&cru SCLK_HDMI_CEC>,
+>> +                 <&cru SCLK_HDMI_HDCP>,
+>> +                 <&cru SCLK_ISP_JPE>,
+>> +                 <&cru SCLK_ISP>,
+>> +                 <&cru SCLK_RGA>;
+>> +        };
+>> +
+>> +        pd_video {
+>> +            reg =3D <RK3288_PD_VIDEO>;
+>> +            /* FIXME: add clocks */
+> remove the 'FIXME'.
 
-Regards
+=46ixed.
 
-=97 Pantelis
+>> +            clocks =3D <&cru ACLK_VCODEC>,
+>> +                 <&cru HCLK_VCODEC>;
+>> +        };
+>> +    };
+>>   };
+>
+>
+>
+>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Best regards,
+Caesar
+
+
