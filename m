@@ -1,76 +1,70 @@
-From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v5 2/8] phy: miphy28lp: Add PHY header file for DT x Driver
- defines
-Date: Thu, 6 Nov 2014 10:30:12 +0100
-Message-ID: <545B3FA4.8040109@st.com>
-References: <1415098284-11182-1-git-send-email-gabriel.fernandez@linaro.org> <1415098284-11182-3-git-send-email-gabriel.fernandez@linaro.org> <545B1C53.9010406@ti.com>
+From: "Kuankuan.Yang" <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 0/2] make imx hdmi publicly used by dw hdmi compatible
+ platform
+Date: Thu, 06 Nov 2014 17:35:40 +0800
+Message-ID: <545B40EC.2030001@rock-chips.com>
+References: <1415107992-34289-1-git-send-email-andy.yan@rock-chips.com> <20141104142908.GG4042@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <545B1C53.9010406-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20141104142908.GG4042-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: airlied-cv59FeDIM0c@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Josh Boyer <jwboyer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
-On 11/06/2014 07:59 AM, Kishon Vijay Abraham I wrote:
-> Hi,
+Hi Russell
+
+I'm working on Designware hdmi-audio, also add it as a standard ALSA de=
+vice.
+Before I saw this email, I also planed to submit my patchs to upsteam.
+I'm very grateful if you can email those patchs to us.
+
+Best Regards.
+
+=E4=BA=8E 2014=E5=B9=B411=E6=9C=8804=E6=97=A5 22:29, Russell King - ARM=
+ Linux =E5=86=99=E9=81=93:
+> On Tue, Nov 04, 2014 at 09:33:10PM +0800, Andy Yan wrote:
+>> From: Andy yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>
+>> We found freescale imx6 and rockchip rk3288 and Ingenic JZ4780 (Xbur=
+st/MIPS)
+>> use the interface compatible Designware HDMI IP, but they also have =
+some
+>> lightly difference, such as phy pll configuration, register width(im=
+x hdmi
+>> register is one byte, but rk3288 is 4 bytes width and can only acces=
+s by word),
+>> 4K support(imx6 doesn't support 4k, but rk3288 does).
+>>
+>> To reuse the imx-hdmi driver, we do this patch set:
+>> patch (1): split out imx-soc code from imx-hdmi to dw_hdmi-imx.c
+>> patch (2): move imx-hdmi to bridge/, and rename to dw-hdmi to
+>> make this driver indepent of drm-imx . And we will add rockchip
+>> platform specific code dw_hdmi-rockchip.c later, this is depend
+>> on drm-rockchip.
+> Great - I fully agree that this needs to be renamed as it is a Design=
+ware
+> IP.
 >
-> On Tuesday 04 November 2014 04:21 PM, Gabriel FERNANDEZ wrote:
->> This provides the shared header file which will be reference from both
->> PHY driver and its associated Device Tree node(s).
->>
->> Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>   include/dt-bindings/phy/phy.h | 18 ++++++++++++++++++
-> I don't see this being used in device tree file. Are you planning to add this
-> after -rc1 is tagged. Or else I have to create a separate branch for this file
-> which will be merged by both me and the dt maintainer. Let me know.
-I think we don't need to create a branch we will merged by both of us.
-
-What we can do that both of us apply this patch in our trees.
-It will avoid dependencies on each others.
-
-What do you think?
-
-Best regards,
-Maxime
-
+> Should it be moved into bridge/ ?  It isn't implemented as a DRM brid=
+ge
+> driver at present, so this seems illogical.  Is the longer term plan =
+to
+> convert it to be a DRM bridge?
 >
-> Thanks
-> Kishon
->>   1 file changed, 18 insertions(+)
->>   create mode 100644 include/dt-bindings/phy/phy.h
->>
->> diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
->> new file mode 100644
->> index 0000000..e8c6a3f
->> --- /dev/null
->> +++ b/include/dt-bindings/phy/phy.h
->> @@ -0,0 +1,18 @@
->> +/*
->> + *
->> + * This header provides constants for the phy framework
->> + *
->> + * Copyright (C) 2014 STMicroelectronics
->> + * Author: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
->> + * License terms:  GNU General Public License (GPL), version 2
->> + */
->> +
->> +#ifndef _DT_BINDINGS_PHY
->> +#define _DT_BINDINGS_PHY
->> +
->> +#define PHY_TYPE_SATA		1
->> +#define PHY_TYPE_PCIE		2
->> +#define PHY_TYPE_USB2		3
->> +#define PHY_TYPE_USB3		4
->> +
->> +#endif /* _DT_BINDINGS_PHY */
->>
+> Secondly, if you want HDMI audio support, you may find the patches I
+> maintain for the SolidRun devices useful, which add this as a standar=
+d
+> ALSA device.  I also have CEC support for it as well.  If you're
+> interested, I'll email those.
+>
+
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
