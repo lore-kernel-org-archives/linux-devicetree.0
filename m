@@ -1,60 +1,62 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v5 2/8] phy: miphy28lp: Add PHY header file for DT x Driver
- defines
-Date: Thu, 6 Nov 2014 12:29:31 +0530
-Message-ID: <545B1C53.9010406@ti.com>
-References: <1415098284-11182-1-git-send-email-gabriel.fernandez@linaro.org> <1415098284-11182-3-git-send-email-gabriel.fernandez@linaro.org>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] ARM: sun8i: Add DMA controller support
+Date: Thu, 6 Nov 2014 12:41:23 +0530
+Message-ID: <20141106071123.GV1870@intel.com>
+References: <1411010680-4481-1-git-send-email-wens@csie.org>
+ <CAGb2v65ZkBvqSjwR0bVUu0-=5-pOmydp51K6GeMnxOa4vOtCRQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415098284-11182-3-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v65ZkBvqSjwR0bVUu0-=5-pOmydp51K6GeMnxOa4vOtCRQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Tuesday 04 November 2014 04:21 PM, Gabriel FERNANDEZ wrote:
-> This provides the shared header file which will be reference from both
-> PHY driver and its associated Device Tree node(s).
+On Fri, Sep 26, 2014 at 11:06:01AM +0800, Chen-Yu Tsai wrote:
+> On Thu, Sep 18, 2014 at 11:24 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> > Hi everyone,
+> >
+> > This is v2 of my sun8i DMA controller support series. This series
+> > adds support for the DMA controller found in the Allwinner A23 SoC.
+> > It is the same hardware as found in the A31 (sun6i) SoC. In addition
+> > to reduced physical channels and endpoints, the controller in the A23
+> > requires an undocumented register to be toggled. That seems to allow
+> > memory bus access.
+> >
+> > This series is based on my earlier "clk: sun6i: Unify AHB1 clock and
+> > fix rate calculation" series, which removes the clock muxing calls from
+> > the sun6i-dma driver. The default PLL6 pre-divider for AHB1 on the A23
+> > results in an exceedingly high clock rate for AHB1, and the system hangs.
+> > Also, on the A23, the dma controller happily works even when AHB1 is
+> > clocked from AXI.
+> >
+> >
+> > Patch 1 changes the channel count macros into runtime data binded to
+> > the DT compatible strings. It also gets rid of some hardcoded values
+> > in the interrupt handler.
+> >
+> > Patch 2 adds the channel number data for the A23 (sun8i), as well as
+> > the undocumented register quirk.
 > 
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-> ---
->  include/dt-bindings/phy/phy.h | 18 ++++++++++++++++++
+> Hi, Vinod,
+> 
+> Any chance we can get patches 1 & 2 merged? You've already merged the
+> prerequisite patch "dmaengine: sun6i: Remove obsolete clk muxing code"
+> a few days ago, and patch 3 is already in arm-soc.
 
-I don't see this being used in device tree file. Are you planning to add this
-after -rc1 is tagged. Or else I have to create a separate branch for this file
-which will be merged by both me and the dt maintainer. Let me know.
+Hi ChenYu,
+
+The patches look fine to me so I tried applying them but they fail to apply,
+can you please rebase these two and resend
 
 Thanks
-Kishon
->  1 file changed, 18 insertions(+)
->  create mode 100644 include/dt-bindings/phy/phy.h
-> 
-> diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
-> new file mode 100644
-> index 0000000..e8c6a3f
-> --- /dev/null
-> +++ b/include/dt-bindings/phy/phy.h
-> @@ -0,0 +1,18 @@
-> +/*
-> + *
-> + * This header provides constants for the phy framework
-> + *
-> + * Copyright (C) 2014 STMicroelectronics
-> + * Author: Gabriel Fernandez <gabriel.fernandez@st.com>
-> + * License terms:  GNU General Public License (GPL), version 2
-> + */
-> +
-> +#ifndef _DT_BINDINGS_PHY
-> +#define _DT_BINDINGS_PHY
-> +
-> +#define PHY_TYPE_SATA		1
-> +#define PHY_TYPE_PCIE		2
-> +#define PHY_TYPE_USB2		3
-> +#define PHY_TYPE_USB3		4
-> +
-> +#endif /* _DT_BINDINGS_PHY */
-> 
+
+-- 
+~Vinod
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
