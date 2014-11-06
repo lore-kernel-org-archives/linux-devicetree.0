@@ -1,58 +1,76 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCHv3 4/5] edac: altera: Add Altera L2 Cache and OCRAM EDAC
- Support
-Date: Thu, 6 Nov 2014 17:31:34 +0100
-Message-ID: <20141106163134.GF4318@pd.tnic>
-References: <1414683131-20786-1-git-send-email-tthayer@opensource.altera.com>
- <1414683131-20786-5-git-send-email-tthayer@opensource.altera.com>
- <20141104151214.GD9570@pd.tnic>
- <545959E8.2040005@opensource.altera.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [V10 PATCH 2/2] irqchip: gicv2m: Add supports for ARM GICv2m
+ MSI(-X)
+Date: Thu, 06 Nov 2014 16:34:09 +0000
+Message-ID: <545BA301.8000709@arm.com>
+References: <1415052977-26036-1-git-send-email-suravee.suthikulpanit@amd.com> <1415052977-26036-3-git-send-email-suravee.suthikulpanit@amd.com> <5458CE31.3040404@linux.intel.com> <545ABB4C.8010103@amd.com> <545ABF6C.1000308@amd.com> <alpine.DEB.2.11.1411060146050.24960@nanos> <alpine.DEB.2.11.1411061131330.24960@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <545959E8.2040005@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thor Thayer <tthayer@opensource.altera.com>
-Cc: dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.11.1411061131330.24960@nanos>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, Jiang Liu <jiang.liu@linux.intel.com>, Mark Rutland <Mark.Rutland@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, "Harish.Kasiviswanathan@amd.com" <Harish.Kasiviswanathan@amd.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thor,
+Hi Thomas,
 
-On Tue, Nov 04, 2014 at 04:57:44PM -0600, Thor Thayer wrote:
-> We want to at least separate L2/OCRAM ECC from the SDRAM ECC because
-> 1) the SDRAM preparation can take almost 2 seconds on boot and some
-> customers need a faster boot time.
-> 2) the SDRAM has an ECC initialization dependency on the preloader which is
-> outside the kernel. It is desirable to be able to turn the SDRAM on & off
-> separately.
-
-Well, now that I asked and you gave valid reasons for the split,
-you should keep them split the way they are. But please do add that
-explanation to the commit message so that it is clear to people why
-there is a split.
-
-> You bring up a good point about the L2 and OCRAM being combined though.
+On 06/11/14 10:42, Thomas Gleixner wrote:
+> On Thu, 6 Nov 2014, Thomas Gleixner wrote:
+>> On Wed, 5 Nov 2014, Suravee Suthikulanit wrote:
+>>> On 11/5/2014 6:05 PM, Suravee Suthikulanit wrote:
+>>>> - Overall, it seems that msi_domain_alloc() could be quite different
+>>>> across architectures. Would it be possible to declare this function as
+>>>> weak, and allow arch to override (similar to arch_setup_msi_irq)?
+>>>
+>>> Actually, declaring "msi_domain_ops" as non-static, and allow other code to
+>>> override the .alloc and .free?
+>>
+>> Why do you want to do that?
 > 
-> If we do want granular control, maybe I should use a submenu? Or isn't that
-> desirable either?
+> I know why. Because you want to spare a level of hierarchy. But thats
+> wrong simply because MSI itself is an interrupt chip at the device
+> level.
+> 
+> [ MSI ] ---> [ GIC-MSI ] ---> [ GIC ]
+> 
+> So the MSI level only cares about the allocation of the virq
+> space. GIC-MSI allocates out of the bitmap which handles the hard
+> wired range of MSI capable GIC interrupts and GIC handles the
+> underlying functionality.
+> 
+> And this makes a lot of sense, if you think about interrupt
+> remapping. If ARM ever grows that you simply insert it into the chain:
+> 
+> [ MSI ] ---> [ Remap] ---> [ GIC-MSI ] ---> [ GIC ]
 
-Well, what do you think would be easier/faster for a user configuring? A
-separate menu where you have to do a couple of key presses just to enter
-it or simply a subtree in Kconfig with all the options together. I think
-the "depends" gives you that already...
+I think ARM has reached that stage with the ITS block in GICv3:
+- Each device gets programmed with a set of  "event IDs" ranging from 0
+to N-1, with N being the number of MSI vectors used by the device
+- the ITS uses both the device ID (basically the PCI requester ID) and
+the event ID to parse a set of software-managed tables (think page
+tables for interrupts).
 
-Ok, once you've worked in the suggested changes, you're good to go,
-at least for the EDAC bits. Let me know how you want to handle this,
-whether I should pick up the whole thing or I should ack the EDAC parts.
-This patchset should go together, in any case, and so I don't care
-whoever picks it up.
+The x86 remapping thing looks quite similar to that, by reading a couple
+of pages from the VT-D document.
 
-Thanks.
+So the way I understand the layout (and please correct me if I'm wrong,
+which is certainly the case) is that the MSI domain is entirely generic,
+allocates the virq, uses Remap as a parent, and uses
+irq_chip_compose_msi_msg to call into the parent and generate whatever
+goes into the MSI message.
 
+I'm still struggling a bit to see how the remapping layer can access the
+requester ID. x86 uses the irq_alloc_info to store that (the result of
+an msi_get_hwirq call), but we don't have an equivalent structure on
+arm/arm64.
+
+I'll try to hack something with my current ITS driver and come back with
+the results.
+
+Thanks,
+
+	M.
 -- 
-Regards/Gruss,
-    Boris.
-
-Sent from a fat crate under my desk. Formatting is fine.
---
+Jazz is not dead. It just smells funny...
