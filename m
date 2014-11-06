@@ -1,49 +1,60 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH RFC V3 2/3] mxs: add driver for ocotp in i.MX23 and i.MX28
-Date: Thu, 06 Nov 2014 20:47:04 +0100
-Message-ID: <6087001.lBonPVHV5K@wuerfel>
-References: <1413628372-2809-1-git-send-email-stefan.wahren@i2se.com> <2223659.OW08fe0cS1@wuerfel> <1003885907.22061.1415301932743.JavaMail.open-xchange@oxbsltgw00.schlund.de>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2] PCI: add missing DT binding for linux,pci-domain property
+Date: Thu, 6 Nov 2014 13:49:48 -0600
+Message-ID: <CAL_JsqKfV3aPuYxK2E8tS1fDjhpJFknqv1nHP+9NYHAfs_owYg@mail.gmail.com>
+References: <1415287400-30426-1-git-send-email-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1003885907.22061.1415301932743.JavaMail.open-xchange-0SF9iQWekqLZ78VGacPtK8gmgJlYmuWJ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1415287400-30426-1-git-send-email-l.stach@pengutronix.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 06 November 2014 20:25:32 Stefan Wahren wrote:
-> Hi,
-> 
-> > Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> hat am 28. Oktober 2014 um 20:13 geschrieben:
-> > [...]
-> >
-> > I came up with MTD just because a grep for OTP showed most hits in there.
-> > I have to admit that I didn't check whether those are actually for
-> > the same kind of device or for something else that goes by the same
-> > name. Having it in MTD doesn't sound too obscure though.
-> >
-> > There are a few other references to efuse or otp in the kernel, which means
-> > that at some point we probably want to have a common subsystem and user
-> > interface for this, either in MTD or standalone.
-> >
-> > Between drivers/misc/fsl_ocotp.c, drivers/soc/tegra/fuse and
-> > drivers/mfd/ab3100-otp.c, is there any commonality that we could
-> > base an abstract API on?
-> 
-> i don't have a answer to this question, but how about changing fsl_ocotp driver
-> to driver/soc/mxs/fuse with a similiar binary interface like the tegra ones.
-> 
-> Does it make sense to you?
+On Thu, Nov 6, 2014 at 9:23 AM, Lucas Stach <l.stach@pengutronix.de> wrote:
+> This property was added by 41e5c0f81d3e
+> (of/pci: Add pci_get_new_domain_nr() and of_get_pci_domain_nr())
+> without the required binding documentation. As this property
+> will be supported by a number of host bridge drivers going forward,
+> add it to the common PCI binding doc.
+>
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> ---
+> This is a non-critical fix, but may still qualify for 3.18-rc as
+> the property was added in this release cycle.
 
-I haven't looked at the drivers, so I don't know if the tegra interface
-is any better or worse than the others. Changing everyone to have the same
-interface is definitely a good idea, but of course only if the unified
-interface is a good one ;-)
+Agreed.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
+
+>
+> v2:
+> - emphasize that the property must be present and unique systemwide
+>   if used
+> ---
+>  Documentation/devicetree/bindings/pci/pci.txt | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
+> index 41aeed38926d..68c364e2f5e5 100644
+> --- a/Documentation/devicetree/bindings/pci/pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/pci.txt
+> @@ -7,3 +7,14 @@ And for the interrupt mapping part:
+>
+>  Open Firmware Recommended Practice: Interrupt Mapping
+>  http://www.openfirmware.org/1275/practice/imap/imap0_9d.pdf
+> +
+> +Additionally to the properties specified in the above standards a host bridge
+> +driver implementation may support the following properties:
+> +
+> +- linux,pci-domain:
+> +   If present this property assigns a fixed PCI domain number to a host bridge,
+> +   otherwise an unstable (across boots) unique number will be assigned.
+> +   It is required to either not set this property at all or set it for all
+> +   host bridges in the system, otherwise potentially conflicting domain numbers
+> +   may be assigned to root buses behind different host bridges. The domain
+> +   number for each host bridge in the system must be unique.
+> --
+> 2.1.1
+>
