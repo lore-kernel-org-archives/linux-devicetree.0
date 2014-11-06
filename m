@@ -1,56 +1,98 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [RFC 2/4] PCI: generic: Add support for ARM64 and MSI(x)
-Date: Thu, 6 Nov 2014 09:52:31 +0000
-Message-ID: <20141106095231.GA1923@red-moon>
-References: <1411937610-22125-1-git-send-email-suravee.suthikulpanit@amd.com>
- <2148776.X8NPqiYA6S@wuerfel>
- <20141105233921.GJ6168@google.com>
- <2659321.LYB03rL97X@wuerfel>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH] PCI: add missing DT binding for linux,pci-domain property
+Date: Thu, 6 Nov 2014 10:05:18 +0000
+Message-ID: <20141106100518.GI8916@e106497-lin.cambridge.arm.com>
+References: <1415101660-26450-1-git-send-email-l.stach@pengutronix.de>
+ <20141105231743.GI6168@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20141105231743.GI6168@google.com>
 Content-Disposition: inline
-In-Reply-To: <2659321.LYB03rL97X@wuerfel>
 Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 06, 2014 at 12:05:48AM +0000, Arnd Bergmann wrote:
-> On Wednesday 05 November 2014 16:39:21 Bjorn Helgaas wrote:
-> > On Wed, Oct 22, 2014 at 10:52:19PM +0200, Arnd Bergmann wrote:
-> > > On Wednesday 22 October 2014 16:59:14 Lorenzo Pieralisi wrote:
-> > > > On Wed, Oct 01, 2014 at 10:38:45AM +0100, Arnd Bergmann wrote:
-> > > > 
-> > > > [...]
-> > > > 
-> > > > > The arm32 implementations of pci_domain_nr/pci_proc_domain can probably be
-> > > > > removed if we change the arm32 pcibios_init_hw function to call the new
-> > > > > interfaces that set the domain number.
-> > > > 
-> > > > I wished, but it is a bit more complicated than I thought unfortunately,
-> > > > mostly because some drivers, eg cns3xxx set the domain numbers
-> > > > statically in pci_sys_data and this sets a chain of dependency that is
-> > > > not easy to untangle. I think cns3xxx is the only legacy driver that "uses"
-> > > > the domain number (in pci_sys_data) in a way that clashes with the
-> > > > generic domain_nr implementation, I need to give it more thought.
-> > > 
-> > > Just had a look at that driver, shouldn't be too hard to change, see below.
-> > > 
-> > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > 
-> > This patch is in my patchwork, but it lacks a topic & changelog and I'm not
-> > sure of its state, so I'm going to drop it for now.  Please post it again
-> > if you want me to do something with it.  I guess it only touches arch/arm,
-> > so it would probably be merged via your tree anyway.
-> 
-> Lorenzo has posted an updated version as
-> 
-> "arm: cns3xxx: pci: remove artificial dependency on pci_sys_data domain",
-> and a second patch that depends on it. That is the version we should be
-> merging, though I'm not sure through which tree.
+On Wed, Nov 05, 2014 at 11:17:43PM +0000, Bjorn Helgaas wrote:
+> On Tue, Nov 04, 2014 at 12:47:40PM +0100, Lucas Stach wrote:
+> > This property was added by 41e5c0f81d3e
+> > (of/pci: Add pci_get_new_domain_nr() and of_get_pci_domain_nr())
+> > without the required binding documentation. As this property
+> > will be supported by a number of host bridge drivers going forward,
+> > add it to the common PCI binding doc.
+> >=20
+> > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+>=20
+> I merged 41e5c0f81d3e through my tree, and I could merge something li=
+ke
+> this if a consensus develops with some acks.  But I'll just let you g=
+uys
+> handle it unless you poke me again.
 
-I am posting a v2 shortly, let's discuss the best way to merge it then.
+While I think the "linux,pci-domain" property *must* be documented, I
+would like to get a consensus first on the usage. If we agree that
+the property is mandatory to all host bridge drivers that use OF then
+we need to patch existing drivers (partially done through Lorenzo's
+patches, but other arches are ignoring it). If we say all *new* drivers
+need to use it then we also need to come up with a strategy on how to
+deal with old vs new school drivers.
 
-Thanks,
-Lorenzo
+My preferred approach is the 3rd way: "linux,pci-domain" becomes part o=
+f
+the core PCI infrastructure (and we find the common ground with ACPI).
+That way the host bridge drivers don't have to do anything, but the DT
+creators have to specify a value.
+
+Pinging Rob to try to get a peek on this thoughts.
+
+Best regards,
+Liviu
+
+>=20
+> > ---
+> > This is a non-critical fix, but may still qualify for 3.18-rc as
+> > the property was added in this release cycle.
+> > ---
+> >  Documentation/devicetree/bindings/pci/pci.txt | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Docume=
+ntation/devicetree/bindings/pci/pci.txt
+> > index 41aeed38926d..b754f786ed5e 100644
+> > --- a/Documentation/devicetree/bindings/pci/pci.txt
+> > +++ b/Documentation/devicetree/bindings/pci/pci.txt
+> > @@ -7,3 +7,13 @@ And for the interrupt mapping part:
+> > =20
+> >  Open Firmware Recommended Practice: Interrupt Mapping
+> >  http://www.openfirmware.org/1275/practice/imap/imap0_9d.pdf
+> > +
+> > +Additionally to the properties specified in the above standards a =
+host bridge
+> > +driver implementation may support the following properties:
+> > +
+> > +- linux,pci-domain:
+> > +   If present this property assigns a fixed PCI domain number to a=
+ host bridge,
+> > +   otherwise an unstable (across boots) unique number will be assi=
+gned.
+> > +   It is recommended to either not set this property at all or set=
+ it for all
+> > +   host bridges in the system, otherwise potentially conflicting d=
+omain numbers
+> > +   may be assigned to root buses behind different host bridges.
+> > --=20
+> > 2.1.1
+> >=20
+>=20
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
