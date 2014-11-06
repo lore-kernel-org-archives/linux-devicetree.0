@@ -1,89 +1,205 @@
-From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v5 2/8] phy: miphy28lp: Add PHY header file for DT x Driver
- defines
-Date: Thu, 6 Nov 2014 12:53:40 +0100
-Message-ID: <545B6144.2020503@st.com>
-References: <1415098284-11182-1-git-send-email-gabriel.fernandez@linaro.org> <1415098284-11182-3-git-send-email-gabriel.fernandez@linaro.org> <545B1C53.9010406@ti.com> <545B3FA4.8040109@st.com> <20141106112825.GC26543@x1>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141106112825.GC26543@x1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Enric Balletbo i Serra <eballetbo@iseebcn.com>
+Subject: [PATCH 02/11] ARM: dts: omap3-igep00x0: Move NAND configuration to a common place.
+Date: Thu,  6 Nov 2014 13:01:42 +0100
+Message-ID: <1415275311-6857-3-git-send-email-eballetbo@iseebcn.com>
+References: <1415275311-6857-1-git-send-email-eballetbo@iseebcn.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1415275311-6857-1-git-send-email-eballetbo@iseebcn.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org, tony@atomide.com
+Cc: javier@dowhile0.org, devicetree@vger.kernel.org, Enric Balletbo i Serra <eballetbo@iseebcn.com>
 List-Id: devicetree@vger.kernel.org
 
+At this moment all supported boards use same NAND chip, so has more sense
+move the GPMC and NAND configuration to the omap3-igep.dtsi common place.
 
-On 11/06/2014 12:28 PM, Lee Jones wrote:
-> On Thu, 06 Nov 2014, Maxime Coquelin wrote:
->
->> Hi Kishon,
->> On 11/06/2014 07:59 AM, Kishon Vijay Abraham I wrote:
->>> Hi,
->>>
->>> On Tuesday 04 November 2014 04:21 PM, Gabriel FERNANDEZ wrote:
->>>> This provides the shared header file which will be reference from both
->>>> PHY driver and its associated Device Tree node(s).
->>>>
->>>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>> ---
->>>>   include/dt-bindings/phy/phy.h | 18 ++++++++++++++++++
->>> I don't see this being used in device tree file. Are you planning to add this
->>> after -rc1 is tagged. Or else I have to create a separate branch for this file
->>> which will be merged by both me and the dt maintainer. Let me know.
->> I think we don't need to create a branch we will merged by both of us.
->>
->> What we can do that both of us apply this patch in our trees.
->> It will avoid dependencies on each others.
->>
->> What do you think?
-> This makes no sense to me.  Can you find another way to explain this
-> please?
+Signed-off-by: Enric Balletbo i Serra <eballetbo@iseebcn.com>
+---
+ arch/arm/boot/dts/omap3-igep.dtsi    | 49 ++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/omap3-igep0020.dts | 47 ---------------------------------
+ arch/arm/boot/dts/omap3-igep0030.dts | 51 ------------------------------------
+ 3 files changed, 49 insertions(+), 98 deletions(-)
 
-I apply the patch on my STi tree.
-Kishon applies the patch on his phy tree.
+diff --git a/arch/arm/boot/dts/omap3-igep.dtsi b/arch/arm/boot/dts/omap3-igep.dtsi
+index fb1040d..04a58ab 100644
+--- a/arch/arm/boot/dts/omap3-igep.dtsi
++++ b/arch/arm/boot/dts/omap3-igep.dtsi
+@@ -128,6 +128,55 @@
+ 	};
+ };
+ 
++&gpmc {
++	nand@0,0 {
++		linux,mtd-name= "micron,mt29c4g96maz";
++		reg = <0 0 4>;	/* CS0, offset 0, IO size 4 */
++		nand-bus-width = <16>;
++		gpmc,device-width = <2>;
++		ti,nand-ecc-opt = "bch8";
++
++		gpmc,sync-clk-ps = <0>;
++		gpmc,cs-on-ns = <0>;
++		gpmc,cs-rd-off-ns = <44>;
++		gpmc,cs-wr-off-ns = <44>;
++		gpmc,adv-on-ns = <6>;
++		gpmc,adv-rd-off-ns = <34>;
++		gpmc,adv-wr-off-ns = <44>;
++		gpmc,we-off-ns = <40>;
++		gpmc,oe-off-ns = <54>;
++		gpmc,access-ns = <64>;
++		gpmc,rd-cycle-ns = <82>;
++		gpmc,wr-cycle-ns = <82>;
++		gpmc,wr-access-ns = <40>;
++		gpmc,wr-data-mux-bus-ns = <0>;
++
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		partition@0 {
++			label = "SPL";
++			reg = <0 0x100000>;
++		};
++		partition@80000 {
++			label = "U-Boot";
++			reg = <0x100000 0x180000>;
++		};
++		partition@1c0000 {
++			label = "Environment";
++			reg = <0x280000 0x100000>;
++		};
++		partition@280000 {
++			label = "Kernel";
++			reg = <0x380000 0x300000>;
++		};
++		partition@780000 {
++			label = "Filesystem";
++			reg = <0x680000 0x1f980000>;
++		};
++	};
++};
++
+ &i2c1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c1_pins>;
+diff --git a/arch/arm/boot/dts/omap3-igep0020.dts b/arch/arm/boot/dts/omap3-igep0020.dts
+index 87d77e4..731ab8f 100644
+--- a/arch/arm/boot/dts/omap3-igep0020.dts
++++ b/arch/arm/boot/dts/omap3-igep0020.dts
+@@ -209,53 +209,6 @@
+ 	ranges = <0 0 0x00000000 0x1000000>,	/* CS0: 16MB for NAND */
+ 		 <5 0 0x2c000000 0x01000000>;
+ 
+-	nand@0,0 {
+-		linux,mtd-name= "micron,mt29c4g96maz";
+-		reg = <0 0 4>;	/* CS0, offset 0, IO size 4 */
+-		nand-bus-width = <16>;
+-		gpmc,device-width = <2>;
+-		ti,nand-ecc-opt = "bch8";
+-
+-		gpmc,sync-clk-ps = <0>;
+-		gpmc,cs-on-ns = <0>;
+-		gpmc,cs-rd-off-ns = <44>;
+-		gpmc,cs-wr-off-ns = <44>;
+-		gpmc,adv-on-ns = <6>;
+-		gpmc,adv-rd-off-ns = <34>;
+-		gpmc,adv-wr-off-ns = <44>;
+-		gpmc,we-off-ns = <40>;
+-		gpmc,oe-off-ns = <54>;
+-		gpmc,access-ns = <64>;
+-		gpmc,rd-cycle-ns = <82>;
+-		gpmc,wr-cycle-ns = <82>;
+-		gpmc,wr-access-ns = <40>;
+-		gpmc,wr-data-mux-bus-ns = <0>;
+-
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-
+-		partition@0 {
+-			label = "SPL";
+-			reg = <0 0x100000>;
+-		};
+-		partition@80000 {
+-			label = "U-Boot";
+-			reg = <0x100000 0x180000>;
+-		};
+-		partition@1c0000 {
+-			label = "Environment";
+-			reg = <0x280000 0x100000>;
+-		};
+-		partition@280000 {
+-			label = "Kernel";
+-			reg = <0x380000 0x300000>;
+-		};
+-		partition@780000 {
+-			label = "Filesystem";
+-			reg = <0x680000 0x1f980000>;
+-		};
+-	};
+-
+ 	ethernet@gpmc {
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&smsc9221_pins>;
+diff --git a/arch/arm/boot/dts/omap3-igep0030.dts b/arch/arm/boot/dts/omap3-igep0030.dts
+index 2df1396..5862380 100644
+--- a/arch/arm/boot/dts/omap3-igep0030.dts
++++ b/arch/arm/boot/dts/omap3-igep0030.dts
+@@ -65,57 +65,6 @@
+ 	};
+ };
+ 
+-&gpmc {
+-	ranges = <0 0 0x00000000 0x1000000>;	/* CS0: 16MB for NAND */
+-
+-	nand@0,0 {
+-		linux,mtd-name= "micron,mt29c4g96maz";
+-		reg = <0 0 4>;	/* CS0, offset 0, IO size 4 */
+-		nand-bus-width = <16>;
+-		gpmc,device-width = <2>;
+-		ti,nand-ecc-opt = "bch8";
+-
+-		gpmc,sync-clk-ps = <0>;
+-		gpmc,cs-on-ns = <0>;
+-		gpmc,cs-rd-off-ns = <44>;
+-		gpmc,cs-wr-off-ns = <44>;
+-		gpmc,adv-on-ns = <6>;
+-		gpmc,adv-rd-off-ns = <34>;
+-		gpmc,adv-wr-off-ns = <44>;
+-		gpmc,we-off-ns = <40>;
+-		gpmc,oe-off-ns = <54>;
+-		gpmc,access-ns = <64>;
+-		gpmc,rd-cycle-ns = <82>;
+-		gpmc,wr-cycle-ns = <82>;
+-		gpmc,wr-access-ns = <40>;
+-		gpmc,wr-data-mux-bus-ns = <0>;
+-
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-
+-		partition@0 {
+-			label = "SPL";
+-			reg = <0 0x100000>;
+-		};
+-		partition@80000 {
+-			label = "U-Boot";
+-			reg = <0x100000 0x180000>;
+-		};
+-		partition@1c0000 {
+-			label = "Environment";
+-			reg = <0x280000 0x100000>;
+-		};
+-		partition@280000 {
+-			label = "Kernel";
+-			reg = <0x380000 0x300000>;
+-		};
+-		partition@780000 {
+-			label = "Filesystem";
+-			reg = <0x680000 0x1f980000>;
+-		};
+-	};
+-};
+-
+ &uart2 {
+        pinctrl-names = "default";
+        pinctrl-0 = <&uart2_pins>;
+-- 
+1.9.1
 
-At the end, both STi and phy branches will be merged in Linus tree,
-with no conflicts.
-
-This is what we are doing for the STiH407 reset DT bindings with Philipp Z.
-
-Regards,
-Maxime
->
->>> Thanks
->>> Kishon
->>>>   1 file changed, 18 insertions(+)
->>>>   create mode 100644 include/dt-bindings/phy/phy.h
->>>>
->>>> diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
->>>> new file mode 100644
->>>> index 0000000..e8c6a3f
->>>> --- /dev/null
->>>> +++ b/include/dt-bindings/phy/phy.h
->>>> @@ -0,0 +1,18 @@
->>>> +/*
->>>> + *
->>>> + * This header provides constants for the phy framework
->>>> + *
->>>> + * Copyright (C) 2014 STMicroelectronics
->>>> + * Author: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
->>>> + * License terms:  GNU General Public License (GPL), version 2
->>>> + */
->>>> +
->>>> +#ifndef _DT_BINDINGS_PHY
->>>> +#define _DT_BINDINGS_PHY
->>>> +
->>>> +#define PHY_TYPE_SATA		1
->>>> +#define PHY_TYPE_PCIE		2
->>>> +#define PHY_TYPE_USB2		3
->>>> +#define PHY_TYPE_USB3		4
->>>> +
->>>> +#endif /* _DT_BINDINGS_PHY */
->>>>
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
