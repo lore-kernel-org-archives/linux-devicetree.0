@@ -1,29 +1,56 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [V10 PATCH 2/2] irqchip: gicv2m: Add supports for ARM GICv2m
- MSI(-X)
-Date: Thu, 6 Nov 2014 01:49:21 +0100 (CET)
-Message-ID: <alpine.DEB.2.11.1411060146050.24960@nanos>
-References: <1415052977-26036-1-git-send-email-suravee.suthikulpanit@amd.com> <1415052977-26036-3-git-send-email-suravee.suthikulpanit@amd.com> <5458CE31.3040404@linux.intel.com> <545ABB4C.8010103@amd.com> <545ABF6C.1000308@amd.com>
+From: leizhen <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/1] of/fdt: simplify early_init_dt_verify
+Date: Thu, 6 Nov 2014 08:59:10 +0800
+Message-ID: <545AC7DE.8080602@huawei.com>
+References: <1414497065-9808-1-git-send-email-thunder.leizhen@huawei.com> <20141104162054.4CC9BC423D0@trevor.secretlab.ca> <CAErSpo6Upf=QPn7=Cd=XDazXVnSPhb-9gDZjH9_CcY37-xUKLw@mail.gmail.com> <5459740B.6000906@huawei.com> <CACxGe6tkOWtqtt9nVk2R=NqsEVZBDCV-1deVhEXf1pAGS7YhFA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <545ABF6C.1000308@amd.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Suravee Suthikulanit <suravee.suthikulpanit@amd.com>
-Cc: Jiang Liu <jiang.liu@linux.intel.com>, marc.zyngier@arm.com, mark.rutland@arm.com, jason@lakedaemon.net, Catalin.Marinas@arm.com, Will.Deacon@arm.com, liviu.dudau@arm.com, Harish.Kasiviswanathan@amd.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACxGe6tkOWtqtt9nVk2R=NqsEVZBDCV-1deVhEXf1pAGS7YhFA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 5 Nov 2014, Suravee Suthikulanit wrote:
-> On 11/5/2014 6:05 PM, Suravee Suthikulanit wrote:
-> > - Overall, it seems that msi_domain_alloc() could be quite different
-> > across architectures. Would it be possible to declare this function as
-> > weak, and allow arch to override (similar to arch_setup_msi_irq)?
+On 2014/11/5 21:52, Grant Likely wrote:
+> On Wed, Nov 5, 2014 at 12:49 AM, leizhen <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+>> On 2014/11/5 1:03, Bjorn Helgaas wrote:
+>>> On Tue, Nov 4, 2014 at 9:20 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>>> On Tue, 28 Oct 2014 19:51:05 +0800
+>>>> , Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>>>>  wrote:
+>>>>> put off initial_boot_params = params; until all checks finished. If any check
+>>>>> failed, initial_boot_params is equal NULL, base upon bss segment initial value.
+>>>>>
+>>>>> Signed-off-by: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>>>>
+>>>> Interesting. I received exactly the same patch from Bjorn Helgaas. Were
+>>>> the two of you working together, or is this merely a coincedence?
+>>>
+>>> LOL, that's really funny.  We're not working together, so it's a total
+>>> coincidence :)
+>>>
+>> Haha!!!
+>>
+>> Hi, Bjorn Helgaas. Nice to meet you.
 > 
-> Actually, declaring "msi_domain_ops" as non-static, and allow other code to
-> override the .alloc and .free?
+> I've applied Bjorn's version, but since the diffstat is *identical*,
+> I've put both of your s-o-b lines into it.
+> 
+> BTW Lei, what prompted you to write this patch? Was there a bug you
+> were fixing, or did you just notice the inconsistency and decide to
+> fix it?
+> 
+> g.
+> 
+> .
+> 
+OK
 
-Why do you want to do that?
+The latter case. Just found it when I reading code.
 
-Thanks,
-
-	tglx
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
