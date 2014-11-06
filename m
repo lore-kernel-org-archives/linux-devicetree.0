@@ -1,72 +1,70 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: [PATCH v5 06/48] gpio-poweroff: Drop reference to pm_power_off from devicetree bindings
-Date: Thu,  6 Nov 2014 08:42:50 -0800
-Message-ID: <1415292213-28652-7-git-send-email-linux@roeck-us.net>
-References: <1415292213-28652-1-git-send-email-linux@roeck-us.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415292213-28652-1-git-send-email-linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH 3/3] drm/panel: add Hitachi TX23D38VM0CAA 9" WVGA TFT LCD panel
+Date: Thu,  6 Nov 2014 17:44:35 +0100
+Message-ID: <1415292275-29726-3-git-send-email-l.stach@pengutronix.de>
+References: <1415292275-29726-1-git-send-email-l.stach@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1415292275-29726-1-git-send-email-l.stach@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-pm_power_off is an implementation detail. Replace it with a more generic
-description of the driver's functionality.
-
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
----
-v5:
-- Rebase to v3.18-rc3
-v4:
-- No change
-v3:
-- Replace poweroff in all newly introduced variables and in text
-  with power_off or power-off as appropriate
-v2:
-- No change
-
- Documentation/devicetree/bindings/gpio/gpio-poweroff.txt | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt b/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt
-index d4eab92..78262de 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt
-@@ -2,12 +2,12 @@ Driver a GPIO line that can be used to turn the power off.
- 
- The driver supports both level triggered and edge triggered power off.
- At driver load time, the driver will request the given gpio line and
--install a pm_power_off handler. If the optional properties 'input' is
--not found, the GPIO line will be driven in the inactive
-+install a handler to power off the system. If the optional properties
-+'input' is not found, the GPIO line will be driven in the inactive
- state. Otherwise its configured as an input.
- 
--When the pm_power_off is called, the gpio is configured as an output,
--and drive active, so triggering a level triggered power off
-+When the the power-off handler is called, the gpio is configured as an
-+output, and drive active, so triggering a level triggered power off
- condition. This will also cause an inactive->active edge condition, so
- triggering positive edge triggered power off. After a delay of 100ms,
- the GPIO is set to inactive, thus causing an active->inactive edge,
-@@ -24,7 +24,7 @@ Required properties:
- 
- Optional properties:
- - input : Initially configure the GPIO line as an input. Only reconfigure
--  it to an output when the pm_power_off function is called. If this optional
-+  it to an output when the power-off handler is called. If this optional
-   property is not specified, the GPIO is initialized as an output in its
-   inactive state.
- 
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIHRoZSBIaXRhY2hpIFRYMjNEMzhWTTBDQUEgOSIg
+V1ZHQSBURlQgTENEIHBhbmVsCnRvIHRoZSBzaW1wbGUtcGFuZWwgZHJpdmVyLgoKVGhpcyBwYW5l
+bCBpcyBjb25uZWN0ZWQgdmlhIExWRFMgYW5kIHVzZXMgdGhlIGRhdGEgZW5hYmxlIHNpZ25hbCBm
+b3IKdGltaW5nLiBTaW5jZSBIU1lOQy9WU1lOQyBhcmUgaWdub3JlZCwgdGhlIHNwbGl0IGJldHdl
+ZW4gc3luYyBsZW5ndGggYW5kCnBvcmNoZXMgaXMgYXJiaXRyYXJ5LCBhcyBsb25nIGFzIHRoZSBj
+b21wbGV0ZSBob3Jpem9udGFsIGJsYW5raW5nIGludGVydmFsCmlzIDI1NiBjbG9ja3MsIGFuZCB0
+aGUgdmVydGljYWwgYmxhbmtpbmcgaW50ZXJ2YWwgaXMgNDUgbGluZXMuCgpTaWduZWQtb2ZmLWJ5
+OiBMdWNhcyBTdGFjaCA8bC5zdGFjaEBwZW5ndXRyb25peC5kZT4KLS0tCiAuLi4vYmluZGluZ3Mv
+cGFuZWwvaGl0LHR4MjNkMzh2bTBjYWEudHh0ICAgICAgICAgICB8ICA3ICsrKysrKwogZHJpdmVy
+cy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jICAgICAgICAgICAgICAgfCAyNiArKysrKysr
+KysrKysrKysrKysrKysrCiAyIGZpbGVzIGNoYW5nZWQsIDMzIGluc2VydGlvbnMoKykKIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGFuZWwvaGl0
+LHR4MjNkMzh2bTBjYWEudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3BhbmVsL2hpdCx0eDIzZDM4dm0wY2FhLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9wYW5lbC9oaXQsdHgyM2QzOHZtMGNhYS50eHQKbmV3IGZpbGUgbW9k
+ZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAwMDAwLi4wNGNhYWFlMTlhZjYKLS0tIC9kZXYvbnVsbAor
+KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGFuZWwvaGl0LHR4MjNkMzh2
+bTBjYWEudHh0CkBAIC0wLDAgKzEsNyBAQAorSGl0YWNoaSBMdGQuIENvcnBvcmF0aW9uIDkiIFdW
+R0EgKDgwMHg0ODApIFRGVCBMQ0QgcGFuZWwKKworUmVxdWlyZWQgcHJvcGVydGllczoKKy0gY29t
+cGF0aWJsZTogc2hvdWxkIGJlICJoaXQsdHgyM2QzOHZtMGNhYSIKKworVGhpcyBiaW5kaW5nIGlz
+IGNvbXBhdGlibGUgd2l0aCB0aGUgc2ltcGxlLXBhbmVsIGJpbmRpbmcsIHdoaWNoIGlzIHNwZWNp
+ZmllZAoraW4gc2ltcGxlLXBhbmVsLnR4dCBpbiB0aGlzIGRpcmVjdG9yeS4KZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyBiL2RyaXZlcnMvZ3B1L2RybS9w
+YW5lbC9wYW5lbC1zaW1wbGUuYwppbmRleCAxNTlmZDg3ODFmOTkuLjdkMGY1MzkwYmIyMyAxMDA2
+NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCisrKyBiL2RyaXZl
+cnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwpAQCAtNTQyLDYgKzU0MiwyOSBAQCBzdGF0
+aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2MgZm94bGlua19mbDUwMHd2cjAwX2EwdCA9IHsKIAl9
+LAogfTsKIAorc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIGhpdGFjaGlfdHgy
+M2QzOHZtMGNhYV9tb2RlID0geworCS5jbG9jayA9IDMzMzMzLAorCS5oZGlzcGxheSA9IDgwMCwK
+KwkuaHN5bmNfc3RhcnQgPSA4MDAgKyA4NSwKKwkuaHN5bmNfZW5kID0gODAwICsgODUgKyA4NiwK
+KwkuaHRvdGFsID0gODAwICsgODUgKyA4NiArIDg1LAorCS52ZGlzcGxheSA9IDQ4MCwKKwkudnN5
+bmNfc3RhcnQgPSA0ODAgKyAxNiwKKwkudnN5bmNfZW5kID0gNDgwICsgMTYgKyAxMywKKwkudnRv
+dGFsID0gNDgwICsgMTYgKyAxMyArIDE2LAorCS52cmVmcmVzaCA9IDYwLAorfTsKKworc3RhdGlj
+IGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGhpdGFjaGlfdHgyM2QzOHZtMGNhYSA9IHsKKwkubW9k
+ZXMgPSAmaGl0YWNoaV90eDIzZDM4dm0wY2FhX21vZGUsCisJLm51bV9tb2RlcyA9IDEsCisJLmJw
+YyA9IDYsCisJLnNpemUgPSB7CisJCS53aWR0aCA9IDE5NSwKKwkJLmhlaWdodCA9IDExNywKKwl9
+LAorfTsKKwogc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIGlubm9sdXhfZzEy
+MWkxX2wwMV9tb2RlID0gewogCS5jbG9jayA9IDcxMDAwLAogCS5oZGlzcGxheSA9IDEyODAsCkBA
+IC02OTAsNiArNzEzLDkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgcGxhdGZv
+cm1fb2ZfbWF0Y2hbXSA9IHsKIAkJLmNvbXBhdGlibGUgPSAiZm94bGluayxmbDUwMHd2cjAwLWEw
+dCIsCiAJCS5kYXRhID0gJmZveGxpbmtfZmw1MDB3dnIwMF9hMHQsCiAJfSwgeworCQkuY29tcGF0
+aWJsZSA9ICJoaXQsdHgyM2QzOHZtMGNhYSIsCisJCS5kYXRhID0gJmhpdGFjaGlfdHgyM2QzOHZt
+MGNhYQorCX0sIHsKIAkJLmNvbXBhdGlibGUgPSJpbm5vbHV4LGcxMjFpMS1sMDEiLAogCQkuZGF0
+YSA9ICZpbm5vbHV4X2cxMjFpMV9sMDEKIAl9LCB7Ci0tIAoyLjEuMQoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
