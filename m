@@ -1,69 +1,55 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCHv0 2/3] rtc: rtc-isl12057: fix isil vs isl naming for
- intersil
-Date: Fri, 7 Nov 2014 07:39:53 +0100
-Message-ID: <20141107063953.GC10432@pengutronix.de>
-References: <cover.1415222752.git.arno@natisbad.org>
- <2ac5b475fd757ea771296ea0731de75d963999ef.1415222752.git.arno@natisbad.org>
- <20141106053253.GK8509@sirena.org.uk>
- <874mucne0y.fsf@natisbad.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <874mucne0y.fsf@natisbad.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnaud Ebalard <arno@natisbad.org>
-Cc: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Linus Walleij <linus.walleij@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-doc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>, Rob Landley <rob@landley.net>, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Peter Huewe <peter.huewe@infineon.com>, Thierry Reding <treding@nvidia.com>, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>
+From: Kevin Cernekee <cernekee@gmail.com>
+Subject: [PATCH V4 00/14] genirq endian fixes; bcm7120/brcmstb IRQ updates
+Date: Thu,  6 Nov 2014 22:44:15 -0800
+Message-ID: <1415342669-30640-1-git-send-email-cernekee@gmail.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: tglx@linutronix.de, jason@lakedaemon.net, linux-sh@vger.kernel.org
+Cc: arnd@arndb.de, f.fainelli@gmail.com, ralf@linux-mips.org, sergei.shtylyov@cogentembedded.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Arnaud,
+V3->V4:
 
-On Thu, Nov 06, 2014 at 11:46:21PM +0100, Arnaud Ebalard wrote:
-> Mark Brown <broonie@kernel.org> writes:
-> > On Wed, Nov 05, 2014 at 10:42:41PM +0100, Arnaud Ebalard wrote:
-> >
-> >> When Intersil ISL12057 driver was introduced by commit 70e123373c0=
-5
-> >> (rtc: Add support for Intersil ISL12057 I2C RTC chip), the vendor
-> >> prefix 'isl' was used instead of the expected 'isil' (Intersil
-> >> NASDAQ symbol). Recently, a patch from Philip Zabel (7a6540ca856a,
-> >> ARM: mvebu: Change vendor prefix for Intersil Corporation to isil)
-> >> fixed that prefix in ReadyNAS devices .dts files (AFAICT, the only
-> >> kernel users at the moment).
-> >
-> > They may be the only in kernel users but someone with an out of tre=
-e DT
-> > may be using the existing prefix, we shouldn't break compatibility =
-with
-> > them so we should support both compatible strings even if we want t=
-o
-> > deprecate the isl, one.
->=20
-> Updating the patch in the following way should make it possible to
-> support out-of-tree users while avoiding additional uses of 'isl':=20
->=20
-> - have two compatible entries in isl12057_dt_match struct instead of =
-one
->   i.e.:
->=20
->     static const struct of_device_id isl12057_dt_match[] =3D {
->    	{ .compatible =3D "isl,isl12057" },
->    	{ .compatible =3D "isil,isl12057" },
->     	{ },
->     };
->=20
->   I think it matches the situation we have.
-This should work. I suggest to add a comment to the obsolete one to
-state not to use it for new boards.
+ - Fix buildbot bisectability warning on patch 02/14 (missing include)
 
-Best regards
-Uwe
+ - Add kernel-doc text for the new reg_{readl,writel} struct members and
+   IRQ_GC_BE_IO flag
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+
+Kevin Cernekee (14):
+  sh: Eliminate unused irq_reg_{readl,writel} accessors
+  genirq: Generic chip: Change irq_reg_{readl,writel} arguments
+  genirq: Generic chip: Allow irqchip drivers to override
+    irq_reg_{readl,writel}
+  genirq: Generic chip: Add big endian I/O accessors
+  irqchip: brcmstb-l2: Eliminate dependency on ARM code
+  irqchip: bcm7120-l2: Eliminate bad IRQ check
+  irqchip: bcm7120-l2, brcmstb-l2: Remove ARM Kconfig dependency
+  irqchip: bcm7120-l2: Make sure all register accesses use base+offset
+  irqchip: bcm7120-l2: Fix missing nibble in gc->unused mask
+  irqchip: bcm7120-l2: Use gc->mask_cache to simplify suspend/resume
+    functions
+  irqchip: bcm7120-l2: Extend driver to support 64+ bit controllers
+  irqchip: bcm7120-l2: Decouple driver from brcmstb-l2
+  irqchip: bcm7120-l2: Convert driver to use irq_reg_{readl,writel}
+  irqchip: brcmstb-l2: Convert driver to use irq_reg_{readl,writel}
+
+ .../interrupt-controller/brcm,bcm7120-l2-intc.txt  |  26 ++-
+ arch/arm/mach-bcm/Kconfig                          |   1 +
+ arch/sh/boards/mach-se/7343/irq.c                  |   3 -
+ arch/sh/boards/mach-se/7722/irq.c                  |   3 -
+ drivers/irqchip/Kconfig                            |   6 +-
+ drivers/irqchip/Makefile                           |   4 +-
+ drivers/irqchip/irq-atmel-aic.c                    |  40 ++---
+ drivers/irqchip/irq-atmel-aic5.c                   |  65 ++++----
+ drivers/irqchip/irq-bcm7120-l2.c                   | 174 +++++++++++++--------
+ drivers/irqchip/irq-brcmstb-l2.c                   |  41 +++--
+ drivers/irqchip/irq-sunxi-nmi.c                    |   4 +-
+ drivers/irqchip/irq-tb10x.c                        |   4 +-
+ include/linux/irq.h                                |  32 +++-
+ kernel/irq/generic-chip.c                          |  36 +++--
+ 14 files changed, 263 insertions(+), 176 deletions(-)
+
+-- 
+2.1.1
+
