@@ -1,55 +1,43 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH 3/5] i2c: sh_mobile: Document SoC-specific bindings
-Date: Fri, 7 Nov 2014 18:53:48 +0100
-Message-ID: <20141107175347.GE3656@katana>
-References: <1415274730-310-1-git-send-email-geert+renesas@glider.be>
- <1415274730-310-4-git-send-email-geert+renesas@glider.be>
+From: =?windows-1252?Q?Andreas_F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH POST V2] ARM: dts: Add am57xx-beagle-x15
+Date: Fri, 07 Nov 2014 19:33:43 +0100
+Message-ID: <545D1087.3080100@suse.de>
+References: <1415382433-31772-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="EgVrEAR5UttbsTXg"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1415274730-310-4-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415382433-31772-1-git-send-email-nm-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, beagleboard-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, gerald-xujr6ya/RELK0SuXxyvBAPegYHeGw8Jk@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, trini-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---EgVrEAR5UttbsTXg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Nov 06, 2014 at 12:52:08PM +0100, Geert Uytterhoeven wrote:
-> Explicitly list the various SoC-specific compatible properties.
-> This allows checkpatch to validate DTSes.
+Am 07.11.2014 um 18:47 schrieb Nishanth Menon:
+> BeagleBoard-X15 is the next generation Open Source Hardware
+> BeagleBoard based on TI's AM5728 SoC featuring dual core 1.5GHz A15
+> processor. The platform features 2GB DDR3L (w/dual 32bit busses),
+> eSATA, 3 USB3.0 ports, integrated HDMI (1920x1080@60), separate LCD
+> port, video In port, 4GB eMMC, uSD, Analog audio in/out, dual 1G
+> Ethernet.
 >=20
-> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> For more information, refer to:
+> BeagleBoard-X15 Wiki:
+> http://www.elinux.org/Beagleboard:BeagleBoard-X15
 
-Applied to for-next, thanks! I guess the other patches go via Simon.
+That page is very empty... is it the correct URL?
 
+Regards,
+Andreas
 
---EgVrEAR5UttbsTXg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUXQcrAAoJEBQN5MwUoCm279MP/0CXxHWFTfQM+26Ne4V6i5D0
-J6utees7cAgs7DG669zkhTNDIbWDNak8phMJsmRDXkxB2rEQNmCdbSkgslC0jsCr
-8ErQk9rKbbYfqWKZMsXFUU1rUhw347Ez3MHgtQpI7oHjflDLcYRttRKXWJwM7vsV
-M0Ln44CH8+IRlAq2tlm590/I1Her5AvYgfUoln3HHxvkt0t++8X9sZ49hW00ylkL
-7fpwv5FnC7vvR/GYVc7rHQSKEWKUrDvFJSbiJa9YVPOAoQRFpolEBkPImwT0LIgs
-HzIKA9MWlfsusu6lf66rJMsyFZPX98iWnVfaMQTWVTmpBuZhAWNeND7ngIwGkizu
-1Q2+7xe779fuvj4/++pB5+Rt3UM3k9zC0HQghwZUicWdqbPhSq+Zog4R3mwyWNma
-R4n2Yk7unk7qzizxLNd2GHpEdipn4oCRtzmSZy7/fkPln0G8Atf4PJaLW7akcZku
-kAYFJJ17AxUZ7GV0IUM1vp1QYg6SXBmbf+7RNVnmujrgF3FZQjJ8uxiz3+sNER92
-QiXUS6EO1YwC8QyeOIn3JjsXuo1xmV16vQo/lzRb2cJGYniC5aaKWQoytbyKVt27
-2eRLV2uenmROTUsXXHVP8ufcMW1ZSCKznzmF4BIpRRn4Ws98TSyK5x/pzQqspl0e
-ec1inWnUSs1RlYEZK3+N
-=r+Fz
------END PGP SIGNATURE-----
-
---EgVrEAR5UttbsTXg--
+--=20
+SUSE LINUX GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 21284 AG N=FCrn=
+berg
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
