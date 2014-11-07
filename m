@@ -1,48 +1,54 @@
-From: YoungJun Cho <yj44.cho@samsung.com>
-Subject: [PATCH 4/4] ARM: dts: add mipi dsi device node to exynos4415.dtsi
-Date: Fri, 07 Nov 2014 15:12:27 +0900
-Message-ID: <1415340747-27904-5-git-send-email-yj44.cho@samsung.com>
-References: <1415340747-27904-1-git-send-email-yj44.cho@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1415340747-27904-1-git-send-email-yj44.cho@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org
-Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, kyungmin.park@samsung.com, inki.dae@samsung.com, jy0922.shim@samsung.com, sw0312.kim@samsung.com, a.hajda@samsung.com, cw00.choi@samsung.com, kgene.kim@samsung.com
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: [RFC] Add of_path property for all devices with a node
+Date: Fri, 07 Nov 2014 17:33:51 +1100
+Message-ID: <1415342031.4925.27.camel@kernel.crashing.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds mipi dsi device node to exynos4415.dtsi.
+Hey folks ! This is not (yet) a formal patch submission but...
 
-Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
----
- arch/arm/boot/dts/exynos4415.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+So I've been annoyed lately with having a bunch of devices such as i2c
+eeproms (for use by VPDs, server world !) and other bits and pieces that
+I want to be able to identify from userspace, and possibly provide
+additional data about from FW.
 
-diff --git a/arch/arm/boot/dts/exynos4415.dtsi b/arch/arm/boot/dts/exynos4415.dtsi
-index 30acb3a..6105236 100644
---- a/arch/arm/boot/dts/exynos4415.dtsi
-+++ b/arch/arm/boot/dts/exynos4415.dtsi
-@@ -246,6 +246,21 @@
- 			status = "disabled";
- 		};
- 
-+		dsi_0: dsi@11C80000 {
-+			compatible = "samsung,exynos4415-mipi-dsi";
-+			reg = <0x11C80000 0x10000>;
-+			interrupts = <0 83 0>;
-+			samsung,phy-type = <0>;
-+			samsung,power-domain = <&pd_lcd0>;
-+			phys = <&mipi_phy 1>;
-+			phy-names = "dsim";
-+			clocks = <&cmu CLK_DSIM0>, <&cmu CLK_SCLK_MIPI0>;
-+			clock-names = "bus_clk", "pll_clk";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		hsotg: hsotg@12480000 {
- 			compatible = "samsung,s3c6400-hsotg";
- 			reg = <0x12480000 0x20000>;
--- 
-1.9.0
+Basically, it boils down to correlating the sysfs device with the OF
+tree device node, so that user space can use device-tree info such as
+additional "location" or "label" (or whatever else we can come up with)
+propreties to identify a given device, or get some attributes of use
+about it, etc...
+
+Now, so far, we've done that in some subsystem in a fairly ad-hoc basis
+using "devspec" properties. For example, PCI creates them if it can
+correlate the probed device with a DT node. Some powerpc specific busses
+do that too.
+
+However, i2c doesn't and it would be nice to have something more generic
+since technically any device can have a corresponding device tree node.
+
+So I came up with this patch, it seems to work well for me. I'm adding
+an "of_path" attribute to not conflict with the existing "devspec" one
+just for the sake of this experiment (plus "devspec" sucks). Long run,
+we might want to use of_path and leave a "devspec" symlink to of_path on
+the few busses that currently have devspec (pci and some powerpc
+specific ones).
+
+Comments ?
+
+Cheers,
+Ben.
+
+
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
