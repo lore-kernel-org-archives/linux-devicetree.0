@@ -1,49 +1,80 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [PATCH v2 06/11] memory: atmel-ebi: add DT bindings documentation
-Date: Fri, 7 Nov 2014 17:19:33 +0100
-Message-ID: <CAAObsKDkqksPyidfQmcHtShd3u7AFOd1RwLh3FRWPus2KjnBQA@mail.gmail.com>
-References: <1415203287-21517-1-git-send-email-boris.brezillon@free-electrons.com>
- <1415203287-21517-7-git-send-email-boris.brezillon@free-electrons.com>
- <CAL_JsqJvT-gnr6AYHq42qfgS+ckZ1y6DFiPK5+-MBhHefB8_Sg@mail.gmail.com> <20141107164940.663f5423@bbrezillon>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v5 3/5] regulator: of: Add regulator desc param to
+ of_get_regulator_init_data()
+Date: Fri, 7 Nov 2014 15:07:43 +0000
+Message-ID: <20141107150743.GR8509@sirena.org.uk>
+References: <1415365205-27630-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1415365205-27630-4-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141107164940.663f5423@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Rob Herring <robherring2@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ji10MhcQ4llII8Lj"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1415365205-27630-4-git-send-email-javier.martinez@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 7 November 2014 16:49, Boris Brezillon
-<boris.brezillon@free-electrons.com> wrote:
-> On Fri, 7 Nov 2014 09:21:39 -0600
-> Rob Herring <robherring2@gmail.com> wrote:
->
->> On Wed, Nov 5, 2014 at 10:01 AM, Boris Brezillon
->> <boris.brezillon@free-electrons.com> wrote:
->> > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
->>
->> Perhaps some commit msg?
->
-> Yes, I was just lazy and though this series would make another round
-> anyway :-).
->
-> I'll add a commit log to all my commits...
->
->>
->> While this binding seems mostly okay to me, this is the 2nd memory
->> controller binding I've looked at in the last day [1]. There are
->> probably some others already as well. This makes me think we need a
->> generic binding here. At least the node structure and how we define
->> chip selects should be common.
->
-> Sure.
-> Any suggestion ?
 
-I unfortunately cannot see much benefit to a generic binding, but
-maybe that's because the one in T124 is a bit special? I'm very
-interested in hearing proposals though.
+--ji10MhcQ4llII8Lj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
+On Fri, Nov 07, 2014 at 02:00:03PM +0100, Javier Martinez Canillas wrote:
 
-Tomeu
+> -	initdata =3D of_get_regulator_init_data(dev, np);
+>  	sreg =3D devm_kzalloc(dev, sizeof(*sreg), GFP_KERNEL);
+>  	if (!sreg)
+>  		return -ENOMEM;
+> -	sreg->initdata =3D initdata;
+>  	sreg->name =3D of_get_property(np, "regulator-name", NULL);
+>  	rdesc =3D &sreg->rdesc;
+> +	initdata =3D of_get_regulator_init_data(dev, np, rdesc);
+> +	sreg->initdata =3D initdata;
+>  	rdesc->name =3D sreg->name;
+>  	rdesc->type =3D REGULATOR_VOLTAGE;
+>  	rdesc->owner =3D THIS_MODULE;
+
+This is using the regulator descriptor before it is initialized which
+doesn't seem ideal...
+
+> +++ b/include/linux/regulator/of_regulator.h
+> @@ -6,6 +6,8 @@
+>  #ifndef __LINUX_OF_REG_H
+>  #define __LINUX_OF_REG_H
+> =20
+> +#include <linux/regulator/driver.h>
+> +
+>  struct of_regulator_match {
+>  	const char *name;
+>  	void *driver_data;
+> @@ -16,14 +18,16 @@ struct of_regulator_match {
+>  #if defined(CONFIG_OF)
+>  extern struct regulator_init_data
+>  	*of_get_regulator_init_data(struct device *dev,
+> -				    struct device_node *node);
+> +				    struct device_node *node,
+> +				    const struct regulator_desc *desc);
+
+This is just adding the include to get the declaration of regulator_desc
+as far as I can see, add a forward declaration of it instead.
+
+--ji10MhcQ4llII8Lj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUXOA+AAoJECTWi3JdVIfQym0H/A0rtJd8H5YsHQ7oraSjw6d3
+A2sqYgqaQgLMQEebo0uv4LNEsWyAjAU2T5nEMqPNl7r0aJN9TgJyLPGinwFtghW6
+HiM+7qsXrtteJ/NwATIcg/kVjlMSxW/8pO515jxBSWMogOflO2W8ySwjpR1/COTj
+mw0OKgzmt4b2by90nutp4RrwNC2lDLMRjuTw9SnK+zDuUGhSqKQMvDTw3rtiqNWT
+CVZNu8QkcAll0qEPK7/sEYl001GVjV+lV4RtdaMhjZCRZWXoyfgbBJNUGxwrWMy4
+zj0vYyb7bpqyM9/C5ZCAAFxKkhgevVAPNmNcanDApAqK0d1yIXwS/yuWn1cbzwI=
+=f0Zj
+-----END PGP SIGNATURE-----
+
+--ji10MhcQ4llII8Lj--
