@@ -1,223 +1,76 @@
-From: Beomho Seo <beomho.seo@samsung.com>
-Subject: [PATCH 2/5] regulator: rt5033: Add RT5033 Regulator device driver
-Date: Fri, 07 Nov 2014 11:52:04 +0900
-Message-ID: <1415328727-16245-3-git-send-email-beomho.seo@samsung.com>
-References: <1415328727-16245-1-git-send-email-beomho.seo@samsung.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <1415328727-16245-1-git-send-email-beomho.seo@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Cc: sameo@linux.intel.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, kyungmin.park@samsung.com, cw00.choi@samsung.com, jonghwa3.lee@samsung.com, geunsik.lim@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, Beomho Seo <beomho.seo@samsung.com>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH V2 1/2] imx-drm: imx-hdmi: split imx soc specific code
+ from imx-hdmi
+Date: Fri, 07 Nov 2014 10:56:49 +0800
+Message-ID: <545C34F1.5020206@rock-chips.com>
+References: <1415192385-6572-1-git-send-email-andy.yan@rock-chips.com>
+ <545A2680.2@imgtec.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <545A2680.2@imgtec.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, ykk@rock-chips.com, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-This patch add device driver of Richtek RT5033 PMIC.
-The driver support multiple regulator like LDO and synchronous Buck.
-The integrated synchronous buck converter is designed to provide 0.6 A
-application with high efficiency. Two LDOs are integrated. One safe LDO is
-for 60mA and the other one LDO is for 150 mA.
-
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
----
- drivers/regulator/Kconfig            |    8 ++
- drivers/regulator/Makefile           |    1 +
- drivers/regulator/rt5033-regulator.c |  154 ++++++++++++++++++++++++++++++++++
- 3 files changed, 163 insertions(+)
- create mode 100644 drivers/regulator/rt5033-regulator.c
-
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 55d7b7b..8558e1b 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -521,6 +521,14 @@ config REGULATOR_RN5T618
- 	help
- 	  Say y here to support the regulators found on Ricoh RN5T618 PMIC.
- 
-+config REGULATOR_RT5033
-+	tristate "Richtek RT5033 Regulators"
-+	depends on MFD_RT5033
-+	help
-+	  This adds support for voltage and current regulators in Richtek
-+	  RT5033 PMIC. The device supports multiple regulators like
-+	  current source, LDO and Buck.
-+
- config REGULATOR_S2MPA01
- 	tristate "Samsung S2MPA01 voltage regulator"
- 	depends on MFD_SEC_CORE
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index 1029ed3..1f28ebf 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -69,6 +69,7 @@ obj-$(CONFIG_REGULATOR_PCF50633) += pcf50633-regulator.o
- obj-$(CONFIG_REGULATOR_RC5T583)  += rc5t583-regulator.o
- obj-$(CONFIG_REGULATOR_RK808)   += rk808-regulator.o
- obj-$(CONFIG_REGULATOR_RN5T618) += rn5t618-regulator.o
-+obj-$(CONFIG_REGULATOR_RT5033)	+= rt5033-regulator.o
- obj-$(CONFIG_REGULATOR_S2MPA01) += s2mpa01.o
- obj-$(CONFIG_REGULATOR_S2MPS11) += s2mps11.o
- obj-$(CONFIG_REGULATOR_S5M8767) += s5m8767.o
-diff --git a/drivers/regulator/rt5033-regulator.c b/drivers/regulator/rt5033-regulator.c
-new file mode 100644
-index 0000000..87571d8
---- /dev/null
-+++ b/drivers/regulator/rt5033-regulator.c
-@@ -0,0 +1,154 @@
-+/*
-+ * Regulator driver for the Richtek RT5033
-+ *
-+ * Copyright (C) 2014 Samsung Electronics, Co., Ltd.
-+ * Beomho Seo <beomho.seo@samsung.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published bythe Free Software Foundation.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/mfd/rt5033.h>
-+#include <linux/mfd/rt5033-private.h>
-+#include <linux/regulator/of_regulator.h>
-+
-+static struct regulator_ops rt5033_safe_ldo_ops = {
-+	.is_enabled		= regulator_is_enabled_regmap,
-+	.enable			= regulator_enable_regmap,
-+	.disable		= regulator_disable_regmap,
-+	.list_voltage		= regulator_list_voltage_linear,
-+};
-+
-+static struct regulator_ops rt5033_buck_ops = {
-+	.is_enabled		= regulator_is_enabled_regmap,
-+	.enable			= regulator_enable_regmap,
-+	.disable		= regulator_disable_regmap,
-+	.list_voltage		= regulator_list_voltage_linear,
-+	.map_voltage		= regulator_map_voltage_linear,
-+	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
-+	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
-+};
-+
-+static const struct regulator_desc rt5033_supported_regulators[] = {
-+	[RT5033_BUCK] = {
-+		.name		= "BUCK",
-+		.id		= RT5033_BUCK,
-+		.ops		= &rt5033_buck_ops,
-+		.type		= REGULATOR_VOLTAGE,
-+		.owner		= THIS_MODULE,
-+		.n_voltages	= RT5033_REGULATOR_BUCK_VOLTAGE_STEP_NUM,
-+		.min_uV		= RT5033_REGULATOR_BUCK_VOLTAGE_MIN,
-+		.uV_step	= RT5033_REGULATOR_BUCK_VOLTAGE_STEP,
-+		.enable_reg	= RT5033_REG_CTRL,
-+		.enable_mask	= RT5033_CTRL_EN_BUCK_MASK,
-+		.vsel_reg	= RT5033_REG_BUCK_CTRL,
-+		.vsel_mask	= RT5033_BUCK_CTRL_MASK,
-+	},
-+	[RT5033_LDO] = {
-+		.name		= "LDO",
-+		.id		= RT5033_LDO,
-+		.ops		= &rt5033_buck_ops,
-+		.type		= REGULATOR_VOLTAGE,
-+		.owner		= THIS_MODULE,
-+		.n_voltages	= RT5033_REGULATOR_LDO_VOLTAGE_STEP_NUM,
-+		.min_uV		= RT5033_REGULATOR_LDO_VOLTAGE_MIN,
-+		.uV_step	= RT5033_REGULATOR_LDO_VOLTAGE_STEP,
-+		.enable_reg	= RT5033_REG_CTRL,
-+		.enable_mask	= RT5033_CTRL_EN_LDO_MASK,
-+		.vsel_reg	= RT5033_REG_LDO_CTRL,
-+		.vsel_mask	= RT5033_LDO_CTRL_MASK,
-+	},
-+	[RT5033_SAFE_LDO] = {
-+		.name		= "SAFE_LDO",
-+		.id		= RT5033_SAFE_LDO,
-+		.ops		= &rt5033_safe_ldo_ops,
-+		.type		= REGULATOR_VOLTAGE,
-+		.owner		= THIS_MODULE,
-+		.n_voltages	= 1,
-+		.min_uV		= RT5033_REGULATOR_SAFE_LDO_VOLTAGE,
-+		.enable_reg	= RT5033_REG_CTRL,
-+		.enable_mask	= RT5033_CTRL_EN_SAFE_LDO_MASK,
-+	},
-+};
-+
-+static struct of_regulator_match rt5033_regulator_matches[] = {
-+	{ .name = "BUCK", },
-+	{ .name = "LDO", },
-+	{ .name = "SAFE_LDO", },
-+};
-+
-+static int rt5033_regulator_dt_parse_data(struct device *dev)
-+{
-+	int ret;
-+	struct device_node *np;
-+
-+	np = of_get_child_by_name(dev->parent->of_node, "regulators");
-+	if  (!np) {
-+		dev_err(dev, "Failed to get child node for regulators\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = of_regulator_match(dev, np, rt5033_regulator_matches,
-+					ARRAY_SIZE(rt5033_regulator_matches));
-+	if (ret < 0)
-+		return ret;
-+
-+	return ret;
-+}
-+
-+static int rt5033_regulator_probe(struct platform_device *pdev)
-+{
-+	struct rt5033_dev *rt5033 = dev_get_drvdata(pdev->dev.parent);
-+	int ret, i;
-+	struct regulator_config config = {};
-+
-+	ret = rt5033_regulator_dt_parse_data(&pdev->dev);
-+	if (ret < 0)
-+		return ret;
-+
-+	config.dev = &pdev->dev;
-+	config.driver_data = rt5033;
-+
-+	for (i = 0; i < ARRAY_SIZE(rt5033_supported_regulators); i++) {
-+		struct regulator_dev *regulator;
-+
-+		config.init_data = rt5033_regulator_matches[i].init_data;
-+		config.of_node = rt5033_regulator_matches[i].of_node;
-+		config.regmap = rt5033->regmap;
-+
-+		regulator = devm_regulator_register(&pdev->dev,
-+				&rt5033_supported_regulators[i], &config);
-+		if (IS_ERR(regulator)) {
-+			ret = PTR_ERR(regulator);
-+			dev_err(&pdev->dev,
-+				"Regulator init failed %d: with error: %d\n",
-+				i, ret);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct platform_device_id rt5033_regulator_id[] = {
-+	{ "rt5033-regulator", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(platform, rt5033_regulator_id);
-+
-+static struct platform_driver rt5033_regulator_driver = {
-+	.driver = {
-+		.name = "rt5033-regulator",
-+	},
-+	.probe		= rt5033_regulator_probe,
-+	.id_table	= rt5033_regulator_id,
-+};
-+module_platform_driver(rt5033_regulator_driver);
-+
-+MODULE_DESCRIPTION("Richtek RT5033 Regulator driver");
-+MODULE_AUTHOR("Beomho Seo <beomho.seo@samsung.com>");
-+MODULE_LICENSE("GPL");
--- 
-1.7.9.5
-
+Ck9uIDIwMTTlubQxMeaciDA15pelIDIxOjMwLCBadWJhaXIgTHV0ZnVsbGFoIEtha2FraGVsIHdy
+b3RlOgo+IFRoaXMgb25lIHBhdGNoIGRvZXMgdG9vIG11Y2ggdG8gYmUgcmV2aWV3ZWQgZWFzaWx5
+Lgo+Cj4gT25lIHBhdGNoIGlzIHN1cHBvc2VkIHRvIG1vZGlmeS9hZGQgb25lIHRoaW5nIGF0IGEg
+dGltZSBpbiB0aGUga2VybmVsLgo+Cj4gU2VwYXJhdGluZyBwbGF0Zm9ybSBzcGVjaWZpYyBjb2Rl
+IGZyb20gaW14LWRybS9pbXgtaGRtaSBpcyBvbmUgdGhpbmcuCj4KPiBBZGRpbmcgc3VwcG9ydCBm
+b3IgbXVsdGktYnl0ZSByZWdpc3RlciBhY2Nlc3MgaXMgc29tZXRoaW5nIGRpZmZlcmVudC4KPgo+
+IGkuZS4gU29tZXRoaW5nIGxpa2UuCj4gMS8zIHNwbGl0IHBsYXRmb3JtIHNwZWNpZmljIGNvZGUg
+b3V0Lgo+IDIvMyBtb3ZlL3JlbmFtZSBpbXgtaGRtaSBvdXRzaWRlIHRoZSBmb2xkZXIKPiAzLzMg
+YWRkIHN1cHBvcnQgZm9yIG11bHRpIGJ5dGUgcmVnaXN0ZXIgd2lkdGggYWNjZXNzLgo+Cj4gSWYg
+dGhlcmUgYXJlIG90aGVyIHRoaW5ncyB0aGF0IGFyZSBub3QgZGlyZWN0bHkgcmVsZXZhbnQgdG8g
+dGhlIHBhdGNoLAo+IGl0IGdvZXMgaW4gYSBkaWZmZXJlbnQgcGF0Y2guIEJ1ZyBmaXhlcyBhcmUg
+YWxzbyBzZXBhcmF0ZS4KPgo+IFRoaXMgc2hvdWxkIHJlc3VsdCBpbiByZWFkYWJsZSBwYXRjaGVz
+IHRoYXQgY2FuIGJlIHJldmlld2VkIGVhc2lseS4KSSBoYXZlIHNwbGl0IHRoZSBwYXRjaCBpbiB0
+aHJlZSBwYXJ0cyBpbiBQQVRDSCBWMywgdGthbmtzIGZvciB5b3VyIApzdWdnZXN0aW9uCj4KPiBB
+bHNvLCB0aGUgYXBwcm9hY2ggd2l0aCA0IGJ5dGUgYWNjZXNzIGlzIG9rLiBCdXQgeW91IGNvdWxk
+IHVzZSByZWctc2hpZnRzIGFzIHdlbGwgcGVyaGFwcy4KPiBUaGVuIHlvdSB3b24ndCBoYXZlIHRv
+IGNoYW5nZSBzbyBtdWNoIG9mIHRoZSBjb2RlLgo+Cj4gc3RhdGljIGlubGluZSB2b2lkIGhkbWlf
+d3JpdGViKHN0cnVjdCBkd2NfaGRtaSAqaGRtaSwgdTggdmFsLCBpbnQgb2Zmc2V0KQo+ICt7Cj4g
+KyB3cml0ZWIodmFsLCBoZG1pLT5yZWdzICsgKG9mZnNldCA8PCBoZG1pLT5yZWdfc2hpZnQpKTsK
+PiArfQo+ICsKPiArc3RhdGljIGlubGluZSB1OCBoZG1pX3JlYWRiKHN0cnVjdCBkd2NfaGRtaSAq
+aGRtaSwgaW50IG9mZnNldCkKPiArewo+ICsgcmV0dXJuIHJlYWRiKGhkbWktPnJlZ3MgKyAob2Zm
+c2V0IDw8IGhkbWktPnJlZ19zaGlmdCkpOwo+ICt9Cj4KPiBBbmQgdGhlbiBpbiBwcm9iZQo+Cj4g
+K2hkbWktPnJlZ19zaGlmdCA9IDA7Cj4gKwo+ICsgaWYgKG9mX3Byb3BlcnR5X3JlYWRfdTMyKG5w
+LCAicmVnLXNoaWZ0IiwgJmhkbWktPnJlZ19zaGlmdCkpCj4gKyBkZXZfd2FybihoZG1pLT5kZXYs
+ICJObyByZWctc2hpZnRcbiIpOwo+Cj4gVGhpcyB3YXkgdGhlIHJlZy1zaGlmdCBwcm9wZXJ0eSBj
+YW4gYmUgZGVmaW5lZCB1c2luZyBEVAoKcmszMjg4IGNhbiBvbmx5IGFjY2VzcyB0aGUgcmVnaXN0
+ZXIgYnkgMzJiaXRzKHJlYWRsL3dyaXRlbCksIGJ5dGUgYWNjZXNzIAp3aWxsIGNhdXNlcyBhbgpp
+bXByZWNpc2UgZXh0ZXJuYWwgYWJvcnQuCkkgaGF2ZSByZWZhY3RvciB0aGUgcmVnaXN0ZXIgYWNj
+ZXNzIGluIFBBVENIIFYzLCBpZiB5b3UgaGF2ZSBhbnkgZnV0aGVyIApzdWdnZXN0aW9uICxwbGVh
+c2UKdGVsbCBtZS4KCj4KPiBDaGVlcnMsCj4gWnViYWlyTEsKPgo+IE9uIDA1LzExLzE0IDEyOjU5
+LCBBbmR5IFlhbiB3cm90ZToKPj4gaW14NiBhbmQgcm9ja2NoaXAgcmszMjg4IGFuZCBKWjQ3ODAg
+KEluZ2VuaWMgWGJ1cnN0L01JUFMpCj4+IHVzZSB0aGUgaW50ZXJmYWNlIGNvbXBhdGlibGUgRGVz
+aWdud2FyZSBIRE1JIElQLCBidXQgdGhleQo+PiBhbHNvIGhhdmUgc29tZSBsaWdodGx5IGRpZmZl
+cmVuY2UsIHN1Y2ggYXMgcGh5IHBsbCBjb25maWd1cmF0aW9uLAo+PiByZWdpc3RlciB3aWR0aChp
+bXggaGRtaSByZWdpc3RlciBpcyBvbmUgYnl0ZSwgYnV0IHJrMzI4OCBpcyA0Cj4+IGJ5dGVzIHdp
+ZHRoKSwgNEsgc3VwcG9ydChpbXg2IGRvZXNuJ3Qgc3VwcG9ydCA0aywgYnV0IHJrMzI4OCBkb2Vz
+KSwKPj4gY2xrIHVzZWFnZSxhbmQgdGhlIGNydGMgbXV4IGNvbmZpZ3VyYXRpb24gaXMgYWxzbyBw
+bGF0Zm9ybSBzcGVjaWZpYy4KPj4KPj4gVG8gcmV1c2UgdGhlIGlteCBoZG1pIGRyaXZlciwgc3Bs
+aXQgdGhlIHBsYXRmb3JtIHNwZWNpZmljIGNvZGUgb3V0Cj4+IHRvIGR3X2hkbWktaW14LmMuCj4+
+Cj4+IFNpZ25lZC1vZmYtYnk6IEFuZHkgWWFuIDxhbmR5LnlhbkByb2NrLWNoaXBzLmNvbT4KPj4g
+LS0tCj4+ICAgZHJpdmVycy9zdGFnaW5nL2lteC1kcm0vTWFrZWZpbGUgICAgICB8ICAgMiArLQo+
+PiAgIGRyaXZlcnMvc3RhZ2luZy9pbXgtZHJtL2R3X2hkbWktaW14LmMgfCAyMTQgKysrKysrKysr
+Kwo+PiAgIGRyaXZlcnMvc3RhZ2luZy9pbXgtZHJtL2lteC1oZG1pLmMgICAgfCA3MjYgKysrKysr
+KysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0tLQo+PiAgIGluY2x1ZGUvZHJtL2JyaWRnZS9kd19o
+ZG1pLmggICAgICAgICAgfCAxMTQgKysrKysrCj4+ICAgNCBmaWxlcyBjaGFuZ2VkLCA2MzQgaW5z
+ZXJ0aW9ucygrKSwgNDIyIGRlbGV0aW9ucygtKQo+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
+ZXJzL3N0YWdpbmcvaW14LWRybS9kd19oZG1pLWlteC5jCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0
+IGluY2x1ZGUvZHJtL2JyaWRnZS9kd19oZG1pLmgKPgo+CgoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2ZWwgbWFpbGluZyBsaXN0CmRldmVsQGxpbnV4
+ZHJpdmVycHJvamVjdC5vcmcKaHR0cDovL2RyaXZlcmRldi5saW51eGRyaXZlcnByb2plY3Qub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpdmVyZGV2LWRldmVsCg==
