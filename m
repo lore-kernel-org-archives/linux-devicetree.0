@@ -1,82 +1,66 @@
-From: Emil Medve <Emilian.Medve@Freescale.com>
-Subject: Re: [PATCH v3 1/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan
-Date: Fri, 7 Nov 2014 03:38:10 -0600
-Message-ID: <545C9302.50703@Freescale.com>
-References: <1415200734-6978-1-git-send-email-Emilian.Medve@Freescale.com>
-	 <1415200734-6978-2-git-send-email-Emilian.Medve@Freescale.com>
-	 <1415310579.23458.402.camel@snotra.buserror.net>
-	 <545C754C.9080700@Freescale.com>
-	 <1415345665.23458.428.camel@snotra.buserror.net>
-	 <545C7F77.90200@Freescale.com>
- <1415348363.23458.432.camel@snotra.buserror.net>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv0 3/3] rtc: rtc-isl12057: add alarm support to Intersil
+ ISL12057 RTC driver
+Date: Fri, 7 Nov 2014 09:47:21 +0000
+Message-ID: <20141107094721.GY8509@sirena.org.uk>
+References: <cover.1415222752.git.arno@natisbad.org>
+ <148403c0ab1d556cbb99d9242c65f714a77843e5.1415222752.git.arno@natisbad.org>
+ <20141106055017.GL8509@sirena.org.uk>
+ <87ppcznbyv.fsf@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="nbwp0cmFVefRM4Ni"
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1415348363.23458.432.camel@snotra.buserror.net>
+Content-Disposition: inline
+In-Reply-To: <87ppcznbyv.fsf@natisbad.org>
 Sender: linux-doc-owner@vger.kernel.org
-To: Scott Wood <scottwood@Freescale.com>
-Cc: galak@kernel.crashing.org, corbet@lwn.net, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, grant.likely@linaro.org, Geoff.Thorpe@Freescale.com, linuxppc-dev@ozlabs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+To: Arnaud Ebalard <arno@natisbad.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Scott,
 
+--nbwp0cmFVefRM4Ni
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 11/07/2014 02:19 AM, Scott Wood wrote:
-> On Fri, 2014-11-07 at 02:14 -0600, Emil Medve wrote:
->> Hello Scott,
->>
->>
->> On 11/07/2014 01:34 AM, Scott Wood wrote:
->>> On Fri, 2014-11-07 at 01:31 -0600, Emil Medve wrote:
->>>> Hello Scott,
->>>>
->>>>
->>>> On 11/06/2014 03:49 PM, Scott Wood wrote:
->>>>> On Wed, 2014-11-05 at 09:18 -0600, Emil Medve wrote:
->>>>>> +Devices connected to a BMan instance via Direct Connect Portals (DCP) must link
->>>>>> +to the respective BMan instance
->>>>>> +
->>>>>> +- fsl,bman
->>>>>> +	Usage:		Required
->>>>>> +	Value type:	<prop-encoded-array>
->>>>>> +	Description:	List of phandle and DCP index pairs, to the BMan instance
->>>>>> +			to which this device is connected via the DCP
->>>>>
->>>>> Does software need the DCP index (though for QMan there do seem to be a
->>>>> few registers associated with each DCP)?  Where can I find that info in
->>>>> the manual?
->>>>
->>>> The DCP index helps describe the topology of the devices connected to
->>>> the B/QMan. One might be tempted to use some address to reference said
->>>> DCP, unfortunately the pertinent registers/bits for said DCP(s) are not
->>>> into a compact region. Look at the CCSR memory map for B/QMan
->>>>
->>>> In the QMan case things are marginally better. For each hardware portal
->>>> there are a handful of (vaguely named *DCx*, *DCPx* or *DCP*) registers
->>>> (configuration, performance monitoring and debugging). However, still
->>>> registers and bits spread here and there
->>>>
->>>> In the BMan case things are a bit worse as the registers names are less
->>>> friendly and still spread around
->>>>
->>>> Do you need specific names/offsets?
->>>
->>> My question about the manual wasn't rhetorical -- I tried to find this
->>> information and couldn't.
->>
->> I get that. As I said, the registers/bits are spread around in the CCSR
->> space of each block and not named excessively friendly. As such I hinted
->> for some search patterns to make it easier to find them. In order to
->> progress the review I'm willing to prepare a list. Just let me know
-> 
-> Could you point me to the section of the manual where this information
-> is -- friendly or otherwise?  I saw the QMan direct connect portal
-> registers.  I didn't see how to tell which <i> in DCPi_xxx goes with
-> which device.
+On Fri, Nov 07, 2014 at 12:30:48AM +0100, Arnaud Ebalard wrote:
+> Mark Brown <broonie@kernel.org> writes:
 
-For QMan look into section '6.3.10 Direct Connect Portals (DCPs)'. The
-BMan DCP assignment is the same
+> > None of the alarm functionality checks to see if there's actually an IRQ
+> > - is that OK? I'd at least expect the alarm interrupt enable call to
+> > check if the interrupt is wired up.
 
+> I can add those check BUT I would like some directions in order to
+> support the following use case too.
 
-Cheers,
+> Current three in-tree users of ISL12057 are NAS devices (Netgear
+> ReadyNAS 102, 104 and 2120). All of them *do not have* the interrupt pin
+> of the RTC chip connected to an interrupt line of the SoC. Nonetheless,
+> the IRQ line of the chip being connected to a PMIC on the board (TI
+> TPS65251 [1] on ReadyNAS 102 and 104, I do not know for ReadyNAS
+> 2120). When the device is off and the alarm rings, the device gets
+> powered on. AFAICT, the IRQ coming on the TPS65251 is not replicated on
+> any line of the SoC.
+
+It's OK to support not having the interrupt, the point is that if there
+isn't an interrupt the driver shouldn't support operations which rely on
+the interrupt to succeed - things like enabling the alarm IRQ for
+example.
+
+--nbwp0cmFVefRM4Ni
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUXJUoAAoJECTWi3JdVIfQzGwH/2eEoNRI4xN2PXAwEumfHFOX
+UF9JtUrr+kHVfJuqX3QtKkVEDwsDGV2HOWzKTOPe8LsHSR8jHKP7u5+Oj9LaBIls
+Od9yoMpMkKfnFSjbOBqpfYx8AatXm154tfi9HKsHUcgVCoRmB+ZkVD6knalSkghM
+MIZ8BXeGRZdvbsMMBxgQNSGGnMkBHt7pBWPlewFURrmeUtZ+cICw95AY/Q9WgQJh
+bKAbSFpofC1zX0rzucO1p9GW9uj4c+CR92K946jQJBjWgDS5PCB61jPR0ycIjZ76
+awhXYMOzVS+GNCI0JW1q7TJvcZUo/Hebl01+17R7Lc8qO313KgP/0Bk4tvXL2aU=
+=qq/f
+-----END PGP SIGNATURE-----
+
+--nbwp0cmFVefRM4Ni--
