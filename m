@@ -1,41 +1,52 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/5] ARM: shmobile: kzm9g legacy: Set i2c clks_per_count
- to 2
-Date: Fri, 7 Nov 2014 08:12:57 +0100
-Message-ID: <CAMuHMdVWS3HjsPj7T3JFxVuiRGSZmopkeDadpKH1YdmnAGYdNw@mail.gmail.com>
-References: <1415274730-310-1-git-send-email-geert+renesas@glider.be>
-	<1415274730-310-2-git-send-email-geert+renesas@glider.be>
-	<20141107052420.GA1278@katana>
+From: Emil Medve <Emilian.Medve@Freescale.com>
+Subject: Re: [PATCH v3 1/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan
+Date: Fri, 7 Nov 2014 01:31:24 -0600
+Message-ID: <545C754C.9080700@Freescale.com>
+References: <1415200734-6978-1-git-send-email-Emilian.Medve@Freescale.com>
+	 <1415200734-6978-2-git-send-email-Emilian.Medve@Freescale.com>
+ <1415310579.23458.402.camel@snotra.buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20141107052420.GA1278@katana>
-Sender: linux-sh-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux I2C <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1415310579.23458.402.camel@snotra.buserror.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Scott Wood <scottwood@Freescale.com>
+Cc: galak@kernel.crashing.org, corbet@lwn.net, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, grant.likely@linaro.org, Geoff.Thorpe@Freescale.com, linuxppc-dev@ozlabs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
+Hello Scott,
 
-On Fri, Nov 7, 2014 at 6:24 AM, Wolfram Sang <wsa@the-dreams.de> wrote:
->> Note that the L/H values still differ from the Transfer Rate Settings
->> example in Table 19.3 of the datasheet, which suggests 0x121/0xe7.
->
-> Is the formula different or is it rounding errors?
 
-The formula is different. It doesn't use absolute tLOW, tHIGH, and tF
-values, but only the duty cycle of the clock.
+On 11/06/2014 03:49 PM, Scott Wood wrote:
+> On Wed, 2014-11-05 at 09:18 -0600, Emil Medve wrote:
+>> +Devices connected to a BMan instance via Direct Connect Portals (DCP) must link
+>> +to the respective BMan instance
+>> +
+>> +- fsl,bman
+>> +	Usage:		Required
+>> +	Value type:	<prop-encoded-array>
+>> +	Description:	List of phandle and DCP index pairs, to the BMan instance
+>> +			to which this device is connected via the DCP
+> 
+> Does software need the DCP index (though for QMan there do seem to be a
+> few registers associated with each DCP)?  Where can I find that info in
+> the manual?
 
-It's similar in the R-Car Gen2 docs. Except that on Gen2, there's no
-mention of using a duty cycle of 5/3 for High Speed like on AG5.
+The DCP index helps describe the topology of the devices connected to
+the B/QMan. One might be tempted to use some address to reference said
+DCP, unfortunately the pertinent registers/bits for said DCP(s) are not
+into a compact region. Look at the CCSR memory map for B/QMan
 
-Gr{oetje,eeting}s,
+In the QMan case things are marginally better. For each hardware portal
+there are a handful of (vaguely named *DCx*, *DCPx* or *DCP*) registers
+(configuration, performance monitoring and debugging). However, still
+registers and bits spread here and there
 
-                        Geert
+In the BMan case things are a bit worse as the registers names are less
+friendly and still spread around
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Do you need specific names/offsets?
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+Cheers,
