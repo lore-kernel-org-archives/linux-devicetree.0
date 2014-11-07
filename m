@@ -1,103 +1,140 @@
-From: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
-Subject: [PATCH] w1: omap-hdq: support device probing with device-tree.
-Date: Sat, 8 Nov 2014 10:30:32 +1100
-Message-ID: <20141108103032.5426db7a@notabene.brown>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH v17 1/5] thermal: rockchip: add driver for thermal
+Date: Fri, 7 Nov 2014 19:39:58 -0400
+Message-ID: <20141107233956.GA27665@developer>
+References: <1414809873-32227-1-git-send-email-caesar.wang@rock-chips.com>
+ <1414809873-32227-2-git-send-email-caesar.wang@rock-chips.com>
+ <20141107013017.GA10180@developer>
+ <20141107015728.GF34214@dtor-ws>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
- boundary="Sig_/7ddOIc1J6FJuK0j4OzOtqRn"; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Evgeniy Polyakov <zbr-i6C2adt8DTjR7s880joybQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, GTA04 owners <gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="XsQoSWH+UP9D9v3l"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141107015728.GF34214@dtor-ws>
+Sender: linux-pm-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Caesar Wang <caesar.wang@rock-chips.com>, heiko@sntech.de, rui.zhang@intel.com, zyf@rock-chips.com, dianders@chromium.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, cf@rock-chips.com, dbasehore@chromium.org, huangtao@rock-chips.com, cjf@rock-chips.com, zhengsq@rock-chips.com, fzf@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
---Sig_/7ddOIc1J6FJuK0j4OzOtqRn
-Content-Type: text/plain; charset=US-ASCII
+
+--XsQoSWH+UP9D9v3l
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
+Hello Dmitry,
 
+On Thu, Nov 06, 2014 at 05:57:28PM -0800, Dmitry Torokhov wrote:
+> Hi Eduardo,
+>=20
+> On Thu, Nov 06, 2014 at 09:30:20PM -0400, Eduardo Valentin wrote:
+> > Hello Caesar,
+> >=20
+> > On Sat, Nov 01, 2014 at 10:44:29AM +0800, Caesar Wang wrote:
+> > > Thermal is TS-ADC Controller module supports
+> > > user-defined mode and automatic mode.
+> > >=20
+> > > User-defined mode refers,TSADC all the control signals entirely by
+> > > software writing to register for direct control.
+> > >=20
+> > > Automaic mode refers to the module automatically poll TSADC output,
+> > > and the results were checked.If you find that the temperature High
+> > > in a period of time,an interrupt is generated to the processor
+> > > down-measures taken;If the temperature over a period of time High,
+> > > the resulting TSHUT gave CRU module,let it reset the entire chip,
+> > > or via GPIO give PMIC.
+> > >=20
+> >=20
+> > First thing, very good progress in this driver!=20
+> >=20
+> > > Signed-off-by: zhaoyifeng <zyf@rock-chips.com>
+> > > Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+> > > Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> >=20
+> > Just for the sake of code / documentation history, this patch, which
+> > adds the driver, should come after patch 2, which adds dt documentation.
+> >=20
+> > > ---
+> > >  drivers/thermal/Kconfig            |   9 +
+> > >  drivers/thermal/Makefile           |   1 +
+> > >  drivers/thermal/rockchip_thermal.c | 711 +++++++++++++++++++++++++++=
+++++++++++
+> > >  3 files changed, 721 insertions(+)
+> > >  create mode 100644 drivers/thermal/rockchip_thermal.c
+> >=20
+> > <big cut>
+> >=20
+> > > +static int
+> > > +rockchip_thermal_register_sensor(struct platform_device *pdev,
+> > > +				 struct rockchip_thermal_data *thermal,
+> > > +				 struct rockchip_thermal_sensor *sensor,
+> > > +				 enum sensor_id id)
+> > > +{
+> > > +	const struct rockchip_tsadc_chip *tsadc =3D thermal->chip;
+> > > +	int error;
+> > > +
+> > > +	tsadc->set_tshut_mode(id, thermal->regs, thermal->tshut_mode);
+> > > +	tsadc->set_tshut_temp(id, thermal->regs, thermal->tshut_temp);
+> > > +
+> > > +	sensor->thermal =3D thermal;
+> > > +	sensor->id =3D id;
+> > > +	sensor->tzd =3D thermal_zone_of_sensor_register(&pdev->dev, id, sen=
+sor,
+> > > +						rockchip_thermal_get_temp,
+> > > +						NULL,
+> > > +						rockchip_thermal_set_trips);
+> >=20
+> > So, did I miss something here? Looks like you have extended the of
+> > thermal, and I haven't seen the patch.
+> >   CC [M]  drivers/thermal/rockchip_thermal.o
+> >   drivers/thermal/rockchip_thermal.c: In function
+> >   `rockchip_thermal_register_sensor':
+> >   drivers/thermal/rockchip_thermal.c:482:7: error: too many arguments to
+> >   function `thermal_zone_of_sensor_register'
+> >          rockchip_thermal_set_trips);
+>=20
+> Yes, it relies on patch by Mikko Perttunen adding support for
+> hardware-supported trip points. It allows us to reduce polling frequency
+> while still being able to react when we cross the tripping point.
+>=20
+> See https://lkml.org/lkml/2014/6/27/76
+>=20
 
-This driver has no 'compatible' string and so is not found when
-using device-tree.
+Yeah, that thread needs to be re-taken. Today I merged nvidia's driver,
+but only a simpler version of it. I expect that they take the missing
+parts through after updating / refreshing the patches.
 
-Add one with value to match
-		hdqw1w: 1w@480b2000 {
-device in omap3.dtsi.
+And on that front, as I requested, there must be also equivalent mapping
+in the thermal core, to avoid spreading / growing of-thermal as a
+secondary thermal API.
 
-Signed-off-by: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+One thing for sure that must be done is a little refactoring in the
+of-thermal registration functions. I had a similar discussion about this
+with Lukasz, who is also interested in improving the of-thermal
+callbacks.
 
-diff --git a/Documentation/devicetree/bindings/w1/omap-hdq.txt b/Documentat=
-ion/devicetree/bindings/w1/omap-hdq.txt
-new file mode 100644
-index 000000000000..fef794741bd1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/w1/omap-hdq.txt
-@@ -0,0 +1,17 @@
-+* OMAP HDQ One wire bus master controller
-+
-+Required properties:
-+- compatible : should be "ti,omap3-1w"
-+- reg : Address and length of the register set for the device
-+- interrupts : interrupt line.
-+- ti,hwmods : "hdq1w"
-+
-+Example:
-+
-+- From omap3.dtsi
-+  hdqw1w: 1w@480b2000 {
-+	compatible =3D "ti,omap3-1w";
-+	reg =3D <0x480b2000 0x1000>;
-+	interrupts =3D <58>;
-+	ti,hwmods =3D "hdq1w";
-+  };
-diff --git a/drivers/w1/masters/omap_hdq.c b/drivers/w1/masters/omap_hdq.c
-index 9900e8ec7393..03321d6a2684 100644
---- a/drivers/w1/masters/omap_hdq.c
-+++ b/drivers/w1/masters/omap_hdq.c
-@@ -72,11 +72,18 @@ struct hdq_data {
- static int omap_hdq_probe(struct platform_device *pdev);
- static int omap_hdq_remove(struct platform_device *pdev);
-=20
-+static struct of_device_id omap_hdq_dt_ids[] =3D {
-+	{ .compatible =3D "ti,omap3-1w" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, omap_hdq_dt_ids);
-+
- static struct platform_driver omap_hdq_driver =3D {
- 	.probe =3D	omap_hdq_probe,
- 	.remove =3D	omap_hdq_remove,
- 	.driver =3D	{
- 		.name =3D	"omap_hdq",
-+		.of_match_table =3D omap_hdq_dt_ids,
- 	},
- };
-=20
+Cheers,
 
---Sig_/7ddOIc1J6FJuK0j4OzOtqRn
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> Thanks.
+>=20
+> --=20
+> Dmitry
+
+--XsQoSWH+UP9D9v3l
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIVAwUBVF1WGDnsnt1WYoG5AQKY8A//QH85O0cW6uytzdkQ9Tr1eFj7TzIm0gYF
-eZ6nzYSHaqDaHn7PlBn7YHEdCxPw2hfksdFDvDoUObCxx6UvEMuuCjO+sqneVxJd
-5kU9aCb6nk7rUzakfbRoUyCZDaQ03b5SUmLo840/O7alVKQcu+g/Lwom+IFLnsHC
-z8XeGZNJL2OLdT5XKmrCKcgg6dhjSoqgE5AGUQK8fyinpZohFpMWWE8Kxis5NJ0R
-kpYBUVzLVW+VYgRHtBo0MUt1NxThZ/Qqdq5yh6vW/t6ykamoGamVpVzJ1Kp9274+
-Z89PCjJ3VKZoSV/FtcyTT8bvw7zd9odfY7vcXJYqx+XTvVYPCSFCxK1lsjjzVprF
-akYQJv5Cu2XGhb/MS6gacNjtdFjJhWLMKIucpT4NPxL3UzXPdHmsiNdP/NqKIJWF
-/LuiQN/4i5zF4hK05TA7gEPkCK80kH8RnSnw1MHNGQwI+n9sNEarPHIUQViKEpqw
-NJad44hXgLjRo9wftEhKWlO3UGd67FKhhs4csfOILNyt0JRVRBJ21piyhS4VB87O
-9PxeEoS7arA6S4XCFxe50XJwVDo2galkPepxtZJKS1zBevkH0ptUeIzFLqCUwUBe
-eZbzCYBPVYzo3PGQcBwtmi499AWLV0geS4TyGL0ntLZMz60H+hdPGrIAljofoxrD
-qEwTMsH1+kc=
-=sYx4
+iQEcBAEBAgAGBQJUXVhBAAoJEMLUO4d9pOJWRvsH/36hPhZiMhL7T98JOCZckL4B
+svYwwczBS9ka+q3PihKLdI8Sez7KkiEpse5HyrQEUXdDxDAnBmiQOiIxL9sjWRin
+pDzZrfEXYclPW5NBz4HyJ3Z3kS4IlSdZthsVmCTL7YfUHrbgHey5c8I97TlBeua5
+yupt0sYiZQrFJgEImxXz4tQV3sH9R7rbBIQeNhuYYz3FJX3XG3dSrNCJPwOUG4hg
+a4NMcTicRVkPKCeGP/x0eb+bUXvLw+Y+Ezx1XaJRmkNK+xBK70BFtxcUJ9HgqSi0
+vfi43FwXaP+zCWeA1UsMzaIUvDEcfnZfvUL1y2JANcm6UUzkAkd/qia7wwCmgK8=
+=238s
 -----END PGP SIGNATURE-----
 
---Sig_/7ddOIc1J6FJuK0j4OzOtqRn--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--XsQoSWH+UP9D9v3l--
