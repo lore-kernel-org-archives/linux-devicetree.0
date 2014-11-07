@@ -1,48 +1,87 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: rockchip: add pinctrl nodes for SPDIF, LCDC, CIF, HDMI, USB and GPS
-Date: Fri, 07 Nov 2014 17:52:23 +0100
-Message-ID: <5384745.1WqprI8GVl@diego>
-References: <1415373589-11650-1-git-send-email-julien.chauveau@neo-technologies.fr>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH v3 1/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan
+Date: Fri, 7 Nov 2014 10:49:54 -0600
+Message-ID: <1415378994.3805.5.camel@snotra.buserror.net>
+References: <1415200734-6978-1-git-send-email-Emilian.Medve@Freescale.com>
+	 <1415200734-6978-2-git-send-email-Emilian.Medve@Freescale.com>
+	 <1415310579.23458.402.camel@snotra.buserror.net>
+	 <545C754C.9080700@Freescale.com>
+	 <1415345665.23458.428.camel@snotra.buserror.net>
+	 <545C7F77.90200@Freescale.com>
+	 <1415348363.23458.432.camel@snotra.buserror.net>
+	 <545C9302.50703@Freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415373589-11650-1-git-send-email-julien.chauveau-MwaZihP3oV2HdZQakrT3ElaPQRlvutdw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Julien CHAUVEAU <julien.chauveau-MwaZihP3oV2HdZQakrT3ElaPQRlvutdw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "moderated list:ARM/Rockchip SoC..." <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <545C9302.50703@Freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Emil Medve <Emilian.Medve@Freescale.com>
+Cc: galak@kernel.crashing.org, corbet@lwn.net, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, grant.likely@linaro.org, Geoff.Thorpe@Freescale.com, linuxppc-dev@ozlabs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Julien,
+On Fri, 2014-11-07 at 03:38 -0600, Emil Medve wrote:
+> Hello Scott,
+> 
+> 
+> On 11/07/2014 02:19 AM, Scott Wood wrote:
+> > On Fri, 2014-11-07 at 02:14 -0600, Emil Medve wrote:
+> >> Hello Scott,
+> >>
+> >>
+> >> On 11/07/2014 01:34 AM, Scott Wood wrote:
+> >>> On Fri, 2014-11-07 at 01:31 -0600, Emil Medve wrote:
+> >>>> Hello Scott,
+> >>>>
+> >>>>
+> >>>> On 11/06/2014 03:49 PM, Scott Wood wrote:
+> >>>>> On Wed, 2014-11-05 at 09:18 -0600, Emil Medve wrote:
+> >>>>>> +Devices connected to a BMan instance via Direct Connect Portals (DCP) must link
+> >>>>>> +to the respective BMan instance
+> >>>>>> +
+> >>>>>> +- fsl,bman
+> >>>>>> +	Usage:		Required
+> >>>>>> +	Value type:	<prop-encoded-array>
+> >>>>>> +	Description:	List of phandle and DCP index pairs, to the BMan instance
+> >>>>>> +			to which this device is connected via the DCP
+> >>>>>
+> >>>>> Does software need the DCP index (though for QMan there do seem to be a
+> >>>>> few registers associated with each DCP)?  Where can I find that info in
+> >>>>> the manual?
+> >>>>
+> >>>> The DCP index helps describe the topology of the devices connected to
+> >>>> the B/QMan. One might be tempted to use some address to reference said
+> >>>> DCP, unfortunately the pertinent registers/bits for said DCP(s) are not
+> >>>> into a compact region. Look at the CCSR memory map for B/QMan
+> >>>>
+> >>>> In the QMan case things are marginally better. For each hardware portal
+> >>>> there are a handful of (vaguely named *DCx*, *DCPx* or *DCP*) registers
+> >>>> (configuration, performance monitoring and debugging). However, still
+> >>>> registers and bits spread here and there
+> >>>>
+> >>>> In the BMan case things are a bit worse as the registers names are less
+> >>>> friendly and still spread around
+> >>>>
+> >>>> Do you need specific names/offsets?
+> >>>
+> >>> My question about the manual wasn't rhetorical -- I tried to find this
+> >>> information and couldn't.
+> >>
+> >> I get that. As I said, the registers/bits are spread around in the CCSR
+> >> space of each block and not named excessively friendly. As such I hinted
+> >> for some search patterns to make it easier to find them. In order to
+> >> progress the review I'm willing to prepare a list. Just let me know
+> > 
+> > Could you point me to the section of the manual where this information
+> > is -- friendly or otherwise?  I saw the QMan direct connect portal
+> > registers.  I didn't see how to tell which <i> in DCPi_xxx goes with
+> > which device.
+> 
+> For QMan look into section '6.3.10 Direct Connect Portals (DCPs)'. The
+> BMan DCP assignment is the same
 
-Am Freitag, 7. November 2014, 16:19:49 schrieb Julien CHAUVEAU:
-> On RK3066, add pinctrl nodes for SPDIF, LCDC1, CIF0/1, HDMI and USB.
-> On RK3188, add pinctrl nodes for SPDIF, LCDC1, CIF and GPS.
+Thanks, I'm not sure how I missed that.
 
-Please don't bulk-add pinctrl settings nobody is using for the forseeable 
-future. There are currently no spdif, lcdc, cif and hdmi drivers for those 
-socs and things like the usb_vbus and sd_pwr pins are used as gpios through 
-regulators.
-
-Pinctrl settings can be added in the same patch adding the device node, 
-_after_ a driver got accepted.
+-Scott
 
 
-> At the same time, add some missing pinctrl for SDMMC0 and SDMMC1
-> and fix the unit addresses of GPIO0 and GPIO1 banks in rk3188.dtsi.
-
-I you're concatenating change descriptions by "and" or your "At the same 
-time", it's a good indicator that these should be two separate patches.
-The general rule is, one patch - one issue.
-
-
-So I'd suggest resending the address fix for the two gpios and leaving the pin 
-settings be till something really uses them,
-
-
-Heiko
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
