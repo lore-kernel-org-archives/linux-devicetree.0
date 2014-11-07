@@ -1,56 +1,99 @@
-From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH 0/3] Add support for Tegra Activity Monitor
-Date: Fri, 07 Nov 2014 13:35:19 +0100
-Message-ID: <545CBC87.7050404@collabora.com>
-References: <1414594232-15684-1-git-send-email-tomeu.vizoso@collabora.com> <545C8BCC.3090908@nvidia.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [RFC PATCH v4 3/3] PM / clock_ops: add and enable clocks always
+ if !CONFIG_PM_RUNTIME
+Date: Fri, 7 Nov 2014 14:43:41 +0200
+Message-ID: <545CBE7D.4050704@ti.com>
+References: <1415281862-23764-1-git-send-email-grygorii.strashko@ti.com>
+ <1415281862-23764-4-git-send-email-grygorii.strashko@ti.com>
+ <20141106180956.GE34214@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <545C8BCC.3090908-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20141106180956.GE34214@dtor-ws>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, khilman@linaro.org, Caesar Wang <caesar.wang@rock-chips.com>, linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Philipp Zabel <p.zabel@pengutronix.de>, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/07/2014 10:07 AM, Alexandre Courbot wrote:
-> On 10/29/2014 11:50 PM, Tomeu Vizoso wrote:
->> Hello,
+On 11/06/2014 08:09 PM, Dmitry Torokhov wrote:
+> On Thu, Nov 06, 2014 at 03:51:02PM +0200, Grygorii Strashko wrote:
+>> Device's clocks need to be enabled always at probing time
+>> if !CONFIG_PM_RUNTIME - in that way, device will become accesible
+>> and, later, its clocks can be disabled/enabled during system
+>> suspend/resume by using pm_clk_suspend/pm_clk_resume APIs.
 >>
->> these patches implement support for setting the rate of the EMC clock based on
->> stats collected from the ACTMON, a piece of hw in the Tegra124 that counts
->> memory accesses (among others).
+>> But now, the clocks management code doesn't enable clocks when
+>> clocks are being registered per-device by using pm_clk_add/_clk().
+>> So, update pm_clk_acquire(), which is called from pm_clk_add/_clk(),
+>> to enable clock always if !CONFIG_PM_RUNTIME.
 >>
->> It depends on the following in-flight patches:
+>> Also, Platform PM domains drivers will not have to add code like below
+>> each time they need to handle the case when !CONFIG_PM_RUNTIME [1 - 3]:
 >>
->> * MC driver: http://thread.gmane.org/gmane.linux.ports.tegra/19623
->> * EMC driver: http://thread.gmane.org/gmane.linux.ports.arm.kernel/365125
->> * CPUFreq driver: http://thread.gmane.org/gmane.linux.kernel/1812962
+>>         if (!IS_ENABLED(CONFIG_PM_RUNTIME)) {
+>>                 ret = pm_clk_resume(dev);
+>>                 if (ret) {
+>>                         dev_err(dev, "pm_clk_resume failed %d\n", ret);
+>>                         goto clk_err;
+>>                 };
+>>         }
 >>
->> I have pushed a branch here for testing:
-> 
-> I am not too familiar with DVFS, but after going through this series it 
-> really seems to me that this could use devfreq. In its current form this 
-> driver mixes control and policy and lacks flexibility, preventing e.g. 
-> to switch to a performance or power-saving profile. Could you study the 
-> feasibility of using devfreq for this?
+>> [1] https://lkml.org/lkml/2014/10/3/306
+>> [2] https://lkml.org/lkml/2014/10/16/305
+>> [3] https://lkml.org/lkml/2014/10/20/249
+>>
+>> CC: Santosh Shilimkar <ssantosh@kernel.org>
+>> CC: Kevin Hilman <khilman@linaro.org>
+>> CC: Ulf Hansson <ulf.hansson@linaro.org>
+>> CC: Geert Uytterhoeven <geert@linux-m68k.org>
+>> CC: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>> CC: Philipp Zabel <p.zabel@pengutronix.de>
+>> CC: Caesar Wang <caesar.wang@rock-chips.com>
+>>
+>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>> ---
+>> Hi,
+>>
+>> I marked it as RFC, because:
+>>    Generic clock manipulation PM callbacks can be used for any device
+>>    for which list of clocks need to be maintained - and it doesn't mean
+>>    that this framework need to be always connected to GPD/Runtime PM or
+>>    used during suspend resume. Also, for DT-use case - it doesn't perform
+>>    any actions (except clk_prepare) on clocks by itself and only
+>>    by request from framework's consumer.
+>>
+>>   For example, it can be reused by Power domain/controller drivers like:
+>>   - Rockchip RK3288 PM Domain (https://lkml.org/lkml/2014/11/6/30)
+>>   - IMX.6 PU power domain (http://www.spinics.net/lists/arm-kernel/msg360709.html)
+>>
+>>   to maintain list of clocks for GPD itself and these clocks should not
+>>   be enabled by default, because they are used to power on/off Power domain
+>>   in a specific way:
+>>       - enable all clocks assigned to PD
+>>       - power on/off PD
+>>       - disable all clocks assigned to PD.
+>>   After this patch it will be impossible to reuse Generic clock manipulation PM
+>>   callbacks in cases described above.
+>
+> I'd rather keep it separate and concentrate on making pm_clk* code
+> working with the power management core. Individual drivers can easily
+> keep list of their clocks for whatever additional purpose they need
+> without involving pm_clk* API.
+>
 
-Yeah, I started writing a devfreq driver, but then I looked in more
-detail to the downstream driver and realized that most of the
-functionality that devfreq provides overlaps with the hw.
-
-The ACTMON can be configured to fire an interrupt when a set of
-thresholds are crossed, similar to the simple-ondemand governor but a
-bit more sophisticated. The only functionality of the governors that
-isn't covered by the ACTMON hw is determining the new frequency after a
-threshold has been crossed, but if we want to retain the flexibility of
-the downstream solution, we would need to write a new governor anyway.
-
-I realize that it would be cool to reuse the code in devfreq, but being
-able to let the hw sample the counters, calculating averages and
-checking if a threshold has been crossed without the cpu having to
-intervene gives this SoC quite an edge when compared to its competitors.
+In general, I'm ok with this patch for Keystone 2 proposes,
+just added some notes about introduced limitations. And  all
+current users of pm_clk* APIs will not regress with this patch, because
+they will go through different code path if !CONFIG_PM_RUNTIME.
 
 Regards,
-
-Tomeu
+-grygorii
