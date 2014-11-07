@@ -1,112 +1,83 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH v3] thermal: Add QPNP PMIC temperature alarm driver
-Date: Thu, 6 Nov 2014 19:48:15 -0400
-Message-ID: <20141106234812.GB8176@developer>
-References: <1412178817-20371-1-git-send-email-iivanov@mm-sol.com>
- <20141027201602.GC6088@developer>
- <1414596776.32383.2.camel@mm-sol.com>
- <1414677345.12674.1.camel@mm-sol.com>
+From: Jiang Liu <jiang.liu@linux.intel.com>
+Subject: Re: [V10 PATCH 2/2] irqchip: gicv2m: Add supports for ARM GICv2m
+ MSI(-X)
+Date: Fri, 07 Nov 2014 09:00:36 +0800
+Message-ID: <545C19B4.6040006@linux.intel.com>
+References: <1415052977-26036-1-git-send-email-suravee.suthikulpanit@amd.com> <1415052977-26036-3-git-send-email-suravee.suthikulpanit@amd.com> <5458CE31.3040404@linux.intel.com> <545ABB4C.8010103@amd.com> <545ABF6C.1000308@amd.com> <alpine.DEB.2.11.1411060146050.24960@nanos> <alpine.DEB.2.11.1411061131330.24960@nanos> <545BA301.8000709@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+g7M9IMkV8truYOl"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1414677345.12674.1.camel@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, David Collins <collinsd@codeaurora.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <545BA301.8000709@arm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>
+Cc: "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, Mark Rutland <Mark.Rutland@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, "Harish.Kasiviswanathan@amd.com" <Harish.Kasiviswanathan@amd.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 2014/11/7 0:34, Marc Zyngier wrote:
+> Hi Thomas,
+> 
+> On 06/11/14 10:42, Thomas Gleixner wrote:
+>> On Thu, 6 Nov 2014, Thomas Gleixner wrote:
+>>> On Wed, 5 Nov 2014, Suravee Suthikulanit wrote:
+>>>> On 11/5/2014 6:05 PM, Suravee Suthikulanit wrote:
+>>>>> - Overall, it seems that msi_domain_alloc() could be quite different
+>>>>> across architectures. Would it be possible to declare this function as
+>>>>> weak, and allow arch to override (similar to arch_setup_msi_irq)?
+>>>>
+>>>> Actually, declaring "msi_domain_ops" as non-static, and allow other code to
+>>>> override the .alloc and .free?
+>>>
+>>> Why do you want to do that?
+>>
+>> I know why. Because you want to spare a level of hierarchy. But thats
+>> wrong simply because MSI itself is an interrupt chip at the device
+>> level.
+>>
+>> [ MSI ] ---> [ GIC-MSI ] ---> [ GIC ]
+>>
+>> So the MSI level only cares about the allocation of the virq
+>> space. GIC-MSI allocates out of the bitmap which handles the hard
+>> wired range of MSI capable GIC interrupts and GIC handles the
+>> underlying functionality.
+>>
+>> And this makes a lot of sense, if you think about interrupt
+>> remapping. If ARM ever grows that you simply insert it into the chain:
+>>
+>> [ MSI ] ---> [ Remap] ---> [ GIC-MSI ] ---> [ GIC ]
+> 
+> I think ARM has reached that stage with the ITS block in GICv3:
+> - Each device gets programmed with a set of  "event IDs" ranging from 0
+> to N-1, with N being the number of MSI vectors used by the device
+> - the ITS uses both the device ID (basically the PCI requester ID) and
+> the event ID to parse a set of software-managed tables (think page
+> tables for interrupts).
+> 
+> The x86 remapping thing looks quite similar to that, by reading a couple
+> of pages from the VT-D document.
+> 
+> So the way I understand the layout (and please correct me if I'm wrong,
+> which is certainly the case) is that the MSI domain is entirely generic,
+> allocates the virq, uses Remap as a parent, and uses
+> irq_chip_compose_msi_msg to call into the parent and generate whatever
+> goes into the MSI message.
+Hi Marc,
+	It works exactly in this way:)
 
---+g7M9IMkV8truYOl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> 
+> I'm still struggling a bit to see how the remapping layer can access the
+> requester ID. x86 uses the irq_alloc_info to store that (the result of
+> an msi_get_hwirq call), but we don't have an equivalent structure on
+> arm/arm64.
+irq_alloc_info is newly introduced for hierarchy irqdomain on x86.
+Regards!
+Gerry
 
-On Thu, Oct 30, 2014 at 03:55:45PM +0200, Ivan T. Ivanov wrote:
->=20
-> On Wed, 2014-10-29 at 17:32 +0200, Ivan T. Ivanov wrote:
-> >=20
-> +
-> > > > +       chip->tz_dev =3D thermal_zone_device_register(node->name, T=
-RIP_NUM, 0,
-> > > > +       chip, &qpnp_tz_ops, NULL,
-> > >=20
-> > > Have you considered using of-thermal instead of doing your own specif=
-ic thermal
-> > > zone registration? Having a glance look in this driver, most of the
-> > > operation are covered by of-thermal. Ahy concerns using of-thermal in
-> > > your case?
-> > >=20
-> >=20
-> > I just followed implementation found in "armada_thermal", "db8500-therm=
-al",
-> > "dove_thermal", "imx_thermal", "kirkwood_thermal"...
-> >=20
-> > Will look at of-thermal.
-> >=20
->=20
-> Hm, the 15 drivers, which register its own thermal zone, against 4, which=
-=20
-
-Yes, and the reasoning is pretty simple: of-thermal is not imposed
-standard, and not all platform have decided to move to using it.
-However, DT is being used more and more frequently. So, given you
-already have DT support, considering using of-thermal is a good thing to do=
-=2E=20
-
-Besides, you are with hands on your driver, might make sense to add its
-support while you are there.=20
-
-> use of-thermal registration and one of them is OMAP, which have fallback
-> to its own zone registration :-). Anyway. I am afraid that if I use just
-
-The fallback is because non-dt booting has not been dropped from OMAP,
-AFAIK.
-
-> thermal_zone_of_sensor_register(), driver will lost ability to switch off=
-=20
-> hardware controlled shutdown sequence, which make it useless IMHO.
-
-Any special sequence or callback you want to consider to improve
-of-thermal support?
-
-
-For instance, getting a callback for mode change events would enable you
-to get a better support for hardware controlled shutdown sequence?
-
-
->=20
-> I don't see how driver can benefits from nice things provided by of-therm=
-al.
-> There is no colling device associated with PMIC chip, pooling delays are =
-of
-> no use, device uses interrupt, trip pints are predefined in hardware...
-
-I see. However, using it may make this driver even simpler, as you would
-simply describe it in DT and the notification you want would be taken
-care by the core part of the framework.
-
->=20
-> Please advice.
->=20
-> Regards,
-> Ivan
-
---+g7M9IMkV8truYOl
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUXAizAAoJEMLUO4d9pOJWTkwH/2XInDMeeJuIOK6CWM5WDUYV
-HCjuNs3AGlNys9Z/m8BAGcMkT+KiQqWN+utfN3ltWI4YlvEmonUEksk/HRc1nyON
-t6Q4UGdNf8O0e9DfuyNESCZUbaleVQEkjgdfOm6EPjna+moUJ0BAzlbAKwGb9JtI
-WMT28qn000QGxVw4aSHzJiftKIEN00txLym727vtmPGebd6ci0lHQQrZ3JCvbj5z
-HMogP7nV6u1ZnVAF7XXqf83WacqxBNBKTT1uYE8EE2PACC+CMFnBr1HH3p5uL+he
-d3GyN2pG1F9XoV6e96G3TPYzzo9c5O6wTiPMClUQsX5XE8N6A3oEf6e7MftRaQY=
-=Emhb
------END PGP SIGNATURE-----
-
---+g7M9IMkV8truYOl--
+> 
+> I'll try to hack something with my current ITS driver and come back with
+> the results.
+> 
+> Thanks,
+> 
+> 	M.
+> 
