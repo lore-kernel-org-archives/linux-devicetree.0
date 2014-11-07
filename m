@@ -1,93 +1,37 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v17 1/5] thermal: rockchip: add driver for thermal
-Date: Thu, 6 Nov 2014 17:57:28 -0800
-Message-ID: <20141107015728.GF34214@dtor-ws>
-References: <1414809873-32227-1-git-send-email-caesar.wang@rock-chips.com>
- <1414809873-32227-2-git-send-email-caesar.wang@rock-chips.com>
- <20141107013017.GA10180@developer>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH V3 4/4] dw-hdmi: convert dw-hdmi to drm_bridge mode
+Date: Fri, 07 Nov 2014 10:21:36 +0800
+Message-ID: <545C2CB0.3090901@rock-chips.com>
+References: <1415273118-57045-1-git-send-email-andy.yan@rock-chips.com>
+ <1415273176-57096-1-git-send-email-andy.yan@rock-chips.com>
+ <20141106155410.GB19811@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141107013017.GA10180@developer>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>
-Cc: Caesar Wang <caesar.wang@rock-chips.com>, heiko@sntech.de, rui.zhang@intel.com, zyf@rock-chips.com, dianders@chromium.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, cf@rock-chips.com, dbasehore@chromium.org, huangtao@rock-chips.com, cjf@rock-chips.com, zhengsq@rock-chips.com, fzf@rock-chips.com
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20141106155410.GB19811@kroah.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, rmk+kernel@arm.linux.org.uk, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, linux-kernel@vger.kernel.org, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eduardo,
-
-On Thu, Nov 06, 2014 at 09:30:20PM -0400, Eduardo Valentin wrote:
-> Hello Caesar,
-> 
-> On Sat, Nov 01, 2014 at 10:44:29AM +0800, Caesar Wang wrote:
-> > Thermal is TS-ADC Controller module supports
-> > user-defined mode and automatic mode.
-> > 
-> > User-defined mode refers,TSADC all the control signals entirely by
-> > software writing to register for direct control.
-> > 
-> > Automaic mode refers to the module automatically poll TSADC output,
-> > and the results were checked.If you find that the temperature High
-> > in a period of time,an interrupt is generated to the processor
-> > down-measures taken;If the temperature over a period of time High,
-> > the resulting TSHUT gave CRU module,let it reset the entire chip,
-> > or via GPIO give PMIC.
-> > 
-> 
-> First thing, very good progress in this driver! 
-> 
-> > Signed-off-by: zhaoyifeng <zyf@rock-chips.com>
-> > Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
-> > Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> 
-> Just for the sake of code / documentation history, this patch, which
-> adds the driver, should come after patch 2, which adds dt documentation.
-> 
-> > ---
-> >  drivers/thermal/Kconfig            |   9 +
-> >  drivers/thermal/Makefile           |   1 +
-> >  drivers/thermal/rockchip_thermal.c | 711 +++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 721 insertions(+)
-> >  create mode 100644 drivers/thermal/rockchip_thermal.c
-> 
-> <big cut>
-> 
-> > +static int
-> > +rockchip_thermal_register_sensor(struct platform_device *pdev,
-> > +				 struct rockchip_thermal_data *thermal,
-> > +				 struct rockchip_thermal_sensor *sensor,
-> > +				 enum sensor_id id)
-> > +{
-> > +	const struct rockchip_tsadc_chip *tsadc = thermal->chip;
-> > +	int error;
-> > +
-> > +	tsadc->set_tshut_mode(id, thermal->regs, thermal->tshut_mode);
-> > +	tsadc->set_tshut_temp(id, thermal->regs, thermal->tshut_temp);
-> > +
-> > +	sensor->thermal = thermal;
-> > +	sensor->id = id;
-> > +	sensor->tzd = thermal_zone_of_sensor_register(&pdev->dev, id, sensor,
-> > +						rockchip_thermal_get_temp,
-> > +						NULL,
-> > +						rockchip_thermal_set_trips);
-> 
-> So, did I miss something here? Looks like you have extended the of
-> thermal, and I haven't seen the patch.
->   CC [M]  drivers/thermal/rockchip_thermal.o
->   drivers/thermal/rockchip_thermal.c: In function
->   `rockchip_thermal_register_sensor':
->   drivers/thermal/rockchip_thermal.c:482:7: error: too many arguments to
->   function `thermal_zone_of_sensor_register'
->          rockchip_thermal_set_trips);
-
-Yes, it relies on patch by Mikko Perttunen adding support for
-hardware-supported trip points. It allows us to reduce polling frequency
-while still being able to react when we cross the tripping point.
-
-See https://lkml.org/lkml/2014/6/27/76
-
-Thanks.
-
--- 
-Dmitry
+Ck9uIDIwMTTlubQxMeaciDA25pelIDIzOjU0LCBHcmVnIEtyb2FoLUhhcnRtYW4gd3JvdGU6Cj4g
+T24gVGh1LCBOb3YgMDYsIDIwMTQgYXQgMDc6MjY6MTZQTSArMDgwMCwgQW5keSBZYW4gd3JvdGU6
+Cj4+IEZyb206IHlrayA8eWtrQHJvY2stY2hpcHMuY29tPgo+IFdlIG5lZWQgYSAicmVhbCIgbmFt
+ZSBoZXJlLCBzb3JyeS4KPgo+PiBkdy1oZG1pIGlzIHVuZGVyIGRybS9icmlkZ2UsIHNvIGl0IHNo
+b3VsZCBiZSB0aGUgYnJpZGdlIG1vZGUuCj4+IGhhbmdlIG9mZiB0aGUgZW5jb2RlciB0byBkd19o
+ZG1pLWlteC5jLCBrZWVwIHRoZSBjb25uZWN0b3IgJgo+PiBiaXJkZ2UgaW4gZHdfaGRtaS5jCj4+
+Cj4+IFNpZ25lZC1vZmYtYnk6IHlrayA8eWtrQHJvY2stY2hpcHMuY29tPgo+IFNhbWUgaGVyZS4K
+Pgo+IHRoYW5rcywKPgo+IGdyZWcgay1oCj4KPgo+ClNvcnJ5LCB0aGVzZSB3aWxsIGJlIGZpeGVk
+IGluIFY0LiBBbmQgdGtzIGZvciB5b3UgcG9pbnRpbmcgaXQgb3V0LgoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2ZWwgbWFpbGluZyBsaXN0CmRldmVs
+QGxpbnV4ZHJpdmVycHJvamVjdC5vcmcKaHR0cDovL2RyaXZlcmRldi5saW51eGRyaXZlcnByb2pl
+Y3Qub3JnL21haWxtYW4vbGlzdGluZm8vZHJpdmVyZGV2LWRldmVsCg==
