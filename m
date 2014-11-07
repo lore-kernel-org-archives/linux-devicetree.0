@@ -1,72 +1,146 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 03/13] ARM: STi: DT: STiH416: Add DT nodes for the ehci and ohci usb controllers.
-Date: Fri, 07 Nov 2014 13:08:57 +0100
-Message-ID: <2945908.5UNg8NaKcc@wuerfel>
-References: <1415361475-6218-1-git-send-email-peter.griffin@linaro.org> <1415361475-6218-4-git-send-email-peter.griffin@linaro.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] OF: Add support for built in FDT blob
+Date: Fri, 7 Nov 2014 12:09:33 +0000
+Message-ID: <20141107120933.GA5487@leverpostej>
+References: <1415358849-25879-1-git-send-email-albeu@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415361475-6218-4-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1415358849-25879-1-git-send-email-albeu-GANU6spQydw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 07 November 2014 11:57:45 Peter Griffin wrote:
-> diff --git a/arch/arm/boot/dts/stih416.dtsi b/arch/arm/boot/dts/stih416.dtsi
-> index 0f3019a..6238d9e 100644
-> --- a/arch/arm/boot/dts/stih416.dtsi
-> +++ b/arch/arm/boot/dts/stih416.dtsi
-> @@ -325,5 +325,149 @@
->                         clock-names = "osc_phy";
+Hi,
+
+On Fri, Nov 07, 2014 at 11:14:09AM +0000, Alban Bedel wrote:
+> Allow embedding an FDT blob in the kernel image, this is mostly
+> useful to run new kernels on boards with old bootloaders.
+
+I am very much not keen on embedding a DTB within a kernel. It's far
+nicer for the two to remain separate blobs, with a small shim to set up
+the DTB address.
+
+On ARM we have appended DTB for this purpose, which is at least better
+than embedding the DT inside of the kernel.
+
+What architecture and bootloader are you using that necessitate this?
+
+Thanks,
+Mark.
+
+> Signed-off-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+> ---
+>  drivers/of/Kconfig    | 16 ++++++++++++++++
+>  drivers/of/Makefile   |  8 ++++++++
+>  drivers/of/fdt.c      |  8 ++++++++
+>  drivers/of/fdt_blob.S | 17 +++++++++++++++++
+>  4 files changed, 49 insertions(+)
+>  create mode 100644 drivers/of/fdt_blob.S
+> 
+> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+> index 1a13f5b..97c5d18 100644
+> --- a/drivers/of/Kconfig
+> +++ b/drivers/of/Kconfig
+> @@ -83,4 +83,20 @@ config OF_RESERVED_MEM
+>  config OF_RESOLVE
+>  	bool
 >  
->                 };
+> +config OF_BUILTIN_FDT
+> +	bool "Include a FDT blob in the kernel"
+> +	help
+> +	  Include a FDT blob in the kernel to use as default when
+> +	  no blob has been passed by the bootloader. This is useful
+> +	  to use devicetree on boards with old bootloaders.
 > +
-> +               ehci0: usb@0xfe1ffe00 {
-
-Please drop the '0x' from the unit address in all instances.
-
-> +                       compatible = "st,st-ehci-300x";
-> +                       reg = <0xfe1ffe00 0x100>;
-> +                       interrupts = <GIC_SPI 148 IRQ_TYPE_NONE>;
-> +                       pinctrl-names = "default";
-> +                       pinctrl-0 = <&pinctrl_usb0>;
-> +                       clocks = <&clk_s_a1_ls 0>,
-> +                                <&clockgen_b0 0>;
-> +                       clock-names = "ic", "clk48";
+> +	  If unsure, say N.
 > +
-> +                       phys = <&usb2_phy>;
-> +                       phy-names = "usb";
-> +                       status = "okay";
-
-No need to list 'status="okay"', it's the default. It might
-make sense to change this to 'status="disabled"' though, if the ports
-might be unused on some boards.
-
->                 mmc0: sdhci@fe81e000 {
->                         bus-width = <8>;
->                 };
+> +config OF_BUILTIN_FDT_BLOB
+> +	string "FDT Blob name"
+> +	depends on OF_BUILTIN_FDT
+> +	help
+> +	  Name of the FDT blob to build in the kernel, from one of the
+> +	  dtbs available for the current platform.
 > +
-> +               usb0: usb@fe100000 {
-> +                       status = "okay";
-> +               };
+>  endmenu # OF
+> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+> index ca9209c..b96c6e9 100644
+> --- a/drivers/of/Makefile
+> +++ b/drivers/of/Makefile
+> @@ -14,6 +14,14 @@ obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
+>  obj-$(CONFIG_OF_MTD)	+= of_mtd.o
+>  obj-$(CONFIG_OF_RESERVED_MEM) += of_reserved_mem.o
+>  obj-$(CONFIG_OF_RESOLVE)  += resolver.o
+> +obj-$(CONFIG_OF_BUILTIN_FDT) += fdt_blob.o
+>  
+>  CFLAGS_fdt.o = -I$(src)/../../scripts/dtc/libfdt
+>  CFLAGS_fdt_address.o = -I$(src)/../../scripts/dtc/libfdt
 > +
-> +               usb1: usb@fe200000 {
-> +                       status = "okay";
-> +               };
+> +# The FDT blob to include
+> +FDT_BLOB := arch/$(ARCH)/boot/dts/$(CONFIG_OF_BUILTIN_FDT_BLOB:"%"=%).dtb
+> +# Undefine ARCH to avoid breaking the FDT path
+> +AFLAGS_fdt_blob.o += -U$(ARCH) -DFDT_BLOB=$(FDT_BLOB)
+> +# This dependency can't be automatically tracked
+> +$(obj)/fdt_blob.o: $(obj)/../../$(FDT_BLOB)
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index d1ffca8..ffb86a7 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -26,6 +26,9 @@
+>  #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
+>  #include <asm/page.h>
+>  
+> +extern char __fdt_blob_start[];
+> +extern unsigned long __fdt_blob_size;
 > +
-> +               usb2: usb@fe300000 {
-> +                       status = "okay";
-> +               };
-
-I don't understand this part: why do you add extra nodes here that only
-contain a status property?
-
-Note that if you add the devices to the per-soc file instead of the
-per-board file, you can just access the nodes by label.
-
-	Arnd
+>  /*
+>   * of_fdt_limit_memory - limit the number of regions in the /memory node
+>   * @limit: maximum entries
+> @@ -1064,6 +1067,11 @@ void __init unflatten_and_copy_device_tree(void)
+>  	int size;
+>  	void *dt;
+>  
+> +#ifdef CONFIG_OF_BUILTIN_FDT
+> +	if (!initial_boot_params && __fdt_blob_size > 0)
+> +		initial_boot_params = __fdt_blob_start;
+> +#endif
+> +
+>  	if (!initial_boot_params) {
+>  		pr_warn("No valid device tree found, continuing without\n");
+>  		return;
+> diff --git a/drivers/of/fdt_blob.S b/drivers/of/fdt_blob.S
+> new file mode 100644
+> index 0000000..fcaa2aa
+> --- /dev/null
+> +++ b/drivers/of/fdt_blob.S
+> @@ -0,0 +1,17 @@
+> +#include <linux/stringify.h>
+> +#include <asm-generic/vmlinux.lds.h>
+> +
+> +.align 4
+> +.section .init.fdt_blob,"a"
+> +.globl VMLINUX_SYMBOL(__fdt_blob_start)
+> +VMLINUX_SYMBOL(__fdt_blob_start):
+> +.incbin __stringify(FDT_BLOB)
+> +__fdt_blob_end:
+> +.section .init.fdt_blob.info,"a"
+> +.globl VMLINUX_SYMBOL(__fdt_blob_size)
+> +VMLINUX_SYMBOL(__fdt_blob_size):
+> +#ifdef CONFIG_64BIT
+> +        .quad __fdt_blob_end - __fdt_blob_start
+> +#else
+> +        .long __fdt_blob_end - __fdt_blob_start
+> +#endif
+> -- 
+> 2.0.0
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
