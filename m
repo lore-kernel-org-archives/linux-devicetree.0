@@ -1,106 +1,117 @@
-From: <tthayer@opensource.altera.com>
-Subject: [PATCHv4 5/5] arm: dts: Add Altera L2 Cache and OCRAM EDAC
-Date: Fri, 7 Nov 2014 10:54:22 -0600
-Message-ID: <1415379263-12391-6-git-send-email-tthayer@opensource.altera.com>
-References: <1415379263-12391-1-git-send-email-tthayer@opensource.altera.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: Creating a new platform_bus inside a spi_driver
+Date: Fri, 07 Nov 2014 18:04:35 +0100
+Message-ID: <2501338.EAyTJJ482M@wuerfel>
+References: <545BD3EC.6050503@datacom.ind.br> <707686811.tbHdnxXMgE@wuerfel> <545CF546.8090703@datacom.ind.br>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415379263-12391-1-git-send-email-tthayer@opensource.altera.com>
+In-Reply-To: <545CF546.8090703@datacom.ind.br>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com
+To: DATACOM - =?ISO-8859-1?Q?=C9rico?= Nunes <erico.nunes@datacom.ind.br>
+Cc: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, sameo@linux.intel.com, lee.jones@linaro.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <tthayer@opensource.altera.com>
+On Friday 07 November 2014 14:37:26 DATACOM - =C9rico Nunes wrote:
+> Hello Arnd and all,
+>=20
+> On 11/07/2014 08:04 AM, Arnd Bergmann wrote:
+> > On Thursday 06 November 2014 18:02:52 DATACOM - =C9rico Nunes wrote=
+:
+> >> The idea is that "fpga-spi" is a spi_driver which instantiates all=
+ of the
+> >> "fpga-deviceN" as platform_devices, through the use of
+> >> of_platform_populate(dev->of_node, NULL, NULL, dev).
+> >>
+> >> The visible problem we're facing with this approach is that, as th=
+e internal
+> >> platform_devices have a "reg" property, of_platform_populate() eve=
+ntually
+> >> triggers an address translation which is apparently trying to tran=
+slate the
+> >> addresses of the internal platform_bus to addresses of the process=
+or memory
+> >> map.
+> >> This translation is however not part of our intention, as we inten=
+d to have an
+> >> internal bus with its own memory map.
+> >> This fails when __of_translate_address() reaches the spi-master bo=
+undary
+> >> because (as it seems to make sense) it isn't possible to translate=
+ them past
+> >> that.
+> >> A KERN_ERR rated message like
+> >> "prom_parse: Bad cell count for /soc@f0000000/spi@2000/fpga@1"
+> >> is thrown by __of_translate_address() and later it is not possible=
+ to obtain
+> >> the "reg" address with platform_get_resource().
+> >>
+> >> On this scenario, we have a few questions and, depending on the ou=
+tcome of
+> >> these, possibly a patch.
+> >>
+> >> 1. Is it possible to have an internal platform_bus with a differen=
+t memory map
+> >> as we intended? Or are platform_busses and platform_devices suppos=
+ed to always
+> >> be mapped on the processor memory map?
+> > It's inconsistent. We have some code that assumes that platform dev=
+ices
+> > are always memory mapped, and some other code that breaks this assu=
+mption.
+>=20
+> By this I take that the platform subsystem could be made generic so i=
+t can be
+> used in both ways (mapped to processor memory map or mapped to a priv=
+ate memory
+> map). There seems to be no strict requirement enforcing it to be proc=
+essor
+> memory map.
+>=20
+> Is this correct?
 
-Adding the device tree entries and bindings needed to support
-the Altera L2 cache and On-Chip RAM EDAC. This patch relies upon
-an earlier patch to declare and setup On-chip RAM properly.
-http://www.spinics.net/lists/devicetree/msg51117.html
+It could be, but I'm sure if that is a good idea or not. It might compl=
+icate
+things elsewhere, so it would at least need careful testing and consens=
+us
+among a broader group of developers.
 
-Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
----
-v2: Remove OCRAM declaration and reference prior patch.
+> >> 2. If platform_bus and platform_device were actually designed to a=
+lways be
+> >> mappable to the processor memory map, what would be a different ap=
+proach to
+> >> this problem?  One alternative considered was to define a new "fpg=
+a_bus" and
+> >> "fpga_device" but that seemed as an overkill approach to the probl=
+em.
+> > I think the existing mfd framework should do what you need, when yo=
+u call
+> > mfd_add_devices() and pass a table of cells with the compatible str=
+ings
+> > for your devices, it should create the platform devices you want. I=
+f not,
+> > that can probably be fixed in the mfd core code.
+> >
+> >
+>=20
+> Thanks for the tip, we were not aware of the purpose of this mfd fram=
+ework and
+> we will take a look at this framework now.
+> However I'm thinking now that eventually it would fall in the same ca=
+se of
+> trying to translate the address of any "reg" dts property to the proc=
+essor
+> memory map, and fail with the same error for the SPI case.
+>=20
+> Considering this and taking the answer to the first question, do you =
+think a
+> patch fixing the "error" report by the translation function would be
+> acceptable?
+> We can prepare/test that under our platform and submit it.
 
-v3/4: No Change
----
- .../bindings/arm/altera/socfpga-l2-edac.txt        |   15 +++++++++++++++
- .../bindings/arm/altera/socfpga-ocram-edac.txt     |   16 ++++++++++++++++
- arch/arm/boot/dts/socfpga.dtsi                     |   15 ++++++++++++++-
- 3 files changed, 45 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
- create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
+Please try to use the mfd approach first. There are a lot of mfd driver=
+s
+on the SPI bus, so I'd assume this works fine.
 
-diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
-new file mode 100644
-index 0000000..35b19e3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
-@@ -0,0 +1,15 @@
-+Altera SoCFPGA L2 cache Error Detection and Correction [EDAC]
-+
-+Required Properties:
-+- compatible : Should be "altr,l2-edac"
-+- reg : Address and size for ECC error interrupt clear registers.
-+- interrupts : Should be single bit error interrupt, then double bit error
-+	interrupt. Note the rising edge type.
-+
-+Example:
-+
-+	l2edac@ffd08140 {
-+		compatible = "altr,l2-edac";
-+		reg = <0xffd08140 0x4>;
-+		interrupts = <0 36 1>, <0 37 1>;
-+	};
-diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
-new file mode 100644
-index 0000000..31ab205
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
-@@ -0,0 +1,16 @@
-+Altera SoCFPGA On-Chip RAM Error Detection and Correction [EDAC]
-+
-+OCRAM ECC Required Properties:
-+- compatible : Should be "altr,ocram-edac"
-+- reg : Address and size for ECC error interrupt clear registers.
-+- iram : phandle to On-Chip RAM definition.
-+- interrupts : Should be single bit error interrupt, then double bit error
-+	interrupt. Note the rising edge type.
-+
-+Example:
-+	ocramedac@ffd08144 {
-+		compatible = "altr,ocram-edac";
-+		reg = <0xffd08144 0x4>;
-+		iram = <&ocram>;
-+		interrupts = <0 178 1>, <0 179 1>;
-+	};
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 6af96ed..32c63a3 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -618,8 +618,21 @@
- 			interrupts = <0 39 4>;
- 		};
- 
-+		l2edac@ffd08140 {
-+			compatible = "altr,l2-edac";
-+			reg = <0xffd08140 0x4>;
-+			interrupts = <0 36 1>, <0 37 1>;
-+		};
-+
-+		ocramedac@ffd08144 {
-+			compatible = "altr,ocram-edac";
-+			reg = <0xffd08144 0x4>;
-+			iram = <&ocram>;
-+			interrupts = <0 178 1>, <0 179 1>;
-+		};
-+
- 		L2: l2-cache@fffef000 {
--			compatible = "arm,pl310-cache";
-+			compatible = "arm,pl310-cache", "syscon";
- 			reg = <0xfffef000 0x1000>;
- 			interrupts = <0 38 0x04>;
- 			cache-unified;
--- 
-1.7.9.5
+	Arnd
