@@ -1,113 +1,72 @@
-From: =?windows-1252?Q?DATACOM_-_=C9rico_Nunes?=
-	<erico.nunes-rCUF4CxDseZknzVnJbg3IA@public.gmane.org>
-Subject: Re: Creating a new platform_bus inside a spi_driver
-Date: Fri, 07 Nov 2014 14:37:26 -0200
-Message-ID: <545CF546.8090703@datacom.ind.br>
-References: <545BD3EC.6050503@datacom.ind.br> <707686811.tbHdnxXMgE@wuerfel>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] OF: Add support for built in FDT blob
+Date: Fri, 7 Nov 2014 16:47:01 +0000
+Message-ID: <20141107164701.GC5586@leverpostej>
+References: <1415358849-25879-1-git-send-email-albeu@free.fr>
+ <20141107120933.GA5487@leverpostej>
+ <20141107135931.376caf98@tock>
+ <CAL_Jsq+n8owZz6yas=surm4fTaGWgUuCLLEKXYKm8_02S8DdYA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <707686811.tbHdnxXMgE@wuerfel>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+n8owZz6yas=surm4fTaGWgUuCLLEKXYKm8_02S8DdYA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alban <albeu-GANU6spQydw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Arnd and all,
+On Fri, Nov 07, 2014 at 02:56:32PM +0000, Rob Herring wrote:
+> On Fri, Nov 7, 2014 at 6:59 AM, Alban <albeu-GANU6spQydw@public.gmane.org> wrote:
+> > On Fri, 7 Nov 2014 12:09:33 +0000
+> > Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> >
+> >> Hi,
+> >>
+> >> On Fri, Nov 07, 2014 at 11:14:09AM +0000, Alban Bedel wrote:
+> >> > Allow embedding an FDT blob in the kernel image, this is mostly
+> >> > useful to run new kernels on boards with old bootloaders.
+> >>
+> >> I am very much not keen on embedding a DTB within a kernel. It's far
+> >> nicer for the two to remain separate blobs, with a small shim to set
+> >> up the DTB address.
+> >>
+> >> On ARM we have appended DTB for this purpose, which is at least better
+> >> than embedding the DT inside of the kernel.
+> >
+> > I looked at that but that seemed quiet complicated to implement, not to
+> > mention that it needed quiet a lot of arch specific code. On the other
+> > hand having the DTB built in like this was trivial and would be portable
+> > to every architecture, so that seemed like the best way to me.
+> >
+> >> What architecture and bootloader are you using that necessitate this?
+> >
+> > MIPS with an antic u-boot version patched by the board vendor to use
+> > some non standard image format. Updating the boot loader is currently
+> > not an option because of the lack of documentation for the board/SoC.
+> 
+> MIPS and a few other arches already have built-in dtb support. We
+> don't need another way to do it, but I would welcome any clean-up that
+> makes it arch independent and available to any arch.
+> 
+> While Mark is right, I could envision other uses such as embedding
+> overlay dtbs in the kernel either for add-on boards or just as fixups.
 
-On 11/07/2014 08:04 AM, Arnd Bergmann wrote:
-> On Thursday 06 November 2014 18:02:52 DATACOM - =C9rico Nunes wrote:
->> The idea is that "fpga-spi" is a spi_driver which instantiates all o=
-f the
->> "fpga-deviceN" as platform_devices, through the use of
->> of_platform_populate(dev->of_node, NULL, NULL, dev).
->>
->> The visible problem we're facing with this approach is that, as the =
-internal
->> platform_devices have a "reg" property, of_platform_populate() event=
-ually
->> triggers an address translation which is apparently trying to transl=
-ate the
->> addresses of the internal platform_bus to addresses of the processor=
- memory
->> map.
->> This translation is however not part of our intention, as we intend =
-to have an
->> internal bus with its own memory map.
->> This fails when __of_translate_address() reaches the spi-master boun=
-dary
->> because (as it seems to make sense) it isn't possible to translate t=
-hem past
->> that.
->> A KERN_ERR rated message like
->> "prom_parse: Bad cell count for /soc@f0000000/spi@2000/fpga@1"
->> is thrown by __of_translate_address() and later it is not possible t=
-o obtain
->> the "reg" address with platform_get_resource().
->>
->> On this scenario, we have a few questions and, depending on the outc=
-ome of
->> these, possibly a patch.
->>
->> 1. Is it possible to have an internal platform_bus with a different =
-memory map
->> as we intended? Or are platform_busses and platform_devices supposed=
- to always
->> be mapped on the processor memory map?
-> It's inconsistent. We have some code that assumes that platform devic=
-es
-> are always memory mapped, and some other code that breaks this assump=
-tion.
+I don't see how embedding a DTB in this manner helps with overlays and
+fixups.
 
-By this I take that the platform subsystem could be made generic so it =
-can be
-used in both ways (mapped to processor memory map or mapped to a privat=
-e memory
-map). There seems to be no strict requirement enforcing it to be proces=
-sor
-memory map.
+I'm rather worried about this turning into a shoddy board file, and
+making it painful to build/distribute/boot a generic kernel for an
+arbitrary platform.
 
-Is this correct?
+On arm64 the kernel and DTB have always been separate, and I'm not keen
+on allowing the two to be tightly coupled in this way. There are already
+container formats (e.g. FIT) that can be used to hold both if that's
+what the bootloader desires.
 
->> 2. If platform_bus and platform_device were actually designed to alw=
-ays be
->> mappable to the processor memory map, what would be a different appr=
-oach to
->> this problem?  One alternative considered was to define a new "fpga_=
-bus" and
->> "fpga_device" but that seemed as an overkill approach to the problem=
-=2E
-> I think the existing mfd framework should do what you need, when you =
-call
-> mfd_add_devices() and pass a table of cells with the compatible strin=
-gs
-> for your devices, it should create the platform devices you want. If =
-not,
-> that can probably be fixed in the mfd core code.
->
->
-
-Thanks for the tip, we were not aware of the purpose of this mfd framew=
-ork and
-we will take a look at this framework now.
-However I'm thinking now that eventually it would fall in the same case=
- of
-trying to translate the address of any "reg" dts property to the proces=
-sor
-memory map, and fail with the same error for the SPI case.
-
-Considering this and taking the answer to the first question, do you th=
-ink a
-patch fixing the "error" report by the translation function would be
-acceptable?
-We can prepare/test that under our platform and submit it.
-
-Thanks!
-
-
+Thanks,
+Mark.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
