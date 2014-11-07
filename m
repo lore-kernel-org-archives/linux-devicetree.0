@@ -1,58 +1,63 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] ARM: dts: Fix booting on Rinato market device
-Date: Fri, 07 Nov 2014 12:44:22 +0100
-Message-ID: <1415360662-30390-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH V4 5/6] dw-hdmi: add support for multi byte register
+ width access
+Date: Fri, 07 Nov 2014 12:45:07 +0100
+Message-ID: <1415360707.2776.1.camel@pengutronix.de>
+References: <1415360068-8606-1-git-send-email-andy.yan@rock-chips.com>
+ <1415360125-8655-1-git-send-email-andy.yan@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1415360125-8655-1-git-send-email-andy.yan@rock-chips.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: heiko@sntech.de, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, rmk+kernel@arm.linux.org.uk, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com
 List-Id: devicetree@vger.kernel.org
 
-The bootloader on market Rinato (Gear 2) device checks for revision in
-compatible field of DTB. If it is not present or lower than required
-then booting fails with: "Could not do normal boot. (no DTB found)".
-
-Log of bootloader in case of failure:
-h/w: revision  = 0x06
-h/w: schematic = SM-R380_Rev0.5_Final_0205
-date = 2000/01/01 12:00:21 (UTC)
-cmu_div:4, div:5, src_clk:800000000, pixel_clk:31860720
-load_kernel: loading boot image from 57344.. (BOOT)
-load_kernel: found zImage, size: 0x3267e8
-0xbc Error!
-Verify_Binary_Signature: failed.
-pit_check_signature (BOOT) invalid.
-load_kernel: found custom kernel (ret:-2147483647)
- No need to update kernel type.
-Detected board: samsung,rinato-rev06
-Could not do normal boot. (no DTB found)
-: Entering usb mode for SM-R380_EUR_XX (65535)..
-
-Add a "rev06" suffix to compatible to satisfy the bootloader.
-
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/exynos3250-rinato.dts | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/exynos3250-rinato.dts b/arch/arm/boot/dts/exynos3250-rinato.dts
-index 84380fa13e37..f72ba0a1d915 100644
---- a/arch/arm/boot/dts/exynos3250-rinato.dts
-+++ b/arch/arm/boot/dts/exynos3250-rinato.dts
-@@ -18,7 +18,8 @@
- 
- / {
- 	model = "Samsung Rinato board";
--	compatible = "samsung,rinato", "samsung,exynos3250", "samsung,exynos3";
-+	compatible = "samsung,rinato", "samsung,rinato-rev06",
-+			"samsung,exynos3250", "samsung,exynos3";
- 
- 	aliases {
- 		i2c7 = &i2c_max77836;
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QW0gRnJlaXRhZywgZGVuIDA3LjExLjIwMTQsIDE5OjM1ICswODAwIHNjaHJpZWIgQW5keSBZYW46
+Cj4gT24gcm9ja2NoaXAgcmszMjg4LCBvbmx5IHdvcmQoMzItYml0KSBhY2Nlc3NlcyBhcmUKPiBw
+ZXJtaXR0ZWQgZm9yIGhkbWkgcmVnaXN0ZXJzLiAgQnl0ZSB3aWR0aCBhY2Nlc3MgKHdyaXRlYiwK
+PiByZWFkYikgZ2VuZXJhdGVzIGFuIGltcHJlY2lzZSBleHRlcm5hbCBhYm9ydC4KPiAKPiBTaWdu
+ZWQtb2ZmLWJ5OiBBbmR5IFlhbiA8YW5keS55YW5Acm9jay1jaGlwcy5jb20+Cj4gLS0tCj4gIGRy
+aXZlcnMvZ3B1L2RybS9icmlkZ2UvZHdfaGRtaS5jIHwgNDkgKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKy0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgNDYgaW5zZXJ0aW9ucygrKSwg
+MyBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9k
+d19oZG1pLmMgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R3X2hkbWkuYwo+IGluZGV4IGRmNzZh
+OGMuLjk4Njc2NDIgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kd19oZG1p
+LmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R3X2hkbWkuYwo+IEBAIC0xMjYsMTkg
+KzEyNiw0MiBAQCBzdHJ1Y3QgZHdfaGRtaSB7ClsuLi5dCj4gKwl1MzIgdmFsOwo+ICsKPiArCWlm
+ICghb2ZfcHJvcGVydHlfcmVhZF91MzIobnAsICJyZWctaW8td2lkdGgiLCAmdmFsKSkgewo+ICsJ
+CXN3aXRjaCAodmFsKSB7Cj4gKwkJY2FzZSA0Ogo+ICsJCQloZG1pLT53cml0ZSA9IGR3X2hkbWlf
+d3JpdGVsOwo+ICsJCQloZG1pLT5yZWFkID0gZHdfaGRtaV9yZWFkbDsKPiArCQkJaGRtaS0+cmVn
+X3NoaWZ0ID0gMjsKPiArCQkJYnJlYWs7Cj4gKwkJZGVmYXVsdDoKPiArCQkJaGRtaS0+d3JpdGUg
+PSBkd19oZG1pX3dyaXRlYjsKPiArCQkJaGRtaS0+cmVhZCA9IGR3X2hkbWlfcmVhZGI7Cj4gKwkJ
+CWhkbWktPnJlZ19zaGlmdCA9IDA7Cj4gKwkJCWJyZWFrOwo+ICsJCX0KPiArCX0gZWxzZSB7Cj4g
+KwkJaGRtaS0+d3JpdGUgPSBkd19oZG1pX3dyaXRlYjsKPiArCQloZG1pLT5yZWFkID0gZHdfaGRt
+aV9yZWFkYjsKPiArCQloZG1pLT5yZWdfc2hpZnQgPSAwOwo+ICsJfQo+ICAKPiAgCWRkY19ub2Rl
+ID0gb2ZfcGFyc2VfcGhhbmRsZShucCwgImRkYy1pMmMtYnVzIiwgMCk7Cj4gIAlpZiAoZGRjX25v
+ZGUpIHsKClRoaXMgc2hvdWxkIHRocm93IGFuIGVycm9yIGlmIHRoZSBwcm9wZXJ0eSB2YWx1ZSBp
+biBkZXZpY2V0cmVlIGlzIG5vdApyZWNvZ25pemVkLiBUaGlzIGNvdWxkIGJlIHNpbXBsaWZpZWQg
+bGlrZSB0aGlzOgoKCXUzMiB2YWwgPSAxOwoKCS8vIHRoaXMgd29uJ3QgdG91Y2ggdmFsIGlmIGl0
+IGNhbid0IGZpbmQgdGhlIHByb3BlcnR5CglvZl9wcm9wZXJ0eV9yZWFkX3UzMihucCwgInJlZy1p
+by13aWR0aCIsICZ2YWwpIAoKCglzd2l0Y2ggKHZhbCkgewoJY2FzZSA0OgoJCWhkbWktPndyaXRl
+ID0gZHdfaGRtaV93cml0ZWw7CgkJaGRtaS0+cmVhZCA9IGR3X2hkbWlfcmVhZGw7CgkJaGRtaS0+
+cmVnX3NoaWZ0ID0gMjsKCQlicmVhazsKCWNhc2UgMToKCQloZG1pLT53cml0ZSA9IGR3X2hkbWlf
+d3JpdGViOwoJCWhkbWktPnJlYWQgPSBkd19oZG1pX3JlYWRiOwoJCWhkbWktPnJlZ19zaGlmdCA9
+IDA7CgkJYnJlYWs7CglkZWZhdWx0OgoJCWRldl9lcnIoZGV2LCAidW5yZWNvZ25pemVkIHZhbHVl
+IGZvciByZWctaW8td2lkdGgiKTsKCQkvLyBlcnJvciBoYW5kbGluZwoJfQoKQWxzbyB0aGUgRFQg
+YmluZGluZyBkb2MgZm9yIHRoaXMgcHJvcGVydHkgaXMgbWlzc2luZy4KClJlZ2FyZHMsCkx1Y2Fz
+Ci0tIApQZW5ndXRyb25peCBlLksuICAgICAgICAgICAgIHwgTHVjYXMgU3RhY2ggICAgICAgICAg
+ICAgICAgIHwKSW5kdXN0cmlhbCBMaW51eCBTb2x1dGlvbnMgICB8IGh0dHA6Ly93d3cucGVuZ3V0
+cm9uaXguZGUvICB8CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
