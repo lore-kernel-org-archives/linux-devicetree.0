@@ -1,93 +1,69 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [RFC] Add of_path property for all devices with a node
-Date: Fri, 07 Nov 2014 17:35:17 +1100
-Message-ID: <1415342117.4925.29.camel@kernel.crashing.org>
-References: <1415342031.4925.27.camel@kernel.crashing.org>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCHv0 2/3] rtc: rtc-isl12057: fix isil vs isl naming for
+ intersil
+Date: Fri, 7 Nov 2014 07:39:53 +0100
+Message-ID: <20141107063953.GC10432@pengutronix.de>
+References: <cover.1415222752.git.arno@natisbad.org>
+ <2ac5b475fd757ea771296ea0731de75d963999ef.1415222752.git.arno@natisbad.org>
+ <20141106053253.GK8509@sirena.org.uk>
+ <874mucne0y.fsf@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415342031.4925.27.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <874mucne0y.fsf@natisbad.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnaud Ebalard <arno@natisbad.org>
+Cc: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Linus Walleij <linus.walleij@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-doc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>, Rob Landley <rob@landley.net>, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Peter Huewe <peter.huewe@infineon.com>, Thierry Reding <treding@nvidia.com>, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2014-11-07 at 17:33 +1100, Benjamin Herrenschmidt wrote:
+Hello Arnaud,
 
-> So I came up with this patch, 
+On Thu, Nov 06, 2014 at 11:46:21PM +0100, Arnaud Ebalard wrote:
+> Mark Brown <broonie@kernel.org> writes:
+> > On Wed, Nov 05, 2014 at 10:42:41PM +0100, Arnaud Ebalard wrote:
+> >
+> >> When Intersil ISL12057 driver was introduced by commit 70e123373c0=
+5
+> >> (rtc: Add support for Intersil ISL12057 I2C RTC chip), the vendor
+> >> prefix 'isl' was used instead of the expected 'isil' (Intersil
+> >> NASDAQ symbol). Recently, a patch from Philip Zabel (7a6540ca856a,
+> >> ARM: mvebu: Change vendor prefix for Intersil Corporation to isil)
+> >> fixed that prefix in ReadyNAS devices .dts files (AFAICT, the only
+> >> kernel users at the moment).
+> >
+> > They may be the only in kernel users but someone with an out of tre=
+e DT
+> > may be using the existing prefix, we shouldn't break compatibility =
+with
+> > them so we should support both compatible strings even if we want t=
+o
+> > deprecate the isl, one.
+>=20
+> Updating the patch in the following way should make it possible to
+> support out-of-tree users while avoiding additional uses of 'isl':=20
+>=20
+> - have two compatible entries in isl12057_dt_match struct instead of =
+one
+>   i.e.:
+>=20
+>     static const struct of_device_id isl12057_dt_match[] =3D {
+>    	{ .compatible =3D "isl,isl12057" },
+>    	{ .compatible =3D "isil,isl12057" },
+>     	{ },
+>     };
+>=20
+>   I think it matches the situation we have.
+This should work. I suggest to add a comment to the obsolete one to
+state not to use it for new boards.
 
-And here is the actual patch, which might help :-) It's pretty trivial
-and small...
+Best regards
+Uwe
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 20da3ad..dd0ee1b 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -26,6 +26,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/netdevice.h>
- #include <linux/sysfs.h>
-+#include <linux/of.h>
- 
- #include "base.h"
- #include "power/power.h"
-@@ -454,6 +455,23 @@ static ssize_t online_store(struct device *dev, struct device_attribute *attr,
- }
- static DEVICE_ATTR_RW(online);
- 
-+#ifdef CONFIG_OF
-+
-+static ssize_t of_path_show(struct device *dev, struct device_attribute *attr,
-+			    char *buf)
-+{
-+	ssize_t s = 0;
-+
-+	device_lock(dev);
-+	if (dev->of_node)
-+		s = sprintf(buf, "%s\n", dev->of_node->full_name);
-+	device_unlock(dev);
-+	return s;
-+}
-+static DEVICE_ATTR_RO(of_path);
-+
-+#endif /* CONFIG_OF */
-+
- int device_add_groups(struct device *dev, const struct attribute_group **groups)
- {
- 	return sysfs_create_groups(&dev->kobj, groups);
-@@ -487,15 +505,27 @@ static int device_add_attrs(struct device *dev)
- 	if (error)
- 		goto err_remove_type_groups;
- 
-+#ifdef CONFIG_OF
-+	if (dev->of_node) {
-+		error = device_create_file(dev, &dev_attr_of_path);
-+		if (error)
-+			goto err_remove_dev_groups;
-+	}
-+#endif /* CONFIG_OF */
-+
- 	if (device_supports_offline(dev) && !dev->offline_disabled) {
- 		error = device_create_file(dev, &dev_attr_online);
- 		if (error)
--			goto err_remove_dev_groups;
-+			goto err_remove_of_path;
- 	}
- 
- 	return 0;
- 
-+ err_remove_of_path:
-+#ifdef CONFIG_OF
-+	device_remove_file(dev, &dev_attr_of_path);
-  err_remove_dev_groups:
-+#endif
- 	device_remove_groups(dev, dev->groups);
-  err_remove_type_groups:
- 	if (type)
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
