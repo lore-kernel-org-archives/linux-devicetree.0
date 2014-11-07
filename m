@@ -1,78 +1,66 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH V4 00/14] genirq endian fixes; bcm7120/brcmstb IRQ
- updates
-Date: Fri, 7 Nov 2014 07:27:45 -0500
-Message-ID: <20141107122745.GJ3698@titan.lakedaemon.net>
-References: <1415342669-30640-1-git-send-email-cernekee@gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] ASoC: simple-card: add multi-CODECs in DT
+Date: Fri, 7 Nov 2014 12:30:35 +0000
+Message-ID: <20141107123035.GO8509@sirena.org.uk>
+References: <cover.1415096705.git.moinejf@free.fr>
+ <53ef077d2174f8eb5b861d6cebe7c9e732f06d52.1415096705.git.moinejf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="prA7fRZJHz3WLy0C"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1415342669-30640-1-git-send-email-cernekee@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>
-Cc: tglx@linutronix.de, linux-sh@vger.kernel.org, arnd@arndb.de, f.fainelli@gmail.com, ralf@linux-mips.org, sergei.shtylyov@cogentembedded.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
+In-Reply-To: <53ef077d2174f8eb5b861d6cebe7c9e732f06d52.1415096705.git.moinejf-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Thomas,
 
-On Thu, Nov 06, 2014 at 10:44:15PM -0800, Kevin Cernekee wrote:
-> V3->V4:
-> 
->  - Fix buildbot bisectability warning on patch 02/14 (missing include)
+--prA7fRZJHz3WLy0C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Dammit.  :(  Even if I had created a topic branch for this series, I
-still would have put the genirq changes in /core, then based a brcm
-branch off of that.
+On Tue, Nov 04, 2014 at 11:21:46AM +0100, Jean-Francois Moine wrote:
 
-I'm inclined to think I should just drop v3 and apply v4, as a revert
-commit wouldn't solve the bisectability issue.
+This looks like it combines some refactoring to split out some of the
+DAI node parsing code with some new code.  It's quite hard to read
+what's going on here, separating the code motion and the new code would
+make life a lot easier, I've stared at it for a bit and I'm still not
+100% sure it's doing everything it's supposed to be.
 
-thoughts?
+> -Example 2 - many DAI links:
+> +Example 2 - many DAI links and multi-CODECs:
 
-thx,
+This would be a lot easier to read if the change didn't completely
+rewrite the example but just added the thing it wants to add an example
+of; the example may be drawn from a real system but that's not the
+point.
 
-Jason.
+>  	} else {
+> -		clk = of_clk_get(args.np, 0);
+> +		clk = of_clk_get((struct device_node *) dai_np, 0);
 
-> 
->  - Add kernel-doc text for the new reg_{readl,writel} struct members and
->    IRQ_GC_BE_IO flag
-> 
-> 
-> Kevin Cernekee (14):
->   sh: Eliminate unused irq_reg_{readl,writel} accessors
->   genirq: Generic chip: Change irq_reg_{readl,writel} arguments
->   genirq: Generic chip: Allow irqchip drivers to override
->     irq_reg_{readl,writel}
->   genirq: Generic chip: Add big endian I/O accessors
->   irqchip: brcmstb-l2: Eliminate dependency on ARM code
->   irqchip: bcm7120-l2: Eliminate bad IRQ check
->   irqchip: bcm7120-l2, brcmstb-l2: Remove ARM Kconfig dependency
->   irqchip: bcm7120-l2: Make sure all register accesses use base+offset
->   irqchip: bcm7120-l2: Fix missing nibble in gc->unused mask
->   irqchip: bcm7120-l2: Use gc->mask_cache to simplify suspend/resume
->     functions
->   irqchip: bcm7120-l2: Extend driver to support 64+ bit controllers
->   irqchip: bcm7120-l2: Decouple driver from brcmstb-l2
->   irqchip: bcm7120-l2: Convert driver to use irq_reg_{readl,writel}
->   irqchip: brcmstb-l2: Convert driver to use irq_reg_{readl,writel}
-> 
->  .../interrupt-controller/brcm,bcm7120-l2-intc.txt  |  26 ++-
->  arch/arm/mach-bcm/Kconfig                          |   1 +
->  arch/sh/boards/mach-se/7343/irq.c                  |   3 -
->  arch/sh/boards/mach-se/7722/irq.c                  |   3 -
->  drivers/irqchip/Kconfig                            |   6 +-
->  drivers/irqchip/Makefile                           |   4 +-
->  drivers/irqchip/irq-atmel-aic.c                    |  40 ++---
->  drivers/irqchip/irq-atmel-aic5.c                   |  65 ++++----
->  drivers/irqchip/irq-bcm7120-l2.c                   | 174 +++++++++++++--------
->  drivers/irqchip/irq-brcmstb-l2.c                   |  41 +++--
->  drivers/irqchip/irq-sunxi-nmi.c                    |   4 +-
->  drivers/irqchip/irq-tb10x.c                        |   4 +-
->  include/linux/irq.h                                |  32 +++-
->  kernel/irq/generic-chip.c                          |  36 +++--
->  14 files changed, 263 insertions(+), 176 deletions(-)
-> 
-> -- 
-> 2.1.1
-> 
+Adding this cast looks suspicous - why?  As far as I can tell the
+original code didn't need one.
+
+--prA7fRZJHz3WLy0C
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUXLtrAAoJECTWi3JdVIfQhEIH/2T4LeTlBVD8EDgJ240x41T/
+bRAAWYQ5Hb9/qA9dbRoXxFZmIp+dTtNk5EYarcZgdqnO+9/Y2MtBN8QEaeHWPULS
+aq6uCaYt+jIj+iBh9eQVHSoi7bDHKcZH7uQevuYxmC+C126Kxted0VuCj3TQ2qSj
+XJWuwVtGsDtG5IY6NCM5UNBXqnwFVYRPMC7/q7QHB5s+CKDFD0EcGOKFlhAGBdJh
+em6aeWdXky9IYAFct7muYud+Hupx7KLtWFKek2ZzWBGIA3q8rK1lMad5uE6moM5d
+/XyzxrTrgCiYhVVwHUg95lZ2vqJIoS3MF2lBoN6/5W1F1TgtPs+SnBOUBh15q70=
+=6+eE
+-----END PGP SIGNATURE-----
+
+--prA7fRZJHz3WLy0C--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
