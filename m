@@ -1,63 +1,113 @@
-From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCHv3 4/5] edac: altera: Add Altera L2 Cache and OCRAM EDAC
- Support
-Date: Fri, 7 Nov 2014 10:31:20 -0600
-Message-ID: <545CF3D8.1020500@opensource.altera.com>
-References: <1414683131-20786-1-git-send-email-tthayer@opensource.altera.com> <1414683131-20786-5-git-send-email-tthayer@opensource.altera.com> <20141104151214.GD9570@pd.tnic> <545959E8.2040005@opensource.altera.com> <20141106163134.GF4318@pd.tnic>
+From: =?windows-1252?Q?DATACOM_-_=C9rico_Nunes?=
+	<erico.nunes-rCUF4CxDseZknzVnJbg3IA@public.gmane.org>
+Subject: Re: Creating a new platform_bus inside a spi_driver
+Date: Fri, 07 Nov 2014 14:37:26 -0200
+Message-ID: <545CF546.8090703@datacom.ind.br>
+References: <545BD3EC.6050503@datacom.ind.br> <707686811.tbHdnxXMgE@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141106163134.GF4318-fF5Pk5pvG8Y@public.gmane.org>
+In-Reply-To: <707686811.tbHdnxXMgE@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+Hello Arnd and all,
 
-On 11/06/2014 10:31 AM, Borislav Petkov wrote:
-> Hi Thor,
-> 
-> On Tue, Nov 04, 2014 at 04:57:44PM -0600, Thor Thayer wrote:
->> We want to at least separate L2/OCRAM ECC from the SDRAM ECC because
->> 1) the SDRAM preparation can take almost 2 seconds on boot and some
->> customers need a faster boot time.
->> 2) the SDRAM has an ECC initialization dependency on the preloader which is
->> outside the kernel. It is desirable to be able to turn the SDRAM on & off
->> separately.
-> 
-> Well, now that I asked and you gave valid reasons for the split,
-> you should keep them split the way they are. But please do add that
-> explanation to the commit message so that it is clear to people why
-> there is a split.
-> 
->> You bring up a good point about the L2 and OCRAM being combined though.
+On 11/07/2014 08:04 AM, Arnd Bergmann wrote:
+> On Thursday 06 November 2014 18:02:52 DATACOM - =C9rico Nunes wrote:
+>> The idea is that "fpga-spi" is a spi_driver which instantiates all o=
+f the
+>> "fpga-deviceN" as platform_devices, through the use of
+>> of_platform_populate(dev->of_node, NULL, NULL, dev).
 >>
->> If we do want granular control, maybe I should use a submenu? Or isn't that
->> desirable either?
-> 
-> Well, what do you think would be easier/faster for a user configuring? A
-> separate menu where you have to do a couple of key presses just to enter
-> it or simply a subtree in Kconfig with all the options together. I think
-> the "depends" gives you that already...
-> 
-> Ok, once you've worked in the suggested changes, you're good to go,
-> at least for the EDAC bits. Let me know how you want to handle this,
-> whether I should pick up the whole thing or I should ack the EDAC parts.
-> This patchset should go together, in any case, and so I don't care
-> whoever picks it up.
-> 
+>> The visible problem we're facing with this approach is that, as the =
+internal
+>> platform_devices have a "reg" property, of_platform_populate() event=
+ually
+>> triggers an address translation which is apparently trying to transl=
+ate the
+>> addresses of the internal platform_bus to addresses of the processor=
+ memory
+>> map.
+>> This translation is however not part of our intention, as we intend =
+to have an
+>> internal bus with its own memory map.
+>> This fails when __of_translate_address() reaches the spi-master boun=
+dary
+>> because (as it seems to make sense) it isn't possible to translate t=
+hem past
+>> that.
+>> A KERN_ERR rated message like
+>> "prom_parse: Bad cell count for /soc@f0000000/spi@2000/fpga@1"
+>> is thrown by __of_translate_address() and later it is not possible t=
+o obtain
+>> the "reg" address with platform_get_resource().
+>>
+>> On this scenario, we have a few questions and, depending on the outc=
+ome of
+>> these, possibly a patch.
+>>
+>> 1. Is it possible to have an internal platform_bus with a different =
+memory map
+>> as we intended? Or are platform_busses and platform_devices supposed=
+ to always
+>> be mapped on the processor memory map?
+> It's inconsistent. We have some code that assumes that platform devic=
+es
+> are always memory mapped, and some other code that breaks this assump=
+tion.
 
-If it's okay, can you please pick up this series, once everything is
-cleaned up? I just checked to make sure that there aren't any merge
-conflicts in the DTS files in this series against DTS patches that I
-have queue up for 3.19, and there aren't.
+By this I take that the platform subsystem could be made generic so it =
+can be
+used in both ways (mapped to processor memory map or mapped to a privat=
+e memory
+map). There seems to be no strict requirement enforcing it to be proces=
+sor
+memory map.
 
-Thanks,
-Dinh
+Is this correct?
+
+>> 2. If platform_bus and platform_device were actually designed to alw=
+ays be
+>> mappable to the processor memory map, what would be a different appr=
+oach to
+>> this problem?  One alternative considered was to define a new "fpga_=
+bus" and
+>> "fpga_device" but that seemed as an overkill approach to the problem=
+=2E
+> I think the existing mfd framework should do what you need, when you =
+call
+> mfd_add_devices() and pass a table of cells with the compatible strin=
+gs
+> for your devices, it should create the platform devices you want. If =
+not,
+> that can probably be fixed in the mfd core code.
+>
+>
+
+Thanks for the tip, we were not aware of the purpose of this mfd framew=
+ork and
+we will take a look at this framework now.
+However I'm thinking now that eventually it would fall in the same case=
+ of
+trying to translate the address of any "reg" dts property to the proces=
+sor
+memory map, and fail with the same error for the SPI case.
+
+Considering this and taking the answer to the first question, do you th=
+ink a
+patch fixing the "error" report by the translation function would be
+acceptable?
+We can prepare/test that under our platform and submit it.
+
+Thanks!
+
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
