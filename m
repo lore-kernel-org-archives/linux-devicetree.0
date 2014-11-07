@@ -1,31 +1,65 @@
-From: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCHv4 4/7] hwspinlock/core: add common OF helpers
-Date: Fri, 7 Nov 2014 07:06:44 +0200
-Message-ID: <CAK=Wgbar61qG4bWQz=YiyeUZDD0hUf74wSPMV1dFpcVJb4Os3Q@mail.gmail.com>
-References: <1389658764-39199-1-git-send-email-s-anna@ti.com>
- <1389658764-39199-5-git-send-email-s-anna@ti.com> <CAJAp7Oj-3ZxvN8o=rg8YeTiXYWyQ1iowgisdU1R5UcZeh4VmOQ@mail.gmail.com>
- <5425938C.6070007@ti.com> <CAK=WgbYf3++K4MVXW_n4zj-8fMEee61XG5+r40cW=trapRtJ7w@mail.gmail.com>
- <545BBCCB.7030107@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <545BBCCB.7030107-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Cc: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Abhilash Kesavan <a.kesavan@samsung.com>
+Subject: [PATCH v6 0/7] Enable support for Samsung Exynos7 SoC
+Date: Fri, 07 Nov 2014 10:50:48 +0530
+Message-ID: <1415337655-31003-1-git-send-email-a.kesavan@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org, catalin.marinas@arm.com, robh@kernel.org, devicetree@vger.kernel.org, olof@lixom.net, arnd@arndb.de, tomasz.figa@gmail.com, kesavan.abhilash@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Suman,
+Exynos7 is a System-On-Chip that is based on 64-bit ARMv8 RISC processor
+(Cortex-A57). This patchset adds arch/device tree support for Exynos7.
 
-On Thu, Nov 6, 2014 at 8:24 PM, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> wrote:
-> Ping on this. Can you review the latest series v6 [1] and pick it up for
-> 3.19? The MSM spinlock driver is also blocked/dependent on that series.
+These were originally part of 2 patchsets[1][2] adding support for Exynos7.
+The clock and pinctrl patches are going through the respective maintainer's
+tree; hence the remaining dt related patches have been consolidated and are
+being posted here as a separate series.
 
-Sure, it's on my mind, I hope I'll get to it next week.
+This patchset has build dependencies on the following patches:
+a] "[GIT PULL] Samsung clock changes for 3.19" - specifically the clock dt
+   bindings header.
+   http://comments.gmane.org/gmane.linux.kernel.samsung-soc/39142
+b] "tty: serial: samsung: Clean-up selection of number of available UARTs"
+   http://www.spinics.net/lists/linux-samsung-soc/msg37418.html
+c] "dts, kbuild: Implement support for dtb vendor subdirs"(merged in linux-next)
+   https://lkml.org/lkml/2014/10/21/654
 
-Thanks,
-Ohad.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1] arch: arm64: Enable support for Samsung Exynos7 SoC
+http://www.spinics.net/lists/linux-samsung-soc/msg37047.html
+[2] Add clock and DT support for a few IPs on Exynos7
+http://www.spinics.net/lists/linux-samsung-soc/msg37973.html
+
+Abhilash Kesavan (2):
+  arm64: dts: Add PMU DT node for exynos7 SoC
+  arm64: dts: Add nodes for mmc, i2c, rtc, watchdog, adc on Exynos7
+
+Alim Akhtar (2):
+  arm64: exynos7: Enable ARMv8 based Exynos7 (SoC) support
+  arm64: Enable Exynos7 SOC in the defconfig
+
+Naveen Krishna Ch (2):
+  arm64: dts: Add initial device tree support for EXYNOS7
+  arm64: dts: Add initial pinctrl support to EXYNOS7
+
+Pankaj Dubey (1):
+  arm64: dts: add <dt-bindings/> symlink
+
+ .../devicetree/bindings/arm/samsung/pmu.txt        |    1 +
+ arch/arm64/Kconfig                                 |   17 +
+ arch/arm64/boot/dts/Makefile                       |    1 +
+ arch/arm64/boot/dts/exynos/Makefile                |    5 +
+ arch/arm64/boot/dts/exynos/exynos7-espresso.dts    |   84 +++
+ arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi    |  588 ++++++++++++++++++++
+ arch/arm64/boot/dts/exynos/exynos7.dtsi            |  530 ++++++++++++++++++
+ arch/arm64/boot/dts/include/dt-bindings            |    1 +
+ arch/arm64/configs/defconfig                       |    4 +
+ 9 files changed, 1231 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/exynos/Makefile
+ create mode 100644 arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+ create mode 100644 arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi
+ create mode 100644 arch/arm64/boot/dts/exynos/exynos7.dtsi
+ create mode 120000 arch/arm64/boot/dts/include/dt-bindings
+
+-- 
+1.7.9.5
