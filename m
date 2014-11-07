@@ -1,83 +1,51 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] ASoC: core: add multi-codec support in DT
-Date: Fri, 7 Nov 2014 14:01:44 +0000
-Message-ID: <20141107140144.GP8509@sirena.org.uk>
-References: <cover.1415096705.git.moinejf@free.fr>
- <6b04d690576a0036b401d00784299ee576051c0d.1415096705.git.moinejf@free.fr>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 01/11] mfd: syscon: Add atmel-matrix registers
+ definition
+Date: Fri, 7 Nov 2014 15:14:55 +0100
+Message-ID: <20141107151455.75c73416@bbrezillon>
+References: <1415203287-21517-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1415203287-21517-2-git-send-email-boris.brezillon@free-electrons.com>
+	<20141107134510.GC4068@piout.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="M/v0iXgzSsdULkoO"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <6b04d690576a0036b401d00784299ee576051c0d.1415096705.git.moinejf-GANU6spQydw@public.gmane.org>
+In-Reply-To: <20141107134510.GC4068-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Alexandre,
 
---M/v0iXgzSsdULkoO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Fri, 7 Nov 2014 14:45:10 +0100
+Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-On Mon, Nov 03, 2014 at 06:42:22PM +0100, Jean-Francois Moine wrote:
-> SoC audio cards may have many CODECs per audio link.
-> This patch exports a core function to handle such links
-> when they are described in the DT.
+> On 05/11/2014 at 17:01:17 +0100, Boris Brezillon wrote :
+> > AT91 SoCs have a memory range reserved for internal bus configuration.
+> > Expose those registers so that drivers can make use of the matrix syscon
+> > declared in at91 DTs.
+> > 
+> > Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> >  include/linux/mfd/syscon/atmel-matrix.h | 114 ++++++++++++++++++++++++++++++++
+> 
+> I think we should stop cluttering the include/linux directory and start
+> doing what has been done for tegra and create an include/soc/atmel or
+> include/soc/at91 directory. that's what I was planning to do in my
+> sdramc/reset series but I didn't get any comment on it.
+> 
 
-It would be a lot easier to review this change if the changelog said
-what the description this was intended to parse looks like...
+I'll let MFD and ARM maintainers decide, but other syscon drivers are
+using this directory to define their registers...
 
-> +int snd_soc_of_get_dai_link_codecs(struct device_node *of_node,
-> +				   const char *list_name,
-> +				   struct snd_soc_dai_link *dai_link)
+Regards,
 
-This is a newly exported function, please add kerneldoc for it.
-
-> +{
-> +	struct of_phandle_args args;
-> +	struct snd_soc_dai_link_component *component;
-> +	int index, ret;
-> +
-> +	for (index = 0, component = dai_link->codecs;
-> +	     index < dai_link->num_codecs;
-> +	     index++, component++) {
-> +		ret = of_parse_phandle_with_args(of_node, list_name,
-> +						 "#sound-dai-cells",
-> +						  index, &args);
-> +		if (ret)
-> +			goto err;
-> +		component->of_node = args.np;
-> +		ret = snd_soc_get_dai_name(&args, &component->dai_name);
-> +		if (ret < 0)
-> +			goto err;
-> +	}
-
-We're relying on the caller to fill in the number of CODECs and not
-checking that there aren't extra things in the list in the DT that we're
-ignoring.  I'd expect us to either get the number of CODECs as part of
-this function or check that there isn't anything extra in the list.
-
-I'd also expect some sort of error message on parse failures to help
-people writing DTs.
-
---M/v0iXgzSsdULkoO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUXNDDAAoJECTWi3JdVIfQJc8H/0oQIR8eiPTFqOtaOP6Yu/tB
-etczqnmgawu5snijpNS4ujdUxqXtexy4ZBMxYA/aIXcefnSStC4CZPB5sMuYXJAT
-Fd3xYy9M29CYQIkpYOXXuBZHqJlli197k+ZDLs4ncmlY1oZve5BiLZMbpUqfUYyu
-pQiadiB0/FbMkuq0pjhetfShS6JWB2mMrCqloyLYjDMlSjm5tkHZCbvajGs+HM7a
-WDWCJGYy4tbv702TCBZY4EEF7JBAHArKgFnrHn2mW3xwiyHZewlJnurr/SZ11T6f
-dOjJyTmN27fBiDQ1IoNnLjGHkde4oAt4yvGOsTAKp6QcxrqT1VTfjAH2xcJjhUY=
-=ZXod
------END PGP SIGNATURE-----
-
---M/v0iXgzSsdULkoO--
+Boris
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
