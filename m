@@ -1,83 +1,106 @@
-From: Jiang Liu <jiang.liu@linux.intel.com>
-Subject: Re: [V10 PATCH 2/2] irqchip: gicv2m: Add supports for ARM GICv2m
- MSI(-X)
-Date: Fri, 07 Nov 2014 09:00:36 +0800
-Message-ID: <545C19B4.6040006@linux.intel.com>
-References: <1415052977-26036-1-git-send-email-suravee.suthikulpanit@amd.com> <1415052977-26036-3-git-send-email-suravee.suthikulpanit@amd.com> <5458CE31.3040404@linux.intel.com> <545ABB4C.8010103@amd.com> <545ABF6C.1000308@amd.com> <alpine.DEB.2.11.1411060146050.24960@nanos> <alpine.DEB.2.11.1411061131330.24960@nanos> <545BA301.8000709@arm.com>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH v17 1/5] thermal: rockchip: add driver for thermal
+Date: Thu, 6 Nov 2014 21:30:20 -0400
+Message-ID: <20141107013017.GA10180@developer>
+References: <1414809873-32227-1-git-send-email-caesar.wang@rock-chips.com>
+ <1414809873-32227-2-git-send-email-caesar.wang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <545BA301.8000709@arm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>
-Cc: "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, Mark Rutland <Mark.Rutland@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, "Harish.Kasiviswanathan@amd.com" <Harish.Kasiviswanathan@amd.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="6TrnltStXW4iwmi0"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1414809873-32227-2-git-send-email-caesar.wang@rock-chips.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Caesar Wang <caesar.wang@rock-chips.com>
+Cc: heiko@sntech.de, rui.zhang@intel.com, zyf@rock-chips.com, dianders@chromium.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, cf@rock-chips.com, dmitry.torokhov@gmail.com, dbasehore@chromium.org, huangtao@rock-chips.com, cjf@rock-chips.com, zhengsq@rock-chips.com, fzf@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On 2014/11/7 0:34, Marc Zyngier wrote:
-> Hi Thomas,
-> 
-> On 06/11/14 10:42, Thomas Gleixner wrote:
->> On Thu, 6 Nov 2014, Thomas Gleixner wrote:
->>> On Wed, 5 Nov 2014, Suravee Suthikulanit wrote:
->>>> On 11/5/2014 6:05 PM, Suravee Suthikulanit wrote:
->>>>> - Overall, it seems that msi_domain_alloc() could be quite different
->>>>> across architectures. Would it be possible to declare this function as
->>>>> weak, and allow arch to override (similar to arch_setup_msi_irq)?
->>>>
->>>> Actually, declaring "msi_domain_ops" as non-static, and allow other code to
->>>> override the .alloc and .free?
->>>
->>> Why do you want to do that?
->>
->> I know why. Because you want to spare a level of hierarchy. But thats
->> wrong simply because MSI itself is an interrupt chip at the device
->> level.
->>
->> [ MSI ] ---> [ GIC-MSI ] ---> [ GIC ]
->>
->> So the MSI level only cares about the allocation of the virq
->> space. GIC-MSI allocates out of the bitmap which handles the hard
->> wired range of MSI capable GIC interrupts and GIC handles the
->> underlying functionality.
->>
->> And this makes a lot of sense, if you think about interrupt
->> remapping. If ARM ever grows that you simply insert it into the chain:
->>
->> [ MSI ] ---> [ Remap] ---> [ GIC-MSI ] ---> [ GIC ]
-> 
-> I think ARM has reached that stage with the ITS block in GICv3:
-> - Each device gets programmed with a set of  "event IDs" ranging from 0
-> to N-1, with N being the number of MSI vectors used by the device
-> - the ITS uses both the device ID (basically the PCI requester ID) and
-> the event ID to parse a set of software-managed tables (think page
-> tables for interrupts).
-> 
-> The x86 remapping thing looks quite similar to that, by reading a couple
-> of pages from the VT-D document.
-> 
-> So the way I understand the layout (and please correct me if I'm wrong,
-> which is certainly the case) is that the MSI domain is entirely generic,
-> allocates the virq, uses Remap as a parent, and uses
-> irq_chip_compose_msi_msg to call into the parent and generate whatever
-> goes into the MSI message.
-Hi Marc,
-	It works exactly in this way:)
 
-> 
-> I'm still struggling a bit to see how the remapping layer can access the
-> requester ID. x86 uses the irq_alloc_info to store that (the result of
-> an msi_get_hwirq call), but we don't have an equivalent structure on
-> arm/arm64.
-irq_alloc_info is newly introduced for hierarchy irqdomain on x86.
-Regards!
-Gerry
+--6TrnltStXW4iwmi0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> I'll try to hack something with my current ITS driver and come back with
-> the results.
-> 
-> Thanks,
-> 
-> 	M.
-> 
+Hello Caesar,
+
+On Sat, Nov 01, 2014 at 10:44:29AM +0800, Caesar Wang wrote:
+> Thermal is TS-ADC Controller module supports
+> user-defined mode and automatic mode.
+>=20
+> User-defined mode refers,TSADC all the control signals entirely by
+> software writing to register for direct control.
+>=20
+> Automaic mode refers to the module automatically poll TSADC output,
+> and the results were checked.If you find that the temperature High
+> in a period of time,an interrupt is generated to the processor
+> down-measures taken;If the temperature over a period of time High,
+> the resulting TSHUT gave CRU module,let it reset the entire chip,
+> or via GPIO give PMIC.
+>=20
+
+First thing, very good progress in this driver!=20
+
+> Signed-off-by: zhaoyifeng <zyf@rock-chips.com>
+> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+> Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+
+Just for the sake of code / documentation history, this patch, which
+adds the driver, should come after patch 2, which adds dt documentation.
+
+> ---
+>  drivers/thermal/Kconfig            |   9 +
+>  drivers/thermal/Makefile           |   1 +
+>  drivers/thermal/rockchip_thermal.c | 711 +++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 721 insertions(+)
+>  create mode 100644 drivers/thermal/rockchip_thermal.c
+
+<big cut>
+
+> +static int
+> +rockchip_thermal_register_sensor(struct platform_device *pdev,
+> +				 struct rockchip_thermal_data *thermal,
+> +				 struct rockchip_thermal_sensor *sensor,
+> +				 enum sensor_id id)
+> +{
+> +	const struct rockchip_tsadc_chip *tsadc =3D thermal->chip;
+> +	int error;
+> +
+> +	tsadc->set_tshut_mode(id, thermal->regs, thermal->tshut_mode);
+> +	tsadc->set_tshut_temp(id, thermal->regs, thermal->tshut_temp);
+> +
+> +	sensor->thermal =3D thermal;
+> +	sensor->id =3D id;
+> +	sensor->tzd =3D thermal_zone_of_sensor_register(&pdev->dev, id, sensor,
+> +						rockchip_thermal_get_temp,
+> +						NULL,
+> +						rockchip_thermal_set_trips);
+
+So, did I miss something here? Looks like you have extended the of
+thermal, and I haven't seen the patch.
+  CC [M]  drivers/thermal/rockchip_thermal.o
+  drivers/thermal/rockchip_thermal.c: In function
+  `rockchip_thermal_register_sensor':
+  drivers/thermal/rockchip_thermal.c:482:7: error: too many arguments to
+  function `thermal_zone_of_sensor_register'
+         rockchip_thermal_set_trips);
+
+
+
+--6TrnltStXW4iwmi0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUXCCHAAoJEMLUO4d9pOJWleQIAJ6EwZupFBB6tPWGOH22wHu9
+sbk39SNWEjaX1AejKiRrbOvFp9FMugIKfDX1VQVKpT8glFLsvhQo1YH7JCgRG9rh
+PJKEWmOEvnNZOtjURbS+eRxwnuL1ocVZQFBSoiXPgASjj7xT8L+1bd23OwM18T38
+7ix7IO0r6EcbTVmDntg+4wa8hsP7Yg78/h3XzljB6qdWHhjfKrBWGaPvHG06v2Lm
+XnTklL30SDS5SXY04i7r3PTTbK8r6fnfNk+luAxo04EhwB4xygZdwUAFK8chP7j2
+JW6S2a9GFi5GUlZPvRCFrh1kt6VPcVM9O4LXIief6TsXYs1cNed8uWpSWt23iw0=
+=tbh4
+-----END PGP SIGNATURE-----
+
+--6TrnltStXW4iwmi0--
