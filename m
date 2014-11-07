@@ -1,58 +1,41 @@
-From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V4 08/14] irqchip: bcm7120-l2: Make sure all register accesses use base+offset
-Date: Thu,  6 Nov 2014 22:44:23 -0800
-Message-ID: <1415342669-30640-9-git-send-email-cernekee@gmail.com>
-References: <1415342669-30640-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1415342669-30640-1-git-send-email-cernekee@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: tglx@linutronix.de, jason@lakedaemon.net, linux-sh@vger.kernel.org
-Cc: arnd@arndb.de, f.fainelli@gmail.com, ralf@linux-mips.org, sergei.shtylyov@cogentembedded.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/5] ARM: shmobile: kzm9g legacy: Set i2c clks_per_count
+ to 2
+Date: Fri, 7 Nov 2014 08:12:57 +0100
+Message-ID: <CAMuHMdVWS3HjsPj7T3JFxVuiRGSZmopkeDadpKH1YdmnAGYdNw@mail.gmail.com>
+References: <1415274730-310-1-git-send-email-geert+renesas@glider.be>
+	<1415274730-310-2-git-send-email-geert+renesas@glider.be>
+	<20141107052420.GA1278@katana>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20141107052420.GA1278@katana>
+Sender: linux-sh-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux I2C <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-A couple of accesses to IRQEN (base+0x00) just used "base" directly, so
-they would break if IRQEN ever became nonzero.  Make sure that all
-reads/writes specify the register offset constant.
+Hi Wolfram,
 
-Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/irqchip/irq-bcm7120-l2.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On Fri, Nov 7, 2014 at 6:24 AM, Wolfram Sang <wsa@the-dreams.de> wrote:
+>> Note that the L/H values still differ from the Transfer Rate Settings
+>> example in Table 19.3 of the datasheet, which suggests 0x121/0xe7.
+>
+> Is the formula different or is it rounding errors?
 
-diff --git a/drivers/irqchip/irq-bcm7120-l2.c b/drivers/irqchip/irq-bcm7120-l2.c
-index 7086fe0..22d3fa1 100644
---- a/drivers/irqchip/irq-bcm7120-l2.c
-+++ b/drivers/irqchip/irq-bcm7120-l2.c
-@@ -66,10 +66,10 @@ static void bcm7120_l2_intc_suspend(struct irq_data *d)
- 
- 	irq_gc_lock(gc);
- 	/* Save the current mask and the interrupt forward mask */
--	b->saved_mask = __raw_readl(b->base) | b->irq_fwd_mask;
-+	b->saved_mask = __raw_readl(b->base + IRQEN) | b->irq_fwd_mask;
- 	if (b->can_wake) {
- 		reg = b->saved_mask | gc->wake_active;
--		__raw_writel(reg, b->base);
-+		__raw_writel(reg, b->base + IRQEN);
- 	}
- 	irq_gc_unlock(gc);
- }
-@@ -81,7 +81,7 @@ static void bcm7120_l2_intc_resume(struct irq_data *d)
- 
- 	/* Restore the saved mask */
- 	irq_gc_lock(gc);
--	__raw_writel(b->saved_mask, b->base);
-+	__raw_writel(b->saved_mask, b->base + IRQEN);
- 	irq_gc_unlock(gc);
- }
- 
--- 
-2.1.1
+The formula is different. It doesn't use absolute tLOW, tHIGH, and tF
+values, but only the duty cycle of the clock.
+
+It's similar in the R-Car Gen2 docs. Except that on Gen2, there's no
+mention of using a duty cycle of 5/3 for High Speed like on AG5.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
