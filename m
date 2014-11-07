@@ -1,68 +1,73 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: [PATCH v5 1/5] regulator: Document binding for initial and suspend modes
-Date: Fri,  7 Nov 2014 14:00:01 +0100
-Message-ID: <1415365205-27630-2-git-send-email-javier.martinez@collabora.co.uk>
-References: <1415365205-27630-1-git-send-email-javier.martinez@collabora.co.uk>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415365205-27630-1-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [PATCH v3 04/13] of: document new emc-timings subnode in nvidia,tegra124-car
+Date: Fri, 07 Nov 2014 14:03:51 +0100
+Message-ID: <545CC337.4020409@collabora.com>
+References: <1414599796-30597-1-git-send-email-tomeu.vizoso@collabora.com> <1414599796-30597-5-git-send-email-tomeu.vizoso@collabora.com> <545B172C.4060105@nvidia.com> <CAL_JsqKYSF3JVrXH_dkqRXQrgUU3igzvoK1C2k1Caz-4UuHX6Q@mail.gmail.com> <545C5927.3010001@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <545C5927.3010001-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some regulators can run on different operating modes (opmodes). This
-allows systems to choose the most efficient opmode for each regulator.
+On 11/07/2014 06:31 AM, Alexandre Courbot wrote:
+> On 11/07/2014 12:12 AM, Rob Herring wrote:
+>> On Thu, Nov 6, 2014 at 12:37 AM, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>>> On 10/30/2014 01:22 AM, Tomeu Vizoso wrote:
+>>>>
+>>>> The EMC clock needs some extra information for changing its rate.
+>>>>
+>>>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>>>> ---
+>>>>    .../bindings/clock/nvidia,tegra124-car.txt         | 46
+>>>> +++++++++++++++++++++-
+>>>>    1 file changed, 44 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git
+>>>> a/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
+>>>> b/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
+>>>> index ded5d62..42e0588 100644
+>>>> --- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
+>>>> +++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
+>>>> @@ -19,12 +19,35 @@ Required properties :
+>>>>      In clock consumers, this cell represents the bit number in the CAR's
+>>>>      array of CLK_RST_CONTROLLER_RST_DEVICES_* registers.
+>>>>
+>>>> +The node should contain a "emc-timings" subnode for each supported RAM
+>>>> type (see
+>>>> +field RAM_CODE in register PMC_STRAPPING_OPT_A), with its unit address
+>>>> being its
+>>>> +RAM_CODE.
+>>>> +
+>>>> +Required properties for "emc-timings" nodes :
+>>>> +- nvidia,ram-code : Should contain the value of RAM_CODE this timing set
+>>>> +  is used for.
+>>>> +
+>>>> +Each "emc-timings" node should contain a "timing" subnode for every
+>>>> supported
+>>>> +EMC clock rate. The "timing" subnodes should have the clock rate in Hz as
+>>>> their
+>>>> +unit address.
+>>>
+>>>
+>>> This seems to be a quite liberal use of unit addresses (same in the next
+>>> patch) - is this allowed by DT?
+>>
+>> No, unit address should match a reg property.
+> 
+> Mmm, would you have any suggestion as to how this can be fixed? Right 
+> now what I can think of is either to replace the "clock-frequency" 
+> property by "reg" (which would be confusing), or to use a different 
+> naming scheme, e.g. timing-12750000. IIUC the naming is not essential 
+> for properly parsing these nodes, so maybe the second solution is the 
+> way to go?
 
-This patch builds on top of (291d761 regulator: Document binding for
-regulator suspend state for PM state) adding a regulator-initial-mode
-DT property to configure at startup the operating mode for regulators
-that support changing its mode during normal operation and a property
-regulator-mode to be used in the regulator-state-[mem/disk] nodes for
-regulators that supports changing its operating mode when the system
-enters in a suspend state.
+Yeah, there seems to be a precedent for embedding the frequency in the
+node name in the TI DTs, e.g.: virt_12000000_ck.
 
-The set of possible modes that a regulator can operate depends on the
-hardware capabilities so a list of generic operating modes can't be
-provided. Instead, each hardware binding should define the list of
-valid operating modes for the regulators found on that device.
+Thanks,
 
-Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
----
-
-Changes in v5: None
-
-Changes in v4: None
-
-Changes in v3:
- - Rebased on top of regulator suspend voltage series
-
- Documentation/devicetree/bindings/regulator/regulator.txt | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
-index 4e7ed76..3fffa3b 100644
---- a/Documentation/devicetree/bindings/regulator/regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/regulator.txt
-@@ -30,6 +30,20 @@ Optional properties:
- 	- regulator-off-in-suspend: regulator should be off in suspend state.
- 	- regulator-suspend-microvolt: regulator should be set to this voltage
- 	  in suspend.
-+	- regulator-mode: operating mode in the given suspend state.
-+	  The set of possible operating modes depends on the capabilities of
-+	  every hardware so the valid modes are documented on each regulator
-+	  device tree binding document.
-+	  The "regulator-mode" property only takes effect if the regulator is
-+	  enabled for the given suspend state using "regulator-on-in-suspend".
-+	  If the regulator has not been explicitly disabled for the given state
-+	  with "regulator-off-in-suspend", then setting the operating mode
-+	  will also have no effect.
-+- regulator-initial-mode: initial operating mode. The set of possible operating
-+  modes is the same used for the regulator-mode property and the device binding
-+  documentation explains which property each regulator supports.
-+If no mode is defined, then the OS will not manage the modes and the hardware
-+default values will be used instead.
- 
- Deprecated properties:
- - regulator-compatible: If a regulator chip contains multiple
--- 
-2.1.0
+Tomeu
