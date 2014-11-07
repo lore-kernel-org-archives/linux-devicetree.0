@@ -1,35 +1,98 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 06/11] memory: atmel-ebi: add DT bindings documentation
-Date: Fri, 7 Nov 2014 14:55:09 +0100
-Message-ID: <20141107135509.GD4068@piout.net>
-References: <1415203287-21517-1-git-send-email-boris.brezillon@free-electrons.com>
- <1415203287-21517-7-git-send-email-boris.brezillon@free-electrons.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] PCI: add missing DT binding for linux,pci-domain property
+Date: Fri, 7 Nov 2014 08:00:56 -0600
+Message-ID: <CAL_JsqKdwLkybzLHdYcg81vEYfZvLu3_Cg1vZyoAyuobi6Vc4Q@mail.gmail.com>
+References: <1415101660-26450-1-git-send-email-l.stach@pengutronix.de>
+ <20141105231743.GI6168@google.com> <20141106100518.GI8916@e106497-lin.cambridge.arm.com>
+ <CAL_JsqK-g2qW12jatyZBLeBEtpr80o=WWZVet5+OgMtzAAXHJQ@mail.gmail.com>
+ <20141106153051.GU8916@e106497-lin.cambridge.arm.com> <CAL_Jsq+WHyRN+hAaEwH1ZHabEYgTDnpPinoL8pagHYzP4Zfe=g@mail.gmail.com>
+ <20141107101728.GZ8916@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1415203287-21517-7-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20141107101728.GZ8916@e106497-lin.cambridge.arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Lucas Stach <l.stach@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-We probabyl should start making sure we have a commit log for every
-patches ;)
+On Fri, Nov 7, 2014 at 4:17 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+> On Thu, Nov 06, 2014 at 07:46:33PM +0000, Rob Herring wrote:
+>> On Thu, Nov 6, 2014 at 9:30 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+>> > On Thu, Nov 06, 2014 at 02:57:35PM +0000, Rob Herring wrote:
+>> >> On Thu, Nov 6, 2014 at 4:05 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+>> >> > On Wed, Nov 05, 2014 at 11:17:43PM +0000, Bjorn Helgaas wrote:
+>> >> >> On Tue, Nov 04, 2014 at 12:47:40PM +0100, Lucas Stach wrote:
+>> >> >> > This property was added by 41e5c0f81d3e
+>> >> >> > (of/pci: Add pci_get_new_domain_nr() and of_get_pci_domain_nr())
+>> >> >> > without the required binding documentation. As this property
+>> >> >> > will be supported by a number of host bridge drivers going forward,
+>> >> >> > add it to the common PCI binding doc.
+>> >> >> >
+>> >> >> > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+>> >> >>
+>> >> >> I merged 41e5c0f81d3e through my tree, and I could merge something like
+>> >> >> this if a consensus develops with some acks.  But I'll just let you guys
+>> >> >> handle it unless you poke me again.
+>> >> >
+>> >> > While I think the "linux,pci-domain" property *must* be documented, I
+>> >> > would like to get a consensus first on the usage. If we agree that
+>> >> > the property is mandatory to all host bridge drivers that use OF then
+>> >> > we need to patch existing drivers (partially done through Lorenzo's
+>> >> > patches, but other arches are ignoring it). If we say all *new* drivers
+>> >> > need to use it then we also need to come up with a strategy on how to
+>> >> > deal with old vs new school drivers.
+>> >> >
+>> >> > My preferred approach is the 3rd way: "linux,pci-domain" becomes part of
+>> >> > the core PCI infrastructure (and we find the common ground with ACPI).
+>> >> > That way the host bridge drivers don't have to do anything, but the DT
+>> >> > creators have to specify a value.
+>> >>
+>> >> I'm okay with it being in the core. It was the mixture of using the
+>> >> property and automatic numbering that I had issues with. Any mixture
+>> >> whether in DT or in drivers should be an error. Also, I think having a
+>> >> mixture of root bus host drivers would be rare, so I'm not too
+>> >> concerned about some drivers supporting the property and others not.
+>> >> In any case, these issues are all with the kernel and not really the
+>> >> concern for the binding. For the binding, simply all hosts set the
+>> >> domain or none of them do.
+>> >
+>> > Repeating what you've said to verify my understanding: you are OK with
+>> > the "linux,pci-domain" being handled in the PCI framework and mandatory
+>> > to all OF-based host bridges and architectures. Failure to include
+>> > the property should be an error and no host bridge driver should default
+>> > to the auto-generation of domain numbers.
+>> >
+>> > Is that correct?
+>>
+>> Not exactly. It is only mandatory when you have multiple root buses.
+>> But we can't say an existing dtb is in error, so it has to remain
+>> optional for compatibility. Also, given it is a Linux property, you
+>> can't really say it is mandatory for all PCI bindings from a DT
+>> perspective.
+>>
+>> While we could have issues in theory if this is handled in the
+>> drivers, I don't think we will in practice as having root buses with
+>> different drivers is unlikely.
+>
+> That's correct. However, I would like to bring to you attention that as
+> long as the property is treated as optional in certain cases we will need,
+> in the framework code, to mix the assignment of a domain number coming from
+> parsing of the property with the auto-numbering scheme in order to support
+> old DT files. And that was one of your major concerns when reviewing the
+> series. Any suggestions or clarifications?
 
-On 05/11/2014 at 17:01:22 +0100, Boris Brezillon wrote :
-> +Child chip-select (cs) nodes contain the memory devices nodes connected to
-> +such as NOR (e.g. cfi-flash) and NAND.
-> +There might be board specific devices like FPGAs.
-> +You'll define you device requirements in these child nodes.
-                 your
+We have to support both allocation schemes, but not on the same
+system. A mixture on a given system is an error. So the cases to
+handle are like this:
 
+1 root bus w/ domain -> use domain prop
+1 root bus w/o domain -> auto numbering
+N root buses w/ domains -> use domain prop
+N root buses w/o domains -> auto numbering
+N root buses w/ and w/o domains -> error
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I also had issues just around the implementation details, but we can
+discuss those when there is another version.
+
+Rob
