@@ -1,48 +1,67 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH v4 2/4] serial: mxs-auart: use mctrl_gpio helpers for handling modem signals
-Date: Fri, 7 Nov 2014 09:03:11 +0100
-Message-ID: <201411070903.11645.marex@denx.de>
-References: <1412960007-28159-1-git-send-email-j.uzycki@elproma.com.pl> <545B57D7.4070609@elproma.com.pl> <CAMiH66FKJm8hcgtR=-ZzzpCq+PQ8xkixbUnMzRPVd_cM_6VM1w@mail.gmail.com>
+From: Emil Medve <Emilian.Medve@Freescale.com>
+Subject: Re: [PATCH v3 1/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan
+Date: Fri, 7 Nov 2014 02:14:47 -0600
+Message-ID: <545C7F77.90200@Freescale.com>
+References: <1415200734-6978-1-git-send-email-Emilian.Medve@Freescale.com>
+	 <1415200734-6978-2-git-send-email-Emilian.Medve@Freescale.com>
+	 <1415310579.23458.402.camel@snotra.buserror.net>
+	 <545C754C.9080700@Freescale.com>
+ <1415345665.23458.428.camel@snotra.buserror.net>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <CAMiH66FKJm8hcgtR=-ZzzpCq+PQ8xkixbUnMzRPVd_cM_6VM1w@mail.gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Huang Shijie <shijie8@gmail.com>
-Cc: Janusz =?utf-8?q?U=C5=BCycki?= <j.uzycki@elproma.com.pl>, Richard Genoud <richard.genoud@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jiri Slaby <jslaby@suse.cz>, Fabio Estevam <festevam@gmail.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1415345665.23458.428.camel@snotra.buserror.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Scott Wood <scottwood@Freescale.com>
+Cc: galak@kernel.crashing.org, corbet@lwn.net, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, grant.likely@linaro.org, Geoff.Thorpe@Freescale.com, linuxppc-dev@ozlabs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday, November 07, 2014 at 02:34:31 AM, Huang Shijie wrote:
-> why change them to gpio?  If we change them to gpio.  Could the DMA still
-> works fine?
-> did you test the DMA with this patch?
+Hello Scott,
+
+
+On 11/07/2014 01:34 AM, Scott Wood wrote:
+> On Fri, 2014-11-07 at 01:31 -0600, Emil Medve wrote:
+>> Hello Scott,
+>>
+>>
+>> On 11/06/2014 03:49 PM, Scott Wood wrote:
+>>> On Wed, 2014-11-05 at 09:18 -0600, Emil Medve wrote:
+>>>> +Devices connected to a BMan instance via Direct Connect Portals (DCP) must link
+>>>> +to the respective BMan instance
+>>>> +
+>>>> +- fsl,bman
+>>>> +	Usage:		Required
+>>>> +	Value type:	<prop-encoded-array>
+>>>> +	Description:	List of phandle and DCP index pairs, to the BMan instance
+>>>> +			to which this device is connected via the DCP
+>>>
+>>> Does software need the DCP index (though for QMan there do seem to be a
+>>> few registers associated with each DCP)?  Where can I find that info in
+>>> the manual?
+>>
+>> The DCP index helps describe the topology of the devices connected to
+>> the B/QMan. One might be tempted to use some address to reference said
+>> DCP, unfortunately the pertinent registers/bits for said DCP(s) are not
+>> into a compact region. Look at the CCSR memory map for B/QMan
+>>
+>> In the QMan case things are marginally better. For each hardware portal
+>> there are a handful of (vaguely named *DCx*, *DCPx* or *DCP*) registers
+>> (configuration, performance monitoring and debugging). However, still
+>> registers and bits spread here and there
+>>
+>> In the BMan case things are a bit worse as the registers names are less
+>> friendly and still spread around
+>>
+>> Do you need specific names/offsets?
 > 
-> Add Marek for this patch too.
+> My question about the manual wasn't rhetorical -- I tried to find this
+> information and couldn't.
 
-I didn't look too deep into the patch, so here's just my experience:
+I get that. As I said, the registers/bits are spread around in the CCSR
+space of each block and not named excessively friendly. As such I hinted
+for some search patterns to make it easier to find them. In order to
+progress the review I'm willing to prepare a list. Just let me know
 
-1) The AUART block signals and GPIO block signals are not sychronised using the 
-   same clock. Therefore, the latency between toggling of the AUART lines and
-   the GPIO-driven pins will not be deterministic and will vary. There might be
-   a way to approximate that, but that's definitelly not a reliable solution.
 
-   This is very bad for example if you drive RS485 DIR line with the RTS pin as
-   a GPIO ; the RTS pin will toggle at non-deterministic time compared to the
-   end of UART transmission. This will trigger bit-loss on the RS485 line and
-   you just don't want that.
-
-2) Speaking of RS485, there's [1] and [2]. which I believe apply to any combo
-   of UART+GPIO toggling.
-
-So I hate to bring the bad news , but UART+GPIO combo toggling is really a bad
-bad idea.
-
-HTH
-
-[1] http://comments.gmane.org/gmane.linux.serial/6770
-[2] http://article.gmane.org/gmane.linux.serial/3619/
-
-Best regards,
-Marek Vasut
+Cheers,
