@@ -1,132 +1,82 @@
-From: arno@natisbad.org (Arnaud Ebalard)
-Subject: Re: [PATCHv0 3/3] rtc: rtc-isl12057: add alarm support to Intersil ISL12057 RTC driver
-Date: Fri, 07 Nov 2014 10:37:01 +0100
-Message-ID: <878ujnnygy.fsf@natisbad.org>
-References: <cover.1415222752.git.arno@natisbad.org>
-	<148403c0ab1d556cbb99d9242c65f714a77843e5.1415222752.git.arno@natisbad.org>
-	<20141106055017.GL8509@sirena.org.uk> <87ppcznbyv.fsf@natisbad.org>
-	<20141107075843.GD10432@pengutronix.de>
+From: Emil Medve <Emilian.Medve@Freescale.com>
+Subject: Re: [PATCH v3 1/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan
+Date: Fri, 7 Nov 2014 03:38:10 -0600
+Message-ID: <545C9302.50703@Freescale.com>
+References: <1415200734-6978-1-git-send-email-Emilian.Medve@Freescale.com>
+	 <1415200734-6978-2-git-send-email-Emilian.Medve@Freescale.com>
+	 <1415310579.23458.402.camel@snotra.buserror.net>
+	 <545C754C.9080700@Freescale.com>
+	 <1415345665.23458.428.camel@snotra.buserror.net>
+	 <545C7F77.90200@Freescale.com>
+ <1415348363.23458.432.camel@snotra.buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1415348363.23458.432.camel@snotra.buserror.net>
 Sender: linux-doc-owner@vger.kernel.org
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Linus Walleij <linus.walleij@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-doc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, devicetree@vger.kernel.org, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>, linux-arm-kernel@lists.infradead.org, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Peter Huewe <peter.huewe@infineon.com>, Thierry Reding <treding@nvidia.com>, Guenter Roeck <linux@roeck-us.net>, Jason Cooper <jason@lakedaemon.net>
+To: Scott Wood <scottwood@Freescale.com>
+Cc: galak@kernel.crashing.org, corbet@lwn.net, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, grant.likely@linaro.org, Geoff.Thorpe@Freescale.com, linuxppc-dev@ozlabs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Uwe,
-
-Thanks for your support.
-
-Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> writes:
-
->> No strong feeling on that point. ISL12008 on which this driver is ba=
-sed
->> has a similar logic.
-> Some time ago I already had the feeling that there is much "rank grow=
-th"
-> in the rtc drivers. I guess this is because maintenance of the rtc
-> subsystem isn't optimal and there are no guidelines (at least I'm not
-> aware of any) about detail questions.
-
-I had that feeling too when I pushed the ISL12057 driver.
-
->> > None of the alarm functionality checks to see if there's actually =
-an IRQ
->> > - is that OK? I'd at least expect the alarm interrupt enable call =
-to
->> > check if the interrupt is wired up.
->>=20
->> I can add those check BUT I would like some directions in order to
->> support the following use case too.
->>=20
->> Current three in-tree users of ISL12057 are NAS devices (Netgear
->> ReadyNAS 102, 104 and 2120). All of them *do not have* the interrupt=
- pin
-> I assume you don't have schematics of the devices, right? If so, do y=
-ou
-> think it might be worth to try to get them from Netgear? Just to make
-> sure that there really is no pin connected to the SoC.
-
-I'll ask but I am skeptical: I already tested all the MPP of the SoC so
-unless I missed something, it's unlikely.
+Hello Scott,
 
 
->> of the RTC chip connected to an interrupt line of the SoC. Nonethele=
-ss,
->> the IRQ line of the chip being connected to a PMIC on the board (TI
->> TPS65251 [1] on ReadyNAS 102 and 104, I do not know for ReadyNAS
-> Looking over the manual it seems there is no way to let the PMIC forw=
-ard
-> the irq either.
->
->> 2120). When the device is off and the alarm rings, the device gets
->> powered on. AFAICT, the IRQ coming on the TPS65251 is not replicated=
- on
->> any line of the SoC.
->>=20
->> I think it's possible w/ some soldering to get somewhere where the R=
-TC
->> framework wants me to be and finish the alarm part to have it merged
->> upstream but that's of limited interest if in-tree user cannot use i=
-t to
->> fit their need, i.e. configure an alarm value and enable the associa=
-ted
->> interrupt which is routed externally, i.e. not visible by the SoC.
-> Do you need to enable the irq somewhere else (apart from in the RTC
-> device)? I guess not.
+On 11/07/2014 02:19 AM, Scott Wood wrote:
+> On Fri, 2014-11-07 at 02:14 -0600, Emil Medve wrote:
+>> Hello Scott,
+>>
+>>
+>> On 11/07/2014 01:34 AM, Scott Wood wrote:
+>>> On Fri, 2014-11-07 at 01:31 -0600, Emil Medve wrote:
+>>>> Hello Scott,
+>>>>
+>>>>
+>>>> On 11/06/2014 03:49 PM, Scott Wood wrote:
+>>>>> On Wed, 2014-11-05 at 09:18 -0600, Emil Medve wrote:
+>>>>>> +Devices connected to a BMan instance via Direct Connect Portals (DCP) must link
+>>>>>> +to the respective BMan instance
+>>>>>> +
+>>>>>> +- fsl,bman
+>>>>>> +	Usage:		Required
+>>>>>> +	Value type:	<prop-encoded-array>
+>>>>>> +	Description:	List of phandle and DCP index pairs, to the BMan instance
+>>>>>> +			to which this device is connected via the DCP
+>>>>>
+>>>>> Does software need the DCP index (though for QMan there do seem to be a
+>>>>> few registers associated with each DCP)?  Where can I find that info in
+>>>>> the manual?
+>>>>
+>>>> The DCP index helps describe the topology of the devices connected to
+>>>> the B/QMan. One might be tempted to use some address to reference said
+>>>> DCP, unfortunately the pertinent registers/bits for said DCP(s) are not
+>>>> into a compact region. Look at the CCSR memory map for B/QMan
+>>>>
+>>>> In the QMan case things are marginally better. For each hardware portal
+>>>> there are a handful of (vaguely named *DCx*, *DCPx* or *DCP*) registers
+>>>> (configuration, performance monitoring and debugging). However, still
+>>>> registers and bits spread here and there
+>>>>
+>>>> In the BMan case things are a bit worse as the registers names are less
+>>>> friendly and still spread around
+>>>>
+>>>> Do you need specific names/offsets?
+>>>
+>>> My question about the manual wasn't rhetorical -- I tried to find this
+>>> information and couldn't.
+>>
+>> I get that. As I said, the registers/bits are spread around in the CCSR
+>> space of each block and not named excessively friendly. As such I hinted
+>> for some search patterns to make it easier to find them. In order to
+>> progress the review I'm willing to prepare a list. Just let me know
+> 
+> Could you point me to the section of the manual where this information
+> is -- friendly or otherwise?  I saw the QMan direct connect portal
+> registers.  I didn't see how to tell which <i> in DCPi_xxx goes with
+> which device.
 
-This is the problem: I just need to enable the interrupt in the ISL1205=
-7
-(flag in regs) but w/o dealing with SoC/system interrupt, i.e. w/o havi=
-ng
-a client->irq passed to the driver. In current RTC framework, alarm
-support requires a client->irq and a working interrupt line w/ the SoC.
-
-
->> FWIW, we had a similar discussion a while ago, during driver inclusi=
-on:
->>=20
->>   http://marc.info/?l=3Ddevicetree&m=3D138109313118504&w=3D2
->>=20
->> Uwe, any idea?
-> What is the problem of a not-wired-up irq line? Does the rtc framewor=
-k
-> need to change to allow setting an alarm without the irq line being
-> hooked up?
-
-yes.=20
-
-
-> Is it "only" that the alarm is missed?
-
-In practice, yes. But RTC framework does not support that. Or maybe
-there is some trick a maintainer would be aware of to support that
-scenario. Something involving:
-
- - returning some specific value in alarm_irq_enable handler
- - calling device_init_wakeup(dev, true); w/o having an IRQ line
- - extend workaround started in c9f5c7e7a84f and 4a649903f91232
-   and expose those via dt
- - ...
-
-> Irq polling probably isn't sensible?
->
-> I assume it's not that unusual that an rtc irq doesn't trigger a syst=
-em
-> irq, so having that supported nicely would be great.
-
-Now, we're two to think that way ;-)
+For QMan look into section '6.3.10 Direct Connect Portals (DCPs)'. The
+BMan DCP assignment is the same
 
 
-> Looking through the rtc's datasheet, the device is a tad more
-> complicated than the current driver handles. There are two irq lines =
-and
-> three functions that can be routed through these (alarm1, alarm2 and
-> clkout; not all combinations are possible).
-
-Yes, but I wanted to handle the problem at hand before soldering IRQ#1
-on my RN102 and add more feature.
-
-a+
+Cheers,
