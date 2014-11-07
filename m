@@ -1,349 +1,114 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH] mfd: qcom-spmi-pmic: Add support for more chips versions
-Date: Fri, 07 Nov 2014 17:33:10 +0200
-Message-ID: <1415374390.26058.1.camel@mm-sol.com>
-References: <1415108003-16387-1-git-send-email-iivanov@mm-sol.com>
-	 <CAJAp7OgU64=KCuDhYEZTYppVeBz6wKvTDsof5vDRznfdZgAfZw@mail.gmail.com>
-	 <1415212271.14949.1.camel@mm-sol.com>
-	 <CAJAp7OgXHGWQj7MWh51LTUdmZpgZc=6m=o-Az=z8QxR7yfrw7g@mail.gmail.com>
-	 <1415260480.13103.3.camel@mm-sol.com>
-	 <CAJAp7OgPGhM=EnMNU2JfjG6Qb-EiWSPSRyZWGicSPmpicBQW7g@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] PCI: add missing DT binding for linux,pci-domain property
+Date: Fri, 7 Nov 2014 09:37:34 -0600
+Message-ID: <CAL_JsqLGav-_g1eq9Q_YsUrNao4KpHqYPHsm6qKxR1VkcicZ=Q@mail.gmail.com>
+References: <1415101660-26450-1-git-send-email-l.stach@pengutronix.de>
+ <20141105231743.GI6168@google.com> <20141106100518.GI8916@e106497-lin.cambridge.arm.com>
+ <CAL_JsqK-g2qW12jatyZBLeBEtpr80o=WWZVet5+OgMtzAAXHJQ@mail.gmail.com>
+ <20141106153051.GU8916@e106497-lin.cambridge.arm.com> <CAL_Jsq+WHyRN+hAaEwH1ZHabEYgTDnpPinoL8pagHYzP4Zfe=g@mail.gmail.com>
+ <20141107101728.GZ8916@e106497-lin.cambridge.arm.com> <CAL_JsqKdwLkybzLHdYcg81vEYfZvLu3_Cg1vZyoAyuobi6Vc4Q@mail.gmail.com>
+ <20141107152311.GJ8916@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="=-IF1ZwQIZJVW5gmXLV29x"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAJAp7OgPGhM=EnMNU2JfjG6Qb-EiWSPSRyZWGicSPmpicBQW7g@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn@kryo.se>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20141107152311.GJ8916@e106497-lin.cambridge.arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Lucas Stach <l.stach@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Nov 7, 2014 at 9:23 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+> On Fri, Nov 07, 2014 at 02:00:56PM +0000, Rob Herring wrote:
+>> On Fri, Nov 7, 2014 at 4:17 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+>> > On Thu, Nov 06, 2014 at 07:46:33PM +0000, Rob Herring wrote:
+>> >> On Thu, Nov 6, 2014 at 9:30 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+>> >> > On Thu, Nov 06, 2014 at 02:57:35PM +0000, Rob Herring wrote:
+>> >> >> On Thu, Nov 6, 2014 at 4:05 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+>> >> >> > On Wed, Nov 05, 2014 at 11:17:43PM +0000, Bjorn Helgaas wrote:
+>> >> >> >> On Tue, Nov 04, 2014 at 12:47:40PM +0100, Lucas Stach wrote:
+>> >> >> >> > This property was added by 41e5c0f81d3e
+>> >> >> >> > (of/pci: Add pci_get_new_domain_nr() and of_get_pci_domain_nr())
+>> >> >> >> > without the required binding documentation. As this property
+>> >> >> >> > will be supported by a number of host bridge drivers going forward,
+>> >> >> >> > add it to the common PCI binding doc.
+>> >> >> >> >
+>> >> >> >> > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+>> >> >> >>
+>> >> >> >> I merged 41e5c0f81d3e through my tree, and I could merge something like
+>> >> >> >> this if a consensus develops with some acks.  But I'll just let you guys
+>> >> >> >> handle it unless you poke me again.
+>> >> >> >
+>> >> >> > While I think the "linux,pci-domain" property *must* be documented, I
+>> >> >> > would like to get a consensus first on the usage. If we agree that
+>> >> >> > the property is mandatory to all host bridge drivers that use OF then
+>> >> >> > we need to patch existing drivers (partially done through Lorenzo's
+>> >> >> > patches, but other arches are ignoring it). If we say all *new* drivers
+>> >> >> > need to use it then we also need to come up with a strategy on how to
+>> >> >> > deal with old vs new school drivers.
+>> >> >> >
+>> >> >> > My preferred approach is the 3rd way: "linux,pci-domain" becomes part of
+>> >> >> > the core PCI infrastructure (and we find the common ground with ACPI).
+>> >> >> > That way the host bridge drivers don't have to do anything, but the DT
+>> >> >> > creators have to specify a value.
+>> >> >>
+>> >> >> I'm okay with it being in the core. It was the mixture of using the
+>> >> >> property and automatic numbering that I had issues with. Any mixture
+>> >> >> whether in DT or in drivers should be an error. Also, I think having a
+>> >> >> mixture of root bus host drivers would be rare, so I'm not too
+>> >> >> concerned about some drivers supporting the property and others not.
+>> >> >> In any case, these issues are all with the kernel and not really the
+>> >> >> concern for the binding. For the binding, simply all hosts set the
+>> >> >> domain or none of them do.
+>> >> >
+>> >> > Repeating what you've said to verify my understanding: you are OK with
+>> >> > the "linux,pci-domain" being handled in the PCI framework and mandatory
+>> >> > to all OF-based host bridges and architectures. Failure to include
+>> >> > the property should be an error and no host bridge driver should default
+>> >> > to the auto-generation of domain numbers.
+>> >> >
+>> >> > Is that correct?
+>> >>
+>> >> Not exactly. It is only mandatory when you have multiple root buses.
+>> >> But we can't say an existing dtb is in error, so it has to remain
+>> >> optional for compatibility. Also, given it is a Linux property, you
+>> >> can't really say it is mandatory for all PCI bindings from a DT
+>> >> perspective.
+>> >>
+>> >> While we could have issues in theory if this is handled in the
+>> >> drivers, I don't think we will in practice as having root buses with
+>> >> different drivers is unlikely.
+>> >
+>> > That's correct. However, I would like to bring to you attention that as
+>> > long as the property is treated as optional in certain cases we will need,
+>> > in the framework code, to mix the assignment of a domain number coming from
+>> > parsing of the property with the auto-numbering scheme in order to support
+>> > old DT files. And that was one of your major concerns when reviewing the
+>> > series. Any suggestions or clarifications?
+>>
+>> We have to support both allocation schemes, but not on the same
+>> system. A mixture on a given system is an error. So the cases to
+>> handle are like this:
+>>
+>> 1 root bus w/ domain -> use domain prop
+>> 1 root bus w/o domain -> auto numbering
+>> N root buses w/ domains -> use domain prop
+>> N root buses w/o domains -> auto numbering
+>> N root buses w/ and w/o domains -> error
+>
+> Agree.
+>
+>>
+>> I also had issues just around the implementation details, but we can
+>> discuss those when there is another version.
+>
+> Well, there is a version already in arch/arm64/kernel/pci.c:
+> pci_bus_assign_domain_nr() and I believe it works on all the cases
+> listed above. Question is if you agree on making this the default
+> implementation for OF-based architectures. Lorenzo has already
+> copied it into arch/arm.
 
---=-IF1ZwQIZJVW5gmXLV29x
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+I agree it is correct implementation for correct DTs, but it doesn't
+handle some error cases. I'll comment on Lorenzo's ARM version about
+specifics.
 
-
-On Thu, 2014-11-06 at 08:55 -0800, Bjorn Andersson wrote:
-> On Wed, Nov 5, 2014 at 11:54 PM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
-> > On Wed, 2014-11-05 at 17:36 -0800, Bjorn Andersson wrote:
-> > > On Wed, Nov 5, 2014 at 10:31 AM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
-> [..]
-> > > > Some of the child device drivers have to know PMIC chip revision.
-> > > > 
-> > > 
-> > > So your plan is to have a strstr(parent->compatible, "-v2") there?
-> > 
-> > Actually also PMIC subtype (pm8841, pm8226...) is also required, so
-> > the plan is to have something like this:
-> > 
-> > {
-> >         static const struct of_device_id pmic_match_table[] = {
-> >                 { .compatible = "qcom,pm8941-v1.0" },
-> >                 { .compatible = "qcom,pm8841-v0.0" },
-> >                 { }
-> > 
-> >         };
-> > 
-> >         const struct of_device_id *match;
-> > 
-> >         match = of_match_device(pmic_match_table, pdev->dev.parent);
-> >         if (match) {
-> >                 dev_info(&pdev->dev, "%s chip detected\n", match->compatible);
-> >         }
-> > }
-> > 
-> 
-> To me this is a hack, you should not alter the devicetree to make it
-> "better express the hardware". Either you know these things from boot
-> and they go in device tree, or you can probe them and they should not
-> go in device tree.
-> 
-> If you really need these values you should expose them through some api.
-
-I would like to avoid compile time dependency between these drivers.
-There are several precedents of using of_update_property() for enhancing
-compatible property already.  
-
-> 
-> > > Could you be a little bit more elaborate on what you're trying to do
-> > > and which child devices that might be?
-> > 
-> > For example ADC drivers are required temperature compensation based
-> > on PMIC variant and chip manufacturer.
-> > 
-> 
-> I see, is that compensation of any practical value? Or is the
-> compensation of academic proportions?
-
-It depends of what you mean by academic :-). Attached file have test
-application which dump difference between non compensated and compensated
-values for different temperature, manufacture and input value.
-
-Output format of the program is:
-Column 1: manufacturer GF=0, SMIC=1, TSMC=2
-Column 2: chip revision
-Column 3: die temperature in mili deg Celsius 
-Column 4: input for compensation in micro Volts
-Column 5: compensated result in micro Volts
-Column 6: difference in micro Volts
-
-
-Regards,
-Ivan
-
---=-IF1ZwQIZJVW5gmXLV29x
-Content-Disposition: attachment; filename="temperature-compensation-check.c"
-Content-Transfer-Encoding: base64
-Content-Type: text/x-csrc; name="temperature-compensation-check.c"; charset="UTF-8"
-
-CiNpbmNsdWRlIDxzdGRpby5oPgoKLyogU1cgaW5kZXgncyBmb3IgUE1JQyB0eXBlIGFuZCB2ZXJz
-aW9uIHVzZWQgYnkgUVBOUCBWQURDIGFuZCBJQURDICovCiNkZWZpbmUgUkVWX0lEXzg5NDFfM18x
-CTEKI2RlZmluZSBSRVZfSURfODAyNl8xXzAJMgojZGVmaW5lIFJFVl9JRF84MDI2XzJfMAkzCiNk
-ZWZpbmUgUkVWX0lEXzgxMTBfMV8wCTQKI2RlZmluZSBSRVZfSURfODAyNl8yXzEJNQojZGVmaW5l
-IFJFVl9JRF84MTEwXzJfMAk2CiNkZWZpbmUgUkVWX0lEXzgwMjZfMl8yCTcKI2RlZmluZSBSRVZf
-SURfODk0MV8zXzAJOAojZGVmaW5lIFJFVl9JRF84OTQxXzJfMAk5CiNkZWZpbmUgUkVWX0lEXzg5
-MTZfMV8wCTEwCiNkZWZpbmUgUkVWX0lEXzg5MTZfMV8xCTExCiNkZWZpbmUgUkVWX0lEXzg5MTZf
-Ml8wCTEyCgojZGVmaW5lIEZBQ1RPUllfR0YgCQkwCiNkZWZpbmUgRkFDVE9SWV9TTUlDCQkxCiNk
-ZWZpbmUgRkFDVE9SWV9UU01DCQkyCgojZGVmaW5lIFZCQVRfQ09FRkZfMQkzMDAwCiNkZWZpbmUg
-VkJBVF9DT0VGRl8yCTQ1ODEwMDAwCiNkZWZpbmUgVkJBVF9DT0VGRl8zCTEwMDAwMAojZGVmaW5l
-IFZCQVRfQ09FRkZfNAkzNTAwCiNkZWZpbmUgVkJBVF9DT0VGRl81CTgwMDAwMDAwCiNkZWZpbmUg
-VkJBVF9DT0VGRl82CTQ0MDAKI2RlZmluZSBWQkFUX0NPRUZGXzcJMzIyMDAwMDAKI2RlZmluZSBW
-QkFUX0NPRUZGXzgJMzg4MAojZGVmaW5lIFZCQVRfQ09FRkZfOQk1NzcwCiNkZWZpbmUgVkJBVF9D
-T0VGRl8xMAkzNjYwCiNkZWZpbmUgVkJBVF9DT0VGRl8xMQk1MzIwCiNkZWZpbmUgVkJBVF9DT0VG
-Rl8xMgk4MDYwMDAwCiNkZWZpbmUgVkJBVF9DT0VGRl8xMwkxMDI2NDAwMDAKI2RlZmluZSBWQkFU
-X0NPRUZGXzE0CTIyMjIwMDAwCiNkZWZpbmUgVkJBVF9DT0VGRl8xNQk4MzA2MDAwMAojZGVmaW5l
-IFZCQVRfQ09FRkZfMTYJMjgxMAojZGVmaW5lIFZCQVRfQ09FRkZfMTcJNTI2MAojZGVmaW5lIFZC
-QVRfQ09FRkZfMTgJODAyNwojZGVmaW5lIFZCQVRfQ09FRkZfMTkJMjM0NwojZGVmaW5lIFZCQVRf
-Q09FRkZfMjAJNjA0MwojZGVmaW5lIFZCQVRfQ09FRkZfMjEJMTkxNAojZGVmaW5lIFZCQVRfT0ZG
-U0VUX1NNSUMJOTQ0NgojZGVmaW5lIFZCQVRfT0ZGU0VUX0dGCTk0NDEKI2RlZmluZSBPQ1ZfT0ZG
-U0VUX1NNSUMJNDU5NgojZGVmaW5lIE9DVl9PRkZTRVRfR0YJNTg5NgojZGVmaW5lIFZCQVRfQ09F
-RkZfMjIJNjgwMAojZGVmaW5lIFZCQVRfQ09FRkZfMjMJMzUwMAojZGVmaW5lIFZCQVRfQ09FRkZf
-MjQJNDM2MAojZGVmaW5lIFZCQVRfQ09FRkZfMjUJODA2MAojZGVmaW5lIFZCQVRfQ09FRkZfMjYJ
-Nzg5NQojZGVmaW5lIFZCQVRfQ09FRkZfMjcJNTY1OAojZGVmaW5lIFZCQVRfQ09FRkZfMjgJNTc2
-MAojZGVmaW5lIFZCQVRfQ09FRkZfMjkJNzkwMAojZGVmaW5lIFZCQVRfQ09FRkZfMzAJNTY2MAoj
-ZGVmaW5lIFZCQVRfQ09FRkZfMzEJMzYyMAojZGVmaW5lIFZCQVRfQ09FRkZfMzIJMTIzMAojZGVm
-aW5lIFZCQVRfQ09FRkZfMzMJNTc2MAojZGVmaW5lIFZCQVRfQ09FRkZfMzQJNDA4MAojZGVmaW5l
-IFZCQVRfQ09FRkZfMzUJNzAwMAojZGVmaW5lIFZCQVRfQ09FRkZfMzYJMzA0MAojZGVmaW5lIFZC
-QVRfQ09FRkZfMzcJMzg1MAojZGVmaW5lIFZCQVRfQ09FRkZfMzgJNTAwMAojZGVmaW5lIFZCQVRf
-Q09FRkZfMzkJMjYxMAojZGVmaW5lIFZCQVRfQ09FRkZfNDAJNDE5MAojZGVmaW5lIFZCQVRfQ09F
-RkZfNDEJNTgwMAojZGVmaW5lIFZCQVRfQ09FRkZfNDIJMjYyMAojZGVmaW5lIFZCQVRfQ09FRkZf
-NDMJNDAzMAojZGVmaW5lIFZCQVRfQ09FRkZfNDQJMzIzMAojZGVmaW5lIFZCQVRfQ09FRkZfNDUJ
-MzQ1MAojZGVmaW5lIFZCQVRfQ09FRkZfNDYJMjEyMAojZGVmaW5lIFZCQVRfQ09FRkZfNDcJMzU2
-MAojZGVmaW5lIFZCQVRfQ09FRkZfNDgJMjE5MAoKc3RhdGljIGxvbmcKcXBucF9vY3ZfY29tcChp
-bnQgdmVyc2lvbiwgaW50IGZhY3RvcnksIGxvbmcgcmVzdWx0LCBsb25nIGRpZV90ZW1wKQp7CiAg
-ICBsb25nIHRlbXBfdmFyID0gMCwgb2Zmc2V0ID0gMDsKCiAgICBpZiAodmVyc2lvbiA9PSBSRVZf
-SURfODAyNl8yXzIpIHsKICAgICAgICBpZiAoZGllX3RlbXAgPiAyNTAwMCkKICAgICAgICAgICAg
-cmV0dXJuIHJlc3VsdDsKICAgIH0KCiAgICBzd2l0Y2ggKHZlcnNpb24pIHsKICAgICAgICBjYXNl
-IFJFVl9JRF84OTQxXzNfMToKICAgICAgICAgICAgc3dpdGNoIChmYWN0b3J5KSB7CiAgICAgICAg
-ICAgICAgICBjYXNlIEZBQ1RPUllfVFNNQzoKICAgICAgICAgICAgICAgICAgICB0ZW1wX3ZhciA9
-ICgoZGllX3RlbXAgLSAyNTAwMCkgKiAoLVZCQVRfQ09FRkZfNCkpOwogICAgICAgICAgICAgICAg
-ICAgIGJyZWFrOwogICAgICAgICAgICAgICAgZGVmYXVsdDoKICAgICAgICAgICAgICAgIGNhc2Ug
-RkFDVE9SWV9HRjoKICAgICAgICAgICAgICAgICAgICB0ZW1wX3ZhciA9ICgoZGllX3RlbXAgLSAy
-NTAwMCkgKiAoLVZCQVRfQ09FRkZfMSkpOwogICAgICAgICAgICAgICAgICAgIGJyZWFrOwogICAg
-ICAgICAgICB9CiAgICAgICAgICAgIGJyZWFrOwogICAgICAgIGNhc2UgUkVWX0lEXzgwMjZfMV8w
-OgogICAgICAgICAgICBzd2l0Y2ggKGZhY3RvcnkpIHsKICAgICAgICAgICAgICAgIGNhc2UgRkFD
-VE9SWV9UU01DOgogICAgICAgICAgICAgICAgICAgIHRlbXBfdmFyID0gKCgoZGllX3RlbXAgKiAo
-LVZCQVRfQ09FRkZfMTApKQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtIFZCQVRf
-Q09FRkZfMTQpKTsKICAgICAgICAgICAgICAgICAgICBicmVhazsKICAgICAgICAgICAgICAgIGRl
-ZmF1bHQ6CiAgICAgICAgICAgICAgICBjYXNlIEZBQ1RPUllfR0Y6CiAgICAgICAgICAgICAgICAg
-ICAgdGVtcF92YXIgPSAoKChkaWVfdGVtcCAqICgtVkJBVF9DT0VGRl84KSkKICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgKyBWQkFUX0NPRUZGXzEyKSk7CiAgICAgICAgICAgICAgICAg
-ICAgYnJlYWs7CiAgICAgICAgICAgIH0KICAgICAgICAgICAgYnJlYWs7CiAgICAgICAgY2FzZSBS
-RVZfSURfODAyNl8yXzA6CiAgICAgICAgY2FzZSBSRVZfSURfODAyNl8yXzE6CiAgICAgICAgICAg
-IHN3aXRjaCAoZmFjdG9yeSkgewogICAgICAgICAgICAgICAgY2FzZSBGQUNUT1JZX1RTTUM6CiAg
-ICAgICAgICAgICAgICAgICAgdGVtcF92YXIgPSAoKGRpZV90ZW1wIC0gMjUwMDApICogKC1WQkFU
-X0NPRUZGXzEwKSk7CiAgICAgICAgICAgICAgICAgICAgYnJlYWs7CiAgICAgICAgICAgICAgICBk
-ZWZhdWx0OgogICAgICAgICAgICAgICAgY2FzZSBGQUNUT1JZX0dGOgogICAgICAgICAgICAgICAg
-ICAgIHRlbXBfdmFyID0gKChkaWVfdGVtcCAtIDI1MDAwKSAqICgtVkJBVF9DT0VGRl84KSk7CiAg
-ICAgICAgICAgICAgICAgICAgYnJlYWs7CiAgICAgICAgICAgIH0KICAgICAgICAgICAgYnJlYWs7
-CiAgICAgICAgY2FzZSBSRVZfSURfODAyNl8yXzI6CiAgICAgICAgICAgIHN3aXRjaCAoZmFjdG9y
-eSkgewogICAgICAgICAgICAgICAgY2FzZSBGQUNUT1JZX1RTTUM6CiAgICAgICAgICAgICAgICAg
-ICAgcmVzdWx0IC09IFZCQVRfQ09FRkZfMjI7CiAgICAgICAgICAgICAgICAgICAgdGVtcF92YXIg
-PSAoZGllX3RlbXAgLSAyNTAwMCkgKiBWQkFUX0NPRUZGXzI0OwogICAgICAgICAgICAgICAgICAg
-IGJyZWFrOwogICAgICAgICAgICAgICAgZGVmYXVsdDoKICAgICAgICAgICAgICAgIGNhc2UgRkFD
-VE9SWV9HRjoKICAgICAgICAgICAgICAgICAgICByZXN1bHQgLT0gVkJBVF9DT0VGRl8yMjsKICAg
-ICAgICAgICAgICAgICAgICB0ZW1wX3ZhciA9IChkaWVfdGVtcCAtIDI1MDAwKSAqIFZCQVRfQ09F
-RkZfMjU7CiAgICAgICAgICAgICAgICAgICAgYnJlYWs7CiAgICAgICAgICAgIH0KICAgICAgICAg
-ICAgYnJlYWs7CiAgICAgICAgY2FzZSBSRVZfSURfODExMF8yXzA6CiAgICAgICAgICAgIHN3aXRj
-aCAoZmFjdG9yeSkgewogICAgICAgICAgICAgICAgY2FzZSBGQUNUT1JZX1NNSUM6CiAgICAgICAg
-ICAgICAgICAgICAgcmVzdWx0IC09IE9DVl9PRkZTRVRfU01JQzsKICAgICAgICAgICAgICAgICAg
-ICBpZiAoZGllX3RlbXAgPCAyNTAwMCkKICAgICAgICAgICAgICAgICAgICAgICAgdGVtcF92YXIg
-PSBWQkFUX0NPRUZGXzE4OwogICAgICAgICAgICAgICAgICAgIGVsc2UKICAgICAgICAgICAgICAg
-ICAgICAgICAgdGVtcF92YXIgPSBWQkFUX0NPRUZGXzE5OwogICAgICAgICAgICAgICAgICAgIHRl
-bXBfdmFyID0gKGRpZV90ZW1wIC0gMjUwMDApICogdGVtcF92YXI7CiAgICAgICAgICAgICAgICAg
-ICAgYnJlYWs7CiAgICAgICAgICAgICAgICBkZWZhdWx0OgogICAgICAgICAgICAgICAgY2FzZSBG
-QUNUT1JZX0dGOgogICAgICAgICAgICAgICAgICAgIHJlc3VsdCAtPSBPQ1ZfT0ZGU0VUX0dGOwog
-ICAgICAgICAgICAgICAgICAgIGlmIChkaWVfdGVtcCA8IDI1MDAwKQogICAgICAgICAgICAgICAg
-ICAgICAgICB0ZW1wX3ZhciA9IFZCQVRfQ09FRkZfMjA7CiAgICAgICAgICAgICAgICAgICAgZWxz
-ZQogICAgICAgICAgICAgICAgICAgICAgICB0ZW1wX3ZhciA9IFZCQVRfQ09FRkZfMjE7CiAgICAg
-ICAgICAgICAgICAgICAgdGVtcF92YXIgPSAoZGllX3RlbXAgLSAyNTAwMCkgKiB0ZW1wX3ZhcjsK
-ICAgICAgICAgICAgICAgICAgICBicmVhazsKICAgICAgICAgICAgfQogICAgICAgICAgICBicmVh
-azsKICAgICAgICBjYXNlIFJFVl9JRF84OTE2XzFfMDoKICAgICAgICAgICAgc3dpdGNoIChmYWN0
-b3J5KSB7CiAgICAgICAgICAgICAgICBjYXNlIEZBQ1RPUllfU01JQzoKICAgICAgICAgICAgICAg
-ICAgICBpZiAoZGllX3RlbXAgPCAyNTAwMCkKICAgICAgICAgICAgICAgICAgICAgICAgdGVtcF92
-YXIgPSBWQkFUX0NPRUZGXzI2OwogICAgICAgICAgICAgICAgICAgIGVsc2UKICAgICAgICAgICAg
-ICAgICAgICAgICAgdGVtcF92YXIgPSBWQkFUX0NPRUZGXzI3OwogICAgICAgICAgICAgICAgICAg
-IHRlbXBfdmFyID0gKGRpZV90ZW1wIC0gMjUwMDApICogdGVtcF92YXI7CiAgICAgICAgICAgICAg
-ICAgICAgYnJlYWs7CiAgICAgICAgICAgICAgICBkZWZhdWx0OgogICAgICAgICAgICAgICAgY2Fz
-ZSBGQUNUT1JZX0dGOgogICAgICAgICAgICAgICAgICAgIG9mZnNldCA9IE9DVl9PRkZTRVRfR0Y7
-CiAgICAgICAgICAgICAgICAgICAgaWYgKGRpZV90ZW1wIDwgMjUwMDApCiAgICAgICAgICAgICAg
-ICAgICAgICAgIHRlbXBfdmFyID0gVkJBVF9DT0VGRl8yNjsKICAgICAgICAgICAgICAgICAgICBl
-bHNlCiAgICAgICAgICAgICAgICAgICAgICAgIHRlbXBfdmFyID0gVkJBVF9DT0VGRl8yNzsKICAg
-ICAgICAgICAgICAgICAgICB0ZW1wX3ZhciA9IChkaWVfdGVtcCAtIDI1MDAwKSAqIHRlbXBfdmFy
-OwogICAgICAgICAgICAgICAgICAgIGJyZWFrOwogICAgICAgICAgICB9CiAgICAgICAgICAgIGJy
-ZWFrOwogICAgICAgIGNhc2UgUkVWX0lEXzg5MTZfMV8xOgogICAgICAgICAgICBzd2l0Y2ggKGZh
-Y3RvcnkpIHsKICAgICAgICAgICAgICAgICAgICAvKiBGQUJfSUQgaXMgemVybyAqLwogICAgICAg
-ICAgICAgICAgY2FzZSBGQUNUT1JZX0dGOgogICAgICAgICAgICAgICAgICAgIGlmIChkaWVfdGVt
-cCA8IDI1MDAwKQogICAgICAgICAgICAgICAgICAgICAgICB0ZW1wX3ZhciA9IFZCQVRfQ09FRkZf
-Mjk7CiAgICAgICAgICAgICAgICAgICAgZWxzZQogICAgICAgICAgICAgICAgICAgICAgICB0ZW1w
-X3ZhciA9IFZCQVRfQ09FRkZfMzA7CiAgICAgICAgICAgICAgICAgICAgdGVtcF92YXIgPSAoZGll
-X3RlbXAgLSAyNTAwMCkgKiB0ZW1wX3ZhcjsKICAgICAgICAgICAgICAgICAgICBicmVhazsKICAg
-ICAgICAgICAgICAgICAgICAvKiBGQUJfSUQgaXMgbm9uLXplcm8gKi8KICAgICAgICAgICAgICAg
-IGRlZmF1bHQ6CiAgICAgICAgICAgICAgICAgICAgaWYgKGRpZV90ZW1wIDwgMjUwMDApCiAgICAg
-ICAgICAgICAgICAgICAgICAgIHRlbXBfdmFyID0gVkJBVF9DT0VGRl8zMTsKICAgICAgICAgICAg
-ICAgICAgICBlbHNlCiAgICAgICAgICAgICAgICAgICAgICAgIHRlbXBfdmFyID0gKC1WQkFUX0NP
-RUZGXzMyKTsKICAgICAgICAgICAgICAgICAgICB0ZW1wX3ZhciA9IChkaWVfdGVtcCAtIDI1MDAw
-KSAqIHRlbXBfdmFyOwogICAgICAgICAgICAgICAgICAgIGJyZWFrOwogICAgICAgICAgICB9CiAg
-ICAgICAgICAgIGJyZWFrOwogICAgICAgIGNhc2UgUkVWX0lEXzg5MTZfMl8wOgogICAgICAgICAg
-ICBzd2l0Y2ggKGZhY3RvcnkpIHsKICAgICAgICAgICAgICAgIGNhc2UgRkFDVE9SWV9TTUlDOgog
-ICAgICAgICAgICAgICAgICAgIG9mZnNldCA9ICgtVkJBVF9DT0VGRl8zOCk7CiAgICAgICAgICAg
-ICAgICAgICAgaWYgKGRpZV90ZW1wIDwgMCkKICAgICAgICAgICAgICAgICAgICAgICAgdGVtcF92
-YXIgPSBkaWVfdGVtcCAqIFZCQVRfQ09FRkZfMzY7CiAgICAgICAgICAgICAgICAgICAgZWxzZSBp
-ZiAoZGllX3RlbXAgPiA0MDAwMCkKICAgICAgICAgICAgICAgICAgICAgICAgdGVtcF92YXIgPSAo
-KGRpZV90ZW1wIC0gNDAwMDApICogKC1WQkFUX0NPRUZGXzM3KSk7CiAgICAgICAgICAgICAgICAg
-ICAgYnJlYWs7CiAgICAgICAgICAgICAgICBjYXNlIEZBQ1RPUllfVFNNQzoKICAgICAgICAgICAg
-ICAgICAgICBpZiAoZGllX3RlbXAgPCAxMDAwMCkKICAgICAgICAgICAgICAgICAgICAgICAgdGVt
-cF92YXIgPSAoKGRpZV90ZW1wIC0gMTAwMDApICogVkJBVF9DT0VGRl80MSk7CiAgICAgICAgICAg
-ICAgICAgICAgZWxzZSBpZiAoZGllX3RlbXAgPiA1MDAwMCkKICAgICAgICAgICAgICAgICAgICAg
-ICAgdGVtcF92YXIgPSAoKGRpZV90ZW1wIC0gNTAwMDApICogKC1WQkFUX0NPRUZGXzQyKSk7CiAg
-ICAgICAgICAgICAgICAgICAgYnJlYWs7CiAgICAgICAgICAgICAgICBkZWZhdWx0OgogICAgICAg
-ICAgICAgICAgY2FzZSBGQUNUT1JZX0dGOgogICAgICAgICAgICAgICAgICAgIGlmIChkaWVfdGVt
-cCA8IDIwMDAwKQogICAgICAgICAgICAgICAgICAgICAgICB0ZW1wX3ZhciA9ICgoZGllX3RlbXAg
-LSAyMDAwMCkgKiBWQkFUX0NPRUZGXzQ1KTsKICAgICAgICAgICAgICAgICAgICBlbHNlIGlmIChk
-aWVfdGVtcCA+IDQwMDAwKQogICAgICAgICAgICAgICAgICAgICAgICB0ZW1wX3ZhciA9ICgoZGll
-X3RlbXAgLSA0MDAwMCkgKiAoLVZCQVRfQ09FRkZfNDYpKTsKICAgICAgICAgICAgICAgICAgICBi
-cmVhazsKICAgICAgICAgICAgfQogICAgICAgICAgICBicmVhazsKICAgICAgICBkZWZhdWx0Ogog
-ICAgICAgICAgICB0ZW1wX3ZhciA9IDA7CiAgICAgICAgICAgIGJyZWFrOwogICAgfQoKICAgIHRl
-bXBfdmFyID0gdGVtcF92YXIgLyBWQkFUX0NPRUZGXzM7CgogICAgdGVtcF92YXIgPSAxMDAwMDAw
-ICsgdGVtcF92YXI7CgogICAgcmVzdWx0ID0gcmVzdWx0ICogdGVtcF92YXI7CgogICAgaWYgKG9m
-ZnNldCkKICAgICAgICByZXN1bHQgLT0gb2Zmc2V0OwoKICAgIHJlc3VsdCA9IHJlc3VsdCAvIDEw
-MDAwMDA7CgogICAgcmV0dXJuIHJlc3VsdDsKfQoKc3RhdGljIGxvbmcKcXBucF92YmF0X3Nuc19j
-b21wKGludCB2ZXJzaW9uLCBpbnQgZmFjdG9yeSwgbG9uZyByZXN1bHQsIGxvbmcgZGllX3RlbXAp
-CnsKICAgIGxvbmcgdGVtcF92YXIgPSAwLCBvZmZzZXQgPSAwOwoKICAgIGlmICh2ZXJzaW9uICE9
-IFJFVl9JRF84OTQxXzNfMSkgewogICAgICAgIC8qIG1pbihkaWVfdGVtcF9jLCA2MF9kZWdDKSAq
-LwogICAgICAgIGlmIChkaWVfdGVtcCA+IDYwMDAwKQogICAgICAgICAgICBkaWVfdGVtcCA9IDYw
-MDAwOwogICAgfQoKICAgIHN3aXRjaCAodmVyc2lvbikgewogICAgICAgIGNhc2UgUkVWX0lEXzg5
-NDFfM18xOgogICAgICAgICAgICBzd2l0Y2ggKGZhY3RvcnkpIHsKICAgICAgICAgICAgICAgIGNh
-c2UgRkFDVE9SWV9UU01DOgogICAgICAgICAgICAgICAgICAgIHRlbXBfdmFyID0gKChkaWVfdGVt
-cCAtIDI1MDAwKSAqICgtVkJBVF9DT0VGRl8xKSk7CiAgICAgICAgICAgICAgICAgICAgYnJlYWs7
-CiAgICAgICAgICAgICAgICBkZWZhdWx0OgogICAgICAgICAgICAgICAgY2FzZSBGQUNUT1JZX0dG
-OgogICAgICAgICAgICAgICAgICAgIC8qIG1pbihkaWVfdGVtcF9jLCA2MF9kZWdDKSAqLwogICAg
-ICAgICAgICAgICAgICAgIGlmIChkaWVfdGVtcCA+IDYwMDAwKQogICAgICAgICAgICAgICAgICAg
-ICAgICBkaWVfdGVtcCA9IDYwMDAwOwogICAgICAgICAgICAgICAgICAgIHRlbXBfdmFyID0gKChk
-aWVfdGVtcCAtIDI1MDAwKSAqICgtVkJBVF9DT0VGRl8xKSk7CiAgICAgICAgICAgICAgICAgICAg
-YnJlYWs7CiAgICAgICAgICAgIH0KICAgICAgICAgICAgYnJlYWs7CiAgICAgICAgY2FzZSBSRVZf
-SURfODAyNl8xXzA6CiAgICAgICAgICAgIHN3aXRjaCAoZmFjdG9yeSkgewogICAgICAgICAgICAg
-ICAgY2FzZSBGQUNUT1JZX1RTTUM6CiAgICAgICAgICAgICAgICAgICAgdGVtcF92YXIgPSAoKChk
-aWVfdGVtcCAqICgtVkJBVF9DT0VGRl8xMSkpCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICsgVkJBVF9DT0VGRl8xNSkpOwogICAgICAgICAgICAgICAgICAgIGJyZWFrOwogICAgICAg
-ICAgICAgICAgZGVmYXVsdDoKICAgICAgICAgICAgICAgIGNhc2UgRkFDVE9SWV9HRjoKICAgICAg
-ICAgICAgICAgICAgICB0ZW1wX3ZhciA9ICgoKGRpZV90ZW1wICogKC1WQkFUX0NPRUZGXzkpKQog
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICArIFZCQVRfQ09FRkZfMTMpKTsKICAgICAg
-ICAgICAgICAgICAgICBicmVhazsKICAgICAgICAgICAgfQogICAgICAgICAgICBicmVhazsKICAg
-ICAgICBjYXNlIFJFVl9JRF84MDI2XzJfMDoKICAgICAgICBjYXNlIFJFVl9JRF84MDI2XzJfMToK
-ICAgICAgICAgICAgc3dpdGNoIChmYWN0b3J5KSB7CiAgICAgICAgICAgICAgICBjYXNlIEZBQ1RP
-UllfVFNNQzoKICAgICAgICAgICAgICAgICAgICB0ZW1wX3ZhciA9ICgoZGllX3RlbXAgLSAyNTAw
-MCkgKiAoLVZCQVRfQ09FRkZfMTEpKTsKICAgICAgICAgICAgICAgICAgICBicmVhazsKICAgICAg
-ICAgICAgICAgIGRlZmF1bHQ6CiAgICAgICAgICAgICAgICBjYXNlIEZBQ1RPUllfR0Y6CiAgICAg
-ICAgICAgICAgICAgICAgdGVtcF92YXIgPSAoKGRpZV90ZW1wIC0gMjUwMDApICogKC1WQkFUX0NP
-RUZGXzkpKTsKICAgICAgICAgICAgICAgICAgICBicmVhazsKICAgICAgICAgICAgfQogICAgICAg
-ICAgICBicmVhazsKICAgICAgICBjYXNlIFJFVl9JRF84MDI2XzJfMjoKICAgICAgICAgICAgc3dp
-dGNoIChmYWN0b3J5KSB7CiAgICAgICAgICAgICAgICBjYXNlIEZBQ1RPUllfVFNNQzoKICAgICAg
-ICAgICAgICAgICAgICByZXN1bHQgLT0gVkJBVF9DT0VGRl8yMzsKICAgICAgICAgICAgICAgICAg
-ICB0ZW1wX3ZhciA9IDA7CiAgICAgICAgICAgICAgICAgICAgYnJlYWs7CiAgICAgICAgICAgICAg
-ICBkZWZhdWx0OgogICAgICAgICAgICAgICAgY2FzZSBGQUNUT1JZX0dGOgogICAgICAgICAgICAg
-ICAgICAgIHJlc3VsdCAtPSBWQkFUX0NPRUZGXzIzOwogICAgICAgICAgICAgICAgICAgIHRlbXBf
-dmFyID0gMDsKICAgICAgICAgICAgICAgICAgICBicmVhazsKICAgICAgICAgICAgfQogICAgICAg
-ICAgICBicmVhazsKICAgICAgICBjYXNlIFJFVl9JRF84MTEwXzJfMDoKICAgICAgICAgICAgc3dp
-dGNoIChmYWN0b3J5KSB7CiAgICAgICAgICAgICAgICBjYXNlIEZBQ1RPUllfU01JQzoKICAgICAg
-ICAgICAgICAgICAgICByZXN1bHQgLT0gVkJBVF9PRkZTRVRfU01JQzsKICAgICAgICAgICAgICAg
-ICAgICB0ZW1wX3ZhciA9ICgoZGllX3RlbXAgLSAyNTAwMCkgKiAoVkJBVF9DT0VGRl8xNykpOwog
-ICAgICAgICAgICAgICAgICAgIGJyZWFrOwogICAgICAgICAgICAgICAgZGVmYXVsdDoKICAgICAg
-ICAgICAgICAgIGNhc2UgRkFDVE9SWV9HRjoKICAgICAgICAgICAgICAgICAgICByZXN1bHQgLT0g
-VkJBVF9PRkZTRVRfR0Y7CiAgICAgICAgICAgICAgICAgICAgdGVtcF92YXIgPSAoKGRpZV90ZW1w
-IC0gMjUwMDApICogKFZCQVRfQ09FRkZfMTYpKTsKICAgICAgICAgICAgICAgICAgICBicmVhazsK
-ICAgICAgICAgICAgfQogICAgICAgICAgICBicmVhazsKICAgICAgICBjYXNlIFJFVl9JRF84OTE2
-XzFfMDoKICAgICAgICAgICAgc3dpdGNoIChmYWN0b3J5KSB7CiAgICAgICAgICAgICAgICBjYXNl
-IEZBQ1RPUllfU01JQzoKICAgICAgICAgICAgICAgICAgICB0ZW1wX3ZhciA9ICgoZGllX3RlbXAg
-LSAyNTAwMCkgKiAoVkJBVF9DT0VGRl8yOCkpOwogICAgICAgICAgICAgICAgICAgIGJyZWFrOwog
-ICAgICAgICAgICAgICAgZGVmYXVsdDoKICAgICAgICAgICAgICAgIGNhc2UgRkFDVE9SWV9HRjoK
-ICAgICAgICAgICAgICAgICAgICB0ZW1wX3ZhciA9ICgoZGllX3RlbXAgLSAyNTAwMCkgKiAoVkJB
-VF9DT0VGRl8yOCkpOwogICAgICAgICAgICAgICAgICAgIGJyZWFrOwogICAgICAgICAgICB9CiAg
-ICAgICAgICAgIGJyZWFrOwogICAgICAgIGNhc2UgUkVWX0lEXzg5MTZfMV8xOgogICAgICAgICAg
-ICBzd2l0Y2ggKGZhY3RvcnkpIHsKICAgICAgICAgICAgICAgICAgICAvKiBGQUJfSUQgaXMgemVy
-byAqLwogICAgICAgICAgICAgICAgY2FzZSBGQUNUT1JZX0dGOgogICAgICAgICAgICAgICAgICAg
-IHRlbXBfdmFyID0gKChkaWVfdGVtcCAtIDI1MDAwKSAqIChWQkFUX0NPRUZGXzMzKSk7CiAgICAg
-ICAgICAgICAgICAgICAgYnJlYWs7CiAgICAgICAgICAgICAgICAgICAgLyogRkFCX0lEIGlzIG5v
-bi16ZXJvICovCiAgICAgICAgICAgICAgICBkZWZhdWx0OgogICAgICAgICAgICAgICAgICAgIG9m
-ZnNldCA9IFZCQVRfQ09FRkZfMzU7CiAgICAgICAgICAgICAgICAgICAgaWYgKGRpZV90ZW1wID4g
-NTAwMDApIHsKICAgICAgICAgICAgICAgICAgICAgICAgdGVtcF92YXIgPSAoKGRpZV90ZW1wIC0g
-MjUwMDApICogKFZCQVRfQ09FRkZfMzQpKTsKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAg
-ICAgICAgICAgICAgYnJlYWs7CiAgICAgICAgICAgIH0KICAgICAgICAgICAgYnJlYWs7CiAgICAg
-ICAgY2FzZSBSRVZfSURfODkxNl8yXzA6CiAgICAgICAgICAgIHN3aXRjaCAoZmFjdG9yeSkgewog
-ICAgICAgICAgICAgICAgY2FzZSBGQUNUT1JZX1NNSUM6CiAgICAgICAgICAgICAgICAgICAgaWYg
-KGRpZV90ZW1wIDwgMCkgewogICAgICAgICAgICAgICAgICAgICAgICB0ZW1wX3ZhciA9IChkaWVf
-dGVtcCAqIFZCQVRfQ09FRkZfMzkpOwogICAgICAgICAgICAgICAgICAgIH0gZWxzZSBpZiAoZGll
-X3RlbXAgPiA0MDAwMCkgewogICAgICAgICAgICAgICAgICAgICAgICB0ZW1wX3ZhciA9ICgoZGll
-X3RlbXAgLSA0MDAwMCkgKiAoLVZCQVRfQ09FRkZfNDApKTsKICAgICAgICAgICAgICAgICAgICB9
-CiAgICAgICAgICAgICAgICAgICAgYnJlYWs7CiAgICAgICAgICAgICAgICBjYXNlIEZBQ1RPUllf
-VFNNQzoKICAgICAgICAgICAgICAgICAgICBpZiAoZGllX3RlbXAgPCAxMDAwMCkKICAgICAgICAg
-ICAgICAgICAgICAgICAgdGVtcF92YXIgPSAoKGRpZV90ZW1wIC0gMTAwMDApICogVkJBVF9DT0VG
-Rl80Myk7CiAgICAgICAgICAgICAgICAgICAgZWxzZSBpZiAoZGllX3RlbXAgPiA1MDAwMCkKICAg
-ICAgICAgICAgICAgICAgICAgICAgdGVtcF92YXIgPSAoKGRpZV90ZW1wIC0gNTAwMDApICogKC1W
-QkFUX0NPRUZGXzQ0KSk7CiAgICAgICAgICAgICAgICAgICAgYnJlYWs7CiAgICAgICAgICAgICAg
-ICBkZWZhdWx0OgogICAgICAgICAgICAgICAgY2FzZSBGQUNUT1JZX0dGOgogICAgICAgICAgICAg
-ICAgICAgIGlmIChkaWVfdGVtcCA8IDIwMDAwKQogICAgICAgICAgICAgICAgICAgICAgICB0ZW1w
-X3ZhciA9ICgoZGllX3RlbXAgLSAyMDAwMCkgKiBWQkFUX0NPRUZGXzQ3KTsKICAgICAgICAgICAg
-ICAgICAgICBlbHNlIGlmIChkaWVfdGVtcCA+IDQwMDAwKQogICAgICAgICAgICAgICAgICAgICAg
-ICB0ZW1wX3ZhciA9ICgoZGllX3RlbXAgLSA0MDAwMCkgKiAoLVZCQVRfQ09FRkZfNDgpKTsKICAg
-ICAgICAgICAgICAgICAgICBicmVhazsKICAgICAgICAgICAgfQogICAgICAgICAgICBicmVhazsK
-ICAgICAgICBkZWZhdWx0OgogICAgICAgICAgICB0ZW1wX3ZhciA9IDA7CiAgICAgICAgICAgIGJy
-ZWFrOwogICAgfQoKICAgIHRlbXBfdmFyID0gdGVtcF92YXIgLyBWQkFUX0NPRUZGXzM7CgogICAg
-dGVtcF92YXIgPSAxMDAwMDAwICsgdGVtcF92YXI7CgogICAgcmVzdWx0ID0gcmVzdWx0ICogdGVt
-cF92YXI7CgogICAgaWYgKG9mZnNldCkKICAgICAgICByZXN1bHQgLT0gb2Zmc2V0OwoKICAgIHJl
-c3VsdCA9IHJlc3VsdCAvIDEwMDAwMDA7CgogICAgcmV0dXJuIHJlc3VsdDsKfQoKaW50Cm1haW4o
-dm9pZCkKewogICAgbG9uZyByZXN1bHQsIG9yaWdpbmFsLCBkaWVfdGVtcCwgZGlmZjsKICAgIGlu
-dCB2ZXJzaW9uLCBmYWN0b3J5OwoKICAgIHByaW50ZigiPT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09XG4iKTsKICAgIHByaW50
-ZigiICAgICAgICAgICAgICAgICAgICAgICAgIE9DViBDb21wZW5zYXRpb24gICAgICAgICAgICAg
-ICAgICAgICAgICAgXG4iKTsKICAgIHByaW50ZigiPT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09XG4iKTsKCiAgICBmb3IgKGZh
-Y3RvcnkgPSBGQUNUT1JZX0dGOyBmYWN0b3J5IDw9IEZBQ1RPUllfVFNNQzsgZmFjdG9yeSsrKSB7
-CgogICAgICAgIGZvciAodmVyc2lvbiA9IFJFVl9JRF84OTQxXzNfMTsgdmVyc2lvbiA8PSBSRVZf
-SURfODkxNl8yXzA7IHZlcnNpb24rKykgewoKICAgICAgICAgICAgZm9yIChkaWVfdGVtcCA9IDA7
-IGRpZV90ZW1wIDw9IDEwMDAwMDsgZGllX3RlbXAgKz0gMTAwMDApIHsKCiAgICAgICAgICAgICAg
-ICBmb3IgKG9yaWdpbmFsID0gMDsgb3JpZ2luYWwgPD0gMTgwMDAwMDsgb3JpZ2luYWwgKz0gMTAw
-MDAwKSB7CgogICAgICAgICAgICAgICAgICAgIHJlc3VsdCA9IHFwbnBfb2N2X2NvbXAodmVyc2lv
-biwgZmFjdG9yeSwgb3JpZ2luYWwsIGRpZV90ZW1wKTsKCiAgICAgICAgICAgICAgICAgICAgZGlm
-ZiA9IHJlc3VsdCAtIG9yaWdpbmFsOwoKICAgICAgICAgICAgICAgICAgICBwcmludGYoIiVkXHQl
-ZFx0JWxkXHQlbGRcdCVsZFx0JWxkXG4iLCBmYWN0b3J5LCB2ZXJzaW9uLCBkaWVfdGVtcCwgb3Jp
-Z2luYWwsIHJlc3VsdCwgZGlmZik7CiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAg
-ICAgICB9CiAgICB9CgogICAgcHJpbnRmKCI9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT1cbiIpOwogICAgcHJpbnRmKCIgICAg
-ICAgICAgICAgICAgICAgICAgICAgVkJBVCBDb21wZW5zYXRpb24gICAgICAgICAgICAgICAgICAg
-ICAgICBcbiIpOwogICAgcHJpbnRmKCI9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT1cbiIpOwoKICAgIGZvciAoZmFjdG9yeSA9
-IEZBQ1RPUllfR0Y7IGZhY3RvcnkgPD0gRkFDVE9SWV9UU01DOyBmYWN0b3J5KyspIHsKCiAgICAg
-ICAgZm9yICh2ZXJzaW9uID0gUkVWX0lEXzg5NDFfM18xOyB2ZXJzaW9uIDw9IFJFVl9JRF84OTE2
-XzJfMDsgdmVyc2lvbisrKSB7CgogICAgICAgICAgICBmb3IgKGRpZV90ZW1wID0gMDsgZGllX3Rl
-bXAgPD0gMTAwMDAwOyBkaWVfdGVtcCArPSAxMDAwMCkgewoKICAgICAgICAgICAgICAgIGZvciAo
-b3JpZ2luYWwgPSAwOyBvcmlnaW5hbCA8PSAxODAwMDAwOyBvcmlnaW5hbCArPSAxMDAwMDApIHsK
-CiAgICAgICAgICAgICAgICAgICAgcmVzdWx0ID0gcXBucF92YmF0X3Nuc19jb21wKHZlcnNpb24s
-IGZhY3RvcnksIG9yaWdpbmFsLCBkaWVfdGVtcCk7CgogICAgICAgICAgICAgICAgICAgIGRpZmYg
-PSByZXN1bHQgLSBvcmlnaW5hbDsKCiAgICAgICAgICAgICAgICAgICAgcHJpbnRmKCIlZFx0JWRc
-dCVsZFx0JWxkXHQlbGRcdCVsZFxuIiwgZmFjdG9yeSwgdmVyc2lvbiwgZGllX3RlbXAsIG9yaWdp
-bmFsLCByZXN1bHQsIGRpZmYpOwogICAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAg
-ICAgfQogICAgfQoKICAgIHJldHVybiAwOwp9Ci==
-
-
---=-IF1ZwQIZJVW5gmXLV29x--
+Rob
