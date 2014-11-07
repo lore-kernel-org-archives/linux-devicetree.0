@@ -1,47 +1,31 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH V3 00/14] genirq endian fixes; bcm7120/brcmstb IRQ
- updates
-Date: Fri, 7 Nov 2014 00:00:09 -0500
-Message-ID: <20141107050009.GI3698@titan.lakedaemon.net>
-References: <1414890241-9938-1-git-send-email-cernekee@gmail.com>
+From: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCHv4 4/7] hwspinlock/core: add common OF helpers
+Date: Fri, 7 Nov 2014 07:06:44 +0200
+Message-ID: <CAK=Wgbar61qG4bWQz=YiyeUZDD0hUf74wSPMV1dFpcVJb4Os3Q@mail.gmail.com>
+References: <1389658764-39199-1-git-send-email-s-anna@ti.com>
+ <1389658764-39199-5-git-send-email-s-anna@ti.com> <CAJAp7Oj-3ZxvN8o=rg8YeTiXYWyQ1iowgisdU1R5UcZeh4VmOQ@mail.gmail.com>
+ <5425938C.6070007@ti.com> <CAK=WgbYf3++K4MVXW_n4zj-8fMEee61XG5+r40cW=trapRtJ7w@mail.gmail.com>
+ <545BBCCB.7030107@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1414890241-9938-1-git-send-email-cernekee@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>
-Cc: arnd@arndb.de, f.fainelli@gmail.com, tglx@linutronix.de, ralf@linux-mips.org, linux-sh@vger.kernel.org, sergei.shtylyov@cogentembedded.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <545BBCCB.7030107-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Cc: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Kevin,
+Hi Suman,
 
-On Sat, Nov 01, 2014 at 06:03:47PM -0700, Kevin Cernekee wrote:
-...
-> Kevin Cernekee (14):
->   sh: Eliminate unused irq_reg_{readl,writel} accessors
->   genirq: Generic chip: Change irq_reg_{readl,writel} arguments
->   genirq: Generic chip: Allow irqchip drivers to override
->     irq_reg_{readl,writel}
->   genirq: Generic chip: Add big endian I/O accessors
->   irqchip: brcmstb-l2: Eliminate dependency on ARM code
->   irqchip: bcm7120-l2: Eliminate bad IRQ check
->   irqchip: bcm7120-l2, brcmstb-l2: Remove ARM Kconfig dependency
->   irqchip: bcm7120-l2: Make sure all register accesses use base+offset
->   irqchip: bcm7120-l2: Fix missing nibble in gc->unused mask
->   irqchip: bcm7120-l2: Use gc->mask_cache to simplify suspend/resume
->     functions
->   irqchip: bcm7120-l2: Extend driver to support 64+ bit controllers
->   irqchip: bcm7120-l2: Decouple driver from brcmstb-l2
->   irqchip: bcm7120-l2: Convert driver to use irq_reg_{readl,writel}
->   irqchip: brcmstb-l2: Convert driver to use irq_reg_{readl,writel}
+On Thu, Nov 6, 2014 at 8:24 PM, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> wrote:
+> Ping on this. Can you review the latest series v6 [1] and pick it up for
+> 3.19? The MSM spinlock driver is also blocked/dependent on that series.
 
-Patches 2, 3, and 4 applied to irqchip/core with Thomas' and Arnd's Acks
-added.  Patches 5-$ added to irqchip/core with Arnd's Ack added where it
-was missing.
+Sure, it's on my mind, I hope I'll get to it next week.
 
-I've left patch #1 for the sh maintainers.
-
-thx,
-
-Jason.
+Thanks,
+Ohad.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
