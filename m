@@ -1,147 +1,51 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] OF: Add support for built in FDT blob
-Date: Fri, 7 Nov 2014 12:09:33 +0000
-Message-ID: <20141107120933.GA5487@leverpostej>
-References: <1415358849-25879-1-git-send-email-albeu@free.fr>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 11/13] ARM: STi: DT: STih407: Abstract common dt nodes into shared files.
+Date: Fri, 07 Nov 2014 13:10:05 +0100
+Message-ID: <3301013.ouyFbjlpZY@wuerfel>
+References: <1415361475-6218-1-git-send-email-peter.griffin@linaro.org> <1415361475-6218-12-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1415358849-25879-1-git-send-email-albeu-GANU6spQydw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1415361475-6218-12-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, lee.jones@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Fri, Nov 07, 2014 at 11:14:09AM +0000, Alban Bedel wrote:
-> Allow embedding an FDT blob in the kernel image, this is mostly
-> useful to run new kernels on boards with old bootloaders.
-
-I am very much not keen on embedding a DTB within a kernel. It's far
-nicer for the two to remain separate blobs, with a small shim to set up
-the DTB address.
-
-On ARM we have appended DTB for this purpose, which is at least better
-than embedding the DT inside of the kernel.
-
-What architecture and bootloader are you using that necessitate this?
-
-Thanks,
-Mark.
-
-> Signed-off-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-> ---
->  drivers/of/Kconfig    | 16 ++++++++++++++++
->  drivers/of/Makefile   |  8 ++++++++
->  drivers/of/fdt.c      |  8 ++++++++
->  drivers/of/fdt_blob.S | 17 +++++++++++++++++
->  4 files changed, 49 insertions(+)
->  create mode 100644 drivers/of/fdt_blob.S
-> 
-> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> index 1a13f5b..97c5d18 100644
-> --- a/drivers/of/Kconfig
-> +++ b/drivers/of/Kconfig
-> @@ -83,4 +83,20 @@ config OF_RESERVED_MEM
->  config OF_RESOLVE
->  	bool
->  
-> +config OF_BUILTIN_FDT
-> +	bool "Include a FDT blob in the kernel"
-> +	help
-> +	  Include a FDT blob in the kernel to use as default when
-> +	  no blob has been passed by the bootloader. This is useful
-> +	  to use devicetree on boards with old bootloaders.
-> +
-> +	  If unsure, say N.
-> +
-> +config OF_BUILTIN_FDT_BLOB
-> +	string "FDT Blob name"
-> +	depends on OF_BUILTIN_FDT
-> +	help
-> +	  Name of the FDT blob to build in the kernel, from one of the
-> +	  dtbs available for the current platform.
-> +
->  endmenu # OF
-> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-> index ca9209c..b96c6e9 100644
-> --- a/drivers/of/Makefile
-> +++ b/drivers/of/Makefile
-> @@ -14,6 +14,14 @@ obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
->  obj-$(CONFIG_OF_MTD)	+= of_mtd.o
->  obj-$(CONFIG_OF_RESERVED_MEM) += of_reserved_mem.o
->  obj-$(CONFIG_OF_RESOLVE)  += resolver.o
-> +obj-$(CONFIG_OF_BUILTIN_FDT) += fdt_blob.o
->  
->  CFLAGS_fdt.o = -I$(src)/../../scripts/dtc/libfdt
->  CFLAGS_fdt_address.o = -I$(src)/../../scripts/dtc/libfdt
-> +
-> +# The FDT blob to include
-> +FDT_BLOB := arch/$(ARCH)/boot/dts/$(CONFIG_OF_BUILTIN_FDT_BLOB:"%"=%).dtb
-> +# Undefine ARCH to avoid breaking the FDT path
-> +AFLAGS_fdt_blob.o += -U$(ARCH) -DFDT_BLOB=$(FDT_BLOB)
-> +# This dependency can't be automatically tracked
-> +$(obj)/fdt_blob.o: $(obj)/../../$(FDT_BLOB)
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index d1ffca8..ffb86a7 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -26,6 +26,9 @@
->  #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
->  #include <asm/page.h>
->  
-> +extern char __fdt_blob_start[];
-> +extern unsigned long __fdt_blob_size;
-> +
->  /*
->   * of_fdt_limit_memory - limit the number of regions in the /memory node
->   * @limit: maximum entries
-> @@ -1064,6 +1067,11 @@ void __init unflatten_and_copy_device_tree(void)
->  	int size;
->  	void *dt;
->  
-> +#ifdef CONFIG_OF_BUILTIN_FDT
-> +	if (!initial_boot_params && __fdt_blob_size > 0)
-> +		initial_boot_params = __fdt_blob_start;
-> +#endif
-> +
->  	if (!initial_boot_params) {
->  		pr_warn("No valid device tree found, continuing without\n");
->  		return;
-> diff --git a/drivers/of/fdt_blob.S b/drivers/of/fdt_blob.S
+On Friday 07 November 2014 11:57:53 Peter Griffin wrote:
+> diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
 > new file mode 100644
-> index 0000000..fcaa2aa
+> index 0000000..862bb2f
 > --- /dev/null
-> +++ b/drivers/of/fdt_blob.S
-> @@ -0,0 +1,17 @@
-> +#include <linux/stringify.h>
-> +#include <asm-generic/vmlinux.lds.h>
+> +++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+> @@ -0,0 +1,73 @@
+> +/*
+> + * Copyright (C) 2014 STMicroelectronics (R&D) Limited.
+> + * Author: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +/ {
+> +       chosen {
+> +               bootargs = "console=ttyAS0,115200";
+> +               linux,stdout-path = &sbc_serial0;
+> +       };
 > +
-> +.align 4
-> +.section .init.fdt_blob,"a"
-> +.globl VMLINUX_SYMBOL(__fdt_blob_start)
-> +VMLINUX_SYMBOL(__fdt_blob_start):
-> +.incbin __stringify(FDT_BLOB)
-> +__fdt_blob_end:
-> +.section .init.fdt_blob.info,"a"
-> +.globl VMLINUX_SYMBOL(__fdt_blob_size)
-> +VMLINUX_SYMBOL(__fdt_blob_size):
-> +#ifdef CONFIG_64BIT
-> +        .quad __fdt_blob_end - __fdt_blob_start
-> +#else
-> +        .long __fdt_blob_end - __fdt_blob_start
-> +#endif
-> -- 
-> 2.0.0
+> +       memory {
+> +               device_type = "memory";
+> +               reg = <0x40000000 0x80000000>;
+> +       };
+> +
+> +       aliases {
+> +               ttyAS0 = &sbc_serial0;
+> +       };
+> +
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Please leave these in the per-board file, each board would have different
+values, so it makes no sense to have them in the shared file.
+
+	Arnd
