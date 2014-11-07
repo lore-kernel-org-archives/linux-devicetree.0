@@ -1,57 +1,61 @@
 From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Subject: [PATCH v7 0/2] clk: shmobile: DIV6 clock variable parent support
-Date: Fri,  7 Nov 2014 16:51:06 +0100
-Message-ID: <1415375468-15378-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+Subject: [PATCH v7 2/2] clk: shmobile: document DIV6 clock parent bindings
+Date: Fri,  7 Nov 2014 16:51:08 +0100
+Message-ID: <1415375468-15378-3-git-send-email-ulrich.hecht+renesas@gmail.com>
+References: <1415375468-15378-1-git-send-email-ulrich.hecht+renesas@gmail.com>
 Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1415375468-15378-1-git-send-email-ulrich.hecht+renesas@gmail.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: horms@verge.net.au, mturquette@linaro.org, geert@linux-m68k.org, laurent.pinchart+renesas@ideasonboard.com
 Cc: linux-sh@vger.kernel.org, magnus.damm@gmail.com, devicetree@vger.kernel.org, mark.rutland@arm.com, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+Describes how to specify the parents for clocks with EXSRC bits.
 
-As Geert suggested, this revision fixes the number of parent clocks at one,
-four, or eight to avoid ambiguity.
+Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+---
+ .../bindings/clock/renesas,cpg-div6-clocks.txt         | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-CU
-Uli
-
-
-Changes since v6:
-- require exactly one, four, or eight parent clocks
-
-Changes since v5:
-- straighten types
-- don't use hw->init outside cpg_div6_clock_init()
-- drop superfluous allocation error messages
-- drop renesas,src-* properties, can be inferred
-
-Changes since v4:
-- implement .get_parent, .set_parent
-- improve bindings documentation
-
-Changes since v3:
-- note that renesas,src-shift and renesas,src-width depend on each other
-- clarified description
-- minor coding style fixes
-
-Changes since v2:
-- add r8a73a4 to bindings
-- use u32 where appropriate
-- don't split error message
-
-Changes since v1:
-- make sure unrelated register bits are preserved
-- use the plural for the clocks property in bindings
-
-Ulrich Hecht (2):
-  clk: shmobile: div6: support selectable-input clocks
-  clk: shmobile: document DIV6 clock parent bindings
-
- .../bindings/clock/renesas,cpg-div6-clocks.txt     |  18 ++--
- drivers/clk/shmobile/clk-div6.c                    | 113 ++++++++++++++++++---
- 2 files changed, 113 insertions(+), 18 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
+index 952e373..054f65f 100644
+--- a/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
++++ b/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
+@@ -7,11 +7,16 @@ to 64.
+ Required Properties:
+ 
+   - compatible: Must be one of the following
++    - "renesas,r8a73a4-div6-clock" for R8A73A4 (R-Mobile APE6) DIV6 clocks
++    - "renesas,r8a7740-div6-clock" for R8A7740 (R-Mobile A1) DIV6 clocks
+     - "renesas,r8a7790-div6-clock" for R8A7790 (R-Car H2) DIV6 clocks
+     - "renesas,r8a7791-div6-clock" for R8A7791 (R-Car M2) DIV6 clocks
++    - "renesas,sh73a0-div6-clock" for SH73A0 (SH-Mobile AG5) DIV6 clocks
+     - "renesas,cpg-div6-clock" for generic DIV6 clocks
+   - reg: Base address and length of the memory resource used by the DIV6 clock
+-  - clocks: Reference to the parent clock
++  - clocks: Reference to the parent clock(s); either one, four, or eight
++    clocks must be specified.  For clocks with multiple parents, invalid
++    settings must be specified as "<0>".
+   - #clock-cells: Must be 0
+   - clock-output-names: The name of the clock as a free-form string
+ 
+@@ -19,10 +24,11 @@ Required Properties:
+ Example
+ -------
+ 
+-	sd2_clk: sd2_clk@e6150078 {
+-		compatible = "renesas,r8a7790-div6-clock", "renesas,cpg-div6-clock";
+-		reg = <0 0xe6150078 0 4>;
+-		clocks = <&pll1_div2_clk>;
++	sdhi2_clk: sdhi2_clk@e615007c {
++		compatible = "renesas,r8a73a4-div6-clock", "renesas,cpg-div6-clock";
++		reg = <0 0xe615007c 0 4>;
++		clocks = <&pll1_div2_clk>, <&cpg_clocks R8A73A4_CLK_PLL2S>,
++			 <0>, <&extal2_clk>;
+ 		#clock-cells = <0>;
+-		clock-output-names = "sd2";
++		clock-output-names = "sdhi2ck";
+ 	};
 -- 
 1.8.4.5
 
