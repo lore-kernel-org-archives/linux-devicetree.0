@@ -1,80 +1,32 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: Creating a new platform_bus inside a spi_driver
-Date: Fri, 07 Nov 2014 11:04:36 +0100
-Message-ID: <707686811.tbHdnxXMgE@wuerfel>
-References: <545BD3EC.6050503@datacom.ind.br>
+From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/4] input: touchscreen: ti_am335x_tsc Interchange
+ touchscreen and ADC steps
+Date: Fri, 7 Nov 2014 11:17:14 +0100
+Message-ID: <20141107101714.GA23102@netboy>
+References: <1414408111-2631-1-git-send-email-vigneshr@ti.com>
+ <1414408111-2631-2-git-send-email-vigneshr@ti.com>
+ <20141106141916.GA17151@netboy>
+ <545C59CD.3070707@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <545BD3EC.6050503-rCUF4CxDseZknzVnJbg3IA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: DATACOM - =?ISO-8859-1?Q?=C9rico?= Nunes <erico.nunes-rCUF4CxDseZknzVnJbg3IA@public.gmane.org>
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <545C59CD.3070707-l0cyMroinI0@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jan Kardell <jan.kardell-KSZdJiTw9mzQT0dZR+AlfA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 06 November 2014 18:02:52 DATACOM - =C9rico Nunes wrote:
->=20
-> The idea is that "fpga-spi" is a spi_driver which instantiates all of=
- the
-> "fpga-deviceN" as platform_devices, through the use of
-> of_platform_populate(dev->of_node, NULL, NULL, dev).
->=20
-> The visible problem we're facing with this approach is that, as the i=
-nternal
-> platform_devices have a "reg" property, of_platform_populate() eventu=
-ally
-> triggers an address translation which is apparently trying to transla=
-te the
-> addresses of the internal platform_bus to addresses of the processor =
-memory
-> map.
-> This translation is however not part of our intention, as we intend t=
-o have an
-> internal bus with its own memory map.
-> This fails when __of_translate_address() reaches the spi-master bound=
-ary
-> because (as it seems to make sense) it isn't possible to translate th=
-em past
-> that.
-> A KERN_ERR rated message like
-> "prom_parse: Bad cell count for /soc@f0000000/spi@2000/fpga@1"
-> is thrown by __of_translate_address() and later it is not possible to=
- obtain
-> the "reg" address with platform_get_resource().
->=20
-> On this scenario, we have a few questions and, depending on the outco=
-me of
-> these, possibly a patch.
->=20
-> 1. Is it possible to have an internal platform_bus with a different m=
-emory map
-> as we intended? Or are platform_busses and platform_devices supposed =
-to always
-> be mapped on the processor memory map?
+On Fri, Nov 07, 2014 at 11:04:05AM +0530, Vignesh R wrote:
+> Currently, there is too much noise in the TSC hardware that is being
+> removed by delta filtering. I tested TSC unit by removing filtering
+> logic, the performance was not at all satisfactory. The cursor jumps
+> wayward and smooth circles cannot be drawn. Looks like delta filtering
+> cannot be removed as of now. May be I will try and address it in future.
 
-It's inconsistent. We have some code that assumes that platform devices
-are always memory mapped, and some other code that breaks this assumpti=
-on.
+FWIW, on the boards that I tested, I printed the measured values out,
+and I found that with 5 repetitions, I got the same value 5 times,
+plus or minus a very small delta.
 
-> 2. If platform_bus and platform_device were actually designed to alwa=
-ys be
-> mappable to the processor memory map, what would be a different appro=
-ach to
-> this problem?  One alternative considered was to define a new "fpga_b=
-us" and
-> "fpga_device" but that seemed as an overkill approach to the problem.
-
-I think the existing mfd framework should do what you need, when you ca=
-ll
-mfd_add_devices() and pass a table of cells with the compatible strings
-for your devices, it should create the platform devices you want. If no=
-t,
-that can probably be fixed in the mfd core code.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Richard
