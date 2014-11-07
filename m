@@ -1,73 +1,41 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v2 06/11] memory: atmel-ebi: add DT bindings
- documentation
-Date: Fri, 7 Nov 2014 16:49:40 +0100
-Message-ID: <20141107164940.663f5423@bbrezillon>
-References: <1415203287-21517-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1415203287-21517-7-git-send-email-boris.brezillon@free-electrons.com>
-	<CAL_JsqJvT-gnr6AYHq42qfgS+ckZ1y6DFiPK5+-MBhHefB8_Sg@mail.gmail.com>
+From: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: Re: [PATCH v5 3/5] regulator: of: Add regulator desc param to of_get_regulator_init_data()
+Date: Fri, 07 Nov 2014 16:49:49 +0100
+Message-ID: <545CEA1D.2020109@collabora.co.uk>
+References: <1415365205-27630-1-git-send-email-javier.martinez@collabora.co.uk> <1415365205-27630-4-git-send-email-javier.martinez@collabora.co.uk> <20141107150743.GR8509@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJvT-gnr6AYHq42qfgS+ckZ1y6DFiPK5+-MBhHefB8_Sg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Arnd Bergmann <arnd@arndb.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141107150743.GR8509-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 7 Nov 2014 09:21:39 -0600
-Rob Herring <robherring2@gmail.com> wrote:
+Hello Mark,
 
-> On Wed, Nov 5, 2014 at 10:01 AM, Boris Brezillon
-> <boris.brezillon@free-electrons.com> wrote:
-> > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+On 11/07/2014 04:07 PM, Mark Brown wrote:
 > 
-> Perhaps some commit msg?
+> This is using the regulator descriptor before it is initialized which
+> doesn't seem ideal...
+>
 
-Yes, I was just lazy and though this series would make another round
-anyway :-).
-
-I'll add a commit log to all my commits...
+You are right, even if most of them are not used currently, that may
+change in the future so is safer to use it after all fields have been
+initialized. I'll double check all drivers to be sure that's the case.
 
 > 
-> While this binding seems mostly okay to me, this is the 2nd memory
-> controller binding I've looked at in the last day [1]. There are
-> probably some others already as well. This makes me think we need a
-> generic binding here. At least the node structure and how we define
-> chip selects should be common.
-
-Sure.
-Any suggestion ?
-
-BTW, I don't use any specific property to define the chip select
-associated to a device, because it's already encoded in the reg
-property.
-TI AEMIF binding define an ti,cs-chipselect property, is there any
-reason for doing that ?
-
-Moreover, IMHO it would even make sense to have some sort of
-framework/helper functions for those kind of interfaces to external
-memories, but this is another story :-).
-
+> This is just adding the include to get the declaration of regulator_desc
+> as far as I can see, add a forward declaration of it instead.
 > 
-> While I like timing information in time units over magic register
-> values in the Tegra binding, the reality is converting timing info to
-> register values is generally very hard to get both correct and
-> optimal. In the end, you probably need to hand tweak the register
-> settings anyway. So I'm hesitant to say it must be done 1 way here.
 
-Well, I'm not a big fan of timings expressed in clock cycles, cause
-this implies changing your DT when you tweak your master/bus clk.
-Expressing those timings in nano or pico seconds let the driver figure
-out what's the best value according to the current source clk rate.
+Perfect, I didn't know what you would prefer. I'll change it in the
+next version.
 
-Regards,
-
-Boris
-
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Best regards,
+Javier
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
