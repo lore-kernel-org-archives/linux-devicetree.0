@@ -1,41 +1,57 @@
-From: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [PATCH v5 3/5] regulator: of: Add regulator desc param to of_get_regulator_init_data()
-Date: Fri, 07 Nov 2014 16:49:49 +0100
-Message-ID: <545CEA1D.2020109@collabora.co.uk>
-References: <1415365205-27630-1-git-send-email-javier.martinez@collabora.co.uk> <1415365205-27630-4-git-send-email-javier.martinez@collabora.co.uk> <20141107150743.GR8509@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141107150743.GR8509-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Subject: [PATCH v7 0/2] clk: shmobile: DIV6 clock variable parent support
+Date: Fri,  7 Nov 2014 16:51:06 +0100
+Message-ID: <1415375468-15378-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, mturquette@linaro.org, geert@linux-m68k.org, laurent.pinchart+renesas@ideasonboard.com
+Cc: linux-sh@vger.kernel.org, magnus.damm@gmail.com, devicetree@vger.kernel.org, mark.rutland@arm.com, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
+Hi!
 
-On 11/07/2014 04:07 PM, Mark Brown wrote:
-> 
-> This is using the regulator descriptor before it is initialized which
-> doesn't seem ideal...
->
+As Geert suggested, this revision fixes the number of parent clocks at one,
+four, or eight to avoid ambiguity.
 
-You are right, even if most of them are not used currently, that may
-change in the future so is safer to use it after all fields have been
-initialized. I'll double check all drivers to be sure that's the case.
+CU
+Uli
 
-> 
-> This is just adding the include to get the declaration of regulator_desc
-> as far as I can see, add a forward declaration of it instead.
-> 
 
-Perfect, I didn't know what you would prefer. I'll change it in the
-next version.
+Changes since v6:
+- require exactly one, four, or eight parent clocks
 
-Best regards,
-Javier
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes since v5:
+- straighten types
+- don't use hw->init outside cpg_div6_clock_init()
+- drop superfluous allocation error messages
+- drop renesas,src-* properties, can be inferred
+
+Changes since v4:
+- implement .get_parent, .set_parent
+- improve bindings documentation
+
+Changes since v3:
+- note that renesas,src-shift and renesas,src-width depend on each other
+- clarified description
+- minor coding style fixes
+
+Changes since v2:
+- add r8a73a4 to bindings
+- use u32 where appropriate
+- don't split error message
+
+Changes since v1:
+- make sure unrelated register bits are preserved
+- use the plural for the clocks property in bindings
+
+Ulrich Hecht (2):
+  clk: shmobile: div6: support selectable-input clocks
+  clk: shmobile: document DIV6 clock parent bindings
+
+ .../bindings/clock/renesas,cpg-div6-clocks.txt     |  18 ++--
+ drivers/clk/shmobile/clk-div6.c                    | 113 ++++++++++++++++++---
+ 2 files changed, 113 insertions(+), 18 deletions(-)
+
+-- 
+1.8.4.5
+
