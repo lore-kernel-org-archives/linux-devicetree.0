@@ -1,76 +1,66 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH V2 1/2] imx-drm: imx-hdmi: split imx soc specific code
- from imx-hdmi
-Date: Fri, 07 Nov 2014 10:56:49 +0800
-Message-ID: <545C34F1.5020206@rock-chips.com>
-References: <1415192385-6572-1-git-send-email-andy.yan@rock-chips.com>
- <545A2680.2@imgtec.com>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] powerpc/fsl: Update fman dt binding with clock name and qbman link
+Date: Thu, 6 Nov 2014 21:01:34 -0600
+Message-ID: <1415329294-22011-1-git-send-email-scottwood@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <545A2680.2@imgtec.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, ykk@rock-chips.com, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Igal Liberman <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Ck9uIDIwMTTlubQxMeaciDA15pelIDIxOjMwLCBadWJhaXIgTHV0ZnVsbGFoIEtha2FraGVsIHdy
-b3RlOgo+IFRoaXMgb25lIHBhdGNoIGRvZXMgdG9vIG11Y2ggdG8gYmUgcmV2aWV3ZWQgZWFzaWx5
-Lgo+Cj4gT25lIHBhdGNoIGlzIHN1cHBvc2VkIHRvIG1vZGlmeS9hZGQgb25lIHRoaW5nIGF0IGEg
-dGltZSBpbiB0aGUga2VybmVsLgo+Cj4gU2VwYXJhdGluZyBwbGF0Zm9ybSBzcGVjaWZpYyBjb2Rl
-IGZyb20gaW14LWRybS9pbXgtaGRtaSBpcyBvbmUgdGhpbmcuCj4KPiBBZGRpbmcgc3VwcG9ydCBm
-b3IgbXVsdGktYnl0ZSByZWdpc3RlciBhY2Nlc3MgaXMgc29tZXRoaW5nIGRpZmZlcmVudC4KPgo+
-IGkuZS4gU29tZXRoaW5nIGxpa2UuCj4gMS8zIHNwbGl0IHBsYXRmb3JtIHNwZWNpZmljIGNvZGUg
-b3V0Lgo+IDIvMyBtb3ZlL3JlbmFtZSBpbXgtaGRtaSBvdXRzaWRlIHRoZSBmb2xkZXIKPiAzLzMg
-YWRkIHN1cHBvcnQgZm9yIG11bHRpIGJ5dGUgcmVnaXN0ZXIgd2lkdGggYWNjZXNzLgo+Cj4gSWYg
-dGhlcmUgYXJlIG90aGVyIHRoaW5ncyB0aGF0IGFyZSBub3QgZGlyZWN0bHkgcmVsZXZhbnQgdG8g
-dGhlIHBhdGNoLAo+IGl0IGdvZXMgaW4gYSBkaWZmZXJlbnQgcGF0Y2guIEJ1ZyBmaXhlcyBhcmUg
-YWxzbyBzZXBhcmF0ZS4KPgo+IFRoaXMgc2hvdWxkIHJlc3VsdCBpbiByZWFkYWJsZSBwYXRjaGVz
-IHRoYXQgY2FuIGJlIHJldmlld2VkIGVhc2lseS4KSSBoYXZlIHNwbGl0IHRoZSBwYXRjaCBpbiB0
-aHJlZSBwYXJ0cyBpbiBQQVRDSCBWMywgdGthbmtzIGZvciB5b3VyIApzdWdnZXN0aW9uCj4KPiBB
-bHNvLCB0aGUgYXBwcm9hY2ggd2l0aCA0IGJ5dGUgYWNjZXNzIGlzIG9rLiBCdXQgeW91IGNvdWxk
-IHVzZSByZWctc2hpZnRzIGFzIHdlbGwgcGVyaGFwcy4KPiBUaGVuIHlvdSB3b24ndCBoYXZlIHRv
-IGNoYW5nZSBzbyBtdWNoIG9mIHRoZSBjb2RlLgo+Cj4gc3RhdGljIGlubGluZSB2b2lkIGhkbWlf
-d3JpdGViKHN0cnVjdCBkd2NfaGRtaSAqaGRtaSwgdTggdmFsLCBpbnQgb2Zmc2V0KQo+ICt7Cj4g
-KyB3cml0ZWIodmFsLCBoZG1pLT5yZWdzICsgKG9mZnNldCA8PCBoZG1pLT5yZWdfc2hpZnQpKTsK
-PiArfQo+ICsKPiArc3RhdGljIGlubGluZSB1OCBoZG1pX3JlYWRiKHN0cnVjdCBkd2NfaGRtaSAq
-aGRtaSwgaW50IG9mZnNldCkKPiArewo+ICsgcmV0dXJuIHJlYWRiKGhkbWktPnJlZ3MgKyAob2Zm
-c2V0IDw8IGhkbWktPnJlZ19zaGlmdCkpOwo+ICt9Cj4KPiBBbmQgdGhlbiBpbiBwcm9iZQo+Cj4g
-K2hkbWktPnJlZ19zaGlmdCA9IDA7Cj4gKwo+ICsgaWYgKG9mX3Byb3BlcnR5X3JlYWRfdTMyKG5w
-LCAicmVnLXNoaWZ0IiwgJmhkbWktPnJlZ19zaGlmdCkpCj4gKyBkZXZfd2FybihoZG1pLT5kZXYs
-ICJObyByZWctc2hpZnRcbiIpOwo+Cj4gVGhpcyB3YXkgdGhlIHJlZy1zaGlmdCBwcm9wZXJ0eSBj
-YW4gYmUgZGVmaW5lZCB1c2luZyBEVAoKcmszMjg4IGNhbiBvbmx5IGFjY2VzcyB0aGUgcmVnaXN0
-ZXIgYnkgMzJiaXRzKHJlYWRsL3dyaXRlbCksIGJ5dGUgYWNjZXNzIAp3aWxsIGNhdXNlcyBhbgpp
-bXByZWNpc2UgZXh0ZXJuYWwgYWJvcnQuCkkgaGF2ZSByZWZhY3RvciB0aGUgcmVnaXN0ZXIgYWNj
-ZXNzIGluIFBBVENIIFYzLCBpZiB5b3UgaGF2ZSBhbnkgZnV0aGVyIApzdWdnZXN0aW9uICxwbGVh
-c2UKdGVsbCBtZS4KCj4KPiBDaGVlcnMsCj4gWnViYWlyTEsKPgo+IE9uIDA1LzExLzE0IDEyOjU5
-LCBBbmR5IFlhbiB3cm90ZToKPj4gaW14NiBhbmQgcm9ja2NoaXAgcmszMjg4IGFuZCBKWjQ3ODAg
-KEluZ2VuaWMgWGJ1cnN0L01JUFMpCj4+IHVzZSB0aGUgaW50ZXJmYWNlIGNvbXBhdGlibGUgRGVz
-aWdud2FyZSBIRE1JIElQLCBidXQgdGhleQo+PiBhbHNvIGhhdmUgc29tZSBsaWdodGx5IGRpZmZl
-cmVuY2UsIHN1Y2ggYXMgcGh5IHBsbCBjb25maWd1cmF0aW9uLAo+PiByZWdpc3RlciB3aWR0aChp
-bXggaGRtaSByZWdpc3RlciBpcyBvbmUgYnl0ZSwgYnV0IHJrMzI4OCBpcyA0Cj4+IGJ5dGVzIHdp
-ZHRoKSwgNEsgc3VwcG9ydChpbXg2IGRvZXNuJ3Qgc3VwcG9ydCA0aywgYnV0IHJrMzI4OCBkb2Vz
-KSwKPj4gY2xrIHVzZWFnZSxhbmQgdGhlIGNydGMgbXV4IGNvbmZpZ3VyYXRpb24gaXMgYWxzbyBw
-bGF0Zm9ybSBzcGVjaWZpYy4KPj4KPj4gVG8gcmV1c2UgdGhlIGlteCBoZG1pIGRyaXZlciwgc3Bs
-aXQgdGhlIHBsYXRmb3JtIHNwZWNpZmljIGNvZGUgb3V0Cj4+IHRvIGR3X2hkbWktaW14LmMuCj4+
-Cj4+IFNpZ25lZC1vZmYtYnk6IEFuZHkgWWFuIDxhbmR5LnlhbkByb2NrLWNoaXBzLmNvbT4KPj4g
-LS0tCj4+ICAgZHJpdmVycy9zdGFnaW5nL2lteC1kcm0vTWFrZWZpbGUgICAgICB8ICAgMiArLQo+
-PiAgIGRyaXZlcnMvc3RhZ2luZy9pbXgtZHJtL2R3X2hkbWktaW14LmMgfCAyMTQgKysrKysrKysr
-Kwo+PiAgIGRyaXZlcnMvc3RhZ2luZy9pbXgtZHJtL2lteC1oZG1pLmMgICAgfCA3MjYgKysrKysr
-KysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0tLQo+PiAgIGluY2x1ZGUvZHJtL2JyaWRnZS9kd19o
-ZG1pLmggICAgICAgICAgfCAxMTQgKysrKysrCj4+ICAgNCBmaWxlcyBjaGFuZ2VkLCA2MzQgaW5z
-ZXJ0aW9ucygrKSwgNDIyIGRlbGV0aW9ucygtKQo+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
-ZXJzL3N0YWdpbmcvaW14LWRybS9kd19oZG1pLWlteC5jCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0
-IGluY2x1ZGUvZHJtL2JyaWRnZS9kd19oZG1pLmgKPgo+CgoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2ZWwgbWFpbGluZyBsaXN0CmRldmVsQGxpbnV4
-ZHJpdmVycHJvamVjdC5vcmcKaHR0cDovL2RyaXZlcmRldi5saW51eGRyaXZlcnByb2plY3Qub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpdmVyZGV2LWRldmVsCg==
+The clock name "fmanclk" was given in the example, but not specified
+in the binding itself.  Made clock-names mandatory as otherwise there's
+not much point having it.
+
+Added a reference to the fsl,qman and fsl,bman properties proposed
+in http://patchwork.ozlabs.org/patch/407034/ and
+http://patchwork.ozlabs.org/patch/407035/
+
+Signed-off-by: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+This patch is on top of http://patchwork.ozlabs.org/patch/390351/
+
+ Documentation/devicetree/bindings/powerpc/fsl/fman.txt | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+index da8e5f2..edeea16 100644
+--- a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
++++ b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+@@ -79,12 +79,12 @@ PROPERTIES
+ - clocks
+ 		Usage: required
+ 		Value type: <prop-encoded-array>
+-		Definition: phandle for fman clock.
++		Definition: phandle for the fman input clock.
+ 
+ - clock-names
+-		usage: optional
++		usage: required
+ 		Value type: <stringlist>
+-		Definition: A standard property
++		Definition: "fmanclk" for the fman input clock.
+ 
+ - interrupts
+ 		Usage: required
+@@ -104,6 +104,11 @@ PROPERTIES
+ 		"Work Queue (WQ) Channel Assignments in the QMan" section
+ 		in DPAA Reference Manual.
+ 
++- fsl,qman
++- fsl,bman
++		Usage: required
++		Definition: See soc/fsl/qman.txt and soc/fsl/bman.txt
++
+ =============================================================================
+ FMan MURAM Node
+ 
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
