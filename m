@@ -1,49 +1,46 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH RFC V3 2/3] mxs: add driver for ocotp in i.MX23 and
- i.MX28
-Date: Fri, 7 Nov 2014 20:44:35 +0100 (CET)
-Message-ID: <1818938629.87757.1415389475195.JavaMail.open-xchange@oxbsltgw03.schlund.de>
-References: <1413628372-2809-1-git-send-email-stefan.wahren@i2se.com> <3434817.dk7dLDFrcN@wuerfel> <544FCFB3.10100@vanguardiasur.com.ar> <2223659.OW08fe0cS1@wuerfel> <1003885907.22061.1415301932743.JavaMail.open-xchange@oxbsltgw00.schlund.de> <545D1A0D.9050307@vanguardiasur.com.ar>
-Reply-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH v3 2/2] ASoC: simple-card: add multi-CODECs
+ in DT
+Date: Fri, 07 Nov 2014 21:07:03 +0100
+Message-ID: <545D2667.4070707@metafoo.de>
+References: <cover.1415096705.git.moinejf@free.fr> <53ef077d2174f8eb5b861d6cebe7c9e732f06d52.1415096705.git.moinejf@free.fr> <20141107123035.GO8509@sirena.org.uk> <20141107200557.78971e08@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <545D1A0D.9050307-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+In-Reply-To: <20141107200557.78971e08@armhf>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Cc: mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-> Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> hat am 7. November 2014 um
-> 20:14 geschrieben:
+On 11/07/2014 08:05 PM, Jean-Francois Moine wrote:
+> On Fri, 7 Nov 2014 12:30:35 +0000
+> Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 >
+>>>   	} else {
+>>> -		clk = of_clk_get(args.np, 0);
+>>> +		clk = of_clk_get((struct device_node *) dai_np, 0);
+>>
+>> Adding this cast looks suspicous - why?  As far as I can tell the
+>> original code didn't need one.
 >
-> While you are here, maybe you can check if your API and driver will also
-> be useful to support i.MX6 OCOTP?
-
-That's why i named the driver fsl_ocotp and not mxs_ocotp ;-)
-
-Sure the handling would be a little different.
-
+> Right, 'args.np' was (struct device_node *), but, now, 'dai_np' is
+> (const struct device_node *).
 >
-> I understand that I might be asking too much, and that perhaps i.MX23/28
-> eFuses are completely different from other another i.MX.
-
-I don't believe that, but i didn't doublecheck it.
-
-BR Stefan
-
+> Changing 'dai_np' to (struct device_node *) in the
+> asoc_simple_card_sub_parse_of() argument asks for a cast in calling
+> this function because the field 'of_node' of the struct
+> snd_soc_dai_link_component is (const struct device_node *).
 >
-> --
-> Ezequiel Garcia, VanguardiaSur
-> www.vanguardiasur.com.ar
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> Do you better like this last cast?
+
+Casting const away is usually a sign that something is wrong and has the 
+potential to result in undefined behavior. The correct fix in this case is 
+probably to make the np argument for of_clk_get() const.
+
+- Lars
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
