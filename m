@@ -1,68 +1,157 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 1/5] regulator: Document binding for initial and
- suspend modes
-Date: Fri, 7 Nov 2014 14:58:06 +0000
-Message-ID: <20141107145806.GQ8509@sirena.org.uk>
-References: <1415365205-27630-1-git-send-email-javier.martinez@collabora.co.uk>
- <1415365205-27630-2-git-send-email-javier.martinez@collabora.co.uk>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH v4 2/4] serial: mxs-auart: use mctrl_gpio helpers for handling modem signals
+Date: Fri, 7 Nov 2014 15:48:57 +0100
+Message-ID: <201411071548.58044.marex@denx.de>
+References: <1412960007-28159-1-git-send-email-j.uzycki@elproma.com.pl> <201411071202.16344.marex@denx.de> <545CC7CB.1010107@elproma.com.pl>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="d6yp3DxVbLZXge6e"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1415365205-27630-2-git-send-email-javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: Text/Plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <545CC7CB.1010107@elproma.com.pl>
+Sender: linux-serial-owner@vger.kernel.org
+To: Janusz =?utf-8?q?U=C5=BCycki?= <j.uzycki@elproma.com.pl>
+Cc: Huang Shijie <shijie8@gmail.com>, Richard Genoud <richard.genoud@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jiri Slaby <jslaby@suse.cz>, Fabio Estevam <festevam@gmail.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
+On Friday, November 07, 2014 at 02:23:23 PM, Janusz U=C5=BCycki wrote:
+[...]
 
---d6yp3DxVbLZXge6e
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> >> Hardware RTS/CTS lines can be occupied by RX/TX of other AUART por=
+t
+> >> in order to obtain as much uarts as possible using i.mx283.
+> >> Therefore gpios can be used for "hardware" flow control.
+> >=20
+> > Your logic is outright flawed here, the first sentence doesn't impl=
+icate
+> > the second sentence. In fact, those two are completely unrelated.
+>=20
+> I didn't write MUST but CAN. There is a choice. Is flexibility of the
+> driver disadvantage?
 
-On Fri, Nov 07, 2014 at 02:00:01PM +0100, Javier Martinez Canillas wrote:
+If the flexibility brings in known problems, then yes, it is a problem.=
+ Not=20
+because of the flexibility, but because it brings in bugs.
 
-> +	  The "regulator-mode" property only takes effect if the regulator is
-> +	  enabled for the given suspend state using "regulator-on-in-suspend".
+> >>>>     If we change them to gpio.  Could the DMA still
+> >>>>=20
+> >>>> works fine?
+> >>>> did you test the DMA with this patch?
+> >>>>=20
+> >>>> Add Marek for this patch too.
+> >>>=20
+> >>> I didn't look too deep into the patch, so here's just my experien=
+ce:
+> >>>=20
+> >>> 1) The AUART block signals and GPIO block signals are not sychron=
+ised
+> >>> using the
+> >>>=20
+> >>>      same clock. Therefore, the latency between toggling of the A=
+UART
+> >>>      lines and the GPIO-driven pins will not be deterministic and=
+ will
+> >>>      vary. There might be a way to approximate that, but that's
+> >>>      definitelly not a reliable solution.
+> >>>     =20
+> >>>      This is very bad for example if you drive RS485 DIR line wit=
+h the
+> >>>      RTS pin as a GPIO ; the RTS pin will toggle at non-determini=
+stic
+> >>>      time compared to the end of UART transmission. This will tri=
+gger
+> >>>      bit-loss on the RS485 line and you just don't want that.
+> >>>=20
+> >>> 2) Speaking of RS485, there's [1] and [2]. which I believe apply =
+to any
+> >>> combo
+> >>>=20
+> >>>      of UART+GPIO toggling.
+> >>>=20
+> >>> So I hate to bring the bad news , but UART+GPIO combo toggling is
+> >>> really a bad bad idea.
+> >>=20
+> >> Unfortunately if hardware is limited there is no choice and UART+G=
+PIO is
+> >> necessary.
+> >=20
+> > You will run into timing problems (see above).
+>=20
+> A lot of 8250-compatible devices has no hardware flow control and in
+> most cases
+> they works and it is enough even for 115200 speed if CTS is handled b=
+y irq.
+> So it depends on your needs.
 
-Why?
+I presume that in such a case , the 8250 still handles the CTS line, no=
+t some=20
+external GPIO block, yes ?
 
-> +	  If the regulator has not been explicitly disabled for the given state
-> +	  with "regulator-off-in-suspend", then setting the operating mode
-> +	  will also have no effect.
+> > What you're proposing here is a workaround for broken hardware, whi=
+ch was
+> > proven to be a bad idea and NAK'd already multiple times in the pas=
+t
+> > (please see the links I posted in my last email).
+>=20
+> It is not broken  hardware - rather limited to lower speeds but still
+> very useful solution.
 
-This seems surprising, I'd expect mode setting to be paid attention to
-even if the regulator is off - we may add other ways to control the
-enable state in suspend for example.
+What exact "lower speed" are you talking about here and why ?
 
-> +- regulator-initial-mode: initial operating mode. The set of possible operating
-> +  modes is the same used for the regulator-mode property and the device binding
-> +  documentation explains which property each regulator supports.
-> +If no mode is defined, then the OS will not manage the modes and the hardware
-> +default values will be used instead.
+> >> Your experience confirms the discussion [3] with Russell King. DMA
+> >> should be disabled and
+> >> the patch disables DMA support in mxs_auart_init_gpios() if RTS or=
+ CTS
+> >> line is set as gpio.
+> >=20
+> > DMA has nothing to do with those problems here. DMA can be safely i=
+gnored
+> > for the purpose of the discussion altogether.
+>=20
+> When gpios are used for RTS/CTS DMA is not used. However DMA is relat=
+ed
+> due to the driver
+> and "fsl,uart-has-rtscts". If you look into code of the driver you
+> should agree.
 
-Again that seems surprising, it precludes any future changes and isn't
-going to be true for devices where we can't read the current state.
+This makes me believe that the DMA introduces too many timing fluctuati=
+ons,
+so it's really not possible for you to keep toggling the GPIOs such tha=
+t the
+bus would work. Is that the case ?
 
---d6yp3DxVbLZXge6e
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+[...]
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> >> Now the question: "fsl,uart-has-rtscts" name seems to be misleadin=
+g now,
+> >> do you agree? It rather should include "dma" word in the name. Any
+> >> suggestion?
+> >>=20
+> >> [3] http://thread.gmane.org/gmane.linux.serial/16069/focus=3D16077
+> >=20
+> > The best suggestion I can give you is to fix your hardware early, b=
+efore
+> > you run into nasty deep s.....tuff. These workarounds do not work a=
+nd
+> > they will bit you later on, when it's hard to fix the hardware anym=
+ore.
+>=20
+> The speed is limited but why don't you accept SW-HW mixed solutions?
 
-iQEcBAEBAgAGBQJUXN3+AAoJECTWi3JdVIfQ1CEH+wVIAHIeDVtR3iEK1BH1GdzP
-K6IqQUcMQ2z6/OZgW3FNSArPj6AoGGsWPwlGDYbI/j0pbuo4ufYcZqKLeJmo9iOX
-ohGmkmAjqb68EtLlsDghOm1110JXBwr0qqmkFAlawvKT6eZYWnlJs1nyGoyakO/2
-isq7C3qxYVzMP1hgOhs2A8LL804kACmd/K7t4eoZJk12KwGi6m/NLM6LOrGunMnF
-BUaSZGih9SeqXwxnVcQiHhOUJU8ikcS4p2c8305Qdmmmd9fU/ElLLYbfiU12IEOj
-Yzpm9d2v/RqVslJC0bBf14HXAPJzxVngS3ZS3cVWhDcsJFVaAWXRuNsmmUZjueo=
-=jVnK
------END PGP SIGNATURE-----
+Did you read up on the RS485 timing problems and why that solution was =
+never
+accepted for any driver ? I believe the threads explained that quite cl=
+early.
 
---d6yp3DxVbLZXge6e--
+> Exactly the same method is accepted for 8250.
+
+Can you point out this code please ?
+
+> It is good to have choice than not. We can comment that speed is limi=
+ted
+> for gpio-based hardware flow control. So please, rethink again.
+[...]
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-serial"=
+ in
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
