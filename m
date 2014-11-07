@@ -1,84 +1,92 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [RFCv2 0/8] [media] si4713 DT binding
-Date: Fri, 07 Nov 2014 13:49:42 +0100
-Message-ID: <545CBFE6.3070201@xs4all.nl>
-References: <1413904027-16767-1-git-send-email-sre@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413904027-16767-1-git-send-email-sre@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org
-Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: [PATCH v5 0/5] regulator: of: Add initial and suspend modes support
+Date: Fri,  7 Nov 2014 14:00:00 +0100
+Message-ID: <1415365205-27630-1-git-send-email-javier.martinez@collabora.co.uk>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 10/21/14 17:06, Sebastian Reichel wrote:
-> Hi,
-> 
-> This is the RFCv2 patchset adding DT support to the si4713
-> radio transmitter i2c driver. The changes can be summarized
-> as follows:
-> 
->  * Move regulator information back into the driver. The
->    regulators needed are documented in the chip and have
->    nothing to do with boarddata. Instead devm_regulator_get_optional
->    is used and errors are handled quite loosely now. Maybe the USB
->    driver should provide dummy regulators.
->  * GPIO handling is updated to gpiod consumer interface, resulting
->    in a driver cleanup and easy DT handling
->  * The driver is updated to use managed resources wherever possible
-> 
-> So much about the nice stuff. But there is also
-> 
->  * Instantiation of the platform device from the i2c (sub-)device. Since DT
->    is not supposed to contain linuxisms the device is a simple i2c node
->    resulting in the i2c probe function being called. Thus registering the main
->    v4l device must happen from there.
-> 
-> Tested:
->  * Compilation on torvalds/linux.git:master (based on 52d589a)
->  * Booting in DT mode
->  * Some simply driver queries using v4l2-ctl
-> 
-> Not tested:
->  * The USB driver, since I do not own the USB dongle
+Hello Mark,
 
-I will test this on Monday for the USB device. It looks good, but I need
-to verify that it doesn't break the USB driver.
+This is the fifth version of the series that adds regulator initial
+and suspend operating modes support. It relies on the existing work
+that added suspend states bindings. The opmodes are parsed by the
+regulator core and drivers should only define a translation function
+to map between hardware specific to standard modes.
 
-Regards,
+The series adds a "regulator-initial-mode" property to configure at
+startup, the operating mode for the regulators that support changing
+its mode during normal operation and a "regulator-mode" property for
+the regulators that supports changing its operating mode when the
+system enters in a suspend state. These properties were originally
+part of Chanwoo Choi's regulator suspend state series [0] but were
+removed since there wasn't a way to define the operating modes in a
+generic way.
 
-	Hans
+The generic regulator DT binding doc explains that each device has
+to document what their valid operating modes are and drivers must
+add a translation function so the core knows how to map the opmodes.
 
->  * The legacy platform code (only DT boot has been tested).
->    (The legacy platform code is supposed to removed in the near future anyways)
-> 
-> Changes since RFCv1 (requested by Hans Verkuil):
->  - splitted the patchset into more patches
->  - replaced dev_info with dev_dbg for missing regulators
->  - check for ENOSYS value from devm_gpiod_get (disabled GPIOLIB)
-> 
-> -- Sebastian
-> 
-> Sebastian Reichel (8):
->   [media] si4713: switch to devm regulator API
->   [media] si4713: switch reset gpio to devm_gpiod API
->   [media] si4713: use managed memory allocation
->   [media] si4713: use managed irq request
->   [media] si4713: add device tree support
->   [media] si4713: add DT binding documentation
->   ARM: OMAP2: RX-51: update si4713 platform data
->   [media] si4713: cleanup platform data
-> 
->  Documentation/devicetree/bindings/media/si4713.txt |  30 ++++
->  arch/arm/mach-omap2/board-rx51-peripherals.c       |  69 ++++-----
->  drivers/media/radio/si4713/radio-platform-si4713.c |  28 +---
->  drivers/media/radio/si4713/si4713.c                | 167 +++++++++++++--------
->  drivers/media/radio/si4713/si4713.h                |  15 +-
->  include/media/radio-si4713.h                       |  30 ----
->  include/media/si4713.h                             |   4 +-
->  7 files changed, 186 insertions(+), 157 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/media/si4713.txt
->  delete mode 100644 include/media/radio-si4713.h
-> 
+Older versions of this series were meant to add initial and suspend
+modes for the max77802 regulator driver but the feedback was that
+this should had been done in a generic way. The latest version was
+"[PATCH v4 00/14] Add Maxim 77802 PMIC support" [1] but that series
+mixed core changes, bugfixes and new driver features.
+
+This series instead contains only the patches that add the support
+to the regulator core and drivers are only modified when a function
+signature is changed to maintain git bisect-ability.
+
+If the patches are merged, following series will change the drivers
+using of_regulator_match() to pass the regulator description in the
+match table and another series will add the new opmode feature in
+the max77802 regulator driver.
+
+The series is composed of the following patches:
+
+Javier Martinez Canillas (5):
+  regulator: Document binding for initial and suspend modes
+  regulator: Add function to map modes to struct regulator_desc
+  regulator: of: Add regulator desc param to
+    of_get_regulator_init_data()
+  regulator: of: Pass the regulator description in the match table
+  regulator: of: Add support for parsing initial and suspend modes
+
+ .../devicetree/bindings/regulator/regulator.txt    | 14 ++++++++++
+ drivers/regulator/88pm8607.c                       |  3 +-
+ drivers/regulator/anatop-regulator.c               |  4 +--
+ drivers/regulator/arizona-ldo1.c                   |  8 ++++--
+ drivers/regulator/arizona-micsupp.c                |  8 ++++--
+ drivers/regulator/da9052-regulator.c               |  3 +-
+ drivers/regulator/da9210-regulator.c               |  2 +-
+ drivers/regulator/fan53555.c                       | 17 ++++++------
+ drivers/regulator/fixed.c                          | 18 ++++++------
+ drivers/regulator/gpio-regulator.c                 | 18 ++++++------
+ drivers/regulator/max8952.c                        |  2 +-
+ drivers/regulator/max8973-regulator.c              |  3 +-
+ drivers/regulator/max8997.c                        |  3 +-
+ drivers/regulator/max8998.c                        |  5 ++--
+ drivers/regulator/mc13xxx-regulator-core.c         |  3 +-
+ drivers/regulator/of_regulator.c                   | 32 ++++++++++++++++++----
+ drivers/regulator/pwm-regulator.c                  |  3 +-
+ drivers/regulator/qcom_rpm-regulator.c             |  9 +++---
+ drivers/regulator/s5m8767.c                        |  3 +-
+ drivers/regulator/sky81452-regulator.c             |  2 +-
+ drivers/regulator/stw481x-vmmc.c                   |  3 +-
+ drivers/regulator/ti-abb-regulator.c               |  3 +-
+ drivers/regulator/tps51632-regulator.c             | 16 ++++++-----
+ drivers/regulator/tps62360-regulator.c             | 17 +++++++-----
+ drivers/regulator/tps65218-regulator.c             |  3 +-
+ drivers/regulator/twl-regulator.c                  |  3 +-
+ drivers/regulator/vexpress.c                       |  3 +-
+ include/linux/regulator/driver.h                   |  8 ++++++
+ include/linux/regulator/of_regulator.h             |  9 ++++--
+ 29 files changed, 151 insertions(+), 74 deletions(-)
+
+Best regards,
+Javier
+
+[0]: https://lkml.org/lkml/2014/10/10/161
+[1]: https://lkml.org/lkml/2014/6/25/668
