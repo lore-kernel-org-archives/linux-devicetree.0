@@ -1,60 +1,69 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V4 01/14] sh: Eliminate unused irq_reg_{readl,writel} accessors
-Date: Thu,  6 Nov 2014 22:44:16 -0800
-Message-ID: <1415342669-30640-2-git-send-email-cernekee@gmail.com>
+Subject: [PATCH V4 06/14] irqchip: bcm7120-l2: Eliminate bad IRQ check
+Date: Thu,  6 Nov 2014 22:44:21 -0800
+Message-ID: <1415342669-30640-7-git-send-email-cernekee@gmail.com>
 References: <1415342669-30640-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1415342669-30640-1-git-send-email-cernekee@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+Sender: linux-kernel-owner@vger.kernel.org
 To: tglx@linutronix.de, jason@lakedaemon.net, linux-sh@vger.kernel.org
 Cc: arnd@arndb.de, f.fainelli@gmail.com, ralf@linux-mips.org, sergei.shtylyov@cogentembedded.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-Defining these macros way down in arch/sh/.../irq.c doesn't cause
-kernel/irq/generic-chip.c to use them.  As far as I can tell this code
-has no effect.
+This check may be prone to race conditions, e.g.
+
+1) Some external event (e.g. GPIO level) causes an IRQ to become pending
+2) Peripheral asserts the L2 IRQ
+3) CPU takes an interrupt
+4) The event from #1 goes away
+5) bcm7120_l2_intc_irq_handle() reads back a 0 status
+
+Unlike the hardware supported by brcmstb-l2, the bcm7120-l2 controller
+does not latch the IRQ status.  Bits can change if the inputs to the
+controller change.  Also, do_bad_IRQ() is an ARM-specific macro.
+
+So let's just nuke it.
 
 Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- arch/sh/boards/mach-se/7343/irq.c | 3 ---
- arch/sh/boards/mach-se/7722/irq.c | 3 ---
- 2 files changed, 6 deletions(-)
+ drivers/irqchip/irq-bcm7120-l2.c | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
 
-diff --git a/arch/sh/boards/mach-se/7343/irq.c b/arch/sh/boards/mach-se/7343/irq.c
-index 7646bf0..1087dba 100644
---- a/arch/sh/boards/mach-se/7343/irq.c
-+++ b/arch/sh/boards/mach-se/7343/irq.c
-@@ -14,9 +14,6 @@
- #define DRV_NAME "SE7343-FPGA"
- #define pr_fmt(fmt) DRV_NAME ": " fmt
+diff --git a/drivers/irqchip/irq-bcm7120-l2.c b/drivers/irqchip/irq-bcm7120-l2.c
+index b9f4fb8..7086fe0 100644
+--- a/drivers/irqchip/irq-bcm7120-l2.c
++++ b/drivers/irqchip/irq-bcm7120-l2.c
+@@ -27,8 +27,6 @@
  
--#define irq_reg_readl	ioread16
--#define irq_reg_writel	iowrite16
--
- #include <linux/init.h>
- #include <linux/irq.h>
- #include <linux/interrupt.h>
-diff --git a/arch/sh/boards/mach-se/7722/irq.c b/arch/sh/boards/mach-se/7722/irq.c
-index f5e2af1..00e6992 100644
---- a/arch/sh/boards/mach-se/7722/irq.c
-+++ b/arch/sh/boards/mach-se/7722/irq.c
-@@ -11,9 +11,6 @@
- #define DRV_NAME "SE7722-FPGA"
- #define pr_fmt(fmt) DRV_NAME ": " fmt
+ #include "irqchip.h"
  
--#define irq_reg_readl	ioread16
--#define irq_reg_writel	iowrite16
+-#include <asm/mach/irq.h>
 -
- #include <linux/init.h>
- #include <linux/irq.h>
- #include <linux/interrupt.h>
+ /* Register offset in the L2 interrupt controller */
+ #define IRQEN		0x00
+ #define IRQSTAT		0x04
+@@ -51,19 +49,12 @@ static void bcm7120_l2_intc_irq_handle(unsigned int irq, struct irq_desc *desc)
+ 	chained_irq_enter(chip, desc);
+ 
+ 	status = __raw_readl(b->base + IRQSTAT);
+-
+-	if (status == 0) {
+-		do_bad_IRQ(irq, desc);
+-		goto out;
+-	}
+-
+-	do {
++	while (status) {
+ 		irq = ffs(status) - 1;
+ 		status &= ~(1 << irq);
+ 		generic_handle_irq(irq_find_mapping(b->domain, irq));
+-	} while (status);
++	}
+ 
+-out:
+ 	chained_irq_exit(chip, desc);
+ }
+ 
 -- 
 2.1.1
