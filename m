@@ -1,42 +1,132 @@
-From: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 0/3] Add support for Tegra Activity Monitor
-Date: Fri, 7 Nov 2014 18:07:24 +0900
-Message-ID: <545C8BCC.3090908@nvidia.com>
-References: <1414594232-15684-1-git-send-email-tomeu.vizoso@collabora.com>
+From: arno@natisbad.org (Arnaud Ebalard)
+Subject: Re: [PATCHv0 3/3] rtc: rtc-isl12057: add alarm support to Intersil ISL12057 RTC driver
+Date: Fri, 07 Nov 2014 10:37:01 +0100
+Message-ID: <878ujnnygy.fsf@natisbad.org>
+References: <cover.1415222752.git.arno@natisbad.org>
+	<148403c0ab1d556cbb99d9242c65f714a77843e5.1415222752.git.arno@natisbad.org>
+	<20141106055017.GL8509@sirena.org.uk> <87ppcznbyv.fsf@natisbad.org>
+	<20141107075843.GD10432@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414594232-15684-1-git-send-email-tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Linus Walleij <linus.walleij@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-doc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, devicetree@vger.kernel.org, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>, linux-arm-kernel@lists.infradead.org, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Peter Huewe <peter.huewe@infineon.com>, Thierry Reding <treding@nvidia.com>, Guenter Roeck <linux@roeck-us.net>, Jason Cooper <jason@lakedaemon.net>
 List-Id: devicetree@vger.kernel.org
 
-On 10/29/2014 11:50 PM, Tomeu Vizoso wrote:
-> Hello,
->
-> these patches implement support for setting the rate of the EMC clock based on
-> stats collected from the ACTMON, a piece of hw in the Tegra124 that counts
-> memory accesses (among others).
->
-> It depends on the following in-flight patches:
->
-> * MC driver: http://thread.gmane.org/gmane.linux.ports.tegra/19623
-> * EMC driver: http://thread.gmane.org/gmane.linux.ports.arm.kernel/365125
-> * CPUFreq driver: http://thread.gmane.org/gmane.linux.kernel/1812962
->
-> I have pushed a branch here for testing:
+Hi Uwe,
 
-I am not too familiar with DVFS, but after going through this series it 
-really seems to me that this could use devfreq. In its current form this 
-driver mixes control and policy and lacks flexibility, preventing e.g. 
-to switch to a performance or power-saving profile. Could you study the 
-feasibility of using devfreq for this?
+Thanks for your support.
 
-I also wonder if this driver could not be made more flexible generally 
-speaking - right now it is hardcoded that you can only control EMC 
-frequency with it. I can imagine that we could want to control several 
-clocks using the same counter information, and that e.g. a notifier 
-block might help with that. But let's keep that for later - whether to 
-use devfreq or not seems to be the most important question for now.
+Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> writes:
+
+>> No strong feeling on that point. ISL12008 on which this driver is ba=
+sed
+>> has a similar logic.
+> Some time ago I already had the feeling that there is much "rank grow=
+th"
+> in the rtc drivers. I guess this is because maintenance of the rtc
+> subsystem isn't optimal and there are no guidelines (at least I'm not
+> aware of any) about detail questions.
+
+I had that feeling too when I pushed the ISL12057 driver.
+
+>> > None of the alarm functionality checks to see if there's actually =
+an IRQ
+>> > - is that OK? I'd at least expect the alarm interrupt enable call =
+to
+>> > check if the interrupt is wired up.
+>>=20
+>> I can add those check BUT I would like some directions in order to
+>> support the following use case too.
+>>=20
+>> Current three in-tree users of ISL12057 are NAS devices (Netgear
+>> ReadyNAS 102, 104 and 2120). All of them *do not have* the interrupt=
+ pin
+> I assume you don't have schematics of the devices, right? If so, do y=
+ou
+> think it might be worth to try to get them from Netgear? Just to make
+> sure that there really is no pin connected to the SoC.
+
+I'll ask but I am skeptical: I already tested all the MPP of the SoC so
+unless I missed something, it's unlikely.
+
+
+>> of the RTC chip connected to an interrupt line of the SoC. Nonethele=
+ss,
+>> the IRQ line of the chip being connected to a PMIC on the board (TI
+>> TPS65251 [1] on ReadyNAS 102 and 104, I do not know for ReadyNAS
+> Looking over the manual it seems there is no way to let the PMIC forw=
+ard
+> the irq either.
+>
+>> 2120). When the device is off and the alarm rings, the device gets
+>> powered on. AFAICT, the IRQ coming on the TPS65251 is not replicated=
+ on
+>> any line of the SoC.
+>>=20
+>> I think it's possible w/ some soldering to get somewhere where the R=
+TC
+>> framework wants me to be and finish the alarm part to have it merged
+>> upstream but that's of limited interest if in-tree user cannot use i=
+t to
+>> fit their need, i.e. configure an alarm value and enable the associa=
+ted
+>> interrupt which is routed externally, i.e. not visible by the SoC.
+> Do you need to enable the irq somewhere else (apart from in the RTC
+> device)? I guess not.
+
+This is the problem: I just need to enable the interrupt in the ISL1205=
+7
+(flag in regs) but w/o dealing with SoC/system interrupt, i.e. w/o havi=
+ng
+a client->irq passed to the driver. In current RTC framework, alarm
+support requires a client->irq and a working interrupt line w/ the SoC.
+
+
+>> FWIW, we had a similar discussion a while ago, during driver inclusi=
+on:
+>>=20
+>>   http://marc.info/?l=3Ddevicetree&m=3D138109313118504&w=3D2
+>>=20
+>> Uwe, any idea?
+> What is the problem of a not-wired-up irq line? Does the rtc framewor=
+k
+> need to change to allow setting an alarm without the irq line being
+> hooked up?
+
+yes.=20
+
+
+> Is it "only" that the alarm is missed?
+
+In practice, yes. But RTC framework does not support that. Or maybe
+there is some trick a maintainer would be aware of to support that
+scenario. Something involving:
+
+ - returning some specific value in alarm_irq_enable handler
+ - calling device_init_wakeup(dev, true); w/o having an IRQ line
+ - extend workaround started in c9f5c7e7a84f and 4a649903f91232
+   and expose those via dt
+ - ...
+
+> Irq polling probably isn't sensible?
+>
+> I assume it's not that unusual that an rtc irq doesn't trigger a syst=
+em
+> irq, so having that supported nicely would be great.
+
+Now, we're two to think that way ;-)
+
+
+> Looking through the rtc's datasheet, the device is a tad more
+> complicated than the current driver handles. There are two irq lines =
+and
+> three functions that can be routed through these (alarm1, alarm2 and
+> clkout; not all combinations are possible).
+
+Yes, but I wanted to handle the problem at hand before soldering IRQ#1
+on my RN102 and add more feature.
+
+a+
