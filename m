@@ -1,51 +1,43 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 11/13] ARM: STi: DT: STih407: Abstract common dt nodes into shared files.
-Date: Fri, 07 Nov 2014 13:10:05 +0100
-Message-ID: <3301013.ouyFbjlpZY@wuerfel>
-References: <1415361475-6218-1-git-send-email-peter.griffin@linaro.org> <1415361475-6218-12-git-send-email-peter.griffin@linaro.org>
+Subject: Re: [PATCH 12/13] ARM: STi: DT: STiH410: Add STiH410 SoC clock support.
+Date: Fri, 07 Nov 2014 13:13:36 +0100
+Message-ID: <88469624.TsXJ3Gpfe2@wuerfel>
+References: <1415361475-6218-1-git-send-email-peter.griffin@linaro.org> <1415361475-6218-13-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415361475-6218-12-git-send-email-peter.griffin@linaro.org>
+In-Reply-To: <1415361475-6218-13-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, lee.jones@linaro.org, devicetree@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Peter Griffin <peter.griffin@linaro.org>, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, devicetree@vger.kernel.org, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 07 November 2014 11:57:53 Peter Griffin wrote:
-> diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-> new file mode 100644
-> index 0000000..862bb2f
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-> @@ -0,0 +1,73 @@
-> +/*
-> + * Copyright (C) 2014 STMicroelectronics (R&D) Limited.
-> + * Author: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +/ {
-> +       chosen {
-> +               bootargs = "console=ttyAS0,115200";
-> +               linux,stdout-path = &sbc_serial0;
-> +       };
+On Friday 07 November 2014 11:57:54 Peter Griffin wrote:
 > +
-> +       memory {
-> +               device_type = "memory";
-> +               reg = <0x40000000 0x80000000>;
-> +       };
+> +       soc {
 > +
-> +       aliases {
-> +               ttyAS0 = &sbc_serial0;
-> +       };
+> +               ohci0: usb@9a03c00 {
+> +                       status = "okay";
+> +               };
 > +
+> +               ehci0: usb@9a03e00 {
+> +                       status = "okay";
+> +               };
+> +
+> +               ohci1: usb@9a83c00 {
+> +                       status = "okay";
+> +               };
+> +
+> +               ehci1: usb@9a83e00 {
+> +                       status = "okay";
+> +               };
+> +       };
+> +};
 > 
 
-Please leave these in the per-board file, each board would have different
-values, so it makes no sense to have them in the shared file.
+These seem to refer to an existing device in the base dtsi file. Just put the label
+in the shared file and remove the exact names here. Alternatively, drop the labels
+you don't use.
 
 	Arnd
