@@ -1,97 +1,90 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH v5 1/5] regulator: Document binding for initial and suspend
- modes
-Date: Fri, 07 Nov 2014 16:38:04 +0100
-Message-ID: <545CE75C.8000408@collabora.co.uk>
-References: <1415365205-27630-1-git-send-email-javier.martinez@collabora.co.uk> <1415365205-27630-2-git-send-email-javier.martinez@collabora.co.uk> <20141107145806.GQ8509@sirena.org.uk>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH] mfd: qcom-spmi-pmic: Add support for more chips versions
+Date: Fri, 07 Nov 2014 17:40:52 +0200
+Message-ID: <1415374852.26058.3.camel@mm-sol.com>
+References: <1415108003-16387-1-git-send-email-iivanov@mm-sol.com>
+	 <CAJAp7OgU64=KCuDhYEZTYppVeBz6wKvTDsof5vDRznfdZgAfZw@mail.gmail.com>
+	 <1415212271.14949.1.camel@mm-sol.com>
+	 <CAJAp7OgXHGWQj7MWh51LTUdmZpgZc=6m=o-Az=z8QxR7yfrw7g@mail.gmail.com>
+	 <1415260480.13103.3.camel@mm-sol.com>
+	 <CAJAp7OgPGhM=EnMNU2JfjG6Qb-EiWSPSRyZWGicSPmpicBQW7g@mail.gmail.com>
+	 <1415374390.26058.1.camel@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20141107145806.GQ8509@sirena.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1415374390.26058.1.camel@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn@kryo.se>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
 
-Thanks a lot for your feedback.
-
-On 11/07/2014 03:58 PM, Mark Brown wrote:
-> On Fri, Nov 07, 2014 at 02:00:01PM +0100, Javier Martinez Canillas wrote:
+On Fri, 2014-11-07 at 17:33 +0200, Ivan T. Ivanov wrote:
+> On Thu, 2014-11-06 at 08:55 -0800, Bjorn Andersson wrote:
+> > On Wed, Nov 5, 2014 at 11:54 PM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
+> > > On Wed, 2014-11-05 at 17:36 -0800, Bjorn Andersson wrote:
+> > > > On Wed, Nov 5, 2014 at 10:31 AM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
+> > [..]
+> > > > > Some of the child device drivers have to know PMIC chip revision.
+> > > > > 
+> > > > 
+> > > > So your plan is to have a strstr(parent->compatible, "-v2") there?
+> > > 
+> > > Actually also PMIC subtype (pm8841, pm8226...) is also required, so
+> > > the plan is to have something like this:
+> > > 
+> > > {
+> > >         static const struct of_device_id pmic_match_table[] = {
+> > >                 { .compatible = "qcom,pm8941-v1.0" },
+> > >                 { .compatible = "qcom,pm8841-v0.0" },
+> > >                 { }
+> > > 
+> > >         };
+> > > 
+> > >         const struct of_device_id *match;
+> > > 
+> > >         match = of_match_device(pmic_match_table, pdev->dev.parent);
+> > >         if (match) {
+> > >                 dev_info(&pdev->dev, "%s chip detected\n", match->compatible);
+> > >         }
+> > > }
+> > > 
+> > 
+> > To me this is a hack, you should not alter the devicetree to make it
+> > "better express the hardware". Either you know these things from boot
+> > and they go in device tree, or you can probe them and they should not
+> > go in device tree.
+> > 
+> > If you really need these values you should expose them through some api.
 > 
->> +	  The "regulator-mode" property only takes effect if the regulator is
->> +	  enabled for the given suspend state using "regulator-on-in-suspend".
+> I would like to avoid compile time dependency between these drivers.
+> There are several precedents of using of_update_property() for enhancing
+> compatible property already.
 > 
-> Why?
+> > > > Could you be a little bit more elaborate on what you're trying to do
+> > > > and which child devices that might be?
+> > > 
+> > > For example ADC drivers are required temperature compensation based
+> > > on PMIC variant and chip manufacturer.
+> > > 
+> > 
+> > I see, is that compensation of any practical value? Or is the
+> > compensation of academic proportions?
 > 
-
-I saw that the regulator core only call the .set_suspend_mode callback if
-the regulator is either enabled or disabled explicitly...
-
-static int suspend_set_state(struct regulator_dev *rdev,
-	struct regulator_state *rstate)
-{
-	....
-	/* If we have no suspend mode configration don't set anything;
-	 * only warn if the driver implements set_suspend_voltage or
-	 * set_suspend_mode callback.
-	 */
-	if (!rstate->enabled && !rstate->disabled) {
-		if (rdev->desc->ops->set_suspend_voltage ||
-		    rdev->desc->ops->set_suspend_mode)
-			rdev_warn(rdev, "No configuration\n");
-		return 0;
-	}
-	...
-	
-};
-
->> +	  If the regulator has not been explicitly disabled for the given state
->> +	  with "regulator-off-in-suspend", then setting the operating mode
->> +	  will also have no effect.
+> It depends of what you mean by academic :-). Attached file have test
+> application which dump difference between non compensated and compensated
+> values for different temperature, manufacture and input value.
 > 
-> This seems surprising, I'd expect mode setting to be paid attention to
-> even if the regulator is off - we may add other ways to control the
-> enable state in suspend for example.
-> 
+> Output format of the program is:
+> Column 1: manufacturer GF=0, SMIC=1, TSMC=2
+> Column 2: chip revision
+> Column 3: die temperature in mili deg Celsius
+> Column 4: input for compensation in micro Volts
+> Column 5: compensated result in micro Volts
+> Column 6: difference in micro Volts
 
-...and I thought that setting a mode if the regulator was disabled in suspend
-was not a possible configuration, that's why I documented that.
+Forgot to add. PMIC subtype and version are used also in charger and BMS
+drivers to workaround hardware issues.
 
-I know that there is both a .set_suspend_disable and .set_suspend_mode but
-at least in the hardware that I'm interested in (max77802), the same hw
-register is used for setting a suspend mode and disable on suspend.
-
-So if this is allowed and a user specifies both a disable on suspend and a
-suspend mode, the later will overwrite the configuration of the former.
-
-But now that I think about it, this is only a constraint of the max77802
-and probably needs to be specified in the max77802 DT binding and not in
-the regulator generic one since otherwise limits what other devices can
-do.
-
->> +- regulator-initial-mode: initial operating mode. The set of possible operating
->> +  modes is the same used for the regulator-mode property and the device binding
->> +  documentation explains which property each regulator supports.
->> +If no mode is defined, then the OS will not manage the modes and the hardware
->> +default values will be used instead.
-> 
-> Again that seems surprising, it precludes any future changes and isn't
-> going to be true for devices where we can't read the current state.
-> 
-
-I saw that you asked Chanwoo on an early version of his suspend states
-series, to point out that in the absence of a initial state, the state is
-the hardware default [0] so I thought that it should be the case for the
-regulator suspend mode too.
-
-So should I just explain what each property is about without trying to make
-assumptions about the limitations that different devices could have and let
-each device DT binding to specify those?
-
-Best regards,
-Javier
-
-[0]: https://lkml.org/lkml/2014/9/4/652 
+Ivan
