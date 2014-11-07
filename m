@@ -1,56 +1,54 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH 3/5] i2c: sh_mobile: Document SoC-specific bindings
-Date: Fri, 7 Nov 2014 13:17:57 +0900
-Message-ID: <20141107041756.GD2006@verge.net.au>
-References: <1415274730-310-1-git-send-email-geert+renesas@glider.be>
- <1415274730-310-4-git-send-email-geert+renesas@glider.be>
+From: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/3] ARM: dts: AM43x: Fix DCDC3 regulator voltage
+Date: Fri, 7 Nov 2014 10:16:25 +0530
+Message-ID: <545C4EA1.5000802@ti.com>
+References: <1415271004-10935-1-git-send-email-j-keerthy@ti.com> <20141106182526.GC31454@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1415274730-310-4-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141106182526.GC31454-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 06, 2014 at 12:52:08PM +0100, Geert Uytterhoeven wrote:
-> Explicitly list the various SoC-specific compatible properties.
-> This allows checkpatch to validate DTSes.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+On Thursday 06 November 2014 11:55 PM, Tony Lindgren wrote:
+> * Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> [141106 02:55]:
+>> Fix DCDC3 volatge to 1.5V which is the right value to be supplied by
+>> DCDC3 for all the boards.
+> Hmm so what about the comments for similar beaglebone changes
+> in thread "[PATCH] ARM: dts: am335x-boneblack: set dcdc1 regulator
+> for 1.35v ddr3"?
+Hi Tony,
 
-Acked-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+am335x uses TPS65917 PMIC and am43x* use TPS65218 PMIC.
+The latest TPS65218 defaults to 1.5V. We see boot hangs when
+there is a voltage change from 1.5V to 1.35V in case of AM43x
+boards. Hence keeping it at 1.5V.
 
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-sh_mobile.txt | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-sh_mobile.txt b/Documentation/devicetree/bindings/i2c/i2c-sh_mobile.txt
-> index d2153ce36fa81404..c33e9a32d496ef10 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-sh_mobile.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-sh_mobile.txt
-> @@ -2,6 +2,15 @@ Device tree configuration for Renesas IIC (sh_mobile) driver
->  
->  Required properties:
->  - compatible      : "renesas,iic-<soctype>". "renesas,rmobile-iic" as fallback
-> +		     Examples with soctypes are:
-> +			- "renesas,iic-r8a73a4" (R-Mobile APE6)
-> +			- "renesas,iic-r8a7740" (R-Mobile A1)
-> +			- "renesas,iic-r8a7790" (R-Car H2)
-> +			- "renesas,iic-r8a7791" (R-Car M2-W)
-> +			- "renesas,iic-r8a7792" (R-Car V2H)
-> +			- "renesas,iic-r8a7793" (R-Car M2-N)
-> +			- "renesas,iic-r8a7794" (R-Car E2)
-> +			- "renesas,iic-sh73a0" (SH-Mobile AG5)
->  - reg             : address start and address range size of device
->  - interrupts      : interrupt of device
->  - clocks          : clock for device
-> -- 
-> 1.9.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+Regards,
+Keerthy
+>
+> Regards,
+>
+> Tony
+>   
+>> Keerthy (3):
+>>    ARM: dts: AM43x-EPOS-EVM: Fix DCDC3 voltage
+>>    ARM: dts: AM437x-GP-EVM: Fix DCDC3 voltage
+>>    ARM: dts: AM437x-SK-EVM: Fix DCDC3 voltage
+>>
+>>   arch/arm/boot/dts/am437x-gp-evm.dts  |    4 ++--
+>>   arch/arm/boot/dts/am437x-sk-evm.dts  |    4 ++--
+>>   arch/arm/boot/dts/am43x-epos-evm.dts |    4 ++--
+>>   3 files changed, 6 insertions(+), 6 deletions(-)
+>>
+>> -- 
+>> 1.7.9.5
+>>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
