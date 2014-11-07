@@ -1,125 +1,48 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH 1/2] imx-drm: imx-hdmi: split imx soc specific code from
- imx-hdmi
-Date: Fri, 07 Nov 2014 10:47:55 +0800
-Message-ID: <545C32DB.7090907@rock-chips.com>
-References: <1415192101-6404-1-git-send-email-andy.yan@rock-chips.com>	
- <1415192101-6404-2-git-send-email-andy.yan@rock-chips.com>
- <1415194882.5696.9.camel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1415194882.5696.9.camel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, rmk+kernel@arm.linux.org.uk, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
+From: Beomho Seo <beomho.seo@samsung.com>
+Subject: [PATCH 0/5] mfd: rt5033: Add Richtek RT5033 drivers
+Date: Fri, 07 Nov 2014 11:52:02 +0900
+Message-ID: <1415328727-16245-1-git-send-email-beomho.seo@samsung.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: sameo@linux.intel.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, kyungmin.park@samsung.com, cw00.choi@samsung.com, jonghwa3.lee@samsung.com, geunsik.lim@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, Beomho Seo <beomho.seo@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Ck9uIDIwMTTlubQxMeaciDA15pelIDIxOjQxLCBQaGlsaXBwIFphYmVsIHdyb3RlOgo+IEhpIEFu
-ZHksCj4KPiBJIHRoaW5rIHNlcGFyYXRpbmcgdGhlIGNvcmUgZnJvbSB0aGUgU29DIHNwZWNpZmlj
-IHBhcnQgaXMgYSBnb29kIHN0ZXAKPiBpbnRvIHRoZSByaWdodCBkaXJlY3Rpb24uCj4KPiBBbSBN
-aXR0d29jaCwgZGVuIDA1LjExLjIwMTQsIDIwOjU1ICswODAwIHNjaHJpZWIgQW5keSBZYW46Cj4+
-IGlteDYgYW5kIHJvY2tjaGlwIHJrMzI4OCBhbmQgSlo0NzgwIChJbmdlbmljIFhidXJzdC9NSVBT
-KQo+PiB1c2UgdGhlIGludGVyZmFjZSBjb21wYXRpYmxlIERlc2lnbndhcmUgSERNSSBJUCwgYnV0
-IHRoZXkKPj4gYWxzbyBoYXZlIHNvbWUgbGlnaHRseSBkaWZmZXJlbmNlLCBzdWNoIGFzIHBoeSBw
-bGwgY29uZmlndXJhdGlvbiwKPj4gcmVnaXN0ZXIgd2lkdGgoaW14IGhkbWkgcmVnaXN0ZXIgaXMg
-b25lIGJ5dGUsIGJ1dCByazMyODggaXMgNAo+PiBieXRlcyB3aWR0aCksIDRLIHN1cHBvcnQoaW14
-NiBkb2Vzbid0IHN1cHBvcnQgNGssIGJ1dCByazMyODggZG9lcyksCj4+IGNsayB1c2VhZ2UsYW5k
-IHRoZSBjcnRjIG11eCBjb25maWd1cmF0aW9uIGlzIGFsc28gcGxhdGZvcm0gc3BlY2lmaWMuCj4+
-Cj4+IFRvIHJldXNlIHRoZSBpbXggaGRtaSBkcml2ZXIsIHNwbGl0IHRoZSBwbGF0Zm9ybSBzcGVj
-aWZpYyBjb2RlIG91dAo+PiB0byBkd19oZG1pLWlteC5jLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBB
-bmR5IFlhbiA8YW5keS55YW5Acm9jay1jaGlwcy5jb20+Cj4gWy4uLl0KPj4gK3N0YXRpYyBpbnQg
-aW14X2hkbWlfcGFyc2VfZHQoc3RydWN0IGlteF9oZG1pX3ByaXYgKmhkbWkpCj4+ICt7Cj4+ICsJ
-c3RydWN0IGRldmljZV9ub2RlICpucCA9IGhkbWktPmRldi0+b2Zfbm9kZTsKPj4gKwo+PiArCWhk
-bWktPnJlZ21hcCA9IHN5c2Nvbl9yZWdtYXBfbG9va3VwX2J5X3BoYW5kbGUobnAsICJncHIiKTsK
-Pj4gKwlpZiAoSVNfRVJSKGhkbWktPnJlZ21hcCkpIHsKPj4gKwkJZGV2X2VycihoZG1pLT5kZXYs
-ICJVbmFibGUgdG8gZ2V0IGdwclxuIik7Cj4+ICsJCXJldHVybiBQVFJfRVJSKGhkbWktPnJlZ21h
-cCk7Cj4+ICsJfQo+PiArCj4+ICsJaGRtaS0+aXNmcl9jbGsgPSBkZXZtX2Nsa19nZXQoaGRtaS0+
-ZGV2LCAiaXNmciIpOwo+PiArCWlmIChJU19FUlIoaGRtaS0+aXNmcl9jbGspKSB7Cj4+ICsJCWRl
-dl9lcnIoaGRtaS0+ZGV2LCAiVW5hYmxlIHRvIGdldCBIRE1JIGlzZnIgY2xrXG4iKTsKPj4gKwkJ
-cmV0dXJuIFBUUl9FUlIoaGRtaS0+aXNmcl9jbGspOwo+PiArCX0KPj4gKwo+PiArCWhkbWktPmlh
-aGJfY2xrID0gZGV2bV9jbGtfZ2V0KGhkbWktPmRldiwgImlhaGIiKTsKPj4gKwlpZiAoSVNfRVJS
-KGhkbWktPmlhaGJfY2xrKSkgewo+PiArCQlkZXZfZXJyKGhkbWktPmRldiwgIlVuYWJsZSB0byBn
-ZXQgSERNSSBpYWhiIGNsa1xuIik7Cj4+ICsJCXJldHVybiBQVFJfRVJSKGhkbWktPmlhaGJfY2xr
-KTsKPj4gKwl9Cj4gU3VyZWx5IHRoaXMgSVAgY29yZSBuZWVkcyB0byBiZSBjbG9ja2VkIHJlZ2Fy
-ZGxlc3Mgb2YgdGhlIFNvQz8gSG93IGFyZQo+IGNsb2NrcyBjb250cm9sbGVkIG9uIHJrMzI4OCBh
-bmQgano0NzgwPwp5ZXMsIHRoaXMgSVAgY29yZSBuZWVkIHRvIGJlIGNsb2NrZWQuIEJ1dCBkaWZm
-ZXJlbnQgU29jIGhhcyBkaWZmZXJlbnQKdXNhZ2Ugb2YgdGhlIGNsaywgb24gZnJlZXNjYWxlIGlt
-eCBwbGF0Zm9ybSBvbmUgY2xrIGlzIHVzZWQgZm9yIGlzZnIsIApvbmUgaXMgdXNlZCBmb3IgaWFo
-YiwKYnV0IG9uIHJvY2tjaGlwIHJrMzI4OCwgb25lIGNsayBpcyB1c2VkIGZvciBjb250cm9sIGxv
-Z2ljICwgdGhlIGFub3RoZXIgCmlzIHVzZWQgZm9yIGhkY3AuCkkgYW0gbm90IHN1cmUgaG93IGFy
-ZSB0aGUgY2xvY2tzIG9uIGp6NDc4MAoKPgo+IFsuLi5dCj4+ICsvKk9uIHJvY2tjaGlwIHBsYXRm
-b3JtLCBuby13b3JkIGFjY2VzcyB0byB0aGUgaGRtaQo+PiArICogcmVnaXN0ZXIgd2lsbCBjYXVz
-ZXMgYW4gaW1wcmVjaXNlIGV4dGVybmFsIGFib3J0Cj4+ICsgKi8KPj4gK3N0YXRpYyBpbmxpbmUg
-dm9pZCBoZG1pX3dyaXRlbChzdHJ1Y3QgaW14X2hkbWkgKmhkbWksIHUzMiB2YWwsIGludCBvZmZz
-ZXQpCj4+ICt7Cj4+ICsJd3JpdGVsKHZhbCwgaGRtaS0+cmVncyArIChvZmZzZXQgPDwgMikpOwo+
-PiArfQo+PiAgIAo+PiAtCWJvb2wgcGh5X2VuYWJsZWQ7Cj4+IC0Jc3RydWN0IGRybV9kaXNwbGF5
-X21vZGUgcHJldmlvdXNfbW9kZTsKPj4gK3N0YXRpYyBpbmxpbmUgdTMyIGhkbWlfcmVhZGwoc3Ry
-dWN0IGlteF9oZG1pICpoZG1pLCBpbnQgb2Zmc2V0KQo+PiArewo+PiArCXJldHVybiByZWFkbCho
-ZG1pLT5yZWdzICsgKG9mZnNldCA8PCAyKSk7Cj4+ICt9Cj4+ICAgCj4+IC0Jc3RydWN0IHJlZ21h
-cCAqcmVnbWFwOwo+PiAtCXN0cnVjdCBpMmNfYWRhcHRlciAqZGRjOwo+PiAtCXZvaWQgX19pb21l
-bSAqcmVnczsKPj4gK3N0YXRpYyB2b2lkIGhkbWlfbW9kbChzdHJ1Y3QgaW14X2hkbWkgKmhkbWks
-IHUzMiBkYXRhLCB1MzIgbWFzaywgdW5zaWduZWQgcmVnKQo+PiArewo+PiArCXUzMiB2YWwgPSBo
-ZG1pX3JlYWRsKGhkbWksIHJlZykgJiB+bWFzazsKPj4gICAKPj4gLQl1bnNpZ25lZCBpbnQgc2Ft
-cGxlX3JhdGU7Cj4+IC0JaW50IHJhdGlvOwo+PiAtfTsKPj4gKwl2YWwgfD0gZGF0YSAmIG1hc2s7
-Cj4+ICsJaGRtaV93cml0ZWwoaGRtaSwgdmFsLCByZWcpOwo+PiArfQo+PiAgIAo+PiAtc3RhdGlj
-IHZvaWQgaW14X2hkbWlfc2V0X2lwdV9kaV9tdXgoc3RydWN0IGlteF9oZG1pICpoZG1pLCBpbnQg
-aXB1X2RpKQo+PiArc3RhdGljIHZvaWQgaGRtaV9tYXNrX3dyaXRlbChzdHJ1Y3QgaW14X2hkbWkg
-KmhkbWksIHUzMiBkYXRhLCB1bnNpZ25lZCBpbnQgcmVnLAo+PiArCQkJICAgICB1MzIgc2hpZnQs
-IHUzMiBtYXNrKQo+PiAgIHsKPj4gLQlyZWdtYXBfdXBkYXRlX2JpdHMoaGRtaS0+cmVnbWFwLCBJ
-T01VWENfR1BSMywKPj4gLQkJCSAgIElNWDZRX0dQUjNfSERNSV9NVVhfQ1RMX01BU0ssCj4+IC0J
-CQkgICBpcHVfZGkgPDwgSU1YNlFfR1BSM19IRE1JX01VWF9DVExfU0hJRlQpOwo+PiArCWhkbWlf
-bW9kbChoZG1pLCBkYXRhIDw8IHNoaWZ0LCBtYXNrLCByZWcpOwo+PiAgIH0KPj4gICAKPj4gLXN0
-YXRpYyBpbmxpbmUgdm9pZCBoZG1pX3dyaXRlYihzdHJ1Y3QgaW14X2hkbWkgKmhkbWksIHU4IHZh
-bCwgaW50IG9mZnNldCkKPj4gK3N0YXRpYyBpbmxpbmUgdm9pZCBoZG1pX3dyaXRlYihzdHJ1Y3Qg
-aW14X2hkbWkgKmhkbWksIHUzMiB2YWwsIGludCBvZmZzZXQpCj4+ICAgewo+PiAgIAl3cml0ZWIo
-dmFsLCBoZG1pLT5yZWdzICsgb2Zmc2V0KTsKPj4gICB9Cj4+ICAgCj4+IC1zdGF0aWMgaW5saW5l
-IHU4IGhkbWlfcmVhZGIoc3RydWN0IGlteF9oZG1pICpoZG1pLCBpbnQgb2Zmc2V0KQo+PiArc3Rh
-dGljIGlubGluZSB1MzIgaGRtaV9yZWFkYihzdHJ1Y3QgaW14X2hkbWkgKmhkbWksIGludCBvZmZz
-ZXQpCj4+ICAgewo+PiAgIAlyZXR1cm4gcmVhZGIoaGRtaS0+cmVncyArIG9mZnNldCk7Cj4+ICAg
-fQo+PiAgIAo+PiAtc3RhdGljIHZvaWQgaGRtaV9tb2RiKHN0cnVjdCBpbXhfaGRtaSAqaGRtaSwg
-dTggZGF0YSwgdTggbWFzaywgdW5zaWduZWQgcmVnKQo+PiArc3RhdGljIHZvaWQgaGRtaV9tb2Ri
-KHN0cnVjdCBpbXhfaGRtaSAqaGRtaSwgdTMyIGRhdGEsIHUzMiBtYXNrLCB1bnNpZ25lZCByZWcp
-Cj4+ICAgewo+PiAgIAl1OCB2YWwgPSBoZG1pX3JlYWRiKGhkbWksIHJlZykgJiB+bWFzazsKPiBE
-byB5b3UgcmVhbGx5IG5lZWQgdG8gdXNlIHJlYWRsIGluc3RlYWQgb2YgcmVhZGI/IEluIG15IG9w
-aW5pb24gaXQgd291bGQKPiBiZSBiZXR0ZXIgdGhlbiB0byBjb252ZXJ0IHRoZSBkcml2ZXIgdG8g
-dXNlIHJlZ21hcCBmb3IgcmVnaXN0ZXIgYWNjZXNzCj4gKGluIGEgc2VwYXJhdGUgcGF0Y2gpIGFu
-ZCB0aGVuIGxldCB0aGUgU29DIHNwZWNpZmljIGRyaXZlciBleHRlbnNpb24KPiBwcm92aWRlIHRo
-ZSByZWdtYXAgdG8gdGhlIGNvcmUgZHJpdmVyLgpSb2NrY2hpcCBSSzMyODggY2FuIG9ubHkgYWNj
-ZXNzIHRoZSBoZG1pIHJlZ2lzdGVyIGJ5IDMyYml0KHJlYWRsL3dyaXRlbCkKYnl0ZSBhY2Nlc3Mo
-cmVhZGIvd3JpdGViKSB3aWxsIGNhdXNlICBhbiBpbXByZWNpc2UgZXh0ZXJuYWwgYWJvcnQKCkkg
-cmVmYWN0b3IgdGhlIHJlZ2lzdGVyIGFjY2VzcyBpbiBQQVRDSCBWMywgaWYgeW91IGhhdmUgYW55
-IApzdWdnZXN0aW9uLHBsZWFzZQp0ZWxsIG1lLgo+Cj4gWy4uLl0KPj4gZGlmZiAtLWdpdCBhL2lu
-Y2x1ZGUvZHJtL2JyaWRnZS9kd19oZG1pLmggYi9pbmNsdWRlL2RybS9icmlkZ2UvZHdfaGRtaS5o
-Cj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+IGluZGV4IDAwMDAwMDAuLmU3ZTgyODUKPj4gLS0t
-IC9kZXYvbnVsbAo+PiArKysgYi9pbmNsdWRlL2RybS9icmlkZ2UvZHdfaGRtaS5oCj4+IEBAIC0w
-LDAgKzEsMTE0IEBACj4+ICsvKgo+PiArICogQ29weXJpZ2h0IChDKSAyMDExIEZyZWVzY2FsZSBT
-ZW1pY29uZHVjdG9yLCBJbmMuCj4+ICsgKgo+PiArICogVGhpcyBwcm9ncmFtIGlzIGZyZWUgc29m
-dHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vciBtb2RpZnkKPj4gKyAqIGl0IHVu
-ZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgYXMgcHVibGlz
-aGVkIGJ5Cj4+ICsgKiB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uOyBlaXRoZXIgdmVyc2lv
-biAyIG9mIHRoZSBMaWNlbnNlLCBvcgo+PiArICogKGF0IHlvdXIgb3B0aW9uKSBhbnkgbGF0ZXIg
-dmVyc2lvbi4KPj4gKyAqLwo+PiArCj4+ICsjaWZuZGVmIF9fRFdfSERNSV9IX18KPj4gKyNkZWZp
-bmUgX19EV19IRE1JX0hfXwo+PiArCj4+ICsjaW5jbHVkZSA8ZHJtL2RybVAuaD4KPj4gKwo+PiAr
-I2RlZmluZSBIRE1JX0VESURfTEVOICAgICAgICAgICA1MTIKPj4gKwo+PiArZW51bSB7Cj4+ICsJ
-UkVTXzgsCj4+ICsJUkVTXzEwLAo+PiArCVJFU18xMiwKPj4gKwlSRVNfTUFYLAo+PiArfTsKPj4g
-Kwo+PiArZW51bSBpbXhfaGRtaV9kZXZ0eXBlIHsKPj4gKwlJTVg2UV9IRE1JLAo+PiArCUlNWDZE
-TF9IRE1JLAo+PiArfTsKPj4gKwo+PiArc3RydWN0IG1wbGxfY29uZmlnIHsKPj4gKwl1bnNpZ25l
-ZCBsb25nIG1waXhlbGNsb2NrOwo+PiArCXN0cnVjdCB7Cj4+ICsJCXUxNiBjcGNlOwo+PiArCQl1
-MTYgZ21wOwo+PiArCX0gcmVzW1JFU19NQVhdOwo+PiArfTsKPj4gKwo+PiArc3RydWN0IGN1cnJf
-Y3RybCB7Cj4+ICsJdW5zaWduZWQgbG9uZyBtcGl4ZWxjbG9jazsKPj4gKwl1MTYgY3VycltSRVNf
-TUFYXTsKPj4gK307Cj4gRm9yIGEgaGVhZGVyIGZpbGUgaW4gaW5jbHVkZS9kcm0vYnJpZGdlIG1h
-eWJlIHRoZXNlIHN0cnVjdCBuYW1lcyBhcmUgYQo+IGJpdCB0b28gZ2VuZXJpYyBub3cuCj4KPiBy
-ZWdhcmRzCj4gUGhpbGlwcAo+Cj4KPgo+Cj4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkZXZlbCBtYWlsaW5nIGxpc3QKZGV2ZWxAbGludXhkcml2ZXJw
-cm9qZWN0Lm9yZwpodHRwOi8vZHJpdmVyZGV2LmxpbnV4ZHJpdmVycHJvamVjdC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9kcml2ZXJkZXYtZGV2ZWwK
+ This patchset adds driver for Richtek rt5033 chip The chip contains
+switching charge mode Li-Ion/Li-Polymer battery charger, fuelgauge, regulators.
+This patchset provides common support for accessing the device.
+This patchset have been tested base on exynos board.
+
+Beomho Seo (5):
+  mfd: rt5033: Add Rictek RT5033 driver core.
+  regulator: rt5033: Add RT5033 Regulator device driver
+  power: rt5033_battery: Add RT5033 Fuel gauge device driver
+  power: rt5033_charger: Add RT5033 charger device driver
+  Documentation: Add documentation for rt5033 multifunction device
+
+ Documentation/devicetree/bindings/mfd/rt5033.txt   |  115 +++++
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ drivers/mfd/Kconfig                                |   11 +
+ drivers/mfd/Makefile                               |    1 +
+ drivers/mfd/rt5033.c                               |  157 +++++++
+ drivers/power/Kconfig                              |   16 +
+ drivers/power/Makefile                             |    2 +
+ drivers/power/rt5033_battery.c                     |  189 ++++++++
+ drivers/power/rt5033_charger.c                     |  485 ++++++++++++++++++++
+ drivers/regulator/Kconfig                          |    8 +
+ drivers/regulator/Makefile                         |    1 +
+ drivers/regulator/rt5033-regulator.c               |  154 +++++++
+ include/linux/mfd/rt5033-private.h                 |  255 ++++++++++
+ include/linux/mfd/rt5033.h                         |   64 +++
+ 14 files changed, 1459 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/rt5033.txt
+ create mode 100644 drivers/mfd/rt5033.c
+ create mode 100644 drivers/power/rt5033_battery.c
+ create mode 100644 drivers/power/rt5033_charger.c
+ create mode 100644 drivers/regulator/rt5033-regulator.c
+ create mode 100644 include/linux/mfd/rt5033-private.h
+ create mode 100644 include/linux/mfd/rt5033.h
+
+-- 
+1.7.9.5
+
