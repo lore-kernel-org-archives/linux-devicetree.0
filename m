@@ -1,54 +1,225 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v5 2/5] regulator: Add function to map modes to struct
- regulator_desc
-Date: Fri, 7 Nov 2014 15:54:00 +0000
-Message-ID: <20141107155400.GU8509@sirena.org.uk>
-References: <1415365205-27630-1-git-send-email-javier.martinez@collabora.co.uk>
- <1415365205-27630-3-git-send-email-javier.martinez@collabora.co.uk>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="XzDp6KY4NBYgEz60"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1415365205-27630-3-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Subject: [PATCH v7 1/2] clk: shmobile: div6: support selectable-input clocks
+Date: Fri,  7 Nov 2014 16:51:07 +0100
+Message-ID: <1415375468-15378-2-git-send-email-ulrich.hecht+renesas@gmail.com>
+References: <1415375468-15378-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1415375468-15378-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, mturquette@linaro.org, geert@linux-m68k.org, laurent.pinchart+renesas@ideasonboard.com
+Cc: linux-sh@vger.kernel.org, magnus.damm@gmail.com, devicetree@vger.kernel.org, mark.rutland@arm.com, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Support for setting the parent at initialization time based on the current
+hardware configuration in DIV6 clocks with selectable parents as found in
+the r8a73a4, r8a7740, sh73a0, and other SoCs.
 
---XzDp6KY4NBYgEz60
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+---
+ drivers/clk/shmobile/clk-div6.c | 113 +++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 101 insertions(+), 12 deletions(-)
 
-On Fri, Nov 07, 2014 at 02:00:02PM +0100, Javier Martinez Canillas wrote:
+diff --git a/drivers/clk/shmobile/clk-div6.c b/drivers/clk/shmobile/clk-div6.c
+index f065f69..639241e 100644
+--- a/drivers/clk/shmobile/clk-div6.c
++++ b/drivers/clk/shmobile/clk-div6.c
+@@ -32,6 +32,9 @@ struct div6_clock {
+ 	struct clk_hw hw;
+ 	void __iomem *reg;
+ 	unsigned int div;
++	u32 src_shift;
++	u32 src_width;
++	u8 *parents;
+ };
+ 
+ #define to_div6_clock(_hw) container_of(_hw, struct div6_clock, hw)
+@@ -39,8 +42,11 @@ struct div6_clock {
+ static int cpg_div6_clock_enable(struct clk_hw *hw)
+ {
+ 	struct div6_clock *clock = to_div6_clock(hw);
++	u32 val;
+ 
+-	clk_writel(CPG_DIV6_DIV(clock->div - 1), clock->reg);
++	val = (clk_readl(clock->reg) & ~(CPG_DIV6_DIV_MASK | CPG_DIV6_CKSTP))
++	    | CPG_DIV6_DIV(clock->div - 1);
++	clk_writel(val, clock->reg);
+ 
+ 	return 0;
+ }
+@@ -52,7 +58,7 @@ static void cpg_div6_clock_disable(struct clk_hw *hw)
+ 	/* DIV6 clocks require the divisor field to be non-zero when stopping
+ 	 * the clock.
+ 	 */
+-	clk_writel(CPG_DIV6_CKSTP | CPG_DIV6_DIV(CPG_DIV6_DIV_MASK),
++	clk_writel(clk_readl(clock->reg) | CPG_DIV6_CKSTP | CPG_DIV6_DIV_MASK,
+ 		   clock->reg);
+ }
+ 
+@@ -94,12 +100,53 @@ static int cpg_div6_clock_set_rate(struct clk_hw *hw, unsigned long rate,
+ {
+ 	struct div6_clock *clock = to_div6_clock(hw);
+ 	unsigned int div = cpg_div6_clock_calc_div(rate, parent_rate);
++	u32 val;
+ 
+ 	clock->div = div;
+ 
++	val = clk_readl(clock->reg) & ~CPG_DIV6_DIV_MASK;
+ 	/* Only program the new divisor if the clock isn't stopped. */
+-	if (!(clk_readl(clock->reg) & CPG_DIV6_CKSTP))
+-		clk_writel(CPG_DIV6_DIV(clock->div - 1), clock->reg);
++	if (!(val & CPG_DIV6_CKSTP))
++		clk_writel(val | CPG_DIV6_DIV(clock->div - 1), clock->reg);
++
++	return 0;
++}
++
++static u8 cpg_div6_clock_get_parent(struct clk_hw *hw)
++{
++	struct div6_clock *clock = to_div6_clock(hw);
++	unsigned int i;
++	u8 hw_index;
++
++	if (clock->src_width == 0)
++		return 0;
++
++	hw_index = (clk_readl(clock->reg) >> clock->src_shift) &
++		   (BIT(clock->src_width) - 1);
++	for (i = 0; i < __clk_get_num_parents(hw->clk); i++) {
++		if (clock->parents[i] == hw_index)
++			return i;
++	}
++
++	pr_err("%s: %s DIV6 clock set to invalid parent %u\n",
++	       __func__, __clk_get_name(hw->clk), hw_index);
++	return 0;
++}
++
++static int cpg_div6_clock_set_parent(struct clk_hw *hw, u8 index)
++{
++	struct div6_clock *clock = to_div6_clock(hw);
++	u8 hw_index;
++	u32 mask;
++
++	if (index >= __clk_get_num_parents(hw->clk))
++		return -EINVAL;
++
++	mask = ~((BIT(clock->src_width) - 1) << clock->src_shift);
++	hw_index = clock->parents[index];
++
++	clk_writel((clk_readl(clock->reg) & mask) |
++		(hw_index << clock->src_shift), clock->reg);
+ 
+ 	return 0;
+ }
+@@ -108,6 +155,8 @@ static const struct clk_ops cpg_div6_clock_ops = {
+ 	.enable = cpg_div6_clock_enable,
+ 	.disable = cpg_div6_clock_disable,
+ 	.is_enabled = cpg_div6_clock_is_enabled,
++	.get_parent = cpg_div6_clock_get_parent,
++	.set_parent = cpg_div6_clock_set_parent,
+ 	.recalc_rate = cpg_div6_clock_recalc_rate,
+ 	.round_rate = cpg_div6_clock_round_rate,
+ 	.set_rate = cpg_div6_clock_set_rate,
+@@ -115,20 +164,33 @@ static const struct clk_ops cpg_div6_clock_ops = {
+ 
+ static void __init cpg_div6_clock_init(struct device_node *np)
+ {
++	unsigned int num_parents, valid_parents;
++	const char **parent_names;
+ 	struct clk_init_data init;
+ 	struct div6_clock *clock;
+-	const char *parent_name;
+ 	const char *name;
+ 	struct clk *clk;
++	unsigned int i;
+ 	int ret;
+ 
+ 	clock = kzalloc(sizeof(*clock), GFP_KERNEL);
+-	if (!clock) {
+-		pr_err("%s: failed to allocate %s DIV6 clock\n",
++	if (!clock)
++		return;
++
++	num_parents = of_clk_get_parent_count(np);
++	if (num_parents < 1) {
++		pr_err("%s: no parent found for %s DIV6 clock\n",
+ 		       __func__, np->name);
+ 		return;
+ 	}
+ 
++	clock->parents = kmalloc_array(num_parents, sizeof(*clock->parents),
++		GFP_KERNEL);
++	parent_names = kmalloc_array(num_parents, sizeof(*parent_names),
++				GFP_KERNEL);
++	if (!parent_names)
++		return;
++
+ 	/* Remap the clock register and read the divisor. Disabling the
+ 	 * clock overwrites the divisor, so we need to cache its value for the
+ 	 * enable operation.
+@@ -150,9 +212,34 @@ static void __init cpg_div6_clock_init(struct device_node *np)
+ 		goto error;
+ 	}
+ 
+-	parent_name = of_clk_get_parent_name(np, 0);
+-	if (parent_name == NULL) {
+-		pr_err("%s: failed to get %s DIV6 clock parent name\n",
++
++	for (i = 0, valid_parents = 0; i < num_parents; i++) {
++		const char *name = of_clk_get_parent_name(np, i);
++
++		if (name) {
++			parent_names[valid_parents] = name;
++			clock->parents[valid_parents] = i;
++			valid_parents++;
++		}
++	}
++
++	switch (num_parents) {
++	case 1:
++		/* fixed parent clock */
++		clock->src_shift = clock->src_width = 0;
++		break;
++	case 4:
++		/* clock with EXSRC bits 6-7 */
++		clock->src_shift = 6;
++		clock->src_width = 2;
++		break;
++	case 8:
++		/* VCLK with EXSRC bits 12-14 */
++		clock->src_shift = 12;
++		clock->src_width = 3;
++		break;
++	default:
++		pr_err("%s: invalid number of parents for DIV6 clock %s\n",
+ 		       __func__, np->name);
+ 		goto error;
+ 	}
+@@ -161,8 +248,8 @@ static void __init cpg_div6_clock_init(struct device_node *np)
+ 	init.name = name;
+ 	init.ops = &cpg_div6_clock_ops;
+ 	init.flags = CLK_IS_BASIC;
+-	init.parent_names = &parent_name;
+-	init.num_parents = 1;
++	init.parent_names = parent_names;
++	init.num_parents = valid_parents;
+ 
+ 	clock->hw.init = &init;
+ 
+@@ -175,11 +262,13 @@ static void __init cpg_div6_clock_init(struct device_node *np)
+ 
+ 	of_clk_add_provider(np, of_clk_src_simple_get, clk);
+ 
++	kfree(parent_names);
+ 	return;
+ 
+ error:
+ 	if (clock->reg)
+ 		iounmap(clock->reg);
++	kfree(parent_names);
+ 	kfree(clock);
+ }
+ CLK_OF_DECLARE(cpg_div6_clk, "renesas,cpg-div6-clock", cpg_div6_clock_init);
+-- 
+1.8.4.5
 
-> + * @map_modes: Callback invoked to translate from hardware to standard modes.
-> + *             The function returns the standard REGULATOR_MODE that maps to
-> + *             the hardware specific mode passed as an argument.
-
-of_map_mode - it's only one mode and this is mapping to/from DT.
-
-> + *             If the callback is not defined, the "regulator-initial-mode"
-> + *             and suspend states "regulator-mode" properties won't be parsed.
-
-Just remove this, it's pretty obvious at best and going to bit rot at
-worst.
-
---XzDp6KY4NBYgEz60
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUXOsXAAoJECTWi3JdVIfQiSgH/j18Lc0MhLd2Aqc2JZgxUV2M
-/dBt3zXiUGo46nRN1FozITuUSKxCmbzMI/Cwp+fyY2IrGuJ9hbOn1Si0iSeop548
-8DxkPx0Kp2sFR5yujEQK38Nq5irq72eLzEkE9GUAXIMcQi2vV+QySr0kxn4+pj7z
-illyWKK1JWfy878SV/GYaBA9Oc26jREN4jSaWYNxcF11JXTSZ2P8yOKcvYXpO1c8
-qCgK5okIpY+IYxl+3ZYbQROvX7QbhkD/Sqf0G/aUutArUJVDl78o66KrIi66vCTw
-5/QS2ggcb7YUmb6MWKAYkEDVZfLVEsIwHgGayRwDMXxcz2QOLI2PJscJv53GVb0=
-=5Yn1
------END PGP SIGNATURE-----
-
---XzDp6KY4NBYgEz60--
