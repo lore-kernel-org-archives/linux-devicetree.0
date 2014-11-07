@@ -1,42 +1,48 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH 1/4] input: touchscreen: ti_am335x_tsc Interchange
- touchscreen and ADC steps
-Date: Fri, 7 Nov 2014 09:00:34 +0100
-Message-ID: <20141107080033.GA6455@netboy>
-References: <1414408111-2631-1-git-send-email-vigneshr@ti.com>
- <1414408111-2631-2-git-send-email-vigneshr@ti.com>
- <20141106141916.GA17151@netboy>
- <545C59CD.3070707@ti.com>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH v4 2/4] serial: mxs-auart: use mctrl_gpio helpers for handling modem signals
+Date: Fri, 7 Nov 2014 09:03:11 +0100
+Message-ID: <201411070903.11645.marex@denx.de>
+References: <1412960007-28159-1-git-send-email-j.uzycki@elproma.com.pl> <545B57D7.4070609@elproma.com.pl> <CAMiH66FKJm8hcgtR=-ZzzpCq+PQ8xkixbUnMzRPVd_cM_6VM1w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <545C59CD.3070707@ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jonathan Cameron <jic23@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Samuel Ortiz <sameo@linux.intel.com>, Jan Kardell <jan.kardell@telliq.com>, linux-iio@vger.kernel.org, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Peter Meerwald <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, linux-arm
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <CAMiH66FKJm8hcgtR=-ZzzpCq+PQ8xkixbUnMzRPVd_cM_6VM1w@mail.gmail.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Huang Shijie <shijie8@gmail.com>
+Cc: Janusz =?utf-8?q?U=C5=BCycki?= <j.uzycki@elproma.com.pl>, Richard Genoud <richard.genoud@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jiri Slaby <jslaby@suse.cz>, Fabio Estevam <festevam@gmail.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 07, 2014 at 11:04:05AM +0530, Vignesh R wrote:
+On Friday, November 07, 2014 at 02:34:31 AM, Huang Shijie wrote:
+> why change them to gpio?  If we change them to gpio.  Could the DMA still
+> works fine?
+> did you test the DMA with this patch?
 > 
-> Currently, there is too much noise in the TSC hardware that is being
-> removed by delta filtering.
+> Add Marek for this patch too.
 
-The so called "filter" was only programmed because the fifo entries
-were being mixed up. Sebastian fixed that.
+I didn't look too deep into the patch, so here's just my experience:
 
-> I tested TSC unit by removing filtering
-> logic, the performance was not at all satisfactory. The cursor jumps
-> wayward and smooth circles cannot be drawn. Looks like delta filtering
-> cannot be removed as of now. May be I will try and address it in future.
+1) The AUART block signals and GPIO block signals are not sychronised using the 
+   same clock. Therefore, the latency between toggling of the AUART lines and
+   the GPIO-driven pins will not be deterministic and will vary. There might be
+   a way to approximate that, but that's definitelly not a reliable solution.
 
-The "filter" code is nonsensical. It picks the two values in seqeunce
-that are closest to one and another. How is that supposed to work?
+   This is very bad for example if you drive RS485 DIR line with the RTS pin as
+   a GPIO ; the RTS pin will toggle at non-deterministic time compared to the
+   end of UART transmission. This will trigger bit-loss on the RS485 line and
+   you just don't want that.
 
-Did you look at the "noise"? What kind of properties did you see?
+2) Speaking of RS485, there's [1] and [2]. which I believe apply to any combo
+   of UART+GPIO toggling.
 
-A median filter makes more sense. Or sort, remove outliers, and
-average. But choosing the two closest in series is silly.
+So I hate to bring the bad news , but UART+GPIO combo toggling is really a bad
+bad idea.
 
-Thanks,
-Richard
+HTH
+
+[1] http://comments.gmane.org/gmane.linux.serial/6770
+[2] http://article.gmane.org/gmane.linux.serial/3619/
+
+Best regards,
+Marek Vasut
