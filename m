@@ -1,234 +1,53 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 03/13] ARM: STi: DT: STiH416: Add DT nodes for the ehci and ohci usb controllers.
-Date: Fri,  7 Nov 2014 11:57:45 +0000
-Message-ID: <1415361475-6218-4-git-send-email-peter.griffin@linaro.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH 08/13] ARM: STi: DT: STiH410: Add defines for STiH410 DT clocks
+Date: Fri,  7 Nov 2014 11:57:50 +0000
+Message-ID: <1415361475-6218-9-git-send-email-peter.griffin@linaro.org>
 References: <1415361475-6218-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415361475-6218-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org
-Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1415361475-6218-1-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the DT nodes for the 4 usb ehci and ohci usb controllers
-on the stih416 SoC.
+Although most clock outputs are the same as stih407 SoC, stih410
+also has some additional new clock outputs.
 
-Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 ---
- arch/arm/boot/dts/stih416-b2020.dts  |   4 +
- arch/arm/boot/dts/stih416-b2020e.dts |   4 +
- arch/arm/boot/dts/stih416.dtsi       | 144 +++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/stih41x-b2020.dtsi |  12 +++
- 4 files changed, 164 insertions(+)
+ include/dt-bindings/clock/stih410-clks.h | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 include/dt-bindings/clock/stih410-clks.h
 
-diff --git a/arch/arm/boot/dts/stih416-b2020.dts b/arch/arm/boot/dts/stih416-b2020.dts
-index 5d1543b..c75b632 100644
---- a/arch/arm/boot/dts/stih416-b2020.dts
-+++ b/arch/arm/boot/dts/stih416-b2020.dts
-@@ -33,5 +33,9 @@
- 		sata0: sata@fe380000{
- 			status = "okay";
- 		};
+diff --git a/include/dt-bindings/clock/stih410-clks.h b/include/dt-bindings/clock/stih410-clks.h
+new file mode 100644
+index 0000000..2c5d6ff
+--- /dev/null
++++ b/include/dt-bindings/clock/stih410-clks.h
+@@ -0,0 +1,24 @@
++/*
++ * This header provides constants clk index STMicroelectronics
++ * STiH410 SoC.
++ */
++#ifndef _DT_BINDINGS_CLK_STIH410
++#define _DT_BINDINGS_CLK_STIH410
++#include "stih407-clks.h"
 +
-+		usb3: usb@fe340000 {
-+			status = "okay";
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/stih416-b2020e.dts b/arch/arm/boot/dts/stih416-b2020e.dts
-index 956fab8..9768503 100644
---- a/arch/arm/boot/dts/stih416-b2020e.dts
-+++ b/arch/arm/boot/dts/stih416-b2020e.dts
-@@ -51,5 +51,9 @@
- 		sata0: sata@fe380000{
- 			status = "okay";
- 		};
++/* STiH410 introduces new clock outputs compared to STiH407 */
 +
-+		usb3: usb@fe340000 {
-+			status = "okay";
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/stih416.dtsi b/arch/arm/boot/dts/stih416.dtsi
-index 0f3019a..6238d9e 100644
---- a/arch/arm/boot/dts/stih416.dtsi
-+++ b/arch/arm/boot/dts/stih416.dtsi
-@@ -325,5 +325,149 @@
- 			clock-names = "osc_phy";
- 
- 		};
++/* CLOCKGEN C0 */
++#define CLK_TX_ICN_HADES	32
++#define CLK_RX_ICN_HADES	33
++#define CLK_ICN_REG_16		34
++#define CLK_PP_HADES		35
++#define CLK_CLUST_HADES		36
++#define CLK_HWPE_HADES		37
++#define CLK_FC_HADES		38
 +
-+		ehci0: usb@0xfe1ffe00 {
-+			compatible = "st,st-ehci-300x";
-+			reg = <0xfe1ffe00 0x100>;
-+			interrupts = <GIC_SPI 148 IRQ_TYPE_NONE>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_usb0>;
-+			clocks = <&clk_s_a1_ls 0>,
-+				 <&clockgen_b0 0>;
-+			clock-names = "ic", "clk48";
++/* CLOCKGEN D0 */
++#define CLK_PCMR10_MASTER	4
++#define CLK_USB2_PHY		5
 +
-+			phys = <&usb2_phy>;
-+			phy-names = "usb";
-+			status = "okay";
-+
-+			resets = <&powerdown STIH416_USB0_POWERDOWN>,
-+				 <&softreset STIH416_USB0_SOFTRESET>;
-+			reset-names = "power", "softreset";
-+		};
-+
-+		ohci0: usb@0xfe1ffc00 {
-+			compatible = "st,st-ohci-300x";
-+			reg = <0xfe1ffc00 0x100>;
-+			interrupts = <GIC_SPI 149 IRQ_TYPE_NONE>;
-+			clocks = <&clk_s_a1_ls 0>,
-+				 <&clockgen_b0 0>;
-+			clock-names = "ic", "clk48";
-+			phys = <&usb2_phy>;
-+			phy-names = "usb";
-+			status = "okay";
-+
-+			resets = <&powerdown STIH416_USB0_POWERDOWN>,
-+				 <&softreset STIH416_USB0_SOFTRESET>;
-+			reset-names = "power", "softreset";
-+		};
-+
-+		ehci1: usb@0xfe203e00 {
-+			compatible = "st,st-ehci-300x";
-+			reg = <0xfe203e00 0x100>;
-+			interrupts = <GIC_SPI 150 IRQ_TYPE_NONE>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_usb1>;
-+
-+			clocks = <&clk_s_a1_ls 0>,
-+				 <&clockgen_b0 0>;
-+			clock-names = "ic", "clk48";
-+
-+			phys = <&usb2_phy>;
-+			phy-names = "usb";
-+			status = "okay";
-+
-+			resets = <&powerdown STIH416_USB1_POWERDOWN>,
-+				 <&softreset STIH416_USB1_SOFTRESET>;
-+			reset-names = "power", "softreset";
-+		};
-+
-+		ohci1: usb@0xfe203c00 {
-+			compatible = "st,st-ohci-300x";
-+			reg = <0xfe203c00 0x100>;
-+			interrupts = <GIC_SPI 151 IRQ_TYPE_NONE>;
-+
-+			clocks = <&clk_s_a1_ls 0>,
-+				 <&clockgen_b0 0>;
-+			clock-names = "ic", "clk48";
-+			phys = <&usb2_phy>;
-+			phy-names = "usb";
-+			status = "okay";
-+
-+			resets = <&powerdown STIH416_USB1_POWERDOWN>,
-+				 <&softreset STIH416_USB1_SOFTRESET>;
-+			reset-names = "power", "softreset";
-+		};
-+
-+		ehci2: usb@0xfe303e00 {
-+			compatible = "st,st-ehci-300x";
-+			reg = <0xfe303e00 0x100>;
-+			interrupts = <GIC_SPI 152 IRQ_TYPE_NONE>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_usb2>;
-+
-+			clocks = <&clk_s_a1_ls 0>,
-+				 <&clockgen_b0 0>;
-+			clock-names = "ic", "clk48";
-+
-+			phys = <&usb2_phy>;
-+			phy-names = "usb";
-+			status = "okay";
-+
-+			resets = <&powerdown STIH416_USB2_POWERDOWN>,
-+				 <&softreset STIH416_USB2_SOFTRESET>;
-+			reset-names = "power", "softreset";
-+		};
-+
-+		ohci2: usb@0xfe303c00 {
-+			compatible = "st,st-ohci-300x";
-+			reg = <0xfe303c00 0x100>;
-+			interrupts = <GIC_SPI 153 IRQ_TYPE_NONE>;
-+			clocks = <&clk_s_a1_ls 0>,
-+				 <&clockgen_b0 0>;
-+			clock-names = "ic", "clk48";
-+			phys = <&usb2_phy>;
-+			phy-names = "usb";
-+			status = "okay";
-+
-+			resets = <&powerdown STIH416_USB2_POWERDOWN>,
-+				 <&softreset STIH416_USB2_SOFTRESET>;
-+			reset-names = "power", "softreset";
-+		};
-+
-+		ehci3: usb@0xfe343e00 {
-+			compatible = "st,st-ehci-300x";
-+			reg = <0xfe343e00 0x100>;
-+			interrupts = <GIC_SPI 154 IRQ_TYPE_NONE>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_usb3>;
-+
-+			clocks = <&clk_s_a1_ls 0>,
-+				 <&clockgen_b0 0>;
-+			clock-names = "ic", "clk48";
-+
-+			phys = <&usb2_phy>;
-+			phy-names = "usb";
-+			status = "okay";
-+
-+			resets = <&powerdown STIH416_USB3_POWERDOWN>,
-+				 <&softreset STIH416_USB3_SOFTRESET>;
-+			reset-names = "power", "softreset";
-+		};
-+
-+		ohci3: usb@0xfe343c00 {
-+			compatible = "st,st-ohci-300x";
-+			reg = <0xfe343c00 0x100>;
-+			interrupts = <GIC_SPI 155 IRQ_TYPE_NONE>;
-+			clocks = <&clk_s_a1_ls 0>,
-+				 <&clockgen_b0 0>;
-+			clock-names = "ic", "clk48";
-+			phys = <&usb2_phy>;
-+			phy-names = "usb";
-+			status = "okay";
-+
-+			resets = <&powerdown STIH416_USB3_POWERDOWN>,
-+				 <&softreset STIH416_USB3_SOFTRESET>;
-+			reset-names = "power", "softreset";
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/stih41x-b2020.dtsi b/arch/arm/boot/dts/stih41x-b2020.dtsi
-index 487d7d8..005ab38 100644
---- a/arch/arm/boot/dts/stih41x-b2020.dtsi
-+++ b/arch/arm/boot/dts/stih41x-b2020.dtsi
-@@ -78,5 +78,17 @@
- 		mmc0: sdhci@fe81e000 {
- 			bus-width = <8>;
- 		};
-+
-+		usb0: usb@fe100000 {
-+			status = "okay";
-+		};
-+
-+		usb1: usb@fe200000 {
-+			status = "okay";
-+		};
-+
-+		usb2: usb@fe300000 {
-+			status = "okay";
-+		};
- 	};
- };
++#endif
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
