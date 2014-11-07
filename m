@@ -1,40 +1,172 @@
-From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCHv3 4/5] edac: altera: Add Altera L2 Cache and OCRAM EDAC
- Support
-Date: Fri, 7 Nov 2014 17:51:34 +0100
-Message-ID: <20141107165134.GA5139@pd.tnic>
-References: <1414683131-20786-1-git-send-email-tthayer@opensource.altera.com>
- <1414683131-20786-5-git-send-email-tthayer@opensource.altera.com>
- <20141104151214.GD9570@pd.tnic>
- <545959E8.2040005@opensource.altera.com>
- <20141106163134.GF4318@pd.tnic>
- <545CF3D8.1020500@opensource.altera.com>
+From: <tthayer@opensource.altera.com>
+Subject: [PATCHv4 1/5] arm: socfpga: Enable L2 Cache ECC on startup.
+Date: Fri, 7 Nov 2014 10:54:18 -0600
+Message-ID: <1415379263-12391-2-git-send-email-tthayer@opensource.altera.com>
+References: <1415379263-12391-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <545CF3D8.1020500-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1415379263-12391-1-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 07, 2014 at 10:31:20AM -0600, Dinh Nguyen wrote:
-> If it's okay, can you please pick up this series, once everything is
-> cleaned up? I just checked to make sure that there aren't any merge
-> conflicts in the DTS files in this series against DTS patches that I
-> have queue up for 3.19, and there aren't.
+From: Thor Thayer <tthayer@opensource.altera.com>
 
-Sure, but I'd need ACKs from you/the relevant maintainers for 1/5, 2/5
-and 5/5 patches.
+This patch enables the ECC for L2 cache on machine
+startup.  The ECC has to be enabled before data is
+is stored in memory otherwise the ECC will fail on
+reads.
 
+Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+---
+v2: Split OCRAM initialization into separate patch.
+
+v3/4: No change
+---
+ MAINTAINERS                      |    1 +
+ arch/arm/mach-socfpga/Makefile   |    1 +
+ arch/arm/mach-socfpga/l2_cache.c |   44 ++++++++++++++++++++++++++++++++++++++
+ arch/arm/mach-socfpga/l2_cache.h |   28 ++++++++++++++++++++++++
+ arch/arm/mach-socfpga/socfpga.c  |    5 ++++-
+ 5 files changed, 78 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/mach-socfpga/l2_cache.c
+ create mode 100644 arch/arm/mach-socfpga/l2_cache.h
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ee1bc5b..d0c7752 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1407,6 +1407,7 @@ ARM/SOCFPGA EDAC SUPPORT
+ M:	Thor Thayer <tthayer@opensource.altera.com>
+ S:	Maintained
+ F:	drivers/edac/altera_edac.
++F:	arch/arm/mach-socfpga/l2_cache.*
+ 
+ ARM/STI ARCHITECTURE
+ M:	Srinivas Kandagatla <srinivas.kandagatla@gmail.com>
+diff --git a/arch/arm/mach-socfpga/Makefile b/arch/arm/mach-socfpga/Makefile
+index 6dd7a93..142609e 100644
+--- a/arch/arm/mach-socfpga/Makefile
++++ b/arch/arm/mach-socfpga/Makefile
+@@ -4,3 +4,4 @@
+ 
+ obj-y					:= socfpga.o
+ obj-$(CONFIG_SMP)	+= headsmp.o platsmp.o
++obj-$(CONFIG_EDAC_ALTERA_L2C) += l2_cache.o
+diff --git a/arch/arm/mach-socfpga/l2_cache.c b/arch/arm/mach-socfpga/l2_cache.c
+new file mode 100644
+index 0000000..8e109f3
+--- /dev/null
++++ b/arch/arm/mach-socfpga/l2_cache.c
+@@ -0,0 +1,44 @@
++/*
++ * Copyright Altera Corporation (C) 2014. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++#include <linux/clk-provider.h>
++#include <linux/of_platform.h>
++#include <linux/of_address.h>
++
++#include "l2_cache.h"
++
++void socfpga_init_l2_ecc(void)
++{
++	struct device_node *np;
++	void __iomem  *mapped_l2_edac_addr;
++
++	np = of_find_compatible_node(NULL, NULL, "altr,l2-edac");
++	if (!np) {
++		pr_err("SOCFPGA: Unable to find altr,l2-edac in dtb\n");
++		return;
++	}
++
++	mapped_l2_edac_addr = of_iomap(np, 0);
++	if (!mapped_l2_edac_addr) {
++		pr_err("SOCFPGA: Unable to find L2 ECC mapping in dtb\n");
++		return;
++	}
++
++	/* Enable ECC */
++	writel(0x01, mapped_l2_edac_addr);
++
++	pr_debug("SOCFPGA: Success Initializing L2 cache ECC\n");
++}
++
+diff --git a/arch/arm/mach-socfpga/l2_cache.h b/arch/arm/mach-socfpga/l2_cache.h
+new file mode 100644
+index 0000000..58e140d
+--- /dev/null
++++ b/arch/arm/mach-socfpga/l2_cache.h
+@@ -0,0 +1,28 @@
++/*
++ * Copyright Altera Corporation (C) 2014. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#ifndef MACH_SOCFPGA_L2_CACHE_H
++#define MACH_SOCFPGA_L2_CACHE_H
++
++#ifdef CONFIG_EDAC_ALTERA_L2C
++void socfpga_init_l2_ecc(void);
++#else
++inline void socfpga_init_l2_ecc(void)
++{
++}
++#endif
++
++#endif /* #ifndef MACH_SOCFPGA_L2_CACHE_H */
+diff --git a/arch/arm/mach-socfpga/socfpga.c b/arch/arm/mach-socfpga/socfpga.c
+index adbf383..af6413a 100644
+--- a/arch/arm/mach-socfpga/socfpga.c
++++ b/arch/arm/mach-socfpga/socfpga.c
+@@ -1,5 +1,5 @@
+ /*
+- *  Copyright (C) 2012 Altera Corporation
++ *  Copyright (C) 2012;2014 Altera Corporation
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+@@ -25,6 +25,8 @@
+ #include <asm/mach/map.h>
+ 
+ #include "core.h"
++#include "l2_cache.h"
++#include "ocram.h"
+ 
+ void __iomem *socfpga_scu_base_addr = ((void __iomem *)(SOCFPGA_SCU_VIRT_BASE));
+ void __iomem *sys_manager_base_addr;
+@@ -83,6 +85,7 @@ static void __init socfpga_init_irq(void)
+ {
+ 	irqchip_init();
+ 	socfpga_sysmgr_init();
++	socfpga_init_l2_ecc();
+ }
+ 
+ static void socfpga_cyclone5_restart(enum reboot_mode mode, const char *cmd)
 -- 
-Regards/Gruss,
-    Boris.
+1.7.9.5
 
-Sent from a fat crate under my desk. Formatting is fine.
---
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
