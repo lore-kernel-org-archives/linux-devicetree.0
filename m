@@ -1,59 +1,128 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 5/5] ARM: shmobile: r8a73a4 dtsi: Add SoC-specific IIC
- compatible properties
-Date: Fri, 7 Nov 2014 06:26:16 +0100
-Message-ID: <20141107052616.GC1278@katana>
-References: <1415274730-310-1-git-send-email-geert+renesas@glider.be>
- <1415274730-310-6-git-send-email-geert+renesas@glider.be>
+From: Alexandre Courbot <acourbot@nvidia.com>
+Subject: Re: [PATCH v3 04/13] of: document new emc-timings subnode in nvidia,tegra124-car
+Date: Fri, 7 Nov 2014 14:31:19 +0900
+Message-ID: <545C5927.3010001@nvidia.com>
+References: <1414599796-30597-1-git-send-email-tomeu.vizoso@collabora.com> <1414599796-30597-5-git-send-email-tomeu.vizoso@collabora.com> <545B172C.4060105@nvidia.com> <CAL_JsqKYSF3JVrXH_dkqRXQrgUU3igzvoK1C2k1Caz-4UuHX6Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="eHhjakXzOLJAF9wJ"
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1415274730-310-6-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKYSF3JVrXH_dkqRXQrgUU3igzvoK1C2k1Caz-4UuHX6Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 11/07/2014 12:12 AM, Rob Herring wrote:
+> On Thu, Nov 6, 2014 at 12:37 AM, Alexandre Courbot <acourbot@nvidia.com> wrote:
+>> On 10/30/2014 01:22 AM, Tomeu Vizoso wrote:
+>>>
+>>> The EMC clock needs some extra information for changing its rate.
+>>>
+>>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+>>> ---
+>>>    .../bindings/clock/nvidia,tegra124-car.txt         | 46
+>>> +++++++++++++++++++++-
+>>>    1 file changed, 44 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
+>>> b/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
+>>> index ded5d62..42e0588 100644
+>>> --- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
+>>> +++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
+>>> @@ -19,12 +19,35 @@ Required properties :
+>>>      In clock consumers, this cell represents the bit number in the CAR's
+>>>      array of CLK_RST_CONTROLLER_RST_DEVICES_* registers.
+>>>
+>>> +The node should contain a "emc-timings" subnode for each supported RAM
+>>> type (see
+>>> +field RAM_CODE in register PMC_STRAPPING_OPT_A), with its unit address
+>>> being its
+>>> +RAM_CODE.
+>>> +
+>>> +Required properties for "emc-timings" nodes :
+>>> +- nvidia,ram-code : Should contain the value of RAM_CODE this timing set
+>>> +  is used for.
+>>> +
+>>> +Each "emc-timings" node should contain a "timing" subnode for every
+>>> supported
+>>> +EMC clock rate. The "timing" subnodes should have the clock rate in Hz as
+>>> their
+>>> +unit address.
+>>
+>>
+>> This seems to be a quite liberal use of unit addresses (same in the next
+>> patch) - is this allowed by DT?
+>
+> No, unit address should match a reg property.
 
---eHhjakXzOLJAF9wJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Mmm, would you have any suggestion as to how this can be fixed? Right 
+now what I can think of is either to replace the "clock-frequency" 
+property by "reg" (which would be confusing), or to use a different 
+naming scheme, e.g. timing-12750000. IIUC the naming is not essential 
+for properly parsing these nodes, so maybe the second solution is the 
+way to go?
 
-On Thu, Nov 06, 2014 at 12:52:10PM +0100, Geert Uytterhoeven wrote:
-> The IIC nodes used the generic compatible properties only.
-> This may cause the driver to fail when using Standard Speed on IIC
-> masters where the operational clock is driven by the 130 MHz HP clock.
->=20
-> Add the SoC-specific compatible property to fix this.
->=20
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+>>> +
+>>> +Required properties for "timing" nodes :
+>>> +- clock-frequency : Should contain the memory clock rate to which this
+>>> timing
+>>> +relates.
+>>> +- nvidia,parent-clock-frequency : Should contain the rate at which the
+>>> current
+>>> +parent of the EMC clock should be running at this timing.
+>>> +- clocks : Must contain an entry for each entry in clock-names.
+>>> +  See ../clocks/clock-bindings.txt for details.
+>>> +- clock-names : Must include the following entries:
+>>> +  - emc-parent : the clock that should be the parent of the EMC clock at
+>>> this
+>>> +timing.
+>>> +
+>>>    Example SoC include file:
+>>>
+>>>    / {
+>>> -       tegra_car: clock {
+>>> +       tegra_car: clock@0,60006000 {
+>
+> The comma here is wrong. Commas should be used when you have something
+> like PCI bus:dev:func for addressing.
+>
+>>>                  compatible = "nvidia,tegra124-car";
+>>> -               reg = <0x60006000 0x1000>;
+>>> +               reg = <0x0 0x60006000 0x0 0x1000>;
+>
+> The number of cell's is really irrelevant to the example.
+>
+>>>                  #clock-cells = <1>;
+>>>                  #reset-cells = <1>;
+>>>          };
+>>> @@ -60,4 +83,23 @@ Example board file:
+>>>          &tegra_car {
+>>>                  clocks = <&clk_32k> <&osc>;
+>>>          };
+>>> +
+>>> +       clock@0,60006000 {
+>>> +               emc-timings@3 {
+>>> +                       nvidia,ram-code = <3>;
+>>> +
+>>> +                       timing@12750000 {
+>>> +                               clock-frequency = <12750000>;
+>>> +                               nvidia,parent-clock-frequency =
+>>> <408000000>;
+>>> +                               clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
+>>> +                               clock-names = "emc-parent";
+>
+> Why do you need both clocks and hardcoded values? clock-frequency is
+> the desired freq you want to set TEGRA124_CLK_PLL_P to?
 
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+That would be nvidia,parent-clock-frequency IIUC, while clock-frequency 
+is the resulting EMC clock.
 
+>
+> The clocks property really belongs as part of the memory controller
+> node or a memory device node.
 
---eHhjakXzOLJAF9wJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUXFf4AAoJEBQN5MwUoCm22uMP/2574bStl0HXV/Bov1+H9cyN
-b//44WOHH+I0o2vExRS/v916frRWGJ3nHGfaPSLHRSj2EIUXgEJcFccx35WJssmO
-8lPBvrSs8cAbhx4KumnVNmrcKNHpQzaYBDh2NCvS5V7RANFEgYgmQDMk3TUyjCD8
-QG3wH6IfszacB/oc7Jj30aT/W20ksShSVK7kY9I+lte7KkFfsT7hHvguaRwJtXaC
-HiDUixn/aY3n5N98jVC98FpIcwqyeKjmRg6Ixp6ux6nCN8pn8tw7giLI4LBlFkBy
-tdMqMS6EV/L/0phpzYgxUSgCR6ZT3i32JsmDemWelfG0CcbfKDjI0DIm/SeW4Z/v
-RXZE6XzLxsLDT8gvm//i5HsbTfVCAYfUwrWgcDV2KZjMQNfl4B9A70REPm+34vhs
-5cum5kZYBRVH72ycHVm/XDhg9OlxYlzxweN5tZK8Pw3GvBiaZany1HajwaB5uTOM
-jICe42LaejbJAqyebGN7h26fNCe7VFJCvWOTVGQpgDm2vCf+zjhvDezDtg3areKp
-ZI2Q7RVSPMA30kLXe/IqvXyo47PUdwr2lLT10Atf5yBKu2voNrhUg6j6G+2bf1hd
-MbvVX7x0RHLYpr3t1NmmmCag1k50zfqxvdp7Svzy942jKNCiKQppEJ1VaS63yJJc
-U8s/YT/N8DKasYV+3tTJ
-=1kke
------END PGP SIGNATURE-----
-
---eHhjakXzOLJAF9wJ--
+I would tend to agree here. Tomeu, does it make sense to move these 
+properties to the EMC driver instead?
