@@ -1,43 +1,78 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 12/13] ARM: STi: DT: STiH410: Add STiH410 SoC clock support.
-Date: Fri, 07 Nov 2014 13:13:36 +0100
-Message-ID: <88469624.TsXJ3Gpfe2@wuerfel>
-References: <1415361475-6218-1-git-send-email-peter.griffin@linaro.org> <1415361475-6218-13-git-send-email-peter.griffin@linaro.org>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH V4 00/14] genirq endian fixes; bcm7120/brcmstb IRQ
+ updates
+Date: Fri, 7 Nov 2014 07:27:45 -0500
+Message-ID: <20141107122745.GJ3698@titan.lakedaemon.net>
+References: <1415342669-30640-1-git-send-email-cernekee@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415361475-6218-13-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Peter Griffin <peter.griffin@linaro.org>, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, devicetree@vger.kernel.org, lee.jones@linaro.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1415342669-30640-1-git-send-email-cernekee@gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Kevin Cernekee <cernekee@gmail.com>
+Cc: tglx@linutronix.de, linux-sh@vger.kernel.org, arnd@arndb.de, f.fainelli@gmail.com, ralf@linux-mips.org, sergei.shtylyov@cogentembedded.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 07 November 2014 11:57:54 Peter Griffin wrote:
-> +
-> +       soc {
-> +
-> +               ohci0: usb@9a03c00 {
-> +                       status = "okay";
-> +               };
-> +
-> +               ehci0: usb@9a03e00 {
-> +                       status = "okay";
-> +               };
-> +
-> +               ohci1: usb@9a83c00 {
-> +                       status = "okay";
-> +               };
-> +
-> +               ehci1: usb@9a83e00 {
-> +                       status = "okay";
-> +               };
-> +       };
-> +};
+Thomas,
+
+On Thu, Nov 06, 2014 at 10:44:15PM -0800, Kevin Cernekee wrote:
+> V3->V4:
 > 
+>  - Fix buildbot bisectability warning on patch 02/14 (missing include)
 
-These seem to refer to an existing device in the base dtsi file. Just put the label
-in the shared file and remove the exact names here. Alternatively, drop the labels
-you don't use.
+Dammit.  :(  Even if I had created a topic branch for this series, I
+still would have put the genirq changes in /core, then based a brcm
+branch off of that.
 
-	Arnd
+I'm inclined to think I should just drop v3 and apply v4, as a revert
+commit wouldn't solve the bisectability issue.
+
+thoughts?
+
+thx,
+
+Jason.
+
+> 
+>  - Add kernel-doc text for the new reg_{readl,writel} struct members and
+>    IRQ_GC_BE_IO flag
+> 
+> 
+> Kevin Cernekee (14):
+>   sh: Eliminate unused irq_reg_{readl,writel} accessors
+>   genirq: Generic chip: Change irq_reg_{readl,writel} arguments
+>   genirq: Generic chip: Allow irqchip drivers to override
+>     irq_reg_{readl,writel}
+>   genirq: Generic chip: Add big endian I/O accessors
+>   irqchip: brcmstb-l2: Eliminate dependency on ARM code
+>   irqchip: bcm7120-l2: Eliminate bad IRQ check
+>   irqchip: bcm7120-l2, brcmstb-l2: Remove ARM Kconfig dependency
+>   irqchip: bcm7120-l2: Make sure all register accesses use base+offset
+>   irqchip: bcm7120-l2: Fix missing nibble in gc->unused mask
+>   irqchip: bcm7120-l2: Use gc->mask_cache to simplify suspend/resume
+>     functions
+>   irqchip: bcm7120-l2: Extend driver to support 64+ bit controllers
+>   irqchip: bcm7120-l2: Decouple driver from brcmstb-l2
+>   irqchip: bcm7120-l2: Convert driver to use irq_reg_{readl,writel}
+>   irqchip: brcmstb-l2: Convert driver to use irq_reg_{readl,writel}
+> 
+>  .../interrupt-controller/brcm,bcm7120-l2-intc.txt  |  26 ++-
+>  arch/arm/mach-bcm/Kconfig                          |   1 +
+>  arch/sh/boards/mach-se/7343/irq.c                  |   3 -
+>  arch/sh/boards/mach-se/7722/irq.c                  |   3 -
+>  drivers/irqchip/Kconfig                            |   6 +-
+>  drivers/irqchip/Makefile                           |   4 +-
+>  drivers/irqchip/irq-atmel-aic.c                    |  40 ++---
+>  drivers/irqchip/irq-atmel-aic5.c                   |  65 ++++----
+>  drivers/irqchip/irq-bcm7120-l2.c                   | 174 +++++++++++++--------
+>  drivers/irqchip/irq-brcmstb-l2.c                   |  41 +++--
+>  drivers/irqchip/irq-sunxi-nmi.c                    |   4 +-
+>  drivers/irqchip/irq-tb10x.c                        |   4 +-
+>  include/linux/irq.h                                |  32 +++-
+>  kernel/irq/generic-chip.c                          |  36 +++--
+>  14 files changed, 263 insertions(+), 176 deletions(-)
+> 
+> -- 
+> 2.1.1
+> 
