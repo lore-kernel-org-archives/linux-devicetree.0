@@ -1,71 +1,47 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] OF: Add support for built in FDT blob
-Date: Fri, 7 Nov 2014 16:47:01 +0000
-Message-ID: <20141107164701.GC5586@leverpostej>
-References: <1415358849-25879-1-git-send-email-albeu@free.fr>
- <20141107120933.GA5487@leverpostej>
- <20141107135931.376caf98@tock>
- <CAL_Jsq+n8owZz6yas=surm4fTaGWgUuCLLEKXYKm8_02S8DdYA@mail.gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: rockchip: add pinctrl nodes for SPDIF, LCDC, CIF, HDMI, USB and GPS
+Date: Fri, 07 Nov 2014 17:52:23 +0100
+Message-ID: <5384745.1WqprI8GVl@diego>
+References: <1415373589-11650-1-git-send-email-julien.chauveau@neo-technologies.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+n8owZz6yas=surm4fTaGWgUuCLLEKXYKm8_02S8DdYA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1415373589-11650-1-git-send-email-julien.chauveau-MwaZihP3oV2HdZQakrT3ElaPQRlvutdw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alban <albeu-GANU6spQydw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Julien CHAUVEAU <julien.chauveau-MwaZihP3oV2HdZQakrT3ElaPQRlvutdw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "moderated list:ARM/Rockchip SoC..." <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 07, 2014 at 02:56:32PM +0000, Rob Herring wrote:
-> On Fri, Nov 7, 2014 at 6:59 AM, Alban <albeu-GANU6spQydw@public.gmane.org> wrote:
-> > On Fri, 7 Nov 2014 12:09:33 +0000
-> > Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> >
-> >> Hi,
-> >>
-> >> On Fri, Nov 07, 2014 at 11:14:09AM +0000, Alban Bedel wrote:
-> >> > Allow embedding an FDT blob in the kernel image, this is mostly
-> >> > useful to run new kernels on boards with old bootloaders.
-> >>
-> >> I am very much not keen on embedding a DTB within a kernel. It's far
-> >> nicer for the two to remain separate blobs, with a small shim to set
-> >> up the DTB address.
-> >>
-> >> On ARM we have appended DTB for this purpose, which is at least better
-> >> than embedding the DT inside of the kernel.
-> >
-> > I looked at that but that seemed quiet complicated to implement, not to
-> > mention that it needed quiet a lot of arch specific code. On the other
-> > hand having the DTB built in like this was trivial and would be portable
-> > to every architecture, so that seemed like the best way to me.
-> >
-> >> What architecture and bootloader are you using that necessitate this?
-> >
-> > MIPS with an antic u-boot version patched by the board vendor to use
-> > some non standard image format. Updating the boot loader is currently
-> > not an option because of the lack of documentation for the board/SoC.
-> 
-> MIPS and a few other arches already have built-in dtb support. We
-> don't need another way to do it, but I would welcome any clean-up that
-> makes it arch independent and available to any arch.
-> 
-> While Mark is right, I could envision other uses such as embedding
-> overlay dtbs in the kernel either for add-on boards or just as fixups.
+Hi Julien,
 
-I don't see how embedding a DTB in this manner helps with overlays and
-fixups.
+Am Freitag, 7. November 2014, 16:19:49 schrieb Julien CHAUVEAU:
+> On RK3066, add pinctrl nodes for SPDIF, LCDC1, CIF0/1, HDMI and USB.
+> On RK3188, add pinctrl nodes for SPDIF, LCDC1, CIF and GPS.
 
-I'm rather worried about this turning into a shoddy board file, and
-making it painful to build/distribute/boot a generic kernel for an
-arbitrary platform.
+Please don't bulk-add pinctrl settings nobody is using for the forseeable 
+future. There are currently no spdif, lcdc, cif and hdmi drivers for those 
+socs and things like the usb_vbus and sd_pwr pins are used as gpios through 
+regulators.
 
-On arm64 the kernel and DTB have always been separate, and I'm not keen
-on allowing the two to be tightly coupled in this way. There are already
-container formats (e.g. FIT) that can be used to hold both if that's
-what the bootloader desires.
+Pinctrl settings can be added in the same patch adding the device node, 
+_after_ a driver got accepted.
 
-Thanks,
-Mark.
+
+> At the same time, add some missing pinctrl for SDMMC0 and SDMMC1
+> and fix the unit addresses of GPIO0 and GPIO1 banks in rk3188.dtsi.
+
+I you're concatenating change descriptions by "and" or your "At the same 
+time", it's a good indicator that these should be two separate patches.
+The general rule is, one patch - one issue.
+
+
+So I'd suggest resending the address fix for the two gpios and leaving the pin 
+settings be till something really uses them,
+
+
+Heiko
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
