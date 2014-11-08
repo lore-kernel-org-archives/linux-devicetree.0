@@ -1,29 +1,35 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH 01/11] ARM: dts: omap3-igep00x0: Fix UART2 pins that
- aren't common.
-Date: Sat, 8 Nov 2014 21:32:49 +0100
-Message-ID: <CABxcv==J_uFRe-47GH9-6GS5PafwOnnkDhTALhHCxRjy4LKFtw@mail.gmail.com>
-References: <1415275311-6857-1-git-send-email-eballetbo@iseebcn.com>
-	<1415275311-6857-2-git-send-email-eballetbo@iseebcn.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1415275311-6857-2-git-send-email-eballetbo@iseebcn.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Enric Balletbo i Serra <eballetbo@iseebcn.com>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] devicetree: vendor-prefixes.txt: fix whitespace
+Date: Sun,  9 Nov 2014 00:16:08 +0300
+Message-ID: <1415481368-21258-1-git-send-email-antonynpavlov@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Enric,
+Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Thu, Nov 6, 2014 at 1:01 PM, Enric Balletbo i Serra
-<eballetbo@iseebcn.com> wrote:
-> UART2 is used to connect the processor with the bluetooth chip, these pins
-> are not common between IGEPv2 boards and IGEP COM MODULE boards. This patch
-> muxes the correct pins for every board and removes UART2 configuration from
-> common omap3-igep.dtsi file.
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 723999d..37c92be 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -138,7 +138,7 @@ silergy	Silergy Corp.
+ sirf	SiRF Technology, Inc.
+ sitronix	Sitronix Technology Corporation
+ smsc	Standard Microsystems Corporation
+-snps 	Synopsys, Inc.
++snps	Synopsys, Inc.
+ solidrun	SolidRun
+ sony	Sony Corporation
+ spansion	Spansion Inc.
+-- 
+2.1.1
 
-Acked-by: Javier Martinez Canillas <javier@dowhile0.org>
-
-Best regards,
-Javier
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
