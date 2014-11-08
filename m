@@ -1,51 +1,40 @@
-From: Darshana Padmadas <darshanapadmadas@gmail.com>
-Subject: [PATCH v5 1/4] dt-bindings: Document correct and deprecated
- vendor-prefix with device isl29028
-Date: Sat,  8 Nov 2014 22:52:05 +0530
-Message-ID: <1415467328-9745-2-git-send-email-darshanapadmadas@gmail.com>
+From: Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v5 2/4] dt-bindings: Document deprecated device vendor name to fix related warning
+Date: Sat,  8 Nov 2014 22:52:06 +0530
+Message-ID: <1415467328-9745-3-git-send-email-darshanapadmadas@gmail.com>
 References: <1415467328-9745-1-git-send-email-darshanapadmadas@gmail.com>
-Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1415467328-9745-1-git-send-email-darshanapadmadas@gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: devicetree@vger.kernel.org
-Cc: devel@driverdev.osuosl.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, opw-kernel@googlegroups.com, Darshana Padmadas <darshanapadmadas@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415467328-9745-1-git-send-email-darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, opw-kernel-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBkb2N1bWVudHMgdGhlIGRldmljZSBpc2wyOTAyOCB3aXRoIGl0cyB2ZW5kb3It
-cHJlZml4LiBVbmRvY3VtZW50ZWQgZGVwcmVjYXRlZCB2ZW5kb3ItcHJlZml4CmZvdW5kIGJ5IGNo
-ZWNrcGF0Y2ggYWxzbyBkb2N1bWVudGVkIGZvciBjb21wYXRpYmlsaXR5IHJlYXNvbnMuCgpTaWdu
-ZWQtb2ZmLWJ5OiBEYXJzaGFuYSBQYWRtYWRhcyA8ZGFyc2hhbmFwYWRtYWRhc0BnbWFpbC5jb20+
-CkFja2VkLWJ5OiBBcm5kIEJlcmdtYW5uIDxhcm5kQGFybmRiLmRlPgpBY2tlZC1ieTogTWFyayBS
-dXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT4KLS0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvaTJjL3RyaXZpYWwtZGV2aWNlcy50eHQgfCAyICsrCiAxIGZpbGUgY2hhbmdl
-ZCwgMiBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2kyYy90cml2aWFsLWRldmljZXMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2kyYy90cml2aWFsLWRldmljZXMudHh0CmluZGV4IDZhZjU3MGUuLjMyZWRm
-MGIgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvdHJp
-dmlhbC1kZXZpY2VzLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-aTJjL3RyaXZpYWwtZGV2aWNlcy50eHQKQEAgLTU3LDYgKzU3LDggQEAgZ210LGc3NTEJCUc3NTE6
-IERpZ2l0YWwgVGVtcGVyYXR1cmUgU2Vuc29yIGFuZCBUaGVybWFsIFdhdGNoZG9nIHdpdGggVHdv
-LVdpcmUgSW4KIGluZmluZW9uLHNsYjk2MzV0dAlJbmZpbmVvbiBTTEI5NjM1IChTb2Z0LSkgSTJD
-IFRQTSAob2xkIHByb3RvY29sLCBtYXggMTAwa2h6KQogaW5maW5lb24sc2xiOTY0NXR0CUluZmlu
-ZW9uIFNMQjk2NDUgSTJDIFRQTSAobmV3IHByb3RvY29sLCBtYXggNDAwa2h6KQogaXNsLGlzbDEy
-MDU3CQlJbnRlcnNpbCBJU0wxMjA1NyBJMkMgUlRDIENoaXAKK2lzaWwsaXNsMjkwMjggICAgICAg
-ICAgIChkZXByZWNhdGVkLCB1c2UgaXNsKQoraXNsLGlzbDI5MDI4ICAgICAgICAgICAgSW50ZXJz
-aWwgSVNMMjkwMjggQW1iaWVudCBMaWdodCBhbmQgUHJveGltaXR5IFNlbnNvcgogbWF4aW0sZHMx
-MDUwCQk1IEJpdCBQcm9ncmFtbWFibGUsIFB1bHNlLVdpZHRoIE1vZHVsYXRvcgogbWF4aW0sbWF4
-MTIzNwkJTG93LVBvd2VyLCA0LS8xMi1DaGFubmVsLCAyLVdpcmUgU2VyaWFsLCAxMi1CaXQgQURD
-cwogbWF4aW0sbWF4NjYyNQkJOS1CaXQvMTItQml0IFRlbXBlcmF0dXJlIFNlbnNvcnMgd2l0aCBJ
-wrJDLUNvbXBhdGlibGUgU2VyaWFsIEludGVyZmFjZQotLSAKMS45LjEKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmVsIG1haWxpbmcgbGlzdApkZXZl
-bEBsaW51eGRyaXZlcnByb2plY3Qub3JnCmh0dHA6Ly9kcml2ZXJkZXYubGludXhkcml2ZXJwcm9q
-ZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaXZlcmRldi1kZXZlbAo=
+This patch documents deprecated vendor name "isil" to fix warning of
+undocumented string for device isl29028 as reported while running checkpatch.pl
+on drivers/staging/iio/light/isl29028.c. This is done to maintain compatibility
+with older kernels.
+
+Signed-off-by: Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index ac7269f..ab97459 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -68,6 +68,7 @@ img	Imagination Technologies Ltd.
+ intel	Intel Corporation
+ intercontrol	Inter Control Group
+ isee	ISEE 2007 S.L.
++isil    Intersil (deprecated, use isl)
+ isl	Intersil
+ karo	Ka-Ro electronics GmbH
+ keymile	Keymile GmbH
+-- 
+1.9.1
