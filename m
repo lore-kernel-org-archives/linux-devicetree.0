@@ -1,37 +1,52 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: [PATCH 06/10] of: v4l: Document link-frequency property in video-interfaces.txt
-Date: Sun,  9 Nov 2014 01:09:27 +0200
-Message-ID: <1415488171-27636-7-git-send-email-sakari.ailus@iki.fi>
-References: <1415488171-27636-1-git-send-email-sakari.ailus@iki.fi>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1415488171-27636-1-git-send-email-sakari.ailus@iki.fi>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: Sakari Ailus <sakari.ailus@iki.fi>, devicetree@vger.kernel.org
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [GIT PULL] Devicetree bug fix for v3.18
+Date: Sat, 8 Nov 2014 23:22:55 +0000
+Message-ID: <CACxGe6sskK4wFXwx=b0B9QyCP602h6vC4EZU-iEBuN0YE9bB2A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-link-frequency is a 64-bit unsigned integer array of allowed link
-frequencies.
+[resending; forgot to cc the mailing lists]
 
-Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: devicetree@vger.kernel.org
----
- Documentation/devicetree/bindings/media/video-interfaces.txt |    3 +++
- 1 file changed, 3 insertions(+)
+Hi Linus.
 
-diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-index ce719f8..7d8f07f 100644
---- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-+++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-@@ -103,6 +103,9 @@ Optional endpoint properties
-   array contains only one entry.
- - clock-noncontinuous: a boolean property to allow MIPI CSI-2 non-continuous
-   clock mode.
-+- link-frequency: Allowed data bus frequencies. For MIPI CSI-2, for
-+  instance, this is the actual frequency of the bus, not bits per clock per
-+  lane value. An array of 64-bit unsigned integers.
- 
- 
- Example
--- 
-1.7.10.4
+Please pull the following branch for a device tree bug fix.
+
+Thanks,
+g.
+
+The following changes since commit 0df1f2487d2f0d04703f142813d53615d62a1da4:
+
+  Linux 3.18-rc3 (2014-11-02 15:01:51 -0800)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/glikely/linux devicetree/merge
+
+for you to fetch changes up to a87fa1d81a9fb5e9adca9820e16008c40ad09f33:
+
+  of: Fix overflow bug in string property parsing functions
+(2014-11-04 10:19:48 +0000)
+
+----------------------------------------------------------------
+Devicetree bugfix for v3.18
+
+One buffer overflow bug that shouldn't be left around.
+
+----------------------------------------------------------------
+Grant Likely (1):
+      of: Fix overflow bug in string property parsing functions
+
+ drivers/of/base.c                           | 88 ++++++++---------------------
+ drivers/of/selftest.c                       | 66 ++++++++++++++++++++--
+ drivers/of/testcase-data/tests-phandle.dtsi |  2 +
+ include/linux/of.h                          | 84 ++++++++++++++++++++++-----
+ 4 files changed, 154 insertions(+), 86 deletions(-)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
