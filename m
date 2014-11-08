@@ -1,40 +1,52 @@
-From: Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v5 2/4] dt-bindings: Document deprecated device vendor name to fix related warning
-Date: Sat,  8 Nov 2014 22:52:06 +0530
-Message-ID: <1415467328-9745-3-git-send-email-darshanapadmadas@gmail.com>
+From: Darshana Padmadas <darshanapadmadas@gmail.com>
+Subject: [PATCH v5 3/4] Staging: iio: light: Added correct vendor-prefix for
+ device isl29028
+Date: Sat,  8 Nov 2014 22:52:07 +0530
+Message-ID: <1415467328-9745-4-git-send-email-darshanapadmadas@gmail.com>
 References: <1415467328-9745-1-git-send-email-darshanapadmadas@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415467328-9745-1-git-send-email-darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, opw-kernel-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1415467328-9745-1-git-send-email-darshanapadmadas@gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: devicetree@vger.kernel.org
+Cc: devel@driverdev.osuosl.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, opw-kernel@googlegroups.com, Darshana Padmadas <darshanapadmadas@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch documents deprecated vendor name "isil" to fix warning of
-undocumented string for device isl29028 as reported while running checkpatch.pl
-on drivers/staging/iio/light/isl29028.c. This is done to maintain compatibility
-with older kernels.
+This patch adds the correct vendor-prefix for device isl29028 and
+maintains deprecated vendor-prefix found by checkpatch warning
+for older kernel releases.
 
-Signed-off-by: Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Signed-off-by: Darshana Padmadas <darshanapadmadas@gmail.com>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Acked-by: Jonathan Cameron <jic23@kernel.org>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/staging/iio/light/isl29028.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index ac7269f..ab97459 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -68,6 +68,7 @@ img	Imagination Technologies Ltd.
- intel	Intel Corporation
- intercontrol	Inter Control Group
- isee	ISEE 2007 S.L.
-+isil    Intersil (deprecated, use isl)
- isl	Intersil
- karo	Ka-Ro electronics GmbH
- keymile	Keymile GmbH
+diff --git a/drivers/staging/iio/light/isl29028.c b/drivers/staging/iio/light/isl29028.c
+index 6014625..e969107 100644
+--- a/drivers/staging/iio/light/isl29028.c
++++ b/drivers/staging/iio/light/isl29028.c
+@@ -537,7 +537,8 @@ static const struct i2c_device_id isl29028_id[] = {
+ MODULE_DEVICE_TABLE(i2c, isl29028_id);
+ 
+ static const struct of_device_id isl29028_of_match[] = {
+-	{ .compatible = "isil,isl29028", },
++	{ .compatible = "isl,isl29028", },
++	{ .compatible = "isil,isl29028", },/* deprecated, don't use */
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, isl29028_of_match);
 -- 
 1.9.1
