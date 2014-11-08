@@ -1,140 +1,105 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH v17 1/5] thermal: rockchip: add driver for thermal
-Date: Fri, 7 Nov 2014 19:39:58 -0400
-Message-ID: <20141107233956.GA27665@developer>
-References: <1414809873-32227-1-git-send-email-caesar.wang@rock-chips.com>
- <1414809873-32227-2-git-send-email-caesar.wang@rock-chips.com>
- <20141107013017.GA10180@developer>
- <20141107015728.GF34214@dtor-ws>
+From: Gilad Avidov <gavidov@codeaurora.org>
+Subject: Re: [PATCH] mfd: qcom-spmi-pmic: Add support for more chips versions
+Date: Fri, 07 Nov 2014 17:08:10 -0700
+Message-ID: <545D5EEA.8020800@codeaurora.org>
+References: <1415108003-16387-1-git-send-email-iivanov@mm-sol.com>	 <CAJAp7OgU64=KCuDhYEZTYppVeBz6wKvTDsof5vDRznfdZgAfZw@mail.gmail.com>	 <1415212271.14949.1.camel@mm-sol.com>	 <CAJAp7OgXHGWQj7MWh51LTUdmZpgZc=6m=o-Az=z8QxR7yfrw7g@mail.gmail.com> <1415260480.13103.3.camel@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="XsQoSWH+UP9D9v3l"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141107015728.GF34214@dtor-ws>
-Sender: linux-pm-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Caesar Wang <caesar.wang@rock-chips.com>, heiko@sntech.de, rui.zhang@intel.com, zyf@rock-chips.com, dianders@chromium.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, cf@rock-chips.com, dbasehore@chromium.org, huangtao@rock-chips.com, cjf@rock-chips.com, zhengsq@rock-chips.com, fzf@rock-chips.com
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1415260480.13103.3.camel@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Bjorn Andersson <bjorn@kryo.se>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 11/6/2014 12:54 AM, Ivan T. Ivanov wrote:
+> On Wed, 2014-11-05 at 17:36 -0800, Bjorn Andersson wrote:
+>> On Wed, Nov 5, 2014 at 10:31 AM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
+>>> On Wed, 2014-11-05 at 10:11 -0800, Bjorn Andersson wrote:
+>>>> On Tue, Nov 4, 2014 at 5:33 AM, Ivan T. Ivanov <iivanov@mm-sol.com>
+>>>> wrote:
+>>>> [..]
+>>>>> @@ -28,11 +144,27 @@ static int pmic_spmi_probe(struct spmi_device
+>>>>> *sdev)
+>>>>>   {
+>>>>>          struct device_node *root = sdev->dev.of_node;
+>>>>>          struct regmap *regmap;
+>>>>> +       struct property *prop;
+>>>>> +       int major, minor, ret;
+>>>>> +       char *name, compatible[32];
+>>>>>
+>>>>>          regmap = devm_regmap_init_spmi_ext(sdev,
+>>>>> &spmi_regmap_config);
+Hi Ivan, I have a general question about this driver/layer.
+Since the driver is using regmap, why does it need to be 
+qcom-*spmi*-pmic ? could we drop the spmi part?
+regmap's point is abstraction of  the bus technology, and indeed some 
+PMICs use i2c.
 
---XsQoSWH+UP9D9v3l
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>>>>>          if (IS_ERR(regmap))
+>>>>>                  return PTR_ERR(regmap);
+>>>>>
+>>>>> +       ret = pmic_spmi_read_revid(regmap, &name, &major, &minor);
+>>>>> +       if (!ret) {
+>>>>> +               snprintf(compatible, ARRAY_SIZE(compatible),
+>>>>> "qcom,%s-v%d.%d",
+>>>>> +                        name, major, minor);
+>>>>> +               prop = kzalloc(sizeof(*prop), GFP_KERNEL);
+>>>>> +               if (prop) {
+>>>>> +                       prop->name = kstrdup("compatible",
+>>>>> GFP_KERNEL);
+>>>>> +                       prop->value = kstrdup(compatible,
+>>>>> GFP_KERNEL);
+>>>>> +                       prop->length = strlen(prop->value);
+>>>>> +                       of_update_property(root, prop);
+>>>>> +               }
+>>>>> +       }
+>>>>> +
+>>>> Why would you do this?
+>>>> What benefit does it give to patch the of_node to have a more
+>>>> specific
+>>>> compatible?
+>>> Some of the child device drivers have to know PMIC chip revision.
+>>>
+>> So your plan is to have a strstr(parent->compatible, "-v2") there?
+> Actually also PMIC subtype (pm8841, pm8226...) is also required, so
+> the plan is to have something like this:
+>
+> {
+>          static const struct of_device_id pmic_match_table[] = {
+>                  { .compatible = "qcom,pm8941-v1.0" },
+>                  { .compatible = "qcom,pm8841-v0.0" },
+>                  { }
+>
+>          };
+>
+>          const struct of_device_id *match;
+>
+>          match = of_match_device(pmic_match_table, pdev->dev.parent);
+>          if (match) {
+>                  dev_info(&pdev->dev, "%s chip detected\n", match->compatible);
+>          }
+> }
+>
+>> Could you be a little bit more elaborate on what you're trying to do
+>> and which child devices that might be?
+> For example ADC drivers are required temperature compensation based
+> on PMIC variant and chip manufacturer.
+>
+> This patch have one issue, at least :-). Using of_update_property will prevent
+> driver to be build as module. which, I think, is coming from the fact the
+> on first load it will modify device compatible property and will be impossible
+> driver to match device id again. Still thinking how to overcome this.
+>
+> Regards,
+> Ivan
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-Hello Dmitry,
 
-On Thu, Nov 06, 2014 at 05:57:28PM -0800, Dmitry Torokhov wrote:
-> Hi Eduardo,
->=20
-> On Thu, Nov 06, 2014 at 09:30:20PM -0400, Eduardo Valentin wrote:
-> > Hello Caesar,
-> >=20
-> > On Sat, Nov 01, 2014 at 10:44:29AM +0800, Caesar Wang wrote:
-> > > Thermal is TS-ADC Controller module supports
-> > > user-defined mode and automatic mode.
-> > >=20
-> > > User-defined mode refers,TSADC all the control signals entirely by
-> > > software writing to register for direct control.
-> > >=20
-> > > Automaic mode refers to the module automatically poll TSADC output,
-> > > and the results were checked.If you find that the temperature High
-> > > in a period of time,an interrupt is generated to the processor
-> > > down-measures taken;If the temperature over a period of time High,
-> > > the resulting TSHUT gave CRU module,let it reset the entire chip,
-> > > or via GPIO give PMIC.
-> > >=20
-> >=20
-> > First thing, very good progress in this driver!=20
-> >=20
-> > > Signed-off-by: zhaoyifeng <zyf@rock-chips.com>
-> > > Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
-> > > Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> >=20
-> > Just for the sake of code / documentation history, this patch, which
-> > adds the driver, should come after patch 2, which adds dt documentation.
-> >=20
-> > > ---
-> > >  drivers/thermal/Kconfig            |   9 +
-> > >  drivers/thermal/Makefile           |   1 +
-> > >  drivers/thermal/rockchip_thermal.c | 711 +++++++++++++++++++++++++++=
-++++++++++
-> > >  3 files changed, 721 insertions(+)
-> > >  create mode 100644 drivers/thermal/rockchip_thermal.c
-> >=20
-> > <big cut>
-> >=20
-> > > +static int
-> > > +rockchip_thermal_register_sensor(struct platform_device *pdev,
-> > > +				 struct rockchip_thermal_data *thermal,
-> > > +				 struct rockchip_thermal_sensor *sensor,
-> > > +				 enum sensor_id id)
-> > > +{
-> > > +	const struct rockchip_tsadc_chip *tsadc =3D thermal->chip;
-> > > +	int error;
-> > > +
-> > > +	tsadc->set_tshut_mode(id, thermal->regs, thermal->tshut_mode);
-> > > +	tsadc->set_tshut_temp(id, thermal->regs, thermal->tshut_temp);
-> > > +
-> > > +	sensor->thermal =3D thermal;
-> > > +	sensor->id =3D id;
-> > > +	sensor->tzd =3D thermal_zone_of_sensor_register(&pdev->dev, id, sen=
-sor,
-> > > +						rockchip_thermal_get_temp,
-> > > +						NULL,
-> > > +						rockchip_thermal_set_trips);
-> >=20
-> > So, did I miss something here? Looks like you have extended the of
-> > thermal, and I haven't seen the patch.
-> >   CC [M]  drivers/thermal/rockchip_thermal.o
-> >   drivers/thermal/rockchip_thermal.c: In function
-> >   `rockchip_thermal_register_sensor':
-> >   drivers/thermal/rockchip_thermal.c:482:7: error: too many arguments to
-> >   function `thermal_zone_of_sensor_register'
-> >          rockchip_thermal_set_trips);
->=20
-> Yes, it relies on patch by Mikko Perttunen adding support for
-> hardware-supported trip points. It allows us to reduce polling frequency
-> while still being able to react when we cross the tripping point.
->=20
-> See https://lkml.org/lkml/2014/6/27/76
->=20
-
-Yeah, that thread needs to be re-taken. Today I merged nvidia's driver,
-but only a simpler version of it. I expect that they take the missing
-parts through after updating / refreshing the patches.
-
-And on that front, as I requested, there must be also equivalent mapping
-in the thermal core, to avoid spreading / growing of-thermal as a
-secondary thermal API.
-
-One thing for sure that must be done is a little refactoring in the
-of-thermal registration functions. I had a similar discussion about this
-with Lukasz, who is also interested in improving the of-thermal
-callbacks.
-
-Cheers,
-
-> Thanks.
->=20
-> --=20
-> Dmitry
-
---XsQoSWH+UP9D9v3l
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUXVhBAAoJEMLUO4d9pOJWRvsH/36hPhZiMhL7T98JOCZckL4B
-svYwwczBS9ka+q3PihKLdI8Sez7KkiEpse5HyrQEUXdDxDAnBmiQOiIxL9sjWRin
-pDzZrfEXYclPW5NBz4HyJ3Z3kS4IlSdZthsVmCTL7YfUHrbgHey5c8I97TlBeua5
-yupt0sYiZQrFJgEImxXz4tQV3sH9R7rbBIQeNhuYYz3FJX3XG3dSrNCJPwOUG4hg
-a4NMcTicRVkPKCeGP/x0eb+bUXvLw+Y+Ezx1XaJRmkNK+xBK70BFtxcUJ9HgqSi0
-vfi43FwXaP+zCWeA1UsMzaIUvDEcfnZfvUL1y2JANcm6UUzkAkd/qia7wwCmgK8=
-=238s
------END PGP SIGNATURE-----
-
---XsQoSWH+UP9D9v3l--
+-- 
+Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
