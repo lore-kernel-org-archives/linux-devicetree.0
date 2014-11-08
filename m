@@ -1,11 +1,11 @@
 From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] devicetree: vendor-prefixes.txt: fix whitespace
-Date: Sun,  9 Nov 2014 00:16:08 +0300
-Message-ID: <1415481368-21258-1-git-send-email-antonynpavlov@gmail.com>
+Subject: [PATCH RESEND] devicetree: vendor-prefixes.txt: fix whitespace
+Date: Sun,  9 Nov 2014 01:37:34 +0300
+Message-ID: <1415486254-21499-1-git-send-email-antonynpavlov@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
