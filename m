@@ -1,199 +1,509 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/5] input: touchscreen: ti_am335x_tsc Interchange touchscreen
- and ADC steps
-Date: Sat, 08 Nov 2014 12:29:44 +0000
-Message-ID: <545E0CB8.7090906@kernel.org>
-References: <1415339350-17679-1-git-send-email-vigneshr@ti.com> <1415339350-17679-2-git-send-email-vigneshr@ti.com>
+Subject: Re: [PATCH v2 1/3] iio: adc: Cosmic Circuits 10001 ADC driver
+Date: Sat, 08 Nov 2014 12:55:54 +0000
+Message-ID: <545E12DA.2040107@kernel.org>
+References: <1415224611-22096-1-git-send-email-ezequiel.garcia@imgtec.com> <1415224611-22096-2-git-send-email-ezequiel.garcia@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415339350-17679-2-git-send-email-vigneshr-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1415224611-22096-2-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Brad Griffis <bgriffis-l0cyMroinI0@public.gmane.org>, Sanjeev Sharma <sanjeev_sharma-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Jan Kardell <jan.kardell-KSZdJiTw9mzQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Phani Movva <phani.movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/11/14 05:49, Vignesh R wrote:
-> From: Brad Griffis <bgriffis-l0cyMroinI0@public.gmane.org>
->=20
-> This patch makes the initial changes required to workaround TSC-false
-> pen-up interrupts. It is required to implement these changes in order=
- to
-> remove udelay in the TSC interrupt handler and false pen-up events.
-> The charge step is to be executed immediately after sampling X+. Henc=
-e
-> TSC is made to use higher numbered steps (steps 5 to 16 for 5 co-ordi=
-nate
-> readouts, 4 wire TSC configuration) and ADC to use lower ones. Furthe=
-r
-> X co-ordinate readouts must be the last to be sampled, thus co-ordina=
-tes
-> are sampled in the order Y-Z-X.
->=20
-> Signed-off-by: Brad Griffis <bgriffis-l0cyMroinI0@public.gmane.org>
-> [vigneshr-l0cyMroinI0@public.gmane.org: Ported the patch from v3.12 to v3.18rc2]
->=20
-> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-=46or the tiny bit in IIO
-Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-All yours Lee/Dmitry.
+On 05/11/14 21:56, Ezequiel Garcia wrote:
+> From: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> 
+> This commit adds support for Cosmic Circuits 10001 10-bit ADC device.
+> 
+> Signed-off-by: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> [Ezequiel: code style cleaning]
+> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Looks good to me.  Some utter nitpicks.  I'd have let them go
+but would like this to sit on the list to give others time for
+a second review.
 
 Jonathan
 > ---
->  drivers/iio/adc/ti_am335x_adc.c           |  5 ++--
->  drivers/input/touchscreen/ti_am335x_tsc.c | 42 ++++++++++++++++++---=
-----------
->  2 files changed, 26 insertions(+), 21 deletions(-)
->=20
-> diff --git a/drivers/iio/adc/ti_am335x_adc.c b/drivers/iio/adc/ti_am3=
-35x_adc.c
-> index b730864731e8..adba23246474 100644
-> --- a/drivers/iio/adc/ti_am335x_adc.c
-> +++ b/drivers/iio/adc/ti_am335x_adc.c
-> @@ -86,19 +86,18 @@ static void tiadc_step_config(struct iio_dev *ind=
-io_dev)
->  {
->  	struct tiadc_device *adc_dev =3D iio_priv(indio_dev);
->  	unsigned int stepconfig;
-> -	int i, steps;
-> +	int i, steps =3D 0;
-> =20
->  	/*
->  	 * There are 16 configurable steps and 8 analog input
->  	 * lines available which are shared between Touchscreen and ADC.
->  	 *
-> -	 * Steps backwards i.e. from 16 towards 0 are used by ADC
-> +	 * Steps forwards i.e. from 0 towards 16 are used by ADC
->  	 * depending on number of input lines needed.
->  	 * Channel would represent which analog input
->  	 * needs to be given to ADC to digitalize data.
->  	 */
-> =20
-> -	steps =3D TOTAL_STEPS - adc_dev->channels;
->  	if (iio_buffer_enabled(indio_dev))
->  		stepconfig =3D STEPCONFIG_AVG_16 | STEPCONFIG_FIFO1
->  					| STEPCONFIG_MODE_SWCNT;
-> diff --git a/drivers/input/touchscreen/ti_am335x_tsc.c b/drivers/inpu=
-t/touchscreen/ti_am335x_tsc.c
-> index 2ce649520fe0..1aeac9675fe7 100644
-> --- a/drivers/input/touchscreen/ti_am335x_tsc.c
-> +++ b/drivers/input/touchscreen/ti_am335x_tsc.c
-> @@ -121,7 +121,7 @@ static void titsc_step_config(struct titsc *ts_de=
-v)
->  {
->  	unsigned int	config;
->  	int i;
-> -	int end_step;
-> +	int end_step, first_step, tsc_steps;
->  	u32 stepenable;
-> =20
->  	config =3D STEPCONFIG_MODE_HWSYNC |
-> @@ -140,9 +140,11 @@ static void titsc_step_config(struct titsc *ts_d=
-ev)
->  		break;
->  	}
-> =20
-> -	/* 1 =E2=80=A6 coordinate_readouts is for X */
-> -	end_step =3D ts_dev->coordinate_readouts;
-> -	for (i =3D 0; i < end_step; i++) {
-> +	tsc_steps =3D ts_dev->coordinate_readouts * 2 + 2;
-> +	first_step =3D TOTAL_STEPS - tsc_steps;
-> +	/* Steps 16 to 16-coordinate_readouts is for X */
-> +	end_step =3D first_step + tsc_steps;
-> +	for (i =3D end_step - ts_dev->coordinate_readouts; i < end_step; i+=
-+) {
->  		titsc_writel(ts_dev, REG_STEPCONFIG(i), config);
->  		titsc_writel(ts_dev, REG_STEPDELAY(i), STEPCONFIG_OPENDLY);
->  	}
-> @@ -164,9 +166,9 @@ static void titsc_step_config(struct titsc *ts_de=
-v)
->  		break;
->  	}
-> =20
-> -	/* coordinate_readouts =E2=80=A6 coordinate_readouts * 2 is for Y *=
-/
-> -	end_step =3D ts_dev->coordinate_readouts * 2;
-> -	for (i =3D ts_dev->coordinate_readouts; i < end_step; i++) {
-> +	/* 1 ... coordinate_readouts is for Y */
-> +	end_step =3D first_step + ts_dev->coordinate_readouts;
-> +	for (i =3D first_step; i < end_step; i++) {
->  		titsc_writel(ts_dev, REG_STEPCONFIG(i), config);
->  		titsc_writel(ts_dev, REG_STEPDELAY(i), STEPCONFIG_OPENDLY);
->  	}
-> @@ -179,7 +181,7 @@ static void titsc_step_config(struct titsc *ts_de=
-v)
->  	titsc_writel(ts_dev, REG_CHARGECONFIG, config);
->  	titsc_writel(ts_dev, REG_CHARGEDELAY, CHARGEDLY_OPENDLY);
-> =20
-> -	/* coordinate_readouts * 2 =E2=80=A6 coordinate_readouts * 2 + 2 is=
- for Z */
-> +	/* coordinate_readouts + 1 ... coordinate_readouts + 2 is for Z */
->  	config =3D STEPCONFIG_MODE_HWSYNC |
->  			STEPCONFIG_AVG_16 | ts_dev->bit_yp |
->  			ts_dev->bit_xn | STEPCONFIG_INM_ADCREFM |
-> @@ -194,8 +196,11 @@ static void titsc_step_config(struct titsc *ts_d=
-ev)
->  	titsc_writel(ts_dev, REG_STEPDELAY(end_step),
->  			STEPCONFIG_OPENDLY);
-> =20
-> -	/* The steps1 =E2=80=A6 end and bit 0 for TS_Charge */
-> -	stepenable =3D (1 << (end_step + 2)) - 1;
-> +	/* The steps end ... end - readouts * 2 + 2 and bit 0 for TS_Charge=
- */
-> +	stepenable =3D 1;
-> +	for (i =3D 0; i < tsc_steps; i++)
-> +		stepenable |=3D 1 << (first_step + i + 1);
+>  drivers/iio/adc/Kconfig        |  10 +
+>  drivers/iio/adc/Makefile       |   1 +
+>  drivers/iio/adc/cc_10001_adc.c | 425 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 436 insertions(+)
+>  create mode 100644 drivers/iio/adc/cc_10001_adc.c
+> 
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 88bdc8f..b1f3ecc 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -127,6 +127,16 @@ config AT91_ADC
+>  	help
+>  	  Say yes here to build support for Atmel AT91 ADC.
+>  
+> +config CC_10001_ADC
+hmm. how fixed are you on th CC_ it is 'unusual' compared to normal
+part naming in kernel.  However, I understand if you have
+existing code out there using this convention and don't care that
+much!
+> +	tristate "Cosmic Circuits 10001 ADC driver"
+> +	select IIO_BUFFER
+> +	select IIO_TRIGGERED_BUFFER
+> +	help
+> +	  Say yes here to build support for Cosmic Circuits 10001 ADC.
 > +
->  	ts_dev->step_mask =3D stepenable;
->  	am335x_tsc_se_set_cache(ts_dev->mfd_tscadc, ts_dev->step_mask);
->  }
-> @@ -209,6 +214,7 @@ static void titsc_read_coordinates(struct titsc *=
-ts_dev,
->  	unsigned int read, diff;
->  	unsigned int i, channel;
->  	unsigned int creads =3D ts_dev->coordinate_readouts;
-> +	unsigned int first_step =3D TOTAL_STEPS - (creads * 2 + 2);
-> =20
->  	*z1 =3D *z2 =3D 0;
->  	if (fifocount % (creads * 2 + 2))
-> @@ -226,7 +232,7 @@ static void titsc_read_coordinates(struct titsc *=
-ts_dev,
-> =20
->  		channel =3D (read & 0xf0000) >> 16;
->  		read &=3D 0xfff;
-> -		if (channel < creads) {
-> +		if (channel > first_step + creads + 2) {
->  			diff =3D abs(read - prev_val_x);
->  			if (diff < prev_diff_x) {
->  				prev_diff_x =3D diff;
-> @@ -234,19 +240,19 @@ static void titsc_read_coordinates(struct titsc=
- *ts_dev,
->  			}
->  			prev_val_x =3D read;
-> =20
-> -		} else if (channel < creads * 2) {
-> +		} else if (channel =3D=3D first_step + creads + 1) {
-> +			*z1 =3D read;
+> +	  This driver can also be built as a module. If so, the module will be
+> +	  called cc_10001_adc.
 > +
-> +		} else if (channel =3D=3D first_step + creads + 2) {
-> +			*z2 =3D read;
+>  config EXYNOS_ADC
+>  	tristate "Exynos ADC driver support"
+>  	depends on ARCH_EXYNOS || ARCH_S3C24XX || ARCH_S3C64XX || (OF && COMPILE_TEST)
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index cb88a6a..f4d522d 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -14,6 +14,7 @@ obj-$(CONFIG_AD7793) += ad7793.o
+>  obj-$(CONFIG_AD7887) += ad7887.o
+>  obj-$(CONFIG_AD799X) += ad799x.o
+>  obj-$(CONFIG_AT91_ADC) += at91_adc.o
+> +obj-$(CONFIG_CC_10001_ADC) += cc_10001_adc.o
+>  obj-$(CONFIG_EXYNOS_ADC) += exynos_adc.o
+>  obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
+>  obj-$(CONFIG_MAX1027) += max1027.o
+> diff --git a/drivers/iio/adc/cc_10001_adc.c b/drivers/iio/adc/cc_10001_adc.c
+> new file mode 100644
+> index 0000000..1720a62
+> --- /dev/null
+> +++ b/drivers/iio/adc/cc_10001_adc.c
+> @@ -0,0 +1,425 @@
+> +/*
+> + * Copyright (c) 2014 Imagination Technologies Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License version 2 as published by
+> + * the Free Software Foundation.
+> + *
+> + */
 > +
-> +		} else if (channel > first_step) {
->  			diff =3D abs(read - prev_val_y);
->  			if (diff < prev_diff_y) {
->  				prev_diff_y =3D diff;
->  				*y =3D read;
->  			}
->  			prev_val_y =3D read;
-> -
-> -		} else if (channel < creads * 2 + 1) {
-> -			*z1 =3D read;
-> -
-> -		} else if (channel < creads * 2 + 2) {
-> -			*z2 =3D read;
->  		}
->  	}
->  }
->=20
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/slab.h>
+> +
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/iio/trigger.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/iio/triggered_buffer.h>
+> +
+> +/* Registers */
+> +#define CC10001_ADC_CONFIG		0x00
+> +#define CC10001_ADC_START_CONV		BIT(4)
+> +#define CC10001_ADC_MODE_SINGLE_CONV	BIT(5)
+> +
+> +#define CC10001_ADC_DDATA_OUT		0x04
+> +#define CC10001_ADC_EOC			0x08
+> +#define CC10001_ADC_EOC_SET		BIT(0)
+> +
+> +#define CC10001_ADC_CHSEL_SAMPLED	0x0c
+> +#define CC10001_ADC_POWER_UP		0x10
+> +#define CC10001_ADC_POWER_UP_SET	BIT(0)
+> +#define CC10001_ADC_DEBUG		0x14
+> +#define CC10001_ADC_DATA_COUNT		0x20
+> +
+> +#define CC10001_ADC_DATA_MASK		GENMASK(9, 0)
+> +#define CC10001_ADC_NUM_CHANNELS	8
+> +#define CC10001_ADC_CH_MASK		(CC10001_ADC_NUM_CHANNELS - 1)
+> +
+> +#define CC10001_INVALID_SAMPLED_OUTPUT	0xFFFF
+> +#define CC10001_MAX_POLL_COUNT		20
+> +
+> +/*
+> + * As per device specification, wait six clock cycles after power-up to
+> + * activate START. Since adding two more clock cycles delay does not
+> + * impact the performance too much, we are adding two additional cycles delay
+> + * intentionally here.
+> + */
+> +#define	CC10001_WAIT_CYCLES		8
+> +
+> +struct cc10001_adc_device {
+> +	void __iomem *reg_base;
+> +	struct iio_dev *indio_dev;
+> +	struct clk *adc_clk;
+> +	struct regulator *reg;
+> +	u16 *buf;
+> +
+> +	struct mutex lock;
+> +	unsigned long channel_map;
+> +	unsigned int start_delay_ns;
+> +	unsigned int eoc_delay_ns;
+> +};
+> +
+> +static inline void cc_adc_write_reg(struct cc10001_adc_device *adc_dev,
+> +				    u32 reg, u32 val)
+> +{
+> +	writel(val, adc_dev->reg_base + reg);
+> +}
+> +
+> +static inline u32 cc_adc_read_reg(struct cc10001_adc_device *adc_dev,
+> +				  u32 reg)
+> +{
+> +	return readl(adc_dev->reg_base + reg);
+> +}
+> +
+> +static void cc_adc_start(struct cc10001_adc_device *adc_dev,
+> +			 unsigned int channel)
+> +{
+> +	u32 val;
+> +
+> +	/* Channel selection and mode of operation */
+> +	val = (channel & CC10001_ADC_CH_MASK) | CC10001_ADC_MODE_SINGLE_CONV;
+> +	cc_adc_write_reg(adc_dev, CC10001_ADC_CONFIG, val);
+> +
+> +	val = cc_adc_read_reg(adc_dev, CC10001_ADC_CONFIG);
+> +	val = val | CC10001_ADC_START_CONV;
+> +	cc_adc_write_reg(adc_dev, CC10001_ADC_CONFIG, val);
+> +}
+> +
+cc10001_adc_poll etc.  Consistency is good with funciton prefixing...
+
+> +static u16 cc_adc_poll_done(struct iio_dev *indio_dev, unsigned int channel,
+> +			    unsigned int delay)
+> +{
+> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
+> +	unsigned int poll_count = 0;
+> +
+> +	while (!(cc_adc_read_reg(adc_dev, CC10001_ADC_EOC) &
+> +			CC10001_ADC_EOC_SET)) {
+> +
+> +		ndelay(delay);
+> +		if (poll_count++ == CC10001_MAX_POLL_COUNT)
+> +			return CC10001_INVALID_SAMPLED_OUTPUT;
+> +	}
+> +
+> +	poll_count = 0;
+> +	while ((cc_adc_read_reg(adc_dev, CC10001_ADC_CHSEL_SAMPLED) &
+> +			CC10001_ADC_CH_MASK) != channel) {
+> +
+> +		ndelay(delay);
+> +		if (poll_count++ == CC10001_MAX_POLL_COUNT)
+> +			return CC10001_INVALID_SAMPLED_OUTPUT;
+> +	}
+> +
+> +	/* Read the 10 bit output register */
+> +	return cc_adc_read_reg(adc_dev, CC10001_ADC_DDATA_OUT) &
+> +			       CC10001_ADC_DATA_MASK;
+> +}
+> +
+> +static irqreturn_t cc10001_adc_trigger_h(int irq, void *p)
+> +{
+> +	struct cc10001_adc_device *adc_dev;
+> +	struct iio_poll_func *pf = p;
+> +	struct iio_dev *indio_dev;
+> +	unsigned int delay_ns;
+> +	unsigned int channel;
+> +	bool sample_invalid;
+> +	u16 *data;
+> +	int i;
+> +
+> +	indio_dev = pf->indio_dev;
+> +	adc_dev = iio_priv(indio_dev);
+> +	data = adc_dev->buf;
+> +
+> +	mutex_lock(&adc_dev->lock);
+> +
+> +	cc_adc_write_reg(adc_dev, CC10001_ADC_POWER_UP,
+> +			 CC10001_ADC_POWER_UP_SET);
+> +
+> +	/* Wait for 8 (6+2) clock cycles before activating START */
+> +	ndelay(adc_dev->start_delay_ns);
+> +
+> +	/* Calculate delay step for eoc and sampled data */
+> +	delay_ns = adc_dev->eoc_delay_ns / CC10001_MAX_POLL_COUNT;
+> +
+> +	i = 0;
+> +	sample_invalid = false;
+> +	for_each_set_bit(channel, indio_dev->active_scan_mask,
+> +				  indio_dev->masklength) {
+> +
+> +		cc_adc_start(adc_dev, channel);
+> +
+> +		data[i] = cc_adc_poll_done(indio_dev, channel, delay_ns);
+> +		if (data[i] == CC10001_INVALID_SAMPLED_OUTPUT) {
+> +			dev_warn(&indio_dev->dev,
+> +				 "invalid sample on channel %d\n", channel);
+> +			sample_invalid = true;
+> +			goto done;
+> +		}
+> +		i++;
+> +	}
+> +
+> +done:
+> +	cc_adc_write_reg(adc_dev, CC10001_ADC_POWER_UP, 0);
+> +
+> +	mutex_unlock(&adc_dev->lock);
+> +
+> +	if (!sample_invalid)
+> +		iio_push_to_buffers_with_timestamp(indio_dev, data,
+> +						   iio_get_time_ns());
+> +	iio_trigger_notify_done(indio_dev->trig);
+blank line here.
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static u16 cc10001_adc_read_raw_voltage(struct iio_dev *indio_dev,
+> +					 struct iio_chan_spec const *chan)
+> +{
+> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
+> +	unsigned int delay_ns;
+> +	u16 val;
+> +
+> +	cc_adc_write_reg(adc_dev, CC10001_ADC_POWER_UP,
+> +			 CC10001_ADC_POWER_UP_SET);
+> +
+> +	/* Wait for 8 (6+2) clock cycles before activating START */
+> +	ndelay(adc_dev->start_delay_ns);
+> +
+> +	/* Calculate delay step for eoc and sampled data */
+> +	delay_ns = adc_dev->eoc_delay_ns / CC10001_MAX_POLL_COUNT;
+> +
+> +	cc_adc_start(adc_dev, chan->channel);
+> +
+> +	val = cc_adc_poll_done(indio_dev, chan->channel, delay_ns);
+> +
+> +	cc_adc_write_reg(adc_dev, CC10001_ADC_POWER_UP, 0);
+> +
+> +	return val;
+> +}
+> +
+> +static int cc10001_adc_read_raw(struct iio_dev *indio_dev,
+> +				 struct iio_chan_spec const *chan,
+> +				 int *val, int *val2, long mask)
+> +{
+> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		if (iio_buffer_enabled(indio_dev))
+> +			return -EBUSY;
+> +		mutex_lock(&adc_dev->lock);
+> +		*val = cc10001_adc_read_raw_voltage(indio_dev, chan);
+> +		mutex_unlock(&adc_dev->lock);
+> +
+> +		if (*val == CC10001_INVALID_SAMPLED_OUTPUT)
+> +			return -EIO;
+> +		return IIO_VAL_INT;
+> +
+> +	case IIO_CHAN_INFO_SCALE:
+> +		ret = regulator_get_voltage(adc_dev->reg);
+> +		if (ret)
+> +			return ret;
+> +
+> +		*val = ret / 1000;
+> +		*val2 = chan->scan_type.realbits;
+> +		return IIO_VAL_FRACTIONAL_LOG2;
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int cc10001_update_scan_mode(struct iio_dev *indio_dev,
+> +				     const unsigned long *scan_mask)
+> +{
+> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
+> +
+> +	kfree(adc_dev->buf);
+> +	adc_dev->buf = kmalloc(indio_dev->scan_bytes, GFP_KERNEL);
+> +	if (!adc_dev->buf)
+> +		return -ENOMEM;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct iio_info cc10001_adc_info = {
+> +	.driver_module = THIS_MODULE,
+> +	.read_raw = &cc10001_adc_read_raw,
+> +	.update_scan_mode = &cc10001_update_scan_mode,
+> +};
+> +
+> +static int cc10001_adc_channel_init(struct iio_dev *indio_dev)
+> +{
+> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
+> +	struct iio_chan_spec *chan_array, *timestamp;
+> +	unsigned int bit, idx = 0;
+> +
+> +	indio_dev->num_channels = bitmap_weight(&adc_dev->channel_map,
+> +						CC10001_ADC_NUM_CHANNELS);
+> +
+> +	chan_array = devm_kcalloc(&indio_dev->dev, indio_dev->num_channels + 1,
+> +				  sizeof(struct iio_chan_spec),
+> +				  GFP_KERNEL);
+> +	if (!chan_array)
+> +		return -ENOMEM;
+> +
+> +	for_each_set_bit(bit, &adc_dev->channel_map,
+> +			 CC10001_ADC_NUM_CHANNELS) {
+> +		struct iio_chan_spec *chan = &chan_array[idx];
+> +
+> +		chan->type = IIO_VOLTAGE;
+> +		chan->indexed = 1;
+> +		chan->channel = bit;
+> +		chan->scan_index = idx;
+> +		chan->scan_type.sign = 'u';
+> +		chan->scan_type.realbits = 10;
+> +		chan->scan_type.storagebits = 16;
+> +		chan->info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE);
+> +		chan->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
+> +		idx++;
+> +	}
+> +
+> +	timestamp = &chan_array[idx];
+> +	timestamp->type = IIO_TIMESTAMP;
+> +	timestamp->channel = -1;
+> +	timestamp->scan_index = idx;
+> +	timestamp->scan_type.sign = 's';
+> +	timestamp->scan_type.realbits = 64;
+> +	timestamp->scan_type.storagebits = 64;
+> +
+> +	indio_dev->channels = chan_array;
+> +
+> +	return 0;
+> +}
+> +
+> +static int cc10001_adc_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *node = pdev->dev.of_node;
+> +	struct cc10001_adc_device *adc_dev;
+> +	unsigned long adc_clk_rate;
+> +	struct resource *res;
+> +	struct iio_dev *indio_dev;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*adc_dev));
+> +	if (indio_dev == NULL)
+> +		return -ENOMEM;
+> +
+> +	adc_dev = iio_priv(indio_dev);
+> +
+> +	if (of_property_read_u32(node, "cosmic,adc-available-channels", &ret)) {
+> +		dev_err(&indio_dev->dev, "Missing adc-available-channels property\n");
+> +		return -EINVAL;
+> +	}
+> +	adc_dev->channel_map = ret;
+> +
+> +	adc_dev->reg = devm_regulator_get(&pdev->dev, "vref");
+> +	if (IS_ERR_OR_NULL(adc_dev->reg))
+> +		return -EINVAL;
+> +
+> +	ret = regulator_enable(adc_dev->reg);
+> +	if (ret)
+> +		return ret;
+> +
+> +	indio_dev->dev.parent = &pdev->dev;
+> +	indio_dev->name = dev_name(&pdev->dev);
+> +	indio_dev->info = &cc10001_adc_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	adc_dev->reg_base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(adc_dev->reg_base))
+> +		goto err_disable_reg;
+> +
+> +	adc_dev->adc_clk = devm_clk_get(&pdev->dev, "adc");
+> +	if (IS_ERR(adc_dev->adc_clk)) {
+> +		dev_err(&pdev->dev, "Failed to get the clock\n");
+> +		goto err_disable_reg;
+> +	}
+> +
+> +	ret = clk_prepare_enable(adc_dev->adc_clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to enable the clock\n");
+> +		goto err_disable_reg;
+> +	}
+> +
+> +	adc_clk_rate = clk_get_rate(adc_dev->adc_clk);
+> +	if (!adc_clk_rate) {
+> +		ret = -EINVAL;
+> +		dev_err(&pdev->dev, "null clock rate!\n");
+> +		goto err_disable_clk;
+> +	}
+> +
+> +	adc_dev->eoc_delay_ns = NSEC_PER_SEC / adc_clk_rate;
+> +	adc_dev->start_delay_ns = adc_dev->eoc_delay_ns * CC10001_WAIT_CYCLES;
+> +
+> +	/* Setup the ADC channels available on the device */
+> +	ret = cc10001_adc_channel_init(indio_dev);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "Could not initialize the channels.\n");
+> +		goto err_disable_clk;
+> +	}
+> +
+> +	mutex_init(&adc_dev->lock);
+> +
+> +	ret = iio_triggered_buffer_setup(indio_dev, NULL,
+> +					 &cc10001_adc_trigger_h, NULL);
+> +	if (ret < 0)
+> +		goto err_disable_clk;
+> +
+> +	ret = iio_device_register(indio_dev);
+> +	if (ret < 0)
+> +		goto err_cleanup_buffer;
+> +
+> +	platform_set_drvdata(pdev, indio_dev);
+> +
+> +	return 0;
+> +
+> +err_cleanup_buffer:
+> +	iio_triggered_buffer_cleanup(indio_dev);
+> +err_disable_clk:
+> +	clk_disable_unprepare(adc_dev->adc_clk);
+> +err_disable_reg:
+> +	regulator_disable(adc_dev->reg);
+> +	return ret;
+> +}
+> +
+> +static int cc10001_adc_remove(struct platform_device *pdev)
+> +{
+> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
+> +
+> +	iio_device_unregister(indio_dev);
+> +	iio_triggered_buffer_cleanup(indio_dev);
+> +	clk_disable_unprepare(adc_dev->adc_clk);
+> +	regulator_disable(adc_dev->reg);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id cc10001_adc_dt_ids[] = {
+> +	{ .compatible = "cosmic,10001-adc", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, cc10001_adc_dt_ids);
+> +
+> +static struct platform_driver cc10001_adc_driver = {
+> +	.driver = {
+> +		.name   = "cc-10001-adc",
+cc10001-adc?
+> +		.owner	= THIS_MODULE,
+> +		.of_match_table = cc10001_adc_dt_ids,
+> +	},
+> +	.probe	= cc10001_adc_probe,
+> +	.remove	= cc10001_adc_remove,
+> +};
+> +module_platform_driver(cc10001_adc_driver);
+> +
+> +MODULE_AUTHOR("Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>");
+> +MODULE_DESCRIPTION("Cosmic Circuits ADC driver");
+> +MODULE_LICENSE("GPL v2");
+> 
