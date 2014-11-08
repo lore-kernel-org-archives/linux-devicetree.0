@@ -1,7 +1,7 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH v2 2/3] DT: iio: adc: Add CC_10001 binding documentation
-Date: Sat, 08 Nov 2014 12:57:23 +0000
-Message-ID: <545E1333.9010904@kernel.org>
+Date: Sat, 08 Nov 2014 12:59:01 +0000
+Message-ID: <545E1395.6040606@kernel.org>
 References: <1415224611-22096-1-git-send-email-ezequiel.garcia@imgtec.com> <1415224611-22096-3-git-send-email-ezequiel.garcia@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
@@ -10,7 +10,7 @@ Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1415224611-22096-3-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Phani Movva <phani.movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 On 05/11/14 21:56, Ezequiel Garcia wrote:
@@ -22,10 +22,8 @@ On 05/11/14 21:56, Ezequiel Garcia wrote:
 > Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 > [Ezequiel: minor style cleaning]
 > Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Please resend including the device tree list and maintainers.
-All bindings must go to them whatever part they are for.
-
-
+I'm unobservant.  You did cc'd the list for device tree - convention is to
+also cc the listed maintainers.. (done on this reply).
 > ---
 >  .../devicetree/bindings/iio/adc/cc_10001_adc.txt      | 19 +++++++++++++++++++
 >  1 file changed, 19 insertions(+)
@@ -43,9 +41,6 @@ All bindings must go to them whatever part they are for.
 > +  - compatible: Should be "cosmic,10001-adc"
 > +  - reg: Should contain adc registers location and length.
 > +  - cosmic,adc-available-channels: Bitmask of the channels currently enabled.
-I suspect there may be other preferred ways of doing this (child nodes perhaps
-for each enabled channel?)
-
 > +  - clock-names: Should contain "adc".
 > +  - clocks: phandles to input clocks.
 > +  - vref-supply: The regulator supply ADC reference voltage.
