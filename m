@@ -1,11 +1,14 @@
 From: Darshana Padmadas <darshanapadmadas@gmail.com>
-Subject: [PATCH v5 0/4] Correct vendor-prefix and document device isl29028
-Date: Sat,  8 Nov 2014 22:52:04 +0530
-Message-ID: <1415467328-9745-1-git-send-email-darshanapadmadas@gmail.com>
+Subject: [PATCH v5 1/4] dt-bindings: Document correct and deprecated
+ vendor-prefix with device isl29028
+Date: Sat,  8 Nov 2014 22:52:05 +0530
+Message-ID: <1415467328-9745-2-git-send-email-darshanapadmadas@gmail.com>
+References: <1415467328-9745-1-git-send-email-darshanapadmadas@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1415467328-9745-1-git-send-email-darshanapadmadas@gmail.com>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -19,28 +22,30 @@ To: devicetree@vger.kernel.org
 Cc: devel@driverdev.osuosl.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, opw-kernel@googlegroups.com, Darshana Padmadas <darshanapadmadas@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Patchset documents correct and the deprecated vendor-prefix found by checkpatch
-warning and also documents information of device isl29028 for compatibility.
-Patchset also includes corrected vendor-prefix and device name in compatible
-property for files with checkpatch warning of undocumented string "isil,isl29028".
-
-Darshana Padmadas (4):
-  dt-bindings: Document correct and deprecated vendor-prefix with device
-    isl29028
-  dt-bindings: Document deprecated device vendor name to fix related
-    warning
-  Staging: iio: light: Added correct vendor-prefix for device isl29028
-  arch: arm: boot: dts: Correct vendor-prefix for iio device isl29028 in
-    compatible property
-
-Changes in v5:
-    - Shortened subject in PATCH 1/4 and PATCH 2/4.
-
- Documentation/devicetree/bindings/i2c/trivial-devices.txt | 2 ++
- Documentation/devicetree/bindings/vendor-prefixes.txt     | 1 +
- drivers/staging/iio/light/isl29028.c                      | 3 ++-
- arch/arm/boot/dts/tegra30-cardhu.dtsi                     | 2 +-
- 4 files changed, 6 insertions(+), 2 deletions(-)
-
--- 
-1.9.1
+VGhpcyBwYXRjaCBkb2N1bWVudHMgdGhlIGRldmljZSBpc2wyOTAyOCB3aXRoIGl0cyB2ZW5kb3It
+cHJlZml4LiBVbmRvY3VtZW50ZWQgZGVwcmVjYXRlZCB2ZW5kb3ItcHJlZml4CmZvdW5kIGJ5IGNo
+ZWNrcGF0Y2ggYWxzbyBkb2N1bWVudGVkIGZvciBjb21wYXRpYmlsaXR5IHJlYXNvbnMuCgpTaWdu
+ZWQtb2ZmLWJ5OiBEYXJzaGFuYSBQYWRtYWRhcyA8ZGFyc2hhbmFwYWRtYWRhc0BnbWFpbC5jb20+
+CkFja2VkLWJ5OiBBcm5kIEJlcmdtYW5uIDxhcm5kQGFybmRiLmRlPgpBY2tlZC1ieTogTWFyayBS
+dXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT4KLS0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvaTJjL3RyaXZpYWwtZGV2aWNlcy50eHQgfCAyICsrCiAxIGZpbGUgY2hhbmdl
+ZCwgMiBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2kyYy90cml2aWFsLWRldmljZXMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2kyYy90cml2aWFsLWRldmljZXMudHh0CmluZGV4IDZhZjU3MGUuLjMyZWRm
+MGIgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvdHJp
+dmlhbC1kZXZpY2VzLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+aTJjL3RyaXZpYWwtZGV2aWNlcy50eHQKQEAgLTU3LDYgKzU3LDggQEAgZ210LGc3NTEJCUc3NTE6
+IERpZ2l0YWwgVGVtcGVyYXR1cmUgU2Vuc29yIGFuZCBUaGVybWFsIFdhdGNoZG9nIHdpdGggVHdv
+LVdpcmUgSW4KIGluZmluZW9uLHNsYjk2MzV0dAlJbmZpbmVvbiBTTEI5NjM1IChTb2Z0LSkgSTJD
+IFRQTSAob2xkIHByb3RvY29sLCBtYXggMTAwa2h6KQogaW5maW5lb24sc2xiOTY0NXR0CUluZmlu
+ZW9uIFNMQjk2NDUgSTJDIFRQTSAobmV3IHByb3RvY29sLCBtYXggNDAwa2h6KQogaXNsLGlzbDEy
+MDU3CQlJbnRlcnNpbCBJU0wxMjA1NyBJMkMgUlRDIENoaXAKK2lzaWwsaXNsMjkwMjggICAgICAg
+ICAgIChkZXByZWNhdGVkLCB1c2UgaXNsKQoraXNsLGlzbDI5MDI4ICAgICAgICAgICAgSW50ZXJz
+aWwgSVNMMjkwMjggQW1iaWVudCBMaWdodCBhbmQgUHJveGltaXR5IFNlbnNvcgogbWF4aW0sZHMx
+MDUwCQk1IEJpdCBQcm9ncmFtbWFibGUsIFB1bHNlLVdpZHRoIE1vZHVsYXRvcgogbWF4aW0sbWF4
+MTIzNwkJTG93LVBvd2VyLCA0LS8xMi1DaGFubmVsLCAyLVdpcmUgU2VyaWFsLCAxMi1CaXQgQURD
+cwogbWF4aW0sbWF4NjYyNQkJOS1CaXQvMTItQml0IFRlbXBlcmF0dXJlIFNlbnNvcnMgd2l0aCBJ
+wrJDLUNvbXBhdGlibGUgU2VyaWFsIEludGVyZmFjZQotLSAKMS45LjEKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmVsIG1haWxpbmcgbGlzdApkZXZl
+bEBsaW51eGRyaXZlcnByb2plY3Qub3JnCmh0dHA6Ly9kcml2ZXJkZXYubGludXhkcml2ZXJwcm9q
+ZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaXZlcmRldi1kZXZlbAo=
