@@ -1,52 +1,37 @@
-From: Darshana Padmadas <darshanapadmadas@gmail.com>
-Subject: [PATCH v5 4/4] arch: arm: boot: dts: Correct vendor-prefix for iio
- device isl29028 in compatible property
-Date: Sat,  8 Nov 2014 22:52:08 +0530
-Message-ID: <1415467328-9745-5-git-send-email-darshanapadmadas@gmail.com>
-References: <1415467328-9745-1-git-send-email-darshanapadmadas@gmail.com>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH v1 2/3] usb: phy: convert gpio-vbus to gpio_desc
+Date: Sat, 08 Nov 2014 18:45:59 +0100
+Message-ID: <87a941wppk.fsf@free.fr>
+References: <1414951910-16075-1-git-send-email-robert.jarzmik@free.fr>
+	<1414951910-16075-2-git-send-email-robert.jarzmik@free.fr>
+	<20141105192957.GM6548@saruman> <87sihx1lcd.fsf@free.fr>
+	<20141105195015.GU6548@saruman> <87oasl1kn7.fsf@free.fr>
+	<20141105200942.GW6548@saruman>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1415467328-9745-1-git-send-email-darshanapadmadas@gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: devicetree@vger.kernel.org
-Cc: devel@driverdev.osuosl.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, opw-kernel@googlegroups.com, Darshana Padmadas <darshanapadmadas@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141105200942.GW6548@saruman> (Felipe Balbi's message of "Wed,
+	5 Nov 2014 14:09:42 -0600")
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch corrects the vendor-prefix for isl29028 in the compatible property from
-"isil,isl29028" to "isl,isl29028" according to listed vendor-prefixes in
-Documentation/devicetree/bindings/vendor-prefixes.txt. Incorrect vendor-prefix "isl"
-was reported by checkpatch.pl warning for drivers/staging/iio/light/isl29028.c.
-Thus incorrect vendor-prefix "isil" was corrected for every mention of device isl29028.
+Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> writes:
 
-Signed-off-by: Darshana Padmadas <darshanapadmadas@gmail.com>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
----
- arch/arm/boot/dts/tegra30-cardhu.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> fine by me, as long as their all optional and agreed with devicetree
+> folks. I think we still have time for v3.19 if you manage to finish this
+> before next week's end.
+I will try, no promise I'll succeed in this window.
 
-diff --git a/arch/arm/boot/dts/tegra30-cardhu.dtsi b/arch/arm/boot/dts/tegra30-cardhu.dtsi
-index 2063795..dcc6c75 100644
---- a/arch/arm/boot/dts/tegra30-cardhu.dtsi
-+++ b/arch/arm/boot/dts/tegra30-cardhu.dtsi
-@@ -187,7 +187,7 @@
- 
- 		/* ALS and Proximity sensor */
- 		isl29028@44 {
--			compatible = "isil,isl29028";
-+			compatible = "isl,isl29028";
- 			reg = <0x44>;
- 			interrupt-parent = <&gpio>;
- 			interrupts = <TEGRA_GPIO(L, 0) IRQ_TYPE_LEVEL_HIGH>;
+At least I should fire out within the next days the gpiod patch and the DT
+documentation patch if I want to respect the schedule.
+
+Cheers.
+
 -- 
-1.9.1
+Robert
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
