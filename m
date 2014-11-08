@@ -1,263 +1,199 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH v4 2/4] serial: mxs-auart: use mctrl_gpio helpers for handling modem signals
-Date: Sat, 8 Nov 2014 12:22:05 +0100
-Message-ID: <201411081222.05722.marex@denx.de>
-References: <1412960007-28159-1-git-send-email-j.uzycki@elproma.com.pl> <201411071548.58044.marex@denx.de> <545CF36D.3060501@elproma.com.pl>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/5] input: touchscreen: ti_am335x_tsc Interchange touchscreen
+ and ADC steps
+Date: Sat, 08 Nov 2014 12:29:44 +0000
+Message-ID: <545E0CB8.7090906@kernel.org>
+References: <1415339350-17679-1-git-send-email-vigneshr@ti.com> <1415339350-17679-2-git-send-email-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <545CF36D.3060501@elproma.com.pl>
-Sender: linux-serial-owner@vger.kernel.org
-To: Janusz =?utf-8?q?U=C5=BCycki?= <j.uzycki@elproma.com.pl>
-Cc: Huang Shijie <shijie8@gmail.com>, Richard Genoud <richard.genoud@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jiri Slaby <jslaby@suse.cz>, Fabio Estevam <festevam@gmail.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415339350-17679-2-git-send-email-vigneshr-l0cyMroinI0@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Brad Griffis <bgriffis-l0cyMroinI0@public.gmane.org>, Sanjeev Sharma <sanjeev_sharma-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Jan Kardell <jan.kardell-KSZdJiTw9mzQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday, November 07, 2014 at 05:29:33 PM, Janusz U=C5=BCycki wrote:
-> W dniu 2014-11-07 o 15:48, Marek Vasut pisze:
-> > On Friday, November 07, 2014 at 02:23:23 PM, Janusz U=C5=BCycki wro=
-te:
-> > [...]
-> >=20
-> >>>> Hardware RTS/CTS lines can be occupied by RX/TX of other AUART p=
-ort
-> >>>> in order to obtain as much uarts as possible using i.mx283.
-> >>>> Therefore gpios can be used for "hardware" flow control.
-> >>>=20
-> >>> Your logic is outright flawed here, the first sentence doesn't
-> >>> implicate the second sentence. In fact, those two are completely
-> >>> unrelated.
-> >>=20
-> >> I didn't write MUST but CAN. There is a choice. Is flexibility of =
-the
-> >> driver disadvantage?
-> >=20
-> > If the flexibility brings in known problems, then yes, it is a prob=
-lem.
-> > Not because of the flexibility, but because it brings in bugs.
+On 07/11/14 05:49, Vignesh R wrote:
+> From: Brad Griffis <bgriffis-l0cyMroinI0@public.gmane.org>
 >=20
-> New features new bugs :) Does it mean to stop development?
-
-You shouldn't push code which is known to be defective by design into m=
-ainline.
-
-> >>>>>>      If we change them to gpio.  Could the DMA still
-> >>>>>>=20
-> >>>>>> works fine?
-> >>>>>> did you test the DMA with this patch?
-> >>>>>>=20
-> >>>>>> Add Marek for this patch too.
-> >>>>>=20
-> >>>>> I didn't look too deep into the patch, so here's just my experi=
-ence:
-> >>>>>=20
-> >>>>> 1) The AUART block signals and GPIO block signals are not sychr=
-onised
-> >>>>> using the
-> >>>>>=20
-> >>>>>       same clock. Therefore, the latency between toggling of th=
+> This patch makes the initial changes required to workaround TSC-false
+> pen-up interrupts. It is required to implement these changes in order=
+ to
+> remove udelay in the TSC interrupt handler and false pen-up events.
+> The charge step is to be executed immediately after sampling X+. Henc=
 e
-> >>>>>       AUART lines and the GPIO-driven pins will not be determin=
-istic
-> >>>>>       and will vary. There might be a way to approximate that, =
-but
-> >>>>>       that's definitelly not a reliable solution.
-> >>>>>      =20
-> >>>>>       This is very bad for example if you drive RS485 DIR line =
-with
-> >>>>>       the RTS pin as a GPIO ; the RTS pin will toggle at
-> >>>>>       non-deterministic time compared to the end of UART
-> >>>>>       transmission. This will trigger bit-loss on the RS485 lin=
-e and
-> >>>>>       you just don't want that.
-> >>>>>=20
-> >>>>> 2) Speaking of RS485, there's [1] and [2]. which I believe appl=
-y to
-> >>>>> any combo
-> >>>>>=20
-> >>>>>       of UART+GPIO toggling.
-> >>>>>=20
-> >>>>> So I hate to bring the bad news , but UART+GPIO combo toggling =
-is
-> >>>>> really a bad bad idea.
-> >>>>=20
-> >>>> Unfortunately if hardware is limited there is no choice and UART=
-+GPIO
-> >>>> is necessary.
-> >>>=20
-> >>> You will run into timing problems (see above).
-> >>=20
-> >> A lot of 8250-compatible devices has no hardware flow control and =
-in
-> >> most cases
-> >> they works and it is enough even for 115200 speed if CTS is handle=
-d by
-> >> irq. So it depends on your needs.
-> >=20
-> > I presume that in such a case , the 8250 still handles the CTS line=
-, not
-> > some external GPIO block, yes ?
+> TSC is made to use higher numbered steps (steps 5 to 16 for 5 co-ordi=
+nate
+> readouts, 4 wire TSC configuration) and ADC to use lower ones. Furthe=
+r
+> X co-ordinate readouts must be the last to be sampled, thus co-ordina=
+tes
+> are sampled in the order Y-Z-X.
 >=20
-> Yes. However mxs includes both GPIO and AUART. Clocks differs but it =
-is
-> still the same silicon.
-> External GPIO block is extreme example highly not recommended here.
-
-The way you implemented this particular change, it is possible to use a=
-rbitrary
-GPIO pin. There is no way you can guarantee anything about the latency =
-of the
-GPIO toggling (I am repeating myself).
-
-> >>> What you're proposing here is a workaround for broken hardware, w=
-hich
-> >>> was proven to be a bad idea and NAK'd already multiple times in t=
-he
-> >>> past (please see the links I posted in my last email).
-> >>=20
-> >> It is not broken  hardware - rather limited to lower speeds but st=
-ill
-> >> very useful solution.
-> >=20
-> > What exact "lower speed" are you talking about here and why ?
+> Signed-off-by: Brad Griffis <bgriffis-l0cyMroinI0@public.gmane.org>
+> [vigneshr-l0cyMroinI0@public.gmane.org: Ported the patch from v3.12 to v3.18rc2]
 >=20
-> For example not more than 115200 but it depends on CPU load of course=
-,
-> FIFO size
-> and device on the opposite site. RTS/CTS via GPIO require to know the=
- limit
-> in an application.
+> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+=46or the tiny bit in IIO
+Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-OK, this is completely unreliable solution, which works just by sheer l=
-uck.
+All yours Lee/Dmitry.
 
-> I googled even so exotic thing like:
-> "8250: add support for DTR/DSR hardware flow control"
-
-The fact that those perversions exists doesn't make them right. It does=
-n't
-even make them mainlinable.
-
-> >>>> Your experience confirms the discussion [3] with Russell King. D=
-MA
-> >>>> should be disabled and
-> >>>> the patch disables DMA support in mxs_auart_init_gpios() if RTS =
-or CTS
-> >>>> line is set as gpio.
-> >>>=20
-> >>> DMA has nothing to do with those problems here. DMA can be safely
-> >>> ignored for the purpose of the discussion altogether.
-> >>=20
-> >> When gpios are used for RTS/CTS DMA is not used. However DMA is re=
-lated
-> >> due to the driver
-> >> and "fsl,uart-has-rtscts". If you look into code of the driver you
-> >> should agree.
-> >=20
-> > This makes me believe that the DMA introduces too many timing
-> > fluctuations, so it's really not possible for you to keep toggling =
-the
-> > GPIOs such that the bus would work. Is that the case ?
+Jonathan
+> ---
+>  drivers/iio/adc/ti_am335x_adc.c           |  5 ++--
+>  drivers/input/touchscreen/ti_am335x_tsc.c | 42 ++++++++++++++++++---=
+----------
+>  2 files changed, 26 insertions(+), 21 deletions(-)
 >=20
-> Yes, for RTS/CTS based on gpio DMA is not used. They are just toggled=
-=2E
-> So you probably misunderstood me.
-
-I understand you -- in case DMA is enabled on the AUART block, your hac=
-k
-is no longer capable to working correctly, so everything falls apart.
-
-> > [...]
-> >=20
-> >>>> Now the question: "fsl,uart-has-rtscts" name seems to be mislead=
-ing
-> >>>> now, do you agree? It rather should include "dma" word in the na=
-me.
-> >>>> Any suggestion?
-> >>>>=20
-> >>>> [3] http://thread.gmane.org/gmane.linux.serial/16069/focus=3D160=
-77
-> >>>=20
-> >>> The best suggestion I can give you is to fix your hardware early,
-> >>> before you run into nasty deep s.....tuff. These workarounds do n=
-ot
-> >>> work and they will bit you later on, when it's hard to fix the
-> >>> hardware anymore.
-> >>=20
-> >> The speed is limited but why don't you accept SW-HW mixed solution=
-s?
-> >=20
-> > Did you read up on the RS485 timing problems and why that solution =
-was
-> > never accepted for any driver ? I believe the threads explained tha=
-t
-> > quite clearly.
+> diff --git a/drivers/iio/adc/ti_am335x_adc.c b/drivers/iio/adc/ti_am3=
+35x_adc.c
+> index b730864731e8..adba23246474 100644
+> --- a/drivers/iio/adc/ti_am335x_adc.c
+> +++ b/drivers/iio/adc/ti_am335x_adc.c
+> @@ -86,19 +86,18 @@ static void tiadc_step_config(struct iio_dev *ind=
+io_dev)
+>  {
+>  	struct tiadc_device *adc_dev =3D iio_priv(indio_dev);
+>  	unsigned int stepconfig;
+> -	int i, steps;
+> +	int i, steps =3D 0;
+> =20
+>  	/*
+>  	 * There are 16 configurable steps and 8 analog input
+>  	 * lines available which are shared between Touchscreen and ADC.
+>  	 *
+> -	 * Steps backwards i.e. from 16 towards 0 are used by ADC
+> +	 * Steps forwards i.e. from 0 towards 16 are used by ADC
+>  	 * depending on number of input lines needed.
+>  	 * Channel would represent which analog input
+>  	 * needs to be given to ADC to digitalize data.
+>  	 */
+> =20
+> -	steps =3D TOTAL_STEPS - adc_dev->channels;
+>  	if (iio_buffer_enabled(indio_dev))
+>  		stepconfig =3D STEPCONFIG_AVG_16 | STEPCONFIG_FIFO1
+>  					| STEPCONFIG_MODE_SWCNT;
+> diff --git a/drivers/input/touchscreen/ti_am335x_tsc.c b/drivers/inpu=
+t/touchscreen/ti_am335x_tsc.c
+> index 2ce649520fe0..1aeac9675fe7 100644
+> --- a/drivers/input/touchscreen/ti_am335x_tsc.c
+> +++ b/drivers/input/touchscreen/ti_am335x_tsc.c
+> @@ -121,7 +121,7 @@ static void titsc_step_config(struct titsc *ts_de=
+v)
+>  {
+>  	unsigned int	config;
+>  	int i;
+> -	int end_step;
+> +	int end_step, first_step, tsc_steps;
+>  	u32 stepenable;
+> =20
+>  	config =3D STEPCONFIG_MODE_HWSYNC |
+> @@ -140,9 +140,11 @@ static void titsc_step_config(struct titsc *ts_d=
+ev)
+>  		break;
+>  	}
+> =20
+> -	/* 1 =E2=80=A6 coordinate_readouts is for X */
+> -	end_step =3D ts_dev->coordinate_readouts;
+> -	for (i =3D 0; i < end_step; i++) {
+> +	tsc_steps =3D ts_dev->coordinate_readouts * 2 + 2;
+> +	first_step =3D TOTAL_STEPS - tsc_steps;
+> +	/* Steps 16 to 16-coordinate_readouts is for X */
+> +	end_step =3D first_step + tsc_steps;
+> +	for (i =3D end_step - ts_dev->coordinate_readouts; i < end_step; i+=
++) {
+>  		titsc_writel(ts_dev, REG_STEPCONFIG(i), config);
+>  		titsc_writel(ts_dev, REG_STEPDELAY(i), STEPCONFIG_OPENDLY);
+>  	}
+> @@ -164,9 +166,9 @@ static void titsc_step_config(struct titsc *ts_de=
+v)
+>  		break;
+>  	}
+> =20
+> -	/* coordinate_readouts =E2=80=A6 coordinate_readouts * 2 is for Y *=
+/
+> -	end_step =3D ts_dev->coordinate_readouts * 2;
+> -	for (i =3D ts_dev->coordinate_readouts; i < end_step; i++) {
+> +	/* 1 ... coordinate_readouts is for Y */
+> +	end_step =3D first_step + ts_dev->coordinate_readouts;
+> +	for (i =3D first_step; i < end_step; i++) {
+>  		titsc_writel(ts_dev, REG_STEPCONFIG(i), config);
+>  		titsc_writel(ts_dev, REG_STEPDELAY(i), STEPCONFIG_OPENDLY);
+>  	}
+> @@ -179,7 +181,7 @@ static void titsc_step_config(struct titsc *ts_de=
+v)
+>  	titsc_writel(ts_dev, REG_CHARGECONFIG, config);
+>  	titsc_writel(ts_dev, REG_CHARGEDELAY, CHARGEDLY_OPENDLY);
+> =20
+> -	/* coordinate_readouts * 2 =E2=80=A6 coordinate_readouts * 2 + 2 is=
+ for Z */
+> +	/* coordinate_readouts + 1 ... coordinate_readouts + 2 is for Z */
+>  	config =3D STEPCONFIG_MODE_HWSYNC |
+>  			STEPCONFIG_AVG_16 | ts_dev->bit_yp |
+>  			ts_dev->bit_xn | STEPCONFIG_INM_ADCREFM |
+> @@ -194,8 +196,11 @@ static void titsc_step_config(struct titsc *ts_d=
+ev)
+>  	titsc_writel(ts_dev, REG_STEPDELAY(end_step),
+>  			STEPCONFIG_OPENDLY);
+> =20
+> -	/* The steps1 =E2=80=A6 end and bit 0 for TS_Charge */
+> -	stepenable =3D (1 << (end_step + 2)) - 1;
+> +	/* The steps end ... end - readouts * 2 + 2 and bit 0 for TS_Charge=
+ */
+> +	stepenable =3D 1;
+> +	for (i =3D 0; i < tsc_steps; i++)
+> +		stepenable |=3D 1 << (first_step + i + 1);
+> +
+>  	ts_dev->step_mask =3D stepenable;
+>  	am335x_tsc_se_set_cache(ts_dev->mfd_tscadc, ts_dev->step_mask);
+>  }
+> @@ -209,6 +214,7 @@ static void titsc_read_coordinates(struct titsc *=
+ts_dev,
+>  	unsigned int read, diff;
+>  	unsigned int i, channel;
+>  	unsigned int creads =3D ts_dev->coordinate_readouts;
+> +	unsigned int first_step =3D TOTAL_STEPS - (creads * 2 + 2);
+> =20
+>  	*z1 =3D *z2 =3D 0;
+>  	if (fifocount % (creads * 2 + 2))
+> @@ -226,7 +232,7 @@ static void titsc_read_coordinates(struct titsc *=
+ts_dev,
+> =20
+>  		channel =3D (read & 0xf0000) >> 16;
+>  		read &=3D 0xfff;
+> -		if (channel < creads) {
+> +		if (channel > first_step + creads + 2) {
+>  			diff =3D abs(read - prev_val_x);
+>  			if (diff < prev_diff_x) {
+>  				prev_diff_x =3D diff;
+> @@ -234,19 +240,19 @@ static void titsc_read_coordinates(struct titsc=
+ *ts_dev,
+>  			}
+>  			prev_val_x =3D read;
+> =20
+> -		} else if (channel < creads * 2) {
+> +		} else if (channel =3D=3D first_step + creads + 1) {
+> +			*z1 =3D read;
+> +
+> +		} else if (channel =3D=3D first_step + creads + 2) {
+> +			*z2 =3D read;
+> +
+> +		} else if (channel > first_step) {
+>  			diff =3D abs(read - prev_val_y);
+>  			if (diff < prev_diff_y) {
+>  				prev_diff_y =3D diff;
+>  				*y =3D read;
+>  			}
+>  			prev_val_y =3D read;
+> -
+> -		} else if (channel < creads * 2 + 1) {
+> -			*z1 =3D read;
+> -
+> -		} else if (channel < creads * 2 + 2) {
+> -			*z2 =3D read;
+>  		}
+>  	}
+>  }
 >=20
-> Example of RS485 implementation where RTS is toggled by software:
-> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/comm=
-it/dri
-> vers/tty/serial/omap-serial.c?id=3D4a0ac0f55b18dc297a87a85417fcf06865=
-8bf103
-> https://git.kernel.org/cgit/linux/kernel/git/stable/linux-stable.git/=
-tree/
-> drivers/tty/serial/omap-serial.c
-
-This is a question for Greg. I checked the discussion about this patch =
-[1]
-and I see this timing issue was brought up, but the patch was applied a=
-nyway.
-I cannot tell you why , I just know that this GPIO approach has problem=
-s and
-I wrestled those a couple of days ago (without success, it's not possib=
-le to
-get correct timing).
-
-[1] http://www.spinics.net/lists/linux-serial/msg10574.html
-
-> >> Exactly the same method is accepted for 8250.
-> >=20
-> > Can you point out this code please ?
->=20
-> If 8250 doesn't support auto flow control RTS/CTS are also toggled by
-> software,
-> uart_trottle(), uart_untrothle(), uart_handle_cts_change():
-> http://lxr.free-electrons.com/source/drivers/tty/serial/serial_core.c=
-#L635
-> http://lxr.free-electrons.com/source/drivers/tty/serial/serial_core.c=
-#L2796
-> Detected by irq (ms enabled when CRTSCTS) CTS change stops tx because
-> UPF_HARD_FLOW flag is not set by the mxs-auart driver.
-
-This doesn't use GPIO to toggle the RTS/CTS pins, it does toggle then v=
-ia the
-8250 IP block registers, right ?
-
-> Of course timing problem exists but in many cases it is not critical =
--
-> the toggle method was implemented many years ago and it seems to work=
-=2E
-
-Yes, it does seem to work initially, that's why so many hardware people
-implement it, thinking the software people can fix those flubs. Problem
-is, this is one of those nasty problems, which cannot be fixed in softw=
-are.
-
-> >> It is good to have choice than not. We can comment that speed is l=
-imited
-> >> for gpio-based hardware flow control. So please, rethink again.
-> >=20
-> > [...]
->=20
-> The only problem for me is misleading "fsl,uart-has-rtscts" name beca=
-use
-> the flag
-> only enables DMA if CRTSCTS is set and hardware flow control of AUART
-> block is used.
->=20
-> best regards
-> Janusz
---
-To unsubscribe from this list: send the line "unsubscribe linux-serial"=
- in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
