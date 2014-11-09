@@ -1,401 +1,61 @@
 From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v8 4/8] ARM: dts: Enable Broadcom Cygnus SoC
-Date: Sat, 8 Nov 2014 16:22:47 -0800
-Message-ID: <CAOesGMjUE-Z3L=FU1nspv5M52UhhJ9-dBLr40RTCz2WEhEPHLA@mail.gmail.com>
-References: <sbranden@broadcom.com>
-	<1414525992-3678-1-git-send-email-sbranden@broadcom.com>
-	<1414525992-3678-5-git-send-email-sbranden@broadcom.com>
+Subject: Re: [GIT PULL] Broadcom Cygnus SoC Device Tree changes
+Date: Sat, 8 Nov 2014 16:25:01 -0800
+Message-ID: <20141109002501.GC11947@quad.lixom.net>
+References: <1414698612-26216-1-git-send-email-f.fainelli@gmail.com>
+ <1414698612-26216-2-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414525992-3678-5-git-send-email-sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1414698612-26216-2-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, JD Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-arm
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Florian,
 
-A bunch of small comments below, should be quick to fix.
+On Thu, Oct 30, 2014 at 12:50:10PM -0700, Florian Fainelli wrote:
+> The following changes since commit f114040e3ea6e07372334ade75d1ee0775c355e1:
+> 
+>   Linux 3.18-rc1 (2014-10-19 18:08:38 -0700)
+> 
+> are available in the git repository at:
+> 
+>   http://github.com/brcm/linux.git tags/arm-soc/for-3.18/cygnus-dts-v9
+> 
+> for you to fetch changes up to 8872fc22c2670cde338ab92be4a8e9ebad8e53e6:
+> 
+>   ARM: dts: Enable Broadcom Cygnus SoC (2014-10-30 11:05:55 -0700)
+> 
+> ----------------------------------------------------------------
+> This patchset contains initial support for Broadcom's Cygnus SoC based on our
+> iProc architecture. Initial support is minimal and includes just the mach
+> platform code, clock driver, and a basic device tree configuration. Peripheral
+> drivers will be submitted soon, as will device tree configurations for other
+> Cygnus board variants.
+> 
+> These are the Device Tree changes
+> 
+> ----------------------------------------------------------------
+> Jonathan Richardson (1):
+>       dt-bindings: Document Broadcom Cygnus SoC and clocks
+> 
+> Scott Branden (1):
+>       ARM: dts: Enable Broadcom Cygnus SoC
 
-On Tue, Oct 28, 2014 at 12:53 PM, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> DT files to enable cygnus consisting on reference designs
-> and cygnus core configuration.
->
-> Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Arun Parameswaran <aparames-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Tested-by: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: JD (Jiandong) Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/Makefile              |    4 ++
->  arch/arm/boot/dts/bcm-cygnus-clock.dtsi |   73 ++++++++++++++++++++++
->  arch/arm/boot/dts/bcm-cygnus.dtsi       |  100 +++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/bcm911360_entphn.dts  |   32 ++++++++++
->  arch/arm/boot/dts/bcm911360k.dts        |   32 ++++++++++
->  arch/arm/boot/dts/bcm958300k.dts        |   32 ++++++++++
->  6 files changed, 273 insertions(+)
->  create mode 100644 arch/arm/boot/dts/bcm-cygnus-clock.dtsi
->  create mode 100644 arch/arm/boot/dts/bcm-cygnus.dtsi
->  create mode 100644 arch/arm/boot/dts/bcm911360_entphn.dts
->  create mode 100644 arch/arm/boot/dts/bcm911360k.dts
->  create mode 100644 arch/arm/boot/dts/bcm958300k.dts
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 38c89ca..4b3a590 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -54,6 +54,10 @@ dtb-$(CONFIG_ARCH_AT91)      += at91-sama5d4ek.dtb
->  dtb-$(CONFIG_ARCH_ATLAS6) += atlas6-evb.dtb
->  dtb-$(CONFIG_ARCH_AXXIA) += axm5516-amarillo.dtb
->  dtb-$(CONFIG_ARCH_BCM2835) += bcm2835-rpi-b.dtb
-> +dtb-$(CONFIG_ARCH_BCM_CYGNUS) += \
-> +       bcm911360_entphn.dtb \
-> +       bcm911360k.dtb \
-> +       bcm958300k.dtb
->  dtb-$(CONFIG_ARCH_BCM_5301X) += bcm4708-netgear-r6250.dtb
->  dtb-$(CONFIG_ARCH_BCM_63XX) += bcm963138dvt.dtb
->  dtb-$(CONFIG_ARCH_BCM_MOBILE) += bcm28155-ap.dtb \
+I just posted a set of comments on this original patch that I noticed
+when reviewing it while merging. Please send a fresh pull request when
+they're addressed.
 
-Please add new entries in alphabetical/alphanumerical order. Also,
-first entry is commonly added on the first line
+Also, about your tag texts: There's no need to have the first paragraph
+boiler on all of them, I'd rather appreciate a sentence or two about
+what the DTS'es are in this case (i.e. one dtsi for the family and three
+different boards based on it), etc. You'll get a hang of it over time. :)
 
 
-> diff --git a/arch/arm/boot/dts/bcm-cygnus-clock.dtsi b/arch/arm/boot/dts/bcm-cygnus-clock.dtsi
-> new file mode 100644
-> index 0000000..d06172b
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/bcm-cygnus-clock.dtsi
-> @@ -0,0 +1,73 @@
-> +/*
-> + * Copyright 2014 Broadcom Corporation.  All rights reserved.
-> + *
-> + * Unless you and Broadcom execute a separate written software license
-> + * agreement governing use of this software, this software is licensed to you
-> + * under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation version 2.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-
-We ask for new DT contents to be added with dual BSD/GPL license, to
-allow for reuse of the DT data structures in other projects as well.
-There's currently a lot of activity going on relicensing the current
-files so I recommend sorting it out before they are added if you can.
-
-> + */
-> +
-> +clocks {
-> +       #address-cells = <1>;
-> +       #size-cells = <1>;
-> +       ranges;
-> +
-> +       osc: oscillator {
-> +               compatible = "fixed-clock";
-> +               #clock-cells = <1>;
-> +               clock-frequency = <25000000>;
-> +       };
-> +
-> +       apb_clk: apb_clk {
-> +               compatible = "fixed-clock";
-> +               #clock-cells = <0>;
-> +               clock-frequency = <1000000000>;
-> +       };
-> +
-> +       periph_clk: periph_clk {
-> +               compatible = "fixed-clock";
-> +               #clock-cells = <0>;
-> +               clock-frequency = <500000000>;
-> +       };
-> +
-> +       sdio_clk: lcpll_ch2 {
-> +               compatible = "fixed-clock";
-> +               #clock-cells = <0>;
-> +               clock-frequency = <200000000>;
-> +       };
-> +
-> +       axi81_clk: axi81_clk {
-> +               compatible = "fixed-clock";
-> +               #clock-cells = <0>;
-> +               clock-frequency = <100000000>;
-> +       };
-> +
-> +       keypad_clk: keypad_clk {
-> +               compatible = "fixed-clock";
-> +               #clock-cells = <0>;
-> +               clock-frequency = <31806>;
-> +       };
-> +
-> +       adc_clk: adc_clk {
-> +               compatible = "fixed-clock";
-> +               #clock-cells = <0>;
-> +               clock-frequency = <1562500>;
-> +       };
-> +
-> +       pwm_clk: pwm_clk {
-> +               compatible = "fixed-clock";
-> +               #clock-cells = <0>;
-> +               clock-frequency = <1000000>;
-> +       };
-> +
-> +       lcd_clk: mipipll_ch1 {
-> +               compatible = "fixed-clock";
-> +               #clock-cells = <0>;
-> +               clock-frequency = <100000000>;
-> +       };
-> +};
-> diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
-> new file mode 100644
-> index 0000000..9c650ab
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
-> @@ -0,0 +1,100 @@
-> +/*
-> + * Copyright 2014 Broadcom Corporation.  All rights reserved.
-> + *
-> + * Unless you and Broadcom execute a separate written software license
-> + * agreement governing use of this software, this software is licensed to you
-> + * under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation version 2.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +#include "skeleton.dtsi"
-> +
-> +/ {
-> +       compatible = "brcm,cygnus";
-> +       model = "Broadcom Cygnus SoC";
-> +       interrupt-parent = <&gic>;
-> +
-> +       cpus {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               cpu@0 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a9";
-> +                       next-level-cache = <&L2>;
-> +                       reg = <0x0>;
-> +               };
-> +       };
-> +
-> +       /include/ "bcm-cygnus-clock.dtsi"
-> +
-> +       amba {
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               compatible = "arm,amba-bus", "simple-bus";
-> +               interrupt-parent = <&gic>;
-> +               ranges;
-> +
-> +               wdt@18009000 {
-> +                        compatible = "arm,sp805" , "arm,primecell";
-> +                        reg = <0x18009000 0x1000>;
-> +                        interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
-> +                        clocks = <&axi81_clk>;
-> +                        clock-names = "apb_pclk";
-> +               };
-> +       };
-> +
-> +       uart3: serial@18023000 {
-> +               compatible = "snps,dw-apb-uart";
-> +               reg = <0x18023000 0x100>;
-> +               reg-shift = <2>;
-> +               reg-io-width = <4>;
-> +               interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
-> +               clock-frequency = <100000000>;
-> +               clocks = <&axi81_clk>;
-> +               status = "okay";
-
-It is common to leave these disabled in the SoC/common dtsi, and
-enable them in the per-board dts files, since different boards might
-not use all peripherals, etc.
-
-It seems like all your boards currently use both uarts, but if it
-changes in the future please consider switching over. It might be
-worth doing so now to avoid churn later on. That also allows you to
-define all the uards (I'm going to guess that there's a total of at
-least 4 on this system :).
-
-> +       };
-> +
-> +       uart0: serial@18020000 {
-
-These are also out of order, uart3 is before uart0 (and the registers
-are in reverse order).
-
-We normally recommend that you add entries sorted by reg/unit address
--- that way there's less risk of conflict due to add/add compared to
-if people just append new entries at the end of the file.
-
-> +               compatible = "snps,dw-apb-uart";
-> +               reg = <0x18020000 0x100>;
-> +               reg-shift = <2>;
-> +               reg-io-width = <4>;
-> +               interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
-> +               clocks = <&axi81_clk>;
-> +               clock-frequency = <100000000>;
-> +               status = "okay";
-> +       };
-> +
-> +       gic: interrupt-controller@19021000 {
-> +               compatible = "arm,cortex-a9-gic";
-> +               #interrupt-cells = <3>;
-> +               #address-cells = <0>;
-> +               interrupt-controller;
-> +               reg = <0x19021000 0x1000>,
-> +                     <0x19020100 0x100>;
-> +       };
-> +
-> +       L2: l2-cache {
-
-l2-cache@19022000
-
-> +               compatible = "arm,pl310-cache";
-> +               reg = <0x19022000 0x1000>;
-> +               cache-unified;
-> +               cache-level = <2>;
-> +       };
-> +
-> +       timer@19020200 {
-> +               compatible = "arm,cortex-a9-global-timer";
-> +               reg = <0x19020200 0x100>;
-> +               interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
-> +               clocks = <&periph_clk>;
-> +       };
-> +
-> +};
-> diff --git a/arch/arm/boot/dts/bcm911360_entphn.dts b/arch/arm/boot/dts/bcm911360_entphn.dts
-> new file mode 100644
-> index 0000000..9de5e87
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/bcm911360_entphn.dts
-> @@ -0,0 +1,32 @@
-> +/*
-> + * Copyright 2014 Broadcom Corporation.  All rights reserved.
-> + *
-> + * Unless you and Broadcom execute a separate written software license
-> + * agreement governing use of this software, this software is licensed to you
-> + * under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation version 2.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "bcm-cygnus.dtsi"
-> +
-> +/ {
-> +       model = "Cygnus Enterprise Phone (BCM911360_ENTPHN)";
-> +       compatible = "brcm,bcm11360", "brcm,cygnus";
-> +
-> +       aliases {
-> +               serial0 = &uart3;
-> +               serial1 = &uart0;
-> +       };
-> +
-> +       chosen {
-> +               stdout-path = &uart3;
-> +               bootargs = "console=ttyS0,115200";
-> +       };
-> +};
-> diff --git a/arch/arm/boot/dts/bcm911360k.dts b/arch/arm/boot/dts/bcm911360k.dts
-> new file mode 100644
-> index 0000000..dd4f102
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/bcm911360k.dts
-> @@ -0,0 +1,32 @@
-> +/*
-> + * Copyright 2014 Broadcom Corporation.  All rights reserved.
-> + *
-> + * Unless you and Broadcom execute a separate written software license
-> + * agreement governing use of this software, this software is licensed to you
-> + * under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation version 2.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "bcm-cygnus.dtsi"
-> +
-> +/ {
-> +       model = "Cygnus SVK (BCM911360K)";
-> +       compatible = "brcm,bcm11360", "brcm,cygnus";
-> +
-> +       aliases {
-> +               serial0 = &uart3;
-> +               serial1 = &uart0;
-> +       };
-> +
-> +       chosen {
-> +               stdout-path = &uart3;
-> +               bootargs = "console=ttyS0,115200";
-> +       };
-> +};
-> diff --git a/arch/arm/boot/dts/bcm958300k.dts b/arch/arm/boot/dts/bcm958300k.dts
-> new file mode 100644
-> index 0000000..f8b9625
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/bcm958300k.dts
-> @@ -0,0 +1,32 @@
-> +/*
-> + * Copyright 2014 Broadcom Corporation.  All rights reserved.
-> + *
-> + * Unless you and Broadcom execute a separate written software license
-> + * agreement governing use of this software, this software is licensed to you
-> + * under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation version 2.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "bcm-cygnus.dtsi"
-> +
-> +/ {
-> +       model = "Cygnus SVK (BCM958300K)";
-> +       compatible = "brcm,bcm58300", "brcm,cygnus";
-> +
-> +       aliases {
-> +               serial0 = &uart3;
-> +               serial1 = &uart0;
-> +       };
-> +
-> +       chosen {
-> +               stdout-path = &uart3;
-> +               bootargs = "console=ttyS0,115200";
-> +       };
-> +};
-> --
-> 1.7.9.5
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+-Olof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
