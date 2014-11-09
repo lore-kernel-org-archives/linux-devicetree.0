@@ -1,96 +1,74 @@
-From: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] ARM: dts: Fix failing ethernet PHY detection on the LeMaker Banana Pi
-Date: Sun,  9 Nov 2014 14:28:33 +0100
-Message-ID: <1415539714-7652-1-git-send-email-merker@debian.org>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v8 4/8] ARM: dts: Enable Broadcom Cygnus SoC
+Date: Sun, 9 Nov 2014 09:23:11 -0800
+Message-ID: <20141109172311.GB738@kroah.com>
+References: <sbranden@broadcom.com>
+ <1414525992-3678-1-git-send-email-sbranden@broadcom.com>
+ <1414525992-3678-5-git-send-email-sbranden@broadcom.com>
+ <CAOesGMjUE-Z3L=FU1nspv5M52UhhJ9-dBLr40RTCz2WEhEPHLA@mail.gmail.com>
+ <545F05F0.3000702@broadcom.com>
+ <CAOesGMhd37UM+7+6eR9iLY22Fb9cG1dr8dD4DAzLJNRmtysnkg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAOesGMhd37UM+7+6eR9iLY22Fb9cG1dr8dD4DAzLJNRmtysnkg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, JD Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-arm-kernel@li
 List-Id: devicetree@vger.kernel.org
 
-While testing the daily builds of the Debian-Installer (d-i) on the
-LeMaker Banana Pi (a small, Allwinner A20-based board), I found that
-within the installer environment, the detection of the external Realtek
-ethernet PHY connected to the Allwinner A20 GMAC fails upon first
-loading of the stmmac driver:
+On Sat, Nov 08, 2014 at 10:49:09PM -0800, Olof Johansson wrote:
+> >>> +/*
+> >>> + * Copyright 2014 Broadcom Corporation.  All rights reserved.
+> >>> + *
+> >>> + * Unless you and Broadcom execute a separate written software license
+> >>> + * agreement governing use of this software, this software is licensed
+> >>> to you
+> >>> + * under the terms of the GNU General Public License as
+> >>> + * published by the Free Software Foundation version 2.
+> >>> + *
+> >>> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+> >>> + * kind, whether express or implied; without even the implied warranty
+> >>> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> >>> + * GNU General Public License for more details.
+> >>
+> >>
+> >> We ask for new DT contents to be added with dual BSD/GPL license, to
+> >> allow for reuse of the DT data structures in other projects as well.
+> >> There's currently a lot of activity going on relicensing the current
+> >> files so I recommend sorting it out before they are added if you can.
+> >
+> >
+> > This may take more time than you think.  I am going to have to go through
+> > legal to get such a license created. Also, why would you need dual license?
+> > If it is BSD that should serve both purposes?
+> 
+> I haven't followed the discussion close enough to know if there's been
+> discussion about single-license BSD vs dual BSD/GPL.
+> 
+> At the very least, please start the process of getting it changed.
+> 
+> Also, I see now that this isn't even a clean GPL v2, given "Unless you
+> and Broadcom..." language. I see the bnx2x driver had that in the
+> past, but none of the Kona contributions did. I strongly suggest
+> sticking to the normal copyrights here and not making things more
+> complicated than they have to.
 
-[   77.235117] stmmaceth 1c50000.ethernet: no reset control found
-[   77.235192]  Ring mode enabled
-[   77.235202]  No HW DMA feature register supported
-[   77.235211]  Normal descriptors
-[   77.235219]  TX Checksum insertion supported
-[   77.242678] libphy: stmmac: probed
-[   77.242708] eth0: No PHY found
+I'm thinking that the "unless you and Broadcom..." language really
+doesn't mean much other than what all other files in the kernel mean
+from what I can tell.  This should just default to GPLv2 and everyone
+should be ok.
 
-Just unloading the stmmac module and immediately afterwards 
-modprobing it again results in proper detection of the PHY:
+But note, I'm not a lawyer, it would be good to get a confirmation from
+Broadcom that this is the exact wording they want in this file, and that
+they are happy with it being "just" GPLv2 for all intensive purposes, as
+it does "differ" from the wording we are "accustomed" to seeing in
+kernel files.
 
-[  148.823456] stmmaceth 1c50000.ethernet: no reset control found
-[  148.823487]  Ring mode enabled
-[  148.823496]  No HW DMA feature register supported
-[  148.823502]  Normal descriptors
-[  148.823509]  TX Checksum insertion supported
-[  148.854654] libphy: stmmac: probed
-[  148.854683] eth0: PHY ID 001cc915 at 0 IRQ POLL (stmmac-0:00) active
-[  148.854694] eth0: PHY ID 001cc915 at 1 IRQ POLL (stmmac-0:01)
+thanks,
 
-On the Banana Pi, the PHY power supply is handled by a GPIO-controlled
-regulator:
-
-gmac: ethernet@01c50000 {
-        pinctrl-names = "default";
-        pinctrl-0 = <&gmac_pins_rgmii_a>;
-        phy = <&phy1>;
-        phy-mode = "rgmii";
-        phy-supply = <&reg_gmac_3v3>;
-        status = "okay";
-
-        phy1: ethernet-phy@1 {
-                reg = <1>;
-        };
-};
-
-reg_gmac_3v3: gmac-3v3 {
-        compatible = "regulator-fixed";
-        pinctrl-names = "default";
-        pinctrl-0 = <&gmac_power_pin_bananapi>;
-        regulator-name = "gmac-3v3";
-        regulator-min-microvolt = <3300000>;
-        regulator-max-microvolt = <3300000>;
-        startup-delay-us = <50000>;
-        enable-active-high;
-        gpio = <&pio 7 23 0>;
-};
-
-and this problem did not show up on the hardware-wise rather similar
-Cubietech Cubietruck (same SoC, same external PHY, but no
-GPIO-controlled regulator for the PHY).  Further tests have shown that
-increasing the startup-delay for the regulator solves the problem.  The
-current sun7i-a20-bananapi.dts file (in linux-next, intended to go into
-kernel 3.19) sets startup-delay-us for the PHY's regulator to 50000.  On
-my Banana Pi board, even with a value of 55000, the PHY detection does
-usually not work on the first probing inside d-i.  Increasing the value
-to 57500 results in a successful probing most of the time, but not
-always; only setting it to 60000 results in a reliable PHY detection
-for me.
-
-I would therefore like to propose increasing the startup-delay in the
-Banana Pi dts to a value of 60000.  Following is an according patch.
-
-Regards,
-Karsten
-
-
-
-Karsten Merker (1):
-  ARM: dts: sunxi: Banana Pi: increase startup-delay for the GMAC PHY
-    regulator
-
- arch/arm/boot/dts/sun7i-a20-bananapi.dts |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
--- 
-1.7.10.4
+greg k-h
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
