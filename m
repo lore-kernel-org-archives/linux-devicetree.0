@@ -1,105 +1,119 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v5 0/6] ARM: mediatek: Add support for interrupt
- polarity
-Date: Sun, 9 Nov 2014 00:38:20 -0500
-Message-ID: <20141109053820.GU3698@titan.lakedaemon.net>
-References: <1414576824-16143-1-git-send-email-yingjoe.chen@mediatek.com>
+From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [GIT PULL] Broadcom Cygnus SoC defconfig changes
+Date: Sat, 8 Nov 2014 21:45:18 -0800
+Message-ID: <545EFF6E.7000309@broadcom.com>
+References: <1414698612-26216-1-git-send-email-f.fainelli@gmail.com> <20141109001302.GB11947@quad.lixom.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1414576824-16143-1-git-send-email-yingjoe.chen@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yingjoe Chen <yingjoe.chen@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Jiang Liu <jiang.liu@linux.intel.com>, arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Grant Likely <grant.likely@linaro.org>, Boris BREZILLON <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, yingjoe.chen@gmail.com, hc.yen@mediatek.com, eddie.huang@mediatek.com, nathan.chung@mediatek.com, yh.chen@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141109001302.GB11947-O5ziIzlqnXUVNXGz7ipsyg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Thomas, Marc,
+Hi Olof,
 
-Could I get Acks for the core changes and gic changes when you have
-a moment?
+Thanks for the comments.  Please see my questions inline before we 
+determine what needs to be done for the defconfig patchset.
 
-thx,
+On 14-11-08 04:13 PM, Olof Johansson wrote:
+> On Thu, Oct 30, 2014 at 12:50:09PM -0700, Florian Fainelli wrote:
+>> The following changes since commit f114040e3ea6e07372334ade75d1ee0775c355e1:
+>>
+>>    Linux 3.18-rc1 (2014-10-19 18:08:38 -0700)
+>>
+>> are available in the git repository at:
+>>
+>>    http://github.com/brcm/linux.git tags/arm-soc/for-3.18/cygnus-defconfig-v9
+>>
+>> for you to fetch changes up to aa0204801143ee2d47e9e8dd5f39cdddd5613b4b:
+>>
+>>    ARM: multi_v7_defconfig: Enable Broadcom Cygnus (2014-10-30 11:01:35 -0700)
+>
+> Hi Florian,
+>
+> Apologies for the delay in dealing with this pull request.
+>
+>> ----------------------------------------------------------------
+>> This patchset contains initial support for Broadcom's Cygnus SoC based on our
+>> iProc architecture. Initial support is minimal and includes just the mach
+>> platform code, clock driver, and a basic device tree configuration. Peripheral
+>> drivers will be submitted soon, as will device tree configurations for other
+>> Cygnus board variants.
+>>
+>> These are the defconfig parts of the changes
+>>
+>> ----------------------------------------------------------------
+>> Jonathan Richardson (1):
+>>        ARM: cygnus defconfig : Initial defconfig for Broadcom Cygnus SoC
+>>
+>> Ray Jui (1):
+>>        ARM: multi_v7_defconfig: Enable Broadcom Cygnus
+>>
+>> Scott Branden (1):
+>>        ARM: bcm_defconfig/multi_v7_defconfig: remove one level of menu from Kconfig
+>>
+>>   arch/arm/configs/bcm_cygnus_defconfig | 237 ++++++++++++++++++++++++++++++++++
+>>   arch/arm/configs/bcm_defconfig        |   3 +-
+>>   arch/arm/configs/multi_v7_defconfig   |  21 ++-
+>
+> Please send multi_v7_defconfig updates as a patch instead of including in
+> a merge request. We ask for this because it's a file that many maintainers
+> touch and it's easy that we get lots of conflicts otherwise.
+OK, easy to do.  Are there other files that we need to be aware of that 
+have these different requirements to merge as well?
 
-Jason.
+>
+> As far as the bcm_cygnus_defconfig: Since new platforms are multiplatform
+> enabled by default, we normally only prefer to have one defconfig per vendor.
+> We've made exceptions in cases where the families are very different, but in
+> general one defconfig per vendor should be sufficient.
+>
+> I.e. please enable the cygnus options in bcm_defconfig instead of adding a new
+> one.
 
-On Wed, Oct 29, 2014 at 06:00:18PM +0800, Yingjoe Chen wrote:
-> This series is 5th version of interrupt polarity support for MediaTek SoCs.
-> This is based on Jiang's hierarchy irqdomain p2v3 [1], which is based on 
-> v3.18-rc2, and my mediatek SoC basic support [2].
-> 
-> Besides changing base, this version addressed comments from Thomas and Marc
-> and also fix a bug on mt6589 reported by Matthias.
-> 
-> In Jiang's version of irq_create_of_mapping, if irqdomain is hierarchy, it
-> will not perform irq_find_mapping check and set_type. The outermost
-> irqdomain need to take care of that. Because we will have several different
-> outermost irqdomain in different ARM SoCs, this cause code duplication. I
-> moved them back to irq_create_of_mapping.
-> 
-> Simplified block diagram for interrupt on my system:
-> 
->     +-------+      +-------+
->  ---| SYSIRQ|------|ARM GIC|
->  ---|       |------|       |
->  ---|       |------|       |
->  ---|       |------|       |
->  ---|       |------|       |
->     +-------+      +-------+
-> 
-> In device tree, interrupt-parent for other devices is sysirq, child of gic.
-> This describe HW better and allow device to specify polarity as it is sent
-> by the device.
-> 
-> When using hierarchy irq domain, gic will use irq_domain_add_linear to
-> create irqdomain and all interrupt numbers must come from device tree. My
-> /proc/interrupts looks like this now:
-> 
-> # cat /proc/interrupts
->            CPU0
->  16:     149578  MT_SYSIRQ 113  mtk_timer
->  20:       1082  MT_SYSIRQ  54  serial
-> 
-> Changes in v5:
->  - Fix bug on mt6589 reported by Matthias
->  - Fix bug for irq_find_mapping in irq_create_of_mapping
->  - Merge Marc's change to proper handle non-DT case in gic_init_bases
-> 
-> Changes in v4:
->  - Discussed in [3]
->  - Remove arm,hierarchy-irq-domain. When GIC is probed by DT, it will
-> support hierarchy irqdomain.
-> 
-> Changes in v3:
->  - Discussed in [4]
->  - First implementation using hierarchy irqdomain
-> 
-> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/297624.html
-> [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/296093.html
-> [3] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/296911.html
-> [4] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/293766.html
-> 
-> 
-> Yingjoe Chen (6):
->   irqdomain: do irq_find_mapping and set_type for hierarchy irqdomain
->   genirq: Add more helper functions to support stacked irq_chip
->   irqchip: gic: Support hierarchy irq domain.
->   ARM: mediatek: Add sysirq interrupt polarity support
->   ARM: mediatek: Add sysirq in mt6589/mt8135/mt8127 dtsi
->   dt-bindings: add bindings for mediatek sysirq
-> 
->  .../bindings/arm/mediatek/mediatek,sysirq.txt      |  26 ++++
->  arch/arm/boot/dts/mt6589.dtsi                      |  14 +-
->  arch/arm/boot/dts/mt8127.dtsi                      |  14 +-
->  arch/arm/boot/dts/mt8135.dtsi                      |  14 +-
->  drivers/irqchip/Kconfig                            |   1 +
->  drivers/irqchip/Makefile                           |   1 +
->  drivers/irqchip/irq-gic.c                          |  90 +++++++----
->  drivers/irqchip/irq-mtk-sysirq.c                   | 168 +++++++++++++++++++++
->  include/linux/irq.h                                |   6 +
->  kernel/irq/chip.c                                  |  28 ++++
->  kernel/irq/irqdomain.c                             |  27 ++--
->  11 files changed, 348 insertions(+), 41 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
->  create mode 100644 drivers/irqchip/irq-mtk-sysirq.c
-> 
+Hi Olof, we can do this.  But this makes bcm_defconfig unusable for us 
+in a product and is not a simple configuration to start from for our 
+customers.  bcm_defconfig is a different SoC family based around the 
+Kona architecture. bcm_defconfig won't be what we build and test on 
+Cygnus at all.  There is a script in scripts/kconfig/mergeconfig.pl that 
+allows you to merge config files together if you wish to have a kernel 
+support multiple SoCs.  I see the same problem with multi_v7_defconfig 
+but even worse.  It isn't a configuration we will ever use.  Its only 
+purpose seems to be to enable our drivers in the that build just in case 
+somebody else happens to break something in the build.
+
+As it stands, multi_v7_defconfig boots noticably slower than 
+bcm_cygnus_defconfig.  And, the kernel is larger than we want.  And, the 
+kconfigs are more complicated than we need for our boards.  I also 
+notice some of the other SoCs families enabled automatically turn on a 
+lot of features we don't want on.
+
+Perhaps most of the multi_v7_defconfig merge issue you are facing could 
+be solved if you used the mergconfig.pl script to merge multiple 
+defconfigs together?
+
+What we wish to do is have a config file that only supports the Cygnus 
+family of SoCs.  This allows others to easily see what applies to Cygnus 
+without being confused by other configurations.  And, if somebody wishes 
+to use scripts/kconfig/mergeconfig.pl to merge different SoC support 
+together they are free to do so.
+
+So, we can do as you ask to get this upstreamed.  But it really serves 
+little purpose for us other than verifying things build.
+
+Where do we upstream the defconfig that we actually use?  Or is this 
+just not done and everyone keeps everything locally and has to continue 
+to maintain it there?
+
+>
+>
+> -Olof
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
