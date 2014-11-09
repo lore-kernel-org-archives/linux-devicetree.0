@@ -1,31 +1,45 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH 02/11] ARM: dts: omap3-igep00x0: Move NAND configuration
- to a common place.
-Date: Sun, 9 Nov 2014 09:17:54 +0100
-Message-ID: <CABxcv=k+rGscdzB0mtTie5YyvEHxws1tCveytmSYU=dK01wm1A@mail.gmail.com>
-References: <1415275311-6857-1-git-send-email-eballetbo@iseebcn.com>
-	<1415275311-6857-3-git-send-email-eballetbo@iseebcn.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1415275311-6857-3-git-send-email-eballetbo@iseebcn.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Enric Balletbo i Serra <eballetbo@iseebcn.com>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Beniamino Galvani <b.galvani@gmail.com>
+Subject: [PATCH v2 0/3] media: rc: add support for Amlogic Meson IR receiver
+Date: Sun,  9 Nov 2014 09:32:05 +0100
+Message-ID: <1415521928-25251-1-git-send-email-b.galvani@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <m.chehab@samsung.com>
+Cc: linux-media@vger.kernel.org, Carlo Caione <carlo@caione.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jerry Cao <jerry.cao@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Beniamino Galvani <b.galvani@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Enric,
+Hi,
 
-On Thu, Nov 6, 2014 at 1:01 PM, Enric Balletbo i Serra
-<eballetbo@iseebcn.com> wrote:
-> At this moment all supported boards use same NAND chip, so has more sense
-> move the GPMC and NAND configuration to the omap3-igep.dtsi common place.
->
-> Signed-off-by: Enric Balletbo i Serra <eballetbo@iseebcn.com>
+this is a driver for the infrared receiver available in Amlogic Meson6
+and Meson8 SoCs. The device can operate in two modes: "NEC" mode in
+which the hardware decodes frames using the NEC IR protocol, and
+"general" mode in which the receiver simply reports the duration of
+pulses and spaces for software decoding.
 
-Agreed that makes sense to factor out this into the .dtsi
+In order to have the maximum compatibility with different protocols
+the driver implements software decoding.
 
-Acked-by: Javier Martinez Canillas <javier@dowhile0.org>
+Changes since v1:
+ - added COMPILE_TEST to allow compilation for other architectures
+ - added missing header files
+ - removed bogus vendor, product and version assignments
+ - added file path to Meson entry in MAINTAINERS
+ - reordered patches
 
-Best regards,
-Javier
+Beniamino Galvani (3):
+  media: rc: meson: document device tree bindings
+  media: rc: add driver for Amlogic Meson IR remote receiver
+  ARM: dts: meson: add IR receiver node
+
+ .../devicetree/bindings/media/meson-ir.txt         |  14 ++
+ MAINTAINERS                                        |   1 +
+ arch/arm/boot/dts/meson.dtsi                       |   7 +
+ drivers/media/rc/Kconfig                           |  11 ++
+ drivers/media/rc/Makefile                          |   1 +
+ drivers/media/rc/meson-ir.c                        | 215 +++++++++++++++++++++
+ 6 files changed, 249 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/meson-ir.txt
+ create mode 100644 drivers/media/rc/meson-ir.c
+
+-- 
+1.9.1
