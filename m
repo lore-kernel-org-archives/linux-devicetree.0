@@ -1,58 +1,50 @@
 From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [GIT PULL] Broadcom Cygnus SoC platforms changes
-Date: Sat, 8 Nov 2014 16:33:08 -0800
-Message-ID: <20141109003308.GE11947@quad.lixom.net>
-References: <1414698612-26216-1-git-send-email-f.fainelli@gmail.com>
- <1414698612-26216-4-git-send-email-f.fainelli@gmail.com>
- <20141109002846.GD11947@quad.lixom.net>
+Subject: Re: [PATCH] ARM: dts: zynq: Enable PL clocks for Parallella
+Date: Sat, 8 Nov 2014 16:58:02 -0800
+Message-ID: <20141109005802.GE13855@quad.lixom.net>
+References: <1415294531-8942-1-git-send-email-afaerber@suse.de>
+ <eca8ae5de8184151b03d3fd8d23c62a7@BY2FFO11FD010.protection.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20141109002846.GD11947-O5ziIzlqnXUVNXGz7ipsyg@public.gmane.org>
+In-Reply-To: <eca8ae5de8184151b03d3fd8d23c62a7-neA4ZlFjCT2P1V7ZRuPZVmYJ4DzVTqeXkX/xN29GLwg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andreas Olofsson <andreas-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>, Matteo Vit <matteo.vit-WGsyu9ztxDWovDFt+AQlJdBPR1lH4CV8@public.gmane.org>, Sean Rickerd <srickerd-IBi9RG/b67k@public.gmane.org>, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 08, 2014 at 04:28:46PM -0800, Olof Johansson wrote:
-> On Thu, Oct 30, 2014 at 12:50:12PM -0700, Florian Fainelli wrote:
-> > The following changes since commit f114040e3ea6e07372334ade75d1ee0775c355e1:
-> > 
-> >   Linux 3.18-rc1 (2014-10-19 18:08:38 -0700)
-> > 
-> > are available in the git repository at:
-> > 
-> >   http://github.com/brcm/linux.git tags/arm-soc/for-3.18/cygnus-platform-v9
-> > 
-> > for you to fetch changes up to 038aae04d36eff71e0b30a1c3057ec0a05bf9390:
-> > 
-> >   ARM: mach-bcm: ARCH_BCM_MOBILE: remove one level of menu from Kconfig (2014-10-30 11:39:51 -0700)
-> > 
-> > ----------------------------------------------------------------
-> > This patchset contains initial support for Broadcom's Cygnus SoC based on our
-> > iProc architecture. Initial support is minimal and includes just the mach
-> > platform code, clock driver, and a basic device tree configuration. Peripheral
-> > drivers will be submitted soon, as will device tree configurations for other
-> > Cygnus board variants.
-> > 
-> > These are the platform changes
-> 
-> Hi,
-> 
-> Merged into next/soc. Thanks!
+On Fri, Nov 07, 2014 at 07:44:16AM +0100, Michal Simek wrote:
+> On 11/06/2014 06:22 PM, Andreas F=E4rber wrote:
+> > The Parallella board comes with a U-Boot bootloader that loads one =
+of
+> > two predefined FPGA bitstreams before booting the kernel. Both defi=
+ne an
+> > AXI interface to the on-board Epiphany processor.
+> >=20
+> > Enable clocks FCLK0..FCLK3 for the Programmable Logic by default.
+> >=20
+> > Otherwise accessing, e.g., the ESYSRESET register freezes the board=
+,
+> > as seen with the Epiphany SDK tools e-reset and e-hw-rev, using /de=
+v/mem.
+> >=20
+> > Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> # 3.17.x
+> > Signed-off-by: Andreas F=E4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+> > ---
+> >  Michal/Olof, please consider this trivial patch as a fix for 3.18.
+>=20
+> Acked-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>=20
+> Olof, Arnd: Can you please pick this directly?
 
-Actually, I noticed on the other branch (the maintainers one) that you
-haven't signed off on any patches you've applied (you're the committer,
-but there's no Signed-off-by line from you). So I dropped this branch
-again, please fix that up and send fresh pull requests.
-
-When you do that, you can also fold in the maintainers patch in the platform
-branch.
+Done, applied to fixes.
 
 
 -Olof
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
