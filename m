@@ -1,39 +1,36 @@
 From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH v3 2/2] ASoC: simple-card: add multi-CODECs
- in DT
-Date: Sun, 9 Nov 2014 19:42:33 +0100
-Message-ID: <20141109194233.66eae626@armhf>
-References: <cover.1415096705.git.moinejf@free.fr>
-	<53ef077d2174f8eb5b861d6cebe7c9e732f06d52.1415096705.git.moinejf@free.fr>
-	<20141107123035.GO8509@sirena.org.uk>
-	<20141107200557.78971e08@armhf>
-	<545D2667.4070707@metafoo.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Subject: [PATCH 0/2] of: Fix some 'const' problems
+Date: Sun, 9 Nov 2014 19:28:00 +0100
+Message-ID: <cover.1415557680.git.moinejf@free.fr>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <545D2667.4070707-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 07 Nov 2014 21:07:03 +0100
-Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
+A cast is often needed to call some OF functions, removing
+the 'const' attribute.
+This patchset makes 'const' the device node pointers of the functions
+of_clk_get() and of_node_put() and also removes some useless casts
+in the sound/soc tree.
 
-> Casting const away is usually a sign that something is wrong and has =
-the=20
-> potential to result in undefined behavior. The correct fix in this ca=
-se is=20
-> probably to make the np argument for of_clk_get() const.
+Jean-Francois Moine (2):
+  of: Make const the device node pointers in of_clk_get and of_node_put
+  ASoC: Remove useless casts
 
-Thanks. I am sending a patch for that.
+ drivers/clk/clkdev.c                  | 2 +-
+ drivers/of/dynamic.c                  | 2 +-
+ include/linux/clk.h                   | 4 ++--
+ include/linux/of.h                    | 4 ++--
+ sound/soc/generic/simple-card.c       | 7 ++-----
+ sound/soc/samsung/odroidx2_max98090.c | 4 ++--
+ sound/soc/ux500/mop500.c              | 6 ++----
+ 7 files changed, 12 insertions(+), 17 deletions(-)
 
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
+-- 
+2.1.3
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
