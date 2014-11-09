@@ -1,41 +1,105 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH V4 00/14] genirq endian fixes; bcm7120/brcmstb IRQ
- updates
-Date: Sat, 8 Nov 2014 23:30:10 -0500
-Message-ID: <20141109043010.GR3698@titan.lakedaemon.net>
-References: <1415342669-30640-1-git-send-email-cernekee@gmail.com>
- <20141107122745.GJ3698@titan.lakedaemon.net>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH v5 0/6] ARM: mediatek: Add support for interrupt
+ polarity
+Date: Sun, 9 Nov 2014 00:38:20 -0500
+Message-ID: <20141109053820.GU3698@titan.lakedaemon.net>
+References: <1414576824-16143-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20141107122745.GJ3698-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+In-Reply-To: <1414576824-16143-1-git-send-email-yingjoe.chen@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yingjoe Chen <yingjoe.chen@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Jiang Liu <jiang.liu@linux.intel.com>, arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Grant Likely <grant.likely@linaro.org>, Boris BREZILLON <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, yingjoe.chen@gmail.com, hc.yen@mediatek.com, eddie.huang@mediatek.com, nathan.chung@mediatek.com, yh.chen@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 07, 2014 at 07:27:45AM -0500, Jason Cooper wrote:
-> Thomas,
-> 
-> On Thu, Nov 06, 2014 at 10:44:15PM -0800, Kevin Cernekee wrote:
-> > V3->V4:
-> > 
-> >  - Fix buildbot bisectability warning on patch 02/14 (missing include)
-> 
-> Dammit.  :(  Even if I had created a topic branch for this series, I
-> still would have put the genirq changes in /core, then based a brcm
-> branch off of that.
-> 
-> I'm inclined to think I should just drop v3 and apply v4, as a revert
-> commit wouldn't solve the bisectability issue.
+Thomas, Marc,
 
-Ok, no complaints, so it's done.
+Could I get Acks for the core changes and gic changes when you have
+a moment?
 
 thx,
 
 Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+On Wed, Oct 29, 2014 at 06:00:18PM +0800, Yingjoe Chen wrote:
+> This series is 5th version of interrupt polarity support for MediaTek SoCs.
+> This is based on Jiang's hierarchy irqdomain p2v3 [1], which is based on 
+> v3.18-rc2, and my mediatek SoC basic support [2].
+> 
+> Besides changing base, this version addressed comments from Thomas and Marc
+> and also fix a bug on mt6589 reported by Matthias.
+> 
+> In Jiang's version of irq_create_of_mapping, if irqdomain is hierarchy, it
+> will not perform irq_find_mapping check and set_type. The outermost
+> irqdomain need to take care of that. Because we will have several different
+> outermost irqdomain in different ARM SoCs, this cause code duplication. I
+> moved them back to irq_create_of_mapping.
+> 
+> Simplified block diagram for interrupt on my system:
+> 
+>     +-------+      +-------+
+>  ---| SYSIRQ|------|ARM GIC|
+>  ---|       |------|       |
+>  ---|       |------|       |
+>  ---|       |------|       |
+>  ---|       |------|       |
+>     +-------+      +-------+
+> 
+> In device tree, interrupt-parent for other devices is sysirq, child of gic.
+> This describe HW better and allow device to specify polarity as it is sent
+> by the device.
+> 
+> When using hierarchy irq domain, gic will use irq_domain_add_linear to
+> create irqdomain and all interrupt numbers must come from device tree. My
+> /proc/interrupts looks like this now:
+> 
+> # cat /proc/interrupts
+>            CPU0
+>  16:     149578  MT_SYSIRQ 113  mtk_timer
+>  20:       1082  MT_SYSIRQ  54  serial
+> 
+> Changes in v5:
+>  - Fix bug on mt6589 reported by Matthias
+>  - Fix bug for irq_find_mapping in irq_create_of_mapping
+>  - Merge Marc's change to proper handle non-DT case in gic_init_bases
+> 
+> Changes in v4:
+>  - Discussed in [3]
+>  - Remove arm,hierarchy-irq-domain. When GIC is probed by DT, it will
+> support hierarchy irqdomain.
+> 
+> Changes in v3:
+>  - Discussed in [4]
+>  - First implementation using hierarchy irqdomain
+> 
+> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/297624.html
+> [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/296093.html
+> [3] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/296911.html
+> [4] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/293766.html
+> 
+> 
+> Yingjoe Chen (6):
+>   irqdomain: do irq_find_mapping and set_type for hierarchy irqdomain
+>   genirq: Add more helper functions to support stacked irq_chip
+>   irqchip: gic: Support hierarchy irq domain.
+>   ARM: mediatek: Add sysirq interrupt polarity support
+>   ARM: mediatek: Add sysirq in mt6589/mt8135/mt8127 dtsi
+>   dt-bindings: add bindings for mediatek sysirq
+> 
+>  .../bindings/arm/mediatek/mediatek,sysirq.txt      |  26 ++++
+>  arch/arm/boot/dts/mt6589.dtsi                      |  14 +-
+>  arch/arm/boot/dts/mt8127.dtsi                      |  14 +-
+>  arch/arm/boot/dts/mt8135.dtsi                      |  14 +-
+>  drivers/irqchip/Kconfig                            |   1 +
+>  drivers/irqchip/Makefile                           |   1 +
+>  drivers/irqchip/irq-gic.c                          |  90 +++++++----
+>  drivers/irqchip/irq-mtk-sysirq.c                   | 168 +++++++++++++++++++++
+>  include/linux/irq.h                                |   6 +
+>  kernel/irq/chip.c                                  |  28 ++++
+>  kernel/irq/irqdomain.c                             |  27 ++--
+>  11 files changed, 348 insertions(+), 41 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
+>  create mode 100644 drivers/irqchip/irq-mtk-sysirq.c
+> 
