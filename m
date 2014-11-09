@@ -1,54 +1,50 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: [PATCH v1] usb: phy: nop: device tree documentation for vbus
-Date: Sun,  9 Nov 2014 14:02:18 +0100
-Message-ID: <1415538138-24434-1-git-send-email-robert.jarzmik@free.fr>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+From: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] ARM: dts: sunxi: Banana Pi: increase
+ startup-delay for the GMAC PHY regulator
+Date: Sun,  9 Nov 2014 14:28:34 +0100
+Message-ID: <1415539714-7652-2-git-send-email-merker@debian.org>
+References: <1415539714-7652-1-git-send-email-merker@debian.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDP2XNNJ7IFBBXWY7WRAKGQEWNRSHEQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1415539714-7652-1-git-send-email-merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Enhance the phy documentation by adding 2 new optional bindings :
- - the vbus gpio, which detects usb insertion
- - the vbus regulator, which provides current drawn from the usb cable
+On the LeMaker Banana Pi, probing the external ethernet PHY connected
+to the SoC's internal GMAC module sometimes fails.  The PHY power
+supply is handled via a GPIO-controlled regulator, and the existing
+regulator startup-delay of 50000us is too short to make sure that the
+PHY is always fully powered up when it is queried by phylib.  To
+guarantee a reliable PHY detection, the startup-delay has to be
+increased to 60000us.
 
-Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Signed-off-by: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/boot/dts/sun7i-a20-bananapi.dts |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt b/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
-index 1bd37fa..65dfe4b 100644
---- a/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
-@@ -17,6 +17,11 @@ Optional properties:
- 
- - reset-gpios: Should specify the GPIO for reset.
- 
-+- vbus-gpios: should specify the GPIO detecting a VBus insertion
-+              (see Documentation/devicetree/bindings/gpio/gpio.txt)
-+- vbus-regulator : should specifiy the regulator supplying current drawn from
-+  the VBus line (see Documentation/devicetree/bindings/regulator/regulator.txt).
-+
- Example:
- 
- 	hsusb1_phy {
-@@ -26,8 +31,11 @@ Example:
- 		clock-names = "main_clk";
- 		vcc-supply = <&hsusb1_vcc_regulator>;
- 		reset-gpios = <&gpio1 7 GPIO_ACTIVE_LOW>;
-+		vbus-gpios = <&gpio2 13 GPIO_ACTIVE_HIGH>;
-+		vbus-regulator = <&vbus_regulator>;
+diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+index 3de847d..36065d1 100644
+--- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
++++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+@@ -207,7 +207,7 @@
+ 		regulator-name = "gmac-3v3";
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
+-		startup-delay-us = <50000>;
++		startup-delay-us = <60000>;
+ 		enable-active-high;
+ 		gpio = <&pio 7 23 0>;
  	};
- 
- hsusb1_phy is a NOP USB PHY device that gets its clock from an oscillator
- and expects that clock to be configured to 19.2MHz by the NOP PHY driver.
- hsusb1_vcc_regulator provides power to the PHY and GPIO 7 controls RESET.
-+GPIO 13 detects VBus insertion, and accordingly notifies the vbus-regulator.
 -- 
-2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.10.4
