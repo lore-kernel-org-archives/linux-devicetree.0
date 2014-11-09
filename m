@@ -1,36 +1,80 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: [PATCH 0/2] of: Fix some 'const' problems
-Date: Sun, 9 Nov 2014 19:28:00 +0100
-Message-ID: <cover.1415557680.git.moinejf@free.fr>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: [PATCH 2/2] ASoC: Remove useless casts
+Date: Sun, 9 Nov 2014 12:38:56 +0100
+Message-ID: <33e64705e81810201349a09ac22d5e1f66e035e0.1415557680.git.moinejf@free.fr>
+References: <cover.1415557680.git.moinejf@free.fr>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1415557680.git.moinejf@free.fr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-A cast is often needed to call some OF functions, removing
-the 'const' attribute.
-This patchset makes 'const' the device node pointers of the functions
-of_clk_get() and of_node_put() and also removes some useless casts
-in the sound/soc tree.
+There is no need to cast the cpu_of_node or codec_of_node of the
+dai_links when calling of_put_node.
 
-Jean-Francois Moine (2):
-  of: Make const the device node pointers in of_clk_get and of_node_put
-  ASoC: Remove useless casts
-
- drivers/clk/clkdev.c                  | 2 +-
- drivers/of/dynamic.c                  | 2 +-
- include/linux/clk.h                   | 4 ++--
- include/linux/of.h                    | 4 ++--
+Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
+---
  sound/soc/generic/simple-card.c       | 7 ++-----
  sound/soc/samsung/odroidx2_max98090.c | 4 ++--
  sound/soc/ux500/mop500.c              | 6 ++----
- 7 files changed, 12 insertions(+), 17 deletions(-)
+ 3 files changed, 6 insertions(+), 11 deletions(-)
 
+diff --git a/sound/soc/generic/simple-card.c b/sound/soc/generic/simple-card.c
+index cd49d50..3e3fec4 100644
+--- a/sound/soc/generic/simple-card.c
++++ b/sound/soc/generic/simple-card.c
+@@ -457,16 +457,13 @@ static int asoc_simple_card_unref(struct platform_device *pdev)
+ {
+ 	struct snd_soc_card *card = platform_get_drvdata(pdev);
+ 	struct snd_soc_dai_link *dai_link;
+-	struct device_node *np;
+ 	int num_links;
+ 
+ 	for (num_links = 0, dai_link = card->dai_link;
+ 	     num_links < card->num_links;
+ 	     num_links++, dai_link++) {
+-		np = (struct device_node *) dai_link->cpu_of_node;
+-		of_node_put(np);
+-		np = (struct device_node *) dai_link->codec_of_node;
+-		of_node_put(np);
++		of_node_put(dai_link->cpu_of_node);
++		of_node_put(dai_link->codec_of_node);
+ 	}
+ 	return 0;
+ }
+diff --git a/sound/soc/samsung/odroidx2_max98090.c b/sound/soc/samsung/odroidx2_max98090.c
+index 3c8f604..d7640e7 100644
+--- a/sound/soc/samsung/odroidx2_max98090.c
++++ b/sound/soc/samsung/odroidx2_max98090.c
+@@ -153,8 +153,8 @@ static int odroidx2_audio_remove(struct platform_device *pdev)
+ 
+ 	snd_soc_unregister_card(card);
+ 
+-	of_node_put((struct device_node *)odroidx2_dai[0].cpu_of_node);
+-	of_node_put((struct device_node *)odroidx2_dai[0].codec_of_node);
++	of_node_put(odroidx2_dai[0].cpu_of_node);
++	of_node_put(odroidx2_dai[0].codec_of_node);
+ 
+ 	return 0;
+ }
+diff --git a/sound/soc/ux500/mop500.c b/sound/soc/ux500/mop500.c
+index b3b66aa..ea9ba284 100644
+--- a/sound/soc/ux500/mop500.c
++++ b/sound/soc/ux500/mop500.c
+@@ -64,11 +64,9 @@ static void mop500_of_node_put(void)
+ 
+ 	for (i = 0; i < 2; i++) {
+ 		if (mop500_dai_links[i].cpu_of_node)
+-			of_node_put((struct device_node *)
+-				mop500_dai_links[i].cpu_of_node);
++			of_node_put(mop500_dai_links[i].cpu_of_node);
+ 		if (mop500_dai_links[i].codec_of_node)
+-			of_node_put((struct device_node *)
+-				mop500_dai_links[i].codec_of_node);
++			of_node_put(mop500_dai_links[i].codec_of_node);
+ 	}
+ }
+ 
 -- 
 2.1.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
