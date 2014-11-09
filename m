@@ -1,93 +1,48 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: [PATCH 1/2] of: Make const the device node pointers in of_clk_get and
- of_node_put
-Date: Sat, 8 Nov 2014 19:33:22 +0100
-Message-ID: <375a82230accf26dfbbb74e6f928243ea8e38b50.1415557680.git.moinejf@free.fr>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] of: Make const the device node pointers in
+ of_clk_get and of_node_put
+Date: Sun, 9 Nov 2014 18:50:19 +0000
+Message-ID: <20141109185019.GU4042@n2100.arm.linux.org.uk>
 References: <cover.1415557680.git.moinejf@free.fr>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1415557680.git.moinejf@free.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+ <375a82230accf26dfbbb74e6f928243ea8e38b50.1415557680.git.moinejf@free.fr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <375a82230accf26dfbbb74e6f928243ea8e38b50.1415557680.git.moinejf-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some device nodes are sometimes referenced by const pointers.
+On Sat, Nov 08, 2014 at 07:33:22PM +0100, Jean-Francois Moine wrote:
+> Some device nodes are sometimes referenced by const pointers.
+> 
+> This patch avoids to cast these pointers when calling the functions
+> of_clk_get() and of_node_put().
 
-This patch avoids to cast these pointers when calling the functions
-of_clk_get() and of_node_put().
+NAK.  Firstly, of_node_put contains a kref, which is /definitely/ not
+a const item when kobject_put() is called on it.  Inside the kobject
+is a kref, which kobject_put() will call kref_put() on.  kref_put()
+in turn will internally call atomic_sub_and_test() on a value embedded
+within the kref struct.
 
-Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
----
- drivers/clk/clkdev.c | 2 +-
- drivers/of/dynamic.c | 2 +-
- include/linux/clk.h  | 4 ++--
- include/linux/of.h   | 4 ++--
- 4 files changed, 6 insertions(+), 6 deletions(-)
+Ergo, of_node_put() modifies the struct device_node contents.  Therefore,
+of_node_put() definitely not treating the data pointed to as read-only,
+and therefore it is completely inappropriate for it to be marked "const".
 
-diff --git a/drivers/clk/clkdev.c b/drivers/clk/clkdev.c
-index da4bda8..eaee11e 100644
---- a/drivers/clk/clkdev.c
-+++ b/drivers/clk/clkdev.c
-@@ -53,7 +53,7 @@ struct clk *of_clk_get_by_clkspec(struct of_phandle_args *clkspec)
- 	return clk;
- }
- 
--struct clk *of_clk_get(struct device_node *np, int index)
-+struct clk *of_clk_get(const struct device_node *np, int index)
- {
- 	struct of_phandle_args clkspec;
- 	struct clk *clk;
-diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index f297891..64eb5ba 100644
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -34,7 +34,7 @@ EXPORT_SYMBOL(of_node_get);
-  * @node:	Node to dec refcount, NULL is supported to simplify writing of
-  *		callers
-  */
--void of_node_put(struct device_node *node)
-+void of_node_put(const struct device_node *node)
- {
- 	if (node)
- 		kobject_put(&node->kobj);
-diff --git a/include/linux/clk.h b/include/linux/clk.h
-index c7f258a..4e077a4 100644
---- a/include/linux/clk.h
-+++ b/include/linux/clk.h
-@@ -425,11 +425,11 @@ struct device_node;
- struct of_phandle_args;
- 
- #if defined(CONFIG_OF) && defined(CONFIG_COMMON_CLK)
--struct clk *of_clk_get(struct device_node *np, int index);
-+struct clk *of_clk_get(const struct device_node *np, int index);
- struct clk *of_clk_get_by_name(struct device_node *np, const char *name);
- struct clk *of_clk_get_from_provider(struct of_phandle_args *clkspec);
- #else
--static inline struct clk *of_clk_get(struct device_node *np, int index)
-+static inline struct clk *of_clk_get(const struct device_node *np, int index)
- {
- 	return ERR_PTR(-ENOENT);
- }
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 6545e7a..b738681 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -95,14 +95,14 @@ static inline int of_node_is_attached(struct device_node *node)
- 
- #ifdef CONFIG_OF_DYNAMIC
- extern struct device_node *of_node_get(struct device_node *node);
--extern void of_node_put(struct device_node *node);
-+extern void of_node_put(const struct device_node *node);
- #else /* CONFIG_OF_DYNAMIC */
- /* Dummy ref counting routines - to be implemented later */
- static inline struct device_node *of_node_get(struct device_node *node)
- {
- 	return node;
- }
--static inline void of_node_put(struct device_node *node) { }
-+static inline void of_node_put(const struct device_node *node) { }
- #endif /* !CONFIG_OF_DYNAMIC */
- 
- #ifdef CONFIG_OF
+What this then means is that it fundamentally undermines the idea of
+storing the pointer to a device_node as a const pointer, as the device
+node must always be modified when you're done with it (because it's a
+ref-counted structure.)  So, having it const in your code is a bug.
+
+What this also means is that every other place that you've added const
+below is also very dubious.
+
 -- 
-2.1.3
+FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
