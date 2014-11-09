@@ -1,14 +1,14 @@
 From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH 04/11] ARM: dts: omap3-igep0020: Specify IGEPv2 revision
- in device tree.
-Date: Sun, 9 Nov 2014 11:03:14 +0100
-Message-ID: <CABxcv=k=XN+UrNAM7Tngp-MUv4O5v33zRcZjSWns=eGYSFrjyA@mail.gmail.com>
+Subject: Re: [PATCH 05/11] ARM: dts: omap3-igep00x0: Move outside common file
+ the on board Wifi module.
+Date: Sun, 9 Nov 2014 11:05:29 +0100
+Message-ID: <CABxcv==5N+EQnvqC9UmrKKO8MtADVNcR4Go_nf1kHD3kb6J8jA@mail.gmail.com>
 References: <1415275311-6857-1-git-send-email-eballetbo@iseebcn.com>
-	<1415275311-6857-5-git-send-email-eballetbo@iseebcn.com>
+	<1415275311-6857-6-git-send-email-eballetbo@iseebcn.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1415275311-6857-5-git-send-email-eballetbo@iseebcn.com>
+In-Reply-To: <1415275311-6857-6-git-send-email-eballetbo@iseebcn.com>
 Sender: linux-omap-owner@vger.kernel.org
 To: Enric Balletbo i Serra <eballetbo@iseebcn.com>
 Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
@@ -18,9 +18,9 @@ Hello Enric,
 
 On Thu, Nov 6, 2014 at 1:01 PM, Enric Balletbo i Serra
 <eballetbo@iseebcn.com> wrote:
-> We'll introduce new hardware revisions soon. This patch is only to
-> indicate which board revision supports this device tree file in order
-> to avoid confusions.
+> New IGEP boards revisions will use another Wifi module, so this patch moves
+> the DT nodes outside the common omap3-igep.dtsi file to specific DT for every
+> board.
 >
 > Signed-off-by: Enric Balletbo i Serra <eballetbo@iseebcn.com>
 
