@@ -1,45 +1,28 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 3/3] ARM: dts: meson: add node for SPIFC
-Date: Sun, 9 Nov 2014 10:17:29 +0000
-Message-ID: <20141109101729.GN2722@sirena.org.uk>
-References: <1415525113-25598-1-git-send-email-b.galvani@gmail.com>
- <1415525113-25598-4-git-send-email-b.galvani@gmail.com>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH 11/11] ARM: OMAP2+: igep00x0: Add pdata-quirks for the
+ btwilink device.
+Date: Sun, 9 Nov 2014 11:23:52 +0100
+Message-ID: <CABxcv=kijAqwN6dzvrVE77mHr_GKeScG-ZHbUghJd133Bh-fDQ@mail.gmail.com>
+References: <1415275311-6857-1-git-send-email-eballetbo@iseebcn.com>
+	<1415275311-6857-12-git-send-email-eballetbo@iseebcn.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JLiXfqD9/Kt1b+Pq"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1415525113-25598-4-git-send-email-b.galvani@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Beniamino Galvani <b.galvani@gmail.com>
-Cc: linux-spi@vger.kernel.org, Carlo Caione <carlo@caione.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jerry Cao <jerry.cao@amlogic.com>, Victor Wan <victor.wan@amlogic.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1415275311-6857-12-git-send-email-eballetbo@iseebcn.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Enric Balletbo i Serra <eballetbo@iseebcn.com>
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello Enric,
 
---JLiXfqD9/Kt1b+Pq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Thu, Nov 6, 2014 at 1:01 PM, Enric Balletbo i Serra
+<eballetbo@iseebcn.com> wrote:
+> Add btwilink device for IGEPv2 Rev. F and IGEP COM MODULE Rev. G.
+>
+> Signed-off-by: Enric Balletbo i Serra <eballetbo@iseebcn.com>
 
-On Sun, Nov 09, 2014 at 10:25:13AM +0100, Beniamino Galvani wrote:
-> This adds a node for the SPI Flash Controller to the Amlogic Meson
-> DTS.
+Acked-by: Javier Martinez Canillas <javier@dowhile0.org>
 
-Acked-by: Mark Brown <broonie@kernel.org>
-
---JLiXfqD9/Kt1b+Pq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUXz85AAoJECTWi3JdVIfQG5cH/3A15dIrwZU8ZtnWmeAznIes
-0YCa6pASIak1j8iCCGLW5qUXchiMB5ag5gWAZRiZAfuW7K0K57IlRrHYQSsk8jOC
-UWK5M0er7jKCTpfgrwfpO1GcOWlNQwo+qCx47M8N2HBK6cSH1AC3WqhzZmyn6anK
-HnV+858F6PoBlRflAhRJNVRyF2MIS9DqSS4hYttsUrWiiHxsz3jmnsgZr4Z6thjR
-VegzJ354je2zaKhEPPBL+s08xwRN/1EzZ67KFCYWLfgMA7uMwRk6F4BuxfHEqOs4
-K0+qlRjZAJJpIiD/3aCF124O9Kfu7Ar+ZTJosEcsZt61UESR4StW7uUOWcqpMzM=
-=sG1B
------END PGP SIGNATURE-----
-
---JLiXfqD9/Kt1b+Pq--
+Best regards,
+Javier
