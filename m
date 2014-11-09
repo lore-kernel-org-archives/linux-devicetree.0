@@ -1,51 +1,72 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [GIT PULL] Devicetree bug fix for v3.18
-Date: Sat, 8 Nov 2014 23:22:55 +0000
-Message-ID: <CACxGe6sskK4wFXwx=b0B9QyCP602h6vC4EZU-iEBuN0YE9bB2A@mail.gmail.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [GIT PULL] Broadcom Cygnus SoC defconfig changes
+Date: Sat, 8 Nov 2014 16:13:02 -0800
+Message-ID: <20141109001302.GB11947@quad.lixom.net>
+References: <1414698612-26216-1-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1414698612-26216-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[resending; forgot to cc the mailing lists]
+On Thu, Oct 30, 2014 at 12:50:09PM -0700, Florian Fainelli wrote:
+> The following changes since commit f114040e3ea6e07372334ade75d1ee0775c355e1:
+> 
+>   Linux 3.18-rc1 (2014-10-19 18:08:38 -0700)
+> 
+> are available in the git repository at:
+> 
+>   http://github.com/brcm/linux.git tags/arm-soc/for-3.18/cygnus-defconfig-v9
+> 
+> for you to fetch changes up to aa0204801143ee2d47e9e8dd5f39cdddd5613b4b:
+> 
+>   ARM: multi_v7_defconfig: Enable Broadcom Cygnus (2014-10-30 11:01:35 -0700)
 
-Hi Linus.
+Hi Florian,
 
-Please pull the following branch for a device tree bug fix.
+Apologies for the delay in dealing with this pull request.
 
-Thanks,
-g.
+> ----------------------------------------------------------------
+> This patchset contains initial support for Broadcom's Cygnus SoC based on our
+> iProc architecture. Initial support is minimal and includes just the mach
+> platform code, clock driver, and a basic device tree configuration. Peripheral
+> drivers will be submitted soon, as will device tree configurations for other
+> Cygnus board variants.
+> 
+> These are the defconfig parts of the changes
+> 
+> ----------------------------------------------------------------
+> Jonathan Richardson (1):
+>       ARM: cygnus defconfig : Initial defconfig for Broadcom Cygnus SoC
+> 
+> Ray Jui (1):
+>       ARM: multi_v7_defconfig: Enable Broadcom Cygnus
+> 
+> Scott Branden (1):
+>       ARM: bcm_defconfig/multi_v7_defconfig: remove one level of menu from Kconfig
+> 
+>  arch/arm/configs/bcm_cygnus_defconfig | 237 ++++++++++++++++++++++++++++++++++
+>  arch/arm/configs/bcm_defconfig        |   3 +-
+>  arch/arm/configs/multi_v7_defconfig   |  21 ++-
 
-The following changes since commit 0df1f2487d2f0d04703f142813d53615d62a1da4:
+Please send multi_v7_defconfig updates as a patch instead of including in
+a merge request. We ask for this because it's a file that many maintainers
+touch and it's easy that we get lots of conflicts otherwise.
 
-  Linux 3.18-rc3 (2014-11-02 15:01:51 -0800)
+As far as the bcm_cygnus_defconfig: Since new platforms are multiplatform
+enabled by default, we normally only prefer to have one defconfig per vendor.
+We've made exceptions in cases where the families are very different, but in
+general one defconfig per vendor should be sufficient.
 
-are available in the git repository at:
+I.e. please enable the cygnus options in bcm_defconfig instead of adding a new
+one.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/glikely/linux devicetree/merge
 
-for you to fetch changes up to a87fa1d81a9fb5e9adca9820e16008c40ad09f33:
-
-  of: Fix overflow bug in string property parsing functions
-(2014-11-04 10:19:48 +0000)
-
-----------------------------------------------------------------
-Devicetree bugfix for v3.18
-
-One buffer overflow bug that shouldn't be left around.
-
-----------------------------------------------------------------
-Grant Likely (1):
-      of: Fix overflow bug in string property parsing functions
-
- drivers/of/base.c                           | 88 ++++++++---------------------
- drivers/of/selftest.c                       | 66 ++++++++++++++++++++--
- drivers/of/testcase-data/tests-phandle.dtsi |  2 +
- include/linux/of.h                          | 84 ++++++++++++++++++++++-----
- 4 files changed, 154 insertions(+), 86 deletions(-)
+-Olof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
