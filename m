@@ -1,121 +1,140 @@
-From: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] spi: meson: Add support for Amlogic Meson SPIFC
-Date: Sun, 9 Nov 2014 23:56:50 +0100
-Message-ID: <20141109225650.GA27950@gmail.com>
-References: <1415525113-25598-1-git-send-email-b.galvani@gmail.com>
- <1415525113-25598-3-git-send-email-b.galvani@gmail.com>
- <20141109101712.GM2722@sirena.org.uk>
+From: NeilBrown <neilb@suse.de>
+Subject: Re: [PATCH 2/3] ASoC: twl4030: allow voice port to be
+ connected externally.
+Date: Mon, 10 Nov 2014 10:25:51 +1100
+Message-ID: <20141110102551.2678d342@notabene.brown>
+References: <20141108002637.6561.19002.stgit@notabene.brown>
+ <20141108003803.6561.57464.stgit@notabene.brown>
+ <20141108092622.GC2722@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141109101712.GM2722-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============7843894543514871539=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20141108092622.GC2722@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, GTA04 owners <gta04-owner@goldelico.com>, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 09, 2014 at 10:17:12AM +0000, Mark Brown wrote:
-> On Sun, Nov 09, 2014 at 10:25:12AM +0100, Beniamino Galvani wrote:
-> 
-> > +static int meson_spifc_wait_ready(struct meson_spifc *spifc)
-> > +{
-> > +	unsigned long deadline = jiffies + msecs_to_jiffies(1000);
-> > +	u32 data;
-> > +
-> > +	do {
-> > +		regmap_read(spifc->regmap, REG_SLAVE, &data);
-> > +		if (data & SLAVE_TRST_DONE)
-> > +			return 0;
-> > +		cond_resched();
-> > +	} while (time_before(jiffies, deadline));
-> 
-> This will busy wait for up to a second, that seems like a long time to
-> busy wait.  We also appear to be using this for the entire duration of
-> the transfer which could be a fairly long time even during normal
-> operation if doing a large transfer such as a firmware download, or if
-> the bus speed is low.
+--===============7843894543514871539==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ boundary="Sig_/q+_O70ObzbDZp1yJD37T1cz"; protocol="application/pgp-signature"
 
-Yes, probably the timeout value is too long since the maximum length
-of a basic transfer is 64 bytes. Can you suggest a reasonable value?
+--Sig_/q+_O70ObzbDZp1yJD37T1cz
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> > +	meson_spifc_setup_speed(spifc, xfer->speed_hz ? xfer->speed_hz :
-> > +				spi->max_speed_hz);
-> > +
-> 
-> Please avoid the ternery operator, it does nothing for legibility and in
-> this case it's not needed as the core will always ensure that there is a
-> per-transfer speed set.
+On Sat, 8 Nov 2014 09:26:22 +0000 Mark Brown <broonie@kernel.org> wrote:
 
-Ok.
+> On Sat, Nov 08, 2014 at 11:38:03AM +1100, NeilBrown wrote:
+>=20
+> > If voice port on twl4030 is not connected to a McBSP (or similar)
+> > then we cannot configure the format the way we normally do for a DAI.
+>=20
+> Yes we can, you need to represent the DAI link to whatever else the
+> device is connected to in the driver like we do anything else - and in
+> any case this isn't a device specific issue so we shouldn't be doing
+> something driver specific to solve it.  Look at something like speyside.
 
-> > +	while (done < xfer->len && !ret) {
-> > +		len = min_t(int, xfer->len - done, SPIFC_BUFFER_SIZE);
-> > +		ret = meson_spifc_txrx(spifc, xfer, done, len,
-> > +				       last_xfer, done + len >= xfer->len);
-> > +		done += len;
-> > +	}
-> 
-> I noticed that the handling of /CS was done in the spifc_txrx() function
-> - will this do the right thing if the transfer needs to be split for the
-> buffer size?
+Hi Mark,
+ thanks for the reply ... I might need a little bit more help though.
 
-It should. When the transfer gets split, CS is kept active for all the
-chunks and the value of CS after that depends on the value of
-cs_change.
+I had a look at sound/soc/samsung/speyside.c, but I'm not entirely sure what
+I'm looking for.
+Presumably this is an audio processor not unlike the audio module in the
+twl4030.
 
-> 
-> > +	if (!ret && xfer->delay_usecs)
-> > +		udelay(xfer->delay_usecs);
-> 
-> The core will do this for you if you implement this as transfer_one().
+I see that there are 3 dai-links:
+  CPU-DSP
+  DSP-CODEC
+  Baseband
 
-Please correct me if I'm wrong, but I think that transfer_one() can't
-be used in this case. The hardware doesn't support direct manipulation
-of CS and allows only to specify if CS must be kept active after the
-current transfer. So I need to know for each transfer if it's the last
-and this can be achieved only implementing transfer_one_message().
+Presumably "Baseband" is similar, in purpose at least, to the "voice"
+interface on the twl4030.
 
-> 
-> > +static int meson_spifc_transfer_one_message(struct spi_master *master,
-> > +					    struct spi_message *msg)
-> 
-> This appears to do nothing that the core won't do - just implement
-> transfer_one() and remove this.
-> 
-> > +	spifc = spi_master_get_devdata(master);
-> > +	memset(spifc, 0, sizeof(struct meson_spifc));
-> 
-> There should be no need for this memset.
-> 
-> > +	spifc_regmap_config.max_register = resource_size(res) - 4;
-> > +	spifc_regmap_config.name = "amlogic,meson-spifc";
-> 
-> If you're dynamically initializing the structure you need to work with a
-> copy of it rather than directly since there may be multiple instances.
-> I'm not seeing a reason to override the regmap name here, this is only
-> really intended for devices with multiple register maps.
-> 
-> > +	ret = clk_prepare_enable(spifc->clk);
-> > +	if (ret) {
-> > +		dev_err(spifc->dev, "can't prepare clock\n");
-> > +		goto out_err;
-> > +	}
-> 
-> You should really implement runtime PM operations to disable this when
-> not in use and use auto_runtime_pm to make sure this happens.
-> 
-> > +	master->bus_num = pdev->id;
-> 
-> Leave this blank for DT only devices (and for non-DT devices this won't
-> work if you get two different buses).
+Each dai-link has a "cpu_dai_name" and a "codec_dai_name", even though it
+appears that only "CPU-DSP" is connected to the CPU.  Maybe that naming is
+the source of some of my confusion.
 
-Ok, will do. Thanks for the review.
+"Baseband" declares
+                .cpu_dai_name =3D "wm8996-aif2",
+so wm8996 is something with 2 audio interfaces, (aif), and this is the seco=
+nd
+one?  Maybe the  wm8996 is the audio module, so what is the "speyside"?
 
-Beniamino
+http://opensource.wolfsonmicro.com/content/speyside-audio
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+says it is a "reference platform".  Does that mean it is a board with a bun=
+ch
+of chips soldered onto it?  If it were a board it should be described by a
+dts file, not by a pile of C code (I thought), so I must be wrong about tha=
+t.
+
+
+In my case, I have a board with a GSM module and the twl4030 module.  Each
+has an audio interface and these are connected.  I assume that I need to
+express this connection in the dts file.
+The GSM module doesn't currently appear in the dts file as it is usb-attach=
+ed.
+However I've been thinking that we will need to add it so we can express
+power-on controls (twiddling some GPIOs).  So let's suppose we have the GSM
+module in the dts file (child of a USB interface) and the twl4030 as well
+(beneath an i2c interface).
+
+The twl4030 needs to know the master/polarity of the clk/frm lines.  The GSM
+module declares that these are.  So presumably we need some sort of linkage.
+Ahhhh... I found Documentation/devicetree/bindings/sound/simple-card.txt
+
+So I need to make the "voice" port on the twl4030 look like a "cpu" end of a
+dai-link, and create a "codec" end in the GSM module, and use "sound-dai" to
+point from the twl4030 to the GSM module.
+Then I use frame-master, bitclock-master, bitclock-inversion, frame-inversi=
+on
+for the settings I need.
+
+I suspect I can make that work.
+
+Am I on the right track?
+
+Thanks,
+NeilBrown
+
+--Sig_/q+_O70ObzbDZp1yJD37T1cz
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIVAwUBVF/3/znsnt1WYoG5AQLjhw//aEDPnYz+D3TTOrrpi5gTXRlqNTiNmq6W
+dOSPSXR1tfUI3gevIXkjO+NlHbRf74/2dOpQ5PJdzIG0tpkdXRr2M+y1zwj/KzIp
+hvjLLbc43xiX/pLfp7MnIe0MEeOIMDgbF9q6v9oeBNLpIqgb0Naa5vd6Q97NET4W
+ey4uJfkVp9jI6v9JgUeK+2/cTHgCkxJEW2eLrInpoBbHhGuuijIxGPjzPLr+yrv9
+6pcIp+JB1LH4RXZgssVw87dm5EYq8mFDNt86GxLKm0Mm0rbi6lojku1LGBC1s0gz
+VpUhVi65iXLA8krQaX9RGHIyD4kuLiVVKiQyCo3fTs2fwoHAWJ1moRoCcn96uC9k
+GKGcpJnvNXU5qjuTS25U2VvG5mYoGxpwAQHvfL0qAVNEUA+4xGMmooRMyYLVgdRe
+PLif6/JVmPQB5hHW3/B88NjdvNjEBCFOZUyTHbxzi5ublElvPAZSqQdSOnd4MEyC
+qV14AlThWI9g51f/ARd4wuybfQlpWvFQceIh1JpbYIc+7OP7KiBEdqSXJDsv0na8
+h68LiqesfTnALyGI3T3CRtwOozou9dchXjTsXsmmx4ssiZvf26/RR7TDT1yB5OqQ
+D3BE89cVdHI3au19ZCJsBmF49KE8rWwdKa/95i0BedWg29xNn9nbjr3YQK8bsOk5
+rWwdUid+aJY=
+=EZoe
+-----END PGP SIGNATURE-----
+
+--Sig_/q+_O70ObzbDZp1yJD37T1cz--
+
+--===============7843894543514871539==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============7843894543514871539==--
