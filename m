@@ -1,27 +1,52 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH 3/5] i2c: sh_mobile: Document SoC-specific bindings
-Date: Mon, 10 Nov 2014 10:05:31 +0900
-Message-ID: <20141110010531.GI16836@verge.net.au>
-References: <1415274730-310-1-git-send-email-geert+renesas@glider.be>
- <1415274730-310-4-git-send-email-geert+renesas@glider.be>
- <20141107175347.GE3656@katana>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141107175347.GE3656@katana>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH v6 07/48] qnap-poweroff: Drop reference to pm_power_off from devicetree bindings
+Date: Sun,  9 Nov 2014 17:42:24 -0800
+Message-ID: <1415583785-6980-8-git-send-email-linux@roeck-us.net>
+References: <1415583785-6980-1-git-send-email-linux@roeck-us.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1415583785-6980-1-git-send-email-linux@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 07, 2014 at 06:53:48PM +0100, Wolfram Sang wrote:
-> On Thu, Nov 06, 2014 at 12:52:08PM +0100, Geert Uytterhoeven wrote:
-> > Explicitly list the various SoC-specific compatible properties.
-> > This allows checkpatch to validate DTSes.
-> > 
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> 
-> Applied to for-next, thanks! I guess the other patches go via Simon.
+Replace reference to pm_power_off (which is an implementation detail)
+and replace it with a more generic description of the driver's functionality.
 
-Thanks, I have picked up patches 1, 4 and 5.
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Acked-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+v6:
+- No change.
+v5:
+- Rebase to v3.18-rc3
+v4:
+- No change
+v3:
+- No change
+v2:
+- Drop implementation details
+
+ Documentation/devicetree/bindings/power_supply/qnap-poweroff.txt | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/power_supply/qnap-poweroff.txt b/Documentation/devicetree/bindings/power_supply/qnap-poweroff.txt
+index af25e77..c363d71 100644
+--- a/Documentation/devicetree/bindings/power_supply/qnap-poweroff.txt
++++ b/Documentation/devicetree/bindings/power_supply/qnap-poweroff.txt
+@@ -3,8 +3,7 @@
+ QNAP NAS devices have a microcontroller controlling the main power
+ supply. This microcontroller is connected to UART1 of the Kirkwood and
+ Orion5x SoCs. Sending the character 'A', at 19200 baud, tells the
+-microcontroller to turn the power off. This driver adds a handler to
+-pm_power_off which is called to turn the power off.
++microcontroller to turn the power off.
+ 
+ Synology NAS devices use a similar scheme, but a different baud rate,
+ 9600, and a different character, '1'.
+-- 
+1.9.1
