@@ -1,43 +1,50 @@
-From: Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 5/5] ARM: dts: sun7i: Cubietruck: add power
- supply regulator for USB OTG VBUS
-Date: Mon, 10 Nov 2014 19:55:10 +0100
-Message-ID: <75c850ce9a46f86bd746205916bbdcae2cf63756.1415645258.git.rbyshko@gmail.com>
-References: <cover.1415645258.git.rbyshko@gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDJMXIOHZIFBBKEUQSRQKGQEDSLJ4AY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <cover.1415645258.git.rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-In-Reply-To: <cover.1415645258.git.rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-References: <cover.1415645258.git.rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 1/5] ASoC: sh: fsi: Document SoC-specific bindings
+Date: Mon, 10 Nov 2014 20:00:40 +0100
+Message-ID: <1415646044-4168-2-git-send-email-geert+renesas@glider.be>
+References: <1415646044-4168-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1415646044-4168-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: alsa-devel@alsa-project.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/sun7i-a20-cubietruck.dts | 1 +
- 1 file changed, 1 insertion(+)
+The documentation only mentioned the generic fallback compatible
+property.
+Add the missing SoC-specific compatible properties, some of which are
+already in use.
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-index 1682307..a281d25 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-@@ -40,6 +40,7 @@
- 		};
+Also fix a small typo, while we're at it.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ Documentation/devicetree/bindings/sound/renesas,fsi.txt | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/renesas,fsi.txt b/Documentation/devicetree/bindings/sound/renesas,fsi.txt
+index c5be003f413e3aa3..0d0ab51105b01ece 100644
+--- a/Documentation/devicetree/bindings/sound/renesas,fsi.txt
++++ b/Documentation/devicetree/bindings/sound/renesas,fsi.txt
+@@ -1,11 +1,16 @@
+ Renesas FSI
  
- 		usbphy: phy@01c13400 {
-+			usb0_vbus-supply = <&reg_usb0_vbus>;
- 			usb1_vbus-supply = <&reg_usb1_vbus>;
- 			usb2_vbus-supply = <&reg_usb2_vbus>;
- 			status = "okay";
+ Required properties:
+-- compatible			: "renesas,sh_fsi2" or "renesas,sh_fsi"
++- compatible			: "renesas,fsi2-<soctype>",
++				  "renesas,sh_fsi2" or "renesas,sh_fsi" as
++				  fallback.
++				  Examples with soctypes are:
++				    - "renesas,fsi2-r8a7740" (R-Mobile A1)
++				    - "renesas,fsi2-sh73a0" (SH-Mobile AG5)
+ - reg				: Should contain the register physical address and length
+ - interrupts			: Should contain FSI interrupt
+ 
+-- fsia,spdif-connection		: FSI is connected by S/PDFI
++- fsia,spdif-connection		: FSI is connected by S/PDIF
+ - fsia,stream-mode-support	: FSI supports 16bit stream mode.
+ - fsia,use-internal-clock	: FSI uses internal clock when master mode.
+ 
 -- 
-2.1.2
+1.9.1
+
