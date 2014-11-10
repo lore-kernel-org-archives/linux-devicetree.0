@@ -1,57 +1,49 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 3/5] ASoC: rsnd: Document SoC-specific bindings
-Date: Mon, 10 Nov 2014 20:00:42 +0100
-Message-ID: <1415646044-4168-4-git-send-email-geert+renesas@glider.be>
-References: <1415646044-4168-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1415646044-4168-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: alsa-devel@alsa-project.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 1/2] of: Fix crash if an earlycon driver is not found
+Date: Mon, 10 Nov 2014 22:01:29 +0300
+Message-ID: <54610B89.4080004@cogentembedded.com>
+References: <1415523348-4631-1-git-send-email-cernekee@gmail.com> <CAL_Jsq+iVfFGYEF575spQ5MaYPzo1QSfLUZP1M=TpH0+HdGS6A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+iVfFGYEF575spQ5MaYPzo1QSfLUZP1M=TpH0+HdGS6A@mail.gmail.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Kevin Cernekee <cernekee@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux-MIPS <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The documentation only mentioned the generic fallback compatible
-property.
-Add the missing SoC-specific compatible properties, which are already in
-use.
+On 11/10/2014 05:14 PM, Rob Herring wrote:
 
-Also drop a bogus 0x unit-address prefix while we're at it.
+>> __earlycon_of_table_sentinel.compatible is a char[128], not a pointer, so
+>> it will never be NULL.  Checking it against NULL causes the match loop to
+>> run past the end of the array, and eventually match a bogus entry, under
+>> the following conditions:
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- Documentation/devicetree/bindings/sound/renesas,rsnd.txt | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+>>   - Kernel command line specifies "earlycon" with no parameters
+>>   - DT has a stdout-path pointing to a UART node
+>>   - The UART driver doesn't use OF_EARLYCON_DECLARE (or maybe the console
+>>     driver is compiled out)
 
-diff --git a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-index aa697abf337e7aa6..2dd690bc19cc6436 100644
---- a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-+++ b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-@@ -1,8 +1,12 @@
- Renesas R-Car sound
- 
- Required properties:
--- compatible			: "renesas,rcar_sound-gen1" if generation1
-+- compatible			: "renesas,rcar_sound-<soctype>", fallbacks
-+				  "renesas,rcar_sound-gen1" if generation1, and
- 				  "renesas,rcar_sound-gen2" if generation2
-+				  Examples with soctypes are:
-+				    - "renesas,rcar_sound-r8a7790" (R-Car H2)
-+				    - "renesas,rcar_sound-r8a7791" (R-Car M2-W)
- - reg				: Should contain the register physical address.
- 				  required register is
- 				   SRU/ADG/SSI      if generation1
-@@ -35,9 +39,9 @@ DAI subnode properties:
- 
- Example:
- 
--rcar_sound: rcar_sound@0xffd90000 {
-+rcar_sound: rcar_sound@ec500000 {
- 	#sound-dai-cells = <1>;
--	compatible = "renesas,rcar_sound-gen2";
-+	compatible = "renesas,rcar_sound-r8a7791", "renesas,rcar_sound-gen2";
- 	reg =	<0 0xec500000 0 0x1000>, /* SCU */
- 		<0 0xec5a0000 0 0x100>,  /* ADG */
- 		<0 0xec540000 0 0x1000>, /* SSIU */
--- 
-1.9.1
+>> Fix this by checking to see if match->compatible is a non-empty string.
+
+>> Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+>> Cc: <stable@vger.kernel.org> # 3.16+
+
+> Thanks. I'll queue this up.
+
+> BTW, you should not add stable CC when submitting for review, but
+> rather add a note for the maintainer to apply to stable. Only if a
+> commit is in mainline already and not flagged for stable, then you
+> send the patch with the stable tag to get the commit added to stable.
+> It's a bit confusing...
+
+    It's actually OK to tag the patch for stable (not really send to stable), 
+so that that list gets automatically notified when the comment lands in the 
+mainline. Unless the maintainer doesn't have his own rules about stable 
+patches (like e.g. DaveM). Do you have alike rules?
+
+> Rob
+
+WBR, Sergei
 
