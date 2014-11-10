@@ -1,78 +1,244 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] DT: iio: adc: Add CC_10001 binding documentation
-Date: Mon, 10 Nov 2014 13:28:33 -0800
-Message-ID: <CAL1qeaHzp==jmTB8dJ1M3NuocwuSqsfbVSU4nuM50vrOyfJ3qA@mail.gmail.com>
-References: <1415224611-22096-1-git-send-email-ezequiel.garcia@imgtec.com>
-	<1415224611-22096-3-git-send-email-ezequiel.garcia@imgtec.com>
-	<545E1333.9010904@kernel.org>
-	<5461170B.7070505@imgtec.com>
-	<54611934.6050701@imgtec.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54611934.6050701-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Phani Movva <phani.movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: mathieu.poirier@linaro.org
+Subject: [PATCH v9 RESEND] coresight: bindings for coresight drivers
+Date: Mon, 10 Nov 2014 14:32:21 -0700
+Message-ID: <1415655141-31507-1-git-send-email-mathieu.poirier@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Ezequiel,
+Can someone in the bindings' maintainer brigade pick this up?  The code has been
+added to linux-next:
+	a06ae86 coresight: add CoreSight core layer framework	
 
-On Mon, Nov 10, 2014 at 11:59 AM, Ezequiel Garcia
-<ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
-> On 11/10/2014 04:50 PM, Ezequiel Garcia wrote:
->> On 11/08/2014 09:57 AM, Jonathan Cameron wrote:
->>> On 05/11/14 21:56, Ezequiel Garcia wrote:
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/iio/adc/cc_10001_adc.txt b/Documentation/devicetree/bindings/iio/adc/cc_10001_adc.txt
->>>> new file mode 100644
->>>> index 0000000..6491839
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/iio/adc/cc_10001_adc.txt
->>>> @@ -0,0 +1,19 @@
->>>> +* Cosmic Circuits - Analog to Digital Converter (CC-10001-ADC)
->>>> +
->>>> +Required properties:
->>>> +  - compatible: Should be "cosmic,10001-adc"
->>>> +  - reg: Should contain adc registers location and length.
->>>> +  - cosmic,adc-available-channels: Bitmask of the channels currently enabled.
->>> I suspect there may be other preferred ways of doing this (child nodes perhaps
->>> for each enabled channel?)
->>
->> Hm, I'm not sure about this. As far I can recall, if a node has children
->> then it *must* be a bus, which is not the case. Of course, you'll find
->> examples doing this wrong.
->>
->
-> On a second thought... I guess you meant something like this?
->
-> adc: adc@18101600 {
->         compatible = "cosmic,10001-adc";
->         reg = <0x18101600 0x24>;
->         clocks = <&adc_clk>;
->         clock-names = "adc";
->         vref-supply = <&reg_1v8>;
->         cosmic,channels {
->                 #address-cells = <1>;
->                 #size-cells = <0>;
->                 channel@0 {
->                         reg = <0>;
->                 };
->                 channel@1 {
->                         reg = <1>;
->                 };
->         };
-> };
->
-> Might be better, but I don't have a strong opinion on it.
+Thanks,
+Mathieu 
 
-I actually don't think this is any better.  The point of the property
-is to indicate which channels are available for use by the main CPU,
-i.e. channels not used by the RPU co-processor.  The property is not
-used to indicate the presence of certain channels in hardware, in
-which case maybe a bus would be appropriate.
+>From 12ec0ef4753125e470a0899fabd94b46b3a93a9d Mon Sep 17 00:00:00 2001
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Date: Thu, 7 Aug 2014 12:34:06 -0600
+Subject: [PATCH v9] coresight: bindings for coresight drivers
 
-Also, perhaps it would be better to reverse the sense of the property
-(maybe, "cosmic,reserved-adc-channels") and make it optional?  I did
-something similar for the MIPS GIC binding:
-http://patchwork.linux-mips.org/patch/8268/.
+Coresight IP blocks allow for the support of HW assisted tracing
+on ARM SoCs.  Bindings for the currently available blocks are
+presented herein.
+
+Signed-off-by: Pratik Patel <pratikp@codeaurora.org>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+---
+ .../devicetree/bindings/arm/coresight.txt          | 203 +++++++++++++++++++++
+ 1 file changed, 203 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/coresight.txt
+
+diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+new file mode 100644
+index 0000000..96dd947
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/coresight.txt
+@@ -0,0 +1,203 @@
++* CoreSight Components:
++
++CoreSight components are compliant with the ARM CoreSight architecture
++specification and can be connected in various topologies to suit a particular
++SoCs tracing needs. These trace components can generally be classified as sinks,
++links and sources. Trace data produced by one or more sources flows through the
++intermediate links connecting the source to the currently selected sink. Each
++CoreSight component device should use these properties to describe its hardware
++characteristcs.
++
++* Required properties for all components *except* non-configurable replicators:
++
++	* compatible: These have to be supplemented with "arm,primecell" as
++	  drivers are using the AMBA bus interface.  Possible values include:
++		- "arm,coresight-etb10", "arm,primecell";
++		- "arm,coresight-tpiu", "arm,primecell";
++		- "arm,coresight-tmc", "arm,primecell";
++		- "arm,coresight-funnel", "arm,primecell";
++		- "arm,coresight-etm3x", "arm,primecell";
++
++	* reg: physical base address and length of the register
++	  set(s) of the component.
++
++	* clocks: the clock associated to this component.
++
++	* clock-names: the name of the clock as referenced by the code.
++	  Since we are using the AMBA framework, the name should be
++	  "apb_pclk".
++
++	* port or ports: The representation of the component's port
++	  layout using the generic DT graph presentation found in
++	  "bindings/graph.txt".
++
++* Required properties for devices that don't show up on the AMBA bus, such as
++  non-configurable replicators:
++
++	* compatible: Currently supported value is (note the absence of the
++	  AMBA markee):
++		- "arm,coresight-replicator"
++
++	* id: a unique number that will identify this replicator.
++
++	* port or ports: same as above.
++
++* Optional properties for ETM/PTMs:
++
++	* arm,cp14: must be present if the system accesses ETM/PTM management registers
++	  via co-processor 14.
++
++	* cpu: the cpu phandle this ETM/PTM is affined to. When omitted the source is
++	  considered to belong to CPU0.
++
++* Optional property for TMC:
++
++	* arm,buffer-size: size of contiguous buffer space for TMC ETR
++	 (embedded trace router)
++
++
++Example:
++
++1. Sinks
++	etb@0,20010000 {
++		compatible = "arm,coresight-etb10", "arm,primecell";
++		reg = <0 0x20010000 0 0x1000>;
++
++		coresight-default-sink;
++		clocks = <&oscclk6a>;
++		clock-names = "apb_pclk";
++		port {
++			etb_in_port: endpoint@0 {
++				slave-mode;
++				remote-endpoint = <&replicator_out_port0>;
++			};
++		};
++	};
++
++	tpiu@0,20030000 {
++		compatible = "arm,coresight-tpiu", "arm,primecell";
++		reg = <0 0x20030000 0 0x1000>;
++
++		clocks = <&oscclk6a>;
++		clock-names = "apb_pclk";
++		port {
++			tpiu_in_port: endpoint@0 {
++				slave-mode;
++				remote-endpoint = <&replicator_out_port1>;
++			};
++		};
++	};
++
++2. Links
++	replicator {
++		/* non-configurable replicators don't show up on the
++		 * AMBA bus.  As such no need to add "arm,primecell".
++		 */
++		compatible = "arm,coresight-replicator";
++		/* this will show up in debugfs as "0.replicator" */
++		id = <0>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			/* replicator output ports */
++			port@0 {
++				reg = <0>;
++				replicator_out_port0: endpoint {
++					remote-endpoint = <&etb_in_port>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++				replicator_out_port1: endpoint {
++					remote-endpoint = <&tpiu_in_port>;
++				};
++			};
++
++			/* replicator input port */
++			port@2 {
++				reg = <0>;
++				replicator_in_port0: endpoint {
++					slave-mode;
++					remote-endpoint = <&funnel_out_port0>;
++				};
++			};
++		};
++	};
++
++	funnel@0,20040000 {
++		compatible = "arm,coresight-funnel", "arm,primecell";
++		reg = <0 0x20040000 0 0x1000>;
++
++		clocks = <&oscclk6a>;
++		clock-names = "apb_pclk";
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			/* funnel output port */
++			port@0 {
++				reg = <0>;
++				funnel_out_port0: endpoint {
++					remote-endpoint = <&replicator_in_port0>;
++				};
++			};
++
++			/* funnel input ports */
++			port@1 {
++				reg = <0>;
++				funnel_in_port0: endpoint {
++					slave-mode;
++					remote-endpoint = <&ptm0_out_port>;
++				};
++			};
++
++			port@2 {
++				reg = <1>;
++				funnel_in_port1: endpoint {
++					slave-mode;
++					remote-endpoint = <&ptm1_out_port>;
++				};
++			};
++
++			port@3 {
++				reg = <2>;
++				funnel_in_port2: endpoint {
++					slave-mode;
++					remote-endpoint = <&etm0_out_port>;
++				};
++			};
++
++		};
++	};
++
++3. Sources
++	ptm@0,2201c000 {
++		compatible = "arm,coresight-etm3x", "arm,primecell";
++		reg = <0 0x2201c000 0 0x1000>;
++
++		cpu = <&cpu0>;
++		clocks = <&oscclk6a>;
++		clock-names = "apb_pclk";
++		port {
++			ptm0_out_port: endpoint {
++				remote-endpoint = <&funnel_in_port0>;
++			};
++		};
++	};
++
++	ptm@0,2201d000 {
++		compatible = "arm,coresight-etm3x", "arm,primecell";
++		reg = <0 0x2201d000 0 0x1000>;
++
++		cpu = <&cpu1>;
++		clocks = <&oscclk6a>;
++		clock-names = "apb_pclk";
++		port {
++			ptm1_out_port: endpoint {
++				remote-endpoint = <&funnel_in_port1>;
++			};
++		};
++	};
+-- 
+1.9.1
