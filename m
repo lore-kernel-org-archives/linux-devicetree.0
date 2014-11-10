@@ -1,49 +1,49 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 1/2] of: Fix crash if an earlycon driver is not found
-Date: Mon, 10 Nov 2014 22:01:29 +0300
-Message-ID: <54610B89.4080004@cogentembedded.com>
-References: <1415523348-4631-1-git-send-email-cernekee@gmail.com> <CAL_Jsq+iVfFGYEF575spQ5MaYPzo1QSfLUZP1M=TpH0+HdGS6A@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 2/5] regulator: rt5033: Add RT5033 Regulator device
+ driver
+Date: Mon, 10 Nov 2014 19:04:03 +0000
+Message-ID: <20141110190403.GH3815@sirena.org.uk>
+References: <1415603987-32475-1-git-send-email-beomho.seo@samsung.com>
+ <1415603987-32475-3-git-send-email-beomho.seo@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+iVfFGYEF575spQ5MaYPzo1QSfLUZP1M=TpH0+HdGS6A@mail.gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Kevin Cernekee <cernekee@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux-MIPS <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, stable@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="inJ2Z4oiSrNaWWYu"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1415603987-32475-3-git-send-email-beomho.seo@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Beomho Seo <beomho.seo@samsung.com>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, cw00.choi@samsung.com, geunsik.lim@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, Liam Girdwood <lgirdwood@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/10/2014 05:14 PM, Rob Herring wrote:
 
->> __earlycon_of_table_sentinel.compatible is a char[128], not a pointer, so
->> it will never be NULL.  Checking it against NULL causes the match loop to
->> run past the end of the array, and eventually match a bogus entry, under
->> the following conditions:
+--inJ2Z4oiSrNaWWYu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->>   - Kernel command line specifies "earlycon" with no parameters
->>   - DT has a stdout-path pointing to a UART node
->>   - The UART driver doesn't use OF_EARLYCON_DECLARE (or maybe the console
->>     driver is compiled out)
+On Mon, Nov 10, 2014 at 04:19:44PM +0900, Beomho Seo wrote:
+> This patch add device driver of Richtek RT5033 PMIC.
+> The driver support multiple regulator like LDO and synchronous Buck.
+> The integrated synchronous buck converter is designed to provide 0.6 A
+> application with high efficiency. Two LDOs are integrated. One safe LDO is
+> for 60mA and the other one LDO is for 150 mA.
 
->> Fix this by checking to see if match->compatible is a non-empty string.
+I'm missing all the other patches in this series...
 
->> Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
->> Cc: <stable@vger.kernel.org> # 3.16+
+--inJ2Z4oiSrNaWWYu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> Thanks. I'll queue this up.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-> BTW, you should not add stable CC when submitting for review, but
-> rather add a note for the maintainer to apply to stable. Only if a
-> commit is in mainline already and not flagged for stable, then you
-> send the patch with the stable tag to get the commit added to stable.
-> It's a bit confusing...
+iQEcBAEBAgAGBQJUYQwiAAoJECTWi3JdVIfQSlgH/AqqlkSGfWEO1tS+I28W9i/Y
+HN/zL6+FjNHA/qNeNyvjxGuezLKymEnwiFpKWatvYWOu+7N+7SJSgY8CU72NsqR/
+/I9ZwxCb9anwANFANdh0oLzSBubKWYx359MSgYGPW6ume35J2ZVwgjndjSmbQjQv
+8cWH6gyQukU4+7NXizz9UwTk+GZRTJOZKffwUsQQOlCQjqo2b+x2oAk+OOr8hdFm
+kaJ23hqezfTlK4m7qAigcr+cxYFVqtX3qAMRbKGbBNWt7uQB1+AmhrDtxThiq7cz
+qg5iJxKraiGd67SxlGb1w4wQQHZUqMY9AFKpWhEBaOgZwqCe6KAxpQTpsWkTtfw=
+=9fdp
+-----END PGP SIGNATURE-----
 
-    It's actually OK to tag the patch for stable (not really send to stable), 
-so that that list gets automatically notified when the comment lands in the 
-mainline. Unless the maintainer doesn't have his own rules about stable 
-patches (like e.g. DaveM). Do you have alike rules?
-
-> Rob
-
-WBR, Sergei
-
+--inJ2Z4oiSrNaWWYu--
