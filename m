@@ -1,161 +1,89 @@
-Return-Path: <yingjoe.chen@mediatek.com>
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: [PATCH v5' 3/8] ARM: mediatek: Add basic support for mt8135
-Date: Tue, 11 Nov 2014 15:53:43 +0800
-Message-ID: <1415692428-18416-3-git-send-email-yingjoe.chen@mediatek.com>
-In-Reply-To: <1415692428-18416-1-git-send-email-yingjoe.chen@mediatek.com>
-References: <1415086255-5555-1-git-send-email-yingjoe.chen@mediatek.com>
- <1415692428-18416-1-git-send-email-yingjoe.chen@mediatek.com>
+Return-Path: <a0875039@kernel.org>
+From: Sandeep Nair <sandeep_n@ti.com>
+Subject: [PATCH v6 0/3] net: Add Keystone NetCP ethernet driver support
+Date: Mon, 10 Nov 2014 18:27:14 -0500
+Message-ID: <1415662037-12689-1-git-send-email-sandeep_n@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-To: Arnd Bergmann <arnd@arndb.de>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, hc.yen@mediatek.com, yh.chen@mediatek.com, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, nathan.chung@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, "Joe.C" <yingjoe.chen@mediatek.com>, eddie.huang@mediatek.com, yingjoe.chen@gmail.com
+To: davem@davemloft.net, netdev@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Sandeep Nair <sandeep_n@ti.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Sandeep Nair <sandeepn02@gmail.com>, Murali Karicheri <m-karicheri2@ti.com>, Santosh Shilimkar <santosh.shilimkar@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: "Joe.C" <yingjoe.chen@mediatek.com>
+v5->v6
+updated version after incorporating comments [6] from David Miller,
+David Laight & Geert Uytterhoeven on v5. I would like get this in
+for v3.19 merge window if the latest version is acceptable.
 
-This adds a basic dtsi for MT8135 based SoC.
+v4->v5
+Sorry to spin v5 quickly but I missed few check-patch warnings which
+were pointed by Joe Perches(thanks). I folded his changes [5] along with
+few more check-patch warning fixes. I would like get this in for v3.18
+merge window if David is happy with this version.
 
-Signed-off-by: Joe.C <yingjoe.chen@mediatek.com>
----
- arch/arm/boot/dts/mt8135.dtsi     | 116 ++++++++++++++++++++++++++++++++++++++
- arch/arm/mach-mediatek/mediatek.c |   1 +
- 2 files changed, 117 insertions(+)
- create mode 100644 arch/arm/boot/dts/mt8135.dtsi
+v3->v4
+Couple of fixes in in error path as pointed [4] out by David. Rest of
+the patches are unchanged from v3. 
 
-diff --git a/arch/arm/boot/dts/mt8135.dtsi b/arch/arm/boot/dts/mt8135.dtsi
-new file mode 100644
-index 0000000..7d56a98
---- /dev/null
-+++ b/arch/arm/boot/dts/mt8135.dtsi
-@@ -0,0 +1,116 @@
-+/*
-+ * Copyright (c) 2014 MediaTek Inc.
-+ * Author: Joe.C <yingjoe.chen@mediatek.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include "skeleton64.dtsi"
-+
-+/ {
-+	compatible = "mediatek,mt8135";
-+	interrupt-parent = <&gic>;
-+
-+	cpu-map {
-+		cluster0 {
-+			core0 {
-+				cpu = <&cpu0>;
-+			};
-+			core1 {
-+				cpu = <&cpu1>;
-+			};
-+		};
-+
-+		cluster1 {
-+			core0 {
-+				cpu = <&cpu2>;
-+			};
-+			core1 {
-+				cpu = <&cpu3>;
-+			};
-+		};
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x000>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x001>;
-+		};
-+
-+		cpu2: cpu@100 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a15";
-+			reg = <0x100>;
-+		};
-+
-+		cpu3: cpu@101 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a15";
-+			reg = <0x101>;
-+		};
-+	};
-+
-+	clocks {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		compatible = "simple-bus";
-+		ranges;
-+
-+		system_clk: dummy13m {
-+			compatible = "fixed-clock";
-+			clock-frequency = <13000000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		rtc_clk: dummy32k {
-+			compatible = "fixed-clock";
-+			clock-frequency = <32000>;
-+			#clock-cells = <0>;
-+		};
-+	};
-+
-+	soc {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		compatible = "simple-bus";
-+		ranges;
-+
-+		timer: timer@10008000 {
-+			compatible = "mediatek,mt8135-timer",
-+					"mediatek,mt6577-timer";
-+			reg = <0 0x10008000 0 0x80>;
-+			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&system_clk>, <&rtc_clk>;
-+			clock-names = "system-clk", "rtc-clk";
-+		};
-+
-+		gic: interrupt-controller@10211000 {
-+			compatible = "arm,cortex-a15-gic";
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			reg = <0 0x10211000 0 0x1000>,
-+			      <0 0x10212000 0 0x1000>,
-+			      <0 0x10214000 0 0x2000>,
-+			      <0 0x10216000 0 0x2000>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/mach-mediatek/mediatek.c b/arch/arm/mach-mediatek/mediatek.c
-index 7f478ce..48051a2 100644
---- a/arch/arm/mach-mediatek/mediatek.c
-+++ b/arch/arm/mach-mediatek/mediatek.c
-@@ -20,6 +20,7 @@
- static const char * const mediatek_board_dt_compat[] = {
- 	"mediatek,mt6589",
- 	"mediatek,mt8127",
-+	"mediatek,mt8135",
- 	NULL,
- };
- 
+v2->v3
+Update v3 after incorporating Jamal and David Miller's comment/suggestion
+from earlier versions [1] [2].  After per the discussion here [3], the
+controversial custom exports have been dropped now. And for future
+future offload support additions, we will plug into generic frameworks
+as an when they are available.
+
+The network coprocessor (NetCP) is a hardware accelerator that processes
+Ethernet packets. NetCP has a gigabit Ethernet (GbE) subsystem with a ethernet
+switch sub-module to send and receive packets. NetCP also includes a packet
+accelerator (PA) module to perform packet classification operations such as
+header matching, and packet modification operations such as checksum
+generation. NetCP can also optionally include a Security Accelerator(SA)
+capable of performing IPSec operations on ingress/egress packets.
+    
+Keystone SoC's also have a 10 Gigabit Ethernet Subsystem (XGbE) which
+includes a 3-port Ethernet switch sub-module capable of 10Gb/s and
+1Gb/s rates per Ethernet port.
+    
+Both GBE and XGBE network processors supported using common driver. It
+is also designed to handle future variants of NetCP.
+
+Cc: David Miller <davem@davemloft.net>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Sandeep Nair <sandeepn02@gmail.com>
+Cc: Murali Karicheri <m-karicheri2@ti.com>
+Cc: Santosh Shilimkar <santosh.shilimkar@kernel.org>
+
+Regards
+Sandeep
+
+Sandeep Nair (3):
+  Documentation: dt: net: Add binding doc for Keystone NetCP ethernet
+    driver
+  net: Add Keystone NetCP ethernet driver
+  MAINTAINER: net: Add TI NETCP Ethernet driver entry
+
+ .../devicetree/bindings/net/keystone-netcp.txt     |  197 ++
+ MAINTAINERS                                        |    7 +
+ drivers/net/ethernet/ti/Kconfig                    |   12 +-
+ drivers/net/ethernet/ti/Makefile                   |    4 +
+ drivers/net/ethernet/ti/netcp.h                    |  227 ++
+ drivers/net/ethernet/ti/netcp_core.c               | 2262 ++++++++++++++++++++
+ drivers/net/ethernet/ti/netcp_ethss.c              | 2159 +++++++++++++++++++
+ drivers/net/ethernet/ti/netcp_sgmii.c              |  130 ++
+ drivers/net/ethernet/ti/netcp_xgbepcsr.c           |  501 +++++
+ 9 files changed, 5498 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/net/keystone-netcp.txt
+ create mode 100644 drivers/net/ethernet/ti/netcp.h
+ create mode 100644 drivers/net/ethernet/ti/netcp_core.c
+ create mode 100644 drivers/net/ethernet/ti/netcp_ethss.c
+ create mode 100644 drivers/net/ethernet/ti/netcp_sgmii.c
+ create mode 100644 drivers/net/ethernet/ti/netcp_xgbepcsr.c
+
+[1] https://lkml.org/lkml/2014/4/22/805
+[2] https://lkml.org/lkml/2014/8/15/218
+[3] https://lkml.org/lkml/2014/9/11/691
+[4] https://lkml.org/lkml/2014/9/15/403
+[5] https://lkml.org/lkml/2014/9/25/332
+[6] https://lkml.org/lkml/2014/9/29/639
 -- 
-1.8.1.1.dirty
+1.7.10.4
