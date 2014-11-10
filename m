@@ -1,50 +1,55 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 1/3] ARM: at91: Add Special Function Registers binding documentation
-Date: Mon, 10 Nov 2014 16:14:29 +0100
-Message-ID: <1415632471-14672-1-git-send-email-alexandre.belloni@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Radek Dostal <radek.dostal@streamunlimited.com>
+Subject: [PATCH] ARM: dts: bcm63138: change "interupts" to "interrupts"
+Date: Mon, 10 Nov 2014 17:35:58 +0100
+Message-ID: <1415637358-24378-1-git-send-email-radek.dostal@streamunlimited.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
+Cc: devicetree@vger.kernel.org, f.fainelli@gmail.com, arnd@arndb.de, Radek Dostal <radek.dostal@streamunlimited.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The special function registers gather some registers that allow to tweak
-features provided by IPs controlled through another register range.
+all other nodes in bcm63138.dtsi use "interrupts", this had to be just a typo
+which never got noticed, even it may have quite some consequences.
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Radek Dostal <radek.dostal@streamunlimited.com>
 ---
- Documentation/devicetree/bindings/arm/atmel-at91.txt | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ Hi all,
 
-diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.txt b/Documentation/devicetree/bindings/arm/atmel-at91.txt
-index 562cda9d86d9..a6427de45785 100644
---- a/Documentation/devicetree/bindings/arm/atmel-at91.txt
-+++ b/Documentation/devicetree/bindings/arm/atmel-at91.txt
-@@ -136,3 +136,20 @@ Example:
- 		compatible = "atmel,at91sam9260-rstc";
- 		reg = <0xfffffd00 0x10>;
+ when running git grep with typo, I spotted this typo inDT binding, which 
+ looks obviously wrong to me. Sorry I do not have the board to test it, but 
+ I am pretty sure the patch is correct.
+
+ I hope I included, right people get_maintainer.pl showed bit too many.
+
+ Thanks,
+ Radek
+
+ arch/arm/boot/dts/bcm63138.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/bcm63138.dtsi b/arch/arm/boot/dts/bcm63138.dtsi
+index f3bb2dd..d2d8e94 100644
+--- a/arch/arm/boot/dts/bcm63138.dtsi
++++ b/arch/arm/boot/dts/bcm63138.dtsi
+@@ -102,7 +102,7 @@
+ 		twd_watchdog: watchdog@1e620 {
+ 			compatible = "arm,cortex-a9-twd-wdt";
+ 			reg = <0x1e620 0x20>;
+-			interupts = <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
  	};
-+
-+Special Function Registers (SFR)
-+
-+Special Function Registers (SFR) manage specific aspects of the integrated
-+memory, bridge implementations, processor and other functionality not controlled
-+elsewhere.
-+
-+required properties:
-+- compatible: Should be "atmel,<chip>-sfr", "syscon".
-+  <chip> can be "at91sam9260", "at91sam9rl" or "at91sam9x5".
-+- reg: Should contain registers location and length
-+
-+	sfr@f0038000 {
-+		compatible = "atmel,sama5d3-sfr", "syscon";
-+		reg = <0xf0038000 0x4000>;
-+	};
-+
+ 
 -- 
-2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
