@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 1/6] clk: shmobile: Deprecate renesas,clock-indices
-Date: Mon, 10 Nov 2014 19:49:34 +0100
-Message-ID: <1415645379-3366-2-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v2 3/6] ARM: shmobile: r8a7779 dtsi: Change to using clock-indices
+Date: Mon, 10 Nov 2014 19:49:36 +0100
+Message-ID: <1415645379-3366-4-git-send-email-geert+renesas@glider.be>
 References: <1415645379-3366-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1415645379-3366-1-git-send-email-geert+renesas@glider.be>
@@ -10,42 +10,52 @@ To: Mike Turquette <mturquette@linaro.org>, Simon Horman <horms@verge.net.au>, M
 Cc: Ben Dooks <ben.dooks@codethink.co.uk>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Commit 8e33f91a0b84ae19 ("clk: shmobile: clk-mstp: change to using
-clock-indices") forgot to replace all occurrences of
-"renesas,clock-indices" in the driver-specific binding documentation.
+With the addition of clock-indices in commit 8e33f91a0b84ae19 ("clk:
+shmobile: clk-mstp: change to using clock-indices"), we can change the
+DTSes to use the generic property instead of the deprecated
+vendor-specific property.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
 Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 ---
 v2:
-  - Drop the reference to "renesas,clock-indices" completely,
-  - Add Acked-by.
+  - Add Acked-by
 ---
- .../devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt         | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/r8a7779.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-index e566fb79af9e4d37..0a80fa70ca265c0f 100644
---- a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-+++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-@@ -27,11 +27,11 @@ Required Properties:
-     must appear in the same order as the output clocks.
-   - #clock-cells: Must be 1
-   - clock-output-names: The name of the clocks as free-form strings
--  - renesas,clock-indices: Indices of the gate clocks into the group (0 to 31)
-+  - clock-indices: Indices of the gate clocks into the group (0 to 31)
- 
--The clocks, clock-output-names and renesas,clock-indices properties contain one
--entry per gate clock. The MSTP groups are sparsely populated. Unimplemented
--gate clocks must not be declared.
-+The clocks, clock-output-names and clock-indices properties contain one entry
-+per gate clock. The MSTP groups are sparsely populated. Unimplemented gate
-+clocks must not be declared.
- 
- 
- Example
+diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+index ede9a29e4bc601ae..e3846af833e1d532 100644
+--- a/arch/arm/boot/dts/r8a7779.dtsi
++++ b/arch/arm/boot/dts/r8a7779.dtsi
+@@ -475,7 +475,7 @@
+ 				 <&cpg_clocks R8A7779_CLK_P>,
+ 				 <&cpg_clocks R8A7779_CLK_P>;
+ 			#clock-cells = <1>;
+-			renesas,clock-indices = <
++			clock-indices = <
+ 				R8A7779_CLK_HSPI R8A7779_CLK_TMU2
+ 				R8A7779_CLK_TMU1 R8A7779_CLK_TMU0
+ 				R8A7779_CLK_HSCIF1 R8A7779_CLK_HSCIF0
+@@ -506,7 +506,7 @@
+ 				 <&cpg_clocks R8A7779_CLK_P>,
+ 				 <&cpg_clocks R8A7779_CLK_S>;
+ 			#clock-cells = <1>;
+-			renesas,clock-indices = <
++			clock-indices = <
+ 				R8A7779_CLK_USB01 R8A7779_CLK_USB2
+ 				R8A7779_CLK_DU R8A7779_CLK_VIN2
+ 				R8A7779_CLK_VIN1 R8A7779_CLK_VIN0
+@@ -527,7 +527,7 @@
+ 			clocks = <&s4_clk>, <&s4_clk>, <&s4_clk>, <&s4_clk>,
+ 				 <&s4_clk>, <&s4_clk>;
+ 			#clock-cells = <1>;
+-			renesas,clock-indices = <
++			clock-indices = <
+ 				R8A7779_CLK_SDHI3 R8A7779_CLK_SDHI2
+ 				R8A7779_CLK_SDHI1 R8A7779_CLK_SDHI0
+ 				R8A7779_CLK_MMC1 R8A7779_CLK_MMC0
 -- 
 1.9.1
 
