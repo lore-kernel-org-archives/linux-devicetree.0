@@ -1,52 +1,64 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH] mfd: qcom-spmi-pmic: Add support for more chips versions
-Date: Mon, 10 Nov 2014 09:46:32 +0200
-Message-ID: <1415605592.22935.3.camel@mm-sol.com>
-References: <1415108003-16387-1-git-send-email-iivanov@mm-sol.com>
-		 <CAJAp7OgU64=KCuDhYEZTYppVeBz6wKvTDsof5vDRznfdZgAfZw@mail.gmail.com>
-		 <1415212271.14949.1.camel@mm-sol.com>
-		 <CAJAp7OgXHGWQj7MWh51LTUdmZpgZc=6m=o-Az=z8QxR7yfrw7g@mail.gmail.com>
-	 <1415260480.13103.3.camel@mm-sol.com> <545D5EEA.8020800@codeaurora.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v8 4/8] ARM: dts: Enable Broadcom Cygnus SoC
+Date: Mon, 10 Nov 2014 09:11:30 +0100
+Message-ID: <2221359.WPjXKG5OT3@wuerfel>
+References: <sbranden@broadcom.com> <5982323.RDuqIHPULA@wuerfel> <54604A71.1010000@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <545D5EEA.8020800@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Gilad Avidov <gavidov@codeaurora.org>
-Cc: Bjorn Andersson <bjorn@kryo.se>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54604A71.1010000-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Sunday 09 November 2014 21:17:37 Scott Branden wrote:
+> On 14-11-09 12:38 PM, Arnd Bergmann wrote:
+> > On Sunday 09 November 2014 09:23:11 Greg Kroah-Hartman wrote:
+> >> On Sat, Nov 08, 2014 at 10:49:09PM -0800, Olof Johansson wrote:
+> >>>>>> +/*
+> >>>>>> + * Copyright 2014 Broadcom Corporation.  All rights reserved.
+> >>>>>> + *
+> >>>>>> + * Unless you and Broadcom execute a separate written software license
+> >>>>>> + * agreement governing use of this software, this software is licensed
+> >>>>>> to you
+> >>>>>> + * under the terms of the GNU General Public License as
+> >>>>>> + * published by the Free Software Foundation version 2.
+> >>>>>> + *
+> >>>>>> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+> >>>>>> + * kind, whether express or implied; without even the implied warranty
+> >>>>>> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> >>>>>> + * GNU General Public License for more details.
+> >>>>>
+> >>>>>
+> >>>>> We ask for new DT contents to be added with dual BSD/GPL license, to
+> >>>>> allow for reuse of the DT data structures in other projects as well.
+> >>>>> There's currently a lot of activity going on relicensing the current
+> >>>>> files so I recommend sorting it out before they are added if you can.
+> >>>>
+> >>>>
+> >>>> This may take more time than you think.  I am going to have to go through
+> >>>> legal to get such a license created. Also, why would you need dual license?
+> >>>> If it is BSD that should serve both purposes?
+> >>>
+> >>> I haven't followed the discussion close enough to know if there's been
+> >>> discussion about single-license BSD vs dual BSD/GPL.
+> >
+> > I think for all practical purposes, BSD and dual BSD/GPL is the same and
+> > listing it as dual was meant as a clarification to make it easier to see
+> > that all files in the kernel are GPLv2 compatible.
+> A dual BSD/GPL may involve having me get a lawyer to create such a 
+> header.  I would prefer to leave it as GPL for now until some concrete 
+> decision has finally been made on this by the rest of the community? 
+> Or, I can put it as BSD right now if that helps?
 
-Hi Gilad,
+I would prefer a pure BSD header for the moment over a pure GPL header.
+The last thing we want is to force other operating systems to create
+another set of dts files for the same hardware.
 
-On Fri, 2014-11-07 at 17:08 -0700, Gilad Avidov wrote:
-> On 11/6/2014 12:54 AM, Ivan T. Ivanov wrote:
-> > On Wed, 2014-11-05 at 17:36 -0800, Bjorn Andersson wrote:
-> > > On Wed, Nov 5, 2014 at 10:31 AM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
-> > > > On Wed, 2014-11-05 at 10:11 -0800, Bjorn Andersson wrote:
-> > > > > On Tue, Nov 4, 2014 at 5:33 AM, Ivan T. Ivanov <iivanov@mm-sol.com>
-> > > > > wrote:
-> > > > > [..]
-> > > > > > @@ -28,11 +144,27 @@ static int pmic_spmi_probe(struct spmi_device
-> > > > > > *sdev)
-> > > > > >   {
-> > > > > >          struct device_node *root = sdev->dev.of_node;
-> > > > > >          struct regmap *regmap;
-> > > > > > +       struct property *prop;
-> > > > > > +       int major, minor, ret;
-> > > > > > +       char *name, compatible[32];
-> > > > > > 
-> > > > > >          regmap = devm_regmap_init_spmi_ext(sdev,
-> > > > > > &spmi_regmap_config);
-> Hi Ivan, I have a general question about this driver/layer.
-> Since the driver is using regmap, why does it need to be
-> qcom-*spmi*-pmic ? could we drop the spmi part?
-> regmap's point is abstraction of  the bus technology, and indeed some
-> PMICs use i2c.
-
-This is driver for SPMI device, so no. The child device/drivers are
-different question, but I don't want to start that discussion again.
-
-Regards,
-Ivan
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
