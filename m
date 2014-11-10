@@ -1,79 +1,48 @@
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 12/17] ARM: mvebu: Armada XP GP specific suspend/resume
- code
-Date: Mon, 10 Nov 2014 14:53:38 +0100
-Message-ID: <5460C362.2090802@free-electrons.com>
-References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com> <1414151970-6626-13-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH 13/17] ARM: mvebu: make sure MMU is disabled in armada_370_xp_cpu_resume
+Date: Mon, 10 Nov 2014 15:05:21 +0100
+Message-ID: <5460C621.9010506@free-electrons.com>
+References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com> <1414151970-6626-14-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414151970-6626-13-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1414151970-6626-14-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+On 24/10/2014 13:59, Thomas Petazzoni wrote:
+> The armada_370_xp_cpu_resume() until now was used only as the function
+> called by the SoC when returning from a deep idle state (as used in
+> cpuidle, or when the CPU is brought offline using CPU hotplug).
+> 
+> However, it is now also used when exiting the suspend to RAM state. In
+> this case, it is the bootloader that calls back into this function,
+> with the MMU left enabled by the BootROM. Having the MMU enabled when
+> entering this function confuses the kerrnel because we are not using
+                                      kernel
 
-[...]
 
-> +#include "common.h"
-> +
-> +#define ARMADA_XP_GP_PIC_NR_GPIOS 3
-> +
-> +static void __iomem *gpio_ctrl;
-> +static int pic_gpios[ARMADA_XP_GP_PIC_NR_GPIOS];
-> +static int pic_raw_gpios[ARMADA_XP_GP_PIC_NR_GPIOS];
-> +
-> +static void mvebu_armada_xp_gp_pm_enter(void __iomem *sdram_reg, u32 srcmd)
-> +{
-> +	u32 reg, ackcmd;
-> +	int i;
-> +
-> +	/* Put 001 as value on the GPIOs */
-> +	reg = readl(gpio_ctrl);
-> +	for (i = 0; i < ARMADA_XP_GP_PIC_NR_GPIOS; i++)
-> +		reg &= ~BIT(pic_raw_gpios[i]);
-> +	reg |= BIT(pic_raw_gpios[0]);
-> +	writel(reg, gpio_ctrl);
-> +
-> +	/* Prepare writing 111 to the GPIOs */
-> +	ackcmd = readl(gpio_ctrl);
-> +	for (i = 0; i < ARMADA_XP_GP_PIC_NR_GPIOS; i++)
-> +		ackcmd |= BIT(pic_raw_gpios[i]);
-> +
-> +	/* Wait a while */
-> +	mdelay(250);
-> +
-> +	asm volatile (
-> +		/* Align to a cache line */
-> +		".balign 32\n\t"
-> +
-> +		/* Enter self refresh */
-> +		"str %[srcmd], [%[sdram_reg]]\n\t"
-> +
-> +		/* Wait 100 cycles for DDR to enter self refresh */
-> +		"1: subs r1, r1, #1\n\t"
+> the kernel page tables at this point, but in other mvebu functions we
+> use the information on whether the MMU is enabled or not to find out
+> whether we should talk to the coherency fabric using a physical
+> address or a virtual address. To fix that, we simply disable the MMU
+> when entering this function, so that the kernel is in an expected
+> situation.
+> 
 
-I should miss something obvious, but I don't see where you load 100 in
-the r1 register. According to your comment and the code, you remove 1 from
-r1 until it reaches 0, so I expected that just before you have loaded 100 in r1.
 
-Thanks,
+Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Gregory
 
-> +		"bne 1b\n\t"
-> +
-> +		/* Issue the command ACK */
-> +		"str %[ackcmd], [%[gpio_ctrl]]\n\t"
-> +
-> +		/* Trap the processor */
-> +		"b .\n\t"
-> +		: : [srcmd] "r" (srcmd), [sdram_reg] "r" (sdram_reg),
-> +		  [ackcmd] "r" (ackcmd), [gpio_ctrl] "r" (gpio_ctrl) : "r1");
-> +}
+
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  arch/arm/mach-mvebu/pmsu_ll.S | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+
 
 -- 
 Gregory Clement, Free Electrons
