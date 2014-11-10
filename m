@@ -1,43 +1,62 @@
-From: Kevin Cernekee <cernekee@gmail.com>
-Subject: Re: [PATCH 2/2] tty: serial: bcm63xx: Allow device nodes to be
- renamed to /dev/ttyBCM*
-Date: Mon, 10 Nov 2014 11:50:56 -0800
-Message-ID: <CAJiQ=7C5ki+9opnH68Kw9a573PmO=ANeiVutmVROUP2Typn2qw@mail.gmail.com>
-References: <1415523348-4631-1-git-send-email-cernekee@gmail.com>
- <1415523348-4631-2-git-send-email-cernekee@gmail.com> <CAL_JsqLXznpCo3YjN+XqF6cDG38C6dKzO9DHJmzi6=sNnAU=hQ@mail.gmail.com>
- <CAJiQ=7DUV0isdRooz6112Ncx07+9RE5DS5tMBwxr47hTWA8PAw@mail.gmail.com> <CAL_JsqLYoUKr71Q-hfLQhXOVL72Gy7PkO-Zd4rBc0Fn-prOqTw@mail.gmail.com>
+From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] DT: iio: adc: Add CC_10001 binding documentation
+Date: Mon, 10 Nov 2014 16:50:35 -0300
+Message-ID: <5461170B.7070505@imgtec.com>
+References: <1415224611-22096-1-git-send-email-ezequiel.garcia@imgtec.com> <1415224611-22096-3-git-send-email-ezequiel.garcia@imgtec.com> <545E1333.9010904@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLYoUKr71Q-hfLQhXOVL72Gy7PkO-Zd4rBc0Fn-prOqTw@mail.gmail.com>
-Sender: stable-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux-MIPS <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, stable@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <545E1333.9010904-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Phani Movva <phani.movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 10, 2014 at 11:22 AM, Rob Herring <robh@kernel.org> wrote:
->>> This can be solved with a udev rule to create sym links.
+
+
+On 11/08/2014 09:57 AM, Jonathan Cameron wrote:
+> On 05/11/14 21:56, Ezequiel Garcia wrote:
+>> From: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 >>
->> Is it safe to register two console drivers named "ttyS" with the same
->> major/minor numbers?  Maybe there is a trick to making them coexist?
->
-> No, but I think you can do dynamic minor numbers. I seem to recall
-> this coming up with the Samsung UARTs a while back.
+>> Add the devicetree binding document for Cosmic Circuits 10001 ADC device.
+>>
+>> Signed-off-by: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>> [Ezequiel: minor style cleaning]
+>> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Please resend including the device tree list and maintainers.
+> All bindings must go to them whatever part they are for.
+> 
 
-The other variations I've seen in the tree are:
+Right, sorry about that.
 
-nwpserial: ttySQ, major 4 minor 68 (not 64)
+> 
+>> ---
+>>  .../devicetree/bindings/iio/adc/cc_10001_adc.txt      | 19 +++++++++++++++++++
+>>  1 file changed, 19 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/cc_10001_adc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/adc/cc_10001_adc.txt b/Documentation/devicetree/bindings/iio/adc/cc_10001_adc.txt
+>> new file mode 100644
+>> index 0000000..6491839
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/adc/cc_10001_adc.txt
+>> @@ -0,0 +1,19 @@
+>> +* Cosmic Circuits - Analog to Digital Converter (CC-10001-ADC)
+>> +
+>> +Required properties:
+>> +  - compatible: Should be "cosmic,10001-adc"
+>> +  - reg: Should contain adc registers location and length.
+>> +  - cosmic,adc-available-channels: Bitmask of the channels currently enabled.
+> I suspect there may be other preferred ways of doing this (child nodes perhaps
+> for each enabled channel?)
 
-sunhv, sunsab, sunsu, sunzilog: set uart_driver->major to 4 but let
-uart_driver->minor default to 0
+Hm, I'm not sure about this. As far I can recall, if a node has children
+then it *must* be a bus, which is not the case. Of course, you'll find
+examples doing this wrong.
 
-SERIAL_ATMEL_TTYAT: compile-time selectable between ttySn (4/64) and
-ttyATn (204/154).  txx9 does something similar using
-SERIAL_TXX9_STDSERIAL.
+Maybe some of the devicetree maintainers can clarify this point?
 
-A whole bunch of other SoC serial drivers use major 204 and a custom
-name like "ttyAL".  Some of these show up in
-Documentation/devices.txt; others don't.  ~3 drivers use 204/64 from
-the middle of the Altix assigned range.
-
-What is the current best practice for new drivers?
+-- 
+Ezequiel
