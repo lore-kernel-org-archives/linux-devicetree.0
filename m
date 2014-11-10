@@ -1,71 +1,113 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v6 7/7] dt-bindings: add document for dw-hdmi
-Date: Mon, 10 Nov 2014 18:41:02 +0800
-Message-ID: <1415616062-30583-8-git-send-email-andy.yan@rock-chips.com>
-References: <1415616062-30583-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415616062-30583-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: airlied@linux.ie, Zubair.Kakakhel@imgtec.com, rmk+kernel@arm.linux.org.uk, fabio.estevam@freescale.com, heiko@sntech.de
-Cc: Andy Yan <andy.yan@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH 3/5] mfd: ti_am335x_tscadc: Remove unwanted reg_se_cache
+ save
+Date: Mon, 10 Nov 2014 16:14:53 +0530
+Message-ID: <54609725.9080608@ti.com>
+References: <1415339350-17679-1-git-send-email-vigneshr@ti.com> <1415339350-17679-4-git-send-email-vigneshr@ti.com> <20141110091527.GD21424@x1> <20141110092645.GE21424@x1>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20141110092645.GE21424@x1>
+Sender: linux-input-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Samuel Ortiz <sameo@linux.intel.com>, Felipe Balbi <balbi@ti.com>, Brad Griffis <bgriffis@ti.com>, Sanjeev Sharma <sanjeev_sharma@mentor.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Jan Kardell <jan.kardell@telliq.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
----
 
-Changes in v6: None
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
 
- .../devicetree/bindings/drm/bridge/dw-hdmi.txt     | 38 ++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/drm/bridge/dw-hdmi.txt
+On Monday 10 November 2014 02:56 PM, Lee Jones wrote:
+> On Mon, 10 Nov 2014, Lee Jones wrote:
+> 
+>> On Fri, 07 Nov 2014, Vignesh R wrote:
+>>
+>>> In one shot mode, sequencer automatically disables all enabled steps at
+>>> the end of each cycle. (both ADC steps and TSC steps) Hence these steps
+>>> need not be saved in reg_se_cache for clearing these steps at a later
+>>> stage.
+>>> Also, when ADC wakes up Sequencer should not be busy executing any of the
+>>> config steps except for the charge step. Previously charge step was 1 ADC
+>>> clock cycle and hence it was ignored.
+>>>
+>>> Signed-off-by: Vignesh R <vigneshr@ti.com>
+>>> ---
+>>>  drivers/mfd/ti_am335x_tscadc.c       | 7 +++++--
+>>>  include/linux/mfd/ti_am335x_tscadc.h | 1 +
+>>>  2 files changed, 6 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/mfd/ti_am335x_tscadc.c b/drivers/mfd/ti_am335x_tscadc.c
+>>> index d877e777cce6..94ef8992f46b 100644
+>>> --- a/drivers/mfd/ti_am335x_tscadc.c
+>>> +++ b/drivers/mfd/ti_am335x_tscadc.c
+>>> @@ -86,8 +86,12 @@ static void am335x_tscadc_need_adc(struct ti_tscadc_dev *tsadc)
+>>>  		spin_lock_irq(&tsadc->reg_lock);
+>>>  		finish_wait(&tsadc->reg_se_wait, &wait);
+>>>  
+>>> +		/*
+>>> +		 * Sequencer should either be idle or
+>>> +		 * busy applying the charge step.
+>>> +		 */
+>>>  		reg = tscadc_readl(tsadc, REG_ADCFSM);
+>>> -		WARN_ON(reg & SEQ_STATUS);
+>>> +		WARN_ON(reg & SEQ_STATUS & (!CHARGE_STEP));
+>>
+>> This is almost certainly not correct.
+>>
+>> Please take another look at the logic.
+>>
+>> I'm _assuming_ you mean (reg & SEQ_STATUS && !CHARGE_STEP).
+> 
+> So I just saw that CHARGE_STEP is actually the new macro below.
+> 
+> So you're currently ANDing these together.
+> 
+> xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx  reg
+> 00000000 00000000 00000000 00100000  #define SEQ_STATUS   BIT(5)
+> 00000000 00000000 00000000 00010001  #define CHARGE_STEP  0x11
+> 
+> ... which will always equate to 0.
+> 
 
-diff --git a/Documentation/devicetree/bindings/drm/bridge/dw-hdmi.txt b/Documentation/devicetree/bindings/drm/bridge/dw-hdmi.txt
-new file mode 100644
-index 0000000..aa7ed17
---- /dev/null
-+++ b/Documentation/devicetree/bindings/drm/bridge/dw-hdmi.txt
-@@ -0,0 +1,38 @@
-+DesignWare HDMI bridge bindings
-+
-+Required properities:
-+- compatibel: platform specific such as "fsl,imx6q-hdmi","fsl,imx6dl-hdmi"
-+	      "rockchip,rk3288-dw-hdmi"
-+- reg: physical base address of the controller and length
-+- ddc-i2c-bus: the ddc i2c bus
-+- interrupts: The interrupt number to the cpu
-+
-+Optional properties
-+- reg-io-width: the width of the reg:1,4, default set to 1 if not present
-+
-+Example:
-+	hdmi: hdmi@0120000 {
-+		compatible = "fsl,imx6q-hdmi";
-+		reg = <0x00120000 0x9000>;
-+		interrupts = <0 115 0x04>;
-+		gpr = <&gpr>;
-+		clocks = <&clks 123>, <&clks 124>;
-+		clock-names = "iahb", "isfr";
-+		ddc-i2c-bus = <&i2c2>;
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			hdmi_mux_0: endpoint {
-+				remote-endpoint = <&ipu1_di0_hdmi>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			hdmi_mux_1: endpoint {
-+				remote-endpoint = <&ipu1_di1_hdmi>;
-+			};
-+		};
-+	};
--- 
-1.9.1
+Oops.. Sorry.. I meant ((reg & SEQ_STATUS) && !(reg & CHARGE_STEP)).
+I will fix this.
+
+
+>>>  		tsadc->adc_waiting = false;
+>>>  	}
+>>>  	tsadc->adc_in_use = true;
+>>> @@ -96,7 +100,6 @@ static void am335x_tscadc_need_adc(struct ti_tscadc_dev *tsadc)
+>>>  void am335x_tsc_se_set_once(struct ti_tscadc_dev *tsadc, u32 val)
+>>>  {
+>>>  	spin_lock_irq(&tsadc->reg_lock);
+>>> -	tsadc->reg_se_cache |= val;
+> 
+> Didn't you add this line a little over 1 month ago?
+> 
+> Why the change of heart?
+> 
+
+Previously, TSC did not reliably re-enable its steps as the TSC irq
+handler received false pen up events. Hence, in order to use TSC after
+ADC operation, it was necessary to save and re-enable TSC steps
+(basically, to keep TSC steps enabled always).
+The change was more of a workaround to overcome limitation of TSC irq
+handler. With this series of patches, TSC irq handler is very reliable
+and the workaround is no longer required.
+
+>>>  	am335x_tscadc_need_adc(tsadc);
+>>>  
+>>>  	tscadc_writel(tsadc, REG_SE, val);
+>>> diff --git a/include/linux/mfd/ti_am335x_tscadc.h b/include/linux/mfd/ti_am335x_tscadc.h
+>>> index c99be5dc0f5c..fcce182e4a35 100644
+>>> --- a/include/linux/mfd/ti_am335x_tscadc.h
+>>> +++ b/include/linux/mfd/ti_am335x_tscadc.h
+>>> @@ -128,6 +128,7 @@
+>>>  
+>>>  /* Sequencer Status */
+>>>  #define SEQ_STATUS BIT(5)
+>>> +#define CHARGE_STEP		0x11
+>>>  
+>>>  #define ADC_CLK			3000000
+>>>  #define TOTAL_STEPS		16
+>>
+> 
