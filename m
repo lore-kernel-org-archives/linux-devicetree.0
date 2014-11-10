@@ -1,181 +1,180 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [GIT PULL] Broadcom Cygnus SoC defconfig changes
-Date: Sun, 9 Nov 2014 22:21:59 -0800
-Message-ID: <CAOesGMgc30QU8tU15Ddzf_HHpA2rqSa07ThBj+e1Rn36_dbqyg@mail.gmail.com>
-References: <1414698612-26216-1-git-send-email-f.fainelli@gmail.com>
-	<20141109001302.GB11947@quad.lixom.net>
-	<545EFF6E.7000309@broadcom.com>
-	<545FBF72.10202@gmail.com>
-	<54604EE1.4020303@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54604EE1.4020303-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jiandong Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [Gta04-owner] [PATCH 2/3] ASoC: twl4030: allow voice port to be connected externally.
+Date: Mon, 10 Nov 2014 07:46:50 +0100
+Message-ID: <1B5F0B4F-2F19-4692-BB95-C6D916DAD3A7@goldelico.com>
+References: <20141108002637.6561.19002.stgit@notabene.brown> <20141108003803.6561.57464.stgit@notabene.brown> <20141108092622.GC2722@sirena.org.uk> <20141110102551.2678d342@notabene.brown>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141110102551.2678d342@notabene.brown>
+Sender: linux-kernel-owner@vger.kernel.org
+To: List for communicating with real GTA04 owners <gta04-owner@goldelico.com>
+Cc: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 9, 2014 at 9:36 PM, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> On 14-11-09 11:24 AM, Florian Fainelli wrote:
->>
->> On 11/08/14 21:45, Scott Branden wrote:
->>>
->>> Hi Olof,
->>>
->>> Thanks for the comments.  Please see my questions inline before we
->>> determine what needs to be done for the defconfig patchset.
->>>
->>> On 14-11-08 04:13 PM, Olof Johansson wrote:
->>>>
->>>> On Thu, Oct 30, 2014 at 12:50:09PM -0700, Florian Fainelli wrote:
->>>>>
->>>>> The following changes since commit
->>>>> f114040e3ea6e07372334ade75d1ee0775c355e1:
->>>>>
->>>>>     Linux 3.18-rc1 (2014-10-19 18:08:38 -0700)
->>>>>
->>>>> are available in the git repository at:
->>>>>
->>>>>     http://github.com/brcm/linux.git
->>>>> tags/arm-soc/for-3.18/cygnus-defconfig-v9
->>>>>
->>>>> for you to fetch changes up to
->>>>> aa0204801143ee2d47e9e8dd5f39cdddd5613b4b:
->>>>>
->>>>>     ARM: multi_v7_defconfig: Enable Broadcom Cygnus (2014-10-30
->>>>> 11:01:35 -0700)
->>>>
->>>>
->>>> Hi Florian,
->>>>
->>>> Apologies for the delay in dealing with this pull request.
->>>>
->>>>> ----------------------------------------------------------------
->>>>> This patchset contains initial support for Broadcom's Cygnus SoC
->>>>> based on our
->>>>> iProc architecture. Initial support is minimal and includes just the
->>>>> mach
->>>>> platform code, clock driver, and a basic device tree configuration.
->>>>> Peripheral
->>>>> drivers will be submitted soon, as will device tree configurations
->>>>> for other
->>>>> Cygnus board variants.
->>>>>
->>>>> These are the defconfig parts of the changes
->>>>>
->>>>> ----------------------------------------------------------------
->>>>> Jonathan Richardson (1):
->>>>>         ARM: cygnus defconfig : Initial defconfig for Broadcom Cygnus
->>>>> SoC
->>>>>
->>>>> Ray Jui (1):
->>>>>         ARM: multi_v7_defconfig: Enable Broadcom Cygnus
->>>>>
->>>>> Scott Branden (1):
->>>>>         ARM: bcm_defconfig/multi_v7_defconfig: remove one level of
->>>>> menu from Kconfig
->>>>>
->>>>>    arch/arm/configs/bcm_cygnus_defconfig | 237
->>>>> ++++++++++++++++++++++++++++++++++
->>>>>    arch/arm/configs/bcm_defconfig        |   3 +-
->>>>>    arch/arm/configs/multi_v7_defconfig   |  21 ++-
->>>>
->>>>
->>>> Please send multi_v7_defconfig updates as a patch instead of including
->>>> in
->>>> a merge request. We ask for this because it's a file that many
->>>> maintainers
->>>> touch and it's easy that we get lots of conflicts otherwise.
->>>
->>> OK, easy to do.  Are there other files that we need to be aware of that
->>> have these different requirements to merge as well?
->>>
->>>>
->>>> As far as the bcm_cygnus_defconfig: Since new platforms are
->>>> multiplatform
->>>> enabled by default, we normally only prefer to have one defconfig per
->>>> vendor.
->>>> We've made exceptions in cases where the families are very different,
->>>> but in
->>>> general one defconfig per vendor should be sufficient.
->>>>
->>>> I.e. please enable the cygnus options in bcm_defconfig instead of
->>>> adding a new
->>>> one.
->>>
->>>
->>> Hi Olof, we can do this.  But this makes bcm_defconfig unusable for us
->>> in a product and is not a simple configuration to start from for our
->>> customers.  bcm_defconfig is a different SoC family based around the
->>> Kona architecture. bcm_defconfig won't be what we build and test on
->>> Cygnus at all.  There is a script in scripts/kconfig/mergeconfig.pl that
->>> allows you to merge config files together if you wish to have a kernel
->>> support multiple SoCs.  I see the same problem with multi_v7_defconfig
->>> but even worse.  It isn't a configuration we will ever use.  Its only
->>> purpose seems to be to enable our drivers in the that build just in case
->>> somebody else happens to break something in the build.
->>
->>
->> The defconfigs shipped in the mainline kernel only serve the purpose of
->> building as many drivers/subsystems as possible and making sure they
->> work well together from a general distribution perspective like
->> Debian/Ubuntu/OE... That does not mean this is your configuration
->> template for a downstream kernel with only a specific set of SoCs to
->> support.
->>
->>>
->>> As it stands, multi_v7_defconfig boots noticably slower than
->>> bcm_cygnus_defconfig.  And, the kernel is larger than we want.  And, the
->>> kconfigs are more complicated than we need for our boards.  I also
->>> notice some of the other SoCs families enabled automatically turn on a
->>> lot of features we don't want on.
->>
->>
->> Right, you are also very likely to see code blow away that has been
->> enabled as part of the multi_v7_defconfig, but actually assumes that it
->> will only run on a a particular family of SoCs, of course, all of this
->> is good to fix to improve the multiplatform kernel, but does not
->> necessarily impact you directly.
->>
->>>
->>> Perhaps most of the multi_v7_defconfig merge issue you are facing could
->>> be solved if you used the mergconfig.pl script to merge multiple
->>> defconfigs together?
->>>
->>> What we wish to do is have a config file that only supports the Cygnus
->>> family of SoCs.  This allows others to easily see what applies to Cygnus
->>> without being confused by other configurations.  And, if somebody wishes
->>> to use scripts/kconfig/mergeconfig.pl to merge different SoC support
->>> together they are free to do so.
->>>
->>> So, we can do as you ask to get this upstreamed.  But it really serves
->>> little purpose for us other than verifying things build.
->>>
->>> Where do we upstream the defconfig that we actually use?  Or is this
->>> just not done and everyone keeps everything locally and has to continue
->>> to maintain it there?
->>
->>
->> FWIW, this is typically what we do for the brcmstb_defconfig, it is just
->> present in our downstream kernel, but we do use the multi_v7_defconfig
->> when testing upstream.
->
-> Puzzling.  So dts files are allowed to be upstreamed per board, but the
-> reference kernel configuration that is actually tested extensively on that
-> board is not upstreamed?
 
-Correct. Distros (desktop/server/embedded/etc) test the kernel too,
-and they don't have their defconfigs in the kernel repo either.
+Am 10.11.2014 um 00:25 schrieb NeilBrown <neilb@suse.de>:
 
-The beauty of the defconfigs is that even though you enable more
-options than the bare minimum, the kernel should still work (or it's
-broken). Sure, it'll be larger, and might take a while longer to load
-from disk, but things should work just fine.
+> On Sat, 8 Nov 2014 09:26:22 +0000 Mark Brown <broonie@kernel.org> wro=
+te:
+>=20
+>> On Sat, Nov 08, 2014 at 11:38:03AM +1100, NeilBrown wrote:
+>>=20
+>>> If voice port on twl4030 is not connected to a McBSP (or similar)
+>>> then we cannot configure the format the way we normally do for a DA=
+I.
+>>=20
+>> Yes we can, you need to represent the DAI link to whatever else the
+>> device is connected to in the driver like we do anything else - and =
+in
+>> any case this isn't a device specific issue so we shouldn't be doing
+>> something driver specific to solve it.  Look at something like speys=
+ide.
+>=20
+> Hi Mark,
+> thanks for the reply ... I might need a little bit more help though.
+>=20
+> I had a look at sound/soc/samsung/speyside.c, but I'm not entirely su=
+re what
+> I'm looking for.
+> Presumably this is an audio processor not unlike the audio module in =
+the
+> twl4030.
+>=20
+> I see that there are 3 dai-links:
+>  CPU-DSP
+>  DSP-CODEC
+>  Baseband
+>=20
+> Presumably "Baseband" is similar, in purpose at least, to the "voice"
+> interface on the twl4030.
+>=20
+> Each dai-link has a "cpu_dai_name" and a "codec_dai_name", even thoug=
+h it
+> appears that only "CPU-DSP" is connected to the CPU.  Maybe that nami=
+ng is
+> the source of some of my confusion.
+>=20
+> "Baseband" declares
+>                .cpu_dai_name =3D "wm8996-aif2",
+> so wm8996 is something with 2 audio interfaces, (aif), and this is th=
+e second
+> one?  Maybe the  wm8996 is the audio module, so what is the "speyside=
+"?
+>=20
+> http://opensource.wolfsonmicro.com/content/speyside-audio
+>=20
+> says it is a "reference platform".  Does that mean it is a board with=
+ a bunch
+> of chips soldered onto it?  If it were a board it should be described=
+ by a
+> dts file, not by a pile of C code (I thought), so I must be wrong abo=
+ut that.
+>=20
+>=20
+> In my case, I have a board with a GSM module and the twl4030 module. =
+ Each
+> has an audio interface and these are connected.  I assume that I need=
+ to
+> express this connection in the dts file.
+> The GSM module doesn't currently appear in the dts file as it is usb-=
+attached.
+> However I've been thinking that we will need to add it so we can expr=
+ess
+> power-on controls (twiddling some GPIOs).  So let's suppose we have t=
+he GSM
+> module in the dts file (child of a USB interface)
 
+It is a quite complex connection pattern and I am not sure if the modem=
+ is really
+a logical child of the USB interface. Powering up/down the USB interfac=
+e has nothing
+to do with the modem power. Rather, it continues to operate if USB is s=
+uspended
+and the modem notifies USB that it has become active.
 
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The connections on this GTA04 board are:
+
+Modem USB <=97> CPU USB
+Modem PCM <=97> TWL4030 Voice <=97> OMAP3 McBSP4 (yes, it is a 3-way co=
+nnection)
+Modem Power control <=97> 1 or 2 GPIOs (depending on board variant)
+
+The reason for the 3-way connection is that user space can chose if the=
+ GSM
+voice is routed directly to the TWL codec (low latency, independent of =
+CPU) or
+goes through the CPU (e.g. for DTAM or voice scrambling by software) an=
+d
+then through the other PCM link between the CPU and the TWL.
+
+This is why I would make the McBSP4 a separate sound card.
+
+And, this is why it needs some control and tri-state of the TWL4030 and=
+ OMAP3
+McBSP4 since only one can provide a digital PCM stream to the modem.
+
+One more thing to consider for a general solution is that there are mod=
+em modules
+that communicate data through UART or SPI - but otherwise have a simila=
+r connection
+for digital audio. So forcing the power control driver to be a subnode =
+of USB doesn=92t
+appear general enough to me.
+
+=46inally, this connection pattern is not specific to this modem (OPTIO=
+N GTM601) on this
+GTA04 board. We plan to use a Gemalto PHS8  in the Pyra-Handheld and th=
+e Neo900
+devices - but the general connection pattern as defined above remains t=
+he same.
+
+So my proposal is to have a specific wwan-power driver for this type of=
+ modems.
+And power control can and should be kept separately from USB (except th=
+e case
+where only 1 GPIO exists and USB must be tapped to detect the modem pow=
+er
+state). You can find work in progress for this approach here:
+
+<http://git.goldelico.com/?p=3Dgta04-kernel.git;a=3Dblob;f=3Ddrivers/mi=
+sc/wwan-on-off.c;h=3De13f47dbd734d14f4e38ea9cf622982dc3550212;hb=3D154b=
+cd388a8f5bcc7fcf0e57e93b6388daa16980>
+
+> and the twl4030 as well
+> (beneath an i2c interface).
+>=20
+> The twl4030 needs to know the master/polarity of the clk/frm lines.  =
+The GSM
+> module declares that these are.  So presumably we need some sort of l=
+inkage.
+> Ahhhh... I found Documentation/devicetree/bindings/sound/simple-card.=
+txt
+>=20
+> So I need to make the "voice" port on the twl4030 look like a "cpu" e=
+nd of a
+> dai-link, and create a "codec" end in the GSM module, and use "sound-=
+dai" to
+> point from the twl4030 to the GSM module.
+
+What I wonder a little is that we have all these dai-links working sinc=
+e your 3.7
+kernel for GTA04. Is it necessary to re-invent a solution or should we =
+just make
+the solution device tree compatible?
+
+> Then I use frame-master, bitclock-master, bitclock-inversion, frame-i=
+nversion
+> for the settings I need.
+>=20
+> I suspect I can make that work.
+>=20
+> Am I on the right track?
+>=20
+> Thanks,
+> NeilBrown
+> _______________________________________________
+> Gta04-owner mailing list
+> Gta04-owner@goldelico.com
+> http://lists.goldelico.com/mailman/listinfo.cgi/gta04-owner
