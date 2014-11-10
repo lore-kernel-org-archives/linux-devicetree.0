@@ -1,102 +1,51 @@
-From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH 12/13] ARM: STi: DT: STiH410: Add STiH410 SoC clock support.
-Date: Mon, 10 Nov 2014 10:20:39 +0100
-Message-ID: <54608367.6010901@st.com>
-References: <1415361475-6218-1-git-send-email-peter.griffin@linaro.org> <1415361475-6218-13-git-send-email-peter.griffin@linaro.org>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Subject: Re: [PATCH V5 3/7] dw-hdmi: make checkpatch happy
+Date: Mon, 10 Nov 2014 09:22:13 +0000
+Message-ID: <546083C5.8060502@imgtec.com>
+References: <1415424410-7364-1-git-send-email-andy.yan@rock-chips.com>
+ <1415424598-7533-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415361475-6218-13-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1415424598-7533-1-git-send-email-andy.yan@rock-chips.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Andy Yan <andy.yan@rock-chips.com>, airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, ykk@rock-chips.com, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, Shawn Guo <shawn.guo@linaro.org>, jay.xu@rock-chips.com, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+Hi Andy,
 
-On 11/07/2014 12:57 PM, Peter Griffin wrote:
-> The STiH410 is an advanced multi-HD AVC processor with 3D graphics acceleration
-> and 1.5-GHz ARM Cortex-A9 SMP CPU part of the stih407 family.
->
-> It has wide connectivity including USB 3.0, PCI-e, SATA and gigabit ethernet.
->
-> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In 3.18 rc4, I cannot find checkpatch errors in imx-hdmi.c
+
+Have these errors come during the previous 2 patches.
+
+If yes, then these changes need to be squashed into the previous
+patches. No patch should add a checkpatch error and then fix it in a later patch.
+
+Regards
+ZubairLK
+
+On 08/11/14 05:29, Andy Yan wrote:
+> CHECK: Alignment should match open parenthesis
+> +       if ((hdmi->vic == 10) || (hdmi->vic == 11) ||
+> +               (hdmi->vic == 12) || (hdmi->vic == 13) ||
+> 
+> CHECK: braces {} should be used on all arms of this statement
+> +       if (hdmi->hdmi_data.video_mode.mdvi)
+> [...]
+> +       else {
+> [...]
+> 
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
 > ---
->   arch/arm/boot/dts/Makefile           |   1 +
->   arch/arm/boot/dts/stih410-b2120.dts  |  42 +++++
->   arch/arm/boot/dts/stih410-clock.dtsi | 338 +++++++++++++++++++++++++++++++++++
-You are adding a new board also, not only clocks.
-Please fix the commit title.
-
->   3 files changed, 381 insertions(+)
->   create mode 100644 arch/arm/boot/dts/stih410-b2120.dts
->   create mode 100644 arch/arm/boot/dts/stih410-clock.dtsi
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 38c89ca..04cf4a4 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -409,6 +409,7 @@ dtb-$(CONFIG_ARCH_SPEAR3XX)+= spear300-evb.dtb \
->   	spear320-hmi.dtb
->   dtb-$(CONFIG_ARCH_SPEAR6XX)+= spear600-evb.dtb
->   dtb-$(CONFIG_ARCH_STI)+= stih407-b2120.dtb \
-> +	stih410-b2120.dtb \
->   	stih415-b2000.dtb \
->   	stih415-b2020.dtb \
->   	stih416-b2000.dtb \
-> diff --git a/arch/arm/boot/dts/stih410-b2120.dts b/arch/arm/boot/dts/stih410-b2120.dts
-> new file mode 100644
-> index 0000000..06ee73b
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/stih410-b2120.dts
-> @@ -0,0 +1,42 @@
-> +/*
-> + * Copyright (C) 2014 STMicroelectronics (R&D) Limited.
-> + * Author: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +/dts-v1/;
-> +#include "stih407-clock.dtsi"
-This file should be included by a SoC dtsi file, not a board file, no?
-> +#include "stih407-family.dtsi"
-> +#include "stihxxx-b2120.dtsi"
-> +/ {
-> +	model = "STiH410 B2120";
-> +	compatible = "st,stih410-b2120", "st,stih410";
-> +
-> +	aliases {
-> +		ohci0 = &ohci0;
-> +		ehci0 = &ehci0;
-> +		ohci1 = &ohci1;
-> +		ehci1 = &ehci1;
-> +	};
-> +
-> +	soc {
-> +
-> +		ohci0: usb@9a03c00 {
-> +			status = "okay";
-> +		};
-> +
-> +		ehci0: usb@9a03e00 {
-> +			status = "okay";
-> +		};
-> +
-> +		ohci1: usb@9a83c00 {
-> +			status = "okay";
-> +		};
-> +
-> +		ehci1: usb@9a83e00 {
-> +			status = "okay";
-> +		};
-> +	};
-> +};
->
-<snip>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  drivers/gpu/drm/bridge/dw_hdmi.c | 97 ++++++++++++++++++++--------------------
+>  1 file changed, 48 insertions(+), 49 deletions(-)
