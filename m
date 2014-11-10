@@ -1,65 +1,89 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: [PATCH v6 1/5] regulator: Document binding for initial and suspend modes
-Date: Mon, 10 Nov 2014 14:43:51 +0100
-Message-ID: <1415627035-3088-2-git-send-email-javier.martinez@collabora.co.uk>
-References: <1415627035-3088-1-git-send-email-javier.martinez@collabora.co.uk>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415627035-3088-1-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [RFC PATCH] drivers: of: move PCI domain assignment to generic
+ OF code
+Date: Mon, 10 Nov 2014 13:52:32 +0000
+Message-ID: <20141110135232.GC15484@red-moon>
+References: <1415622368-14612-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1459907.RIyEjnM4cg@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1459907.RIyEjnM4cg@wuerfel>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
 List-Id: devicetree@vger.kernel.org
 
-Some regulators can run on different operating modes (opmodes). This
-allows systems to choose the most efficient opmode for each regulator.
+On Mon, Nov 10, 2014 at 12:51:19PM +0000, Arnd Bergmann wrote:
+> On Monday 10 November 2014 12:26:08 Lorenzo Pieralisi wrote:
+> > ---
+> >  arch/arm64/kernel/pci.c | 14 +++--------
+> >  drivers/of/of_pci.c     | 66 +++++++++++++++++++++++++++++++++++++++++++++++--
+> >  include/linux/of_pci.h  |  7 +++---
+> >  3 files changed, 71 insertions(+), 16 deletions(-)
+> > 
+> > diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
+> > index ce5836c..5e21c1c 100644
+> > --- a/arch/arm64/kernel/pci.c
+> > +++ b/arch/arm64/kernel/pci.c
+> > @@ -49,20 +49,14 @@ int pcibios_add_device(struct pci_dev *dev)
+> >  
+> >  
+> >  #ifdef CONFIG_PCI_DOMAINS_GENERIC
+> > -static bool dt_domain_found = false;
+> >  
+> >  void pci_bus_assign_domain_nr(struct pci_bus *bus, struct device *parent)
+> >  {
+> > -	int domain = of_get_pci_domain_nr(parent->of_node);
+> > +	int domain = of_assign_pci_domain_nr(parent->of_node);
+> >  
+> > -	if (domain >= 0) {
+> > -		dt_domain_found = true;
+> > -	} else if (dt_domain_found == true) {
+> > -		dev_err(parent, "Node %s is missing \"linux,pci-domain\" property in DT\n",
+> > -			parent->of_node->full_name);
+> > -		return;
+> > -	} else {
+> > -		domain = pci_get_new_domain_nr();
+> > +	if (domain < 0) {
+> > +		dev_err(parent, "PCI domain assignment failed\n");
+> > +		domain = -1;
+> >  	}
+> >  
+> >  	bus->domain_nr = domain;
+> 
+> Is there a need to still keep this in architecture specific code? Why
+> not move it to drivers/pci and let other firmware infrastructure
+> hook in there directly.
 
-This patch builds on top of (291d761 regulator: Document binding for
-regulator suspend state for PM state) adding a regulator-initial-mode
-DT property to configure at startup the operating mode for regulators
-that support changing its mode during normal operation and a property
-regulator-mode to be used in the regulator-state-[mem/disk] nodes for
-regulators that supports changing its operating mode when the system
-enters in a suspend state.
+Ok, I can move the function to drivers/pci/pci.c, I did not want to add
+OF code in there but if it is ok with Bjorn I will move the generic
 
-The set of possible modes that a regulator can operate depends on the
-hardware capabilities so a list of generic operating modes can't be
-provided. Instead, each hardware binding should define the list of
-valid operating modes for the regulators found on that device.
+pci_bus_assign_domain_nr()
 
-Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
----
+there and be done with this.
 
-Changes in v6:
- - Remove assumptions about implementation details and don't overspecify.
-   Suggested by Mark Brown.
+> >  {
+> > @@ -45,10 +45,9 @@ of_pci_parse_bus_range(struct device_node *node, struct resource *res)
+> >  	return -EINVAL;
+> >  }
+> >  
+> > -static inline int
+> > -of_get_pci_domain_nr(struct device_node *node)
+> > +static inline int of_assign_pci_domain_nr(struct device_node *node)
+> >  {
+> > -	return -1;
+> > +	return pci_get_new_domain_nr();
+> >  }
+> >  #endif
+> 
+> This gets a bit tricky otherwise once we add ACPI in the mix, with all
+> combinations of OF and ACPI at compile time and at runtime.
 
-Changes in v5: None
+I definitely agree, that's why it is an RFC, basically wanted to
+understand what we want to do with the generic implementation and where
+to move it.
 
-Changes in v4: None
-
-Changes in v3:
- - Rebased on top of regulator suspend voltage series
-
- Documentation/devicetree/bindings/regulator/regulator.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
-index 4e7ed76..abb26b5 100644
---- a/Documentation/devicetree/bindings/regulator/regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/regulator.txt
-@@ -30,6 +30,13 @@ Optional properties:
- 	- regulator-off-in-suspend: regulator should be off in suspend state.
- 	- regulator-suspend-microvolt: regulator should be set to this voltage
- 	  in suspend.
-+	- regulator-mode: operating mode in the given suspend state.
-+	  The set of possible operating modes depends on the capabilities of
-+	  every hardware so the valid modes are documented on each regulator
-+	  device tree binding document.
-+- regulator-initial-mode: initial operating mode. The set of possible operating
-+  modes depends on the capabilities of every hardware so each device binding
-+  documentation explains which values the regulator supports.
- 
- Deprecated properties:
- - regulator-compatible: If a regulator chip contains multiple
--- 
-2.1.0
+Thanks,
+Lorenzo
