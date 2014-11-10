@@ -1,85 +1,55 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH V5 7/7] dt-bindings: add document for dw-hdmi
-Date: Mon, 10 Nov 2014 17:59:01 +0800
-Message-ID: <54608C65.7050902@rock-chips.com>
-References: <1415424410-7364-1-git-send-email-andy.yan@rock-chips.com>
- <1415424767-7761-1-git-send-email-andy.yan@rock-chips.com>
- <546082A9.5050203@imgtec.com> <546088F6.4090505@rock-chips.com>
- <54608B03.9050805@imgtec.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 13/13] ARM: STi: DT: STih407: Add clk_ignore_unused to
+ kernel bootargs
+Date: Mon, 10 Nov 2014 10:04:06 +0000
+Message-ID: <20141110100406.GL21424@x1>
+References: <1415361475-6218-1-git-send-email-peter.griffin@linaro.org>
+ <1415361475-6218-14-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <54608B03.9050805@imgtec.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, ykk@rock-chips.com, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, Shawn Guo <shawn.guo@linaro.org>, jay.xu@rock-chips.com, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1415361475-6218-14-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Ck9uIDIwMTTlubQxMeaciDEw5pelIDE3OjUzLCBadWJhaXIgTHV0ZnVsbGFoIEtha2FraGVsIHdy
-b3RlOgo+Cj4gT24gMTAvMTEvMTQgMDk6NDQsIEFuZHkgWWFuIHdyb3RlOgo+PiBIaSBadWJhaXJM
-Swo+PiBPbiAyMDE05bm0MTHmnIgxMOaXpSAxNzoxNywgWnViYWlyIEx1dGZ1bGxhaCBLYWtha2hl
-bCB3cm90ZToKPj4+IE5pY2Ugd29yay4KPj4+Cj4+PiBUaGlzIHBhdGNoIHNob3VsZCBtb3ZlIHRo
-ZSBiaW5kaW5nIGZyb20KPj4+Cj4+PiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-c3RhZ2luZy9pbXgtZHJtL2hkbWkudHh0Cj4+PiB0byB0aGUgbG9jYXRpb24gaW5zdGVhZCBvZiBt
-YWtpbmcgYSBuZXcgZmlsZSBhbmQgbGVhdmluZyB0aGUgb2xkCj4+PiBvbmUgaW4gcGxhY2UuCj4+
-Pgo+Pj4gQW5kIHVzZSBnaXQgZm9ybWF0LXBhdGNoIC1NIHRvIGhpZ2hsaWdodCBhbnkgY2hhbmdl
-cy4KPj4+Cj4+PiBSZWdhcmRzCj4+PiBadWJhaXJMSwo+PiAgICAgSSBhZGQgdGhlc2UgYmluZGlu
-Z3MgZm9yIGR3LWhkbWkgY29yZSwgYmVjYXVzZQo+PiAgICBwcm9wZXJpdGllcyBsaWtlIHJlZywg
-aW50ZXJydXB0cywgZGRjLWkyYy1idXMsIHJlZy1pby13aWR0aCBhcmUgdXNlZAo+PiAgICBieSBk
-dy1oZG1pIGNvcmUsIGJ1dCBwcm9wZXJpdGllcyBsaWtlIGNvbXBhdGlibGUsIGdwcixjbGssIGFy
-ZSBwbGF0Zm9ybQo+PiAgICBzcGVjaWZpYyAsIHRoZXkgYXJlIGhhbmRsZWQgYnkgdGhlIHBsYXRm
-b3JtIGNvZGUgbGlrZSBkd19oZG1pLWlteC5jCj4+ICAgIGFuZCBkZXNjcmliZWQgaW4gcGxhdGZv
-cm0gc3BlY2lmaWMgZHQgYmluZHMgbGlrZSAvaW14LWRybS9oZG1pLnR4dAo+IEkgdW5kZXJzdGFu
-ZC4KPgo+IEFyZSB0aGVyZSBhbnkgY2hhbmdlcyB0byBpbXgtZHJtL2hkbWkudHh0Pwo+Cj4gU29t
-ZSBwcm9wZXJ0aWVzIGZvciBpbXgtZHJtL2hkbWkudHh0IHdvdWxkIGJlY29tZSBvcHRpb25hbC9p
-bmhlcml0ZWQgZnJvbSB0aGUgcGFyZW50IGhkbWkgZHJtIGJpbmRpbmc/Cj4KPiBUaGUgY2hhbmdl
-cyBzaG91bGQgYmUgaGlnaGxpZ2h0ZWQgaW4gdGhlIGNvbW1pdCBtZXNzYWdlLiBPciB3ZSdsbAo+
-IGJlIGNvbmZ1c2VkIHdoaWNoIGlzIHdoaWNoLi4KPgo+IFp1YmFpckxLCj4KICAgdG8ga2VlcCAg
-IGNvbXBhdGlibGUgZm9yIGlteCwgbm8gY2hhbmdlcyBmb3IgaW14LWRybS9oZG1pLnR4dAogICB0
-aGUgb25seSBhZGRlZCBwcm9wZXJ0aWVzICBpcyByZWctaW8td2lkdGgsIGFuZCBpdCBpcyBvcHRp
-b25hbAo+Pj4gT24gMDgvMTEvMTQgMDU6MzIsIEFuZHkgWWFuIHdyb3RlOgo+Pj4+IFNpZ25lZC1v
-ZmYtYnk6IEFuZHkgWWFuIDxhbmR5LnlhbkByb2NrLWNoaXBzLmNvbT4KPj4+PiAtLS0KPj4+PiAg
-ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3LWhkbWkudHh0ICAgICB8IDM4
-ICsrKysrKysrKysrKysrKysrKysrKysKPj4+PiAgICAxIGZpbGUgY2hhbmdlZCwgMzggaW5zZXJ0
-aW9ucygrKQo+Pj4+ICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZHJtL2JyaWRnZS9kdy1oZG1pLnR4dAo+Pj4+Cj4+Pj4gZGlmZiAtLWdpdCBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3LWhkbWkudHh0
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9icmlkZ2UvZHctaGRtaS50
-eHQKPj4+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+Pj4+IGluZGV4IDAwMDAwMDAuLmFhN2VkMTcK
-Pj4+PiAtLS0gL2Rldi9udWxsCj4+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2RybS9icmlkZ2UvZHctaGRtaS50eHQKPj4+PiBAQCAtMCwwICsxLDM4IEBACj4+Pj4g
-K0Rlc2lnbldhcmUgSERNSSBicmlkZ2UgYmluZGluZ3MKPj4+PiArCj4+Pj4gK1JlcXVpcmVkIHBy
-b3Blcml0aWVzOgo+Pj4+ICstIGNvbXBhdGliZWw6IHBsYXRmb3JtIHNwZWNpZmljIHN1Y2ggYXMg
-ImZzbCxpbXg2cS1oZG1pIiwiZnNsLGlteDZkbC1oZG1pIgo+IHNwZWxsY2hlY2suIGNvbXBhdGli
-bGUKPgo+Pj4+ICsgICAgICAgICAgInJvY2tjaGlwLHJrMzI4OC1kdy1oZG1pIgo+Pj4+ICstIHJl
-ZzogcGh5c2ljYWwgYmFzZSBhZGRyZXNzIG9mIHRoZSBjb250cm9sbGVyIGFuZCBsZW5ndGgKPj4+
-PiArLSBkZGMtaTJjLWJ1czogdGhlIGRkYyBpMmMgYnVzCj4+Pj4gKy0gaW50ZXJydXB0czogVGhl
-IGludGVycnVwdCBudW1iZXIgdG8gdGhlIGNwdQo+Pj4+ICsKPj4+PiArT3B0aW9uYWwgcHJvcGVy
-dGllcwo+Pj4+ICstIHJlZy1pby13aWR0aDogdGhlIHdpZHRoIG9mIHRoZSByZWc6MSw0LCBkZWZh
-dWx0IHNldCB0byAxIGlmIG5vdCBwcmVzZW50Cj4+Pj4gKwo+Pj4+ICtFeGFtcGxlOgo+Pj4+ICsg
-ICAgaGRtaTogaGRtaUAwMTIwMDAwIHsKPj4+PiArICAgICAgICBjb21wYXRpYmxlID0gImZzbCxp
-bXg2cS1oZG1pIjsKPj4+PiArICAgICAgICByZWcgPSA8MHgwMDEyMDAwMCAweDkwMDA+Owo+Pj4+
-ICsgICAgICAgIGludGVycnVwdHMgPSA8MCAxMTUgMHgwND47Cj4+Pj4gKyAgICAgICAgZ3ByID0g
-PCZncHI+Owo+Pj4+ICsgICAgICAgIGNsb2NrcyA9IDwmY2xrcyAxMjM+LCA8JmNsa3MgMTI0PjsK
-Pj4+PiArICAgICAgICBjbG9jay1uYW1lcyA9ICJpYWhiIiwgImlzZnIiOwo+Pj4+ICsgICAgICAg
-IGRkYy1pMmMtYnVzID0gPCZpMmMyPjsKPj4+PiArCj4+Pj4gKyAgICAgICAgcG9ydEAwIHsKPj4+
-PiArICAgICAgICAgICAgcmVnID0gPDA+Owo+Pj4+ICsKPj4+PiArICAgICAgICAgICAgaGRtaV9t
-dXhfMDogZW5kcG9pbnQgewo+Pj4+ICsgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0g
-PCZpcHUxX2RpMF9oZG1pPjsKPj4+PiArICAgICAgICAgICAgfTsKPj4+PiArICAgICAgICB9Owo+
-Pj4+ICsKPj4+PiArICAgICAgICBwb3J0QDEgewo+Pj4+ICsgICAgICAgICAgICByZWcgPSA8MT47
-Cj4+Pj4gKwo+Pj4+ICsgICAgICAgICAgICBoZG1pX211eF8xOiBlbmRwb2ludCB7Cj4+Pj4gKyAg
-ICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JmlwdTFfZGkxX2hkbWk+Owo+Pj4+ICsg
-ICAgICAgICAgICB9Owo+Pj4+ICsgICAgICAgIH07Cj4+Pj4gKyAgICB9Owo+Pj4+Cj4+Pgo+Pgo+
-Cj4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZl
-bCBtYWlsaW5nIGxpc3QKZGV2ZWxAbGludXhkcml2ZXJwcm9qZWN0Lm9yZwpodHRwOi8vZHJpdmVy
-ZGV2LmxpbnV4ZHJpdmVycHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcml2ZXJkZXYtZGV2
-ZWwK
+On Fri, 07 Nov 2014, Peter Griffin wrote:
+
+> At the moment we don't take a reference on some core interconnect
+> clocks which means when CCF turns off unused clocks the SoC will
+> hang. As a temp soltuion we will boot with clk_ignore_unused
+> parameter for all b2120 boards.
+>=20
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> ---
+>  arch/arm/boot/dts/stihxxx-b2120.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts=
+/stihxxx-b2120.dtsi
+> index 862bb2f..7280b6d 100644
+> --- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
+> +++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+> @@ -8,7 +8,7 @@
+>   */
+>  / {
+>  	chosen {
+> -		bootargs =3D "console=3DttyAS0,115200";
+> +		bootargs =3D "console=3DttyAS0,115200 clk_ignore_unused";
+
+Acked-by: Lee Jones <lee.jones@linaro.org>
+
+Although, hopefully we won't require this for too much longer.
+
+>  		linux,stdout-path =3D &sbc_serial0;
+>  	};
+> =20
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
