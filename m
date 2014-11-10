@@ -1,46 +1,96 @@
 From: Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH V5 3/7] dw-hdmi: make checkpatch happy
-Date: Mon, 10 Nov 2014 17:31:54 +0800
-Message-ID: <5460860A.7030802@rock-chips.com>
-References: <1415424410-7364-1-git-send-email-andy.yan@rock-chips.com>
- <1415424598-7533-1-git-send-email-andy.yan@rock-chips.com>
- <546083C5.8060502@imgtec.com>
+Subject: Re: [PATCH V5 7/7] dt-bindings: add document for dw-hdmi
+Date: Mon, 10 Nov 2014 17:44:22 +0800
+Message-ID: <546088F6.4090505@rock-chips.com>
+References: <1415424410-7364-1-git-send-email-andy.yan@rock-chips.com> <1415424767-7761-1-git-send-email-andy.yan@rock-chips.com> <546082A9.5050203@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <546083C5.8060502@imgtec.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <546082A9.5050203@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, ykk@rock-chips.com, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, Shawn Guo <shawn.guo@linaro.org>, jay.xu@rock-chips.com, Lucas Stach <l.stach@pengutronix.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, Josh Boyer <jwboyer@redhat.com>, Sean Paul <seanpaul@chromium.org>, Inki Dae <inki.dae@samsung.com>, Dave Airlie <airlied@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Lucas Stach <l.stach@pengutronix.de>, djkurtz@google.com, ykk@rock-chips.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, jay.xu@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgWnViYWlyTEs6Ck9uIDIwMTTlubQxMeaciDEw5pelIDE3OjIyLCBadWJhaXIgTHV0ZnVsbGFo
-IEtha2FraGVsIHdyb3RlOgo+IEhpIEFuZHksCj4KPiBJbiAzLjE4IHJjNCwgSSBjYW5ub3QgZmlu
-ZCBjaGVja3BhdGNoIGVycm9ycyBpbiBpbXgtaGRtaS5jCj4KPiBIYXZlIHRoZXNlIGVycm9ycyBj
-b21lIGR1cmluZyB0aGUgcHJldmlvdXMgMiBwYXRjaGVzLgo+Cj4gSWYgeWVzLCB0aGVuIHRoZXNl
-IGNoYW5nZXMgbmVlZCB0byBiZSBzcXVhc2hlZCBpbnRvIHRoZSBwcmV2aW91cwo+IHBhdGNoZXMu
-IE5vIHBhdGNoIHNob3VsZCBhZGQgYSBjaGVja3BhdGNoIGVycm9yIGFuZCB0aGVuIGZpeCBpdCBp
-biBhIGxhdGVyIHBhdGNoLgo+Cj4gUmVnYXJkcwo+IFp1YmFpckxLCiAgSSB1c2UgY2hlY2twYXRj
-aCB3aXRoIC0tc3ViamVjdGl2ZQo+IE9uIDA4LzExLzE0IDA1OjI5LCBBbmR5IFlhbiB3cm90ZToK
-Pj4gQ0hFQ0s6IEFsaWdubWVudCBzaG91bGQgbWF0Y2ggb3BlbiBwYXJlbnRoZXNpcwo+PiArICAg
-ICAgIGlmICgoaGRtaS0+dmljID09IDEwKSB8fCAoaGRtaS0+dmljID09IDExKSB8fAo+PiArICAg
-ICAgICAgICAgICAgKGhkbWktPnZpYyA9PSAxMikgfHwgKGhkbWktPnZpYyA9PSAxMykgfHwKPj4K
-Pj4gQ0hFQ0s6IGJyYWNlcyB7fSBzaG91bGQgYmUgdXNlZCBvbiBhbGwgYXJtcyBvZiB0aGlzIHN0
-YXRlbWVudAo+PiArICAgICAgIGlmIChoZG1pLT5oZG1pX2RhdGEudmlkZW9fbW9kZS5tZHZpKQo+
-PiBbLi4uXQo+PiArICAgICAgIGVsc2Ugewo+PiBbLi4uXQo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBB
-bmR5IFlhbiA8YW5keS55YW5Acm9jay1jaGlwcy5jb20+Cj4+IC0tLQo+PiAgIGRyaXZlcnMvZ3B1
-L2RybS9icmlkZ2UvZHdfaGRtaS5jIHwgOTcgKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0t
-LS0tLS0tLS0tLQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCA0OCBpbnNlcnRpb25zKCspLCA0OSBkZWxl
-dGlvbnMoLSkKPgo+CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KZGV2ZWwgbWFpbGluZyBsaXN0CmRldmVsQGxpbnV4ZHJpdmVycHJvamVjdC5vcmcKaHR0
-cDovL2RyaXZlcmRldi5saW51eGRyaXZlcnByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-dmVyZGV2LWRldmVsCg==
+Hi ZubairLK
+On 2014=E5=B9=B411=E6=9C=8810=E6=97=A5 17:17, Zubair Lutfullah Kakakhel=
+ wrote:
+> Nice work.
+>
+> This patch should move the binding from
+>
+> Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
+> to the location instead of making a new file and leaving the old
+> one in place.
+>
+> And use git format-patch -M to highlight any changes.
+>
+> Regards
+> ZubairLK
+    I add these bindings for dw-hdmi core, because
+   properities like reg, interrupts, ddc-i2c-bus, reg-io-width are used
+   by dw-hdmi core, but properities like compatible, gpr,clk, are platf=
+orm
+   specific , they are handled by the platform code like dw_hdmi-imx.c
+   and described in platform specific dt binds like /imx-drm/hdmi.txt
+> On 08/11/14 05:32, Andy Yan wrote:
+>> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+>> ---
+>>   .../devicetree/bindings/drm/bridge/dw-hdmi.txt     | 38 ++++++++++=
+++++++++++++
+>>   1 file changed, 38 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/drm/bridge/dw=
+-hdmi.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/drm/bridge/dw-hdmi.tx=
+t b/Documentation/devicetree/bindings/drm/bridge/dw-hdmi.txt
+>> new file mode 100644
+>> index 0000000..aa7ed17
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/drm/bridge/dw-hdmi.txt
+>> @@ -0,0 +1,38 @@
+>> +DesignWare HDMI bridge bindings
+>> +
+>> +Required properities:
+>> +- compatibel: platform specific such as "fsl,imx6q-hdmi","fsl,imx6d=
+l-hdmi"
+>> +	      "rockchip,rk3288-dw-hdmi"
+>> +- reg: physical base address of the controller and length
+>> +- ddc-i2c-bus: the ddc i2c bus
+>> +- interrupts: The interrupt number to the cpu
+>> +
+>> +Optional properties
+>> +- reg-io-width: the width of the reg:1,4, default set to 1 if not p=
+resent
+>> +
+>> +Example:
+>> +	hdmi: hdmi@0120000 {
+>> +		compatible =3D "fsl,imx6q-hdmi";
+>> +		reg =3D <0x00120000 0x9000>;
+>> +		interrupts =3D <0 115 0x04>;
+>> +		gpr =3D <&gpr>;
+>> +		clocks =3D <&clks 123>, <&clks 124>;
+>> +		clock-names =3D "iahb", "isfr";
+>> +		ddc-i2c-bus =3D <&i2c2>;
+>> +
+>> +		port@0 {
+>> +			reg =3D <0>;
+>> +
+>> +			hdmi_mux_0: endpoint {
+>> +				remote-endpoint =3D <&ipu1_di0_hdmi>;
+>> +			};
+>> +		};
+>> +
+>> +		port@1 {
+>> +			reg =3D <1>;
+>> +
+>> +			hdmi_mux_1: endpoint {
+>> +				remote-endpoint =3D <&ipu1_di1_hdmi>;
+>> +			};
+>> +		};
+>> +	};
+>>
+>
+>
