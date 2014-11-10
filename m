@@ -1,94 +1,84 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] spi: meson: Add support for Amlogic Meson SPIFC
-Date: Mon, 10 Nov 2014 15:11:40 +0000
-Message-ID: <20141110151140.GA3815@sirena.org.uk>
-References: <1415525113-25598-1-git-send-email-b.galvani@gmail.com>
- <1415525113-25598-3-git-send-email-b.galvani@gmail.com>
- <20141109101712.GM2722@sirena.org.uk>
- <20141109225650.GA27950@gmail.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH v4 0/2] ARM: keystone: pm: switch to use generic pm domains
+Date: Mon, 10 Nov 2014 17:13:05 +0200
+Message-ID: <5460D601.70504@ti.com>
+References: <1415631557-22897-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8LcJRZYx/wLV/pN5"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141109225650.GA27950-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1415631557-22897-1-git-send-email-grygorii.strashko@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, khilman@linaro.org
+Cc: linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Santosh,
 
---8LcJRZYx/wLV/pN5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 11/10/2014 04:59 PM, Grygorii Strashko wrote:
+> Hi Santosh, Kevin,
+> 
+> This series switches Keystone 2 PM code to use Generic PM domains
+> instead of PM clock domains because of the lack of DT support
+> for the last.
+> It will finally allow to enable Runtime PM for Keystone 2.
+> 
+> This series based on top
+> 
+> Changes in v4:
+>   - changes for Generic clock manipulation PM callbacks (clock_ops.c)
+>     were separated in standalone series [3] and Keystone 2 specific
+>     patches were rebased on top of it.
 
-On Sun, Nov 09, 2014 at 11:56:50PM +0100, Beniamino Galvani wrote:
-> On Sun, Nov 09, 2014 at 10:17:12AM +0000, Mark Brown wrote:
+I've just found that prerequisite patches have been taken by Rafael in linux-pm.git/linux-next,
+first two patches from series:
+ "[PATCH v4 0/3] PM / clock_ops: add pm_clk_add_clk()"
+ https://lkml.org/lkml/2014/11/6/319 
 
-> > This will busy wait for up to a second, that seems like a long time to
-> > busy wait.  We also appear to be using this for the entire duration of
-> > the transfer which could be a fairly long time even during normal
-> > operation if doing a large transfer such as a firmware download, or if
-> > the bus speed is low.
+Thanks a lot Rafael.
 
-> Yes, probably the timeout value is too long since the maximum length
-> of a basic transfer is 64 bytes. Can you suggest a reasonable value?
+So, if no complains, this series is ready.
 
-10ms?  It depends somewhat=20
+> 
+> Changes in v3:
+>   - handling of the case when !CONFIG_PM_RUNTIME has been
+>     moved in PM clock framework.
+> 
+> Changes in v2:
+> - minor comments applied and rebased on top of Linux 3.18-rc1.
+> 
+> Links on previous versions:
+> v2:  https://lkml.org/lkml/2014/10/20/248
+> v1:  https://lkml.org/lkml/2014/9/29/382
+> 
+> RFC version of patches can be found at [2].
+> 
+> [1] "[PATCH/RFC 0/4] of: Register clocks for Runtime PM with PM core"
+>    https://lkml.org/lkml/2014/4/24/1118
+> 
+> [2] "[RFC PATCH 0/4] ARM: keystone: pm: switch to use generic pm domains"
+>    https://lkml.org/lkml/2014/9/25/364
+> 
+> [3] "[PATCH v4 0/3] PM / clock_ops: add pm_clk_add_clk()"
+>    https://lkml.org/lkml/2014/11/6/319
+> 
+> CC: Santosh Shilimkar <ssantosh@kernel.org>
+> CC: Kevin Hilman <khilman@linaro.org>
+> CC: Ulf Hansson <ulf.hansson@linaro.org>
+> CC: Geert Uytterhoeven <geert@linux-m68k.org>
+> CC: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> 
+> Grygorii Strashko (2):
+>    ARM: keystone: pm: switch to use generic pm domains
+>    ARM: dts: keystone: add generic pm controller node
+> 
+>   .../bindings/power/ti,keystone-powerdomain.txt     |  31 ++++++
+>   arch/arm/boot/dts/keystone.dtsi                    |   6 ++
+>   arch/arm/mach-keystone/Kconfig                     |   1 +
+>   arch/arm/mach-keystone/pm_domain.c                 | 106 ++++++++++++++-------
+>   4 files changed, 107 insertions(+), 37 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/power/ti,keystone-powerdomain.txt
+> 
 
-> > > +	while (done < xfer->len && !ret) {
-> > > +		len =3D min_t(int, xfer->len - done, SPIFC_BUFFER_SIZE);
-> > > +		ret =3D meson_spifc_txrx(spifc, xfer, done, len,
-> > > +				       last_xfer, done + len >=3D xfer->len);
-> > > +		done +=3D len;
-> > > +	}
-
-> > I noticed that the handling of /CS was done in the spifc_txrx() function
-> > - will this do the right thing if the transfer needs to be split for the
-> > buffer size?
-
-> It should. When the transfer gets split, CS is kept active for all the
-> chunks and the value of CS after that depends on the value of
-> cs_change.
-
-Can you be more specific about how that works?  I'm just not seeing the
-code that handles this.
-
-> > > +	if (!ret && xfer->delay_usecs)
-> > > +		udelay(xfer->delay_usecs);
-
-> > The core will do this for you if you implement this as transfer_one().
-
-> Please correct me if I'm wrong, but I think that transfer_one() can't
-> be used in this case. The hardware doesn't support direct manipulation
-> of CS and allows only to specify if CS must be kept active after the
-> current transfer. So I need to know for each transfer if it's the last
-> and this can be achieved only implementing transfer_one_message().
-
-This is already in a function that's operating at the transfer_one()
-level, the function is even called transfer_one() and besides it's
-clearly not something specific to this hardware so should be factored
-out into the core instead of open coded.
-
---8LcJRZYx/wLV/pN5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUYNWsAAoJECTWi3JdVIfQUbQH/R+WA5WkTd5kxqYoVA77kn/3
-CX0Rs9IR+peXFR0ZkVYxQA+Or/APV3EiJ8O6ECf0aiHh4oRv+a5NyZSgELarfOiL
-jraGi5PKLWW3Ac2DUL4RFeGHQ6NgAMOMKH+6nMxE/d6IS81zVLzFdQrBTNORzWmQ
-cftA0dfZNYDqMGtLYt5zrvC/ZdRiu2qRZgF8AoHy/TWep/xthjPcO2YquXB45DBk
-jPDSl8pEe5gSKoSvhG9udCOSpaah40tSoi+45GXqKbzshWmiKtM3CqpuGljFH/FG
-dJLOUog401k4j3DYFX6oE3MUmJ9qPBCySBnrCrYQOvjxf4DAF7rHJK1+WRUfdrs=
-=X4Go
------END PGP SIGNATURE-----
-
---8LcJRZYx/wLV/pN5--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards,
+-grygorii
