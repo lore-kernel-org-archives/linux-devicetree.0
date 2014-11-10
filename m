@@ -1,409 +1,94 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: Re: [PATCH 1/2] crypto: Add Imagination Technologies hw hash accelerator
-Date: Mon, 10 Nov 2014 17:09:52 +0200
-Message-ID: <5460D540.6070205@mentor.com>
-References: <1415621455-10468-1-git-send-email-james.hartley@imgtec.com> <1415621455-10468-2-git-send-email-james.hartley@imgtec.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] spi: meson: Add support for Amlogic Meson SPIFC
+Date: Mon, 10 Nov 2014 15:11:40 +0000
+Message-ID: <20141110151140.GA3815@sirena.org.uk>
+References: <1415525113-25598-1-git-send-email-b.galvani@gmail.com>
+ <1415525113-25598-3-git-send-email-b.galvani@gmail.com>
+ <20141109101712.GM2722@sirena.org.uk>
+ <20141109225650.GA27950@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <1415621455-10468-2-git-send-email-james.hartley@imgtec.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: James Hartley <james.hartley@imgtec.com>, herbert@gondor.apana.org.au, davem@davemloft.net, grant.likely@linaro.org, robh+dt@kernel.org, akpm@linux-foundation.org, gregkh@linuxfoundation.org, joe@perches.com, mchehab@osg.samsung.com, crope@iki.fi, jg1.han@samsung.com, linux-crypto@vger.kernel.org
-Cc: devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, abrestic@chromium.org, ezequiel.garcia@imgtec.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="8LcJRZYx/wLV/pN5"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141109225650.GA27950-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello James,
 
-On 10.11.2014 14:10, James Hartley wrote:
-> This adds support for the Imagination Technologies hash
-> accelerator that provides hardware acceleration for
-> SHA1 SHA224 SHA256 and MD5 Hashes.
-> 
-> Signed-off-by: James Hartley <james.hartley@imgtec.com>
-> ---
+--8LcJRZYx/wLV/pN5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[snip]
+On Sun, Nov 09, 2014 at 11:56:50PM +0100, Beniamino Galvani wrote:
+> On Sun, Nov 09, 2014 at 10:17:12AM +0000, Mark Brown wrote:
 
-> diff --git a/drivers/crypto/img-hash.c b/drivers/crypto/img-hash.c
-> new file mode 100644
-> index 0000000..e58c81a
-> --- /dev/null
-> +++ b/drivers/crypto/img-hash.c
-> @@ -0,0 +1,1048 @@
-> +/*
-> +* Copyright (c) 2014 Imagination Technologies
-> +* Author:  Will Thomas
-> +*
-> +* This program is free software; you can redistribute it and/or modify
-> +* it under the terms of the GNU General Public License version 2 as published
-> +* by the Free Software Foundation.
-> +*
-> +*	Interface structure taken from omap-sham driver
-> +*/
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/clk.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/io.h>
-> +#include <linux/scatterlist.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/of_device.h>
-> +#include <crypto/sha.h>
-> +#include <crypto/md5.h>
-> +#include <crypto/internal/hash.h>
-> +
-> +#define MD5_BLOCK_SIZE			64
-> +
-> +#define CR_RESET			0
-> +#define CR_RESET_SET			1
-> +#define CR_RESET_UNSET			0
-> +
-> +#define CR_MESSAGE_LENGTH_H		0x4
-> +#define CR_MESSAGE_LENGTH_L		0x8
-> +
-> +#define	CR_CONTROL			0xc
+> > This will busy wait for up to a second, that seems like a long time to
+> > busy wait.  We also appear to be using this for the entire duration of
+> > the transfer which could be a fairly long time even during normal
+> > operation if doing a large transfer such as a firmware download, or if
+> > the bus speed is low.
 
-Tab symbol instead of space after #define.
+> Yes, probably the timeout value is too long since the maximum length
+> of a basic transfer is 64 bytes. Can you suggest a reasonable value?
 
-> +#define CR_CONTROL_BYTE_ORDER_3210	0
-> +#define CR_CONTROL_BYTE_ORDER_0123	1
-> +#define CR_CONTROL_BYTE_ORDER_2310	2
-> +#define CR_CONTROL_BYTE_ORDER_1032	3
-> +#define CR_CONTROL_ALGO_MD5	0
-> +#define CR_CONTROL_ALGO_SHA1	1
-> +#define CR_CONTROL_ALGO_SHA224	2
-> +#define CR_CONTROL_ALGO_SHA256	3
-> +
+10ms?  It depends somewhat=20
 
-[snip]
+> > > +	while (done < xfer->len && !ret) {
+> > > +		len =3D min_t(int, xfer->len - done, SPIFC_BUFFER_SIZE);
+> > > +		ret =3D meson_spifc_txrx(spifc, xfer, done, len,
+> > > +				       last_xfer, done + len >=3D xfer->len);
+> > > +		done +=3D len;
+> > > +	}
 
-> +static int img_hash_hw_init(struct img_hash_dev *hdev)
-> +{
-> +	unsigned long long nbits;
-> +	u32 u, l;
-> +
-> +	clk_prepare_enable(hdev->iclk);
+> > I noticed that the handling of /CS was done in the spifc_txrx() function
+> > - will this do the right thing if the transfer needs to be split for the
+> > buffer size?
 
-This call may fail, please add a check.
+> It should. When the transfer gets split, CS is kept active for all the
+> chunks and the value of CS after that depends on the value of
+> cs_change.
 
-> +
-> +	img_hash_write(hdev, CR_RESET, CR_RESET_SET);
-> +	img_hash_write(hdev, CR_RESET, CR_RESET_UNSET);
-> +	img_hash_write(hdev, CR_INTENAB, CR_INT_NEW_RESULTS_SET);
-> +
-> +	nbits = (hdev->req->nbytes << 3);
-> +	u = nbits >> 32;
-> +	l = nbits;
-> +	img_hash_write(hdev, CR_MESSAGE_LENGTH_H, u);
-> +	img_hash_write(hdev, CR_MESSAGE_LENGTH_L, l);
-> +
-> +	if (!(DRIVER_FLAGS_INIT & hdev->flags)) {
-> +		hdev->flags |= DRIVER_FLAGS_INIT;
-> +		hdev->err = 0;
-> +	}
-> +	pr_debug("hw initialized, nbits: %llx\n", nbits);
-> +	return 0;
-> +}
-> +
+Can you be more specific about how that works?  I'm just not seeing the
+code that handles this.
 
-[snip]
+> > > +	if (!ret && xfer->delay_usecs)
+> > > +		udelay(xfer->delay_usecs);
 
-> +static void img_hash_xmit_dma(struct img_hash_dev *hdev, struct scatterlist *sg)
-> +{
-> +	struct dma_async_tx_descriptor *desc;
-> +	struct img_hash_request_ctx *ctx = ahash_request_ctx(hdev->req);
-> +
-> +	ctx->dma_ct = dma_map_sg(hdev->dev, sg, 1, DMA_MEM_TO_DEV);
-> +	if (ctx->dma_ct == 0) {
-> +		dev_err(hdev->dev, "Invalid DMA sg\n");
-> +		hdev->err = -EINVAL;
-> +		return;
-> +	}
-> +
-> +	desc = dmaengine_prep_slave_sg(hdev->dma_lch,
-> +					sg,
-> +					ctx->dma_ct,
-> +					DMA_MEM_TO_DEV,
-> +					DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
-> +	if (!desc) {
-> +		dev_err(hdev->dev, "Null DMA descriptor\n");
-> +		hdev->err = -EINVAL;
+> > The core will do this for you if you implement this as transfer_one().
 
-Missing dma_unmap_sg()
+> Please correct me if I'm wrong, but I think that transfer_one() can't
+> be used in this case. The hardware doesn't support direct manipulation
+> of CS and allows only to specify if CS must be kept active after the
+> current transfer. So I need to know for each transfer if it's the last
+> and this can be achieved only implementing transfer_one_message().
 
-> +		return;
-> +	}
-> +	desc->callback = img_hash_dma_callback;
-> +	desc->callback_param = hdev;
-> +	dmaengine_submit(desc);
-> +	dma_async_issue_pending(hdev->dma_lch);
-> +}
-> +
-> +static void img_hash_dma_task(unsigned long d)
-> +{
-> +	struct img_hash_dev *hdev = (struct img_hash_dev *) d;
-> +	struct img_hash_request_ctx *ctx = ahash_request_ctx(hdev->req);
-> +	char *addr;
-> +	size_t nbytes, bleft, bsend, len, tbc;
-> +	struct scatterlist tsg;
-> +
-> +	if (!ctx->sg)
-> +		return;
-> +	if (!hdev)
-> +		pr_err("invalid ptr for hash device");
-> +
-> +	addr = sg_virt(ctx->sg);
-> +	nbytes = ctx->sg->length - ctx->offset;
-> +	bleft = nbytes % 4;
-> +	bsend = (nbytes / 4);
-> +
-> +
-> +	if (bsend) {
-> +		sg_init_one(&tsg, addr + ctx->offset, bsend * 4);
-> +		img_hash_xmit_dma(hdev, &tsg);
+This is already in a function that's operating at the transfer_one()
+level, the function is even called transfer_one() and besides it's
+clearly not something specific to this hardware so should be factored
+out into the core instead of open coded.
 
-What happens, if img_hash_xmit_dma() fails?
+--8LcJRZYx/wLV/pN5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> +		ctx->sent += bsend * 4;
-> +	}
-> +
-> +	if (bleft) {
-> +		ctx->bufcnt = sg_pcopy_to_buffer(ctx->sgfirst, ctx->nents,
-> +					ctx->buffer, bleft, ctx->sent);
-> +		tbc = 0;
-> +		ctx->sg = sg_next(ctx->sg);
-> +		while (ctx->sg && (ctx->bufcnt < 4)) {
-> +			len = ctx->sg->length;
-> +			if (likely(len > (4 - ctx->bufcnt)))
-> +				len = 4 - ctx->bufcnt;
-> +			tbc = sg_pcopy_to_buffer(ctx->sgfirst, ctx->nents,
-> +					ctx->buffer + ctx->bufcnt, len,
-> +					ctx->sent + ctx->bufcnt);
-> +			ctx->bufcnt += tbc;
-> +			if (tbc >= ctx->sg->length) {
-> +				ctx->sg = sg_next(ctx->sg);
-> +				tbc = 0;
-> +			}
-> +		}
-> +
-> +		ctx->sent += ctx->bufcnt;
-> +		ctx->offset = tbc;
-> +
-> +		if (!bsend)
-> +			img_hash_dma_callback(hdev);
-> +	} else {
-> +		ctx->offset = 0;
-> +		ctx->sg = sg_next(ctx->sg);
-> +
-> +	}
-> +}
-> +
-> +static int img_hash_dma_init(struct img_hash_dev *hdev)
-> +{
-> +	int err = -EINVAL;
-> +
-> +	hdev->dma_lch = dma_request_slave_channel(hdev->dev, "tx");
-> +	if (!hdev->dma_lch) {
-> +		dev_err(hdev->dev, "Couldn't aquire a slave DMA channel.\n");
-> +		return -EBUSY;
-> +	}
-> +	hdev->dma_conf.direction = DMA_MEM_TO_DEV;
-> +	hdev->dma_conf.dst_addr = hdev->bus_addr;
-> +	hdev->dma_conf.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-> +	hdev->dma_conf.dst_maxburst = 16;
-> +	hdev->dma_conf.device_fc = false;
-> +
-> +	err = dmaengine_slave_config(hdev->dma_lch,  &hdev->dma_conf);
-> +	if (err) {
-> +		dev_err(hdev->dev, "Couldn't configure DMA slave.\n");
-> +		return err;
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Missing dma_release_channel(hdev->dma_lch);
+iQEcBAEBAgAGBQJUYNWsAAoJECTWi3JdVIfQUbQH/R+WA5WkTd5kxqYoVA77kn/3
+CX0Rs9IR+peXFR0ZkVYxQA+Or/APV3EiJ8O6ECf0aiHh4oRv+a5NyZSgELarfOiL
+jraGi5PKLWW3Ac2DUL4RFeGHQ6NgAMOMKH+6nMxE/d6IS81zVLzFdQrBTNORzWmQ
+cftA0dfZNYDqMGtLYt5zrvC/ZdRiu2qRZgF8AoHy/TWep/xthjPcO2YquXB45DBk
+jPDSl8pEe5gSKoSvhG9udCOSpaah40tSoi+45GXqKbzshWmiKtM3CqpuGljFH/FG
+dJLOUog401k4j3DYFX6oE3MUmJ9qPBCySBnrCrYQOvjxf4DAF7rHJK1+WRUfdrs=
+=X4Go
+-----END PGP SIGNATURE-----
 
-> +	}
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id img_hash_match[] = {
-> +	{ .compatible = "img,img-hash-accelerator-rev1" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, img_hash_match)
-> +
-> +static int img_hash_probe(struct platform_device *pdev)
-> +{
-> +	struct img_hash_dev *hdev;
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *hash_res;
-> +	int err;
-> +
-> +	hdev = devm_kzalloc(dev, sizeof(*hdev), GFP_KERNEL);
-> +	if (hdev == NULL) {
-> +		err = -ENOMEM;
-> +		goto sha_dev_err;
-> +	}
-> +	spin_lock_init(&hdev->lock);
-> +
-> +	hdev->dev = dev;
-> +
-> +	platform_set_drvdata(pdev, hdev);
-> +
-> +	INIT_LIST_HEAD(&hdev->list);
-> +
-> +	tasklet_init(&hdev->done_task, img_hash_done_task,
-> +		(unsigned long) hdev);
-> +	tasklet_init(&hdev->dma_task, img_hash_dma_task,
-> +		(unsigned long) hdev);
-> +
-> +	crypto_init_queue(&hdev->queue, IMG_HASH_QUEUE_LENGTH);
-> +
-> +	hash_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!hash_res) {
-> +		dev_err(dev, "no MEM resource info\n");
-> +		err = -ENODEV;
-> +		goto res_err;
-> +	}
-> +
-> +	hdev->io_base = devm_ioremap_resource(dev, hash_res);
-> +	if (!hdev->io_base) {
-> +		dev_err(dev, "can't ioremap\n");
-> +		err = -ENOMEM;
-> +		goto hash_io_err;
-> +	}
-> +
-> +	hash_res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +	if (!hash_res) {
-> +		dev_err(dev, "no MEM resource info\n");
-> +		err = -ENODEV;
-> +		goto res_err;
-> +	}
-> +	hdev->bus_addr = hash_res->start;
-> +	hdev->cpu_addr = devm_ioremap_resource(dev, hash_res);
-> +
-> +	hdev->irq = platform_get_irq(pdev, 0);
-> +	if (hdev->irq < 0) {
-> +		dev_err(dev, "no IRQ resource info\n");
-> +		err = hdev->irq;
-> +		goto res_err;
-> +	}
-> +
-> +	err = devm_request_irq(dev, hdev->irq, img_irq_handler, 0,
-> +			"img-hash-accelerator-rev1", hdev);
-> +	if (err) {
-> +		dev_err(dev, "unable to request img-hash-accelerator irq\n");
-> +		goto res_err;
-> +	}
-> +	dev_info(dev, "using IRQ channel %d\n", hdev->irq);
-> +
-> +	hdev->iclk = devm_clk_get(&pdev->dev, "hash_clk");
-> +	if (IS_ERR(hdev->iclk)) {
-> +		dev_err(dev, "clock initialization failed.\n");
-> +		err = PTR_ERR(hdev->iclk);
-> +		goto clk_err;
-
-goto res_err is good enough, no need to introduce another label.
-
-> +	}
-> +
-> +	err = img_hash_dma_init(hdev);
-> +	if (err)
-> +		goto err_dma;
-> +
-> +	dev_info(dev, "using %s for DMA transfers\n",
-> +			dma_chan_name(hdev->dma_lch));
-> +
-> +	spin_lock(&img_hash.lock);
-> +	list_add_tail(&hdev->list, &img_hash.dev_list);
-> +	spin_unlock(&img_hash.lock);
-> +
-> +	err = img_register_algs(hdev);
-> +	if (err)
-> +		goto err_algs;
-> +	dev_info(dev, "data bus: 0x%x;\tsize:0x%x\n", hdev->bus_addr, 0x4);
-> +	dev_info(dev, "Img MD5/SHA1/SHA224/SHA256 Hardware accelerator initialized\n");
-> +
-> +	return 0;
-> +
-> +err_algs:
-> +	spin_lock(&img_hash.lock);
-> +	list_del(&hdev->list);
-> +	spin_unlock(&img_hash.lock);
-> +	dma_release_channel(hdev->dma_lch);
-> +err_dma:
-> +	iounmap(hdev->io_base);
-
-Mixing of devm_* resource initialization and commodity resource release
-leads to double decrement of clock usage count reference.
-
-> +hash_io_err:
-> +	clk_put(hdev->iclk);
-
-Same as above.
-
-> +clk_err:
-> +res_err:
-> +	tasklet_kill(&hdev->done_task);
-
-What is about killing &hdev->dma_task?
-
-> +sha_dev_err:
-> +	dev_err(dev, "initialization failed.\n");
-> +	return err;
-> +}
-> +
-> +static void img_hash_dma_cleanup(struct img_hash_dev *hdev)
-> +{
-> +	dma_release_channel(hdev->dma_lch);
-> +}
-
-The function is used only once in img_hash_remove(), probably it can be
-removed.
-
-> +
-> +static int img_hash_remove(struct platform_device *pdev)
-> +{
-> +	static struct img_hash_dev *hdev;
-> +
-> +	hdev = platform_get_drvdata(pdev);
-> +	if (!hdev)
-> +		return -ENODEV;
-> +	spin_lock(&img_hash.lock);
-> +	list_del(&hdev->list);
-> +	spin_unlock(&img_hash.lock);
-> +
-> +	img_unregister_algs(hdev);
-> +
-> +	tasklet_kill(&hdev->done_task);
-> +	tasklet_kill(&hdev->dma_task);
-> +	img_hash_dma_cleanup(hdev);
-> +
-> +	iounmap(hdev->io_base);
-
-Same as above, devres iounmap() is good enough.
-
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver img_hash_driver = {
-> +	.probe		= img_hash_probe,
-> +	.remove		= img_hash_remove,
-> +	.driver		= {
-> +		.name	= "img-hash-accelerator-rev1",
-> +		.of_match_table	= of_match_ptr(img_hash_match),
-> +	}
-> +};
-> +module_platform_driver(img_hash_driver);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("Imgtec SHA1/224/256 & MD5 hw accelerator driver");
-> +MODULE_AUTHOR("Will Thomas.");
-> +
-> 
-
-Also please check the whole patch for DOS line endings.
-
+--8LcJRZYx/wLV/pN5--
 --
-With best wishes,
-Vladimir
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
