@@ -1,65 +1,97 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH v9 4/8] ARM: dts: Enable Broadcom Cygnus SoC
-Date: Mon, 10 Nov 2014 11:50:11 +0100
-Message-ID: <1415616611.4862.38.camel@x220>
-References: <Scott Branden <sbranden@broadcom.com>
-	 <1414538111-11668-1-git-send-email-sbranden@broadcom.com>
-	 <1414538111-11668-5-git-send-email-sbranden@broadcom.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 01/13] ARM: STi: DT: STiH416: Add pinctl setup for usb
+ controllers.
+Date: Mon, 10 Nov 2014 10:50:41 +0000
+Message-ID: <20141110105041.GU21424@x1>
+References: <1415361475-6218-1-git-send-email-peter.griffin@linaro.org>
+ <1415361475-6218-2-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414538111-11668-5-git-send-email-sbranden@broadcom.com>
+Content-Disposition: inline
+In-Reply-To: <1415361475-6218-2-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Branden <sbranden@broadcom.com>
-Cc: Valentin Rothberg <valentinrothberg@gmail.com>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, bcm-kernel-feedback-list@broadcom.com, Mike Turquette <mturquette@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Antti Palosaari <crope@iki.fi>, JD Zheng <jdzheng@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-10-28 at 16:15 -0700, Scott Branden wrote:
-> DT files to enable cygnus consisting on reference designs
-> and cygnus core configuration.
-> 
-> Reviewed-by: Ray Jui <rjui@broadcom.com>
-> Reviewed-by: Arun Parameswaran <aparames@broadcom.com>
-> Tested-by: Jonathan Richardson <jonathar@broadcom.com>
-> Reviewed-by: JD (Jiandong) Zheng <jdzheng@broadcom.com>
-> Signed-off-by: Scott Branden <sbranden@broadcom.com>
+On Fri, 07 Nov 2014, Peter Griffin wrote:
 
-This landed in today's linux-next (ie, next-21041110) as commit
-8872fc22c267 ("ARM: dts: Enable Broadcom Cygnus SoC").
+> This patch adds the required pin config for all usb controllers
+> on the stih416.
+>=20
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> ---
+>  arch/arm/boot/dts/stih416-pinctrl.dtsi | 34 ++++++++++++++++++++++++=
+++++++++++
+>  1 file changed, 34 insertions(+)
 
->  arch/arm/boot/dts/Makefile              |    4 ++
->  arch/arm/boot/dts/bcm-cygnus-clock.dtsi |   73 ++++++++++++++++++++++
->  arch/arm/boot/dts/bcm-cygnus.dtsi       |  100 +++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/bcm911360_entphn.dts  |   32 ++++++++++
->  arch/arm/boot/dts/bcm911360k.dts        |   32 ++++++++++
->  arch/arm/boot/dts/bcm958300k.dts        |   32 ++++++++++
->  6 files changed, 273 insertions(+)
->  create mode 100644 arch/arm/boot/dts/bcm-cygnus-clock.dtsi
->  create mode 100644 arch/arm/boot/dts/bcm-cygnus.dtsi
->  create mode 100644 arch/arm/boot/dts/bcm911360_entphn.dts
->  create mode 100644 arch/arm/boot/dts/bcm911360k.dts
->  create mode 100644 arch/arm/boot/dts/bcm958300k.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 38c89ca..4b3a590 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -54,6 +54,10 @@ dtb-$(CONFIG_ARCH_AT91)	+= at91-sama5d4ek.dtb
->  dtb-$(CONFIG_ARCH_ATLAS6) += atlas6-evb.dtb
->  dtb-$(CONFIG_ARCH_AXXIA) += axm5516-amarillo.dtb
->  dtb-$(CONFIG_ARCH_BCM2835) += bcm2835-rpi-b.dtb
-> +dtb-$(CONFIG_ARCH_BCM_CYGNUS) += \
-> +	bcm911360_entphn.dtb \
-> +	bcm911360k.dtb \
-> +	bcm958300k.dtb
->  dtb-$(CONFIG_ARCH_BCM_5301X) += bcm4708-netgear-r6250.dtb
->  dtb-$(CONFIG_ARCH_BCM_63XX) += bcm963138dvt.dtb
->  dtb-$(CONFIG_ARCH_BCM_MOBILE) += bcm28155-ap.dtb \
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-Without patch 1/8 ("ARM: cygnus: Initial support for Broadcom Cygnus
-SoC") CONFIG_ARCH_BCM_CYGNUS will not be set. I guess patch 1/8 will be
-added to linux-next one of these days. Is that correct?
+> diff --git a/arch/arm/boot/dts/stih416-pinctrl.dtsi b/arch/arm/boot/d=
+ts/stih416-pinctrl.dtsi
+> index c2025bc..9cccf2d 100644
+> --- a/arch/arm/boot/dts/stih416-pinctrl.dtsi
+> +++ b/arch/arm/boot/dts/stih416-pinctrl.dtsi
+> @@ -147,6 +147,15 @@
+>  				};
+>  			};
+> =20
+> +			usb {
+> +				pinctrl_usb3: usb3 {
+> +					st,pins {
+> +						oc-detect =3D <&pio40 0 ALT1 IN>;
+> +						pwr-enable =3D <&pio40 1 ALT1 OUT>;
+> +					};
+> +				};
+> +			};
+> +
+>  			sbc_i2c1 {
+>  				pinctrl_sbc_i2c1_default: sbc_i2c1-default {
+>  					st,pins {
+> @@ -318,6 +327,16 @@
+>  				};
+>  			};
+> =20
+> +			usb {
+> +				pinctrl_usb0: usb0 {
+> +					st,pins {
+> +						oc-detect =3D <&pio9 4 ALT1 IN>;
+> +						pwr-enable =3D <&pio9 5 ALT1 OUT>;
+> +					};
+> +				};
+> +			};
+> +
+> +
+>  			i2c1 {
+>  				pinctrl_i2c1_default: i2c1-default {
+>  					st,pins {
+> @@ -506,6 +525,21 @@
+>  					};
+>  				};
+>  			};
+> +
+> +			usb {
+> +				pinctrl_usb1: usb1 {
+> +					st,pins {
+> +						oc-detect =3D <&pio18 0 ALT1 IN>;
+> +						pwr-enable =3D <&pio18 1 ALT1 OUT>;
+> +					};
+> +				};
+> +				pinctrl_usb2: usb2 {
+> +					st,pins {
+> +						oc-detect =3D <&pio18 2 ALT1 IN>;
+> +						pwr-enable =3D <&pio18 3 ALT1 OUT>;
+> +					};
+> +				};
+> +			};
+>  		};
+> =20
+>  		pin-controller-fvdp-fe {
 
-
-Paul Bolle
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
