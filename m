@@ -1,40 +1,65 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2 2/2] ARM: dts: socfpga: Add l3nic node
-Date: Mon, 10 Nov 2014 14:44:10 +0100
-Message-ID: <1415627050-2235-2-git-send-email-s.trumtrar@pengutronix.de>
-References: <1415627050-2235-1-git-send-email-s.trumtrar@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415627050-2235-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: [PATCH v6 1/5] regulator: Document binding for initial and suspend modes
+Date: Mon, 10 Nov 2014 14:43:51 +0100
+Message-ID: <1415627035-3088-2-git-send-email-javier.martinez@collabora.co.uk>
+References: <1415627035-3088-1-git-send-email-javier.martinez@collabora.co.uk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1415627035-3088-1-git-send-email-javier.martinez@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Some regulators can run on different operating modes (opmodes). This
+allows systems to choose the most efficient opmode for each regulator.
+
+This patch builds on top of (291d761 regulator: Document binding for
+regulator suspend state for PM state) adding a regulator-initial-mode
+DT property to configure at startup the operating mode for regulators
+that support changing its mode during normal operation and a property
+regulator-mode to be used in the regulator-state-[mem/disk] nodes for
+regulators that supports changing its operating mode when the system
+enters in a suspend state.
+
+The set of possible modes that a regulator can operate depends on the
+hardware capabilities so a list of generic operating modes can't be
+provided. Instead, each hardware binding should define the list of
+valid operating modes for the regulators found on that device.
+
+Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 ---
- arch/arm/boot/dts/socfpga.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 4472fd92685c..e47b69c9f6cd 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -628,6 +628,11 @@
- 			arm,data-latency = <2 1 1>;
- 		};
+Changes in v6:
+ - Remove assumptions about implementation details and don't overspecify.
+   Suggested by Mark Brown.
+
+Changes in v5: None
+
+Changes in v4: None
+
+Changes in v3:
+ - Rebased on top of regulator suspend voltage series
+
+ Documentation/devicetree/bindings/regulator/regulator.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
+index 4e7ed76..abb26b5 100644
+--- a/Documentation/devicetree/bindings/regulator/regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/regulator.txt
+@@ -30,6 +30,13 @@ Optional properties:
+ 	- regulator-off-in-suspend: regulator should be off in suspend state.
+ 	- regulator-suspend-microvolt: regulator should be set to this voltage
+ 	  in suspend.
++	- regulator-mode: operating mode in the given suspend state.
++	  The set of possible operating modes depends on the capabilities of
++	  every hardware so the valid modes are documented on each regulator
++	  device tree binding document.
++- regulator-initial-mode: initial operating mode. The set of possible operating
++  modes depends on the capabilities of every hardware so each device binding
++  documentation explains which values the regulator supports.
  
-+		l3regs: gpv@ff800000 {
-+			compatible = "altr,l3-nic";
-+			reg = <0xff800000 0x100000>;
-+		};
-+
- 		mmc: dwmmc0@ff704000 {
- 			compatible = "altr,socfpga-dw-mshc";
- 			reg = <0xff704000 0x1000>;
+ Deprecated properties:
+ - regulator-compatible: If a regulator chip contains multiple
 -- 
-2.1.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.0
