@@ -1,32 +1,74 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 3/4] arm: dts: omap3-gta04: Add handling for tv output
-Date: Mon, 10 Nov 2014 15:30:51 -0800
-Message-ID: <20141110233050.GC31454@atomide.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 4/4] arm: dts: omap3-gta04: Add static configuration for
+ devconf1 register
+Date: Mon, 10 Nov 2014 15:36:31 -0800
+Message-ID: <20141110233630.GD31454@atomide.com>
 References: <1415051968-4878-1-git-send-email-marek@goldelico.com>
- <1415051968-4878-4-git-send-email-marek@goldelico.com>
+ <1415051968-4878-5-git-send-email-marek@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1415051968-4878-4-git-send-email-marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org
+In-Reply-To: <1415051968-4878-5-git-send-email-marek@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marek Belisko <marek@goldelico.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, linux@arm.linux.org.uk, tomi.valkeinen@ti.com, plagnioj@jcrosoft.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, hns@goldelico.com
 List-Id: devicetree@vger.kernel.org
 
-* Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> [141103 14:01]:
-> Add handling for gta04 tv out chain:
-> venc -> opa362 -> svideo
+* Marek Belisko <marek@goldelico.com> [141103 14:01]:
+> gta04 board need for tvout enabled 2 bits in devconf1 register (tvbypass and acbias).
+> Add single pinmux entry and enable it.
 > 
-> Signed-off-by: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+> Signed-off-by: Marek Belisko <marek@goldelico.com>
 > ---
->  arch/arm/boot/dts/omap3-gta04.dtsi | 48 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
+>  arch/arm/boot/dts/omap3-gta04.dtsi | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+> index e4d05f0..a456d37 100644
+> --- a/arch/arm/boot/dts/omap3-gta04.dtsi
+> +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+> @@ -118,6 +118,17 @@
+>  			};
+>  		};
+>  	};
+> +
+> +	/* pinmux for devconf1 */
+> +	control_devconf1: pinmux@480022d8 {
+> +		compatible = "pinctrl-single";
+> +		reg = <0x480022d8 4>;	/* single register */
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		pinctrl-single,bit-per-mux;
+> +		pinctrl-single,register-width = <32>;
+> +		pinctrl-single,function-mask = <0xfc0bd5>;
+> +	};
+>  };
+>  
 
-Applying this patch into omap-for-v3.19/dt thanks.
+The pinctrl-single entry should be in omap3.dtsi as the mux register is there
+for all the omap3 devices, can you please update the patch for that?
+
+Regards,
 
 Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+>  &omap3_pmx_core {
+> @@ -497,3 +508,14 @@
+>  		};
+>  	};
+>  };
+> +
+> +&control_devconf1 {
+> +	pinctrl-name = "default";
+> +	pinctrl-0 = < &tv_acbias_pins>;
+> +
+> +	tv_acbias_pins: pinmux_tv_acbias_pins {
+> +		pinctrl-single,bits = <
+> +			0 0x40800 0x40800
+> +		>;
+> +	};
+> +};
+> -- 
+> 1.9.1
+> 
