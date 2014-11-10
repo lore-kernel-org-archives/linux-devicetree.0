@@ -1,63 +1,65 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 02/13] ARM: STi: DT: STiH416: Add DT node for the
- stih415/6 usb2 phy
-Date: Mon, 10 Nov 2014 10:49:47 +0000
-Message-ID: <20141110104947.GT21424@x1>
-References: <1415361475-6218-1-git-send-email-peter.griffin@linaro.org>
- <1415361475-6218-3-git-send-email-peter.griffin@linaro.org>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH v9 4/8] ARM: dts: Enable Broadcom Cygnus SoC
+Date: Mon, 10 Nov 2014 11:50:11 +0100
+Message-ID: <1415616611.4862.38.camel@x220>
+References: <Scott Branden <sbranden@broadcom.com>
+	 <1414538111-11668-1-git-send-email-sbranden@broadcom.com>
+	 <1414538111-11668-5-git-send-email-sbranden@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1415361475-6218-3-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1414538111-11668-5-git-send-email-sbranden@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Scott Branden <sbranden@broadcom.com>
+Cc: Valentin Rothberg <valentinrothberg@gmail.com>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, bcm-kernel-feedback-list@broadcom.com, Mike Turquette <mturquette@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Antti Palosaari <crope@iki.fi>, JD Zheng <jdzheng@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 07 Nov 2014, Peter Griffin wrote:
+On Tue, 2014-10-28 at 16:15 -0700, Scott Branden wrote:
+> DT files to enable cygnus consisting on reference designs
+> and cygnus core configuration.
+> 
+> Reviewed-by: Ray Jui <rjui@broadcom.com>
+> Reviewed-by: Arun Parameswaran <aparames@broadcom.com>
+> Tested-by: Jonathan Richardson <jonathar@broadcom.com>
+> Reviewed-by: JD (Jiandong) Zheng <jdzheng@broadcom.com>
+> Signed-off-by: Scott Branden <sbranden@broadcom.com>
 
-> This usb picophy is found on stih415/6 SoC.
+This landed in today's linux-next (ie, next-21041110) as commit
+8872fc22c267 ("ARM: dts: Enable Broadcom Cygnus SoC").
 
-Then shouldn't it live in stih41x.dtsi?
+>  arch/arm/boot/dts/Makefile              |    4 ++
+>  arch/arm/boot/dts/bcm-cygnus-clock.dtsi |   73 ++++++++++++++++++++++
+>  arch/arm/boot/dts/bcm-cygnus.dtsi       |  100 +++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/bcm911360_entphn.dts  |   32 ++++++++++
+>  arch/arm/boot/dts/bcm911360k.dts        |   32 ++++++++++
+>  arch/arm/boot/dts/bcm958300k.dts        |   32 ++++++++++
+>  6 files changed, 273 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/bcm-cygnus-clock.dtsi
+>  create mode 100644 arch/arm/boot/dts/bcm-cygnus.dtsi
+>  create mode 100644 arch/arm/boot/dts/bcm911360_entphn.dts
+>  create mode 100644 arch/arm/boot/dts/bcm911360k.dts
+>  create mode 100644 arch/arm/boot/dts/bcm958300k.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 38c89ca..4b3a590 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -54,6 +54,10 @@ dtb-$(CONFIG_ARCH_AT91)	+= at91-sama5d4ek.dtb
+>  dtb-$(CONFIG_ARCH_ATLAS6) += atlas6-evb.dtb
+>  dtb-$(CONFIG_ARCH_AXXIA) += axm5516-amarillo.dtb
+>  dtb-$(CONFIG_ARCH_BCM2835) += bcm2835-rpi-b.dtb
+> +dtb-$(CONFIG_ARCH_BCM_CYGNUS) += \
+> +	bcm911360_entphn.dtb \
+> +	bcm911360k.dtb \
+> +	bcm958300k.dtb
+>  dtb-$(CONFIG_ARCH_BCM_5301X) += bcm4708-netgear-r6250.dtb
+>  dtb-$(CONFIG_ARCH_BCM_63XX) += bcm963138dvt.dtb
+>  dtb-$(CONFIG_ARCH_BCM_MOBILE) += bcm28155-ap.dtb \
 
-> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm/boot/dts/stih416.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/stih416.dtsi b/arch/arm/boot/dts/stih4=
-16.dtsi
-> index 1137bdf..0f3019a 100644
-> --- a/arch/arm/boot/dts/stih416.dtsi
-> +++ b/arch/arm/boot/dts/stih416.dtsi
-> @@ -316,5 +316,14 @@
-> =20
->  			status	        =3D "disabled";
->  		};
-> +
-> +		usb2_phy: usb2phy@0 {
-> +			compatible =3D "st,stih416-usb-phy";
-> +			#phy-cells =3D <0>;
-> +			st,syscfg =3D <&syscfg_rear>;
-> +			clocks =3D <&clk_sysin>;
-> +			clock-names =3D "osc_phy";
-> +
+Without patch 1/8 ("ARM: cygnus: Initial support for Broadcom Cygnus
+SoC") CONFIG_ARCH_BCM_CYGNUS will not be set. I guess patch 1/8 will be
+added to linux-next one of these days. Is that correct?
 
-Remove this '\n'.
 
-> +		};
->  	};
->  };
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Paul Bolle
