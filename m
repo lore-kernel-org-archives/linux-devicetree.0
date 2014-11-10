@@ -1,103 +1,69 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] tty: serial: bcm63xx: Allow device nodes to be
- renamed to /dev/ttyBCM*
-Date: Mon, 10 Nov 2014 08:25:14 -0600
-Message-ID: <CAL_JsqLXznpCo3YjN+XqF6cDG38C6dKzO9DHJmzi6=sNnAU=hQ@mail.gmail.com>
-References: <1415523348-4631-1-git-send-email-cernekee@gmail.com> <1415523348-4631-2-git-send-email-cernekee@gmail.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] i2c: add support for Amlogic Meson I2C controller
+Date: Mon, 10 Nov 2014 15:44:41 +0100
+Message-ID: <20141110144440.GB10422@katana>
+References: <1412540232-26168-1-git-send-email-b.galvani@gmail.com>
+ <1412540232-26168-2-git-send-email-b.galvani@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <1415523348-4631-2-git-send-email-cernekee@gmail.com>
-Sender: stable-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux-MIPS <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, stable@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="GRPZ8SYKNexpdSJ7"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1412540232-26168-2-git-send-email-b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 9, 2014 at 2:55 AM, Kevin Cernekee <cernekee@gmail.com> wrote:
-> By default, bcm63xx_uart.c uses the standard 8250 device naming and
-> major/minor numbers.  There are at least two situations where this could
-> be a problem:
->
-> 1) Multiplatform kernels that need to support some chips that have 8250
-> UARTs and other chips that have bcm63xx UARTs.
->
-> 2) Some older chips like BCM7125 have a mix of both UART types.
->
-> Add a new Kconfig option to tell the driver whether to register itself
-> as ttyS or ttyBCM.  By default it will retain the existing "ttyS"
-> behavior to avoid surprises.
 
-While I understand the desire to have stable names, this is the
-opposite direction we want to go. Per platform tty names complicates
-having a generic userspace. It is not so bad since most ARM platforms
-use ttyS or ttyAMA, but just think what the kernel and userspace side
-would look like if every single platform did this. We can't change
-everything to ttyS because the other names are already an ABI.
+--GRPZ8SYKNexpdSJ7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This can be solved with a udev rule to create sym links. Or if you
-just need to know which dev node is h/w uart X, you can get that from
-sysfs.
+On Sun, Oct 05, 2014 at 10:17:11PM +0200, Beniamino Galvani wrote:
+> This is a driver for the I2C controller found in Amlogic Meson SoCs.
+>=20
+> Signed-off-by: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Rob
+Thanks. Looking very good already!
 
-> Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
-> ---
->  drivers/tty/serial/Kconfig        | 11 +++++++++++
->  drivers/tty/serial/bcm63xx_uart.c |  8 ++++++++
->  2 files changed, 19 insertions(+)
->
-> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-> index fdd851e..c82cfd2 100644
-> --- a/drivers/tty/serial/Kconfig
-> +++ b/drivers/tty/serial/Kconfig
-> @@ -1302,6 +1302,17 @@ config SERIAL_BCM63XX_CONSOLE
->           If you have enabled the serial port on the BCM63xx CPU
->           you can make it the console by answering Y to this option.
->
-> +config SERIAL_BCM63XX_TTYS
-> +       bool "Use ttyS[01] device nodes for bcm63xx_uart"
-> +       depends on SERIAL_BCM63XX
-> +       default y
-> +       help
-> +         Say Y to name the serial ports /dev/ttyS0, ttyS1, ...
-> +         This conflicts with the 8250 driver but may avoid breaking
-> +         compatibility with existing init scripts.
-> +
-> +         Say N to name the serial ports /dev/ttyBCM0, ttyBCM1, ...
-> +
->  config SERIAL_GRLIB_GAISLER_APBUART
->         tristate "GRLIB APBUART serial support"
->         depends on OF && SPARC
-> diff --git a/drivers/tty/serial/bcm63xx_uart.c b/drivers/tty/serial/bcm63xx_uart.c
-> index e04e580..9f3dcc8 100644
-> --- a/drivers/tty/serial/bcm63xx_uart.c
-> +++ b/drivers/tty/serial/bcm63xx_uart.c
-> @@ -751,7 +751,11 @@ static int bcm_console_setup(struct console *co, char *options)
->  static struct uart_driver bcm_uart_driver;
->
->  static struct console bcm63xx_console = {
-> +#ifdef CONFIG_SERIAL_BCM63XX_TTYS
->         .name           = "ttyS",
-> +#else
-> +       .name           = "ttyBCM",
-> +#endif
->         .write          = bcm_console_write,
->         .device         = uart_console_device,
->         .setup          = bcm_console_setup,
-> @@ -796,9 +800,13 @@ OF_EARLYCON_DECLARE(bcm63xx_uart, "brcm,bcm6345-uart", bcm_early_console_setup);
->  static struct uart_driver bcm_uart_driver = {
->         .owner          = THIS_MODULE,
->         .driver_name    = "bcm63xx_uart",
-> +#ifdef CONFIG_SERIAL_BCM63XX_TTYS
->         .dev_name       = "ttyS",
->         .major          = TTY_MAJOR,
->         .minor          = 64,
-> +#else
-> +       .dev_name       = "ttyBCM",
-> +#endif
->         .nr             = BCM63XX_NR_UARTS,
->         .cons           = BCM63XX_CONSOLE,
->  };
-> --
-> 2.1.1
->
+> +static void meson_i2c_prepare_xfer(struct meson_i2c *i2c, bool write)
+
+Instead of the bool, maybe you could query i2c->state in the function?
+You decide, I am not forcing you to do this.
+
+> +static u32 meson_i2c_func(struct i2c_adapter *adap)
+> +{
+> +	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
+> +}
+
+Have you tested 0-byte transfers, too (i2cdetect -q)? What was your test
+scenario in general?
+
+Just minor questions. It is good to go already!
+
+
+--GRPZ8SYKNexpdSJ7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUYM9YAAoJEBQN5MwUoCm28x8P/izwmjTbddAKKzeFuH18eatu
+N+iXyQF0AFLsQJPOeE6HixqsHXoFBOMQ9zBp7UGfkUl62xS31fweaVSVXkVtorEB
+CRnXGWOmjmHYRGRA4MJnPJuxwTGceJFmyzkHwl1+GARNS0tjQeagGCY9u+e0R7Y0
+Jf/dFz90Ks3sTiX/3U5+R0WpjXjqxl9IC2KgrxRyLOTLncd6fZbI2fAoNTSB69cE
+JxKtnQHdic7f9PmvwKzFTjToSk+JeYtxp3EOKg2cHhxYM8CP3GJkNCf11i5GLnGG
+b0sePrBPeo9wDoKEKJpDUIR6WR/b6cEbWES0VWXN2qL8Ik0+qulvfaRnjheAFVFA
+tZGrYrJBpBfqqVIYlqj1PB8dcQ91jAkg8XVm3smZn+zKj50qhKjmrfso9vn2gzxI
++88x+04YbXto0pO8Q4SDDUWPsydszbtws68vIp6l7lBtbOfmeev6EXJw8Pi5ZVzt
+P0qL2ryzR1rRMpSf7x9CF/iQMjTM06j6i8ZTYmT2gri3CuEFuGtZDBeSeXwGXi6I
+cwQTm7Q6KRcPYpPCmgz4aJmeFUc8XuBOxwVQBlxi/tiVRhkEIoLZyQxmHnEQqVkq
+VgEfmgIqD+vppOljC2FZiPXDKOuYvb0LQ2ZsIoRyvUKCr7LDuQhDD6ixeSNkEBim
+/1+k9x7KsTvT8mzFF+xz
+=x9Vp
+-----END PGP SIGNATURE-----
+
+--GRPZ8SYKNexpdSJ7--
