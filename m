@@ -1,37 +1,41 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH V4 01/14] sh: Eliminate unused irq_reg_{readl,writel} accessors
-Date: Mon, 10 Nov 2014 09:13:49 +0100
-Message-ID: <CAMuHMdW+L8YbE8Z8jrtnm8xWk63sRGaFdM7TPM6MmrDg9XwHuQ@mail.gmail.com>
-References: <1415342669-30640-1-git-send-email-cernekee@gmail.com>
-	<1415342669-30640-2-git-send-email-cernekee@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1415342669-30640-2-git-send-email-cernekee@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Linux-sh list <linux-sh@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Florian Fainelli <f.fainelli@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: [PATCH v4 0/4] ASoC: simple-card: Add multi-CODEC support
+Date: Mon, 10 Nov 2014 08:48:36 +0100
+Message-ID: <cover.1415605716.git.moinejf@free.fr>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 7, 2014 at 7:44 AM, Kevin Cernekee <cernekee@gmail.com> wrote:
-> Defining these macros way down in arch/sh/.../irq.c doesn't cause
-> kernel/irq/generic-chip.c to use them.  As far as I can tell this code
-> has no effect.
->
-> Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+This patch set adds multi-CODEC support to the simple card.
 
-Compared preprocessor and asm output before and after, no difference
-except for line numbers, so
+v4: (Mark Brown)
+	- document the new core function
+	- calculation of the number of codecs moved to the core function
+	- split the patch about simple-card.c
+	- less code changes
+	- remove the cast of pointers
+	- less changes in the DT binding example 2
+v3: rebase on broonie git 2014/11/03
+v2: accept list of CODECs in 'sound-dais' (Benoit Cousson)
 
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Jean-Francois Moine (4):
+  ASoC: core: add multi-codec support in DT
+  ASoC: simple-card: Remove useless function argument
+  ASoC: simple-card: add multi-CODECs in DT
+  ASoC: simple-card: Remove useless check
 
-Gr{oetje,eeting}s,
+ .../devicetree/bindings/sound/simple-card.txt      |  20 ++--
+ include/sound/soc.h                                |   3 +
+ sound/soc/generic/simple-card.c                    |  87 ++++++++--------
+ sound/soc/soc-core.c                               | 113 ++++++++++++++++++---
+ 4 files changed, 154 insertions(+), 69 deletions(-)
 
-                        Geert
+-- 
+2.1.3
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
