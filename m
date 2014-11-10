@@ -1,46 +1,57 @@
-From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of/fdt: export fdt blob as /sys/firmware/fdt
-Date: Mon, 10 Nov 2014 18:08:03 +0100
-Message-ID: <CAKv+Gu_y2ej6BGA3E-jAni7q9peWOVprNh_m-LU0M9DRHWWTJg@mail.gmail.com>
-References: <1415638305-24463-1-git-send-email-ard.biesheuvel@linaro.org>
-	<3340387.dB5eK3mRnu@wuerfel>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 0/2] OMAP Mailbox DTS patches for 3.19
+Date: Mon, 10 Nov 2014 09:15:09 -0800
+Message-ID: <20141110171508.GN31454@atomide.com>
+References: <1415056055-64201-1-git-send-email-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3340387.dB5eK3mRnu@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geoff Levand <geoff.levand-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1415056055-64201-1-git-send-email-s-anna@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Suman Anna <s-anna@ti.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Dave Gerlach <d-gerlach@ti.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10 November 2014 17:57, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Monday 10 November 2014 17:51:45 Ard Biesheuvel wrote:
->> Create a new /sys entry '/sys/firmware/fdt' to export the FDT blob
->> that was passed to the kernel by the bootloader. This allows userland
->> applications such as kexec to access the raw binary.
->>
->> The fact that this node does not reside under /sys/firmware/device-tree
->> is deliberate: FDT is also used on arm64 UEFI/ACPI systems to
->> communicate just the UEFI and ACPI entry points, but the FDT is never
->> unflattened and used to configure the system.
->>
->> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> Can you elaborate on the motivation? Initially the fdt format was
-> introduced to make it easy to pass the information from /proc/device-tree
-> to the next kernel for kexec. Are you interested in cases where this does
-> not work?
->
+* Suman Anna <s-anna@ti.com> [141103 15:09]:
+> Hi Tony,
+> 
+> The following OMAP mailbox DTS patches are based on 3.18-rc3 and are
+> intended for the 3.19 merge window.
+> 
+> The first patch is new and adds the interrupts property to all the mailbox
+> nodes on DRA7xx now that we have the DRA7xx interrupt crossbar driver
+> functional and merged in the kernel.
+> 
+> The second patch enables the OMAP Mailbox DT users (there are none at the
+> moment) to use the recently merged Mailbox framework API, and is a repost
+> of the DTS patch [1] from the OMAP Mailbox framework adaptation series [2]
+> after rebasing. The driver portion of the adaptation patch is posted
+> separately so that Jassi can pick it up. Together, these are the last
+> base mailbox dependent patches for Dave's PM work on AM335x.
 
-/sys/firmware/device-tree only gets populated if you are really
-booting in DT mode, i.e., when the device tree is unflattened.
-However, in ACPI mode we still need to access the data that was
-communicated between UEFI and the kernel in the /chosen node if we
-want to support kexec under UEFI.
+Applying these two into omap-for-v3.19/dt thanks.
 
--- 
-Ard.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
+
+ 
+> [1] http://marc.info/?l=linux-omap&m=141038449717781&w=2
+> [2] http://marc.info/?l=linux-omap&m=141038447817775&w=2
+> 
+> Suman Anna (2):
+>   ARM: dts: DRA7: Add interrupts property to mailbox nodes
+>   ARM: dts: OMAP2+: Add #mbox-cells property to all mailbox nodes
+> 
+>  arch/arm/boot/dts/am33xx.dtsi   |  1 +
+>  arch/arm/boot/dts/am4372.dtsi   |  1 +
+>  arch/arm/boot/dts/dra7.dtsi     | 64 +++++++++++++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/omap2420.dtsi |  1 +
+>  arch/arm/boot/dts/omap2430.dtsi |  1 +
+>  arch/arm/boot/dts/omap3.dtsi    |  1 +
+>  arch/arm/boot/dts/omap4.dtsi    |  1 +
+>  arch/arm/boot/dts/omap5.dtsi    |  1 +
+>  8 files changed, 71 insertions(+)
+> 
+> -- 
+> 2.1.0
+> 
