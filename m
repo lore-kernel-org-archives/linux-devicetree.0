@@ -1,60 +1,55 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] of: Fix crash if an earlycon driver is not found
-Date: Mon, 10 Nov 2014 08:14:01 -0600
-Message-ID: <CAL_Jsq+iVfFGYEF575spQ5MaYPzo1QSfLUZP1M=TpH0+HdGS6A@mail.gmail.com>
-References: <1415523348-4631-1-git-send-email-cernekee@gmail.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 15/17] ARM: mvebu: add suspend/resume DT information for
+ Armada XP GP
+Date: Mon, 10 Nov 2014 15:14:20 +0100
+Message-ID: <5460C83C.8050401@free-electrons.com>
+References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com> <1414151970-6626-16-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1415523348-4631-1-git-send-email-cernekee@gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux-MIPS <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, stable@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414151970-6626-16-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 9, 2014 at 2:55 AM, Kevin Cernekee <cernekee@gmail.com> wrote:
-> __earlycon_of_table_sentinel.compatible is a char[128], not a pointer, so
-> it will never be NULL.  Checking it against NULL causes the match loop to
-> run past the end of the array, and eventually match a bogus entry, under
-> the following conditions:
->
->  - Kernel command line specifies "earlycon" with no parameters
->  - DT has a stdout-path pointing to a UART node
->  - The UART driver doesn't use OF_EARLYCON_DECLARE (or maybe the console
->    driver is compiled out)
->
-> Fix this by checking to see if match->compatible is a non-empty string.
->
-> Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
-> Cc: <stable@vger.kernel.org> # 3.16+
+Hi Thomas,
+On 24/10/2014 13:59, Thomas Petazzoni wrote:
+> This commit improves the Armada XP GP Device Tree description to
+> describe the 3 GPIOs that are used to connect the SoC to the PIC
+> micro-controller that we talk to shutdown the SoC when entering
+> suspend to RAM.
+> 
 
-Thanks. I'll queue this up.
+Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-BTW, you should not add stable CC when submitting for review, but
-rather add a note for the maintainer to apply to stable. Only if a
-commit is in mainline already and not flagged for stable, then you
-send the patch with the stable tag to get the commit added to stable.
-It's a bit confusing...
 
-Rob
+Thanks,
 
+Gregory
+
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> 
 > ---
->  drivers/of/fdt.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> This probably needs some Device Tree binding documentation, but I'm
+> not sure where to put it
+> exactly. Documentation/devicetree/bindings/arm/armada-xp-gp-pic.txt ?
+> 
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/armada-xp-gp.dts | 19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
+> 
 >
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index d1ffca8..30e97bc 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -773,7 +773,7 @@ int __init early_init_dt_scan_chosen_serial(void)
->         if (offset < 0)
->                 return -ENODEV;
->
-> -       while (match->compatible) {
-> +       while (match->compatible[0]) {
->                 unsigned long addr;
->                 if (fdt_node_check_compatible(fdt, offset, match->compatible)) {
->                         match++;
-> --
-> 2.1.1
->
+
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
