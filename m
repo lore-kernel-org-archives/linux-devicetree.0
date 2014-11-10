@@ -1,73 +1,49 @@
-From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH RESEND 1/7] arm64: dts: Add APM X-Gene USB DTS node
-Date: Mon, 10 Nov 2014 10:23:08 +0000
-Message-ID: <20141110102308.GB21366@e104818-lin.cambridge.arm.com>
-References: <1414438108-8384-1-git-send-email-fkan@apm.com>
- <1414438108-8384-2-git-send-email-fkan@apm.com>
- <1414599817.1870.15.camel@deneb.redhat.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 06/13] ARM: multi_v7_defconfig: Enable stih407 usb picophy
+Date: Mon, 10 Nov 2014 10:28:00 +0000
+Message-ID: <20141110102800.GQ21424@x1>
+References: <1415361475-6218-1-git-send-email-peter.griffin@linaro.org>
+ <1415361475-6218-7-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1414599817.1870.15.camel-PDpCo7skNiwAicBL8TP8PQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Bao Truong <btruong-qTEPVZfXA3Y@public.gmane.org>
+In-Reply-To: <1415361475-6218-7-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 29, 2014 at 04:23:37PM +0000, Mark Salter wrote:
-> On Mon, 2014-10-27 at 12:28 -0700, Feng Kan wrote:
-> > This parch adds the device tree nodes for APM X-Gnene USB host controller.
-> > Since X-Gene SOC supports maximum 2 USB ports, 2 dts node are added.
-> > 
-> > Signed-off-by: Bao Truong <btruong-qTEPVZfXA3Y@public.gmane.org>
-> > Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
-> > ---
-> >  arch/arm64/boot/dts/apm-storm.dtsi | 14 ++++++++++++++
-> >  1 file changed, 14 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-> > index 3eef74b..a80f2fa 100644
-> > --- a/arch/arm64/boot/dts/apm-storm.dtsi
-> > +++ b/arch/arm64/boot/dts/apm-storm.dtsi
-> > @@ -587,6 +587,20 @@
-> >  			phy-names = "sata-phy";
-> >  		};
-> >  
-> > +		usb0: dwusb@19000000 {
-> > +			status = "disabled";
-> > +			compatible = "xhci-platform";
-> > +			reg =  <0x0 0x19000000 0x0 0x100000>;
-> > +			interrupts = <0x0 0x89 0x4>;
-> > +		};
-> > +
-> > +		usb1: dwusb@19800000 {
-> > +			status = "disabled";
-> > +			compatible = "xhci-platform";
-> > +			reg =  <0x0 0x19800000 0x0 0x100000>;
-> > +			interrupts = <0x0 0x8a 0x4>;
-> > +		};
-> > +
-> 
-> Should these have "dma-coherent" properties?
+On Fri, 07 Nov 2014, Peter Griffin wrote:
 
-Just a note here: if the device is coherent but the DT does not specify
-it as such, it's not just a matter of performance but potentially data
-corruption. The current DMA ops for non-coherent devices perform a
-D-cache invalidate on the unmap path with the FROM_DEVICE direction. If
-the device is coherent and the DMA transfer (FROM_DEVICE) allocated data
-in the system cache (L3), the CPU cache invalidation after the transfer
-would corrupt such data.
+> This patch enables the picoPHY usb phy which is used by
+> the usb2 and usb3 host controllers when controlling usb2/1.1
+> devices. It is found in stih407 family SoC's from STMicroelectronics.
+>=20
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> ---
+>  arch/arm/configs/multi_v7_defconfig | 1 +
+>  1 file changed, 1 insertion(+)
 
-We had a similar discussion internally around coherency properties for
-ACPI. If we don't have guarantees that the DT (or ACPI) tables always
-pass the correct information, we should change the kernel DMA ops to
-perform the safe clean+invalidate on the unmap path (some CPU
-implementations do this by default).
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
--- 
-Catalin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/m=
+ulti_v7_defconfig
+> index e13ab7e..ac7b536 100644
+> --- a/arch/arm/configs/multi_v7_defconfig
+> +++ b/arch/arm/configs/multi_v7_defconfig
+> @@ -427,6 +427,7 @@ CONFIG_OMAP_USB2=3Dy
+>  CONFIG_TI_PIPE3=3Dy
+>  CONFIG_PHY_MIPHY365X=3Dy
+>  CONFIG_PHY_STIH41X_USB=3Dy
+> +CONFIG_PHY_STIH407_USB=3Dy
+>  CONFIG_PHY_SUN4I_USB=3Dy
+>  CONFIG_EXT4_FS=3Dy
+>  CONFIG_VFAT_FS=3Dy
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
