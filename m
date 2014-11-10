@@ -1,68 +1,53 @@
-From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v8 4/8] ARM: dts: Enable Broadcom Cygnus SoC
-Date: Mon, 10 Nov 2014 10:28:24 -0800
-Message-ID: <546103C8.3030905@broadcom.com>
-References: <sbranden@broadcom.com> <5982323.RDuqIHPULA@wuerfel> <54604A71.1010000@broadcom.com> <2221359.WPjXKG5OT3@wuerfel>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 2/2] tty: serial: bcm63xx: Allow device nodes to be
+ renamed to /dev/ttyBCM*
+Date: Tue, 11 Nov 2014 03:30:56 +0900
+Message-ID: <20141110183056.GA14178@kroah.com>
+References: <1415523348-4631-1-git-send-email-cernekee@gmail.com>
+ <1415523348-4631-2-git-send-email-cernekee@gmail.com>
+ <CAL_JsqLXznpCo3YjN+XqF6cDG38C6dKzO9DHJmzi6=sNnAU=hQ@mail.gmail.com>
+ <CAJiQ=7DUV0isdRooz6112Ncx07+9RE5DS5tMBwxr47hTWA8PAw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2221359.WPjXKG5OT3@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, JD
+Content-Type: text/plain; charset=us-ascii
+Return-path: <stable-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJiQ=7DUV0isdRooz6112Ncx07+9RE5DS5tMBwxr47hTWA8PAw@mail.gmail.com>
+Sender: stable-owner@vger.kernel.org
+To: Kevin Cernekee <cernekee@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Jiri Slaby <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux-MIPS <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 14-11-10 12:11 AM, Arnd Bergmann wrote:
-> On Sunday 09 November 2014 21:17:37 Scott Branden wrote:
->> On 14-11-09 12:38 PM, Arnd Bergmann wrote:
->>> On Sunday 09 November 2014 09:23:11 Greg Kroah-Hartman wrote:
->>>> On Sat, Nov 08, 2014 at 10:49:09PM -0800, Olof Johansson wrote:
->>>>>>>> +/*
->>>>>>>> + * Copyright 2014 Broadcom Corporation.  All rights reserved.
->>>>>>>> + *
->>>>>>>> + * Unless you and Broadcom execute a separate written software license
->>>>>>>> + * agreement governing use of this software, this software is licensed
->>>>>>>> to you
->>>>>>>> + * under the terms of the GNU General Public License as
->>>>>>>> + * published by the Free Software Foundation version 2.
->>>>>>>> + *
->>>>>>>> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
->>>>>>>> + * kind, whether express or implied; without even the implied warranty
->>>>>>>> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>>>>>>> + * GNU General Public License for more details.
->>>>>>>
->>>>>>>
->>>>>>> We ask for new DT contents to be added with dual BSD/GPL license, to
->>>>>>> allow for reuse of the DT data structures in other projects as well.
->>>>>>> There's currently a lot of activity going on relicensing the current
->>>>>>> files so I recommend sorting it out before they are added if you can.
->>>>>>
->>>>>>
->>>>>> This may take more time than you think.  I am going to have to go through
->>>>>> legal to get such a license created. Also, why would you need dual license?
->>>>>> If it is BSD that should serve both purposes?
->>>>>
->>>>> I haven't followed the discussion close enough to know if there's been
->>>>> discussion about single-license BSD vs dual BSD/GPL.
->>>
->>> I think for all practical purposes, BSD and dual BSD/GPL is the same and
->>> listing it as dual was meant as a clarification to make it easier to see
->>> that all files in the kernel are GPLv2 compatible.
->> A dual BSD/GPL may involve having me get a lawyer to create such a
->> header.  I would prefer to leave it as GPL for now until some concrete
->> decision has finally been made on this by the rest of the community?
->> Or, I can put it as BSD right now if that helps?
->
-> I would prefer a pure BSD header for the moment over a pure GPL header.
-> The last thing we want is to force other operating systems to create
-> another set of dts files for the same hardware.
-I have changed the headers to pure BSD.  I hope this is acceptable.
->
-> 	Arnd
->
+On Mon, Nov 10, 2014 at 07:05:14AM -0800, Kevin Cernekee wrote:
+> On Mon, Nov 10, 2014 at 6:25 AM, Rob Herring <robh@kernel.org> wrote:
+> > On Sun, Nov 9, 2014 at 2:55 AM, Kevin Cernekee <cernekee@gmail.com> wrote:
+> >> By default, bcm63xx_uart.c uses the standard 8250 device naming and
+> >> major/minor numbers.  There are at least two situations where this could
+> >> be a problem:
+> >>
+> >> 1) Multiplatform kernels that need to support some chips that have 8250
+> >> UARTs and other chips that have bcm63xx UARTs.
+> >>
+> >> 2) Some older chips like BCM7125 have a mix of both UART types.
+> >>
+> >> Add a new Kconfig option to tell the driver whether to register itself
+> >> as ttyS or ttyBCM.  By default it will retain the existing "ttyS"
+> >> behavior to avoid surprises.
+> >
+> > While I understand the desire to have stable names, this is the
+> > opposite direction we want to go. Per platform tty names complicates
+> > having a generic userspace. It is not so bad since most ARM platforms
+> > use ttyS or ttyAMA, but just think what the kernel and userspace side
+> > would look like if every single platform did this. We can't change
+> > everything to ttyS because the other names are already an ABI.
+> >
+> > This can be solved with a udev rule to create sym links.
+> 
+> Is it safe to register two console drivers named "ttyS" with the same
+> major/minor numbers?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Not at all, think about what you are asking for here.
+
+Is the kernel allowed to register two block devices with the same
+major/minor numbers?
+
+greg k-h
