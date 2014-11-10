@@ -1,53 +1,58 @@
-From: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] i2c: add support for Amlogic Meson I2C controller
-Date: Mon, 10 Nov 2014 22:46:58 +0100
-Message-ID: <20141110214658.GA15156@gmail.com>
-References: <1412540232-26168-1-git-send-email-b.galvani@gmail.com>
- <1412540232-26168-2-git-send-email-b.galvani@gmail.com>
- <20141110144440.GB10422@katana>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: serial: of-serial: fetch line number from DT
+Date: Mon, 10 Nov 2014 13:49:29 -0800
+Message-ID: <CAOesGMg_fK62av7kX_n_8xXhNShnKOGv9RCp=UNQxeMcmSYeyA@mail.gmail.com>
+References: <CAOesGMjzs=dThDv6S8Xvo+ym-XECaQhTQ8NV6t46fQZ1LoJnHw@mail.gmail.com>
+	<54613065.1090300@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141110144440.GB10422@katana>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54613065.1090300-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 10, 2014 at 03:44:41PM +0100, Wolfram Sang wrote:
-> On Sun, Oct 05, 2014 at 10:17:11PM +0200, Beniamino Galvani wrote:
-> > This is a driver for the I2C controller found in Amlogic Meson SoCs.
-> > 
-> > Signed-off-by: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> Thanks. Looking very good already!
-> 
-> > +static void meson_i2c_prepare_xfer(struct meson_i2c *i2c, bool write)
-> 
-> Instead of the bool, maybe you could query i2c->state in the function?
-> You decide, I am not forcing you to do this.
+On Mon, Nov 10, 2014 at 1:38 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 11/10/2014 02:34 PM, Olof Johansson wrote:
+>>
+>> Greg,
+>>
+>> This commit:
+>>
+>> commit 1bd8324535ec1ff44aef55c0e40b9e7d56b310fb
+>> Author: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+>> Date:   Mon Nov 3 23:16:54 2014 +0100
+>>
+>>      serial: of-serial: fetch line number from DT
+>
+> ...
+>>
+>> Broke a whole lot of tegra boards in last night's -next here. In
+>> particular, I've been looking at tegra20-seaboard, which now doesn't
+>> boot with console any more.
+>>
+>> http://arm-soc.lixom.net/bootlogs/next/next-20141110/
+>>
+>> Unfortunately, tegra has for a long time been specifying the aliases
+>> as a fixed 1:1 mapping, but most environments rely on ttyS0 being the
+>> first _activated_ serial port. That's obviously going to break things
+>> here. :(
+>
+> ...
+>>
+>> Stephen: I suppose the best way to handle this on tegra is to specify
+>> the aliases per-board instead of in the soc dtsi today.
+>
+>
+> IIRC, there was a deliberate request to name the Tegra UARTs after the SoC
+> ports rather than board ports, so that it'd be obvious to people which port
+> was which. I'm not sure if we can change the aliases in the Tegra DTs now
+> that people may have got used to them?
 
-Seems reasonable, will do.
+I think that's a great idea in general, but they've been this way now
+for 4 years and it'll mean everyone changing bootargs and console
+configurations (where to spawn getty) everywhere. :(
 
-> 
-> > +static u32 meson_i2c_func(struct i2c_adapter *adap)
-> > +{
-> > +	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
-> > +}
-> 
-> Have you tested 0-byte transfers, too (i2cdetect -q)? What was your test
-> scenario in general?
 
-I did a test with i2cdetect and quick write commands appear to
-work.
-
-When I wrote the driver I tested it to communicate with the only I2C
-device available on the board, a Ricoh RN5T618 PMIC.
-
-Now I have access to a hardware with a PCF8564 RTC and just realized
-that long reads don't work properly, so I'm going to submit a new
-version of the patchset in the next days.
-
-Thanks,
-Beniamino
+-Olof
