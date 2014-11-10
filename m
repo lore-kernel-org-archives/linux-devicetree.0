@@ -1,57 +1,32 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH V4 04/14] genirq: Generic chip: Add big endian I/O
- accessors
-Date: Tue, 11 Nov 2014 00:03:01 +0100
-Message-ID: <20141110230301.GV4068@piout.net>
-References: <1415342669-30640-1-git-send-email-cernekee@gmail.com>
- <1415342669-30640-5-git-send-email-cernekee@gmail.com>
- <7hy4riogwt.fsf@deeprootsystems.com>
- <CAJiQ=7CYjy-sWc-M3m2Mg8si8JacpDH=RPPm8S-Q4m88wk3Sqg@mail.gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 3/4] arm: dts: omap3-gta04: Add handling for tv output
+Date: Mon, 10 Nov 2014 15:30:51 -0800
+Message-ID: <20141110233050.GC31454@atomide.com>
+References: <1415051968-4878-1-git-send-email-marek@goldelico.com>
+ <1415051968-4878-4-git-send-email-marek@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAJiQ=7CYjy-sWc-M3m2Mg8si8JacpDH=RPPm8S-Q4m88wk3Sqg@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>
-Cc: Kevin Hilman <khilman@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, linux-sh@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, nicolas.ferre@atmel.com, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Boris Brezillon <boris.brezillon@free-electrons.com>
+In-Reply-To: <1415051968-4878-4-git-send-email-marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Adding Boris in Cc: as he wrote that part.
+* Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> [141103 14:01]:
+> Add handling for gta04 tv out chain:
+> venc -> opa362 -> svideo
+> 
+> Signed-off-by: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/omap3-gta04.dtsi | 48 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
 
-On 10/11/2014 at 14:11:44 -0800, Kevin Cernekee wrote :
-> On Mon, Nov 10, 2014 at 2:00 PM, Kevin Hilman <khilman@kernel.org> wrote:
-> > Kevin Cernekee <cernekee@gmail.com> writes:
-> >
-> >> Use io{read,write}32be if the caller specified IRQ_GC_BE_IO when creating
-> >> the irqchip.
-> >>
-> >> Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
-> >
-> > I bisected a couple ARM boot failures in next-20141110 on atmel sama5 platforms down to
-> > this patch, though I'm not quite yet sure how it's causing the failure.
-> > I'm not getting any console output, so haven't been able to dig deeper
-> > yet.  Maybe the atmel maintainers (Cc'd) can help dig.
-> >
-> > I've confirmed that reverting $SUBJECT patch (commit
-> > b79055952badbd73710685643bab44104f2509ea2) on top of next-20141110 gets
-> > things booting again.
-> >
-> > Also, it only happens with sama5_defconfig, not with multi_v7_defconfig.
-> 
-> In drivers/irqchip/irq-atmel-aic-common.c I see:
-> 
->         ret = irq_alloc_domain_generic_chips(domain, 32, 1, name,
->                                              handle_level_irq, 0, 0,
->                                              IRQCHIP_SKIP_SET_WAKE);
-> 
-> and IRQCHIP_SKIP_SET_WAKE is (1 << 4), same as IRQ_GC_BE_IO.
-> 
-> Is it possible that the caller is passing values intended for
-> irq_chip->flags into a function expecting
-> irq_domain_chip_generic->gc_flags ?
+Applying this patch into omap-for-v3.19/dt thanks.
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
