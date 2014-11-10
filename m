@@ -1,57 +1,50 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 0/2] OMAP Mailbox DTS patches for 3.19
-Date: Mon, 10 Nov 2014 09:15:09 -0800
-Message-ID: <20141110171508.GN31454@atomide.com>
-References: <1415056055-64201-1-git-send-email-s-anna@ti.com>
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: Re: [PATCH 2/2] Documentation: crypto: Add DT binding info for the
+ img hw hash accelerator
+Date: Mon, 10 Nov 2014 09:30:10 -0800
+Message-ID: <CAL1qeaEp_K2JYXBu1hvFuiJ6Ps3jBoLRtmvw1F7FPKHwKDjXmg@mail.gmail.com>
+References: <1415621455-10468-1-git-send-email-james.hartley@imgtec.com>
+	<1415621455-10468-3-git-send-email-james.hartley@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1415056055-64201-1-git-send-email-s-anna@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Dave Gerlach <d-gerlach@ti.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <1415621455-10468-3-git-send-email-james.hartley@imgtec.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: James Hartley <james.hartley@imgtec.com>
+Cc: herbert@gondor.apana.org.au, davem@davemloft.net, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, joe@perches.com, mchehab@osg.samsung.com, crope@iki.fi, jg1.han@samsung.com, linux-crypto@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-* Suman Anna <s-anna@ti.com> [141103 15:09]:
-> Hi Tony,
-> 
-> The following OMAP mailbox DTS patches are based on 3.18-rc3 and are
-> intended for the 3.19 merge window.
-> 
-> The first patch is new and adds the interrupts property to all the mailbox
-> nodes on DRA7xx now that we have the DRA7xx interrupt crossbar driver
-> functional and merged in the kernel.
-> 
-> The second patch enables the OMAP Mailbox DT users (there are none at the
-> moment) to use the recently merged Mailbox framework API, and is a repost
-> of the DTS patch [1] from the OMAP Mailbox framework adaptation series [2]
-> after rebasing. The driver portion of the adaptation patch is posted
-> separately so that Jassi can pick it up. Together, these are the last
-> base mailbox dependent patches for Dave's PM work on AM335x.
+Hi James,
 
-Applying these two into omap-for-v3.19/dt thanks.
+On Mon, Nov 10, 2014 at 4:10 AM, James Hartley <james.hartley@imgtec.com> wrote:
+> Signed-off-by: James Hartley <james.hartley@imgtec.com>
 
-Tony
+A brief commit message describing the hardware and where it's found
+would be nice.
 
- 
-> [1] http://marc.info/?l=linux-omap&m=141038449717781&w=2
-> [2] http://marc.info/?l=linux-omap&m=141038447817775&w=2
-> 
-> Suman Anna (2):
->   ARM: dts: DRA7: Add interrupts property to mailbox nodes
->   ARM: dts: OMAP2+: Add #mbox-cells property to all mailbox nodes
-> 
->  arch/arm/boot/dts/am33xx.dtsi   |  1 +
->  arch/arm/boot/dts/am4372.dtsi   |  1 +
->  arch/arm/boot/dts/dra7.dtsi     | 64 +++++++++++++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/omap2420.dtsi |  1 +
->  arch/arm/boot/dts/omap2430.dtsi |  1 +
->  arch/arm/boot/dts/omap3.dtsi    |  1 +
->  arch/arm/boot/dts/omap4.dtsi    |  1 +
->  arch/arm/boot/dts/omap5.dtsi    |  1 +
->  8 files changed, 71 insertions(+)
-> 
-> -- 
-> 2.1.0
-> 
+> diff --git a/Documentation/devicetree/bindings/crypto/img-hash.txt b/Documentation/devicetree/bindings/crypto/img-hash.txt
+
+> @@ -0,0 +1,28 @@
+> +* Imagination Technologies Ltd. Hash Accelerator
+> +
+> +The hash accelerator provides hardware hashing acceleration for
+> +SHA1, SHA224, SHA256 and MD5 hashes
+> +
+> +Required properties:
+> +
+> +- compatible : "img,img-hash-accelerator-rev1"
+
+I know I mentioned in the internal review that it would be good to
+have some sort of version indicator, but it looks like from the TRM
+that the version is probable (CR_HASH_CORE_REV).  If we expect probing
+for the revision number to be sufficient, then perhaps "rev1" can be
+dropped?  Also, the second "img" is redundant.
+
+> +- reg : Offset and length of the register set for the module, and the DMA port
+> +- interrupts : The designated IRQ line for the hashing module.
+> +- dmas : DMA specifier as per Documentation/devicetree/bindings/dma/dma.txt
+> +- dma-names : Should be "tx"
+> +- bus-addr : The bus address for the input data for hashing block
+
+I think this can be dropped.  This is the same as the second "reg"
+entry above, is it not?
