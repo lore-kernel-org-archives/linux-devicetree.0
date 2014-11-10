@@ -1,55 +1,47 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/2] Add DRA7xx CPSW Ethernet support in Device Tree
-Date: Mon, 10 Nov 2014 09:52:52 -0800
-Message-ID: <20141110175251.GR31454@atomide.com>
-References: <1413885661-4850-1-git-send-email-mugunthanvnm@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] of/fdt: export fdt blob as /sys/firmware/fdt
+Date: Mon, 10 Nov 2014 19:02:03 +0100
+Message-ID: <1710966.sRrJNMnKBO@wuerfel>
+References: <1415638305-24463-1-git-send-email-ard.biesheuvel@linaro.org> <3340387.dB5eK3mRnu@wuerfel> <CAKv+Gu_y2ej6BGA3E-jAni7q9peWOVprNh_m-LU0M9DRHWWTJg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1413885661-4850-1-git-send-email-mugunthanvnm-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <CAKv+Gu_y2ej6BGA3E-jAni7q9peWOVprNh_m-LU0M9DRHWWTJg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geoff Levand <geoff.levand-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org> [141021 03:02]:
-> Adding device tree entry for CPSW to make it work in Dual EMAC mode.
-> These patches were tested with DRA7 hwmod patches on top of linux-next.
-> Patches are tested on top of Nishanth's PM tree for v3.17 [1] and pushed
-> my tree to [2].
+On Monday 10 November 2014 18:08:03 Ard Biesheuvel wrote:
+> On 10 November 2014 17:57, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > On Monday 10 November 2014 17:51:45 Ard Biesheuvel wrote:
+> >> Create a new /sys entry '/sys/firmware/fdt' to export the FDT blob
+> >> that was passed to the kernel by the bootloader. This allows userland
+> >> applications such as kexec to access the raw binary.
+> >>
+> >> The fact that this node does not reside under /sys/firmware/device-tree
+> >> is deliberate: FDT is also used on arm64 UEFI/ACPI systems to
+> >> communicate just the UEFI and ACPI entry points, but the FDT is never
+> >> unflattened and used to configure the system.
+> >>
+> >> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >
+> > Can you elaborate on the motivation? Initially the fdt format was
+> > introduced to make it easy to pass the information from /proc/device-tree
+> > to the next kernel for kexec. Are you interested in cases where this does
+> > not work?
+> >
 > 
-> Did a boot test with CPSW and ping test with suspend/resume, the boot logs
-> on DRA7xx EVM are posted at [3]
+> /sys/firmware/device-tree only gets populated if you are really
+> booting in DT mode, i.e., when the device tree is unflattened.
+> However, in ACPI mode we still need to access the data that was
+> communicated between UEFI and the kernel in the /chosen node if we
+> want to support kexec under UEFI.
 
-Thanks applying into omap-for-v3.19/dt.
+Ah, now I get it.
 
-Tony
- 
-> [1] git://github.com/nmenon/linux-2.6-playground.git testing/v3.17/cpu-idle-suspend-dra7-omap5-framework
-> [2] git://git.ti.com/~mugunthanvnm/ti-linux-kernel/linux.git v3.17/dra7-evm-cpsw-v3
-> [3] http://pastebin.ubuntu.com/8613072/
-> 
-> Changes from v2:
-> * Changed pinctrl comments to hold mode0-name.mode-selected-name
-> * Changes slave numbers in the pinctrl comments
-> * Added cpsw and cpts clocks
-> 
-> Changes from initial version:
-> * Dropped patch for pinoff states
-> * Changed pinoff state to mode15
-> 
-> Mugunthan V N (2):
->   ARM: dts: dra7: Add CPSW and MDIO module nodes for dra7
->   ARM: dts: dra7-evm: Enable CPSW and MDIO for dra7xx EVM
-> 
->  arch/arm/boot/dts/dra7-evm.dts | 106 +++++++++++++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/dra7.dtsi    |  61 ++++++++++++++++++++++++
->  2 files changed, 167 insertions(+)
-> 
-> -- 
-> 2.1.2.484.g13da0fc
-> 
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
