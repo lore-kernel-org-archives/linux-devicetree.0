@@ -1,77 +1,68 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2] PCI: add missing DT binding for linux,pci-domain
- property
-Date: Mon, 10 Nov 2014 15:58:29 +0100
-Message-ID: <1415631509.20340.5.camel@pengutronix.de>
-References: <1415287400-30426-1-git-send-email-l.stach@pengutronix.de>
-	 <CAL_JsqKfV3aPuYxK2E8tS1fDjhpJFknqv1nHP+9NYHAfs_owYg@mail.gmail.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH v4 0/2] ARM: keystone: pm: switch to use generic pm domains
+Date: Mon, 10 Nov 2014 16:59:15 +0200
+Message-ID: <1415631557-22897-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKfV3aPuYxK2E8tS1fDjhpJFknqv1nHP+9NYHAfs_owYg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, khilman@linaro.org
+Cc: linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 06.11.2014, 13:49 -0600 schrieb Rob Herring:
-> On Thu, Nov 6, 2014 at 9:23 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> > This property was added by 41e5c0f81d3e
-> > (of/pci: Add pci_get_new_domain_nr() and of_get_pci_domain_nr())
-> > without the required binding documentation. As this property
-> > will be supported by a number of host bridge drivers going forward,
-> > add it to the common PCI binding doc.
-> >
-> > Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > ---
-> > This is a non-critical fix, but may still qualify for 3.18-rc as
-> > the property was added in this release cycle.
-> 
-> Agreed.
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
+Hi Santosh, Kevin,
 
-So how should we proceed here? Are you going to pick it up or should
-Bjorn route this through the PCI tree?
+This series switches Keystone 2 PM code to use Generic PM domains
+instead of PM clock domains because of the lack of DT support
+for the last.
+It will finally allow to enable Runtime PM for Keystone 2.
 
-> >
-> > v2:
-> > - emphasize that the property must be present and unique systemwide
-> >   if used
-> > ---
-> >  Documentation/devicetree/bindings/pci/pci.txt | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
-> > index 41aeed38926d..68c364e2f5e5 100644
-> > --- a/Documentation/devicetree/bindings/pci/pci.txt
-> > +++ b/Documentation/devicetree/bindings/pci/pci.txt
-> > @@ -7,3 +7,14 @@ And for the interrupt mapping part:
-> >
-> >  Open Firmware Recommended Practice: Interrupt Mapping
-> >  http://www.openfirmware.org/1275/practice/imap/imap0_9d.pdf
-> > +
-> > +Additionally to the properties specified in the above standards a host bridge
-> > +driver implementation may support the following properties:
-> > +
-> > +- linux,pci-domain:
-> > +   If present this property assigns a fixed PCI domain number to a host bridge,
-> > +   otherwise an unstable (across boots) unique number will be assigned.
-> > +   It is required to either not set this property at all or set it for all
-> > +   host bridges in the system, otherwise potentially conflicting domain numbers
-> > +   may be assigned to root buses behind different host bridges. The domain
-> > +   number for each host bridge in the system must be unique.
-> > --
-> > 2.1.1
-> >
+This series based on top 
+
+Changes in v4:
+ - changes for Generic clock manipulation PM callbacks (clock_ops.c) 
+   were separated in standalone series [3] and Keystone 2 specific
+   patches were rebased on top of it.
+
+Changes in v3:
+ - handling of the case when !CONFIG_PM_RUNTIME has been
+   moved in PM clock framework.
+
+Changes in v2:
+- minor comments applied and rebased on top of Linux 3.18-rc1.
+
+Links on previous versions:
+v2:  https://lkml.org/lkml/2014/10/20/248
+v1:  https://lkml.org/lkml/2014/9/29/382
+
+RFC version of patches can be found at [2].
+
+[1] "[PATCH/RFC 0/4] of: Register clocks for Runtime PM with PM core"
+  https://lkml.org/lkml/2014/4/24/1118
+
+[2] "[RFC PATCH 0/4] ARM: keystone: pm: switch to use generic pm domains"
+  https://lkml.org/lkml/2014/9/25/364
+
+[3] "[PATCH v4 0/3] PM / clock_ops: add pm_clk_add_clk()"
+  https://lkml.org/lkml/2014/11/6/319
+
+CC: Santosh Shilimkar <ssantosh@kernel.org>
+CC: Kevin Hilman <khilman@linaro.org>
+CC: Ulf Hansson <ulf.hansson@linaro.org>
+CC: Geert Uytterhoeven <geert@linux-m68k.org>
+CC: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+
+Grygorii Strashko (2):
+  ARM: keystone: pm: switch to use generic pm domains
+  ARM: dts: keystone: add generic pm controller node
+
+ .../bindings/power/ti,keystone-powerdomain.txt     |  31 ++++++
+ arch/arm/boot/dts/keystone.dtsi                    |   6 ++
+ arch/arm/mach-keystone/Kconfig                     |   1 +
+ arch/arm/mach-keystone/pm_domain.c                 | 106 ++++++++++++++-------
+ 4 files changed, 107 insertions(+), 37 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/ti,keystone-powerdomain.txt
 
 -- 
-Pengutronix e.K.             | Lucas Stach                 |
-Industrial Linux Solutions   | http://www.pengutronix.de/  |
+1.9.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
