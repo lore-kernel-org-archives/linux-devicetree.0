@@ -1,78 +1,77 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: Re: [PATCH V5 7/7] dt-bindings: add document for dw-hdmi
-Date: Mon, 10 Nov 2014 09:53:07 +0000
-Message-ID: <54608B03.9050805@imgtec.com>
-References: <1415424410-7364-1-git-send-email-andy.yan@rock-chips.com>
- <1415424767-7761-1-git-send-email-andy.yan@rock-chips.com>
- <546082A9.5050203@imgtec.com> <546088F6.4090505@rock-chips.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 04/11] mfd: syscon: Add Atmel SMC binding doc
+Date: Mon, 10 Nov 2014 09:55:02 +0000
+Message-ID: <20141110095502.GH21424@x1>
+References: <1415203287-21517-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1415203287-21517-5-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <546088F6.4090505@rock-chips.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Andy Yan <andy.yan@rock-chips.com>, airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, ykk@rock-chips.com, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, Shawn Guo <shawn.guo@linaro.org>, jay.xu@rock-chips.com, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1415203287-21517-5-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAxMC8xMS8xNCAwOTo0NCwgQW5keSBZYW4gd3JvdGU6Cj4gSGkgWnViYWlyTEsKPiBPbiAy
-MDE05bm0MTHmnIgxMOaXpSAxNzoxNywgWnViYWlyIEx1dGZ1bGxhaCBLYWtha2hlbCB3cm90ZToK
-Pj4gTmljZSB3b3JrLgo+Pgo+PiBUaGlzIHBhdGNoIHNob3VsZCBtb3ZlIHRoZSBiaW5kaW5nIGZy
-b20KPj4KPj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3N0YWdpbmcvaW14LWRy
-bS9oZG1pLnR4dAo+PiB0byB0aGUgbG9jYXRpb24gaW5zdGVhZCBvZiBtYWtpbmcgYSBuZXcgZmls
-ZSBhbmQgbGVhdmluZyB0aGUgb2xkCj4+IG9uZSBpbiBwbGFjZS4KPj4KPj4gQW5kIHVzZSBnaXQg
-Zm9ybWF0LXBhdGNoIC1NIHRvIGhpZ2hsaWdodCBhbnkgY2hhbmdlcy4KPj4KPj4gUmVnYXJkcwo+
-PiBadWJhaXJMSwo+ICAgIEkgYWRkIHRoZXNlIGJpbmRpbmdzIGZvciBkdy1oZG1pIGNvcmUsIGJl
-Y2F1c2UKPiAgIHByb3Blcml0aWVzIGxpa2UgcmVnLCBpbnRlcnJ1cHRzLCBkZGMtaTJjLWJ1cywg
-cmVnLWlvLXdpZHRoIGFyZSB1c2VkCj4gICBieSBkdy1oZG1pIGNvcmUsIGJ1dCBwcm9wZXJpdGll
-cyBsaWtlIGNvbXBhdGlibGUsIGdwcixjbGssIGFyZSBwbGF0Zm9ybQo+ICAgc3BlY2lmaWMgLCB0
-aGV5IGFyZSBoYW5kbGVkIGJ5IHRoZSBwbGF0Zm9ybSBjb2RlIGxpa2UgZHdfaGRtaS1pbXguYwo+
-ICAgYW5kIGRlc2NyaWJlZCBpbiBwbGF0Zm9ybSBzcGVjaWZpYyBkdCBiaW5kcyBsaWtlIC9pbXgt
-ZHJtL2hkbWkudHh0CgpJIHVuZGVyc3RhbmQuIAoKQXJlIHRoZXJlIGFueSBjaGFuZ2VzIHRvIGlt
-eC1kcm0vaGRtaS50eHQ/CgpTb21lIHByb3BlcnRpZXMgZm9yIGlteC1kcm0vaGRtaS50eHQgd291
-bGQgYmVjb21lIG9wdGlvbmFsL2luaGVyaXRlZCBmcm9tIHRoZSBwYXJlbnQgaGRtaSBkcm0gYmlu
-ZGluZz8KClRoZSBjaGFuZ2VzIHNob3VsZCBiZSBoaWdobGlnaHRlZCBpbiB0aGUgY29tbWl0IG1l
-c3NhZ2UuIE9yIHdlJ2xsCmJlIGNvbmZ1c2VkIHdoaWNoIGlzIHdoaWNoLi4KClp1YmFpckxLCgo+
-PiBPbiAwOC8xMS8xNCAwNTozMiwgQW5keSBZYW4gd3JvdGU6Cj4+PiBTaWduZWQtb2ZmLWJ5OiBB
-bmR5IFlhbiA8YW5keS55YW5Acm9jay1jaGlwcy5jb20+Cj4+PiAtLS0KPj4+ICAgLi4uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZHJtL2JyaWRnZS9kdy1oZG1pLnR4dCAgICAgfCAzOCArKysrKysrKysr
-KysrKysrKysrKysrCj4+PiAgIDEgZmlsZSBjaGFuZ2VkLCAzOCBpbnNlcnRpb25zKCspCj4+PiAg
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJt
-L2JyaWRnZS9kdy1oZG1pLnR4dAo+Pj4KPj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZHJtL2JyaWRnZS9kdy1oZG1pLnR4dCBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3LWhkbWkudHh0Cj4+PiBuZXcgZmlsZSBt
-b2RlIDEwMDY0NAo+Pj4gaW5kZXggMDAwMDAwMC4uYWE3ZWQxNwo+Pj4gLS0tIC9kZXYvbnVsbAo+
-Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9icmlkZ2UvZHct
-aGRtaS50eHQKPj4+IEBAIC0wLDAgKzEsMzggQEAKPj4+ICtEZXNpZ25XYXJlIEhETUkgYnJpZGdl
-IGJpbmRpbmdzCj4+PiArCj4+PiArUmVxdWlyZWQgcHJvcGVyaXRpZXM6Cj4+PiArLSBjb21wYXRp
-YmVsOiBwbGF0Zm9ybSBzcGVjaWZpYyBzdWNoIGFzICJmc2wsaW14NnEtaGRtaSIsImZzbCxpbXg2
-ZGwtaGRtaSIKCnNwZWxsY2hlY2suIGNvbXBhdGlibGUKCj4+PiArICAgICAgICAgICJyb2NrY2hp
-cCxyazMyODgtZHctaGRtaSIKPj4+ICstIHJlZzogcGh5c2ljYWwgYmFzZSBhZGRyZXNzIG9mIHRo
-ZSBjb250cm9sbGVyIGFuZCBsZW5ndGgKPj4+ICstIGRkYy1pMmMtYnVzOiB0aGUgZGRjIGkyYyBi
-dXMKPj4+ICstIGludGVycnVwdHM6IFRoZSBpbnRlcnJ1cHQgbnVtYmVyIHRvIHRoZSBjcHUKPj4+
-ICsKPj4+ICtPcHRpb25hbCBwcm9wZXJ0aWVzCj4+PiArLSByZWctaW8td2lkdGg6IHRoZSB3aWR0
-aCBvZiB0aGUgcmVnOjEsNCwgZGVmYXVsdCBzZXQgdG8gMSBpZiBub3QgcHJlc2VudAo+Pj4gKwo+
-Pj4gK0V4YW1wbGU6Cj4+PiArICAgIGhkbWk6IGhkbWlAMDEyMDAwMCB7Cj4+PiArICAgICAgICBj
-b21wYXRpYmxlID0gImZzbCxpbXg2cS1oZG1pIjsKPj4+ICsgICAgICAgIHJlZyA9IDwweDAwMTIw
-MDAwIDB4OTAwMD47Cj4+PiArICAgICAgICBpbnRlcnJ1cHRzID0gPDAgMTE1IDB4MDQ+Owo+Pj4g
-KyAgICAgICAgZ3ByID0gPCZncHI+Owo+Pj4gKyAgICAgICAgY2xvY2tzID0gPCZjbGtzIDEyMz4s
-IDwmY2xrcyAxMjQ+Owo+Pj4gKyAgICAgICAgY2xvY2stbmFtZXMgPSAiaWFoYiIsICJpc2ZyIjsK
-Pj4+ICsgICAgICAgIGRkYy1pMmMtYnVzID0gPCZpMmMyPjsKPj4+ICsKPj4+ICsgICAgICAgIHBv
-cnRAMCB7Cj4+PiArICAgICAgICAgICAgcmVnID0gPDA+Owo+Pj4gKwo+Pj4gKyAgICAgICAgICAg
-IGhkbWlfbXV4XzA6IGVuZHBvaW50IHsKPj4+ICsgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBv
-aW50ID0gPCZpcHUxX2RpMF9oZG1pPjsKPj4+ICsgICAgICAgICAgICB9Owo+Pj4gKyAgICAgICAg
-fTsKPj4+ICsKPj4+ICsgICAgICAgIHBvcnRAMSB7Cj4+PiArICAgICAgICAgICAgcmVnID0gPDE+
-Owo+Pj4gKwo+Pj4gKyAgICAgICAgICAgIGhkbWlfbXV4XzE6IGVuZHBvaW50IHsKPj4+ICsgICAg
-ICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZpcHUxX2RpMV9oZG1pPjsKPj4+ICsgICAg
-ICAgICAgICB9Owo+Pj4gKyAgICAgICAgfTsKPj4+ICsgICAgfTsKPj4+Cj4+Cj4+Cj4gCj4gCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmVsIG1haWxp
-bmcgbGlzdApkZXZlbEBsaW51eGRyaXZlcnByb2plY3Qub3JnCmh0dHA6Ly9kcml2ZXJkZXYubGlu
-dXhkcml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaXZlcmRldi1kZXZlbAo=
+On Wed, 05 Nov 2014, Boris Brezillon wrote:
+
+> The SMC registers are used to configure Atmel EBI (External Bus Inter=
+face)
+> to interface with standard memory devices (NAND, NOR, SRAM or special=
+ized
+> devices like FPGAs).
+>=20
+> Declare this memory region as a syscon, so that different drivers can
+> configure the SMC interface (mostly timing configuration) according t=
+o
+> their need.
+>=20
+> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/atmel-smc.txt | 19 +++++++++++=
+++++++++
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/atmel-smc.t=
+xt
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/atmel-smc.txt b/Do=
+cumentation/devicetree/bindings/mfd/atmel-smc.txt
+> new file mode 100644
+> index 0000000..0c0cc3d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/atmel-smc.txt
+> @@ -0,0 +1,19 @@
+> +* Device tree bindings for Atmel SMC (Static Memory Controller)
+> +
+> +The SMC registers are used to configure Atmel EBI (External Bus Inte=
+rface)
+> +to interface with standard memory devices (NAND, NOR, SRAM or specia=
+lized
+> +devices like FPGAs).
+> +
+> +Required properties:
+> +- compatible:		should be one of the following
+> +			"atmel,at91sam9260-smc", "syscon"
+> +			"atmel,sama5d3-smc", "syscon"
+> +- reg:			contains offset/length value of the SMC memory
+> +			region.
+
+I'd be happier if the sentences started with uppercase letters, but
+nothing too offensive or controversial here:
+
+Acked-by: Lee Jones <lee.jones@linaro.org>
+
+> +Example:
+> +
+> +smc: smc@ffffc000 {
+> +	compatible =3D "atmel,sama5d3-smc", "syscon";
+> +	reg =3D <0xffffc000 0x1000>;
+> +};
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
