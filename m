@@ -1,70 +1,103 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 17/17] ARM: mvebu: add SDRAM controller description for
- Armada XP
-Date: Mon, 10 Nov 2014 15:25:08 +0100
-Message-ID: <5460CAC4.7030008@free-electrons.com>
-References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com> <1414151970-6626-18-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/2] tty: serial: bcm63xx: Allow device nodes to be
+ renamed to /dev/ttyBCM*
+Date: Mon, 10 Nov 2014 08:25:14 -0600
+Message-ID: <CAL_JsqLXznpCo3YjN+XqF6cDG38C6dKzO9DHJmzi6=sNnAU=hQ@mail.gmail.com>
+References: <1415523348-4631-1-git-send-email-cernekee@gmail.com> <1415523348-4631-2-git-send-email-cernekee@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414151970-6626-18-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <1415523348-4631-2-git-send-email-cernekee@gmail.com>
+Sender: stable-owner@vger.kernel.org
+To: Kevin Cernekee <cernekee@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux-MIPS <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+On Sun, Nov 9, 2014 at 2:55 AM, Kevin Cernekee <cernekee@gmail.com> wrote:
+> By default, bcm63xx_uart.c uses the standard 8250 device naming and
+> major/minor numbers.  There are at least two situations where this could
+> be a problem:
+>
+> 1) Multiplatform kernels that need to support some chips that have 8250
+> UARTs and other chips that have bcm63xx UARTs.
+>
+> 2) Some older chips like BCM7125 have a mix of both UART types.
+>
+> Add a new Kconfig option to tell the driver whether to register itself
+> as ttyS or ttyBCM.  By default it will retain the existing "ttyS"
+> behavior to avoid surprises.
 
+While I understand the desire to have stable names, this is the
+opposite direction we want to go. Per platform tty names complicates
+having a generic userspace. It is not so bad since most ARM platforms
+use ttyS or ttyAMA, but just think what the kernel and userspace side
+would look like if every single platform did this. We can't change
+everything to ttyS because the other names are already an ABI.
 
-On 24/10/2014 13:59, Thomas Petazzoni wrote:
-> The suspend/resume sequence on Armada XP needs to modify a number of
-> registers in the SDRAM controller. Therefore, this commit updates the
-> Armada XP Device Tree description to include the SDRAM controller
-> Device Tree node.
-> 
+This can be solved with a udev rule to create sym links. Or if you
+just need to know which dev node is h/w uart X, you can get that from
+sysfs.
 
-Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Rob
 
-
-Thanks,
-
-Gregory
-
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
 > ---
->  arch/arm/boot/dts/armada-xp.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
-> index bff9f6c..2be244a 100644
-> --- a/arch/arm/boot/dts/armada-xp.dtsi
-> +++ b/arch/arm/boot/dts/armada-xp.dtsi
-> @@ -35,6 +35,11 @@
->  		};
->  
->  		internal-regs {
-> +			sdramc@1400 {
-> +				compatible = "marvell,armada-xp-sdram-controller";
-> +				reg = <0x1400 0x500>;
-
-It seemed a quite large area, but indeed there are registers related to the sdram
-controller at least until the address 0x18AC.
-
-> +			};
+>  drivers/tty/serial/Kconfig        | 11 +++++++++++
+>  drivers/tty/serial/bcm63xx_uart.c |  8 ++++++++
+>  2 files changed, 19 insertions(+)
+>
+> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> index fdd851e..c82cfd2 100644
+> --- a/drivers/tty/serial/Kconfig
+> +++ b/drivers/tty/serial/Kconfig
+> @@ -1302,6 +1302,17 @@ config SERIAL_BCM63XX_CONSOLE
+>           If you have enabled the serial port on the BCM63xx CPU
+>           you can make it the console by answering Y to this option.
+>
+> +config SERIAL_BCM63XX_TTYS
+> +       bool "Use ttyS[01] device nodes for bcm63xx_uart"
+> +       depends on SERIAL_BCM63XX
+> +       default y
+> +       help
+> +         Say Y to name the serial ports /dev/ttyS0, ttyS1, ...
+> +         This conflicts with the 8250 driver but may avoid breaking
+> +         compatibility with existing init scripts.
 > +
->  			L2: l2-cache {
->  				compatible = "marvell,aurora-system-cache";
->  				reg = <0x08000 0x1000>;
-> 
-
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +         Say N to name the serial ports /dev/ttyBCM0, ttyBCM1, ...
+> +
+>  config SERIAL_GRLIB_GAISLER_APBUART
+>         tristate "GRLIB APBUART serial support"
+>         depends on OF && SPARC
+> diff --git a/drivers/tty/serial/bcm63xx_uart.c b/drivers/tty/serial/bcm63xx_uart.c
+> index e04e580..9f3dcc8 100644
+> --- a/drivers/tty/serial/bcm63xx_uart.c
+> +++ b/drivers/tty/serial/bcm63xx_uart.c
+> @@ -751,7 +751,11 @@ static int bcm_console_setup(struct console *co, char *options)
+>  static struct uart_driver bcm_uart_driver;
+>
+>  static struct console bcm63xx_console = {
+> +#ifdef CONFIG_SERIAL_BCM63XX_TTYS
+>         .name           = "ttyS",
+> +#else
+> +       .name           = "ttyBCM",
+> +#endif
+>         .write          = bcm_console_write,
+>         .device         = uart_console_device,
+>         .setup          = bcm_console_setup,
+> @@ -796,9 +800,13 @@ OF_EARLYCON_DECLARE(bcm63xx_uart, "brcm,bcm6345-uart", bcm_early_console_setup);
+>  static struct uart_driver bcm_uart_driver = {
+>         .owner          = THIS_MODULE,
+>         .driver_name    = "bcm63xx_uart",
+> +#ifdef CONFIG_SERIAL_BCM63XX_TTYS
+>         .dev_name       = "ttyS",
+>         .major          = TTY_MAJOR,
+>         .minor          = 64,
+> +#else
+> +       .dev_name       = "ttyBCM",
+> +#endif
+>         .nr             = BCM63XX_NR_UARTS,
+>         .cons           = BCM63XX_CONSOLE,
+>  };
+> --
+> 2.1.1
+>
