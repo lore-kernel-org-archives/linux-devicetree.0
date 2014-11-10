@@ -1,47 +1,67 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] of/fdt: export fdt blob as /sys/firmware/fdt
-Date: Mon, 10 Nov 2014 19:02:03 +0100
-Message-ID: <1710966.sRrJNMnKBO@wuerfel>
-References: <1415638305-24463-1-git-send-email-ard.biesheuvel@linaro.org> <3340387.dB5eK3mRnu@wuerfel> <CAKv+Gu_y2ej6BGA3E-jAni7q9peWOVprNh_m-LU0M9DRHWWTJg@mail.gmail.com>
+From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v8 4/8] ARM: dts: Enable Broadcom Cygnus SoC
+Date: Mon, 10 Nov 2014 10:28:24 -0800
+Message-ID: <546103C8.3030905@broadcom.com>
+References: <sbranden@broadcom.com> <5982323.RDuqIHPULA@wuerfel> <54604A71.1010000@broadcom.com> <2221359.WPjXKG5OT3@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKv+Gu_y2ej6BGA3E-jAni7q9peWOVprNh_m-LU0M9DRHWWTJg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <2221359.WPjXKG5OT3@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geoff Levand <geoff.levand-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, JD
 List-Id: devicetree@vger.kernel.org
 
-On Monday 10 November 2014 18:08:03 Ard Biesheuvel wrote:
-> On 10 November 2014 17:57, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Monday 10 November 2014 17:51:45 Ard Biesheuvel wrote:
-> >> Create a new /sys entry '/sys/firmware/fdt' to export the FDT blob
-> >> that was passed to the kernel by the bootloader. This allows userland
-> >> applications such as kexec to access the raw binary.
-> >>
-> >> The fact that this node does not reside under /sys/firmware/device-tree
-> >> is deliberate: FDT is also used on arm64 UEFI/ACPI systems to
-> >> communicate just the UEFI and ACPI entry points, but the FDT is never
-> >> unflattened and used to configure the system.
-> >>
-> >> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >
-> > Can you elaborate on the motivation? Initially the fdt format was
-> > introduced to make it easy to pass the information from /proc/device-tree
-> > to the next kernel for kexec. Are you interested in cases where this does
-> > not work?
-> >
-> 
-> /sys/firmware/device-tree only gets populated if you are really
-> booting in DT mode, i.e., when the device tree is unflattened.
-> However, in ACPI mode we still need to access the data that was
-> communicated between UEFI and the kernel in the /chosen node if we
-> want to support kexec under UEFI.
+On 14-11-10 12:11 AM, Arnd Bergmann wrote:
+> On Sunday 09 November 2014 21:17:37 Scott Branden wrote:
+>> On 14-11-09 12:38 PM, Arnd Bergmann wrote:
+>>> On Sunday 09 November 2014 09:23:11 Greg Kroah-Hartman wrote:
+>>>> On Sat, Nov 08, 2014 at 10:49:09PM -0800, Olof Johansson wrote:
+>>>>>>>> +/*
+>>>>>>>> + * Copyright 2014 Broadcom Corporation.  All rights reserved.
+>>>>>>>> + *
+>>>>>>>> + * Unless you and Broadcom execute a separate written software license
+>>>>>>>> + * agreement governing use of this software, this software is licensed
+>>>>>>>> to you
+>>>>>>>> + * under the terms of the GNU General Public License as
+>>>>>>>> + * published by the Free Software Foundation version 2.
+>>>>>>>> + *
+>>>>>>>> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+>>>>>>>> + * kind, whether express or implied; without even the implied warranty
+>>>>>>>> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>>>>>>> + * GNU General Public License for more details.
+>>>>>>>
+>>>>>>>
+>>>>>>> We ask for new DT contents to be added with dual BSD/GPL license, to
+>>>>>>> allow for reuse of the DT data structures in other projects as well.
+>>>>>>> There's currently a lot of activity going on relicensing the current
+>>>>>>> files so I recommend sorting it out before they are added if you can.
+>>>>>>
+>>>>>>
+>>>>>> This may take more time than you think.  I am going to have to go through
+>>>>>> legal to get such a license created. Also, why would you need dual license?
+>>>>>> If it is BSD that should serve both purposes?
+>>>>>
+>>>>> I haven't followed the discussion close enough to know if there's been
+>>>>> discussion about single-license BSD vs dual BSD/GPL.
+>>>
+>>> I think for all practical purposes, BSD and dual BSD/GPL is the same and
+>>> listing it as dual was meant as a clarification to make it easier to see
+>>> that all files in the kernel are GPLv2 compatible.
+>> A dual BSD/GPL may involve having me get a lawyer to create such a
+>> header.  I would prefer to leave it as GPL for now until some concrete
+>> decision has finally been made on this by the rest of the community?
+>> Or, I can put it as BSD right now if that helps?
+>
+> I would prefer a pure BSD header for the moment over a pure GPL header.
+> The last thing we want is to force other operating systems to create
+> another set of dts files for the same hardware.
+I have changed the headers to pure BSD.  I hope this is acceptable.
+>
+> 	Arnd
+>
 
-Ah, now I get it.
-
-	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
