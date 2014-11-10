@@ -1,102 +1,66 @@
-From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] arm64: Add Juno SoC device tree.
-Date: Mon, 10 Nov 2014 20:00:05 +0000
-Message-ID: <20141110200005.GA10247@e106497-lin.cambridge.arm.com>
-References: <1415618875-8469-1-git-send-email-Liviu.Dudau@arm.com>
- <1415618875-8469-3-git-send-email-Liviu.Dudau@arm.com>
- <54610C86.9090002@suse.de>
+From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] DT: iio: adc: Add CC_10001 binding documentation
+Date: Mon, 10 Nov 2014 16:59:48 -0300
+Message-ID: <54611934.6050701@imgtec.com>
+References: <1415224611-22096-1-git-send-email-ezequiel.garcia@imgtec.com> <1415224611-22096-3-git-send-email-ezequiel.garcia@imgtec.com> <545E1333.9010904@kernel.org> <5461170B.7070505@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54610C86.9090002-l3A5Bk7waGM@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, device tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5461170B.7070505-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Phani Movva <phani.movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 10, 2014 at 07:05:42PM +0000, Andreas F=C3=A4rber wrote:
-> Hi,
->=20
-> Am 10.11.2014 um 12:27 schrieb Liviu Dudau:
-> > diff --git a/arch/arm64/boot/dts/juno.dts b/arch/arm64/boot/dts/jun=
-o.dts
-> > new file mode 100644
-> > index 0000000..7f998de
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/juno.dts
-> > @@ -0,0 +1,374 @@
-> > +/*
-> > + * ARM Ltd. Juno Plaform
->=20
-> "Platform"
->=20
-> > + *
->=20
-> Shouldn't this mention a license, ideally dual-licensed?
 
-Hi Andreas,
 
-TBH I wasn't sure a license was needed. Most (all?) of ARM's DT
-files don't seem to carry a license, but I will add the appropriate
-license. And yes, it is dual-licensed (GPLv2 or BSD)
+On 11/10/2014 04:50 PM, Ezequiel Garcia wrote:
+> On 11/08/2014 09:57 AM, Jonathan Cameron wrote:
+>> On 05/11/14 21:56, Ezequiel Garcia wrote:
 
->=20
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +
-> > +/ {
-> > +	model =3D "Juno";
-> > +	compatible =3D "arm,juno", "arm,vexpress";
-> > +	interrupt-parent =3D <&gic>;
-> > +	#address-cells =3D <2>;
-> > +	#size-cells =3D <2>;
-> > +
-> > +	aliases {
-> > +		serial0 =3D &soc_uart0;
-> > +	};
-> > +
-> > +	cpus {
-> > +		#address-cells =3D <2>;
-> > +		#size-cells =3D <0>;
-> > +
-> > +		A53_0:cpu@100 {
-> [snip]
->=20
-> Can you please add a space after colon, like you did for non-CPU node=
-s?
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/iio/adc/cc_10001_adc.txt b/Documentation/devicetree/bindings/iio/adc/cc_10001_adc.txt
+>>> new file mode 100644
+>>> index 0000000..6491839
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/iio/adc/cc_10001_adc.txt
+>>> @@ -0,0 +1,19 @@
+>>> +* Cosmic Circuits - Analog to Digital Converter (CC-10001-ADC)
+>>> +
+>>> +Required properties:
+>>> +  - compatible: Should be "cosmic,10001-adc"
+>>> +  - reg: Should contain adc registers location and length.
+>>> +  - cosmic,adc-available-channels: Bitmask of the channels currently enabled.
+>> I suspect there may be other preferred ways of doing this (child nodes perhaps
+>> for each enabled channel?)
+> 
+> Hm, I'm not sure about this. As far I can recall, if a node has children
+> then it *must* be a bus, which is not the case. Of course, you'll find
+> examples doing this wrong.
+> 
 
-Sure, will do.
+On a second thought... I guess you meant something like this?
 
-Best regards,
-Liviu
+adc: adc@18101600 {
+        compatible = "cosmic,10001-adc";
+        reg = <0x18101600 0x24>;
+        clocks = <&adc_clk>;
+        clock-names = "adc";
+        vref-supply = <&reg_1v8>;
+        cosmic,channels {
+                #address-cells = <1>;
+                #size-cells = <0>;
+                channel@0 {
+                        reg = <0>;
+                };
+                channel@1 {
+                        reg = <1>;
+                };
+        };
+};
 
->=20
-> Regards,
-> Andreas
->=20
-> --=20
-> SUSE LINUX GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-> GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 21284 AG N=
-=C3=BCrnberg
->=20
+Might be better, but I don't have a strong opinion on it.
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Ezequiel
