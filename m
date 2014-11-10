@@ -1,40 +1,80 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [RFC] Add of_path property for all devices with a node
-Date: Mon, 10 Nov 2014 16:17:06 +1100
-Message-ID: <1415596626.5769.14.camel@kernel.crashing.org>
-References: <1415342031.4925.27.camel@kernel.crashing.org>
-	 <1415342117.4925.29.camel@kernel.crashing.org>
+From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v8 4/8] ARM: dts: Enable Broadcom Cygnus SoC
+Date: Sun, 9 Nov 2014 21:17:37 -0800
+Message-ID: <54604A71.1010000@broadcom.com>
+References: <sbranden@broadcom.com> <CAOesGMhd37UM+7+6eR9iLY22Fb9cG1dr8dD4DAzLJNRmtysnkg@mail.gmail.com> <20141109172311.GB738@kroah.com> <5982323.RDuqIHPULA@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415342117.4925.29.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <5982323.RDuqIHPULA@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, JD Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-arm-kernel@list
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2014-11-07 at 17:35 +1100, Benjamin Herrenschmidt wrote:
-> On Fri, 2014-11-07 at 17:33 +1100, Benjamin Herrenschmidt wrote:
-> 
-> > So I came up with this patch, 
-> 
-> And here is the actual patch, which might help :-) It's pretty trivial
-> and small...
-
-So not much reactions here .. a bit more on IRC, where Olof suggested
-that rather than a file containing a path, we could use a symlink since
-the devtree is now in sysfs, so we can do relative links.
-
-That means keeping the legacy "devspec" files in the few places where
-they exist, possibly behind a deprecated-default-y config option (though
-we might never be able to deprecate them...), but there aren't many.
-
-Any preference either way ?
-
-Cheers,
-Ben.
-
+On 14-11-09 12:38 PM, Arnd Bergmann wrote:
+> On Sunday 09 November 2014 09:23:11 Greg Kroah-Hartman wrote:
+>> On Sat, Nov 08, 2014 at 10:49:09PM -0800, Olof Johansson wrote:
+>>>>>> +/*
+>>>>>> + * Copyright 2014 Broadcom Corporation.  All rights reserved.
+>>>>>> + *
+>>>>>> + * Unless you and Broadcom execute a separate written software license
+>>>>>> + * agreement governing use of this software, this software is licensed
+>>>>>> to you
+>>>>>> + * under the terms of the GNU General Public License as
+>>>>>> + * published by the Free Software Foundation version 2.
+>>>>>> + *
+>>>>>> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+>>>>>> + * kind, whether express or implied; without even the implied warranty
+>>>>>> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>>>>> + * GNU General Public License for more details.
+>>>>>
+>>>>>
+>>>>> We ask for new DT contents to be added with dual BSD/GPL license, to
+>>>>> allow for reuse of the DT data structures in other projects as well.
+>>>>> There's currently a lot of activity going on relicensing the current
+>>>>> files so I recommend sorting it out before they are added if you can.
+>>>>
+>>>>
+>>>> This may take more time than you think.  I am going to have to go through
+>>>> legal to get such a license created. Also, why would you need dual license?
+>>>> If it is BSD that should serve both purposes?
+>>>
+>>> I haven't followed the discussion close enough to know if there's been
+>>> discussion about single-license BSD vs dual BSD/GPL.
+>
+> I think for all practical purposes, BSD and dual BSD/GPL is the same and
+> listing it as dual was meant as a clarification to make it easier to see
+> that all files in the kernel are GPLv2 compatible.
+A dual BSD/GPL may involve having me get a lawyer to create such a 
+header.  I would prefer to leave it as GPL for now until some concrete 
+decision has finally been made on this by the rest of the community? 
+Or, I can put it as BSD right now if that helps?
+>
+>>> At the very least, please start the process of getting it changed.
+>>>
+>>> Also, I see now that this isn't even a clean GPL v2, given "Unless you
+>>> and Broadcom..." language. I see the bnx2x driver had that in the
+>>> past, but none of the Kona contributions did. I strongly suggest
+>>> sticking to the normal copyrights here and not making things more
+>>> complicated than they have to.
+>>
+>> I'm thinking that the "unless you and Broadcom..." language really
+>> doesn't mean much other than what all other files in the kernel mean
+>> from what I can tell.  This should just default to GPLv2 and everyone
+>> should be ok.
+>
+> I would hope so at least. It's certainly not obvious whether that means
+> Broadcom can give additional rights to someone over what someone else
+> contributed upstream, or worse if this becomes GPL-incompatible and
+> makes the kernel undistributable for anybody who has an additional
+> license agreement that doesn't give them all the rights that they already
+> had under the GPL.
+I'll change the header on these files so there are no disagreements.
+>
+> 	Arnd
+>
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
