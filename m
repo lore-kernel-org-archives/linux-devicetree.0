@@ -1,56 +1,51 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 0/6] ARM: shmobile: Change to using clock-indices
-Date: Mon, 10 Nov 2014 19:49:33 +0100
-Message-ID: <1415645379-3366-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v2 1/6] clk: shmobile: Deprecate renesas,clock-indices
+Date: Mon, 10 Nov 2014 19:49:34 +0100
+Message-ID: <1415645379-3366-2-git-send-email-geert+renesas@glider.be>
+References: <1415645379-3366-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1415645379-3366-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-sh-owner@vger.kernel.org
 To: Mike Turquette <mturquette@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: Ben Dooks <ben.dooks@codethink.co.uk>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-	Hi Mike, Simon, Magnus,
+Commit 8e33f91a0b84ae19 ("clk: shmobile: clk-mstp: change to using
+clock-indices") forgot to replace all occurrences of
+"renesas,clock-indices" in the driver-specific binding documentation.
 
-This patch series finalizes the conversion from the vendor-specific
-"renesas,clock-indices" to the generic "clock-indices", started by Ben Dooks.
-
-The patches for r8a7790 and r8a7791 were extracted from a patch that Ben sent
-before ("[PATCH 2/3] renesas: change to using clock-indices"), but it was never
-split/updated.
-
-Changes in v2:
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Simon Horman <horms+renesas@verge.net.au>
+Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+v2:
   - Drop the reference to "renesas,clock-indices" completely,
   - Add Acked-by.
+---
+ .../devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt         | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Thanks for applying!
-
-Ben Dooks (2):
-  ARM: shmobile: r8a7790 dtsi: Change to using clock-indices
-  ARM: shmobile: r8a7791 dtsi: Change to using clock-indices
-
-Geert Uytterhoeven (4):
-  clk: shmobile: Deprecate renesas,clock-indices
-  ARM: shmobile: r8a7740 dtsi: Change to using clock-indices
-  ARM: shmobile: r8a7779 dtsi: Change to using clock-indices
-  ARM: shmobile: r8a7794 dtsi: Change to using clock-indices
-
- .../bindings/clock/renesas,cpg-mstp-clocks.txt     |  8 ++++----
- arch/arm/boot/dts/r8a7740.dtsi                     | 10 +++++-----
- arch/arm/boot/dts/r8a7779.dtsi                     |  6 +++---
- arch/arm/boot/dts/r8a7790.dtsi                     | 20 +++++++++++---------
- arch/arm/boot/dts/r8a7791.dtsi                     | 22 ++++++++++++----------
- arch/arm/boot/dts/r8a7794.dtsi                     | 14 +++++++-------
- 6 files changed, 42 insertions(+), 38 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+index e566fb79af9e4d37..0a80fa70ca265c0f 100644
+--- a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
++++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+@@ -27,11 +27,11 @@ Required Properties:
+     must appear in the same order as the output clocks.
+   - #clock-cells: Must be 1
+   - clock-output-names: The name of the clocks as free-form strings
+-  - renesas,clock-indices: Indices of the gate clocks into the group (0 to 31)
++  - clock-indices: Indices of the gate clocks into the group (0 to 31)
+ 
+-The clocks, clock-output-names and renesas,clock-indices properties contain one
+-entry per gate clock. The MSTP groups are sparsely populated. Unimplemented
+-gate clocks must not be declared.
++The clocks, clock-output-names and clock-indices properties contain one entry
++per gate clock. The MSTP groups are sparsely populated. Unimplemented gate
++clocks must not be declared.
+ 
+ 
+ Example
 -- 
 1.9.1
 
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
