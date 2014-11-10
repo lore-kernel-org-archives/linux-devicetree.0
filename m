@@ -1,49 +1,35 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 06/13] ARM: multi_v7_defconfig: Enable stih407 usb picophy
-Date: Mon, 10 Nov 2014 10:28:00 +0000
-Message-ID: <20141110102800.GQ21424@x1>
-References: <1415361475-6218-1-git-send-email-peter.griffin@linaro.org>
- <1415361475-6218-7-git-send-email-peter.griffin@linaro.org>
+From: Maxime Coquelin <maxime.coquelin@st.com>
+Subject: Re: [PATCH v5 2/8] phy: miphy28lp: Add PHY header file for DT x Driver
+ defines
+Date: Mon, 10 Nov 2014 11:39:40 +0100
+Message-ID: <546095EC.2040501@st.com>
+References: <1415098284-11182-1-git-send-email-gabriel.fernandez@linaro.org> <1415098284-11182-3-git-send-email-gabriel.fernandez@linaro.org> <545B1C53.9010406@ti.com> <545B3FA4.8040109@st.com> <20141106112825.GC26543@x1> <545B6144.2020503@st.com> <20141106153659.GD26543@x1> <545B9F15.5070404@st.com> <20141107130538.GB3745@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1415361475-6218-7-git-send-email-peter.griffin@linaro.org>
+In-Reply-To: <20141107130538.GB3745@x1>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, devicetree@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, Gabriel Fernandez <gabriel.fernandez@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 07 Nov 2014, Peter Griffin wrote:
 
-> This patch enables the picoPHY usb phy which is used by
-> the usb2 and usb3 host controllers when controlling usb2/1.1
-> devices. It is found in stih407 family SoC's from STMicroelectronics.
->=20
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> ---
->  arch/arm/configs/multi_v7_defconfig | 1 +
->  1 file changed, 1 insertion(+)
+On 11/07/2014 02:05 PM, Lee Jones wrote:
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+<snip>
+> If the merge turns out to be simple, then Git will do the correct
+> thing; however, if the first version of the patch is applied, then
+> some changes around the same area of the file occur _then_ when the
+> second version (of the same patch differing only by SHA1) is applied
+> Git will get confused.  If it has the same SHA1 however, Git will
+> discard it as 'already applied'.  This is the reason we pass around
+> shared tags to immutable branches.
+Looking at how the patch is trivial, I persist to think there is no issue.
+But OK, I will prepare an immutable branch..
 
-> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/m=
-ulti_v7_defconfig
-> index e13ab7e..ac7b536 100644
-> --- a/arch/arm/configs/multi_v7_defconfig
-> +++ b/arch/arm/configs/multi_v7_defconfig
-> @@ -427,6 +427,7 @@ CONFIG_OMAP_USB2=3Dy
->  CONFIG_TI_PIPE3=3Dy
->  CONFIG_PHY_MIPHY365X=3Dy
->  CONFIG_PHY_STIH41X_USB=3Dy
-> +CONFIG_PHY_STIH407_USB=3Dy
->  CONFIG_PHY_SUN4I_USB=3Dy
->  CONFIG_EXT4_FS=3Dy
->  CONFIG_VFAT_FS=3Dy
+Kishon, checkpatch complains because this new file has no maintainer.
+Is it ok for you if I add it to the Generic PHY subsystem?
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Regards,
+Maxime
