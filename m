@@ -1,83 +1,34 @@
-From: NeilBrown <neilb@suse.de>
-Subject: Re: [PATCH 3/3] ASoC: twl4030: enable routing audio to 'voice'
- interface.
-Date: Mon, 10 Nov 2014 10:54:38 +1100
-Message-ID: <20141110105438.39cff12b@notabene.brown>
-References: <20141108002637.6561.19002.stgit@notabene.brown>
-	<20141108003803.6561.52497.stgit@notabene.brown>
-	<20141108092756.GD2722@sirena.org.uk>
+From: =?koi8-r?B?5dfHxc7JyiDwz8zRy8/X?= <zbr-i6C2adt8DTjR7s880joybQ@public.gmane.org>
+Subject: Re: [PATCH] w1: omap-hdq: support device probing with device-tree.
+Date: Mon, 10 Nov 2014 03:10:04 +0300
+Message-ID: <17841415578204@web5g.yandex.ru>
+References: <20141108103032.5426db7a@notabene.brown>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- boundary="Sig_/dR1OvpO1fg+U5QcLkwY8/Mp"; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141108092756.GD2722@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, GTA04 owners <gta04-owner@goldelico.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=koi8-r
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141108103032.5426db7a-wvvUuzkyo1EYVZTmpyfIwg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, GTA04 owners <gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/dR1OvpO1fg+U5QcLkwY8/Mp
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi
 
-On Sat, 8 Nov 2014 09:27:56 +0000 Mark Brown <broonie@kernel.org> wrote:
+08.11.2014, 02:30, "NeilBrown" <neilb-l3A5Bk7waGM@public.gmane.org>:
+> This driver has no 'compatible' string and so is not found when
+> using device-tree.
+>
+> Add one with value to match
+> =9A=9A=9A=9A=9A=9A=9A=9A=9A=9A=9A=9A=9A=9A=9A=9Ahdqw1w: 1w@480b2000 {
+> device in omap3.dtsi.
+>
+> Signed-off-by: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
 
-> On Sat, Nov 08, 2014 at 11:38:03AM +1100, NeilBrown wrote:
->=20
-> > -		twl_i2c_write_u8(TWL4030_MODULE_AUDIO_VOICE,
-> > -				 TWL4030_VIF_TRI_EN,
-> > -				 TWL4030_REG_VOICE_IF);
-> > +		/* These pins only relevant when voice_fmt set */
-> > +		snd_soc_dapm_disable_pin(&codec->dapm, "VOICEIN");
-> > +		snd_soc_dapm_disable_pin(&codec->dapm, "VOICEOUT");
->=20
-> Given your previous patch are these trying to control a digital link by
-> any chance?  If they are they should be removed, and in any case this
-> sort of thing looks like a machine driver issue.
-
-
-Depends on what you mean by "control".
-They declare that a digital link is, or is not, active so that the related
-amplifiers, DACs, etc can be powered up or down.
-
-The "VIF_TRI_EN" puts the digital interface in 'tristate' mode which
-effectively disables it.  So that bit certainly "controls" the digital link.
-
-
-If I shouldn't have these controls here, where should I have them?  How
-should I turn on/off the widgets that drive the VOICE interface?
-
-You say it looks like "a machine driver issue".
-alsa/soc/machine.txt says that "machine" is a synonym for "board".
-I thought we were getting rid of board files and replacing them with
-devicetree.  You seem to be implying that we are keeping board files (under
-the name "machine driver") for the audio config.
-
-Is that correct?  What is the reason for that?
-
-Thanks,
-NeilBrown
-
---Sig_/dR1OvpO1fg+U5QcLkwY8/Mp
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIVAwUBVF/+vjnsnt1WYoG5AQJKHg//foJMDfvWH76ZCj7aW+TFu99LPKFdVm32
-DJcjQzeNRzNlkkHsKAvqmRL/pre4G8XAO8b1FGudZRxJ1IUrmWSv1DL0ZOLK/7bU
-JL53v9rBdgVkSv8y6MToV0XFGIz/3tJxARlvloG7lx+Ih61Wam+PXVPNysd+WQgB
-FyNkdhIW7zf5BzE+a8KSigasfLDqJBICSEy9Y47Z9MNi04epWR5UgI5dardSmcfl
-To/ALmqSqIpwOPvB5G2C2rOmJyQ7TP17GqBIR7Dt64YASLdZYooEcAQyVRNdMcOL
-R91iE4pKAuHirmU0C00albapt80/jTiGeSinJ/84f5/JljKmjw0mQNIBV5y/nBcZ
-5NQS4cNzdBjW7oO01nHrasOOZhHY1tPskF0MlXKQ8ksdOWYtrhQ0sMaGWHZ3FsX+
-dsyWiBa1Nd+yfMpqPQ3dxXyTi7tgI3q6k2CyD4a5z6IUv5edHDVsiacPwJJh5anl
-bDF0bgbmX/BW8JaawUgPjxJIY+VBXtkiNWBj67dt9xMnFyQyP+GxMdhj/Ty9+6Yl
-s8ntAWX1KjvQ0e1tyv6cXAoHIpJBoPGo9PtDHW6KvyKF+m9HOVeZy4WHFtEetg5H
-tRz/07G7N3UnyWCL0BPt5f3Zynf37rcqyQkTBoOW1WFcm5ddypGeafvKxIN+iF2M
-kOotbM31CEY=
-=KcWZ
------END PGP SIGNATURE-----
-
---Sig_/dR1OvpO1fg+U5QcLkwY8/Mp--
+Looks good to me
+Acked-by: Evgeniy Polyakov <zbr-i6C2adt8DTjR7s880joybQ@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
