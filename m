@@ -1,45 +1,51 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/1] ARM: dts: dra72x-evm: Enable CPSW and MDIO
-Date: Mon, 10 Nov 2014 14:33:51 -0800
-Message-ID: <20141110223351.GZ31454@atomide.com>
-References: <1415008693-28552-1-git-send-email-mugunthanvnm@ti.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [RFC] Add of_path property for all devices with a node
+Date: Tue, 11 Nov 2014 09:48:42 +1100
+Message-ID: <1415659722.5769.32.camel@kernel.crashing.org>
+References: <1415342031.4925.27.camel@kernel.crashing.org>
+	 <1415342117.4925.29.camel@kernel.crashing.org>
+	 <1415596626.5769.14.camel@kernel.crashing.org>
+	 <CAL_JsqKG=vpeGKj3v-2VW9oGQsnmuYMHRfy6LuXDXE=ROjHT4w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1415008693-28552-1-git-send-email-mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKG=vpeGKj3v-2VW9oGQsnmuYMHRfy6LuXDXE=ROjHT4w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-* Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org> [141103 01:59]:
-> Adding CPSW phy-id, CPSW and MDIO pinmux configuration for active and
-> sleep states and enable them in board evm dts file.
-> 
-> Signed-off-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-> ---
-> 
-> Adding device tree entry for CPSW to make it work in Switch mode.
-> Patches are tested on top of Nishanth's PM tree for v3.17 [1] and pushed
-> my tree to [2].
-> 
-> Did a boot test with CPSW and ping test with suspend/resume, the boot logs
-> on DRA72x EVM are posted at [3]
-> 
-> This patch depends on the DRA7xx CPSW support patch series [4] and one driver
-> patch (47276fc drivers: net:cpsw: fix probe_dt when only slave 1 is pinned out)
-> which is already present in linux-next
+On Mon, 2014-11-10 at 08:06 -0600, Rob Herring wrote:
+> Adding Grant.
 
-Applying into omap-for-v3.19/dt thanks.
+Oh, I forgot him ? oops...
 
-Tony
- 
-> [1] git://github.com/nmenon/linux-2.6-playground.git testing/v3.17/cpu-idle-suspend-dra7-omap5-framework
-> [2] git://git.ti.com/~mugunthanvnm/ti-linux-kernel/linux.git for-v3.19/dra72-evm-cpsw
-> [3] http://pastebin.ubuntu.com/8800549/
-> [4] http://comments.gmane.org/gmane.linux.kernel/1810171
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > So not much reactions here .. a bit more on IRC, where Olof suggested
+> > that rather than a file containing a path, we could use a symlink since
+> > the devtree is now in sysfs, so we can do relative links.
+> 
+> +1 on this. That was part of the motivation to move DT into sysfs.
+
+Yes, I like this too. I'll give it a go some time this week (I'm off for
+a day or two) unless somebody beats me to it.
+
+Cheers,
+Ben.
+
+> Rob
+> 
+> > That means keeping the legacy "devspec" files in the few places where
+> > they exist, possibly behind a deprecated-default-y config option (though
+> > we might never be able to deprecate them...), but there aren't many.
+> >
+> > Any preference either way ?
+> >
+> > Cheers,
+> > Ben.
+> >
+> >
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
