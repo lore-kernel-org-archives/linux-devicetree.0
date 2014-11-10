@@ -1,63 +1,43 @@
-From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v5 2/2] DT: i2c: Add binding document for IMG I2C SCB
-Date: Mon, 10 Nov 2014 16:30:16 -0300
-Message-ID: <1415647816-16415-3-git-send-email-ezequiel.garcia@imgtec.com>
-References: <1415647816-16415-1-git-send-email-ezequiel.garcia@imgtec.com>
+From: Kevin Cernekee <cernekee@gmail.com>
+Subject: Re: [PATCH 2/2] tty: serial: bcm63xx: Allow device nodes to be
+ renamed to /dev/ttyBCM*
+Date: Mon, 10 Nov 2014 11:50:56 -0800
+Message-ID: <CAJiQ=7C5ki+9opnH68Kw9a573PmO=ANeiVutmVROUP2Typn2qw@mail.gmail.com>
+References: <1415523348-4631-1-git-send-email-cernekee@gmail.com>
+ <1415523348-4631-2-git-send-email-cernekee@gmail.com> <CAL_JsqLXznpCo3YjN+XqF6cDG38C6dKzO9DHJmzi6=sNnAU=hQ@mail.gmail.com>
+ <CAJiQ=7DUV0isdRooz6112Ncx07+9RE5DS5tMBwxr47hTWA8PAw@mail.gmail.com> <CAL_JsqLYoUKr71Q-hfLQhXOVL72Gy7PkO-Zd4rBc0Fn-prOqTw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415647816-16415-1-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLYoUKr71Q-hfLQhXOVL72Gy7PkO-Zd4rBc0Fn-prOqTw@mail.gmail.com>
+Sender: stable-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux-MIPS <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+On Mon, Nov 10, 2014 at 11:22 AM, Rob Herring <robh@kernel.org> wrote:
+>>> This can be solved with a udev rule to create sym links.
+>>
+>> Is it safe to register two console drivers named "ttyS" with the same
+>> major/minor numbers?  Maybe there is a trick to making them coexist?
+>
+> No, but I think you can do dynamic minor numbers. I seem to recall
+> this coming up with the Samsung UARTs a while back.
 
-Introduce a devicetree binding for Imagination Technologies
-I2C SCB controller.
+The other variations I've seen in the tree are:
 
-Signed-off-by: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
----
- .../devicetree/bindings/i2c/i2c-img-scb.txt        | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-img-scb.txt
+nwpserial: ttySQ, major 4 minor 68 (not 64)
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-img-scb.txt b/Documentation/devicetree/bindings/i2c/i2c-img-scb.txt
-new file mode 100644
-index 0000000..3a5cd1f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-img-scb.txt
-@@ -0,0 +1,29 @@
-+IMG Serial Control Bus (SCB) I2C Controller
-+
-+Required Properties:
-+- compatible: "img,scb-i2c"
-+- reg: Physical base address and length of controller registers
-+- interrupts: Interrupt number used by the controller
-+- clocks : Should contain a clock specifier for each entry in clock-names
-+- clock-names : Should contain the following entries:
-+                "scb", for the SCB core clock.
-+                "sys", for the system clock.
-+- clock-frequency: The I2C bus frequency in Hz
-+- #address-cells: Should be <1>
-+- #size-cells: Should be <0>
-+
-+Optional Properties
-+- img,bus-delay : Bus delay in ms, defaults to 0.
-+
-+Example:
-+
-+i2c@18100000 {
-+	compatible = "img,scb-i2c";
-+	reg = <0x18100000 0x200>;
-+	interrupts = <GIC_SHARED 2 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks = <&i2c0_clk>, <&system_clk>;
-+	clock-names = "scb", "sys";
-+	clock-frequency = <400000>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+};
--- 
-2.1.0
+sunhv, sunsab, sunsu, sunzilog: set uart_driver->major to 4 but let
+uart_driver->minor default to 0
+
+SERIAL_ATMEL_TTYAT: compile-time selectable between ttySn (4/64) and
+ttyATn (204/154).  txx9 does something similar using
+SERIAL_TXX9_STDSERIAL.
+
+A whole bunch of other SoC serial drivers use major 204 and a custom
+name like "ttyAL".  Some of these show up in
+Documentation/devices.txt; others don't.  ~3 drivers use 204/64 from
+the middle of the Altix assigned range.
+
+What is the current best practice for new drivers?
