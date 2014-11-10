@@ -1,69 +1,35 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] tty: serial: bcm63xx: Allow device nodes to be
- renamed to /dev/ttyBCM*
-Date: Mon, 10 Nov 2014 13:22:47 -0600
-Message-ID: <CAL_JsqLYoUKr71Q-hfLQhXOVL72Gy7PkO-Zd4rBc0Fn-prOqTw@mail.gmail.com>
-References: <1415523348-4631-1-git-send-email-cernekee@gmail.com>
- <1415523348-4631-2-git-send-email-cernekee@gmail.com> <CAL_JsqLXznpCo3YjN+XqF6cDG38C6dKzO9DHJmzi6=sNnAU=hQ@mail.gmail.com>
- <CAJiQ=7DUV0isdRooz6112Ncx07+9RE5DS5tMBwxr47hTWA8PAw@mail.gmail.com>
+From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Subject: Re: [PATCH v9 4/8] ARM: dts: Enable Broadcom Cygnus SoC
+Date: Mon, 10 Nov 2014 20:23:38 +0100
+Message-ID: <1415647418.21229.17.camel@x220>
+References: <sbranden@broadcom.com>
+	 <1414538111-11668-1-git-send-email-sbranden@broadcom.com>
+	 <1414538111-11668-5-git-send-email-sbranden@broadcom.com>
+	 <1415616611.4862.38.camel@x220>
+	 <CAOesGMgqsvOtgxKa6aBwvTqW3CO5Q7E_YsVVuS83yR4GdQEHUw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <CAJiQ=7DUV0isdRooz6112Ncx07+9RE5DS5tMBwxr47hTWA8PAw@mail.gmail.com>
-Sender: stable-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux-MIPS <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOesGMgqsvOtgxKa6aBwvTqW3CO5Q7E_YsVVuS83yR4GdQEHUw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Valentin Rothberg <valentinrothberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, JD Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>"linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linu>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 10, 2014 at 9:05 AM, Kevin Cernekee <cernekee@gmail.com> wrote:
-> On Mon, Nov 10, 2014 at 6:25 AM, Rob Herring <robh@kernel.org> wrote:
->> On Sun, Nov 9, 2014 at 2:55 AM, Kevin Cernekee <cernekee@gmail.com> wrote:
->>> By default, bcm63xx_uart.c uses the standard 8250 device naming and
->>> major/minor numbers.  There are at least two situations where this could
->>> be a problem:
->>>
->>> 1) Multiplatform kernels that need to support some chips that have 8250
->>> UARTs and other chips that have bcm63xx UARTs.
->>>
->>> 2) Some older chips like BCM7125 have a mix of both UART types.
->>>
->>> Add a new Kconfig option to tell the driver whether to register itself
->>> as ttyS or ttyBCM.  By default it will retain the existing "ttyS"
->>> behavior to avoid surprises.
->>
->> While I understand the desire to have stable names, this is the
->> opposite direction we want to go. Per platform tty names complicates
->> having a generic userspace. It is not so bad since most ARM platforms
->> use ttyS or ttyAMA, but just think what the kernel and userspace side
->> would look like if every single platform did this. We can't change
->> everything to ttyS because the other names are already an ABI.
->>
->> This can be solved with a udev rule to create sym links.
->
-> Is it safe to register two console drivers named "ttyS" with the same
-> major/minor numbers?  Maybe there is a trick to making them coexist?
+On Mon, 2014-11-10 at 10:35 -0800, Olof Johansson wrote:
+> On Mon, Nov 10, 2014 at 2:50 AM, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org> wrote:
+> > I guess patch 1/8 will be added to linux-next one of these days. Is
+> > that correct?
+> 
+> Yes.
 
-No, but I think you can do dynamic minor numbers. I seem to recall
-this coming up with the Samsung UARTs a while back.
+Thanks.
 
-Rob
 
-> What I found is that everything worked fine on a system with
-> bcm63xx_uart hardware until I enabled the 8250 driver in .config.  At
-> that point the drivers clashed and I had no serial output
-> post-bootconsole.  It didn't even get to userland before it failed.
-> There are no DT entries mentioning 8250; the mere presence of the 8250
-> driver killed my console.
->
-> If this behavior is unexpected I can keep digging to find out what went wrong.
->
->> Or if you
->> just need to know which dev node is h/w uart X, you can get that from
->> sysfs.
->
-> Right - I use busybox cttyhack in the init scripts to figure out the
-> console name, so the same rootfs image can be used for both ttyS0 and
-> ttyBCM0:
->
-> # Put a shell on the serial port
-> ::respawn:/bin/cttyhack /bin/sh -l
+Paul Bolle
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
