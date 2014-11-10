@@ -1,57 +1,33 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: bcm63138: change "interupts" to "interrupts"
-Date: Mon, 10 Nov 2014 09:46:23 -0800
-Message-ID: <5460F9EF.5010605@gmail.com>
-References: <1415637358-24378-1-git-send-email-radek.dostal@streamunlimited.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2] ARM: dts: sbc-t3x: add DVI display data
+Date: Mon, 10 Nov 2014 09:48:45 -0800
+Message-ID: <20141110174845.GP31454@atomide.com>
+References: <1413364186-23752-1-git-send-email-lifshitz@compulab.co.il>
+ <1414927198-7127-1-git-send-email-lifshitz@compulab.co.il>
+ <54561E45.7000404@compulab.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415637358-24378-1-git-send-email-radek.dostal-6oiIBCxl0MMjD8S081q9vkEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Radek Dostal <radek.dostal-6oiIBCxl0MMjD8S081q9vkEOCMrvLtNR@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54561E45.7000404@compulab.co.il>
+Sender: linux-omap-owner@vger.kernel.org
+To: Igor Grinberg <grinberg@compulab.co.il>
+Cc: Dmitry Lifshitz <lifshitz@compulab.co.il>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/10/2014 08:35 AM, Radek Dostal wrote:
-> all other nodes in bcm63138.dtsi use "interrupts", this had to be just a typo
-> which never got noticed, even it may have quite some consequences.
+* Igor Grinberg <grinberg@compulab.co.il> [141102 04:08]:
+> On 11/02/14 13:19, Dmitry Lifshitz wrote:
+> > Add DSS related pinmux and display data nodes required to support
+> > DVI video out on SBC-T3530, SBC-T3730 and SBC-T3517.
+> > 
+> > Signed-off-by: Dmitry Lifshitz <lifshitz@compulab.co.il>
 > 
-> Signed-off-by: Radek Dostal <radek.dostal-6oiIBCxl0MMjD8S081q9vkEOCMrvLtNR@public.gmane.org>
+> Acked-by: Igor Grinberg <grinberg@compulab.co.il>
 
-Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Thanks applying into omap-for-v3.19/dt.
 
-> ---
->  Hi all,
-> 
->  when running git grep with typo, I spotted this typo inDT binding, which 
->  looks obviously wrong to me. Sorry I do not have the board to test it, but 
->  I am pretty sure the patch is correct.
-> 
->  I hope I included, right people get_maintainer.pl showed bit too many.
-> 
->  Thanks,
->  Radek
-> 
->  arch/arm/boot/dts/bcm63138.dtsi |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/bcm63138.dtsi b/arch/arm/boot/dts/bcm63138.dtsi
-> index f3bb2dd..d2d8e94 100644
-> --- a/arch/arm/boot/dts/bcm63138.dtsi
-> +++ b/arch/arm/boot/dts/bcm63138.dtsi
-> @@ -102,7 +102,7 @@
->  		twd_watchdog: watchdog@1e620 {
->  			compatible = "arm,cortex-a9-twd-wdt";
->  			reg = <0x1e620 0x20>;
-> -			interupts = <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupts = <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>;
->  		};
->  	};
->  
-> 
+Are we now ready to drop the board-cm-*.c files?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+
+Tony
