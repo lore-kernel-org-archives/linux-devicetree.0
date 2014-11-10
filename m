@@ -1,98 +1,33 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 3/5] mfd: ti_am335x_tscadc: Remove unwanted reg_se_cache
- save
-Date: Mon, 10 Nov 2014 09:15:27 +0000
-Message-ID: <20141110091527.GD21424@x1>
-References: <1415339350-17679-1-git-send-email-vigneshr@ti.com>
- <1415339350-17679-4-git-send-email-vigneshr@ti.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v7 0/2] clk: shmobile: DIV6 clock variable parent support
+Date: Mon, 10 Nov 2014 10:16:32 +0100
+Message-ID: <CAMuHMdW=TGAySfRgXtVigcO-HuEudEDhnc2BhWuy8b0KJvE4oA@mail.gmail.com>
+References: <1415375468-15378-1-git-send-email-ulrich.hecht+renesas@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1415339350-17679-4-git-send-email-vigneshr@ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Samuel Ortiz <sameo@linux.intel.com>, Felipe Balbi <balbi@ti.com>, Brad Griffis <bgriffis@ti.com>, Sanjeev Sharma <sanjeev_sharma@mentor.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Jan Kardell <jan.kardell@telliq.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.i
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1415375468-15378-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Cc: Simon Horman <horms@verge.net.au>, Mike Turquette <mturquette@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 07 Nov 2014, Vignesh R wrote:
+On Fri, Nov 7, 2014 at 4:51 PM, Ulrich Hecht
+<ulrich.hecht+renesas@gmail.com> wrote:
+>  .../bindings/clock/renesas,cpg-div6-clocks.txt     |  18 ++--
+>  drivers/clk/shmobile/clk-div6.c                    | 113 ++++++++++++++++++---
+>  2 files changed, 113 insertions(+), 18 deletions(-)
 
-> In one shot mode, sequencer automatically disables all enabled steps =
-at
-> the end of each cycle. (both ADC steps and TSC steps) Hence these ste=
-ps
-> need not be saved in reg_se_cache for clearing these steps at a later
-> stage.
-> Also, when ADC wakes up Sequencer should not be busy executing any of=
- the
-> config steps except for the charge step. Previously charge step was 1=
- ADC
-> clock cycle and hence it was ignored.
->=20
-> Signed-off-by: Vignesh R <vigneshr@ti.com>
-> ---
->  drivers/mfd/ti_am335x_tscadc.c       | 7 +++++--
->  include/linux/mfd/ti_am335x_tscadc.h | 1 +
->  2 files changed, 6 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/mfd/ti_am335x_tscadc.c b/drivers/mfd/ti_am335x_t=
-scadc.c
-> index d877e777cce6..94ef8992f46b 100644
-> --- a/drivers/mfd/ti_am335x_tscadc.c
-> +++ b/drivers/mfd/ti_am335x_tscadc.c
-> @@ -86,8 +86,12 @@ static void am335x_tscadc_need_adc(struct ti_tscad=
-c_dev *tsadc)
->  		spin_lock_irq(&tsadc->reg_lock);
->  		finish_wait(&tsadc->reg_se_wait, &wait);
-> =20
-> +		/*
-> +		 * Sequencer should either be idle or
-> +		 * busy applying the charge step.
-> +		 */
->  		reg =3D tscadc_readl(tsadc, REG_ADCFSM);
-> -		WARN_ON(reg & SEQ_STATUS);
-> +		WARN_ON(reg & SEQ_STATUS & (!CHARGE_STEP));
+For the series:
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-This is almost certainly not correct.
+Gr{oetje,eeting}s,
 
-Please take another look at the logic.
+                        Geert
 
-I'm _assuming_ you mean (reg & SEQ_STATUS && !CHARGE_STEP).
-
->  		tsadc->adc_waiting =3D false;
->  	}
->  	tsadc->adc_in_use =3D true;
-> @@ -96,7 +100,6 @@ static void am335x_tscadc_need_adc(struct ti_tscad=
-c_dev *tsadc)
->  void am335x_tsc_se_set_once(struct ti_tscadc_dev *tsadc, u32 val)
->  {
->  	spin_lock_irq(&tsadc->reg_lock);
-> -	tsadc->reg_se_cache |=3D val;
->  	am335x_tscadc_need_adc(tsadc);
-> =20
->  	tscadc_writel(tsadc, REG_SE, val);
-> diff --git a/include/linux/mfd/ti_am335x_tscadc.h b/include/linux/mfd=
-/ti_am335x_tscadc.h
-> index c99be5dc0f5c..fcce182e4a35 100644
-> --- a/include/linux/mfd/ti_am335x_tscadc.h
-> +++ b/include/linux/mfd/ti_am335x_tscadc.h
-> @@ -128,6 +128,7 @@
-> =20
->  /* Sequencer Status */
->  #define SEQ_STATUS BIT(5)
-> +#define CHARGE_STEP		0x11
-> =20
->  #define ADC_CLK			3000000
->  #define TOTAL_STEPS		16
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
