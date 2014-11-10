@@ -1,147 +1,72 @@
-From: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH] DT: add MDIO node for FMan node
-Date: Mon, 10 Nov 2014 10:19:16 +0000
-Message-ID: <715df09ebc3a444bb9da853c942348c1@DM2PR0301MB0864.namprd03.prod.outlook.com>
-References: <1415102196-9238-1-git-send-email-shh.xie@gmail.com>
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH RESEND 1/7] arm64: dts: Add APM X-Gene USB DTS node
+Date: Mon, 10 Nov 2014 10:23:08 +0000
+Message-ID: <20141110102308.GB21366@e104818-lin.cambridge.arm.com>
+References: <1414438108-8384-1-git-send-email-fkan@apm.com>
+ <1414438108-8384-2-git-send-email-fkan@apm.com>
+ <1414599817.1870.15.camel@deneb.redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415102196-9238-1-git-send-email-shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1414599817.1870.15.camel-PDpCo7skNiwAicBL8TP8PQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Emilian Medve <Emilian.Medve-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Bao Truong <btruong-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Ping.
+On Wed, Oct 29, 2014 at 04:23:37PM +0000, Mark Salter wrote:
+> On Mon, 2014-10-27 at 12:28 -0700, Feng Kan wrote:
+> > This parch adds the device tree nodes for APM X-Gnene USB host controller.
+> > Since X-Gene SOC supports maximum 2 USB ports, 2 dts node are added.
+> > 
+> > Signed-off-by: Bao Truong <btruong-qTEPVZfXA3Y@public.gmane.org>
+> > Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+> > ---
+> >  arch/arm64/boot/dts/apm-storm.dtsi | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
+> > index 3eef74b..a80f2fa 100644
+> > --- a/arch/arm64/boot/dts/apm-storm.dtsi
+> > +++ b/arch/arm64/boot/dts/apm-storm.dtsi
+> > @@ -587,6 +587,20 @@
+> >  			phy-names = "sata-phy";
+> >  		};
+> >  
+> > +		usb0: dwusb@19000000 {
+> > +			status = "disabled";
+> > +			compatible = "xhci-platform";
+> > +			reg =  <0x0 0x19000000 0x0 0x100000>;
+> > +			interrupts = <0x0 0x89 0x4>;
+> > +		};
+> > +
+> > +		usb1: dwusb@19800000 {
+> > +			status = "disabled";
+> > +			compatible = "xhci-platform";
+> > +			reg =  <0x0 0x19800000 0x0 0x100000>;
+> > +			interrupts = <0x0 0x8a 0x4>;
+> > +		};
+> > +
+> 
+> Should these have "dma-coherent" properties?
 
-Best Regards, 
-Shaohui Xie
+Just a note here: if the device is coherent but the DT does not specify
+it as such, it's not just a matter of performance but potentially data
+corruption. The current DMA ops for non-coherent devices perform a
+D-cache invalidate on the unmap path with the FROM_DEVICE direction. If
+the device is coherent and the DMA transfer (FROM_DEVICE) allocated data
+in the system cache (L3), the CPU cache invalidation after the transfer
+would corrupt such data.
 
-> -----Original Message-----
-> From: shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org [mailto:shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
-> Sent: Tuesday, November 04, 2014 7:57 PM
-> To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Wood
-> Scott-B07421
-> Cc: Medve Emilian-EMMEDVE1; Xie Shaohui-B21989
-> Subject: [PATCH] DT: add MDIO node for FMan node
-> 
-> From: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> 
-> This binding is for FMan MDIO, it covers FMan v2 & FMan v3.
-> 
-> Signed-off-by: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
-> based on http://patchwork.ozlabs.org/patch/390351/
-> for 'next' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/scottwood/linux.git
-> 
->  .../devicetree/bindings/powerpc/fsl/fman.txt       | 69
-> ++++++++++++++++++++++
->  1 file changed, 69 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-> b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-> index da8e5f2..83c2f14 100644
-> --- a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-> +++ b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-> @@ -7,6 +7,7 @@ CONTENTS
->    - FMan MURAM Node
->    - FMan dTSEC/XGEC/mEMAC Node
->    - FMan IEEE 1588 Node
-> +  - FMan MDIO Node
->    - Example
-> 
-> 
-> =========================================================================
-> ====
-> @@ -352,6 +353,67 @@ ptp-timer@fe000 {
->  };
-> 
-> 
-> =========================================================================
-> ====
-> +FMan MDIO Node
-> +
-> +DESCRIPTION
-> +
-> +The MDIO is a bus to which the PHY devices are connected.
-> +
-> +PROPERTIES
-> +
-> +- compatible
-> +		Usage: required
-> +		Value type: <stringlist>
-> +		Definition: A standard property.
-> +		Must include "fsl,fman-mdio" for 1 Gb/s MDIO from FMan v2.
-> +		Must include "fsl,fman-xmdio" for 10 Gb/s MDIO from FMan v2.
-> +		Must include "fsl,fman-memac-mdio" for 1/10 Gb/s MDIO from
-> +		FMan v3.
-> +
-> +- reg
-> +		Usage: required
-> +		Value type: <prop-encoded-array>
-> +		Definition: A standard property.
-> +
-> +- bus-frequency
-> +		Usage: optional
-> +		Value type: <u32>
-> +		Definition: Default MDIO bus clock speed.
-> +
-> +- interrupts
-> +		Usage: optional
-> +		Value type: <prop-encoded-array>
-> +		Definition: MDIO controller event interrupts.
-> +
-> +- type
-> +		Usage: required for FMan v3
-> +		Value type: <stringlist>
-> +		Definition: A standard property.
-> +		FMan v3 has internal MDIO for internal PCS(Physical Coding
-> +		Sublayer) PHYs and external MDIO for external PHYs.
-> +		The settings and programming routines for internal/external
-> +		MDIO are different. Must include "internal" for internal MDIO,
-> +		must include "external" for external MDIO.
-> +
-> +EXAMPLE
-> +
-> +Example for FMan v2:
-> +
-> +mdio@f1000 {
-> +	compatible = "fsl,fman-xmdio";
-> +	reg = <0xf1000 0x1000>;
-> +};
-> +
-> +Example for FMan v3:
-> +
-> +mdio@fd000 {
-> +	compatible = "fsl,fman-memac-mdio";
-> +	reg = <0xfd000 0x1000>;
-> +	bus-frequency = <2500000>;
-> +	type = "external";
-> +};
-> +
-> +========================================================================
-> =====
->  Example
-> 
->  fman@400000 {
-> @@ -526,4 +588,11 @@ fman@400000 {
->  		compatible = "fsl,fman-ptp-timer";
->  		reg = <0xfe000 0x1000>;
->  	};
-> +
-> +	mdio@fd000 {
-> +		compatible = "fsl,fman-memac-mdio";
-> +		reg = <0xfd000 0x1000>;
-> +		bus-frequency = <2500000>;
-> +		type = "external";
-> +	};
->  };
-> --
-> 1.8.4.1
+We had a similar discussion internally around coherency properties for
+ACPI. If we don't have guarantees that the DT (or ACPI) tables always
+pass the correct information, we should change the kernel DMA ops to
+perform the safe clean+invalidate on the unmap path (some CPU
+implementations do this by default).
 
+-- 
+Catalin
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
