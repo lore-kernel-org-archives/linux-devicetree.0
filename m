@@ -1,235 +1,131 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] i2c: Add Imagination Technologies I2C SCB driver
-Date: Mon, 10 Nov 2014 12:53:41 -0800
-Message-ID: <CAL1qeaEd-NeoC4Zc3u99WYSojr7HJVxmUweO6taBo8BhAxDJcQ@mail.gmail.com>
-References: <1415647816-16415-1-git-send-email-ezequiel.garcia@imgtec.com>
-	<1415647816-16415-2-git-send-email-ezequiel.garcia@imgtec.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [RFCv2 5/8] [media] si4713: add device tree support
+Date: Mon, 10 Nov 2014 21:58:14 +0100
+Message-ID: <20141110205814.GA2591@earth.universe>
+References: <1413904027-16767-1-git-send-email-sre@kernel.org>
+ <1413904027-16767-6-git-send-email-sre@kernel.org>
+ <54594962.2090207@iki.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415647816-16415-2-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54594962.2090207@iki.fi>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ezequiel,
 
-On Mon, Nov 10, 2014 at 11:30 AM, Ezequiel Garcia
-<ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
-> From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
->
-> Add support for the IMG I2C Serial Control Bus (SCB) found on the
-> Pistachio and TZ1090 SoCs.
->
-> Signed-off-by: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> [Ezequiel: code cleaning and rebasing]
-> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+--mP3DRpeJDSE+ciuQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-A few minor comments below, otherwise:
+Hi Sakari,
 
-Reviewed-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+On Tue, Nov 04, 2014 at 11:47:14PM +0200, Sakari Ailus wrote:
+> Nice set of patches! Thanks! :-)
 
-> diff --git a/drivers/i2c/busses/i2c-img-scb.c b/drivers/i2c/busses/i2c-img-scb.c
+Thanks :)
 
-> +/* Force a bus reset sequence and wait for it to complete */
-> +static void img_i2c_reset_bus(struct img_i2c *i2c)
-> +{
-> +       unsigned long flags;
-> +
-> +       spin_lock_irqsave(&i2c->lock, flags);
-> +       reinit_completion(&i2c->msg_complete);
-> +       img_i2c_reset_start(i2c);
-> +       spin_unlock_irqrestore(&i2c->lock, flags);
-> +
-> +       wait_for_completion_timeout(&i2c->msg_complete, IMG_I2C_TOUT);
+> > [...]
+> >  	struct si4713_device *sdev;
+> > -	struct si4713_platform_data *pdata =3D client->dev.platform_data;
+> >  	struct v4l2_ctrl_handler *hdl;
+> > -	int rval, i;
+> > +	struct si4713_platform_data *pdata =3D client->dev.platform_data;
+> > +	struct device_node *np =3D client->dev.of_node;
+> > +	int rval;
+> > +
+>=20
+> Why empty line here?
+>=20
+> It's not a bad practice to declare short temporary variables etc. as last.
 
-Check return value here?
+Fixed in PATCHv3.
 
-> +static int img_i2c_xfer(struct i2c_adapter *i2c_adap, struct i2c_msg *msgs,
-> +                       int num)
-> +{
-> +       struct img_i2c *i2c = i2c_get_adapdata(i2c_adap);
-> +       bool atomic = false;
-> +       int i, ret;
-> +
-> +       if (i2c->mode == MODE_SUSPEND) {
-> +               WARN(1, "refusing to service transaction in suspended state\n");
-> +               return -EIO;
-> +       }
-> +
-> +       if (i2c->mode == MODE_FATAL)
-> +               return -EIO;
-> +
-> +       for (i = 0; i < num; i++) {
-> +               if (likely(msgs[i].len))
-> +                       continue;
-> +               /*
-> +                * 0 byte reads are not possible because the slave could try
-> +                * and pull the data line low, preventing a stop bit.
-> +                */
-> +               if (unlikely(msgs[i].flags & I2C_M_RD))
-> +                       return -EIO;
-> +               /*
-> +                * 0 byte writes are possible and used for probing, but we
-> +                * cannot do them in automatic mode, so use atomic mode
-> +                * instead.
-> +                */
-> +               atomic = true;
-> +       }
-> +
-> +       ret = clk_prepare_enable(i2c->scb_clk);
-> +       if (ret)
-> +               return ret;
-> +
-> +       for (i = 0; i < num; i++) {
-> +               struct i2c_msg *msg = &msgs[i];
-> +               unsigned long flags;
-> +
-> +               spin_lock_irqsave(&i2c->lock, flags);
-> +
-> +               /*
-> +                * Make a copy of the message struct. We mustn't modify the
-> +                * original or we'll confuse drivers and i2c-dev.
-> +                */
-> +               i2c->msg = *msg;
-> +               i2c->msg_status = 0;
-> +
-> +               /*
-> +                * After the last message we must have waited for a stop bit.
-> +                * Not waiting can cause problems when the clock is disabled
-> +                * before the stop bit is sent, and the linux I2C interface
-> +                * requires separate transfers not to joined with repeated
-> +                * start.
-> +                */
-> +               i2c->last_msg = (i == num - 1);
-> +               reinit_completion(&i2c->msg_complete);
-> +
-> +               if (atomic)
-> +                       img_i2c_atomic_start(i2c);
-> +               else if (msg->flags & I2C_M_RD)
-> +                       img_i2c_read(i2c);
-> +               else
-> +                       img_i2c_write(i2c);
-> +               spin_unlock_irqrestore(&i2c->lock, flags);
-> +
-> +               wait_for_completion_timeout(&i2c->msg_complete, IMG_I2C_TOUT);
+> > +	struct radio_si4713_platform_data si4713_pdev_pdata;
+> > +	struct platform_device *si4713_pdev;
+> > =20
+> >  	sdev =3D devm_kzalloc(&client->dev, sizeof(*sdev), GFP_KERNEL);
+> >  	if (!sdev) {
+> > @@ -1608,8 +1612,31 @@ static int si4713_probe(struct i2c_client *clien=
+t,
+> >  		goto free_ctrls;
+> >  	}
+> > =20
+> > +	if ((pdata && pdata->is_platform_device) || np) {
+> > +		si4713_pdev =3D platform_device_alloc("radio-si4713", -1);
+>=20
+> You could declare si4713_pdev here since you're not using it elsewhere.
 
-... and here?
+It has been used in the put_main_pdev jump label at the bottom
+outside of the scope and all access will happen out of the scope
+after the refactoring you suggested below.
 
-> +               del_timer_sync(&i2c->check_timer);
-> +               if (i2c->msg_status)
-> +                       break;
-> +       }
-> +
-> +       clk_disable_unprepare(i2c->scb_clk);
-> +
-> +       return i2c->msg_status ? i2c->msg_status : num;
-> +}
+> > +		if (!si4713_pdev)
+> > +			goto put_main_pdev;
+> > +
+> > +		si4713_pdev_pdata.subdev =3D client;
+> > +		rval =3D platform_device_add_data(si4713_pdev, &si4713_pdev_pdata,
+> > +						sizeof(si4713_pdev_pdata));
+> > +		if (rval)
+> > +			goto put_main_pdev;
+> > +
+> > +		rval =3D platform_device_add(si4713_pdev);
+> > +		if (rval)
+> > +			goto put_main_pdev;
+> > +
+> > +		sdev->pd =3D si4713_pdev;
+> > +	} else {
+> > +		sdev->pd =3D NULL;
+>=20
+> sdev->pd is NULL already here. You could simply return in if () and
+> proceed to create the platform device if need be.
 
-> +static int img_i2c_init(struct img_i2c *i2c)
-> +{
-> +       unsigned int clk_khz, bitrate_khz, clk_period, tckh, tckl, tsdh;
-> +       unsigned int i, ret, data, prescale, inc, int_bitrate;
-> +       unsigned int filt, filt_disable, filt_bypass;
-> +       struct img_i2c_timings timing;
-> +       u32 rev;
-> +
-> +       ret = clk_prepare_enable(i2c->scb_clk);
-> +       if (ret)
-> +               return ret;
-> +
-> +       rev = img_i2c_readl(i2c, SCB_CORE_REV_REG);
-> +       if ((rev & 0x00ffffff) < 0x00020200) {
-> +               dev_info(i2c->adap.dev.parent,
-> +                        "Unknown hardware revision (%d.%d.%d.%d)\n",
-> +                        (rev >> 24) & 0xff, (rev >> 16) & 0xff,
-> +                        (rev >> 8) & 0xff, rev & 0xff);
-> +               clk_disable_unprepare(i2c->scb_clk);
-> +               return -EINVAL;
-> +       }
-> +
-> +       if (rev == REL_SOC_IP_SCB_2_2_1)
-> +               i2c->need_wr_rd_fence = true;
-> +
-> +       bitrate_khz = i2c->bitrate / 1000;
-> +       clk_khz = clk_get_rate(i2c->scb_clk) / 1000;
-> +
-> +       /* Determine what mode we're in from the bitrate */
-> +       timing = timings[0];
-> +       for (i = 0; i < ARRAY_SIZE(timings); i++) {
-> +               if (i2c->bitrate <= timings[i].max_bitrate) {
-> +                       timing = timings[i];
-> +                       break;
-> +               }
-> +       }
-> +
-> +       /* Find the prescale that would give us that inc (approx delay = 0) */
-> +       prescale = SCB_OPT_INC * clk_khz / (256 * 16 * bitrate_khz);
-> +       prescale = clamp_t(unsigned int, prescale, 1, 8);
-> +       clk_khz /= prescale;
-> +
-> +       /* Setup the clock increment value */
-> +       inc = ((256 * 16 * bitrate_khz) /
-> +              (clk_khz - (16 * bitrate_khz * (clk_khz / 1000) *
-> +                          i2c->busdelay) / 10000));
-> +
-> +       /* Setup the filter clock value */
-> +       filt_bypass = 0;
-> +       filt_disable = 0;
-> +       filt = 0;
-> +       if (clk_khz < 20000) {
-> +               filt_disable = SCB_FILT_DISABLE;
-> +       } else if (clk_khz < 40000) {
-> +               filt_bypass = SCB_FILT_BYPASS;
-> +       } else {
-> +               /* Calculate filter clock */
-> +               filt = ((640000) / ((clk_khz / 1000) * (250 - i2c->busdelay)));
-> +               if ((640000) % ((clk_khz / 1000) * (250 - i2c->busdelay))) {
-> +                       /* Scale up */
-> +                       inc++;
-> +               }
-> +               if (filt > SCB_FILT_INC_MASK)
-> +                       filt = SCB_FILT_INC_MASK;
-> +       }
-> +       data = filt_disable | filt_bypass |
-> +              ((filt & SCB_FILT_INC_MASK) << SCB_FILT_INC_SHIFT) |
-> +              ((inc & SCB_INC_MASK) << SCB_INC_SHIFT) |
-> +              (prescale - 1);
-> +       img_i2c_writel(i2c, SCB_CLK_SET_REG, data);
+Right. I simplified the code accordingly in PATCHv3.
 
-Do filt_bypass/filt_disable really need to be separate variables?
-Can't we just use filt in all three cases?
+> Speaking of which --- I wonder if there are other than historical
+> reasons to create the platform device. I guess that's out of the scope
+> of the set anyway.
 
-> +#ifdef CONFIG_PM_SLEEP
-> +static int img_i2c_suspend(struct device *dev)
-> +{
-> +       struct img_i2c *i2c = dev_get_drvdata(dev);
-> +
-> +       img_i2c_switch_mode(i2c, MODE_SUSPEND);
-> +
-> +       clk_disable(i2c->sys_clk);
+I think this was done, so that the usb device can export its own
+control functions.
 
-Why not unprepare as well?
+> > [...]
+> >
+> > +	if (sdev->pd)
+> > +		platform_device_unregister(sdev->pd);
+>=20
+> platform_device_unregister() may be safely called with NULL argument.
 
-> +
-> +       return 0;
-> +}
-> +
-> +static int img_i2c_resume(struct device *dev)
-> +{
-> +       struct img_i2c *i2c = dev_get_drvdata(dev);
-> +       int ret;
-> +
-> +       ret = clk_enable(i2c->sys_clk);
+Ok. Changed in PATCHv3.
 
-... and then prepare here?
+> > [...]
 
-> +       if (ret)
-> +               return ret;
-> +
-> +       img_i2c_init(i2c);
-> +
-> +       return 0;
-> +}
-> +#endif /* CONFIG_PM_SLEEP */
+-- Sebastian
+
+--mP3DRpeJDSE+ciuQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJUYSbmAAoJENju1/PIO/qa90IP/22e/fi1cIzIKoCeIjQKQsXB
+nMxwX5/ejk8JMbRe4d3dDVWtIBYE/FqDFpM5jwfF295WzykKqZUpwlrzPff+iDjV
+SRt33b163fim/qu7NhpgaMH4/i0dTJYtIoyx+pIlXdWy560j+YIN+FIU92DZvShp
+ZekibJUQRPiL8uXp8qLWngdO4A7oCEGDWr5G5Kb5aj5bzuXvcJGpTvx7aSOqfOen
+Rt1XXmLRd9314je1bMdtszjdXGqXmnejUnqynANtI7l7MyV9FgMWUaAqc97ei1o0
+uHZ4cYzBtocOUFqbHnUp3uOmbrp8ulBJAfn0xq+C/6d86qwVL/Oqgrxipy4cRDZl
+jPaI3GlPJz690OBGg4YfnjTXae/AHnWkLpgz39XaSOdmdG26KKg1jav0wosfsvsV
+3VbotsVwDQsgzIHUbKmYQmv4Pc7bHSaJLRHtsz/BJjcT46qSbe8I7ozyQFmAkFJ+
+o8uVybLrfaDdt9weH6WeJKJEmQBzMz66C2YoZEKRB8K86ILF8aCq1K7lmMorAQvH
+Nc0JDlp/CRlfCZdIuJqe2VES99bGOMnoQmdYiAC08f3Ns3K31cLlTS3cwTI/gG9B
+JSrJXRMPCycpw5lnS0SduHsK9tVWo/F/BU5EOoYLmDQ4LUFhy5ipPIVArmJJOKsq
+xiuIClevWOzCji0IXQZH
+=GQV+
+-----END PGP SIGNATURE-----
+
+--mP3DRpeJDSE+ciuQ--
