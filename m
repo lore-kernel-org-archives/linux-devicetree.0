@@ -1,66 +1,60 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 14/17] ARM: mvebu: synchronize secondary CPU clocks on
- resume
-Date: Mon, 10 Nov 2014 15:12:21 +0100
-Message-ID: <5460C7C5.7060007@free-electrons.com>
-References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com> <1414151970-6626-15-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] of: Fix crash if an earlycon driver is not found
+Date: Mon, 10 Nov 2014 08:14:01 -0600
+Message-ID: <CAL_Jsq+iVfFGYEF575spQ5MaYPzo1QSfLUZP1M=TpH0+HdGS6A@mail.gmail.com>
+References: <1415523348-4631-1-git-send-email-cernekee@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414151970-6626-15-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1415523348-4631-1-git-send-email-cernekee@gmail.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Kevin Cernekee <cernekee@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux-MIPS <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
-On 24/10/2014 13:59, Thomas Petazzoni wrote:
-> The Armada XP has multiple cores clocked by independent clocks. The
-> SMP startup code contains a function called set_secondary_cpus_clock()
-> called in armada_xp_smp_prepare_cpus() to ensure the clocks of the
-> secondary CPUs match the clock of the boot CPU.
-> 
-> With the introduction of suspend/resume, this operation is no longer
-> needed when booting the system, but also when existing the suspend to
-> RAM state. Therefore this commit reworks a bit the logic: instead of
-> configuring the clock of all secondary CPUs in
-> armada_xp_smp_prepare_cpus(), we do it on a per-secondary CPU basis in
-> armada_xp_boot_secondary(), as this function gets called when existing
-> suspend to RAM for each secondary CPU.
-> 
-> Since the function now only takes care of one CPU, we rename it from
-> set_secondary_cpus_clock() to set_secondary_cpu_clock(), and it looses
-> its __init marker, as it is now used beyond the system initialization.
-> 
-> Note that we can't use smp_processor_id() directly, because when
-> exiting from suspend to RAM, the code is apparently executed with
-> preemption enabled, so smp_processor_id() is not happy (prints a
-> warning). We therefore switch to using get_cpu()/put_cpu(), even
-> though we pretty much have the guarantee that the code starting the
-> secondary CPUs is going to run on the boot CPU and will not be
-> migrated.
-> 
+On Sun, Nov 9, 2014 at 2:55 AM, Kevin Cernekee <cernekee@gmail.com> wrote:
+> __earlycon_of_table_sentinel.compatible is a char[128], not a pointer, so
+> it will never be NULL.  Checking it against NULL causes the match loop to
+> run past the end of the array, and eventually match a bogus entry, under
+> the following conditions:
+>
+>  - Kernel command line specifies "earlycon" with no parameters
+>  - DT has a stdout-path pointing to a UART node
+>  - The UART driver doesn't use OF_EARLYCON_DECLARE (or maybe the console
+>    driver is compiled out)
+>
+> Fix this by checking to see if match->compatible is a non-empty string.
+>
+> Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+> Cc: <stable@vger.kernel.org> # 3.16+
 
-Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Thanks. I'll queue this up.
 
+BTW, you should not add stable CC when submitting for review, but
+rather add a note for the maintainer to apply to stable. Only if a
+commit is in mainline already and not flagged for stable, then you
+send the patch with the stable tag to get the commit added to stable.
+It's a bit confusing...
 
-Thanks,
+Rob
 
-Gregory
-
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
->  arch/arm/mach-mvebu/platsmp.c | 31 +++++++++++++++----------------
->  1 file changed, 15 insertions(+), 16 deletions(-)
-
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  drivers/of/fdt.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index d1ffca8..30e97bc 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -773,7 +773,7 @@ int __init early_init_dt_scan_chosen_serial(void)
+>         if (offset < 0)
+>                 return -ENODEV;
+>
+> -       while (match->compatible) {
+> +       while (match->compatible[0]) {
+>                 unsigned long addr;
+>                 if (fdt_node_check_compatible(fdt, offset, match->compatible)) {
+>                         match++;
+> --
+> 2.1.1
+>
