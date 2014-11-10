@@ -1,54 +1,42 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH v6 05/48] mfd: as3722: Drop reference to pm_power_off from devicetree bindings
-Date: Sun,  9 Nov 2014 17:42:22 -0800
-Message-ID: <1415583785-6980-6-git-send-email-linux@roeck-us.net>
-References: <1415583785-6980-1-git-send-email-linux@roeck-us.net>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1415583785-6980-1-git-send-email-linux@roeck-us.net>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-pm@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [RFC] Add of_path property for all devices with a node
+Date: Mon, 10 Nov 2014 16:17:06 +1100
+Message-ID: <1415596626.5769.14.camel@kernel.crashing.org>
+References: <1415342031.4925.27.camel@kernel.crashing.org>
+	 <1415342117.4925.29.camel@kernel.crashing.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415342117.4925.29.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Devicetree bindings are supposed to be operating system independent
-and should thus not describe how a specific functionality is implemented
-in Linux.
+On Fri, 2014-11-07 at 17:35 +1100, Benjamin Herrenschmidt wrote:
+> On Fri, 2014-11-07 at 17:33 +1100, Benjamin Herrenschmidt wrote:
+> 
+> > So I came up with this patch, 
+> 
+> And here is the actual patch, which might help :-) It's pretty trivial
+> and small...
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Acked-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
-v6:
-- No change.
-v5:
-- Rebase to v3.18-rc3
-v4:
-- No change
-v3:
-- No change
-v2:
-- No change
+So not much reactions here .. a bit more on IRC, where Olof suggested
+that rather than a file containing a path, we could use a symlink since
+the devtree is now in sysfs, so we can do relative links.
 
- Documentation/devicetree/bindings/mfd/as3722.txt | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+That means keeping the legacy "devspec" files in the few places where
+they exist, possibly behind a deprecated-default-y config option (though
+we might never be able to deprecate them...), but there aren't many.
 
-diff --git a/Documentation/devicetree/bindings/mfd/as3722.txt b/Documentation/devicetree/bindings/mfd/as3722.txt
-index 4f64b2a..0b2a609 100644
---- a/Documentation/devicetree/bindings/mfd/as3722.txt
-+++ b/Documentation/devicetree/bindings/mfd/as3722.txt
-@@ -122,8 +122,7 @@ Following are properties of regulator subnode.
- 
- Power-off:
- =========
--AS3722 supports the system power off by turning off all its rail. This
--is provided through pm_power_off.
-+AS3722 supports the system power off by turning off all its rails.
- The device node should have the following properties to enable this
- functionality
- ams,system-power-controller: Boolean, to enable the power off functionality
--- 
-1.9.1
+Any preference either way ?
 
+Cheers,
+Ben.
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
