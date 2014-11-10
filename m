@@ -1,154 +1,272 @@
-Return-Path: <amstan@chromium.org>
+Return-Path: <a0875039@kernel.org>
+From: Sandeep Nair <sandeep_n@ti.com>
+Subject: [PATCH v6 1/3] Documentation: dt: net: Add binding doc for Keystone NetCP ethernet driver
+Date: Mon, 10 Nov 2014 18:27:15 -0500
+Message-ID: <1415662037-12689-2-git-send-email-sandeep_n@ti.com>
+In-Reply-To: <1415662037-12689-1-git-send-email-sandeep_n@ti.com>
+References: <1415662037-12689-1-git-send-email-sandeep_n@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20141117193902.25314.97687@quantum>
-References: <1416009604-31545-1-git-send-email-amstan@chromium.org>
- <1416009604-31545-2-git-send-email-amstan@chromium.org> <20141117193902.25314.97687@quantum>
-From: Alexandru Stan <amstan@chromium.org>
-Date: Mon, 17 Nov 2014 11:47:16 -0800
-Message-ID: <CAHNYxRxTaRY=+wi_TgfO35U_NDXmyeGtzPQZXDsYMRA5fyd3eg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] clk: rockchip: add bindings for the mmc clock phases
-Content-Type: multipart/alternative; boundary=001a113defd81a39e10508134075
-To: Mike Turquette <mturquette@linaro.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, Doug Anderson <dianders@chromium.org>, addy ke <addy.ke@rock-chips.com>, Sonny Rao <sonnyrao@chromium.org>, Kever Yang <kever.yang@rock-chips.com>, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.yao@rock-chips.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+To: davem@davemloft.net, netdev@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Sandeep Nair <sandeep_n@ti.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Murali Karicheri <m-karicheri2@ti.com>, Santosh Shilimkar <santosh.shilimkar@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
---001a113defd81a39e10508134075
-Content-Type: text/plain; charset=UTF-8
+The network coprocessor (NetCP) is a hardware accelerator that processes
+Ethernet packets. NetCP has a gigabit Ethernet (GbE) subsystem with a ethernet
+switch sub-module to send and receive packets. NetCP also includes a packet
+accelerator (PA) module to perform packet classification operations such as
+header matching, and packet modification operations such as checksum
+generation. NetCP can also optionally include a Security Accelerator(SA)
+capable of performing IPSec operations on ingress/egress packets.
 
-I actually need to control 2 phases, one of them is used when outputting
-data, the other when sampling. Sunxi does something similar:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/273273.html
+Keystone SoC's also have a 10 Gigabit Ethernet Subsystem (XGbE) which
+includes a 3-port Ethernet switch sub-module capable of 10Gb/s and
+1Gb/s rates per Ethernet port.
 
-Another reason it wouldn't work is because the upstream clock(eg SCLK_SDMMC)
-is twice as fast as the real clock(see RK3288_CLKGEN_DIV in
-drivers/mmc/host/dw_mmc-rockchip.c), since that clock goes to a /2 divider
-to be able to do the 90 degree clock phases.
+NetCP Subsystem device tree layout looks something like below:
 
-Alexandru Stan (amstan)
+-----------------------------
+  NetCP subsystem(10G or 1G)
+-----------------------------
+	|
+	|-> NetCP Devices ->	|
+	|			|-> GBE/XGBE Switch
+	|			|
+	|			|-> Packet Accelerator
+	|			|
+	|			|-> Security Accelerator
+	|
+	|
+	|
+	|-> NetCP Interfaces ->	|
+				|-> Ethernet Port 0
+				|
+				|-> Ethernet Port 1
+				|
+				|-> Ethernet Port 2
+				|
+				|-> Ethernet Port 3
 
-On Mon, Nov 17, 2014 at 11:39 AM, Mike Turquette <mturquette@linaro.org>
-wrote:
+Common driver supports GBE as well XGBE network processors.
 
-> Quoting Alexandru M Stan (2014-11-14 16:00:03)
-> > This will be used in a later patch for clock phase tuning.
-> >
-> > Suggested-by: Heiko Stuebner <heiko@sntech.de>
-> > Signed-off-by: Alexandru M Stan <amstan@chromium.org>
-> > ---
-> > Changes in v2: None
-> >
-> >  include/dt-bindings/clock/rk3288-cru.h | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> >
-> > diff --git a/include/dt-bindings/clock/rk3288-cru.h
-> b/include/dt-bindings/clock/rk3288-cru.h
-> > index 100a08c..465d0f6 100644
-> > --- a/include/dt-bindings/clock/rk3288-cru.h
-> > +++ b/include/dt-bindings/clock/rk3288-cru.h
-> > @@ -72,6 +72,16 @@
-> >  #define SCLK_HEVC_CABAC                111
-> >  #define SCLK_HEVC_CORE         112
-> >
-> > +#define SCLK_SDMMC_DRV_PHASE   113
-> > +#define SCLK_SDIO0_DRV_PHASE   114
-> > +#define SCLK_SDIO1_DRV_PHASE   115
-> > +#define SCLK_EMMC_DRV_PHASE    116
-> > +
-> > +#define SCLK_SDMMC_SAMPLE_PHASE        117
-> > +#define SCLK_SDIO0_SAMPLE_PHASE        118
-> > +#define SCLK_SDIO1_SAMPLE_PHASE        119
-> > +#define SCLK_EMMC_SAMPLE_PHASE 120
->
-> It looks like you are adding new clocks to handle the phase requirement.
-> Is that the right thing to do? Don't these clks already exist (e.g.
-> SCLK_SDMMC)?
->
-> Regards,
-> Mike
->
-> > +
-> >  #define DCLK_VOP0              190
-> >  #define DCLK_VOP1              191
-> >
-> > --
-> > 2.1.0.rc2.206.gedb03e5
-> >
->
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: David Miller <davem@davemloft.net>
+Cc: Murali Karicheri <m-karicheri2@ti.com>
+Cc: Santosh Shilimkar <santosh.shilimkar@kernel.org>
 
---001a113defd81a39e10508134075
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Sandeep Nair <sandeep_n@ti.com>
+---
+ .../devicetree/bindings/net/keystone-netcp.txt     |  197 ++++++++++++++++++++
+ 1 file changed, 197 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/keystone-netcp.txt
 
-<div dir=3D"ltr"><font face=3D"arial, sans-serif"><span style=3D"font-size:=
-12.8000001907349px">I actually need to control 2 phases, one of them is use=
-d when outputting data, the other when sampling. Sunxi does something simil=
-ar:=C2=A0<a href=3D"http://lists.infradead.org/pipermail/linux-arm-kernel/2=
-014-July/273273.html">http://lists.infradead.org/pipermail/linux-arm-kernel=
-/2014-July/273273.html</a></span></font><div><br></div><div>Another reason =
-it wouldn&#39;t work is because the upstream clock(eg=C2=A0<span style=3D"f=
-ont-family:arial,sans-serif;font-size:12.8000001907349px">SCLK_SDMMC</span>=
-) is twice as fast as the real clock(see RK3288_CLKGEN_DIV in drivers/mmc/h=
-ost/dw_mmc-rockchip.c), since that clock goes to a /2 divider to be able to=
- do the 90 degree clock phases.</div><div class=3D"gmail_extra"><br clear=
-=3D"all"><div><div class=3D"gmail_signature"><div dir=3D"ltr"><div style=3D=
-"font-family:arial;font-size:small">Alexandru Stan (amstan)<br></div></div>=
-</div></div>
-<br><div class=3D"gmail_quote">On Mon, Nov 17, 2014 at 11:39 AM, Mike Turqu=
-ette <span dir=3D"ltr">&lt;<a href=3D"mailto:mturquette@linaro.org" target=
-=3D"_blank">mturquette@linaro.org</a>&gt;</span> wrote:<br><blockquote clas=
-s=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left-width:1px;b=
-order-left-color:rgb(204,204,204);border-left-style:solid;padding-left:1ex"=
->Quoting Alexandru M Stan (2014-11-14 16:00:03)<br>
-<div><div class=3D"h5">&gt; This will be used in a later patch for clock ph=
-ase tuning.<br>
-&gt;<br>
-&gt; Suggested-by: Heiko Stuebner &lt;<a href=3D"mailto:heiko@sntech.de">he=
-iko@sntech.de</a>&gt;<br>
-&gt; Signed-off-by: Alexandru M Stan &lt;<a href=3D"mailto:amstan@chromium.=
-org">amstan@chromium.org</a>&gt;<br>
-&gt; ---<br>
-&gt; Changes in v2: None<br>
-&gt;<br>
-&gt;=C2=A0 include/dt-bindings/clock/rk3288-cru.h | 10 ++++++++++<br>
-&gt;=C2=A0 1 file changed, 10 insertions(+)<br>
-&gt;<br>
-&gt; diff --git a/include/dt-bindings/clock/rk3288-cru.h b/include/dt-bindi=
-ngs/clock/rk3288-cru.h<br>
-&gt; index 100a08c..465d0f6 100644<br>
-&gt; --- a/include/dt-bindings/clock/rk3288-cru.h<br>
-&gt; +++ b/include/dt-bindings/clock/rk3288-cru.h<br>
-&gt; @@ -72,6 +72,16 @@<br>
-&gt;=C2=A0 #define SCLK_HEVC_CABAC=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 111<br>
-&gt;=C2=A0 #define SCLK_HEVC_CORE=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0112<br>
-&gt;<br>
-&gt; +#define SCLK_SDMMC_DRV_PHASE=C2=A0 =C2=A0113<br>
-&gt; +#define SCLK_SDIO0_DRV_PHASE=C2=A0 =C2=A0114<br>
-&gt; +#define SCLK_SDIO1_DRV_PHASE=C2=A0 =C2=A0115<br>
-&gt; +#define SCLK_EMMC_DRV_PHASE=C2=A0 =C2=A0 116<br>
-&gt; +<br>
-&gt; +#define SCLK_SDMMC_SAMPLE_PHASE=C2=A0 =C2=A0 =C2=A0 =C2=A0 117<br>
-&gt; +#define SCLK_SDIO0_SAMPLE_PHASE=C2=A0 =C2=A0 =C2=A0 =C2=A0 118<br>
-&gt; +#define SCLK_SDIO1_SAMPLE_PHASE=C2=A0 =C2=A0 =C2=A0 =C2=A0 119<br>
-&gt; +#define SCLK_EMMC_SAMPLE_PHASE 120<br>
-<br>
-</div></div>It looks like you are adding new clocks to handle the phase req=
-uirement.<br>
-Is that the right thing to do? Don&#39;t these clks already exist (e.g.<br>
-SCLK_SDMMC)?<br>
-<br>
-Regards,<br>
-Mike<br>
-<div class=3D""><div class=3D"h5"><br>
-&gt; +<br>
-&gt;=C2=A0 #define DCLK_VOP0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 190<br>
-&gt;=C2=A0 #define DCLK_VOP1=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 191<br>
-&gt;<br>
-&gt; --<br>
-&gt; 2.1.0.rc2.206.gedb03e5<br>
-&gt;<br>
-</div></div></blockquote></div><br></div></div>
-
---001a113defd81a39e10508134075--
+diff --git a/Documentation/devicetree/bindings/net/keystone-netcp.txt b/Documentation/devicetree/bindings/net/keystone-netcp.txt
+new file mode 100644
+index 0000000..a7d061b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/keystone-netcp.txt
+@@ -0,0 +1,197 @@
++This document describes the device tree bindings associated with the
++keystone network coprocessor(NetCP) driver support.
++
++The network coprocessor (NetCP) is a hardware accelerator that processes
++Ethernet packets. NetCP has a gigabit Ethernet (GbE) subsytem with a ethernet
++switch sub-module to send and receive packets. NetCP also includes a packet
++accelerator (PA) module to perform packet classification operations such as
++header matching, and packet modification operations such as checksum
++generation. NetCP can also optionally include a Security Accelerator (SA)
++capable of performing IPSec operations on ingress/egress packets.
++
++Keystone II SoC's also have a 10 Gigabit Ethernet Subsystem (XGbE) which
++includes a 3-port Ethernet switch sub-module capable of 10Gb/s and 1Gb/s rates
++per Ethernet port.
++
++Keystone NetCP driver has a plug-in module architecture where each of the NetCP
++sub-modules exist as a loadable kernel module which plug in to the netcp core.
++These sub-modules are represented as "netcp-devices" in the dts bindings. It is
++mandatory to have the ethernet switch sub-module for the ethernet interface to
++be operational. Any other sub-module like the PA is optional.
++
++NetCP Ethernet SubSystem Layout:
++
++-----------------------------
++  NetCP subsystem(10G or 1G)
++-----------------------------
++	|
++	|-> NetCP Devices ->	|
++	|			|-> GBE/XGBE Switch
++	|			|
++	|			|-> Packet Accelerator
++	|			|
++	|			|-> Security Accelerator
++	|
++	|
++	|
++	|-> NetCP Interfaces ->	|
++				|-> Ethernet Port 0
++				|
++				|-> Ethernet Port 1
++				|
++				|-> Ethernet Port 2
++				|
++				|-> Ethernet Port 3
++
++
++NetCP subsystem properties:
++Required properties:
++- compatible:	Should be "ti,netcp-1.0"
++- clocks:	phandle to the reference clocks for the subsystem.
++- dma-id:	Navigator packet dma instance id.
++
++Optional properties:
++- reg:		register location and the size for the following register
++		regions in the specified order.
++		- Efuse MAC address register
++- dma-coherent:	Present if dma operations are coherent
++- big-endian:	Keystone devices can be operated in a mode where the DSP is in
++		the big endian mode. In such cases enable this option. This
++		option should also be enabled if the ARM is operated in
++		big endian mode with the DSP in little endian.
++
++NetCP device properties: Device specification for NetCP sub-modules.
++1Gb/10Gb (gbe/xgbe) ethernet switch sub-module specifications.
++Required properties:
++- label:	Must be "netcp-gbe" for 1Gb & "netcp-xgbe" for 10Gb.
++- reg:		register location and the size for the following register
++		regions in the specified order.
++		- subsystem registers
++		- serdes registers
++- tx-channel:	the navigator packet dma channel number for tx.
++- tx-queue:	the navigator queue number associated with the tx dma channel.
++- interfaces:	specification for each of the switch port to be registered as a
++		network interface in the stack.
++-- slave-port:	Switch port number, 0 based numbering.
++-- link-interface:	type of link interface, supported options are
++			- mac<->mac auto negotiate mode: 0
++			- mac<->phy mode: 1
++			- mac<->mac forced mode: 2
++			- mac<->fiber mode: 3
++			- mac<->phy mode with no mdio: 4
++			- 10Gb mac<->phy mode : 10
++			- 10Gb mac<->mac forced mode : 11
++----phy-handle:	phandle to PHY device
++
++Optional properties:
++- enable-ale:	NetCP driver keeps the address learning feature in the ethernet
++		switch module disabled. This attribute is to enable the address
++		learning.
++- secondary-slave-ports:	specification for each of the switch port not be
++				registered as a network interface. NetCP driver
++				will only initialize these ports and attach PHY
++				driver to them if needed.
++
++NetCP interface properties: Interface specification for NetCP sub-modules.
++Required properties:
++- rx-channel:	the navigator packet dma channel number for rx.
++- rx-queue:	the navigator queue number associated with rx dma channel.
++- rx-pool:	specifies the number of descriptors to be used & the region-id
++		for creating the rx descriptor pool.
++- tx-pool:	specifies the number of descriptors to be used & the region-id
++		for creating the tx descriptor pool.
++- rx-queue-depth:	number of descriptors in each of the free descriptor
++			queue (FDQ) for the pktdma Rx flow. There can be at
++			present a maximum of 4 queues per Rx flow.
++- rx-buffer-size:	the buffer size for each of the Rx flow FDQ.
++- tx-completion-queue:	the navigator queue number where the descriptors are
++			recycled after Tx DMA completion.
++
++Optional properties:
++- efuse-mac:	If this is 1, then the MAC address for the interface is
++		obtained from the device efuse mac address register
++- local-mac-address:	the driver is designed to use the of_get_mac_address api
++			only if efuse-mac is 0. When efuse-mac is 0, the MAC
++			address is obtained from local-mac-address. If this
++			attribute is not present, then the driver will use a
++			random MAC address.
++- "netcp-device label":	phandle to the device specification for each of NetCP
++			sub-module attached to this interface.
++
++Example binding:
++
++netcp: netcp@2090000 {
++	reg = <0x2620110 0x8>;
++	reg-names = "efuse";
++	compatible = "ti,netcp-1.0";
++	#address-cells = <1>;
++	#size-cells = <1>;
++	ranges;
++
++	clocks = <&papllclk>, <&clkcpgmac>, <&chipclk12>;
++	dma-coherent;
++	/* big-endian; */
++	dma-id = <0>;
++
++	netcp-devices {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++		gbe@0x2090000 {
++			label = "netcp-gbe";
++			reg = <0x2090000 0xf00>;
++			/* enable-ale; */
++			tx-queue = <648>;
++			tx-channel = <8>;
++
++			interfaces {
++				gbe0: interface-0 {
++					slave-port = <0>;
++					link-interface	= <4>;
++				};
++				gbe1: interface-1 {
++					slave-port = <1>;
++					link-interface	= <4>;
++				};
++			};
++
++			secondary-slave-ports {
++				port-2 {
++					slave-port = <2>;
++					link-interface	= <2>;
++				};
++				port-3 {
++					slave-port = <3>;
++					link-interface	= <2>;
++				};
++			};
++		};
++	};
++
++	netcp-interfaces {
++		interface-0 {
++			rx-channel = <22>;
++			rx-pool = <1024 12>;
++			tx-pool = <1024 12>;
++			rx-queue-depth = <128 128 0 0>;
++			rx-buffer-size = <1518 4096 0 0>;
++			rx-queue = <8704>;
++			tx-completion-queue = <8706>;
++			efuse-mac = <1>;
++			netcp-gbe = <&gbe0>;
++
++		};
++		interface-1 {
++			rx-channel = <23>;
++			rx-pool = <1024 12>;
++			tx-pool = <1024 12>;
++			rx-queue-depth = <128 128 0 0>;
++			rx-buffer-size = <1518 4096 0 0>;
++			rx-queue = <8705>;
++			tx-completion-queue = <8707>;
++			efuse-mac = <0>;
++			local-mac-address = [02 18 31 7e 3e 6f];
++			netcp-gbe = <&gbe1>;
++		};
++	};
++};
+-- 
+1.7.10.4
