@@ -1,115 +1,85 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 03/11] mfd: syscon: Add atmel-smc registers definition
-Date: Mon, 10 Nov 2014 09:57:28 +0000
-Message-ID: <20141110095728.GJ21424@x1>
-References: <1415203287-21517-1-git-send-email-boris.brezillon@free-electrons.com>
- <1415203287-21517-4-git-send-email-boris.brezillon@free-electrons.com>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH V5 7/7] dt-bindings: add document for dw-hdmi
+Date: Mon, 10 Nov 2014 17:59:01 +0800
+Message-ID: <54608C65.7050902@rock-chips.com>
+References: <1415424410-7364-1-git-send-email-andy.yan@rock-chips.com>
+ <1415424767-7761-1-git-send-email-andy.yan@rock-chips.com>
+ <546082A9.5050203@imgtec.com> <546088F6.4090505@rock-chips.com>
+ <54608B03.9050805@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1415203287-21517-4-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <54608B03.9050805@imgtec.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, ykk@rock-chips.com, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, Shawn Guo <shawn.guo@linaro.org>, jay.xu@rock-chips.com, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 05 Nov 2014, Boris Brezillon wrote:
-
-> Atmel AT91 SoCs have a memory range reserved for SMC (Static Memory
-> Controller) configuration.
-> Expose those registers so that drivers can make use of the smc syscon
-> declared in at91 DTs.
->=20
-> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  include/linux/mfd/syscon/atmel-smc.h | 60 ++++++++++++++++++++++++++=
-++++++++++
->  1 file changed, 60 insertions(+)
->  create mode 100644 include/linux/mfd/syscon/atmel-smc.h
-
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-Any idea who will take this set?
-
-> diff --git a/include/linux/mfd/syscon/atmel-smc.h b/include/linux/mfd=
-/syscon/atmel-smc.h
-> new file mode 100644
-> index 0000000..430f486
-> --- /dev/null
-> +++ b/include/linux/mfd/syscon/atmel-smc.h
-> @@ -0,0 +1,60 @@
-> +/*
-> + * Atmel SMC (Static Memory Controller) register offsets and bit def=
-initions.
-> + *
-> + * Copyright (C) 2014 Atmel
-> + * Copyright (C) 2014 Free Electrons
-> + *
-> + * Author: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or mod=
-ify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#ifndef _LINUX_MFD_SYSCON_ATMEL_SMC_H_
-> +#define _LINUX_MFD_SYSCON_ATMEL_SMC_H_
-> +
-> +#include <linux/regmap.h>
-> +
-> +#define AT91SAM9_SMC_GENERIC_OFFSET	0x00
-> +#define AT91SAM9_SMC_GENERIC_BLK_SZ	0x10
-> +
-> +#define SAMA5_SMC_GENERIC_OFFSET	0x600
-> +#define SAMA5_SMC_GENERIC_BLK_SZ	0x14
-> +
-> +#define AT91SAM9_SMC_SETUP(o)		((o) + 0x00)
-> +#define AT91SAM9_SMC_NWESETUP_SHFT	0
-> +#define AT91SAM9_SMC_NCS_WRSETUP_SHFT	8
-> +#define AT91SAM9_SMC_NRDSETUP_SHFT	16
-> +#define AT91SAM9_SMC_NCS_NRDSETUP_SHFT	24
-> +
-> +#define AT91SAM9_SMC_PULSE(o)		((o) + 0x04)
-> +
-> +#define AT91SAM9_SMC_CYCLE(o)		((o) + 0x08)
-> +
-> +#define AT91SAM9_SMC_MODE(o)		((o) + 0x0c)
-> +#define SAMA5_SMC_MODE(o)		((o) + 0x10)
-> +#define AT91_SMC_READMODE		BIT(0)
-> +#define AT91_SMC_WRITEMODE		BIT(1)
-> +#define AT91_SMC_EXNWMODE		GENMASK(5, 4)
-> +#define AT91_SMC_EXNWMODE_DISABLE	(0 << 4)
-> +#define AT91_SMC_EXNWMODE_FROZEN	(2 << 4)
-> +#define AT91_SMC_EXNWMODE_READY		(3 << 4)
-> +#define AT91_SMC_BAT			BIT(8)
-> +#define AT91_SMC_BAT_SELECT		(0 << 8)
-> +#define AT91_SMC_BAT_WRITE		(1 << 8)
-> +#define AT91_SMC_DBW			GENMASK(13, 12)
-> +#define AT91_SMC_DBW_8			(0 << 12)
-> +#define AT91_SMC_DBW_16			(1 << 12)
-> +#define AT91_SMC_DBW_32			(2 << 12)
-> +#define AT91_SMC_TDF			GENMASK(19, 16)
-> +#define AT91_SMC_TDF_(x)		(((x) & 0xf) << 16)
-> +#define AT91_SMC_TDFMODE		BIT(20)
-> +#define AT91_SMC_PMEN			BIT(24)
-> +#define AT91_SMC_PS			GENMASK(29, 28)
-> +#define AT91_SMC_PS_4			(0 << 28)
-> +#define AT91_SMC_PS_8			(1 << 28)
-> +#define AT91_SMC_PS_16			(2 << 28)
-> +#define AT91_SMC_PS_32			(3 << 28)
-> +
-> +#endif /* _LINUX_MFD_SYSCON_ATMEL_SMC_H_ */
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ck9uIDIwMTTlubQxMeaciDEw5pelIDE3OjUzLCBadWJhaXIgTHV0ZnVsbGFoIEtha2FraGVsIHdy
+b3RlOgo+Cj4gT24gMTAvMTEvMTQgMDk6NDQsIEFuZHkgWWFuIHdyb3RlOgo+PiBIaSBadWJhaXJM
+Swo+PiBPbiAyMDE05bm0MTHmnIgxMOaXpSAxNzoxNywgWnViYWlyIEx1dGZ1bGxhaCBLYWtha2hl
+bCB3cm90ZToKPj4+IE5pY2Ugd29yay4KPj4+Cj4+PiBUaGlzIHBhdGNoIHNob3VsZCBtb3ZlIHRo
+ZSBiaW5kaW5nIGZyb20KPj4+Cj4+PiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+c3RhZ2luZy9pbXgtZHJtL2hkbWkudHh0Cj4+PiB0byB0aGUgbG9jYXRpb24gaW5zdGVhZCBvZiBt
+YWtpbmcgYSBuZXcgZmlsZSBhbmQgbGVhdmluZyB0aGUgb2xkCj4+PiBvbmUgaW4gcGxhY2UuCj4+
+Pgo+Pj4gQW5kIHVzZSBnaXQgZm9ybWF0LXBhdGNoIC1NIHRvIGhpZ2hsaWdodCBhbnkgY2hhbmdl
+cy4KPj4+Cj4+PiBSZWdhcmRzCj4+PiBadWJhaXJMSwo+PiAgICAgSSBhZGQgdGhlc2UgYmluZGlu
+Z3MgZm9yIGR3LWhkbWkgY29yZSwgYmVjYXVzZQo+PiAgICBwcm9wZXJpdGllcyBsaWtlIHJlZywg
+aW50ZXJydXB0cywgZGRjLWkyYy1idXMsIHJlZy1pby13aWR0aCBhcmUgdXNlZAo+PiAgICBieSBk
+dy1oZG1pIGNvcmUsIGJ1dCBwcm9wZXJpdGllcyBsaWtlIGNvbXBhdGlibGUsIGdwcixjbGssIGFy
+ZSBwbGF0Zm9ybQo+PiAgICBzcGVjaWZpYyAsIHRoZXkgYXJlIGhhbmRsZWQgYnkgdGhlIHBsYXRm
+b3JtIGNvZGUgbGlrZSBkd19oZG1pLWlteC5jCj4+ICAgIGFuZCBkZXNjcmliZWQgaW4gcGxhdGZv
+cm0gc3BlY2lmaWMgZHQgYmluZHMgbGlrZSAvaW14LWRybS9oZG1pLnR4dAo+IEkgdW5kZXJzdGFu
+ZC4KPgo+IEFyZSB0aGVyZSBhbnkgY2hhbmdlcyB0byBpbXgtZHJtL2hkbWkudHh0Pwo+Cj4gU29t
+ZSBwcm9wZXJ0aWVzIGZvciBpbXgtZHJtL2hkbWkudHh0IHdvdWxkIGJlY29tZSBvcHRpb25hbC9p
+bmhlcml0ZWQgZnJvbSB0aGUgcGFyZW50IGhkbWkgZHJtIGJpbmRpbmc/Cj4KPiBUaGUgY2hhbmdl
+cyBzaG91bGQgYmUgaGlnaGxpZ2h0ZWQgaW4gdGhlIGNvbW1pdCBtZXNzYWdlLiBPciB3ZSdsbAo+
+IGJlIGNvbmZ1c2VkIHdoaWNoIGlzIHdoaWNoLi4KPgo+IFp1YmFpckxLCj4KICAgdG8ga2VlcCAg
+IGNvbXBhdGlibGUgZm9yIGlteCwgbm8gY2hhbmdlcyBmb3IgaW14LWRybS9oZG1pLnR4dAogICB0
+aGUgb25seSBhZGRlZCBwcm9wZXJ0aWVzICBpcyByZWctaW8td2lkdGgsIGFuZCBpdCBpcyBvcHRp
+b25hbAo+Pj4gT24gMDgvMTEvMTQgMDU6MzIsIEFuZHkgWWFuIHdyb3RlOgo+Pj4+IFNpZ25lZC1v
+ZmYtYnk6IEFuZHkgWWFuIDxhbmR5LnlhbkByb2NrLWNoaXBzLmNvbT4KPj4+PiAtLS0KPj4+PiAg
+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3LWhkbWkudHh0ICAgICB8IDM4
+ICsrKysrKysrKysrKysrKysrKysrKysKPj4+PiAgICAxIGZpbGUgY2hhbmdlZCwgMzggaW5zZXJ0
+aW9ucygrKQo+Pj4+ICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZHJtL2JyaWRnZS9kdy1oZG1pLnR4dAo+Pj4+Cj4+Pj4gZGlmZiAtLWdpdCBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3LWhkbWkudHh0
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9icmlkZ2UvZHctaGRtaS50
+eHQKPj4+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+Pj4+IGluZGV4IDAwMDAwMDAuLmFhN2VkMTcK
+Pj4+PiAtLS0gL2Rldi9udWxsCj4+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2RybS9icmlkZ2UvZHctaGRtaS50eHQKPj4+PiBAQCAtMCwwICsxLDM4IEBACj4+Pj4g
+K0Rlc2lnbldhcmUgSERNSSBicmlkZ2UgYmluZGluZ3MKPj4+PiArCj4+Pj4gK1JlcXVpcmVkIHBy
+b3Blcml0aWVzOgo+Pj4+ICstIGNvbXBhdGliZWw6IHBsYXRmb3JtIHNwZWNpZmljIHN1Y2ggYXMg
+ImZzbCxpbXg2cS1oZG1pIiwiZnNsLGlteDZkbC1oZG1pIgo+IHNwZWxsY2hlY2suIGNvbXBhdGli
+bGUKPgo+Pj4+ICsgICAgICAgICAgInJvY2tjaGlwLHJrMzI4OC1kdy1oZG1pIgo+Pj4+ICstIHJl
+ZzogcGh5c2ljYWwgYmFzZSBhZGRyZXNzIG9mIHRoZSBjb250cm9sbGVyIGFuZCBsZW5ndGgKPj4+
+PiArLSBkZGMtaTJjLWJ1czogdGhlIGRkYyBpMmMgYnVzCj4+Pj4gKy0gaW50ZXJydXB0czogVGhl
+IGludGVycnVwdCBudW1iZXIgdG8gdGhlIGNwdQo+Pj4+ICsKPj4+PiArT3B0aW9uYWwgcHJvcGVy
+dGllcwo+Pj4+ICstIHJlZy1pby13aWR0aDogdGhlIHdpZHRoIG9mIHRoZSByZWc6MSw0LCBkZWZh
+dWx0IHNldCB0byAxIGlmIG5vdCBwcmVzZW50Cj4+Pj4gKwo+Pj4+ICtFeGFtcGxlOgo+Pj4+ICsg
+ICAgaGRtaTogaGRtaUAwMTIwMDAwIHsKPj4+PiArICAgICAgICBjb21wYXRpYmxlID0gImZzbCxp
+bXg2cS1oZG1pIjsKPj4+PiArICAgICAgICByZWcgPSA8MHgwMDEyMDAwMCAweDkwMDA+Owo+Pj4+
+ICsgICAgICAgIGludGVycnVwdHMgPSA8MCAxMTUgMHgwND47Cj4+Pj4gKyAgICAgICAgZ3ByID0g
+PCZncHI+Owo+Pj4+ICsgICAgICAgIGNsb2NrcyA9IDwmY2xrcyAxMjM+LCA8JmNsa3MgMTI0PjsK
+Pj4+PiArICAgICAgICBjbG9jay1uYW1lcyA9ICJpYWhiIiwgImlzZnIiOwo+Pj4+ICsgICAgICAg
+IGRkYy1pMmMtYnVzID0gPCZpMmMyPjsKPj4+PiArCj4+Pj4gKyAgICAgICAgcG9ydEAwIHsKPj4+
+PiArICAgICAgICAgICAgcmVnID0gPDA+Owo+Pj4+ICsKPj4+PiArICAgICAgICAgICAgaGRtaV9t
+dXhfMDogZW5kcG9pbnQgewo+Pj4+ICsgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0g
+PCZpcHUxX2RpMF9oZG1pPjsKPj4+PiArICAgICAgICAgICAgfTsKPj4+PiArICAgICAgICB9Owo+
+Pj4+ICsKPj4+PiArICAgICAgICBwb3J0QDEgewo+Pj4+ICsgICAgICAgICAgICByZWcgPSA8MT47
+Cj4+Pj4gKwo+Pj4+ICsgICAgICAgICAgICBoZG1pX211eF8xOiBlbmRwb2ludCB7Cj4+Pj4gKyAg
+ICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JmlwdTFfZGkxX2hkbWk+Owo+Pj4+ICsg
+ICAgICAgICAgICB9Owo+Pj4+ICsgICAgICAgIH07Cj4+Pj4gKyAgICB9Owo+Pj4+Cj4+Pgo+Pgo+
+Cj4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZl
+bCBtYWlsaW5nIGxpc3QKZGV2ZWxAbGludXhkcml2ZXJwcm9qZWN0Lm9yZwpodHRwOi8vZHJpdmVy
+ZGV2LmxpbnV4ZHJpdmVycHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcml2ZXJkZXYtZGV2
+ZWwK
