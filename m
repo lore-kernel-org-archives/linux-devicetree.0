@@ -1,55 +1,143 @@
-From: Radek Dostal <radek.dostal@streamunlimited.com>
-Subject: [PATCH] ARM: dts: bcm63138: change "interupts" to "interrupts"
-Date: Mon, 10 Nov 2014 17:35:58 +0100
-Message-ID: <1415637358-24378-1-git-send-email-radek.dostal@streamunlimited.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
-Cc: devicetree@vger.kernel.org, f.fainelli@gmail.com, arnd@arndb.de, Radek Dostal <radek.dostal@streamunlimited.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [RFC PATCH v2] drivers: pci: move PCI domain assignment to generic PCI code
+Date: Mon, 10 Nov 2014 16:41:46 +0000
+Message-ID: <1415637706-2195-1-git-send-email-lorenzo.pieralisi@arm.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, Liviu Dudau <liviu.dudau@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-all other nodes in bcm63138.dtsi use "interrupts", this had to be just a typo
-which never got noticed, even it may have quite some consequences.
+The current logic used for PCI domain assignment in arm64
+pci_bus_assign_domain_nr() is flawed in that, depending on the host
+controllers configuration for a platform and the respective initialization
+sequence, core code may end up allocating PCI domain numbers from both DT and
+the core code generic domain counter, which would result in PCI domain
+allocation aliases/errors.
 
-Signed-off-by: Radek Dostal <radek.dostal@streamunlimited.com>
+This patch fixes the logic behind the PCI domain number assignment and
+moves the resulting code to generic PCI core code so that the same domain
+allocation logic is used on all platforms selecting
+
+CONFIG_PCI_DOMAINS_GENERIC
+
+instead of resorting to an arch specific implementation that might end up
+duplicating the PCI domain assignment logic wrongly.
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Liviu Dudau <liviu.dudau@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 ---
- Hi all,
+v1 => v2:
 
- when running git grep with typo, I spotted this typo inDT binding, which 
- looks obviously wrong to me. Sorry I do not have the board to test it, but 
- I am pretty sure the patch is correct.
+- Moved generic pci_bus_assign_domain_nr() code to PCI core instead of
+  adding an OF layer API
+- Updated commit log and code comments
 
- I hope I included, right people get_maintainer.pl showed bit too many.
+ arch/arm64/kernel/pci.c | 22 ----------------------
+ drivers/pci/pci.c       | 50 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 50 insertions(+), 22 deletions(-)
 
- Thanks,
- Radek
-
- arch/arm/boot/dts/bcm63138.dtsi |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/bcm63138.dtsi b/arch/arm/boot/dts/bcm63138.dtsi
-index f3bb2dd..d2d8e94 100644
---- a/arch/arm/boot/dts/bcm63138.dtsi
-+++ b/arch/arm/boot/dts/bcm63138.dtsi
-@@ -102,7 +102,7 @@
- 		twd_watchdog: watchdog@1e620 {
- 			compatible = "arm,cortex-a9-twd-wdt";
- 			reg = <0x1e620 0x20>;
--			interupts = <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 	};
+diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
+index ce5836c..6f93c24 100644
+--- a/arch/arm64/kernel/pci.c
++++ b/arch/arm64/kernel/pci.c
+@@ -46,25 +46,3 @@ int pcibios_add_device(struct pci_dev *dev)
  
+ 	return 0;
+ }
+-
+-
+-#ifdef CONFIG_PCI_DOMAINS_GENERIC
+-static bool dt_domain_found = false;
+-
+-void pci_bus_assign_domain_nr(struct pci_bus *bus, struct device *parent)
+-{
+-	int domain = of_get_pci_domain_nr(parent->of_node);
+-
+-	if (domain >= 0) {
+-		dt_domain_found = true;
+-	} else if (dt_domain_found == true) {
+-		dev_err(parent, "Node %s is missing \"linux,pci-domain\" property in DT\n",
+-			parent->of_node->full_name);
+-		return;
+-	} else {
+-		domain = pci_get_new_domain_nr();
+-	}
+-
+-	bus->domain_nr = domain;
+-}
+-#endif
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 625a4ac..2279414 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -10,6 +10,8 @@
+ #include <linux/kernel.h>
+ #include <linux/delay.h>
+ #include <linux/init.h>
++#include <linux/of.h>
++#include <linux/of_pci.h>
+ #include <linux/pci.h>
+ #include <linux/pm.h>
+ #include <linux/slab.h>
+@@ -4447,6 +4449,54 @@ int pci_get_new_domain_nr(void)
+ {
+ 	return atomic_inc_return(&__domain_nr);
+ }
++
++#ifdef CONFIG_PCI_DOMAINS_GENERIC
++
++void pci_bus_assign_domain_nr(struct pci_bus *bus, struct device *parent)
++{
++	static int use_dt_domains = -1;
++	int domain = of_get_pci_domain_nr(parent->of_node);
++
++	/*
++	 * Check DT domain and use_dt_domains values.
++	 *
++	 * If DT domain property is valid (domain >= 0) and
++	 * use_dt_domains != 0, the DT assignment is valid since this means
++	 * we have not previously allocated a domain number by using
++	 * pci_get_new_domain_nr(); we should also update use_dt_domains to
++	 * 1, to indicate that we have just assigned a domain number from
++	 * DT.
++	 *
++	 * If DT domain property value is not valid (ie domain < 0), and we
++	 * have not previously assigned a domain number from DT
++	 * (use_dt_domains != 1) we should assign a domain number by
++	 * using the:
++	 *
++	 * pci_get_new_domain_nr()
++	 *
++	 * API and update the use_dt_domains value to keep track of method we
++	 * are using to assign domain numbers (use_dt_domains = 0).
++	 *
++	 * All other combinations imply we have a platform that is trying
++	 * to mix domain numbers obtained from DT and pci_get_new_domain_nr(),
++	 * which is a recipe for domain mishandling and it is prevented by
++	 * invalidating the domain value (domain = -1) and printing a
++	 * corresponding error.
++	 */
++	if (domain >= 0 && use_dt_domains) {
++		use_dt_domains = 1;
++	} else if (domain < 0 && use_dt_domains != 1) {
++		use_dt_domains = 0;
++		domain = pci_get_new_domain_nr();
++	} else {
++		dev_err(parent, "Node %s has inconsistent \"linux,pci-domain\" property in DT\n",
++			parent->of_node->full_name);
++		domain = -1;
++	}
++
++	bus->domain_nr = domain;
++}
++#endif
+ #endif
+ 
+ /**
 -- 
-1.7.9.5
+2.1.2
