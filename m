@@ -1,101 +1,121 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: Re: [PATCH 1/2] crypto: Add Imagination Technologies hw hash accelerator
-Date: Tue, 11 Nov 2014 17:12:24 +0200
-Message-ID: <54622758.7050907@mentor.com>
-References: <1415621455-10468-1-git-send-email-james.hartley@imgtec.com> <1415621455-10468-2-git-send-email-james.hartley@imgtec.com> <5460D540.6070205@mentor.com> <72BC0C8BD7BB6F45988A99382E5FBAE54433BAC5@hhmail02.hh.imgtec.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <72BC0C8BD7BB6F45988A99382E5FBAE54433BAC5@hhmail02.hh.imgtec.org>
-Sender: linux-crypto-owner@vger.kernel.org
-To: James Hartley <James.Hartley@imgtec.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-Cc: "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>, "davem@davemloft.net" <davem@davemloft.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "joe@perches.com" <joe@perches.com>, "mchehab@osg.samsung.com" <mchehab@osg.samsung.com>, "crope@iki.fi" <crope@iki.fi>, "jg1.han@samsung.com" <jg1.han@samsung.com>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "abrestic@chromium.org" <abrestic@chromium.org>, Ezequiel Garcia <Ezequiel.Garcia@imgtec.com>
+From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v3] of/fdt: export fdt blob as /sys/firmware/fdt
+Date: Tue, 11 Nov 2014 16:25:46 +0100
+Message-ID: <1415719546-14076-1-git-send-email-ard.biesheuvel@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, geoff.levand-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi James,
+Create a new /sys entry '/sys/firmware/fdt' to export the FDT blob
+that was passed to the kernel by the bootloader. This allows userland
+applications such as kexec to access the raw binary.
 
-On 11.11.2014 16:59, James Hartley wrote:
-> Hi Vladimir, thanks for the review! 
-> 
->> -----Original Message-----
->> From: Vladimir Zapolskiy [mailto:vladimir_zapolskiy@mentor.com]
->> Sent: 10 November 2014 15:10
->> To: James Hartley; herbert@gondor.apana.org.au; davem@davemloft.net;
->> grant.likely@linaro.org; robh+dt@kernel.org; akpm@linux-foundation.org;
->> gregkh@linuxfoundation.org; joe@perches.com;
->> mchehab@osg.samsung.com; crope@iki.fi; jg1.han@samsung.com; linux-
->> crypto@vger.kernel.org
->> Cc: devicetree@vger.kernel.org; pawel.moll@arm.com;
->> mark.rutland@arm.com; ijc+devicetree@hellion.org.uk;
->> galak@codeaurora.org; abrestic@chromium.org; Ezequiel Garcia
->> Subject: Re: [PATCH 1/2] crypto: Add Imagination Technologies hw hash
->> accelerator
->>
->> Hello James,
->>
->> On 10.11.2014 14:10, James Hartley wrote:
->>> This adds support for the Imagination Technologies hash accelerator
->>> that provides hardware acceleration for
->>> SHA1 SHA224 SHA256 and MD5 Hashes.
->>>
->>> Signed-off-by: James Hartley <james.hartley@imgtec.com>
->>> ---
->>
+The fact that this node does not reside under /sys/firmware/device-tree
+is deliberate: FDT is also used on arm64 UEFI/ACPI systems to
+communicate just the UEFI and ACPI entry points, but the FDT is never
+unflattened and used to configure the system.
 
-[snip]
+A CRC32 checksum is calculated over the entire FDT blob, and verified
+at late_initcall time. The sysfs entry is instantiated only if the
+checksum is valid, i.e., if the FDT blob has not been modified in the
+mean time. Otherwise, a warning is printed.
 
->>> +
->>> +	return 0;
->>> +
->>> +err_algs:
->>> +	spin_lock(&img_hash.lock);
->>> +	list_del(&hdev->list);
->>> +	spin_unlock(&img_hash.lock);
->>> +	dma_release_channel(hdev->dma_lch);
->>> +err_dma:
->>> +	iounmap(hdev->io_base);
->>
->> Mixing of devm_* resource initialization and commodity resource release
->> leads to double decrement of clock usage count reference.
-> 
-> Ok, changed to devm_iounmap
-> 
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+v3: keep checksum instead of copying the entire blob, and WARN on mismatch
 
-just one small comment, please double check, but most probably you don't
-need to call devm_iounmap() explicitly on error path.
+ drivers/of/Kconfig |  1 +
+ drivers/of/fdt.c   | 36 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 37 insertions(+)
 
-[snip]
-
-> 
->>
->>> +
->>> +static int img_hash_remove(struct platform_device *pdev) {
->>> +	static struct img_hash_dev *hdev;
->>> +
->>> +	hdev = platform_get_drvdata(pdev);
->>> +	if (!hdev)
->>> +		return -ENODEV;
->>> +	spin_lock(&img_hash.lock);
->>> +	list_del(&hdev->list);
->>> +	spin_unlock(&img_hash.lock);
->>> +
->>> +	img_unregister_algs(hdev);
->>> +
->>> +	tasklet_kill(&hdev->done_task);
->>> +	tasklet_kill(&hdev->dma_task);
->>> +	img_hash_dma_cleanup(hdev);
->>> +
->>> +	iounmap(hdev->io_base);
->>
->> Same as above, devres iounmap() is good enough.
-> 
-> Done
-> 
-
-Same as above, I suppose you can simply remove iounmap() call without
-adding explicit devm_iounmap().
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index 1a13f5b722c5..0348c208343c 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -23,6 +23,7 @@ config OF_FLATTREE
+ 	bool
+ 	select DTC
+ 	select LIBFDT
++	select CRC32
+ 
+ config OF_EARLY_FLATTREE
+ 	bool
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index d1ffca8b34ea..6742b6ae1b89 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -9,6 +9,7 @@
+  * version 2 as published by the Free Software Foundation.
+  */
+ 
++#include <linux/crc32.h>
+ #include <linux/kernel.h>
+ #include <linux/initrd.h>
+ #include <linux/memblock.h>
+@@ -22,10 +23,20 @@
+ #include <linux/libfdt.h>
+ #include <linux/debugfs.h>
+ #include <linux/serial_core.h>
++#include <linux/sysfs.h>
+ 
+ #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
+ #include <asm/page.h>
+ 
++static u32 of_fdt_crc32;
++
++static u32 of_fdt_get_crc32(void *fdt)
++{
++	static u32 const OF_FDT_CRC32_SEED = 0x04c11db7;
++
++	return crc32_be(OF_FDT_CRC32_SEED, fdt, fdt_totalsize(fdt));
++}
++
+ /*
+  * of_fdt_limit_memory - limit the number of regions in the /memory node
+  * @limit: maximum entries
+@@ -1003,6 +1014,8 @@ bool __init early_init_dt_verify(void *params)
+ 		return false;
+ 	}
+ 
++	of_fdt_crc32 = of_fdt_get_crc32(initial_boot_params);
++
+ 	return true;
+ }
+ 
+@@ -1103,4 +1116,27 @@ static int __init of_flat_dt_debugfs_export_fdt(void)
+ module_init(of_flat_dt_debugfs_export_fdt);
+ #endif
+ 
++#ifdef CONFIG_SYSFS
++static ssize_t of_fdt_raw_read(struct file *filp, struct kobject *kobj,
++			       struct bin_attribute *bin_attr,
++			       char *buf, loff_t off, size_t count)
++{
++	memcpy(buf, initial_boot_params + off, count);
++	return count;
++}
++
++static int __init of_fdt_raw_init(void)
++{
++	static struct bin_attribute of_fdt_raw_attr =
++		__BIN_ATTR(fdt, S_IRUSR, of_fdt_raw_read, NULL, 0);
++
++	if (WARN(of_fdt_crc32 != of_fdt_get_crc32(initial_boot_params),
++		 "CRC check failed on binary FDT"))
++		return -EFAULT;
++	of_fdt_raw_attr.size = fdt_totalsize(initial_boot_params);
++	return sysfs_create_bin_file(firmware_kobj, &of_fdt_raw_attr);
++}
++late_initcall(of_fdt_raw_init);
++#endif
++
+ #endif /* CONFIG_OF_EARLY_FLATTREE */
+-- 
+1.8.3.2
 
 --
-With best wishes,
-Vladimir
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
