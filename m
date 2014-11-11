@@ -1,53 +1,66 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH v7 6/7] drm: bridge/dw-hdmi: convert dw-hdmi to drm_bridge
- mode
-Date: Tue, 11 Nov 2014 22:50:46 +0800
-Message-ID: <54622246.9080302@rock-chips.com>
-References: <1415710229-11935-1-git-send-email-andy.yan@rock-chips.com>
- <1415710469-12213-1-git-send-email-andy.yan@rock-chips.com>
- <54621EF7.4000300@imgtec.com>
+From: =?windows-1252?Q?Andreas_F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: create an include directory for DT bindings
+Date: Tue, 11 Nov 2014 15:51:14 +0100
+Message-ID: <54622262.2010200@suse.de>
+References: <1415712108-11352-1-git-send-email-bintian.wang@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <54621EF7.4000300@imgtec.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Dave Airlie <airlied@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, ykk@rock-chips.com, Grant Likely <grant.likely@linaro.org>, djkurtz@google.com, Shawn Guo <shawn.guo@linaro.org>, jay.xu@rock-chips.com, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415712108-11352-1-git-send-email-bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgWnViYWlyTEs6Ck9uIDIwMTTlubQxMeaciDEx5pelIDIyOjM2LCBadWJhaXIgTHV0ZnVsbGFo
-IEtha2FraGVsIHdyb3RlOgo+IEhpIEFuZHksCj4KPiBPbiAxMS8xMS8xNCAxMjo1NCwgQW5keSBZ
-YW4gd3JvdGU6Cj4+IEZyb206IFlha2lyIFlhbmcgPHlra0Byb2NrLWNoaXBzLmNvbT4KPj4KPj4g
-a2VlcCB0aGUgY29ubmVjdG9yICYgYmlyZGdlIGluIGR3X2hkbWkuYywgaGFuZGxlIGVuY29kZXIg
-aW4gZHdfaGRtaS1pbXguYwo+IElzIHRoZXJlIGEgcmVhc29uIGZvciB0aGlzIHNlcGFyYXRpb24/
-IEtlZXBpbmcgZW5jb2RlciBpbiBwbGF0Zm9ybSBmaWxlcz8KPiBJZiB5ZXMsIHRoZW4gdGhlIGNv
-bW1pdCBtZXNzYWdlIHNob3VsZCBleHBsYWluIHRoYXQuCiAgICBpbiB0aGUgZW5jb2RlciwgbW9z
-dCBvcGVyYXRpb24gYXJlIHBsYXRmb3JtIHNwZWNpZmljLCBzdWNoIGFzCiAgIG11eCB0byBzZWxl
-Y3Qgd2hpY2ggY3J0YyBpcyB1c2VkLCAgc2V0IHBhbmVsIGZvcm1hdCBldGMsIHRoZXNlIG9wZXJh
-dGlvbgogICBjb21wbGV0ZSBieSBwbGF0Zm9ybSBzcGVjaWZpYyBpbnRlcmZhY2UKPj4gU2lnbmVk
-LW9mZi1ieTogQW5keSBZYW4gPGFuZHkueWFuQHJvY2stY2hpcHMuY29tPgo+PiBTaWduZWQtb2Zm
-LWJ5OiBZYWtpciBZYW5nIDx5a2tAcm9jay1jaGlwcy5jb20+Cj4+Cj4+IC0tLQo+Pgo+PiBDaGFu
-Z2VzIGluIHY3OiBOb25lCj4+IENoYW5nZXMgaW4gdjY6Cj4+IC0gbW92ZSBzb21lIG1vZGlmaWNh
-dGlvbiBmcm9tIHBhdGNoIzUKPj4KPj4gQ2hhbmdlcyBpbiB2NTogTm9uZQo+PiBDaGFuZ2VzIGlu
-IHY0OiBOb25lCj4+IENoYW5nZXMgaW4gdjM6IE5vbmUKPj4gQ2hhbmdlcyBpbiB2MjogTm9uZQo+
-Pgo+PiAgIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvZHdfaGRtaS5jICAgICAgfCAyMjggKysrKysr
-KysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0tLQo+PiAgIGRyaXZlcnMvc3RhZ2luZy9pbXgtZHJt
-L2R3X2hkbWktaW14LmMgfCAxNDUgKysrKysrKysrKysrKystLS0tLS0tCj4+ICAgaW5jbHVkZS9k
-cm0vYnJpZGdlL2R3X2hkbWkuaCAgICAgICAgICB8ICAxMyArLQo+PiAgIDMgZmlsZXMgY2hhbmdl
-ZCwgMTk5IGluc2VydGlvbnMoKyksIDE4NyBkZWxldGlvbnMoLSkKPgo+IFJlZ2FyZHMKPiBadWJh
-aXJMSwo+Cj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-PiBMaW51eC1yb2NrY2hpcCBtYWlsaW5nIGxpc3QKPiBMaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZy
-YWRlYWQub3JnCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9s
-aW51eC1yb2NrY2hpcAo+Cj4KPgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmRldmVsIG1haWxpbmcgbGlzdApkZXZlbEBsaW51eGRyaXZlcnByb2plY3Qu
-b3JnCmh0dHA6Ly9kcml2ZXJkZXYubGludXhkcml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaXZlcmRldi1kZXZlbAo=
+Hi,
+
+Am 11.11.2014 um 14:21 schrieb Bintian Wang:
+> Some header files may be used by both DT files and kernel, and we
+> usually put them under <include/dt-bindings/>, and also include them
+> in DT files just like:
+>     #include <dt-bindings/xxx/xxx.h>
+> for exaple, some clock header files.
+>=20
+> On arm64 platform, the compiler will report an error and terminate
+> when compiling DT files:
+>     dt-bindings/xxx/xxx.h: No such file or directory
+>=20
+> In order to fix the compile error, create an include directory and sy=
+mlink
+> dt-bindings from there to the actual location of include/dt-bindings/=
+:
+>=20
+> arch/arm64/boot/dts/include/dt-bindings -> ../../../../../include/dt-=
+bindings
+>=20
+> Signed-off-by: Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/include/dt-bindings | 1 +
+>  1 file changed, 1 insertion(+)
+>  create mode 120000 arch/arm64/boot/dts/include/dt-bindings
+>=20
+> diff --git a/arch/arm64/boot/dts/include/dt-bindings b/arch/arm64/boo=
+t/dts/include/dt-bindings
+> new file mode 120000
+> index 0000000..08c00e4
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/include/dt-bindings
+> @@ -0,0 +1 @@
+> +../../../../../include/dt-bindings
+> \ No newline at end of file
+
+Such a patch was already on the list for the Juno board.
+
+Regards,
+Andreas
+
+--=20
+SUSE LINUX GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 21284 AG N=FCrn=
+berg
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
