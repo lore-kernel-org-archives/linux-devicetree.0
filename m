@@ -1,53 +1,39 @@
-From: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 01/22] dt/bindings: fix documentation of ethernet-phy compatible property
-Date: Tue, 11 Nov 2014 18:37:19 +0100
-Message-ID: <1415727460-20417-2-git-send-email-johan@kernel.org>
+From: Johan Hovold <johan@kernel.org>
+Subject: [PATCH 19/22] dt/bindings: add micrel,rmii_ref_clk_sel_25_mhz to eth-phy binding
+Date: Tue, 11 Nov 2014 18:37:37 +0100
+Message-ID: <1415727460-20417-20-git-send-email-johan@kernel.org>
 References: <1415727460-20417-1-git-send-email-johan@kernel.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415727460-20417-1-git-send-email-johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1415727460-20417-1-git-send-email-johan@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-A recent commit extended the documentation of the ethernet-phy
-compatible property, but placed the new paragraph under the max-speed
-property.
+Add "micrel,rmii_ref_clk_sel_25_mhz" to Micrel ethernet PHY binding
+documentation.
 
-Fixes: f00e756ed12d ("dt: Document a compatible entry for MDIO ethernet
-Phys")
-
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- Documentation/devicetree/bindings/net/phy.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/net/micrel.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
-index 5b8c58903077..40831fbaff72 100644
---- a/Documentation/devicetree/bindings/net/phy.txt
-+++ b/Documentation/devicetree/bindings/net/phy.txt
-@@ -19,7 +19,6 @@ Optional Properties:
-   specifications. If neither of these are specified, the default is to
-   assume clause 22. The compatible list may also contain other
-   elements.
--- max-speed: Maximum PHY supported speed (10, 100, 1000...)
+diff --git a/Documentation/devicetree/bindings/net/micrel.txt b/Documentation/devicetree/bindings/net/micrel.txt
+index a1bab5eaae02..9b08dd6551dd 100644
+--- a/Documentation/devicetree/bindings/net/micrel.txt
++++ b/Documentation/devicetree/bindings/net/micrel.txt
+@@ -19,6 +19,11 @@ Optional properties:
  
-   If the phy's identifier is known then the list may contain an entry
-   of the form: "ethernet-phy-idAAAA.BBBB" where
-@@ -29,6 +28,8 @@ Optional Properties:
-             4 hex digits. This is the chip vendor OUI bits 19:24,
-             followed by 10 bits of a vendor specific ID.
+               See the respective PHY datasheet for the mode values.
  
-+- max-speed: Maximum PHY supported speed (10, 100, 1000...)
++ - micrel,rmii_ref_clk_sel_25_mhz: rmii_ref_clk_sel bit selects 25 MHz mode
 +
- Example:
++		Whether 25 MHz (rather than 50 Mhz) clock mode is selected
++		when the rmii_ref_clk_sel bit is set.
++
+  - clocks, clock-names: contains clocks according to the common clock bindings.
  
- ethernet-phy@0 {
+               supported clocks:
 -- 
 2.0.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
