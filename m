@@ -1,95 +1,52 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH] mmc: dw_mmc: try pick the exact same voltage as vmmc for vqmmc
-Date: Tue, 11 Nov 2014 09:52:47 +0100
-Message-ID: <CAPDyKFqUoBjhsbz8rkLa9PY_dpgMxnimz3k7OoA5WVhi7MacPQ@mail.gmail.com>
-References: <1415109789-7046-1-git-send-email-addy.ke@rock-chips.com>
-	<1415678573-6093-1-git-send-email-addy.ke@rock-chips.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 0/5] ARM: sunxi: Add support for USB OTG PHY
+Date: Tue, 11 Nov 2014 10:11:29 +0100
+Message-ID: <5461D2C1.6020505@redhat.com>
+References: <cover.1415645258.git.rbyshko@gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1415678573-6093-1-git-send-email-addy.ke@rock-chips.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Addy Ke <addy.ke@rock-chips.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Dinh Nguyen <dinguyen@altera.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, Doug Anderson <dianders@chromium.org>, Sonny Rao <sonnyrao@chromium.org>, amstan@chromium.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-rockchip@lists.infr
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBWVFQ6RQKGQEOK6R3YI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <cover.1415645258.git.rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11 November 2014 05:02, Addy Ke <addy.ke@rock-chips.com> wrote:
-> SD2.0 cards need vqmmc and vmmc to be the same.
+Hi,
 
-No, that's not correct.
+On 11/10/2014 07:55 PM, Roman Byshko wrote:
+> Hi,
+> 
+> There is already support for two USB phys, which are used for
+> USB host controllers on Allwinner SoC aka sunxi.
+> 
+> This patch series add support for the USB OTG phy (aka phy0).
+> 
+> The code has been tested on Allwinner A20 aka sun7i (Cubietruck).
+> 
+> Best regards,
+> Roman Byshko
 
-If I remember the spec correctly, the bus signal threshold is 0.75 * VDD.
+First of all very cool that you're working on this, I somehow missed
+v1, but I'm very happy to see this.
 
-> But vqmmc call regulator_set_voltage to set min_uv(2.7v) as far as possible.
+Second some questions, this series seems to only add support for
+initializing the phy, without adding the necessary magic for
+switching from app to host mode, and without actually hooking up musb,
+I assume you've a follow up series adding musb support, which actually
+uses the phy ?
 
-I guess you want to do that to save as much power as possible.
+Also have you coordinated your work with ChenYu? ATM ChenYu is mostly
+working on other stuff, but AFAIk he has been working on musb support
+in the past.
 
-> So if we set vmmc 3.3V in dt table, we will get error information as follows:
->
-> [   17.785398] mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot req
-> 50000000Hz, actual 50000000HZ div = 0)
-> [   17.795175] mmc1: new high speed SDHC card at address e624
-> [   17.801283] mmcblk1: mmc1:e624 SU08G 7.40 GiB
-> [   17.816033]  mmcblk1: p1
-> [   17.839318] mmcblk1: error -110 sending status command, retrying
-> [   17.845363] mmcblk1: error -115 sending stop command, original cmd
-> response 0x900, card status 0x800b00
-> [   17.854758] mmcblk1: error -84 transferring data, sector 32, nr 24,
-> cmd response 0x900, card status 0xb00
-> [   17.864328] mmcblk1: retrying using single block read
-> [   17.873647] mmcblk1: error -110 sending status command, retrying
-> [   17.879660] mmcblk1: error -84 transferring data, sector 44, nr 12,
-> cmd response 0x900, card status 0x0
-> [   17.889051] end_request: I/O error, dev mmcblk1, sector 44
-> [   17.895594] Buffer I/O error on device mmcblk1, logical block 5
-> [   17.902484] mmcblk1: error -110 sending status command, retrying
-> [   17.908498] mmcblk1: error -84 transferring data, sector 50, nr 6,
-> cmd response 0x900, card status 0x0
-> [   17.917802] end_request: I/O error, dev mmcblk1, sector 50
-> [   17.924984] Buffer I/O error on device mmcblk1, logical block 6
-> [   18.431258] mmc_host mmc1: Timeout sending command (cmd 0x200000 arg
-> 0x0 status 0x80200000)
->
-> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
-> ---
->  drivers/mmc/host/dw_mmc.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-> index b4c3044..a8b70b5 100644
-> --- a/drivers/mmc/host/dw_mmc.c
-> +++ b/drivers/mmc/host/dw_mmc.c
-> @@ -1163,8 +1163,14 @@ static int dw_mci_switch_voltage(struct mmc_host *mmc, struct mmc_ios *ios)
->          */
->         uhs = mci_readl(host, UHS_REG);
->         if (ios->signal_voltage == MMC_SIGNAL_VOLTAGE_330) {
-> -               min_uv = 2700000;
-> -               max_uv = 3600000;
-> +               /* try pick the exact same voltage as vmmc for vqmmc */
+Regards,
 
-This seems like a generic SD protocol issue.
-
-Should we maybe provide some helper function from the mmc core, which
-in principle take the negotiated card->ocr into account while
-calculating the signal voltage level. Typically min_uv should be 0.75
-x (card->ocr), for these cases.
-
-Comments?
-
-> +               if (!IS_ERR(mmc->supply.vmmc)) {
-> +                       min_uv = regulator_get_voltage(mmc->supply.vmmc);
-> +                       max_uv = min_uv;
-> +               } else {
-> +                       min_uv = 2700000;
-> +                       max_uv = 3600000;
-> +               }
->                 uhs &= ~v18;
->         } else {
->                 min_uv = 1700000;
-> --
-> 1.8.3.2
->
->
-
-Kind regards
-Uffe
+Hans
