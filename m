@@ -1,37 +1,81 @@
-From: Joakim Tjernlund <joakim.tjernlund@transmode.se>
-Subject: Re: [PATCH] DT: add MDIO node for FMan node
-Date: Tue, 11 Nov 2014 23:27:47 +0100
-Message-ID: <OF15DE84DA.A166DEAF-ONC1257D8D.007B1CCE-C1257D8D.007B6562@transmode.se>
-References: <1415102196-9238-1-git-send-email-shh.xie@gmail.com>
- <1415665384.15957.16.camel@freescale.com>
- <fb6dc6131da04e89bfc31bd8278030a0@DM2PR0301MB0864.namprd03.prod.outlook.com>
- <1415727479.15957.29.camel@freescale.com>
+From: Hartmut Knaack <knaack.h@gmx.de>
+Subject: Re: [PATCH v4 2/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
+Date: Tue, 11 Nov 2014 23:39:34 +0100
+Message-ID: <54629026.3080002@gmx.de>
+References: <1415028270-25860-1-git-send-email-iivanov@mm-sol.com>	 <1415028270-25860-3-git-send-email-iivanov@mm-sol.com>	 <54612A0D.7020308@gmx.de> <1415694109.22935.13.camel@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1415727479.15957.29.camel@freescale.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Scott Wood <scottwood@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Xie Shaohui-B21989 <Shaohui.Xie@freescale.com>, Medve Emilian-EMMEDVE1 <Emilian.Medve@freescale.com>, Liberman Igal-B31950 <Igal.Liberman@freescale.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1415694109.22935.13.camel@mm-sol.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Stanimir Varbanov <svarbanov@mm-sol.com>, Angelo Compagnucci <angelo.compagnucci@gmail.com>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-PiA+Cj4gPiBUaGUgVEJJIGltcGxlbWVudHMgdHJhbnNtaXQvcmVjZWl2ZSBwb3J0aW9ucyBvZiBQ
-Q1MsIGl0J3Mgbm90IHVzZWQgaW4KPiA+IExpbnV4LiBUaGUgUENTIG9uIEZtYW4gVjMgYXJlIG5v
-dCBqdXN0IGZvciBTR01JSSwgaXQgaGFzIG1vcmUKPiA+IGltcGxlbWVudGF0aW9ucywgaXQncyB1
-c2VkIGluIExpbnV4LgoKSXQgaXMgdXNlZCBmb3IgUEhZIGxlc3MgbW9kZShha2EgZml4ZWQgUEhZ
-KSBhbmQgbmVlZHMgdG8gYmUgZXhwb3NlZCB0bwpsaW51eCBzbyBpdCBpcyBwb3NzaWJsZSB0byBz
-ZWxlY3QgU0dNSUkvMTAwMEJBU0UtWCwgQXV0b05lZyBldGMuCgo+IAo+IFRoZSBkZXZpY2UgdHJl
-ZSBpcyBhYm91dCB0aGUgaGFyZHdhcmUsIG5vdCB3aGF0J3MgdXNlZCBpbiBMaW51eC4KPiAKPiAt
-U2NvdHQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxp
-bnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0
-cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+Ivan T. Ivanov schrieb am 11.11.2014 09:21:
+> Hi Hartmut,
+> 
+> On Mon, 2014-11-10 at 22:11 +0100, Hartmut Knaack wrote:
+>> Ivan T. Ivanov schrieb am 03.11.2014 16:24:
+>>> From: Stanimir Varbanov <svarbanov@mm-sol.com>
+>>>
+>>> The voltage ADC is peripheral of Qualcomm SPMI PMIC chips. It has
+>>> 15 bits resolution and register space inside PMIC accessible across
+>>> SPMI bus.
+>>>
+>>> The vadc driver registers itself through IIO interface.
+>> Reviewing again, I got the feeling that due to the complexity of adc reads (writing to register 
+>> to start conversion, waiting a decent time for the conversion to complete, reading the result), 
+>> it would be beneficial to use a mutex in vadc_read_raw or its depending functions.
+> 
+> Hm, yes, but there is such a nice info_exist_lock :-) in core functions,
+> which in practice serve the same purpose.
+I seem to miss that. Please point me in the right direction.
+> 
+>> Also, I would want to double-check that the CPU in this type of chips is little endian.
+> 
+> Yes, it is.
+> 
+>> Besides that, a few minor issues inline.
+> 
+>>> +static int vadc_probe(struct platform_device *pdev)
+>>> +{
+>>> +       struct device_node *node = pdev->dev.of_node;
+>>> +       struct device *dev = &pdev->dev;
+>>> +       struct iio_dev *indio_dev;
+>>> +       struct vadc_priv *vadc;
+>>> +       struct regmap *regmap;
+>>> +       int ret, irq_eoc;
+>>> +       u32 res;
+>> Since vadc->base is u16, shouldn't res be u16 as well? Also think about naming it reg, as this is 
+>> the property name in DT.
+> 
+> Yes, but #address-cells for the node is 1, so I would like to keep it 32 bits.
+> 
+>>> +
+>>> +       regmap = dev_get_regmap(dev->parent, NULL);
+>>> +       if (!regmap)
+>>> +       return -ENODEV;
+>>> +
+>>> +       ret = of_property_read_u32(node, "reg", &res);
+>> For u16, there would be of_property_read_u16().
+>>> +       if (ret < 0)
+>>> +       return -ENODEV;
+>> Just return ret here?
+> 
+> I am usually trying to follow these recommendations[1]. In practice driver
+> core cares only for EPROBE_DEFER, ENODEV and ENXIO, while of_property_read_u32()
+> can return ENODATA and EOVERFLOW, which did't not make sense for the core.
+Please point me in the right direction on this one, too. It is pretty common to pass error codes up, as it is also mentioned in [1].
+Yet, this thread in [1] seems more like a draft to me, as Greg K-H wrote in the end: "Fair enough, care to respin this and send it out to me for review?"
+> 
+> Thank you,
+> Ivan
+> 
+> [1] http://www.gossamer-threads.com/lists/linux/kernel/1010603
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
