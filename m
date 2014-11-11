@@ -1,50 +1,89 @@
-From: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH V2 1/1] ARM: dts: sunxi: Banana Pi: increase startup-delay for the GMAC PHY regulator
-Date: Wed, 12 Nov 2014 00:01:46 +0100
-Message-ID: <1415746906-20835-2-git-send-email-merker@debian.org>
-References: <1415539714-7652-1-git-send-email-merker@debian.org>
- <1415746906-20835-1-git-send-email-merker@debian.org>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 4/5] ARM: berlin: Add AHCI and SATA PHY nodes to BG2
+Date: Wed, 12 Nov 2014 00:23:07 +0100
+Message-ID: <54629A5B.9050209@gmail.com>
+References: <1413882477-27922-1-git-send-email-sebastian.hesselbarth@gmail.com> <1414664488-5911-1-git-send-email-sebastian.hesselbarth@gmail.com> <1414664488-5911-5-git-send-email-sebastian.hesselbarth@gmail.com>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415746906-20835-1-git-send-email-merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1414664488-5911-5-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, =?UTF-8?B?QW50b2luZSBUw6luYXJ0?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On the LeMaker Banana Pi, probing the external ethernet PHY connected
-to the SoC's internal GMAC module sometimes fails. The PHY power
-supply is handled via a GPIO-controlled regulator, and the existing
-regulator startup-delay of 50000us is too short to make sure that the
-PHY is always fully powered up when it is queried by phylib. Tests
-have shown that to provide a reliable PHY detection, the startup-delay
-has to be increased to at least 60000us. To have a certain safety margin
-and to cater for manufacturing variations between different boards,
-the delay gets set to 100000us as discussed on the linux-arm-kernel
-mailinglist.
+On 30.10.2014 11:21, Sebastian Hesselbarth wrote:
+> Add DT nodes for the AHCI controller and SATA PHY found on Marvell
+> Berlin2 SoCs.
+>
+> Acked-by: Antoine T=C3=A9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org=
+>
 
-Signed-off-by: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Acked-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/sun7i-a20-bananapi.dts |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Applied both DT patches to berlin/dt.
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-index 3de847d..1cf1214 100644
---- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-@@ -207,7 +207,7 @@
- 		regulator-name = "gmac-3v3";
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
--		startup-delay-us = <50000>;
-+		startup-delay-us = <100000>;
- 		enable-active-high;
- 		gpio = <&pio 7 23 0>;
- 	};
--- 
-1.7.10.4
+Sebastian
+
+> ---
+>   arch/arm/boot/dts/berlin2.dtsi | 39 +++++++++++++++++++++++++++++++=
+++++++++
+>   1 file changed, 39 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berli=
+n2.dtsi
+> index 9d7c810ebd0b..f39090491eb2 100644
+> --- a/arch/arm/boot/dts/berlin2.dtsi
+> +++ b/arch/arm/boot/dts/berlin2.dtsi
+> @@ -246,6 +246,45 @@
+>   			};
+>   		};
+>
+> +		ahci: sata@e90000 {
+> +			compatible =3D "marvell,berlin2-ahci", "generic-ahci";
+> +			reg =3D <0xe90000 0x1000>;
+> +			interrupts =3D <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks =3D <&chip CLKID_SATA>;
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +
+> +			sata0: sata-port@0 {
+> +				reg =3D <0>;
+> +				phys =3D <&sata_phy 0>;
+> +				status =3D "disabled";
+> +			};
+> +
+> +			sata1: sata-port@1 {
+> +				reg =3D <1>;
+> +				phys =3D <&sata_phy 1>;
+> +				status =3D "disabled";
+> +			};
+> +		};
+> +
+> +		sata_phy: phy@e900a0 {
+> +			compatible =3D "marvell,berlin2-sata-phy";
+> +			reg =3D <0xe900a0 0x200>;
+> +			clocks =3D <&chip CLKID_SATA>;
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +			#phy-cells =3D <1>;
+> +			status =3D "disabled";
+> +
+> +			sata-phy@0 {
+> +				reg =3D <0>;
+> +			};
+> +
+> +			sata-phy@1 {
+> +				reg =3D <1>;
+> +			};
+> +		};
+> +
+>   		chip: chip-control@ea0000 {
+>   			compatible =3D "marvell,berlin2-chip-ctrl";
+>   			#clock-cells =3D <1>;
+>
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
