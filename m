@@ -1,65 +1,49 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 3/5] ASoC: rsnd: Document SoC-specific bindings
-Date: Tue, 11 Nov 2014 09:25:18 +0900
-Message-ID: <20141111002517.GF29665@verge.net.au>
-References: <1415646044-4168-1-git-send-email-geert+renesas@glider.be>
- <1415646044-4168-4-git-send-email-geert+renesas@glider.be>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v7 0/5] This is the 1st version of suspend for RK3288.
+Date: Tue, 11 Nov 2014 01:40:29 +0100
+Message-ID: <22835729.YDXmW0qp6M@diego>
+References: <1415368177-6637-1-git-send-email-zyw@rock-chips.com> <7hwq76pqyz.fsf@deeprootsystems.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1415646044-4168-4-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, alsa-devel@alsa-project.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7hwq76pqyz.fsf@deeprootsystems.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: Kevin Hilman <khilman@kernel.org>, dianders@chromium.org, mturquette@linaro.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Tony Xie <xxx@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 10, 2014 at 08:00:42PM +0100, Geert Uytterhoeven wrote:
-> The documentation only mentioned the generic fallback compatible
-> property.
-> Add the missing SoC-specific compatible properties, which are already in
-> use.
-> 
-> Also drop a bogus 0x unit-address prefix while we're at it.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Hi Chris,
 
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
+Am Freitag, 7. November 2014, 14:48:20 schrieb Kevin Hilman:
+> Chris Zhong <zyw@rock-chips.com> writes:
+> > RK3288 can shut down the cpu, gpu and other device controllers in suspend,
+> > and it will pull the GLOBAL_PWROFF pin to high in the final stage of the
+> > process of suspend, pull the pin to low again when resume.
+> 
+> The cover letter still doesn't state what this series applies to, or
+> what its dependencies are for testing, even though it was requested in
+> earlier reviews[1].  I discovered (again) by trial and error it applies
+> to current linux-next.  I also discovered (as was earlier discussed[2])
+> that it still does not resume using current upstream code, and those
+> dependencies are not described here either.  These are the kinds of
+> things that are crucial in a cover letter in order to help reviewers and
+> testers not have to spend time digging through the archives trying to
+> remember from the previous round of reviews.
+> 
+> Please, please list the out-of-tree dependencies, and how to test,
+> including how you tested it, and on what hardware.
 
-> ---
->  Documentation/devicetree/bindings/sound/renesas,rsnd.txt | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-> index aa697abf337e7aa6..2dd690bc19cc6436 100644
-> --- a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-> +++ b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-> @@ -1,8 +1,12 @@
->  Renesas R-Car sound
->  
->  Required properties:
-> -- compatible			: "renesas,rcar_sound-gen1" if generation1
-> +- compatible			: "renesas,rcar_sound-<soctype>", fallbacks
-> +				  "renesas,rcar_sound-gen1" if generation1, and
->  				  "renesas,rcar_sound-gen2" if generation2
-> +				  Examples with soctypes are:
-> +				    - "renesas,rcar_sound-r8a7790" (R-Car H2)
-> +				    - "renesas,rcar_sound-r8a7791" (R-Car M2-W)
->  - reg				: Should contain the register physical address.
->  				  required register is
->  				   SRU/ADG/SSI      if generation1
-> @@ -35,9 +39,9 @@ DAI subnode properties:
->  
->  Example:
->  
-> -rcar_sound: rcar_sound@0xffd90000 {
-> +rcar_sound: rcar_sound@ec500000 {
->  	#sound-dai-cells = <1>;
-> -	compatible = "renesas,rcar_sound-gen2";
-> +	compatible = "renesas,rcar_sound-r8a7791", "renesas,rcar_sound-gen2";
->  	reg =	<0 0xec500000 0 0x1000>, /* SCU */
->  		<0 0xec5a0000 0 0x100>,  /* ADG */
->  		<0 0xec540000 0 0x1000>, /* SSIU */
-> -- 
-> 1.9.1
-> 
+I'll second what Kevin said.
+
+I guess the regulator suspend handling [0] is one of the requirements, but I'd 
+think there is more. And while Doug had a quite long list of suspend-related 
+patches in his try, for now we'll need the minimal set to enable this series 
+to sucessfully wake the system again after going to suspend.
+
+
+Heiko
+
+
+[0] 
+https://git.kernel.org/cgit/linux/kernel/git/broonie/regulator.git/log/?h=topic/suspend
