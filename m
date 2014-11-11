@@ -1,146 +1,265 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Re: [PATCH v4 0/5] simplefb: add clock handling code
-Date: Tue, 11 Nov 2014 21:49:50 +0000
-Message-ID: <20141111214950.7FCABC41610@trevor.secretlab.ca>
-References: <1413996311-4287-1-git-send-email-hdegoede@redhat.com>
-	<544F737A.7000109@ti.com>
-	<CAL_JsqJ2JRg7k21CEVe4-At7enD+y3TN_7wfqhY0OHZm-_j17w@mail.gmail.com>
-	<544F7E5D.60104@redhat.com> <5450CAA5.5020205@ti.com>
-	<CAL_JsqKWqq+H5ymUW3n8tkmLJHEUGaKDLX5+orJmGUQ3ECQwUQ@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH] coresight: bindings for coresight drivers
+Date: Tue, 11 Nov 2014 14:52:17 -0700
+Message-ID: <CANLsYkxok7LVGey6tPqmt42GEAs8R7SYAG_cs4VRjYeqkwKEKw@mail.gmail.com>
+References: <1415727960-29524-1-git-send-email-mathieu.poirier@linaro.org>
+	<CAL_JsqLXTx9jWT3sm3wnu1oWCk_VH_CUjfVX7t1HEA_9BfSeAg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCJP567ORICBBAUJRKRQKGQE44AVRZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAL_JsqKWqq+H5ymUW3n8tkmLJHEUGaKDLX5+orJmGUQ3ECQwUQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLXTx9jWT3sm3wnu1oWCk_VH_CUjfVX7t1HEA_9BfSeAg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 1 Nov 2014 04:47:56 +0800
-, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
- wrote:
-> On Wed, Oct 29, 2014 at 7:08 PM, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> wrote:
-> > Hi Hans, Rob,
-> >
-> > On 28/10/14 13:30, Hans de Goede wrote:
-> >> Hi,
-> >>
-> >> On 10/28/2014 12:11 PM, Rob Herring wrote:
-> >
-> >>> Yes, I object to the binding still as it has not changed from what was
-> >>> previously posted.
-> >>
-> >> It would be helpful if you could explain why you object. Last time you
-> >> said: " You are mixing in a hardware description that is simply inaccurate."
-> >>
-> >> I then explained that this is not hardware description, but runtime state
-> >> information, as it tells the kernel which clocks were chosen to drive the
-> >> display (out of typically a list of possible options, depending on which
-> >> output is used, etc.). Just like which memory address the bootloader has
-> >> chosen to scan out the video image from.
-> >>
-> >> Then you got quiet, so sorry, but this time your objection really is too
-> >> late. You cannot simply go quiet halfway through a discussion and then pop
-> >> up again when a new version is posted to say "I object" yet another time,
-> >> you've had your chance to make your arguments last time, and chose to stay
-> >> quiet after I explained in detail that this is not hardware description but
-> >> state information, so now it is simply too late.
-> >>
-> >> These bindings have been discussed at Plumbers with various interested people
-> >> present, and the conclusion was that this really is the best way to handle this,
-> >> so this patch is:
-> >>
-> >>     Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> >>     Reviewed-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >>     Acked-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-> >>     Reviewed-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> >>
-> >> And David Herrman who is working on simpledrm, which will be merged soon, which
-> >> will also use the simplefb bindings also agrees. So we have the simplefb maintainer,
-> >> simpledrm maintainer, and the clk subsystem maintainer + 2 other maintainers all
-> >> agreeing on a way forward, the time for bikeshedding now really really really is
-> >> over.
-> >>
-> >> Tomi, can you please let us know how you plan to proceed with this ?
-> >
-> > I won't merge DT bindings via fbdev tree, if a DT maintainer says no.
-> >
-> > I took Rob's silence to the earlier series as a silent ack for your
-> > explanation. Obviously that was not the case.
-> >
-> > Rob, please advice asap what should be done to the bindings to get your
-> > ack. As Hans explained above, this discussion has been going on for a
-> > long time, and afaik this series is the best way forward of all the
-> > options discussed.
-> 
-> I still think for the most part this is a kernel problem. It is a
-> kernel policy to turn off unused clocks. The clock framework could
-> just as easily decide that any clocks enabled at boot and left
-> un-managed (i.e. w/o a driver) are kept on until they are managed. I'm
-> not saying this can't be in DT, only that DT is not the only solution
-> here. This problem is not unique to simplefb. A serial console could
-> stop working if no serial driver is loaded before unused clocks are
-> disabled. CPU core clocks have a similar issue as well (often enabled
-> in platform code). I want to see this solved in a generic way for any
-> clock.
+On 11 November 2014 11:04, Rob Herring <robherring2@gmail.com> wrote:
+> On Tue, Nov 11, 2014 at 11:46 AM,  <mathieu.poirier@linaro.org> wrote:
+>> Greg,
+>>
+>> Please consider this as a supplement to the coresight patchset.  It should have
+>> been sent with the rest of the patches but I missed the original ack from Rob
+>> Herring.
+>
+> Ummm...
+>
+>>
+>> Thanks,
+>> Mathieu
+>>
+>> From 69cae46640b8cdc836bf7b86211d5f2adf3d0270 Mon Sep 17 00:00:00 2001
+>> From: Mathieu Poirier <mathieu.poirier@linaro.org>
+>> Date: Thu, 7 Aug 2014 12:34:06 -0600
+>> Subject: [PATCH] coresight: bindings for coresight drivers
+>>
+>> Coresight IP blocks allow for the support of HW assisted tracing
+>> on ARM SoCs.  Bindings for the currently available blocks are
+>> presented herein.
+>>
+>> Signed-off-by: Pratik Patel <pratikp@codeaurora.org>
+>> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+>
+> And you still did.
 
-I've spent most of today rereading the entire thread and thinking about
-this issue. Given that the clock binding is a well established core
-binding at this point, it is entirely reasonable for a generic driver to
-have part of the binding specify the clock resources that it depends on
-to keep working. The binding needs to be very clear that it is a mere
-dependency, and that the OS must not make any attempt to modify the
-clock settings, but it is reasonable indicate to the OS that the clocks
-are used by the firmware framebuffer, and turning them off will cause
-the framebuffer will break. The best place to provide that guidance is
-directly in the node.
+https://patchwork.ozlabs.org/patch/388318/
 
-If we were talking about a resource that didn't have a well established
-binding, ie, the video path configuration, then I'd still say no way
-because there is no way to do it generically. Claiming clocks on the
-other hand is straight forward and simple.
-
-Aside from wanting the documentation to be more explicit about what the
-driver does with the clocks, I don't have a problem with doing it.
-
-However, I am concerned about handover. I've lost track over the entire
-thread on whether the handover mechanism has been resolved, and I would
-really like to have a proposed solution to this documented in the
-binding. The fact that there is nothing tying the simple framebuffer to
-the actual hardware backing the framebuffer is concerning. It means the
-kernel needs to guess which graphics device is associated with the
-framebuffer.
-
-The best solution in my opinion is to embed the simplefb properties
-directly into the graphics device node (Yes, I know some have argued
-that the graphics subsystem is composed of multiple devices; That
-doesn't matter. Just choose one of the device nodes; the device that
-actually DMAs the video buffer is probably the correct choice). That
-makes it crystal clear which graphics controller owns the framebuffer.
-There is precedence in DT bindings for putting current state into the
-tree. offb.c is trying to solve the exact same problem. It also means
-that we can use the driver model to provide mutual exclusion between
-probing simplefb and a full-featured driver.
-
-That approach would require some modifications of the binding to make
-sure properties don't conflict with the device specific properties. The
-easiest way is to allow the properties to live in a sub node so that the
-reg property doesn't conflict.
-
-However, I'm not stuck on this approach. The solution must be
-unambiguious, and the handover mechanism must be thought through, but it
-doesn't /have/ to be what I suggested above if a proposal that can be
-well argued as better.
-
-Hans, let's talk about this tomorrow. #devicetree on freenode? It looks like
-I'm committed to volunteer at my daughters school tomorrow morning, but
-the afternoon looks good.
-
-g.
+>
+>
+>> ---
+>>  .../devicetree/bindings/arm/coresight.txt          | 204 +++++++++++++++++++++
+>>  1 file changed, 204 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/coresight.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+>> new file mode 100644
+>> index 0000000..d790f49
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+>> @@ -0,0 +1,204 @@
+>> +* CoreSight Components:
+>> +
+>> +CoreSight components are compliant with the ARM CoreSight architecture
+>> +specification and can be connected in various topologies to suit a particular
+>> +SoCs tracing needs. These trace components can generally be classified as
+>> +sinks, links and sources. Trace data produced by one or more sources flows
+>> +through the intermediate links connecting the source to the currently selected
+>> +sink. Each CoreSight component device should use these properties to describe
+>> +its hardware characteristcs.
+>> +
+>> +* Required properties for all components *except* non-configurable replicators:
+>> +
+>> +       * compatible: These have to be supplemented with "arm,primecell" as
+>> +         drivers are using the AMBA bus interface.  Possible values include:
+>> +               - "arm,coresight-etb10", "arm,primecell";
+>> +               - "arm,coresight-tpiu", "arm,primecell";
+>> +               - "arm,coresight-tmc", "arm,primecell";
+>> +               - "arm,coresight-funnel", "arm,primecell";
+>> +               - "arm,coresight-etm3x", "arm,primecell";
+>> +
+>> +       * reg: physical base address and length of the register
+>> +         set(s) of the component.
+>> +
+>> +       * clocks: the clock associated to this component.
+>> +
+>> +       * clock-names: the name of the clock as referenced by the code.
+>> +         Since we are using the AMBA framework, the name should be
+>> +         "apb_pclk".
+>> +
+>> +       * port or ports: The representation of the component's port
+>> +         layout using the generic DT graph presentation found in
+>> +         "bindings/graph.txt".
+>> +
+>> +* Required properties for devices that don't show up on the AMBA bus, such as
+>> +  non-configurable replicators:
+>> +
+>> +       * compatible: Currently supported value is (note the absence of the
+>> +         AMBA markee):
+>> +               - "arm,coresight-replicator"
+>> +
+>> +       * id: a unique number that will identify this replicator.
+>> +
+>> +       * port or ports: same as above.
+>> +
+>> +* Optional properties for ETM/PTMs:
+>> +
+>> +       * arm,cp14: must be present if the system accesses ETM/PTM management
+>> +         registers via co-processor 14.
+>> +
+>> +       * cpu: the cpu phandle this ETM/PTM is affined to. When omitted the
+>> +         source is considered to belong to CPU0.
+>> +
+>> +* Optional property for TMC:
+>> +
+>> +       * arm,buffer-size: size of contiguous buffer space for TMC ETR
+>> +        (embedded trace router)
+>> +
+>> +
+>> +Example:
+>> +
+>> +1. Sinks
+>> +       etb@20010000 {
+>> +               compatible = "arm,coresight-etb10", "arm,primecell";
+>> +               reg = <0 0x20010000 0 0x1000>;
+>> +
+>> +               coresight-default-sink;
+>> +               clocks = <&oscclk6a>;
+>> +               clock-names = "apb_pclk";
+>> +               port {
+>> +                       etb_in_port: endpoint@0 {
+>> +                               slave-mode;
+>> +                               remote-endpoint = <&replicator_out_port0>;
+>> +                       };
+>> +               };
+>> +       };
+>> +
+>> +       tpiu@20030000 {
+>> +               compatible = "arm,coresight-tpiu", "arm,primecell";
+>> +               reg = <0 0x20030000 0 0x1000>;
+>> +
+>> +               clocks = <&oscclk6a>;
+>> +               clock-names = "apb_pclk";
+>> +               port {
+>> +                       tpiu_in_port: endpoint@0 {
+>> +                               slave-mode;
+>> +                               remote-endpoint = <&replicator_out_port1>;
+>> +                       };
+>> +               };
+>> +       };
+>> +
+>> +2. Links
+>> +       replicator {
+>> +               /* non-configurable replicators don't show up on the
+>> +                * AMBA bus.  As such no need to add "arm,primecell".
+>> +                */
+>> +               compatible = "arm,coresight-replicator";
+>> +               /* this will show up in debugfs as "0.replicator" */
+>> +               id = <0>;
+>> +
+>> +               ports {
+>> +                       #address-cells = <1>;
+>> +                       #size-cells = <0>;
+>> +
+>> +                       /* replicator output ports */
+>> +                       port@0 {
+>> +                               reg = <0>;
+>> +                               replicator_out_port0: endpoint {
+>> +                                       remote-endpoint = <&etb_in_port>;
+>> +                               };
+>> +                       };
+>> +
+>> +                       port@1 {
+>> +                               reg = <1>;
+>> +                               replicator_out_port1: endpoint {
+>> +                                       remote-endpoint = <&tpiu_in_port>;
+>> +                               };
+>> +                       };
+>> +
+>> +                       /* replicator input port */
+>> +                       port@2 {
+>> +                               reg = <0>;
+>> +                               replicator_in_port0: endpoint {
+>> +                                       slave-mode;
+>> +                                       remote-endpoint = <&funnel_out_port0>;
+>> +                               };
+>> +                       };
+>> +               };
+>> +       };
+>> +
+>> +       funnel@20040000 {
+>> +               compatible = "arm,coresight-funnel", "arm,primecell";
+>> +               reg = <0 0x20040000 0 0x1000>;
+>> +
+>> +               clocks = <&oscclk6a>;
+>> +               clock-names = "apb_pclk";
+>> +               ports {
+>> +                       #address-cells = <1>;
+>> +                       #size-cells = <0>;
+>> +
+>> +                       /* funnel output port */
+>> +                       port@0 {
+>> +                               reg = <0>;
+>> +                               funnel_out_port0: endpoint {
+>> +                                       remote-endpoint =
+>> +                                                       <&replicator_in_port0>;
+>> +                               };
+>> +                       };
+>> +
+>> +                       /* funnel input ports */
+>> +                       port@1 {
+>> +                               reg = <0>;
+>> +                               funnel_in_port0: endpoint {
+>> +                                       slave-mode;
+>> +                                       remote-endpoint = <&ptm0_out_port>;
+>> +                               };
+>> +                       };
+>> +
+>> +                       port@2 {
+>> +                               reg = <1>;
+>> +                               funnel_in_port1: endpoint {
+>> +                                       slave-mode;
+>> +                                       remote-endpoint = <&ptm1_out_port>;
+>> +                               };
+>> +                       };
+>> +
+>> +                       port@3 {
+>> +                               reg = <2>;
+>> +                               funnel_in_port2: endpoint {
+>> +                                       slave-mode;
+>> +                                       remote-endpoint = <&etm0_out_port>;
+>> +                               };
+>> +                       };
+>> +
+>> +               };
+>> +       };
+>> +
+>> +3. Sources
+>> +       ptm@2201c000 {
+>> +               compatible = "arm,coresight-etm3x", "arm,primecell";
+>> +               reg = <0 0x2201c000 0 0x1000>;
+>> +
+>> +               cpu = <&cpu0>;
+>> +               clocks = <&oscclk6a>;
+>> +               clock-names = "apb_pclk";
+>> +               port {
+>> +                       ptm0_out_port: endpoint {
+>> +                               remote-endpoint = <&funnel_in_port0>;
+>> +                       };
+>> +               };
+>> +       };
+>> +
+>> +       ptm@2201d000 {
+>> +               compatible = "arm,coresight-etm3x", "arm,primecell";
+>> +               reg = <0 0x2201d000 0 0x1000>;
+>> +
+>> +               cpu = <&cpu1>;
+>> +               clocks = <&oscclk6a>;
+>> +               clock-names = "apb_pclk";
+>> +               port {
+>> +                       ptm1_out_port: endpoint {
+>> +                               remote-endpoint = <&funnel_in_port1>;
+>> +                       };
+>> +               };
+>> +       };
+>> --
+>> 1.9.1
+>>
