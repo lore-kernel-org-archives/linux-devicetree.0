@@ -1,40 +1,59 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: Re: [PATCH v7 5/7] drm: bridge/dw-hdmi: add support for multi byte
- register width access
-Date: Tue, 11 Nov 2014 14:48:02 +0000
-Message-ID: <546221A2.30706@imgtec.com>
-References: <1415710229-11935-1-git-send-email-andy.yan@rock-chips.com>
- <1415710432-12167-1-git-send-email-andy.yan@rock-chips.com>
- <54621B23.1020602@imgtec.com> <5462214F.4010504@rock-chips.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2] ARM: dts: sbc-t3x: add DVI display data
+Date: Tue, 11 Nov 2014 06:49:12 -0800
+Message-ID: <20141111144911.GK31454@atomide.com>
+References: <1413364186-23752-1-git-send-email-lifshitz@compulab.co.il>
+ <1414927198-7127-1-git-send-email-lifshitz@compulab.co.il>
+ <54561E45.7000404@compulab.co.il>
+ <20141110174845.GP31454@atomide.com>
+ <5461FAEF.3010607@compulab.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <5462214F.4010504@rock-chips.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Andy Yan <andy.yan@rock-chips.com>, airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Dave Airlie <airlied@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, ykk@rock-chips.com, Grant Likely <grant.likely@linaro.org>, djkurtz@google.com, Shawn Guo <shawn.guo@linaro.org>, jay.xu@rock-chips.com, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5461FAEF.3010607@compulab.co.il>
+Sender: linux-omap-owner@vger.kernel.org
+To: Igor Grinberg <grinberg@compulab.co.il>
+Cc: Dmitry Lifshitz <lifshitz@compulab.co.il>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAxMS8xMS8xNCAxNDo0NiwgQW5keSBZYW4gd3JvdGU6Cj4gCj4gT24gMjAxNOW5tDEx5pyI
-MTHml6UgMjI6MjAsIFp1YmFpciBMdXRmdWxsYWggS2FrYWtoZWwgd3JvdGU6Cj4+IEhpIEFuZHks
-Cj4+Cj4+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgcmVnLWlvLXdpZHRoIGJpbmRpbmcuCj4+Cj4+IEhl
-bmNlIHRoZSBiaW5kaW5nIHBhdGNoIHNob3VsZCBjb21lIGJlZm9yZSBpdC4KPj4KPiAgICBkbyB5
-b3UgbWVhbiB0aGF0IEkgc2hvdWxkIHB1dCBkdHMgYmluZGluZyBwYXRjaAo+ICAgIGJlZm9yZSB0
-aGlzIHBhdGNoPwoKWWVzLiBUaGUgcGF0Y2ggYWRkaW5nIHRoZSBiaW5kaW5nIHRvIHRoZSBEb2N1
-bWVudGF0aW9uIGZvbGRlciBjb21lcwpiZWZvcmUgdGhlIGRyaXZlciBpbXBsZW1lbnRpbmcgdGhl
-IGJpbmRpbmcuCgpadWJhaXJMSwoKPj4gT24gMTEvMTEvMTQgMTI6NTMsIEFuZHkgWWFuIHdyb3Rl
-Ogo+Pj4gT24gcm9ja2NoaXAgcmszMjg4LCBvbmx5IHdvcmQoMzItYml0KSBhY2Nlc3NlcyBhcmUK
-Pj4+IHBlcm1pdHRlZCBmb3IgaGRtaSByZWdpc3RlcnMuICBCeXRlIHdpZHRoIGFjY2Vzc2VzICh3
-cml0ZWIsCj4+PiByZWFkYikgZ2VuZXJhdGUgYW4gaW1wcmVjaXNlIGV4dGVybmFsIGFib3J0Lgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZlbCBtYWls
-aW5nIGxpc3QKZGV2ZWxAbGludXhkcml2ZXJwcm9qZWN0Lm9yZwpodHRwOi8vZHJpdmVyZGV2Lmxp
-bnV4ZHJpdmVycHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcml2ZXJkZXYtZGV2ZWwK
+* Igor Grinberg <grinberg@compulab.co.il> [141111 04:04]:
+> Hi Tony,
+> 
+> On 11/10/14 19:48, Tony Lindgren wrote:
+> > * Igor Grinberg <grinberg@compulab.co.il> [141102 04:08]:
+> >> On 11/02/14 13:19, Dmitry Lifshitz wrote:
+> >>> Add DSS related pinmux and display data nodes required to support
+> >>> DVI video out on SBC-T3530, SBC-T3730 and SBC-T3517.
+> >>>
+> >>> Signed-off-by: Dmitry Lifshitz <lifshitz@compulab.co.il>
+> >>
+> >> Acked-by: Igor Grinberg <grinberg@compulab.co.il>
+> > 
+> > Thanks applying into omap-for-v3.19/dt.
+> > 
+> > Are we now ready to drop the board-cm-*.c files?
+> 
+> Let's see, below is a list of things that are yet to be
+> supported in DT boot:
+> NAND, TV, LCD, Touchscreen, Audio (CM-T3x30), RTC (CM-T3517), CAN (CM-3517).
+
+OK great, hopefully that's mostly just configuring the .dts
+files.
+ 
+> We're rc4 now, so hopefully, we will be able to get all this in for 3.19
+> and then have the board files removed for 3.20.
+
+Yes something like that sounds good to me. We should allow at
+least one release for people to change over.
+
+> This way we can have 3.19 with both ways supported and do last checks.
+> 
+> Are you ok with this?
+
+Sure if you get the changes posted before -rc6, otherwise
+it will be too late for v3.19.
+
+Regards,
+
+Tony
