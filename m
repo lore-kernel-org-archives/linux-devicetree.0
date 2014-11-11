@@ -1,97 +1,80 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 3/6] mfd: ti_am335x_tscadc: Remove unwanted
- reg_se_cache save
-Date: Tue, 11 Nov 2014 12:26:24 +0000
-Message-ID: <20141111122623.GA24004@x1>
-References: <1415694844-11230-1-git-send-email-vigneshr@ti.com>
- <1415694844-11230-4-git-send-email-vigneshr@ti.com>
+From: Hongzhou Yang <hongzhou.yang@mediatek.com>
+Subject: [PATCH v3 0/3] Add Mediatek SoC Pinctrl/GPIO driver for MT8135.
+Date: Tue, 11 Nov 2014 20:38:52 +0800
+Message-ID: <1415709535-31515-1-git-send-email-hongzhou.yang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1415694844-11230-4-git-send-email-vigneshr@ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, richardcochran@gmail.com, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Samuel Ortiz <sameo@linux.intel.com>, Felipe Balbi <balbi@ti.com>, Brad Griffis <bgriffis@ti.com>, Sanjeev Sharma <sanjeev_sharma@mentor.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Jan Kardell <jan.kardell@telliq.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, =?UTF-8?q?Heiko=20St=FCbner?= <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, dandan.he@mediatek.com, linux-kernel@vger.kernel.org, alan.cheng@mediatek.com, Ashwin Chaugule <ashwin.chaugule@linaro.org>, toby.liu@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Nov 2014, Vignesh R wrote:
+This is v3 of add Mediatek SoC Pinctrl/GPIO drvier for MT8135.
+It is based on Joe.C' basic device tree support.
+See http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/296093.html
 
-> In one shot mode, sequencer automatically disables all enabled steps =
-at
-> the end of each cycle. (both ADC steps and TSC steps) Hence these ste=
-ps
-> need not be saved in reg_se_cache for clearing these steps at a later
-> stage.
-> Also, when ADC wakes up Sequencer should not be busy executing any of=
- the
-> config steps except for the charge step. Previously charge step was 1=
- ADC
-> clock cycle and hence it was ignored.
->=20
-> Signed-off-by: Vignesh R <vigneshr@ti.com>
-> ---
+This driver include common and MT8135 part, other Mediatek SoCs will share the common part,
+and MT8135 part only support MT8135. MT8135 has GPIO controller, it includes 203 pins.
 
-You need to provide a changelog here when submitting new versions.
+Changes in v3:
+  - Rebase on 3.18-rc1.
+  - Follow '[RFC] pinctrl: Provide a generic device tree binding for per-pin pin controllers', modify mediatek,pins format,
+    add config setting for each pin, the reason is that each pin may have different config.
+    The RFC link: http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/296491.html
+  - Switch to use syscon regmap.
+  - Add CLR_ADDR() and SET_ADDR() macros.
+  - Add mtk_pconf_set_ies() and mtk_pconf_set_smt() functions to deal with input-enable and input-schmitt-enable.
+  - Rename mt_gpio_devdata to mtk_pinctrl_devdata.
+  - Rename all mt_prefix to mtk_prefix.
+  - Rename mt_pconf_pull_conf() to mtk_pconf_parse_conf, add mtk_pconf_set_pull_select() to deal with pull enable and pull up/down.
+    And we will add PIN_CONFIG_DRIVE_STRENGTH to mtk_pconf_parse_conf().
 
->  drivers/mfd/ti_am335x_tscadc.c       | 7 +++++--
->  include/linux/mfd/ti_am335x_tscadc.h | 1 +
->  2 files changed, 6 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/mfd/ti_am335x_tscadc.c b/drivers/mfd/ti_am335x_t=
-scadc.c
-> index d877e777cce6..110038859a8d 100644
-> --- a/drivers/mfd/ti_am335x_tscadc.c
-> +++ b/drivers/mfd/ti_am335x_tscadc.c
-> @@ -86,8 +86,12 @@ static void am335x_tscadc_need_adc(struct ti_tscad=
-c_dev *tsadc)
->  		spin_lock_irq(&tsadc->reg_lock);
->  		finish_wait(&tsadc->reg_se_wait, &wait);
-> =20
-> +		/*
-> +		 * Sequencer should either be idle or
-> +		 * busy applying the charge step.
-> +		 */
->  		reg =3D tscadc_readl(tsadc, REG_ADCFSM);
-> -		WARN_ON(reg & SEQ_STATUS);
-> +		WARN_ON((reg & SEQ_STATUS) && !(reg & CHARGE_STEP));
->  		tsadc->adc_waiting =3D false;
->  	}
->  	tsadc->adc_in_use =3D true;
-> @@ -96,7 +100,6 @@ static void am335x_tscadc_need_adc(struct ti_tscad=
-c_dev *tsadc)
->  void am335x_tsc_se_set_once(struct ti_tscadc_dev *tsadc, u32 val)
->  {
->  	spin_lock_irq(&tsadc->reg_lock);
-> -	tsadc->reg_se_cache |=3D val;
+According to Linus' suggestion, make some following changes:
+  - Add port_shf, port_mask and port_align members to mtk_pinctrl_devdata struct.
+  - Use BIT(x) instead of 1 << (x).
+  - Remove mt_pctrl_write_reg() and mt_pctrl_read_reg().
+  - Remove mt_gpio_of_xlate().
+  - Use .set_mux() instead of .enable().
+  - Add some comments.
 
-You didn't answer my question about this?
+Hongzhou Yang (3):
+  ARM: mediatek: Add Pinctrl/GPIO driver for mt8135.
+  dt-bindings: Add pinctrl bindings for mt65xx/mt81xx.
+  ARM: dts: mt8135: Add pinctrl/GPIO node for mt8135.
 
->  	am335x_tscadc_need_adc(tsadc);
-> =20
->  	tscadc_writel(tsadc, REG_SE, val);
-> diff --git a/include/linux/mfd/ti_am335x_tscadc.h b/include/linux/mfd=
-/ti_am335x_tscadc.h
-> index c99be5dc0f5c..fcce182e4a35 100644
-> --- a/include/linux/mfd/ti_am335x_tscadc.h
-> +++ b/include/linux/mfd/ti_am335x_tscadc.h
-> @@ -128,6 +128,7 @@
-> =20
->  /* Sequencer Status */
->  #define SEQ_STATUS BIT(5)
-> +#define CHARGE_STEP		0x11
-> =20
->  #define ADC_CLK			3000000
->  #define TOTAL_STEPS		16
+  .../devicetree/bindings/pinctrl/pinctrl-mt65xx.txt |  123 +
+  arch/arm/boot/dts/mt8135-pinfunc.h                 | 1304 +++++++++++
+  arch/arm/boot/dts/mt8135.dtsi                      |   19 +
+  arch/arm/mach-mediatek/Kconfig                     |    1 +
+  drivers/pinctrl/Kconfig                            |    1 +
+  drivers/pinctrl/Makefile                           |    1 +
+  drivers/pinctrl/mediatek/Kconfig                   |   12 +
+  drivers/pinctrl/mediatek/Makefile                  |    5 +
+  drivers/pinctrl/mediatek/pinctrl-mt8135.c          |   87 +
+  drivers/pinctrl/mediatek/pinctrl-mtk-common.c      |  861 +++++++
+  drivers/pinctrl/mediatek/pinctrl-mtk-common.h      |  123 +
+  drivers/pinctrl/mediatek/pinctrl-mtk-mt8135.h      | 2460 ++++++++++++++++++++
+  include/dt-bindings/pinctrl/mt65xx.h               |   23 +
+  13 files changed, 5020 insertions(+)
+  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+  create mode 100644 arch/arm/boot/dts/mt8135-pinfunc.h
+  create mode 100644 drivers/pinctrl/mediatek/Kconfig
+  create mode 100644 drivers/pinctrl/mediatek/Makefile
+  create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt8135.c
+  create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-common.c
+  create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-common.h
+  create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt8135.h
+  create mode 100644 include/dt-bindings/pinctrl/mt65xx.h
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.1.1.dirty
