@@ -1,137 +1,264 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [RFCv2 1/8] [media] si4713: switch to devm regulator API
-Date: Tue, 11 Nov 2014 18:59:31 +0100
-Message-ID: <54624E83.1060404@xs4all.nl>
-References: <1413904027-16767-1-git-send-email-sre@kernel.org>	<1413904027-16767-2-git-send-email-sre@kernel.org> <20141111090710.7a60a846@recife.lan>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] coresight: bindings for coresight drivers
+Date: Tue, 11 Nov 2014 12:04:58 -0600
+Message-ID: <CAL_JsqLXTx9jWT3sm3wnu1oWCk_VH_CUjfVX7t1HEA_9BfSeAg@mail.gmail.com>
+References: <1415727960-29524-1-git-send-email-mathieu.poirier@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141111090710.7a60a846@recife.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Sebastian Reichel <sre@kernel.org>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415727960-29524-1-git-send-email-mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mauro,
+On Tue, Nov 11, 2014 at 11:46 AM,  <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Greg,
+>
+> Please consider this as a supplement to the coresight patchset.  It should have
+> been sent with the rest of the patches but I missed the original ack from Rob
+> Herring.
 
-On 11/11/2014 12:07 PM, Mauro Carvalho Chehab wrote:
-> Em Tue, 21 Oct 2014 17:07:00 +0200
-> Sebastian Reichel <sre@kernel.org> escreveu:
->=20
->> This switches back to the normal regulator API (but use
->> managed variant) in preparation for device tree support.
->=20
-> This patch broke compilation. Please be sure that none of the patches=
- in
-> the series would break it, as otherwise git bisect would be broken.
+Ummm...
 
-Weird, as reported by Sebastian, it works for me.
-
-However, after applying this patch I get these new warnings:
-
-  CC      drivers/media/radio/si4713/radio-usb-si4713.o
-drivers/media/radio/si4713/si4713.c: In function =91si4713_probe=92:
-drivers/media/radio/si4713/si4713.c:1617:1: warning: label =91free_gpio=
-=92 defined but not used [-Wunused-label]
- free_gpio:
- ^
-drivers/media/radio/si4713/si4713.c:1451:12: warning: unused variable =91=
-i=92 [-Wunused-variable]
-  int rval, i;
-            ^
-
-So it's probably not a good idea to merge this patch anyway until this =
-is fixed.
-
-Sebastian, can you fix these warnings and repost?
-
-Thanks!
-
-	Hans
-
->=20
+>
 > Thanks,
-> Mauro
->=20
-> drivers/media/radio/si4713/si4713.c: In function 'si4713_powerup':
-> drivers/media/radio/si4713/si4713.c:369:10: error: 'struct si4713_dev=
-ice' has no member named 'supplies'
-> =20
->           ^
-> drivers/media/radio/si4713/si4713.c:370:35: error: 'struct si4713_dev=
-ice' has no member named 'supplies'
->   if (sdev->vdd) {
->                                    ^
-> drivers/media/radio/si4713/si4713.c:370:51: error: 'struct si4713_dev=
-ice' has no member named 'supply_data'
->   if (sdev->vdd) {
->                                                    ^
-> drivers/media/radio/si4713/si4713.c:402:10: error: 'struct si4713_dev=
-ice' has no member named 'supplies'
->    v4l2_dbg(1, debug, &sdev->sd, "Device in power up mode\n");
->           ^
-> drivers/media/radio/si4713/si4713.c:403:36: error: 'struct si4713_dev=
-ice' has no member named 'supplies'
->    sdev->power_state =3D POWER_ON;
->                                     ^
-> drivers/media/radio/si4713/si4713.c:403:52: error: 'struct si4713_dev=
-ice' has no member named 'supply_data'
->    sdev->power_state =3D POWER_ON;
->                                                     ^
-> drivers/media/radio/si4713/si4713.c: In function 'si4713_powerdown':
-> drivers/media/radio/si4713/si4713.c:435:11: error: 'struct si4713_dev=
-ice' has no member named 'supplies'
->   int err;
->            ^
-> drivers/media/radio/si4713/si4713.c:436:37: error: 'struct si4713_dev=
-ice' has no member named 'supplies'
->   u8 resp[SI4713_PWDN_NRESP];
->                                      ^
-> drivers/media/radio/si4713/si4713.c:437:16: error: 'struct si4713_dev=
-ice' has no member named 'supply_data'
-> =20
->                 ^
-> drivers/media/radio/si4713/si4713.c: In function 'si4713_probe':
-> drivers/media/radio/si4713/si4713.c:1444:7: error: 'struct si4713_dev=
-ice' has no member named 'supplies'
->  /* si4713_probe - probe for the device */
->        ^
-> drivers/media/radio/si4713/si4713.c:1447:22: error: 'struct si4713_de=
-vice' has no member named 'supplies'
->  {
->                       ^
-> drivers/media/radio/si4713/si4713.c:1448:7: error: 'struct si4713_dev=
-ice' has no member named 'supply_data'
->   struct si4713_device *sdev;
->        ^
-> drivers/media/radio/si4713/si4713.c:1450:46: error: 'struct si4713_de=
-vice' has no member named 'supplies'
->   struct v4l2_ctrl_handler *hdl;
->                                               ^
-> drivers/media/radio/si4713/si4713.c:1451:11: error: 'struct si4713_de=
-vice' has no member named 'supply_data'
->   int rval, i;
->            ^
-> drivers/media/radio/si4713/si4713.c:1583:26: error: 'struct si4713_de=
-vice' has no member named 'supplies'
-> =20
->                           ^
-> drivers/media/radio/si4713/si4713.c:1583:42: error: 'struct si4713_de=
-vice' has no member named 'supply_data'
-> =20
->                                           ^
-> drivers/media/radio/si4713/si4713.c: In function 'si4713_remove':
-> drivers/media/radio/si4713/si4713.c:1607:26: error: 'struct si4713_de=
-vice' has no member named 'supplies'
->    goto free_irq;
->                           ^
-> drivers/media/radio/si4713/si4713.c:1607:42: error: 'struct si4713_de=
-vice' has no member named 'supply_data'
->    goto free_irq;
+> Mathieu
+>
+> From 69cae46640b8cdc836bf7b86211d5f2adf3d0270 Mon Sep 17 00:00:00 2001
+> From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Date: Thu, 7 Aug 2014 12:34:06 -0600
+> Subject: [PATCH] coresight: bindings for coresight drivers
+>
+> Coresight IP blocks allow for the support of HW assisted tracing
+> on ARM SoCs.  Bindings for the currently available blocks are
+> presented herein.
+>
+> Signed-off-by: Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+And you still did.
+
+
+> ---
+>  .../devicetree/bindings/arm/coresight.txt          | 204 +++++++++++++++++++++
+>  1 file changed, 204 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/coresight.txt
+>
+> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+> new file mode 100644
+> index 0000000..d790f49
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+> @@ -0,0 +1,204 @@
+> +* CoreSight Components:
+> +
+> +CoreSight components are compliant with the ARM CoreSight architecture
+> +specification and can be connected in various topologies to suit a particular
+> +SoCs tracing needs. These trace components can generally be classified as
+> +sinks, links and sources. Trace data produced by one or more sources flows
+> +through the intermediate links connecting the source to the currently selected
+> +sink. Each CoreSight component device should use these properties to describe
+> +its hardware characteristcs.
+> +
+> +* Required properties for all components *except* non-configurable replicators:
+> +
+> +       * compatible: These have to be supplemented with "arm,primecell" as
+> +         drivers are using the AMBA bus interface.  Possible values include:
+> +               - "arm,coresight-etb10", "arm,primecell";
+> +               - "arm,coresight-tpiu", "arm,primecell";
+> +               - "arm,coresight-tmc", "arm,primecell";
+> +               - "arm,coresight-funnel", "arm,primecell";
+> +               - "arm,coresight-etm3x", "arm,primecell";
+> +
+> +       * reg: physical base address and length of the register
+> +         set(s) of the component.
+> +
+> +       * clocks: the clock associated to this component.
+> +
+> +       * clock-names: the name of the clock as referenced by the code.
+> +         Since we are using the AMBA framework, the name should be
+> +         "apb_pclk".
+> +
+> +       * port or ports: The representation of the component's port
+> +         layout using the generic DT graph presentation found in
+> +         "bindings/graph.txt".
+> +
+> +* Required properties for devices that don't show up on the AMBA bus, such as
+> +  non-configurable replicators:
+> +
+> +       * compatible: Currently supported value is (note the absence of the
+> +         AMBA markee):
+> +               - "arm,coresight-replicator"
+> +
+> +       * id: a unique number that will identify this replicator.
+> +
+> +       * port or ports: same as above.
+> +
+> +* Optional properties for ETM/PTMs:
+> +
+> +       * arm,cp14: must be present if the system accesses ETM/PTM management
+> +         registers via co-processor 14.
+> +
+> +       * cpu: the cpu phandle this ETM/PTM is affined to. When omitted the
+> +         source is considered to belong to CPU0.
+> +
+> +* Optional property for TMC:
+> +
+> +       * arm,buffer-size: size of contiguous buffer space for TMC ETR
+> +        (embedded trace router)
+> +
+> +
+> +Example:
+> +
+> +1. Sinks
+> +       etb@20010000 {
+> +               compatible = "arm,coresight-etb10", "arm,primecell";
+> +               reg = <0 0x20010000 0 0x1000>;
+> +
+> +               coresight-default-sink;
+> +               clocks = <&oscclk6a>;
+> +               clock-names = "apb_pclk";
+> +               port {
+> +                       etb_in_port: endpoint@0 {
+> +                               slave-mode;
+> +                               remote-endpoint = <&replicator_out_port0>;
+> +                       };
+> +               };
+> +       };
+> +
+> +       tpiu@20030000 {
+> +               compatible = "arm,coresight-tpiu", "arm,primecell";
+> +               reg = <0 0x20030000 0 0x1000>;
+> +
+> +               clocks = <&oscclk6a>;
+> +               clock-names = "apb_pclk";
+> +               port {
+> +                       tpiu_in_port: endpoint@0 {
+> +                               slave-mode;
+> +                               remote-endpoint = <&replicator_out_port1>;
+> +                       };
+> +               };
+> +       };
+> +
+> +2. Links
+> +       replicator {
+> +               /* non-configurable replicators don't show up on the
+> +                * AMBA bus.  As such no need to add "arm,primecell".
+> +                */
+> +               compatible = "arm,coresight-replicator";
+> +               /* this will show up in debugfs as "0.replicator" */
+> +               id = <0>;
+> +
+> +               ports {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +
+> +                       /* replicator output ports */
+> +                       port@0 {
+> +                               reg = <0>;
+> +                               replicator_out_port0: endpoint {
+> +                                       remote-endpoint = <&etb_in_port>;
+> +                               };
+> +                       };
+> +
+> +                       port@1 {
+> +                               reg = <1>;
+> +                               replicator_out_port1: endpoint {
+> +                                       remote-endpoint = <&tpiu_in_port>;
+> +                               };
+> +                       };
+> +
+> +                       /* replicator input port */
+> +                       port@2 {
+> +                               reg = <0>;
+> +                               replicator_in_port0: endpoint {
+> +                                       slave-mode;
+> +                                       remote-endpoint = <&funnel_out_port0>;
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +
+> +       funnel@20040000 {
+> +               compatible = "arm,coresight-funnel", "arm,primecell";
+> +               reg = <0 0x20040000 0 0x1000>;
+> +
+> +               clocks = <&oscclk6a>;
+> +               clock-names = "apb_pclk";
+> +               ports {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +
+> +                       /* funnel output port */
+> +                       port@0 {
+> +                               reg = <0>;
+> +                               funnel_out_port0: endpoint {
+> +                                       remote-endpoint =
+> +                                                       <&replicator_in_port0>;
+> +                               };
+> +                       };
+> +
+> +                       /* funnel input ports */
+> +                       port@1 {
+> +                               reg = <0>;
+> +                               funnel_in_port0: endpoint {
+> +                                       slave-mode;
+> +                                       remote-endpoint = <&ptm0_out_port>;
+> +                               };
+> +                       };
+> +
+> +                       port@2 {
+> +                               reg = <1>;
+> +                               funnel_in_port1: endpoint {
+> +                                       slave-mode;
+> +                                       remote-endpoint = <&ptm1_out_port>;
+> +                               };
+> +                       };
+> +
+> +                       port@3 {
+> +                               reg = <2>;
+> +                               funnel_in_port2: endpoint {
+> +                                       slave-mode;
+> +                                       remote-endpoint = <&etm0_out_port>;
+> +                               };
+> +                       };
+> +
+> +               };
+> +       };
+> +
+> +3. Sources
+> +       ptm@2201c000 {
+> +               compatible = "arm,coresight-etm3x", "arm,primecell";
+> +               reg = <0 0x2201c000 0 0x1000>;
+> +
+> +               cpu = <&cpu0>;
+> +               clocks = <&oscclk6a>;
+> +               clock-names = "apb_pclk";
+> +               port {
+> +                       ptm0_out_port: endpoint {
+> +                               remote-endpoint = <&funnel_in_port0>;
+> +                       };
+> +               };
+> +       };
+> +
+> +       ptm@2201d000 {
+> +               compatible = "arm,coresight-etm3x", "arm,primecell";
+> +               reg = <0 0x2201d000 0 0x1000>;
+> +
+> +               cpu = <&cpu1>;
+> +               clocks = <&oscclk6a>;
+> +               clock-names = "apb_pclk";
+> +               port {
+> +                       ptm1_out_port: endpoint {
+> +                               remote-endpoint = <&funnel_in_port1>;
+> +                       };
+> +               };
+> +       };
 > --
-> To unsubscribe from this list: send the line "unsubscribe linux-media=
-" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
+> 1.9.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
