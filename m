@@ -1,81 +1,76 @@
-From: Abhilash Kesavan <kesavan.abhilash@gmail.com>
-Subject: Re: [PATCH v7 0/7] Enable support for Samsung Exynos7 SoC
-Date: Tue, 11 Nov 2014 19:59:20 +0530
-Message-ID: <CAM4voanLYH+aEhKq_P+pTde5XL4dS0ZjvXta-2U4k0CdV6vYKQ@mail.gmail.com>
-References: <1415506834-8180-1-git-send-email-a.kesavan@samsung.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [RFCv2 1/8] [media] si4713: switch to devm regulator API
+Date: Tue, 11 Nov 2014 15:33:00 +0100
+Message-ID: <20141111143300.GA23012@earth.universe>
+References: <1413904027-16767-1-git-send-email-sre@kernel.org>
+ <1413904027-16767-2-git-send-email-sre@kernel.org>
+ <20141111090710.7a60a846@recife.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1415506834-8180-1-git-send-email-a.kesavan@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, "robh@kernel.org" <robh@kernel.org>, devicetree <devicetree@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Me2 <kesavan.abhilash@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="x+6KMIRAuhnl3hBn"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141111090710.7a60a846@recife.lan>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>
 List-Id: devicetree@vger.kernel.org
 
-Hello Olof and Arnd,
 
-On Sun, Nov 9, 2014 at 9:50 AM, Abhilash Kesavan <a.kesavan@samsung.com> wrote:
-> These were originally part of 2 patchsets[1][2] adding support for Exynos7.
->  The clock and pinctrl patches are going through the respective maintainer's
-> tree; hence the remaining dt related patches have been consolidated and are
-> being posted here as a separate series.
->
-> This patchset has build dependencies on the following patches:
-> a] "[GIT PULL] Samsung clock changes for 3.19" - specifically the clock dt
->    bindings header.
->    http://comments.gmane.org/gmane.linux.kernel.samsung-soc/39142
-> b] "tty: serial: samsung: Clean-up selection of number of available UARTs"
->    http://www.spinics.net/lists/linux-samsung-soc/msg37418.html
-> c] "dts, kbuild: Implement support for dtb vendor subdirs"(merged in linux-next)
->    https://lkml.org/lkml/2014/10/21/654
->
-> [1] arch: arm64: Enable support for Samsung Exynos7 SoC
-> http://www.spinics.net/lists/linux-samsung-soc/msg37047.html
-> [2] Add clock and DT support for a few IPs on Exynos7
-> http://www.spinics.net/lists/linux-samsung-soc/msg37973.html
->
-> Changes since v6:
->         - Fixed the platform ordering (exynos before thunder) in Kconfig file.
->         - Fixed the ordering of reg and enable-method properties in cpu node
->         as per Lorenzo Pieralisi's comment.
+--x+6KMIRAuhnl3hBn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi Mauro,
 
-Do you have any comments on this patchset ?
+On Tue, Nov 11, 2014 at 09:07:10AM -0200, Mauro Carvalho Chehab wrote:
+> Em Tue, 21 Oct 2014 17:07:00 +0200
+> Sebastian Reichel <sre@kernel.org> escreveu:
+>=20
+> > This switches back to the normal regulator API (but use
+> > managed variant) in preparation for device tree support.
+>=20
+> This patch broke compilation. Please be sure that none of the patches in
+> the series would break it, as otherwise git bisect would be broken.
+>
+> [...]
 
-Regards,
-Abhilash
->
-> Abhilash Kesavan (2):
->   arm64: dts: Add PMU DT node for exynos7 SoC
->   arm64: dts: Add nodes for mmc, i2c, rtc, watchdog, adc on Exynos7
->
-> Alim Akhtar (2):
->   arm64: exynos7: Enable ARMv8 based Exynos7 (SoC) support
->   arm64: Enable Exynos7 SOC in the defconfig
->
-> Naveen Krishna Ch (2):
->   arm64: dts: Add initial device tree support for EXYNOS7
->   arm64: dts: Add initial pinctrl support to EXYNOS7
->
-> Pankaj Dubey (1):
->   arm64: dts: add <dt-bindings/> symlink
->
->  .../devicetree/bindings/arm/samsung/pmu.txt        |   1 +
->  arch/arm64/Kconfig                                 |  17 +
->  arch/arm64/boot/dts/Makefile                       |   1 +
->  arch/arm64/boot/dts/exynos/Makefile                |   5 +
->  arch/arm64/boot/dts/exynos/exynos7-espresso.dts    |  84 +++
->  arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi    | 588 +++++++++++++++++++++
->  arch/arm64/boot/dts/exynos/exynos7.dtsi            | 530 +++++++++++++++++++
->  arch/arm64/boot/dts/include/dt-bindings            |   1 +
->  arch/arm64/configs/defconfig                       |   4 +
->  9 files changed, 1231 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/exynos/Makefile
->  create mode 100644 arch/arm64/boot/dts/exynos/exynos7-espresso.dts
->  create mode 100644 arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi
->  create mode 100644 arch/arm64/boot/dts/exynos/exynos7.dtsi
->  create mode 120000 arch/arm64/boot/dts/include/dt-bindings
->
-> --
-> 2.1.0
->
+mh, the errors seem to be from the old code (without the patch
+applied to drivers/media/radio/si4713/si4713.c) and the inlined code
+fragment displayed by the compiler seems to be the new code (with
+the patch applied to drivers/media/radio/si4713/si4713.c).
+
+Possible reasons I can think of:
+
+ * You are using some kind of object cache, which assumed it could
+   link the previously compiled si4713.o
+ * You started the kernel compilation before merging the patch and
+   the commit was only half applied when the compilation reached
+   the si4713 driver.
+
+-- Sebastian
+
+--x+6KMIRAuhnl3hBn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJUYh4cAAoJENju1/PIO/qaYqsP/j6SRe41NWwhYwhF5B3CDSUs
+SKNXfUgBGu0ZmNKaTkpWem4+08g+qPhmj9XDlOvOr3lr3cvcaUA5+FTPehraYRh0
+kju4widgN15lpJsvVngaV5rU48ksC6nbXko1OUKkWTSR/Ye8wvN7Xboor4vAw30V
+cvBt+R3QG4Y5RHCmBKBSCYyO/yUYQ2IIsblKZEdby4ivZVJHyQ9qdb+c/E9I3UpF
+vWtzVBnm1gKVYJc4BkZP3hPqkVFSiOqCG+1mnZNcJoEHEJOtKoOReIjO+qx6idsz
+o3JX2/Zaqz9vCEN3GuIiiNdewPOQxaNR6lWavXhbAo08W9h9xUxkG5dQA3QxBTpn
+xEzAkxTc/VA0uJd1MCcopDv4Ryu8m8938nhgmP5d920D5mV8rfEpOyyi80wTTCLV
+RHd3dlgmDCePsTEyt3vxYDGh6ErRoYKBdQJPvm65wtBUc7AZ3Ih/fjTzvC5W/ZFY
+moQCZP6dOr8lrv4Xqp4DDWuVzPuH09cPdGYsasM1nM4rlGGYvVpWBM8F7/KvlKjT
+vF7Udnroh5zmyfYQfcexwPmuwAEqL3mBduvLHUfPvvLn5BwpAg69AEVMBcH4cgpt
+NeLmzPP16fpoGUln0gtxOCn2offK8sT0hVwzEErrA5RPEQwWxEHnZVRqvgR7G1j0
+Y9Yo10GblfzsXrF0s5L3
+=3sNS
+-----END PGP SIGNATURE-----
+
+--x+6KMIRAuhnl3hBn--
