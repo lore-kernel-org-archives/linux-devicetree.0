@@ -1,48 +1,75 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v5 2/8] phy: miphy28lp: Add PHY header file for DT x Driver
- defines
-Date: Tue, 11 Nov 2014 10:50:28 +0530
-Message-ID: <54619C9C.90605@ti.com>
-References: <1415098284-11182-1-git-send-email-gabriel.fernandez@linaro.org> <1415098284-11182-3-git-send-email-gabriel.fernandez@linaro.org> <545B1C53.9010406@ti.com> <545B3FA4.8040109@st.com> <20141106112825.GC26543@x1> <545B6144.2020503@st.com> <20141106153659.GD26543@x1> <545B9F15.5070404@st.com> <20141107130538.GB3745@x1> <546095EC.2040501@st.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v7 0/5] This is the 1st version of suspend for RK3288.
+Date: Mon, 10 Nov 2014 21:47:35 -0800
+Message-ID: <CAD=FV=UJAzVgZedrJJaxCc+3FdJp__NV9-9pY=wTH_ZydXrQcg@mail.gmail.com>
+References: <1415368177-6637-1-git-send-email-zyw@rock-chips.com>
+	<7hwq76pqyz.fsf@deeprootsystems.com>
+	<22835729.YDXmW0qp6M@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <546095EC.2040501-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <22835729.YDXmW0qp6M@diego>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Tony Xie <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+On Mon, Nov 10, 2014 at 4:40 PM, Heiko St=C3=BCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> w=
+rote:
+> Hi Chris,
+>
+> Am Freitag, 7. November 2014, 14:48:20 schrieb Kevin Hilman:
+>> Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> writes:
+>> > RK3288 can shut down the cpu, gpu and other device controllers in =
+suspend,
+>> > and it will pull the GLOBAL_PWROFF pin to high in the final stage =
+of the
+>> > process of suspend, pull the pin to low again when resume.
+>>
+>> The cover letter still doesn't state what this series applies to, or
+>> what its dependencies are for testing, even though it was requested =
+in
+>> earlier reviews[1].  I discovered (again) by trial and error it appl=
+ies
+>> to current linux-next.  I also discovered (as was earlier discussed[=
+2])
+>> that it still does not resume using current upstream code, and those
+>> dependencies are not described here either.  These are the kinds of
+>> things that are crucial in a cover letter in order to help reviewers=
+ and
+>> testers not have to spend time digging through the archives trying t=
+o
+>> remember from the previous round of reviews.
+>>
+>> Please, please list the out-of-tree dependencies, and how to test,
+>> including how you tested it, and on what hardware.
+>
+> I'll second what Kevin said.
+>
+> I guess the regulator suspend handling [0] is one of the requirements=
+, but I'd
+> think there is more. And while Doug had a quite long list of suspend-=
+related
+> patches in his try, for now we'll need the minimal set to enable this=
+ series
+> to sucessfully wake the system again after going to suspend.
 
-On Monday 10 November 2014 04:09 PM, Maxime Coquelin wrote:
-> 
-> On 11/07/2014 02:05 PM, Lee Jones wrote:
-> 
-> <snip>
->> If the merge turns out to be simple, then Git will do the correct
->> thing; however, if the first version of the patch is applied, then
->> some changes around the same area of the file occur _then_ when the
->> second version (of the same patch differing only by SHA1) is applied
->> Git will get confused.  If it has the same SHA1 however, Git will
->> discard it as 'already applied'.  This is the reason we pass around
->> shared tags to immutable branches.
-> Looking at how the patch is trivial, I persist to think there is no issue.
-> But OK, I will prepare an immutable branch..
-> 
-> Kishon, checkpatch complains because this new file has no maintainer.
-> Is it ok for you if I add it to the Generic PHY subsystem?
+With the current series we have in the Chrome OS tree, the WIP power
+domain patches are a requirement, which makes testing very hard.  I've
+suggested that Chris try going back to leaving the GPU on his patches.
+It's possible you could get basic suspend/resume without power domain
+patches in that case.  Once power domain stuff is in good shape then
+we can turn off the GPU, I think.
 
-yeah.. sure.
+=2E..all of those things are needed to actually get the system into the
+lowest power state, but starting simple makes a lot of sense.
 
-Thanks
-Kishon
-> 
-> Regards,
-> Maxime
-> 
+-Doug
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
