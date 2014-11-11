@@ -1,56 +1,148 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] tty: serial: bcm63xx: Allow device nodes to be
- renamed to /dev/ttyBCM*
-Date: Tue, 11 Nov 2014 11:35:23 -0600
-Message-ID: <CAL_JsqKE=p_d53A7n4QZpQc_z0tbAp0bhZGerjsUt2BSSvGgtw@mail.gmail.com>
-References: <1415523348-4631-1-git-send-email-cernekee@gmail.com>
- <1415523348-4631-2-git-send-email-cernekee@gmail.com> <CAL_JsqLXznpCo3YjN+XqF6cDG38C6dKzO9DHJmzi6=sNnAU=hQ@mail.gmail.com>
- <CAJiQ=7DUV0isdRooz6112Ncx07+9RE5DS5tMBwxr47hTWA8PAw@mail.gmail.com>
- <CAL_JsqLYoUKr71Q-hfLQhXOVL72Gy7PkO-Zd4rBc0Fn-prOqTw@mail.gmail.com> <CAJiQ=7C5ki+9opnH68Kw9a573PmO=ANeiVutmVROUP2Typn2qw@mail.gmail.com>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] DT: add MDIO node for FMan node
+Date: Tue, 11 Nov 2014 11:37:59 -0600
+Message-ID: <1415727479.15957.29.camel@freescale.com>
+References: <1415102196-9238-1-git-send-email-shh.xie@gmail.com>
+	 <1415665384.15957.16.camel@freescale.com>
+	 <fb6dc6131da04e89bfc31bd8278030a0@DM2PR0301MB0864.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <CAJiQ=7C5ki+9opnH68Kw9a573PmO=ANeiVutmVROUP2Typn2qw@mail.gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux-MIPS <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <fb6dc6131da04e89bfc31bd8278030a0-Cwg/PA1lyPnq20u2fDgSrZwN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Xie Shaohui-B21989 <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Liberman Igal-B31950 <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Medve Emilian-EMMEDVE1 <Emilian.Medve-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 10, 2014 at 1:50 PM, Kevin Cernekee <cernekee@gmail.com> wrote:
-> On Mon, Nov 10, 2014 at 11:22 AM, Rob Herring <robh@kernel.org> wrote:
->>>> This can be solved with a udev rule to create sym links.
->>>
->>> Is it safe to register two console drivers named "ttyS" with the same
->>> major/minor numbers?  Maybe there is a trick to making them coexist?
->>
->> No, but I think you can do dynamic minor numbers. I seem to recall
->> this coming up with the Samsung UARTs a while back.
->
-> The other variations I've seen in the tree are:
->
-> nwpserial: ttySQ, major 4 minor 68 (not 64)
->
-> sunhv, sunsab, sunsu, sunzilog: set uart_driver->major to 4 but let
-> uart_driver->minor default to 0
->
-> SERIAL_ATMEL_TTYAT: compile-time selectable between ttySn (4/64) and
-> ttyATn (204/154).  txx9 does something similar using
-> SERIAL_TXX9_STDSERIAL.
->
-> A whole bunch of other SoC serial drivers use major 204 and a custom
-> name like "ttyAL".  Some of these show up in
-> Documentation/devices.txt; others don't.  ~3 drivers use 204/64 from
-> the middle of the Altix assigned range.
->
-> What is the current best practice for new drivers?
+On Tue, 2014-11-11 at 04:32 -0600, Xie Shaohui-B21989 wrote:
+> > -----Original Message-----
+> > From: Wood Scott-B07421
+> > Sent: Tuesday, November 11, 2014 8:23 AM
+> > To: shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+> > Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Medve
+> > Emilian-EMMEDVE1; Xie Shaohui-B21989
+> > Subject: Re: [PATCH] DT: add MDIO node for FMan node
+> > 
+> > On Tue, 2014-11-04 at 19:56 +0800, shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> > > From: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > >
+> > > This binding is for FMan MDIO, it covers FMan v2 & FMan v3.
+> > >
+> > > Signed-off-by: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > > ---
+> > > based on http://patchwork.ozlabs.org/patch/390351/
+> > > for 'next' of
+> > > git://git.kernel.org/pub/scm/linux/kernel/git/scottwood/linux.git
+> > 
+> > Are there any other FMan pieces that are missing from the above patch?
+> [S.H] I'm adding Igal for this comment.
+> 
+> > 
+> > >  .../devicetree/bindings/powerpc/fsl/fman.txt       | 69
+> > ++++++++++++++++++++++
+> > >  1 file changed, 69 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+> > > b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+> > > index da8e5f2..83c2f14 100644
+> > > --- a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+> > > +++ b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+> > > @@ -7,6 +7,7 @@ CONTENTS
+> > >    - FMan MURAM Node
+> > >    - FMan dTSEC/XGEC/mEMAC Node
+> > >    - FMan IEEE 1588 Node
+> > > +  - FMan MDIO Node
+> > >    - Example
+> > >
+> > >
+> > > ======================================================================
+> > > ======= @@ -352,6 +353,67 @@ ptp-timer@fe000 {  };
+> > >
+> > >
+> > > ======================================================================
+> > > =======
+> > > +FMan MDIO Node
+> > > +
+> > > +DESCRIPTION
+> > > +
+> > > +The MDIO is a bus to which the PHY devices are connected.
+> > > +
+> > > +PROPERTIES
+> > > +
+> > > +- compatible
+> > > +		Usage: required
+> > > +		Value type: <stringlist>
+> > > +		Definition: A standard property.
+> > > +		Must include "fsl,fman-mdio" for 1 Gb/s MDIO from FMan v2.
+> > > +		Must include "fsl,fman-xmdio" for 10 Gb/s MDIO from FMan v2.
+> > > +		Must include "fsl,fman-memac-mdio" for 1/10 Gb/s MDIO from
+> > > +		FMan v3.
+> > > +
+> > > +- reg
+> > > +		Usage: required
+> > > +		Value type: <prop-encoded-array>
+> > > +		Definition: A standard property.
+> > > +
+> > > +- bus-frequency
+> > > +		Usage: optional
+> > > +		Value type: <u32>
+> > > +		Definition: Default MDIO bus clock speed.
+> > 
+> > Use clocks/clock-names
+> [S.H] The MDIO uses Fman clock and divides it to a proper value which is specified by this property.
 
-I think it would be using dynamic numbering, but would be good to have
-others weigh in here. It looks like a dynamic major would solve your
-problem. See tty_register_driver. Also, there was a patch to make this
-the fallback behavior instead of an error[1], but it was never merged
-(and it's not clear why). This was the Samsung related change I was
-remembering.
+Use clocks/clock-names to describe that relationship.
 
-Rob
+> > 
+> > > +- interrupts
+> > > +		Usage: optional
+> > > +		Value type: <prop-encoded-array>
+> > > +		Definition: MDIO controller event interrupts.
+> > 
+> > One interrupt or multiple?
+> [S.H] One for 1 Gb/s, one for 10 Gb/s.
 
-[1] http://lists.linaro.org/pipermail/linaro-kernel/2014-January/010383.html
+Then the binding needs to say that there are two (except for
+"fsl,fman-mdio", right?) and which is which.
+
+> > 
+> > > +
+> > > +- type
+> > > +		Usage: required for FMan v3
+> > > +		Value type: <stringlist>
+> > > +		Definition: A standard property.
+> > 
+> > What standard is "type" defined in?
+>
+> [S.H] It's to differentiate between the internal and external MDIO, I'm
+> not quite sure about naming it, or what could be better way to
+> differentiate the MDIOs?
+
+I'm not questioning the need to convey this information.  I'm saying
+it's not "A standard property".  I'd also like to see a better name.
+
+> > 
+> > > +		FMan v3 has internal MDIO for internal PCS(Physical Coding
+> > > +		Sublayer) PHYs and external MDIO for external PHYs.
+> > > +		The settings and programming routines for internal/external
+> > > +		MDIO are different. Must include "internal" for internal MDIO,
+> > > +		must include "external" for external MDIO.
+> > 
+> > I assume fman v2 is always internal?  How about a boolean "fsl,fman-
+> > internal-phy" property instead?
+> [S.H] Both Fman v2 & v3 have internal/external MDIO, Fman v2 uses internal MDIO for TBI operations to set the SGMII PHY, 
+>
+> The TBI implements transmit/receive portions of PCS, it's not used in
+> Linux. The PCS on Fman V3 are not just for SGMII, it has more
+> implementations, it's used in Linux.
+
+The device tree is about the hardware, not what's used in Linux.
+
+-Scott
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
