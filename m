@@ -1,88 +1,46 @@
-From: James Hartley <James.Hartley@imgtec.com>
-Subject: RE: [PATCH 1/2] crypto: Add Imagination Technologies hw hash
- accelerator
-Date: Tue, 11 Nov 2014 15:28:25 +0000
-Message-ID: <72BC0C8BD7BB6F45988A99382E5FBAE54433BBAA@hhmail02.hh.imgtec.org>
-References: <1415621455-10468-1-git-send-email-james.hartley@imgtec.com>
- <1415621455-10468-2-git-send-email-james.hartley@imgtec.com>
- <5460D540.6070205@mentor.com>
- <72BC0C8BD7BB6F45988A99382E5FBAE54433BAC5@hhmail02.hh.imgtec.org>
- <54622758.7050907@mentor.com>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH] irqchip: atmel-aic: fix irqdomain initialization
+Date: Tue, 11 Nov 2014 07:45:37 -0800
+Message-ID: <7hioiloi5a.fsf@deeprootsystems.com>
+References: <20141110230301.GV4068@piout.net>
+	<1415712816-9202-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <54622758.7050907@mentor.com>
-Content-Language: en-US
-Sender: linux-crypto-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-Cc: "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>, "davem@davemloft.net" <davem@davemloft.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "joe@perches.com" <joe@perches.com>, "mchehab@osg.samsung.com" <mchehab@osg.samsung.com>, "crope@iki.fi" <crope@iki.fi>, "jg1.han@samsung.com" <jg1.han@samsung.com>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "abrestic@chromium.org" <abrestic@chromium.org>, Ezequiel Garcia <Ezequiel.Garcia@imgtec.com>
+Content-Type: text/plain
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1415712816-9202-1-git-send-email-boris.brezillon@free-electrons.com>
+	(Boris Brezillon's message of "Tue, 11 Nov 2014 14:33:36 +0100")
+Sender: linux-sh-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Kevin Cernekee <cernekee@gmail.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, linux-sh@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, linux-mips@linux-mips.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-SGkgVmxhZGltaXINCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51
-eC1jcnlwdG8tb3duZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86bGludXgtY3J5cHRvLQ0KPiBv
-d25lckB2Z2VyLmtlcm5lbC5vcmddIE9uIEJlaGFsZiBPZiBWbGFkaW1pciBaYXBvbHNraXkNCj4g
-U2VudDogMTEgTm92ZW1iZXIgMjAxNCAxNToxMg0KPiBUbzogSmFtZXMgSGFydGxleTsgZ3JhbnQu
-bGlrZWx5QGxpbmFyby5vcmc7IHJvYmgrZHRAa2VybmVsLm9yZzsNCj4gYWtwbUBsaW51eC1mb3Vu
-ZGF0aW9uLm9yZw0KPiBDYzogaGVyYmVydEBnb25kb3IuYXBhbmEub3JnLmF1OyBkYXZlbUBkYXZl
-bWxvZnQubmV0Ow0KPiBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsgam9lQHBlcmNoZXMuY29t
-Ow0KPiBtY2hlaGFiQG9zZy5zYW1zdW5nLmNvbTsgY3JvcGVAaWtpLmZpOyBqZzEuaGFuQHNhbXN1
-bmcuY29tOyBsaW51eC0NCj4gY3J5cHRvQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2Vy
-Lmtlcm5lbC5vcmc7DQo+IHBhd2VsLm1vbGxAYXJtLmNvbTsgbWFyay5ydXRsYW5kQGFybS5jb207
-DQo+IGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrOyBnYWxha0Bjb2RlYXVyb3JhLm9yZzsN
-Cj4gYWJyZXN0aWNAY2hyb21pdW0ub3JnOyBFemVxdWllbCBHYXJjaWENCj4gU3ViamVjdDogUmU6
-IFtQQVRDSCAxLzJdIGNyeXB0bzogQWRkIEltYWdpbmF0aW9uIFRlY2hub2xvZ2llcyBodyBoYXNo
-DQo+IGFjY2VsZXJhdG9yDQo+IA0KPiBIaSBKYW1lcywNCj4gDQo+IE9uIDExLjExLjIwMTQgMTY6
-NTksIEphbWVzIEhhcnRsZXkgd3JvdGU6DQo+ID4gSGkgVmxhZGltaXIsIHRoYW5rcyBmb3IgdGhl
-IHJldmlldyENCj4gPg0KPiA+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+PiBGcm9t
-OiBWbGFkaW1pciBaYXBvbHNraXkgW21haWx0bzp2bGFkaW1pcl96YXBvbHNraXlAbWVudG9yLmNv
-bV0NCj4gPj4gU2VudDogMTAgTm92ZW1iZXIgMjAxNCAxNToxMA0KPiA+PiBUbzogSmFtZXMgSGFy
-dGxleTsgaGVyYmVydEBnb25kb3IuYXBhbmEub3JnLmF1Ow0KPiBkYXZlbUBkYXZlbWxvZnQubmV0
-Ow0KPiA+PiBncmFudC5saWtlbHlAbGluYXJvLm9yZzsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiA+
-PiBha3BtQGxpbnV4LWZvdW5kYXRpb24ub3JnOyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsN
-Cj4gPj4gam9lQHBlcmNoZXMuY29tOyBtY2hlaGFiQG9zZy5zYW1zdW5nLmNvbTsgY3JvcGVAaWtp
-LmZpOw0KPiA+PiBqZzEuaGFuQHNhbXN1bmcuY29tOyBsaW51eC0gY3J5cHRvQHZnZXIua2VybmVs
-Lm9yZw0KPiA+PiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IHBhd2VsLm1vbGxAYXJt
-LmNvbTsNCj4gPj4gbWFyay5ydXRsYW5kQGFybS5jb207IGlqYytkZXZpY2V0cmVlQGhlbGxpb24u
-b3JnLnVrOw0KPiA+PiBnYWxha0Bjb2RlYXVyb3JhLm9yZzsgYWJyZXN0aWNAY2hyb21pdW0ub3Jn
-OyBFemVxdWllbCBHYXJjaWENCj4gPj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzJdIGNyeXB0bzog
-QWRkIEltYWdpbmF0aW9uIFRlY2hub2xvZ2llcyBodyBoYXNoDQo+ID4+IGFjY2VsZXJhdG9yDQo+
-ID4+DQo+ID4+IEhlbGxvIEphbWVzLA0KPiA+Pg0KPiA+PiBPbiAxMC4xMS4yMDE0IDE0OjEwLCBK
-YW1lcyBIYXJ0bGV5IHdyb3RlOg0KPiA+Pj4gVGhpcyBhZGRzIHN1cHBvcnQgZm9yIHRoZSBJbWFn
-aW5hdGlvbiBUZWNobm9sb2dpZXMgaGFzaCBhY2NlbGVyYXRvcg0KPiA+Pj4gdGhhdCBwcm92aWRl
-cyBoYXJkd2FyZSBhY2NlbGVyYXRpb24gZm9yDQo+ID4+PiBTSEExIFNIQTIyNCBTSEEyNTYgYW5k
-IE1ENSBIYXNoZXMuDQo+ID4+Pg0KPiA+Pj4gU2lnbmVkLW9mZi1ieTogSmFtZXMgSGFydGxleSA8
-amFtZXMuaGFydGxleUBpbWd0ZWMuY29tPg0KPiA+Pj4gLS0tDQo+ID4+DQo+IA0KPiBbc25pcF0N
-Cj4gDQo+ID4+PiArDQo+ID4+PiArCXJldHVybiAwOw0KPiA+Pj4gKw0KPiA+Pj4gK2Vycl9hbGdz
-Og0KPiA+Pj4gKwlzcGluX2xvY2soJmltZ19oYXNoLmxvY2spOw0KPiA+Pj4gKwlsaXN0X2RlbCgm
-aGRldi0+bGlzdCk7DQo+ID4+PiArCXNwaW5fdW5sb2NrKCZpbWdfaGFzaC5sb2NrKTsNCj4gPj4+
-ICsJZG1hX3JlbGVhc2VfY2hhbm5lbChoZGV2LT5kbWFfbGNoKTsNCj4gPj4+ICtlcnJfZG1hOg0K
-PiA+Pj4gKwlpb3VubWFwKGhkZXYtPmlvX2Jhc2UpOw0KPiA+Pg0KPiA+PiBNaXhpbmcgb2YgZGV2
-bV8qIHJlc291cmNlIGluaXRpYWxpemF0aW9uIGFuZCBjb21tb2RpdHkgcmVzb3VyY2UNCj4gPj4g
-cmVsZWFzZSBsZWFkcyB0byBkb3VibGUgZGVjcmVtZW50IG9mIGNsb2NrIHVzYWdlIGNvdW50IHJl
-ZmVyZW5jZS4NCj4gPg0KPiA+IE9rLCBjaGFuZ2VkIHRvIGRldm1faW91bm1hcA0KPiA+DQo+IA0K
-PiBqdXN0IG9uZSBzbWFsbCBjb21tZW50LCBwbGVhc2UgZG91YmxlIGNoZWNrLCBidXQgbW9zdCBw
-cm9iYWJseSB5b3UgZG9uJ3QNCj4gbmVlZCB0byBjYWxsIGRldm1faW91bm1hcCgpIGV4cGxpY2l0
-bHkgb24gZXJyb3IgcGF0aC4NCg0KWWVzIHlvdSBhcmUgcmlnaHQsIEkgd2lsbCByZW1vdmUgdGhl
-bQ0KDQo+IA0KPiBbc25pcF0NCj4gDQo+ID4NCj4gPj4NCj4gPj4+ICsNCj4gPj4+ICtzdGF0aWMg
-aW50IGltZ19oYXNoX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KSB7DQo+ID4+
-PiArCXN0YXRpYyBzdHJ1Y3QgaW1nX2hhc2hfZGV2ICpoZGV2Ow0KPiA+Pj4gKw0KPiA+Pj4gKwlo
-ZGV2ID0gcGxhdGZvcm1fZ2V0X2RydmRhdGEocGRldik7DQo+ID4+PiArCWlmICghaGRldikNCj4g
-Pj4+ICsJCXJldHVybiAtRU5PREVWOw0KPiA+Pj4gKwlzcGluX2xvY2soJmltZ19oYXNoLmxvY2sp
-Ow0KPiA+Pj4gKwlsaXN0X2RlbCgmaGRldi0+bGlzdCk7DQo+ID4+PiArCXNwaW5fdW5sb2NrKCZp
-bWdfaGFzaC5sb2NrKTsNCj4gPj4+ICsNCj4gPj4+ICsJaW1nX3VucmVnaXN0ZXJfYWxncyhoZGV2
-KTsNCj4gPj4+ICsNCj4gPj4+ICsJdGFza2xldF9raWxsKCZoZGV2LT5kb25lX3Rhc2spOw0KPiA+
-Pj4gKwl0YXNrbGV0X2tpbGwoJmhkZXYtPmRtYV90YXNrKTsNCj4gPj4+ICsJaW1nX2hhc2hfZG1h
-X2NsZWFudXAoaGRldik7DQo+ID4+PiArDQo+ID4+PiArCWlvdW5tYXAoaGRldi0+aW9fYmFzZSk7
-DQo+ID4+DQo+ID4+IFNhbWUgYXMgYWJvdmUsIGRldnJlcyBpb3VubWFwKCkgaXMgZ29vZCBlbm91
-Z2guDQo+ID4NCj4gPiBEb25lDQo+ID4NCj4gDQo+IFNhbWUgYXMgYWJvdmUsIEkgc3VwcG9zZSB5
-b3UgY2FuIHNpbXBseSByZW1vdmUgaW91bm1hcCgpIGNhbGwgd2l0aG91dA0KPiBhZGRpbmcgZXhw
-bGljaXQgZGV2bV9pb3VubWFwKCkuDQoNCkFzIGFib3ZlLg0KDQo+IA0KPiAtLQ0KPiBXaXRoIGJl
-c3Qgd2lzaGVzLA0KPiBWbGFkaW1pcg0KPiAtLQ0KPiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMg
-bGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgbGludXgtY3J5cHRvIiBpbiB0aGUNCj4g
-Ym9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIua2VybmVsLm9yZyBNb3JlIG1ham9y
-ZG9tbyBpbmZvIGF0DQo+IGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jkb21vLWluZm8uaHRt
-bA0KDQoNClRoYW5rcyBhZ2FpbiBmb3IgdGhlIHF1aWNrIHJldmlldy4gIEknbGwgcG9zdCBhIFYy
-IHBhdGNoc2V0IHdoZW4gSSd2ZSBmaWd1cmVkIG91dA0Kd2hhdCBJIGNhbiBkbyBhYm91dCB0aGUg
-ZXJyb3IgaGFuZGxpbmcgeW91IG1lbnRpb25lZCBwcmV2aW91c2x5Lg0KDQpUaGFua3MNCkphbWVz
-DQo=
+Boris Brezillon <boris.brezillon@free-electrons.com> writes:
+
+> First of all IRQCHIP_SKIP_SET_WAKE is not a valid irq_gc_flags and thus
+> should not be passed as the last argument of
+> irq_alloc_domain_generic_chips.
+>
+> Then pass the correct handler (handle_fasteoi_irq) to
+> irq_alloc_domain_generic_chips instead of manually re-setting it in the
+> initialization loop.
+>
+> And eventually initialize default irq flags to the pseudo standard:
+> IRQ_REQUEST | IRQ_PROBE | IRQ_AUTOEN.
+>
+> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+
+> ---
+> Hello Kevin,
+>
+> This patch has not been tested yet but it should solve the issue you've
+> experienced with the IRQ_GC_BE_IO flag and the atmel-aic driver.
+>
+> I'll test it tomorrow and let you know if it actually works.
+
+Well, it at least boots on my xplained and my sama5d35-ek:
+
+Tested-by: Kevin Hilman <khilman@linaro.org>
+
+I'll let Jason pick this up as a fix through his tree.
+
+Kevin
