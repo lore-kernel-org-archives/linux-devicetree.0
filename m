@@ -1,42 +1,72 @@
-From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v5' 1/8] ARM: mediatek: Add basic support for mt8127
-Date: Tue, 11 Nov 2014 15:58:20 +0800
-Message-ID: <1415692700.13629.26.camel@mtksdaap41>
-References: <1415086255-5555-1-git-send-email-yingjoe.chen@mediatek.com>
-	 <1415692428-18416-1-git-send-email-yingjoe.chen@mediatek.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 2/2] mmc: core: reset sdio card properly on resume.
+Date: Tue, 11 Nov 2014 09:12:09 +0100
+Message-ID: <CAPDyKFohBBEAO2cAXYQ-GCyFbpau3UMHP7p_gJwiHeMo6_7s6A@mail.gmail.com>
+References: <20141108000919.5629.55381.stgit@notabene.brown>
+	<20141108001411.5629.55298.stgit@notabene.brown>
+	<CAPDyKFrrOozTO5xR8RO=4L8xZ9hLGizH=2mxZE=5zvwMhhgD+w@mail.gmail.com>
+	<20141111111738.1e7856ce@notabene.brown>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415692428-18416-1-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20141111111738.1e7856ce@notabene.brown>
+Sender: linux-mmc-owner@vger.kernel.org
+To: NeilBrown <neilb@suse.de>
+Cc: Chris Ball <chris@printf.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, GTA04 owners <gta04-owner@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
+On 11 November 2014 01:17, NeilBrown <neilb@suse.de> wrote:
+> On Mon, 10 Nov 2014 14:29:19 +0100 Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+>> On 8 November 2014 01:14, NeilBrown <neilb@suse.de> wrote:
+>> > mmc_sdio_power_restore calls
+>> >         mmc_send_if_cond(host, host->ocr_avail);
+>> >
+>> >         ret = mmc_send_io_op_cond(host, 0, NULL);
+>> >
+>> > between mmc_go_idle() and  mmc_sdio_init_card().
+>> > mmc_sdio_resume needs to as well, else my libertas sdio wifi
+>> > device doesn't resume properly from suspend.
+>> >
+>> > Signed-off-by: NeilBrown <neilb@suse.de>
+>> > ---
+>> >  drivers/mmc/core/sdio.c |    8 ++++++--
+>> >  1 file changed, 6 insertions(+), 2 deletions(-)
+>> >
+>> > diff --git a/drivers/mmc/core/sdio.c b/drivers/mmc/core/sdio.c
+>> > index e636d9e99e4a..3f069a6f448f 100644
+>> > --- a/drivers/mmc/core/sdio.c
+>> > +++ b/drivers/mmc/core/sdio.c
+>> > @@ -981,8 +981,12 @@ static int mmc_sdio_resume(struct mmc_host *host)
+>> >         if (mmc_card_is_removable(host) || !mmc_card_keep_power(host)) {
+>> >                 sdio_reset(host);
+>> >                 mmc_go_idle(host);
+>> > -               err = mmc_sdio_init_card(host, host->card->ocr, host->card,
+>> > -                                       mmc_card_keep_power(host));
+>> > +               mmc_send_if_cond(host, host->ocr_avail);
+>>
+>> /s /host->ocr_avail /host->card->ocr
+>>
+>> I would expect that to work. I do realize that "host->ocr_avail" is
+>> being used in the ->power_restore() callback, but I think that's wrong
+>> as well. Could you maybe verify that changing to host->card->ocr works
+>> in this path as well? That's would of course be a separate patch.
+>
+> Hi Ulf,
+>  I made the substitution in mmc_sdio_resume and mmc_sdio_power_restore
+> and my sdio device continues to work, including after resume.
+>
+> The  host->card->ocr value is 0x10000, the host->ocr_avail value is 0x18000.
 
-Hi, Matthias, Arnd,
+That makes sense.
 
-After previous discussion[1], I'm not sure which one do you preferred
-for mt8127/mt8135, so I send 64bits address version again. Trying to not
-SPAM too much, I only send the difference(first 4 patches) this time.
+The host->card->ocr mask has been negotiated at initialization between
+the host and the card.
 
-We do have SoC that need >4GB address, so at least those will need to
-use 64bits address. If we want to have a consistent look, 64bits is the
-way to go. Also we already have some patches under review now using
-64bits address. So I preferred this one, but both versions are OK to me.
+>
+> If you like I'll send the two patches formally, but it might be a day or so.
 
-Please help to review this and let me know anything you want me to
-change. Thanks.
+Please do.
 
-Joe.C
-
-[1]
-http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/299598.html
-
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kind regards
+Uffe
