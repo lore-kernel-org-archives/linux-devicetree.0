@@ -1,35 +1,66 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 1/3] ARM: dts: pbab01: move i2c pins and frequency
- configuration into pfla02
-Date: Tue, 11 Nov 2014 21:33:33 +0800
-Message-ID: <20141111133331.GA2704@dragon>
-References: <1415106349-18846-1-git-send-email-d.lavnikevich@sam-solutions.com>
- <1415106349-18846-2-git-send-email-d.lavnikevich@sam-solutions.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1415106349-18846-2-git-send-email-d.lavnikevich-H6HfJ9slvY0Aspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Lavnikevich <d.lavnikevich-H6HfJ9slvY0Aspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-Cc: shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: [PATCH] irqchip: atmel-aic: fix irqdomain initialization
+Date: Tue, 11 Nov 2014 14:33:36 +0100
+Message-ID: <1415712816-9202-1-git-send-email-boris.brezillon@free-electrons.com>
+References: <20141110230301.GV4068@piout.net>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20141110230301.GV4068@piout.net>
+Sender: linux-sh-owner@vger.kernel.org
+To: Kevin Cernekee <cernekee@gmail.com>
+Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kevin Hilman <khilman@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, linux-sh@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, linux-mips@linux-mips.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Boris Brezillon <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 04, 2014 at 04:05:47PM +0300, Dmitry Lavnikevich wrote:
-> Since pins and frequency are specific to module (pfla02), not base board
-> (pbab02), it is better to be initialized in corresponding dts file.
-> 
-> This patch fixes i2c2, i2c3 pin configuration which caused messages:
-> 
-> imx6q-pinctrl 20e0000.iomuxc: no groups defined in /soc/aips-bus@02000000/iomuxc@020e0000/i2c2grp
-> imx6q-pinctrl 20e0000.iomuxc: no groups defined in /soc/aips-bus@02000000/iomuxc@020e0000/i2c3grp
-> imx6q-pinctrl 20e0000.iomuxc: unable to find group for node i2c2grp
-> imx6q-pinctrl 20e0000.iomuxc: unable to find group for node i2c3grp
-> 
-> Signed-off-by: Dmitry Lavnikevich <d.lavnikevich-H6HfJ9slvY0Aspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+First of all IRQCHIP_SKIP_SET_WAKE is not a valid irq_gc_flags and thus
+should not be passed as the last argument of
+irq_alloc_domain_generic_chips.
 
-Applied all 3, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Then pass the correct handler (handle_fasteoi_irq) to
+irq_alloc_domain_generic_chips instead of manually re-setting it in the
+initialization loop.
+
+And eventually initialize default irq flags to the pseudo standard:
+IRQ_REQUEST | IRQ_PROBE | IRQ_AUTOEN.
+
+Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+---
+Hello Kevin,
+
+This patch has not been tested yet but it should solve the issue you've
+experienced with the IRQ_GC_BE_IO flag and the atmel-aic driver.
+
+I'll test it tomorrow and let you know if it actually works.
+
+Regards,
+
+Boris
+
+ drivers/irqchip/irq-atmel-aic-common.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/irqchip/irq-atmel-aic-common.c b/drivers/irqchip/irq-atmel-aic-common.c
+index 656cfe3..d111ac7 100644
+--- a/drivers/irqchip/irq-atmel-aic-common.c
++++ b/drivers/irqchip/irq-atmel-aic-common.c
+@@ -243,8 +243,9 @@ struct irq_domain *__init aic_common_of_init(struct device_node *node,
+ 	}
+ 
+ 	ret = irq_alloc_domain_generic_chips(domain, 32, 1, name,
+-					     handle_level_irq, 0, 0,
+-					     IRQCHIP_SKIP_SET_WAKE);
++					     handle_fasteoi_irq,
++					     IRQ_NOREQUEST | IRQ_NOPROBE |
++					     IRQ_NOAUTOEN, 0, 0);
+ 	if (ret)
+ 		goto err_domain_remove;
+ 
+@@ -256,7 +257,6 @@ struct irq_domain *__init aic_common_of_init(struct device_node *node,
+ 		gc->unused = 0;
+ 		gc->wake_enabled = ~0;
+ 		gc->chip_types[0].type = IRQ_TYPE_SENSE_MASK;
+-		gc->chip_types[0].handler = handle_fasteoi_irq;
+ 		gc->chip_types[0].chip.irq_eoi = irq_gc_eoi;
+ 		gc->chip_types[0].chip.irq_set_wake = irq_gc_set_wake;
+ 		gc->chip_types[0].chip.irq_shutdown = aic_common_shutdown;
+-- 
+1.9.1
+
