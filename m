@@ -1,76 +1,58 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [RFCv2 1/8] [media] si4713: switch to devm regulator API
-Date: Tue, 11 Nov 2014 15:33:00 +0100
-Message-ID: <20141111143300.GA23012@earth.universe>
-References: <1413904027-16767-1-git-send-email-sre@kernel.org>
- <1413904027-16767-2-git-send-email-sre@kernel.org>
- <20141111090710.7a60a846@recife.lan>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Subject: Re: [PATCH v7 6/7] drm: bridge/dw-hdmi: convert dw-hdmi to drm_bridge
+ mode
+Date: Tue, 11 Nov 2014 14:36:39 +0000
+Message-ID: <54621EF7.4000300@imgtec.com>
+References: <1415710229-11935-1-git-send-email-andy.yan@rock-chips.com>
+ <1415710469-12213-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="x+6KMIRAuhnl3hBn"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141111090710.7a60a846@recife.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1415710469-12213-1-git-send-email-andy.yan@rock-chips.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Andy Yan <andy.yan@rock-chips.com>, airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, ykk@rock-chips.com, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, Shawn Guo <shawn.guo@linaro.org>, jay.xu@rock-chips.com, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
+Hi Andy,
 
---x+6KMIRAuhnl3hBn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 11/11/14 12:54, Andy Yan wrote:
+> From: Yakir Yang <ykk@rock-chips.com>
+> 
+> keep the connector & birdge in dw_hdmi.c, handle encoder in dw_hdmi-imx.c
 
-Hi Mauro,
+Is there a reason for this separation? Keeping encoder in platform files?
+If yes, then the commit message should explain that.
 
-On Tue, Nov 11, 2014 at 09:07:10AM -0200, Mauro Carvalho Chehab wrote:
-> Em Tue, 21 Oct 2014 17:07:00 +0200
-> Sebastian Reichel <sre@kernel.org> escreveu:
->=20
-> > This switches back to the normal regulator API (but use
-> > managed variant) in preparation for device tree support.
->=20
-> This patch broke compilation. Please be sure that none of the patches in
-> the series would break it, as otherwise git bisect would be broken.
->
-> [...]
+> 
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+> 
+> ---
+> 
+> Changes in v7: None
+> Changes in v6:
+> - move some modification from patch#5
+> 
+> Changes in v5: None
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  drivers/gpu/drm/bridge/dw_hdmi.c      | 228 +++++++++++++++-------------------
+>  drivers/staging/imx-drm/dw_hdmi-imx.c | 145 ++++++++++++++-------
+>  include/drm/bridge/dw_hdmi.h          |  13 +-
+>  3 files changed, 199 insertions(+), 187 deletions(-)
 
-mh, the errors seem to be from the old code (without the patch
-applied to drivers/media/radio/si4713/si4713.c) and the inlined code
-fragment displayed by the compiler seems to be the new code (with
-the patch applied to drivers/media/radio/si4713/si4713.c).
 
-Possible reasons I can think of:
-
- * You are using some kind of object cache, which assumed it could
-   link the previously compiled si4713.o
- * You started the kernel compilation before merging the patch and
-   the commit was only half applied when the compilation reached
-   the si4713 driver.
-
--- Sebastian
-
---x+6KMIRAuhnl3hBn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJUYh4cAAoJENju1/PIO/qaYqsP/j6SRe41NWwhYwhF5B3CDSUs
-SKNXfUgBGu0ZmNKaTkpWem4+08g+qPhmj9XDlOvOr3lr3cvcaUA5+FTPehraYRh0
-kju4widgN15lpJsvVngaV5rU48ksC6nbXko1OUKkWTSR/Ye8wvN7Xboor4vAw30V
-cvBt+R3QG4Y5RHCmBKBSCYyO/yUYQ2IIsblKZEdby4ivZVJHyQ9qdb+c/E9I3UpF
-vWtzVBnm1gKVYJc4BkZP3hPqkVFSiOqCG+1mnZNcJoEHEJOtKoOReIjO+qx6idsz
-o3JX2/Zaqz9vCEN3GuIiiNdewPOQxaNR6lWavXhbAo08W9h9xUxkG5dQA3QxBTpn
-xEzAkxTc/VA0uJd1MCcopDv4Ryu8m8938nhgmP5d920D5mV8rfEpOyyi80wTTCLV
-RHd3dlgmDCePsTEyt3vxYDGh6ErRoYKBdQJPvm65wtBUc7AZ3Ih/fjTzvC5W/ZFY
-moQCZP6dOr8lrv4Xqp4DDWuVzPuH09cPdGYsasM1nM4rlGGYvVpWBM8F7/KvlKjT
-vF7Udnroh5zmyfYQfcexwPmuwAEqL3mBduvLHUfPvvLn5BwpAg69AEVMBcH4cgpt
-NeLmzPP16fpoGUln0gtxOCn2offK8sT0hVwzEErrA5RPEQwWxEHnZVRqvgR7G1j0
-Y9Yo10GblfzsXrF0s5L3
-=3sNS
------END PGP SIGNATURE-----
-
---x+6KMIRAuhnl3hBn--
+Regards
+ZubairLK
