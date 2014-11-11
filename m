@@ -1,85 +1,262 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH V4 04/14] genirq: Generic chip: Add big endian I/O
- accessors
-Date: Tue, 11 Nov 2014 11:03:08 +0100
-Message-ID: <20141111110308.5bf7bbef@bbrezillon>
-References: <1415342669-30640-1-git-send-email-cernekee@gmail.com>
-	<1415342669-30640-5-git-send-email-cernekee@gmail.com>
-	<7hy4riogwt.fsf@deeprootsystems.com>
-	<CAJiQ=7CYjy-sWc-M3m2Mg8si8JacpDH=RPPm8S-Q4m88wk3Sqg@mail.gmail.com>
-	<20141110230301.GV4068@piout.net>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] phy: add support for USB cluster on the Armada
+ 375 SoC
+Date: Tue, 11 Nov 2014 15:44:01 +0530
+Message-ID: <5461E169.1040404@ti.com>
+References: <1414164254-13053-1-git-send-email-gregory.clement@free-electrons.com> <1414164254-13053-5-git-send-email-gregory.clement@free-electrons.com> <545899CF.3080001@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20141110230301.GV4068@piout.net>
-Sender: linux-sh-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: Kevin Cernekee <cernekee@gmail.com>, Kevin Hilman <khilman@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, linux-sh@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, nicolas.ferre@atmel.com, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <545899CF.3080001-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On Tue, 11 Nov 2014 00:03:01 +0100
-Alexandre Belloni <alexandre.belloni@free-electrons.com> wrote:
-
-> Adding Boris in Cc: as he wrote that part.
-
-Thanks for putting me in the loop.
-
+On Tuesday 04 November 2014 02:48 PM, Kishon Vijay Abraham I wrote:
+> Hi,
 > 
-> On 10/11/2014 at 14:11:44 -0800, Kevin Cernekee wrote :
-> > On Mon, Nov 10, 2014 at 2:00 PM, Kevin Hilman <khilman@kernel.org> wrote:
-> > > Kevin Cernekee <cernekee@gmail.com> writes:
-> > >
-> > >> Use io{read,write}32be if the caller specified IRQ_GC_BE_IO when creating
-> > >> the irqchip.
-> > >>
-> > >> Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
-> > >
-> > > I bisected a couple ARM boot failures in next-20141110 on atmel sama5 platforms down to
-> > > this patch, though I'm not quite yet sure how it's causing the failure.
-> > > I'm not getting any console output, so haven't been able to dig deeper
-> > > yet.  Maybe the atmel maintainers (Cc'd) can help dig.
-> > >
-> > > I've confirmed that reverting $SUBJECT patch (commit
-> > > b79055952badbd73710685643bab44104f2509ea2) on top of next-20141110 gets
-> > > things booting again.
-> > >
-> > > Also, it only happens with sama5_defconfig, not with multi_v7_defconfig.
-> > 
-> > In drivers/irqchip/irq-atmel-aic-common.c I see:
-> > 
-> >         ret = irq_alloc_domain_generic_chips(domain, 32, 1, name,
-> >                                              handle_level_irq, 0, 0,
-> >                                              IRQCHIP_SKIP_SET_WAKE);
-> > 
-> > and IRQCHIP_SKIP_SET_WAKE is (1 << 4), same as IRQ_GC_BE_IO.
-> > 
-> > Is it possible that the caller is passing values intended for
-> > irq_chip->flags into a function expecting
-> > irq_domain_chip_generic->gc_flags ?
+> On Friday 24 October 2014 08:54 PM, Gregory CLEMENT wrote:
+>> The Armada 375 SoC comes with an USB2 host and device controller and
+>> an USB3 controller. The USB cluster control register allows to manage
+>> common features of both USB controllers.
+>>
+>> This commit adds a driver integrated in the generic PHY framework to
+>> control this USB cluster feature.
+>>
+>> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> ---
+>>  drivers/phy/Kconfig                              |   6 +
+>>  drivers/phy/Makefile                             |   1 +
+>>  drivers/phy/phy-armada375-usb2.c                 | 145 +++++++++++++++++++++++
+>>  include/dt-bindings/phy/armada-375-usb-cluster.h |  19 +++
+>>  4 files changed, 171 insertions(+)
+>>  create mode 100644 drivers/phy/phy-armada375-usb2.c
+>>  create mode 100644 include/dt-bindings/phy/armada-375-usb-cluster.h
+>>
+>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+>> index 2a436e607f99..625adb0abd43 100644
+>> --- a/drivers/phy/Kconfig
+>> +++ b/drivers/phy/Kconfig
+>> @@ -21,6 +21,12 @@ config PHY_BERLIN_SATA
+>>  	select GENERIC_PHY
+>>  	help
+>>  	  Enable this to support the SATA PHY on Marvell Berlin SoCs.
+>> +config ARMADA375_USBCLUSTER_PHY
+>> +	def_bool y
+>> +	depends on MACH_ARMADA_375 || COMPILE_TEST
+>> +	depends on OF
+>> +	select GENERIC_PHY
+>> +
+>>  
+>>  config PHY_EXYNOS_MIPI_VIDEO
+>>  	tristate "S5P/EXYNOS SoC series MIPI CSI-2/DSI PHY driver"
+>> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+>> index c4590fce082f..26b5633f378a 100644
+>> --- a/drivers/phy/Makefile
+>> +++ b/drivers/phy/Makefile
+>> @@ -4,6 +4,7 @@
+>>  
+>>  obj-$(CONFIG_GENERIC_PHY)		+= phy-core.o
+>>  obj-$(CONFIG_PHY_BERLIN_SATA)		+= phy-berlin-sata.o
+>> +obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)	+= phy-armada375-usb2.o
+>>  obj-$(CONFIG_BCM_KONA_USB2_PHY)		+= phy-bcm-kona-usb2.o
+>>  obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+= phy-exynos-dp-video.o
+>>  obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
+>> diff --git a/drivers/phy/phy-armada375-usb2.c b/drivers/phy/phy-armada375-usb2.c
+>> new file mode 100644
+>> index 000000000000..7c6daa9029b3
+>> --- /dev/null
+>> +++ b/drivers/phy/phy-armada375-usb2.c
+>> @@ -0,0 +1,145 @@
+>> +/*
+>> + * USB cluster support for Armada 375 platform.
+>> + *
+>> + * Copyright (C) 2014 Marvell
+>> + *
+>> + * Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> + *
+>> + * This file is licensed under the terms of the GNU General Public
+>> + * License version 2 or later. This program is licensed "as is"
+>> + * without any warranty of any kind, whether express or implied.
+>> + *
+>> + * Armada 375 comes with an USB2 host and device controller and an
+>> + * USB3 controller. The USB cluster control register allows to manage
+>> + * common features of both USB controllers.
+>> + */
+>> +
+>> +#include <dt-bindings/phy/armada-375-usb-cluster.h>
+>> +#include <linux/init.h>
+>> +#include <linux/io.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/phy/phy.h>
+>> +#include <linux/platform_device.h>
+>> +
+>> +#define USB2_PHY_CONFIG_DISABLE BIT(0)
+>> +
+>> +struct armada375_cluster_phy {
+>> +	struct phy *phy;
+>> +	void __iomem *reg;
+>> +	bool use_usb3;
+>> +	int phy_provided;
+>> +};
+>> +
+>> +static struct armada375_cluster_phy usb_cluster_phy;
+>> +
+>> +static int armada375_usb_phy_init(struct phy *phy)
+>> +{
+>> +	struct armada375_cluster_phy *cluster_phy = phy_get_drvdata(phy);
+>> +	u32 reg;
+>> +
+>> +	reg = readl(cluster_phy->reg);
+>> +	if (cluster_phy->use_usb3)
+>> +		reg |= USB2_PHY_CONFIG_DISABLE;
+>> +	else
+>> +		reg &= ~USB2_PHY_CONFIG_DISABLE;
+>> +	writel(reg, cluster_phy->reg);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static struct phy_ops armada375_usb_phy_ops = {
+>> +	.init = armada375_usb_phy_init,
+>> +	.owner = THIS_MODULE,
+>> +};
+>> +
+>> +/*
+>> + * Only one controller can use this PHY. We shouldn't have the case
+>> + * when two controllers want to use this PHY. But if this case occurs
+>> + * then we provide a phy to the first one and return an error for the
+>> + * next one. This error has also to be an error returned by
+>> + * devm_phy_optional_get() so different from ENODEV for USB2. In the
+>> + * USB3 case it still optional and we use ENODEV.
+>> + */
+>> +static struct phy *armada375_usb_phy_xlate(struct device *dev,
+>> +					struct of_phandle_args *args)
+>> +{
+>> +
+>> +    /*
+>> +     * Either the phy had never been requested and then the first usb
+>> +     * claiming it can get it, or it had already been requested in
+>> +     * this case, we only allow to use it with the same configuration.
+>> +     */
+>> +	if (WARN_ON((usb_cluster_phy.phy_provided != PHY_NONE) &&
+>> +			(usb_cluster_phy.phy_provided != args->args[0]))) {
+>> +		dev_err(dev, "This PHY has already been provided!\n");
+>> +		dev_err(dev, "Check your device tree, only one controller can use it\n.");
+>> +		if (args->args[0] == PHY_USB2)
+>> +			return ERR_PTR(-EBUSY);
+>> +		else
+>> +			return ERR_PTR(-ENODEV);
+>> +	}
+>> +
+>> +	if (args->args[0] == PHY_USB2)
+>> +		usb_cluster_phy.use_usb3 = false;
+>> +	else if (args->args[0] == PHY_USB3)
+>> +		usb_cluster_phy.use_usb3 = true;
+>> +	else {
+>> +		dev_err(dev, "Invalid PHY mode\n");
+>> +		return ERR_PTR(-ENODEV);
+>> +	}
+>> +
+>> +	/* Store which phy mode is used for next test */
+>> +	usb_cluster_phy.phy_provided = args->args[0];
+>> +
+>> +	return usb_cluster_phy.phy;
+>> +}
+>> +
+>> +static int armada375_usb_phy_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct phy *phy;
+>> +	struct phy_provider *phy_provider;
+>> +	void __iomem *usb_cluster_base;
+>> +	struct resource *res;
+>> +
+>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	usb_cluster_base = devm_ioremap_resource(&pdev->dev, res);
+>> +	if (!usb_cluster_base)
+>> +		return -ENOMEM;
+>> +
+>> +	phy = devm_phy_create(dev, NULL, &armada375_usb_phy_ops, NULL);
+>> +	if (IS_ERR(phy)) {
+>> +		dev_err(dev, "failed to create PHY\n");
+>> +		return PTR_ERR(phy);
+>> +	}
+>> +
+>> +	usb_cluster_phy.phy = phy;
+>> +	usb_cluster_phy.reg = usb_cluster_base;
+>> +	phy_set_drvdata(phy, &usb_cluster_phy);
+>> +
+>> +	phy_provider = devm_of_phy_provider_register(&pdev->dev,
+>> +						     armada375_usb_phy_xlate);
+>> +	return PTR_ERR_OR_ZERO(phy_provider);
+>> +}
+>> +
+>> +static const struct of_device_id of_usb_cluster_table[] = {
+>> +	{ .compatible = "marvell,armada-375-usb-cluster", },
+>> +	{ /* end of list */ },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, of_usb_cluster_table);
+>> +
+>> +static struct platform_driver armada375_usb_phy_driver = {
+>> +	.probe	= armada375_usb_phy_probe,
+>> +	.driver = {
+>> +		.of_match_table	= of_usb_cluster_table,
+>> +		.name  = "armada-375-usb-cluster",
+>> +		.owner = THIS_MODULE,
+>> +	}
+>> +};
+>> +module_platform_driver(armada375_usb_phy_driver);
+>> +
+>> +MODULE_DESCRIPTION("Armada 375 USB cluster driver");
+>> +MODULE_AUTHOR("Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>");
+>> +MODULE_LICENSE("GPL");
+>> diff --git a/include/dt-bindings/phy/armada-375-usb-cluster.h b/include/dt-bindings/phy/armada-375-usb-cluster.h
+>> new file mode 100644
+>> index 000000000000..cbd2d4e720bb
+>> --- /dev/null
+>> +++ b/include/dt-bindings/phy/armada-375-usb-cluster.h
+>> @@ -0,0 +1,19 @@
+>> +/*
+>> + * Copyright (C) 2014 Marvell
+>> + *
+>> + * This program is free software; you can redistribute it and/or
+>> + * modify it under the terms of the GNU General Public License as
+>> + * published by the Free Software Foundation; either version 2 of the
+>> + * License, or (at your option) any later version.
+>> + */
+>> +
+>> +#ifndef __ARMADA_375_USB_CLUSTER__
+>> +#define __ARMADA_375_USB_CLUSTER__
+>> +
+>> +/* The supported mode passed through by the phandle are the following */
+>> +
+>> +#define PHY_NONE    0
+>> +#define PHY_USB2    1
+>> +#define PHY_USB3    2
+> 
+> Let's not add a separate file for every platform for these generic modes.
 
-Indeed, I don't know what I tried to do in the first place but this is
-completely wrong.
-First because the last argument is not a valid flag as you pointed out,
-then because I clearly have set irq_set_wake and thus setting
-IRQCHIP_SKIP_SET_WAKE makes no sense.
+Can you use this patch [1] and resend your series?
 
-I also realized I should directly pass handle_fasteoi_irq and not
-handle_level_irq for the handler, that clr flags (IRQ_NOREQUEST |
-IRQ_NOPROBE | IRQ_NOAUTOEN) are missing and that IRQ_GC_INIT_MASK_CACHE
-is missing too.
+Thanks
+Kishon
 
-I'll propose a patch fixing all those bugs.
-
-Sorry for the inconvenience :-(.
-
-Regards,
-
-Boris
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+[1] -> http://www.gossamer-threads.com/lists/linux/kernel/2044969
+> 
+> Thanks
+> Kishon
+>> +
+>> +#endif /* __DT_BINDINGS_CLOCK_R8A7791_H__ */
+>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
