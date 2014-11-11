@@ -1,49 +1,137 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v7 0/5] This is the 1st version of suspend for RK3288.
-Date: Tue, 11 Nov 2014 01:40:29 +0100
-Message-ID: <22835729.YDXmW0qp6M@diego>
-References: <1415368177-6637-1-git-send-email-zyw@rock-chips.com> <7hwq76pqyz.fsf@deeprootsystems.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Howard Chen <ibanezchen@gmail.com>
+Subject: [PATCH v5 1/3] ARM: mediatek: Add basic support for mt6592
+Date: Tue, 11 Nov 2014 11:55:09 +0800
+Message-ID: <1415678111-29914-1-git-send-email-ibanezchen@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7hwq76pqyz.fsf@deeprootsystems.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: Kevin Hilman <khilman@kernel.org>, dianders@chromium.org, mturquette@linaro.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Tony Xie <xxx@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+To: arm@kernel.org, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Howard Chen <ibanezchen@gmail.com>, Olof Johansson <olof@lixom.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
+* A dtsi for boards based on Mediatek MT6592 SoCs
+* Compatible string in arch/arm/mach-mediatek/mediatek.c
 
-Am Freitag, 7. November 2014, 14:48:20 schrieb Kevin Hilman:
-> Chris Zhong <zyw@rock-chips.com> writes:
-> > RK3288 can shut down the cpu, gpu and other device controllers in suspend,
-> > and it will pull the GLOBAL_PWROFF pin to high in the final stage of the
-> > process of suspend, pull the pin to low again when resume.
-> 
-> The cover letter still doesn't state what this series applies to, or
-> what its dependencies are for testing, even though it was requested in
-> earlier reviews[1].  I discovered (again) by trial and error it applies
-> to current linux-next.  I also discovered (as was earlier discussed[2])
-> that it still does not resume using current upstream code, and those
-> dependencies are not described here either.  These are the kinds of
-> things that are crucial in a cover letter in order to help reviewers and
-> testers not have to spend time digging through the archives trying to
-> remember from the previous round of reviews.
-> 
-> Please, please list the out-of-tree dependencies, and how to test,
-> including how you tested it, and on what hardware.
+Signed-off-by: Howard Chen <ibanezchen@gmail.com>
+---
+ arch/arm/boot/dts/mt6592.dtsi     | 97 +++++++++++++++++++++++++++++++++++++++
+ arch/arm/mach-mediatek/mediatek.c |  1 +
+ 2 files changed, 98 insertions(+)
+ create mode 100644 arch/arm/boot/dts/mt6592.dtsi
 
-I'll second what Kevin said.
-
-I guess the regulator suspend handling [0] is one of the requirements, but I'd 
-think there is more. And while Doug had a quite long list of suspend-related 
-patches in his try, for now we'll need the minimal set to enable this series 
-to sucessfully wake the system again after going to suspend.
-
-
-Heiko
-
-
-[0] 
-https://git.kernel.org/cgit/linux/kernel/git/broonie/regulator.git/log/?h=topic/suspend
+diff --git a/arch/arm/boot/dts/mt6592.dtsi b/arch/arm/boot/dts/mt6592.dtsi
+new file mode 100644
+index 0000000..65aa81b
+--- /dev/null
++++ b/arch/arm/boot/dts/mt6592.dtsi
+@@ -0,0 +1,97 @@
++/*
++ * Copyright (c) 2014 MediaTek Inc.
++ * Author: Howard Chen <ibanezchen@gmail.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include "skeleton.dtsi"
++
++/ {
++	compatible = "mediatek,mt6592";
++	interrupt-parent = <&gic>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x0>;
++		};
++		cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x1>;
++		};
++		cpu@2 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x2>;
++		};
++		cpu@3 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x3>;
++		};
++		cpu@4 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x4>;
++		};
++		cpu@5 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x5>;
++		};
++		cpu@6 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x6>;
++		};
++		cpu@7 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x7>;
++		};
++	};
++
++	system_clk: dummy13m {
++		compatible = "fixed-clock";
++		clock-frequency = <13000000>;
++		#clock-cells = <0>;
++	};
++
++	rtc_clk: dummy32k {
++		compatible = "fixed-clock";
++		clock-frequency = <32000>;
++		#clock-cells = <0>;
++	};
++
++	timer: timer@10008000 {
++		compatible = "mediatek,mt6577-timer";
++		reg = <0x10008000 0x80>;
++		interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&system_clk>, <&rtc_clk>;
++		clock-names = "system-clk", "rtc-clk";
++	};
++
++	gic: interrupt-controller@10211000 {
++		compatible = "arm,cortex-a7-gic";
++		interrupt-controller;
++		#interrupt-cells = <3>;
++		reg = <0x10211000 0x1000>,
++		      <0x10212000 0x1000>;
++	};
++
++};
+diff --git a/arch/arm/mach-mediatek/mediatek.c b/arch/arm/mach-mediatek/mediatek.c
+index f2acf07..88e4626 100644
+--- a/arch/arm/mach-mediatek/mediatek.c
++++ b/arch/arm/mach-mediatek/mediatek.c
+@@ -19,6 +19,7 @@
+ 
+ static const char * const mediatek_board_dt_compat[] = {
+ 	"mediatek,mt6589",
++	"mediatek,mt6592",
+ 	NULL,
+ };
+ 
+-- 
+1.9.1
