@@ -1,178 +1,59 @@
-From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] of/fdt: export fdt blob as /sys/firmware/fdt
-Date: Tue, 11 Nov 2014 15:44:56 +0100
-Message-ID: <CAKv+Gu_KUFaop440Zg6FZ1XmEiE3_ngy3F1adS7uw4_v-24t5w@mail.gmail.com>
-References: <1415645222-14909-1-git-send-email-ard.biesheuvel@linaro.org>
-	<1415645222-14909-2-git-send-email-ard.biesheuvel@linaro.org>
-	<20141111144221.5FCDAC416AF@trevor.secretlab.ca>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH v7 5/7] drm: bridge/dw-hdmi: add support for multi byte
+ register width access
+Date: Tue, 11 Nov 2014 22:46:39 +0800
+Message-ID: <5462214F.4010504@rock-chips.com>
+References: <1415710229-11935-1-git-send-email-andy.yan@rock-chips.com>
+ <1415710432-12167-1-git-send-email-andy.yan@rock-chips.com>
+ <54621B23.1020602@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141111144221.5FCDAC416AF-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geoff Levand <geoff.levand-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <54621B23.1020602@imgtec.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Dave Airlie <airlied@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, ykk@rock-chips.com, Grant Likely <grant.likely@linaro.org>, djkurtz@google.com, Shawn Guo <shawn.guo@linaro.org>, jay.xu@rock-chips.com, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On 11 November 2014 15:42, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, 10 Nov 2014 19:47:01 +0100
-> , Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->  wrote:
->> Create a new /sys entry '/sys/firmware/fdt' to export the FDT blob
->> that was passed to the kernel by the bootloader. This allows userland
->> applications such as kexec to access the raw binary. The blob needs to
->> be preserved as early as possible by calling preserve_fdt().
->>
->> The fact that this node does not reside under /sys/firmware/device-tree
->> is deliberate: FDT is also used on arm64 UEFI/ACPI systems to
->> communicate just the UEFI and ACPI entry points, but the FDT is never
->> unflattened and used to configure the system.
->>
->> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> On further thought, nak. I want tree modifications to be treated as
-> bugs. Do a checksum CRC32 or check. It's simpler and it can be extended
-> to us an in-blob CRC when the file format gets upreved to include one.
->
-
-Ah, right, I was under the impression that tree modifications were
-expected and allowed.
-In that case, yes, let me respin to calculate a CRC early on, and
-WARN() if it gets corrupted.
-
--- 
-Ard.
-
-
-> g.
->
-> ---
->
-> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> index be16ce2ffd69..adda0a16934f 100644
-> --- a/drivers/of/Kconfig
-> +++ b/drivers/of/Kconfig
-> @@ -23,6 +23,7 @@ config OF_FLATTREE
->         bool
->         select DTC
->         select LIBFDT
-> +       select CRC
->
->  config OF_EARLY_FLATTREE
->         bool
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 83a8e1154602..80db46a2eab9 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -10,6 +10,7 @@
->   */
->
->  #include <linux/kernel.h>
-> +#include <linux/crc32.h>
->  #include <linux/initrd.h>
->  #include <linux/memblock.h>
->  #include <linux/of.h>
-> @@ -420,6 +421,7 @@ int __initdata dt_root_addr_cells;
->  int __initdata dt_root_size_cells;
->
->  void *initial_boot_params;
-> +u32 initial_boot_params_crc;
->
->  #ifdef CONFIG_OF_EARLY_FLATTREE
->
-> @@ -1003,6 +1005,9 @@ bool __init early_init_dt_verify(void *params)
->
->         /* Setup flat device-tree pointer */
->         initial_boot_params = params;
-> +       initial_boot_params_crc = crc32_be(0, params, fdt_totalsize(params));
-> +       pr_info("FDT CRC: %x\n", initial_boot_params_crc);
-> +
->         return true;
->  }
->
->
->
->
->> ---
->>  drivers/of/fdt.c       | 34 ++++++++++++++++++++++++++++++++++
->>  include/linux/of_fdt.h |  2 ++
->>  2 files changed, 36 insertions(+)
->>
->> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
->> index d1ffca8b34ea..e9ee3d5f7ea4 100644
->> --- a/drivers/of/fdt.c
->> +++ b/drivers/of/fdt.c
->> @@ -22,6 +22,7 @@
->>  #include <linux/libfdt.h>
->>  #include <linux/debugfs.h>
->>  #include <linux/serial_core.h>
->> +#include <linux/sysfs.h>
->>
->>  #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
->>  #include <asm/page.h>
->> @@ -1103,4 +1104,37 @@ static int __init of_flat_dt_debugfs_export_fdt(void)
->>  module_init(of_flat_dt_debugfs_export_fdt);
->>  #endif
->>
->> +static u8 *raw_fdt_copy;
->> +
->> +void __init preserve_fdt(void)
->> +{
->> +     u32 fdt_size;
->> +
->> +     fdt_size = fdt_totalsize(initial_boot_params);
->> +     raw_fdt_copy = memcpy(__va(memblock_alloc(fdt_size, PAGE_SIZE)),
->> +                           initial_boot_params, fdt_size);
->> +}
->> +
->> +#ifdef CONFIG_SYSFS
->> +static ssize_t of_fdt_raw_read(struct file *filp, struct kobject *kobj,
->> +                            struct bin_attribute *bin_attr,
->> +                            char *buf, loff_t off, size_t count)
->> +{
->> +     memcpy(buf, raw_fdt_copy + off, count);
->> +     return count;
->> +}
->> +
->> +static int __init of_fdt_raw_init(void)
->> +{
->> +     static struct bin_attribute of_fdt_raw_attr =
->> +             __BIN_ATTR(fdt, S_IRUSR, of_fdt_raw_read, NULL, 0);
->> +
->> +     if (!raw_fdt_copy)
->> +             return 0;
->> +     of_fdt_raw_attr.size = fdt_totalsize(raw_fdt_copy);
->> +     return sysfs_create_bin_file(firmware_kobj, &of_fdt_raw_attr);
->> +}
->> +module_init(of_fdt_raw_init);
->> +#endif
->> +
->>  #endif /* CONFIG_OF_EARLY_FLATTREE */
->> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
->> index 0ff360d5b3b3..7672a26305a5 100644
->> --- a/include/linux/of_fdt.h
->> +++ b/include/linux/of_fdt.h
->> @@ -83,6 +83,7 @@ extern const void *of_flat_dt_match_machine(const void *default_match,
->>  /* Other Prototypes */
->>  extern void unflatten_device_tree(void);
->>  extern void unflatten_and_copy_device_tree(void);
->> +extern void preserve_fdt(void);
->>  extern void early_init_devtree(void *);
->>  extern void early_get_first_memblock_info(void *, phys_addr_t *);
->>  extern u64 fdt_translate_address(const void *blob, int node_offset);
->> @@ -92,6 +93,7 @@ static inline void early_init_fdt_scan_reserved_mem(void) {}
->>  static inline const char *of_flat_dt_get_machine_name(void) { return NULL; }
->>  static inline void unflatten_device_tree(void) {}
->>  static inline void unflatten_and_copy_device_tree(void) {}
->> +static inline void preserve_fdt(void) {}
->>  #endif /* CONFIG_OF_FLATTREE */
->>
->>  #endif /* __ASSEMBLY__ */
->> --
->> 1.8.3.2
->>
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ck9uIDIwMTTlubQxMeaciDEx5pelIDIyOjIwLCBadWJhaXIgTHV0ZnVsbGFoIEtha2FraGVsIHdy
+b3RlOgo+IEhpIEFuZHksCj4KPiBUaGlzIHBhdGNoIGFkZHMgdGhlIHJlZy1pby13aWR0aCBiaW5k
+aW5nLgo+Cj4gSGVuY2UgdGhlIGJpbmRpbmcgcGF0Y2ggc2hvdWxkIGNvbWUgYmVmb3JlIGl0Lgo+
+CiAgICBkbyB5b3UgbWVhbiB0aGF0IEkgc2hvdWxkIHB1dCBkdHMgYmluZGluZyBwYXRjaAogICAg
+YmVmb3JlIHRoaXMgcGF0Y2g/Cj4gT24gMTEvMTEvMTQgMTI6NTMsIEFuZHkgWWFuIHdyb3RlOgo+
+PiBPbiByb2NrY2hpcCByazMyODgsIG9ubHkgd29yZCgzMi1iaXQpIGFjY2Vzc2VzIGFyZQo+PiBw
+ZXJtaXR0ZWQgZm9yIGhkbWkgcmVnaXN0ZXJzLiAgQnl0ZSB3aWR0aCBhY2Nlc3NlcyAod3JpdGVi
+LAo+PiByZWFkYikgZ2VuZXJhdGUgYW4gaW1wcmVjaXNlIGV4dGVybmFsIGFib3J0Lgo+Pgo+PiBT
+aWduZWQtb2ZmLWJ5OiBBbmR5IFlhbiA8YW5keS55YW5Acm9jay1jaGlwcy5jb20+Cj4+Cj4+IC0t
+LQo+Pgo+PiAgIH0KPj4gICAKPj4gICBzdGF0aWMgdm9pZCBoZG1pX21vZGIoc3RydWN0IGR3X2hk
+bWkgKmhkbWksIHU4IGRhdGEsIHU4IG1hc2ssIHVuc2lnbmVkIHJlZykKPj4gQEAgLTE0OTksNiAr
+MTUyNywyMyBAQCBzdGF0aWMgaW50IGR3X2hkbWlfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0
+cnVjdCBkZXZpY2UgKm1hc3Rlciwgdm9pZCAqZGF0YSkKPj4gICAJc3RydWN0IGRldmljZV9ub2Rl
+ICpkZGNfbm9kZTsKPj4gICAJc3RydWN0IHJlc291cmNlICppb3JlczsKPj4gICAJaW50IHJldCwg
+aXJxOwo+PiArCXUzMiB2YWwgPSAxOwo+PiArCj4+ICsJb2ZfcHJvcGVydHlfcmVhZF91MzIobnAs
+ICJyZWctaW8td2lkdGgiLCAmdmFsKTsKPj4gKwo+PiArCXN3aXRjaCAodmFsKSB7Cj4+ICsJY2Fz
+ZSA0Ogo+PiArCQloZG1pLT53cml0ZSA9IGR3X2hkbWlfd3JpdGVsOwo+PiArCQloZG1pLT5yZWFk
+ID0gZHdfaGRtaV9yZWFkbDsKPj4gKwkJYnJlYWs7Cj4+ICsJY2FzZSAxOgo+PiArCQloZG1pLT53
+cml0ZSA9IGR3X2hkbWlfd3JpdGViOwo+PiArCQloZG1pLT5yZWFkID0gZHdfaGRtaV9yZWFkYjsK
+Pj4gKwkJYnJlYWs7Cj4+ICsJZGVmYXVsdDoKPj4gKwkJZGV2X2VycihkZXYsICJyZWctaW8td2lk
+dGggbXVzdCBiZSAxIG9yIDRcbiIpOwo+PiArCQlyZXR1cm4gLUVJTlZBTDsKPj4gKwl9Cj4gVGhl
+IGJpbmRpbmcgcGF0Y2ggc2F5cyB0aGlzIGlzIGFuIG9wdGlvbmFsIHByb3BlcnR5Lgo+IEJ1dCBo
+ZXJlIGlmIHVuZGVmaW5lZCBpdCByZXR1cm5zIC1FSU5WQUwuCj4KPiBJIHdvdWxkIGtlZXAgaXQg
+b3B0aW9uYWwgYW5kIGRlZmF1bHQgaXQgdG8gYnl0ZSBhY2Nlc3MuCiAgIGlmIHRoZSBkdHMgdW5k
+ZWZpbmVkIGl0LCB0aGUgdmFsIHdpbGwgYmUgMS4KICAgaWYgdGhlIGR0cyBkZWZpbmVkIG90aGVy
+IHZhbHVlIGV4Y2VwdCA0IGFuZCAxLCByZXR1cm4gLUVJTlZBTAo+Cj4gUmVnYXJkcywKPiBadWJh
+aXJMSwo+ICAgIAo+Cj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KPiBMaW51eC1yb2NrY2hpcCBtYWlsaW5nIGxpc3QKPiBMaW51eC1yb2NrY2hpcEBsaXN0
+cy5pbmZyYWRlYWQub3JnCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9saW51eC1yb2NrY2hpcAo+Cj4KPgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRldmVsIG1haWxpbmcgbGlzdApkZXZlbEBsaW51eGRyaXZlcnBy
+b2plY3Qub3JnCmh0dHA6Ly9kcml2ZXJkZXYubGludXhkcml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2RyaXZlcmRldi1kZXZlbAo=
