@@ -1,67 +1,86 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/5] simplefb: Add simplefb MAINTAINERS entry
-Date: Tue, 11 Nov 2014 16:27:47 +0000
-Message-ID: <20141111162748.01BBDC416AF@trevor.secretlab.ca>
-References: <1413996311-4287-1-git-send-email-hdegoede@redhat.com>
-	<1413996311-4287-2-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] DT: iio: adc: Add CC_10001 binding documentation
+Date: Tue, 11 Nov 2014 13:29:44 -0300
+Message-ID: <54623978.60005@imgtec.com>
+References: <1415224611-22096-1-git-send-email-ezequiel.garcia@imgtec.com>	<1415224611-22096-3-git-send-email-ezequiel.garcia@imgtec.com>	<545E1333.9010904@kernel.org>	<5461170B.7070505@imgtec.com>	<54611934.6050701@imgtec.com> <CAL1qeaHzp==jmTB8dJ1M3NuocwuSqsfbVSU4nuM50vrOyfJ3qA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCJP567ORICBBCHSRCRQKGQEYW2CW7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1413996311-4287-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL1qeaHzp==jmTB8dJ1M3NuocwuSqsfbVSU4nuM50vrOyfJ3qA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Phani Movva <phani.movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 22 Oct 2014 18:45:07 +0200
-, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
- wrote:
-> During the discussion about adding clock handling code to simplefb, it became
-> clear that simplefb currently does not have an active maintainer.
-> 
-> I've discussed this with Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, the original
-> author of simplefb, and with his permisson I'm picking up maintainership of
-> simplefb.
-> 
-> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> Reviewed-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Reviewed-by: David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-> ---
->  MAINTAINERS | 8 ++++++++
->  1 file changed, 8 insertions(+)
+On 11/10/2014 06:28 PM, Andrew Bresticker wrote:
+> Ezequiel,
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 73d1aef..6e92e73 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8416,6 +8416,14 @@ F:	drivers/media/usb/siano/
->  F:	drivers/media/usb/siano/
->  F:	drivers/media/mmc/siano/
->  
-> +SIMPLEFB FB DRIVER
-> +M:	Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> +L:	linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/video/simple-framebuffer.txt
-> +F:	drivers/video/fbdev/simplefb.c
-> +F:	include/linux/platform_data/simplefb.h
-> +
->  SH_VEU V4L2 MEM2MEM DRIVER
->  L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->  S:	Orphan
-> -- 
-> 2.1.0
+> On Mon, Nov 10, 2014 at 11:59 AM, Ezequiel Garcia
+> <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+>> On 11/10/2014 04:50 PM, Ezequiel Garcia wrote:
+>>> On 11/08/2014 09:57 AM, Jonathan Cameron wrote:
+>>>> On 05/11/14 21:56, Ezequiel Garcia wrote:
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/iio/adc/cc_10001_adc.txt b/Documentation/devicetree/bindings/iio/adc/cc_10001_adc.txt
+>>>>> new file mode 100644
+>>>>> index 0000000..6491839
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/iio/adc/cc_10001_adc.txt
+>>>>> @@ -0,0 +1,19 @@
+>>>>> +* Cosmic Circuits - Analog to Digital Converter (CC-10001-ADC)
+>>>>> +
+>>>>> +Required properties:
+>>>>> +  - compatible: Should be "cosmic,10001-adc"
+>>>>> +  - reg: Should contain adc registers location and length.
+>>>>> +  - cosmic,adc-available-channels: Bitmask of the channels currently enabled.
+>>>> I suspect there may be other preferred ways of doing this (child nodes perhaps
+>>>> for each enabled channel?)
+>>>
+>>> Hm, I'm not sure about this. As far I can recall, if a node has children
+>>> then it *must* be a bus, which is not the case. Of course, you'll find
+>>> examples doing this wrong.
+>>>
+>>
+>> On a second thought... I guess you meant something like this?
+>>
+>> adc: adc@18101600 {
+>>         compatible = "cosmic,10001-adc";
+>>         reg = <0x18101600 0x24>;
+>>         clocks = <&adc_clk>;
+>>         clock-names = "adc";
+>>         vref-supply = <&reg_1v8>;
+>>         cosmic,channels {
+>>                 #address-cells = <1>;
+>>                 #size-cells = <0>;
+>>                 channel@0 {
+>>                         reg = <0>;
+>>                 };
+>>                 channel@1 {
+>>                         reg = <1>;
+>>                 };
+>>         };
+>> };
+>>
+>> Might be better, but I don't have a strong opinion on it.
 > 
+> I actually don't think this is any better.  The point of the property
+> is to indicate which channels are available for use by the main CPU,
+> i.e. channels not used by the RPU co-processor.  The property is not
+> used to indicate the presence of certain channels in hardware, in
+> which case maybe a bus would be appropriate.
+> 
+> Also, perhaps it would be better to reverse the sense of the property
+> (maybe, "cosmic,reserved-adc-channels") and make it optional?  I did
+> something similar for the MIPS GIC binding:
+> http://patchwork.linux-mips.org/patch/8268/.
+> 
+
+I'm fine with that. If Jonathan agrees with it (or better, if we can
+have an ack from a devicetree binding maintainer) I can spin a v3.
+
+Thanks!
+-- 
+Ezequiel
