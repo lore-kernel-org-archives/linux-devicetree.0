@@ -1,41 +1,44 @@
-From: Jiang Liu <jiang.liu@linux.intel.com>
-Subject: Re: [PATCH v5 0/6] ARM: mediatek: Add support for interrupt polarity
-Date: Tue, 11 Nov 2014 19:41:12 +0800
-Message-ID: <5461F5D8.7050700@linux.intel.com>
-References: <1414576824-16143-1-git-send-email-yingjoe.chen@mediatek.com> <20141109053820.GU3698@titan.lakedaemon.net> <alpine.DEB.2.11.1411111234220.3935@nanos>
+From: Igor Grinberg <grinberg@compulab.co.il>
+Subject: Re: [PATCH v2] ARM: dts: sbc-t3x: add DVI display data
+Date: Tue, 11 Nov 2014 14:02:55 +0200
+Message-ID: <5461FAEF.3010607@compulab.co.il>
+References: <1413364186-23752-1-git-send-email-lifshitz@compulab.co.il> <1414927198-7127-1-git-send-email-lifshitz@compulab.co.il> <54561E45.7000404@compulab.co.il> <20141110174845.GP31454@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.11.1411111234220.3935@nanos>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
-Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>, Marc Zyngier <marc.zyngier@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Grant Likely <grant.likely@linaro.org>, Boris BREZILLON <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, yingjoe.chen@gmail.com, hc.yen@mediatek.com, eddie.huang@mediatek.com, nathan.chung@mediatek.com, yh.chen@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20141110174845.GP31454@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Dmitry Lifshitz <lifshitz@compulab.co.il>, =?ISO-8859-1?Q?Beno=EEt_?= =?ISO-8859-1?Q?Cousson?= <bcousson@baylibre.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Tony,
 
-
-On 2014/11/11 19:35, Thomas Gleixner wrote:
-> On Sun, 9 Nov 2014, Jason Cooper wrote:
-> 
->> Thomas, Marc,
+On 11/10/14 19:48, Tony Lindgren wrote:
+> * Igor Grinberg <grinberg@compulab.co.il> [141102 04:08]:
+>> On 11/02/14 13:19, Dmitry Lifshitz wrote:
+>>> Add DSS related pinmux and display data nodes required to support
+>>> DVI video out on SBC-T3530, SBC-T3730 and SBC-T3517.
+>>>
+>>> Signed-off-by: Dmitry Lifshitz <lifshitz@compulab.co.il>
 >>
->> Could I get Acks for the core changes and gic changes when you have
->> a moment?
+>> Acked-by: Igor Grinberg <grinberg@compulab.co.il>
 > 
-> this depends on the core irqdomain changes which are not yet in
-> tip. I'm waiting for Jiangs latest iteration and Marcs feedback on
-> those.
-Hi Thomas,
-	Sorry for dealy:)
-	I think my previous version is good for merging. I only need to
-update one patch to address a possible conflict on other architectures.
-I'm testing the patch and should send it out soon.
-Regards!
-Gerry
+> Thanks applying into omap-for-v3.19/dt.
+> 
+> Are we now ready to drop the board-cm-*.c files?
 
-> 
-> Thanks,
-> 
-> 	tglx
-> 
+Let's see, below is a list of things that are yet to be
+supported in DT boot:
+NAND, TV, LCD, Touchscreen, Audio (CM-T3x30), RTC (CM-T3517), CAN (CM-3517).
+
+We're rc4 now, so hopefully, we will be able to get all this in for 3.19
+and then have the board files removed for 3.20.
+This way we can have 3.19 with both ways supported and do last checks.
+
+Are you ok with this?
+
+-- 
+Regards,
+Igor.
