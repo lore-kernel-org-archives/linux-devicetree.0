@@ -1,66 +1,68 @@
-From: =?windows-1252?Q?Andreas_F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: create an include directory for DT bindings
-Date: Tue, 11 Nov 2014 15:51:14 +0100
-Message-ID: <54622262.2010200@suse.de>
-References: <1415712108-11352-1-git-send-email-bintian.wang@huawei.com>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH v7 7/7] dt-bindings: add document for dw-hdmi
+Date: Tue, 11 Nov 2014 22:53:18 +0800
+Message-ID: <546222DE.4020803@rock-chips.com>
+References: <1415710229-11935-1-git-send-email-andy.yan@rock-chips.com>
+ <1415710486-12263-1-git-send-email-andy.yan@rock-chips.com>
+ <54621FCB.1050208@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415712108-11352-1-git-send-email-bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <54621FCB.1050208@imgtec.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Dave Airlie <airlied@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, ykk@rock-chips.com, Grant Likely <grant.likely@linaro.org>, djkurtz@google.com, Shawn Guo <shawn.guo@linaro.org>, jay.xu@rock-chips.com, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Am 11.11.2014 um 14:21 schrieb Bintian Wang:
-> Some header files may be used by both DT files and kernel, and we
-> usually put them under <include/dt-bindings/>, and also include them
-> in DT files just like:
->     #include <dt-bindings/xxx/xxx.h>
-> for exaple, some clock header files.
->=20
-> On arm64 platform, the compiler will report an error and terminate
-> when compiling DT files:
->     dt-bindings/xxx/xxx.h: No such file or directory
->=20
-> In order to fix the compile error, create an include directory and sy=
-mlink
-> dt-bindings from there to the actual location of include/dt-bindings/=
-:
->=20
-> arch/arm64/boot/dts/include/dt-bindings -> ../../../../../include/dt-=
-bindings
->=20
-> Signed-off-by: Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/include/dt-bindings | 1 +
->  1 file changed, 1 insertion(+)
->  create mode 120000 arch/arm64/boot/dts/include/dt-bindings
->=20
-> diff --git a/arch/arm64/boot/dts/include/dt-bindings b/arch/arm64/boo=
-t/dts/include/dt-bindings
-> new file mode 120000
-> index 0000000..08c00e4
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/include/dt-bindings
-> @@ -0,0 +1 @@
-> +../../../../../include/dt-bindings
-> \ No newline at end of file
-
-Such a patch was already on the list for the Juno board.
-
-Regards,
-Andreas
-
---=20
-SUSE LINUX GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 21284 AG N=FCrn=
-berg
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ck9uIDIwMTTlubQxMeaciDEx5pelIDIyOjQwLCBadWJhaXIgTHV0ZnVsbGFoIEtha2FraGVsIHdy
+b3RlOgo+IEhpIEFuZHksCj4KPiBTb21lIG1pbm9yIGNvbW1lbnRzIGlubGluZS4KPgo+IE9uIDEx
+LzExLzE0IDEyOjU0LCBBbmR5IFlhbiB3cm90ZToKPj4gU2lnbmVkLW9mZi1ieTogQW5keSBZYW4g
+PGFuZHkueWFuQHJvY2stY2hpcHMuY29tPgo+PiAtLS0KPj4KPj4gQ2hhbmdlcyBpbiB2NzogTm9u
+ZQo+PiBDaGFuZ2VzIGluIHY2OiBOb25lCj4+IENoYW5nZXMgaW4gdjU6IE5vbmUKPj4gQ2hhbmdl
+cyBpbiB2NDogTm9uZQo+PiBDaGFuZ2VzIGluIHYzOiBOb25lCj4+IENoYW5nZXMgaW4gdjI6IE5v
+bmUKPj4KPj4gICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3LWhkbWkudHh0
+ICAgICB8IDM4ICsrKysrKysrKysrKysrKysrKysrKysKPj4gICAxIGZpbGUgY2hhbmdlZCwgMzgg
+aW5zZXJ0aW9ucygrKQo+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZHJtL2JyaWRnZS9kdy1oZG1pLnR4dAo+Pgo+PiBkaWZmIC0tZ2l0IGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9icmlkZ2UvZHctaGRtaS50eHQg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2JyaWRnZS9kdy1oZG1pLnR4
+dAo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwLi5hYTdlZDE3Cj4+IC0t
+LSAvZGV2L251bGwKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Ry
+bS9icmlkZ2UvZHctaGRtaS50eHQKPj4gQEAgLTAsMCArMSwzOCBAQAo+PiArRGVzaWduV2FyZSBI
+RE1JIGJyaWRnZSBiaW5kaW5ncwo+PiArCj4+ICtSZXF1aXJlZCBwcm9wZXJpdGllczoKPiAJCj4g
+CSAgICBecHJvcGVydGllcwo+Cj4+ICstIGNvbXBhdGliZWw6IHBsYXRmb3JtIHNwZWNpZmljIHN1
+Y2ggYXMgImZzbCxpbXg2cS1oZG1pIiwiZnNsLGlteDZkbC1oZG1pIgo+ICAgICAgIF5jb21wYXRp
+YmxlCiAgIHRoYW5rcyAsIHRoZXNlIHdpbGwgYmUgZml4ZWQgbmV4dC4KPj4gKwkgICAgICAicm9j
+a2NoaXAscmszMjg4LWR3LWhkbWkiCj4gVGhpcyB3aWxsIG5lZWQgdG8gY29tZSBpbiBhIHNlcGFy
+YXRlIHNlcmllcyB3aGljaCBhZGRzIHJrMzI4OCBoZG1pIHN1cHBvcnQuLgogIHdlIHdpbGwgYWRk
+IHJrMzI4OCBoZG1pIHBsYXRmb3JtIGNvZGUgc29vbgo+Cj4+ICstIHJlZzogcGh5c2ljYWwgYmFz
+ZSBhZGRyZXNzIG9mIHRoZSBjb250cm9sbGVyIGFuZCBsZW5ndGgKPj4gKy0gZGRjLWkyYy1idXM6
+IHRoZSBkZGMgaTJjIGJ1cwo+PiArLSBpbnRlcnJ1cHRzOiBUaGUgaW50ZXJydXB0IG51bWJlciB0
+byB0aGUgY3B1Cj4+ICsKPj4gK09wdGlvbmFsIHByb3BlcnRpZXMKPj4gKy0gcmVnLWlvLXdpZHRo
+OiB0aGUgd2lkdGggb2YgdGhlIHJlZzoxLDQsIGRlZmF1bHQgc2V0IHRvIDEgaWYgbm90IHByZXNl
+bnQKPj4gKwo+PiArRXhhbXBsZToKPj4gKwloZG1pOiBoZG1pQDAxMjAwMDAgewo+PiArCQljb21w
+YXRpYmxlID0gImZzbCxpbXg2cS1oZG1pIjsKPj4gKwkJcmVnID0gPDB4MDAxMjAwMDAgMHg5MDAw
+PjsKPj4gKwkJaW50ZXJydXB0cyA9IDwwIDExNSAweDA0PjsKPj4gKwkJZ3ByID0gPCZncHI+Owo+
+PiArCQljbG9ja3MgPSA8JmNsa3MgMTIzPiwgPCZjbGtzIDEyND47Cj4+ICsJCWNsb2NrLW5hbWVz
+ID0gImlhaGIiLCAiaXNmciI7Cj4+ICsJCWRkYy1pMmMtYnVzID0gPCZpMmMyPjsKPj4gKwo+PiAr
+CQlwb3J0QDAgewo+PiArCQkJcmVnID0gPDA+Owo+PiArCj4+ICsJCQloZG1pX211eF8wOiBlbmRw
+b2ludCB7Cj4+ICsJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZpcHUxX2RpMF9oZG1pPjsKPj4gKwkJ
+CX07Cj4+ICsJCX07Cj4+ICsKPj4gKwkJcG9ydEAxIHsKPj4gKwkJCXJlZyA9IDwxPjsKPj4gKwo+
+PiArCQkJaGRtaV9tdXhfMTogZW5kcG9pbnQgewo+PiArCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwm
+aXB1MV9kaTFfaGRtaT47Cj4+ICsJCQl9Owo+PiArCQl9Owo+PiArCX07Cj4+Cj4gVGhhbmtzCj4g
+WnViYWlyTEsKPgo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCj4gTGludXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0Cj4gTGludXgtcm9ja2NoaXBAbGlzdHMu
+aW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
+Zm8vbGludXgtcm9ja2NoaXAKPgo+Cj4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkZXZlbCBtYWlsaW5nIGxpc3QKZGV2ZWxAbGludXhkcml2ZXJwcm9q
+ZWN0Lm9yZwpodHRwOi8vZHJpdmVyZGV2LmxpbnV4ZHJpdmVycHJvamVjdC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9kcml2ZXJkZXYtZGV2ZWwK
