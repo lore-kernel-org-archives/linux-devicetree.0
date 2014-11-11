@@ -1,66 +1,74 @@
-From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] DT: i2c: Add binding document for IMG I2C SCB
-Date: Tue, 11 Nov 2014 17:39:47 -0300
-Message-ID: <54627413.2030901@imgtec.com>
-References: <1415647816-16415-1-git-send-email-ezequiel.garcia@imgtec.com>	<1415647816-16415-3-git-send-email-ezequiel.garcia@imgtec.com> <CAL1qeaHG=zVgA+LOQWcaYndyPJPq6Qs18b4Vorj8zXhj8tSeyw@mail.gmail.com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/5] dt-bindings: Add a clocks property
+ to the simple-framebuffer binding
+Date: Tue, 11 Nov 2014 21:42:17 +0000
+Message-ID: <20141111214217.19EF5C41610@trevor.secretlab.ca>
+References: <1413996311-4287-1-git-send-email-hdegoede@redhat.com>
+	<1413996311-4287-3-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL1qeaHG=zVgA+LOQWcaYndyPJPq6Qs18b4Vorj8zXhj8tSeyw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCJP567ORICBBPEFRKRQKGQESETMVJY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1413996311-4287-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 11/10/2014 05:22 PM, Andrew Bresticker wrote:
-> Hi Ezequiel, James,
+On Wed, 22 Oct 2014 18:45:08 +0200
+, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+ wrote:
+> A simple-framebuffer node represents a framebuffer setup by the firmware /
+> bootloader. Such a framebuffer may have a number of clocks in use, add a
+> property to communicate this to the OS.
 > 
-> On Mon, Nov 10, 2014 at 11:30 AM, Ezequiel Garcia
-> <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
->> From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
->>
->> Introduce a devicetree binding for Imagination Technologies
->> I2C SCB controller.
->>
->> Signed-off-by: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
->> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Reviewed-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Acked-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+> Reviewed-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > 
->> diff --git a/Documentation/devicetree/bindings/i2c/i2c-img-scb.txt b/Documentation/devicetree/bindings/i2c/i2c-img-scb.txt
->> new file mode 100644
->> index 0000000..3a5cd1f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/i2c/i2c-img-scb.txt
->> @@ -0,0 +1,29 @@
->> +IMG Serial Control Bus (SCB) I2C Controller
->> +
->> +Required Properties:
->> +- compatible: "img,scb-i2c"
->> +- reg: Physical base address and length of controller registers
->> +- interrupts: Interrupt number used by the controller
->> +- clocks : Should contain a clock specifier for each entry in clock-names
->> +- clock-names : Should contain the following entries:
->> +                "scb", for the SCB core clock.
->> +                "sys", for the system clock.
->> +- clock-frequency: The I2C bus frequency in Hz
->> +- #address-cells: Should be <1>
->> +- #size-cells: Should be <0>
->> +
->> +Optional Properties
->> +- img,bus-delay : Bus delay in ms, defaults to 0.
+> --
+> Changes in v2:
+> -Added Reviewed-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Changes in v3:
+> -Updated description to make clear simplefb deals with more then just memory
+> ---
+>  Documentation/devicetree/bindings/video/simple-framebuffer.txt | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 > 
-> Maybe this is a dumb question, but what delay does this correspond to
-> in hardware?  In what situations would we use a non-zero value?
-> 
+> diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer.txt b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+> index 70c26f3..172ad5f 100644
+> --- a/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+> +++ b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+> @@ -1,8 +1,8 @@
+>  Simple Framebuffer
+>  
+> -A simple frame-buffer describes a raw memory region that may be rendered to,
+> -with the assumption that the display hardware has already been set up to scan
+> -out from that buffer.
+> +A simple frame-buffer describes a frame-buffer setup by firmware or
+> +the bootloader, with the assumption that the display hardware has already
+> +been set up to scan out from the memory pointed to by the reg property.
+>  
+>  Required properties:
+>  - compatible: "simple-framebuffer"
+> @@ -14,6 +14,9 @@ Required properties:
+>    - r5g6b5 (16-bit pixels, d[15:11]=r, d[10:5]=g, d[4:0]=b).
+>    - a8b8g8r8 (32-bit pixels, d[31:24]=a, d[23:16]=b, d[15:8]=g, d[7:0]=r).
+>  
+> +Optional properties:
+> +- clocks : List of clocks used by the framebuffer
 
-I'm not sure when would we need a non-zero value. The TRM I have here
-mentions the bus delay parameter models the delay in the internal Clock
-Enable Generation block, and which affects the values that should be
-written to obtain a specified clock enable rate.
+Please change to the following:
+- clocks : List of clocks used by the framebuffer. Clocks listed here
+           are expected to already be configured correctly. The OS must
+           ensure these clocks are not modified or disabled while the
+           simple framebuffer remains active.
 
-After re-reading the code that configures the clock generation, I think
-we can use some more comments :)
--- 
-Ezequiel
+g.
