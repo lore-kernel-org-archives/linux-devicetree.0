@@ -1,146 +1,51 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] DT: add MDIO node for FMan node
-Date: Tue, 11 Nov 2014 11:37:59 -0600
-Message-ID: <1415727479.15957.29.camel@freescale.com>
-References: <1415102196-9238-1-git-send-email-shh.xie@gmail.com>
-	 <1415665384.15957.16.camel@freescale.com>
-	 <fb6dc6131da04e89bfc31bd8278030a0@DM2PR0301MB0864.namprd03.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 01/22] dt/bindings: fix documentation of ethernet-phy compatible property
+Date: Tue, 11 Nov 2014 18:37:19 +0100
+Message-ID: <1415727460-20417-2-git-send-email-johan@kernel.org>
+References: <1415727460-20417-1-git-send-email-johan@kernel.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <fb6dc6131da04e89bfc31bd8278030a0-Cwg/PA1lyPnq20u2fDgSrZwN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+In-Reply-To: <1415727460-20417-1-git-send-email-johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xie Shaohui-B21989 <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Liberman Igal-B31950 <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Medve Emilian-EMMEDVE1 <Emilian.Medve-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-11-11 at 04:32 -0600, Xie Shaohui-B21989 wrote:
-> > -----Original Message-----
-> > From: Wood Scott-B07421
-> > Sent: Tuesday, November 11, 2014 8:23 AM
-> > To: shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-> > Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Medve
-> > Emilian-EMMEDVE1; Xie Shaohui-B21989
-> > Subject: Re: [PATCH] DT: add MDIO node for FMan node
-> > 
-> > On Tue, 2014-11-04 at 19:56 +0800, shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> > > From: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > >
-> > > This binding is for FMan MDIO, it covers FMan v2 & FMan v3.
-> > >
-> > > Signed-off-by: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > > ---
-> > > based on http://patchwork.ozlabs.org/patch/390351/
-> > > for 'next' of
-> > > git://git.kernel.org/pub/scm/linux/kernel/git/scottwood/linux.git
-> > 
-> > Are there any other FMan pieces that are missing from the above patch?
-> [S.H] I'm adding Igal for this comment.
-> 
-> > 
-> > >  .../devicetree/bindings/powerpc/fsl/fman.txt       | 69
-> > ++++++++++++++++++++++
-> > >  1 file changed, 69 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-> > > b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-> > > index da8e5f2..83c2f14 100644
-> > > --- a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-> > > +++ b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-> > > @@ -7,6 +7,7 @@ CONTENTS
-> > >    - FMan MURAM Node
-> > >    - FMan dTSEC/XGEC/mEMAC Node
-> > >    - FMan IEEE 1588 Node
-> > > +  - FMan MDIO Node
-> > >    - Example
-> > >
-> > >
-> > > ======================================================================
-> > > ======= @@ -352,6 +353,67 @@ ptp-timer@fe000 {  };
-> > >
-> > >
-> > > ======================================================================
-> > > =======
-> > > +FMan MDIO Node
-> > > +
-> > > +DESCRIPTION
-> > > +
-> > > +The MDIO is a bus to which the PHY devices are connected.
-> > > +
-> > > +PROPERTIES
-> > > +
-> > > +- compatible
-> > > +		Usage: required
-> > > +		Value type: <stringlist>
-> > > +		Definition: A standard property.
-> > > +		Must include "fsl,fman-mdio" for 1 Gb/s MDIO from FMan v2.
-> > > +		Must include "fsl,fman-xmdio" for 10 Gb/s MDIO from FMan v2.
-> > > +		Must include "fsl,fman-memac-mdio" for 1/10 Gb/s MDIO from
-> > > +		FMan v3.
-> > > +
-> > > +- reg
-> > > +		Usage: required
-> > > +		Value type: <prop-encoded-array>
-> > > +		Definition: A standard property.
-> > > +
-> > > +- bus-frequency
-> > > +		Usage: optional
-> > > +		Value type: <u32>
-> > > +		Definition: Default MDIO bus clock speed.
-> > 
-> > Use clocks/clock-names
-> [S.H] The MDIO uses Fman clock and divides it to a proper value which is specified by this property.
+A recent commit extended the documentation of the ethernet-phy
+compatible property, but placed the new paragraph under the max-speed
+property.
 
-Use clocks/clock-names to describe that relationship.
+Fixes: f00e756ed12d ("dt: Document a compatible entry for MDIO ethernet
+Phys")
 
-> > 
-> > > +- interrupts
-> > > +		Usage: optional
-> > > +		Value type: <prop-encoded-array>
-> > > +		Definition: MDIO controller event interrupts.
-> > 
-> > One interrupt or multiple?
-> [S.H] One for 1 Gb/s, one for 10 Gb/s.
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/net/phy.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Then the binding needs to say that there are two (except for
-"fsl,fman-mdio", right?) and which is which.
-
-> > 
-> > > +
-> > > +- type
-> > > +		Usage: required for FMan v3
-> > > +		Value type: <stringlist>
-> > > +		Definition: A standard property.
-> > 
-> > What standard is "type" defined in?
->
-> [S.H] It's to differentiate between the internal and external MDIO, I'm
-> not quite sure about naming it, or what could be better way to
-> differentiate the MDIOs?
-
-I'm not questioning the need to convey this information.  I'm saying
-it's not "A standard property".  I'd also like to see a better name.
-
-> > 
-> > > +		FMan v3 has internal MDIO for internal PCS(Physical Coding
-> > > +		Sublayer) PHYs and external MDIO for external PHYs.
-> > > +		The settings and programming routines for internal/external
-> > > +		MDIO are different. Must include "internal" for internal MDIO,
-> > > +		must include "external" for external MDIO.
-> > 
-> > I assume fman v2 is always internal?  How about a boolean "fsl,fman-
-> > internal-phy" property instead?
-> [S.H] Both Fman v2 & v3 have internal/external MDIO, Fman v2 uses internal MDIO for TBI operations to set the SGMII PHY, 
->
-> The TBI implements transmit/receive portions of PCS, it's not used in
-> Linux. The PCS on Fman V3 are not just for SGMII, it has more
-> implementations, it's used in Linux.
-
-The device tree is about the hardware, not what's used in Linux.
-
--Scott
-
+diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
+index 5b8c58903077..40831fbaff72 100644
+--- a/Documentation/devicetree/bindings/net/phy.txt
++++ b/Documentation/devicetree/bindings/net/phy.txt
+@@ -19,7 +19,6 @@ Optional Properties:
+   specifications. If neither of these are specified, the default is to
+   assume clause 22. The compatible list may also contain other
+   elements.
+-- max-speed: Maximum PHY supported speed (10, 100, 1000...)
+ 
+   If the phy's identifier is known then the list may contain an entry
+   of the form: "ethernet-phy-idAAAA.BBBB" where
+@@ -29,6 +28,8 @@ Optional Properties:
+             4 hex digits. This is the chip vendor OUI bits 19:24,
+             followed by 10 bits of a vendor specific ID.
+ 
++- max-speed: Maximum PHY supported speed (10, 100, 1000...)
++
+ Example:
+ 
+ ethernet-phy@0 {
+-- 
+2.0.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
