@@ -1,111 +1,41 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RESUBMIT PATCH v6 0/8] Add Skyworks SKY81452 device drivers
-Date: Tue, 11 Nov 2014 11:10:37 +0000
-Message-ID: <20141111111037.GW24004@x1>
-References: <1414393369-31583-1-git-send-email-jack.yoo@skyworksinc.com>
- <1414739322-12487-1-git-send-email-jack.yoo@skyworksinc.com>
+From: Jiang Liu <jiang.liu@linux.intel.com>
+Subject: Re: [PATCH v5 0/6] ARM: mediatek: Add support for interrupt polarity
+Date: Tue, 11 Nov 2014 19:41:12 +0800
+Message-ID: <5461F5D8.7050700@linux.intel.com>
+References: <1414576824-16143-1-git-send-email-yingjoe.chen@mediatek.com> <20141109053820.GU3698@titan.lakedaemon.net> <alpine.DEB.2.11.1411111234220.3935@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1414739322-12487-1-git-send-email-jack.yoo@skyworksinc.com>
+In-Reply-To: <alpine.DEB.2.11.1411111234220.3935@nanos>
 Sender: linux-kernel-owner@vger.kernel.org
-To: gyungoh@gmail.com
-Cc: sameo@linux.intel.com, jg1.han@samsung.com, cooloney@gmail.com, broonie@kernel.org, lgirdwood@gmail.com, jack.yoo@skyworksinc.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, heiko@sntech.de, jason@lakedaemon.net, shawn.guo@freescale.com, treding@nvidia.com, florian.vaussard@epfl.ch, trivial@kernel.org, linux@roeck-us.net, andrew@lunn.ch, jic23@kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
+Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>, Marc Zyngier <marc.zyngier@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Grant Likely <grant.likely@linaro.org>, Boris BREZILLON <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, yingjoe.chen@gmail.com, hc.yen@mediatek.com, eddie.huang@mediatek.com, nathan.chung@mediatek.com, yh.chen@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Gyungoh,
 
-You are still missing Acks for this set.  Can you please send it again
-with the Acks that you have collected thus far.
 
-Please do not send it in reply-to these others.  I would suggest never
-sending out the set again in reply-to a previous version, as things
-get confusing real quick.
+On 2014/11/11 19:35, Thomas Gleixner wrote:
+> On Sun, 9 Nov 2014, Jason Cooper wrote:
+> 
+>> Thomas, Marc,
+>>
+>> Could I get Acks for the core changes and gic changes when you have
+>> a moment?
+> 
+> this depends on the core irqdomain changes which are not yet in
+> tip. I'm waiting for Jiangs latest iteration and Marcs feedback on
+> those.
+Hi Thomas,
+	Sorry for dealy:)
+	I think my previous version is good for merging. I only need to
+update one patch to address a possible conflict on other architectures.
+I'm testing the patch and should send it out soon.
+Regards!
+Gerry
 
-> From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
->=20
-> This patch set includes regulator and backlight driver for SKY81452.
-> Also it includes documents for device tree and module.
-> The initial version of sky81452-regulator was applied. Fo this, incre=
-mental
-> patches are included.
->=20
-> v6:
-> Added new line character at the end of line of dev_err()
->=20
-> v5:
-> Changed DT for regulator : 'lout' node should be defined under 'regul=
-ator'
-> Removed compatible string from sky81452-regulator driver
-> Modified sky81452-regulator to return EINVAL when of_node is NULL
-> Move sky81452-backlight.h to include/linux/platform_data
->=20
-> v4:
-> Removed MODULE_VERSION()
-> Modified license to GPLv2
-> Removed calling to backlight_device_unregister() in sky81452-backligh=
-t
->=20
-> v3:
-> Cleaned-up DBG messages
-> Cleaned-up DT
-> Fixed the backlight name from 'sky81452-bl' to 'sky81452-backlight'
-> Assigned mfd_cell.of_compatible for binding device node
-> Modified error messages
-> Modified sky81452-regulator to return ENODATA when of_node is NULL
->=20
-> v2:
-> Split the patches for each sub-system
-> Added 'reg' attribute for I2C address in device tree documents
-> Added 'compatible' attribute in child drivers
-> Renamed CONFIG_SKY81452 to CONFIG_MFD_SKY81452
-> Changed the dependency from I2C=3Dy to I2C, for CONFIG_MFD_SKY81452
-> Added message for exception or errors.
-> Added vendor prefix for Skyworks Solutions, Inc.
-> Add SKY81452 to the Trivial Devices list
->=20
-> Gyungoh Yoo (8):
->   mfd: Add support for Skyworks SKY81452 driver
->   backlight: Add support Skyworks SKY81452 backlight driver
->   devicetree: mfd: Add new SKY81452 mfd binding
->   devicetree: backlight: Add new SKY81452 backlight binding
->   devicetree: Add vendor prefix for Skyworks Solutions, Inc.
->   devicetree: i2c: Add SKY81452 to the Trivial Devices list
->   regulator: sky81452: Add compatible string for device binding
->   devicetree: regulator: sky81452: Add compatible string for device
->     binding
->=20
->  .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
->  Documentation/devicetree/bindings/mfd/sky81452.txt |  33 ++
->  .../bindings/regulator/sky81452-regulator.txt      |  10 +-
->  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
->  .../video/backlight/sky81452-backlight.txt         |  24 ++
->  drivers/mfd/Kconfig                                |  12 +
->  drivers/mfd/Makefile                               |   1 +
->  drivers/mfd/sky81452.c                             | 109 +++++++
->  drivers/regulator/Kconfig                          |   2 +-
->  drivers/regulator/sky81452-regulator.c             |  29 +-
->  drivers/video/backlight/Kconfig                    |  10 +
->  drivers/video/backlight/Makefile                   |   1 +
->  drivers/video/backlight/sky81452-backlight.c       | 345 +++++++++++=
-++++++++++
->  include/linux/mfd/sky81452.h                       |  32 ++
->  include/linux/platform_data/sky81452-backlight.h   |  47 +++
->  15 files changed, 642 insertions(+), 15 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/sky81452.tx=
-t
->  create mode 100644 Documentation/devicetree/bindings/video/backlight=
-/sky81452-backlight.txt
->  create mode 100644 drivers/mfd/sky81452.c
->  create mode 100644 drivers/video/backlight/sky81452-backlight.c
->  create mode 100644 include/linux/mfd/sky81452.h
->  create mode 100644 include/linux/platform_data/sky81452-backlight.h
->=20
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+> 
+> Thanks,
+> 
+> 	tglx
+> 
