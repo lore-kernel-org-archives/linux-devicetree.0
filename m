@@ -1,55 +1,95 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 0/5] ARM: sunxi: Add support for USB OTG PHY
-Date: Wed, 12 Nov 2014 00:50:53 +0800
-Message-ID: <CAGb2v65=xbP+QMTBtVGRg6cEXHhsYda45yKHGrq9QfKcXozHiA@mail.gmail.com>
-References: <cover.1415645258.git.rbyshko@gmail.com> <5461D2C1.6020505@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2] ARM: dts: sbc-t3x: add DVI display data
+Date: Tue, 11 Nov 2014 08:51:46 -0800
+Message-ID: <20141111165145.GA26481@atomide.com>
+References: <1413364186-23752-1-git-send-email-lifshitz@compulab.co.il>
+ <1414927198-7127-1-git-send-email-lifshitz@compulab.co.il>
+ <54561E45.7000404@compulab.co.il>
+ <20141110174845.GP31454@atomide.com>
+ <5461FAEF.3010607@compulab.co.il>
+ <20141111144911.GK31454@atomide.com>
+ <54623BC7.6000603@compulab.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBAX5RCRQKGQEIRTC7HQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <5461D2C1.6020505-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54623BC7.6000603@compulab.co.il>
+Sender: linux-omap-owner@vger.kernel.org
+To: Igor Grinberg <grinberg@compulab.co.il>
+Cc: Dmitry Lifshitz <lifshitz@compulab.co.il>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 11, 2014 at 5:11 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> Hi,
->
-> On 11/10/2014 07:55 PM, Roman Byshko wrote:
->> Hi,
->>
->> There is already support for two USB phys, which are used for
->> USB host controllers on Allwinner SoC aka sunxi.
->>
->> This patch series add support for the USB OTG phy (aka phy0).
->>
->> The code has been tested on Allwinner A20 aka sun7i (Cubietruck).
->>
->> Best regards,
->> Roman Byshko
->
-> First of all very cool that you're working on this, I somehow missed
-> v1, but I'm very happy to see this.
->
-> Second some questions, this series seems to only add support for
-> initializing the phy, without adding the necessary magic for
-> switching from app to host mode, and without actually hooking up musb,
-> I assume you've a follow up series adding musb support, which actually
-> uses the phy ?
->
-> Also have you coordinated your work with ChenYu? ATM ChenYu is mostly
-> working on other stuff, but AFAIk he has been working on musb support
-> in the past.
+* Igor Grinberg <grinberg@compulab.co.il> [141111 08:41]:
+> On 11/11/14 16:49, Tony Lindgren wrote:
+> > * Igor Grinberg <grinberg@compulab.co.il> [141111 04:04]:
+> >> Hi Tony,
+> >>
+> >> On 11/10/14 19:48, Tony Lindgren wrote:
+> >>> * Igor Grinberg <grinberg@compulab.co.il> [141102 04:08]:
+> >>>> On 11/02/14 13:19, Dmitry Lifshitz wrote:
+> >>>>> Add DSS related pinmux and display data nodes required to support
+> >>>>> DVI video out on SBC-T3530, SBC-T3730 and SBC-T3517.
+> >>>>>
+> >>>>> Signed-off-by: Dmitry Lifshitz <lifshitz@compulab.co.il>
+> >>>>
+> >>>> Acked-by: Igor Grinberg <grinberg@compulab.co.il>
+> >>>
+> >>> Thanks applying into omap-for-v3.19/dt.
+> >>>
+> >>> Are we now ready to drop the board-cm-*.c files?
+> >>
+> >> Let's see, below is a list of things that are yet to be
+> >> supported in DT boot:
+> >> NAND, TV, LCD, Touchscreen, Audio (CM-T3x30), RTC (CM-T3517), CAN (CM-3517).
+> > 
+> > OK great, hopefully that's mostly just configuring the .dts
+> > files.
+> 
+> Well, mostly... but not all of it.
+> 
+> The LCD, RTC and CAN require bindings/drivers work.
 
-I'm happy that someone has taken over. I was mostly just exploring what
-OTG is, not much code actually made it into my working branch, which is
-available on github.
+OK 
+  
+> >> We're rc4 now, so hopefully, we will be able to get all this in for 3.19
+> >> and then have the board files removed for 3.20.
+> > 
+> > Yes something like that sounds good to me. We should allow at
+> > least one release for people to change over.
+> > 
+> >> This way we can have 3.19 with both ways supported and do last checks.
+> >>
+> >> Are you ok with this?
+> > 
+> > Sure if you get the changes posted before -rc6, otherwise
+> > it will be too late for v3.19.
+> 
+> I think, I was too optimistic about 3.19, but we can try.
+> Since drivers will require adaptation, I'm not sure
+> it will be merged for 3.19...
 
-ChenYu
+Yes it might be a bit late for that, but if the changes are trivial,
+maybe not.
+
+> If we really want to make the DT boot for 3.19, we could work and
+> post the drivers adaptation patches and in parallel (to keep thing
+> going for board files removal) prepare patches for adding the
+> problematic stuff via quirks. This way we can keep only the DT missing
+> functionality in quirks and remove the board files. Once the drivers
+> are adjusted with new bindings, we can remove the quirks.
+
+Yes that's what we can do for sure.
+ 
+> Or if we are fine with keeping the board files for a little more, then
+> just add the DT functionality that is ready and keep working on drivers
+> until they are ready (hopefully, 1 - 2 releases).
+> 
+> What do you think?
+
+It seems we can do both in parallel: We can use quirks for now, then
+remove the quirks when drivers have bindings. That removes a dependency
+between board-*.c files and the remaining few drivers.
+
+Regards,
+
+Tony
