@@ -1,81 +1,88 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: [PATCH 2/3] regulator: max77802: Fill regulator modes translation callback
-Date: Tue, 11 Nov 2014 13:04:44 +0100
-Message-ID: <1415707485-28563-3-git-send-email-javier.martinez@collabora.co.uk>
-References: <1415707485-28563-1-git-send-email-javier.martinez@collabora.co.uk>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415707485-28563-1-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH v7 0/7] dw-hdmi: convert imx hdmi to bridge/dw-hdmi
+Date: Tue, 11 Nov 2014 20:12:25 +0800
+Message-ID: <1415707952-11415-1-git-send-email-andy.yan@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: airlied@linux.ie, Zubair.Kakakhel@imgtec.com, rmk+kernel@arm.linux.org.uk, fabio.estevam@freescale.com, heiko@sntech.de, djkurtz@chromium.org, ykk@rock-chips.com
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Josh Boyer <jwboyer@redhat.com>, Dave Airlie <airlied@redhat.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Andy Yan <andy.yan@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-The max77802 PMIC regulators output can be configured in one of two
-modes: Output ON (normal) and Output ON in Low Power Mode. Some of
-the regulators support their operating mode to be changed on startup
-or by consumers when the system is running while others only support
-their operating mode to be changed while the system has entered in a
-suspend state.
 
-Use the max77802_map_mode() function to translate the device specific
-modes to the standard operating modes as used by the regulator core.
+We found freescale imx5 and rockchip rk3288 and Ingenic JZ4780 (Xburst/MIPS)
+use the interface compatible Designware HDMI IP, but they also have some
+lightly differences, such as phy pll configuration, register width(imx hdmi
+register is one byte, but rk3288 is 4 bytes width and can only access by word),
+4K support(imx6 doesn't support 4k, but rk3288 does).
 
-Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
----
- drivers/regulator/max77802.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+To reuse the imx-hdmi driver, we do this patch set:
+(1): fix some CodingStyle warning to make checkpatch happy
+(2): split out imx-soc code from imx-hdmi to dw_hdmi-imx.c
+(3): move imx-hdmi to bridge/dw-hdmi, and convert it to a drm_bridge driver
+And we will add rockchip platform specific code dw_hdmi-rockchip.c later,
+which is depend on drm-rockchip.
 
-diff --git a/drivers/regulator/max77802.c b/drivers/regulator/max77802.c
-index 9b4d127..0766615 100644
---- a/drivers/regulator/max77802.c
-+++ b/drivers/regulator/max77802.c
-@@ -378,6 +378,7 @@ static struct regulator_ops max77802_buck_dvs_ops = {
- 	.vsel_mask	= MAX77802_VSEL_MASK,				\
- 	.enable_reg	= MAX77802_REG_LDO1CTRL1 + num - 1,		\
- 	.enable_mask	= MAX77802_OPMODE_MASK << MAX77802_OPMODE_SHIFT_LDO, \
-+	.of_map_mode	= max77802_map_mode,				\
- }
- 
- /* LDOs 1, 2, 8, 15, 17, 27, 30, 35 */
-@@ -398,6 +399,7 @@ static struct regulator_ops max77802_buck_dvs_ops = {
- 	.vsel_mask	= MAX77802_VSEL_MASK,				\
- 	.enable_reg	= MAX77802_REG_LDO1CTRL1 + num - 1,		\
- 	.enable_mask	= MAX77802_OPMODE_MASK << MAX77802_OPMODE_SHIFT_LDO, \
-+	.of_map_mode	= max77802_map_mode,				\
- }
- 
- /* BUCKs 1, 6 */
-@@ -418,6 +420,7 @@ static struct regulator_ops max77802_buck_dvs_ops = {
- 	.vsel_mask	= MAX77802_DVS_VSEL_MASK,			\
- 	.enable_reg	= MAX77802_REG_BUCK ## num ## CTRL,		\
- 	.enable_mask	= MAX77802_OPMODE_MASK,				\
-+	.of_map_mode	= max77802_map_mode,				\
- }
- 
- /* BUCKS 2-4 */
-@@ -439,6 +442,7 @@ static struct regulator_ops max77802_buck_dvs_ops = {
- 	.enable_reg	= MAX77802_REG_BUCK ## num ## CTRL1,		\
- 	.enable_mask	= MAX77802_OPMODE_MASK <<			\
- 				MAX77802_OPMODE_BUCK234_SHIFT,		\
-+	.of_map_mode	= max77802_map_mode,				\
- }
- 
- /* BUCK 5 */
-@@ -459,6 +463,7 @@ static struct regulator_ops max77802_buck_dvs_ops = {
- 	.vsel_mask	= MAX77802_VSEL_MASK,				\
- 	.enable_reg	= MAX77802_REG_BUCK5CTRL,			\
- 	.enable_mask	= MAX77802_OPMODE_MASK,				\
-+	.of_map_mode	= max77802_map_mode,				\
- }
- 
- /* BUCKs 7-10 */
-@@ -479,6 +484,7 @@ static struct regulator_ops max77802_buck_dvs_ops = {
- 	.vsel_mask	= MAX77802_VSEL_MASK,				\
- 	.enable_reg	= MAX77802_REG_BUCK7CTRL + (num - 7) * 3,	\
- 	.enable_mask	= MAX77802_OPMODE_MASK,				\
-+	.of_map_mode	= max77802_map_mode,				\
- }
- 
- static const struct regulator_desc regulators[] = {
+Changes in v7:
+- remove unused variables from structure dw_hdmi
+- remove a wrong modification
+- add copyrights for dw_hdmi-imx.c
+
+Changes in v6:
+- rearrange the patch order
+- move some modification to  patch#6
+- refactor register access without reg_shift
+- move some modification from patch#5
+
+Changes in v5:
+- refactor reg-io-width
+
+Changes in v4:
+- fix checkpatch CHECK
+- defer probe ddc i2c adapter
+
+Changes in v3:
+- split multi register access to one indepent patch
+
+Changes in v2:
+- use git format -M to generate these patch
+
+Andy Yan (6):
+  staging: imx-drm: imx-hdmi: make checkpatch happy
+  staging: imx-drm: imx-hdmi: return defer if can't get ddc i2c adapter
+  staging: imx-drm: imx-hdmi: split imx soc specific code from imx-hdmi
+  staging: imx-drm: imx-hdmi: move imx-hdmi to bridge/dw-hdmi
+  drm: bridge/dw-hdmi: add support for multi byte register width access
+  dt-bindings: add document for dw-hdmi
+
+Yakir Yang (1):
+  drm: bridge/dw-hdmi: convert dw-hdmi to drm_bridge mode
+
+ .../devicetree/bindings/drm/bridge/dw-hdmi.txt     |  38 ++
+ drivers/gpu/drm/bridge/Kconfig                     |   5 +
+ drivers/gpu/drm/bridge/Makefile                    |   1 +
+ .../imx-hdmi.c => gpu/drm/bridge/dw_hdmi.c}        | 723 +++++++++------------
+ .../imx-hdmi.h => gpu/drm/bridge/dw_hdmi.h}        |   5 +-
+ drivers/staging/imx-drm/Kconfig                    |   1 +
+ drivers/staging/imx-drm/Makefile                   |   2 +-
+ drivers/staging/imx-drm/dw_hdmi-imx.c              | 266 ++++++++
+ include/drm/bridge/dw_hdmi.h                       |  52 ++
+ 9 files changed, 670 insertions(+), 423 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/drm/bridge/dw-hdmi.txt
+ rename drivers/{staging/imx-drm/imx-hdmi.c => gpu/drm/bridge/dw_hdmi.c} (71%)
+ rename drivers/{staging/imx-drm/imx-hdmi.h => gpu/drm/bridge/dw_hdmi.h} (99%)
+ create mode 100644 drivers/staging/imx-drm/dw_hdmi-imx.c
+ create mode 100644 include/drm/bridge/dw_hdmi.h
+
 -- 
-2.1.0
+1.9.1
