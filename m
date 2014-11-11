@@ -1,75 +1,44 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v7 0/5] This is the 1st version of suspend for RK3288.
-Date: Mon, 10 Nov 2014 21:47:35 -0800
-Message-ID: <CAD=FV=UJAzVgZedrJJaxCc+3FdJp__NV9-9pY=wTH_ZydXrQcg@mail.gmail.com>
-References: <1415368177-6637-1-git-send-email-zyw@rock-chips.com>
-	<7hwq76pqyz.fsf@deeprootsystems.com>
-	<22835729.YDXmW0qp6M@diego>
+From: =?windows-1252?Q?Terje_Bergstr=F6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 0/3] Add support for Tegra Activity Monitor
+Date: Tue, 11 Nov 2014 08:57:30 +0200
+Message-ID: <5461B35A.3080604@nvidia.com>
+References: <1414594232-15684-1-git-send-email-tomeu.vizoso@collabora.com>
+ <545C8BCC.3090908@nvidia.com> <545CBC87.7050404@collabora.com>
+ <546190BA.7050502@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <22835729.YDXmW0qp6M@diego>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Tony Xie <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <546190BA.7050502-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 11.11.2014 06:29, Alexandre Courbot wrote:
+> I think (after a quick look at devfreq's source) that you can avoid
+> polling altogether if you set polling_ms to 0 in your
+> devfreq_dev_profile instance. Then it is up to you to call
+> update_devfreq() from your custom governor whenever it sees fit.
+> 
+> ACTMON support seems to overlap between being a governor (which reacts
+> to ACTMON interrupts and calls update_devfreq() when needed) and part of
+> a devfreq_dev_profile (get_dev_status() needs to use the actmon
+> counters). If we keep your current design where the driver simply
+> controls a clock, you could have the ACTMON driver obtain that clock,
+> register its governor, create a non-polling devfreq_dev_profile that
+> controls that clock, and just call devfreq_add_device() with both. Then
+> we will have the benefit of being able to use ACTMON as well as the
+> performance and powersave governors on EMC, and switch policies
+> dynamically.
 
-On Mon, Nov 10, 2014 at 4:40 PM, Heiko St=C3=BCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> w=
-rote:
-> Hi Chris,
->
-> Am Freitag, 7. November 2014, 14:48:20 schrieb Kevin Hilman:
->> Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> writes:
->> > RK3288 can shut down the cpu, gpu and other device controllers in =
-suspend,
->> > and it will pull the GLOBAL_PWROFF pin to high in the final stage =
-of the
->> > process of suspend, pull the pin to low again when resume.
->>
->> The cover letter still doesn't state what this series applies to, or
->> what its dependencies are for testing, even though it was requested =
-in
->> earlier reviews[1].  I discovered (again) by trial and error it appl=
-ies
->> to current linux-next.  I also discovered (as was earlier discussed[=
-2])
->> that it still does not resume using current upstream code, and those
->> dependencies are not described here either.  These are the kinds of
->> things that are crucial in a cover letter in order to help reviewers=
- and
->> testers not have to spend time digging through the archives trying t=
-o
->> remember from the previous round of reviews.
->>
->> Please, please list the out-of-tree dependencies, and how to test,
->> including how you tested it, and on what hardware.
->
-> I'll second what Kevin said.
->
-> I guess the regulator suspend handling [0] is one of the requirements=
-, but I'd
-> think there is more. And while Doug had a quite long list of suspend-=
-related
-> patches in his try, for now we'll need the minimal set to enable this=
- series
-> to sucessfully wake the system again after going to suspend.
+Another way to use it is that governor is just a governor. It takes in
+load values and generates new target frequencies, and doesn't know
+anything about HW.
 
-With the current series we have in the Chrome OS tree, the WIP power
-domain patches are a requirement, which makes testing very hard.  I've
-suggested that Chris try going back to leaving the GPU on his patches.
-It's possible you could get basic suspend/resume without power domain
-patches in that case.  Once power domain stuff is in good shape then
-we can turn off the GPU, I think.
+Device profile is the one that enables threshold interrupts and disables
+polling. Device profile receives the interrupt, retrieves new load
+number from hardware, and calls update_devfreq().
 
-=2E..all of those things are needed to actually get the system into the
-lowest power state, but starting simple makes a lot of sense.
-
--Doug
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This way we keep all HW specific code in device profile, and there's
+potential to use a generic governor instead of writing your own.
