@@ -1,129 +1,131 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH v7 7/7] dt-bindings: add document for dw-hdmi
-Date: Tue, 11 Nov 2014 21:33:55 +0800
-Message-ID: <54621043.7080103@rock-chips.com>
-References: <1415707952-11415-1-git-send-email-andy.yan@rock-chips.com> <1415707952-11415-8-git-send-email-andy.yan@rock-chips.com> <20141111122418.GA24306@leverpostej>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: vf-colibri: add USB regulators
+Date: Tue, 11 Nov 2014 22:12:30 +0800
+Message-ID: <20141111141228.GB2704@dragon>
+References: <1415106430-6271-1-git-send-email-stefan@agner.ch>
+ <1415106430-6271-4-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141111122418.GA24306@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "airlied@linux.ie" <airlied@linux.ie>, "Zubair.Kakakhel@imgtec.com" <Zubair.Kakakhel@imgtec.com>, "rmk+kernel@arm.linux.org.uk" <rmk+kernel@arm.linux.org.uk>, "fabio.estevam@freescale.com" <fabio.estevam@freescale.com>, "heiko@sntech.de" <heiko@sntech.de>, "djkurtz@chromium.org" <djkurtz@chromium.org>, "ykk@rock-chips.com" <ykk@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1415106430-6271-4-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Sorry, it seems that there is somethings wrong whit my network.
-This version maybe sent twice.
-On 2014=E5=B9=B411=E6=9C=8811=E6=97=A5 20:24, Mark Rutland wrote:
-> On Tue, Nov 11, 2014 at 12:12:32PM +0000, Andy Yan wrote:
->> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
->> ---
->>
->> Changes in v7: None
->> Changes in v6: None
->> Changes in v5: None
->> Changes in v4: None
->> Changes in v3: None
->> Changes in v2: None
->>
->>   .../devicetree/bindings/drm/bridge/dw-hdmi.txt     | 38 ++++++++++=
-++++++++++++
->>   1 file changed, 38 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/drm/bridge/dw=
--hdmi.txt
->>
->> diff --git a/Documentation/devicetree/bindings/drm/bridge/dw-hdmi.tx=
-t b/Documentation/devicetree/bindings/drm/bridge/dw-hdmi.txt
->> new file mode 100644
->> index 0000000..aa7ed17
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/drm/bridge/dw-hdmi.txt
->> @@ -0,0 +1,38 @@
->> +DesignWare HDMI bridge bindings
->> +
->> +Required properities:
->> +- compatibel: platform specific such as "fsl,imx6q-hdmi","fsl,imx6d=
-l-hdmi"
->> +	      "rockchip,rk3288-dw-hdmi"
-> s/compatibel/compatible/
-   thanks, I will correct it next version.
->
-> This should include the _precise_ strings you expect. Please format t=
-his
-> as a list, e.g.
->
-> - compatible: should contain one of:
->    * "fsl,imx6q-hdmi"
->    * "fsl,imx6dl-hdmi"
->    * "rockchip,rk3288-dw-hdmi"
->
-   I will do as your suggestion in next version
->> +- reg: physical base address of the controller and length
->> +- ddc-i2c-bus: the ddc i2c bus
->> +- interrupts: The interrupt number to the cpu
-> Does the device only have one interrupt? Just describe what this
-> logically is, and don't mention the CPU. It'll be plumbed through an
-> interrupt controller anyhow.
-   this device only have on interrupt for hot plug and other things.
->> +
->> +Optional properties
->> +- reg-io-width: the width of the reg:1,4, default set to 1 if not p=
-resent
-> I don't understand this description. Could you elaborate on this?
-     this property is platform specific , it is used to describe the=20
-register width.
-     on imx6, the hdmi register is one byte width, which means the firs=
-t=20
-register address
-     is 0x0000, the second is 0x0001, but on rk3288, the register is 4=20
-bytes width, the first
-      register address is 0x0000, and the second is 0x0004
->
->> +
->> +Example:
->> +	hdmi: hdmi@0120000 {
->> +		compatible =3D "fsl,imx6q-hdmi";
->> +		reg =3D <0x00120000 0x9000>;
->> +		interrupts =3D <0 115 0x04>;
->> +		gpr =3D <&gpr>;
->> +		clocks =3D <&clks 123>, <&clks 124>;
->> +		clock-names =3D "iahb", "isfr";
-> These three properties weren't mentioned in the binding.
-    gpr,clocks, port are platform specific property, on
-    rk3288, the grf have the similar function as gpr on imx.
-    And the clock also have different name on the two platforms.
-    the port also different, on imx, the port is ipuxxx, but on rk3288,
-    the port is vopx,
-    these properties will be mentioned in platform dt binding.
->
->> +		ddc-i2c-bus =3D <&i2c2>;
->> +
->> +		port@0 {
->> +			reg =3D <0>;
->> +
->> +			hdmi_mux_0: endpoint {
->> +				remote-endpoint =3D <&ipu1_di0_hdmi>;
->> +			};
->> +		};
-> Please mention the graphics bindings that require graph info.
->
-> THanks,
-> Mark.
->
->> +
->> +		port@1 {
->> +			reg =3D <1>;
->> +
->> +			hdmi_mux_1: endpoint {
->> +				remote-endpoint =3D <&ipu1_di1_hdmi>;
->> +			};
->> +		};
->> +	};
->> --=20
->> 1.9.1
->>
->>
->
->
+On Tue, Nov 04, 2014 at 02:07:10PM +0100, Stefan Agner wrote:
+> Add structure of USB supply logic. Especially, the USB hosts power
+> enable regulator is needed to control VBUS supply.
+> 
+> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/vf-colibri-eval-v3.dtsi | 45 ++++++++++++++++++++++++++++++-
+>  arch/arm/boot/dts/vf-colibri.dtsi         | 12 +++++++++
+>  2 files changed, 56 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
+> index 80e8fbc..eb4ca50 100644
+> --- a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
+> +++ b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
+> @@ -11,6 +11,41 @@
+>  	chosen {
+>  		bootargs = "console=ttyLP0,115200";
+>  	};
+> +
+> +	regulators {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		sys_5v0_reg: regulator@1 {
+> +			compatible = "regulator-fixed";
+> +			reg = <1>;
+
+The numbering generally starts from 0 instead of 1.
+
+> +			regulator-name = "5v0";
+> +			regulator-min-microvolt = <5000000>;
+> +			regulator-max-microvolt = <5000000>;
+> +			regulator-always-on;
+> +		};
+> +
+> +		usbc_vbus_reg: regulator@2 {
+> +			compatible = "regulator-fixed";
+> +			reg = <2>;
+> +			regulator-name = "usbc_vbus";
+> +			regulator-min-microvolt = <5000000>;
+> +			regulator-max-microvolt = <5000000>;
+> +			vin-supply = <&sys_5v0_reg>;
+> +		};
+> +
+> +		/* USBH_PEN */
+> +		usbh_vbus_reg: regulator@3 {
+> +			compatible = "regulator-fixed";
+> +			reg = <3>;
+> +			regulator-name = "usbh_vbus";
+> +			regulator-min-microvolt = <5000000>;
+> +			regulator-max-microvolt = <5000000>;
+> +			gpio = <&gpio3 19 GPIO_ACTIVE_LOW>;
+> +			vin-supply = <&sys_5v0_reg>;
+> +		};
+> +	};
+>  };
+>  
+>  &bl {
+> @@ -51,4 +86,12 @@
+>  
+>  &uart2 {
+>  	status = "okay";
+> -};
+> \ No newline at end of file
+> +};
+> +
+> +&usbdev0 {
+> +	vbus-supply = <&usbc_vbus_reg>;
+> +};
+> +
+> +&usbh1 {
+> +	vbus-supply = <&usbh_vbus_reg>;
+> +};
+> diff --git a/arch/arm/boot/dts/vf-colibri.dtsi b/arch/arm/boot/dts/vf-colibri.dtsi
+> index 2371760..79ccfe2 100644
+> --- a/arch/arm/boot/dts/vf-colibri.dtsi
+> +++ b/arch/arm/boot/dts/vf-colibri.dtsi
+> @@ -163,5 +163,17 @@
+>  				VF610_PAD_PTD3__UART2_CTS		0x21a1
+>  			>;
+>  		};
+> +
+> +		pinctrl_usbh1_ext: gpio_usb_vbus {
+> +			fsl,pins = <
+> +				VF610_PAD_PTD4__GPIO_83			0x22ed
+
+We used to know the GPIO usage by looking for the phandle reference to
+the node.  But it doesn't work for VF610 case now.
+
+I guess this is for usbh_vbus_reg usage?  It would be nice to have a
+comment telling the usage of the GPIO.
+
+> +			>;
+> +		};
+> +
+> +		pinctrl_usbdev0_ext: gpio_usb_cdet {
+> +			fsl,pins = <
+> +				VF610_PAD_PTC29__GPIO_102		0x22ed
+
+How is this one used?
+
+Shawn
+
+> +			>;
+> +		};
+>  	};
+>  };
+> -- 
+> 2.1.3
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
