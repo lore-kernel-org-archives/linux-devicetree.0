@@ -1,47 +1,58 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: [PATCH 1/9] dt/bindings: fix documentation of ethernet-phy compatible property
-Date: Tue, 11 Nov 2014 20:00:07 +0100
-Message-ID: <1415732415-10363-2-git-send-email-johan@kernel.org>
-References: <1415732415-10363-1-git-send-email-johan@kernel.org>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1415732415-10363-1-git-send-email-johan@kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org
+From: Romain Perier <romain.perier@gmail.com>
+Subject: Re: [PATCH v3 1/2] of: Rename "poweroff-source" property to "system-power-controller"
+Date: Tue, 11 Nov 2014 20:01:10 +0100
+Message-ID: <CABgxDoLfGYRnGCLmxnW6XCwJo3AoecO3=sLNBsOUAHig3P8New@mail.gmail.com>
+References: <1415283784-10885-1-git-send-email-romain.perier@gmail.com>
+	<1415283784-10885-2-git-send-email-romain.perier@gmail.com>
+	<20141111150139.A904BC416AF@trevor.secretlab.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20141111150139.A904BC416AF@trevor.secretlab.ca>
+Sender: linux-pm-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Felipe Balbi <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-A recent commit extended the documentation of the ethernet-phy
-compatible property, but placed the new paragraph under the max-speed
-property.
+2014-11-11 16:01 GMT+01:00 Grant Likely <grant.likely@linaro.org>:
+> So, to be a little pendantic, the 'ti,' prefix is basically just for
+> backwards compatibility with the old binding, and that old binding is
+> only used on palmas.c, tps65*.c and twl4030-power.c, correct?
 
-Fixes: f00e756ed12d ("dt: Document a compatible entry for MDIO ethernet
-Phys")
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- Documentation/devicetree/bindings/net/phy.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+No, the backward compatibility here is only useful for drivers which
+used "ti,system-power-controller" in the past and recently switched to
+the new property through the standard helper function. As most of the
+dts were not updated to use the new property, previous patches broke
+compatibility with "ti,system-power-controller" (this compat would be
+reverted with this serie). Only one driver has this problem, it is
+tps65910.
 
-diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
-index 5b8c58903077..40831fbaff72 100644
---- a/Documentation/devicetree/bindings/net/phy.txt
-+++ b/Documentation/devicetree/bindings/net/phy.txt
-@@ -19,7 +19,6 @@ Optional Properties:
-   specifications. If neither of these are specified, the default is to
-   assume clause 22. The compatible list may also contain other
-   elements.
--- max-speed: Maximum PHY supported speed (10, 100, 1000...)
- 
-   If the phy's identifier is known then the list may contain an entry
-   of the form: "ethernet-phy-idAAAA.BBBB" where
-@@ -29,6 +28,8 @@ Optional Properties:
-             4 hex digits. This is the chip vendor OUI bits 19:24,
-             followed by 10 bits of a vendor specific ID.
- 
-+- max-speed: Maximum PHY supported speed (10, 100, 1000...)
-+
- Example:
- 
- ethernet-phy@0 {
--- 
-2.0.4
+So, What you propose is that I should handle the old property directly
+from tps65910, and keep the standard helper generic right ?
+
+Romain
+
+
+
+
+>
+> We don't actually want a ti comparison in the generic code. Normally
+> what you'd do here is have the fixup in the ti driver code, possibly
+> with a ti specific helper for those 4 files.
+>
+> I'm not going to nak this patch and I know you need to get things cleaned
+> up, but the static inline really should be reduced back to just checking
+> only for "system-power-controller". The current mainline code does the
+> right thing anyway, and it is a *tiny* amount of extra code in 4 drivers
+> file.
+>
+> g.
+>
+>
+>>  }
+>>
+>>  #endif /* _LINUX_OF_H */
+>> --
+>> 1.9.1
+>>
+>
