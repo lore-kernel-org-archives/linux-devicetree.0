@@ -1,72 +1,74 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 2/2] mmc: core: reset sdio card properly on resume.
-Date: Tue, 11 Nov 2014 09:12:09 +0100
-Message-ID: <CAPDyKFohBBEAO2cAXYQ-GCyFbpau3UMHP7p_gJwiHeMo6_7s6A@mail.gmail.com>
-References: <20141108000919.5629.55381.stgit@notabene.brown>
-	<20141108001411.5629.55298.stgit@notabene.brown>
-	<CAPDyKFrrOozTO5xR8RO=4L8xZ9hLGizH=2mxZE=5zvwMhhgD+w@mail.gmail.com>
-	<20141111111738.1e7856ce@notabene.brown>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH v4 2/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
+Date: Tue, 11 Nov 2014 10:21:49 +0200
+Message-ID: <1415694109.22935.13.camel@mm-sol.com>
+References: <1415028270-25860-1-git-send-email-iivanov@mm-sol.com>
+	 <1415028270-25860-3-git-send-email-iivanov@mm-sol.com>
+	 <54612A0D.7020308@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20141111111738.1e7856ce@notabene.brown>
-Sender: linux-mmc-owner@vger.kernel.org
-To: NeilBrown <neilb@suse.de>
-Cc: Chris Ball <chris@printf.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, GTA04 owners <gta04-owner@goldelico.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <54612A0D.7020308@gmx.de>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Hartmut Knaack <knaack.h@gmx.de>
+Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Stanimir Varbanov <svarbanov@mm-sol.com>, Angelo Compagnucci <angelo.compagnucci@gmail.com>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11 November 2014 01:17, NeilBrown <neilb@suse.de> wrote:
-> On Mon, 10 Nov 2014 14:29:19 +0100 Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
->> On 8 November 2014 01:14, NeilBrown <neilb@suse.de> wrote:
->> > mmc_sdio_power_restore calls
->> >         mmc_send_if_cond(host, host->ocr_avail);
->> >
->> >         ret = mmc_send_io_op_cond(host, 0, NULL);
->> >
->> > between mmc_go_idle() and  mmc_sdio_init_card().
->> > mmc_sdio_resume needs to as well, else my libertas sdio wifi
->> > device doesn't resume properly from suspend.
->> >
->> > Signed-off-by: NeilBrown <neilb@suse.de>
->> > ---
->> >  drivers/mmc/core/sdio.c |    8 ++++++--
->> >  1 file changed, 6 insertions(+), 2 deletions(-)
->> >
->> > diff --git a/drivers/mmc/core/sdio.c b/drivers/mmc/core/sdio.c
->> > index e636d9e99e4a..3f069a6f448f 100644
->> > --- a/drivers/mmc/core/sdio.c
->> > +++ b/drivers/mmc/core/sdio.c
->> > @@ -981,8 +981,12 @@ static int mmc_sdio_resume(struct mmc_host *host)
->> >         if (mmc_card_is_removable(host) || !mmc_card_keep_power(host)) {
->> >                 sdio_reset(host);
->> >                 mmc_go_idle(host);
->> > -               err = mmc_sdio_init_card(host, host->card->ocr, host->card,
->> > -                                       mmc_card_keep_power(host));
->> > +               mmc_send_if_cond(host, host->ocr_avail);
->>
->> /s /host->ocr_avail /host->card->ocr
->>
->> I would expect that to work. I do realize that "host->ocr_avail" is
->> being used in the ->power_restore() callback, but I think that's wrong
->> as well. Could you maybe verify that changing to host->card->ocr works
->> in this path as well? That's would of course be a separate patch.
->
-> Hi Ulf,
->  I made the substitution in mmc_sdio_resume and mmc_sdio_power_restore
-> and my sdio device continues to work, including after resume.
->
-> The  host->card->ocr value is 0x10000, the host->ocr_avail value is 0x18000.
+Hi Hartmut,
 
-That makes sense.
+On Mon, 2014-11-10 at 22:11 +0100, Hartmut Knaack wrote:
+> Ivan T. Ivanov schrieb am 03.11.2014 16:24:
+> > From: Stanimir Varbanov <svarbanov@mm-sol.com>
+> > 
+> > The voltage ADC is peripheral of Qualcomm SPMI PMIC chips. It has
+> > 15 bits resolution and register space inside PMIC accessible across
+> > SPMI bus.
+> > 
+> > The vadc driver registers itself through IIO interface.
+> Reviewing again, I got the feeling that due to the complexity of adc reads (writing to register 
+> to start conversion, waiting a decent time for the conversion to complete, reading the result), 
+> it would be beneficial to use a mutex in vadc_read_raw or its depending functions.
 
-The host->card->ocr mask has been negotiated at initialization between
-the host and the card.
+Hm, yes, but there is such a nice info_exist_lock :-) in core functions,
+which in practice serve the same purpose.
 
->
-> If you like I'll send the two patches formally, but it might be a day or so.
+> Also, I would want to double-check that the CPU in this type of chips is little endian.
 
-Please do.
+Yes, it is.
 
-Kind regards
-Uffe
+> Besides that, a few minor issues inline.
+
+> > +static int vadc_probe(struct platform_device *pdev)
+> > +{
+> > +       struct device_node *node = pdev->dev.of_node;
+> > +       struct device *dev = &pdev->dev;
+> > +       struct iio_dev *indio_dev;
+> > +       struct vadc_priv *vadc;
+> > +       struct regmap *regmap;
+> > +       int ret, irq_eoc;
+> > +       u32 res;
+> Since vadc->base is u16, shouldn't res be u16 as well? Also think about naming it reg, as this is 
+> the property name in DT.
+
+Yes, but #address-cells for the node is 1, so I would like to keep it 32 bits.
+
+> > +
+> > +       regmap = dev_get_regmap(dev->parent, NULL);
+> > +       if (!regmap)
+> > +       return -ENODEV;
+> > +
+> > +       ret = of_property_read_u32(node, "reg", &res);
+> For u16, there would be of_property_read_u16().
+> > +       if (ret < 0)
+> > +       return -ENODEV;
+> Just return ret here?
+
+I am usually trying to follow these recommendations[1]. In practice driver
+core cares only for EPROBE_DEFER, ENODEV and ENXIO, while of_property_read_u32()
+can return ENODATA and EOVERFLOW, which did't not make sense for the core.
+
+Thank you,
+Ivan
+
+[1] http://www.gossamer-threads.com/lists/linux/kernel/1010603
