@@ -1,83 +1,89 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: [PATCH v3 4/6] ARM: dts: AM335x: Make charge delay a DT parameter for
- tsc
-Date: Tue, 11 Nov 2014 14:04:02 +0530
-Message-ID: <1415694844-11230-5-git-send-email-vigneshr@ti.com>
-References: <1415694844-11230-1-git-send-email-vigneshr@ti.com>
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: Re: [PATCH 0/3] Add support for Tegra Activity Monitor
+Date: Tue, 11 Nov 2014 09:40:49 +0100
+Message-ID: <CAAObsKB9xxS5C7VsP9cBGYDB5ArhbLM0nKEPk8yqWX=iwqcj7A@mail.gmail.com>
+References: <1414594232-15684-1-git-send-email-tomeu.vizoso@collabora.com>
+ <545C8BCC.3090908@nvidia.com> <545CBC87.7050404@collabora.com> <546190BA.7050502@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1415694844-11230-1-git-send-email-vigneshr@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, richardcochran@gmail.com, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Brad Griffis <bgriffis@ti.com>, Jan Kardell <jan.kardell@telliq.com>, Vignesh R <vigneshr@ti.com>, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Peter Meerwald <pmeerw@pmeerw.net>, linux-input@vger.kernel.org, Sanjeev Sharma <sanjeev_sharma@mentor.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Samuel Ortiz <sameo@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <546190BA.7050502@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <treding@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-The charge delay value is by default 0xB000. But it can be set to lower
-values on some boards as long as false pen-ups are avoided. Lowering the
-value increases the sampling rate (though current sampling rate is
-sufficient for tsc operation). Hence charge delay has been made a DT
-parameter.
+On 11 November 2014 05:29, Alexandre Courbot <acourbot@nvidia.com> wrote:
+> On 11/07/2014 09:35 PM, Tomeu Vizoso wrote:
+>>
+>> On 11/07/2014 10:07 AM, Alexandre Courbot wrote:
+>>>
+>>> On 10/29/2014 11:50 PM, Tomeu Vizoso wrote:
+>>>>
+>>>> Hello,
+>>>>
+>>>> these patches implement support for setting the rate of the EMC clock
+>>>> based on
+>>>> stats collected from the ACTMON, a piece of hw in the Tegra124 that
+>>>> counts
+>>>> memory accesses (among others).
+>>>>
+>>>> It depends on the following in-flight patches:
+>>>>
+>>>> * MC driver: http://thread.gmane.org/gmane.linux.ports.tegra/19623
+>>>> * EMC driver:
+>>>> http://thread.gmane.org/gmane.linux.ports.arm.kernel/365125
+>>>> * CPUFreq driver: http://thread.gmane.org/gmane.linux.kernel/1812962
+>>>>
+>>>> I have pushed a branch here for testing:
+>>>
+>>>
+>>> I am not too familiar with DVFS, but after going through this series it
+>>> really seems to me that this could use devfreq. In its current form this
+>>> driver mixes control and policy and lacks flexibility, preventing e.g.
+>>> to switch to a performance or power-saving profile. Could you study the
+>>> feasibility of using devfreq for this?
+>>
+>>
+>> Yeah, I started writing a devfreq driver, but then I looked in more
+>> detail to the downstream driver and realized that most of the
+>> functionality that devfreq provides overlaps with the hw.
+>>
+>> The ACTMON can be configured to fire an interrupt when a set of
+>> thresholds are crossed, similar to the simple-ondemand governor but a
+>> bit more sophisticated.
+>
+>
+> I think (after a quick look at devfreq's source) that you can avoid polling
+> altogether if you set polling_ms to 0 in your devfreq_dev_profile instance.
+> Then it is up to you to call update_devfreq() from your custom governor
+> whenever it sees fit.
+>
+> ACTMON support seems to overlap between being a governor (which reacts to
+> ACTMON interrupts and calls update_devfreq() when needed) and part of a
+> devfreq_dev_profile (get_dev_status() needs to use the actmon counters). If
+> we keep your current design where the driver simply controls a clock, you
+> could have the ACTMON driver obtain that clock, register its governor,
+> create a non-polling devfreq_dev_profile that controls that clock, and just
+> call devfreq_add_device() with both. Then we will have the benefit of being
+> able to use ACTMON as well as the performance and powersave governors on
+> EMC, and switch policies dynamically.
+>
+> Another benefit is that you will have a placeholder in the governor to
+> implement suspend/resume for the ACTMON IP, in case this becomes necessary
+> in the future.
+>
+> Do you think that would work? Apart from the polling which doesn't seem to
+> be an issue, have you seen any other redundancy between devfreq and ACTMON?
 
-Signed-off-by: Vignesh R <vigneshr@ti.com>
----
- .../devicetree/bindings/input/touchscreen/ti-tsc-adc.txt  | 15 +++++++++++++++
- arch/arm/boot/dts/am335x-evm.dts                          |  1 +
- 2 files changed, 16 insertions(+)
+I don't think there's any obstacle to having this as a devfreq driver,
+it's just that it won't use much/any functionality of it so I don't
+really see the point.
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-index 878549ba814d..b87574bae009 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-+++ b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-@@ -28,6 +28,20 @@ Required properties:
- 	ti,adc-channels: List of analog inputs available for ADC.
- 			 AIN0 = 0, AIN1 = 1 and so on till AIN7 = 7.
- 
-+Optional properties:
-+- child "tsc"
-+	ti,charge-delay: Length of touch screen charge delay step in terms of
-+			 ADC clock cycles. Charge delay value should be large
-+			 in order to avoid false pen-up events. This value
-+			 affects the overall sampling speed, hence need to be
-+			 kept as low as possible, while avoiding false pen-up
-+			 event. Start from a lower value, say 0x400, and
-+			 increase value until false pen-up events are avoided.
-+			 The pen-up detection happens immediately after the
-+			 charge step, so this does in fact function as a
-+			 hardware knob for adjusting the amount of "settling
-+			 time".
-+
- Example:
- 	tscadc: tscadc@44e0d000 {
- 		compatible = "ti,am3359-tscadc";
-@@ -36,6 +50,7 @@ Example:
- 			ti,x-plate-resistance = <200>;
- 			ti,coordiante-readouts = <5>;
- 			ti,wire-config = <0x00 0x11 0x22 0x33>;
-+			ti,charge-delay = <0xB000>;
- 		};
- 
- 		adc {
-diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-index e2156a583de7..80be0462298b 100644
---- a/arch/arm/boot/dts/am335x-evm.dts
-+++ b/arch/arm/boot/dts/am335x-evm.dts
-@@ -641,6 +641,7 @@
- 		ti,x-plate-resistance = <200>;
- 		ti,coordinate-readouts = <5>;
- 		ti,wire-config = <0x00 0x11 0x22 0x33>;
-+		ti,charge-delay = <0xB000>;
- 	};
- 
- 	adc {
--- 
-1.9.1
+I think it will be better if I send a version of the driver that uses
+the devfreq framework, so we can better compare (and maybe I will
+change my opinion).
+
+Regards,
+
+Tomeu
