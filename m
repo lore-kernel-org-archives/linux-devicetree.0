@@ -1,121 +1,72 @@
-From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3] of/fdt: export fdt blob as /sys/firmware/fdt
-Date: Tue, 11 Nov 2014 16:25:46 +0100
-Message-ID: <1415719546-14076-1-git-send-email-ard.biesheuvel@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, geoff.levand-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: "R, Vignesh" <vigneshr@ti.com>
+Subject: RE: [PATCH v3 3/6] mfd: ti_am335x_tscadc: Remove unwanted
+ reg_se_cache save
+Date: Tue, 11 Nov 2014 15:26:19 +0000
+Message-ID: <71C24A547111EA4E84AE759B748D9EAE4B976C@DBDE04.ent.ti.com>
+References: <1415694844-11230-1-git-send-email-vigneshr@ti.com>
+ <1415694844-11230-4-git-send-email-vigneshr@ti.com>
+ <20141111122623.GA24004@x1>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141111122623.GA24004@x1>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, "richardcochran@gmail.com" <richardcochran@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Samuel Ortiz <sameo@linux.intel.com>, "Balbi, Felipe" <balbi@ti.com>, "Griffis, Brad" <bgriffis@ti.com>, Sanjeev Sharma <sanjeev_sharma@mentor.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Jan Kardell <jan.kardell@telliq.com>, "devicetree@vger.kernel.org" <devicetree@vger.k>
 List-Id: devicetree@vger.kernel.org
 
-Create a new /sys entry '/sys/firmware/fdt' to export the FDT blob
-that was passed to the kernel by the bootloader. This allows userland
-applications such as kexec to access the raw binary.
-
-The fact that this node does not reside under /sys/firmware/device-tree
-is deliberate: FDT is also used on arm64 UEFI/ACPI systems to
-communicate just the UEFI and ACPI entry points, but the FDT is never
-unflattened and used to configure the system.
-
-A CRC32 checksum is calculated over the entire FDT blob, and verified
-at late_initcall time. The sysfs entry is instantiated only if the
-checksum is valid, i.e., if the FDT blob has not been modified in the
-mean time. Otherwise, a warning is printed.
-
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-v3: keep checksum instead of copying the entire blob, and WARN on mismatch
-
- drivers/of/Kconfig |  1 +
- drivers/of/fdt.c   | 36 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 37 insertions(+)
-
-diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index 1a13f5b722c5..0348c208343c 100644
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -23,6 +23,7 @@ config OF_FLATTREE
- 	bool
- 	select DTC
- 	select LIBFDT
-+	select CRC32
- 
- config OF_EARLY_FLATTREE
- 	bool
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index d1ffca8b34ea..6742b6ae1b89 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -9,6 +9,7 @@
-  * version 2 as published by the Free Software Foundation.
-  */
- 
-+#include <linux/crc32.h>
- #include <linux/kernel.h>
- #include <linux/initrd.h>
- #include <linux/memblock.h>
-@@ -22,10 +23,20 @@
- #include <linux/libfdt.h>
- #include <linux/debugfs.h>
- #include <linux/serial_core.h>
-+#include <linux/sysfs.h>
- 
- #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
- #include <asm/page.h>
- 
-+static u32 of_fdt_crc32;
-+
-+static u32 of_fdt_get_crc32(void *fdt)
-+{
-+	static u32 const OF_FDT_CRC32_SEED = 0x04c11db7;
-+
-+	return crc32_be(OF_FDT_CRC32_SEED, fdt, fdt_totalsize(fdt));
-+}
-+
- /*
-  * of_fdt_limit_memory - limit the number of regions in the /memory node
-  * @limit: maximum entries
-@@ -1003,6 +1014,8 @@ bool __init early_init_dt_verify(void *params)
- 		return false;
- 	}
- 
-+	of_fdt_crc32 = of_fdt_get_crc32(initial_boot_params);
-+
- 	return true;
- }
- 
-@@ -1103,4 +1116,27 @@ static int __init of_flat_dt_debugfs_export_fdt(void)
- module_init(of_flat_dt_debugfs_export_fdt);
- #endif
- 
-+#ifdef CONFIG_SYSFS
-+static ssize_t of_fdt_raw_read(struct file *filp, struct kobject *kobj,
-+			       struct bin_attribute *bin_attr,
-+			       char *buf, loff_t off, size_t count)
-+{
-+	memcpy(buf, initial_boot_params + off, count);
-+	return count;
-+}
-+
-+static int __init of_fdt_raw_init(void)
-+{
-+	static struct bin_attribute of_fdt_raw_attr =
-+		__BIN_ATTR(fdt, S_IRUSR, of_fdt_raw_read, NULL, 0);
-+
-+	if (WARN(of_fdt_crc32 != of_fdt_get_crc32(initial_boot_params),
-+		 "CRC check failed on binary FDT"))
-+		return -EFAULT;
-+	of_fdt_raw_attr.size = fdt_totalsize(initial_boot_params);
-+	return sysfs_create_bin_file(firmware_kobj, &of_fdt_raw_attr);
-+}
-+late_initcall(of_fdt_raw_init);
-+#endif
-+
- #endif /* CONFIG_OF_EARLY_FLATTREE */
--- 
-1.8.3.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+DQpPbiBUdWUsIDExIE5vdiAyMDE0LCBWaWduZXNoIFIgd3JvdGU6DQoNCj4gSW4gb25lIHNob3Qg
+bW9kZSwgc2VxdWVuY2VyIGF1dG9tYXRpY2FsbHkgZGlzYWJsZXMgYWxsIGVuYWJsZWQgc3RlcHMg
+DQo+IGF0IHRoZSBlbmQgb2YgZWFjaCBjeWNsZS4gKGJvdGggQURDIHN0ZXBzIGFuZCBUU0Mgc3Rl
+cHMpIEhlbmNlIHRoZXNlIA0KPiBzdGVwcyBuZWVkIG5vdCBiZSBzYXZlZCBpbiByZWdfc2VfY2Fj
+aGUgZm9yIGNsZWFyaW5nIHRoZXNlIHN0ZXBzIGF0IGEgDQo+IGxhdGVyIHN0YWdlLg0KPiBBbHNv
+LCB3aGVuIEFEQyB3YWtlcyB1cCBTZXF1ZW5jZXIgc2hvdWxkIG5vdCBiZSBidXN5IGV4ZWN1dGlu
+ZyBhbnkgb2YgDQo+IHRoZSBjb25maWcgc3RlcHMgZXhjZXB0IGZvciB0aGUgY2hhcmdlIHN0ZXAu
+IFByZXZpb3VzbHkgY2hhcmdlIHN0ZXAgDQo+IHdhcyAxIEFEQyBjbG9jayBjeWNsZSBhbmQgaGVu
+Y2UgaXQgd2FzIGlnbm9yZWQuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBWaWduZXNoIFIgPHZpZ25l
+c2hyQHRpLmNvbT4NCj4gLS0tDQoNCllvdSBuZWVkIHRvIHByb3ZpZGUgYSBjaGFuZ2Vsb2cgaGVy
+ZSB3aGVuIHN1Ym1pdHRpbmcgbmV3IHZlcnNpb25zLg0KDQpJIGhhdmUgaW5jbHVkZWQgY2hhbmdl
+bG9nIGluIHRoZSBjb3ZlciBwYWdlLiBXaWxsIGluY2x1ZGUgdGhlbSBpbiANCmluZGl2aWR1YWwg
+cGF0Y2hlcyBuZXh0IHRpbWUuDQoNCj4gIGRyaXZlcnMvbWZkL3RpX2FtMzM1eF90c2NhZGMuYyAg
+ICAgICB8IDcgKysrKystLQ0KPiAgaW5jbHVkZS9saW51eC9tZmQvdGlfYW0zMzV4X3RzY2FkYy5o
+IHwgMSArDQo+ICAyIGZpbGVzIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMo
+LSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21mZC90aV9hbTMzNXhfdHNjYWRjLmMgDQo+
+IGIvZHJpdmVycy9tZmQvdGlfYW0zMzV4X3RzY2FkYy5jIGluZGV4IGQ4NzdlNzc3Y2NlNi4uMTEw
+MDM4ODU5YThkIA0KPiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9tZmQvdGlfYW0zMzV4X3RzY2Fk
+Yy5jDQo+ICsrKyBiL2RyaXZlcnMvbWZkL3RpX2FtMzM1eF90c2NhZGMuYw0KPiBAQCAtODYsOCAr
+ODYsMTIgQEAgc3RhdGljIHZvaWQgYW0zMzV4X3RzY2FkY19uZWVkX2FkYyhzdHJ1Y3QgdGlfdHNj
+YWRjX2RldiAqdHNhZGMpDQo+ICAJCXNwaW5fbG9ja19pcnEoJnRzYWRjLT5yZWdfbG9jayk7DQo+
+ICAJCWZpbmlzaF93YWl0KCZ0c2FkYy0+cmVnX3NlX3dhaXQsICZ3YWl0KTsNCj4gIA0KPiArCQkv
+Kg0KPiArCQkgKiBTZXF1ZW5jZXIgc2hvdWxkIGVpdGhlciBiZSBpZGxlIG9yDQo+ICsJCSAqIGJ1
+c3kgYXBwbHlpbmcgdGhlIGNoYXJnZSBzdGVwLg0KPiArCQkgKi8NCj4gIAkJcmVnID0gdHNjYWRj
+X3JlYWRsKHRzYWRjLCBSRUdfQURDRlNNKTsNCj4gLQkJV0FSTl9PTihyZWcgJiBTRVFfU1RBVFVT
+KTsNCj4gKwkJV0FSTl9PTigocmVnICYgU0VRX1NUQVRVUykgJiYgIShyZWcgJiBDSEFSR0VfU1RF
+UCkpOw0KPiAgCQl0c2FkYy0+YWRjX3dhaXRpbmcgPSBmYWxzZTsNCj4gIAl9DQo+ICAJdHNhZGMt
+PmFkY19pbl91c2UgPSB0cnVlOw0KPiBAQCAtOTYsNyArMTAwLDYgQEAgc3RhdGljIHZvaWQgYW0z
+MzV4X3RzY2FkY19uZWVkX2FkYyhzdHJ1Y3QgDQo+IHRpX3RzY2FkY19kZXYgKnRzYWRjKSAgdm9p
+ZCBhbTMzNXhfdHNjX3NlX3NldF9vbmNlKHN0cnVjdCANCj4gdGlfdHNjYWRjX2RldiAqdHNhZGMs
+IHUzMiB2YWwpICB7DQo+ICAJc3Bpbl9sb2NrX2lycSgmdHNhZGMtPnJlZ19sb2NrKTsNCj4gLQl0
+c2FkYy0+cmVnX3NlX2NhY2hlIHw9IHZhbDsNCg0KWW91IGRpZG4ndCBhbnN3ZXIgbXkgcXVlc3Rp
+b24gYWJvdXQgdGhpcz8NCkkgZGlkIHJlcGx5IHRvIHRoZSBxdWVzdGlvbiBpbiB0aGUgcHJldmlv
+dXMgdGhyZWFkLiAgDQoNClByZXZpb3VzbHksIFRTQyBkaWQgbm90IHJlbGlhYmx5IHJlLWVuYWJs
+ZSBpdHMgc3RlcHMgYXMgdGhlIFRTQyBpcnEgaGFuZGxlciByZWNlaXZlZCANCmZhbHNlIHBlbiB1
+cCBldmVudHMuIEhlbmNlLCBpbiBvcmRlciB0byB1c2UgVFNDIGFmdGVyIEFEQyBvcGVyYXRpb24s
+IGl0IHdhcyBuZWNlc3NhcnkgdG8NCiBzYXZlIGFuZCByZS1lbmFibGUgVFNDIHN0ZXBzIChiYXNp
+Y2FsbHksIHRvIGtlZXAgVFNDIHN0ZXBzIGVuYWJsZWQgYWx3YXlzKS4NClRoZSBjaGFuZ2Ugd2Fz
+IG1vcmUgb2YgYSB3b3JrYXJvdW5kIHRvIG92ZXJjb21lIGxpbWl0YXRpb24gb2YgVFNDIGlycSBo
+YW5kbGVyLiBXaXRoIA0KdGhpcyBzZXJpZXMgb2YgcGF0Y2hlcywgVFNDIGlycSBoYW5kbGVyIGlz
+IHZlcnkgcmVsaWFibGUgYW5kIHRoZSB3b3JrYXJvdW5kIGlzIG5vIGxvbmdlciByZXF1aXJlZC4N
+Cg0KPiAgCWFtMzM1eF90c2NhZGNfbmVlZF9hZGModHNhZGMpOw0KPiAgDQo+ICAJdHNjYWRjX3dy
+aXRlbCh0c2FkYywgUkVHX1NFLCB2YWwpOw0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9t
+ZmQvdGlfYW0zMzV4X3RzY2FkYy5oIA0KPiBiL2luY2x1ZGUvbGludXgvbWZkL3RpX2FtMzM1eF90
+c2NhZGMuaA0KPiBpbmRleCBjOTliZTVkYzBmNWMuLmZjY2UxODJlNGEzNSAxMDA2NDQNCj4gLS0t
+IGEvaW5jbHVkZS9saW51eC9tZmQvdGlfYW0zMzV4X3RzY2FkYy5oDQo+ICsrKyBiL2luY2x1ZGUv
+bGludXgvbWZkL3RpX2FtMzM1eF90c2NhZGMuaA0KPiBAQCAtMTI4LDYgKzEyOCw3IEBADQo+ICAN
+Cj4gIC8qIFNlcXVlbmNlciBTdGF0dXMgKi8NCj4gICNkZWZpbmUgU0VRX1NUQVRVUyBCSVQoNSkN
+Cj4gKyNkZWZpbmUgQ0hBUkdFX1NURVAJCTB4MTENCj4gIA0KPiAgI2RlZmluZSBBRENfQ0xLCQkJ
+MzAwMDAwMA0KPiAgI2RlZmluZSBUT1RBTF9TVEVQUwkJMTYNCg0KLS0NCkxlZSBKb25lcw0KTGlu
+YXJvIFNUTWljcm9lbGVjdHJvbmljcyBMYW5kaW5nIFRlYW0gTGVhZCBMaW5hcm8ub3JnIOKUgiBP
+cGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MgRm9sbG93IExpbmFybzogRmFjZWJvb2sg
+fCBUd2l0dGVyIHwgQmxvZw0K
