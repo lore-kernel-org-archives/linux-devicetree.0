@@ -1,614 +1,351 @@
-From: <tthayer@opensource.altera.com>
-Subject: [PATCHv5 4/5] edac: altera: Add Altera L2 Cache and OCRAM EDAC Support
-Date: Tue, 11 Nov 2014 18:14:22 -0600
-Message-ID: <1415751263-1830-5-git-send-email-tthayer@opensource.altera.com>
-References: <1415751263-1830-1-git-send-email-tthayer@opensource.altera.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [RESEND PATCH 1/2] extcon: gpio: Add dt support for the driver
+Date: Wed, 12 Nov 2014 10:10:06 +0900
+Message-ID: <5462B36E.80600@samsung.com>
+References: <1415201388-32060-1-git-send-email-george.cherian@ti.com>
+ <1415201388-32060-2-git-send-email-george.cherian@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1415751263-1830-1-git-send-email-tthayer@opensource.altera.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-reply-to: <1415201388-32060-2-git-send-email-george.cherian@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: George Cherian <george.cherian@ti.com>
+Cc: myungjoo.ham@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rongjun.ying@csr.com, Baohua.Song@csr.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <tthayer@opensource.altera.com>
+Hi George,
 
-Adding L2 Cache and On-Chip RAM EDAC support for the
-Altera SoCs using the EDAC device  model. The SDRAM
-controller is using the Memory Controller model.
+How do you test this patch? This patch cannot test it 
+because this patch has not compatible string for binding through DT.
 
-The SDRAM ECC is a separate Kconfig option because:
-1) the SDRAM preparation can take almost 2 seconds on boot and some
-customers need a faster boot time.
-2) the SDRAM has an ECC initialization dependency on the preloader
-which is outside the kernel. It is desirable to be able to turn the
-SDRAM on & off separately.
+You have to add following of_device_id for extcon-gpio:
 
-Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
----
-v2: Fix L2 dependency comments.
-
-v3: Move OCRAM and L2 cache EDAC functions into altera_edac.c
-    instead of separate files.
-
-v4: Change mask defines to use BIT().
-    Fix comment style to agree with kernel coding style.
-    Better printk description for read != write in trigger.
-    Remove SysFS debugging message.
-    Better dci->mod_name
-    Move gen_pool pointer assignment to end of function.
-    Invert logic to reduce indent in ocram depenency check.
-    Change from dev_err() to edac_printk()
-    Replace magic numbers with defines & comments.
-    Improve error injection test.
-    Change Makefile intermediary name to altr (from alt)
-
-v5: No change.
----
- drivers/edac/Kconfig       |   14 ++
- drivers/edac/Makefile      |    5 +-
- drivers/edac/altera_edac.c |  481 +++++++++++++++++++++++++++++++++++++++++++-
- 3 files changed, 498 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 1719975..b145a52 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -385,4 +385,18 @@ config EDAC_ALTERA_MC
- 	  preloader must initialize the SDRAM before loading
- 	  the kernel.
- 
-+config EDAC_ALTERA_L2C
-+	bool "Altera L2 Cache EDAC"
-+	depends on EDAC_MM_EDAC=y && ARCH_SOCFPGA && CACHE_L2X0
-+	help
-+	  Support for error detection and correction on the
-+	  Altera L2 cache Memory for Altera SoCs.
++#if defined(CONFIG_OF)
++static const struct of_device_id gpio_extcon_of_match[] = {
++       { .compatible = "extcon-gpio", },
++       {},
++};
++MODULE_DEVICE_TABLE(of, gpio_extcon_of_match);
++#endif
 +
-+config EDAC_ALTERA_OCRAM
-+	bool "Altera On-Chip RAM EDAC"
-+	depends on EDAC_MM_EDAC=y && ARCH_SOCFPGA && SRAM && GENERIC_ALLOCATOR
-+	help
-+	  Support for error detection and correction on the
-+	  Altera On-Chip RAM Memory for Altera SoCs.
-+
- endif # EDAC
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index 359aa49..20e9b6f 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -66,4 +66,7 @@ obj-$(CONFIG_EDAC_OCTEON_L2C)		+= octeon_edac-l2c.o
- obj-$(CONFIG_EDAC_OCTEON_LMC)		+= octeon_edac-lmc.o
- obj-$(CONFIG_EDAC_OCTEON_PCI)		+= octeon_edac-pci.o
- 
--obj-$(CONFIG_EDAC_ALTERA_MC)		+= altera_edac.o
-+altr_edac-y				:= altera_edac.o
-+obj-$(CONFIG_EDAC_ALTERA_MC)		+= altr_edac.o
-+obj-$(CONFIG_EDAC_ALTERA_L2C)		+= altr_edac.o
-+obj-$(CONFIG_EDAC_ALTERA_OCRAM)		+= altr_edac.o
-diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-index 3c4929f..1655dd3 100644
---- a/drivers/edac/altera_edac.c
-+++ b/drivers/edac/altera_edac.c
-@@ -17,8 +17,10 @@
-  * Adapted from the highbank_mc_edac driver.
-  */
- 
-+#include <asm/cacheflush.h>
- #include <linux/ctype.h>
- #include <linux/edac.h>
-+#include <linux/genalloc.h>
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/mfd/syscon.h>
-@@ -33,6 +35,7 @@
- 
- #define EDAC_MOD_STR		"altera_edac"
- #define EDAC_VERSION		"1"
-+#define EDAC_DEVICE		"ALTR_MEM"
- 
- /* SDRAM Controller CtrlCfg Register */
- #define CTLCFG_OFST             0x00
-@@ -107,6 +110,35 @@ struct altr_sdram_mc_data {
- 	struct regmap *mc_vbase;
+ static struct platform_driver gpio_extcon_driver = {
+        .probe          = gpio_extcon_probe,
+        .remove         = gpio_extcon_remove,
+        .driver         = {
+                .name   = "extcon-gpio",
+                .owner  = THIS_MODULE,
++               .of_match_table = of_match_ptr(gpio_extcon_of_match),
+                .pm     = &gpio_extcon_pm_ops,
+        },
  };
- 
-+/************************** EDAC Device Defines **************************/
-+
-+/* OCRAM ECC Management Group Defines */
-+#define ALTR_MAN_GRP_OCRAM_ECC_OFFSET   0x04
-+#define ALTR_OCR_ECC_EN_MASK            BIT(0)
-+#define ALTR_OCR_ECC_INJS_MASK          BIT(1)
-+#define ALTR_OCR_ECC_INJD_MASK          BIT(2)
-+#define ALTR_OCR_ECC_SERR_MASK          BIT(3)
-+#define ALTR_OCR_ECC_DERR_MASK          BIT(4)
-+
-+/* MPU L2 Register Defines */
-+#define ALTR_MPUL2_CONTROL_OFFSET       0x100
-+#define ALTR_MPUL2_CTL_CACHE_EN_MASK    BIT(0)
-+
-+/* L2 ECC Management Group Defines */
-+#define ALTR_MAN_GRP_L2_ECC_OFFSET      0x00
-+#define ALTR_L2_ECC_EN_MASK             BIT(0)
-+#define ALTR_L2_ECC_INJS_MASK           BIT(1)
-+#define ALTR_L2_ECC_INJD_MASK           BIT(2)
-+
-+#define ALTR_UE_TRIGGER_CHAR            'U'   /* Trigger for UE */
-+#define ALTR_TRIGGER_READ_WRD_CNT       16    /* Line size x 2 */
-+#define ALTR_TRIG_OCRAM_BYTE_SIZE       128   /* Line size x 4 */
-+#define ALTR_TRIG_L2C_BYTE_SIZE         4096  /* Full Page */
-+
-+/*********************** EDAC Memory Controller Functions ****************/
-+
-+/* The SDRAM controller uses the EDAC Memory Controller framework.       */
-+
- static irqreturn_t altr_sdram_mc_err_handler(int irq, void *dev_id)
- {
- 	struct mem_ctl_info *mci = dev_id;
-@@ -405,6 +437,453 @@ static struct platform_driver altr_sdram_edac_driver = {
- 
- module_platform_driver(altr_sdram_edac_driver);
- 
-+/************************* EDAC Device Functions *************************/
-+
-+/*
-+ * EDAC Device Functions (shared between various IPs).
-+ * The discrete memories use the EDAC Device framework. The probe
-+ * and error handling functions are very similar between memories
-+ * so they are shared. The memory allocation and free for EDAC trigger
-+ * testing are different for each memory.
-+ */
-+
-+const struct edac_device_prv_data ocramecc_data;
-+const struct edac_device_prv_data l2ecc_data;
-+
-+struct edac_device_prv_data {
-+	int (*setup)(struct platform_device *pdev, void __iomem *base);
-+	int ce_clear_mask;
-+	int ue_clear_mask;
-+#ifdef CONFIG_EDAC_DEBUG
-+	struct edac_dev_sysfs_attribute *eccmgr_sysfs_attr;
-+	void * (*alloc_mem)(size_t size, void **other);
-+	void (*free_mem)(void *p, size_t size, void *other);
-+	int ecc_enable_mask;
-+	int ce_set_mask;
-+	int ue_set_mask;
-+	int trig_alloc_sz;
-+#endif
-+};
-+
-+struct altr_edac_device_dev {
-+	void __iomem *base;
-+	int sb_irq;
-+	int db_irq;
-+	const struct edac_device_prv_data *data;
-+	char *edac_dev_name;
-+};
-+
-+static irqreturn_t altr_edac_device_handler(int irq, void *dev_id)
-+{
-+	struct edac_device_ctl_info *dci = dev_id;
-+	struct altr_edac_device_dev *drvdata = dci->pvt_info;
-+	const struct edac_device_prv_data *priv = drvdata->data;
-+
-+	if (irq == drvdata->sb_irq) {
-+		if (priv->ce_clear_mask)
-+			writel(priv->ce_clear_mask, drvdata->base);
-+		edac_device_handle_ce(dci, 0, 0, drvdata->edac_dev_name);
-+	}
-+	if (irq == drvdata->db_irq) {
-+		if (priv->ue_clear_mask)
-+			writel(priv->ue_clear_mask, drvdata->base);
-+		edac_device_handle_ue(dci, 0, 0, drvdata->edac_dev_name);
-+		panic("\nEDAC:ECC_DEVICE[Uncorrectable errors]\n");
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+#ifdef CONFIG_EDAC_DEBUG
-+ssize_t altr_edac_device_trig(struct edac_device_ctl_info *edac_dci,
-+			      const char *buffer, size_t count)
-+{
-+	u32 *ptemp, i, error_mask;
-+	int result = 0;
-+	unsigned long flags;
-+	struct altr_edac_device_dev *drvdata = edac_dci->pvt_info;
-+	const struct edac_device_prv_data *priv = drvdata->data;
-+	void *generic_ptr = edac_dci->dev;
-+
-+	if (!priv->alloc_mem)
-+		return -ENOMEM;
-+
-+	/*
-+	 * Note that generic_ptr is initialized to the device * but in
-+	 * some alloc_functions, this is overridden and returns data.
-+	 */
-+	ptemp = priv->alloc_mem(priv->trig_alloc_sz, &generic_ptr);
-+	if (!ptemp) {
-+		edac_printk(KERN_ERR, EDAC_DEVICE,
-+			    "Inject: Buffer Allocation error\n");
-+		return -ENOMEM;
-+	}
-+
-+	if (buffer[0] == ALTR_UE_TRIGGER_CHAR)
-+		error_mask = priv->ue_set_mask;
-+	else
-+		error_mask = priv->ce_set_mask;
-+
-+	edac_printk(KERN_ALERT, EDAC_DEVICE,
-+		    "Trigger Error Mask (0x%X)\n", error_mask);
-+
-+	local_irq_save(flags);
-+	/* write ECC corrupted data out. */
-+	for (i = 0; i < (priv->trig_alloc_sz/sizeof(*ptemp)); i++) {
-+		/* Read data so we're in the correct state */
-+		rmb();
-+		if (ACCESS_ONCE(ptemp[i]))
-+			result = -1;
-+		/* Toggle Error bit (it is latched), leave ECC enabled */
-+		writel(error_mask, drvdata->base);
-+		writel(priv->ecc_enable_mask, drvdata->base);
-+		ptemp[i] = i;
-+	}
-+	/* Ensure it has been written out */
-+	wmb();
-+	local_irq_restore(flags);
-+
-+	if (result)
-+		edac_printk(KERN_ERR, EDAC_DEVICE, "Mem Not Cleared\n");
-+
-+	/* Read out written data. ECC error caused here */
-+	for (i = 0; i < ALTR_TRIGGER_READ_WRD_CNT; i++)
-+		if (ACCESS_ONCE(ptemp[i]) != i)
-+			edac_printk(KERN_ERR, EDAC_DEVICE,
-+				    "Read doesn't match written data\n");
-+
-+	if (priv->free_mem)
-+		priv->free_mem(ptemp, priv->trig_alloc_sz, generic_ptr);
-+
-+	return count;
-+}
-+
-+static void altr_set_sysfs_attr(struct edac_device_ctl_info *edac_dci,
-+				const struct edac_device_prv_data *priv)
-+{
-+	struct edac_dev_sysfs_attribute *ecc_attr = priv->eccmgr_sysfs_attr;
-+
-+	if (ecc_attr)
-+		edac_dci->sysfs_attributes = ecc_attr;
-+}
-+#else
-+static void altr_set_sysfs_attr(struct edac_device_ctl_info *edac_dci,
-+				const struct edac_device_prv_data *priv)
-+{}
-+#endif	/* #ifdef CONFIG_EDAC_DEBUG */
-+
-+static const struct of_device_id altr_edac_device_of_match[] = {
-+#ifdef CONFIG_EDAC_ALTERA_L2C
-+	{ .compatible = "altr,l2-edac", .data = (void *)&l2ecc_data },
-+#endif
-+#ifdef CONFIG_EDAC_ALTERA_OCRAM
-+	{ .compatible = "altr,ocram-edac", .data = (void *)&ocramecc_data },
-+#endif
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, altr_edac_device_of_match);
-+
-+/*
-+ * altr_edac_device_probe()
-+ *	This is a generic EDAC device driver that will support
-+ *	various Altera memory devices such as the L2 cache ECC and
-+ *	OCRAM ECC as well as the memories for other peripherals.
-+ *	Module specific initialization is done by passing the
-+ *	function index in the device tree.
-+ */
-+static int altr_edac_device_probe(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *dci;
-+	struct altr_edac_device_dev *drvdata;
-+	struct resource *r;
-+	int res = 0;
-+	struct device_node *np = pdev->dev.of_node;
-+	char *ecc_name = (char *)np->name;
-+	static int dev_instance;
-+
-+	if (!devres_open_group(&pdev->dev, NULL, GFP_KERNEL))
-+		return -ENOMEM;
-+
-+	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!r) {
-+		edac_printk(KERN_ERR, EDAC_DEVICE,
-+			    "Unable to get mem resource\n");
-+		return -ENODEV;
-+	}
-+
-+	if (!devm_request_mem_region(&pdev->dev, r->start, resource_size(r),
-+				     dev_name(&pdev->dev))) {
-+		edac_printk(KERN_ERR, EDAC_DEVICE,
-+			    "%s:Error requesting mem region\n", ecc_name);
-+		return -EBUSY;
-+	}
-+
-+	dci = edac_device_alloc_ctl_info(sizeof(*drvdata), ecc_name,
-+					 1, ecc_name, 1, 0, NULL, 0,
-+					 dev_instance++);
-+
-+	if (!dci)
-+		return -ENOMEM;
-+
-+	drvdata = dci->pvt_info;
-+	dci->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, dci);
-+	drvdata->edac_dev_name = ecc_name;
-+
-+	drvdata->base = devm_ioremap(&pdev->dev, r->start, resource_size(r));
-+	if (!drvdata->base) {
-+		edac_printk(KERN_ERR, EDAC_DEVICE,
-+			    "%s:Unable to map regs\n", ecc_name);
-+		goto err;
-+	}
-+
-+	/* Get driver specific data for this EDAC device */
-+	drvdata->data = of_match_node(altr_edac_device_of_match, np)->data;
-+
-+	/* Check specific dependencies for the module */
-+	if (drvdata->data->setup) {
-+		res = drvdata->data->setup(pdev, drvdata->base);
-+		if (res < 0)
-+			goto err;
-+	}
-+
-+	drvdata->sb_irq = platform_get_irq(pdev, 0);
-+	res = devm_request_irq(&pdev->dev, drvdata->sb_irq,
-+			       altr_edac_device_handler,
-+			       0, dev_name(&pdev->dev), dci);
-+	if (res < 0)
-+		goto err;
-+
-+	drvdata->db_irq = platform_get_irq(pdev, 1);
-+	res = devm_request_irq(&pdev->dev, drvdata->db_irq,
-+			       altr_edac_device_handler,
-+			       0, dev_name(&pdev->dev), dci);
-+	if (res < 0)
-+		goto err;
-+
-+	dci->mod_name = "Altera EDAC Memory";
-+	dci->dev_name = drvdata->edac_dev_name;
-+
-+	altr_set_sysfs_attr(dci, drvdata->data);
-+
-+	if (edac_device_add_device(dci))
-+		goto err;
-+
-+	devres_close_group(&pdev->dev, NULL);
-+
-+	return 0;
-+err:
-+	devres_release_group(&pdev->dev, NULL);
-+	edac_device_free_ctl_info(dci);
-+
-+	return res;
-+}
-+
-+static int altr_edac_device_remove(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *dci = platform_get_drvdata(pdev);
-+
-+	edac_device_del_device(&pdev->dev);
-+	edac_device_free_ctl_info(dci);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver altr_edac_device_driver = {
-+	.probe =  altr_edac_device_probe,
-+	.remove = altr_edac_device_remove,
-+	.driver = {
-+		.name = "altr_edac_device",
-+		.of_match_table = altr_edac_device_of_match,
-+	},
-+};
-+module_platform_driver(altr_edac_device_driver);
-+
-+/*********************** OCRAM EDAC Device Functions *********************/
-+
-+#ifdef CONFIG_EDAC_ALTERA_OCRAM
-+
-+#ifdef CONFIG_EDAC_DEBUG
-+static void *ocram_alloc_mem(size_t size, void **other)
-+{
-+	struct device_node *np;
-+	struct gen_pool *gp;
-+	void *sram_addr;
-+
-+	np = of_find_compatible_node(NULL, NULL, "altr,ocram-edac");
-+	if (!np)
-+		return NULL;
-+
-+	gp = of_get_named_gen_pool(np, "iram", 0);
-+	if (!gp)
-+		return NULL;
-+
-+	sram_addr = (void *)gen_pool_alloc(gp, size);
-+	if (!sram_addr)
-+		return NULL;
-+
-+	memset(sram_addr, 0, size);
-+	wmb();	/* Ensure data is written out */
-+
-+	*other = gp;
-+
-+	return sram_addr;
-+}
-+
-+static void ocram_free_mem(void *p, size_t size, void *other)
-+{
-+	gen_pool_free((struct gen_pool *)other, (u32)p, size);
-+}
-+
-+static struct edac_dev_sysfs_attribute altr_ocr_sysfs_attributes[] = {
-+	{
-+		.attr = { .name = "altr_ocram_trigger",
-+			  .mode = (S_IRUGO | S_IWUSR) },
-+		.show = NULL,
-+		.store = altr_edac_device_trig
-+	},
-+	{
-+		.attr = {.name = NULL }
-+	}
-+};
-+#endif	/* #ifdef CONFIG_EDAC_DEBUG */
-+
-+/*
-+ * altr_ocram_dependencies()
-+ *	Test for OCRAM cache ECC dependencies upon entry because
-+ *	platform specific startup should have initialized the
-+ *	On-Chip RAM memory and enabled the ECC.
-+ *	Can't turn on ECC here because accessing un-initialized
-+ *	memory will cause CE/UE errors possibly causing an ABORT.
-+ */
-+static int altr_ocram_dependencies(struct platform_device *pdev,
-+				   void __iomem *base)
-+{
-+	u32 control;
-+
-+	control = readl(base) & ALTR_OCR_ECC_EN_MASK;
-+	if (control)
-+		return 0;
-+
-+	edac_printk(KERN_ERR, EDAC_DEVICE,
-+		    "OCRAM: No ECC present or ECC disabled.\n");
-+	return -ENODEV;
-+}
-+
-+const struct edac_device_prv_data ocramecc_data = {
-+	.setup = altr_ocram_dependencies,
-+	.ce_clear_mask = (ALTR_OCR_ECC_EN_MASK | ALTR_OCR_ECC_SERR_MASK),
-+	.ue_clear_mask = (ALTR_OCR_ECC_EN_MASK | ALTR_OCR_ECC_DERR_MASK),
-+#ifdef CONFIG_EDAC_DEBUG
-+	.eccmgr_sysfs_attr = altr_ocr_sysfs_attributes,
-+	.alloc_mem = ocram_alloc_mem,
-+	.free_mem = ocram_free_mem,
-+	.ecc_enable_mask = ALTR_OCR_ECC_EN_MASK,
-+	.ce_set_mask = (ALTR_OCR_ECC_EN_MASK | ALTR_OCR_ECC_INJS_MASK),
-+	.ue_set_mask = (ALTR_OCR_ECC_EN_MASK | ALTR_OCR_ECC_INJD_MASK),
-+	.trig_alloc_sz = ALTR_TRIG_OCRAM_BYTE_SIZE,
-+#endif
-+};
-+
-+#endif	/* #ifdef CONFIG_EDAC_ALTERA_OCRAM */
-+
-+/********************* L2 Cache EDAC Device Functions ********************/
-+
-+#ifdef CONFIG_EDAC_ALTERA_L2C
-+
-+#ifdef CONFIG_EDAC_DEBUG
-+static void *l2_alloc_mem(size_t size, void **other)
-+{
-+	struct device *dev = *other;
-+	void *ptemp = devm_kzalloc(dev, size, GFP_KERNEL);
-+
-+	if (!ptemp)
-+		return NULL;
-+
-+	/* Make sure everything is written out */
-+	wmb();
-+	flush_cache_all();
-+
-+	return ptemp;
-+}
-+
-+static void l2_free_mem(void *p, size_t size, void *other)
-+{
-+	struct device *dev = other;
-+
-+	if (dev && p)
-+		devm_kfree(dev, p);
-+}
-+
-+static struct edac_dev_sysfs_attribute altr_l2_sysfs_attributes[] = {
-+	{
-+		.attr = { .name = "altr_l2_trigger",
-+			  .mode = (S_IRUGO | S_IWUSR) },
-+		.show = NULL,
-+		.store = altr_edac_device_trig
-+	},
-+	{
-+		.attr = {.name = NULL }
-+	}
-+};
-+#endif	/* #ifdef CONFIG_EDAC_DEBUG */
-+
-+/*
-+ * altr_l2_dependencies()
-+ *	Test for L2 cache ECC dependencies upon entry because
-+ *	platform specific startup should have initialized the L2
-+ *	memory and enabled the ECC.
-+ *	Can't turn on ECC here because accessing un-initialized
-+ *	memory will cause CE/UE errors possibly causing an ABORT.
-+ *	Bail if ECC is not on.
-+ *	Test For 1) L2 ECC is enabled and 2) L2 Cache is enabled.
-+ */
-+static int altr_l2_dependencies(struct platform_device *pdev,
-+				void __iomem *base)
-+{
-+	u32 control;
-+	struct regmap *l2_vbase;
-+
-+	control = readl(base) & ALTR_L2_ECC_EN_MASK;
-+	if (!control) {
-+		edac_printk(KERN_ERR, EDAC_DEVICE,
-+			    "L2: No ECC present, or ECC disabled\n");
-+		return -ENODEV;
-+	}
-+
-+	l2_vbase = syscon_regmap_lookup_by_compatible("arm,pl310-cache");
-+	if (IS_ERR(l2_vbase)) {
-+		edac_printk(KERN_ERR, EDAC_DEVICE,
-+			    "L2:regmap for arm,pl310-cache lookup failed.\n");
-+		return -ENODEV;
-+	}
-+
-+	regmap_read(l2_vbase, ALTR_MPUL2_CONTROL_OFFSET, &control);
-+	if (!(control & ALTR_MPUL2_CTL_CACHE_EN_MASK)) {
-+		edac_printk(KERN_ERR, EDAC_DEVICE, "L2: Cache disabled\n");
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+const struct edac_device_prv_data l2ecc_data = {
-+	.setup = altr_l2_dependencies,
-+	.ce_clear_mask = 0,
-+	.ue_clear_mask = 0,
-+#ifdef CONFIG_EDAC_DEBUG
-+	.eccmgr_sysfs_attr = altr_l2_sysfs_attributes,
-+	.alloc_mem = l2_alloc_mem,
-+	.free_mem = l2_free_mem,
-+	.ecc_enable_mask = ALTR_L2_ECC_EN_MASK,
-+	.ce_set_mask = (ALTR_L2_ECC_EN_MASK | ALTR_L2_ECC_INJS_MASK),
-+	.ue_set_mask = (ALTR_L2_ECC_EN_MASK | ALTR_L2_ECC_INJD_MASK),
-+	.trig_alloc_sz = ALTR_TRIG_L2C_BYTE_SIZE,
-+#endif
-+};
-+
-+#endif	/* #ifdef CONFIG_EDAC_ALTERA_L2C */
-+
- MODULE_LICENSE("GPL v2");
- MODULE_AUTHOR("Thor Thayer");
--MODULE_DESCRIPTION("EDAC Driver for Altera SDRAM Controller");
-+MODULE_DESCRIPTION("EDAC Driver for Altera Memories");
--- 
-1.7.9.5
+
+
+On 11/06/2014 12:29 AM, George Cherian wrote:
+> Add device tree support to extcon-gpio driver.
+> Add devicetree binding documentation
+> 
+> While at that
+> 	- Cleanup the pdata as there are no users for the same.
+> 	- Convert the driver to use gpiod_* API's.
+> 	- Some gpio's can sleep while reading, so always use gpio_get_value_cansleep
+> 	to get data. This fixes warning from gpiolib due to wrong API usage.
+> 
+> Signed-off-by: George Cherian <george.cherian@ti.com>
+> ---
+>  .../devicetree/bindings/extcon/extcon-gpio.txt     | 21 ++++++
+>  drivers/extcon/extcon-gpio.c                       | 83 +++++++---------------
+>  include/linux/extcon/extcon-gpio.h                 | 59 ---------------
+>  3 files changed, 46 insertions(+), 117 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-gpio.txt
+>  delete mode 100644 include/linux/extcon/extcon-gpio.h
+> 
+> diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
+> new file mode 100644
+> index 0000000..30aa2e1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
+> @@ -0,0 +1,21 @@
+> +GPIO based EXTCON
+> +
+> +EXTCON GPIO
+> +-----------
+> +
+> +Required Properties:
+> + - compatible: should be:
+> +	* "linux,extcon-gpio"
+
+I prefer to use simply "extcon-gpio" compatible" instead of "linux,extcon-gpio".
+
+> + - gpios: specifies the gpio pin used.
+> +
+> +Optional Properties:
+> + - debounce: Debounce time for GPIO IRQ in ms
+> +
+> +
+
+Remove unneeded blank line.
+
+> +Eg:
+> +
+> +	extcon1: am43_usbid_extcon1 {
+
+I want to change the example of extcon-gpio as following:
+	"extcon1: am43_usbid_extcon1" -> "usb_extcon: extcon-gpio0"
+
+> +		compatible = "linux,extcon-gpio";
+
+ditto.
+
+> +		gpios = <&gpio3 12 GPIO_ACTIVE_HIGH>;
+> +		debounce = <20>;
+> +		};
+
+You have to fix indentation of brace.
+
+> diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
+> index 72f19a3..85795de 100644
+> --- a/drivers/extcon/extcon-gpio.c
+> +++ b/drivers/extcon/extcon-gpio.c
+> @@ -21,26 +21,23 @@
+>  */
+>  
+>  #include <linux/extcon.h>
+> -#include <linux/extcon/extcon-gpio.h>
+>  #include <linux/gpio.h>
+>  #include <linux/init.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/irq.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> +#include <linux/of_gpio.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/slab.h>
+>  #include <linux/workqueue.h>
+>  
+>  struct gpio_extcon_data {
+>  	struct extcon_dev *edev;
+> -	unsigned gpio;
+> -	bool gpio_active_low;
+> -	const char *state_on;
+> -	const char *state_off;
+> +	struct gpio_desc *gpiod;
+>  	int irq;
+>  	struct delayed_work work;
+>  	unsigned long debounce_jiffies;
+> -	bool check_on_resume;
+>  };
+>  
+>  static void gpio_extcon_work(struct work_struct *work)
+> @@ -50,9 +47,7 @@ static void gpio_extcon_work(struct work_struct *work)
+>  		container_of(to_delayed_work(work), struct gpio_extcon_data,
+>  			     work);
+>  
+> -	state = gpio_get_value(data->gpio);
+> -	if (data->gpio_active_low)
+> -		state = !state;
+> +	state = gpiod_get_value_cansleep(data->gpiod);
+>  	extcon_set_state(data->edev, state);
+>  }
+>  
+> @@ -65,34 +60,16 @@ static irqreturn_t gpio_irq_handler(int irq, void *dev_id)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> -static ssize_t extcon_gpio_print_state(struct extcon_dev *edev, char *buf)
+> -{
+> -	struct device *dev = edev->dev.parent;
+> -	struct gpio_extcon_data *extcon_data = dev_get_drvdata(dev);
+> -	const char *state;
+> -
+> -	if (extcon_get_state(edev))
+> -		state = extcon_data->state_on;
+> -	else
+> -		state = extcon_data->state_off;
+> -
+> -	if (state)
+> -		return sprintf(buf, "%s\n", state);
+> -	return -EINVAL;
+> -}
+> -
+>  static int gpio_extcon_probe(struct platform_device *pdev)
+>  {
+> -	struct gpio_extcon_platform_data *pdata = dev_get_platdata(&pdev->dev);
+> +	struct device_node *np = pdev->dev.of_node;
+>  	struct gpio_extcon_data *extcon_data;
+> +	unsigned int irq_flags;
+> +	unsigned int debounce = 0;
+>  	int ret;
+>  
+> -	if (!pdata)
+> -		return -EBUSY;
+> -	if (!pdata->irq_flags) {
+> -		dev_err(&pdev->dev, "IRQ flag is not specified.\n");
+> +	if (!np)
+>  		return -EINVAL;
+> -	}
+>  
+>  	extcon_data = devm_kzalloc(&pdev->dev, sizeof(struct gpio_extcon_data),
+>  				   GFP_KERNEL);
+> @@ -104,27 +81,23 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+>  		dev_err(&pdev->dev, "failed to allocate extcon device\n");
+>  		return -ENOMEM;
+>  	}
+> -	extcon_data->edev->name = pdata->name;
+> -
+> -	extcon_data->gpio = pdata->gpio;
+> -	extcon_data->gpio_active_low = pdata->gpio_active_low;
+> -	extcon_data->state_on = pdata->state_on;
+> -	extcon_data->state_off = pdata->state_off;
+> -	extcon_data->check_on_resume = pdata->check_on_resume;
+> -	if (pdata->state_on && pdata->state_off)
+> -		extcon_data->edev->print_state = extcon_gpio_print_state;
+> -
+> -	ret = devm_gpio_request_one(&pdev->dev, extcon_data->gpio, GPIOF_DIR_IN,
+> -				    pdev->name);
+> -	if (ret < 0)
+> -		return ret;
+> +	extcon_data->edev->name = np->name;
+> +	extcon_data->gpiod = gpiod_get(&pdev->dev, NULL);
+> +	if (IS_ERR(extcon_data->gpiod))
+> +		return PTR_ERR(extcon_data->gpiod);
+>  
+> -	if (pdata->debounce) {
+> -		ret = gpio_set_debounce(extcon_data->gpio,
+> -					pdata->debounce * 1000);
+> +	extcon_data->irq = gpiod_to_irq(extcon_data->gpiod);
+> +	if (extcon_data->irq < 0)
+> +		return extcon_data->irq;
+> +
+> +	irq_flags = irq_get_trigger_type(extcon_data->irq);
+
+I recommend to use interrupt flags as following:
+	irqflags = IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING;
+
+> +	of_property_read_u32(np, "debounce", &debounce);
+
+I don't want to use additional variable ('debounce').
+You better to use 'data->debounce_jiffies' direclty instead of 'debounce'
+Also, I prefer to check the return value of of_property_read_u32().
+
+> +	if (debounce) {
+> +		ret = gpiod_set_debounce(extcon_data->gpiod,
+> +					 debounce * 1000);
+>  		if (ret < 0)
+>  			extcon_data->debounce_jiffies =
+> -				msecs_to_jiffies(pdata->debounce);
+> +				msecs_to_jiffies(debounce);
+>  	}
+
+How about following codes?
+
+	if (of_property_read_u32(np, "debounce", &data->debounce_jiffies))
+		data->debounce_jiffies = 0;
+
+	ret = gpiod_set_debounce(data->gpiod, data->debounce_jiffies * 1000);
+	if (ret < 0)
+		data->debounce_jiffies
+			= msecs_to_jiffies(data->debounce_jiffies);
+
+
+>  
+>  	ret = devm_extcon_dev_register(&pdev->dev, extcon_data->edev);
+> @@ -132,13 +105,8 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+>  		return ret;
+>  
+>  	INIT_DELAYED_WORK(&extcon_data->work, gpio_extcon_work);
+> -
+> -	extcon_data->irq = gpio_to_irq(extcon_data->gpio);
+> -	if (extcon_data->irq < 0)
+> -		return extcon_data->irq;
+> -
+>  	ret = request_any_context_irq(extcon_data->irq, gpio_irq_handler,
+> -				      pdata->irq_flags, pdev->name,
+> +				      irq_flags, pdev->name,
+>  				      extcon_data);
+>  	if (ret < 0)
+>  		return ret;
+> @@ -166,9 +134,8 @@ static int gpio_extcon_resume(struct device *dev)
+>  	struct gpio_extcon_data *extcon_data;
+>  
+>  	extcon_data = dev_get_drvdata(dev);
+> -	if (extcon_data->check_on_resume)
+
+Why did you remove 'check_on_resume' flag without any description?
+
+> -		queue_delayed_work(system_power_efficient_wq,
+> -			&extcon_data->work, extcon_data->debounce_jiffies);
+> +	queue_delayed_work(system_power_efficient_wq,
+> +			   &extcon_data->work, extcon_data->debounce_jiffies);
+>  
+>  	return 0;
+>  }
+> diff --git a/include/linux/extcon/extcon-gpio.h b/include/linux/extcon/extcon-gpio.h
+> deleted file mode 100644
+> index 0b17ad4..0000000
+> --- a/include/linux/extcon/extcon-gpio.h
+> +++ /dev/null
+> @@ -1,59 +0,0 @@
+> -/*
+> - *  External connector (extcon) class generic GPIO driver
+> - *
+> - * Copyright (C) 2012 Samsung Electronics
+> - * Author: MyungJoo Ham <myungjoo.ham@samsung.com>
+> - *
+> - * based on switch class driver
+> - * Copyright (C) 2008 Google, Inc.
+> - * Author: Mike Lockwood <lockwood@android.com>
+> - *
+> - * This software is licensed under the terms of the GNU General Public
+> - * License version 2, as published by the Free Software Foundation, and
+> - * may be copied, distributed, and modified under those terms.
+> - *
+> - * This program is distributed in the hope that it will be useful,
+> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> - * GNU General Public License for more details.
+> - *
+> -*/
+> -#ifndef __EXTCON_GPIO_H__
+> -#define __EXTCON_GPIO_H__ __FILE__
+> -
+> -#include <linux/extcon.h>
+> -
+> -/**
+> - * struct gpio_extcon_platform_data - A simple GPIO-controlled extcon device.
+> - * @name:		The name of this GPIO extcon device.
+> - * @gpio:		Corresponding GPIO.
+> - * @gpio_active_low:	Boolean describing whether gpio active state is 1 or 0
+> - *			If true, low state of gpio means active.
+> - *			If false, high state of gpio means active.
+> - * @debounce:		Debounce time for GPIO IRQ in ms.
+> - * @irq_flags:		IRQ Flags (e.g., IRQF_TRIGGER_LOW).
+> - * @state_on:		print_state is overriden with state_on if attached.
+> - *			If NULL, default method of extcon class is used.
+> - * @state_off:		print_state is overriden with state_off if detached.
+> - *			If NUll, default method of extcon class is used.
+> - * @check_on_resume:	Boolean describing whether to check the state of gpio
+> - *			while resuming from sleep.
+> - *
+> - * Note that in order for state_on or state_off to be valid, both state_on
+> - * and state_off should be not NULL. If at least one of them is NULL,
+> - * the print_state is not overriden.
+> - */
+> -struct gpio_extcon_platform_data {
+> -	const char *name;
+> -	unsigned gpio;
+> -	bool gpio_active_low;
+> -	unsigned long debounce;
+> -	unsigned long irq_flags;
+> -
+> -	/* if NULL, "0" or "1" will be printed */
+> -	const char *state_on;
+> -	const char *state_off;
+> -	bool check_on_resume;
+> -};
+> -
+> -#endif /* __EXTCON_GPIO_H__ */
+> 
+
+Thanks,
+Chanwoo Choi
