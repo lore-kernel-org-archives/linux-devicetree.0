@@ -1,28 +1,75 @@
-From: bpqw <bpqw-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH 1/1 V2] devicetree: bindings: Add vendor prefix for
- Micron Technology Co., Ltd.
-Date: Wed, 12 Nov 2014 14:16:55 +0000
-Message-ID: <A765B125120D1346A63912DDE6D8B6315EB8F2@NTXXIAMBX02.xacn.micron.com>
-References: <A765B125120D1346A63912DDE6D8B6315EB0ED@NTXXIAMBX02.xacn.micron.com>
- <20141112090215.GA29664@ulmo.nvidia.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 04/13] of: document new emc-timings subnode in
+ nvidia,tegra124-car
+Date: Wed, 12 Nov 2014 15:18:57 +0100
+Message-ID: <20141112141856.GA26488@ulmo>
+References: <1415779051-26410-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1415779051-26410-5-git-send-email-tomeu.vizoso@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141112090215.GA29664-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Silvio F <silvio.fricke-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hayato Suzuki <hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="2oS5YaxWCcQjTEyO"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1415779051-26410-5-git-send-email-tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, mikko.perttunen-/1wQRMveznE@public.gmane.org, acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
->Patch looks okay to me content-wise, but you might want to use proper names and 
->capitalization for the From: and Signed-off-by: lines. bpqw doesn't look like a real name to me, and "bean huo" should probably be "Bean Huo".
 
->Thierry
+--2oS5YaxWCcQjTEyO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,will modify it and submit V3.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Wed, Nov 12, 2014 at 08:56:27AM +0100, Tomeu Vizoso wrote:
+[...]
+>  Example SoC include file:
+> =20
+>  / {
+> -	tegra_car: clock {
+> +	tegra_car: clock@60006000 {
+>  		compatible =3D "nvidia,tegra124-car";
+>  		reg =3D <0x60006000 0x1000>;
+>  		#clock-cells =3D <1>;
+> @@ -60,4 +83,23 @@ Example board file:
+>  	&tegra_car {
+>  		clocks =3D <&clk_32k> <&osc>;
+>  	};
+> +
+> +	clock@60006000 {
+> +		emc-timings@3 {
+
+Shouldn't this be following the same naming scheme as the memory
+controller's subnodes?
+
+> +			nvidia,ram-code =3D <3>;
+> +
+> +			timing@12750000 {
+
+And this?
+
+Thierry
+
+--2oS5YaxWCcQjTEyO
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJUY2xPAAoJEN0jrNd/PrOhb2sP/0tmY+HHUDM8YmTw6uMLnq7s
+zyr/8IvsvcZtXcf1wfGFumjtvfZL7zxAjm4J7y8TQ21ugCVWG8hxIC/6gwdNKwcA
+eJsqMmiRKI5q17aQrD9peDYoPL9K0XM6dddWGU7vd0UmtIFkygGQFbNUs1mw3U78
+KEUlkmU16Fw1JykGfpbkF7QGtjC5v78y/aI330rt/3ePpAx31Oxo+LJCiNZfuNyJ
+8hgRTDVE1uH88yBt6tUhz9movAfNlCLQBZgSoX5/Gp8PkpYnB/o6imLR02OnGNuh
+3cnMrT7Jhh93KiMb9CLP9XByYypl8RbBz0Ub4TIaAfbxZQ8GD25J0/HA+T1SxQFm
+FZI1AVXMQNoNiaO6Uc8cdohhbH4mOJEhRMIqVXr5UfbpMPNCcXMbISwNOEF3E6JM
+tZLzuZp4Fha7S+SDGrKLJaN+kce048H2iEDqgsOyNLWIFHtsSgzRc7kQnlNY+wK2
+ZOBXiPt/opY95JRPvyoMNWukqn/XiQPjAWWCgcn05ysSbJwqgcf2byOqPu2VTsvh
+b6ubKIx3HK6RwYe76CeGE2cgs6PNtnHIQO0eJkkLRnRu1XDdxTivxSn6oxlV6Oqu
+3tI4SfWWBhr3RBmywRdLgv24A53OFqxcu7vXicCEgkVqPiBQd4rsOz1o1wY8A8oX
+beteYkD2QUYLmBUTR/FK
+=/ygY
+-----END PGP SIGNATURE-----
+
+--2oS5YaxWCcQjTEyO--
