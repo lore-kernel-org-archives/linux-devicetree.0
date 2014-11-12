@@ -1,45 +1,36 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 3/5] ASoC: rsnd: Document SoC-specific bindings
-Date: Wed, 12 Nov 2014 22:31:41 +0000
-Message-ID: <20141112223141.GY3815@sirena.org.uk>
-References: <1415646044-4168-1-git-send-email-geert+renesas@glider.be>
- <1415646044-4168-4-git-send-email-geert+renesas@glider.be>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="wEUdGI42XAwEDC/y"
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1415646044-4168-4-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, alsa-devel@alsa-project.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+From: George McCollister <george.mccollister-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/2] of: Add vendor prefix for NovaTech LLC
+Date: Wed, 12 Nov 2014 16:41:32 -0600
+Message-ID: <1415832094-20991-1-git-send-email-george.mccollister@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: George McCollister <george.mccollister-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Hayato Suzuki <hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+For company details see:
+http://www.novatechweb.com
 
---wEUdGI42XAwEDC/y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: George McCollister <george.mccollister-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Mon, Nov 10, 2014 at 08:00:42PM +0100, Geert Uytterhoeven wrote:
-> The documentation only mentioned the generic fallback compatible
-> property.
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 723999d..8f1462e 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -105,6 +105,7 @@ netgear	NETGEAR
+ newhaven	Newhaven Display International
+ nintendo	Nintendo
+ nokia	Nokia
++novatech	NovaTech LLC
+ nvidia	NVIDIA
+ nxp	NXP Semiconductors
+ onnn	ON Semiconductor Corp.
+-- 
+2.1.0
 
-Applied, thanks.
-
---wEUdGI42XAwEDC/y
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUY9/NAAoJECTWi3JdVIfQMI4H/1WrZyf0vUdJDcLSsia3unec
-gHPB1pR7BdMsKq1wWtISFyxlgW4IQ6+T8CpuTzTxd/5VTpZNdfynaWAAbH91FH1I
-b9KhQ1v6XAEFXeILfxVpUsJPJx0i6zkPb4BpHeKExaI0bUUiZDbxD74HX5ZWqUt4
-tdiHdFgdj4UhMnQK2kZsVNl4sZLVK616AYWa4GH9FuEJ71cQS10LkWSzaSpDvkr4
-E6DPPi33gJFbQ2bATISg/RUk3xiqD43O/AllR1dp4anmqBwGTSrXYo0MyLNPVTci
-EDlvMY3Wtu4X3vQ/zpaDlrmsQNGow0WYDDCJdia5Eo28HX+elphNhV4k4eLW/QU=
-=Pr29
------END PGP SIGNATURE-----
-
---wEUdGI42XAwEDC/y--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
