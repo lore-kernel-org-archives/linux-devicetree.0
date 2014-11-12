@@ -1,80 +1,71 @@
 From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v5 2/3] ARM: mediatek: add dts for mt6592-evb
-Date: Wed, 12 Nov 2014 12:41:47 +0100
-Message-ID: <CABuKBeKTA1Ugf50ZhLOanXFs_cFbsUrgraEtb4UwovKECMwCPQ@mail.gmail.com>
+Subject: Re: [PATCH v5 3/3] dt-bindings: add documentation for Mediatek SoC
+Date: Wed, 12 Nov 2014 12:43:13 +0100
+Message-ID: <CABuKBeJRW9aKdbmK5Yum6dM99m3AihA9t-1U3+3H9XjtfUHvmw@mail.gmail.com>
 References: <1415678111-29914-1-git-send-email-ibanezchen@gmail.com>
-	<1415678111-29914-2-git-send-email-ibanezchen@gmail.com>
+	<1415678111-29914-3-git-send-email-ibanezchen@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415678111-29914-2-git-send-email-ibanezchen@gmail.com>
+In-Reply-To: <1415678111-29914-3-git-send-email-ibanezchen@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Howard Chen <ibanezchen@gmail.com>
 Cc: arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Olof Johansson <olof@lixom.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 2014-11-11 4:55 GMT+01:00 Howard Chen <ibanezchen@gmail.com>:
-> The mt6592-evb is an evaluation board based on the MT6592 SoC.
+> This adds a DT binding documentation for the MT6592 SoC from Mediatek.
 >
 > Signed-off-by: Howard Chen <ibanezchen@gmail.com>
 > ---
->  arch/arm/boot/dts/Makefile       |  3 ++-
->  arch/arm/boot/dts/mt6592-evb.dts | 29 +++++++++++++++++++++++++++++
->  2 files changed, 31 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/mt6592-evb.dts
+>  Documentation/devicetree/bindings/arm/mediatek.txt    | 7 +++++--
+>  Documentation/devicetree/bindings/serial/mtk-uart.txt | 3 ++-
+>  2 files changed, 7 insertions(+), 3 deletions(-)
 >
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index ab63751..0ce0d9e 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -532,7 +532,8 @@ dtb-$(CONFIG_MACH_DOVE) += dove-cm-a510.dtb \
->         dove-d2plug.dtb \
->         dove-d3plug.dtb \
->         dove-dove-db.dtb
-> -dtb-$(CONFIG_ARCH_MEDIATEK) += mt6589-aquaris5.dtb
-> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt6589-aquaris5.dtb \
-> +       mt6592-evb.dtb
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek.txt b/Documentation/devicetree/bindings/arm/mediatek.txt
+> index fa25226..1d2d151 100644
+> --- a/Documentation/devicetree/bindings/arm/mediatek.txt
+> +++ b/Documentation/devicetree/bindings/arm/mediatek.txt
+> @@ -1,10 +1,10 @@
+>  Mediatek MT6589 Platforms Device Tree Bindings
 >
->  endif
+> -Boards with a SoC of the Mediatek MT6589 shall have the following property:
+> +Boards with a SoC from Mediatek shall have the following property:
 >
-> diff --git a/arch/arm/boot/dts/mt6592-evb.dts b/arch/arm/boot/dts/mt6592-evb.dts
-> new file mode 100644
-> index 0000000..d7294d9
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/mt6592-evb.dts
-> @@ -0,0 +1,29 @@
-> +/*
-> + * Copyright (c) 2014 MediaTek Inc.
-> + * Author: Howard Chen <ibanezchen@gmail.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
+>  Required root node property:
+>
+> -compatible: must contain "mediatek,mt6589"
+> +compatible: must contain one of "mediatek,mt6589", "mediatek,mt6592"
+>
+>
+>  Supported boards:
+> @@ -12,3 +12,6 @@ Supported boards:
+>  - bq Aquaris5 smart phone:
+>      Required root node properties:
+>        - compatible = "mundoreader,bq-aquaris5", "mediatek,mt6589";
 > +
-> +/dts-v1/;
-> +#include "mt6592.dtsi"
-> +
-> +/ {
-> +       model = "mt6592 evb";
-> +       compatible = "mediatek,mt6592-evb", "mediatek,mt6592";
-> +
-> +       chosen {
-> +               bootargs = "console=ttyS0,921600n8";
-> +       };
+> +- Evaluation board for MT6592:
+> +      - compatible = "mediatek,mt6592-evb", "mediatek,mt6592";
+> diff --git a/Documentation/devicetree/bindings/serial/mtk-uart.txt b/Documentation/devicetree/bindings/serial/mtk-uart.txt
+> index 48358a3..e2864b7 100644
+> --- a/Documentation/devicetree/bindings/serial/mtk-uart.txt
+> +++ b/Documentation/devicetree/bindings/serial/mtk-uart.txt
+> @@ -2,9 +2,10 @@
+>
+>  Required properties:
+>  - compatible should contain:
+> +  * "mediatek,mt6592-uart" for MT6592 compatible UARTS
+>    * "mediatek,mt6589-uart" for MT6589 compatible UARTS
+>    * "mediatek,mt6582-uart" for MT6582 compatible UARTS
+> -  * "mediatek,mt6577-uart" for all compatible UARTS (MT6589, MT6582, MT6577)
+> +  * "mediatek,mt6577-uart" for all compatible UARTS on MT65xx
 
-Please delte this, we don't have a serial console at the moment.
+This should be two seperate patches, one for the SoC documentation and
+one for the UART documentation.
 
-> +
-> +       memory {
-> +               reg = <0x80000000 0x08000000>;
-> +       };
-> +};
+>
+>  - reg: The base address of the UART register bank.
+>
 > --
 > 1.9.1
 >
