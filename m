@@ -1,83 +1,90 @@
-From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] of/fdt: export fdt blob as /sys/firmware/fdt
-Date: Wed, 12 Nov 2014 12:51:50 +0100
-Message-ID: <CAKv+Gu9BgH8DiU=z-A5NDcCSwamJ84x3s95G=RGNoO9ostmTwg@mail.gmail.com>
-References: <1415645222-14909-1-git-send-email-ard.biesheuvel@linaro.org>
-	<1415645222-14909-2-git-send-email-ard.biesheuvel@linaro.org>
-	<20141111144221.5FCDAC416AF@trevor.secretlab.ca>
-	<CAL_JsqKeG1dWrMZydCN119V3++WKXqsjMm1bG7Fodhf3O8owpw@mail.gmail.com>
-	<CACxGe6tsLr52ZLww2JfwHFHajHW+f6nbYJPyWXmZJg3coKmMCA@mail.gmail.com>
-	<CAKv+Gu-UOPMaGQ+eRu8TX4DX_AN93JHt9dFHSaWs9+UB3UhdAg@mail.gmail.com>
-	<CACxGe6sN6dObiOnbhYM4Ltdn0BU_KTESuefvxh3odm1BbcUVbw@mail.gmail.com>
+From: Juergen Borleis <jbe@pengutronix.de>
+Subject: Re: Samsung/S3C6410/Mini6410: how to handle NAND's "clock off"
+Date: Wed, 12 Nov 2014 13:00:27 +0100
+Message-ID: <201411121300.30286.jbe@pengutronix.de>
+References: <201411111910.34231.juergen@kreuzholzen.de> <20141111184226.GH27002@pengutronix.de> <20141112091458.GM27002@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6sN6dObiOnbhYM4Ltdn0BU_KTESuefvxh3odm1BbcUVbw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geoff Levand <geoff.levand-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: Text/Plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20141112091458.GM27002@pengutronix.de>
+Content-Disposition: inline
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Uwe =?iso-8859-1?q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Juergen Borleis <juergen@kreuzholzen.de>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Grant Likely <grant.likely@linaro.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12 November 2014 12:45, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Nov 11, 2014 at 8:34 PM, Ard Biesheuvel
-> <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> On 11 November 2014 21:08, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>> On Tue, Nov 11, 2014 at 4:25 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>> On Tue, Nov 11, 2014 at 8:42 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>>>> On Mon, 10 Nov 2014 19:47:01 +0100
->>>>> , Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>>  wrote:
->>>>>> Create a new /sys entry '/sys/firmware/fdt' to export the FDT blob
->>>>>> that was passed to the kernel by the bootloader. This allows userland
->>>>>> applications such as kexec to access the raw binary. The blob needs to
->>>>>> be preserved as early as possible by calling preserve_fdt().
->>>>>>
->>>>>> The fact that this node does not reside under /sys/firmware/device-tree
->>>>>> is deliberate: FDT is also used on arm64 UEFI/ACPI systems to
->>>>>> communicate just the UEFI and ACPI entry points, but the FDT is never
->>>>>> unflattened and used to configure the system.
->>>>>>
->>>>>> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>>
->>>>> On further thought, nak. I want tree modifications to be treated as
->>>>> bugs. Do a checksum CRC32 or check. It's simpler and it can be extended
->>>>> to us an in-blob CRC when the file format gets upreved to include one.
->>>>
->>>> Why? MIPS Octeon is full of them BTW. So the rule is any modifications
->>>> or fixups have to be on the unflattened tree?
->>>
->>> That, or we require the fixups to explicitly clean up the CRC after
->>> themselves. That will force them to be visible. Anything using the
->>> fdt_*() write functions could potentially take care of it
->>> automatically. That would make it immediately discoverable where
->>> changes are being made in the tree.
->>>
->>
->> Doesn't that defeat the purpose of capturing the FDT as it was passed
->> by the bootloader? Those fixups will be reapplied by the kexec'ed
->> kernel anyway.
->
-> We're always going to be in a grey area here. There are some things
-> that should not be passed over. For example, a framebuffer that is
-> passed in from firmware will no longer be valid on kexec. Right now on
-> arch/arm, the exynos platform fixes up the DT because the memory node
-> is outright /corrupt/. In the MIPS case, they do a bunch of stuff in
-> the kernel to figure out the hardware as configured by firmware. I
-> don't agree with that approach, but I would be very surprised if the
-> full original DT has any validity after the early boot fixups.
->
 
-Well, yes, but those fixups will presumably be done on every boot,
-including the kexec ones.
-
-> Early boot fixups to the .dtb are always going to be oddball cases.
+On Wednesday 12 November 2014 10:14:58 Uwe Kleine-K=F6nig wrote:
+> Hello again,
 >
+> [extending audience a bit]
+>
+> On Tue, Nov 11, 2014 at 07:42:26PM +0100, Uwe Kleine-K=F6nig wrote:
+> > On Tue, Nov 11, 2014 at 07:10:33PM +0100, Juergen Borleis wrote:
+> > > Hi,
+> > >
+> > > the S3C2410 NAND driver [1] can still be used for NANDs attached =
+to an
+> > > S3C6410 SoC. But this driver has a "nice" feature called "clock o=
+ff" to
+> > > save some power while not in use. I tried it here on my Mini6410
+> > > platform and it freezes the system.
+> > >
+> > > The clock tree is somehow:
+> > >
+> > > [...]
+> > >   hclk                      4            4   133000000          0=
+ 0
+> > >      hclk_mfc               0            0   133000000          0=
+ 0
+> > >      hclk_mem0              2            2   133000000          0=
+ 0
+> > >         mem0_srom           0            0   133000000          0=
+ 0
+> > >         mem0_nfcon          1            1   133000000          0=
+ 0
+> > >         mem0_onenand0       0            0   133000000          0=
+ 0
+> > >         mem0_onenand1       0            0   133000000          0=
+ 0
+> > >         mem0_cfcon          0            0   133000000          0=
+ 0
+> > > [...]
+> > >
+> > > On the Mini6410 the "mem0_nfcon" clock is the only single user of=
+ the
+> > > "hclk_mem0". And this clock is required to keep the access to the
+> > > external network device enabled. When the NAND driver disables it=
+s
+> > > clock "mem0_nfcon", the "hclk_mem0" gets also disabled because th=
+ere is
+> > > no consumer anymore. The next time the network driver tries to ac=
+cess
+> > > its device, the SoC freezes.
+> >
+> > Sounds like the network driver should hold a reference to hclk_mem0=
+=2E
+>
+> After talking to J=FCrgen by phone, the solution that the dm9000 driv=
+er
+> should handle the clock sounds wrong. The clk in question is needed b=
+y
+> the SoC to operate the bus the dm9000 is connected to. So I think the
+> right approach would include
 
-OK, so generally speaking, whether the original DTB is more suitable
-to be presented through /sys/firmware/fdt than the 'current' FDT
-(i.e., whatever is in memory at the time the sysfs node is accessed)
-is not obvious at all. So why not just do the latter?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I think we need the same here for the S3C6410 SoC, like the imx-weim dr=
+iver is=20
+for i.MX SoCs.
+
+jbe
+
+--=20
+Pengutronix e.K. =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0| Juergen Borleis =A0 =A0 =A0 =A0 =A0 =A0 |
+Industrial Linux Solutions               =A0 =A0 =A0| Phone: +49-5121-2=
+06917-5128 |
+Peiner Str. 6-8, 31137 Hildesheim, Germany =A0 =A0| Fax: =A0 +49-5121-2=
+06917-5555 |
+Amtsgericht Hildesheim, HRA 2686 =A0 =A0 =A0 =A0 =A0 =A0 =A0| http://ww=
+w.pengutronix.de/ =A0|
