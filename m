@@ -1,63 +1,61 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v2 0/6] ARM: shmobile: Change to using clock-indices
-Date: Wed, 12 Nov 2014 17:43:28 +0100
-Message-ID: <20141112164328.GH4031@katana>
-References: <1415645379-3366-1-git-send-email-geert+renesas@glider.be>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH 2/3] power: reset: imx-snvs-poweroff: add power off
+ driver for i.mx6
+Date: Wed, 12 Nov 2014 17:59:25 +0100
+Message-ID: <20141112165925.GA27681@earth.universe>
+References: <1415780439-29728-1-git-send-email-b38343@freescale.com>
+ <1415780439-29728-3-git-send-email-b38343@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Enx9fNJ0XV5HaWRu"
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="VbJkn9YxBvnuCH5J"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1415645379-3366-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Mike Turquette <mturquette@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
+In-Reply-To: <1415780439-29728-3-git-send-email-b38343@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robin Gong <b38343@freescale.com>
+Cc: shawn.guo@linaro.org, kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dbaryshkov@gmail.com, dwmw2@infradead.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, smoch@web.de
 List-Id: devicetree@vger.kernel.org
 
 
---Enx9fNJ0XV5HaWRu
+--VbJkn9YxBvnuCH5J
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 10, 2014 at 07:49:33PM +0100, Geert Uytterhoeven wrote:
-> 	Hi Mike, Simon, Magnus,
+Hi,
+
+On Wed, Nov 12, 2014 at 04:20:38PM +0800, Robin Gong wrote:
+> This driver register pm_power_off with snvs power off function. If
+> your boards NOT use PMIC_ON_REQ to turn on/off external pmic, or use
+> other pin to do, please disable the driver in dts, otherwise, your
+> pm_power_off maybe overwrote by this driver.
 >=20
-> This patch series finalizes the conversion from the vendor-specific
-> "renesas,clock-indices" to the generic "clock-indices", started by Ben Do=
-oks.
->=20
-> The patches for r8a7790 and r8a7791 were extracted from a patch that Ben =
-sent
-> before ("[PATCH 2/3] renesas: change to using clock-indices"), but it was=
- never
-> split/updated.
+> Signed-off-by: Robin Gong <b38343@freescale.com>
 
-Cool!
+Acked-By: Sebastian Reichel <sre@kernel.org>
 
-Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+-- Sebastian
 
-
---Enx9fNJ0XV5HaWRu
+--VbJkn9YxBvnuCH5J
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJUY44vAAoJEBQN5MwUoCm2IQkQAKBdz//mkB6I0lSOHitBnkLq
-0eMOm96nlcV2wf/69p30ugJOgqzuLHHkkpWM/rptRLKETtgIk1GCjaQj7UXmjZVV
-kU2WEQpW6ZuRI89pjmBEZo0ruAqHbhWDPMg+6Fg+F62r+GIQsDoXajqzC88ZsGzg
-9buTyLjlipstPprz88Bkd/LhFC7rVNbCYTihByXKkSDDNk3I7n7MA2CC5SQM8GzJ
-0pIE6383lLLJ+ZfKiwHSn+LRqvximwICTD/Vtw8QNXmaaACQI4J/iWBmZ2a3zTa7
-auv+5CZ29oi5SWcAYq76/OJPdRMXTjMkXmmAJUdqaT9PIEXt01ZyKYvVwY7ZxtH3
-YY3Yt7iMgdVlSAqwVQz9oOEk5ziBYvH5Kq+VZ/5ux7em+CSfELF79t5lXH9HgLCY
-C6TX0Z2EsreXSzuz5dBTD29AyUYsYoKBUr8vfxxVDDsJ4vNixEHyA9rTf4BSs7yK
-0jmd46ee81HoDYjgEBVx0jLnELhNQPgNd7IUBKvv+gUuweZkpDU4X8FZKbx3HH+Y
-gqcy+QDuPkouNATP6eSbisghvrpPBUSKF4gTZR33O63JGryaARmg6vhKr4g33V2k
-9RljTqvrEkipF0KC/n8Lbqb6wzqy4Ltx+jwcuh3pbL6emAW5vzFgNQI4ULF71Ohy
-jVl+5PkxICwkVT7I1C3X
-=uws5
+iQIcBAEBCgAGBQJUY5HtAAoJENju1/PIO/qaYdkP/AgVUwvCivqytBuQLaByw3lg
+hfpEc+62UTzBHWwhqI5QJ9Ni7Z5ap/116EKGRUPGESvwzwEgvfTedKtvAC6HHE+v
+AdVnlciWj5SeqsY8n0madYp07vZrYSCvic/HGAv16ubJmzQCejYXx8L3Vc0/eKsY
+8fZNEa2EyX9roH8USYJ7Klozko7a7mGeN28cWVA5EMscxbSJOR2FT88MuEduYg3B
+M+MCjU+YpVY7u1VtWIHzXbJRLDtziLjUEudLIjcfzQpsc7W21HBA2Cw88R2iZ2Yo
+A4NOU7rt9JQb5rX0gdcz1nIK/5LEAQMpHhwIiLfueDRTpS/fQKlOEgbxZgLKn2pw
+rkJpzBAhMrGa8zzby2sBhPGhWQ0J61anVxm15m/cC9RoePpwgTfR/nhV3kQPJTYe
+njrNNRh8JFsWXP/97kc+icr7twucW38kApJUVtPAskP7MwP745JGfse/XS/1C0MZ
+aGNe75x5i83BO+bElkoAKYLSQKQ+vdvPsgYKCh4S9BgsBMy9EqpmID1l6xvJKQce
+u18l/W2QeuzyZQN0VnUg6NZ9IhS1rUm/FuLEuDIXyHIJf+HyC2KFDZLd1COv/oxX
+GQNT4mpTs8wQWT3fzU4GKM+x9G4Lqyue+a4E0GWZPBp4KteQvKKWWqxLhEx8uNDC
+t+lJau0RoLV8NRW3NxWp
+=dB4J
 -----END PGP SIGNATURE-----
 
---Enx9fNJ0XV5HaWRu--
+--VbJkn9YxBvnuCH5J--
