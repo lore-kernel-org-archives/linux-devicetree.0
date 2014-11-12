@@ -1,70 +1,44 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: Re: [PATCH v4 0/5] simplefb: add clock handling code
-Date: Wed, 12 Nov 2014 09:34:41 +0100
-Message-ID: <CAMuHMdUoPK_s7OP1Aop4eOyhec+abFij7ZoAAdA5fqpJJy-Dgg@mail.gmail.com>
-References: <1413996311-4287-1-git-send-email-hdegoede@redhat.com>
-	<544F737A.7000109@ti.com>
-	<CAL_JsqJ2JRg7k21CEVe4-At7enD+y3TN_7wfqhY0OHZm-_j17w@mail.gmail.com>
-	<544F7E5D.60104@redhat.com>
-	<5450CAA5.5020205@ti.com>
-	<CAL_JsqKWqq+H5ymUW3n8tkmLJHEUGaKDLX5+orJmGUQ3ECQwUQ@mail.gmail.com>
-	<20141111214950.7FCABC41610@trevor.secretlab.ca>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCQJP74GSUDRBIVXRSRQKGQEP26RIOI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20141111214950.7FCABC41610-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Kevin Cernekee <cernekee@gmail.com>
+Subject: [PATCH/RFC 0/8] UART driver support for BMIPS multiplatform kernels
+Date: Wed, 12 Nov 2014 00:46:25 -0800
+Message-ID: <1415781993-7755-1-git-send-email-cernekee@gmail.com>
+Return-path: <linux-serial-owner@vger.kernel.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, jslaby@suse.cz, robh@kernel.org
+Cc: tushar.behera@linaro.org, daniel@zonque.org, haojian.zhuang@gmail.com, robert.jarzmik@free.fr, grant.likely@linaro.org, f.fainelli@gmail.com, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+Use the pxa serial driver to support BCM7xxx's UARTs; add code to allow
+native-endian operation on both LE and BE systems.  Enable OF_EARLYCON
+in the pxa driver.
 
-On Tue, Nov 11, 2014 at 10:49 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wr=
-ote:
-> However, I am concerned about handover. I've lost track over the entire
-> thread on whether the handover mechanism has been resolved, and I would
-> really like to have a proposed solution to this documented in the
-> binding. The fact that there is nothing tying the simple framebuffer to
-> the actual hardware backing the framebuffer is concerning. It means the
-> kernel needs to guess which graphics device is associated with the
-> framebuffer.
+After applying these changes I am able to build a multiplatform kernel
+that boots to the prompt on BCM6328 (bcm63xx_uart) and BCM7346 (pxa).
 
-We did discuss handover in D=C3=BCsseldorf, and concluded that the simplefb=
-'s
-regs property can be used for this.
 
-While on a modern system with unified memory this association cannot be
-derived in a generic way, a device-specific driver for the graphics hardwar=
-e
-can if the regs property of the simplefb node matches the address the CRTC
-engine is configured for.
+Kevin Cernekee (7):
+  serial: core: Add big_endian flag
+  of: Add helper function to check MMIO register endianness
+  serial: pxa: Add fifo-size and {big,native}-endian properties
+  serial: pxa: Make the driver buildable for BCM7xxx set-top platforms
+  serial: pxa: Update DT binding documentation
+  serial: earlycon: Set uart_port->big_endian based on DT properties
+  serial: pxa: Add OF_EARLYCON support
 
-Gr{oetje,eeting}s,
+Tushar Behera (1):
+  tty: Fallback to use dynamic major number
 
-                        Geert
+ .../devicetree/bindings/serial/mrvl-serial.txt     | 34 +++++++++++-
+ drivers/of/base.c                                  | 23 ++++++++
+ drivers/of/fdt.c                                   |  9 +++-
+ drivers/tty/serial/Kconfig                         |  2 +-
+ drivers/tty/serial/earlycon.c                      |  3 +-
+ drivers/tty/serial/pxa.c                           | 62 +++++++++++++++++++++-
+ drivers/tty/tty_io.c                               | 19 +++++--
+ include/linux/of.h                                 |  6 +++
+ include/linux/serial_core.h                        |  5 +-
+ 9 files changed, 152 insertions(+), 11 deletions(-)
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+-- 
+2.1.1
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
