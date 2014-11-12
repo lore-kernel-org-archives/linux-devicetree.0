@@ -1,74 +1,83 @@
-From: "Suzuki K. Poulose" <Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] of/fdt: export fdt blob as /sys/firmware/fdt
-Date: Wed, 12 Nov 2014 10:42:05 +0000
-Message-ID: <5463397D.7060506@arm.com>
-References: <1415645222-14909-1-git-send-email-ard.biesheuvel@linaro.org> <1415645222-14909-2-git-send-email-ard.biesheuvel@linaro.org>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: imx: temporarily remove CONFIG_SOC_FSL from LS1021A
+Date: Wed, 12 Nov 2014 18:42:41 +0800
+Message-ID: <20141112104239.GJ2704@dragon>
+References: <1414746073-12394-1-git-send-email-jingchang.lu@freescale.com>
+ <1414746073-12394-6-git-send-email-jingchang.lu@freescale.com>
+ <1727581.y25NQPsRIm@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415645222-14909-2-git-send-email-ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1727581.y25NQPsRIm@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "geoff.levand-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <geoff.levand-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/11/14 18:47, Ard Biesheuvel wrote:
-> Create a new /sys entry '/sys/firmware/fdt' to export the FDT blob
-> that was passed to the kernel by the bootloader. This allows userland
-> applications such as kexec to access the raw binary. The blob needs to
-> be preserved as early as possible by calling preserve_fdt().
->
-> The fact that this node does not reside under /sys/firmware/device-tree
-> is deliberate: FDT is also used on arm64 UEFI/ACPI systems to
-> communicate just the UEFI and ACPI entry points, but the FDT is never
-> unflattened and used to configure the system.
->
-> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Tue, Nov 11, 2014 at 05:03:25PM +0100, Arnd Bergmann wrote:
+> The newly introduced LS1021A SoC selects CONFIG_SOC_FSL, which
+> is originally symbol used for the PowerPC based platforms
+> and guards lots of code that does not build on ARM.
+> 
+> This breaks allmodconfig, so let's remove it for now, until
+> either all those drivers are fixed or they use a dependency
+> on IMX instead.
+> 
+> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> 
 > ---
->   drivers/of/fdt.c       | 34 ++++++++++++++++++++++++++++++++++
->   include/linux/of_fdt.h |  2 ++
->   2 files changed, 36 insertions(+)
->
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index d1ffca8b34ea..e9ee3d5f7ea4 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -22,6 +22,7 @@
->   #include <linux/libfdt.h>
->   #include <linux/debugfs.h>
->   #include <linux/serial_core.h>
-> +#include <linux/sysfs.h>
->
->   #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
->   #include <asm/page.h>
-> @@ -1103,4 +1104,37 @@ static int __init of_flat_dt_debugfs_export_fdt(void)
->   module_init(of_flat_dt_debugfs_export_fdt);
->   #endif
->
-> +static u8 *raw_fdt_copy;
-> +
-> +void __init preserve_fdt(void)
-> +{
-> +	u32 fdt_size;
-> +
-> +	fdt_size = fdt_totalsize(initial_boot_params);
-> +	raw_fdt_copy = memcpy(__va(memblock_alloc(fdt_size, PAGE_SIZE)),
-> +			      initial_boot_params, fdt_size);
-> +}
-> +
-> +#ifdef CONFIG_SYSFS
-> +static ssize_t of_fdt_raw_read(struct file *filp, struct kobject *kobj,
-> +			       struct bin_attribute *bin_attr,
-> +			       char *buf, loff_t off, size_t count)
-> +{
-> +	memcpy(buf, raw_fdt_copy + off, count);
-Should we check for the off+count, not to exceed the fdt_size that we 
-actually copied ?
+> On Friday 31 October 2014 17:01:12 Jingchang Lu wrote:
+> > From: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > 
+> > The LS1021A SoC is a dual-core Cortex-A7 based processor,
+> > this adds the initial support for it.
+> > 
+> > Signed-off-by: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> 
+> >  
+> > +config FSL_SOC
+> > +       bool
+> > +
+> > +config SOC_LS1021A
+> > +       bool "Freescale LS1021A support"
+> > +       select ARM_GIC
+> > +       select HAVE_ARM_ARCH_TIMER
+> > +       select FSL_SOC
+> >
+> 
+> 
+> This broke allmodconfig builds in linux-next, please apply this
+> partial revert for the moment.
 
-Thanks
-Suzuki
+I noticed the issue from 0-DAY testing and was trying to drop the patch.
+Jingchang said someone is trying to fixing the issues from driver code.
+But it seems to take some time.  So I agree with this partial reverting.
 
+Patch applied.  Thanks Arnd.
 
+Shawn
+
+> diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+> index ef549ef1cd6d..e8627e04e1e6 100644
+> --- a/arch/arm/mach-imx/Kconfig
+> +++ b/arch/arm/mach-imx/Kconfig
+> @@ -658,14 +658,10 @@ choice
+>  
+>  endchoice
+>  
+> -config FSL_SOC
+> -	bool
+> -
+>  config SOC_LS1021A
+>  	bool "Freescale LS1021A support"
+>  	select ARM_GIC
+>  	select HAVE_ARM_ARCH_TIMER
+> -	select FSL_SOC
+>  	select PCI_DOMAINS if PCI
+>  	select ZONE_DMA if ARM_LPAE
+>  
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
