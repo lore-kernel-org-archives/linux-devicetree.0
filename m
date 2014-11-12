@@ -1,37 +1,49 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH 1/5] ARM: shmobile: kzm9g legacy: Set i2c clks_per_count
- to 2
-Date: Wed, 12 Nov 2014 18:05:48 +0900
-Message-ID: <20141112090548.GZ9007@verge.net.au>
-References: <1415274730-310-1-git-send-email-geert+renesas@glider.be>
- <1415274730-310-2-git-send-email-geert+renesas@glider.be>
- <20141107052420.GA1278@katana>
- <20141112014450.GC11597@verge.net.au>
- <CAMuHMdUUspG8-dYGiO7cmuECBLpfmQAYg=B8ZpajxRXhaEUJ2A@mail.gmail.com>
- <CAMuHMdXoiX6CreDJNaDHcmsifX0C+TRRvTy4JWYBc2c-MVT_Qw@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH/RFC 4/8] serial: pxa: Add fifo-size and {big,native}-endian properties
+Date: Wed, 12 Nov 2014 10:08:22 +0100
+Message-ID: <1644326.y4vtt1W8M2@wuerfel>
+References: <1415781993-7755-1-git-send-email-cernekee@gmail.com> <1415781993-7755-5-git-send-email-cernekee@gmail.com> <5463227E.9050304@suse.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXoiX6CreDJNaDHcmsifX0C+TRRvTy4JWYBc2c-MVT_Qw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <5463227E.9050304@suse.cz>
+Sender: linux-serial-owner@vger.kernel.org
+To: Jiri Slaby <jslaby@suse.cz>
+Cc: Kevin Cernekee <cernekee@gmail.com>, gregkh@linuxfoundation.org, robh@kernel.org, tushar.behera@linaro.org, daniel@zonque.org, haojian.zhuang@gmail.com, robert.jarzmik@free.fr, grant.likely@linaro.org, f.fainelli@gmail.com, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 12, 2014 at 09:55:58AM +0100, Geert Uytterhoeven wrote:
-> On Wed, Nov 12, 2014 at 9:53 AM, Geert Uytterhoeven
-> <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
-> >>   i2c_shmobile support.") in v2.6.37.
-> >>
-> >>   Without this fix i2c may not operate correctly on the sh73a0/kzm9g.
-> >
-> > Thanks, that's correct.
+On Wednesday 12 November 2014 10:03:58 Jiri Slaby wrote:
+> On 11/12/2014, 09:46 AM, Kevin Cernekee wrote:
+> > With a few tweaks, the PXA serial driver can handle other 16550A clones.
+> > Add a fifo-size DT property to override the FIFO depth (BCM7xxx uses 32),
+> > and {native,big}-endian properties similar to regmap to support SoCs that
+> > have BE or "automagic endian" registers.
+> > 
+> > Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+> > ---
+> >  drivers/tty/serial/pxa.c | 16 ++++++++++++++--
+> >  1 file changed, 14 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/tty/serial/pxa.c b/drivers/tty/serial/pxa.c
+> > index 21b7d8b..78ed7ee 100644
+> > --- a/drivers/tty/serial/pxa.c
+> > +++ b/drivers/tty/serial/pxa.c
+> > @@ -60,13 +60,19 @@ struct uart_pxa_port {
+> >  static inline unsigned int serial_in(struct uart_pxa_port *up, int offset)
+> >  {
+> >       offset <<= 2;
+> > -     return readl(up->port.membase + offset);
+> > +     if (!up->port.big_endian)
+> > +             return readl(up->port.membase + offset);
+> > +     else
+> > +             return ioread32be(up->port.membase + offset);
 > 
-> git tag --contains b028f94b76319e1b8 says v2.6.38.
-> 
-> Not that you're gonna backport it to ltsi-v2.6.37 ;-)
+> This needn't fly IMO, unless you map the space using iomap (not ioremap).
 
-Hopefully not!
+For all I know, the ioread family is required to work with tokens returned
+from ioremap on all architectures. The difference to readl is that it
+also works on tokens returned from ioport_map or one of the wrappers
+around it.
 
-I'll update my description anyway.
+	Arnd
