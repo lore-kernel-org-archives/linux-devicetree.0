@@ -1,162 +1,111 @@
-From: Beomho Seo <beomho.seo@samsung.com>
-Subject: [PATCH v3 5/5] Documentation: Add documentation for rt5033
- multifunction device
-Date: Wed, 12 Nov 2014 21:08:02 +0900
-Message-ID: <1415794082-30277-6-git-send-email-beomho.seo@samsung.com>
-References: <1415794082-30277-1-git-send-email-beomho.seo@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1415794082-30277-1-git-send-email-beomho.seo@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Cc: sameo@linux.intel.com, lee.jone@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, cw00.choi@samsung.com, geunsik.lim@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, Beomho Seo <beomho.seo@samsung.com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] of/fdt: export fdt blob as /sys/firmware/fdt
+Date: Wed, 12 Nov 2014 12:10:47 +0000
+Message-ID: <CACxGe6tUFv2GR5pFjDGa=S3pqVndph4E3MauZFoyRRYzNyRu=w@mail.gmail.com>
+References: <1415645222-14909-1-git-send-email-ard.biesheuvel@linaro.org>
+ <1415645222-14909-2-git-send-email-ard.biesheuvel@linaro.org>
+ <20141111144221.5FCDAC416AF@trevor.secretlab.ca> <CAL_JsqKeG1dWrMZydCN119V3++WKXqsjMm1bG7Fodhf3O8owpw@mail.gmail.com>
+ <CACxGe6tsLr52ZLww2JfwHFHajHW+f6nbYJPyWXmZJg3coKmMCA@mail.gmail.com>
+ <CAKv+Gu-UOPMaGQ+eRu8TX4DX_AN93JHt9dFHSaWs9+UB3UhdAg@mail.gmail.com>
+ <CACxGe6sN6dObiOnbhYM4Ltdn0BU_KTESuefvxh3odm1BbcUVbw@mail.gmail.com>
+ <CAKv+Gu9BgH8DiU=z-A5NDcCSwamJ84x3s95G=RGNoO9ostmTwg@mail.gmail.com>
+ <CACxGe6vPC74TtwRxgA2jPQwCrpVjpk9UvnUiUNTF4ZgfmH4YgQ@mail.gmail.com> <CAKv+Gu8wenvVa3=35pXTJkbZT+cwpAUfs6RdcBtWGyOyzXcupg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAKv+Gu8wenvVa3=35pXTJkbZT+cwpAUfs6RdcBtWGyOyzXcupg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geoff Levand <geoff.levand-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch device tree binding documentation for rt5033 multifunction device.
+On Wed, Nov 12, 2014 at 12:08 PM, Ard Biesheuvel
+<ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 12 November 2014 13:01, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On Wed, Nov 12, 2014 at 11:51 AM, Ard Biesheuvel
+>> <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>> On 12 November 2014 12:45, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>>> On Tue, Nov 11, 2014 at 8:34 PM, Ard Biesheuvel
+>>>> <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>>>> On 11 November 2014 21:08, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>>>>> On Tue, Nov 11, 2014 at 4:25 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>>>> On Tue, Nov 11, 2014 at 8:42 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>>>>>>> On Mon, 10 Nov 2014 19:47:01 +0100
+>>>>>>>> , Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>>>>>>  wrote:
+>>>>>>>>> Create a new /sys entry '/sys/firmware/fdt' to export the FDT blob
+>>>>>>>>> that was passed to the kernel by the bootloader. This allows userland
+>>>>>>>>> applications such as kexec to access the raw binary. The blob needs to
+>>>>>>>>> be preserved as early as possible by calling preserve_fdt().
+>>>>>>>>>
+>>>>>>>>> The fact that this node does not reside under /sys/firmware/device-tree
+>>>>>>>>> is deliberate: FDT is also used on arm64 UEFI/ACPI systems to
+>>>>>>>>> communicate just the UEFI and ACPI entry points, but the FDT is never
+>>>>>>>>> unflattened and used to configure the system.
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>>>>>>
+>>>>>>>> On further thought, nak. I want tree modifications to be treated as
+>>>>>>>> bugs. Do a checksum CRC32 or check. It's simpler and it can be extended
+>>>>>>>> to us an in-blob CRC when the file format gets upreved to include one.
+>>>>>>>
+>>>>>>> Why? MIPS Octeon is full of them BTW. So the rule is any modifications
+>>>>>>> or fixups have to be on the unflattened tree?
+>>>>>>
+>>>>>> That, or we require the fixups to explicitly clean up the CRC after
+>>>>>> themselves. That will force them to be visible. Anything using the
+>>>>>> fdt_*() write functions could potentially take care of it
+>>>>>> automatically. That would make it immediately discoverable where
+>>>>>> changes are being made in the tree.
+>>>>>>
+>>>>>
+>>>>> Doesn't that defeat the purpose of capturing the FDT as it was passed
+>>>>> by the bootloader? Those fixups will be reapplied by the kexec'ed
+>>>>> kernel anyway.
+>>>>
+>>>> We're always going to be in a grey area here. There are some things
+>>>> that should not be passed over. For example, a framebuffer that is
+>>>> passed in from firmware will no longer be valid on kexec. Right now on
+>>>> arch/arm, the exynos platform fixes up the DT because the memory node
+>>>> is outright /corrupt/. In the MIPS case, they do a bunch of stuff in
+>>>> the kernel to figure out the hardware as configured by firmware. I
+>>>> don't agree with that approach, but I would be very surprised if the
+>>>> full original DT has any validity after the early boot fixups.
+>>>>
+>>>
+>>> Well, yes, but those fixups will presumably be done on every boot,
+>>> including the kexec ones.
+>>>
+>>>> Early boot fixups to the .dtb are always going to be oddball cases.
+>>>>
+>>>
+>>> OK, so generally speaking, whether the original DTB is more suitable
+>>> to be presented through /sys/firmware/fdt than the 'current' FDT
+>>> (i.e., whatever is in memory at the time the sysfs node is accessed)
+>>> is not obvious at all. So why not just do the latter?
+>>
+>> We're now talking theoreticals. In the case you're working on
+>> (ACPI+FDT), the FDT is generated by Grub or the EFI stub as an
+>> intermediary format, and there isn't currently any code in your boot
+>> path that modifies the FDT. You're arguing for a future situation
+>> where the kernel makes a fixup that is not wanted in the second
+>> kernel. I'm arguing that 1) I want to /know/ when that happens because
+>> there are very few situations where it is a valid thing to do, and 2)
+>> the likelyhood of that happening in the FDT+ACPI case is somewhere
+>> between slim and none because you're working with an intermediary FDT,
+>> not a real hardware description.
+>>
+>
+> But do you still want the warning? Or only if you access the sysfs
+> node? Or just a pr_warn() perhaps rather than a full blown WARN() ?
+> MIPS will start seeing the warning as well even if they don't care
+> about what is in /sys/firmware/fdt
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
----
-Changes in v3:
-- none.
+pr_warn() and then don't export the file in /sys/firmware/fdt. I'm
+okay with the check being done once at the end of initcalls.
 
-Changes in v2:
-- Revise binding documentation.
----
- Documentation/devicetree/bindings/mfd/rt5033.txt   |  108 ++++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- 2 files changed, 109 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/rt5033.txt
-
-diff --git a/Documentation/devicetree/bindings/mfd/rt5033.txt b/Documentation/devicetree/bindings/mfd/rt5033.txt
-new file mode 100644
-index 0000000..52a6d33
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/rt5033.txt
-@@ -0,0 +1,108 @@
-+Richtek RT5033 Power management Integrated Circuit
-+
-+RT5033 is a Multifunction device which includes battery charger, fuel gauge,
-+flash LED current source, LDO and synchronous Buck converter for portable
-+applications. It is interfaced to host controller using i2c interface.
-+
-+Required properties:
-+- compatible : Must be "richtek,rt5033"
-+- reg : Specifies the i2c slave address of general part.
-+- interrupts : This i2c devices has an IRQ line connected to the main SoC.
-+- interrupt-parent : The parent interrupt controller.
-+
-+Optional node:
-+Regulators: The regulators of RT5033 have to be instantiated under sub-node
-+named "regulators" usinge the following format.
-+
-+	regulators {
-+		regulator-name {
-+			regulator-name = LDO/BUCK
-+			regulator subnodes called X, Y and Z
-+		};
-+	};
-+	refer Documentation/devicetree/bindings/regulator/regulator.txt
-+
-+
-+Battery charger: There battery charger of RT5033 have to be instantiated under
-+sub-node named "charger" using the following format.
-+
-+Required properties:
-+- compatible : Must be "richtek,rt5033-charger".
-+- richtek,pre-uamp : Current of pre-charge mode. The pre-charge current levels
-+  are 350 mA to 650 mA programmed by I2C per 100 mA.
-+- richtek,pre-threshold-uvolt : Voltage of threshold pre-charge mode. Battery
-+  voltage is below pre-charge threshold voltage, the charger is in pre-charge
-+  mode with pre-charge current. Its levels are 2.3 V  to 3.8 V programmed
-+  by I2C per 0.1 V.
-+- richtek,fast-uamp : Current of fast-charge mode. The fast-charge current
-+  levels are 700 mA to 2000 mA programmed by I2C per 100 mA.
-+- richtek,const-uvolt :  Battery regulation voltage of constant voltage mode.
-+  This voltage level 3.65 V to 4.4 V bye I2C per 0.025 V.
-+- richtek,eoc-uamp : This property is end of charge current. Its level 150 mA
-+  to 200 mA.
-+
-+	charger {
-+		compatible = "richtek,rt5033-charger";
-+		richtek,pre-uamp = <350000>;
-+		richtek,pre-threshold-uvolt = <3400000>;
-+		richtek,fast-uamp = <2000000>;
-+		richtek,const-uvolt = <4350000>;
-+		richtek,eoc-uamp = <250000>;
-+	};
-+
-+
-+Fuelgauge: There fuelgauge of RT5033 to be instantiated node named "fuelgauge"
-+using the following format.
-+
-+Required properties:
-+- compatible = Must be "richtek,rt5033-battery".
-+
-+	i2c_fuel: i2c@1 {
-+		compatible = "i2c-gpio";
-+		standard i2c-gpio constraints...
-+		fuelgauge {
-+			compatible = "richtek,rt5033-battery".
-+		};
-+	};
-+
-+
-+Example:
-+
-+		rt5033@34 {
-+			compatible = "richtek,rt5033";
-+			reg = <0x34>;
-+			interrupt-parent = <&gpx1>;
-+			interrupts = <5 0>;
-+
-+			regulators {
-+				buck_reg: BUCK {
-+					regulator-name = "BUCK";
-+					regulator-min-microvolt = <1200000>;
-+					regulator-max-microvolt = <1200000>;
-+					regulator-always-on;
-+				};
-+			};
-+
-+			charger {
-+				compatible = "richtek,rt5033-charger";
-+				richtek,pre-uamp = <350000>;
-+				richtek,pre-threshold-uvolt = <3400000>;
-+				richtek,fast-uamp = <2000000>;
-+				richtek,const-uvolt = <4350000>;
-+				richtek,eoc-uamp = <250000>;
-+			};
-+
-+		};
-+
-+		i2c_fuel: i2c@10 {
-+			compatible = "i2c-gpio";
-+			gpios = <&gpm3 1 0
-+				&gpm3 0 0>;
-+
-+			fuel: rt5033-battery@35 {
-+				compatible = "richtek,rt5033-battery";
-+				interrupt-parent = <&gpx2>;
-+				interrupts = <3 0>;
-+				reg = <0x35>;
-+			};
-+		};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 723999d..611b543 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -124,6 +124,7 @@ ralink	Mediatek/Ralink Technology Corp.
- ramtron	Ramtron International
- realtek Realtek Semiconductor Corp.
- renesas	Renesas Electronics Corporation
-+richtek	Richtek Technology Corporation
- ricoh	Ricoh Co. Ltd.
- rockchip	Fuzhou Rockchip Electronics Co., Ltd
- samsung	Samsung Semiconductor
--- 
-1.7.9.5
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
