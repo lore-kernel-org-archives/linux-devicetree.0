@@ -1,65 +1,113 @@
-From: Belisko Marek <marek.belisko@gmail.com>
-Subject: Re: [PATCH 1/4] video: omapdss: Add opa362 driver
-Date: Wed, 12 Nov 2014 15:04:41 +0100
-Message-ID: <CAAfyv34dZBrss5cQJKq=gYUuYb3i7c2cKOyw_QezEuaG3UsodQ@mail.gmail.com>
-References: <1415051968-4878-1-git-send-email-marek@goldelico.com>
-	<1415051968-4878-2-git-send-email-marek@goldelico.com>
-	<54636763.10605@ti.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [RFC PATCH v2] drivers: pci: move PCI domain assignment to
+ generic PCI code
+Date: Wed, 12 Nov 2014 14:14:29 +0000
+Message-ID: <20141112141429.GF6759@red-moon>
+References: <1415637706-2195-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <176983067.8qgFVmI6qY@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <54636763.10605@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <176983067.8qgFVmI6qY@wuerfel>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomi,
+On Wed, Nov 12, 2014 at 10:39:17AM +0000, Arnd Bergmann wrote:
+> On Monday 10 November 2014 16:41:46 Lorenzo Pieralisi wrote:
+> > The current logic used for PCI domain assignment in arm64
+> > pci_bus_assign_domain_nr() is flawed in that, depending on the host
+> > controllers configuration for a platform and the respective initialization
+> > sequence, core code may end up allocating PCI domain numbers from both DT and
+> > the core code generic domain counter, which would result in PCI domain
+> > allocation aliases/errors.
+> > 
+> > This patch fixes the logic behind the PCI domain number assignment and
+> > moves the resulting code to generic PCI core code so that the same domain
+> > allocation logic is used on all platforms selecting
+> > 
+> > CONFIG_PCI_DOMAINS_GENERIC
+> > 
+> > instead of resorting to an arch specific implementation that might end up
+> > duplicating the PCI domain assignment logic wrongly.
+> > 
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Liviu Dudau <liviu.dudau@arm.com>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> 
+> The general approach seems good to me,
+> 
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> 
+> I would suggest one simplification:
+> 
+> > +
+> > +#ifdef CONFIG_PCI_DOMAINS_GENERIC
+> > +
+> > +void pci_bus_assign_domain_nr(struct pci_bus *bus, struct device *parent)
+> > +{
+> > +	static int use_dt_domains = -1;
+> > +	int domain = of_get_pci_domain_nr(parent->of_node);
+> > +
+> > +	/*
+> > +	 * Check DT domain and use_dt_domains values.
+> > +	 *
+> > +	 * If DT domain property is valid (domain >= 0) and
+> > +	 * use_dt_domains != 0, the DT assignment is valid since this means
+> > +	 * we have not previously allocated a domain number by using
+> > +	 * pci_get_new_domain_nr(); we should also update use_dt_domains to
+> > +	 * 1, to indicate that we have just assigned a domain number from
+> > +	 * DT.
+> > +	 *
+> > +	 * If DT domain property value is not valid (ie domain < 0), and we
+> > +	 * have not previously assigned a domain number from DT
+> > +	 * (use_dt_domains != 1) we should assign a domain number by
+> > +	 * using the:
+> > +	 *
+> > +	 * pci_get_new_domain_nr()
+> > +	 *
+> > +	 * API and update the use_dt_domains value to keep track of method we
+> > +	 * are using to assign domain numbers (use_dt_domains = 0).
+> > +	 *
+> > +	 * All other combinations imply we have a platform that is trying
+> > +	 * to mix domain numbers obtained from DT and pci_get_new_domain_nr(),
+> > +	 * which is a recipe for domain mishandling and it is prevented by
+> > +	 * invalidating the domain value (domain = -1) and printing a
+> > +	 * corresponding error.
+> > +	 */
+> > +	if (domain >= 0 && use_dt_domains) {
+> > +		use_dt_domains = 1;
+> > +	} else if (domain < 0 && use_dt_domains != 1) {
+> > +		use_dt_domains = 0;
+> > +		domain = pci_get_new_domain_nr();
+> > +	} else {
+> > +		dev_err(parent, "Node %s has inconsistent \"linux,pci-domain\" property in DT\n",
+> > +			parent->of_node->full_name);
+> > +		domain = -1;
+> > +	}
+> > +
+> > +	bus->domain_nr = domain;
+> > +}
+> > +#endif
+> >  #endif
+> >  
+> 
+> Since this is now in the file in which it gets called, you can mark the
+> function itself as 'static' and remove the extern declaration and inline
+> wrapper from the header file. You can also avoid the #ifdef by doing
 
-On Wed, Nov 12, 2014 at 2:57 PM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
-> Hi,
->
->
-> On 03/11/14 23:59, Marek Belisko wrote:
->> opa362 is amplifier for videoand can be connected to the tvout pads
->> of the OMAP3. It has one gpio control for enable/disable of the output
->> (high impedance).
->>
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> ---
->>  drivers/video/fbdev/omap2/displays-new/Kconfig     |   6 +
->>  drivers/video/fbdev/omap2/displays-new/Makefile    |   1 +
->>  .../fbdev/omap2/displays-new/amplifier-opa362.c    | 347 +++++++++++++++++++++
->>  3 files changed, 354 insertions(+)
->>  create mode 100644 drivers/video/fbdev/omap2/displays-new/amplifier-opa362.c
->
-> This doesn't even compile:
->
-> drivers/video/fbdev/omap2/displays-new/amplifier-opa362.c:207:28: error:
-> dereferencing pointer to incomplete type
->   ddata->enable_gpio = pdata->enable_gpio;
-Hmm sorry about that. I must mixed something up. I'll post updated version soon.
-Thanks for review.
->
-> And it seems to have fields for bypass and bypass which are handled in
-> the devconf1 patch.
->
->  Tomi
->
->
+It is not, it is in driver/pci/pci.c, it is called in probe.c.
 
-BR,
+Maybe I can move the function to probe.c, but this would leave the
+domain handling in two separate files.
 
-marek
+I can't remove the #ifdeffery in that domain_nr in pci_bus is #ifdeffed
+too, unless I remove that #ifdef and I compile it in all the time.
 
--- 
-as simple and primitive as possible
--------------------------------------------------
-Marek Belisko - OPEN-NANDRA
-Freelance Developer
-
-Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
-Tel: +421 915 052 184
-skype: marekwhite
-twitter: #opennandra
-web: http://open-nandra.com
+Thanks all for the review,
+Lorenzo
