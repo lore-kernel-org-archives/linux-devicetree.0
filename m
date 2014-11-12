@@ -1,71 +1,71 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: dtc: New v1.4.1 release, and tarballs now on kernel.org
-Date: Wed, 12 Nov 2014 15:11:45 +1100
-Message-ID: <20141112041145.GB17562@voom.redhat.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH v2 2/2] arm: dts: Exynos5: Use pmu_system_controller
+ phandle for dp phy
+Date: Wed, 12 Nov 2014 13:21:08 +0900
+Message-ID: <000101cffe30$155793a0$4006bae0$%han@samsung.com>
+References: <1414675442-3471-1-git-send-email-gautam.vivek@samsung.com>
+ <1414675442-3471-2-git-send-email-gautam.vivek@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="XF85m9dhOBO43t/C"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1414675442-3471-2-git-send-email-gautam.vivek@samsung.com>
+Content-language: ko
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Vivek Gautam' <gautam.vivek@samsung.com>
+Cc: dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, seanpaul@google.com, ajaykumar.rs@samsung.com, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thursday, October 30, 2014 10:24 PM, Vivek Gautam wrote:
+> 
+> DP PHY now require pmu-system-controller to handle PMU register
+> to control PHY's power isolation. Adding the same to dp-phy
+> node.
+> 
+> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+> Cc: Jingoo Han <jg1.han@samsung.com>
 
---XF85m9dhOBO43t/C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Jingoo Han <jg1.han@samsung.com>
 
-Hello all,
+Best regards,
+Jingoo Han
 
-As you probably know, the git tree and mailing lists for dtc have been
-hosted on kernel.org for a while now.  However, release tarballs have
-not been there.. until now!
-
-WIth jdl.com now shut down, there hasn't actually been anywhere to
-download dtc release tarballs recently, but I've now got a directory
-set up for this on kernel.org and investigated the mysteries of kup.
-dtc release tarballs can now be downloaded from:
-    https://www.kernel.org/pub/software/utils/dtc/
-
-In addition, it's been a while since the last dtc release (v1.4.0).
-We haven't really developed any interesting new features in that time,
-but there have been some important bugfixes, so it's time we rolled a
-release.
-
-The new v1.4.1 release has been tagged in git, and has a released
-tarball with all the others.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---XF85m9dhOBO43t/C
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUYt4BAAoJEGw4ysog2bOSk/kQALoigH12T0SAQiMZfXoVvB2e
-A4YhxZKIQHVy8icUbzTsDry2hvr1QjDD5Q+FaCp6ZfYSvA7mqa+V24xu3NGcGuj+
-6321YXqQLN3qkHt2EKUOIlKdcNLCdsDb9b+dyGGriOPYCpSnKbJamfP+x8TwROhh
-TD1zwToZ/Di561IK2HJEojcG+PbZkrnkXt/I3z4FuqaZB7Pejhm5/+Zt0SXm16gB
-bZVchkE+Ke4HDtwcciev7afUpGsaNXkcYsltqG7QCzRnCUMdUavWkKCa+Be+vOdq
-6Qip1zEi0yfx3tzj1OaQGooJThcamMwAfxO/D2Jkn2/Daj9RhRN31JCfY11C0saG
-DHvtgu3n8Zhyu1tigymMdBr/oPmjApjO4adcQW3Q85c5zQKG83Nx6OqQNR6pgkzX
-w1eTmpK25/NZ0mafBi8XjROJ5I11JHEz5UFRPdefgEvcQ8EiyD+g7mn3rbS/OXs7
-Xe9/muPSsp8V3OOc36/HKMUQ2Kxk7M4cAMJ8eQr3KyIK/wFmblQCuc3/uHBr8mLj
-qi29o8RCX7Jp+ooSTYGwkD0ox7z5KNWdYO+YSG19W51bHV5qL+y+JKxSRRSgAoRu
-NVPBTMOXgHtJ+zkSM3KvT5qdVbW75GagzEVGeNq8Bw7PJYA6GsuDZVMUK/u1vdfI
-7qzoIbNuBQZwsfhfN2rc
-=pBVB
------END PGP SIGNATURE-----
-
---XF85m9dhOBO43t/C--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+> 
+> Changes from V1:
+>  - none.
+> 
+>  arch/arm/boot/dts/exynos5250.dtsi |    2 +-
+>  arch/arm/boot/dts/exynos5420.dtsi |    4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+> index 012b021..69f5eb0 100644
+> --- a/arch/arm/boot/dts/exynos5250.dtsi
+> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> @@ -732,7 +732,7 @@
+> 
+>  	dp_phy: video-phy@10040720 {
+>  		compatible = "samsung,exynos5250-dp-video-phy";
+> -		reg = <0x10040720 4>;
+> +		samsung,pmu-syscon = <&pmu_system_controller>;
+>  		#phy-cells = <0>;
+>  	};
+> 
+> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> index 8617a03..1353a09 100644
+> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> @@ -503,8 +503,8 @@
+>  	};
+> 
+>  	dp_phy: video-phy@10040728 {
+> -		compatible = "samsung,exynos5250-dp-video-phy";
+> -		reg = <0x10040728 4>;
+> +		compatible = "samsung,exynos5420-dp-video-phy";
+> +		samsung,pmu-syscon = <&pmu_system_controller>;
+>  		#phy-cells = <0>;
+>  	};
+> 
+> --
+> 1.7.10.4
