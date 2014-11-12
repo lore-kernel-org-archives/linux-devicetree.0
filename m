@@ -1,30 +1,45 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dma: imx-sdma: Add a new DMATYPE for SAI
-Date: Wed, 12 Nov 2014 16:45:59 +0530
-Message-ID: <20141112111559.GI24582@intel.com>
-References: <1414179461-3522-1-git-send-email-nicoleotsuka@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 0/3] add power off driver for i.mx6
+Date: Wed, 12 Nov 2014 12:26:03 +0100
+Message-ID: <8538337.xAQUHpampk@wuerfel>
+References: <1415780439-29728-1-git-send-email-b38343@freescale.com> <20141112105620.GM2704@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1414179461-3522-1-git-send-email-nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141112105620.GM2704@dragon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Robin Gong <b38343@freescale.com>, kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, smoch@web.de
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 24, 2014 at 12:37:41PM -0700, Nicolin Chen wrote:
-> This patch simply adds a new DMATYPE for SAI which's included
-> in i.MX6 Solo X.
+On Wednesday 12 November 2014 18:56:22 Shawn Guo wrote:
+> On Wed, Nov 12, 2014 at 04:20:36PM +0800, Robin Gong wrote:
+> > Resend the patchset  with the latest MAINTAINERS
+> > Add simple power off driver for i.mx6, including:
+> > - add basic imx-snvs-poweroff driver in drivers/power/reset
+> > - add device node in all dts files of i.mx6.
+> > - enable in config file
+> > 
+> > Change from v3:
+> > - disable poweroff driver in soc level dts and enable it in board level dts
+> > - replace 'EIO' with 'ENODEV' while of_iomap fail.
+> > Change from v2:
+> > - remove useless included head files
+> > - split device binding doc from dts patch
+> > - add description for the case that PMIC_ON_REQ not used as external power
+> >   control
+> > 
+> > Robin Gong (3):
+> >   ARM: dts: imx6: add pm_power_off support for i.mx6 chips
+> >   power: reset: imx-snvs-poweroff: add power off driver for i.mx6
+> >   ARM: configs: imx_v6_v7_defconfig: add power off driver
+> 
+> I'm fine with the series.  But before I take the patches, I need an ACK
+> from DT folks on the bindings.
 
-Applied, thanks.
+Looks ok to me. Using a syscon for fsl,sec-v4.0-mon might have been nicer
+than making it a simple-bus, but that decision has been made already,
+so this version is a logical extension of what we have already.
 
-Please snure you use the right subsystem name.
-
--- 
-~Vinod
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
