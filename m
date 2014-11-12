@@ -1,63 +1,100 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v8 2/9] staging: imx-drm: imx-hdmi: return defer if can't get
- ddc i2c adapter
-Date: Wed, 12 Nov 2014 20:01:36 +0800
-Message-ID: <1415793696-5168-1-git-send-email-andy.yan@rock-chips.com>
-References: <1415793593-5075-1-git-send-email-andy.yan@rock-chips.com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] of/fdt: export fdt blob as /sys/firmware/fdt
+Date: Wed, 12 Nov 2014 12:01:53 +0000
+Message-ID: <CACxGe6vPC74TtwRxgA2jPQwCrpVjpk9UvnUiUNTF4ZgfmH4YgQ@mail.gmail.com>
+References: <1415645222-14909-1-git-send-email-ard.biesheuvel@linaro.org>
+ <1415645222-14909-2-git-send-email-ard.biesheuvel@linaro.org>
+ <20141111144221.5FCDAC416AF@trevor.secretlab.ca> <CAL_JsqKeG1dWrMZydCN119V3++WKXqsjMm1bG7Fodhf3O8owpw@mail.gmail.com>
+ <CACxGe6tsLr52ZLww2JfwHFHajHW+f6nbYJPyWXmZJg3coKmMCA@mail.gmail.com>
+ <CAKv+Gu-UOPMaGQ+eRu8TX4DX_AN93JHt9dFHSaWs9+UB3UhdAg@mail.gmail.com>
+ <CACxGe6sN6dObiOnbhYM4Ltdn0BU_KTESuefvxh3odm1BbcUVbw@mail.gmail.com> <CAKv+Gu9BgH8DiU=z-A5NDcCSwamJ84x3s95G=RGNoO9ostmTwg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1415793593-5075-1-git-send-email-andy.yan@rock-chips.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
-Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Andy yan <andy.yan@rock-chips.com>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAKv+Gu9BgH8DiU=z-A5NDcCSwamJ84x3s95G=RGNoO9ostmTwg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geoff Levand <geoff.levand-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-drm driver may probe before the i2c bus, so the driver should
-defer probing until it is available
+On Wed, Nov 12, 2014 at 11:51 AM, Ard Biesheuvel
+<ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 12 November 2014 12:45, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On Tue, Nov 11, 2014 at 8:34 PM, Ard Biesheuvel
+>> <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>> On 11 November 2014 21:08, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>>> On Tue, Nov 11, 2014 at 4:25 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>> On Tue, Nov 11, 2014 at 8:42 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>>>>> On Mon, 10 Nov 2014 19:47:01 +0100
+>>>>>> , Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>>>>  wrote:
+>>>>>>> Create a new /sys entry '/sys/firmware/fdt' to export the FDT blob
+>>>>>>> that was passed to the kernel by the bootloader. This allows userland
+>>>>>>> applications such as kexec to access the raw binary. The blob needs to
+>>>>>>> be preserved as early as possible by calling preserve_fdt().
+>>>>>>>
+>>>>>>> The fact that this node does not reside under /sys/firmware/device-tree
+>>>>>>> is deliberate: FDT is also used on arm64 UEFI/ACPI systems to
+>>>>>>> communicate just the UEFI and ACPI entry points, but the FDT is never
+>>>>>>> unflattened and used to configure the system.
+>>>>>>>
+>>>>>>> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>>>>
+>>>>>> On further thought, nak. I want tree modifications to be treated as
+>>>>>> bugs. Do a checksum CRC32 or check. It's simpler and it can be extended
+>>>>>> to us an in-blob CRC when the file format gets upreved to include one.
+>>>>>
+>>>>> Why? MIPS Octeon is full of them BTW. So the rule is any modifications
+>>>>> or fixups have to be on the unflattened tree?
+>>>>
+>>>> That, or we require the fixups to explicitly clean up the CRC after
+>>>> themselves. That will force them to be visible. Anything using the
+>>>> fdt_*() write functions could potentially take care of it
+>>>> automatically. That would make it immediately discoverable where
+>>>> changes are being made in the tree.
+>>>>
+>>>
+>>> Doesn't that defeat the purpose of capturing the FDT as it was passed
+>>> by the bootloader? Those fixups will be reapplied by the kexec'ed
+>>> kernel anyway.
+>>
+>> We're always going to be in a grey area here. There are some things
+>> that should not be passed over. For example, a framebuffer that is
+>> passed in from firmware will no longer be valid on kexec. Right now on
+>> arch/arm, the exynos platform fixes up the DT because the memory node
+>> is outright /corrupt/. In the MIPS case, they do a bunch of stuff in
+>> the kernel to figure out the hardware as configured by firmware. I
+>> don't agree with that approach, but I would be very surprised if the
+>> full original DT has any validity after the early boot fixups.
+>>
+>
+> Well, yes, but those fixups will presumably be done on every boot,
+> including the kexec ones.
+>
+>> Early boot fixups to the .dtb are always going to be oddball cases.
+>>
+>
+> OK, so generally speaking, whether the original DTB is more suitable
+> to be presented through /sys/firmware/fdt than the 'current' FDT
+> (i.e., whatever is in memory at the time the sysfs node is accessed)
+> is not obvious at all. So why not just do the latter?
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+We're now talking theoreticals. In the case you're working on
+(ACPI+FDT), the FDT is generated by Grub or the EFI stub as an
+intermediary format, and there isn't currently any code in your boot
+path that modifies the FDT. You're arguing for a future situation
+where the kernel makes a fixup that is not wanted in the second
+kernel. I'm arguing that 1) I want to /know/ when that happens because
+there are very few situations where it is a valid thing to do, and 2)
+the likelyhood of that happening in the FDT+ACPI case is somewhere
+between slim and none because you're working with an intermediary FDT,
+not a real hardware description.
 
----
+/If/ it ever becomes a problem we can revisit, until then I still
+prefer the checksum method.
 
-Changes in v8: None
-Changes in v7: None
-Changes in v6: None
-Changes in v5: None
-Changes in v4:
-- defer probe ddc i2c adapter
-
-Changes in v3: None
-Changes in v2: None
-
- drivers/staging/imx-drm/imx-hdmi.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/staging/imx-drm/imx-hdmi.c b/drivers/staging/imx-drm/imx-hdmi.c
-index 79daec4..c2b035a 100644
---- a/drivers/staging/imx-drm/imx-hdmi.c
-+++ b/drivers/staging/imx-drm/imx-hdmi.c
-@@ -1611,8 +1611,11 @@ static int imx_hdmi_bind(struct device *dev, struct device *master, void *data)
- 	ddc_node = of_parse_phandle(np, "ddc-i2c-bus", 0);
- 	if (ddc_node) {
- 		hdmi->ddc = of_find_i2c_adapter_by_node(ddc_node);
--		if (!hdmi->ddc)
-+		if (!hdmi->ddc) {
- 			dev_dbg(hdmi->dev, "failed to read ddc node\n");
-+			of_node_put(ddc_node);
-+			return -EPROBE_DEFER;
-+		}
- 
- 		of_node_put(ddc_node);
- 	} else {
--- 
-1.9.1
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
