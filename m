@@ -1,60 +1,49 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 12/13] ARM: STi: DT: STiH410: Add STiH410 SoC clock
- support.
-Date: Wed, 12 Nov 2014 13:48:01 +0000
-Message-ID: <20141112134801.GB20187@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1415361475-6218-1-git-send-email-peter.griffin@linaro.org>
- <1415361475-6218-13-git-send-email-peter.griffin@linaro.org>
- <88469624.TsXJ3Gpfe2@wuerfel>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: [PATCH RESEND] Documentation: devicetree: Fix Xilinx VDMA specification
+Date: Wed, 12 Nov 2014 14:51:16 +0100
+Message-ID: <1415800277-6817-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <88469624.TsXJ3Gpfe2@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+The specification requires xlnx,data-width, but example and driver use
+xlnx,datawidth. Change the specification to match the implementation.
 
-Thanks for reviewing.
+Reviewed-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+=46ixes: eebeac03db93 ("dma: Add Xilinx Video DMA DT Binding Documentat=
+ion")
+Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+---
+ This appears to have fallen through the cracks... resending to dmaengi=
+ne.
 
-> On Friday 07 November 2014 11:57:54 Peter Griffin wrote:
-> > +
-> > +       soc {
-> > +
-> > +               ohci0: usb@9a03c00 {
-> > +                       status = "okay";
-> > +               };
-> > +
-> > +               ehci0: usb@9a03e00 {
-> > +                       status = "okay";
-> > +               };
-> > +
-> > +               ohci1: usb@9a83c00 {
-> > +                       status = "okay";
-> > +               };
-> > +
-> > +               ehci1: usb@9a83e00 {
-> > +                       status = "okay";
-> > +               };
-> > +       };
-> > +};
-> > 
-> 
-> These seem to refer to an existing device in the base dtsi file. Just put the label
-> in the shared file and remove the exact names here. Alternatively, drop the labels
-> you don't use.
+ Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Based on Maximes feedback in V2 I've created a seperate stih410.dtsi file
-which has the extra ehci / ohci device nodes in it. This means they don't need to be
-enabled in the board file any more.
+diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.t=
+xt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
+index 1405ed071bb4..e4c4d47f8137 100644
+--- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
++++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
+@@ -25,7 +25,7 @@ Required child node properties:
+ - compatible: It should be either "xlnx,axi-vdma-mm2s-channel" or
+ 	"xlnx,axi-vdma-s2mm-channel".
+ - interrupts: Should contain per channel VDMA interrupts.
+-- xlnx,data-width: Should contain the stream data width, take values
++- xlnx,datawidth: Should contain the stream data width, take values
+ 	{32,64...1024}.
+=20
+ Optional child node properties:
+--=20
+2.1.2
 
-regards,
-
-Peter.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
