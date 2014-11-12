@@ -1,122 +1,127 @@
-From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v4] of/fdt: export fdt blob as /sys/firmware/fdt
-Date: Wed, 12 Nov 2014 13:28:28 +0100
-Message-ID: <1415795308-14639-1-git-send-email-ard.biesheuvel@linaro.org>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 4/4] arm: dts: omap3-gta04: Add static configuration for
+ devconf1 register
+Date: Wed, 12 Nov 2014 14:53:49 +0200
+Message-ID: <5463585D.9070209@ti.com>
+References: <1415051968-4878-1-git-send-email-marek@goldelico.com> <1415051968-4878-5-git-send-email-marek@goldelico.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="c0Kkcpg1fR1vkmcOxR1vKclD6JMrWcbsQ"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415051968-4878-5-git-send-email-marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, geoff.levand-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Create a new /sys entry '/sys/firmware/fdt' to export the FDT blob
-that was passed to the kernel by the bootloader. This allows userland
-applications such as kexec to access the raw binary.
+--c0Kkcpg1fR1vkmcOxR1vKclD6JMrWcbsQ
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-The fact that this node does not reside under /sys/firmware/device-tree
-is deliberate: FDT is also used on arm64 UEFI/ACPI systems to
-communicate just the UEFI and ACPI entry points, but the FDT is never
-unflattened and used to configure the system.
+Hi,
 
-A CRC32 checksum is calculated over the entire FDT blob, and verified
-at late_initcall time. The sysfs entry is instantiated only if the
-checksum is valid, i.e., if the FDT blob has not been modified in the
-mean time. Otherwise, a warning is printed.
+On 03/11/14 23:59, Marek Belisko wrote:
+> gta04 board need for tvout enabled 2 bits in devconf1 register (tvbypas=
+s and acbias).
+> Add single pinmux entry and enable it.
+>=20
+> Signed-off-by: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/omap3-gta04.dtsi | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/oma=
+p3-gta04.dtsi
+> index e4d05f0..a456d37 100644
+> --- a/arch/arm/boot/dts/omap3-gta04.dtsi
+> +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+> @@ -118,6 +118,17 @@
+>  			};
+>  		};
+>  	};
+> +
+> +	/* pinmux for devconf1 */
+> +	control_devconf1: pinmux@480022d8 {
+> +		compatible =3D "pinctrl-single";
+> +		reg =3D <0x480022d8 4>;	/* single register */
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +		pinctrl-single,bit-per-mux;
+> +		pinctrl-single,register-width =3D <32>;
+> +		pinctrl-single,function-mask =3D <0xfc0bd5>;
+> +	};
+>  };
+> =20
+>  &omap3_pmx_core {
+> @@ -497,3 +508,14 @@
+>  		};
+>  	};
+>  };
+> +
+> +&control_devconf1 {
+> +	pinctrl-name =3D "default";
+> +	pinctrl-0 =3D < &tv_acbias_pins>;
+> +
+> +	tv_acbias_pins: pinmux_tv_acbias_pins {
+> +		pinctrl-single,bits =3D <
+> +			0 0x40800 0x40800
 
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-v4: use pr_warn() instead of WARN()
-v3: keep checksum instead of copying the entire blob, and WARN on mismatch
+I think it would be good to have a comment in the .dts above, mentioning
+that TVOUTBYPASS and TVACEN bits are being set.
 
- drivers/of/Kconfig |  1 +
- drivers/of/fdt.c   | 37 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 38 insertions(+)
+> +		>;
+> +	};
+> +};
+>=20
 
-diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index 1a13f5b722c5..0348c208343c 100644
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -23,6 +23,7 @@ config OF_FLATTREE
- 	bool
- 	select DTC
- 	select LIBFDT
-+	select CRC32
- 
- config OF_EARLY_FLATTREE
- 	bool
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index d1ffca8b34ea..0004871ebccf 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -9,6 +9,7 @@
-  * version 2 as published by the Free Software Foundation.
-  */
- 
-+#include <linux/crc32.h>
- #include <linux/kernel.h>
- #include <linux/initrd.h>
- #include <linux/memblock.h>
-@@ -22,10 +23,20 @@
- #include <linux/libfdt.h>
- #include <linux/debugfs.h>
- #include <linux/serial_core.h>
-+#include <linux/sysfs.h>
- 
- #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
- #include <asm/page.h>
- 
-+static u32 of_fdt_crc32;
-+
-+static u32 of_fdt_get_crc32(void *fdt)
-+{
-+	static u32 const OF_FDT_CRC32_SEED = 0x04c11db7;
-+
-+	return crc32_be(OF_FDT_CRC32_SEED, fdt, fdt_totalsize(fdt));
-+}
-+
- /*
-  * of_fdt_limit_memory - limit the number of regions in the /memory node
-  * @limit: maximum entries
-@@ -1003,6 +1014,8 @@ bool __init early_init_dt_verify(void *params)
- 		return false;
- 	}
- 
-+	of_fdt_crc32 = of_fdt_get_crc32(initial_boot_params);
-+
- 	return true;
- }
- 
-@@ -1103,4 +1116,28 @@ static int __init of_flat_dt_debugfs_export_fdt(void)
- module_init(of_flat_dt_debugfs_export_fdt);
- #endif
- 
-+#ifdef CONFIG_SYSFS
-+static ssize_t of_fdt_raw_read(struct file *filp, struct kobject *kobj,
-+			       struct bin_attribute *bin_attr,
-+			       char *buf, loff_t off, size_t count)
-+{
-+	memcpy(buf, initial_boot_params + off, count);
-+	return count;
-+}
-+
-+static int __init of_fdt_raw_init(void)
-+{
-+	static struct bin_attribute of_fdt_raw_attr =
-+		__BIN_ATTR(fdt, S_IRUSR, of_fdt_raw_read, NULL, 0);
-+
-+	if (of_fdt_crc32 != of_fdt_get_crc32(initial_boot_params)) {
-+		pr_warn("fdt: not creating '/sys/firmware/fdt': CRC check failed");
-+		return 0;
-+	}
-+	of_fdt_raw_attr.size = fdt_totalsize(initial_boot_params);
-+	return sysfs_create_bin_file(firmware_kobj, &of_fdt_raw_attr);
-+}
-+late_initcall(of_fdt_raw_init);
-+#endif
-+
- #endif /* CONFIG_OF_EARLY_FLATTREE */
--- 
-1.8.3.2
+OMAP3630 seems to have CONTROL_AVDAC1 and CONTROL_AVDAC2 registers. Did
+you check if the SoC you use have those? It looks like they need
+configuration also, if the exist.
 
+So, I don't think tvbypass and acbias are really pinmux stuff, but it
+does seem like an easy way to handle the devconf1 register, and I don't
+see any issues with the setting being fixed.
+
+However, devconf1 register seems to have bits for many devices,
+including mcbsp, mmc, and even some "Force MPU writes to be nonposted" bi=
+t.
+
+And, with a quick grep, I see CONTROL_DEVCONF1 touched in multiple
+places in the kernel. I wonder if adding a pinmux entry for it could
+cause some rather odd problems.
+
+Tony, any idea about this? How should CONTROL_DEVCONFx registers be
+accessed?
+
+ Tomi
+
+
+
+--c0Kkcpg1fR1vkmcOxR1vKclD6JMrWcbsQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUY1hdAAoJEPo9qoy8lh71hlcQAJ6gfPqz/bOlLRyx0YacJy6f
+KZhOx50DHtm8v5Ft0U2nxaJJ8QfEn1gP1HgQ8lZVkLbU0rLCaeQdoBU2pcCbiFph
+BJZUP4G68VVdgcY8x6hd6PEx/eTcYWd33mOAKjf54rRwcTgWj/a1EOK4L9eCcUXn
+zNj9lRU2+uueg9SR19//aH18dZNpcDP+fyJFjjxEEwc6IAdCkLile4sa7Noio5S9
+RMhrbp3FW+43gzwlYRAWFPBfJkSyo/fG8/STJ9tUq0sb3xCSm56yqk/tXtxVj24p
+w35yTxPj9QF7xbrLEZPf91ZNGi/J+lZDYBnUb4LeUPuksILwjmrg93e6M8Xw20w7
+p9krJFYDWcmcezIr4a353ajqvHzNd5I3rorln8ehCJCYNpz87d2OzX0SkRUscFM0
+oQZKEcPO0lXIIOqP2PV6af8yI9Yt9v+g7amO9B13BKuYJn84NLTMe2jUnDfwRWtB
+d7J2bmKrjy4bZpq8SERs9ZESMn2rmqBD6sOyWYrr9PdcPAhDKtRwzniLSRApihWQ
+ZSsY2TjBtrQsdlRM6TbMAkCv/pflf2O62MZ4PHi9sulULFSyA0usSKlgWMLssdgo
+vDqwGAvtVT4HGpteZbJzCnVYqXSueSoDz4XFOml4rXRVmiM9WkJr3wxlRKHGpvBV
+FfgJH4Lmqp2IUXSFd8rU
+=48Bv
+-----END PGP SIGNATURE-----
+
+--c0Kkcpg1fR1vkmcOxR1vKclD6JMrWcbsQ--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
