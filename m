@@ -1,95 +1,71 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/5] ARM: shmobile: kzm9g legacy: Set i2c clks_per_count
- to 2
-Date: Wed, 12 Nov 2014 09:53:27 +0100
-Message-ID: <CAMuHMdUUspG8-dYGiO7cmuECBLpfmQAYg=B8ZpajxRXhaEUJ2A@mail.gmail.com>
-References: <1415274730-310-1-git-send-email-geert+renesas@glider.be>
-	<1415274730-310-2-git-send-email-geert+renesas@glider.be>
-	<20141107052420.GA1278@katana>
-	<20141112014450.GC11597@verge.net.au>
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
+Date: Wed, 12 Nov 2014 10:55:11 +0200
+Message-ID: <1415782511.4820.2.camel@mm-sol.com>
+References: <1415028270-25860-1-git-send-email-iivanov@mm-sol.com>
+		 <1415028270-25860-3-git-send-email-iivanov@mm-sol.com>
+		 <54612A0D.7020308@gmx.de> <1415694109.22935.13.camel@mm-sol.com>
+	 <54629026.3080002@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20141112014450.GC11597@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Linux I2C <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54629026.3080002-Mmb7MZpHnFY@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
 
-On Wed, Nov 12, 2014 at 2:44 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Fri, Nov 07, 2014 at 06:24:21AM +0100, Wolfram Sang wrote:
->> On Thu, Nov 06, 2014 at 12:52:06PM +0100, Geert Uytterhoeven wrote:
->> > On sh73a0/kzm9g-legacy, probing of the i2c masters fails with:
->> >
->> >     i2c-sh_mobile i2c-sh_mobile.0: timing values out of range: L/H=0x208/0x1bf
->> >     sh_mobile: probe of i2c-sh_mobile.0 failed with error -22
->>
->> Yay, so the warning I added found another bug \o/
->>
->> >
->> > According to the datasheet, the transfer rate is derived from the HP
->> > clock (which runs at 104 MHz) divided by two. Hence
->> > i2c_sh_mobile_platform_data.clks_per_count should be set to two.
->> >
->> > Now probing succeeds, and i2c works:
->> >
->> >     i2c-sh_mobile i2c-sh_mobile.0: I2C adapter 0 with bus speed 100000 Hz (L/H=0x104/0xe0)
->> >
->> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>
->> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+On Tue, 2014-11-11 at 23:39 +0100, Hartmut Knaack wrote:
+> Ivan T. Ivanov schrieb am 11.11.2014 09:21:
+> > Hi Hartmut,
+> > 
+> > On Mon, 2014-11-10 at 22:11 +0100, Hartmut Knaack wrote:
+> > > Ivan T. Ivanov schrieb am 03.11.2014 16:24:
+> > > > From: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+> > > > 
+> > > > The voltage ADC is peripheral of Qualcomm SPMI PMIC chips. It has
+> > > > 15 bits resolution and register space inside PMIC accessible across
+> > > > SPMI bus.
+> > > > 
+> > > > The vadc driver registers itself through IIO interface.
+> > > Reviewing again, I got the feeling that due to the complexity of adc reads (writing to 
+> > > register
+> > > to start conversion, waiting a decent time for the conversion to complete, reading the 
+> > > result),
+> > > it would be beneficial to use a mutex in vadc_read_raw or its depending functions.
+> > 
+> > Hm, yes, but there is such a nice info_exist_lock :-) in core functions,
+> > which in practice serve the same purpose.
+> I seem to miss that. Please point me in the right direction.
 
-> As this appears to be a bug fix I would like to accompany this patch with
-> some text describing when the problem was introduced and what its effects
-> are. In short a rough guide to if it should be applied to -stable. To that
-> end I prepared the following which I would appreciate your feedback on.
->
-> * ARM: shmobile: kzm9g legacy: Set i2c clks_per_count
->
->   This problem appears to have been introduced when i2c shmobile support was
->   added to the sh73a9 by b028f94b76319e1b8 ("ARM: mach-shmobile: sh73a0
+I am referring to info_exist_lock mutex part of struct iio_dev. 
+It protects all operations inkern.c, no?
 
-sh73a0
+> > > 
+> > > > +
+> > > > +       ret = of_property_read_u32(node, "reg", &res);
+> > > For u16, there would be of_property_read_u16().
+> > > > +       if (ret < 0)
+> > > > +       return -ENODEV;
+> > > Just return ret here?
+> > 
+> > I am usually trying to follow these recommendations[1]. In practice driver
+> > core cares only for EPROBE_DEFER, ENODEV and ENXIO, while of_property_read_u32()
+> > can return ENODATA and EOVERFLOW, which did't not make sense for the core.
+> Please point me in the right direction on this one, too. It is pretty common to pass error codes 
+> up, as it is also mentioned in [1].
 
->   i2c_shmobile support.") in v2.6.37.
->
->   Without this fix i2c may not operate correctly on the sh73a0/kzm9g.
+Yes, I know that is common to just pass error codes up, but in this case it did't 
+make too much sense, I think. Also take a look at realy_probe() and line 343.
 
-Thanks, that's correct.
+> Yet, this thread in [1] seems more like a draft to me, as Greg K-H wrote in the end: "Fair 
+> enough, care to respin this and send it out to me for review?"
 
-BTW, I guess Kuribayashi-san was aware of the problem:
 
-commit ebd5ac165f2aaefb767c53112c2010b0ff3df688
-Author: Shinya Kuribayashi <shinya.kuribayashi.px@renesas.com>
-Date:   Wed Oct 24 19:58:10 2012 +0900
 
-    i2c: i2c-sh_mobile: support I2C hardware block with a faster operating clock
+Yes, but it make sense to me.
 
-    On newer SH-/R-Mobile SoCs, a clock supply to the I2C hardware block,
-    which is used to generate the SCL clock output, is getting faster than
-    before, while on the other hand, the SCL clock control registers, ICCH
-    and ICCL, stay unchanged in 9-bit-wide (8+1).
-
-    On such silicons, the internal SCL clock counter gets incremented every
-    2 clocks of the operating clock.
-
-    This patch makes it configurable through platform data.
-
-    Signed-off-by: Shinya Kuribayashi <shinya.kuribayashi.px@renesas.com>
-    Signed-off-by: Wolfram Sang <w.sang@pengutronix.de>
-
-But I couldn't find any patches on a public mailing list using the new
-clks_per_count field...
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Regards,
+Ivan
