@@ -1,244 +1,76 @@
-From: mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Subject: [PATCH v2] coresight: bindings for coresight drivers
-Date: Wed, 12 Nov 2014 16:36:59 -0700
-Message-ID: <1415835419-5565-1-git-send-email-mathieu.poirier@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
-Cc: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/4] simplefb: Add support for enumerating
+ simplefb dt nodes in /chosen
+Date: Thu, 13 Nov 2014 10:39:10 +1100
+Message-ID: <CAGRGNgW_Q6oghpe5Mw-8aYPVVj1YZ6R3iaqOQzCE9dSD1nYSyA@mail.gmail.com>
+References: <1415830124-28787-1-git-send-email-hdegoede@redhat.com> <1415830124-28787-2-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDQIP76OUQLBBMW7R6RQKGQE7KQ7TXI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1415830124-28787-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Hi Hans,
 
-Coresight IP blocks allow for the support of HW assisted tracing
-on ARM SoCs.  Bindings for the currently available blocks are
-presented herein.
+On Thu, Nov 13, 2014 at 9:08 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> Update simplefb to support the new preferred location for simplefb dt nodes
+> under /chosen.
+>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/video/fbdev/simplefb.c | 33 ++++++++++++++++++++++++++++++++-
+>  1 file changed, 32 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/video/fbdev/simplefb.c b/drivers/video/fbdev/simplefb.c
+> index cd96edd..be7d288 100644
+> --- a/drivers/video/fbdev/simplefb.c
+> +++ b/drivers/video/fbdev/simplefb.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/platform_data/simplefb.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/clk-provider.h>
+> +#include <linux/of_platform.h>
+>
+>  static struct fb_fix_screeninfo simplefb_fix = {
+>         .id             = "simple",
+> @@ -385,7 +386,37 @@ static struct platform_driver simplefb_driver = {
+>         .probe = simplefb_probe,
+>         .remove = simplefb_remove,
+>  };
+> -module_platform_driver(simplefb_driver);
+> +
+> +static int __init simplefb_init(void)
+> +{
+> +       int i, ret;
+> +       char name[16];
+> +       struct device_node *np;
+> +
+> +       ret = platform_driver_register(&simplefb_driver);
+> +       if (ret)
+> +               return ret;
+> +
+> +       for (i = 0; ; i++) {
+> +               snprintf(name, sizeof(name), "framebuffer%d", i);
 
-Signed-off-by: Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Signed-off-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
-Change for v2:
-  - Added ack by Rob Herring
----
- .../devicetree/bindings/arm/coresight.txt          | 204 +++++++++++++++++++++
- 1 file changed, 204 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/coresight.txt
+This smells like an infinite loop: we can be pretty sure that no
+hardware will ever exist with more than 9999 (I think?) framebuffers,
+however if that ever happens this'll loop until it runs out of RAM.
+Maybe add a suitably high limit to the for loop?
 
-diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-new file mode 100644
-index 0000000..d790f49
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/coresight.txt
-@@ -0,0 +1,204 @@
-+* CoreSight Components:
-+
-+CoreSight components are compliant with the ARM CoreSight architecture
-+specification and can be connected in various topologies to suit a particular
-+SoCs tracing needs. These trace components can generally be classified as
-+sinks, links and sources. Trace data produced by one or more sources flows
-+through the intermediate links connecting the source to the currently selected
-+sink. Each CoreSight component device should use these properties to describe
-+its hardware characteristcs.
-+
-+* Required properties for all components *except* non-configurable replicators:
-+
-+	* compatible: These have to be supplemented with "arm,primecell" as
-+	  drivers are using the AMBA bus interface.  Possible values include:
-+		- "arm,coresight-etb10", "arm,primecell";
-+		- "arm,coresight-tpiu", "arm,primecell";
-+		- "arm,coresight-tmc", "arm,primecell";
-+		- "arm,coresight-funnel", "arm,primecell";
-+		- "arm,coresight-etm3x", "arm,primecell";
-+
-+	* reg: physical base address and length of the register
-+	  set(s) of the component.
-+
-+	* clocks: the clock associated to this component.
-+
-+	* clock-names: the name of the clock as referenced by the code.
-+	  Since we are using the AMBA framework, the name should be
-+	  "apb_pclk".
-+
-+	* port or ports: The representation of the component's port
-+	  layout using the generic DT graph presentation found in
-+	  "bindings/graph.txt".
-+
-+* Required properties for devices that don't show up on the AMBA bus, such as
-+  non-configurable replicators:
-+
-+	* compatible: Currently supported value is (note the absence of the
-+	  AMBA markee):
-+		- "arm,coresight-replicator"
-+
-+	* id: a unique number that will identify this replicator.
-+
-+	* port or ports: same as above.
-+
-+* Optional properties for ETM/PTMs:
-+
-+	* arm,cp14: must be present if the system accesses ETM/PTM management
-+	  registers via co-processor 14.
-+
-+	* cpu: the cpu phandle this ETM/PTM is affined to. When omitted the
-+	  source is considered to belong to CPU0.
-+
-+* Optional property for TMC:
-+
-+	* arm,buffer-size: size of contiguous buffer space for TMC ETR
-+	 (embedded trace router)
-+
-+
-+Example:
-+
-+1. Sinks
-+	etb@20010000 {
-+		compatible = "arm,coresight-etb10", "arm,primecell";
-+		reg = <0 0x20010000 0 0x1000>;
-+
-+		coresight-default-sink;
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		port {
-+			etb_in_port: endpoint@0 {
-+				slave-mode;
-+				remote-endpoint = <&replicator_out_port0>;
-+			};
-+		};
-+	};
-+
-+	tpiu@20030000 {
-+		compatible = "arm,coresight-tpiu", "arm,primecell";
-+		reg = <0 0x20030000 0 0x1000>;
-+
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		port {
-+			tpiu_in_port: endpoint@0 {
-+				slave-mode;
-+				remote-endpoint = <&replicator_out_port1>;
-+			};
-+		};
-+	};
-+
-+2. Links
-+	replicator {
-+		/* non-configurable replicators don't show up on the
-+		 * AMBA bus.  As such no need to add "arm,primecell".
-+		 */
-+		compatible = "arm,coresight-replicator";
-+		/* this will show up in debugfs as "0.replicator" */
-+		id = <0>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			/* replicator output ports */
-+			port@0 {
-+				reg = <0>;
-+				replicator_out_port0: endpoint {
-+					remote-endpoint = <&etb_in_port>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				replicator_out_port1: endpoint {
-+					remote-endpoint = <&tpiu_in_port>;
-+				};
-+			};
-+
-+			/* replicator input port */
-+			port@2 {
-+				reg = <0>;
-+				replicator_in_port0: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&funnel_out_port0>;
-+				};
-+			};
-+		};
-+	};
-+
-+	funnel@20040000 {
-+		compatible = "arm,coresight-funnel", "arm,primecell";
-+		reg = <0 0x20040000 0 0x1000>;
-+
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			/* funnel output port */
-+			port@0 {
-+				reg = <0>;
-+				funnel_out_port0: endpoint {
-+					remote-endpoint =
-+							<&replicator_in_port0>;
-+				};
-+			};
-+
-+			/* funnel input ports */
-+			port@1 {
-+				reg = <0>;
-+				funnel_in_port0: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&ptm0_out_port>;
-+				};
-+			};
-+
-+			port@2 {
-+				reg = <1>;
-+				funnel_in_port1: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&ptm1_out_port>;
-+				};
-+			};
-+
-+			port@3 {
-+				reg = <2>;
-+				funnel_in_port2: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&etm0_out_port>;
-+				};
-+			};
-+
-+		};
-+	};
-+
-+3. Sources
-+	ptm@2201c000 {
-+		compatible = "arm,coresight-etm3x", "arm,primecell";
-+		reg = <0 0x2201c000 0 0x1000>;
-+
-+		cpu = <&cpu0>;
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		port {
-+			ptm0_out_port: endpoint {
-+				remote-endpoint = <&funnel_in_port0>;
-+			};
-+		};
-+	};
-+
-+	ptm@2201d000 {
-+		compatible = "arm,coresight-etm3x", "arm,primecell";
-+		reg = <0 0x2201d000 0 0x1000>;
-+
-+		cpu = <&cpu1>;
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		port {
-+			ptm1_out_port: endpoint {
-+				remote-endpoint = <&funnel_in_port1>;
-+			};
-+		};
-+	};
+Thanks,
+
 -- 
-1.9.1
+Julian Calaby
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Profile: http://www.google.com/profiles/julian.calaby/
