@@ -1,12 +1,13 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v5 1/5] simplefb: Add simplefb MAINTAINERS entry
-Date: Wed, 12 Nov 2014 17:15:48 +0100
-Message-ID: <1415808952-23549-2-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH v5 2/5] dt-bindings: Add a clocks property to
+ the simple-framebuffer binding
+Date: Wed, 12 Nov 2014 17:15:49 +0100
+Message-ID: <1415808952-23549-3-git-send-email-hdegoede@redhat.com>
 References: <1415808952-23549-1-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBSMPR2RQKGQEZZRNYTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBT4PR2RQKGQE5NPOCWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1415808952-23549-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,42 +20,55 @@ To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-During the discussion about adding clock handling code to simplefb, it became
-clear that simplefb currently does not have an active maintainer.
+A simple-framebuffer node represents a framebuffer setup by the firmware /
+bootloader. Such a framebuffer may have a number of clocks in use, add a
+property to communicate this to the OS.
 
-I've discussed this with Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, the original
-author of simplefb, and with his permisson I'm picking up maintainership of
-simplefb.
-
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Reviewed-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Acked-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Reviewed-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Reviewed-by: David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index df82827..7678808 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8442,6 +8442,14 @@ F:	drivers/media/usb/siano/
- F:	drivers/media/usb/siano/
- F:	drivers/media/mmc/siano/
+--
+Changes in v2:
+-Added Reviewed-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Changes in v3:
+-Updated description to make clear simplefb deals with more then just memory
+Changes in v5:
+-Improved clocks property description
+---
+ .../devicetree/bindings/video/simple-framebuffer.txt         | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer.txt b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+index 70c26f3..8f35718 100644
+--- a/Documentation/devicetree/bindings/video/simple-framebuffer.txt
++++ b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+@@ -1,8 +1,8 @@
+ Simple Framebuffer
  
-+SIMPLEFB FB DRIVER
-+M:	Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-+L:	linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/video/simple-framebuffer.txt
-+F:	drivers/video/fbdev/simplefb.c
-+F:	include/linux/platform_data/simplefb.h
+-A simple frame-buffer describes a raw memory region that may be rendered to,
+-with the assumption that the display hardware has already been set up to scan
+-out from that buffer.
++A simple frame-buffer describes a frame-buffer setup by firmware or
++the bootloader, with the assumption that the display hardware has already
++been set up to scan out from the memory pointed to by the reg property.
+ 
+ Required properties:
+ - compatible: "simple-framebuffer"
+@@ -14,6 +14,12 @@ Required properties:
+   - r5g6b5 (16-bit pixels, d[15:11]=r, d[10:5]=g, d[4:0]=b).
+   - a8b8g8r8 (32-bit pixels, d[31:24]=a, d[23:16]=b, d[15:8]=g, d[7:0]=r).
+ 
++Optional properties:
++- clocks : List of clocks used by the framebuffer. Clocks listed here
++           are expected to already be configured correctly. The OS must
++           ensure these clocks are not modified or disabled while the
++           simple framebuffer remains active.
 +
- SH_VEU V4L2 MEM2MEM DRIVER
- L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
- S:	Orphan
+ Example:
+ 
+ 	framebuffer {
 -- 
 2.1.0
