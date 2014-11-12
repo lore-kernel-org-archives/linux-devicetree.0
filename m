@@ -1,107 +1,29 @@
 From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3.19 2/2] ARM: multi_v7_defconfig: Enable Broadcom Cygnus
-Date: Wed, 12 Nov 2014 13:03:17 -0800
-Message-ID: <1415826197-6748-3-git-send-email-f.fainelli@gmail.com>
-References: <1415826197-6748-1-git-send-email-f.fainelli@gmail.com>
+Subject: [PATCH 3.19 0/2] ARM: multi_v7_defconfig: Enable Broadcom Cygnus
+Date: Wed, 12 Nov 2014 13:03:15 -0800
+Message-ID: <1415826197-6748-1-git-send-email-f.fainelli@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415826197-6748-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Hi Olof, Arnd,
 
-Enable Broadcom Cygnus platform support in multi_v7_defconfig
+These two patches enable support for the Broadcom Cygnus SoC in the
+multi_v7_defconfig and also remove one level of menuconfig.
 
-Signed-off-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/configs/multi_v7_defconfig | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Thanks!
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index e8f79fdd4cc3..f3ef3f539f2c 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -17,6 +17,7 @@ CONFIG_MACH_ARMADA_38X=y
- CONFIG_MACH_ARMADA_XP=y
- CONFIG_MACH_DOVE=y
- CONFIG_ARCH_BCM=y
-+CONFIG_ARCH_BCM_CYGNUS=y
- CONFIG_ARCH_BCM_21664=y
- CONFIG_ARCH_BCM_281XX=y
- CONFIG_ARCH_BCM_5301X=y
-@@ -125,8 +126,12 @@ CONFIG_DMA_CMA=y
- CONFIG_CMA_SIZE_MBYTES=64
- CONFIG_OMAP_OCP2SCP=y
- CONFIG_MTD=y
-+CONFIG_MTD_CMDLINE_PARTS=y
-+CONFIG_MTD_BLOCK=y
- CONFIG_MTD_M25P80=y
-+CONFIG_MTD_NAND=y
- CONFIG_MTD_SPI_NOR=y
-+CONFIG_MTD_UBI=y
- CONFIG_BLK_DEV_LOOP=y
- CONFIG_AD525X_DPOT=y
- CONFIG_AD525X_DPOT_I2C=y
-@@ -161,6 +166,7 @@ CONFIG_TI_CPSW=y
- CONFIG_XILINX_EMACLITE=y
- CONFIG_AT803X_PHY=y
- CONFIG_MARVELL_PHY=y
-+CONFIG_BROADCOM_PHY=y
- CONFIG_ICPLUS_PHY=y
- CONFIG_USB_PEGASUS=y
- CONFIG_USB_USBNET=y
-@@ -234,6 +240,7 @@ CONFIG_SPI_TEGRA114=y
- CONFIG_SPI_TEGRA20_SFLASH=y
- CONFIG_SPI_TEGRA20_SLINK=y
- CONFIG_SPI_XILINX=y
-+CONFIG_SPI_SPIDEV=y
- CONFIG_PINCTRL_AS3722=y
- CONFIG_PINCTRL_PALMAS=y
- CONFIG_GPIO_SYSFS=y
-@@ -260,6 +267,7 @@ CONFIG_ST_THERMAL_SYSCFG=y
- CONFIG_ST_THERMAL_MEMMAP=y
- CONFIG_WATCHDOG=y
- CONFIG_XILINX_WATCHDOG=y
-+CONFIG_ARM_SP805_WATCHDOG=y
- CONFIG_ORION_WATCHDOG=y
- CONFIG_SUNXI_WATCHDOG=y
- CONFIG_MFD_AS3722=y
-@@ -306,6 +314,8 @@ CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=y
- CONFIG_SOUND=y
- CONFIG_SND=y
-+CONFIG_SND_DYNAMIC_MINORS=y
-+CONFIG_SND_USB_AUDIO=y
- CONFIG_SND_SOC=y
- CONFIG_SND_SOC_TEGRA=y
- CONFIG_SND_SOC_TEGRA_RT5640=y
-@@ -427,7 +437,12 @@ CONFIG_TI_PIPE3=y
- CONFIG_PHY_MIPHY365X=y
- CONFIG_PHY_SUN4I_USB=y
- CONFIG_EXT4_FS=y
-+CONFIG_AUTOFS4_FS=y
-+CONFIG_MSDOS_FS=y
- CONFIG_VFAT_FS=y
-+CONFIG_NTFS_FS=y
-+CONFIG_TMPFS_POSIX_ACL=y
-+CONFIG_UBIFS_FS=y
- CONFIG_TMPFS=y
- CONFIG_SQUASHFS=y
- CONFIG_SQUASHFS_LZO=y
-@@ -436,6 +451,9 @@ CONFIG_NFS_FS=y
- CONFIG_NFS_V3_ACL=y
- CONFIG_NFS_V4=y
- CONFIG_ROOT_NFS=y
-+CONFIG_NLS_CODEPAGE_437=y
-+CONFIG_NLS_ISO8859_1=y
-+CONFIG_NLS_UTF8=y
- CONFIG_PRINTK_TIME=y
- CONFIG_DEBUG_FS=y
- CONFIG_MAGIC_SYSRQ=y
+Ray Jui (1):
+  ARM: multi_v7_defconfig: Enable Broadcom Cygnus
+
+Scott Branden (1):
+  ARM: multi_v7_defconfig: remove one level of menu from Kconfig
+
+ arch/arm/configs/multi_v7_defconfig | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
+
 -- 
 1.9.1
 
