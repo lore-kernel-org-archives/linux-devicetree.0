@@ -1,67 +1,70 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of/base: Fix PowerPC address parsing hack
-Date: Wed, 12 Nov 2014 17:02:51 +0000
-Message-ID: <20141112170251.DA1B7C41C04@trevor.secretlab.ca>
-References: <1415771461.5124.33.camel@kernel.crashing.org>
-	<CAL_JsqKfBGdpFV_XuE4DEhFrkhN33kOMkiZE_TOnAZDm2qjwMw@mail.gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKfBGdpFV_XuE4DEhFrkhN33kOMkiZE_TOnAZDm2qjwMw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linuxppc-dev <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 4/4] arm: dts: omap3-gta04: Add static configuration for
+ devconf1 register
+Date: Wed, 12 Nov 2014 13:23:41 -0800
+Message-ID: <20141112212340.GL26481@atomide.com>
+References: <1415051968-4878-1-git-send-email-marek@goldelico.com>
+ <1415051968-4878-5-git-send-email-marek@goldelico.com>
+ <20141110233630.GD31454@atomide.com>
+ <CAAfyv34sPAa94dYM1QoHKEX+MN8NMnzE91HLhXW6MG1Yr=o8mQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAAfyv34sPAa94dYM1QoHKEX+MN8NMnzE91HLhXW6MG1Yr=o8mQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Belisko Marek <marek.belisko@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 12 Nov 2014 08:39:32 -0600
-, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
- wrote:
-> On Tue, Nov 11, 2014 at 11:51 PM, Benjamin Herrenschmidt
-> <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
-> > We have a historical hack that treats missing ranges properties as the
-> > equivalent of an empty one. This is needed for ancient PowerMac "bad"
-> > device-trees, and shouldn't be enabled for any other PowerPC platform,
-> > otherwise we get some nasty layout of devices in sysfs or even
-> > duplication when a set of otherwise identically named devices is
-> > created multiple times under a different parent node with no ranges
-> > property.
-> >
-> > This fix is needed for the PowerNV i2c busses to be exposed properly
-> > and will fix a number of other embedded cases.
-> >
-> > Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> > CC: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-> > ---
-> >
-> > diff --git a/drivers/of/address.c b/drivers/of/address.c
-> > index e371825..e37f017 100644
-> > --- a/drivers/of/address.c
-> > +++ b/drivers/of/address.c
-> > @@ -7,6 +7,10 @@
-> >  #include <linux/pci_regs.h>
-> >  #include <linux/string.h>
-> >
-> > +#ifdef CONFIG_PPC
-> > +#include <asm/machdep.h>
-> > +#endif
-> > +
-> >  /* Max address size we deal with */
-> >  #define OF_MAX_ADDR_CELLS      4
-> >  #define OF_CHECK_ADDR_COUNT(na)        ((na) > 0 && (na) <= OF_MAX_ADDR_CELLS)
-> > @@ -428,12 +432,13 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
-> >          * This code is only enabled on powerpc. --gcl
-> >          */
-> >         ranges = of_get_property(parent, rprop, &rlen);
-> > -#if !defined(CONFIG_PPC)
-> > +#if defined(CONFIG_PPC)
-> > +       if (!machine_is(powermac))
+* Belisko Marek <marek.belisko@gmail.com> [141112 13:04]:
+> Hi Tony,
 > 
-> Can we use a machine compatible here or something not PPC specific?
-> Then we can use IS_ENABLED(CONFIG_PPC) instead of ifdefs.
+> On Tue, Nov 11, 2014 at 12:36 AM, Tony Lindgren <tony@atomide.com> wrote:
+> > * Marek Belisko <marek@goldelico.com> [141103 14:01]:
+> >> gta04 board need for tvout enabled 2 bits in devconf1 register (tvbypass and acbias).
+> >> Add single pinmux entry and enable it.
+> >>
+> >> Signed-off-by: Marek Belisko <marek@goldelico.com>
+> >> ---
+> >>  arch/arm/boot/dts/omap3-gta04.dtsi | 22 ++++++++++++++++++++++
+> >>  1 file changed, 22 insertions(+)
+> >>
+> >> diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+> >> index e4d05f0..a456d37 100644
+> >> --- a/arch/arm/boot/dts/omap3-gta04.dtsi
+> >> +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+> >> @@ -118,6 +118,17 @@
+> >>                       };
+> >>               };
+> >>       };
+> >> +
+> >> +     /* pinmux for devconf1 */
+> >> +     control_devconf1: pinmux@480022d8 {
+> >> +             compatible = "pinctrl-single";
+> >> +             reg = <0x480022d8 4>;   /* single register */
+> >> +             #address-cells = <1>;
+> >> +             #size-cells = <0>;
+> >> +             pinctrl-single,bit-per-mux;
+> >> +             pinctrl-single,register-width = <32>;
+> >> +             pinctrl-single,function-mask = <0xfc0bd5>;
+> >> +     };
+> >>  };
+> >>
+> >
+> > The pinctrl-single entry should be in omap3.dtsi as the mux register is there
+> > for all the omap3 devices, can you please update the patch for that?
+> Ok I'll do. Just one question. I checked TRM for omap3430 and omap3630 and
+> reserved bits in devconf1 are different. So keep function-mask for
+> omap3430 in omap3.dtsi
+> and redefine in omap36xx.dtsi (not sure if this will work in this
+> way)? Or exist other way how to deal with that? Thanks.
 
-Yeah, that's kind of nasty!
+Oh OK. Yes if they are different you should have the common entry in
+omap3.dtsi and the SoC specific fields in omap34xx.dtsi and
+omap36xx.dtsi. And please leave out the bit for configuring the
+MPUFORCEWRNP.
 
-g.
+Regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
