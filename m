@@ -1,49 +1,73 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dmaengine: qcom_bam_dma: Generalize BAM
- register offset calculations
-Date: Wed, 12 Nov 2014 16:10:33 +0530
-Message-ID: <20141112104033.GF24582@intel.com>
-References: <1411037575-13153-1-git-send-email-architt@codeaurora.org>
- <1411965189-24499-1-git-send-email-architt@codeaurora.org>
+From: "Suzuki K. Poulose" <Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] of/fdt: export fdt blob as /sys/firmware/fdt
+Date: Wed, 12 Nov 2014 10:42:05 +0000
+Message-ID: <5463397D.7060506@arm.com>
+References: <1415645222-14909-1-git-send-email-ard.biesheuvel@linaro.org> <1415645222-14909-2-git-send-email-ard.biesheuvel@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1411965189-24499-1-git-send-email-architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <1415645222-14909-2-git-send-email-ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "geoff.levand-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <geoff.levand-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 29, 2014 at 10:03:07AM +0530, Archit Taneja wrote:
-> The BAM DMA IP comes in different versions. The register offset layout varies
-> among these versions. The layouts depend on which generation/family of SoCs they
-> belong to.
-> 
-> The current SoCs(like 8084, 8074) have a layout where the Top level registers
-> come in the beginning of the address range, followed by pipe and event
-> registers. The BAM revision numbers fall above 1.4.0.
-> 
-> The older SoCs (like 8064, 8960) have a layout where the pipe registers come
-> first, and the top level come later. These have BAM revision numbers lesser than
-> 1.4.0.
-> 
-> It isn't suitable to have macros provide the register offsets with the layouts
-> changed. Future BAM revisions may have different register layouts too. The
-> register addresses are now calculated by referring a table which contains a base
-> offset and multipliers for pipe/evnt/ee registers.
-> 
-> We have a common function bam_addr() which computes addresses for all the
-> registers. When computing address of top level/ee registers, we pass 0 to the
-> pipe argument in addr() since they don't have any multiple instances.
-> 
-> Some of the unused register definitions are removed. We can add new registers as
-> we need them.
+On 10/11/14 18:47, Ard Biesheuvel wrote:
+> Create a new /sys entry '/sys/firmware/fdt' to export the FDT blob
+> that was passed to the kernel by the bootloader. This allows userland
+> applications such as kexec to access the raw binary. The blob needs to
+> be preserved as early as possible by calling preserve_fdt().
+>
+> The fact that this node does not reside under /sys/firmware/device-tree
+> is deliberate: FDT is also used on arm64 UEFI/ACPI systems to
+> communicate just the UEFI and ACPI entry points, but the FDT is never
+> unflattened and used to configure the system.
+>
+> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>   drivers/of/fdt.c       | 34 ++++++++++++++++++++++++++++++++++
+>   include/linux/of_fdt.h |  2 ++
+>   2 files changed, 36 insertions(+)
+>
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index d1ffca8b34ea..e9ee3d5f7ea4 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -22,6 +22,7 @@
+>   #include <linux/libfdt.h>
+>   #include <linux/debugfs.h>
+>   #include <linux/serial_core.h>
+> +#include <linux/sysfs.h>
+>
+>   #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
+>   #include <asm/page.h>
+> @@ -1103,4 +1104,37 @@ static int __init of_flat_dt_debugfs_export_fdt(void)
+>   module_init(of_flat_dt_debugfs_export_fdt);
+>   #endif
+>
+> +static u8 *raw_fdt_copy;
+> +
+> +void __init preserve_fdt(void)
+> +{
+> +	u32 fdt_size;
+> +
+> +	fdt_size = fdt_totalsize(initial_boot_params);
+> +	raw_fdt_copy = memcpy(__va(memblock_alloc(fdt_size, PAGE_SIZE)),
+> +			      initial_boot_params, fdt_size);
+> +}
+> +
+> +#ifdef CONFIG_SYSFS
+> +static ssize_t of_fdt_raw_read(struct file *filp, struct kobject *kobj,
+> +			       struct bin_attribute *bin_attr,
+> +			       char *buf, loff_t off, size_t count)
+> +{
+> +	memcpy(buf, raw_fdt_copy + off, count);
+Should we check for the off+count, not to exceed the fdt_size that we 
+actually copied ?
 
-Applied alll three, thanks
+Thanks
+Suzuki
 
--- 
-~Vinod
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
