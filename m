@@ -1,25 +1,61 @@
-From: bpqw <bpqw@micron.com>
-Subject: RE:  [PATCH 1/1 V2] devicetree: bindings: Add vendor prefix for
- Micron Technology Co., Ltd.
-Date: Wed, 12 Nov 2014 01:26:58 +0000
-Message-ID: <A765B125120D1346A63912DDE6D8B6315EB0ED@NTXXIAMBX02.xacn.micron.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/5] ARM: shmobile: kzm9g legacy: Set i2c clks_per_count
+ to 2
+Date: Wed, 12 Nov 2014 10:44:51 +0900
+Message-ID: <20141112014450.GC11597@verge.net.au>
+References: <1415274730-310-1-git-send-email-geert+renesas@glider.be>
+ <1415274730-310-2-git-send-email-geert+renesas@glider.be>
+ <20141107052420.GA1278@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: Jason Cooper <jason@lakedaemon.net>, Mark Brown <broonie@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <treding@nvidia.com>, Florian Vaussard <florian.vaussard@epfl.ch>, Andrew Lunn <andrew@lunn.ch>, Silvio F <silvio.fricke@gmail.com>, Hayato Suzuki <hytszk@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141107052420.GA1278@katana>
+Sender: linux-sh-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
->Signed-off-by: bean huo <beanhuo@micron.com>
->Signed-off-by: bpqw <bpqw@micron.com>
->---
->V2:
- > - Add signed-off-by
- > - Modify commit logs that wrapped to less than 80 columns
+On Fri, Nov 07, 2014 at 06:24:21AM +0100, Wolfram Sang wrote:
+> On Thu, Nov 06, 2014 at 12:52:06PM +0100, Geert Uytterhoeven wrote:
+> > On sh73a0/kzm9g-legacy, probing of the i2c masters fails with:
+> > 
+> >     i2c-sh_mobile i2c-sh_mobile.0: timing values out of range: L/H=0x208/0x1bf
+> >     sh_mobile: probe of i2c-sh_mobile.0 failed with error -22
+> 
+> Yay, so the warning I added found another bug \o/
+> 
+> > 
+> > According to the datasheet, the transfer rate is derived from the HP
+> > clock (which runs at 104 MHz) divided by two. Hence
+> > i2c_sh_mobile_platform_data.clks_per_count should be set to two.
+> > 
+> > Now probing succeeds, and i2c works:
+> > 
+> >     i2c-sh_mobile i2c-sh_mobile.0: I2C adapter 0 with bus speed 100000 Hz (L/H=0x104/0xe0)
+> > 
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> 
+> > ---
+> > Note that the L/H values still differ from the Transfer Rate Settings
+> > example in Table 19.3 of the datasheet, which suggests 0x121/0xe7.
+> 
+> Is the formula different or is it rounding errors?
 
-Dear maintainers:
+Hi Geert,
 
-Please give some tips,if this patch is OK?thanks!
+As this appears to be a bug fix I would like to accompany this patch with
+some text describing when the problem was introduced and what its effects
+are. In short a rough guide to if it should be applied to -stable. To that
+end I prepared the following which I would appreciate your feedback on.
+
+* ARM: shmobile: kzm9g legacy: Set i2c clks_per_count
+
+  This problem appears to have been introduced when i2c shmobile support was
+  added to the sh73a9 by b028f94b76319e1b8 ("ARM: mach-shmobile: sh73a0
+  i2c_shmobile support.") in v2.6.37.
+
+  Without this fix i2c may not operate correctly on the sh73a0/kzm9g.
+
