@@ -1,113 +1,51 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH v2] drivers: pci: move PCI domain assignment to generic PCI code
-Date: Wed, 12 Nov 2014 11:39:17 +0100
-Message-ID: <176983067.8qgFVmI6qY@wuerfel>
-References: <1415637706-2195-1-git-send-email-lorenzo.pieralisi@arm.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] dmaengine: qcom_bam_dma: Generalize BAM
+ register offset calculations
+Date: Wed, 12 Nov 2014 16:10:33 +0530
+Message-ID: <20141112104033.GF24582@intel.com>
+References: <1411037575-13153-1-git-send-email-architt@codeaurora.org>
+ <1411965189-24499-1-git-send-email-architt@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1415637706-2195-1-git-send-email-lorenzo.pieralisi@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1411965189-24499-1-git-send-email-architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 10 November 2014 16:41:46 Lorenzo Pieralisi wrote:
-> The current logic used for PCI domain assignment in arm64
-> pci_bus_assign_domain_nr() is flawed in that, depending on the host
-> controllers configuration for a platform and the respective initialization
-> sequence, core code may end up allocating PCI domain numbers from both DT and
-> the core code generic domain counter, which would result in PCI domain
-> allocation aliases/errors.
+On Mon, Sep 29, 2014 at 10:03:07AM +0530, Archit Taneja wrote:
+> The BAM DMA IP comes in different versions. The register offset layout varies
+> among these versions. The layouts depend on which generation/family of SoCs they
+> belong to.
 > 
-> This patch fixes the logic behind the PCI domain number assignment and
-> moves the resulting code to generic PCI core code so that the same domain
-> allocation logic is used on all platforms selecting
+> The current SoCs(like 8084, 8074) have a layout where the Top level registers
+> come in the beginning of the address range, followed by pipe and event
+> registers. The BAM revision numbers fall above 1.4.0.
 > 
-> CONFIG_PCI_DOMAINS_GENERIC
+> The older SoCs (like 8064, 8960) have a layout where the pipe registers come
+> first, and the top level come later. These have BAM revision numbers lesser than
+> 1.4.0.
 > 
-> instead of resorting to an arch specific implementation that might end up
-> duplicating the PCI domain assignment logic wrongly.
+> It isn't suitable to have macros provide the register offsets with the layouts
+> changed. Future BAM revisions may have different register layouts too. The
+> register addresses are now calculated by referring a table which contains a base
+> offset and multipliers for pipe/evnt/ee registers.
 > 
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Liviu Dudau <liviu.dudau@arm.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> We have a common function bam_addr() which computes addresses for all the
+> registers. When computing address of top level/ee registers, we pass 0 to the
+> pipe argument in addr() since they don't have any multiple instances.
+> 
+> Some of the unused register definitions are removed. We can add new registers as
+> we need them.
 
-The general approach seems good to me,
+Applied alll three, thanks
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+-- 
+~Vinod
 
-I would suggest one simplification:
-
-> +
-> +#ifdef CONFIG_PCI_DOMAINS_GENERIC
-> +
-> +void pci_bus_assign_domain_nr(struct pci_bus *bus, struct device *parent)
-> +{
-> +	static int use_dt_domains = -1;
-> +	int domain = of_get_pci_domain_nr(parent->of_node);
-> +
-> +	/*
-> +	 * Check DT domain and use_dt_domains values.
-> +	 *
-> +	 * If DT domain property is valid (domain >= 0) and
-> +	 * use_dt_domains != 0, the DT assignment is valid since this means
-> +	 * we have not previously allocated a domain number by using
-> +	 * pci_get_new_domain_nr(); we should also update use_dt_domains to
-> +	 * 1, to indicate that we have just assigned a domain number from
-> +	 * DT.
-> +	 *
-> +	 * If DT domain property value is not valid (ie domain < 0), and we
-> +	 * have not previously assigned a domain number from DT
-> +	 * (use_dt_domains != 1) we should assign a domain number by
-> +	 * using the:
-> +	 *
-> +	 * pci_get_new_domain_nr()
-> +	 *
-> +	 * API and update the use_dt_domains value to keep track of method we
-> +	 * are using to assign domain numbers (use_dt_domains = 0).
-> +	 *
-> +	 * All other combinations imply we have a platform that is trying
-> +	 * to mix domain numbers obtained from DT and pci_get_new_domain_nr(),
-> +	 * which is a recipe for domain mishandling and it is prevented by
-> +	 * invalidating the domain value (domain = -1) and printing a
-> +	 * corresponding error.
-> +	 */
-> +	if (domain >= 0 && use_dt_domains) {
-> +		use_dt_domains = 1;
-> +	} else if (domain < 0 && use_dt_domains != 1) {
-> +		use_dt_domains = 0;
-> +		domain = pci_get_new_domain_nr();
-> +	} else {
-> +		dev_err(parent, "Node %s has inconsistent \"linux,pci-domain\" property in DT\n",
-> +			parent->of_node->full_name);
-> +		domain = -1;
-> +	}
-> +
-> +	bus->domain_nr = domain;
-> +}
-> +#endif
->  #endif
->  
-
-Since this is now in the file in which it gets called, you can mark the
-function itself as 'static' and remove the extern declaration and inline
-wrapper from the header file. You can also avoid the #ifdef by doing
-
-void pci_bus_assign_domain_nr(struct pci_bus *bus, struct device *parent)
-{
-	static int use_dt_domains = -1;
-	int domain = of_get_pci_domain_nr(parent->of_node);
-
-	if (!IS_ENABLED(CONFIG_PCI_DOMAINS_GENERIC))
-		return;
-
-	...
-}
-
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
