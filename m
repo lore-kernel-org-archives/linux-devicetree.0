@@ -1,40 +1,55 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v4 0/3] add power off driver for i.mx6
-Date: Wed, 12 Nov 2014 18:56:22 +0800
-Message-ID: <20141112105620.GM2704@dragon>
-References: <1415780439-29728-1-git-send-email-b38343@freescale.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v7 0/2] clk: shmobile: DIV6 clock variable parent support
+Date: Wed, 12 Nov 2014 11:56:52 +0100
+Message-ID: <CAMuHMdWkGtMq+gDZ+1YTmUh2E5xAUsCANcuG433=S3QOsPzjdg@mail.gmail.com>
+References: <1415375468-15378-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+	<CAMuHMdW=TGAySfRgXtVigcO-HuEudEDhnc2BhWuy8b0KJvE4oA@mail.gmail.com>
+	<CANqRtoQS_868tnScxyLpSkCRiAewVvMfGLh60PqSC+b-mhKakw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1415780439-29728-1-git-send-email-b38343@freescale.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Robin Gong <b38343@freescale.com>
-Cc: kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, smoch@web.de
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CANqRtoQS_868tnScxyLpSkCRiAewVvMfGLh60PqSC+b-mhKakw@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Simon Horman <horms@verge.net.au>, Mike Turquette <mturquette@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 12, 2014 at 04:20:36PM +0800, Robin Gong wrote:
-> Resend the patchset  with the latest MAINTAINERS
-> Add simple power off driver for i.mx6, including:
-> - add basic imx-snvs-poweroff driver in drivers/power/reset
-> - add device node in all dts files of i.mx6.
-> - enable in config file
-> 
-> Change from v3:
-> - disable poweroff driver in soc level dts and enable it in board level dts
-> - replace 'EIO' with 'ENODEV' while of_iomap fail.
-> Change from v2:
-> - remove useless included head files
-> - split device binding doc from dts patch
-> - add description for the case that PMIC_ON_REQ not used as external power
->   control
-> 
-> Robin Gong (3):
->   ARM: dts: imx6: add pm_power_off support for i.mx6 chips
->   power: reset: imx-snvs-poweroff: add power off driver for i.mx6
->   ARM: configs: imx_v6_v7_defconfig: add power off driver
+Hi Magnus,
 
-I'm fine with the series.  But before I take the patches, I need an ACK
-from DT folks on the bindings.
+On Tue, Nov 11, 2014 at 11:16 AM, Magnus Damm <magnus.damm@gmail.com> wrote:
+> On Mon, Nov 10, 2014 at 6:16 PM, Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+>> On Fri, Nov 7, 2014 at 4:51 PM, Ulrich Hecht
+>> <ulrich.hecht+renesas@gmail.com> wrote:
+>>>  .../bindings/clock/renesas,cpg-div6-clocks.txt     |  18 ++--
+>>>  drivers/clk/shmobile/clk-div6.c                    | 113 ++++++++++++++++++---
+>>>  2 files changed, 113 insertions(+), 18 deletions(-)
+>>
+>> For the series:
+>> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> Thanks, Geert!
+>
+> From my side this series "[PATCH v7 0/2] clk: shmobile: DIV6 clock
+> variable parent support" looks quite finalized. Would it be possible
 
-Shawn
+Does this mean I can add your acked-by?
+
+Thanks!
+
+> for you to pick this up into the renesas-driver git repo? It would
+> also be great if you could lend a hand and make sure this series gets
+> picked up by Mike.
+
+Will do.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
