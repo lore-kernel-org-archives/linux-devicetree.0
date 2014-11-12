@@ -1,44 +1,23 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 1/1] Input: gpio_keys - add device tree support for interrupt only keys
-Date: Wed, 12 Nov 2014 20:16:06 +0100
-Message-ID: <2197757.1V0yxO5sLr@wuerfel>
-References: <1415808176-13282-1-git-send-email-alexander.stein@systec-electronic.com> <3325183.d9PtLzFMKy@wuerfel> <8280855.M123yTnXfy@ws-stein>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v10 2/3] power-domain: rockchip: add power doamin driver
+Date: Wed, 12 Nov 2014 11:22:57 -0800
+Message-ID: <CAD=FV=V-qhi5rPxe_WGcS1JAZba_euFY3YuUyO_4mbqvJPUtzQ@mail.gmail.com>
+References: <1415690392-9278-1-git-send-email-caesar.wang@rock-chips.com>
+	<1415690392-9278-3-git-send-email-caesar.wang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <8280855.M123yTnXfy@ws-stein>
-Sender: linux-input-owner@vger.kernel.org
-To: Alexander Stein <alexander.stein@systec-electronic.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1415690392-9278-3-git-send-email-caesar.wang@rock-chips.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Caesar Wang <caesar.wang@rock-chips.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Heiko Stuebner <heiko@sntech.de>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Randy Dunlap <rdunlap@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Ulf Hansson <ulf.hansson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, ZhenFu Fang <fzf@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, Jack Dai <jack.dai@ro>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 12 November 2014 17:38:31 Alexander Stein wrote:
-> On Wednesday 12 November 2014 17:04:57, Arnd Bergmann wrote:
-> > On Wednesday 12 November 2014 17:02:56 Alexander Stein wrote:
-> > > This features already exists for board config setups. Add support for
-> > > device tree based systems.
-> > > 
-> > > Signed-off-by: Alexander Stein <alexander.stein@systec-electronic.com>
-> > > ---
-> > > Please note: Due to current lack of hardware I could not test it yet. V2
-> > > includes the changes proposed by Dmitry.
-> > > 
-> > > Changes in v2:
-> > > * Added device tree bindings
-> > > * IRQ is only parsed and mapped when there is no "gpios" property
-> > > 
-> > 
-> > Can you list one or more examples in the patch description?
-> > Are these systems that don't expose the GPIO controller with a
-> > standalone driver, or systems that really actually connect the
-> > buttons to an interrupt pin?
-> 
-> You mean a use case? I came to this situation to test interrupt polarity on a microcontroller, thus a simple /IRQ pin, no GPIO at all. So in the end I have an input just connected to an interrupt line.
-> I noticed gpio_keys using platform data only can be used for this setup. So I added this support for device tree.
-> 
+Caesar,
 
-I meant a specific board file that uses this, which can't be converted
-to DT without your change.
+On Mon, Nov 10, 2014 at 11:19 PM, Caesar Wang
+<caesar.wang@rock-chips.com> wrote:
+> +       pm_genpd_init(&pd->genpd, NULL, false);
 
-	Arnd
+As Dmitry pointed out in another context, maybe this should be
+"pm_genpd_init(&pd->genpd, NULL, !is_on);"
