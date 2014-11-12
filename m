@@ -1,7 +1,7 @@
 From: <tthayer@opensource.altera.com>
-Subject: [PATCHv5 3/5] edac: altera: Remove SDRAM module compile
-Date: Tue, 11 Nov 2014 18:14:21 -0600
-Message-ID: <1415751263-1830-4-git-send-email-tthayer@opensource.altera.com>
+Subject: [PATCHv5 5/5] arm: dts: Add Altera L2 Cache and OCRAM EDAC
+Date: Tue, 11 Nov 2014 18:14:23 -0600
+Message-ID: <1415751263-1830-6-git-send-email-tthayer@opensource.altera.com>
 References: <1415751263-1830-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,33 +14,93 @@ List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <tthayer@opensource.altera.com>
 
-The SDRAM EDAC requires SDRAM configuration/initialization before
-SDRAM is accessed (in the preloader). Having a module compile is
-not desired so force to be built into kernel.
+Adding the device tree entries and bindings needed to support
+the Altera L2 cache and On-Chip RAM EDAC. This patch relies upon
+an earlier patch to declare and setup On-chip RAM properly.
+http://www.spinics.net/lists/devicetree/msg51117.html
 
 Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 ---
-v3: Added in this version as a separate patch.
+v2: Remove OCRAM declaration and reference prior patch.
 
-v4/5: No change.
+v3-5: No Change
 ---
- drivers/edac/Kconfig |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../bindings/arm/altera/socfpga-l2-edac.txt        |   15 +++++++++++++++
+ .../bindings/arm/altera/socfpga-ocram-edac.txt     |   16 ++++++++++++++++
+ arch/arm/boot/dts/socfpga.dtsi                     |   15 ++++++++++++++-
+ 3 files changed, 45 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
 
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 7072c28..1719975 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -377,8 +377,8 @@ config EDAC_OCTEON_PCI
- 	  Cavium Octeon family of SOCs.
+diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
+new file mode 100644
+index 0000000..35b19e3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
+@@ -0,0 +1,15 @@
++Altera SoCFPGA L2 cache Error Detection and Correction [EDAC]
++
++Required Properties:
++- compatible : Should be "altr,l2-edac"
++- reg : Address and size for ECC error interrupt clear registers.
++- interrupts : Should be single bit error interrupt, then double bit error
++	interrupt. Note the rising edge type.
++
++Example:
++
++	l2edac@ffd08140 {
++		compatible = "altr,l2-edac";
++		reg = <0xffd08140 0x4>;
++		interrupts = <0 36 1>, <0 37 1>;
++	};
+diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
+new file mode 100644
+index 0000000..31ab205
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
+@@ -0,0 +1,16 @@
++Altera SoCFPGA On-Chip RAM Error Detection and Correction [EDAC]
++
++OCRAM ECC Required Properties:
++- compatible : Should be "altr,ocram-edac"
++- reg : Address and size for ECC error interrupt clear registers.
++- iram : phandle to On-Chip RAM definition.
++- interrupts : Should be single bit error interrupt, then double bit error
++	interrupt. Note the rising edge type.
++
++Example:
++	ocramedac@ffd08144 {
++		compatible = "altr,ocram-edac";
++		reg = <0xffd08144 0x4>;
++		iram = <&ocram>;
++		interrupts = <0 178 1>, <0 179 1>;
++	};
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index 6af96ed..32c63a3 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -618,8 +618,21 @@
+ 			interrupts = <0 39 4>;
+ 		};
  
- config EDAC_ALTERA_MC
--	tristate "Altera SDRAM Memory Controller EDAC"
--	depends on EDAC_MM_EDAC && ARCH_SOCFPGA
-+	bool "Altera SDRAM Memory Controller EDAC"
-+	depends on EDAC_MM_EDAC=y && ARCH_SOCFPGA
- 	help
- 	  Support for error detection and correction on the
- 	  Altera SDRAM memory controller. Note that the
++		l2edac@ffd08140 {
++			compatible = "altr,l2-edac";
++			reg = <0xffd08140 0x4>;
++			interrupts = <0 36 1>, <0 37 1>;
++		};
++
++		ocramedac@ffd08144 {
++			compatible = "altr,ocram-edac";
++			reg = <0xffd08144 0x4>;
++			iram = <&ocram>;
++			interrupts = <0 178 1>, <0 179 1>;
++		};
++
+ 		L2: l2-cache@fffef000 {
+-			compatible = "arm,pl310-cache";
++			compatible = "arm,pl310-cache", "syscon";
+ 			reg = <0xfffef000 0x1000>;
+ 			interrupts = <0 38 0x04>;
+ 			cache-unified;
 -- 
 1.7.9.5
