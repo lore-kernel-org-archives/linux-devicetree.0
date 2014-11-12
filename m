@@ -1,49 +1,121 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/5] dt-bindings: Add a clocks property
- to the simple-framebuffer binding
-Date: Wed, 12 Nov 2014 14:56:18 +0000
-Message-ID: <CACxGe6v15EjpALit4ZJLXDgCkwEYM4t1mryjoQpa3=wpKmXWEg@mail.gmail.com>
-References: <1413996311-4287-1-git-send-email-hdegoede@redhat.com>
- <1413996311-4287-3-git-send-email-hdegoede@redhat.com> <20141111214217.19EF5C41610@trevor.secretlab.ca>
- <546373C6.4010001@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 4/4] arm: dts: omap3-gta04: Add static configuration for
+ devconf1 register
+Date: Wed, 12 Nov 2014 07:02:11 -0800
+Message-ID: <20141112150210.GC26481@atomide.com>
+References: <1415051968-4878-1-git-send-email-marek@goldelico.com>
+ <1415051968-4878-5-git-send-email-marek@goldelico.com>
+ <5463585D.9070209@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCJP567ORICBBJXKRWRQKGQEUTXWJQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <546373C6.4010001-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5463585D.9070209-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[Replying on-list and with original ccs]
-
-On Wed, Nov 12, 2014 at 2:50 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+* Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> [141112 04:56]:
 > Hi,
->
-> On 11/11/2014 10:42 PM, Grant Likely wrote:
->> - clocks : List of clocks used by the framebuffer. Clocks listed here
->>            are expected to already be configured correctly. The OS must
->>            ensure these clocks are not modified or disabled while the
->>            simple framebuffer remains active.
->
-> Updated in my local tree, where I've also added proper commit messages
-> to the 2 patches missing them. Shall I send a v5 of the set, and may I
-> add your Acked-by to this patch when sending v5?
+> 
+> On 03/11/14 23:59, Marek Belisko wrote:
+> > gta04 board need for tvout enabled 2 bits in devconf1 register (tvbypass and acbias).
+> > Add single pinmux entry and enable it.
+> > 
+> > Signed-off-by: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/omap3-gta04.dtsi | 22 ++++++++++++++++++++++
+> >  1 file changed, 22 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+> > index e4d05f0..a456d37 100644
+> > --- a/arch/arm/boot/dts/omap3-gta04.dtsi
+> > +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+> > @@ -118,6 +118,17 @@
+> >  			};
+> >  		};
+> >  	};
+> > +
+> > +	/* pinmux for devconf1 */
+> > +	control_devconf1: pinmux@480022d8 {
+> > +		compatible = "pinctrl-single";
+> > +		reg = <0x480022d8 4>;	/* single register */
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +		pinctrl-single,bit-per-mux;
+> > +		pinctrl-single,register-width = <32>;
+> > +		pinctrl-single,function-mask = <0xfc0bd5>;
+> > +	};
+> >  };
+> >  
+> >  &omap3_pmx_core {
+> > @@ -497,3 +508,14 @@
+> >  		};
+> >  	};
+> >  };
+> > +
+> > +&control_devconf1 {
+> > +	pinctrl-name = "default";
+> > +	pinctrl-0 = < &tv_acbias_pins>;
+> > +
+> > +	tv_acbias_pins: pinmux_tv_acbias_pins {
+> > +		pinctrl-single,bits = <
+> > +			0 0x40800 0x40800
+> 
+> I think it would be good to have a comment in the .dts above, mentioning
+> that TVOUTBYPASS and TVACEN bits are being set.
+> 
+> > +		>;
+> > +	};
+> > +};
+> > 
+> 
+> OMAP3630 seems to have CONTROL_AVDAC1 and CONTROL_AVDAC2 registers. Did
+> you check if the SoC you use have those? It looks like they need
+> configuration also, if the exist.
 
-For this whole series, please add my Acked-by.
+Those look like AVDAC specific control registers that are not mux
+registers. So those should be accessed the existing SCM (System Control
+Mmodule) syscon area by the DSS code. For examples, see what
+pbias-regulator.c is doing for some other registers in the syscon area.
+ 
+> So, I don't think tvbypass and acbias are really pinmux stuff, but it
+> does seem like an easy way to handle the devconf1 register, and I don't
+> see any issues with the setting being fixed.
 
-Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+The CONTROL_DEVCONF registers seem to be all related to muxing signals
+and configuring ping signal levels. So I think the pinctrl-single is
+OK to use with these.
+ 
+> However, devconf1 register seems to have bits for many devices,
+> including mcbsp, mmc, and even some "Force MPU writes to be nonposted" bit.
 
-I'm okay with the bindings, and I'm okay with adding the clock
-dependency to a simplefb node. I'm happy with the conversation we had
-today on IRC, and I'm expecting to see a binding that covers expected
-firmware/OS behaviour and association with the real hardware posted to
-the list shortly.
+Yes the"Force MPU writes to be nonposted" debug bit is an odd one
+there :) But we're not using that luckily anywhere..
+ 
+> And, with a quick grep, I see CONTROL_DEVCONF1 touched in multiple
+> places in the kernel. I wonder if adding a pinmux entry for it could
+> cause some rather odd problems.
 
-g.
+They can all use pinctrl-single no problem.
+ 
+> Tony, any idea about this? How should CONTROL_DEVCONFx registers be
+> accessed?
+
+If they are pinctrl related like the CONTROL_DEVCONF registers, then
+pincatrl-single is OK. However, for any registers in the SCM that are
+not just routing signals, then the syscon mapping should be used. And
+we should have a separate driver implementing some standard Linux
+generic framework driver. For example a regulator or clock driver.
+
+Anyways, I'll drop this $subject patch for now and set up a new branch
+for the .dts changes.
+
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
