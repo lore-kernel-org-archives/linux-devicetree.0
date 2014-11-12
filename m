@@ -1,166 +1,71 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH v2 1/2] drm/exynos: dp: Remove support for unused dptx-phy
-Date: Wed, 12 Nov 2014 13:08:53 +0900
-Message-ID: <000001cffe2e$5f83fd30$1e8bf790$%han@samsung.com>
-References: <1414675442-3471-1-git-send-email-gautam.vivek@samsung.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: dtc: New v1.4.1 release, and tarballs now on kernel.org
+Date: Wed, 12 Nov 2014 15:11:45 +1100
+Message-ID: <20141112041145.GB17562@voom.redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1414675442-3471-1-git-send-email-gautam.vivek@samsung.com>
-Content-language: ko
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Vivek Gautam' <gautam.vivek@samsung.com>
-Cc: dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, seanpaul@google.com, ajaykumar.rs@samsung.com, 'Inki Dae' <inki.dae@samsung.com>, 'Jingoo Han' <jg1.han@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="XF85m9dhOBO43t/C"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, October 30, 2014 10:24 PM, Vivek Gautam wrote:
-> 
-> Now that we have moved to generic phy based bindings,
-> we don't need to have any code related to older dptx-phy.
-> Nobody is using this dptx-phy anymore, so removing the
-> same.
 
-Right, older dptx-phy was replaced long time ago.
-However, it was not removed for DT compatibility.
-I think that now these old DT properties can be removed.
+--XF85m9dhOBO43t/C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I added some comments below.
+Hello all,
 
-> 
-> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
-> Cc: Inki Dae <inki.dae@samsung.com>
-> Cc: Jingoo Han <jg1.han@samsung.com>
-> ---
-> 
-> Changes from V1:
->  - Reworked error handling in exynos_dp_dt_parse_phydata() as commented
->    by Inki.
-> 
->  drivers/gpu/drm/exynos/exynos_dp_core.c |   67 ++++++++-----------------------
->  drivers/gpu/drm/exynos/exynos_dp_core.h |    2 -
->  2 files changed, 17 insertions(+), 52 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/exynos/exynos_dp_core.c b/drivers/gpu/drm/exynos/exynos_dp_core.c
-> index cd50ece..206163b 100644
-> --- a/drivers/gpu/drm/exynos/exynos_dp_core.c
-> +++ b/drivers/gpu/drm/exynos/exynos_dp_core.c
-> @@ -1052,28 +1052,14 @@ static int exynos_dp_create_connector(struct exynos_drm_display *display,
-> 
->  static void exynos_dp_phy_init(struct exynos_dp_device *dp)
->  {
-> -	if (dp->phy) {
-> +	if (dp->phy)
->  		phy_power_on(dp->phy);
-> -	} else if (dp->phy_addr) {
-> -		u32 reg;
-> -
-> -		reg = __raw_readl(dp->phy_addr);
-> -		reg |= dp->enable_mask;
-> -		__raw_writel(reg, dp->phy_addr);
-> -	}
->  }
-> 
->  static void exynos_dp_phy_exit(struct exynos_dp_device *dp)
->  {
-> -	if (dp->phy) {
-> +	if (dp->phy)
->  		phy_power_off(dp->phy);
-> -	} else if (dp->phy_addr) {
-> -		u32 reg;
-> -
-> -		reg = __raw_readl(dp->phy_addr);
-> -		reg &= ~(dp->enable_mask);
-> -		__raw_writel(reg, dp->phy_addr);
-> -	}
->  }
-> 
->  static void exynos_dp_poweron(struct exynos_drm_display *display)
-> @@ -1212,40 +1198,13 @@ static struct video_info *exynos_dp_dt_parse_pdata(struct device *dev)
-> 
->  static int exynos_dp_dt_parse_phydata(struct exynos_dp_device *dp)
->  {
-> -	struct device_node *dp_phy_node = of_node_get(dp->dev->of_node);
-> -	u32 phy_base;
-> -	int ret = 0;
-> -
-> -	dp_phy_node = of_find_node_by_name(dp_phy_node, "dptx-phy");
-> -	if (!dp_phy_node) {
-> -		dp->phy = devm_phy_get(dp->dev, "dp");
-> -		return PTR_ERR_OR_ZERO(dp->phy);
-> -	}
-> -
-> -	if (of_property_read_u32(dp_phy_node, "reg", &phy_base)) {
-> -		dev_err(dp->dev, "failed to get reg for dptx-phy\n");
-> -		ret = -EINVAL;
-> -		goto err;
-> -	}
-> -
-> -	if (of_property_read_u32(dp_phy_node, "samsung,enable-mask",
-> -				&dp->enable_mask)) {
-> -		dev_err(dp->dev, "failed to get enable-mask for dptx-phy\n");
-> -		ret = -EINVAL;
-> -		goto err;
-> -	}
-> -
-> -	dp->phy_addr = ioremap(phy_base, SZ_4);
-> -	if (!dp->phy_addr) {
-> -		dev_err(dp->dev, "failed to ioremap dp-phy\n");
-> -		ret = -ENOMEM;
-> -		goto err;
-> +	dp->phy = devm_phy_get(dp->dev, "dp");
-> +	if (IS_ERR(dp->phy)) {
-> +		dev_err(dp->dev, "no DP phy configured\n");
-> +		return PTR_ERR(dp->phy);
->  	}
-> 
-> -err:
-> -	of_node_put(dp_phy_node);
-> -
-> -	return ret;
-> +	return 0;
->  }
-> 
->  static int exynos_dp_dt_parse_panel(struct exynos_dp_device *dp)
-> @@ -1278,8 +1237,16 @@ static int exynos_dp_bind(struct device *dev, struct device *master, void *data)
->  		return PTR_ERR(dp->video_info);
-> 
->  	ret = exynos_dp_dt_parse_phydata(dp);
+As you probably know, the git tree and mailing lists for dtc have been
+hosted on kernel.org for a while now.  However, release tarballs have
+not been there.. until now!
 
-In your patch, exynos_dp_dt_parse_phydata() calls only devm_phy_get().
-Then, how about calling devm_phy_get() directly and removing
-exynos_dp_dt_parse_phydata()? It looks simpler.
+WIth jdl.com now shut down, there hasn't actually been anywhere to
+download dtc release tarballs recently, but I've now got a directory
+set up for this on kernel.org and investigated the mysteries of kup.
+dtc release tarballs can now be downloaded from:
+    https://www.kernel.org/pub/software/utils/dtc/
 
-Best regards,
-Jingoo Han
+In addition, it's been a while since the last dtc release (v1.4.0).
+We haven't really developed any interesting new features in that time,
+but there have been some important bugfixes, so it's time we rolled a
+release.
 
-> -	if (ret)
-> -		return ret;
-> +	if (ret) {
-> +		/*
-> +		 * phy itself is not enabled, so we can move forward
-> +		 * assigning NULL to phy pointer.
-> +		 */
-> +		if (ret == -ENOSYS || ret == -ENODEV)
-> +			dp->phy = NULL;
-> +		else
-> +			return ret;
-> +	}
-> 
->  	if (!dp->panel) {
->  		ret = exynos_dp_dt_parse_panel(dp);
-> diff --git a/drivers/gpu/drm/exynos/exynos_dp_core.h b/drivers/gpu/drm/exynos/exynos_dp_core.h
-> index a1aee69..6426201 100644
-> --- a/drivers/gpu/drm/exynos/exynos_dp_core.h
-> +++ b/drivers/gpu/drm/exynos/exynos_dp_core.h
-> @@ -153,8 +153,6 @@ struct exynos_dp_device {
->  	struct clk		*clock;
->  	unsigned int		irq;
->  	void __iomem		*reg_base;
-> -	void __iomem		*phy_addr;
-> -	unsigned int		enable_mask;
-> 
->  	struct video_info	*video_info;
->  	struct link_train	link_train;
-> --
-> 1.7.10.4
+The new v1.4.1 release has been tagged in git, and has a released
+tarball with all the others.
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--XF85m9dhOBO43t/C
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUYt4BAAoJEGw4ysog2bOSk/kQALoigH12T0SAQiMZfXoVvB2e
+A4YhxZKIQHVy8icUbzTsDry2hvr1QjDD5Q+FaCp6ZfYSvA7mqa+V24xu3NGcGuj+
+6321YXqQLN3qkHt2EKUOIlKdcNLCdsDb9b+dyGGriOPYCpSnKbJamfP+x8TwROhh
+TD1zwToZ/Di561IK2HJEojcG+PbZkrnkXt/I3z4FuqaZB7Pejhm5/+Zt0SXm16gB
+bZVchkE+Ke4HDtwcciev7afUpGsaNXkcYsltqG7QCzRnCUMdUavWkKCa+Be+vOdq
+6Qip1zEi0yfx3tzj1OaQGooJThcamMwAfxO/D2Jkn2/Daj9RhRN31JCfY11C0saG
+DHvtgu3n8Zhyu1tigymMdBr/oPmjApjO4adcQW3Q85c5zQKG83Nx6OqQNR6pgkzX
+w1eTmpK25/NZ0mafBi8XjROJ5I11JHEz5UFRPdefgEvcQ8EiyD+g7mn3rbS/OXs7
+Xe9/muPSsp8V3OOc36/HKMUQ2Kxk7M4cAMJ8eQr3KyIK/wFmblQCuc3/uHBr8mLj
+qi29o8RCX7Jp+ooSTYGwkD0ox7z5KNWdYO+YSG19W51bHV5qL+y+JKxSRRSgAoRu
+NVPBTMOXgHtJ+zkSM3KvT5qdVbW75GagzEVGeNq8Bw7PJYA6GsuDZVMUK/u1vdfI
+7qzoIbNuBQZwsfhfN2rc
+=pBVB
+-----END PGP SIGNATURE-----
+
+--XF85m9dhOBO43t/C--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
