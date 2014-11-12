@@ -1,84 +1,65 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [GIT PULL] Broadcom Cygnus SoC defconfig changes
-Date: Wed, 12 Nov 2014 09:25:28 -0800
-Message-ID: <CAOesGMh6t6f+_friV6_pE5WLgEFa+OrErmNKnB0v5jcBstwGKA@mail.gmail.com>
-References: <1414698612-26216-1-git-send-email-f.fainelli@gmail.com>
-	<20141109001302.GB11947@quad.lixom.net>
-	<CAGVrzcbQG7qZNOoocgpbV=pf3Jv9mwAfsb=Eq2tiFfMa_pAPZQ@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 2/5] dt-bindings: Add a clocks property
+ to the simple-framebuffer binding
+Date: Wed, 12 Nov 2014 11:43:56 -0600
+Message-ID: <CAL_Jsq+fzmTOSr8g+6b5R=KPao1ZeumsyNS3nfYBzfVQCiPbWA@mail.gmail.com>
+References: <1413996311-4287-1-git-send-email-hdegoede@redhat.com>
+ <1413996311-4287-3-git-send-email-hdegoede@redhat.com> <20141111214217.19EF5C41610@trevor.secretlab.ca>
+ <546373C6.4010001@redhat.com> <CACxGe6v15EjpALit4ZJLXDgCkwEYM4t1mryjoQpa3=wpKmXWEg@mail.gmail.com>
+ <CACxGe6vBq5Y6HbogbpVUy9VLaocfrAsR_XRbio4zBB_vY5GRsw@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGVrzcbQG7qZNOoocgpbV=pf3Jv9mwAfsb=Eq2tiFfMa_pAPZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, JD Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sunxi+bncBD62P6P6EQIPDOEOUMCRUBD7SB2HY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CACxGe6vBq5Y6HbogbpVUy9VLaocfrAsR_XRbio4zBB_vY5GRsw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 11, 2014 at 10:29 PM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> 2014-11-08 16:13 GMT-08:00 Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>:
->> On Thu, Oct 30, 2014 at 12:50:09PM -0700, Florian Fainelli wrote:
->>> The following changes since commit f114040e3ea6e07372334ade75d1ee0775c355e1:
->>>
->>>   Linux 3.18-rc1 (2014-10-19 18:08:38 -0700)
->>>
->>> are available in the git repository at:
->>>
->>>   http://github.com/brcm/linux.git tags/arm-soc/for-3.18/cygnus-defconfig-v9
->>>
->>> for you to fetch changes up to aa0204801143ee2d47e9e8dd5f39cdddd5613b4b:
->>>
->>>   ARM: multi_v7_defconfig: Enable Broadcom Cygnus (2014-10-30 11:01:35 -0700)
->>
->> Hi Florian,
->>
->> Apologies for the delay in dealing with this pull request.
->>
->>> ----------------------------------------------------------------
->>> This patchset contains initial support for Broadcom's Cygnus SoC based on our
->>> iProc architecture. Initial support is minimal and includes just the mach
->>> platform code, clock driver, and a basic device tree configuration. Peripheral
->>> drivers will be submitted soon, as will device tree configurations for other
->>> Cygnus board variants.
->>>
->>> These are the defconfig parts of the changes
->>>
->>> ----------------------------------------------------------------
->>> Jonathan Richardson (1):
->>>       ARM: cygnus defconfig : Initial defconfig for Broadcom Cygnus SoC
->>>
->>> Ray Jui (1):
->>>       ARM: multi_v7_defconfig: Enable Broadcom Cygnus
->>>
->>> Scott Branden (1):
->>>       ARM: bcm_defconfig/multi_v7_defconfig: remove one level of menu from Kconfig
->>>
->>>  arch/arm/configs/bcm_cygnus_defconfig | 237 ++++++++++++++++++++++++++++++++++
->>>  arch/arm/configs/bcm_defconfig        |   3 +-
->>>  arch/arm/configs/multi_v7_defconfig   |  21 ++-
->>
->> Please send multi_v7_defconfig updates as a patch instead of including in
->> a merge request. We ask for this because it's a file that many maintainers
->> touch and it's easy that we get lots of conflicts otherwise.
->>
->> As far as the bcm_cygnus_defconfig: Since new platforms are multiplatform
->> enabled by default, we normally only prefer to have one defconfig per vendor.
->> We've made exceptions in cases where the families are very different, but in
->> general one defconfig per vendor should be sufficient.
->>
->> I.e. please enable the cygnus options in bcm_defconfig instead of adding a new
->> one.
+On Wed, Nov 12, 2014 at 10:38 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Rob, seeing as we disagree on patch #5, do you have time to discuss this
+> evening, or tomorrow?
+
+Yes, either is fine.
+
+Rob
+
 >
-> Alright, so just to make sure I get this right:
+> g.
 >
-> - there are two patches from Scott and Ray which enable Cygnus in
-> mutli_v7_defconfig that I should send a separate patches
-> - adding Cygnus to bcm_defconfig can be part of a separate pull request
-
-Yep!
-
-
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> On 12 Nov 2014 14:56, "Grant Likely" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>
+>> [Replying on-list and with original ccs]
+>>
+>> On Wed, Nov 12, 2014 at 2:50 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> wrote:
+>> > Hi,
+>> >
+>> > On 11/11/2014 10:42 PM, Grant Likely wrote:
+>> >> - clocks : List of clocks used by the framebuffer. Clocks listed here
+>> >>            are expected to already be configured correctly. The OS must
+>> >>            ensure these clocks are not modified or disabled while the
+>> >>            simple framebuffer remains active.
+>> >
+>> > Updated in my local tree, where I've also added proper commit messages
+>> > to the 2 patches missing them. Shall I send a v5 of the set, and may I
+>> > add your Acked-by to this patch when sending v5?
+>>
+>> For this whole series, please add my Acked-by.
+>>
+>> Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>
+>> I'm okay with the bindings, and I'm okay with adding the clock
+>> dependency to a simplefb node. I'm happy with the conversation we had
+>> today on IRC, and I'm expecting to see a binding that covers expected
+>> firmware/OS behaviour and association with the real hardware posted to
+>> the list shortly.
+>>
+>> g.
