@@ -1,21 +1,244 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH] ARM: dts: rockchip: fix invalid unit-address in rk3188.dtsi
-Date: Thu, 13 Nov 2014 00:32:44 +0100
-Message-ID: <1834074.A8oL01ENBp@diego>
-References: <5384745.1WqprI8GVl@diego> <1415407496-18507-1-git-send-email-julien.chauveau@neo-technologies.fr>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415407496-18507-1-git-send-email-julien.chauveau@neo-technologies.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "moderated list:ARM/Rockchip SoC..." <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+From: mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Subject: [PATCH v2] coresight: bindings for coresight drivers
+Date: Wed, 12 Nov 2014 16:36:59 -0700
+Message-ID: <1415835419-5565-1-git-send-email-mathieu.poirier@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Cc: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Samstag, 8. November 2014, 01:44:56 schrieb Julien CHAUVEAU:
-> Unit addresses, whilst written in hex, don't contain a 0x prefix.
-> 
-> Signed-off-by: Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
+From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-added this to my v3.19-armsoc/dts branch
+Coresight IP blocks allow for the support of HW assisted tracing
+on ARM SoCs.  Bindings for the currently available blocks are
+presented herein.
+
+Signed-off-by: Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+Change for v2:
+  - Added ack by Rob Herring
+---
+ .../devicetree/bindings/arm/coresight.txt          | 204 +++++++++++++++++++++
+ 1 file changed, 204 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/coresight.txt
+
+diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+new file mode 100644
+index 0000000..d790f49
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/coresight.txt
+@@ -0,0 +1,204 @@
++* CoreSight Components:
++
++CoreSight components are compliant with the ARM CoreSight architecture
++specification and can be connected in various topologies to suit a particular
++SoCs tracing needs. These trace components can generally be classified as
++sinks, links and sources. Trace data produced by one or more sources flows
++through the intermediate links connecting the source to the currently selected
++sink. Each CoreSight component device should use these properties to describe
++its hardware characteristcs.
++
++* Required properties for all components *except* non-configurable replicators:
++
++	* compatible: These have to be supplemented with "arm,primecell" as
++	  drivers are using the AMBA bus interface.  Possible values include:
++		- "arm,coresight-etb10", "arm,primecell";
++		- "arm,coresight-tpiu", "arm,primecell";
++		- "arm,coresight-tmc", "arm,primecell";
++		- "arm,coresight-funnel", "arm,primecell";
++		- "arm,coresight-etm3x", "arm,primecell";
++
++	* reg: physical base address and length of the register
++	  set(s) of the component.
++
++	* clocks: the clock associated to this component.
++
++	* clock-names: the name of the clock as referenced by the code.
++	  Since we are using the AMBA framework, the name should be
++	  "apb_pclk".
++
++	* port or ports: The representation of the component's port
++	  layout using the generic DT graph presentation found in
++	  "bindings/graph.txt".
++
++* Required properties for devices that don't show up on the AMBA bus, such as
++  non-configurable replicators:
++
++	* compatible: Currently supported value is (note the absence of the
++	  AMBA markee):
++		- "arm,coresight-replicator"
++
++	* id: a unique number that will identify this replicator.
++
++	* port or ports: same as above.
++
++* Optional properties for ETM/PTMs:
++
++	* arm,cp14: must be present if the system accesses ETM/PTM management
++	  registers via co-processor 14.
++
++	* cpu: the cpu phandle this ETM/PTM is affined to. When omitted the
++	  source is considered to belong to CPU0.
++
++* Optional property for TMC:
++
++	* arm,buffer-size: size of contiguous buffer space for TMC ETR
++	 (embedded trace router)
++
++
++Example:
++
++1. Sinks
++	etb@20010000 {
++		compatible = "arm,coresight-etb10", "arm,primecell";
++		reg = <0 0x20010000 0 0x1000>;
++
++		coresight-default-sink;
++		clocks = <&oscclk6a>;
++		clock-names = "apb_pclk";
++		port {
++			etb_in_port: endpoint@0 {
++				slave-mode;
++				remote-endpoint = <&replicator_out_port0>;
++			};
++		};
++	};
++
++	tpiu@20030000 {
++		compatible = "arm,coresight-tpiu", "arm,primecell";
++		reg = <0 0x20030000 0 0x1000>;
++
++		clocks = <&oscclk6a>;
++		clock-names = "apb_pclk";
++		port {
++			tpiu_in_port: endpoint@0 {
++				slave-mode;
++				remote-endpoint = <&replicator_out_port1>;
++			};
++		};
++	};
++
++2. Links
++	replicator {
++		/* non-configurable replicators don't show up on the
++		 * AMBA bus.  As such no need to add "arm,primecell".
++		 */
++		compatible = "arm,coresight-replicator";
++		/* this will show up in debugfs as "0.replicator" */
++		id = <0>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			/* replicator output ports */
++			port@0 {
++				reg = <0>;
++				replicator_out_port0: endpoint {
++					remote-endpoint = <&etb_in_port>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++				replicator_out_port1: endpoint {
++					remote-endpoint = <&tpiu_in_port>;
++				};
++			};
++
++			/* replicator input port */
++			port@2 {
++				reg = <0>;
++				replicator_in_port0: endpoint {
++					slave-mode;
++					remote-endpoint = <&funnel_out_port0>;
++				};
++			};
++		};
++	};
++
++	funnel@20040000 {
++		compatible = "arm,coresight-funnel", "arm,primecell";
++		reg = <0 0x20040000 0 0x1000>;
++
++		clocks = <&oscclk6a>;
++		clock-names = "apb_pclk";
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			/* funnel output port */
++			port@0 {
++				reg = <0>;
++				funnel_out_port0: endpoint {
++					remote-endpoint =
++							<&replicator_in_port0>;
++				};
++			};
++
++			/* funnel input ports */
++			port@1 {
++				reg = <0>;
++				funnel_in_port0: endpoint {
++					slave-mode;
++					remote-endpoint = <&ptm0_out_port>;
++				};
++			};
++
++			port@2 {
++				reg = <1>;
++				funnel_in_port1: endpoint {
++					slave-mode;
++					remote-endpoint = <&ptm1_out_port>;
++				};
++			};
++
++			port@3 {
++				reg = <2>;
++				funnel_in_port2: endpoint {
++					slave-mode;
++					remote-endpoint = <&etm0_out_port>;
++				};
++			};
++
++		};
++	};
++
++3. Sources
++	ptm@2201c000 {
++		compatible = "arm,coresight-etm3x", "arm,primecell";
++		reg = <0 0x2201c000 0 0x1000>;
++
++		cpu = <&cpu0>;
++		clocks = <&oscclk6a>;
++		clock-names = "apb_pclk";
++		port {
++			ptm0_out_port: endpoint {
++				remote-endpoint = <&funnel_in_port0>;
++			};
++		};
++	};
++
++	ptm@2201d000 {
++		compatible = "arm,coresight-etm3x", "arm,primecell";
++		reg = <0 0x2201d000 0 0x1000>;
++
++		cpu = <&cpu1>;
++		clocks = <&oscclk6a>;
++		clock-names = "apb_pclk";
++		port {
++			ptm1_out_port: endpoint {
++				remote-endpoint = <&funnel_in_port1>;
++			};
++		};
++	};
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
