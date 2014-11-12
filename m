@@ -1,85 +1,73 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [GIT PULL] Broadcom Cygnus SoC defconfig changes
-Date: Tue, 11 Nov 2014 22:29:45 -0800
-Message-ID: <CAGVrzcbQG7qZNOoocgpbV=pf3Jv9mwAfsb=Eq2tiFfMa_pAPZQ@mail.gmail.com>
-References: <1414698612-26216-1-git-send-email-f.fainelli@gmail.com> <20141109001302.GB11947@quad.lixom.net>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH 19/22] dt/bindings: add micrel,rmii_ref_clk_sel_25_mhz to
+ eth-phy binding
+Date: Wed, 12 Nov 2014 08:01:27 +0100
+Message-ID: <20141112070127.GF30369@pengutronix.de>
+References: <1415727460-20417-1-git-send-email-johan@kernel.org>
+ <1415727460-20417-20-git-send-email-johan@kernel.org>
+ <20141111175741.GF25295@leverpostej>
+ <20141111181825.GH29789@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141109001302.GB11947-O5ziIzlqnXUVNXGz7ipsyg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, JD Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141111181825.GH29789@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-11-08 16:13 GMT-08:00 Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>:
-> On Thu, Oct 30, 2014 at 12:50:09PM -0700, Florian Fainelli wrote:
->> The following changes since commit f114040e3ea6e07372334ade75d1ee0775c355e1:
->>
->>   Linux 3.18-rc1 (2014-10-19 18:08:38 -0700)
->>
->> are available in the git repository at:
->>
->>   http://github.com/brcm/linux.git tags/arm-soc/for-3.18/cygnus-defconfig-v9
->>
->> for you to fetch changes up to aa0204801143ee2d47e9e8dd5f39cdddd5613b4b:
->>
->>   ARM: multi_v7_defconfig: Enable Broadcom Cygnus (2014-10-30 11:01:35 -0700)
->
-> Hi Florian,
->
-> Apologies for the delay in dealing with this pull request.
->
->> ----------------------------------------------------------------
->> This patchset contains initial support for Broadcom's Cygnus SoC based on our
->> iProc architecture. Initial support is minimal and includes just the mach
->> platform code, clock driver, and a basic device tree configuration. Peripheral
->> drivers will be submitted soon, as will device tree configurations for other
->> Cygnus board variants.
->>
->> These are the defconfig parts of the changes
->>
->> ----------------------------------------------------------------
->> Jonathan Richardson (1):
->>       ARM: cygnus defconfig : Initial defconfig for Broadcom Cygnus SoC
->>
->> Ray Jui (1):
->>       ARM: multi_v7_defconfig: Enable Broadcom Cygnus
->>
->> Scott Branden (1):
->>       ARM: bcm_defconfig/multi_v7_defconfig: remove one level of menu from Kconfig
->>
->>  arch/arm/configs/bcm_cygnus_defconfig | 237 ++++++++++++++++++++++++++++++++++
->>  arch/arm/configs/bcm_defconfig        |   3 +-
->>  arch/arm/configs/multi_v7_defconfig   |  21 ++-
->
-> Please send multi_v7_defconfig updates as a patch instead of including in
-> a merge request. We ask for this because it's a file that many maintainers
-> touch and it's easy that we get lots of conflicts otherwise.
->
-> As far as the bcm_cygnus_defconfig: Since new platforms are multiplatform
-> enabled by default, we normally only prefer to have one defconfig per vendor.
-> We've made exceptions in cases where the families are very different, but in
-> general one defconfig per vendor should be sufficient.
->
-> I.e. please enable the cygnus options in bcm_defconfig instead of adding a new
-> one.
+On Tue, Nov 11, 2014 at 07:18:25PM +0100, Johan Hovold wrote:
+> On Tue, Nov 11, 2014 at 05:57:42PM +0000, Mark Rutland wrote:
+> > On Tue, Nov 11, 2014 at 05:37:37PM +0000, Johan Hovold wrote:
+> > > Add "micrel,rmii_ref_clk_sel_25_mhz" to Micrel ethernet PHY binding
+> > > documentation.
+> > > 
+> > > Cc: devicetree@vger.kernel.org
+> > > Signed-off-by: Johan Hovold <johan@kernel.org>
+> > > ---
+> > >  Documentation/devicetree/bindings/net/micrel.txt | 5 +++++
+> > >  1 file changed, 5 insertions(+)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/net/micrel.txt b/Documentation/devicetree/bindings/net/micrel.txt
+> > > index a1bab5eaae02..9b08dd6551dd 100644
+> > > --- a/Documentation/devicetree/bindings/net/micrel.txt
+> > > +++ b/Documentation/devicetree/bindings/net/micrel.txt
+> > > @@ -19,6 +19,11 @@ Optional properties:
+> > >  
+> > >                See the respective PHY datasheet for the mode values.
+> > >  
+> > > + - micrel,rmii_ref_clk_sel_25_mhz: rmii_ref_clk_sel bit selects 25 MHz mode
+> > > +
+> > > +		Whether 25 MHz (rather than 50 Mhz) clock mode is selected
+> > > +		when the rmii_ref_clk_sel bit is set.
+> > 
+> > s/_/-/ in property names please.
+> 
+> Ouch, copied from variable name, sorry.
+> 
+> > That said, I don't follow the meaning. Does this cause the kernel to do
+> > something different, or is is simply that a 25MHz ref clock is wired up?
+> 
+> Yes, the driver currently sets this configuration bit based on a common
+> clock binding.
+> 
+> However, it turns out the meaning of the bit is reversed on some PHY
+> variants. On most PHYs 50 MHz mode is selected by setting this bit,
+> whereas on the PHYs that need this new property, setting it selects 25
+> MHz mode instead.
 
-Alright, so just to make sure I get this right:
+Maybe rename the property to something like rmii-ref-clk-25mhz-active-high
+then? Also you should probably make it more explicit that this is a
+hardware property and not for adjusting the clock.
 
-- there are two patches from Scott and Ray which enable Cygnus in
-mutli_v7_defconfig that I should send a separate patches
-- adding Cygnus to bcm_defconfig can be part of a separate pull request
+It's not very nice from Micrel to create Phys with exactly the same
+device id but the meaning of this bit reversed.
 
->
->
-> -Olof
-
-
+Sascha
 
 -- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
