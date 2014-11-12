@@ -1,103 +1,50 @@
-From: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
-Subject: Re: [PATCH]  of/base: Fix PowerPC address parsing hack
-Date: Thu, 13 Nov 2014 09:10:36 +1100
-Message-ID: <20141113091036.4e9ec43d@canb.auug.org.au>
-References: <1415771461.5124.33.camel@kernel.crashing.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] of: Add binding document for IMG SPFI controller
+Date: Wed, 12 Nov 2014 22:09:35 +0000
+Message-ID: <20141112220935.GS3815@sirena.org.uk>
+References: <1415828274-24727-1-git-send-email-abrestic@chromium.org>
+ <1415828274-24727-2-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/YVBg/yUUqmVzB6hR1OqPj5B"; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415771461.5124.33.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="pJCrgSoq0Ldj8RFP"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1415828274-24727-2-git-send-email-abrestic@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Bresticker <abrestic@chromium.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, James Hartley <James.Hartley@imgtec.com>, Ezequiel Garcia <Ezequiel.Garcia@imgtec.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_/YVBg/yUUqmVzB6hR1OqPj5B
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi Ben,
+--pJCrgSoq0Ldj8RFP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Urk!  :-)
+On Wed, Nov 12, 2014 at 01:37:53PM -0800, Andrew Bresticker wrote:
+> The Synchronous Peripheral Flash Interface (SPFI) controller found
+> on IMG SoCs supports single, dual, and (optionally) quad mode SPI
+> transfers.
 
-How about:
+This is OK but please use subject lines matching the style for the
+subsystem; people often filter on subject line when describing what to
+read.  I do note that the binding lists the DMA as mandatory but the
+implementation tolerates it being missing, this is fine since the code
+is more liberal.
 
-On Wed, 12 Nov 2014 16:51:01 +1100 Benjamin Herrenschmidt <benh-XVmvHMARGAQ9aPiWuuUPmg@public.gmane.org=
-hing.org> wrote:
->
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index e371825..e37f017 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -7,6 +7,10 @@
->  #include <linux/pci_regs.h>
->  #include <linux/string.h>
-> =20
-> +#ifdef CONFIG_PPC
-> +#include <asm/machdep.h>
-
-#define IS_PMAC	machine_is(pmac)
-#else
-#define IS_PMAC	(0)
-
-> +#endif
-> +
->  /* Max address size we deal with */
->  #define OF_MAX_ADDR_CELLS	4
->  #define OF_CHECK_ADDR_COUNT(na)	((na) > 0 && (na) <=3D OF_MAX_ADDR_CELLS)
-> @@ -428,12 +432,13 @@ static int of_translate_one(struct device_node *par=
-ent, struct of_bus *bus,
->  	 * This code is only enabled on powerpc. --gcl
->  	 */
->  	ranges =3D of_get_property(parent, rprop, &rlen);
-> -#if !defined(CONFIG_PPC)
-> +#if defined(CONFIG_PPC)
-> +	if (!machine_is(powermac))
-> +#endif /* defined(CONFIG_PPC) */
->  	if (ranges =3D=3D NULL) {
-
-if ((!IS_PMAC) && (ranges =3D=3D NULL)) {
-
-> -		pr_err("OF: no ranges; cannot translate\n");
-> +		pr_debug("OF: no ranges; cannot translate\n");
->  		return 1;
->  	}
-> -#endif /* !defined(CONFIG_PPC) */
->  	if (ranges =3D=3D NULL || rlen =3D=3D 0) {
->  		offset =3D of_read_number(addr, na);
->  		memset(addr, 0, pna * 4);
-
-There might be a better identifier than IS_PMAC ...
-
---=20
-Cheers,
-Stephen Rothwell                    sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org
-
---Sig_/YVBg/yUUqmVzB6hR1OqPj5B
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--pJCrgSoq0Ldj8RFP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBCAAGBQJUY9rhAAoJEMDTa8Ir7ZwVyfsP/1M0ZtuUeLMWMgKhzS6/A3If
-pye7dEoEUIRdBDpXuYg5UZZ3D2yFDHaIOH/zXvgl3c22kwAOJjQXlly4TnukC8uu
-aBrv0cZe4D0yLLfKVEUjKbfpOqm8A8Upw+C//WmC8HkPT2P8AlfvaKD46uCwSsLR
-qplNmMfiQMJnUMjeTJu0T4Gq4O12VoWhR9UVgMBjqDJDblhHh0P2iB6iQnVghZVd
-Y6Ch0ilsvAgcPWC6Or7lvOqNQkTtFSnOfT3E/cLWE6t20Su1mEXCAmDZQ5pBa9/E
-HIYbnuCnFOnIu9Jn3IFkT+H9Kfpr6+2cnAdiGLPAbFkMziJsNcARaiLtXZH9i4ue
-h/Hsg4ieHE7vor9MAVOLbNV0hYmjwzq6ahJ6nzF+5cRL3VOZnVDMzIURrU2K7t0j
-pze6Lu0JWjeLVJmXEyaJC1ylON9S19hMsg0Ki6AR+tvO+4S/SFKot7l/SdkBIIep
-+G0KBZHWF3M5ZlxsTBJ0XvKtdwgq0h/KKGbyaL2ByG31L6XIDFI2yM5lZ56kzdGL
-ivqpd1zVH5mcx/38twxQe/rwNVK8p7j0X4/YEqYED1WeqGbWowrY4ga9sm5XXS3T
-1CwZELExTkUowzexEnkYbXZQ8B3KbD09ePBIHnczDHHijXh/y9ZZkS7InqaLU0lL
-kmSWYQ6iLYdZGpYMZaoA
-=UoQz
+iQEcBAEBAgAGBQJUY9qeAAoJECTWi3JdVIfQud8H/3pe3bHtN5f7+tljerf9qKWv
+6hgAKEORrHS9mMieTqb0bAKsv7WSAP7P1sZt8+eRVNHBiPAQ5KWB4BNk6JGpGTEd
+zChO11UDiLT0bwhLmWn5flvtvfqypHKjsGrBER2EopuWZkYAglapjohwEf8rRdh7
+J8d77YzYXuq6PGwXxG53Fn49T3I6iDi6sFchTjloHnr0ztJr3T0lTHE4fh9TKQIP
+cPkB/5r1xAbSkyTLUlJwOoKiyYQ63fe/+QNIX6I9jUGMySupeoIJLGvCA90MRl2e
+FmEEx56hVIszyHlzXxq/o2gZrCP+FiL47m6HZMRmXCs3mvST6p7TILTuw9kML3Q=
+=YnDi
 -----END PGP SIGNATURE-----
 
---Sig_/YVBg/yUUqmVzB6hR1OqPj5B--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--pJCrgSoq0Ldj8RFP--
