@@ -1,76 +1,60 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [PATCH 03/13] ARM: STi: DT: STiH416: Add DT nodes for the ehci
- and ohci usb controllers.
-Date: Wed, 12 Nov 2014 13:44:12 +0000
-Message-ID: <20141112134412.GA20187@griffinp-ThinkPad-X1-Carbon-2nd>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 12/13] ARM: STi: DT: STiH410: Add STiH410 SoC clock
+ support.
+Date: Wed, 12 Nov 2014 13:48:01 +0000
+Message-ID: <20141112134801.GB20187@griffinp-ThinkPad-X1-Carbon-2nd>
 References: <1415361475-6218-1-git-send-email-peter.griffin@linaro.org>
- <1415361475-6218-4-git-send-email-peter.griffin@linaro.org>
- <2945908.5UNg8NaKcc@wuerfel>
+ <1415361475-6218-13-git-send-email-peter.griffin@linaro.org>
+ <88469624.TsXJ3Gpfe2@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <2945908.5UNg8NaKcc@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, devicetree@vger.kernel.org, lee.jones@linaro.org
+In-Reply-To: <88469624.TsXJ3Gpfe2@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Arnd,
 
 Thanks for reviewing.
 
-On Fri, 07 Nov 2014, Arnd Bergmann wrote:
-
-> > +               ehci0: usb@0xfe1ffe00 {
-> 
-> Please drop the '0x' from the unit address in all instances.
-
-Ok, fixed in v2
-
-> 
-> > +                       compatible = "st,st-ehci-300x";
-> > +                       reg = <0xfe1ffe00 0x100>;
-> > +                       interrupts = <GIC_SPI 148 IRQ_TYPE_NONE>;
-> > +                       pinctrl-names = "default";
-> > +                       pinctrl-0 = <&pinctrl_usb0>;
-> > +                       clocks = <&clk_s_a1_ls 0>,
-> > +                                <&clockgen_b0 0>;
-> > +                       clock-names = "ic", "clk48";
+> On Friday 07 November 2014 11:57:54 Peter Griffin wrote:
 > > +
-> > +                       phys = <&usb2_phy>;
-> > +                       phy-names = "usb";
-> > +                       status = "okay";
-> 
-> No need to list 'status="okay"', it's the default. It might
-> make sense to change this to 'status="disabled"' though, if the ports
-> might be unused on some boards.
-
-ok, removed in v2
-
-> 
-> >                 mmc0: sdhci@fe81e000 {
-> >                         bus-width = <8>;
-> >                 };
+> > +       soc {
 > > +
-> > +               usb0: usb@fe100000 {
+> > +               ohci0: usb@9a03c00 {
 > > +                       status = "okay";
 > > +               };
 > > +
-> > +               usb1: usb@fe200000 {
+> > +               ehci0: usb@9a03e00 {
 > > +                       status = "okay";
 > > +               };
 > > +
-> > +               usb2: usb@fe300000 {
+> > +               ohci1: usb@9a83c00 {
 > > +                       status = "okay";
 > > +               };
+> > +
+> > +               ehci1: usb@9a83e00 {
+> > +                       status = "okay";
+> > +               };
+> > +       };
+> > +};
+> > 
 > 
-> I don't understand this part: why do you add extra nodes here that only
-> contain a status property?
+> These seem to refer to an existing device in the base dtsi file. Just put the label
+> in the shared file and remove the exact names here. Alternatively, drop the labels
+> you don't use.
 
-Good spot, this is a bit of legacy code which I should have removed before submitting.
-It's removed in v2.
+Based on Maximes feedback in V2 I've created a seperate stih410.dtsi file
+which has the extra ehci / ohci device nodes in it. This means they don't need to be
+enabled in the board file any more.
 
 regards,
 
 Peter.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
