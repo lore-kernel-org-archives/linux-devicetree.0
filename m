@@ -1,53 +1,47 @@
-From: Marek Belisko <marek@goldelico.com>
-Subject: [PATCH v2 0/5] omapdss: Add video output support for gta04 board
-Date: Wed, 12 Nov 2014 23:10:42 +0100
-Message-ID: <1415830247-31633-1-git-send-email-marek@goldelico.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/5] ASoC: sh: fsi: Document SoC-specific bindings
+Date: Wed, 12 Nov 2014 22:31:03 +0000
+Message-ID: <20141112223103.GX3815@sirena.org.uk>
+References: <1415646044-4168-1-git-send-email-geert+renesas@glider.be>
+ <1415646044-4168-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, tony@atomide.com, linux@arm.linux.org.uk, tomi.valkeinen@ti.com, plagnioj@jcrosoft.com, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, hns@goldelico.com, linux-kernel@vger.kernel.org, gta04-owner@goldelico.com, Marek Belisko <marek@goldelico.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Rd+jWxMEN+3uw23T"
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1415646044-4168-2-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, alsa-devel@alsa-project.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds support for video output on gta04 board. It consist
-of opa362 video amplifier driver + DT bindings, adding venc -> opa362 -> svideo-connecor
-setup in DT and finally static setup for tvbypass anc acbias in devconf1 register
-via pinctrl subsystem.
 
-Changes from v1:
-- fix opa362 compilation error
-- fix opa362 DT documentation
-- move devconf1 definition to omap3.dtsi
+--Rd+jWxMEN+3uw23T
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Marek Belisko (5):
-  video: omapdss: Add opa362 driver
-  Documentation: DT: Add documentation for ti,opa362 bindings
-  arm: dts: omap3-gta04: Add handling for tv output
-  arm: dts: omap3: Add definition for devconf1 register
-  arm: dts: omap3-gta04: Add static configuration for devconf1 register
+On Mon, Nov 10, 2014 at 08:00:40PM +0100, Geert Uytterhoeven wrote:
+> The documentation only mentioned the generic fallback compatible
+> property.
+> Add the missing SoC-specific compatible properties, some of which are
+> already in use.
 
- .../devicetree/bindings/video/ti,opa362.txt        |  38 +++
- arch/arm/boot/dts/omap3-gta04.dtsi                 |  59 ++++
- arch/arm/boot/dts/omap3.dtsi                       |  13 +
- arch/arm/boot/dts/omap34xx.dtsi                    |   4 +
- arch/arm/boot/dts/omap36xx.dtsi                    |   4 +
- drivers/video/fbdev/omap2/displays-new/Kconfig     |   6 +
- drivers/video/fbdev/omap2/displays-new/Makefile    |   1 +
- .../fbdev/omap2/displays-new/amplifier-opa362.c    | 343 +++++++++++++++++++++
- include/video/omap-panel-data.h                    |  12 +
- 9 files changed, 480 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/ti,opa362.txt
- create mode 100644 drivers/video/fbdev/omap2/displays-new/amplifier-opa362.c
+Applied, thanks.
 
--- 
-1.9.1
+--Rd+jWxMEN+3uw23T
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUY9+nAAoJECTWi3JdVIfQjeYH+gNoKe1M32rmF/AgCWO+dmXJ
+GKg9iLCkMT5hz1d4fAlQGu2BjeKCnU8eXMMHx6wus4d0SgR3E+Ana1Z5VwEEV/A8
++Bu0B8DXjgmJH0kRrOgOZTwmvhXqs/zL2Wpyt1q+pewQhvNuH4wNcHAQy2QnxRlR
+JB521zxN/3QKOSTrnX3HBYgM5q0MhyKXKS8OTRhVgBA1/Hpig7Y11phmKdqTny47
+3wV8kfWtzvUiMnMdpa10YCSKt9O+bEVRFDLyMZPoeTmrjg1xwLBNJr9mipIHe41P
+VKpArLJTJqU4GzLxNH8G0AvNb2SO6//Eq1slYIz0GEv/axDoPCIHeQe9N2CdMYU=
+=2GK/
+-----END PGP SIGNATURE-----
+
+--Rd+jWxMEN+3uw23T--
