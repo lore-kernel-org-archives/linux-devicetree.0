@@ -1,80 +1,78 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] mmc: dw_mmc: try pick the exact same voltage as vmmc for vqmmc
-Date: Wed, 12 Nov 2014 10:04:31 -0800
-Message-ID: <CAD=FV=VQHZ6YmcoeAb1OEVLYRrYBnc_dM5Kjt1TZX_CQJC=EfA@mail.gmail.com>
-References: <1415109789-7046-1-git-send-email-addy.ke@rock-chips.com>
-	<1415678573-6093-1-git-send-email-addy.ke@rock-chips.com>
-	<CAPDyKFqUoBjhsbz8rkLa9PY_dpgMxnimz3k7OoA5WVhi7MacPQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFqUoBjhsbz8rkLa9PY_dpgMxnimz3k7OoA5WVhi7MacPQ@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Addy Ke <addy.ke@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Dinh Nguyen <dinguyen@altera.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, Sonny Rao <sonnyrao@chromium.org>, Alexandru Stan <amstan@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, open list:A
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH] of: pass name argument for of_io_request_and_map as const char *
+Date: Thu, 13 Nov 2014 02:17:02 +0800
+Message-ID: <1415816222-32200-1-git-send-email-wens@csie.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Ulf,
+The name argument for of_io_request_and_map is only passed to
+request_mem_region, which is a macro of __request_region, which
+takes a const name argument.
 
-On Tue, Nov 11, 2014 at 12:52 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> On 11 November 2014 05:02, Addy Ke <addy.ke@rock-chips.com> wrote:
->> SD2.0 cards need vqmmc and vmmc to be the same.
->
-> No, that's not correct.
->
-> If I remember the spec correctly, the bus signal threshold is 0.75 * VDD.
+Make the name argument const, so when we pass const strings we
+don't get the following warnings:
 
-As usual, I will first state my utter lack of knowledge of all things mmc.
+    warning: passing argument 3 of 'of_io_request_and_map' discards
+    'const' qualifier from pointer target type [enabled by default]
 
-Now that's out of the way, on two separate board with two separate
-SoCs I've heard stories of cards that don't work when there's a big
-gap between vmmc and vqmmc.
+    In file included from drivers/clk/sunxi/clk-sunxi.c:20:0:
+    include/linux/of_address.h:108:15: note: expected 'char *' but
+    argument is of type 'const char *'
 
-If my memory serves, previously I heard of problems with vmmc=3.3V and
-vqmmc=2.8V.  That means there were problems with .85 * VDD.  Certainly
-Addy seems to have a card that has problems with vmmc=3.3V and
-vqmmc=2.7V (but worked with vmmc=3.3V and vqmmc=2.8V).  That is .82 *
-VDD.
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
 
-I have no idea if these old cards are "to spec", but they exist and it
-would be nice to support them.
+I ran into this while switching some of the sunxi clock code to use
+of_io_request_and_map.
 
-It seems like the absolute safest thing would be to try to keep vmmc
-and vqmmc matching if possible, especially during card probe.  Once
-voltage negotiation happened then the vqmmc could go down.
+---
+ drivers/of/address.c       | 2 +-
+ include/linux/of_address.h | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index afdb782..e02828f 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -871,7 +871,7 @@ EXPORT_SYMBOL(of_iomap);
+  *		return PTR_ERR(base);
+  */
+ void __iomem *of_io_request_and_map(struct device_node *np, int index,
+-					char *name)
++					const char *name)
+ {
+ 	struct resource res;
+ 	void __iomem *mem;
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index 8cb14eb..d88e81b 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -106,7 +106,7 @@ extern int of_address_to_resource(struct device_node *dev, int index,
+ 				  struct resource *r);
+ void __iomem *of_iomap(struct device_node *node, int index);
+ void __iomem *of_io_request_and_map(struct device_node *device,
+-					int index, char *name);
++					int index, const char *name);
+ #else
+ 
+ #include <linux/io.h>
+@@ -123,7 +123,7 @@ static inline void __iomem *of_iomap(struct device_node *device, int index)
+ }
+ 
+ static inline void __iomem *of_io_request_and_map(struct device_node *device,
+-					int index, char *name)
++					int index, const char *name)
+ {
+ 	return IOMEM_ERR_PTR(-EINVAL);
+ }
+-- 
+2.1.3
 
->> But vqmmc call regulator_set_voltage to set min_uv(2.7v) as far as possible.
->
-> I guess you want to do that to save as much power as possible.
-
-I don't think it's Addy wanting it, I think it's the regulator framework.
-
-If a regulator is current 1.8V and you request 2.7 - 3.3V, the
-framework needs to pick one of those voltages.  I believe it will pick
-2.7V.
-
-...so I think we get into trouble only when the 2.0 card is plugged in
-after a UHS card has negotiated down the voltage, but I could be
-wrong.  Maybe Addy can clarify.
-
-
->> @@ -1163,8 +1163,14 @@ static int dw_mci_switch_voltage(struct mmc_host *mmc, struct mmc_ios *ios)
->>          */
->>         uhs = mci_readl(host, UHS_REG);
->>         if (ios->signal_voltage == MMC_SIGNAL_VOLTAGE_330) {
->> -               min_uv = 2700000;
->> -               max_uv = 3600000;
->> +               /* try pick the exact same voltage as vmmc for vqmmc */
->
-> This seems like a generic SD protocol issue.
->
-> Should we maybe provide some helper function from the mmc core, which
-> in principle take the negotiated card->ocr into account while
-> calculating the signal voltage level. Typically min_uv should be 0.75
-> x (card->ocr), for these cases.
-
-Yes, if there are ways to make the solution more generic I would
-certainly support that.
-
--Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
