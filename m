@@ -1,97 +1,68 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCHv6 4/5] hwspinlock/core: add common OF helpers
-Date: Wed, 12 Nov 2014 13:32:06 -0600
-Message-ID: <5463B5B6.8040709@ti.com>
-References: <1410553499-55951-1-git-send-email-s-anna@ti.com> <1410553499-55951-5-git-send-email-s-anna@ti.com> <CAK=WgbamdqAufjC4Xb5moERRBSB-cO6c1RPTE=f+dp75F+Eh7A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK=WgbamdqAufjC4Xb5moERRBSB-cO6c1RPTE=f+dp75F+Eh7A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ohad Ben-Cohen <ohad@wizery.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Tony Lindgren <tony@atomide.com>, Josh Cartwright <joshc@codeaurora.org>, Bjorn Andersson <bjorn@kryo.se>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH V5 0/4] MIPS: GIC device-tree support
+Date: Wed, 12 Nov 2014 11:43:35 -0800
+Message-ID: <1415821419-26974-1-git-send-email-abrestic@chromium.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ohad,
+This series add support for mapping and routing GIC interrupts as well
+as setting up the GIC timer through device-tree.  Patches 1 adds the
+"mti" vendor prefix, patch 2 adds the GIC binding document, and patches
+3 and 4 add device-tree support for the GIC irqchip and clocksource drivers,
+respectively.
 
-Thanks for the review.
+Based on next-20141028, which includes part 1 [0] and part 2 [1] of my
+GIC cleanup series.
 
-On 11/12/2014 01:08 PM, Ohad Ben-Cohen wrote:
-> Hi Suman,
-> 
-> On Fri, Sep 12, 2014 at 11:24 PM, Suman Anna <s-anna@ti.com> wrote:
->> +int of_hwspin_lock_get_id(struct device_node *np, int index)
->> +{
->> +       struct hwspinlock_device *bank;
->> +       struct of_phandle_args args;
->> +       int id;
->> +       int ret;
->> +
->> +       ret = of_parse_phandle_with_args(np, "hwlocks", "#hwlock-cells", index,
->> +                                        &args);
->> +       if (ret)
->> +               return ret;
->> +
->> +       mutex_lock(&hwspinlock_tree_lock);
->> +       list_for_each_entry(bank, &hwspinlock_devices, list)
->> +               if (bank->dev->of_node == args.np)
->> +                       break;
->> +       mutex_unlock(&hwspinlock_tree_lock);
->> +       if (&bank->list == &hwspinlock_devices) {
->> +               ret = -EPROBE_DEFER;
->> +               goto out;
->> +       }
-> 
-> Is this the validation you mentioned which requires the existence of
-> "hwspinlock/core: maintain a list of registered hwspinlock banks" ?
+Changes from v4:
+ - don't probe clocksource from irqchip; just WARN() if device-tree
+   is incorrect
 
-Well, not exactly. The validation is on the following segment,
+Changes from v3:
+ - dropped the CPU name from the compatible string
+ - replaced available-cpu-vectors property with reserved-cpu-vectors
+ - made reg property optional
+ - probed GIC timer from GIC irqchip driver
 
-+	id = of_hwspin_lock_simple_xlate(bank, &args);
-+	if (id < 0 || id >= bank->num_locks) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
+Changes from v2:
+ - added back third cell to specifier to differentiate between shared and
+   local interrupts
+ - added timer sub-node and it's properties
+ - changed compatible string to include CPU version
+ - rebased on GIC cleanup series
 
-That said, it is also needed to provide the support for deferred probing
-without changing the return code conventions on the existing API.
+Changes from v1:
+ - updated bindings to drop third interrupt cell and remove CPU interrupt
+   controller as the parent of the GIC
+ - moved GIC to drivers/irqchip/
+ - other minor fixes/cleanups
 
-> 
-> I'm not convinced this is needed for several reasons:
-> - the user isn't using the lock yet at this point, and may only need
-> the id in order to communicate it to a remote processor
+[0] https://lkml.org/lkml/2014/9/18/487
+[1] https://lkml.org/lkml/2014/10/20/481
 
-Yes, and wouldn't that require that the id is validated? It just cannot
-return any return value, and expect it will be verified somewhere else
-or in a following API call. Not doing the validation unnecessarily
-complicates the system usage of a lock as you are sharing an invalid
-lock to a remote processor and then you have two validation failure
-paths on different processors.
+Andrew Bresticker (4):
+  of: Add vendor prefix for MIPS Technologies, Inc.
+  of: Add binding document for MIPS GIC
+  irqchip: mips-gic: Add device-tree support
+  clocksource: mips-gic: Add device-tree support
 
-> - if the user will try to use the lock prematurely,
-> hwspin_lock_request_specific should stop her
-> - moreover, hwspin_lock_request_specific must be the one who validates
-> the id, since in heterogeneous systems the user may get the id from a
-> remote processor and not via of_hwspin_lock_get_id
-> 
->  "hwspinlock/core: maintain a list of registered hwspinlock banks"
-> adds complexity which must be very strongly justified.
-> 
-> If we're not sure there is a strong justification for it, we better
-> not merge it.
-> 
->> +EXPORT_SYMBOL_GPL(of_hwspin_lock_get_base_id);
-> ...
->> +EXPORT_SYMBOL_GPL(of_hwspin_lock_get_num_locks);
-> 
-> Do we really must expose these two helpers globally?
-> 
-> Can we instead make these "static inline" methods and embed them in
-> hwspinlock_internal.h ?
+ .../bindings/interrupt-controller/mips-gic.txt     | 55 +++++++++++++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ drivers/clocksource/Kconfig                        |  1 +
+ drivers/clocksource/mips-gic-timer.c               | 41 ++++++++--
+ drivers/irqchip/irq-mips-gic.c                     | 92 ++++++++++++++++++++--
+ .../dt-bindings/interrupt-controller/mips-gic.h    |  9 +++
+ 6 files changed, 187 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
+ create mode 100644 include/dt-bindings/interrupt-controller/mips-gic.h
 
-Actually, not a bad idea, I will move it, thanks. All the client drivers
-would need it, and they already have to include the internal header.
+-- 
+2.1.0.rc2.206.gedb03e5
 
-regards
-Suman
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
