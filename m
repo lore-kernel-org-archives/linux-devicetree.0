@@ -1,100 +1,164 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v4 0/5] simplefb: add clock handling code
-Date: Wed, 12 Nov 2014 11:08:10 +0100
-Message-ID: <CAMuHMdVX72ve9TqpA9GUtumZGDnCjYqKemMxyNf=a4AxWR44iQ@mail.gmail.com>
-References: <1413996311-4287-1-git-send-email-hdegoede@redhat.com>
-	<544F737A.7000109@ti.com>
-	<CAL_JsqJ2JRg7k21CEVe4-At7enD+y3TN_7wfqhY0OHZm-_j17w@mail.gmail.com>
-	<544F7E5D.60104@redhat.com>
-	<5450CAA5.5020205@ti.com>
-	<CAL_JsqKWqq+H5ymUW3n8tkmLJHEUGaKDLX5+orJmGUQ3ECQwUQ@mail.gmail.com>
-	<20141111214950.7FCABC41610@trevor.secretlab.ca>
-	<CAMuHMdUoPK_s7OP1Aop4eOyhec+abFij7ZoAAdA5fqpJJy-Dgg@mail.gmail.com>
-	<CACxGe6sMF2C6hvRNNnB_i6a44fh0WC7JjjisFOh5GMV66mC6Fw@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH v2] drivers: pci: move PCI domain assignment to
+ generic PCI code
+Date: Wed, 12 Nov 2014 10:09:44 +0000
+Message-ID: <20141112100944.GC6759@red-moon>
+References: <1415637706-2195-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCQJP74GSUDRBC7DRSRQKGQE3HA62AQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CACxGe6sMF2C6hvRNNnB_i6a44fh0WC7JjjisFOh5GMV66mC6Fw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1415637706-2195-1-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+On Mon, Nov 10, 2014 at 04:41:46PM +0000, Lorenzo Pieralisi wrote:
+> The current logic used for PCI domain assignment in arm64
+> pci_bus_assign_domain_nr() is flawed in that, depending on the host
+> controllers configuration for a platform and the respective initialization
+> sequence, core code may end up allocating PCI domain numbers from both DT and
+> the core code generic domain counter, which would result in PCI domain
+> allocation aliases/errors.
+> 
+> This patch fixes the logic behind the PCI domain number assignment and
+> moves the resulting code to generic PCI core code so that the same domain
+> allocation logic is used on all platforms selecting
+> 
+> CONFIG_PCI_DOMAINS_GENERIC
+> 
+> instead of resorting to an arch specific implementation that might end up
+> duplicating the PCI domain assignment logic wrongly.
+> 
+> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Cc: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+> Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> ---
+> v1 => v2:
+> 
+> - Moved generic pci_bus_assign_domain_nr() code to PCI core instead of
+>   adding an OF layer API
+> - Updated commit log and code comments
 
-On Wed, Nov 12, 2014 at 10:57 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wr=
-ote:
-> On Wednesday, November 12, 2014, Geert Uytterhoeven
-> <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
->> On Tue, Nov 11, 2014 at 10:49 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>=
- wrote:
->> > However, I am concerned about handover. I've lost track over the entir=
-e
->> > thread on whether the handover mechanism has been resolved, and I woul=
-d
->> > really like to have a proposed solution to this documented in the
->> > binding. The fact that there is nothing tying the simple framebuffer t=
-o
->> > the actual hardware backing the framebuffer is concerning. It means th=
-e
->> > kernel needs to guess which graphics device is associated with the
->> > framebuffer.
->>
->> We did discuss handover in D=C3=BCsseldorf, and concluded that the simpl=
-efb's
->> regs property can be used for this.
->>
->> While on a modern system with unified memory this association cannot be
->> derived in a generic way, a device-specific driver for the graphics hard=
-ware
->> can if the regs property of the simplefb node matches the address the CR=
-TC
->> engine is configured for.
->
-> ???
->
-> Right, I'm going to be blunt here: That's just dumb. All the
-> capability needed is there in the DT to associate a simple FB to a
-> display controller, and the solution chosen is to use a heuristic?
->
-> The association needs to be explicit. I strongly prefer putting the
-> simple FB directly into the display controller node, but I would
-> consider phandle linkage also.
+Is this approach ok with everyone ? I would need to have this patch
+queued so that I can rebase the ARM32 pcibios pci_sys_data domain removal
+on top of it, if everyone agrees of course.
 
-IFF there's a display controller node, you can put it there.
-I actually proposed to have a minimal/preliminary display controller node,
-but people countered that for various reasons (too many components
-with multiple nodes on many systems, bindings not yet defined, etc.).
+Thanks !
+Lorenzo
 
-And if there's no graphics driver/bindings yet at the time the bootloader
-is written, it doesn't know how to link simplefb with it in DT.
-Hence the heuristic to match regs... Does that make sense?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+> 
+>  arch/arm64/kernel/pci.c | 22 ----------------------
+>  drivers/pci/pci.c       | 50 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 50 insertions(+), 22 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
+> index ce5836c..6f93c24 100644
+> --- a/arch/arm64/kernel/pci.c
+> +++ b/arch/arm64/kernel/pci.c
+> @@ -46,25 +46,3 @@ int pcibios_add_device(struct pci_dev *dev)
+>  
+>  	return 0;
+>  }
+> -
+> -
+> -#ifdef CONFIG_PCI_DOMAINS_GENERIC
+> -static bool dt_domain_found = false;
+> -
+> -void pci_bus_assign_domain_nr(struct pci_bus *bus, struct device *parent)
+> -{
+> -	int domain = of_get_pci_domain_nr(parent->of_node);
+> -
+> -	if (domain >= 0) {
+> -		dt_domain_found = true;
+> -	} else if (dt_domain_found == true) {
+> -		dev_err(parent, "Node %s is missing \"linux,pci-domain\" property in DT\n",
+> -			parent->of_node->full_name);
+> -		return;
+> -	} else {
+> -		domain = pci_get_new_domain_nr();
+> -	}
+> -
+> -	bus->domain_nr = domain;
+> -}
+> -#endif
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 625a4ac..2279414 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -10,6 +10,8 @@
+>  #include <linux/kernel.h>
+>  #include <linux/delay.h>
+>  #include <linux/init.h>
+> +#include <linux/of.h>
+> +#include <linux/of_pci.h>
+>  #include <linux/pci.h>
+>  #include <linux/pm.h>
+>  #include <linux/slab.h>
+> @@ -4447,6 +4449,54 @@ int pci_get_new_domain_nr(void)
+>  {
+>  	return atomic_inc_return(&__domain_nr);
+>  }
+> +
+> +#ifdef CONFIG_PCI_DOMAINS_GENERIC
+> +
+> +void pci_bus_assign_domain_nr(struct pci_bus *bus, struct device *parent)
+> +{
+> +	static int use_dt_domains = -1;
+> +	int domain = of_get_pci_domain_nr(parent->of_node);
+> +
+> +	/*
+> +	 * Check DT domain and use_dt_domains values.
+> +	 *
+> +	 * If DT domain property is valid (domain >= 0) and
+> +	 * use_dt_domains != 0, the DT assignment is valid since this means
+> +	 * we have not previously allocated a domain number by using
+> +	 * pci_get_new_domain_nr(); we should also update use_dt_domains to
+> +	 * 1, to indicate that we have just assigned a domain number from
+> +	 * DT.
+> +	 *
+> +	 * If DT domain property value is not valid (ie domain < 0), and we
+> +	 * have not previously assigned a domain number from DT
+> +	 * (use_dt_domains != 1) we should assign a domain number by
+> +	 * using the:
+> +	 *
+> +	 * pci_get_new_domain_nr()
+> +	 *
+> +	 * API and update the use_dt_domains value to keep track of method we
+> +	 * are using to assign domain numbers (use_dt_domains = 0).
+> +	 *
+> +	 * All other combinations imply we have a platform that is trying
+> +	 * to mix domain numbers obtained from DT and pci_get_new_domain_nr(),
+> +	 * which is a recipe for domain mishandling and it is prevented by
+> +	 * invalidating the domain value (domain = -1) and printing a
+> +	 * corresponding error.
+> +	 */
+> +	if (domain >= 0 && use_dt_domains) {
+> +		use_dt_domains = 1;
+> +	} else if (domain < 0 && use_dt_domains != 1) {
+> +		use_dt_domains = 0;
+> +		domain = pci_get_new_domain_nr();
+> +	} else {
+> +		dev_err(parent, "Node %s has inconsistent \"linux,pci-domain\" property in DT\n",
+> +			parent->of_node->full_name);
+> +		domain = -1;
+> +	}
+> +
+> +	bus->domain_nr = domain;
+> +}
+> +#endif
+>  #endif
+>  
+>  /**
+> -- 
+> 2.1.2
+> 
+> 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
