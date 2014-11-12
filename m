@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [GIT PULL 3.19] Broadcom Cygnus SoC MAINTAINERS updates
-Date: Wed, 12 Nov 2014 13:04:25 -0800
-Message-ID: <1415826266-6867-3-git-send-email-f.fainelli@gmail.com>
+Subject: [GIT PULL 3.19] Broadcom Cygnus SoC platform support
+Date: Wed, 12 Nov 2014 13:04:26 -0800
+Message-ID: <1415826266-6867-4-git-send-email-f.fainelli@gmail.com>
 References: <1415826266-6867-1-git-send-email-f.fainelli@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1415826266-6867-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -16,22 +16,33 @@ The following changes since commit f114040e3ea6e07372334ade75d1ee0775c355e1:
 
 are available in the git repository at:
 
-  http://github.com/brcm/linux.git tags/arm-soc/for-3.19/cygnus-maintainers-v2
+  http://github.com/brcm/linux.git tags/arm-soc/for-3.19/cygnus-platform-v2
 
-for you to fetch changes up to 36c0237f1ae08f9ba538ade0ab6375bd58bb996c:
+for you to fetch changes up to 64e74aa788f996cd0e328a1c4223e9d438b78e9c:
 
-  MAINTAINERS: Entry for Cygnus/iproc arm architecture (2014-11-11 23:04:25 -0800)
-
-----------------------------------------------------------------
-This pull request contains the MAINTAINERS update to add the Broadcom Cygnus
-SoC platform files, Device Tree sources and clock drivers.
+  ARM: mach-bcm: ARCH_BCM_MOBILE: remove one level of menu from Kconfig (2014-11-11 22:35:45 -0800)
 
 ----------------------------------------------------------------
-Scott Branden (1):
-      MAINTAINERS: Entry for Cygnus/iproc arm architecture
+This pull request contains the platform code to support the Broadcom Cygnus SoC
+using the iProc architecture:
 
- MAINTAINERS | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+- add support for the Broadcom Cygnus SoC
+- consolidate the BCM5301X Kconfig options under the iProc menuconfig entry
+- remove one level of menu in menuconfig
+
+----------------------------------------------------------------
+Jonathan Richardson (1):
+      ARM: cygnus: Initial support for Broadcom Cygnus SoC
+
+Scott Branden (2):
+      ARM: mach-bcm: Consolidate currently supported IPROC SoCs
+      ARM: mach-bcm: ARCH_BCM_MOBILE: remove one level of menu from Kconfig
+
+ arch/arm/mach-bcm/Kconfig      | 93 ++++++++++++++++++++++++++----------------
+ arch/arm/mach-bcm/Makefile     |  3 ++
+ arch/arm/mach-bcm/bcm_cygnus.c | 25 ++++++++++++
+ 3 files changed, 85 insertions(+), 36 deletions(-)
+ create mode 100644 arch/arm/mach-bcm/bcm_cygnus.c
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
