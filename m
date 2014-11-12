@@ -1,43 +1,56 @@
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
-Subject: Re: [PATCHv5 1/5] arm: socfpga: Enable L2 Cache ECC on startup.
-Date: Wed, 12 Nov 2014 01:32:03 -0600
-Message-ID: <54630CF3.6020409@opensource.altera.com>
-References: <1415751263-1830-1-git-send-email-tthayer@opensource.altera.com> <1415751263-1830-2-git-send-email-tthayer@opensource.altera.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] coresight: bindings for coresight drivers
+Date: Wed, 12 Nov 2014 16:31:33 +0900
+Message-ID: <20141112073133.GA8354@kroah.com>
+References: <1415727960-29524-1-git-send-email-mathieu.poirier@linaro.org>
+ <CAL_JsqLXTx9jWT3sm3wnu1oWCk_VH_CUjfVX7t1HEA_9BfSeAg@mail.gmail.com>
+ <CANLsYkxok7LVGey6tPqmt42GEAs8R7SYAG_cs4VRjYeqkwKEKw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415751263-1830-2-git-send-email-tthayer@opensource.altera.com>
+Content-Disposition: inline
+In-Reply-To: <CANLsYkxok7LVGey6tPqmt42GEAs8R7SYAG_cs4VRjYeqkwKEKw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: tthayer@opensource.altera.com, bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Rob Herring <robherring2@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Nov 11, 2014 at 02:52:17PM -0700, Mathieu Poirier wrote:
+> On 11 November 2014 11:04, Rob Herring <robherring2@gmail.com> wrote:
+> > On Tue, Nov 11, 2014 at 11:46 AM,  <mathieu.poirier@linaro.org> wrote:
+> >> Greg,
+> >>
+> >> Please consider this as a supplement to the coresight patchset.  It should have
+> >> been sent with the rest of the patches but I missed the original ack from Rob
+> >> Herring.
+> >
+> > Ummm...
+> >
+> >>
+> >> Thanks,
+> >> Mathieu
+> >>
+> >> From 69cae46640b8cdc836bf7b86211d5f2adf3d0270 Mon Sep 17 00:00:00 2001
+> >> From: Mathieu Poirier <mathieu.poirier@linaro.org>
+> >> Date: Thu, 7 Aug 2014 12:34:06 -0600
+> >> Subject: [PATCH] coresight: bindings for coresight drivers
+> >>
+> >> Coresight IP blocks allow for the support of HW assisted tracing
+> >> on ARM SoCs.  Bindings for the currently available blocks are
+> >> presented herein.
+> >>
+> >> Signed-off-by: Pratik Patel <pratikp@codeaurora.org>
+> >> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> >
+> > And you still did.
+> 
+> https://patchwork.ozlabs.org/patch/388318/
 
+How does that help me?  It's not on this patch, so I can't add it.
 
-On 11/11/14, 6:14 PM, tthayer@opensource.altera.com wrote:
-> From: Thor Thayer <tthayer@opensource.altera.com>
-> 
-> This patch enables the ECC for L2 cache on machine
-> startup.  The ECC has to be enabled before data is
-> is stored in memory otherwise the ECC will fail on
-> reads.
-> 
-> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
-> ---
-> v2: Split OCRAM initialization into separate patch.
-> 
-> v3/4: No change
-> 
-> v5: Remove l2cache.h, use io.h instead of clk-provider.h
->     Make copyright header inclusive. Remove MAINTAINERS entry.
-> ---
->  arch/arm/mach-socfpga/Makefile   |    1 +
->  arch/arm/mach-socfpga/core.h     |    2 ++
->  arch/arm/mach-socfpga/l2_cache.c |   41 ++++++++++++++++++++++++++++++++++++++
->  arch/arm/mach-socfpga/socfpga.c  |    4 +++-
->  4 files changed, 47 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/mach-socfpga/l2_cache.c
-> 
+And I can't even _take_ this patch, I need something that I can apply,
+not have to hand-edit in order to get it to apply properly.
 
-Acked-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+Please resend, _with_ the ack, and then I can queue it up.
+
+greg k-h
