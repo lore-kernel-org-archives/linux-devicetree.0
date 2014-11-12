@@ -1,45 +1,44 @@
-From: Ohad Ben-Cohen <ohad@wizery.com>
-Subject: Re: [PATCHv6 5/5] hwspinlock/omap: add support for dt nodes
-Date: Wed, 12 Nov 2014 21:14:44 +0200
-Message-ID: <CAK=WgbZE7_WrsNz5E+MDX7j2tAGEjv91zeCgqhB=Jsiu0+d8vw@mail.gmail.com>
-References: <1410553499-55951-1-git-send-email-s-anna@ti.com> <1410553499-55951-6-git-send-email-s-anna@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 1/1] Input: gpio_keys - add device tree support for interrupt only keys
+Date: Wed, 12 Nov 2014 20:16:06 +0100
+Message-ID: <2197757.1V0yxO5sLr@wuerfel>
+References: <1415808176-13282-1-git-send-email-alexander.stein@systec-electronic.com> <3325183.d9PtLzFMKy@wuerfel> <8280855.M123yTnXfy@ws-stein>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1410553499-55951-6-git-send-email-s-anna@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Tony Lindgren <tony@atomide.com>, Josh Cartwright <joshc@codeaurora.org>, Bjorn Andersson <bjorn@kryo.se>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <8280855.M123yTnXfy@ws-stein>
+Sender: linux-input-owner@vger.kernel.org
+To: Alexander Stein <alexander.stein@systec-electronic.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Suman,
+On Wednesday 12 November 2014 17:38:31 Alexander Stein wrote:
+> On Wednesday 12 November 2014 17:04:57, Arnd Bergmann wrote:
+> > On Wednesday 12 November 2014 17:02:56 Alexander Stein wrote:
+> > > This features already exists for board config setups. Add support for
+> > > device tree based systems.
+> > > 
+> > > Signed-off-by: Alexander Stein <alexander.stein@systec-electronic.com>
+> > > ---
+> > > Please note: Due to current lack of hardware I could not test it yet. V2
+> > > includes the changes proposed by Dmitry.
+> > > 
+> > > Changes in v2:
+> > > * Added device tree bindings
+> > > * IRQ is only parsed and mapped when there is no "gpios" property
+> > > 
+> > 
+> > Can you list one or more examples in the patch description?
+> > Are these systems that don't expose the GPIO controller with a
+> > standalone driver, or systems that really actually connect the
+> > buttons to an interrupt pin?
+> 
+> You mean a use case? I came to this situation to test interrupt polarity on a microcontroller, thus a simple /IRQ pin, no GPIO at all. So in the end I have an input just connected to an interrupt line.
+> I noticed gpio_keys using platform data only can be used for this setup. So I added this support for device tree.
+> 
 
-On Fri, Sep 12, 2014 at 11:24 PM, Suman Anna <s-anna@ti.com> wrote:
->  static int omap_hwspinlock_probe(struct platform_device *pdev)
->  {
-> -       struct hwspinlock_pdata *pdata = pdev->dev.platform_data;
-> +       struct device_node *node = pdev->dev.of_node;
->         struct hwspinlock_device *bank;
->         struct hwspinlock *hwlock;
->         struct resource *res;
->         void __iomem *io_base;
-> -       int num_locks, i, ret;
-> +       int num_locks, i, ret, base_id;
->
-> -       if (!pdata)
-> +       if (!node)
->                 return -ENODEV;
->
-> +       ret = of_hwspin_lock_get_base_id(node);
-> +       if (ret < 0 && ret != -EINVAL)
-> +               return -ENODEV;
-> +       base_id = (ret > 0 ? ret : 0);
+I meant a specific board file that uses this, which can't be converted
+to DT without your change.
 
-Does this mean you allow nodes not to have the base_id property? How
-do we protect against multiple nodes not having a base_id property
-then?
-
-Implicitly assuming a base_id value (zero in this case) may not be always safe.
-
-Thanks,
-Ohad.
+	Arnd
