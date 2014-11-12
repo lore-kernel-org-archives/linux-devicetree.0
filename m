@@ -1,74 +1,49 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of/base: Fix PowerPC address parsing hack
-Date: Wed, 12 Nov 2014 08:39:32 -0600
-Message-ID: <CAL_JsqKfBGdpFV_XuE4DEhFrkhN33kOMkiZE_TOnAZDm2qjwMw@mail.gmail.com>
-References: <1415771461.5124.33.camel@kernel.crashing.org>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/5] dt-bindings: Add a clocks property
+ to the simple-framebuffer binding
+Date: Wed, 12 Nov 2014 14:56:18 +0000
+Message-ID: <CACxGe6v15EjpALit4ZJLXDgCkwEYM4t1mryjoQpa3=wpKmXWEg@mail.gmail.com>
+References: <1413996311-4287-1-git-send-email-hdegoede@redhat.com>
+ <1413996311-4287-3-git-send-email-hdegoede@redhat.com> <20141111214217.19EF5C41610@trevor.secretlab.ca>
+ <546373C6.4010001@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415771461.5124.33.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linuxppc-dev <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-sunxi+bncBCJP567ORICBBJXKRWRQKGQEUTXWJQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <546373C6.4010001-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 11, 2014 at 11:51 PM, Benjamin Herrenschmidt
-<benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
-> We have a historical hack that treats missing ranges properties as the
-> equivalent of an empty one. This is needed for ancient PowerMac "bad"
-> device-trees, and shouldn't be enabled for any other PowerPC platform,
-> otherwise we get some nasty layout of devices in sysfs or even
-> duplication when a set of otherwise identically named devices is
-> created multiple times under a different parent node with no ranges
-> property.
->
-> This fix is needed for the PowerNV i2c busses to be exposed properly
-> and will fix a number of other embedded cases.
->
-> Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> CC: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-> ---
->
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index e371825..e37f017 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -7,6 +7,10 @@
->  #include <linux/pci_regs.h>
->  #include <linux/string.h>
->
-> +#ifdef CONFIG_PPC
-> +#include <asm/machdep.h>
-> +#endif
-> +
->  /* Max address size we deal with */
->  #define OF_MAX_ADDR_CELLS      4
->  #define OF_CHECK_ADDR_COUNT(na)        ((na) > 0 && (na) <= OF_MAX_ADDR_CELLS)
-> @@ -428,12 +432,13 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
->          * This code is only enabled on powerpc. --gcl
->          */
->         ranges = of_get_property(parent, rprop, &rlen);
-> -#if !defined(CONFIG_PPC)
-> +#if defined(CONFIG_PPC)
-> +       if (!machine_is(powermac))
+[Replying on-list and with original ccs]
 
-Can we use a machine compatible here or something not PPC specific?
-Then we can use IS_ENABLED(CONFIG_PPC) instead of ifdefs.
-
-Rob
-
-> +#endif /* defined(CONFIG_PPC) */
->         if (ranges == NULL) {
-> -               pr_err("OF: no ranges; cannot translate\n");
-> +               pr_debug("OF: no ranges; cannot translate\n");
->                 return 1;
->         }
-> -#endif /* !defined(CONFIG_PPC) */
->         if (ranges == NULL || rlen == 0) {
->                 offset = of_read_number(addr, na);
->                 memset(addr, 0, pna * 4);
+On Wed, Nov 12, 2014 at 2:50 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> Hi,
 >
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> On 11/11/2014 10:42 PM, Grant Likely wrote:
+>> - clocks : List of clocks used by the framebuffer. Clocks listed here
+>>            are expected to already be configured correctly. The OS must
+>>            ensure these clocks are not modified or disabled while the
+>>            simple framebuffer remains active.
+>
+> Updated in my local tree, where I've also added proper commit messages
+> to the 2 patches missing them. Shall I send a v5 of the set, and may I
+> add your Acked-by to this patch when sending v5?
+
+For this whole series, please add my Acked-by.
+
+Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+I'm okay with the bindings, and I'm okay with adding the clock
+dependency to a simplefb node. I'm happy with the conversation we had
+today on IRC, and I'm expecting to see a binding that covers expected
+firmware/OS behaviour and association with the real hardware posted to
+the list shortly.
+
+g.
