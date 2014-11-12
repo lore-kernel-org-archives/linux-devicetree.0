@@ -1,196 +1,672 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v5 5/5] simplefb: add clock handling code
-Date: Wed, 12 Nov 2014 17:15:52 +0100
-Message-ID: <1415808952-23549-6-git-send-email-hdegoede@redhat.com>
-References: <1415808952-23549-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Mikko Perttunen <mikko.perttunen-/1wQRMveznE@public.gmane.org>
+Subject: Re: [PATCH v4 10/13] memory: tegra: Add EMC (external memory controller)
+ driver
+Date: Wed, 12 Nov 2014 18:25:00 +0200
+Message-ID: <546389DC.9020900@kapsi.fi>
+References: <1415779051-26410-1-git-send-email-tomeu.vizoso@collabora.com> <1415779051-26410-11-git-send-email-tomeu.vizoso@collabora.com> <20141112154549.GF26488@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBWEPR2RQKGQEO3DG46Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1415808952-23549-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141112154549.GF26488@ulmo>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
+On 11/12/2014 05:45 PM, Thierry Reding wrote:
+> On Wed, Nov 12, 2014 at 08:56:33AM +0100, Tomeu Vizoso wrote:
+> [...]
+>> diff --git a/drivers/memory/tegra/tegra124-emc.c b/drivers/memory/tegra/tegra124-emc.c
+> [...]
+>> +static int t124_emc_burst_regs[] = {
+>
+> The t124 prefix seems rather redundant in a Tegra124-specific file. Also
+> these should really be unsigned.
+>
+>> +struct emc_timing {
+>> +	unsigned long rate;
+>> +
+>> +	/*
+>> +	 * Store EMC burst data in a union to minimize mistakes. This allows
+>> +	 * us to use the same burst data lists as used by the downstream and
+>> +	 * ChromeOS kernels.
+>
+> I don't understand what this means. Can you elaborate?
 
-This claims and enables clocks listed in the simple framebuffer dt node.
-This is needed so that the display engine, in case the required clocks
-are known by the kernel code and are described in the dt, will remain
-properly enabled.
+We could store the three specifically named u32's separately, but using 
+a union we can easily keep the indexing for the burst registers 
+identical to the indexing used in the downstream and ChromeOS kernels. 
+In reality, these burst register lists are generated by NVIDIA's 
+downstream tool, so allowing use of the same lists minimizes possible 
+(probably very difficult to spot) mistakes when porting mach 
+files/device trees from those kernels to the upstream kernel.
 
-Signed-off-by: Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
-[hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: Change clks from list to dynamic array]
-Reviewed-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Acked-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Reviewed-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Reviewed-by: David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
---
-Changes in v4:
--change clks from linkedlist to dynamic allocated array
--propagate EPROBE_DEFER up from simplefb_clocks_init to simplefb_probe
----
- drivers/video/fbdev/simplefb.c | 101 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 100 insertions(+), 1 deletion(-)
+>
+>> +	 */
+>> +	union {
+>> +		u32 emc_burst_data[ARRAY_SIZE(t124_emc_burst_regs)];
+>> +		struct {
+>> +			u32 __pad0[121];
+>> +			u32 emc_xm2dqspadctrl2;
+>> +			u32 __pad1[15];
+>> +			u32 emc_zcal_interval;
+>> +			u32 __pad2[1];
+>> +			u32 emc_mrs_wait_cnt;
+>> +		};
+>> +	};
+> [...]
+>> +struct tegra_emc {
+>> +	struct platform_device *pdev;
+>
+> I don't see this ever used other than for accessing pdev->dev, in which
+> case it would be much simpler and save a lot of characters if this was
+> simply:
+>
+> 	struct device *dev;
+>
+>> +	struct tegra_mc *mc;
+>> +
+>> +	void __iomem *emc_regs;
+>
+> There is no second set of registers, so the emc_ prefix is useless.
+>
+>> +
+>> +	enum emc_dram_type dram_type;
+>> +	u8 dram_num;
+>
+> Should be an unsized type and match what's returned by the MC accessor.
+>
+>> +
+>> +	struct emc_timing last_timing;
+>
+> struct emc_timing is rather big, can this be a pointer to an entry in
+> the timings array instead?
 
-diff --git a/drivers/video/fbdev/simplefb.c b/drivers/video/fbdev/simplefb.c
-index cdcf1fe..cd96edd 100644
---- a/drivers/video/fbdev/simplefb.c
-+++ b/drivers/video/fbdev/simplefb.c
-@@ -26,6 +26,7 @@
- #include <linux/module.h>
- #include <linux/platform_data/simplefb.h>
- #include <linux/platform_device.h>
-+#include <linux/clk-provider.h>
- 
- static struct fb_fix_screeninfo simplefb_fix = {
- 	.id		= "simple",
-@@ -167,8 +168,98 @@ static int simplefb_parse_pd(struct platform_device *pdev,
- 
- struct simplefb_par {
- 	u32 palette[PSEUDO_PALETTE_SIZE];
-+	int clk_count;
-+	struct clk **clks;
- };
- 
-+/*
-+ * Clock handling code.
-+ *
-+ * Here we handle the clocks property of our "simple-framebuffer" dt node.
-+ * This is necessary so that we can make sure that any clocks needed by
-+ * the display engine that the bootloader set up for us (and for which it
-+ * provided a simplefb dt node), stay up, for the life of the simplefb
-+ * driver.
-+ *
-+ * When the driver unloads, we cleanly disable, and then release the clocks.
-+ *
-+ * We only complain about errors here, no action is taken as the most likely
-+ * error can only happen due to a mismatch between the bootloader which set
-+ * up simplefb, and the clock definitions in the device tree. Chances are
-+ * that there are no adverse effects, and if there are, a clean teardown of
-+ * the fb probe will not help us much either. So just complain and carry on,
-+ * and hope that the user actually gets a working fb at the end of things.
-+ */
-+static int
-+simplefb_clocks_init(struct simplefb_par *par, struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct clk *clock;
-+	int i, ret;
-+
-+	if (dev_get_platdata(&pdev->dev) || !np)
-+		return 0;
-+
-+	par->clk_count = of_clk_get_parent_count(np);
-+	if (par->clk_count <= 0)
-+		return 0;
-+
-+	par->clks = kcalloc(par->clk_count, sizeof(struct clk *), GFP_KERNEL);
-+	if (!par->clks)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < par->clk_count; i++) {
-+		clock = of_clk_get(np, i);
-+		if (IS_ERR(clock)) {
-+			if (PTR_ERR(clock) == -EPROBE_DEFER) {
-+				while (--i >= 0) {
-+					if (par->clks[i])
-+						clk_put(par->clks[i]);
-+				}
-+				kfree(par->clks);
-+				return -EPROBE_DEFER;
-+			}
-+			dev_err(&pdev->dev, "%s: clock %d not found: %ld\n",
-+				__func__, i, PTR_ERR(clock));
-+			continue;
-+		}
-+		par->clks[i] = clock;
-+	}
-+
-+	for (i = 0; i < par->clk_count; i++) {
-+		if (par->clks[i]) {
-+			ret = clk_prepare_enable(par->clks[i]);
-+			if (ret) {
-+				dev_err(&pdev->dev,
-+					"%s: failed to enable clock %d: %d\n",
-+					__func__, i, ret);
-+				clk_put(par->clks[i]);
-+				par->clks[i] = NULL;
-+			}
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void
-+simplefb_clocks_destroy(struct simplefb_par *par)
-+{
-+	int i;
-+
-+	if (!par->clks)
-+		return;
-+
-+	for (i = 0; i < par->clk_count; i++) {
-+		if (par->clks[i]) {
-+			clk_disable_unprepare(par->clks[i]);
-+			clk_put(par->clks[i]);
-+		}
-+	}
-+
-+	kfree(par->clks);
-+}
-+
- static int simplefb_probe(struct platform_device *pdev)
- {
- 	int ret;
-@@ -236,6 +327,10 @@ static int simplefb_probe(struct platform_device *pdev)
- 	}
- 	info->pseudo_palette = par->palette;
- 
-+	ret = simplefb_clocks_init(par, pdev);
-+	if (ret < 0)
-+		goto error_unmap;
-+
- 	dev_info(&pdev->dev, "framebuffer at 0x%lx, 0x%x bytes, mapped to 0x%p\n",
- 			     info->fix.smem_start, info->fix.smem_len,
- 			     info->screen_base);
-@@ -247,13 +342,15 @@ static int simplefb_probe(struct platform_device *pdev)
- 	ret = register_framebuffer(info);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "Unable to register simplefb: %d\n", ret);
--		goto error_unmap;
-+		goto error_clocks;
- 	}
- 
- 	dev_info(&pdev->dev, "fb%d: simplefb registered!\n", info->node);
- 
- 	return 0;
- 
-+error_clocks:
-+	simplefb_clocks_destroy(par);
- error_unmap:
- 	iounmap(info->screen_base);
- error_fb_release:
-@@ -264,8 +361,10 @@ error_fb_release:
- static int simplefb_remove(struct platform_device *pdev)
- {
- 	struct fb_info *info = platform_get_drvdata(pdev);
-+	struct simplefb_par *par = info->par;
- 
- 	unregister_framebuffer(info);
-+	simplefb_clocks_destroy(par);
- 	framebuffer_release(info);
- 
- 	return 0;
--- 
-2.1.0
+No. The timing set by the pre-kernel boot process might not correspond 
+to any timing in the kernel's timing lists. Of course, we don't need 
+most of the values at that point (and don't populate them either), so it 
+would be possible to special case the timing change function to use some 
+separate structure for the first timing change. Doing what is done now 
+is simpler, though. It is also how it's done downstream (not that that 
+is a good indicator of good design..)
+
+>
+>> +	struct emc_timing *timings;
+>> +	unsigned int num_timings;
+>> +};
+>> +
+>> +/* Timing change sequence functions */
+>> +
+>> +static void emc_ccfifo_writel(struct tegra_emc *tegra, u32 val,
+>> +			      unsigned long offs)
+>> +{
+>> +	writel(val, tegra->emc_regs + EMC_CCFIFO_DATA);
+>> +	writel(offs, tegra->emc_regs + EMC_CCFIFO_ADDR);
+>> +}
+>> +
+>> +static void emc_seq_update_timing(struct tegra_emc *tegra)
+>> +{
+>> +	int i;
+>
+> unsigned int, please.
+>
+>> +
+>> +	writel(1, tegra->emc_regs + EMC_TIMING_CONTROL);
+>> +
+>> +	for (i = 0; i < EMC_STATUS_UPDATE_TIMEOUT; ++i) {
+>> +		if (!(readl(tegra->emc_regs + EMC_STATUS) &
+>> +		    EMC_STATUS_TIMING_UPDATE_STALLED))
+>> +			return;
+>> +	}
+>
+> You're busy-looping 1000 times here. What are the real criteria here?
+> How long is this allowed to take? Should this not be a timed loop where
+> the number of iterations doesn't matter?
+
+Logic directly taken from downstream/hw testing code. A timeout would 
+sound more logical, but dunno what to use.
+
+>
+>> +
+>> +	dev_err(&tegra->pdev->dev, "timing update failed\n");
+>> +}
+>
+> Should this return an error that can be propagated?
+
+I'm not sure if it's safe to stop during the timing change sequence.. at 
+least the downstream code doesn't try either. To know for sure, you'd 
+need some internal guy who really knows the sequence.
+
+>
+>> +static void emc_seq_disable_auto_cal(struct tegra_emc *tegra)
+>> +{
+>> +	int i;
+>> +
+>> +	writel(0, tegra->emc_regs + EMC_AUTO_CAL_INTERVAL);
+>> +
+>> +	for (i = 0; i < EMC_STATUS_UPDATE_TIMEOUT; ++i) {
+>> +		if (!(readl(tegra->emc_regs + EMC_AUTO_CAL_STATUS) &
+>> +		    EMC_AUTO_CAL_STATUS_ACTIVE))
+>> +			return;
+>> +	}
+>> +
+>> +	dev_err(&tegra->pdev->dev, "auto cal disable failed\n");
+>> +}
+>
+> Same comments as for emc_seq_update_timing().
+>
+>> +
+>> +static void emc_seq_wait_clkchange(struct tegra_emc *tegra)
+>> +{
+>> +	int i;
+>> +
+>> +	for (i = 0; i < EMC_STATUS_UPDATE_TIMEOUT; ++i) {
+>> +		if (readl(tegra->emc_regs + EMC_INTSTATUS) &
+>> +		    EMC_INTSTATUS_CLKCHANGE_COMPLETE)
+>> +			return;
+>> +	}
+>> +
+>> +	dev_err(&tegra->pdev->dev, "clkchange failed\n");
+>> +}
+>
+> And again.
+>
+>> +
+>> +static void emc_prepare_timing_change(struct tegra_emc *tegra,
+>> +				      const struct emc_timing *timing)
+>> +{
+>> +	u32 val, val2;
+>> +	bool update = false;
+>> +	int pre_wait = 0;
+>> +	int i;
+>
+> Both of these can be unsigned.
+>
+>> +	enum emc_dll_change dll_change;
+>> +
+>> +	if ((tegra->last_timing.emc_mode_1 & 0x1) == (timing->emc_mode_1 & 1))
+>> +		dll_change = DLL_CHANGE_NONE;
+>> +	else if (timing->emc_mode_1 & 1)
+>> +		dll_change = DLL_CHANGE_ON;
+>> +	else
+>> +		dll_change = DLL_CHANGE_OFF;
+>> +
+>> +	/* Clear CLKCHANGE_COMPLETE interrupts */
+>> +
+>> +	writel(EMC_INTSTATUS_CLKCHANGE_COMPLETE,
+>> +	       tegra->emc_regs + EMC_INTSTATUS);
+>> +
+>> +	/* Disable dynamic self-refresh */
+>> +
+>> +	val = readl(tegra->emc_regs + EMC_CFG);
+>> +	if (val & EMC_CFG_PWR_MASK) {
+>> +		val &= ~EMC_CFG_POWER_FEATURES_MASK;
+>> +		writel(val, tegra->emc_regs + EMC_CFG);
+>> +
+>> +		pre_wait = 5;
+>> +	}
+>> +
+>> +	/* Disable SEL_DPD_CTRL for clock change */
+>> +
+>> +	val = readl(tegra->emc_regs + EMC_SEL_DPD_CTRL);
+>> +	if (val & (tegra->dram_type == DRAM_TYPE_DDR3 ?
+>> +	    EMC_SEL_DPD_CTRL_DDR3_MASK : EMC_SEL_DPD_CTRL_MASK)) {
+>
+> This is really hard to read. Perhaps something like:
+>
+> 	if (tegra->dram_type == DRAM_TYPE_DDR3)
+> 		mask = EMC_SEL_DPD_CTRL_DDR3_MASK;
+> 	else
+> 		mask = EMC_SEL_DPD_CTRL_MASK;
+>
+> ?
+>
+>> +		val &= ~(EMC_SEL_DPD_CTRL_DATA_SEL_DPD |
+>> +				EMC_SEL_DPD_CTRL_ODT_SEL_DPD |
+>> +				EMC_SEL_DPD_CTRL_CA_SEL_DPD |
+>> +				EMC_SEL_DPD_CTRL_CLK_SEL_DPD);
+>> +		if (tegra->dram_type == DRAM_TYPE_DDR3)
+>> +			val &= ~EMC_SEL_DPD_CTRL_RESET_SEL_DPD;
+>
+> These seem to be all the fields already present in the respective masks,
+> so why not just:
+>
+> 	val &= ~mask;
+>
+> ?
+>
+>> +		writel(val, tegra->emc_regs + EMC_SEL_DPD_CTRL);
+>> +	}
+>> +
+>> +	/* Prepare DQ/DQS for clock change */
+>> +
+>> +	val = readl(tegra->emc_regs + EMC_BGBIAS_CTL0);
+>> +	val2 = tegra->last_timing.emc_bgbias_ctl0;
+>> +	if (!(timing->emc_bgbias_ctl0 &
+>> +	      EMC_BGBIAS_CTL0_BIAS0_DSC_E_PWRD_IBIAS_RX) &&
+>> +	    (val & EMC_BGBIAS_CTL0_BIAS0_DSC_E_PWRD_IBIAS_RX)) {
+>> +		val2 &= ~EMC_BGBIAS_CTL0_BIAS0_DSC_E_PWRD_IBIAS_RX;
+>> +		update = true;
+>> +	}
+>> +
+>> +	if ((val & EMC_BGBIAS_CTL0_BIAS0_DSC_E_PWRD) ||
+>> +	    (val & EMC_BGBIAS_CTL0_BIAS0_DSC_E_PWRD_IBIAS_VTTGEN)) {
+>> +		update = true;
+>> +	}
+>> +
+>> +	if (update) {
+>> +		writel(val2, tegra->emc_regs + EMC_BGBIAS_CTL0);
+>> +		if (pre_wait < 5)
+>> +			pre_wait = 5;
+>> +	}
+>> +
+>> +	update = false;
+>> +	val = readl(tegra->emc_regs + EMC_XM2DQSPADCTRL2);
+>> +	if (timing->emc_xm2dqspadctrl2 & EMC_XM2DQSPADCTRL2_VREF_ENABLE &&
+>> +	    !(val & EMC_XM2DQSPADCTRL2_VREF_ENABLE)) {
+>> +		val |= EMC_XM2DQSPADCTRL2_VREF_ENABLE;
+>> +		update = true;
+>> +	}
+>> +
+>> +	if (timing->emc_xm2dqspadctrl2 & EMC_XM2DQSPADCTRL2_RX_FT_REC_ENABLE &&
+>> +	    !(val & EMC_XM2DQSPADCTRL2_RX_FT_REC_ENABLE)) {
+>> +		val |= EMC_XM2DQSPADCTRL2_RX_FT_REC_ENABLE;
+>> +		update = true;
+>> +	}
+>> +
+>> +	if (update) {
+>> +		writel(val, tegra->emc_regs + EMC_XM2DQSPADCTRL2);
+>> +		if (pre_wait < 30)
+>> +			pre_wait = 30;
+>> +	}
+>> +
+>> +	/* Wait to settle */
+>> +
+>> +	if (pre_wait) {
+>> +		emc_seq_update_timing(tegra);
+>> +		udelay(pre_wait);
+>> +	}
+>> +
+>> +	/* Program CTT_TERM control */
+>> +
+>> +	if (tegra->last_timing.emc_ctt_term_ctrl != timing->emc_ctt_term_ctrl) {
+>
+> There are a whole lot of very long lines caused by tegra->last_timing.
+> How about introducing a temporary variable:
+>
+> 	struct emc_timing *last = &tegra->last_timing;
+>
+> or simply:
+>
+> 	struct emc_timing *last = tegra->last_timing;
+>
+> after a change I suggested earlier.
+>
+>> +		emc_seq_disable_auto_cal(tegra);
+>> +		writel(timing->emc_ctt_term_ctrl,
+>> +			tegra->emc_regs + EMC_CTT_TERM_CTRL);
+>> +		emc_seq_update_timing(tegra);
+>> +	}
+>> +
+>> +	/* Program burst shadow registers */
+>> +
+>> +	for (i = 0; i < ARRAY_SIZE(timing->emc_burst_data); ++i)
+>> +		__raw_writel(timing->emc_burst_data[i],
+>> +			     tegra->emc_regs + t124_emc_burst_regs[i]);
+>> +
+>> +	tegra_mc_write_emem_configuration(tegra->mc, timing->rate);
+>> +
+>> +	val = timing->emc_cfg & ~EMC_CFG_POWER_FEATURES_MASK;
+>> +	emc_ccfifo_writel(tegra, val, EMC_CFG);
+>> +
+>> +	/* Program AUTO_CAL_CONFIG */
+>> +
+>> +	if (timing->emc_auto_cal_config2 !=
+>> +	    tegra->last_timing.emc_auto_cal_config2)
+>> +		emc_ccfifo_writel(tegra, timing->emc_auto_cal_config2,
+>> +				  EMC_AUTO_CAL_CONFIG2);
+>> +	if (timing->emc_auto_cal_config3 !=
+>> +	    tegra->last_timing.emc_auto_cal_config3)
+>> +		emc_ccfifo_writel(tegra, timing->emc_auto_cal_config3,
+>> +				  EMC_AUTO_CAL_CONFIG3);
+>> +	if (timing->emc_auto_cal_config !=
+>> +	    tegra->last_timing.emc_auto_cal_config) {
+>> +		val = timing->emc_auto_cal_config;
+>> +		val &= EMC_AUTO_CAL_CONFIG_AUTO_CAL_START;
+>> +		emc_ccfifo_writel(tegra, val, EMC_AUTO_CAL_CONFIG);
+>> +	}
+>> +
+>> +	/* DDR3: predict MRS long wait count */
+>> +
+>> +	if (tegra->dram_type == DRAM_TYPE_DDR3 && dll_change == DLL_CHANGE_ON) {
+>> +		u32 cnt = 32;
+>> +
+>> +		if (timing->emc_zcal_interval != 0 &&
+>> +		    tegra->last_timing.emc_zcal_interval == 0)
+>> +			cnt -= tegra->dram_num * 256;
+>
+> Hmm... I don't understand this: cnt == 32 at the beginning, now you're
+> subtracting something that's >= 256 if dram_num > 0. Is that really
+> intended?
+
+Looking at the downstream kernel (some version of it, at least), I see 
+that cnt = 512. Not sure why I don't have that.
+
+>
+>> +
+>> +		val = timing->emc_mrs_wait_cnt
+>> +			& EMC_MRS_WAIT_CNT_SHORT_WAIT_MASK
+>> +			>> EMC_MRS_WAIT_CNT_SHORT_WAIT_SHIFT;
+>
+> I think >> has higher precedence than &, so you probably want
+> parentheses here.
+
+Yes.
+
+>
+>> +		if (cnt < val)
+>> +			cnt = val;
+>> +
+>> +		val = timing->emc_mrs_wait_cnt
+>> +			& ~EMC_MRS_WAIT_CNT_LONG_WAIT_MASK;
+>> +		val |= (cnt << EMC_MRS_WAIT_CNT_LONG_WAIT_SHIFT)
+>> +			& EMC_MRS_WAIT_CNT_LONG_WAIT_MASK;
+>> +
+>> +		writel(val, tegra->emc_regs + EMC_MRS_WAIT_CNT);
+>> +	}
+>> +
+>> +	val = timing->emc_cfg_2;
+>> +	val &= ~EMC_CFG_2_DIS_STP_OB_CLK_DURING_NON_WR;
+>> +	emc_ccfifo_writel(tegra, val, EMC_CFG_2);
+>> +
+>> +	/* DDR3: Turn off DLL and enter self-refresh */
+>> +
+>> +	if (tegra->dram_type == DRAM_TYPE_DDR3 && dll_change == DLL_CHANGE_OFF)
+>> +		emc_ccfifo_writel(tegra, timing->emc_mode_1, EMC_EMRS);
+>> +
+>> +	/* Disable refresh controller */
+>> +
+>> +	emc_ccfifo_writel(tegra, EMC_REFCTRL_DEV_SEL(tegra->dram_num),
+>> +			  EMC_REFCTRL);
+>> +	if (tegra->dram_type == DRAM_TYPE_DDR3)
+>> +		emc_ccfifo_writel(tegra,
+>> +				  EMC_DRAM_DEV_SEL(tegra->dram_num)
+>> +					| EMC_SELF_REF_CMD_ENABLED,
+>> +				  EMC_SELF_REF);
+>> +
+>> +	/* Flow control marker */
+>> +
+>> +	emc_ccfifo_writel(tegra, 1, EMC_STALL_THEN_EXE_AFTER_CLKCHANGE);
+>> +
+>> +	/* DDR3: Exit self-refresh */
+>> +
+>> +	if (tegra->dram_type == DRAM_TYPE_DDR3)
+>> +		emc_ccfifo_writel(tegra,
+>> +				  EMC_DRAM_DEV_SEL(tegra->dram_num),
+>> +				  EMC_SELF_REF);
+>> +	emc_ccfifo_writel(tegra,
+>> +			  EMC_REFCTRL_DEV_SEL(tegra->dram_num)
+>> +				| EMC_REFCTRL_ENABLE,
+>> +			  EMC_REFCTRL);
+>> +
+>> +	/* Set DRAM mode registers */
+>> +
+>> +	if (tegra->dram_type == DRAM_TYPE_DDR3) {
+>> +		if (timing->emc_mode_1 != tegra->last_timing.emc_mode_1)
+>> +			emc_ccfifo_writel(tegra, timing->emc_mode_1, EMC_EMRS);
+>> +		if (timing->emc_mode_2 != tegra->last_timing.emc_mode_2)
+>> +			emc_ccfifo_writel(tegra, timing->emc_mode_2, EMC_EMRS2);
+>
+> These patterns repeat a lot, perhaps some helpers would be useful.
+> Something like:
+>
+> #define emc_ccfifo_writel_if_changed(emc, old, new, field, offset)	\
+> 	if ((new)->field != (old)->field)				\
+> 		emc_ccfifo_writel(emc, (new)->field, offset);
+>
+> ...
+>
+> 			emc_ccfifo_writel_if_changed(tegra, last, timing,
+> 						     emc_mode_1, EMC_EMRS);
+>
+> That's not as much of an improvement as I had hoped... so feel free to
+> ignore.
+>
+>> +static int load_timings_from_dt(struct tegra_emc *tegra,
+>> +				struct device_node *node)
+>> +{
+>> +	struct device_node *child;
+>> +	int child_count = of_get_child_count(node);
+>> +	int i = 0, err;
+>
+> unsigned int for i.
+>
+>> +
+>> +	tegra->timings = devm_kzalloc(&tegra->pdev->dev,
+>> +				      sizeof(struct emc_timing) * child_count,
+>> +				      GFP_KERNEL);
+>
+> devm_kcalloc()/
+>
+>> +	if (!tegra->timings)
+>> +		return -ENOMEM;
+>> +
+>> +	tegra->num_timings = child_count;
+>> +
+>> +	for_each_child_of_node(node, child) {
+>> +		struct emc_timing *timing = tegra->timings + (i++);
+>
+> timing = &tegra->timings[i++];?
+>
+>> +
+>> +		err = load_one_timing_from_dt(tegra, timing, child);
+>> +		if (err)
+>> +			return err;
+>> +	}
+>> +
+>> +	sort(tegra->timings, tegra->num_timings, sizeof(struct emc_timing),
+>> +	     cmp_timings, NULL);
+>
+> sizeof(*timing)?
+>
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id tegra_emc_of_match[] = {
+>> +	{ .compatible = "nvidia,tegra124-emc" },
+>> +	{}
+>> +};
+>> +MODULE_DEVICE_TABLE(of, tegra_emc_of_match);
+>> +
+>> +static struct tegra_emc *emc_instance;
+>
+> Can we find a way around this global variable? I suppose that somebody
+> is going to call the tegra_emc_{prepare,complete}_timing_change() below,
+> so perhaps the caller needs to get a reference to the EMC and pass that
+> in?
+>
+>> +static struct emc_timing *tegra_emc_find_timing(unsigned long rate)
+>> +{
+>> +	int i;
+>
+> unsigned
+>
+>> +
+>> +	if (!emc_instance)
+>> +		return NULL;
+>> +
+>> +	for (i = 0; i < emc_instance->num_timings; ++i) {
+>> +		if (emc_instance->timings[i].rate == rate)
+>> +			break;
+>> +	}
+>> +
+>> +	if (i == emc_instance->num_timings) {
+>> +		dev_err(&emc_instance->pdev->dev, "no timing for rate %lu\n", rate);
+>> +		return NULL;
+>> +	}
+>> +
+>> +	return emc_instance->timings + i;
+>
+> This could be rewritten in a similar way than I suggested for the MC
+> changes earlier.
+>
+>> +}
+>> +
+>> +int tegra_emc_prepare_timing_change(unsigned long rate)
+>> +{
+>> +	struct emc_timing *timing = tegra_emc_find_timing(rate);
+>> +
+>> +	if (!timing)
+>> +		return -ENOENT;
+>> +
+>> +	emc_prepare_timing_change(emc_instance, timing);
+>> +
+>> +	return 0;
+>> +}
+>
+> It seems like this really ought to return an error if
+> emc_prepare_timing_change() fails.
+>
+>> +
+>> +void tegra_emc_complete_timing_change(unsigned long rate)
+>> +{
+>> +	struct emc_timing *timing = tegra_emc_find_timing(rate);
+>> +
+>> +	if (!timing)
+>> +		return;
+>> +
+>> +	emc_complete_timing_change(emc_instance, timing);
+>> +}
+>> +
+>> +static int tegra_emc_probe(struct platform_device *pdev)
+>> +{
+>> +	struct tegra_emc *tegra;
+>> +	struct device_node *node;
+>> +	struct platform_device *mc_pdev;
+>
+> Perhaps simply "mc"?
+>
+>> +	struct resource *res;
+>> +	u32 ram_code, node_ram_code;
+>
+> You only need node_ram_code in the loop, so perhaps move it there and
+> make the name something less cumbersome like "value"?
+>
+>> +	int err;
+>> +
+>> +	tegra = devm_kzalloc(&pdev->dev, sizeof(*tegra), GFP_KERNEL);
+>> +	if (!tegra)
+>> +		return -ENOMEM;
+>> +
+>> +	tegra->pdev = pdev;
+>> +
+>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	tegra->emc_regs = devm_ioremap_resource(&pdev->dev, res);
+>> +	if (IS_ERR(tegra->emc_regs)) {
+>> +		dev_err(&pdev->dev, "failed to map EMC regs\n");
+>
+> No need for this error message, devm_ioremap_resource() prints one of
+> you.
+>
+>> +		return PTR_ERR(tegra->emc_regs);
+>> +	}
+>> +
+>> +	node = of_parse_phandle(pdev->dev.of_node,
+>> +				"nvidia,memory-controller", 0);
+>> +	if (!node) {
+>> +		dev_err(&pdev->dev, "could not get memory controller\n");
+>> +		return -ENOENT;
+>> +	}
+>> +
+>> +	mc_pdev = of_find_device_by_node(node);
+>> +	if (!mc_pdev)
+>> +		return -ENOENT;
+>> +
+>> +	tegra->mc = platform_get_drvdata(mc_pdev);
+>> +	if (!tegra->mc)
+>> +		return -ENOENT;
+>
+> Perhaps this ought to be -EPROBE_DEFER to handle that case?
+>
+>> +
+>> +	of_node_put(node);
+>
+> I think that should go right after the call to of_find_device_by_node(),
+> otherwise it'll leak in case of errors earlier.
+>
+>> +
+>> +	ram_code = tegra_read_ram_code();
+>> +
+>> +	tegra->num_timings = 0;
+>> +
+>> +	for_each_child_of_node(pdev->dev.of_node, node) {
+>> +		err = of_property_read_u32(node, "nvidia,ram-code", &node_ram_code);
+>> +		if (err || (node_ram_code != ram_code))
+>> +			continue;
+>> +
+>> +		err = load_timings_from_dt(tegra, node);
+>> +		if (err)
+>> +			return err;
+>> +		break;
+>> +	}
+>> +
+>> +	if (tegra->num_timings == 0)
+>> +		dev_warn(&pdev->dev, "no memory timings for ram code %u registered\n", ram_code);
+>
+> Isn't this an error? What's the use of proceeding if this happens?
+
+True. This is leftover from when I split the clock driver out of this 
+one. The clock driver can be used readonly without timings.
+
+>
+> This is slightly more complicated than I think it should be. Perhaps
+> split this into a helper function that finds a node matching the RAM
+> code, then:
+>
+> 	node = tegra_emc_find_node_by_ram_code(pdev->dev.of_node, ram_code);
+> 	if (!node)
+> 		return -ENOENT;
+>
+> 	err = load_timings_from_dt(tegra, node);
+> 	if (err)
+> 		return err;
+>
+> Also I think you need to of_node_put() the node when you're done with
+> it.
+>
+>> +
+>> +	err = emc_init(tegra);
+>> +	if (err) {
+>> +		dev_err(&pdev->dev, "initialization failed: %d\n", err);
+>> +		return err;
+>> +	}
+>> +
+>> +	platform_set_drvdata(pdev, tegra);
+>> +
+>> +	emc_instance = tegra;
+>> +
+>> +	return 0;
+>> +};
+>> +
+>> +static struct platform_driver tegra_emc_driver = {
+>> +	.probe = tegra_emc_probe,
+>> +	.driver = {
+>> +		.name = "tegra-emc",
+>> +		.of_match_table = tegra_emc_of_match,
+>
+> Perhaps you also want to add a ".suppress_bind_attrs = true;" here to
+> avoid people from causing oopses by unbinding via sysfs.
+
+True.
+
+>
+> Thierry
+>
+
+Thanks for reviewing, sorry I couldn't answer all.
+I'll leave the rest to Tomeu ;)
+
+Cheers,
+Mikko
