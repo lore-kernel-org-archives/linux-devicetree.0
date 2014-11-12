@@ -1,53 +1,105 @@
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
-Subject: Re: [PATCHv5 2/5] arm: socfpga: Enable OCRAM ECC on startup.
-Date: Wed, 12 Nov 2014 01:33:06 -0600
-Message-ID: <54630D32.1000307@opensource.altera.com>
-References: <1415751263-1830-1-git-send-email-tthayer@opensource.altera.com>
- <1415751263-1830-3-git-send-email-tthayer@opensource.altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1415751263-1830-3-git-send-email-tthayer@opensource.altera.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: tthayer@opensource.altera.com, bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH v4 00/13] Tegra124 EMC (external memory controller) support
+Date: Wed, 12 Nov 2014 08:56:23 +0100
+Message-ID: <1415779051-26410-1-git-send-email-tomeu.vizoso@collabora.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, mikko.perttunen-/1wQRMveznE@public.gmane.org, acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
+in this v4 you can find these changes:
 
-On 11/11/14, 6:14 PM, tthayer@opensource.altera.com wrote:
-> From: Thor Thayer <tthayer@opensource.altera.com>
-> 
-> This patch enables the ECC for On-Chip RAM on machine
-> startup.  The ECC has to be enabled before data is
-> is stored in memory otherwise the ECC will fail on
-> reads.
-> 
-> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
-> ---
-> v2: Split OCRAM ECC portion separately. Addition of iounmap()
-> and reorganization of gen_pool_free. Remove defconfig from patch.
-> 
-> v3/4: No change
-> 
-> v5: Remove ocram.h, use io.h instead of clk-provider.h
->     Check prop in correct place. Add ECC EN defines.
-> ---
->  arch/arm/mach-socfpga/Makefile  |    1 +
->  arch/arm/mach-socfpga/core.h    |    1 +
->  arch/arm/mach-socfpga/ocram.c   |   90 +++++++++++++++++++++++++++++++++++++++
->  arch/arm/mach-socfpga/socfpga.c |    9 ++++
->  4 files changed, 101 insertions(+)
->  create mode 100644 arch/arm/mach-socfpga/ocram.c
-> 
+* Adapt to changes in the latest version of Thierry's IOMMU series
 
-Acked-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+* OF bindings don't specify any unit-address or naming for the timings and timing subnodes. This is
+in line with how the display timings are specified.
+
+* Misc improvements on error handling and reporting
+
+* Misc style fixes
+
+* Adds a bit more information on the registers that need to be specified for each timing, and points
+to the TRM for more details.
+
+It depends on Thierry's MC patches at [0] and a branch can be found at [1]. So
+far it has been tested only on a Jetson TK1.
+
+Patch 1: Removes the old EMC clock, that was unused and not functional
+
+Patch 2: Documents bindings for the new long-ram-code property
+
+Patch 3: Adds API for reading the ram code
+
+Patches 4 to 6: Document OF additions
+
+Patch 7: Adds EMC node to Tegra124 DT
+
+Patch 8: Adds timings for Jetson TK1 board
+
+Patch 9: Adds functions to the MC driver so the EMC driver can stay within its
+own registers
+
+Patch 10: Adds the actual EMC driver, making use of the new MC API
+
+Patch 11: Adds EMC clock driver, making use of API provided by the EMC driver
+
+Patch 12: Adds debugfs entry for getting and setting the EMC rate
+
+Patch 13: On Tegra124, have the EMC clock be the parent of the MC clock
+
+Regards,
+
+Tomeu
+
+[0] https://github.com/thierryreding/linux/commits/staging/iommu
+[1] http://cgit.collabora.com/git/user/tomeu/linux.git/log/?h=emc-v4
+
+Mikko Perttunen (9):
+  clk: tegra124: Remove old emc clock
+  soc/tegra: Add ram code reader helper
+  of: Add Tegra124 EMC bindings
+  ARM: tegra: Add EMC to Tegra124 device tree
+  ARM: tegra: Add EMC timings to Jetson TK1 device tree
+  memory: tegra: Add API needed by the EMC driver
+  memory: tegra: Add EMC (external memory controller) driver
+  clk: tegra: Add EMC clock driver
+  memory: tegra: Add debugfs entry for getting and setting the EMC rate
+
+Tomeu Vizoso (4):
+  of: Document long-ram-code property in nvidia,tegra20-apbmisc
+  of: document new emc-timings subnode in nvidia,tegra124-car
+  of: Document timings subnode of nvidia,tegra-mc
+  clk: tegra: Set the EMC clock as the parent of the MC clock
+
+ .../bindings/clock/nvidia,tegra124-car.txt         |   44 +-
+ .../memory-controllers/nvidia,tegra-mc.txt         |   84 +-
+ .../bindings/memory-controllers/tegra-emc.txt      |  376 +++
+ .../bindings/misc/nvidia,tegra20-apbmisc.txt       |    2 +
+ arch/arm/boot/dts/tegra124-jetson-tk1-emc.dtsi     | 2412 ++++++++++++++++++++
+ arch/arm/boot/dts/tegra124-jetson-tk1.dts          |    2 +
+ arch/arm/boot/dts/tegra124.dtsi                    |    7 +
+ drivers/clk/tegra/Makefile                         |    2 +-
+ drivers/clk/tegra/clk-emc.c                        |  468 ++++
+ drivers/clk/tegra/clk-tegra124.c                   |   18 +-
+ drivers/clk/tegra/clk.h                            |    2 +
+ drivers/memory/tegra/Kconfig                       |   10 +
+ drivers/memory/tegra/Makefile                      |    2 +
+ drivers/memory/tegra/mc.c                          |  130 ++
+ drivers/memory/tegra/mc.h                          |   12 +
+ drivers/memory/tegra/tegra124-emc.c                | 1157 ++++++++++
+ drivers/memory/tegra/tegra124.c                    |   44 +
+ drivers/soc/tegra/fuse/tegra-apbmisc.c             |   19 +
+ include/soc/tegra/fuse.h                           |    1 +
+ include/soc/tegra/memory.h                         |   19 +
+ 20 files changed, 4793 insertions(+), 18 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/tegra-emc.txt
+ create mode 100644 arch/arm/boot/dts/tegra124-jetson-tk1-emc.dtsi
+ create mode 100644 drivers/clk/tegra/clk-emc.c
+ create mode 100644 drivers/memory/tegra/tegra124-emc.c
+ create mode 100644 include/soc/tegra/memory.h
+
+-- 
+1.9.3
