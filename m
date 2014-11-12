@@ -1,62 +1,88 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCHv6 5/5] hwspinlock/omap: add support for dt nodes
-Date: Wed, 12 Nov 2014 13:50:15 -0600
-Message-ID: <5463B9F7.8040105@ti.com>
-References: <1410553499-55951-1-git-send-email-s-anna@ti.com> <1410553499-55951-6-git-send-email-s-anna@ti.com> <CAK=WgbZE7_WrsNz5E+MDX7j2tAGEjv91zeCgqhB=Jsiu0+d8vw@mail.gmail.com>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH] of/base: Fix PowerPC address parsing hack
+Date: Thu, 13 Nov 2014 06:55:07 +1100
+Message-ID: <1415822107.5124.45.camel@kernel.crashing.org>
+References: <1415771461.5124.33.camel@kernel.crashing.org>
+	 <CAL_JsqKfBGdpFV_XuE4DEhFrkhN33kOMkiZE_TOnAZDm2qjwMw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK=WgbZE7_WrsNz5E+MDX7j2tAGEjv91zeCgqhB=Jsiu0+d8vw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAL_JsqKfBGdpFV_XuE4DEhFrkhN33kOMkiZE_TOnAZDm2qjwMw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linuxppc-dev <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ohad,
-
-On 11/12/2014 01:14 PM, Ohad Ben-Cohen wrote:
-> Hi Suman,
+On Wed, 2014-11-12 at 08:39 -0600, Rob Herring wrote:
+> On Tue, Nov 11, 2014 at 11:51 PM, Benjamin Herrenschmidt
+> <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
+> > We have a historical hack that treats missing ranges properties as the
+> > equivalent of an empty one. This is needed for ancient PowerMac "bad"
+> > device-trees, and shouldn't be enabled for any other PowerPC platform,
+> > otherwise we get some nasty layout of devices in sysfs or even
+> > duplication when a set of otherwise identically named devices is
+> > created multiple times under a different parent node with no ranges
+> > property.
+> >
+> > This fix is needed for the PowerNV i2c busses to be exposed properly
+> > and will fix a number of other embedded cases.
+> >
+> > Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+> > CC: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+> > ---
+> >
+> > diff --git a/drivers/of/address.c b/drivers/of/address.c
+> > index e371825..e37f017 100644
+> > --- a/drivers/of/address.c
+> > +++ b/drivers/of/address.c
+> > @@ -7,6 +7,10 @@
+> >  #include <linux/pci_regs.h>
+> >  #include <linux/string.h>
+> >
+> > +#ifdef CONFIG_PPC
+> > +#include <asm/machdep.h>
+> > +#endif
+> > +
+> >  /* Max address size we deal with */
+> >  #define OF_MAX_ADDR_CELLS      4
+> >  #define OF_CHECK_ADDR_COUNT(na)        ((na) > 0 && (na) <= OF_MAX_ADDR_CELLS)
+> > @@ -428,12 +432,13 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
+> >          * This code is only enabled on powerpc. --gcl
+> >          */
+> >         ranges = of_get_property(parent, rprop, &rlen);
+> > -#if !defined(CONFIG_PPC)
+> > +#if defined(CONFIG_PPC)
+> > +       if (!machine_is(powermac))
 > 
-> On Fri, Sep 12, 2014 at 11:24 PM, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> wrote:
->>  static int omap_hwspinlock_probe(struct platform_device *pdev)
->>  {
->> -       struct hwspinlock_pdata *pdata = pdev->dev.platform_data;
->> +       struct device_node *node = pdev->dev.of_node;
->>         struct hwspinlock_device *bank;
->>         struct hwspinlock *hwlock;
->>         struct resource *res;
->>         void __iomem *io_base;
->> -       int num_locks, i, ret;
->> +       int num_locks, i, ret, base_id;
->>
->> -       if (!pdata)
->> +       if (!node)
->>                 return -ENODEV;
->>
->> +       ret = of_hwspin_lock_get_base_id(node);
->> +       if (ret < 0 && ret != -EINVAL)
->> +               return -ENODEV;
->> +       base_id = (ret > 0 ? ret : 0);
+> Can we use a machine compatible here or something not PPC specific?
+> Then we can use IS_ENABLED(CONFIG_PPC) instead of ifdefs.
+
+We could, we'd have to use a pair of machine compatible, I'll spin a new
+patch later today.
+
+Ben.
+ 
+> Rob
 > 
-> Does this mean you allow nodes not to have the base_id property? How
-> do we protect against multiple nodes not having a base_id property
-> then?
-> 
-> Implicitly assuming a base_id value (zero in this case) may not be always safe.
+> > +#endif /* defined(CONFIG_PPC) */
+> >         if (ranges == NULL) {
+> > -               pr_err("OF: no ranges; cannot translate\n");
+> > +               pr_debug("OF: no ranges; cannot translate\n");
+> >                 return 1;
+> >         }
+> > -#endif /* !defined(CONFIG_PPC) */
+> >         if (ranges == NULL || rlen == 0) {
+> >                 offset = of_read_number(addr, na);
+> >                 memset(addr, 0, pna * 4);
+> >
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 
-None of the OMAPs have multiple IP instances, and as such the base-id is
-an optional property. I have made this change to make sure we atleast
-attempt to use the value if mentioned in DT and not hard-coding the
-value to begin with (going by the optional property semantics). If and
-when multiple instances get added and a secondary node doesn't add the
-property, the node will not be registered with the core due to an
-overlap failure. Here is the previous version [1] for reference.
 
-regards
-Suman
-
-[1] https://patchwork.kernel.org/patch/4096881/
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
