@@ -1,139 +1,123 @@
 From: Caesar Wang <caesar.wang@rock-chips.com>
-Subject: [PATCH v11 3/3] ARM: dts: add rk3288 power-domain node
-Date: Thu, 13 Nov 2014 06:01:30 +0800
-Message-ID: <1415829690-20236-4-git-send-email-caesar.wang@rock-chips.com>
-References: <1415829690-20236-1-git-send-email-caesar.wang@rock-chips.com>
+Subject: [PATCH v11 0/3] ARM: rk3288: Add PM Domain support
+Date: Thu, 13 Nov 2014 06:01:27 +0800
+Message-ID: <1415829690-20236-1-git-send-email-caesar.wang@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415829690-20236-1-git-send-email-caesar.wang@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, Russell King <linux@arm.linux.org.uk>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, Ulf Hansson <ulf.hansson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, fzf@rock-chips.com, cf@rock-chips.com, caesar.wang@rock-chips.com, Jack Dai <jack.dai@rock-chips.com>, "jinkun.hong" <jinkun.hong@rock-chips.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, Ulf Hansson <ulf.hansson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, fzf@rock-chips.com, cf@rock-chips.com, caesar.wang@rock-chips.com, "jinkun.hong" <jinkun.hong@rock-chips.com>, Jack Dai <jack.dai@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch add the needed clocks into power-controller.
+    Add power domain drivers based on generic power domain for
+    Rockchip platform, and support RK3288.
 
-why need we do so that?
+    https://chromium-review.googlesource.com/#/c/220253/9
+    This is the GPU driver, add the following information in DT,
+    and it can support the PMDOMAIN
 
-Firstly, we always be needed turn off clocks to save power when
-the system enter suspend.So we need to enumerate the clocks are needed
-to switch power doamin no and off.
+gpu: gpu@ffa30000 {
+    compatible = "arm,malit764",
+                 "arm,malit76x",
+                 "arm,malit7xx",
+                 "arm,mali-midgard";
+    reg = <0xffa30000 0x10000>;
+    interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+                 <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
+                 <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+    interrupt-names = "JOB", "MMU", "GPU";
+    clocks = <&cru ACLK_GPU>;
+    clock-names = "aclk_gpu";
+    operating-points = <
+                /* KHz uV */
+                100000 800000
+                200000 850000
+                300000 950000
+                400000 1000000
+                600000 1150000
+    >;
+    power-domains = <&power RK3288_PD_GPU>;
+    status = "disabled";
+};
 
-Secondly, Rk3288 reset circuit should be syncchronous reset and
-then sync revoked.so we need to enable clocks of all devices.
+Based on:
+    - [PATCH v1 1/4] PM / clock_ops: Add pm_clk_add_clk()
+    http://www.mail-archive.com/linux-kernel@vger.kernel.org/msg735599.html
 
-Signed-off-by: Jack Dai <jack.dai@rock-chips.com>
-Signed-off-by: jinkun.hong <jinkun.hong@rock-chips.com>
-Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+Changes in v11:
+    - fix pm_genpd_init(&pd->genpd, NULL, false);
 
----
-
-Changes in v11: None
 Changes in v10:
+    - this switches over domain infos to use masks instead of recomputing
+      them each time and also gets rid of custom domain translator and
+      uses standard onecell on.
     - fix missing the #include <dt-bindings/power-domain/rk3288.h>
     - remove the notes
 
 Changes in v9:
+    - add document decription
+    - fix v8 changes as follows:
+    - This reconciles the v2 and v7 code so that we power domain have
+      lists of clocks they toggle on and off during power transitions and
+      independently from power domains clocks we attach clocks to devices
+      comprising power domain and prepare them so they are turn on and off
+      by runtime PM.
+    - add rockchip_pm_add_one_domain() to control domains.
+    - add pd_start/pd_stop interface to control clocks
     - add decription for power-doamin node
 
 Changes in v8:
+    - document go back to v2
+    - This reconciles the v2 and v7 code so that we power domain have
+      lists of clocks they toggle on and off during power transitions and
+      independently from power domains clocks we attach clocks to devices
+      comprising power domain and prepare them so they are turn on and off
+      by runtime PM.
     - DTS go back to v2
 
-Changes in v7: None
-Changes in v6: None
-Changes in v5: None
-Changes in v4: None
+Changes in v7:
+    - Delete unused variables
+
+Changes in v6:
+    - delete pmu_lock
+    - modify dev_lock using mutex
+    - pm_clk_resume(pd->dev) change to pm_clk_resume(ed->dev)
+    - pm_clk_suspend(pd->dev) change to pm_clk_suspend(ed->dev)
+    - add devm_kfree(pd->dev, de) in rockchip_pm_domain_detach_dev
+
+Changes in v5:
+    - delete idle_lock
+    - add timeout in rockchip_pmu_set_idle_request()
+
+Changes in v4:
+    - use list storage dev
+
 Changes in v3:
+    - DT structure has changed
+    - change use pm_clk_resume() and pm_clk_suspend()
     - Decomposition power-controller, changed to multiple controller
     (gpu-power-controller, hevc-power-controller)
 
 Changes in v2:
+    - move clocks to "optional"
+    - remove the "pd->pd.of_node = np"
     - make pd_vio clocks all one entry per line and alphabetize.
     - power: power-controller move back to pinctrl: pinctrl.
 
- arch/arm/boot/dts/rk3288.dtsi | 66 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 66 insertions(+)
+Caesar Wang (3):
+  dt-bindings: add document of Rockchip power domain
+  power-domain: rockchip: add power doamin driver
+  ARM: dts: add rk3288 power-domain node
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index cb18bb4..4e64fb2 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -15,6 +15,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/pinctrl/rockchip.h>
- #include <dt-bindings/clock/rk3288-cru.h>
-+#include <dt-bindings/power-domain/rk3288.h>
- #include "skeleton.dtsi"
- 
- / {
-@@ -989,4 +990,69 @@
- 			};
- 		};
- 	};
-+
-+	power: power-controller {
-+		compatible = "rockchip,rk3288-power-controller";
-+		#power-domain-cells = <1>;
-+		rockchip,pmu = <&pmu>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		pd_gpu {
-+			reg = <RK3288_PD_GPU>;
-+			clocks = <&cru ACLK_GPU>;
-+		};
-+
-+		pd_hevc {
-+			reg = <RK3288_PD_HEVC>;
-+			clocks = <&cru ACLK_HEVC>,
-+				 <&cru SCLK_HEVC_CABAC>,
-+				 <&cru SCLK_HEVC_CORE>,
-+				 <&cru HCLK_HEVC>;
-+		};
-+
-+		pd_vio {
-+			reg = <RK3288_PD_VIO>;
-+			clocks = <&cru ACLK_IEP>,
-+				 <&cru ACLK_ISP>,
-+				 <&cru ACLK_RGA_NIU>,
-+				 <&cru ACLK_RGA>,
-+				 <&cru ACLK_VIO0_NIU>,
-+				 <&cru ACLK_VIO1_NIU>,
-+				 <&cru ACLK_VIP>,
-+				 <&cru ACLK_VOP0>,
-+				 <&cru ACLK_VOP1>,
-+				 <&cru DCLK_VOP0>,
-+				 <&cru DCLK_VOP1>,
-+				 <&cru HCLK_IEP>,
-+				 <&cru HCLK_ISP>,
-+				 <&cru HCLK_RGA>,
-+				 <&cru HCLK_VIO_AHB_ARBI>,
-+				 <&cru HCLK_VIO_NIU>,
-+				 <&cru HCLK_VIO2_H2P>,
-+				 <&cru HCLK_VIP>,
-+				 <&cru HCLK_VOP0>,
-+				 <&cru HCLK_VOP1>,
-+				 <&cru PCLK_EDP_CTRL>,
-+				 <&cru PCLK_HDMI_CTRL>,
-+				 <&cru PCLK_LVDS_PHY>,
-+				 <&cru PCLK_MIPI_CSI>,
-+				 <&cru PCLK_MIPI_DSI0>,
-+				 <&cru PCLK_MIPI_DSI1>,
-+				 <&cru PCLK_VIO2_H2P>,
-+				 <&cru SCLK_EDP_24M>,
-+				 <&cru SCLK_EDP>,
-+				 <&cru SCLK_HDMI_CEC>,
-+				 <&cru SCLK_HDMI_HDCP>,
-+				 <&cru SCLK_ISP_JPE>,
-+				 <&cru SCLK_ISP>,
-+				 <&cru SCLK_RGA>;
-+		};
-+
-+		pd_video {
-+			reg = <RK3288_PD_VIDEO>;
-+			clocks = <&cru ACLK_VCODEC>,
-+				 <&cru HCLK_VCODEC>;
-+		};
-+	};
- };
+ .../bindings/arm/rockchip/power_domain.txt         |  48 +++
+ arch/arm/boot/dts/rk3288.dtsi                      |  66 +++
+ arch/arm/mach-rockchip/Kconfig                     |   1 +
+ arch/arm/mach-rockchip/Makefile                    |   1 +
+ arch/arm/mach-rockchip/pm_domains.c                | 471 +++++++++++++++++++++
+ include/dt-bindings/power-domain/rk3288.h          |  11 +
+ 6 files changed, 598 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/rockchip/power_domain.txt
+ create mode 100644 arch/arm/mach-rockchip/pm_domains.c
+ create mode 100644 include/dt-bindings/power-domain/rk3288.h
+
 -- 
 1.9.1
