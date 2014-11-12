@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [GIT PULL 3.19] Broadcom Cygnus SoC Device Tree changes
-Date: Wed, 12 Nov 2014 13:04:24 -0800
-Message-ID: <1415826266-6867-2-git-send-email-f.fainelli@gmail.com>
+Subject: [GIT PULL 3.19] Broadcom Cygnus SoC MAINTAINERS updates
+Date: Wed, 12 Nov 2014 13:04:25 -0800
+Message-ID: <1415826266-6867-3-git-send-email-f.fainelli@gmail.com>
 References: <1415826266-6867-1-git-send-email-f.fainelli@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1415826266-6867-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -16,42 +16,22 @@ The following changes since commit f114040e3ea6e07372334ade75d1ee0775c355e1:
 
 are available in the git repository at:
 
-  http://github.com/brcm/linux.git tags/arm-soc/for-3.19/cygnus-dts-v2
+  http://github.com/brcm/linux.git tags/arm-soc/for-3.19/cygnus-maintainers-v2
 
-for you to fetch changes up to c9ad7bc5fe3c57c8c817fcb1bd264a02176a40c4:
+for you to fetch changes up to 36c0237f1ae08f9ba538ade0ab6375bd58bb996c:
 
-  ARM: dts: Enable Broadcom Cygnus SoC (2014-11-11 22:30:42 -0800)
-
-----------------------------------------------------------------
-This pull request contains the Broadcom Cygnus Device Tree changes:
-
-- binding documentation for the SoC and clock
-- cygnus SoC and clock dtsi files
-- DTS for Cygnus Entreprise phone, BCM911360K and BCM958300K
+  MAINTAINERS: Entry for Cygnus/iproc arm architecture (2014-11-11 23:04:25 -0800)
 
 ----------------------------------------------------------------
-Jonathan Richardson (1):
-      dt-bindings: Document Broadcom Cygnus SoC and clocks
+This pull request contains the MAINTAINERS update to add the Broadcom Cygnus
+SoC platform files, Device Tree sources and clock drivers.
 
+----------------------------------------------------------------
 Scott Branden (1):
-      ARM: dts: Enable Broadcom Cygnus SoC
+      MAINTAINERS: Entry for Cygnus/iproc arm architecture
 
- .../devicetree/bindings/arm/bcm/cygnus.txt         |  31 +++++
- .../devicetree/bindings/clock/bcm-cygnus-clock.txt |  34 +++++
- arch/arm/boot/dts/Makefile                         |   3 +
- arch/arm/boot/dts/bcm-cygnus-clock.dtsi            |  91 ++++++++++++++
- arch/arm/boot/dts/bcm-cygnus.dtsi                  | 140 +++++++++++++++++++++
- arch/arm/boot/dts/bcm911360_entphn.dts             |  53 ++++++++
- arch/arm/boot/dts/bcm911360k.dts                   |  53 ++++++++
- arch/arm/boot/dts/bcm958300k.dts                   |  53 ++++++++
- 8 files changed, 458 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/bcm/cygnus.txt
- create mode 100644 Documentation/devicetree/bindings/clock/bcm-cygnus-clock.txt
- create mode 100644 arch/arm/boot/dts/bcm-cygnus-clock.dtsi
- create mode 100644 arch/arm/boot/dts/bcm-cygnus.dtsi
- create mode 100644 arch/arm/boot/dts/bcm911360_entphn.dts
- create mode 100644 arch/arm/boot/dts/bcm911360k.dts
- create mode 100644 arch/arm/boot/dts/bcm958300k.dts
+ MAINTAINERS | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
