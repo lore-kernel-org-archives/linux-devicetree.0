@@ -1,59 +1,145 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: simplefb device tree bindings enumeration and handover
-Date: Wed, 12 Nov 2014 16:49:08 +0100
-Message-ID: <54638174.50306@redhat.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH 3/3] ARM: dts: vf-colibri: add USB regulators
+Date: Wed, 12 Nov 2014 16:51:16 +0100
+Message-ID: <0bb62bdfc866f75977d01070d228ed4c@agner.ch>
+References: <1415106430-6271-1-git-send-email-stefan@agner.ch>
+ <1415106430-6271-4-git-send-email-stefan@agner.ch>
+ <20141111141228.GB2704@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141111141228.GB2704@dragon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: kernel@pengutronix.de, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+On 2014-11-11 15:12, Shawn Guo wrote:
+> On Tue, Nov 04, 2014 at 02:07:10PM +0100, Stefan Agner wrote:
+>> Add structure of USB supply logic. Especially, the USB hosts power
+>> enable regulator is needed to control VBUS supply.
+>>
+>> Signed-off-by: Stefan Agner <stefan@agner.ch>
+>> ---
+>>  arch/arm/boot/dts/vf-colibri-eval-v3.dtsi | 45 ++++++++++++++++++++++++++++++-
+>>  arch/arm/boot/dts/vf-colibri.dtsi         | 12 +++++++++
+>>  2 files changed, 56 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
+>> index 80e8fbc..eb4ca50 100644
+>> --- a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
+>> +++ b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
+>> @@ -11,6 +11,41 @@
+>>  	chosen {
+>>  		bootargs = "console=ttyLP0,115200";
+>>  	};
+>> +
+>> +	regulators {
+>> +		compatible = "simple-bus";
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		sys_5v0_reg: regulator@1 {
+>> +			compatible = "regulator-fixed";
+>> +			reg = <1>;
+> 
+> The numbering generally starts from 0 instead of 1.
+> 
+>> +			regulator-name = "5v0";
+>> +			regulator-min-microvolt = <5000000>;
+>> +			regulator-max-microvolt = <5000000>;
+>> +			regulator-always-on;
+>> +		};
+>> +
+>> +		usbc_vbus_reg: regulator@2 {
+>> +			compatible = "regulator-fixed";
+>> +			reg = <2>;
+>> +			regulator-name = "usbc_vbus";
+>> +			regulator-min-microvolt = <5000000>;
+>> +			regulator-max-microvolt = <5000000>;
+>> +			vin-supply = <&sys_5v0_reg>;
+>> +		};
+>> +
+>> +		/* USBH_PEN */
+>> +		usbh_vbus_reg: regulator@3 {
+>> +			compatible = "regulator-fixed";
+>> +			reg = <3>;
+>> +			regulator-name = "usbh_vbus";
+>> +			regulator-min-microvolt = <5000000>;
+>> +			regulator-max-microvolt = <5000000>;
+>> +			gpio = <&gpio3 19 GPIO_ACTIVE_LOW>;
+>> +			vin-supply = <&sys_5v0_reg>;
+>> +		};
+>> +	};
+>>  };
+>>
+>>  &bl {
+>> @@ -51,4 +86,12 @@
+>>
+>>  &uart2 {
+>>  	status = "okay";
+>> -};
+>> \ No newline at end of file
+>> +};
+>> +
+>> +&usbdev0 {
+>> +	vbus-supply = <&usbc_vbus_reg>;
+>> +};
+>> +
+>> +&usbh1 {
+>> +	vbus-supply = <&usbh_vbus_reg>;
+>> +};
+>> diff --git a/arch/arm/boot/dts/vf-colibri.dtsi b/arch/arm/boot/dts/vf-colibri.dtsi
+>> index 2371760..79ccfe2 100644
+>> --- a/arch/arm/boot/dts/vf-colibri.dtsi
+>> +++ b/arch/arm/boot/dts/vf-colibri.dtsi
+>> @@ -163,5 +163,17 @@
+>>  				VF610_PAD_PTD3__UART2_CTS		0x21a1
+>>  			>;
+>>  		};
+>> +
+>> +		pinctrl_usbh1_ext: gpio_usb_vbus {
+>> +			fsl,pins = <
+>> +				VF610_PAD_PTD4__GPIO_83			0x22ed
+> 
+> We used to know the GPIO usage by looking for the phandle reference to
+> the node.  But it doesn't work for VF610 case now.
+> 
+> I guess this is for usbh_vbus_reg usage?  It would be nice to have a
+> comment telling the usage of the GPIO.
 
-Today I've had a long discussion with Grant Likely on irc, in the
-#devicetree channel, on the devicetree bindings for simplefb.
+Yeah its true, its assign is not required for Vybird. However, we could
+assign them anyway, it would even enforce correct pin setup from
+Startup... This would then make a comment superfluous. What do you
+think?
 
-The 2 topics discussed were enumeration of simplefb nodes, and the
-handover to a hw specific driver later in the boot process.
 
-We've come to the following conclusions:
+> 
+>> +			>;
+>> +		};
+>> +
+>> +		pinctrl_usbdev0_ext: gpio_usb_cdet {
+>> +			fsl,pins = <
+>> +				VF610_PAD_PTC29__GPIO_102		0x22ed
+> 
+> How is this one used?
 
-1) Since simplefb nodes represent runtime information they must be sub-nodes
-of the chosen node. The primary display node must be named framebuffer0,
-additional nodes must be called framebuffer1, etc.
-
-2) If a simplefb node represents the preferred console for user
-interaction, then the chosen node's stdout-path property must point to it.
-
-3) Older devicetree files may have a compatible = "simple-framebuffer"
-node in a different place, operating systems must first enumerate any
-framebuffer# nodes found under chosen and then check for other compatible
-nodes.
-
-4) If the devicetree contains nodes for the display hardware used by a simplefb,
-then one of the hw nodes must have a property called "framebuffer" pointing to
-the framebuffer# node in chosen, so that the operating system knows which
-simplefb to disable when handing over control to a driver for the real
-hardware. The bindings for the hw nodes must specify which node contains the
-framebuffer property.
-
-5) It is advised that devicetree files contain pre-filled, disabled framebuffer#
-nodes, so that the firmware only needs to update the mode information and
-enable them. This way if e.g. later on support for more display clocks get
-added, the simplefb nodes will already contain this info and the firmware
-does not need to be updated.
-
-I'll post a patch updating Documentation/devicetree/bindings/video/simple-framebuffer.txt
-to reflect this soon.
-
-Regards,
-
-Hans
+This is not yet used. It is more or less the OTG-ID pin, but on 3.3V
+level. We use that on the Colibri standard to switch between Host/Device
+mode, however a driver which uses that GPIO is still outstanding. I can
+also leave that away for now, if you prefer....
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Stefan
+
+> 
+> Shawn
+> 
+>> +			>;
+>> +		};
+>>  	};
+>>  };
+>> --
+>> 2.1.3
+>>
