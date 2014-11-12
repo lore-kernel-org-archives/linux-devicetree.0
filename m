@@ -1,55 +1,54 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v7 0/2] clk: shmobile: DIV6 clock variable parent support
-Date: Wed, 12 Nov 2014 11:56:52 +0100
-Message-ID: <CAMuHMdWkGtMq+gDZ+1YTmUh2E5xAUsCANcuG433=S3QOsPzjdg@mail.gmail.com>
-References: <1415375468-15378-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-	<CAMuHMdW=TGAySfRgXtVigcO-HuEudEDhnc2BhWuy8b0KJvE4oA@mail.gmail.com>
-	<CANqRtoQS_868tnScxyLpSkCRiAewVvMfGLh60PqSC+b-mhKakw@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] ARM: imx: temporarily remove CONFIG_SOC_FSL from LS1021A
+Date: Wed, 12 Nov 2014 12:04:57 +0100
+Message-ID: <3302008.ezqrZf1odh@wuerfel>
+References: <1414746073-12394-1-git-send-email-jingchang.lu@freescale.com> <1727581.y25NQPsRIm@wuerfel> <20141112104239.GJ2704@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CANqRtoQS_868tnScxyLpSkCRiAewVvMfGLh60PqSC+b-mhKakw@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Simon Horman <horms@verge.net.au>, Mike Turquette <mturquette@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141112104239.GJ2704@dragon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Magnus,
+On Wednesday 12 November 2014 18:42:41 Shawn Guo wrote:
+> 
+> I noticed the issue from 0-DAY testing and was trying to drop the patch.
+> Jingchang said someone is trying to fixing the issues from driver code.
+> But it seems to take some time.  So I agree with this partial reverting.
+> 
+> Patch applied.  Thanks Arnd.
 
-On Tue, Nov 11, 2014 at 11:16 AM, Magnus Damm <magnus.damm@gmail.com> wrote:
-> On Mon, Nov 10, 2014 at 6:16 PM, Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
->> On Fri, Nov 7, 2014 at 4:51 PM, Ulrich Hecht
->> <ulrich.hecht+renesas@gmail.com> wrote:
->>>  .../bindings/clock/renesas,cpg-div6-clocks.txt     |  18 ++--
->>>  drivers/clk/shmobile/clk-div6.c                    | 113 ++++++++++++++++++---
->>>  2 files changed, 113 insertions(+), 18 deletions(-)
->>
->> For the series:
->> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> Thanks, Geert!
->
-> From my side this series "[PATCH v7 0/2] clk: shmobile: DIV6 clock
-> variable parent support" looks quite finalized. Would it be possible
+Thanks a lot!
 
-Does this mean I can add your acked-by?
+Jingchang, can you say which of the drivers that are currently depending
+on FSL_SOC are reused on LS1021A? I see these ones in the source tree:
 
-Thanks!
+drivers/ata/sata_fsl.c
+drivers/crypto/caam/
+drivers/crypto/talitos.c
+drivers/dma/fsldma.c
+drivers/memory/fsl_ifc.c
+drivers/misc/carma/
+drivers/mtd/nand/fsl_ifc_nand.c
+drivers/net/ethernet/freescale/fsl_pq_mdio.c
+drivers/net/ethernet/freescale/gianfar*
+drivers/net/ethernet/freescale/xgmac_mdio.c
+drivers/spi/spi-fsl-cpm.c
+drivers/spi/spi-fsl-dspi.c
+drivers/spi/spi-fsl-espi.c
+drivers/usb/host/ehci-fsl.c
+drivers/video/fbdev/fsl-diu-fb.c
+drivers/virt/fsl_hypervisor.c
+sound/soc/fsl/mpc*
 
-> for you to pick this up into the renesas-driver git repo? It would
-> also be great if you could lend a hand and make sure this series gets
-> picked up by Mike.
+I suspect that you only want a small subset of these, but I have no idea
+which.
 
-Will do.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+	Arnd
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
