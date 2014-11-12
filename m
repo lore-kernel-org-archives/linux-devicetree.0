@@ -1,61 +1,51 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH 2/3] power: reset: imx-snvs-poweroff: add power off
- driver for i.mx6
-Date: Wed, 12 Nov 2014 17:59:25 +0100
-Message-ID: <20141112165925.GA27681@earth.universe>
-References: <1415780439-29728-1-git-send-email-b38343@freescale.com>
- <1415780439-29728-3-git-send-email-b38343@freescale.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v5' 1/8] ARM: mediatek: Add basic support for mt8127
+Date: Wed, 12 Nov 2014 18:08:02 +0100
+Message-ID: <CABuKBeK3-h79sb1i32r-YbgCMVWFy-CEVobieW3VC7TsQJj1ew@mail.gmail.com>
+References: <1415086255-5555-1-git-send-email-yingjoe.chen@mediatek.com>
+	<1415692428-18416-1-git-send-email-yingjoe.chen@mediatek.com>
+	<1415692700.13629.26.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="VbJkn9YxBvnuCH5J"
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1415780439-29728-3-git-send-email-b38343@freescale.com>
+In-Reply-To: <1415692700.13629.26.camel@mtksdaap41>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Gong <b38343@freescale.com>
-Cc: shawn.guo@linaro.org, kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dbaryshkov@gmail.com, dwmw2@infradead.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, smoch@web.de
+To: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, srv_heupstream <srv_heupstream@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, HC Yen <hc.yen@mediatek.com>, Yuhau Chen <yh.chen@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Nathan Chung <nathan.chung@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, huang eddie <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Joe,
 
---VbJkn9YxBvnuCH5J
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+2014-11-11 8:58 GMT+01:00 Yingjoe Chen <yingjoe.chen@mediatek.com>:
+>
+> Hi, Matthias, Arnd,
+>
+> After previous discussion[1], I'm not sure which one do you preferred
+> for mt8127/mt8135, so I send 64bits address version again. Trying to not
+> SPAM too much, I only send the difference(first 4 patches) this time.
+>
+> We do have SoC that need >4GB address, so at least those will need to
+> use 64bits address. If we want to have a consistent look, 64bits is the
+> way to go. Also we already have some patches under review now using
+> 64bits address. So I preferred this one, but both versions are OK to me.
 
-Hi,
+Regarding Arnd's last email, the 64 bit is the right way.
 
-On Wed, Nov 12, 2014 at 04:20:38PM +0800, Robin Gong wrote:
-> This driver register pm_power_off with snvs power off function. If
-> your boards NOT use PMIC_ON_REQ to turn on/off external pmic, or use
-> other pin to do, please disable the driver in dts, otherwise, your
-> pm_power_off maybe overwrote by this driver.
->=20
-> Signed-off-by: Robin Gong <b38343@freescale.com>
+Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
 
-Acked-By: Sebastian Reichel <sre@kernel.org>
+>
+> Please help to review this and let me know anything you want me to
+> change. Thanks.
+>
+> Joe.C
+>
+> [1]
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/299598.html
+>
+>
+>
 
--- Sebastian
 
---VbJkn9YxBvnuCH5J
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJUY5HtAAoJENju1/PIO/qaYdkP/AgVUwvCivqytBuQLaByw3lg
-hfpEc+62UTzBHWwhqI5QJ9Ni7Z5ap/116EKGRUPGESvwzwEgvfTedKtvAC6HHE+v
-AdVnlciWj5SeqsY8n0madYp07vZrYSCvic/HGAv16ubJmzQCejYXx8L3Vc0/eKsY
-8fZNEa2EyX9roH8USYJ7Klozko7a7mGeN28cWVA5EMscxbSJOR2FT88MuEduYg3B
-M+MCjU+YpVY7u1VtWIHzXbJRLDtziLjUEudLIjcfzQpsc7W21HBA2Cw88R2iZ2Yo
-A4NOU7rt9JQb5rX0gdcz1nIK/5LEAQMpHhwIiLfueDRTpS/fQKlOEgbxZgLKn2pw
-rkJpzBAhMrGa8zzby2sBhPGhWQ0J61anVxm15m/cC9RoePpwgTfR/nhV3kQPJTYe
-njrNNRh8JFsWXP/97kc+icr7twucW38kApJUVtPAskP7MwP745JGfse/XS/1C0MZ
-aGNe75x5i83BO+bElkoAKYLSQKQ+vdvPsgYKCh4S9BgsBMy9EqpmID1l6xvJKQce
-u18l/W2QeuzyZQN0VnUg6NZ9IhS1rUm/FuLEuDIXyHIJf+HyC2KFDZLd1COv/oxX
-GQNT4mpTs8wQWT3fzU4GKM+x9G4Lqyue+a4E0GWZPBp4KteQvKKWWqxLhEx8uNDC
-t+lJau0RoLV8NRW3NxWp
-=dB4J
------END PGP SIGNATURE-----
-
---VbJkn9YxBvnuCH5J--
+-- 
+motzblog.wordpress.com
