@@ -1,68 +1,42 @@
-From: Howard Chen <ibanezchen@gmail.com>
-Subject: [PATCH v6 2/4] ARM: mediatek: add dts for mt6592-evb
-Date: Thu, 13 Nov 2014 00:07:35 +0800
-Message-ID: <1415808457-4030-2-git-send-email-ibanezchen@gmail.com>
+From: Howard Chen <ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v6 4/4] DTS: serial: Add bindings documention for the Mediatek UARTs
+Date: Thu, 13 Nov 2014 00:07:37 +0800
+Message-ID: <1415808457-4030-4-git-send-email-ibanezchen@gmail.com>
 References: <1415808457-4030-1-git-send-email-ibanezchen@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415808457-4030-1-git-send-email-ibanezchen@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: arm@kernel.org, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Howard Chen <ibanezchen@gmail.com>, Olof Johansson <olof@lixom.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415808457-4030-1-git-send-email-ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Howard Chen <ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The mt6592-evb is an evaluation board based on the MT6592 SoC.
+This patch add s devicetree document for Mediatek UART.
 
-Signed-off-by: Howard Chen <ibanezchen@gmail.com>
+Signed-off-by: Howard Chen <ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile       |  3 ++-
- arch/arm/boot/dts/mt6592-evb.dts | 25 +++++++++++++++++++++++++
- 2 files changed, 27 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/mt6592-evb.dts
+ Documentation/devicetree/bindings/serial/mtk-uart.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index ab63751..0ce0d9e 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -532,7 +532,8 @@ dtb-$(CONFIG_MACH_DOVE) += dove-cm-a510.dtb \
- 	dove-d2plug.dtb \
- 	dove-d3plug.dtb \
- 	dove-dove-db.dtb
--dtb-$(CONFIG_ARCH_MEDIATEK) += mt6589-aquaris5.dtb
-+dtb-$(CONFIG_ARCH_MEDIATEK) += mt6589-aquaris5.dtb \
-+	mt6592-evb.dtb
+diff --git a/Documentation/devicetree/bindings/serial/mtk-uart.txt b/Documentation/devicetree/bindings/serial/mtk-uart.txt
+index 48358a3..e2864b7 100644
+--- a/Documentation/devicetree/bindings/serial/mtk-uart.txt
++++ b/Documentation/devicetree/bindings/serial/mtk-uart.txt
+@@ -2,9 +2,10 @@
  
- endif
+ Required properties:
+ - compatible should contain:
++  * "mediatek,mt6592-uart" for MT6592 compatible UARTS
+   * "mediatek,mt6589-uart" for MT6589 compatible UARTS
+   * "mediatek,mt6582-uart" for MT6582 compatible UARTS
+-  * "mediatek,mt6577-uart" for all compatible UARTS (MT6589, MT6582, MT6577)
++  * "mediatek,mt6577-uart" for all compatible UARTS on MT65xx
  
-diff --git a/arch/arm/boot/dts/mt6592-evb.dts b/arch/arm/boot/dts/mt6592-evb.dts
-new file mode 100644
-index 0000000..4750c4c
---- /dev/null
-+++ b/arch/arm/boot/dts/mt6592-evb.dts
-@@ -0,0 +1,25 @@
-+/*
-+ * Copyright (c) 2014 MediaTek Inc.
-+ * Author: Howard Chen <ibanezchen@gmail.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+/dts-v1/;
-+#include "mt6592.dtsi"
-+
-+/ {
-+	model = "mt6592 evb";
-+	compatible = "mediatek,mt6592-evb", "mediatek,mt6592";
-+
-+	memory {
-+		reg = <0x80000000 0x08000000>;
-+	};
-+};
+ - reg: The base address of the UART register bank.
+ 
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
