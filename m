@@ -1,79 +1,90 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH V2 1/1] ARM: dts: sunxi: Banana Pi: increase
- startup-delay for the GMAC PHY regulator
-Date: Wed, 12 Nov 2014 14:37:27 +0100
-Message-ID: <20141112133727.GO14919@lukather>
-References: <1415539714-7652-1-git-send-email-merker@debian.org>
- <1415746906-20835-1-git-send-email-merker@debian.org>
- <1415746906-20835-2-git-send-email-merker@debian.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Shaohui Xie <Shaohui.Xie@freescale.com>
+Subject: RE: [PATCH] DT: add MDIO node for FMan node
+Date: Wed, 12 Nov 2014 13:40:56 +0000
+Message-ID: <c4dd11a97a684be8b799c2f639e600ca@DM2PR0301MB0864.namprd03.prod.outlook.com>
+References: <1415102196-9238-1-git-send-email-shh.xie@gmail.com>
+ <1415665384.15957.16.camel@freescale.com>
+ <fb6dc6131da04e89bfc31bd8278030a0@DM2PR0301MB0864.namprd03.prod.outlook.com>
+ <1415727479.15957.29.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="eHmdSDY+kY2au76U"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBN6GRWRQKGQELCGSUHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1415746906-20835-2-git-send-email-merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1415727479.15957.29.camel@freescale.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Scott Wood <scottwood@freescale.com>
+Cc: "Igal.Liberman@freescale.com" <Igal.Liberman@freescale.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Emilian Medve <Emilian.Medve@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---eHmdSDY+kY2au76U
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Nov 12, 2014 at 12:01:46AM +0100, Karsten Merker wrote:
-> On the LeMaker Banana Pi, probing the external ethernet PHY connected
-> to the SoC's internal GMAC module sometimes fails. The PHY power
-> supply is handled via a GPIO-controlled regulator, and the existing
-> regulator startup-delay of 50000us is too short to make sure that the
-> PHY is always fully powered up when it is queried by phylib. Tests
-> have shown that to provide a reliable PHY detection, the startup-delay
-> has to be increased to at least 60000us. To have a certain safety margin
-> and to cater for manufacturing variations between different boards,
-> the delay gets set to 100000us as discussed on the linux-arm-kernel
-> mailinglist.
->=20
-> Signed-off-by: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-> Acked-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-
-Merged, thanks.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---eHmdSDY+kY2au76U
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUY2KXAAoJEBx+YmzsjxAg7zgP/1IKd6W+p5LjWaHSFVKsQSv8
-GTsVexwjqLodPgjVfDvQC0EwXlmd0sPWaqgfkVvAogrL75tddRelYv+MVbNtDeIP
-6Iqg78ONFyrnxum9mufT9xnsUk//pfAh9mum85vRoXmynKazPDWSaDDDEHZLXtaM
-SBXjOs4eIHtYut6oIS/7movIMsstwximDQWVGgJwI+x19Uye095oMwRALFZs5dsQ
-lkkbTjvS98QCmaVeylGRVN10IXDu50hlCfAxvRiN7nmveFU9K+9KBo0Zydu3V5Ch
-2FFr0JDHGTAVF5VTnSzVxXb11GJc0KYUvnNQrgdBCVWrABDLOc+AEvxhazJGZ9F8
-LchI2bMCidN8/H5gmfbBW1BMEXNj2rwkWsUstiMNQ4RZSbQ9W07j+VIcDOntAnVO
-zU+2/8jM5U6LGBk+QE9dW2cuRZbyqVuEEA5LQYlUWtIZGWM2aVpH97MymkzWvm8z
-bjBmibB0x9lc8lHBHStCUeSTpMNvwSu08tHxCwszczmQtPvjm0V0yq9VOrpfAxuy
-WLL+4JIFbpe+0UJOIkIV6+MPrnL861/4FH+e9+S/fY181ygriDWv7uHYKuhUQmM+
-EMJK6iESuSmL7JPygR1QOnDEJ3MOZLgsUTDbboKEXMQhJ1tLRH8PedVkRHcV6aMv
-q+ptx03gXDjpAZTFMhtO
-=Dr7/
------END PGP SIGNATURE-----
-
---eHmdSDY+kY2au76U--
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBXb29kIFNjb3R0LUIwNzQyMQ0K
+PiBTZW50OiBXZWRuZXNkYXksIE5vdmVtYmVyIDEyLCAyMDE0IDE6MzggQU0NCj4gVG86IFhpZSBT
+aGFvaHVpLUIyMTk4OQ0KPiBDYzogTGliZXJtYW4gSWdhbC1CMzE5NTA7IGxpbnV4cHBjLWRldkBs
+aXN0cy5vemxhYnMub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgTWVkdmUgRW1p
+bGlhbi1FTU1FRFZFMQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBEVDogYWRkIE1ESU8gbm9kZSBm
+b3IgRk1hbiBub2RlDQo+IA0KPiBPbiBUdWUsIDIwMTQtMTEtMTEgYXQgMDQ6MzIgLTA2MDAsIFhp
+ZSBTaGFvaHVpLUIyMTk4OSB3cm90ZToNCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
+DQo+ID4gPiBGcm9tOiBXb29kIFNjb3R0LUIwNzQyMQ0KPiA+ID4gU2VudDogVHVlc2RheSwgTm92
+ZW1iZXIgMTEsIDIwMTQgODoyMyBBTQ0KPiA+ID4gVG86IHNoaC54aWVAZ21haWwuY29tDQo+ID4g
+PiBDYzogbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJu
+ZWwub3JnOyBNZWR2ZQ0KPiA+ID4gRW1pbGlhbi1FTU1FRFZFMTsgWGllIFNoYW9odWktQjIxOTg5
+DQo+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIXSBEVDogYWRkIE1ESU8gbm9kZSBmb3IgRk1hbiBu
+b2RlDQo+ID4gPg0KPiA+ID4gT24gVHVlLCAyMDE0LTExLTA0IGF0IDE5OjU2ICswODAwLCBzaGgu
+eGllQGdtYWlsLmNvbSB3cm90ZToNCj4gPiA+ID4gRnJvbTogU2hhb2h1aSBYaWUgPFNoYW9odWku
+WGllQGZyZWVzY2FsZS5jb20+DQo+ID4gPiA+DQo+ID4gPiA+IFRoaXMgYmluZGluZyBpcyBmb3Ig
+Rk1hbiBNRElPLCBpdCBjb3ZlcnMgRk1hbiB2MiAmIEZNYW4gdjMuDQo+ID4gPiA+DQo+ID4gPiA+
+IFNpZ25lZC1vZmYtYnk6IFNoYW9odWkgWGllIDxTaGFvaHVpLlhpZUBmcmVlc2NhbGUuY29tPg0K
+PiA+ID4gPiAtLS0NCj4gPiA+ID4gYmFzZWQgb24gaHR0cDovL3BhdGNod29yay5vemxhYnMub3Jn
+L3BhdGNoLzM5MDM1MS8NCj4gPiA+ID4gZm9yICduZXh0JyBvZg0KPiA+ID4gPiBnaXQ6Ly9naXQu
+a2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvc2NvdHR3b29kL2xpbnV4LmdpdA0K
+PiA+ID4NCj4gPiA+IEFyZSB0aGVyZSBhbnkgb3RoZXIgRk1hbiBwaWVjZXMgdGhhdCBhcmUgbWlz
+c2luZyBmcm9tIHRoZSBhYm92ZSBwYXRjaD8NCj4gPiBbUy5IXSBJJ20gYWRkaW5nIElnYWwgZm9y
+IHRoaXMgY29tbWVudC4NCj4gPg0KPiA+ID4NCj4gPiA+ID4gKy0gYnVzLWZyZXF1ZW5jeQ0KPiA+
+ID4gPiArCQlVc2FnZTogb3B0aW9uYWwNCj4gPiA+ID4gKwkJVmFsdWUgdHlwZTogPHUzMj4NCj4g
+PiA+ID4gKwkJRGVmaW5pdGlvbjogRGVmYXVsdCBNRElPIGJ1cyBjbG9jayBzcGVlZC4NCj4gPiA+
+DQo+ID4gPiBVc2UgY2xvY2tzL2Nsb2NrLW5hbWVzDQo+ID4gW1MuSF0gVGhlIE1ESU8gdXNlcyBG
+bWFuIGNsb2NrIGFuZCBkaXZpZGVzIGl0IHRvIGEgcHJvcGVyIHZhbHVlIHdoaWNoDQo+IGlzIHNw
+ZWNpZmllZCBieSB0aGlzIHByb3BlcnR5Lg0KPiANCj4gVXNlIGNsb2Nrcy9jbG9jay1uYW1lcyB0
+byBkZXNjcmliZSB0aGF0IHJlbGF0aW9uc2hpcC4NCj4gDQpbUy5IXSBUaGUgTURJTyBub2RlIGlz
+IHN1Yi1ub2RlIGFuZCBlbWJlZGRlZCBpbiBGbWFuIG5vZGUsIHRoZSBjbG9ja3MvY2xvY2stbmFt
+ZXMgaXMgcHJvdmlkZWQgYnkgRm1hbiBub2RlLCBzaG91bGQgcmVwZWF0IHRoZW0gaW4gTURJTyBu
+b2RlPyBGb3IgdGhlIGRlZmF1bHQgTURJTyBidXMgY2xvY2sgc3BlZWQsIG1heWJlICJjbG9jay1y
+YW5nZXMiIHNob3VsZCBiZSB1c2VkPw0KDQo+ID4gPg0KPiA+ID4gPiArLSBpbnRlcnJ1cHRzDQo+
+ID4gPiA+ICsJCVVzYWdlOiBvcHRpb25hbA0KPiA+ID4gPiArCQlWYWx1ZSB0eXBlOiA8cHJvcC1l
+bmNvZGVkLWFycmF5Pg0KPiA+ID4gPiArCQlEZWZpbml0aW9uOiBNRElPIGNvbnRyb2xsZXIgZXZl
+bnQgaW50ZXJydXB0cy4NCj4gPiA+DQo+ID4gPiBPbmUgaW50ZXJydXB0IG9yIG11bHRpcGxlPw0K
+PiA+IFtTLkhdIE9uZSBmb3IgMSBHYi9zLCBvbmUgZm9yIDEwIEdiL3MuDQo+IA0KPiBUaGVuIHRo
+ZSBiaW5kaW5nIG5lZWRzIHRvIHNheSB0aGF0IHRoZXJlIGFyZSB0d28gKGV4Y2VwdCBmb3IgImZz
+bCxmbWFuLQ0KPiBtZGlvIiwgcmlnaHQ/KSBhbmQgd2hpY2ggaXMgd2hpY2guDQo+IA0KW1MuSF0g
+T0suDQoNCj4gPiA+DQo+ID4gPiA+ICsNCj4gPiA+ID4gKy0gdHlwZQ0KPiA+ID4gPiArCQlVc2Fn
+ZTogcmVxdWlyZWQgZm9yIEZNYW4gdjMNCj4gPiA+ID4gKwkJVmFsdWUgdHlwZTogPHN0cmluZ2xp
+c3Q+DQo+ID4gPiA+ICsJCURlZmluaXRpb246IEEgc3RhbmRhcmQgcHJvcGVydHkuDQo+ID4gPg0K
+PiA+ID4gV2hhdCBzdGFuZGFyZCBpcyAidHlwZSIgZGVmaW5lZCBpbj8NCj4gPg0KPiA+IFtTLkhd
+IEl0J3MgdG8gZGlmZmVyZW50aWF0ZSBiZXR3ZWVuIHRoZSBpbnRlcm5hbCBhbmQgZXh0ZXJuYWwg
+TURJTywNCj4gPiBJJ20gbm90IHF1aXRlIHN1cmUgYWJvdXQgbmFtaW5nIGl0LCBvciB3aGF0IGNv
+dWxkIGJlIGJldHRlciB3YXkgdG8NCj4gPiBkaWZmZXJlbnRpYXRlIHRoZSBNRElPcz8NCj4gDQo+
+IEknbSBub3QgcXVlc3Rpb25pbmcgdGhlIG5lZWQgdG8gY29udmV5IHRoaXMgaW5mb3JtYXRpb24u
+ICBJJ20gc2F5aW5nIGl0J3MNCj4gbm90ICJBIHN0YW5kYXJkIHByb3BlcnR5Ii4gIEknZCBhbHNv
+IGxpa2UgdG8gc2VlIGEgYmV0dGVyIG5hbWUuDQo+IA0KW1MuSF0gc2luY2UgRm1hbiBWMiAmIFYz
+IGNhbiBiZSBkaWZmZXJlbnRpYXRlZCBieSBjb21wYXRpYmxlLCBhIGJvb2xlYW4gcHJvcGVydHkg
+ImZzbCxmbWFuLWludGVybmFsLW1kaW8iIHNlZW1zIGJldHRlciwgaWYgZGVmaW5lZCwgaXQgaW5k
+aWNhdGVzIGFuIGludGVybmFsIE1ESU8uIEl0IGxvb2tzIGxpa2UgYmVsb3c6DQoNCmZzbCxmbWFu
+LWludGVybmFsLW1kaW8NCgkJVXNhZ2U6IHJlcXVpcmVkIGZvciBpbnRlcm5hbCBNRElPDQoJCVZh
+bHVlIHR5cGU6IEJvb2xlYW4NCgkJRGVmaW5pdGlvbjogRm1hbiBoYXMgaW50ZXJuYWwgTURJTyBm
+b3IgaW50ZXJuYWwgUENTKFBoeXNpY2FsDQoJCUNvZGluZyBTdWJsYXllcikgUEhZcyBhbmQgZXh0
+ZXJuYWwgTURJTyBmb3IgZXh0ZXJuYWwgUEhZcy4NCgkJVGhlIHNldHRpbmdzIGFuZCBwcm9ncmFt
+bWluZyByb3V0aW5lcyBmb3IgaW50ZXJuYWwvZXh0ZXJuYWwNCgkJTURJTyBhcmUgZGlmZmVyZW50
+LiBNdXN0IGJlIGluY2x1ZGVkIGZvciBpbnRlcm5hbCBNRElPLg0KDQpIb3cgYWJvdXQgdGhpcz8N
+Cg0KVGhhbmtzIQ0KU2hhb2h1aQ0KIA0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlz
+dHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMt
+ZGV2
