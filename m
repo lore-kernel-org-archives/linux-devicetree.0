@@ -1,418 +1,148 @@
-From: George McCollister <george.mccollister@gmail.com>
-Subject: [PATCH 2/2] ARM: dts: Add devicetree for NovaTech OrionLXm
-Date: Wed, 12 Nov 2014 16:41:33 -0600
-Message-ID: <1415832094-20991-2-git-send-email-george.mccollister@gmail.com>
-References: <1415832094-20991-1-git-send-email-george.mccollister@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415832094-20991-1-git-send-email-george.mccollister@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: George McCollister <george.mccollister@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Florian Vaussard <florian.vaussard@epfl.ch>, Joachim Eastwood <manabian@gmail.com>, Rajendra Nayak <rnayak@ti.com>, Felipe Balbi <balbi@ti.com>, Carlos Garcia <carlos@cgarcia.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, "open list:OMAP DEVICE TREE..." <linux-omap@vger.kernel.org>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 2/2] spi: Add driver for IMG SPFI controller
+Date: Wed, 12 Nov 2014 14:54:57 -0800
+Message-ID: <CAL1qeaH1rMcy37vcoHZ9xsmYs5iHz3Pp0GrC7agLmQ4Y7==iTw@mail.gmail.com>
+References: <1415828274-24727-1-git-send-email-abrestic@chromium.org>
+	<1415828274-24727-3-git-send-email-abrestic@chromium.org>
+	<20141112220740.GR3815@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141112220740.GR3815-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ezequiel Garcia <Ezequiel.Garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the NovaTech OrionLXm which is based on the AM335x SoC
-http://www.novatechweb.com/substation-automation/orionlxm/
+On Wed, Nov 12, 2014 at 2:07 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>
+> On Wed, Nov 12, 2014 at 01:37:54PM -0800, Andrew Bresticker wrote:
+>> Add support for the Synchronous Peripheral Flash Interface (SPFI) master
+>> controller found on IMG SoCs.  The SPFI controller supports 5 chip-select
+>> lines and single/dual/quad mode SPI transfers.
+>
+>>  drivers/spi/spi-img.c | 703 ++++++++++++++++++++++++++++++++++++++++++++++++++
+>
+> How about spi-img-spfi?  That way if someone makes another SPI
+> controller (say a more generic one, this one seems flash specialized)
+> there won't be a collision.
 
-RAM: 512MiB
-Flash: 4GB eMMC
-Ethernet PHYs: 2x Micrel KSZ8041FTLI
-USB ports are used internally by the expansion cards.
-Internal micro SD slot is available.
+Despite the name, I believe this controller is used for generic SPI
+stuff as well.  I'm not sure if there is a separate one which is more
+generic (James?).
 
-Signed-off-by: George McCollister <george.mccollister@gmail.com>
----
- .../devicetree/bindings/arm/omap/omap.txt          |   3 +
- arch/arm/boot/dts/Makefile                         |   3 +-
- arch/arm/boot/dts/am335x-lxm.dts                   | 354 +++++++++++++++++++++
- 3 files changed, 359 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/am335x-lxm.dts
+>> +static void spfi_flush_tx_fifo(struct img_spfi *spfi)
+>> +{
+>> +     spfi_writel(spfi, SPFI_INTERRUPT_SDE, SPFI_INTERRUPT_CLEAR);
+>> +     while (!(spfi_readl(spfi, SPFI_INTERRUPT_STATUS) &
+>> +              SPFI_INTERRUPT_SDE))
+>> +             cpu_relax();
+>> +}
+>
+> This will busy loop for ever if we don't get the response we want from
+> the hardware...  some cap on the number of spins would be good.
 
-diff --git a/Documentation/devicetree/bindings/arm/omap/omap.txt b/Documentation/devicetree/bindings/arm/omap/omap.txt
-index ddd9bcd..4f6a82c 100644
---- a/Documentation/devicetree/bindings/arm/omap/omap.txt
-+++ b/Documentation/devicetree/bindings/arm/omap/omap.txt
-@@ -132,6 +132,9 @@ Boards:
- - AM335X Bone : Low cost community board
-   compatible = "ti,am335x-bone", "ti,am33xx", "ti,omap3"
- 
-+- AM335X OrionLXm : Substation Automation Platform
-+  compatible = "novatech,am335x-lxm", "ti,am33xx"
-+
- - OMAP5 EVM : Evaluation Module
-   compatible = "ti,omap5-evm", "ti,omap5"
- 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 38c89ca..454ee6c 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -331,7 +331,8 @@ dtb-$(CONFIG_SOC_AM33XX) += am335x-base0033.dtb \
- 	am335x-evm.dtb \
- 	am335x-evmsk.dtb \
- 	am335x-nano.dtb \
--	am335x-pepper.dtb
-+	am335x-pepper.dtb \
-+	am335x-lxm.dtb
- dtb-$(CONFIG_ARCH_OMAP4) += omap4-duovero-parlor.dtb \
- 	omap4-panda.dtb \
- 	omap4-panda-a4.dtb \
-diff --git a/arch/arm/boot/dts/am335x-lxm.dts b/arch/arm/boot/dts/am335x-lxm.dts
-new file mode 100644
-index 0000000..0f7cbae
---- /dev/null
-+++ b/arch/arm/boot/dts/am335x-lxm.dts
-@@ -0,0 +1,354 @@
-+/*
-+ * Copyright (C) 2014 NovaTech LLC - http://www.novatechweb.com
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+/dts-v1/;
-+
-+#include "am33xx.dtsi"
-+
-+/ {
-+	model = "NovaTech OrionLXm";
-+	compatible = "novatech,am335x-lxm", "ti,am33xx";
-+
-+	cpus {
-+		cpu@0 {
-+			cpu0-supply = <&vdd1_reg>;
-+		};
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x80000000 0x20000000>; /* 512 MB */
-+	};
-+
-+	vbat: fixedregulator@0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vbat";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-boot-on;
-+	};
-+
-+	vmmcsd_fixed: fixedregulator@0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vmmcsd_fixed";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+};
-+
-+&am33xx_pinmux {
-+	mmc1_pins: pinmux_mmc1_pins {
-+		pinctrl-single,pins = <
-+			0xf0 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_dat3 */
-+			0xf4 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_dat2 */
-+			0xf8 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_dat1 */
-+			0xfc (PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_dat0 */
-+			0x100 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_clk */
-+			0x104 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_cmd */
-+		>;
-+	};
-+
-+	i2c0_pins: pinmux_i2c0_pins {
-+		pinctrl-single,pins = <
-+			0x188 (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c0_sda.i2c0_sda */
-+			0x18c (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c0_scl.i2c0_scl */
-+		>;
-+	};
-+
-+	i2c2_pins: pinmux_i2c2_pins {
-+		pinctrl-single,pins = <
-+			0x178 (PIN_INPUT_PULLUP | MUX_MODE3)	/* uart1_ctsn.i2c2_sda */
-+			0x17c (PIN_INPUT_PULLUP | MUX_MODE3)	/* uart1_rtsn.i2c2_scl */
-+		>;
-+	};
-+
-+	cpsw_default: cpsw_default {
-+		pinctrl-single,pins = <
-+			/* Slave 1 */
-+			0x64 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* rmii1_int */
-+			0x10c (PIN_INPUT_PULLDOWN | MUX_MODE1)	/* rmii1_crs_dv */
-+			0x110 (PIN_INPUT_PULLDOWN | MUX_MODE1)	/* rmii1_rxer */
-+			0x114 (PIN_OUTPUT_PULLDOWN | MUX_MODE1)	/* rmii1_txen */
-+			0x124 (PIN_OUTPUT_PULLDOWN | MUX_MODE1)	/* rmii1_td1 */
-+			0x128 (PIN_OUTPUT_PULLDOWN | MUX_MODE1)	/* rmii1_td0 */
-+			0x13c (PIN_INPUT_PULLDOWN | MUX_MODE1)	/* rmii1_rd1 */
-+			0x140 (PIN_INPUT_PULLDOWN | MUX_MODE1)	/* rmii1_rd0 */
-+			0x144 (PIN_INPUT_PULLDOWN | MUX_MODE0)	/* rmii1_refclk */
-+
-+			/* Slave 2 */
-+			0x40 (PIN_OUTPUT_PULLDOWN | MUX_MODE3)	/* rmii2_txen */
-+			0x50 (PIN_OUTPUT_PULLDOWN | MUX_MODE3)	/* rmii2_td1 */
-+			0x54 (PIN_OUTPUT_PULLDOWN | MUX_MODE3)	/* rmii2_td0 */
-+			0x68 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* rmii2_rd1 */
-+			0x6c (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* rmii2_rd0 */
-+			0x70 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* rmii2_crs_dv */
-+			0x74 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* rmii2_rxer */
-+			0x78 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* rmii2_int */
-+			0x108 (PIN_INPUT_PULLDOWN | MUX_MODE1)	/* rmii2_refclk */
-+		>;
-+	};
-+
-+	cpsw_sleep: cpsw_sleep {
-+		pinctrl-single,pins = <
-+			/* Slave 1 reset value */
-+			0x64 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* rmii1_int */
-+			0x10c (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* rmii1_crs_dv */
-+			0x110 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* rmii1_rxer */
-+			0x114 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* rmii1_txen */
-+			0x124 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* rmii1_td1 */
-+			0x128 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* rmii1_td0 */
-+			0x13c (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* rmii1_rd1 */
-+			0x140 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* rmii1_rd0 */
-+			0x144 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* rmii1_refclk */
-+
-+			/* Slave 2 reset value*/
-+			0x40 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* rmii2_txen */
-+			0x50 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* rmii2_td1 */
-+			0x54 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* rmii2_td0 */
-+			0x68 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* rmii2_rd1 */
-+			0x6c (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* rmii2_rd0 */
-+			0x70 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* rmii2_crs_dv */
-+			0x74 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* rmii2_rxer */
-+			0x78 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* rmii2_int */
-+			0x108 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* rmii2_refclk */
-+		>;
-+	};
-+
-+	davinci_mdio_default: davinci_mdio_default {
-+		pinctrl-single,pins = <
-+			/* MDIO */
-+			0x148 (PIN_INPUT_PULLUP | SLEWCTRL_FAST | MUX_MODE0)	/* mdio_data.mdio_data */
-+			0x14c (PIN_OUTPUT_PULLUP | MUX_MODE0)			/* mdio_clk.mdio_clk */
-+		>;
-+	};
-+
-+	davinci_mdio_sleep: davinci_mdio_sleep {
-+		pinctrl-single,pins = <
-+			/* MDIO reset value */
-+			0x148 (PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			0x14c (PIN_INPUT_PULLDOWN | MUX_MODE7)
-+		>;
-+	};
-+
-+	emmc_pins: pinmux_emmc_pins {
-+		pinctrl-single,pins = <
-+			0x80 (PIN_INPUT_PULLUP | MUX_MODE2) /* gpmc_csn1.mmc1_clk */
-+			0x84 (PIN_INPUT_PULLUP | MUX_MODE2) /* gpmc_csn2.mmc1_cmd */
-+			0x00 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad0.mmc1_dat0 */
-+			0x04 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad1.mmc1_dat1 */
-+			0x08 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad2.mmc1_dat2 */
-+			0x0c (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad3.mmc1_dat3 */
-+			0x10 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad4.mmc1_dat4 */
-+			0x14 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad5.mmc1_dat5 */
-+			0x18 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad6.mmc1_dat6 */
-+			0x1c (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad7.mmc1_dat7 */
-+		>;
-+	};
-+
-+	uart0_pins: pinmux_uart0_pins {
-+		pinctrl-single,pins = <
-+			0x170 (PIN_INPUT_PULLUP | MUX_MODE0)	/* uart0_rxd.uart0_rxd */
-+			0x174 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* uart0_txd.uart0_txd */
-+		>;
-+	};
-+};
-+
-+
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins>;
-+
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	serial_config1: serial_config1@20 {
-+		compatible = "nxp,pca9539";
-+		reg = <0x20>;
-+	};
-+
-+	serial_config2: serial_config2@21 {
-+		compatible = "nxp,pca9539";
-+		reg = <0x21>;
-+	};
-+
-+	tps: tps@2d {
-+		reg = <0x2d>;
-+	};
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins>;
-+
-+	status = "okay";
-+	clock-frequency = <100000>;
-+};
-+
-+/include/ "tps65910.dtsi"
-+
-+&tps {
-+	vcc1-supply = <&vbat>;
-+	vcc2-supply = <&vbat>;
-+	vcc3-supply = <&vbat>;
-+	vcc4-supply = <&vbat>;
-+	vcc5-supply = <&vbat>;
-+	vcc6-supply = <&vbat>;
-+	vcc7-supply = <&vbat>;
-+	vccio-supply = <&vbat>;
-+
-+	regulators {
-+		vrtc_reg: regulator@0 {
-+			regulator-always-on;
-+		};
-+
-+		vio_reg: regulator@1 {
-+			regulator-always-on;
-+		};
-+
-+		vdd1_reg: regulator@2 {
-+			regulator-name = "vdd_mpu";
-+			regulator-min-microvolt = <600000>;
-+			regulator-max-microvolt = <1500000>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+		};
-+
-+		vdd2_reg: regulator@3 {
-+			regulator-always-on;
-+		};
-+
-+		vdd3_reg: regulator@4 {
-+			regulator-always-on;
-+		};
-+
-+		vdig1_reg: regulator@5 {
-+			regulator-always-on;
-+		};
-+
-+		vdig2_reg: regulator@6 {
-+			regulator-always-on;
-+		};
-+
-+		vpll_reg: regulator@7 {
-+			regulator-always-on;
-+		};
-+
-+		vdac_reg: regulator@8 {
-+			regulator-always-on;
-+		};
-+
-+		vaux1_reg: regulator@9 {
-+			regulator-always-on;
-+		};
-+
-+		vaux2_reg: regulator@10 {
-+			regulator-always-on;
-+		};
-+
-+		vaux33_reg: regulator@11 {
-+			regulator-always-on;
-+		};
-+
-+		vmmc_reg: regulator@12 {
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+	};
-+};
-+
-+&sham {
-+	status = "okay";
-+};
-+
-+&aes {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins>;
-+
-+	status = "okay";
-+};
-+
-+&usb {
-+	status = "okay";
-+};
-+
-+&usb_ctrl_mod {
-+	status = "okay";
-+};
-+
-+&usb0_phy {
-+	status = "okay";
-+};
-+
-+&usb1_phy {
-+	status = "okay";
-+};
-+
-+&usb0 {
-+	status = "okay";
-+	dr_mode = "host";
-+};
-+
-+&usb1 {
-+	status = "okay";
-+	dr_mode = "host";
-+};
-+
-+&cppi41dma  {
-+	status = "okay";
-+};
-+
-+&cpsw_emac0 {
-+	phy_id = <&davinci_mdio>, <5>;
-+	phy-mode = "rmii";
-+	dual_emac_res_vlan = <2>;
-+};
-+
-+&cpsw_emac1 {
-+	phy_id = <&davinci_mdio>, <4>;
-+	phy-mode = "rmii";
-+	dual_emac_res_vlan = <3>;
-+};
-+
-+&mac {
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&cpsw_default>;
-+	pinctrl-1 = <&cpsw_sleep>;
-+	dual_emac = <1>;
-+	status = "okay";
-+};
-+
-+&davinci_mdio {
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&davinci_mdio_default>;
-+	pinctrl-1 = <&davinci_mdio_sleep>;
-+	status = "okay";
-+};
-+
-+&mmc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins>;
-+	bus-width = <4>;
-+	status = "okay";
-+	vmmc-supply = <&vmmc_reg>;
-+	ti,vcc-aux-disable-is-sleep;
-+};
-+
-+&mmc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emmc_pins>;
-+	vmmc-supply = <&vmmcsd_fixed>;
-+	bus-width = <8>;
-+	ti,non-removable;
-+	status = "okay";
-+	ti,vcc-aux-disable-is-sleep;
-+};
-+
--- 
-2.1.0
+Ok, I'll add a timeout or something here.
+
+>> +     while ((tx_bytes > 0 || rx_bytes > 0) &&
+>> +            time_before(jiffies, timeout)) {
+>> +             unsigned int tx_count, rx_count;
+>> +
+>> +             if (xfer->bits_per_word == 32) {
+>> +                     tx_count = spfi_pio_write32(spfi, tx_buf, tx_bytes);
+>> +                     rx_count = spfi_pio_read32(spfi, rx_buf, rx_bytes);
+>> +             } else {
+>> +                     tx_count = spfi_pio_write8(spfi, tx_buf, tx_bytes);
+>> +                     rx_count = spfi_pio_read8(spfi, rx_buf, rx_bytes);
+>> +             }
+>
+> switch statement please (here and elsewhere).  Apart from the
+> defensivenes it means that we'll do the right thing if someone decides
+> to add 16 bit support to the hardware.
+
+Ok.
+
+>> +             tx_buf += tx_count;
+>> +             rx_buf += rx_count;
+>> +             tx_bytes -= tx_count;
+>> +             rx_bytes -= rx_count;
+
+I don't think so.  The spfi_pio_* functions just read/write from the
+FIFO until it's empty/full - they don't check for any errors, nor are
+there really any to check for.  The loop will time-out eventually if
+we are unable to transmit/receive the requested number of bytes.
+
+>> +
+>> +             cpu_relax();
+>
+> Seems random - we already relax in the data transfer?
+
+We don't relax in the transfers - would that be a better place to put
+it?  I thought it was better here since we reach this point once the
+TX FIFO has filled or RX FIFO has emptied.
+
+>> +     if (tx_buf)
+>> +             spfi_flush_tx_fifo(spfi);
+>> +     spfi_disable(spfi);
+>
+> What does the enable and disable actually do?  Should this be runtime
+> PM?
+
+It starts/stops the transfer.  The control registers (bit clock,
+transfer mode, etc.) must be programmed before the enable bit is set
+and the bit does not clear itself upon completion of the transfer.  I
+don't think it makes sense to have this be part of runtime PM.
+
+>> +       if (xfer->tx_nbits == SPI_NBITS_DUAL ||
+>> +           xfer->rx_nbits == SPI_NBITS_DUAL)
+>> +               val |= SPFI_CONTROL_TMODE_DUAL << SPFI_CONTROL_TMODE_SHIFT;
+>> +       else if (xfer->tx_nbits == SPI_NBITS_QUAD ||
+>> +                xfer->rx_nbits == SPI_NBITS_QUAD)
+>> +               val |= SPFI_CONTROL_TMODE_QUAD << SPFI_CONTROL_TMODE_SHIFT;
+>
+> This suggests that dual and quad mode must be symmetric but doesn't
+> enforce that; I rather suspect that in reality these modes are only
+> supported on the transmit side.
+
+Actually it looks like they are symmetric.  I'll update these checks
+to enforce that.
+
+>> +static irqreturn_t img_spfi_irq(int irq, void *dev_id)
+>> +{
+>> +     struct img_spfi *spfi = (struct img_spfi *)dev_id;
+>> +     u32 status;
+>> +
+>> +     status = spfi_readl(spfi, SPFI_INTERRUPT_STATUS);
+>> +     if (status & SPFI_INTERRUPT_IACCESS) {
+>> +             spfi_writel(spfi, SPFI_INTERRUPT_IACCESS, SPFI_INTERRUPT_CLEAR);
+>> +             dev_err(spfi->dev, "Illegal access interrupt");
+>> +     }
+>> +
+>> +     return IRQ_HANDLED;
+>> +}
+>
+> This will unconditionally claim to have handled an interrupt even if it
+> didn't get any interrupt status it has ever heard of.  At the very least
+> it should log unknown interrupts, ideally return IRQ_NONE though since
+> it seems to be a clear on read interrupt that's a bit misleading.
+
+There's a clear register actually (see the writel() above), but yes,
+an error and returning IRQ_NONE sound appropriate in the event of an
+unexpected interrupt.
+
+>> +     ret = clk_prepare_enable(spfi->sys_clk);
+>> +     if (ret)
+>> +             goto put_spi;
+>> +     ret = clk_prepare_enable(spfi->spfi_clk);
+>> +     if (ret)
+>> +             goto disable_pclk;
+>
+> We should have runtime PM callbacks to enable these clocks only when the
+> controller is active, this will improve power consumption slightly - the
+> core can manage the runtime PM for you.
+
+Ok, will do.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
