@@ -1,141 +1,102 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] spi: Add driver for IMG SPFI controller
-Date: Wed, 12 Nov 2014 22:07:40 +0000
-Message-ID: <20141112220740.GR3815@sirena.org.uk>
-References: <1415828274-24727-1-git-send-email-abrestic@chromium.org>
- <1415828274-24727-3-git-send-email-abrestic@chromium.org>
+From: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
+Subject: Re: [PATCH]  of/base: Fix PowerPC address parsing hack
+Date: Thu, 13 Nov 2014 09:10:36 +1100
+Message-ID: <20141113091036.4e9ec43d@canb.auug.org.au>
+References: <1415771461.5124.33.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="FDQDjY+0Qvff/AOF"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/YVBg/yUUqmVzB6hR1OqPj5B"; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1415828274-24727-3-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1415771461.5124.33.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <Ezequiel.Garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+--Sig_/YVBg/yUUqmVzB6hR1OqPj5B
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
---FDQDjY+0Qvff/AOF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi Ben,
 
+Urk!  :-)
 
-On Wed, Nov 12, 2014 at 01:37:54PM -0800, Andrew Bresticker wrote:
-> Add support for the Synchronous Peripheral Flash Interface (SPFI) master
-> controller found on IMG SoCs.  The SPFI controller supports 5 chip-select
-> lines and single/dual/quad mode SPI transfers.
+How about:
 
->  drivers/spi/spi-img.c | 703 ++++++++++++++++++++++++++++++++++++++++++++++++++
+On Wed, 12 Nov 2014 16:51:01 +1100 Benjamin Herrenschmidt <benh-XVmvHMARGAQ9aPiWuuUPmg@public.gmane.org=
+hing.org> wrote:
+>
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index e371825..e37f017 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -7,6 +7,10 @@
+>  #include <linux/pci_regs.h>
+>  #include <linux/string.h>
+> =20
+> +#ifdef CONFIG_PPC
+> +#include <asm/machdep.h>
 
-How about spi-img-spfi?  That way if someone makes another SPI
-controller (say a more generic one, this one seems flash specialized)
-there won't be a collision.
+#define IS_PMAC	machine_is(pmac)
+#else
+#define IS_PMAC	(0)
 
-> +static void spfi_flush_tx_fifo(struct img_spfi *spfi)
-> +{
-> +	spfi_writel(spfi, SPFI_INTERRUPT_SDE, SPFI_INTERRUPT_CLEAR);
-> +	while (!(spfi_readl(spfi, SPFI_INTERRUPT_STATUS) &
-> +		 SPFI_INTERRUPT_SDE))
-> +		cpu_relax();
-> +}
-
-This will busy loop for ever if we don't get the response we want from
-the hardware...  some cap on the number of spins would be good.
-
-> +	while ((tx_bytes > 0 || rx_bytes > 0) &&
-> +	       time_before(jiffies, timeout)) {
-> +		unsigned int tx_count, rx_count;
+> +#endif
 > +
-> +		if (xfer->bits_per_word == 32) {
-> +			tx_count = spfi_pio_write32(spfi, tx_buf, tx_bytes);
-> +			rx_count = spfi_pio_read32(spfi, rx_buf, rx_bytes);
-> +		} else {
-> +			tx_count = spfi_pio_write8(spfi, tx_buf, tx_bytes);
-> +			rx_count = spfi_pio_read8(spfi, rx_buf, rx_bytes);
-> +		}
+>  /* Max address size we deal with */
+>  #define OF_MAX_ADDR_CELLS	4
+>  #define OF_CHECK_ADDR_COUNT(na)	((na) > 0 && (na) <=3D OF_MAX_ADDR_CELLS)
+> @@ -428,12 +432,13 @@ static int of_translate_one(struct device_node *par=
+ent, struct of_bus *bus,
+>  	 * This code is only enabled on powerpc. --gcl
+>  	 */
+>  	ranges =3D of_get_property(parent, rprop, &rlen);
+> -#if !defined(CONFIG_PPC)
+> +#if defined(CONFIG_PPC)
+> +	if (!machine_is(powermac))
+> +#endif /* defined(CONFIG_PPC) */
+>  	if (ranges =3D=3D NULL) {
 
-switch statement please (here and elsewhere).  Apart from the
-defensivenes it means that we'll do the right thing if someone decides
-to add 16 bit support to the hardware.
+if ((!IS_PMAC) && (ranges =3D=3D NULL)) {
 
-> +		tx_buf += tx_count;
-> +		rx_buf += rx_count;
-> +		tx_bytes -= tx_count;
-> +		rx_bytes -= rx_count;
+> -		pr_err("OF: no ranges; cannot translate\n");
+> +		pr_debug("OF: no ranges; cannot translate\n");
+>  		return 1;
+>  	}
+> -#endif /* !defined(CONFIG_PPC) */
+>  	if (ranges =3D=3D NULL || rlen =3D=3D 0) {
+>  		offset =3D of_read_number(addr, na);
+>  		memset(addr, 0, pna * 4);
 
-No errors possible?
+There might be a better identifier than IS_PMAC ...
 
-> +
-> +		cpu_relax();
+--=20
+Cheers,
+Stephen Rothwell                    sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org
 
-Seems random - we already relax in the data transfer?
-
-> +	if (tx_buf)
-> +		spfi_flush_tx_fifo(spfi);
-> +	spfi_disable(spfi);
-
-What does the enable and disable actually do?  Should this be runtime
-PM?
-
-> +       if (xfer->tx_nbits == SPI_NBITS_DUAL ||
-> +           xfer->rx_nbits == SPI_NBITS_DUAL)
-> +               val |= SPFI_CONTROL_TMODE_DUAL << SPFI_CONTROL_TMODE_SHIFT;
-> +       else if (xfer->tx_nbits == SPI_NBITS_QUAD ||
-> +                xfer->rx_nbits == SPI_NBITS_QUAD)
-> +               val |= SPFI_CONTROL_TMODE_QUAD << SPFI_CONTROL_TMODE_SHIFT;
-
-This suggests that dual and quad mode must be symmetric but doesn't
-enforce that; I rather suspect that in reality these modes are only
-supported on the transmit side.
-
-> +static irqreturn_t img_spfi_irq(int irq, void *dev_id)
-> +{
-> +	struct img_spfi *spfi = (struct img_spfi *)dev_id;
-> +	u32 status;
-> +
-> +	status = spfi_readl(spfi, SPFI_INTERRUPT_STATUS);
-> +	if (status & SPFI_INTERRUPT_IACCESS) {
-> +		spfi_writel(spfi, SPFI_INTERRUPT_IACCESS, SPFI_INTERRUPT_CLEAR);
-> +		dev_err(spfi->dev, "Illegal access interrupt");
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-
-This will unconditionally claim to have handled an interrupt even if it
-didn't get any interrupt status it has ever heard of.  At the very least
-it should log unknown interrupts, ideally return IRQ_NONE though since
-it seems to be a clear on read interrupt that's a bit misleading.
-
-> +	ret = clk_prepare_enable(spfi->sys_clk);
-> +	if (ret)
-> +		goto put_spi;
-> +	ret = clk_prepare_enable(spfi->spfi_clk);
-> +	if (ret)
-> +		goto disable_pclk;
-
-We should have runtime PM callbacks to enable these clocks only when the
-controller is active, this will improve power consumption slightly - the
-core can manage the runtime PM for you.
-
---FDQDjY+0Qvff/AOF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+--Sig_/YVBg/yUUqmVzB6hR1OqPj5B
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBAgAGBQJUY9orAAoJECTWi3JdVIfQYS8H/jdeXwjx+GfsYfxM/6C8gff3
-aagwCKsZEa6E5pJOqB8HlCWDdnPdTPYfXRZvzGM/fDRB10q+FeOBqr1W7uYH02pb
-XqArVXx9dVmpp7B74jeD1NUrGPvOnXtEGfXkJ4/xU4hFFRdNvIwk+eIJSpBUogDI
-9cPf1yTnd7ztBqOqdtxOmf/v5KhWAS6bGCRaKjdV1Xp8ru5K4iSfLUCWFwWwz0zj
-OnY3kNhtecV/tk7TSN3CwRlNRcNApwAZULi4SHr3Ku61zkGjHxKoVf3zg6Oi+WLM
-sLH1u/cTrWpuic88V7KR5LAYgmgs5la5nrKrc4Hs3puE/GDxra6PgovUPK4Ewac=
-=B3cU
+iQIcBAEBCAAGBQJUY9rhAAoJEMDTa8Ir7ZwVyfsP/1M0ZtuUeLMWMgKhzS6/A3If
+pye7dEoEUIRdBDpXuYg5UZZ3D2yFDHaIOH/zXvgl3c22kwAOJjQXlly4TnukC8uu
+aBrv0cZe4D0yLLfKVEUjKbfpOqm8A8Upw+C//WmC8HkPT2P8AlfvaKD46uCwSsLR
+qplNmMfiQMJnUMjeTJu0T4Gq4O12VoWhR9UVgMBjqDJDblhHh0P2iB6iQnVghZVd
+Y6Ch0ilsvAgcPWC6Or7lvOqNQkTtFSnOfT3E/cLWE6t20Su1mEXCAmDZQ5pBa9/E
+HIYbnuCnFOnIu9Jn3IFkT+H9Kfpr6+2cnAdiGLPAbFkMziJsNcARaiLtXZH9i4ue
+h/Hsg4ieHE7vor9MAVOLbNV0hYmjwzq6ahJ6nzF+5cRL3VOZnVDMzIURrU2K7t0j
+pze6Lu0JWjeLVJmXEyaJC1ylON9S19hMsg0Ki6AR+tvO+4S/SFKot7l/SdkBIIep
++G0KBZHWF3M5ZlxsTBJ0XvKtdwgq0h/KKGbyaL2ByG31L6XIDFI2yM5lZ56kzdGL
+ivqpd1zVH5mcx/38twxQe/rwNVK8p7j0X4/YEqYED1WeqGbWowrY4ga9sm5XXS3T
+1CwZELExTkUowzexEnkYbXZQ8B3KbD09ePBIHnczDHHijXh/y9ZZkS7InqaLU0lL
+kmSWYQ6iLYdZGpYMZaoA
+=UoQz
 -----END PGP SIGNATURE-----
 
---FDQDjY+0Qvff/AOF--
+--Sig_/YVBg/yUUqmVzB6hR1OqPj5B--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
