@@ -1,50 +1,83 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCHv6 1/5] Documentation: dt: add common bindings for hwspinlock
-Date: Wed, 12 Nov 2014 11:08:51 -0600
-Message-ID: <54639423.3030607@ti.com>
-References: <1410553499-55951-1-git-send-email-s-anna@ti.com> <1410553499-55951-2-git-send-email-s-anna@ti.com> <CAK=WgbZqj23J4M8n5FOkPdUOcyK3==TXgc3DfX=LKS6E8C+-Bg@mail.gmail.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [GIT PULL] Broadcom Cygnus SoC defconfig changes
+Date: Wed, 12 Nov 2014 09:25:28 -0800
+Message-ID: <CAOesGMh6t6f+_friV6_pE5WLgEFa+OrErmNKnB0v5jcBstwGKA@mail.gmail.com>
+References: <1414698612-26216-1-git-send-email-f.fainelli@gmail.com>
+	<20141109001302.GB11947@quad.lixom.net>
+	<CAGVrzcbQG7qZNOoocgpbV=pf3Jv9mwAfsb=Eq2tiFfMa_pAPZQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK=WgbZqj23J4M8n5FOkPdUOcyK3==TXgc3DfX=LKS6E8C+-Bg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAGVrzcbQG7qZNOoocgpbV=pf3Jv9mwAfsb=Eq2tiFfMa_pAPZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, JD Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Kumar, Mark, Rob,
-
-On 11/12/2014 09:14 AM, Ohad Ben-Cohen wrote:
-> Hi Suman,
-> 
-> On Fri, Sep 12, 2014 at 11:24 PM, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> wrote:
->> This patch adds the generic common bindings used to represent
->> a hwlock device and use/request locks in a device-tree build.
+On Tue, Nov 11, 2014 at 10:29 PM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 2014-11-08 16:13 GMT-08:00 Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>:
+>> On Thu, Oct 30, 2014 at 12:50:09PM -0700, Florian Fainelli wrote:
+>>> The following changes since commit f114040e3ea6e07372334ade75d1ee0775c355e1:
+>>>
+>>>   Linux 3.18-rc1 (2014-10-19 18:08:38 -0700)
+>>>
+>>> are available in the git repository at:
+>>>
+>>>   http://github.com/brcm/linux.git tags/arm-soc/for-3.18/cygnus-defconfig-v9
+>>>
+>>> for you to fetch changes up to aa0204801143ee2d47e9e8dd5f39cdddd5613b4b:
+>>>
+>>>   ARM: multi_v7_defconfig: Enable Broadcom Cygnus (2014-10-30 11:01:35 -0700)
 >>
-> ...
+>> Hi Florian,
 >>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
->> ---
->>  .../devicetree/bindings/hwlock/hwlock.txt          | 55 ++++++++++++++++++++++
->>  1 file changed, 55 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/hwlock/hwlock.txt
-> 
-> Please ask a DT maintainer to ACK this - otherwise I can't send this to Linus.
-> 
+>> Apologies for the delay in dealing with this pull request.
+>>
+>>> ----------------------------------------------------------------
+>>> This patchset contains initial support for Broadcom's Cygnus SoC based on our
+>>> iProc architecture. Initial support is minimal and includes just the mach
+>>> platform code, clock driver, and a basic device tree configuration. Peripheral
+>>> drivers will be submitted soon, as will device tree configurations for other
+>>> Cygnus board variants.
+>>>
+>>> These are the defconfig parts of the changes
+>>>
+>>> ----------------------------------------------------------------
+>>> Jonathan Richardson (1):
+>>>       ARM: cygnus defconfig : Initial defconfig for Broadcom Cygnus SoC
+>>>
+>>> Ray Jui (1):
+>>>       ARM: multi_v7_defconfig: Enable Broadcom Cygnus
+>>>
+>>> Scott Branden (1):
+>>>       ARM: bcm_defconfig/multi_v7_defconfig: remove one level of menu from Kconfig
+>>>
+>>>  arch/arm/configs/bcm_cygnus_defconfig | 237 ++++++++++++++++++++++++++++++++++
+>>>  arch/arm/configs/bcm_defconfig        |   3 +-
+>>>  arch/arm/configs/multi_v7_defconfig   |  21 ++-
+>>
+>> Please send multi_v7_defconfig updates as a patch instead of including in
+>> a merge request. We ask for this because it's a file that many maintainers
+>> touch and it's easy that we get lots of conflicts otherwise.
+>>
+>> As far as the bcm_cygnus_defconfig: Since new platforms are multiplatform
+>> enabled by default, we normally only prefer to have one defconfig per vendor.
+>> We've made exceptions in cases where the families are very different, but in
+>> general one defconfig per vendor should be sufficient.
+>>
+>> I.e. please enable the cygnus options in bcm_defconfig instead of adding a new
+>> one.
+>
+> Alright, so just to make sure I get this right:
+>
+> - there are two patches from Scott and Ray which enable Cygnus in
+> mutli_v7_defconfig that I should send a separate patches
+> - adding Cygnus to bcm_defconfig can be part of a separate pull request
 
-Can one of you ack this patch and the next patch [1] so that Ohad can
-pick up the series for 3.19? This series has been in works for quite
-some time now and was reviewed by each of you at some point of time
-(thanks!!), the cover letter [2] has the history of the changes.
+Yep!
 
-regards
-Suman
 
-[1] https://patchwork.kernel.org/patch/4898001/
-[2] http://marc.info/?l=linux-omap&m=141055365213895&w=2
-
+-Olof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
