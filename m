@@ -1,89 +1,71 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH] of/base: Fix PowerPC address parsing hack
-Date: Thu, 13 Nov 2014 06:55:07 +1100
-Message-ID: <1415822107.5124.45.camel@kernel.crashing.org>
-References: <1415771461.5124.33.camel@kernel.crashing.org>
-	 <CAL_JsqKfBGdpFV_XuE4DEhFrkhN33kOMkiZE_TOnAZDm2qjwMw@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] phy: sun4i: add support for USB phy0
+Date: Wed, 12 Nov 2014 21:29:27 +0100
+Message-ID: <20141112202927.GB20972@lukather>
+References: <cover.1415645258.git.rbyshko@gmail.com>
+ <997f1e2744504f3461f9e94e2171180b5ce87aa2.1415645258.git.rbyshko@gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKfBGdpFV_XuE4DEhFrkhN33kOMkiZE_TOnAZDm2qjwMw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linuxppc-dev <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="oLBj+sq0vYjzfsbl"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBSUGR6RQKGQERVUPIII-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <997f1e2744504f3461f9e94e2171180b5ce87aa2.1415645258.git.rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-11-12 at 08:39 -0600, Rob Herring wrote:
-> On Tue, Nov 11, 2014 at 11:51 PM, Benjamin Herrenschmidt
-> <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
-> > We have a historical hack that treats missing ranges properties as the
-> > equivalent of an empty one. This is needed for ancient PowerMac "bad"
-> > device-trees, and shouldn't be enabled for any other PowerPC platform,
-> > otherwise we get some nasty layout of devices in sysfs or even
-> > duplication when a set of otherwise identically named devices is
-> > created multiple times under a different parent node with no ranges
-> > property.
-> >
-> > This fix is needed for the PowerNV i2c busses to be exposed properly
-> > and will fix a number of other embedded cases.
-> >
-> > Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> > CC: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-> > ---
-> >
-> > diff --git a/drivers/of/address.c b/drivers/of/address.c
-> > index e371825..e37f017 100644
-> > --- a/drivers/of/address.c
-> > +++ b/drivers/of/address.c
-> > @@ -7,6 +7,10 @@
-> >  #include <linux/pci_regs.h>
-> >  #include <linux/string.h>
-> >
-> > +#ifdef CONFIG_PPC
-> > +#include <asm/machdep.h>
-> > +#endif
-> > +
-> >  /* Max address size we deal with */
-> >  #define OF_MAX_ADDR_CELLS      4
-> >  #define OF_CHECK_ADDR_COUNT(na)        ((na) > 0 && (na) <= OF_MAX_ADDR_CELLS)
-> > @@ -428,12 +432,13 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
-> >          * This code is only enabled on powerpc. --gcl
-> >          */
-> >         ranges = of_get_property(parent, rprop, &rlen);
-> > -#if !defined(CONFIG_PPC)
-> > +#if defined(CONFIG_PPC)
-> > +       if (!machine_is(powermac))
-> 
-> Can we use a machine compatible here or something not PPC specific?
-> Then we can use IS_ENABLED(CONFIG_PPC) instead of ifdefs.
 
-We could, we'd have to use a pair of machine compatible, I'll spin a new
-patch later today.
+--oLBj+sq0vYjzfsbl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ben.
- 
-> Rob
-> 
-> > +#endif /* defined(CONFIG_PPC) */
-> >         if (ranges == NULL) {
-> > -               pr_err("OF: no ranges; cannot translate\n");
-> > +               pr_debug("OF: no ranges; cannot translate\n");
-> >                 return 1;
-> >         }
-> > -#endif /* !defined(CONFIG_PPC) */
-> >         if (ranges == NULL || rlen == 0) {
-> >                 offset = of_read_number(addr, na);
-> >                 memset(addr, 0, pna * 4);
-> >
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+On Mon, Nov 10, 2014 at 07:55:06PM +0100, Roman Byshko wrote:
+> The driver for sun4i USB phys currently supports
+> only phy1 and phy2 which are used for USB host
+> controllers. This patch adds support for USB phy0,
+> which is used by the musb hdrc USB controller.
+>=20
+> Signed-off-by: Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--oLBj+sq0vYjzfsbl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUY8MnAAoJEBx+YmzsjxAg0xsP/3tyScQX+ROwSlyxFeY8ERCC
+nZ2yJIv6OCJ7qovOeR9SrfLsbsBGtrjXLvVk0lRaqCp6neIWHCmRM7E848jzSV0z
+GBSRW6uAJpilzlg/HOsgsGkVdvtCTB9ZEzQNHt7013oT9PO/NRptBSXSdTpGvHhx
+WQqxE56PWU+En45OEvjQXTOIf3cw0iHOfgp9Xby6azFy12wnThUak/jIwu6Zdiqy
+9yohFOoDq1vj4pac5R/c5y2UDDS1M+UrhF2nJ9wlIJJXiIGllu7xi794TlpQmfJO
+GxqD2xHZgKsHwVRd7Yp7HpDQelVJ1HC3po1UVx0MmPTx8hXsAQr5LBcH6UIsN1Wp
+Rxmh6RM0jJsmXfLPDcEqY9UizuvgNFnfDjj/q4wQwWNVhtrQ8Qnsi+tSnyGgUOSe
+WRRw2mF0FbUCxCsIf+v+xdSkk7HTwgPd3PHp2qo5QC/s0Ise2z4A+POBEd6Ij0qM
+EA0TXtMtxDXlXq1h0KxF7vvLWaBoZ38G9aF4Ow9cg4fyG3slE/KpKolQOpLlYngo
+P25ZVZL34V3QwpXWkizHOVU+1IL8ldRPlH7nzU4wu/QjAIA0l+oM4o8NDoMIpmw9
+80ZyyiZLEknPhQky1VtrkH3RMPXkEfsbssHTD4SpDDHw/3MEKTNrwlHdC8K8eNFJ
+w3LYMYssdI+UqF3SM+8j
+=Hifw
+-----END PGP SIGNATURE-----
+
+--oLBj+sq0vYjzfsbl--
