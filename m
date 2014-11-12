@@ -1,129 +1,63 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/5] dt-bindings: Add a clocks property
- to the simple-framebuffer binding
-Date: Wed, 12 Nov 2014 16:38:09 +0000
-Message-ID: <CACxGe6vBq5Y6HbogbpVUy9VLaocfrAsR_XRbio4zBB_vY5GRsw@mail.gmail.com>
-References: <1413996311-4287-1-git-send-email-hdegoede@redhat.com>
-	<1413996311-4287-3-git-send-email-hdegoede@redhat.com>
-	<20141111214217.19EF5C41610@trevor.secretlab.ca>
-	<546373C6.4010001@redhat.com>
-	<CACxGe6v15EjpALit4ZJLXDgCkwEYM4t1mryjoQpa3=wpKmXWEg@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v2 0/6] ARM: shmobile: Change to using clock-indices
+Date: Wed, 12 Nov 2014 17:43:28 +0100
+Message-ID: <20141112164328.GH4031@katana>
+References: <1415645379-3366-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: multipart/alternative; boundary=bcaec5161acd628f3e0507ac0566
-Return-path: <linux-sunxi+bncBCJP567ORICBB4UZR2RQKGQED7NRCAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CACxGe6v15EjpALit4ZJLXDgCkwEYM4t1mryjoQpa3=wpKmXWEg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Enx9fNJ0XV5HaWRu"
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1415645379-3366-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Mike Turquette <mturquette@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---bcaec5161acd628f3e0507ac0566
-Content-Type: text/plain; charset=UTF-8
 
-Rob, seeing as we disagree on patch #5, do you have time to discuss this
-evening, or tomorrow?
-
-g.
-On 12 Nov 2014 14:56, "Grant Likely" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-
-> [Replying on-list and with original ccs]
->
-> On Wed, Nov 12, 2014 at 2:50 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> wrote:
-> > Hi,
-> >
-> > On 11/11/2014 10:42 PM, Grant Likely wrote:
-> >> - clocks : List of clocks used by the framebuffer. Clocks listed here
-> >>            are expected to already be configured correctly. The OS must
-> >>            ensure these clocks are not modified or disabled while the
-> >>            simple framebuffer remains active.
-> >
-> > Updated in my local tree, where I've also added proper commit messages
-> > to the 2 patches missing them. Shall I send a v5 of the set, and may I
-> > add your Acked-by to this patch when sending v5?
->
-> For this whole series, please add my Acked-by.
->
-> Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> I'm okay with the bindings, and I'm okay with adding the clock
-> dependency to a simplefb node. I'm happy with the conversation we had
-> today on IRC, and I'm expecting to see a binding that covers expected
-> firmware/OS behaviour and association with the real hardware posted to
-> the list shortly.
->
-> g.
->
-
--- 
-You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---bcaec5161acd628f3e0507ac0566
-Content-Type: text/html; charset=UTF-8
+--Enx9fNJ0XV5HaWRu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-<p dir=3D"ltr">Rob, seeing as we disagree on patch #5, do you have time to =
-discuss this evening, or tomorrow?</p>
-<p dir=3D"ltr">g.</p>
-<div class=3D"gmail_quote">On 12 Nov 2014 14:56, &quot;Grant Likely&quot; &=
-lt;<a href=3D"mailto:grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org">grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org</a>&g=
-t; wrote:<br type=3D"attribution"><blockquote class=3D"gmail_quote" style=
-=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">[Replyin=
-g on-list and with original ccs]<br>
-<br>
-On Wed, Nov 12, 2014 at 2:50 PM, Hans de Goede &lt;<a href=3D"mailto:hdegoe=
-de-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org">hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org</a>&gt; wrote:<br>
-&gt; Hi,<br>
-&gt;<br>
-&gt; On 11/11/2014 10:42 PM, Grant Likely wrote:<br>
-&gt;&gt; - clocks : List of clocks used by the framebuffer. Clocks listed h=
-ere<br>
-&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 are expected to already b=
-e configured correctly. The OS must<br>
-&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ensure these clocks are n=
-ot modified or disabled while the<br>
-&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 simple framebuffer remain=
-s active.<br>
-&gt;<br>
-&gt; Updated in my local tree, where I&#39;ve also added proper commit mess=
-ages<br>
-&gt; to the 2 patches missing them. Shall I send a v5 of the set, and may I=
-<br>
-&gt; add your Acked-by to this patch when sending v5?<br>
-<br>
-For this whole series, please add my Acked-by.<br>
-<br>
-Acked-by: Grant Likely &lt;<a href=3D"mailto:grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org">grant=
-.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org</a>&gt;<br>
-<br>
-I&#39;m okay with the bindings, and I&#39;m okay with adding the clock<br>
-dependency to a simplefb node. I&#39;m happy with the conversation we had<b=
-r>
-today on IRC, and I&#39;m expecting to see a binding that covers expected<b=
-r>
-firmware/OS behaviour and association with the real hardware posted to<br>
-the list shortly.<br>
-<br>
-g.<br>
-</blockquote></div>
+On Mon, Nov 10, 2014 at 07:49:33PM +0100, Geert Uytterhoeven wrote:
+> 	Hi Mike, Simon, Magnus,
+>=20
+> This patch series finalizes the conversion from the vendor-specific
+> "renesas,clock-indices" to the generic "clock-indices", started by Ben Do=
+oks.
+>=20
+> The patches for r8a7790 and r8a7791 were extracted from a patch that Ben =
+sent
+> before ("[PATCH 2/3] renesas: change to using clock-indices"), but it was=
+ never
+> split/updated.
 
-<p></p>
+Cool!
 
--- <br />
-You received this message because you are subscribed to the Google Groups &=
-quot;linux-sunxi&quot; group.<br />
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to <a href=3D"mailto:linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">linux-s=
-unxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
-For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
-s://groups.google.com/d/optout</a>.<br />
+Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
---bcaec5161acd628f3e0507ac0566--
+
+--Enx9fNJ0XV5HaWRu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUY44vAAoJEBQN5MwUoCm2IQkQAKBdz//mkB6I0lSOHitBnkLq
+0eMOm96nlcV2wf/69p30ugJOgqzuLHHkkpWM/rptRLKETtgIk1GCjaQj7UXmjZVV
+kU2WEQpW6ZuRI89pjmBEZo0ruAqHbhWDPMg+6Fg+F62r+GIQsDoXajqzC88ZsGzg
+9buTyLjlipstPprz88Bkd/LhFC7rVNbCYTihByXKkSDDNk3I7n7MA2CC5SQM8GzJ
+0pIE6383lLLJ+ZfKiwHSn+LRqvximwICTD/Vtw8QNXmaaACQI4J/iWBmZ2a3zTa7
+auv+5CZ29oi5SWcAYq76/OJPdRMXTjMkXmmAJUdqaT9PIEXt01ZyKYvVwY7ZxtH3
+YY3Yt7iMgdVlSAqwVQz9oOEk5ziBYvH5Kq+VZ/5ux7em+CSfELF79t5lXH9HgLCY
+C6TX0Z2EsreXSzuz5dBTD29AyUYsYoKBUr8vfxxVDDsJ4vNixEHyA9rTf4BSs7yK
+0jmd46ee81HoDYjgEBVx0jLnELhNQPgNd7IUBKvv+gUuweZkpDU4X8FZKbx3HH+Y
+gqcy+QDuPkouNATP6eSbisghvrpPBUSKF4gTZR33O63JGryaARmg6vhKr4g33V2k
+9RljTqvrEkipF0KC/n8Lbqb6wzqy4Ltx+jwcuh3pbL6emAW5vzFgNQI4ULF71Ohy
+jVl+5PkxICwkVT7I1C3X
+=uws5
+-----END PGP SIGNATURE-----
+
+--Enx9fNJ0XV5HaWRu--
