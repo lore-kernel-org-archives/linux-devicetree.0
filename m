@@ -1,90 +1,99 @@
-From: Juergen Borleis <jbe@pengutronix.de>
-Subject: Re: Samsung/S3C6410/Mini6410: how to handle NAND's "clock off"
-Date: Wed, 12 Nov 2014 13:00:27 +0100
-Message-ID: <201411121300.30286.jbe@pengutronix.de>
-References: <201411111910.34231.juergen@kreuzholzen.de> <20141111184226.GH27002@pengutronix.de> <20141112091458.GM27002@pengutronix.de>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH v8 0/9] dw-hdmi: convert imx hdmi to bridge/dw_hdmi
+Date: Wed, 12 Nov 2014 19:59:53 +0800
+Message-ID: <1415793593-5075-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20141112091458.GM27002@pengutronix.de>
-Content-Disposition: inline
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Uwe =?iso-8859-1?q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Juergen Borleis <juergen@kreuzholzen.de>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Grant Likely <grant.likely@linaro.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
+Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Andy yan <andy.yan@rock-chips.com>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
 
-On Wednesday 12 November 2014 10:14:58 Uwe Kleine-K=F6nig wrote:
-> Hello again,
->
-> [extending audience a bit]
->
-> On Tue, Nov 11, 2014 at 07:42:26PM +0100, Uwe Kleine-K=F6nig wrote:
-> > On Tue, Nov 11, 2014 at 07:10:33PM +0100, Juergen Borleis wrote:
-> > > Hi,
-> > >
-> > > the S3C2410 NAND driver [1] can still be used for NANDs attached =
-to an
-> > > S3C6410 SoC. But this driver has a "nice" feature called "clock o=
-ff" to
-> > > save some power while not in use. I tried it here on my Mini6410
-> > > platform and it freezes the system.
-> > >
-> > > The clock tree is somehow:
-> > >
-> > > [...]
-> > >   hclk                      4            4   133000000          0=
- 0
-> > >      hclk_mfc               0            0   133000000          0=
- 0
-> > >      hclk_mem0              2            2   133000000          0=
- 0
-> > >         mem0_srom           0            0   133000000          0=
- 0
-> > >         mem0_nfcon          1            1   133000000          0=
- 0
-> > >         mem0_onenand0       0            0   133000000          0=
- 0
-> > >         mem0_onenand1       0            0   133000000          0=
- 0
-> > >         mem0_cfcon          0            0   133000000          0=
- 0
-> > > [...]
-> > >
-> > > On the Mini6410 the "mem0_nfcon" clock is the only single user of=
- the
-> > > "hclk_mem0". And this clock is required to keep the access to the
-> > > external network device enabled. When the NAND driver disables it=
-s
-> > > clock "mem0_nfcon", the "hclk_mem0" gets also disabled because th=
-ere is
-> > > no consumer anymore. The next time the network driver tries to ac=
-cess
-> > > its device, the SoC freezes.
-> >
-> > Sounds like the network driver should hold a reference to hclk_mem0=
-=2E
->
-> After talking to J=FCrgen by phone, the solution that the dm9000 driv=
-er
-> should handle the clock sounds wrong. The clk in question is needed b=
-y
-> the SoC to operate the bus the dm9000 is connected to. So I think the
-> right approach would include
+We found freescale imx6 and rockchip rk3288 and Ingenic JZ4780 (Xburst/MIPS)
+use the interface compatible Designware HDMI IP, but they also have some
+lightly differences, such as phy pll configuration, register width(imx hdmi
+register is one byte, but rk3288 is 4 bytes width and can only access by word),
+4K support(imx6 doesn't support 4k, but rk3288 does).
 
-I think we need the same here for the S3C6410 SoC, like the imx-weim dr=
-iver is=20
-for i.MX SoCs.
+To reuse the imx-hdmi driver, we make this patch set:
+(1): fix some CodingStyle warning to make checkpatch happy
+(2): split out imx-soc code from imx-hdmi to dw_hdmi-imx.c
+(3): move imx-hdmi to bridge/dw-hdmi, and convert it to a drm_bridge driver
+(4): add rockchip rk3288 platform specific code dw_hdmi-rockchip.c
 
-jbe
+Changes in v8:
+- correct some spelling mistake
+- modify ddc-i2c-bus and interrupt description
+- Add documentation for rockchip dw hdmi
+- add support for rockchip rk3288 hdmi
 
---=20
-Pengutronix e.K. =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0| Juergen Borleis =A0 =A0 =A0 =A0 =A0 =A0 |
-Industrial Linux Solutions               =A0 =A0 =A0| Phone: +49-5121-2=
-06917-5128 |
-Peiner Str. 6-8, 31137 Hildesheim, Germany =A0 =A0| Fax: =A0 +49-5121-2=
-06917-5555 |
-Amtsgericht Hildesheim, HRA 2686 =A0 =A0 =A0 =A0 =A0 =A0 =A0| http://ww=
-w.pengutronix.de/ =A0|
+Changes in v7:
+- remove unused variables from structure dw_hdmi
+- remove a wrong modification
+- add copyrights for dw_hdmi-imx.c
+
+Changes in v6:
+- rearrange the patch order
+- move some modification to  patch#6
+- refactor register access without reg_shift
+- move some modification from patch#5
+
+Changes in v5:
+- refactor reg-io-width
+
+Changes in v4:
+- fix checkpatch CHECK
+- defer probe ddc i2c adapter
+
+Changes in v3:
+- split multi register access to one indepent patch
+
+Changes in v2:
+- use git format -M to generate these patch
+
+Andy Yan (8):
+  staging: imx-drm: imx-hdmi: make checkpatch happy
+  staging: imx-drm: imx-hdmi: return defer if can't get ddc i2c adapter
+  staging: imx-drm: imx-hdmi: split imx soc specific code from imx-hdmi
+  staging: imx-drm: imx-hdmi: move imx-hdmi to bridge/dw_hdmi
+  dt-bindings: add document for dw_hdmi
+  drm: bridge/dw_hdmi: add support for multi byte register width access
+  dt-bindings: Add documentation for rockchip dw hdmi
+  drm: bridge/dw_hdmi: add rockchip rk3288 support
+
+Yakir Yang (1):
+  drm: bridge/dw_hdmi: convert dw-hdmi to drm_bridge mode
+
+ .../devicetree/bindings/drm/bridge/dw_hdmi.txt     |  40 ++
+ .../devicetree/bindings/video/dw_hdmi-rockchip.txt |  43 ++
+ drivers/gpu/drm/bridge/Kconfig                     |   5 +
+ drivers/gpu/drm/bridge/Makefile                    |   1 +
+ .../imx-hdmi.c => gpu/drm/bridge/dw_hdmi.c}        | 773 ++++++++++-----------
+ .../imx-hdmi.h => gpu/drm/bridge/dw_hdmi.h}        |   5 +-
+ drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c        | 319 +++++++++
+ drivers/staging/imx-drm/Kconfig                    |   1 +
+ drivers/staging/imx-drm/Makefile                   |   2 +-
+ drivers/staging/imx-drm/dw_hdmi-imx.c              | 266 +++++++
+ include/drm/bridge/dw_hdmi.h                       |  53 ++
+ 11 files changed, 1081 insertions(+), 427 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt
+ create mode 100644 Documentation/devicetree/bindings/video/dw_hdmi-rockchip.txt
+ rename drivers/{staging/imx-drm/imx-hdmi.c => gpu/drm/bridge/dw_hdmi.c} (70%)
+ rename drivers/{staging/imx-drm/imx-hdmi.h => gpu/drm/bridge/dw_hdmi.h} (99%)
+ create mode 100644 drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+ create mode 100644 drivers/staging/imx-drm/dw_hdmi-imx.c
+ create mode 100644 include/drm/bridge/dw_hdmi.h
+
+-- 
+1.9.1
