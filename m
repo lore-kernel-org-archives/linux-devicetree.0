@@ -1,91 +1,43 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH 19/22] dt/bindings: add micrel,rmii_ref_clk_sel_25_mhz to
- eth-phy binding
-Date: Wed, 12 Nov 2014 10:19:20 +0100
-Message-ID: <20141112091920.GC15215@localhost>
-References: <1415727460-20417-1-git-send-email-johan@kernel.org>
- <1415727460-20417-20-git-send-email-johan@kernel.org>
- <20141111175741.GF25295@leverpostej>
- <20141111181825.GH29789@localhost>
- <20141112070127.GF30369@pengutronix.de>
+From: Kevin Cernekee <cernekee@gmail.com>
+Subject: Re: [PATCH/RFC 5/8] serial: pxa: Make the driver buildable for
+ BCM7xxx set-top platforms
+Date: Wed, 12 Nov 2014 01:19:24 -0800
+Message-ID: <CAJiQ=7AFr5vR+FEc8B3CAZLb5GYujNxtaz7TU2FU0D3oModZ7w@mail.gmail.com>
+References: <1415781993-7755-1-git-send-email-cernekee@gmail.com>
+ <1415781993-7755-6-git-send-email-cernekee@gmail.com> <3356477.HitZEsNa4H@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141112070127.GF30369@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <3356477.HitZEsNa4H@wuerfel>
+Sender: linux-serial-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Rob Herring <robh@kernel.org>, tushar.behera@linaro.org, daniel@zonque.org, Haojian Zhuang <haojian.zhuang@gmail.com>, robert.jarzmik@free.fr, Grant Likely <grant.likely@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 12, 2014 at 08:01:27AM +0100, Sascha Hauer wrote:
-> On Tue, Nov 11, 2014 at 07:18:25PM +0100, Johan Hovold wrote:
-> > On Tue, Nov 11, 2014 at 05:57:42PM +0000, Mark Rutland wrote:
-> > > On Tue, Nov 11, 2014 at 05:37:37PM +0000, Johan Hovold wrote:
-> > > > Add "micrel,rmii_ref_clk_sel_25_mhz" to Micrel ethernet PHY binding
-> > > > documentation.
-> > > > 
-> > > > Cc: devicetree@vger.kernel.org
-> > > > Signed-off-by: Johan Hovold <johan@kernel.org>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/net/micrel.txt | 5 +++++
-> > > >  1 file changed, 5 insertions(+)
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/net/micrel.txt b/Documentation/devicetree/bindings/net/micrel.txt
-> > > > index a1bab5eaae02..9b08dd6551dd 100644
-> > > > --- a/Documentation/devicetree/bindings/net/micrel.txt
-> > > > +++ b/Documentation/devicetree/bindings/net/micrel.txt
-> > > > @@ -19,6 +19,11 @@ Optional properties:
-> > > >  
-> > > >                See the respective PHY datasheet for the mode values.
-> > > >  
-> > > > + - micrel,rmii_ref_clk_sel_25_mhz: rmii_ref_clk_sel bit selects 25 MHz mode
-> > > > +
-> > > > +		Whether 25 MHz (rather than 50 Mhz) clock mode is selected
-> > > > +		when the rmii_ref_clk_sel bit is set.
-> > > 
-> > > s/_/-/ in property names please.
-> > 
-> > Ouch, copied from variable name, sorry.
-> > 
-> > > That said, I don't follow the meaning. Does this cause the kernel to do
-> > > something different, or is is simply that a 25MHz ref clock is wired up?
-> > 
-> > Yes, the driver currently sets this configuration bit based on a common
-> > clock binding.
-> > 
-> > However, it turns out the meaning of the bit is reversed on some PHY
-> > variants. On most PHYs 50 MHz mode is selected by setting this bit,
-> > whereas on the PHYs that need this new property, setting it selects 25
-> > MHz mode instead.
-> 
-> Maybe rename the property to something like rmii-ref-clk-25mhz-active-high
-> then? Also you should probably make it more explicit that this is a
-> hardware property and not for adjusting the clock.
+On Wed, Nov 12, 2014 at 1:04 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Wednesday 12 November 2014 00:46:30 Kevin Cernekee wrote:
+>> Remove the platform dependency in Kconfig and add an appropriate
+>> compatible string.  Note that BCM7401 has one 16550A-compatible UART
+>> in the UPG uart_clk domain, and two proprietary UARTs in the 27 MHz
+>> clock domain.  This driver handles the former one.
+>>
+>> Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+>
+> Can you explain why you are using the PXA serial driver instead of the
+> 8250 driver, if this is 16550A compatible? I don't know the history
+> why PXA is using a separate driver.
 
-You're right, but how about calling it
+I wasn't able to get serial8250 to work in any situation where another
+driver tried to claim "ttyS"/4/64.
 
-	micrel,rmii-reference-clock-select-inverted
+serial8250 calls uart_add_one_port() in its module_init function, even
+if the system doesn't have any ports.  Setting nr_uarts
+(CONFIG_SERIAL_8250_RUNTIME_UARTS) to 0 doesn't help because
+serial8250_find_match_or_unused() will just return NULL.
 
-Then no one will set it believing it will change the clock mode and
-without reading the binding doc first.
+I guess I could try to rework that logic but several cases would need
+to be retested, going back to PCs with ISA buses and PCI add-in cards.
+And the differences may be visible to userspace.
 
-The description could then read something like
-
-	micrel,rmii-reference-clock-select-inverted: RMII Reference
-		Clock Select bit is inverted
-
-	The RMII Reference Clock Select bit is inverted so that setting
-	it selects 25 MHz rather than 50 MHz clock mode. 
-
-	Note that this is only needed for PHY variants that has this bit
-	inverted and that a clock reference ("rmii-ref" below) is always
-	needed to select the actual mode.
-
-> It's not very nice from Micrel to create Phys with exactly the same
-> device id but the meaning of this bit reversed.
-
-Not very nice at all.
-
-Thanks,
-Johan
+The PXA driver seemed like a much cleaner starting point, even if it
+was intended for a different SoC.
