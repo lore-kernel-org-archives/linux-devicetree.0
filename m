@@ -1,10 +1,12 @@
 From: <tthayer@opensource.altera.com>
-Subject: [PATCHv5 0/5] Add Altera peripheral memories to EDAC framework
-Date: Tue, 11 Nov 2014 18:14:18 -0600
-Message-ID: <1415751263-1830-1-git-send-email-tthayer@opensource.altera.com>
+Subject: [PATCHv5 2/5] arm: socfpga: Enable OCRAM ECC on startup.
+Date: Tue, 11 Nov 2014 18:14:20 -0600
+Message-ID: <1415751263-1830-3-git-send-email-tthayer@opensource.altera.com>
+References: <1415751263-1830-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1415751263-1830-1-git-send-email-tthayer@opensource.altera.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
 Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com
@@ -12,62 +14,170 @@ List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <tthayer@opensource.altera.com>
 
-This patch adds the L2 cache and OCRAM peripherals to the EDAC framework
-using the EDAC device framework. The ECC is enabled early in the boot
-process in the platform specific code.
+This patch enables the ECC for On-Chip RAM on machine
+startup.  The ECC has to be enabled before data is
+is stored in memory otherwise the ECC will fail on
+reads.
 
-v2 changes:
-- Split On-Chip RAM ECC platform initialization into separate patch from
-  L2 ECC platform initialization.
-- Fix L2 cache dependency comments.
-- Remove OCRAM node from dts and reference prior patch.
+Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+---
+v2: Split OCRAM ECC portion separately. Addition of iounmap()
+and reorganization of gen_pool_free. Remove defconfig from patch.
 
-v3 changes:
-- Move L2 cache & On-Chip RAM EDAC code into altera_edac.c
-- Remove SDRAM module compile.
+v3/4: No change
 
-v4 changes:
-- Change mask defines to use BIT().
-- Fix comment style to agree with kernel coding style.
-- Better printk description for read != write in trigger.
-- Remove SysFS debugging message.
-- Better dci->mod_name
-- Move gen_pool pointer assignment to end of function.
-- Invert logic to reduce indent in ocram depenency check.
-- Change from dev_err() to edac_printk()
-- Replace magic numbers with defines & comments.
-- Improve error injection test.
-- Change Makefile intermediary name to altr (from alt)
-
-v5 changes:
-- Remove l2cache.h by using if (IS_ENABLED(CONFIG_EDAC_ALTERA_L2C))
-- Remove ocram.h by using if (IS_ENABLED(CONFIG_EDAC_ALTERA_OCRAM))
-- Check prop variable before using. Include io.h.
-- Add defines for better readability. Remove MAINTAINERS changes.
-
-Thor Thayer (5):
-  arm: socfpga: Enable L2 Cache ECC on startup.
-  arm: socfpga: Enable OCRAM ECC on startup.
-  edac: altera: Remove SDRAM module compile
-  edac: altera: Add Altera L2 Cache and OCRAM EDAC Support
-  arm: dts: Add Altera L2 Cache and OCRAM EDAC
-
- .../bindings/arm/altera/socfpga-l2-edac.txt        |   15 +
- .../bindings/arm/altera/socfpga-ocram-edac.txt     |   16 +
- arch/arm/boot/dts/socfpga.dtsi                     |   15 +-
- arch/arm/mach-socfpga/Makefile                     |    2 +
- arch/arm/mach-socfpga/core.h                       |    3 +
- arch/arm/mach-socfpga/l2_cache.c                   |   41 ++
- arch/arm/mach-socfpga/ocram.c                      |   90 ++++
- arch/arm/mach-socfpga/socfpga.c                    |   13 +-
- drivers/edac/Kconfig                               |   18 +-
- drivers/edac/Makefile                              |    5 +-
- drivers/edac/altera_edac.c                         |  481 +++++++++++++++++++-
- 11 files changed, 693 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
- create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
- create mode 100644 arch/arm/mach-socfpga/l2_cache.c
+v5: Remove ocram.h, use io.h instead of clk-provider.h
+    Check prop in correct place. Add ECC EN defines.
+---
+ arch/arm/mach-socfpga/Makefile  |    1 +
+ arch/arm/mach-socfpga/core.h    |    1 +
+ arch/arm/mach-socfpga/ocram.c   |   90 +++++++++++++++++++++++++++++++++++++++
+ arch/arm/mach-socfpga/socfpga.c |    9 ++++
+ 4 files changed, 101 insertions(+)
  create mode 100644 arch/arm/mach-socfpga/ocram.c
 
+diff --git a/arch/arm/mach-socfpga/Makefile b/arch/arm/mach-socfpga/Makefile
+index 142609e..1552ca5 100644
+--- a/arch/arm/mach-socfpga/Makefile
++++ b/arch/arm/mach-socfpga/Makefile
+@@ -5,3 +5,4 @@
+ obj-y					:= socfpga.o
+ obj-$(CONFIG_SMP)	+= headsmp.o platsmp.o
+ obj-$(CONFIG_EDAC_ALTERA_L2C) += l2_cache.o
++obj-$(CONFIG_EDAC_ALTERA_OCRAM) += ocram.o
+diff --git a/arch/arm/mach-socfpga/core.h b/arch/arm/mach-socfpga/core.h
+index 385baba..f3eee32 100644
+--- a/arch/arm/mach-socfpga/core.h
++++ b/arch/arm/mach-socfpga/core.h
+@@ -45,5 +45,6 @@ extern unsigned long cpu1start_addr;
+ #define SOCFPGA_SCU_VIRT_BASE   0xfffec000
+ 
+ void socfpga_init_l2_ecc(void);
++void socfpga_init_ocram_ecc(void);
+ 
+ #endif
+diff --git a/arch/arm/mach-socfpga/ocram.c b/arch/arm/mach-socfpga/ocram.c
+new file mode 100644
+index 0000000..a83b34f
+--- /dev/null
++++ b/arch/arm/mach-socfpga/ocram.c
+@@ -0,0 +1,90 @@
++/*
++ * Copyright Altera Corporation (C) 2014. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++#include <linux/io.h>
++#include <linux/genalloc.h>
++#include <linux/of_platform.h>
++
++#define ALTR_OCRAM_CLEAR_ECC          0x00000018
++#define ALTR_OCRAM_ECC_EN             0x00000019
++
++void socfpga_init_ocram_ecc(void)
++{
++	struct device_node *np;
++	const __be32 *prop;
++	u32 ocr_edac_addr, iram_addr, len;
++	void __iomem  *mapped_ocr_edac_addr;
++	size_t size;
++	struct gen_pool *gp;
++
++	np = of_find_compatible_node(NULL, NULL, "altr,ocram-edac");
++	if (!np) {
++		pr_err("SOCFPGA: Unable to find altr,ocram-edac in dtb\n");
++		return;
++	}
++
++	prop = of_get_property(np, "reg", &size);
++	if (!prop || size < sizeof(*prop)) {
++		pr_err("SOCFPGA: Unable to find OCRAM ECC mapping in dtb\n");
++		return;
++	}
++	ocr_edac_addr = be32_to_cpup(prop++);
++	len = be32_to_cpup(prop);
++
++	gp = of_get_named_gen_pool(np, "iram", 0);
++	if (!gp) {
++		pr_err("SOCFPGA: OCRAM cannot find gen pool\n");
++		return;
++	}
++
++	np = of_find_compatible_node(NULL, NULL, "mmio-sram");
++	if (!np) {
++		pr_err("SOCFPGA: Unable to find mmio-sram in dtb\n");
++		return;
++	}
++
++	/* Determine the OCRAM address and size */
++	prop = of_get_property(np, "reg", &size);
++	if (!prop || size < sizeof(*prop)) {
++		pr_err("SOCFPGA: Unable to find OCRAM mapping in dtb\n");
++		return;
++	}
++	iram_addr = be32_to_cpup(prop++);
++	len = be32_to_cpup(prop);
++
++	iram_addr = gen_pool_alloc(gp, len);
++	if (iram_addr == 0) {
++		pr_err("SOCFPGA: cannot alloc from gen pool\n");
++		return;
++	}
++
++	memset((void *)iram_addr, 0, len);
++
++	gen_pool_free(gp, iram_addr, len);
++
++	mapped_ocr_edac_addr = ioremap(ocr_edac_addr, 4);
++	if (!mapped_ocr_edac_addr) {
++		pr_err("SOCFPGA: Unable to map OCRAM ecc regs.\n");
++		return;
++	}
++
++	/* Clear any pending OCRAM ECC interrupts, then enable ECC */
++	writel(ALTR_OCRAM_CLEAR_ECC, mapped_ocr_edac_addr);
++	writel(ALTR_OCRAM_ECC_EN, mapped_ocr_edac_addr);
++
++	iounmap(mapped_ocr_edac_addr);
++
++	pr_debug("SOCFPGA: Success Initializing OCRAM\n");
++}
+diff --git a/arch/arm/mach-socfpga/socfpga.c b/arch/arm/mach-socfpga/socfpga.c
+index 0954011..065d80d 100644
+--- a/arch/arm/mach-socfpga/socfpga.c
++++ b/arch/arm/mach-socfpga/socfpga.c
+@@ -100,6 +100,14 @@ static void socfpga_cyclone5_restart(enum reboot_mode mode, const char *cmd)
+ 	writel(temp, rst_manager_base_addr + SOCFPGA_RSTMGR_CTRL);
+ }
+ 
++static void __init socfpga_cyclone5_init(void)
++{
++	of_platform_populate(NULL, of_default_bus_match_table,
++			     NULL, NULL);
++	if (IS_ENABLED(CONFIG_EDAC_ALTERA_OCRAM))
++		socfpga_init_ocram_ecc();
++}
++
+ static const char *altera_dt_match[] = {
+ 	"altr,socfpga",
+ 	NULL
+@@ -111,6 +119,7 @@ DT_MACHINE_START(SOCFPGA, "Altera SOCFPGA")
+ 	.smp		= smp_ops(socfpga_smp_ops),
+ 	.map_io		= socfpga_map_io,
+ 	.init_irq	= socfpga_init_irq,
++	.init_machine	= socfpga_cyclone5_init,
+ 	.restart	= socfpga_cyclone5_restart,
+ 	.dt_compat	= altera_dt_match,
+ MACHINE_END
 -- 
 1.7.9.5
