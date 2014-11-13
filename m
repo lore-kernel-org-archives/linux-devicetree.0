@@ -1,95 +1,52 @@
-From: James Hartley <James.Hartley@imgtec.com>
-Subject: RE: [PATCH 2/2] spi: Add driver for IMG SPFI controller
-Date: Thu, 13 Nov 2014 15:07:44 +0000
-Message-ID: <72BC0C8BD7BB6F45988A99382E5FBAE54433DF40@hhmail02.hh.imgtec.org>
-References: <1415828274-24727-1-git-send-email-abrestic@chromium.org>
- <1415828274-24727-3-git-send-email-abrestic@chromium.org>
- <20141112220740.GR3815@sirena.org.uk>
- <CAL1qeaH1rMcy37vcoHZ9xsmYs5iHz3Pp0GrC7agLmQ4Y7==iTw@mail.gmail.com>
- <20141112230624.GA3815@sirena.org.uk>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v9 00/10] rtc: at91sam9: add DT support
+Date: Thu, 13 Nov 2014 16:14:26 +0100
+Message-ID: <5464CAD2.8040901@atmel.com>
+References: <1411483725-31532-1-git-send-email-boris.brezillon@free-electrons.com>
+ <20141020141748.063d6835@bbrezillon> <544501AE.7030706@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141112230624.GA3815@sirena.org.uk>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Andrew Bresticker <abrestic@chromium.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Ezequiel Garcia <Ezequiel.Garcia@imgtec.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, James Hogan <James.Hogan@imgtec.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <544501AE.7030706@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>, Alessandro Zummo <a.zummo@towertech.it>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, rtc-linux@googlegroups.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Johan Hovold <jhovold@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Andrew Victor <linux@maxim.org.za>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Mark Brown [mailto:broonie@kernel.org]
-> Sent: 12 November 2014 23:06
-> To: Andrew Bresticker
-> Cc: James Hartley; Rob Herring; Pawel Moll; Mark Rutland; Ian Campbell;
-> Kumar Gala; Grant Likely; Ezequiel Garcia; devicetree@vger.kernel.org; linux-
-> kernel@vger.kernel.org; linux-spi@vger.kernel.org
-> Subject: Re: [PATCH 2/2] spi: Add driver for IMG SPFI controller
+On 20/10/2014 14:35, Nicolas Ferre :
+> On 20/10/2014 14:17, Boris Brezillon :
+>> Hi Alessandro,
+>>
+>> On Tue, 23 Sep 2014 16:48:35 +0200
+>> Boris BREZILLON <boris.brezillon@free-electrons.com> wrote:
+>>
+>>> Hello,
+>>>
+>>> This patch series adds DT support to the atmel at91sam9 RTC driver.
+>>>
+>>> It also removes any machine specific inclusions to prepare the migration
+>>> to multi platform kernel support, and retain the slow clock to prevent
+>>> the CCF from disabling it at the end of boot.
+>>
+>> Nicolas was planning to take this series (except for patch 10 which was
+>> already applied by Lee) in his tree for 3.19, but if you prefer to take
+>> it into yours just let us know.
 > 
-> On Wed, Nov 12, 2014 at 02:54:57PM -0800, Andrew Bresticker wrote:
-> > On Wed, Nov 12, 2014 at 2:07 PM, Mark Brown <broonie@kernel.org>
-> wrote:
-> 
-> > >>  drivers/spi/spi-img.c | 703
-> > >> ++++++++++++++++++++++++++++++++++++++++++++++++++
-> 
-> > > How about spi-img-spfi?  That way if someone makes another SPI
-> > > controller (say a more generic one, this one seems flash
-> > > specialized) there won't be a collision.
-> 
-> > Despite the name, I believe this controller is used for generic SPI
-> > stuff as well.  I'm not sure if there is a separate one which is more
-> > generic (James?).
+> Absolutely, I'll happily take them for at91-3.19-drivers and push them
+> through arm-soc tree unless Alessandro says otherwise.
 
-There is another generic img spi hardware block which is not register 
-compatible and doesn't have the flash interface which is also in existing 
-SoC's.  There is a separate img-spi driver for that which has not yet been 
-mainlined. I think spi-img-spfi would be ok for this driver. There is also 
-another sfc (Serial Flash Controller), block in the pipeline, so that could
-then be called spi-img-sfc.
+Now in at91-3.19-drivers with Arnd's Ack on the documentation patch.
+I'll sent them soon to arm-soc.
 
-> 
-> It would still be better to use a name less impressively generic - this is an
-> entire company, not even a product line.
-> 
-> > >> +             cpu_relax();
-> 
-> > > Seems random - we already relax in the data transfer?
-> 
-> > We don't relax in the transfers - would that be a better place to put
-> > it?  I thought it was better here since we reach this point once the
-> > TX FIFO has filled or RX FIFO has emptied.
-> 
-> Oh, that was the FIFO drain I was thinking of.  I guess here is fine.
-> 
-> > >> +     if (tx_buf)
-> > >> +             spfi_flush_tx_fifo(spfi);
-> > >> +     spfi_disable(spfi);
-> 
-> > > What does the enable and disable actually do?  Should this be
-> > > runtime PM?
-> 
-> > It starts/stops the transfer.  The control registers (bit clock,
-> > transfer mode, etc.) must be programmed before the enable bit is set
-> > and the bit does not clear itself upon completion of the transfer.  I
-> > don't think it makes sense to have this be part of runtime PM.
-> 
-> Perhaps these functions need to be called start() and stop() then - the
-> names sound like they gate the IP?
-> 
-> > > This will unconditionally claim to have handled an interrupt even if
-> > > it didn't get any interrupt status it has ever heard of.  At the
-> > > very least it should log unknown interrupts, ideally return IRQ_NONE
-> > > though since it seems to be a clear on read interrupt that's a bit
-> misleading.
-> 
-> > There's a clear register actually (see the writel() above), but yes,
-> > an error and returning IRQ_NONE sound appropriate in the event of an
-> > unexpected interrupt.
-> 
-> Don't add the error print - the interrupt core has diagnostics already and it
-> won't be nice if the interrupt ends up shared.  My recommendation was
-> intended as an either/or.
-
-James.
+Thanks, best regards,
+-- 
+Nicolas Ferre
