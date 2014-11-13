@@ -1,78 +1,70 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH/RFC 5/8] serial: pxa: Make the driver buildable for BCM7xxx set-top platforms
-Date: Thu, 13 Nov 2014 10:42:06 +0100
-Message-ID: <4606459.kh8mb8TEgZ@wuerfel>
-References: <1415781993-7755-1-git-send-email-cernekee@gmail.com> <3356477.HitZEsNa4H@wuerfel> <CAJiQ=7AFr5vR+FEc8B3CAZLb5GYujNxtaz7TU2FU0D3oModZ7w@mail.gmail.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: at91: Add Special Function Registers binding
+ documentation
+Date: Thu, 13 Nov 2014 10:48:03 +0100
+Message-ID: <20141113104803.179a7529@bbrezillon>
+References: <1415632471-14672-1-git-send-email-alexandre.belloni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <CAJiQ=7AFr5vR+FEc8B3CAZLb5GYujNxtaz7TU2FU0D3oModZ7w@mail.gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Rob Herring <robh@kernel.org>, tushar.behera@linaro.org, daniel@zonque.org, Haojian Zhuang <haojian.zhuang@gmail.com>, robert.jarzmik@free.fr, Grant Likely <grant.likely@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415632471-14672-1-git-send-email-alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 12 November 2014 01:19:24 Kevin Cernekee wrote:
-> On Wed, Nov 12, 2014 at 1:04 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Wednesday 12 November 2014 00:46:30 Kevin Cernekee wrote:
-> >> Remove the platform dependency in Kconfig and add an appropriate
-> >> compatible string.  Note that BCM7401 has one 16550A-compatible UART
-> >> in the UPG uart_clk domain, and two proprietary UARTs in the 27 MHz
-> >> clock domain.  This driver handles the former one.
-> >>
-> >> Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
-> >
-> > Can you explain why you are using the PXA serial driver instead of the
-> > 8250 driver, if this is 16550A compatible? I don't know the history
-> > why PXA is using a separate driver.
+On Mon, 10 Nov 2014 16:14:29 +0100
+Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+
+> The special function registers gather some registers that allow to tweak
+> features provided by IPs controlled through another register range.
 > 
-> I wasn't able to get serial8250 to work in any situation where another
-> driver tried to claim "ttyS"/4/64.
+> Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+Once you've fixed your dtsi you can add my
+
+Acked-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+on the whole series.
+
+> ---
+>  Documentation/devicetree/bindings/arm/atmel-at91.txt | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
 > 
-> serial8250 calls uart_add_one_port() in its module_init function, even
-> if the system doesn't have any ports.  Setting nr_uarts
-> (CONFIG_SERIAL_8250_RUNTIME_UARTS) to 0 doesn't help because
-> serial8250_find_match_or_unused() will just return NULL.
-> 
-> I guess I could try to rework that logic but several cases would need
-> to be retested, going back to PCs with ISA buses and PCI add-in cards.
-> And the differences may be visible to userspace.
-> 
-> The PXA driver seemed like a much cleaner starting point, even if it
-> was intended for a different SoC.
-
-Hmm, I've seen you already posted v2 of the series, but I'm not sure
-that this is what Greg had in mind when he suggested using /dev/ttyS*
-for the other driver.
-
-TTY naming is a mess today, and you seem to be caught in the middle
-of it trying to work around the inherent problems. Extending the PXA
-driver is an interesting approach since as you say it's a very nice
-clean subset of the 8250 driver, but that doesn't mean that it's
-a good long-term strategy, as we will likely have more chips with
-8250 variants.
-
-Some of the ways forward that I can see are:
-
-- (your approach) use and extend the pxa serial driver for new SoCs,
-  possibly migrate some of the existing users of 8250 to use that
-  and leave 8250 alone.
-
-- fix the problem you see in a different way, and get the 8250 driver
-  to solve your problem. Possibly integrate the pxa driver back into
-  8250 in eventually, as we did with the omap driver.
-
-- Do a fresh start for a general-purpose soc-type 8250 driver, using
-  tty_port instead of uart_port as the abstraction layer. Use that for
-  all new socs instead of extending the 8250 driver more, possibly
-  migrating some of the existing 8250 users.
-
-- split out the /dev/ttyS number allocation from the 8250 driver and
-  make it usable by arbitrary drivers.
-
-Greg, Jiri, do you have some guidance, or possibly other ideas?
-
-	Arnd
+> diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.txt b/Documentation/devicetree/bindings/arm/atmel-at91.txt
+> index 562cda9d86d9..a6427de45785 100644
+> --- a/Documentation/devicetree/bindings/arm/atmel-at91.txt
+> +++ b/Documentation/devicetree/bindings/arm/atmel-at91.txt
+> @@ -136,3 +136,20 @@ Example:
+>  		compatible = "atmel,at91sam9260-rstc";
+>  		reg = <0xfffffd00 0x10>;
+>  	};
+> +
+> +Special Function Registers (SFR)
+> +
+> +Special Function Registers (SFR) manage specific aspects of the integrated
+> +memory, bridge implementations, processor and other functionality not controlled
+> +elsewhere.
+> +
+> +required properties:
+> +- compatible: Should be "atmel,<chip>-sfr", "syscon".
+> +  <chip> can be "at91sam9260", "at91sam9rl" or "at91sam9x5".
+> +- reg: Should contain registers location and length
+> +
+> +	sfr@f0038000 {
+> +		compatible = "atmel,sama5d3-sfr", "syscon";
+> +		reg = <0xf0038000 0x4000>;
+> +	};
+> +
 
 
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
