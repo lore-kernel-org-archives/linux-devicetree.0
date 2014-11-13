@@ -1,69 +1,42 @@
-From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 0/3] iio: Add Cosmic Circuits ADC support
-Date: Thu, 13 Nov 2014 11:14:01 -0300
-Message-ID: <1415888044-16635-5-git-send-email-ezequiel.garcia@imgtec.com>
-References: <1415888044-16635-1-git-send-email-ezequiel.garcia@imgtec.com>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/7] dmaengine: at_xdmac: prefer usage of
+ readl/writel_relaxed
+Date: Thu, 13 Nov 2014 15:21:11 +0100
+Message-ID: <20141113142111.GS3639@ldesroches-Latitude-E6320>
+References: <1415875965-6905-1-git-send-email-ludovic.desroches@atmel.com>
+ <1415875965-6905-2-git-send-email-ludovic.desroches@atmel.com>
+ <2791155.z0l2TZezWO@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415888044-16635-1-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, Mark.Rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <2791155.z0l2TZezWO@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Here goes the third round of this series. You can find the previous patchset
-and its discussion here: http://thread.gmane.org/gmane.linux.kernel.iio/14553.
+On Thu, Nov 13, 2014 at 12:01:49PM +0100, Arnd Bergmann wrote:
+> On Thursday 13 November 2014 11:52:39 Ludovic Desroches wrote:
+> > _relaxed version of readl and writel are not implemented on all
+> > architecture so COMPILE_TEST has to be removed in order to not cause
+> > some build failures.
+> > 
+> > Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> > ---
+> > 
+> 
+> I've queued up Will Deacon's series to enable the relaxed accessors
+> on all architectures, so the Kconfig change should no longer
+> be required in 3.19.
 
-Changes from v2:
+Good news.
 
-  * Changed a devicetree property from adc-available-channels to
-    adc-reserved-channels, so it can be made optional.
+Vinod, I can send a v2 if you want.
 
-  * Renamed the driver from cc_10001_xxx to cc10001_xxx so it's consistent
-    with the rest of the kernel style.
 
-  * Some more minor cosmetic fixes.
-
-Changes from v1:
-
-  * Removed unneeded header includes.
-
-  * Changed all the names and macros prefix: s/CC_10001_/CC10001_.
-
-  * Used .update_scan_mode callback to preallocate the buffer.
-
-  * Used indio_dev for the struct iio_dev.
-
-  * Only read the regulator voltage when needed.
-
-  * Fixed probe() error handling.
-
-  * Used for_each_set_bit() instead of open-coding it.
-
-  * Name the power-down register as _POWER_UP, to make the code
-    less silly.
-
-  * Error out when no valid sample can be read (i.e. when end-of-conversion
-    poll times out).
-
-  * ... plus some assorted code cleaning based on the feedback.
-
-Ezequiel Garcia (1):
-  DT: Add a vendor prefix for Cosmic Circuits
-
-Phani Movva (2):
-  iio: adc: Cosmic Circuits 10001 ADC driver
-  DT: iio: adc: Add CC_10001 binding documentation
-
- .../devicetree/bindings/iio/adc/cc10001_adc.txt    |  22 ++
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- drivers/iio/adc/Kconfig                            |  11 +
- drivers/iio/adc/Makefile                           |   1 +
- drivers/iio/adc/cc10001_adc.c                      | 425 +++++++++++++++++++++
- 5 files changed, 460 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/cc10001_adc.txt
- create mode 100644 drivers/iio/adc/cc10001_adc.c
-
--- 
-2.1.0
+Ludovic
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
