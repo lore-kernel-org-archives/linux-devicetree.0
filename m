@@ -1,122 +1,79 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH V2 00/13] clk: mmp: clock device tree support
-Date: Wed, 12 Nov 2014 16:35:37 -0800
-Message-ID: <20141113003537.25314.19238@quantum>
-References: <1414721633-29508-1-git-send-email-chao.xie@marvell.com>
- <CAN1soZyqWtKUajbW_R-_uTwSbN4Apo0+NJ9WupS+YLOP_nGJ3w@mail.gmail.com>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH]  of/base: Fix PowerPC address parsing hack
+Date: Thu, 13 Nov 2014 11:45:22 +1100
+Message-ID: <1415839522.5124.58.camel@kernel.crashing.org>
+References: <1415771461.5124.33.camel@kernel.crashing.org>
+	 <20141113091036.4e9ec43d@canb.auug.org.au>
+	 <1415833725.5124.53.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAN1soZyqWtKUajbW_R-_uTwSbN4Apo0+NJ9WupS+YLOP_nGJ3w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Haojian Zhuang <haojian.zhuang@gmail.com>, Chao Xie <chao.xie@marvell.com>
-Cc: Haojian Zhuang <haojian.zhuang@linaro.org>, xiechao_mail@163.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415833725.5124.53.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Haojian Zhuang (2014-11-04 00:15:55)
-> On Fri, Oct 31, 2014 at 10:13 AM, Chao Xie <chao.xie@marvell.com> wrote:
-> > From: Chao Xie <chao.xie@marvell.com>
-> >
-> > The patch set focuses at support device tree for clock.
-> >
-> > The first part of the patches
-> >   clk: mmp: add prefix "mmp" for structures defined for clk-frac
-> >   clk: mmp: add spin lock for clk-frac
-> >   clk: mmp: add init callback for clk-frac
-> >   clk: mmp: move definiton of mmp_clk_frac to clk.h It enhances the clk-frac.
-> >
-> > The second part of the patches
-> >   clk: mmp: add clock type mix
-> >   clk: mmp: add mmp private gate clock
-> >
-> > The third part of the patches
-> >   clk: mmp: add basic support functions for DT support
-> >   clk: mmp: add reset support
-> >   clk: mmp: add pxa168 DT support for clock driver
-> >   clk: mmp: add pxa910 DT support for clock driver
-> >   clk: mmp: add mmp2 DT support for clock driver
-> > It add the device tree support for pxa168, pxa910 and mmp2.
-> >
-> > V1 -> V2:
-> >   Add reset support for the clocks that have reset bit.
-> >
-> > Chao Xie (13):
-> >   clk: mmp: add prefix "mmp" for structures defined for clk-frac
-> >   clk: mmp: add spin lock for clk-frac
-> >   clk: mmp: add init callback for clk-frac
-> >   clk: mmp: move definiton of mmp_clk_frac to clk.h
-> >   clk: mmp: add clock type mix
-> >   clk: mmp: add mmp private gate clock
-> >   clk: mmp: add basic support functions for DT support
-> >   clk: mmp: add reset support
-> >   clk: mmp: add pxa168 DT support for clock driver
-> >   clk: mmp: add pxa910 DT support for clock driver
-> >   clk: mmp: add mmp2 DT support for clock driver
-> >   arm: mmp: Make all the dts file to be compiled by Makefile
-> >   arm: mmp: Make use of the DT supported clock
-> >
-> >  .../devicetree/bindings/clock/marvell,mmp2.txt     |  21 +
-> >  .../devicetree/bindings/clock/marvell,pxa168.txt   |  21 +
-> >  .../devicetree/bindings/clock/marvell,pxa910.txt   |  21 +
-> >  arch/arm/boot/dts/Makefile                         |   3 +
-> >  arch/arm/boot/dts/mmp2-brownstone.dts              |   2 +-
-> >  arch/arm/boot/dts/mmp2.dtsi                        |  29 +-
-> >  arch/arm/boot/dts/pxa168-aspenite.dts              |   2 +-
-> >  arch/arm/boot/dts/pxa168.dtsi                      |  27 +-
-> >  arch/arm/boot/dts/pxa910-dkb.dts                   |   2 +-
-> >  arch/arm/boot/dts/pxa910.dtsi                      |  28 +-
-> >  arch/arm/mach-mmp/Kconfig                          |  12 +-
-> >  arch/arm/mach-mmp/mmp-dt.c                         |  57 +--
-> >  arch/arm/mach-mmp/mmp2-dt.c                        |  26 +-
-> >  drivers/clk/mmp/Makefile                           |   7 +-
-> >  drivers/clk/mmp/clk-frac.c                         |  74 ++-
-> >  drivers/clk/mmp/clk-gate.c                         | 133 ++++++
-> >  drivers/clk/mmp/clk-mix.c                          | 513 +++++++++++++++++++++
-> >  drivers/clk/mmp/clk-mmp2.c                         |   6 +-
-> >  drivers/clk/mmp/clk-of-mmp2.c                      | 334 ++++++++++++++
-> >  drivers/clk/mmp/clk-of-pxa168.c                    | 279 +++++++++++
-> >  drivers/clk/mmp/clk-of-pxa910.c                    | 301 ++++++++++++
-> >  drivers/clk/mmp/clk-pxa168.c                       |   6 +-
-> >  drivers/clk/mmp/clk-pxa910.c                       |   6 +-
-> >  drivers/clk/mmp/clk.c                              | 192 ++++++++
-> >  drivers/clk/mmp/clk.h                              | 226 ++++++++-
-> >  drivers/clk/mmp/reset.c                            |  99 ++++
-> >  drivers/clk/mmp/reset.h                            |  31 ++
-> >  include/dt-bindings/clock/marvell,mmp2.h           |  74 +++
-> >  include/dt-bindings/clock/marvell,pxa168.h         |  57 +++
-> >  include/dt-bindings/clock/marvell,pxa910.h         |  54 +++
-> >  30 files changed, 2538 insertions(+), 105 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/clock/marvell,mmp2.txt
-> >  create mode 100644 Documentation/devicetree/bindings/clock/marvell,pxa168.txt
-> >  create mode 100644 Documentation/devicetree/bindings/clock/marvell,pxa910.txt
-> >  create mode 100644 drivers/clk/mmp/clk-gate.c
-> >  create mode 100644 drivers/clk/mmp/clk-mix.c
-> >  create mode 100644 drivers/clk/mmp/clk-of-mmp2.c
-> >  create mode 100644 drivers/clk/mmp/clk-of-pxa168.c
-> >  create mode 100644 drivers/clk/mmp/clk-of-pxa910.c
-> >  create mode 100644 drivers/clk/mmp/clk.c
-> >  create mode 100644 drivers/clk/mmp/reset.c
-> >  create mode 100644 drivers/clk/mmp/reset.h
-> >  create mode 100644 include/dt-bindings/clock/marvell,mmp2.h
-> >  create mode 100644 include/dt-bindings/clock/marvell,pxa168.h
-> >  create mode 100644 include/dt-bindings/clock/marvell,pxa910.h
-> >
-> > --
-> > 1.8.3.2
-> >
-> 
-> Acked-by: Haojian Zhuang <haojian.zhuang@gmail.com>
-> 
-> Mike,
-> Please merge all mach-mmp patches with clock together. Otherwise, it
-> may result in build issue.
+What about this one instead ? I want to cache it because that function
+can be called quite a while and doing two additional property lookup
+and string compares every time might hurt some platforms.
 
-Can patches #12 & #13 go through arm-soc?
+----
 
-Regards,
-Mike
+We have a historical hack that treats missing ranges properties as the
+equivalent of an empty one. This is needed for ancient PowerMac "bad"
+device-trees, and shouldn't be enabled for any other PowerPC platform,
+otherwise we get some nasty layout of devices in sysfs or even
+duplication when a set of otherwise identically named devices is
+created multiple times under a different parent node with no ranges
+property.
 
-> 
-> Best Regards
-> Haojian
+This fix is needed for the PowerNV i2c busses to be exposed properly
+and will fix a number of other embedded cases.
+
+Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+CC: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index e371825..5eae0cd 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -403,6 +403,17 @@ static struct of_bus *of_match_bus(struct device_node *np)
+ 	return NULL;
+ }
+ 
++static int of_empty_ranges_quirk(void)
++{
++	/* To save cycles, we cache the result */
++	static int quirk_state = -1;
++
++	if (quirk_state < 0)
++		quirk_state = of_machine_is_compatible("Power Macintosh") ||
++			of_machine_is_compatible("MacRISC");
++	return quirk_state;
++}
++
+ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
+ 			    struct of_bus *pbus, __be32 *addr,
+ 			    int na, int ns, int pna, const char *rprop)
+@@ -428,12 +439,10 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
+ 	 * This code is only enabled on powerpc. --gcl
+ 	 */
+ 	ranges = of_get_property(parent, rprop, &rlen);
+-#if !defined(CONFIG_PPC)
+-	if (ranges == NULL) {
++	if (ranges == NULL && !of_empty_ranges_quirk()) {
+ 		pr_err("OF: no ranges; cannot translate\n");
+ 		return 1;
+ 	}
+-#endif /* !defined(CONFIG_PPC) */
+ 	if (ranges == NULL || rlen == 0) {
+ 		offset = of_read_number(addr, na);
+ 		memset(addr, 0, pna * 4);
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
