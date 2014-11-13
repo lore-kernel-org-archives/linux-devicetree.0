@@ -1,66 +1,103 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2] PCI: add missing DT binding for linux,pci-domain
- property
-Date: Thu, 13 Nov 2014 10:34:04 -0700
-Message-ID: <20141113173404.GJ5064@google.com>
-References: <1415287400-30426-1-git-send-email-l.stach@pengutronix.de>
- <20141113170921.GG5064@google.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v6 1/2] i2c: Add Imagination Technologies I2C SCB driver
+Date: Thu, 13 Nov 2014 18:38:25 +0100
+Message-ID: <20141113173825.GD1275@katana>
+References: <1415885111-4138-1-git-send-email-ezequiel.garcia@imgtec.com>
+ <1415885111-4138-2-git-send-email-ezequiel.garcia@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="n/aVsWSeQ4JHkrmm"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20141113170921.GG5064@google.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Liviu Dudau <Liviu.Dudau@arm.com>, Arnd Bergmann <arnd@arndb.de>
+In-Reply-To: <1415885111-4138-2-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 13, 2014 at 10:09:21AM -0700, Bjorn Helgaas wrote:
-> On Thu, Nov 06, 2014 at 04:23:20PM +0100, Lucas Stach wrote:
-> > This property was added by 41e5c0f81d3e
-> > (of/pci: Add pci_get_new_domain_nr() and of_get_pci_domain_nr())
-> > without the required binding documentation. As this property
-> > will be supported by a number of host bridge drivers going forward,
-> > add it to the common PCI binding doc.
-> > 
-> > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> 
-> Applied with acks from Liviu and Rob to for-linus for v3.18, thanks a lot
-> for working this out!
 
-Arnd, I just noticed your concern about this being linux-only.  Are you
-happy with this one?  If not, I can drop this.
+--n/aVsWSeQ4JHkrmm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > ---
-> > This is a non-critical fix, but may still qualify for 3.18-rc as
-> > the property was added in this release cycle.
-> > 
-> > v2:
-> > - emphasize that the property must be present and unique systemwide
-> >   if used
-> > ---
-> >  Documentation/devicetree/bindings/pci/pci.txt | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
-> > index 41aeed38926d..68c364e2f5e5 100644
-> > --- a/Documentation/devicetree/bindings/pci/pci.txt
-> > +++ b/Documentation/devicetree/bindings/pci/pci.txt
-> > @@ -7,3 +7,14 @@ And for the interrupt mapping part:
-> >  
-> >  Open Firmware Recommended Practice: Interrupt Mapping
-> >  http://www.openfirmware.org/1275/practice/imap/imap0_9d.pdf
-> > +
-> > +Additionally to the properties specified in the above standards a host bridge
-> > +driver implementation may support the following properties:
-> > +
-> > +- linux,pci-domain:
-> > +   If present this property assigns a fixed PCI domain number to a host bridge,
-> > +   otherwise an unstable (across boots) unique number will be assigned.
-> > +   It is required to either not set this property at all or set it for all
-> > +   host bridges in the system, otherwise potentially conflicting domain numbers
-> > +   may be assigned to root buses behind different host bridges. The domain
-> > +   number for each host bridge in the system must be unique.
-> > -- 
-> > 2.1.1
-> > 
+Hi,
+
+Thank you for this submission! Wow, this is a lot of code and I have
+only very minor comments. Good work and thanks to all previous
+reviewers!
+
+> @@ -0,0 +1,1415 @@
+> +/*
+> + * I2C adapter for the IMG Serial Control Bus (SCB) IP block.
+> + *
+> + * Copyright (C) 2009, 2010, 2012, 2014 Imagination Technologies Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * There are three ways that this I2C controller can be driven:
+
+Interesting beast. Offers a lot of possibilities and complexity :)
+
+> + * Notice that the driver implements a timer-based timeout mechanism.
+> + * This is done to avoid slave events interrupts in automatic mode,
+> + * given the driver gets a slave event and transaction done interrupts
+> + * for each atomic mode command (start, data, ack, stop, etc) that gets
+> + * completed, none of which are of interest when using automatic mode
+> + * since those atomic mode commands are managed automatically by hardware
+> + * rather than by the I2C state machine in the interrupt handler.
+
+I read this three times and still have no clear picture. Please
+rephrase. Smaller sentences. Simple ones.
+
+
+... all down to probe()
+
+> +	i2c_set_adapdata(&i2c->adap, i2c);
+> +	i2c->adap.dev.parent = &pdev->dev;
+> +	i2c->adap.dev.of_node = node;
+> +	i2c->adap.owner = THIS_MODULE;
+> +	i2c->adap.class = I2C_CLASS_HWMON | I2C_CLASS_SPD;
+
+You probably won't need this one. You have DT probing.
+
+> +	i2c->adap.algo = &img_i2c_algo;
+> +	i2c->adap.retries = 5;
+> +	i2c->adap.nr = pdev->id;
+> +	snprintf(i2c->adap.name, sizeof(i2c->adap.name),
+> +		 "IMG i2c%d", i2c->adap.nr);
+
+Please use a static name, like "IMG <some type> I2C". This describes the
+IP block, not the bus in use.
+
+Very close to go...
+
+Thanks,
+
+   Wolfram
+
+
+--n/aVsWSeQ4JHkrmm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUZOyRAAoJEBQN5MwUoCm2wf8P/jlgbCFhIpQY9WKribEX2sbF
+WqgdpDSrq/NPGRrQV9H15yjEo/EHiCMLgzyR9i61I7JAulVlKPcw/PheLz3EyTkr
+cbTMDcvrZRq4QkIktaNIkc5xUHwcJZ5f86MP0XGRB1sRkMLgVHdzhdHLg1eiHmUg
+pzsUR+BtZqFDjqt3Rz77sJzK7WGY+PLRlDGkP3fqh+TGBAL9ytk43oJ9n7jqvSLf
+BSB9OApceu7ghl0Ne2rUUPSkZJYNSV03E8AqdusXeq8an4J2rwIe9YMsbTs0mtc0
+3FGNgCnAucnjNS5XWMNshKC+KKsj5xob1ueAuy2E7uB1rZ4AmVcEIhZNjqcvLD83
+0p7Dw1zSoiXLxvRpY3kLMq8ceTkck3ZLZxZbMhu8XVbJthcQi7+65EAAkGGPFLHp
+qhAy40L2avFX9aoX0JgGSlkAwtikhWflvrBw3JKFRhoRify33rVGriqTH/D9ZUdG
++nq/wB9+nNm1cr2qyojf+xoujlsCScvTraLOz0iLYfopW+cbQw9G4XnKGanUPe/Y
+1B9/s1pZW4+xDipUuzzMktNjd8FFhOVomSCGzDProB+ORJ48VYIqFNRqvyiE2Rpx
+Gs9L8pHCMG1ucQBLZyePs7gLtRlh/c1xQjaaFN63QS/E7FP7k0wBB22V62p6jc7s
+6Tvqyazpmjj3YPAVoHXF
+=IeW0
+-----END PGP SIGNATURE-----
+
+--n/aVsWSeQ4JHkrmm--
