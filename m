@@ -1,65 +1,73 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 4/4] arm: dts: omap3-gta04: Add static configuration for
- devconf1 register
-Date: Thu, 13 Nov 2014 10:28:49 -0800
-Message-ID: <20141113182848.GQ26481@atomide.com>
-References: <1415051968-4878-1-git-send-email-marek@goldelico.com>
- <1415051968-4878-5-git-send-email-marek@goldelico.com>
- <5463585D.9070209@ti.com>
- <20141112150210.GC26481@atomide.com>
- <5464969F.30708@ti.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] ARM: mediatek: Add driver for Mediatek I2C
+ controller
+Date: Thu, 13 Nov 2014 19:31:22 +0100
+Message-ID: <20141113183122.GH1275@katana>
+References: <1415078977-18374-1-git-send-email-xudong.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="bpVaumkpfGNUagdU"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5464969F.30708-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1415078977-18374-1-git-send-email-xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Xudong Chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Nathan Chung <nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YH Chen <yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> [141113 03:33]:
-> On 12/11/14 17:02, Tony Lindgren wrote:
-> 
-> >> And, with a quick grep, I see CONTROL_DEVCONF1 touched in multiple
-> >> places in the kernel. I wonder if adding a pinmux entry for it could
-> >> cause some rather odd problems.
-> > 
-> > They can all use pinctrl-single no problem.
-> 
-> Can, but don't. That's my worry. If we touch the DEVCONF1 via pinmux,
-> and we have code in mach-omap2 that also touch DEVCONF1, without any
-> knowledge (and locking) between those...
 
-Hmm yeah the McBSP clock mux could be racy as the mux register for
-McBSP is treated as a clock. This register muxes the clock between
-external pin and internal clock. Considering that this should be
-selectable at board level as the external clock probably needs to be
-used if level shifters are being used, it should be really handled by
-pinctrl-single.
+--bpVaumkpfGNUagdU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The other use for hsmmc.c and pdata-quirks.c for the one time mux for
-MMC clock from the MMC clock pin. That can be done with pinctrl-single
-from the MMC driver too for DT based booting.
 
-Then we just have the save and restore of the registers for
-off-idle.
- 
-> So _maybe_ that's not an issue, as the pinmux config we have here is
-> fixed, and done once at boot time, and maybe the code in mach-omap2 that
-> touch DEVCONF1 is also ran just once and not at the same time as the
-> pinmux. But I don't know if that's so.
+> MTK I2C HW has some limitation.
+> 1. If the i2c_msg number is more than one, STOP will be issued instead of
+> RS(Repeat Start) between each message.
+>=20
+> 2. Mediatek I2C controller support WRRD(write then read) mode, in WRRD
+> mode the Repeat Start will be issued between 2 messages.
+> In this driver if 2 messages is first write then read, the driver will
+> combine 2 messages using Write-Read mode so the RS will be issued between
+> the 2 messages.
+> Ex: W/R/R, driver will combine first W/R and then R.
+>=20
+> 3. Due to HW limitation, in this version the max transfer data length is =
+255
+> in one message.
 
-It seems we could just do a read-only check for McBSP in the clock
-code for the mux register, or even completely drop that code from
-cclock3xxx_data.c and start using the pinctrl for that mux.
+This looks to me more like an SMBUS controller instead of I2C. Maybe you
+should populate smbus_xfer rather than master_xfer?
 
-Paul & Tero, got any comments here?
+> MT8135 and MT6589 can control I2C pins on PMIC(MT6397) by setting the i2c
+> registers in MT8135 side.
 
-Regards,
+I still didn't get this, even after reading the mail thread of old
+series. Can someone maybe draw me a nice ASCII picture showing the setup
+which is going on here?
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--bpVaumkpfGNUagdU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUZPj6AAoJEBQN5MwUoCm298UP/i/SoKTHz4N7HOuev9WcBtwC
+XzbQo/VmY+4QNUD1O0rS+qoCDHi5x3hr46Gqn0zCLdRmfRlu0jBi2u+Ccb0m0P9I
+HgZdFz2UEJlXz0ZEuMYcVSBqA9U7tm4USF8o27zzPX6nvQsk3/JyNxm0LOPAS/Jg
+caLFXcIBkUQcdAevt/Q8O/OY6IstLsTiL2xVcGMCVWaAQoZ4/Lor7YmpYfBh5qJC
+7YD2Ww/7knl2BEy2A8p3eMQZMetdmSEnCW35XvqoFhSRi2UI84AHtkEzb+BzOW6X
+GrYyUEMbCk2hEXbUR2vp/DWofnnbz52AoghlkrUu20E84FEOpSX2jBxtM/f8k9+i
+CqPZl2Bjw4rAzCg3IOlWEad2ItbBTJcRnp3yDdpWZ6T3nlOLOKMuV9zCeLObvZNU
+7RLei4ZOtdje32H6ccPgwLv32JrStJdZYhnro0ZT1moxwvOrF2dzEwlPtMYZlIET
+37P3LkcIbTN/xUJoBi81VsYerRDYs/NVvQE6NBc1GTNGZqbqPzMYx6rushKiCR3q
+tgW/R8bp0go5GTyPUf87ebgk/hTQXcrOWOcOuxyhuuH3pOhXQmItXVm5XS0j9Naa
+UACDfqPGPU+C2TEJWjVddkOIGOX1GKzjTFe5O9W4U/gfYhX2AYWxUmEmVABFSsjo
+LoF4hHo43V6ZYiirk6nw
+=NRsk
+-----END PGP SIGNATURE-----
+
+--bpVaumkpfGNUagdU--
