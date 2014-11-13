@@ -1,57 +1,122 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH] i2c-qoriq: modified compatibility for correct prescaler
-Date: Thu, 13 Nov 2014 01:34:19 +0100
-Message-ID: <20141113003418.GE2062@katana>
-References: <1413538026-15739-1-git-send-email-valentin.longchamp@keymile.com>
- <1414537731.23458.120.camel@snotra.buserror.net>
- <5450AC85.40302@keymile.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH V2 00/13] clk: mmp: clock device tree support
+Date: Wed, 12 Nov 2014 16:35:37 -0800
+Message-ID: <20141113003537.25314.19238@quantum>
+References: <1414721633-29508-1-git-send-email-chao.xie@marvell.com>
+ <CAN1soZyqWtKUajbW_R-_uTwSbN4Apo0+NJ9WupS+YLOP_nGJ3w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2hMgfIw2X+zgXrFs"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5450AC85.40302-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux PowerPC Kernel <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux device trees <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Brunck, Holger" <Holger.Brunck-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, "Boschung, Rainer" <Rainer.Boschung-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAN1soZyqWtKUajbW_R-_uTwSbN4Apo0+NJ9WupS+YLOP_nGJ3w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Haojian Zhuang <haojian.zhuang@gmail.com>, Chao Xie <chao.xie@marvell.com>
+Cc: Haojian Zhuang <haojian.zhuang@linaro.org>, xiechao_mail@163.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Quoting Haojian Zhuang (2014-11-04 00:15:55)
+> On Fri, Oct 31, 2014 at 10:13 AM, Chao Xie <chao.xie@marvell.com> wrote:
+> > From: Chao Xie <chao.xie@marvell.com>
+> >
+> > The patch set focuses at support device tree for clock.
+> >
+> > The first part of the patches
+> >   clk: mmp: add prefix "mmp" for structures defined for clk-frac
+> >   clk: mmp: add spin lock for clk-frac
+> >   clk: mmp: add init callback for clk-frac
+> >   clk: mmp: move definiton of mmp_clk_frac to clk.h It enhances the clk-frac.
+> >
+> > The second part of the patches
+> >   clk: mmp: add clock type mix
+> >   clk: mmp: add mmp private gate clock
+> >
+> > The third part of the patches
+> >   clk: mmp: add basic support functions for DT support
+> >   clk: mmp: add reset support
+> >   clk: mmp: add pxa168 DT support for clock driver
+> >   clk: mmp: add pxa910 DT support for clock driver
+> >   clk: mmp: add mmp2 DT support for clock driver
+> > It add the device tree support for pxa168, pxa910 and mmp2.
+> >
+> > V1 -> V2:
+> >   Add reset support for the clocks that have reset bit.
+> >
+> > Chao Xie (13):
+> >   clk: mmp: add prefix "mmp" for structures defined for clk-frac
+> >   clk: mmp: add spin lock for clk-frac
+> >   clk: mmp: add init callback for clk-frac
+> >   clk: mmp: move definiton of mmp_clk_frac to clk.h
+> >   clk: mmp: add clock type mix
+> >   clk: mmp: add mmp private gate clock
+> >   clk: mmp: add basic support functions for DT support
+> >   clk: mmp: add reset support
+> >   clk: mmp: add pxa168 DT support for clock driver
+> >   clk: mmp: add pxa910 DT support for clock driver
+> >   clk: mmp: add mmp2 DT support for clock driver
+> >   arm: mmp: Make all the dts file to be compiled by Makefile
+> >   arm: mmp: Make use of the DT supported clock
+> >
+> >  .../devicetree/bindings/clock/marvell,mmp2.txt     |  21 +
+> >  .../devicetree/bindings/clock/marvell,pxa168.txt   |  21 +
+> >  .../devicetree/bindings/clock/marvell,pxa910.txt   |  21 +
+> >  arch/arm/boot/dts/Makefile                         |   3 +
+> >  arch/arm/boot/dts/mmp2-brownstone.dts              |   2 +-
+> >  arch/arm/boot/dts/mmp2.dtsi                        |  29 +-
+> >  arch/arm/boot/dts/pxa168-aspenite.dts              |   2 +-
+> >  arch/arm/boot/dts/pxa168.dtsi                      |  27 +-
+> >  arch/arm/boot/dts/pxa910-dkb.dts                   |   2 +-
+> >  arch/arm/boot/dts/pxa910.dtsi                      |  28 +-
+> >  arch/arm/mach-mmp/Kconfig                          |  12 +-
+> >  arch/arm/mach-mmp/mmp-dt.c                         |  57 +--
+> >  arch/arm/mach-mmp/mmp2-dt.c                        |  26 +-
+> >  drivers/clk/mmp/Makefile                           |   7 +-
+> >  drivers/clk/mmp/clk-frac.c                         |  74 ++-
+> >  drivers/clk/mmp/clk-gate.c                         | 133 ++++++
+> >  drivers/clk/mmp/clk-mix.c                          | 513 +++++++++++++++++++++
+> >  drivers/clk/mmp/clk-mmp2.c                         |   6 +-
+> >  drivers/clk/mmp/clk-of-mmp2.c                      | 334 ++++++++++++++
+> >  drivers/clk/mmp/clk-of-pxa168.c                    | 279 +++++++++++
+> >  drivers/clk/mmp/clk-of-pxa910.c                    | 301 ++++++++++++
+> >  drivers/clk/mmp/clk-pxa168.c                       |   6 +-
+> >  drivers/clk/mmp/clk-pxa910.c                       |   6 +-
+> >  drivers/clk/mmp/clk.c                              | 192 ++++++++
+> >  drivers/clk/mmp/clk.h                              | 226 ++++++++-
+> >  drivers/clk/mmp/reset.c                            |  99 ++++
+> >  drivers/clk/mmp/reset.h                            |  31 ++
+> >  include/dt-bindings/clock/marvell,mmp2.h           |  74 +++
+> >  include/dt-bindings/clock/marvell,pxa168.h         |  57 +++
+> >  include/dt-bindings/clock/marvell,pxa910.h         |  54 +++
+> >  30 files changed, 2538 insertions(+), 105 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/clock/marvell,mmp2.txt
+> >  create mode 100644 Documentation/devicetree/bindings/clock/marvell,pxa168.txt
+> >  create mode 100644 Documentation/devicetree/bindings/clock/marvell,pxa910.txt
+> >  create mode 100644 drivers/clk/mmp/clk-gate.c
+> >  create mode 100644 drivers/clk/mmp/clk-mix.c
+> >  create mode 100644 drivers/clk/mmp/clk-of-mmp2.c
+> >  create mode 100644 drivers/clk/mmp/clk-of-pxa168.c
+> >  create mode 100644 drivers/clk/mmp/clk-of-pxa910.c
+> >  create mode 100644 drivers/clk/mmp/clk.c
+> >  create mode 100644 drivers/clk/mmp/reset.c
+> >  create mode 100644 drivers/clk/mmp/reset.h
+> >  create mode 100644 include/dt-bindings/clock/marvell,mmp2.h
+> >  create mode 100644 include/dt-bindings/clock/marvell,pxa168.h
+> >  create mode 100644 include/dt-bindings/clock/marvell,pxa910.h
+> >
+> > --
+> > 1.8.3.2
+> >
+> 
+> Acked-by: Haojian Zhuang <haojian.zhuang@gmail.com>
+> 
+> Mike,
+> Please merge all mach-mmp patches with clock together. Otherwise, it
+> may result in build issue.
 
---2hMgfIw2X+zgXrFs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Can patches #12 & #13 go through arm-soc?
 
+Regards,
+Mike
 
-> If we wanted to be on the safe side and strict (since we are not sure that the
-> hardware is 100% compatible), we maybe should add a fsl,qoriq-i2c compatible to
-> the driver that does the same as mpc8543-i2c.
-
-Or you leave the driver as is and use both compatibles:
-
-compatible = "fsl,qoriq-i2c", "fsl,mpc8543-i2c", "fsl-i2c";
-
-?
-
---2hMgfIw2X+zgXrFs
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUY/yKAAoJEBQN5MwUoCm2m98P/ix5SsOvuRsDYFbeDB3XqNyN
-16yH9cU7oGeDHPFyvqzcnZ++d6+r0tpaErXOU3GS2NBdaMnNMHogmhBIbmCbdlW8
-A3gp2+mY/BnSmvl6dv5tqKzjqX2zZ5+3KOj6EcVAXVR9bz5qmFpKrEsZYv++BQj/
-tNEAUN7iy2gt33kckfBxpfrIwjAiylsKae3hqLMhmry8x5rd2/KrkGB6qL1QOaAx
-wV4ZIMcDBDVO7u4lmokl9heRebED6vYB8YiTWZH1dDz1whbN2loUGZroTmR+dbAv
-2UY+S2CMxUg1bQPkyDVe2GglZ1wXit8SKToa/mClSeXtpiW546JzcYW0Ep4HUQf3
-lv9+Lg1ne+y771u/Pome2MUPHR6Ntuuy9GHxQad/kx/1jRe6/C3yko+3VoQj9SrY
-3sNXLcUmraRLQL/3EjOJdjFOJapjkopt5Jh4Lt6jIueOjEZLBXEbVJgGiHyS1IU7
-61FeVvl6Mxt8lt2zsUjT8IBzi8xh43zquzHjJgjAXH4CxHXx7y+GURJmclXmOf0h
-HE5qMLRerHOC7Fr4pOnuXixehhrxKZsz9MuUk2NMnAlqEULxgRMCXbzw9rRLKVSS
-m2VsqDdYRABZjLrhIFmfWOMnye4tKMd/I7qitE617QhZFqc9+YsiJoFHj3Tncchc
-zA+pXncSKBWHcPRjo/DJ
-=XA65
------END PGP SIGNATURE-----
-
---2hMgfIw2X+zgXrFs--
+> 
+> Best Regards
+> Haojian
