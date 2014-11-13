@@ -1,7 +1,7 @@
 From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: [PATCH v6 3/6] irqchip: gic: Support hierarchy irq domain.
-Date: Thu, 13 Nov 2014 23:37:06 +0800
-Message-ID: <1415893029-2971-4-git-send-email-yingjoe.chen@mediatek.com>
+Subject: [PATCH v6 5/6] ARM: mediatek: Add sysirq in mt6589/mt8135/mt8127 dtsi
+Date: Thu, 13 Nov 2014 23:37:08 +0800
+Message-ID: <1415893029-2971-6-git-send-email-yingjoe.chen@mediatek.com>
 References: <1415893029-2971-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,158 +12,138 @@ To: Thomas Gleixner <tglx@linutronix.de>, Jiang Liu <jiang.liu@linux.intel.com>,
 Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Grant Likely <grant.likely@linaro.org>, Boris BREZILLON <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bjorn Helgaas <bhelgaas@google.com>, Yijing Wang <wangyijing@huawei.com>, srv_heupstream@mediatek.com, yingjoe.chen@gmail.com, hc.yen@mediatek.com, eddie.huang@mediatek.com, nathan.chung@mediatek.com, yh.chen@mediatek.com, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Add support to use gic as a parent for stacked irq domain.
+Add sysirq settings for mt6589/mt8135/mt8127
+This also correct timer interrupt flag. The old setting works
+because boot loader already set polarity for timer interrupt.
+Without intpol support, the setting was not changed so gic
+can get the irq correctly.
 
 Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
 ---
- drivers/irqchip/Kconfig   |  1 +
- drivers/irqchip/irq-gic.c | 80 ++++++++++++++++++++++++++++++++---------------
- 2 files changed, 55 insertions(+), 26 deletions(-)
+ arch/arm/boot/dts/mt6589.dtsi | 14 ++++++++++++--
+ arch/arm/boot/dts/mt8127.dtsi | 14 ++++++++++++--
+ arch/arm/boot/dts/mt8135.dtsi | 14 ++++++++++++--
+ 3 files changed, 36 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index b21f12f..7f34138 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -5,6 +5,7 @@ config IRQCHIP
- config ARM_GIC
- 	bool
- 	select IRQ_DOMAIN
-+	select IRQ_DOMAIN_HIERARCHY
- 	select MULTI_IRQ_HANDLER
+diff --git a/arch/arm/boot/dts/mt6589.dtsi b/arch/arm/boot/dts/mt6589.dtsi
+index e3c7600..c91b2a9 100644
+--- a/arch/arm/boot/dts/mt6589.dtsi
++++ b/arch/arm/boot/dts/mt6589.dtsi
+@@ -19,7 +19,7 @@
  
- config GIC_NON_BANKED
-diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-index 38493ff..fe9ab93 100644
---- a/drivers/irqchip/irq-gic.c
-+++ b/drivers/irqchip/irq-gic.c
-@@ -788,17 +788,16 @@ static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
- {
- 	if (hw < 32) {
- 		irq_set_percpu_devid(irq);
--		irq_set_chip_and_handler(irq, &gic_chip,
--					 handle_percpu_devid_irq);
-+		irq_domain_set_info(d, irq, hw, &gic_chip, d->host_data,
-+				    handle_percpu_devid_irq, NULL, NULL);
- 		set_irq_flags(irq, IRQF_VALID | IRQF_NOAUTOEN);
- 	} else {
--		irq_set_chip_and_handler(irq, &gic_chip,
--					 handle_fasteoi_irq);
-+		irq_domain_set_info(d, irq, hw, &gic_chip, d->host_data,
-+				    handle_fasteoi_irq, NULL, NULL);
- 		set_irq_flags(irq, IRQF_VALID | IRQF_PROBE);
+ / {
+ 	compatible = "mediatek,mt6589";
+-	interrupt-parent = <&gic>;
++	interrupt-parent = <&sysirq>;
  
- 		gic_routable_irq_domain_ops->map(d, irq, hw);
- 	}
--	irq_set_chip_data(irq, d->host_data);
- 	return 0;
- }
+ 	cpus {
+ 		#address-cells = <1>;
+@@ -76,15 +76,25 @@
+ 		timer: timer@10008000 {
+ 			compatible = "mediatek,mt6577-timer";
+ 			reg = <0x10008000 0x80>;
+-			interrupts = <GIC_SPI 113 IRQ_TYPE_EDGE_RISING>;
++			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>;
+ 			clocks = <&system_clk>, <&rtc_clk>;
+ 			clock-names = "system-clk", "rtc-clk";
+ 		};
  
-@@ -814,8 +813,6 @@ static int gic_irq_domain_xlate(struct irq_domain *d,
- {
- 	unsigned long ret = 0;
- 
--	if (d->of_node != controller)
--		return -EINVAL;
- 	if (intsize < 3)
- 		return -EINVAL;
- 
-@@ -858,6 +855,31 @@ static struct notifier_block gic_cpu_notifier = {
- };
- #endif
- 
-+static int gic_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
-+				unsigned int nr_irqs, void *arg)
-+{
-+	int i, ret;
-+	irq_hw_number_t hwirq;
-+	unsigned int type = IRQ_TYPE_NONE;
-+	struct of_phandle_args *irq_data = arg;
++		sysirq: interrupt-controller@10200100 {
++			compatible = "mediatek,mt6589-sysirq",
++				     "mediatek,mt6577-sysirq";
++			interrupt-controller;
++			#interrupt-cells = <3>;
++			interrupt-parent = <&gic>;
++			reg = <0x10200100 0x1c>;
++		};
 +
-+	ret = gic_irq_domain_xlate(domain, irq_data->np, irq_data->args,
-+				   irq_data->args_count, &hwirq, &type);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0; i < nr_irqs; i++)
-+		gic_irq_domain_map(domain, virq+i, hwirq+i);
-+
-+	return 0;
-+}
-+
-+static const struct irq_domain_ops gic_irq_domain_hierarchy_ops = {
-+	.xlate = gic_irq_domain_xlate,
-+	.alloc = gic_irq_domain_alloc,
-+	.free = irq_domain_free_irqs_top,
-+};
-+
- static const struct irq_domain_ops gic_irq_domain_ops = {
- 	.map = gic_irq_domain_map,
- 	.unmap = gic_irq_domain_unmap,
-@@ -948,18 +970,6 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
- 		gic_cpu_map[i] = 0xff;
+ 		gic: interrupt-controller@10211000 {
+ 			compatible = "arm,cortex-a7-gic";
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
++			interrupt-parent = <&gic>;
+ 			reg = <0x10211000 0x1000>,
+ 			      <0x10212000 0x1000>,
+ 			      <0x10214000 0x2000>,
+diff --git a/arch/arm/boot/dts/mt8127.dtsi b/arch/arm/boot/dts/mt8127.dtsi
+index c3ee060..49f5976 100644
+--- a/arch/arm/boot/dts/mt8127.dtsi
++++ b/arch/arm/boot/dts/mt8127.dtsi
+@@ -18,7 +18,7 @@
  
- 	/*
--	 * For primary GICs, skip over SGIs.
--	 * For secondary GICs, skip over PPIs, too.
--	 */
--	if (gic_nr == 0 && (irq_start & 31) > 0) {
--		hwirq_base = 16;
--		if (irq_start != -1)
--			irq_start = (irq_start & ~31) + 16;
--	} else {
--		hwirq_base = 32;
--	}
--
--	/*
- 	 * Find out how many interrupts are supported.
- 	 * The GIC only supports up to 1020 interrupt sources.
- 	 */
-@@ -969,10 +979,32 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
- 		gic_irqs = 1020;
- 	gic->gic_irqs = gic_irqs;
+ / {
+ 	compatible = "mediatek,mt8127";
+-	interrupt-parent = <&gic>;
++	interrupt-parent = <&sysirq>;
  
--	gic_irqs -= hwirq_base; /* calculate # of irqs to allocate */
-+	if (node) {		/* DT case */
-+		const struct irq_domain_ops *ops =
-+					&gic_irq_domain_hierarchy_ops;
+ 	cpus {
+ 		#address-cells = <1>;
+@@ -82,15 +82,25 @@
+ 			compatible = "mediatek,mt8127-timer",
+ 					"mediatek,mt6577-timer";
+ 			reg = <0 0x10008000 0 0x80>;
+-			interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_LOW>;
+ 			clocks = <&system_clk>, <&rtc_clk>;
+ 			clock-names = "system-clk", "rtc-clk";
+ 		};
+ 
++		sysirq: interrupt-controller@10200100 {
++			compatible = "mediatek,mt8127-sysirq",
++				     "mediatek,mt6577-sysirq";
++			interrupt-controller;
++			#interrupt-cells = <3>;
++			interrupt-parent = <&gic>;
++			reg = <0 0x10200100 0 0x1c>;
++		};
 +
-+		if (!of_property_read_u32(node, "arm,routable-irqs",
-+					  &nr_routable_irqs)) {
-+			ops = &gic_irq_domain_ops;
-+			gic_irqs = nr_routable_irqs;
-+		}
+ 		gic: interrupt-controller@10211000 {
+ 			compatible = "arm,cortex-a7-gic";
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
++			interrupt-parent = <&gic>;
+ 			reg = <0 0x10211000 0 0x1000>,
+ 			      <0 0x10212000 0 0x1000>,
+ 			      <0 0x10214000 0 0x2000>,
+diff --git a/arch/arm/boot/dts/mt8135.dtsi b/arch/arm/boot/dts/mt8135.dtsi
+index 5faae6e..60338d9 100644
+--- a/arch/arm/boot/dts/mt8135.dtsi
++++ b/arch/arm/boot/dts/mt8135.dtsi
+@@ -18,7 +18,7 @@
+ 
+ / {
+ 	compatible = "mediatek,mt8135";
+-	interrupt-parent = <&gic>;
++	interrupt-parent = <&sysirq>;
+ 
+ 	cpu-map {
+ 		cluster0 {
+@@ -105,15 +105,25 @@
+ 			compatible = "mediatek,mt8135-timer",
+ 					"mediatek,mt6577-timer";
+ 			reg = <0 0x10008000 0 0x80>;
+-			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>;
+ 			clocks = <&system_clk>, <&rtc_clk>;
+ 			clock-names = "system-clk", "rtc-clk";
+ 		};
+ 
++		sysirq: interrupt-controller@10200030 {
++			compatible = "mediatek,mt8135-sysirq",
++				     "mediatek,mt6577-sysirq";
++			interrupt-controller;
++			#interrupt-cells = <3>;
++			interrupt-parent = <&gic>;
++			reg = <0 0x10200030 0 0x1c>;
++		};
 +
-+		gic->domain = irq_domain_add_linear(node, gic_irqs, ops, gic);
-+	} else {		/* Non-DT case */
-+		/*
-+		 * For primary GICs, skip over SGIs.
-+		 * For secondary GICs, skip over PPIs, too.
-+		 */
-+		if (gic_nr == 0 && (irq_start & 31) > 0) {
-+			hwirq_base = 16;
-+			if (irq_start != -1)
-+				irq_start = (irq_start & ~31) + 16;
-+		} else {
-+			hwirq_base = 32;
-+		}
-+
-+		gic_irqs -= hwirq_base; /* calculate # of irqs to allocate */
- 
--	if (of_property_read_u32(node, "arm,routable-irqs",
--				 &nr_routable_irqs)) {
- 		irq_base = irq_alloc_descs(irq_start, 16, gic_irqs,
- 					   numa_node_id());
- 		if (IS_ERR_VALUE(irq_base)) {
-@@ -983,10 +1015,6 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
- 
- 		gic->domain = irq_domain_add_legacy(node, gic_irqs, irq_base,
- 					hwirq_base, &gic_irq_domain_ops, gic);
--	} else {
--		gic->domain = irq_domain_add_linear(node, nr_routable_irqs,
--						    &gic_irq_domain_ops,
--						    gic);
- 	}
- 
- 	if (WARN_ON(!gic->domain))
+ 		gic: interrupt-controller@10211000 {
+ 			compatible = "arm,cortex-a15-gic";
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
++			interrupt-parent = <&gic>;
+ 			reg = <0 0x10211000 0 0x1000>,
+ 			      <0 0x10212000 0 0x1000>,
+ 			      <0 0x10214000 0 0x2000>,
 -- 
 1.8.1.1.dirty
