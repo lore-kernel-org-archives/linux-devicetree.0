@@ -1,451 +1,134 @@
-From: Kevin Cernekee <cernekee@gmail.com>
-Subject: Re: [PATCH V2 00/10] UART driver support for BMIPS multiplatform kernels
-Date: Thu, 13 Nov 2014 08:39:27 -0800
-Message-ID: <CAJiQ=7CJzN=HD9_frDS1VxX8sByKsD_6Jo+C-ECgK7wbMj_M2A@mail.gmail.com>
-References: <1415825647-6024-1-git-send-email-cernekee@gmail.com> <87oasbtuum.fsf@free.fr>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] video: omapdss: Add opa362 driver
+Date: Thu, 13 Nov 2014 18:41:10 +0200
+Message-ID: <5464DF26.2010707@ti.com>
+References: <1415830247-31633-1-git-send-email-marek@goldelico.com> <1415830247-31633-2-git-send-email-marek@goldelico.com> <54649B43.1000801@ti.com> <9FD016B8-4EA2-4A0D-B790-6494AB449B31@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <87oasbtuum.fsf@free.fr>
-Sender: linux-serial-owner@vger.kernel.org
-To: Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, daniel@zonque.org, Haojian Zhuang <haojian.zhuang@gmail.com>, Grant Likely <grant.likely@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="LX7QdeE9Ro2bnE0XeKoO9WI8HNqbn3XPQ"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9FD016B8-4EA2-4A0D-B790-6494AB449B31-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Dr. H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 12, 2014 at 11:36 PM, Robert Jarzmik <robert.jarzmik@free.fr> wrote:
-> Kevin Cernekee <cernekee@gmail.com> writes:
->
->> V1->V2:
+--LX7QdeE9Ro2bnE0XeKoO9WI8HNqbn3XPQ
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
+
+On 13/11/14 18:25, Dr. H. Nikolaus Schaller wrote:
+> Hi,
+>=20
+> Am 13.11.2014 um 12:51 schrieb Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>:
+>=20
+>> On 13/11/14 00:10, Marek Belisko wrote:
+>>> opa362 is amplifier for video and can be connected to the tvout pads
+>>> of the OMAP3. It has one gpio control for enable/disable of the outpu=
+t
+>>> (high impedance).
+>>>
+>>> Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+>>> ---
+>>> drivers/video/fbdev/omap2/displays-new/Kconfig     |   6 +
+>>> drivers/video/fbdev/omap2/displays-new/Makefile    |   1 +
+>>> .../fbdev/omap2/displays-new/amplifier-opa362.c    | 343 ++++++++++++=
++++++++++
 >>
->> Add a new UPIO_MEM32BE iotype instead of a separate big_endian flag.
+>> I think it would be better to rename this to encoder-opa362.c. It's no=
+t
+>=20
+> When developing this driver we did simply rename the encoder-tfp410 fil=
+e,
+> but thent hough that it does not fit into the =84encoder=93 category, b=
+ecause we
+> would expect something digital or digital to analog =84encoding=93 whic=
+h it does not.
+
+That is true, but we already have other "encoders" like
+encoder-tpd12s015.c, which also do not encode. "encoder" in this context
+means something that takes a video input, and has a video output. In
+contrast to a panel or a connector.
+
+>>> +
+>>> +	in->ops.atv->set_timings(in, &ddata->timings);
+>>> +	/* fixme: should we receive the invert from our consumer, i.e. the =
+connector? */
+>>> +	in->ops.atv->invert_vid_out_polarity(in, true);
 >>
->> Change some of the of_*_is_* APIs to return bool, where appropriate.
+>> Well this does seem to be broken. I don't know what the answer to the
+>> question above is, but the code doesn't work properly.
 >>
->> Fix a few minor comment issues.
->
-> Hi Kevin,
->
-> I'll review the pxa part tonight or tomorrow, just a simple preliminary question
-> : did you test this serie with the triple activation of DEBUG_UART, early
-> console, and kernel console, all of them on the same tty ?
+>> In the opa362_invert_vid_out_polarity function below, you get the inve=
+rt
+>> boolean from the connector. This you pass to the OMAP venc. However,
+>> above you always override that value in venc with true.
+>>
+>> So, either the invert_vid_out_polarity value has to be always true or
+>> false, because _OPA362_ requires it to be true or false, OR you need u=
+se
+>> the value from the connector.
+>>
+>> Seeing the comment in opa362_invert_vid_out_polarity, my guess is the
+>> latter, and the call above should be removed.
+>=20
+> Yes, you are right - this is not systematic.
+>=20
+> But the problem is that we can=92t ask the connector here what it wants=
 
-I originally tested with MIPS EARLY_PRINTK + earlycon +
-console=ttyS0,115200.  arch/arm/kernel/early_printk.c and
-arch/mips/kernel/early_printk.c look very similar.  Using EARLY_PRINTK
-+ earlycon at the same time produces duplicate messages until the
-console switch occurs, so you'll probably want to disable ARM's
-DEBUG_UART if you add "earlycon" to the pxa boot command line.
+> to see. It might (or might not) call our opa362_invert_vid_out_polarity=
+() later
+> which we can then forward to overwrite the inital state of this opa362_=
+enable().
 
-Once earlycon was stable, I started running with EARLY_PRINTK disabled
-(and in fact, completely yanked the patch that was hardcoding the UART
-base address into the kernel).
+You don't need to ask. The connector calls invert_vid_out_polarity
+before enabling the output. You can just pass it forward inverted, as
+you already do in this driver. If it doesn't, it's either a bug or you
+can just rely on the value that is already programmed to venc.
 
-FWIW here is a log showing EARLY_PRINTK + earlycon + console=ttyS0,115200:
+>> We are going to support only DT boot at some point. Thus I think the
+>> whole platform data code should be left out.
+>=20
+> Is there already a decision? I think it should not be done before. And =
+it
+> does not harm to still have it.
 
-Linux version 3.18.0-rc4+ (cernekee@vm9) (gcc version 4.8.4 20140811
-(prerelease) (Broadcom stbgcc-4.8-1.0) ) #428 SMP Thu Nov 13 08:25:53
-PST 2014
-bootconsole [early0] enabled
-CPU0 revision is: 00025a11 (Broadcom BMIPS5000)
-FPU revision is: 00130001
-MIPS: machine is Broadcom BCM97346DBSMB
-Determined physical RAM map:
- memory: 10000000 @ 00000000 (usable)
- memory: 30000000 @ 20000000 (usable)
-Linux version 3.18.0-rc4+ (cernekee@vm9) (gcc version 4.8.4 20140811
-(prerelease) (Broadcom stbgcc-4.8-1.0) ) #428 SMP Thu Nov 13 08:25:53
-PST 2014
-bootconsole [early0] enabled
-CPU0 revision is: 00025a11 (Broadcom BMIPS5000)
-FPU revision is: 00130001
-MIPS: machine is Broadcom BCM97346DBSMB
-Determined physical RAM map:
- memory: 10000000 @ 00000000 (usable)
- memory: 30000000 @ 20000000 (usable)
-bootconsole [uart0] enabled
-bootconsole [uart0] enabled
-Initrd not found or emptyInitrd not found or empty - disabling initrd
- - disabling initrd
-Zone ranges:
-Zone ranges:
-  Normal     Normal   [mem 0x00000000-0x1fffffff]
-[mem 0x00000000-0x1fffffff]
-  HighMem    HighMem  [mem 0x20000000-0x4fffffff]
-[mem 0x20000000-0x4fffffff]
-Movable zone start for each node
-Movable zone start for each node
-Early memory node ranges
-Early memory node ranges
-  node   0: [mem 0x00000000-0x0fffffff]
-  node   0: [mem 0x00000000-0x0fffffff]
-  node   0: [mem 0x20000000-0x4fffffff]
-  node   0: [mem 0x20000000-0x4fffffff]
-Initmem setup node 0 [mem 0x00000000-0x4fffffff]
-Initmem setup node 0 [mem 0x00000000-0x4fffffff]
-Primary instruction cache 32kB, VIPT, 4-way, linesize 64 bytes.
-Primary instruction cache 32kB, VIPT, 4-way, linesize 64 bytes.
-Primary data cache 32kB, 4-way, VIPT, cache aliases, linesize 32 bytes
-Primary data cache 32kB, 4-way, VIPT, cache aliases, linesize 32 bytes
-MIPS secondary cache 256kB, 8-way, linesize 128 bytes.
-MIPS secondary cache 256kB, 8-way, linesize 128 bytes.
-PERCPU: Embedded 7 pages/cpu @81a0d000 s6912 r0 d21760 u32768
-PERCPU: Embedded 7 pages/cpu @81a0d000 s6912 r0 d21760 u32768
-Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 261120
-Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 261120
-Kernel command line: console=ttyS0,115200 earlycon
-Kernel command line: console=ttyS0,115200 earlycon
-PID hash table entries: 1024 (order: 0, 4096 bytes)
-PID hash table entries: 1024 (order: 0, 4096 bytes)
-Dentry cache hash table entries: 32768 (order: 5, 131072 bytes)
-Dentry cache hash table entries: 32768 (order: 5, 131072 bytes)
-Inode-cache hash table entries: 16384 (order: 4, 65536 bytes)
-Inode-cache hash table entries: 16384 (order: 4, 65536 bytes)
-Memory: 1027712K/1048576K available (5010K kernel code, 183K rwdata,
-684K rodata, 4096K init, 256K bss, 20864K reserved, 786432K highmem)
-Memory: 1027712K/1048576K available (5010K kernel code, 183K rwdata,
-684K rodata, 4096K init, 256K bss, 20864K reserved, 786432K highmem)
-SLUB: HWalign=128, Order=0-3, MinObjects=0, CPUs=2, Nodes=1
-SLUB: HWalign=128, Order=0-3, MinObjects=0, CPUs=2, Nodes=1
-Hierarchical RCU implementation.
-Hierarchical RCU implementation.
-    RCU restricting CPUs from NR_CPUS=4 to nr_cpu_ids=2.
-    RCU restricting CPUs from NR_CPUS=4 to nr_cpu_ids=2.
-RCU: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=2
-RCU: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=2
-NR_IRQS:128
-NR_IRQS:128
-irq_bcm7038_l1: registered BCM7038 L1 intc (mem: 0xb0411400, parent IRQ: 2)
-irq_bcm7038_l1: registered BCM7038 L1 intc (mem: 0xb0411400, parent IRQ: 2)
-irq_bcm7120_l2: registered BCM7120 L2 intc (mem: 0xb0406780, parent IRQ(s): 1)
-irq_bcm7120_l2: registered BCM7120 L2 intc (mem: 0xb0406780, parent IRQ(s): 1)
-Calibrating delay loop... Calibrating delay loop... 866.30 BogoMIPS
-(lpj=1732608)
-866.30 BogoMIPS (lpj=1732608)
-pid_max: default: 32768 minimum: 301
-pid_max: default: 32768 minimum: 301
-Mount-cache hash table entries: 1024 (order: 0, 4096 bytes)
-Mount-cache hash table entries: 1024 (order: 0, 4096 bytes)
-Mountpoint-cache hash table entries: 1024 (order: 0, 4096 bytes)
-Mountpoint-cache hash table entries: 1024 (order: 0, 4096 bytes)
-SMP: Booting CPU1...
-SMP: Booting CPU1...
-CPU1 revision is: 00025a11 (Broadcom BMIPS5000)
-CPU1 revision is: 00025a11 (Broadcom BMIPS5000)
-FPU revision is: 00130001
-FPU revision is: 00130001
-Primary instruction cache 32kB, VIPT, 4-way, linesize 64 bytes.
-Primary instruction cache 32kB, VIPT, 4-way, linesize 64 bytes.
-Primary data cache 32kB, 4-way, VIPT, cache aliases, linesize 32 bytes
-Primary data cache 32kB, 4-way, VIPT, cache aliases, linesize 32 bytes
-MIPS secondary cache 256kB, 8-way, linesize 128 bytes.
-MIPS secondary cache 256kB, 8-way, linesize 128 bytes.
-Synchronize counters for CPU 1: done.
-Synchronize counters for CPU 1: done.
-SMP: CPU1 is running
-SMP: CPU1 is running
-Brought up 2 CPUs
-Brought up 2 CPUs
-devtmpfs: initialized
-devtmpfs: initialized
-NET: Registered protocol family 16
-NET: Registered protocol family 16
-SCSI subsystem initialized
-SCSI subsystem initialized
-usbcore: registered new interface driver usbfs
-usbcore: registered new interface driver usbfs
-usbcore: registered new interface driver hub
-usbcore: registered new interface driver hub
-usbcore: registered new device driver usb
-usbcore: registered new device driver usb
-Switched to clocksource MIPS
-Switched to clocksource MIPS
-cfg80211: Calling CRDA to update world regulatory domain
-cfg80211: Calling CRDA to update world regulatory domain
-NET: Registered protocol family 2
-NET: Registered protocol family 2
-TCP established hash table entries: 2048 (order: 1, 8192 bytes)
-TCP established hash table entries: 2048 (order: 1, 8192 bytes)
-TCP bind hash table entries: 2048 (order: 2, 16384 bytes)
-TCP bind hash table entries: 2048 (order: 2, 16384 bytes)
-TCP: Hash tables configured (established 2048 bind 2048)
-TCP: Hash tables configured (established 2048 bind 2048)
-TCP: reno registered
-TCP: reno registered
-UDP hash table entries: 256 (order: 1, 8192 bytes)
-UDP hash table entries: 256 (order: 1, 8192 bytes)
-UDP-Lite hash table entries: 256 (order: 1, 8192 bytes)
-UDP-Lite hash table entries: 256 (order: 1, 8192 bytes)
-NET: Registered protocol family 1
-NET: Registered protocol family 1
-RPC: Registered named UNIX socket transport module.
-RPC: Registered named UNIX socket transport module.
-RPC: Registered udp transport module.
-RPC: Registered udp transport module.
-RPC: Registered tcp transport module.
-RPC: Registered tcp transport module.
-RPC: Registered tcp NFSv4.1 backchannel transport module.
-RPC: Registered tcp NFSv4.1 backchannel transport module.
-futex hash table entries: 512 (order: 4, 65536 bytes)
-futex hash table entries: 512 (order: 4, 65536 bytes)
-fuse init (API version 7.23)
-fuse init (API version 7.23)
-bounce: pool size: 64 pages
-bounce: pool size: 64 pages
-io scheduler noop registered (default)
-io scheduler noop registered (default)
-pxa2xx-uart 10406900.serial: ttyS0 at MMIO 0x10406900 (irq = 64,
-base_baud = 5062500) is a UART1
-pxa2xx-uart 10406900.serial: ttyS0 at MMIO 0x10406900 (irq = 64,
-base_baud = 5062500) is a UART1
-console [ttyS0] enabled
-console [ttyS0] enabled
-console [ttyS0] enabled
-bootconsole [early0] disabled
-bootconsole [early0] disabled
-bootconsole [early0] disabled
-bootconsole [uart0] disabled
-bootconsole [uart0] disabled
-Default device node (4:64) for ttyS is busy, using dynamic major number
-libphy: Fixed MDIO Bus: probed
-bcmgenet 10430000.ethernet: failed to get enet clock
-bcmgenet 10430000.ethernet: GENET 2.9 EPHY: 0x00b0
-bcmgenet 10430000.ethernet: failed to get enet-wol clock
-libphy: bcmgenet MII bus: probed
-bcmgenet 10430000.ethernet: configuring instance for internal PHY
-attached PHY at address 1 [Broadcom BCM7XXX 40nm]
-usbcore: registered new interface driver asix
-usbcore: registered new interface driver ax88179_178a
-usbcore: registered new interface driver cdc_ether
-usbcore: registered new interface driver net1080
-usbcore: registered new interface driver cdc_subset
-usbcore: registered new interface driver zaurus
-usbcore: registered new interface driver cdc_ncm
-ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
-ehci-platform: EHCI generic platform driver
-ehci-platform 10480300.usb: EHCI Host Controller
-ehci-platform 10480300.usb: new USB bus registered, assigned bus number 1
-ehci-platform 10480300.usb: irq 68, io mem 0x10480300
-ehci-platform 10480300.usb: USB 2.0 started, EHCI 1.00
-hub 1-0:1.0: USB hub found
-hub 1-0:1.0: 1 port detected
-ehci-platform 10480500.usb: EHCI Host Controller
-ehci-platform 10480500.usb: new USB bus registered, assigned bus number 2
-ehci-platform 10480500.usb: irq 69, io mem 0x10480500
-ehci-platform 10480500.usb: USB 2.0 started, EHCI 1.00
-hub 2-0:1.0: USB hub found
-hub 2-0:1.0: 1 port detected
-ehci-platform 10490300.usb: EHCI Host Controller
-ehci-platform 10490300.usb: new USB bus registered, assigned bus number 3
-ehci-platform 10490300.usb: irq 73, io mem 0x10490300
-ehci-platform 10490300.usb: USB 2.0 started, EHCI 1.00
-hub 3-0:1.0: USB hub found
-hub 3-0:1.0: 1 port detected
-ehci-platform 10490500.usb: EHCI Host Controller
-ehci-platform 10490500.usb: new USB bus registered, assigned bus number 4
-ehci-platform 10490500.usb: irq 74, io mem 0x10490500
-ehci-platform 10490500.usb: USB 2.0 started, EHCI 1.00
-hub 4-0:1.0: USB hub found
-hub 4-0:1.0: 1 port detected
-ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
-ohci-platform: OHCI generic platform driver
-ohci-platform 10480400.usb: Generic Platform OHCI controller
-ohci-platform 10480400.usb: new USB bus registered, assigned bus number 5
-ohci-platform 10480400.usb: irq 70, io mem 0x10480400
-hub 5-0:1.0: USB hub found
-hub 5-0:1.0: 1 port detected
-ohci-platform 10480600.usb: Generic Platform OHCI controller
-ohci-platform 10480600.usb: new USB bus registered, assigned bus number 6
-ohci-platform 10480600.usb: irq 71, io mem 0x10480600
-hub 6-0:1.0: USB hub found
-hub 6-0:1.0: 1 port detected
-ohci-platform 10490400.usb: Generic Platform OHCI controller
-ohci-platform 10490400.usb: new USB bus registered, assigned bus number 7
-ohci-platform 10490400.usb: irq 75, io mem 0x10490400
-hub 7-0:1.0: USB hub found
-hub 7-0:1.0: 1 port detected
-ohci-platform 10490600.usb: Generic Platform OHCI controller
-ohci-platform 10490600.usb: new USB bus registered, assigned bus number 8
-ohci-platform 10490600.usb: irq 76, io mem 0x10490600
-hub 8-0:1.0: USB hub found
-hub 8-0:1.0: 1 port detected
-usbcore: registered new interface driver usb-storage
-TCP: cubic registered
-NET: Registered protocol family 10
-sit: IPv6 over IPv4 tunneling driver
-NET: Registered protocol family 17
-Freeing unused kernel memory: 4096K (805d0000 - 809d0000)
-starting pid 830, tty '': '/etc/init.d/rcS'
-Mounting virtual filesystems
-Starting mdev
-Configuring eth0 interface
-bcmgenet 10430000.ethernet eth0: Link is Down
-IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
-Configuring lo interface
-Configuring sit0 interface
-Starting network services
-starting pid 864, tty '': '/bin/cttyhack /bin/sh -l'
-root@bmips#
+It's just a matter of time. I don't accept any new boards using platform
+data for display, or new display drivers using platform data, because I
+don't want to spend my time converting them later. And as this is a new
+driver, no existing board can be using the opa362 platform_data. So we
+can support DT only.
+
+ Tomi
 
 
-And here's a log with "earlycon console=ttyS0,115200" and EARLY_PRINTK disabled:
 
-Linux version 3.18.0-rc4+ (cernekee@vm9) (gcc version 4.8.4 20140811
-(prerelease) (Broadcom stbgcc-4.8-1.0) ) #429 SMP Thu Nov 13 08:33:30
-PST 2014
-CPU0 revision is: 00025a11 (Broadcom BMIPS5000)
-FPU revision is: 00130001
-MIPS: machine is Broadcom BCM97346DBSMB
-Determined physical RAM map:
- memory: 10000000 @ 00000000 (usable)
- memory: 30000000 @ 20000000 (usable)
-bootconsole [uart0] enabled
-Initrd not found or empty - disabling initrd
-Zone ranges:
-  Normal   [mem 0x00000000-0x1fffffff]
-  HighMem  [mem 0x20000000-0x4fffffff]
-Movable zone start for each node
-Early memory node ranges
-  node   0: [mem 0x00000000-0x0fffffff]
-  node   0: [mem 0x20000000-0x4fffffff]
-Initmem setup node 0 [mem 0x00000000-0x4fffffff]
-Primary instruction cache 32kB, VIPT, 4-way, linesize 64 bytes.
-Primary data cache 32kB, 4-way, VIPT, cache aliases, linesize 32 bytes
-MIPS secondary cache 256kB, 8-way, linesize 128 bytes.
-PERCPU: Embedded 7 pages/cpu @81a0d000 s6912 r0 d21760 u32768
-Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 261120
-Kernel command line: console=ttyS0,115200 earlycon
-PID hash table entries: 1024 (order: 0, 4096 bytes)
-Dentry cache hash table entries: 32768 (order: 5, 131072 bytes)
-Inode-cache hash table entries: 16384 (order: 4, 65536 bytes)
-Memory: 1027712K/1048576K available (5010K kernel code, 183K rwdata,
-684K rodata, 4096K init, 256K bss, 20864K reserved, 786432K highmem)
-SLUB: HWalign=128, Order=0-3, MinObjects=0, CPUs=2, Nodes=1
-Hierarchical RCU implementation.
-    RCU restricting CPUs from NR_CPUS=4 to nr_cpu_ids=2.
-RCU: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=2
-NR_IRQS:128
-irq_bcm7038_l1: registered BCM7038 L1 intc (mem: 0xb0411400, parent IRQ: 2)
-irq_bcm7120_l2: registered BCM7120 L2 intc (mem: 0xb0406780, parent IRQ(s): 1)
-Calibrating delay loop... 866.30 BogoMIPS (lpj=1732608)
-pid_max: default: 32768 minimum: 301
-Mount-cache hash table entries: 1024 (order: 0, 4096 bytes)
-Mountpoint-cache hash table entries: 1024 (order: 0, 4096 bytes)
-SMP: Booting CPU1...
-CPU1 revision is: 00025a11 (Broadcom BMIPS5000)
-FPU revision is: 00130001
-Primary instruction cache 32kB, VIPT, 4-way, linesize 64 bytes.
-Primary data cache 32kB, 4-way, VIPT, cache aliases, linesize 32 bytes
-MIPS secondary cache 256kB, 8-way, linesize 128 bytes.
-Synchronize counters for CPU 1: done.
-SMP: CPU1 is running
-Brought up 2 CPUs
-devtmpfs: initialized
-NET: Registered protocol family 16
-SCSI subsystem initialized
-usbcore: registered new interface driver usbfs
-usbcore: registered new interface driver hub
-usbcore: registered new device driver usb
-cfg80211: Calling CRDA to update world regulatory domain
-Switched to clocksource MIPS
-NET: Registered protocol family 2
-TCP established hash table entries: 2048 (order: 1, 8192 bytes)
-TCP bind hash table entries: 2048 (order: 2, 16384 bytes)
-TCP: Hash tables configured (established 2048 bind 2048)
-TCP: reno registered
-UDP hash table entries: 256 (order: 1, 8192 bytes)
-UDP-Lite hash table entries: 256 (order: 1, 8192 bytes)
-NET: Registered protocol family 1
-RPC: Registered named UNIX socket transport module.
-RPC: Registered udp transport module.
-RPC: Registered tcp transport module.
-RPC: Registered tcp NFSv4.1 backchannel transport module.
-futex hash table entries: 512 (order: 4, 65536 bytes)
-fuse init (API version 7.23)
-bounce: pool size: 64 pages
-io scheduler noop registered (default)
-pxa2xx-uart 10406900.serial: ttyS0 at MMIO 0x10406900 (irq = 64,
-base_baud = 5062500) is a UART1
-console [ttyS0] enabled
-console [ttyS0] enabled
-bootconsole [uart0] disabled
-bootconsole [uart0] disabled
-Default device node (4:64) for ttyS is busy, using dynamic major number
-libphy: Fixed MDIO Bus: probed
-bcmgenet 10430000.ethernet: failed to get enet clock
-bcmgenet 10430000.ethernet: GENET 2.9 EPHY: 0x00b0
-bcmgenet 10430000.ethernet: failed to get enet-wol clock
-libphy: bcmgenet MII bus: probed
-bcmgenet 10430000.ethernet: configuring instance for internal PHY
-attached PHY at address 1 [Broadcom BCM7XXX 40nm]
-usbcore: registered new interface driver asix
-usbcore: registered new interface driver ax88179_178a
-usbcore: registered new interface driver cdc_ether
-usbcore: registered new interface driver net1080
-usbcore: registered new interface driver cdc_subset
-usbcore: registered new interface driver zaurus
-usbcore: registered new interface driver cdc_ncm
-ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
-ehci-platform: EHCI generic platform driver
-ehci-platform 10480300.usb: EHCI Host Controller
-ehci-platform 10480300.usb: new USB bus registered, assigned bus number 1
-ehci-platform 10480300.usb: irq 68, io mem 0x10480300
-ehci-platform 10480300.usb: USB 2.0 started, EHCI 1.00
-hub 1-0:1.0: USB hub found
-hub 1-0:1.0: 1 port detected
-ehci-platform 10480500.usb: EHCI Host Controller
-ehci-platform 10480500.usb: new USB bus registered, assigned bus number 2
-ehci-platform 10480500.usb: irq 69, io mem 0x10480500
-ehci-platform 10480500.usb: USB 2.0 started, EHCI 1.00
-hub 2-0:1.0: USB hub found
-hub 2-0:1.0: 1 port detected
-ehci-platform 10490300.usb: EHCI Host Controller
-ehci-platform 10490300.usb: new USB bus registered, assigned bus number 3
-ehci-platform 10490300.usb: irq 73, io mem 0x10490300
-ehci-platform 10490300.usb: USB 2.0 started, EHCI 1.00
-hub 3-0:1.0: USB hub found
-hub 3-0:1.0: 1 port detected
-ehci-platform 10490500.usb: EHCI Host Controller
-ehci-platform 10490500.usb: new USB bus registered, assigned bus number 4
-ehci-platform 10490500.usb: irq 74, io mem 0x10490500
-ehci-platform 10490500.usb: USB 2.0 started, EHCI 1.00
-hub 4-0:1.0: USB hub found
-hub 4-0:1.0: 1 port detected
-ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
-ohci-platform: OHCI generic platform driver
-ohci-platform 10480400.usb: Generic Platform OHCI controller
-ohci-platform 10480400.usb: new USB bus registered, assigned bus number 5
-ohci-platform 10480400.usb: irq 70, io mem 0x10480400
-hub 5-0:1.0: USB hub found
-hub 5-0:1.0: 1 port detected
-ohci-platform 10480600.usb: Generic Platform OHCI controller
-ohci-platform 10480600.usb: new USB bus registered, assigned bus number 6
-ohci-platform 10480600.usb: irq 71, io mem 0x10480600
-hub 6-0:1.0: USB hub found
-hub 6-0:1.0: 1 port detected
-ohci-platform 10490400.usb: Generic Platform OHCI controller
-ohci-platform 10490400.usb: new USB bus registered, assigned bus number 7
-ohci-platform 10490400.usb: irq 75, io mem 0x10490400
-hub 7-0:1.0: USB hub found
-hub 7-0:1.0: 1 port detected
-ohci-platform 10490600.usb: Generic Platform OHCI controller
-ohci-platform 10490600.usb: new USB bus registered, assigned bus number 8
-ohci-platform 10490600.usb: irq 76, io mem 0x10490600
-hub 8-0:1.0: USB hub found
-hub 8-0:1.0: 1 port detected
-usbcore: registered new interface driver usb-storage
-TCP: cubic registered
-NET: Registered protocol family 10
-sit: IPv6 over IPv4 tunneling driver
-NET: Registered protocol family 17
-Freeing unused kernel memory: 4096K (805d0000 - 809d0000)
-starting pid 830, tty '': '/etc/init.d/rcS'
-Mounting virtual filesystems
-Starting mdev
-Configuring eth0 interface
-bcmgenet 10430000.ethernet eth0: Link is Down
-IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
-Configuring lo interface
-Configuring sit0 interface
-Starting network services
-starting pid 864, tty '': '/bin/cttyhack /bin/sh -l'
-root@bmips#
+--LX7QdeE9Ro2bnE0XeKoO9WI8HNqbn3XPQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUZN8mAAoJEPo9qoy8lh71LXYP/0QNZyypw8Ax4IKs9k3/B4KA
+rvowtV1BwKR4uG0dJgdTDWZeFkcVu/cdIqeRFXiZu6YQTHFpMqJ2/BqSL8BLKHoR
+7xg6M5AzPgr/6XEjPJmwC+8Mg0TVV2NHhHVW93A7wMCANY4p3MiQBKpdvTtWbrc3
+2lNcQQZ2RC9uuWpqNtxLIgdluo6ru6efQfhdUdRCuNlyMkWFaIZ9fTWO36fQLp5m
+RKnArfVijMuZfYRAW6Y8TpBlXueFz49IAG+weCvVStYjmCQ5FCla0lbvRWsj4Ucq
+AYdM2bS8ZhxK/ecVwY2vnUg3W+9JvKRLYvYb3RWWz9P8xq3AYm/KLOHqTUNxpN/n
+djjGsBS4jLQVYNSDpdulFf6pjD+Zirrek5YHTn8OP7fQqRQB7SFfcO7vcNMcT/YL
+5h5Y+JTe5oiO4zss+zuP0t8oI+/5+jdJKZE8qVYQx1IqnRml8qM2YNhm7FabKW1S
+vqs6uhP1Anlb+zy5Ca/tGXycoWQ6ZV+rMWQWqMDATeSvksBtvu7PdOsVsyEk/nfe
+iqd4QR649t55I1VrsNxUPD45fx4jnR7f9v7V4Yhq6NQtDCD9UIhs1xXS1RvyvVC2
+Q4UT1iDfP2fqLFSvY8ACqVD+e8qEbgvra8Gj37/t/6B9rv6SHz5CDLyqQDZnRDpn
+/8T7qRIsM7xzTTL8/gAT
+=y8BJ
+-----END PGP SIGNATURE-----
+
+--LX7QdeE9Ro2bnE0XeKoO9WI8HNqbn3XPQ--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
