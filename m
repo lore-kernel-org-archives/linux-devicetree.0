@@ -1,57 +1,99 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v2 13/14] ARM: STi: DT: STiH410: Add usb2 picophy dt nodes
-Date: Thu, 13 Nov 2014 11:00:16 +0000
-Message-ID: <1415876417-28728-14-git-send-email-peter.griffin@linaro.org>
-References: <1415876417-28728-1-git-send-email-peter.griffin@linaro.org>
+From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Subject: RE: [PATCH] can: Fix bug in suspend/resume
+Date: Thu, 13 Nov 2014 11:01:30 +0000
+Message-ID: <2abd0a7b76bd4c5fab3cda60b8e2f8d1@BN1AFFO11FD030.protection.gbl>
+References: <a44efc1fb0144cca9d0c4851cc51db25@BL2FFO11FD024.protection.gbl>
+ <546484D9.4030005@pengutronix.de> <54648BF4.60007@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415876417-28728-1-git-send-email-peter.griffin@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, arnd@arndb.de
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>, "wg@grandegger.com" <wg@grandegger.com>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the dt nodes for the extra usb2 picophys found on the stih410.
-These two picophys are used in conjunction with the extra ehci/ohci usb
-controllers also found on the stih410.
-
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
----
- arch/arm/boot/dts/stih410.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
-
-diff --git a/arch/arm/boot/dts/stih410.dtsi b/arch/arm/boot/dts/stih410.dtsi
-index c05627e..5ade3ed 100644
---- a/arch/arm/boot/dts/stih410.dtsi
-+++ b/arch/arm/boot/dts/stih410.dtsi
-@@ -10,5 +10,29 @@
- #include "stih407-family.dtsi"
- #include "stih410-pinctrl.dtsi"
- / {
-+	soc {
-+		usb2_picophy0: usbpicophy@0 {
-+			compatible = "st,stih407-usb2-phy";
-+			reg = <0xf8 0x04>,	/* syscfg 5062 */
-+			      <0xf4 0x04>;	/* syscfg 5061 */
-+			reg-names = "param", "ctrl";
-+			#phy-cells = <0>;
-+			st,syscfg = <&syscfg_core>;
-+			resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
-+				 <&picophyreset STIH407_PICOPHY0_RESET>;
-+			reset-names = "global", "port";
-+		};
- 
-+		usb2_picophy1: usbpicophy@1 {
-+			compatible = "st,stih407-usb2-phy";
-+			#phy-cells = <0>;
-+			reg = <0xfc 0x04>,	/* syscfg 5063 */
-+			      <0xf4 0x04>;	/* syscfg 5061 */
-+			reg-names = "param", "ctrl";
-+			st,syscfg = <&syscfg_core>;
-+			resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
-+				 <&picophyreset STIH407_PICOPHY1_RESET>;
-+			reset-names = "global", "port";
-+		};
-+	};
- };
--- 
-1.9.1
+SGkgTWFyYywNCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IEFwcGFuYSBEdXJn
+YSBLZWRhcmVzd2FyYSBSYW8NClNlbnQ6IFRodXJzZGF5LCBOb3ZlbWJlciAxMywgMjAxNCA0OjI4
+IFBNDQpUbzogJ01hcmMgS2xlaW5lLUJ1ZGRlJzsgd2dAZ3JhbmRlZ2dlci5jb207IE1pY2hhbCBT
+aW1lazsgU29yZW4gQnJpbmttYW5uOyBncmFudC5saWtlbHlAbGluYXJvLm9yZzsgcm9iaCtkdEBr
+ZXJuZWwub3JnDQpDYzogbGludXgtY2FuQHZnZXIua2VybmVsLm9yZzsgbmV0ZGV2QHZnZXIua2Vy
+bmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1rZXJu
+ZWxAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KU3ViamVjdDog
+UkU6IFtQQVRDSF0gY2FuOiBGaXggYnVnIGluIHN1c3BlbmQvcmVzdW1lDQoNCkhpIE1hcmMsDQoN
+Ci0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBNYXJjIEtsZWluZS1CdWRkZSBbbWFp
+bHRvOm1rbEBwZW5ndXRyb25peC5kZV0NClNlbnQ6IFRodXJzZGF5LCBOb3ZlbWJlciAxMywgMjAx
+NCA0OjE2IFBNDQpUbzogQXBwYW5hIER1cmdhIEtlZGFyZXN3YXJhIFJhbzsgd2dAZ3JhbmRlZ2dl
+ci5jb207IE1pY2hhbCBTaW1lazsgU29yZW4gQnJpbmttYW5uOyBncmFudC5saWtlbHlAbGluYXJv
+Lm9yZzsgcm9iaCtkdEBrZXJuZWwub3JnDQpDYzogbGludXgtY2FuQHZnZXIua2VybmVsLm9yZzsg
+bmV0ZGV2QHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
+b3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVs
+Lm9yZzsgQXBwYW5hIER1cmdhIEtlZGFyZXN3YXJhIFJhbw0KU3ViamVjdDogUmU6IFtQQVRDSF0g
+Y2FuOiBGaXggYnVnIGluIHN1c3BlbmQvcmVzdW1lDQoNCk9uIDExLzEzLzIwMTQgMTE6MTUgQU0s
+IE1hcmMgS2xlaW5lLUJ1ZGRlIHdyb3RlOg0KPiBPbiAxMS8xMy8yMDE0IDA3OjU4IEFNLCBLZWRh
+cmVzd2FyYSByYW8gQXBwYW5hIHdyb3RlOg0KPj4gV2hlbiBhY2Nlc3NpbmcgdGhlIHByaXYgc3Ry
+dWN0dXJlIHVzZSBjb250YWluZXJfb2YgaW5zdGVhZCBvZiBkZXZfZ2V0X2RydmRhdGEuDQo+DQo+
+IFdoeT8NCg0KVGhlIGRydmRhdGEgaGVyZSBpcyB0aGUgc3RydWN0IG5ldF9kZXZpY2UsIG5vdCB0
+aGUgcGxhdGZvcm0gZGV2aWNlLg0KUGxlYXNlIHN0YXRlIHRoaXMgaW4gdGhlIGNvbW1pdCBtZXNz
+YWdlLg0KDQpJZiBJIHVuZGVyc3RhbmQgdGhlIGNvZGUgY29ycmVjdCwgeW91IGNhbiBtYWtlIHVz
+ZSBvZiB0aGUgZXhpc3RpbmcgaGVscGVyIGZ1bmN0aW9uIHRvX3BsYXRmb3JtX2RldmljZSgpOg0K
+DQpodHRwOi8vbHhyLmZyZWUtZWxlY3Ryb25zLmNvbS9zb3VyY2UvaW5jbHVkZS9saW51eC9wbGF0
+Zm9ybV9kZXZpY2UuaCNMNDINCg0KVGhhbmtzIGZvciB0aGUgc3VnZ2VzdGlvbi4NCiBXaWxsIHVz
+ZSB0aGlzIG1hY3JvKHRvX3BsYXRmb3JtX2RldmljZSkgIC4NCg0KPg0KPj4gRW5hYmxlIHRoZSBj
+bG9ja3MgaW4gdGhlIHN1c3BlbmQgYmVmb3JlIGFjY2Vzc2luZyB0aGUgcmVnaXN0ZXJzIG9mIHRo
+ZSBDQU4uDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogS2VkYXJlc3dhcmEgcmFvIEFwcGFuYSA8YXBw
+YW5hZEB4aWxpbnguY29tPg0KPj4gLS0tDQo+PiAgZHJpdmVycy9uZXQvY2FuL3hpbGlueF9jYW4u
+YyB8ICAgMjAgKysrKysrKysrKysrKysrKysrLS0NCj4+ICAxIGZpbGVzIGNoYW5nZWQsIDE4IGlu
+c2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+bmV0L2Nhbi94aWxpbnhfY2FuLmMNCj4+IGIvZHJpdmVycy9uZXQvY2FuL3hpbGlueF9jYW4uYyBp
+bmRleCA1ZThiNTYwLi42M2VmNjQ1IDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy9uZXQvY2FuL3hp
+bGlueF9jYW4uYw0KPj4gKysrIGIvZHJpdmVycy9uZXQvY2FuL3hpbGlueF9jYW4uYw0KPj4gQEAg
+LTk3MiwxNSArOTcyLDMwIEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbmV0X2RldmljZV9vcHMgeGNh
+bl9uZXRkZXZfb3BzID0gew0KPj4gICAqLw0KPj4gIHN0YXRpYyBpbnQgX19tYXliZV91bnVzZWQg
+eGNhbl9zdXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldikgIHsNCj4+IC0gICAgc3RydWN0IHBsYXRm
+b3JtX2RldmljZSAqcGRldiA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOw0KPj4gKyAgICBzdHJ1Y3Qg
+cGxhdGZvcm1fZGV2aWNlICpwZGV2ID0gY29udGFpbmVyX29mKGRldiwNCj4+ICsgICAgICAgICAg
+ICAgICAgICAgIHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UsIGRldik7DQo+PiAgICAgIHN0cnVjdCBu
+ZXRfZGV2aWNlICpuZGV2ID0gcGxhdGZvcm1fZ2V0X2RydmRhdGEocGRldik7DQo+PiAgICAgIHN0
+cnVjdCB4Y2FuX3ByaXYgKnByaXYgPSBuZXRkZXZfcHJpdihuZGV2KTsNCj4+ICsgICAgaW50IHJl
+dDsNCj4+DQo+PiAgICAgIGlmIChuZXRpZl9ydW5uaW5nKG5kZXYpKSB7DQo+PiAgICAgICAgICAg
+ICAgbmV0aWZfc3RvcF9xdWV1ZShuZGV2KTsNCj4+ICAgICAgICAgICAgICBuZXRpZl9kZXZpY2Vf
+ZGV0YWNoKG5kZXYpOw0KPj4gICAgICB9DQo+Pg0KPj4gKyAgICByZXQgPSBjbGtfcHJlcGFyZV9l
+bmFibGUocHJpdi0+Y2FuX2Nsayk7DQo+PiArICAgIGlmIChyZXQpIHsNCj4+ICsgICAgICAgICAg
+ICBkZXZfZXJyKGRldiwgInVuYWJsZSB0byBlbmFibGUgZGV2aWNlIGNsb2NrXG4iKTsNCj4+ICsg
+ICAgICAgICAgICByZXR1cm4gcmV0Ow0KPj4gKyAgICB9DQo+PiArDQo+PiArICAgIHJldCA9IGNs
+a19wcmVwYXJlX2VuYWJsZShwcml2LT5idXNfY2xrKTsNCj4+ICsgICAgaWYgKHJldCkgew0KPj4g
+KyAgICAgICAgICAgIGRldl9lcnIoZGV2LCAidW5hYmxlIHRvIGVuYWJsZSBidXMgY2xvY2tcbiIp
+Ow0KPj4gKyAgICAgICAgICAgIGNsa19kaXNhYmxlX3VucHJlcGFyZShwcml2LT5jYW5fY2xrKTsN
+Cj4+ICsgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPj4gKyAgICB9DQo+DQo+IE5vdyB5b3UgaGF2
+ZSBjbG9jayBpbWJhbGFuY2UuIFBlciBzdXNwZW5kL3Jlc3VtZSBjeWNsZSB0aGUgY2xvY2tzIGFy
+ZQ0KPiBlbmFibGVkIHR3aWNlLCBidXQgZGlzYWJsZWQgb25seSBvbmNlLg0KPg0KDQpUaGUgY2xv
+Y2tzIGFyZSBnZXR0aW5nIGRpc2FibGVkIGFuZCB1biBwcmVwYXJlZCBhdCB0aGUgZW5kIG9mIHRo
+ZSBwcm9iZS4NCkluIHRoZSByZXN1bWUgdGhlIGRyaXZlciBpcyBkb2luZyByZWdpc3RlciB3cml0
+ZS4NCg0KU29ycnkgc3BlbGwgbWlzdGFrZSBub3QgaW4gcmVzdW1lIGluIHRoZSBzdXNwZW5kIEkg
+YW0gZG9pbmcgYSByZWdpc3RlciB3cml0ZS4NCg0KSW4gb3JkZXIgdG8gZG8gdGhhdCByZWdpc3Rl
+ciB3cml0ZSBJIGhhdmUgdG8gYWdhaW4gZW5hYmxlIGFuZCBwcmVwYXJlIHRoZSBjbG9ja3MuDQoN
+Cg0KUmVnYXJkcywNCktlZGFyLg0KDQoNClJlZ2FyZHMsDQpLZWRhci4NCg0KPj4gKw0KPj4gICAg
+ICBwcml2LT53cml0ZV9yZWcocHJpdiwgWENBTl9NU1JfT0ZGU0VULCBYQ0FOX01TUl9TTEVFUF9N
+QVNLKTsNCj4+ICAgICAgcHJpdi0+Y2FuLnN0YXRlID0gQ0FOX1NUQVRFX1NMRUVQSU5HOw0KPj4N
+Cj4+IEBAIC05OTksNyArMTAxNCw4IEBAIHN0YXRpYyBpbnQgX19tYXliZV91bnVzZWQgeGNhbl9z
+dXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldikNCj4+ICAgKi8NCj4+ICBzdGF0aWMgaW50IF9fbWF5
+YmVfdW51c2VkIHhjYW5fcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikgIHsNCj4+IC0gICAgc3Ry
+dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOw0KPj4gKyAg
+ICBzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2ID0gY29udGFpbmVyX29mKGRldiwNCj4+ICsg
+ICAgICAgICAgICAgICAgICAgIHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UsIGRldik7DQo+PiAgICAg
+IHN0cnVjdCBuZXRfZGV2aWNlICpuZGV2ID0gcGxhdGZvcm1fZ2V0X2RydmRhdGEocGRldik7DQo+
+PiAgICAgIHN0cnVjdCB4Y2FuX3ByaXYgKnByaXYgPSBuZXRkZXZfcHJpdihuZGV2KTsNCj4+ICAg
+ICAgaW50IHJldDsNCg0KTWFyYw0KDQotLQ0KUGVuZ3V0cm9uaXggZS5LLiAgICAgICAgICAgICAg
+ICAgIHwgTWFyYyBLbGVpbmUtQnVkZGUgICAgICAgICAgIHwNCkluZHVzdHJpYWwgTGludXggU29s
+dXRpb25zICAgICAgICB8IFBob25lOiArNDktMjMxLTI4MjYtOTI0ICAgICB8DQpWZXJ0cmV0dW5n
+IFdlc3QvRG9ydG11bmQgICAgICAgICAgfCBGYXg6ICAgKzQ5LTUxMjEtMjA2OTE3LTU1NTUgfA0K
+QW10c2dlcmljaHQgSGlsZGVzaGVpbSwgSFJBIDI2ODYgIHwgaHR0cDovL3d3dy5wZW5ndXRyb25p
+eC5kZSAgIHwNCg0KDQoNClRoaXMgZW1haWwgYW5kIGFueSBhdHRhY2htZW50cyBhcmUgaW50ZW5k
+ZWQgZm9yIHRoZSBzb2xlIHVzZSBvZiB0aGUgbmFtZWQgcmVjaXBpZW50KHMpIGFuZCBjb250YWlu
+KHMpIGNvbmZpZGVudGlhbCBpbmZvcm1hdGlvbiB0aGF0IG1heSBiZSBwcm9wcmlldGFyeSwgcHJp
+dmlsZWdlZCBvciBjb3B5cmlnaHRlZCB1bmRlciBhcHBsaWNhYmxlIGxhdy4gSWYgeW91IGFyZSBu
+b3QgdGhlIGludGVuZGVkIHJlY2lwaWVudCwgZG8gbm90IHJlYWQsIGNvcHksIG9yIGZvcndhcmQg
+dGhpcyBlbWFpbCBtZXNzYWdlIG9yIGFueSBhdHRhY2htZW50cy4gRGVsZXRlIHRoaXMgZW1haWwg
+bWVzc2FnZSBhbmQgYW55IGF0dGFjaG1lbnRzIGltbWVkaWF0ZWx5Lg0KDQo=
