@@ -1,87 +1,84 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/4] simplefb: Add support for enumerating
- simplefb dt nodes in /chosen
-Date: Thu, 13 Nov 2014 10:24:41 +0000
-Message-ID: <CACxGe6uegSdZFhqx8J0MEPr4PPTw9pDMqH45cBka5qk4mkHW6g@mail.gmail.com>
-References: <1415830124-28787-1-git-send-email-hdegoede@redhat.com>
- <1415830124-28787-2-git-send-email-hdegoede@redhat.com> <CAGRGNgW_Q6oghpe5Mw-8aYPVVj1YZ6R3iaqOQzCE9dSD1nYSyA@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 3/6] mfd: ti_am335x_tscadc: Remove unwanted
+ reg_se_cache save
+Date: Thu, 13 Nov 2014 10:25:40 +0000
+Message-ID: <20141113102540.GJ24004@x1>
+References: <1415694844-11230-1-git-send-email-vigneshr@ti.com>
+ <1415694844-11230-4-git-send-email-vigneshr@ti.com>
+ <20141111122623.GA24004@x1>
+ <71C24A547111EA4E84AE759B748D9EAE4B976C@DBDE04.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCJP567ORICBB7UNSKRQKGQEBDECMOI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGRGNgW_Q6oghpe5Mw-8aYPVVj1YZ6R3iaqOQzCE9dSD1nYSyA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <71C24A547111EA4E84AE759B748D9EAE4B976C-yXqyApvAXouIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "R, Vignesh" <vigneshr-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, "richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>, "Griffis, Brad" <bgriffis-l0cyMroinI0@public.gmane.org>, Sanjeev Sharma <sanjeev_sharma-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Jan Kardell <jan.kardell-KSZdJiTw9mzQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 12, 2014 at 11:39 PM, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Hans,
->
-> On Thu, Nov 13, 2014 at 9:08 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->> Update simplefb to support the new preferred location for simplefb dt nodes
->> under /chosen.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>  drivers/video/fbdev/simplefb.c | 33 ++++++++++++++++++++++++++++++++-
->>  1 file changed, 32 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/video/fbdev/simplefb.c b/drivers/video/fbdev/simplefb.c
->> index cd96edd..be7d288 100644
->> --- a/drivers/video/fbdev/simplefb.c
->> +++ b/drivers/video/fbdev/simplefb.c
->> @@ -27,6 +27,7 @@
->>  #include <linux/platform_data/simplefb.h>
->>  #include <linux/platform_device.h>
->>  #include <linux/clk-provider.h>
->> +#include <linux/of_platform.h>
->>
->>  static struct fb_fix_screeninfo simplefb_fix = {
->>         .id             = "simple",
->> @@ -385,7 +386,37 @@ static struct platform_driver simplefb_driver = {
->>         .probe = simplefb_probe,
->>         .remove = simplefb_remove,
->>  };
->> -module_platform_driver(simplefb_driver);
->> +
->> +static int __init simplefb_init(void)
->> +{
->> +       int i, ret;
->> +       char name[16];
->> +       struct device_node *np;
->> +
->> +       ret = platform_driver_register(&simplefb_driver);
->> +       if (ret)
->> +               return ret;
->> +
->> +       for (i = 0; ; i++) {
->> +               snprintf(name, sizeof(name), "framebuffer%d", i);
->
-> This smells like an infinite loop: we can be pretty sure that no
-> hardware will ever exist with more than 9999 (I think?) framebuffers,
-> however if that ever happens this'll loop until it runs out of RAM.
-> Maybe add a suitably high limit to the for loop?
+On Tue, 11 Nov 2014, R, Vignesh wrote:
+> On Tue, 11 Nov 2014, Vignesh R wrote:
+> > In one shot mode, sequencer automatically disables all enabled step=
+s=20
+> > at the end of each cycle. (both ADC steps and TSC steps) Hence thes=
+e=20
+> > steps need not be saved in reg_se_cache for clearing these steps at=
+ a=20
+> > later stage.
+> > Also, when ADC wakes up Sequencer should not be busy executing any =
+of=20
+> > the config steps except for the charge step. Previously charge step=
+=20
+> > was 1 ADC clock cycle and hence it was ignored.
+> >=20
+> > Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+> > ---
 
-Unlikely, but the loop is wrong anyway. The loop should be:
+[...]
 
-for_each_child_of_node(of_chosen, child)
-        if (of_device_is_compatible(child, "simple-framebuffer");
-                of_platform_device_create(np, NULL, NULL);
+> > -	tsadc->reg_se_cache |=3D val;
+>=20
+> You didn't answer my question about this?
+> I did reply to the question in the previous thread. =20
+>=20
+> Previously, TSC did not reliably re-enable its steps as the TSC irq h=
+andler received=20
+> false pen up events. Hence, in order to use TSC after ADC operation, =
+it was necessary to
+>  save and re-enable TSC steps (basically, to keep TSC steps enabled a=
+lways).
+> The change was more of a workaround to overcome limitation of TSC irq=
+ handler. With=20
+> this series of patches, TSC irq handler is very reliable and the work=
+around is no longer required.
 
-Then make the probe hook choose an appropriate FB number. It looks
-like you structured the code the way you did to get the framebuffers
-to register in a particular order, and therefore implicitly get the
-right numbers, but that is a fragile way to go about it.
+Okay, thanks for the explanation.
 
-Using /aliases really is the right way to get specific framebuffer
-numbers. We already use it for UARTs, so we should do the same here.
-Use of_alias_get_id(, "framebuffer") to get the framebuffer number.
+By the way, your mailer doesn't appear to quote previous messages.  Is
+there any way to fix that?
 
-g.
+> >  	am335x_tscadc_need_adc(tsadc);
+> > =20
+> >  	tscadc_writel(tsadc, REG_SE, val);
+> > diff --git a/include/linux/mfd/ti_am335x_tscadc.h=20
+> > b/include/linux/mfd/ti_am335x_tscadc.h
+> > index c99be5dc0f5c..fcce182e4a35 100644
+> > --- a/include/linux/mfd/ti_am335x_tscadc.h
+> > +++ b/include/linux/mfd/ti_am335x_tscadc.h
+> > @@ -128,6 +128,7 @@
+> > =20
+> >  /* Sequencer Status */
+> >  #define SEQ_STATUS BIT(5)
+> > +#define CHARGE_STEP		0x11
+> > =20
+> >  #define ADC_CLK			3000000
+> >  #define TOTAL_STEPS		16
+>=20
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
