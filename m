@@ -1,79 +1,133 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/4] simplefb: Add support for enumerating
- simplefb dt nodes in /chosen
-Date: Thu, 13 Nov 2014 09:27:07 +0100
-Message-ID: <54646B5B.1070604@redhat.com>
-References: <1415830124-28787-1-git-send-email-hdegoede@redhat.com> <1415830124-28787-2-git-send-email-hdegoede@redhat.com> <CAGRGNgW_Q6oghpe5Mw-8aYPVVj1YZ6R3iaqOQzCE9dSD1nYSyA@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Shaohui Xie <Shaohui.Xie@freescale.com>
+Subject: RE: [PATCH] DT: add MDIO node for FMan node
+Date: Thu, 13 Nov 2014 08:27:16 +0000
+Message-ID: <b7e76a785be4439bb1f69dc611703e1d@DM2PR0301MB0864.namprd03.prod.outlook.com>
+References: <1415102196-9238-1-git-send-email-shh.xie@gmail.com>
+ <1415665384.15957.16.camel@freescale.com>
+ <fb6dc6131da04e89bfc31bd8278030a0@DM2PR0301MB0864.namprd03.prod.outlook.com>
+ <1415727479.15957.29.camel@freescale.com>
+ <c4dd11a97a684be8b799c2f639e600ca@DM2PR0301MB0864.namprd03.prod.outlook.com>
+ <1415859399.15957.48.camel@freescale.com>
+ <59c6a8b7ad1d477aad9edd2152d02f8e@DM2PR0301MB0864.namprd03.prod.outlook.com>
+ <1415862913.15957.56.camel@freescale.com>
+ <489ad06fda99436eb3307d613b1f8293@DM2PR0301MB0864.namprd03.prod.outlook.com>
+ <1415865867.15957.58.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBZ6WSGRQKGQEPTJWG2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAGRGNgW_Q6oghpe5Mw-8aYPVVj1YZ6R3iaqOQzCE9dSD1nYSyA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1415865867.15957.58.camel@freescale.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Scott Wood <scottwood@freescale.com>
+Cc: "Igal.Liberman@freescale.com" <Igal.Liberman@freescale.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Emilian Medve <Emilian.Medve@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 11/13/2014 12:39 AM, Julian Calaby wrote:
-> Hi Hans,
-> 
-> On Thu, Nov 13, 2014 at 9:08 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->> Update simplefb to support the new preferred location for simplefb dt nodes
->> under /chosen.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>  drivers/video/fbdev/simplefb.c | 33 ++++++++++++++++++++++++++++++++-
->>  1 file changed, 32 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/video/fbdev/simplefb.c b/drivers/video/fbdev/simplefb.c
->> index cd96edd..be7d288 100644
->> --- a/drivers/video/fbdev/simplefb.c
->> +++ b/drivers/video/fbdev/simplefb.c
->> @@ -27,6 +27,7 @@
->>  #include <linux/platform_data/simplefb.h>
->>  #include <linux/platform_device.h>
->>  #include <linux/clk-provider.h>
->> +#include <linux/of_platform.h>
->>
->>  static struct fb_fix_screeninfo simplefb_fix = {
->>         .id             = "simple",
->> @@ -385,7 +386,37 @@ static struct platform_driver simplefb_driver = {
->>         .probe = simplefb_probe,
->>         .remove = simplefb_remove,
->>  };
->> -module_platform_driver(simplefb_driver);
->> +
->> +static int __init simplefb_init(void)
->> +{
->> +       int i, ret;
->> +       char name[16];
->> +       struct device_node *np;
->> +
->> +       ret = platform_driver_register(&simplefb_driver);
->> +       if (ret)
->> +               return ret;
->> +
->> +       for (i = 0; ; i++) {
->> +               snprintf(name, sizeof(name), "framebuffer%d", i);
-> 
-> This smells like an infinite loop: we can be pretty sure that no
-> hardware will ever exist with more than 9999 (I think?) framebuffers,
-> however if that ever happens this'll loop until it runs out of RAM.
-> Maybe add a suitably high limit to the for loop?
-
-The loop will stop as soon as there are no more framebuffer# nodes in chosen,
-so the loop is only infinite if there are infinite nodes in the devicetree,
-which would make the devicetree infinitely large, so this will never happen.
-
-Regards,
-
-Hans
+DQoNCkJlc3QgUmVnYXJkcywgDQpTaGFvaHVpIFhpZQ0KDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNz
+YWdlLS0tLS0NCj4gRnJvbTogV29vZCBTY290dC1CMDc0MjENCj4gU2VudDogVGh1cnNkYXksIE5v
+dmVtYmVyIDEzLCAyMDE0IDQ6MDQgUE0NCj4gVG86IFhpZSBTaGFvaHVpLUIyMTk4OQ0KPiBDYzog
+TGliZXJtYW4gSWdhbC1CMzE5NTA7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOw0KPiBk
+ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgTWVkdmUgRW1pbGlhbi1FTU1FRFZFMQ0KPiBTdWJq
+ZWN0OiBSZTogW1BBVENIXSBEVDogYWRkIE1ESU8gbm9kZSBmb3IgRk1hbiBub2RlDQo+IA0KPiBP
+biBUaHUsIDIwMTQtMTEtMTMgYXQgMDI6MDIgLTA2MDAsIFhpZSBTaGFvaHVpLUIyMTk4OSB3cm90
+ZToNCj4gPg0KPiA+DQo+ID4gQmVzdCBSZWdhcmRzLA0KPiA+IFNoYW9odWkgWGllDQo+ID4NCj4g
+Pg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IFdvb2QgU2Nv
+dHQtQjA3NDIxDQo+ID4gPiBTZW50OiBUaHVyc2RheSwgTm92ZW1iZXIgMTMsIDIwMTQgMzoxNSBQ
+TQ0KPiA+ID4gVG86IFhpZSBTaGFvaHVpLUIyMTk4OQ0KPiA+ID4gQ2M6IExpYmVybWFuIElnYWwt
+QjMxOTUwOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsNCj4gPiA+IGRldmljZXRyZWVA
+dmdlci5rZXJuZWwub3JnOyBNZWR2ZSBFbWlsaWFuLUVNTUVEVkUxDQo+ID4gPiBTdWJqZWN0OiBS
+ZTogW1BBVENIXSBEVDogYWRkIE1ESU8gbm9kZSBmb3IgRk1hbiBub2RlDQo+ID4gPg0KPiA+ID4g
+T24gVGh1LCAyMDE0LTExLTEzIGF0IDAxOjExIC0wNjAwLCBYaWUgU2hhb2h1aS1CMjE5ODkgd3Jv
+dGU6DQo+ID4gPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+ID4gPiBGcm9t
+OiBXb29kIFNjb3R0LUIwNzQyMQ0KPiA+ID4gPiA+IFNlbnQ6IFRodXJzZGF5LCBOb3ZlbWJlciAx
+MywgMjAxNCAyOjE3IFBNDQo+ID4gPiA+ID4gVG86IFhpZSBTaGFvaHVpLUIyMTk4OQ0KPiA+ID4g
+PiA+IENjOiBMaWJlcm1hbiBJZ2FsLUIzMTk1MDsgbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5v
+cmc7DQo+ID4gPiA+ID4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IE1lZHZlIEVtaWxpYW4t
+RU1NRURWRTENCj4gPiA+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIXSBEVDogYWRkIE1ESU8gbm9k
+ZSBmb3IgRk1hbiBub2RlDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBPbiBXZWQsIDIwMTQtMTEtMTIg
+YXQgMDc6NDAgLTA2MDAsIFhpZSBTaGFvaHVpLUIyMTk4OSB3cm90ZToNCj4gPiA+ID4gPiA+ID4g
+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+ID4gPiA+ID4gRnJvbTogV29vZCBTY290
+dC1CMDc0MjENCj4gPiA+ID4gPiA+ID4gU2VudDogV2VkbmVzZGF5LCBOb3ZlbWJlciAxMiwgMjAx
+NCAxOjM4IEFNDQo+ID4gPiA+ID4gPiA+IFRvOiBYaWUgU2hhb2h1aS1CMjE5ODkNCj4gPiA+ID4g
+PiA+ID4gQ2M6IExpYmVybWFuIElnYWwtQjMxOTUwOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJz
+Lm9yZzsNCj4gPiA+ID4gPiA+ID4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IE1lZHZlIEVt
+aWxpYW4tRU1NRURWRTENCj4gPiA+ID4gPiA+ID4gU3ViamVjdDogUmU6IFtQQVRDSF0gRFQ6IGFk
+ZCBNRElPIG5vZGUgZm9yIEZNYW4gbm9kZQ0KPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiBP
+biBUdWUsIDIwMTQtMTEtMTEgYXQgMDQ6MzIgLTA2MDAsIFhpZSBTaGFvaHVpLUIyMTk4OSB3cm90
+ZToNCj4gPiA+ID4gPiA+ID4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiA+
+ID4gPiA+ID4gPiBGcm9tOiBXb29kIFNjb3R0LUIwNzQyMQ0KPiA+ID4gPiA+ID4gPiA+ID4gU2Vu
+dDogVHVlc2RheSwgTm92ZW1iZXIgMTEsIDIwMTQgODoyMyBBTQ0KPiA+ID4gPiA+ID4gPiA+ID4g
+VG86IHNoaC54aWVAZ21haWwuY29tDQo+ID4gPiA+ID4gPiA+ID4gPiBDYzogbGludXhwcGMtZGV2
+QGxpc3RzLm96bGFicy5vcmc7DQo+ID4gPiA+ID4gPiA+ID4gPiBkZXZpY2V0cmVlQHZnZXIua2Vy
+bmVsLm9yZzsgTWVkdmUgRW1pbGlhbi1FTU1FRFZFMTsgWGllDQo+ID4gPiA+ID4gPiA+ID4gPiBT
+aGFvaHVpLUIyMTk4OQ0KPiA+ID4gPiA+ID4gPiA+ID4gU3ViamVjdDogUmU6IFtQQVRDSF0gRFQ6
+IGFkZCBNRElPIG5vZGUgZm9yIEZNYW4gbm9kZQ0KPiA+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4g
+PiA+ID4gPiA+IE9uIFR1ZSwgMjAxNC0xMS0wNCBhdCAxOTo1NiArMDgwMCwgc2hoLnhpZUBnbWFp
+bC5jb20NCj4gd3JvdGU6DQo+ID4gPiA+ID4gPiA+ID4gPiA+IEZyb206IFNoYW9odWkgWGllIDxT
+aGFvaHVpLlhpZUBmcmVlc2NhbGUuY29tPg0KPiA+ID4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+
+ID4gPiA+ID4gPiBUaGlzIGJpbmRpbmcgaXMgZm9yIEZNYW4gTURJTywgaXQgY292ZXJzIEZNYW4g
+djIgJiBGTWFuDQo+IHYzLg0KPiA+ID4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+ID4g
+PiBTaWduZWQtb2ZmLWJ5OiBTaGFvaHVpIFhpZSA8U2hhb2h1aS5YaWVAZnJlZXNjYWxlLmNvbT4N
+Cj4gPiA+ID4gPiA+ID4gPiA+ID4gLS0tDQo+ID4gPiA+ID4gPiA+ID4gPiA+IGJhc2VkIG9uIGh0
+dHA6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC8zOTAzNTEvDQo+ID4gPiA+ID4gPiA+ID4g
+PiA+IGZvciAnbmV4dCcgb2YNCj4gPiA+ID4gPiA+ID4gPiA+ID4NCj4gPiA+IGdpdDovL2dpdC5r
+ZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9zY290dHdvb2QvbGludXguDQo+ID4g
+PiA+ID4gPiA+ID4gPiA+IGdpdA0KPiA+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiA+
+IEFyZSB0aGVyZSBhbnkgb3RoZXIgRk1hbiBwaWVjZXMgdGhhdCBhcmUgbWlzc2luZyBmcm9tDQo+
+ID4gPiA+ID4gPiA+ID4gPiB0aGUgYWJvdmUNCj4gPiA+ID4gPiBwYXRjaD8NCj4gPiA+ID4gPiA+
+ID4gPiBbUy5IXSBJJ20gYWRkaW5nIElnYWwgZm9yIHRoaXMgY29tbWVudC4NCj4gPiA+ID4gPiA+
+ID4gPg0KPiA+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiA+ID4gKy0gYnVzLWZyZXF1
+ZW5jeQ0KPiA+ID4gPiA+ID4gPiA+ID4gPiArCQlVc2FnZTogb3B0aW9uYWwNCj4gPiA+ID4gPiA+
+ID4gPiA+ID4gKwkJVmFsdWUgdHlwZTogPHUzMj4NCj4gPiA+ID4gPiA+ID4gPiA+ID4gKwkJRGVm
+aW5pdGlvbjogRGVmYXVsdCBNRElPIGJ1cyBjbG9jayBzcGVlZC4NCj4gPiA+ID4gPiA+ID4gPiA+
+DQo+ID4gPiA+ID4gPiA+ID4gPiBVc2UgY2xvY2tzL2Nsb2NrLW5hbWVzDQo+ID4gPiA+ID4gPiA+
+ID4gW1MuSF0gVGhlIE1ESU8gdXNlcyBGbWFuIGNsb2NrIGFuZCBkaXZpZGVzIGl0IHRvIGEgcHJv
+cGVyDQo+ID4gPiA+ID4gPiA+ID4gdmFsdWUgd2hpY2gNCj4gPiA+ID4gPiA+ID4gaXMgc3BlY2lm
+aWVkIGJ5IHRoaXMgcHJvcGVydHkuDQo+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+IFVzZSBj
+bG9ja3MvY2xvY2stbmFtZXMgdG8gZGVzY3JpYmUgdGhhdCByZWxhdGlvbnNoaXAuDQo+ID4gPiA+
+ID4gPiA+DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gW1MuSF0gVGhlIE1ESU8gbm9kZSBpcyBz
+dWItbm9kZSBhbmQgZW1iZWRkZWQgaW4gRm1hbiBub2RlLCB0aGUNCj4gPiA+ID4gPiA+IGNsb2Nr
+cy9jbG9jay1uYW1lcyBpcyBwcm92aWRlZCBieSBGbWFuIG5vZGUsIHNob3VsZCByZXBlYXQNCj4g
+PiA+ID4gPiA+IHRoZW0gaW4gTURJTyBub2RlPyBGb3IgdGhlIGRlZmF1bHQgTURJTyBidXMgY2xv
+Y2sgc3BlZWQsIG1heWJlDQo+ID4gPiA+ID4gPiAiY2xvY2stDQo+ID4gPiByYW5nZXMiDQo+ID4g
+PiA+ID4gPiBzaG91bGQgYmUgdXNlZD8NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IEl0J3MgYSBkaWZm
+ZXJlbnQgY2xvY2suICBZb3Ugd291bGRuJ3QgYmUgcmVwZWF0aW5nLiAgSWYgaXQncw0KPiA+ID4g
+PiA+IGRlcml2ZWQgZnJvbSB0aGUgRk1hbiBjbG9jaywgdGhlbiBtYXliZSB5b3UgZG9uJ3QgbmVl
+ZCBhbnl0aGluZw0KPiA+ID4gPiA+IGhlcmUgKGRvZXMgdGhlIGRyaXZlciBrbm93IHdoYXQgdGhl
+IGRpdmlkZXIgaXMsIG9yIHdvdWxkIHRoYXQNCj4gPiA+ID4gPiBuZWVkIHRvIGJlIHNwZWNpZmll
+ZCBpbiB0aGUgZGV2aWNlIHRyZWU/KSwgYnV0IG5vIG1vcmUNCj4gPiA+ID4gPiBjbG9jay1mcmVx
+dWVuY3kvYnVzLQ0KPiA+ID4gZnJlcXVlbmN5IHByb3BlcnRpZXMuDQo+ID4gPiA+ID4NCj4gPiA+
+ID4gW1MuSF0gVGhlIHB1cnBvc2UgaGVyZSBpcyB0byBnZXQgYSBzcGVjaWZpYyBjbG9jayBmcmVx
+dWVuY3ksDQo+ID4gPiA+IGRyaXZlciB0bw0KPiA+ID4gdXNlIGl0IHRvIGNhbGN1bGF0ZSB0aGUg
+ZGl2aWRlci4NCj4gPiA+ID4gVGhlbiB0aGUgRm1hbiBjbG9jayBjYW4gYmUgZGl2aWRlZCB0byB0
+aGUgZnJlcXVlbmN5Lg0KPiA+ID4NCj4gPiA+IE9oLCBzbyB0aGlzIGlzIHN0YXRpbmcgYSBkZXNp
+cmVkIGZyZXF1ZW5jeSBhbmQgbm90IHNvbWV0aGluZyB0aGF0DQo+ID4gPiBhbHJlYWR5IGV4aXN0
+cz8gIFdoYXQgZGV0ZXJtaW5lcyB0aGlzIGZyZXF1ZW5jeT8gIElzIGl0IGJhc2VkIG9uDQo+ID4g
+PiBib2FyZCBkZXNpZ24sIG9yIGp1c3Qgb24gdGhlIE1ESU8gc3RhbmRhcmQsIGV0Yz8gIEknbSB3
+b25kZXJpbmcgaWYNCj4gPiA+IHRoZSBkZXZpY2UgdHJlZSBpcyB0aGUgcmlnaHQgcGxhY2UgZm9y
+IGl0Lg0KPiA+IFtTLkhdIFllcywgYSBkZXNpcmVkIGZyZXF1ZW5jeSB3aGljaCBpcyBkaWZmZXJl
+bnQgd2l0aCBNRElPIHN0YW5kYXJkLg0KPiANCj4gSSdtIG5vdCBzdXJlIHdoYXQgeW91IG1lYW4g
+YnkgImRpZmZlcmVudCB3aXRoIi4gIERvIHlvdSBtZWFuICJkaWZmZXJlbnQNCj4gZnJvbSI/ICBX
+aGF0IGRvZXMgdGhlIHN0YW5kYXJkIHNheSBhYm91dCBmcmVxdWVuY3k/DQpbUy5IXSBUaGUgc3Rh
+bmRhcmQgTURJTyBmcmVxdWVuY3kgaXMgMi41TUh6LiAgQnV0IGEgZGlmZmVyZW50IG9uZSBpcyBk
+ZXNpcmVkLg0KDQo+IA0KPiA+IFRoZSBGbWFuIGNsb2NrIGFuZCB0aGUgZGl2aWRlciBkZXRlcm1p
+bmVzIHRoaXMgZnJlcXVlbmN5Lg0KPiA+IFNpbmNlIEZtYW4gY2xvY2sgaXMgZGlmZmVyZW50IG9u
+IGRpZmZlcmVudCBTb0NzLCBzbyBzcGVjaWZ5IHRoZQ0KPiA+IGRlc2lyZWQgZnJlcXVlbmN5LCB0
+aGVuIHRvIGdldCB0aGUgcHJvcGVyIGRpdmlkZXIuDQo+IA0KPiBXaHkgZG9lcyB0aGUgZm1hbiBj
+bG9jayBiZWluZyBkaWZmZXJlbnQgbWVhbiB0aGUgbWRpbyBjbG9jayBzaG91bGQgYmUNCj4gZGlm
+ZmVyZW50Pw0KW1MuSF0gVGhlIG1kaW8gY2xvY2sgc2hvdWxkIGJlIHNhbWUsIGEgZGlmZmVyZW50
+IGRpdmlkZXIgc2hvdWxkIGJlIHVzZWQgDQp0byBtYXRjaCB0aGUgRm1hbiBjbG9jayB0byBtYWtl
+IHN1cmUgdGhlIG1kaW8gY2xvY2sga2VwdCBzYW1lLiBTbyB0byBzcGVjaWZ5DQpUaGUgZGVzaXJl
+ZCBtZGlvIGZyZXF1ZW5jeSwgdGhlbiB0byBnZXQgcHJvcGVyIGRpdmlkZXIuDQoNClRoYW5rcy4N
+ClNoYW9odWkNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcK
+aHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
