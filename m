@@ -1,7 +1,7 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v4 3/7] Phy: DT binding documentation for the Armada 375 USB cluster binding
-Date: Thu, 13 Nov 2014 12:47:45 +0100
-Message-ID: <1415879269-29711-4-git-send-email-gregory.clement@free-electrons.com>
+Subject: [PATCH v4 2/7] Phy: DT binding documentation for Marvell MVEBU SATA phy.
+Date: Thu, 13 Nov 2014 12:47:44 +0100
+Message-ID: <1415879269-29711-3-git-send-email-gregory.clement@free-electrons.com>
 References: <1415879269-29711-1-git-send-email-gregory.clement@free-electrons.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1415879269-29711-1-git-send-email-gregory.clement@free-electrons.com>
@@ -10,44 +10,69 @@ To: Kishon Vijay Abraham I <kishon@ti.com>, Jason Cooper <jason@lakedaemon.net>,
 Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Armada 375 comes with an USB2 host and device controller and an USB3
-controller. The USB cluster control register allows to manage common
-features of both USB controllers. This commit adds the Device Tree
-binding documentation for this piece of hardware.
+From: Andrew Lunn <andrew@lunn.ch>
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Describe the binding for the Marvell MVEBU SATA phy. This driver
+can be used at least with Kirkwood, Dove and maybe others.
+Additionally, update the SATA binding with the properties to link
+to the phy nodes.
+
+Signed-off-by: Andrew Lunn <andrew@lunn.ch>
 ---
- Documentation/devicetree/bindings/phy/phy-mvebu.txt | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ Documentation/devicetree/bindings/ata/marvell.txt  |  6 ++++++
+ .../devicetree/bindings/phy/phy-mvebu.txt          | 22 ++++++++++++++++++++++
+ 2 files changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-mvebu.txt
 
+diff --git a/Documentation/devicetree/bindings/ata/marvell.txt b/Documentation/devicetree/bindings/ata/marvell.txt
+index 1c8351604d38..b460edd12766 100644
+--- a/Documentation/devicetree/bindings/ata/marvell.txt
++++ b/Documentation/devicetree/bindings/ata/marvell.txt
+@@ -6,11 +6,17 @@ Required Properties:
+ - interrupts    : Interrupt controller is using
+ - nr-ports      : Number of SATA ports in use.
+ 
++Optional Properties:
++- phys		: List of phandles to sata phys
++- phy-names	: Should be "0", "1", etc, one number per phandle
++
+ Example:
+ 
+ 	sata@80000 {
+ 		compatible = "marvell,orion-sata";
+ 		reg = <0x80000 0x5000>;
+ 		interrupts = <21>;
++		phys = <&sata_phy0>, <&sata_phy1>;
++		phy-names = "0", "1";
+ 		nr-ports = <2>;
+ 	}
 diff --git a/Documentation/devicetree/bindings/phy/phy-mvebu.txt b/Documentation/devicetree/bindings/phy/phy-mvebu.txt
-index 6cb3364aeafb..f95b6260a3b3 100644
---- a/Documentation/devicetree/bindings/phy/phy-mvebu.txt
+new file mode 100644
+index 000000000000..6cb3364aeafb
+--- /dev/null
 +++ b/Documentation/devicetree/bindings/phy/phy-mvebu.txt
-@@ -20,3 +20,24 @@ Example:
- 			#phy-cells = <0>;
- 			status = "ok";
- 		};
+@@ -0,0 +1,22 @@
++* Marvell MVEBU SATA PHY
 +
-+Armada 375 USB cluster
-+----------------------
++Power control for the SATA phy found on Marvell MVEBU SoCs.
 +
-+Armada 375 comes with an USB2 host and device controller and an USB3
-+controller. The USB cluster control register allows to manage common
-+features of both USB controllers.
++This document extends the binding described in phy-bindings.txt
 +
-+Required properties:
++Required properties :
 +
-+- compatible: "marvell,armada-375-usb-cluster"
-+- reg: Should contain usb cluster register location and length.
-+- #phy-cells : from the generic phy bindings, must be 1. Possible
-+values are 1 (USB2), 2 (USB3).
++ - reg		   : Offset and length of the register set for the SATA device
++ - compatible	   : Should be "marvell,mvebu-sata-phy"
++ - clocks	   : phandle of clock and specifier that supplies the device
++ - clock-names	   : Should be "sata"
 +
 +Example:
-+		usbcluster: usb-cluster@18400 {
-+			compatible = "marvell,armada-375-usb-cluster";
-+			reg = <0x18400 0x4>;
-+			#phy-cells = <1>
++		sata-phy@84000 {
++			compatible = "marvell,mvebu-sata-phy";
++			reg = <0x84000 0x0334>;
++			clocks = <&gate_clk 15>;
++			clock-names = "sata";
++			#phy-cells = <0>;
++			status = "ok";
 +		};
 -- 
 1.9.1
