@@ -1,103 +1,56 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v5 0/5] simplefb: add clock handling code
-Date: Thu, 13 Nov 2014 17:20:58 +0200
-Message-ID: <5464CC5A.7010508@ti.com>
-References: <1415808952-23549-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: Re: [alsa-devel] Question on Compressed offload session
+Date: Thu, 13 Nov 2014 09:27:30 -0600
+Message-ID: <5464CDE2.2070406@linux.intel.com>
+References: <85499f52ebd29581bf58b9cafbae6864.squirrel@www.codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="NtRsRo5Edfc5Vn0GoiA1OQg00cA4hwFJV"
-Return-path: <linux-sunxi+bncBCGMHFOOT4LBBZMYSORQKGQEO22DYRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1415808952-23549-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <85499f52ebd29581bf58b9cafbae6864.squirrel@www.codeaurora.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: gsantosh@codeaurora.org, alsa-devel-bounces@alsa-project.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linux-sh list <linux-sh@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Magnus <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, grant.likely@linaro.org, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
---NtRsRo5Edfc5Vn0GoiA1OQg00cA4hwFJV
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+On 11/12/14, 9:02 PM, gsantosh@codeaurora.org wrote:
+> Hi All,
+>
+> The Question is for the compressed offload session.
+>
+> For a generic codec driver during the startup function it will set some of
+> the hw_constraints rule similarly like this.
+>
+>          snd_pcm_hw_constraint_list(substream->runtime, 0,
+>                      SNDRV_PCM_HW_PARAM_RATE,
+>                      &constraints_12_24);
+>
+> pcm_lib.c will try to add the rule to the runtime structure by accessing
+> the pointers which will be initialized during opening of the session,
+> as The Constraints added by the codec driver will be updated in the
+>
+> struct snd_pcm_hw_constraints of runtime structure which will be part of
+> substream handle.
+>
+> But for the compressed offload I do not see the initialization done for HW
+> constraints, as done in pcm session
+>
+> 2092int snd_pcm_open_substream(struct snd_pcm *pcm, int stream,
+> 2093			   struct file *file,
+> 2094			   struct snd_pcm_substream **rsubstream)
+>
+> most of the existing drivers which has the hw_constraint_list code will
+> not be applicable for compress offload session, how to solve this?
 
-On 12/11/14 18:15, Hans de Goede wrote:
-> Hi Tomi,
->=20
-> Here is v5 of my simplefb patch-set, this time with an Ack from
-> Grant Likely for the dt-bindings bits, which should end all controversy=
+You can't directly link physical output/input with the decoder/encoder 
+in general.
+For decoders, the sample-rate may not always be known ahead of time, 
+e.g. with AAC-SBR implicit signaling. There is no way to add constraints 
+on open, there is an assumption that a sample-rate converter is part of 
+the chain to take care of the difference between the output of the 
+offloaded decoder and the back-end actual sampling frequency (same with 
+number of channels and bit-width btw).
+Likewise if you encode the frequency may not be the same as what the 
+backend provides and some SRC might be needed.
+-Pierre
 
-> surrounding that patch.
->=20
-> For changes since the original postings please see the per patch change=
-logs
-> in the patch commit messages.
->=20
-> Please merge this into your tree for 3.19.
-
-I applied this and the "dt-bindings: simplefb: Specify node location and
-handoff related properties" v3 series to my test branch, compiled for
-x64 and:
-
-drivers/video/fbdev/simplefb.c: In function =91simplefb_clocks_init=92:
-drivers/video/fbdev/simplefb.c:204:2: error: implicit declaration of
-function =91of_clk_get_parent_count=92 [-Werror=3Dimplicit-function-decla=
-ration]
-  par->clk_count =3D of_clk_get_parent_count(np);
-  ^
-In file included from include/linux/i2c.h:33:0,
-                 from include/uapi/linux/fb.h:5,
-                 from include/linux/fb.h:5,
-                 from drivers/video/fbdev/simplefb.c:24:
-drivers/video/fbdev/simplefb.c: In function =91simplefb_init=92:
-drivers/video/fbdev/simplefb.c:399:25: error: =91of_chosen=92 undeclared
-(first use in this function)
-  for_each_child_of_node(of_chosen, np) {
-                         ^
-include/linux/of.h:736:33: note: in definition of macro
-=91for_each_child_of_node=92
-  for (child =3D of_get_next_child(parent, NULL); child !=3D NULL; \
-                                 ^
-drivers/video/fbdev/simplefb.c:399:25: note: each undeclared identifier
-is reported only once for each function it appears in
-  for_each_child_of_node(of_chosen, np) {
-                         ^
-include/linux/of.h:736:33: note: in definition of macro
-=91for_each_child_of_node=92
-  for (child =3D of_get_next_child(parent, NULL); child !=3D NULL; \
-                                 ^
-
-We need "depends on OF"?
-
- Tomi
-
-
-
---NtRsRo5Edfc5Vn0GoiA1OQg00cA4hwFJV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUZMxaAAoJEPo9qoy8lh71xw8P/0a9vxreeaRD8NNJQd3hdLMM
-zbXq6K/GwGV7Qv87LAto9HrXUEk/iUZCaPmS7tRjxHnRBdUUIangy0JIraTGEgg0
-mNRasHi+h9zaQzqOzAAkVaWhSsiByX3htNwL2oNF9DpezGHmSIBbUOYsbK+g9+73
-Ph3v2NhDCbcAori9/yYbrssMRoKrD1gTKFdSpxADrBP64iYw6ZdGtXMIUX1EgEFa
-ouJAAsohHEC14R4TJeXTj56mqCQSRuo6yI9QgYKhJiOvFpi3t4j310LNwfbcPfVJ
-WytC6U9+WRUAWkdZoxSdYr103i7iH8qwnoE120Vw9wClEjIX3Hd193/kDOf2jgph
-QK4atXi81vi9NyX81ooJmMOJMbWUvRmZCsE373bBFXr+FgzIsS07tkOT+K4DVpC5
-Wa6xxPsYJR8sS05y2Ok9yebhwPmYPra81otgOamzINWtJ0mECi7p/UPi43ySpMZp
-G96MN7/ehSsLccPlXW5U2tbnPi9MvxPFwZVo82DiL1gClHuxEd/9Al4L7AERPdJi
-AeMNB50bIMmcr2TTATneZ968ElOtnmt7IuTfpWaDiivHkjN8I56zyYYV51HjFUkY
-W1uJtbTbixnPGe6nYOEvSykukn/m9zyGQ/swRssrZcgAmP1o9FzboiDvKDYry7fY
-a3GjBNTdXqDXFJykxt8W
-=89r8
------END PGP SIGNATURE-----
-
---NtRsRo5Edfc5Vn0GoiA1OQg00cA4hwFJV--
