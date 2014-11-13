@@ -1,70 +1,130 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: [PATCH] drivers/core/of: Add symlink to device-tree from devices
- with an OF node
-Date: Thu, 13 Nov 2014 12:10:47 +1100
-Message-ID: <1415841047.5124.62.camel@kernel.crashing.org>
-References: <1415342031.4925.27.camel@kernel.crashing.org>
-	 <1415342117.4925.29.camel@kernel.crashing.org>
-	 <1415596626.5769.14.camel@kernel.crashing.org>
-	 <CAL_JsqKG=vpeGKj3v-2VW9oGQsnmuYMHRfy6LuXDXE=ROjHT4w@mail.gmail.com>
+From: Haojian Zhuang <haojian.zhuang@linaro.org>
+Subject: Re: [PATCH V2 00/13] clk: mmp: clock device tree support
+Date: Thu, 13 Nov 2014 09:21:37 +0800
+Message-ID: <CAD6h2NTUc7S9K-R-TfUA8Moiv3rnOd=PE_fnO6LDbj2Sk869Mg@mail.gmail.com>
+References: <1414721633-29508-1-git-send-email-chao.xie@marvell.com>
+	<CAN1soZyqWtKUajbW_R-_uTwSbN4Apo0+NJ9WupS+YLOP_nGJ3w@mail.gmail.com>
+	<20141113003537.25314.19238@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKG=vpeGKj3v-2VW9oGQsnmuYMHRfy6LuXDXE=ROjHT4w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jeremy.kerr-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141113003537.25314.19238@quantum>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Haojian Zhuang <haojian.zhuang@gmail.com>, Chao Xie <chao.xie@marvell.com>, Chao Xie <xiechao_mail@163.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-So I've been annoyed lately with having a bunch of devices such as i2c
-eeproms (for use by VPDs, server world !) and other bits and pieces that
-I want to be able to identify from userspace, and possibly provide
-additional data about from FW.
+On 13 November 2014 08:35, Mike Turquette <mturquette@linaro.org> wrote:
+> Quoting Haojian Zhuang (2014-11-04 00:15:55)
+>> On Fri, Oct 31, 2014 at 10:13 AM, Chao Xie <chao.xie@marvell.com> wrote:
+>> > From: Chao Xie <chao.xie@marvell.com>
+>> >
+>> > The patch set focuses at support device tree for clock.
+>> >
+>> > The first part of the patches
+>> >   clk: mmp: add prefix "mmp" for structures defined for clk-frac
+>> >   clk: mmp: add spin lock for clk-frac
+>> >   clk: mmp: add init callback for clk-frac
+>> >   clk: mmp: move definiton of mmp_clk_frac to clk.h It enhances the clk-frac.
+>> >
+>> > The second part of the patches
+>> >   clk: mmp: add clock type mix
+>> >   clk: mmp: add mmp private gate clock
+>> >
+>> > The third part of the patches
+>> >   clk: mmp: add basic support functions for DT support
+>> >   clk: mmp: add reset support
+>> >   clk: mmp: add pxa168 DT support for clock driver
+>> >   clk: mmp: add pxa910 DT support for clock driver
+>> >   clk: mmp: add mmp2 DT support for clock driver
+>> > It add the device tree support for pxa168, pxa910 and mmp2.
+>> >
+>> > V1 -> V2:
+>> >   Add reset support for the clocks that have reset bit.
+>> >
+>> > Chao Xie (13):
+>> >   clk: mmp: add prefix "mmp" for structures defined for clk-frac
+>> >   clk: mmp: add spin lock for clk-frac
+>> >   clk: mmp: add init callback for clk-frac
+>> >   clk: mmp: move definiton of mmp_clk_frac to clk.h
+>> >   clk: mmp: add clock type mix
+>> >   clk: mmp: add mmp private gate clock
+>> >   clk: mmp: add basic support functions for DT support
+>> >   clk: mmp: add reset support
+>> >   clk: mmp: add pxa168 DT support for clock driver
+>> >   clk: mmp: add pxa910 DT support for clock driver
+>> >   clk: mmp: add mmp2 DT support for clock driver
+>> >   arm: mmp: Make all the dts file to be compiled by Makefile
+>> >   arm: mmp: Make use of the DT supported clock
+>> >
+>> >  .../devicetree/bindings/clock/marvell,mmp2.txt     |  21 +
+>> >  .../devicetree/bindings/clock/marvell,pxa168.txt   |  21 +
+>> >  .../devicetree/bindings/clock/marvell,pxa910.txt   |  21 +
+>> >  arch/arm/boot/dts/Makefile                         |   3 +
+>> >  arch/arm/boot/dts/mmp2-brownstone.dts              |   2 +-
+>> >  arch/arm/boot/dts/mmp2.dtsi                        |  29 +-
+>> >  arch/arm/boot/dts/pxa168-aspenite.dts              |   2 +-
+>> >  arch/arm/boot/dts/pxa168.dtsi                      |  27 +-
+>> >  arch/arm/boot/dts/pxa910-dkb.dts                   |   2 +-
+>> >  arch/arm/boot/dts/pxa910.dtsi                      |  28 +-
+>> >  arch/arm/mach-mmp/Kconfig                          |  12 +-
+>> >  arch/arm/mach-mmp/mmp-dt.c                         |  57 +--
+>> >  arch/arm/mach-mmp/mmp2-dt.c                        |  26 +-
+>> >  drivers/clk/mmp/Makefile                           |   7 +-
+>> >  drivers/clk/mmp/clk-frac.c                         |  74 ++-
+>> >  drivers/clk/mmp/clk-gate.c                         | 133 ++++++
+>> >  drivers/clk/mmp/clk-mix.c                          | 513 +++++++++++++++++++++
+>> >  drivers/clk/mmp/clk-mmp2.c                         |   6 +-
+>> >  drivers/clk/mmp/clk-of-mmp2.c                      | 334 ++++++++++++++
+>> >  drivers/clk/mmp/clk-of-pxa168.c                    | 279 +++++++++++
+>> >  drivers/clk/mmp/clk-of-pxa910.c                    | 301 ++++++++++++
+>> >  drivers/clk/mmp/clk-pxa168.c                       |   6 +-
+>> >  drivers/clk/mmp/clk-pxa910.c                       |   6 +-
+>> >  drivers/clk/mmp/clk.c                              | 192 ++++++++
+>> >  drivers/clk/mmp/clk.h                              | 226 ++++++++-
+>> >  drivers/clk/mmp/reset.c                            |  99 ++++
+>> >  drivers/clk/mmp/reset.h                            |  31 ++
+>> >  include/dt-bindings/clock/marvell,mmp2.h           |  74 +++
+>> >  include/dt-bindings/clock/marvell,pxa168.h         |  57 +++
+>> >  include/dt-bindings/clock/marvell,pxa910.h         |  54 +++
+>> >  30 files changed, 2538 insertions(+), 105 deletions(-)
+>> >  create mode 100644 Documentation/devicetree/bindings/clock/marvell,mmp2.txt
+>> >  create mode 100644 Documentation/devicetree/bindings/clock/marvell,pxa168.txt
+>> >  create mode 100644 Documentation/devicetree/bindings/clock/marvell,pxa910.txt
+>> >  create mode 100644 drivers/clk/mmp/clk-gate.c
+>> >  create mode 100644 drivers/clk/mmp/clk-mix.c
+>> >  create mode 100644 drivers/clk/mmp/clk-of-mmp2.c
+>> >  create mode 100644 drivers/clk/mmp/clk-of-pxa168.c
+>> >  create mode 100644 drivers/clk/mmp/clk-of-pxa910.c
+>> >  create mode 100644 drivers/clk/mmp/clk.c
+>> >  create mode 100644 drivers/clk/mmp/reset.c
+>> >  create mode 100644 drivers/clk/mmp/reset.h
+>> >  create mode 100644 include/dt-bindings/clock/marvell,mmp2.h
+>> >  create mode 100644 include/dt-bindings/clock/marvell,pxa168.h
+>> >  create mode 100644 include/dt-bindings/clock/marvell,pxa910.h
+>> >
+>> > --
+>> > 1.8.3.2
+>> >
+>>
+>> Acked-by: Haojian Zhuang <haojian.zhuang@gmail.com>
+>>
+>> Mike,
+>> Please merge all mach-mmp patches with clock together. Otherwise, it
+>> may result in build issue.
+>
+> Can patches #12 & #13 go through arm-soc?
+>
 
-Basically, it boils down to correlating the sysfs device with the OF
-tree device node, so that user space can use device-tree info such as
-additional "location" or "label" (or whatever else we can come up with)
-propreties to identify a given device, or get some attributes of use
-about it, etc...
+Hi Mike,
 
-Now, so far, we've done that in some subsystem in a fairly ad-hoc basis
-using "devspec" properties. For example, PCI creates them if it can
-correlate the probed device with a DT node. Some powerpc specific busses
-do that too.
+I also hope so. But patch #12 makes those dtb files built
+automatically. And patch #13
+references clocks that are defined in dt-binding files. If I merge
+patch #12 & #13, I'll meet
+build issue since I'm lack of those new dt-binding files. So it's
+better to go through your
+clock tree.
 
-However, i2c doesn't and it would be nice to have something more generic
-since technically any device can have a corresponding device tree node.
-
-This patch adds an "of_node" symlink to devices that have a non-NULL
-dev->of_node pointer, the patch is pretty trivial and seems to work just
-fine for me.
-
-Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
----
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 20da3ad..8c7b607 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -493,6 +493,15 @@ static int device_add_attrs(struct device *dev)
- 			goto err_remove_dev_groups;
- 	}
- 
-+#ifdef CONFIG_OF
-+	if (dev->of_node) {
-+		error = sysfs_create_link(&dev->kobj, &dev->of_node->kobj,
-+					  "of_node");
-+		if (error)
-+			dev_warn(dev, "Error %d creating of_node link\n", error);
-+	}
-+#endif /* CONFIG_OF */
-+
- 	return 0;
- 
-  err_remove_dev_groups:
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards
+Haojian
