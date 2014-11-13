@@ -1,63 +1,39 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 3/4] simplefb: Change simplefb_init from
- module_init to fs_initcall
-Date: Thu, 13 Nov 2014 10:24:05 +0100
-Message-ID: <546478B5.2040002@redhat.com>
-References: <1415830124-28787-1-git-send-email-hdegoede@redhat.com> <1415830124-28787-3-git-send-email-hdegoede@redhat.com> <20141113085238.GE20972@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: dts: sama5d4: use macro instead of numeric value
+Date: Thu, 13 Nov 2014 10:29:07 +0100
+Message-ID: <1415870947-23120-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBP7RSGRQKGQEK2B3VQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20141113085238.GE20972@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+There is a macro for the irq type.
 
-On 11/13/2014 09:52 AM, Maxime Ripard wrote:
-> On Wed, Nov 12, 2014 at 11:08:43PM +0100, Hans de Goede wrote:
->> One of the reasons for having the simplefb nodes in /chosen, and doing
->> explicit enumeration of the nodes there, is too allow enumerating them sooner,
->> so that we get a console earlier on.
->>
->> Doing this earlier then fs_initcall is not useful, since the fb only turns into
->> a console when fbcon intializes, which is a fs_initcall too.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>  drivers/video/fbdev/simplefb.c | 6 +++++-
->>  1 file changed, 5 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/video/fbdev/simplefb.c b/drivers/video/fbdev/simplefb.c
->> index be7d288..8c0c972 100644
->> --- a/drivers/video/fbdev/simplefb.c
->> +++ b/drivers/video/fbdev/simplefb.c
->> @@ -415,7 +415,11 @@ static void __exit simplefb_exit(void)
->>  	platform_driver_unregister(&simplefb_driver);
->>  }
->>  
->> -module_init(simplefb_init);
->> +/*
->> + * While this can be a module, if builtin it's most likely the console
->> + * So let's leave module_exit but move module_init to an earlier place
->> + */
-> 
-> Not really related to this patch itself, but do we want to support
-> simplefb as a module? It seems like it's going to be most of the time
-> broken.
+Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/sama5d4.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-A valid point, my mean reasoning here is that some may see not being able to
-use it as a module as a regression, so I just kept things as is, but I do
-agree that it is advisable to just build it in.
+diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
+index e0157b0..338dfd8 100644
+--- a/arch/arm/boot/dts/sama5d4.dtsi
++++ b/arch/arm/boot/dts/sama5d4.dtsi
+@@ -817,7 +817,7 @@
+ 			i2c2: i2c@f8024000 {
+ 				compatible = "atmel,at91sam9x5-i2c";
+ 				reg = <0xf8024000 0x4000>;
+-				interrupts = <34 4 6>;
++				interrupts = <34 IRQ_TYPE_LEVEL_HIGH 6>;
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_i2c2>;
+ 				#address-cells = <1>;
+-- 
+2.0.3
 
-Regards,
-
-Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
