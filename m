@@ -1,53 +1,42 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 4/4] simplefb: Change simplefb_init from
- module_init to fs_initcall
-Date: Thu, 13 Nov 2014 20:23:14 +0100
-Message-ID: <1415906594-2461-4-git-send-email-hdegoede@redhat.com>
-References: <1415906594-2461-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBNEKSSRQKGQEMTGC3EY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1415906594-2461-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 0/3]  i2c: add driver for Amlogic Meson I2C controller
+Date: Thu, 13 Nov 2014 20:32:00 +0100
+Message-ID: <1415907123-4318-1-git-send-email-b.galvani@gmail.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-One of the reasons for having the simplefb nodes in /chosen, and doing
-explicit enumeration of the nodes there, is too allow enumerating them sooner,
-so that we get a console earlier on.
+Hi,
 
-Doing this earlier then fs_initcall is not useful, since the fb only turns
-into a console when fbcon intializes, which is a fs_initcall too.
+this patchset adds a driver for the I2C controller available in
+Amlogic Meson SoCs. It has been tested on a Meson8 based board with
+the following devices:
+ - Ricoh RN5T618 PMIC
+ - NXP PCF8564 RTC
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
---
-Changes in v4 (of the patch-set):
--Drop the comment about using fs_initcall vs module_exit, as we no longer have
- a module_exit
----
- drivers/video/fbdev/simplefb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes since v2:
+ - fixed token generation for split reads
+ - simplified meson_i2c_prepare_xfer()
+ - added DTS patch
 
-diff --git a/drivers/video/fbdev/simplefb.c b/drivers/video/fbdev/simplefb.c
-index e381a53..1fc973c 100644
---- a/drivers/video/fbdev/simplefb.c
-+++ b/drivers/video/fbdev/simplefb.c
-@@ -411,7 +411,7 @@ static int __init simplefb_init(void)
- 	return 0;
- }
- 
--module_init(simplefb_init);
-+fs_initcall(simplefb_init);
- 
- MODULE_AUTHOR("Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>");
- MODULE_DESCRIPTION("Simple framebuffer driver");
+Changes since v1:
+ - factored common code for token list setup
+
+Beniamino Galvani (3):
+  i2c: meson: add device tree bindings documentation
+  i2c: add support for Amlogic Meson I2C controller
+  ARM: dts: meson: add I2C controller nodes
+
+ .../devicetree/bindings/i2c/i2c-meson.txt          |  24 +
+ arch/arm/boot/dts/meson.dtsi                       |  30 ++
+ drivers/i2c/busses/Kconfig                         |   7 +
+ drivers/i2c/busses/Makefile                        |   1 +
+ drivers/i2c/busses/i2c-meson.c                     | 492 +++++++++++++++++++++
+ 5 files changed, 554 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-meson.txt
+ create mode 100644 drivers/i2c/busses/i2c-meson.c
+
 -- 
-2.1.0
+1.9.1
