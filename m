@@ -1,84 +1,81 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v4 09/10] ARM: dts: am33xx: Update DCAN nodes
-Date: Thu, 13 Nov 2014 17:03:49 +0100
-Message-ID: <20141113160349.GA1275@katana>
-References: <1415881371-4982-1-git-send-email-rogerq@ti.com>
- <1415881371-4982-10-git-send-email-rogerq@ti.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] PCI: add missing DT binding for linux,pci-domain property
+Date: Thu, 13 Nov 2014 10:04:51 -0600
+Message-ID: <CAL_Jsq+oygs12ih0SttbGJYyDTZR3f8-w6egNQuQ+_zwiNxxRg@mail.gmail.com>
+References: <1415287400-30426-1-git-send-email-l.stach@pengutronix.de>
+ <CAL_JsqKfV3aPuYxK2E8tS1fDjhpJFknqv1nHP+9NYHAfs_owYg@mail.gmail.com> <1415631509.20340.5.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6c2NcOVqGQ03X4Wi"
-Return-path: <linux-can-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1415881371-4982-10-git-send-email-rogerq@ti.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: tony@atomide.com, wg@grandegger.com, mkl@pengutronix.de, mugunthanvnm@ti.com, george.cherian@ti.com, balbi@ti.com, nsekhar@ti.comnm@ti.com, sergei.shtylyov@cogentembedded.com, linux-omap@vger.kernel.org, linux-can@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415631509.20340.5.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Nov 10, 2014 at 8:58 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> Am Donnerstag, den 06.11.2014, 13:49 -0600 schrieb Rob Herring:
+>> On Thu, Nov 6, 2014 at 9:23 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+>> > This property was added by 41e5c0f81d3e
+>> > (of/pci: Add pci_get_new_domain_nr() and of_get_pci_domain_nr())
+>> > without the required binding documentation. As this property
+>> > will be supported by a number of host bridge drivers going forward,
+>> > add it to the common PCI binding doc.
+>> >
+>> > Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> > ---
+>> > This is a non-critical fix, but may still qualify for 3.18-rc as
+>> > the property was added in this release cycle.
+>>
+>> Agreed.
+>>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>
+>
+> So how should we proceed here? Are you going to pick it up or should
+> Bjorn route this through the PCI tree?
 
---6c2NcOVqGQ03X4Wi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I believe Bjorn said he would pick this up since he merged the rest.
 
-On Thu, Nov 13, 2014 at 02:22:50PM +0200, Roger Quadros wrote:
-> Add "raminit-syscon" property to specify the RAMINIT register.
-> Add clock information.
-> Rename can nodes from "d_can" to "can" to be compliant
-> with the ePAPR specs.
->=20
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
->  arch/arm/boot/dts/am33xx.dtsi | 20 ++++++++++++--------
->  1 file changed, 12 insertions(+), 8 deletions(-)
->=20
-> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-> index 9f3058c..74fefa1 100644
-> --- a/arch/arm/boot/dts/am33xx.dtsi
-> +++ b/arch/arm/boot/dts/am33xx.dtsi
-> @@ -338,20 +338,24 @@
->  			interrupts =3D <91>;
->  		};
-> =20
-> -		dcan0: d_can@481cc000 {
-> -			compatible =3D "bosch,d_can";
-> +		dcan0: can@481cc000 {
-> +			compatible =3D "ti,am3352-d_can";
->  			ti,hwmods =3D "d_can0";
-> -			reg =3D <0x481cc000 0x2000
-> -				0x44e10644 0x4>;
-> +			reg =3D <0x481cc000 0x2000>;
-> +			clocks =3D <&dcan0_fck>;
-> +			clock-names =3D "fck";
-> +			syscon-raminit =3D <&am33xx_control_module 0x644 0>;
+Rob
 
-Yeah, I missed to write the mail that I disagreed with the "dcan_0/1"
-compatible-properties of V3. The second parameter to syscon here is much
-better!
-
-Acked-by: Wolfram Sang <wsa@the-dreams.de>
-
-
---6c2NcOVqGQ03X4Wi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUZNZlAAoJEBQN5MwUoCm2pEUP/1mgDo7Nxbw/Cj8EyNr3kMaC
-6CEIQFZ2W7TgMGZuGzRd7qpIepHPM5NHiqqsgKOOLyFsuCQUXCE64padMFdcQ28S
-DQQ7DVbbOAZfPVctZ9wqcyD45HvYxg3DGtg+Dfo0/+zHMKYGgmbwdXMOsS1NRapw
-aQ2dQemYlsOZN8RX7nLeKo7XbGv+6RgVWxNTtT3pOfW9xKjdD5MGfJVELV3A7SP3
-wn1STeoGDoyH9QvL//5Lb+iuAmwRPm4px8YcVQM0b/KgutyFHiOSrQITZVetIcyG
-czmks5gjyASvSJCoi1V1fQpcT/jm7rkqgateu56vVzLzj789XCj9hjb7qkGvMk8t
-Me8Rt5EnwSh92zKgksnQm7ztVAmIWq/qaaj1MkrZ8IPb14OZ0ZJ5T1X+7Ow5O3Ua
-83xSc/r8FgQEqyVyM4ZvFo6A3HZt17yRwkwnivOy7koeVRp2jLMwxi0zMTLgDdkH
-IqYxrreSBpqiWKjpJC8D7RLP7yz24zDOIjoEXZwyRfZolJKU32mWkxP8dNSQbups
-p/w+vU/BrjiAxIVPcnm3h+V9szrPxzJaMveR98lgDB6SDrWsPmSEClyxFiUv332t
-0Rkh25gCvAQ+x26Fa8VnGaGDDpmm/4VNjYhiufI6Riho8oxSO0833jFRzioosSNe
-CcE9e1cfaHrLGEb80KL9
-=2YPi
------END PGP SIGNATURE-----
-
---6c2NcOVqGQ03X4Wi--
+>
+>> >
+>> > v2:
+>> > - emphasize that the property must be present and unique systemwide
+>> >   if used
+>> > ---
+>> >  Documentation/devicetree/bindings/pci/pci.txt | 11 +++++++++++
+>> >  1 file changed, 11 insertions(+)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
+>> > index 41aeed38926d..68c364e2f5e5 100644
+>> > --- a/Documentation/devicetree/bindings/pci/pci.txt
+>> > +++ b/Documentation/devicetree/bindings/pci/pci.txt
+>> > @@ -7,3 +7,14 @@ And for the interrupt mapping part:
+>> >
+>> >  Open Firmware Recommended Practice: Interrupt Mapping
+>> >  http://www.openfirmware.org/1275/practice/imap/imap0_9d.pdf
+>> > +
+>> > +Additionally to the properties specified in the above standards a host bridge
+>> > +driver implementation may support the following properties:
+>> > +
+>> > +- linux,pci-domain:
+>> > +   If present this property assigns a fixed PCI domain number to a host bridge,
+>> > +   otherwise an unstable (across boots) unique number will be assigned.
+>> > +   It is required to either not set this property at all or set it for all
+>> > +   host bridges in the system, otherwise potentially conflicting domain numbers
+>> > +   may be assigned to root buses behind different host bridges. The domain
+>> > +   number for each host bridge in the system must be unique.
+>> > --
+>> > 2.1.1
+>> >
+>
+> --
+> Pengutronix e.K.             | Lucas Stach                 |
+> Industrial Linux Solutions   | http://www.pengutronix.de/  |
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
