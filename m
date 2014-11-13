@@ -1,91 +1,107 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of/base: Fix PowerPC address parsing hack
-Date: Thu, 13 Nov 2014 12:44:19 +0000
-Message-ID: <CACxGe6s0CXL2oRKCLhzzycOKWJStxdZsc1pn_X8fLuAqCguBMA@mail.gmail.com>
-References: <1415771461.5124.33.camel@kernel.crashing.org> <20141113091036.4e9ec43d@canb.auug.org.au>
- <1415833725.5124.53.camel@kernel.crashing.org> <1415839522.5124.58.camel@kernel.crashing.org>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH v9 0/9] dw-hdmi: convert imx hdmi to bridge/dw_hdmi
+Date: Thu, 13 Nov 2014 20:52:21 +0800
+Message-ID: <1415883141-3330-1-git-send-email-andy.yan@rock-chips.com>
+References: <1415793593-5075-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415839522.5124.58.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linuxppc-dev <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1415793593-5075-1-git-send-email-andy.yan@rock-chips.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
+Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, mark.yao@rock-chips.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Andy yan <andy.yan@rock-chips.com>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 13, 2014 at 12:45 AM, Benjamin Herrenschmidt
-<benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
-> What about this one instead ? I want to cache it because that function
-> can be called quite a while and doing two additional property lookup
-> and string compares every time might hurt some platforms.
->
-> ----
->
-> We have a historical hack that treats missing ranges properties as the
-> equivalent of an empty one. This is needed for ancient PowerMac "bad"
-> device-trees, and shouldn't be enabled for any other PowerPC platform,
-> otherwise we get some nasty layout of devices in sysfs or even
-> duplication when a set of otherwise identically named devices is
-> created multiple times under a different parent node with no ranges
-> property.
->
-> This fix is needed for the PowerNV i2c busses to be exposed properly
-> and will fix a number of other embedded cases.
->
-> Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> CC: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 
-How far back does this need to go? I assume I need to get this in for v3.18.
+We found Freescale imx6 and Rockchip rk3288 and Ingenic JZ4780 (Xburst/MIPS)
+use the interface compatible Designware HDMI IP, but they also have some
+lightly differences, such as phy pll configuration, register width(imx hdmi
+register is one byte, but rk3288 is 4 bytes width and can only be accessed
+by word), 4K support(imx6 doesn't support 4k, but rk3288 does), and HDMI2.0
+support.
 
->
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index e371825..5eae0cd 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -403,6 +403,17 @@ static struct of_bus *of_match_bus(struct device_node *np)
->         return NULL;
->  }
->
-> +static int of_empty_ranges_quirk(void)
-> +{
-> +       /* To save cycles, we cache the result */
-> +       static int quirk_state = -1;
-> +
+To reuse the imx-hdmi driver, we make this patch set:
+(1): fix some CodingStyle warning to make checkpatch happy
+(2): split out imx-soc code from imx-hdmi to dw_hdmi-imx.c
+(3): move imx-hdmi to bridge/dw-hdmi, and convert it to a drm_bridge driver
+(4): add rockchip rk3288 platform specific code dw_hdmi-rockchip.c
 
-if (IS_ENABLED(CONFIG_POWERPC)) {
+Changes in v9:
+- move some phy configuration to platform driver
 
-> +       if (quirk_state < 0)
-> +               quirk_state = of_machine_is_compatible("Power Macintosh") ||
-> +                       of_machine_is_compatible("MacRISC");
-> +       return quirk_state;
+Changes in v8:
+- correct some spelling mistake
+- modify ddc-i2c-bus and interrupt description
+- Add documentation for rockchip dw hdmi
+- add support for rockchip rk3288 hdmi
 
-}
-return 0;
+Changes in v7:
+- remove unused variables from structure dw_hdmi
+- remove a wrong modification
+- add copyrights for dw_hdmi-imx.c
 
-So it gets compiled out for non powerpc.
+Changes in v6:
+- rearrange the patch order
+- move some modification to  patch#6
+- refactor register access without reg_shift
+- move some modification from patch#5
 
-> +}
-> +
->  static int of_translate_one(struct device_node *parent, struct of_bus *bus,
->                             struct of_bus *pbus, __be32 *addr,
->                             int na, int ns, int pna, const char *rprop)
-> @@ -428,12 +439,10 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
->          * This code is only enabled on powerpc. --gcl
->          */
->         ranges = of_get_property(parent, rprop, &rlen);
-> -#if !defined(CONFIG_PPC)
-> -       if (ranges == NULL) {
-> +       if (ranges == NULL && !of_empty_ranges_quirk()) {
->                 pr_err("OF: no ranges; cannot translate\n");
->                 return 1;
->         }
-> -#endif /* !defined(CONFIG_PPC) */
->         if (ranges == NULL || rlen == 0) {
->                 offset = of_read_number(addr, na);
->                 memset(addr, 0, pna * 4);
->
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes in v5:
+- refactor reg-io-width
+
+Changes in v4:
+- fix checkpatch CHECK
+- defer probe ddc i2c adapter
+
+Changes in v3:
+- split multi register access to one indepent patch
+
+Changes in v2:
+- use git format -M to generate these patch
+
+Andy Yan (8):
+  staging: imx-drm: imx-hdmi: make checkpatch happy
+  staging: imx-drm: imx-hdmi: return defer if can't get ddc i2c adapter
+  staging: imx-drm: imx-hdmi: split imx soc specific code from imx-hdmi
+  staging: imx-drm: imx-hdmi: move imx-hdmi to bridge/dw_hdmi
+  dt-bindings: add document for dw_hdmi
+  drm: bridge/dw_hdmi: add support for multi byte register width access
+  dt-bindings: Add documentation for rockchip dw hdmi
+  drm: bridge/dw_hdmi: add rockchip rk3288 support
+
+Yakir Yang (1):
+  drm: bridge/dw_hdmi: convert dw-hdmi to drm_bridge mode
+
+ .../devicetree/bindings/drm/bridge/dw_hdmi.txt     |  40 ++
+ .../devicetree/bindings/video/dw_hdmi-rockchip.txt |  43 ++
+ drivers/gpu/drm/bridge/Kconfig                     |   5 +
+ drivers/gpu/drm/bridge/Makefile                    |   1 +
+ .../imx-hdmi.c => gpu/drm/bridge/dw_hdmi.c}        | 762 +++++++++------------
+ .../imx-hdmi.h => gpu/drm/bridge/dw_hdmi.h}        |   8 +-
+ drivers/gpu/drm/rockchip/Kconfig                   |  10 +
+ drivers/gpu/drm/rockchip/Makefile                  |   2 +-
+ drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c        | 328 +++++++++
+ drivers/staging/imx-drm/Kconfig                    |   1 +
+ drivers/staging/imx-drm/Makefile                   |   2 +-
+ drivers/staging/imx-drm/dw_hdmi-imx.c              | 274 ++++++++
+ include/drm/bridge/dw_hdmi.h                       |  60 ++
+ 13 files changed, 1111 insertions(+), 425 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt
+ create mode 100644 Documentation/devicetree/bindings/video/dw_hdmi-rockchip.txt
+ rename drivers/{staging/imx-drm/imx-hdmi.c => gpu/drm/bridge/dw_hdmi.c} (70%)
+ rename drivers/{staging/imx-drm/imx-hdmi.h => gpu/drm/bridge/dw_hdmi.h} (99%)
+ create mode 100644 drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+ create mode 100644 drivers/staging/imx-drm/dw_hdmi-imx.c
+ create mode 100644 include/drm/bridge/dw_hdmi.h
+
+-- 
+1.9.1
