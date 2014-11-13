@@ -1,98 +1,82 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH v4 06/10] ARM: dts: am4372: Add DCAN nodes
-Date: Thu, 13 Nov 2014 15:54:01 +0100
-Message-ID: <5464C609.9070800@pengutronix.de>
-References: <1415881371-4982-1-git-send-email-rogerq@ti.com> <1415881371-4982-7-git-send-email-rogerq@ti.com> <5464BB38.7020402@pengutronix.de> <5464C2C4.2070907@ti.com> <5464C3B1.2030908@pengutronix.de> <5464C4E8.9060103@ti.com>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 13/14] ARM: STi: DT: STiH410: Add usb2 picophy dt nodes
+Date: Thu, 13 Nov 2014 14:54:19 +0000
+Message-ID: <20141113145419.GA30296@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1415876417-28728-1-git-send-email-peter.griffin@linaro.org>
+ <1415876417-28728-14-git-send-email-peter.griffin@linaro.org>
+ <3348806.YN8XP4V4uc@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="VaQqdm9EkN0XFQ0KWMpWIUPLrg0DTF7P3"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <5464C4E8.9060103@ti.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, tony@atomide.com
-Cc: wg@grandegger.com, wsa@the-dreams.de, mugunthanvnm@ti.com, george.cherian@ti.com, balbi@ti.com, nsekhar@ti.comnm@ti.com, sergei.shtylyov@cogentembedded.com, linux-omap@vger.kernel.org, linux-can@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <3348806.YN8XP4V4uc@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---VaQqdm9EkN0XFQ0KWMpWIUPLrg0DTF7P3
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Hi Arnd,
 
-On 11/13/2014 03:49 PM, Roger Quadros wrote:
-> On 11/13/2014 04:44 PM, Marc Kleine-Budde wrote:
->> On 11/13/2014 03:40 PM, Roger Quadros wrote:
->>> On 11/13/2014 04:07 PM, Marc Kleine-Budde wrote:
->>>> On 11/13/2014 01:22 PM, Roger Quadros wrote:
->>>>> The SoC contains 2 DCAN modules. Add them.
->>>>>
->>>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>>>> ---
->>>>>  arch/arm/boot/dts/am4372.dtsi | 22 ++++++++++++++++++++++
->>>>>  1 file changed, 22 insertions(+)
->>>>>
->>>>> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am43=
-72.dtsi
->>>>> index 899c57c..12fb1db 100644
->>>>> --- a/arch/arm/boot/dts/am4372.dtsi
->>>>> +++ b/arch/arm/boot/dts/am4372.dtsi
->>>>> @@ -901,6 +901,28 @@
->>>>>  			compatible =3D "mmio-sram";
->>>>>  			reg =3D <0x40300000 0x40000>; /* 256k */
->>>>>  		};
->>>>> +
->>>>> +		dcan0: can@481cc000 {
->>>>> +			compatible =3D "ti,am3352-d_can";
->>>>
->>>> You should add "ti,am4372-d_can" as first compatible here.
->>>>
->>> We don't have a separate compatible id for am4372-d_can
->>> as it the IP exactly same as am3352-d_can.
->>
->> Having the "ti,am4372-d_can" compatible gives you the freedom to add
->> some spacial handling for the IP if there turns that you need to witho=
-ut
->> needing to modify the device tree. (We do this on imx.)
->=20
-> Agreed. On OMAP platforms we don't add new compatible IDs unless we rea=
-lly need to.
-> Can we add "ti,am4372-d_can" even if it is not mentioned in Documentati=
-on/devicetree/bindings?
->=20
-> Tony what is your preference?
+Thanks for reviewing.
 
-I don't insist, do it the Omap way :)
+On Thu, 13 Nov 2014, Arnd Bergmann wrote:
 
-Marc
+> On Thursday 13 November 2014 11:00:16 Peter Griffin wrote:
+> > +       soc {
+> > +               usb2_picophy0: usbpicophy@0 {
+> > +                       compatible = "st,stih407-usb2-phy";
+> > +                       reg = <0xf8 0x04>,      /* syscfg 5062 */
+> > +                             <0xf4 0x04>;      /* syscfg 5061 */
+> > 
+> 
+> I think the node name for the phy should be "phy@f8" instead of usbpicophy@0
+> by common convention. I notice that there are some existing instances of
+> this, you can probably change them as well. Linux doesn't normally care
+> about the node names.
 
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+Ok will fix in v3
+
+> 
+> It also seems that you have put the node in the wrong place, as the reg
+> property apparently refers to a different address space. Did you mean
+> to put this under the syscfg_core node?
+
+Your correct in that it refers to the syscfg_core address space.
+However I intentionaly didn't put it under the syscfg_core node.
+
+The phy is more unique than most other devices in that in this instance it
+is only controlled from two syscfg_core registers which happen to be in the same
+sysconf bank.
+
+However most other devices tend to have a combination of some memory mapped
+registers and also some sysconfig registers which does then create a conflict
+over where the dt node should live.
+
+Currently I can't find an example but there is also no guarentee that a
+device will not have some configuration bits in syscfg_core and some
+other bits in syscfg_rear/front registers. The phy for example could
+have had one register in each, which would make deciding where to put
+it difficult.
+
+So to create coherency / conformity we decided to put all the IP blocks under the soc node.
+
+Also its worth pointing if your not already aware that sysconf_core/rear/front isn't
+really a device, it's just a regmap abstraction of some memory mapped configuration
+registers where a bunch of seemingly random control bits get stuffed.
+
+Of course if you feel strongly about it I can of course change it like you suggested,
+but that is the reasoning / rationale of why it was done like this initially.
+
+regards,
+
+Peter.
 
 
---VaQqdm9EkN0XFQ0KWMpWIUPLrg0DTF7P3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iQIcBAEBAgAGBQJUZMYJAAoJECte4hHFiupULt0P/iN9oUkk8L3BiQNanfOo/eC3
-PKlk+6NLwjeLD7oEDmAI1r4eF3TkXyAkOSO7UWKB3tE8d0CmG0O1aYBFzMCz+kmN
-++Lg6VbWIAX4fWLgXC2VRRaMdcUlxIukTsV1hFJz+pwGKIZ219jR8EAKrGP1G5LL
-tQDN99T1L9soBGHXnC/1KPH3sjCY6F/yYXB9P+XDL9BIURbMdIxjuXoYwFmZLRTZ
-CuezlA/QSfuyLqxRQIxEPoDSD+YY7jnUiVy1fISNhGM5zB2mNbggiHNsrUD4FLZi
-yuYimbpDL03PuknywH1KK8ucHZZSDh5ihtTnNDqXggIAtgEZuXUHu1lLiUcaVkLk
-rqCdrFc/bDcFSC9VeUAiRlcdpHjwnTMx7xIa7iwEjZvmsUyYZAq0t4PX/ZEkZNSG
-t5R1R0tmY+EzuE3nrFl0hWOWoAZXUA/tqy+3rXbuCevKpZkrVkcd6a2bdtsEF29N
-K8lQNXaKWuhVRBFUZmql39PXBdgfMS3l6PMEDmVm+WaD74kZ8NGbjhdMN6MPouZ1
-Ex3oTgr6hMNnrCN2TfidIJ5czBCONKYjzFBrPvxYQOr6RE4Bmp/ehuqIpa5wxS3r
-4/W/dKGU+c+DSTqHFxWY+wbcRPHmvcPkJum3Y+gMnceRa4dNHYKk2+VNzLvdgFAV
-R23ViXBlVysHznPDH0o2
-=uoSN
------END PGP SIGNATURE-----
 
---VaQqdm9EkN0XFQ0KWMpWIUPLrg0DTF7P3--
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
