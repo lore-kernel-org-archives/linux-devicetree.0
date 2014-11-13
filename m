@@ -1,84 +1,146 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v2 14/14] ARM: STi: DT: STiH410: Add DT nodes for the ehci and ohci usb controllers.
-Date: Thu, 13 Nov 2014 11:00:17 +0000
-Message-ID: <1415876417-28728-15-git-send-email-peter.griffin@linaro.org>
-References: <1415876417-28728-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415876417-28728-1-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, arnd@arndb.de
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: simplefb: Specify node
+ location and handoff related properties
+Date: Thu, 13 Nov 2014 11:02:14 +0000
+Message-ID: <CACxGe6uX7V-TcZfM0vP4SvjxKx3T_RGByX8wFqTdFo4LEzP2Yg@mail.gmail.com>
+References: <1415868610-13297-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCJP567ORICBBSU7SKRQKGQEZHSBTEQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1415868610-13297-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the DT nodes for the extra ehci and ohci usb controllers
-on the stih410 SoC.
+On Thu, Nov 13, 2014 at 8:50 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> Since simplefb nodes do not relate directly to hw typically they have been
+> placed in the root of the devicetree. As the represent runtime information
+> having them as sub-nodes of /chosen is more logical, specify this.
+>
+> Also specify when to set the chosen stdout-path property to a simplefb node.
+>
+> For reliable handover to a hardware specific driver, that driver needs to
+> know which simplefb to unregister when taking over, specify how the hw driver
+> can find the matching simplefb node.
+>
+> Last add some advice on how to fill and use simplefb nodes from a firmware
+> pov.
+>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Acked-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+> --
+> Changes in v2:
+> -Add stdout-path to the example code
+> ---
+>  .../bindings/video/simple-framebuffer.txt          | 38 +++++++++++++++++++++-
+>  1 file changed, 37 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer.txt b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+> index 8f35718..8b7ecf6 100644
+> --- a/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+> +++ b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+> @@ -4,6 +4,26 @@ A simple frame-buffer describes a frame-buffer setup by firmware or
+>  the bootloader, with the assumption that the display hardware has already
+>  been set up to scan out from the memory pointed to by the reg property.
+>
+> +Since simplefb nodes represent runtime information they must be sub-nodes of
+> +the chosen node (*). The primary display node must be named framebuffer0,
+> +additional nodes must be called framebuffer1, etc.
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
----
- arch/arm/boot/dts/stih410.dtsi | 52 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+Thinking more about our conversation yesterday, the preferred name
+should still be framebuffer@<address>. There is no reason to break
+with established convention, and as mentioned in my reply on patch #2,
+using the name is not the preferred way to identify a device node. So,
+my recommendation is to prefer the name "framebuffer@<addr>", but if
+it is inconvenient because the address isn't known, then
+"framebuffer#" is acceptable. Then use /aliases for actual enumeration
+which has the advantage of also working for framebuffers that aren't
+in /chosen.
 
-diff --git a/arch/arm/boot/dts/stih410.dtsi b/arch/arm/boot/dts/stih410.dtsi
-index 5ade3ed..3da08e5 100644
---- a/arch/arm/boot/dts/stih410.dtsi
-+++ b/arch/arm/boot/dts/stih410.dtsi
-@@ -34,5 +34,57 @@
- 				 <&picophyreset STIH407_PICOPHY1_RESET>;
- 			reset-names = "global", "port";
- 		};
-+
-+		ohci0: usb@9a03c00 {
-+			compatible = "st,st-ohci-300x";
-+			reg = <0x9a03c00 0x100>;
-+			interrupts = <GIC_SPI 180 IRQ_TYPE_NONE>;
-+			clocks = <&clk_s_c0_flexgen CLK_TX_ICN_DISP_0>;
-+			resets = <&powerdown STIH407_USB2_PORT0_POWERDOWN>,
-+				 <&softreset STIH407_USB2_PORT0_SOFTRESET>;
-+			reset-names = "power", "softreset";
-+			phys = <&usb2_picophy0>;
-+			phy-names = "usb";
-+		};
-+
-+		ehci0: usb@9a03e00 {
-+			compatible = "st,st-ehci-300x";
-+			reg = <0x9a03e00 0x100>;
-+			interrupts = <GIC_SPI 151 IRQ_TYPE_NONE>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_usb0>;
-+			clocks = <&clk_s_c0_flexgen CLK_TX_ICN_DISP_0>;
-+			resets = <&powerdown STIH407_USB2_PORT0_POWERDOWN>,
-+				 <&softreset STIH407_USB2_PORT0_SOFTRESET>;
-+			reset-names = "power", "softreset";
-+			phys = <&usb2_picophy0>;
-+			phy-names = "usb";
-+		};
-+
-+		ohci1: usb@9a83c00 {
-+			compatible = "st,st-ohci-300x";
-+			reg = <0x9a83c00 0x100>;
-+			interrupts = <GIC_SPI 181 IRQ_TYPE_NONE>;
-+			clocks = <&clk_s_c0_flexgen CLK_TX_ICN_DISP_0>;
-+			resets = <&powerdown STIH407_USB2_PORT1_POWERDOWN>,
-+				 <&softreset STIH407_USB2_PORT1_SOFTRESET>;
-+			reset-names = "power", "softreset";
-+			phys = <&usb2_picophy1>;
-+			phy-names = "usb";
-+		};
-+
-+		ehci1: usb@9a83e00 {
-+			compatible = "st,st-ehci-300x";
-+			reg = <0x9a83e00 0x100>;
-+			interrupts = <GIC_SPI 153 IRQ_TYPE_NONE>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_usb1>;
-+			clocks = <&clk_s_c0_flexgen CLK_TX_ICN_DISP_0>;
-+			resets = <&powerdown STIH407_USB2_PORT1_POWERDOWN>,
-+				 <&softreset STIH407_USB2_PORT1_SOFTRESET>;
-+			reset-names = "power", "softreset";
-+			phys = <&usb2_picophy1>;
-+			phy-names = "usb";
-+		};
- 	};
- };
--- 
-1.9.1
+> +
+> +If a simplefb node represents the preferred console for user interaction,
+> +then the chosen node's stdout-path property must point to it.
+> +
+> +If the devicetree contains nodes for the display hardware used by a simplefb,
+> +then one of the hw nodes must have a property called "framebuffer" pointing to
+> +the framebuffer# node in chosen, so that the operating system knows which
+> +simplefb to disable when handing over control to a driver for the real
+> +hardware. The bindings for the hw nodes must specify which node contains the
+> +framebuffer property.
+
+I've also been thinking about this. When we talked yesterday I said I
+didn't have a preference as to which direction the link between the
+framebuffer and the display hardware pointed. Thinking about it now,
+between the two nodes, the HW node is pretty much static, but the FB
+node is dynamic and in most scenarios will be enabled by firmware, and
+then disabled by the operating system. If the framebuffer property is
+in the HW node, then that means the firmware needs to modify two nodes
+to set up the linkage correctly. It needs to enable the framebuffer,
+and then add the link. If one of several possible FB nodes was enabled
+by the firmware, it need to modify the display controller node to
+match. And, when the framebuffer is disabled, the HW node is left with
+a dangling link that kexec won't necessarily know how to fix up.
+
+If instead the link goes the other way, as a property in the
+framebuffer node pointing to display controller, all of the
+functionality still stays the same, but the display controller node
+never needs to change when framebuffers are
+enabled/disabled/added/removed. Since the location and/or compatible
+value of framebuffers is always well known, (aside from the fact that
+the simplefb driver binds to them), we can have a single API that will
+return all the framebuffers associated to a given display controller
+node. The real HW driver will be able to use that to find its
+framebuffers and coordinate handover between them.
+
+g.
+
+> +
+> +It is advised that devicetree files contain pre-filled, disabled framebuffer#
+> +nodes, so that the firmware only needs to update the mode information and
+> +enable them. This way if e.g. later on support for more display clocks get
+> +added, the simplefb nodes will already contain this info and the firmware
+> +does not need to be updated.
+> +
+>  Required properties:
+>  - compatible: "simple-framebuffer"
+>  - reg: Should contain the location and size of the framebuffer memory.
+> @@ -22,11 +42,27 @@ Optional properties:
+>
+>  Example:
+>
+> -       framebuffer {
+> +chosen {
+> +       framebuffer0 {
+>                 compatible = "simple-framebuffer";
+>                 reg = <0x1d385000 (1600 * 1200 * 2)>;
+>                 width = <1600>;
+>                 height = <1200>;
+>                 stride = <(1600 * 2)>;
+>                 format = "r5g6b5";
+> +               clocks = <&ahb_gates 36>, <&ahb_gates 43>, <&ahb_gates 44>;
+>         };
+> +       stdout-path = &framebuffer0;
+> +};
+> +
+> +soc@01c00000 {
+> +       lcdc0: lcdc@1c0c000 {
+> +               compatible = "allwinner,sun4i-a10-lcdc";
+> +               framebuffer = <&framebuffer0>;
+> +       };
+> +};
+> +
+> +
+> +*) Older devicetree files may have a compatible = "simple-framebuffer" node
+> +in a different place, operating systems must first enumerate any framebuffer#
+> +nodes found under chosen and then check for other compatible nodes.
+> --
+> 2.1.0
+>
