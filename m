@@ -1,69 +1,43 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: vf-colibri: add USB regulators
-Date: Thu, 13 Nov 2014 09:23:59 +0800
-Message-ID: <20141113012358.GN2704@dragon>
-References: <1415106430-6271-1-git-send-email-stefan@agner.ch>
- <1415106430-6271-4-git-send-email-stefan@agner.ch>
- <20141111141228.GB2704@dragon>
- <0bb62bdfc866f75977d01070d228ed4c@agner.ch>
+From: Robin Gong <b38343@freescale.com>
+Subject: Re: [PATCH v4 0/3] add power off driver for i.mx6
+Date: Thu, 13 Nov 2014 10:10:08 +0800
+Message-ID: <20141113021007.GA30646@Robin-OptiPlex-780>
+References: <1415780439-29728-1-git-send-email-b38343@freescale.com>
+ <20141112105620.GM2704@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <0bb62bdfc866f75977d01070d228ed4c-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20141112105620.GM2704@dragon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, smoch@web.de
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 12, 2014 at 04:51:16PM +0100, Stefan Agner wrote:
-> >> diff --git a/arch/arm/boot/dts/vf-colibri.dtsi b/arch/arm/boot/dts/vf-colibri.dtsi
-> >> index 2371760..79ccfe2 100644
-> >> --- a/arch/arm/boot/dts/vf-colibri.dtsi
-> >> +++ b/arch/arm/boot/dts/vf-colibri.dtsi
-> >> @@ -163,5 +163,17 @@
-> >>  				VF610_PAD_PTD3__UART2_CTS		0x21a1
-> >>  			>;
-> >>  		};
-> >> +
-> >> +		pinctrl_usbh1_ext: gpio_usb_vbus {
-> >> +			fsl,pins = <
-> >> +				VF610_PAD_PTD4__GPIO_83			0x22ed
+Thanks, Shawn.
+On Wed, Nov 12, 2014 at 06:56:22PM +0800, Shawn Guo wrote:
+> On Wed, Nov 12, 2014 at 04:20:36PM +0800, Robin Gong wrote:
+> > Resend the patchset  with the latest MAINTAINERS
+> > Add simple power off driver for i.mx6, including:
+> > - add basic imx-snvs-poweroff driver in drivers/power/reset
+> > - add device node in all dts files of i.mx6.
+> > - enable in config file
 > > 
-> > We used to know the GPIO usage by looking for the phandle reference to
-> > the node.  But it doesn't work for VF610 case now.
+> > Change from v3:
+> > - disable poweroff driver in soc level dts and enable it in board level dts
+> > - replace 'EIO' with 'ENODEV' while of_iomap fail.
+> > Change from v2:
+> > - remove useless included head files
+> > - split device binding doc from dts patch
+> > - add description for the case that PMIC_ON_REQ not used as external power
+> >   control
 > > 
-> > I guess this is for usbh_vbus_reg usage?  It would be nice to have a
-> > comment telling the usage of the GPIO.
+> > Robin Gong (3):
+> >   ARM: dts: imx6: add pm_power_off support for i.mx6 chips
+> >   power: reset: imx-snvs-poweroff: add power off driver for i.mx6
+> >   ARM: configs: imx_v6_v7_defconfig: add power off driver
 > 
-> Yeah its true, its assign is not required for Vybird. However, we could
-> assign them anyway, it would even enforce correct pin setup from
-> Startup... This would then make a comment superfluous. What do you
-> think?
-
-I agree with the approach of assigning the phandle anyway.
-
+> I'm fine with the series.  But before I take the patches, I need an ACK
+> from DT folks on the bindings.
 > 
-> 
-> > 
-> >> +			>;
-> >> +		};
-> >> +
-> >> +		pinctrl_usbdev0_ext: gpio_usb_cdet {
-> >> +			fsl,pins = <
-> >> +				VF610_PAD_PTC29__GPIO_102		0x22ed
-> > 
-> > How is this one used?
-> 
-> This is not yet used. It is more or less the OTG-ID pin, but on 3.3V
-> level. We use that on the Colibri standard to switch between Host/Device
-> mode, however a driver which uses that GPIO is still outstanding. I can
-> also leave that away for now, if you prefer....
-
-Then let's add it when it's actually required.
-
-Shawn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Shawn
