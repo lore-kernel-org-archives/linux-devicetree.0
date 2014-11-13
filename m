@@ -1,177 +1,123 @@
-From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: dts: sama5d4: add DMA support
-Date: Thu, 13 Nov 2014 14:18:44 +0100
-Message-ID: <1415884724-11777-1-git-send-email-ludovic.desroches@atmel.com>
+From: Gyungoh Yoo <gyungoh@gmail.com>
+Subject: Re: [RESUBMIT PATCH v6 0/8] Add Skyworks SKY81452 device drivers
+Date: Thu, 13 Nov 2014 22:20:16 +0900
+Message-ID: <20141113132014.GB13117@linuxstudy.pe.kr>
+References: <1414393369-31583-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1414739322-12487-1-git-send-email-jack.yoo@skyworksinc.com>
+ <20141111111037.GW24004@x1>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141111111037.GW24004@x1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: sameo@linux.intel.com, jg1.han@samsung.com, cooloney@gmail.com, broonie@kernel.org, lgirdwood@gmail.com, jack.yoo@skyworksinc.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, heiko@sntech.de, jason@lakedaemon.net, shawn.guo@freescale.com, treding@nvidia.com, florian.vaussard@epfl.ch, trivial@kernel.org, linux@roeck-us.net, andrew@lunn.ch, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add DMA controllers and device configurations.
+On Tue, Nov 11, 2014 at 11:10:37AM +0000, Lee Jones wrote:
+> Gyungoh,
+>=20
+> You are still missing Acks for this set.  Can you please send it agai=
+n
+> with the Acks that you have collected thus far.
+>=20
+> Please do not send it in reply-to these others.  I would suggest neve=
+r
+> sending out the set again in reply-to a previous version, as things
+> get confusing real quick.
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
+I see. I didn't know that reply-to makes a confusing.
+I will resubmit the patch series.
 
- arch/arm/boot/dts/sama5d4.dtsi | 69 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+Thank you
 
-diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
-index 338dfd8..05e0526 100644
---- a/arch/arm/boot/dts/sama5d4.dtsi
-+++ b/arch/arm/boot/dts/sama5d4.dtsi
-@@ -45,6 +45,7 @@
- 
- #include "skeleton.dtsi"
- #include <dt-bindings/clock/at91.h>
-+#include <dt-bindings/dma/at91.h>
- #include <dt-bindings/pinctrl/at91.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/gpio/gpio.h>
-@@ -302,6 +303,15 @@
- 			#size-cells = <1>;
- 			ranges;
- 
-+			dma1: dma-controller@f0004000 {
-+				compatible = "atmel,sama5d4-dma";
-+				reg = <0xf0004000 0x200>;
-+				interrupts = <50 IRQ_TYPE_LEVEL_HIGH 0>;
-+				#dma-cells = <1>;
-+				clocks = <&dma1_clk>;
-+				clock-names = "dma_clk";
-+			};
-+
- 			ramc0: ramc@f0010000 {
- 				compatible = "atmel,sama5d3-ddramc";
- 				reg = <0xf0010000 0x200>;
-@@ -309,6 +319,15 @@
- 				clock-names = "ddrck", "mpddr";
- 			};
- 
-+			dma0: dma-controller@f0014000 {
-+				compatible = "atmel,sama5d4-dma";
-+				reg = <0xf0014000 0x200>;
-+				interrupts = <8 IRQ_TYPE_LEVEL_HIGH 0>;
-+				#dma-cells = <1>;
-+				clocks = <&dma0_clk>;
-+				clock-names = "dma_clk";
-+			};
-+
- 			pmc: pmc@f0018000 {
- 				compatible = "atmel,sama5d3-pmc";
- 				reg = <0xf0018000 0x120>;
-@@ -761,6 +780,10 @@
- 				compatible = "atmel,hsmci";
- 				reg = <0xf8000000 0x600>;
- 				interrupts = <35 IRQ_TYPE_LEVEL_HIGH 0>;
-+				dmas = <&dma1
-+					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-+					| AT91_XDMAC_DT_PERID(0))>;
-+				dma-names = "rxtx";
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_mmc0_clk_cmd_dat0 &pinctrl_mmc0_dat1_3>;
- 				status = "disabled";
-@@ -776,6 +799,13 @@
- 				compatible = "atmel,at91rm9200-spi";
- 				reg = <0xf8010000 0x100>;
- 				interrupts = <37 IRQ_TYPE_LEVEL_HIGH 3>;
-+				dmas = <&dma1
-+					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-+					| AT91_XDMAC_DT_PERID(10))>,
-+				       <&dma1
-+					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-+					| AT91_XDMAC_DT_PERID(11))>;
-+				dma-names = "tx", "rx";
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_spi0>;
- 				clocks = <&spi0_clk>;
-@@ -787,6 +817,13 @@
- 				compatible = "atmel,at91sam9x5-i2c";
- 				reg = <0xf8014000 0x4000>;
- 				interrupts = <32 IRQ_TYPE_LEVEL_HIGH 6>;
-+				dmas = <&dma1
-+					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-+					| AT91_XDMAC_DT_PERID(2))>,
-+				       <&dma1
-+					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-+					| AT91_XDMAC_DT_PERID(3))>;
-+				dma-names = "tx", "rx";
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_i2c0>;
- 				#address-cells = <1>;
-@@ -818,6 +855,13 @@
- 				compatible = "atmel,at91sam9x5-i2c";
- 				reg = <0xf8024000 0x4000>;
- 				interrupts = <34 IRQ_TYPE_LEVEL_HIGH 6>;
-+				dmas = <&dma1
-+					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-+					| AT91_XDMAC_DT_PERID(6))>,
-+				       <&dma1
-+					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-+					| AT91_XDMAC_DT_PERID(7))>;
-+				dma-names = "tx", "rx";
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_i2c2>;
- 				#address-cells = <1>;
-@@ -830,6 +874,10 @@
- 				compatible = "atmel,hsmci";
- 				reg = <0xfc000000 0x600>;
- 				interrupts = <36 IRQ_TYPE_LEVEL_HIGH 0>;
-+				dmas = <&dma1
-+					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-+					| AT91_XDMAC_DT_PERID(1))>;
-+				dma-names = "rxtx";
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_mmc1_clk_cmd_dat0 &pinctrl_mmc1_dat1_3>;
- 				status = "disabled";
-@@ -843,6 +891,13 @@
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xfc008000 0x100>;
- 				interrupts = <29 IRQ_TYPE_LEVEL_HIGH 5>;
-+				dmas = <&dma1
-+					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-+					| AT91_XDMAC_DT_PERID(16))>,
-+				       <&dma1
-+					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-+					| AT91_XDMAC_DT_PERID(17))>;
-+				dma-names = "tx", "rx";
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_usart2 &pinctrl_usart2_rts &pinctrl_usart2_cts>;
- 				clocks = <&usart2_clk>;
-@@ -854,6 +909,13 @@
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xfc00c000 0x100>;
- 				interrupts = <30 IRQ_TYPE_LEVEL_HIGH 5>;
-+				dmas = <&dma1
-+					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-+					| AT91_XDMAC_DT_PERID(18))>,
-+				       <&dma1
-+					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-+					| AT91_XDMAC_DT_PERID(19))>;
-+				dma-names = "tx", "rx";
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_usart3>;
- 				clocks = <&usart3_clk>;
-@@ -865,6 +927,13 @@
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xfc010000 0x100>;
- 				interrupts = <31 IRQ_TYPE_LEVEL_HIGH 5>;
-+				dmas = <&dma1
-+					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-+					| AT91_XDMAC_DT_PERID(20))>,
-+				       <&dma1
-+					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-+					| AT91_XDMAC_DT_PERID(21))>;
-+				dma-names = "tx", "rx";
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_usart4>;
- 				clocks = <&usart4_clk>;
--- 
-2.0.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+> > From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
+> >=20
+> > This patch set includes regulator and backlight driver for SKY81452=
+=2E
+> > Also it includes documents for device tree and module.
+> > The initial version of sky81452-regulator was applied. Fo this, inc=
+remental
+> > patches are included.
+> >=20
+> > v6:
+> > Added new line character at the end of line of dev_err()
+> >=20
+> > v5:
+> > Changed DT for regulator : 'lout' node should be defined under 'reg=
+ulator'
+> > Removed compatible string from sky81452-regulator driver
+> > Modified sky81452-regulator to return EINVAL when of_node is NULL
+> > Move sky81452-backlight.h to include/linux/platform_data
+> >=20
+> > v4:
+> > Removed MODULE_VERSION()
+> > Modified license to GPLv2
+> > Removed calling to backlight_device_unregister() in sky81452-backli=
+ght
+> >=20
+> > v3:
+> > Cleaned-up DBG messages
+> > Cleaned-up DT
+> > Fixed the backlight name from 'sky81452-bl' to 'sky81452-backlight'
+> > Assigned mfd_cell.of_compatible for binding device node
+> > Modified error messages
+> > Modified sky81452-regulator to return ENODATA when of_node is NULL
+> >=20
+> > v2:
+> > Split the patches for each sub-system
+> > Added 'reg' attribute for I2C address in device tree documents
+> > Added 'compatible' attribute in child drivers
+> > Renamed CONFIG_SKY81452 to CONFIG_MFD_SKY81452
+> > Changed the dependency from I2C=3Dy to I2C, for CONFIG_MFD_SKY81452
+> > Added message for exception or errors.
+> > Added vendor prefix for Skyworks Solutions, Inc.
+> > Add SKY81452 to the Trivial Devices list
+> >=20
+> > Gyungoh Yoo (8):
+> >   mfd: Add support for Skyworks SKY81452 driver
+> >   backlight: Add support Skyworks SKY81452 backlight driver
+> >   devicetree: mfd: Add new SKY81452 mfd binding
+> >   devicetree: backlight: Add new SKY81452 backlight binding
+> >   devicetree: Add vendor prefix for Skyworks Solutions, Inc.
+> >   devicetree: i2c: Add SKY81452 to the Trivial Devices list
+> >   regulator: sky81452: Add compatible string for device binding
+> >   devicetree: regulator: sky81452: Add compatible string for device
+> >     binding
+> >=20
+> >  .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
+> >  Documentation/devicetree/bindings/mfd/sky81452.txt |  33 ++
+> >  .../bindings/regulator/sky81452-regulator.txt      |  10 +-
+> >  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+> >  .../video/backlight/sky81452-backlight.txt         |  24 ++
+> >  drivers/mfd/Kconfig                                |  12 +
+> >  drivers/mfd/Makefile                               |   1 +
+> >  drivers/mfd/sky81452.c                             | 109 +++++++
+> >  drivers/regulator/Kconfig                          |   2 +-
+> >  drivers/regulator/sky81452-regulator.c             |  29 +-
+> >  drivers/video/backlight/Kconfig                    |  10 +
+> >  drivers/video/backlight/Makefile                   |   1 +
+> >  drivers/video/backlight/sky81452-backlight.c       | 345 +++++++++=
+++++++++++++
+> >  include/linux/mfd/sky81452.h                       |  32 ++
+> >  include/linux/platform_data/sky81452-backlight.h   |  47 +++
+> >  15 files changed, 642 insertions(+), 15 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/sky81452.=
+txt
+> >  create mode 100644 Documentation/devicetree/bindings/video/backlig=
+ht/sky81452-backlight.txt
+> >  create mode 100644 drivers/mfd/sky81452.c
+> >  create mode 100644 drivers/video/backlight/sky81452-backlight.c
+> >  create mode 100644 include/linux/mfd/sky81452.h
+> >  create mode 100644 include/linux/platform_data/sky81452-backlight.=
+h
+> >=20
+>=20
+> --=20
+> Lee Jones
+> Linaro STMicroelectronics Landing Team Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
