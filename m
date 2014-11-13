@@ -1,71 +1,61 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 10/17] ARM: mvebu: implement suspend/resume support for
- Armada XP
-Date: Thu, 13 Nov 2014 18:00:35 +0100
-Message-ID: <20141113180035.774d8f9d@free-electrons.com>
-References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1414151970-6626-11-git-send-email-thomas.petazzoni@free-electrons.com>
-	<5458A3CE.70900@free-electrons.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2] PCI: add missing DT binding for linux,pci-domain
+ property
+Date: Thu, 13 Nov 2014 10:09:21 -0700
+Message-ID: <20141113170921.GG5064@google.com>
+References: <1415287400-30426-1-git-send-email-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5458A3CE.70900-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1415287400-30426-1-git-send-email-l.stach@pengutronix.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Liviu Dudau <Liviu.Dudau@arm.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Dear Gregory CLEMENT,
-
-On Tue, 04 Nov 2014 11:00:46 +0100, Gregory CLEMENT wrote:
-
-> > +static int mvebu_pm_enter(suspend_state_t state)
-> > +{
-> > +	if (state != PM_SUSPEND_MEM)
-> > +		return -EINVAL;
-> > +
-> > +	cpu_pm_enter();
-> > +	cpu_cluster_pm_enter();
+On Thu, Nov 06, 2014 at 04:23:20PM +0100, Lucas Stach wrote:
+> This property was added by 41e5c0f81d3e
+> (of/pci: Add pci_get_new_domain_nr() and of_get_pci_domain_nr())
+> without the required binding documentation. As this property
+> will be supported by a number of host bridge drivers going forward,
+> add it to the common PCI binding doc.
 > 
-> Why do you use this function?
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+
+Applied with acks from Liviu and Rob to for-linus for v3.18, thanks a lot
+for working this out!
+
+> ---
+> This is a non-critical fix, but may still qualify for 3.18-rc as
+> the property was added in this release cycle.
 > 
-> It notifies the listeners with CPU_CLUSTER_PM_ENTER but currently only omap2
-> and the gic are waiting for it.
+> v2:
+> - emphasize that the property must be present and unique systemwide
+>   if used
+> ---
+>  Documentation/devicetree/bindings/pci/pci.txt | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 > 
-> Do you already plan to be compatible with the cortex A9 based mvebu SoC?
-
-Indeed, using cpu_cluster_pm_enter() is not necessary for the moment,
-it was just a stupid copy and paste from the PM code for other SoCs.
-
-Support for the Cortex A9 based mvebu SoCs is indeed planned at some
-point, but for the moment I don't know how much PM code will be shared,
-and it will anyway be time to re-add these cpu_cluster_pm_enter and
-cpu_cluster_pm_exit calls, so for now I removed them.
-
-> By the way the gic doesn't use the suspend and resume operation from syscore_ops
-> but the notification. Is there any particular reason for using
-> syscore_ops in the irq-armada-370-xp driver?
-
-Well, the syscore_ops strategy was already used in irq-metag-ext,
-irq-vic and irq-sirfsoc, while the notifier-based strategy is only used
-by irq-gic. Plus I'm using the syscore_ops strategy in all other core
-drivers (clock, mvebu-mbus, etc.), so to me it makes sense to use the
-same strategy in the irqchip driver, especially if other irqchip
-drivers are doing the same thing.
-
-Though this is definitely not a very strong opinion, and if the irqchip
-maintainers would like to see the notifier-based strategy used here,
-I'd do the change without a problem.
-
-Thanks for your comments!
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
+> index 41aeed38926d..68c364e2f5e5 100644
+> --- a/Documentation/devicetree/bindings/pci/pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/pci.txt
+> @@ -7,3 +7,14 @@ And for the interrupt mapping part:
+>  
+>  Open Firmware Recommended Practice: Interrupt Mapping
+>  http://www.openfirmware.org/1275/practice/imap/imap0_9d.pdf
+> +
+> +Additionally to the properties specified in the above standards a host bridge
+> +driver implementation may support the following properties:
+> +
+> +- linux,pci-domain:
+> +   If present this property assigns a fixed PCI domain number to a host bridge,
+> +   otherwise an unstable (across boots) unique number will be assigned.
+> +   It is required to either not set this property at all or set it for all
+> +   host bridges in the system, otherwise potentially conflicting domain numbers
+> +   may be assigned to root buses behind different host bridges. The domain
+> +   number for each host bridge in the system must be unique.
+> -- 
+> 2.1.1
+> 
