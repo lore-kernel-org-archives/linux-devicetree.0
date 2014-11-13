@@ -1,170 +1,63 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] DT: add MDIO node for FMan node
-Date: Thu, 13 Nov 2014 02:29:07 -0600
-Message-ID: <1415867347.15957.60.camel@freescale.com>
-References: <1415102196-9238-1-git-send-email-shh.xie@gmail.com>
-	 <1415665384.15957.16.camel@freescale.com>
-	 <fb6dc6131da04e89bfc31bd8278030a0@DM2PR0301MB0864.namprd03.prod.outlook.com>
-	 <1415727479.15957.29.camel@freescale.com>
-	 <c4dd11a97a684be8b799c2f639e600ca@DM2PR0301MB0864.namprd03.prod.outlook.com>
-	 <1415859399.15957.48.camel@freescale.com>
-	 <59c6a8b7ad1d477aad9edd2152d02f8e@DM2PR0301MB0864.namprd03.prod.outlook.com>
-	 <1415862913.15957.56.camel@freescale.com>
-	 <489ad06fda99436eb3307d613b1f8293@DM2PR0301MB0864.namprd03.prod.outlook.com>
-	 <1415865867.15957.58.camel@freescale.com>
-	 <b7e76a785be4439bb1f69dc611703e1d@DM2PR0301MB0864.namprd03.prod.outlook.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 2/4] simplefb: Add support for enumerating
+ simplefb dt nodes in /chosen
+Date: Thu, 13 Nov 2014 09:34:07 +0100
+Message-ID: <CAMuHMdVSfYyHc52Tdu_wzb6ZYPzeZtOzweUwADHxiJLypuBQNw@mail.gmail.com>
+References: <1415830124-28787-1-git-send-email-hdegoede@redhat.com>
+	<1415830124-28787-2-git-send-email-hdegoede@redhat.com>
+	<CAGRGNgW_Q6oghpe5Mw-8aYPVVj1YZ6R3iaqOQzCE9dSD1nYSyA@mail.gmail.com>
+	<54646B5B.1070604@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b7e76a785be4439bb1f69dc611703e1d-Cwg/PA1lyPnq20u2fDgSrZwN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xie Shaohui-B21989 <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Liberman Igal-B31950 <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Medve Emilian-EMMEDVE1 <Emilian.Medve-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCQJP74GSUDRB76ZSGRQKGQEZVMF2XY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <54646B5B.1070604-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2014-11-13 at 02:27 -0600, Xie Shaohui-B21989 wrote:
-> 
-> 
-> Best Regards, 
-> Shaohui Xie
-> 
-> 
-> > -----Original Message-----
-> > From: Wood Scott-B07421
-> > Sent: Thursday, November 13, 2014 4:04 PM
-> > To: Xie Shaohui-B21989
-> > Cc: Liberman Igal-B31950; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org;
-> > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Medve Emilian-EMMEDVE1
-> > Subject: Re: [PATCH] DT: add MDIO node for FMan node
-> > 
-> > On Thu, 2014-11-13 at 02:02 -0600, Xie Shaohui-B21989 wrote:
-> > >
-> > >
-> > > Best Regards,
-> > > Shaohui Xie
-> > >
-> > >
-> > > > -----Original Message-----
-> > > > From: Wood Scott-B07421
-> > > > Sent: Thursday, November 13, 2014 3:15 PM
-> > > > To: Xie Shaohui-B21989
-> > > > Cc: Liberman Igal-B31950; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org;
-> > > > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Medve Emilian-EMMEDVE1
-> > > > Subject: Re: [PATCH] DT: add MDIO node for FMan node
-> > > >
-> > > > On Thu, 2014-11-13 at 01:11 -0600, Xie Shaohui-B21989 wrote:
-> > > > > > -----Original Message-----
-> > > > > > From: Wood Scott-B07421
-> > > > > > Sent: Thursday, November 13, 2014 2:17 PM
-> > > > > > To: Xie Shaohui-B21989
-> > > > > > Cc: Liberman Igal-B31950; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org;
-> > > > > > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Medve Emilian-EMMEDVE1
-> > > > > > Subject: Re: [PATCH] DT: add MDIO node for FMan node
-> > > > > >
-> > > > > > On Wed, 2014-11-12 at 07:40 -0600, Xie Shaohui-B21989 wrote:
-> > > > > > > > -----Original Message-----
-> > > > > > > > From: Wood Scott-B07421
-> > > > > > > > Sent: Wednesday, November 12, 2014 1:38 AM
-> > > > > > > > To: Xie Shaohui-B21989
-> > > > > > > > Cc: Liberman Igal-B31950; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org;
-> > > > > > > > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Medve Emilian-EMMEDVE1
-> > > > > > > > Subject: Re: [PATCH] DT: add MDIO node for FMan node
-> > > > > > > >
-> > > > > > > > On Tue, 2014-11-11 at 04:32 -0600, Xie Shaohui-B21989 wrote:
-> > > > > > > > > > -----Original Message-----
-> > > > > > > > > > From: Wood Scott-B07421
-> > > > > > > > > > Sent: Tuesday, November 11, 2014 8:23 AM
-> > > > > > > > > > To: shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-> > > > > > > > > > Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org;
-> > > > > > > > > > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Medve Emilian-EMMEDVE1; Xie
-> > > > > > > > > > Shaohui-B21989
-> > > > > > > > > > Subject: Re: [PATCH] DT: add MDIO node for FMan node
-> > > > > > > > > >
-> > > > > > > > > > On Tue, 2014-11-04 at 19:56 +0800, shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-> > wrote:
-> > > > > > > > > > > From: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > > > > > > > > > >
-> > > > > > > > > > > This binding is for FMan MDIO, it covers FMan v2 & FMan
-> > v3.
-> > > > > > > > > > >
-> > > > > > > > > > > Signed-off-by: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > > > > > > > > > > ---
-> > > > > > > > > > > based on http://patchwork.ozlabs.org/patch/390351/
-> > > > > > > > > > > for 'next' of
-> > > > > > > > > > >
-> > > > git://git.kernel.org/pub/scm/linux/kernel/git/scottwood/linux.
-> > > > > > > > > > > git
-> > > > > > > > > >
-> > > > > > > > > > Are there any other FMan pieces that are missing from
-> > > > > > > > > > the above
-> > > > > > patch?
-> > > > > > > > > [S.H] I'm adding Igal for this comment.
-> > > > > > > > >
-> > > > > > > > > >
-> > > > > > > > > > > +- bus-frequency
-> > > > > > > > > > > +		Usage: optional
-> > > > > > > > > > > +		Value type: <u32>
-> > > > > > > > > > > +		Definition: Default MDIO bus clock speed.
-> > > > > > > > > >
-> > > > > > > > > > Use clocks/clock-names
-> > > > > > > > > [S.H] The MDIO uses Fman clock and divides it to a proper
-> > > > > > > > > value which
-> > > > > > > > is specified by this property.
-> > > > > > > >
-> > > > > > > > Use clocks/clock-names to describe that relationship.
-> > > > > > > >
-> > > > > > >
-> > > > > > > [S.H] The MDIO node is sub-node and embedded in Fman node, the
-> > > > > > > clocks/clock-names is provided by Fman node, should repeat
-> > > > > > > them in MDIO node? For the default MDIO bus clock speed, maybe
-> > > > > > > "clock-
-> > > > ranges"
-> > > > > > > should be used?
-> > > > > >
-> > > > > > It's a different clock.  You wouldn't be repeating.  If it's
-> > > > > > derived from the FMan clock, then maybe you don't need anything
-> > > > > > here (does the driver know what the divider is, or would that
-> > > > > > need to be specified in the device tree?), but no more
-> > > > > > clock-frequency/bus-
-> > > > frequency properties.
-> > > > > >
-> > > > > [S.H] The purpose here is to get a specific clock frequency,
-> > > > > driver to
-> > > > use it to calculate the divider.
-> > > > > Then the Fman clock can be divided to the frequency.
-> > > >
-> > > > Oh, so this is stating a desired frequency and not something that
-> > > > already exists?  What determines this frequency?  Is it based on
-> > > > board design, or just on the MDIO standard, etc?  I'm wondering if
-> > > > the device tree is the right place for it.
-> > > [S.H] Yes, a desired frequency which is different with MDIO standard.
-> > 
-> > I'm not sure what you mean by "different with".  Do you mean "different
-> > from"?  What does the standard say about frequency?
-> [S.H] The standard MDIO frequency is 2.5MHz.  But a different one is desired.
+Hi Hans,
 
-Why is a different frequency desired?
+On Thu, Nov 13, 2014 at 9:27 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>>> +       char name[16];
+>>> +       struct device_node *np;
+>>> +
+>>> +       ret = platform_driver_register(&simplefb_driver);
+>>> +       if (ret)
+>>> +               return ret;
+>>> +
+>>> +       for (i = 0; ; i++) {
+>>> +               snprintf(name, sizeof(name), "framebuffer%d", i);
+>>
+>> This smells like an infinite loop: we can be pretty sure that no
+>> hardware will ever exist with more than 9999 (I think?) framebuffers,
+>> however if that ever happens this'll loop until it runs out of RAM.
+>> Maybe add a suitably high limit to the for loop?
+>
+> The loop will stop as soon as there are no more framebuffer# nodes in chosen,
+> so the loop is only infinite if there are infinite nodes in the devicetree,
+> which would make the devicetree infinitely large, so this will never happen.
 
-> > 
-> > > The Fman clock and the divider determines this frequency.
-> > > Since Fman clock is different on different SoCs, so specify the
-> > > desired frequency, then to get the proper divider.
-> > 
-> > Why does the fman clock being different mean the mdio clock should be
-> > different?
-> [S.H] The mdio clock should be same, a different divider should be used 
-> to match the Fman clock to make sure the mdio clock kept same. So to specify
-> The desired mdio frequency, then to get proper divider.
+If there are 10000 frame buffers, the loop will continue beyond that,
+as the index will be truncated to 4 digits due to the size of name[].
+It will stop when (signed) i becomes negative, though ;-)
 
-What I'm trying to determine is why the MDIO frequency wouldn't always
-be the same, and thus could be hardcoded in the driver rather than in
-the device tree.
+One solution is to increase the size of name[], another to use kasprintf().
 
--Scott
+Gr{oetje,eeting}s,
 
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
