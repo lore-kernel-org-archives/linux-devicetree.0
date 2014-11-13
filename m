@@ -1,49 +1,83 @@
-From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] watchdog: ImgTec PDC Watchdog Timer Driver
-Date: Thu, 13 Nov 2014 13:26:41 +0000
-Message-ID: <5464B191.9020401@imgtec.com>
-References: <1415805483-26268-1-git-send-email-Naidu.Tellapati@imgtec.com>	<1415805483-26268-2-git-send-email-Naidu.Tellapati@imgtec.com> <CAL1qeaHt14p3cjk7hLx_E2qKdqR+qHne-BJmHvVrgBF-4AyU=A@mail.gmail.com> <89F3BC60EA3A0141B1F6C2A661D95E5E3F192BB4@hbmail01.hb.imgtec.org>
+From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v6 0/2] i2c: Imagination Technologies I2C adapter driver
+Date: Thu, 13 Nov 2014 10:25:09 -0300
+Message-ID: <1415885111-4138-1-git-send-email-ezequiel.garcia@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <89F3BC60EA3A0141B1F6C2A661D95E5E3F192BB4-C8yLA94LPOy3snIXRfWIHVBRoQTxkR7k@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <Ezequiel.Garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13/11/14 12:58, Jude Abraham wrote:
->>>  +/* timeout in seconds */
->>>  +#define PDC_WD_MIN_TIMEOUT             1
->>>  +#define PDC_WD_MAX_TIMEOUT             131072
->>> +#define PDC_WD_DEFAULT_TIMEOUT         64
->>>  +#define PDC_WD_DEFAULT_PRETIMEOUT      PDC_WD_MAX_TIMEOUT
->>>  +#define MIN_TIMEOUT_SHIFT              14  /* Clock rate 32768Hz=2^(14+1)*/
-> 
->> The input clock is not fixed at 32kHz.  I believe it can be configured to run at a different rate.
-> 
-> I think it is  a 32 Khz fixed clock to the block. We are speaking to my hardware team for confirmation.
-> We will address the review comment after receive feedback from  my hardware team.
+Changes from v5:
 
-It should ideally be 32KHz, but that doesn't mean it will be guaranteed
-to be. The input clock rate is still dependent on the SoC clock setup to
-provide the clock, and that can usually be reconfigured i.e. from a
-dedicated external oscillator on the board if provided (hopefully
-providing the right frequency), or derived from a shared oscillator of
-some other frequency.
+  * Checked the return value of wait_for_completion_timeout
 
-For TZ1090 SoC with this IP block, powering down the rest of the SoC
-happened to reset the low power clock configuration and it would switch
-clock source to the main oscillator with a fixed divide, which certainly
-wasn't 32khz most of the time. Each of the low power drivers had to then
-take this into account in their configuration (img-ir for IR timings,
-wdt to a lesser extent, and most importantly rtc so as not to lose time
-or wake up at the wrong time!).
+  * Removed the bus-delay devicetree parameter. After reviewing this logic
+    in detail, we found a bug in the formulae involving the bus delay. Moreover,
+    this parameter is not used by any product in the wild.
 
-Cheers
-James
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+  * Use clk_prepare_enable/clk_disable_unprepare in the resume/suspend hooks.
+
+Changes from v4:
+
+  * Fixed the MODULE_LICENSE to "GPL v2", as per the comment at the top of
+    the driver.
+
+Changes from v3:
+
+  * Checked for the return value of clk_enable and clk_prepare_enable calls.
+
+Changes from v2:
+
+  * Removed support for the "linux,i2c-index" devicetree property.
+
+Changes from v1:
+
+  * Cleaned-up the clock filter configuration by adding some macros.
+
+  * Dropped the ISR_ATOMIC macro since it wasn't used anywhere and
+    instead just return 0.
+
+  * Rename some functions with the img_i2c_ prefix to follow the rest
+    of the driver style.
+
+  * Make img_i2c_{readl,writel} receive a struct img_i2c argument,
+    instead of the register base.
+
+  * Removed a duplicated flag in INT_ENABLE_MASK_ATOMIC macro definition.
+
+  * Added the system clock to the devicetree binding. Improved the binding
+    document.
+
+  * Added an explanation by James Hogan with details about the timer-based
+    abort condition detection.
+
+This patchset adds a new adapter driver supporting the Imagination Technologies
+I2C Serial Control Bus (SCB) controller.
+
+The driver supports the usual FIFO-based mode of operation (so-called automatic
+in the driver), and also a set lower-level modes of operation that is used
+for 0-length writes and for bus recovery routines.
+
+The recently merged bus recovery infrastructure is not used, given this driver
+already implements a fairly complex bus recovery, and has been tested
+extensively with it.
+
+Based on v3.18-rc2.
+
+James Hogan (2):
+  i2c: Add Imagination Technologies I2C SCB driver
+  DT: i2c: Add binding document for IMG I2C SCB
+
+ .../devicetree/bindings/i2c/i2c-img-scb.txt        |   26 +
+ drivers/i2c/busses/Kconfig                         |   10 +
+ drivers/i2c/busses/Makefile                        |    1 +
+ drivers/i2c/busses/i2c-img-scb.c                   | 1415 ++++++++++++++++++++
+ 4 files changed, 1452 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-img-scb.txt
+ create mode 100644 drivers/i2c/busses/i2c-img-scb.c
+
+-- 
+2.1.0
