@@ -1,7 +1,7 @@
 From: Ankit Jindal <ankit.jindal@linaro.org>
-Subject: [PATCH v4 2/6] uio: Add new UIO_MEM_PHYS_CACHE type for mem regions
-Date: Thu, 13 Nov 2014 13:15:18 +0530
-Message-ID: <1415864722-2800-3-git-send-email-ankit.jindal@linaro.org>
+Subject: [PATCH v4 5/6] Documentation: dt-bindings: Add binding info for X-Gene QMTM UIO driver
+Date: Thu, 13 Nov 2014 13:15:21 +0530
+Message-ID: <1415864722-2800-6-git-send-email-ankit.jindal@linaro.org>
 References: <1415864722-2800-1-git-send-email-ankit.jindal@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1415864722-2800-1-git-send-email-ankit.jindal@linaro.org>
@@ -10,74 +10,72 @@ To: linux-kernel@vger.kernel.org
 Cc: "Hans J. Koch" <hjk@hansjkoch.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, patches@apm.com, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Tushar Jagad <tushar.jagad@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Varka Bhadram <varkabhadram@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ankit Jindal <ankit.jindal@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently, three types of mem regions are supported: UIO_MEM_PHYS,
-UIO_MEM_LOGICAL and UIO_MEM_VIRTUAL. Among these UIO_MEM_PHYS helps
-UIO driver export physcial memory to user space as non-cacheable
-user memory. Typcially memory-mapped registers of a device are exported
-to user space as UIO_MEM_PHYS type mem region. The UIO_MEM_PHYS type
-is not efficient if dma-capable devices are capable of maintaining coherency
-with CPU caches.
-
-This patch adds new type UIO_MEM_PHYS_CACHE for mem regions to enable
-cacheable access to physical memory from user space.
+This patch adds device tree binding documentation for
+X-Gene QMTM UIO driver.
 
 Signed-off-by: Ankit Jindal <ankit.jindal@linaro.org>
 Signed-off-by: Tushar Jagad <tushar.jagad@linaro.org>
 ---
- drivers/uio/uio.c          |   11 ++++++++---
- include/linux/uio_driver.h |    1 +
- 2 files changed, 9 insertions(+), 3 deletions(-)
+ .../devicetree/bindings/uio/uio_xgene_qmtm.txt     |   51 ++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt
 
-diff --git a/drivers/uio/uio.c b/drivers/uio/uio.c
-index 97e6444..120a84b 100644
---- a/drivers/uio/uio.c
-+++ b/drivers/uio/uio.c
-@@ -644,7 +644,7 @@ static const struct vm_operations_struct uio_physical_vm_ops = {
- #endif
- };
- 
--static int uio_mmap_physical(struct vm_area_struct *vma)
-+static int uio_mmap_physical(struct vm_area_struct *vma, bool cacheable)
- {
- 	struct uio_device *idev = vma->vm_private_data;
- 	int mi = uio_find_mem_index(vma);
-@@ -659,7 +659,9 @@ static int uio_mmap_physical(struct vm_area_struct *vma)
- 		return -EINVAL;
- 
- 	vma->vm_ops = &uio_physical_vm_ops;
--	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
+diff --git a/Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt b/Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt
+new file mode 100644
+index 0000000..ed85bc6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt
+@@ -0,0 +1,51 @@
++APM X-Gene QMTM nodes
 +
-+	if (!cacheable)
-+		vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
- 
- 	/*
- 	 * We cannot use the vm_iomap_memory() helper here,
-@@ -707,10 +709,13 @@ static int uio_mmap(struct file *filep, struct vm_area_struct *vma)
- 
- 	switch (idev->info->mem[mi].memtype) {
- 	case UIO_MEM_PHYS:
--		return uio_mmap_physical(vma);
-+		return uio_mmap_physical(vma, false);
- 	case UIO_MEM_LOGICAL:
- 	case UIO_MEM_VIRTUAL:
- 		return uio_mmap_logical(vma);
-+	case UIO_MEM_PHYS_CACHE:
-+		return uio_mmap_physical(vma, true);
++The Applied Micro X-Gene SOC has on-chip QMTM (Queue manager
++and Traffic manager). It is a device for managing hardware queues.
++It also implements QoS among hardware queues hence term "traffic"
++manager is present in its name.
 +
- 	default:
- 		return -EINVAL;
- 	}
-diff --git a/include/linux/uio_driver.h b/include/linux/uio_driver.h
-index 1ad4724..40ca3f3 100644
---- a/include/linux/uio_driver.h
-+++ b/include/linux/uio_driver.h
-@@ -118,6 +118,7 @@ extern void uio_event_notify(struct uio_info *info);
- #define UIO_MEM_PHYS	1
- #define UIO_MEM_LOGICAL	2
- #define UIO_MEM_VIRTUAL 3
-+#define UIO_MEM_PHYS_CACHE	4
- 
- /* defines for uio_port->porttype */
- #define UIO_PORT_NONE	0
++Required properties:
++- compatible: Should be "apm,xgene-qmtm"
++- reg: Address and length of the register set for the device. It contains the
++  information of registers in the same order as described by reg-names.
++- reg-names: Should contain the register set names
++  - "csr": QMTM control and status register address space.
++  - "fabric": QMTM memory mapped access to queue states.
++- qpool-memory: Points to the phandle of the node defining memory location for
++	 creating QMTM queues. This must point to the reserved-memory node
++	 (as-per reserved memory bindings). It is expected that size and
++	 location of qpool memory will be configurable via bootloader.
++- clocks: Reference to the clock entry.
++- num-queues: Number of queues under this QMTM device.
++- devid: QMTM identification number for the system having multiple QMTM devices.
++	 This is used to form a unique id (a tuple of queue number and
++	 device id) for the queues belonging to this device.
++
++Example:
++	qmtm1_uio_qpool: qmtm1_uio_qpool {
++		reg = <0x0 0x0 0x0 0x0>
++	};
++
++	qmtm1clk: qmtmclk@1f20c000 {
++		compatible = "apm,xgene-device-clock";
++		clock-output-names = "qmtm1clk";
++		status = "ok";
++	};
++
++	qmtm1_uio: qmtm_uio@1f200000 {
++		compatible = "apm,xgene-qmtm";
++		status = "disabled";
++		reg = <0x0 0x1f200000 0x0 0x10000>,
++		      <0x0 0x1b000000 0x0 0x400000>;
++		reg-names = "csr", "fabric";
++		qpool = <&qmtm1_uio_qpool>;
++		clocks = <&qmtm1clk 0>;
++		num-queues = <0x400>;
++		devid = <1>;
++	};
++
++	/* Board-specific peripheral configurations */
++	&qmtm1_uio {
++		status = "ok";
++	};
 -- 
 1.7.9.5
