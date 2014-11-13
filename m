@@ -1,86 +1,113 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: [PATCH 1/2] dmaengine: Add binding document for IMG MDC
-Date: Thu, 13 Nov 2014 12:58:07 -0800
-Message-ID: <1415912288-26926-2-git-send-email-abrestic@chromium.org>
-References: <1415912288-26926-1-git-send-email-abrestic@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415912288-26926-1-git-send-email-abrestic@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>
-Cc: Andrew Bresticker <abrestic@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCHv6 4/5] hwspinlock/core: add common OF helpers
+Date: Thu, 13 Nov 2014 15:02:00 -0600
+Message-ID: <54651C48.90809@ti.com>
+References: <1410553499-55951-1-git-send-email-s-anna@ti.com> <1410553499-55951-5-git-send-email-s-anna@ti.com> <CAK=WgbamdqAufjC4Xb5moERRBSB-cO6c1RPTE=f+dp75F+Eh7A@mail.gmail.com> <5463B5B6.8040709@ti.com> <CAK=WgbbatPTiz3efDWHVEcuug_UQfkCViMoK0zcfUg3JwB2oTA@mail.gmail.com> <5464EC7A.7050603@ti.com> <CAK=WgbbodS8GsUxQbkyCp6hAG+Ko4LMirx+pUa8_fUdxWFasvw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK=WgbbodS8GsUxQbkyCp6hAG+Ko4LMirx+pUa8_fUdxWFasvw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a binding document for the IMG Multi-threaded DMA Controller (MDC)
-present on the MIPS-based Pistachio and other IMG SoCs.
+Hi Ohad,
 
-Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
----
- .../devicetree/bindings/dma/img-mdc-dma.txt        | 57 ++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/img-mdc-dma.txt
+On 11/13/2014 01:45 PM, Ohad Ben-Cohen wrote:
+> Hi Suman,
+> 
+> On Thu, Nov 13, 2014 at 7:38 PM, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> wrote:
+>> No, not always, because, either of them can be optional between
+>> different platform implementations. For example, on OMAP, the number of
+>> locks is read from an IP register, and not coded in DT. Similarly,
+>> base_id can be optional on SoCs that don't have multiple IP instances.
+> 
+> It can, but base_id isn't optional today --- it must be provided via
+> platform_data --- 
 
-diff --git a/Documentation/devicetree/bindings/dma/img-mdc-dma.txt b/Documentation/devicetree/bindings/dma/img-mdc-dma.txt
-new file mode 100644
-index 0000000..28c1341
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/img-mdc-dma.txt
-@@ -0,0 +1,57 @@
-+* IMG Multi-threaded DMA Controller (MDC)
-+
-+Required properties:
-+- compatible: Must be "img,pistachio-mdc-dma".
-+- reg: Must contain the base address and length of the MDC registers.
-+- interrupts: Must contain all the per-channel DMA interrupts.
-+- clocks: Must contain an entry for each entry in clock-names.
-+  See ../clock/clock-bindings.txt for details.
-+- clock-names: Must include the following entries:
-+  - sys: MDC system interface clock.
-+- img,cr-periph: Must contain a phandle to the peripheral control syscon
-+  node which contains the DMA request to channel mapping registers.
-+- img,max-burst-multiplier: Must be the maximum supported burst size multiplier.
-+  The maximum burst size is this value multiplied by the hardware-reported bus
-+  width.
-+- #dma-cells: Must be 3:
-+  - The first cell is the peripheral's DMA request line.
-+  - The second cell is a bitmap specifying to which channels the DMA request
-+    line may be mapped (i.e. bit N set indicates channel N is usable).
-+  - The third cell is the thread ID to be used by the channel.
-+
-+Optional properties:
-+- dma-channels: Number of supported DMA channels, up to 32.  If not specified
-+  the number reported by the hardware is used.
-+
-+Example:
-+
-+mdc: dma-controller@18143000 {
-+	compatible = "img,pistachio-mdc-dma";
-+	reg = <0x18143000 0x1000>;
-+	interrupts = <GIC_SHARED 27 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SHARED 28 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SHARED 29 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SHARED 30 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SHARED 31 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SHARED 32 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SHARED 33 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SHARED 34 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SHARED 35 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SHARED 36 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SHARED 37 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SHARED 38 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks = <&system_clk>;
-+	clock-names = "sys";
-+
-+	img,max-burst-multiplier = <16>;
-+	img,cr-periph = <&cr_periph>;
-+
-+	#dma-cells = <3>;
-+};
-+
-+spi@18100f00 {
-+	...
-+	dmas = <&mdc 9 0xffffffff 0>, <&mdc 10 0xffffffff 0>;
-+	dma-names = "tx", "rx";
-+	...
-+};
--- 
-2.1.0.rc2.206.gedb03e5
+That was the case before DT, right. As it is, the hwspinlock core has no
+knowledge of platform_data, it was used by the individual implementation
+drivers to supply the base_id in the registration API.
+The platform_data will/should become obsolete with DT devices.
+
+and I'm not sure we should implicitly change this
+> semantics while moving to DT. We never guessed the base_id before,
+> even if there was only a single IP instance, and I'm not convinced we
+> should start doing it now.
+
+OK, if we make hwlock-base-id mandatory in DT, we will get past 1
+problem (that of looking up base-id for a specific device).
+
+> 
+> About the number of locks - why do we even need it at this point? the
+> global lock id should just be base_id + the lock index.
+
+The number of locks would still be needed for validation purposes.
+
+OK, lets take an example. I have say 2 device instances, say
+	hwlock1: hwlock@0 {
+		hwlock-num-locks = <32>
+		hwlock-base-id = <0>;
+		#hwlock-cells = <1>;
+	};
+	hwlock2: hwlock@0 {
+		hwlock-num-locks = <32>
+		hwlock-base-id = <32>;
+		#hwlock-cells = <1>;
+	};
+
+	some-client {
+		hwlocks = <&hwlock1 32>, <&hwlock2 0>;
+	};
+
+The first args value is incorrect, and I expect the API to return an
+error. I don't think the API can make assumptions that all passed in
+values will be correct. What do you suggest that the API do here?
+The above locks are equivalent if we forgo checking.
+
+> 
+>> IMHO, this life cycle management is not that complicated
+> 
+> It's always very easy to add code, really. It is never complicated.
+> But then gradually the code becomes harder to maintain, debug, and
+> change.
+> 
+> On the contrary, achieving the same functionality with less code is
+> always harder. But when we get there, the results are pretty
+> satisfying.
+> 
+> In this case I still feel the extra linked list is redundant.
+> 
+> Please try it: ditch the "hwspinlock/core: maintain a list of
+> registered hwspinlock banks" patch, and replace of_hwspin_lock_get_id
+> with a slim method that just returns the base_id + the lock index. Let
+> me know if it works for you.
+
+Yeah, it will work (provided base-id is mandatory) and we drop the
+support for
+1. phandle args-specifier validation
+2. Deferred probing
+
+One solution to handle #1 is to also make the hwlock-num-locks property
+also mandatory (even though it could have been read from a register and
+I wonder what implementations should do if there is a mismatch between
+DT provided value and the value read from IP register). I am not sure
+what the DT maintainers' stance is on this, as we are forcing that to
+solve an implementation detail in the hwspinlock core.
+
+And, how do you propose we solve the problem of deferred probing? This
+was the solution that is resolving both the problems without changing
+return codes on existing API (that was my first attempt, but you
+preferred not to change API return convention).
+
+Kumar, Mark,
+Any comments here?
+
+regards
+Suman
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
