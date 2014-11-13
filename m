@@ -1,48 +1,94 @@
-From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 7/7] dmaengine: at_xdmac: Add DMA_PRIVATE
-Date: Thu, 13 Nov 2014 11:52:45 +0100
-Message-ID: <1415875965-6905-8-git-send-email-ludovic.desroches@atmel.com>
-References: <1415875965-6905-1-git-send-email-ludovic.desroches@atmel.com>
+From: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH] can: Fix bug in suspend/resume
+Date: Thu, 13 Nov 2014 10:58:04 +0000
+Message-ID: <9455da2b86c74d5aafe9bf118edec7bb@BN1AFFO11FD045.protection.gbl>
+References: <a44efc1fb0144cca9d0c4851cc51db25@BL2FFO11FD024.protection.gbl>
+ <546484D9.4030005@pengutronix.de> <54648BF4.60007@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415875965-6905-1-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <54648BF4.60007-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+To: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org" <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-same issue as commit 7f5ae3553685:
-"Without DMA_PRIVATE the driver is not able to allocate more than one channel.
-Since it uses dma_get_any_slave_channel that calls private_candidate, the
-second allocation fails at
-/* some channels are already publicly allocated */
-"
-
-Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
- drivers/dma/at_xdmac.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-index 586275f..b60d77a 100644
---- a/drivers/dma/at_xdmac.c
-+++ b/drivers/dma/at_xdmac.c
-@@ -1394,6 +1394,11 @@ static int at_xdmac_probe(struct platform_device *pdev)
- 	dma_cap_set(DMA_CYCLIC, atxdmac->dma.cap_mask);
- 	dma_cap_set(DMA_MEMCPY, atxdmac->dma.cap_mask);
- 	dma_cap_set(DMA_SLAVE, atxdmac->dma.cap_mask);
-+	/*
-+	 * Without DMA_PRIVATE the driver is not able to allocate more than
-+	 * one channel, second allocation fails in private_candidate.
-+	 */
-+	dma_cap_set(DMA_PRIVATE, atxdmac->dma.cap_mask);
- 	atxdmac->dma.dev				= &pdev->dev;
- 	atxdmac->dma.device_alloc_chan_resources	= at_xdmac_alloc_chan_resources;
- 	atxdmac->dma.device_free_chan_resources		= at_xdmac_free_chan_resources;
--- 
-2.0.3
-
+SGkgTWFyYywNCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IE1hcmMgS2xlaW5l
+LUJ1ZGRlIFttYWlsdG86bWtsQHBlbmd1dHJvbml4LmRlXQ0KU2VudDogVGh1cnNkYXksIE5vdmVt
+YmVyIDEzLCAyMDE0IDQ6MTYgUE0NClRvOiBBcHBhbmEgRHVyZ2EgS2VkYXJlc3dhcmEgUmFvOyB3
+Z0BncmFuZGVnZ2VyLmNvbTsgTWljaGFsIFNpbWVrOyBTb3JlbiBCcmlua21hbm47IGdyYW50Lmxp
+a2VseUBsaW5hcm8ub3JnOyByb2JoK2R0QGtlcm5lbC5vcmcNCkNjOiBsaW51eC1jYW5Admdlci5r
+ZXJuZWwub3JnOyBuZXRkZXZAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3Rz
+LmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVA
+dmdlci5rZXJuZWwub3JnOyBBcHBhbmEgRHVyZ2EgS2VkYXJlc3dhcmEgUmFvDQpTdWJqZWN0OiBS
+ZTogW1BBVENIXSBjYW46IEZpeCBidWcgaW4gc3VzcGVuZC9yZXN1bWUNCg0KT24gMTEvMTMvMjAx
+NCAxMToxNSBBTSwgTWFyYyBLbGVpbmUtQnVkZGUgd3JvdGU6DQo+IE9uIDExLzEzLzIwMTQgMDc6
+NTggQU0sIEtlZGFyZXN3YXJhIHJhbyBBcHBhbmEgd3JvdGU6DQo+PiBXaGVuIGFjY2Vzc2luZyB0
+aGUgcHJpdiBzdHJ1Y3R1cmUgdXNlIGNvbnRhaW5lcl9vZiBpbnN0ZWFkIG9mIGRldl9nZXRfZHJ2
+ZGF0YS4NCj4NCj4gV2h5Pw0KDQpUaGUgZHJ2ZGF0YSBoZXJlIGlzIHRoZSBzdHJ1Y3QgbmV0X2Rl
+dmljZSwgbm90IHRoZSBwbGF0Zm9ybSBkZXZpY2UuDQpQbGVhc2Ugc3RhdGUgdGhpcyBpbiB0aGUg
+Y29tbWl0IG1lc3NhZ2UuDQoNCklmIEkgdW5kZXJzdGFuZCB0aGUgY29kZSBjb3JyZWN0LCB5b3Ug
+Y2FuIG1ha2UgdXNlIG9mIHRoZSBleGlzdGluZyBoZWxwZXIgZnVuY3Rpb24gdG9fcGxhdGZvcm1f
+ZGV2aWNlKCk6DQoNCmh0dHA6Ly9seHIuZnJlZS1lbGVjdHJvbnMuY29tL3NvdXJjZS9pbmNsdWRl
+L2xpbnV4L3BsYXRmb3JtX2RldmljZS5oI0w0Mg0KDQpUaGFua3MgZm9yIHRoZSBzdWdnZXN0aW9u
+Lg0KIFdpbGwgdXNlIHRoaXMgbWFjcm8odG9fcGxhdGZvcm1fZGV2aWNlKSAgLg0KDQo+DQo+PiBF
+bmFibGUgdGhlIGNsb2NrcyBpbiB0aGUgc3VzcGVuZCBiZWZvcmUgYWNjZXNzaW5nIHRoZSByZWdp
+c3RlcnMgb2YgdGhlIENBTi4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBLZWRhcmVzd2FyYSByYW8g
+QXBwYW5hIDxhcHBhbmFkQHhpbGlueC5jb20+DQo+PiAtLS0NCj4+ICBkcml2ZXJzL25ldC9jYW4v
+eGlsaW54X2Nhbi5jIHwgICAyMCArKysrKysrKysrKysrKysrKystLQ0KPj4gIDEgZmlsZXMgY2hh
+bmdlZCwgMTggaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4+DQo+PiBkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9uZXQvY2FuL3hpbGlueF9jYW4uYw0KPj4gYi9kcml2ZXJzL25ldC9jYW4veGls
+aW54X2Nhbi5jIGluZGV4IDVlOGI1NjAuLjYzZWY2NDUgMTAwNjQ0DQo+PiAtLS0gYS9kcml2ZXJz
+L25ldC9jYW4veGlsaW54X2Nhbi5jDQo+PiArKysgYi9kcml2ZXJzL25ldC9jYW4veGlsaW54X2Nh
+bi5jDQo+PiBAQCAtOTcyLDE1ICs5NzIsMzAgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBuZXRfZGV2
+aWNlX29wcyB4Y2FuX25ldGRldl9vcHMgPSB7DQo+PiAgICovDQo+PiAgc3RhdGljIGludCBfX21h
+eWJlX3VudXNlZCB4Y2FuX3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2KSAgew0KPj4gLSAgICBz
+dHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2ID0gZGV2X2dldF9kcnZkYXRhKGRldik7DQo+PiAr
+ICAgIHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYgPSBjb250YWluZXJfb2YoZGV2LA0KPj4g
+KyAgICAgICAgICAgICAgICAgICAgc3RydWN0IHBsYXRmb3JtX2RldmljZSwgZGV2KTsNCj4+ICAg
+ICAgc3RydWN0IG5ldF9kZXZpY2UgKm5kZXYgPSBwbGF0Zm9ybV9nZXRfZHJ2ZGF0YShwZGV2KTsN
+Cj4+ICAgICAgc3RydWN0IHhjYW5fcHJpdiAqcHJpdiA9IG5ldGRldl9wcml2KG5kZXYpOw0KPj4g
+KyAgICBpbnQgcmV0Ow0KPj4NCj4+ICAgICAgaWYgKG5ldGlmX3J1bm5pbmcobmRldikpIHsNCj4+
+ICAgICAgICAgICAgICBuZXRpZl9zdG9wX3F1ZXVlKG5kZXYpOw0KPj4gICAgICAgICAgICAgIG5l
+dGlmX2RldmljZV9kZXRhY2gobmRldik7DQo+PiAgICAgIH0NCj4+DQo+PiArICAgIHJldCA9IGNs
+a19wcmVwYXJlX2VuYWJsZShwcml2LT5jYW5fY2xrKTsNCj4+ICsgICAgaWYgKHJldCkgew0KPj4g
+KyAgICAgICAgICAgIGRldl9lcnIoZGV2LCAidW5hYmxlIHRvIGVuYWJsZSBkZXZpY2UgY2xvY2tc
+biIpOw0KPj4gKyAgICAgICAgICAgIHJldHVybiByZXQ7DQo+PiArICAgIH0NCj4+ICsNCj4+ICsg
+ICAgcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKHByaXYtPmJ1c19jbGspOw0KPj4gKyAgICBpZiAo
+cmV0KSB7DQo+PiArICAgICAgICAgICAgZGV2X2VycihkZXYsICJ1bmFibGUgdG8gZW5hYmxlIGJ1
+cyBjbG9ja1xuIik7DQo+PiArICAgICAgICAgICAgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHByaXYt
+PmNhbl9jbGspOw0KPj4gKyAgICAgICAgICAgIHJldHVybiByZXQ7DQo+PiArICAgIH0NCj4NCj4g
+Tm93IHlvdSBoYXZlIGNsb2NrIGltYmFsYW5jZS4gUGVyIHN1c3BlbmQvcmVzdW1lIGN5Y2xlIHRo
+ZSBjbG9ja3MgYXJlDQo+IGVuYWJsZWQgdHdpY2UsIGJ1dCBkaXNhYmxlZCBvbmx5IG9uY2UuDQo+
+DQoNClRoZSBjbG9ja3MgYXJlIGdldHRpbmcgZGlzYWJsZWQgYW5kIHVuIHByZXBhcmVkIGF0IHRo
+ZSBlbmQgb2YgdGhlIHByb2JlLg0KSW4gdGhlIHJlc3VtZSB0aGUgZHJpdmVyIGlzIGRvaW5nIHJl
+Z2lzdGVyIHdyaXRlLg0KSW4gb3JkZXIgdG8gZG8gdGhhdCByZWdpc3RlciB3cml0ZSBJIGhhdmUg
+dG8gYWdhaW4gZW5hYmxlIGFuZCBwcmVwYXJlIHRoZSBjbG9ja3MuDQoNClJlZ2FyZHMsDQpLZWRh
+ci4NCg0KPj4gKw0KPj4gICAgICBwcml2LT53cml0ZV9yZWcocHJpdiwgWENBTl9NU1JfT0ZGU0VU
+LCBYQ0FOX01TUl9TTEVFUF9NQVNLKTsNCj4+ICAgICAgcHJpdi0+Y2FuLnN0YXRlID0gQ0FOX1NU
+QVRFX1NMRUVQSU5HOw0KPj4NCj4+IEBAIC05OTksNyArMTAxNCw4IEBAIHN0YXRpYyBpbnQgX19t
+YXliZV91bnVzZWQgeGNhbl9zdXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldikNCj4+ICAgKi8NCj4+
+ICBzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIHhjYW5fcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRl
+dikgIHsNCj4+IC0gICAgc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiA9IGRldl9nZXRfZHJ2
+ZGF0YShkZXYpOw0KPj4gKyAgICBzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2ID0gY29udGFp
+bmVyX29mKGRldiwNCj4+ICsgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBwbGF0Zm9ybV9kZXZp
+Y2UsIGRldik7DQo+PiAgICAgIHN0cnVjdCBuZXRfZGV2aWNlICpuZGV2ID0gcGxhdGZvcm1fZ2V0
+X2RydmRhdGEocGRldik7DQo+PiAgICAgIHN0cnVjdCB4Y2FuX3ByaXYgKnByaXYgPSBuZXRkZXZf
+cHJpdihuZGV2KTsNCj4+ICAgICAgaW50IHJldDsNCg0KTWFyYw0KDQotLQ0KUGVuZ3V0cm9uaXgg
+ZS5LLiAgICAgICAgICAgICAgICAgIHwgTWFyYyBLbGVpbmUtQnVkZGUgICAgICAgICAgIHwNCklu
+ZHVzdHJpYWwgTGludXggU29sdXRpb25zICAgICAgICB8IFBob25lOiArNDktMjMxLTI4MjYtOTI0
+ICAgICB8DQpWZXJ0cmV0dW5nIFdlc3QvRG9ydG11bmQgICAgICAgICAgfCBGYXg6ICAgKzQ5LTUx
+MjEtMjA2OTE3LTU1NTUgfA0KQW10c2dlcmljaHQgSGlsZGVzaGVpbSwgSFJBIDI2ODYgIHwgaHR0
+cDovL3d3dy5wZW5ndXRyb25peC5kZSAgIHwNCg0KDQoNClRoaXMgZW1haWwgYW5kIGFueSBhdHRh
+Y2htZW50cyBhcmUgaW50ZW5kZWQgZm9yIHRoZSBzb2xlIHVzZSBvZiB0aGUgbmFtZWQgcmVjaXBp
+ZW50KHMpIGFuZCBjb250YWluKHMpIGNvbmZpZGVudGlhbCBpbmZvcm1hdGlvbiB0aGF0IG1heSBi
+ZSBwcm9wcmlldGFyeSwgcHJpdmlsZWdlZCBvciBjb3B5cmlnaHRlZCB1bmRlciBhcHBsaWNhYmxl
+IGxhdy4gSWYgeW91IGFyZSBub3QgdGhlIGludGVuZGVkIHJlY2lwaWVudCwgZG8gbm90IHJlYWQs
+IGNvcHksIG9yIGZvcndhcmQgdGhpcyBlbWFpbCBtZXNzYWdlIG9yIGFueSBhdHRhY2htZW50cy4g
+RGVsZXRlIHRoaXMgZW1haWwgbWVzc2FnZSBhbmQgYW55IGF0dGFjaG1lbnRzIGltbWVkaWF0ZWx5
+Lg0KDQo=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
