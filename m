@@ -1,59 +1,64 @@
-From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Subject: [PATCH 2/6] Documentation: devicetree: arizona: Add
-	bindings for WM8280
-Date: Thu, 13 Nov 2014 17:50:42 +0000
-Message-ID: <1415901046-3391-3-git-send-email-rf@opensource.wolfsonmicro.com>
-References: <1415901046-3391-1-git-send-email-rf@opensource.wolfsonmicro.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 4/7] ARM: dts: sun6i: Add simplefb node
+Date: Thu, 13 Nov 2014 18:52:57 +0100
+Message-ID: <5464EFF9.9010203@redhat.com>
+References: <1415871109-28332-1-git-send-email-hdegoede@redhat.com> <1415871109-28332-4-git-send-email-hdegoede@redhat.com> <20141113164606.GM20972@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1415901046-3391-1-git-send-email-rf@opensource.wolfsonmicro.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: lee.jones@linaro.org, lgirdwood@gmail.com, myungjoo.ham@samsung.com, cw00.choi@samsung.com, linus.walleij@linaro.org, gnurou@gmail.com, broonie@kernel.org, tiwai@suse.de
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, sameo@linux.intel.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, ckeepax@opensource.wolfsonmicro.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBAXASORQKGQEYJO72JA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20141113164606.GM20972@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
----
- Documentation/devicetree/bindings/mfd/arizona.txt |   10 ++++++----
- 1 files changed, 6 insertions(+), 4 deletions(-)
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-index 7bd1273..079badb 100644
---- a/Documentation/devicetree/bindings/mfd/arizona.txt
-+++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-@@ -8,6 +8,7 @@ Required properties:
-   - compatible : One of the following chip-specific strings:
-         "wlf,wm5102"
-         "wlf,wm5110"
-+        "wlf,wm8280"
-         "wlf,wm8997"
-   - reg : I2C slave address when connected using I2C, chip select number when
-     using SPI.
-@@ -26,10 +27,11 @@ Required properties:
-   - #gpio-cells : Must be 2. The first cell is the pin number and the
-     second cell is used to specify optional parameters (currently unused).
- 
--  - AVDD-supply, DBVDD1-supply, DBVDD2-supply, DBVDD3-supply (wm5102, wm5110),
--    CPVDD-supply, SPKVDDL-supply (wm5102, wm5110), SPKVDDR-supply (wm5102,
--    wm5110), SPKVDD-supply (wm8997) : Power supplies for the device, as covered
--    in Documentation/devicetree/bindings/regulator/regulator.txt
-+  - AVDD-supply, DBVDD1-supply, DBVDD2-supply, DBVDD3-supply (wm5102, wm5110,
-+    wm8280), CPVDD-supply, SPKVDDL-supply (wm5102, wm5110, wm8280),
-+    SPKVDDR-supply (wm5102, wm5110, wm8280), SPKVDD-supply (wm8997)
-+    : Power supplies for the device, as covered in
-+    Documentation/devicetree/bindings/regulator/regulator.txt
- 
- Optional properties:
- 
--- 
-1.7.2.5
+On 11/13/2014 05:46 PM, Maxime Ripard wrote:
+> Hi,
+> 
+> On Thu, Nov 13, 2014 at 10:31:46AM +0100, Hans de Goede wrote:
+>> Add a simplefb template node for u-boot to further fill and activate.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/sun6i-a31.dtsi | 10 ++++++++++
+>>  1 file changed, 10 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+>> index 543f895..438952e 100644
+>> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
+>> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+>> @@ -62,6 +62,16 @@
+>>  		ethernet0 = &gmac;
+>>  	};
+>>  
+>> +	chosen {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		ranges;
+>> +
+>> +		framebuffer0 {
+>> +			compatible = "simple-framebuffer";
+>> +			status = "disabled";
+> 
+> Aren't we suppose to have clocks in there too?
+
+I deliberately left them out as they are not needed on sun6i, once the blocks
+are setup ahb access is not necessary, but it seems that the ahb_gate bits
+in sun4i / sun5i / sun7i double as a reset. Toggling them on / off / on breaks
+the mode, while toggling module clocks on / off / on only causes a glitch.
+
+Since the sun6i has a separate reset controller, the clock gates seem to really
+only control ahb access which is not necessary once the mode has been set up.
+
+Regards,
+
+Hans
