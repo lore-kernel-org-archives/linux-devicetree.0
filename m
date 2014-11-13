@@ -1,48 +1,43 @@
-From: gsantosh@codeaurora.org
-Subject: Question on Compressed offload session
-Date: Thu, 13 Nov 2014 03:02:04 -0000
-Message-ID: <85499f52ebd29581bf58b9cafbae6864.squirrel@www.codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: alsa-devel-bounces@alsa-project.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Stephen Warren <swarren@wwwdotorg.org>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, grant.likely@linaro.org, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Olof Johansson <olof@lixom.net>, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH V2 0/2] spi: IMG SPFI driver
+Date: Wed, 12 Nov 2014 19:08:14 -0800
+Message-ID: <1415848096-20079-1-git-send-email-abrestic@chromium.org>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <Ezequiel.Garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
+This series adds support for the Sychronous Peripheral Flash Interface
+master found on IMG SoCs.  The controller supports up to 5 chip-select
+lines and single, dual, and optionally quad, mode transfers.
 
-The Question is for the compressed offload session.
+Tested on a platform using the MIPS-based Pistachio SoC with additional
+out-of-tree patches - support for Pistachio will be submitted soon.
 
-For a generic codec driver during the startup function it will set some of
-the hw_constraints rule similarly like this.
+Based on 3.18-rc4.
 
-        snd_pcm_hw_constraint_list(substream->runtime, 0,
-                    SNDRV_PCM_HW_PARAM_RATE,
-                    &constraints_12_24);
+Changes from v1:
+ - added runtime PM support
+ - renamed spi-img -> spi-img-spfi
+ - addressed Mark's review comments
 
-pcm_lib.c will try to add the rule to the runtime structure by accessing
-the pointers which will be initialized during opening of the session,
-as The Constraints added by the codec driver will be updated in the
+Andrew Bresticker (2):
+  spi: Add binding document for IMG SPFI controller
+  spi: Add driver for IMG SPFI controller
 
-struct snd_pcm_hw_constraints of runtime structure which will be part of
-substream handle.
+ .../devicetree/bindings/spi/spi-img-spfi.txt       |  37 +
+ drivers/spi/Kconfig                                |   7 +
+ drivers/spi/Makefile                               |   1 +
+ drivers/spi/spi-img-spfi.c                         | 745 +++++++++++++++++++++
+ 4 files changed, 790 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-img-spfi.txt
+ create mode 100644 drivers/spi/spi-img-spfi.c
 
-But for the compressed offload I do not see the initialization done for HW
-constraints, as done in pcm session
+-- 
+2.1.0.rc2.206.gedb03e5
 
-2092int snd_pcm_open_substream(struct snd_pcm *pcm, int stream,
-2093			   struct file *file,
-2094			   struct snd_pcm_substream **rsubstream)
-
-most of the existing drivers which has the hw_constraint_list code will
-not be applicable for compress offload session, how to solve this?
-
-Regards,
-Santosh M G.
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
-Forum,a Linux Foundation Collaborative Project
-
-
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
