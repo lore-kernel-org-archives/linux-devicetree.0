@@ -1,39 +1,110 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v4] mmc: dw_mmc: add support for the other bit of sdio interrupt
-Date: Thu, 13 Nov 2014 10:58:48 -0800
-Message-ID: <CAD=FV=XGjDZRBw7re8aRHdzNAq5cmtfpZ5RMdQ7o1CzbFMVXjw@mail.gmail.com>
-References: <1414977633-3196-1-git-send-email-addy.ke@rock-chips.com>
-	<1415109789-7046-1-git-send-email-addy.ke@rock-chips.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v5 0/5] simplefb: add clock handling code
+Date: Thu, 13 Nov 2014 19:00:56 +0100
+Message-ID: <5464F1D8.5060106@redhat.com>
+References: <1415808952-23549-1-git-send-email-hdegoede@redhat.com> <5464CC5A.7010508@ti.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1415109789-7046-1-git-send-email-addy.ke@rock-chips.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Addy Ke <addy.ke@rock-chips.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Dinh Nguyen <dinguyen@altera.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, Sonny Rao <sonnyrao@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>"open list:ARM/Rockchip SoC..." <linux>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDRZXY4CYYORB777SORQKGQEEH3H6QA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <5464CC5A.7010508-l0cyMroinI0@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Addy,
+Hi,
 
-On Tue, Nov 4, 2014 at 6:03 AM, Addy Ke <addy.ke@rock-chips.com> wrote:
-> The bit of sdio interrupt is 16 in designware implementation,
-> but it is 24 on Rockchip SoCs.This patch add sdio_id0 for the
-> number of slot0 in the SDIO interrupt registers.
->
-> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
-> ---
-> Changes in v2:
-> - rebase on http://git.linaro.org/git/people/ulf.hansson/mmc.git, next branch
-> Changes in v3:
-> - Remove dts for sdio_id0, just replace this with 8, suggested by Doug
-> - Change to support all Rockchip Socs, suggested by Heiko
-> Changes in v4:
-> - use init-hook to set sdio_id0, suggested by Jaehoon
->
->  drivers/mmc/host/dw_mmc-rockchip.c | 10 ++++++++++
->  drivers/mmc/host/dw_mmc.c          | 12 +++++++-----
->  drivers/mmc/host/dw_mmc.h          |  2 ++
->  include/linux/mmc/dw_mmc.h         |  3 +++
->  4 files changed, 22 insertions(+), 5 deletions(-)
+On 11/13/2014 04:20 PM, Tomi Valkeinen wrote:
+> On 12/11/14 18:15, Hans de Goede wrote:
+>> Hi Tomi,
+>>
+>> Here is v5 of my simplefb patch-set, this time with an Ack from
+>> Grant Likely for the dt-bindings bits, which should end all controversy
+>> surrounding that patch.
+>>
+>> For changes since the original postings please see the per patch changel=
+ogs
+>> in the patch commit messages.
+>>
+>> Please merge this into your tree for 3.19.
+>=20
+> I applied this and the "dt-bindings: simplefb: Specify node location and
+> handoff related properties" v3 series to my test branch, compiled for
+> x64 and:
+>=20
+> drivers/video/fbdev/simplefb.c: In function =E2=80=98simplefb_clocks_init=
+=E2=80=99:
+> drivers/video/fbdev/simplefb.c:204:2: error: implicit declaration of
+> function =E2=80=98of_clk_get_parent_count=E2=80=99 [-Werror=3Dimplicit-fu=
+nction-declaration]
+>   par->clk_count =3D of_clk_get_parent_count(np);
+>   ^
+> In file included from include/linux/i2c.h:33:0,
+>                  from include/uapi/linux/fb.h:5,
+>                  from include/linux/fb.h:5,
+>                  from drivers/video/fbdev/simplefb.c:24:
+> drivers/video/fbdev/simplefb.c: In function =E2=80=98simplefb_init=E2=80=
+=99:
+> drivers/video/fbdev/simplefb.c:399:25: error: =E2=80=98of_chosen=E2=80=99=
+ undeclared
+> (first use in this function)
+>   for_each_child_of_node(of_chosen, np) {
+>                          ^
+> include/linux/of.h:736:33: note: in definition of macro
+> =E2=80=98for_each_child_of_node=E2=80=99
+>   for (child =3D of_get_next_child(parent, NULL); child !=3D NULL; \
+>                                  ^
+> drivers/video/fbdev/simplefb.c:399:25: note: each undeclared identifier
+> is reported only once for each function it appears in
+>   for_each_child_of_node(of_chosen, np) {
+>                          ^
+> include/linux/of.h:736:33: note: in definition of macro
+> =E2=80=98for_each_child_of_node=E2=80=99
+>   for (child =3D of_get_next_child(parent, NULL); child !=3D NULL; \
+>                                  ^
+>=20
+> We need "depends on OF"?
 
-Reviewed-by: Doug Anderson <dianders@chromium.org>
+Good catch!
+
+So a quick-grep through the entire kernel sources has thought me that
+apparently simplefb is used on non devicetree / of platforms through
+platform-device instantiation, using the trick of naming the platform-devic=
+e the
+same as the driver to get the driver to bind.
+
+So the answer to your compile breakage is to make the relevant code bits
+be #ifdef CONFIG_OF
+
+I'll respin the offending patch (5/5) in the "simplefb: add clock handling =
+code"
+series, and I'll respin the entire second series, as I need to also address
+your comment on the example in the bindings there.
+
+I hope to be able to post a re-spun version of both later tonight.
+
+Regards,
+
+Hans
+
+
+
+>=20
+>  Tomi
+>=20
+>=20
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
