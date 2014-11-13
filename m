@@ -1,86 +1,84 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: Re: [PATCH v3 1/4] dt-bindings: simplefb: Specify
- node location and handoff related properties
-Date: Thu, 13 Nov 2014 17:52:39 +0200
-Message-ID: <5464D3C7.7060707@ti.com>
-References: <1415885645-24613-1-git-send-email-hdegoede@redhat.com> <5464C026.7030300@ti.com> <5464C444.4050101@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v4 09/10] ARM: dts: am33xx: Update DCAN nodes
+Date: Thu, 13 Nov 2014 17:03:49 +0100
+Message-ID: <20141113160349.GA1275@katana>
+References: <1415881371-4982-1-git-send-email-rogerq@ti.com>
+ <1415881371-4982-10-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="BEPFkd1WjqrFWxwtSP9fEc7uLvmTI3xaC"
-Return-path: <linux-sunxi+bncBCGMHFOOT4LBBU5HSORQKGQEY6UV62A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <5464C444.4050101-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="6c2NcOVqGQ03X4Wi"
+Return-path: <linux-can-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1415881371-4982-10-git-send-email-rogerq@ti.com>
+Sender: linux-can-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: tony@atomide.com, wg@grandegger.com, mkl@pengutronix.de, mugunthanvnm@ti.com, george.cherian@ti.com, balbi@ti.com, nsekhar@ti.comnm@ti.com, sergei.shtylyov@cogentembedded.com, linux-omap@vger.kernel.org, linux-can@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---BEPFkd1WjqrFWxwtSP9fEc7uLvmTI3xaC
-Content-Type: text/plain; charset=utf-8
+
+--6c2NcOVqGQ03X4Wi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On 13/11/14 16:46, Hans de Goede wrote:
-> Hi,
+On Thu, Nov 13, 2014 at 02:22:50PM +0200, Roger Quadros wrote:
+> Add "raminit-syscon" property to specify the RAMINIT register.
+> Add clock information.
+> Rename can nodes from "d_can" to "can" to be compliant
+> with the ePAPR specs.
 >=20
-> On 11/13/2014 03:28 PM, Tomi Valkeinen wrote:
->> On 13/11/14 15:34, Hans de Goede wrote:
->>
->>> +chosen {
->>> +	framebuffer0: framebuffer@5fc00000 {
->>>  		compatible =3D "simple-framebuffer";
->>> -		reg =3D <0x1d385000 (1600 * 1200 * 2)>;
->>> +		reg =3D <0x5fc00000 (4096 * 1024)>;
->>
->> Was there a reason for this change?
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+>  arch/arm/boot/dts/am33xx.dtsi | 20 ++++++++++++--------
+>  1 file changed, 12 insertions(+), 8 deletions(-)
 >=20
-> I changed the node name to match the new bindings text which
-> specifies that the node name must be framebuffer@<address>,
-> while at it I've taken a real world address range.
->=20
-> I assume you refer to the bit where the size of the reg property
-> is changed ? That indeed is not really necessary.
+> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+> index 9f3058c..74fefa1 100644
+> --- a/arch/arm/boot/dts/am33xx.dtsi
+> +++ b/arch/arm/boot/dts/am33xx.dtsi
+> @@ -338,20 +338,24 @@
+>  			interrupts =3D <91>;
+>  		};
+> =20
+> -		dcan0: d_can@481cc000 {
+> -			compatible =3D "bosch,d_can";
+> +		dcan0: can@481cc000 {
+> +			compatible =3D "ti,am3352-d_can";
+>  			ti,hwmods =3D "d_can0";
+> -			reg =3D <0x481cc000 0x2000
+> -				0x44e10644 0x4>;
+> +			reg =3D <0x481cc000 0x2000>;
+> +			clocks =3D <&dcan0_fck>;
+> +			clock-names =3D "fck";
+> +			syscon-raminit =3D <&am33xx_control_module 0x644 0>;
 
-Yes, I meant the size of the reg prop. As this is an example, I think it
-should be as clear as possible.
+Yeah, I missed to write the mail that I disagreed with the "dcan_0/1"
+compatible-properties of V3. The second parameter to syscon here is much
+better!
 
-I guess a valid use case here is to set the size to larger-than-needed,
-so that it gets preallocated and you don't need to worry about getting
-the memory later when the system has already been running for a longer
-time. But if that's the case in this example, I think it would be better
-to describe it explicitly.
-
- Tomi
+Acked-by: Wolfram Sang <wsa@the-dreams.de>
 
 
-
---BEPFkd1WjqrFWxwtSP9fEc7uLvmTI3xaC
+--6c2NcOVqGQ03X4Wi
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJUZNPHAAoJEPo9qoy8lh71cBwP/RH/NwBTxWJqw/Dl1J292ZtX
-GuFNFaMQ1d08iZr5ENS4GsmU+iNsBcYLoF6hHS0dJvW91Q2zjWKtLI8fyUqhJqgb
-KW16CXBYSGYFo4XJq0ul1+FECawQSRmMdtCugITk6SKAT70hhKiWefa5C9Vym8X7
-2nDaKKIMYQgd26XFX83kdJ9zu9QnKyAmypczfxDEnXxs92iHoPEtSQ5/L+e3Dw5K
-t9ClwOhUEKPFDIJc5YdN7G9fCuDQxhlCun9xX6fCsVnFgWiqyLSf2n3Jepl2bccE
-vy6uNGA7LC+MqXgIoeFZNhT3XXraau9UhsiPxcFPAErWz2fkzrk+9R5FkxcLHx9H
-NT9znGuZ9hImCQsEfiiSvydtb+bDXNVV1ogn5w14jLye6GDext1RTr6k327Bxvb8
-vi7p8X5kG5pykhWnhXFgE1Z5HIwtsF3AIGW0XsBF4WFLnNT/D6J/RlzQ3ZT/F42m
-vwjFLVFRT2PgXy6n1Szfofk4KU/7h2IyXSTqpykaIRIfQdWpVhPzInxuUQCmzBJo
-DdcOCWweWHFN3LtHRZyXF3n8lTHdQoHIYbxwus5JufKR5SHwFxGxIKtToi1YQRDA
-Ur9Xd79aj1VfxCH/zyS8DHxx6kN2+rVbzbI+5kn3gTav6lQk4k0OmzUhRS7fGWj5
-QfzwYekNufTmV8rJyvuM
-=jrZ+
+iQIcBAEBAgAGBQJUZNZlAAoJEBQN5MwUoCm2pEUP/1mgDo7Nxbw/Cj8EyNr3kMaC
+6CEIQFZ2W7TgMGZuGzRd7qpIepHPM5NHiqqsgKOOLyFsuCQUXCE64padMFdcQ28S
+DQQ7DVbbOAZfPVctZ9wqcyD45HvYxg3DGtg+Dfo0/+zHMKYGgmbwdXMOsS1NRapw
+aQ2dQemYlsOZN8RX7nLeKo7XbGv+6RgVWxNTtT3pOfW9xKjdD5MGfJVELV3A7SP3
+wn1STeoGDoyH9QvL//5Lb+iuAmwRPm4px8YcVQM0b/KgutyFHiOSrQITZVetIcyG
+czmks5gjyASvSJCoi1V1fQpcT/jm7rkqgateu56vVzLzj789XCj9hjb7qkGvMk8t
+Me8Rt5EnwSh92zKgksnQm7ztVAmIWq/qaaj1MkrZ8IPb14OZ0ZJ5T1X+7Ow5O3Ua
+83xSc/r8FgQEqyVyM4ZvFo6A3HZt17yRwkwnivOy7koeVRp2jLMwxi0zMTLgDdkH
+IqYxrreSBpqiWKjpJC8D7RLP7yz24zDOIjoEXZwyRfZolJKU32mWkxP8dNSQbups
+p/w+vU/BrjiAxIVPcnm3h+V9szrPxzJaMveR98lgDB6SDrWsPmSEClyxFiUv332t
+0Rkh25gCvAQ+x26Fa8VnGaGDDpmm/4VNjYhiufI6Riho8oxSO0833jFRzioosSNe
+CcE9e1cfaHrLGEb80KL9
+=2YPi
 -----END PGP SIGNATURE-----
 
---BEPFkd1WjqrFWxwtSP9fEc7uLvmTI3xaC--
+--6c2NcOVqGQ03X4Wi--
