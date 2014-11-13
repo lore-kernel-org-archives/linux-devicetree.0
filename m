@@ -1,56 +1,41 @@
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: Re: [alsa-devel] Question on Compressed offload session
-Date: Thu, 13 Nov 2014 09:27:30 -0600
-Message-ID: <5464CDE2.2070406@linux.intel.com>
-References: <85499f52ebd29581bf58b9cafbae6864.squirrel@www.codeaurora.org>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/7] dmaengine: at_xdmac: prefer usage of
+ readl/writel_relaxed
+Date: Thu, 13 Nov 2014 21:04:49 +0530
+Message-ID: <20141113153449.GO24582@intel.com>
+References: <1415875965-6905-1-git-send-email-ludovic.desroches@atmel.com>
+ <1415875965-6905-2-git-send-email-ludovic.desroches@atmel.com>
+ <2791155.z0l2TZezWO@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <85499f52ebd29581bf58b9cafbae6864.squirrel@www.codeaurora.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: gsantosh@codeaurora.org, alsa-devel-bounces@alsa-project.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linux-sh list <linux-sh@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Magnus <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, grant.likely@linaro.org, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <2791155.z0l2TZezWO@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/12/14, 9:02 PM, gsantosh@codeaurora.org wrote:
-> Hi All,
->
-> The Question is for the compressed offload session.
->
-> For a generic codec driver during the startup function it will set some of
-> the hw_constraints rule similarly like this.
->
->          snd_pcm_hw_constraint_list(substream->runtime, 0,
->                      SNDRV_PCM_HW_PARAM_RATE,
->                      &constraints_12_24);
->
-> pcm_lib.c will try to add the rule to the runtime structure by accessing
-> the pointers which will be initialized during opening of the session,
-> as The Constraints added by the codec driver will be updated in the
->
-> struct snd_pcm_hw_constraints of runtime structure which will be part of
-> substream handle.
->
-> But for the compressed offload I do not see the initialization done for HW
-> constraints, as done in pcm session
->
-> 2092int snd_pcm_open_substream(struct snd_pcm *pcm, int stream,
-> 2093			   struct file *file,
-> 2094			   struct snd_pcm_substream **rsubstream)
->
-> most of the existing drivers which has the hw_constraint_list code will
-> not be applicable for compress offload session, how to solve this?
+On Thu, Nov 13, 2014 at 12:01:49PM +0100, Arnd Bergmann wrote:
+> On Thursday 13 November 2014 11:52:39 Ludovic Desroches wrote:
+> > _relaxed version of readl and writel are not implemented on all
+> > architecture so COMPILE_TEST has to be removed in order to not cause
+> > some build failures.
+> > 
+> > Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> > ---
+> > 
+> 
+> I've queued up Will Deacon's series to enable the relaxed accessors
+> on all architectures, so the Kconfig change should no longer
+> be required in 3.19.
+And why is _relaxed() version required for thsi driver. Why cant readl(),
+writel() with barriers do?
 
-You can't directly link physical output/input with the decoder/encoder 
-in general.
-For decoders, the sample-rate may not always be known ahead of time, 
-e.g. with AAC-SBR implicit signaling. There is no way to add constraints 
-on open, there is an assumption that a sample-rate converter is part of 
-the chain to take care of the difference between the output of the 
-offloaded decoder and the back-end actual sampling frequency (same with 
-number of channels and bit-width btw).
-Likewise if you encode the frequency may not be the same as what the 
-backend provides and some SRC might be needed.
--Pierre
+-- 
+~Vinod
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
