@@ -1,12 +1,12 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 3/7] ARM: dts: sun5i: Add simplefb node
-Date: Thu, 13 Nov 2014 10:31:45 +0100
-Message-ID: <1415871109-28332-3-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 4/7] ARM: dts: sun6i: Add simplefb node
+Date: Thu, 13 Nov 2014 10:31:46 +0100
+Message-ID: <1415871109-28332-4-git-send-email-hdegoede@redhat.com>
 References: <1415871109-28332-1-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBFHVSGRQKGQE6HFTJUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBFPVSGRQKGQE67OCZAQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1415871109-28332-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -23,15 +23,15 @@ Add a simplefb template node for u-boot to further fill and activate.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun5i-a10s.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm/boot/dts/sun6i-a31.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun5i-a10s.dtsi b/arch/arm/boot/dts/sun5i-a10s.dtsi
-index 7089284..dcea088 100644
---- a/arch/arm/boot/dts/sun5i-a10s.dtsi
-+++ b/arch/arm/boot/dts/sun5i-a10s.dtsi
-@@ -24,6 +24,18 @@
- 		serial3 = &uart3;
+diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+index 543f895..438952e 100644
+--- a/arch/arm/boot/dts/sun6i-a31.dtsi
++++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+@@ -62,6 +62,16 @@
+ 		ethernet0 = &gmac;
  	};
  
 +	chosen {
@@ -41,13 +41,11 @@ index 7089284..dcea088 100644
 +
 +		framebuffer0 {
 +			compatible = "simple-framebuffer";
-+			clocks = <&ahb_gates 36>, <&ahb_gates 43>, <&ahb_gates 44>;
 +			status = "disabled";
 +		};
 +	};
-+
+ 
  	cpus {
- 		cpu@0 {
- 			compatible = "arm,cortex-a8";
+ 		enable-method = "allwinner,sun6i-a31";
 -- 
 2.1.0
