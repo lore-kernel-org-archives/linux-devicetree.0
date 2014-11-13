@@ -1,66 +1,57 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v3 0/3] iio: Add Cosmic Circuits ADC support
-Date: Thu, 13 Nov 2014 11:10:51 -0800
-Message-ID: <CAL1qeaF0LfbeTE4LxL05mHDBeV775AaW2F9+NsHnOMiVdZHNdw@mail.gmail.com>
-References: <1415888044-16635-1-git-send-email-ezequiel.garcia@imgtec.com>
-	<1415888044-16635-5-git-send-email-ezequiel.garcia@imgtec.com>
+From: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
+Subject: RE: [PATCH 1/4] pwm: Imagination Technologies PWM DAC driver
+Date: Thu, 13 Nov 2014 19:11:14 +0000
+Message-ID: <27E62D98F903554192E3C13AFCC91C3C2F50566F@hbmail01.hb.imgtec.org>
+References: <1415795873-4816-1-git-send-email-Naidu.Tellapati@imgtec.com>
+	<1415795873-4816-2-git-send-email-Naidu.Tellapati@imgtec.com>
+	<CAL1qeaFuKccak4fJFOK1YSW1uoyLA_a=GFWJ1PTS00Ab9vZB9A@mail.gmail.com>
+	<1F66364AC115084B902937EE750BD69B3F145947@hbmail01.hb.imgtec.org>
+	<1F66364AC115084B902937EE750BD69B3F14598A@hbmail01.hb.imgtec.org>,<CAL1qeaF2Dz0W4qAW=A_GYVBNur4mhjeM61X66cduf5VX9t5HbQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415888044-16635-5-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <CAL1qeaF2Dz0W4qAW=A_GYVBNur4mhjeM61X66cduf5VX9t5HbQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-pwm-owner@vger.kernel.org
+To: Andrew Bresticker <abrestic@chromium.org>, Sai Masarapu <Sai.Masarapu@imgtec.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, James Hartley <James.Hartley@imgtec.com>, Ezequiel Garcia <Ezequiel.Garcia@imgtec.com>, Arul Ramasamy <Arul.Ramasamy@imgtec.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Ezequiel,
+Hi Andrew,
 
-On Thu, Nov 13, 2014 at 6:14 AM, Ezequiel Garcia
-<ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
-> Here goes the third round of this series. You can find the previous patchset
-> and its discussion here: http://thread.gmane.org/gmane.linux.kernel.iio/14553.
->
-> Changes from v2:
->
->   * Changed a devicetree property from adc-available-channels to
->     adc-reserved-channels, so it can be made optional.
->
->   * Renamed the driver from cc_10001_xxx to cc10001_xxx so it's consistent
->     with the rest of the kernel style.
->
->   * Some more minor cosmetic fixes.
->
-> Changes from v1:
->
->   * Removed unneeded header includes.
->
->   * Changed all the names and macros prefix: s/CC_10001_/CC10001_.
->
->   * Used .update_scan_mode callback to preallocate the buffer.
->
->   * Used indio_dev for the struct iio_dev.
->
->   * Only read the regulator voltage when needed.
->
->   * Fixed probe() error handling.
->
->   * Used for_each_set_bit() instead of open-coding it.
->
->   * Name the power-down register as _POWER_UP, to make the code
->     less silly.
->
->   * Error out when no valid sample can be read (i.e. when end-of-conversion
->     poll times out).
->
->   * ... plus some assorted code cleaning based on the feedback.
->
-> Ezequiel Garcia (1):
->   DT: Add a vendor prefix for Cosmic Circuits
->
-> Phani Movva (2):
->   iio: adc: Cosmic Circuits 10001 ADC driver
->   DT: iio: adc: Add CC_10001 binding documentation
+Thanks for the review.
 
-This series (with v4 of patch 2/3):
+> On Thu, Nov 13, 2014 at 5:55 AM, Sai Masarapu <Sai.Masarapu@imgtec.com> wrote:
+>> On Wed, Nov 12, 2014 at 4:37 AM,  <Naidu.Tellapati@imgtec.com> wrote:
+>>>> From: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
 
-Reviewed-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>>>> Signed-off-by: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
+>>>> Signed-off-by: Sai Masarapu <Sai.Masarapu@imgtec.com>
+
+>>>> +#define CR_PERIP_PWM_PDM_CONTROL       0x0140 /* PWM and PDM ctrl register */
+>>>> +#define PWM_PDM_CH_CTRL_SHIFT(ch)      (ch * 4)
+>>>> +
+>>>> +#define NUM_PWM                                4
+>>>> +#define SUB_DIV0                       1
+>>>> +#define SUB_DIV1                       2
+>>> +#define NO_SUB_DIV                     0
+>>>> +#define SUB_DIV0_DIV1                  3
+>>>> +#define MIN_TMBASE_STEPS               1
+>>>> +#define MAX_TMBASE_STEPS               65536
+>>>> +#define MIN_DUTY_STEPS                 0
+>>>> +#define MAX_DUTY_STEPS                 65535
+>>
+>>> Please place these #defines next to their corresponding register or register field #define.
+>>
+>>    Defined Macros are not related to register fields.
+
+> Really?  The SUB_DIV #defines are possible values for the DIVIDER
+> field in CR_PWM_CTRL_CFG, are they not?  And I believe the TMBASE and
+> DUTY #defines specify the range of values for the DUTYCYCLE and
+> TIMEBASE fields of the CR_PWM*_CFG registers.
+
+Sai might have overlooked these fields. We will address this in the next patch set.
+
+Regards,
+Naidu.
