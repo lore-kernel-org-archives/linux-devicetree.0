@@ -1,57 +1,60 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 13/14] ARM: STi: DT: STiH410: Add usb2 picophy dt nodes
-Date: Thu, 13 Nov 2014 18:41:56 +0100
-Message-ID: <2401196.5cvW5dPSz2@wuerfel>
-References: <1415876417-28728-1-git-send-email-peter.griffin@linaro.org> <3348806.YN8XP4V4uc@wuerfel> <20141113145419.GA30296@griffinp-ThinkPad-X1-Carbon-2nd>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 2/2] spi: Add driver for IMG SPFI controller
+Date: Thu, 13 Nov 2014 17:44:05 +0000
+Message-ID: <20141113174405.GJ3815@sirena.org.uk>
+References: <1415848096-20079-1-git-send-email-abrestic@chromium.org>
+ <1415848096-20079-3-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="KFqA3NAzXT9iu/Yo"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141113145419.GA30296@griffinp-ThinkPad-X1-Carbon-2nd>
+Content-Disposition: inline
+In-Reply-To: <1415848096-20079-3-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <Ezequiel.Garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 13 November 2014 14:54:19 Peter Griffin wrote:
-> 
-> > 
-> > It also seems that you have put the node in the wrong place, as the reg
-> > property apparently refers to a different address space. Did you mean
-> > to put this under the syscfg_core node?
-> 
-> Your correct in that it refers to the syscfg_core address space.
-> However I intentionaly didn't put it under the syscfg_core node.
-> 
-> The phy is more unique than most other devices in that in this instance it
-> is only controlled from two syscfg_core registers which happen to be in the same
-> sysconf bank.
->
-> However most other devices tend to have a combination of some memory mapped
-> registers and also some sysconfig registers which does then create a conflict
-> over where the dt node should live.
-> 
-> Currently I can't find an example but there is also no guarentee that a
-> device will not have some configuration bits in syscfg_core and some
-> other bits in syscfg_rear/front registers. The phy for example could
-> have had one register in each, which would make deciding where to put
-> it difficult.
-> 
-> So to create coherency / conformity we decided to put all the IP blocks under the soc node.
-> 
-> Also its worth pointing if your not already aware that sysconf_core/rear/front isn't
-> really a device, it's just a regmap abstraction of some memory mapped configuration
-> registers where a bunch of seemingly random control bits get stuffed.
-> 
-> Of course if you feel strongly about it I can of course change it like you suggested,
-> but that is the reasoning / rationale of why it was done like this initially.
 
-The problem is your use of the 'reg' property. If it doesn't refer to the
-node's address space, it shouldn't be called 'reg'.
+--KFqA3NAzXT9iu/Yo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Please fix the binding.
+On Wed, Nov 12, 2014 at 07:08:16PM -0800, Andrew Bresticker wrote:
 
-	Arnd
+> +#ifdef CONFIG_PM_SLEEP
+> +static int img_spfi_suspend(struct device *dev)
+> +{
+> +	struct spi_master *master =3D dev_get_drvdata(dev);
+> +
+> +	return spi_master_suspend(master);
+> +}
+
+This should really be checking that the device is runtime suspended and
+disabling the clocks if not, if nothing else someone might be running
+with !CONFIG_RUNTIME_PM. =20
+
+One of these days we'll get runtime and system PM playing more
+frictionlessly but not today.
+
+--KFqA3NAzXT9iu/Yo
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUZO3kAAoJECTWi3JdVIfQtLwH/RvmbswLLjnV97UEwcv5mbmt
+O1MtBjlqfg64Ls6llZYSAjq1gInOzM4An3Wn36zEcHaYYRKiLLQPB5NO1qouTpVD
+c09Zm9le2W2Rkw2f10gXQLOPeKSev7meTEk/c7Rh0TBHV6XKrDUDHzNPu8Cw8MuV
+4+PyU0Q3liBdOG5qJTuCz/rGSfsBIHa8sn805Z2iIn8yfKo62VYHkQtfydJJ/UZt
+wFgrtzZ8bChJ2csOh9CSGweXEzBGFKvVBPPGizx7LOUUuj+AO0DjJxFh4wWRCigw
+myq5IxLOhLJoG4IMVngxM2wRbvcjupBxrygeTfJPrF9v+K+aQGo+AYa8mlJG84U=
+=TciD
+-----END PGP SIGNATURE-----
+
+--KFqA3NAzXT9iu/Yo--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
