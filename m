@@ -1,57 +1,65 @@
-From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 2/3] DT: iio: adc: Add CC_10001 binding documentation
-Date: Thu, 13 Nov 2014 15:19:32 -0300
-Message-ID: <1415902772-20407-1-git-send-email-ezequiel.garcia@imgtec.com>
-References: <1415888044-16635-3-git-send-email-ezequiel.garcia@imgtec.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 4/4] arm: dts: omap3-gta04: Add static configuration for
+ devconf1 register
+Date: Thu, 13 Nov 2014 10:28:49 -0800
+Message-ID: <20141113182848.GQ26481@atomide.com>
+References: <1415051968-4878-1-git-send-email-marek@goldelico.com>
+ <1415051968-4878-5-git-send-email-marek@goldelico.com>
+ <5463585D.9070209@ti.com>
+ <20141112150210.GC26481@atomide.com>
+ <5464969F.30708@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415888044-16635-3-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, Mark.Rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5464969F.30708-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+* Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> [141113 03:33]:
+> On 12/11/14 17:02, Tony Lindgren wrote:
+> 
+> >> And, with a quick grep, I see CONTROL_DEVCONF1 touched in multiple
+> >> places in the kernel. I wonder if adding a pinmux entry for it could
+> >> cause some rather odd problems.
+> > 
+> > They can all use pinctrl-single no problem.
+> 
+> Can, but don't. That's my worry. If we touch the DEVCONF1 via pinmux,
+> and we have code in mach-omap2 that also touch DEVCONF1, without any
+> knowledge (and locking) between those...
 
-Add the devicetree binding document for Cosmic Circuits 10001 ADC device.
+Hmm yeah the McBSP clock mux could be racy as the mux register for
+McBSP is treated as a clock. This register muxes the clock between
+external pin and internal clock. Considering that this should be
+selectable at board level as the external clock probably needs to be
+used if level shifters are being used, it should be really handled by
+pinctrl-single.
 
-Signed-off-by: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-[Ezequiel: minor style cleaning]
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
----
- .../devicetree/bindings/iio/adc/cc10001_adc.txt    | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/cc10001_adc.txt
+The other use for hsmmc.c and pdata-quirks.c for the one time mux for
+MMC clock from the MMC clock pin. That can be done with pinctrl-single
+from the MMC driver too for DT based booting.
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/cc10001_adc.txt b/Documentation/devicetree/bindings/iio/adc/cc10001_adc.txt
-new file mode 100644
-index 0000000..b7ba558
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/cc10001_adc.txt
-@@ -0,0 +1,22 @@
-+* Cosmic Circuits - Analog to Digital Converter (CC-10001-ADC)
-+
-+Required properties:
-+  - compatible: Should be "cosmic,10001-adc"
-+  - reg: Should contain adc registers location and length.
-+  - clock-names: Should contain "adc".
-+  - clocks: Should contain a clock specifier for each entry in clock-names
-+  - vref-supply: The regulator supply ADC reference voltage.
-+
-+Optional properties:
-+  - cosmic,adc-reserved-channels: Bitmask of reserved channels,
-+    i.e. channels that cannot be used by the OS.
-+
-+Example:
-+adc: adc@18101600 {
-+	compatible = "cosmic,10001-adc";
-+	reg = <0x18101600 0x24>;
-+	cosmic,adc-reserved-channels = <0x2>;
-+	clocks = <&adc_clk>;
-+	clock-names = "adc";
-+	vref-supply = <&reg_1v8>;
-+};
--- 
-2.1.0
+Then we just have the save and restore of the registers for
+off-idle.
+ 
+> So _maybe_ that's not an issue, as the pinmux config we have here is
+> fixed, and done once at boot time, and maybe the code in mach-omap2 that
+> touch DEVCONF1 is also ran just once and not at the same time as the
+> pinmux. But I don't know if that's so.
+
+It seems we could just do a read-only check for McBSP in the clock
+code for the mux register, or even completely drop that code from
+cclock3xxx_data.c and start using the pinctrl for that mux.
+
+Paul & Tero, got any comments here?
+
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
