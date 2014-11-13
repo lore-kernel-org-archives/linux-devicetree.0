@@ -1,98 +1,58 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH 19/22] dt/bindings: add micrel,rmii_ref_clk_sel_25_mhz to
- eth-phy binding
-Date: Thu, 13 Nov 2014 09:09:27 +0100
-Message-ID: <20141113080927.GP30369@pengutronix.de>
-References: <1415727460-20417-1-git-send-email-johan@kernel.org>
- <1415727460-20417-20-git-send-email-johan@kernel.org>
- <20141111175741.GF25295@leverpostej>
- <20141111181825.GH29789@localhost>
- <20141112070127.GF30369@pengutronix.de>
- <20141112091920.GC15215@localhost>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 2/4] simplefb: Add support for enumerating
+ simplefb dt nodes in /chosen
+Date: Thu, 13 Nov 2014 09:15:55 +0100
+Message-ID: <CAMuHMdWdtxcmDc7fDbQHfVa425sR3MGwJ70cRnh2Wb50iAo2CQ@mail.gmail.com>
+References: <1415830124-28787-1-git-send-email-hdegoede@redhat.com>
+	<1415830124-28787-2-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141112091920.GC15215@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCQJP74GSUDRBO6RSGRQKGQEL5LEQBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1415830124-28787-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 12, 2014 at 10:19:20AM +0100, Johan Hovold wrote:
-> On Wed, Nov 12, 2014 at 08:01:27AM +0100, Sascha Hauer wrote:
-> > On Tue, Nov 11, 2014 at 07:18:25PM +0100, Johan Hovold wrote:
-> > > On Tue, Nov 11, 2014 at 05:57:42PM +0000, Mark Rutland wrote:
-> > > > On Tue, Nov 11, 2014 at 05:37:37PM +0000, Johan Hovold wrote:
-> > > > > Add "micrel,rmii_ref_clk_sel_25_mhz" to Micrel ethernet PHY binding
-> > > > > documentation.
-> > > > > 
-> > > > > Cc: devicetree@vger.kernel.org
-> > > > > Signed-off-by: Johan Hovold <johan@kernel.org>
-> > > > > ---
-> > > > >  Documentation/devicetree/bindings/net/micrel.txt | 5 +++++
-> > > > >  1 file changed, 5 insertions(+)
-> > > > > 
-> > > > > diff --git a/Documentation/devicetree/bindings/net/micrel.txt b/Documentation/devicetree/bindings/net/micrel.txt
-> > > > > index a1bab5eaae02..9b08dd6551dd 100644
-> > > > > --- a/Documentation/devicetree/bindings/net/micrel.txt
-> > > > > +++ b/Documentation/devicetree/bindings/net/micrel.txt
-> > > > > @@ -19,6 +19,11 @@ Optional properties:
-> > > > >  
-> > > > >                See the respective PHY datasheet for the mode values.
-> > > > >  
-> > > > > + - micrel,rmii_ref_clk_sel_25_mhz: rmii_ref_clk_sel bit selects 25 MHz mode
-> > > > > +
-> > > > > +		Whether 25 MHz (rather than 50 Mhz) clock mode is selected
-> > > > > +		when the rmii_ref_clk_sel bit is set.
-> > > > 
-> > > > s/_/-/ in property names please.
-> > > 
-> > > Ouch, copied from variable name, sorry.
-> > > 
-> > > > That said, I don't follow the meaning. Does this cause the kernel to do
-> > > > something different, or is is simply that a 25MHz ref clock is wired up?
-> > > 
-> > > Yes, the driver currently sets this configuration bit based on a common
-> > > clock binding.
-> > > 
-> > > However, it turns out the meaning of the bit is reversed on some PHY
-> > > variants. On most PHYs 50 MHz mode is selected by setting this bit,
-> > > whereas on the PHYs that need this new property, setting it selects 25
-> > > MHz mode instead.
-> > 
-> > Maybe rename the property to something like rmii-ref-clk-25mhz-active-high
-> > then? Also you should probably make it more explicit that this is a
-> > hardware property and not for adjusting the clock.
-> 
-> You're right, but how about calling it
-> 
-> 	micrel,rmii-reference-clock-select-inverted
-> 
-> Then no one will set it believing it will change the clock mode and
-> without reading the binding doc first.
-> 
-> The description could then read something like
-> 
-> 	micrel,rmii-reference-clock-select-inverted: RMII Reference
-> 		Clock Select bit is inverted
-> 
-> 	The RMII Reference Clock Select bit is inverted so that setting
-> 	it selects 25 MHz rather than 50 MHz clock mode. 
-> 
-> 	Note that this is only needed for PHY variants that has this bit
-> 	inverted and that a clock reference ("rmii-ref" below) is always
-> 	needed to select the actual mode.
+On Wed, Nov 12, 2014 at 11:08 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> --- a/drivers/video/fbdev/simplefb.c
+> +++ b/drivers/video/fbdev/simplefb.c
 
-"Inverted" only has a meaning when everybody agrees what's the normal
-case. Since that not the case I really prefer talking about
-"active-high" or "active-low".
+> @@ -385,7 +386,37 @@ static struct platform_driver simplefb_driver = {
+>         .probe = simplefb_probe,
+>         .remove = simplefb_remove,
+>  };
+> -module_platform_driver(simplefb_driver);
+> +
+> +static int __init simplefb_init(void)
+> +{
+> +       int i, ret;
 
-Sascha
+unsigned int i;
 
+> +       char name[16];
+> +       struct device_node *np;
+> +
+> +       ret = platform_driver_register(&simplefb_driver);
+> +       if (ret)
+> +               return ret;
+> +
+> +       for (i = 0; ; i++) {
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
