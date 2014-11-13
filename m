@@ -1,100 +1,132 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/4] simplefb: Change simplefb_init from
- module_init to fs_initcall
-Date: Thu, 13 Nov 2014 11:42:03 +0100
-Message-ID: <20141113104203.GF20972@lukather>
-References: <1415830124-28787-1-git-send-email-hdegoede@redhat.com>
- <1415830124-28787-3-git-send-email-hdegoede@redhat.com>
- <20141113085238.GE20972@lukather>
- <546478B5.2040002@redhat.com>
- <CACxGe6u8B854PEWw8XzwhyX8joMWwOsHOOXtmBmC1TgCGjGtdg@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH] can: Fix bug in suspend/resume
+Date: Thu, 13 Nov 2014 11:46:12 +0100
+Message-ID: <54648BF4.60007@pengutronix.de>
+References: <a44efc1fb0144cca9d0c4851cc51db25@BL2FFO11FD024.protection.gbl> <546484D9.4030005@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="yRA+Bmk8aPhU85Qt"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBL4XSKRQKGQE2O4C5HY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACxGe6u8B854PEWw8XzwhyX8joMWwOsHOOXtmBmC1TgCGjGtdg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+ protocol="application/pgp-signature";
+ boundary="JDTIScx6ajdfsQADus7HgWIFDNJFgeGnv"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <546484D9.4030005@pengutronix.de>
+Sender: linux-can-owner@vger.kernel.org
+To: Kedareswara rao Appana <appana.durga.rao@xilinx.com>, wg@grandegger.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, grant.likely@linaro.org, robh+dt@kernel.org
+Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kedareswara rao Appana <appanad@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-
---yRA+Bmk8aPhU85Qt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--JDTIScx6ajdfsQADus7HgWIFDNJFgeGnv
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 13, 2014 at 10:29:52AM +0000, Grant Likely wrote:
-> On Thu, Nov 13, 2014 at 9:24 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrot=
-e:
-> > On 11/13/2014 09:52 AM, Maxime Ripard wrote:
-> >>> +/*
-> >>> + * While this can be a module, if builtin it's most likely the conso=
-le
-> >>> + * So let's leave module_exit but move module_init to an earlier pla=
-ce
-> >>> + */
-> >>
-> >> Not really related to this patch itself, but do we want to support
-> >> simplefb as a module? It seems like it's going to be most of the time
-> >> broken.
-> >
-> > A valid point, my mean reasoning here is that some may see not being ab=
-le to
-> > use it as a module as a regression, so I just kept things as is, but I =
-do
-> > agree that it is advisable to just build it in.
+On 11/13/2014 11:15 AM, Marc Kleine-Budde wrote:
+> On 11/13/2014 07:58 AM, Kedareswara rao Appana wrote:
+>> When accessing the priv structure use container_of instead of dev_get_=
+drvdata.
 >=20
-> Like a lot of things, if it is made a modules, and it breaks for the
-> user, the user gets to keep the pieces. There are potentially some
-> valid scenarios where it is fine to have it as a module. I don't
-> recommend changing this unless is actually starts causing problems.
+> Why?
 
-I don't really agree here. If it's broken because the clocks, reset,
-memory, or whatever resource has been reclaimed by the kernel before
-the module even had a chance to probe, the only thing that the user
-will get is that there's no chance it's ever going to work, and that
-it's just unreliable.
+The drvdata here is the struct net_device, not the platform device.
+Please state this in the commit message.
 
-If we know that it's going to break, and that there's no way it can be
-reliable (as in on all the SoCs reliable), keeping it as a module is
-just asking for trouble.
+If I understand the code correct, you can make use of the existing
+helper function to_platform_device():
 
-Maxime
+http://lxr.free-electrons.com/source/include/linux/platform_device.h#L42
+
+>=20
+>> Enable the clocks in the suspend before accessing the registers of the=
+ CAN.
+>>
+>> Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+>> ---
+>>  drivers/net/can/xilinx_can.c |   20 ++++++++++++++++++--
+>>  1 files changed, 18 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/net/can/xilinx_can.c b/drivers/net/can/xilinx_can=
+=2Ec
+>> index 5e8b560..63ef645 100644
+>> --- a/drivers/net/can/xilinx_can.c
+>> +++ b/drivers/net/can/xilinx_can.c
+>> @@ -972,15 +972,30 @@ static const struct net_device_ops xcan_netdev_o=
+ps =3D {
+>>   */
+>>  static int __maybe_unused xcan_suspend(struct device *dev)
+>>  {
+>> -	struct platform_device *pdev =3D dev_get_drvdata(dev);
+>> +	struct platform_device *pdev =3D container_of(dev,
+>> +			struct platform_device, dev);
+>>  	struct net_device *ndev =3D platform_get_drvdata(pdev);
+>>  	struct xcan_priv *priv =3D netdev_priv(ndev);
+>> +	int ret;
+>> =20
+>>  	if (netif_running(ndev)) {
+>>  		netif_stop_queue(ndev);
+>>  		netif_device_detach(ndev);
+>>  	}
+>> =20
+>> +	ret =3D clk_prepare_enable(priv->can_clk);
+>> +	if (ret) {
+>> +		dev_err(dev, "unable to enable device clock\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret =3D clk_prepare_enable(priv->bus_clk);
+>> +	if (ret) {
+>> +		dev_err(dev, "unable to enable bus clock\n");
+>> +		clk_disable_unprepare(priv->can_clk);
+>> +		return ret;
+>> +	}
+>=20
+> Now you have clock imbalance. Per suspend/resume cycle the clocks are
+> enabled twice, but disabled only once.
+>=20
+>> +
+>>  	priv->write_reg(priv, XCAN_MSR_OFFSET, XCAN_MSR_SLEEP_MASK);
+>>  	priv->can.state =3D CAN_STATE_SLEEPING;
+>> =20
+>> @@ -999,7 +1014,8 @@ static int __maybe_unused xcan_suspend(struct dev=
+ice *dev)
+>>   */
+>>  static int __maybe_unused xcan_resume(struct device *dev)
+>>  {
+>> -	struct platform_device *pdev =3D dev_get_drvdata(dev);
+>> +	struct platform_device *pdev =3D container_of(dev,
+>> +			struct platform_device, dev);
+>>  	struct net_device *ndev =3D platform_get_drvdata(pdev);
+>>  	struct xcan_priv *priv =3D netdev_priv(ndev);
+>>  	int ret;
+
+Marc
 
 --=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
---yRA+Bmk8aPhU85Qt
+
+--JDTIScx6ajdfsQADus7HgWIFDNJFgeGnv
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJUZIr7AAoJEBx+YmzsjxAgSccP/RI59EUGactEAMDhskesOqwa
-psXnHuoo/zBauzyWFJUXD1Jv9SglUghzjkDj5Hy+iaxt6VTZr1iMVHZTfm3o1gE3
-lBH97NFLk5S4MzCOTb7hI2lCXtFLd88Jq8BblL356HFjGC9k9+ofTSXYrGAhayNy
-3zKmRA2mfsA1VWo+8W6EFwU7VpQoR64s1T2Cx79GHPGFIvfixZKclDwKPc2Jv4FE
-9bE95nQxet/8gaG20e58uttyi7rheXahj76hvd7JANvONrbaFYE/AqLV8VzCd+gP
-7HcKtSpF1QB88vCYDvuMZiz1JvZRlf+x/CZdfMV55ev3DbYrClVwQ/YK5cG/9nMr
-Wojv5BIIX26c7epl8vLytUrCWnuQblUG9Kit+Ud2TLiiRJuxFG/+GUNCM56avleO
-5XtFZ96w0OKhXqAUzbP3/GDmhlTgNYB1JXX/yCZlWrpcZC9ZYu8eXkow5NCQT/E5
-NkMhW8wrpchhFrRf+J5qT8+NPgawe684RAM7giVYnoJ7Tg/ITQiSJoDTemEJ9fAz
-hUAtAshtYjVN02/UdGCfoIonmSd4drw/5lCHRhB2DAhAQHCryyRFUrg63F+7ZWi6
-NXCyvBT5ODlkGk0iktXyB7DkhWc1vX+Qi6ofCj3YTyfLLQZ/X9NethT5FvG9S2cS
-yqSMACWqhQuySMRtlxDk
-=LOgH
+iQIcBAEBAgAGBQJUZIv0AAoJECte4hHFiupUBRAQAIEwZXuTkeRCmFmiy27yYlmw
+LIsgVArhIbenkJnaT1LKOlx++6vj+7NzdJfX1K4eU1LLDwbQB4Rl4QDDvMvKjbDg
+5pNq51d5es0fCLP4ZEGTMmmXunlYhTajvBO7+BnPOvCgBXSAd+Ch+wfhtpSf6pwR
+JkwzG39/c4oqDDarqSEbHN6sdsaBWxKY1mANg7MDVYxu0k5BASeus8Jk7YIWJYN+
+UAOgTDRAXdDsegaH3ZgPtNP9QY7Ui0yUNQvVIX5J4W6kr93H4IHbrLTcJ6a+8rgY
+9flcjPrwEh1w+qcUa5875zI89YsnUKZCXArCYeJL3+ty+KUFBqk24lu3RFm9bJ+e
+VNWuSWTzb3uF6nMFLvg9BJoSCm7c/f9enirVDJk2hE188aF00Kf6wntT+eHnOYyg
+zioxAmscDRvIR7EH/U541sldYDQzCvr6jevWnmaMVbInmtL0wFw7Pw7Lof+fybIa
+s8DGxH/SrvC7vbiqVV3XsbDpxHgQ+nSdeoqZ4u+4x74dMCjU9/9auqN3BbgP9eBS
+hNpp1J3kAS4gj4GaaGC7cns47KgJE0+jW2vXwWCrPZ/AegXpNrYFoLL10kIBVM0c
+qbjZXBtmS+J92WhDfZx8g5fJ9uWe9zUQLP7IITUuYPyubN/roAR8fZqXxMQ5N7Ce
+1YzhFTcp+AhOl7bZYHw6
+=ncoe
 -----END PGP SIGNATURE-----
 
---yRA+Bmk8aPhU85Qt--
+--JDTIScx6ajdfsQADus7HgWIFDNJFgeGnv--
