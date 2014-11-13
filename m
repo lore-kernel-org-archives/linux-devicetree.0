@@ -1,40 +1,100 @@
-From: Ankit Jindal <ankit.jindal@linaro.org>
-Subject: [PATCH v4 6/6] MAINTAINERS: Add entry for APM X-Gene QMTM UIO driver
-Date: Thu, 13 Nov 2014 13:15:22 +0530
-Message-ID: <1415864722-2800-7-git-send-email-ankit.jindal@linaro.org>
-References: <1415864722-2800-1-git-send-email-ankit.jindal@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415864722-2800-1-git-send-email-ankit.jindal@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: "Hans J. Koch" <hjk@hansjkoch.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, patches@apm.com, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Tushar Jagad <tushar.jagad@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Varka Bhadram <varkabhadram@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ankit Jindal <ankit.jindal@linaro.org>
+From: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH] DT: add MDIO node for FMan node
+Date: Thu, 13 Nov 2014 08:02:39 +0000
+Message-ID: <489ad06fda99436eb3307d613b1f8293@DM2PR0301MB0864.namprd03.prod.outlook.com>
+References: <1415102196-9238-1-git-send-email-shh.xie@gmail.com>
+	 <1415665384.15957.16.camel@freescale.com>
+	 <fb6dc6131da04e89bfc31bd8278030a0@DM2PR0301MB0864.namprd03.prod.outlook.com>
+	 <1415727479.15957.29.camel@freescale.com>
+	 <c4dd11a97a684be8b799c2f639e600ca@DM2PR0301MB0864.namprd03.prod.outlook.com>
+	 <1415859399.15957.48.camel@freescale.com>
+	 <59c6a8b7ad1d477aad9edd2152d02f8e@DM2PR0301MB0864.namprd03.prod.outlook.com>
+ <1415862913.15957.56.camel@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415862913.15957.56.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Emilian Medve <Emilian.Medve-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add entry to maintainer list for APM X-Gene QMTM UIO driver.
-
-Signed-off-by: Ankit Jindal <ankit.jindal@linaro.org>
-Signed-off-by: Tushar Jagad <tushar.jagad@linaro.org>
----
- MAINTAINERS |    7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5e7866a..138663f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -727,6 +727,13 @@ S:	Supported
- F:	drivers/net/ethernet/apm/xgene/
- F:	Documentation/devicetree/bindings/net/apm-xgene-enet.txt
- 
-+APPLIED MICRO (APM) X-GENE QMTM UIO DRIVER
-+M:	Ankit Jindal <ankit.jindal@linaro.org>
-+M:	Tushar Jagad <tushar.jagad@linaro.org>
-+S:	Supported
-+F:	drivers/uio/uio_xgene_qmtm.c
-+F:	Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt
-+
- APTINA CAMERA SENSOR PLL
- M:	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
- L:	linux-media@vger.kernel.org
--- 
-1.7.9.5
+DQoNCkJlc3QgUmVnYXJkcywgDQpTaGFvaHVpIFhpZQ0KDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNz
+YWdlLS0tLS0NCj4gRnJvbTogV29vZCBTY290dC1CMDc0MjENCj4gU2VudDogVGh1cnNkYXksIE5v
+dmVtYmVyIDEzLCAyMDE0IDM6MTUgUE0NCj4gVG86IFhpZSBTaGFvaHVpLUIyMTk4OQ0KPiBDYzog
+TGliZXJtYW4gSWdhbC1CMzE5NTA7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOw0KPiBk
+ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgTWVkdmUgRW1pbGlhbi1FTU1FRFZFMQ0KPiBTdWJq
+ZWN0OiBSZTogW1BBVENIXSBEVDogYWRkIE1ESU8gbm9kZSBmb3IgRk1hbiBub2RlDQo+IA0KPiBP
+biBUaHUsIDIwMTQtMTEtMTMgYXQgMDE6MTEgLTA2MDAsIFhpZSBTaGFvaHVpLUIyMTk4OSB3cm90
+ZToNCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBXb29kIFNj
+b3R0LUIwNzQyMQ0KPiA+ID4gU2VudDogVGh1cnNkYXksIE5vdmVtYmVyIDEzLCAyMDE0IDI6MTcg
+UE0NCj4gPiA+IFRvOiBYaWUgU2hhb2h1aS1CMjE5ODkNCj4gPiA+IENjOiBMaWJlcm1hbiBJZ2Fs
+LUIzMTk1MDsgbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmc7DQo+ID4gPiBkZXZpY2V0cmVl
+QHZnZXIua2VybmVsLm9yZzsgTWVkdmUgRW1pbGlhbi1FTU1FRFZFMQ0KPiA+ID4gU3ViamVjdDog
+UmU6IFtQQVRDSF0gRFQ6IGFkZCBNRElPIG5vZGUgZm9yIEZNYW4gbm9kZQ0KPiA+ID4NCj4gPiA+
+IE9uIFdlZCwgMjAxNC0xMS0xMiBhdCAwNzo0MCAtMDYwMCwgWGllIFNoYW9odWktQjIxOTg5IHdy
+b3RlOg0KPiA+ID4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiA+ID4gRnJv
+bTogV29vZCBTY290dC1CMDc0MjENCj4gPiA+ID4gPiBTZW50OiBXZWRuZXNkYXksIE5vdmVtYmVy
+IDEyLCAyMDE0IDE6MzggQU0NCj4gPiA+ID4gPiBUbzogWGllIFNoYW9odWktQjIxOTg5DQo+ID4g
+PiA+ID4gQ2M6IExpYmVybWFuIElnYWwtQjMxOTUwOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJz
+Lm9yZzsNCj4gPiA+ID4gPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgTWVkdmUgRW1pbGlh
+bi1FTU1FRFZFMQ0KPiA+ID4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIERUOiBhZGQgTURJTyBu
+b2RlIGZvciBGTWFuIG5vZGUNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IE9uIFR1ZSwgMjAxNC0xMS0x
+MSBhdCAwNDozMiAtMDYwMCwgWGllIFNoYW9odWktQjIxOTg5IHdyb3RlOg0KPiA+ID4gPiA+ID4g
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gPiA+ID4gPiBGcm9tOiBXb29kIFNj
+b3R0LUIwNzQyMQ0KPiA+ID4gPiA+ID4gPiBTZW50OiBUdWVzZGF5LCBOb3ZlbWJlciAxMSwgMjAx
+NCA4OjIzIEFNDQo+ID4gPiA+ID4gPiA+IFRvOiBzaGgueGllQGdtYWlsLmNvbQ0KPiA+ID4gPiA+
+ID4gPiBDYzogbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmc7DQo+ID4gPiA+ID4gPiA+IGRl
+dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBNZWR2ZSBFbWlsaWFuLUVNTUVEVkUxOyBYaWUNCj4g
+PiA+ID4gPiA+ID4gU2hhb2h1aS1CMjE5ODkNCj4gPiA+ID4gPiA+ID4gU3ViamVjdDogUmU6IFtQ
+QVRDSF0gRFQ6IGFkZCBNRElPIG5vZGUgZm9yIEZNYW4gbm9kZQ0KPiA+ID4gPiA+ID4gPg0KPiA+
+ID4gPiA+ID4gPiBPbiBUdWUsIDIwMTQtMTEtMDQgYXQgMTk6NTYgKzA4MDAsIHNoaC54aWVAZ21h
+aWwuY29tIHdyb3RlOg0KPiA+ID4gPiA+ID4gPiA+IEZyb206IFNoYW9odWkgWGllIDxTaGFvaHVp
+LlhpZUBmcmVlc2NhbGUuY29tPg0KPiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ID4gVGhp
+cyBiaW5kaW5nIGlzIGZvciBGTWFuIE1ESU8sIGl0IGNvdmVycyBGTWFuIHYyICYgRk1hbiB2My4N
+Cj4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IFNoYW9odWkg
+WGllIDxTaGFvaHVpLlhpZUBmcmVlc2NhbGUuY29tPg0KPiA+ID4gPiA+ID4gPiA+IC0tLQ0KPiA+
+ID4gPiA+ID4gPiA+IGJhc2VkIG9uIGh0dHA6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC8z
+OTAzNTEvDQo+ID4gPiA+ID4gPiA+ID4gZm9yICduZXh0JyBvZg0KPiA+ID4gPiA+ID4gPiA+DQo+
+IGdpdDovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9zY290dHdvb2Qv
+bGludXguDQo+ID4gPiA+ID4gPiA+ID4gZ2l0DQo+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+
+IEFyZSB0aGVyZSBhbnkgb3RoZXIgRk1hbiBwaWVjZXMgdGhhdCBhcmUgbWlzc2luZyBmcm9tIHRo
+ZQ0KPiA+ID4gPiA+ID4gPiBhYm92ZQ0KPiA+ID4gcGF0Y2g/DQo+ID4gPiA+ID4gPiBbUy5IXSBJ
+J20gYWRkaW5nIElnYWwgZm9yIHRoaXMgY29tbWVudC4NCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4g
+PiA+DQo+ID4gPiA+ID4gPiA+ID4gKy0gYnVzLWZyZXF1ZW5jeQ0KPiA+ID4gPiA+ID4gPiA+ICsJ
+CVVzYWdlOiBvcHRpb25hbA0KPiA+ID4gPiA+ID4gPiA+ICsJCVZhbHVlIHR5cGU6IDx1MzI+DQo+
+ID4gPiA+ID4gPiA+ID4gKwkJRGVmaW5pdGlvbjogRGVmYXVsdCBNRElPIGJ1cyBjbG9jayBzcGVl
+ZC4NCj4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gVXNlIGNsb2Nrcy9jbG9jay1uYW1lcw0K
+PiA+ID4gPiA+ID4gW1MuSF0gVGhlIE1ESU8gdXNlcyBGbWFuIGNsb2NrIGFuZCBkaXZpZGVzIGl0
+IHRvIGEgcHJvcGVyDQo+ID4gPiA+ID4gPiB2YWx1ZSB3aGljaA0KPiA+ID4gPiA+IGlzIHNwZWNp
+ZmllZCBieSB0aGlzIHByb3BlcnR5Lg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gVXNlIGNsb2Nrcy9j
+bG9jay1uYW1lcyB0byBkZXNjcmliZSB0aGF0IHJlbGF0aW9uc2hpcC4NCj4gPiA+ID4gPg0KPiA+
+ID4gPg0KPiA+ID4gPiBbUy5IXSBUaGUgTURJTyBub2RlIGlzIHN1Yi1ub2RlIGFuZCBlbWJlZGRl
+ZCBpbiBGbWFuIG5vZGUsIHRoZQ0KPiA+ID4gPiBjbG9ja3MvY2xvY2stbmFtZXMgaXMgcHJvdmlk
+ZWQgYnkgRm1hbiBub2RlLCBzaG91bGQgcmVwZWF0IHRoZW0gaW4NCj4gPiA+ID4gTURJTyBub2Rl
+PyBGb3IgdGhlIGRlZmF1bHQgTURJTyBidXMgY2xvY2sgc3BlZWQsIG1heWJlICJjbG9jay0NCj4g
+cmFuZ2VzIg0KPiA+ID4gPiBzaG91bGQgYmUgdXNlZD8NCj4gPiA+DQo+ID4gPiBJdCdzIGEgZGlm
+ZmVyZW50IGNsb2NrLiAgWW91IHdvdWxkbid0IGJlIHJlcGVhdGluZy4gIElmIGl0J3MgZGVyaXZl
+ZA0KPiA+ID4gZnJvbSB0aGUgRk1hbiBjbG9jaywgdGhlbiBtYXliZSB5b3UgZG9uJ3QgbmVlZCBh
+bnl0aGluZyBoZXJlIChkb2VzDQo+ID4gPiB0aGUgZHJpdmVyIGtub3cgd2hhdCB0aGUgZGl2aWRl
+ciBpcywgb3Igd291bGQgdGhhdCBuZWVkIHRvIGJlDQo+ID4gPiBzcGVjaWZpZWQgaW4gdGhlIGRl
+dmljZSB0cmVlPyksIGJ1dCBubyBtb3JlIGNsb2NrLWZyZXF1ZW5jeS9idXMtDQo+IGZyZXF1ZW5j
+eSBwcm9wZXJ0aWVzLg0KPiA+ID4NCj4gPiBbUy5IXSBUaGUgcHVycG9zZSBoZXJlIGlzIHRvIGdl
+dCBhIHNwZWNpZmljIGNsb2NrIGZyZXF1ZW5jeSwgZHJpdmVyIHRvDQo+IHVzZSBpdCB0byBjYWxj
+dWxhdGUgdGhlIGRpdmlkZXIuDQo+ID4gVGhlbiB0aGUgRm1hbiBjbG9jayBjYW4gYmUgZGl2aWRl
+ZCB0byB0aGUgZnJlcXVlbmN5Lg0KPiANCj4gT2gsIHNvIHRoaXMgaXMgc3RhdGluZyBhIGRlc2ly
+ZWQgZnJlcXVlbmN5IGFuZCBub3Qgc29tZXRoaW5nIHRoYXQgYWxyZWFkeQ0KPiBleGlzdHM/ICBX
+aGF0IGRldGVybWluZXMgdGhpcyBmcmVxdWVuY3k/ICBJcyBpdCBiYXNlZCBvbiBib2FyZCBkZXNp
+Z24sIG9yDQo+IGp1c3Qgb24gdGhlIE1ESU8gc3RhbmRhcmQsIGV0Yz8gIEknbSB3b25kZXJpbmcg
+aWYgdGhlIGRldmljZSB0cmVlIGlzIHRoZQ0KPiByaWdodCBwbGFjZSBmb3IgaXQuDQpbUy5IXSBZ
+ZXMsIGEgZGVzaXJlZCBmcmVxdWVuY3kgd2hpY2ggaXMgZGlmZmVyZW50IHdpdGggTURJTyBzdGFu
+ZGFyZC4NClRoZSBGbWFuIGNsb2NrIGFuZCB0aGUgZGl2aWRlciBkZXRlcm1pbmVzIHRoaXMgZnJl
+cXVlbmN5Lg0KU2luY2UgRm1hbiBjbG9jayBpcyBkaWZmZXJlbnQgb24gZGlmZmVyZW50IFNvQ3Ms
+IHNvIHNwZWNpZnkgdGhlIGRlc2lyZWQgZnJlcXVlbmN5LCANCnRoZW4gdG8gZ2V0IHRoZSBwcm9w
+ZXIgZGl2aWRlci4NCg0KDQpUaGFua3MuDQpzaGFvaHVpDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
