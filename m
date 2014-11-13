@@ -1,40 +1,57 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 0/5] simplefb: add clock handling code
-Date: Thu, 13 Nov 2014 07:38:38 +0000
-Message-ID: <CACxGe6ua8OF5+SNjgO3Nc5ZSVvaic3OzrFES-5=f+bsj-fvE3g@mail.gmail.com>
-References: <1415808952-23549-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCJP567ORICBBEWASGRQKGQE2EIBSFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1415808952-23549-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+From: Ankit Jindal <ankit.jindal@linaro.org>
+Subject: [PATCH v4 0/6] UIO driver for APM X-Gene QMTM
+Date: Thu, 13 Nov 2014 13:15:16 +0530
+Message-ID: <1415864722-2800-1-git-send-email-ankit.jindal@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: "Hans J. Koch" <hjk@hansjkoch.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, patches@apm.com, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Tushar Jagad <tushar.jagad@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Varka Bhadram <varkabhadram@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ankit Jindal <ankit.jindal@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 12, 2014 at 4:15 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> Hi Tomi,
->
-> Here is v5 of my simplefb patch-set, this time with an Ack from
-> Grant Likely for the dt-bindings bits, which should end all controversy
-> surrounding that patch.
->
-> For changes since the original postings please see the per patch changelogs
-> in the patch commit messages.
->
-> Please merge this into your tree for 3.19.
+This patchset enables user space access to APM X-Gene QMTM
+using UIO framework.
 
-Hi Tomi,
+The patchset also introduces new type UIO_MEM_PHYS_CACHE
+for mem regions because APM X-Gene QMTM device supports
+cache coherency with CPU caches.
 
-I'm discussing this with Rob today. Please hold off 24 hours before
-merging. If you don't hear anything to the contrary by tomorrow then
-go ahead and merge.
+Changes since v3:
+ - Renamed qpool to qpool-memory in dt-binding.
+ - Some cleanups in dt-binding documentation.
 
-g.
+Changes since v2:
+ - Formatting cleanups.
+ - Remove qmtm_cleanup().
+
+Changes since v1:
+ - Factor-out formating related change in uio/uio.c as separate patch.
+ - Use devm_xxx() APIs where appilicable.
+ - Some cleanups and buggy loop fixed in qmtm_reset().
+ - Removed open and release functions.
+ - Use phandle for specifying QMTM qpool resource.
+ - Removed "uio" from the compatible string.
+ - Added more information about QMTM in binding documentation.
+
+Ankit Jindal (6):
+  uio: code style cleanup
+  uio: Add new UIO_MEM_PHYS_CACHE type for mem regions
+  Documentation: Update documentation for UIO_MEM_PHYS_CACHE
+  uio: Add X-Gene QMTM UIO driver
+  Documentation: dt-bindings: Add binding info for X-Gene QMTM UIO
+    driver
+  MAINTAINERS: Add entry for APM X-Gene QMTM UIO driver
+
+ Documentation/DocBook/uio-howto.tmpl               |    5 +-
+ .../devicetree/bindings/uio/uio_xgene_qmtm.txt     |   51 ++++
+ MAINTAINERS                                        |    7 +
+ drivers/uio/Kconfig                                |    8 +
+ drivers/uio/Makefile                               |    1 +
+ drivers/uio/uio.c                                  |   23 +-
+ drivers/uio/uio_xgene_qmtm.c                       |  271 ++++++++++++++++++++
+ include/linux/uio_driver.h                         |    1 +
+ 8 files changed, 356 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt
+ create mode 100644 drivers/uio/uio_xgene_qmtm.c
+
+-- 
+1.7.9.5
