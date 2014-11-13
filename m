@@ -1,70 +1,54 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: at91: Add Special Function Registers binding
- documentation
-Date: Thu, 13 Nov 2014 10:48:03 +0100
-Message-ID: <20141113104803.179a7529@bbrezillon>
-References: <1415632471-14672-1-git-send-email-alexandre.belloni@free-electrons.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 5/6] iommu/arm-smmu: support buggy implementations with
+	invalidate-on-map
+Date: Thu, 13 Nov 2014 09:48:26 +0000
+Message-ID: <20141113094826.GA13350@arm.com>
+References: <1407891099-24641-1-git-send-email-mitchelh@codeaurora.org>
+	<1407891099-24641-6-git-send-email-mitchelh@codeaurora.org>
+	<20141112182642.GH26437@arm.com>
+	<vnkwy4rg5jqu.fsf@mitchelh-linux.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415632471-14672-1-git-send-email-alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <vnkwy4rg5jqu.fsf-Yf+dfxj6toJBVvN7MMdr1KRtKmQZhJ7pQQ4Iyu8u01E@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 10 Nov 2014 16:14:29 +0100
-Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-
-> The special function registers gather some registers that allow to tweak
-> features provided by IPs controlled through another register range.
+On Wed, Nov 12, 2014 at 06:58:17PM +0000, Mitchel Humpherys wrote:
+> On Wed, Nov 12 2014 at 10:26:43 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
+> > On Wed, Aug 13, 2014 at 01:51:38AM +0100, Mitchel Humpherys wrote:
+> >> Add a workaround for some buggy hardware that requires a TLB invalidate
+> >> operation to occur at map time. Activate the feature with the
+> >> qcom,smmu-invalidate-on-map boolean DT property.
+> >
+> > I'm digging up an old thread here, but I've been working on a new page-table
+> > allocator for the SMMU and looked into implementing this workaround for you
+> > in there. When I do the TLBI on map after installing the new PTE, can I just
+> > invalidate the range mapped by that PTE, or does it need to be a full TLBI?
 > 
-> Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-
-Once you've fixed your dtsi you can add my
-
-Acked-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-
-on the whole series.
-
-> ---
->  Documentation/devicetree/bindings/arm/atmel-at91.txt | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
+> I'm not totally sure on the history of the hardware errata but I believe
+> it's just the range mapped by that pte.  We use SMMU_CBn_TLBIVA in the
+> our smmu driver.
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.txt b/Documentation/devicetree/bindings/arm/atmel-at91.txt
-> index 562cda9d86d9..a6427de45785 100644
-> --- a/Documentation/devicetree/bindings/arm/atmel-at91.txt
-> +++ b/Documentation/devicetree/bindings/arm/atmel-at91.txt
-> @@ -136,3 +136,20 @@ Example:
->  		compatible = "atmel,at91sam9260-rstc";
->  		reg = <0xfffffd00 0x10>;
->  	};
-> +
-> +Special Function Registers (SFR)
-> +
-> +Special Function Registers (SFR) manage specific aspects of the integrated
-> +memory, bridge implementations, processor and other functionality not controlled
-> +elsewhere.
-> +
-> +required properties:
-> +- compatible: Should be "atmel,<chip>-sfr", "syscon".
-> +  <chip> can be "at91sam9260", "at91sam9rl" or "at91sam9x5".
-> +- reg: Should contain registers location and length
-> +
-> +	sfr@f0038000 {
-> +		compatible = "atmel,sama5d3-sfr", "syscon";
-> +		reg = <0xf0038000 0x4000>;
-> +	};
-> +
+> However, let's actually just drop this...  It's looking like the targets
+> we have that will use the arm-smmu driver thankfully won't need this
+> workaround.  Thanks for keeping this in mind though :)
 
+Ha, damn, then I don't have a user of the shiny new quirks field I added!
+I don't think I'll go as far as removing it altogether though...
 
+Cheers,
 
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Will
