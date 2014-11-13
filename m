@@ -1,57 +1,202 @@
-From: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
-Subject: RE: [PATCH 1/4] pwm: Imagination Technologies PWM DAC driver
-Date: Thu, 13 Nov 2014 19:11:14 +0000
-Message-ID: <27E62D98F903554192E3C13AFCC91C3C2F50566F@hbmail01.hb.imgtec.org>
-References: <1415795873-4816-1-git-send-email-Naidu.Tellapati@imgtec.com>
-	<1415795873-4816-2-git-send-email-Naidu.Tellapati@imgtec.com>
-	<CAL1qeaFuKccak4fJFOK1YSW1uoyLA_a=GFWJ1PTS00Ab9vZB9A@mail.gmail.com>
-	<1F66364AC115084B902937EE750BD69B3F145947@hbmail01.hb.imgtec.org>
-	<1F66364AC115084B902937EE750BD69B3F14598A@hbmail01.hb.imgtec.org>,<CAL1qeaF2Dz0W4qAW=A_GYVBNur4mhjeM61X66cduf5VX9t5HbQ@mail.gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v6] simplefb: add clock handling code
+Date: Thu, 13 Nov 2014 20:22:26 +0100
+Message-ID: <1415906546-2408-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <CAL1qeaF2Dz0W4qAW=A_GYVBNur4mhjeM61X66cduf5VX9t5HbQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-pwm-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>, Sai Masarapu <Sai.Masarapu@imgtec.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, James Hartley <James.Hartley@imgtec.com>, Ezequiel Garcia <Ezequiel.Garcia@imgtec.com>, Arul Ramasamy <Arul.Ramasamy@imgtec.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBAEKSSRQKGQEXKHIXWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+From: Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
 
-Thanks for the review.
+This claims and enables clocks listed in the simple framebuffer dt node.
+This is needed so that the display engine, in case the required clocks
+are known by the kernel code and are described in the dt, will remain
+properly enabled.
 
-> On Thu, Nov 13, 2014 at 5:55 AM, Sai Masarapu <Sai.Masarapu@imgtec.com> wrote:
->> On Wed, Nov 12, 2014 at 4:37 AM,  <Naidu.Tellapati@imgtec.com> wrote:
->>>> From: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
+Signed-off-by: Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
+[hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: Change clks from list to dynamic array]
+Reviewed-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Acked-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Reviewed-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Reviewed-by: David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+--
+Changes in v4:
+-change clks from linkedlist to dynamic allocated array
+-propagate EPROBE_DEFER up from simplefb_clocks_init to simplefb_probe
+changes in v6:
+-Wrap the clock code in #ifdef CONFIG_OF, as simplefb is used on non
+ devicetree platforms too
+---
+ drivers/video/fbdev/simplefb.c | 106 ++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 105 insertions(+), 1 deletion(-)
 
->>>> Signed-off-by: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
->>>> Signed-off-by: Sai Masarapu <Sai.Masarapu@imgtec.com>
-
->>>> +#define CR_PERIP_PWM_PDM_CONTROL       0x0140 /* PWM and PDM ctrl register */
->>>> +#define PWM_PDM_CH_CTRL_SHIFT(ch)      (ch * 4)
->>>> +
->>>> +#define NUM_PWM                                4
->>>> +#define SUB_DIV0                       1
->>>> +#define SUB_DIV1                       2
->>> +#define NO_SUB_DIV                     0
->>>> +#define SUB_DIV0_DIV1                  3
->>>> +#define MIN_TMBASE_STEPS               1
->>>> +#define MAX_TMBASE_STEPS               65536
->>>> +#define MIN_DUTY_STEPS                 0
->>>> +#define MAX_DUTY_STEPS                 65535
->>
->>> Please place these #defines next to their corresponding register or register field #define.
->>
->>    Defined Macros are not related to register fields.
-
-> Really?  The SUB_DIV #defines are possible values for the DIVIDER
-> field in CR_PWM_CTRL_CFG, are they not?  And I believe the TMBASE and
-> DUTY #defines specify the range of values for the DUTYCYCLE and
-> TIMEBASE fields of the CR_PWM*_CFG registers.
-
-Sai might have overlooked these fields. We will address this in the next patch set.
-
-Regards,
-Naidu.
+diff --git a/drivers/video/fbdev/simplefb.c b/drivers/video/fbdev/simplefb.c
+index cdcf1fe..868099a 100644
+--- a/drivers/video/fbdev/simplefb.c
++++ b/drivers/video/fbdev/simplefb.c
+@@ -26,6 +26,7 @@
+ #include <linux/module.h>
+ #include <linux/platform_data/simplefb.h>
+ #include <linux/platform_device.h>
++#include <linux/clk-provider.h>
+ 
+ static struct fb_fix_screeninfo simplefb_fix = {
+ 	.id		= "simple",
+@@ -167,8 +168,103 @@ static int simplefb_parse_pd(struct platform_device *pdev,
+ 
+ struct simplefb_par {
+ 	u32 palette[PSEUDO_PALETTE_SIZE];
++#ifdef CONFIG_OF
++	int clk_count;
++	struct clk **clks;
++#endif
+ };
+ 
++/*
++ * Clock handling code.
++ *
++ * Here we handle the clocks property of our "simple-framebuffer" dt node.
++ * This is necessary so that we can make sure that any clocks needed by
++ * the display engine that the bootloader set up for us (and for which it
++ * provided a simplefb dt node), stay up, for the life of the simplefb
++ * driver.
++ *
++ * When the driver unloads, we cleanly disable, and then release the clocks.
++ *
++ * We only complain about errors here, no action is taken as the most likely
++ * error can only happen due to a mismatch between the bootloader which set
++ * up simplefb, and the clock definitions in the device tree. Chances are
++ * that there are no adverse effects, and if there are, a clean teardown of
++ * the fb probe will not help us much either. So just complain and carry on,
++ * and hope that the user actually gets a working fb at the end of things.
++ */
++static int
++simplefb_clocks_init(struct simplefb_par *par, struct platform_device *pdev)
++{
++#ifdef CONFIG_OF
++	struct device_node *np = pdev->dev.of_node;
++	struct clk *clock;
++	int i, ret;
++
++	if (dev_get_platdata(&pdev->dev) || !np)
++		return 0;
++
++	par->clk_count = of_clk_get_parent_count(np);
++	if (par->clk_count <= 0)
++		return 0;
++
++	par->clks = kcalloc(par->clk_count, sizeof(struct clk *), GFP_KERNEL);
++	if (!par->clks)
++		return -ENOMEM;
++
++	for (i = 0; i < par->clk_count; i++) {
++		clock = of_clk_get(np, i);
++		if (IS_ERR(clock)) {
++			if (PTR_ERR(clock) == -EPROBE_DEFER) {
++				while (--i >= 0) {
++					if (par->clks[i])
++						clk_put(par->clks[i]);
++				}
++				kfree(par->clks);
++				return -EPROBE_DEFER;
++			}
++			dev_err(&pdev->dev, "%s: clock %d not found: %ld\n",
++				__func__, i, PTR_ERR(clock));
++			continue;
++		}
++		par->clks[i] = clock;
++	}
++
++	for (i = 0; i < par->clk_count; i++) {
++		if (par->clks[i]) {
++			ret = clk_prepare_enable(par->clks[i]);
++			if (ret) {
++				dev_err(&pdev->dev,
++					"%s: failed to enable clock %d: %d\n",
++					__func__, i, ret);
++				clk_put(par->clks[i]);
++				par->clks[i] = NULL;
++			}
++		}
++	}
++#endif
++	return 0;
++}
++
++static void
++simplefb_clocks_destroy(struct simplefb_par *par)
++{
++#ifdef CONFIG_OF
++	int i;
++
++	if (!par->clks)
++		return;
++
++	for (i = 0; i < par->clk_count; i++) {
++		if (par->clks[i]) {
++			clk_disable_unprepare(par->clks[i]);
++			clk_put(par->clks[i]);
++		}
++	}
++
++	kfree(par->clks);
++#endif
++}
++
+ static int simplefb_probe(struct platform_device *pdev)
+ {
+ 	int ret;
+@@ -236,6 +332,10 @@ static int simplefb_probe(struct platform_device *pdev)
+ 	}
+ 	info->pseudo_palette = par->palette;
+ 
++	ret = simplefb_clocks_init(par, pdev);
++	if (ret < 0)
++		goto error_unmap;
++
+ 	dev_info(&pdev->dev, "framebuffer at 0x%lx, 0x%x bytes, mapped to 0x%p\n",
+ 			     info->fix.smem_start, info->fix.smem_len,
+ 			     info->screen_base);
+@@ -247,13 +347,15 @@ static int simplefb_probe(struct platform_device *pdev)
+ 	ret = register_framebuffer(info);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "Unable to register simplefb: %d\n", ret);
+-		goto error_unmap;
++		goto error_clocks;
+ 	}
+ 
+ 	dev_info(&pdev->dev, "fb%d: simplefb registered!\n", info->node);
+ 
+ 	return 0;
+ 
++error_clocks:
++	simplefb_clocks_destroy(par);
+ error_unmap:
+ 	iounmap(info->screen_base);
+ error_fb_release:
+@@ -264,8 +366,10 @@ error_fb_release:
+ static int simplefb_remove(struct platform_device *pdev)
+ {
+ 	struct fb_info *info = platform_get_drvdata(pdev);
++	struct simplefb_par *par = info->par;
+ 
+ 	unregister_framebuffer(info);
++	simplefb_clocks_destroy(par);
+ 	framebuffer_release(info);
+ 
+ 	return 0;
+-- 
+2.1.0
