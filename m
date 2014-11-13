@@ -1,7 +1,7 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v2 09/14] ARM: STi: DT: STiH410:  Add pinctl config for usb controllers.
-Date: Thu, 13 Nov 2014 11:00:12 +0000
-Message-ID: <1415876417-28728-10-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH v2 01/14] ARM: STi: DT: STiH416: Add pinctl setup for usb controllers.
+Date: Thu, 13 Nov 2014 11:00:04 +0000
+Message-ID: <1415876417-28728-2-git-send-email-peter.griffin@linaro.org>
 References: <1415876417-28728-1-git-send-email-peter.griffin@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1415876417-28728-1-git-send-email-peter.griffin@linaro.org>
@@ -10,54 +10,73 @@ To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.c
 Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the required pin configiguration for the extra usb
-controllers found on the stih410 device.
+This patch adds the required pin config for all usb controllers
+on the stih416.
 
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+Acked-by: Lee Jones <lee.jones@linaro.org>
 ---
- arch/arm/boot/dts/stih410-pinctrl.dtsi | 34 ++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/stih416-pinctrl.dtsi | 34 ++++++++++++++++++++++++++++++++++
  1 file changed, 34 insertions(+)
- create mode 100644 arch/arm/boot/dts/stih410-pinctrl.dtsi
 
-diff --git a/arch/arm/boot/dts/stih410-pinctrl.dtsi b/arch/arm/boot/dts/stih410-pinctrl.dtsi
-new file mode 100644
-index 0000000..b3e9dfc
---- /dev/null
-+++ b/arch/arm/boot/dts/stih410-pinctrl.dtsi
-@@ -0,0 +1,34 @@
-+/*
-+ * Copyright (C) 2014 STMicroelectronics Limited.
-+ * Author: Peter Griffin <peter.griffin@linaro.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * publishhed by the Free Software Foundation.
-+ */
-+#include "st-pincfg.h"
-+/ {
-+
-+	soc {
-+		pin-controller-rear {
-+
-+			usb0 {
-+				pinctrl_usb0: usb2-0 {
+diff --git a/arch/arm/boot/dts/stih416-pinctrl.dtsi b/arch/arm/boot/dts/stih416-pinctrl.dtsi
+index c2025bc..9cccf2d 100644
+--- a/arch/arm/boot/dts/stih416-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stih416-pinctrl.dtsi
+@@ -147,6 +147,15 @@
+ 				};
+ 			};
+ 
++			usb {
++				pinctrl_usb3: usb3 {
 +					st,pins {
-+						usb-oc-detect = <&pio35 0 ALT1 IN>;
-+						usb-pwr-enable = <&pio35 1 ALT1 OUT>;
++						oc-detect = <&pio40 0 ALT1 IN>;
++						pwr-enable = <&pio40 1 ALT1 OUT>;
 +					};
 +				};
 +			};
 +
-+			usb1 {
-+				pinctrl_usb1: usb2-1 {
+ 			sbc_i2c1 {
+ 				pinctrl_sbc_i2c1_default: sbc_i2c1-default {
+ 					st,pins {
+@@ -318,6 +327,16 @@
+ 				};
+ 			};
+ 
++			usb {
++				pinctrl_usb0: usb0 {
 +					st,pins {
-+						usb-oc-detect = <&pio35 2 ALT1 IN>;
-+						usb-pwr-enable = <&pio35 3 ALT1 OUT>;
++						oc-detect = <&pio9 4 ALT1 IN>;
++						pwr-enable = <&pio9 5 ALT1 OUT>;
 +					};
 +				};
 +			};
-+		};
-+	};
-+};
++
++
+ 			i2c1 {
+ 				pinctrl_i2c1_default: i2c1-default {
+ 					st,pins {
+@@ -506,6 +525,21 @@
+ 					};
+ 				};
+ 			};
++
++			usb {
++				pinctrl_usb1: usb1 {
++					st,pins {
++						oc-detect = <&pio18 0 ALT1 IN>;
++						pwr-enable = <&pio18 1 ALT1 OUT>;
++					};
++				};
++				pinctrl_usb2: usb2 {
++					st,pins {
++						oc-detect = <&pio18 2 ALT1 IN>;
++						pwr-enable = <&pio18 3 ALT1 OUT>;
++					};
++				};
++			};
+ 		};
+ 
+ 		pin-controller-fvdp-fe {
 -- 
 1.9.1
