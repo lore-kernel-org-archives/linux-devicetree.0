@@ -1,66 +1,89 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 4/4] arm: dts: omap3-gta04: Add static configuration for
- devconf1 register
-Date: Thu, 13 Nov 2014 13:31:43 +0200
-Message-ID: <5464969F.30708@ti.com>
-References: <1415051968-4878-1-git-send-email-marek@goldelico.com> <1415051968-4878-5-git-send-email-marek@goldelico.com> <5463585D.9070209@ti.com> <20141112150210.GC26481@atomide.com>
+From: =?windows-1251?B?weDi4PDo/w==?= <x7699-RZYas3B7W+Y4zZeSroS2Fxar7b1XU7go@public.gmane.org>
+Subject: =?windows-1251?b?zeXs5fbq6Okg8eDs7uPu7e376SDg7+/g8ODyIKvB?=
+	=?windows-1251?b?4OLg8Oj/uy4gzeXs5fbq7uUg6uD35fHy4u4uIDEwMCUg7vfo?=
+	=?windows-1251?b?8fLq4CDu8iDx6OLz+O379SDs4PHl6yE=?=
+Date: Thu, 13 Nov 2014 11:33:42 +0000
+Message-ID: <C1C472212AFED172AEABE25D59EA64CE@zblacrpaa>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="DMCMabk2ehAkTPpWcefgGcbx1ANQjpQ4x"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141112150210.GC26481@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Marek Belisko <marek@goldelico.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, linux@arm.linux.org.uk, plagnioj@jcrosoft.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, hns@goldelico.com
+Content-Type: multipart/mixed; boundary="===============8717903069659248769=="
+Return-path: <nbd-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/nbd-general>,
+	<mailto:nbd-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=nbd-general>
+List-Post: <mailto:nbd-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:nbd-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/nbd-general>,
+	<mailto:nbd-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: nbd-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: "faisal.latif" <faisal.latif-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, netfilter <netfilter-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "paul.clements" <paul.clements-G8/ITkJZaeZWk0Htik3J/w@public.gmane.org>, nbd-general <nbd-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "steffen.klassert" <steffen.klassert-opNxpl+3fjRBDgjK7y7TUQ@public.gmane.org>, "manish.chopra" <manish.chopra-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org>, "sony.chacko" <sony.chacko-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org>, "rajesh.borundia" <rajesh.borundia-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org>, "lauro.venancio" <lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, "aloisio.almeida" <aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, "trond.myklebust" <trond.myklebust-7I+n7zu2hftEKMMhf/gKZA@public.gmane.org>, "jon.mason" <jon.mason-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, anton <anton-yrGDUoBaLx3QT0dZR+AlfA@public.gmane.org>, bcousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---DMCMabk2ehAkTPpWcefgGcbx1ANQjpQ4x
-Content-Type: text/plain; charset=windows-1252
+This is a multi-part message in MIME format.
+
+--===============8717903069659248769==
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_1C2E_01CFFF35.AD7CCAA0"
+
+This is a multi-part message in MIME format.
+
+------=_NextPart_000_1C2E_01CFFF35.AD7CCAA0
+Content-Type: text/plain;
+	charset="windows-1251"
 Content-Transfer-Encoding: quoted-printable
 
-On 12/11/14 17:02, Tony Lindgren wrote:
+=CC=EE=F9=ED=FB=E9 =F1=E0=EC=EE=E3=EE=ED=ED=FB=E9 =E0=EF=EF=E0=F0=E0=F2 =EF=
+=EE =EC=E8=E7=E5=F0=ED=EE=E9 =F6=E5=ED=E5! =CD=E5=EC=E5=F6=EA=EE=E5 =EA=E0=
+=F7=E5=F1=F2=E2=EE. 100% =EE=F7=E8=F1=F2=EA=E0 =EE=F2 =F1=E8=E2=F3=F8=ED=FB=
+=F5 =EC=E0=F1=E5=EB! =C1=E5=F1=EF=EB=E0=F2=ED=E0=FF =E4=EE=F1=F2=E0=E2=EA=
+=E0 =ED=E0 =E4=EE=EC! =CF=EE=E4=F0=EE=E1=ED=E5=E5....=20
 
->> And, with a quick grep, I see CONTROL_DEVCONF1 touched in multiple
->> places in the kernel. I wonder if adding a pinmux entry for it could
->> cause some rather odd problems.
->=20
-> They can all use pinctrl-single no problem.
+------=_NextPart_000_1C2E_01CFFF35.AD7CCAA0
+Content-Type: text/html;
+	charset="windows-1251"
+Content-Transfer-Encoding: quoted-printable
 
-Can, but don't. That's my worry. If we touch the DEVCONF1 via pinmux,
-and we have code in mach-omap2 that also touch DEVCONF1, without any
-knowledge (and locking) between those...
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META content=3D"text/html; charset=3Dwindows-1251" http-equiv=3DContent-=
+Type>
+<META name=3DGENERATOR content=3D"MSHTML 11.00.9600.17105">
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV align=3Dleft><FONT face=3DArial>=CC=EE=F9=ED=FB=E9 =F1=E0=EC=EE=E3=EE=
+=ED=ED=FB=E9 =E0=EF=EF=E0=F0=E0=F2 =EF=EE =EC=E8=E7=E5=F0=ED=EE=E9 =F6=E5=
+=ED=E5!=20
+=CD=E5=EC=E5=F6=EA=EE=E5 =EA=E0=F7=E5=F1=F2=E2=EE. 100% =EE=F7=E8=F1=F2=EA=
+=E0 =EE=F2 =F1=E8=E2=F3=F8=ED=FB=F5 =EC=E0=F1=E5=EB! =C1=E5=F1=EF=EB=E0=F2=
+=ED=E0=FF =E4=EE=F1=F2=E0=E2=EA=E0 =ED=E0 =E4=EE=EC!=20
+<A href=3D"http://aonangkrabivilla.com/vk/bq6ge.php">=CF=EE=E4=F0=EE=E1=ED=
+=E5=E5.... </A></FONT></DIV></BODY></HTML>
 
-So _maybe_ that's not an issue, as the pinmux config we have here is
-fixed, and done once at boot time, and maybe the code in mach-omap2 that
-touch DEVCONF1 is also ran just once and not at the same time as the
-pinmux. But I don't know if that's so.
-
- Tomi
+------=_NextPart_000_1C2E_01CFFF35.AD7CCAA0--
 
 
 
---DMCMabk2ehAkTPpWcefgGcbx1ANQjpQ4x
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+--===============8717903069659248769==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+------------------------------------------------------------------------------
+Comprehensive Server Monitoring with Site24x7.
+Monitor 10 servers for $9/Month.
+Get alerted through email, SMS, voice calls or mobile push notifications.
+Take corrective actions from your mobile device.
+http://pubads.g.doubleclick.net/gampad/clk?id=154624111&iu=/4140/ostg.clktrk
+--===============8717903069659248769==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-iQIcBAEBAgAGBQJUZJafAAoJEPo9qoy8lh71jJgP/3qSP8qsUyziPLpWjcX37leM
-NlMTt9xjQ6B8aNIUWDaso5CpfJmsO47I5S5coKcCDAtnyyRZdp1bGg6MtEhxWOoy
-mP0WfoZDzMrQh/j7IASwHe8R9MlHPCSa/+IBmG5BsqRCPaxrDULM8E6aGn3noKo1
-uI7XCossptOUjKhR6NxXaXKR0uqDZfkmCHvsVwNLj1mQiQAuns271AGkCVSUHlWN
-SN+gzxpg367m5DSAXuodLJZ8Vv+fC7Bkl1iDYrSO6zHAPlcPchxCeM9/iFZRzC12
-EAeSYTEQ1jrxiE3XReqNcqDP+/Pb2PDL6lapPMdawhuuFVRKF5X4yKpiNsdMQ8Uf
-qz1uiJN9E+fvewd0AVcndkLhkqwrWDDsFlgNHXM4xIpUHlSofurAhUMOtsy3OTse
-FErYnbNwz5Ls0XWta1OYmXUpwlc6Uy0JFaXdpCiIEpryzqbqYoVpuVuFreciFuGk
-VkoD1n1UkYRqaJW+phdfQxn+OFW/MO/m496rYvoQtCRqd4GRrh5mCVePYQ5ALZD2
-TUwtC+b41ynOO41SBMMAIHLMF0b8nxv4jv6fm1HXT1OI45ba6wxN8UTz0rzat5nE
-UQuvXYRDu+cssCiZq2OXRndj46cai21CZ8w6xpaaQDWbnBNKc3RRTjHHeHc1uKWu
-Xh0V0i2cC29uQe+PqAcE
-=U/8Y
------END PGP SIGNATURE-----
+_______________________________________________
+Nbd-general mailing list
+Nbd-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+https://lists.sourceforge.net/lists/listinfo/nbd-general
 
---DMCMabk2ehAkTPpWcefgGcbx1ANQjpQ4x--
+--===============8717903069659248769==--
