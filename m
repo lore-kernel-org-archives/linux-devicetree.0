@@ -1,54 +1,145 @@
-From: Auto Configured <romain.perier@gmail.com>
-Subject: [PATCH v4 2/2] dt-bindings: Update documentation for "system-power-controller" and fix misspellings
-Date: Thu, 13 Nov 2014 13:34:59 +0000
-Message-ID: <1415885699-1465-3-git-send-email-user@radxa>
-References: <1415885699-1465-1-git-send-email-user@radxa>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415885699-1465-1-git-send-email-user@radxa>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: grant.likely@linaro.org, robh@kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org, johan@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balbi@ti.com, Romain Perier <romain.perier@gmail.com>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH v9 9/9] drm: bridge/dw_hdmi: add rockchip rk3288 support
+Date: Thu, 13 Nov 2014 21:38:26 +0800
+Message-ID: <5464B452.5020700@rock-chips.com>
+References: <1415793593-5075-1-git-send-email-andy.yan@rock-chips.com>
+ <1415883434-3754-1-git-send-email-andy.yan@rock-chips.com>
+ <5464AD7A.6050700@imgtec.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <5464AD7A.6050700@imgtec.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
+Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, mark.yao@rock-chips.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Romain Perier <romain.perier@gmail.com>
-
-Signed-off-by: Romain Perier <romain.perier@gmail.com>
----
- .../devicetree/bindings/power/power-controller.txt   | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/power/power-controller.txt b/Documentation/devicetree/bindings/power/power-controller.txt
-index 845868b..9afa847 100644
---- a/Documentation/devicetree/bindings/power/power-controller.txt
-+++ b/Documentation/devicetree/bindings/power/power-controller.txt
-@@ -1,18 +1,18 @@
--* Generic Poweroff capability
-+* Generic system power control capability
- 
--Power-management integrated circuits or miscellaneous harware components are
--sometimes able to control the system power. The device driver associated to these
--components might needs to define poweroff capability, which tells to the kernel
--how to switch off the system. The corresponding driver must have the standard
--property "poweroff-source" in its device node. This property marks the device as
--able to shutdown the system. In order to test if this property is found
--programmatically, use the helper function "of_system_has_poweroff_source" from
--of.h .
-+Power-management integrated circuits or miscellaneous hardware components are
-+sometimes able to control the system power. The device driver associated with these
-+components might need to define this capability, which tells the kernel that
-+it can be used to switch off the system. The corresponding device must have the
-+standard property "system-power-controller" in its device node. This property
-+marks the device as able to control the system power. In order to test if this
-+property is found programmatically, use the helper function
-+"of_is_system_power_controller" from of.h .
- 
- Example:
- 
- act8846: act8846@5 {
- 	 compatible = "active-semi,act8846";
- 	 status = "okay";
--	 poweroff-source;
-+	 system-power-controller;
- }
--- 
-1.9.1
+SGkgWnViYWlyTEs6CiAgIHRoYW5rcyBmb3IgeW91ciByZXZpZXcuCk9uIDIwMTTlubQxMeaciDEz
+5pelIDIxOjA5LCBadWJhaXIgTHV0ZnVsbGFoIEtha2FraGVsIHdyb3RlOgo+Cj4gT24gMTMvMTEv
+MTQgMTI6NTcsIEFuZHkgWWFuIHdyb3RlOgo+PiByazMyODggaGRtaSBpcyBjb21wYXRpYmxlIHdp
+dGggRGVzaWdud2FyZSBoZG1pCj4+Cj4+IHRoaXMgcGF0Y2ggaXMgZGVwZW5kIG9uIHBhdGNoIGJ5
+IE1hcmsgWWFvIEFkZCBkcm0KPj4gZHJpdmVyIGZvciBSb2NrY2hpcCBTb2NzCj4+Cj4+IHNlZSBo
+dHRwczovL2xrbWwub3JnL2xrbWwvMjAxNC8xMC84LzIwMQo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBB
+bmR5IFlhbiA8YW5keS55YW5Acm9jay1jaGlwcy5jb20+Cj4+IFNpZ25lZC1vZmYtYnk6IFlha2ly
+IFlhbmcgPHlra0Byb2NrLWNoaXBzLmNvbT4KPj4KPj4gLS0tCj4+Cj4+IENoYW5nZXMgaW4gdjk6
+Cj4+IC0gbW92ZSBzb21lIHBoeSBjb25maWd1cmF0aW9uIHRvIHBsYXRmb3JtIGRyaXZlcgo+Pgo+
+PiBDaGFuZ2VzIGluIHY4Ogo+PiAtIGFkZCBzdXBwb3J0IGZvciByb2NrY2hpcCByazMyODggaGRt
+aQo+Pgo+PiBDaGFuZ2VzIGluIHY3OiBOb25lCj4+IENoYW5nZXMgaW4gdjY6IE5vbmUKPj4gQ2hh
+bmdlcyBpbiB2NTogTm9uZQo+PiBDaGFuZ2VzIGluIHY0OiBOb25lCj4+IENoYW5nZXMgaW4gdjM6
+IE5vbmUKPj4gQ2hhbmdlcyBpbiB2MjogTm9uZQo+Pgo+PiAgIGRyaXZlcnMvZ3B1L2RybS9icmlk
+Z2UvZHdfaGRtaS5jICAgICAgICAgICAgfCAgNDUgKysrLQo+IFRoaXMgcGF0Y2ggbG9va3MgbGlr
+ZSBpdCBkb2VzIGFsb3QgdG8gdGhlIGR3X2hkbWkuYyBhcyB3ZWxsIGFuZCBub3QKPiBqdXN0IGFk
+ZHMgc3VwcG9ydCBmb3IgcmszMjg4Li4KPgo+PiAgIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvZHdf
+aGRtaS5oICAgICAgICAgICAgfCAgIDMgKy0KPj4gICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAv
+S2NvbmZpZyAgICAgICAgICAgIHwgIDEwICsKPj4gICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAv
+TWFrZWZpbGUgICAgICAgICAgIHwgICAyICstCj4+ICAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlw
+L2R3X2hkbWktcm9ja2NoaXAuYyB8IDMyOCArKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4+
+ICAgZHJpdmVycy9zdGFnaW5nL2lteC1kcm0vZHdfaGRtaS1pbXguYyAgICAgICB8ICAgOCArCj4+
+ICAgaW5jbHVkZS9kcm0vYnJpZGdlL2R3X2hkbWkuaCAgICAgICAgICAgICAgICB8ICAgOCArCj4+
+ICAgNyBmaWxlcyBjaGFuZ2VkLCAzOTkgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkKPj4g
+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9j
+a2NoaXAuYwo+Pgo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kd19oZG1p
+LmMgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R3X2hkbWkuYwo+PiBpbmRleCBlZDc1MTQ3Li4x
+ZGQxZjBiIDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R3X2hkbWkuYwo+
+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R3X2hkbWkuYwo+PiBAQCAtNjY4LDExICs2
+NjgsMTUgQEAgc3RhdGljIGlubGluZSB2b2lkIGhkbWlfcGh5X3Rlc3RfZG91dChzdHJ1Y3QgZHdf
+aGRtaSAqaGRtaSwKPj4gICAKPj4gICBzdGF0aWMgYm9vbCBoZG1pX3BoeV93YWl0X2kyY19kb25l
+KHN0cnVjdCBkd19oZG1pICpoZG1pLCBpbnQgbXNlYykKPj4gICB7Cj4+IC0Jd2hpbGUgKChoZG1p
+X3JlYWRiKGhkbWksIEhETUlfSUhfSTJDTVBIWV9TVEFUMCkgJiAweDMpID09IDApIHsKPj4gKwl1
+MzIgdmFsOwo+PiArCj4+ICsJd2hpbGUgKCh2YWwgPSBoZG1pX3JlYWRiKGhkbWksIEhETUlfSUhf
+STJDTVBIWV9TVEFUMCkgJiAweDMpID09IDApIHsKPj4gICAJCWlmIChtc2VjLS0gPT0gMCkKPj4g
+ICAJCQlyZXR1cm4gZmFsc2U7Cj4+ICAgCQl1ZGVsYXkoMTAwMCk7Cj4+ICAgCX0KPj4gKwloZG1p
+X3dyaXRlYihoZG1pLCB2YWwsIEhETUlfSUhfSTJDTVBIWV9TVEFUMCk7Cj4+ICsKPj4gICAJcmV0
+dXJuIHRydWU7Cj4+ICAgfQo+PiAgIAo+IElzIHRoaXMgYSBidWcgZml4PwogICAgIEl0IHNlZW1z
+IGxpa2UgYSBidWcgZml4LCBJIGRvbid0IGtub3cgd2h5IGl0IHdvcmtzIHdlbGwgb24gaW14IGFu
+ZCAKano0NzgwCiAgICAgd2l0aG91dCB0aGlzIGZpeC4KICAgICAgSERNSV9JTl9JMkNNUEhZX1NU
+QVQwIGlzIGEgY2xlYXIgb24gd3JpdGUgKDEgdG8gY29ycmVzcG9uZGluZyBiaXQpIApzdGF0dXMg
+cmVnaXN0ZXIKICAgICAgdG8gaW5kaWNhdGUgaTJjIG9wZXJhdGlvbiBvZiB0aGUgaGRtaSBwaHko
+aTJjIHRyYW5zZmVyIGRvbmUgb3IgCmVycikuIEFmdGVyIG9uZSByZWdpc3RlcgogICAgICBvZiB0
+aGUgcGh5IGlzIGNvbmZpZ3VyZWQgYnkgdGhlIGkyY20sIHdlIHNob3VsZCB3YWl0IGZvciB0aGUg
+CmkyY21waHlkb25lIGJpdCBzZXQgdG8gMSwKICAgICAgdGhhbiBjb25maWd1cmUgdGhlIG5leHQg
+cmVnaXN0ZXIsIHRoYW4gd2FpdCBmb3IgdGhlIGkyY21waHlkb25lIApiaXQgc2V0IHRvIDEuLi4u
+QnV0IHdlIHNob3VsZAogICAgICBjbGVhciB0aGUgaW5kaWNhdGUgYml0IGJ5IHdyaXRlIDEgdG8g
+dGhlIGNvcnJlc3BvbmRpbmcgYml0IGFmdGVyIAp0aGUgdGhlIHNldCB0byAxLCBvdGhlcndpc2Ug
+dGhlIGJpdAogICAgICB3aWxsIGhvbGQgb24gZm9yZXZlciwgdGhpcyB3aWxsIGdpdmUgdXMgYSB3
+cm9uZyBzaWduYWwgaW4gdGhlIG5leHQgCndhaXQsIGFuZCBhcyBhIHJlc3VsdCAsIHRoZSBwaHkg
+cmVnaXN0ZXIgY2FuJ3QgIGJlIGNvbmZpZ3VyZWQgYXMgd2Ugd2FudC4KPgo+PiBAQCAtNzExLDYg
+KzcxNSwxMyBAQCBzdGF0aWMgdm9pZCBkd19oZG1pX3BoeV9lbmFibGVfdG1kcyhzdHJ1Y3QgZHdf
+aGRtaSAqaGRtaSwgdTggZW5hYmxlKQo+PiAgIAkJCSBIRE1JX1BIWV9DT05GMF9FTlRNRFNfTUFT
+Syk7Cj4+ICAgfQo+PiAgIAo+PiArc3RhdGljIHZvaWQgZHdfaGRtaV9waHlfZW5hYmxlX3NwYXJl
+KHN0cnVjdCBkd19oZG1pICpoZG1pLCB1OCBlbmFibGUpCj4+ICt7Cj4+ICsJaGRtaV9tYXNrX3dy
+aXRlYihoZG1pLCBlbmFibGUsIEhETUlfUEhZX0NPTkYwLAo+PiArCQkJIEhETUlfUEhZX0NPTkYw
+X1NQQVJFQ1RSTF9PRkZTRVQsCj4+ICsJCQkgSERNSV9QSFlfQ09ORjBfU1BBUkVDVFJMX01BU0sp
+Owo+PiArfQo+PiArCj4+ICAgc3RhdGljIHZvaWQgZHdfaGRtaV9waHlfZ2VuMl9wZGRxKHN0cnVj
+dCBkd19oZG1pICpoZG1pLCB1OCBlbmFibGUpCj4+ICAgewo+PiAgIAloZG1pX21hc2tfd3JpdGVi
+KGhkbWksIGVuYWJsZSwgSERNSV9QSFlfQ09ORjAsCj4+IEBAIC03NDYsNiArNzU3LDcgQEAgc3Rh
+dGljIGludCBoZG1pX3BoeV9jb25maWd1cmUoc3RydWN0IGR3X2hkbWkgKmhkbWksIHVuc2lnbmVk
+IGNoYXIgcHJlcCwKPj4gICAJdTggdmFsLCBtc2VjOwo+PiAgIAljb25zdCBzdHJ1Y3QgbXBsbF9j
+b25maWcgKm1wbGxfY2ZnID0gaGRtaS0+cGxhdF9kYXRhLT5tcGxsX2NmZzsKPj4gICAJY29uc3Qg
+c3RydWN0IGN1cnJfY3RybCAgICpjdXJyX2N0ciA9IGhkbWktPnBsYXRfZGF0YS0+Y3VyX2N0cjsK
+Pj4gKwljb25zdCBzdHJ1Y3Qgc3ltX3Rlcm0gKnN5bV90ZXJtID0gIGhkbWktPnBsYXRfZGF0YS0+
+c3ltX3Rlcm07Cj4+ICAgCj4+ICAgCWlmIChwcmVwKQo+PiAgIAkJcmV0dXJuIC1FSU5WQUw7Cj4+
+IEBAIC04MTUsMTAgKzgyNywxNyBAQCBzdGF0aWMgaW50IGhkbWlfcGh5X2NvbmZpZ3VyZShzdHJ1
+Y3QgZHdfaGRtaSAqaGRtaSwgdW5zaWduZWQgY2hhciBwcmVwLAo+PiAgIAo+PiAgIAloZG1pX3Bo
+eV9pMmNfd3JpdGUoaGRtaSwgMHgwMDAwLCAweDEzKTsgIC8qIFBMTFBIQllDVFJMICovCj4+ICAg
+CWhkbWlfcGh5X2kyY193cml0ZShoZG1pLCAweDAwMDYsIDB4MTcpOwo+PiArCj4+ICsJZm9yIChp
+ID0gMDsgc3ltX3Rlcm1baV0ubXBpeGVsY2xvY2sgIT0gKH4wVUwpOyBpKyspCj4+ICsJCWlmICho
+ZG1pLT5oZG1pX2RhdGEudmlkZW9fbW9kZS5tcGl4ZWxjbG9jayA8PQo+PiArCQkgICAgc3ltX3Rl
+cm1baV0ubXBpeGVsY2xvY2spCj4+ICsJCQlicmVhazsKPj4gKwo+PiAgIAkvKiBSRVNJU1RBTkNF
+IFRFUk0gMTMzT2htIENmZyAqLwo+PiAtCWhkbWlfcGh5X2kyY193cml0ZShoZG1pLCAweDAwMDUs
+IDB4MTkpOyAgLyogVFhURVJNICovCj4+ICsJaGRtaV9waHlfaTJjX3dyaXRlKGhkbWksIHN5bV90
+ZXJtW2ldLnRlcm0sIDB4MTkpOyAgLyogVFhURVJNICovCj4+ICAgCS8qIFBSRUVNUCBDZ2YgMC4w
+MCAqLwo+PiAtCWhkbWlfcGh5X2kyY193cml0ZShoZG1pLCAweDgwMGQsIDB4MDkpOyAgLyogQ0tT
+WU1UWENUUkwgKi8KPj4gKwloZG1pX3BoeV9pMmNfd3JpdGUoaGRtaSwgc3ltX3Rlcm1baV0uc3lt
+X2N0ciwgMHgwOSk7ICAvKiBDS1NZTVRYQ1RSTCAqLwo+PiArCj4gQWxsIHRoZXNlIHNlZW0gZ2Vu
+ZXJpYyBpbXByb3ZlbWVudHMgYW5kIG5vdCByazMyODggc3BlY2lmaWM/CiAgICBZZXMgLCAgZGlm
+ZmVyZW50IGJvYXJkIG5lZWRzIGRpZmZlcmVudCB0ZXJtaW5hdGlvbiB2YWxlIHRvIGdldCBiZXN0
+IFNJLgogICAgRG8geW91IG1lYW4gd2Ugc2hvdWxkIHB1dCB0aGVzZSBpbiBhIHNlcGFyYXRlIHBh
+dGNoPwo+Cj4+ICAgCS8qIFRYL0NLIExWTCAxMCAqLwo+PiAgIAloZG1pX3BoeV9pMmNfd3JpdGUo
+aGRtaSwgMHgwMWFkLCAweDBFKTsgIC8qIFZMRVZDVFJMICovCj4+ICAgCS8qIFJFTU9WRSBDTEsg
+VEVSTSAqLwo+PiBAQCAtODM0LDYgKzg1Myw5IEBAIHN0YXRpYyBpbnQgaGRtaV9waHlfY29uZmln
+dXJlKHN0cnVjdCBkd19oZG1pICpoZG1pLCB1bnNpZ25lZCBjaGFyIHByZXAsCj4+ICAgCWR3X2hk
+bWlfcGh5X2dlbjJfdHhwd3JvbihoZG1pLCAxKTsKPj4gICAJZHdfaGRtaV9waHlfZ2VuMl9wZGRx
+KGhkbWksIDApOwo+PiAgIAo+PiArCWlmIChoZG1pLT5kZXZfdHlwZSA9PSBSSzMyODhfSERNSSkK
+Pj4gKwkJZHdfaGRtaV9waHlfZW5hYmxlX3NwYXJlKGhkbWksIDEpOwo+PiArCj4+ICAgCS8qV2Fp
+dCBmb3IgUEhZIFBMTCBsb2NrICovCj4+ICAgCW1zZWMgPSA1Owo+PiAgIAlkbyB7Cj4+IEBAIC0x
+Mzk4LDYgKzE0MjAsMjAgQEAgc3RhdGljIGludCBkd19oZG1pX2Nvbm5lY3Rvcl9nZXRfbW9kZXMo
+c3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvcikKPj4gICAJcmV0dXJuIDA7Cj4+ICAgfQo+
+PiAgIAo+PiArc3RhdGljIGVudW0gZHJtX21vZGVfc3RhdHVzCj4+ICtkd19oZG1pX2Nvbm5lY3Rv
+cl9tb2RlX3ZhbGlkKHN0cnVjdCBkcm1fY29ubmVjdG9yICpjb25uZWN0b3IsCj4+ICsJCQkgICAg
+IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlICptb2RlKQo+PiArewo+PiArCXN0cnVjdCBkd19oZG1p
+ICpoZG1pID0gY29udGFpbmVyX29mKGNvbm5lY3RvciwKPj4gKwkJCQkJICAgIHN0cnVjdCBkd19o
+ZG1pLCBjb25uZWN0b3IpOwo+PiArCWVudW0gZHJtX21vZGVfc3RhdHVzIG1vZGVfc3RhdHVzID0g
+TU9ERV9PSzsKPj4gKwo+PiArCWlmIChoZG1pLT5wbGF0X2RhdGEtPm1vZGVfdmFsaWQpCj4+ICsJ
+CW1vZGVfc3RhdHVzID0gaGRtaS0+cGxhdF9kYXRhLT5tb2RlX3ZhbGlkKGNvbm5lY3RvciwgbW9k
+ZSk7Cj4+ICsKPj4gKwlyZXR1cm4gbW9kZV9zdGF0dXM7Cj4+ICt9Cj4+ICsKPiBUaGlzIHRvbyBp
+cyBkaXNqb2ludCBmcm9tIHJrMzI4OCBzdXBwb3J0LgogICBSSzMyODggY2FuJ3Qgc3VwcG9ydCBh
+bGwgdGhlIGRpc3BsYXkgbW9kZSBmb3IgaXQgY2FuJ3QgZ2l2ZQogICBhbGwgdGhlIHByZWNpc2Ug
+Y2xvY2sgc29tZSBkaXNwbGF5IG1vZGUgbmVlZHMuCj4KPj4gICBzdGF0aWMgc3RydWN0IGRybV9l
+bmNvZGVyICpkd19oZG1pX2Nvbm5lY3Rvcl9iZXN0X2VuY29kZXIoc3RydWN0IGRybV9jb25uZWN0
+b3IKPj4gICAJCQkJCQkJICAgKmNvbm5lY3RvcikKPj4gICB7Cj4+IEBAIC0xNDIyLDYgKzE0NTgs
+NyBAQCBzdGF0aWMgc3RydWN0IGRybV9jb25uZWN0b3JfZnVuY3MgZHdfaGRtaV9jb25uZWN0b3Jf
+ZnVuY3MgPSB7Cj4+ICAgCj4+ICAgc3RhdGljIHN0cnVjdCBkcm1fY29ubmVjdG9yX2hlbHBlcl9m
+dW5jcyBkd19oZG1pX2Nvbm5lY3Rvcl9oZWxwZXJfZnVuY3MgPSB7Cj4+ICAgCS5nZXRfbW9kZXMg
+PSBkd19oZG1pX2Nvbm5lY3Rvcl9nZXRfbW9kZXMsCj4+ICsJLm1vZGVfdmFsaWQgPSBkd19oZG1p
+X2Nvbm5lY3Rvcl9tb2RlX3ZhbGlkLAo+PiAgIAkuYmVzdF9lbmNvZGVyID0gZHdfaGRtaV9jb25u
+ZWN0b3JfYmVzdF9lbmNvZGVyLAo+PiAgIH07Cj4+ICAgCj4+IEBAIC0xNTE0LDYgKzE1NTEsOCBA
+QCBzdGF0aWMgaW50IGR3X2hkbWlfcmVnaXN0ZXIoc3RydWN0IGRybV9kZXZpY2UgKmRybSwgc3Ry
+dWN0IGR3X2hkbWkgKmhkbWkpCj4+ICAgCj4+ICAgCWRybV9tb2RlX2Nvbm5lY3Rvcl9hdHRhY2hf
+ZW5jb2RlcigmaGRtaS0+Y29ubmVjdG9yLCBlbmNvZGVyKTsKPj4gICAKPj4gKwlkcm1fY29ubmVj
+dG9yX3JlZ2lzdGVyKCZoZG1pLT5jb25uZWN0b3IpOwo+PiArCj4+ICAgCXJldHVybiAwOwo+PiAg
+IH0KPj4gICAKPiAuLi4KPgo+IFBsZWFzZSBzZXBhcmF0ZSBnZW5lcmljIGR3X2hkbWkuYyBpbXBy
+b3ZlbWVudHMgZnJvbSB0aGUgYWRkIHJrMzI4OCBzdXBwb3J0Lgo+Cj4gUmVnYXJkcwo+IFp1YmFp
+ckxLCj4KPgo+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkZXZlbCBtYWlsaW5nIGxpc3QKZGV2ZWxAbGludXhkcml2ZXJwcm9qZWN0Lm9yZwpodHRwOi8v
+ZHJpdmVyZGV2LmxpbnV4ZHJpdmVycHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcml2ZXJk
+ZXYtZGV2ZWwK
