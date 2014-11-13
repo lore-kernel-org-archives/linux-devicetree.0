@@ -1,99 +1,58 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH] of/base: Fix PowerPC address parsing hack
-Date: Thu, 13 Nov 2014 23:53:47 +1100
-Message-ID: <1415883227.666.6.camel@kernel.crashing.org>
-References: <1415771461.5124.33.camel@kernel.crashing.org>
-	 <20141113091036.4e9ec43d@canb.auug.org.au>
-	 <1415833725.5124.53.camel@kernel.crashing.org>
-	 <1415839522.5124.58.camel@kernel.crashing.org>
-	 <CACxGe6s0CXL2oRKCLhzzycOKWJStxdZsc1pn_X8fLuAqCguBMA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACxGe6s0CXL2oRKCLhzzycOKWJStxdZsc1pn_X8fLuAqCguBMA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Rob Herring <robherring2@gmail.com>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linuxppc-dev <linuxppc-dev@ozlabs.org>
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v9 2/9] staging: imx-drm: imx-hdmi: return defer if can't get ddc i2c adapter
+Date: Thu, 13 Nov 2014 20:54:44 +0800
+Message-ID: <1415883284-3425-1-git-send-email-andy.yan@rock-chips.com>
+References: <1415793593-5075-1-git-send-email-andy.yan@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415793593-5075-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: airlied-cv59FeDIM0c@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Josh Boyer <jwboyer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2014-11-13 at 12:44 +0000, Grant Likely wrote:
-> On Thu, Nov 13, 2014 at 12:45 AM, Benjamin Herrenschmidt
-> <benh@kernel.crashing.org> wrote:
-> > What about this one instead ? I want to cache it because that function
-> > can be called quite a while and doing two additional property lookup
-> > and string compares every time might hurt some platforms.
-> >
-> > ----
-> >
-> > We have a historical hack that treats missing ranges properties as the
-> > equivalent of an empty one. This is needed for ancient PowerMac "bad"
-> > device-trees, and shouldn't be enabled for any other PowerPC platform,
-> > otherwise we get some nasty layout of devices in sysfs or even
-> > duplication when a set of otherwise identically named devices is
-> > created multiple times under a different parent node with no ranges
-> > property.
-> >
-> > This fix is needed for the PowerNV i2c busses to be exposed properly
-> > and will fix a number of other embedded cases.
-> >
-> > Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> > CC: <stable@vger.kernel.org>
-> 
-> How far back does this need to go? I assume I need to get this in for v3.18.
+drm driver may probe before the i2c bus, so the driver should
+defer probing until it is available
 
-I'd like some distro to pick it up in 3.16
+Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-> > diff --git a/drivers/of/address.c b/drivers/of/address.c
-> > index e371825..5eae0cd 100644
-> > --- a/drivers/of/address.c
-> > +++ b/drivers/of/address.c
-> > @@ -403,6 +403,17 @@ static struct of_bus *of_match_bus(struct device_node *np)
-> >         return NULL;
-> >  }
-> >
-> > +static int of_empty_ranges_quirk(void)
-> > +{
-> > +       /* To save cycles, we cache the result */
-> > +       static int quirk_state = -1;
-> > +
-> 
-> if (IS_ENABLED(CONFIG_POWERPC)) {
-> 
-> > +       if (quirk_state < 0)
-> > +               quirk_state = of_machine_is_compatible("Power Macintosh") ||
-> > +                       of_machine_is_compatible("MacRISC");
-> > +       return quirk_state;
-> 
-> }
-> return 0;
-> 
-> So it gets compiled out for non powerpc.
+---
 
-Yeah, I'm set in my ways, keep forgetting about all the shiny new stuff.
+Changes in v9: None
+Changes in v8: None
+Changes in v7: None
+Changes in v6: None
+Changes in v5: None
+Changes in v4:
+- defer probe ddc i2c adapter
 
-> > +}
-> > +
-> >  static int of_translate_one(struct device_node *parent, struct of_bus *bus,
-> >                             struct of_bus *pbus, __be32 *addr,
-> >                             int na, int ns, int pna, const char *rprop)
-> > @@ -428,12 +439,10 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
-> >          * This code is only enabled on powerpc. --gcl
-> >          */
-> >         ranges = of_get_property(parent, rprop, &rlen);
-> > -#if !defined(CONFIG_PPC)
-> > -       if (ranges == NULL) {
-> > +       if (ranges == NULL && !of_empty_ranges_quirk()) {
-> >                 pr_err("OF: no ranges; cannot translate\n");
-> >                 return 1;
-> >         }
-> > -#endif /* !defined(CONFIG_PPC) */
-> >         if (ranges == NULL || rlen == 0) {
-> >                 offset = of_read_number(addr, na);
-> >                 memset(addr, 0, pna * 4);
-> >
-> >
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes in v3: None
+Changes in v2: None
+
+ drivers/staging/imx-drm/imx-hdmi.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/staging/imx-drm/imx-hdmi.c b/drivers/staging/imx-drm/imx-hdmi.c
+index 79daec4..c2b035a 100644
+--- a/drivers/staging/imx-drm/imx-hdmi.c
++++ b/drivers/staging/imx-drm/imx-hdmi.c
+@@ -1611,8 +1611,11 @@ static int imx_hdmi_bind(struct device *dev, struct device *master, void *data)
+ 	ddc_node = of_parse_phandle(np, "ddc-i2c-bus", 0);
+ 	if (ddc_node) {
+ 		hdmi->ddc = of_find_i2c_adapter_by_node(ddc_node);
+-		if (!hdmi->ddc)
++		if (!hdmi->ddc) {
+ 			dev_dbg(hdmi->dev, "failed to read ddc node\n");
++			of_node_put(ddc_node);
++			return -EPROBE_DEFER;
++		}
+ 
+ 		of_node_put(ddc_node);
+ 	} else {
+-- 
+1.9.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
