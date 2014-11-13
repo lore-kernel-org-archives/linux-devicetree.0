@@ -1,69 +1,102 @@
-From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/4] arm: dts: omap3-gta04: Add static configuration for
- devconf1 register
-Date: Thu, 13 Nov 2014 22:59:38 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1411132251320.17030@utopia.booyaka.com>
-References: <1415051968-4878-1-git-send-email-marek@goldelico.com> <1415051968-4878-5-git-send-email-marek@goldelico.com> <5463585D.9070209@ti.com> <20141112150210.GC26481@atomide.com> <5464969F.30708@ti.com> <20141113182848.GQ26481@atomide.com>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 2/2] dmaengine: Add driver for IMG MDC
+Date: Thu, 13 Nov 2014 15:07:06 -0800
+Message-ID: <CAL1qeaGvaHmfCHAhVejEqtV-dMVTEGprZJZPOevOmXaSyf8Uyw@mail.gmail.com>
+References: <1415912288-26926-1-git-send-email-abrestic@chromium.org>
+	<1415912288-26926-3-git-send-email-abrestic@chromium.org>
+	<11336807.gWpZoH7Aih@wuerfel>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141113182848.GQ26481-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <11336807.gWpZoH7Aih@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Damien Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi
+On Thu, Nov 13, 2014 at 2:13 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Thursday 13 November 2014 12:58:08 Andrew Bresticker wrote:
+>> +
+>> +static bool mdc_filter_fn(struct dma_chan *chan, void *fn_param)
+>> +{
+>> +       struct mdc_filter_data *data = fn_param;
+>> +       struct mdc_chan *mchan;
+>> +
+>> +       if (chan->device->dev->driver == &mdc_dma_driver.driver) {
+>> +               mchan = to_mdc_chan(chan);
+>> +               if (!(data->mask & BIT(mchan->chan_nr)))
+>> +                       return false;
+>> +               mchan->periph = data->periph;
+>> +               mchan->thread = data->thread;
+>> +               return true;
+>> +       }
+>> +       return false;
+>> +}
+>> +
+>> +static struct dma_chan *mdc_of_xlate(struct of_phandle_args *dma_spec,
+>> +                                    struct of_dma *ofdma)
+>> +{
+>> +       struct mdc_dma *mdma = ofdma->of_dma_data;
+>> +       struct mdc_filter_data data;
+>> +
+>> +       if (dma_spec->args_count != 3)
+>> +               return NULL;
+>> +
+>> +       data.periph = dma_spec->args[0];
+>> +       data.mask = dma_spec->args[1];
+>> +       data.thread = dma_spec->args[2];
+>> +
+>> +       return dma_request_channel(mdma->dma_dev.cap_mask, mdc_filter_fn,
+>> +                                  &data);
+>> +}
+>
+> The filter function is broken if you ever have multiple instances
+> of the device. Better avoid calling dma_request_channel and scan
+> the channels that the device knows about.
 
-On Thu, 13 Nov 2014, Tony Lindgren wrote:
+It seems unlikely that there would be multiple instances of this IP in
+a system, but it doesn't hurt to be safe.  Perhaps instead of
+iterating through the list here I could extend struct mdc_filter_data
+to include a pointer to the struct dma_device corresponding to this
+instance of the MDC and compare based on that.
 
-> * Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> [141113 03:33]:
-> > On 12/11/14 17:02, Tony Lindgren wrote:
-> > 
-> > >> And, with a quick grep, I see CONTROL_DEVCONF1 touched in multiple
-> > >> places in the kernel. I wonder if adding a pinmux entry for it could
-> > >> cause some rather odd problems.
-> > > 
-> > > They can all use pinctrl-single no problem.
-> > 
-> > Can, but don't. That's my worry. If we touch the DEVCONF1 via pinmux,
-> > and we have code in mach-omap2 that also touch DEVCONF1, without any
-> > knowledge (and locking) between those...
-> 
-> Hmm yeah the McBSP clock mux could be racy as the mux register for
-> McBSP is treated as a clock. This register muxes the clock between
-> external pin and internal clock. Considering that this should be
-> selectable at board level as the external clock probably needs to be
-> used if level shifters are being used, it should be really handled by
-> pinctrl-single.
-> 
-> The other use for hsmmc.c and pdata-quirks.c for the one time mux for
-> MMC clock from the MMC clock pin. That can be done with pinctrl-single
-> from the MMC driver too for DT based booting.
-> 
-> Then we just have the save and restore of the registers for
-> off-idle.
->  
-> > So _maybe_ that's not an issue, as the pinmux config we have here is
-> > fixed, and done once at boot time, and maybe the code in mach-omap2 that
-> > touch DEVCONF1 is also ran just once and not at the same time as the
-> > pinmux. But I don't know if that's so.
-> 
-> It seems we could just do a read-only check for McBSP in the clock
-> code for the mux register, or even completely drop that code from
-> cclock3xxx_data.c and start using the pinctrl for that mux.
-> 
-> Paul & Tero, got any comments here?
+>> +
+>> +#define PISTACHIO_CR_PERIPH_DMA_ROUTE(ch)      (0x120 + 0x4 * ((ch) / 4))
+>> +#define PISTACHIO_CR_PERIPH_DMA_ROUTE_SHIFT(ch) (8 * ((ch) % 4))
+>> +#define PISTACHIO_CR_PERIPH_DMA_ROUTE_MASK     0x3f
+>> +
+>> +static void pistachio_mdc_enable_chan(struct mdc_chan *mchan)
+>> +{
+>> +       struct mdc_dma *mdma = mchan->mdma;
+>> +       unsigned long flags;
+>> +
+>> +       spin_lock_irqsave(&mdma->lock, flags);
+>> +       regmap_update_bits(mdma->periph_regs,
+>> +                          PISTACHIO_CR_PERIPH_DMA_ROUTE(mchan->chan_nr),
+>> +                          PISTACHIO_CR_PERIPH_DMA_ROUTE_MASK <<
+>> +                          PISTACHIO_CR_PERIPH_DMA_ROUTE_SHIFT(mchan->chan_nr),
+>> +                          mchan->periph <<
+>> +                          PISTACHIO_CR_PERIPH_DMA_ROUTE_SHIFT(mchan->chan_nr));
+>> +       spin_unlock_irqrestore(&mdma->lock, flags);
+>> +}
+>> +
+>> +static void pistachio_mdc_disable_chan(struct mdc_chan *mchan)
+>> +{
+>> +       struct mdc_dma *mdma = mchan->mdma;
+>> +       unsigned long flags;
+>> +
+>> +       spin_lock_irqsave(&mdma->lock, flags);
+>> +       regmap_update_bits(mdma->periph_regs,
+>> +                          PISTACHIO_CR_PERIPH_DMA_ROUTE(mchan->chan_nr),
+>> +                          PISTACHIO_CR_PERIPH_DMA_ROUTE_MASK <<
+>> +                          PISTACHIO_CR_PERIPH_DMA_ROUTE_SHIFT(mchan->chan_nr),
+>> +                          0);
+>> +       spin_unlock_irqrestore(&mdma->lock, flags);
+>> +}
+>
+> Regmap has its own locking, no need to add another level.
 
-It's best to move all of the SCM register reads/writes to an SCM IP block 
-driver.  This driver would be the only entity that would touch the SCM IP 
-block registers - no other code on the system would touch it (perhaps 
-aside from anything needed for early init).  The SCM driver would enforce 
-mutual exclusion via a spinlock, so concurrent SCM register modifications 
-wouldn't flake out.  Then the SCM driver would register clocks with the 
-CCF, register pins with the pinctrl subsystem, etc. etc.
-
-- Paul
+Ah, right.  I'll drop the locking.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
