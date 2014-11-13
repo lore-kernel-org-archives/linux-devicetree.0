@@ -1,7 +1,7 @@
 From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/7] dmaengine: at_xdmac: prefer usage of readl/writel_relaxed
-Date: Thu, 13 Nov 2014 11:52:39 +0100
-Message-ID: <1415875965-6905-2-git-send-email-ludovic.desroches@atmel.com>
+Subject: [PATCH 2/7] dmaengine: at_xdmac: remove chancnt affectation
+Date: Thu, 13 Nov 2014 11:52:40 +0100
+Message-ID: <1415875965-6905-3-git-send-email-ludovic.desroches@atmel.com>
 References: <1415875965-6905-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,50 +12,25 @@ To: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z
 Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-_relaxed version of readl and writel are not implemented on all
-architecture so COMPILE_TEST has to be removed in order to not cause
-some build failures.
+Remove chancnt affectation since it is done in dma_async_device_regiser.
 
 Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 ---
- drivers/dma/Kconfig    | 2 +-
- drivers/dma/at_xdmac.c | 8 ++++----
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/dma/at_xdmac.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index aef8b9d..f2b2c4e 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -109,7 +109,7 @@ config AT_HDMAC
- 
- config AT_XDMAC
- 	tristate "Atmel XDMA support"
--	depends on (ARCH_AT91 || COMPILE_TEST)
-+	depends on ARCH_AT91
- 	select DMA_ENGINE
- 	help
- 	  Support the Atmel XDMA controller.
 diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-index 89c43be..1f53d92 100644
+index 1f53d92..fcecbad 100644
 --- a/drivers/dma/at_xdmac.c
 +++ b/drivers/dma/at_xdmac.c
-@@ -248,12 +248,12 @@ static inline void __iomem *at_xdmac_chan_reg_base(struct at_xdmac *atxdmac, uns
- 	return atxdmac->regs + (AT_XDMAC_CHAN_REG_BASE + chan_nb * 0x40);
- }
+@@ -1393,7 +1393,6 @@ static int at_xdmac_probe(struct platform_device *pdev)
+ 	atxdmac->dma.device_prep_dma_memcpy		= at_xdmac_prep_dma_memcpy;
+ 	atxdmac->dma.device_prep_slave_sg		= at_xdmac_prep_slave_sg;
+ 	atxdmac->dma.device_control			= at_xdmac_control;
+-	atxdmac->dma.chancnt				= nr_channels;
+ 	atxdmac->dma.device_slave_caps			= at_xdmac_device_slave_caps;
  
--#define at_xdmac_read(atxdmac, reg) readl((atxdmac)->regs + (reg))
-+#define at_xdmac_read(atxdmac, reg) readl_relaxed((atxdmac)->regs + (reg))
- #define at_xdmac_write(atxdmac, reg, value) \
--	writel((value), (atxdmac)->regs + (reg))
-+	writel_relaxed((value), (atxdmac)->regs + (reg))
- 
--#define at_xdmac_chan_read(atchan, reg) readl((atchan)->ch_regs + (reg))
--#define at_xdmac_chan_write(atchan, reg, value) writel((value), (atchan)->ch_regs + (reg))
-+#define at_xdmac_chan_read(atchan, reg) readl_relaxed((atchan)->ch_regs + (reg))
-+#define at_xdmac_chan_write(atchan, reg, value) writel_relaxed((value), (atchan)->ch_regs + (reg))
- 
- static inline struct at_xdmac_chan *to_at_xdmac_chan(struct dma_chan *dchan)
- {
+ 	/* Disable all chans and interrupts. */
 -- 
 2.0.3
 
