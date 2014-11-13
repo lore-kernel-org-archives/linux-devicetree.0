@@ -1,59 +1,76 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/4] simplefb: Add support for enumerating
- simplefb dt nodes in /chosen
-Date: Thu, 13 Nov 2014 09:40:35 +0100
-Message-ID: <54646E83.9070704@redhat.com>
-References: <1415830124-28787-1-git-send-email-hdegoede@redhat.com>	<1415830124-28787-2-git-send-email-hdegoede@redhat.com>	<CAGRGNgW_Q6oghpe5Mw-8aYPVVj1YZ6R3iaqOQzCE9dSD1nYSyA@mail.gmail.com>	<54646B5B.1070604@redhat.com> <CAMuHMdVSfYyHc52Tdu_wzb6ZYPzeZtOzweUwADHxiJLypuBQNw@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH 1/4] drm/exynos: dsi: support Exynos4415 SoC
+Date: Thu, 13 Nov 2014 17:42:43 +0900
+Message-ID: <54646F03.7000605@samsung.com>
+References: <1415340747-27904-1-git-send-email-yj44.cho@samsung.com>
+ <1415340747-27904-2-git-send-email-yj44.cho@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBEG5SGRQKGQEWDC53CQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAMuHMdVSfYyHc52Tdu_wzb6ZYPzeZtOzweUwADHxiJLypuBQNw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1415340747-27904-2-git-send-email-yj44.cho@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: YoungJun Cho <yj44.cho@samsung.com>
+Cc: dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, kyungmin.park@samsung.com, jy0922.shim@samsung.com, sw0312.kim@samsung.com, a.hajda@samsung.com, cw00.choi@samsung.com, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 2014=EB=85=84 11=EC=9B=94 07=EC=9D=BC 15:12, YoungJun Cho wrote:
+> This patch supports Exynos4415 SoC.
+>=20
 
-On 11/13/2014 09:34 AM, Geert Uytterhoeven wrote:
-> Hi Hans,
-> 
-> On Thu, Nov 13, 2014 at 9:27 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->>>> +       char name[16];
->>>> +       struct device_node *np;
->>>> +
->>>> +       ret = platform_driver_register(&simplefb_driver);
->>>> +       if (ret)
->>>> +               return ret;
->>>> +
->>>> +       for (i = 0; ; i++) {
->>>> +               snprintf(name, sizeof(name), "framebuffer%d", i);
->>>
->>> This smells like an infinite loop: we can be pretty sure that no
->>> hardware will ever exist with more than 9999 (I think?) framebuffers,
->>> however if that ever happens this'll loop until it runs out of RAM.
->>> Maybe add a suitably high limit to the for loop?
->>
->> The loop will stop as soon as there are no more framebuffer# nodes in chosen,
->> so the loop is only infinite if there are infinite nodes in the devicetree,
->> which would make the devicetree infinitely large, so this will never happen.
-> 
-> If there are 10000 frame buffers, the loop will continue beyond that,
-> as the index will be truncated to 4 digits due to the size of name[].
-> It will stop when (signed) i becomes negative, though ;-)
-> 
-> One solution is to increase the size of name[],
+Applied.
 
-This is probably never going to happen, but I'll increase the size of name in v2
-anyways.
+Thanks,
+Inki Dae
 
-Regards,
-
-Hans
+> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+>  Documentation/devicetree/bindings/video/exynos_dsim.txt | 1 +
+>  drivers/gpu/drm/exynos/exynos_drm_dsi.c                 | 7 +++++++
+>  2 files changed, 8 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/video/exynos_dsim.txt =
+b/Documentation/devicetree/bindings/video/exynos_dsim.txt
+> index e74243b..ca2b4aa 100644
+> --- a/Documentation/devicetree/bindings/video/exynos_dsim.txt
+> +++ b/Documentation/devicetree/bindings/video/exynos_dsim.txt
+> @@ -4,6 +4,7 @@ Required properties:
+>    - compatible: value should be one of the following
+>  		"samsung,exynos3250-mipi-dsi" /* for Exynos3250/3472 SoCs */
+>  		"samsung,exynos4210-mipi-dsi" /* for Exynos4 SoCs */
+> +		"samsung,exynos4415-mipi-dsi" /* for Exynos4415 SoC */
+>  		"samsung,exynos5410-mipi-dsi" /* for Exynos5410/5420/5440 SoCs */
+>    - reg: physical base address and length of the registers set for t=
+he device
+>    - interrupts: should contain DSI interrupt
+> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/dr=
+m/exynos/exynos_drm_dsi.c
+> index acf7e9e..ff17c6e 100644
+> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> @@ -316,6 +316,11 @@ static struct exynos_dsi_driver_data exynos4_dsi=
+_driver_data =3D {
+>  	.has_clklane_stop =3D 1,
+>  };
+> =20
+> +static struct exynos_dsi_driver_data exynos4415_dsi_driver_data =3D =
+{
+> +	.plltmr_reg =3D 0x58,
+> +	.has_clklane_stop =3D 1,
+> +};
+> +
+>  static struct exynos_dsi_driver_data exynos5_dsi_driver_data =3D {
+>  	.plltmr_reg =3D 0x58,
+>  };
+> @@ -325,6 +330,8 @@ static struct of_device_id exynos_dsi_of_match[] =
+=3D {
+>  	  .data =3D &exynos3_dsi_driver_data },
+>  	{ .compatible =3D "samsung,exynos4210-mipi-dsi",
+>  	  .data =3D &exynos4_dsi_driver_data },
+> +	{ .compatible =3D "samsung,exynos4415-mipi-dsi",
+> +	  .data =3D &exynos4415_dsi_driver_data },
+>  	{ .compatible =3D "samsung,exynos5410-mipi-dsi",
+>  	  .data =3D &exynos5_dsi_driver_data },
+>  	{ }
+>=20
