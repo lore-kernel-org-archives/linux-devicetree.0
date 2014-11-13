@@ -1,61 +1,74 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 2/2] spi: Add driver for IMG SPFI controller
-Date: Thu, 13 Nov 2014 17:44:05 +0000
-Message-ID: <20141113174405.GJ3815@sirena.org.uk>
-References: <1415848096-20079-1-git-send-email-abrestic@chromium.org>
- <1415848096-20079-3-git-send-email-abrestic@chromium.org>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v6 1/2] i2c: Add Imagination Technologies I2C SCB driver
+Date: Thu, 13 Nov 2014 18:49:30 +0100
+Message-ID: <20141113174930.GF1275@katana>
+References: <1415885111-4138-1-git-send-email-ezequiel.garcia@imgtec.com>
+ <1415885111-4138-2-git-send-email-ezequiel.garcia@imgtec.com>
+ <20141113173825.GD1275@katana>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="KFqA3NAzXT9iu/Yo"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="Zi0sgQQBxRFxMTsj"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1415848096-20079-3-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <Ezequiel.Garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20141113173825.GD1275@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---KFqA3NAzXT9iu/Yo
+--Zi0sgQQBxRFxMTsj
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 12, 2014 at 07:08:16PM -0800, Andrew Bresticker wrote:
+> Very close to go...
 
-> +#ifdef CONFIG_PM_SLEEP
-> +static int img_spfi_suspend(struct device *dev)
-> +{
-> +	struct spi_master *master =3D dev_get_drvdata(dev);
-> +
-> +	return spi_master_suspend(master);
-> +}
+checkpatch --strict says:
 
-This should really be checking that the device is runtime suspended and
-disabling the clocks if not, if nothing else someone might be running
-with !CONFIG_RUNTIME_PM. =20
+CHECK: Please don't use multiple blank lines
+#234: FILE: drivers/i2c/busses/i2c-img-scb.c:181:
++
++
 
-One of these days we'll get runtime and system PM playing more
-frictionlessly but not today.
+CHECK: Blank lines aren't necessary before a close brace '}'
+#621: FILE: drivers/i2c/busses/i2c-img-scb.c:568:
++
++	}
 
---KFqA3NAzXT9iu/Yo
+CHECK: braces {} should be used on all arms of this statement
+#810: FILE: drivers/i2c/busses/i2c-img-scb.c:757:
++			if (i2c->msg.len == 0)
+[...]
++			else if (i2c->msg.flags & I2C_M_RD)
+[...]
++			else {
+[...]
+
+And coccicheck:
+
+drivers/i2c/busses/i2c-img-scb.c:510:1-12: WARNING: Assignment of bool to 0/1
+
+
+--Zi0sgQQBxRFxMTsj
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Version: GnuPG v1
 
-iQEcBAEBAgAGBQJUZO3kAAoJECTWi3JdVIfQtLwH/RvmbswLLjnV97UEwcv5mbmt
-O1MtBjlqfg64Ls6llZYSAjq1gInOzM4An3Wn36zEcHaYYRKiLLQPB5NO1qouTpVD
-c09Zm9le2W2Rkw2f10gXQLOPeKSev7meTEk/c7Rh0TBHV6XKrDUDHzNPu8Cw8MuV
-4+PyU0Q3liBdOG5qJTuCz/rGSfsBIHa8sn805Z2iIn8yfKo62VYHkQtfydJJ/UZt
-wFgrtzZ8bChJ2csOh9CSGweXEzBGFKvVBPPGizx7LOUUuj+AO0DjJxFh4wWRCigw
-myq5IxLOhLJoG4IMVngxM2wRbvcjupBxrygeTfJPrF9v+K+aQGo+AYa8mlJG84U=
-=TciD
+iQIcBAEBAgAGBQJUZO8qAAoJEBQN5MwUoCm2fTcP/jzNDJ7WtpuAKw+RUdMDorxG
+qK3cW+EGTauwiWZsPvIo8W4mRgfzHGqdxY73N1kzgEym1Mopj33857KKex8bnFMY
+iZ2WU4dSceyVXey15mbwTWZwCUZiUikk/dnBZgyB68B5YhdkSa/F7lAHJEqdZgFS
+R9/VMMHOM/S+STfCi06nOFeuPx7RVmVfgEz4n709lTnky1ywAtPvo52LIA0u8cxc
+/Ko+CtFhBc0ag2uQxZr56IBreDfQDqqTIlvbZwGNV8I9QeB4p0DuW6sO5VBHhqLs
+6dqilClU6eoE51eQjQdBLOxO94hvcVhFQCI3d3MtCBwXy1viRD+8IEW4cEEf1wxN
+9j4rrvYSlbtW0RMw9qTATE+QPA3XsyazmLAUgSmVPJqpSLZuhelStiaLHxax5LEg
+baKtUZF6hxLobGmrBkeLHjAMnMCXmuhfPrfrAMVSCmthKRjo5Gw9vXeF6rfv6xPv
+f3K/unb9UHdK9mYIEW+EgRTh8+VSbq/NBgg5wHrF4sLv3VizjWLtLEbi8ELXixUA
+vMZd9FhbHHQKw4w9m41NNRjensa4sNSpkZp6EGjP8MuZOBGHugeqDtWqsbaPdAgQ
+imHDqY6nWvr5mSdUqjZDXU/vuwuIdicQJDa33apZ+VY3uXC+LieCvQnl+xZHIyjI
+2S4DV5+Rsj5osXdtB8gQ
+=CH8V
 -----END PGP SIGNATURE-----
 
---KFqA3NAzXT9iu/Yo--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--Zi0sgQQBxRFxMTsj--
