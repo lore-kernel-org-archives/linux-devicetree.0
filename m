@@ -1,59 +1,104 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] DT: i2c: Add binding document for IMG I2C SCB
-Date: Thu, 13 Nov 2014 19:49:57 +0100
-Message-ID: <20141113184957.GJ1275@katana>
-References: <1415885111-4138-1-git-send-email-ezequiel.garcia@imgtec.com>
- <1415885111-4138-3-git-send-email-ezequiel.garcia@imgtec.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH] of: pass name argument for of_io_request_and_map as const
+ char *
+Date: Fri, 14 Nov 2014 02:56:10 +0800
+Message-ID: <CAGb2v67MRg7C2_U_CWfGfcZWjn_1+k3tAwb=OU+Eo-0i8kBRnA@mail.gmail.com>
+References: <1415816222-32200-1-git-send-email-wens@csie.org> <CABuKBe+vRJUk1fB2mwUzGnnVcS-3N9U2uwgW1ZFwKBOe5sWf0Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="g3RkK9jYN81zD2N+"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1415885111-4138-3-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABuKBe+vRJUk1fB2mwUzGnnVcS-3N9U2uwgW1ZFwKBOe5sWf0Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Nov 13, 2014 at 5:04 PM, Matthias Brugger
+<matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> I already send a patch for that which got accepted by Grant [0].
+> Although right now, I'm not able to find it on his repository [1].
 
---g3RkK9jYN81zD2N+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Oh great! Please ignore this one then.
 
-On Thu, Nov 13, 2014 at 10:25:11AM -0300, Ezequiel Garcia wrote:
-> From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
->=20
-> Introduce a devicetree binding for Imagination Technologies
-> I2C SCB controller.
->=20
-> Reviewed-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Signed-off-by: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+ChenYu
 
-Applied to for-next, thanks!
-
-
---g3RkK9jYN81zD2N+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUZP1UAAoJEBQN5MwUoCm2NOcP/0frypE7Y0Qfdlm7gZfJWivK
-4tGwq9KVK5bUiLq5Hye/o6o1iQxFCZqU69NZc40ov0aqJEZL5V4c4oSPGQX75N9V
-VuDPKlR6WK25GtPek8GAz089kdoaLCNK68SdybZWHWNl/teVS4/NWX8Q97GOGaf7
-k9tMbUoaM5DTWIyP1BIjnGymNudcGPeIP6vMTdke4lO19P+IiSZr+MktPFXVJe/m
-DG7PVh6bARz5nAABUIS7jO1BlzOJgolv5hPc1+RGN57rcI0N/ELxfDCzt0sVaGki
-wB2NXMSzWb/LoVDPCd1oKgrnB5q06rLYft5m64/Rta89ewLkXW9MBkxADe3TOlwp
-/S9IeSoJp69bs+80P87xo8BY3b460KCE3pycMBAv3u9G4o1JN4nV1KpB/v6q3Zel
-oK+cVj9w0VWgnSKHzfDoDe+uu1gOC9HhludjSmhQdE1PHt9XPVTPsXNDhPhfdqdx
-rEln4ZANXqZAi88StpY8Ogv/pov8hGKnci/reHrirpBCTqOyu/+48HFYuh3itOXX
-a8GTIsh6gfzgPtDTj7mE3GjGaMGe1WVIicuk6regFotfEGX7bbRAOQNBPP8lmEPY
-P4fJN4IEQaoEzUAT4Uc5AcE2/xjjNRoL3Nt1rvkQOQoNVobDVqvd0ighu++Uqgpl
-o7AxgYd8rj9eSYu5aLV7
-=lhxN
------END PGP SIGNATURE-----
-
---g3RkK9jYN81zD2N+--
+> Cheers,
+> Matthias
+>
+> [0] https://lkml.org/lkml/2014/11/4/588
+> [1] https://git.kernel.org/cgit/linux/kernel/git/glikely/linux.git/
+>
+> 2014-11-12 19:17 GMT+01:00 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>:
+>> The name argument for of_io_request_and_map is only passed to
+>> request_mem_region, which is a macro of __request_region, which
+>> takes a const name argument.
+>>
+>> Make the name argument const, so when we pass const strings we
+>> don't get the following warnings:
+>>
+>>     warning: passing argument 3 of 'of_io_request_and_map' discards
+>>     'const' qualifier from pointer target type [enabled by default]
+>>
+>>     In file included from drivers/clk/sunxi/clk-sunxi.c:20:0:
+>>     include/linux/of_address.h:108:15: note: expected 'char *' but
+>>     argument is of type 'const char *'
+>>
+>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>
+>> I ran into this while switching some of the sunxi clock code to use
+>> of_io_request_and_map.
+>>
+>> ---
+>>  drivers/of/address.c       | 2 +-
+>>  include/linux/of_address.h | 4 ++--
+>>  2 files changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/of/address.c b/drivers/of/address.c
+>> index afdb782..e02828f 100644
+>> --- a/drivers/of/address.c
+>> +++ b/drivers/of/address.c
+>> @@ -871,7 +871,7 @@ EXPORT_SYMBOL(of_iomap);
+>>   *             return PTR_ERR(base);
+>>   */
+>>  void __iomem *of_io_request_and_map(struct device_node *np, int index,
+>> -                                       char *name)
+>> +                                       const char *name)
+>>  {
+>>         struct resource res;
+>>         void __iomem *mem;
+>> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+>> index 8cb14eb..d88e81b 100644
+>> --- a/include/linux/of_address.h
+>> +++ b/include/linux/of_address.h
+>> @@ -106,7 +106,7 @@ extern int of_address_to_resource(struct device_node *dev, int index,
+>>                                   struct resource *r);
+>>  void __iomem *of_iomap(struct device_node *node, int index);
+>>  void __iomem *of_io_request_and_map(struct device_node *device,
+>> -                                       int index, char *name);
+>> +                                       int index, const char *name);
+>>  #else
+>>
+>>  #include <linux/io.h>
+>> @@ -123,7 +123,7 @@ static inline void __iomem *of_iomap(struct device_node *device, int index)
+>>  }
+>>
+>>  static inline void __iomem *of_io_request_and_map(struct device_node *device,
+>> -                                       int index, char *name)
+>> +                                       int index, const char *name)
+>>  {
+>>         return IOMEM_ERR_PTR(-EINVAL);
+>>  }
+>> --
+>> 2.1.3
+>>
+>
+>
+>
+> --
+> motzblog.wordpress.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
