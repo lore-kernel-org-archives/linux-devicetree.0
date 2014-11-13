@@ -1,41 +1,192 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: simplefb: Specify node
- location and handoff related properties
-Date: Thu, 13 Nov 2014 16:28:54 +0200
-Message-ID: <5464C026.7030300@ti.com>
-References: <1415885645-24613-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sama5d4: add DMA support
+Date: Thu, 13 Nov 2014 15:30:40 +0100
+Message-ID: <5464C090.2080203@atmel.com>
+References: <1415884724-11777-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="56rDmCkloI4VERVWVsFrTc6rHmuLeesVt"
-Return-path: <linux-sunxi+bncBCGMHFOOT4LBBMEASORQKGQEJWP3KUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1415885645-24613-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415884724-11777-1-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---56rDmCkloI4VERVWVsFrTc6rHmuLeesVt
-Content-Type: text/plain; charset=UTF-8
+On 13/11/2014 14:18, Ludovic Desroches :
+> Add DMA controllers and device configurations.
+> 
+> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-On 13/11/14 15:34, Hans de Goede wrote:
+Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-> +chosen {
-> +	framebuffer0: framebuffer@5fc00000 {
->  		compatible = "simple-framebuffer";
-> -		reg = <0x1d385000 (1600 * 1200 * 2)>;
-> +		reg = <0x5fc00000 (4096 * 1024)>;
+and queued in at91-3.19-dt.
 
-Was there a reason for this change? The former version seems much more
-obvious to me, especially as this is an example.
+BTW: I changed the subject to match at91 standard ;-)
+"ARM: at91*" so it is now: "ARM: at91/dt: sama5d4: add DMA support"
 
- Tomi
+Thanks, bye,
 
---56rDmCkloI4VERVWVsFrTc6rHmuLeesVt--
+> ---
+> 
+>  arch/arm/boot/dts/sama5d4.dtsi | 69 ++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 69 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
+> index 338dfd8..05e0526 100644
+> --- a/arch/arm/boot/dts/sama5d4.dtsi
+> +++ b/arch/arm/boot/dts/sama5d4.dtsi
+> @@ -45,6 +45,7 @@
+>  
+>  #include "skeleton.dtsi"
+>  #include <dt-bindings/clock/at91.h>
+> +#include <dt-bindings/dma/at91.h>
+>  #include <dt-bindings/pinctrl/at91.h>
+>  #include <dt-bindings/interrupt-controller/irq.h>
+>  #include <dt-bindings/gpio/gpio.h>
+> @@ -302,6 +303,15 @@
+>  			#size-cells = <1>;
+>  			ranges;
+>  
+> +			dma1: dma-controller@f0004000 {
+> +				compatible = "atmel,sama5d4-dma";
+> +				reg = <0xf0004000 0x200>;
+> +				interrupts = <50 IRQ_TYPE_LEVEL_HIGH 0>;
+> +				#dma-cells = <1>;
+> +				clocks = <&dma1_clk>;
+> +				clock-names = "dma_clk";
+> +			};
+> +
+>  			ramc0: ramc@f0010000 {
+>  				compatible = "atmel,sama5d3-ddramc";
+>  				reg = <0xf0010000 0x200>;
+> @@ -309,6 +319,15 @@
+>  				clock-names = "ddrck", "mpddr";
+>  			};
+>  
+> +			dma0: dma-controller@f0014000 {
+> +				compatible = "atmel,sama5d4-dma";
+> +				reg = <0xf0014000 0x200>;
+> +				interrupts = <8 IRQ_TYPE_LEVEL_HIGH 0>;
+> +				#dma-cells = <1>;
+> +				clocks = <&dma0_clk>;
+> +				clock-names = "dma_clk";
+> +			};
+> +
+>  			pmc: pmc@f0018000 {
+>  				compatible = "atmel,sama5d3-pmc";
+>  				reg = <0xf0018000 0x120>;
+> @@ -761,6 +780,10 @@
+>  				compatible = "atmel,hsmci";
+>  				reg = <0xf8000000 0x600>;
+>  				interrupts = <35 IRQ_TYPE_LEVEL_HIGH 0>;
+> +				dmas = <&dma1
+> +					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
+> +					| AT91_XDMAC_DT_PERID(0))>;
+> +				dma-names = "rxtx";
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&pinctrl_mmc0_clk_cmd_dat0 &pinctrl_mmc0_dat1_3>;
+>  				status = "disabled";
+> @@ -776,6 +799,13 @@
+>  				compatible = "atmel,at91rm9200-spi";
+>  				reg = <0xf8010000 0x100>;
+>  				interrupts = <37 IRQ_TYPE_LEVEL_HIGH 3>;
+> +				dmas = <&dma1
+> +					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
+> +					| AT91_XDMAC_DT_PERID(10))>,
+> +				       <&dma1
+> +					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
+> +					| AT91_XDMAC_DT_PERID(11))>;
+> +				dma-names = "tx", "rx";
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&pinctrl_spi0>;
+>  				clocks = <&spi0_clk>;
+> @@ -787,6 +817,13 @@
+>  				compatible = "atmel,at91sam9x5-i2c";
+>  				reg = <0xf8014000 0x4000>;
+>  				interrupts = <32 IRQ_TYPE_LEVEL_HIGH 6>;
+> +				dmas = <&dma1
+> +					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
+> +					| AT91_XDMAC_DT_PERID(2))>,
+> +				       <&dma1
+> +					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
+> +					| AT91_XDMAC_DT_PERID(3))>;
+> +				dma-names = "tx", "rx";
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&pinctrl_i2c0>;
+>  				#address-cells = <1>;
+> @@ -818,6 +855,13 @@
+>  				compatible = "atmel,at91sam9x5-i2c";
+>  				reg = <0xf8024000 0x4000>;
+>  				interrupts = <34 IRQ_TYPE_LEVEL_HIGH 6>;
+> +				dmas = <&dma1
+> +					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
+> +					| AT91_XDMAC_DT_PERID(6))>,
+> +				       <&dma1
+> +					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
+> +					| AT91_XDMAC_DT_PERID(7))>;
+> +				dma-names = "tx", "rx";
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&pinctrl_i2c2>;
+>  				#address-cells = <1>;
+> @@ -830,6 +874,10 @@
+>  				compatible = "atmel,hsmci";
+>  				reg = <0xfc000000 0x600>;
+>  				interrupts = <36 IRQ_TYPE_LEVEL_HIGH 0>;
+> +				dmas = <&dma1
+> +					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
+> +					| AT91_XDMAC_DT_PERID(1))>;
+> +				dma-names = "rxtx";
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&pinctrl_mmc1_clk_cmd_dat0 &pinctrl_mmc1_dat1_3>;
+>  				status = "disabled";
+> @@ -843,6 +891,13 @@
+>  				compatible = "atmel,at91sam9260-usart";
+>  				reg = <0xfc008000 0x100>;
+>  				interrupts = <29 IRQ_TYPE_LEVEL_HIGH 5>;
+> +				dmas = <&dma1
+> +					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
+> +					| AT91_XDMAC_DT_PERID(16))>,
+> +				       <&dma1
+> +					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
+> +					| AT91_XDMAC_DT_PERID(17))>;
+> +				dma-names = "tx", "rx";
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&pinctrl_usart2 &pinctrl_usart2_rts &pinctrl_usart2_cts>;
+>  				clocks = <&usart2_clk>;
+> @@ -854,6 +909,13 @@
+>  				compatible = "atmel,at91sam9260-usart";
+>  				reg = <0xfc00c000 0x100>;
+>  				interrupts = <30 IRQ_TYPE_LEVEL_HIGH 5>;
+> +				dmas = <&dma1
+> +					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
+> +					| AT91_XDMAC_DT_PERID(18))>,
+> +				       <&dma1
+> +					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
+> +					| AT91_XDMAC_DT_PERID(19))>;
+> +				dma-names = "tx", "rx";
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&pinctrl_usart3>;
+>  				clocks = <&usart3_clk>;
+> @@ -865,6 +927,13 @@
+>  				compatible = "atmel,at91sam9260-usart";
+>  				reg = <0xfc010000 0x100>;
+>  				interrupts = <31 IRQ_TYPE_LEVEL_HIGH 5>;
+> +				dmas = <&dma1
+> +					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
+> +					| AT91_XDMAC_DT_PERID(20))>,
+> +				       <&dma1
+> +					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
+> +					| AT91_XDMAC_DT_PERID(21))>;
+> +				dma-names = "tx", "rx";
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&pinctrl_usart4>;
+>  				clocks = <&usart4_clk>;
+> 
+
+
+-- 
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
