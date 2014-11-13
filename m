@@ -1,123 +1,30 @@
-From: Gyungoh Yoo <gyungoh@gmail.com>
-Subject: Re: [RESUBMIT PATCH v6 0/8] Add Skyworks SKY81452 device drivers
-Date: Thu, 13 Nov 2014 22:20:16 +0900
-Message-ID: <20141113132014.GB13117@linuxstudy.pe.kr>
-References: <1414393369-31583-1-git-send-email-jack.yoo@skyworksinc.com>
- <1414739322-12487-1-git-send-email-jack.yoo@skyworksinc.com>
- <20141111111037.GW24004@x1>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141111111037.GW24004@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: sameo@linux.intel.com, jg1.han@samsung.com, cooloney@gmail.com, broonie@kernel.org, lgirdwood@gmail.com, jack.yoo@skyworksinc.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, heiko@sntech.de, jason@lakedaemon.net, shawn.guo@freescale.com, treding@nvidia.com, florian.vaussard@epfl.ch, trivial@kernel.org, linux@roeck-us.net, andrew@lunn.ch, jic23@kernel.org
+From: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [RFC PATCH 0/2] add dts property to force update a clock setting
+Date: Thu, 13 Nov 2014 21:20:24 +0800
+Message-ID: <1415884826-7877-1-git-send-email-kever.yang@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dkl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 11, 2014 at 11:10:37AM +0000, Lee Jones wrote:
-> Gyungoh,
->=20
-> You are still missing Acks for this set.  Can you please send it agai=
-n
-> with the Acks that you have collected thus far.
->=20
-> Please do not send it in reply-to these others.  I would suggest neve=
-r
-> sending out the set again in reply-to a previous version, as things
-> get confusing real quick.
+When we assgined a clock rate in dts, we may need to update
+the clock setting like PLLs who can get the same output rate with
+different parameter even if we don't need to change the rate.
 
-I see. I didn't know that reply-to makes a confusing.
-I will resubmit the patch series.
 
-Thank you
+Kever Yang (2):
+  clk: add property for force to update clock setting
+  dt-bindings: clk: add document for assigned-clock-force-rates usage
 
->=20
-> > From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
-> >=20
-> > This patch set includes regulator and backlight driver for SKY81452=
-=2E
-> > Also it includes documents for device tree and module.
-> > The initial version of sky81452-regulator was applied. Fo this, inc=
-remental
-> > patches are included.
-> >=20
-> > v6:
-> > Added new line character at the end of line of dev_err()
-> >=20
-> > v5:
-> > Changed DT for regulator : 'lout' node should be defined under 'reg=
-ulator'
-> > Removed compatible string from sky81452-regulator driver
-> > Modified sky81452-regulator to return EINVAL when of_node is NULL
-> > Move sky81452-backlight.h to include/linux/platform_data
-> >=20
-> > v4:
-> > Removed MODULE_VERSION()
-> > Modified license to GPLv2
-> > Removed calling to backlight_device_unregister() in sky81452-backli=
-ght
-> >=20
-> > v3:
-> > Cleaned-up DBG messages
-> > Cleaned-up DT
-> > Fixed the backlight name from 'sky81452-bl' to 'sky81452-backlight'
-> > Assigned mfd_cell.of_compatible for binding device node
-> > Modified error messages
-> > Modified sky81452-regulator to return ENODATA when of_node is NULL
-> >=20
-> > v2:
-> > Split the patches for each sub-system
-> > Added 'reg' attribute for I2C address in device tree documents
-> > Added 'compatible' attribute in child drivers
-> > Renamed CONFIG_SKY81452 to CONFIG_MFD_SKY81452
-> > Changed the dependency from I2C=3Dy to I2C, for CONFIG_MFD_SKY81452
-> > Added message for exception or errors.
-> > Added vendor prefix for Skyworks Solutions, Inc.
-> > Add SKY81452 to the Trivial Devices list
-> >=20
-> > Gyungoh Yoo (8):
-> >   mfd: Add support for Skyworks SKY81452 driver
-> >   backlight: Add support Skyworks SKY81452 backlight driver
-> >   devicetree: mfd: Add new SKY81452 mfd binding
-> >   devicetree: backlight: Add new SKY81452 backlight binding
-> >   devicetree: Add vendor prefix for Skyworks Solutions, Inc.
-> >   devicetree: i2c: Add SKY81452 to the Trivial Devices list
-> >   regulator: sky81452: Add compatible string for device binding
-> >   devicetree: regulator: sky81452: Add compatible string for device
-> >     binding
-> >=20
-> >  .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
-> >  Documentation/devicetree/bindings/mfd/sky81452.txt |  33 ++
-> >  .../bindings/regulator/sky81452-regulator.txt      |  10 +-
-> >  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
-> >  .../video/backlight/sky81452-backlight.txt         |  24 ++
-> >  drivers/mfd/Kconfig                                |  12 +
-> >  drivers/mfd/Makefile                               |   1 +
-> >  drivers/mfd/sky81452.c                             | 109 +++++++
-> >  drivers/regulator/Kconfig                          |   2 +-
-> >  drivers/regulator/sky81452-regulator.c             |  29 +-
-> >  drivers/video/backlight/Kconfig                    |  10 +
-> >  drivers/video/backlight/Makefile                   |   1 +
-> >  drivers/video/backlight/sky81452-backlight.c       | 345 +++++++++=
-++++++++++++
-> >  include/linux/mfd/sky81452.h                       |  32 ++
-> >  include/linux/platform_data/sky81452-backlight.h   |  47 +++
-> >  15 files changed, 642 insertions(+), 15 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/sky81452.=
-txt
-> >  create mode 100644 Documentation/devicetree/bindings/video/backlig=
-ht/sky81452-backlight.txt
-> >  create mode 100644 drivers/mfd/sky81452.c
-> >  create mode 100644 drivers/video/backlight/sky81452-backlight.c
-> >  create mode 100644 include/linux/mfd/sky81452.h
-> >  create mode 100644 include/linux/platform_data/sky81452-backlight.=
-h
-> >=20
->=20
-> --=20
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+ .../devicetree/bindings/clock/clock-bindings.txt   |  7 +++--
+ drivers/clk/clk-conf.c                             | 33 +++++++++++++++++++++-
+ 2 files changed, 37 insertions(+), 3 deletions(-)
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
