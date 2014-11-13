@@ -1,51 +1,104 @@
-From: Sai Masarapu <Sai.Masarapu@imgtec.com>
-Subject: RE: [PATCH 2/4] DT: pwm: Add binding document for IMG PWM DAC
-Date: Thu, 13 Nov 2014 13:56:04 +0000
-Message-ID: <1F66364AC115084B902937EE750BD69B3F145993@hbmail01.hb.imgtec.org>
-References: <1415795873-4816-1-git-send-email-Naidu.Tellapati@imgtec.com>
-	<1415795873-4816-3-git-send-email-Naidu.Tellapati@imgtec.com>
- <CAL1qeaHd0j273HnQ+EXhfJoKh0nVM_==K4DvzkvcS2y4_kv+wg@mail.gmail.com>
- <1F66364AC115084B902937EE750BD69B3F14595B@hbmail01.hb.imgtec.org>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH v4 06/10] ARM: dts: am4372: Add DCAN nodes
+Date: Thu, 13 Nov 2014 15:07:52 +0100
+Message-ID: <5464BB38.7020402@pengutronix.de>
+References: <1415881371-4982-1-git-send-email-rogerq@ti.com> <1415881371-4982-7-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1F66364AC115084B902937EE750BD69B3F14595B@hbmail01.hb.imgtec.org>
-Content-Language: en-US
-Sender: linux-pwm-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>, Naidu Tellapati <Naidu.Tellapati@imgtec.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, James Hartley <James.Hartley@imgtec.com>, Ezequiel Garcia <Ezequiel.Garcia@imgtec.com>, Arul Ramasamy <Arul.Ramasamy@imgtec.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="BHJVNKOeO1HLWmKphmWEEG4pXlOBLssxE"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <1415881371-4982-7-git-send-email-rogerq@ti.com>
+Sender: linux-can-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>, tony@atomide.com
+Cc: wg@grandegger.com, wsa@the-dreams.de, mugunthanvnm@ti.com, george.cherian@ti.com, balbi@ti.com, nsekhar@ti.comnm@ti.com, sergei.shtylyov@cogentembedded.com, linux-omap@vger.kernel.org, linux-can@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW5kcmV3LA0KDQpNYW55IHRoYW5rcyBmb3IgcmV2aWV3aW5nLiBQbGVhc2Ugc2VlIG15IGlu
-bGluZSBjb21tZW50cyBiZWxvdy4NCg0KDQpPbiBXZWQsIE5vdiAxMiwgMjAxNCBhdCA0OjM3IEFN
-LCAgPE5haWR1LlRlbGxhcGF0aUBpbWd0ZWMuY29tPiB3cm90ZToNCj4gPkZyb206IE5haWR1IFRl
-bGxhcGF0aSA8TmFpZHUuVGVsbGFwYXRpQGltZ3RlYy5jb20+DQo+Pg0KPiA+QWRkIGJpbmRpbmcg
-ZG9jdW1lbnQgZm9yIElNRyBQdWxzZSBXaWR0aCBNb2R1bGF0b3IgKFBXTSkgREFDIHByZXNlbnQg
-DQo+ID5vbiB0aGUgUGlzdGFjaGlvIFNPQy4gVGhlIFBXTSBEQUMgaGFzIGZvdXIgY2hhbm5lbHMu
-DQo+Pg0KPiA+U2lnbmVkLW9mZi1ieTogTmFpZHUgVGVsbGFwYXRpIDxOYWlkdS5UZWxsYXBhdGlA
-aW1ndGVjLmNvbT4NCj4gPlNpZ25lZC1vZmYtYnk6IFNhaSBNYXNhcmFwdSA8U2FpLk1hc2FyYXB1
-QGltZ3RlYy5jb20+DQoNCj4gPmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvcHdtL2ltZy1wd20udHh0DQo+ID5iL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9wd20vaW1nLXB3bS50eHQNCj4gPm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID5pbmRl
-eCAwMDAwMDAwLi40ZjdmNjBjDQo+ID4tLS0gL2Rldi9udWxsDQo+PiArKysgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcHdtL2ltZy1wd20udHh0DQo+PiBAQCAtMCwwICsxLDIy
-IEBADQo+PiArKkltYWdpbmF0aW9uIFRlY2hub2xvZ2llcyBQV00gREFDIGRyaXZlcg0KPiA+Kw0K
-PiA+K1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4rICAtIGNvbXBhdGlibGU6IFNob3VsZCBiZSAi
-aW1nLHBpc3RhY2hpby1wd20iDQo+ID4rICAtIHJlZzogU2hvdWxkIGNvbnRhaW4gcGh5c2ljYWwg
-YmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgcHdtIHJlZ2lzdGVycy4NCj4gPisgIC0gY2xvY2tz
-OiBwaGFuZGxlIHRvIGlucHV0IFBXTSBjbG9jay4NCj4gPisgIC0gY2xvY2stbmFtZXM6IGlucHV0
-IGNsb2NrIG5hbWVzLg0KPiA+KyAgICAgICBSZXF1aXJlZCBlbGVtZW50czogInB3bSIuDQo+ID4r
-ICAtICNwd20tY2VsbHM6IFNob3VsZCBiZSAyLiBTZWUgcHdtLnR4dCBpbiB0aGlzIGRpcmVjdG9y
-eSBmb3IgdGhlDQo+ID4rICAgICAgIGRlc2NyaXB0aW9uIG9mIHRoZSBjZWxscyBmb3JtYXQuDQo+
-ID4rICAtIGltZyxjci1wZXJpcGg6IE11c3QgY29udGFpbiBhIHBoYW5kbGUgdG8gdGhlIHBlcmlw
-aGVyYWwgY29udHJvbA0KPiA+KyAgICAgICBzeXNjb24gbm9kZSB3aGljaCBjb250YWlucyBQV00g
-Y29udHJvbCByZWdpc3RlcnMuDQo+ID4rDQo+ID4rRXhhbXBsZToNCj4gPisgICAgICAgcHdtOiBw
-d21AMTgxMDEzMDAgew0KPiA+KyAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiaW1nLHBpc3Rh
-Y2hpby1wd20iOw0KPiA+ICsgICAgICAgICAgICAgICByZWcgPSA8MHgxODEwMTMwMCAweDE0PjsN
-Cg0KID4gTWlnaHQgYXMgd2VsbCBjbGFpbSB0aGUgZnVsbCAyNTYgYnl0ZXMuDQoNCk9rLCBXZSB3
-aWxsIGNvcnJlY3QgaXQuDQoNCj4gPisgICAgICAgICAgICAgICBjbG9ja3MgPSA8JnB3bV9jbGtf
-aGFuZGxlPjsNCj4gPisgICAgICAgICAgICAgICBjbGstbmFtZXMgPSAicHdtIjsNCg0KPiAgcy9j
-bGsvY2xvY2svDQoNCk9rLCBXZSB3aWxsIGNvcnJlY3QgaXQuDQoNCj4gPisgICAgICAgICAgICAg
-ICAjcHdtLWNlbGxzID0gPDI+Ow0KPj4gKyAgICAgICAgICAgICAgIGltZyxjci1wZXJpcGggPSA8
-JmNyX3BlcmlwaD47DQo+ID4rICAgICAgIH07DQo+PiAtLQ0KPiA+MS43LjAuNA0KPj4NCg==
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--BHJVNKOeO1HLWmKphmWEEG4pXlOBLssxE
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+On 11/13/2014 01:22 PM, Roger Quadros wrote:
+> The SoC contains 2 DCAN modules. Add them.
+>=20
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+>  arch/arm/boot/dts/am4372.dtsi | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.d=
+tsi
+> index 899c57c..12fb1db 100644
+> --- a/arch/arm/boot/dts/am4372.dtsi
+> +++ b/arch/arm/boot/dts/am4372.dtsi
+> @@ -901,6 +901,28 @@
+>  			compatible =3D "mmio-sram";
+>  			reg =3D <0x40300000 0x40000>; /* 256k */
+>  		};
+> +
+> +		dcan0: can@481cc000 {
+> +			compatible =3D "ti,am3352-d_can";
+
+You should add "ti,am4372-d_can" as first compatible here.
+
+> +			ti,hwmods =3D "d_can0";
+> +			clocks =3D <&dcan0_fck>;
+> +			clock-names =3D "fck";
+> +			reg =3D <0x481cc000 0x2000>;
+> +			syscon-raminit =3D <&am43xx_control_module 0x644 0>;
+> +			interrupts =3D <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
+> +			status =3D "disabled";
+> +		};
+> +
+> +		dcan1: can@481d0000 {
+> +			compatible =3D "ti,am3352-d_can";
+
+Same here.
+
+> +			ti,hwmods =3D "d_can1";
+> +			clocks =3D <&dcan1_fck>;
+> +			clock-names =3D "fck";
+> +			reg =3D <0x481d0000 0x2000>;
+> +			syscon-raminit =3D <&am43xx_control_module 0x644 1>;
+> +			interrupts =3D <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> +			status =3D "disabled";
+> +		};
+>  	};
+>  };
+> =20
+>=20
+
+Marc
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+--BHJVNKOeO1HLWmKphmWEEG4pXlOBLssxE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUZLs4AAoJECte4hHFiupUla4QAIFE9OwX7qdb/K4WP788hh2V
+ZlDIrzwhaGHqkFxmfaqbzyZBm7pWNjnev3UfNPUotnJ8nOL3qWL6U76+5QWvX8TK
+koXa/RVhi+XbcDJ3WcsLLfMMu3VklxaOhCkvt+f0DzHkKqDYv13pfvGJsK9eJZpt
+GUzMzAFjFSFItT2yipfQZfyYjheT8MXxVMXob1585Toc1N3QX1vYzcwn/msqbVYH
+SO17Cng2W77W4LyYgk3bXE/gz9oWAqaC/nU3TCw4I/bigT47fzCvICyQvd8+MJcM
+E0SmHUa0K4Bgc7PsLuq48HshpFbqSK58lo7xgYTCFGnPNEt+gUyjh35CBI8a+WzS
+p+Ho6oy8Ryr0m6GdGIz3WHppxi20Qy7XPfWaPA1/9rBjnIGYVcdk7yN70wMXr58o
+V0u1u6yOq/l/EpjD0IZAcLI8D1ro1JNm33JSb1DHv19lfpFy4hTFB6mJfAO9990x
+yvCoOioEvjf51GxQfRCOf31ZC72nDe66NUp2hYrq1typyVwUCebxKY2eB3abXbJs
+Mmi8YNMdHJWnnG8qitwxQZlraA6ECh2CmwhLP+ku+9AlloP8G6bdgmNfa/+/8tlj
+UaTjTMm3FKUHzKugG7X5ZZw6m1VyfNbEgkr3DCLrc/W+BT/4CZxGt8GB/6hfpZ89
+519zcIhmdVHdpdtbyutw
+=gXIH
+-----END PGP SIGNATURE-----
+
+--BHJVNKOeO1HLWmKphmWEEG4pXlOBLssxE--
