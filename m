@@ -1,68 +1,64 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 2/2] DT: watchdog: Add ImgTec PDC Watchdog Timer binding documentation
-Date: Wed, 12 Nov 2014 20:09:24 -0800
-Message-ID: <CAL1qeaHrjccd4KYAUMvWEKqhM9DFNyKWE=-2k0ux+76XR+Q5tQ@mail.gmail.com>
-References: <1415805483-26268-1-git-send-email-Naidu.Tellapati@imgtec.com>
-	<1415805483-26268-3-git-send-email-Naidu.Tellapati@imgtec.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC] Add of_path property for all devices with a node
+Date: Wed, 12 Nov 2014 20:28:52 -0800
+Message-ID: <54643384.5030309@gmail.com>
+References: <1415342031.4925.27.camel@kernel.crashing.org>
+Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415805483-26268-3-git-send-email-Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1415342031.4925.27.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <Ezequiel.Garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 12, 2014 at 7:18 AM,  <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
-> From: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
->
-> Add the devicetree binding document for ImgTec PDC Watchdog Timer.
->
-> Signed-off-by: Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+On 11/6/2014 10:33 PM, Benjamin Herrenschmidt wrote:
+> Hey folks ! This is not (yet) a formal patch submission but...
+> 
+> So I've been annoyed lately with having a bunch of devices such as i2c
+> eeproms (for use by VPDs, server world !) and other bits and pieces that
+> I want to be able to identify from userspace, and possibly provide
+> additional data about from FW.
+> 
+> Basically, it boils down to correlating the sysfs device with the OF
+> tree device node, so that user space can use device-tree info such as
+> additional "location" or "label" (or whatever else we can come up with)
+> propreties to identify a given device, or get some attributes of use
+> about it, etc...
+> 
+> Now, so far, we've done that in some subsystem in a fairly ad-hoc basis
+> using "devspec" properties. For example, PCI creates them if it can
+> correlate the probed device with a DT node. Some powerpc specific busses
+> do that too.
+> 
+> However, i2c doesn't and it would be nice to have something more generic
+> since technically any device can have a corresponding device tree node.
+> 
+> So I came up with this patch, it seems to work well for me. I'm adding
+> an "of_path" attribute to not conflict with the existing "devspec" one
+> just for the sake of this experiment (plus "devspec" sucks). Long run,
+> we might want to use of_path and leave a "devspec" symlink to of_path on
+> the few busses that currently have devspec (pci and some powerpc
+> specific ones).
+> 
+> Comments ?
+> 
+> Cheers,
+> Ben.
 
-> diff --git a/Documentation/devicetree/bindings/watchdog/imgpdc-wdt.txt b/Documentation/devicetree/bindings/watchdog/imgpdc-wdt.txt
-> new file mode 100644
-> index 0000000..2f13896
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/imgpdc-wdt.txt
-> @@ -0,0 +1,18 @@
-> +*ImgTec PowerDown Controller (PDC) Watchdog Timer (WDT)
-> +
-> +Required properties:
-> +- compatible : Should be "img,pistachio-pdc-wdt"
+If I understand correctly, that information is already available in
+the file uevent.  For example, if I apply your patch, at least
+for a simple path, I see the same path name in uevent as in of_path:
 
-I don't see anything Pistachio-specific about this driver or binding
-and it looks like IP revision is probable via the WD_CORE_REV
-register, so I think you can drop the "pistachio".
+   $ cd /sys/devices/soc/f9824900.sdhci
+   $ cat of_path
+   /soc/sdhci@f9824900
+   $ grep OF_FULLNAME uevent | cut -d"=" -f2
+   /soc/sdhci@f9824900
 
-> +- reg : Should contain WDT registers location and length
-> +- clock-names: Should contain "wdt"
-
-I believe there are two clocks: the 32kHz watchdog timer operating
-clock and the system interface gate clock.  Perhaps call them "wdt"
-and "sys"?
-
-> +- clocks: phandles to input clocks
-> +- interrupts : Should contain WDT interrupt
-
-Not sure the interrupt will really be necessary.
-
-> +Examples:
-> +
-> +wdt@18102100 {
-> +       compatible = "img,pistachio-pdc-wdt";
-> +       reg = <0x18102100 0x20>;
-
-The TRM I have shows the watchdog registers occupying a full 256 bytes.
-
-> +       clocks = <&pdc_wdt_clk>;
-> +       clock-names = "wdt";
-> +       interrupts = <0 52 IRQ_TYPE_LEVEL_HIGH>;
-> +};
-> --
-> 1.7.0.4
->
+-Frank
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
