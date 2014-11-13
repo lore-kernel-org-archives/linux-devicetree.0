@@ -1,12 +1,14 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 1/4] dt-bindings: simplefb: Specify node
- location and handoff related properties
-Date: Thu, 13 Nov 2014 14:34:02 +0100
-Message-ID: <1415885645-24613-1-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH v3 3/4] simplefb: Change simplefb_init from
+ module_init to fs_initcall
+Date: Thu, 13 Nov 2014 14:34:04 +0100
+Message-ID: <1415885645-24613-3-git-send-email-hdegoede@redhat.com>
+References: <1415885645-24613-1-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBWHGSKRQKGQENZB3Y7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBXXGSKRQKGQEN5OMZHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1415885645-24613-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -18,109 +20,35 @@ To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Since simplefb nodes do not relate directly to hw typically they have been
-placed in the root of the devicetree. As the represent runtime information
-having them as sub-nodes of /chosen is more logical, specify this.
+One of the reasons for having the simplefb nodes in /chosen, and doing
+explicit enumeration of the nodes there, is too allow enumerating them sooner,
+so that we get a console earlier on.
 
-Also specify when to set the chosen stdout-path property to a simplefb node.
-
-For reliable handover to a hardware specific driver, that driver needs to
-know which simplefb to unregister when taking over, specify how the hw driver
-can find the matching simplefb node.
-
-Last add some advice on how to fill and use simplefb nodes from a firmware
-pov.
+Doing this earlier then fs_initcall is not useful, since the fb only turns into
+a console when fbcon intializes, which is a fs_initcall too.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Acked-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
---
-Changes in v2:
--Add stdout-path to the example code
-Changes in v3:
--Specify that the node name must be "framebuffer@<address>"
--Specify that the link to link simplefb node and display hw noded to one
- another for handover goes into the simplefb node, and must be called "display"
--Specify how aliases may be used to tell the OS how to number displays
--Update the example to reflect these changes
+Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- .../bindings/video/simple-framebuffer.txt          | 51 +++++++++++++++++++++-
- 1 file changed, 49 insertions(+), 2 deletions(-)
+ drivers/video/fbdev/simplefb.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer.txt b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
-index 8f35718..6c7339b 100644
---- a/Documentation/devicetree/bindings/video/simple-framebuffer.txt
-+++ b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
-@@ -4,6 +4,31 @@ A simple frame-buffer describes a frame-buffer setup by firmware or
- the bootloader, with the assumption that the display hardware has already
- been set up to scan out from the memory pointed to by the reg property.
+diff --git a/drivers/video/fbdev/simplefb.c b/drivers/video/fbdev/simplefb.c
+index 223f230..1028a0d 100644
+--- a/drivers/video/fbdev/simplefb.c
++++ b/drivers/video/fbdev/simplefb.c
+@@ -409,7 +409,11 @@ static void __exit simplefb_exit(void)
+ 	platform_driver_unregister(&simplefb_driver);
+ }
  
-+Since simplefb nodes represent runtime information they must be sub-nodes of
-+the chosen node (*). Simplefb nodes must be named "framebuffer@<address>".
-+
-+If a simplefb node represents the preferred console for user interaction,
-+then the chosen node's stdout-path property must point to it.
-+
-+If the devicetree contains nodes for the display hardware used by a simplefb,
-+then the simplefb node must contain a property called "display", which
-+contains a phandle pointing to the primary display hw node, so that the OS
-+knows which simplefb to disable when handing over control to a driver for the
-+real hardware. The bindings for the hw nodes must specify which node is
-+considered the primary node.
-+
-+It is advised to add display# aliases to help the OS determine how to number
-+things. If display# aliases are used, then if the simplefb node contains a
-+"display" property then the /aliases/display# path must point to the display
-+hw node the "display" property points to, otherwise it must point directly
-+to the simplefb node.
-+
-+It is advised that devicetree files contain pre-filled, disabled framebuffer
-+nodes, so that the firmware only needs to update the mode information and
-+enable them. This way if e.g. later on support for more display clocks get
-+added, the simplefb nodes will already contain this info and the firmware
-+does not need to be updated.
-+
- Required properties:
- - compatible: "simple-framebuffer"
- - reg: Should contain the location and size of the framebuffer memory.
-@@ -19,14 +44,36 @@ Optional properties:
-            are expected to already be configured correctly. The OS must
-            ensure these clocks are not modified or disabled while the
-            simple framebuffer remains active.
-+- display : phandle pointing to the primary display hardware node
+-module_init(simplefb_init);
++/*
++ * While this can be a module, if builtin it's most likely the console
++ * So let's leave module_exit but move module_init to an earlier place
++ */
++fs_initcall(simplefb_init);
+ module_exit(simplefb_exit);
  
- Example:
- 
--	framebuffer {
-+aliases {
-+	display0 = &lcdc0;
-+}
-+
-+chosen {
-+	framebuffer0: framebuffer@5fc00000 {
- 		compatible = "simple-framebuffer";
--		reg = <0x1d385000 (1600 * 1200 * 2)>;
-+		reg = <0x5fc00000 (4096 * 1024)>;
- 		width = <1600>;
- 		height = <1200>;
- 		stride = <(1600 * 2)>;
- 		format = "r5g6b5";
-+		clocks = <&ahb_gates 36>, <&ahb_gates 43>, <&ahb_gates 44>;
-+		display = <&lcdc0>;
-+	};
-+	stdout-path = &framebuffer0;
-+};
-+
-+soc@01c00000 {
-+	lcdc0: lcdc@1c0c000 {
-+		compatible = "allwinner,sun4i-a10-lcdc";
-+		...
- 	};
-+};
-+
-+
-+*) Older devicetree files may have a compatible = "simple-framebuffer" node
-+in a different place, operating systems must first enumerate any compatible
-+nodes found under chosen and then check for other compatible nodes.
+ MODULE_AUTHOR("Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>");
 -- 
 2.1.0
