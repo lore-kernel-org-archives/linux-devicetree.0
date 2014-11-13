@@ -1,76 +1,57 @@
-From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/4] simplefb: Add support for enumerating
- simplefb dt nodes in /chosen
-Date: Thu, 13 Nov 2014 10:39:10 +1100
-Message-ID: <CAGRGNgW_Q6oghpe5Mw-8aYPVVj1YZ6R3iaqOQzCE9dSD1nYSyA@mail.gmail.com>
-References: <1415830124-28787-1-git-send-email-hdegoede@redhat.com> <1415830124-28787-2-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH] i2c-qoriq: modified compatibility for correct prescaler
+Date: Thu, 13 Nov 2014 01:34:19 +0100
+Message-ID: <20141113003418.GE2062@katana>
+References: <1413538026-15739-1-git-send-email-valentin.longchamp@keymile.com>
+ <1414537731.23458.120.camel@snotra.buserror.net>
+ <5450AC85.40302@keymile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDQIP76OUQLBBMW7R6RQKGQE7KQ7TXI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1415830124-28787-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="2hMgfIw2X+zgXrFs"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5450AC85.40302-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux PowerPC Kernel <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux device trees <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Brunck, Holger" <Holger.Brunck-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, "Boschung, Rainer" <Rainer.Boschung-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
 
-On Thu, Nov 13, 2014 at 9:08 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> Update simplefb to support the new preferred location for simplefb dt nodes
-> under /chosen.
->
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
->  drivers/video/fbdev/simplefb.c | 33 ++++++++++++++++++++++++++++++++-
->  1 file changed, 32 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/video/fbdev/simplefb.c b/drivers/video/fbdev/simplefb.c
-> index cd96edd..be7d288 100644
-> --- a/drivers/video/fbdev/simplefb.c
-> +++ b/drivers/video/fbdev/simplefb.c
-> @@ -27,6 +27,7 @@
->  #include <linux/platform_data/simplefb.h>
->  #include <linux/platform_device.h>
->  #include <linux/clk-provider.h>
-> +#include <linux/of_platform.h>
->
->  static struct fb_fix_screeninfo simplefb_fix = {
->         .id             = "simple",
-> @@ -385,7 +386,37 @@ static struct platform_driver simplefb_driver = {
->         .probe = simplefb_probe,
->         .remove = simplefb_remove,
->  };
-> -module_platform_driver(simplefb_driver);
-> +
-> +static int __init simplefb_init(void)
-> +{
-> +       int i, ret;
-> +       char name[16];
-> +       struct device_node *np;
-> +
-> +       ret = platform_driver_register(&simplefb_driver);
-> +       if (ret)
-> +               return ret;
-> +
-> +       for (i = 0; ; i++) {
-> +               snprintf(name, sizeof(name), "framebuffer%d", i);
+--2hMgfIw2X+zgXrFs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This smells like an infinite loop: we can be pretty sure that no
-hardware will ever exist with more than 9999 (I think?) framebuffers,
-however if that ever happens this'll loop until it runs out of RAM.
-Maybe add a suitably high limit to the for loop?
 
-Thanks,
+> If we wanted to be on the safe side and strict (since we are not sure that the
+> hardware is 100% compatible), we maybe should add a fsl,qoriq-i2c compatible to
+> the driver that does the same as mpc8543-i2c.
 
--- 
-Julian Calaby
+Or you leave the driver as is and use both compatibles:
 
-Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Profile: http://www.google.com/profiles/julian.calaby/
+compatible = "fsl,qoriq-i2c", "fsl,mpc8543-i2c", "fsl-i2c";
+
+?
+
+--2hMgfIw2X+zgXrFs
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUY/yKAAoJEBQN5MwUoCm2m98P/ix5SsOvuRsDYFbeDB3XqNyN
+16yH9cU7oGeDHPFyvqzcnZ++d6+r0tpaErXOU3GS2NBdaMnNMHogmhBIbmCbdlW8
+A3gp2+mY/BnSmvl6dv5tqKzjqX2zZ5+3KOj6EcVAXVR9bz5qmFpKrEsZYv++BQj/
+tNEAUN7iy2gt33kckfBxpfrIwjAiylsKae3hqLMhmry8x5rd2/KrkGB6qL1QOaAx
+wV4ZIMcDBDVO7u4lmokl9heRebED6vYB8YiTWZH1dDz1whbN2loUGZroTmR+dbAv
+2UY+S2CMxUg1bQPkyDVe2GglZ1wXit8SKToa/mClSeXtpiW546JzcYW0Ep4HUQf3
+lv9+Lg1ne+y771u/Pome2MUPHR6Ntuuy9GHxQad/kx/1jRe6/C3yko+3VoQj9SrY
+3sNXLcUmraRLQL/3EjOJdjFOJapjkopt5Jh4Lt6jIueOjEZLBXEbVJgGiHyS1IU7
+61FeVvl6Mxt8lt2zsUjT8IBzi8xh43zquzHjJgjAXH4CxHXx7y+GURJmclXmOf0h
+HE5qMLRerHOC7Fr4pOnuXixehhrxKZsz9MuUk2NMnAlqEULxgRMCXbzw9rRLKVSS
+m2VsqDdYRABZjLrhIFmfWOMnye4tKMd/I7qitE617QhZFqc9+YsiJoFHj3Tncchc
+zA+pXncSKBWHcPRjo/DJ
+=XA65
+-----END PGP SIGNATURE-----
+
+--2hMgfIw2X+zgXrFs--
