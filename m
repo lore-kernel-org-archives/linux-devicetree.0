@@ -1,91 +1,59 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v9 5/9] dt-bindings: add document for dw_hdmi
-Date: Thu, 13 Nov 2014 20:55:40 +0800
-Message-ID: <1415883340-3565-1-git-send-email-andy.yan@rock-chips.com>
-References: <1415793593-5075-1-git-send-email-andy.yan@rock-chips.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [RFC PATCH 0/3] DRA72: MMC HS200 support
+Date: Thu, 13 Nov 2014 18:25:21 +0530
+Message-ID: <1415883324-19591-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1415793593-5075-1-git-send-email-andy.yan@rock-chips.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
-Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, mark.yao@rock-chips.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Andy yan <andy.yan@rock-chips.com>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: chris@printf.net, ulf.hansson@linaro.org, tony@atomide.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org, afenkart@gmail.com, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+Added HS200 to improve EMMC throughput for dra72.
 
----
+With HS200
+==============
+Read throughput
+./dd if=/dev/mmcblk0 of=/dev/null bs=1M count=100 oflag=sync
+100+0 records in
+100+0 records out
+104857600 bytes (105 MB) copied, 1.46028 s, 71.8 MB/s
 
-Changes in v9: None
-Changes in v8:
-- correct some spelling mistake
-- modify ddc-i2c-bus and interrupt description
+Write throughput
+root@dra7xx-evm:/# ./dd if=/dev/zero of=/dev/mmcblk0 bs=1M count=100 oflag=sync
+100+0 records in
+100+0 records out
+104857600 bytes (105 MB) copied, 9.34884 s, 11.2 MB/s
 
-Changes in v7: None
-Changes in v6: None
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
 
- .../devicetree/bindings/drm/bridge/dw_hdmi.txt     | 40 ++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt
+WithOUT HS200
+==============
+Read throughput
+./dd if=/dev/mmcblk0 of=/dev/null bs=1M count=100 oflag=sync
+100+0 records in
+100+0 records out
+104857600 bytes (105 MB) copied, 2.6423 s, 39.7 MB/s
 
-diff --git a/Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt b/Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt
-new file mode 100644
-index 0000000..0558442
---- /dev/null
-+++ b/Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt
-@@ -0,0 +1,40 @@
-+DesignWare HDMI bridge bindings
-+
-+Required properities:
-+- compatible: platform specific such as:
-+   * "fsl,imx6q-hdmi"
-+   * "fsl,imx6dl-hdmi"
-+   * "rockchip,rk3288-dw-hdmi"
-+- reg: physical base address of the controller and length
-+- ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
-+- interrupts: The HDMI interrupt number
-+
-+Optional properties
-+- reg-io-width: the width of the reg:1,4, default set to 1 if not present
-+
-+Example:
-+	hdmi: hdmi@0120000 {
-+		compatible = "fsl,imx6q-hdmi";
-+		reg = <0x00120000 0x9000>;
-+		interrupts = <0 115 0x04>;
-+		gpr = <&gpr>;
-+		clocks = <&clks 123>, <&clks 124>;
-+		clock-names = "iahb", "isfr";
-+		ddc-i2c-bus = <&i2c2>;
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			hdmi_mux_0: endpoint {
-+				remote-endpoint = <&ipu1_di0_hdmi>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			hdmi_mux_1: endpoint {
-+				remote-endpoint = <&ipu1_di1_hdmi>;
-+			};
-+		};
-+	};
+Write throughput
+./dd if=/dev/zero of=/dev/mmcblk0 bs=1M count=100 oflag=sync
+100+0 records in
+100+0 records out
+104857600 bytes (105 MB) copied, 9.3556 s, 11.2 MB/s
+
+Balaji T K (1):
+  mmc: omap_hsmmc: add tuning support
+
+Kishon Vijay Abraham I (1):
+  ARM: dts: dra72-evm: Set the max-frequency to 192MHz
+
+Viswanath Puttagunta (1):
+  mmc: omap_hsmmc: set host capabilities by reading MMCHS_CAPA2
+    register
+
+ arch/arm/boot/dts/dra72-evm.dts |    1 +
+ drivers/mmc/host/omap_hsmmc.c   |  342 ++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 341 insertions(+), 2 deletions(-)
+
 -- 
-1.9.1
+1.7.9.5
