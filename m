@@ -1,61 +1,89 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2] PCI: add missing DT binding for linux,pci-domain
- property
-Date: Thu, 13 Nov 2014 10:09:21 -0700
-Message-ID: <20141113170921.GG5064@google.com>
-References: <1415287400-30426-1-git-send-email-l.stach@pengutronix.de>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v11 2/3] power-domain: rockchip: add power doamin driver
+Date: Thu, 13 Nov 2014 09:29:37 -0800
+Message-ID: <CAD=FV=XHcpT8VaBeytJ2mYJ-fg96uvdDrbVna6md=Ne2y=dN=Q@mail.gmail.com>
+References: <1415829690-20236-1-git-send-email-caesar.wang@rock-chips.com>
+	<1415829690-20236-3-git-send-email-caesar.wang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1415287400-30426-1-git-send-email-l.stach@pengutronix.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Liviu Dudau <Liviu.Dudau@arm.com>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1415829690-20236-3-git-send-email-caesar.wang@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Caesar Wang <caesar.wang@rock-chips.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Heiko Stuebner <heiko@sntech.de>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Randy Dunlap <rdunlap@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Ulf Hansson <ulf.hansson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, ZhenFu Fang <fzf@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, Jack Dai <jack.dai@ro>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 06, 2014 at 04:23:20PM +0100, Lucas Stach wrote:
-> This property was added by 41e5c0f81d3e
-> (of/pci: Add pci_get_new_domain_nr() and of_get_pci_domain_nr())
-> without the required binding documentation. As this property
-> will be supported by a number of host bridge drivers going forward,
-> add it to the common PCI binding doc.
-> 
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Hi,
 
-Applied with acks from Liviu and Rob to for-linus for v3.18, thanks a lot
-for working this out!
+On Wed, Nov 12, 2014 at 2:01 PM, Caesar Wang <caesar.wang@rock-chips.com> wrote:
+> In order to meet high performance and low power requirements, a power
+> management unit is designed or saving power when RK3288 in low power mode.
+> The RK3288 PMU is dedicated for managing the power ot the whole chip.
+>
+> Signed-off-by: Jack Dai <jack.dai@rock-chips.com>
+> Signed-off-by: jinkun.hong <jinkun.hong@rock-chips.com>
+> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+>
+> ---
+>
+> Changes in v11:
+>     - fix pm_genpd_init(&pd->genpd, NULL, false);
+>
+> Changes in v10:
+>     - this switches over domain infos to use masks instead of recomputing
+>       them each time and also gets rid of custom domain translator and
+>       uses standard onecell on.
+>
+> Changes in v9:
+>     - fix v8 changes as follows:
+>     - This reconciles the v2 and v7 code so that we power domain have
+>       lists of clocks they toggle on and off during power transitions and
+>       independently from power domains clocks we attach clocks to devices
+>       comprising power domain and prepare them so they are turn on and off
+>       by runtime PM.
+>     - add rockchip_pm_add_one_domain() to control domains.
+>     - add pd_start/pd_stop interface to control clocks
+>
+> Changes in v8:
+>     - This reconciles the v2 and v7 code so that we power domain have
+>       lists of clocks they toggle on and off during power transitions and
+>       independently from power domains clocks we attach clocks to devices
+>       comprising power domain and prepare them so they are turn on and off
+>       by runtime PM.
+>
+> Changes in v7:
+>     - Delete unused variables
+>
+> Changes in v6:
+>     - delete pmu_lock
+>     - modify dev_lock using mutex
+>     - pm_clk_resume(pd->dev) change to pm_clk_resume(ed->dev)
+>     - pm_clk_suspend(pd->dev) change to pm_clk_suspend(ed->dev)
+>     - add devm_kfree(pd->dev, de) in rockchip_pm_domain_detach_dev
+>
+> Changes in v5:
+>     - delete idle_lock
+>     - add timeout in rockchip_pmu_set_idle_request()
+>
+> Changes in v4:
+>     - use list storage dev
+>
+> Changes in v3:
+>     - change use pm_clk_resume() and pm_clk_suspend()
+>
+> Changes in v2:
+>     - remove the "pd->pd.of_node = np"
+>
+>  arch/arm/mach-rockchip/Kconfig            |   1 +
+>  arch/arm/mach-rockchip/Makefile           |   1 +
+>  arch/arm/mach-rockchip/pm_domains.c       | 471 ++++++++++++++++++++++++++++++
+>  include/dt-bindings/power-domain/rk3288.h |  11 +
+>  4 files changed, 484 insertions(+)
 
-> ---
-> This is a non-critical fix, but may still qualify for 3.18-rc as
-> the property was added in this release cycle.
-> 
-> v2:
-> - emphasize that the property must be present and unique systemwide
->   if used
-> ---
->  Documentation/devicetree/bindings/pci/pci.txt | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
-> index 41aeed38926d..68c364e2f5e5 100644
-> --- a/Documentation/devicetree/bindings/pci/pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/pci.txt
-> @@ -7,3 +7,14 @@ And for the interrupt mapping part:
->  
->  Open Firmware Recommended Practice: Interrupt Mapping
->  http://www.openfirmware.org/1275/practice/imap/imap0_9d.pdf
-> +
-> +Additionally to the properties specified in the above standards a host bridge
-> +driver implementation may support the following properties:
-> +
-> +- linux,pci-domain:
-> +   If present this property assigns a fixed PCI domain number to a host bridge,
-> +   otherwise an unstable (across boots) unique number will be assigned.
-> +   It is required to either not set this property at all or set it for all
-> +   host bridges in the system, otherwise potentially conflicting domain numbers
-> +   may be assigned to root buses behind different host bridges. The domain
-> +   number for each host bridge in the system must be unique.
-> -- 
-> 2.1.1
-> 
+This was discussed offlist, but just to make sure it's also included here:
+
+This patch will need to be spun to deal with the fact that (c16561e PM
+/ Domains: Change prototype for the attach and detach callbacks) has
+landed.
+
+-Doug
