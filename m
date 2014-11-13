@@ -1,123 +1,40 @@
-From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] watchdog: ImgTec PDC Watchdog Timer Driver
-Date: Thu, 13 Nov 2014 10:05:11 -0300
-Message-ID: <5464AC87.6000004@imgtec.com>
-References: <1415805483-26268-1-git-send-email-Naidu.Tellapati@imgtec.com> <1415805483-26268-2-git-send-email-Naidu.Tellapati@imgtec.com>
+From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 2/2] DT: watchdog: Add ImgTec PDC Watchdog Timer binding
+ documentation
+Date: Thu, 13 Nov 2014 13:08:27 +0000
+Message-ID: <5464AD4B.1000509@imgtec.com>
+References: <1415805483-26268-1-git-send-email-Naidu.Tellapati@imgtec.com>	<1415805483-26268-3-git-send-email-Naidu.Tellapati@imgtec.com> <CAL1qeaHrjccd4KYAUMvWEKqhM9DFNyKWE=-2k0ux+76XR+Q5tQ@mail.gmail.com> <89F3BC60EA3A0141B1F6C2A661D95E5E3F192BAA@hbmail01.hb.imgtec.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415805483-26268-2-git-send-email-Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <89F3BC60EA3A0141B1F6C2A661D95E5E3F192BAA-C8yLA94LPOy3snIXRfWIHVBRoQTxkR7k@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <Ezequiel.Garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+On 13/11/14 12:58, Jude Abraham wrote:
+> On Wed, Nov 12, 2014 at 7:18 AM,  <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+>>> diff --git a/Documentation/devicetree/bindings/watchdog/imgpdc-wdt.txt 
 
-On 11/12/2014 12:18 PM, Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org wrote:
-[..]
-> +
-> +static int pdc_wdt_keepalive(struct watchdog_device *wdt_dev)
-> +{
-> +	struct pdc_wdt_dev *wdt = watchdog_get_drvdata(wdt_dev);
-> +
-> +	writel(PDC_WD_TICKLE1_MAGIC, wdt->base + PDC_WD_TICKLE1);
-> +	writel(PDC_WD_TICKLE2_MAGIC, wdt->base + PDC_WD_TICKLE2);
-> +
-> +	return 0;
-> +}
-> +
-> +static int pdc_wdt_stop(struct watchdog_device *wdt_dev)
-> +{
-> +	unsigned int val;
-> +	struct pdc_wdt_dev *wdt = watchdog_get_drvdata(wdt_dev);
-> +
-> +	val = readl(wdt->base + PDC_WD_CONFIG);
-> +	val &= ~BIT(31);
-> +	writel(val, wdt->base + PDC_WD_CONFIG);
-> +	/* Must tickle to finish the stop */
-> +	pdc_wdt_keepalive(wdt_dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int pdc_wdt_set_timeout(struct watchdog_device *wdt_dev,
-> +			       unsigned int new_timeout)
-> +{
-> +	unsigned int val;
-> +	struct pdc_wdt_dev *wdt = watchdog_get_drvdata(wdt_dev);
-> +
-> +	if (new_timeout < PDC_WD_MIN_TIMEOUT ||
-> +	    new_timeout > PDC_WD_MAX_TIMEOUT)
-> +		return -EINVAL;
-> +
-> +	wdt->wdt_dev.timeout = new_timeout;
-> +
-> +	/* round up to the next power of 2 */
-> +	new_timeout = order_base_2(new_timeout);
-> +	val = readl(wdt->base + PDC_WD_CONFIG);
-> +
-> +	/* number of 32.768KHz clocks, 2^(n+1) (14 is 1 sec) */
-> +	val &= ~PDC_WD_CONFIG_DELAY;
-> +	val |= (new_timeout + MIN_TIMEOUT_SHIFT) << PDC_WD_CONFIG_DELAY_SHIFT;
-> +	writel(val, wdt->base + PDC_WD_CONFIG);
-> +
-> +	return 0;
-> +}
-> +
-> +static int pdc_wdt_set_pretimeout(struct watchdog_device *wdt_dev,
-> +				  unsigned int new_pretimeout)
-> +{
-> +	int delay;
-> +	unsigned int val;
-> +	struct pdc_wdt_dev *wdt = watchdog_get_drvdata(wdt_dev);
-> +
-> +       /*
-> +	* Pretimeout is measured in seconds before main timeout.
-> +	* Subtract and round it once, and it will effectively change
-> +	* if the main timeout is changed.
-> +	*/
-> +	delay = wdt->wdt_dev.timeout;
-> +	if (!new_pretimeout)
-> +		new_pretimeout = PDC_WD_MAX_TIMEOUT;
-> +	else if (new_pretimeout > 0 && new_pretimeout < delay)
-> +		new_pretimeout = delay - new_pretimeout;
-> +	else
-> +		return -EINVAL;
-> +
-> +	pretimeout = new_pretimeout;
-> +	new_pretimeout = ilog2(new_pretimeout);
-> +	val = readl(wdt->base + PDC_WD_CONFIG);
-> +
-> +	/* number of 32.768KHz clocks, 2^(n+1) (14 is 1 sec) */
-> +	val &= ~PDC_WD_CONFIG_REMIND;
-> +	val |= (new_pretimeout + MIN_TIMEOUT_SHIFT)
-> +				<< PDC_WD_CONFIG_REMIND_SHIFT;
-> +	writel(val, wdt->base + PDC_WD_CONFIG);
-> +	wdt->pretimeout = pretimeout;
-> +
-> +	return 0;
-> +}
-> +
-> +/* Start the watchdog timer (delay should already be set */
-> +static int pdc_wdt_start(struct watchdog_device *wdt_dev)
-> +{
-> +	int ret;
-> +	unsigned int val;
-> +	struct pdc_wdt_dev *wdt = watchdog_get_drvdata(wdt_dev);
-> +
-> +	ret = pdc_wdt_set_timeout(&wdt->wdt_dev, wdt->wdt_dev.timeout);
-> +	if (ret < 0)
-> +		return ret;
-> +
+>>> +- interrupts : Should contain WDT interrupt
+> 
+>>  Not sure the interrupt will really be necessary.
+> 
+> Ok, We will remove the interrupt.
 
-Please double check it, but I think you don't need to set the timeout
-here. You set the default at probe time; and then it'll get set by the
-ioctl if it changes.
+Regardless, there is still an interrupt line coming out of the WDT and
+interrupt status/clear/enable registers for the single reminder
+interrupt. IMO it makes sense to describe it in DT even if the driver
+doesn't [yet] make use it.
 
--- 
-Ezequiel
+BTW, please do CC me on future versions of this patchset.
+
+Cheers
+James
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
