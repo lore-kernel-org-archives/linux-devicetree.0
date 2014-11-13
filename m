@@ -1,82 +1,82 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH/RFC 5/8] serial: pxa: Make the driver buildable for BCM7xxx set-top platforms
-Date: Thu, 13 Nov 2014 23:34:39 +0100
-Message-ID: <3857076.lzkrNkraM9@wuerfel>
-References: <1415781993-7755-1-git-send-email-cernekee@gmail.com> <4606459.kh8mb8TEgZ@wuerfel> <CAJiQ=7DoFk7ZSjHygaMWHyBTpxJFbQX4onh2xqixaqORQODsVg@mail.gmail.com>
+From: =?windows-1251?B?wPDy5ezo6Q==?= <x618-4uB02yS3QoR8UrSeD/g0lQ@public.gmane.org>
+Subject: =?windows-1251?b?zO7pIPHv7vHu4SDs7unq6CDs4Pjo7fsg7+7x8uDi?=
+	=?windows-1251?b?6OsgIu3gIPP46CIg4uXx/CDI7fLl8O3l8iE=?=
+Date: Thu, 13 Nov 2014 22:49:00 +0000
+Message-ID: <BDB80E5D5682AC6FB3B6FF404497EA49@gulimaz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <CAJiQ=7DoFk7ZSjHygaMWHyBTpxJFbQX4onh2xqixaqORQODsVg@mail.gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Rob Herring <robh@kernel.org>, daniel@zonque.org, Haojian Zhuang <haojian.zhuang@gmail.com>, robert.jarzmik@free.fr, Grant Likely <grant.likely@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="===============8702402066089698914=="
+Return-path: <nbd-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/nbd-general>,
+	<mailto:nbd-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=nbd-general>
+List-Post: <mailto:nbd-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:nbd-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/nbd-general>,
+	<mailto:nbd-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: nbd-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: "faisal.latif" <faisal.latif-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, netfilter <netfilter-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "paul.clements" <paul.clements-G8/ITkJZaeZWk0Htik3J/w@public.gmane.org>, nbd-general <nbd-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "steffen.klassert" <steffen.klassert-opNxpl+3fjRBDgjK7y7TUQ@public.gmane.org>, "manish.chopra" <manish.chopra-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org>, "sony.chacko" <sony.chacko-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org>, "rajesh.borundia" <rajesh.borundia-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org>, "lauro.venancio" <lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, "aloisio.almeida" <aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, "trond.myklebust" <trond.myklebust-7I+n7zu2hftEKMMhf/gKZA@public.gmane.org>, "jon.mason" <jon.mason-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, anton <anton-yrGDUoBaLx3QT0dZR+AlfA@public.gmane.org>, bcousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 13 November 2014 11:08:08 Kevin Cernekee wrote:
-> On Thu, Nov 13, 2014 at 1:42 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > TTY naming is a mess today, and you seem to be caught in the middle
-> > of it trying to work around the inherent problems. Extending the PXA
-> > driver is an interesting approach since as you say it's a very nice
-> > clean subset of the 8250 driver, but that doesn't mean that it's
-> > a good long-term strategy, as we will likely have more chips with
-> > 8250 variants.
-> >
-> > Some of the ways forward that I can see are:
-> >
-> > - (your approach) use and extend the pxa serial driver for new SoCs,
-> >   possibly migrate some of the existing users of 8250 to use that
-> >   and leave 8250 alone.
-> >
-> > - fix the problem you see in a different way, and get the 8250 driver
-> >   to solve your problem. Possibly integrate the pxa driver back into
-> >   8250 in eventually, as we did with the omap driver.
-> 
-> Do you think it might make sense to come up with a set of guidelines
-> that ensure that SoCs using a non-serial8250 driver (like pxa) on
-> 16550-compatible hardware can be easily moved back to serial8250
-> someday?
-> 
-> e.g. maybe I should be adding a reg-shift property to my pxa DT entry.
-> It isn't necessary for pxa.c, but if we ever move to serial8250 it
-> will be necessary.
+This is a multi-part message in MIME format.
 
-I'm not sure how many others exist that are 8250-like with different
-drivers. I think it would be a good idea to have the properties in
-there, but I'm not sure if I can come up with an exhaustive list
-of requirements.
+--===============8702402066089698914==
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0B30_01CFFF94.03D9ECD0"
 
-> > - Do a fresh start for a general-purpose soc-type 8250 driver, using
-> >   tty_port instead of uart_port as the abstraction layer.
-> 
-> Hmm, does that mean we can't use the serial_core.c helpers?
+This is a multi-part message in MIME format.
 
-Correct. IIRC the consensus among the tty maintainers has been
-for some time that serial_core.c and uart_port doesn't actually do
-that much good compared to the complexity it adds in other places.
-I may misremember the exact argument.
+------=_NextPart_000_0B30_01CFFF94.03D9ECD0
+Content-Type: text/plain;
+	charset="windows-1251"
+Content-Transfer-Encoding: quoted-printable
 
-> >   Use that for
-> >   all new socs instead of extending the 8250 driver more, possibly
-> >   migrating some of the existing 8250 users.
-> 
-> One nice thing about a brand new driver is that we can use dynamic
-> major/minor numbers unconditionally without breaking existing users.
-> If either pxa.c or bcm63xx_uart.c had used dynamic numbers, I could
-> drop Tushar's original workaround.
-> 
-> Another advantage is that we can assume all users have DT, simplifying
-> the probe function.
-> 
-> Would it be helpful to split parts of pxa.c and/or serial8250 into a
-> "lib8250", similar to libahci, that can be called by many different
-> implementations (some of which have special features like DMA
-> support)?
+=CF=F0=EE=F1=F2=E0=FF =D5=C8=D2=D0=CE=D1=D2=DC =E4=EB=FF =E1=E5=E7=F3=EF=F0=
+=E5=F7=ED=EE=E9 =F7=E8=F1=F2=EE=F2=FB... =CF=EE=E4=F0=EE=E1=ED=EE=F1=F2=E8=
+ =E7=E4=E5=F1=FC
 
-That sounds like a very good idea, yes. I had actually worked on something
-in this area years ago, but haven't followed up in some time. In particular,
-I think it makes sense to split the specific I/O register access method into
-a separate library from the code that knows about the 8250 register set,
-and from the code that performs the probing.
+------=_NextPart_000_0B30_01CFFF94.03D9ECD0
+Content-Type: text/html;
+	charset="windows-1251"
+Content-Transfer-Encoding: quoted-printable
 
-	Arnd
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META content=3D"text/html; charset=3Dwindows-1251" http-equiv=3DContent-=
+Type>
+<META name=3DGENERATOR content=3D"MSHTML 8.00.6001.23588"></HEAD>
+<BODY>
+<DIV>
+<DIV><FONT size=3D4>=CF=F0=EE=F1=F2=E0=FF =D5=C8=D2=D0=CE=D1=D2=DC =E4=EB=
+=FF =E1=E5=E7=F3=EF=F0=E5=F7=ED=EE=E9 =F7=E8=F1=F2=EE=F2=FB...&nbsp;<A=20
+href=3D"http://chaopaidj.com/vk/09a9a.php">=CF=EE=E4=F0=EE=E1=ED=EE=F1=F2=
+=E8=20
+=E7=E4=E5=F1=FC</A></FONT></DIV></DIV></BODY></HTML>
+
+------=_NextPart_000_0B30_01CFFF94.03D9ECD0--
+
+
+
+--===============8702402066089698914==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+------------------------------------------------------------------------------
+Comprehensive Server Monitoring with Site24x7.
+Monitor 10 servers for $9/Month.
+Get alerted through email, SMS, voice calls or mobile push notifications.
+Take corrective actions from your mobile device.
+http://pubads.g.doubleclick.net/gampad/clk?id=154624111&iu=/4140/ostg.clktrk
+--===============8702402066089698914==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+Nbd-general mailing list
+Nbd-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+https://lists.sourceforge.net/lists/listinfo/nbd-general
+
+--===============8702402066089698914==--
