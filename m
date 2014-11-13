@@ -1,51 +1,57 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v2 04/14] ARM: multi_v7_defconfig: Enable st ohci and ehci HCD
- drivers.
-Date: Thu, 13 Nov 2014 11:00:07 +0000
-Message-ID: <1415876417-28728-5-git-send-email-peter.griffin@linaro.org>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 12/14] ARM: STi: DT: STih407: STih410: Add clk_ignore_unused to kernel bootargs
+Date: Thu, 13 Nov 2014 11:00:15 +0000
+Message-ID: <1415876417-28728-13-git-send-email-peter.griffin@linaro.org>
 References: <1415876417-28728-1-git-send-email-peter.griffin@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1415876417-28728-1-git-send-email-peter.griffin@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, arnd@arndb.de
-Cc: peter.griffin@linaro.org, devicetree@vger.kernel.org, lee.jones@linaro.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415876417-28728-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Enable the ehci and ohci drivers in the multi_v7_defconfig so that
-the USB controllers on stih41x work by default.
+At the moment we don't take a reference on some core interconnect
+clocks which means when CCF turns off unused clocks the SoC will
+hang. As a temp soltuion we will boot with clk_ignore_unused
+parameter for all b2120 boards.
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Acked-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/configs/multi_v7_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/stih407-b2120.dts | 2 +-
+ arch/arm/boot/dts/stih410-b2120.dts | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index 491b7d5..c7a9517 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -318,9 +318,11 @@ CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_MVEBU=y
- CONFIG_USB_EHCI_HCD=y
- CONFIG_USB_EHCI_TEGRA=y
-+CONFIG_USB_EHCI_HCD_STI=y
- CONFIG_USB_EHCI_HCD_PLATFORM=y
- CONFIG_USB_ISP1760_HCD=y
- CONFIG_USB_OHCI_HCD=y
-+CONFIG_USB_OHCI_HCD_STI=y
- CONFIG_USB_OHCI_HCD_PLATFORM=y
- CONFIG_USB_STORAGE=y
- CONFIG_USB_CHIPIDEA=y
+diff --git a/arch/arm/boot/dts/stih407-b2120.dts b/arch/arm/boot/dts/stih407-b2120.dts
+index a3ad52b..261d5e2 100644
+--- a/arch/arm/boot/dts/stih407-b2120.dts
++++ b/arch/arm/boot/dts/stih407-b2120.dts
+@@ -15,7 +15,7 @@
+ 	compatible = "st,stih407-b2120", "st,stih407";
+ 
+ 	chosen {
+-		bootargs = "console=ttyAS0,115200";
++		bootargs = "console=ttyAS0,115200 clk_ignore_unused";
+ 		linux,stdout-path = &sbc_serial0;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/stih410-b2120.dts b/arch/arm/boot/dts/stih410-b2120.dts
+index 972c17a..2f61a99 100644
+--- a/arch/arm/boot/dts/stih410-b2120.dts
++++ b/arch/arm/boot/dts/stih410-b2120.dts
+@@ -14,7 +14,7 @@
+ 	compatible = "st,stih410-b2120", "st,stih410";
+ 
+ 	chosen {
+-		bootargs = "console=ttyAS0,115200";
++		bootargs = "console=ttyAS0,115200 clk_ignore_unused";
+ 		linux,stdout-path = &sbc_serial0;
+ 	};
+ 
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
