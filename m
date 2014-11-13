@@ -1,42 +1,65 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 2/2] DT: watchdog: Add ImgTec PDC Watchdog Timer binding documentation
-Date: Thu, 13 Nov 2014 11:07:52 -0800
-Message-ID: <CAL1qeaHEGZWs8PPrX5cNpUWXDL3D_5Y2w772eKBEO0G+5q_p-g@mail.gmail.com>
-References: <1415805483-26268-1-git-send-email-Naidu.Tellapati@imgtec.com>
-	<1415805483-26268-3-git-send-email-Naidu.Tellapati@imgtec.com>
-	<CAL1qeaHrjccd4KYAUMvWEKqhM9DFNyKWE=-2k0ux+76XR+Q5tQ@mail.gmail.com>
-	<89F3BC60EA3A0141B1F6C2A661D95E5E3F192BAA@hbmail01.hb.imgtec.org>
-	<5464AD4B.1000509@imgtec.com>
+From: Kevin Cernekee <cernekee@gmail.com>
+Subject: Re: [PATCH/RFC 5/8] serial: pxa: Make the driver buildable for
+ BCM7xxx set-top platforms
+Date: Thu, 13 Nov 2014 11:08:08 -0800
+Message-ID: <CAJiQ=7DoFk7ZSjHygaMWHyBTpxJFbQX4onh2xqixaqORQODsVg@mail.gmail.com>
+References: <1415781993-7755-1-git-send-email-cernekee@gmail.com>
+ <3356477.HitZEsNa4H@wuerfel> <CAJiQ=7AFr5vR+FEc8B3CAZLb5GYujNxtaz7TU2FU0D3oModZ7w@mail.gmail.com>
+ <4606459.kh8mb8TEgZ@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5464AD4B.1000509-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <Ezequiel.Garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <4606459.kh8mb8TEgZ@wuerfel>
+Sender: linux-serial-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Rob Herring <robh@kernel.org>, daniel@zonque.org, Haojian Zhuang <haojian.zhuang@gmail.com>, robert.jarzmik@free.fr, Grant Likely <grant.likely@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 13, 2014 at 5:08 AM, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
-> Hi,
+On Thu, Nov 13, 2014 at 1:42 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> TTY naming is a mess today, and you seem to be caught in the middle
+> of it trying to work around the inherent problems. Extending the PXA
+> driver is an interesting approach since as you say it's a very nice
+> clean subset of the 8250 driver, but that doesn't mean that it's
+> a good long-term strategy, as we will likely have more chips with
+> 8250 variants.
 >
-> On 13/11/14 12:58, Jude Abraham wrote:
->> On Wed, Nov 12, 2014 at 7:18 AM,  <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
->>>> diff --git a/Documentation/devicetree/bindings/watchdog/imgpdc-wdt.txt
+> Some of the ways forward that I can see are:
 >
->>>> +- interrupts : Should contain WDT interrupt
->>
->>>  Not sure the interrupt will really be necessary.
->>
->> Ok, We will remove the interrupt.
+> - (your approach) use and extend the pxa serial driver for new SoCs,
+>   possibly migrate some of the existing users of 8250 to use that
+>   and leave 8250 alone.
 >
-> Regardless, there is still an interrupt line coming out of the WDT and
-> interrupt status/clear/enable registers for the single reminder
-> interrupt. IMO it makes sense to describe it in DT even if the driver
-> doesn't [yet] make use it.
+> - fix the problem you see in a different way, and get the 8250 driver
+>   to solve your problem. Possibly integrate the pxa driver back into
+>   8250 in eventually, as we did with the omap driver.
 
-Yes, you're right.  Even if we don't currently use the interrupt, it's
-a correct description of the hardware.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Do you think it might make sense to come up with a set of guidelines
+that ensure that SoCs using a non-serial8250 driver (like pxa) on
+16550-compatible hardware can be easily moved back to serial8250
+someday?
+
+e.g. maybe I should be adding a reg-shift property to my pxa DT entry.
+It isn't necessary for pxa.c, but if we ever move to serial8250 it
+will be necessary.
+
+> - Do a fresh start for a general-purpose soc-type 8250 driver, using
+>   tty_port instead of uart_port as the abstraction layer.
+
+Hmm, does that mean we can't use the serial_core.c helpers?
+
+>   Use that for
+>   all new socs instead of extending the 8250 driver more, possibly
+>   migrating some of the existing 8250 users.
+
+One nice thing about a brand new driver is that we can use dynamic
+major/minor numbers unconditionally without breaking existing users.
+If either pxa.c or bcm63xx_uart.c had used dynamic numbers, I could
+drop Tushar's original workaround.
+
+Another advantage is that we can assume all users have DT, simplifying
+the probe function.
+
+Would it be helpful to split parts of pxa.c and/or serial8250 into a
+"lib8250", similar to libahci, that can be called by many different
+implementations (some of which have special features like DMA
+support)?
