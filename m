@@ -1,73 +1,123 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 4/7] phy: add support for USB cluster on the Armada
- 375 SoC
-Date: Thu, 13 Nov 2014 14:06:36 +0100
-Message-ID: <20141113140636.21226234@free-electrons.com>
-References: <1415879269-29711-1-git-send-email-gregory.clement@free-electrons.com>
-	<1415879269-29711-5-git-send-email-gregory.clement@free-electrons.com>
+From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/2] watchdog: ImgTec PDC Watchdog Timer Driver
+Date: Thu, 13 Nov 2014 10:05:11 -0300
+Message-ID: <5464AC87.6000004@imgtec.com>
+References: <1415805483-26268-1-git-send-email-Naidu.Tellapati@imgtec.com> <1415805483-26268-2-git-send-email-Naidu.Tellapati@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415879269-29711-5-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1415805483-26268-2-git-send-email-Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Gregory CLEMENT,
 
-On Thu, 13 Nov 2014 12:47:46 +0100, Gregory CLEMENT wrote:
-> The Armada 375 SoC comes with an USB2 host and device controller and
-> an USB3 controller. The USB cluster control register allows to manage
-> common features of both USB controllers.
-> 
-> This commit adds a driver integrated in the generic PHY framework to
-> control this USB cluster feature.
-> 
-> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  drivers/phy/Kconfig              |   6 ++
->  drivers/phy/Makefile             |   1 +
->  drivers/phy/phy-armada375-usb2.c | 158 +++++++++++++++++++++++++++++++++++++++
->  include/dt-bindings/phy/phy.h    |   1 +
->  4 files changed, 166 insertions(+)
->  create mode 100644 drivers/phy/phy-armada375-usb2.c
-> 
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index 2a436e607f99..625adb0abd43 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -21,6 +21,12 @@ config PHY_BERLIN_SATA
->  	select GENERIC_PHY
->  	help
->  	  Enable this to support the SATA PHY on Marvell Berlin SoCs.
-> +config ARMADA375_USBCLUSTER_PHY
 
-Missing new line here.
-
-> +	def_bool y
-> +	depends on MACH_ARMADA_375 || COMPILE_TEST
-> +	depends on OF
-> +	select GENERIC_PHY
+On 11/12/2014 12:18 PM, Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org wrote:
+[..]
 > +
->  
+> +static int pdc_wdt_keepalive(struct watchdog_device *wdt_dev)
+> +{
+> +	struct pdc_wdt_dev *wdt = watchdog_get_drvdata(wdt_dev);
+> +
+> +	writel(PDC_WD_TICKLE1_MAGIC, wdt->base + PDC_WD_TICKLE1);
+> +	writel(PDC_WD_TICKLE2_MAGIC, wdt->base + PDC_WD_TICKLE2);
+> +
+> +	return 0;
+> +}
+> +
+> +static int pdc_wdt_stop(struct watchdog_device *wdt_dev)
+> +{
+> +	unsigned int val;
+> +	struct pdc_wdt_dev *wdt = watchdog_get_drvdata(wdt_dev);
+> +
+> +	val = readl(wdt->base + PDC_WD_CONFIG);
+> +	val &= ~BIT(31);
+> +	writel(val, wdt->base + PDC_WD_CONFIG);
+> +	/* Must tickle to finish the stop */
+> +	pdc_wdt_keepalive(wdt_dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int pdc_wdt_set_timeout(struct watchdog_device *wdt_dev,
+> +			       unsigned int new_timeout)
+> +{
+> +	unsigned int val;
+> +	struct pdc_wdt_dev *wdt = watchdog_get_drvdata(wdt_dev);
+> +
+> +	if (new_timeout < PDC_WD_MIN_TIMEOUT ||
+> +	    new_timeout > PDC_WD_MAX_TIMEOUT)
+> +		return -EINVAL;
+> +
+> +	wdt->wdt_dev.timeout = new_timeout;
+> +
+> +	/* round up to the next power of 2 */
+> +	new_timeout = order_base_2(new_timeout);
+> +	val = readl(wdt->base + PDC_WD_CONFIG);
+> +
+> +	/* number of 32.768KHz clocks, 2^(n+1) (14 is 1 sec) */
+> +	val &= ~PDC_WD_CONFIG_DELAY;
+> +	val |= (new_timeout + MIN_TIMEOUT_SHIFT) << PDC_WD_CONFIG_DELAY_SHIFT;
+> +	writel(val, wdt->base + PDC_WD_CONFIG);
+> +
+> +	return 0;
+> +}
+> +
+> +static int pdc_wdt_set_pretimeout(struct watchdog_device *wdt_dev,
+> +				  unsigned int new_pretimeout)
+> +{
+> +	int delay;
+> +	unsigned int val;
+> +	struct pdc_wdt_dev *wdt = watchdog_get_drvdata(wdt_dev);
+> +
+> +       /*
+> +	* Pretimeout is measured in seconds before main timeout.
+> +	* Subtract and round it once, and it will effectively change
+> +	* if the main timeout is changed.
+> +	*/
+> +	delay = wdt->wdt_dev.timeout;
+> +	if (!new_pretimeout)
+> +		new_pretimeout = PDC_WD_MAX_TIMEOUT;
+> +	else if (new_pretimeout > 0 && new_pretimeout < delay)
+> +		new_pretimeout = delay - new_pretimeout;
+> +	else
+> +		return -EINVAL;
+> +
+> +	pretimeout = new_pretimeout;
+> +	new_pretimeout = ilog2(new_pretimeout);
+> +	val = readl(wdt->base + PDC_WD_CONFIG);
+> +
+> +	/* number of 32.768KHz clocks, 2^(n+1) (14 is 1 sec) */
+> +	val &= ~PDC_WD_CONFIG_REMIND;
+> +	val |= (new_pretimeout + MIN_TIMEOUT_SHIFT)
+> +				<< PDC_WD_CONFIG_REMIND_SHIFT;
+> +	writel(val, wdt->base + PDC_WD_CONFIG);
+> +	wdt->pretimeout = pretimeout;
+> +
+> +	return 0;
+> +}
+> +
+> +/* Start the watchdog timer (delay should already be set */
+> +static int pdc_wdt_start(struct watchdog_device *wdt_dev)
+> +{
+> +	int ret;
+> +	unsigned int val;
+> +	struct pdc_wdt_dev *wdt = watchdog_get_drvdata(wdt_dev);
+> +
+> +	ret = pdc_wdt_set_timeout(&wdt->wdt_dev, wdt->wdt_dev.timeout);
+> +	if (ret < 0)
+> +		return ret;
+> +
 
-One too many new line.
+Please double check it, but I think you don't need to set the timeout
+here. You set the default at probe time; and then it'll get set by the
+ioctl if it changes.
 
-
-> +	cluster_phy = dev_get_drvdata(phy->dev.parent);
-> +	if (!cluster_phy)
-> +		return -ENOMEM;
-
-Is ENOMEM really the appropriate error code here?
-
-Thomas
 -- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Ezequiel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
