@@ -1,57 +1,55 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 12/14] ARM: STi: DT: STih407: STih410: Add clk_ignore_unused to kernel bootargs
-Date: Thu, 13 Nov 2014 11:00:15 +0000
-Message-ID: <1415876417-28728-13-git-send-email-peter.griffin@linaro.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH v2 08/14] ARM: STi: DT: STiH410: Add defines for STiH410 DT clocks
+Date: Thu, 13 Nov 2014 11:00:11 +0000
+Message-ID: <1415876417-28728-9-git-send-email-peter.griffin@linaro.org>
 References: <1415876417-28728-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415876417-28728-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1415876417-28728-1-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, arnd@arndb.de
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-At the moment we don't take a reference on some core interconnect
-clocks which means when CCF turns off unused clocks the SoC will
-hang. As a temp soltuion we will boot with clk_ignore_unused
-parameter for all b2120 boards.
+Although most clock outputs are the same as stih407 SoC, stih410
+also has some additional new clock outputs.
 
-Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+Acked-by: Lee Jones <lee.jones@linaro.org>
 ---
- arch/arm/boot/dts/stih407-b2120.dts | 2 +-
- arch/arm/boot/dts/stih410-b2120.dts | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ include/dt-bindings/clock/stih410-clks.h | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 include/dt-bindings/clock/stih410-clks.h
 
-diff --git a/arch/arm/boot/dts/stih407-b2120.dts b/arch/arm/boot/dts/stih407-b2120.dts
-index a3ad52b..261d5e2 100644
---- a/arch/arm/boot/dts/stih407-b2120.dts
-+++ b/arch/arm/boot/dts/stih407-b2120.dts
-@@ -15,7 +15,7 @@
- 	compatible = "st,stih407-b2120", "st,stih407";
- 
- 	chosen {
--		bootargs = "console=ttyAS0,115200";
-+		bootargs = "console=ttyAS0,115200 clk_ignore_unused";
- 		linux,stdout-path = &sbc_serial0;
- 	};
- 
-diff --git a/arch/arm/boot/dts/stih410-b2120.dts b/arch/arm/boot/dts/stih410-b2120.dts
-index 972c17a..2f61a99 100644
---- a/arch/arm/boot/dts/stih410-b2120.dts
-+++ b/arch/arm/boot/dts/stih410-b2120.dts
-@@ -14,7 +14,7 @@
- 	compatible = "st,stih410-b2120", "st,stih410";
- 
- 	chosen {
--		bootargs = "console=ttyAS0,115200";
-+		bootargs = "console=ttyAS0,115200 clk_ignore_unused";
- 		linux,stdout-path = &sbc_serial0;
- 	};
- 
+diff --git a/include/dt-bindings/clock/stih410-clks.h b/include/dt-bindings/clock/stih410-clks.h
+new file mode 100644
+index 0000000..2097a4b
+--- /dev/null
++++ b/include/dt-bindings/clock/stih410-clks.h
+@@ -0,0 +1,25 @@
++/*
++ * This header provides constants clk index STMicroelectronics
++ * STiH410 SoC.
++ */
++#ifndef _DT_BINDINGS_CLK_STIH410
++#define _DT_BINDINGS_CLK_STIH410
++
++#include "stih407-clks.h"
++
++/* STiH410 introduces new clock outputs compared to STiH407 */
++
++/* CLOCKGEN C0 */
++#define CLK_TX_ICN_HADES	32
++#define CLK_RX_ICN_HADES	33
++#define CLK_ICN_REG_16		34
++#define CLK_PP_HADES		35
++#define CLK_CLUST_HADES		36
++#define CLK_HWPE_HADES		37
++#define CLK_FC_HADES		38
++
++/* CLOCKGEN D0 */
++#define CLK_PCMR10_MASTER	4
++#define CLK_USB2_PHY		5
++
++#endif
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
