@@ -1,67 +1,58 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v4 06/10] ARM: dts: am4372: Add DCAN nodes
-Date: Thu, 13 Nov 2014 09:40:44 -0800
-Message-ID: <20141113174044.GN26481@atomide.com>
-References: <1415881371-4982-1-git-send-email-rogerq@ti.com>
- <1415881371-4982-7-git-send-email-rogerq@ti.com>
- <5464BB38.7020402@pengutronix.de>
- <5464C2C4.2070907@ti.com>
- <5464C3B1.2030908@pengutronix.de>
- <5464C4E8.9060103@ti.com>
- <5464C609.9070800@pengutronix.de>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 13/14] ARM: STi: DT: STiH410: Add usb2 picophy dt nodes
+Date: Thu, 13 Nov 2014 18:41:56 +0100
+Message-ID: <2401196.5cvW5dPSz2@wuerfel>
+References: <1415876417-28728-1-git-send-email-peter.griffin@linaro.org> <3348806.YN8XP4V4uc@wuerfel> <20141113145419.GA30296@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-can-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5464C609.9070800@pengutronix.de>
-Sender: linux-can-owner@vger.kernel.org
-To: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Roger Quadros <rogerq@ti.com>, wg@grandegger.com, wsa@the-dreams.de, mugunthanvnm@ti.com, george.cherian@ti.com, balbi@ti.com, nsekhar@ti.comnm@ti.com, sergei.shtylyov@cogentembedded.com, linux-omap@vger.kernel.org, linux-can@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141113145419.GA30296@griffinp-ThinkPad-X1-Carbon-2nd>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Marc Kleine-Budde <mkl@pengutronix.de> [141113 06:55]:
-> On 11/13/2014 03:49 PM, Roger Quadros wrote:
-> > On 11/13/2014 04:44 PM, Marc Kleine-Budde wrote:
-> >> On 11/13/2014 03:40 PM, Roger Quadros wrote:
-> >>> On 11/13/2014 04:07 PM, Marc Kleine-Budde wrote:
-> >>>> On 11/13/2014 01:22 PM, Roger Quadros wrote:
-> >>>>> The SoC contains 2 DCAN modules. Add them.
-> >>>>>
-> >>>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> >>>>> ---
-> >>>>>  arch/arm/boot/dts/am4372.dtsi | 22 ++++++++++++++++++++++
-> >>>>>  1 file changed, 22 insertions(+)
-> >>>>>
-> >>>>> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-> >>>>> index 899c57c..12fb1db 100644
-> >>>>> --- a/arch/arm/boot/dts/am4372.dtsi
-> >>>>> +++ b/arch/arm/boot/dts/am4372.dtsi
-> >>>>> @@ -901,6 +901,28 @@
-> >>>>>  			compatible = "mmio-sram";
-> >>>>>  			reg = <0x40300000 0x40000>; /* 256k */
-> >>>>>  		};
-> >>>>> +
-> >>>>> +		dcan0: can@481cc000 {
-> >>>>> +			compatible = "ti,am3352-d_can";
-> >>>>
-> >>>> You should add "ti,am4372-d_can" as first compatible here.
-> >>>>
-> >>> We don't have a separate compatible id for am4372-d_can
-> >>> as it the IP exactly same as am3352-d_can.
-> >>
-> >> Having the "ti,am4372-d_can" compatible gives you the freedom to add
-> >> some spacial handling for the IP if there turns that you need to without
-> >> needing to modify the device tree. (We do this on imx.)
-> > 
-> > Agreed. On OMAP platforms we don't add new compatible IDs unless we really need to.
-> > Can we add "ti,am4372-d_can" even if it is not mentioned in Documentation/devicetree/bindings?
-> > 
-> > Tony what is your preference?
+On Thursday 13 November 2014 14:54:19 Peter Griffin wrote:
 > 
-> I don't insist, do it the Omap way :)
+> > 
+> > It also seems that you have put the node in the wrong place, as the reg
+> > property apparently refers to a different address space. Did you mean
+> > to put this under the syscfg_core node?
+> 
+> Your correct in that it refers to the syscfg_core address space.
+> However I intentionaly didn't put it under the syscfg_core node.
+> 
+> The phy is more unique than most other devices in that in this instance it
+> is only controlled from two syscfg_core registers which happen to be in the same
+> sysconf bank.
+>
+> However most other devices tend to have a combination of some memory mapped
+> registers and also some sysconfig registers which does then create a conflict
+> over where the dt node should live.
+> 
+> Currently I can't find an example but there is also no guarentee that a
+> device will not have some configuration bits in syscfg_core and some
+> other bits in syscfg_rear/front registers. The phy for example could
+> have had one register in each, which would make deciding where to put
+> it difficult.
+> 
+> So to create coherency / conformity we decided to put all the IP blocks under the soc node.
+> 
+> Also its worth pointing if your not already aware that sysconf_core/rear/front isn't
+> really a device, it's just a regmap abstraction of some memory mapped configuration
+> registers where a bunch of seemingly random control bits get stuffed.
+> 
+> Of course if you feel strongly about it I can of course change it like you suggested,
+> but that is the reasoning / rationale of why it was done like this initially.
 
-I agree it's good to add if we need to add custom handling later on.
+The problem is your use of the 'reg' property. If it doesn't refer to the
+node's address space, it shouldn't be called 'reg'.
 
-Regards,
+Please fix the binding.
 
-Tony
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
