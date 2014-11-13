@@ -1,7 +1,7 @@
 From: Ankit Jindal <ankit.jindal@linaro.org>
-Subject: [PATCH v4 3/6] Documentation: Update documentation for UIO_MEM_PHYS_CACHE
-Date: Thu, 13 Nov 2014 13:15:19 +0530
-Message-ID: <1415864722-2800-4-git-send-email-ankit.jindal@linaro.org>
+Subject: [PATCH v4 6/6] MAINTAINERS: Add entry for APM X-Gene QMTM UIO driver
+Date: Thu, 13 Nov 2014 13:15:22 +0530
+Message-ID: <1415864722-2800-7-git-send-email-ankit.jindal@linaro.org>
 References: <1415864722-2800-1-git-send-email-ankit.jindal@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1415864722-2800-1-git-send-email-ankit.jindal@linaro.org>
@@ -10,30 +10,31 @@ To: linux-kernel@vger.kernel.org
 Cc: "Hans J. Koch" <hjk@hansjkoch.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, patches@apm.com, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Tushar Jagad <tushar.jagad@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Varka Bhadram <varkabhadram@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ankit Jindal <ankit.jindal@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch updates UIO documentation for new mem region
-type UIO_MEM_PHYS_CACHE.
+Add entry to maintainer list for APM X-Gene QMTM UIO driver.
 
 Signed-off-by: Ankit Jindal <ankit.jindal@linaro.org>
 Signed-off-by: Tushar Jagad <tushar.jagad@linaro.org>
 ---
- Documentation/DocBook/uio-howto.tmpl |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ MAINTAINERS |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/DocBook/uio-howto.tmpl b/Documentation/DocBook/uio-howto.tmpl
-index bbe9c1f..baa9185 100644
---- a/Documentation/DocBook/uio-howto.tmpl
-+++ b/Documentation/DocBook/uio-howto.tmpl
-@@ -529,8 +529,9 @@ the memory region, it will show up in the corresponding sysfs node.
- <varname>int memtype</varname>: Required if the mapping is used. Set this to
- <varname>UIO_MEM_PHYS</varname> if you you have physical memory on your
- card to be mapped. Use <varname>UIO_MEM_LOGICAL</varname> for logical
--memory (e.g. allocated with <function>kmalloc()</function>). There's also
--<varname>UIO_MEM_VIRTUAL</varname> for virtual memory.
-+memory (e.g. allocated with <function>kmalloc()</function>). There are also
-+<varname>UIO_MEM_VIRTUAL</varname> for virtual memory, and
-+<varname>UIO_MEM_PHYS_CACHE</varname> for cacheable access to physical memory.
- </para></listitem>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5e7866a..138663f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -727,6 +727,13 @@ S:	Supported
+ F:	drivers/net/ethernet/apm/xgene/
+ F:	Documentation/devicetree/bindings/net/apm-xgene-enet.txt
  
- <listitem><para>
++APPLIED MICRO (APM) X-GENE QMTM UIO DRIVER
++M:	Ankit Jindal <ankit.jindal@linaro.org>
++M:	Tushar Jagad <tushar.jagad@linaro.org>
++S:	Supported
++F:	drivers/uio/uio_xgene_qmtm.c
++F:	Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt
++
+ APTINA CAMERA SENSOR PLL
+ M:	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+ L:	linux-media@vger.kernel.org
 -- 
 1.7.9.5
