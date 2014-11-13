@@ -1,137 +1,98 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] DT: add MDIO node for FMan node
-Date: Thu, 13 Nov 2014 02:04:27 -0600
-Message-ID: <1415865867.15957.58.camel@freescale.com>
-References: <1415102196-9238-1-git-send-email-shh.xie@gmail.com>
-	 <1415665384.15957.16.camel@freescale.com>
-	 <fb6dc6131da04e89bfc31bd8278030a0@DM2PR0301MB0864.namprd03.prod.outlook.com>
-	 <1415727479.15957.29.camel@freescale.com>
-	 <c4dd11a97a684be8b799c2f639e600ca@DM2PR0301MB0864.namprd03.prod.outlook.com>
-	 <1415859399.15957.48.camel@freescale.com>
-	 <59c6a8b7ad1d477aad9edd2152d02f8e@DM2PR0301MB0864.namprd03.prod.outlook.com>
-	 <1415862913.15957.56.camel@freescale.com>
-	 <489ad06fda99436eb3307d613b1f8293@DM2PR0301MB0864.namprd03.prod.outlook.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH 19/22] dt/bindings: add micrel,rmii_ref_clk_sel_25_mhz to
+ eth-phy binding
+Date: Thu, 13 Nov 2014 09:09:27 +0100
+Message-ID: <20141113080927.GP30369@pengutronix.de>
+References: <1415727460-20417-1-git-send-email-johan@kernel.org>
+ <1415727460-20417-20-git-send-email-johan@kernel.org>
+ <20141111175741.GF25295@leverpostej>
+ <20141111181825.GH29789@localhost>
+ <20141112070127.GF30369@pengutronix.de>
+ <20141112091920.GC15215@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <489ad06fda99436eb3307d613b1f8293-Cwg/PA1lyPnq20u2fDgSrZwN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xie Shaohui-B21989 <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Liberman Igal-B31950 <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Medve Emilian-EMMEDVE1 <Emilian.Medve-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141112091920.GC15215@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2014-11-13 at 02:02 -0600, Xie Shaohui-B21989 wrote:
-> 
-> 
-> Best Regards, 
-> Shaohui Xie
-> 
-> 
-> > -----Original Message-----
-> > From: Wood Scott-B07421
-> > Sent: Thursday, November 13, 2014 3:15 PM
-> > To: Xie Shaohui-B21989
-> > Cc: Liberman Igal-B31950; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org;
-> > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Medve Emilian-EMMEDVE1
-> > Subject: Re: [PATCH] DT: add MDIO node for FMan node
+On Wed, Nov 12, 2014 at 10:19:20AM +0100, Johan Hovold wrote:
+> On Wed, Nov 12, 2014 at 08:01:27AM +0100, Sascha Hauer wrote:
+> > On Tue, Nov 11, 2014 at 07:18:25PM +0100, Johan Hovold wrote:
+> > > On Tue, Nov 11, 2014 at 05:57:42PM +0000, Mark Rutland wrote:
+> > > > On Tue, Nov 11, 2014 at 05:37:37PM +0000, Johan Hovold wrote:
+> > > > > Add "micrel,rmii_ref_clk_sel_25_mhz" to Micrel ethernet PHY binding
+> > > > > documentation.
+> > > > > 
+> > > > > Cc: devicetree@vger.kernel.org
+> > > > > Signed-off-by: Johan Hovold <johan@kernel.org>
+> > > > > ---
+> > > > >  Documentation/devicetree/bindings/net/micrel.txt | 5 +++++
+> > > > >  1 file changed, 5 insertions(+)
+> > > > > 
+> > > > > diff --git a/Documentation/devicetree/bindings/net/micrel.txt b/Documentation/devicetree/bindings/net/micrel.txt
+> > > > > index a1bab5eaae02..9b08dd6551dd 100644
+> > > > > --- a/Documentation/devicetree/bindings/net/micrel.txt
+> > > > > +++ b/Documentation/devicetree/bindings/net/micrel.txt
+> > > > > @@ -19,6 +19,11 @@ Optional properties:
+> > > > >  
+> > > > >                See the respective PHY datasheet for the mode values.
+> > > > >  
+> > > > > + - micrel,rmii_ref_clk_sel_25_mhz: rmii_ref_clk_sel bit selects 25 MHz mode
+> > > > > +
+> > > > > +		Whether 25 MHz (rather than 50 Mhz) clock mode is selected
+> > > > > +		when the rmii_ref_clk_sel bit is set.
+> > > > 
+> > > > s/_/-/ in property names please.
+> > > 
+> > > Ouch, copied from variable name, sorry.
+> > > 
+> > > > That said, I don't follow the meaning. Does this cause the kernel to do
+> > > > something different, or is is simply that a 25MHz ref clock is wired up?
+> > > 
+> > > Yes, the driver currently sets this configuration bit based on a common
+> > > clock binding.
+> > > 
+> > > However, it turns out the meaning of the bit is reversed on some PHY
+> > > variants. On most PHYs 50 MHz mode is selected by setting this bit,
+> > > whereas on the PHYs that need this new property, setting it selects 25
+> > > MHz mode instead.
 > > 
-> > On Thu, 2014-11-13 at 01:11 -0600, Xie Shaohui-B21989 wrote:
-> > > > -----Original Message-----
-> > > > From: Wood Scott-B07421
-> > > > Sent: Thursday, November 13, 2014 2:17 PM
-> > > > To: Xie Shaohui-B21989
-> > > > Cc: Liberman Igal-B31950; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org;
-> > > > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Medve Emilian-EMMEDVE1
-> > > > Subject: Re: [PATCH] DT: add MDIO node for FMan node
-> > > >
-> > > > On Wed, 2014-11-12 at 07:40 -0600, Xie Shaohui-B21989 wrote:
-> > > > > > -----Original Message-----
-> > > > > > From: Wood Scott-B07421
-> > > > > > Sent: Wednesday, November 12, 2014 1:38 AM
-> > > > > > To: Xie Shaohui-B21989
-> > > > > > Cc: Liberman Igal-B31950; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org;
-> > > > > > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Medve Emilian-EMMEDVE1
-> > > > > > Subject: Re: [PATCH] DT: add MDIO node for FMan node
-> > > > > >
-> > > > > > On Tue, 2014-11-11 at 04:32 -0600, Xie Shaohui-B21989 wrote:
-> > > > > > > > -----Original Message-----
-> > > > > > > > From: Wood Scott-B07421
-> > > > > > > > Sent: Tuesday, November 11, 2014 8:23 AM
-> > > > > > > > To: shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-> > > > > > > > Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org;
-> > > > > > > > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Medve Emilian-EMMEDVE1; Xie
-> > > > > > > > Shaohui-B21989
-> > > > > > > > Subject: Re: [PATCH] DT: add MDIO node for FMan node
-> > > > > > > >
-> > > > > > > > On Tue, 2014-11-04 at 19:56 +0800, shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> > > > > > > > > From: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > > > > > > > >
-> > > > > > > > > This binding is for FMan MDIO, it covers FMan v2 & FMan v3.
-> > > > > > > > >
-> > > > > > > > > Signed-off-by: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > > > > > > > > ---
-> > > > > > > > > based on http://patchwork.ozlabs.org/patch/390351/
-> > > > > > > > > for 'next' of
-> > > > > > > > >
-> > git://git.kernel.org/pub/scm/linux/kernel/git/scottwood/linux.
-> > > > > > > > > git
-> > > > > > > >
-> > > > > > > > Are there any other FMan pieces that are missing from the
-> > > > > > > > above
-> > > > patch?
-> > > > > > > [S.H] I'm adding Igal for this comment.
-> > > > > > >
-> > > > > > > >
-> > > > > > > > > +- bus-frequency
-> > > > > > > > > +		Usage: optional
-> > > > > > > > > +		Value type: <u32>
-> > > > > > > > > +		Definition: Default MDIO bus clock speed.
-> > > > > > > >
-> > > > > > > > Use clocks/clock-names
-> > > > > > > [S.H] The MDIO uses Fman clock and divides it to a proper
-> > > > > > > value which
-> > > > > > is specified by this property.
-> > > > > >
-> > > > > > Use clocks/clock-names to describe that relationship.
-> > > > > >
-> > > > >
-> > > > > [S.H] The MDIO node is sub-node and embedded in Fman node, the
-> > > > > clocks/clock-names is provided by Fman node, should repeat them in
-> > > > > MDIO node? For the default MDIO bus clock speed, maybe "clock-
-> > ranges"
-> > > > > should be used?
-> > > >
-> > > > It's a different clock.  You wouldn't be repeating.  If it's derived
-> > > > from the FMan clock, then maybe you don't need anything here (does
-> > > > the driver know what the divider is, or would that need to be
-> > > > specified in the device tree?), but no more clock-frequency/bus-
-> > frequency properties.
-> > > >
-> > > [S.H] The purpose here is to get a specific clock frequency, driver to
-> > use it to calculate the divider.
-> > > Then the Fman clock can be divided to the frequency.
-> > 
-> > Oh, so this is stating a desired frequency and not something that already
-> > exists?  What determines this frequency?  Is it based on board design, or
-> > just on the MDIO standard, etc?  I'm wondering if the device tree is the
-> > right place for it.
-> [S.H] Yes, a desired frequency which is different with MDIO standard.
+> > Maybe rename the property to something like rmii-ref-clk-25mhz-active-high
+> > then? Also you should probably make it more explicit that this is a
+> > hardware property and not for adjusting the clock.
+> 
+> You're right, but how about calling it
+> 
+> 	micrel,rmii-reference-clock-select-inverted
+> 
+> Then no one will set it believing it will change the clock mode and
+> without reading the binding doc first.
+> 
+> The description could then read something like
+> 
+> 	micrel,rmii-reference-clock-select-inverted: RMII Reference
+> 		Clock Select bit is inverted
+> 
+> 	The RMII Reference Clock Select bit is inverted so that setting
+> 	it selects 25 MHz rather than 50 MHz clock mode. 
+> 
+> 	Note that this is only needed for PHY variants that has this bit
+> 	inverted and that a clock reference ("rmii-ref" below) is always
+> 	needed to select the actual mode.
 
-I'm not sure what you mean by "different with".  Do you mean "different
-from"?  What does the standard say about frequency?
+"Inverted" only has a meaning when everybody agrees what's the normal
+case. Since that not the case I really prefer talking about
+"active-high" or "active-low".
 
-> The Fman clock and the divider determines this frequency.
-> Since Fman clock is different on different SoCs, so specify the desired frequency, 
-> then to get the proper divider.
-
-Why does the fman clock being different mean the mdio clock should be
-different?
-
--Scott
+Sascha
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
