@@ -1,61 +1,126 @@
-From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v6 2/2] DT: i2c: Add binding document for IMG I2C SCB
-Date: Thu, 13 Nov 2014 10:25:11 -0300
-Message-ID: <1415885111-4138-3-git-send-email-ezequiel.garcia@imgtec.com>
-References: <1415885111-4138-1-git-send-email-ezequiel.garcia@imgtec.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 1/4] dt-bindings: simplefb: Specify node
+ location and handoff related properties
+Date: Thu, 13 Nov 2014 14:34:02 +0100
+Message-ID: <1415885645-24613-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415885111-4138-1-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBWHGSKRQKGQENZB3Y7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Since simplefb nodes do not relate directly to hw typically they have been
+placed in the root of the devicetree. As the represent runtime information
+having them as sub-nodes of /chosen is more logical, specify this.
 
-Introduce a devicetree binding for Imagination Technologies
-I2C SCB controller.
+Also specify when to set the chosen stdout-path property to a simplefb node.
 
-Reviewed-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+For reliable handover to a hardware specific driver, that driver needs to
+know which simplefb to unregister when taking over, specify how the hw driver
+can find the matching simplefb node.
+
+Last add some advice on how to fill and use simplefb nodes from a firmware
+pov.
+
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Acked-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+--
+Changes in v2:
+-Add stdout-path to the example code
+Changes in v3:
+-Specify that the node name must be "framebuffer@<address>"
+-Specify that the link to link simplefb node and display hw noded to one
+ another for handover goes into the simplefb node, and must be called "display"
+-Specify how aliases may be used to tell the OS how to number displays
+-Update the example to reflect these changes
 ---
- .../devicetree/bindings/i2c/i2c-img-scb.txt        | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-img-scb.txt
+ .../bindings/video/simple-framebuffer.txt          | 51 +++++++++++++++++++++-
+ 1 file changed, 49 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-img-scb.txt b/Documentation/devicetree/bindings/i2c/i2c-img-scb.txt
-new file mode 100644
-index 0000000..b646160
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-img-scb.txt
-@@ -0,0 +1,26 @@
-+IMG Serial Control Bus (SCB) I2C Controller
+diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer.txt b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+index 8f35718..6c7339b 100644
+--- a/Documentation/devicetree/bindings/video/simple-framebuffer.txt
++++ b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+@@ -4,6 +4,31 @@ A simple frame-buffer describes a frame-buffer setup by firmware or
+ the bootloader, with the assumption that the display hardware has already
+ been set up to scan out from the memory pointed to by the reg property.
+ 
++Since simplefb nodes represent runtime information they must be sub-nodes of
++the chosen node (*). Simplefb nodes must be named "framebuffer@<address>".
 +
-+Required Properties:
-+- compatible: "img,scb-i2c"
-+- reg: Physical base address and length of controller registers
-+- interrupts: Interrupt number used by the controller
-+- clocks : Should contain a clock specifier for each entry in clock-names
-+- clock-names : Should contain the following entries:
-+                "scb", for the SCB core clock.
-+                "sys", for the system clock.
-+- clock-frequency: The I2C bus frequency in Hz
-+- #address-cells: Should be <1>
-+- #size-cells: Should be <0>
++If a simplefb node represents the preferred console for user interaction,
++then the chosen node's stdout-path property must point to it.
 +
-+Example:
++If the devicetree contains nodes for the display hardware used by a simplefb,
++then the simplefb node must contain a property called "display", which
++contains a phandle pointing to the primary display hw node, so that the OS
++knows which simplefb to disable when handing over control to a driver for the
++real hardware. The bindings for the hw nodes must specify which node is
++considered the primary node.
 +
-+i2c@18100000 {
-+	compatible = "img,scb-i2c";
-+	reg = <0x18100000 0x200>;
-+	interrupts = <GIC_SHARED 2 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks = <&i2c0_clk>, <&system_clk>;
-+	clock-names = "scb", "sys";
-+	clock-frequency = <400000>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
++It is advised to add display# aliases to help the OS determine how to number
++things. If display# aliases are used, then if the simplefb node contains a
++"display" property then the /aliases/display# path must point to the display
++hw node the "display" property points to, otherwise it must point directly
++to the simplefb node.
++
++It is advised that devicetree files contain pre-filled, disabled framebuffer
++nodes, so that the firmware only needs to update the mode information and
++enable them. This way if e.g. later on support for more display clocks get
++added, the simplefb nodes will already contain this info and the firmware
++does not need to be updated.
++
+ Required properties:
+ - compatible: "simple-framebuffer"
+ - reg: Should contain the location and size of the framebuffer memory.
+@@ -19,14 +44,36 @@ Optional properties:
+            are expected to already be configured correctly. The OS must
+            ensure these clocks are not modified or disabled while the
+            simple framebuffer remains active.
++- display : phandle pointing to the primary display hardware node
+ 
+ Example:
+ 
+-	framebuffer {
++aliases {
++	display0 = &lcdc0;
++}
++
++chosen {
++	framebuffer0: framebuffer@5fc00000 {
+ 		compatible = "simple-framebuffer";
+-		reg = <0x1d385000 (1600 * 1200 * 2)>;
++		reg = <0x5fc00000 (4096 * 1024)>;
+ 		width = <1600>;
+ 		height = <1200>;
+ 		stride = <(1600 * 2)>;
+ 		format = "r5g6b5";
++		clocks = <&ahb_gates 36>, <&ahb_gates 43>, <&ahb_gates 44>;
++		display = <&lcdc0>;
++	};
++	stdout-path = &framebuffer0;
 +};
++
++soc@01c00000 {
++	lcdc0: lcdc@1c0c000 {
++		compatible = "allwinner,sun4i-a10-lcdc";
++		...
+ 	};
++};
++
++
++*) Older devicetree files may have a compatible = "simple-framebuffer" node
++in a different place, operating systems must first enumerate any compatible
++nodes found under chosen and then check for other compatible nodes.
 -- 
 2.1.0
