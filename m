@@ -1,54 +1,87 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 07/13] ARM: STi: DT: STiH407: Add usb2 picophy dt nodes
-Date: Thu, 13 Nov 2014 10:22:18 +0000
-Message-ID: <20141113102218.GA25886@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1415361475-6218-1-git-send-email-peter.griffin@linaro.org>
- <1415361475-6218-8-git-send-email-peter.griffin@linaro.org>
- <20141110101131.GP21424@x1>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/4] simplefb: Add support for enumerating
+ simplefb dt nodes in /chosen
+Date: Thu, 13 Nov 2014 10:24:41 +0000
+Message-ID: <CACxGe6uegSdZFhqx8J0MEPr4PPTw9pDMqH45cBka5qk4mkHW6g@mail.gmail.com>
+References: <1415830124-28787-1-git-send-email-hdegoede@redhat.com>
+ <1415830124-28787-2-git-send-email-hdegoede@redhat.com> <CAGRGNgW_Q6oghpe5Mw-8aYPVVj1YZ6R3iaqOQzCE9dSD1nYSyA@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141110101131.GP21424@x1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCJP567ORICBB7UNSKRQKGQEBDECMOI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGRGNgW_Q6oghpe5Mw-8aYPVVj1YZ6R3iaqOQzCE9dSD1nYSyA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+On Wed, Nov 12, 2014 at 11:39 PM, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Hans,
+>
+> On Thu, Nov 13, 2014 at 9:08 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> Update simplefb to support the new preferred location for simplefb dt nodes
+>> under /chosen.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  drivers/video/fbdev/simplefb.c | 33 ++++++++++++++++++++++++++++++++-
+>>  1 file changed, 32 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/video/fbdev/simplefb.c b/drivers/video/fbdev/simplefb.c
+>> index cd96edd..be7d288 100644
+>> --- a/drivers/video/fbdev/simplefb.c
+>> +++ b/drivers/video/fbdev/simplefb.c
+>> @@ -27,6 +27,7 @@
+>>  #include <linux/platform_data/simplefb.h>
+>>  #include <linux/platform_device.h>
+>>  #include <linux/clk-provider.h>
+>> +#include <linux/of_platform.h>
+>>
+>>  static struct fb_fix_screeninfo simplefb_fix = {
+>>         .id             = "simple",
+>> @@ -385,7 +386,37 @@ static struct platform_driver simplefb_driver = {
+>>         .probe = simplefb_probe,
+>>         .remove = simplefb_remove,
+>>  };
+>> -module_platform_driver(simplefb_driver);
+>> +
+>> +static int __init simplefb_init(void)
+>> +{
+>> +       int i, ret;
+>> +       char name[16];
+>> +       struct device_node *np;
+>> +
+>> +       ret = platform_driver_register(&simplefb_driver);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       for (i = 0; ; i++) {
+>> +               snprintf(name, sizeof(name), "framebuffer%d", i);
+>
+> This smells like an infinite loop: we can be pretty sure that no
+> hardware will ever exist with more than 9999 (I think?) framebuffers,
+> however if that ever happens this'll loop until it runs out of RAM.
+> Maybe add a suitably high limit to the for loop?
 
-Thanks for reviewing.
+Unlikely, but the loop is wrong anyway. The loop should be:
 
-On Mon, 10 Nov 2014, Lee Jones wrote:
-> > +			reg =	<0xf8 0x04>,	/* syscfg 5062 */
-> > +				<0xf4 0x04>;    /* syscfg 5061 */
-> 
-> Are there really only 2 32bit registers to control this h/w?
+for_each_child_of_node(of_chosen, child)
+        if (of_device_is_compatible(child, "simple-framebuffer");
+                of_platform_device_create(np, NULL, NULL);
 
-Yes
+Then make the probe hook choose an appropriate FB number. It looks
+like you structured the code the way you did to get the framebuffers
+to register in a particular order, and therefore implicitly get the
+right numbers, but that is a fragile way to go about it.
 
-> 
-> > +			reg-names =	"param",
-> > +					"ctrl";
-> 
-> Superflous indentation after 'reg = ' and 'reg-names = '.
+Using /aliases really is the right way to get specific framebuffer
+numbers. We already use it for UARTs, so we should do the same here.
+Use of_alias_get_id(, "framebuffer") to get the framebuffer number.
 
-Fixed in v2.
-
-> > +			st,syscfg = <&syscfg_core>;
-> > +			resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
-> > +				 <&picophyreset STIH407_PICOPHY0_RESET>;
-> > +			reset-names = "global",
-> > +				      "port";
-> 
-> May as well put these on the same line.
-
-Fixed in v2.
-
-regards,
-
-Peter.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+g.
