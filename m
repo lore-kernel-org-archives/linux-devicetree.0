@@ -1,311 +1,99 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v9 1/9] staging: imx-drm: imx-hdmi: make checkpatch happy
-Date: Thu, 13 Nov 2014 20:53:22 +0800
-Message-ID: <1415883202-3377-1-git-send-email-andy.yan@rock-chips.com>
-References: <1415793593-5075-1-git-send-email-andy.yan@rock-chips.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH] of/base: Fix PowerPC address parsing hack
+Date: Thu, 13 Nov 2014 23:53:47 +1100
+Message-ID: <1415883227.666.6.camel@kernel.crashing.org>
+References: <1415771461.5124.33.camel@kernel.crashing.org>
+	 <20141113091036.4e9ec43d@canb.auug.org.au>
+	 <1415833725.5124.53.camel@kernel.crashing.org>
+	 <1415839522.5124.58.camel@kernel.crashing.org>
+	 <CACxGe6s0CXL2oRKCLhzzycOKWJStxdZsc1pn_X8fLuAqCguBMA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1415793593-5075-1-git-send-email-andy.yan@rock-chips.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
-Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, mark.yao@rock-chips.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Andy yan <andy.yan@rock-chips.com>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6s0CXL2oRKCLhzzycOKWJStxdZsc1pn_X8fLuAqCguBMA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Rob Herring <robherring2@gmail.com>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linuxppc-dev <linuxppc-dev@ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-CHECK: Alignment should match open parenthesis
-+       if ((hdmi->vic == 10) || (hdmi->vic == 11) ||
-+               (hdmi->vic == 12) || (hdmi->vic == 13) ||
+On Thu, 2014-11-13 at 12:44 +0000, Grant Likely wrote:
+> On Thu, Nov 13, 2014 at 12:45 AM, Benjamin Herrenschmidt
+> <benh@kernel.crashing.org> wrote:
+> > What about this one instead ? I want to cache it because that function
+> > can be called quite a while and doing two additional property lookup
+> > and string compares every time might hurt some platforms.
+> >
+> > ----
+> >
+> > We have a historical hack that treats missing ranges properties as the
+> > equivalent of an empty one. This is needed for ancient PowerMac "bad"
+> > device-trees, and shouldn't be enabled for any other PowerPC platform,
+> > otherwise we get some nasty layout of devices in sysfs or even
+> > duplication when a set of otherwise identically named devices is
+> > created multiple times under a different parent node with no ranges
+> > property.
+> >
+> > This fix is needed for the PowerNV i2c busses to be exposed properly
+> > and will fix a number of other embedded cases.
+> >
+> > Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> > CC: <stable@vger.kernel.org>
+> 
+> How far back does this need to go? I assume I need to get this in for v3.18.
 
-CHECK: braces {} should be used on all arms of this statement
-+       if (hdmi->hdmi_data.video_mode.mdvi)
-[...]
-+       else {
-[...]
+I'd like some distro to pick it up in 3.16
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+> > diff --git a/drivers/of/address.c b/drivers/of/address.c
+> > index e371825..5eae0cd 100644
+> > --- a/drivers/of/address.c
+> > +++ b/drivers/of/address.c
+> > @@ -403,6 +403,17 @@ static struct of_bus *of_match_bus(struct device_node *np)
+> >         return NULL;
+> >  }
+> >
+> > +static int of_empty_ranges_quirk(void)
+> > +{
+> > +       /* To save cycles, we cache the result */
+> > +       static int quirk_state = -1;
+> > +
+> 
+> if (IS_ENABLED(CONFIG_POWERPC)) {
+> 
+> > +       if (quirk_state < 0)
+> > +               quirk_state = of_machine_is_compatible("Power Macintosh") ||
+> > +                       of_machine_is_compatible("MacRISC");
+> > +       return quirk_state;
+> 
+> }
+> return 0;
+> 
+> So it gets compiled out for non powerpc.
 
----
+Yeah, I'm set in my ways, keep forgetting about all the shiny new stuff.
 
-Changes in v9: None
-Changes in v8: None
-Changes in v7: None
-Changes in v6:
-- rearrange the patch order
-
-Changes in v5: None
-Changes in v4:
-- fix checkpatch CHECK
-
-Changes in v3: None
-Changes in v2: None
-
- drivers/staging/imx-drm/imx-hdmi.c | 97 +++++++++++++++++++-------------------
- 1 file changed, 48 insertions(+), 49 deletions(-)
-
-diff --git a/drivers/staging/imx-drm/imx-hdmi.c b/drivers/staging/imx-drm/imx-hdmi.c
-index aaec6b2..79daec4 100644
---- a/drivers/staging/imx-drm/imx-hdmi.c
-+++ b/drivers/staging/imx-drm/imx-hdmi.c
-@@ -163,7 +163,7 @@ static void hdmi_modb(struct imx_hdmi *hdmi, u8 data, u8 mask, unsigned reg)
- }
- 
- static void hdmi_mask_writeb(struct imx_hdmi *hdmi, u8 data, unsigned int reg,
--		      u8 shift, u8 mask)
-+			     u8 shift, u8 mask)
- {
- 	hdmi_modb(hdmi, data << shift, mask, reg);
- }
-@@ -327,7 +327,7 @@ static unsigned int hdmi_compute_cts(unsigned int freq, unsigned long pixel_clk,
- }
- 
- static void hdmi_set_clk_regenerator(struct imx_hdmi *hdmi,
--	unsigned long pixel_clk)
-+				     unsigned long pixel_clk)
- {
- 	unsigned int clk_n, clk_cts;
- 
-@@ -338,7 +338,7 @@ static void hdmi_set_clk_regenerator(struct imx_hdmi *hdmi,
- 
- 	if (!clk_cts) {
- 		dev_dbg(hdmi->dev, "%s: pixel clock not supported: %lu\n",
--			 __func__, pixel_clk);
-+			__func__, pixel_clk);
- 		return;
- 	}
- 
-@@ -477,13 +477,11 @@ static void imx_hdmi_update_csc_coeffs(struct imx_hdmi *hdmi)
- 		u16 coeff_b = (*csc_coeff)[1][i];
- 		u16 coeff_c = (*csc_coeff)[2][i];
- 
--		hdmi_writeb(hdmi, coeff_a & 0xff,
--			HDMI_CSC_COEF_A1_LSB + i * 2);
-+		hdmi_writeb(hdmi, coeff_a & 0xff, HDMI_CSC_COEF_A1_LSB + i * 2);
- 		hdmi_writeb(hdmi, coeff_a >> 8, HDMI_CSC_COEF_A1_MSB + i * 2);
- 		hdmi_writeb(hdmi, coeff_b & 0xff, HDMI_CSC_COEF_B1_LSB + i * 2);
- 		hdmi_writeb(hdmi, coeff_b >> 8, HDMI_CSC_COEF_B1_MSB + i * 2);
--		hdmi_writeb(hdmi, coeff_c & 0xff,
--			HDMI_CSC_COEF_C1_LSB + i * 2);
-+		hdmi_writeb(hdmi, coeff_c & 0xff, HDMI_CSC_COEF_C1_LSB + i * 2);
- 		hdmi_writeb(hdmi, coeff_c >> 8, HDMI_CSC_COEF_C1_MSB + i * 2);
- 	}
- 
-@@ -535,21 +533,22 @@ static void hdmi_video_packetize(struct imx_hdmi *hdmi)
- 	struct hdmi_data_info *hdmi_data = &hdmi->hdmi_data;
- 	u8 val, vp_conf;
- 
--	if (hdmi_data->enc_out_format == RGB
--		|| hdmi_data->enc_out_format == YCBCR444) {
--		if (!hdmi_data->enc_color_depth)
-+	if (hdmi_data->enc_out_format == RGB ||
-+	    hdmi_data->enc_out_format == YCBCR444) {
-+		if (!hdmi_data->enc_color_depth) {
- 			output_select = HDMI_VP_CONF_OUTPUT_SELECTOR_BYPASS;
--		else if (hdmi_data->enc_color_depth == 8) {
-+		} else if (hdmi_data->enc_color_depth == 8) {
- 			color_depth = 4;
- 			output_select = HDMI_VP_CONF_OUTPUT_SELECTOR_BYPASS;
--		} else if (hdmi_data->enc_color_depth == 10)
-+		} else if (hdmi_data->enc_color_depth == 10) {
- 			color_depth = 5;
--		else if (hdmi_data->enc_color_depth == 12)
-+		} else if (hdmi_data->enc_color_depth == 12) {
- 			color_depth = 6;
--		else if (hdmi_data->enc_color_depth == 16)
-+		} else if (hdmi_data->enc_color_depth == 16) {
- 			color_depth = 7;
--		else
-+		} else {
- 			return;
-+		}
- 	} else if (hdmi_data->enc_out_format == YCBCR422_8BITS) {
- 		if (!hdmi_data->enc_color_depth ||
- 		    hdmi_data->enc_color_depth == 8)
-@@ -561,8 +560,9 @@ static void hdmi_video_packetize(struct imx_hdmi *hdmi)
- 		else
- 			return;
- 		output_select = HDMI_VP_CONF_OUTPUT_SELECTOR_YCC422;
--	} else
-+	} else {
- 		return;
-+	}
- 
- 	/* set the packetizer registers */
- 	val = ((color_depth << HDMI_VP_PR_CD_COLOR_DEPTH_OFFSET) &
-@@ -623,34 +623,34 @@ static void hdmi_video_packetize(struct imx_hdmi *hdmi)
- }
- 
- static inline void hdmi_phy_test_clear(struct imx_hdmi *hdmi,
--						unsigned char bit)
-+				       unsigned char bit)
- {
- 	hdmi_modb(hdmi, bit << HDMI_PHY_TST0_TSTCLR_OFFSET,
- 		  HDMI_PHY_TST0_TSTCLR_MASK, HDMI_PHY_TST0);
- }
- 
- static inline void hdmi_phy_test_enable(struct imx_hdmi *hdmi,
--						unsigned char bit)
-+					unsigned char bit)
- {
- 	hdmi_modb(hdmi, bit << HDMI_PHY_TST0_TSTEN_OFFSET,
- 		  HDMI_PHY_TST0_TSTEN_MASK, HDMI_PHY_TST0);
- }
- 
- static inline void hdmi_phy_test_clock(struct imx_hdmi *hdmi,
--						unsigned char bit)
-+				       unsigned char bit)
- {
- 	hdmi_modb(hdmi, bit << HDMI_PHY_TST0_TSTCLK_OFFSET,
- 		  HDMI_PHY_TST0_TSTCLK_MASK, HDMI_PHY_TST0);
- }
- 
- static inline void hdmi_phy_test_din(struct imx_hdmi *hdmi,
--						unsigned char bit)
-+				     unsigned char bit)
- {
- 	hdmi_writeb(hdmi, bit, HDMI_PHY_TST1);
- }
- 
- static inline void hdmi_phy_test_dout(struct imx_hdmi *hdmi,
--						unsigned char bit)
-+				      unsigned char bit)
- {
- 	hdmi_writeb(hdmi, bit, HDMI_PHY_TST2);
- }
-@@ -666,21 +666,21 @@ static bool hdmi_phy_wait_i2c_done(struct imx_hdmi *hdmi, int msec)
- }
- 
- static void __hdmi_phy_i2c_write(struct imx_hdmi *hdmi, unsigned short data,
--			      unsigned char addr)
-+				 unsigned char addr)
- {
- 	hdmi_writeb(hdmi, 0xFF, HDMI_IH_I2CMPHY_STAT0);
- 	hdmi_writeb(hdmi, addr, HDMI_PHY_I2CM_ADDRESS_ADDR);
- 	hdmi_writeb(hdmi, (unsigned char)(data >> 8),
--		HDMI_PHY_I2CM_DATAO_1_ADDR);
-+		    HDMI_PHY_I2CM_DATAO_1_ADDR);
- 	hdmi_writeb(hdmi, (unsigned char)(data >> 0),
--		HDMI_PHY_I2CM_DATAO_0_ADDR);
-+		    HDMI_PHY_I2CM_DATAO_0_ADDR);
- 	hdmi_writeb(hdmi, HDMI_PHY_I2CM_OPERATION_ADDR_WRITE,
--		HDMI_PHY_I2CM_OPERATION_ADDR);
-+		    HDMI_PHY_I2CM_OPERATION_ADDR);
- 	hdmi_phy_wait_i2c_done(hdmi, 1000);
- }
- 
- static int hdmi_phy_i2c_write(struct imx_hdmi *hdmi, unsigned short data,
--				     unsigned char addr)
-+			      unsigned char addr)
- {
- 	__hdmi_phy_i2c_write(hdmi, data, addr);
- 	return 0;
-@@ -839,7 +839,7 @@ static int hdmi_phy_configure(struct imx_hdmi *hdmi, unsigned char prep,
- 
- 	hdmi_phy_test_clear(hdmi, 1);
- 	hdmi_writeb(hdmi, HDMI_PHY_I2CM_SLAVE_ADDR_PHY_GEN2,
--			HDMI_PHY_I2CM_SLAVE_ADDR);
-+		    HDMI_PHY_I2CM_SLAVE_ADDR);
- 	hdmi_phy_test_clear(hdmi, 0);
- 
- 	/* PLL/MPLL Cfg - always match on final entry */
-@@ -857,9 +857,8 @@ static int hdmi_phy_configure(struct imx_hdmi *hdmi, unsigned char prep,
- 			break;
- 
- 	if (i >= ARRAY_SIZE(curr_ctrl)) {
--		dev_err(hdmi->dev,
--				"Pixel clock %d - unsupported by HDMI\n",
--				hdmi->hdmi_data.video_mode.mpixelclock);
-+		dev_err(hdmi->dev, "Pixel clock %d - unsupported by HDMI\n",
-+			hdmi->hdmi_data.video_mode.mpixelclock);
- 		return -EINVAL;
- 	}
- 
-@@ -1223,21 +1222,21 @@ static int imx_hdmi_setup(struct imx_hdmi *hdmi, struct drm_display_mode *mode)
- 	}
- 
- 	if ((hdmi->vic == 6) || (hdmi->vic == 7) ||
--		(hdmi->vic == 21) || (hdmi->vic == 22) ||
--		(hdmi->vic == 2) || (hdmi->vic == 3) ||
--		(hdmi->vic == 17) || (hdmi->vic == 18))
-+	    (hdmi->vic == 21) || (hdmi->vic == 22) ||
-+	    (hdmi->vic == 2) || (hdmi->vic == 3) ||
-+	    (hdmi->vic == 17) || (hdmi->vic == 18))
- 		hdmi->hdmi_data.colorimetry = HDMI_COLORIMETRY_ITU_601;
- 	else
- 		hdmi->hdmi_data.colorimetry = HDMI_COLORIMETRY_ITU_709;
- 
- 	if ((hdmi->vic == 10) || (hdmi->vic == 11) ||
--		(hdmi->vic == 12) || (hdmi->vic == 13) ||
--		(hdmi->vic == 14) || (hdmi->vic == 15) ||
--		(hdmi->vic == 25) || (hdmi->vic == 26) ||
--		(hdmi->vic == 27) || (hdmi->vic == 28) ||
--		(hdmi->vic == 29) || (hdmi->vic == 30) ||
--		(hdmi->vic == 35) || (hdmi->vic == 36) ||
--		(hdmi->vic == 37) || (hdmi->vic == 38))
-+	    (hdmi->vic == 12) || (hdmi->vic == 13) ||
-+	    (hdmi->vic == 14) || (hdmi->vic == 15) ||
-+	    (hdmi->vic == 25) || (hdmi->vic == 26) ||
-+	    (hdmi->vic == 27) || (hdmi->vic == 28) ||
-+	    (hdmi->vic == 29) || (hdmi->vic == 30) ||
-+	    (hdmi->vic == 35) || (hdmi->vic == 36) ||
-+	    (hdmi->vic == 37) || (hdmi->vic == 38))
- 		hdmi->hdmi_data.video_mode.mpixelrepetitionoutput = 1;
- 	else
- 		hdmi->hdmi_data.video_mode.mpixelrepetitionoutput = 0;
-@@ -1266,9 +1265,9 @@ static int imx_hdmi_setup(struct imx_hdmi *hdmi, struct drm_display_mode *mode)
- 	imx_hdmi_enable_video_path(hdmi);
- 
- 	/* not for DVI mode */
--	if (hdmi->hdmi_data.video_mode.mdvi)
-+	if (hdmi->hdmi_data.video_mode.mdvi) {
- 		dev_dbg(hdmi->dev, "%s DVI mode\n", __func__);
--	else {
-+	} else {
- 		dev_dbg(hdmi->dev, "%s CEA mode\n", __func__);
- 
- 		/* HDMI Initialization Step E - Configure audio */
-@@ -1525,7 +1524,7 @@ static irqreturn_t imx_hdmi_irq(int irq, void *dev_id)
- 			dev_dbg(hdmi->dev, "EVENT=plugout\n");
- 
- 			hdmi_modb(hdmi, HDMI_PHY_HPD, HDMI_PHY_HPD,
--				HDMI_PHY_POL0);
-+				  HDMI_PHY_POL0);
- 
- 			imx_hdmi_poweroff(hdmi);
- 		}
-@@ -1554,7 +1553,7 @@ static int imx_hdmi_register(struct drm_device *drm, struct imx_hdmi *hdmi)
- 			 DRM_MODE_ENCODER_TMDS);
- 
- 	drm_connector_helper_add(&hdmi->connector,
--			&imx_hdmi_connector_helper_funcs);
-+				 &imx_hdmi_connector_helper_funcs);
- 	drm_connector_init(drm, &hdmi->connector, &imx_hdmi_connector_funcs,
- 			   DRM_MODE_CONNECTOR_HDMIA);
- 
-@@ -1671,11 +1670,11 @@ static int imx_hdmi_bind(struct device *dev, struct device *master, void *data)
- 
- 	/* Product and revision IDs */
- 	dev_info(dev,
--		"Detected HDMI controller 0x%x:0x%x:0x%x:0x%x\n",
--		hdmi_readb(hdmi, HDMI_DESIGN_ID),
--		hdmi_readb(hdmi, HDMI_REVISION_ID),
--		hdmi_readb(hdmi, HDMI_PRODUCT_ID0),
--		hdmi_readb(hdmi, HDMI_PRODUCT_ID1));
-+		 "Detected HDMI controller 0x%x:0x%x:0x%x:0x%x\n",
-+		 hdmi_readb(hdmi, HDMI_DESIGN_ID),
-+		 hdmi_readb(hdmi, HDMI_REVISION_ID),
-+		 hdmi_readb(hdmi, HDMI_PRODUCT_ID0),
-+		 hdmi_readb(hdmi, HDMI_PRODUCT_ID1));
- 
- 	initialize_hdmi_ih_mutes(hdmi);
- 
--- 
-1.9.1
+> > +}
+> > +
+> >  static int of_translate_one(struct device_node *parent, struct of_bus *bus,
+> >                             struct of_bus *pbus, __be32 *addr,
+> >                             int na, int ns, int pna, const char *rprop)
+> > @@ -428,12 +439,10 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
+> >          * This code is only enabled on powerpc. --gcl
+> >          */
+> >         ranges = of_get_property(parent, rprop, &rlen);
+> > -#if !defined(CONFIG_PPC)
+> > -       if (ranges == NULL) {
+> > +       if (ranges == NULL && !of_empty_ranges_quirk()) {
+> >                 pr_err("OF: no ranges; cannot translate\n");
+> >                 return 1;
+> >         }
+> > -#endif /* !defined(CONFIG_PPC) */
+> >         if (ranges == NULL || rlen == 0) {
+> >                 offset = of_read_number(addr, na);
+> >                 memset(addr, 0, pna * 4);
+> >
+> >
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
