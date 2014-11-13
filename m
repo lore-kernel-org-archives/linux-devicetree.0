@@ -1,69 +1,187 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH] can: Fix bug in suspend/resume
-Date: Thu, 13 Nov 2014 13:03:22 +0100
-Message-ID: <54649E0A.7030607@pengutronix.de>
-References: <a44efc1fb0144cca9d0c4851cc51db25@BL2FFO11FD024.protection.gbl>	<546484D9.4030005@pengutronix.de>	<54648BF4.60007@pengutronix.de>	<9455da2b86c74d5aafe9bf118edec7bb@BN1AFFO11FD045.protection.gbl> <20141113123218.79850236@ipc1.ka-ro>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: simplefb: Specify node
+ location and handoff related properties
+Date: Thu, 13 Nov 2014 12:03:52 +0000
+Message-ID: <CACxGe6uPKcZ4XqdiPQtia-0D+BnqjDE3eW-oDCR+byUrVtNpSg@mail.gmail.com>
+References: <1415868610-13297-1-git-send-email-hdegoede@redhat.com> <CACxGe6uX7V-TcZfM0vP4SvjxKx3T_RGByX8wFqTdFo4LEzP2Yg@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="4wE7Jg7KguPfsGsbBXRRgDfE747xg132x"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <20141113123218.79850236@ipc1.ka-ro>
-Sender: linux-can-owner@vger.kernel.org
-To: =?UTF-8?B?TG90aGFyIFdhw59tYW5u?= <LW@KARO-electronics.de>, Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
-Cc: "wg@grandegger.com" <wg@grandegger.com>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCJP567ORICBBPN4SKRQKGQEC4UWDFY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CACxGe6uX7V-TcZfM0vP4SvjxKx3T_RGByX8wFqTdFo4LEzP2Yg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---4wE7Jg7KguPfsGsbBXRRgDfE747xg132x
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-On 11/13/2014 12:32 PM, Lothar Wa=C3=9Fmann wrote:
->>>>  static int __maybe_unused xcan_suspend(struct device *dev)  {
->>>> -    struct platform_device *pdev =3D dev_get_drvdata(dev);
->>>> +    struct platform_device *pdev =3D container_of(dev,
->>>> +                    struct platform_device, dev);
->>>>      struct net_device *ndev =3D platform_get_drvdata(pdev);
->>>>      struct xcan_priv *priv =3D netdev_priv(ndev);
+On Thu, Nov 13, 2014 at 11:02 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, Nov 13, 2014 at 8:50 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> Since simplefb nodes do not relate directly to hw typically they have been
+>> placed in the root of the devicetree. As the represent runtime information
+>> having them as sub-nodes of /chosen is more logical, specify this.
 >>
-> Why not simply:
-> 	struct net_device *ndev =3D dev_get_drvdata(dev);
->=20
-> There is no need for a struct platform_device* at all.
+>> Also specify when to set the chosen stdout-path property to a simplefb node.
+>>
+>> For reliable handover to a hardware specific driver, that driver needs to
+>> know which simplefb to unregister when taking over, specify how the hw driver
+>> can find the matching simplefb node.
+>>
+>> Last add some advice on how to fill and use simplefb nodes from a firmware
+>> pov.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> Acked-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+>> --
+>> Changes in v2:
+>> -Add stdout-path to the example code
+>> ---
+>>  .../bindings/video/simple-framebuffer.txt          | 38 +++++++++++++++++++++-
+>>  1 file changed, 37 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer.txt b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+>> index 8f35718..8b7ecf6 100644
+>> --- a/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+>> +++ b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+>> @@ -4,6 +4,26 @@ A simple frame-buffer describes a frame-buffer setup by firmware or
+>>  the bootloader, with the assumption that the display hardware has already
+>>  been set up to scan out from the memory pointed to by the reg property.
+>>
+>> +Since simplefb nodes represent runtime information they must be sub-nodes of
+>> +the chosen node (*). The primary display node must be named framebuffer0,
+>> +additional nodes must be called framebuffer1, etc.
+>
+> Thinking more about our conversation yesterday, the preferred name
+> should still be framebuffer@<address>. There is no reason to break
+> with established convention, and as mentioned in my reply on patch #2,
+> using the name is not the preferred way to identify a device node. So,
+> my recommendation is to prefer the name "framebuffer@<addr>", but if
+> it is inconvenient because the address isn't known, then
+> "framebuffer#" is acceptable. Then use /aliases for actual enumeration
+> which has the advantage of also working for framebuffers that aren't
+> in /chosen.
 
-ACK
+Some more thoughts about aliases.
 
-Marc
+There is a natural tension between enumerate framebuffers or
+enumerating displays. There is precedence for displays to be named
+'display...' and to use /aliases/display* to enumerate them. What do
+we do for framebuffers? Does it make sense to have a separate
+/aliases/framebuffer* enumeration, or would it be better to have a
+single 'display' namespace so that the same name is used right
+through?
 
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+Right now I'm leaning towards using /aliases/display* for everything,
+and making simplefb understand that /aliases/display# could either
+point directly to the framebuffer when there is not node for the
+hardware, or point to the display node. This would make it easy to
+have consistent names for display. For example, with the kexec
+scenario, if /aliases/display0 points at the display node then the
+alias won't need to be changed between first boot when firmware sets
+up a framebuffer, and kexec boot after the kernel has torn down the
+original framebuffer. If /aliases/display0 points to the framebuffer
+node directly, then the linkage from /aliases/display0 to the HW
+display node will be lost when the framebuffer gets torn down.
 
+Doing it this way does make two assumptions though. It assumes that
+each display will have its own node somewhere so that no two
+framebuffers will point to the same node. Second, it assumes that we
+have a mechanism to handoff a display name (/dev/fb*)? from simplefb
+to another device. I don't know enough about the fbdev subsystem to
+know whether or not this will be a problem. Or if there are any
+namespace conflicts between fbdev and drm.
 
---4wE7Jg7KguPfsGsbBXRRgDfE747xg132x
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Implementation would be simple to do. If the simple framebuffer node
+has a 'display' property, then it will call of_alias_get_id() on the
+target of that phandle. Otherwise it will call of_alias_get_id() on
+itself.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Thoughts?
 
-iQIcBAEBAgAGBQJUZJ4KAAoJECte4hHFiupU718P/jAARGmiFL2vp3iAHwiDcj4V
-e81t+DyNqBn2blQBvT61+XA6e8iAf9f5tsAzIyvAYMZiBi74b4S1cIl6AG3Re8Pq
-QyDNkngyEWkxG7W+PdxDY6KBcHXJMCRH4Y3G3jYjIdk95QFrH3t1b0G4/Sq8tKqP
-whI4hikmXzt2zG09Opc0D5zn/9Yv1PB1r+J0q0yM767F7FaI0lT2Bwwjb0b0tVbN
-d+QJcGnj1OMapHFiAUSwRc8VqMGqCpguDEwbMjJJutIgpp0dcSL4Gk8j6iUwo2yF
-MIqL2Rc1Hz5K5s3qJ7GJB5UU67SFkBwqUl4NgbNmdc7tOj2TmtsNtNHLGLBzqatC
-cQgVz5AdVH1QsfNg+BgCUEJBfDcoRygDofTpnGLMWleVZ4CWJN9MWxAQc75k8HC+
-E2eqs7vv2Gd0IJj/c1r7BvRK9BhlZXGa07YBSnbEGQ7706mk6fBw29MWvKOG5zmA
-F/UScHHsBuKCmzLTuYhfJviZw5e1UTc1LBB7LBy7wKBWcb28ZmR1WZ2oPDk4OK2p
-xusP7v6WeumzOzNLCpRGj2LCnrYht4ncV6+Jbu2cdFO8cdiszzCZDB8drlOI8sPC
-Iagmfra7+/bA7B4t9YO0AOcE1e7KlmbVdeBQ0zVTH2Pacd5Z6coAsHyvmy+O57Cq
-RRb5GEu/rOoc61v9T1SJ
-=G+o9
------END PGP SIGNATURE-----
+g.
 
---4wE7Jg7KguPfsGsbBXRRgDfE747xg132x--
+>
+>> +
+>> +If a simplefb node represents the preferred console for user interaction,
+>> +then the chosen node's stdout-path property must point to it.
+>> +
+>> +If the devicetree contains nodes for the display hardware used by a simplefb,
+>> +then one of the hw nodes must have a property called "framebuffer" pointing to
+>> +the framebuffer# node in chosen, so that the operating system knows which
+>> +simplefb to disable when handing over control to a driver for the real
+>> +hardware. The bindings for the hw nodes must specify which node contains the
+>> +framebuffer property.
+>
+> I've also been thinking about this. When we talked yesterday I said I
+> didn't have a preference as to which direction the link between the
+> framebuffer and the display hardware pointed. Thinking about it now,
+> between the two nodes, the HW node is pretty much static, but the FB
+> node is dynamic and in most scenarios will be enabled by firmware, and
+> then disabled by the operating system. If the framebuffer property is
+> in the HW node, then that means the firmware needs to modify two nodes
+> to set up the linkage correctly. It needs to enable the framebuffer,
+> and then add the link. If one of several possible FB nodes was enabled
+> by the firmware, it need to modify the display controller node to
+> match. And, when the framebuffer is disabled, the HW node is left with
+> a dangling link that kexec won't necessarily know how to fix up.
+>
+> If instead the link goes the other way, as a property in the
+> framebuffer node pointing to display controller, all of the
+> functionality still stays the same, but the display controller node
+> never needs to change when framebuffers are
+> enabled/disabled/added/removed. Since the location and/or compatible
+> value of framebuffers is always well known, (aside from the fact that
+> the simplefb driver binds to them), we can have a single API that will
+> return all the framebuffers associated to a given display controller
+> node. The real HW driver will be able to use that to find its
+> framebuffers and coordinate handover between them.
+>
+> g.
+>
+>> +
+>> +It is advised that devicetree files contain pre-filled, disabled framebuffer#
+>> +nodes, so that the firmware only needs to update the mode information and
+>> +enable them. This way if e.g. later on support for more display clocks get
+>> +added, the simplefb nodes will already contain this info and the firmware
+>> +does not need to be updated.
+>> +
+>>  Required properties:
+>>  - compatible: "simple-framebuffer"
+>>  - reg: Should contain the location and size of the framebuffer memory.
+>> @@ -22,11 +42,27 @@ Optional properties:
+>>
+>>  Example:
+>>
+>> -       framebuffer {
+>> +chosen {
+>> +       framebuffer0 {
+>>                 compatible = "simple-framebuffer";
+>>                 reg = <0x1d385000 (1600 * 1200 * 2)>;
+>>                 width = <1600>;
+>>                 height = <1200>;
+>>                 stride = <(1600 * 2)>;
+>>                 format = "r5g6b5";
+>> +               clocks = <&ahb_gates 36>, <&ahb_gates 43>, <&ahb_gates 44>;
+>>         };
+>> +       stdout-path = &framebuffer0;
+>> +};
+>> +
+>> +soc@01c00000 {
+>> +       lcdc0: lcdc@1c0c000 {
+>> +               compatible = "allwinner,sun4i-a10-lcdc";
+>> +               framebuffer = <&framebuffer0>;
+>> +       };
+>> +};
+>> +
+>> +
+>> +*) Older devicetree files may have a compatible = "simple-framebuffer" node
+>> +in a different place, operating systems must first enumerate any framebuffer#
+>> +nodes found under chosen and then check for other compatible nodes.
+>> --
+>> 2.1.0
+>>
