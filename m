@@ -1,70 +1,57 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH v2 1/1] Input: gpio_keys - add device tree support for
- interrupt only keys
-Date: Thu, 13 Nov 2014 16:29:02 +0530
-Message-ID: <54648EF6.10402@nvidia.com>
-References: <1415808176-13282-1-git-send-email-alexander.stein@systec-electronic.com> <2197757.1V0yxO5sLr@wuerfel> <5340312.bOFF4aoNWW@ws-stein> <1763965.yCxTDubTPH@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1763965.yCxTDubTPH@wuerfel>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Alexander Stein <alexander.stein@systec-electronic.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH v2 13/14] ARM: STi: DT: STiH410: Add usb2 picophy dt nodes
+Date: Thu, 13 Nov 2014 11:00:16 +0000
+Message-ID: <1415876417-28728-14-git-send-email-peter.griffin@linaro.org>
+References: <1415876417-28728-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1415876417-28728-1-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, arnd@arndb.de
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 13 November 2014 04:17 PM, Arnd Bergmann wrote:
-> On Thursday 13 November 2014 11:35:42 Alexander Stein wrote:
->> On Wednesday 12 November 2014 20:16:06, Arnd Bergmann wrote:
->>> On Wednesday 12 November 2014 17:38:31 Alexander Stein wrote:
->>>> On Wednesday 12 November 2014 17:04:57, Arnd Bergmann wrote:
->>>>> On Wednesday 12 November 2014 17:02:56 Alexander Stein wrote:
->>>>>> This features already exists for board config setups. Add support for
->>>>>> device tree based systems.
->>>>>>
->>>>>> Signed-off-by: Alexander Stein <alexander.stein@systec-electronic.com>
->>>>>> ---
->>>>>> Please note: Due to current lack of hardware I could not test it yet. V2
->>>>>> includes the changes proposed by Dmitry.
->>>>>>
->>>>>> Changes in v2:
->>>>>> * Added device tree bindings
->>>>>> * IRQ is only parsed and mapped when there is no "gpios" property
->>>>>>
->>>>> Can you list one or more examples in the patch description?
->>>>> Are these systems that don't expose the GPIO controller with a
->>>>> standalone driver, or systems that really actually connect the
->>>>> buttons to an interrupt pin?
->>>> You mean a use case? I came to this situation to test interrupt polarity on a microcontroller, thus a simple /IRQ pin, no GPIO at all. So in the end I have an input just connected to an interrupt line.
->>>> I noticed gpio_keys using platform data only can be used for this setup. So I added this support for device tree.
->>>>
->>> I meant a specific board file that uses this, which can't be converted
->>> to DT without your change.
->> I've searched (hopefully) the complete arch/ tree on v3.18-rc4 for
->> struct gpio_keys_button and checked each occurrence. I didn't found
->> any usage of IRQ based input keys.
-> Ok, I see.
->
-> I notice that Laxman Dewangan initially added the feature as part of
-> (I assume) work on Tegra, but these days Tegra is DT-only so it can't
-> actually get used for that any more.
->
-> If we have a real usecase, I think we can still take your patch, but
-> my impression at the moment is that it may be better to instead
-> remove the feature entirely by reverting d8ee4a1c9052 ("Input:
-> gpio_keys - add support for interrupt only keys").
->
-> Regarding your initial use case of testing interrupt polarity, would
-> you have been able to do the same thing by looking at the interrupt
-> count in /proc/interrupts?
->
+This patch adds the dt nodes for the extra usb2 picophys found on the stih410.
+These two picophys are used in conjunction with the extra ehci/ohci usb
+controllers also found on the stih410.
 
-Yes, I posted patch for interrupt key on context on key connected to 
-PMIC-Onkey.
-On PMIC, there is onkey pin input which generates interrupt only when it 
-toggles. So if we have key (power key on our platforms) connected to 
-this pin then we will only get interrupt from PMIC.
-Instead of implementing full interrupt key driver, I added this support 
-on existing gpio keys.
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+---
+ arch/arm/boot/dts/stih410.dtsi | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
+diff --git a/arch/arm/boot/dts/stih410.dtsi b/arch/arm/boot/dts/stih410.dtsi
+index c05627e..5ade3ed 100644
+--- a/arch/arm/boot/dts/stih410.dtsi
++++ b/arch/arm/boot/dts/stih410.dtsi
+@@ -10,5 +10,29 @@
+ #include "stih407-family.dtsi"
+ #include "stih410-pinctrl.dtsi"
+ / {
++	soc {
++		usb2_picophy0: usbpicophy@0 {
++			compatible = "st,stih407-usb2-phy";
++			reg = <0xf8 0x04>,	/* syscfg 5062 */
++			      <0xf4 0x04>;	/* syscfg 5061 */
++			reg-names = "param", "ctrl";
++			#phy-cells = <0>;
++			st,syscfg = <&syscfg_core>;
++			resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
++				 <&picophyreset STIH407_PICOPHY0_RESET>;
++			reset-names = "global", "port";
++		};
+ 
++		usb2_picophy1: usbpicophy@1 {
++			compatible = "st,stih407-usb2-phy";
++			#phy-cells = <0>;
++			reg = <0xfc 0x04>,	/* syscfg 5063 */
++			      <0xf4 0x04>;	/* syscfg 5061 */
++			reg-names = "param", "ctrl";
++			st,syscfg = <&syscfg_core>;
++			resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
++				 <&picophyreset STIH407_PICOPHY1_RESET>;
++			reset-names = "global", "port";
++		};
++	};
+ };
+-- 
+1.9.1
