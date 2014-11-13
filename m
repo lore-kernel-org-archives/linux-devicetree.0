@@ -1,68 +1,66 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v11 3/3] ARM: dts: add rk3288 power-domain node
-Date: Thu, 13 Nov 2014 09:33:15 -0800
-Message-ID: <CAD=FV=UKUnr33s85imePmcxizLK=AMYS8fPC7VvKnV4XXWFG2w@mail.gmail.com>
-References: <1415829690-20236-1-git-send-email-caesar.wang@rock-chips.com>
-	<1415829690-20236-4-git-send-email-caesar.wang@rock-chips.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2] PCI: add missing DT binding for linux,pci-domain
+ property
+Date: Thu, 13 Nov 2014 10:34:04 -0700
+Message-ID: <20141113173404.GJ5064@google.com>
+References: <1415287400-30426-1-git-send-email-l.stach@pengutronix.de>
+ <20141113170921.GG5064@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1415829690-20236-4-git-send-email-caesar.wang@rock-chips.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Caesar Wang <caesar.wang@rock-chips.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Heiko Stuebner <heiko@sntech.de>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Randy Dunlap <rdunlap@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Ulf Hansson <ulf.hansson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, ZhenFu Fang <fzf@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, Jack Dai <jack.dai@ro>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141113170921.GG5064@google.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Liviu Dudau <Liviu.Dudau@arm.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Nov 13, 2014 at 10:09:21AM -0700, Bjorn Helgaas wrote:
+> On Thu, Nov 06, 2014 at 04:23:20PM +0100, Lucas Stach wrote:
+> > This property was added by 41e5c0f81d3e
+> > (of/pci: Add pci_get_new_domain_nr() and of_get_pci_domain_nr())
+> > without the required binding documentation. As this property
+> > will be supported by a number of host bridge drivers going forward,
+> > add it to the common PCI binding doc.
+> > 
+> > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> 
+> Applied with acks from Liviu and Rob to for-linus for v3.18, thanks a lot
+> for working this out!
 
-On Wed, Nov 12, 2014 at 2:01 PM, Caesar Wang <caesar.wang@rock-chips.com> wrote:
-> +               pd_vio {
-> +                       reg = <RK3288_PD_VIO>;
-> +                       clocks = <&cru ACLK_IEP>,
-> +                                <&cru ACLK_ISP>,
-> +                                <&cru ACLK_RGA_NIU>,
-> +                                <&cru ACLK_RGA>,
-> +                                <&cru ACLK_VIO0_NIU>,
-> +                                <&cru ACLK_VIO1_NIU>,
-> +                                <&cru ACLK_VIP>,
-> +                                <&cru ACLK_VOP0>,
-> +                                <&cru ACLK_VOP1>,
-> +                                <&cru DCLK_VOP0>,
-> +                                <&cru DCLK_VOP1>,
-> +                                <&cru HCLK_IEP>,
-> +                                <&cru HCLK_ISP>,
-> +                                <&cru HCLK_RGA>,
-> +                                <&cru HCLK_VIO_AHB_ARBI>,
-> +                                <&cru HCLK_VIO_NIU>,
-> +                                <&cru HCLK_VIO2_H2P>,
-> +                                <&cru HCLK_VIP>,
-> +                                <&cru HCLK_VOP0>,
-> +                                <&cru HCLK_VOP1>,
-> +                                <&cru PCLK_EDP_CTRL>,
-> +                                <&cru PCLK_HDMI_CTRL>,
-> +                                <&cru PCLK_LVDS_PHY>,
-> +                                <&cru PCLK_MIPI_CSI>,
-> +                                <&cru PCLK_MIPI_DSI0>,
-> +                                <&cru PCLK_MIPI_DSI1>,
-> +                                <&cru PCLK_VIO2_H2P>,
-> +                                <&cru SCLK_EDP_24M>,
-> +                                <&cru SCLK_EDP>,
-> +                                <&cru SCLK_HDMI_CEC>,
-> +                                <&cru SCLK_HDMI_HDCP>,
-> +                                <&cru SCLK_ISP_JPE>,
-> +                                <&cru SCLK_ISP>,
-> +                                <&cru SCLK_RGA>;
+Arnd, I just noticed your concern about this being linux-only.  Are you
+happy with this one?  If not, I can drop this.
 
-This was discussed offlist, but just to make sure it's summarized here:
-
-Some of the above clocks are "IGNORE_UNUSED" (AKA left on) in Linux
-right now because nobody is managing them right now (due to the fact
-that they are "interface unit clocks", etc).  The fact that these are
-now being enabled and disabled as part of power domain transitions
-will break this.
-
-My vote would be to leave such clocks out of the list for now until we
-figure out how they should be dealt with.
-
-
--Doug
+> > ---
+> > This is a non-critical fix, but may still qualify for 3.18-rc as
+> > the property was added in this release cycle.
+> > 
+> > v2:
+> > - emphasize that the property must be present and unique systemwide
+> >   if used
+> > ---
+> >  Documentation/devicetree/bindings/pci/pci.txt | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
+> > index 41aeed38926d..68c364e2f5e5 100644
+> > --- a/Documentation/devicetree/bindings/pci/pci.txt
+> > +++ b/Documentation/devicetree/bindings/pci/pci.txt
+> > @@ -7,3 +7,14 @@ And for the interrupt mapping part:
+> >  
+> >  Open Firmware Recommended Practice: Interrupt Mapping
+> >  http://www.openfirmware.org/1275/practice/imap/imap0_9d.pdf
+> > +
+> > +Additionally to the properties specified in the above standards a host bridge
+> > +driver implementation may support the following properties:
+> > +
+> > +- linux,pci-domain:
+> > +   If present this property assigns a fixed PCI domain number to a host bridge,
+> > +   otherwise an unstable (across boots) unique number will be assigned.
+> > +   It is required to either not set this property at all or set it for all
+> > +   host bridges in the system, otherwise potentially conflicting domain numbers
+> > +   may be assigned to root buses behind different host bridges. The domain
+> > +   number for each host bridge in the system must be unique.
+> > -- 
+> > 2.1.1
+> > 
