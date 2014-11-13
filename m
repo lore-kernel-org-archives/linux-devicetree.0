@@ -1,60 +1,85 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Re: [PATCH v3 1/4] dt-bindings: simplefb: Specify
- node location and handoff related properties
-Date: Thu, 13 Nov 2014 16:07:18 +0000
-Message-ID: <CACxGe6tA90T+nj5aBbWWd4SJVofzKLY9AS2cXeqUJyAVMYECbw@mail.gmail.com>
-References: <1415885645-24613-1-git-send-email-hdegoede@redhat.com>
- <5464C026.7030300@ti.com> <5464C444.4050101@redhat.com> <5464D3C7.7060707@ti.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 2/4] ARM: mediatek: add dts for mt6592-evb
+Date: Thu, 13 Nov 2014 17:11:13 +0100
+Message-ID: <CABuKBeKvhJPQOSoViCtdB_UYKDkwgtQ3XF8fD0fhs+36nFjQbA@mail.gmail.com>
+References: <1415808457-4030-1-git-send-email-ibanezchen@gmail.com>
+	<1415808457-4030-2-git-send-email-ibanezchen@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCJP567ORICBBS5OSORQKGQEEL2FXTA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <5464D3C7.7060707-l0cyMroinI0@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415808457-4030-2-git-send-email-ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Howard Chen <ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 13, 2014 at 3:52 PM, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> wrote:
-> On 13/11/14 16:46, Hans de Goede wrote:
->> Hi,
->>
->> On 11/13/2014 03:28 PM, Tomi Valkeinen wrote:
->>> On 13/11/14 15:34, Hans de Goede wrote:
->>>
->>>> +chosen {
->>>> +   framebuffer0: framebuffer@5fc00000 {
->>>>             compatible = "simple-framebuffer";
->>>> -           reg = <0x1d385000 (1600 * 1200 * 2)>;
->>>> +           reg = <0x5fc00000 (4096 * 1024)>;
->>>
->>> Was there a reason for this change?
->>
->> I changed the node name to match the new bindings text which
->> specifies that the node name must be framebuffer@<address>,
->> while at it I've taken a real world address range.
->>
->> I assume you refer to the bit where the size of the reg property
->> is changed ? That indeed is not really necessary.
+2014-11-12 17:07 GMT+01:00 Howard Chen <ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> The mt6592-evb is an evaluation board based on the MT6592 SoC.
 >
-> Yes, I meant the size of the reg prop. As this is an example, I think it
-> should be as clear as possible.
+> Signed-off-by: Howard Chen <ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/Makefile       |  3 ++-
+>  arch/arm/boot/dts/mt6592-evb.dts | 25 +++++++++++++++++++++++++
+>  2 files changed, 27 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/boot/dts/mt6592-evb.dts
 >
-> I guess a valid use case here is to set the size to larger-than-needed,
-> so that it gets preallocated and you don't need to worry about getting
-> the memory later when the system has already been running for a longer
-> time. But if that's the case in this example, I think it would be better
-> to describe it explicitly.
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index ab63751..0ce0d9e 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -532,7 +532,8 @@ dtb-$(CONFIG_MACH_DOVE) += dove-cm-a510.dtb \
+>         dove-d2plug.dtb \
+>         dove-d3plug.dtb \
+>         dove-dove-db.dtb
+> -dtb-$(CONFIG_ARCH_MEDIATEK) += mt6589-aquaris5.dtb
+> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt6589-aquaris5.dtb \
+> +       mt6592-evb.dtb
+>
+>  endif
+>
+> diff --git a/arch/arm/boot/dts/mt6592-evb.dts b/arch/arm/boot/dts/mt6592-evb.dts
+> new file mode 100644
+> index 0000000..4750c4c
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/mt6592-evb.dts
+> @@ -0,0 +1,25 @@
+> +/*
+> + * Copyright (c) 2014 MediaTek Inc.
+> + * Author: Howard Chen <ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +/dts-v1/;
+> +#include "mt6592.dtsi"
+> +
+> +/ {
+> +       model = "mt6592 evb";
+> +       compatible = "mediatek,mt6592-evb", "mediatek,mt6592";
+> +
+> +       memory {
+> +               reg = <0x80000000 0x08000000>;
 
-Besides, we already have a mechanism for that called /reserved-memory.
-Any memory used by a framebuffer needs to be described in the reserved
-map anyway, and that region can be made larger than the firmware
-configured framebuffer.
+Does the eval board only have 128 MB? Maybe there is a zero missing (2GB)?
 
-g.
+> +       };
+> +};
+> --
+> 1.9.1
+>
+
+
+
+-- 
+motzblog.wordpress.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
