@@ -1,65 +1,66 @@
-From: Kevin Cernekee <cernekee@gmail.com>
-Subject: Re: [PATCH/RFC 5/8] serial: pxa: Make the driver buildable for
- BCM7xxx set-top platforms
-Date: Thu, 13 Nov 2014 11:08:08 -0800
-Message-ID: <CAJiQ=7DoFk7ZSjHygaMWHyBTpxJFbQX4onh2xqixaqORQODsVg@mail.gmail.com>
-References: <1415781993-7755-1-git-send-email-cernekee@gmail.com>
- <3356477.HitZEsNa4H@wuerfel> <CAJiQ=7AFr5vR+FEc8B3CAZLb5GYujNxtaz7TU2FU0D3oModZ7w@mail.gmail.com>
- <4606459.kh8mb8TEgZ@wuerfel>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 0/3] iio: Add Cosmic Circuits ADC support
+Date: Thu, 13 Nov 2014 11:10:51 -0800
+Message-ID: <CAL1qeaF0LfbeTE4LxL05mHDBeV775AaW2F9+NsHnOMiVdZHNdw@mail.gmail.com>
+References: <1415888044-16635-1-git-send-email-ezequiel.garcia@imgtec.com>
+	<1415888044-16635-5-git-send-email-ezequiel.garcia@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <4606459.kh8mb8TEgZ@wuerfel>
-Sender: linux-serial-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Rob Herring <robh@kernel.org>, daniel@zonque.org, Haojian Zhuang <haojian.zhuang@gmail.com>, robert.jarzmik@free.fr, Grant Likely <grant.likely@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415888044-16635-5-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 13, 2014 at 1:42 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> TTY naming is a mess today, and you seem to be caught in the middle
-> of it trying to work around the inherent problems. Extending the PXA
-> driver is an interesting approach since as you say it's a very nice
-> clean subset of the 8250 driver, but that doesn't mean that it's
-> a good long-term strategy, as we will likely have more chips with
-> 8250 variants.
+Ezequiel,
+
+On Thu, Nov 13, 2014 at 6:14 AM, Ezequiel Garcia
+<ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+> Here goes the third round of this series. You can find the previous patchset
+> and its discussion here: http://thread.gmane.org/gmane.linux.kernel.iio/14553.
 >
-> Some of the ways forward that I can see are:
+> Changes from v2:
 >
-> - (your approach) use and extend the pxa serial driver for new SoCs,
->   possibly migrate some of the existing users of 8250 to use that
->   and leave 8250 alone.
+>   * Changed a devicetree property from adc-available-channels to
+>     adc-reserved-channels, so it can be made optional.
 >
-> - fix the problem you see in a different way, and get the 8250 driver
->   to solve your problem. Possibly integrate the pxa driver back into
->   8250 in eventually, as we did with the omap driver.
+>   * Renamed the driver from cc_10001_xxx to cc10001_xxx so it's consistent
+>     with the rest of the kernel style.
+>
+>   * Some more minor cosmetic fixes.
+>
+> Changes from v1:
+>
+>   * Removed unneeded header includes.
+>
+>   * Changed all the names and macros prefix: s/CC_10001_/CC10001_.
+>
+>   * Used .update_scan_mode callback to preallocate the buffer.
+>
+>   * Used indio_dev for the struct iio_dev.
+>
+>   * Only read the regulator voltage when needed.
+>
+>   * Fixed probe() error handling.
+>
+>   * Used for_each_set_bit() instead of open-coding it.
+>
+>   * Name the power-down register as _POWER_UP, to make the code
+>     less silly.
+>
+>   * Error out when no valid sample can be read (i.e. when end-of-conversion
+>     poll times out).
+>
+>   * ... plus some assorted code cleaning based on the feedback.
+>
+> Ezequiel Garcia (1):
+>   DT: Add a vendor prefix for Cosmic Circuits
+>
+> Phani Movva (2):
+>   iio: adc: Cosmic Circuits 10001 ADC driver
+>   DT: iio: adc: Add CC_10001 binding documentation
 
-Do you think it might make sense to come up with a set of guidelines
-that ensure that SoCs using a non-serial8250 driver (like pxa) on
-16550-compatible hardware can be easily moved back to serial8250
-someday?
+This series (with v4 of patch 2/3):
 
-e.g. maybe I should be adding a reg-shift property to my pxa DT entry.
-It isn't necessary for pxa.c, but if we ever move to serial8250 it
-will be necessary.
-
-> - Do a fresh start for a general-purpose soc-type 8250 driver, using
->   tty_port instead of uart_port as the abstraction layer.
-
-Hmm, does that mean we can't use the serial_core.c helpers?
-
->   Use that for
->   all new socs instead of extending the 8250 driver more, possibly
->   migrating some of the existing 8250 users.
-
-One nice thing about a brand new driver is that we can use dynamic
-major/minor numbers unconditionally without breaking existing users.
-If either pxa.c or bcm63xx_uart.c had used dynamic numbers, I could
-drop Tushar's original workaround.
-
-Another advantage is that we can assume all users have DT, simplifying
-the probe function.
-
-Would it be helpful to split parts of pxa.c and/or serial8250 into a
-"lib8250", similar to libahci, that can be called by many different
-implementations (some of which have special features like DMA
-support)?
+Reviewed-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
