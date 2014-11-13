@@ -1,38 +1,41 @@
-From: Alexander Stein <alexander.stein@systec-electronic.com>
-Subject: Re: [PATCH v2 1/1] Input: gpio_keys - add device tree support for interrupt only keys
-Date: Thu, 13 Nov 2014 11:52:48 +0100
-Message-ID: <4899804.1F6dNN1eJX@ws-stein>
-References: <1415808176-13282-1-git-send-email-alexander.stein@systec-electronic.com> <5340312.bOFF4aoNWW@ws-stein> <1763965.yCxTDubTPH@wuerfel>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/7] fixes and update for at_xdmac
+Date: Thu, 13 Nov 2014 11:52:38 +0100
+Message-ID: <1415875965-6905-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1763965.yCxTDubTPH@wuerfel>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 13 November 2014 11:47:13, Arnd Bergmann wrote:
-> Regarding your initial use case of testing interrupt polarity, would
-> you have been able to do the same thing by looking at the interrupt
-> count in /proc/interrupts?
+Hi,
 
-This is only possible if some driver actually requests this interrupt, no?
+This set of patches is mainly about fixes and an update to remove the chancnt
+affection since xdmac was not in the tree when Maxime managed that.
 
-Best regards,
-Alexander
+
+Cyrille Pitchen (2):
+  dmaengine: at_xdmac: fix software lockup at_xdmac_tx_status()
+  dmaengine: at_xdmac: fix a bug in transfer residue computation
+
+Ludovic Desroches (5):
+  dmaengine: at_xdmac: prefer usage of readl/writel_relaxed
+  dmaengine: at_xdmac: remove chancnt affectation
+  dmaengine: at_xdmac: fix missing spin_unlock
+  ARM: dts: at_xdmac: fix bad value of dma-cells in documentation
+  dmaengine: at_xdmac: Add DMA_PRIVATE
+
+ .../devicetree/bindings/dma/atmel-xdma.txt         |  2 +-
+ drivers/dma/Kconfig                                |  2 +-
+ drivers/dma/at_xdmac.c                             | 36 +++++++++++++++-------
+ 3 files changed, 27 insertions(+), 13 deletions(-)
+
 -- 
-Dipl.-Inf. Alexander Stein
+2.0.3
 
-SYS TEC electronic GmbH
-Am Windrad 2
-08468 Heinsdorfergrund
-Tel.: 03765 38600-1156
-Fax: 03765 38600-4100
-Email: alexander.stein@systec-electronic.com
-Website: www.systec-electronic.com
- 
-Managing Director: Dipl.-Phys. Siegmar Schmidt
-Commercial registry: Amtsgericht Chemnitz, HRB 28082
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
