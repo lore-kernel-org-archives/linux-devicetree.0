@@ -1,33 +1,155 @@
-From: Stefan Monnier <monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org>
-Subject: Re: [PATCH 3/4] simplefb: Change simplefb_init from
- module_init to fs_initcall
-Date: Thu, 13 Nov 2014 11:13:19 -0500
-Message-ID: <jwvy4rf2i7h.fsf-monnier+gmane.comp.hardware.netbook.arm.sunxi@gnu.org>
-References: <1415830124-28787-1-git-send-email-hdegoede@redhat.com>
-	<1415830124-28787-3-git-send-email-hdegoede@redhat.com>
-	<20141113085238.GE20972@lukather> <546478B5.2040002@redhat.com>
-	<CACxGe6u8B854PEWw8XzwhyX8joMWwOsHOOXtmBmC1TgCGjGtdg@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v6 1/4] ARM: mediatek: Add basic support for mt6592
+Date: Thu, 13 Nov 2014 17:17:48 +0100
+Message-ID: <CABuKBeJv0S2Q4W1fqb=8BUG6AEvFsZ6sY9QXuz=CRe+qbaYzQQ@mail.gmail.com>
+References: <1415808457-4030-1-git-send-email-ibanezchen@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDMKFH665MBBBONRSORQKGQEXQJTATA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1415808457-4030-1-git-send-email-ibanezchen@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Howard Chen <ibanezchen@gmail.com>
+Cc: arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Olof Johansson <olof@lixom.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-> Like a lot of things, if it is made a modules, and it breaks for the
-> user, the user gets to keep the pieces.  There are potentially some
+2014-11-12 17:07 GMT+01:00 Howard Chen <ibanezchen@gmail.com>:
+> * A dtsi for boards based on Mediatek MT6592 SoCs
+> * Compatible string in arch/arm/mach-mediatek/mediatek.c
+>
+> Signed-off-by: Howard Chen <ibanezchen@gmail.com>
+> ---
+>  arch/arm/boot/dts/mt6592.dtsi     | 97 +++++++++++++++++++++++++++++++++++++++
+>  arch/arm/mach-mediatek/mediatek.c |  1 +
+>  2 files changed, 98 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/mt6592.dtsi
+>
+> diff --git a/arch/arm/boot/dts/mt6592.dtsi b/arch/arm/boot/dts/mt6592.dtsi
+> new file mode 100644
+> index 0000000..65aa81b
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/mt6592.dtsi
+> @@ -0,0 +1,97 @@
+> +/*
+> + * Copyright (c) 2014 MediaTek Inc.
+> + * Author: Howard Chen <ibanezchen@gmail.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include "skeleton.dtsi"
 
-But the option's description should probably include some blurb about
-the fact that it only works as a module with some combinations of
-SoC+kernel.
+Regarding a discussion I had with Joe and Arnd [0], I think we should
+use skeleton64.dtsi here, right?
+The datasheets states that mt6592 supports up to 8 GB.
+
+[0] https://lkml.org/lkml/2014/11/4/192
+
+> +
+> +/ {
+> +       compatible = "mediatek,mt6592";
+> +       interrupt-parent = <&gic>;
+> +
+> +       cpus {
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               cpu@0 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a7";
+> +                       reg = <0x0>;
+> +               };
+> +               cpu@1 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a7";
+> +                       reg = <0x1>;
+> +               };
+> +               cpu@2 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a7";
+> +                       reg = <0x2>;
+> +               };
+> +               cpu@3 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a7";
+> +                       reg = <0x3>;
+> +               };
+> +               cpu@4 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a7";
+> +                       reg = <0x4>;
+> +               };
+> +               cpu@5 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a7";
+> +                       reg = <0x5>;
+> +               };
+> +               cpu@6 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a7";
+> +                       reg = <0x6>;
+> +               };
+> +               cpu@7 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a7";
+> +                       reg = <0x7>;
+> +               };
+> +       };
+> +
+> +       system_clk: dummy13m {
+> +               compatible = "fixed-clock";
+> +               clock-frequency = <13000000>;
+> +               #clock-cells = <0>;
+> +       };
+> +
+> +       rtc_clk: dummy32k {
+> +               compatible = "fixed-clock";
+> +               clock-frequency = <32000>;
+> +               #clock-cells = <0>;
+> +       };
+> +
+> +       timer: timer@10008000 {
+> +               compatible = "mediatek,mt6577-timer";
+> +               reg = <0x10008000 0x80>;
+> +               interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>;
+> +               clocks = <&system_clk>, <&rtc_clk>;
+> +               clock-names = "system-clk", "rtc-clk";
+> +       };
+> +
+> +       gic: interrupt-controller@10211000 {
+> +               compatible = "arm,cortex-a7-gic";
+> +               interrupt-controller;
+> +               #interrupt-cells = <3>;
+> +               reg = <0x10211000 0x1000>,
+> +                     <0x10212000 0x1000>;
+> +       };
+> +
+> +};
+> diff --git a/arch/arm/mach-mediatek/mediatek.c b/arch/arm/mach-mediatek/mediatek.c
+> index f2acf07..88e4626 100644
+> --- a/arch/arm/mach-mediatek/mediatek.c
+> +++ b/arch/arm/mach-mediatek/mediatek.c
+> @@ -19,6 +19,7 @@
+>
+>  static const char * const mediatek_board_dt_compat[] = {
+>         "mediatek,mt6589",
+> +       "mediatek,mt6592",
+>         NULL,
+>  };
+>
+> --
+> 1.9.1
+>
 
 
-        Stefan
+
+-- 
+motzblog.wordpress.com
