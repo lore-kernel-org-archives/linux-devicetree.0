@@ -1,80 +1,39 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] PCI: add missing DT binding for linux,pci-domain property
-Date: Thu, 13 Nov 2014 10:04:51 -0600
-Message-ID: <CAL_Jsq+oygs12ih0SttbGJYyDTZR3f8-w6egNQuQ+_zwiNxxRg@mail.gmail.com>
-References: <1415287400-30426-1-git-send-email-l.stach@pengutronix.de>
- <CAL_JsqKfV3aPuYxK2E8tS1fDjhpJFknqv1nHP+9NYHAfs_owYg@mail.gmail.com> <1415631509.20340.5.camel@pengutronix.de>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 0/5] simplefb: add clock handling code
+Date: Thu, 13 Nov 2014 16:05:40 +0000
+Message-ID: <CACxGe6ssdeOnQnem1012h_jFK1wWOD_WwosjFgiAcgBoqyDt9A@mail.gmail.com>
+References: <1415808952-23549-1-git-send-email-hdegoede@redhat.com> <CACxGe6ua8OF5+SNjgO3Nc5ZSVvaic3OzrFES-5=f+bsj-fvE3g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415631509.20340.5.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <CACxGe6ua8OF5+SNjgO3Nc5ZSVvaic3OzrFES-5=f+bsj-fvE3g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 10, 2014 at 8:58 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> Am Donnerstag, den 06.11.2014, 13:49 -0600 schrieb Rob Herring:
->> On Thu, Nov 6, 2014 at 9:23 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
->> > This property was added by 41e5c0f81d3e
->> > (of/pci: Add pci_get_new_domain_nr() and of_get_pci_domain_nr())
->> > without the required binding documentation. As this property
->> > will be supported by a number of host bridge drivers going forward,
->> > add it to the common PCI binding doc.
->> >
->> > Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> > ---
->> > This is a non-critical fix, but may still qualify for 3.18-rc as
->> > the property was added in this release cycle.
+On Thu, Nov 13, 2014 at 7:38 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, Nov 12, 2014 at 4:15 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> Hi Tomi,
 >>
->> Agreed.
+>> Here is v5 of my simplefb patch-set, this time with an Ack from
+>> Grant Likely for the dt-bindings bits, which should end all controversy
+>> surrounding that patch.
 >>
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> For changes since the original postings please see the per patch changelogs
+>> in the patch commit messages.
 >>
+>> Please merge this into your tree for 3.19.
 >
-> So how should we proceed here? Are you going to pick it up or should
-> Bjorn route this through the PCI tree?
+> Hi Tomi,
+>
+> I'm discussing this with Rob today. Please hold off 24 hours before
+> merging. If you don't hear anything to the contrary by tomorrow then
+> go ahead and merge.
 
-I believe Bjorn said he would pick this up since he merged the rest.
+I just talked to Rob. All is good, you can apply.
 
-Rob
-
->
->> >
->> > v2:
->> > - emphasize that the property must be present and unique systemwide
->> >   if used
->> > ---
->> >  Documentation/devicetree/bindings/pci/pci.txt | 11 +++++++++++
->> >  1 file changed, 11 insertions(+)
->> >
->> > diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
->> > index 41aeed38926d..68c364e2f5e5 100644
->> > --- a/Documentation/devicetree/bindings/pci/pci.txt
->> > +++ b/Documentation/devicetree/bindings/pci/pci.txt
->> > @@ -7,3 +7,14 @@ And for the interrupt mapping part:
->> >
->> >  Open Firmware Recommended Practice: Interrupt Mapping
->> >  http://www.openfirmware.org/1275/practice/imap/imap0_9d.pdf
->> > +
->> > +Additionally to the properties specified in the above standards a host bridge
->> > +driver implementation may support the following properties:
->> > +
->> > +- linux,pci-domain:
->> > +   If present this property assigns a fixed PCI domain number to a host bridge,
->> > +   otherwise an unstable (across boots) unique number will be assigned.
->> > +   It is required to either not set this property at all or set it for all
->> > +   host bridges in the system, otherwise potentially conflicting domain numbers
->> > +   may be assigned to root buses behind different host bridges. The domain
->> > +   number for each host bridge in the system must be unique.
->> > --
->> > 2.1.1
->> >
->
-> --
-> Pengutronix e.K.             | Lucas Stach                 |
-> Industrial Linux Solutions   | http://www.pengutronix.de/  |
->
+g.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
