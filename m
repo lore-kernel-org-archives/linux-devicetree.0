@@ -1,43 +1,42 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH 3/4] simplefb: Change simplefb_init from
- module_init to fs_initcall
-Date: Thu, 13 Nov 2014 20:04:35 +0100
-Message-ID: <546500C3.7040908@redhat.com>
-References: <1415830124-28787-1-git-send-email-hdegoede@redhat.com>	<1415830124-28787-3-git-send-email-hdegoede@redhat.com>	<20141113085238.GE20972@lukather> <546478B5.2040002@redhat.com>	<CACxGe6u8B854PEWw8XzwhyX8joMWwOsHOOXtmBmC1TgCGjGtdg@mail.gmail.com> <jwvy4rf2i7h.fsf-monnier+gmane.comp.hardware.netbook.arm.sunxi@gnu.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 2/2] DT: watchdog: Add ImgTec PDC Watchdog Timer binding documentation
+Date: Thu, 13 Nov 2014 11:07:52 -0800
+Message-ID: <CAL1qeaHEGZWs8PPrX5cNpUWXDL3D_5Y2w772eKBEO0G+5q_p-g@mail.gmail.com>
+References: <1415805483-26268-1-git-send-email-Naidu.Tellapati@imgtec.com>
+	<1415805483-26268-3-git-send-email-Naidu.Tellapati@imgtec.com>
+	<CAL1qeaHrjccd4KYAUMvWEKqhM9DFNyKWE=-2k0ux+76XR+Q5tQ@mail.gmail.com>
+	<89F3BC60EA3A0141B1F6C2A661D95E5E3F192BAA@hbmail01.hb.imgtec.org>
+	<5464AD4B.1000509@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBSMBSSRQKGQEBGYT4KA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <jwvy4rf2i7h.fsf-monnier+gmane.comp.hardware.netbook.arm.sunxi-mXXj517/zsQ@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5464AD4B.1000509-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <Ezequiel.Garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Nov 13, 2014 at 5:08 AM, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+> Hi,
+>
+> On 13/11/14 12:58, Jude Abraham wrote:
+>> On Wed, Nov 12, 2014 at 7:18 AM,  <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+>>>> diff --git a/Documentation/devicetree/bindings/watchdog/imgpdc-wdt.txt
+>
+>>>> +- interrupts : Should contain WDT interrupt
+>>
+>>>  Not sure the interrupt will really be necessary.
+>>
+>> Ok, We will remove the interrupt.
+>
+> Regardless, there is still an interrupt line coming out of the WDT and
+> interrupt status/clear/enable registers for the single reminder
+> interrupt. IMO it makes sense to describe it in DT even if the driver
+> doesn't [yet] make use it.
 
-On 11/13/2014 05:13 PM, Stefan Monnier wrote:
->> Like a lot of things, if it is made a modules, and it breaks for the
->> user, the user gets to keep the pieces.  There are potentially some
-> 
-> But the option's description should probably include some blurb about
-> the fact that it only works as a module with some combinations of
-> SoC+kernel.
-
-So I was about to add an update of the Kconfig text along this line
-while I was respinning the patch anyways, and guess what simplefb
-currently cannot be build as a module, so this is a non-issue.
-
-I'll update my "simplefb: Add support for enumerating simplefb dt nodes in /chosen"
-patch to not have a module_exit in the next version, since that is
-not really useful if it cannot be build as a module anyways.
-
-Regards,
-
-Hans
+Yes, you're right.  Even if we don't currently use the interrupt, it's
+a correct description of the hardware.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
