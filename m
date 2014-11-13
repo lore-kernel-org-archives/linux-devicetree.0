@@ -1,45 +1,62 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 1/1] Input: gpio_keys - add device tree support for interrupt only keys
-Date: Thu, 13 Nov 2014 12:05:26 +0100
-Message-ID: <1587930.UcHkd3vGmk@wuerfel>
-References: <1415808176-13282-1-git-send-email-alexander.stein@systec-electronic.com> <1763965.yCxTDubTPH@wuerfel> <54648EF6.10402@nvidia.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH][resend] of: Add vendor 2nd prefix for Asahi Kasei Corp
+Date: Thu, 13 Nov 2014 11:07:40 +0000
+Message-ID: <20141113110740.GE3815@sirena.org.uk>
+References: <5398AB07.4040304@wwwdotorg.org>
+ <87sinbdk44.wl%kuninori.morimoto.gx@renesas.com>
+ <878ulzx6hr.wl%kuninori.morimoto.gx@gmail.com>
+ <20140922130026.GK3290@leverpostej>
+ <CAMuHMdX22z97SbGS1HDiYfJ1PXxyEN2S8D7w4sr+4bUwD+mJZw@mail.gmail.com>
+ <20140922132743.GM3290@leverpostej>
+ <87y4rfhmgl.wl%kuninori.morimoto.gx@renesas.com>
+ <1415845309.4269.6.camel@perches.com>
+ <20141113025105.GA16652@verge.net.au>
+ <87vbmjhj00.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <54648EF6.10402@nvidia.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Alexander Stein <alexander.stein@systec-electronic.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="uYGmg1LLWPQm165X"
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <87vbmjhj00.wl%kuninori.morimoto.gx@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Joe Perches <joe@perches.com>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>, Olof Johansson <olof@lixom.net>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus <magnus.damm@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 13 November 2014 16:29:02 Laxman Dewangan wrote:
-> On Thursday 13 November 2014 04:17 PM, Arnd Bergmann wrote:
-> > I notice that Laxman Dewangan initially added the feature as part of
-> > (I assume) work on Tegra, but these days Tegra is DT-only so it can't
-> > actually get used for that any more.
-> >
-> > If we have a real usecase, I think we can still take your patch, but
-> > my impression at the moment is that it may be better to instead
-> > remove the feature entirely by reverting d8ee4a1c9052 ("Input:
-> > gpio_keys - add support for interrupt only keys").
-> >
-> > Regarding your initial use case of testing interrupt polarity, would
-> > you have been able to do the same thing by looking at the interrupt
-> > count in /proc/interrupts?
-> >
-> 
-> Yes, I posted patch for interrupt key on context on key connected to 
-> PMIC-Onkey.
-> On PMIC, there is onkey pin input which generates interrupt only when it 
-> toggles. So if we have key (power key on our platforms) connected to 
-> this pin then we will only get interrupt from PMIC.
-> Instead of implementing full interrupt key driver, I added this support 
-> on existing gpio keys.
 
-So is this code still in place, and do you think it's worthwhile to
-have a DT binding for it?
+--uYGmg1LLWPQm165X
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Could the PMIC register a gpio controller instead?
+On Thu, Nov 13, 2014 at 03:33:38AM +0000, Kuninori Morimoto wrote:
 
-	Arnd
+> > I think that what Morimoto-san wanted to say was something like this:
+
+> >   I guess that removing the "ak" line from vendor-prefixes.txt would
+> >   be sufficient to cause checkpatch to generate a warning about
+> >   using the deprecated "ak" vendor prefix. Is that a good approach?
+
+> Yes, this is.
+> Thank you Simon, Sorry Joe.
+
+It'd be a bit nicer to be able to leave it there with a note saying it
+was legacy (if only so people don't try to add it back) but I don't mind
+too much.
+
+--uYGmg1LLWPQm165X
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUZJD7AAoJECTWi3JdVIfQTcwH/iqbf8HyIXkT9aD8GTzeQF+E
+QjfY2W/KOY6HGjGPuCixw2+tvHCWg6oUzFLti0q0q3VJctk/S3nvynGcMujndTGi
+HsLHd7JZ/2fJkr8Ov1g5DXX8BzbklfE9uG2YzBa9blFyqI24QO16VJlVRsTigarz
+osaC9BPvGu96leqvXWdpwJDK+rRef27kuMKnaeb+3tqpRUMCCmmn55iaxWYIIvwz
+jbVXYbTBm1gdNi7Nf411YTJ3Hwe463qFemX2/XgVe32qjX7HF7mrEmBHbjGHeAWz
+F0j3dmSEoRsFvQm0yG5LuMoYGQtFss0dd/AyE+rokv6ykGZdl/OJRgpWvCPpjms=
+=ts6R
+-----END PGP SIGNATURE-----
+
+--uYGmg1LLWPQm165X--
