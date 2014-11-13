@@ -1,99 +1,77 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] DT: add MDIO node for FMan node
-Date: Thu, 13 Nov 2014 00:16:39 -0600
-Message-ID: <1415859399.15957.48.camel@freescale.com>
-References: <1415102196-9238-1-git-send-email-shh.xie@gmail.com>
-	 <1415665384.15957.16.camel@freescale.com>
-	 <fb6dc6131da04e89bfc31bd8278030a0@DM2PR0301MB0864.namprd03.prod.outlook.com>
-	 <1415727479.15957.29.camel@freescale.com>
-	 <c4dd11a97a684be8b799c2f639e600ca@DM2PR0301MB0864.namprd03.prod.outlook.com>
+From: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
+Subject: [PATCH] can: Fix bug in suspend/resume
+Date: Thu, 13 Nov 2014 12:28:11 +0530
+Message-ID: <a44efc1fb0144cca9d0c4851cc51db25@BL2FFO11FD024.protection.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c4dd11a97a684be8b799c2f639e600ca-Cwg/PA1lyPnq20u2fDgSrZwN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xie Shaohui-B21989 <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Liberman Igal-B31950 <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Medve Emilian-EMMEDVE1 <Emilian.Medve-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: wg@grandegger.com, mkl@pengutronix.de, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, grant.likely@linaro.org, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-can@vger.kernel.org, Kedareswara rao Appana <appanad@xilinx.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-11-12 at 07:40 -0600, Xie Shaohui-B21989 wrote:
-> > -----Original Message-----
-> > From: Wood Scott-B07421
-> > Sent: Wednesday, November 12, 2014 1:38 AM
-> > To: Xie Shaohui-B21989
-> > Cc: Liberman Igal-B31950; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org;
-> > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Medve Emilian-EMMEDVE1
-> > Subject: Re: [PATCH] DT: add MDIO node for FMan node
-> > 
-> > On Tue, 2014-11-11 at 04:32 -0600, Xie Shaohui-B21989 wrote:
-> > > > -----Original Message-----
-> > > > From: Wood Scott-B07421
-> > > > Sent: Tuesday, November 11, 2014 8:23 AM
-> > > > To: shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-> > > > Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Medve
-> > > > Emilian-EMMEDVE1; Xie Shaohui-B21989
-> > > > Subject: Re: [PATCH] DT: add MDIO node for FMan node
-> > > >
-> > > > On Tue, 2014-11-04 at 19:56 +0800, shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> > > > > From: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > > > >
-> > > > > This binding is for FMan MDIO, it covers FMan v2 & FMan v3.
-> > > > >
-> > > > > Signed-off-by: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > > > > ---
-> > > > > based on http://patchwork.ozlabs.org/patch/390351/
-> > > > > for 'next' of
-> > > > > git://git.kernel.org/pub/scm/linux/kernel/git/scottwood/linux.git
-> > > >
-> > > > Are there any other FMan pieces that are missing from the above patch?
-> > > [S.H] I'm adding Igal for this comment.
-> > >
-> > > >
-> > > > > +- bus-frequency
-> > > > > +		Usage: optional
-> > > > > +		Value type: <u32>
-> > > > > +		Definition: Default MDIO bus clock speed.
-> > > >
-> > > > Use clocks/clock-names
-> > > [S.H] The MDIO uses Fman clock and divides it to a proper value which
-> > is specified by this property.
-> > 
-> > Use clocks/clock-names to describe that relationship.
-> > 
->
-> [S.H] The MDIO node is sub-node and embedded in Fman node, the
-> clocks/clock-names is provided by Fman node, should repeat them in MDIO
-> node? For the default MDIO bus clock speed, maybe "clock-ranges" should
-> be used?
+When accessing the priv structure use container_of instead of dev_get_drvdata.
+Enable the clocks in the suspend before accessing the registers of the CAN.
 
-It's a different clock.  You wouldn't be repeating.  If it's derived
-from the FMan clock, then maybe you don't need anything here (does the
-driver know what the divider is, or would that need to be specified in
-the device tree?), but no more clock-frequency/bus-frequency properties.
+Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+---
+ drivers/net/can/xilinx_can.c |   20 ++++++++++++++++++--
+ 1 files changed, 18 insertions(+), 2 deletions(-)
 
-> [S.H] since Fman V2 & V3 can be differentiated by compatible, a boolean
-> property "fsl,fman-internal-mdio" seems better, if defined, it
-> indicates an internal MDIO. It looks like below:
-> 
-> fsl,fman-internal-mdio
-> 		Usage: required for internal MDIO
-> 		Value type: Boolean
-> 		Definition: Fman has internal MDIO for internal PCS(Physical
-> 		Coding Sublayer) PHYs and external MDIO for external PHYs.
-> 		The settings and programming routines for internal/external
-> 		MDIO are different. Must be included for internal MDIO.
-> 
-> How about this?
-
-This looks better, thanks.
-
-This would be set on fman v2 TBI mdio nodes as well, right?
-
--Scott
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/net/can/xilinx_can.c b/drivers/net/can/xilinx_can.c
+index 5e8b560..63ef645 100644
+--- a/drivers/net/can/xilinx_can.c
++++ b/drivers/net/can/xilinx_can.c
+@@ -972,15 +972,30 @@ static const struct net_device_ops xcan_netdev_ops = {
+  */
+ static int __maybe_unused xcan_suspend(struct device *dev)
+ {
+-	struct platform_device *pdev = dev_get_drvdata(dev);
++	struct platform_device *pdev = container_of(dev,
++			struct platform_device, dev);
+ 	struct net_device *ndev = platform_get_drvdata(pdev);
+ 	struct xcan_priv *priv = netdev_priv(ndev);
++	int ret;
+ 
+ 	if (netif_running(ndev)) {
+ 		netif_stop_queue(ndev);
+ 		netif_device_detach(ndev);
+ 	}
+ 
++	ret = clk_prepare_enable(priv->can_clk);
++	if (ret) {
++		dev_err(dev, "unable to enable device clock\n");
++		return ret;
++	}
++
++	ret = clk_prepare_enable(priv->bus_clk);
++	if (ret) {
++		dev_err(dev, "unable to enable bus clock\n");
++		clk_disable_unprepare(priv->can_clk);
++		return ret;
++	}
++
+ 	priv->write_reg(priv, XCAN_MSR_OFFSET, XCAN_MSR_SLEEP_MASK);
+ 	priv->can.state = CAN_STATE_SLEEPING;
+ 
+@@ -999,7 +1014,8 @@ static int __maybe_unused xcan_suspend(struct device *dev)
+  */
+ static int __maybe_unused xcan_resume(struct device *dev)
+ {
+-	struct platform_device *pdev = dev_get_drvdata(dev);
++	struct platform_device *pdev = container_of(dev,
++			struct platform_device, dev);
+ 	struct net_device *ndev = platform_get_drvdata(pdev);
+ 	struct xcan_priv *priv = netdev_priv(ndev);
+ 	int ret;
+-- 
+1.7.4
