@@ -1,28 +1,42 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/4] of: Add vendor prefix for Chips&Media, Inc.
-Date: Fri, 14 Nov 2014 17:50:04 -0200
-Message-ID: <CAOMZO5ALspYUOhxKw2K4vZ5ufN87VF5r7-5EbVd5BeHBVendxw@mail.gmail.com>
-References: <1402679641-868-1-git-send-email-p.zabel@pengutronix.de>
+From: Ohad Ben-Cohen <ohad@wizery.com>
+Subject: Re: [PATCHv6 4/5] hwspinlock/core: add common OF helpers
+Date: Fri, 14 Nov 2014 22:05:07 +0200
+Message-ID: <CAK=WgbYEQPwPH-i_kfF8-h6uOH9q4rcT1+W0smG3e=chDg833Q@mail.gmail.com>
+References: <1410553499-55951-1-git-send-email-s-anna@ti.com>
+ <1410553499-55951-5-git-send-email-s-anna@ti.com> <CAK=WgbamdqAufjC4Xb5moERRBSB-cO6c1RPTE=f+dp75F+Eh7A@mail.gmail.com>
+ <5463B5B6.8040709@ti.com> <CAK=WgbbatPTiz3efDWHVEcuug_UQfkCViMoK0zcfUg3JwB2oTA@mail.gmail.com>
+ <5464EC7A.7050603@ti.com> <CAK=WgbbodS8GsUxQbkyCp6hAG+Ko4LMirx+pUa8_fUdxWFasvw@mail.gmail.com>
+ <54651C48.90809@ti.com> <CAK=WgbYMM19-rWLOBjix+TA3fF_Pb25ia1rutDxYSUg9SV0efg@mail.gmail.com>
+ <5466373B.2070808@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1402679641-868-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5466373B.2070808@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Suman Anna <s-anna@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Tony Lindgren <tony@atomide.com>, Josh Cartwright <joshc@codeaurora.org>, Bjorn Andersson <bjorn@kryo.se>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
+On Fri, Nov 14, 2014 at 7:09 PM, Suman Anna <s-anna@ti.com> wrote:
+>> It seems to me that hwspin_lock_request_specific failures should be
+>> used by clients to defer their probing. Why wouldn't such a simple
+>> solution work?
 
-On Fri, Jun 13, 2014 at 2:13 PM, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> Chips&Media is a developer of Video Codec IP cores.
->
-> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Because the API always returns NULL on failures and there is no way for
+> the clients to figure out if the lock id passed is invalid or the bank
+> containing the lock is not registered.
 
-4/4 is in Shawn's tree now. Could you please resend patches 1,2 and 3?
+It seems to me this may always be the case - lock ids may be wrong and
+there's no way to fully validate them.
 
-Thanks
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Let's start with the simpler approach where
+hwspin_lock_request_specific failures are used by clients to defer
+their probing.
+
+If a real use case will require changes we can always do that later,
+though it seems to me the only gain by changing this API is to catch a
+small subset of fatal DT mistakes which will anyway be caught very
+early in the development.
+
+Thanks,
+Ohad.
