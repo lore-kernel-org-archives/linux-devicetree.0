@@ -1,46 +1,56 @@
-From: Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [RESEND PATCH 2/2] ARM: dts: exynos4412-trats2: Enable TMU support at
- Trats2
-Date: Fri, 14 Nov 2014 11:03:25 +0100
-Message-ID: <1415959405-14157-2-git-send-email-l.majewski@samsung.com>
-References: <1381300194-13134-5-git-send-email-l.majewski@samsung.com>
- <1415959405-14157-1-git-send-email-l.majewski@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1415959405-14157-1-git-send-email-l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Subject: [PATCH 2/6 V2] Documentation: devicetree: arizona: Add bindings
+	for WM8280
+Date: Fri, 14 Nov 2014 10:04:37 +0000
+Message-ID: <20141114100437.GA12913@opensource.wolfsonmicro.com>
+References: <1415901046-3391-1-git-send-email-rf@opensource.wolfsonmicro.com> <1415901046-3391-3-git-send-email-rf@opensource.wolfsonmicro.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1415901046-3391-3-git-send-email-rf@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org, lgirdwood@gmail.com, myungjoo.ham@samsung.com, cw00.choi@samsung.com, linus.walleij@linaro.org, gnurou@gmail.com, broonie@kernel.org, tiwai@suse.de
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, sameo@linux.intel.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, ckeepax@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-This patch enables support for TMU at Exynos4412 based Trats2 board.
-
-Signed-off-by: Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
 ---
- arch/arm/boot/dts/exynos4412-trats2.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+ Documentation/devicetree/bindings/mfd/arizona.txt |   15 +++++++++++----
+ 1 files changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
-index 5e066cd..121430d 100644
---- a/arch/arm/boot/dts/exynos4412-trats2.dts
-+++ b/arch/arm/boot/dts/exynos4412-trats2.dts
-@@ -551,6 +551,11 @@
- 		status = "okay";
- 	};
+diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+index 7bd1273..dc81b71 100644
+--- a/Documentation/devicetree/bindings/mfd/arizona.txt
++++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+@@ -8,6 +8,7 @@ Required properties:
+   - compatible : One of the following chip-specific strings:
+         "wlf,wm5102"
+         "wlf,wm5110"
++        "wlf,wm8280"
+         "wlf,wm8997"
+   - reg : I2C slave address when connected using I2C, chip select number when
+     using SPI.
+@@ -26,10 +27,16 @@ Required properties:
+   - #gpio-cells : Must be 2. The first cell is the pin number and the
+     second cell is used to specify optional parameters (currently unused).
  
-+	tmu@100C0000 {
-+		vtmu-supply = <&ldo10_reg>;
-+		status = "okay";
-+	};
+-  - AVDD-supply, DBVDD1-supply, DBVDD2-supply, DBVDD3-supply (wm5102, wm5110),
+-    CPVDD-supply, SPKVDDL-supply (wm5102, wm5110), SPKVDDR-supply (wm5102,
+-    wm5110), SPKVDD-supply (wm8997) : Power supplies for the device, as covered
+-    in Documentation/devicetree/bindings/regulator/regulator.txt
++  - AVDD-supply, DBVDD1-supply, CPVDD-supply : Power supplies for the device,
++    as covered in Documentation/devicetree/bindings/regulator/regulator.txt
++  
++  - DBVDD2-supply, DBVDD3-supply : Additional databus power supplies (wm5102,
++    wm5110, wm8280)
 +
- 	i2c_ak8975: i2c-gpio-0 {
- 		compatible = "i2c-gpio";
- 		gpios = <&gpy2 4 0>, <&gpy2 5 0>;
++  - SPKVDDL-supply, SPKVDDR-supply : Speaker driver power supplies (wm5102,
++    wm5110, wm8280)
++  
++  - SPKVDD-supply : Speaker driver power supply (wm8997)
+ 
+ Optional properties:
+ 
 -- 
-2.0.0.rc2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.2.5
