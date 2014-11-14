@@ -1,37 +1,45 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] DTS: meson: Add forgotten compatible in board DTS
-Date: Fri, 14 Nov 2014 17:38:32 +0100
-Message-ID: <1415983112-11064-1-git-send-email-carlo@caione.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, eric.hankinson-kKnclOS8ZqId9SLi6J12IkEOCMrvLtNR@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH V4 01/14] sh: Eliminate unused irq_reg_{readl,writel}
+ accessors
+Date: Fri, 14 Nov 2014 12:05:25 -0500
+Message-ID: <20141114170525.GL3698@titan.lakedaemon.net>
+References: <1415342669-30640-1-git-send-email-cernekee@gmail.com>
+ <1415342669-30640-2-git-send-email-cernekee@gmail.com>
+ <CAMuHMdW+L8YbE8Z8jrtnm8xWk63sRGaFdM7TPM6MmrDg9XwHuQ@mail.gmail.com>
+ <20141114163843.GH29662@linux-mips.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141114163843.GH29662@linux-mips.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ralf Baechle <ralf@linux-mips.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Kevin Cernekee <cernekee@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linux-sh list <linux-sh@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Florian Fainelli <f.fainelli@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-The board DTS is missing the machine compatible.
+On Fri, Nov 14, 2014 at 05:38:44PM +0100, Ralf Baechle wrote:
+> On Mon, Nov 10, 2014 at 09:13:49AM +0100, Geert Uytterhoeven wrote:
+> 
+> > On Fri, Nov 7, 2014 at 7:44 AM, Kevin Cernekee <cernekee@gmail.com> wrote:
+> > > Defining these macros way down in arch/sh/.../irq.c doesn't cause
+> > > kernel/irq/generic-chip.c to use them.  As far as I can tell this code
+> > > has no effect.
+> > >
+> > > Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+> > 
+> > Compared preprocessor and asm output before and after, no difference
+> > except for line numbers, so
+> > 
+> > Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> I noticed the remainder of of this series is now in Jason Cooper's irqchip
+> tree.  Is anybody still taking care of SH?  If not I can funnel it
+> through the MIPS tree.
 
-Signed-off-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
----
- arch/arm/boot/dts/meson6-atv1200.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Are the SH maintainers active?  I admit I know very little about the
+arch.  I'm more than happy to pick it up and keep it with the rest of
+the series, I just didn't want to step on toes...
 
-diff --git a/arch/arm/boot/dts/meson6-atv1200.dts b/arch/arm/boot/dts/meson6-atv1200.dts
-index dc2541f..d7d351a 100644
---- a/arch/arm/boot/dts/meson6-atv1200.dts
-+++ b/arch/arm/boot/dts/meson6-atv1200.dts
-@@ -50,7 +50,7 @@
- 
- / {
- 	model = "Geniatech ATV1200";
--	compatible = "geniatech,atv1200";
-+	compatible = "geniatech,atv1200", "amlogic,meson6";
- 
- 	aliases {
- 		serial0 = &uart_AO;
--- 
-1.9.1
+thx,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jason.
