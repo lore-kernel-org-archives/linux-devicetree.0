@@ -1,101 +1,45 @@
-From: Antoine Tenart <antoine.tenart@free-electrons.com>
-Subject: [PATCH v7 10/13] ARM: dts: berlin: add BG2Q nodes for USB support
-Date: Fri, 14 Nov 2014 16:26:00 +0100
-Message-ID: <1415978763-27345-11-git-send-email-antoine.tenart@free-electrons.com>
+From: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v7 03/13] ARM: Berlin: select the reset controller
+Date: Fri, 14 Nov 2014 16:25:53 +0100
+Message-ID: <1415978763-27345-4-git-send-email-antoine.tenart@free-electrons.com>
 References: <1415978763-27345-1-git-send-email-antoine.tenart@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415978763-27345-1-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sebastian.hesselbarth@gmail.com, Peter.Chen@freescale.com, balbi@ti.com, p.zabel@pengutronix.de
-Cc: Antoine Tenart <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415978763-27345-1-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Adds nodes describing the Marvell Berlin BG2Q USB PHY and USB. The BG2Q
-SoC has 3 USB host controller, compatible with ChipIdea.
+The Marvell Berlin SoCs now has a reset controller. Add the needed
+configuration.
 
-Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
+Signed-off-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/berlin2q.dtsi | 55 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+ arch/arm/mach-berlin/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
-index 2de8d6f8973c..834142bdfbb1 100644
---- a/arch/arm/boot/dts/berlin2q.dtsi
-+++ b/arch/arm/boot/dts/berlin2q.dtsi
-@@ -114,6 +114,40 @@
- 			#interrupt-cells = <3>;
- 		};
+diff --git a/arch/arm/mach-berlin/Kconfig b/arch/arm/mach-berlin/Kconfig
+index 24f85be71671..5803f773a065 100644
+--- a/arch/arm/mach-berlin/Kconfig
++++ b/arch/arm/mach-berlin/Kconfig
+@@ -1,11 +1,13 @@
+ menuconfig ARCH_BERLIN
+ 	bool "Marvell Berlin SoCs" if ARCH_MULTI_V7
++	select ARCH_HAS_RESET_CONTROLLER
+ 	select ARCH_REQUIRE_GPIOLIB
+ 	select ARM_GIC
+ 	select GENERIC_IRQ_CHIP
+ 	select DW_APB_ICTL
+ 	select DW_APB_TIMER_OF
+ 	select PINCTRL
++	select RESET_CONTROLLER
  
-+		usb_phy2: phy@a2f400 {
-+			compatible = "marvell,berlin2-usb-phy";
-+			reg = <0xa2f400 0x128>;
-+			#phy-cells = <0>;
-+			resets = <&chip 0x104 14>;
-+			status = "disabled";
-+		};
-+
-+		usb2: usb@a30000 {
-+			compatible = "chipidea,usb2";
-+			reg = <0xa30000 0x10000>;
-+			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&chip CLKID_USB2>;
-+			phys = <&usb_phy2>;
-+			phy-names = "usb-phy";
-+			status = "disabled";
-+		};
-+
-+		usb_phy0: phy@b74000 {
-+			compatible = "marvell,berlin2-usb-phy";
-+			reg = <0xb74000 0x128>;
-+			#phy-cells = <0>;
-+			resets = <&chip 0x104 12>;
-+			status = "disabled";
-+		};
-+
-+		usb_phy1: phy@b78000 {
-+			compatible = "marvell,berlin2-usb-phy";
-+			reg = <0xb78000 0x128>;
-+			#phy-cells = <0>;
-+			resets = <&chip 0x104 13>;
-+			status = "disabled";
-+		};
-+
- 		eth0: ethernet@b90000 {
- 			compatible = "marvell,pxa168-eth";
- 			reg = <0xb90000 0x10000>;
-@@ -365,6 +399,26 @@
- 			};
- 		};
+ if ARCH_BERLIN
  
-+		usb0: usb@ed0000 {
-+			compatible = "chipidea,usb2";
-+			reg = <0xed0000 0x10000>;
-+			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&chip CLKID_USB0>;
-+			phys = <&usb_phy0>;
-+			phy-names = "usb-phy";
-+			status = "disabled";
-+		};
-+
-+		usb1: usb@ee0000 {
-+			compatible = "chipidea,usb2";
-+			reg = <0xee0000 0x10000>;
-+			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&chip CLKID_USB1>;
-+			phys = <&usb_phy1>;
-+			phy-names = "usb-phy";
-+			status = "disabled";
-+		};
-+
- 		apb@fc0000 {
- 			compatible = "simple-bus";
- 			#address-cells = <1>;
-@@ -457,5 +511,6 @@
- 				interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
- 			};
- 		};
-+
- 	};
- };
 -- 
 2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
