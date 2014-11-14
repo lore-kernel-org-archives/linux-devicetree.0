@@ -1,27 +1,45 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: Re: [PATCH v2 2/4] DT: pwm: Add binding document for IMG PWM DAC
-Date: Fri, 14 Nov 2014 10:57:03 -0800
-Message-ID: <CAL1qeaFWiwfv_FWCSsKz0o8WdNq2yH1XgF7oi+mnCjupaguL4g@mail.gmail.com>
-References: <1415979460-1093-1-git-send-email-naidu.tellapati@imgtec.com>
-	<1415979460-1093-3-git-send-email-naidu.tellapati@imgtec.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1415979460-1093-3-git-send-email-naidu.tellapati@imgtec.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Naidu Tellapati <naidu.tellapati@imgtec.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, James Hartley <James.Hartley@imgtec.com>, Ezequiel Garcia <Ezequiel.Garcia@imgtec.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Arul Ramasamy <arul.ramasamy@imgtec.com>, Sai Masarapu <Sai.Masarapu@imgtec.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH v7 03/13] ARM: Berlin: select the reset controller
+Date: Fri, 14 Nov 2014 20:07:31 +0100
+Message-ID: <546652F3.8050809@gmail.com>
+References: <1415978763-27345-1-git-send-email-antoine.tenart@free-electrons.com> <1415978763-27345-4-git-send-email-antoine.tenart@free-electrons.com> <3287202.nx0cnO5WUI@wuerfel> <54662192.6000403@gmail.com> <20141114172812.GD2991@kwain>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141114172812.GD2991@kwain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Antoine Tenart <antoine.tenart@free-electrons.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Peter.Chen@freescale.com, balbi@ti.com, p.zabel@pengutronix.de, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Naidu,
-
-On Fri, Nov 14, 2014 at 7:37 AM,  <naidu.tellapati@imgtec.com> wrote:
-> From: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
+On 14.11.2014 18:28, Antoine Tenart wrote:
+> Sebastian,
 >
-> Add binding document for IMG Pulse Width Modulator (PWM) DAC present on the
-> Pistachio SOC. The PWM DAC has four channels.
+> On Fri, Nov 14, 2014 at 04:36:50PM +0100, Sebastian Hesselbarth wrote:
+>> On 11/14/2014 04:33 PM, Arnd Bergmann wrote:
+>>> On Friday 14 November 2014 16:25:53 Antoine Tenart wrote:
+>>>>   menuconfig ARCH_BERLIN
+>>>>          bool "Marvell Berlin SoCs" if ARCH_MULTI_V7
+>>>> +       select ARCH_HAS_RESET_CONTROLLER
+>>>>          select ARCH_REQUIRE_GPIOLIB
+>>>>          select ARM_GIC
+>>>>          select GENERIC_IRQ_CHIP
+>>>>          select DW_APB_ICTL
+>>>>          select DW_APB_TIMER_OF
+>>>>          select PINCTRL
+>>>> +       select RESET_CONTROLLER
+>>>
+>>> RESET_CONTROLLER is meant to be user-selectable, don't add a 'select' here,
+>>> but instead make the driver 'depends on RESET_CONTROLLER'.
+>>
+>> It already went into arm-soc for v3.19 - ergo, we need an extra
+>> patch for removing the current 'select'.
 >
-> Signed-off-by: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
-> Signed-off-by: Sai Masarapu <Sai.Masarapu@imgtec.com>
+> Do you want me to send the extra patch fixing this issue?
 
-Reviewed-by: Andrew Bresticker <abrestic@chromium.org>
+Yes, please. The patch in question is already in a tagged, stabled,
+and pulled branch - so there is nothing I can do about it.
+
+You can just send it as an independent patch, I'll pick it up quickly.
+
+Sebastian
