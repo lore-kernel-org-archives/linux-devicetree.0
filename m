@@ -1,187 +1,125 @@
 From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCHv2 07/16] bus: mvebu-mbus: provide a mechanism to save SDRAM window configuration
-Date: Fri, 14 Nov 2014 16:21:27 +0100
-Message-ID: <1415978496-9334-8-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCHv2 08/16] clk: mvebu: add suspend/resume for gatable clocks
+Date: Fri, 14 Nov 2014 16:21:28 +0100
+Message-ID: <1415978496-9334-9-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1415978496-9334-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1415978496-9334-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Marvell EBU platforms, when doing suspend/resume, the SDRAM window
-configuration must be saved on suspend, and restored on
-resume. However, it needs to be restored on resume *before*
-re-entering the kernel, because the SDRAM window configuration defines
-the layout of the memory. For this reason, it cannot simply be done in
-the ->suspend() and ->resume() hooks of the mvebu-mbus driver.
+This commit adds suspend/resume support for the gatable clock driver
+used on Marvell EBU platforms. When getting out of suspend, the
+Marvell EBU platforms go through the bootloader, which re-enables all
+gatable clocks. However, upon resume, the clock framework will not
+disable again all gatable clocks that are not used.
 
-Instead, it needs to be restored by the bootloader "boot info"
-mechanism used when resuming. This mechanism allows the kernel to
-define a list of (address, value) pairs when suspending, that the
-bootloader will restore on resume before jumping back into the kernel.
+Therefore, if the clock driver does not save/restore the state of the
+gatable clocks, all gatable clocks that are not claimed by any device
+driver will remain enabled after a resume. This is why this driver
+saves and restores the state of those clocks.
 
-This commit therefore adds a new function to the mvebu-mbus driver,
-called mvebu_mbus_save_cpu_target(), which will be called by the
-platform code to make the mvebu-mbus driver save the SDRAM window
-configuration in a way that can be understood by the bootloader "boot
-info" mechanism.
+Since clocks aren't real devices, we don't have the normal ->suspend()
+and ->resume() of the device model, and have to use the ->suspend()
+and ->resume() hooks of the syscore_ops mechanism. This mechanism has
+the unfortunate idea of not providing a way of passing private data,
+which requires us to change the driver to make the assumption that
+there is only once instance of the gatable clock control structure.
 
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Reviewed-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/bus/mvebu-mbus.c | 56 ++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/mbus.h     |  1 +
- 2 files changed, 57 insertions(+)
+ drivers/clk/mvebu/common.c | 30 ++++++++++++++++++++++++++++--
+ 1 file changed, 28 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/bus/mvebu-mbus.c b/drivers/bus/mvebu-mbus.c
-index e8c1593..eb7682d 100644
---- a/drivers/bus/mvebu-mbus.c
-+++ b/drivers/bus/mvebu-mbus.c
-@@ -110,6 +110,8 @@ struct mvebu_mbus_soc_data {
- 	bool has_mbus_bridge;
- 	unsigned int (*win_cfg_offset)(const int win);
- 	void (*setup_cpu_target)(struct mvebu_mbus_state *s);
-+	int (*save_cpu_target)(struct mvebu_mbus_state *s,
-+			       u32 *store_addr);
- 	int (*show_cpu_target)(struct mvebu_mbus_state *s,
- 			       struct seq_file *seq, void *v);
- };
-@@ -128,6 +130,7 @@ struct mvebu_mbus_state {
- 	void __iomem *mbuswins_base;
- 	void __iomem *sdramwins_base;
- 	void __iomem *mbusbridge_base;
-+	phys_addr_t sdramwins_phys_base;
- 	struct dentry *debugfs_root;
- 	struct dentry *debugfs_sdram;
- 	struct dentry *debugfs_devs;
-@@ -541,6 +544,28 @@ mvebu_mbus_default_setup_cpu_target(struct mvebu_mbus_state *mbus)
- 	mvebu_mbus_dram_info.num_cs = cs;
- }
+diff --git a/drivers/clk/mvebu/common.c b/drivers/clk/mvebu/common.c
+index b7fcb46..8799fb8 100644
+--- a/drivers/clk/mvebu/common.c
++++ b/drivers/clk/mvebu/common.c
+@@ -19,6 +19,7 @@
+ #include <linux/io.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
++#include <linux/syscore_ops.h>
  
-+static int
-+mvebu_mbus_default_save_cpu_target(struct mvebu_mbus_state *mbus,
-+				   u32 *store_addr)
-+{
-+	int i;
+ #include "common.h"
+ 
+@@ -177,14 +178,18 @@ struct clk_gating_ctrl {
+ 	spinlock_t *lock;
+ 	struct clk **gates;
+ 	int num_gates;
++	struct syscore_ops syscore_ops;
++	void __iomem *base;
++	u32 saved_reg;
+ };
+ 
+ #define to_clk_gate(_hw) container_of(_hw, struct clk_gate, hw)
+ 
++static struct clk_gating_ctrl *ctrl;
 +
-+	for (i = 0; i < 4; i++) {
-+		u32 base = readl(mbus->sdramwins_base + DDR_BASE_CS_OFF(i));
-+		u32 size = readl(mbus->sdramwins_base + DDR_SIZE_CS_OFF(i));
-+
-+		writel(mbus->sdramwins_phys_base + DDR_BASE_CS_OFF(i),
-+		       store_addr++);
-+		writel(base, store_addr++);
-+		writel(mbus->sdramwins_phys_base + DDR_SIZE_CS_OFF(i),
-+		       store_addr++);
-+		writel(size, store_addr++);
-+	}
-+
-+	/* We've written 16 words to the store address */
-+	return 16;
-+}
-+
- static void __init
- mvebu_mbus_dove_setup_cpu_target(struct mvebu_mbus_state *mbus)
+ static struct clk *clk_gating_get_src(
+ 	struct of_phandle_args *clkspec, void *data)
  {
-@@ -571,11 +596,35 @@ mvebu_mbus_dove_setup_cpu_target(struct mvebu_mbus_state *mbus)
- 	mvebu_mbus_dram_info.num_cs = cs;
+-	struct clk_gating_ctrl *ctrl = (struct clk_gating_ctrl *)data;
+ 	int n;
+ 
+ 	if (clkspec->args_count < 1)
+@@ -199,15 +204,30 @@ static struct clk *clk_gating_get_src(
+ 	return ERR_PTR(-ENODEV);
  }
  
-+static int
-+mvebu_mbus_dove_save_cpu_target(struct mvebu_mbus_state *mbus,
-+				u32 *store_addr)
++static int mvebu_clk_gating_suspend(void)
 +{
-+	int i;
++	ctrl->saved_reg = readl(ctrl->base);
++	return 0;
++}
 +
-+	for (i = 0; i < 2; i++) {
-+		u32 map = readl(mbus->sdramwins_base + DOVE_DDR_BASE_CS_OFF(i));
++static void mvebu_clk_gating_resume(void)
++{
++	writel(ctrl->saved_reg, ctrl->base);
++}
 +
-+		writel(mbus->sdramwins_phys_base + DOVE_DDR_BASE_CS_OFF(i),
-+		       store_addr++);
-+		writel(map, store_addr++);
+ void __init mvebu_clk_gating_setup(struct device_node *np,
+ 				   const struct clk_gating_soc_desc *desc)
+ {
+-	struct clk_gating_ctrl *ctrl;
+ 	struct clk *clk;
+ 	void __iomem *base;
+ 	const char *default_parent = NULL;
+ 	int n;
+ 
++	if (ctrl) {
++		pr_err("mvebu-clk-gating: cannot instantiate more than one gatable clock device\n");
++		return;
 +	}
 +
-+	/* We've written 4 words to the store address */
-+	return 4;
-+}
-+
-+int mvebu_mbus_save_cpu_target(u32 *store_addr)
-+{
-+	return mbus_state.soc->save_cpu_target(&mbus_state, store_addr);
-+}
-+
- static const struct mvebu_mbus_soc_data armada_370_xp_mbus_data = {
- 	.num_wins            = 20,
- 	.num_remappable_wins = 8,
- 	.has_mbus_bridge     = true,
- 	.win_cfg_offset      = armada_370_xp_mbus_win_offset,
-+	.save_cpu_target     = mvebu_mbus_default_save_cpu_target,
- 	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
- 	.show_cpu_target     = mvebu_sdram_debug_show_orion,
- };
-@@ -584,6 +633,7 @@ static const struct mvebu_mbus_soc_data kirkwood_mbus_data = {
- 	.num_wins            = 8,
- 	.num_remappable_wins = 4,
- 	.win_cfg_offset      = orion_mbus_win_offset,
-+	.save_cpu_target     = mvebu_mbus_default_save_cpu_target,
- 	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
- 	.show_cpu_target     = mvebu_sdram_debug_show_orion,
- };
-@@ -592,6 +642,7 @@ static const struct mvebu_mbus_soc_data dove_mbus_data = {
- 	.num_wins            = 8,
- 	.num_remappable_wins = 4,
- 	.win_cfg_offset      = orion_mbus_win_offset,
-+	.save_cpu_target     = mvebu_mbus_dove_save_cpu_target,
- 	.setup_cpu_target    = mvebu_mbus_dove_setup_cpu_target,
- 	.show_cpu_target     = mvebu_sdram_debug_show_dove,
- };
-@@ -604,6 +655,7 @@ static const struct mvebu_mbus_soc_data orion5x_4win_mbus_data = {
- 	.num_wins            = 8,
- 	.num_remappable_wins = 4,
- 	.win_cfg_offset      = orion_mbus_win_offset,
-+	.save_cpu_target     = mvebu_mbus_default_save_cpu_target,
- 	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
- 	.show_cpu_target     = mvebu_sdram_debug_show_orion,
- };
-@@ -612,6 +664,7 @@ static const struct mvebu_mbus_soc_data orion5x_2win_mbus_data = {
- 	.num_wins            = 8,
- 	.num_remappable_wins = 2,
- 	.win_cfg_offset      = orion_mbus_win_offset,
-+	.save_cpu_target     = mvebu_mbus_default_save_cpu_target,
- 	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
- 	.show_cpu_target     = mvebu_sdram_debug_show_orion,
- };
-@@ -620,6 +673,7 @@ static const struct mvebu_mbus_soc_data mv78xx0_mbus_data = {
- 	.num_wins            = 14,
- 	.num_remappable_wins = 8,
- 	.win_cfg_offset      = mv78xx0_mbus_win_offset,
-+	.save_cpu_target     = mvebu_mbus_default_save_cpu_target,
- 	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
- 	.show_cpu_target     = mvebu_sdram_debug_show_orion,
- };
-@@ -804,6 +858,8 @@ static int __init mvebu_mbus_common_init(struct mvebu_mbus_state *mbus,
- 		return -ENOMEM;
- 	}
+ 	base = of_iomap(np, 0);
+ 	if (WARN_ON(!base))
+ 		return;
+@@ -225,6 +245,10 @@ void __init mvebu_clk_gating_setup(struct device_node *np,
+ 	/* lock must already be initialized */
+ 	ctrl->lock = &ctrl_gating_lock;
  
-+	mbus->sdramwins_phys_base = sdramwins_phys_base;
++	ctrl->base = base;
++	ctrl->syscore_ops.suspend = mvebu_clk_gating_suspend;
++	ctrl->syscore_ops.resume = mvebu_clk_gating_resume;
 +
- 	if (mbusbridge_phys_base) {
- 		mbus->mbusbridge_base = ioremap(mbusbridge_phys_base,
- 						mbusbridge_size);
-diff --git a/include/linux/mbus.h b/include/linux/mbus.h
-index 550c88f..611b69f 100644
---- a/include/linux/mbus.h
-+++ b/include/linux/mbus.h
-@@ -61,6 +61,7 @@ static inline const struct mbus_dram_target_info *mv_mbus_dram_info(void)
- }
- #endif
+ 	/* Count, allocate, and register clock gates */
+ 	for (n = 0; desc[n].name;)
+ 		n++;
+@@ -246,6 +270,8 @@ void __init mvebu_clk_gating_setup(struct device_node *np,
  
-+int mvebu_mbus_save_cpu_target(u32 *store_addr);
- void mvebu_mbus_get_pcie_mem_aperture(struct resource *res);
- void mvebu_mbus_get_pcie_io_aperture(struct resource *res);
- int mvebu_mbus_add_window_remap_by_id(unsigned int target,
+ 	of_clk_add_provider(np, clk_gating_get_src, ctrl);
+ 
++	register_syscore_ops(&ctrl->syscore_ops);
++
+ 	return;
+ gates_out:
+ 	kfree(ctrl);
 -- 
 2.1.0
 
