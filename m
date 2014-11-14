@@ -1,101 +1,51 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH 4/4] arm: dts: omap3-gta04: Add static configuration for
- devconf1 register
-Date: Fri, 14 Nov 2014 09:32:06 +0200
-Message-ID: <5465AFF6.506@ti.com>
-References: <1415051968-4878-1-git-send-email-marek@goldelico.com> <1415051968-4878-5-git-send-email-marek@goldelico.com> <5463585D.9070209@ti.com> <20141112150210.GC26481@atomide.com> <5464969F.30708@ti.com> <20141113182848.GQ26481@atomide.com> <alpine.DEB.2.02.1411132251320.17030@utopia.booyaka.com> <20141113235840.GS26481@atomide.com>
+From: Valentin Longchamp <valentin.longchamp@keymile.com>
+Subject: Re: [PATCH] i2c-qoriq: modified compatibility for correct prescaler
+Date: Fri, 14 Nov 2014 08:43:01 +0100
+Message-ID: <5465B285.7070005@keymile.com>
+References: <1413538026-15739-1-git-send-email-valentin.longchamp@keymile.com>
+ <1414537731.23458.120.camel@snotra.buserror.net> <5450AC85.40302@keymile.com>
+ <20141113003418.GE2062@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141113235840.GS26481@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, Marek Belisko <marek@goldelico.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, linux@arm.linux.org.uk, plagnioj@jcrosoft.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, hns@goldelico.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20141113003418.GE2062@katana>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Linux device trees <devicetree@vger.kernel.org>, "Boschung,
+ Rainer" <Rainer.Boschung@keymile.com>, "Brunck,
+ Holger" <Holger.Brunck@keymile.com>, Linux I2C <linux-i2c@vger.kernel.org>, Scott Wood <scottwood@freescale.com>, Linux PowerPC Kernel <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/14/2014 01:58 AM, Tony Lindgren wrote:
-> * Paul Walmsley <paul@pwsan.com> [141113 15:01]:
->> Hi
->>
->> On Thu, 13 Nov 2014, Tony Lindgren wrote:
->>
->>> * Tomi Valkeinen <tomi.valkeinen@ti.com> [141113 03:33]:
->>>> On 12/11/14 17:02, Tony Lindgren wrote:
->>>>
->>>>>> And, with a quick grep, I see CONTROL_DEVCONF1 touched in multiple
->>>>>> places in the kernel. I wonder if adding a pinmux entry for it could
->>>>>> cause some rather odd problems.
->>>>>
->>>>> They can all use pinctrl-single no problem.
->>>>
->>>> Can, but don't. That's my worry. If we touch the DEVCONF1 via pinmux,
->>>> and we have code in mach-omap2 that also touch DEVCONF1, without any
->>>> knowledge (and locking) between those...
->>>
->>> Hmm yeah the McBSP clock mux could be racy as the mux register for
->>> McBSP is treated as a clock. This register muxes the clock between
->>> external pin and internal clock. Considering that this should be
->>> selectable at board level as the external clock probably needs to be
->>> used if level shifters are being used, it should be really handled by
->>> pinctrl-single.
->>>
->>> The other use for hsmmc.c and pdata-quirks.c for the one time mux for
->>> MMC clock from the MMC clock pin. That can be done with pinctrl-single
->>> from the MMC driver too for DT based booting.
->>>
->>> Then we just have the save and restore of the registers for
->>> off-idle.
->>>
->>>> So _maybe_ that's not an issue, as the pinmux config we have here is
->>>> fixed, and done once at boot time, and maybe the code in mach-omap2 that
->>>> touch DEVCONF1 is also ran just once and not at the same time as the
->>>> pinmux. But I don't know if that's so.
->>>
->>> It seems we could just do a read-only check for McBSP in the clock
->>> code for the mux register, or even completely drop that code from
->>> cclock3xxx_data.c and start using the pinctrl for that mux.
->>>
->>> Paul & Tero, got any comments here?
->>
->> It's best to move all of the SCM register reads/writes to an SCM IP block
->> driver.  This driver would be the only entity that would touch the SCM IP
->> block registers - no other code on the system would touch it (perhaps
->> aside from anything needed for early init).  The SCM driver would enforce
->> mutual exclusion via a spinlock, so concurrent SCM register modifications
->> wouldn't flake out.  Then the SCM driver would register clocks with the
->> CCF, register pins with the pinctrl subsystem, etc. etc.
->
-> We actually do have that with pinctrl-single + syscon. We certainly
-> need to implement more Linux framework drivers for the SCM registers.
-> Things like regulators, clocks, and PHYs, but they should use
-> pinctrl-single + syscon. See the the pbias-regulator.c for example.
->
-> Looking at the McBSP clock handling, threre's yet more handling of
-> the same DEVCONF1 mux register in omap2_mcbsp_set_clks_src that gets
-> alled from omap_mcbsp_dai_set_dai_sysclk.
->
-> To me it seems that if we handle the DEVCONF with pinctrl-single, we
-> don't need most of the McBSP fck code or the omap2_mcbsp_set_clks_src.
-> Having the mux register as the clock enable register is not nice..
-> Who knows what the clock coming from the external pin might be :)
-
-The PRCM/clock cleanups that I have under work basically splits the 
-clock inits under their respective IP blocks; currently everything is 
-registered under generic PRCM. System control module will be one of the 
-clock providers (and is going to look like a driver), which will be 
-registering its own clocks. This doesn't change the fact that pinctrl is 
-directly mapping its own register space atm though, it might be possible 
-to re-route this to use the generic system control module if need be though.
-
-I guess its just a political decision which way we want to go, currently 
-we have lots of system control clocks under the clock data (for 
-AM33xx,AM43xx,OMAP3), but we can remove these easily if need be. In some 
-cases it is nicer to have the data in the clock tree though, the drivers 
-don't need to care if they are touching a clock or a pinctrl entity. 
-Some people have been converting additional stuff to CCF outside of 
-PRCM, like Archit did some work to try and get control module clock 
-support for DRA7, and Tomi has been talking to convert some of the DSS 
-internal clocks to CCF also.
-
--Tero
+T24gMTEvMTMvMjAxNCAwMTozNCBBTSwgV29sZnJhbSBTYW5nIHdyb3RlOgo+IAo+PiBJZiB3ZSB3
+YW50ZWQgdG8gYmUgb24gdGhlIHNhZmUgc2lkZSBhbmQgc3RyaWN0IChzaW5jZSB3ZSBhcmUgbm90
+IHN1cmUgdGhhdCB0aGUKPj4gaGFyZHdhcmUgaXMgMTAwJSBjb21wYXRpYmxlKSwgd2UgbWF5YmUg
+c2hvdWxkIGFkZCBhIGZzbCxxb3JpcS1pMmMgY29tcGF0aWJsZSB0bwo+PiB0aGUgZHJpdmVyIHRo
+YXQgZG9lcyB0aGUgc2FtZSBhcyBtcGM4NTQzLWkyYy4KPiAKPiBPciB5b3UgbGVhdmUgdGhlIGRy
+aXZlciBhcyBpcyBhbmQgdXNlIGJvdGggY29tcGF0aWJsZXM6Cj4gCj4gY29tcGF0aWJsZSA9ICJm
+c2wscW9yaXEtaTJjIiwgImZzbCxtcGM4NTQzLWkyYyIsICJmc2wtaTJjIjsKPiAKPiA/Cj4gCgpJ
+IGxpa2UgU2NvdHQncyBwcm9wb3NpdGlvbiB0byBhZGQgdGhlIHByZXNjYWxlciBpbiB0aGUgZGV2
+aWNlIHRyZWUgbW9yZS4gRnJvbQp0aGUgaGFyZHdhcmUgZGVzY3JpcHRpb24gcG9pbnQgb2Ygdmll
+dywgaXQgbWFrZXMgbW9yZSBzZW5zZTogdGhlIGRldmljZXMgYXJlIGFsbApqdXN0IGZzbC1pMmMs
+IHdpdGggYSBkaWZmZXJlbnQgcHJlc2NhbGVyLiBJIGp1c3QgcXVvdGUgaXQgYmVsb3cgYXMgYSBy
+ZW1pbmRlci4KCj4gCj4gSWYgd2UncmUgZ29pbmcgdG8gY2hhbmdlIHRoZSBkZXZpY2UgdHJlZSBJ
+J2QgcmF0aGVyIGp1c3QgYWRkIGEgcHJvcGVydHkKPiB0byBzYXkgd2hhdCB0aGUgcHJlc2NhbGVy
+IGlzLgoKIFdlIHdvdWxkIGhvd2V2ZXIsIGxlYXZlIHRoZSBib2FyZHMnIGRldmljZSB0cmVlcyB0
+aGF0IHVzZSB0aGluZ3MgbGlrZQoiZnNsLG1wYzg1NDMtaTJjIiBhcyBpcyBhbmQgaW50cm9kdWNl
+IHRoZSBwcmVzY2FsZXIgZm9yIHRoZSBvdGhlcnMgcmVxdWlyaW5nIGl0LgoKCk5vdyB0aGUgZHJh
+d2JhY2sgaXMgdGhhdCB0aGUgZHJpdmVyIHdvdWxkIHJlcXVpcmUgYSBjaGFuZ2UsIHRvIHBhcnNl
+IHRoaXMKcHJlc2NhbGVyIG5ldyBwcmVzY2FsZXIgcHJvcGVydHkuIFdvdWxkIHRoaXMgYmUgT0sg
+ZnJvbSB5b3VyIHBvaW50IG9mIHZpZXcKV29sZnJhbSA/IElmIHllcywgSSB3aWxsIHNlbmQgdGhl
+IHBhdGNoZXMgZm9yIGl0LgoKVmFsZW50aW4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZA
+bGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhw
+cGMtZGV2
