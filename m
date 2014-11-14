@@ -1,67 +1,216 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCHv2 02/16] ARM: mvebu: enable strex backoff delay
-Date: Fri, 14 Nov 2014 16:21:22 +0100
-Message-ID: <1415978496-9334-3-git-send-email-thomas.petazzoni@free-electrons.com>
-References: <1415978496-9334-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <1415978496-9334-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: stable-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>
-Cc: linux-arm-kernel@lists.infradead.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, stable@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCHv2 00/16] Suspend to RAM support for Armada XP
+Date: Fri, 14 Nov 2014 16:21:20 +0100
+Message-ID: <1415978496-9334-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Nadav Haklai <nadavh@marvell.com>
+Hello,
 
-Under extremely rare conditions, in an MPCore node consisting of at
-least 3 CPUs, two CPUs trying to perform a STREX to data on the same
-shared cache line can enter a livelock situation.
+This is the second version of the patches implementing suspend to RAM
+for the Marvell Armada XP platform, and specifically for the Armada XP
+GP board.
 
-This patch enables the HW mechanism that overcomes the bug. This fixes
-the incorrect setup of the STREX backoff delay bit due to a wrong
-description in the specification.
+If possible, I'd like this patch series to be considered as 3.19
+material.
 
-Note that enabling the STREX backoff delay mechanism is done by
-leaving the bit *cleared*, while the bit was currently being set by
-the proc-v7.S code.
+=46or now, it does not implement suspend/resume for all device drivers,
+it only implements the core of the suspend/resume functionality:
+enough to make sure that the system can enter suspend and resume from
+suspend, restart all CPUs, and get back to a shell prompt. Additional
+work in individual device drivers will be needed, and provided as
+follow-up patches.
 
-[Thomas: adapt to latest mainline, slightly reword the commit log, add
-stable markers.]
+There are three important things to understand about the hardware
+before reading this patch series:
 
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: <stable@vger.kernel.org> # v3.8+
-Fixes: de4901933f6d ("arm: mm: Add support for PJ4B cpu and init routines")
-Signed-off-by: Nadav Haklai <nadavh@marvell.com>
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Acked-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
----
-This patch is submitted as part of the suspend/resume work, because
-the suspend/resume path is triggering this rare bug in a very
-reproducible fashion.
+ - The Armada XP SoC cannot put itself into a suspend to RAM state. It
+   requires an external circuit, which in most cases, is a PIC
+   micro-controller, to turn off the SoC. This PIC is connected to the
+   SoC using a set of GPIOs, which allow the SoC to talk to the PIC
+   and request certain things to be done.
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
----
- arch/arm/mm/proc-v7.S | 2 --
- 1 file changed, 2 deletions(-)
+   This means that the Armada XP suspend/resume logic has some
+   board-specific code, which is fairly uncommon for suspend/resume
+   code in the ARM world.
 
-diff --git a/arch/arm/mm/proc-v7.S b/arch/arm/mm/proc-v7.S
-index b3a9478..22ac2a6 100644
---- a/arch/arm/mm/proc-v7.S
-+++ b/arch/arm/mm/proc-v7.S
-@@ -270,7 +270,6 @@ __v7_pj4b_setup:
- /* Auxiliary Debug Modes Control 1 Register */
- #define PJ4B_STATIC_BP (1 << 2) /* Enable Static BP */
- #define PJ4B_INTER_PARITY (1 << 8) /* Disable Internal Parity Handling */
--#define PJ4B_BCK_OFF_STREX (1 << 5) /* Enable the back off of STREX instr */
- #define PJ4B_CLEAN_LINE (1 << 16) /* Disable data transfer for clean line */
- 
- /* Auxiliary Debug Modes Control 2 Register */
-@@ -293,7 +292,6 @@ __v7_pj4b_setup:
- 	/* Auxiliary Debug Modes Control 1 Register */
- 	mrc	p15, 1,	r0, c15, c1, 1
- 	orr     r0, r0, #PJ4B_CLEAN_LINE
--	orr     r0, r0, #PJ4B_BCK_OFF_STREX
- 	orr     r0, r0, #PJ4B_INTER_PARITY
- 	bic	r0, r0, #PJ4B_STATIC_BP
- 	mcr	p15, 1,	r0, c15, c1, 1
--- 
+   We have chosen to represent the PIC and the fact that it's
+   connected to the SoC using 3 GPIOs in the Device
+   Tree.
+
+ - When exiting from suspend, the SoC is actually powered up again
+   completely from scratch, so it goes through the bootloader. The
+   kernel has to fill a bootloader-specific structure at a fixed
+   physical address to pass information to the bootloader that will
+   tell the bootloader to do a resume and therefore jump back directly
+   into the kernel resume entry point, instead of doing a normal boot.
+
+ - The bootloader has to reconfigure the DRAM controller, which
+   involves executing some DDR3 training code that has the unfortunate
+   side effect of overwriting the first 10 KB of each DRAM
+   chip-select. We therefore have to ensure that the kernel does not
+   use the first 10 KB of each DRAM chip select.
+
+So, in sequence:
+
+ * PATCH 1 and 2 are mainly preparation patches: Device Tree binding
+   documentation, fixing an errata of the Armada XP.
+
+ * PATCH 3 to 8 add suspend/resume support to some core drivers:
+   irqchip, clocksource, gpio, mvebu-mbus and clock.
+
+   Note that the gpio suspend/resume patch was said to be applied by
+   Linus Walleij in
+   http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/=
+299201.html,
+   but I don't see it present in
+   https://git.kernel.org/cgit/linux/kernel/git/linusw/linux-gpio.git/l=
+og/?h=3Dfor-next,
+   so I've kept it for now in this patch series.
+
+ * PATCH 9 implements the core of the SoC suspend/resume logic.
+
+ * PATCH 10 makes sure the first 10 KB of each DRAM chip select isn't
+   used by the kernel.
+
+ * PATCH 11 implements the board-specific suspend/resume logic,
+   especially talking with the PIC micro-controller over GPIOs.
+
+ * PATCH 12 and 13 make some other additional changes to the Armada XP
+   SoC support to make suspend/resume work properly.
+
+ * PATCH 14 to 16 modify the Armada XP and Armada XP GP Device Tree
+   description to add the relevant hardware blocks that are needed for
+   suspend/resume: description of the PIC micro-controller and the 3
+   GPIOs connecting it to the SoC, an additional set of the register
+   for mvebu-mbus, and the registers for the SDRAM controller.
+
+Changes since v1:
+
+ - Add Reviewed-by from Gr=C3=A9gory Clement on
+
+   Documentation: dt-bindings: minimal documentation for MVEBU SDRAM co=
+ntroller
+   gpio: mvebu: add suspend/resume support
+   bus: mvebu-mbus: provide a mechanism to save SDRAM window configurat=
+ion
+
+ - Added Acked-by from Gr=C3=A9gory Clement on
+
+   ARM: mvebu: enable strex backoff delay
+   ARM: mvebu: reserve the first 10 KB of each memory bank for suspend/=
+resume
+   ARM: mvebu: make sure MMU is disabled in armada_370_xp_cpu_resume
+   ARM: mvebu: synchronize secondary CPU clocks on resume
+   ARM: mvebu: add suspend/resume DT information for Armada XP GP
+   ARM: mvebu: adjust mbus controller description on Armada 370/XP
+   ARM: mvebu: add SDRAM controller description for Armada XP
+   clk: mvebu: add suspend/resume for gatable clocks
+
+ - Add Acked-by from Alexandre Courbot on
+   gpio: mvebu: add suspend/resume support
+
+ - Drop patch "irqchip: irq-armada-370-xp: use proper return value for
+   ->set_affinity()" as it was applied by Jason Cooper.
+
+ - Fix typo in commit log of "clocksource: time-armada-370-xp: add
+   suspend/resume support", noticed by Gr=C3=A9gory Clement.
+
+ - Adjust the name of the new variables used in "clocksource:
+   time-armada-370-xp: add suspend/resume support" to save the state
+   of timer 0, to make it clear only the state of timer 0 is
+   preserved. Suggested by Gr=C3=A9gory Clement.
+
+ - In the suspend/resume code of the mvebu-mbus driver, make sure to
+   fail (and therefore abort the suspend) if the MBus bridge registers
+   were not mapped, instead of continuing with the suspend procedure
+   and later on have a system that we know cannot resume
+   properly. Suggested by Gr=C3=A9gory Clement.
+
+ - Remove cpu_pm_cluster_{enter,exit} calls from
+   mach-mvebu/pm.c. Suggested by Gr=C3=A9gory Clement.
+
+ - In patch "ARM: mvebu: Armada XP GP specific suspend/resume code",
+   fixup the wait loop of 100 cycles before entering suspend to
+   actually initialize the r1 register before entering the wait
+   loop. Before that, r1 was uninitialized, and a JTAG has shown that
+   it was generally defined to 0, so the loop started by decrementing
+   it by 1, making r1 equal 0xFFFFFFFF. So we had 2^32 iterations of a
+   two instructions loop, at 1.2 Ghz, about a 7 seconds
+   delay. Switching to the 100 cycles loop that is needed showed that
+   the previous mdelay of 250 ms was way too short: the PIC needs
+   several seconds before the two GPIO toggles. The Marvell vendor
+   kernel uses a bit more than 3 seconds delay, and experience has
+   shown that a 3 seconds delay works fine, while shorter delays
+   sometimes lead to a system that doesn't enter suspend. Noticed by
+   Gr=C3=A9gory Clement.
+
+Best regards,
+
+Thomas
+
+Nadav Haklai (1):
+  ARM: mvebu: enable strex backoff delay
+
+Thomas Petazzoni (15):
+  Documentation: dt-bindings: minimal documentation for MVEBU SDRAM
+    controller
+  irqchip: irq-armada-370-xp: suspend/resume support
+  clocksource: time-armada-370-xp: add suspend/resume support
+  gpio: mvebu: add suspend/resume support
+  bus: mvebu-mbus: suspend/resume support
+  bus: mvebu-mbus: provide a mechanism to save SDRAM window
+    configuration
+  clk: mvebu: add suspend/resume for gatable clocks
+  ARM: mvebu: implement suspend/resume support for Armada XP
+  ARM: mvebu: reserve the first 10 KB of each memory bank for
+    suspend/resume
+  ARM: mvebu: Armada XP GP specific suspend/resume code
+  ARM: mvebu: make sure MMU is disabled in armada_370_xp_cpu_resume
+  ARM: mvebu: synchronize secondary CPU clocks on resume
+  ARM: mvebu: add suspend/resume DT information for Armada XP GP
+  ARM: mvebu: adjust mbus controller description on Armada 370/XP
+  ARM: mvebu: add SDRAM controller description for Armada XP
+
+ .../devicetree/bindings/bus/mvebu-mbus.txt         |  17 +-
+ .../memory-controllers/mvebu-sdram-controller.txt  |  21 ++
+ arch/arm/boot/dts/armada-370-xp.dtsi               |   3 +-
+ arch/arm/boot/dts/armada-xp-gp.dts                 |  19 +-
+ arch/arm/boot/dts/armada-xp.dtsi                   |   5 +
+ arch/arm/mach-mvebu/Makefile                       |   2 +-
+ arch/arm/mach-mvebu/board-v7.c                     |  51 +++++
+ arch/arm/mach-mvebu/common.h                       |   2 +
+ arch/arm/mach-mvebu/platsmp.c                      |  31 ++-
+ arch/arm/mach-mvebu/pm-board.c                     | 141 +++++++++++++
+ arch/arm/mach-mvebu/pm.c                           | 218 +++++++++++++=
+++++++++
+ arch/arm/mach-mvebu/pmsu.h                         |   1 +
+ arch/arm/mach-mvebu/pmsu_ll.S                      |   8 +
+ arch/arm/mm/proc-v7.S                              |   2 -
+ drivers/bus/mvebu-mbus.c                           | 180 +++++++++++++=
++++-
+ drivers/clk/mvebu/common.c                         |  30 ++-
+ drivers/clocksource/time-armada-370-xp.c           |  25 +++
+ drivers/gpio/gpio-mvebu.c                          |  99 ++++++++++
+ drivers/irqchip/irq-armada-370-xp.c                |  52 +++++
+ include/linux/mbus.h                               |   1 +
+ 20 files changed, 874 insertions(+), 34 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/memory-controller=
+s/mvebu-sdram-controller.txt
+ create mode 100644 arch/arm/mach-mvebu/pm-board.c
+ create mode 100644 arch/arm/mach-mvebu/pm.c
+
+--=20
 2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
