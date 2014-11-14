@@ -1,50 +1,37 @@
-From: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v7 07/13] usb: chipidea: fix phy handling
-Date: Fri, 14 Nov 2014 16:25:57 +0100
-Message-ID: <1415978763-27345-8-git-send-email-antoine.tenart@free-electrons.com>
+From: Antoine Tenart <antoine.tenart@free-electrons.com>
+Subject: [PATCH v7 13/13] ARM: dts: berlin: enable USB on the Google Chromecast
+Date: Fri, 14 Nov 2014 16:26:03 +0100
+Message-ID: <1415978763-27345-14-git-send-email-antoine.tenart@free-electrons.com>
 References: <1415978763-27345-1-git-send-email-antoine.tenart@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415978763-27345-1-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1415978763-27345-1-git-send-email-antoine.tenart@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com, Peter.Chen@freescale.com, balbi@ti.com, p.zabel@pengutronix.de
+Cc: alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Antoine Tenart <antoine.tenart@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-The generic platform device for CI drivers is probed by calling
-ci_hdrc_probe. This is not the same device as the one for the specific
-driver, so the of_node isn't the one we're looking into.
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 
-This result in not being able to probe the phys. Since all CI driver are
-retrieving their phys in the specific code, this didn't impact any of
-them yet.
+Enable usb1 on Google Chromecast which is connected to micro-USB
+plug used for external power supply, too.
 
-Fixes it using the right of node pointer, by using dev->parent instead
-of dev in phy get functions.
-
-Signed-off-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
 ---
- drivers/usb/chipidea/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/berlin2cd-google-chromecast.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-index ba0ac2723098..36318c85ad65 100644
---- a/drivers/usb/chipidea/core.c
-+++ b/drivers/usb/chipidea/core.c
-@@ -654,8 +654,8 @@ static int ci_hdrc_probe(struct platform_device *pdev)
- 	} else if (ci->platdata->usb_phy) {
- 		ci->usb_phy = ci->platdata->usb_phy;
- 	} else {
--		ci->phy = devm_phy_get(dev, "usb-phy");
--		ci->usb_phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
-+		ci->phy = devm_phy_get(dev->parent, "usb-phy");
-+		ci->usb_phy = devm_usb_get_phy(dev->parent, USB_PHY_TYPE_USB2);
+diff --git a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
+index bcd81ffc495d..5c42c3bfb613 100644
+--- a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
++++ b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
+@@ -27,3 +27,7 @@
+ };
  
- 		/* if both generic PHY and USB PHY layers aren't enabled */
- 		if (PTR_ERR(ci->phy) == -ENOSYS &&
+ &uart0 { status = "okay"; };
++
++&usb_phy1 { status = "okay"; };
++
++&usb1 { status = "okay"; };
 -- 
 2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
