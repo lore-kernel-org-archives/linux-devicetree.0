@@ -1,102 +1,38 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: [PATCH]  tty: serial: msm_serial: document DT alias
-Date: Fri, 14 Nov 2014 14:07:15 -0800
-Message-ID: <54667D13.2070105@gmail.com>
-Reply-To: frowand.list@gmail.com
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH] ACPI / GPIO: Driver GPIO mappings for ACPI GPIOs
+Date: Fri, 14 Nov 2014 23:54:13 +0100
+Message-ID: <3115626.VVMxodDDvN@vostro.rjw.lan>
+References: <CAAVeFuLW6fucvDxQvY5DDfnhPrgYM+1pi7WoHfBQa_BgYnc_Cw@mail.gmail.com> <1433051.htaUTMPMBY@vostro.rjw.lan> <CACRpkdb-T42Bqtf7zvc+2om03hgu4j8twDUqmsE4dcKaPXB9Wg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Linux Kernel list <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-serial@vger.kernel.org, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Tyler Baker <tyler.baker@linaro.org>, Kevin Hilman <khilman@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdb-T42Bqtf7zvc+2om03hgu4j8twDUqmsE4dcKaPXB9Wg@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <gnurou@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sonymobile.com>
+On Friday, November 14, 2014 09:58:41 AM Linus Walleij wrote:
+> On Mon, Nov 3, 2014 at 11:56 PM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> > On Monday, November 03, 2014 02:22:10 PM Linus Walleij wrote:
+> 
+> >> With that change:
+> >> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> >
+> > OK, made the changes and added your Reviewed-by.
+> >
+> > One semi-related question though.  Alexandre ACKed the patch before, so
+> > what did that mean from the GPIO subsystem's perspective?  Was the patch
+> > approved, not approved, semi-approved?
+> 
+> It just means we are not always entirely aligned, it's not like
+> Alexandre and I have meetings on the side and decide what to
+> say, it's just these mails. I do trust him, I wouldn't get mad if it
+> had been merged just wanted some polishing when I could get
+> it...
 
-Update devicetree binding for msm_serial to reflect msm_serial_probe()
-getting line id (port number) from the serialN alias.
+I see, thanks!
 
-Signed-off-by: Frank Rowand <frank.rowand@sonymobile.com>
----
- Documentation/devicetree/bindings/serial/qcom,msm-uartdm.txt |   15 +++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+Rafael
 
-Index: linux/Documentation/devicetree/bindings/serial/qcom,msm-uartdm.txt
-===================================================================
---- linux.orig/Documentation/devicetree/bindings/serial/qcom,msm-uartdm.txt
-+++ linux/Documentation/devicetree/bindings/serial/qcom,msm-uartdm.txt
-@@ -27,27 +27,52 @@ Optional properties:
- - dmas: Should contain dma specifiers for transmit and receive channels
- - dma-names: Should contain "tx" for transmit and "rx" for receive channels
- 
-+Note: Aliases may be defined to ensure the correct ordering of the UARTs.
-+The alias serialN will result in the UART being assigned port N.  If any
-+serialN alias exists, then an alias must exist for each enabled UART.  The
-+serialN aliases should be in a .dts file instead of in a .dtsi file.
-+
- Examples:
- 
--A uartdm v1.4 device with dma capabilities.
-+- A uartdm v1.4 device with dma capabilities.
-+
-+	serial@f991e000 {
-+		compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
-+		reg = <0xf991e000 0x1000>;
-+		interrupts = <0 108 0x0>;
-+		clocks = <&blsp1_uart2_apps_cxc>, <&blsp1_ahb_cxc>;
-+		clock-names = "core", "iface";
-+		dmas = <&dma0 0>, <&dma0 1>;
-+		dma-names = "tx", "rx";
-+	};
-+
-+- A uartdm v1.3 device without dma capabilities and part of a GSBI complex.
-+
-+	serial@19c40000 {
-+		compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
-+		reg = <0x19c40000 0x1000>,
-+	      	<0x19c00000 0x1000>;
-+		interrupts = <0 195 0x0>;
-+		clocks = <&gsbi5_uart_cxc>, <&gsbi5_ahb_cxc>;
-+		clock-names = "core", "iface";
-+	};
-+
-+- serialN alias.
-+
-+	aliases {
-+		serial0 = &uarta;
-+		serial1 = &uartc;
-+		serial2 = &uartb;
-+	};
-+
-+	uarta: serial@12490000 {
-+		status = "ok";
-+	};
-+
-+	uartb: serial@16340000 {
-+		status = "ok";
-+	};
- 
--serial@f991e000 {
--	compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
--	reg = <0xf991e000 0x1000>;
--	interrupts = <0 108 0x0>;
--	clocks = <&blsp1_uart2_apps_cxc>, <&blsp1_ahb_cxc>;
--	clock-names = "core", "iface";
--	dmas = <&dma0 0>, <&dma0 1>;
--	dma-names = "tx", "rx";
--};
--
--A uartdm v1.3 device without dma capabilities and part of a GSBI complex.
--
--serial@19c40000 {
--	compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
--	reg = <0x19c40000 0x1000>,
--	      <0x19c00000 0x1000>;
--	interrupts = <0 195 0x0>;
--	clocks = <&gsbi5_uart_cxc>, <&gsbi5_ahb_cxc>;
--	clock-names = "core", "iface";
--};
-+	uartc: serial@1a240000 {
-+		status = "ok";
-+	};
