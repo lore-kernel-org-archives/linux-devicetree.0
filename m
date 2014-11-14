@@ -1,50 +1,67 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH 3/4] ARM: dts: add fimd device node to exynos4415.dtsi
-Date: Fri, 14 Nov 2014 17:24:33 +0900
-Message-ID: <5465BC41.6060501@samsung.com>
-References: <1415340747-27904-1-git-send-email-yj44.cho@samsung.com>
- <1415340747-27904-4-git-send-email-yj44.cho@samsung.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH] i2c-qoriq: modified compatibility for correct prescaler
+Date: Fri, 14 Nov 2014 09:28:33 +0100
+Message-ID: <20141114082832.GA2180@katana>
+References: <1413538026-15739-1-git-send-email-valentin.longchamp@keymile.com>
+ <1414537731.23458.120.camel@snotra.buserror.net>
+ <5450AC85.40302@keymile.com>
+ <20141113003418.GE2062@katana>
+ <5465B285.7070005@keymile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1415340747-27904-4-git-send-email-yj44.cho@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: YoungJun Cho <yj44.cho@samsung.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com, cw00.choi@samsung.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="W/nzBZO5zC0uMSeA"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5465B285.7070005-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux PowerPC Kernel <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux device trees <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Brunck, Holger" <Holger.Brunck-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, "Boschung, Rainer" <Rainer.Boschung-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxNOuFhCAxMeyblCAwN+ydvCAxNToxMiwgWW91bmdKdW4gQ2hvIHdyb3RlOgo+IFRoaXMg
-cGF0Y2ggYWRkcyBmaW1kIGRldmljZSBub2RlIHRvIGV4eW5vczQ0MTUuZHRzaS4KPiAKCkhpIEt1
-a2ppbiwKCkNvdWxkIHlvdSBtZXJnZSBwYXRjaCAzIGFuZCA0IHRvIHlvdXIgdHJlZT8gVGhlc2Ug
-YXJlIGR0IHBhcnQgZm9yCkV4eW5vczQ0MTUgZHJtIHN1cHBvcnQuIEZvciBkcm0gcGF0Y2hlcywg
-SSBhbHJlYWR5IG1lcmdlZCB0aGVtLgoKVGhhbmtzLApJbmtpIERhZQoKCj4gU2lnbmVkLW9mZi1i
-eTogWW91bmdKdW4gQ2hvIDx5ajQ0LmNob0BzYW1zdW5nLmNvbT4KPiBBY2tlZC1ieTogS3l1bmdt
-aW4gUGFyayA8a3l1bmdtaW4ucGFya0BzYW1zdW5nLmNvbT4KPiAtLS0KPiAgYXJjaC9hcm0vYm9v
-dC9kdHMvZXh5bm9zNDQxNS5kdHNpIHwgMTIgKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2Vk
-LCAxMiBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2V4
-eW5vczQ0MTUuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczQ0MTUuZHRzaQo+IGluZGV4
-IGMxYzliMzcuLjMwYWNiM2EgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9z
-NDQxNS5kdHNpCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNDQxNS5kdHNpCj4gQEAg
-LTIzNCw2ICsyMzQsMTggQEAKPiAgCQkJaW50ZXJydXB0cyA9IDwwIDI0MCAwPjsKPiAgCQl9Owo+
-ICAKPiArCQlmaW1kOiBmaW1kQDExQzAwMDAwIHsKPiArCQkJY29tcGF0aWJsZSA9ICJzYW1zdW5n
-LGV4eW5vczQ0MTUtZmltZCI7Cj4gKwkJCXJlZyA9IDwweDExQzAwMDAwIDB4MzAwMDA+Owo+ICsJ
-CQlpbnRlcnJ1cHQtbmFtZXMgPSAiZmlmbyIsICJ2c3luYyIsICJsY2Rfc3lzIjsKPiArCQkJaW50
-ZXJydXB0cyA9IDwwIDg0IDA+LCA8MCA4NSAwPiwgPDAgODYgMD47Cj4gKwkJCWNsb2NrcyA9IDwm
-Y211IENMS19TQ0xLX0ZJTUQwPiwgPCZjbXUgQ0xLX0ZJTUQwPjsKPiArCQkJY2xvY2stbmFtZXMg
-PSAic2Nsa19maW1kIiwgImZpbWQiOwo+ICsJCQlzYW1zdW5nLHBvd2VyLWRvbWFpbiA9IDwmcGRf
-bGNkMD47Cj4gKwkJCXNhbXN1bmcsc3lzcmVnID0gPCZzeXNyZWdfc3lzdGVtX2NvbnRyb2xsZXI+
-Owo+ICsJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ICsJCX07Cj4gKwo+ICAJCWhzb3RnOiBoc290
-Z0AxMjQ4MDAwMCB7Cj4gIAkJCWNvbXBhdGlibGUgPSAic2Ftc3VuZyxzM2M2NDAwLWhzb3RnIjsK
-PiAgCQkJcmVnID0gPDB4MTI0ODAwMDAgMHgyMDAwMD47Cj4gCgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+--W/nzBZO5zC0uMSeA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+
+> >=20
+> > If we're going to change the device tree I'd rather just add a property
+> > to say what the prescaler is.
+>=20
+>  We would however, leave the boards' device trees that use things like
+> "fsl,mpc8543-i2c" as is and introduce the prescaler for the others requir=
+ing it.
+>=20
+>=20
+> Now the drawback is that the driver would require a change, to parse this
+> prescaler new prescaler property. Would this be OK from your point of view
+> Wolfram ? If yes, I will send the patches for it.
+
+I don't think it is OK. I'd think it can be deduced from the compatible
+property. Let's ask the DT experts here. I'll follow their suggestion.
+
+
+--W/nzBZO5zC0uMSeA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUZb0wAAoJEBQN5MwUoCm2SfoQAKIprVmGbqkdES+FOABKUcRc
+dKTGxZW2obmcHVlE2BmXeR3hrzGYWj+1JAT0UYCkFqdCUwSb8qt4zOu7+41MJiW3
+UPgJpIdixzqNVqXxBa8pdg3tsKEtZ5DjOHZ1+ZhTfe4HO4wkPZLE8mVMUOUoo7DY
+WlRFFnd2hJeLxoSSt6xJZWJ0L6KDVPUK0VW4zpqocLvCJ1q8xYPvFRahF0Q9KSpm
+h0QifBJJ0DakuCtGkK6nmd8n8A+XYT2YX2JAA2Xnl85AQ1gujtR3CP0rigKH/o0z
+qLSkzPnICLg0hMXqFwKG8F2RriX62LSR+ogViTBRtQ4zEO+XMM6dGUrKD6eiI11R
+wkQovbV2f10QLO7+j1sLYYVfkgIwxByzoDowpGE/wKcZ1CYZU62C9+au+tS+yjHL
+3FcFZymLkhoHWHKk1W7c66TkUC0nrj8f3HfRvwLxb+h3dgIvEJW+Rz6UdOOaPsuX
+GpcIjbcKiWzSOT6dHCMkI9M4AL2thp+NwroT6LQK/wm54jI1C9KMmHwfiOgq7IIK
+F3nhsDqi8i56T5NzbX8V1SWqj2hiQ/qX7Nhn2+MT/9JojMaunDyz3riL6kKr6V57
+lFhixLqknLpEqB1gX0u29AdLb9neuSjqXtpVfLG6JMO1Oev2sa1xFlO4mKtCSMIl
+J1SJRzCHQeiiBJBOSqJ0
+=fEBN
+-----END PGP SIGNATURE-----
+
+--W/nzBZO5zC0uMSeA--
