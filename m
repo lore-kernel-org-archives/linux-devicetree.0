@@ -1,53 +1,61 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v5 5/5] simplefb: Change simplefb_init from
- module_init to fs_initcall
-Date: Fri, 14 Nov 2014 12:03:16 +0100
-Message-ID: <1415962996-31712-5-git-send-email-hdegoede@redhat.com>
-References: <1415962996-31712-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 13/14] ARM: STi: DT: STiH410: Add usb2 picophy dt nodes
+Date: Fri, 14 Nov 2014 12:03:46 +0100
+Message-ID: <1546892.RCPeXgVQNJ@wuerfel>
+References: <1415876417-28728-1-git-send-email-peter.griffin@linaro.org> <2401196.5cvW5dPSz2@wuerfel> <20141114095621.GA1648@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBC6DS6RQKGQEDNPUSDA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1415962996-31712-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141114095621.GA1648@griffinp-ThinkPad-X1-Carbon-2nd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Peter Griffin <peter.griffin@linaro.org>, devicetree@vger.kernel.org, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, linux-kernel@vger.kernel.org, lee.jones@linaro.org, maxime.coquelin@st.com
 List-Id: devicetree@vger.kernel.org
 
-One of the reasons for having the simplefb nodes in /chosen, and doing
-explicit enumeration of the nodes there, is too allow enumerating them sooner,
-so that we get a console earlier on.
+On Friday 14 November 2014 09:56:21 Peter Griffin wrote:
+> 
+> I'll appologize in advance as I'm not sure I've understood you correctly, definately your answer
+> has given me a bunch more questions to clarify my understanding...
+> 
+> In the case of this particular node, then both reg properties refer to the syscfg_core address space
+> as both <0xf8 0x04> and <0xf4 0x04> are offsets into syscfg_core registers. So moving it under
+> the syscfg_core like you originaly suggested I believe would meet the definition of 'reg' ("describes the
+> address of the device's resources within the address space defined by its parent bus").
 
-Doing this earlier then fs_initcall is not useful, since the fb only turns
-into a console when fbcon intializes, which is a fs_initcall too.
+You will also have to add an appropriate 'ranges' property then.
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
---
-Changes in v4 (of the patch-set):
--Drop the comment about using fs_initcall vs module_exit, as we no longer have
- a module_exit
----
- drivers/video/fbdev/simplefb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Or maybe you meant, if I want to keep the picophy node where it is (under soc), I need to stop using the reg
+> property?
 
-diff --git a/drivers/video/fbdev/simplefb.c b/drivers/video/fbdev/simplefb.c
-index 74c5edd..8be9754 100644
---- a/drivers/video/fbdev/simplefb.c
-+++ b/drivers/video/fbdev/simplefb.c
-@@ -413,7 +413,7 @@ static int __init simplefb_init(void)
- 	return 0;
- }
- 
--module_init(simplefb_init);
-+fs_initcall(simplefb_init);
- 
- MODULE_AUTHOR("Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>");
- MODULE_DESCRIPTION("Simple framebuffer driver");
--- 
-2.1.0
+That would also be possible, just put the register numbers into your 'st,syscfg'
+property after the phandle, and leave the reg property empty then.
+
+> The other problem I was describing is a device with some memory mapped registers and some
+> sysconfig registers you can find examples already upstream in stih416.dtsi file with the
+> ethernet0 and miphy365x_phy nodes.
+> 
+> Here the first 1/2 reg properties are expressed as a 32 bit physical address and size (meets the spec definition),
+> and the last is expressed as a sysconfig offset and size (which AFAIK doesn't match the spec definition).
+> This change in address space is however documented in the bindings documentation.
+> 
+> How should devices which have multiple address spaces ideally be handled?
+
+There should at most be one 'reg' address space, so put it under the node whose
+bus these refer to. Put all offsets that are relative to a syscon link into
+the phandle that refers to the syscon device, or hardcode the offsets in the
+driver.
+
+> From looking around in the source I see a few different ways people have done this: -
+> 
+> 1) Some drivers encode the data statically into the source and make a decision based on compatible string.
+> 2) Some drivers add a couple of extra dt properties to encode the offset (spifsm in stih416)
+> 3) Some drivers mix address spaces in the reg properties (examples given above) 
+> 3) Probably some other ways I've not found yet
+>
+> Is there a blessed way of doing this? It would be nice at least for all the drivers in STI to be doing
+> it the same as currently there seems to be a mix of implementations.
+
+You can do 1 or 2, not 3.
+
+	Arnd
