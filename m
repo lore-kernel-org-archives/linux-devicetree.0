@@ -1,23 +1,48 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: Re: [PATCH v11 2/3] power-domain: rockchip: add power doamin driver
-Date: Fri, 14 Nov 2014 10:57:00 +0800
-Message-ID: <CAGS+omBYBJwNu-dbkzEbPZvF3qmf52bLETNm4fTnR02H=k31Mg@mail.gmail.com>
-References: <1415829690-20236-1-git-send-email-caesar.wang@rock-chips.com> <1415829690-20236-3-git-send-email-caesar.wang@rock-chips.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 3/3] ARM: shmobile: koelsch dts: Drop console= bootargs
+ parameter
+Date: Fri, 14 Nov 2014 12:02:36 +0900
+Message-ID: <20141114030235.GA28000@verge.net.au>
+References: <1414592918-25138-1-git-send-email-geert+renesas@glider.be>
+ <1414592918-25138-4-git-send-email-geert+renesas@glider.be>
+ <42870768.kOpZNjp1qs@avalon>
+ <CAMuHMdUOX845FFaNkEan9c+fRrsSk4q0gXUeknTn-MK5JAYWGg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1415829690-20236-3-git-send-email-caesar.wang@rock-chips.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Caesar Wang <caesar.wang@rock-chips.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Heiko Stuebner <heiko@sntech.de>, Russell King <linux@arm.linux.org.uk>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "jinkun.hong" <jinkun.hong@rock-chips.com>, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, ZhenFu Fang <fzf@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linar>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUOX845FFaNkEan9c+fRrsSk4q0gXUeknTn-MK5JAYWGg@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Caesar,
+On Thu, Oct 30, 2014 at 12:03:22PM +0100, Geert Uytterhoeven wrote:
+> On Thu, Oct 30, 2014 at 11:44 AM, Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com> wrote:
+> > On Wednesday 29 October 2014 15:28:38 Geert Uytterhoeven wrote:
+> >> Since commit 595c6a4bb77f0096 ("ARM: shmobile: koelsch: Remove legacy C
+> >> board code"), koelsch is restricted to booting from DT, so
+> >> chosen/stdout-path is always used, and we can drop the "console="
+> >> parameter from chosen/bootargs.
+> >
+> > I'm curious, how is the baud rate now selected ?
+> 
+> >From an earlier response for kzm9d:
+> 
+> "I forgot emev is the only supported SoC not using sh-sci.
+>  drivers/tty/serial/sh-sci.c:serial_console_setup() defaults to 115200 baud,
+>  while serial8250_console_setup() defaults to 9600 baud."
 
-One more little nit:
+Hi Geert,
 
-The title of this patch has a typo:
-  doamin -> domain
+while backporting this and similar changes for other boards
+to v3.14/LTSI-3.14 I noticed that koelsch, alt and ape6evm-reference
+come up without a console. Which is not ideal.
 
-Thanks,
--Dan
+I am wondering if you have any thoughts on why this may occur.
+My wild stab in the dark is some interaction with PM.
+
+For reference my backport is the backport/v3.14.23/snapshot2.wip1 tag in my
+renesas-backports tree. At the very top it includes reversions of the
+backports of the troublesome patches.
