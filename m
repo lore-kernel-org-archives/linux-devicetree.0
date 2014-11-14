@@ -1,82 +1,46 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [RFC PATCH 2/3] mmc: omap_hsmmc: add tuning support
-Date: Fri, 14 Nov 2014 11:41:52 -0600
-Message-ID: <20141114174152.GM11538@saruman>
-References: <1415883379-19654-1-git-send-email-kishon@ti.com>
- <1415883379-19654-3-git-send-email-kishon@ti.com>
-Reply-To: <balbi@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 2/5] regulator: rt5033: Add RT5033 Regulator device
+ driver
+Date: Fri, 14 Nov 2014 17:55:02 +0000
+Message-ID: <20141114175502.GL3815@sirena.org.uk>
+References: <1415794082-30277-1-git-send-email-beomho.seo@samsung.com>
+ <1415794082-30277-3-git-send-email-beomho.seo@samsung.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="TXIPBuAs4GDcsx9K"
-Return-path: <linux-mmc-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="+msPJjaBje60IBrx"
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1415883379-19654-3-git-send-email-kishon@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: chris@printf.net, ulf.hansson@linaro.org, tony@atomide.com, devicetree@vger.kernel.org, nsekhar@ti.com, afenkart@gmail.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1415794082-30277-3-git-send-email-beomho.seo@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Beomho Seo <beomho.seo@samsung.com>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sameo@linux.intel.com, lee.jone@linaro.org, lgirdwood@gmail.com, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, cw00.choi@samsung.com, geunsik.lim@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
---TXIPBuAs4GDcsx9K
+
+--+msPJjaBje60IBrx
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Wed, Nov 12, 2014 at 09:07:59PM +0900, Beomho Seo wrote:
+> This patch add device driver of Richtek RT5033 PMIC.
+> The driver support multiple regulator like LDO and synchronous Buck.
 
-On Thu, Nov 13, 2014 at 06:26:18PM +0530, Kishon Vijay Abraham I wrote:
-> @@ -233,6 +263,48 @@ struct omap_mmc_of_data {
->  	u8 controller_flags;
->  };
-> =20
-> +static const u32 ref_tuning_4bits[] =3D {
-> +	0x00FF0FFF, 0xCCC3CCFF, 0xFFCC3CC3, 0xEFFEFFFE,
-> +	0xDDFFDFFF, 0xFBFFFBFF, 0xFF7FFFBF, 0xEFBDF777,
-> +	0xF0FFF0FF, 0x3CCCFC0F, 0xCFCC33CC, 0xEEFFEFFF,
-> +	0xFDFFFDFF, 0xFFBFFFDF, 0xFFF7FFBB, 0xDE7B7FF7
-> +};
-> +
-> +static const u32 ref_tuning_8bits[] =3D {
-> +	0xFF00FFFF, 0x0000FFFF, 0xCCCCFFFF, 0xCCCC33CC,
-> +	0xCC3333CC, 0xFFFFCCCC, 0xFFFFEEFF, 0xFFEEEEFF,
-> +	0xFFDDFFFF, 0xDDDDFFFF, 0xBBFFFFFF, 0xBBFFFFFF,
-> +	0xFFFFFFBB, 0XFFFFFF77, 0x77FF7777, 0xFFEEDDBB,
-> +	0x00FFFFFF, 0x00FFFFFF, 0xCCFFFF00, 0xCC33CCCC,
-> +	0x3333CCCC, 0xFFCCCCCC, 0xFFEEFFFF, 0xEEEEFFFF,
-> +	0xDDFFFFFF, 0xDDFFFFFF, 0xFFFFFFDD, 0XFFFFFFBB,
-> +	0xFFFFBBBB, 0xFFFF77FF, 0xFF7777FF, 0xEEDDBB77
-> +};
+Applied, thanks.
 
-yet another feature we would've gotten for free if we were already using
-sdhci. This is just a copy of what's on sdhci-msm.c, probably because
-they license the same IP we do.
-
-It would be much better to just convert omap-hsmmc.c into sdhci-omap.c
-much like it was done for 8250-omap.c, with the added benefit that this
-will incur no userland regressions due to devnode names.
-
---=20
-balbi
-
---TXIPBuAs4GDcsx9K
+--+msPJjaBje60IBrx
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v2
 
-iQIcBAEBAgAGBQJUZj7gAAoJEIaOsuA1yqREmbYP/A3aKmMOFLbdhe5G3WwrCG8U
-e4vP9xY4VoQ4ItZKDaj3vG7F2BXL7aVV975ksd8k+zGFN+g+9OxXxNFeVNF8/TgY
-jDPW8VGwfA9XolLVDj2faURDRMmx/VgDK9nlUOsldIpRfIeDQywidzZwBND+SQZf
-6Blnn/YaJEMh8DhJiRHufHJltohvPinJ/n5qTv9ZL3Ql8ND/UC3nK+XOoHueCUOU
-bDzXjssTP2Xl5paHcHmuUUL9UgmXTaA0rJrH9MS68hAS4S21uUfHX06JV4QuZlMH
-9t+roZceCljjYSL+bP3jsc+Nxizm6Q+k0wkYo964G45AvxnG3138tSmPx28In8qQ
-5Ip4a0ODdLrHj98qWHl/+KqyuEbRoyLNX7llJuVmMRfu5FWufIJEtBnNglT3hg5u
-05EqZRVmp4+aBj1T4oADcWQSub6/a91OnX0wZEYTwkuypoqTmiO77bhUMt2hqAcP
-YYD+ffovmxXoGFJgUjuTjvJ2npIstyZeVnNCal2ePliDxP5AhUndBvKtEo+oT8z4
-/1XirQjBvA47E/gd9K8AgRJ6Rkp3EXPUXLjuLAOLbFY+RvEmFwNgKD2/5ku5/5EB
-ymVHivyIIbIByWtDwNJBl4l/1Sld0FtMmaxTX7ryHLm0JiQczJkpp8AnwImUxxh4
-FReNNPFeNdOH2wTGj+0o
-=vXtc
+iQEcBAEBAgAGBQJUZkH1AAoJECTWi3JdVIfQpMsH/RCG1UZh7KNXgIB5zwmI08E7
+zw+CEGw98x1TL/N1ANdUiVq0SpjF7LV8/kfIQKIsiUP6xsQEKrxiRtpefMEFUnPQ
+ONkL4k++SB2BMQBDhacKYdQxq1p7YrkKqrAwOUru7MRgk2n4pJ3LsZwDIH68iylU
+uqeI7YMzUP7o6MAc+yZQF/BorjyJ9FUEj59QEcc0/5HHmKCrDIZQsnQdWV57DVt5
+H271/qDkLpwrJvQKBTWtZsTWvXmMFMcWI/DZ7wcfBL6ejdReHRqu2TOmxUKnRGvS
+59Dpgbuvj7Qv0l72yJzfyRW0eIPLNTziqd7t+FzeQ8TK5djoDYyC51kEy1qhdx4=
+=pfhN
 -----END PGP SIGNATURE-----
 
---TXIPBuAs4GDcsx9K--
+--+msPJjaBje60IBrx--
