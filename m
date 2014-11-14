@@ -1,64 +1,127 @@
-From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] ARM: mediatek: Add driver for Mediatek I2C
- controller
-Date: Fri, 14 Nov 2014 16:00:30 +0800
-Message-ID: <1415952030.17958.129.camel@mtksdaap41>
-References: <1415078977-18374-1-git-send-email-xudong.chen@mediatek.com>
-	 <20141113183122.GH1275@katana>  <1415934752.2152.58.camel@mhfsdcap03>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 3/3] ARM: shmobile: koelsch dts: Drop console= bootargs parameter
+Date: Fri, 14 Nov 2014 09:04:29 +0100
+Message-ID: <CAMuHMdU-oWC8aTUK-Oxf72XxzEYUnn5O25L-hWi1dEQpqe+-gg@mail.gmail.com>
+References: <1414592918-25138-1-git-send-email-geert+renesas@glider.be>
+	<1414592918-25138-4-git-send-email-geert+renesas@glider.be>
+	<42870768.kOpZNjp1qs@avalon>
+	<CAMuHMdUOX845FFaNkEan9c+fRrsSk4q0gXUeknTn-MK5JAYWGg@mail.gmail.com>
+	<20141114030235.GA28000@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415934752.2152.58.camel@mhfsdcap03>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: xudong chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Nathan Chung <nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YH Chen <yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20141114030235.GA28000@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2014-11-14 at 11:12 +0800, xudong chen wrote:
-> On Thu, 2014-11-13 at 19:31 +0100, Wolfram Sang wrote:
-> > > MT8135 and MT6589 can control I2C pins on PMIC(MT6397) by setting the i2c
-> > > registers in MT8135 side.
-> > 
-> > I still didn't get this, even after reading the mail thread of old
-> > series. Can someone maybe draw me a nice ASCII picture showing the setup
-> > which is going on here?
-> > 
-> 
-> 1. The DIR_PATH register is in MT8135.
-> 2. All the registers used in the driver are in MT8135.
-> 3. If want I2C wave go/from PMIC need to set the DIR_PATH register bit^0
-> to 1 extra.
+Hi Simon,
 
-Hi,
+On Fri, Nov 14, 2014 at 4:02 AM, Simon Horman <horms@verge.net.au> wrote:
+> On Thu, Oct 30, 2014 at 12:03:22PM +0100, Geert Uytterhoeven wrote:
+>> On Thu, Oct 30, 2014 at 11:44 AM, Laurent Pinchart
+>> <laurent.pinchart@ideasonboard.com> wrote:
+>> > On Wednesday 29 October 2014 15:28:38 Geert Uytterhoeven wrote:
+>> >> Since commit 595c6a4bb77f0096 ("ARM: shmobile: koelsch: Remove legacy C
+>> >> board code"), koelsch is restricted to booting from DT, so
+>> >> chosen/stdout-path is always used, and we can drop the "console="
+>> >> parameter from chosen/bootargs.
+>> >
+>> > I'm curious, how is the baud rate now selected ?
+>>
+>> >From an earlier response for kzm9d:
+>>
+>> "I forgot emev is the only supported SoC not using sh-sci.
+>>  drivers/tty/serial/sh-sci.c:serial_console_setup() defaults to 115200 baud,
+>>  while serial8250_console_setup() defaults to 9600 baud."
+>
+> Hi Geert,
+>
+> while backporting this and similar changes for other boards
+> to v3.14/LTSI-3.14 I noticed that koelsch, alt and ape6evm-reference
+> come up without a console. Which is not ideal.
+>
+> I am wondering if you have any thoughts on why this may occur.
+> My wild stab in the dark is some interaction with PM.
+>
+> For reference my backport is the backport/v3.14.23/snapshot2.wip1 tag in my
+> renesas-backports tree. At the very top it includes reversions of the
+> backports of the troublesome patches.
 
-Some supplemental, I hope this make it more clear.
+You're missing the core changes that enabled this feature, which appeared in
+v3.17, cfr. the two commits below. The third one is a fix, but as no one checked
+the return value, you can drop if it you want.
 
-    +---------------+
-    |     MT8135    |
-    |               |
-    |    +----------|
-    |    |I2C       |___SDA
-    |    |controller|___SCL
-    |    +----------|
-    |               |      +-------+
-    |    +----------|      | MT6397|
-    |    |  pwrap   |      |       |___SDA_pmic
-    |    |          |<---->|       |___SCL_pmic
-    +---------------+      +-------+
+If it still doesn't work afterwards, just let me know, and I'll dive into it.
 
-This is the simplified block diagram of mt8135 and mt6397. MT8135 can
-works with MTK PMIC MT6397. On MT8135, it use pwrap module to control
-/communicate with the PMIC. Pwrap is a hardware communicate with pmic
-through MTK proprietary interface.
+commit 3482f2c52b77bf6596e24aae82e204a0603eba66
+Author: Grant Likely <grant.likely@linaro.org>
+Date:   Thu Mar 27 17:18:55 2014 -0700
 
-There are several PMIC functionality that is controlled by registers
-and controllers on MT8135, I2C is one of them.
+    of: Create of_console_check() for selecting a console specified in /chosen
 
-On MT8135, I2C controller can control I2C pins on MT8135 and MT6397.
-When you set I2C DIR_PATH register on MT8135, i2c controller will
-control PMIC pins(through pwrap) to send i2c signal. Because the
-i2c controllers are on 8135, it can still do DMA from system memory.
-So it kinds of like these 2 works like a virtual SoC.
+    The devicetree has a binding for specifying the console device in the
+    /chosen node, but the kernel doesn't use it consistently. This change
+    adds an API for testing if a device node is a console, and adds a
+    preferred console entry if it is.
 
-Joe.C
+    At the same time this patch removes the of_device_is_stdout_path() API
+    since it is unused.
+
+    Signed-off-by: Grant Likely <grant.likely@linaro.org>
+    Tested-by: Sascha Hauer <s.hauer@pengutronix.de>
+
+
+commit a208ffd251d08ed7ba6bdf3ae1e423373fb12d3d
+Author: Grant Likely <grant.likely@linaro.org>
+Date:   Thu Mar 27 18:29:46 2014 -0700
+
+    of: Enable console on serial ports specified by /chosen/stdout-path
+
+    If the devicetree specifies a serial port as a stdout device, then the
+    kernel can use it as the default console if nothing else was selected on
+    the command line. For any serial port that uses the uart_add_one_port()
+    feature, the uart_add_one_port() has all the information needed to
+    automatically enable the console device, which is what this patch does.
+
+    With this change applied, a device tree platform can be booted without
+    any console= parameters on the command line and the kernel will still be
+    able to determine its console.
+
+    Tested on QEMU Versatile model and i.MX
+
+    Signed-off-by: Grant Likely <grant.likely@linaro.org>
+    Tested-by: Sascha Hauer <s.hauer@pengutronix.de>
+
+
+commit 5f74d8b7b8546255db6af45b017e9cbb18aed609
+Author: Brian Norris <computersforpeace@gmail.com>
+Date:   Wed Sep 3 11:06:43 2014 -0700
+
+    of: correct of_console_check()'s return value
+
+    The comments above of_console_check() say that it will return TRUE if it
+    registers a preferred console, but add_preferred_console() uses a
+    0-equals-success convention, so this leaves of_console_check() with an
+    inconsistent policy for its return values.
+
+    Fortunately, nobody was actually checking the return value of
+    of_console_check(), so this isn't significant at the moment.
+
+    But let's match the comments, so we're doing what we say.
+
+    Fixes: 3482f2c52b77 ('of: Create of_console_check() for selecting a console
+    Signed-off-by: Brian Norris <computersforpeace@gmail.com>
+    Signed-off-by: Grant Likely <grant.likely@linaro.org>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
