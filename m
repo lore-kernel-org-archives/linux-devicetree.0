@@ -1,61 +1,84 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 13/14] ARM: STi: DT: STiH410: Add usb2 picophy dt nodes
-Date: Fri, 14 Nov 2014 12:03:46 +0100
-Message-ID: <1546892.RCPeXgVQNJ@wuerfel>
-References: <1415876417-28728-1-git-send-email-peter.griffin@linaro.org> <2401196.5cvW5dPSz2@wuerfel> <20141114095621.GA1648@griffinp-ThinkPad-X1-Carbon-2nd>
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v10 05/11] drm: bridge/dw_hdmi:split some phy configuration
+ to platform driver
+Date: Fri, 14 Nov 2014 19:08:43 +0800
+Message-ID: <5465E2BB.1070507@rock-chips.com>
+References: <1415934583-16290-1-git-send-email-andy.yan@rock-chips.com> <1415935631-16826-1-git-send-email-andy.yan@rock-chips.com> <5465D73C.9030507@imgtec.com> <5465DF0C.50301@rock-chips.com> <5465DFB2.8060601@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141114095621.GA1648@griffinp-ThinkPad-X1-Carbon-2nd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Peter Griffin <peter.griffin@linaro.org>, devicetree@vger.kernel.org, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, linux-kernel@vger.kernel.org, lee.jones@linaro.org, maxime.coquelin@st.com
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5465DFB2.8060601-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, airlied-cv59FeDIM0c@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Josh Boyer <jwboyer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 14 November 2014 09:56:21 Peter Griffin wrote:
-> 
-> I'll appologize in advance as I'm not sure I've understood you correctly, definately your answer
-> has given me a bunch more questions to clarify my understanding...
-> 
-> In the case of this particular node, then both reg properties refer to the syscfg_core address space
-> as both <0xf8 0x04> and <0xf4 0x04> are offsets into syscfg_core registers. So moving it under
-> the syscfg_core like you originaly suggested I believe would meet the definition of 'reg' ("describes the
-> address of the device's resources within the address space defined by its parent bus").
 
-You will also have to add an appropriate 'ranges' property then.
-
-> Or maybe you meant, if I want to keep the picophy node where it is (under soc), I need to stop using the reg
-> property?
-
-That would also be possible, just put the register numbers into your 'st,syscfg'
-property after the phandle, and leave the reg property empty then.
-
-> The other problem I was describing is a device with some memory mapped registers and some
-> sysconfig registers you can find examples already upstream in stih416.dtsi file with the
-> ethernet0 and miphy365x_phy nodes.
-> 
-> Here the first 1/2 reg properties are expressed as a 32 bit physical address and size (meets the spec definition),
-> and the last is expressed as a sysconfig offset and size (which AFAIK doesn't match the spec definition).
-> This change in address space is however documented in the bindings documentation.
-> 
-> How should devices which have multiple address spaces ideally be handled?
-
-There should at most be one 'reg' address space, so put it under the node whose
-bus these refer to. Put all offsets that are relative to a syscon link into
-the phandle that refers to the syscon device, or hardcode the offsets in the
-driver.
-
-> From looking around in the source I see a few different ways people have done this: -
-> 
-> 1) Some drivers encode the data statically into the source and make a decision based on compatible string.
-> 2) Some drivers add a couple of extra dt properties to encode the offset (spifsm in stih416)
-> 3) Some drivers mix address spaces in the reg properties (examples given above) 
-> 3) Probably some other ways I've not found yet
+On 2014=E5=B9=B411=E6=9C=8814=E6=97=A5 18:55, Zubair Lutfullah Kakakhel=
+ wrote:
 >
-> Is there a blessed way of doing this? It would be nice at least for all the drivers in STI to be doing
-> it the same as currently there seems to be a mix of implementations.
+> On 14/11/14 10:53, Andy Yan wrote:
+>> Hi ZubairLK:
+>>     Thanks for your review.
+>> On 2014=E5=B9=B411=E6=9C=8814=E6=97=A5 18:19, Zubair Lutfullah Kakak=
+hel wrote:
+>>> Hi Andy,
+>>>
+>>> Nice work on this patch series. Its getting better and better :).
+>>>
+>>> On 14/11/14 03:27, Andy Yan wrote:
+>>>> hdmi phy clock symbol and transmission termination value
+>>>> can adjust platform specific to get the best SI
+>>>                          ^Is this signal integrity?
+>>     yes , SI  is signal integrity, such as eye diagram measurement
+>>> Are these two disjoint features in separate patches?
+>>>
+>>>> also add mode_valid interface for some platform may not support
+>>>> all the display mode
+>>> Sounds like another separate patch to me. :)
+>>     they can seperate
+>>> Also, This series is becoming quite large. With major changes and f=
+ixes mixed together.
+>>>
+>>> Patch 3 splits imx-drm.
+>>> Patch 4 moves dw-drm out of imx-drm folder.
+>>> Patch 7 adds binding
+>>> Patch 9 converts to drm bridge.
+>>>
+>>> Can these be placed together easily?
+>>> And in the start. i.e. patch 1, 2, 3, 4,
+>>>
+>>> Then all fixes etc can come afterwards?
+>>>
+>>> It helps when checking histories later as to how a driver was made =
+and how fixes happened.
+>>>
+>>> Especially when file moves happen..
+>>    Do you mean we can rearrange the patch series?
+>>    put patch 3, 4 ,7, 9 together  one bye one
+>>    than followed by the fixes patches  5 ,6, 8, 11 ?
+> Yes. Rearrange so that the split imx-drm/imx-hdmi and conversion to d=
+rm-bridge is at the start of the series.
+> Then the rest are bug fixes and feature additions.
+   Can I put patch#1(make checkpatch happy) and patch#2 (defer probe) a=
+s=20
+the first two patch.
+   Daniel from Google chromium think it's better to put the two slightl=
+y=20
+changes in the front for easy review.
+> Cheers,
+> ZubairLK
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
 
-You can do 1 or 2, not 3.
 
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
