@@ -1,94 +1,64 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3] of: replace Asahi Kasei Corp venter prefix
-Date: Fri, 14 Nov 2014 10:30:17 +0100
-Message-ID: <20141114093016.GB3810@ulmo>
-References: <20140922130026.GK3290@leverpostej>
- <CAMuHMdX22z97SbGS1HDiYfJ1PXxyEN2S8D7w4sr+4bUwD+mJZw@mail.gmail.com>
- <20140922132743.GM3290@leverpostej>
- <87y4rfhmgl.wl%kuninori.morimoto.gx@renesas.com>
- <1415845309.4269.6.camel@perches.com>
- <20141113025105.GA16652@verge.net.au>
- <87vbmjhj00.wl%kuninori.morimoto.gx@renesas.com>
- <20141113110740.GE3815@sirena.org.uk>
- <87k32yd0bd.wl%kuninori.morimoto.gx@renesas.com>
- <5465BFA2.9050706@nvidia.com>
+From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH] ARM: imx: temporarily remove CONFIG_SOC_FSL from LS1021A
+Date: Fri, 14 Nov 2014 09:31:42 +0000
+Message-ID: <7b9de442bdd34acbb4398efe92a64a4f@BN3PR0301MB1236.namprd03.prod.outlook.com>
+References: <1414746073-12394-1-git-send-email-jingchang.lu@freescale.com>
+ <1727581.y25NQPsRIm@wuerfel> <20141112104239.GJ2704@dragon>
+ <3302008.ezqrZf1odh@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PmA2V3Z32TCmWXqI"
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5465BFA2.9050706@nvidia.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Joe Perches <joe@perches.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>, Olof Johansson <olof@lixom.net>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus <magnus.damm@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3302008.ezqrZf1odh@wuerfel>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---PmA2V3Z32TCmWXqI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Nov 14, 2014 at 05:38:58PM +0900, Alexandre Courbot wrote:
-> On 11/14/2014 10:43 AM, Kuninori Morimoto wrote:
-[...]
-> >diff --git a/arch/arm/boot/dts/tegra20-seaboard.dts b/arch/arm/boot/dts/=
-tegra20-seaboard.dts
-> >index a1d4bf9..7f5cf80 100644
-> >--- a/arch/arm/boot/dts/tegra20-seaboard.dts
-> >+++ b/arch/arm/boot/dts/tegra20-seaboard.dts
-> >@@ -405,7 +405,7 @@
-> >  		clock-frequency =3D <400000>;
-> >
-> >  		magnetometer@c {
-> >-			compatible =3D "ak,ak8975";
-> >+			compatible =3D "asahi-kasei,ak8975";
->=20
-> Mmm. So does this mean this device was never probed because the driver did
-> not recognize its compatible property?
-
-I2C (like SPI) has a fallback in case the OF table yields no match. The
-of_modalias_node() that it uses extracts the module name from the device
-tree node's compatible string by skipping the vendor prefix. The
-resulting string is then set as the I2C client's name and causes the I2C
-standard ID matching to succeed (see of_i2c_register_devices() for how
-this is done in detail).
-
-> I cannot find "ak,ak8975" anywhere else in the kernel.
->=20
-> If so,
->=20
-> Acked-by: Alexandre Courbot <acourbot@nvidia.com>
-
-Technically this is breaking backwards-compatibility from a DT
-perspective, but I think it's safe to do because the Linux kernel has a
-way of dealing with this and other operating systems should be able to
-deal with this in a similar way (or even easier by letting the driver
-match on the ak prefix as well for this particular chip).
-
-So:
-
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---PmA2V3Z32TCmWXqI
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUZcuoAAoJEN0jrNd/PrOhijEP/0fWBqWZTvD71aj6UyH4xq3U
-9EmL389EXehLKgnx7cjPW98QN0MPEDHotakxbVPD3Vn2IhU/SI2/c1w7BAQH8OdM
-FZjm1ujoHRk5ePM27/23OWPZd5L/9p54K7ko5qpZvxDj4tmxcMiOWL694RgSRW8q
-HkuFd+WcVOdD67uQRcY5xRNRB/egnLzFI5N2jaQUZE8adL9OTWo6objaOigTXAFl
-mMlqIpIwK9oGhuJygi05ESp3LcJYMA8i3kdKJv45YH8ctKonRBOmOQqjgxjgMeF6
-drzGcz/oiIgd4vV41N9OsKWyTY5gamX/6t604ur+UyKlf/7vgiW72EGMflwcMyKd
-reps8t+ZrRQfDBgqy9/+cpQsSnhnLLhFjl/b3jkveNZoEFwf7MWmNdF4VdMdD/mV
-BKPNkHHQDI5xbAZJpdZfD9o5zWupkxFt0PrvU8fg78UPXg/pG8Pa91m6S8w77iD6
-NyJmWdc8x3R0ADT4DtLelemJalcPaJzcWABYlgDQMBSCms6o6KpFVfIc0VqQUtup
-1TzB+QkXNhJdWd6cVbK/XF9wyuiwzCfmXR0+gAK1hOxHfj8IKt+4MtiRDSKmdgSH
-S3Cz7OcHCqElXp4QQpuKtNkp1CQffH9rzqF4/aH3zXxayCyz+8hI7a3Twet9UauE
-Z967FL/gqnn5QOLMuUfF
-=BXjP
------END PGP SIGNATURE-----
-
---PmA2V3Z32TCmWXqI--
+Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogQXJuZCBCZXJnbWFubiBbbWFpbHRv
+OmFybmRAYXJuZGIuZGVdDQo+U2VudDogV2VkbmVzZGF5LCBOb3ZlbWJlciAxMiwgMjAxNCA3OjA1
+IFBNDQo+VG86IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPkNjOiBTaGF3
+biBHdW87IG1hcmsucnV0bGFuZEBhcm0uY29tOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsg
+THUNCj5KaW5nY2hhbmctQjM1MDgzDQo+U3ViamVjdDogUmU6IFtQQVRDSF0gQVJNOiBpbXg6IHRl
+bXBvcmFyaWx5IHJlbW92ZSBDT05GSUdfU09DX0ZTTCBmcm9tDQo+TFMxMDIxQQ0KPg0KPk9uIFdl
+ZG5lc2RheSAxMiBOb3ZlbWJlciAyMDE0IDE4OjQyOjQxIFNoYXduIEd1byB3cm90ZToNCj4+DQo+
+PiBJIG5vdGljZWQgdGhlIGlzc3VlIGZyb20gMC1EQVkgdGVzdGluZyBhbmQgd2FzIHRyeWluZyB0
+byBkcm9wIHRoZSBwYXRjaC4NCj4+IEppbmdjaGFuZyBzYWlkIHNvbWVvbmUgaXMgdHJ5aW5nIHRv
+IGZpeGluZyB0aGUgaXNzdWVzIGZyb20gZHJpdmVyIGNvZGUuDQo+PiBCdXQgaXQgc2VlbXMgdG8g
+dGFrZSBzb21lIHRpbWUuICBTbyBJIGFncmVlIHdpdGggdGhpcyBwYXJ0aWFsIHJldmVydGluZy4N
+Cj4+DQo+PiBQYXRjaCBhcHBsaWVkLiAgVGhhbmtzIEFybmQuDQo+DQo+VGhhbmtzIGEgbG90IQ0K
+Pg0KPkppbmdjaGFuZywgY2FuIHlvdSBzYXkgd2hpY2ggb2YgdGhlIGRyaXZlcnMgdGhhdCBhcmUg
+Y3VycmVudGx5IGRlcGVuZGluZw0KPm9uIEZTTF9TT0MgYXJlIHJldXNlZCBvbiBMUzEwMjFBPyBJ
+IHNlZSB0aGVzZSBvbmVzIGluIHRoZSBzb3VyY2UgdHJlZToNCj4NCj5kcml2ZXJzL2F0YS9zYXRh
+X2ZzbC5jDQo+ZHJpdmVycy9jcnlwdG8vY2FhbS8NCj5kcml2ZXJzL2NyeXB0by90YWxpdG9zLmMN
+Cj5kcml2ZXJzL2RtYS9mc2xkbWEuYw0KPmRyaXZlcnMvbWVtb3J5L2ZzbF9pZmMuYw0KPmRyaXZl
+cnMvbWlzYy9jYXJtYS8NCj5kcml2ZXJzL210ZC9uYW5kL2ZzbF9pZmNfbmFuZC5jDQo+ZHJpdmVy
+cy9uZXQvZXRoZXJuZXQvZnJlZXNjYWxlL2ZzbF9wcV9tZGlvLmMNCj5kcml2ZXJzL25ldC9ldGhl
+cm5ldC9mcmVlc2NhbGUvZ2lhbmZhcioNCj5kcml2ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUv
+eGdtYWNfbWRpby5jDQo+ZHJpdmVycy9zcGkvc3BpLWZzbC1jcG0uYw0KPmRyaXZlcnMvc3BpL3Nw
+aS1mc2wtZHNwaS5jDQo+ZHJpdmVycy9zcGkvc3BpLWZzbC1lc3BpLmMNCj5kcml2ZXJzL3VzYi9o
+b3N0L2VoY2ktZnNsLmMNCj5kcml2ZXJzL3ZpZGVvL2ZiZGV2L2ZzbC1kaXUtZmIuYw0KPmRyaXZl
+cnMvdmlydC9mc2xfaHlwZXJ2aXNvci5jDQo+c291bmQvc29jL2ZzbC9tcGMqDQo+DQo+SSBzdXNw
+ZWN0IHRoYXQgeW91IG9ubHkgd2FudCBhIHNtYWxsIHN1YnNldCBvZiB0aGVzZSwgYnV0IEkgaGF2
+ZSBubyBpZGVhDQo+d2hpY2guDQo+DQo+CUFybmQNCg0KSGksIEFybmQgYW5kIFNoYXduLA0KDQog
+IE1hbnkgdGhhbmtzIGZvciB5b3VyIHdvcmsgb24gcmVzb2x2aW5nIHRoZSBGU0xfU09DIGJyZWFr
+aW5nIGFsbG1vZGNvbmZpZy4NCg0KICBGb3JtZXJseSBtYW55IGRyaXZlcnMgb24gUFBDIGRlcGVu
+ZCBvbiBhIEZTTF9TT0MgY29uZmlndXJhdGlvbiwgd2hlbiB0aGV5DQphcmUgc2hhcmVkIG9uIG91
+ciBBUk0gcGxhdGZvcm0sIEkgYWRkIHRoaXMgY29uZmlndXJhdGlvbiBpbnRlcm5hbGx5IGZvcg0K
+cXVpY2sgcmVmZXJlbmNlIGFuZCBhbHNvIHNvbWUgaW50ZXJuYWwgZGV2ZWxvcGVycycgcmVxdWly
+ZW1lbnQsIHRodXMgSQ0KYWxzbyBhZGQgaXQgaW50byBteSB1cHN0cmVhbSBjb2RlLg0KDQogWWVz
+LCBvbmx5IGEgc3Vic2V0IG9mIHRoZXNlIGRyaXZlcnMgYXJlIHNoYXJlZCBiZXR3ZWVuIG91ciBB
+Uk0gYW5kIFBQQw0KcGxhdGZvcm1zLiBTaW5jZSB0aGVyZSB3aWxsIGJlIGFsbG1vZGNvbmZpZyBi
+cmVha2luZyBmYXVsdCBkdWUgdG8gdGhlDQpGU0xfU09DIGNvbmZpZ3VyYXRpb24sIHdlIHdpbGwg
+dHJ5IHRvIGZpeCB0aGlzIG9yIHNlbGVjdCBhbm90aGVyIGRlcGVuZGVuY3ksDQpJIHdpbGwgYWxz
+byBpbmZvcm0gb3VyIGRyaXZlciBvd25lcnMgYWJvdXQgdGhpcy4NCiANCkJlbG93IGRyaXZlcnMg
+YXJlIHNoYXJlZCBvbiBMUzEwMjFBIHBsYXRmb3JtIGN1cnJlbnRseToNCg0KZHJpdmVycy9jcnlw
+dG8vY2FhbS8NCmRyaXZlcnMvbWVtb3J5L2ZzbF9pZmMuYw0KZHJpdmVycy9tdGQvbmFuZC9mc2xf
+aWZjX25hbmQuYw0KZHJpdmVycy9uZXQvZXRoZXJuZXQvZnJlZXNjYWxlL2ZzbF9wcV9tZGlvLmMN
+CmRyaXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9naWFuZmFyKg0KZHJpdmVycy9zcGkvc3Bp
+LWZzbC1kc3BpLmMNCg0KDQpUaGFua3MgYW5kIEJlc3QgUmVnYXJkcywNCkppbmdjaGFuZw0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
