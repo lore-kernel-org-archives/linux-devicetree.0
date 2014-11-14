@@ -1,27 +1,87 @@
-From: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Subject: Re: [PATCH V5 2/4] of: Add binding document for MIPS GIC
-Date: Fri, 14 Nov 2014 12:30:09 +0100
-Message-ID: <20141114113009.GB11666@linux-mips.org>
-References: <1415821419-26974-1-git-send-email-abrestic@chromium.org>
- <1415821419-26974-3-git-send-email-abrestic@chromium.org>
+From: =?windows-1251?B?0eDs4OPu7S7Q8w==?= <x6-kWpDZo/R5IkjuUp2flYTmwC/G2K4zDHf@public.gmane.org>
+Subject: =?windows-1251?b?0eDs7uPu7e376SDg7+/g8ODyICLB4OLg8Oj/Ii4g?=
+	=?windows-1251?b?yvDo8fLg6/zt7i336PHy++Ug7eDv6PLq6CE=?=
+Date: Fri, 14 Nov 2014 11:31:44 +0000
+Message-ID: <F5F046151ECAE5469A9FD6696D0E2776@kbajifmelg>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1415821419-26974-3-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============3696462988852154392=="
+Return-path: <nbd-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/nbd-general>,
+	<mailto:nbd-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=nbd-general>
+List-Post: <mailto:nbd-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:nbd-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/nbd-general>,
+	<mailto:nbd-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: nbd-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: "faisal.latif" <faisal.latif-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, netfilter <netfilter-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "paul.clements" <paul.clements-G8/ITkJZaeZWk0Htik3J/w@public.gmane.org>, nbd-general <nbd-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "steffen.klassert" <steffen.klassert-opNxpl+3fjRBDgjK7y7TUQ@public.gmane.org>, "manish.chopra" <manish.chopra-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org>, "sony.chacko" <sony.chacko-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org>, "rajesh.borundia" <rajesh.borundia-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org>, "lauro.venancio" <lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, "aloisio.almeida" <aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, "trond.myklebust" <trond.myklebust-7I+n7zu2hftEKMMhf/gKZA@public.gmane.org>, "jon.mason" <jon.mason-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, anton <anton-yrGDUoBaLx3QT0dZR+AlfA@public.gmane.org>, bcousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 12, 2014 at 11:43:37AM -0800, Andrew Bresticker wrote:
+This is a multi-part message in MIME format.
 
-Patches 2-4 queud for 3.19.
+--===============3696462988852154392==
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_16D3_01CFFFFE.91728010"
 
-Thanks,
+This is a multi-part message in MIME format.
 
-  Ralf
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+------=_NextPart_000_16D3_01CFFFFE.91728010
+Content-Type: text/plain;
+	charset="windows-1251"
+Content-Transfer-Encoding: quoted-printable
+
+=D1=E0=EC=EE=E3=EE=ED=ED=FB=E9 =E0=EF=EF=E0=F0=E0=F2 =E8=E7 =ED=E5=F0=E6=E0=
+=E2=E5=FE=F9=E5=E9 =F1=F2=E0=EB=E8! =C3=E0=F0=E0=ED=F2=E8=FF 5 =EB=E5=F2!=
+ 100% =EB=F3=F7=F8=E5=E5 =EA=E0=F7=E5=F1=F2=E2=EE! =D1=E5=E1=E5=F1=F2=EE=E8=
+=EC=EE=F1=F2=FC =EB=E8=F2=F0=E0 =F1=E0=EC=EE=E3=EE=ED=E0 19 =F0=F3=E1=EB=E5=
+=E9! =D1=EC=EE=F2=F0=E8 =F2=F3=F2.....=20
+
+------=_NextPart_000_16D3_01CFFFFE.91728010
+Content-Type: text/html;
+	charset="windows-1251"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META content=3D"text/html; charset=3Dwindows-1251" http-equiv=3DContent-=
+Type>
+<META name=3DGENERATOR content=3D"MSHTML 10.00.9200.16897">
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV>=D1=E0=EC=EE=E3=EE=ED=ED=FB=E9 =E0=EF=EF=E0=F0=E0=F2 =E8=E7 =ED=E5=F0=
+=E6=E0=E2=E5=FE=F9=E5=E9 =F1=F2=E0=EB=E8! =C3=E0=F0=E0=ED=F2=E8=FF 5 =EB=E5=
+=F2! 100% =EB=F3=F7=F8=E5=E5=20
+=EA=E0=F7=E5=F1=F2=E2=EE! =D1=E5=E1=E5=F1=F2=EE=E8=EC=EE=F1=F2=FC =EB=E8=F2=
+=F0=E0 =F1=E0=EC=EE=E3=EE=ED=E0 19 =F0=F3=E1=EB=E5=E9! <A=20
+href=3D"http://AkalizaKeza.com/vk/7we1e.php">=D1=EC=EE=F2=F0=E8 =F2=F3=F2=
+.....</A> </DIV></BODY></HTML>
+
+------=_NextPart_000_16D3_01CFFFFE.91728010--
+
+
+
+--===============3696462988852154392==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+------------------------------------------------------------------------------
+Comprehensive Server Monitoring with Site24x7.
+Monitor 10 servers for $9/Month.
+Get alerted through email, SMS, voice calls or mobile push notifications.
+Take corrective actions from your mobile device.
+http://pubads.g.doubleclick.net/gampad/clk?id=154624111&iu=/4140/ostg.clktrk
+--===============3696462988852154392==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+Nbd-general mailing list
+Nbd-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+https://lists.sourceforge.net/lists/listinfo/nbd-general
+
+--===============3696462988852154392==--
