@@ -1,97 +1,98 @@
-From: Lukasz Majewski <l.majewski@samsung.com>
-Subject: Re: [PATCH v2 5/5] ARM: dts: exynos4412-trats2: Enable TMU support at
- Trats2
-Date: Fri, 14 Nov 2014 10:26:03 +0100
-Message-ID: <20141114102603.2b15d1f8@amdc2363>
-References: <1380010102-25817-1-git-send-email-l.majewski@samsung.com>
- <1381300194-13134-1-git-send-email-l.majewski@samsung.com>
- <1381300194-13134-6-git-send-email-l.majewski@samsung.com>
- <20131015082935.3d33eee7@amdc308.digital.local>
- <20131127081242.0591f911@amdc308.digital.local>
- <004d01ceeb64$da648200$8f2d8600$@kernel.org>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/4] simplefb: Add support for
+ enumerating simplefb dt nodes in /chosen
+Date: Fri, 14 Nov 2014 09:28:25 +0000
+Message-ID: <CACxGe6u3_GJA6pbDGX6puDhyJ2E9T+WujmzASw2VE+5-x9q9sA@mail.gmail.com>
+References: <1415906594-2461-1-git-send-email-hdegoede@redhat.com> <1415906594-2461-2-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <004d01ceeb64$da648200$8f2d8600$@kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: kgene@kernel.org
-Cc: 'Linux PM list' <linux-pm@vger.kernel.org>, 'Lukasz Majewski' <l.majewski@majess.pl>, 'Bartlomiej Zolnierkiewicz' <b.zolnierkie@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCJP567ORICBBTMWS6RQKGQESA5GOGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1415906594-2461-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kukjin,
-
-> Lukasz Majewski wrote:
-> > 
-> > Hi Kukjin,
-> > 
-> > > Hi Kukjin,
-> > >
-> > > > This patch enables support for TMU at Exynos4412 based Trats2
-> > > > board.
-> > > >
-> > > > Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
-> > > > Reviewed-by: Bartlomiej Zolnierkiewicz
-> > > > <b.zolnierkie@samsung.com> Reviewed-by: Tomasz Figa
-> > > > <t.figa@samsung.com>
-> > > >
-> > > > ---
-> > > > Changes for v2:
-> > > > - None
-> > > >
-> > > >  arch/arm/boot/dts/exynos4412-trats2.dts |    5 +++++
-> > > >  1 file changed, 5 insertions(+)
-> > > >
-> > > > diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts
-> > > > b/arch/arm/boot/dts/exynos4412-trats2.dts index fb7b9ae..57136f8
-> > > > 100644 --- a/arch/arm/boot/dts/exynos4412-trats2.dts
-> > > > +++ b/arch/arm/boot/dts/exynos4412-trats2.dts
-> > > > @@ -467,6 +467,11 @@
-> > > >  		status = "okay";
-> > > >  	};
-> > > >
-> > > > +	tmu@100C0000 {
-> > > > +		vtmu-supply = <&ldo10_reg>;
-> > > > +		status = "okay";
-> > > > +	};
-> > > > +
-> > > >  	i2c_ak8975: i2c-gpio-0 {
-> > > >  		compatible = "i2c-gpio";
-> > > >  		gpios = <&gpy2 4 0>, <&gpy2 5 0>;
-> > >
-> > > Can you pull this DT node definition for TMU (as a fix to v3.12)?
-> > >
-> > > It is crucial for Exynos4412. Other patches from this patch set
-> > > were already pulled as v3.12 fixes.
-> > >
-> > 
-> > Kukjin, could you pull this patch?
-> > 
-> Applied, thanks.
-
-It is strange, but it seems like this patch hasn't found its way to
-mainline (3.18-rc3).
-
-This patch should be applied with the following one:
-"[PATCH v2 4/5] ARM: dts: exynos4x12: Device tree node definition for
-TMU on Exynos4x12"
-
-Anyway, I will resend them. If possible, please add them to your tree
-ASAP.
-
-> Kukjin
-> 
+On Thu, Nov 13, 2014 at 7:23 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> Update simplefb to support the new preferred location for simplefb dt nodes
+> under /chosen.
+>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 > --
-> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+> Changes in v2:
+> -Make name array larger in case we ever encounter more then 10000 framebuffers
+> Changes in v3:
+> -Switch to for_each_child_of_node to loop over the nodes under chosen
+> Changes in v4:
+> -Wrap the chosen enumeration code in #ifdef CONFIG_OF, as simplefb is used on
+>  non devicetree platforms too
+> -simplefb can only be built-in, so drop the module_exit function calling
+>  platform_driver_unregister
+> ---
+>  drivers/video/fbdev/simplefb.c | 23 ++++++++++++++++++++++-
+>  1 file changed, 22 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/video/fbdev/simplefb.c b/drivers/video/fbdev/simplefb.c
+> index 868099a..e381a53 100644
+> --- a/drivers/video/fbdev/simplefb.c
+> +++ b/drivers/video/fbdev/simplefb.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/platform_data/simplefb.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/clk-provider.h>
+> +#include <linux/of_platform.h>
+>
+>  static struct fb_fix_screeninfo simplefb_fix = {
+>         .id             = "simple",
+> @@ -390,7 +391,27 @@ static struct platform_driver simplefb_driver = {
+>         .probe = simplefb_probe,
+>         .remove = simplefb_remove,
+>  };
+> -module_platform_driver(simplefb_driver);
+> +
+> +static int __init simplefb_init(void)
+> +{
+> +       int ret;
+> +       struct device_node __maybe_unused *np;
+> +
+> +       ret = platform_driver_register(&simplefb_driver);
+> +       if (ret)
+> +               return ret;
+> +
+> +#ifdef CONFIG_OF
+> +       for_each_child_of_node(of_chosen, np) {
+> +               if (of_device_is_compatible(np, "simple-framebuffer"))
+> +                       of_platform_device_create(np, NULL, NULL);
+> +       }
+> +#endif
 
+Nit: Kind of ugly. This should work instead:
 
+        if (IS_ENABLED(CONFIG_OF_PLATFORM) && of_chosen) {
+                for_each_child_of_node(of_chosen, np)
+                        if (of_device_is_compatible(np, "simple-framebuffer"))
+                                of_platform_device_create(np, NULL, NULL);
+        }
 
--- 
-Best regards,
+And move the forward declaration of of_chosen in include/linux/of.h up
+5 lines so that it is always declared. gcc will optimize it out, but
+it will still get properly syntax checked on every build.
 
-Lukasz Majewski
-
-Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
+> +
+> +       return 0;
+> +}
+> +
+> +module_init(simplefb_init);
+>
+>  MODULE_AUTHOR("Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>");
+>  MODULE_DESCRIPTION("Simple framebuffer driver");
+> --
+> 2.1.0
+>
