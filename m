@@ -1,160 +1,119 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCHv2 05/16] gpio: mvebu: add suspend/resume support
-Date: Fri, 14 Nov 2014 16:21:25 +0100
-Message-ID: <1415978496-9334-6-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCHv2 10/16] ARM: mvebu: reserve the first 10 KB of each memory bank for suspend/resume
+Date: Fri, 14 Nov 2014 16:21:30 +0100
+Message-ID: <1415978496-9334-11-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1415978496-9334-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1415978496-9334-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>
-Cc: linux-arm-kernel@lists.infradead.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415978496-9334-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds the implementation of ->suspend() and ->resume()
-platform_driver hooks in order to save and restore the state of the
-GPIO configuration. In order to achieve that, additional fields are
-added to the mvebu_gpio_chip structure.
+When going out of suspend to RAM, the Marvell EBU platforms go through
+the bootloader, which re-configures the DRAM controller. To achieve
+this, the bootloader executes a piece of code called the "DDR3
+training code". It does some reads/writes to the memory to find out
+the optimal timings for the memory chip being used.
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>
-Cc: linux-gpio@vger.kernel.org
-Acked-by: Alexandre Courbot <acourbot@nvidia.com>
-Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+This has the nasty side effect that the first 10 KB of each DRAM
+chip-select are overwritten by the bootloader when exiting the suspend
+to RAM state.
+
+Therefore, this commit implements the ->reserve() hook for the 'struct
+machine_desc' used on Armada XP, to reserve the 10 KB of each DRAM
+chip-select using the memblock API.
+
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/gpio/gpio-mvebu.c | 99 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 99 insertions(+)
+ arch/arm/mach-mvebu/board-v7.c | 51 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-index 418e386..dd5545c 100644
---- a/drivers/gpio/gpio-mvebu.c
-+++ b/drivers/gpio/gpio-mvebu.c
-@@ -83,6 +83,14 @@ struct mvebu_gpio_chip {
- 	int		   irqbase;
- 	struct irq_domain *domain;
- 	int                soc_variant;
-+
-+	/* Used to preserve GPIO registers accross suspend/resume */
-+	u32                out_reg;
-+	u32                io_conf_reg;
-+	u32                blink_en_reg;
-+	u32                in_pol_reg;
-+	u32                edge_mask_regs[4];
-+	u32                level_mask_regs[4];
- };
+diff --git a/arch/arm/mach-mvebu/board-v7.c b/arch/arm/mach-mvebu/board-v7.c
+index 6478626..bc52231 100644
+--- a/arch/arm/mach-mvebu/board-v7.c
++++ b/arch/arm/mach-mvebu/board-v7.c
+@@ -16,10 +16,12 @@
+ #include <linux/init.h>
+ #include <linux/clk-provider.h>
+ #include <linux/of_address.h>
++#include <linux/of_fdt.h>
+ #include <linux/of_platform.h>
+ #include <linux/io.h>
+ #include <linux/clocksource.h>
+ #include <linux/dma-mapping.h>
++#include <linux/memblock.h>
+ #include <linux/mbus.h>
+ #include <linux/signal.h>
+ #include <linux/slab.h>
+@@ -57,6 +59,54 @@ void __iomem *mvebu_get_scu_base(void)
+ }
  
  /*
-@@ -554,6 +562,93 @@ static const struct of_device_id mvebu_gpio_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, mvebu_gpio_of_match);
- 
-+static int mvebu_gpio_suspend(struct platform_device *pdev, pm_message_t state)
++ * When returning from suspend, the platform goes through the
++ * bootloader, which executes its DDR3 training code. This code has
++ * the unfortunate idea of using the first 10 KB of each DRAM bank to
++ * exercise the RAM and calculate the optimal timings. Therefore, this
++ * area of RAM is overwritten, and shouldn't be used by the kernel if
++ * suspend/resume is supported.
++ */
++
++#ifdef CONFIG_SUSPEND
++#define MVEBU_DDR_TRAINING_AREA_SZ (10 * SZ_1K)
++static int __init mvebu_scan_mem(unsigned long node, const char *uname,
++				 int depth, void *data)
 +{
-+	struct mvebu_gpio_chip *mvchip = platform_get_drvdata(pdev);
-+	int i;
++	const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
++	const __be32 *reg, *endp;
++	int l;
 +
-+	mvchip->out_reg = readl(mvebu_gpioreg_out(mvchip));
-+	mvchip->io_conf_reg = readl(mvebu_gpioreg_io_conf(mvchip));
-+	mvchip->blink_en_reg = readl(mvebu_gpioreg_blink(mvchip));
-+	mvchip->in_pol_reg = readl(mvebu_gpioreg_in_pol(mvchip));
++	if (type == NULL || strcmp(type, "memory"))
++		return 0;
 +
-+	switch (mvchip->soc_variant) {
-+	case MVEBU_GPIO_SOC_VARIANT_ORION:
-+		mvchip->edge_mask_regs[0] =
-+			readl(mvchip->membase + GPIO_EDGE_MASK_OFF);
-+		mvchip->level_mask_regs[0] =
-+			readl(mvchip->membase + GPIO_LEVEL_MASK_OFF);
-+		break;
-+	case MVEBU_GPIO_SOC_VARIANT_MV78200:
-+		for (i = 0; i < 2; i++) {
-+			mvchip->edge_mask_regs[i] =
-+				readl(mvchip->membase +
-+				      GPIO_EDGE_MASK_MV78200_OFF(i));
-+			mvchip->level_mask_regs[i] =
-+				readl(mvchip->membase +
-+				      GPIO_LEVEL_MASK_MV78200_OFF(i));
-+		}
-+		break;
-+	case MVEBU_GPIO_SOC_VARIANT_ARMADAXP:
-+		for (i = 0; i < 4; i++) {
-+			mvchip->edge_mask_regs[i] =
-+				readl(mvchip->membase +
-+				      GPIO_EDGE_MASK_ARMADAXP_OFF(i));
-+			mvchip->level_mask_regs[i] =
-+				readl(mvchip->membase +
-+				      GPIO_LEVEL_MASK_ARMADAXP_OFF(i));
-+		}
-+		break;
-+	default:
-+		BUG();
++	reg = of_get_flat_dt_prop(node, "linux,usable-memory", &l);
++	if (reg == NULL)
++		reg = of_get_flat_dt_prop(node, "reg", &l);
++	if (reg == NULL)
++		return 0;
++
++	endp = reg + (l / sizeof(__be32));
++	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
++		u64 base, size;
++
++		base = dt_mem_next_cell(dt_root_addr_cells, &reg);
++		size = dt_mem_next_cell(dt_root_size_cells, &reg);
++
++		memblock_reserve(base, MVEBU_DDR_TRAINING_AREA_SZ);
 +	}
 +
 +	return 0;
 +}
 +
-+static int mvebu_gpio_resume(struct platform_device *pdev)
++static void __init mvebu_memblock_reserve(void)
 +{
-+	struct mvebu_gpio_chip *mvchip = platform_get_drvdata(pdev);
-+	int i;
-+
-+	writel(mvchip->out_reg, mvebu_gpioreg_out(mvchip));
-+	writel(mvchip->io_conf_reg, mvebu_gpioreg_io_conf(mvchip));
-+	writel(mvchip->blink_en_reg, mvebu_gpioreg_blink(mvchip));
-+	writel(mvchip->in_pol_reg, mvebu_gpioreg_in_pol(mvchip));
-+
-+	switch (mvchip->soc_variant) {
-+	case MVEBU_GPIO_SOC_VARIANT_ORION:
-+		writel(mvchip->edge_mask_regs[0],
-+		       mvchip->membase + GPIO_EDGE_MASK_OFF);
-+		writel(mvchip->level_mask_regs[0],
-+		       mvchip->membase + GPIO_LEVEL_MASK_OFF);
-+		break;
-+	case MVEBU_GPIO_SOC_VARIANT_MV78200:
-+		for (i = 0; i < 2; i++) {
-+			writel(mvchip->edge_mask_regs[i],
-+			       mvchip->membase + GPIO_EDGE_MASK_MV78200_OFF(i));
-+			writel(mvchip->level_mask_regs[i],
-+			       mvchip->membase +
-+			       GPIO_LEVEL_MASK_MV78200_OFF(i));
-+		}
-+		break;
-+	case MVEBU_GPIO_SOC_VARIANT_ARMADAXP:
-+		for (i = 0; i < 4; i++) {
-+			writel(mvchip->edge_mask_regs[i],
-+			       mvchip->membase +
-+			       GPIO_EDGE_MASK_ARMADAXP_OFF(i));
-+			writel(mvchip->level_mask_regs[i],
-+			       mvchip->membase +
-+			       GPIO_LEVEL_MASK_ARMADAXP_OFF(i));
-+		}
-+		break;
-+	default:
-+		BUG();
-+	}
-+
-+	return 0;
++	of_scan_flat_dt(mvebu_scan_mem, NULL);
 +}
++#else
++static void __init mvebu_memblock_reserve(void) {}
++#endif
 +
- static int mvebu_gpio_probe(struct platform_device *pdev)
- {
- 	struct mvebu_gpio_chip *mvchip;
-@@ -577,6 +672,8 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
- 	if (!mvchip)
- 		return -ENOMEM;
++/*
+  * Early versions of Armada 375 SoC have a bug where the BootROM
+  * leaves an external data abort pending. The kernel is hit by this
+  * data abort as soon as it enters userspace, because it unmasks the
+@@ -210,6 +260,7 @@ DT_MACHINE_START(ARMADA_370_XP_DT, "Marvell Armada 370/XP (Device Tree)")
+ 	.init_machine	= mvebu_dt_init,
+ 	.init_irq       = mvebu_init_irq,
+ 	.restart	= mvebu_restart,
++	.reserve        = mvebu_memblock_reserve,
+ 	.dt_compat	= armada_370_xp_dt_compat,
+ MACHINE_END
  
-+	platform_set_drvdata(pdev, mvchip);
-+
- 	if (of_property_read_u32(pdev->dev.of_node, "ngpios", &ngpios)) {
- 		dev_err(&pdev->dev, "Missing ngpios OF property\n");
- 		return -ENODEV;
-@@ -735,5 +832,7 @@ static struct platform_driver mvebu_gpio_driver = {
- 		.of_match_table = mvebu_gpio_of_match,
- 	},
- 	.probe		= mvebu_gpio_probe,
-+	.suspend        = mvebu_gpio_suspend,
-+	.resume         = mvebu_gpio_resume,
- };
- module_platform_driver(mvebu_gpio_driver);
 -- 
 2.1.0
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
