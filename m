@@ -1,82 +1,119 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Subject: Re: [PATCH v10 11/11] drm: bridge/dw_hdmi: add rockchip rk3288 support
-Date: Fri, 14 Nov 2014 11:16:14 +0000
-Message-ID: <5465E47E.7090602@imgtec.com>
-References: <1415934583-16290-1-git-send-email-andy.yan@rock-chips.com>
- <1415935884-17130-1-git-send-email-andy.yan@rock-chips.com>
- <5465D816.3020708@imgtec.com> <5465DB4F.7090402@rock-chips.com>
- <5465DF34.303@imgtec.com> <5465E3F1.4060407@rock-chips.com>
+Date: Fri, 14 Nov 2014 19:21:36 +0800
+Message-ID: <5465E5C0.7050207@rock-chips.com>
+References: <1415934583-16290-1-git-send-email-andy.yan@rock-chips.com> <1415935884-17130-1-git-send-email-andy.yan@rock-chips.com> <5465D816.3020708@imgtec.com> <5465DB4F.7090402@rock-chips.com> <5465DF34.303@imgtec.com> <5465E3F1.4060407@rock-chips.com> <5465E47E.7090602@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <5465E3F1.4060407@rock-chips.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Andy Yan <andy.yan@rock-chips.com>, airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
-Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, mark.yao@rock-chips.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5465E47E.7090602-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, airlied-cv59FeDIM0c@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Josh Boyer <jwboyer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAxNC8xMS8xNCAxMToxMywgQW5keSBZYW4gd3JvdGU6Cj4gCj4gT24gMjAxNOW5tDEx5pyI
-MTTml6UgMTg6NTMsIFp1YmFpciBMdXRmdWxsYWggS2FrYWtoZWwgd3JvdGU6Cj4+Cj4+IE9uIDE0
-LzExLzE0IDEwOjM3LCBBbmR5IFlhbiB3cm90ZToKPj4+IE9uIDIwMTTlubQxMeaciDE05pelIDE4
-OjIzLCBadWJhaXIgTHV0ZnVsbGFoIEtha2FraGVsIHdyb3RlOgo+Pj4+IEhpIEFuZHkKPj4+Pgo+
-Pj4+IE9uIDE0LzExLzE0IDAzOjMxLCBBbmR5IFlhbiB3cm90ZToKPj4+Pj4gUm9ja2NoaXAgUksz
-Mjg4IGhkbWkgaXMgY29tcGF0aWJsZSB3aXRoIGR3X2hkbWkKPj4+Pj4KPj4+Pj4gU2lnbmVkLW9m
-Zi1ieTogQW5keSBZYW4gPGFuZHkueWFuQHJvY2stY2hpcHMuY29tPgo+Pj4+Pgo+Pj4+PiAtLS0K
-Pj4+Pj4KPj4+Pj4gQ2hhbmdlcyBpbiB2MTA6Cj4+Pj4+IC0gYWRkIG1vcmUgZGlzcGxheSBtb2Rl
-IHN1cHBvcnQgbXBsbCBjb25maWd1cmF0aW9uIGZvciByazMyODgKPj4+Pj4KPj4+Pj4gQ2hhbmdl
-cyBpbiB2OToKPj4+Pj4gLSBtb3ZlIHNvbWUgcGh5IGNvbmZpZ3VyYXRpb24gdG8gcGxhdGZvcm0g
-ZHJpdmVyCj4+Pj4+Cj4+Pj4+IENoYW5nZXMgaW4gdjg6IE5vbmUKPj4+Pj4gQ2hhbmdlcyBpbiB2
-NzogTm9uZQo+Pj4+PiBDaGFuZ2VzIGluIHY2OiBOb25lCj4+Pj4+IENoYW5nZXMgaW4gdjU6IE5v
-bmUKPj4+Pj4gQ2hhbmdlcyBpbiB2NDogTm9uZQo+Pj4+PiBDaGFuZ2VzIGluIHYzOiBOb25lCj4+
-Pj4+IENoYW5nZXMgaW4gdjI6IE5vbmUKPj4+Pj4KPj4+Pj4gICAgZHJpdmVycy9ncHUvZHJtL2Jy
-aWRnZS9kd19oZG1pLmMgICAgICAgICAgICB8ICAxMCArCj4+Pj4+ICAgIGRyaXZlcnMvZ3B1L2Ry
-bS9icmlkZ2UvZHdfaGRtaS5oICAgICAgICAgICAgfCAgIDMgKy0KPj4+Pj4gICAgZHJpdmVycy9n
-cHUvZHJtL3JvY2tjaGlwL0tjb25maWcgICAgICAgICAgICB8ICAxMCArCj4+Pj4+ICAgIGRyaXZl
-cnMvZ3B1L2RybS9yb2NrY2hpcC9NYWtlZmlsZSAgICAgICAgICAgfCAgIDIgKy0KPj4+Pj4gICAg
-ZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAuYyB8IDM1NSArKysrKysr
-KysrKysrKysrKysrKysrKysrKysrCj4+Pj4+ICAgIGluY2x1ZGUvZHJtL2JyaWRnZS9kd19oZG1p
-LmggICAgICAgICAgICAgICAgfCAgIDEgKwo+Pj4+PiAgICA2IGZpbGVzIGNoYW5nZWQsIDM3OSBp
-bnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQo+Pj4+PiAgICBjcmVhdGUgbW9kZSAxMDA2NDQg
-ZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAuYwo+Pj4+Pgo+Pj4+PiBk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kd19oZG1pLmMgYi9kcml2ZXJzL2dw
-dS9kcm0vYnJpZGdlL2R3X2hkbWkuYwo+Pj4+PiBpbmRleCBhMjg3NmZlLi4xZGQxZjBiIDEwMDY0
-NAo+Pj4+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R3X2hkbWkuYwo+Pj4+PiArKysg
-Yi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R3X2hkbWkuYwo+Pj4+PiBAQCAtNzE1LDYgKzcxNSwx
-MyBAQCBzdGF0aWMgdm9pZCBkd19oZG1pX3BoeV9lbmFibGVfdG1kcyhzdHJ1Y3QgZHdfaGRtaSAq
-aGRtaSwgdTggZW5hYmxlKQo+Pj4+PiAgICAgICAgICAgICAgICAgSERNSV9QSFlfQ09ORjBfRU5U
-TURTX01BU0spOwo+Pj4+PiAgICB9Cj4+Pj4+ICAgICtzdGF0aWMgdm9pZCBkd19oZG1pX3BoeV9l
-bmFibGVfc3BhcmUoc3RydWN0IGR3X2hkbWkgKmhkbWksIHU4IGVuYWJsZSkKPj4+Pj4gK3sKPj4+
-Pj4gKyAgICBoZG1pX21hc2tfd3JpdGViKGhkbWksIGVuYWJsZSwgSERNSV9QSFlfQ09ORjAsCj4+
-Pj4+ICsgICAgICAgICAgICAgSERNSV9QSFlfQ09ORjBfU1BBUkVDVFJMX09GRlNFVCwKPj4+Pj4g
-KyAgICAgICAgICAgICBIRE1JX1BIWV9DT05GMF9TUEFSRUNUUkxfTUFTSyk7Cj4+Pj4+ICt9Cj4+
-Pj4+ICsKPj4+PiBXaGF0IGRvZXMgZW5hYmxlIHNwYXJlIGRvPyBDYW4gb3RoZXIgZnV0dXJlIFNv
-Q3MgdXNlIGl0Pwo+Pj4+Cj4+Pj4gVGhpcyBsb29rcyBsaWtlIERXIHNwZWNpZmljLiBBbmQgY2Fu
-IGJlIGEgc2VwYXJhdGUgY29tbWl0IHRoYXQgYWRkcyBhIGZlYXR1cmUgdG8gdGhlIGR3IGhkbWkg
-ZHJpdmVyLgo+Pj4gICAgQWN0dWFsbHkgSSBhbSBub3QgdmVyeSBjbGVhcmx5IGFib3V0IHRoaXMg
-Yml0LCBidXQgUkszMjg4IEhETUkgd2lsbCBub3Qgd29yayB3aXRob3V0IHRoaXMgYml0IGVuYWJs
-ZS4KPj4+ICAgIE9uIGlteDYsIHRoZSBkZXNjcmlwdGlvbiBhYm91dCB0aGlzIGJpdCBpczpSZXNl
-cnZlZC4gU3BhcmUgcGluIGNvbnRyb2wuCj4+PiAgICBPbiByazMyODgsIHRoZSBkZXNjcmlwdGlv
-biBpczogc3ZzcmV0L3NwYXJlY3RybAo+Pj4gICAgIEJvdGggYXJlIHZlcnkgc2ltcGxlLgo+PiBT
-b3VuZHMgbGlrZSB0aGUgSVAgQ29yZSBpbiB0aGUgcmszMjg4IGlzIHNsaWdodGx5IHVwZ3JhZGVk
-Lgo+PiBTZXBhcmF0ZSB0aGlzIHNlY3Rpb24gaW4gYSBkaWZmZXJlbnQgY29tbWl0IGFzIGl0IGlz
-IGdlbmVyaWMgRFcgc3R1ZmYuCj4+Cj4+IEFuZCBhZGQgd2hhdCB5b3Ugd3JvdGUgYWJvdmUgaW4g
-dGhlIGNvbW1pdCBtZXNzYWdlLgo+ICAgT25seSBTZXBhcmF0ZSBmdW5jdGlvbiBkd19oZG1pX3Bo
-eV9lbmFsZV9zcGFyZSA/IG5vdCBpbmNsdWRlCj4gICBpZiAoaGRtaS0+ZGV2X3R5cGUgPT0gcmsz
-Mjg4X2hkbWkpCj4gICAgICAgICAgICAgICAgZHdfaGRtaV9lbmFibGVfcGh5X3NwYXJlKGhkbWks
-IDEpOwo+ICA/CgpZZXMuIFNlcGFyYXRlIGR3X2hkbWlfcGh5X2VuYWJsZV9zcGFyZSBhbmQgaXRz
-IGFzc29jaWF0ZWQgZGVmaW5lcyAKIEhETUlfUEhZX0NPTkYwX1NQQVJFQ1RSTF9PRkZTRVQKIEhE
-TUlfUEhZX0NPTkYwX1NQQVJFQ1RSTF9NQVNLCiBpbiB0aGUgaGVhZGVyCmFzIG9uZSBjb21taXQu
-CgoKVGhlIGlmIChoZG1pLT5kZXZfdHlwZSA9PSByazMyODhfaGRtaSkgY29kZSBpcyBwYXJ0IG9m
-IHRoZSBhZGQgcmszMjg4IHN1cHBvcnQuCgpadWJhaXJMSwpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZlbCBtYWlsaW5nIGxpc3QKZGV2ZWxAbGludXhk
-cml2ZXJwcm9qZWN0Lm9yZwpodHRwOi8vZHJpdmVyZGV2LmxpbnV4ZHJpdmVycHJvamVjdC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcml2ZXJkZXYtZGV2ZWwK
+
+On 2014=E5=B9=B411=E6=9C=8814=E6=97=A5 19:16, Zubair Lutfullah Kakakhel=
+ wrote:
+>
+> On 14/11/14 11:13, Andy Yan wrote:
+>> On 2014=E5=B9=B411=E6=9C=8814=E6=97=A5 18:53, Zubair Lutfullah Kakak=
+hel wrote:
+>>> On 14/11/14 10:37, Andy Yan wrote:
+>>>> On 2014=E5=B9=B411=E6=9C=8814=E6=97=A5 18:23, Zubair Lutfullah Kak=
+akhel wrote:
+>>>>> Hi Andy
+>>>>>
+>>>>> On 14/11/14 03:31, Andy Yan wrote:
+>>>>>> Rockchip RK3288 hdmi is compatible with dw_hdmi
+>>>>>>
+>>>>>> Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>>>>>
+>>>>>> ---
+>>>>>>
+>>>>>> Changes in v10:
+>>>>>> - add more display mode support mpll configuration for rk3288
+>>>>>>
+>>>>>> Changes in v9:
+>>>>>> - move some phy configuration to platform driver
+>>>>>>
+>>>>>> Changes in v8: None
+>>>>>> Changes in v7: None
+>>>>>> Changes in v6: None
+>>>>>> Changes in v5: None
+>>>>>> Changes in v4: None
+>>>>>> Changes in v3: None
+>>>>>> Changes in v2: None
+>>>>>>
+>>>>>>     drivers/gpu/drm/bridge/dw_hdmi.c            |  10 +
+>>>>>>     drivers/gpu/drm/bridge/dw_hdmi.h            |   3 +-
+>>>>>>     drivers/gpu/drm/rockchip/Kconfig            |  10 +
+>>>>>>     drivers/gpu/drm/rockchip/Makefile           |   2 +-
+>>>>>>     drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 355 ++++++++++=
+++++++++++++++++++
+>>>>>>     include/drm/bridge/dw_hdmi.h                |   1 +
+>>>>>>     6 files changed, 379 insertions(+), 2 deletions(-)
+>>>>>>     create mode 100644 drivers/gpu/drm/rockchip/dw_hdmi-rockchip=
+=2Ec
+>>>>>>
+>>>>>> diff --git a/drivers/gpu/drm/bridge/dw_hdmi.c b/drivers/gpu/drm/=
+bridge/dw_hdmi.c
+>>>>>> index a2876fe..1dd1f0b 100644
+>>>>>> --- a/drivers/gpu/drm/bridge/dw_hdmi.c
+>>>>>> +++ b/drivers/gpu/drm/bridge/dw_hdmi.c
+>>>>>> @@ -715,6 +715,13 @@ static void dw_hdmi_phy_enable_tmds(struct =
+dw_hdmi *hdmi, u8 enable)
+>>>>>>                  HDMI_PHY_CONF0_ENTMDS_MASK);
+>>>>>>     }
+>>>>>>     +static void dw_hdmi_phy_enable_spare(struct dw_hdmi *hdmi, =
+u8 enable)
+>>>>>> +{
+>>>>>> +    hdmi_mask_writeb(hdmi, enable, HDMI_PHY_CONF0,
+>>>>>> +             HDMI_PHY_CONF0_SPARECTRL_OFFSET,
+>>>>>> +             HDMI_PHY_CONF0_SPARECTRL_MASK);
+>>>>>> +}
+>>>>>> +
+>>>>> What does enable spare do? Can other future SoCs use it?
+>>>>>
+>>>>> This looks like DW specific. And can be a separate commit that ad=
+ds a feature to the dw hdmi driver.
+>>>>     Actually I am not very clearly about this bit, but RK3288 HDMI=
+ will not work without this bit enable.
+>>>>     On imx6, the description about this bit is:Reserved. Spare pin=
+ control.
+>>>>     On rk3288, the description is: svsret/sparectrl
+>>>>      Both are very simple.
+>>> Sounds like the IP Core in the rk3288 is slightly upgraded.
+>>> Separate this section in a different commit as it is generic DW stu=
+ff.
+>>>
+>>> And add what you wrote above in the commit message.
+>>    Only Separate function dw_hdmi_phy_enale_spare ? not include
+>>    if (hdmi->dev_type =3D=3D rk3288_hdmi)
+>>                 dw_hdmi_enable_phy_spare(hdmi, 1);
+>>   ?
+> Yes. Separate dw_hdmi_phy_enable_spare and its associated defines
+>   HDMI_PHY_CONF0_SPARECTRL_OFFSET
+>   HDMI_PHY_CONF0_SPARECTRL_MASK
+>   in the header
+> as one commit.
+>
+>
+> The if (hdmi->dev_type =3D=3D rk3288_hdmi) code is part of the add rk=
+3288 support.
+>
+> ZubairLK
+   Many thanks :-)
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
