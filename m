@@ -1,168 +1,70 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH v4 0/6] Xilinx Zynq OCM support
-Date: Fri, 14 Nov 2014 11:52:01 +0100
-Message-ID: <cover.1415962281.git.michal.simek@xilinx.com>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Subject: Re: [PATCH v10 11/11] drm: bridge/dw_hdmi: add rockchip rk3288 support
+Date: Fri, 14 Nov 2014 10:53:40 +0000
+Message-ID: <5465DF34.303@imgtec.com>
+References: <1415934583-16290-1-git-send-email-andy.yan@rock-chips.com>
+ <1415935884-17130-1-git-send-email-andy.yan@rock-chips.com>
+ <5465D816.3020708@imgtec.com> <5465DB4F.7090402@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2335263040510286878=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, Soren Brinkmann <soren.brinkmann@xilinx.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Josh Cartwright <josh.cartwright@ni.com>, Russell King <linux@arm.linux.org.uk>, Jingoo Han <jg1.han@samsung.com>, Sandeep Nair <sandeep_n@ti.com>, Antti Palosaari <crope@iki.fi>, Grant Likely <grant.likely@linaro.org>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Michal Simek <monstr@monstr.eu>, Rob Herring <robh+dt@kernel.org>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Santosh Shilimkar <santosh.shilimkar@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, linux-kernel@vger.kernel.org, Andy Gross <agro>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <5465DB4F.7090402@rock-chips.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Andy Yan <andy.yan@rock-chips.com>, airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
+Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, mark.yao@rock-chips.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-This is a MIME GnuPG-signed message.  If you see this text, it means that
-your E-mail or Usenet software does not support MIME signed messages.
-The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
-To open this message correctly you will need to install E-mail or Usenet
-software that supports modern Internet standards.
-
---===============2335263040510286878==
-Content-Type: multipart/signed;
-    boundary="=_mimegpg-monstr-desktop-14082-1415962327-0001";
-    micalg=pgp-sha1; protocol="application/pgp-signature"
-
-This is a MIME GnuPG-signed message.  If you see this text, it means that
-your E-mail or Usenet software does not support MIME signed messages.
-The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
-To open this message correctly you will need to install E-mail or Usenet
-software that supports modern Internet standards.
-
---=_mimegpg-monstr-desktop-14082-1415962327-0001
-
-Hi,
-
-this is the next attepmt to add support for On Chip Memory
-configuration via On Chip Memory Controller.
-OCM can be divided into 4 independend blocks and placed to
-two locations which this driver detects.
-
-For everybody on-chip SRAM driver "mmio-sram"
-is missing parity IRQ handling not sure how to write
-in generic way and also the memory layout
-can be changed at run time (not currently supported by this driver)
-
-smp-sram trampoline allocation can be used from mmio-sram
-and size allocated via DT but currently no reason for using
-it.
-
-Creating mmio-sram node with setting at run time based on current setting
-is possible but it won't look good.
-One way how to do it is here
-"ARM: mvebu: Add quirk for i2c for the OpenBlocks AX3-4 board"
-(sha1: 85e618a1be2b2092318178d1d66bdad49cbbeeeb)
-but creating nodes at run-time or changing compact strings
-will be just more hacky code.
-
-Using device-tree overlays is another option but SMP
-trampoline code is placed there and it will be used by PM code
-that's why driver should be there before user-space.
-
-Next option is to create driver which just create platform device
-at run-time. This is doable but I expect sram driver has to be
-updated.
-
-Thanks,
-Michal
-
-
-Changes in v4:
-- New patch in this series
-- New patch in this series
-- Move only slcr.h and smp.h and keep common.h in platform
-  which is not needed by OCMC driver
-  Based on Arnd request: https://lkml.org/lkml/2014/10/20/268
-  Not all symbols from slcr.h/smp.h will be used by OCMC driver
-  - no problem to remove them if it is needed
-- Add record to MAINTAINERS file
-- slcr.h has moved to soc/include/ folder. Move definition there too.
-- Use }; instead of } ; in doc
-- Use memory-controller@... instead of ocmc@...
-- Create Kconfig entry for OCMC driver - enable GENERIC_ALLOCATOR here
-- Add entry to MAINTAINERS file
-- Use memory-controller@... instead of ocmc@...
-
-Changes in v3:
-- Move OCM to drivers/soc
-- Update year
-- Extract DTS node to be able to apply it out of driver
-- Remove generic allocator enabling
-- Extract SLCR part
-- Use const in of_device_id
-- OCM->OCMC
-- Use ocmc-1.0 compatible string
-- Extract from OCM driver
-
-Changes in v2:
-- Update pm.c added in 3.17 too - Soren pointed on it
-- Change compatibility string to be in xilinx format
-- Fix kernel-doc format
-
-Michal Simek (6):
-  ARM: zynq: Extract smp related functions out of common.h
-  ARM: zynq: Extract slcr related functions out of common.h
-  ARM: zynq: Move slcr.h and smp.h to generic location
-  ARM: zynq: Extend SLCR driver to read OCM configuration
-  ARM: zynq: Add OCM controller driver
-  ARM: zynq: DT: Add OCM controller node
-
- .../bindings/arm/zynq/xlnx,zynq-ocmc.txt           |  17 ++
- MAINTAINERS                                        |   2 +
- arch/arm/boot/dts/zynq-7000.dtsi                   |   7 +
- arch/arm/mach-zynq/common.c                        |   2 +
- arch/arm/mach-zynq/common.h                        |  19 --
- arch/arm/mach-zynq/platsmp.c                       |   3 +
- arch/arm/mach-zynq/slcr.c                          |  17 ++
- drivers/soc/Kconfig                                |   1 +
- drivers/soc/Makefile                               |   1 +
- drivers/soc/zynq/Kconfig                           |  13 ++
- drivers/soc/zynq/Makefile                          |   1 +
- drivers/soc/zynq/zynq_ocmc.c                       | 247 +++++++++++++++++++++
- include/soc/zynq/slcr.h                            |  30 +++
- include/soc/zynq/smp.h                             |  30 +++
- 14 files changed, 371 insertions(+), 19 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocmc.txt
- create mode 100644 drivers/soc/zynq/Kconfig
- create mode 100644 drivers/soc/zynq/Makefile
- create mode 100644 drivers/soc/zynq/zynq_ocmc.c
- create mode 100644 include/soc/zynq/slcr.h
- create mode 100644 include/soc/zynq/smp.h
-
---
-1.8.2.3
-
-
---=_mimegpg-monstr-desktop-14082-1415962327-0001
-Content-Type: application/pgp-signature
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iEYEABECAAYFAlRl3tcACgkQykllyylKDCEn5ACggoXR6bwBuUrJbEytoa1PF1TC
-pnkAn1FwDKYq0/9luJ/z4SLKg2fi82wX
-=ck+b
------END PGP SIGNATURE-----
-
---=_mimegpg-monstr-desktop-14082-1415962327-0001--
-
-
---===============2335263040510286878==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============2335263040510286878==--
+CgpPbiAxNC8xMS8xNCAxMDozNywgQW5keSBZYW4gd3JvdGU6Cj4gCj4gT24gMjAxNOW5tDEx5pyI
+MTTml6UgMTg6MjMsIFp1YmFpciBMdXRmdWxsYWggS2FrYWtoZWwgd3JvdGU6Cj4+IEhpIEFuZHkK
+Pj4KPj4gT24gMTQvMTEvMTQgMDM6MzEsIEFuZHkgWWFuIHdyb3RlOgo+Pj4gUm9ja2NoaXAgUksz
+Mjg4IGhkbWkgaXMgY29tcGF0aWJsZSB3aXRoIGR3X2hkbWkKPj4+Cj4+PiBTaWduZWQtb2ZmLWJ5
+OiBBbmR5IFlhbiA8YW5keS55YW5Acm9jay1jaGlwcy5jb20+Cj4+Pgo+Pj4gLS0tCj4+Pgo+Pj4g
+Q2hhbmdlcyBpbiB2MTA6Cj4+PiAtIGFkZCBtb3JlIGRpc3BsYXkgbW9kZSBzdXBwb3J0IG1wbGwg
+Y29uZmlndXJhdGlvbiBmb3IgcmszMjg4Cj4+Pgo+Pj4gQ2hhbmdlcyBpbiB2OToKPj4+IC0gbW92
+ZSBzb21lIHBoeSBjb25maWd1cmF0aW9uIHRvIHBsYXRmb3JtIGRyaXZlcgo+Pj4KPj4+IENoYW5n
+ZXMgaW4gdjg6IE5vbmUKPj4+IENoYW5nZXMgaW4gdjc6IE5vbmUKPj4+IENoYW5nZXMgaW4gdjY6
+IE5vbmUKPj4+IENoYW5nZXMgaW4gdjU6IE5vbmUKPj4+IENoYW5nZXMgaW4gdjQ6IE5vbmUKPj4+
+IENoYW5nZXMgaW4gdjM6IE5vbmUKPj4+IENoYW5nZXMgaW4gdjI6IE5vbmUKPj4+Cj4+PiAgIGRy
+aXZlcnMvZ3B1L2RybS9icmlkZ2UvZHdfaGRtaS5jICAgICAgICAgICAgfCAgMTAgKwo+Pj4gICBk
+cml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R3X2hkbWkuaCAgICAgICAgICAgIHwgICAzICstCj4+PiAg
+IGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9LY29uZmlnICAgICAgICAgICAgfCAgMTAgKwo+Pj4g
+ICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvTWFrZWZpbGUgICAgICAgICAgIHwgICAyICstCj4+
+PiAgIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLmMgfCAzNTUgKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKwo+Pj4gICBpbmNsdWRlL2RybS9icmlkZ2UvZHdfaGRt
+aS5oICAgICAgICAgICAgICAgIHwgICAxICsKPj4+ICAgNiBmaWxlcyBjaGFuZ2VkLCAzNzkgaW5z
+ZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
+cnMvZ3B1L2RybS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLmMKPj4+Cj4+PiBkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kd19oZG1pLmMgYi9kcml2ZXJzL2dwdS9kcm0vYnJp
+ZGdlL2R3X2hkbWkuYwo+Pj4gaW5kZXggYTI4NzZmZS4uMWRkMWYwYiAxMDA2NDQKPj4+IC0tLSBh
+L2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvZHdfaGRtaS5jCj4+PiArKysgYi9kcml2ZXJzL2dwdS9k
+cm0vYnJpZGdlL2R3X2hkbWkuYwo+Pj4gQEAgLTcxNSw2ICs3MTUsMTMgQEAgc3RhdGljIHZvaWQg
+ZHdfaGRtaV9waHlfZW5hYmxlX3RtZHMoc3RydWN0IGR3X2hkbWkgKmhkbWksIHU4IGVuYWJsZSkK
+Pj4+ICAgICAgICAgICAgICAgIEhETUlfUEhZX0NPTkYwX0VOVE1EU19NQVNLKTsKPj4+ICAgfQo+
+Pj4gICArc3RhdGljIHZvaWQgZHdfaGRtaV9waHlfZW5hYmxlX3NwYXJlKHN0cnVjdCBkd19oZG1p
+ICpoZG1pLCB1OCBlbmFibGUpCj4+PiArewo+Pj4gKyAgICBoZG1pX21hc2tfd3JpdGViKGhkbWks
+IGVuYWJsZSwgSERNSV9QSFlfQ09ORjAsCj4+PiArICAgICAgICAgICAgIEhETUlfUEhZX0NPTkYw
+X1NQQVJFQ1RSTF9PRkZTRVQsCj4+PiArICAgICAgICAgICAgIEhETUlfUEhZX0NPTkYwX1NQQVJF
+Q1RSTF9NQVNLKTsKPj4+ICt9Cj4+PiArCj4+IFdoYXQgZG9lcyBlbmFibGUgc3BhcmUgZG8/IENh
+biBvdGhlciBmdXR1cmUgU29DcyB1c2UgaXQ/Cj4+Cj4+IFRoaXMgbG9va3MgbGlrZSBEVyBzcGVj
+aWZpYy4gQW5kIGNhbiBiZSBhIHNlcGFyYXRlIGNvbW1pdCB0aGF0IGFkZHMgYSBmZWF0dXJlIHRv
+IHRoZSBkdyBoZG1pIGRyaXZlci4KPiAgIEFjdHVhbGx5IEkgYW0gbm90IHZlcnkgY2xlYXJseSBh
+Ym91dCB0aGlzIGJpdCwgYnV0IFJLMzI4OCBIRE1JIHdpbGwgbm90IHdvcmsgd2l0aG91dCB0aGlz
+IGJpdCBlbmFibGUuCj4gICBPbiBpbXg2LCB0aGUgZGVzY3JpcHRpb24gYWJvdXQgdGhpcyBiaXQg
+aXM6UmVzZXJ2ZWQuIFNwYXJlIHBpbiBjb250cm9sLgo+ICAgT24gcmszMjg4LCB0aGUgZGVzY3Jp
+cHRpb24gaXM6IHN2c3JldC9zcGFyZWN0cmwKPiAgICBCb3RoIGFyZSB2ZXJ5IHNpbXBsZS4KClNv
+dW5kcyBsaWtlIHRoZSBJUCBDb3JlIGluIHRoZSByazMyODggaXMgc2xpZ2h0bHkgdXBncmFkZWQu
+ClNlcGFyYXRlIHRoaXMgc2VjdGlvbiBpbiBhIGRpZmZlcmVudCBjb21taXQgYXMgaXQgaXMgZ2Vu
+ZXJpYyBEVyBzdHVmZi4KCkFuZCBhZGQgd2hhdCB5b3Ugd3JvdGUgYWJvdmUgaW4gdGhlIGNvbW1p
+dCBtZXNzYWdlLgoKVGhhbmtzClp1YmFpckxLCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRldmVsIG1haWxpbmcgbGlzdApkZXZlbEBsaW51eGRyaXZlcnBy
+b2plY3Qub3JnCmh0dHA6Ly9kcml2ZXJkZXYubGludXhkcml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2RyaXZlcmRldi1kZXZlbAo=
