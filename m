@@ -1,66 +1,422 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH v10 05/11] drm: bridge/dw_hdmi:split some phy configuration
- to platform driver
-Date: Fri, 14 Nov 2014 18:53:00 +0800
-Message-ID: <5465DF0C.50301@rock-chips.com>
-References: <1415934583-16290-1-git-send-email-andy.yan@rock-chips.com>
- <1415935631-16826-1-git-send-email-andy.yan@rock-chips.com>
- <5465D73C.9030507@imgtec.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <5465D73C.9030507@imgtec.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
-Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, mark.yao@rock-chips.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH v4 5/6] ARM: zynq: Add OCM controller driver
+Date: Fri, 14 Nov 2014 11:52:06 +0100
+Message-ID: <6741d995fbec801d795c5db481e39425bd912f8a.1415962281.git.michal.simek@xilinx.com>
+References: <cover.1415962281.git.michal.simek@xilinx.com>
+Content-Type: multipart/signed;
+    boundary="=_mimegpg-monstr-desktop-14131-1415962340-0001";
+    micalg=pgp-sha1; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1415962281.git.michal.simek@xilinx.com>
+In-Reply-To: <cover.1415962281.git.michal.simek@xilinx.com>
+References: <cover.1415962281.git.michal.simek@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, Soren Brinkmann <soren.brinkmann@xilinx.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
+Cc: monstr@monstr.eu, Josh Cartwright <josh.cartwright@ni.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Antti Palosaari <crope@iki.fi>, Jingoo Han <jg1.han@samsung.com>, Sandeep Nair <sandeep_n@ti.com>, Santosh Shilimkar <santosh.shilimkar@gmail.com>, Andy Gross <agross@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>Thierry Reding <tr>
 List-Id: devicetree@vger.kernel.org
 
-SGkgWnViYWlyTEs6CiAgICBUaGFua3MgZm9yIHlvdXIgcmV2aWV3LgpPbiAyMDE05bm0MTHmnIgx
-NOaXpSAxODoxOSwgWnViYWlyIEx1dGZ1bGxhaCBLYWtha2hlbCB3cm90ZToKPiBIaSBBbmR5LAo+
-Cj4gTmljZSB3b3JrIG9uIHRoaXMgcGF0Y2ggc2VyaWVzLiBJdHMgZ2V0dGluZyBiZXR0ZXIgYW5k
-IGJldHRlciA6KS4KPgo+IE9uIDE0LzExLzE0IDAzOjI3LCBBbmR5IFlhbiB3cm90ZToKPj4gaGRt
-aSBwaHkgY2xvY2sgc3ltYm9sIGFuZCB0cmFuc21pc3Npb24gdGVybWluYXRpb24gdmFsdWUKPj4g
-Y2FuIGFkanVzdCBwbGF0Zm9ybSBzcGVjaWZpYyB0byBnZXQgdGhlIGJlc3QgU0kKPiAJCQkJCQle
-SXMgdGhpcyBzaWduYWwgaW50ZWdyaXR5PwogICAgeWVzICwgU0kgIGlzIHNpZ25hbCBpbnRlZ3Jp
-dHksIHN1Y2ggYXMgZXllIGRpYWdyYW0gbWVhc3VyZW1lbnQKPgo+IEFyZSB0aGVzZSB0d28gZGlz
-am9pbnQgZmVhdHVyZXMgaW4gc2VwYXJhdGUgcGF0Y2hlcz8KPgo+PiBhbHNvIGFkZCBtb2RlX3Zh
-bGlkIGludGVyZmFjZSBmb3Igc29tZSBwbGF0Zm9ybSBtYXkgbm90IHN1cHBvcnQKPj4gYWxsIHRo
-ZSBkaXNwbGF5IG1vZGUKPiBTb3VuZHMgbGlrZSBhbm90aGVyIHNlcGFyYXRlIHBhdGNoIHRvIG1l
-LiA6KQogICAgdGhleSBjYW4gc2VwZXJhdGUKPgo+IEFsc28sIFRoaXMgc2VyaWVzIGlzIGJlY29t
-aW5nIHF1aXRlIGxhcmdlLiBXaXRoIG1ham9yIGNoYW5nZXMgYW5kIGZpeGVzIG1peGVkIHRvZ2V0
-aGVyLgo+Cj4gUGF0Y2ggMyBzcGxpdHMgaW14LWRybS4KPiBQYXRjaCA0IG1vdmVzIGR3LWRybSBv
-dXQgb2YgaW14LWRybSBmb2xkZXIuCj4gUGF0Y2ggNyBhZGRzIGJpbmRpbmcKPiBQYXRjaCA5IGNv
-bnZlcnRzIHRvIGRybSBicmlkZ2UuCj4KPiBDYW4gdGhlc2UgYmUgcGxhY2VkIHRvZ2V0aGVyIGVh
-c2lseT8KPiBBbmQgaW4gdGhlIHN0YXJ0LiBpLmUuIHBhdGNoIDEsIDIsIDMsIDQsCj4KPiBUaGVu
-IGFsbCBmaXhlcyBldGMgY2FuIGNvbWUgYWZ0ZXJ3YXJkcz8KPgo+IEl0IGhlbHBzIHdoZW4gY2hl
-Y2tpbmcgaGlzdG9yaWVzIGxhdGVyIGFzIHRvIGhvdyBhIGRyaXZlciB3YXMgbWFkZSBhbmQgaG93
-IGZpeGVzIGhhcHBlbmVkLgo+Cj4gRXNwZWNpYWxseSB3aGVuIGZpbGUgbW92ZXMgaGFwcGVuLi4K
-ICAgRG8geW91IG1lYW4gd2UgY2FuIHJlYXJyYW5nZSB0aGUgcGF0Y2ggc2VyaWVzPwogICBwdXQg
-cGF0Y2ggMywgNCAsNywgOSB0b2dldGhlciAgb25lIGJ5ZSBvbmUKICAgdGhhbiBmb2xsb3dlZCBi
-eSB0aGUgZml4ZXMgcGF0Y2hlcyAgNSAsNiwgOCwgMTEgPwo+Cj4gQ2hlZXJzLAo+IFp1YmFpckxL
-Cj4KPj4gU2lnbmVkLW9mZi1ieTogQW5keSBZYW4gPGFuZHkueWFuQHJvY2stY2hpcHMuY29tPgo+
-Pgo+PiAtLS0KPj4KPj4gQ2hhbmdlcyBpbiB2MTA6Cj4+IC0gc3BsaXQgZ2VuZXJpYyBkd19oZG1p
-LmMgaW1wcm92ZW1lbnRzIGZyb20gcGF0Y2gjMTEgKGFkZCByazMyODggc3VwcG9ydCkKPj4KPj4g
-Q2hhbmdlcyBpbiB2OTogTm9uZQo+PiBDaGFuZ2VzIGluIHY4OiBOb25lCj4+IENoYW5nZXMgaW4g
-djc6IE5vbmUKPj4gQ2hhbmdlcyBpbiB2NjogTm9uZQo+PiBDaGFuZ2VzIGluIHY1OiBOb25lCj4+
-IENoYW5nZXMgaW4gdjQ6IE5vbmUKPj4gQ2hhbmdlcyBpbiB2MzogTm9uZQo+PiBDaGFuZ2VzIGlu
-IHYyOiBOb25lCj4+Cj4+ICAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kd19oZG1pLmMgICAgICB8
-IDI5ICsrKysrKysrKysrKysrKysrKysrKysrKysrKy0tCj4+ICAgZHJpdmVycy9zdGFnaW5nL2lt
-eC1kcm0vZHdfaGRtaS1pbXguYyB8IDEwICsrKysrKysrKy0KPj4gICBpbmNsdWRlL2RybS9icmlk
-Z2UvZHdfaGRtaS5oICAgICAgICAgIHwgIDcgKysrKysrKwo+PiAgIDMgZmlsZXMgY2hhbmdlZCwg
-NDMgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKPj4KPiBfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IExpbnV4LXJvY2tjaGlwIG1haWxpbmcgbGlz
-dAo+IExpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKPiBodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LXJvY2tjaGlwCj4KPgo+CgoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2ZWwgbWFpbGluZyBs
-aXN0CmRldmVsQGxpbnV4ZHJpdmVycHJvamVjdC5vcmcKaHR0cDovL2RyaXZlcmRldi5saW51eGRy
-aXZlcnByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vZHJpdmVyZGV2LWRldmVsCg==
+This is a MIME GnuPG-signed message.  If you see this text, it means that
+your E-mail or Usenet software does not support MIME signed messages.
+The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
+To open this message correctly you will need to install E-mail or Usenet
+software that supports modern Internet standards.
+
+--=_mimegpg-monstr-desktop-14131-1415962340-0001
+
+The driver provide memory allocator which can
+be used by others drivers to allocate memory inside OCM.
+All location for 64kB blocks are supported
+and driver is trying to allocate the largest continuous
+block of memory.
+
+Checking mpcore addressing filterring is not done here
+but could be added in future.
+
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+
+---
+
+Changes in v4:
+- Use }; instead of } ; in doc
+- Use memory-controller@... instead of ocmc@...
+- Create Kconfig entry for OCMC driver - enable GENERIC_ALLOCATOR here
+- Add entry to MAINTAINERS file
+
+Changes in v3:
+- Move OCM to drivers/soc
+- Update year
+- Extract DTS node to be able to apply it out of driver
+- Remove generic allocator enabling
+- Extract SLCR part
+- Use const in of_device_id
+- OCM->OCMC
+- Use ocmc-1.0 compatible string
+
+Changes in v2:
+- Change compatibility string to be in xilinx format
+- Fix kernel-doc format
+
+ .../bindings/arm/zynq/xlnx,zynq-ocmc.txt           |  17 ++
+ MAINTAINERS                                        |   1 +
+ drivers/soc/Kconfig                                |   1 +
+ drivers/soc/Makefile                               |   1 +
+ drivers/soc/zynq/Kconfig                           |  13 ++
+ drivers/soc/zynq/Makefile                          |   1 +
+ drivers/soc/zynq/zynq_ocmc.c                       | 247 +++++++++++++++++++++
+ 7 files changed, 281 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocmc.txt
+ create mode 100644 drivers/soc/zynq/Kconfig
+ create mode 100644 drivers/soc/zynq/Makefile
+ create mode 100644 drivers/soc/zynq/zynq_ocmc.c
+
+diff --git a/Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocmc.txt b/Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocmc.txt
+new file mode 100644
+index 000000000000..dcf221e8a16e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocmc.txt
+@@ -0,0 +1,17 @@
++Device tree bindings for Zynq's OCM controller
++
++The OCM is divided to 4 64kB segments which can be separately configured
++to low or high location. Location is controlled via SLCR.
++
++Required properties:
++ compatible: Compatibility string. Must be "xlnx,zynq-ocmc-1.0".
++ reg: Specify the base and size of the OCMC registers in the memory map.
++      E.g.: reg = <0xf800c000 0x1000>;
++
++Example:
++ocmc: memory-controller@f800c000 {
++	compatible =  "xlnx,zynq-ocmc-1.0";
++	interrupt-parent = <&intc>;
++	interrupts = <0 3 4>;
++	reg = <0xf800c000 0x1000>;
++};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 279e87eef71c..b1471df44f44 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1551,6 +1551,7 @@ S:	Supported
+ F:	arch/arm/mach-zynq/
+ F:	drivers/cpuidle/cpuidle-zynq.c
+ F:	drivers/block/xsysace.c
++F:	drivers/soc/zynq/
+ F:	include/soc/zynq/
+ N:	zynq
+ N:	xilinx
+diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
+index 76d6bd4da138..25cc114a982d 100644
+--- a/drivers/soc/Kconfig
++++ b/drivers/soc/Kconfig
+@@ -3,5 +3,6 @@ menu "SOC (System On Chip) specific Drivers"
+ source "drivers/soc/qcom/Kconfig"
+ source "drivers/soc/ti/Kconfig"
+ source "drivers/soc/versatile/Kconfig"
++source "drivers/soc/zynq/Kconfig"
+
+ endmenu
+diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
+index 063113d0bd38..77a7865a3367 100644
+--- a/drivers/soc/Makefile
++++ b/drivers/soc/Makefile
+@@ -6,3 +6,4 @@ obj-$(CONFIG_ARCH_QCOM)		+= qcom/
+ obj-$(CONFIG_ARCH_TEGRA)	+= tegra/
+ obj-$(CONFIG_SOC_TI)		+= ti/
+ obj-$(CONFIG_PLAT_VERSATILE)	+= versatile/
++obj-$(CONFIG_ARCH_ZYNQ)		+= zynq/
+diff --git a/drivers/soc/zynq/Kconfig b/drivers/soc/zynq/Kconfig
+new file mode 100644
+index 000000000000..0163c54acbc6
+--- /dev/null
++++ b/drivers/soc/zynq/Kconfig
+@@ -0,0 +1,13 @@
++#
++# Xilnx Zynq SoC drivers
++#
++
++if ARCH_ZYNQ
++
++config ZYNQ_OCMC
++	def_bool y
++	select GENERIC_ALLOCATOR
++	help
++	  Xilinx Zynq On Chip Memory Controller driver
++
++endif
+diff --git a/drivers/soc/zynq/Makefile b/drivers/soc/zynq/Makefile
+new file mode 100644
+index 000000000000..807c9b83850d
+--- /dev/null
++++ b/drivers/soc/zynq/Makefile
+@@ -0,0 +1 @@
++obj-$(CONFIG_ZYNQ_OCMC) += zynq_ocmc.o
+diff --git a/drivers/soc/zynq/zynq_ocmc.c b/drivers/soc/zynq/zynq_ocmc.c
+new file mode 100644
+index 000000000000..1e93a33e11ae
+--- /dev/null
++++ b/drivers/soc/zynq/zynq_ocmc.c
+@@ -0,0 +1,247 @@
++/*
++ * Copyright (C) 2013 - 2014 Xilinx
++ *
++ * Based on "Generic on-chip SRAM allocation driver"
++ *
++ * Copyright (C) 2012 Philipp Zabel, Pengutronix
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/kernel.h>
++#include <linux/err.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/of_irq.h>
++#include <linux/platform_device.h>
++#include <linux/genalloc.h>
++
++#include <soc/zynq/slcr.h>
++#include <soc/zynq/smp.h>
++
++#define ZYNQ_OCMC_HIGHADDR	0xfffc0000
++#define ZYNQ_OCMC_LOWADDR	0x0
++#define ZYNQ_OCMC_BLOCK_SIZE	0x10000
++#define ZYNQ_OCMC_BLOCKS		4
++#define ZYNQ_OCMC_GRANULARITY	32
++
++#define ZYNQ_OCMC_PARITY_CTRL	0x0
++#define ZYNQ_OCMC_PARITY_ENABLE	0x1e
++
++#define ZYNQ_OCMC_PARITY_ERRADDRESS	0x4
++
++#define ZYNQ_OCMC_IRQ_STS		0x8
++#define ZYNQ_OCMC_IRQ_STS_ERR_MASK	0x7
++
++struct zynq_ocmc_dev {
++	void __iomem *base;
++	int irq;
++	struct gen_pool *pool;
++	struct resource res[ZYNQ_OCMC_BLOCKS];
++};
++
++/**
++ * zynq_ocmc_irq_handler - Interrupt service routine of the OCM controller
++ * @irq:	IRQ number
++ * @data:	Pointer to the zynq_ocmc_dev structure
++ *
++ * Return:     IRQ_HANDLED always
++ */
++static irqreturn_t zynq_ocmc_irq_handler(int irq, void *data)
++{
++	u32 sts;
++	u32 err_addr;
++	struct zynq_ocmc_dev *zynq_ocmc = data;
++
++	/* check status */
++	sts = readl(zynq_ocmc->base + ZYNQ_OCMC_IRQ_STS);
++	if (sts & ZYNQ_OCMC_IRQ_STS_ERR_MASK) {
++		/* check error address */
++		err_addr = readl(zynq_ocmc->base + ZYNQ_OCMC_PARITY_ERRADDRESS);
++		pr_err("%s: OCM err intr generated at 0x%04x (stat: 0x%08x).",
++		       __func__, err_addr, sts & ZYNQ_OCMC_IRQ_STS_ERR_MASK);
++	}
++	pr_warn("%s: Interrupt generated by OCM, but no error is found.",
++		__func__);
++
++	return IRQ_HANDLED;
++}
++
++/**
++ * zynq_ocmc_probe - Probe method for the OCM driver
++ * @pdev:	Pointer to the platform_device structure
++ *
++ * This function initializes the driver data structures and the hardware.
++ *
++ * Return:	0 on success and error value on failure
++ */
++static int zynq_ocmc_probe(struct platform_device *pdev)
++{
++	int ret;
++	struct zynq_ocmc_dev *zynq_ocmc;
++	u32 i, ocm_config, curr;
++	struct resource *res;
++
++	ocm_config = zynq_slcr_get_ocm_config();
++
++	zynq_ocmc = devm_kzalloc(&pdev->dev, sizeof(*zynq_ocmc), GFP_KERNEL);
++	if (!zynq_ocmc)
++		return -ENOMEM;
++
++	zynq_ocmc->pool = devm_gen_pool_create(&pdev->dev,
++					       ilog2(ZYNQ_OCMC_GRANULARITY),
++					       -1);
++	if (!zynq_ocmc->pool)
++		return -ENOMEM;
++
++	curr = 0; /* For storing current struct resource for OCM */
++	for (i = 0; i < ZYNQ_OCMC_BLOCKS; i++) {
++		u32 base, start, end;
++
++		/* Setup base address for 64kB OCM block */
++		if (ocm_config & BIT(i))
++			base = ZYNQ_OCMC_HIGHADDR;
++		else
++			base = ZYNQ_OCMC_LOWADDR;
++
++		/* Calculate start and end block addresses */
++		start = i * ZYNQ_OCMC_BLOCK_SIZE + base;
++		end = start + (ZYNQ_OCMC_BLOCK_SIZE - 1);
++
++		/* Concatenate OCM blocks together to get bigger pool */
++		if (i > 0 && start == (zynq_ocmc->res[curr - 1].end + 1)) {
++			zynq_ocmc->res[curr - 1].end = end;
++		} else {
++#ifdef CONFIG_SMP
++			/*
++			 * OCM block if placed at 0x0 has special meaning
++			 * for SMP because jump trampoline is added there.
++			 * Ensure that this address won't be allocated.
++			 */
++			if (!base) {
++				u32 trampoline_code_size =
++					&zynq_secondary_trampoline_end -
++					&zynq_secondary_trampoline;
++				dev_dbg(&pdev->dev,
++					"Allocate reset vector table %dB\n",
++					trampoline_code_size);
++				/* Postpone start offset */
++				start += trampoline_code_size;
++			}
++#endif
++			/* First resource is always initialized */
++			zynq_ocmc->res[curr].start = start;
++			zynq_ocmc->res[curr].end = end;
++			zynq_ocmc->res[curr].flags = IORESOURCE_MEM;
++			curr++; /* Increment curr value */
++		}
++		dev_dbg(&pdev->dev, "OCM block %d, start %x, end %x\n",
++			i, start, end);
++	}
++
++	/*
++	 * Separate pool allocation from OCM block detection to ensure
++	 * the biggest possible pool.
++	 */
++	for (i = 0; i < ZYNQ_OCMC_BLOCKS; i++) {
++		unsigned long size;
++		void __iomem *virt_base;
++
++		/* Skip all zero size resources */
++		if (zynq_ocmc->res[i].end == 0)
++			break;
++		dev_dbg(&pdev->dev, "OCM resources %d, start %x, end %x\n",
++			i, zynq_ocmc->res[i].start, zynq_ocmc->res[i].end);
++		size = resource_size(&zynq_ocmc->res[i]);
++		virt_base = devm_ioremap_resource(&pdev->dev,
++						  &zynq_ocmc->res[i]);
++		if (IS_ERR(virt_base))
++			return PTR_ERR(virt_base);
++
++		ret = gen_pool_add_virt(zynq_ocmc->pool,
++					(unsigned long)virt_base,
++					zynq_ocmc->res[i].start, size, -1);
++		if (ret < 0) {
++			dev_err(&pdev->dev, "Gen pool failed\n");
++			return ret;
++		}
++		dev_info(&pdev->dev, "ZYNQ OCM pool: %ld KiB @ 0x%p\n",
++			 size / 1024, virt_base);
++	}
++
++	/* Get OCM config space */
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	zynq_ocmc->base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(zynq_ocmc->base))
++		return PTR_ERR(zynq_ocmc->base);
++
++	/* Allocate OCM parity IRQ */
++	zynq_ocmc->irq = platform_get_irq(pdev, 0);
++	if (zynq_ocmc->irq < 0) {
++		dev_err(&pdev->dev, "irq resource not found\n");
++		return zynq_ocmc->irq;
++	}
++	ret = devm_request_irq(&pdev->dev, zynq_ocmc->irq,
++			       zynq_ocmc_irq_handler,
++			       0, pdev->name, zynq_ocmc);
++	if (ret != 0) {
++		dev_err(&pdev->dev, "request_irq failed\n");
++		return ret;
++	}
++
++	/* Enable parity errors */
++	writel(ZYNQ_OCMC_PARITY_ENABLE,
++	       zynq_ocmc->base + ZYNQ_OCMC_PARITY_CTRL);
++
++	platform_set_drvdata(pdev, zynq_ocmc);
++
++	return 0;
++}
++
++/**
++ * zynq_ocmc_remove - Remove method for the OCM driver
++ * @pdev:	Pointer to the platform_device structure
++ *
++ * Return:	0 on success and error value on failure
++ *
++ * This function is called if a device is physically removed from the system or
++ * if the driver module is being unloaded. It frees all resources allocated to
++ * the device.
++ */
++static int zynq_ocmc_remove(struct platform_device *pdev)
++{
++	struct zynq_ocmc_dev *zynq_ocmc = platform_get_drvdata(pdev);
++
++	if (gen_pool_avail(zynq_ocmc->pool) < gen_pool_size(zynq_ocmc->pool))
++		dev_dbg(&pdev->dev, "removed while SRAM allocated\n");
++
++	return 0;
++}
++
++static const struct of_device_id zynq_ocmc_dt_ids[] = {
++	{ .compatible = "xlnx,zynq-ocmc-1.0" },
++	{ /* end of table */ }
++};
++
++static struct platform_driver zynq_ocmc_driver = {
++	.driver = {
++		.name = "zynq_ocmc",
++		.of_match_table = zynq_ocmc_dt_ids,
++	},
++	.probe = zynq_ocmc_probe,
++	.remove = zynq_ocmc_remove,
++};
++
++static int __init zynq_ocmc_init(void)
++{
++	return platform_driver_register(&zynq_ocmc_driver);
++}
++
++arch_initcall(zynq_ocmc_init);
+--
+1.8.2.3
+
+
+--=_mimegpg-monstr-desktop-14131-1415962340-0001
+Content-Type: application/pgp-signature
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEABECAAYFAlRl3uQACgkQykllyylKDCEffQCeIXwQc3YtGW1ZQAj4btkRegfP
+hdcAn0K862feirmOBgjjHuYqTbZyS0w4
+=/yx7
+-----END PGP SIGNATURE-----
+
+--=_mimegpg-monstr-desktop-14131-1415962340-0001--
