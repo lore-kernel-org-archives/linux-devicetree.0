@@ -1,58 +1,89 @@
-From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] Add support for ADC on am437x-gp and am43x-epos-evm
-Date: Fri, 14 Nov 2014 09:37:22 +0530
-Message-ID: <54657FFA.1070200@ti.com>
-References: <1415099728-10959-1-git-send-email-vigneshr@ti.com>
+From: gsantosh@codeaurora.org
+Subject: Re: [alsa-devel] Question on Compressed offload session
+Date: Fri, 14 Nov 2014 04:08:28 -0000
+Message-ID: <fd33d16f31eb73cc6f0585c192601d9e.squirrel@www.codeaurora.org>
+References: <85499f52ebd29581bf58b9cafbae6864.squirrel@www.codeaurora.org>
+    <5464CDE2.2070406@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415099728-10959-1-git-send-email-vigneshr-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <5464CDE2.2070406@linux.intel.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc: gsantosh@codeaurora.org, alsa-devel-bounces@alsa-project.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Stephen Warren <swarren@wwwdotorg.org>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, grant.likely@linaro.org, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Olof Johansson <olof@lixom.net>, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+> On 11/12/14, 9:02 PM, gsantosh@codeaurora.org wrote:
+>> Hi All,
+>>
+>> The Question is for the compressed offload session.
+>>
+>> For a generic codec driver during the startup function it will set some
+>> of
+>> the hw_constraints rule similarly like this.
+>>
+>>          snd_pcm_hw_constraint_list(substream->runtime, 0,
+>>                      SNDRV_PCM_HW_PARAM_RATE,
+>>                      &constraints_12_24);
+>>
+>> pcm_lib.c will try to add the rule to the runtime structure by accessing
+>> the pointers which will be initialized during opening of the session,
+>> as The Constraints added by the codec driver will be updated in the
+>>
+>> struct snd_pcm_hw_constraints of runtime structure which will be part of
+>> substream handle.
+>>
+>> But for the compressed offload I do not see the initialization done for
+>> HW
+>> constraints, as done in pcm session
+>>
+>> 2092int snd_pcm_open_substream(struct snd_pcm *pcm, int stream,
+>> 2093			   struct file *file,
+>> 2094			   struct snd_pcm_substream **rsubstream)
+>>
+>> most of the existing drivers which has the hw_constraint_list code will
+>> not be applicable for compress offload session, how to solve this?
+>
+> You can't directly link physical output/input with the decoder/encoder
+> in general.
+> For decoders, the sample-rate may not always be known ahead of time,
+> e.g. with AAC-SBR implicit signaling. There is no way to add constraints
+> on open, there is an assumption that a sample-rate converter is part of
+> the chain to take care of the difference between the output of the
+> offloaded decoder and the back-end actual sampling frequency (same with
+> number of channels and bit-width btw).
+> Likewise if you encode the frequency may not be the same as what the
+> backend provides and some SRC might be needed.
+> -Pierre
+>
 
-On Tuesday 04 November 2014 04:45 PM, Vignesh R wrote:
-> This series of patches enable ADC on am437x-gp-evm and am43x-epos-evm.
-> The ADC clock hwmod data of am33xx has been moved to commom place so that
-> both am43xx and am33xx can reuse them.
-> tscadc DT node has been adided to am437x-gp and am43x-epos dt files.
-> With these patches, ADC functionalities are now available on am43xx.
-> 
-> Changelog:
-> 
-> v2:
-> Removed phy addresses in hwmod. Using DT instead.
-> Removed unused "ti,am4372" compatible string.
-> Use macro to set clk domain name.
-> Fixed subject format of all patches
-> 
+I Agree we cannot have a direct link between physical output  / input with
+decoder / encoder, during compressed playback.
+My concern here is, if we have a legacy codec driver which is used for the
+PCM out, and in the start up of this codec driver it is adding
+hw_constraints list, now the same codec driver is used for the compressed
+session FE or PCM session FE,
+If the routing is such that compressed FE -> codec the hw_constraints
+added by this driver is not valid here,
+and legacy drivers needs to be changed,
+Now the question comes how to change this drivers?
+I can think of following things
+if the routing is done for Compressed FE -> codec
 
-Please accept these patches.
+1) in Codec driver avoid adding hw_constraint during startup if compressed
+session is routed, this recommend for codec driver to know that compress
+session is routed to codec which I feel not the correct way to handle this
+
+I was checking how to handle this situation in much better way.
 
 Regards
-Vignesh R
+Santosh
 
-> Vignesh R (3):
->   ARM: OMAP2+: hwmod: AM335x/AM43x: Move am33xx_l4_hs_hwmod to
->     ipblock_data
->   ARM: OMAP2+: hwmod: AM335x/AM43x: add hwmod support for tscadc on
->     am43x-evm
->   ARM: dts: AM43xx: add tscadc DT entries for am437x-evm and
->     am43x-epos-evm
-> 
->  arch/arm/boot/dts/am4372.dtsi                      | 20 ++++++
->  arch/arm/boot/dts/am437x-gp-evm.dts                |  8 +++
->  arch/arm/boot/dts/am43x-epos-evm.dts               |  8 +++
->  .../mach-omap2/omap_hwmod_33xx_43xx_common_data.h  |  2 +
->  .../mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c | 71 ++++++++++++++++++++++
->  arch/arm/mach-omap2/omap_hwmod_33xx_data.c         | 64 -------------------
->  arch/arm/mach-omap2/omap_hwmod_43xx_data.c         |  1 +
->  7 files changed, 110 insertions(+), 64 deletions(-)
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+>
+
+
