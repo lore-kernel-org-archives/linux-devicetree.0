@@ -1,155 +1,58 @@
-From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v5.5] of/fdt: export fdt blob as /sys/firmware/fdt
-Date: Fri, 14 Nov 2014 18:05:35 +0100
-Message-ID: <1415984735-32388-1-git-send-email-ard.biesheuvel@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, geoff.levand-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [alsa-devel] Question on Compressed offload session
+Date: Fri, 14 Nov 2014 17:06:50 +0000
+Message-ID: <20141114170650.GG3815@sirena.org.uk>
+References: <85499f52ebd29581bf58b9cafbae6864.squirrel@www.codeaurora.org>
+ <5464CDE2.2070406@linux.intel.com>
+ <fd33d16f31eb73cc6f0585c192601d9e.squirrel@www.codeaurora.org>
+ <54662DC6.7070302@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="6cotLj5rESeNB5ig"
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54662DC6.7070302@linux.intel.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc: gsantosh@codeaurora.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Stephen Warren <swarren@wwwdotorg.org>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>, grant.likely@linaro.org, alsa-devel-bounces@alsa-project.org, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Create a new /sys entry '/sys/firmware/fdt' to export the FDT blob
-that was passed to the kernel by the bootloader. This allows userland
-applications such as kexec to access the raw binary.
 
-The fact that this node does not reside under /sys/firmware/device-tree
-is deliberate: FDT is also used on arm64 UEFI/ACPI systems to
-communicate just the UEFI and ACPI entry points, but the FDT is never
-unflattened and used to configure the system.
+--6cotLj5rESeNB5ig
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-A CRC32 checksum is calculated over the entire FDT blob, and verified
-at late_initcall time. The sysfs entry is instantiated only if the
-checksum is valid, i.e., if the FDT blob has not been modified in the
-mean time. Otherwise, a warning is printed.
+On Fri, Nov 14, 2014 at 10:28:54AM -0600, Pierre-Louis Bossart wrote:
+> On 11/13/14, 10:08 PM, gsantosh@codeaurora.org wrote:
 
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
+> >1) in Codec driver avoid adding hw_constraint during startup if compressed
+> >session is routed, this recommend for codec driver to know that compress
+> >session is routed to codec which I feel not the correct way to handle this
 
-v5.5: based on Grant's changes
-"""
-Actually, I made a couple of changes when I merged it. I removed the
-older debugfs interface since it overlaps, and I added tests for
-initial_boot_params to make sure it doesn't try to run on an invalid
-FDT
-"""
-but I removed the second fdt_check_header() again in the late init code, as it
-would result in a corrupted FDT to be silently ignored. Note that
-initial_boot_params can only be set if fdt_check_header() succeeded the first
-time, so a failure occurring the second time should produce a warning, and
-the CRC check will catch it anyway. The CRC check itself is fixed to use the
-API as it is supposed to. I also moved the CRC variable definition inside the
-#ifdef OF_EARLY_FLATTREE region.
+> >I was checking how to handle this situation in much better way.
 
-v4: use pr_warn() instead of WARN()
-v3: keep checksum instead of copying the entire blob, and WARN on mismatch
+> What exactly do you call a 'legacy codec'? If there is a DAI i am not sure I
+> understand the problem.
 
- drivers/of/Kconfig |  1 +
- drivers/of/fdt.c   | 43 +++++++++++++++++++++++++++----------------
- 2 files changed, 28 insertions(+), 16 deletions(-)
+I think what he's trying to say is that there's nothing automatic which
+will ensure that constraints on the back end set by the CODEC driver
+will be paid attention to.  This is true, it's pretty much entirely up
+to the machine driver to make sure it gets the back end links right.
 
-diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index 1a13f5b722c5..0348c208343c 100644
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -23,6 +23,7 @@ config OF_FLATTREE
- 	bool
- 	select DTC
- 	select LIBFDT
-+	select CRC32
- 
- config OF_EARLY_FLATTREE
- 	bool
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index d1ffca8b34ea..2bbda0775f57 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -9,6 +9,7 @@
-  * version 2 as published by the Free Software Foundation.
-  */
- 
-+#include <linux/crc32.h>
- #include <linux/kernel.h>
- #include <linux/initrd.h>
- #include <linux/memblock.h>
-@@ -22,6 +23,7 @@
- #include <linux/libfdt.h>
- #include <linux/debugfs.h>
- #include <linux/serial_core.h>
-+#include <linux/sysfs.h>
- 
- #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
- #include <asm/page.h>
-@@ -425,6 +427,8 @@ void *initial_boot_params;
- 
- #ifdef CONFIG_OF_EARLY_FLATTREE
- 
-+static u32 of_fdt_crc32;
-+
- /**
-  * res_mem_reserve_reg() - reserve all memory described in 'reg' property
-  */
-@@ -996,6 +1000,8 @@ bool __init early_init_dt_verify(void *params)
- 
- 	/* Setup flat device-tree pointer */
- 	initial_boot_params = params;
-+	of_fdt_crc32 = crc32_be(~0, initial_boot_params,
-+				fdt_totalsize(initial_boot_params));
- 
- 	/* check device tree validity */
- 	if (fdt_check_header(params)) {
-@@ -1080,27 +1086,32 @@ void __init unflatten_and_copy_device_tree(void)
- 	unflatten_device_tree();
- }
- 
--#if defined(CONFIG_DEBUG_FS) && defined(DEBUG)
--static struct debugfs_blob_wrapper flat_dt_blob;
--
--static int __init of_flat_dt_debugfs_export_fdt(void)
-+#ifdef CONFIG_SYSFS
-+static ssize_t of_fdt_raw_read(struct file *filp, struct kobject *kobj,
-+			       struct bin_attribute *bin_attr,
-+			       char *buf, loff_t off, size_t count)
- {
--	struct dentry *d = debugfs_create_dir("device-tree", NULL);
--
--	if (!d)
--		return -ENOENT;
-+	memcpy(buf, initial_boot_params + off, count);
-+	return count;
-+}
- 
--	flat_dt_blob.data = initial_boot_params;
--	flat_dt_blob.size = fdt_totalsize(initial_boot_params);
-+static int __init of_fdt_raw_init(void)
-+{
-+	static struct bin_attribute of_fdt_raw_attr =
-+		__BIN_ATTR(fdt, S_IRUSR, of_fdt_raw_read, NULL, 0);
- 
--	d = debugfs_create_blob("flat-device-tree", S_IFREG | S_IRUSR,
--				d, &flat_dt_blob);
--	if (!d)
--		return -ENOENT;
-+	if (!initial_boot_params)
-+		return 0;
- 
--	return 0;
-+	if (of_fdt_crc32 != crc32_be(~0, initial_boot_params,
-+				     fdt_totalsize(initial_boot_params))) {
-+		pr_warn("fdt: not creating '/sys/firmware/fdt': CRC check failed\n");
-+		return 0;
-+	}
-+	of_fdt_raw_attr.size = fdt_totalsize(initial_boot_params);
-+	return sysfs_create_bin_file(firmware_kobj, &of_fdt_raw_attr);
- }
--module_init(of_flat_dt_debugfs_export_fdt);
-+late_initcall(of_fdt_raw_init);
- #endif
- 
- #endif /* CONFIG_OF_EARLY_FLATTREE */
--- 
-1.8.3.2
+--6cotLj5rESeNB5ig
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUZjaqAAoJECTWi3JdVIfQuFAH/13RyikXZ58DwaCl7jN85TQ8
+BV4EwR+3FqqXVcXw4fX8JLkRyNmUnkv4GSQyFTNEICL2qoHHKSlnd1fbow1tOWdn
+NGuhgFL1yqraNjguNS8/bBKfbwFOZ2OwhQruKXWuZdeOyKJ6qZ+GffsR/ov/7LY4
+Ggrfl4PqjPowCWMulNgwCkCfdy84/E1tzPOfInBj6YXDeORs+Ros6kgnOiyAyXHf
+UVUnExmdreqnqHpnVeBS4TT68hM2Wnh8A7jmWISM6taB6bHe9BAiXpiqtEOx6DBq
+6Kwqjn8w0jZ1jfVUuof+cJs6t/C+MYSabOLn+M6brV8ZY5Z1P7AZvW4W2PmBkC8=
+=hWv8
+-----END PGP SIGNATURE-----
+
+--6cotLj5rESeNB5ig--
