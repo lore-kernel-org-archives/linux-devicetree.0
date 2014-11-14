@@ -1,45 +1,36 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v7 03/13] ARM: Berlin: select the reset controller
-Date: Fri, 14 Nov 2014 20:07:31 +0100
-Message-ID: <546652F3.8050809@gmail.com>
-References: <1415978763-27345-1-git-send-email-antoine.tenart@free-electrons.com> <1415978763-27345-4-git-send-email-antoine.tenart@free-electrons.com> <3287202.nx0cnO5WUI@wuerfel> <54662192.6000403@gmail.com> <20141114172812.GD2991@kwain>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141114172812.GD2991@kwain>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Antoine Tenart <antoine.tenart@free-electrons.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Peter.Chen@freescale.com, balbi@ti.com, p.zabel@pengutronix.de, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH V2 4/7] arm64: dts: Add Designware GPIO dts binding to APM
+ X-Gene platform
+Date: Fri, 14 Nov 2014 11:26:04 -0800
+Message-ID: <CAL85gmDYM2V=TCtA5iBazj+k6rfvpd6c2dnqaA2jfifyxeZR_w@mail.gmail.com>
+References: <1415924401-3013-1-git-send-email-fkan@apm.com>
+	<1415924401-3013-5-git-send-email-fkan@apm.com>
+	<1829495.FoDfH1G36W@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1829495.FoDfH1G36W@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14.11.2014 18:28, Antoine Tenart wrote:
-> Sebastian,
->
-> On Fri, Nov 14, 2014 at 04:36:50PM +0100, Sebastian Hesselbarth wrote:
->> On 11/14/2014 04:33 PM, Arnd Bergmann wrote:
->>> On Friday 14 November 2014 16:25:53 Antoine Tenart wrote:
->>>>   menuconfig ARCH_BERLIN
->>>>          bool "Marvell Berlin SoCs" if ARCH_MULTI_V7
->>>> +       select ARCH_HAS_RESET_CONTROLLER
->>>>          select ARCH_REQUIRE_GPIOLIB
->>>>          select ARM_GIC
->>>>          select GENERIC_IRQ_CHIP
->>>>          select DW_APB_ICTL
->>>>          select DW_APB_TIMER_OF
->>>>          select PINCTRL
->>>> +       select RESET_CONTROLLER
->>>
->>> RESET_CONTROLLER is meant to be user-selectable, don't add a 'select' here,
->>> but instead make the driver 'depends on RESET_CONTROLLER'.
+On Fri, Nov 14, 2014 at 7:06 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Thursday 13 November 2014 16:19:58 Feng Kan wrote:
+>> +               dwgpio: dwgpio@1c024000 {
+>> +                       compatible = "snps,dw-apb-gpio";
+>> +                       reg = <0x0 0x1c024000 0x0 0x1000>;
+>> +                       reg-io-width = <4>;
+>> +                       #address-cells = <1>;
+>> +                       #size-cells = <0>;
 >>
->> It already went into arm-soc for v3.19 - ergo, we need an extra
->> patch for removing the current 'select'.
 >
-> Do you want me to send the extra patch fixing this issue?
+> Same comment as patch 1: make the node name 'gpio', not 'dwgpio'.
 
-Yes, please. The patch in question is already in a tagged, stabled,
-and pulled branch - so there is nothing I can do about it.
-
-You can just send it as an independent patch, I'll pick it up quickly.
-
-Sebastian
+I can make this change.
+>
+>         Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
