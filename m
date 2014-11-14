@@ -1,8 +1,7 @@
 From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v10 06/11] drm: bridge/dw_hdmi: clear i2cmphy_stat0 reg in
- hdmi_phy_wait_i2c_done
-Date: Fri, 14 Nov 2014 11:27:59 +0800
-Message-ID: <1415935679-16874-1-git-send-email-andy.yan@rock-chips.com>
+Subject: [PATCH v10 07/11] dt-bindings: add document for dw_hdmi
+Date: Fri, 14 Nov 2014 11:28:38 +0800
+Message-ID: <1415935718-16923-1-git-send-email-andy.yan@rock-chips.com>
 References: <1415934583-16290-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,19 +21,16 @@ To: airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@a
 Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, mark.yao@rock-chips.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Andy Yan <andy.yan@rock-chips.com>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-HDMI_IH_I2CMPHY_STAT0 is a clear on write register, which indicates i2cm
-operation status(i2c transfer done or error), every hdmi phy register
-configuration must check this register to make sure the configuration
-has complete. But the indication bit should be cleared after check, otherwise
-the corresponding bit will hold on forever, this may give a wrong signal for
-next check.
-
 Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+
 ---
 
 Changes in v10: None
 Changes in v9: None
-Changes in v8: None
+Changes in v8:
+- correct some spelling mistake
+- modify ddc-i2c-bus and interrupt description
+
 Changes in v7: None
 Changes in v6: None
 Changes in v5: None
@@ -42,29 +38,55 @@ Changes in v4: None
 Changes in v3: None
 Changes in v2: None
 
- drivers/gpu/drm/bridge/dw_hdmi.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/drm/bridge/dw_hdmi.txt     | 40 ++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt
 
-diff --git a/drivers/gpu/drm/bridge/dw_hdmi.c b/drivers/gpu/drm/bridge/dw_hdmi.c
-index 05e7156..4f9a5c0 100644
---- a/drivers/gpu/drm/bridge/dw_hdmi.c
-+++ b/drivers/gpu/drm/bridge/dw_hdmi.c
-@@ -640,11 +640,15 @@ static inline void hdmi_phy_test_dout(struct dw_hdmi *hdmi,
- 
- static bool hdmi_phy_wait_i2c_done(struct dw_hdmi *hdmi, int msec)
- {
--	while ((hdmi_readb(hdmi, HDMI_IH_I2CMPHY_STAT0) & 0x3) == 0) {
-+	u32 val;
+diff --git a/Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt b/Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt
+new file mode 100644
+index 0000000..0558442
+--- /dev/null
++++ b/Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt
+@@ -0,0 +1,40 @@
++DesignWare HDMI bridge bindings
 +
-+	while ((val = hdmi_readb(hdmi, HDMI_IH_I2CMPHY_STAT0) & 0x3) == 0) {
- 		if (msec-- == 0)
- 			return false;
- 		udelay(1000);
- 	}
-+	hdmi_writeb(hdmi, val, HDMI_IH_I2CMPHY_STAT0);
++Required properities:
++- compatible: platform specific such as:
++   * "fsl,imx6q-hdmi"
++   * "fsl,imx6dl-hdmi"
++   * "rockchip,rk3288-dw-hdmi"
++- reg: physical base address of the controller and length
++- ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
++- interrupts: The HDMI interrupt number
 +
- 	return true;
- }
- 
++Optional properties
++- reg-io-width: the width of the reg:1,4, default set to 1 if not present
++
++Example:
++	hdmi: hdmi@0120000 {
++		compatible = "fsl,imx6q-hdmi";
++		reg = <0x00120000 0x9000>;
++		interrupts = <0 115 0x04>;
++		gpr = <&gpr>;
++		clocks = <&clks 123>, <&clks 124>;
++		clock-names = "iahb", "isfr";
++		ddc-i2c-bus = <&i2c2>;
++
++		port@0 {
++			reg = <0>;
++
++			hdmi_mux_0: endpoint {
++				remote-endpoint = <&ipu1_di0_hdmi>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++
++			hdmi_mux_1: endpoint {
++				remote-endpoint = <&ipu1_di1_hdmi>;
++			};
++		};
++	};
 -- 
 1.9.1
