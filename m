@@ -1,138 +1,41 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH v9 1/9] qcom: scm: scm_set_warm_boot_addr() to set the
- warmboot address
-Date: Fri, 14 Nov 2014 09:33:32 -0700
-Message-ID: <20141114163332.GF45276@linaro.org>
-References: <1414194024-55547-1-git-send-email-lina.iyer@linaro.org>
- <1414194024-55547-2-git-send-email-lina.iyer@linaro.org>
- <5465BD97.5070506@linaro.org>
+From: Ralf Baechle <ralf@linux-mips.org>
+Subject: Re: [PATCH V4 01/14] sh: Eliminate unused irq_reg_{readl,writel}
+ accessors
+Date: Fri, 14 Nov 2014 17:38:44 +0100
+Message-ID: <20141114163843.GH29662@linux-mips.org>
+References: <1415342669-30640-1-git-send-email-cernekee@gmail.com>
+ <1415342669-30640-2-git-send-email-cernekee@gmail.com>
+ <CAMuHMdW+L8YbE8Z8jrtnm8xWk63sRGaFdM7TPM6MmrDg9XwHuQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Received: from localhost.localdomain ([127.0.0.1]:34867 "EHLO linux-mips.org"
+        rhost-flags-OK-OK-OK-FAIL) by eddie.linux-mips.org with ESMTP
+        id S27013725AbaKNQiuQ1Fns (ORCPT <rfc822;devicetree@vger.kernel.org>
+        + 2 others); Fri, 14 Nov 2014 17:38:50 +0100
 Content-Disposition: inline
-In-Reply-To: <5465BD97.5070506@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
+In-Reply-To: <CAMuHMdW+L8YbE8Z8jrtnm8xWk63sRGaFdM7TPM6MmrDg9XwHuQ@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Kevin Cernekee <cernekee@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Linux-sh list <linux-sh@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Florian Fainelli <f.fainelli@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 14 2014 at 01:30 -0700, Daniel Lezcano wrote:
->On 10/25/2014 01:40 AM, Lina Iyer wrote:
->>Set the warmboot address using an SCM call, only if the new address i=
-s
->>different than the old one.
->
->Please could you elaborate why a new address can be changed ?
->
-Hotplug could have a different warmboot address.
+On Mon, Nov 10, 2014 at 09:13:49AM +0100, Geert Uytterhoeven wrote:
 
+> On Fri, Nov 7, 2014 at 7:44 AM, Kevin Cernekee <cernekee@gmail.com> wrote:
+> > Defining these macros way down in arch/sh/.../irq.c doesn't cause
+> > kernel/irq/generic-chip.c to use them.  As far as I can tell this code
+> > has no effect.
+> >
+> > Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+> 
+> Compared preprocessor and asm output before and after, no difference
+> except for line numbers, so
+> 
+> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
->>Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
->>---
->>  drivers/soc/qcom/scm-boot.c | 22 ++++++++++++++++++++++
->>  include/soc/qcom/scm-boot.h |  1 +
->>  2 files changed, 23 insertions(+)
->>
->>diff --git a/drivers/soc/qcom/scm-boot.c b/drivers/soc/qcom/scm-boot.=
-c
->>index 60ff7b4..5710967 100644
->>--- a/drivers/soc/qcom/scm-boot.c
->>+++ b/drivers/soc/qcom/scm-boot.c
->>@@ -37,3 +37,25 @@ int scm_set_boot_addr(phys_addr_t addr, int flags)
->>  			&cmd, sizeof(cmd), NULL, 0);
->>  }
->>  EXPORT_SYMBOL(scm_set_boot_addr);
->>+
->>+
->
->extra line.
->
->>+int scm_set_warm_boot_addr(void *entry, int cpu)
->>+{
->>+	static int flags[NR_CPUS] =3D {
->>+		SCM_FLAG_WARMBOOT_CPU0,
->>+		SCM_FLAG_WARMBOOT_CPU1,
->>+		SCM_FLAG_WARMBOOT_CPU2,
->>+		SCM_FLAG_WARMBOOT_CPU3,
->>+	};
->
->Please do not do that, you don't know what NR_CPUS value could be in=20
->the future with the single kernel image and that could lead to a bug=20
->very hard to find. The kernel stack is 4096.
->
->Move this out of the function:
->
->static int scm_flags[] =3D {
->	SCM_FLAG_WARMBOOT_CPU0,
->	SCM_FLAG_WARMBOOT_CPU1,
->	SCM_FLAG_WARMBOOT_CPU2,
->	SCM_FLAG_WARMBOOT_CPU3,
->};
-Sure.
->
->>+	static DEFINE_PER_CPU(void *, last_known_entry);
->
->It sounds odd to add those static declaration here even if I=20
->understand that is to encapsulate them.
->
-Sure.
->>+	int ret;
->>+
->>+	if (entry =3D=3D per_cpu(last_known_entry, cpu))
->>+		return 0;
->
->My question is: why scm_set_warm_boot_addr could be called with=20
->different addresses ?
->
->If this is really needed, please replace the per_cpu variable by:
->
->struct scm_boot_addr {
->	int flag;
->	phys_addr_t entry;
->};
->
->static struct scm_boot_addr scm_flags[] =3D {
->	{ SCM_FLAG_WARMBOOT_CPU0, },
->	{ SCM_FLAG_WARMBOOT_CPU1, },
->	{ SCM_FLAG_WARMBOOT_CPU2, },
->	{ SCM_FLAG_WARMBOOT_CPU3, },
->};
->
-Hmm.. OK.
+I noticed the remainder of of this series is now in Jason Cooper's irqchip
+tree.  Is anybody still taking care of SH?  If not I can funnel it
+through the MIPS tree.
 
->>+	ret =3D scm_set_boot_addr(virt_to_phys(entry), flags[cpu]);
->>+	if (!ret)
->>+		per_cpu(last_known_entry, cpu) =3D entry;
->>+
->>+	return ret;
->>+}
->>diff --git a/include/soc/qcom/scm-boot.h b/include/soc/qcom/scm-boot.=
-h
->>index 02b445c..100938b 100644
->>--- a/include/soc/qcom/scm-boot.h
->>+++ b/include/soc/qcom/scm-boot.h
->>@@ -22,5 +22,6 @@
->>  #define SCM_FLAG_WARMBOOT_CPU3		0x40
->
->By the way, if you look for encapsulation, perhaps these macros could=20
->be moved into scm-boot.c, no ?
->
-Dont think anybody outside the file needs it.
-
->>  int scm_set_boot_addr(phys_addr_t addr, int flags);
->>+int scm_set_warm_boot_addr(void *entry, int cpu);
->>
->>  #endif
->>
->
->
->--=20
-> <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
->
->Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-><http://twitter.com/#!/linaroorg> Twitter |
-><http://www.linaro.org/linaro-blog/> Blog
->
+  Ralf
