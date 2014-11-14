@@ -1,84 +1,109 @@
-From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v10 05/11] drm: bridge/dw_hdmi:split some phy configuration
- to platform driver
-Date: Fri, 14 Nov 2014 19:08:43 +0800
-Message-ID: <5465E2BB.1070507@rock-chips.com>
-References: <1415934583-16290-1-git-send-email-andy.yan@rock-chips.com> <1415935631-16826-1-git-send-email-andy.yan@rock-chips.com> <5465D73C.9030507@imgtec.com> <5465DF0C.50301@rock-chips.com> <5465DFB2.8060601@imgtec.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v6 0/6] ARM: mediatek: Add support for interrupt polarity
+Date: Fri, 14 Nov 2014 12:13:20 +0100
+Message-ID: <CABuKBeJMnoX239NQTpsqjRRr=90hrkBJAehEUxQVsPZmoHP9ng@mail.gmail.com>
+References: <1415893029-2971-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5465DFB2.8060601-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, airlied-cv59FeDIM0c@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Josh Boyer <jwboyer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1415893029-2971-1-git-send-email-yingjoe.chen@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jiang Liu <jiang.liu@linux.intel.com>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Grant Likely <grant.likely@linaro.org>, Boris BREZILLON <boris.brezillon@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, Yijing Wang <wangyijing@huawei.com>, srv_heupstream <srv_heupstream@mediatek.com>, Yingjoe Chen <yingjoe.chen@gmail.com>, HC Yen <hc.yen@mediatek.com>, huang eddie <eddie.huang@mediatek.com>, Nathan Chung <nathan.chung@mediatek.com>, Yuhau Chen <yh>
 List-Id: devicetree@vger.kernel.org
 
-
-On 2014=E5=B9=B411=E6=9C=8814=E6=97=A5 18:55, Zubair Lutfullah Kakakhel=
- wrote:
+2014-11-13 16:37 GMT+01:00 Yingjoe Chen <yingjoe.chen@mediatek.com>:
 >
-> On 14/11/14 10:53, Andy Yan wrote:
->> Hi ZubairLK:
->>     Thanks for your review.
->> On 2014=E5=B9=B411=E6=9C=8814=E6=97=A5 18:19, Zubair Lutfullah Kakak=
-hel wrote:
->>> Hi Andy,
->>>
->>> Nice work on this patch series. Its getting better and better :).
->>>
->>> On 14/11/14 03:27, Andy Yan wrote:
->>>> hdmi phy clock symbol and transmission termination value
->>>> can adjust platform specific to get the best SI
->>>                          ^Is this signal integrity?
->>     yes , SI  is signal integrity, such as eye diagram measurement
->>> Are these two disjoint features in separate patches?
->>>
->>>> also add mode_valid interface for some platform may not support
->>>> all the display mode
->>> Sounds like another separate patch to me. :)
->>     they can seperate
->>> Also, This series is becoming quite large. With major changes and f=
-ixes mixed together.
->>>
->>> Patch 3 splits imx-drm.
->>> Patch 4 moves dw-drm out of imx-drm folder.
->>> Patch 7 adds binding
->>> Patch 9 converts to drm bridge.
->>>
->>> Can these be placed together easily?
->>> And in the start. i.e. patch 1, 2, 3, 4,
->>>
->>> Then all fixes etc can come afterwards?
->>>
->>> It helps when checking histories later as to how a driver was made =
-and how fixes happened.
->>>
->>> Especially when file moves happen..
->>    Do you mean we can rearrange the patch series?
->>    put patch 3, 4 ,7, 9 together  one bye one
->>    than followed by the fixes patches  5 ,6, 8, 11 ?
-> Yes. Rearrange so that the split imx-drm/imx-hdmi and conversion to d=
-rm-bridge is at the start of the series.
-> Then the rest are bug fixes and feature additions.
-   Can I put patch#1(make checkpatch happy) and patch#2 (defer probe) a=
-s=20
-the first two patch.
-   Daniel from Google chromium think it's better to put the two slightl=
-y=20
-changes in the front for easy review.
-> Cheers,
-> ZubairLK
+> This series is 6th version of interrupt polarity support for MediaTek SoCs.
+> This is based on tip/irq/irqdomain[1] and my mediatek SoC basic support[2].
 >
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> In this version, I added a minor fix to irqdomain as first patch. Patch 3,
+> 4 are changed to use newly added helper functions. The other patches are
+> unchanged.
+>
+>
+> Simplified block diagram for interrupt on my system:
+>
+>     +-------+      +-------+
+>  ---| SYSIRQ|------|ARM GIC|
+>  ---|       |------|       |
+>  ---|       |------|       |
+>  ---|       |------|       |
+>  ---|       |------|       |
+>     +-------+      +-------+
+>
+> In device tree, interrupt-parent for other devices is sysirq, child of gic.
+> This describe HW better and allow device to specify polarity as it is sent
+> by the device.
+>
+> When using hierarchy irq domain, gic will use irq_domain_add_linear to
+> create irqdomain and all interrupt numbers must come from device tree. My
+> /proc/interrupts looks like this now:
+>
+> # cat /proc/interrupts
+>            CPU0
+>  16:     149578  MT_SYSIRQ 113  mtk_timer
+>  20:       1082  MT_SYSIRQ  54  serial
+
+It works for me on mt6589.
+
+Tested-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+>
+> Changes in v6:
+>  - Rebased to tip/irq/irqdomain [1]
+>
+> Changes in v5:
+>  - Discussed in [3]
+>  - Fix bug on mt6589 reported by Matthias
+>  - Fix bug for irq_find_mapping in irq_create_of_mapping
+>  - Merge Marc's change to proper handle non-DT case in gic_init_bases
+>
+> Changes in v4:
+>  - Discussed in [4]
+>  - Remove arm,hierarchy-irq-domain. When GIC is probed by DT, it will
+> support hierarchy irqdomain.
+>
+> Changes in v3:
+>  - Discussed in [5]
+>  - First implementation using hierarchy irqdomain
+>
+> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/297624.html
+> [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/296093.html
+> [3] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/298161.html
+> [4] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/296911.html
+> [5] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/293766.html
+>
+>
+> Yingjoe Chen (6):
+>   irqdomain: Use consistent prototype for irq_domain_free_irqs_*
+>   genirq: Add more helper functions to support stacked irq_chip
+>   irqchip: gic: Support hierarchy irq domain.
+>   ARM: mediatek: Add sysirq interrupt polarity support
+>   ARM: mediatek: Add sysirq in mt6589/mt8135/mt8127 dtsi
+>   dt-bindings: add bindings for mediatek sysirq
+>
+>  .../bindings/arm/mediatek/mediatek,sysirq.txt      |  26 ++++
+>  arch/arm/boot/dts/mt6589.dtsi                      |  14 +-
+>  arch/arm/boot/dts/mt8127.dtsi                      |  14 +-
+>  arch/arm/boot/dts/mt8135.dtsi                      |  14 +-
+>  drivers/irqchip/Kconfig                            |   1 +
+>  drivers/irqchip/Makefile                           |   1 +
+>  drivers/irqchip/irq-gic.c                          |  80 +++++++----
+>  drivers/irqchip/irq-mtk-sysirq.c                   | 156 +++++++++++++++++++++
+>  include/linux/irq.h                                |   6 +
+>  include/linux/irqdomain.h                          |   8 +-
+>  kernel/irq/chip.c                                  |  28 ++++
+>  kernel/irq/irqdomain.c                             |   8 +-
+>  12 files changed, 317 insertions(+), 39 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
+>  create mode 100644 drivers/irqchip/irq-mtk-sysirq.c
+>
+> --
+> 1.8.1.1.dirty
+>
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+motzblog.wordpress.com
