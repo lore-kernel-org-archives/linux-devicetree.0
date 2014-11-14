@@ -1,38 +1,64 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v6] simplefb: add clock handling code
-Date: Fri, 14 Nov 2014 08:58:39 +0100
-Message-ID: <5465B62F.1000306@redhat.com>
-References: <1415906546-2408-1-git-send-email-hdegoede@redhat.com> <CAMuHMdW-6Eb9DSE=JQm7xWMhJUpt1xxLqS=6KU+=ZDMsmtiBag@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] ARM: mediatek: Add driver for Mediatek I2C
+ controller
+Date: Fri, 14 Nov 2014 16:00:30 +0800
+Message-ID: <1415952030.17958.129.camel@mtksdaap41>
+References: <1415078977-18374-1-git-send-email-xudong.chen@mediatek.com>
+	 <20141113183122.GH1275@katana>  <1415934752.2152.58.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBOXMS2RQKGQEGWOK6BY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAMuHMdW-6Eb9DSE=JQm7xWMhJUpt1xxLqS=6KU+=ZDMsmtiBag-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415934752.2152.58.camel@mhfsdcap03>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: xudong chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Nathan Chung <nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YH Chen <yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
+
+On Fri, 2014-11-14 at 11:12 +0800, xudong chen wrote:
+> On Thu, 2014-11-13 at 19:31 +0100, Wolfram Sang wrote:
+> > > MT8135 and MT6589 can control I2C pins on PMIC(MT6397) by setting the i2c
+> > > registers in MT8135 side.
+> > 
+> > I still didn't get this, even after reading the mail thread of old
+> > series. Can someone maybe draw me a nice ASCII picture showing the setup
+> > which is going on here?
+> > 
+> 
+> 1. The DIR_PATH register is in MT8135.
+> 2. All the registers used in the driver are in MT8135.
+> 3. If want I2C wave go/from PMIC need to set the DIR_PATH register bit^0
+> to 1 extra.
 
 Hi,
 
-On 11/13/2014 08:39 PM, Geert Uytterhoeven wrote:
-> On Thu, Nov 13, 2014 at 8:22 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->> changes in v6:
->> -Wrap the clock code in #ifdef CONFIG_OF, as simplefb is used on non
->>  devicetree platforms too
-> 
-> With clocks?
+Some supplemental, I hope this make it more clear.
 
-No, the existing users are in arch/x86/kernel/sysfb*.c so no clock support.
+    +---------------+
+    |     MT8135    |
+    |               |
+    |    +----------|
+    |    |I2C       |___SDA
+    |    |controller|___SCL
+    |    +----------|
+    |               |      +-------+
+    |    +----------|      | MT6397|
+    |    |  pwrap   |      |       |___SDA_pmic
+    |    |          |<---->|       |___SCL_pmic
+    +---------------+      +-------+
 
-And any new users which need clocks should use devicetree.
+This is the simplified block diagram of mt8135 and mt6397. MT8135 can
+works with MTK PMIC MT6397. On MT8135, it use pwrap module to control
+/communicate with the PMIC. Pwrap is a hardware communicate with pmic
+through MTK proprietary interface.
 
-Regards,
+There are several PMIC functionality that is controlled by registers
+and controllers on MT8135, I2C is one of them.
 
-Hans
+On MT8135, I2C controller can control I2C pins on MT8135 and MT6397.
+When you set I2C DIR_PATH register on MT8135, i2c controller will
+control PMIC pins(through pwrap) to send i2c signal. Because the
+i2c controllers are on 8135, it can still do DMA from system memory.
+So it kinds of like these 2 works like a virtual SoC.
+
+Joe.C
