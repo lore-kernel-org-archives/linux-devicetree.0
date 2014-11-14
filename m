@@ -1,90 +1,222 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH v2] can: Fix bug in suspend/resume
-Date: Fri, 14 Nov 2014 16:09:35 +0100
-Message-ID: <54661B2F.2000704@pengutronix.de>
-References: <e7070431858e49e29cd03d76fd7a66c3@BN1AFFO11FD055.protection.gbl> <5465C34D.4030805@pengutronix.de> <e5f5913b51a54222aa1bb0680a77e56d@BN1AFFO11FD055.protection.gbl>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="XdXl35NW4fHGW2gSn9bhxeK9AIp5bHaER"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <e5f5913b51a54222aa1bb0680a77e56d@BN1AFFO11FD055.protection.gbl>
-Sender: linux-can-owner@vger.kernel.org
-To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>
-Cc: Kedareswara rao Appana <appana.durga.rao@xilinx.com>, wg@grandegger.com, michal.simek@xilinx.com, grant.likely@linaro.org, robh+dt@kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kedareswara rao Appana <appanad@xilinx.com>
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v8 4/8] OF: platform: Add OF notifier handler
+Date: Fri, 14 Nov 2014 17:13:23 +0200
+Message-ID: <5E35070E-5536-41DE-835E-8441B1C867F5@konsulko.com>
+References: <1414528565-10907-1-git-send-email-pantelis.antoniou@konsulko.com> <1414528565-10907-5-git-send-email-pantelis.antoniou@konsulko.com> <20141113232944.1F136C40B52@trevor.secretlab.ca>
+Mime-Version: 1.0 (Mac OS X Mail 8.0 \(1990.1\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141113232944.1F136C40B52-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel Becker <jlbec-aKy9MeLSZ9dg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---XdXl35NW4fHGW2gSn9bhxeK9AIp5bHaER
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Hi Grant,
 
-On 11/14/2014 04:05 PM, S=C3=B6ren Brinkmann wrote:
-> On Fri, 2014-11-14 at 09:54AM +0100, Marc Kleine-Budde wrote:
->> On 11/14/2014 09:16 AM, Kedareswara rao Appana wrote:
->>> The drvdata in the suspend/resume is of type struct net_device,
->>> not the platform device.Enable the clocks in the suspend before
->>> accessing the registers of the CAN.
->>>
->>> Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
->>> ---
->>> Changes for v2:
->>>   - Removed the struct platform_device* from suspend/resume
->>>     as suggest by Lothar.
->>>   - The clocks are getting disabled and un prepared at the end of the=
- probe.=20
->>>     In the suspend the driver is doing a register write.In order
->>>     To do that register write we have to again enable and prepare the=
- clocks.
->>
->> Please look the at suspend/resume code and count the
->> clock_enable/disable manually. After a suspend/resume cycle, you have
->> enabled the clock twice, but disabled it once.
->>
->> I think you have to abstract the clock handling behind runtime PM. I
->> haven't done this myself yet, but the strong feeling that this is a
->> possible solution to your problem. These links might help:
+> On Nov 14, 2014, at 01:29 , Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> =
+wrote:
 >=20
-> I agree, the clock handling looks weird. Also the clk_disable calls in
-> xcan_get_berr_counter() look suspicious to me, but I might be wrong.
-> I think you can take a look at gpio-zynq for an example for runtime_pm
-> usage. I think the usage model in that driver is similar to here.
+> On Tue, 28 Oct 2014 22:36:01 +0200
+> , Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> wrote:
+>> Add OF notifier handler needed for creating/destroying platform devi=
+ces
+>> according to dynamic runtime changes in the DT live tree.
+>>=20
+>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>=20
+> Hi Pantelis,
+>=20
+> Some comments below. Feel free to send me fixup patches instead of
+> respinning.
+>=20
 
-The xcan_get_berr_counter() function is correct, when doing manual (i.e.
-non runtime-pm) clock handling. This function might be called if the
-interface is down, this means clocks are disabled.
+Sure, I=E2=80=99ll get around to send updated patches over the weekend.
 
-Marc
+> g.
+>=20
+>> ---
+>> drivers/base/platform.c     | 18 +++++++++--
+>> drivers/of/platform.c       | 78 +++++++++++++++++++++++++++++++++++=
+++++++++++
+>> include/linux/of_platform.h | 10 ++++++
+>> 3 files changed, 103 insertions(+), 3 deletions(-)
+>>=20
+>> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+>> index b2afc29..282bfec 100644
+>> --- a/drivers/base/platform.c
+>> +++ b/drivers/base/platform.c
+>> @@ -1002,10 +1002,22 @@ int __init platform_bus_init(void)
+>>=20
+>> 	error =3D device_register(&platform_bus);
+>> 	if (error)
+>> -		return error;
+>> -	error =3D  bus_register(&platform_bus_type);
+>> +		goto err_out;
+>> +
+>> +	error =3D bus_register(&platform_bus_type);
+>> +	if (error)
+>> +		goto err_unreg_dev;
+>> +
+>> +	error =3D of_platform_register_reconfig_notifier();
+>> 	if (error)
+>> -		device_unregister(&platform_bus);
+>> +		goto err_unreg_bus;
+>=20
+> We really don't want to fail out here. If the notifier registration f=
+ails, it
+> doesn't make sense to cause the entire boot to fail.
+>=20
+> Instead of refactoring the function, just add the call to
+> of_platform_register_reconfig_notifier(), and WARN_ON() failure witho=
+ut
+> bailing.
+>=20
+> (Actually, you don't need to send me a fixup for this; I've gone ahea=
+d
+> and fixed it up in my tree)
+>=20
 
+I see. Thanks.
 
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+I=E2=80=99m curious under which condition the of_platform_register_reco=
+nfig_notifier()
+would fail. Only under extreme low memory conditions (and very early in=
+ the
+boot-sequence). I doubt we=E2=80=99ll get very far - the boot-sequence =
+will croak shortly
+after.=20
 
+>> +
+>> +	return 0;
+>> +err_unreg_bus:
+>> +	bus_unregister(&platform_bus_type);
+>> +err_unreg_dev:
+>> +	device_unregister(&platform_bus);
+>> +err_out:
+>> 	return error;
+>> }
+>>=20
+>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+>> index 3b64d0b..aa8db92 100644
+>> --- a/drivers/of/platform.c
+>> +++ b/drivers/of/platform.c
+>> @@ -546,4 +546,82 @@ void of_platform_depopulate(struct device *pare=
+nt)
+>> }
+>> EXPORT_SYMBOL_GPL(of_platform_depopulate);
+>>=20
+>> +#ifdef CONFIG_OF_DYNAMIC
+>> +
+>> +static struct notifier_block platform_of_notifier;
+>> +
+>> +static int of_platform_notify(struct notifier_block *nb,
+>> +				unsigned long action, void *arg)
+>> +{
+>> +	struct platform_device *pdev_parent, *pdev;
+>> +	struct device_node *dn;
+>> +	int state;
+>> +	bool children_left;
+>> +
+>> +	state =3D of_reconfig_get_state_change(action, arg);
+>> +
+>> +	/* no change? */
+>> +	if (state =3D=3D -1)
+>> +		return NOTIFY_OK;
+>> +
+>> +	switch (action) {
+>> +	case OF_RECONFIG_ATTACH_NODE:
+>> +	case OF_RECONFIG_DETACH_NODE:
+>> +		dn =3D arg;
+>> +		break;
+>> +	case OF_RECONFIG_ADD_PROPERTY:
+>> +	case OF_RECONFIG_REMOVE_PROPERTY:
+>> +	case OF_RECONFIG_UPDATE_PROPERTY:
+>> +		dn =3D ((struct of_prop_reconfig *)arg)->dn;
+>> +		break;
+>> +	default:
+>> +		return NOTIFY_OK;
+>> +	}
+>> +
+>> +	if (state) {
+>> +
+>> +		/* verify that the parent is a bus */
+>> +		if (!of_match_node(of_default_bus_match_table, dn->parent))
+>> +			return NOTIFY_OK;	/* not for us */
+>=20
+> This doesn't work reliably. Not all callers of of_platform_populate u=
+se
+> the of_default_bus_match_table. The code needs to actively track the
+> nodes that were used to create child devices. We've got a flag in the
+> device node now that you can use for that; OF_POPULATED_BUS.
+>=20
 
---XdXl35NW4fHGW2gSn9bhxeK9AIp5bHaER
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+I see. That=E2=80=99s a relatively new flag no?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUZhsvAAoJECte4hHFiupU2aAP/1D4UmAQsWEyj2226J7eYpw0
-MYnRj9cGOU/veX16llKdizrOb1dsbkfIyp8oAeDhAl0jjTQGySZdP3I6kzZ4nX5T
-1lGSHJPSTY77qFWEGiOPb1qM45+j9Euk6qxtNjiqXhjYAId/t5oD6zAcwZvxDnI1
-xyUTQe2iK+x6ljFUSJ08hBxVJg5CivVrc1mwQWyjrHE4sfRa/n63clAReh1W6oV7
-3Mv85DdMhdylPq34LowW+t70e5Yel9tGYwaACaleR1JILk+TJQ4zG5qUpr8gxRRb
-UPuS4JvWbtzRNCbjiEBCwUPMPaZp29D/NLM7icNYr78hOkwgqoaZ4eTm0T/K4yMv
-AMdpLCXTLvshQ8aoUi6dktpSS/nzlH2tWjm7tAUubqekcUic2uRj/Y14bQu5CXc7
-m9+goKBwVzxKGtVRaPi3PMq6hSsSVrhiFQuTg4HpJN1dgkCapFfyUKV9g9EFdrnn
-VonI+ocR3GEju2k13WUv5qqyYVzeNiU3vdZQ9XItr4FhUpJbPFfGhkAzfU26HHv7
-5tBqw6pytDwC0XYSSSMEAYi2MX0DrGdisEYEcQo4wQG69RR7jQQC3vYLR77QmeDg
-YPMgWpZqPDDxeIaQl35b+79Bp/V9QLmwZalq4Q7tcqC6UNMkXjrVaA9lVHggEFCv
-4PY24kbmUITh4gO+sk76
-=mcbj
------END PGP SIGNATURE-----
-
---XdXl35NW4fHGW2gSn9bhxeK9AIp5bHaER--
+>> +
+>> +		/* pdev_parent may be NULL when no bus platform device */
+>> +		pdev_parent =3D of_find_device_by_node(dn->parent);
+>> +		pdev =3D of_platform_device_create(dn, NULL,
+>> +				pdev_parent ? &pdev_parent->dev : NULL);
+>> +		of_dev_put(pdev_parent);
+>> +
+>> +		if (pdev =3D=3D NULL) {
+>> +			pr_err("%s: failed to create for '%s'\n",
+>> +					__func__, dn->full_name);
+>> +			/* of_platform_device_create tosses the error code */
+>> +			return notifier_from_errno(-EINVAL);
+>> +		}
+>> +
+>> +	} else {
+>> +
+>> +		/* find our device by node */
+>> +		pdev =3D of_find_device_by_node(dn);
+>> +		if (pdev =3D=3D NULL)
+>> +			return NOTIFY_OK;	/* no? not meant for us */
+>> +
+>> +		/* unregister takes one ref away */
+>> +		of_platform_device_destroy(&pdev->dev, &children_left);
+>> +
+>> +		/* and put the reference of the find */
+>> +		of_dev_put(pdev);
+>> +
+>> +	}
+>> +
+>> +	return NOTIFY_OK;
+>> +}
+>> +
+>> +int of_platform_register_reconfig_notifier(void)
+>> +{
+>> +	platform_of_notifier.notifier_call =3D of_platform_notify;
+>> +	return of_reconfig_notifier_register(&platform_of_notifier);
+>> +}
+>> +EXPORT_SYMBOL_GPL(of_platform_register_reconfig_notifier);
+>> +
+>> +#endif
+>> +
+>> #endif /* CONFIG_OF_ADDRESS */
+>> diff --git a/include/linux/of_platform.h b/include/linux/of_platform=
+=2Eh
+>> index c2b0627..01fe5d6 100644
+>> --- a/include/linux/of_platform.h
+>> +++ b/include/linux/of_platform.h
+>> @@ -84,4 +84,14 @@ static inline int of_platform_populate(struct dev=
+ice_node *root,
+>> static inline void of_platform_depopulate(struct device *parent) { }
+>> #endif
+>>=20
+>> +#ifdef CONFIG_OF_DYNAMIC
+>> +extern int of_platform_register_reconfig_notifier(void);
+>> +#else
+>> +static inline int of_platform_register_reconfig_notifier(void)
+>> +{
+>> +	return 0;
+>> +}
+>> +#endif
+>> +
+>> +
+>> #endif	/* _LINUX_OF_PLATFORM_H */
+>> --=20
+>> 1.7.12
