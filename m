@@ -1,106 +1,84 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: Re: [PATCH v10 11/11] drm: bridge/dw_hdmi: add rockchip rk3288 support
-Date: Fri, 14 Nov 2014 10:23:18 +0000
-Message-ID: <5465D816.3020708@imgtec.com>
-References: <1415934583-16290-1-git-send-email-andy.yan@rock-chips.com>
- <1415935884-17130-1-git-send-email-andy.yan@rock-chips.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 4/7] ARM: dts: sun6i: Add simplefb node
+Date: Fri, 14 Nov 2014 11:24:17 +0100
+Message-ID: <20141114102417.GY20972@lukather>
+References: <1415871109-28332-1-git-send-email-hdegoede@redhat.com>
+ <1415871109-28332-4-git-send-email-hdegoede@redhat.com>
+ <20141113164606.GM20972@lukather>
+ <5464EFF9.9010203@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1415935884-17130-1-git-send-email-andy.yan@rock-chips.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Andy Yan <andy.yan@rock-chips.com>, airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
-Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, mark.yao@rock-chips.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="P6PRkhImOxklJvkF"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBAFRS6RQKGQE7YBGPPA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5464EFF9.9010203-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy
+--P6PRkhImOxklJvkF
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-On 14/11/14 03:31, Andy Yan wrote:
-> Rockchip RK3288 hdmi is compatible with dw_hdmi
+On Thu, Nov 13, 2014 at 06:52:57PM +0100, Hans de Goede wrote:
+> Hi,
 > 
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+> On 11/13/2014 05:46 PM, Maxime Ripard wrote:
+> > Hi,
+> > 
+> > On Thu, Nov 13, 2014 at 10:31:46AM +0100, Hans de Goede wrote:
+> >> Add a simplefb template node for u-boot to further fill and activate.
+> >>
+> >> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> >> ---
+> >>  arch/arm/boot/dts/sun6i-a31.dtsi | 10 ++++++++++
+> >>  1 file changed, 10 insertions(+)
+> >>
+> >> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+> >> index 543f895..438952e 100644
+> >> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
+> >> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+> >> @@ -62,6 +62,16 @@
+> >>  		ethernet0 = &gmac;
+> >>  	};
+> >>  
+> >> +	chosen {
+> >> +		#address-cells = <1>;
+> >> +		#size-cells = <1>;
+> >> +		ranges;
+> >> +
+> >> +		framebuffer0 {
+> >> +			compatible = "simple-framebuffer";
+> >> +			status = "disabled";
+> > 
+> > Aren't we suppose to have clocks in there too?
 > 
-> ---
+> I deliberately left them out as they are not needed on sun6i, once the blocks
+> are setup ahb access is not necessary, but it seems that the ahb_gate bits
+> in sun4i / sun5i / sun7i double as a reset. Toggling them on / off / on breaks
+> the mode, while toggling module clocks on / off / on only causes a glitch.
 > 
-> Changes in v10:
-> - add more display mode support mpll configuration for rk3288
-> 
-> Changes in v9:
-> - move some phy configuration to platform driver
-> 
-> Changes in v8: None
-> Changes in v7: None
-> Changes in v6: None
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2: None
-> 
->  drivers/gpu/drm/bridge/dw_hdmi.c            |  10 +
->  drivers/gpu/drm/bridge/dw_hdmi.h            |   3 +-
->  drivers/gpu/drm/rockchip/Kconfig            |  10 +
->  drivers/gpu/drm/rockchip/Makefile           |   2 +-
->  drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 355 ++++++++++++++++++++++++++++
->  include/drm/bridge/dw_hdmi.h                |   1 +
->  6 files changed, 379 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-> 
-> diff --git a/drivers/gpu/drm/bridge/dw_hdmi.c b/drivers/gpu/drm/bridge/dw_hdmi.c
-> index a2876fe..1dd1f0b 100644
-> --- a/drivers/gpu/drm/bridge/dw_hdmi.c
-> +++ b/drivers/gpu/drm/bridge/dw_hdmi.c
-> @@ -715,6 +715,13 @@ static void dw_hdmi_phy_enable_tmds(struct dw_hdmi *hdmi, u8 enable)
->  			 HDMI_PHY_CONF0_ENTMDS_MASK);
->  }
->  
-> +static void dw_hdmi_phy_enable_spare(struct dw_hdmi *hdmi, u8 enable)
-> +{
-> +	hdmi_mask_writeb(hdmi, enable, HDMI_PHY_CONF0,
-> +			 HDMI_PHY_CONF0_SPARECTRL_OFFSET,
-> +			 HDMI_PHY_CONF0_SPARECTRL_MASK);
-> +}
-> +
+> Since the sun6i has a separate reset controller, the clock gates seem to really
+> only control ahb access which is not necessary once the mode has been set up.
 
-What does enable spare do? Can other future SoCs use it?
+Ok. That can always be changed in the future if we ever find we need
+them anyway.
 
-This looks like DW specific. And can be a separate commit that adds a feature to the dw hdmi driver.
+I'll merge these four patches as soon as the bindings doc is
+acked-by/merged by Grant or any other DT maintainer.
 
-Thanks
-ZubairLK
+Maxime
 
->  static void dw_hdmi_phy_gen2_pddq(struct dw_hdmi *hdmi, u8 enable)
->  {
->  	hdmi_mask_writeb(hdmi, enable, HDMI_PHY_CONF0,
-> @@ -846,6 +853,9 @@ static int hdmi_phy_configure(struct dw_hdmi *hdmi, unsigned char prep,
->  	dw_hdmi_phy_gen2_txpwron(hdmi, 1);
->  	dw_hdmi_phy_gen2_pddq(hdmi, 0);
->  
-> +	if (hdmi->dev_type == RK3288_HDMI)
-> +		dw_hdmi_phy_enable_spare(hdmi, 1);
-> +
->  	/*Wait for PHY PLL lock */
->  	msec = 5;
->  	do {
-> diff --git a/drivers/gpu/drm/bridge/dw_hdmi.h b/drivers/gpu/drm/bridge/dw_hdmi.h
-> index b8412a9..30a6b28 100644
-> --- a/drivers/gpu/drm/bridge/dw_hdmi.h
-> +++ b/drivers/gpu/drm/bridge/dw_hdmi.h
-> @@ -837,7 +837,8 @@ enum {
->  	HDMI_PHY_CONF0_PDZ_OFFSET = 7,
->  	HDMI_PHY_CONF0_ENTMDS_MASK = 0x40,
->  	HDMI_PHY_CONF0_ENTMDS_OFFSET = 6,
-> -	HDMI_PHY_CONF0_SPARECTRL = 0x20,
-> +	HDMI_PHY_CONF0_SPARECTRL_MASK = 0x20,
-> +	HDMI_PHY_CONF0_SPARECTRL_OFFSET = 5,
-
-Cheers,
-ZubairLK
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--P6PRkhImOxklJvkF--
