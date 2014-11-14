@@ -1,87 +1,140 @@
-From: =?windows-1251?B?0eDs4OPu7S7Q8w==?= <x6-kWpDZo/R5IkjuUp2flYTmwC/G2K4zDHf@public.gmane.org>
-Subject: =?windows-1251?b?0eDs7uPu7e376SDg7+/g8ODyICLB4OLg8Oj/Ii4g?=
-	=?windows-1251?b?yvDo8fLg6/zt7i336PHy++Ug7eDv6PLq6CE=?=
-Date: Fri, 14 Nov 2014 11:31:44 +0000
-Message-ID: <F5F046151ECAE5469A9FD6696D0E2776@kbajifmelg>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v5 1/5] dt-bindings: simplefb: Specify node
+ location and handoff related properties
+Date: Fri, 14 Nov 2014 12:03:12 +0100
+Message-ID: <1415962996-31712-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3696462988852154392=="
-Return-path: <nbd-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/nbd-general>,
-	<mailto:nbd-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=nbd-general>
-List-Post: <mailto:nbd-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:nbd-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/nbd-general>,
-	<mailto:nbd-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: nbd-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: "faisal.latif" <faisal.latif-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, netfilter <netfilter-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "paul.clements" <paul.clements-G8/ITkJZaeZWk0Htik3J/w@public.gmane.org>, nbd-general <nbd-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "steffen.klassert" <steffen.klassert-opNxpl+3fjRBDgjK7y7TUQ@public.gmane.org>, "manish.chopra" <manish.chopra-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org>, "sony.chacko" <sony.chacko-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org>, "rajesh.borundia" <rajesh.borundia-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org>, "lauro.venancio" <lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, "aloisio.almeida" <aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, "trond.myklebust" <trond.myklebust-7I+n7zu2hftEKMMhf/gKZA@public.gmane.org>, "jon.mason" <jon.mason-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, anton <anton-yrGDUoBaLx3QT0dZR+AlfA@public.gmane.org>, bcousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORB2O4S6RQKGQEZ6P667Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a multi-part message in MIME format.
+Since simplefb nodes do not relate directly to hw typically they have been
+placed in the root of the devicetree. As the represent runtime information
+having them as sub-nodes of /chosen is more logical, specify this.
 
---===============3696462988852154392==
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_16D3_01CFFFFE.91728010"
+Also specify when to set the chosen stdout-path property to a simplefb node.
 
-This is a multi-part message in MIME format.
+For reliable handover to a hardware specific driver, that driver needs to
+know which simplefb to unregister when taking over, specify how the hw driver
+can find the matching simplefb node.
 
-------=_NextPart_000_16D3_01CFFFFE.91728010
-Content-Type: text/plain;
-	charset="windows-1251"
-Content-Transfer-Encoding: quoted-printable
+Last add some advice on how to fill and use simplefb nodes from a firmware
+pov.
 
-=D1=E0=EC=EE=E3=EE=ED=ED=FB=E9 =E0=EF=EF=E0=F0=E0=F2 =E8=E7 =ED=E5=F0=E6=E0=
-=E2=E5=FE=F9=E5=E9 =F1=F2=E0=EB=E8! =C3=E0=F0=E0=ED=F2=E8=FF 5 =EB=E5=F2!=
- 100% =EB=F3=F7=F8=E5=E5 =EA=E0=F7=E5=F1=F2=E2=EE! =D1=E5=E1=E5=F1=F2=EE=E8=
-=EC=EE=F1=F2=FC =EB=E8=F2=F0=E0 =F1=E0=EC=EE=E3=EE=ED=E0 19 =F0=F3=E1=EB=E5=
-=E9! =D1=EC=EE=F2=F0=E8 =F2=F3=F2.....=20
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Acked-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+--
+Changes in v2:
+-Add stdout-path to the example code
+Changes in v3:
+-Specify that the node name must be "framebuffer@<address>"
+-Specify that the link to link simplefb node and display hw nodes to one
+ another for handover goes into the simplefb node, and must be called "display"
+-Specify how aliases may be used to tell the OS how to number displays
+-Update the example to reflect these changes
+Changes in v4:
+-Keep the size of the reg property in the example as it was before
+Changes in v5:
+-Specify that stdout-path property should work the same way as the aliases,
+ or just point to an alias
+-Document naming scheme for pre-populated simplefb nodes
+---
+ .../bindings/video/simple-framebuffer.txt          | 58 +++++++++++++++++++++-
+ 1 file changed, 57 insertions(+), 1 deletion(-)
 
-------=_NextPart_000_16D3_01CFFFFE.91728010
-Content-Type: text/html;
-	charset="windows-1251"
-Content-Transfer-Encoding: quoted-printable
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META content=3D"text/html; charset=3Dwindows-1251" http-equiv=3DContent-=
-Type>
-<META name=3DGENERATOR content=3D"MSHTML 10.00.9200.16897">
-<STYLE></STYLE>
-</HEAD>
-<BODY bgColor=3D#ffffff>
-<DIV>=D1=E0=EC=EE=E3=EE=ED=ED=FB=E9 =E0=EF=EF=E0=F0=E0=F2 =E8=E7 =ED=E5=F0=
-=E6=E0=E2=E5=FE=F9=E5=E9 =F1=F2=E0=EB=E8! =C3=E0=F0=E0=ED=F2=E8=FF 5 =EB=E5=
-=F2! 100% =EB=F3=F7=F8=E5=E5=20
-=EA=E0=F7=E5=F1=F2=E2=EE! =D1=E5=E1=E5=F1=F2=EE=E8=EC=EE=F1=F2=FC =EB=E8=F2=
-=F0=E0 =F1=E0=EC=EE=E3=EE=ED=E0 19 =F0=F3=E1=EB=E5=E9! <A=20
-href=3D"http://AkalizaKeza.com/vk/7we1e.php">=D1=EC=EE=F2=F0=E8 =F2=F3=F2=
-.....</A> </DIV></BODY></HTML>
-
-------=_NextPart_000_16D3_01CFFFFE.91728010--
-
-
-
---===============3696462988852154392==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-------------------------------------------------------------------------------
-Comprehensive Server Monitoring with Site24x7.
-Monitor 10 servers for $9/Month.
-Get alerted through email, SMS, voice calls or mobile push notifications.
-Take corrective actions from your mobile device.
-http://pubads.g.doubleclick.net/gampad/clk?id=154624111&iu=/4140/ostg.clktrk
---===============3696462988852154392==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-Nbd-general mailing list
-Nbd-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-https://lists.sourceforge.net/lists/listinfo/nbd-general
-
---===============3696462988852154392==--
+diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer.txt b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+index 8f35718..f8fb7e6 100644
+--- a/Documentation/devicetree/bindings/video/simple-framebuffer.txt
++++ b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+@@ -4,6 +4,40 @@ A simple frame-buffer describes a frame-buffer setup by firmware or
+ the bootloader, with the assumption that the display hardware has already
+ been set up to scan out from the memory pointed to by the reg property.
+ 
++Since simplefb nodes represent runtime information they must be sub-nodes of
++the chosen node (*). Simplefb nodes must be named "framebuffer@<address>".
++
++If the devicetree contains nodes for the display hardware used by a simplefb,
++then the simplefb node must contain a property called "display", which
++contains a phandle pointing to the primary display hw node, so that the OS
++knows which simplefb to disable when handing over control to a driver for the
++real hardware. The bindings for the hw nodes must specify which node is
++considered the primary node.
++
++It is advised to add display# aliases to help the OS determine how to number
++things. If display# aliases are used, then if the simplefb node contains a
++"display" property then the /aliases/display# path must point to the display
++hw node the "display" property points to, otherwise it must point directly
++to the simplefb node.
++
++If a simplefb node represents the preferred console for user interaction,
++then the chosen node's stdout-path property should point to it, or to the
++primary display hw node, as with display# aliases. If display aliases are
++used then it should be set to the alias instead.
++
++It is advised that devicetree files contain pre-filled, disabled framebuffer
++nodes, so that the firmware only needs to update the mode information and
++enable them. This way if e.g. later on support for more display clocks get
++added, the simplefb nodes will already contain this info and the firmware
++does not need to be updated.
++
++If pre-filled framebuffer nodes are used, they should be named
++"framebuffer#-<output>", e.g. "framebuffer0-hdmi". The output should be
++included in the name since different outputs typically require different
++clocks and the clocks are part of the pre-populated nodes. The firmware must
++rename the nodes to the standard "framebuffer@<address>" name using the
++runtime chosen address when enabling the nodes.
++
+ Required properties:
+ - compatible: "simple-framebuffer"
+ - reg: Should contain the location and size of the framebuffer memory.
+@@ -19,14 +53,36 @@ Optional properties:
+            are expected to already be configured correctly. The OS must
+            ensure these clocks are not modified or disabled while the
+            simple framebuffer remains active.
++- display : phandle pointing to the primary display hardware node
+ 
+ Example:
+ 
+-	framebuffer {
++aliases {
++	display0 = &lcdc0;
++}
++
++chosen {
++	framebuffer0: framebuffer@1d385000 {
+ 		compatible = "simple-framebuffer";
+ 		reg = <0x1d385000 (1600 * 1200 * 2)>;
+ 		width = <1600>;
+ 		height = <1200>;
+ 		stride = <(1600 * 2)>;
+ 		format = "r5g6b5";
++		clocks = <&ahb_gates 36>, <&ahb_gates 43>, <&ahb_gates 44>;
++		display = <&lcdc0>;
++	};
++	stdout-path = "display0";
++};
++
++soc@01c00000 {
++	lcdc0: lcdc@1c0c000 {
++		compatible = "allwinner,sun4i-a10-lcdc";
++		...
+ 	};
++};
++
++
++*) Older devicetree files may have a compatible = "simple-framebuffer" node
++in a different place, operating systems must first enumerate any compatible
++nodes found under chosen and then check for other compatible nodes.
+-- 
+2.1.0
