@@ -1,47 +1,49 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 13/14] ARM: STi: DT: STiH410: Add usb2 picophy dt nodes
-Date: Fri, 14 Nov 2014 15:59:51 +0100
-Message-ID: <3480005.rnSDFdcTbG@wuerfel>
-References: <1415876417-28728-1-git-send-email-peter.griffin@linaro.org> <1546892.RCPeXgVQNJ@wuerfel> <20141114133425.GA28680@griffinp-ThinkPad-X1-Carbon-2nd>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v2] can: Fix bug in suspend/resume
+Date: Fri, 14 Nov 2014 07:05:14 -0800
+Message-ID: <e5f5913b51a54222aa1bb0680a77e56d@BN1AFFO11FD055.protection.gbl>
+References: <e7070431858e49e29cd03d76fd7a66c3@BN1AFFO11FD055.protection.gbl>
+ <5465C34D.4030805@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141114133425.GA28680@griffinp-ThinkPad-X1-Carbon-2nd>
+Content-Disposition: inline
+In-Reply-To: <5465C34D.4030805@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, linux-kernel@vger.kernel.org, lee.jones@linaro.org, maxime.coquelin@st.com
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Kedareswara rao Appana <appana.durga.rao@xilinx.com>, wg@grandegger.com, michal.simek@xilinx.com, grant.likely@linaro.org, robh+dt@kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kedareswara rao Appana <appanad@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 14 November 2014 13:34:25 Peter Griffin wrote:
-> > 
-> > > From looking around in the source I see a few different ways people have done this: -
-> > > 
-> > > 1) Some drivers encode the data statically into the source and make a decision based on compatible string.
-> > > 2) Some drivers add a couple of extra dt properties to encode the offset (spifsm in stih416)
-> > > 3) Some drivers mix address spaces in the reg properties (examples given above) 
-> > > 3) Probably some other ways I've not found yet
-> > >
-> > > Is there a blessed way of doing this? It would be nice at least for all the drivers in STI to be doing
-> > > it the same as currently there seems to be a mix of implementations.
-> > 
-> > You can do 1 or 2, not 3.
-> 
-> Yep got it.
-> 
-> One last question, what are the rules about updating ethernet and miphy365 over
-> to using this method for there sysconfig registers? 
+On Fri, 2014-11-14 at 09:54AM +0100, Marc Kleine-Budde wrote:
+> On 11/14/2014 09:16 AM, Kedareswara rao Appana wrote:
+> > The drvdata in the suspend/resume is of type struct net_device,
+> > not the platform device.Enable the clocks in the suspend before
+> > accessing the registers of the CAN.
+> >=20
+> > Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+> > ---
+> > Changes for v2:
+> >   - Removed the struct platform_device* from suspend/resume
+> >     as suggest by Lothar.
+> >   - The clocks are getting disabled and un prepared at the end of t=
+he probe.=20
+> >     In the suspend the driver is doing a register write.In order
+> >     To do that register write we have to again enable and prepare t=
+he clocks.
+>=20
+> Please look the at suspend/resume code and count the
+> clock_enable/disable manually. After a suspend/resume cycle, you have
+> enabled the clock twice, but disabled it once.
+>=20
+> I think you have to abstract the clock handling behind runtime PM. I
+> haven't done this myself yet, but the strong feeling that this is a
+> possible solution to your problem. These links might help:
 
-It depends on whether you have any machines that rely on this for backwards
-compatibility. If the platform support is still work in progress and you
-wouldn't be able to run a machine with an upstream kernel yet, just say
-in the patch description that this breaks compatibility and why it is ok
-in this particular case.
+I agree, the clock handling looks weird. Also the clk_disable calls in
+xcan_get_berr_counter() look suspicious to me, but I might be wrong.
+I think you can take a look at gpio-zynq for an example for runtime_pm
+usage. I think the usage model in that driver is similar to here.
 
-If you have existing users that rely on these properties, make the
-driver code handle the existing dtb files but print a warning if you
-encounter them. In the documentation, you should list the new method
-as required then, but you can mention that the old method might be
-accepted for backwards compatibility.
-
-	Arnd
+	Thanks,
+	S=C3=B6ren
