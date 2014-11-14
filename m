@@ -1,43 +1,86 @@
-From: Alexandru M Stan <amstan@chromium.org>
-Subject: [PATCH 1/2] clk: rockchip: add bindings for the mmc clock phases
-Date: Fri, 14 Nov 2014 14:52:53 -0800
-Message-ID: <1416005574-7756-2-git-send-email-amstan@chromium.org>
-References: <1416005574-7756-1-git-send-email-amstan@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1416005574-7756-1-git-send-email-amstan@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, Doug Anderson <dianders@chromium.org>, addy ke <addy.ke@rock-chips.com>
-Cc: Sonny Rao <sonnyrao@chromium.org>, Kever Yang <kever.yang@rock-chips.com>, Alexandru M Stan <amstan@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mturquette@linaro.org, mark.yao@rock-chips.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Arnaud Ebalard <arno@natisbad.org>
+Subject: [PATCHv1 0/6] rtc: rtc-isl12057: fixes and alarm support
+Date: Sat, 15 Nov 2014 00:06:17 +0100
+Message-ID: <cover.1416006090.git.arno@natisbad.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
 List-Id: devicetree@vger.kernel.org
 
-This will be used in a later patch for clock phase tuning.
+Hi,
 
-Suggested-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Alexandru M Stan <amstan@chromium.org>
----
- include/dt-bindings/clock/rk3288-cru.h | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+This series includes six patches for Intersil ISL12057 driver.
 
-diff --git a/include/dt-bindings/clock/rk3288-cru.h b/include/dt-bindings/clock/rk3288-cru.h
-index 100a08c..465d0f6 100644
---- a/include/dt-bindings/clock/rk3288-cru.h
-+++ b/include/dt-bindings/clock/rk3288-cru.h
-@@ -72,6 +72,16 @@
- #define SCLK_HEVC_CABAC		111
- #define SCLK_HEVC_CORE		112
- 
-+#define SCLK_SDMMC_DRV_PHASE	113
-+#define SCLK_SDIO0_DRV_PHASE	114
-+#define SCLK_SDIO1_DRV_PHASE	115
-+#define SCLK_EMMC_DRV_PHASE	116
-+
-+#define SCLK_SDMMC_SAMPLE_PHASE	117
-+#define SCLK_SDIO0_SAMPLE_PHASE	118
-+#define SCLK_SDIO1_SAMPLE_PHASE	119
-+#define SCLK_EMMC_SAMPLE_PHASE	120
-+
- #define DCLK_VOP0		190
- #define DCLK_VOP1		191
- 
+ - First patch is a fix for masking issues which dates back to driver
+   inclusion. Even if those issues are not critical per se, the patch is
+   a good candidate for stable down to 3.14.
+
+ - As suggested by Uwe, second patch adds proper support for century bit
+   provided by the driver. This will allow to use the chip until 2199
+   if we manage to pass 2038.
+
+ - Following another comment by Uwe, third patch corrects the handling
+   of oscillator failure bit.
+
+ - fourth patch fixes remaining places where 'isl' is used instead of the
+   expected NASDAQ symbol for Intersil (i.e. isil) after commit
+   7a6540ca856ae ("ARM: mvebu: Change vendor prefix for Intersil 
+   Corporation to isil"). 
+
+ - As suggested by Mark, fifth patch improves failure reports by providing
+   error code in dev_err() code.
+
+ - Sixth patch provides alarm support for Intersil ISL12057. This
+   support was not added when the driver was initially pushed in 3.14
+   kernel due to the inability to check interrupt support. After some
+   soldering, this tests have been performed. More time was also
+   spent on testing.
+
+Comments are welcome,
+
+Cheers,
+
+a+
+
+Changes since v0:
+
+- Kept an "isl,isl12057" compatible string for out-of-tree users w/
+  a comment this is obsolete as suggested by Mark and Uwe.
+- Changed function name from toggle to update for helper as suggested
+  by Uwe and Guenter.
+- As suggested by Mark, added a patch to improve error reporting and
+  log the error code 
+- Driver now handles lack of IRQ correctly by returning -ENOTTY
+  if alarm_irq_enable() handler is called and no IRQ has been
+  provided. Additionally, the device is marked as not supporting UIE
+  when no IRQ is available.
+- Following comments from Mark, added a local copy of IRQ (or lack
+  of) in driver's private structure
+- Following comments from Mark, removed a useless call to free_irq()
+  (driver makes use of devm_request_threaded_irq() which makes the
+  call pointless)
+- Following report from Uwe, added a patch to handle oscillator
+  failure bit properly
+- Following suggestions from Uwe, added a patch to handle the century
+  bit the device provides
+
+Arnaud Ebalard (6):
+  rtc: rtc-isl12057: fix masking of register values
+  rtc: rtc-isl12057: add support for century bit
+  rtc: rtc-isl12057: add proper handling of oscillator failure bit
+  rtc: rtc-isl12057: fix isil vs isl naming for intersil
+  rtc: rtc-isl12057: report error code upon failure in dev_err() calls
+  rtc: rtc-isl12057: add alarm support to Intersil ISL12057 RTC driver
+
+ .../devicetree/bindings/i2c/trivial-devices.txt    |   2 +-
+ .../devicetree/bindings/vendor-prefixes.txt        |   2 +-
+ drivers/rtc/rtc-isl12057.c                         | 408 +++++++++++++++++++--
+ 3 files changed, 377 insertions(+), 35 deletions(-)
+
 -- 
-2.1.0.rc2.206.gedb03e5
+2.1.1
+
