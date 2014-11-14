@@ -1,88 +1,77 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH/RFC 5/8] serial: pxa: Make the driver buildable for BCM7xxx set-top platforms
-Date: Fri, 14 Nov 2014 22:07:39 +0100
-Message-ID: <87ioihtrs4.fsf@free.fr>
-References: <1415781993-7755-1-git-send-email-cernekee@gmail.com>
-	<3356477.HitZEsNa4H@wuerfel>
-	<CAJiQ=7AFr5vR+FEc8B3CAZLb5GYujNxtaz7TU2FU0D3oModZ7w@mail.gmail.com>
-	<4606459.kh8mb8TEgZ@wuerfel>
-	<CAJiQ=7DoFk7ZSjHygaMWHyBTpxJFbQX4onh2xqixaqORQODsVg@mail.gmail.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v7 08/13] usb: chipidea: add a usb2 driver for ci13xxx
+Date: Fri, 14 Nov 2014 15:08:32 -0600
+Message-ID: <20141114210832.GE16388@saruman>
+References: <1415978763-27345-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1415978763-27345-9-git-send-email-antoine.tenart@free-electrons.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <CAJiQ=7DoFk7ZSjHygaMWHyBTpxJFbQX4onh2xqixaqORQODsVg@mail.gmail.com>
-	(Kevin Cernekee's message of "Thu, 13 Nov 2014 11:08:08 -0800")
-Sender: linux-serial-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Greg KH <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Rob Herring <robh@kernel.org>, daniel@zonque.org, Haojian Zhuang <haojian.zhuang@gmail.com>, Grant Likely <grant.likely@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7LkOrbQMr4cezO2T"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1415978763-27345-9-git-send-email-antoine.tenart@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Antoine Tenart <antoine.tenart@free-electrons.com>
+Cc: sebastian.hesselbarth@gmail.com, Peter.Chen@freescale.com, balbi@ti.com, p.zabel@pengutronix.de, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Kevin Cernekee <cernekee@gmail.com> writes:
+--7LkOrbQMr4cezO2T
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Thu, Nov 13, 2014 at 1:42 AM, Arnd Bergmann <arnd@arndb.de> wrote:
->> TTY naming is a mess today, and you seem to be caught in the middle
->> of it trying to work around the inherent problems. Extending the PXA
->> driver is an interesting approach since as you say it's a very nice
->> clean subset of the 8250 driver, but that doesn't mean that it's
->> a good long-term strategy, as we will likely have more chips with
->> 8250 variants.
->>
->> Some of the ways forward that I can see are:
->>
->> - (your approach) use and extend the pxa serial driver for new SoCs,
->>   possibly migrate some of the existing users of 8250 to use that
->>   and leave 8250 alone.
->>
->> - fix the problem you see in a different way, and get the 8250 driver
->>   to solve your problem. Possibly integrate the pxa driver back into
->>   8250 in eventually, as we did with the omap driver.
->
-> Do you think it might make sense to come up with a set of guidelines
-> that ensure that SoCs using a non-serial8250 driver (like pxa) on
-> 16550-compatible hardware can be easily moved back to serial8250
-> someday?
+On Fri, Nov 14, 2014 at 04:25:58PM +0100, Antoine Tenart wrote:
+> Add a USB2 ChipIdea driver for ci13xxx, with optional PHY, clock
+> and DMA mask, to support USB2 ChipIdea controllers that don't need
+> specific functions.
+>=20
+> Tested on the Marvell Berlin SoCs USB controllers.
+>=20
+> Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
+> ---
+>  drivers/usb/chipidea/Makefile       |   1 +
+>  drivers/usb/chipidea/ci_hdrc_usb2.c | 117 ++++++++++++++++++++++++++++++=
+++++++
+>  2 files changed, 118 insertions(+)
+>  create mode 100644 drivers/usb/chipidea/ci_hdrc_usb2.c
+>=20
+> diff --git a/drivers/usb/chipidea/Makefile b/drivers/usb/chipidea/Makefile
+> index 2f099c7df7b5..1fc86a2ca22d 100644
+> --- a/drivers/usb/chipidea/Makefile
+> +++ b/drivers/usb/chipidea/Makefile
+> @@ -10,6 +10,7 @@ ci_hdrc-$(CONFIG_USB_OTG_FSM)		+=3D otg_fsm.o
+> =20
+>  # Glue/Bridge layers go here
+> =20
+> +obj-$(CONFIG_USB_CHIPIDEA)	+=3D ci_hdrc_usb2.o
 
-At least for the pxa part, I'd see it with a very supportive eye to move the pxa
-serial driver to a 8250 based one. Most of the code should be in something
-common AFAIK, it's not pxa specific. Only the erratas, specific interrupt and
-register handling could be left in pxa serial driver.
+usb2 is too generic, you should call it ci_hdcr_marvell, or something
+like that.
 
-I had a look at 8250_core driver and 8250.h api. If that could be used for pxa,
-or something similar, it would be great.
+--=20
+balbi
 
-And same thing goes for probing and registering, most of the things are probably
-common.
+--7LkOrbQMr4cezO2T
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
->> - Do a fresh start for a general-purpose soc-type 8250 driver, using
->>   tty_port instead of uart_port as the abstraction layer.
-Ah, that where others input would be good. I wonder if we should ask Russell
-too, a lot of the files around have his name in the header ...
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
->>   Use that for
->>   all new socs instead of extending the 8250 driver more, possibly
->>   migrating some of the existing 8250 users.
->
-> One nice thing about a brand new driver is that we can use dynamic
-> major/minor numbers unconditionally without breaking existing users.
-> If either pxa.c or bcm63xx_uart.c had used dynamic numbers, I could
-> drop Tushar's original workaround.
->
-> Another advantage is that we can assume all users have DT, simplifying
-> the probe function.
-In that later case, I won't let pxa fully migrate to it, as platform users won't
-be gone in the mid-term. I don't really want to have 2 different drivers (one DT
-and the legacy one) for pxa either. I'd rather have an approach where pxa, in
-both device-tree and platform devices, will use some common code, would that
-code be in a library, an API, ...
+iQIcBAEBAgAGBQJUZm9QAAoJEIaOsuA1yqREWHwP/A9omNZxdGijpfNCN8z2PaHC
+A7Li0HF/a87E29/5S2vh1yDihIJQJY5txGX50dSxmiWZ7ZjGQPV2rMxM/xo2uEkF
+3qDKhzW5qreVziqwPIOZq3jujf2o9F1fd8v1Ao6xCB7hBOEetHYSgkXPw5jKQLuz
+PVsEuN5c5fb1s6FNxjIL8aqqdWC1O/ft/bM4gF6Cb/Ep+c10aV3bDrI6YOLZ9MaP
+t0m5I+LiWcZFL+UxW3Me4bfcWbEMwur3M9f3nrCQcWrA5b83afymEQL9/Y1I3vHB
+9MgplH7TYQlyuD2zQdCDqAnuHP43Zh2Y4L+qQqQlX7ftn98j64pIrA8E6yuW3+3u
+bfei9+7qoHlzqZBd72PJq8JuBh71EknYcDbhjTB8hmsemfoqsuQrG0N+s6IiZw0F
+md+HJfMTWsjUUyk6DV4uG91hhiKB+BRMlPLFYn1gvI5CqStPpOvbLnM/aMbiMRom
+S4ZhCUzpRChzL7hegISkYxgsDAoheZ6T3xll2v9rnaZ6fx/zmAsREngAAyJHH7rE
+u77poV4dYhnejj1hLeZDXNfqpWyvcy6BbvuKvUeOxDNWAQ8ruUJFcShR/pOx/M9i
+9Xc+a31EQU84aPXPPYR7hZhKE2U1zoUq+4/2rJ6qi734L0AipSXVE0PuqU6r51+o
+IZRBXa5TEWj87QWaFqj4
+=YA/Z
+-----END PGP SIGNATURE-----
 
-> Would it be helpful to split parts of pxa.c and/or serial8250 into a
-> "lib8250", similar to libahci, that can be called by many different
-> implementations (some of which have special features like DMA
-> support)?
-That's certainly one solution I would support. What removes code to shift it to
-a shared common code is what I wish.
-
-Cheers.
-
--- 
-Robert
+--7LkOrbQMr4cezO2T--
