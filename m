@@ -1,41 +1,76 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: [PATCH] of/address: Don't throw errors on absent ranges properties
-Date: Fri, 14 Nov 2014 17:58:23 +1100
-Message-ID: <1415948303.666.50.camel@kernel.crashing.org>
+From: Ohad Ben-Cohen <ohad@wizery.com>
+Subject: Re: [PATCHv6 4/5] hwspinlock/core: add common OF helpers
+Date: Fri, 14 Nov 2014 09:11:15 +0200
+Message-ID: <CAK=WgbYMM19-rWLOBjix+TA3fF_Pb25ia1rutDxYSUg9SV0efg@mail.gmail.com>
+References: <1410553499-55951-1-git-send-email-s-anna@ti.com>
+ <1410553499-55951-5-git-send-email-s-anna@ti.com> <CAK=WgbamdqAufjC4Xb5moERRBSB-cO6c1RPTE=f+dp75F+Eh7A@mail.gmail.com>
+ <5463B5B6.8040709@ti.com> <CAK=WgbbatPTiz3efDWHVEcuug_UQfkCViMoK0zcfUg3JwB2oTA@mail.gmail.com>
+ <5464EC7A.7050603@ti.com> <CAK=WgbbodS8GsUxQbkyCp6hAG+Ko4LMirx+pUa8_fUdxWFasvw@mail.gmail.com>
+ <54651C48.90809@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <54651C48.90809@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Suman Anna <s-anna@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Tony Lindgren <tony@atomide.com>, Josh Cartwright <joshc@codeaurora.org>, Bjorn Andersson <bjorn@kryo.se>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The core always tries to translate any "reg" property to construct the platform
-device names. This results in a pile of "OF: no ranges; cannot translate" errors
-in dmesg whenever we expose things like i2c devices that cannot directly translate
-to the MMIO space.
+Hi Suman,
 
-Turn this into a pr_debug instead
+On Thu, Nov 13, 2014 at 11:02 PM, Suman Anna <s-anna@ti.com> wrote:
+> OK, lets take an example. I have say 2 device instances, say
+>         hwlock1: hwlock@0 {
+>                 hwlock-num-locks = <32>
+>                 hwlock-base-id = <0>;
+>                 #hwlock-cells = <1>;
+>         };
+>         hwlock2: hwlock@0 {
+>                 hwlock-num-locks = <32>
+>                 hwlock-base-id = <32>;
+>                 #hwlock-cells = <1>;
+>         };
+>
+>         some-client {
+>                 hwlocks = <&hwlock1 32>, <&hwlock2 0>;
+>         };
+>
+> The first args value is incorrect, and I expect the API to return an
+> error. I don't think the API can make assumptions that all passed in
+> values will be correct. What do you suggest that the API do here?
 
-Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+I think this is just one example of many potential mistakes the DT
+developer can have, and that there's nothing really special about it.
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index f0541fd..bf1f79d 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -444,7 +444,7 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
- 	 */
- 	ranges = of_get_property(parent, rprop, &rlen);
- 	if (ranges == NULL && !of_empty_ranges_quirk()) {
--		pr_err("OF: no ranges; cannot translate\n");
-+		pr_debug("OF: no ranges; cannot translate\n");
- 		return 1;
- 	}
- 	if (ranges == NULL || rlen == 0) {
+What if the '5' digit below is a typo, and the actual hardware
+assignment was supposed to be '4' ?
 
+         some-client {
+                 hwlocks = <&hwlock1 5>, <&hwlock2 5>;
+         };
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I don't see how much different this mistake is from the one you
+mentioned above. There's a limit to how much we can really catch DT
+mistakes in the code, just like we couldn't really catch past mistakes
+in the platform data structures.
+
+If we can easily add some validations then great, but if we have to go
+to great lengths just to gain very limited validations, then I'd vote
+against doing so.
+
+> One solution to handle #1 is to also make the hwlock-num-locks property
+> also mandatory (even though it could have been read from a register
+
+Yeah, this is awkward. We shouldn't impose this on implementations
+like OMAP which don't need it.
+
+Again I think for the very limited validation this buys us - it's not worth it.
+
+> And, how do you propose we solve the problem of deferred probing?
+
+It seems to me that hwspin_lock_request_specific failures should be
+used by clients to defer their probing. Why wouldn't such a simple
+solution work?
+
+Thanks,
+Ohad.
