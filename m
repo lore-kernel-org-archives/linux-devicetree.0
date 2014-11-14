@@ -1,74 +1,100 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: simplefb: Document naming
- scheme for pre-populated simplefb nodes
-Date: Fri, 14 Nov 2014 10:50:42 +0100
-Message-ID: <5465D072.1000407@redhat.com>
-References: <1415955751-6316-1-git-send-email-hdegoede@redhat.com> <CACxGe6txgJKsybuSrCXzCn8sPJYZVwo-wm+pV5KuTmP=YHiA2g@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 13/14] ARM: STi: DT: STiH410: Add usb2 picophy dt nodes
+Date: Fri, 14 Nov 2014 09:56:21 +0000
+Message-ID: <20141114095621.GA1648@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1415876417-28728-1-git-send-email-peter.griffin@linaro.org>
+ <3348806.YN8XP4V4uc@wuerfel>
+ <20141113145419.GA30296@griffinp-ThinkPad-X1-Carbon-2nd>
+ <2401196.5cvW5dPSz2@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORB65AS6RQKGQEEHJB2PA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CACxGe6txgJKsybuSrCXzCn8sPJYZVwo-wm+pV5KuTmP=YHiA2g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <2401196.5cvW5dPSz2@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Arnd,
 
-On 11/14/2014 10:12 AM, Grant Likely wrote:
-> On Fri, Nov 14, 2014 at 9:02 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->> Since we advice to use pre-populated simeplfb nodes in dt files, where the
->> firmware then only needs to fill in the mode info + address and enable it,
->> we should also specify how these pre-populated nodes should be named so
->> that the firmware can find and enable the right one.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/video/simple-framebuffer.txt | 7 +++++++
->>  1 file changed, 7 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer.txt b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
->> index c548f33..01dc948 100644
->> --- a/Documentation/devicetree/bindings/video/simple-framebuffer.txt
->> +++ b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
->> @@ -29,6 +29,13 @@ enable them. This way if e.g. later on support for more display clocks get
->>  added, the simplefb nodes will already contain this info and the firmware
->>  does not need to be updated.
->>
->> +If pre-filled framebuffer nodes are used, they should be named
->> +"framebuffer#-<output>", e.g. "framebuffer0-hdmi". The output should be
->> +included in the name since different outputs typically require different
->> +clocks and the clocks are part of the pre-populated nodes. The firmware must
->> +rename the nodes to the standard "framebuffer@<address>" using the runtime
->> +chosen address when enabling the nodes.
+On Thu, 13 Nov 2014, Arnd Bergmann wrote:
+
+> On Thursday 13 November 2014 14:54:19 Peter Griffin wrote:
+> > 
+> > > 
+> > > It also seems that you have put the node in the wrong place, as the reg
+> > > property apparently refers to a different address space. Did you mean
+> > > to put this under the syscfg_core node?
+> > 
+> > Your correct in that it refers to the syscfg_core address space.
+> > However I intentionaly didn't put it under the syscfg_core node.
+> > 
+> > The phy is more unique than most other devices in that in this instance it
+> > is only controlled from two syscfg_core registers which happen to be in the same
+> > sysconf bank.
+> >
+> > However most other devices tend to have a combination of some memory mapped
+> > registers and also some sysconfig registers which does then create a conflict
+> > over where the dt node should live.
+> > 
+> > Currently I can't find an example but there is also no guarentee that a
+> > device will not have some configuration bits in syscfg_core and some
+> > other bits in syscfg_rear/front registers. The phy for example could
+> > have had one register in each, which would make deciding where to put
+> > it difficult.
+> > 
+> > So to create coherency / conformity we decided to put all the IP blocks under the soc node.
+> > 
+> > Also its worth pointing if your not already aware that sysconf_core/rear/front isn't
+> > really a device, it's just a regmap abstraction of some memory mapped configuration
+> > registers where a bunch of seemingly random control bits get stuffed.
+> > 
+> > Of course if you feel strongly about it I can of course change it like you suggested,
+> > but that is the reasoning / rationale of why it was done like this initially.
 > 
-> -<output> should be optional, an only used when there are multiple options.
-
-Right, notice the "should be named", I would rather leave it at that then
-complicate the wording by adding something about only use -output when there
-are multiple options.
-
-> Something we've not talked about is how to handle a framebuffer that
-> has been set up with mirrored displays. Does that case matter?
-
-It is bound to happen sooner or later I guess, but it is still just a single
-framebuffer, so from the simplefb kernel driver pov it does not matter, it really
-is just another variant on the -<output> theme where there happen to be 2 outputs
-active at the same time.
-
-Regards,
-
-Hans
-
-
-
+> The problem is your use of the 'reg' property. If it doesn't refer to the
+> node's address space, it shouldn't be called 'reg'.
 > 
-> g.
-> 
+> Please fix the binding.
+
+I'll appologize in advance as I'm not sure I've understood you correctly, definately your answer
+has given me a bunch more questions to clarify my understanding...
+
+In the case of this particular node, then both reg properties refer to the syscfg_core address space
+as both <0xf8 0x04> and <0xf4 0x04> are offsets into syscfg_core registers. So moving it under
+the syscfg_core like you originaly suggested I believe would meet the definition of 'reg' ("describes the
+address of the device's resources within the address space defined by its parent bus").
+
+Or maybe you meant, if I want to keep the picophy node where it is (under soc), I need to stop using the reg
+property?
+
+The other problem I was describing is a device with some memory mapped registers and some
+sysconfig registers you can find examples already upstream in stih416.dtsi file with the
+ethernet0 and miphy365x_phy nodes.
+
+Here the first 1/2 reg properties are expressed as a 32 bit physical address and size (meets the spec definition),
+and the last is expressed as a sysconfig offset and size (which AFAIK doesn't match the spec definition).
+This change in address space is however documented in the bindings documentation.
+
+How should devices which have multiple address spaces ideally be handled?
+
+>From looking around in the source I see a few different ways people have done this: -
+
+1) Some drivers encode the data statically into the source and make a decision based on compatible string.
+2) Some drivers add a couple of extra dt properties to encode the offset (spifsm in stih416)
+3) Some drivers mix address spaces in the reg properties (examples given above) 
+3) Probably some other ways I've not found yet
+
+Is there a blessed way of doing this? It would be nice at least for all the drivers in STI to be doing
+it the same as currently there seems to be a mix of implementations.
+
+For the moment I think we can forget the third example in my previous email as it is currently hypothetical.
+
+regards,
+
+Peter.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
