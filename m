@@ -1,84 +1,90 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 4/7] ARM: dts: sun6i: Add simplefb node
-Date: Fri, 14 Nov 2014 11:24:17 +0100
-Message-ID: <20141114102417.GY20972@lukather>
-References: <1415871109-28332-1-git-send-email-hdegoede@redhat.com>
- <1415871109-28332-4-git-send-email-hdegoede@redhat.com>
- <20141113164606.GM20972@lukather>
- <5464EFF9.9010203@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [RFC Patch] gpio: add GPIO hogging mechanism
+Date: Fri, 14 Nov 2014 11:22:44 +0100
+Message-ID: <20141114102244.GX20972@lukather>
+References: <1413922198-29373-1-git-send-email-bparrot@ti.com>
+ <CAAVeFuK4PaFbbYjUsvA-oO78P5qmQvyGqG+Ov4GLghoC=yPAoA@mail.gmail.com>
+ <CACRpkdbO20No0A7ttS=kfMx9qE_MZoZzOtPObHefwnNbixpCeg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="P6PRkhImOxklJvkF"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBAFRS6RQKGQE7YBGPPA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="D+UG5SQJKkIYNVx0"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5464EFF9.9010203-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CACRpkdbO20No0A7ttS=kfMx9qE_MZoZzOtPObHefwnNbixpCeg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Benoit Parrot <bparrot@ti.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pantelis Antoniou <panto@antoniou-consulting.com>, Jiri Prchal <jiri.prchal@aksignal.cz>
 List-Id: devicetree@vger.kernel.org
 
---P6PRkhImOxklJvkF
-Content-Type: text/plain; charset=UTF-8
+
+--D+UG5SQJKkIYNVx0
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 13, 2014 at 06:52:57PM +0100, Hans de Goede wrote:
-> Hi,
-> 
-> On 11/13/2014 05:46 PM, Maxime Ripard wrote:
-> > Hi,
-> > 
-> > On Thu, Nov 13, 2014 at 10:31:46AM +0100, Hans de Goede wrote:
-> >> Add a simplefb template node for u-boot to further fill and activate.
-> >>
-> >> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> >> ---
-> >>  arch/arm/boot/dts/sun6i-a31.dtsi | 10 ++++++++++
-> >>  1 file changed, 10 insertions(+)
-> >>
-> >> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-> >> index 543f895..438952e 100644
-> >> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
-> >> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-> >> @@ -62,6 +62,16 @@
-> >>  		ethernet0 = &gmac;
-> >>  	};
-> >>  
-> >> +	chosen {
-> >> +		#address-cells = <1>;
-> >> +		#size-cells = <1>;
-> >> +		ranges;
-> >> +
-> >> +		framebuffer0 {
-> >> +			compatible = "simple-framebuffer";
-> >> +			status = "disabled";
-> > 
-> > Aren't we suppose to have clocks in there too?
-> 
-> I deliberately left them out as they are not needed on sun6i, once the blocks
-> are setup ahb access is not necessary, but it seems that the ahb_gate bits
-> in sun4i / sun5i / sun7i double as a reset. Toggling them on / off / on breaks
-> the mode, while toggling module clocks on / off / on only causes a glitch.
-> 
-> Since the sun6i has a separate reset controller, the clock gates seem to really
-> only control ahb access which is not necessary once the mode has been set up.
+On Fri, Nov 14, 2014 at 10:19:47AM +0100, Linus Walleij wrote:
+> On Wed, Oct 29, 2014 at 8:09 AM, Alexandre Courbot <gnurou@gmail.com> wro=
+te:
+> > On Wed, Oct 22, 2014 at 5:09 AM, Benoit Parrot <bparrot@ti.com> wrote:
+>=20
+> > +               line_b: line_b {
+> > +                       line_b {
+> > +                               gpios =3D <6 0>;
+> > +                               output-low;
+> > +                               line-name =3D "foo-bar-gpio";
+> > +                       };
+> > +               };
+> >
+> (...)
+> >
+> > I wonder if such usage of child nodes could not interfere with GPIO
+> > drivers (existing or to be) that need to use child nodes for other
+> > purposes. Right now there is no way to distinguish a hog node from a
+> > node that serves another purpose, and that might become a problem in
+> > the future.
+>=20
+> Yes, so I have suggested a hog-something; keyword in there.
+>=20
+> As long as the children don't have any compatible-strings we can
+> decide pretty much how they should be handled internally.
+>=20
+> Are there custom drivers with child nodes inside the main chip
+> today?
 
-Ok. That can always be changed in the future if we ever find we need
-them anyway.
+o/
 
-I'll merge these four patches as soon as the bindings doc is
-acked-by/merged by Grant or any other DT maintainer.
+Our pinctrl driver is also our GPIO driver, so they both share the
+same node.
+
+Our pinctrl definitions are there.
 
 Maxime
 
--- 
+--=20
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
---P6PRkhImOxklJvkF--
+
+--D+UG5SQJKkIYNVx0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUZdf0AAoJEBx+YmzsjxAgh5wP+gN1zLRxrEj3ftOSB5Cx5fVW
+7Sl9viBuFOfYVOEcD4bWoP6nkBw2+9dj7sNbEG/HnmcaFz7QhuzJTKGi4qmpeS1n
+MW+nMrZ/KE/ZFDT7jdC49F1zg4qUmZ2v3dRjGyVOUFG1al6j+ajhx3S6w5kAFlKb
+5EWs4JgeZxaXXJcaurVHAC+6lipq47k1Toqzcwdm0rOKmkYttaoE/LXSGcZyFpvj
+L3svmHr27VcsNj73PxErMyLEw41+vXVmSgiy3DU3vYO9HrAvxHq1amPgc9wUN0R8
+QffIbbf16cg6ar9qMAqDWa96ijG9NL5AVA3ADOn7O1gf9XHSsCbp8FXyzi6RRT6S
+yclt4H7tGxxnLbAhwTNqqKQXeUQNoLnllORSarJp7NGPcWqahVeaRJei0sKSdRzW
+AUyiBRBR79beKTABg5UyuPHvzOwW6gCw5jZHOwhDW4OS14MGvLV7fPpvz1wdaHma
+orlZXVJRBZYNLGPnM++F6/PPsOHwFQoNe3rE1ZzwHPc4KGbEEi6sQocl6dFNH8hA
+6S2tYKUzdQnM+4L9TZjIPlx8uS1pyF4pIKmoUuDIlqE1Zo15cTbzLgd+n+8H8d/t
+0OUjC1cAi1D+cTi6MwlWs0jAuPVFCmI6V7dCdzS8M/AYZTr6xLET2ZN+mWVpzec/
+mNUEaCOSNPGxXyKNjcj8
+=jUSA
+-----END PGP SIGNATURE-----
+
+--D+UG5SQJKkIYNVx0--
