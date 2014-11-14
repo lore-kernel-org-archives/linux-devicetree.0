@@ -1,89 +1,64 @@
-From: gsantosh@codeaurora.org
-Subject: Re: [alsa-devel] Question on Compressed offload session
-Date: Fri, 14 Nov 2014 04:08:28 -0000
-Message-ID: <fd33d16f31eb73cc6f0585c192601d9e.squirrel@www.codeaurora.org>
-References: <85499f52ebd29581bf58b9cafbae6864.squirrel@www.codeaurora.org>
-    <5464CDE2.2070406@linux.intel.com>
+From: Howard Chen <ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 1/4] ARM: mediatek: Add basic support for mt6592
+Date: Fri, 14 Nov 2014 13:03:17 +0800
+Message-ID: <CAHwZioFS==fkVKUEa7Qs6NUm6Q-N9npBFz-nj-s_mDiW6mcSkQ@mail.gmail.com>
+References: <1415808457-4030-1-git-send-email-ibanezchen@gmail.com>
+	<CABuKBeJv0S2Q4W1fqb=8BUG6AEvFsZ6sY9QXuz=CRe+qbaYzQQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <5464CDE2.2070406@linux.intel.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc: gsantosh@codeaurora.org, alsa-devel-bounces@alsa-project.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Stephen Warren <swarren@wwwdotorg.org>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, grant.likely@linaro.org, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Olof Johansson <olof@lixom.net>, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABuKBeJv0S2Q4W1fqb=8BUG6AEvFsZ6sY9QXuz=CRe+qbaYzQQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> On 11/12/14, 9:02 PM, gsantosh@codeaurora.org wrote:
->> Hi All,
+On Fri, Nov 14, 2014 at 12:17 AM, Matthias Brugger
+<matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 2014-11-12 17:07 GMT+01:00 Howard Chen <ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+>> * A dtsi for boards based on Mediatek MT6592 SoCs
+>> * Compatible string in arch/arm/mach-mediatek/mediatek.c
 >>
->> The Question is for the compressed offload session.
+>> Signed-off-by: Howard Chen <ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/mt6592.dtsi     | 97 +++++++++++++++++++++++++++++++++++++++
+>>  arch/arm/mach-mediatek/mediatek.c |  1 +
+>>  2 files changed, 98 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/mt6592.dtsi
 >>
->> For a generic codec driver during the startup function it will set some
->> of
->> the hw_constraints rule similarly like this.
->>
->>          snd_pcm_hw_constraint_list(substream->runtime, 0,
->>                      SNDRV_PCM_HW_PARAM_RATE,
->>                      &constraints_12_24);
->>
->> pcm_lib.c will try to add the rule to the runtime structure by accessing
->> the pointers which will be initialized during opening of the session,
->> as The Constraints added by the codec driver will be updated in the
->>
->> struct snd_pcm_hw_constraints of runtime structure which will be part of
->> substream handle.
->>
->> But for the compressed offload I do not see the initialization done for
->> HW
->> constraints, as done in pcm session
->>
->> 2092int snd_pcm_open_substream(struct snd_pcm *pcm, int stream,
->> 2093			   struct file *file,
->> 2094			   struct snd_pcm_substream **rsubstream)
->>
->> most of the existing drivers which has the hw_constraint_list code will
->> not be applicable for compress offload session, how to solve this?
+>> diff --git a/arch/arm/boot/dts/mt6592.dtsi b/arch/arm/boot/dts/mt6592.dtsi
+>> new file mode 100644
+>> index 0000000..65aa81b
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/mt6592.dtsi
+>> @@ -0,0 +1,97 @@
+>> +/*
+>> + * Copyright (c) 2014 MediaTek Inc.
+>> + * Author: Howard Chen <ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#include <dt-bindings/interrupt-controller/irq.h>
+>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +#include "skeleton.dtsi"
 >
-> You can't directly link physical output/input with the decoder/encoder
-> in general.
-> For decoders, the sample-rate may not always be known ahead of time,
-> e.g. with AAC-SBR implicit signaling. There is no way to add constraints
-> on open, there is an assumption that a sample-rate converter is part of
-> the chain to take care of the difference between the output of the
-> offloaded decoder and the back-end actual sampling frequency (same with
-> number of channels and bit-width btw).
-> Likewise if you encode the frequency may not be the same as what the
-> backend provides and some SRC might be needed.
-> -Pierre
+> Regarding a discussion I had with Joe and Arnd [0], I think we should
+> use skeleton64.dtsi here, right?
+> The datasheets states that mt6592 supports up to 8 GB.
 >
-
-I Agree we cannot have a direct link between physical output  / input with
-decoder / encoder, during compressed playback.
-My concern here is, if we have a legacy codec driver which is used for the
-PCM out, and in the start up of this codec driver it is adding
-hw_constraints list, now the same codec driver is used for the compressed
-session FE or PCM session FE,
-If the routing is such that compressed FE -> codec the hw_constraints
-added by this driver is not valid here,
-and legacy drivers needs to be changed,
-Now the question comes how to change this drivers?
-I can think of following things
-if the routing is done for Compressed FE -> codec
-
-1) in Codec driver avoid adding hw_constraint during startup if compressed
-session is routed, this recommend for codec driver to know that compress
-session is routed to codec which I feel not the correct way to handle this
-
-I was checking how to handle this situation in much better way.
-
-Regards
-Santosh
-
-> _______________________________________________
-> Alsa-devel mailing list
-> Alsa-devel@alsa-project.org
-> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
->
+> [0] https://lkml.org/lkml/2014/11/4/192
 
 
+  No, the maximum addressing capacity of mt6592 is 2G bytes.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
