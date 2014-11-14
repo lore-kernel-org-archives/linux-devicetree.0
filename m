@@ -1,38 +1,49 @@
-From: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
-Subject: RE: [PATCH v2 2/4] DT: pwm: Add binding document for IMG PWM DAC
-Date: Fri, 14 Nov 2014 19:45:57 +0000
-Message-ID: <27E62D98F903554192E3C13AFCC91C3C2F506138@hbmail01.hb.imgtec.org>
-References: <1415979460-1093-1-git-send-email-naidu.tellapati@imgtec.com>
-	<1415979460-1093-3-git-send-email-naidu.tellapati@imgtec.com>,<CAL1qeaFWiwfv_FWCSsKz0o8WdNq2yH1XgF7oi+mnCjupaguL4g@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <CAL1qeaFWiwfv_FWCSsKz0o8WdNq2yH1XgF7oi+mnCjupaguL4g@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-pwm-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, James Hartley <James.Hartley@imgtec.com>, Ezequiel Garcia <Ezequiel.Garcia@imgtec.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Arul Ramasamy <Arul.Ramasamy@imgtec.com>, Sai Masarapu <Sai.Masarapu@imgtec.com>
+From: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Subject: [PATCH] ARM: dts: Explicitly set dr_mode on exynos5250-snow
+Date: Fri, 14 Nov 2014 20:46:19 +0100
+Message-ID: <1415994379-29165-1-git-send-email-sjoerd.simons@collabora.co.uk>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+Explicitly set the dr_mode for the dwc3 controller on the
+Snow board to host mode. This is required to ensure the
+controller is initialized in the right mode if the kernel is
+build with USB gadget support.
 
-> Naidu,
+Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+---
+ arch/arm/boot/dts/exynos5250-snow.dts | 4 ++++
+ arch/arm/boot/dts/exynos5250.dtsi     | 2 +-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-> On Fri, Nov 14, 2014 at 7:37 AM,  <naidu.tellapati@imgtec.com> wrote:
->> From: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
->>
->> Add binding document for IMG Pulse Width Modulator (PWM) DAC present on the
->> Pistachio SOC. The PWM DAC has four channels.
->>
->> Signed-off-by: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
->> Signed-off-by: Sai Masarapu <Sai.Masarapu@imgtec.com>
-
-> Reviewed-by: Andrew Bresticker <abrestic@chromium.org>
-
-Many thanks for the review.
-
-Regards,
-Naidu.
-
-
+diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
+index e51fcef..60429ad 100644
+--- a/arch/arm/boot/dts/exynos5250-snow.dts
++++ b/arch/arm/boot/dts/exynos5250-snow.dts
+@@ -624,4 +624,8 @@
+ 	num-cs = <1>;
+ };
+ 
++&usbdrd_dwc3 {
++	dr_mode = "host";
++};
++
+ #include "cros-ec-keyboard.dtsi"
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index f21b9aa..d55c1a2 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -555,7 +555,7 @@
+ 		#size-cells = <1>;
+ 		ranges;
+ 
+-		dwc3 {
++		usbdrd_dwc3: dwc3 {
+ 			compatible = "synopsys,dwc3";
+ 			reg = <0x12000000 0x10000>;
+ 			interrupts = <0 72 0>;
+-- 
+2.1.3
