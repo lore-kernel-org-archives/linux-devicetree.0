@@ -1,77 +1,108 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCHv2 04/16] clocksource: time-armada-370-xp: add suspend/resume support
-Date: Fri, 14 Nov 2014 16:21:24 +0100
-Message-ID: <1415978496-9334-5-git-send-email-thomas.petazzoni@free-electrons.com>
-References: <1415978496-9334-1-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Antoine Tenart <antoine.tenart@free-electrons.com>
+Subject: [PATCH v7 00/13] ARM: berlin: USB support
+Date: Fri, 14 Nov 2014 16:25:50 +0100
+Message-ID: <1415978763-27345-1-git-send-email-antoine.tenart@free-electrons.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415978496-9334-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>
-Cc: linux-arm-kernel@lists.infradead.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com, Peter.Chen@freescale.com, balbi@ti.com, p.zabel@pengutronix.de
+Cc: Antoine Tenart <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This commit adds a set of suspend/resume syscore_ops to respectively
-save and restore a number of timer registers, in order to make sure
-the clockevent and clocksource devices continue to work properly
-across a suspend/resume cycle.
+This series adds the support for ChipIdea USB2 (ci13xxx) controllers,
+the USB PHYs of the Marvell Berlin SoCs and also adds a reset
+controller for these SoCs.
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org
----
- drivers/clocksource/time-armada-370-xp.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+The reset controller is used by the PHY driver and shares the
+existing chip controller node with the clocks and one pin controller.
 
-diff --git a/drivers/clocksource/time-armada-370-xp.c b/drivers/clocksource/time-armada-370-xp.c
-index 0451e62..ff37d3a 100644
---- a/drivers/clocksource/time-armada-370-xp.c
-+++ b/drivers/clocksource/time-armada-370-xp.c
-@@ -43,6 +43,7 @@
- #include <linux/module.h>
- #include <linux/sched_clock.h>
- #include <linux/percpu.h>
-+#include <linux/syscore_ops.h>
- 
- /*
-  * Timer block registers.
-@@ -223,6 +224,28 @@ static struct notifier_block armada_370_xp_timer_cpu_nb = {
- 	.notifier_call = armada_370_xp_timer_cpu_notify,
- };
- 
-+static u32 timer0_ctrl_reg, timer0_local_ctrl_reg;
-+
-+static int armada_370_xp_timer_suspend(void)
-+{
-+	timer0_ctrl_reg = readl(timer_base + TIMER_CTRL_OFF);
-+	timer0_local_ctrl_reg = readl(local_base + TIMER_CTRL_OFF);
-+	return 0;
-+}
-+
-+static void armada_370_xp_timer_resume(void)
-+{
-+	writel(0xffffffff, timer_base + TIMER0_VAL_OFF);
-+	writel(0xffffffff, timer_base + TIMER0_RELOAD_OFF);
-+	writel(timer0_ctrl_reg, timer_base + TIMER_CTRL_OFF);
-+	writel(timer0_local_ctrl_reg, local_base + TIMER_CTRL_OFF);
-+}
-+
-+struct syscore_ops armada_370_xp_timer_syscore_ops = {
-+	.suspend	= armada_370_xp_timer_suspend,
-+	.resume		= armada_370_xp_timer_resume,
-+};
-+
- static void __init armada_370_xp_timer_common_init(struct device_node *np)
- {
- 	u32 clr = 0, set = 0;
-@@ -285,6 +308,8 @@ static void __init armada_370_xp_timer_common_init(struct device_node *np)
- 	/* Immediately configure the timer on the boot CPU */
- 	if (!res)
- 		armada_370_xp_timer_setup(this_cpu_ptr(armada_370_xp_evt));
-+
-+	register_syscore_ops(&armada_370_xp_timer_syscore_ops);
- }
- 
- static void __init armada_xp_timer_init(struct device_node *np)
+The Marvell Berlin USB controllers are host only on the BG2Q and are
+compatible with USB ChipIdea. We here add a glue to use the available
+common functions for this kind of controllers, and add a generic USB2
+ChipIdea driver. A PHY driver is also added to control the USB PHY.
+
+This series applies on top of the generic PHY support in the USB
+framework[1].
+
+Patches 1-4 should already have been taken by Sebastian.
+
+Changes since v6:
+	- removed ci_hdrc_usb2_dt_probe
+	- fixed a bug in the ChipIdea core for PHY handling
+	- called unconditionally dma_set_mask_and_coherent()
+
+Changes since v5:
+        - added a missing header in ci_hdrc_usb2
+
+Changes since v4:
+        - fixed the error handling of ci_hdrc_usb2_probe()
+
+Changes since v3:
+        - removed the DMA mask property
+        - moved the clock handling in the common probe function
+        - fixed the documentation for the USB2 ChipIdea USB PHY binding
+        - made sure the reset bit is 0-31 in the reset driver
+
+Changes since v2:
+        - moved the PHY driver to the generic PHY framework
+        - changed the compatible to 'chipidea,usb2'
+        - added a property to set the DMA mask in the USB2 CI driver
+        - separated dt specific calls in the CI probing function
+        - rebased on top of the generic PHY support for CI[1]
+
+Changes since v1:
+        - made the Berlin CI USB driver a generic one
+        - added support to custom offset for the reset register
+        - added fixed regulators to support supply the VBUS
+        - modified the PHY driver to support the one one the BG2CD as
+          well
+        - documented the reset properties
+        - added bindings for the BG2CD
+        - cosmetic fixes
+
+[1] git://git.free-electrons.com:users/antoine-tenart/linux.git usb-phy
+
+Antoine Tenart (11):
+  reset: add the Berlin reset controller driver
+  Documentation: bindings: add reset bindings docs for Marvell Berlin
+    SoCs
+  ARM: Berlin: select the reset controller
+  ARM: dts: berlin: add a required reset property in the chip controller
+    node
+  phy: add the Berlin USB PHY driver
+  Documentation: bindings: add doc for the Berlin USB PHY
+  usb: chipidea: fix phy handling
+  usb: chipidea: add a usb2 driver for ci13xxx
+  Documentation: bindings: add doc for the USB2 ChipIdea USB driver
+  ARM: dts: berlin: add BG2Q nodes for USB support
+  ARM: dts: Berlin: enable USB on the BG2Q DMP
+
+Sebastian Hesselbarth (2):
+  ARM: dts: berlin: add BG2CD nodes for USB support
+  ARM: dts: berlin: enable USB on the Google Chromecast
+
+ .../devicetree/bindings/arm/marvell,berlin.txt     |  10 +
+ .../devicetree/bindings/phy/berlin-usb-phy.txt     |  16 ++
+ .../devicetree/bindings/usb/ci-hdrc-usb2.txt       |  24 +++
+ arch/arm/boot/dts/berlin2.dtsi                     |   1 +
+ arch/arm/boot/dts/berlin2cd-google-chromecast.dts  |   4 +
+ arch/arm/boot/dts/berlin2cd.dtsi                   |  37 ++++
+ arch/arm/boot/dts/berlin2q-marvell-dmp.dts         |  53 +++++
+ arch/arm/boot/dts/berlin2q.dtsi                    |  56 ++++++
+ arch/arm/mach-berlin/Kconfig                       |   2 +
+ drivers/phy/Kconfig                                |   7 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-berlin-usb.c                       | 224 +++++++++++++++++++++
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-berlin.c                       | 131 ++++++++++++
+ drivers/usb/chipidea/Makefile                      |   1 +
+ drivers/usb/chipidea/ci_hdrc_usb2.c                | 117 +++++++++++
+ drivers/usb/chipidea/core.c                        |   4 +-
+ 17 files changed, 687 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/berlin-usb-phy.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+ create mode 100644 drivers/phy/phy-berlin-usb.c
+ create mode 100644 drivers/reset/reset-berlin.c
+ create mode 100644 drivers/usb/chipidea/ci_hdrc_usb2.c
+
 -- 
 2.1.0
