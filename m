@@ -1,12 +1,12 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 1/4] ARM: dts: sun4i: Add simplefb node
-Date: Fri, 14 Nov 2014 16:34:34 +0100
-Message-ID: <1415979277-20861-2-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH v2 3/4] ARM: dts: sun6i: Add simplefb node
+Date: Fri, 14 Nov 2014 16:34:36 +0100
+Message-ID: <1415979277-20861-4-git-send-email-hdegoede@redhat.com>
 References: <1415979277-20861-1-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBFGCTCRQKGQENJU3V6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBGOCTCRQKGQEQUEKG5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1415979277-20861-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -23,15 +23,15 @@ Add a simplefb template node for u-boot to further fill and activate.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun4i-a10.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm/boot/dts/sun6i-a31.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
-index 1ef7d57..cdb4708 100644
---- a/arch/arm/boot/dts/sun4i-a10.dtsi
-+++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-@@ -27,6 +27,18 @@
- 		serial7 = &uart7;
+diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+index 543f895..04a5cb3 100644
+--- a/arch/arm/boot/dts/sun6i-a31.dtsi
++++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+@@ -62,6 +62,16 @@
+ 		ethernet0 = &gmac;
  	};
  
 +	chosen {
@@ -41,13 +41,11 @@ index 1ef7d57..cdb4708 100644
 +
 +		framebuffer0-hdmi {
 +			compatible = "simple-framebuffer";
-+			clocks = <&ahb_gates 36>, <&ahb_gates 43>, <&ahb_gates 44>;
 +			status = "disabled";
 +		};
 +	};
-+
+ 
  	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
+ 		enable-method = "allwinner,sun6i-a31";
 -- 
 2.1.0
