@@ -1,119 +1,77 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCHv2 10/16] ARM: mvebu: reserve the first 10 KB of each memory bank for suspend/resume
-Date: Fri, 14 Nov 2014 16:21:30 +0100
-Message-ID: <1415978496-9334-11-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: [PATCHv2 04/16] clocksource: time-armada-370-xp: add suspend/resume support
+Date: Fri, 14 Nov 2014 16:21:24 +0100
+Message-ID: <1415978496-9334-5-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1415978496-9334-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415978496-9334-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1415978496-9334-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>
+Cc: linux-arm-kernel@lists.infradead.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-When going out of suspend to RAM, the Marvell EBU platforms go through
-the bootloader, which re-configures the DRAM controller. To achieve
-this, the bootloader executes a piece of code called the "DDR3
-training code". It does some reads/writes to the memory to find out
-the optimal timings for the memory chip being used.
+This commit adds a set of suspend/resume syscore_ops to respectively
+save and restore a number of timer registers, in order to make sure
+the clockevent and clocksource devices continue to work properly
+across a suspend/resume cycle.
 
-This has the nasty side effect that the first 10 KB of each DRAM
-chip-select are overwritten by the bootloader when exiting the suspend
-to RAM state.
-
-Therefore, this commit implements the ->reserve() hook for the 'struct
-machine_desc' used on Armada XP, to reserve the 10 KB of each DRAM
-chip-select using the memblock API.
-
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org
 ---
- arch/arm/mach-mvebu/board-v7.c | 51 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+ drivers/clocksource/time-armada-370-xp.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/arch/arm/mach-mvebu/board-v7.c b/arch/arm/mach-mvebu/board-v7.c
-index 6478626..bc52231 100644
---- a/arch/arm/mach-mvebu/board-v7.c
-+++ b/arch/arm/mach-mvebu/board-v7.c
-@@ -16,10 +16,12 @@
- #include <linux/init.h>
- #include <linux/clk-provider.h>
- #include <linux/of_address.h>
-+#include <linux/of_fdt.h>
- #include <linux/of_platform.h>
- #include <linux/io.h>
- #include <linux/clocksource.h>
- #include <linux/dma-mapping.h>
-+#include <linux/memblock.h>
- #include <linux/mbus.h>
- #include <linux/signal.h>
- #include <linux/slab.h>
-@@ -57,6 +59,54 @@ void __iomem *mvebu_get_scu_base(void)
- }
+diff --git a/drivers/clocksource/time-armada-370-xp.c b/drivers/clocksource/time-armada-370-xp.c
+index 0451e62..ff37d3a 100644
+--- a/drivers/clocksource/time-armada-370-xp.c
++++ b/drivers/clocksource/time-armada-370-xp.c
+@@ -43,6 +43,7 @@
+ #include <linux/module.h>
+ #include <linux/sched_clock.h>
+ #include <linux/percpu.h>
++#include <linux/syscore_ops.h>
  
  /*
-+ * When returning from suspend, the platform goes through the
-+ * bootloader, which executes its DDR3 training code. This code has
-+ * the unfortunate idea of using the first 10 KB of each DRAM bank to
-+ * exercise the RAM and calculate the optimal timings. Therefore, this
-+ * area of RAM is overwritten, and shouldn't be used by the kernel if
-+ * suspend/resume is supported.
-+ */
+  * Timer block registers.
+@@ -223,6 +224,28 @@ static struct notifier_block armada_370_xp_timer_cpu_nb = {
+ 	.notifier_call = armada_370_xp_timer_cpu_notify,
+ };
+ 
++static u32 timer0_ctrl_reg, timer0_local_ctrl_reg;
 +
-+#ifdef CONFIG_SUSPEND
-+#define MVEBU_DDR_TRAINING_AREA_SZ (10 * SZ_1K)
-+static int __init mvebu_scan_mem(unsigned long node, const char *uname,
-+				 int depth, void *data)
++static int armada_370_xp_timer_suspend(void)
 +{
-+	const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
-+	const __be32 *reg, *endp;
-+	int l;
-+
-+	if (type == NULL || strcmp(type, "memory"))
-+		return 0;
-+
-+	reg = of_get_flat_dt_prop(node, "linux,usable-memory", &l);
-+	if (reg == NULL)
-+		reg = of_get_flat_dt_prop(node, "reg", &l);
-+	if (reg == NULL)
-+		return 0;
-+
-+	endp = reg + (l / sizeof(__be32));
-+	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
-+		u64 base, size;
-+
-+		base = dt_mem_next_cell(dt_root_addr_cells, &reg);
-+		size = dt_mem_next_cell(dt_root_size_cells, &reg);
-+
-+		memblock_reserve(base, MVEBU_DDR_TRAINING_AREA_SZ);
-+	}
-+
++	timer0_ctrl_reg = readl(timer_base + TIMER_CTRL_OFF);
++	timer0_local_ctrl_reg = readl(local_base + TIMER_CTRL_OFF);
 +	return 0;
 +}
 +
-+static void __init mvebu_memblock_reserve(void)
++static void armada_370_xp_timer_resume(void)
 +{
-+	of_scan_flat_dt(mvebu_scan_mem, NULL);
++	writel(0xffffffff, timer_base + TIMER0_VAL_OFF);
++	writel(0xffffffff, timer_base + TIMER0_RELOAD_OFF);
++	writel(timer0_ctrl_reg, timer_base + TIMER_CTRL_OFF);
++	writel(timer0_local_ctrl_reg, local_base + TIMER_CTRL_OFF);
 +}
-+#else
-+static void __init mvebu_memblock_reserve(void) {}
-+#endif
 +
-+/*
-  * Early versions of Armada 375 SoC have a bug where the BootROM
-  * leaves an external data abort pending. The kernel is hit by this
-  * data abort as soon as it enters userspace, because it unmasks the
-@@ -210,6 +260,7 @@ DT_MACHINE_START(ARMADA_370_XP_DT, "Marvell Armada 370/XP (Device Tree)")
- 	.init_machine	= mvebu_dt_init,
- 	.init_irq       = mvebu_init_irq,
- 	.restart	= mvebu_restart,
-+	.reserve        = mvebu_memblock_reserve,
- 	.dt_compat	= armada_370_xp_dt_compat,
- MACHINE_END
++struct syscore_ops armada_370_xp_timer_syscore_ops = {
++	.suspend	= armada_370_xp_timer_suspend,
++	.resume		= armada_370_xp_timer_resume,
++};
++
+ static void __init armada_370_xp_timer_common_init(struct device_node *np)
+ {
+ 	u32 clr = 0, set = 0;
+@@ -285,6 +308,8 @@ static void __init armada_370_xp_timer_common_init(struct device_node *np)
+ 	/* Immediately configure the timer on the boot CPU */
+ 	if (!res)
+ 		armada_370_xp_timer_setup(this_cpu_ptr(armada_370_xp_evt));
++
++	register_syscore_ops(&armada_370_xp_timer_syscore_ops);
+ }
  
+ static void __init armada_xp_timer_init(struct device_node *np)
 -- 
 2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
