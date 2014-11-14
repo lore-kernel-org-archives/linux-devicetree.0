@@ -1,82 +1,138 @@
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: Re: [alsa-devel] Question on Compressed offload session
-Date: Fri, 14 Nov 2014 10:28:54 -0600
-Message-ID: <54662DC6.7070302@linux.intel.com>
-References: <85499f52ebd29581bf58b9cafbae6864.squirrel@www.codeaurora.org> <5464CDE2.2070406@linux.intel.com> <fd33d16f31eb73cc6f0585c192601d9e.squirrel@www.codeaurora.org>
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: Re: [PATCH v9 1/9] qcom: scm: scm_set_warm_boot_addr() to set the
+ warmboot address
+Date: Fri, 14 Nov 2014 09:33:32 -0700
+Message-ID: <20141114163332.GF45276@linaro.org>
+References: <1414194024-55547-1-git-send-email-lina.iyer@linaro.org>
+ <1414194024-55547-2-git-send-email-lina.iyer@linaro.org>
+ <5465BD97.5070506@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <fd33d16f31eb73cc6f0585c192601d9e.squirrel@www.codeaurora.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: gsantosh@codeaurora.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Stephen Warren <swarren@wwwdotorg.org>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, grant.likely@linaro.org, alsa-devel-bounces@alsa-project.org, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5465BD97.5070506@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/13/14, 10:08 PM, gsantosh@codeaurora.org wrote:
->> On 11/12/14, 9:02 PM, gsantosh@codeaurora.org wrote:
->>> Hi All,
->>>
->>> The Question is for the compressed offload session.
->>>
->>> For a generic codec driver during the startup function it will set some
->>> of
->>> the hw_constraints rule similarly like this.
->>>
->>>           snd_pcm_hw_constraint_list(substream->runtime, 0,
->>>                       SNDRV_PCM_HW_PARAM_RATE,
->>>                       &constraints_12_24);
->>>
->>> pcm_lib.c will try to add the rule to the runtime structure by accessing
->>> the pointers which will be initialized during opening of the session,
->>> as The Constraints added by the codec driver will be updated in the
->>>
->>> struct snd_pcm_hw_constraints of runtime structure which will be part of
->>> substream handle.
->>>
->>> But for the compressed offload I do not see the initialization done for
->>> HW
->>> constraints, as done in pcm session
->>>
->>> 2092int snd_pcm_open_substream(struct snd_pcm *pcm, int stream,
->>> 2093			   struct file *file,
->>> 2094			   struct snd_pcm_substream **rsubstream)
->>>
->>> most of the existing drivers which has the hw_constraint_list code will
->>> not be applicable for compress offload session, how to solve this?
->>
->> You can't directly link physical output/input with the decoder/encoder
->> in general.
->> For decoders, the sample-rate may not always be known ahead of time,
->> e.g. with AAC-SBR implicit signaling. There is no way to add constraints
->> on open, there is an assumption that a sample-rate converter is part of
->> the chain to take care of the difference between the output of the
->> offloaded decoder and the back-end actual sampling frequency (same with
->> number of channels and bit-width btw).
->> Likewise if you encode the frequency may not be the same as what the
->> backend provides and some SRC might be needed.
->> -Pierre
->>
+On Fri, Nov 14 2014 at 01:30 -0700, Daniel Lezcano wrote:
+>On 10/25/2014 01:40 AM, Lina Iyer wrote:
+>>Set the warmboot address using an SCM call, only if the new address i=
+s
+>>different than the old one.
 >
-> I Agree we cannot have a direct link between physical output  / input with
-> decoder / encoder, during compressed playback.
-> My concern here is, if we have a legacy codec driver which is used for the
-> PCM out, and in the start up of this codec driver it is adding
-> hw_constraints list, now the same codec driver is used for the compressed
-> session FE or PCM session FE,
-> If the routing is such that compressed FE -> codec the hw_constraints
-> added by this driver is not valid here,
-> and legacy drivers needs to be changed,
-> Now the question comes how to change this drivers?
-> I can think of following things
-> if the routing is done for Compressed FE -> codec
+>Please could you elaborate why a new address can be changed ?
 >
-> 1) in Codec driver avoid adding hw_constraint during startup if compressed
-> session is routed, this recommend for codec driver to know that compress
-> session is routed to codec which I feel not the correct way to handle this
->
-> I was checking how to handle this situation in much better way.
+Hotplug could have a different warmboot address.
 
-What exactly do you call a 'legacy codec'? If there is a DAI i am not 
-sure I understand the problem.
 
+>>Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+>>---
+>>  drivers/soc/qcom/scm-boot.c | 22 ++++++++++++++++++++++
+>>  include/soc/qcom/scm-boot.h |  1 +
+>>  2 files changed, 23 insertions(+)
+>>
+>>diff --git a/drivers/soc/qcom/scm-boot.c b/drivers/soc/qcom/scm-boot.=
+c
+>>index 60ff7b4..5710967 100644
+>>--- a/drivers/soc/qcom/scm-boot.c
+>>+++ b/drivers/soc/qcom/scm-boot.c
+>>@@ -37,3 +37,25 @@ int scm_set_boot_addr(phys_addr_t addr, int flags)
+>>  			&cmd, sizeof(cmd), NULL, 0);
+>>  }
+>>  EXPORT_SYMBOL(scm_set_boot_addr);
+>>+
+>>+
+>
+>extra line.
+>
+>>+int scm_set_warm_boot_addr(void *entry, int cpu)
+>>+{
+>>+	static int flags[NR_CPUS] =3D {
+>>+		SCM_FLAG_WARMBOOT_CPU0,
+>>+		SCM_FLAG_WARMBOOT_CPU1,
+>>+		SCM_FLAG_WARMBOOT_CPU2,
+>>+		SCM_FLAG_WARMBOOT_CPU3,
+>>+	};
+>
+>Please do not do that, you don't know what NR_CPUS value could be in=20
+>the future with the single kernel image and that could lead to a bug=20
+>very hard to find. The kernel stack is 4096.
+>
+>Move this out of the function:
+>
+>static int scm_flags[] =3D {
+>	SCM_FLAG_WARMBOOT_CPU0,
+>	SCM_FLAG_WARMBOOT_CPU1,
+>	SCM_FLAG_WARMBOOT_CPU2,
+>	SCM_FLAG_WARMBOOT_CPU3,
+>};
+Sure.
+>
+>>+	static DEFINE_PER_CPU(void *, last_known_entry);
+>
+>It sounds odd to add those static declaration here even if I=20
+>understand that is to encapsulate them.
+>
+Sure.
+>>+	int ret;
+>>+
+>>+	if (entry =3D=3D per_cpu(last_known_entry, cpu))
+>>+		return 0;
+>
+>My question is: why scm_set_warm_boot_addr could be called with=20
+>different addresses ?
+>
+>If this is really needed, please replace the per_cpu variable by:
+>
+>struct scm_boot_addr {
+>	int flag;
+>	phys_addr_t entry;
+>};
+>
+>static struct scm_boot_addr scm_flags[] =3D {
+>	{ SCM_FLAG_WARMBOOT_CPU0, },
+>	{ SCM_FLAG_WARMBOOT_CPU1, },
+>	{ SCM_FLAG_WARMBOOT_CPU2, },
+>	{ SCM_FLAG_WARMBOOT_CPU3, },
+>};
+>
+Hmm.. OK.
+
+>>+	ret =3D scm_set_boot_addr(virt_to_phys(entry), flags[cpu]);
+>>+	if (!ret)
+>>+		per_cpu(last_known_entry, cpu) =3D entry;
+>>+
+>>+	return ret;
+>>+}
+>>diff --git a/include/soc/qcom/scm-boot.h b/include/soc/qcom/scm-boot.=
+h
+>>index 02b445c..100938b 100644
+>>--- a/include/soc/qcom/scm-boot.h
+>>+++ b/include/soc/qcom/scm-boot.h
+>>@@ -22,5 +22,6 @@
+>>  #define SCM_FLAG_WARMBOOT_CPU3		0x40
+>
+>By the way, if you look for encapsulation, perhaps these macros could=20
+>be moved into scm-boot.c, no ?
+>
+Dont think anybody outside the file needs it.
+
+>>  int scm_set_boot_addr(phys_addr_t addr, int flags);
+>>+int scm_set_warm_boot_addr(void *entry, int cpu);
+>>
+>>  #endif
+>>
+>
+>
+>--=20
+> <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+>
+>Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+><http://twitter.com/#!/linaroorg> Twitter |
+><http://www.linaro.org/linaro-blog/> Blog
+>
