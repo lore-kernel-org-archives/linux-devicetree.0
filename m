@@ -1,99 +1,47 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 13/14] ARM: STi: DT: STiH410: Add usb2 picophy dt nodes
-Date: Fri, 14 Nov 2014 09:56:21 +0000
-Message-ID: <20141114095621.GA1648@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1415876417-28728-1-git-send-email-peter.griffin@linaro.org>
- <3348806.YN8XP4V4uc@wuerfel>
- <20141113145419.GA30296@griffinp-ThinkPad-X1-Carbon-2nd>
- <2401196.5cvW5dPSz2@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [RESEND PATCH 1/2] ARM: dts: exynos4x12: Device tree node definition
+ for TMU on Exynos4x12
+Date: Fri, 14 Nov 2014 11:03:24 +0100
+Message-ID: <1415959405-14157-1-git-send-email-l.majewski@samsung.com>
+References: <1381300194-13134-5-git-send-email-l.majewski@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2401196.5cvW5dPSz2@wuerfel>
+In-reply-to: <1381300194-13134-5-git-send-email-l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+The TMU device tree node definition for Exynos4x12 family of SoCs.
 
-On Thu, 13 Nov 2014, Arnd Bergmann wrote:
+Signed-off-by: Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Reviewed-by: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/exynos4x12.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-> On Thursday 13 November 2014 14:54:19 Peter Griffin wrote:
-> > 
-> > > 
-> > > It also seems that you have put the node in the wrong place, as the reg
-> > > property apparently refers to a different address space. Did you mean
-> > > to put this under the syscfg_core node?
-> > 
-> > Your correct in that it refers to the syscfg_core address space.
-> > However I intentionaly didn't put it under the syscfg_core node.
-> > 
-> > The phy is more unique than most other devices in that in this instance it
-> > is only controlled from two syscfg_core registers which happen to be in the same
-> > sysconf bank.
-> >
-> > However most other devices tend to have a combination of some memory mapped
-> > registers and also some sysconfig registers which does then create a conflict
-> > over where the dt node should live.
-> > 
-> > Currently I can't find an example but there is also no guarentee that a
-> > device will not have some configuration bits in syscfg_core and some
-> > other bits in syscfg_rear/front registers. The phy for example could
-> > have had one register in each, which would make deciding where to put
-> > it difficult.
-> > 
-> > So to create coherency / conformity we decided to put all the IP blocks under the soc node.
-> > 
-> > Also its worth pointing if your not already aware that sysconf_core/rear/front isn't
-> > really a device, it's just a regmap abstraction of some memory mapped configuration
-> > registers where a bunch of seemingly random control bits get stuffed.
-> > 
-> > Of course if you feel strongly about it I can of course change it like you suggested,
-> > but that is the reasoning / rationale of why it was done like this initially.
-> 
-> The problem is your use of the 'reg' property. If it doesn't refer to the
-> node's address space, it shouldn't be called 'reg'.
-> 
-> Please fix the binding.
+diff --git a/arch/arm/boot/dts/exynos4x12.dtsi b/arch/arm/boot/dts/exynos4x12.dtsi
+index 861bb91..2e9f1f7 100644
+--- a/arch/arm/boot/dts/exynos4x12.dtsi
++++ b/arch/arm/boot/dts/exynos4x12.dtsi
+@@ -271,4 +271,14 @@
+ 		compatible = "samsung,exynos4x12-usb2-phy";
+ 		samsung,sysreg-phandle = <&sys_reg>;
+ 	};
++
++	tmu@100C0000 {
++		compatible = "samsung,exynos4412-tmu";
++		interrupt-parent = <&combiner>;
++		interrupts = <2 4>;
++		reg = <0x100C0000 0x100>;
++		clocks = <&clock 383>;
++		clock-names = "tmu_apbif";
++		status = "disabled";
++	};
+ };
+-- 
+2.0.0.rc2
 
-I'll appologize in advance as I'm not sure I've understood you correctly, definately your answer
-has given me a bunch more questions to clarify my understanding...
-
-In the case of this particular node, then both reg properties refer to the syscfg_core address space
-as both <0xf8 0x04> and <0xf4 0x04> are offsets into syscfg_core registers. So moving it under
-the syscfg_core like you originaly suggested I believe would meet the definition of 'reg' ("describes the
-address of the device's resources within the address space defined by its parent bus").
-
-Or maybe you meant, if I want to keep the picophy node where it is (under soc), I need to stop using the reg
-property?
-
-The other problem I was describing is a device with some memory mapped registers and some
-sysconfig registers you can find examples already upstream in stih416.dtsi file with the
-ethernet0 and miphy365x_phy nodes.
-
-Here the first 1/2 reg properties are expressed as a 32 bit physical address and size (meets the spec definition),
-and the last is expressed as a sysconfig offset and size (which AFAIK doesn't match the spec definition).
-This change in address space is however documented in the bindings documentation.
-
-How should devices which have multiple address spaces ideally be handled?
-
->From looking around in the source I see a few different ways people have done this: -
-
-1) Some drivers encode the data statically into the source and make a decision based on compatible string.
-2) Some drivers add a couple of extra dt properties to encode the offset (spifsm in stih416)
-3) Some drivers mix address spaces in the reg properties (examples given above) 
-3) Probably some other ways I've not found yet
-
-Is there a blessed way of doing this? It would be nice at least for all the drivers in STI to be doing
-it the same as currently there seems to be a mix of implementations.
-
-For the moment I think we can forget the third example in my previous email as it is currently hypothetical.
-
-regards,
-
-Peter.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
