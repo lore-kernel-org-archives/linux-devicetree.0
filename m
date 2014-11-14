@@ -1,171 +1,56 @@
-From: Addy Ke <addy.ke@rock-chips.com>
-Subject: [PATCH] mmc: dw_mmc: add quirk for data over interrupt timeout
-Date: Fri, 14 Nov 2014 21:05:38 +0800
-Message-ID: <1415970338-2637-1-git-send-email-addy.ke@rock-chips.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, jh80.chung@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, heiko@sntech.de, olof@lixom.net, dianders@chromium.org, sonnyrao@chromium.org, amstan@chromium.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, zhenfu.fang@rock-chips.com, cf@rock-chips.com, lintao@rock-chips.com, chenfen@rock-chips.com, zyf@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, hj@rock-chips.com, kever.yang@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com, Addy <addy.ke@rock-chips.com>
+From: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH 1/2] watchdog: ImgTec PDC Watchdog Timer Driver
+Date: Fri, 14 Nov 2014 13:08:11 +0000
+Message-ID: <27E62D98F903554192E3C13AFCC91C3C2F505E3E@hbmail01.hb.imgtec.org>
+References: <1415805483-26268-1-git-send-email-Naidu.Tellapati@imgtec.com>
+	<1415805483-26268-2-git-send-email-Naidu.Tellapati@imgtec.com>
+ <CAL1qeaHt14p3cjk7hLx_E2qKdqR+qHne-BJmHvVrgBF-4AyU=A@mail.gmail.com>
+ <89F3BC60EA3A0141B1F6C2A661D95E5E3F192BB4@hbmail01.hb.imgtec.org>,<5464B191.9020401@imgtec.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5464B191.9020401-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Hogan <James.Hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <Ezequiel.Garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Addy <addy.ke@rock-chips.com>
+Hi James & James,
 
-This patch add a new quirk to notify the driver to teminate
-current transfer and report a data timeout to the core,
-if data over interrupt does NOT come within the given time.
+> On 13/11/14 12:58, Jude Abraham wrote:
+>>>>  +/* timeout in seconds */
+>>>>  +#define PDC_WD_MIN_TIMEOUT             1
+>>>>  +#define PDC_WD_MAX_TIMEOUT             131072
+>>>> +#define PDC_WD_DEFAULT_TIMEOUT         64
+>>>>  +#define PDC_WD_DEFAULT_PRETIMEOUT      PDC_WD_MAX_TIMEOUT
+>>>>  +#define MIN_TIMEOUT_SHIFT              14  /* Clock rate 32768Hz=2^(14+1)*/
+>>
+>>> The input clock is not fixed at 32kHz.  I believe it can be configured to run at a different rate.
+>>
+>> I think it is  a 32 Khz fixed clock to the block. We are speaking to my hardware team for confirmation.
+>> We will address the review comment after receive feedback from  my hardware team.
 
-dw_mmc call mmc_request_done func to finish transfer depends on
-data over interrupt. If data over interrupt does not come in
-sending data state, the current transfer will be blocked.
+> It should ideally be 32KHz, but that doesn't mean it will be guaranteed
+> to be. The input clock rate is still dependent on the SoC clock setup to
+> provide the clock, and that can usually be reconfigured i.e. from a
+> dedicated external oscillator on the board if provided (hopefully
+> providing the right frequency), or derived from a shared oscillator of
+> some other frequency.
 
-But this case really exists, when driver reads tuning data from
-card on rk3288-pink2 board. I measured waveforms by oscilloscope
-and found that card clock was always on and data lines were always
-holded high level in sending data state. This is the cause that
-card does NOT send data to host.
+> For TZ1090 SoC with this IP block, powering down the rest of the SoC
+> happened to reset the low power clock configuration and it would switch
+> clock source to the main oscillator with a fixed divide, which certainly
+> wasn't 32khz most of the time. Each of the low power drivers had to then
+> take this into account in their configuration (img-ir for IR timings,
+> wdt to a lesser extent, and most importantly rtc so as not to lose time
+>or wake up at the wrong time!).
 
-According to synopsys designware databook, the timeout counter is
-started only after the card clock is stopped.
+Please suggest us any valid minimum and maximum clock rates for the Watchdog on Pistachio.
 
-So if card clock is always on, data read timeout interrupt will NOT come,
-and if data lines are always holded high level, all data-related
-interrupt such as start-bit error, data crc error, data over interrupt,
-end-bit error, and so on, will NOT come too.
-
-So driver can't get the current state, it can do nothing but wait for.
-
-This patch is based on https://patchwork.kernel.org/patch/5227941/
-
-Signed-off-by: Addy <addy.ke@rock-chips.com>
----
- drivers/mmc/host/dw_mmc.c  | 47 +++++++++++++++++++++++++++++++++++++++++++++-
- include/linux/mmc/dw_mmc.h |  5 +++++
- 2 files changed, 51 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index b4c3044..3960fc3 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -1448,6 +1448,17 @@ static int dw_mci_data_complete(struct dw_mci *host, struct mmc_data *data)
- 	return data->error;
- }
- 
-+static inline void dw_mci_dto_start_monitor(struct dw_mci *host)
-+{
-+	unsigned int data_tmout_clks;
-+	unsigned int data_tmout_ms;
-+
-+	data_tmout_clks = (mci_readl(host, TMOUT) >> 8);
-+	data_tmout_ms = (data_tmout_clks * 1000 / host->bus_hz) + 250;
-+
-+	mod_timer(&host->dto_timer, jiffies + msecs_to_jiffies(data_tmout_ms));
-+}
-+
- static void dw_mci_tasklet_func(unsigned long priv)
- {
- 	struct dw_mci *host = (struct dw_mci *)priv;
-@@ -1522,8 +1533,11 @@ static void dw_mci_tasklet_func(unsigned long priv)
- 			}
- 
- 			if (!test_and_clear_bit(EVENT_XFER_COMPLETE,
--						&host->pending_events))
-+						&host->pending_events)) {
-+				if (host->quirks & DW_MCI_QUIRK_DTO_TIMER)
-+					dw_mci_dto_start_monitor(host);
- 				break;
-+			}
- 
- 			set_bit(EVENT_XFER_COMPLETE, &host->completed_events);
- 
-@@ -2115,6 +2129,9 @@ static irqreturn_t dw_mci_interrupt(int irq, void *dev_id)
- 		}
- 
- 		if (pending & SDMMC_INT_DATA_OVER) {
-+			if (host->quirks & DW_MCI_QUIRK_DTO_TIMER)
-+				del_timer(&host->dto_timer);
-+
- 			mci_writel(host, RINTSTS, SDMMC_INT_DATA_OVER);
- 			if (!host->data_status)
- 				host->data_status = pending;
-@@ -2502,6 +2519,28 @@ ciu_out:
- 	return ret;
- }
- 
-+static void dw_mci_dto_timer(unsigned long arg)
-+{
-+	struct dw_mci *host = (struct dw_mci *)arg;
-+
-+	switch (host->state) {
-+	case STATE_SENDING_DATA:
-+	case STATE_DATA_BUSY:
-+		/*
-+		* If data over interrupt does NOT come in sending data state,
-+		* we should notify the driver to teminate current transfer
-+		* and report a data timeout to the core.
-+		*/
-+		host->data_status = SDMMC_INT_DRTO;
-+		set_bit(EVENT_DATA_ERROR, &host->pending_events);
-+		set_bit(EVENT_DATA_COMPLETE, &host->pending_events);
-+		tasklet_schedule(&host->tasklet);
-+		break;
-+	default:
-+		break;
-+	}
-+}
-+
- #ifdef CONFIG_OF
- static struct dw_mci_of_quirks {
- 	char *quirk;
-@@ -2513,6 +2552,9 @@ static struct dw_mci_of_quirks {
- 	}, {
- 		.quirk	= "disable-wp",
- 		.id	= DW_MCI_QUIRK_NO_WRITE_PROTECT,
-+	}, {
-+		.quirk	= "dto-timer",
-+		.id	= DW_MCI_QUIRK_DTO_TIMER,
- 	},
- };
- 
-@@ -2654,6 +2696,9 @@ int dw_mci_probe(struct dw_mci *host)
- 
- 	spin_lock_init(&host->lock);
- 	INIT_LIST_HEAD(&host->queue);
-+	if (host->quirks & DW_MCI_QUIRK_DTO_TIMER)
-+		setup_timer(&host->dto_timer,
-+			    dw_mci_dto_timer, (unsigned long)host);
- 
- 	/*
- 	 * Get the host data width - this assumes that HCON has been set with
-diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
-index 42b724e..2477813 100644
---- a/include/linux/mmc/dw_mmc.h
-+++ b/include/linux/mmc/dw_mmc.h
-@@ -98,6 +98,7 @@ struct mmc_data;
-  * @irq_flags: The flags to be passed to request_irq.
-  * @irq: The irq value to be passed to request_irq.
-  * @sdio_id0: Number of slot0 in the SDIO interrupt registers.
-+ * @dto_timer: Timer for data over interrupt timeout.
-  *
-  * Locking
-  * =======
-@@ -196,6 +197,8 @@ struct dw_mci {
- 	int			irq;
- 
- 	int			sdio_id0;
-+
-+	struct timer_list	dto_timer;
- };
- 
- /* DMA ops for Internal/External DMAC interface */
-@@ -220,6 +223,8 @@ struct dw_mci_dma_ops {
- #define DW_MCI_QUIRK_BROKEN_CARD_DETECTION	BIT(3)
- /* No write protect */
- #define DW_MCI_QUIRK_NO_WRITE_PROTECT		BIT(4)
-+/* Timer for data over interrupt timeout */
-+#define DW_MCI_QUIRK_DTO_TIMER			BIT(5)
- 
- /* Slot level quirks */
- /* This slot has no write protect */
--- 
-1.8.3.2
-
+Thanks and regards,
+Naidu.--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
