@@ -1,140 +1,158 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v5 1/5] dt-bindings: simplefb: Specify node
- location and handoff related properties
-Date: Fri, 14 Nov 2014 12:03:12 +0100
-Message-ID: <1415962996-31712-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 1/3] ARM: mediatek: Add basic support for mt6592
+Date: Fri, 14 Nov 2014 13:55:51 +0100
+Message-ID: <CABuKBeKiXn6=xdTYKWea3M=w6+0FfLeWFZtjVkfdyUSR3SfNsA@mail.gmail.com>
+References: <1415942094-11451-1-git-send-email-ibanezchen@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORB2O4S6RQKGQEZ6P667Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415942094-11451-1-git-send-email-ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Howard Chen <ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Since simplefb nodes do not relate directly to hw typically they have been
-placed in the root of the devicetree. As the represent runtime information
-having them as sub-nodes of /chosen is more logical, specify this.
+2014-11-14 6:14 GMT+01:00 Howard Chen <ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> * A dtsi for boards based on Mediatek MT6592 SoCs
+> * Compatible string in arch/arm/mach-mediatek/mediatek.c
+>
+> Signed-off-by: Howard Chen <ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Also specify when to set the chosen stdout-path property to a simplefb node.
+I applied the whole series [0].
+Thanks.
 
-For reliable handover to a hardware specific driver, that driver needs to
-know which simplefb to unregister when taking over, specify how the hw driver
-can find the matching simplefb node.
+[0] https://github.com/mbgg/linux-mediatek/commits/v3.19-next/dts
 
-Last add some advice on how to fill and use simplefb nodes from a firmware
-pov.
+> ---
+>  arch/arm/boot/dts/mt6592.dtsi     | 97 +++++++++++++++++++++++++++++++++++++++
+>  arch/arm/mach-mediatek/mediatek.c |  1 +
+>  2 files changed, 98 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/mt6592.dtsi
+>
+> diff --git a/arch/arm/boot/dts/mt6592.dtsi b/arch/arm/boot/dts/mt6592.dtsi
+> new file mode 100644
+> index 0000000..65aa81b
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/mt6592.dtsi
+> @@ -0,0 +1,97 @@
+> +/*
+> + * Copyright (c) 2014 MediaTek Inc.
+> + * Author: Howard Chen <ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include "skeleton.dtsi"
+> +
+> +/ {
+> +       compatible = "mediatek,mt6592";
+> +       interrupt-parent = <&gic>;
+> +
+> +       cpus {
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               cpu@0 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a7";
+> +                       reg = <0x0>;
+> +               };
+> +               cpu@1 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a7";
+> +                       reg = <0x1>;
+> +               };
+> +               cpu@2 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a7";
+> +                       reg = <0x2>;
+> +               };
+> +               cpu@3 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a7";
+> +                       reg = <0x3>;
+> +               };
+> +               cpu@4 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a7";
+> +                       reg = <0x4>;
+> +               };
+> +               cpu@5 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a7";
+> +                       reg = <0x5>;
+> +               };
+> +               cpu@6 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a7";
+> +                       reg = <0x6>;
+> +               };
+> +               cpu@7 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a7";
+> +                       reg = <0x7>;
+> +               };
+> +       };
+> +
+> +       system_clk: dummy13m {
+> +               compatible = "fixed-clock";
+> +               clock-frequency = <13000000>;
+> +               #clock-cells = <0>;
+> +       };
+> +
+> +       rtc_clk: dummy32k {
+> +               compatible = "fixed-clock";
+> +               clock-frequency = <32000>;
+> +               #clock-cells = <0>;
+> +       };
+> +
+> +       timer: timer@10008000 {
+> +               compatible = "mediatek,mt6577-timer";
+> +               reg = <0x10008000 0x80>;
+> +               interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>;
+> +               clocks = <&system_clk>, <&rtc_clk>;
+> +               clock-names = "system-clk", "rtc-clk";
+> +       };
+> +
+> +       gic: interrupt-controller@10211000 {
+> +               compatible = "arm,cortex-a7-gic";
+> +               interrupt-controller;
+> +               #interrupt-cells = <3>;
+> +               reg = <0x10211000 0x1000>,
+> +                     <0x10212000 0x1000>;
+> +       };
+> +
+> +};
+> diff --git a/arch/arm/mach-mediatek/mediatek.c b/arch/arm/mach-mediatek/mediatek.c
+> index f2acf07..88e4626 100644
+> --- a/arch/arm/mach-mediatek/mediatek.c
+> +++ b/arch/arm/mach-mediatek/mediatek.c
+> @@ -19,6 +19,7 @@
+>
+>  static const char * const mediatek_board_dt_compat[] = {
+>         "mediatek,mt6589",
+> +       "mediatek,mt6592",
+>         NULL,
+>  };
+>
+> --
+> 1.9.1
+>
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Acked-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
---
-Changes in v2:
--Add stdout-path to the example code
-Changes in v3:
--Specify that the node name must be "framebuffer@<address>"
--Specify that the link to link simplefb node and display hw nodes to one
- another for handover goes into the simplefb node, and must be called "display"
--Specify how aliases may be used to tell the OS how to number displays
--Update the example to reflect these changes
-Changes in v4:
--Keep the size of the reg property in the example as it was before
-Changes in v5:
--Specify that stdout-path property should work the same way as the aliases,
- or just point to an alias
--Document naming scheme for pre-populated simplefb nodes
----
- .../bindings/video/simple-framebuffer.txt          | 58 +++++++++++++++++++++-
- 1 file changed, 57 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer.txt b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
-index 8f35718..f8fb7e6 100644
---- a/Documentation/devicetree/bindings/video/simple-framebuffer.txt
-+++ b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
-@@ -4,6 +4,40 @@ A simple frame-buffer describes a frame-buffer setup by firmware or
- the bootloader, with the assumption that the display hardware has already
- been set up to scan out from the memory pointed to by the reg property.
- 
-+Since simplefb nodes represent runtime information they must be sub-nodes of
-+the chosen node (*). Simplefb nodes must be named "framebuffer@<address>".
-+
-+If the devicetree contains nodes for the display hardware used by a simplefb,
-+then the simplefb node must contain a property called "display", which
-+contains a phandle pointing to the primary display hw node, so that the OS
-+knows which simplefb to disable when handing over control to a driver for the
-+real hardware. The bindings for the hw nodes must specify which node is
-+considered the primary node.
-+
-+It is advised to add display# aliases to help the OS determine how to number
-+things. If display# aliases are used, then if the simplefb node contains a
-+"display" property then the /aliases/display# path must point to the display
-+hw node the "display" property points to, otherwise it must point directly
-+to the simplefb node.
-+
-+If a simplefb node represents the preferred console for user interaction,
-+then the chosen node's stdout-path property should point to it, or to the
-+primary display hw node, as with display# aliases. If display aliases are
-+used then it should be set to the alias instead.
-+
-+It is advised that devicetree files contain pre-filled, disabled framebuffer
-+nodes, so that the firmware only needs to update the mode information and
-+enable them. This way if e.g. later on support for more display clocks get
-+added, the simplefb nodes will already contain this info and the firmware
-+does not need to be updated.
-+
-+If pre-filled framebuffer nodes are used, they should be named
-+"framebuffer#-<output>", e.g. "framebuffer0-hdmi". The output should be
-+included in the name since different outputs typically require different
-+clocks and the clocks are part of the pre-populated nodes. The firmware must
-+rename the nodes to the standard "framebuffer@<address>" name using the
-+runtime chosen address when enabling the nodes.
-+
- Required properties:
- - compatible: "simple-framebuffer"
- - reg: Should contain the location and size of the framebuffer memory.
-@@ -19,14 +53,36 @@ Optional properties:
-            are expected to already be configured correctly. The OS must
-            ensure these clocks are not modified or disabled while the
-            simple framebuffer remains active.
-+- display : phandle pointing to the primary display hardware node
- 
- Example:
- 
--	framebuffer {
-+aliases {
-+	display0 = &lcdc0;
-+}
-+
-+chosen {
-+	framebuffer0: framebuffer@1d385000 {
- 		compatible = "simple-framebuffer";
- 		reg = <0x1d385000 (1600 * 1200 * 2)>;
- 		width = <1600>;
- 		height = <1200>;
- 		stride = <(1600 * 2)>;
- 		format = "r5g6b5";
-+		clocks = <&ahb_gates 36>, <&ahb_gates 43>, <&ahb_gates 44>;
-+		display = <&lcdc0>;
-+	};
-+	stdout-path = "display0";
-+};
-+
-+soc@01c00000 {
-+	lcdc0: lcdc@1c0c000 {
-+		compatible = "allwinner,sun4i-a10-lcdc";
-+		...
- 	};
-+};
-+
-+
-+*) Older devicetree files may have a compatible = "simple-framebuffer" node
-+in a different place, operating systems must first enumerate any compatible
-+nodes found under chosen and then check for other compatible nodes.
+
 -- 
-2.1.0
+motzblog.wordpress.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
