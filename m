@@ -1,77 +1,77 @@
-From: Christian Hemp <c.hemp@phytec.de>
-Subject: [PATCH 4/5] ARM:dts:imx6:phyFLEX: Add PCIe
-Date: Fri, 14 Nov 2014 14:32:25 +0100
-Message-ID: <1415971946-48975-5-git-send-email-c.hemp@phytec.de>
-References: <1415971946-48975-1-git-send-email-c.hemp@phytec.de>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 13/14] ARM: STi: DT: STiH410: Add usb2 picophy dt nodes
+Date: Fri, 14 Nov 2014 13:34:25 +0000
+Message-ID: <20141114133425.GA28680@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1415876417-28728-1-git-send-email-peter.griffin@linaro.org>
+ <2401196.5cvW5dPSz2@wuerfel>
+ <20141114095621.GA1648@griffinp-ThinkPad-X1-Carbon-2nd>
+ <1546892.RCPeXgVQNJ@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1415971946-48975-1-git-send-email-c.hemp@phytec.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawn.guo@linaro.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Christian Hemp <c.hemp@phytec.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1546892.RCPeXgVQNJ@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add PCIe support for Phytec phyFLEX-i.MX6 (PFL-A-02 and PBA-B-01).
+Hi Arnd,
 
-Signed-off-by: Christian Hemp <c.hemp@phytec.de>
----
- arch/arm/boot/dts/imx6qdl-phytec-pbab01.dtsi |  4 ++++
- arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi | 11 +++++++++++
- 2 files changed, 15 insertions(+)
+Thanks for taking the time to explain this.
 
-diff --git a/arch/arm/boot/dts/imx6qdl-phytec-pbab01.dtsi b/arch/arm/boot/dts/imx6qdl-phytec-pbab01.dtsi
-index 111b1f5..7634cc1 100644
---- a/arch/arm/boot/dts/imx6qdl-phytec-pbab01.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-phytec-pbab01.dtsi
-@@ -144,6 +144,10 @@
- 	status = "okay";
- };
- 
-+&pcie {
-+	status = "okay";
-+};
-+
- &ssi2 {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-index 8d718b5..2d72109 100644
---- a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-@@ -283,6 +283,10 @@
- 			>;
- 		};
- 
-+		pinctrl_pcie: pciegrp {
-+			fsl,pins = <MX6QDL_PAD_DI0_PIN15__GPIO4_IO17  0x80000000>;
-+		};
-+
- 		pinctrl_uart3: uart3grp {
- 			fsl,pins = <
- 				MX6QDL_PAD_EIM_D24__UART3_TX_DATA	0x1b0b1
-@@ -353,6 +357,13 @@
- 	};
- };
- 
-+&pcie {
-+	pinctrl-name = "default";
-+	pinctrl-0 = <&pinctrl_pcie>;
-+	reset-gpio = <&gpio4 17 0>;
-+	status = "disabled";
-+};
-+
- &uart3 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart3>;
--- 
-1.9.1
+On Fri, 14 Nov 2014, Arnd Bergmann wrote:
+<snip>
+> > address of the device's resources within the address space defined by its parent bus").
+> 
+> You will also have to add an appropriate 'ranges' property then.
+> 
+> > Or maybe you meant, if I want to keep the picophy node where it is (under soc), I need to stop using the reg
+> > property?
+> 
+> That would also be possible, just put the register numbers into your 'st,syscfg'
+> property after the phandle, and leave the reg property empty then.
+
+I think this is the best approach and whay I will do, as it would also extend well to devices with sysconfig
+registers in different banks.
+> 
+> > The other problem I was describing is a device with some memory mapped registers and some
+> > sysconfig registers you can find examples already upstream in stih416.dtsi file with the
+> > ethernet0 and miphy365x_phy nodes.
+> > 
+> > Here the first 1/2 reg properties are expressed as a 32 bit physical address and size (meets the spec definition),
+> > and the last is expressed as a sysconfig offset and size (which AFAIK doesn't match the spec definition).
+> > This change in address space is however documented in the bindings documentation.
+> > 
+> > How should devices which have multiple address spaces ideally be handled?
+> 
+> There should at most be one 'reg' address space, so put it under the node whose
+> bus these refer to. Put all offsets that are relative to a syscon link into
+> the phandle that refers to the syscon device, or hardcode the offsets in the
+> driver.
+
+Ok makes sense.
+> 
+> > From looking around in the source I see a few different ways people have done this: -
+> > 
+> > 1) Some drivers encode the data statically into the source and make a decision based on compatible string.
+> > 2) Some drivers add a couple of extra dt properties to encode the offset (spifsm in stih416)
+> > 3) Some drivers mix address spaces in the reg properties (examples given above) 
+> > 3) Probably some other ways I've not found yet
+> >
+> > Is there a blessed way of doing this? It would be nice at least for all the drivers in STI to be doing
+> > it the same as currently there seems to be a mix of implementations.
+> 
+> You can do 1 or 2, not 3.
+
+Yep got it.
+
+One last question, what are the rules about updating ethernet and miphy365 over to using this method for there sysconfig registers? 
+
+regards,
+
+Peter.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
