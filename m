@@ -1,61 +1,27 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 0/3] Add support for ADC on am437x-gp and
- am43x-epos-evm
-Date: Fri, 14 Nov 2014 10:50:49 -0800
-Message-ID: <20141114185049.GB7046@atomide.com>
-References: <1415099728-10959-1-git-send-email-vigneshr@ti.com>
- <54657FFA.1070200@ti.com>
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: Re: [PATCH v2 2/4] DT: pwm: Add binding document for IMG PWM DAC
+Date: Fri, 14 Nov 2014 10:57:03 -0800
+Message-ID: <CAL1qeaFWiwfv_FWCSsKz0o8WdNq2yH1XgF7oi+mnCjupaguL4g@mail.gmail.com>
+References: <1415979460-1093-1-git-send-email-naidu.tellapati@imgtec.com>
+	<1415979460-1093-3-git-send-email-naidu.tellapati@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54657FFA.1070200@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Paul Walmsley <paul@pwsan.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1415979460-1093-3-git-send-email-naidu.tellapati@imgtec.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Naidu Tellapati <naidu.tellapati@imgtec.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, James Hartley <James.Hartley@imgtec.com>, Ezequiel Garcia <Ezequiel.Garcia@imgtec.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Arul Ramasamy <arul.ramasamy@imgtec.com>, Sai Masarapu <Sai.Masarapu@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-* Vignesh R <vigneshr@ti.com> [141113 20:09]:
-> 
-> On Tuesday 04 November 2014 04:45 PM, Vignesh R wrote:
-> > This series of patches enable ADC on am437x-gp-evm and am43x-epos-evm.
-> > The ADC clock hwmod data of am33xx has been moved to commom place so that
-> > both am43xx and am33xx can reuse them.
-> > tscadc DT node has been adided to am437x-gp and am43x-epos dt files.
-> > With these patches, ADC functionalities are now available on am43xx.
-> > 
-> > Changelog:
-> > 
-> > v2:
-> > Removed phy addresses in hwmod. Using DT instead.
-> > Removed unused "ti,am4372" compatible string.
-> > Use macro to set clk domain name.
-> > Fixed subject format of all patches
-> > 
-> 
-> Please accept these patches.
+Naidu,
 
-Adding Paul to Cc, I don't think Paul has seen these, probably because
-get_maintainer.pl did not catch these hwmod files?
+On Fri, Nov 14, 2014 at 7:37 AM,  <naidu.tellapati@imgtec.com> wrote:
+> From: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
+>
+> Add binding document for IMG Pulse Width Modulator (PWM) DAC present on the
+> Pistachio SOC. The PWM DAC has four channels.
+>
+> Signed-off-by: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
+> Signed-off-by: Sai Masarapu <Sai.Masarapu@imgtec.com>
 
-Regards,
-
-Tony
- 
-> > Vignesh R (3):
-> >   ARM: OMAP2+: hwmod: AM335x/AM43x: Move am33xx_l4_hs_hwmod to
-> >     ipblock_data
-> >   ARM: OMAP2+: hwmod: AM335x/AM43x: add hwmod support for tscadc on
-> >     am43x-evm
-> >   ARM: dts: AM43xx: add tscadc DT entries for am437x-evm and
-> >     am43x-epos-evm
-> > 
-> >  arch/arm/boot/dts/am4372.dtsi                      | 20 ++++++
-> >  arch/arm/boot/dts/am437x-gp-evm.dts                |  8 +++
-> >  arch/arm/boot/dts/am43x-epos-evm.dts               |  8 +++
-> >  .../mach-omap2/omap_hwmod_33xx_43xx_common_data.h  |  2 +
-> >  .../mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c | 71 ++++++++++++++++++++++
-> >  arch/arm/mach-omap2/omap_hwmod_33xx_data.c         | 64 -------------------
-> >  arch/arm/mach-omap2/omap_hwmod_43xx_data.c         |  1 +
-> >  7 files changed, 110 insertions(+), 64 deletions(-)
-> > 
+Reviewed-by: Andrew Bresticker <abrestic@chromium.org>
