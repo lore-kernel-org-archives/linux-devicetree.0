@@ -1,39 +1,95 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] ARM: imx: temporarily remove CONFIG_SOC_FSL from LS1021A
-Date: Fri, 14 Nov 2014 11:56:35 +0100
-Message-ID: <3531768.l2njma3NbB@wuerfel>
-References: <1414746073-12394-1-git-send-email-jingchang.lu@freescale.com> <3302008.ezqrZf1odh@wuerfel> <7b9de442bdd34acbb4398efe92a64a4f@BN3PR0301MB1236.namprd03.prod.outlook.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 2/4] simplefb: Add support for
+ enumerating simplefb dt nodes in /chosen
+Date: Fri, 14 Nov 2014 12:00:45 +0100
+Message-ID: <5465E0DD.6070005@redhat.com>
+References: <1415906594-2461-1-git-send-email-hdegoede@redhat.com> <1415906594-2461-2-git-send-email-hdegoede@redhat.com> <CACxGe6u3_GJA6pbDGX6puDhyJ2E9T+WujmzASw2VE+5-x9q9sA@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7b9de442bdd34acbb4398efe92a64a4f-CEkquS/Gb818MjqJKlOTwZwN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBZWBS6RQKGQEPNBIQHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CACxGe6u3_GJA6pbDGX6puDhyJ2E9T+WujmzASw2VE+5-x9q9sA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 14 November 2014 09:31:42 Jingchang Lu wrote:
->  Yes, only a subset of these drivers are shared between our ARM and PPC
-> platforms. Since there will be allmodconfig breaking fault due to the
-> FSL_SOC configuration, we will try to fix this or select another dependency,
-> I will also inform our driver owners about this.
->  
-> Below drivers are shared on LS1021A platform currently:
+Hi,
+
+On 11/14/2014 10:28 AM, Grant Likely wrote:
+> On Thu, Nov 13, 2014 at 7:23 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> Update simplefb to support the new preferred location for simplefb dt nodes
+>> under /chosen.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> --
+>> Changes in v2:
+>> -Make name array larger in case we ever encounter more then 10000 framebuffers
+>> Changes in v3:
+>> -Switch to for_each_child_of_node to loop over the nodes under chosen
+>> Changes in v4:
+>> -Wrap the chosen enumeration code in #ifdef CONFIG_OF, as simplefb is used on
+>>  non devicetree platforms too
+>> -simplefb can only be built-in, so drop the module_exit function calling
+>>  platform_driver_unregister
+>> ---
+>>  drivers/video/fbdev/simplefb.c | 23 ++++++++++++++++++++++-
+>>  1 file changed, 22 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/video/fbdev/simplefb.c b/drivers/video/fbdev/simplefb.c
+>> index 868099a..e381a53 100644
+>> --- a/drivers/video/fbdev/simplefb.c
+>> +++ b/drivers/video/fbdev/simplefb.c
+>> @@ -27,6 +27,7 @@
+>>  #include <linux/platform_data/simplefb.h>
+>>  #include <linux/platform_device.h>
+>>  #include <linux/clk-provider.h>
+>> +#include <linux/of_platform.h>
+>>
+>>  static struct fb_fix_screeninfo simplefb_fix = {
+>>         .id             = "simple",
+>> @@ -390,7 +391,27 @@ static struct platform_driver simplefb_driver = {
+>>         .probe = simplefb_probe,
+>>         .remove = simplefb_remove,
+>>  };
+>> -module_platform_driver(simplefb_driver);
+>> +
+>> +static int __init simplefb_init(void)
+>> +{
+>> +       int ret;
+>> +       struct device_node __maybe_unused *np;
+>> +
+>> +       ret = platform_driver_register(&simplefb_driver);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +#ifdef CONFIG_OF
+>> +       for_each_child_of_node(of_chosen, np) {
+>> +               if (of_device_is_compatible(np, "simple-framebuffer"))
+>> +                       of_platform_device_create(np, NULL, NULL);
+>> +       }
+>> +#endif
 > 
-> drivers/crypto/caam/
-> drivers/memory/fsl_ifc.c
-> drivers/mtd/nand/fsl_ifc_nand.c
-> drivers/net/ethernet/freescale/fsl_pq_mdio.c
-> drivers/net/ethernet/freescale/gianfar*
-> drivers/spi/spi-fsl-dspi.c
+> Nit: Kind of ugly. This should work instead:
+> 
+>         if (IS_ENABLED(CONFIG_OF_PLATFORM) && of_chosen) {
+>                 for_each_child_of_node(of_chosen, np)
+>                         if (of_device_is_compatible(np, "simple-framebuffer"))
+>                                 of_platform_device_create(np, NULL, NULL);
+>         }
+> 
+> And move the forward declaration of of_chosen in include/linux/of.h up
+> 5 lines so that it is always declared. gcc will optimize it out, but
+> it will still get properly syntax checked on every build.
 
-Ok, since this is only a small subset of the FSL_SOC drivers, I'd
-suggest you make these depend on (FSL_SOC || ARCH_IMX) after
-verifying that they build without warnings on ARM.
+Ok, fixed for v5.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+
+Hans
