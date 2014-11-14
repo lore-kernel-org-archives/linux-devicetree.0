@@ -1,86 +1,114 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v5 1/5] dt-bindings: simplefb: Specify node
- location and handoff related properties
-Date: Fri, 14 Nov 2014 16:24:18 +0200
-Message-ID: <54661092.6020907@ti.com>
-References: <1415962996-31712-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Grazvydas Ignotas <notasas@gmail.com>
+Subject: Re: [PATCH 4/4] arm: dts: omap3-gta04: Add static configuration for
+ devconf1 register
+Date: Fri, 14 Nov 2014 16:36:58 +0200
+Message-ID: <CANOLnONkQu-BBvZH5nb+VngCxq=xnk60JkTd6Jha1uFt2j8gJQ@mail.gmail.com>
+References: <1415051968-4878-1-git-send-email-marek@goldelico.com>
+	<1415051968-4878-5-git-send-email-marek@goldelico.com>
+	<5463585D.9070209@ti.com>
+	<20141112150210.GC26481@atomide.com>
+	<5464969F.30708@ti.com>
+	<20141113182848.GQ26481@atomide.com>
+	<alpine.DEB.2.02.1411132251320.17030@utopia.booyaka.com>
+	<20141113235840.GS26481@atomide.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="OMFXBaQ0lXJDCAIEqDUTuukGgkLNpVGHF"
-Return-path: <linux-sunxi+bncBCGMHFOOT4LBBH5BTCRQKGQEUDWHOCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1415962996-31712-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141113235840.GS26481@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Paul Walmsley <paul@pwsan.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, robh+dt@kernel.org, Tero Kristo <t-kristo@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, bcousson@baylibre.com, galak@codeaurora.org, Grant Likely <grant.likely@linaro.org>, Marek Belisko <marek@goldelico.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
---OMFXBaQ0lXJDCAIEqDUTuukGgkLNpVGHF
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
-
-On 14/11/14 13:03, Hans de Goede wrote:
-> Since simplefb nodes do not relate directly to hw typically they have b=
-een
-> placed in the root of the devicetree. As the represent runtime informat=
-ion
-> having them as sub-nodes of /chosen is more logical, specify this.
->=20
-> Also specify when to set the chosen stdout-path property to a simplefb =
-node.
->=20
-> For reliable handover to a hardware specific driver, that driver needs =
-to
-> know which simplefb to unregister when taking over, specify how the hw =
-driver
-> can find the matching simplefb node.
->=20
-> Last add some advice on how to fill and use simplefb nodes from a firmw=
-are
-> pov.
->=20
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-
-Ok, so I have pushed this and the other simplefb series to fbdev for-next=
+On Fri, Nov 14, 2014 at 1:58 AM, Tony Lindgren <tony@atomide.com> wrote=
+:
+> * Paul Walmsley <paul@pwsan.com> [141113 15:01]:
+>> Hi
+>>
+>> On Thu, 13 Nov 2014, Tony Lindgren wrote:
+>>
+>> > * Tomi Valkeinen <tomi.valkeinen@ti.com> [141113 03:33]:
+>> > > On 12/11/14 17:02, Tony Lindgren wrote:
+>> > >
+>> > > >> And, with a quick grep, I see CONTROL_DEVCONF1 touched in mul=
+tiple
+>> > > >> places in the kernel. I wonder if adding a pinmux entry for i=
+t could
+>> > > >> cause some rather odd problems.
+>> > > >
+>> > > > They can all use pinctrl-single no problem.
+>> > >
+>> > > Can, but don't. That's my worry. If we touch the DEVCONF1 via pi=
+nmux,
+>> > > and we have code in mach-omap2 that also touch DEVCONF1, without=
+ any
+>> > > knowledge (and locking) between those...
+>> >
+>> > Hmm yeah the McBSP clock mux could be racy as the mux register for
+>> > McBSP is treated as a clock. This register muxes the clock between
+>> > external pin and internal clock. Considering that this should be
+>> > selectable at board level as the external clock probably needs to =
+be
+>> > used if level shifters are being used, it should be really handled=
+ by
+>> > pinctrl-single.
+>> >
+>> > The other use for hsmmc.c and pdata-quirks.c for the one time mux =
+for
+>> > MMC clock from the MMC clock pin. That can be done with pinctrl-si=
+ngle
+>> > from the MMC driver too for DT based booting.
+>> >
+>> > Then we just have the save and restore of the registers for
+>> > off-idle.
+>> >
+>> > > So _maybe_ that's not an issue, as the pinmux config we have her=
+e is
+>> > > fixed, and done once at boot time, and maybe the code in mach-om=
+ap2 that
+>> > > touch DEVCONF1 is also ran just once and not at the same time as=
+ the
+>> > > pinmux. But I don't know if that's so.
+>> >
+>> > It seems we could just do a read-only check for McBSP in the clock
+>> > code for the mux register, or even completely drop that code from
+>> > cclock3xxx_data.c and start using the pinctrl for that mux.
+>> >
+>> > Paul & Tero, got any comments here?
+>>
+>> It's best to move all of the SCM register reads/writes to an SCM IP =
+block
+>> driver.  This driver would be the only entity that would touch the S=
+CM IP
+>> block registers - no other code on the system would touch it (perhap=
+s
+>> aside from anything needed for early init).  The SCM driver would en=
+force
+>> mutual exclusion via a spinlock, so concurrent SCM register modifica=
+tions
+>> wouldn't flake out.  Then the SCM driver would register clocks with =
+the
+>> CCF, register pins with the pinctrl subsystem, etc. etc.
+>
+> We actually do have that with pinctrl-single + syscon. We certainly
+> need to implement more Linux framework drivers for the SCM registers.
+> Things like regulators, clocks, and PHYs, but they should use
+> pinctrl-single + syscon. See the the pbias-regulator.c for example.
+>
+> Looking at the McBSP clock handling, threre's yet more handling of
+> the same DEVCONF1 mux register in omap2_mcbsp_set_clks_src that gets
+> alled from omap_mcbsp_dai_set_dai_sysclk.
+>
+> To me it seems that if we handle the DEVCONF with pinctrl-single, we
+> don't need most of the McBSP fck code or the omap2_mcbsp_set_clks_src=
 =2E
+> Having the mux register as the clock enable register is not nice..
+> Who knows what the clock coming from the external pin might be :)
 
-I can still refresh the whole series if need be, but if possible I'd
-rather take any new changes as patches on top of the current ones.
-
- Tomi
-
+How will audio do dynamic muxing without that code?
+The pin must be remuxed back to internal clock when audio stops, or
+else PM breaks.
 
 
---OMFXBaQ0lXJDCAIEqDUTuukGgkLNpVGHF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUZhCSAAoJEPo9qoy8lh71EHoQAKuINZQjILEupv3NNuPOS+57
-Z+c1eISYLItqiNExsMJPVunhheLOhsn8mm7F31sXHDFQXFRHCol5iPvtv7woo7Nq
-ET5E40nf0ES+hGUJyygGcFpKgM6JssQj4wW+JYC84L1W1XgcKRYaYGN7cKFgZfkN
-Ygq7y7LI1fEvVr/J/b2JhgP07vFjFHOlewWLvP81AjHe8iwopjI1rtsyv/3Dqe3T
-E4J1mPnoLHteVRKlLubU3VjX2EU+2+Fnj5yW1CGWMo3++L03yUkgaE616DNpcMxj
-Hjzmwcfhx1BnRBaxCJT2ly96voizJTUE3khIFvNal6Dbg3T/LBrnEZYY4kAS1BZA
-JcKbDQii6MufYxrxVwSIJedL1H0NV9NnhcZLFKWhvMNBjIllGgMKntye3p2MpwPq
-3afKYELgyR7uDB8Spqq/7gwN+3HSAKXbr/0q/h78UDCEbEZVvgAKIhru+dOZXx4g
-y5epcVSbyk9Mw17ryN6MYDJfGqYSRoD4RmUvZ0ipdGgPLc5Rw+pn3XcxaWVrD1la
-kA5SYOFx4P+dDEO0Cg5Ao3XlNFASAzX5UCft6MKjcW26hlUpyd3JAzlRw/g17OVz
-62Y5McFsWD+FoUxu2tQ/RRyoWS665belw47Sd4su9GSf0jxatI5SMPr6gNIQ90tQ
-LZISJwf5a7Vk+fZ3VZGB
-=bf8y
------END PGP SIGNATURE-----
-
---OMFXBaQ0lXJDCAIEqDUTuukGgkLNpVGHF--
+Gra=C5=BEvydas
