@@ -1,42 +1,49 @@
-From: Ohad Ben-Cohen <ohad@wizery.com>
-Subject: Re: [PATCHv6 4/5] hwspinlock/core: add common OF helpers
-Date: Fri, 14 Nov 2014 22:05:07 +0200
-Message-ID: <CAK=WgbYEQPwPH-i_kfF8-h6uOH9q4rcT1+W0smG3e=chDg833Q@mail.gmail.com>
-References: <1410553499-55951-1-git-send-email-s-anna@ti.com>
- <1410553499-55951-5-git-send-email-s-anna@ti.com> <CAK=WgbamdqAufjC4Xb5moERRBSB-cO6c1RPTE=f+dp75F+Eh7A@mail.gmail.com>
- <5463B5B6.8040709@ti.com> <CAK=WgbbatPTiz3efDWHVEcuug_UQfkCViMoK0zcfUg3JwB2oTA@mail.gmail.com>
- <5464EC7A.7050603@ti.com> <CAK=WgbbodS8GsUxQbkyCp6hAG+Ko4LMirx+pUa8_fUdxWFasvw@mail.gmail.com>
- <54651C48.90809@ti.com> <CAK=WgbYMM19-rWLOBjix+TA3fF_Pb25ia1rutDxYSUg9SV0efg@mail.gmail.com>
- <5466373B.2070808@ti.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH] MAINTAINERS: add pattern for respective device tree
+ files to Armada entry
+Date: Fri, 14 Nov 2014 21:10:36 +0100
+Message-ID: <20141114201036.GH2001@lunn.ch>
+References: <1415994009-3548-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <5466373B.2070808@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Tony Lindgren <tony@atomide.com>, Josh Cartwright <joshc@codeaurora.org>, Bjorn Andersson <bjorn@kryo.se>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1415994009-3548-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 14, 2014 at 7:09 PM, Suman Anna <s-anna@ti.com> wrote:
->> It seems to me that hwspin_lock_request_specific failures should be
->> used by clients to defer their probing. Why wouldn't such a simple
->> solution work?
+On Fri, Nov 14, 2014 at 08:40:09PM +0100, Uwe Kleine-K=F6nig wrote:
+> This makes it more likely that changes to these files are addressed t=
+o the
+> right maintainers.
+>=20
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 60b1163dba28..282e5427209c 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1136,6 +1136,7 @@ M:	Sebastian Hesselbarth <sebastian.hesselbarth=
+@gmail.com>
+>  L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribe=
+rs)
+>  S:	Maintained
+>  F:	arch/arm/mach-mvebu/
+> +F:	arch/arm/boot/dts/armada-*
 
-> Because the API always returns NULL on failures and there is no way for
-> the clients to figure out if the lock id passed is invalid or the bank
-> containing the lock is not registered.
+Hi Uwe
 
-It seems to me this may always be the case - lock ids may be wrong and
-there's no way to fully validate them.
+Maybe also add kirkwood-* and dove-*
 
-Let's start with the simpler approach where
-hwspin_lock_request_specific failures are used by clients to defer
-their probing.
-
-If a real use case will require changes we can always do that later,
-though it seems to me the only gain by changing this API is to catch a
-small subset of fatal DT mistakes which will anyway be caught very
-early in the development.
-
-Thanks,
-Ohad.
+      Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
