@@ -1,118 +1,191 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCHv2 03/16] irqchip: irq-armada-370-xp: suspend/resume support
-Date: Fri, 14 Nov 2014 16:21:23 +0100
-Message-ID: <1415978496-9334-4-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCHv2 07/16] bus: mvebu-mbus: provide a mechanism to save SDRAM window configuration
+Date: Fri, 14 Nov 2014 16:21:27 +0100
+Message-ID: <1415978496-9334-8-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1415978496-9334-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415978496-9334-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>
-Cc: linux-arm-kernel@lists.infradead.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415978496-9334-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds suspend/resume support to the irqchip driver used on
-Armada XP platforms (amongst others). It does so by adding a set of
-suspend/resume syscore_ops, that will respectively save and restore
-the necessary registers to ensure interrupts continue to work after
-resume.
+On Marvell EBU platforms, when doing suspend/resume, the SDRAM window
+configuration must be saved on suspend, and restored on
+resume. However, it needs to be restored on resume *before*
+re-entering the kernel, because the SDRAM window configuration defines
+the layout of the memory. For this reason, it cannot simply be done in
+the ->suspend() and ->resume() hooks of the mvebu-mbus driver.
 
-It is worth mentioning that the affinity is lost during a
-suspend/resume cycle, because when a secondary CPU is brought
-off-line, all interrupts that are assigned to this CPU in terms of
-affinity gets re-assigned to a still running CPU. Therefore, right
-before entering suspend, all interrupts are assigned to the boot CPU.
+Instead, it needs to be restored by the bootloader "boot info"
+mechanism used when resuming. This mechanism allows the kernel to
+define a list of (address, value) pairs when suspending, that the
+bootloader will restore on resume before jumping back into the kernel.
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: linux-kernel@vger.kernel.org
+This commit therefore adds a new function to the mvebu-mbus driver,
+called mvebu_mbus_save_cpu_target(), which will be called by the
+platform code to make the mvebu-mbus driver save the SDRAM window
+configuration in a way that can be understood by the bootloader "boot
+info" mechanism.
+
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Reviewed-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/irqchip/irq-armada-370-xp.c | 52 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+ drivers/bus/mvebu-mbus.c | 56 ++++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/mbus.h     |  1 +
+ 2 files changed, 57 insertions(+)
 
-diff --git a/drivers/irqchip/irq-armada-370-xp.c b/drivers/irqchip/irq-armada-370-xp.c
-index 3e238cd..4ec137b 100644
---- a/drivers/irqchip/irq-armada-370-xp.c
-+++ b/drivers/irqchip/irq-armada-370-xp.c
-@@ -26,6 +26,7 @@
- #include <linux/of_pci.h>
- #include <linux/irqdomain.h>
- #include <linux/slab.h>
-+#include <linux/syscore_ops.h>
- #include <linux/msi.h>
- #include <asm/mach/arch.h>
- #include <asm/exception.h>
-@@ -66,6 +67,7 @@
- static void __iomem *per_cpu_int_base;
- static void __iomem *main_int_base;
- static struct irq_domain *armada_370_xp_mpic_domain;
-+static u32 doorbell_mask_reg;
- #ifdef CONFIG_PCI_MSI
- static struct irq_domain *armada_370_xp_msi_domain;
- static DECLARE_BITMAP(msi_used, PCI_MSI_DOORBELL_NR);
-@@ -474,6 +476,54 @@ armada_370_xp_handle_irq(struct pt_regs *regs)
- 	} while (1);
+diff --git a/drivers/bus/mvebu-mbus.c b/drivers/bus/mvebu-mbus.c
+index e8c1593..eb7682d 100644
+--- a/drivers/bus/mvebu-mbus.c
++++ b/drivers/bus/mvebu-mbus.c
+@@ -110,6 +110,8 @@ struct mvebu_mbus_soc_data {
+ 	bool has_mbus_bridge;
+ 	unsigned int (*win_cfg_offset)(const int win);
+ 	void (*setup_cpu_target)(struct mvebu_mbus_state *s);
++	int (*save_cpu_target)(struct mvebu_mbus_state *s,
++			       u32 *store_addr);
+ 	int (*show_cpu_target)(struct mvebu_mbus_state *s,
+ 			       struct seq_file *seq, void *v);
+ };
+@@ -128,6 +130,7 @@ struct mvebu_mbus_state {
+ 	void __iomem *mbuswins_base;
+ 	void __iomem *sdramwins_base;
+ 	void __iomem *mbusbridge_base;
++	phys_addr_t sdramwins_phys_base;
+ 	struct dentry *debugfs_root;
+ 	struct dentry *debugfs_sdram;
+ 	struct dentry *debugfs_devs;
+@@ -541,6 +544,28 @@ mvebu_mbus_default_setup_cpu_target(struct mvebu_mbus_state *mbus)
+ 	mvebu_mbus_dram_info.num_cs = cs;
  }
  
-+static int armada_370_xp_mpic_suspend(void)
++static int
++mvebu_mbus_default_save_cpu_target(struct mvebu_mbus_state *mbus,
++				   u32 *store_addr)
 +{
-+	doorbell_mask_reg = readl(per_cpu_int_base +
-+				  ARMADA_370_XP_IN_DRBEL_MSK_OFFS);
-+	return 0;
-+}
++	int i;
 +
-+static void armada_370_xp_mpic_resume(void)
-+{
-+	int nirqs;
-+	irq_hw_number_t irq;
++	for (i = 0; i < 4; i++) {
++		u32 base = readl(mbus->sdramwins_base + DDR_BASE_CS_OFF(i));
++		u32 size = readl(mbus->sdramwins_base + DDR_SIZE_CS_OFF(i));
 +
-+	/* Re-enable interrupts */
-+	nirqs = (readl(main_int_base + ARMADA_370_XP_INT_CONTROL) >> 2) & 0x3ff;
-+	for (irq = 0; irq < nirqs; irq++) {
-+		struct irq_data *data;
-+		int virq;
-+
-+		virq = irq_linear_revmap(armada_370_xp_mpic_domain, irq);
-+		if (virq == 0)
-+			continue;
-+
-+		if (irq != ARMADA_370_XP_TIMER0_PER_CPU_IRQ)
-+			writel(irq, per_cpu_int_base +
-+			       ARMADA_370_XP_INT_CLEAR_MASK_OFFS);
-+		else
-+			writel(irq, main_int_base +
-+			       ARMADA_370_XP_INT_SET_ENABLE_OFFS);
-+
-+		data = irq_get_irq_data(virq);
-+		if (!irqd_irq_disabled(data))
-+			armada_370_xp_irq_unmask(data);
++		writel(mbus->sdramwins_phys_base + DDR_BASE_CS_OFF(i),
++		       store_addr++);
++		writel(base, store_addr++);
++		writel(mbus->sdramwins_phys_base + DDR_SIZE_CS_OFF(i),
++		       store_addr++);
++		writel(size, store_addr++);
 +	}
 +
-+	/* Reconfigure doorbells for IPIs and MSIs */
-+	writel(doorbell_mask_reg,
-+	       per_cpu_int_base + ARMADA_370_XP_IN_DRBEL_MSK_OFFS);
-+	if (doorbell_mask_reg & IPI_DOORBELL_MASK)
-+		writel(0, per_cpu_int_base + ARMADA_370_XP_INT_CLEAR_MASK_OFFS);
-+	if (doorbell_mask_reg & PCI_MSI_DOORBELL_MASK)
-+		writel(1, per_cpu_int_base + ARMADA_370_XP_INT_CLEAR_MASK_OFFS);
++	/* We've written 16 words to the store address */
++	return 16;
 +}
 +
-+struct syscore_ops armada_370_xp_mpic_syscore_ops = {
-+	.suspend	= armada_370_xp_mpic_suspend,
-+	.resume		= armada_370_xp_mpic_resume,
-+};
-+
- static int __init armada_370_xp_mpic_of_init(struct device_node *node,
- 					     struct device_node *parent)
+ static void __init
+ mvebu_mbus_dove_setup_cpu_target(struct mvebu_mbus_state *mbus)
  {
-@@ -530,6 +580,8 @@ static int __init armada_370_xp_mpic_of_init(struct device_node *node,
- 					armada_370_xp_mpic_handle_cascade_irq);
- 	}
- 
-+	register_syscore_ops(&armada_370_xp_mpic_syscore_ops);
-+
- 	return 0;
+@@ -571,11 +596,35 @@ mvebu_mbus_dove_setup_cpu_target(struct mvebu_mbus_state *mbus)
+ 	mvebu_mbus_dram_info.num_cs = cs;
  }
  
++static int
++mvebu_mbus_dove_save_cpu_target(struct mvebu_mbus_state *mbus,
++				u32 *store_addr)
++{
++	int i;
++
++	for (i = 0; i < 2; i++) {
++		u32 map = readl(mbus->sdramwins_base + DOVE_DDR_BASE_CS_OFF(i));
++
++		writel(mbus->sdramwins_phys_base + DOVE_DDR_BASE_CS_OFF(i),
++		       store_addr++);
++		writel(map, store_addr++);
++	}
++
++	/* We've written 4 words to the store address */
++	return 4;
++}
++
++int mvebu_mbus_save_cpu_target(u32 *store_addr)
++{
++	return mbus_state.soc->save_cpu_target(&mbus_state, store_addr);
++}
++
+ static const struct mvebu_mbus_soc_data armada_370_xp_mbus_data = {
+ 	.num_wins            = 20,
+ 	.num_remappable_wins = 8,
+ 	.has_mbus_bridge     = true,
+ 	.win_cfg_offset      = armada_370_xp_mbus_win_offset,
++	.save_cpu_target     = mvebu_mbus_default_save_cpu_target,
+ 	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
+ 	.show_cpu_target     = mvebu_sdram_debug_show_orion,
+ };
+@@ -584,6 +633,7 @@ static const struct mvebu_mbus_soc_data kirkwood_mbus_data = {
+ 	.num_wins            = 8,
+ 	.num_remappable_wins = 4,
+ 	.win_cfg_offset      = orion_mbus_win_offset,
++	.save_cpu_target     = mvebu_mbus_default_save_cpu_target,
+ 	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
+ 	.show_cpu_target     = mvebu_sdram_debug_show_orion,
+ };
+@@ -592,6 +642,7 @@ static const struct mvebu_mbus_soc_data dove_mbus_data = {
+ 	.num_wins            = 8,
+ 	.num_remappable_wins = 4,
+ 	.win_cfg_offset      = orion_mbus_win_offset,
++	.save_cpu_target     = mvebu_mbus_dove_save_cpu_target,
+ 	.setup_cpu_target    = mvebu_mbus_dove_setup_cpu_target,
+ 	.show_cpu_target     = mvebu_sdram_debug_show_dove,
+ };
+@@ -604,6 +655,7 @@ static const struct mvebu_mbus_soc_data orion5x_4win_mbus_data = {
+ 	.num_wins            = 8,
+ 	.num_remappable_wins = 4,
+ 	.win_cfg_offset      = orion_mbus_win_offset,
++	.save_cpu_target     = mvebu_mbus_default_save_cpu_target,
+ 	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
+ 	.show_cpu_target     = mvebu_sdram_debug_show_orion,
+ };
+@@ -612,6 +664,7 @@ static const struct mvebu_mbus_soc_data orion5x_2win_mbus_data = {
+ 	.num_wins            = 8,
+ 	.num_remappable_wins = 2,
+ 	.win_cfg_offset      = orion_mbus_win_offset,
++	.save_cpu_target     = mvebu_mbus_default_save_cpu_target,
+ 	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
+ 	.show_cpu_target     = mvebu_sdram_debug_show_orion,
+ };
+@@ -620,6 +673,7 @@ static const struct mvebu_mbus_soc_data mv78xx0_mbus_data = {
+ 	.num_wins            = 14,
+ 	.num_remappable_wins = 8,
+ 	.win_cfg_offset      = mv78xx0_mbus_win_offset,
++	.save_cpu_target     = mvebu_mbus_default_save_cpu_target,
+ 	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
+ 	.show_cpu_target     = mvebu_sdram_debug_show_orion,
+ };
+@@ -804,6 +858,8 @@ static int __init mvebu_mbus_common_init(struct mvebu_mbus_state *mbus,
+ 		return -ENOMEM;
+ 	}
+ 
++	mbus->sdramwins_phys_base = sdramwins_phys_base;
++
+ 	if (mbusbridge_phys_base) {
+ 		mbus->mbusbridge_base = ioremap(mbusbridge_phys_base,
+ 						mbusbridge_size);
+diff --git a/include/linux/mbus.h b/include/linux/mbus.h
+index 550c88f..611b69f 100644
+--- a/include/linux/mbus.h
++++ b/include/linux/mbus.h
+@@ -61,6 +61,7 @@ static inline const struct mbus_dram_target_info *mv_mbus_dram_info(void)
+ }
+ #endif
+ 
++int mvebu_mbus_save_cpu_target(u32 *store_addr);
+ void mvebu_mbus_get_pcie_mem_aperture(struct resource *res);
+ void mvebu_mbus_get_pcie_io_aperture(struct resource *res);
+ int mvebu_mbus_add_window_remap_by_id(unsigned int target,
 -- 
 2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
