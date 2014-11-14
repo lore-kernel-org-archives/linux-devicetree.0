@@ -1,12 +1,12 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 2/4] ARM: dts: sun5i: Add simplefb node
-Date: Fri, 14 Nov 2014 16:34:35 +0100
-Message-ID: <1415979277-20861-3-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH v2 1/4] ARM: dts: sun4i: Add simplefb node
+Date: Fri, 14 Nov 2014 16:34:34 +0100
+Message-ID: <1415979277-20861-2-git-send-email-hdegoede@redhat.com>
 References: <1415979277-20861-1-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBFOCTCRQKGQEZ7WSUSQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBFGCTCRQKGQENJU3V6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1415979277-20861-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -23,15 +23,15 @@ Add a simplefb template node for u-boot to further fill and activate.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun5i-a10s.dtsi | 12 ++++++++++++
+ arch/arm/boot/dts/sun4i-a10.dtsi | 12 ++++++++++++
  1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun5i-a10s.dtsi b/arch/arm/boot/dts/sun5i-a10s.dtsi
-index 7089284..aee7f25 100644
---- a/arch/arm/boot/dts/sun5i-a10s.dtsi
-+++ b/arch/arm/boot/dts/sun5i-a10s.dtsi
-@@ -24,6 +24,18 @@
- 		serial3 = &uart3;
+diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+index 1ef7d57..cdb4708 100644
+--- a/arch/arm/boot/dts/sun4i-a10.dtsi
++++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+@@ -27,6 +27,18 @@
+ 		serial7 = &uart7;
  	};
  
 +	chosen {
@@ -47,7 +47,7 @@ index 7089284..aee7f25 100644
 +	};
 +
  	cpus {
- 		cpu@0 {
- 			compatible = "arm,cortex-a8";
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
 -- 
 2.1.0
