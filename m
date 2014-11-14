@@ -1,125 +1,301 @@
 From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCHv2 08/16] clk: mvebu: add suspend/resume for gatable clocks
-Date: Fri, 14 Nov 2014 16:21:28 +0100
-Message-ID: <1415978496-9334-9-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCHv2 09/16] ARM: mvebu: implement suspend/resume support for Armada XP
+Date: Fri, 14 Nov 2014 16:21:29 +0100
+Message-ID: <1415978496-9334-10-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1415978496-9334-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1415978496-9334-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds suspend/resume support for the gatable clock driver
-used on Marvell EBU platforms. When getting out of suspend, the
-Marvell EBU platforms go through the bootloader, which re-enables all
-gatable clocks. However, upon resume, the clock framework will not
-disable again all gatable clocks that are not used.
+This commit implements the core of the platform code to enable
+suspend/resume on Armada XP. It registers the platform_suspend_ops
+structure, and implements the ->enter() hook of this structure.
 
-Therefore, if the clock driver does not save/restore the state of the
-gatable clocks, all gatable clocks that are not claimed by any device
-driver will remain enabled after a resume. This is why this driver
-saves and restores the state of those clocks.
+It is worth mentioning that this commit only provides the SoC-level
+part of suspend/resume, which calls into some board-specific code
+provided in a follow-up commit.
 
-Since clocks aren't real devices, we don't have the normal ->suspend()
-and ->resume() of the device model, and have to use the ->suspend()
-and ->resume() hooks of the syscore_ops mechanism. This mechanism has
-the unfortunate idea of not providing a way of passing private data,
-which requires us to change the driver to make the assumption that
-there is only once instance of the gatable clock control structure.
+The most important thing that this SoC-level code has to do is to
+build an in-memory structure that contains a magic number, the return
+address in the kernel after resume, and a set of address/value
+pairs. This structure is used by the bootloader to restore a certain
+number of registers (according to the set of address/value pairs) and
+then jump back into the kernel at the provided location.
+
+The code also puts the SDRAM into self-refresh mode, before calling
+into board-specific code to actually enter the suspend to RAM state.
 
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/clk/mvebu/common.c | 30 ++++++++++++++++++++++++++++--
- 1 file changed, 28 insertions(+), 2 deletions(-)
+ arch/arm/mach-mvebu/Makefile |   2 +-
+ arch/arm/mach-mvebu/common.h |   2 +
+ arch/arm/mach-mvebu/pm.c     | 218 +++++++++++++++++++++++++++++++++++++++++++
+ arch/arm/mach-mvebu/pmsu.h   |   1 +
+ 4 files changed, 222 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/mach-mvebu/pm.c
 
-diff --git a/drivers/clk/mvebu/common.c b/drivers/clk/mvebu/common.c
-index b7fcb46..8799fb8 100644
---- a/drivers/clk/mvebu/common.c
-+++ b/drivers/clk/mvebu/common.c
-@@ -19,6 +19,7 @@
- #include <linux/io.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-+#include <linux/syscore_ops.h>
+diff --git a/arch/arm/mach-mvebu/Makefile b/arch/arm/mach-mvebu/Makefile
+index e24136b..e2bd96f 100644
+--- a/arch/arm/mach-mvebu/Makefile
++++ b/arch/arm/mach-mvebu/Makefile
+@@ -7,7 +7,7 @@ CFLAGS_pmsu.o			:= -march=armv7-a
+ obj-$(CONFIG_MACH_MVEBU_ANY)	 += system-controller.o mvebu-soc-id.o
  
- #include "common.h"
+ ifeq ($(CONFIG_MACH_MVEBU_V7),y)
+-obj-y				 += cpu-reset.o board-v7.o coherency.o coherency_ll.o pmsu.o pmsu_ll.o
++obj-y				 += cpu-reset.o board-v7.o coherency.o coherency_ll.o pmsu.o pmsu_ll.o pm.o
+ obj-$(CONFIG_SMP)		 += platsmp.o headsmp.o platsmp-a9.o headsmp-a9.o
+ endif
  
-@@ -177,14 +178,18 @@ struct clk_gating_ctrl {
- 	spinlock_t *lock;
- 	struct clk **gates;
- 	int num_gates;
-+	struct syscore_ops syscore_ops;
-+	void __iomem *base;
-+	u32 saved_reg;
- };
+diff --git a/arch/arm/mach-mvebu/common.h b/arch/arm/mach-mvebu/common.h
+index 3ccb40c..3e0aca1 100644
+--- a/arch/arm/mach-mvebu/common.h
++++ b/arch/arm/mach-mvebu/common.h
+@@ -25,4 +25,6 @@ int mvebu_system_controller_get_soc_id(u32 *dev, u32 *rev);
  
- #define to_clk_gate(_hw) container_of(_hw, struct clk_gate, hw)
+ void __iomem *mvebu_get_scu_base(void);
  
-+static struct clk_gating_ctrl *ctrl;
++int mvebu_pm_init(void (*board_pm_enter)(void __iomem *sdram_reg, u32 srcmd));
 +
- static struct clk *clk_gating_get_src(
- 	struct of_phandle_args *clkspec, void *data)
- {
--	struct clk_gating_ctrl *ctrl = (struct clk_gating_ctrl *)data;
- 	int n;
- 
- 	if (clkspec->args_count < 1)
-@@ -199,15 +204,30 @@ static struct clk *clk_gating_get_src(
- 	return ERR_PTR(-ENODEV);
- }
- 
-+static int mvebu_clk_gating_suspend(void)
+ #endif
+diff --git a/arch/arm/mach-mvebu/pm.c b/arch/arm/mach-mvebu/pm.c
+new file mode 100644
+index 0000000..6573a8f
+--- /dev/null
++++ b/arch/arm/mach-mvebu/pm.c
+@@ -0,0 +1,218 @@
++/*
++ * Suspend/resume support. Currently supporting Armada XP only.
++ *
++ * Copyright (C) 2014 Marvell
++ *
++ * Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++#include <linux/cpu_pm.h>
++#include <linux/delay.h>
++#include <linux/gpio.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/mbus.h>
++#include <linux/of_address.h>
++#include <linux/suspend.h>
++#include <asm/cacheflush.h>
++#include <asm/outercache.h>
++#include <asm/suspend.h>
++
++#include "coherency.h"
++#include "pmsu.h"
++
++#define SDRAM_CONFIG_OFFS                  0x0
++#define  SDRAM_CONFIG_SR_MODE_BIT          BIT(24)
++#define SDRAM_OPERATION_OFFS               0x18
++#define  SDRAM_OPERATION_SELF_REFRESH      0x7
++#define SDRAM_DLB_EVICTION_OFFS            0x30c
++#define  SDRAM_DLB_EVICTION_THRESHOLD_MASK 0xff
++
++static void (*mvebu_board_pm_enter)(void __iomem *sdram_reg, u32 srcmd);
++static void __iomem *sdram_ctrl;
++
++static int mvebu_pm_powerdown(unsigned long data)
 +{
-+	ctrl->saved_reg = readl(ctrl->base);
++	u32 reg, srcmd;
++
++	flush_cache_all();
++	outer_flush_all();
++
++	/*
++	 * Issue a Data Synchronization Barrier instruction to ensure
++	 * that all state saving has been completed.
++	 */
++	dsb();
++
++	/* Flush the DLB and wait ~7 usec */
++	reg = readl(sdram_ctrl + SDRAM_DLB_EVICTION_OFFS);
++	reg &= ~SDRAM_DLB_EVICTION_THRESHOLD_MASK;
++	writel(reg, sdram_ctrl + SDRAM_DLB_EVICTION_OFFS);
++
++	udelay(7);
++
++	/* Set DRAM in battery backup mode */
++	reg = readl(sdram_ctrl + SDRAM_CONFIG_OFFS);
++	reg &= ~SDRAM_CONFIG_SR_MODE_BIT;
++	writel(reg, sdram_ctrl + SDRAM_CONFIG_OFFS);
++
++	/* Prepare to go to self-refresh */
++
++	srcmd = readl(sdram_ctrl + SDRAM_OPERATION_OFFS);
++	srcmd &= ~0x1F;
++	srcmd |= SDRAM_OPERATION_SELF_REFRESH;
++
++	mvebu_board_pm_enter(sdram_ctrl + SDRAM_OPERATION_OFFS, srcmd);
++
 +	return 0;
 +}
 +
-+static void mvebu_clk_gating_resume(void)
++#define BOOT_INFO_ADDR      0x3000
++#define BOOT_MAGIC_WORD	    0xdeadb002
++#define BOOT_MAGIC_LIST_END 0xffffffff
++
++/*
++ * Those registers are accessed before switching the internal register
++ * base, which is why we hardcode the 0xd0000000 base address, the one
++ * used by the SoC out of reset.
++ */
++#define MBUS_WINDOW_12_CTRL       0xd00200b0
++#define MBUS_INTERNAL_REG_ADDRESS 0xd0020080
++
++#define SDRAM_WIN_BASE_REG(x)	(0x20180 + (0x8*x))
++#define SDRAM_WIN_CTRL_REG(x)	(0x20184 + (0x8*x))
++
++static phys_addr_t mvebu_internal_reg_base(void)
 +{
-+	writel(ctrl->saved_reg, ctrl->base);
++	struct device_node *np;
++	__be32 in_addr[2];
++
++	np = of_find_node_by_name(NULL, "internal-regs");
++	BUG_ON(!np);
++
++	/*
++	 * Ask the DT what is the internal register address on this
++	 * platform. In the mvebu-mbus DT binding, 0xf0010000
++	 * corresponds to the internal register window.
++	 */
++	in_addr[0] = cpu_to_be32(0xf0010000);
++	in_addr[1] = 0x0;
++
++	return of_translate_address(np, in_addr);
 +}
 +
- void __init mvebu_clk_gating_setup(struct device_node *np,
- 				   const struct clk_gating_soc_desc *desc)
- {
--	struct clk_gating_ctrl *ctrl;
- 	struct clk *clk;
- 	void __iomem *base;
- 	const char *default_parent = NULL;
- 	int n;
- 
-+	if (ctrl) {
-+		pr_err("mvebu-clk-gating: cannot instantiate more than one gatable clock device\n");
-+		return;
++static void mvebu_pm_store_bootinfo(void)
++{
++	u32 *store_addr;
++	phys_addr_t resume_pc;
++
++	store_addr = phys_to_virt(BOOT_INFO_ADDR);
++	resume_pc = virt_to_phys(armada_370_xp_cpu_resume);
++
++	/*
++	 * The bootloader expects the first two words to be a magic
++	 * value (BOOT_MAGIC_WORD), followed by the address of the
++	 * resume code to jump to. Then, it expects a sequence of
++	 * (address, value) pairs, which can be used to restore the
++	 * value of certain registers. This sequence must end with the
++	 * BOOT_MAGIC_LIST_END magic value.
++	 */
++
++	writel(BOOT_MAGIC_WORD, store_addr++);
++	writel(resume_pc, store_addr++);
++
++	/*
++	 * Some platforms remap their internal register base address
++	 * to 0xf1000000. However, out of reset, window 12 starts at
++	 * 0xf0000000 and ends at 0xf7ffffff, which would overlap with
++	 * the internal registers. Therefore, disable window 12.
++	 */
++	writel(MBUS_WINDOW_12_CTRL, store_addr++);
++	writel(0x0, store_addr++);
++
++	/*
++	 * Set the internal register base address to the value
++	 * expected by Linux, as read from the Device Tree.
++	 */
++	writel(MBUS_INTERNAL_REG_ADDRESS, store_addr++);
++	writel(mvebu_internal_reg_base(), store_addr++);
++
++	/*
++	 * Ask the mvebu-mbus driver to store the SDRAM window
++	 * configuration, which has to be restored by the bootloader
++	 * before re-entering the kernel on resume.
++	 */
++	store_addr += mvebu_mbus_save_cpu_target(store_addr);
++
++	writel(BOOT_MAGIC_LIST_END, store_addr);
++}
++
++static int mvebu_pm_enter(suspend_state_t state)
++{
++	if (state != PM_SUSPEND_MEM)
++		return -EINVAL;
++
++	cpu_pm_enter();
++
++	mvebu_pm_store_bootinfo();
++	cpu_suspend(0, mvebu_pm_powerdown);
++
++	outer_resume();
++
++	mvebu_v7_pmsu_idle_exit();
++
++	set_cpu_coherent();
++
++	cpu_pm_exit();
++
++	return 0;
++}
++
++static const struct platform_suspend_ops mvebu_pm_ops = {
++	.enter = mvebu_pm_enter,
++	.valid = suspend_valid_only_mem,
++};
++
++int mvebu_pm_init(void (*board_pm_enter)(void __iomem *sdram_reg, u32 srcmd))
++{
++	struct device_node *np;
++	struct resource res;
++
++	if (!of_machine_is_compatible("marvell,armadaxp"))
++		return -ENODEV;
++
++	np = of_find_compatible_node(NULL, NULL,
++				     "marvell,armada-xp-sdram-controller");
++	if (!np)
++		return -ENODEV;
++
++	if (of_address_to_resource(np, 0, &res)) {
++		of_node_put(np);
++		return -ENODEV;
 +	}
 +
- 	base = of_iomap(np, 0);
- 	if (WARN_ON(!base))
- 		return;
-@@ -225,6 +245,10 @@ void __init mvebu_clk_gating_setup(struct device_node *np,
- 	/* lock must already be initialized */
- 	ctrl->lock = &ctrl_gating_lock;
- 
-+	ctrl->base = base;
-+	ctrl->syscore_ops.suspend = mvebu_clk_gating_suspend;
-+	ctrl->syscore_ops.resume = mvebu_clk_gating_resume;
++	if (!request_mem_region(res.start, resource_size(&res),
++				np->full_name)) {
++		of_node_put(np);
++		return -EBUSY;
++	}
 +
- 	/* Count, allocate, and register clock gates */
- 	for (n = 0; desc[n].name;)
- 		n++;
-@@ -246,6 +270,8 @@ void __init mvebu_clk_gating_setup(struct device_node *np,
- 
- 	of_clk_add_provider(np, clk_gating_get_src, ctrl);
- 
-+	register_syscore_ops(&ctrl->syscore_ops);
++	sdram_ctrl = ioremap(res.start, resource_size(&res));
++	if (!sdram_ctrl) {
++		release_mem_region(res.start, resource_size(&res));
++		of_node_put(np);
++		return -ENOMEM;
++	}
 +
- 	return;
- gates_out:
- 	kfree(ctrl);
++	of_node_put(np);
++
++	mvebu_board_pm_enter = board_pm_enter;
++
++	suspend_set_ops(&mvebu_pm_ops);
++
++	return 0;
++}
+diff --git a/arch/arm/mach-mvebu/pmsu.h b/arch/arm/mach-mvebu/pmsu.h
+index 6b58c1f..a7c242d 100644
+--- a/arch/arm/mach-mvebu/pmsu.h
++++ b/arch/arm/mach-mvebu/pmsu.h
+@@ -17,5 +17,6 @@ int mvebu_setup_boot_addr_wa(unsigned int crypto_eng_target,
+                              phys_addr_t resume_addr_reg);
+ 
+ void mvebu_v7_pmsu_idle_exit(void);
++void armada_370_xp_cpu_resume(void);
+ 
+ #endif	/* __MACH_370_XP_PMSU_H */
 -- 
 2.1.0
 
