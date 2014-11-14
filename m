@@ -1,13 +1,13 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v5 2/5] of.h: Keep extern declaration of of_*
- variables when !CONFIG_OF
-Date: Fri, 14 Nov 2014 12:03:13 +0100
-Message-ID: <1415962996-31712-2-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH v5 3/5] simplefb: Add support for enumerating
+ simplefb dt nodes in /chosen
+Date: Fri, 14 Nov 2014 12:03:14 +0100
+Message-ID: <1415962996-31712-3-git-send-email-hdegoede@redhat.com>
 References: <1415962996-31712-1-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBA6DS6RQKGQERTNFVDA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBBWDS6RQKGQEDZE6VUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1415962996-31712-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,41 +20,66 @@ To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Keep the extern declaration of of_allnodes and friends, when building without
-of support, this way code using them can be written like this:
-
-	if (IS_ENABLED(CONFIG_OF_PLATFORM) && of_chosen) {
-		for_each_child_of_node(of_chosen, np)
-			...
-	}
-
-And rely on the compiler optimizing it away, avoiding the need for #ifdef-ery.
+Update simplefb to support the new preferred location for simplefb dt nodes
+under /chosen.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+--
+Changes in v2:
+-Make name array larger in case we ever encounter more then 10000 framebuffers
+Changes in v3:
+-Switch to for_each_child_of_node to loop over the nodes under chosen
+Changes in v4:
+-Wrap the chosen enumeration code in #ifdef CONFIG_OF, as simplefb is used on
+ non devicetree platforms too
+-simplefb can only be built-in, so drop the module_exit function calling
+ platform_driver_unregister
+Changes in v5:
+-Cleanup #ifdef CONFIG_OF handling
 ---
- include/linux/of.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/video/fbdev/simplefb.c | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 6545e7a..f83ca9d 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -105,8 +105,6 @@ static inline struct device_node *of_node_get(struct device_node *node)
- static inline void of_node_put(struct device_node *node) { }
- #endif /* !CONFIG_OF_DYNAMIC */
+diff --git a/drivers/video/fbdev/simplefb.c b/drivers/video/fbdev/simplefb.c
+index d192946..74c5edd 100644
+--- a/drivers/video/fbdev/simplefb.c
++++ b/drivers/video/fbdev/simplefb.c
+@@ -27,6 +27,7 @@
+ #include <linux/platform_data/simplefb.h>
+ #include <linux/platform_device.h>
+ #include <linux/clk-provider.h>
++#include <linux/of_platform.h>
  
--#ifdef CONFIG_OF
--
- /* Pointer for first entry in chain of all nodes. */
- extern struct device_node *of_allnodes;
- extern struct device_node *of_chosen;
-@@ -114,6 +112,7 @@ extern struct device_node *of_aliases;
- extern struct device_node *of_stdout;
- extern raw_spinlock_t devtree_lock;
+ static struct fb_fix_screeninfo simplefb_fix = {
+ 	.id		= "simple",
+@@ -392,7 +393,27 @@ static struct platform_driver simplefb_driver = {
+ 	.probe = simplefb_probe,
+ 	.remove = simplefb_remove,
+ };
+-module_platform_driver(simplefb_driver);
++
++static int __init simplefb_init(void)
++{
++	int ret;
++	struct device_node *np;
++
++	ret = platform_driver_register(&simplefb_driver);
++	if (ret)
++		return ret;
++
++	if (IS_ENABLED(CONFIG_OF) && of_chosen) {
++		for_each_child_of_node(of_chosen, np) {
++			if (of_device_is_compatible(np, "simple-framebuffer"))
++				of_platform_device_create(np, NULL, NULL);
++		}
++	}
++
++	return 0;
++}
++
++module_init(simplefb_init);
  
-+#ifdef CONFIG_OF
- static inline bool of_have_populated_dt(void)
- {
- 	return of_allnodes != NULL;
+ MODULE_AUTHOR("Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>");
+ MODULE_DESCRIPTION("Simple framebuffer driver");
 -- 
 2.1.0
