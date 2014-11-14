@@ -1,109 +1,66 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v6 0/6] ARM: mediatek: Add support for interrupt polarity
-Date: Fri, 14 Nov 2014 12:13:20 +0100
-Message-ID: <CABuKBeJMnoX239NQTpsqjRRr=90hrkBJAehEUxQVsPZmoHP9ng@mail.gmail.com>
-References: <1415893029-2971-1-git-send-email-yingjoe.chen@mediatek.com>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Subject: Re: [PATCH v10 05/11] drm: bridge/dw_hdmi:split some phy configuration
+ to platform driver
+Date: Fri, 14 Nov 2014 11:13:35 +0000
+Message-ID: <5465E3DF.6050307@imgtec.com>
+References: <1415934583-16290-1-git-send-email-andy.yan@rock-chips.com>
+ <1415935631-16826-1-git-send-email-andy.yan@rock-chips.com>
+ <5465D73C.9030507@imgtec.com> <5465DF0C.50301@rock-chips.com>
+ <5465DFB2.8060601@imgtec.com> <5465E2BB.1070507@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415893029-2971-1-git-send-email-yingjoe.chen@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jiang Liu <jiang.liu@linux.intel.com>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Grant Likely <grant.likely@linaro.org>, Boris BREZILLON <boris.brezillon@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, Yijing Wang <wangyijing@huawei.com>, srv_heupstream <srv_heupstream@mediatek.com>, Yingjoe Chen <yingjoe.chen@gmail.com>, HC Yen <hc.yen@mediatek.com>, huang eddie <eddie.huang@mediatek.com>, Nathan Chung <nathan.chung@mediatek.com>, Yuhau Chen <yh>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <5465E2BB.1070507@rock-chips.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Andy Yan <andy.yan@rock-chips.com>, airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
+Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, mark.yao@rock-chips.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-2014-11-13 16:37 GMT+01:00 Yingjoe Chen <yingjoe.chen@mediatek.com>:
->
-> This series is 6th version of interrupt polarity support for MediaTek SoCs.
-> This is based on tip/irq/irqdomain[1] and my mediatek SoC basic support[2].
->
-> In this version, I added a minor fix to irqdomain as first patch. Patch 3,
-> 4 are changed to use newly added helper functions. The other patches are
-> unchanged.
->
->
-> Simplified block diagram for interrupt on my system:
->
->     +-------+      +-------+
->  ---| SYSIRQ|------|ARM GIC|
->  ---|       |------|       |
->  ---|       |------|       |
->  ---|       |------|       |
->  ---|       |------|       |
->     +-------+      +-------+
->
-> In device tree, interrupt-parent for other devices is sysirq, child of gic.
-> This describe HW better and allow device to specify polarity as it is sent
-> by the device.
->
-> When using hierarchy irq domain, gic will use irq_domain_add_linear to
-> create irqdomain and all interrupt numbers must come from device tree. My
-> /proc/interrupts looks like this now:
->
-> # cat /proc/interrupts
->            CPU0
->  16:     149578  MT_SYSIRQ 113  mtk_timer
->  20:       1082  MT_SYSIRQ  54  serial
-
-It works for me on mt6589.
-
-Tested-by: Matthias Brugger <matthias.bgg@gmail.com>
-
->
-> Changes in v6:
->  - Rebased to tip/irq/irqdomain [1]
->
-> Changes in v5:
->  - Discussed in [3]
->  - Fix bug on mt6589 reported by Matthias
->  - Fix bug for irq_find_mapping in irq_create_of_mapping
->  - Merge Marc's change to proper handle non-DT case in gic_init_bases
->
-> Changes in v4:
->  - Discussed in [4]
->  - Remove arm,hierarchy-irq-domain. When GIC is probed by DT, it will
-> support hierarchy irqdomain.
->
-> Changes in v3:
->  - Discussed in [5]
->  - First implementation using hierarchy irqdomain
->
-> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/297624.html
-> [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/296093.html
-> [3] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/298161.html
-> [4] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/296911.html
-> [5] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/293766.html
->
->
-> Yingjoe Chen (6):
->   irqdomain: Use consistent prototype for irq_domain_free_irqs_*
->   genirq: Add more helper functions to support stacked irq_chip
->   irqchip: gic: Support hierarchy irq domain.
->   ARM: mediatek: Add sysirq interrupt polarity support
->   ARM: mediatek: Add sysirq in mt6589/mt8135/mt8127 dtsi
->   dt-bindings: add bindings for mediatek sysirq
->
->  .../bindings/arm/mediatek/mediatek,sysirq.txt      |  26 ++++
->  arch/arm/boot/dts/mt6589.dtsi                      |  14 +-
->  arch/arm/boot/dts/mt8127.dtsi                      |  14 +-
->  arch/arm/boot/dts/mt8135.dtsi                      |  14 +-
->  drivers/irqchip/Kconfig                            |   1 +
->  drivers/irqchip/Makefile                           |   1 +
->  drivers/irqchip/irq-gic.c                          |  80 +++++++----
->  drivers/irqchip/irq-mtk-sysirq.c                   | 156 +++++++++++++++++++++
->  include/linux/irq.h                                |   6 +
->  include/linux/irqdomain.h                          |   8 +-
->  kernel/irq/chip.c                                  |  28 ++++
->  kernel/irq/irqdomain.c                             |   8 +-
->  12 files changed, 317 insertions(+), 39 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
->  create mode 100644 drivers/irqchip/irq-mtk-sysirq.c
->
-> --
-> 1.8.1.1.dirty
->
-
-
-
--- 
-motzblog.wordpress.com
+CgpPbiAxNC8xMS8xNCAxMTowOCwgQW5keSBZYW4gd3JvdGU6Cj4gCj4gT24gMjAxNOW5tDEx5pyI
+MTTml6UgMTg6NTUsIFp1YmFpciBMdXRmdWxsYWggS2FrYWtoZWwgd3JvdGU6Cj4+Cj4+IE9uIDE0
+LzExLzE0IDEwOjUzLCBBbmR5IFlhbiB3cm90ZToKPj4+IEhpIFp1YmFpckxLOgo+Pj4gICAgIFRo
+YW5rcyBmb3IgeW91ciByZXZpZXcuCj4+PiBPbiAyMDE05bm0MTHmnIgxNOaXpSAxODoxOSwgWnVi
+YWlyIEx1dGZ1bGxhaCBLYWtha2hlbCB3cm90ZToKPj4+PiBIaSBBbmR5LAo+Pj4+Cj4+Pj4gTmlj
+ZSB3b3JrIG9uIHRoaXMgcGF0Y2ggc2VyaWVzLiBJdHMgZ2V0dGluZyBiZXR0ZXIgYW5kIGJldHRl
+ciA6KS4KPj4+Pgo+Pj4+IE9uIDE0LzExLzE0IDAzOjI3LCBBbmR5IFlhbiB3cm90ZToKPj4+Pj4g
+aGRtaSBwaHkgY2xvY2sgc3ltYm9sIGFuZCB0cmFuc21pc3Npb24gdGVybWluYXRpb24gdmFsdWUK
+Pj4+Pj4gY2FuIGFkanVzdCBwbGF0Zm9ybSBzcGVjaWZpYyB0byBnZXQgdGhlIGJlc3QgU0kKPj4+
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgXklzIHRoaXMgc2lnbmFsIGludGVncml0eT8KPj4+
+ICAgICB5ZXMgLCBTSSAgaXMgc2lnbmFsIGludGVncml0eSwgc3VjaCBhcyBleWUgZGlhZ3JhbSBt
+ZWFzdXJlbWVudAo+Pj4+IEFyZSB0aGVzZSB0d28gZGlzam9pbnQgZmVhdHVyZXMgaW4gc2VwYXJh
+dGUgcGF0Y2hlcz8KPj4+Pgo+Pj4+PiBhbHNvIGFkZCBtb2RlX3ZhbGlkIGludGVyZmFjZSBmb3Ig
+c29tZSBwbGF0Zm9ybSBtYXkgbm90IHN1cHBvcnQKPj4+Pj4gYWxsIHRoZSBkaXNwbGF5IG1vZGUK
+Pj4+PiBTb3VuZHMgbGlrZSBhbm90aGVyIHNlcGFyYXRlIHBhdGNoIHRvIG1lLiA6KQo+Pj4gICAg
+IHRoZXkgY2FuIHNlcGVyYXRlCj4+Pj4gQWxzbywgVGhpcyBzZXJpZXMgaXMgYmVjb21pbmcgcXVp
+dGUgbGFyZ2UuIFdpdGggbWFqb3IgY2hhbmdlcyBhbmQgZml4ZXMgbWl4ZWQgdG9nZXRoZXIuCj4+
+Pj4KPj4+PiBQYXRjaCAzIHNwbGl0cyBpbXgtZHJtLgo+Pj4+IFBhdGNoIDQgbW92ZXMgZHctZHJt
+IG91dCBvZiBpbXgtZHJtIGZvbGRlci4KPj4+PiBQYXRjaCA3IGFkZHMgYmluZGluZwo+Pj4+IFBh
+dGNoIDkgY29udmVydHMgdG8gZHJtIGJyaWRnZS4KPj4+Pgo+Pj4+IENhbiB0aGVzZSBiZSBwbGFj
+ZWQgdG9nZXRoZXIgZWFzaWx5Pwo+Pj4+IEFuZCBpbiB0aGUgc3RhcnQuIGkuZS4gcGF0Y2ggMSwg
+MiwgMywgNCwKPj4+Pgo+Pj4+IFRoZW4gYWxsIGZpeGVzIGV0YyBjYW4gY29tZSBhZnRlcndhcmRz
+Pwo+Pj4+Cj4+Pj4gSXQgaGVscHMgd2hlbiBjaGVja2luZyBoaXN0b3JpZXMgbGF0ZXIgYXMgdG8g
+aG93IGEgZHJpdmVyIHdhcyBtYWRlIGFuZCBob3cgZml4ZXMgaGFwcGVuZWQuCj4+Pj4KPj4+PiBF
+c3BlY2lhbGx5IHdoZW4gZmlsZSBtb3ZlcyBoYXBwZW4uLgo+Pj4gICAgRG8geW91IG1lYW4gd2Ug
+Y2FuIHJlYXJyYW5nZSB0aGUgcGF0Y2ggc2VyaWVzPwo+Pj4gICAgcHV0IHBhdGNoIDMsIDQgLDcs
+IDkgdG9nZXRoZXIgIG9uZSBieWUgb25lCj4+PiAgICB0aGFuIGZvbGxvd2VkIGJ5IHRoZSBmaXhl
+cyBwYXRjaGVzICA1ICw2LCA4LCAxMSA/Cj4+IFllcy4gUmVhcnJhbmdlIHNvIHRoYXQgdGhlIHNw
+bGl0IGlteC1kcm0vaW14LWhkbWkgYW5kIGNvbnZlcnNpb24gdG8gZHJtLWJyaWRnZSBpcyBhdCB0
+aGUgc3RhcnQgb2YgdGhlIHNlcmllcy4KPj4gVGhlbiB0aGUgcmVzdCBhcmUgYnVnIGZpeGVzIGFu
+ZCBmZWF0dXJlIGFkZGl0aW9ucy4KPiAgIENhbiBJIHB1dCBwYXRjaCMxKG1ha2UgY2hlY2twYXRj
+aCBoYXBweSkgYW5kIHBhdGNoIzIgKGRlZmVyIHByb2JlKSBhcyB0aGUgZmlyc3QgdHdvIHBhdGNo
+Lgo+ICAgRGFuaWVsIGZyb20gR29vZ2xlIGNocm9taXVtIHRoaW5rIGl0J3MgYmV0dGVyIHRvIHB1
+dCB0aGUgdHdvIHNsaWdodGx5IGNoYW5nZXMgaW4gdGhlIGZyb250IGZvciBlYXN5IHJldmlldy4K
+ClN1cmUuCgpJIGFtIG5vdCB0aGUgbWFpbnRhaW5lci4gVGhleSBoYXZlIHRvIG1ha2UgdGhlIGZp
+bmFsIGRlY2lzaW9uLgoKWnViYWlyTEsKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KZGV2ZWwgbWFpbGluZyBsaXN0CmRldmVsQGxpbnV4ZHJpdmVycHJvamVj
+dC5vcmcKaHR0cDovL2RyaXZlcmRldi5saW51eGRyaXZlcnByb2plY3Qub3JnL21haWxtYW4vbGlz
+dGluZm8vZHJpdmVyZGV2LWRldmVsCg==
