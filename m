@@ -1,237 +1,51 @@
-From: George McCollister <george.mccollister-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: Add devicetree for NovaTech OrionLXm
-Date: Fri, 14 Nov 2014 16:47:02 -0600
-Message-ID: <CAFSKS=PvoibYvP8fauFT8J7t_pRDK56-ZbRvOovu=Q5mrw9wpA@mail.gmail.com>
-References: <1415832094-20991-1-git-send-email-george.mccollister@gmail.com>
-	<1415832094-20991-2-git-send-email-george.mccollister@gmail.com>
-	<20141113005908.GA27381@saruman>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH 0/2] For now all I have is the getter and setter for the phase, nothing that uses it
+Date: Fri, 14 Nov 2014 14:52:52 -0800
+Message-ID: <1416005574-7756-1-git-send-email-amstan@chromium.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141113005908.GA27381@saruman>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OMAP DEVICE TREE..." <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, addy ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Felipe,
+(that is ready). You can test the getter like this:
+localhost ~ # cat /sys/kernel/debug/clk/clk_summary|grep sample -C 1
+    sclk_sdio1                            0            0    24000000          0 0
+       sdio1_sample                       0            0    12000000          0 0
+       sdio1_drv                          0            0    12000000          0 90
+--
+          sclk_sdmmc                      1            1   297000000          0 0
+             sdmmc_sample                 0            0   148500000          0 134
+             sdmmc_drv                    0            0   148500000          0 90
+--
+          sclk_sdio0                      1            1   100000000          0 0
+             sdio0_sample                 0            0    50000000          0 0
+             sdio0_drv                    0            0    50000000          0 90
+          sclk_emmc                       1            1   100000000          0 0
+             emmc_sample                  0            0    50000000          0 0
+             emmc_drv                     0            0    50000000          0 180
 
-Thank you for your reply.
+Next thing that will come is some dts changes that will make use of these new
+clocks, and eventually mmc code will be changed to tune with these clocks.
 
->> +     vbat: fixedregulator@0 {
->> +             compatible = "regulator-fixed";
->> +             regulator-name = "vbat";
->> +             regulator-min-microvolt = <5000000>;
->> +             regulator-max-microvolt = <5000000>;
->> +             regulator-boot-on;
->> +     };
->
-> I suppose this is the 5V on a power jack, or something like that ?
 
-It comes with one of three different power supplies (24 - 250VDC, 120
-- 240VAC, 12VDC input) all of which ultimately supply a fixed 5V and
-3.3V.
+Alexandru M Stan (2):
+  clk: rockchip: add bindings for the mmc clock phases
+  clk: rockchip: Add support for the mmc clock phases using the
+    framework
 
->
->> +     vmmcsd_fixed: fixedregulator@0 {
->> +             compatible = "regulator-fixed";
->> +             regulator-name = "vmmcsd_fixed";
->> +             regulator-min-microvolt = <3300000>;
->> +             regulator-max-microvolt = <3300000>;
->
-> but this... I know every other board devices this as a fixed regulator,
-> but is it really a fixed regulator or is supplied by one of the LDOs on
-> the PMIC ?
->
+ drivers/clk/rockchip/Makefile          |   1 +
+ drivers/clk/rockchip/clk-mmc-phase.c   | 150 +++++++++++++++++++++++++++++++++
+ drivers/clk/rockchip/clk-rk3288.c      |  12 +++
+ drivers/clk/rockchip/clk.c             |   8 ++
+ drivers/clk/rockchip/clk.h             |  23 +++++
+ include/dt-bindings/clock/rk3288-cru.h |  10 +++
+ 6 files changed, 204 insertions(+)
+ create mode 100644 drivers/clk/rockchip/clk-mmc-phase.c
 
-It's actually fixed (not from TP65910).
+-- 
+2.1.0.rc2.206.gedb03e5
 
->> +     };
->> +};
->> +
->> +&am33xx_pinmux {
->> +     mmc1_pins: pinmux_mmc1_pins {
->> +             pinctrl-single,pins = <
->> +                     0xf0 (PIN_INPUT_PULLUP | MUX_MODE0)     /* mmc0_dat3 */
->> +                     0xf4 (PIN_INPUT_PULLUP | MUX_MODE0)     /* mmc0_dat2 */
->> +                     0xf8 (PIN_INPUT_PULLUP | MUX_MODE0)     /* mmc0_dat1 */
->> +                     0xfc (PIN_INPUT_PULLUP | MUX_MODE0)     /* mmc0_dat0 */
->> +                     0x100 (PIN_INPUT_PULLUP | MUX_MODE0)    /* mmc0_clk */
->> +                     0x104 (PIN_INPUT_PULLUP | MUX_MODE0)    /* mmc0_cmd */
->> +             >;
->> +     };
->> +
->> +     i2c0_pins: pinmux_i2c0_pins {
->> +             pinctrl-single,pins = <
->> +                     0x188 (PIN_INPUT_PULLUP | MUX_MODE0)    /* i2c0_sda.i2c0_sda */
->> +                     0x18c (PIN_INPUT_PULLUP | MUX_MODE0)    /* i2c0_scl.i2c0_scl */
->> +             >;
->> +     };
->> +
->> +     i2c2_pins: pinmux_i2c2_pins {
->> +             pinctrl-single,pins = <
->> +                     0x178 (PIN_INPUT_PULLUP | MUX_MODE3)    /* uart1_ctsn.i2c2_sda */
->> +                     0x17c (PIN_INPUT_PULLUP | MUX_MODE3)    /* uart1_rtsn.i2c2_scl */
->
-> on thing to keep in mind, if you already have external pullups, you
-> might not want to add internal pullups as you'd end up with both
-> resistors in parallel. For I2C the danger is minimal (unless you have a
-> ton of bus capacitance, then it changes high/low time), but it's best to
-> write a more "pristine" DTS. (and sure, I know pretty much every board
-> makes this mistake, but it's best if we don't proliferate the error)
-
-I'll make sure this is correct and include any required changes in the
-next version of the patch series.
-
->
->> +&i2c0 {
->> +     pinctrl-names = "default";
->> +     pinctrl-0 = <&i2c0_pins>;
->> +
->> +     status = "okay";
->> +     clock-frequency = <400000>;
->> +
->> +     serial_config1: serial_config1@20 {
->> +             compatible = "nxp,pca9539";
->> +             reg = <0x20>;
->> +     };
->> +
->> +     serial_config2: serial_config2@21 {
->> +             compatible = "nxp,pca9539";
->> +             reg = <0x21>;
->> +     };
->> +
->> +     tps: tps@2d {
->> +             reg = <0x2d>;
->
-> which TPS device ? no compatible ?
->
->> +/include/ "tps65910.dtsi"
->
-> oh... okay.
-
-I'm assuming that means you're okay with this (if not please elaborate
-on how to improve it).
-
->
->> +&tps {
->> +     vcc1-supply = <&vbat>;
->> +     vcc2-supply = <&vbat>;
->> +     vcc3-supply = <&vbat>;
->> +     vcc4-supply = <&vbat>;
->> +     vcc5-supply = <&vbat>;
->> +     vcc6-supply = <&vbat>;
->> +     vcc7-supply = <&vbat>;
->> +     vccio-supply = <&vbat>;
->> +
->> +     regulators {
->> +             vrtc_reg: regulator@0 {
->> +                     regulator-always-on;
->
-> this should not be always on, you want to pass this as supply to the RTC
-> module so it can manage it. It's also best to give names to all
-> regulators, so people know what they're used for.
-
-I think we may actually be able to turn this one and possibly two
-others off, I will investigate.
-
-I've come up with names for all of the regulators being used and will
-include the changes in the next version of the patch series.
-
->
->> +             };
->> +
->> +             vio_reg: regulator@1 {
->> +                     regulator-always-on;
->> +             };
->> +
->> +             vdd1_reg: regulator@2 {
->> +                     regulator-name = "vdd_mpu";
->> +                     regulator-min-microvolt = <600000>;
->> +                     regulator-max-microvolt = <1500000>;
->> +                     regulator-boot-on;
->> +                     regulator-always-on;
->> +             };
->> +
->> +             vdd2_reg: regulator@3 {
->> +                     regulator-always-on;
->> +             };
->> +
->> +             vdd3_reg: regulator@4 {
->> +                     regulator-always-on;
->> +             };
->> +
->> +             vdig1_reg: regulator@5 {
->> +                     regulator-always-on;
->> +             };
->> +
->> +             vdig2_reg: regulator@6 {
->> +                     regulator-always-on;
->> +             };
->> +
->> +             vpll_reg: regulator@7 {
->> +                     regulator-always-on;
->> +             };
->> +
->> +             vdac_reg: regulator@8 {
->> +                     regulator-always-on;
->> +             };
->> +
->> +             vaux1_reg: regulator@9 {
->> +                     regulator-always-on;
->> +             };
->> +
->> +             vaux2_reg: regulator@10 {
->> +                     regulator-always-on;
->> +             };
->> +
->> +             vaux33_reg: regulator@11 {
->
-> isn't this the supply to the other MMC slot ?
-
-no, it's actually being used for the USB PHY. As I said above I will
-name all regulators being used.
-
->
->> +                     regulator-always-on;
->> +             };
->> +
->> +             vmmc_reg: regulator@12 {
->> +                     regulator-min-microvolt = <3300000>;
->> +                     regulator-max-microvolt = <3300000>;
->> +                     regulator-always-on;
->> +             };
->> +     };
->> +};
->> +
->> +&sham {
->> +     status = "okay";
->> +};
->> +
->> +&aes {
->> +     status = "okay";
->> +};
->
-> just making sure, are you really using them ?
-
-We may need them at some point, I'd like to keep them enabled.
-
->
->> +&mmc1 {
->> +     pinctrl-names = "default";
->> +     pinctrl-0 = <&mmc1_pins>;
->> +     bus-width = <4>;
->> +     status = "okay";
->> +     vmmc-supply = <&vmmc_reg>;
->> +     ti,vcc-aux-disable-is-sleep;
->
-> this binding isn't documented anywhere. What was it supposed to do ?
-
-I mentioned in the commit message that there is a micro SD slot.
-
->
-> --
-> balbi
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
