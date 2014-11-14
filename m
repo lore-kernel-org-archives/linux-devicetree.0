@@ -1,123 +1,57 @@
-From: <shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] [v2] power/fsl: add MDIO dt binding for FMan
-Date: Fri, 14 Nov 2014 17:53:20 +0800
-Message-ID: <1415958800-9867-1-git-send-email-shh.xie@gmail.com>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Subject: Re: [PATCH v10 05/11] drm: bridge/dw_hdmi:split some phy configuration
+ to platform driver
+Date: Fri, 14 Nov 2014 10:55:46 +0000
+Message-ID: <5465DFB2.8060601@imgtec.com>
+References: <1415934583-16290-1-git-send-email-andy.yan@rock-chips.com>
+ <1415935631-16826-1-git-send-email-andy.yan@rock-chips.com>
+ <5465D73C.9030507@imgtec.com> <5465DF0C.50301@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-Cc: Emilian.Medve-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <5465DF0C.50301@rock-chips.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Andy Yan <andy.yan@rock-chips.com>, airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
+Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, mark.yao@rock-chips.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-
-This binding is for FMan MDIO, it covers FMan v2 & FMan v3.
-
-Signed-off-by: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
-changes in V2:
-addressed comments from Scott in V1.
-
- .../devicetree/bindings/powerpc/fsl/fman.txt       | 69 ++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-index edeea16..1523a87 100644
---- a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-+++ b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-@@ -7,6 +7,7 @@ CONTENTS
-   - FMan MURAM Node
-   - FMan dTSEC/XGEC/mEMAC Node
-   - FMan IEEE 1588 Node
-+  - FMan MDIO Node
-   - Example
- 
- =============================================================================
-@@ -357,6 +358,68 @@ ptp-timer@fe000 {
- };
- 
- =============================================================================
-+FMan MDIO Node
-+
-+DESCRIPTION
-+
-+The MDIO is a bus to which the PHY devices are connected.
-+
-+PROPERTIES
-+
-+- compatible
-+		Usage: required
-+		Value type: <stringlist>
-+		Definition: A standard property.
-+		Must include "fsl,fman-mdio" for 1 Gb/s MDIO from FMan v2.
-+		Must include "fsl,fman-xmdio" for 10 Gb/s MDIO from FMan v2.
-+		Must include "fsl,fman-memac-mdio" for 1/10 Gb/s MDIO from
-+		FMan v3.
-+
-+- reg
-+		Usage: required
-+		Value type: <prop-encoded-array>
-+		Definition: A standard property.
-+
-+- bus-frequency
-+		Usage: optional
-+		Value type: <u32>
-+		Definition: Specifies external MDIO bus clock speed which is
-+		different from MDIO standard 2.5MHz. Should be defined for SoCs
-+		on which the standard one cannot work.
-+
-+- interrupts
-+		Usage: optional
-+		Value type: <prop-encoded-array>
-+		Definition: Event interrupt of external MDIO controller.
-+		1 Gb/s MDIO and 10 Gb/s MDIO has one interrupt respectively.
-+
-+- fsl,fman-internal-mdio
-+		Usage: required for internal MDIO
-+		Value type: boolean
-+		Definition: Fman has internal MDIO for internal PCS(Physical
-+		Coding Sublayer) PHYs and external MDIO for external PHYs.
-+		The settings and programming routines for internal/external
-+		MDIO are different. Must be included for internal MDIO.
-+
-+EXAMPLE
-+
-+Example for FMan v2 external MDIO:
-+
-+mdio@f1000 {
-+	compatible = "fsl,fman-xmdio";
-+	reg = <0xf1000 0x1000>;
-+	bus-frequency = <20000>;
-+};
-+
-+Example for FMan v3 internal MDIO:
-+
-+mdio@f1000 {
-+	compatible = "fsl,fman-memac-mdio";
-+	reg = <0xf1000 0x1000>;
-+	fsl,fman-internal-mdio;
-+};
-+
-+=============================================================================
- Example
- 
- fman@400000 {
-@@ -531,4 +594,10 @@ fman@400000 {
- 		compatible = "fsl,fman-ptp-timer";
- 		reg = <0xfe000 0x1000>;
- 	};
-+
-+	mdio@f1000 {
-+		compatible = "fsl,fman-xmdio";
-+		reg = <0xf1000 0x1000>;
-+		bus-frequency = <20000>;
-+	};
- };
--- 
-1.8.4.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CgpPbiAxNC8xMS8xNCAxMDo1MywgQW5keSBZYW4gd3JvdGU6Cj4gSGkgWnViYWlyTEs6Cj4gICAg
+VGhhbmtzIGZvciB5b3VyIHJldmlldy4KPiBPbiAyMDE05bm0MTHmnIgxNOaXpSAxODoxOSwgWnVi
+YWlyIEx1dGZ1bGxhaCBLYWtha2hlbCB3cm90ZToKPj4gSGkgQW5keSwKPj4KPj4gTmljZSB3b3Jr
+IG9uIHRoaXMgcGF0Y2ggc2VyaWVzLiBJdHMgZ2V0dGluZyBiZXR0ZXIgYW5kIGJldHRlciA6KS4K
+Pj4KPj4gT24gMTQvMTEvMTQgMDM6MjcsIEFuZHkgWWFuIHdyb3RlOgo+Pj4gaGRtaSBwaHkgY2xv
+Y2sgc3ltYm9sIGFuZCB0cmFuc21pc3Npb24gdGVybWluYXRpb24gdmFsdWUKPj4+IGNhbiBhZGp1
+c3QgcGxhdGZvcm0gc3BlY2lmaWMgdG8gZ2V0IHRoZSBiZXN0IFNJCj4+ICAgICAgICAgICAgICAg
+ICAgICAgICAgIF5JcyB0aGlzIHNpZ25hbCBpbnRlZ3JpdHk/Cj4gICAgeWVzICwgU0kgIGlzIHNp
+Z25hbCBpbnRlZ3JpdHksIHN1Y2ggYXMgZXllIGRpYWdyYW0gbWVhc3VyZW1lbnQKPj4KPj4gQXJl
+IHRoZXNlIHR3byBkaXNqb2ludCBmZWF0dXJlcyBpbiBzZXBhcmF0ZSBwYXRjaGVzPwo+Pgo+Pj4g
+YWxzbyBhZGQgbW9kZV92YWxpZCBpbnRlcmZhY2UgZm9yIHNvbWUgcGxhdGZvcm0gbWF5IG5vdCBz
+dXBwb3J0Cj4+PiBhbGwgdGhlIGRpc3BsYXkgbW9kZQo+PiBTb3VuZHMgbGlrZSBhbm90aGVyIHNl
+cGFyYXRlIHBhdGNoIHRvIG1lLiA6KQo+ICAgIHRoZXkgY2FuIHNlcGVyYXRlCj4+Cj4+IEFsc28s
+IFRoaXMgc2VyaWVzIGlzIGJlY29taW5nIHF1aXRlIGxhcmdlLiBXaXRoIG1ham9yIGNoYW5nZXMg
+YW5kIGZpeGVzIG1peGVkIHRvZ2V0aGVyLgo+Pgo+PiBQYXRjaCAzIHNwbGl0cyBpbXgtZHJtLgo+
+PiBQYXRjaCA0IG1vdmVzIGR3LWRybSBvdXQgb2YgaW14LWRybSBmb2xkZXIuCj4+IFBhdGNoIDcg
+YWRkcyBiaW5kaW5nCj4+IFBhdGNoIDkgY29udmVydHMgdG8gZHJtIGJyaWRnZS4KPj4KPj4gQ2Fu
+IHRoZXNlIGJlIHBsYWNlZCB0b2dldGhlciBlYXNpbHk/Cj4+IEFuZCBpbiB0aGUgc3RhcnQuIGku
+ZS4gcGF0Y2ggMSwgMiwgMywgNCwKPj4KPj4gVGhlbiBhbGwgZml4ZXMgZXRjIGNhbiBjb21lIGFm
+dGVyd2FyZHM/Cj4+Cj4+IEl0IGhlbHBzIHdoZW4gY2hlY2tpbmcgaGlzdG9yaWVzIGxhdGVyIGFz
+IHRvIGhvdyBhIGRyaXZlciB3YXMgbWFkZSBhbmQgaG93IGZpeGVzIGhhcHBlbmVkLgo+Pgo+PiBF
+c3BlY2lhbGx5IHdoZW4gZmlsZSBtb3ZlcyBoYXBwZW4uLgo+ICAgRG8geW91IG1lYW4gd2UgY2Fu
+IHJlYXJyYW5nZSB0aGUgcGF0Y2ggc2VyaWVzPwo+ICAgcHV0IHBhdGNoIDMsIDQgLDcsIDkgdG9n
+ZXRoZXIgIG9uZSBieWUgb25lCj4gICB0aGFuIGZvbGxvd2VkIGJ5IHRoZSBmaXhlcyBwYXRjaGVz
+ICA1ICw2LCA4LCAxMSA/CgpZZXMuIFJlYXJyYW5nZSBzbyB0aGF0IHRoZSBzcGxpdCBpbXgtZHJt
+L2lteC1oZG1pIGFuZCBjb252ZXJzaW9uIHRvIGRybS1icmlkZ2UgaXMgYXQgdGhlIHN0YXJ0IG9m
+IHRoZSBzZXJpZXMuClRoZW4gdGhlIHJlc3QgYXJlIGJ1ZyBmaXhlcyBhbmQgZmVhdHVyZSBhZGRp
+dGlvbnMuCgpDaGVlcnMsClp1YmFpckxLCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRldmVsIG1haWxpbmcgbGlzdApkZXZlbEBsaW51eGRyaXZlcnByb2pl
+Y3Qub3JnCmh0dHA6Ly9kcml2ZXJkZXYubGludXhkcml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaXZlcmRldi1kZXZlbAo=
