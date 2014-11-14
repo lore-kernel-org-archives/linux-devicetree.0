@@ -1,79 +1,84 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v4 06/10] ARM: dts: am4372: Add DCAN nodes
-Date: Fri, 14 Nov 2014 10:07:46 -0800
-Message-ID: <20141114180746.GV31250@atomide.com>
-References: <1415881371-4982-1-git-send-email-rogerq@ti.com>
- <1415881371-4982-7-git-send-email-rogerq@ti.com>
- <5464BB38.7020402@pengutronix.de>
- <5464C2C4.2070907@ti.com>
- <5464C3B1.2030908@pengutronix.de>
- <5464C4E8.9060103@ti.com>
- <5464C609.9070800@pengutronix.de>
- <20141113174044.GN26481@atomide.com>
- <54662C3D.8050103@ti.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v6 3/6] irqchip: gic: Support hierarchy irq domain.
+Date: Fri, 14 Nov 2014 18:30:10 +0000
+Message-ID: <54664A32.5070200@arm.com>
+References: <1415893029-2971-1-git-send-email-yingjoe.chen@mediatek.com> <1415893029-2971-4-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-can-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54662C3D.8050103@ti.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>, wg@grandegger.com, wsa@the-dreams.de, mugunthanvnm@ti.com, george.cherian@ti.com, balbi@ti.com, nsekhar@ti.comnm@ti.com, sergei.shtylyov@cogentembedded.com, linux-omap@vger.kernel.org, linux-can@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415893029-2971-4-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Yijing Wang <wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <eddie.hua>
 List-Id: devicetree@vger.kernel.org
 
-* Roger Quadros <rogerq@ti.com> [141114 08:24]:
-> On 11/13/2014 07:40 PM, Tony Lindgren wrote:
-> > * Marc Kleine-Budde <mkl@pengutronix.de> [141113 06:55]:
-> >> On 11/13/2014 03:49 PM, Roger Quadros wrote:
-> >>> On 11/13/2014 04:44 PM, Marc Kleine-Budde wrote:
-> >>>> On 11/13/2014 03:40 PM, Roger Quadros wrote:
-> >>>>> On 11/13/2014 04:07 PM, Marc Kleine-Budde wrote:
-> >>>>>> On 11/13/2014 01:22 PM, Roger Quadros wrote:
-> >>>>>>> The SoC contains 2 DCAN modules. Add them.
-> >>>>>>>
-> >>>>>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> >>>>>>> ---
-> >>>>>>>  arch/arm/boot/dts/am4372.dtsi | 22 ++++++++++++++++++++++
-> >>>>>>>  1 file changed, 22 insertions(+)
-> >>>>>>>
-> >>>>>>> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-> >>>>>>> index 899c57c..12fb1db 100644
-> >>>>>>> --- a/arch/arm/boot/dts/am4372.dtsi
-> >>>>>>> +++ b/arch/arm/boot/dts/am4372.dtsi
-> >>>>>>> @@ -901,6 +901,28 @@
-> >>>>>>>  			compatible = "mmio-sram";
-> >>>>>>>  			reg = <0x40300000 0x40000>; /* 256k */
-> >>>>>>>  		};
-> >>>>>>> +
-> >>>>>>> +		dcan0: can@481cc000 {
-> >>>>>>> +			compatible = "ti,am3352-d_can";
-> >>>>>>
-> >>>>>> You should add "ti,am4372-d_can" as first compatible here.
-> >>>>>>
-> >>>>> We don't have a separate compatible id for am4372-d_can
-> >>>>> as it the IP exactly same as am3352-d_can.
-> >>>>
-> >>>> Having the "ti,am4372-d_can" compatible gives you the freedom to add
-> >>>> some spacial handling for the IP if there turns that you need to without
-> >>>> needing to modify the device tree. (We do this on imx.)
-> >>>
-> >>> Agreed. On OMAP platforms we don't add new compatible IDs unless we really need to.
-> >>> Can we add "ti,am4372-d_can" even if it is not mentioned in Documentation/devicetree/bindings?
-> >>>
-> >>> Tony what is your preference?
-> >>
-> >> I don't insist, do it the Omap way :)
-> > 
-> > I agree it's good to add if we need to add custom handling later on.
+On 13/11/14 15:37, Yingjoe Chen wrote:
+> Add support to use gic as a parent for stacked irq domain.
 > 
-> As of now I don't foresee any custom handling for am4372-d_can vs am3352-d_can, but I can
-> add am4372-d_can anyways. In that case, do I need to mention it in 
-> Documentation/devicetree/bindings/net/can/c_can.txt?
->
-> I guess not, cause we don't do anything specific to am4372-d_can there.
+> Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/irqchip/Kconfig   |  1 +
+>  drivers/irqchip/irq-gic.c | 80 ++++++++++++++++++++++++++++++++---------------
+>  2 files changed, 55 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index b21f12f..7f34138 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -5,6 +5,7 @@ config IRQCHIP
+>  config ARM_GIC
+>  	bool
+>  	select IRQ_DOMAIN
+> +	select IRQ_DOMAIN_HIERARCHY
+>  	select MULTI_IRQ_HANDLER
+>  
+>  config GIC_NON_BANKED
+> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+> index 38493ff..fe9ab93 100644
+> --- a/drivers/irqchip/irq-gic.c
+> +++ b/drivers/irqchip/irq-gic.c
+> @@ -788,17 +788,16 @@ static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
+>  {
+>  	if (hw < 32) {
+>  		irq_set_percpu_devid(irq);
+> -		irq_set_chip_and_handler(irq, &gic_chip,
+> -					 handle_percpu_devid_irq);
+> +		irq_domain_set_info(d, irq, hw, &gic_chip, d->host_data,
+> +				    handle_percpu_devid_irq, NULL, NULL);
+>  		set_irq_flags(irq, IRQF_VALID | IRQF_NOAUTOEN);
+>  	} else {
+> -		irq_set_chip_and_handler(irq, &gic_chip,
+> -					 handle_fasteoi_irq);
+> +		irq_domain_set_info(d, irq, hw, &gic_chip, d->host_data,
+> +				    handle_fasteoi_irq, NULL, NULL);
+>  		set_irq_flags(irq, IRQF_VALID | IRQF_PROBE);
+>  
+>  		gic_routable_irq_domain_ops->map(d, irq, hw);
+>  	}
+> -	irq_set_chip_data(irq, d->host_data);
+>  	return 0;
+>  }
+>  
+> @@ -814,8 +813,6 @@ static int gic_irq_domain_xlate(struct irq_domain *d,
+>  {
+>  	unsigned long ret = 0;
+>  
+> -	if (d->of_node != controller)
+> -		return -EINVAL;
 
-I think you should to avoid checkpatch.pl warnings.
+I'm not sure if removing that check is the right thing to do. You had to
+remove it because your sysirq driver passes its own of_phandle_args
+directly to the GIC code. I think that's a bad idea, and you should fix
+the sysirq layer instead.
 
-Regards,
+Thanks,
 
-Tony
+	M.
+-- 
+Jazz is not dead. It just smells funny...
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
