@@ -1,57 +1,86 @@
-From: James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] watchdog: ImgTec PDC Watchdog Timer Driver
-Date: Fri, 14 Nov 2014 14:08:07 +0000
-Message-ID: <54660CC7.7010802@imgtec.com>
-References: <1415805483-26268-1-git-send-email-Naidu.Tellapati@imgtec.com> <1415805483-26268-2-git-send-email-Naidu.Tellapati@imgtec.com> <CAL1qeaHt14p3cjk7hLx_E2qKdqR+qHne-BJmHvVrgBF-4AyU=A@mail.gmail.com> <89F3BC60EA3A0141B1F6C2A661D95E5E3F192BB4@hbmail01.hb.imgtec.org>,<5464B191.9020401@imgtec.com> <27E62D98F903554192E3C13AFCC91C3C2F505E3E@hbmail01.hb.imgtec.org>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5 1/5] dt-bindings: simplefb: Specify node
+ location and handoff related properties
+Date: Fri, 14 Nov 2014 16:24:18 +0200
+Message-ID: <54661092.6020907@ti.com>
+References: <1415962996-31712-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <27E62D98F903554192E3C13AFCC91C3C2F505E3E-C8yLA94LPOy3snIXRfWIHVBRoQTxkR7k@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: James Hogan <James.Hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Ezequiel Garcia <Ezequiel.Garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="OMFXBaQ0lXJDCAIEqDUTuukGgkLNpVGHF"
+Return-path: <linux-sunxi+bncBCGMHFOOT4LBBH5BTCRQKGQEUDWHOCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1415962996-31712-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/14/14 13:08, Naidu Tellapati wrote:
-> Hi James & James,
->
->> On 13/11/14 12:58, Jude Abraham wrote:
->>>>>   +/* timeout in seconds */
->>>>>   +#define PDC_WD_MIN_TIMEOUT             1
->>>>>   +#define PDC_WD_MAX_TIMEOUT             131072
->>>>> +#define PDC_WD_DEFAULT_TIMEOUT         64
->>>>>   +#define PDC_WD_DEFAULT_PRETIMEOUT      PDC_WD_MAX_TIMEOUT
->>>>>   +#define MIN_TIMEOUT_SHIFT              14  /* Clock rate 32768Hz=2^(14+1)*/
->>>> The input clock is not fixed at 32kHz.  I believe it can be configured to run at a different rate.
->>> I think it is  a 32 Khz fixed clock to the block. We are speaking to my hardware team for confirmation.
->>> We will address the review comment after receive feedback from  my hardware team.
->> It should ideally be 32KHz, but that doesn't mean it will be guaranteed
->> to be. The input clock rate is still dependent on the SoC clock setup to
->> provide the clock, and that can usually be reconfigured i.e. from a
->> dedicated external oscillator on the board if provided (hopefully
->> providing the right frequency), or derived from a shared oscillator of
->> some other frequency.
->> For TZ1090 SoC with this IP block, powering down the rest of the SoC
->> happened to reset the low power clock configuration and it would switch
->> clock source to the main oscillator with a fixed divide, which certainly
->> wasn't 32khz most of the time. Each of the low power drivers had to then
->> take this into account in their configuration (img-ir for IR timings,
->> wdt to a lesser extent, and most importantly rtc so as not to lose time
->> or wake up at the wrong time!).
-> Please suggest us any valid minimum and maximum clock rates for the Watchdog on Pistachio.
->
-> Thanks and regards,
-> Naidu.
-There are 2 dividers in the clock path, with an input signal of 400MHz 
-under normal conditions.  Each divider can divide by up to 128, so the 
-minimum frequency is 24.414kHz.  The maximum frequency that could be 
-tolerated is 50MHz.  As previously discussed the expected operating 
-frequency is 32kHz.
+--OMFXBaQ0lXJDCAIEqDUTuukGgkLNpVGHF
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-James.
+On 14/11/14 13:03, Hans de Goede wrote:
+> Since simplefb nodes do not relate directly to hw typically they have b=
+een
+> placed in the root of the devicetree. As the represent runtime informat=
+ion
+> having them as sub-nodes of /chosen is more logical, specify this.
+>=20
+> Also specify when to set the chosen stdout-path property to a simplefb =
+node.
+>=20
+> For reliable handover to a hardware specific driver, that driver needs =
+to
+> know which simplefb to unregister when taking over, specify how the hw =
+driver
+> can find the matching simplefb node.
+>=20
+> Last add some advice on how to fill and use simplefb nodes from a firmw=
+are
+> pov.
+>=20
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Acked-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok, so I have pushed this and the other simplefb series to fbdev for-next=
+=2E
+
+I can still refresh the whole series if need be, but if possible I'd
+rather take any new changes as patches on top of the current ones.
+
+ Tomi
+
+
+
+--OMFXBaQ0lXJDCAIEqDUTuukGgkLNpVGHF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUZhCSAAoJEPo9qoy8lh71EHoQAKuINZQjILEupv3NNuPOS+57
+Z+c1eISYLItqiNExsMJPVunhheLOhsn8mm7F31sXHDFQXFRHCol5iPvtv7woo7Nq
+ET5E40nf0ES+hGUJyygGcFpKgM6JssQj4wW+JYC84L1W1XgcKRYaYGN7cKFgZfkN
+Ygq7y7LI1fEvVr/J/b2JhgP07vFjFHOlewWLvP81AjHe8iwopjI1rtsyv/3Dqe3T
+E4J1mPnoLHteVRKlLubU3VjX2EU+2+Fnj5yW1CGWMo3++L03yUkgaE616DNpcMxj
+Hjzmwcfhx1BnRBaxCJT2ly96voizJTUE3khIFvNal6Dbg3T/LBrnEZYY4kAS1BZA
+JcKbDQii6MufYxrxVwSIJedL1H0NV9NnhcZLFKWhvMNBjIllGgMKntye3p2MpwPq
+3afKYELgyR7uDB8Spqq/7gwN+3HSAKXbr/0q/h78UDCEbEZVvgAKIhru+dOZXx4g
+y5epcVSbyk9Mw17ryN6MYDJfGqYSRoD4RmUvZ0ipdGgPLc5Rw+pn3XcxaWVrD1la
+kA5SYOFx4P+dDEO0Cg5Ao3XlNFASAzX5UCft6MKjcW26hlUpyd3JAzlRw/g17OVz
+62Y5McFsWD+FoUxu2tQ/RRyoWS665belw47Sd4su9GSf0jxatI5SMPr6gNIQ90tQ
+LZISJwf5a7Vk+fZ3VZGB
+=bf8y
+-----END PGP SIGNATURE-----
+
+--OMFXBaQ0lXJDCAIEqDUTuukGgkLNpVGHF--
