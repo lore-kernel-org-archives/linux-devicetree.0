@@ -1,102 +1,501 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v10 05/11] drm: bridge/dw_hdmi:split some phy
- configuration to platform driver
-Date: Sat, 15 Nov 2014 10:12:18 +0000
-Message-ID: <20141115101218.GI4042@n2100.arm.linux.org.uk>
-References: <1415934583-16290-1-git-send-email-andy.yan@rock-chips.com>
- <1415935631-16826-1-git-send-email-andy.yan@rock-chips.com>
- <5465D73C.9030507@imgtec.com> <5465DF0C.50301@rock-chips.com>
- <5465DFB2.8060601@imgtec.com> <5465E2BB.1070507@rock-chips.com>
- <5465E3DF.6050307@imgtec.com>
- <CAGS+omANityD4ZbqLzgrbro6WSTWozXS9fvdwof=Mv_X8OpHRg@mail.gmail.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] iio: adc: Cosmic Circuits 10001 ADC driver
+Date: Sat, 15 Nov 2014 10:46:28 +0000
+Message-ID: <54672F04.40201@kernel.org>
+References: <1415888044-16635-1-git-send-email-ezequiel.garcia@imgtec.com> <1415888044-16635-2-git-send-email-ezequiel.garcia@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <CAGS+omANityD4ZbqLzgrbro6WSTWozXS9fvdwof=Mv_X8OpHRg@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Kurtz <djkurtz@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, dri-devel <dri-devel@lists.freedesktop.org>, Yakir Yang <ykk@rock-chips.com>, devel@driverdev.osuosl.org, Pawel Moll <pawel.moll@arm.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, Xu Jianqun <jay.xu@rock-chips.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, "mark.yao@rock-chips.com" <mark.yao@rock-chips.com>, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kumar Gala <gala>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415888044-16635-2-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, Mark.Rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCBOb3YgMTUsIDIwMTQgYXQgMDY6MDc6NTBQTSArMDgwMCwgRGFuaWVsIEt1cnR6IHdy
-b3RlOgo+IE9uIEZyaSwgTm92IDE0LCAyMDE0IGF0IDc6MTMgUE0sIFp1YmFpciBMdXRmdWxsYWgg
-S2FrYWtoZWwKPiA8WnViYWlyLktha2FraGVsQGltZ3RlYy5jb20+IHdyb3RlOgo+ID4KPiA+Cj4g
-PiBPbiAxNC8xMS8xNCAxMTowOCwgQW5keSBZYW4gd3JvdGU6Cj4gPj4KPiA+PiBPbiAyMDE05bm0
-MTHmnIgxNOaXpSAxODo1NSwgWnViYWlyIEx1dGZ1bGxhaCBLYWtha2hlbCB3cm90ZToKPiA+Pj4K
-PiA+Pj4gT24gMTQvMTEvMTQgMTA6NTMsIEFuZHkgWWFuIHdyb3RlOgo+ID4+Pj4gSGkgWnViYWly
-TEs6Cj4gPj4+PiAgICAgVGhhbmtzIGZvciB5b3VyIHJldmlldy4KPiA+Pj4+IE9uIDIwMTTlubQx
-MeaciDE05pelIDE4OjE5LCBadWJhaXIgTHV0ZnVsbGFoIEtha2FraGVsIHdyb3RlOgo+ID4+Pj4+
-IEhpIEFuZHksCj4gPj4+Pj4KPiA+Pj4+PiBOaWNlIHdvcmsgb24gdGhpcyBwYXRjaCBzZXJpZXMu
-IEl0cyBnZXR0aW5nIGJldHRlciBhbmQgYmV0dGVyIDopLgo+ID4+Pj4+Cj4gPj4+Pj4gT24gMTQv
-MTEvMTQgMDM6MjcsIEFuZHkgWWFuIHdyb3RlOgo+ID4+Pj4+PiBoZG1pIHBoeSBjbG9jayBzeW1i
-b2wgYW5kIHRyYW5zbWlzc2lvbiB0ZXJtaW5hdGlvbiB2YWx1ZQo+ID4+Pj4+PiBjYW4gYWRqdXN0
-IHBsYXRmb3JtIHNwZWNpZmljIHRvIGdldCB0aGUgYmVzdCBTSQo+ID4+Pj4+ICAgICAgICAgICAg
-ICAgICAgICAgICAgICBeSXMgdGhpcyBzaWduYWwgaW50ZWdyaXR5Pwo+ID4+Pj4gICAgIHllcyAs
-IFNJICBpcyBzaWduYWwgaW50ZWdyaXR5LCBzdWNoIGFzIGV5ZSBkaWFncmFtIG1lYXN1cmVtZW50
-Cj4gPj4+Pj4gQXJlIHRoZXNlIHR3byBkaXNqb2ludCBmZWF0dXJlcyBpbiBzZXBhcmF0ZSBwYXRj
-aGVzPwo+ID4+Pj4+Cj4gPj4+Pj4+IGFsc28gYWRkIG1vZGVfdmFsaWQgaW50ZXJmYWNlIGZvciBz
-b21lIHBsYXRmb3JtIG1heSBub3Qgc3VwcG9ydAo+ID4+Pj4+PiBhbGwgdGhlIGRpc3BsYXkgbW9k
-ZQo+ID4+Pj4+IFNvdW5kcyBsaWtlIGFub3RoZXIgc2VwYXJhdGUgcGF0Y2ggdG8gbWUuIDopCj4g
-Pj4+PiAgICAgdGhleSBjYW4gc2VwZXJhdGUKPiA+Pj4+PiBBbHNvLCBUaGlzIHNlcmllcyBpcyBi
-ZWNvbWluZyBxdWl0ZSBsYXJnZS4gV2l0aCBtYWpvciBjaGFuZ2VzIGFuZCBmaXhlcyBtaXhlZCB0
-b2dldGhlci4KPiA+Pj4+Pgo+ID4+Pj4+IFBhdGNoIDMgc3BsaXRzIGlteC1kcm0uCj4gPj4+Pj4g
-UGF0Y2ggNCBtb3ZlcyBkdy1kcm0gb3V0IG9mIGlteC1kcm0gZm9sZGVyLgo+ID4+Pj4+IFBhdGNo
-IDcgYWRkcyBiaW5kaW5nCj4gPj4+Pj4gUGF0Y2ggOSBjb252ZXJ0cyB0byBkcm0gYnJpZGdlLgo+
-ID4+Pj4+Cj4gPj4+Pj4gQ2FuIHRoZXNlIGJlIHBsYWNlZCB0b2dldGhlciBlYXNpbHk/Cj4gPj4+
-Pj4gQW5kIGluIHRoZSBzdGFydC4gaS5lLiBwYXRjaCAxLCAyLCAzLCA0LAo+ID4+Pj4+Cj4gPj4+
-Pj4gVGhlbiBhbGwgZml4ZXMgZXRjIGNhbiBjb21lIGFmdGVyd2FyZHM/Cj4gPj4+Pj4KPiA+Pj4+
-PiBJdCBoZWxwcyB3aGVuIGNoZWNraW5nIGhpc3RvcmllcyBsYXRlciBhcyB0byBob3cgYSBkcml2
-ZXIgd2FzIG1hZGUgYW5kIGhvdyBmaXhlcyBoYXBwZW5lZC4KPiA+Pj4+Pgo+ID4+Pj4+IEVzcGVj
-aWFsbHkgd2hlbiBmaWxlIG1vdmVzIGhhcHBlbi4uCj4gPj4+PiAgICBEbyB5b3UgbWVhbiB3ZSBj
-YW4gcmVhcnJhbmdlIHRoZSBwYXRjaCBzZXJpZXM/Cj4gPj4+PiAgICBwdXQgcGF0Y2ggMywgNCAs
-NywgOSB0b2dldGhlciAgb25lIGJ5ZSBvbmUKPiA+Pj4+ICAgIHRoYW4gZm9sbG93ZWQgYnkgdGhl
-IGZpeGVzIHBhdGNoZXMgIDUgLDYsIDgsIDExID8KPiA+Pj4gWWVzLiBSZWFycmFuZ2Ugc28gdGhh
-dCB0aGUgc3BsaXQgaW14LWRybS9pbXgtaGRtaSBhbmQgY29udmVyc2lvbiB0byBkcm0tYnJpZGdl
-IGlzIGF0IHRoZSBzdGFydCBvZiB0aGUgc2VyaWVzLgo+ID4+PiBUaGVuIHRoZSByZXN0IGFyZSBi
-dWcgZml4ZXMgYW5kIGZlYXR1cmUgYWRkaXRpb25zLgo+ID4+ICAgQ2FuIEkgcHV0IHBhdGNoIzEo
-bWFrZSBjaGVja3BhdGNoIGhhcHB5KSBhbmQgcGF0Y2gjMiAoZGVmZXIgcHJvYmUpIGFzIHRoZSBm
-aXJzdCB0d28gcGF0Y2guCj4gPj4gICBEYW5pZWwgZnJvbSBHb29nbGUgY2hyb21pdW0gdGhpbmsg
-aXQncyBiZXR0ZXIgdG8gcHV0IHRoZSB0d28gc2xpZ2h0bHkgY2hhbmdlcyBpbiB0aGUgZnJvbnQg
-Zm9yIGVhc3kgcmV2aWV3Lgo+IAo+IFNvcnJ5LCBJIGRpZG4ndCBzZWUgdGhpcyBjb252ZXJzYXRp
-b24gYmVmb3JlIG15IGVhcmxpZXIgZW1haWxzLgo+IAo+IEkgd2FzIHN1Z2dlc3RpbmcgdG8gQW5k
-eSB0byBhcnJhbmdlIGhpcyBwYXRjaGVzIGxpa2UgdGhpczoKPiAgKDEpIGZpeGVzIHRoYXQgZGly
-ZWN0bHkgYXBwbHkgdG8gaW14LWRybSBhcyBpdCBpcyB0b2RheS4KPiAgKDIpIHNwbGl0IG91dCB0
-aGUgImdlbmVyaWMgZHdfaGRtaSIgcGFydHMgZnJvbSBpbXgtaGRtaSBpbnRvIGR3X2hkbWkuYwo+
-ICAoMykgY29udmVydCBkd19oZG1pLmMgdG8gYSBkcm1fYnJpZGdlCj4gICg0KSBtb3ZlIHRoZSBk
-d19oZG1pLmMgYnJpZGdlIGltcGxlbWVudGF0aW9uIHRvIGRybS9icmlkZ2UKPiAgKDUpIG1vZGlm
-aWNhdGlvbnMgdG8gZHdfaGRtaS5jIHJlcXVpcmVkIHRvIHN1cHBvcnQgaGRtaSBvbiByazMyODgK
-PiAgKDUpIGFkZCByazMyODgtaGRtaS5jIHRvIGRybS9yb2NrY2hpcCAoYXQgbGVhc3Qgd2hlbmV2
-ZXIgZHJtL3JvY2tjaGlwIGxhbmRzKQo+IAo+IFRoZSBpZGVhIGJlaW5nIHRoYXQgd2UgY2FuIHN0
-YXJ0IGxhbmRpbmcgdGhlIHBhdGNoZXMgZm9yICgxKSBldmVuCj4gd2hpbGUgd2UgYXJlIHN0aWxs
-IGRlYmF0aW5nIC8gcmV2aWV3aW5nICgyKSsgdXBzdHJlYW0uCj4gCj4gPiBTdXJlLgo+ID4KPiA+
-IEkgYW0gbm90IHRoZSBtYWludGFpbmVyLiBUaGV5IGhhdmUgdG8gbWFrZSB0aGUgZmluYWwgZGVj
-aXNpb24uCj4gCj4gaW14LWRybSBpcyBzdGlsbCBpbiBzdGFnaW5nLiAgSSBkbyBub3Qgc2VlIGFu
-eW9uZSBsaXN0ZWQgZXhwbGljaXRseQo+IHVuZGVyIE1BSU5UQUlORVJTIGZvciBkcml2ZXJzL3N0
-YWdpbmcvaW14LWRybSwgc28gYnkgZGVmYXVsdCBJIGd1ZXNzCj4gaXQgZmFsbHMgYmFjayB0byBn
-cmVna2ggKGRyaXZlcnMvc3RhZ2luZy8pPwo+IFRoZSAiQ29tbWl0IiBmaWVsZCBpbiBnaXQgbG9n
-IHNlZW1zIHRvIGJhY2sgdGhpcyB1cC4KPiAKPiBBbHRob3VnaCwgYmFzZWQgb24gQXV0aG9yLCBJ
-IHRoaW5rIHdlIGFsc28gd2FudCB0aGUgb3BpbmlvbnMgb2YKPiBQaGlsaXBwIFphYmVsIGFuZCBS
-dXNzZWwgS2luZy4KCk9uY2UgdGhlIHdyYW5nbGluZ3Mgb24gdGhlIHBhdGNoIHNlcmllcyBhcmUg
-Y29tcGxldGUsIEkgZG8gaW50ZW5kIHRvIHRlc3QKaXQgb24gdGhlIHBsYXRmb3JtcyBJIGhhdmUg
-LSBhbmQgcmVtZW1iZXIgdGhhdCBJIGRvIGhhdmUgdGhlIEFMU0EgYmFzZWQKYXVkaW8gYW5kIENF
-QyBiaXRzIGFzIHdlbGwsIHNvbWUgb2Ygd2hpY2ggd2lsbCBwcm9iYWJseSBuZWVkIGEgbGl0dGxl
-IGJpdApvZiByZS13b3JrLgoKQWxsIGluIGFsbCwgSSB3ZWxjb21lIHRoZSByZW5hbWluZyBvZiB0
-aGlzIHRvIGluY2x1ZGUgYSByZWZlcmVuY2UgdG8KRGVzaWduV2FyZSAtIEkndmUgYWx3YXlzIHRo
-b3VnaHQgaXQncyBhIG1pc3Rha2UgdGhhdCB0aGUgSERNSSBpbnRlcmZhY2UKaW4gaU1YNiB3YXMg
-bm90IG5hbWVkIHdpdGggYSAiZHciIHByZWZpeCBhcyB0aGUgZG9jcyBjb250YWluIHJlZmVyZW5j
-ZXMKdG8gaXQgYmVpbmcgYSBEZXNpZ25XYXJlIElQIG1vZHVsZS4KCi0tIApGVFRDIGJyb2FkYmFu
-ZCBmb3IgMC44bWlsZSBsaW5lOiBjdXJyZW50bHkgYXQgOS41TWJwcyBkb3duIDQwMGticHMgdXAK
-YWNjb3JkaW5nIHRvIHNwZWVkdGVzdC5uZXQuCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
-LmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpLWRldmVsCg==
+On 13/11/14 14:13, Ezequiel Garcia wrote:
+> From: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> 
+> This commit adds support for Cosmic Circuits 10001 10-bit ADC device.
+> 
+> Signed-off-by: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> [Ezequiel: code style cleaning]
+> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Looks good.  I'll just give Rob time to take another look at the device
+tree bindings before taking this.
+
+J
+> ---
+>  drivers/iio/adc/Kconfig       |  11 ++
+>  drivers/iio/adc/Makefile      |   1 +
+>  drivers/iio/adc/cc10001_adc.c | 425 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 437 insertions(+)
+>  create mode 100644 drivers/iio/adc/cc10001_adc.c
+> 
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 88bdc8f..09e2975 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -127,6 +127,17 @@ config AT91_ADC
+>  	help
+>  	  Say yes here to build support for Atmel AT91 ADC.
+>  
+> +config CC10001_ADC
+> +	tristate "Cosmic Circuits 10001 ADC driver"
+> +	depends on HAS_IOMEM
+> +	select IIO_BUFFER
+> +	select IIO_TRIGGERED_BUFFER
+> +	help
+> +	  Say yes here to build support for Cosmic Circuits 10001 ADC.
+> +
+> +	  This driver can also be built as a module. If so, the module will be
+> +	  called cc10001_adc.
+> +
+>  config EXYNOS_ADC
+>  	tristate "Exynos ADC driver support"
+>  	depends on ARCH_EXYNOS || ARCH_S3C24XX || ARCH_S3C64XX || (OF && COMPILE_TEST)
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index cb88a6a..9286c59 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -14,6 +14,7 @@ obj-$(CONFIG_AD7793) += ad7793.o
+>  obj-$(CONFIG_AD7887) += ad7887.o
+>  obj-$(CONFIG_AD799X) += ad799x.o
+>  obj-$(CONFIG_AT91_ADC) += at91_adc.o
+> +obj-$(CONFIG_CC10001_ADC) += cc10001_adc.o
+>  obj-$(CONFIG_EXYNOS_ADC) += exynos_adc.o
+>  obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
+>  obj-$(CONFIG_MAX1027) += max1027.o
+> diff --git a/drivers/iio/adc/cc10001_adc.c b/drivers/iio/adc/cc10001_adc.c
+> new file mode 100644
+> index 0000000..0b74838
+> --- /dev/null
+> +++ b/drivers/iio/adc/cc10001_adc.c
+> @@ -0,0 +1,425 @@
+> +/*
+> + * Copyright (c) 2014 Imagination Technologies Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License version 2 as published by
+> + * the Free Software Foundation.
+> + *
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/slab.h>
+> +
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/iio/trigger.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/iio/triggered_buffer.h>
+> +
+> +/* Registers */
+> +#define CC10001_ADC_CONFIG		0x00
+> +#define CC10001_ADC_START_CONV		BIT(4)
+> +#define CC10001_ADC_MODE_SINGLE_CONV	BIT(5)
+> +
+> +#define CC10001_ADC_DDATA_OUT		0x04
+> +#define CC10001_ADC_EOC			0x08
+> +#define CC10001_ADC_EOC_SET		BIT(0)
+> +
+> +#define CC10001_ADC_CHSEL_SAMPLED	0x0c
+> +#define CC10001_ADC_POWER_UP		0x10
+> +#define CC10001_ADC_POWER_UP_SET	BIT(0)
+> +#define CC10001_ADC_DEBUG		0x14
+> +#define CC10001_ADC_DATA_COUNT		0x20
+> +
+> +#define CC10001_ADC_DATA_MASK		GENMASK(9, 0)
+> +#define CC10001_ADC_NUM_CHANNELS	8
+> +#define CC10001_ADC_CH_MASK		(CC10001_ADC_NUM_CHANNELS - 1)
+> +
+> +#define CC10001_INVALID_SAMPLED_OUTPUT	0xFFFF
+> +#define CC10001_MAX_POLL_COUNT		20
+> +
+> +/*
+> + * As per device specification, wait six clock cycles after power-up to
+> + * activate START. Since adding two more clock cycles delay does not
+> + * impact the performance too much, we are adding two additional cycles delay
+> + * intentionally here.
+> + */
+> +#define	CC10001_WAIT_CYCLES		8
+> +
+> +struct cc10001_adc_device {
+> +	void __iomem *reg_base;
+> +	struct iio_dev *indio_dev;
+> +	struct clk *adc_clk;
+> +	struct regulator *reg;
+> +	u16 *buf;
+> +
+> +	struct mutex lock;
+> +	unsigned long channel_map;
+> +	unsigned int start_delay_ns;
+> +	unsigned int eoc_delay_ns;
+> +};
+> +
+> +static inline void cc10001_adc_write_reg(struct cc10001_adc_device *adc_dev,
+> +					 u32 reg, u32 val)
+> +{
+> +	writel(val, adc_dev->reg_base + reg);
+> +}
+> +
+> +static inline u32 cc10001_adc_read_reg(struct cc10001_adc_device *adc_dev,
+> +				       u32 reg)
+> +{
+> +	return readl(adc_dev->reg_base + reg);
+> +}
+> +
+> +static void cc10001_adc_start(struct cc10001_adc_device *adc_dev,
+> +			      unsigned int channel)
+> +{
+> +	u32 val;
+> +
+> +	/* Channel selection and mode of operation */
+> +	val = (channel & CC10001_ADC_CH_MASK) | CC10001_ADC_MODE_SINGLE_CONV;
+> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_CONFIG, val);
+> +
+> +	val = cc10001_adc_read_reg(adc_dev, CC10001_ADC_CONFIG);
+> +	val = val | CC10001_ADC_START_CONV;
+> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_CONFIG, val);
+> +}
+> +
+> +static u16 cc10001_adc_poll_done(struct iio_dev *indio_dev,
+> +				 unsigned int channel,
+> +				 unsigned int delay)
+> +{
+> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
+> +	unsigned int poll_count = 0;
+> +
+> +	while (!(cc10001_adc_read_reg(adc_dev, CC10001_ADC_EOC) &
+> +			CC10001_ADC_EOC_SET)) {
+> +
+> +		ndelay(delay);
+> +		if (poll_count++ == CC10001_MAX_POLL_COUNT)
+> +			return CC10001_INVALID_SAMPLED_OUTPUT;
+> +	}
+> +
+> +	poll_count = 0;
+> +	while ((cc10001_adc_read_reg(adc_dev, CC10001_ADC_CHSEL_SAMPLED) &
+> +			CC10001_ADC_CH_MASK) != channel) {
+> +
+> +		ndelay(delay);
+> +		if (poll_count++ == CC10001_MAX_POLL_COUNT)
+> +			return CC10001_INVALID_SAMPLED_OUTPUT;
+> +	}
+> +
+> +	/* Read the 10 bit output register */
+> +	return cc10001_adc_read_reg(adc_dev, CC10001_ADC_DDATA_OUT) &
+> +			       CC10001_ADC_DATA_MASK;
+> +}
+> +
+> +static irqreturn_t cc10001_adc_trigger_h(int irq, void *p)
+> +{
+> +	struct cc10001_adc_device *adc_dev;
+> +	struct iio_poll_func *pf = p;
+> +	struct iio_dev *indio_dev;
+> +	unsigned int delay_ns;
+> +	unsigned int channel;
+> +	bool sample_invalid;
+> +	u16 *data;
+> +	int i;
+> +
+> +	indio_dev = pf->indio_dev;
+> +	adc_dev = iio_priv(indio_dev);
+> +	data = adc_dev->buf;
+> +
+> +	mutex_lock(&adc_dev->lock);
+> +
+> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_POWER_UP,
+> +			      CC10001_ADC_POWER_UP_SET);
+> +
+> +	/* Wait for 8 (6+2) clock cycles before activating START */
+> +	ndelay(adc_dev->start_delay_ns);
+> +
+> +	/* Calculate delay step for eoc and sampled data */
+> +	delay_ns = adc_dev->eoc_delay_ns / CC10001_MAX_POLL_COUNT;
+> +
+> +	i = 0;
+> +	sample_invalid = false;
+> +	for_each_set_bit(channel, indio_dev->active_scan_mask,
+> +				  indio_dev->masklength) {
+> +
+> +		cc10001_adc_start(adc_dev, channel);
+> +
+> +		data[i] = cc10001_adc_poll_done(indio_dev, channel, delay_ns);
+> +		if (data[i] == CC10001_INVALID_SAMPLED_OUTPUT) {
+> +			dev_warn(&indio_dev->dev,
+> +				 "invalid sample on channel %d\n", channel);
+> +			sample_invalid = true;
+> +			goto done;
+> +		}
+> +		i++;
+> +	}
+> +
+> +done:
+> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_POWER_UP, 0);
+> +
+> +	mutex_unlock(&adc_dev->lock);
+> +
+> +	if (!sample_invalid)
+> +		iio_push_to_buffers_with_timestamp(indio_dev, data,
+> +						   iio_get_time_ns());
+> +	iio_trigger_notify_done(indio_dev->trig);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static u16 cc10001_adc_read_raw_voltage(struct iio_dev *indio_dev,
+> +					struct iio_chan_spec const *chan)
+> +{
+> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
+> +	unsigned int delay_ns;
+> +	u16 val;
+> +
+> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_POWER_UP,
+> +			      CC10001_ADC_POWER_UP_SET);
+> +
+> +	/* Wait for 8 (6+2) clock cycles before activating START */
+> +	ndelay(adc_dev->start_delay_ns);
+> +
+> +	/* Calculate delay step for eoc and sampled data */
+> +	delay_ns = adc_dev->eoc_delay_ns / CC10001_MAX_POLL_COUNT;
+> +
+> +	cc10001_adc_start(adc_dev, chan->channel);
+> +
+> +	val = cc10001_adc_poll_done(indio_dev, chan->channel, delay_ns);
+> +
+> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_POWER_UP, 0);
+> +
+> +	return val;
+> +}
+> +
+> +static int cc10001_adc_read_raw(struct iio_dev *indio_dev,
+> +				 struct iio_chan_spec const *chan,
+> +				 int *val, int *val2, long mask)
+> +{
+> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		if (iio_buffer_enabled(indio_dev))
+> +			return -EBUSY;
+> +		mutex_lock(&adc_dev->lock);
+> +		*val = cc10001_adc_read_raw_voltage(indio_dev, chan);
+> +		mutex_unlock(&adc_dev->lock);
+> +
+> +		if (*val == CC10001_INVALID_SAMPLED_OUTPUT)
+> +			return -EIO;
+> +		return IIO_VAL_INT;
+> +
+> +	case IIO_CHAN_INFO_SCALE:
+> +		ret = regulator_get_voltage(adc_dev->reg);
+> +		if (ret)
+> +			return ret;
+> +
+> +		*val = ret / 1000;
+> +		*val2 = chan->scan_type.realbits;
+> +		return IIO_VAL_FRACTIONAL_LOG2;
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int cc10001_update_scan_mode(struct iio_dev *indio_dev,
+> +				     const unsigned long *scan_mask)
+> +{
+> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
+> +
+> +	kfree(adc_dev->buf);
+> +	adc_dev->buf = kmalloc(indio_dev->scan_bytes, GFP_KERNEL);
+> +	if (!adc_dev->buf)
+> +		return -ENOMEM;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct iio_info cc10001_adc_info = {
+> +	.driver_module = THIS_MODULE,
+> +	.read_raw = &cc10001_adc_read_raw,
+> +	.update_scan_mode = &cc10001_update_scan_mode,
+> +};
+> +
+> +static int cc10001_adc_channel_init(struct iio_dev *indio_dev)
+> +{
+> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
+> +	struct iio_chan_spec *chan_array, *timestamp;
+> +	unsigned int bit, idx = 0;
+> +
+> +	indio_dev->num_channels = bitmap_weight(&adc_dev->channel_map,
+> +						CC10001_ADC_NUM_CHANNELS);
+> +
+> +	chan_array = devm_kcalloc(&indio_dev->dev, indio_dev->num_channels + 1,
+> +				  sizeof(struct iio_chan_spec),
+> +				  GFP_KERNEL);
+> +	if (!chan_array)
+> +		return -ENOMEM;
+> +
+> +	for_each_set_bit(bit, &adc_dev->channel_map,
+> +			 CC10001_ADC_NUM_CHANNELS) {
+> +		struct iio_chan_spec *chan = &chan_array[idx];
+> +
+> +		chan->type = IIO_VOLTAGE;
+> +		chan->indexed = 1;
+> +		chan->channel = bit;
+> +		chan->scan_index = idx;
+> +		chan->scan_type.sign = 'u';
+> +		chan->scan_type.realbits = 10;
+> +		chan->scan_type.storagebits = 16;
+> +		chan->info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE);
+> +		chan->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
+> +		idx++;
+> +	}
+> +
+> +	timestamp = &chan_array[idx];
+> +	timestamp->type = IIO_TIMESTAMP;
+> +	timestamp->channel = -1;
+> +	timestamp->scan_index = idx;
+> +	timestamp->scan_type.sign = 's';
+> +	timestamp->scan_type.realbits = 64;
+> +	timestamp->scan_type.storagebits = 64;
+> +
+> +	indio_dev->channels = chan_array;
+> +
+> +	return 0;
+> +}
+> +
+> +static int cc10001_adc_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *node = pdev->dev.of_node;
+> +	struct cc10001_adc_device *adc_dev;
+> +	unsigned long adc_clk_rate;
+> +	struct resource *res;
+> +	struct iio_dev *indio_dev;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*adc_dev));
+> +	if (indio_dev == NULL)
+> +		return -ENOMEM;
+> +
+> +	adc_dev = iio_priv(indio_dev);
+> +
+> +	adc_dev->channel_map = CC10001_ADC_CH_MASK;
+> +	if (!of_property_read_u32(node, "cosmic,reserved-adc-channels", &ret))
+> +		adc_dev->channel_map ^= ret;
+> +
+> +	adc_dev->reg = devm_regulator_get(&pdev->dev, "vref");
+> +	if (IS_ERR_OR_NULL(adc_dev->reg))
+> +		return -EINVAL;
+> +
+> +	ret = regulator_enable(adc_dev->reg);
+> +	if (ret)
+> +		return ret;
+> +
+> +	indio_dev->dev.parent = &pdev->dev;
+> +	indio_dev->name = dev_name(&pdev->dev);
+> +	indio_dev->info = &cc10001_adc_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	adc_dev->reg_base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(adc_dev->reg_base))
+> +		goto err_disable_reg;
+> +
+> +	adc_dev->adc_clk = devm_clk_get(&pdev->dev, "adc");
+> +	if (IS_ERR(adc_dev->adc_clk)) {
+> +		dev_err(&pdev->dev, "Failed to get the clock\n");
+> +		goto err_disable_reg;
+> +	}
+> +
+> +	ret = clk_prepare_enable(adc_dev->adc_clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to enable the clock\n");
+> +		goto err_disable_reg;
+> +	}
+> +
+> +	adc_clk_rate = clk_get_rate(adc_dev->adc_clk);
+> +	if (!adc_clk_rate) {
+> +		ret = -EINVAL;
+> +		dev_err(&pdev->dev, "null clock rate!\n");
+> +		goto err_disable_clk;
+> +	}
+> +
+> +	adc_dev->eoc_delay_ns = NSEC_PER_SEC / adc_clk_rate;
+> +	adc_dev->start_delay_ns = adc_dev->eoc_delay_ns * CC10001_WAIT_CYCLES;
+> +
+> +	/* Setup the ADC channels available on the device */
+> +	ret = cc10001_adc_channel_init(indio_dev);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "Could not initialize the channels.\n");
+> +		goto err_disable_clk;
+> +	}
+> +
+> +	mutex_init(&adc_dev->lock);
+> +
+> +	ret = iio_triggered_buffer_setup(indio_dev, NULL,
+> +					 &cc10001_adc_trigger_h, NULL);
+> +	if (ret < 0)
+> +		goto err_disable_clk;
+> +
+> +	ret = iio_device_register(indio_dev);
+> +	if (ret < 0)
+> +		goto err_cleanup_buffer;
+> +
+> +	platform_set_drvdata(pdev, indio_dev);
+> +
+> +	return 0;
+> +
+> +err_cleanup_buffer:
+> +	iio_triggered_buffer_cleanup(indio_dev);
+> +err_disable_clk:
+> +	clk_disable_unprepare(adc_dev->adc_clk);
+> +err_disable_reg:
+> +	regulator_disable(adc_dev->reg);
+> +	return ret;
+> +}
+> +
+> +static int cc10001_adc_remove(struct platform_device *pdev)
+> +{
+> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
+> +
+> +	iio_device_unregister(indio_dev);
+> +	iio_triggered_buffer_cleanup(indio_dev);
+> +	clk_disable_unprepare(adc_dev->adc_clk);
+> +	regulator_disable(adc_dev->reg);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id cc10001_adc_dt_ids[] = {
+> +	{ .compatible = "cosmic,10001-adc", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, cc10001_adc_dt_ids);
+> +
+> +static struct platform_driver cc10001_adc_driver = {
+> +	.driver = {
+> +		.name   = "cc10001-adc",
+> +		.owner	= THIS_MODULE,
+> +		.of_match_table = cc10001_adc_dt_ids,
+> +	},
+> +	.probe	= cc10001_adc_probe,
+> +	.remove	= cc10001_adc_remove,
+> +};
+> +module_platform_driver(cc10001_adc_driver);
+> +
+> +MODULE_AUTHOR("Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>");
+> +MODULE_DESCRIPTION("Cosmic Circuits ADC driver");
+> +MODULE_LICENSE("GPL v2");
+> 
