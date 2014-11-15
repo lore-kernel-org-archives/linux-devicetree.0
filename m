@@ -1,62 +1,273 @@
-Return-Path: <wxt@rock-chips.com>
-Date: Fri, 14 Nov 2014 11:18:34 +0800
-Subject: Re: Re: [PATCH v11 2/3] power-domain: rockchip: add power doamin
- driver
-Message-ID: <MsgIdV1.15e23c00-9ccf-49a9-a246-a0ed26d7e721@lightmail.cn>
-From: wxt <wxt@rock-chips.com>
-In-Reply-To: <CAGS+omBYBJwNu-dbkzEbPZvF3qmf52bLETNm4fTnR02H=k31Mg@mail.gmail.com>
-References: <LM1415935114000.MsgIdV1.15e23c00-9ccf-49a9-a246-a0ed26d7e721@lightmail.cn>
- <CAGS+omBYBJwNu-dbkzEbPZvF3qmf52bLETNm4fTnR02H=k31Mg@mail.gmail.com>
+Return-Path: <erico.nunes@datacom.ind.br>
+Message-ID: <54676FDD.3090703@datacom.ind.br>
+Date: Sat, 15 Nov 2014 13:23:09 -0200
+From: DATACOM - Erico Nunes <erico.nunes@datacom.ind.br>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; boundary="b1e8689f452e4aa79dba742e0ab3edbb_1"
-To: Daniel Kurtz <djkurtz@chromium.org>, Caesar Wang <caesar.wang@rock-chips.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Heiko Stuebner <heiko@sntech.de>, Russell King <linux@arm.linux.org.uk>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "jinkun.hong" <jinkun.hong@rock-chips.com>, Randy Dunlap <rdunlap@infradead.org>, linux-doc <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, ZhenFu Fang <fzf@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Eddie Cai <cf@rock-chips.com>, Jack Dai <jack.dai@rock-chips.com>
+Subject: Re: Creating a new platform_bus inside a spi_driver
+References: <545BD3EC.6050503@datacom.ind.br>	<707686811.tbHdnxXMgE@wuerfel> <545CF546.8090703@datacom.ind.br>	<2501338.EAyTJJ482M@wuerfel> <20141111110757.3DFFAC40D48@trevor.secretlab.ca> <54647133.1030801@mm-sol.com>
+In-Reply-To: <54647133.1030801@mm-sol.com>
+Content-Type: multipart/alternative;
+ boundary="------------080009050804090207070402"
+To: Stanimir Varbanov <svarbanov@mm-sol.com>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, sameo@linux.intel.com, lee.jones@linaro.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
---b1e8689f452e4aa79dba742e0ab3edbb_1
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-
-VGhhbmtzLCAgRGFuISBJIHdpbGwgZml4IGl0IGluIHBhdGNoIHYxMi5CdXQgSSdtIG9mZiBmb3Vy
-IGRheXMgb2YgaG9saWRheXMu8J+YniAgSSB3aWxsIHBvc3Qgb24gbmV4dCB3ZWVrLgoKU2VudCB3
-aXRoIExpZ2h0TWFpbCAoaHR0cDovL3d3dy5saWdodG1haWwuY24pCgpGcm9tOiBEYW5pZWwgS3Vy
-dHoKVG86IENhZXNhciBXYW5nCkNDOiBMaW51cyBXYWxsZWlqOyBsaW51eC1hcm0ta2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmc7IEhlaWtvIFN0dWVibmVyOyBSdXNzZWxsIEtpbmc7IE1hcmsgUnV0
-bGFuZDsgb3BlbiBsaXN0Ok9QRU4gRklSTVdBUkUgQU5ELi4uOyBVbGYgSGFuc3NvbjsgRG1pdHJ5
-IFRvcm9raG92OyBQYXdlbCBNb2xsOyBJYW4gQ2FtcGJlbGw7IGppbmt1bi5ob25nOyBSYW5keSBE
-dW5sYXA7IDxsaW51eC1kb2NAdmdlci5rZXJuZWwub3JnPjsgbGludXgta2VybmVsQHZnZXIua2Vy
-bmVsLm9yZzsgRG91Z2xhcyBBbmRlcnNvbjsgb3BlbiBsaXN0OkFSTS9Sb2NrY2hpcCBTb0MuLi47
-IFJvYiBIZXJyaW5nOyBaaGVuRnUgRmFuZzsgS3VtYXIgR2FsYTsgR3JhbnQgTGlrZWx5OyBFZGRp
-ZSBDYWk7IEphY2sgRGFpCkRhdGU6IEZyaSwgMTQgTm92IDIwMTQgMTA6NTc6MDAKU3ViamVjdDog
-UmU6IFtQQVRDSCB2MTEgMi8zXSBwb3dlci1kb21haW46IHJvY2tjaGlwOiBhZGQgcG93ZXIgZG9h
-bWluIGRyaXZlcgoKQ2Flc2FyLApPbmUgbW9yZSBsaXR0bGUgbml0OgpUaGUgdGl0bGUgb2YgdGhp
-cyBwYXRjaCBoYXMgYSB0eXBvOgpkb2FtaW4gLT4gZG9tYWluClRoYW5rcywKLURhbg==
+This is a multi-part message in MIME format.
+--------------080009050804090207070402
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
 
 
---b1e8689f452e4aa79dba742e0ab3edbb_1
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: base64
+On 11/13/2014 06:52 AM, Stanimir Varbanov wrote:
+> Hi Grant, Arnd and Erico
+>
+> On 11/11/2014 01:07 PM, Grant Likely wrote:
+>> On Fri, 07 Nov 2014 18:04:35 +0100
+>> , Arnd Bergmann <arnd@arndb.de>
+>>  wrote:
+>>> On Friday 07 November 2014 14:37:26 DATACOM - Érico Nunes wrote:
+>>>> Hello Arnd and all,
+>>>>
+>>>> On 11/07/2014 08:04 AM, Arnd Bergmann wrote:
+>>>>> On Thursday 06 November 2014 18:02:52 DATACOM - Érico Nunes wrote:
+>>>>>> The idea is that "fpga-spi" is a spi_driver which instantiates all of the
+>>>>>> "fpga-deviceN" as platform_devices, through the use of
+>>>>>> of_platform_populate(dev->of_node, NULL, NULL, dev).
+>>>>>>
+>>>>>> The visible problem we're facing with this approach is that, as the internal
+>>>>>> platform_devices have a "reg" property, of_platform_populate() eventually
+>>>>>> triggers an address translation which is apparently trying to translate the
+>>>>>> addresses of the internal platform_bus to addresses of the processor memory
+>>>>>> map.
+>>>>>> This translation is however not part of our intention, as we intend to have an
+>>>>>> internal bus with its own memory map.
+>>>>>> This fails when __of_translate_address() reaches the spi-master boundary
+>>>>>> because (as it seems to make sense) it isn't possible to translate them past
+>>>>>> that.
+>>>>>> A KERN_ERR rated message like
+>>>>>> "prom_parse: Bad cell count for /soc@f0000000/spi@2000/fpga@1"
+>>>>>> is thrown by __of_translate_address() and later it is not possible to obtain
+>>>>>> the "reg" address with platform_get_resource().
+>>>>>>
+>>>>>> On this scenario, we have a few questions and, depending on the outcome of
+>>>>>> these, possibly a patch.
+>>>>>>
+>>>>>> 1. Is it possible to have an internal platform_bus with a different memory map
+>>>>>> as we intended? Or are platform_busses and platform_devices supposed to always
+>>>>>> be mapped on the processor memory map?
+>>>>> It's inconsistent. We have some code that assumes that platform devices
+>>>>> are always memory mapped, and some other code that breaks this assumption.
+>>>>
+>>>> By this I take that the platform subsystem could be made generic so it can be
+>>>> used in both ways (mapped to processor memory map or mapped to a private memory
+>>>> map). There seems to be no strict requirement enforcing it to be processor
+>>>> memory map.
+>>>>
+>>>> Is this correct?
+>>>
+>>> It could be, but I'm sure if that is a good idea or not. It might complicate
+>>> things elsewhere, so it would at least need careful testing and consensus
+>>> among a broader group of developers.
+>>
+>> I don't think it is a good idea. I would prefer to make the behaviour of
+>> of_platform_populate() generic so it could work for multiple bus
+>> types rather than reusing/abusing platform_device in this way.
+>>
+>> If the devices on the FPGA were memory mapped, it would be a different
+>> situation, but being behind an SPI bus where the access to those devices
+>> must always be mediated by the SPI controller, it would be better to
+>> have a separate bus type and a separate pool of drivers for those
+>> devices.
+>>
 
-PGh0bWw+PGhlYWQ+PC9oZWFkPjxib2R5PlRoYW5rcywgIERhbiEgSSB3aWxsIGZpeCBpdCBpbiBw
-YXRjaCB2MTIuQnV0IEkmIzM5O20gb2ZmIGZvdXIgZGF5cyBvZiBob2xpZGF5cy7wn5ieICBJIHdp
-bGwgcG9zdCBvbiBuZXh0IHdlZWsuPGJyPjxicj5TZW50IHdpdGggPGEgaHJlZj0iaHR0cDovL3d3
-dy5saWdodG1haWwuY24vP3NhIj5MaWdodE1haWw8L2E+PGJyPjxkaXYgY2xhc3M9ImdtYWlsX3F1
-b3RlIj48YmxvY2txdW90ZSBjbGFzcz0iZ21haWxfcXVvdGUiIHN0eWxlPSJtYXJnaW46IDBwdCAw
-cHQgMHB0IDAuOGV4OyBib3JkZXItbGVmdDogMXB4IHNvbGlkIHJnYigyMDQsIDIwNCwgMjA0KTsg
-cGFkZGluZy1sZWZ0OiAxZXg7Ij48ZGl2IHN0eWxlPSJiYWNrZ3JvdW5kOiNFNUU1RTUiPkZyb206
-IERhbmllbCBLdXJ0ejxicj5UbzogQ2Flc2FyIFdhbmc8YnI+Q0M6IExpbnVzIFdhbGxlaWo7IGxp
-bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgSGVpa28gU3R1ZWJuZXI7IFJ1c3Nl
-bGwgS2luZzsgTWFyayBSdXRsYW5kOyBvcGVuIGxpc3Q6T1BFTiBGSVJNV0FSRSBBTkQuLi47IFVs
-ZiBIYW5zc29uOyBEbWl0cnkgVG9yb2tob3Y7IFBhd2VsIE1vbGw7IElhbiBDYW1wYmVsbDsgamlu
-a3VuLmhvbmc7IFJhbmR5IER1bmxhcDsgJmx0O2xpbnV4LWRvY0B2Z2VyLmtlcm5lbC5vcmcmZ3Q7
-OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBEb3VnbGFzIEFuZGVyc29uOyBvcGVuIGxp
-c3Q6QVJNL1JvY2tjaGlwIFNvQy4uLjsgUm9iIEhlcnJpbmc7IFpoZW5GdSBGYW5nOyBLdW1hciBH
-YWxhOyBHcmFudCBMaWtlbHk7IEVkZGllIENhaTsgSmFjayBEYWk8YnI+RGF0ZTogRnJpLCAxNCBO
-b3YgMjAxNCAxMDo1NzowMDxicj5TdWJqZWN0OiBSZTogW1BBVENIIHYxMSAyLzNdIHBvd2VyLWRv
-bWFpbjogcm9ja2NoaXA6IGFkZCBwb3dlciBkb2FtaW4gZHJpdmVyPGJyPjwvZGl2Pjxicj5DYWVz
-YXIsPGJyPjxicj5PbmUgbW9yZSBsaXR0bGUgbml0Ojxicj48YnI+VGhlIHRpdGxlIG9mIHRoaXMg
-cGF0Y2ggaGFzIGEgdHlwbzo8YnI+ICBkb2FtaW4gLSZndDsgZG9tYWluPGJyPjxicj5UaGFua3Ms
-PGJyPi1EYW48YnI+PGJyPjxicj48L2Jsb2NrcXVvdGU+PC9kaXY+PC9ib2R5PjwvaHRtbD4=
+Grant,
+could you please elaborate a little on "making the behaviour of
+of_platform_populate() generic so it could work for multiple bus types
+without reusing/abusing platform_device"?
+
+Initially we thought of having a separate bus type, but that felt such a
+duplication of a platform_bus that we decided to try to reuse.
+
+On the other thread line about the patch posted in my opening comment,
+it was suggested that we could change __of_translate_address(), for
+example to allow a translation end-point to be passed it. This seems
+like a good idea to me, however with this comment here it is still not
+clear to me whether this change would be likely accepted or not.
+
+>
+> This is exactly the same problem that we have on Qualcomm SPMI PMIC mfd
+> driver. We had a discussion at [1] where we tried to solve it by
+> IORESOURCE_REG. Unfortunately there is no conclusion yet.
+>
+> I'm glad to see that someone else have the same issue, maybe it is time
+> to restart the discussion. The last proposal from Grant was to implement
+> dev_get_localbus_address() API in drivers/base.
+
+I took the time to read through your thread and indeed a lot of this
+discussion is common. It is now clear that we should not be using
+IORESOURCE_MEM as it was assumed in the original patch, which was one of
+my original questions.
+We are still not using the mfd framework because of the need to maintain
+the table of "compatible" drivers in code, and this requires double
+maintenance of code instead of adding a new device to the dts.
+Nevertheless, I tested your "RFC: add function for localbus address"
+patch, and your solution worked right away for my case too (without mfd)
+by just changing my drivers to get IORESOURCE_REG instead.
 
 
---b1e8689f452e4aa79dba742e0ab3edbb_1--
+
+--------------080009050804090207070402
+Content-Type: text/html; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+
+<html>
+  <head>
+    <meta content="text/html; charset=windows-1252"
+      http-equiv="Content-Type">
+  </head>
+  <body bgcolor="#FFFFFF" text="#000000">
+    <br>
+    On 11/13/2014 06:52 AM, Stanimir Varbanov wrote:<br>
+    <span style="white-space: pre;">&gt; Hi Grant, Arnd and Erico<br>
+      &gt;<br>
+      &gt; On 11/11/2014 01:07 PM, Grant Likely wrote:<br>
+      &gt;&gt; On Fri, 07 Nov 2014 18:04:35 +0100<br>
+      &gt;&gt; , Arnd Bergmann <a class="moz-txt-link-rfc2396E" href="mailto:arnd@arndb.de">&lt;arnd@arndb.de&gt;</a><br>
+      &gt;&gt;� wrote:<br>
+      &gt;&gt;&gt; On Friday 07 November 2014 14:37:26 DATACOM - Érico
+      Nunes wrote:<br>
+      &gt;&gt;&gt;&gt; Hello Arnd and all,<br>
+      &gt;&gt;&gt;&gt;<br>
+      &gt;&gt;&gt;&gt; On 11/07/2014 08:04 AM, Arnd Bergmann wrote:<br>
+      &gt;&gt;&gt;&gt;&gt; On Thursday 06 November 2014 18:02:52 DATACOM
+      - Érico Nunes wrote:<br>
+      &gt;&gt;&gt;&gt;&gt;&gt; The idea is that "fpga-spi" is a
+      spi_driver which instantiates all of the<br>
+      &gt;&gt;&gt;&gt;&gt;&gt; "fpga-deviceN" as platform_devices,
+      through the use of<br>
+      &gt;&gt;&gt;&gt;&gt;&gt; of_platform_populate(dev-&gt;of_node,
+      NULL, NULL, dev).<br>
+      &gt;&gt;&gt;&gt;&gt;&gt;<br>
+      &gt;&gt;&gt;&gt;&gt;&gt; The visible problem we're facing with
+      this approach is that, as the internal<br>
+      &gt;&gt;&gt;&gt;&gt;&gt; platform_devices have a "reg" property,
+      of_platform_populate() eventually<br>
+      &gt;&gt;&gt;&gt;&gt;&gt; triggers an address translation which is
+      apparently trying to translate the<br>
+      &gt;&gt;&gt;&gt;&gt;&gt; addresses of the internal platform_bus to
+      addresses of the processor memory<br>
+      &gt;&gt;&gt;&gt;&gt;&gt; map.<br>
+      &gt;&gt;&gt;&gt;&gt;&gt; This translation is however not part of
+      our intention, as we intend to have an<br>
+      &gt;&gt;&gt;&gt;&gt;&gt; internal bus with its own memory map.<br>
+      &gt;&gt;&gt;&gt;&gt;&gt; This fails when __of_translate_address()
+      reaches the spi-master boundary<br>
+      &gt;&gt;&gt;&gt;&gt;&gt; because (as it seems to make sense) it
+      isn't possible to translate them past<br>
+      &gt;&gt;&gt;&gt;&gt;&gt; that.<br>
+      &gt;&gt;&gt;&gt;&gt;&gt; A KERN_ERR rated message like<br>
+      &gt;&gt;&gt;&gt;&gt;&gt; "prom_parse: Bad cell count for
+      /soc@f0000000/spi@2000/fpga@1"<br>
+      &gt;&gt;&gt;&gt;&gt;&gt; is thrown by __of_translate_address() and
+      later it is not possible to obtain<br>
+      &gt;&gt;&gt;&gt;&gt;&gt; the "reg" address with
+      platform_get_resource().<br>
+      &gt;&gt;&gt;&gt;&gt;&gt;<br>
+      &gt;&gt;&gt;&gt;&gt;&gt; On this scenario, we have a few questions
+      and, depending on the outcome of<br>
+      &gt;&gt;&gt;&gt;&gt;&gt; these, possibly a patch.<br>
+      &gt;&gt;&gt;&gt;&gt;&gt;<br>
+      &gt;&gt;&gt;&gt;&gt;&gt; 1. Is it possible to have an internal
+      platform_bus with a different memory map<br>
+      &gt;&gt;&gt;&gt;&gt;&gt; as we intended? Or are platform_busses
+      and platform_devices supposed to always<br>
+      &gt;&gt;&gt;&gt;&gt;&gt; be mapped on the processor memory map?<br>
+      &gt;&gt;&gt;&gt;&gt; It's inconsistent. We have some code that
+      assumes that platform devices<br>
+      &gt;&gt;&gt;&gt;&gt; are always memory mapped, and some other code
+      that breaks this assumption.<br>
+      &gt;&gt;&gt;&gt;<br>
+      &gt;&gt;&gt;&gt; By this I take that the platform subsystem could
+      be made generic so it can be<br>
+      &gt;&gt;&gt;&gt; used in both ways (mapped to processor memory map
+      or mapped to a private memory<br>
+      &gt;&gt;&gt;&gt; map). There seems to be no strict requirement
+      enforcing it to be processor<br>
+      &gt;&gt;&gt;&gt; memory map.<br>
+      &gt;&gt;&gt;&gt;<br>
+      &gt;&gt;&gt;&gt; Is this correct?<br>
+      &gt;&gt;&gt;<br>
+      &gt;&gt;&gt; It could be, but I'm sure if that is a good idea or
+      not. It might complicate<br>
+      &gt;&gt;&gt; things elsewhere, so it would at least need careful
+      testing and consensus<br>
+      &gt;&gt;&gt; among a broader group of developers.<br>
+      &gt;&gt;<br>
+      &gt;&gt; I don't think it is a good idea. I would prefer to make
+      the behaviour of<br>
+      &gt;&gt; of_platform_populate() generic so it could work for
+      multiple bus<br>
+      &gt;&gt; types rather than reusing/abusing platform_device in this
+      way.<br>
+      &gt;&gt;<br>
+      &gt;&gt; If the devices on the FPGA were memory mapped, it would
+      be a different<br>
+      &gt;&gt; situation, but being behind an SPI bus where the access
+      to those devices<br>
+      &gt;&gt; must always be mediated by the SPI controller, it would
+      be better to<br>
+      &gt;&gt; have a separate bus type and a separate pool of drivers
+      for those<br>
+      &gt;&gt; devices.<br>
+      &gt;&gt;</span><br>
+    <br>
+    Grant,<br>
+    could you please elaborate a little on "making the behaviour of<br>
+    of_platform_populate() generic so it could work for multiple bus
+    types<br>
+    without reusing/abusing platform_device"?<br>
+    <br>
+    Initially we thought of having a separate bus type, but that felt
+    such a<br>
+    duplication of a platform_bus that we decided to try to reuse.<br>
+    <br>
+    On the other thread line about the patch posted in my opening
+    comment,<br>
+    it was suggested that we could change __of_translate_address(), for<br>
+    example to allow a translation end-point to be passed it. This seems<br>
+    like a good idea to me, however with this comment here it is still
+    not<br>
+    clear to me whether this change would be likely accepted or not.<br>
+    <br>
+    <span style="white-space: pre;">&gt;<br>
+      &gt; This is exactly the same problem that we have on Qualcomm
+      SPMI PMIC mfd<br>
+      &gt; driver. We had a discussion at [1] where we tried to solve it
+      by<br>
+      &gt; IORESOURCE_REG. Unfortunately there is no conclusion yet.<br>
+      &gt;<br>
+      &gt; I'm glad to see that someone else have the same issue, maybe
+      it is time<br>
+      &gt; to restart the discussion. The last proposal from Grant was
+      to implement<br>
+      &gt; dev_get_localbus_address() API in drivers/base.</span><br>
+    <br>
+    I took the time to read through your thread and indeed a lot of this<br>
+    discussion is common. It is now clear that we should not be using<br>
+    IORESOURCE_MEM as it was assumed in the original patch, which was
+    one of<br>
+    my original questions.<br>
+    We are still not using the mfd framework because of the need to
+    maintain<br>
+    the table of "compatible" drivers in code, and this requires double<br>
+    maintenance of code instead of adding a new device to the dts.<br>
+    Nevertheless, I tested your "RFC: add function for localbus address"<br>
+    patch, and your solution worked right away for my case too (without
+    mfd)<br>
+    by just changing my drivers to get IORESOURCE_REG instead.<br>
+    <br>
+    <br>
+  </body>
+</html>
+
+--------------080009050804090207070402--
