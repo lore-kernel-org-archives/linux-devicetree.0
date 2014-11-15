@@ -1,80 +1,86 @@
-From: Ajay Kumar <ajaykumar.rs@samsung.com>
-Subject: [PATCH V8 14/14] ARM: dts: peach-pit: represent the connection between
- bridge and panel using videoport and endpoints
-Date: Sat, 15 Nov 2014 15:25:09 +0530
-Message-ID: <1416045309-13359-15-git-send-email-ajaykumar.rs@samsung.com>
-References: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: inki.dae@samsung.com, kgene.kim@samsung.com, seanpaul@google.com, thierry.reding@gmail.com, daniel.vetter@ffwll.ch, ajaynumb@gmail.com, bhushan.r@samsung.com, prashanth.g@samsung.com, Ajay Kumar <ajaykumar.rs@samsung.com>
+From: Daniel Kurtz <djkurtz@chromium.org>
+Subject: Re: [PATCH v10 05/11] drm: bridge/dw_hdmi:split some phy
+ configuration to platform driver
+Date: Sat, 15 Nov 2014 18:07:50 +0800
+Message-ID: <CAGS+omANityD4ZbqLzgrbro6WSTWozXS9fvdwof=Mv_X8OpHRg@mail.gmail.com>
+References: <1415934583-16290-1-git-send-email-andy.yan@rock-chips.com>
+ <1415935631-16826-1-git-send-email-andy.yan@rock-chips.com>
+ <5465D73C.9030507@imgtec.com> <5465DF0C.50301@rock-chips.com>
+ <5465DFB2.8060601@imgtec.com> <5465E2BB.1070507@rock-chips.com>
+ <5465E3DF.6050307@imgtec.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <5465E3DF.6050307@imgtec.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, dri-devel <dri-devel@lists.freedesktop.org>, Yakir Yang <ykk@rock-chips.com>, devel@driverdev.osuosl.org, Pawel Moll <pawel.moll@arm.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, Xu Jianqun <jay.xu@rock-chips.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, rmk+kernel@arm.linux.org.uk, "mark.yao@rock-chips.com" <mark.yao@rock-chips.com>, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>Andy Yan <a>
 List-Id: devicetree@vger.kernel.org
 
-Define videoports and use endpoints to describe the connection between
-the encoder, bridge and the panel, instead of using phandles.
-
-Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
----
- arch/arm/boot/dts/exynos5420-peach-pit.dts |   31 ++++++++++++++++++++++++++--
- 1 file changed, 29 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-index 82cdb74..9d06aef 100644
---- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-+++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-@@ -107,6 +107,12 @@
- 		compatible = "auo,b116xw03";
- 		power-supply = <&tps65090_fet6>;
- 		backlight = <&backlight>;
-+
-+		port {
-+			panel_in: endpoint {
-+				remote-endpoint = <&bridge_out>;
-+			};
-+		};
- 	};
- };
- 
-@@ -126,7 +132,14 @@
- 	samsung,link-rate = <0x06>;
- 	samsung,lane-count = <2>;
- 	samsung,hpd-gpio = <&gpx2 6 0>;
--	bridge = <&ps8625>;
-+
-+	ports {
-+		port@0 {
-+			dp_out: endpoint {
-+				remote-endpoint = <&bridge_in>;
-+			};
-+		};
-+	};
- };
- 
- &fimd {
-@@ -504,8 +517,22 @@
- 		sleep-gpios = <&gpx3 5 GPIO_ACTIVE_HIGH>;
- 		reset-gpios = <&gpy7 7 GPIO_ACTIVE_HIGH>;
- 		lane-count = <2>;
--		panel = <&panel>;
- 		use-external-pwm;
-+
-+		ports {
-+			port@0 {
-+				bridge_out: endpoint {
-+					remote-endpoint = <&panel_in>;
-+				};
-+			};
-+
-+			port@1 {
-+				bridge_in: endpoint {
-+					remote-endpoint = <&dp_out>;
-+				};
-+			};
-+		};
-+
- 	};
- };
- 
--- 
-1.7.9.5
+T24gRnJpLCBOb3YgMTQsIDIwMTQgYXQgNzoxMyBQTSwgWnViYWlyIEx1dGZ1bGxhaCBLYWtha2hl
+bAo8WnViYWlyLktha2FraGVsQGltZ3RlYy5jb20+IHdyb3RlOgo+Cj4KPiBPbiAxNC8xMS8xNCAx
+MTowOCwgQW5keSBZYW4gd3JvdGU6Cj4+Cj4+IE9uIDIwMTTlubQxMeaciDE05pelIDE4OjU1LCBa
+dWJhaXIgTHV0ZnVsbGFoIEtha2FraGVsIHdyb3RlOgo+Pj4KPj4+IE9uIDE0LzExLzE0IDEwOjUz
+LCBBbmR5IFlhbiB3cm90ZToKPj4+PiBIaSBadWJhaXJMSzoKPj4+PiAgICAgVGhhbmtzIGZvciB5
+b3VyIHJldmlldy4KPj4+PiBPbiAyMDE05bm0MTHmnIgxNOaXpSAxODoxOSwgWnViYWlyIEx1dGZ1
+bGxhaCBLYWtha2hlbCB3cm90ZToKPj4+Pj4gSGkgQW5keSwKPj4+Pj4KPj4+Pj4gTmljZSB3b3Jr
+IG9uIHRoaXMgcGF0Y2ggc2VyaWVzLiBJdHMgZ2V0dGluZyBiZXR0ZXIgYW5kIGJldHRlciA6KS4K
+Pj4+Pj4KPj4+Pj4gT24gMTQvMTEvMTQgMDM6MjcsIEFuZHkgWWFuIHdyb3RlOgo+Pj4+Pj4gaGRt
+aSBwaHkgY2xvY2sgc3ltYm9sIGFuZCB0cmFuc21pc3Npb24gdGVybWluYXRpb24gdmFsdWUKPj4+
+Pj4+IGNhbiBhZGp1c3QgcGxhdGZvcm0gc3BlY2lmaWMgdG8gZ2V0IHRoZSBiZXN0IFNJCj4+Pj4+
+ICAgICAgICAgICAgICAgICAgICAgICAgICBeSXMgdGhpcyBzaWduYWwgaW50ZWdyaXR5Pwo+Pj4+
+ICAgICB5ZXMgLCBTSSAgaXMgc2lnbmFsIGludGVncml0eSwgc3VjaCBhcyBleWUgZGlhZ3JhbSBt
+ZWFzdXJlbWVudAo+Pj4+PiBBcmUgdGhlc2UgdHdvIGRpc2pvaW50IGZlYXR1cmVzIGluIHNlcGFy
+YXRlIHBhdGNoZXM/Cj4+Pj4+Cj4+Pj4+PiBhbHNvIGFkZCBtb2RlX3ZhbGlkIGludGVyZmFjZSBm
+b3Igc29tZSBwbGF0Zm9ybSBtYXkgbm90IHN1cHBvcnQKPj4+Pj4+IGFsbCB0aGUgZGlzcGxheSBt
+b2RlCj4+Pj4+IFNvdW5kcyBsaWtlIGFub3RoZXIgc2VwYXJhdGUgcGF0Y2ggdG8gbWUuIDopCj4+
+Pj4gICAgIHRoZXkgY2FuIHNlcGVyYXRlCj4+Pj4+IEFsc28sIFRoaXMgc2VyaWVzIGlzIGJlY29t
+aW5nIHF1aXRlIGxhcmdlLiBXaXRoIG1ham9yIGNoYW5nZXMgYW5kIGZpeGVzIG1peGVkIHRvZ2V0
+aGVyLgo+Pj4+Pgo+Pj4+PiBQYXRjaCAzIHNwbGl0cyBpbXgtZHJtLgo+Pj4+PiBQYXRjaCA0IG1v
+dmVzIGR3LWRybSBvdXQgb2YgaW14LWRybSBmb2xkZXIuCj4+Pj4+IFBhdGNoIDcgYWRkcyBiaW5k
+aW5nCj4+Pj4+IFBhdGNoIDkgY29udmVydHMgdG8gZHJtIGJyaWRnZS4KPj4+Pj4KPj4+Pj4gQ2Fu
+IHRoZXNlIGJlIHBsYWNlZCB0b2dldGhlciBlYXNpbHk/Cj4+Pj4+IEFuZCBpbiB0aGUgc3RhcnQu
+IGkuZS4gcGF0Y2ggMSwgMiwgMywgNCwKPj4+Pj4KPj4+Pj4gVGhlbiBhbGwgZml4ZXMgZXRjIGNh
+biBjb21lIGFmdGVyd2FyZHM/Cj4+Pj4+Cj4+Pj4+IEl0IGhlbHBzIHdoZW4gY2hlY2tpbmcgaGlz
+dG9yaWVzIGxhdGVyIGFzIHRvIGhvdyBhIGRyaXZlciB3YXMgbWFkZSBhbmQgaG93IGZpeGVzIGhh
+cHBlbmVkLgo+Pj4+Pgo+Pj4+PiBFc3BlY2lhbGx5IHdoZW4gZmlsZSBtb3ZlcyBoYXBwZW4uLgo+
+Pj4+ICAgIERvIHlvdSBtZWFuIHdlIGNhbiByZWFycmFuZ2UgdGhlIHBhdGNoIHNlcmllcz8KPj4+
+PiAgICBwdXQgcGF0Y2ggMywgNCAsNywgOSB0b2dldGhlciAgb25lIGJ5ZSBvbmUKPj4+PiAgICB0
+aGFuIGZvbGxvd2VkIGJ5IHRoZSBmaXhlcyBwYXRjaGVzICA1ICw2LCA4LCAxMSA/Cj4+PiBZZXMu
+IFJlYXJyYW5nZSBzbyB0aGF0IHRoZSBzcGxpdCBpbXgtZHJtL2lteC1oZG1pIGFuZCBjb252ZXJz
+aW9uIHRvIGRybS1icmlkZ2UgaXMgYXQgdGhlIHN0YXJ0IG9mIHRoZSBzZXJpZXMuCj4+PiBUaGVu
+IHRoZSByZXN0IGFyZSBidWcgZml4ZXMgYW5kIGZlYXR1cmUgYWRkaXRpb25zLgo+PiAgIENhbiBJ
+IHB1dCBwYXRjaCMxKG1ha2UgY2hlY2twYXRjaCBoYXBweSkgYW5kIHBhdGNoIzIgKGRlZmVyIHBy
+b2JlKSBhcyB0aGUgZmlyc3QgdHdvIHBhdGNoLgo+PiAgIERhbmllbCBmcm9tIEdvb2dsZSBjaHJv
+bWl1bSB0aGluayBpdCdzIGJldHRlciB0byBwdXQgdGhlIHR3byBzbGlnaHRseSBjaGFuZ2VzIGlu
+IHRoZSBmcm9udCBmb3IgZWFzeSByZXZpZXcuCgpTb3JyeSwgSSBkaWRuJ3Qgc2VlIHRoaXMgY29u
+dmVyc2F0aW9uIGJlZm9yZSBteSBlYXJsaWVyIGVtYWlscy4KCkkgd2FzIHN1Z2dlc3RpbmcgdG8g
+QW5keSB0byBhcnJhbmdlIGhpcyBwYXRjaGVzIGxpa2UgdGhpczoKICgxKSBmaXhlcyB0aGF0IGRp
+cmVjdGx5IGFwcGx5IHRvIGlteC1kcm0gYXMgaXQgaXMgdG9kYXkuCiAoMikgc3BsaXQgb3V0IHRo
+ZSAiZ2VuZXJpYyBkd19oZG1pIiBwYXJ0cyBmcm9tIGlteC1oZG1pIGludG8gZHdfaGRtaS5jCiAo
+MykgY29udmVydCBkd19oZG1pLmMgdG8gYSBkcm1fYnJpZGdlCiAoNCkgbW92ZSB0aGUgZHdfaGRt
+aS5jIGJyaWRnZSBpbXBsZW1lbnRhdGlvbiB0byBkcm0vYnJpZGdlCiAoNSkgbW9kaWZpY2F0aW9u
+cyB0byBkd19oZG1pLmMgcmVxdWlyZWQgdG8gc3VwcG9ydCBoZG1pIG9uIHJrMzI4OAogKDUpIGFk
+ZCByazMyODgtaGRtaS5jIHRvIGRybS9yb2NrY2hpcCAoYXQgbGVhc3Qgd2hlbmV2ZXIgZHJtL3Jv
+Y2tjaGlwIGxhbmRzKQoKVGhlIGlkZWEgYmVpbmcgdGhhdCB3ZSBjYW4gc3RhcnQgbGFuZGluZyB0
+aGUgcGF0Y2hlcyBmb3IgKDEpIGV2ZW4Kd2hpbGUgd2UgYXJlIHN0aWxsIGRlYmF0aW5nIC8gcmV2
+aWV3aW5nICgyKSsgdXBzdHJlYW0uCgo+IFN1cmUuCj4KPiBJIGFtIG5vdCB0aGUgbWFpbnRhaW5l
+ci4gVGhleSBoYXZlIHRvIG1ha2UgdGhlIGZpbmFsIGRlY2lzaW9uLgoKaW14LWRybSBpcyBzdGls
+bCBpbiBzdGFnaW5nLiAgSSBkbyBub3Qgc2VlIGFueW9uZSBsaXN0ZWQgZXhwbGljaXRseQp1bmRl
+ciBNQUlOVEFJTkVSUyBmb3IgZHJpdmVycy9zdGFnaW5nL2lteC1kcm0sIHNvIGJ5IGRlZmF1bHQg
+SSBndWVzcwppdCBmYWxscyBiYWNrIHRvIGdyZWdraCAoZHJpdmVycy9zdGFnaW5nLyk/ClRoZSAi
+Q29tbWl0IiBmaWVsZCBpbiBnaXQgbG9nIHNlZW1zIHRvIGJhY2sgdGhpcyB1cC4KCkFsdGhvdWdo
+LCBiYXNlZCBvbiBBdXRob3IsIEkgdGhpbmsgd2UgYWxzbyB3YW50IHRoZSBvcGluaW9ucyBvZgpQ
+aGlsaXBwIFphYmVsIGFuZCBSdXNzZWwgS2luZy4KClRoYW5rcywKLWRqawoKPgo+IFp1YmFpckxL
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
