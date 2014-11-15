@@ -1,143 +1,75 @@
-From: DATACOM - Erico Nunes <erico.nunes@datacom.ind.br>
-Subject: Re: Creating a new platform_bus inside a spi_driver
-Date: Sat, 15 Nov 2014 13:32:07 -0200
-Message-ID: <546771F7.1000805@datacom.ind.br>
-References: <545BD3EC.6050503@datacom.ind.br>	<707686811.tbHdnxXMgE@wuerfel> <545CF546.8090703@datacom.ind.br>	<2501338.EAyTJJ482M@wuerfel> <20141111110757.3DFFAC40D48@trevor.secretlab.ca> <54647133.1030801@mm-sol.com>
+From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/3] staging: imx-drm: document internal HDMI I2C master controller DT binding
+Date: Sat, 15 Nov 2014 19:49:17 +0200
+Message-ID: <1416073759-19939-2-git-send-email-vladimir_zapolskiy@mentor.com>
+References: <1416073759-19939-1-git-send-email-vladimir_zapolskiy@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54647133.1030801@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, sameo@linux.intel.com, lee.jones@linaro.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416073759-19939-1-git-send-email-vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Provide information about how to bind internal iMX6Q/DL HDMI DDC I2C
+master controller. The property is set as optional one, because iMX6
+HDMI DDC bus may be represented by one of general purpose I2C busses
+found on SoC.
 
+Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-On 11/13/2014 06:52 AM, Stanimir Varbanov wrote:
-> Hi Grant, Arnd and Erico
->=20
-> On 11/11/2014 01:07 PM, Grant Likely wrote:
->> On Fri, 07 Nov 2014 18:04:35 +0100
->> , Arnd Bergmann <arnd@arndb.de>
->>  wrote:
->>> On Friday 07 November 2014 14:37:26 DATACOM - =C3=89rico Nunes wrot=
-e:
->>>> Hello Arnd and all,
->>>>
->>>> On 11/07/2014 08:04 AM, Arnd Bergmann wrote:
->>>>> On Thursday 06 November 2014 18:02:52 DATACOM - =C3=89rico Nunes =
-wrote:
->>>>>> The idea is that "fpga-spi" is a spi_driver which instantiates a=
-ll of the
->>>>>> "fpga-deviceN" as platform_devices, through the use of
->>>>>> of_platform_populate(dev->of_node, NULL, NULL, dev).
->>>>>>
->>>>>> The visible problem we're facing with this approach is that, as =
-the internal
->>>>>> platform_devices have a "reg" property, of_platform_populate() e=
-ventually
->>>>>> triggers an address translation which is apparently trying to tr=
-anslate the
->>>>>> addresses of the internal platform_bus to addresses of the proce=
-ssor memory
->>>>>> map.
->>>>>> This translation is however not part of our intention, as we int=
-end to have an
->>>>>> internal bus with its own memory map.
->>>>>> This fails when __of_translate_address() reaches the spi-master =
-boundary
->>>>>> because (as it seems to make sense) it isn't possible to transla=
-te them past
->>>>>> that.
->>>>>> A KERN_ERR rated message like
->>>>>> "prom_parse: Bad cell count for /soc@f0000000/spi@2000/fpga@1"
->>>>>> is thrown by __of_translate_address() and later it is not possib=
-le to obtain
->>>>>> the "reg" address with platform_get_resource().
->>>>>>
->>>>>> On this scenario, we have a few questions and, depending on the =
-outcome of
->>>>>> these, possibly a patch.
->>>>>>
->>>>>> 1. Is it possible to have an internal platform_bus with a differ=
-ent memory map
->>>>>> as we intended? Or are platform_busses and platform_devices supp=
-osed to always
->>>>>> be mapped on the processor memory map?
->>>>> It's inconsistent. We have some code that assumes that platform d=
-evices
->>>>> are always memory mapped, and some other code that breaks this as=
-sumption.
->>>>
->>>> By this I take that the platform subsystem could be made generic s=
-o it can be
->>>> used in both ways (mapped to processor memory map or mapped to a p=
-rivate memory
->>>> map). There seems to be no strict requirement enforcing it to be p=
-rocessor
->>>> memory map.
->>>>
->>>> Is this correct?
->>>
->>> It could be, but I'm sure if that is a good idea or not. It might c=
-omplicate
->>> things elsewhere, so it would at least need careful testing and con=
-sensus
->>> among a broader group of developers.
->>
->> I don't think it is a good idea. I would prefer to make the behaviou=
-r of
->> of_platform_populate() generic so it could work for multiple bus
->> types rather than reusing/abusing platform_device in this way.
->>
->> If the devices on the FPGA were memory mapped, it would be a differe=
-nt
->> situation, but being behind an SPI bus where the access to those dev=
-ices
->> must always be mediated by the SPI controller, it would be better to
->> have a separate bus type and a separate pool of drivers for those
->> devices.
->>
-
-Grant,
-could you please elaborate a little on "making the behaviour of
-of_platform_populate() generic so it could work for multiple bus types
-without reusing/abusing platform_device"?
-
-Initially we thought of having a separate bus type, but that felt such =
-a
-duplication of a platform_bus that we decided to try to reuse.
-
-On the other thread line about the patch posted in my opening comment,
-it was suggested that we could change __of_translate_address(), for
-example to allow a translation end-point to be passed it. This seems
-like a good idea to me, however with this comment here it is still not
-clear to me whether this change would be likely accepted or not.
-
->=20
-> This is exactly the same problem that we have on Qualcomm SPMI PMIC m=
-fd
-> driver. We had a discussion at [1] where we tried to solve it by
-> IORESOURCE_REG. Unfortunately there is no conclusion yet.
->=20
-> I'm glad to see that someone else have the same issue, maybe it is ti=
-me
-> to restart the discussion. The last proposal from Grant was to implem=
-ent
-> dev_get_localbus_address() API in drivers/base.
-
-I took the time to read through your thread and indeed a lot of this
-discussion is common. It is now clear that we should not be using
-IORESOURCE_MEM as it was assumed in the original patch, which was one o=
-f
-my original questions.
-We are still not using the mfd framework because of the need to maintai=
-n
-the table of "compatible" drivers in code, and this requires double
-maintenance of code instead of adding a new device to the dts.
-Nevertheless, I tested your "RFC: add function for localbus address"
-patch, and your solution worked right away for my case too (without mfd=
-)
-by just changing my drivers to get IORESOURCE_REG instead.
+diff --git a/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt b/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
+index 1b756cf..43c8924 100644
+--- a/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
++++ b/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
+@@ -10,6 +10,8 @@ Required properties:
+  - #address-cells : should be <1>
+  - #size-cells : should be <0>
+  - compatible : should be "fsl,imx6q-hdmi" or "fsl,imx6dl-hdmi".
++   If internal HDMI DDC I2C master controller is supposed to be used,
++   then "simple-bus" should be added to compatible value.
+  - gpr : should be <&gpr>.
+    The phandle points to the iomuxc-gpr region containing the HDMI
+    multiplexer control register.
+@@ -22,6 +24,7 @@ Required properties:
+ 
+ Optional properties:
+  - ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
++ - ddc: internal HDMI DDC I2C master controller
+ 
+ example:
+ 
+@@ -32,7 +35,7 @@ example:
+         hdmi: hdmi@0120000 {
+                 #address-cells = <1>;
+                 #size-cells = <0>;
+-                compatible = "fsl,imx6q-hdmi";
++                compatible = "fsl,imx6q-hdmi", "simple-bus";
+                 reg = <0x00120000 0x9000>;
+                 interrupts = <0 115 0x04>;
+                 gpr = <&gpr>;
+@@ -40,6 +43,11 @@ example:
+                 clock-names = "iahb", "isfr";
+                 ddc-i2c-bus = <&i2c2>;
+ 
++                hdmi_ddc: ddc {
++                        compatible = "fsl,imx6q-hdmi-ddc";
++                        status = "disabled";
++                };
++
+                 port@0 {
+                         reg = <0>;
+ 
+-- 
+1.7.10.4
