@@ -1,58 +1,35 @@
-From: Corentin LABBE <clabbe.montjoie@gmail.com>
-Subject: Re: [PATCH 1/2] crypto: Add Imagination Technologies hw hash accelerator
-Date: Sat, 15 Nov 2014 08:55:58 +0100
-Message-ID: <5467070E.5040104@gmail.com>
-References: <1415621455-10468-1-git-send-email-james.hartley@imgtec.com>	<1415621455-10468-2-git-send-email-james.hartley@imgtec.com> <CAL1qeaGN9q_WHP2YJ3fY3r11v0pitcmwbjam5dRzeZhHCp7c8g@mail.gmail.com>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH] ARM: dts: Explicitly set dr_mode on exynos5250-snow
+Date: Sat, 15 Nov 2014 10:27:28 +0100
+Message-ID: <CABxcv=k6rkatN0NSq-gkGA+ZS1chS-bcXu=Nxk+Uf=WuPrKR5w@mail.gmail.com>
+References: <1415994379-29165-1-git-send-email-sjoerd.simons@collabora.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <CAL1qeaGN9q_WHP2YJ3fY3r11v0pitcmwbjam5dRzeZhHCp7c8g@mail.gmail.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>, James Hartley <james.hartley@imgtec.com>, Herbert Xu <herbert@gondor.apana.org.au>
-Cc: davem@davemloft.net, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, joe@perches.com, mchehab@osg.samsung.com, Antti Palosaari <crope@iki.fi>, jg1.han@samsung.com, linux-crypto@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>linux-crypto@vger.kernel.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1415994379-29165-1-git-send-email-sjoerd.simons@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 15/11/2014 00:59, Andrew Bresticker a =C3=A9crit :
-> Hi James,
->=20
->> +
->> +struct img_hash_drv {
->> +       struct list_head dev_list;
->> +       spinlock_t lock;
->> +};
->> +
->> +static struct img_hash_drv img_hash =3D {
->> +       .dev_list =3D LIST_HEAD_INIT(img_hash.dev_list),
->> +       .lock =3D __SPIN_LOCK_UNLOCKED(img_hash.lock),
->> +};
->=20
-> It looks like the only purpose of this list is to get the
-> corresponding struct img_hash_dev in img_hash_init().  If there's
-> never going to be multiple instances within an SoC, perhaps you could
-> just use a global?  Otherwise, you could do something like the
-> qualcomm driver, see drivers/crypto/qce/sha.c.  It looks like there i=
-s
-> some precedent for this device list though...
->=20
+Hello Sjoerd,
 
-I don't understand, you propose to use a global, something that lots of=
- people want to be removed in my driver.
-It is not better than this global list.
+On Fri, Nov 14, 2014 at 8:46 PM, Sjoerd Simons
+<sjoerd.simons@collabora.co.uk> wrote:
+> Explicitly set the dr_mode for the dwc3 controller on the
+> Snow board to host mode. This is required to ensure the
+> controller is initialized in the right mode if the kernel is
+> build with USB gadget support.
 
-I have the fealing that there no good way to get a pointer to a driver =
-structure inside the cryptoAPI.
-What to you think about adding a void *data in struct crypto_alg
+The patch looks good to me.
 
-Before registering an alg you could do:
-mv_aes_alg_ecb.data =3D myprivatedriverdata;
-ret =3D crypto_register_alg(&mv_aes_alg_ecb);
+Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 
-and then get it via
-struct crypto_priv *cp =3D req->base.tfm->__crt_alg->data;
-(a function will be better than that)
+Kukjin,
 
-So what is the recommended way to get driver structure inside the crypt=
-oAPI function (init/udpate/final)?
+I think $subject is -rc material since this issue is seen after commit
+508423b ("ARM: exynos_defconfig: enable USB gadget support") which
+landed in 3.18.
 
-Regards
+Best regards,
+Javier
