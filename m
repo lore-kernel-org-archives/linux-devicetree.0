@@ -1,41 +1,37 @@
 From: Sebastian Reichel <sre@kernel.org>
-Subject: [PATCH] ARM: DTS: OMAP3-N900: add si4713 support
-Date: Sat, 15 Nov 2014 02:47:30 +0100
-Message-ID: <1416016050-4252-1-git-send-email-sre@kernel.org>
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
+Subject: [PATCH] DTS: ARM: OMAP3-N900: Add n900-battery support
+Date: Sat, 15 Nov 2014 03:08:24 +0100
+Message-ID: <1416017304-6879-1-git-send-email-sre@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Tony Lindgren <tony@atomide.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, linux-omap@vger.kernel.org
 Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Sebastian Reichel <sre@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add si4713 node to the N900 device tree file.
+This adds support for the N900's battery to the
+Nokia N900 DTS file.
 
 Signed-off-by: Sebastian Reichel <sre@kernel.org>
 ---
- arch/arm/boot/dts/omap3-n900.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm/boot/dts/omap3-n900.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
-index 9b0494a..81c99f3 100644
+index bc82a12..39778e5 100644
 --- a/arch/arm/boot/dts/omap3-n900.dts
 +++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -540,6 +540,16 @@
- 		power-gpio = <&gpio4 2 GPIO_ACTIVE_HIGH>; /* 98 */
+@@ -115,6 +115,12 @@
+ 		eci-switch-gpios = <&gpio6 22 GPIO_ACTIVE_HIGH>; /* 182 */
+ 		speaker-amplifier-gpios = <&twl_gpio 7 GPIO_ACTIVE_HIGH>;
  	};
- 
-+	si4713: si4713@63 {
-+		compatible = "silabs,si4713";
-+                reg = <0x63>;
 +
-+                interrupts-extended = <&gpio2 21 IRQ_TYPE_EDGE_FALLING>; /* 53 */
-+                reset-gpios = <&gpio6 3 GPIO_ACTIVE_HIGH>; /* 163 */
-+                vio-supply = <&vio>;
-+                vdd-supply = <&vaux1>;
++	battery: n900-battery {
++		compatible = "nokia,n900-battery";
++		io-channels = <&twl_madc 0>, <&twl_madc 4>, <&twl_madc 12>;
++		io-channel-names = "temp", "bsi", "vbat";
 +	};
-+
- 	bq24150a: bq24150a@6b {
- 		compatible = "ti,bq24150a";
- 		reg = <0x6b>;
+ };
+ 
+ &omap3_pmx_core {
 -- 
 2.1.1
-
