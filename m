@@ -1,57 +1,69 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH V4 01/14] sh: Eliminate unused irq_reg_{readl,writel} accessors
-Date: Sun, 16 Nov 2014 10:34:41 +0100
-Message-ID: <CAMuHMdXMsxhcD9C079YPc6Toxdo0e23oqM_9KeSG=NrFa4auRQ@mail.gmail.com>
-References: <1415342669-30640-1-git-send-email-cernekee@gmail.com>
-	<1415342669-30640-2-git-send-email-cernekee@gmail.com>
-	<CAMuHMdW+L8YbE8Z8jrtnm8xWk63sRGaFdM7TPM6MmrDg9XwHuQ@mail.gmail.com>
-	<20141114163843.GH29662@linux-mips.org>
-	<20141114170525.GL3698@titan.lakedaemon.net>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 0/4] ARM: dts: sunxi: Add simplefb nodes
+Date: Sun, 16 Nov 2014 11:04:12 +0100
+Message-ID: <20141116100412.GF6414@lukather>
+References: <1415979277-20861-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20141114170525.GL3698@titan.lakedaemon.net>
-Sender: linux-sh-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Kevin Cernekee <cernekee@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linux-sh list <linux-sh@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Florian Fainelli <f.fainelli@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="RpqchZ26BWispMcB"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBUPNUGRQKGQE25VMBOA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1415979277-20861-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jason,
 
-On Fri, Nov 14, 2014 at 6:05 PM, Jason Cooper <jason@lakedaemon.net> wrote:
-> On Fri, Nov 14, 2014 at 05:38:44PM +0100, Ralf Baechle wrote:
->> On Mon, Nov 10, 2014 at 09:13:49AM +0100, Geert Uytterhoeven wrote:
->>
->> > On Fri, Nov 7, 2014 at 7:44 AM, Kevin Cernekee <cernekee@gmail.com> wrote:
->> > > Defining these macros way down in arch/sh/.../irq.c doesn't cause
->> > > kernel/irq/generic-chip.c to use them.  As far as I can tell this code
->> > > has no effect.
->> > >
->> > > Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
->> >
->> > Compared preprocessor and asm output before and after, no difference
->> > except for line numbers, so
->> >
->> > Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>
->> I noticed the remainder of of this series is now in Jason Cooper's irqchip
->> tree.  Is anybody still taking care of SH?  If not I can funnel it
->> through the MIPS tree.
->
-> Are the SH maintainers active?  I admit I know very little about the
-> arch.  I'm more than happy to pick it up and keep it with the rest of
-> the series, I just didn't want to step on toes...
+--RpqchZ26BWispMcB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-SH is orphaned, so it would be great if you could pick it up.
-Thanks!
+On Fri, Nov 14, 2014 at 04:34:33PM +0100, Hans de Goede wrote:
+> Hi Maxime,
+>=20
+> Here is v2 of these patches, now with the node names suffixed with -hdmi.
+>=20
+> Regards,
+>=20
+> Hans
 
-Gr{oetje,eeting}s,
+Merged, thanks!
+Maxime
 
-                        Geert
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+--RpqchZ26BWispMcB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUaHacAAoJEBx+YmzsjxAg4BgQALDCESR0UqFtNR4DXuUkMAZC
+NO7tEiyM6ldC7Y4bDVF0jvg/8QYsO3JbybO5iSIkuXOtwhZfNniwUwle3yvHxtuv
+YmrR+n4YitcMr92aTO4f7eJ9y78vSFosebN2j+nxtH/nGfOcGIfPLBDAO7rtiuym
+XQrWvl4EPdYuTytqkyJmBP0w2phLblr3AISHh7ngN/pzEjVtevvbDLgoLf7I3sW7
+WnPSVnjNYDBNFH2lWGoGwOX407FVmbUJENBxQl9buOh9fGw/DfGxrIsjrHY2T2d3
+i6nct/9TKJj99x68N6XmSsOeg/iYJcWu0r2MZKeVSbzwVSvhNckMIdFJOfG2mbjc
+vk05HYuZjaP59blYE7R0z3iDllgoDoGHxF6kawcEd8wH2zvKp1VNhokEsX0jT9n7
+asZEERbZbIeNYW96QKL2amX1TzBsBcnrHcDgY+euM06scCAQUN5cFUqSYXE2WWe8
+l7ZvA6J9CRM/gr4FR73HqLcFCFElajznUEONIyx07I0r7jeuu37EXnXAwQ7zBWp+
+KC75o8DAsmoDv1ZepE+4KYaPDID3rblSZr6DoULQum75BN5YMGDZfl8PHLvMT3Sj
+Pk0XcIcAc+qyGeh1UR/voKqjgkkFBKkavtWZjYq4acfd3g8l7NakkEHVCkE9Ul15
+fmF8WmbyhZ0xZ52md8GS
+=G8es
+-----END PGP SIGNATURE-----
+
+--RpqchZ26BWispMcB--
