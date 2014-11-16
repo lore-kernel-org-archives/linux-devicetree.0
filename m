@@ -1,101 +1,56 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: vf-colibri: add USB regulators
-Date: Sun, 16 Nov 2014 19:00:28 +0100
-Message-ID: <1416160828-18168-1-git-send-email-stefan@agner.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v4 6/6] ARM: zynq: DT: Add OCM controller node
+Date: Sun, 16 Nov 2014 11:32:23 -0800
+Message-ID: <c52187589f5c4cc6b908d899c2b9f7a6@BN1BFFO11FD036.protection.gbl>
+References: <cover.1415962281.git.michal.simek@xilinx.com>
+ <0a88d52b5e71fb220ca619180ec9ca746edad2b1.1415962281.git.michal.simek@xilinx.com>
+ <546881CA.2020801@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <546881CA.2020801@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>
+Cc: Michal Simek <michal.simek@xilinx.com>, linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Josh Cartwright <josh.cartwright@ni.com>, monstr@monstr.eu, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Add structure of USB supply logic. The USB hosts power enable
-regulator is needed to control VBUS supply on the Colibri carrier
-board.
+On Sun, 2014-11-16 at 11:51AM +0100, Andreas F=C3=A4rber wrote:
+> Hi Michal,
+>=20
+> Am 14.11.2014 um 11:52 schrieb Michal Simek:
+> > diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/z=
+ynq-7000.dtsi
+> > index ce2ef5bec4f2..e217fb1c1169 100644
+> > --- a/arch/arm/boot/dts/zynq-7000.dtsi
+> > +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+> > @@ -150,6 +150,13 @@
+> >  			reg =3D <0xf8006000 0x1000>;
+> >  		};
+> >=20
+> > +		ocmc: memory-controller@f800c000 {
+> > +			compatible =3D "xlnx,zynq-ocmc-1.0";
+> > +			interrupt-parent =3D <&intc>;
+> > +			interrupts =3D <0 3 4>;
+> > +			reg =3D <0xf800c000 0x1000>;
+> > +		};
+> > +
+> >  		uart0: serial@e0000000 {
+> >  			compatible =3D "xlnx,xuartps", "cdns,uart-r1p8";
+> >  			status =3D "disabled";
+>=20
+> Not directly related to this patch: As one can see here, the node ord=
+er
+> is quite a mess... According to Olof, nodes should be ordered by unit
+> address, whereas here some but not all seem ordered by node name. Wou=
+ld
+> you welcome a cleanup patch, or can you fix that yourself?
 
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
----
-This is the second version of a leftover of the "ARM: dts: vf610:
-USB/GPIO fixes" patchset. The rest is already applied.
+I wouldn't say it's a mess, just a different property to sort the nodes
+by. For humans reading the DT, searching for nodes, alphabetical order
+helps finding the right node, IMHO. What advantage would sorting by
+address have?
 
-Changes in v2:
-- Assign pinctrl to usbh_vbus_reg explicitly
-- Remove USB client/host VBUS supply (not yet implemented in
-  driver)
-
- arch/arm/boot/dts/vf-colibri-eval-v3.dtsi | 34 ++++++++++++++++++++++++++++++-
- arch/arm/boot/dts/vf-colibri.dtsi         |  6 ++++++
- 2 files changed, 39 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
-index 80e8fbc..2d3e966 100644
---- a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
-+++ b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
-@@ -11,6 +11,34 @@
- 	chosen {
- 		bootargs = "console=ttyLP0,115200";
- 	};
-+
-+	regulators {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		sys_5v0_reg: regulator@0 {
-+			compatible = "regulator-fixed";
-+			reg = <0>;
-+			regulator-name = "5v0";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			regulator-always-on;
-+		};
-+
-+		/* USBH_PEN */
-+		usbh_vbus_reg: regulator@1 {
-+			compatible = "regulator-fixed";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_usbh1_reg>;
-+			reg = <1>;
-+			regulator-name = "usbh_vbus";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			gpio = <&gpio3 19 GPIO_ACTIVE_LOW>;
-+			vin-supply = <&sys_5v0_reg>;
-+		};
-+	};
- };
- 
- &bl {
-@@ -51,4 +79,8 @@
- 
- &uart2 {
- 	status = "okay";
--};
-\ No newline at end of file
-+};
-+
-+&usbh1 {
-+	vbus-supply = <&usbh_vbus_reg>;
-+};
-diff --git a/arch/arm/boot/dts/vf-colibri.dtsi b/arch/arm/boot/dts/vf-colibri.dtsi
-index 2371760..27bcf5f 100644
---- a/arch/arm/boot/dts/vf-colibri.dtsi
-+++ b/arch/arm/boot/dts/vf-colibri.dtsi
-@@ -163,5 +163,11 @@
- 				VF610_PAD_PTD3__UART2_CTS		0x21a1
- 			>;
- 		};
-+
-+		pinctrl_usbh1_reg: gpio_usb_vbus {
-+			fsl,pins = <
-+				VF610_PAD_PTD4__GPIO_83			0x22ed
-+			>;
-+		};
- 	};
- };
--- 
-2.1.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Thanks,
+	S=C3=B6ren
