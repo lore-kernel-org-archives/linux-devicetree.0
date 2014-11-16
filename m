@@ -1,22 +1,82 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH] ARM: dts: rockchip: enable PWM on Radxa Rock
-Date: Sat, 15 Nov 2014 21:41:59 +0100
-Message-ID: <2669678.1B0ovBGQIy@diego>
-References: <1415979145-19471-1-git-send-email-julien.chauveau@neo-technologies.fr>
+From: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Subject: [PATCHv1 0/3] arm: mvebu: add Synology DS213j and DS414 .dts files
+Date: Sun, 16 Nov 2014 01:04:01 +0100
+Message-ID: <cover.1416095841.git.arno@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415979145-19471-1-git-send-email-julien.chauveau@neo-technologies.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "moderated list:ARM/Rockchip SoC..." <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 14. November 2014, 16:32:25 schrieb Julien CHAUVEAU:
-> This enables user space access to the 3 PWM available on the Radxa Rock
-> headers.
-> 
-> Signed-off-by: Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
+Hi,
 
-added to my v3.19-armsoc/dts branch
+This series adds .dts files for Synology DS213j (armada 370 2-bay NAS) and
+DS414 (armada XP 4-bay NAS) devices. It is based on comments received on
+a v0 submission of DS213j .dts file [1].
+
+Andrew, in this v1, the two .dts files are still separate w/o any common
+.dtsi. I took a quick look it seems there are small differences between
+the two which make me wonder if its worth the trouble:
+
+ - DS414 fans are not handled by the SoC
+ - various pinctrl variations
+ - a tiny difference in SPI flash partitioning
+ - phy-mode for ethernet interfaces
+ - different comments associated w/ same nodes (e.g. uart1)
+ - etc
+
+Could you take a quick look and tell me if you think it's worth it? I'll
+follow what you'll decide.
+
+Cheers,
+
+a+
+
+[1]: http://thread.gmane.org/gmane.linux.drivers.devicetree/95401
+
+Changes since v0:
+
+ - Added a comment at the beginning of DS213j and DS414j .dts file regarding
+   the need for a recent Marvell bootloader. Arnd suggested to do a specific
+   .dtb file for new and old bootloaders but I think if we follow this path
+   for DS414 and DS213j, we will probably have to do it for all Armada-based
+   synology NAS and possibly for other Armada 370/XP based devices. Opting
+   for recent bootloaders config and having a comment is easier. It is likely
+   that a user already has a recent bootloader. Otherwise, upgrade is a one
+   click process anyway. If a user thinks it is easier to have two different
+   .dts files in the kernel, she will still be able to push a patch. 
+ - Added a comment in the .dts file about the bootloader screwing the kernel
+   if the environment is saved.
+ - Kept GPL licence for .dts file
+ - Fixed bad naming of node and alias (_ vs -)
+ - Added micron vendor prefix for n25q064 flash
+ - Disabled SoC RTC; a Seiko S-35390A is used as main RTC
+ - Added comments about the purpose of each serial port
+ - Added stdout-path = &uart0; to help barebox. A specific patch is included
+   in the series to provide labels for uart serial nodes
+ - Added patch for DS414 .dts file
+ 
+
+Arnaud Ebalard (3):
+  arm: mvebu: add uartX labels for Armada SoC serial nodes
+  arm: mvebu: add .dts file for Synology DS213j
+  arm: mvebu: add .dts file for Synology DS414
+
+ arch/arm/boot/dts/Makefile                       |   6 +-
+ arch/arm/boot/dts/armada-370-synology-ds213j.dts | 351 +++++++++++++++++++++++
+ arch/arm/boot/dts/armada-370-xp.dtsi             |   5 +-
+ arch/arm/boot/dts/armada-xp-synology-ds414.dts   | 343 ++++++++++++++++++++++
+ arch/arm/boot/dts/armada-xp.dtsi                 |   5 +-
+ 5 files changed, 704 insertions(+), 6 deletions(-)
+ create mode 100644 arch/arm/boot/dts/armada-370-synology-ds213j.dts
+ create mode 100644 arch/arm/boot/dts/armada-xp-synology-ds414.dts
+
+-- 
+2.1.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
