@@ -1,87 +1,164 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCHv2 5/8] arm: mvebu: add common uart0 and spi0 pintcrl
- entries for Armada 370
-Date: Sun, 16 Nov 2014 22:10:34 +0100
-Message-ID: <20141116211034.GJ15870@lunn.ch>
-References: <cover.1416158990.git.arno@natisbad.org>
- <d550094896837ac921e5d2a69fc5aae9b287a98a.1416158990.git.arno@natisbad.org>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v9 6/9] qcom: cpuidle: Add cpuidle driver for QCOM cpus
+Date: Sun, 16 Nov 2014 22:20:26 +0100
+Message-ID: <5469151A.20205@linaro.org>
+References: <1414194024-55547-1-git-send-email-lina.iyer@linaro.org> <1414194024-55547-7-git-send-email-lina.iyer@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <d550094896837ac921e5d2a69fc5aae9b287a98a.1416158990.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1414194024-55547-7-git-send-email-lina.iyer@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 16, 2014 at 06:37:33PM +0100, Arnaud Ebalard wrote:
-> 
-> pinctrl entries for uart0 using MPP0-1 and spi0 using MPP33-36 are
-> common configurations. Instead of replicating them in each .dts file,
-> put those in armada-370.dtsi file so that they can be referenced.
-> 
-> Suggested-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+On 10/25/2014 01:40 AM, Lina Iyer wrote:
+> Add cpuidle driver interface to allow cpus to go into C-States. Use t=
+he
+> cpuidle DT interface, common across ARM architectures, to provide the
+> C-State information to the cpuidle framework.
+>
+> Supported modes at this time are Standby and Standalone Power Collaps=
+e.
+>
+> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+
+A few comments below, otherwise it looks good to me.
+
+
 > ---
->  arch/arm/boot/dts/armada-370.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
-> index 6b3c23b1e138..d9f5d59e463e 100644
-> --- a/arch/arm/boot/dts/armada-370.dtsi
-> +++ b/arch/arm/boot/dts/armada-370.dtsi
-> @@ -115,6 +115,17 @@
->  				compatible = "marvell,mv88f6710-pinctrl";
->  				reg = <0x18000 0x38>;
->  
-> +				uart0_pins: uart0-pins {
-> +					marvell,pins = "mpp0", "mpp1";
-> +					marvell,function = "uart0";
-> +				};
 
-Thanks for these.
+[ ... ]
 
-We can go one stage further. kirkwood.dts has:
-
-                uart0: serial@12000 {
-                        compatible = "ns16550a";
-                        reg = <0x12000 0x100>;
-                        reg-shift = <2>;
-                        interrupts = <33>;
-                        clocks = <&gate_clk 7>;
-                        pinctrl-0 = <&pmx_uart0>;
-                        pinctrl-names = "default";
-                        status = "disabled";
-                };
-
-i.e actually references them. This is safe because a board .dts file
-can override the pins if needed.
-
-We should do the same here, both for 370 and XP.
-
-   Andrew
-
+> +[1]. Documentation/devicetree/bindings/arm/idle-states.txt
+> diff --git a/drivers/cpuidle/Kconfig.arm b/drivers/cpuidle/Kconfig.ar=
+m
+> index 8c16ab2..13c7c1f 100644
+> --- a/drivers/cpuidle/Kconfig.arm
+> +++ b/drivers/cpuidle/Kconfig.arm
+> @@ -63,3 +63,10 @@ config ARM_MVEBU_V7_CPUIDLE
+>   	depends on ARCH_MVEBU
+>   	help
+>   	  Select this to enable cpuidle on Armada 370, 38x and XP processo=
+rs.
 > +
-> +				spi0_pins: spi0-pins {
-> +					marvell,pins = "mpp33", "mpp34",
-> +						       "mpp35", "mpp36";
-> +					marvell,function = "spi0";
-> +				};
+> +config ARM_QCOM_CPUIDLE
+> +	bool "CPU Idle drivers for Qualcomm processors"
+> +	depends on QCOM_PM
+
+Could you stick to the ARCH dependency as the other drivers ?
+
+> +	select DT_IDLE_STATES
+> +	help
+> +	  Select this to enable cpuidle for QCOM processors
+> diff --git a/drivers/cpuidle/Makefile b/drivers/cpuidle/Makefile
+> index 4d177b9..6c222d5 100644
+> --- a/drivers/cpuidle/Makefile
+> +++ b/drivers/cpuidle/Makefile
+> @@ -17,6 +17,7 @@ obj-$(CONFIG_ARM_ZYNQ_CPUIDLE)		+=3D cpuidle-zynq.o
+>   obj-$(CONFIG_ARM_U8500_CPUIDLE)         +=3D cpuidle-ux500.o
+>   obj-$(CONFIG_ARM_AT91_CPUIDLE)          +=3D cpuidle-at91.o
+>   obj-$(CONFIG_ARM_EXYNOS_CPUIDLE)        +=3D cpuidle-exynos.o
+> +obj-$(CONFIG_ARM_QCOM_CPUIDLE)		+=3D cpuidle-qcom.o
+>
+>   ###################################################################=
+############
+>   # MIPS drivers
+> diff --git a/drivers/cpuidle/cpuidle-qcom.c b/drivers/cpuidle/cpuidle=
+-qcom.c
+> new file mode 100644
+> index 0000000..1c1dcbc
+> --- /dev/null
+> +++ b/drivers/cpuidle/cpuidle-qcom.c
+> @@ -0,0 +1,72 @@
+> +/*
+> + * Copyright (c) 2014, Linaro Limited.
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify
+> + * it under the terms of the GNU General Public License version 2 an=
+d
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + */
 > +
->  				sdio_pins1: sdio-pins1 {
->  					marvell,pins = "mpp9",  "mpp11", "mpp12",
->  							"mpp13", "mpp14", "mpp15";
-> -- 
-> 2.1.1
-> 
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +#include <linux/cpuidle.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include <soc/qcom/pm.h>
+> +#include "dt_idle_states.h"
+> +
+> +static struct qcom_cpu_pm_ops *lpm_ops;
+> +
+> +static int qcom_cpu_stby(struct cpuidle_device *dev,
+> +				struct cpuidle_driver *drv, int index)
+> +{
+> +	lpm_ops->standby(NULL);
+
+No check ?
+
+> +	return index;
+> +}
+> +
+> +static int qcom_cpu_spc(struct cpuidle_device *dev,
+> +				struct cpuidle_driver *drv, int index)
+> +{
+> +	lpm_ops->spc(NULL);
+
+No check ?
+
+> +	return index;
+> +}
+> +
+> +static struct cpuidle_driver qcom_cpuidle_driver =3D {
+> +	.name	=3D "qcom_cpuidle",
+> +};
+> +
+> +static const struct of_device_id qcom_idle_state_match[] =3D {
+> +	{ .compatible =3D "qcom,idle-state-stby", .data =3D qcom_cpu_stby},
+> +	{ .compatible =3D "qcom,idle-state-spc", .data =3D qcom_cpu_spc },
+> +	{ },
+> +};
+> +
+> +static int qcom_cpuidle_probe(struct platform_device *pdev)
+> +{
+> +	struct cpuidle_driver *drv =3D &qcom_cpuidle_driver;
+> +	int ret;
+> +
+> +	lpm_ops =3D pdev->dev.platform_data;
+> +
+> +	/* Probe for other states, including standby */
+> +	ret =3D dt_init_idle_driver(drv, qcom_idle_state_match, 0);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return cpuidle_register(drv, NULL);
+> +}
+> +
+> +static struct platform_driver qcom_cpuidle_plat_driver =3D {
+> +	.probe	=3D qcom_cpuidle_probe,
+> +	.driver =3D {
+> +		.name =3D "qcom_cpuidle",
+> +	},
+> +};
+> +
+> +module_platform_driver(qcom_cpuidle_plat_driver);
+>
+
+
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
