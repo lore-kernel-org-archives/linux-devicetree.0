@@ -1,69 +1,67 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 0/4] ARM: dts: sunxi: Add simplefb nodes
-Date: Sun, 16 Nov 2014 11:04:12 +0100
-Message-ID: <20141116100412.GF6414@lukather>
-References: <1415979277-20861-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: =?windows-1252?Q?Andreas_F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [RFC] adp1653: Add device tree bindings for LED controller
+Date: Sun, 16 Nov 2014 11:09:51 +0100
+Message-ID: <546877EF.8010906@suse.de>
+References: <20141116075928.GA9763@amd>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="RpqchZ26BWispMcB"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBUPNUGRQKGQE25VMBOA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1415979277-20861-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141116075928.GA9763@amd>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org, sre-GFxCN5SEZAc@public.gmane.org, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, freemangordon-uiMcrn6V0Vs@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Pavel,
 
---RpqchZ26BWispMcB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Am 16.11.2014 um 08:59 schrieb Pavel Machek:
+> For device tree people: Yes, I know I'll have to create file in
+> documentation, but does the binding below look acceptable?
+[...]
+> diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/oma=
+p3-n900.dts
+> index 739fcf2..ed0bfc1 100644
+> --- a/arch/arm/boot/dts/omap3-n900.dts
+> +++ b/arch/arm/boot/dts/omap3-n900.dts
+> @@ -553,6 +561,18 @@
+> =20
+>  		ti,usb-charger-detection =3D <&isp1704>;
+>  	};
+> +
+> +	adp1653: adp1653@30 {
 
-On Fri, Nov 14, 2014 at 04:34:33PM +0100, Hans de Goede wrote:
-> Hi Maxime,
->=20
-> Here is v2 of these patches, now with the node names suffixed with -hdmi.
->=20
-> Regards,
->=20
-> Hans
+This should probably be led-controller@30 (a generic description not
+specific to the model). The label name is fine.
 
-Merged, thanks!
-Maxime
+> +		compatible =3D "ad,adp1653";
+> +		reg =3D <0x30>;
+> +
+> +		max-flash-timeout-usec =3D <500000>;
+> +		max-flash-intensity-uA    =3D <320000>;
+> +		max-torch-intensity-uA     =3D <50000>;
+> +		max-indicator-intensity-uA =3D <17500>;
+> +
+> +		gpios =3D <&gpio3 24 GPIO_ACTIVE_HIGH>; /* Want 88 */
+
+At least to me, the meaning of "Want 88" is not clear - drop or clarify=
+?
+
+> +	};
+>  };
+> =20
+>  &i2c3 {
+[snip]
+
+Regards,
+Andreas
 
 --=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---RpqchZ26BWispMcB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUaHacAAoJEBx+YmzsjxAg4BgQALDCESR0UqFtNR4DXuUkMAZC
-NO7tEiyM6ldC7Y4bDVF0jvg/8QYsO3JbybO5iSIkuXOtwhZfNniwUwle3yvHxtuv
-YmrR+n4YitcMr92aTO4f7eJ9y78vSFosebN2j+nxtH/nGfOcGIfPLBDAO7rtiuym
-XQrWvl4EPdYuTytqkyJmBP0w2phLblr3AISHh7ngN/pzEjVtevvbDLgoLf7I3sW7
-WnPSVnjNYDBNFH2lWGoGwOX407FVmbUJENBxQl9buOh9fGw/DfGxrIsjrHY2T2d3
-i6nct/9TKJj99x68N6XmSsOeg/iYJcWu0r2MZKeVSbzwVSvhNckMIdFJOfG2mbjc
-vk05HYuZjaP59blYE7R0z3iDllgoDoGHxF6kawcEd8wH2zvKp1VNhokEsX0jT9n7
-asZEERbZbIeNYW96QKL2amX1TzBsBcnrHcDgY+euM06scCAQUN5cFUqSYXE2WWe8
-l7ZvA6J9CRM/gr4FR73HqLcFCFElajznUEONIyx07I0r7jeuu37EXnXAwQ7zBWp+
-KC75o8DAsmoDv1ZepE+4KYaPDID3rblSZr6DoULQum75BN5YMGDZfl8PHLvMT3Sj
-Pk0XcIcAc+qyGeh1UR/voKqjgkkFBKkavtWZjYq4acfd3g8l7NakkEHVCkE9Ul15
-fmF8WmbyhZ0xZ52md8GS
-=G8es
------END PGP SIGNATURE-----
-
---RpqchZ26BWispMcB--
+SUSE LINUX GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 21284 AG N=FCrn=
+berg
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
