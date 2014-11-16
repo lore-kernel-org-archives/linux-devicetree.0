@@ -1,100 +1,99 @@
-From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V2 11/22] MIPS: BMIPS: Mask off timer IRQs when hot-unplugging a CPU
-Date: Sat, 15 Nov 2014 16:17:35 -0800
-Message-ID: <1416097066-20452-12-git-send-email-cernekee@gmail.com>
-References: <1416097066-20452-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1416097066-20452-1-git-send-email-cernekee@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: ralf@linux-mips.org
-Cc: f.fainelli@gmail.com, jfraser@broadcom.com, dtor@chromium.org, tglx@linutronix.de, jason@lakedaemon.net, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCHv1 1/3] arm: mvebu: add uartX labels for Armada SoC serial
+ nodes
+Date: Sun, 16 Nov 2014 02:09:33 +0100
+Message-ID: <20141116010933.GB15870@lunn.ch>
+References: <cover.1416095841.git.arno@natisbad.org>
+ <ee5646b8e097b266f51a68f489644256d7c3df33.1416095841.git.arno@natisbad.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <ee5646b8e097b266f51a68f489644256d7c3df33.1416095841.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jon Fraser <jfraser@broadcom.com>
+On Sun, Nov 16, 2014 at 01:04:12AM +0100, Arnaud Ebalard wrote:
+> 
+> This patch adds uartX labels for Armada SoC serial nodes. This is
+> a preliminary work to be able to easily reference the serial lines
+> in Device Tree files. One expected future use is when providing
+> stdout-path property for barebox.
+> 
+> Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
 
-CPU interrupts need to be disabled on a cpu being taken down.
-When a cpu is hot-plugged out of the system the following sequence occurs.
+Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 
-On the CPU where the hotplug sequence was initiated:
-    cpu_down
-        _cpu_down {
-            __cpu_notify(CPU_DOWN_PREPARE
-            __stop_machine(take_cpu_down
-                wait for cpu to run disable code.
-            __cpu_die
-        }
+Not a must, but it would be nice to make use of these in
+armada-xp-lenovo-ix4-300d.dts, which currently has:
 
-On the CPU  being disabled:
-    take_cpu_down
-        __cpu_disable {
-            mp_ops->cpu_disable
-                bmips_cpu_disable
-                    clear_c0_status(IE_IRQ5) (added)
-            cpu_notify(CPU_DYING...
-        }
+      	     stdout-path = "/soc/internal-regs/serial@12000";
 
-Before the cpu_notifier is called with CPU_DYING, all interrupts on the
-dying cpu must be disabled.  This guarantees that before tick_notify is
-called with the CPU_DYING event and sets the clock device pointer to
-NULL, there can not be any more clock interrupts.
+	  Andrew
 
-When this wasn't done, an unfortunately-timed timer interrupt sometimes
-caused hangs immediately prior to system suspend:
-
-    Debug PM is not enabled. To enable partial suspend, rebuild kernel with CONFIG_PM_DEBUG
-    Pass 1 out of 1,PM: Syncing filesystems ... mode=none, tp1=done.
-    1, flags=5, cycle_tp=, sleep=
-    Freezing user space processes ... (elapsed 0.01 seconds) done.
-    Freezing remaining freezable tasks ... (elapsed 0.01 seconds) done.
-    PM: suspend of devices complete after 54.199 msecs
-    PM: late suspend of devices complete after 0.172 msecs
-    Disabling non-boot CPUs ...
-    SMP: CPU1 is offline
-    INFO: rcu_sched detected stalls on CPUs/tasks: { 3} (detected by 0, t=62537 jiffies)
-    Call Trace:
-    [<804baa78>] dump_stack+0x8/0x34
-    [<8008a2d8>] __rcu_pending+0x4b8/0x55c
-    [<8008adf4>] rcu_check_callbacks+0x78/0x180
-    [<80037830>] update_process_times+0x40/0x6c
-    [<80072fe4>] tick_sched_timer+0x74/0xe4
-    [<80050180>] __run_hrtimer.clone.30+0x64/0x140
-    [<80051150>] hrtimer_interrupt+0x19c/0x4bc
-    [<8000cdb8>] c0_compare_interrupt+0x50/0x88
-    [<80081b18>] handle_irq_event_percpu+0x5c/0x2f4
-    [<80086490>] handle_percpu_irq+0x8c/0xc0
-    [<800811b4>] generic_handle_irq+0x34/0x54
-    [<800067dc>] do_IRQ+0x18/0x2c
-    [<8000375c>] plat_irq_dispatch+0xd0/0x128
-    [<80004a04>] ret_from_irq+0x0/0x4
-    [<80004c40>] r4k_wait+0x20/0x40
-    [<80006b6c>] cpu_idle+0x98/0xf0
-    [<805d3988>] start_kernel+0x424/0x440
-
-Signed-off-by: Jon Fraser <jfraser@broadcom.com>
-Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
----
- arch/mips/kernel/smp-bmips.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/mips/kernel/smp-bmips.c b/arch/mips/kernel/smp-bmips.c
-index 887c3ea..f7b1bee 100644
---- a/arch/mips/kernel/smp-bmips.c
-+++ b/arch/mips/kernel/smp-bmips.c
-@@ -375,6 +375,7 @@ static int bmips_cpu_disable(void)
- 
- 	set_cpu_online(cpu, false);
- 	cpu_clear(cpu, cpu_callin_map);
-+	clear_c0_status(IE_IRQ5);
- 
- 	local_flush_tlb_all();
- 	local_flush_icache_range(0, ~0);
--- 
-2.1.1
+> ---
+>  arch/arm/boot/dts/armada-370-xp.dtsi | 5 +++--
+>  arch/arm/boot/dts/armada-xp.dtsi     | 5 +++--
+>  2 files changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
+> index 83286ec9702c..2be9723bcdf3 100644
+> --- a/arch/arm/boot/dts/armada-370-xp.dtsi
+> +++ b/arch/arm/boot/dts/armada-370-xp.dtsi
+> @@ -151,7 +151,7 @@
+>  				status = "disabled";
+>  			};
+>  
+> -			serial@12000 {
+> +			uart0: serial@12000 {
+>  				compatible = "snps,dw-apb-uart";
+>  				reg = <0x12000 0x100>;
+>  				reg-shift = <2>;
+> @@ -160,7 +160,8 @@
+>  				clocks = <&coreclk 0>;
+>  				status = "disabled";
+>  			};
+> -			serial@12100 {
+> +
+> +			uart1: serial@12100 {
+>  				compatible = "snps,dw-apb-uart";
+>  				reg = <0x12100 0x100>;
+>  				reg-shift = <2>;
+> diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
+> index bff9f6c18db1..a68f5b837536 100644
+> --- a/arch/arm/boot/dts/armada-xp.dtsi
+> +++ b/arch/arm/boot/dts/armada-xp.dtsi
+> @@ -52,7 +52,7 @@
+>  				reg = <0x11100 0x100>;
+>  			};
+>  
+> -			serial@12200 {
+> +			uart2: serial@12200 {
+>  				compatible = "snps,dw-apb-uart";
+>  				reg = <0x12200 0x100>;
+>  				reg-shift = <2>;
+> @@ -61,7 +61,8 @@
+>  				clocks = <&coreclk 0>;
+>  				status = "disabled";
+>  			};
+> -			serial@12300 {
+> +
+> +			uart3: serial@12300 {
+>  				compatible = "snps,dw-apb-uart";
+>  				reg = <0x12300 0x100>;
+>  				reg-shift = <2>;
+> -- 
+> 2.1.1
+> 
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
