@@ -1,7 +1,8 @@
 From: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Subject: [PATCHv2 1/8] of: add "micron" vendor prefix for Micron
-Date: Sun, 16 Nov 2014 18:36:57 +0100
-Message-ID: <1ec61e2819e349ee8e5e5892997315951024d6c4.1416158990.git.arno@natisbad.org>
+Subject: [PATCHv2 3/8] arm: mvebu: add uartX labels for Armada SoC serial
+ nodes
+Date: Sun, 16 Nov 2014 18:37:16 +0100
+Message-ID: <833968f4add3449ec9cd7909f558cc6debed521b.1416158990.git.arno@natisbad.org>
 References: <cover.1416158990.git.arno@natisbad.org>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -13,29 +14,64 @@ Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kern
 List-Id: devicetree@vger.kernel.org
 
 
-Micron vendor prefix is not listed yet in vendor-prefixes.txt file. Even
-if the expected vendor prefix should be the NASDAQ symbol ("mu" in that
-case), it seems reasonable to use "micron" here because it is what is
-already found at various locations inside the kernel (see files under
-arch/arm/boot/dts/ for instance).
+This patch adds uartX labels for Armada SoC serial nodes. This is
+a preliminary work to be able to easily reference the serial lines
+in Device Tree files. One expected use is when providing stdout-path
+property for barebox.
 
+Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/armada-370-xp.dtsi | 5 +++--
+ arch/arm/boot/dts/armada-xp.dtsi     | 5 +++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 723999d73744..55a3a7f19063 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -96,6 +96,7 @@ mitsubishi	Mitsubishi Electric Corporation
- mosaixtech	Mosaix Technologies, Inc.
- moxa	Moxa
- mpl	MPL AG
-+micron	Micron Technology, Inc.
- mundoreader	Mundo Reader S.L.
- murata	Murata Manufacturing Co., Ltd.
- mxicy	Macronix International Co., Ltd.
+diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
+index 83286ec9702c..2be9723bcdf3 100644
+--- a/arch/arm/boot/dts/armada-370-xp.dtsi
++++ b/arch/arm/boot/dts/armada-370-xp.dtsi
+@@ -151,7 +151,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			serial@12000 {
++			uart0: serial@12000 {
+ 				compatible = "snps,dw-apb-uart";
+ 				reg = <0x12000 0x100>;
+ 				reg-shift = <2>;
+@@ -160,7 +160,8 @@
+ 				clocks = <&coreclk 0>;
+ 				status = "disabled";
+ 			};
+-			serial@12100 {
++
++			uart1: serial@12100 {
+ 				compatible = "snps,dw-apb-uart";
+ 				reg = <0x12100 0x100>;
+ 				reg-shift = <2>;
+diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
+index bff9f6c18db1..a68f5b837536 100644
+--- a/arch/arm/boot/dts/armada-xp.dtsi
++++ b/arch/arm/boot/dts/armada-xp.dtsi
+@@ -52,7 +52,7 @@
+ 				reg = <0x11100 0x100>;
+ 			};
+ 
+-			serial@12200 {
++			uart2: serial@12200 {
+ 				compatible = "snps,dw-apb-uart";
+ 				reg = <0x12200 0x100>;
+ 				reg-shift = <2>;
+@@ -61,7 +61,8 @@
+ 				clocks = <&coreclk 0>;
+ 				status = "disabled";
+ 			};
+-			serial@12300 {
++
++			uart3: serial@12300 {
+ 				compatible = "snps,dw-apb-uart";
+ 				reg = <0x12300 0x100>;
+ 				reg-shift = <2>;
 -- 
 2.1.1
 
