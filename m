@@ -1,82 +1,46 @@
-From: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v4 6/6] ARM: zynq: DT: Add OCM controller node
-Date: Sun, 16 Nov 2014 11:51:54 +0100
-Message-ID: <546881CA.2020801@suse.de>
-References: <cover.1415962281.git.michal.simek@xilinx.com> <0a88d52b5e71fb220ca619180ec9ca746edad2b1.1415962281.git.michal.simek@xilinx.com>
+From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
+Subject: Re: [PATCHv1 1/3] arm: mvebu: add uartX labels for Armada SoC serial nodes
+Date: Sun, 16 Nov 2014 13:34:10 +0100
+Message-ID: <87h9xzb9z1.fsf@natisbad.org>
+References: <cover.1416095841.git.arno@natisbad.org>
+	<ee5646b8e097b266f51a68f489644256d7c3df33.1416095841.git.arno@natisbad.org>
+	<20141116010933.GB15870@lunn.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="QVnTDSNGMLh4LkFHhFJSbbIDXqvpHP3ln"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0a88d52b5e71fb220ca619180ec9ca746edad2b1.1415962281.git.michal.simek@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: linux-arm-kernel@lists.infradead.org, Soren Brinkmann <soren.brinkmann@xilinx.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Josh Cartwright <josh.cartwright@ni.com>, monstr@monstr.eu, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141116010933.GB15870-g2DYL2Zd6BY@public.gmane.org> (Andrew Lunn's message of "Sun,
+	16 Nov 2014 02:09:33 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---QVnTDSNGMLh4LkFHhFJSbbIDXqvpHP3ln
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: quoted-printable
+Hi Andrew,
 
-Hi Michal,
+Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> writes:
 
-Am 14.11.2014 um 11:52 schrieb Michal Simek:
-> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-=
-7000.dtsi
-> index ce2ef5bec4f2..e217fb1c1169 100644
-> --- a/arch/arm/boot/dts/zynq-7000.dtsi
-> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
-> @@ -150,6 +150,13 @@
->  			reg =3D <0xf8006000 0x1000>;
->  		};
->=20
-> +		ocmc: memory-controller@f800c000 {
-> +			compatible =3D "xlnx,zynq-ocmc-1.0";
-> +			interrupt-parent =3D <&intc>;
-> +			interrupts =3D <0 3 4>;
-> +			reg =3D <0xf800c000 0x1000>;
-> +		};
-> +
->  		uart0: serial@e0000000 {
->  			compatible =3D "xlnx,xuartps", "cdns,uart-r1p8";
->  			status =3D "disabled";
+> On Sun, Nov 16, 2014 at 01:04:12AM +0100, Arnaud Ebalard wrote:
+>> 
+>> This patch adds uartX labels for Armada SoC serial nodes. This is
+>> a preliminary work to be able to easily reference the serial lines
+>> in Device Tree files. One expected future use is when providing
+>> stdout-path property for barebox.
+>> 
+>> Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+>
+> Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+>
+> Not a must, but it would be nice to make use of these in
+> armada-xp-lenovo-ix4-300d.dts, which currently has:
+>
+>       	     stdout-path = "/soc/internal-regs/serial@12000";
 
-Not directly related to this patch: As one can see here, the node order
-is quite a mess... According to Olof, nodes should be ordered by unit
-address, whereas here some but not all seem ordered by node name. Would
-you welcome a cleanup patch, or can you fix that yourself?
+Will add a patch to the series to do that.
 
-Regards,
-Andreas
+Thanks.
 
---=20
-SUSE LINUX GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 21284 AG N=FCrnbe=
-rg
-
-
---QVnTDSNGMLh4LkFHhFJSbbIDXqvpHP3ln
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUaIHQAAoJEPou0S0+fgE/+o4P/17swao7VtdOUDwnEB4XUHML
-fOwKfuz0vwOyt8caopXBu0vRm2PDuwGKHXpV43Gi98prRa4KquRps6AIGb7reCbC
-BEMMLzv4cR8CpMQegIYq5201WcYj8JJPJ4m0iopZC5LwjiEAVJZ3sUTIrodQh3Ft
-1HhWHJMgX5PwnshnsISOw70HEkaBrmfPnSZlj9Zw/Qfa4Nw+yGX5bhEJe+ILpcbH
-id01BN04NbFn4p1XEn5hYv5R8xkh9jh71H/qvBeqSoI+MRQt3MJLWF45xiAD6/JR
-zGcdHF4R8MnbMy0EOV8k1GCbnc7cgcRwVZeaX3EcMtu3pQFM3p45zJhQ5Q0c1NSf
-KmNXYIBQ3BXesU93yQoBVs6HqVlf1f1N/vSLJCk5aIkNziyCW2CysTa9k2WOvtb4
-XCHHw2MfbtKQ9lxHOelhRkLM6TzpLFkZ0LUzTW3x3rOsmVTFUJoRPHg0p+JjYOua
-FhkFGBRWb7Ru5thrmXAnW8XalMZk0ISOrCl714nQ0N2MMAjWVejcGgFZqWNHHib9
-TpWVdcxwp2L7WcGPxygeM9xV2SbZdHYddH1bcCXyhTWbqaMcrfl0kD95xuAgxNpg
-8j0yF2Xts/Nc2uEwwgVWiSRuXCiyHspHQnk4VHWWwM4teLRteK+rgowQsoKKsVyC
-WdXdlvG2HpBcce1GyES8
-=Lovr
------END PGP SIGNATURE-----
-
---QVnTDSNGMLh4LkFHhFJSbbIDXqvpHP3ln--
+a+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
