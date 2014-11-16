@@ -1,333 +1,158 @@
-From: Daniel Kurtz <djkurtz@google.com>
-Subject: Re: [PATCH v11 0/12] dw-hdmi: convert imx hdmi to bridge/dw_hdmi
-Date: Sat, 15 Nov 2014 13:42:35 +0800
-Message-ID: <CAGS+omBuA=K3Q5JevTi6Upviud_c_OFphjuBr5KsDC_2oW5vRg@mail.gmail.com>
-References: <1415934583-16290-1-git-send-email-andy.yan@rock-chips.com>
- <1415972231-8283-1-git-send-email-andy.yan@rock-chips.com>
+From: Ian Campbell <ijc@hellion.org.uk>
+Subject: Re: [PATCH 5/6] sunxi: video: Add simplefb support
+Date: Sun, 16 Nov 2014 14:38:08 +0000
+Message-ID: <1416148688.25454.22.camel@hellion.org.uk>
+References: <1415984088-6800-1-git-send-email-hdegoede@redhat.com>
+	<1415984088-6800-6-git-send-email-hdegoede@redhat.com>
+	<1416138607.25454.13.camel@hellion.org.uk> <5468AC2E.80601@redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0047331686=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1415972231-8283-1-git-send-email-andy.yan@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, dri-devel <dri-devel@lists.freedesktop.org>, Yakir Yang <ykk@rock-chips.com>, devel@driverdev.osuosl.org, Pawel Moll <pawel.moll@arm.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, Xu Jianqun <jay.xu@rock-chips.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, rmk+kernel@arm.linux.org.uk, "mark.yao@rock-chips.com" <mark.yao@rock-chips.com>, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kumar Gala <galak>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <5468AC2E.80601@redhat.com>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>
+Cc: u-boot@lists.denx.de
 List-Id: devicetree@vger.kernel.org
 
---===============0047331686==
-Content-Type: multipart/alternative; boundary=001a11339ffa96c6c40507df376c
+devicetree@, comments on the requirement that a node have a specific
+path welcomed.
 
---001a11339ffa96c6c40507df376c
-Content-Type: text/plain; charset=UTF-8
+On Sun, 2014-11-16 at 14:52 +0100, Hans de Goede wrote:
+> Hi,
+> 
+> On 11/16/2014 12:50 PM, Ian Campbell wrote:
+> > On Fri, 2014-11-14 at 17:54 +0100, Hans de Goede wrote:
+> >> From: Luc Verhaegen <libv@skynet.be>
+> >>
+> >> Add simplefb support, note this depends on the kernel having support for
+> >> the clocks property which has recently been added to the simplefb devicetree
+> >> binding.
+> > 
+> > Link please, Linus's tree[0] doesn't seem to have it yet, I suppose it
+> > is in some maintainer tree at the moment? It's not even in linux-next
+> > yet though[1]. Maybe simple-framebuffer.txt isn't the right place to
+> > look?
+> 
+> Right now it is sitting here, which is the fbdev maintainers official tree:
+> https://git.kernel.org/cgit/linux/kernel/git/tomba/linux.git/log/?h=for-next
+> 
+> > 
+> > [0] https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+> > [1] https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+> > 
+> >> +#if defined(CONFIG_OF_BOARD_SETUP) && defined(CONFIG_VIDEO_DT_SIMPLEFB)
+> >> +void
+> >> +sunxi_simplefb_setup(void *blob)
+> >> +{
+> >> +	static GraphicDevice *graphic_device = &sunxi_display.graphic_device;
+> >> +	const char *node = "/chosen/framebuffer0-hdmi";
+> >> +	const char *format = "x8r8g8b8";
+> > 
+> > The bindings doc currently says:
+> >         
+> >         - format: The format of the framebuffer surface. Valid values are:
+> >           - r5g6b5 (16-bit pixels, d[15:11]=r, d[10:5]=g, d[4:0]=b).
+> >           - a8b8g8r8 (32-bit pixels, d[31:24]=a, d[23:16]=b, d[15:8]=g, d[7:0]=r).
+> >         
+> > Perhaps x8r8g8b8 is defined in the updated version?
+> 
+> Erm, no, I don't think anyone has actually bothered to keep the list in the
+> binding up2date with what the kernel actually supports, x8r8g8b8 has been
+> supported in the kernel before sunxi + simplefb every became a topic.
 
-On Fri, Nov 14, 2014 at 9:37 PM, Andy Yan <andy.yan@rock-chips.com> wrote:
+That's a shame, OS authors shouldn't really be expected to scrobble
+about in Linux source to figure out what a binding is.
 
->
-> We found Freescale imx6 and Rockchip rk3288 and Ingenic JZ4780
-> (Xburst/MIPS)
-> use the interface compatible Designware HDMI IP, but they also have some
-> lightly differences, such as phy pll configuration, register width(imx hdmi
-> register is one byte, but rk3288 is 4 bytes width and can only be accessed
-> by word), 4K support(imx6 doesn't support 4k, but rk3288 does), and HDMI2.0
-> support.
->
-> To reuse the imx-hdmi driver, we make this patch set:
-> (1): fix some CodingStyle warning to make checkpatch happy
-> (2): split out imx-soc code from imx-hdmi to dw_hdmi-imx.c
-> (3): move imx-hdmi to bridge/dw-hdmi, and convert it to a drm_bridge driver
-> (4): add rockchip rk3288 platform specific code dw_hdmi-rockchip.c
->
-> Changes in v11:
-> - rearrange the patch order
-> - squash patch  <split some phy configuration to platform driver>
-> - split some modification form patch <dw_hdmi: add rk3288 support>
->
-> Changes in v10:
-> - split generic dw_hdmi.c improvements from patch#11 (add rk3288 support)
-> - add more display mode support mpll configuration for rk3288
->
-> Changes in v9:
-> - move some phy configuration to platform driver
->
-> Changes in v8:
-> - correct some spelling mistake
-> - modify ddc-i2c-bus and interrupt description
-> - Add documentation for rockchip dw hdmi
->
-> Changes in v7:
-> - remove unused variables from structure dw_hdmi
-> - remove a wrong modification
-> - add copyrights for dw_hdmi-imx.c
->
-> Changes in v6:
-> - rearrange the patch order
-> - move some modification from patch#5
-> - move some modification to  patch#6
-> - refactor register access without reg_shift
->
-> Changes in v5:
-> - refactor reg-io-width
->
-> Changes in v4:
-> - fix checkpatch CHECK
-> - defer probe ddc i2c adapter
->
-> Changes in v3:
-> - split multi-register access to one indepent patch
->
-> Changes in v2:
-> - use git format -M to generate these patch
->
-> Andy Yan (11):
->   staging: imx-drm: imx-hdmi: make checkpatch happy
->   staging: imx-drm: imx-hdmi: return defer if can't get ddc i2c adapter
->   staging: imx-drm: imx-hdmi: split imx soc specific code from imx-hdmi
->   staging: imx-drm: imx-hdmi: move imx-hdmi to bridge/dw_hdmi
->   dt-bindings: add document for dw_hdmi
->   drm: bridge/dw_hdmi: add support for multi-byte register width access
->   drm: bridge/dw_hdmi: add mode_valid support
->   drm: bridge/dw_hdmi: clear i2cmphy_stat0 reg in hdmi_phy_wait_i2c_done
->   drm: bridge/dw_hdmi: add function dw_hdmi_phy_enable_spare
->   dt-bindings: Add documentation for rockchip dw hdmi
->   drm: bridge/dw_hdmi: add rockchip rk3288 support
->
+> >> +	const char *okay = "okay";
+> >> +	char name[32];
+> >> +	fdt32_t cells[2];
+> >> +	int offset, stride, ret;
+> >> +
+> >> +	if (!sunxi_display.enabled)
+> >> +		return;
+> >> +
+> >> +	offset = fdt_path_offset(blob, node);
+> > 
+> > I think you should use fdt_node_offset_by_compatible here instead of
+> > hardcoding a path.
+> 
+> Hardcoding a path is deliberate. I don't know if you've read the
+> previous u-boot code for this, but it did a lot of dt parsing to
+> find clocks and add phandles to them, the way we eventually settled
+> on when discussing this is for the dts to contain pre-populated simplefb
+> nodes which u-boot just needs to fill with the mode info and enable, this
+> way as we add support for more clocks (like the module clocks for the
+> various display pipeline blocks), we don't need to update u-boot in lock-step,
+> we just add the clocks to the simplefb node in the dts file when they get
+> added to the dts file in the first place. See the updated bindings.
 
-Patch 1 & 2 are:
+AFAICT this in no way invalidates what I suggested. There's no reason
+why the need to populate/tweak a pre-existing node should have anything
+to do with where the node is in the device-tree.
 
-Reviewed-by: Daniel Kurtz <djkurtz@chromium.org>
+My suggestion literally amounts to:
+  - offset = fdt_path_offset(blob, node);
+  + offset = fdt_node_offset_by_compatible(blob, -1, "simple-framebuffer");
 
-I think these first two are ready (or will be, after a small nit fix to #2).
+Nothing else in the code changes. You can still add the required details
+to the prepopulated node, no matter where it lives.
 
-Since they are independent of the imx/dw_hdmi split, can we get them
-accepted first, to help shrink Andy's patch set?
+I notice that v1 of these bindings was posted mid last week and were
+still being discussed (at v5) on Friday, where there was active
+discussion by DT maintainers (Grant, who hasn't yet acked it AFAICT). So
+why is this in the fb tree already?
 
-Thanks,
--djk
+It seems to me that this binding is not yet at the point where u-boot
+should be basing implementation on it. I'm sorry if this means this
+feature misses the current u-boot merge window, but there will be
+another soon. (didn't this one close on the 8th anyway?)
 
+> > common/lcd.c does it this way too, it also doesn't
+> > appear to use a node under /chosen. Perhaps this is changed in the more
+> > uptodate binding which I've not seen yet.
+> 
+> The use of /chosen is part of the updated bindings, which were discussed
+> in length on various lists, and then eventually I spend 2 days online with
+> Grant Likely in #devicetree to hash things out.
+> 
+> >> +	cells[0] = cpu_to_fdt32(gd->fb_base);
+> >> +	cells[1] = cpu_to_fdt32(CONFIG_SUNXI_FB_SIZE);
+> >> +	ret = fdt_setprop(blob, offset, "reg", cells, sizeof(cells[0]) * 2);
+> > 
+> > What arranges that #address-cells and #size-cells are both 1 at this
+> > point?
+> 
+> The pre-filled simplefb node.
 
+I think you should use fdt_address_cells and fdt_size_cells to ensure
+that it really is the case that they are as you expect. Or even better
+use them to just DTRT regardless of what the pre-filled node's parent
+says.
 
->
-> Yakir Yang (1):
->   drm: bridge/dw_hdmi: convert dw-hdmi to drm_bridge mode
->
->  .../devicetree/bindings/drm/bridge/dw_hdmi.txt     |  40 ++
->  .../devicetree/bindings/video/dw_hdmi-rockchip.txt |  43 ++
->  drivers/gpu/drm/bridge/Kconfig                     |   5 +
->  drivers/gpu/drm/bridge/Makefile                    |   1 +
->  .../imx-hdmi.c => gpu/drm/bridge/dw_hdmi.c}        | 762
-> +++++++++------------
->  .../imx-hdmi.h => gpu/drm/bridge/dw_hdmi.h}        |   8 +-
->  drivers/gpu/drm/rockchip/Kconfig                   |  10 +
->  drivers/gpu/drm/rockchip/Makefile                  |   2 +-
->  drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c        | 355 ++++++++++
->  drivers/staging/imx-drm/Kconfig                    |   1 +
->  drivers/staging/imx-drm/Makefile                   |   2 +-
->  drivers/staging/imx-drm/dw_hdmi-imx.c              | 274 ++++++++
->  include/drm/bridge/dw_hdmi.h                       |  60 ++
->  13 files changed, 1138 insertions(+), 425 deletions(-)
->  create mode 100644
-> Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt
->  create mode 100644
-> Documentation/devicetree/bindings/video/dw_hdmi-rockchip.txt
->  rename drivers/{staging/imx-drm/imx-hdmi.c => gpu/drm/bridge/dw_hdmi.c}
-> (70%)
->  rename drivers/{staging/imx-drm/imx-hdmi.h => gpu/drm/bridge/dw_hdmi.h}
-> (99%)
->  create mode 100644 drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
->  create mode 100644 drivers/staging/imx-drm/dw_hdmi-imx.c
->  create mode 100644 include/drm/bridge/dw_hdmi.h
->
-> --
-> 1.9.1
->
->
+I'm not really happy with the implication that the DT has to be the
+exact one provided in the Linux source tree, and with the level of
+coupling which is implied by this patch.
 
+I should be able to write my own DT for a device so long as it follows
+the bindings. e.g. if *BSD supports a board (they often seem to have
+their own DT files) then I should be able to boot that from u-boot too,
+so long as all three follow the bindings.
 
--- 
-Daniel Kurtz | Software Engineer | djkurtz@google.com | 650.204.0722
+If the u-boot code is going to put additional constraints on things over
+and above the bindings (e.g. requiring that node to be under a
+particular #{address/size}-cells regimen and IMHO the specific path
+comes under this too despite what recent bindings updates attempt to
+say) then that needs to be clearly documented somewhere, and even that
+would make me slightly sad given how easy it would be to just make it
+work following the bindings in the normal way.
 
---001a11339ffa96c6c40507df376c
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
-te">On Fri, Nov 14, 2014 at 9:37 PM, Andy Yan <span dir=3D"ltr">&lt;<a href=
-=3D"mailto:andy.yan@rock-chips.com" target=3D"_blank">andy.yan@rock-chips.c=
-om</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"marg=
-in:0px 0px 0px 0.8ex;border-left-width:1px;border-left-color:rgb(204,204,20=
-4);border-left-style:solid;padding-left:1ex"><span class=3D""><br>
-We found Freescale imx6 and Rockchip rk3288 and Ingenic JZ4780 (Xburst/MIPS=
-)<br>
-use the interface compatible Designware HDMI IP, but they also have some<br=
->
-lightly differences, such as phy pll configuration, register width(imx hdmi=
-<br>
-register is one byte, but rk3288 is 4 bytes width and can only be accessed<=
-br>
-by word), 4K support(imx6 doesn&#39;t support 4k, but rk3288 does), and HDM=
-I2.0<br>
-support.<br>
-<br>
-To reuse the imx-hdmi driver, we make this patch set:<br>
-(1): fix some CodingStyle warning to make checkpatch happy<br>
-(2): split out imx-soc code from imx-hdmi to dw_hdmi-imx.c<br>
-(3): move imx-hdmi to bridge/dw-hdmi, and convert it to a drm_bridge driver=
-<br>
-(4): add rockchip rk3288 platform specific code dw_hdmi-rockchip.c<br>
-<br>
-</span>Changes in v11:<br>
-<span class=3D"">- rearrange the patch order<br>
-</span>- squash patch=C2=A0 &lt;split some phy configuration to platform dr=
-iver&gt;<br>
-- split some modification form patch &lt;dw_hdmi: add rk3288 support&gt;<br=
->
-<br>
-Changes in v10:<br>
-- split generic dw_hdmi.c improvements from patch#11 (add rk3288 support)<b=
-r>
-<span class=3D"">- add more display mode support mpll configuration for rk3=
-288<br>
-<br>
-Changes in v9:<br>
-- move some phy configuration to platform driver<br>
-<br>
-Changes in v8:<br>
-- correct some spelling mistake<br>
-- modify ddc-i2c-bus and interrupt description<br>
-- Add documentation for rockchip dw hdmi<br>
-<br>
-Changes in v7:<br>
-- remove unused variables from structure dw_hdmi<br>
-- remove a wrong modification<br>
-- add copyrights for dw_hdmi-imx.c<br>
-<br>
-Changes in v6:<br>
-- rearrange the patch order<br>
-</span>- move some modification from patch#5<br>
-<span class=3D"">- move some modification to=C2=A0 patch#6<br>
-- refactor register access without reg_shift<br>
-<br>
-</span><span class=3D"">Changes in v5:<br>
-- refactor reg-io-width<br>
-<br>
-Changes in v4:<br>
-- fix checkpatch CHECK<br>
-- defer probe ddc i2c adapter<br>
-<br>
-Changes in v3:<br>
-</span>- split multi-register access to one indepent patch<br>
-<span class=3D""><br>
-Changes in v2:<br>
-- use git format -M to generate these patch<br>
-<br>
-</span>Andy Yan (11):<br>
-<span class=3D"">=C2=A0 staging: imx-drm: imx-hdmi: make checkpatch happy<b=
-r>
-=C2=A0 staging: imx-drm: imx-hdmi: return defer if can&#39;t get ddc i2c ad=
-apter<br>
-=C2=A0 staging: imx-drm: imx-hdmi: split imx soc specific code from imx-hdm=
-i<br>
-=C2=A0 staging: imx-drm: imx-hdmi: move imx-hdmi to bridge/dw_hdmi<br>
-</span><span class=3D"">=C2=A0 dt-bindings: add document for dw_hdmi<br>
-</span>=C2=A0 drm: bridge/dw_hdmi: add support for multi-byte register widt=
-h access<br>
-=C2=A0 drm: bridge/dw_hdmi: add mode_valid support<br>
-<span class=3D"">=C2=A0 drm: bridge/dw_hdmi: clear i2cmphy_stat0 reg in hdm=
-i_phy_wait_i2c_done<br>
-</span>=C2=A0 drm: bridge/dw_hdmi: add function dw_hdmi_phy_enable_spare<br=
->
-<div class=3D""><div class=3D"h5">=C2=A0 dt-bindings: Add documentation for=
- rockchip dw hdmi<br>
-=C2=A0 drm: bridge/dw_hdmi: add rockchip rk3288 support<br></div></div></bl=
-ockquote><div><br></div><div><div>Patch 1 &amp; 2 are:</div><div><br></div>=
-<div>Reviewed-by: Daniel Kurtz &lt;<a href=3D"mailto:djkurtz@chromium.org">=
-djkurtz@chromium.org</a>&gt;</div><div><br></div><div>I think these first t=
-wo are ready (or will be, after a small nit fix to #2).</div><div><br></div=
-><div>Since they are independent of the imx/dw_hdmi split, can we get them =
-accepted first, to help shrink Andy&#39;s patch set?</div><div><br></div><d=
-iv>Thanks,</div><div>-djk</div></div><div><br></div><div>=C2=A0</div><block=
-quote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left-w=
-idth:1px;border-left-color:rgb(204,204,204);border-left-style:solid;padding=
--left:1ex"><div class=3D""><div class=3D"h5">
-<br>
-Yakir Yang (1):<br>
-=C2=A0 drm: bridge/dw_hdmi: convert dw-hdmi to drm_bridge mode<br>
-<br>
-=C2=A0.../devicetree/bindings/drm/bridge/dw_hdmi.txt=C2=A0 =C2=A0 =C2=A0|=
-=C2=A0 40 ++<br>
-=C2=A0.../devicetree/bindings/video/dw_hdmi-rockchip.txt |=C2=A0 43 ++<br>
-=C2=A0drivers/gpu/drm/bridge/Kconfig=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=A05 +<br>
-=C2=A0drivers/gpu/drm/bridge/Makefile=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 =C2=A01 +<br>
-=C2=A0.../imx-hdmi.c =3D&gt; gpu/drm/bridge/dw_hdmi.c}=C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 | 762 +++++++++------------<br>
-=C2=A0.../imx-hdmi.h =3D&gt; gpu/drm/bridge/dw_hdmi.h}=C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 |=C2=A0 =C2=A08 +-<br>
-=C2=A0drivers/gpu/drm/rockchip/Kconfig=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 10 +<br>
-=C2=A0drivers/gpu/drm/rockchip/Makefile=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 =C2=A02 +-<br>
-=C2=A0drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c=C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 | 355 ++++++++++<br>
-=C2=A0drivers/staging/imx-drm/Kconfig=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 =C2=A01 +<br>
-=C2=A0drivers/staging/imx-drm/Makefile=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=A02 +-<br>
-=C2=A0drivers/staging/imx-drm/dw_hdmi-imx.c=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 | 274 ++++++++<br>
-=C2=A0include/drm/bridge/dw_hdmi.h=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 60 ++<br>
-=C2=A013 files changed, 1138 insertions(+), 425 deletions(-)<br>
-=C2=A0create mode 100644 Documentation/devicetree/bindings/drm/bridge/dw_hd=
-mi.txt<br>
-=C2=A0create mode 100644 Documentation/devicetree/bindings/video/dw_hdmi-ro=
-ckchip.txt<br>
-=C2=A0rename drivers/{staging/imx-drm/imx-hdmi.c =3D&gt; gpu/drm/bridge/dw_=
-hdmi.c} (70%)<br>
-=C2=A0rename drivers/{staging/imx-drm/imx-hdmi.h =3D&gt; gpu/drm/bridge/dw_=
-hdmi.h} (99%)<br>
-=C2=A0create mode 100644 drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c<br>
-=C2=A0create mode 100644 drivers/staging/imx-drm/dw_hdmi-imx.c<br>
-=C2=A0create mode 100644 include/drm/bridge/dw_hdmi.h<br>
-<br>
---<br>
-1.9.1<br>
-<br>
-</div></div></blockquote></div><br><br clear=3D"all"><div><br></div>-- <br>=
-<div class=3D"gmail_signature"><span style=3D"font-family:&#39;Times New Ro=
-man&#39;;font-size:medium"><div style=3D"line-height:1.5em;padding-top:10px=
-;margin-top:10px;color:rgb(85,85,85);font-family:sans-serif;font-size:small=
-"><span style=3D"border-width:2px 0px 0px;border-style:solid;border-color:r=
-gb(213,15,37);padding-top:2px;margin-top:2px">Daniel Kurtz=C2=A0|</span><sp=
-an style=3D"border-width:2px 0px 0px;border-style:solid;border-color:rgb(51=
-,105,232);padding-top:2px;margin-top:2px">=C2=A0Software Engineer=C2=A0|</s=
-pan><span style=3D"border-width:2px 0px 0px;border-style:solid;border-color=
-:rgb(0,153,57);padding-top:2px;margin-top:2px">=C2=A0<a href=3D"mailto:djku=
-rtz@google.com" target=3D"_blank">djkurtz@google.com</a>=C2=A0|</span><span=
- style=3D"border-width:2px 0px 0px;border-style:solid;border-color:rgb(238,=
-178,17);padding-top:2px;margin-top:2px">=C2=A0<span id=3D"gc-number-1" clas=
-s=3D"" title=3D"Call with Google Voice">650.204.0722</span></span></div></s=
-pan></div>
-</div></div>
-
---001a11339ffa96c6c40507df376c--
-
---===============0047331686==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
-
---===============0047331686==--
+Ian.
