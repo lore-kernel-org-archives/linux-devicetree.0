@@ -1,107 +1,45 @@
 From: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Subject: [PATCHv2 0/8] arm: mvebu: add Synology DS213j and DS414 .dts files
-Date: Sun, 16 Nov 2014 18:36:47 +0100
-Message-ID: <cover.1416158990.git.arno@natisbad.org>
+Subject: [PATCHv2 2/8] arm: mvebu: fix vendor prefix typo in
+ kirkwood-synology.dtsi
+Date: Sun, 16 Nov 2014 18:37:06 +0100
+Message-ID: <a7156a5d47c1f9adf7448e3d4999d68a3428c3d6.1416158990.git.arno@natisbad.org>
+References: <cover.1416158990.git.arno@natisbad.org>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1416158990.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
 Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-This series adds .dts files for Synology DS213j (armada 370 2-bay NAS) and
-DS414 (armada XP 4-bay NAS) devices. It is based on comments received on
-a v0 submission of DS213j .dts file [1] and Andrew's comments on a v1 (
-for both DS213j and DS414 .dts files) [2].
+As reported by Andrew, the vendor prefix for Seiko Instruments, Inc.
+S-35390A I2C RTC chip in kirkwood-synology.dtsi has a typo (ssi
+instead of sii). This patches fixes it.
 
-Following previous comments, I have also added in the set 5 additional
-patches to:
+Reported-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+---
+ arch/arm/boot/dts/kirkwood-synology.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- - add 'micron' in vendor-prefixes.txt (note: NASDAQ symbol is 'mu')
- - s/ssi/sii/ in kirkwood-synology.dtsi
- - use uart0 label in armada-xp-lenovo-ix4-300d.dts for stdout-path
- - move common UART0 and SPI0 pinctrl entries to armada-370.dtsi
- - move common Ge0/1 RGMII and SPI0 pinctrl entries to armada-xp-mv78230.dtsi
-
-Cheers,
-
-a+
-
-[1]: http://thread.gmane.org/gmane.linux.drivers.devicetree/95401
-[2]: http://thread.gmane.org/gmane.linux.drivers.devicetree/98830
-
-Changes since v1:
-
-- Added a patch to fix Seiko Instruments, Inc. prefix from "ssi" to
-  "sii" for s35390 RTC chip in kirkwood-synology.dtsi as reported by
-  Andrew
-- Fixed DS414 and DS213j .dts files which had the same issue due to
-  a blind copy-and-paste.
-- Added a patch for armada-xp-lenovo-ix4-300d.dts to use uart alias
-  for stdout-path, as suggested by Andrew.
-- removed pinctrl properties for ethernet interface wrongly referencing
-  a RGMII pin configuration: the PHY is connected using SGMII.
-- moved some DS213j pinctrl entries (spi0, uart0) in armada-370.dtsi
-- same thing for DS414 pinctrl entries (ge0/1, spi0) moved to
-  armada-xp-mv78230.dtsi
-- changed pinctrl nodes and labels to match naming convention found
-  in .dtsi: pmx_*: pmx- changed to *_pin: -pin.
-- same thing for DS414
-- added a comment in the .dts file about DS414 being susceptible at
-  boot when an USB/serial converter is connected to the UART pins.
-
-Changes since v0:
-
-- Added a comment at the beginning of DS213j and DS414j .dts file regarding
-  the need for a recent Marvell bootloader. Arnd suggested to do a specific
-  .dtb file for new and old bootloaders but I think if we follow this path
-  for DS414 and DS213j, we will probably have to do it for all Armada-based
-  synology NAS and possibly for other Armada 370/XP based devices. Opting
-  for recent bootloaders config and having a comment is easier. It is likely
-  that a user already has a recent bootloader. Otherwise, upgrade is a one
-  click process anyway. If a user thinks it is easier to have two different
-  .dts files in the kernel, she will still be able to push a patch.
-- Added a comment in the .dts file about the bootloader screwing the kernel
-  if the environment is saved.
-- Kept GPL licence for .dts file
-- Fixed bad naming of node and alias (_ vs -)
-- Added micron vendor prefix for n25q064 flash
-- Disabled SoC RTC; a Seiko S-35390A is used as main RTC
-- Added comments about the purpose of each serial port
-- Added stdout-path = &uart0; to help barebox. A specific patch is included
-  in the series to provide labels for uart serial nodes
-- Added patch for DS414 .dts file
-
-
-Arnaud Ebalard (8):
-  of: add "micron" vendor prefix for Micron
-  arm: mvebu: fix vendor prefix typo in kirkwood-synology.dtsi
-  arm: mvebu: add uartX labels for Armada SoC serial nodes
-  arm: mvebu: use recently introduced uart label for stdout-path
-  arm: mvebu: add common uart0 and spi0 pintcrl entries for Armada 370
-  arm: mvebu: add common ge0/1 and spi0 pintcrl entries for Armada XP MV78230
-  arm: mvebu: add .dts file for Synology DS213j
-  arm: mvebu: add .dts file for Synology DS414
-
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- arch/arm/boot/dts/Makefile                         |   6 +-
- arch/arm/boot/dts/armada-370-synology-ds213j.dts   | 323 ++++++++++++++++++++
- arch/arm/boot/dts/armada-370-xp.dtsi               |   5 +-
- arch/arm/boot/dts/armada-370.dtsi                  |  11 +
- arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts    |   2 +-
- arch/arm/boot/dts/armada-xp-mv78230.dtsi           |  20 ++
- arch/arm/boot/dts/armada-xp-synology-ds414.dts     | 332 +++++++++++++++++++++
- arch/arm/boot/dts/armada-xp.dtsi                   |   5 +-
- arch/arm/boot/dts/kirkwood-synology.dtsi           |   2 +-
- 10 files changed, 699 insertions(+), 8 deletions(-)
- create mode 100644 arch/arm/boot/dts/armada-370-synology-ds213j.dts
- create mode 100644 arch/arm/boot/dts/armada-xp-synology-ds414.dts
-
+diff --git a/arch/arm/boot/dts/kirkwood-synology.dtsi b/arch/arm/boot/dts/kirkwood-synology.dtsi
+index 811e0971fc58..8be5b2e4626e 100644
+--- a/arch/arm/boot/dts/kirkwood-synology.dtsi
++++ b/arch/arm/boot/dts/kirkwood-synology.dtsi
+@@ -266,7 +266,7 @@
+ 
+ 			s35390a: s35390a@30 {
+ 				status = "disabled";
+-				compatible = "ssi,s35390a";
++				compatible = "sii,s35390a";
+ 				reg = <0x30>;
+ 			};
+ 		};
 -- 
 2.1.1
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
