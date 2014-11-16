@@ -1,49 +1,44 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V2 10/22] MIPS: BMIPS: Allow BMIPS3300 to utilize SMP ebase relocation code
-Date: Sat, 15 Nov 2014 16:17:34 -0800
-Message-ID: <1416097066-20452-11-git-send-email-cernekee@gmail.com>
+Subject: [PATCH V2 13/22] MIPS: Allow MIPS_CPU_SCACHE to be used with different line sizes
+Date: Sat, 15 Nov 2014 16:17:37 -0800
+Message-ID: <1416097066-20452-14-git-send-email-cernekee@gmail.com>
 References: <1416097066-20452-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1416097066-20452-1-git-send-email-cernekee@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+Sender: linux-kernel-owner@vger.kernel.org
 To: ralf@linux-mips.org
 Cc: f.fainelli@gmail.com, jfraser@broadcom.com, dtor@chromium.org, tglx@linutronix.de, jason@lakedaemon.net, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jon Fraser <jfraser@broadcom.com>
+CONFIG_MIPS_CPU_SCACHE determines whether to build sc-mips.c.  However,
+it is currently hardwired to use an L1_SHIFT of 6 (64 bytes).  Move the
+L1_SHIFT selection into the CPU or SoC section so that other SoCs can
+select different values.
 
-BMIPS3300 processors do not have the hardware to support SMP, but with a
-small tweak, the SMP ebase relocation code allows BMIPS3300-based
-platforms to reuse the S2/S3 power management code from BMIPS4380-based
-chips.  Normally this is as simple as adding one line to prom_init():
-
-    board_ebase_setup = &bmips_ebase_setup;
-
-Signed-off-by: Jon Fraser <jfraser@broadcom.com>
 Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
 ---
- arch/mips/kernel/smp-bmips.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/mips/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/kernel/smp-bmips.c b/arch/mips/kernel/smp-bmips.c
-index 8383fa4..887c3ea 100644
---- a/arch/mips/kernel/smp-bmips.c
-+++ b/arch/mips/kernel/smp-bmips.c
-@@ -541,6 +541,7 @@ void bmips_ebase_setup(void)
- 			&bmips_smp_int_vec, 0x80);
- 		__sync();
- 		return;
-+	case CPU_BMIPS3300:
- 	case CPU_BMIPS4380:
- 		/*
- 		 * 0x8000_0000: reset/NMI (initially in kseg1)
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 92033b7..3d56928 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -326,6 +326,7 @@ config MIPS_MALTA
+ 	select I8259
+ 	select MIPS_BONITO64
+ 	select MIPS_CPU_SCACHE
++	select MIPS_L1_CACHE_SHIFT_6
+ 	select PCI_GT64XXX_PCI0
+ 	select MIPS_MSC
+ 	select SWAP_IO_SPACE
+@@ -1909,7 +1910,6 @@ config IP22_CPU_SCACHE
+ config MIPS_CPU_SCACHE
+ 	bool
+ 	select BOARD_SCACHE
+-	select MIPS_L1_CACHE_SHIFT_6
+ 
+ config R5000_CPU_SCACHE
+ 	bool
 -- 
 2.1.1
