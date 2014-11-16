@@ -1,8 +1,8 @@
 From: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Subject: [PATCHv2 4/8] arm: mvebu: use recently introduced uart label for
- stdout-path
-Date: Sun, 16 Nov 2014 18:37:25 +0100
-Message-ID: <8b2c3e42793a9276e7b8ded0623675b95a5f68c2.1416158990.git.arno@natisbad.org>
+Subject: [PATCHv2 5/8] arm: mvebu: add common uart0 and spi0 pintcrl entries
+ for Armada 370
+Date: Sun, 16 Nov 2014 18:37:33 +0100
+Message-ID: <d550094896837ac921e5d2a69fc5aae9b287a98a.1416158990.git.arno@natisbad.org>
 References: <cover.1416158990.git.arno@natisbad.org>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,30 +14,38 @@ Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kern
 List-Id: devicetree@vger.kernel.org
 
 
-Now that labels for uartX are available in Marvell Armada .dtsi files,
-this patch replaces the "/soc/internal-regs/serial@12000" found in
-armada-xp-lenovo-ix4-300d.dts file for stdout-path property by the more
-concise &uart0.
+pinctrl entries for uart0 using MPP0-1 and spi0 using MPP33-36 are
+common configurations. Instead of replicating them in each .dts file,
+put those in armada-370.dtsi file so that they can be referenced.
 
 Suggested-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
 ---
- arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/armada-370.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-index 469cf7137595..cccf54784c4c 100644
---- a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-+++ b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-@@ -22,7 +22,7 @@
+diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
+index 6b3c23b1e138..d9f5d59e463e 100644
+--- a/arch/arm/boot/dts/armada-370.dtsi
++++ b/arch/arm/boot/dts/armada-370.dtsi
+@@ -115,6 +115,17 @@
+ 				compatible = "marvell,mv88f6710-pinctrl";
+ 				reg = <0x18000 0x38>;
  
- 	chosen {
- 		bootargs = "console=ttyS0,115200 earlyprintk";
--		stdout-path = "/soc/internal-regs/serial@12000";
-+		stdout-path = &uart0;
- 	};
- 
- 	memory {
++				uart0_pins: uart0-pins {
++					marvell,pins = "mpp0", "mpp1";
++					marvell,function = "uart0";
++				};
++
++				spi0_pins: spi0-pins {
++					marvell,pins = "mpp33", "mpp34",
++						       "mpp35", "mpp36";
++					marvell,function = "spi0";
++				};
++
+ 				sdio_pins1: sdio-pins1 {
+ 					marvell,pins = "mpp9",  "mpp11", "mpp12",
+ 							"mpp13", "mpp14", "mpp15";
 -- 
 2.1.1
 
