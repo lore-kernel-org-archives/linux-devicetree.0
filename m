@@ -1,46 +1,68 @@
-From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
-Subject: Re: [PATCHv1 1/3] arm: mvebu: add uartX labels for Armada SoC serial nodes
-Date: Sun, 16 Nov 2014 13:34:10 +0100
-Message-ID: <87h9xzb9z1.fsf@natisbad.org>
-References: <cover.1416095841.git.arno@natisbad.org>
-	<ee5646b8e097b266f51a68f489644256d7c3df33.1416095841.git.arno@natisbad.org>
-	<20141116010933.GB15870@lunn.ch>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] clk: sunxi: gmac-tx-clk mux is not a
+ CLK_MUX_INDEX_BIT mux
+Date: Sun, 16 Nov 2014 13:56:57 +0100
+Message-ID: <1416142617-4094-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141116010933.GB15870-g2DYL2Zd6BY@public.gmane.org> (Andrew Lunn's message of "Sun,
-	16 Nov 2014 02:09:33 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBLN6UKRQKGQE6PQEDDA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+A CLK_MUX_INDEX_BIT mux has one bit per parent, but the sun7i-a20-gmac-clk
+has 2 bits selecting between 3 possible parents using values of 0, 1, 2,
+which makes it a regular mux which should not have CLK_MUX_INDEX_BIT set in
+its flag.
 
-Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> writes:
+However we do not support parent 1 (an external clock), so use a table to
+select parent 0 or 2, which are the 2 parents we support.
 
-> On Sun, Nov 16, 2014 at 01:04:12AM +0100, Arnaud Ebalard wrote:
->> 
->> This patch adds uartX labels for Armada SoC serial nodes. This is
->> a preliminary work to be able to easily reference the serial lines
->> in Device Tree files. One expected future use is when providing
->> stdout-path property for barebox.
->> 
->> Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
->
-> Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
->
-> Not a must, but it would be nice to make use of these in
-> armada-xp-lenovo-ix4-300d.dts, which currently has:
->
->       	     stdout-path = "/soc/internal-regs/serial@12000";
+Note this has not been causing any issues sofar, because we start with a
+parent setting of parent 0, and only ever re-parent to parent 2 (for which
+we use an index of 1 as we skip parent 1) and with CLK_MUX_INDEX_BIT set
+we write a value of 2 for index 1.
 
-Will add a patch to the series to do that.
+Tested on both a cubietruck (which uses rgmii mode) as well as a cs908
+(an a31s board which uses mii mode).
 
-Thanks.
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/clk/sunxi/clk-a20-gmac.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-a+
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/clk/sunxi/clk-a20-gmac.c b/drivers/clk/sunxi/clk-a20-gmac.c
+index 5296fd6..0dcf4f2 100644
+--- a/drivers/clk/sunxi/clk-a20-gmac.c
++++ b/drivers/clk/sunxi/clk-a20-gmac.c
+@@ -53,6 +53,11 @@ static DEFINE_SPINLOCK(gmac_lock);
+ #define SUN7I_A20_GMAC_MASK	0x3
+ #define SUN7I_A20_GMAC_PARENTS	2
+ 
++static u32 sun7i_a20_gmac_mux_table[SUN7I_A20_GMAC_PARENTS] = {
++	0x00, /* Select mii_phy_tx_clk */
++	0x02, /* Select gmac_int_tx_clk */
++};
++
+ static void __init sun7i_a20_gmac_clk_setup(struct device_node *node)
+ {
+ 	struct clk *clk;
+@@ -90,7 +95,7 @@ static void __init sun7i_a20_gmac_clk_setup(struct device_node *node)
+ 	gate->lock = &gmac_lock;
+ 	mux->reg = reg;
+ 	mux->mask = SUN7I_A20_GMAC_MASK;
+-	mux->flags = CLK_MUX_INDEX_BIT;
++	mux->table = sun7i_a20_gmac_mux_table;
+ 	mux->lock = &gmac_lock;
+ 
+ 	clk = clk_register_composite(NULL, clk_name,
+-- 
+2.1.0
