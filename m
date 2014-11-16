@@ -1,79 +1,62 @@
-From: Peter Crosthwaite <peter.crosthwaite@xilinx.com>
-Subject: Re: [PATCH v4 6/6] ARM: zynq: DT: Add OCM controller node
-Date: Mon, 17 Nov 2014 09:00:02 +1000
-Message-ID: <CAEgOgz7j3jFbf1HxtimzPDMQ3oRu8AAHhHAUtg1boYjOUV5ygA@mail.gmail.com>
-References: <cover.1415962281.git.michal.simek@xilinx.com>
-	<0a88d52b5e71fb220ca619180ec9ca746edad2b1.1415962281.git.michal.simek@xilinx.com>
-	<546881CA.2020801@suse.de>
-	<c52187589f5c4cc6b908d899c2b9f7a6@BN1BFFO11FD036.protection.gbl>
+From: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
+Subject: Re: [PATCHv1 2/3] arm: mvebu: add .dts file for Synology DS213j
+Date: Mon, 17 Nov 2014 09:23:13 +1000
+Message-ID: <546931E1.5070909@killerwolves.net>
+References: <cover.1416095841.git.arno@natisbad.org>	<1eb26f8c1946622910a7e2318c895a7082fea7e5.1416095841.git.arno@natisbad.org>	<20141116020024.GC15870@lunn.ch> <87d28nb83u.fsf@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c52187589f5c4cc6b908d899c2b9f7a6@BN1BFFO11FD036.protection.gbl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
-Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Michal Simek <michal.simek@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Josh Cartwright <josh.cartwright@ni.com>, Michal Simek <monstr@monstr.eu>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87d28nb83u.fsf-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 17, 2014 at 5:32 AM, S=C3=B6ren Brinkmann
-<soren.brinkmann@xilinx.com> wrote:
-> On Sun, 2014-11-16 at 11:51AM +0100, Andreas F=C3=A4rber wrote:
->> Hi Michal,
->>
->> Am 14.11.2014 um 11:52 schrieb Michal Simek:
->> > diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/=
-zynq-7000.dtsi
->> > index ce2ef5bec4f2..e217fb1c1169 100644
->> > --- a/arch/arm/boot/dts/zynq-7000.dtsi
->> > +++ b/arch/arm/boot/dts/zynq-7000.dtsi
->> > @@ -150,6 +150,13 @@
->> >                     reg =3D <0xf8006000 0x1000>;
->> >             };
->> >
->> > +           ocmc: memory-controller@f800c000 {
->> > +                   compatible =3D "xlnx,zynq-ocmc-1.0";
->> > +                   interrupt-parent =3D <&intc>;
->> > +                   interrupts =3D <0 3 4>;
->> > +                   reg =3D <0xf800c000 0x1000>;
->> > +           };
->> > +
->> >             uart0: serial@e0000000 {
->> >                     compatible =3D "xlnx,xuartps", "cdns,uart-r1p8=
-";
->> >                     status =3D "disabled";
->>
->> Not directly related to this patch: As one can see here, the node or=
-der
->> is quite a mess... According to Olof, nodes should be ordered by uni=
-t
->> address, whereas here some but not all seem ordered by node name. Wo=
-uld
->> you welcome a cleanup patch, or can you fix that yourself?
+On 16/11/2014 11:14 PM, Arnaud Ebalard wrote:
+>>> +	gpio-fan-100-32-35 {
+>> There is some logic to this naming, but i don't remember what it is.
+>> Did you check this is appropriate?
+> The 32-35 is for the MPP i.e. fan uses mpp32 to mpp35 (3 MPP for speed,
+> one for alarm). I don't know what the 100 part means. What I did is I
+> googled to see which fan supported kirkwood models have and noticed
+> that the DS212j uses the exact same fan, i.e. Y.S.Tech FD129225LL-N so
+> I opted for the same naming.
 >
-> I wouldn't say it's a mess, just a different property to sort the nod=
-es
-> by. For humans reading the DT, searching for nodes, alphabetical orde=
-r
-> helps finding the right node, IMHO.
+> On that aspect, you may be able to explain why the speed-map for this
+> fan goes up to 5000 RPM. This fan is supposed to operate at 1900RPM.
+> Note that it does not matter in practice.
 
-I do generally find myself asking "whats that thing at that address"
-more than I find myself asking the "wheres that piece of hardware" so
-Andreas' sorting scheme makes more sense to me. Vertically scanning a
-DT to give yourself an overview of the system level address map is
-good too. Wheras alphabetic sorting doesn't mean to much.
+On the Kirkwood Diskstations, the first number (100, 120 or 150) refers
+to the middle of the three fan speed resistors, the second number (15 or
+32) refers to the first fan control pin, and the third number (18 or 35)
+refers to the first fan alarm pin.
 
-Regards,
-Peter
+i.e. the 100-32-35 uses fan speed resistors of 33, 100 and 150 ohms,
+uses pins 32-34 for fan control, and uses pin 35 for the fan alarm.
 
-What advantage would sorting by
-> address have?
->
->         Thanks,
->         S=C3=B6ren
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kerne=
-l" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+The 5000RPM was interpolated from my measured RPM pulse rate (4200PPM)
+of the 80mm fan in my DS211j (which uses the 150-32-35 fan config) at
+maximum RPM.
+
+-- 
+Ben Peddell
+ * ICT - School Support Officer
+   - St Mary's School Bowen
+   - St Catherine's School Proserpine
+   - St John Bosco's School Collinsville
+ * Mobile: 0431 800 195
+
+*** Disclaimer ***
+This email is only for the addressees, so please don't disclose it
+to others without prior agreement.  The opinions expressed are mine,
+and not my employer's.  My employer shall not be liable.  I am not
+a lawyer.  I check my attachments for viruses, but I can't guarantee
+my email will arrive unaltered.
+
+#include "http://klightspeed.killerwolves.net/stddisclaimer.txt"
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
