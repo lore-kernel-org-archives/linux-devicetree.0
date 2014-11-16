@@ -1,99 +1,106 @@
-From: Anup Patel <anup-aa5cPYPs4nSSZfiimGR9Ow@public.gmane.org>
-Subject: Re: [PATCH v4 5/6] Documentation: dt-bindings: Add binding info for
- X-Gene QMTM UIO driver
-Date: Sun, 16 Nov 2014 09:56:07 +0530
-Message-ID: <CAAhSdy2L5fPdk97wTVy++B4LcJP_s-r-BF18hg6J9Shfg_t1XQ@mail.gmail.com>
-References: <1415864722-2800-1-git-send-email-ankit.jindal@linaro.org>
-	<1415864722-2800-6-git-send-email-ankit.jindal@linaro.org>
+From: Kukjin Kim <kgene@kernel.org>
+Subject: RE: [PATCH v7 0/7] Enable support for Samsung Exynos7 SoC
+Date: Sun, 16 Nov 2014 16:01:15 +0900
+Message-ID: <000e01d0016b$1eef44b0$5ccdce10$@kernel.org>
+References: <1415506834-8180-1-git-send-email-a.kesavan@samsung.com>
+ <CAM4voanLYH+aEhKq_P+pTde5XL4dS0ZjvXta-2U4k0CdV6vYKQ@mail.gmail.com>
+ <CAM4voa=DT80ceZf3P8g5+80hoBKQrviSCHcc1qj--RLJkFxbyQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415864722-2800-6-git-send-email-ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org List" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tushar Jagad <tushar.jagad-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAM4voa=DT80ceZf3P8g5+80hoBKQrviSCHcc1qj--RLJkFxbyQ@mail.gmail.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Abhilash Kesavan' <kesavan.abhilash@gmail.com>, 'linux-arm-kernel' <linux-arm-kernel@lists.infradead.org>, 'Olof Johansson' <olof@lixom.net>, 'Arnd Bergmann' <arnd@arndb.de>
+Cc: 'devicetree' <devicetree@vger.kernel.org>, 'linux-samsung-soc' <linux-samsung-soc@vger.kernel.org>, robh@kernel.org, 'Catalin Marinas' <catalin.marinas@arm.com>, 'Tomasz Figa' <tomasz.figa@gmail.com>, 'Lorenzo Pieralisi' <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 13, 2014 at 1:15 PM, Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> This patch adds device tree binding documentation for
-> X-Gene QMTM UIO driver.
->
-> Signed-off-by: Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Tushar Jagad <tushar.jagad-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../devicetree/bindings/uio/uio_xgene_qmtm.txt     |   51 ++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt
->
-> diff --git a/Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt b/Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt
-> new file mode 100644
-> index 0000000..ed85bc6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt
-> @@ -0,0 +1,51 @@
-> +APM X-Gene QMTM nodes
-> +
-> +The Applied Micro X-Gene SOC has on-chip QMTM (Queue manager
-> +and Traffic manager). It is a device for managing hardware queues.
-> +It also implements QoS among hardware queues hence term "traffic"
-> +manager is present in its name.
-> +
-> +Required properties:
-> +- compatible: Should be "apm,xgene-qmtm"
-> +- reg: Address and length of the register set for the device. It contains the
-> +  information of registers in the same order as described by reg-names.
-> +- reg-names: Should contain the register set names
-> +  - "csr": QMTM control and status register address space.
-> +  - "fabric": QMTM memory mapped access to queue states.
-> +- qpool-memory: Points to the phandle of the node defining memory location for
-> +        creating QMTM queues. This must point to the reserved-memory node
-> +        (as-per reserved memory bindings). It is expected that size and
-> +        location of qpool memory will be configurable via bootloader.
-> +- clocks: Reference to the clock entry.
-> +- num-queues: Number of queues under this QMTM device.
-> +- devid: QMTM identification number for the system having multiple QMTM devices.
-> +        This is used to form a unique id (a tuple of queue number and
-> +        device id) for the queues belonging to this device.
-> +
-> +Example:
-> +       qmtm1_uio_qpool: qmtm1_uio_qpool {
-> +               reg = <0x0 0x0 0x0 0x0>
-> +       };
-> +
-> +       qmtm1clk: qmtmclk@1f20c000 {
-> +               compatible = "apm,xgene-device-clock";
-> +               clock-output-names = "qmtm1clk";
-> +               status = "ok";
-> +       };
-> +
-> +       qmtm1_uio: qmtm_uio@1f200000 {
-> +               compatible = "apm,xgene-qmtm";
-> +               status = "disabled";
-> +               reg = <0x0 0x1f200000 0x0 0x10000>,
-> +                     <0x0 0x1b000000 0x0 0x400000>;
-> +               reg-names = "csr", "fabric";
-> +               qpool = <&qmtm1_uio_qpool>;
+Abhilash Kesavan wrote:
+> 
+> Hi Olof and Arnd
+> 
+Hi
 
-Small typo, this should be qpool-memory = <...>;
+> On Tue, Nov 11, 2014 at 7:59 PM, Abhilash Kesavan
+> <kesavan.abhilash@gmail.com> wrote:
+> > Hello Olof and Arnd,
+> >
+> > On Sun, Nov 9, 2014 at 9:50 AM, Abhilash Kesavan <a.kesavan@samsung.com> wrote:
+> >> These were originally part of 2 patchsets[1][2] adding support for Exynos7.
+> >>  The clock and pinctrl patches are going through the respective maintainer's
+> >> tree; hence the remaining dt related patches have been consolidated and are
+> >> being posted here as a separate series.
+> >>
+> >> This patchset has build dependencies on the following patches:
+> >> a] "[GIT PULL] Samsung clock changes for 3.19" - specifically the clock dt
+> >>    bindings header.
+> >>    http://comments.gmane.org/gmane.linux.kernel.samsung-soc/39142
+> >> b] "tty: serial: samsung: Clean-up selection of number of available UARTs"
+> >>    http://www.spinics.net/lists/linux-samsung-soc/msg37418.html
+> >> c] "dts, kbuild: Implement support for dtb vendor subdirs"(merged in linux-next)
+> >>    https://lkml.org/lkml/2014/10/21/654
+> >>
+> >> [1] arch: arm64: Enable support for Samsung Exynos7 SoC
+> >> http://www.spinics.net/lists/linux-samsung-soc/msg37047.html
+> >> [2] Add clock and DT support for a few IPs on Exynos7
+> >> http://www.spinics.net/lists/linux-samsung-soc/msg37973.html
+> >>
+> >> Changes since v6:
+> >>         - Fixed the platform ordering (exynos before thunder) in Kconfig file.
+> >>         - Fixed the ordering of reg and enable-method properties in cpu node
+> >>         as per Lorenzo Pieralisi's comment.
+> >
+> >
+> > Do you have any comments on this patchset ?
+> 
+> A gentle reminder regarding this patch set. Kindly review.
+> 
+As I commented before, looks good to me, so shall I queue this in samsung tree
+with dependencies such as clock stuff? I'm happy with either way samsung tree
+or arm-soc tree directly though.
 
-> +               clocks = <&qmtm1clk 0>;
-> +               num-queues = <0x400>;
-> +               devid = <1>;
-> +       };
-> +
-> +       /* Board-specific peripheral configurations */
-> +       &qmtm1_uio {
-> +               status = "ok";
-> +       };
-> --
-> 1.7.9.5
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Kukjin
+
+> Abhilash
+> >>
+> >> Abhilash Kesavan (2):
+> >>   arm64: dts: Add PMU DT node for exynos7 SoC
+> >>   arm64: dts: Add nodes for mmc, i2c, rtc, watchdog, adc on Exynos7
+> >>
+> >> Alim Akhtar (2):
+> >>   arm64: exynos7: Enable ARMv8 based Exynos7 (SoC) support
+> >>   arm64: Enable Exynos7 SOC in the defconfig
+> >>
+> >> Naveen Krishna Ch (2):
+> >>   arm64: dts: Add initial device tree support for EXYNOS7
+> >>   arm64: dts: Add initial pinctrl support to EXYNOS7
+> >>
+> >> Pankaj Dubey (1):
+> >>   arm64: dts: add <dt-bindings/> symlink
+> >>
+> >>  .../devicetree/bindings/arm/samsung/pmu.txt        |   1 +
+> >>  arch/arm64/Kconfig                                 |  17 +
+> >>  arch/arm64/boot/dts/Makefile                       |   1 +
+> >>  arch/arm64/boot/dts/exynos/Makefile                |   5 +
+> >>  arch/arm64/boot/dts/exynos/exynos7-espresso.dts    |  84 +++
+> >>  arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi    | 588 +++++++++++++++++++++
+> >>  arch/arm64/boot/dts/exynos/exynos7.dtsi            | 530 +++++++++++++++++++
+> >>  arch/arm64/boot/dts/include/dt-bindings            |   1 +
+> >>  arch/arm64/configs/defconfig                       |   4 +
+> >>  9 files changed, 1231 insertions(+)
+> >>  create mode 100644 arch/arm64/boot/dts/exynos/Makefile
+> >>  create mode 100644 arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+> >>  create mode 100644 arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi
+> >>  create mode 100644 arch/arm64/boot/dts/exynos/exynos7.dtsi
+> >>  create mode 120000 arch/arm64/boot/dts/include/dt-bindings
+> >>
+> >> --
+> >> 2.1.0
+> >>
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
