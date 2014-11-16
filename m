@@ -1,403 +1,64 @@
-From: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Subject: [PATCHv2 8/8] arm: mvebu: add .dts file for Synology DS414
-Date: Sun, 16 Nov 2014 18:38:03 +0100
-Message-ID: <a87ec44dbcd452d806aeab4b4482089c665288f6.1416158990.git.arno@natisbad.org>
-References: <cover.1416158990.git.arno@natisbad.org>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 5/6] sunxi: video: Add simplefb support
+Date: Sun, 16 Nov 2014 18:52:51 +0100
+Message-ID: <5468E473.7050304@redhat.com>
+References: <1415984088-6800-1-git-send-email-hdegoede@redhat.com>	
+	<1415984088-6800-6-git-send-email-hdegoede@redhat.com>	
+	<1416138607.25454.13.camel@hellion.org.uk>
+	<5468AC2E.80601@redhat.com>	
+	<1416148688.25454.22.camel@hellion.org.uk>
+	<5468BE9A.8050501@redhat.com>	
+	<1416154297.25454.24.camel@hellion.org.uk>
+	<1416158375.25454.26.camel@hellion.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1416158990.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <1416158375.25454.26.camel@hellion.org.uk>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: Ian Campbell <ijc@hellion.org.uk>
+Cc: Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, u-boot@lists.denx.de
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-Synology DS414 is a 4-bay NAS powered by a Marvell Armada XP
-(mv78230 dual-core @1.33Ghz). It is very similar on many aspects
-to previous 4-bay synology models based on Marvell kirkwood SoC.
-Here is a short summary of the device:
+On 11/16/2014 06:19 PM, Ian Campbell wrote:
+> On Sun, 2014-11-16 at 16:11 +0000, Ian Campbell wrote:
+>>
+>>> AFAIK Grant agrees with v5
+>>
+>> AFAIK Grant hasn't actually said that. If he does ack it (or if
+>> someone
+>> points me to the correct mail) then I have no further objections.
+> 
+> I finally found
+> <CACxGe6ssdeOnQnem1012h_jFK1wWOD_WwosjFgiAcgBoqyDt9A@mail.gmail.com>
+> which for some reason isn't in my devicetree@ folder nor in any of the
+> archives online I looked at earlier (I could only find it by message-id
+> now I know it), but it was in my sunxi folder.
+> 
+> So with Grant and Rob having accepted them you can consider my concerns
+> with the bindings alleviated.
 
- - 1GB RAM
- - Boot on SPI flash (64Mbit Micron N25Q064)
- - 2 GbE interfaces (Armada MAC connected to two Marvell 88E1512
-   PHY via RGMII)
- - 1 front USB 2.0 ports (directly handled by the Armada 370)
- - 2 rear USB 3.0 ports (handled by an EtronTech EJ168A XHCI
-   controller on the PCIe bus)
- - 4 internal SATA ports handled by a Marvell 88SX7042 SATA-II
-   controller on the PCIe bus)
- - Seiko S-35390A I2C RTC chip
- - UART0 providing serial console
- - UART1 used for poweroff (connected to a Microchip PIC16F883)
+Thanks! I was about to reply to your earlier mail with lets wait for
+Grant to get online, and see what he has to say, but this works too.
 
-Additional note: the front LEDs the and the two fans are not directly
-connected to the SoC and under its control. The former are presumably
-driven by the SATA controller, the latter by the PIC.
+And thanks for explaining the address and size cells thing better, I
+did know that for address and size #cells determines u32 vs u64, I'm
+used to gpio-s / clock-s where extra cells are an extra parameter,
+hence my confusion.
 
-Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
----
- arch/arm/boot/dts/Makefile                     |   3 +-
- arch/arm/boot/dts/armada-xp-synology-ds414.dts | 332 +++++++++++++++++++++++++
- 2 files changed, 334 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/armada-xp-synology-ds414.dts
+I'll do a v3 of the simplefb patch which takes the address and size
+#cells into account.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 95387b59ebb2..c181ee8055ac 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -509,7 +509,8 @@ dtb-$(CONFIG_MACH_ARMADA_XP) += \
- 	armada-xp-lenovo-ix4-300d.dtb \
- 	armada-xp-matrix.dtb \
- 	armada-xp-netgear-rn2120.dtb \
--	armada-xp-openblocks-ax3-4.dtb
-+	armada-xp-openblocks-ax3-4.dtb \
-+	armada-xp-synology-ds414.dtb
- dtb-$(CONFIG_MACH_DOVE) += dove-cm-a510.dtb \
- 	dove-cubox.dtb \
- 	dove-cubox-es.dtb \
-diff --git a/arch/arm/boot/dts/armada-xp-synology-ds414.dts b/arch/arm/boot/dts/armada-xp-synology-ds414.dts
-new file mode 100644
-index 000000000000..2f781d839d69
---- /dev/null
-+++ b/arch/arm/boot/dts/armada-xp-synology-ds414.dts
-@@ -0,0 +1,332 @@
-+/*
-+ * Device Tree file for Synology DS414
-+ *
-+ * Copyright (C) 2014, Arnaud EBALARD <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version
-+ * 2 of the License, or (at your option) any later version.
-+ *
-+ * Note: this Device Tree assumes that the bootloader has remapped the
-+ * internal registers to 0xf1000000 (instead of the old 0xd0000000).
-+ * The 0xf1000000 is the default used by the recent, DT-capable, U-Boot
-+ * bootloaders provided by Marvell. It is used in recent versions of
-+ * DSM software provided by Synology. Nonetheless, some earlier boards
-+ * were delivered with an older version of u-boot that left internal
-+ * registers mapped at 0xd0000000. If you have such a device you will
-+ * not be able to directly boot a kernel based on this Device Tree. In
-+ * that case, the preferred solution is to update your bootloader (e.g.
-+ * by upgrading to latest version of DSM, or building a new one and
-+ * installing it from u-boot prompt) or adjust the Devive Tree
-+ * (s/0xf1000000/0xd0000000/ in 'ranges' below).
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include "armada-xp-mv78230.dtsi"
-+
-+/ {
-+	model = "Synology DS414";
-+	compatible = "synology,ds414", "marvell,armadaxp-mv78230",
-+		     "marvell,armadaxp", "marvell,armada-370-xp";
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200 earlyprintk";
-+		stdout-path = &uart0;
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0 0x00000000 0 0x40000000>; /* 1GB */
-+	};
-+
-+	soc {
-+		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000
-+			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000>;
-+
-+		pcie-controller {
-+			status = "okay";
-+
-+			/*
-+			 * Connected to Marvell 88SX7042 SATA-II controller
-+			 * handling the four disks.
-+			 */
-+			pcie@1,0 {
-+				/* Port 0, Lane 0 */
-+				status = "okay";
-+			};
-+
-+			/*
-+			 * Connected to EtronTech EJ168A XHCI controller
-+			 * providing the two rear USB 3.0 ports.
-+			 */
-+			pcie@5,0 {
-+				/* Port 1, Lane 0 */
-+				status = "okay";
-+			};
-+		};
-+
-+		internal-regs {
-+
-+			pinctrl {
-+				sata1_pwr_pin: sata1-pwr-pin {
-+					marvell,pins = "mpp42";
-+					marvell,function = "gpio";
-+				};
-+
-+				sata2_pwr_pin: sata2-pwr-pin {
-+					marvell,pins = "mpp44";
-+					marvell,function = "gpio";
-+				};
-+
-+				sata3_pwr_pin: sata3-pwr-pin {
-+					marvell,pins = "mpp45";
-+					marvell,function = "gpio";
-+				};
-+
-+				sata4_pwr_pin: sata4-pwr-pin {
-+					marvell,pins = "mpp46";
-+					marvell,function = "gpio";
-+				};
-+
-+				sata1_pres_pin: sata1-pres-pin {
-+					marvell,pins = "mpp34";
-+					marvell,function = "gpio";
-+				};
-+
-+				sata2_pres_pin: sata2-pres-pin {
-+					marvell,pins = "mpp35";
-+					marvell,function = "gpio";
-+				};
-+
-+				sata3_pres_pin: sata3-pres-pin {
-+					marvell,pins = "mpp40";
-+					marvell,function = "gpio";
-+				};
-+
-+				sata4_pres_pin: sata4-pres-pin {
-+					marvell,pins = "mpp41";
-+					marvell,function = "gpio";
-+				};
-+
-+				syno_id_bit0_pin: syno-id-bit0-pin {
-+					marvell,pins = "mpp26";
-+					marvell,function = "gpio";
-+				};
-+
-+				pmx_syno_id_bit1: syno-id-bit1-pin {
-+					marvell,pins = "mpp28";
-+					marvell,function = "gpio";
-+				};
-+
-+				pmx_syno_id_bit2: syno-id-bit2-pin {
-+					marvell,pins = "mpp29";
-+					marvell,function = "gpio";
-+				};
-+
-+				pmx_fan1_alarm: fan1-alarm-pin {
-+					marvell,pins = "mpp33";
-+					marvell,function = "gpio";
-+				};
-+
-+				fan2_alarm_pin: fan2-alarm-pin {
-+					marvell,pins = "mpp32";
-+					marvell,function = "gpio";
-+				};
-+			};
-+
-+			mdio {
-+				phy0: ethernet-phy@0 { /* Marvell 88E1512 */
-+					reg = <0>;
-+				};
-+
-+				phy1: ethernet-phy@1 { /* Marvell 88E1512 */
-+					reg = <1>;
-+				};
-+			};
-+
-+			ethernet@70000 {
-+				status = "okay";
-+				pinctrl-0 = <&ge0_rgmii_pins>;
-+				pinctrl-names = "default";
-+				phy = <&phy1>;
-+				phy-mode = "rgmii-id";
-+			};
-+
-+			ethernet@74000 {
-+				pinctrl-0 = <&ge1_rgmii_pins>;
-+				pinctrl-names = "default";
-+				status = "okay";
-+				phy = <&phy0>;
-+				phy-mode = "rgmii-id";
-+			};
-+
-+			spi0: spi@10600 {
-+				status = "okay";
-+				pinctrl-0 = <&spi0_pins>;
-+				pinctrl-names = "default";
-+
-+				spi-flash@0 {
-+					#address-cells = <1>;
-+					#size-cells = <1>;
-+					compatible = "micron,n25q064";
-+					reg = <0>; /* Chip select 0 */
-+					spi-max-frequency = <20000000>;
-+
-+					/*
-+					 * Warning!
-+					 *
-+					 * Synology u-boot uses its compiled-in environment
-+					 * and it seems Synology did not care to change u-boot
-+					 * default configuration in order to allow saving a
-+					 * modified environment at a sensible location. So,
-+					 * if you do a 'saveenv' under u-boot, your modified
-+					 * environment will be saved at 1MB after the start
-+					 * of the flash, i.e. in the middle of the uImage.
-+					 * For that reason, it is strongly advised not to
-+					 * change the default environment, unless you know
-+					 * what you are doing.
-+					 */
-+					partition@00000000 { /* u-boot */
-+						label = "RedBoot";
-+						reg = <0x00000000 0x000d0000>; /* 832KB */
-+					};
-+
-+					partition@000c0000 { /* uImage */
-+						label = "zImage";
-+						reg = <0x000d0000 0x002d0000>; /* 2880KB */
-+					};
-+
-+					partition@003a0000 { /* uInitramfs */
-+						label = "rd.gz";
-+						reg = <0x003a0000 0x00430000>; /* 4250KB */
-+					};
-+
-+					partition@007d0000 { /* MAC address and serial number */
-+						label = "vendor";
-+						reg = <0x007d0000 0x00010000>; /* 64KB */
-+					};
-+
-+					partition@007e0000 {
-+						label = "RedBoot config";
-+						reg = <0x007e0000 0x00010000>; /* 64KB */
-+					};
-+
-+					partition@007f0000 {
-+						label = "FIS directory";
-+						reg = <0x007f0000 0x00010000>; /* 64KB */
-+					};
-+				};
-+			};
-+
-+			/* Front USB 2.0 port */
-+			usb@50000 {
-+				status = "okay";
-+			};
-+
-+			i2c@11000 {
-+				clock-frequency = <400000>;
-+				status = "okay";
-+
-+				s35390a: s35390a@30 {
-+					 compatible = "sii,s35390a";
-+					 reg = <0x30>;
-+				};
-+			};
-+
-+			/* RTC is provided by Seiko S-35390A above */
-+			rtc@10300 {
-+				status = "disabled";
-+			};
-+
-+			/* Connected to a header on device's PCB. This
-+			 * provides the main console for the device.
-+			 *
-+			 * Warning: the device may not boot with a 3.3V
-+			 * USB-serial converter connected when the power
-+			 * button is pressed. The converter needs to be
-+			 * connected a few seconds after pressing the
-+			 * power button. This is possibly due to UART0_TXD
-+			 * pin being sampled at reset (bit 0 of SAR).
-+			 */
-+			serial@12000 {
-+				status = "okay";
-+			};
-+
-+			/* Connected to a Microchip PIC16F883 for power control */
-+			serial@12100 {
-+				status = "okay";
-+			};
-+
-+			poweroff@12100 {
-+				compatible = "synology,power-off";
-+				reg = <0x12100 0x100>;
-+				clocks = <&coreclk 0>;
-+			};
-+		};
-+	};
-+
-+	regulators {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		pinctrl-0 = <&sata1_pwr_pin &sata2_pwr_pin
-+			     &sata3_pwr_pin &sata4_pwr_pin>;
-+		pinctrl-names = "default";
-+
-+		sata1_regulator: sata1-regulator {
-+			compatible = "regulator-fixed";
-+			reg = <1>;
-+			regulator-name = "SATA1 Power";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			startup-delay-us = <2000000>;
-+			enable-active-high;
-+			regulator-always-on;
-+			regulator-boot-on;
-+			gpio = <&gpio1 10 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		sata2_regulator: sata2-regulator {
-+			compatible = "regulator-fixed";
-+			reg = <2>;
-+			regulator-name = "SATA2 Power";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			startup-delay-us = <4000000>;
-+			enable-active-high;
-+			regulator-always-on;
-+			regulator-boot-on;
-+			gpio = <&gpio1 12 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		sata3_regulator: sata3-regulator {
-+			compatible = "regulator-fixed";
-+			reg = <3>;
-+			regulator-name = "SATA3 Power";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			startup-delay-us = <6000000>;
-+			enable-active-high;
-+			regulator-always-on;
-+			regulator-boot-on;
-+			gpio = <&gpio1 13 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		sata4_regulator: sata4-regulator {
-+			compatible = "regulator-fixed";
-+			reg = <4>;
-+			regulator-name = "SATA4 Power";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			startup-delay-us = <8000000>;
-+			enable-active-high;
-+			regulator-always-on;
-+			regulator-boot-on;
-+			gpio = <&gpio1 14 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+};
--- 
-2.1.1
+Regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hans
