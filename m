@@ -1,33 +1,57 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [RFC] adp1653: Add device tree bindings for LED controller
-Date: Sun, 16 Nov 2014 09:43:53 +0100
-Message-ID: <20141116084353.GC30646@amd>
-References: <20141116075928.GA9763@amd>
- <54685C18.1020109@metafoo.de>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH V4 01/14] sh: Eliminate unused irq_reg_{readl,writel} accessors
+Date: Sun, 16 Nov 2014 10:34:41 +0100
+Message-ID: <CAMuHMdXMsxhcD9C079YPc6Toxdo0e23oqM_9KeSG=NrFa4auRQ@mail.gmail.com>
+References: <1415342669-30640-1-git-send-email-cernekee@gmail.com>
+	<1415342669-30640-2-git-send-email-cernekee@gmail.com>
+	<CAMuHMdW+L8YbE8Z8jrtnm8xWk63sRGaFdM7TPM6MmrDg9XwHuQ@mail.gmail.com>
+	<20141114163843.GH29662@linux-mips.org>
+	<20141114170525.GL3698@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <54685C18.1020109-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org, sre-GFxCN5SEZAc@public.gmane.org, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, freemangordon-uiMcrn6V0Vs@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20141114170525.GL3698@titan.lakedaemon.net>
+Sender: linux-sh-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>
+Cc: Ralf Baechle <ralf@linux-mips.org>, Kevin Cernekee <cernekee@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linux-sh list <linux-sh@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Florian Fainelli <f.fainelli@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun 2014-11-16 09:11:04, Lars-Peter Clausen wrote:
-> On 11/16/2014 08:59 AM, Pavel Machek wrote:
-> >[...]
-> >+	adp1653: adp1653@30 {
-> >+		compatible = "ad,adp1653";
-> 
-> The Analog Devices vendor prefix is adi.
+Hi Jason,
 
-Thanks, will be fixed in next version.
+On Fri, Nov 14, 2014 at 6:05 PM, Jason Cooper <jason@lakedaemon.net> wrote:
+> On Fri, Nov 14, 2014 at 05:38:44PM +0100, Ralf Baechle wrote:
+>> On Mon, Nov 10, 2014 at 09:13:49AM +0100, Geert Uytterhoeven wrote:
+>>
+>> > On Fri, Nov 7, 2014 at 7:44 AM, Kevin Cernekee <cernekee@gmail.com> wrote:
+>> > > Defining these macros way down in arch/sh/.../irq.c doesn't cause
+>> > > kernel/irq/generic-chip.c to use them.  As far as I can tell this code
+>> > > has no effect.
+>> > >
+>> > > Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+>> >
+>> > Compared preprocessor and asm output before and after, no difference
+>> > except for line numbers, so
+>> >
+>> > Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>
+>> I noticed the remainder of of this series is now in Jason Cooper's irqchip
+>> tree.  Is anybody still taking care of SH?  If not I can funnel it
+>> through the MIPS tree.
+>
+> Are the SH maintainers active?  I admit I know very little about the
+> arch.  I'm more than happy to pick it up and keep it with the rest of
+> the series, I just didn't want to step on toes...
 
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+SH is orphaned, so it would be great if you could pick it up.
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
