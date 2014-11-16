@@ -1,92 +1,50 @@
-From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V2 16/22] MIPS: BMIPS: Add special cache handling in c-r4k.c
-Date: Sat, 15 Nov 2014 16:17:40 -0800
-Message-ID: <1416097066-20452-17-git-send-email-cernekee@gmail.com>
+From: Kevin Cernekee <cernekee@gmail.com>
+Subject: [PATCH V2 02/22] irqchip: brcmstb-l2: fix error handling of irq_of_parse_and_map
+Date: Sat, 15 Nov 2014 16:17:26 -0800
+Message-ID: <1416097066-20452-3-git-send-email-cernekee@gmail.com>
 References: <1416097066-20452-1-git-send-email-cernekee@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416097066-20452-1-git-send-email-cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jfraser-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <1416097066-20452-1-git-send-email-cernekee@gmail.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: ralf@linux-mips.org
+Cc: f.fainelli@gmail.com, jfraser@broadcom.com, dtor@chromium.org, tglx@linutronix.de, jason@lakedaemon.net, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-BMIPS435x and BMIPS438x have a single shared L1 D$ and load/store unit,
-so it isn't necessary to raise IPIs to keep both CPUs coherent.
+From: Dmitry Torokhov <dtor@chromium.org>
 
-BMIPS5000 has VIPT L1 caches that handle aliases in hardware, and its I$
-fills from D$.  But a special sequence with 2 SYNCs and 32 NOPs is needed
-to ensure coherency.
+Return value of irq_of_parse_and_map() is unsigned int, with 0
+indicating failure, so testing for negative result never works.
 
-Signed-off-by: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Dmitry Torokhov <dtor@chromium.org>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Tested-by: Kevin Cernekee <cernekee@gmail.com>
 ---
- arch/mips/mm/c-r4k.c | 43 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+ drivers/irqchip/irq-brcmstb-l2.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/mm/c-r4k.c b/arch/mips/mm/c-r4k.c
-index fbcd867..dd261df 100644
---- a/arch/mips/mm/c-r4k.c
-+++ b/arch/mips/mm/c-r4k.c
-@@ -917,6 +917,18 @@ static inline void alias_74k_erratum(struct cpuinfo_mips *c)
+diff --git a/drivers/irqchip/irq-brcmstb-l2.c b/drivers/irqchip/irq-brcmstb-l2.c
+index 4aa653a..313c2c6 100644
+--- a/drivers/irqchip/irq-brcmstb-l2.c
++++ b/drivers/irqchip/irq-brcmstb-l2.c
+@@ -139,9 +139,9 @@ int __init brcmstb_l2_intc_of_init(struct device_node *np,
+ 	writel(0xffffffff, data->base + CPU_CLEAR);
+ 
+ 	data->parent_irq = irq_of_parse_and_map(np, 0);
+-	if (data->parent_irq < 0) {
++	if (!data->parent_irq) {
+ 		pr_err("failed to find parent interrupt\n");
+-		ret = data->parent_irq;
++		ret = -EINVAL;
+ 		goto out_unmap;
  	}
- }
  
-+static void b5k_instruction_hazard(void)
-+{
-+	__sync();
-+	__sync();
-+	__asm__ __volatile__(
-+	"       nop; nop; nop; nop; nop; nop; nop; nop\n"
-+	"       nop; nop; nop; nop; nop; nop; nop; nop\n"
-+	"       nop; nop; nop; nop; nop; nop; nop; nop\n"
-+	"       nop; nop; nop; nop; nop; nop; nop; nop\n"
-+	: : : "memory");
-+}
-+
- static char *way_string[] = { NULL, "direct mapped", "2-way",
- 	"3-way", "4-way", "5-way", "6-way", "7-way", "8-way"
- };
-@@ -1683,6 +1695,37 @@ void r4k_cache_init(void)
- 
- 	coherency_setup();
- 	board_cache_error_setup = r4k_cache_error_setup;
-+
-+	/*
-+	 * Per-CPU overrides
-+	 */
-+	switch (current_cpu_type()) {
-+	case CPU_BMIPS4350:
-+	case CPU_BMIPS4380:
-+		/* No IPI is needed because all CPUs share the same D$ */
-+		flush_data_cache_page = r4k_blast_dcache_page;
-+		break;
-+	case CPU_BMIPS5000:
-+		/* We lose our superpowers if L2 is disabled */
-+		if (c->scache.flags & MIPS_CACHE_NOT_PRESENT)
-+			break;
-+
-+		/* I$ fills from D$ just by emptying the write buffers */
-+		flush_cache_page = (void *)b5k_instruction_hazard;
-+		flush_cache_range = (void *)b5k_instruction_hazard;
-+		flush_cache_sigtramp = (void *)b5k_instruction_hazard;
-+		local_flush_data_cache_page = (void *)b5k_instruction_hazard;
-+		flush_data_cache_page = (void *)b5k_instruction_hazard;
-+		flush_icache_range = (void *)b5k_instruction_hazard;
-+		local_flush_icache_range = (void *)b5k_instruction_hazard;
-+
-+		/* Cache aliases are handled in hardware; allow HIGHMEM */
-+		current_cpu_data.dcache.flags &= ~MIPS_CACHE_ALIASES;
-+
-+		/* Optimization: an L2 flush implicitly flushes the L1 */
-+		current_cpu_data.options |= MIPS_CPU_INCLUSIVE_CACHES;
-+		break;
-+	}
- }
- 
- static int r4k_cache_pm_notifier(struct notifier_block *self, unsigned long cmd,
 -- 
 2.1.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
