@@ -1,98 +1,79 @@
-From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
-Subject: Re: [PATCHv2 5/8] arm: mvebu: add common uart0 and spi0 pintcrl entries for Armada 370
-Date: Sun, 16 Nov 2014 23:29:00 +0100
-Message-ID: <874mtyok43.fsf@natisbad.org>
-References: <cover.1416158990.git.arno@natisbad.org>
-	<d550094896837ac921e5d2a69fc5aae9b287a98a.1416158990.git.arno@natisbad.org>
-	<20141116211034.GJ15870@lunn.ch>
+From: Peter Crosthwaite <peter.crosthwaite@xilinx.com>
+Subject: Re: [PATCH v4 6/6] ARM: zynq: DT: Add OCM controller node
+Date: Mon, 17 Nov 2014 09:00:02 +1000
+Message-ID: <CAEgOgz7j3jFbf1HxtimzPDMQ3oRu8AAHhHAUtg1boYjOUV5ygA@mail.gmail.com>
+References: <cover.1415962281.git.michal.simek@xilinx.com>
+	<0a88d52b5e71fb220ca619180ec9ca746edad2b1.1415962281.git.michal.simek@xilinx.com>
+	<546881CA.2020801@suse.de>
+	<c52187589f5c4cc6b908d899c2b9f7a6@BN1BFFO11FD036.protection.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141116211034.GJ15870-g2DYL2Zd6BY@public.gmane.org> (Andrew Lunn's message of "Sun,
-	16 Nov 2014 22:10:34 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <c52187589f5c4cc6b908d899c2b9f7a6@BN1BFFO11FD036.protection.gbl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
+Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Michal Simek <michal.simek@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Josh Cartwright <josh.cartwright@ni.com>, Michal Simek <monstr@monstr.eu>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> writes:
-
-> On Sun, Nov 16, 2014 at 06:37:33PM +0100, Arnaud Ebalard wrote:
->> 
->> pinctrl entries for uart0 using MPP0-1 and spi0 using MPP33-36 are
->> common configurations. Instead of replicating them in each .dts file,
->> put those in armada-370.dtsi file so that they can be referenced.
->> 
->> Suggested-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
->> Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/armada-370.dtsi | 11 +++++++++++
->>  1 file changed, 11 insertions(+)
->> 
->> diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
->> index 6b3c23b1e138..d9f5d59e463e 100644
->> --- a/arch/arm/boot/dts/armada-370.dtsi
->> +++ b/arch/arm/boot/dts/armada-370.dtsi
->> @@ -115,6 +115,17 @@
->>  				compatible = "marvell,mv88f6710-pinctrl";
->>  				reg = <0x18000 0x38>;
->>  
->> +				uart0_pins: uart0-pins {
->> +					marvell,pins = "mpp0", "mpp1";
->> +					marvell,function = "uart0";
->> +				};
+On Mon, Nov 17, 2014 at 5:32 AM, S=C3=B6ren Brinkmann
+<soren.brinkmann@xilinx.com> wrote:
+> On Sun, 2014-11-16 at 11:51AM +0100, Andreas F=C3=A4rber wrote:
+>> Hi Michal,
+>>
+>> Am 14.11.2014 um 11:52 schrieb Michal Simek:
+>> > diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/=
+zynq-7000.dtsi
+>> > index ce2ef5bec4f2..e217fb1c1169 100644
+>> > --- a/arch/arm/boot/dts/zynq-7000.dtsi
+>> > +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+>> > @@ -150,6 +150,13 @@
+>> >                     reg =3D <0xf8006000 0x1000>;
+>> >             };
+>> >
+>> > +           ocmc: memory-controller@f800c000 {
+>> > +                   compatible =3D "xlnx,zynq-ocmc-1.0";
+>> > +                   interrupt-parent =3D <&intc>;
+>> > +                   interrupts =3D <0 3 4>;
+>> > +                   reg =3D <0xf800c000 0x1000>;
+>> > +           };
+>> > +
+>> >             uart0: serial@e0000000 {
+>> >                     compatible =3D "xlnx,xuartps", "cdns,uart-r1p8=
+";
+>> >                     status =3D "disabled";
+>>
+>> Not directly related to this patch: As one can see here, the node or=
+der
+>> is quite a mess... According to Olof, nodes should be ordered by uni=
+t
+>> address, whereas here some but not all seem ordered by node name. Wo=
+uld
+>> you welcome a cleanup patch, or can you fix that yourself?
 >
-> Thanks for these.
+> I wouldn't say it's a mess, just a different property to sort the nod=
+es
+> by. For humans reading the DT, searching for nodes, alphabetical orde=
+r
+> helps finding the right node, IMHO.
+
+I do generally find myself asking "whats that thing at that address"
+more than I find myself asking the "wheres that piece of hardware" so
+Andreas' sorting scheme makes more sense to me. Vertically scanning a
+DT to give yourself an overview of the system level address map is
+good too. Wheras alphabetic sorting doesn't mean to much.
+
+Regards,
+Peter
+
+What advantage would sorting by
+> address have?
 >
-> We can go one stage further. kirkwood.dts has:
->
->                 uart0: serial@12000 {
->                         compatible = "ns16550a";
->                         reg = <0x12000 0x100>;
->                         reg-shift = <2>;
->                         interrupts = <33>;
->                         clocks = <&gate_clk 7>;
->                         pinctrl-0 = <&pmx_uart0>;
->                         pinctrl-names = "default";
->                         status = "disabled";
->                 };
->
-> i.e actually references them. This is safe because a board .dts file
-> can override the pins if needed.
->
-> We should do the same here, both for 370 and XP.
-
-Just to be sure I understand: for uart0 and uart1, I think this can only
-be done for Armada 370 (on XP, uart0/1 rx/tx are not mpp).
-
-This only a matter of adding the following in armada-370.dtsi for uart0: 
-
- 		 /*
-		  * Default UART pinctrl setting without RTS/CTS, can
-		  * be overwritten on board level.
-                  */
-                 uart0: serial@12000 {
-                         pinctrl-0 = <&uart0_pins>;
-                         pinctrl-names = "default";
-                 };
-
-For uart1, it's not obvious because there are 6 different MPP which can
-be configured to act as uart1 TXD. Same for RXD. If I remove the ones
-overlapping w/ RGMII pins for GbE interfaces, which one should be
-selected as default: 41/42, 55/57, 60/61?
-
-Now, regarding armada XP, uart2 and uart3 txd/rxd MPP are 42/43 and
-44/45. Best we can do is put the same as above in each specific
-armada-xp-mv78XXX.dtsi file, where pinctrl node is, after adding
-uart2-pins and uart3-pins. Unless I am missing something, this cannot
-be done in armada-xp.dtsi.
-
-Cheers,
-
-a+
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>         Thanks,
+>         S=C3=B6ren
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kerne=
+l" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
