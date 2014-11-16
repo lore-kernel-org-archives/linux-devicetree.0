@@ -1,114 +1,98 @@
-From: Kevin Cernekee <cernekee@gmail.com>
-Subject: Re: [PATCH V2 22/22] MIPS: Add multiplatform BMIPS target
-Date: Sun, 16 Nov 2014 14:12:44 -0800
-Message-ID: <CAJiQ=7C-HniwXiVrqQg3cnFNNYGwoxHJf8JP-XYOqM1yWoyXaw@mail.gmail.com>
-References: <1416097066-20452-1-git-send-email-cernekee@gmail.com>
- <1416097066-20452-23-git-send-email-cernekee@gmail.com> <50587083.ieLlCR4VrM@wuerfel>
+From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
+Subject: Re: [PATCHv2 5/8] arm: mvebu: add common uart0 and spi0 pintcrl entries for Armada 370
+Date: Sun, 16 Nov 2014 23:29:00 +0100
+Message-ID: <874mtyok43.fsf@natisbad.org>
+References: <cover.1416158990.git.arno@natisbad.org>
+	<d550094896837ac921e5d2a69fc5aae9b287a98a.1416158990.git.arno@natisbad.org>
+	<20141116211034.GJ15870@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50587083.ieLlCR4VrM@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Florian Fainelli <f.fainelli@gmail.com>, Jon Fraser <jfraser@broadcom.com>, dtor@chromium.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141116211034.GJ15870-g2DYL2Zd6BY@public.gmane.org> (Andrew Lunn's message of "Sun,
+	16 Nov 2014 22:10:34 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 16, 2014 at 1:24 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Saturday 15 November 2014 16:17:46 Kevin Cernekee wrote:
->> +config BMIPS_MULTIPLATFORM
->> +       bool "Broadcom BCM33xx/BCM63xx/BCM7xxx multiplatform kernel"
->> +       select BOOT_RAW
->> +       select NO_EXCEPT_FILL
->> +       select USE_OF
->> +       select BUILTIN_DTB
->> +       select FW_CFE
->> +       select CEVT_R4K
->> +       select CSRC_R4K
->> +       select SYNC_R4K
->> +       select COMMON_CLK
->> +       select BCM7038_L1_IRQ
->> +       select BCM7120_L2_IRQ
->> +       select BRCMSTB_L2_IRQ
->> +       select IRQ_CPU
->> +       select RAW_IRQ_ACCESSORS
->> +       select DMA_NONCOHERENT
->> +       select SYS_SUPPORTS_32BIT_KERNEL
->> +       select SYS_SUPPORTS_LITTLE_ENDIAN
->> +       select SYS_SUPPORTS_BIG_ENDIAN
->> +       select SYS_SUPPORTS_HIGHMEM
->> +       select SYS_HAS_CPU_BMIPS3300
->> +       select SYS_HAS_CPU_BMIPS4350
->> +       select SYS_HAS_CPU_BMIPS4380
->> +       select SYS_HAS_CPU_BMIPS5000
->> +       select SWAP_IO_SPACE
->> +       select USB_EHCI_BIG_ENDIAN_DESC
->> +       select USB_EHCI_BIG_ENDIAN_MMIO
->> +       select USB_OHCI_BIG_ENDIAN_DESC
->> +       select USB_OHCI_BIG_ENDIAN_MMIO
+Hi,
+
+Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> writes:
+
+> On Sun, Nov 16, 2014 at 06:37:33PM +0100, Arnaud Ebalard wrote:
+>> 
+>> pinctrl entries for uart0 using MPP0-1 and spi0 using MPP33-36 are
+>> common configurations. Instead of replicating them in each .dts file,
+>> put those in armada-370.dtsi file so that they can be referenced.
+>> 
+>> Suggested-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+>> Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/armada-370.dtsi | 11 +++++++++++
+>>  1 file changed, 11 insertions(+)
+>> 
+>> diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
+>> index 6b3c23b1e138..d9f5d59e463e 100644
+>> --- a/arch/arm/boot/dts/armada-370.dtsi
+>> +++ b/arch/arm/boot/dts/armada-370.dtsi
+>> @@ -115,6 +115,17 @@
+>>  				compatible = "marvell,mv88f6710-pinctrl";
+>>  				reg = <0x18000 0x38>;
+>>  
+>> +				uart0_pins: uart0-pins {
+>> +					marvell,pins = "mpp0", "mpp1";
+>> +					marvell,function = "uart0";
+>> +				};
 >
-> You mentioned in another thread that all MMIO is byteswapped based on the
-> jumper setting. Should the USB options have an 'if CPU_BIG_ENDIAN'
-> behind them? I think it will still work in the current way, but when you
-> know that you have little-endian registers, it is more efficient
-> not to set these.
-
-Right, it works OK this way because the USB_*_BIG_ENDIAN_* options
-just allow the USB drivers to accept the "big-endian" DT property.
-They don't actually force any endian swaps on their own.
-
-I can add the extra condition if warranted.  On an LE build it saves
-about 19kB = 0.3% in .text:
-
-$ size vmlinux vmlinux.orig
-   text       data        bss        dec        hex    filename
-5945044    6227964     263936    12436944     bdc5d0    vmlinux
-5963924    6227964     263936    12455824     be0f90    vmlinux.orig
-
-("data" includes an initramfs so it's huge, but removing it doesn't
-impact the "text" column.)
-
-At some point I'd also like to get the of_device_is_big_endian() patch
-merged, and then use it to harmonize the way endian swapping works
-across serial8250, libahci, and maybe USB.  Depending on the
-size/complexity impact and the level of passion surrounding the topic,
-this might also involve getting rid of the compile-time optimizations,
-or at least simplifying them down to a single option instead of 6.
-
->> +       help
->> +         Build a multiplatform DT-based kernel image that boots on select
->> +         BCM33xx cable modem chips, BCM63xx DSL chips, and BCM7xxx set-top
->> +         box chips.  Note that CONFIG_CPU_BIG_ENDIAN/CONFIG_CPU_LITTLE_ENDIAN
->> +         must be set appropriately for your board, and the dts/dtsi files may
->> +         require changes based on the system endianness.
->>
+> Thanks for these.
 >
-> Can you clarify the meaning of "multiplatform" here? I suspect you
-> mean that this is one platform that includes multiple SoCs that
-> are all made by the same manufacturer and based on the same CPU
-> core family, but it is still incompatible with other Vendor's SoCs
-> and with Broadcom MIPS SoCs that are based on 74K or other cores, right?
+> We can go one stage further. kirkwood.dts has:
+>
+>                 uart0: serial@12000 {
+>                         compatible = "ns16550a";
+>                         reg = <0x12000 0x100>;
+>                         reg-shift = <2>;
+>                         interrupts = <33>;
+>                         clocks = <&gate_clk 7>;
+>                         pinctrl-0 = <&pmx_uart0>;
+>                         pinctrl-names = "default";
+>                         status = "disabled";
+>                 };
+>
+> i.e actually references them. This is safe because a board .dts file
+> can override the pins if needed.
+>
+> We should do the same here, both for 370 and XP.
 
-Correct
+Just to be sure I understand: for uart0 and uart1, I think this can only
+be done for Armada 370 (on XP, uart0/1 rx/tx are not mpp).
 
-> It's probably not a wrong description here, but for anybody reading this
-> who also works on ARM, it seems rather confusing because there,
-> "multiplatform" implies that the particular SoC can be built into a
-> generic kernel image that supports SoCs from any vendor whose platform
-> is also marked as "multiplatform", as long as the CPU architecture level
-> (v4/v5, or v6/v7, or v8) is the same.
+This only a matter of adding the following in armada-370.dtsi for uart0: 
 
-The BMIPS multiplatform kernel is intended to support any SoC based on
-a 65nm/40nm/28nm BMIPS CPU.  Strictly speaking, "BMIPS" isn't an
-architecture level defined by imgtec, nor is it something that other
-silicon vendors can currently offer.  But the BMIPS CPUs do have their
-own unique CP0 registers, DSP instruction set, errata, and ways of
-handling SMP / cache maintenance / performance counters.
+ 		 /*
+		  * Default UART pinctrl setting without RTS/CTS, can
+		  * be overwritten on board level.
+                  */
+                 uart0: serial@12000 {
+                         pinctrl-0 = <&uart0_pins>;
+                         pinctrl-names = "default";
+                 };
 
-Outside of the CPU, the BCM63xx/BCM33xx/BCM7xxx register maps and
-peripherals look pretty different, and the arch/mips/bmips code makes
-almost zero assumptions about the rest of the chip if a DTB is passed
-in from the bootloader.  In this sense you can see the parallels to
-CONFIG_ARCH_MULTI_Vx.
+For uart1, it's not obvious because there are 6 different MPP which can
+be configured to act as uart1 TXD. Same for RXD. If I remove the ones
+overlapping w/ RGMII pins for GbE interfaces, which one should be
+selected as default: 41/42, 55/57, 60/61?
 
-Prior to this work, these product lines have never been able to share
-a common kernel image.
+Now, regarding armada XP, uart2 and uart3 txd/rxd MPP are 42/43 and
+44/45. Best we can do is put the same as above in each specific
+armada-xp-mv78XXX.dtsi file, where pinctrl node is, after adding
+uart2-pins and uart3-pins. Unless I am missing something, this cannot
+be done in armada-xp.dtsi.
+
+Cheers,
+
+a+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
