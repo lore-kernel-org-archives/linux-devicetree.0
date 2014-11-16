@@ -1,56 +1,42 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] clk: sunxi: gmac-tx-clk mux is not a
- CLK_MUX_INDEX_BIT mux
-Date: Sun, 16 Nov 2014 18:13:52 +0100
-Message-ID: <20141116171352.GO6414@lukather>
-References: <1416142617-4094-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Subject: Re: [U-Boot] [PATCH 5/6] sunxi: video: Add simplefb support
+Date: Sun, 16 Nov 2014 17:19:35 +0000
+Message-ID: <1416158375.25454.26.camel@hellion.org.uk>
+References: <1415984088-6800-1-git-send-email-hdegoede@redhat.com>
+	 <1415984088-6800-6-git-send-email-hdegoede@redhat.com>
+	 <1416138607.25454.13.camel@hellion.org.uk> <5468AC2E.80601@redhat.com>
+	 <1416148688.25454.22.camel@hellion.org.uk> <5468BE9A.8050501@redhat.com>
+	 <1416154297.25454.24.camel@hellion.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+cfQkLQGU7KOA/8T"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBF5XUORQKGQEKGBTT7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1416142617-4094-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416154297.25454.24.camel-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---+cfQkLQGU7KOA/8T
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-On Sun, Nov 16, 2014 at 01:56:57PM +0100, Hans de Goede wrote:
-> A CLK_MUX_INDEX_BIT mux has one bit per parent, but the sun7i-a20-gmac-clk
-> has 2 bits selecting between 3 possible parents using values of 0, 1, 2,
-> which makes it a regular mux which should not have CLK_MUX_INDEX_BIT set in
-> its flag.
+On Sun, 2014-11-16 at 16:11 +0000, Ian Campbell wrote:
 > 
-> However we do not support parent 1 (an external clock), so use a table to
-> select parent 0 or 2, which are the 2 parents we support.
+> > AFAIK Grant agrees with v5
 > 
-> Note this has not been causing any issues sofar, because we start with a
-> parent setting of parent 0, and only ever re-parent to parent 2 (for which
-> we use an index of 1 as we skip parent 1) and with CLK_MUX_INDEX_BIT set
-> we write a value of 2 for index 1.
-> 
-> Tested on both a cubietruck (which uses rgmii mode) as well as a cs908
-> (an a31s board which uses mii mode).
-> 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> AFAIK Grant hasn't actually said that. If he does ack it (or if
+> someone
+> points me to the correct mail) then I have no further objections.
 
-Applied, thanks.
+I finally found
+<CACxGe6ssdeOnQnem1012h_jFK1wWOD_WwosjFgiAcgBoqyDt9A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+which for some reason isn't in my devicetree@ folder nor in any of the
+archives online I looked at earlier (I could only find it by message-id
+now I know it), but it was in my sunxi folder.
 
-Maxime
+So with Grant and Rob having accepted them you can consider my concerns
+with the bindings alleviated.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---+cfQkLQGU7KOA/8T--
+Ian.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
