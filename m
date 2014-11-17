@@ -1,113 +1,344 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] watchdog: ImgTec PDC Watchdog Timer Driver
-Date: Mon, 17 Nov 2014 15:04:31 -0800
-Message-ID: <CAL1qeaGmc_4G3AMrTYeThGFbnstGU-KT02Q9twozJLemJigvvQ@mail.gmail.com>
-References: <1416237194-12033-1-git-send-email-naidu.tellapati@imgtec.com>
-	<1416237194-12033-2-git-send-email-naidu.tellapati@imgtec.com>
-	<CAL1qeaG1xXXmasLiaM14A+RshnqewnHsuQvxb76CNnwiuAXn_A@mail.gmail.com>
-	<20141117212155.GG1739@jhogan-linux.le.imgtec.org>
-	<27E62D98F903554192E3C13AFCC91C3C2F506EFC@hbmail01.hb.imgtec.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <27E62D98F903554192E3C13AFCC91C3C2F506EFC-C8yLA94LPOy3snIXRfWIHVBRoQTxkR7k@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: James Hogan <James.Hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Ezequiel Garcia <Ezequiel.Garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Arul Ramasamy <Arul.Ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: [PATCH 1/1] thermal: of: improve of-thermal sensor registration API
+Date: Mon, 17 Nov 2014 18:36:09 -0400
+Message-ID: <1416263769-6578-2-git-send-email-edubezval@gmail.com>
+References: <1416263769-6578-1-git-send-email-edubezval@gmail.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1416263769-6578-1-git-send-email-edubezval@gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: Caesar Wang <caesar.wang@rock-chips.com>, Wei Ni <wni@nvidia.com>, Lukasz Majewski <l.majewski@samsung.com>, Mikko Perttunen <mikko.perttunen@kapsi.fi>, Eduardo Valentin <edubezval@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.de>, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, lm-sensors@lm-sensors.org, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Zhang Rui <rui.zhang@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 17, 2014 at 3:01 PM, Naidu Tellapati
-<Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
-> Hi Andrew,
->
->>> > +config IMGPDC_WDT
->>> > +       tristate "Imagination Technologies PDC Watchdog Timer"
->>> > +       depends on HAS_IOMEM
->>>
->>> We probably don't want to make this visible for everyone with
->>> HAS_IOMEM, so perhaps MIPS || (HAS_IOMEM && COMPILE_TEST)?  Do we want
->>> to make this available for META as well?
->
->> yeh, can I suggest something like this:
->>        depends on HAS_IOMEM
->  >       depends on METAG || MIPS || COMPILE_TEST
->> More intuitive/scalable to have them separate IMO, since technically it
->> needs HAS_IOMEM regardless of platform (even if the listed platforms are
->> guaranteed to select HAS_IOMEM).
->
-> Shall we go ahead with what James Hogan is suggesting here ?
+Different drivers request API extensions in of-thermal. For this reason,
+additional callbacks are required to fit the new drivers needs.
 
-Yup, sounds good to me.
+The current API implementation expects the registering sensor driver
+to provide a get_temp and get_trend callbacks as function parameters.
+As the amount of callbacks is growing, this patch changes the existing
+implementation to use a .ops field to hold all the of thermal callbacks
+to sensor drivers.
 
->>>
->>> > --- /dev/null
->>> > +++ b/drivers/watchdog/imgpdc_wdt.c
->>>
->>> > +#ifdef CONFIG_COMMON_CLK
->>> > +#define to_pdc_wdt(_nb) container_of(_nb, struct pdc_wdt_dev, clk_nb)
->>> > +
->>> > +static int img_pdc_wdt_clk_notify(struct notifier_block *nb,
->>> > +                                 unsigned long action, void *data)
->>> > +{
->>> > +       struct pdc_wdt_dev *wdt = to_pdc_wdt(nb);
->>> > +
->>> > +       switch (action) {
->>> > +       case POST_RATE_CHANGE:
->>> > +               if (wdt->clk_rate == data->new_rate)
->>> > +                       return NOTIFY_OK;
->>> > +
->>> > +               /* We use the clock rate to calculate the max timeout */
->>> > +               if (data->new_rate < 1 ||
->>> > +                   data->new_rate > PDC_MAX_WD_CLK_RATE) {
->>> > +                       dev_err(wdt->dev, "invalid clock rate\n");
->>> > +                       return NOTIFY_BAD;
->>> > +               }
->>> > +               wdt->clk_rate = data->new_rate;
->>> > +               if (order_base_2(wdt->clk_rate) == 0)
->>> > +                       wdt->min_delay = 0;
->>> > +               else
->>> > +                       wdt->min_delay = order_base_2(wdt->clk_rate) - 1;
->>> > +
->>> > +               wdt->wdt_dev.max_timeout =
->>> > +                               (1 << (PDC_WD_MAX_DELAY - wdt->min_delay));
->>> > +               ret = watchdog_init_timeout(&wdt->wdt_dev, timeout, wdt->dev);
->>> > +               if (ret < 0)
->>> > +                       wdt->wdt_dev.timeout = wdt->wdt_dev.max_timeout;
->>> > +
->>> > +               pdc_wdt_stop(&wdt->wdt_dev);
->>> > +               pdc_wdt_set_timeout(&wdt->wdt_dev, wdt->wdt_dev.timeout);
->>> > +               pdc_wdt_start(&wdt->wdt_dev);
->>> > +               break;
->>> > +       default:
->>> > +               break;
->>> > +       }
->>> > +       return NOTIFY_OK;
->>> > +}
->>> > +#endif
->>>
->>> Do we really expect the watchdog clock to change out from under us?  I
->>> think we can just get the rate in probe() and set the timeout bounds
->>> based on that - no one outside the watchdog driver should be messing
->>> with the watchdog clock, right?  I know the samsung driver does
->>> something similar to this, but I believe that's because the watchdog
->>> clock is derived from the CPU clock.
->
->> I agree (sorry if I implied wdt needed to be dynamic as well as reading
->> the [probably constant] rate before).
->
->> Note, dynamic changes did happen on TZ1090, but only just before suspend
->> (since the hardware would change the rate regardless of what software
->> did when the power actually went down, so it at least allowed drivers to
->> put their workarounds in place). I presume watchdog timers aren't meant
->> to be active during suspend though, in which case even for TZ1090 it
->> probably doesn't need to expect changes.
->
-> From the comments above both from Andrew & James Hogan, I understand that
-> we don't need clock rate-change notifier callback for Watchdog driver.
-> Please correct me if I am wrong.
+This patch also changes the existing of-thermal users to fit the new
+API design. No functional change is introduced in this patch.
 
-Correct.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cc: Alexandre Courbot <gnurou@gmail.com>
+Cc: devicetree@vger.kernel.org
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Jean Delvare <jdelvare@suse.de>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+Cc: linux-tegra@vger.kernel.org
+Cc: lm-sensors@lm-sensors.org
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: Zhang Rui <rui.zhang@intel.com>
+Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
+---
+ drivers/hwmon/lm75.c                               |  9 +++--
+ drivers/hwmon/ntc_thermistor.c                     |  6 +++-
+ drivers/hwmon/tmp102.c                             |  6 +++-
+ drivers/thermal/of-thermal.c                       | 42 +++++++++-------------
+ drivers/thermal/tegra_soctherm.c                   |  7 ++--
+ drivers/thermal/ti-soc-thermal/ti-thermal-common.c |  8 +++--
+ include/linux/thermal.h                            | 24 +++++++++----
+ 7 files changed, 61 insertions(+), 41 deletions(-)
+
+diff --git a/drivers/hwmon/lm75.c b/drivers/hwmon/lm75.c
+index d16dbb3..e7c8bf9 100644
+--- a/drivers/hwmon/lm75.c
++++ b/drivers/hwmon/lm75.c
+@@ -176,6 +176,10 @@ static struct attribute *lm75_attrs[] = {
+ };
+ ATTRIBUTE_GROUPS(lm75);
+ 
++static const struct thermal_zone_of_device_ops lm75_of_thermal_ops = {
++	.get_temp = lm75_read_temp,
++};
++
+ /*-----------------------------------------------------------------------*/
+ 
+ /* device probe and removal */
+@@ -291,10 +295,9 @@ lm75_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 	if (IS_ERR(data->hwmon_dev))
+ 		return PTR_ERR(data->hwmon_dev);
+ 
+-	data->tz = thermal_zone_of_sensor_register(data->hwmon_dev,
+-						   0,
++	data->tz = thermal_zone_of_sensor_register(data->hwmon_dev, 0,
+ 						   data->hwmon_dev,
+-						   lm75_read_temp, NULL);
++						   &lm75_of_thermal_ops);
+ 	if (IS_ERR(data->tz))
+ 		data->tz = NULL;
+ 
+diff --git a/drivers/hwmon/ntc_thermistor.c b/drivers/hwmon/ntc_thermistor.c
+index 4ff89b2..bca8521c8 100644
+--- a/drivers/hwmon/ntc_thermistor.c
++++ b/drivers/hwmon/ntc_thermistor.c
+@@ -486,6 +486,10 @@ static const struct attribute_group ntc_attr_group = {
+ 	.attrs = ntc_attributes,
+ };
+ 
++static const struct thermal_zone_of_device_ops ntc_of_thermal_ops = {
++	.get_temp = ntc_read_temp,
++};
++
+ static int ntc_thermistor_probe(struct platform_device *pdev)
+ {
+ 	const struct of_device_id *of_id =
+@@ -579,7 +583,7 @@ static int ntc_thermistor_probe(struct platform_device *pdev)
+ 								pdev_id->name);
+ 
+ 	data->tz = thermal_zone_of_sensor_register(data->dev, 0, data->dev,
+-						ntc_read_temp, NULL);
++						   &ntc_of_thermal_ops);
+ 	if (IS_ERR(data->tz)) {
+ 		dev_dbg(&pdev->dev, "Failed to register to thermal fw.\n");
+ 		data->tz = NULL;
+diff --git a/drivers/hwmon/tmp102.c b/drivers/hwmon/tmp102.c
+index 5171995..ba9f478 100644
+--- a/drivers/hwmon/tmp102.c
++++ b/drivers/hwmon/tmp102.c
+@@ -158,6 +158,10 @@ ATTRIBUTE_GROUPS(tmp102);
+ #define TMP102_CONFIG  (TMP102_CONF_TM | TMP102_CONF_EM | TMP102_CONF_CR1)
+ #define TMP102_CONFIG_RD_ONLY (TMP102_CONF_R0 | TMP102_CONF_R1 | TMP102_CONF_AL)
+ 
++static const struct thermal_zone_of_device_ops tmp102_of_thermal_ops = {
++	.get_temp = tmp102_read_temp,
++};
++
+ static int tmp102_probe(struct i2c_client *client,
+ 				  const struct i2c_device_id *id)
+ {
+@@ -215,7 +219,7 @@ static int tmp102_probe(struct i2c_client *client,
+ 	}
+ 	tmp102->hwmon_dev = hwmon_dev;
+ 	tmp102->tz = thermal_zone_of_sensor_register(hwmon_dev, 0, hwmon_dev,
+-						     tmp102_read_temp, NULL);
++						     &tmp102_of_thermal_ops);
+ 	if (IS_ERR(tmp102->tz))
+ 		tmp102->tz = NULL;
+ 
+diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
+index f8eb625..ba6a755 100644
+--- a/drivers/thermal/of-thermal.c
++++ b/drivers/thermal/of-thermal.c
+@@ -30,6 +30,7 @@
+ #include <linux/err.h>
+ #include <linux/export.h>
+ #include <linux/string.h>
++#include <linux/thermal.h>
+ 
+ #include "thermal_core.h"
+ 
+@@ -77,8 +78,7 @@ struct __thermal_bind_params {
+  * @num_tbps: number of thermal bind params
+  * @tbps: an array of thermal bind params (0..num_tbps - 1)
+  * @sensor_data: sensor private data used while reading temperature and trend
+- * @get_temp: sensor callback to read temperature
+- * @get_trend: sensor callback to read temperature trend
++ * @ops: set of callbacks to handle the thermal zone based on DT
+  */
+ 
+ struct __thermal_zone {
+@@ -96,8 +96,7 @@ struct __thermal_zone {
+ 
+ 	/* sensor interface */
+ 	void *sensor_data;
+-	int (*get_temp)(void *, long *);
+-	int (*get_trend)(void *, long *);
++	const struct thermal_zone_of_device_ops *ops;
+ };
+ 
+ /***   DT thermal zone device callbacks   ***/
+@@ -107,10 +106,7 @@ static int of_thermal_get_temp(struct thermal_zone_device *tz,
+ {
+ 	struct __thermal_zone *data = tz->devdata;
+ 
+-	if (!data->get_temp)
+-		return -EINVAL;
+-
+-	return data->get_temp(data->sensor_data, temp);
++	return data->ops->get_temp(data->sensor_data, temp);
+ }
+ 
+ static int of_thermal_get_trend(struct thermal_zone_device *tz, int trip,
+@@ -120,10 +116,7 @@ static int of_thermal_get_trend(struct thermal_zone_device *tz, int trip,
+ 	long dev_trend;
+ 	int r;
+ 
+-	if (!data->get_trend)
+-		return -EINVAL;
+-
+-	r = data->get_trend(data->sensor_data, &dev_trend);
++	r = data->ops->get_trend(data->sensor_data, &dev_trend);
+ 	if (r)
+ 		return r;
+ 
+@@ -324,8 +317,7 @@ static struct thermal_zone_device_ops of_thermal_ops = {
+ static struct thermal_zone_device *
+ thermal_zone_of_add_sensor(struct device_node *zone,
+ 			   struct device_node *sensor, void *data,
+-			   int (*get_temp)(void *, long *),
+-			   int (*get_trend)(void *, long *))
++			   const struct thermal_zone_of_device_ops *ops)
+ {
+ 	struct thermal_zone_device *tzd;
+ 	struct __thermal_zone *tz;
+@@ -336,9 +328,11 @@ thermal_zone_of_add_sensor(struct device_node *zone,
+ 
+ 	tz = tzd->devdata;
+ 
++	if (!(ops && ops->get_temp))
++		return ERR_PTR(-EINVAL);
++
+ 	mutex_lock(&tzd->lock);
+-	tz->get_temp = get_temp;
+-	tz->get_trend = get_trend;
++	tz->ops = ops;
+ 	tz->sensor_data = data;
+ 
+ 	tzd->ops->get_temp = of_thermal_get_temp;
+@@ -356,8 +350,8 @@ thermal_zone_of_add_sensor(struct device_node *zone,
+  *             than one sensors
+  * @data: a private pointer (owned by the caller) that will be passed
+  *        back, when a temperature reading is needed.
+- * @get_temp: a pointer to a function that reads the sensor temperature.
+- * @get_trend: a pointer to a function that reads the sensor temperature trend.
++ * @ops: struct thermal_zone_of_device *. Must contain at least .get_trend and
++ *       .get_temp.
+  *
+  * This function will search the list of thermal zones described in device
+  * tree and look for the zone that refer to the sensor device pointed by
+@@ -382,9 +376,8 @@ thermal_zone_of_add_sensor(struct device_node *zone,
+  * check the return value with help of IS_ERR() helper.
+  */
+ struct thermal_zone_device *
+-thermal_zone_of_sensor_register(struct device *dev, int sensor_id,
+-				void *data, int (*get_temp)(void *, long *),
+-				int (*get_trend)(void *, long *))
++thermal_zone_of_sensor_register(struct device *dev, int sensor_id, void *data,
++				const struct thermal_zone_of_device_ops *ops)
+ {
+ 	struct device_node *np, *child, *sensor_np;
+ 
+@@ -424,9 +417,7 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id,
+ 		if (sensor_specs.np == sensor_np && id == sensor_id) {
+ 			of_node_put(np);
+ 			return thermal_zone_of_add_sensor(child, sensor_np,
+-							  data,
+-							  get_temp,
+-							  get_trend);
++							  data, ops);
+ 		}
+ 	}
+ 	of_node_put(np);
+@@ -468,8 +459,7 @@ void thermal_zone_of_sensor_unregister(struct device *dev,
+ 	tzd->ops->get_temp = NULL;
+ 	tzd->ops->get_trend = NULL;
+ 
+-	tz->get_temp = NULL;
+-	tz->get_trend = NULL;
++	tz->ops = NULL;
+ 	tz->sensor_data = NULL;
+ 	mutex_unlock(&tzd->lock);
+ }
+diff --git a/drivers/thermal/tegra_soctherm.c b/drivers/thermal/tegra_soctherm.c
+index 70f7e9e..893c39c 100644
+--- a/drivers/thermal/tegra_soctherm.c
++++ b/drivers/thermal/tegra_soctherm.c
+@@ -317,6 +317,10 @@ static int tegra_thermctl_get_temp(void *data, long *out_temp)
+ 	return 0;
+ }
+ 
++static const struct thermal_zone_of_device_ops tegra_of_thermal_ops = {
++	.get_trend = tegra_thermctl_get_temp,
++};
++
+ static const struct of_device_id tegra_soctherm_of_match[] = {
+ 	{ .compatible = "nvidia,tegra124-soctherm" },
+ 	{ },
+@@ -416,8 +420,7 @@ static int tegra_soctherm_probe(struct platform_device *pdev)
+ 		zone->shift = t124_thermctl_temp_zones[i].shift;
+ 
+ 		tz = thermal_zone_of_sensor_register(&pdev->dev, i, zone,
+-						     tegra_thermctl_get_temp,
+-						     NULL);
++						     &tegra_of_thermal_ops);
+ 		if (IS_ERR(tz)) {
+ 			err = PTR_ERR(tz);
+ 			dev_err(&pdev->dev, "failed to register sensor: %d\n",
+diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+index 9eec26d..5fd0386 100644
+--- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
++++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+@@ -286,6 +286,11 @@ static int ti_thermal_get_crit_temp(struct thermal_zone_device *thermal,
+ 	return ti_thermal_get_trip_temp(thermal, OMAP_TRIP_NUMBER - 1, temp);
+ }
+ 
++static const struct thermal_zone_of_device_ops ti_of_thermal_ops = {
++	.get_temp = __ti_thermal_get_temp,
++	.get_trend = __ti_thermal_get_trend,
++};
++
+ static struct thermal_zone_device_ops ti_thermal_ops = {
+ 	.get_temp = ti_thermal_get_temp,
+ 	.get_trend = ti_thermal_get_trend,
+@@ -333,8 +338,7 @@ int ti_thermal_expose_sensor(struct ti_bandgap *bgp, int id,
+ 
+ 	/* in case this is specified by DT */
+ 	data->ti_thermal = thermal_zone_of_sensor_register(bgp->dev, id,
+-					data, __ti_thermal_get_temp,
+-					__ti_thermal_get_trend);
++					data, &ti_of_thermal_ops);
+ 	if (IS_ERR(data->ti_thermal)) {
+ 		/* Create thermal zone */
+ 		data->ti_thermal = thermal_zone_device_register(domain,
+diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+index ef90838..b565964 100644
+--- a/include/linux/thermal.h
++++ b/include/linux/thermal.h
+@@ -289,19 +289,31 @@ struct thermal_genl_event {
+ 	enum events event;
+ };
+ 
++/**
++ * struct thermal_zone_of_device_ops - scallbacks for handling DT based zones
++ *
++ * Mandatory:
++ * @get_temp: a pointer to a function that reads the sensor temperature.
++ *
++ * Optional:
++ * @get_trend: a pointer to a function that reads the sensor temperature trend.
++ */
++struct thermal_zone_of_device_ops {
++	int (*get_temp)(void *, long *);
++	int (*get_trend)(void *, long *);
++};
++
+ /* Function declarations */
+ #ifdef CONFIG_THERMAL_OF
+ struct thermal_zone_device *
+-thermal_zone_of_sensor_register(struct device *dev, int id,
+-				void *data, int (*get_temp)(void *, long *),
+-				int (*get_trend)(void *, long *));
++thermal_zone_of_sensor_register(struct device *dev, int id, void *data,
++				const struct thermal_zone_of_device_ops *);
+ void thermal_zone_of_sensor_unregister(struct device *dev,
+ 				       struct thermal_zone_device *tz);
+ #else
+ static inline struct thermal_zone_device *
+-thermal_zone_of_sensor_register(struct device *dev, int id,
+-				void *data, int (*get_temp)(void *, long *),
+-				int (*get_trend)(void *, long *))
++thermal_zone_of_sensor_register(struct device *dev, int id, void *data,
++				const struct thermal_zone_of_device_ops *)
+ {
+ 	return NULL;
+ }
+-- 
+2.1.3
+
