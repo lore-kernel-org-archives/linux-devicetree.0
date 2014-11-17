@@ -1,61 +1,49 @@
-From: Antoine Tenart <antoine.tenart@free-electrons.com>
-Subject: [PATCH v8 04/13] ARM: dts: berlin: add a required reset property in the chip controller node
-Date: Mon, 17 Nov 2014 14:35:38 +0100
-Message-ID: <1416231347-27193-5-git-send-email-antoine.tenart@free-electrons.com>
-References: <1416231347-27193-1-git-send-email-antoine.tenart@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1416231347-27193-1-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sebastian.hesselbarth@gmail.com, Peter.Chen@freescale.com, balbi@ti.com, p.zabel@pengutronix.de
-Cc: Antoine Tenart <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 1/4] ARM: shmobile: r8a7740 dtsi: Add cache-controller node
+Date: Mon, 17 Nov 2014 14:53:05 +0100
+Message-ID: <1416232388-2611-2-git-send-email-geert+renesas@glider.be>
+References: <1416232388-2611-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1416232388-2611-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The chip controller node now also describes the Marvell Berlin reset
-controller. Add the required 'reset-cells' property.
+Add the missing cache-controller node. This will allow migration to the
+generic l2c OF initialization.
 
-Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
-Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: devicetree@vger.kernel.org
 ---
- arch/arm/boot/dts/berlin2.dtsi   | 1 +
- arch/arm/boot/dts/berlin2cd.dtsi | 1 +
- arch/arm/boot/dts/berlin2q.dtsi  | 1 +
- 3 files changed, 3 insertions(+)
+Note: This depends on "[PATCH v5 7/8] ARM: shmobile: r8a7740 dtsi: Add
+      PM domain support" due to the pd_a3sm reference.
+---
+ arch/arm/boot/dts/r8a7740.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berlin2.dtsi
-index 9d7c810ebd0b..d7e81e124de0 100644
---- a/arch/arm/boot/dts/berlin2.dtsi
-+++ b/arch/arm/boot/dts/berlin2.dtsi
-@@ -249,6 +249,7 @@
- 		chip: chip-control@ea0000 {
- 			compatible = "marvell,berlin2-chip-ctrl";
- 			#clock-cells = <1>;
-+			#reset-cells = <2>;
- 			reg = <0xea0000 0x400>;
- 			clocks = <&refclk>;
- 			clock-names = "refclk";
-diff --git a/arch/arm/boot/dts/berlin2cd.dtsi b/arch/arm/boot/dts/berlin2cd.dtsi
-index cc1df65da504..68f7032b4686 100644
---- a/arch/arm/boot/dts/berlin2cd.dtsi
-+++ b/arch/arm/boot/dts/berlin2cd.dtsi
-@@ -231,6 +231,7 @@
- 		chip: chip-control@ea0000 {
- 			compatible = "marvell,berlin2cd-chip-ctrl";
- 			#clock-cells = <1>;
-+			#reset-cells = <2>;
- 			reg = <0xea0000 0x400>;
- 			clocks = <&refclk>;
- 			clock-names = "refclk";
-diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
-index 891d56b03922..2de8d6f8973c 100644
---- a/arch/arm/boot/dts/berlin2q.dtsi
-+++ b/arch/arm/boot/dts/berlin2q.dtsi
-@@ -349,6 +349,7 @@
- 		chip: chip-control@ea0000 {
- 			compatible = "marvell,berlin2q-chip-ctrl";
- 			#clock-cells = <1>;
-+			#reset-cells = <2>;
- 			reg = <0xea0000 0x400>, <0xdd0170 0x10>;
- 			clocks = <&refclk>;
- 			clock-names = "refclk";
+diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
+index e2c9496c2c325a1f..a9c7a986c0e9eca6 100644
+--- a/arch/arm/boot/dts/r8a7740.dtsi
++++ b/arch/arm/boot/dts/r8a7740.dtsi
+@@ -37,6 +37,17 @@
+ 		      <0xc2000000 0x1000>;
+ 	};
+ 
++	L2: cache-controller {
++		compatible = "arm,pl310-cache";
++		reg = <0xf0100000 0x1000>;
++		interrupts = <84>;
++		power-domains = <&pd_a3sm>;
++		arm,data-latency = <3 3 3>;
++		arm,tag-latency = <2 2 2>;
++		cache-unified;
++		cache-level = <2>;
++	};
++
+ 	pmu {
+ 		compatible = "arm,cortex-a9-pmu";
+ 		interrupts = <0 83 IRQ_TYPE_LEVEL_HIGH>;
 -- 
-2.1.0
+1.9.1
+
