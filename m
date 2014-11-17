@@ -1,50 +1,50 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC] gpio: em: Use dynamic allocation of GPIOs
-Date: Mon, 17 Nov 2014 15:42:02 +0100
-Message-ID: <CAMuHMdUGC=15doK2tJB80jqbk1BBTnGK--D3yW93APOoW_ZFqQ@mail.gmail.com>
-References: <1416234632-16166-1-git-send-email-geert+renesas@glider.be>
-	<3857937.SYWZS9fGq6@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <3857937.SYWZS9fGq6@wuerfel>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
+From: Radek Dostal <radek.dostal-6oiIBCxl0MMjD8S081q9vkEOCMrvLtNR@public.gmane.org>
+Subject: [PATCH RESEND] ARM: dts: bcm63138: change "interupts" to "interrupts"
+Date: Mon, 17 Nov 2014 15:41:18 +0100
+Message-ID: <1416235278-15759-1-git-send-email-radek.dostal@streamunlimited.com>
+References: <5460F9EF.5010605@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5460F9EF.5010605-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Radek Dostal <radek.dostal-6oiIBCxl0MMjD8S081q9vkEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+all other nodes in bcm63138.dtsi use "interrupts", this had to be just a typo
+which never got noticed, even it may have quite some consequences.
 
-On Mon, Nov 17, 2014 at 3:34 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Monday 17 November 2014 15:30:32 Geert Uytterhoeven wrote:
->> Use dynamic allocation of GPIOs instead of looking at the gpio%u alias
->> in DT.
->> ---
->>   - Is this correct? Not having to care about the alias would simplify the
->>     to-be-written DT binding documentation.
->>   - Completely untested.
->>
->> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>
->
-> This will obviously break any user that expects a particular gpio
-> number, in particular board files, but I guess also user space
-> that tries to access the gpios through sysfs.
->
-> If you don't have any of those, I guess it's correct.
+Signed-off-by: Radek Dostal <radek.dostal-6oiIBCxl0MMjD8S081q9vkEOCMrvLtNR@public.gmane.org>
+Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ Dear all,
 
-Emev2/kzm9d was the first DT-only shmobile SoC/board, so the kernel
-part should be OK.
+ resending the previous patch with added Acked-by from Florian Fainelli. I
+ did not hear anything back for almost a week. Additionally CC to
+ trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org as it may qualify for it.
 
-No idea about userspace.
+ Thanks,
+ Radek
 
-Gr{oetje,eeting}s,
+ arch/arm/boot/dts/bcm63138.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-                        Geert
+diff --git a/arch/arm/boot/dts/bcm63138.dtsi b/arch/arm/boot/dts/bcm63138.dtsi
+index f3bb2dd..d2d8e94 100644
+--- a/arch/arm/boot/dts/bcm63138.dtsi
++++ b/arch/arm/boot/dts/bcm63138.dtsi
+@@ -102,7 +102,7 @@
+ 		twd_watchdog: watchdog@1e620 {
+ 			compatible = "arm,cortex-a9-twd-wdt";
+ 			reg = <0x1e620 0x20>;
+-			interupts = <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 	};
+ 
+-- 
+1.7.9.5
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
