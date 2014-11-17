@@ -1,52 +1,136 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH] i2c: core: Fix probing of i2c slaves without interrupts
-Date: Mon, 17 Nov 2014 12:43:00 +0100
-Message-ID: <1416224580-4782-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH V2 22/22] MIPS: Add multiplatform BMIPS target
+Date: Mon, 17 Nov 2014 13:16:03 +0100
+Message-ID: <3480616.V2TMJFc7uE@wuerfel>
+References: <1416097066-20452-1-git-send-email-cernekee@gmail.com> <50587083.ieLlCR4VrM@wuerfel> <CAJiQ=7C-HniwXiVrqQg3cnFNNYGwoxHJf8JP-XYOqM1yWoyXaw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJiQ=7C-HniwXiVrqQg3cnFNNYGwoxHJf8JP-XYOqM1yWoyXaw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Fraser <jfraser-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Since commit 2fd36c55264926e2 ("i2c: core: Map OF IRQ at probe time"),
-i2c slaves without interrupts (e.g. da9210 and at24 on r8a7791/koelsch)
-fail to probe:
+On Sunday 16 November 2014 14:12:44 Kevin Cernekee wrote:
+> On Sun, Nov 16, 2014 at 1:24 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > On Saturday 15 November 2014 16:17:46 Kevin Cernekee wrote:
+> >> +config BMIPS_MULTIPLATFORM
+> >> +       bool "Broadcom BCM33xx/BCM63xx/BCM7xxx multiplatform kernel"
+> >> +       select BOOT_RAW
+> >> +       select NO_EXCEPT_FILL
+> >> +       select USE_OF
+> >> +       select BUILTIN_DTB
+> >> +       select FW_CFE
+> >> +       select CEVT_R4K
+> >> +       select CSRC_R4K
+> >> +       select SYNC_R4K
+> >> +       select COMMON_CLK
+> >> +       select BCM7038_L1_IRQ
+> >> +       select BCM7120_L2_IRQ
+> >> +       select BRCMSTB_L2_IRQ
+> >> +       select IRQ_CPU
+> >> +       select RAW_IRQ_ACCESSORS
+> >> +       select DMA_NONCOHERENT
+> >> +       select SYS_SUPPORTS_32BIT_KERNEL
+> >> +       select SYS_SUPPORTS_LITTLE_ENDIAN
+> >> +       select SYS_SUPPORTS_BIG_ENDIAN
+> >> +       select SYS_SUPPORTS_HIGHMEM
+> >> +       select SYS_HAS_CPU_BMIPS3300
+> >> +       select SYS_HAS_CPU_BMIPS4350
+> >> +       select SYS_HAS_CPU_BMIPS4380
+> >> +       select SYS_HAS_CPU_BMIPS5000
+> >> +       select SWAP_IO_SPACE
+> >> +       select USB_EHCI_BIG_ENDIAN_DESC
+> >> +       select USB_EHCI_BIG_ENDIAN_MMIO
+> >> +       select USB_OHCI_BIG_ENDIAN_DESC
+> >> +       select USB_OHCI_BIG_ENDIAN_MMIO
+> >
+> > You mentioned in another thread that all MMIO is byteswapped based on the
+> > jumper setting. Should the USB options have an 'if CPU_BIG_ENDIAN'
+> > behind them? I think it will still work in the current way, but when you
+> > know that you have little-endian registers, it is more efficient
+> > not to set these.
+> 
+> Right, it works OK this way because the USB_*_BIG_ENDIAN_* options
+> just allow the USB drivers to accept the "big-endian" DT property.
+> They don't actually force any endian swaps on their own.
+> 
+> I can add the extra condition if warranted.  On an LE build it saves
+> about 19kB = 0.3% in .text:
+> 
+> $ size vmlinux vmlinux.orig
+>    text       data        bss        dec        hex    filename
+> 5945044    6227964     263936    12436944     bdc5d0    vmlinux
+> 5963924    6227964     263936    12455824     be0f90    vmlinux.orig
+> 
+> ("data" includes an initramfs so it's huge, but removing it doesn't
+> impact the "text" column.)
 
-    at24: probe of 2-0050 failed with error -22
+I think 19kb is worth it, though I was actually more interested in the
+runtime overhead.
 
-    da9210: probe of 6-0068 failed with error -22
+> At some point I'd also like to get the of_device_is_big_endian() patch
+> merged, and then use it to harmonize the way endian swapping works
+> across serial8250, libahci, and maybe USB.  Depending on the
+> size/complexity impact and the level of passion surrounding the topic,
+> this might also involve getting rid of the compile-time optimizations,
+> or at least simplifying them down to a single option instead of 6.
 
-This happens because the call to of_irq_get() in i2c_device_probe()
-returns -EINVAL.
+Yes, good idea.
 
-If a device node does not have an "interrupts" property,
-of_irq_parse_one() fails. Unlike irq_of_parse_and_map(), of_irq_get()
-does not ignore errors from of_irq_parse_one(), but forwards them.
+> > It's probably not a wrong description here, but for anybody reading this
+> > who also works on ARM, it seems rather confusing because there,
+> > "multiplatform" implies that the particular SoC can be built into a
+> > generic kernel image that supports SoCs from any vendor whose platform
+> > is also marked as "multiplatform", as long as the CPU architecture level
+> > (v4/v5, or v6/v7, or v8) is the same.
+> 
+> The BMIPS multiplatform kernel is intended to support any SoC based on
+> a 65nm/40nm/28nm BMIPS CPU.  Strictly speaking, "BMIPS" isn't an
+> architecture level defined by imgtec, nor is it something that other
+> silicon vendors can currently offer.  But the BMIPS CPUs do have their
+> own unique CP0 registers, DSP instruction set, errata, and ways of
+> handling SMP / cache maintenance / performance counters.
 
-Make i2c_device_probe() ignore all errors but -EPROBE_DEFER to fix this,
-just like platform_get_irq() and platform_get_irq_byname() already do.
+Ok, I see. It looks like you can have a combined kernel that runs on
+BMIPS BCM47xx and MIPS32r2 74K BCM47xx already, right?
 
-Fixes: 2fd36c55264926e2 ("i2c: core: Map OF IRQ at probe time")
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
- drivers/i2c/i2c-core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+So it's not fundamentally incompatible with the other platforms?
 
-diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
-index a0768d6dffc28aae..cf830915713b387a 100644
---- a/drivers/i2c/i2c-core.c
-+++ b/drivers/i2c/i2c-core.c
-@@ -629,8 +629,10 @@ static int i2c_device_probe(struct device *dev)
- 	if (!client->irq && dev->of_node) {
- 		int irq = of_irq_get(dev->of_node, 0);
- 
--		if (irq < 0)
-+		if (irq == -EPROBE_DEFER)
- 			return irq;
-+		if (irq < 0)
-+			irq = 0;
- 
- 		client->irq = irq;
- 	}
--- 
-1.9.1
+> Outside of the CPU, the BCM63xx/BCM33xx/BCM7xxx register maps and
+> peripherals look pretty different, and the arch/mips/bmips code makes
+> almost zero assumptions about the rest of the chip if a DTB is passed
+> in from the bootloader.  In this sense you can see the parallels to
+> CONFIG_ARCH_MULTI_Vx.
+> 
+> Prior to this work, these product lines have never been able to share
+> a common kernel image.
+
+I still think this is different in the sense that ARM multiplatform
+support is about combining platforms from separate mach-* directories,
+while your approach was to rewrite multiple mach-* directories into
+a single new one that remains separate from the others. While this is
+a great improvement, it doesn't get you any closer to having a
+combined BMIPS+RALINK+JZ4740+ATH79 kernel for instance. I don't know
+if such a kernel is something that anybody wants, or if it's even
+technically possible.
+
+If you wanted to do that however, starting with BMIPS you'd have
+to make it possible to define a new platform without the
+arch/mips/include/asm/mach-bmips/ directory (this should be possible
+already, so the hardest part is done), replace all global function
+calls (arch_init_irq, prom_init, get_system_type,  ...) with generic
+platform-independent implementations or wrappers around per-platform
+callbacks, and move the Kconfig section for CONFIG_BMIPS_MULTIPLATFORM
+outside of the "System type" choice statement.
+Until you do that, your platform isn't "more multipliplatform" than
+the others really, it just abstracts the differences between some
+SoCs nicer than most.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
