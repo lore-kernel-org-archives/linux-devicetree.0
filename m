@@ -1,7 +1,7 @@
 From: gyungoh@gmail.com
-Subject: [RESUBMIT PATCH v7 7/9] regulator: sky81452: Modify Device Tree structure
-Date: Mon, 17 Nov 2014 17:33:08 +0900
-Message-ID: <1416213190-20935-8-git-send-email-jack.yoo@skyworksinc.com>
+Subject: [RESUBMIT PATCH v7 6/9] devicetree: i2c: Add SKY81452 to the Trivial Devices list
+Date: Mon, 17 Nov 2014 17:33:07 +0900
+Message-ID: <1416213190-20935-7-git-send-email-jack.yoo@skyworksinc.com>
 References: <1416213190-20935-1-git-send-email-jack.yoo@skyworksinc.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1416213190-20935-1-git-send-email-jack.yoo@skyworksinc.com>
@@ -15,103 +15,37 @@ From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
 Signed-off-by: Gyungoh Yoo <jack.yoo@skyworksinc.com>
 ---
 Changes v7:
-Modified licensing text to GPLv2
-Splitted Kconfig renaming from DT patch
+Nothing
 
 Changes v6:
-Added new line character at the end of line of dev_err()
+Nothing
 
 Changes v5:
-Changed DT for regulator : 'lout' node should be defined under 'regulator'
-Removed compatible string
-Modified to return EINVAL when of_node is NULL
+Nothing
 
 Changes v4:
-Removed MODULE_VERSION()
-Modified license to GPLv2
+Nothing
 
 Changes v3:
-Modified to return ENODATA when of_node is NULL
-Modified the messages in error cases
+Nothing
 
 Changes v2:
-Added 'compatible' attribute in the driver
-Added message for exception or errors.
+Add SKY81452 to the Trivial Devices list
 
- drivers/regulator/sky81452-regulator.c | 34 +++++++++++++++++++++-------------
- 1 file changed, 21 insertions(+), 13 deletions(-)
+ Documentation/devicetree/bindings/i2c/trivial-devices.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/regulator/sky81452-regulator.c b/drivers/regulator/sky81452-regulator.c
-index 97aff0c..36fa045 100644
---- a/drivers/regulator/sky81452-regulator.c
-+++ b/drivers/regulator/sky81452-regulator.c
-@@ -5,9 +5,8 @@
-  * Author : Gyungoh Yoo <jack.yoo@skyworksinc.com>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-- * under the terms of the GNU General Public License as published by the
-- * Free Software Foundation; either version 2, or (at your option) any
-- * later version.
-+ * under the terms of the GNU General Public License version 2
-+ * as published by the Free Software Foundation.
-  *
-  * This program is distributed in the hope that it will be useful, but
-  * WITHOUT ANY WARRANTY; without even the implied warranty of
-@@ -65,21 +64,29 @@ static const struct regulator_desc sky81452_reg = {
- };
- 
- #ifdef CONFIG_OF
-+static struct of_regulator_match sky81452_match = {
-+	.name = "lout"
-+};
-+
- static struct regulator_init_data *sky81452_reg_parse_dt(struct device *dev)
- {
--	struct regulator_init_data *init_data;
- 	struct device_node *np;
-+	int ret;
- 
- 	np = of_get_child_by_name(dev->parent->of_node, "regulator");
--	if (unlikely(!np)) {
--		dev_err(dev, "regulator node not found");
--		return NULL;
-+	if (!np) {
-+		dev_err(dev, "regulator node not found.\n");
-+		return ERR_PTR(-EINVAL);
- 	}
- 
--	init_data = of_get_regulator_init_data(dev, np);
--
-+	ret = of_regulator_match(dev, np, &sky81452_match, 1);
- 	of_node_put(np);
--	return init_data;
-+	if (IS_ERR_VALUE(ret)) {
-+		dev_err(dev, "Error parsing init data. err=%d\n", ret);
-+		return ERR_PTR(ret);
-+	}
-+
-+	return &sky81452_match.init_data;
- }
- #else
- static struct regulator_init_data *sky81452_reg_parse_dt(struct device *dev)
-@@ -107,8 +114,10 @@ static int sky81452_reg_probe(struct platform_device *pdev)
- 	config.regmap = dev_get_drvdata(dev->parent);
- 
- 	rdev = devm_regulator_register(dev, &sky81452_reg, &config);
--	if (IS_ERR(rdev))
-+	if (IS_ERR(rdev)) {
-+		dev_err(dev, "failed to register. err=%ld\n", PTR_ERR(rdev));
- 		return PTR_ERR(rdev);
-+	}
- 
- 	platform_set_drvdata(pdev, rdev);
- 
-@@ -126,5 +135,4 @@ module_platform_driver(sky81452_reg_driver);
- 
- MODULE_DESCRIPTION("Skyworks SKY81452 Regulator driver");
- MODULE_AUTHOR("Gyungoh Yoo <jack.yoo@skyworksinc.com>");
--MODULE_LICENSE("GPL");
--MODULE_VERSION("1.0");
-+MODULE_LICENSE("GPL v2");
+diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+index fbde415..122fa1e 100644
+--- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
++++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+@@ -77,6 +77,7 @@ ramtron,24c64		i2c serial eeprom  (24cxx)
+ ricoh,rs5c372a		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
+ samsung,24ad0xd1	S524AD0XF1 (128K/256K-bit Serial EEPROM for Low Power)
+ sii,s35390a		2-wire CMOS real-time clock
++skyworks,sky81452	Skyworks SKY81452: Six-Channel White LED Driver with Touch Panel Bias Supply
+ st-micro,24c256		i2c serial eeprom  (24cxx)
+ stm,m41t00		Serial Access TIMEKEEPER
+ stm,m41t62		Serial real-time clock (RTC) with alarm
 -- 
 1.9.1
