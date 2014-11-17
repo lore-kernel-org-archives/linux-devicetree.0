@@ -1,39 +1,226 @@
-From: =?UTF-8?B?S3J6eXN6dG9mIEtvesWCb3dza2k=?= <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 5/5] mfd: s2mps11: Add binding documentation for Samsung
- S2MPS13 PMIC
-Date: Mon, 17 Nov 2014 11:20:43 +0100
-Message-ID: <5469CBFB.8040805@samsung.com>
-References: <1416184980-532-1-git-send-email-cw00.choi@samsung.com>
- <1416184980-532-6-git-send-email-cw00.choi@samsung.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH v2] PCI: designware: Add support 4 ATUs assignment
+Date: Mon, 17 Nov 2014 11:25:08 +0100
+Message-ID: <1416219908.2734.1.camel@pengutronix.de>
+References: <1415682444-24911-1-git-send-email-Minghuan.Lian@freescale.com>
+	 <CA+mB=1+4Dzxhbin6z0PUENvjUz-y8bq-K09FXTnSepFvVfe9HQ@mail.gmail.com>
+	 <546308DD.40109@freescale.com>
+	 <CA+mB=1K=Oyzdb2yfBvPRG9DHi-PFjRPtVS_dY9JMOz6dQog8QQ@mail.gmail.com>
+	 <546331E7.5060003@freescale.com>
+	 <CA+mB=1KObT9O783SMcvHy8nJGQPnxyKgP332r5bHx-K_D+LhVg@mail.gmail.com>
+	 <1415809929.2876.5.camel@pengutronix.de> <546481A3.5050700@freescale.com>
+	 <1415874015.2420.5.camel@pengutronix.de> <54648D61.6050704@freescale.com>
+	 <1415876988.2420.7.camel@pengutronix.de> <5465C19D.3060801@freescale.com>
+	 <1415959338.4445.1.camel@pengutronix.de>
+	 <ceb189ef55cf44588b212cc44bb19ef5@BN3PR0301MB1249.namprd03.prod.outlook.com>
+	 <1415965321.4445.4.camel@pengutronix.de> <5469643A.6040906@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1416184980-532-6-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, geunsik.lim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <5469643A.6040906@freescale.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Lian Minghuan-B31939 <B31939@freescale.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: "Mingkai.Hu@freescale.com" <Mingkai.Hu@freescale.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, Srikanth Thokala <sriku.linux@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Roy Zang <tie-fei.zang@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17.11.2014 01:43, Chanwoo Choi wrote:
-> This patch adds the binding documentation for Samsung S2MPS13 PMIC
-> which is similiar with existing S2MPS14 PMIC. S2MPS13 has the different number
-> of regulators from S2MPS14 and RTC/Clock is the same with the S2MPS14.
-> 
-> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mfd/s2mps11.txt | 22 ++++++++++++----------
->  1 file changed, 12 insertions(+), 10 deletions(-)
+Rob, Mark, Kumar, Ian,
 
-Looks good.
+could I please get your opinion on the following matter? Thanks.
 
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Am Montag, den 17.11.2014, 10:58 +0800 schrieb Lian Minghuan-B31939:
+> Hi Lucas,
+>=20
+> On 2014=E5=B9=B411=E6=9C=8814=E6=97=A5 19:42, Lucas Stach wrote:
+> > Am Freitag, den 14.11.2014, 11:30 +0000 schrieb
+> > Mingkai.Hu@freescale.com:
+> >>
+> >>> -----Original Message-----
+> >>> From: Lucas Stach [mailto:l.stach@pengutronix.de]
+> >>> Sent: Friday, November 14, 2014 6:02 PM
+> >>> To: Lian Minghuan-B31939
+> >>> Cc: Srikanth Thokala; Lian Minghuan-B31939; linux-pci@vger.kernel=
+=2Eorg;
+> >>> linux-arm-kernel@lists.infradead.org; Zang Roy-R61911; Hu Mingkai=
+-B21284;
+> >>> Bjorn Helgaas
+> >>> Subject: Re: [PATCH v2] PCI: designware: Add support 4 ATUs assig=
+nment
+> >>>
+> >>> Am Freitag, den 14.11.2014, 16:47 +0800 schrieb Lian Minghuan-B31=
+939:
+> >>>> Hi Lucas and all,
+> >>>>
+> >>>> On 2014=E5=B9=B411=E6=9C=8813=E6=97=A5 19:09, Lucas Stach wrote:
+> >>>>> Am Donnerstag, den 13.11.2014, 18:52 +0800 schrieb Lian Minghua=
+n-
+> >>> B31939:
+> >>>>>> Hi Lucas,
+> >>>>>>
+> >>>>>> On 2014=E5=B9=B411=E6=9C=8813=E6=97=A5 18:20, Lucas Stach wrot=
+e:
+> >>>>>>> Am Donnerstag, den 13.11.2014, 18:02 +0800 schrieb Lian Mingh=
+uan-
+> >>> B31939:
+> >>>>>>>> Hi Lucas,
+> >>>>>>>>
+> >>>>>>>> Please see my comments inline.
+> >>>>>>>>
+> >>>>>>>> Thanks,
+> >>>>>>>> Minghuan
+> >>>>>>>>
+> >>>>>>>> On 2014=E5=B9=B411=E6=9C=8813=E6=97=A5 00:32, Lucas Stach wr=
+ote:
+> >>>>>>>>> Am Mittwoch, den 12.11.2014, 21:53 +0530 schrieb Srikanth T=
+hokala:
+> >>>>>>>>>> Hi Minghuan,
+> >>>>>>> [...]
+> >>>>>>>
+> >>>>>>>>> Using a smaller type complicates the DT for little to no
+> >>>>>>>>> benefit. I think it's ok to use u32 here, which is a common
+> >>>>>>>>> standard for integer values in DT.
+> >>>>>>>>>
+> >>>>>>>>> Though this discussion lead me to the question if we even n=
+eed
+> >>>>>>>>> to have this property in the DT at all. Isn't this a proper=
+ty
+> >>>>>>>>> that is fixed for a specific silicon implementation of the =
+DW
+> >>>>>>>>> core? In that case we could just infer the number of ATUs f=
+rom
+> >>>>>>>>> the DT compatible, so this should probably just be added to
+> >>>>>>>>> struct pcie_port and properly initialized by the SoC glue d=
+rivers.
+> >>>>>>>> [Minghuan]  As far as I know, exynos implements only 2 ATUs,=
+ this
+> >>>>>>>> is why pcie-designware only supports 2 ATU. iMX implements 4=
+ ATUs
+> >>>>>>>> and LS1021A implements 6 ATUs.
+> >>>>>>>>
+> >>>>>>> Right so we don't need an additional property in the DT at al=
+l.
+> >>>>>>> The number of ATUs is fixed for a specific core compatible an=
+d can
+> >>>>>>> be passed in by the respective exynos, imx and ls1021 glue dr=
+ivers.
+> >>>>>>>
+> >>>>>>> You may ask the Keystone and Spear maintainers to get the cor=
+rect
+> >>>>>>> number of ATUs for those implementations.
+> >>   > >>>
+> >>>>>>> Regards,
+> >>>>>>> Lucas
+> >>>>>> [Minghuan] Yes. This a way that specific core driver passes th=
+e ATU
+> >>>>>> number to pci-designware. But I perfer to adding dts node for =
+the
+> >>>>>> following reasons:
+> >>>>>> 1. ATU number is hardware attribute, so it can be added to DTS=
+=2E
+> >>>>> But it is a duplication of information that can be inferred fro=
+m the
+> >>>>> DT compatible alone, which is usually frowned upon.
+> >>>>>
+> >>>>> Also in contrast to the num-lanes property I don't see a use-ca=
+se to
+> >>>>> reduce the number of used ATUs in a specific system, so num-atu=
+s is
+> >>>>> basically fixed for a specific implementation.
+> >>>> [Minghuan] 4ATUs provides better support for multiple-function a=
+nd
+> >>>> SR-IOV PCIe devices.
+> >>>> Can anyone tell me if there is the company will increase ATUs nu=
+mber?
+> >>>> If yes, we should avoid the following code:
+> >>>>
+> >>>> if (of_device_is_compatible(pcie->dev->of_node, "xxx,r1-pcie"))
+> >>>>       atu_num =3D 2;
+> >>>>
+> >>>> if (of_device_is_compatible(pcie->dev->of_node, "xxx,r2-pcie"))
+> >>>>       atu_num =3D 4;
+> >>>>
+> >>> The number of ATUs is fixed for a specific implementation. If the=
+ number
+> >>> of ATUs changes in a newer implementation of a SoC then the silic=
+on
+> >>> implementation of the DW PCIe core changed, so it should get a ne=
+w
+> >>> compatible anyway.
+> >>>
+> >> If there are multiple platforms to use the same SoC driver, there =
+will be
+> >> multiple cases for different platforms as Minghuan has pointed out=
+=2E
+> >>
+> >> For the platform that only has 2 ATUs, ATU0 is used for CFG0 and M=
+EM and
+> >> there will be conflict when MEM and CFG0 are accessed simultaneous=
+ly which
+> >> has cause the SATA link issue. I think more ATUs will be added in =
+the
+> >> future design, then one driver maybe need to handle multiple platf=
+orms.
+> >>
+> >> DTS is designed for to describe the hardware property, it's a gene=
+ral way
+> >> to put hardware related property into DTS.
+> >>
+> > If another platform uses the same driver you should still have a
+> > specific compatible for that platform. Exactly to differentiate tho=
+se
+> > silicon implementation differences.
+> >
+> > If you add 2 more ATUs to the layerscape pcie in a future design it=
+ is
+> > not fsl,ls1021a-pcie anymore, but for example fsl,ls1100-pcie. Also=
+ you
+> > don't need the code construct as seen above. The number of ATU can =
+be
+> > added to implementation specific data.
+> > Please look at the Tegra PCI driver and especially struct
+> > tegra_pcie_soc_data on how to properly abstract properties that are
+> > defined by a specific silicon implementation of a core.
+> [Minghuan] Yes, we can added specific data for different implementati=
+on.
+> But we need to add hard coded information and assignment statement to
+> the layerscape PCIe driver even to every PCIe driver based on=20
+> pcie-designware.c.
+>=20
+> Why not use dts?  Nothing needs to be added to specific implementatio=
+n=20
+> driver code.
+>=20
 
-Best regards,
-Krzysztof
+This is an implementation detail of the Linux driver. We generally don'=
+t
+decide about the DT layout based on implementation details.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> The Device Tree is a data structure for describing hardware. Rather t=
+han=20
+> hard coding every detail of a device into an operating system, many=20
+> aspect of the hardware can be described in a data structure that is=20
+> passed to the operating system at boot time.
+>=20
+Because in my view this is a duplication of information. I would argue
+that we should not put any properties into the DT that can be easily
+inferred from the device compatible alone.
+
+I can already see problems with DT backwards compatibility for this
+property. You can not make the property mandatory as it this would brea=
+k
+old DTs. You now assume that if the property isn't present it means tha=
+t
+2 ATUs are implemented. While it isn't strictly breaking anything havin=
+g
+the property in the DT means that only systems with a new DTB will set
+the right number of ATUs (4) for i.MX6. This could be easily avoided if
+we just infer the property from the compatible.
+
+But I'm no authority on DT decisions, let's get the proper people on CC
+so we can get to an agreement here.
+
+Regards,
+Lucas
+--=20
+Pengutronix e.K.             | Lucas Stach                 |
+Industrial Linux Solutions   | http://www.pengutronix.de/  |
