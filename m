@@ -1,76 +1,36 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [RFC] adp1653: Add device tree bindings for LED controller
-Date: Mon, 17 Nov 2014 16:21:53 +0100
-Message-ID: <201411171621.54895@pali>
-References: <20141116075928.GA9763@amd> <201411171601.32311@pali> <20141117150617.GD7046@atomide.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 0/2] dt-bindings: simplefb: Drop the advice
+ about using a specific path for nodes
+Date: Mon, 17 Nov 2014 16:37:03 +0100
+Message-ID: <1416238625-28590-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart24421768.ZgrPxUV2KB";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141117150617.GD7046@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Pavel Machek <pavel@ucw.cz>, sre@debian.org, sre@ring0.de, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, khilman@kernel.org, aaro.koskinen@iki.fi, freemangordon@abv.bg, bcousson@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sakari.ailus@iki.fi, devicetree@vger.kernel.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBKVMVCRQKGQE7FDLSNA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---nextPart24421768.ZgrPxUV2KB
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Hi Tomi,
 
-On Monday 17 November 2014 16:06:17 Tony Lindgren wrote:
-> * Pali Roh=C3=A1r <pali.rohar@gmail.com> [141117 07:03]:
-> > On Monday 17 November 2014 15:55:46 Tony Lindgren wrote:
-> > > There's nothing stopping us from initializing the camera
-> > > code from pdata-quirks.c for now to keep it working.
-> > > Certainly the binding should be added to the driver, but
-> > > that removes a dependency to the legacy booting mode if
-> > > things are otherwise working.
-> >=20
-> > Tony, legacy board code for n900 is not in mainline tree.
-> > And that omap3 camera subsystem for n900 is broken since
-> > 3.5 kernel... (both Front and Back camera on n900 show only
-> > green picture).
->=20
-> I'm still seeing the legacy board code for n900 in mainline
-> tree :) It's deprecated, but still there.
->=20
+Here is v2 of my patch set to slightly tweak the simplefb bindings wrt
+the interface between the boot-loader and the devicetree for pre-populated
+simplefb nodes.
 
-Yes, it is there because conversion from board code to DT is not=20
-complete yet... It is slow progress but you can watch it on page=20
-http://elinux.org/N900 (last two columns).
+Changes in v2: Changed the simplefb-sunxi bindings to use a single
+sunxi,pipeline string property instead of a sunxi,pipeline int and a
+sunxi,output string property.
 
-> Are you maybe talking about some other piece of platform_data
-> that's no longer in the mainline kernel?
->=20
+This patch set is all acked up, and a fix to the binding changes you've
+already queued for 3.19, so please queue these 2 patches for 3.19.
 
-Yes, about platform_data which were never in mainline kernel.=20
-Just only in other trees. That code is: camera subsystem (with=20
-all other devices), cellular modem, bluetooth, radio.
+Thanks & Regards,
 
-> No idea what might be wrong with the camera though.
->=20
-> Regards,
->=20
-> Tony
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart24421768.ZgrPxUV2KB
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlRqEpIACgkQi/DJPQPkQ1KkLACfUNWGUzoX6EuoC8WlszGxWO+v
-b+QAoIc1NDSPjO5s9uQL0EzC3uyP4Hcd
-=0o81
------END PGP SIGNATURE-----
-
---nextPart24421768.ZgrPxUV2KB--
+Hans
