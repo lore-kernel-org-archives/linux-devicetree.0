@@ -1,50 +1,73 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v9 2/9] qcom: spm: Add Subsystem Power Manager driver
-Date: Mon, 17 Nov 2014 22:32:18 +0100
-Message-ID: <546A6962.9090801@linaro.org>
-References: <1414194024-55547-1-git-send-email-lina.iyer@linaro.org> <1414194024-55547-3-git-send-email-lina.iyer@linaro.org>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH v4 1/2] ARM: keystone: pm: switch to use generic pm domains
+Date: Mon, 17 Nov 2014 13:50:13 -0800
+Message-ID: <7hsihhzecq.fsf@deeprootsystems.com>
+References: <1415631557-22897-1-git-send-email-grygorii.strashko@ti.com>
+	<1600093.60yAP0Qpua@wuerfel> <7h389h3aif.fsf@deeprootsystems.com>
+	<1618855.DXsjWXLqau@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1414194024-55547-3-git-send-email-lina.iyer@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Lina Iyer <lina.iyer@linaro.org>, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1618855.DXsjWXLqau@wuerfel> (Arnd Bergmann's message of "Mon, 17
+	Nov 2014 21:37:37 +0100")
+Sender: linux-pm-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>, ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/25/2014 01:40 AM, Lina Iyer wrote:
+Arnd Bergmann <arnd@arndb.de> writes:
 
-Hi Lina,
+> On Monday 17 November 2014 11:14:16 Kevin Hilman wrote:
+>> >> 
+>> >> So, The Keystone 2 Generic PM Controller is just a proxy PM layer here between
+>> >> device and Generic clock manipulation PM callbacks.
+>> >> It fills per-device clock list when device is attached to GPD and
+>> >> ensures that all clocks from that list enabled/disabled when device is
+>> >> started/stopped.
+>> >
+>> > The idea of such a generic power domain implementation sounds useful, but
+>> > it has absolutely no business in platform specific code.
+>> 
+>> Yes it does.  This isn't a generic power domain implementation, but
+>> rather just the platform-specific glue that hooks up the clocks to the
+>> right devices and power-domains so that the generic power-domain and
+>> generic pm_clocks code does the right thing.
+>
+> How would you do this on an arm64 version of keystone then? With
+> the current approach, you'd need to add a machine specific directory,
+> and that seems completely pointless since this is not even about
+> a hardware requirement.
 
-[ ... ]
+Yeah, you're right.  I misunderstood you're original comment.
 
-> +static inline void spm_register_write(struct spm_driver_data *drv,
-> +					enum spm_reg reg, u32 val)
-> +{
-> +	if (drv->reg_data->reg_offset[reg])
-> +		writel_relaxed(val, drv->reg_base +
-> +				drv->reg_data->reg_offset[reg]);
+>> > I suggest you either remove the power domain proxy from your drivers
+>> > and use the clocks directly, 
+>> 
+>> No.  That's a step in the wrong direction.  This change isn't affecting
+>> drivers directly.  It's the runtime PM and generic power domain layers
+>> that handle this, and runtime PM adapted drivers don't need any changes.
+>>  
+>> > or come up with an implementation that can be used across other
+>> > platforms and CPU architectures.
+>> 
+>> We already have those in the generic power domain and the pm_clock
+>> layers.  This series is just hooking those up for Keystone.
+>
+> Then why not add the missing piece to the generic power domain
+> code to avoid having to add infrastructure to the platform
+> for it?
 
-Why not use writel and don't use 'wmb' below ?
+Yes, good point.  There is nothing keystone-specific in this glue.
 
-> +}
-> +
+Grygorii, what about adding a feature to the generic domain parsing so
+that it can get clocks from device nodes that are part of the domain,
+and so it sets up pm_clk accordingly.
 
-[ ... ]
+I've recently seen other SoCs doing very similar, so this really should
+be generalized.
 
-> +	spm_register_write(drv, SPM_REG_SPM_CTL, ctl_val);
-> +
-> +	/* Ensure we have written the start address */
-> +	wmb();
+I've been looking at this primarily as a right incremental improvement
+from what is there for Keystone today, but Arnd is right.  This should
+be moved out of platform code.
 
-
-
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Kevin
