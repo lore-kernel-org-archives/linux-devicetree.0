@@ -1,48 +1,45 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH V5 4/4] clocksource: mips-gic: Add device-tree support
-Date: Mon, 17 Nov 2014 22:29:02 +0100
-Message-ID: <546A689E.3050207@linaro.org>
-References: <1415821419-26974-1-git-send-email-abrestic@chromium.org>	<1415821419-26974-5-git-send-email-abrestic@chromium.org>	<546A66EA.3090107@linaro.org> <CAL1qeaHpK0a+ONK3bhVrRk-G7iwRw_HwpjtLwi6E6EJ+rccbww@mail.gmail.com>
+From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v1 1/2] efuse: IMG Pistachio eFuse Controller
+Date: Mon, 17 Nov 2014 21:29:17 +0000
+Message-ID: <20141117212917.GH1739@jhogan-linux.le.imgtec.org>
+References: <1416237576-21542-1-git-send-email-arul.ramasamy@imgtec.com>
+ <1416237576-21542-2-git-send-email-arul.ramasamy@imgtec.com>
+ <546A189B.3090202@imgtec.com>
+ <546A5445.3020905@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL1qeaHpK0a+ONK3bhVrRk-G7iwRw_HwpjtLwi6E6EJ+rccbww@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, John Crispin <blogic@openwrt.org>, David Daney <ddaney.cavm@gmail.com>, Qais Yousef <qais.yousef@imgtec.com>, James Hogan <james.hogan@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, Linux-MIPS <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <546A5445.3020905-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: arul.ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, naidu.tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, jude.abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/17/2014 10:26 PM, Andrew Bresticker wrote:
-> On Mon, Nov 17, 2014 at 1:21 PM, Daniel Lezcano
-> <daniel.lezcano@linaro.org> wrote:
->> On 11/12/2014 08:43 PM, Andrew Bresticker wrote:
->>>
->>> Parse the GIC timer frequency and interrupt from the device-tree.
->>>
->>> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
->>> Acked-by: Arnd Bergmann <arnd@arndb.de>
->>
->>
->> Hi Andrew,
->>
->> through which tree is this patch supposed to go ?
->>
->> Is there any dependency ?
->
-> There are quite a few dependencies, so this series and all the other
-> MIPS GIC stuff is going through the MIPS tree.
+On Mon, Nov 17, 2014 at 05:02:13PM -0300, Ezequiel Garcia wrote:
+> Hi James,
+> 
+> On 11/17/2014 12:47 PM, James Hogan wrote:
+> > Hi,
+> > 
+> > Some comments below.
+> > 
+> > Should this driver live in drivers/misc/fuse?
+> > 
+> 
+> You might want to take a look at the discussion around Tegra's eFuse
+> driver, which was originally proposed for drivers/misc and then got
+> merged in drivers/soc.
 
-Ok thanks.
+Thanks, I hadn't spotted that it got merged elsewhere (must've been
+looking at an older versions of the patchset).
 
-   -- Daniel
+Curiously the tegra commit 783c8f4c84451bc444e314a71b447239c6ef6fd9 did
+add an unused Makefile in drivers/misc/fuse/ ...
 
-
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Cheers
+James
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
