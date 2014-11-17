@@ -1,62 +1,79 @@
-From: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
-Subject: Re: [PATCHv1 2/3] arm: mvebu: add .dts file for Synology DS213j
-Date: Mon, 17 Nov 2014 09:23:13 +1000
-Message-ID: <546931E1.5070909@killerwolves.net>
-References: <cover.1416095841.git.arno@natisbad.org>	<1eb26f8c1946622910a7e2318c895a7082fea7e5.1416095841.git.arno@natisbad.org>	<20141116020024.GC15870@lunn.ch> <87d28nb83u.fsf@natisbad.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87d28nb83u.fsf-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH 3/5] clk: s2mps11: Add the support for S2MPS13 PMIC clock
+Date: Mon, 17 Nov 2014 09:42:58 +0900
+Message-ID: <1416184980-532-4-git-send-email-cw00.choi@samsung.com>
+References: <1416184980-532-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1416184980-532-1-git-send-email-cw00.choi@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org, broonie@kernel.org, mturquette@linaro.org, a.zummo@towertech.it
+Cc: lgirdwood@gmail.com, sbkim73@samsung.com, sameo@linux.intel.com, geunsik.lim@samsung.com, inki.dae@samsung.com, kyungmin.park@samsung.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 16/11/2014 11:14 PM, Arnaud Ebalard wrote:
->>> +	gpio-fan-100-32-35 {
->> There is some logic to this naming, but i don't remember what it is.
->> Did you check this is appropriate?
-> The 32-35 is for the MPP i.e. fan uses mpp32 to mpp35 (3 MPP for speed,
-> one for alarm). I don't know what the 100 part means. What I did is I
-> googled to see which fan supported kirkwood models have and noticed
-> that the DS212j uses the exact same fan, i.e. Y.S.Tech FD129225LL-N so
-> I opted for the same naming.
->
-> On that aspect, you may be able to explain why the speed-map for this
-> fan goes up to 5000 RPM. This fan is supposed to operate at 1900RPM.
-> Note that it does not matter in practice.
+This patch adds the support for S2MPS13 PMIC clock which is same with existing
+S2MPS14 RTC IP. But, S2MPS13 uses all of clocks (32khz_{ap|bt|cp}).
 
-On the Kirkwood Diskstations, the first number (100, 120 or 150) refers
-to the middle of the three fan speed resistors, the second number (15 or
-32) refers to the first fan control pin, and the third number (18 or 35)
-refers to the first fan alarm pin.
+Cc: Mike Turquette <mturquette@linaro.org>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+---
+ drivers/clk/clk-s2mps11.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-i.e. the 100-32-35 uses fan speed resistors of 33, 100 and 150 ohms,
-uses pins 32-34 for fan control, and uses pin 35 for the fan alarm.
-
-The 5000RPM was interpolated from my measured RPM pulse rate (4200PPM)
-of the 80mm fan in my DS211j (which uses the 150-32-35 fan config) at
-maximum RPM.
-
+diff --git a/drivers/clk/clk-s2mps11.c b/drivers/clk/clk-s2mps11.c
+index b7797fb..7bb13af 100644
+--- a/drivers/clk/clk-s2mps11.c
++++ b/drivers/clk/clk-s2mps11.c
+@@ -23,6 +23,7 @@
+ #include <linux/clk-provider.h>
+ #include <linux/platform_device.h>
+ #include <linux/mfd/samsung/s2mps11.h>
++#include <linux/mfd/samsung/s2mps13.h>
+ #include <linux/mfd/samsung/s2mps14.h>
+ #include <linux/mfd/samsung/s5m8767.h>
+ #include <linux/mfd/samsung/core.h>
+@@ -120,6 +121,24 @@ static struct clk_init_data s2mps11_clks_init[S2MPS11_CLKS_NUM] = {
+ 	},
+ };
+ 
++static struct clk_init_data s2mps13_clks_init[S2MPS11_CLKS_NUM] = {
++	[S2MPS11_CLK_AP] = {
++		.name = "s2mps13_ap",
++		.ops = &s2mps11_clk_ops,
++		.flags = CLK_IS_ROOT,
++	},
++	[S2MPS11_CLK_CP] = {
++		.name = "s2mps13_cp",
++		.ops = &s2mps11_clk_ops,
+		.flags = CLK_IS_ROOT,
++	},
++	[S2MPS11_CLK_BT] = {
++		.name = "s2mps13_bt",
++		.ops = &s2mps11_clk_ops,
++		.flags = CLK_IS_ROOT,
++	},
++};
++
+ static struct clk_init_data s2mps14_clks_init[S2MPS11_CLKS_NUM] = {
+ 	[S2MPS11_CLK_AP] = {
+ 		.name = "s2mps14_ap",
+@@ -184,6 +203,10 @@ static int s2mps11_clk_probe(struct platform_device *pdev)
+ 		s2mps11_reg = S2MPS11_REG_RTC_CTRL;
+ 		clks_init = s2mps11_clks_init;
+ 		break;
++	case S2MPS13X:
++		s2mps11_reg = S2MPS13_REG_RTCCTRL;
++		clks_init = s2mps13_clks_init;
++		break;
+ 	case S2MPS14X:
+ 		s2mps11_reg = S2MPS14_REG_RTCCTRL;
+ 		clks_init = s2mps14_clks_init;
+@@ -279,6 +302,7 @@ static int s2mps11_clk_remove(struct platform_device *pdev)
+ 
+ static const struct platform_device_id s2mps11_clk_id[] = {
+ 	{ "s2mps11-clk", S2MPS11X},
++	{ "s2mps13-clk", S2MPS13X},
+ 	{ "s2mps14-clk", S2MPS14X},
+ 	{ "s5m8767-clk", S5M8767X},
+ 	{ },
 -- 
-Ben Peddell
- * ICT - School Support Officer
-   - St Mary's School Bowen
-   - St Catherine's School Proserpine
-   - St John Bosco's School Collinsville
- * Mobile: 0431 800 195
-
-*** Disclaimer ***
-This email is only for the addressees, so please don't disclose it
-to others without prior agreement.  The opinions expressed are mine,
-and not my employer's.  My employer shall not be liable.  I am not
-a lawyer.  I check my attachments for viruses, but I can't guarantee
-my email will arrive unaltered.
-
-#include "http://klightspeed.killerwolves.net/stddisclaimer.txt"
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.5.5
