@@ -1,235 +1,63 @@
-From: Flora Fu <flora.fu@mediatek.com>
-Subject: [PATCH 7/7] ARM: dts: mt8135: Add support for MT6397 regulator
-Date: Mon, 17 Nov 2014 15:40:27 +0800
-Message-ID: <1416210027-5562-8-git-send-email-flora.fu@mediatek.com>
-References: <1416210027-5562-1-git-send-email-flora.fu@mediatek.com>
+From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
+Subject: Re: [PATCHv1 2/3] arm: mvebu: add .dts file for Synology DS213j
+Date: Mon, 17 Nov 2014 09:25:15 +0100
+Message-ID: <878ujas07o.fsf@natisbad.org>
+References: <cover.1416095841.git.arno@natisbad.org>
+	<1eb26f8c1946622910a7e2318c895a7082fea7e5.1416095841.git.arno@natisbad.org>
+	<20141116020024.GC15870@lunn.ch> <87d28nb83u.fsf@natisbad.org>
+	<546931E1.5070909@killerwolves.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1416210027-5562-1-git-send-email-flora.fu@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Ashwin Chaugule <ashwin.chaugule@linaro.org>, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, srv_heupstream@mediatek.com, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Flora Fu <flora.fu@mediatek.com>, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, Dongdong Cheng <dongdong.cheng@mediatek.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <546931E1.5070909-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org> (Ben Peddell's message of
+	"Mon, 17 Nov 2014 09:23:13 +1000")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree for MT6397 regulators in mt8135.dtsi.
+Hi,
 
-Signed-off-by: Flora Fu <flora.fu@mediatek.com>
----
- arch/arm/boot/dts/mt8135.dtsi | 192 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 192 insertions(+)
+Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org> writes:
 
-diff --git a/arch/arm/boot/dts/mt8135.dtsi b/arch/arm/boot/dts/mt8135.dtsi
-index 14a8aad..4f78287 100644
---- a/arch/arm/boot/dts/mt8135.dtsi
-+++ b/arch/arm/boot/dts/mt8135.dtsi
-@@ -118,6 +118,198 @@
- 
- 			pmic {
- 				compatible = "mediatek,mt6397";
-+
-+				regulators {
-+					mt6397_vpca15_reg: buck_vpca15 {
-+						regulator-name = "vpca15";
-+						regulator-min-microvolt = < 700000>;
-+						regulator-max-microvolt = <1493750>;
-+						regulator-ramp-delay = <12500>;
-+						regulator-enable-ramp-delay = <200>;
-+						regulator-always-on;
-+						regulator-boot-on;
-+					};
-+
-+					mt6397_vpca7_reg: buck_vpca7 {
-+						regulator-name = "vpca7";
-+						regulator-min-microvolt = < 700000>;
-+						regulator-max-microvolt = <1493750>;
-+						regulator-ramp-delay = <12500>;
-+						regulator-enable-ramp-delay = <115>;
-+						regulator-always-on;
-+						regulator-boot-on;
-+					};
-+
-+					mt6397_vsramca15_reg: buck_vsramca15 {
-+						regulator-name = "vsramca15";
-+						regulator-min-microvolt = < 700000>;
-+						regulator-max-microvolt = <1493750>;
-+						regulator-ramp-delay = <12500>;
-+						regulator-enable-ramp-delay = <115>;
-+						regulator-always-on;
-+						regulator-boot-on;
-+					};
-+
-+					mt6397_vsramca7_reg: buck_vsramca7 {
-+						regulator-name = "vsramca7";
-+						regulator-min-microvolt = < 700000>;
-+						regulator-max-microvolt = <1493750>;
-+						regulator-ramp-delay = <12500>;
-+						regulator-enable-ramp-delay = <115>;
-+						regulator-always-on;
-+						regulator-boot-on;
-+					};
-+
-+					mt6397_vcore_reg: buck_vcore {
-+						regulator-name = "vcore";
-+						regulator-min-microvolt = < 700000>;
-+						regulator-max-microvolt = <1493750>;
-+						regulator-ramp-delay = <12500>;
-+						regulator-enable-ramp-delay = <115>;
-+						regulator-always-on;
-+						regulator-boot-on;
-+					};
-+
-+					mt6397_vgpu_reg: buck_vgpu {
-+						regulator-name = "vgpu";
-+						regulator-min-microvolt = < 700000>;
-+						regulator-max-microvolt = <1493750>;
-+						regulator-ramp-delay = <12500>;
-+						regulator-enable-ramp-delay = <115>;
-+					};
-+
-+					mt6397_vdrm_reg: buck_vdrm {
-+						regulator-name = "vdrm";
-+						regulator-min-microvolt = < 800000>;
-+						regulator-max-microvolt = <1593750>;
-+						regulator-ramp-delay = <12500>;
-+						regulator-enable-ramp-delay = <500>;
-+						regulator-always-on;
-+						regulator-boot-on;
-+					};
-+
-+					mt6397_vio18_reg: buck_vio18 {
-+						regulator-name = "vio18";
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <1800000>;
-+						regulator-ramp-delay = <12500>;
-+						regulator-enable-ramp-delay = <500>;
-+						regulator-always-on;
-+						regulator-boot-on;
-+					};
-+
-+					mt6397_vtcxo_reg: ldo_vtcxo {
-+						regulator-name = "vtcxo";
-+						regulator-min-microvolt = <2800000>;
-+						regulator-max-microvolt = <2800000>;
-+						regulator-enable-ramp-delay = <90>;
-+						regulator-always-on;
-+						regulator-boot-on;
-+					};
-+
-+					mt6397_va28_reg: ldo_va28 {
-+						regulator-name = "va28";
-+						regulator-min-microvolt = <2800000>;
-+						regulator-max-microvolt = <2800000>;
-+						regulator-enable-ramp-delay = <218>;
-+						regulator-always-on;
-+						regulator-boot-on;
-+					};
-+
-+					mt6397_vcama_reg: ldo_vcama {
-+						regulator-name = "vcama";
-+						regulator-min-microvolt = <1500000>;
-+						regulator-max-microvolt = <2800000>;
-+						regulator-enable-ramp-delay = <218>;
-+					};
-+
-+					mt6397_vio28_reg: ldo_vio28 {
-+						regulator-name = "vio28";
-+						regulator-min-microvolt = <2800000>;
-+						regulator-max-microvolt = <2800000>;
-+						regulator-enable-ramp-delay = <240>;
-+						regulator-always-on;
-+						regulator-boot-on;
-+					};
-+
-+					mt6397_usb_reg: ldo_usb {
-+						regulator-name = "usb";
-+						regulator-min-microvolt = <3300000>;
-+						regulator-max-microvolt = <3300000>;
-+						regulator-enable-ramp-delay = <218>;
-+					};
-+
-+					mt6397_vmc_reg: ldo_vmc {
-+						regulator-name = "vmc";
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <3300000>;
-+						regulator-enable-ramp-delay = <218>;
-+					};
-+
-+					mt6397_vmch_reg: ldo_vmch {
-+						regulator-name = "vmch";
-+						regulator-min-microvolt = <3000000>;
-+						regulator-max-microvolt = <3300000>;
-+						regulator-enable-ramp-delay = <218>;
-+					};
-+
-+					mt6397_vemc_3v3_reg: ldo_vemc3v3 {
-+						regulator-name = "vemc_3v3";
-+						regulator-min-microvolt = <3000000>;
-+						regulator-max-microvolt = <3300000>;
-+						regulator-enable-ramp-delay = <218>;
-+						regulator-boot-on;
-+					};
-+
-+					mt6397_vgp1_reg: ldo_vcamd {
-+						regulator-name = "vgp1";
-+						regulator-min-microvolt = <1220000>;
-+						regulator-max-microvolt = <3300000>;
-+						regulator-enable-ramp-delay = <240>;
-+					};
-+
-+					mt6397_vgp2_reg: ldo_vcamio {
-+						regulator-name = "vgp2";
-+						regulator-min-microvolt = <1200000>;
-+						regulator-max-microvolt = <3300000>;
-+						regulator-enable-ramp-delay = <218>;
-+					};
-+
-+					mt6397_vgp3_reg: ldo_vcamaf {
-+						regulator-name = "vgp3";
-+						regulator-min-microvolt = <1200000>;
-+						regulator-max-microvolt = <3300000>;
-+						regulator-enable-ramp-delay = <218>;
-+					};
-+
-+					mt6397_vgp4_reg: ldo_vgp4 {
-+						regulator-name = "vgp4";
-+						regulator-min-microvolt = <1200000>;
-+						regulator-max-microvolt = <3300000>;
-+						regulator-enable-ramp-delay = <218>;
-+					};
-+
-+					mt6397_vgp5_reg: ldo_vgp5 {
-+						regulator-name = "vgp5";
-+						regulator-min-microvolt = <1200000>;
-+						regulator-max-microvolt = <3000000>;
-+						regulator-enable-ramp-delay = <218>;
-+					};
-+
-+					mt6397_vgp6_reg: ldo_vgp6 {
-+						regulator-name = "vgp6";
-+						regulator-min-microvolt = <1200000>;
-+						regulator-max-microvolt = <3300000>;
-+						regulator-enable-ramp-delay = <218>;
-+					};
-+
-+					mt6397_vibr_reg: ldo_vibr {
-+						regulator-name = "vibr";
-+						regulator-min-microvolt = <1200000>;
-+						regulator-max-microvolt = <3300000>;
-+						regulator-enable-ramp-delay = <218>;
-+					};
-+				};
- 			};
- 		};
- 
--- 
-1.8.1.1.dirty
+> On 16/11/2014 11:14 PM, Arnaud Ebalard wrote:
+>>>> +	gpio-fan-100-32-35 {
+>>> There is some logic to this naming, but i don't remember what it is.
+>>> Did you check this is appropriate?
+>> The 32-35 is for the MPP i.e. fan uses mpp32 to mpp35 (3 MPP for speed,
+>> one for alarm). I don't know what the 100 part means. What I did is I
+>> googled to see which fan supported kirkwood models have and noticed
+>> that the DS212j uses the exact same fan, i.e. Y.S.Tech FD129225LL-N so
+>> I opted for the same naming.
+>>
+>> On that aspect, you may be able to explain why the speed-map for this
+>> fan goes up to 5000 RPM. This fan is supposed to operate at 1900RPM.
+>> Note that it does not matter in practice.
+>
+> On the Kirkwood Diskstations, the first number (100, 120 or 150) refers
+> to the middle of the three fan speed resistors,
+
+Would not have found that alone ;-) Thanks for clarifying.
+
+> the second number (15 or
+> 32) refers to the first fan control pin, and the third number (18 or 35)
+> refers to the first fan alarm pin.
+>
+> i.e. the 100-32-35 uses fan speed resistors of 33, 100 and 150 ohms,
+> uses pins 32-34 for fan control, and uses pin 35 for the fan alarm.
+>
+> The 5000RPM was interpolated from my measured RPM pulse rate (4200PPM)
+> of the 80mm fan in my DS211j (which uses the 150-32-35 fan config) at
+> maximum RPM.
+
+Then, I think I need to change the speed map to have 1900 RPM as max
+speed. Out of curiosity, how did you measured the RPM pulse rate
+exactly?
+
+Cheers,
+
+a+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
