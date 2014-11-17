@@ -1,73 +1,113 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 2/2] dt-bindings: simplefb-sunxi: Add sunxi
- simplefb extensions
-Date: Mon, 17 Nov 2014 12:34:46 +0100
-Message-ID: <1416224086-5698-3-git-send-email-hdegoede@redhat.com>
-References: <1416224086-5698-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/4] Touchscreen performance related fixes
+Date: Mon, 17 Nov 2014 17:09:45 +0530
+Message-ID: <5469DE81.9030009@ti.com>
+References: <1414408111-2631-1-git-send-email-vigneshr@ti.com>	<20141103180920.GA20779@localhost.localdomain>	<545B2651.4090905@ti.com> <CAJKbBDDyShaJkzzfdFs07EK5gDUfwqWiv39Qi4FVSvRrfc6_fA@mail.gmail.com> <5464A2B5.3020207@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBZN2U6RQKGQEGILWSIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1416224086-5698-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5464A2B5.3020207-l0cyMroinI0@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Johannes Pointner <johannes.pointner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jan Kardell <jan.kardell-KSZdJiTw9mzQT0dZR+AlfA@public.gmane.org>, linux-iio <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, linux-om
 List-Id: devicetree@vger.kernel.org
 
-If pre-filled framebuffer nodes are used, the firmware may need extra
-properties to find the right node. This documents the properties to use
-for this on sunxi platforms.
+Hi,
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- .../bindings/video/simple-framebuffer-sunxi.txt    | 33 ++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
+On Thursday 13 November 2014 05:53 PM, Vignesh R wrote:
+> Hi,
+> 
+> On Wednesday 12 November 2014 06:30 PM, Johannes Pointner wrote:
+>> Hello Vignesh,
+>>
+>> I tried your patch version 3 on a customized board and had some
+>> behavior I couldn't explain.
+>> If I only use the touchscreen it works fine but if I also read values
+>> from the ADCs then I get a lot of pen_up events even if I am still
+>> touching the screen.
+>> For the test I read via
+>> # cat /sys/bus/iio/devices/iio\:device0/in_voltage5_raw
+>> values from the ADC in an busy loop as you explained in an email
+>> before. Did you also experience such behavior or do you know what
+>> causes it?
+> 
+> Thanks for testing. I was able to fix this issue. Will post version 4
+> shortly.
+> 
 
-diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt b/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
-new file mode 100644
-index 0000000..84ca264
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
-@@ -0,0 +1,33 @@
-+Sunxi specific Simple Framebuffer bindings
-+
-+This binding documents sunxi specific extensions to the simple-framebuffer
-+bindings. The sunxi simplefb u-boot code relies on the devicetree containing
-+pre-populated simplefb nodes.
-+
-+These extensions are intended so that u-boot can select the right node based
-+on which pipeline and output is being used. As such they are solely intended
-+for firmware / bootloader use, and the OS should ignore them.
-+
-+Required properties:
-+- compatible: "sunxi,framebuffer"
-+- sunxi,pipeline:
-+  <0> for the de_be0 -> lcdc0 -> output pipeline
-+  <1> for the de_be1 -> lcdc1 -> output pipeline
-+- sunxi,output: One of: "hdmi", "lcd", "vga", and "composite"  
-+
-+Example:
-+
-+chosen {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	ranges;
-+
-+	framebuffer@0 {
-+		compatible = "sunxi,framebuffer", "simple-framebuffer";
-+		sunxi,pipeline = <0>;
-+		sunxi,output = "hdmi";
-+		clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
-+			 <&ahb_gates 44>;
-+		status = "disabled";
-+	};
-+};
--- 
-2.1.0
+Were you able to test the v4 patch series on your board? Is the issue fixed?
+
+> Regards
+> Vignesh
+> 
+>>
+>> Without the patches the touchscreen works fine during the iio test.
+>>
+>> Thanks,
+>> Hannes
+>>
+>> 2014-11-06 8:42 GMT+01:00 Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>:
+>>>
+>>>
+>>> On Monday 03 November 2014 11:39 PM, Richard Cochran wrote:
+>>>> On Mon, Oct 27, 2014 at 04:38:27PM +0530, Vignesh R wrote:
+>>>>> This series of patches fix TSC defects related to lag in touchscreen
+>>>>> performance and cursor jump at touch release. The lag was result of
+>>>>> udelay in TSC interrupt handler. Cursor jump due to false pen-up event.
+>>>>> The patches implement Advisory 1.0.31 in silicon errata of am335x-evm
+>>>>> to avoid false pen-up events and remove udelay.
+>>>>
+>>>> That advisory has two workarounds. You have chosen the second one?
+>>>
+>>> Work around one. Hence 5 wire design is not broken.
+>>>
+>>>>
+>>>> The text of the second workaround says it only works on 4 wire setups,
+>>>> so I wonder how 5 wire designs will be affected.
+>>>>
+>>>>> The advisory says to use
+>>>>> steps 1 to 4 for ADC and 5 to 16 for TSC (assuming 4 wire TSC and 4 channel
+>>>>> ADC).
+>>>>
+>>>> No, it doesn't say that. (sprz360f.pdf)
+>>>
+>>> The pen up event detection happens immediately after charge step. Hence,
+>>> interchanging ADC and TSC steps makes sure that sampling of touch
+>>> co-ordinates and pen events are done one after the other. This
+>>> workaround was suggested by internal hardware folks. Earlier ADC steps
+>>> intervened between sampling of co-ordinates and pen event detection
+>>> which is not desirable.
+>>>
+>>>>
+>>>>> Further the X co-ordinate must be the last one to be sampled just
+>>>>> before charge step. The first two patches implement the required changes.
+>>>>
+>>>> FWIW, I implemented the first workaround and removed the udelay not
+>>>> too long ago. Like Sebastian, I saw the TSC unit hang after about
+>>>> 50000 interrupts when running with the workaround.
+>>>>
+>>>> Did you test you patch for very long?
+>>>
+>>> Yes, I tested for about 200000 interrupts and I didn't see any hang.
+>>> This patch series does not just implement workaround but also does some
+>>> minor changes, such as interchanging ADC and TSC steps etc, which makes
+>>> TSC driver more robust. Let me know if you encounter any issues with my
+>>> patch series.
+>>>
+>>> Regards
+>>> Vignesh
+>>>
+>>>>
+>>>> Thanks,
+>>>> Richard
+>>>>
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+>>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
