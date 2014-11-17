@@ -1,100 +1,39 @@
-From: Ankit Jindal <ankit.jindal@linaro.org>
-Subject: Re: [PATCH v4 5/6] Documentation: dt-bindings: Add binding info for
- X-Gene QMTM UIO driver
-Date: Mon, 17 Nov 2014 15:50:02 +0530
-Message-ID: <CAPTm99XRXW=eyoUQcjKuyOaUWzQaH0epGLTMn8MNgA-U4=2E7w@mail.gmail.com>
-References: <1415864722-2800-1-git-send-email-ankit.jindal@linaro.org>
- <1415864722-2800-6-git-send-email-ankit.jindal@linaro.org> <CAAhSdy2L5fPdk97wTVy++B4LcJP_s-r-BF18hg6J9Shfg_t1XQ@mail.gmail.com>
+From: =?UTF-8?B?S3J6eXN6dG9mIEtvesWCb3dza2k=?= <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 5/5] mfd: s2mps11: Add binding documentation for Samsung
+ S2MPS13 PMIC
+Date: Mon, 17 Nov 2014 11:20:43 +0100
+Message-ID: <5469CBFB.8040805@samsung.com>
+References: <1416184980-532-1-git-send-email-cw00.choi@samsung.com>
+ <1416184980-532-6-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAhSdy2L5fPdk97wTVy++B4LcJP_s-r-BF18hg6J9Shfg_t1XQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anup Patel <anup@brainfault.org>
-Cc: "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>, "Hans J. Koch" <hjk@hansjkoch.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, patches <patches@apm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Tushar Jagad <tushar.jagad@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>, Varka Bhadram <varkabhadram@gmail.com>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1416184980-532-6-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, geunsik.lim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 16 November 2014 09:56, Anup Patel <anup@brainfault.org> wrote:
-> On Thu, Nov 13, 2014 at 1:15 PM, Ankit Jindal <ankit.jindal@linaro.org> wrote:
->> This patch adds device tree binding documentation for
->> X-Gene QMTM UIO driver.
->>
->> Signed-off-by: Ankit Jindal <ankit.jindal@linaro.org>
->> Signed-off-by: Tushar Jagad <tushar.jagad@linaro.org>
->> ---
->>  .../devicetree/bindings/uio/uio_xgene_qmtm.txt     |   51 ++++++++++++++++++++
->>  1 file changed, 51 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt
->>
->> diff --git a/Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt b/Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt
->> new file mode 100644
->> index 0000000..ed85bc6
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt
->> @@ -0,0 +1,51 @@
->> +APM X-Gene QMTM nodes
->> +
->> +The Applied Micro X-Gene SOC has on-chip QMTM (Queue manager
->> +and Traffic manager). It is a device for managing hardware queues.
->> +It also implements QoS among hardware queues hence term "traffic"
->> +manager is present in its name.
->> +
->> +Required properties:
->> +- compatible: Should be "apm,xgene-qmtm"
->> +- reg: Address and length of the register set for the device. It contains the
->> +  information of registers in the same order as described by reg-names.
->> +- reg-names: Should contain the register set names
->> +  - "csr": QMTM control and status register address space.
->> +  - "fabric": QMTM memory mapped access to queue states.
->> +- qpool-memory: Points to the phandle of the node defining memory location for
->> +        creating QMTM queues. This must point to the reserved-memory node
->> +        (as-per reserved memory bindings). It is expected that size and
->> +        location of qpool memory will be configurable via bootloader.
->> +- clocks: Reference to the clock entry.
->> +- num-queues: Number of queues under this QMTM device.
->> +- devid: QMTM identification number for the system having multiple QMTM devices.
->> +        This is used to form a unique id (a tuple of queue number and
->> +        device id) for the queues belonging to this device.
->> +
->> +Example:
->> +       qmtm1_uio_qpool: qmtm1_uio_qpool {
->> +               reg = <0x0 0x0 0x0 0x0>
->> +       };
->> +
->> +       qmtm1clk: qmtmclk@1f20c000 {
->> +               compatible = "apm,xgene-device-clock";
->> +               clock-output-names = "qmtm1clk";
->> +               status = "ok";
->> +       };
->> +
->> +       qmtm1_uio: qmtm_uio@1f200000 {
->> +               compatible = "apm,xgene-qmtm";
->> +               status = "disabled";
->> +               reg = <0x0 0x1f200000 0x0 0x10000>,
->> +                     <0x0 0x1b000000 0x0 0x400000>;
->> +               reg-names = "csr", "fabric";
->> +               qpool = <&qmtm1_uio_qpool>;
->
-> Small typo, this should be qpool-memory = <...>;
+On 17.11.2014 01:43, Chanwoo Choi wrote:
+> This patch adds the binding documentation for Samsung S2MPS13 PMIC
+> which is similiar with existing S2MPS14 PMIC. S2MPS13 has the different number
+> of regulators from S2MPS14 and RTC/Clock is the same with the S2MPS14.
+> 
+> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/s2mps11.txt | 22 ++++++++++++----------
+>  1 file changed, 12 insertions(+), 10 deletions(-)
 
-Thanks, I will fix this in next revision.
+Looks good.
 
--Ankit
->
->> +               clocks = <&qmtm1clk 0>;
->> +               num-queues = <0x400>;
->> +               devid = <1>;
->> +       };
->> +
->> +       /* Board-specific peripheral configurations */
->> +       &qmtm1_uio {
->> +               status = "ok";
->> +       };
->> --
->> 1.7.9.5
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->> Please read the FAQ at  http://www.tux.org/lkml/
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+
+Best regards,
+Krzysztof
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
