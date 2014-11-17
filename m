@@ -1,7 +1,7 @@
 From: gyungoh@gmail.com
-Subject: [RESUBMIT PATCH v7 8/9] devicetree: regulator: sky81452: Modify Device Tree structure
-Date: Mon, 17 Nov 2014 17:33:09 +0900
-Message-ID: <1416213190-20935-9-git-send-email-jack.yoo@skyworksinc.com>
+Subject: [RESUBMIT PATCH v7 9/9] regulator: sky81452: Modify dependent Kconfig symbol
+Date: Mon, 17 Nov 2014 17:33:10 +0900
+Message-ID: <1416213190-20935-10-git-send-email-jack.yoo@skyworksinc.com>
 References: <1416213190-20935-1-git-send-email-jack.yoo@skyworksinc.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1416213190-20935-1-git-send-email-jack.yoo@skyworksinc.com>
@@ -15,52 +15,23 @@ From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
 Signed-off-by: Gyungoh Yoo <jack.yoo@skyworksinc.com>
 ---
 Changes v7:
-Nothing
+Splitted Kconfig renaming from DT patch
 
-Changes v6:
-Nothing
+ drivers/regulator/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changes v5:
-Changed DT for regulator : 'lout' node should be defined under 'regulator'
-Removed compatible string from sky81452-regulator driver
-
-Changes v4:
-Nothing
-
-Changes v3:
-Nothing
-
-Changes v2:
-Added 'compatible' attribute in the driver
-
- .../devicetree/bindings/regulator/sky81452-regulator.txt       | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt b/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt
-index 882455e..f9acbc1 100644
---- a/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt
-@@ -1,6 +1,7 @@
- SKY81452 voltage regulator
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index 55d7b7b..fe84bd4 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -547,7 +547,7 @@ config REGULATOR_S5M8767
  
- Required properties:
-+- regulator node named lout.
- - any required generic properties defined in regulator.txt
- 
- Optional properties:
-@@ -9,8 +10,9 @@ Optional properties:
- Example:
- 
- 	regulator {
--		/* generic regulator properties */
--		regulator-name = "touch_en";
--		regulator-min-microvolt = <4500000>;
--		regulator-max-microvolt = <8000000>;
-+		lout {
-+			regulator-name = "sky81452-lout";
-+			regulator-min-microvolt = <4500000>;
-+			regulator-max-microvolt = <8000000>;
-+		};
- 	};
+ config REGULATOR_SKY81452
+ 	tristate "Skyworks Solutions SKY81452 voltage regulator"
+-	depends on SKY81452
++	depends on MFD_SKY81452
+ 	help
+ 	  This driver supports Skyworks SKY81452 voltage output regulator
+ 	  via I2C bus. SKY81452 has one voltage linear regulator can be
 -- 
 1.9.1
