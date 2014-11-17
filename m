@@ -1,82 +1,55 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v2 1/2] of: Add vendor prefix for NovaTech LLC
-Date: Mon, 17 Nov 2014 13:10:22 -0600
-Message-ID: <20141117191022.GB4857@saruman>
-References: <1416250957-11065-1-git-send-email-george.mccollister@gmail.com>
-Reply-To: <balbi@ti.com>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v1 2/2] DT: eFuse: Add binding document for IMG Pistachio
+ eFuse Controller
+Date: Mon, 17 Nov 2014 11:13:30 -0800
+Message-ID: <CAL1qeaF47Xwq5eS17D_rS4QBP12eJ3F0N-RNx+_o0kr-H1ropw@mail.gmail.com>
+References: <1416237576-21542-1-git-send-email-arul.ramasamy@imgtec.com>
+	<1416237576-21542-3-git-send-email-arul.ramasamy@imgtec.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qjNfmADvan18RZcF"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1416250957-11065-1-git-send-email-george.mccollister@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: George McCollister <george.mccollister@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Mark Brown <broonie@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Shawn Guo <shawn.guo@freescale.com>, Florian Vaussard <florian.vaussard@epfl.ch>, Andrew Lunn <andrew@lunn.ch>, Hayato Suzuki <hytszk@gmail.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416237576-21542-3-git-send-email-arul.ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arul Ramasamy <arul.ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Naidu Tellapati <naidu.tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Jude Abraham <jude.abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---qjNfmADvan18RZcF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Nov 17, 2014 at 01:02:34PM -0600, George McCollister wrote:
-> For company details see:
-> http://www.novatechweb.com
->=20
-> Signed-off-by: George McCollister <george.mccollister@gmail.com>
-
-Reviewed-by: Felipe Balbi <balbi@ti.com>
-
+On Mon, Nov 17, 2014 at 7:19 AM,  <arul.ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+> From: Arul Ramasamy <Arul.Ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>
+> Add binding document for IMG eFuse Controller present on Pistachio SOC.
+>
+> Signed-off-by: Arul Ramasamy <Arul.Ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Docu=
-mentation/devicetree/bindings/vendor-prefixes.txt
-> index 723999d..8f1462e 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -105,6 +105,7 @@ netgear	NETGEAR
->  newhaven	Newhaven Display International
->  nintendo	Nintendo
->  nokia	Nokia
-> +novatech	NovaTech LLC
->  nvidia	NVIDIA
->  nxp	NXP Semiconductors
->  onnn	ON Semiconductor Corp.
-> --=20
-> 2.1.0
->=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+>  .../devicetree/bindings/soc/pistachio/img-efuse.txt    | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/pistachio/img-efuse.txt
+>
+> diff --git a/Documentation/devicetree/bindings/soc/pistachio/img-efuse.txt b/Documentation/devicetree/bindings/soc/pistachio/img-efuse.txt
+> new file mode 100644
+> index 0000000..8643a21
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/pistachio/img-efuse.txt
+> @@ -0,0 +1,18 @@
+> +* IMG Pistachio eFuse controller
+> +
+> +Required properties:
+> +- compatible: Must be "img,pistachio-efuse".
+> +- reg: Must contain the base address and length of the eFuse registers.
+> +- clocks: Must contain an entry for each entry in clock-names.
+> +  See ../clock/clock-bindings.txt for details.
+> +- clock-names: Must include the following entries:
+> +  - efuse: External oscillator clock
 
---=20
-balbi
+How is the external oscillator related to efuse?  Also, perhaps it
+should be called "osc" since it's not an efuse-specific clock.
 
---qjNfmADvan18RZcF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> +  - sys: eFuse system interface clock
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUakgeAAoJEIaOsuA1yqREdpIQAJ99gXD/XaNemJk/4xguo390
-whajlEYUJ0NNODSDleEPElnmb3quxC7SAUaHlT8ajPh7Zl0NEZ3iUpU9MULQeCw5
-msZMRJwUnm0bey86Bb1FDEGxZjrfVi1/uXFOIxIIsnUr6JuAqvB/J53mfLgdruHi
-4tjzdrLMBOZ6YnnfwrXWMKIivUi6i3iUUwelCUWemIZB+wt2WC5SRor6WC0vOJHo
-v/HeG0vKRpVmG0/2dmhCfBzB02EAn1zv8qKzz7813Xsf0AmZ8aQZddEa5W/bn4gI
-F0g3nE58ShAGZ+9PZsd14k44PGRPlp6WUgMmXsanfM2Mx9N9vp5Wj0Y1vNTVvhyK
-0S7bZTYcTDx7ZsEA4E5UispXGHg9Hxaa0EQ+Zpf6utCQ6tAAptS8/beQIMwugyAd
-4UbrtDs3saIACHEVD8IjU8X18OPIrRi5gu3UalcU9ZlD7q40P3TRyea/y7tSgclU
-5yUAyM7qKiHZZMcQOKslzWV9MmImGx2bBqWt9MGhCtgnUrjn23PMdPXDHwwY6ekm
-NsYZnTu0t9sUB4T0bUnUR+c4DF7fVdc0KBrFytssaQNbOFCqt09UhwEj4d2qV71y
-XvKK2tMI83x40Nic5ChFurubjTiycodXQZW9H+5480lInWOWs7ulg6QTLRkIT7as
-KGonL3Da3iib/smNUUzA
-=DMSW
------END PGP SIGNATURE-----
-
---qjNfmADvan18RZcF--
+I don't see a system interface gate clock for efuse in the TRM...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
