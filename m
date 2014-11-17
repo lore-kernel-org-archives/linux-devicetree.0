@@ -1,73 +1,82 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH v4 1/2] ARM: keystone: pm: switch to use generic pm domains
-Date: Mon, 17 Nov 2014 13:50:13 -0800
-Message-ID: <7hsihhzecq.fsf@deeprootsystems.com>
-References: <1415631557-22897-1-git-send-email-grygorii.strashko@ti.com>
-	<1600093.60yAP0Qpua@wuerfel> <7h389h3aif.fsf@deeprootsystems.com>
-	<1618855.DXsjWXLqau@wuerfel>
+From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V2 22/22] MIPS: Add multiplatform BMIPS target
+Date: Mon, 17 Nov 2014 13:57:07 -0800
+Message-ID: <CAJiQ=7AhyAyN6Hnvtdowdh6oPknbPFMe-_PrPdzyCGe5H7eE1g@mail.gmail.com>
+References: <1416097066-20452-1-git-send-email-cernekee@gmail.com>
+ <14461008.6cZzGdpat2@wuerfel> <CAJiQ=7CmFNhufdeoeH_6SuYOhf3Luwc2zwy_+8au1V8RW78rOw@mail.gmail.com>
+ <2622492.TiaF5tO0a3@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1618855.DXsjWXLqau@wuerfel> (Arnd Bergmann's message of "Mon, 17
-	Nov 2014 21:37:37 +0100")
-Sender: linux-pm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>, ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2622492.TiaF5tO0a3@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Fraser <jfraser-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Arnd Bergmann <arnd@arndb.de> writes:
-
-> On Monday 17 November 2014 11:14:16 Kevin Hilman wrote:
->> >> 
->> >> So, The Keystone 2 Generic PM Controller is just a proxy PM layer here between
->> >> device and Generic clock manipulation PM callbacks.
->> >> It fills per-device clock list when device is attached to GPD and
->> >> ensures that all clocks from that list enabled/disabled when device is
->> >> started/stopped.
->> >
->> > The idea of such a generic power domain implementation sounds useful, but
->> > it has absolutely no business in platform specific code.
->> 
->> Yes it does.  This isn't a generic power domain implementation, but
->> rather just the platform-specific glue that hooks up the clocks to the
->> right devices and power-domains so that the generic power-domain and
->> generic pm_clocks code does the right thing.
+On Mon, Nov 17, 2014 at 12:33 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>> This mostly depends on the desired feature set, and the delta from one
+>> board to the next.  Many of the reference board sections are largely
+>> copied from a working design, but sometimes there are changes that
+>> affect us.  Other times there are tweaks that can be autodetected,
+>> like a different flash chip.
+>>
+>> The analog interfaces like SATA/USB/Ethernet don't tend to vary all
+>> that much (although some may be missing ports on the board, or
+>> disabled on the chip).
+>>
+>> The pin muxing situation leaves a lot of room for board differences,
+>> and on these platforms it isn't really handled in a central place.
+>> This gets even more challenging when combined with some of the power
+>> management requirements.
+>>
+>> The peripherals that I added in my patch submission are among the
+>> easiest / safest of the bunch.
 >
-> How would you do this on an arm64 version of keystone then? With
-> the current approach, you'd need to add a machine specific directory,
-> and that seems completely pointless since this is not even about
-> a hardware requirement.
+> Right, that is exactly the danger: it's easy to get the basics working
+> like this, but the differences between SoCs are not what we need DT
+> for anyway, those are easily abstracted in kernel code if necessary,
+> hardcoded by some soc version identifier.
 
-Yeah, you're right.  I misunderstood you're original comment.
+That depends on how many SoC's we're talking about...
 
->> > I suggest you either remove the power domain proxy from your drivers
->> > and use the clocks directly, 
->> 
->> No.  That's a step in the wrong direction.  This change isn't affecting
->> drivers directly.  It's the runtime PM and generic power domain layers
->> that handle this, and runtime PM adapted drivers don't need any changes.
->>  
->> > or come up with an implementation that can be used across other
->> > platforms and CPU architectures.
->> 
->> We already have those in the generic power domain and the pm_clock
->> layers.  This series is just hooking those up for Keystone.
->
-> Then why not add the missing piece to the generic power domain
-> code to avoid having to add infrastructure to the platform
-> for it?
+On MIPS we have literally dozens.  Most of the "building blocks" are
+pretty similar, but the MMIO addresses, IRQ mappings, and
+quantity/revision of each peripheral vary.  DT is ideal for
+representing these differences and for rapidly bringing up a new
+system.
 
-Yes, good point.  There is nothing keystone-specific in this glue.
+> What you end up with in your approach is a kernel that can support
+> multiple SoCs but only some boards per SoC, and otherwise you still
+> depend on compile-time configuration.
 
-Grygorii, what about adding a feature to the generic domain parsing so
-that it can get clocks from device nodes that are part of the domain,
-and so it sets up pm_clk accordingly.
+Agreed, but for legacy platforms this is somewhat inevitable.  These
+systems are already in production so there is no manpower available to
+go back and test every single one-off board.  It is most likely that a
+small subset of "interesting" boards will receive the best support.
+For instance, I see an arch/arm/boot/dts/bcm2835-rpi-b.dts, but that's
+hardly the only BCM2835-based platform found in the wild.
 
-I've recently seen other SoCs doing very similar, so this really should
-be generalized.
+The limited board support doesn't negate the value of having a generic
+BMIPS kernel available upstream; this build still eliminates
+duplicated efforts on many of the basic items (CPU/SMP/caching, IRQ
+controllers, UART).  It also allows easy reuse of DT-ready peripherals
+that are common to the CM/DSL/STB MIPS and ARM chips, which was the
+original goal of the BCM3384 port.
 
-I've been looking at this primarily as a right incremental improvement
-from what is there for Keystone today, but Arnd is right.  This should
-be moved out of platform code.
+Going forward I would expect that with this build available in
+mainline, it will open up new opportunities for modernizing the
+bootloaders on each product line.
 
-Kevin
+> Aside from pin configuration,
+> you have to have a per-board dtb file if you have any i2c or spi
+> connected components, PCI devices with custom interrupt lines,
+> LEDs, GPIO buttons, or anything else on a nondiscoverable bus.
+
+Correct.
+
+For better or for worse, most of these don't use Linux kernel drivers on STB.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
