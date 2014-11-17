@@ -1,125 +1,85 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 5/6] sunxi: video: Add simplefb support
-Date: Mon, 17 Nov 2014 11:10:16 +0100
-Message-ID: <5469C988.5040702@redhat.com>
-References: <1415984088-6800-1-git-send-email-hdegoede@redhat.com>
-	<1415984088-6800-6-git-send-email-hdegoede@redhat.com>
-	<1416138607.25454.13.camel@hellion.org.uk>
-	<5468AC2E.80601@redhat.com>
-	<1416148688.25454.22.camel@hellion.org.uk>
-	<5468BE9A.8050501@redhat.com>
-	<1416154297.25454.24.camel@hellion.org.uk>
-	<CACxGe6vE0BdWOrdw1iQyk2-tmdnAUZ=oQCvGg_LESoiw055DLw@mail.gmail.com>
+From: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v7 08/13] usb: chipidea: add a usb2 driver for ci13xxx
+Date: Mon, 17 Nov 2014 11:01:09 +0100
+Message-ID: <20141117100109.GA20934@kwain>
+References: <1415978763-27345-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1415978763-27345-9-git-send-email-antoine.tenart@free-electrons.com>
+ <20141114210832.GE16388@saruman>
+ <20141114211052.GA8105@kwain>
+ <20141114211334.GF16388@saruman>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <CACxGe6vE0BdWOrdw1iQyk2-tmdnAUZ=oQCvGg_LESoiw055DLw@mail.gmail.com>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc@hellion.org.uk>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, U-Boot <u-boot@lists.denx.de>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141114211334.GF16388@saruman>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+=46elipe,
 
-On 11/17/2014 10:58 AM, Grant Likely wrote:
-> On Sun, Nov 16, 2014 at 4:11 PM, Ian Campbell <ijc@hellion.org.uk> wrote:
->> On Sun, 2014-11-16 at 16:11 +0100, Hans de Goede wrote:
+On Fri, Nov 14, 2014 at 03:13:34PM -0600, Felipe Balbi wrote:
+> On Fri, Nov 14, 2014 at 10:10:52PM +0100, Antoine Tenart wrote:
+> > On Fri, Nov 14, 2014 at 03:08:32PM -0600, Felipe Balbi wrote:
+> > > On Fri, Nov 14, 2014 at 04:25:58PM +0100, Antoine Tenart wrote:
+> > > > Add a USB2 ChipIdea driver for ci13xxx, with optional PHY, cloc=
+k
+> > > > and DMA mask, to support USB2 ChipIdea controllers that don't n=
+eed
+> > > > specific functions.
+> > > >=20
+> > > > Tested on the Marvell Berlin SoCs USB controllers.
+> > > >=20
+> > > > Signed-off-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTGGXanvQGlWp@public.gmane.org=
+m>
+> > > > ---
+> > > >  drivers/usb/chipidea/Makefile       |   1 +
+> > > >  drivers/usb/chipidea/ci_hdrc_usb2.c | 117 ++++++++++++++++++++=
+++++++++++++++++
+> > > >  2 files changed, 118 insertions(+)
+> > > >  create mode 100644 drivers/usb/chipidea/ci_hdrc_usb2.c
+> > > >=20
+> > > > diff --git a/drivers/usb/chipidea/Makefile b/drivers/usb/chipid=
+ea/Makefile
+> > > > index 2f099c7df7b5..1fc86a2ca22d 100644
+> > > > --- a/drivers/usb/chipidea/Makefile
+> > > > +++ b/drivers/usb/chipidea/Makefile
+> > > > @@ -10,6 +10,7 @@ ci_hdrc-$(CONFIG_USB_OTG_FSM)		+=3D otg_fsm.o
+> > > > =20
+> > > >  # Glue/Bridge layers go here
+> > > > =20
+> > > > +obj-$(CONFIG_USB_CHIPIDEA)	+=3D ci_hdrc_usb2.o
+> > >=20
+> > > usb2 is too generic, you should call it ci_hdcr_marvell, or somet=
+hing
+> > > like that.
+> >=20
+> > This driver is generic, and not only for Marvell Berlin SoCs. It is=
+ part
+> > of the Berlin USB series as it is the first SoC to use it but Xilin=
+x can
+> > also use it for example.
+>=20
+> then how about ci_hdrc_generic.c ?
 
-<snip>
+We had this discussion during in the v2 thread of this series[1]. I ten=
+d
+to prefer not using the 'generic' keyword. I think using 'usb2' is
+generic enough here.
 
->>> Right, I forgot to add one important bit to my explanation, sorry, if
->>> you look at the binding then it says that the name should be suffixed
->>> with the output type, so currently the sunxi u-boot code will look for
->>> /chosen/framebuffer0-hdmi. Which will e.g. also happen on any A10
->>> based tablets which typically have both hdmi out and an lcd screen,
->>> in the future I hope we will also get lcd support in u-boot, and then
->>> logically on tablets the lcd screen would take precedence, so then
->>> unless overriden through some config mechanism u-boot will chose
->>> to use the lcd, and will look for /chosen/framebuffer0-lcd which has
->>> a different set of clocks then /chosen/framebuffer0-hdmi.
->>
->> This sounds like a use for:
->>         compatible = "simple-framebuffer,hdmi", "simple-framebuffer"
->> or some such, that's almost exactly what multiople compatible strings
->> are for. Relying on specific naming and/or path is rather
->> unconventional.
-> 
-> Indeed, for a long time now finding nodes by path has been strongly
-> discouraged. It makes it hard to move nodes around when needed. I'm
-> not going to make a big deal about it because it doesn't affect the OS
-> interface, but Ian's suggestion is sane. simple-framebuffer is enough
-> to identify the binding, but you can use additional strings to
-> identify the specific hardware interface that U-Boot can use to locate
-> the node. ie. sunxi,framebuffer-hdml or some such. You can never be
-> sure when someone will produce a board that messes with your naming
-> assumptions. What if is suddenly needs to be named "framebuffer1-hdmi"
-> because they added and FPGA that they want as framebuffer0? (Yes, I'm
-> making stuff up, but I have to think about the corner cases)
 
-I like the suggestion of using a compatible of : "sunxi,framebuffer-hdmi"
-although it will need to be : "sunxi,framebuffer0-hdmi" as u-boot
-needs to know which simplefb node to use for which display pipeline
-(so that the node has the right clocks and whats not).
+Antoine
 
-And I think it makes sense to put simple in there as it is a pre-populated
-simplefb node , so then we get:
+[1] https://lkml.org/lkml/2014/6/24/197
 
-"sunxi,simple-framebuffer0-hdmi"
-
-And we can drop the unconventional lookup by path.
-
-I'll go on irc now, and join #devicetree, Ian, maybe you can join us
-there to and we can hash out something we can all agree on ?
-
-And then I'll do yet another set of patches (to apply on top on the
-kernel side, and a new version of the u-boot patch), and we'll hopefully
-end up with something which makes us all happy
-
-<snip>
-
->> In fact it's a bit odd to have a reg property under /chosen at all,
->> since it doesn't really fit in with the bus structure. I've done
->> something similar in some bindings I've authored[0], but AIUI I got that
->> wrong and really should have used a set of non-reg properties with a
->> single value so there was no need to parse using #*-cells  (cf the
->> initrd-start + initrd-end properties under /chosen). Sadly DT is an ABI,
->> so for my bindings I'm kind of stuck with it for the foreseeable future.
->>
->> [0]
->> http://xenbits.xen.org/gitweb/?p=xen.git;a=blob;f=docs/misc/arm/device-tree/booting.txt;h=08ed7751859dbe2d2c32d86d7df371057d7b45a4;hb=HEAD
-> 
-> Ironic isn't it that I though of that as precedence when I suggested
-> /chosen! :-)
-> 
-> I actually don't have a problem with it. We do need a way to specify
-> runtime memory usage, and /chosen is as good a place as any,
-> particularly when it represents things that won't necessarily be
-> relevant on kexec or dom0 boot.
-> 
-> The other options are under either the /memory or the /reserved-memory
-> tree. Rob and I talked about /reserved-memory quite a lot. We could
-> put all the framebuffer details into the memory node that reserves the
-> framebuffer. However, I don't like that idea because it kind of makes
-> assumptions about how the framebuffer will be located inside the
-> memory region and doesn't allow for multiple framebuffers within a
-> single region.
-
-I'm not a devicetree expert, but /chosen already came to my mind even
-before Grant suggested it, /chosen seems the right place for this to me.
-
-Note that once we drop the path based lookup the location can always be
-changed later (to some degree, it still needs to be in a place where
-the kernel will bind to it).
-
-Regards,
-
-Hans
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
