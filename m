@@ -1,81 +1,50 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH] i2c: core: Fix probing of i2c slaves without interrupts
-Date: Mon, 17 Nov 2014 19:12:14 +0100
-Message-ID: <20141117181214.GB12644@katana>
-References: <1416224580-4782-1-git-send-email-geert+renesas@glider.be>
- <CAOMZO5BsfCfP+bMfYWZ9C=Sp0sWkEr6WoRRygw18EfW2T_k3oQ@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v8 10/13] ARM: dts: berlin: add BG2Q nodes for USB support
+Date: Mon, 17 Nov 2014 21:26:25 +0300
+Message-ID: <546A3DD1.8020209@cogentembedded.com>
+References: <1416231347-27193-1-git-send-email-antoine.tenart@free-electrons.com> <1416231347-27193-11-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zx4FCpZtqtKETZ7O"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5BsfCfP+bMfYWZ9C=Sp0sWkEr6WoRRygw18EfW2T_k3oQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-i2c <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416231347-27193-11-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hello.
 
---zx4FCpZtqtKETZ7O
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 11/17/2014 04:35 PM, Antoine Tenart wrote:
 
-On Mon, Nov 17, 2014 at 03:08:25PM -0200, Fabio Estevam wrote:
-> On Mon, Nov 17, 2014 at 9:43 AM, Geert Uytterhoeven
-> <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> wrote:
-> > Since commit 2fd36c55264926e2 ("i2c: core: Map OF IRQ at probe time"),
-> > i2c slaves without interrupts (e.g. da9210 and at24 on r8a7791/koelsch)
-> > fail to probe:
-> >
-> >     at24: probe of 2-0050 failed with error -22
-> >
-> >     da9210: probe of 6-0068 failed with error -22
-> >
-> > This happens because the call to of_irq_get() in i2c_device_probe()
-> > returns -EINVAL.
-> >
-> > If a device node does not have an "interrupts" property,
-> > of_irq_parse_one() fails. Unlike irq_of_parse_and_map(), of_irq_get()
-> > does not ignore errors from of_irq_parse_one(), but forwards them.
-> >
-> > Make i2c_device_probe() ignore all errors but -EPROBE_DEFER to fix this,
-> > just like platform_get_irq() and platform_get_irq_byname() already do.
-> >
-> > Fixes: 2fd36c55264926e2 ("i2c: core: Map OF IRQ at probe time")
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
->=20
-> With this patch applied my codec and PMIC can be probed again:
->=20
-> Tested-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Adds nodes describing the Marvell Berlin BG2Q USB PHY and USB. The BG2Q
+> SoC has 3 USB host controller, compatible with ChipIdea.
 
-Applied to for-next, thanks!
+> Signed-off-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>   arch/arm/boot/dts/berlin2q.dtsi | 55 +++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 55 insertions(+)
 
+> diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
+> index 2de8d6f8973c..834142bdfbb1 100644
+> --- a/arch/arm/boot/dts/berlin2q.dtsi
+> +++ b/arch/arm/boot/dts/berlin2q.dtsi
+[...]
+> @@ -457,5 +511,6 @@
+>   				interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+>   			};
+>   		};
+> +
 
---zx4FCpZtqtKETZ7O
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+    Random whitespace change?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+>   	};
+>   };
+>
 
-iQIcBAEBAgAGBQJUajp+AAoJEBQN5MwUoCm2GuQQAKeOuIgtjnK/BRm4YuKvF1ks
-Zim3GnThYz3T3aKYqp7GeOT0kG3FRR/1GkvPTh7nLJsNBZemmCW4pde8FGlWK0RW
-GaqGmNNVHdrhfNYbJceI2ikwMTjPmz+ACXZOOgFhfrMdALJ8KRRJI7Xom4n5w4nU
-yjhZ2Yg71qmrVFz/Ov/EeHGKEbi7bpgSnZYqUnu6sVfWikxO6JshKIVqQ3jxD/+j
-N3G3KlSiHCA2wh980VkKFO06MvxunD00e8GZGMVnCWsoYWF/pSzzCaZnHtlHBDIV
-4gdNPmUM6qyK9ZoIj2H5e7/enT6B1EaTKm4AvupzSa7O4XD4rAwo3mFs2TSbpZBY
-2YZ6M8uDYYi76K6ArOZOCVueilz4QO8VZIJoxashODwI2rZEtrGrwBIJYwDMwoJ4
-qHbqtB4g8jA0lGKnK/F5IZ8n5yH9+1KYEBZxxK942jAN9y2hBx/9SQ5he9W9mkph
-fBFxsrW1CHzJi0n6RtjEn/XFmW33R1Jd0yfLt8n4iT0rkpCJEjaaPe2+uBSiKCHY
-eHpoj4OeVDJzFmP3sGri/0JLhJboDLcVJB9vkGOfPMw6REDYiRtL4uvtdTsjO8e6
-+TJM8vB4T/6Q4LjcCdkEdDo9TryGCHi610TvLPR1xtZOKxb+1q4a4XfIjlvc1ZeZ
-ZX5hUXoFIQG4rVdAZcRb
-=RFFv
------END PGP SIGNATURE-----
+WBR, Sergei
 
---zx4FCpZtqtKETZ7O--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
