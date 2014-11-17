@@ -1,148 +1,55 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 08/16] clk: mvebu: add suspend/resume for gatable clocks
-Date: Mon, 17 Nov 2014 14:46:04 -0800
-Message-ID: <20141117224604.25314.96198@quantum>
-References: <1415978496-9334-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1415978496-9334-9-git-send-email-thomas.petazzoni@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+From: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/4] spi: Add support for Amlogic Meson SPIFC
+Date: Mon, 17 Nov 2014 23:47:47 +0100
+Message-ID: <1416264471-774-1-git-send-email-b.galvani@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415978496-9334-9-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Thomas Petazzoni (2014-11-14 07:21:28)
-> This commit adds suspend/resume support for the gatable clock driver
-> used on Marvell EBU platforms. When getting out of suspend, the
-> Marvell EBU platforms go through the bootloader, which re-enables all
-> gatable clocks. However, upon resume, the clock framework will not
-> disable again all gatable clocks that are not used.
-> 
-> Therefore, if the clock driver does not save/restore the state of the
-> gatable clocks, all gatable clocks that are not claimed by any device
-> driver will remain enabled after a resume. This is why this driver
-> saves and restores the state of those clocks.
+Hi,
 
-It might be a good idea to call clk_disable_unused() from the clk core
-after resuming from suspend.
+this patchset adds a driver for the SPIFC (SPI flash controller)
+available in Amlogic Meson6 and Meson8 SoCs. The driver has been
+tested on a Meson8 based device to communicate with a Macronix
+mx25l1606e serial flash.
 
-> 
-> Since clocks aren't real devices, we don't have the normal ->suspend()
-> and ->resume() of the device model, and have to use the ->suspend()
-> and ->resume() hooks of the syscore_ops mechanism. This mechanism has
-> the unfortunate idea of not providing a way of passing private data,
-> which requires us to change the driver to make the assumption that
-> there is only once instance of the gatable clock control structure.
-> 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  drivers/clk/mvebu/common.c | 30 ++++++++++++++++++++++++++++--
->  1 file changed, 28 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/clk/mvebu/common.c b/drivers/clk/mvebu/common.c
-> index b7fcb46..8799fb8 100644
-> --- a/drivers/clk/mvebu/common.c
-> +++ b/drivers/clk/mvebu/common.c
-> @@ -19,6 +19,7 @@
->  #include <linux/io.h>
->  #include <linux/of.h>
->  #include <linux/of_address.h>
-> +#include <linux/syscore_ops.h>
->  
->  #include "common.h"
->  
-> @@ -177,14 +178,18 @@ struct clk_gating_ctrl {
->         spinlock_t *lock;
->         struct clk **gates;
->         int num_gates;
-> +       struct syscore_ops syscore_ops;
+The first patch adds a field to the spi_transfer structure that allows
+the driver to know in transfer_one() whether the transfer is the last
+one and change CS accordingly, without the need to reimplement
+transfer_one_message().
 
-You are registering suspend/resume ops per clock. Have you considered
-registering a single set of ops for your clock controller driver? See
-drivers/clk/samsung/clk-exynos5420.c for an example.
+Changes since v1 [ https://lkml.org/lkml/2014/11/9/35 ]:
+ - decrease busy wait timeout
+ - remove check on xfer->speed_hz value in meson_spifc_transfer_one()
+ - implement transfer_one() instead of transfer_one_message()
+ - remove useless memset of devdata
+ - use fixed regmap config
+ - implement PM operations
+ - don't set master->bus_num
+ - allow modular build of the driver
 
-Combined with a table of clocks registered by your driver, centralized
-suspend/resume methods might be a cleaner solution.
+Beniamino Galvani (4):
+  spi: Add 'last' flag to spi_transfer structure
+  spi: meson: Add device tree bindings documentation for SPIFC
+  spi: meson: Add support for Amlogic Meson SPIFC
+  ARM: dts: meson: add node for SPIFC
 
-Regards,
-Mike
+ .../devicetree/bindings/spi/spi-meson.txt          |  22 +
+ arch/arm/boot/dts/meson.dtsi                       |   9 +
+ drivers/spi/Kconfig                                |   7 +
+ drivers/spi/Makefile                               |   1 +
+ drivers/spi/spi-meson-spifc.c                      | 461 +++++++++++++++++++++
+ drivers/spi/spi.c                                  |   6 +
+ include/linux/spi/spi.h                            |   2 +
+ 7 files changed, 508 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-meson.txt
+ create mode 100644 drivers/spi/spi-meson-spifc.c
 
-> +       void __iomem *base;
-> +       u32 saved_reg;
->  };
->  
->  #define to_clk_gate(_hw) container_of(_hw, struct clk_gate, hw)
->  
-> +static struct clk_gating_ctrl *ctrl;
-> +
->  static struct clk *clk_gating_get_src(
->         struct of_phandle_args *clkspec, void *data)
->  {
-> -       struct clk_gating_ctrl *ctrl = (struct clk_gating_ctrl *)data;
->         int n;
->  
->         if (clkspec->args_count < 1)
-> @@ -199,15 +204,30 @@ static struct clk *clk_gating_get_src(
->         return ERR_PTR(-ENODEV);
->  }
->  
-> +static int mvebu_clk_gating_suspend(void)
-> +{
-> +       ctrl->saved_reg = readl(ctrl->base);
-> +       return 0;
-> +}
-> +
-> +static void mvebu_clk_gating_resume(void)
-> +{
-> +       writel(ctrl->saved_reg, ctrl->base);
-> +}
-> +
->  void __init mvebu_clk_gating_setup(struct device_node *np,
->                                    const struct clk_gating_soc_desc *desc)
->  {
-> -       struct clk_gating_ctrl *ctrl;
->         struct clk *clk;
->         void __iomem *base;
->         const char *default_parent = NULL;
->         int n;
->  
-> +       if (ctrl) {
-> +               pr_err("mvebu-clk-gating: cannot instantiate more than one gatable clock device\n");
-> +               return;
-> +       }
-> +
->         base = of_iomap(np, 0);
->         if (WARN_ON(!base))
->                 return;
-> @@ -225,6 +245,10 @@ void __init mvebu_clk_gating_setup(struct device_node *np,
->         /* lock must already be initialized */
->         ctrl->lock = &ctrl_gating_lock;
->  
-> +       ctrl->base = base;
-> +       ctrl->syscore_ops.suspend = mvebu_clk_gating_suspend;
-> +       ctrl->syscore_ops.resume = mvebu_clk_gating_resume;
-> +
->         /* Count, allocate, and register clock gates */
->         for (n = 0; desc[n].name;)
->                 n++;
-> @@ -246,6 +270,8 @@ void __init mvebu_clk_gating_setup(struct device_node *np,
->  
->         of_clk_add_provider(np, clk_gating_get_src, ctrl);
->  
-> +       register_syscore_ops(&ctrl->syscore_ops);
-> +
->         return;
->  gates_out:
->         kfree(ctrl);
-> -- 
-> 2.1.0
-> 
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
