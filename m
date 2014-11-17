@@ -1,137 +1,149 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: [PATCH V5 12/12] ARM: tegra: venice2: Add xHCI support
-Date: Mon, 17 Nov 2014 14:41:42 -0800
-Message-ID: <1416264102-1323-13-git-send-email-abrestic@chromium.org>
-References: <1416264102-1323-1-git-send-email-abrestic@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1416264102-1323-1-git-send-email-abrestic@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, linux-tegra@vger.kernel.org
-Cc: Andrew Bresticker <abrestic@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jassi Brar <jassisinghbrar@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv2 08/16] clk: mvebu: add suspend/resume for gatable clocks
+Date: Mon, 17 Nov 2014 14:46:04 -0800
+Message-ID: <20141117224604.25314.96198@quantum>
+References: <1415978496-9334-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1415978496-9334-9-git-send-email-thomas.petazzoni@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415978496-9334-9-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Assign ports previously owned by the EHCI controllers to the xHCI
-controller.  There are two external USB ports (UTMI ports 0/2 and
-USB3 ports 0/1) and an internal USB port (UTMI port 1).  PCIe lanes
-0 and 1 are used by the USB3 ports.
+Quoting Thomas Petazzoni (2014-11-14 07:21:28)
+> This commit adds suspend/resume support for the gatable clock driver
+> used on Marvell EBU platforms. When getting out of suspend, the
+> Marvell EBU platforms go through the bootloader, which re-enables all
+> gatable clocks. However, upon resume, the clock framework will not
+> disable again all gatable clocks that are not used.
+> 
+> Therefore, if the clock driver does not save/restore the state of the
+> gatable clocks, all gatable clocks that are not claimed by any device
+> driver will remain enabled after a resume. This is why this driver
+> saves and restores the state of those clocks.
 
-Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
-Reviewed-by: Stephen Warren <swarren@nvidia.com>
----
-Changes from v4:
- - Updated regulator and pinconfig properties.
-No changes from v3.
-Changes from v2:
- - Updated VBUS power supply names.
-Changes from v1:
- - Updated USB power supplies.
----
- arch/arm/boot/dts/tegra124-venice2.dts | 79 ++++++++++++++++++++++------------
- 1 file changed, 51 insertions(+), 28 deletions(-)
+It might be a good idea to call clk_disable_unused() from the clk core
+after resuming from suspend.
 
-diff --git a/arch/arm/boot/dts/tegra124-venice2.dts b/arch/arm/boot/dts/tegra124-venice2.dts
-index 1300885..24a8bb8 100644
---- a/arch/arm/boot/dts/tegra124-venice2.dts
-+++ b/arch/arm/boot/dts/tegra124-venice2.dts
-@@ -744,7 +744,7 @@
- 					regulator-always-on;
- 				};
- 
--				ldo0 {
-+				avdd_1v05_run: ldo0 {
- 					regulator-name = "+1.05V_RUN_AVDD";
- 					regulator-min-microvolt = <1050000>;
- 					regulator-max-microvolt = <1050000>;
-@@ -886,6 +886,56 @@
- 		status = "okay";
- 	};
- 
-+	usb@0,70090000 {
-+		status = "okay";
-+		phys = <&padctl TEGRA_XUSB_PADCTL_UTMI_P0>, /* 1st USB A */
-+		       <&padctl TEGRA_XUSB_PADCTL_UTMI_P1>, /* Internal USB */
-+		       <&padctl TEGRA_XUSB_PADCTL_UTMI_P2>, /* 2nd USB A */
-+		       <&padctl TEGRA_XUSB_PADCTL_USB3_P0>, /* 1st USB A */
-+		       <&padctl TEGRA_XUSB_PADCTL_USB3_P1>; /* 2nd USB A */
-+		phy-names = "utmi-0", "utmi-1", "utmi-2", "usb3-0", "usb3-1";
-+		avddio-pex-supply = <&vdd_1v05_run>;
-+		dvddio-pex-supply = <&vdd_1v05_run>;
-+		avdd-usb-supply = <&vdd_3v3_lp0>;
-+		avdd-pll-utmip-supply = <&vddio_1v8>;
-+		avdd-pll-erefe-supply = <&avdd_1v05_run>;
-+		avdd-usb-ss-pll-supply = <&vdd_1v05_run>;
-+		hvdd-usb-ss-supply = <&vdd_3v3_lp0>;
-+		hvdd-usb-ss-pll-e-supply = <&vdd_3v3_lp0>;
-+	};
-+
-+	padctl@0,7009f000 {
-+		pinctrl-0 = <&padctl_default>;
-+		pinctrl-names = "default";
-+
-+		vbus-0-supply = <&vdd_usb1_vbus>;
-+		vbus-1-supply = <&vdd_run_cam>;
-+		vbus-2-supply = <&vdd_usb3_vbus>;
-+
-+		padctl_default: pinmux {
-+			otg {
-+				nvidia,lanes = "otg-0", "otg-1", "otg-2";
-+				nvidia,function = "xusb";
-+			};
-+
-+			usb3p0 {
-+				nvidia,lanes = "pcie-0";
-+				nvidia,function = "usb3";
-+				nvidia,iddq = <0>;
-+				nvidia,usb2-port = <0>;
-+				nvidia,usb3-port = <0>;
-+			};
-+
-+			usb3p1 {
-+				nvidia,lanes = "pcie-1";
-+				nvidia,function = "usb3";
-+				nvidia,iddq = <0>;
-+				nvidia,usb2-port = <2>;
-+				nvidia,usb3-port = <1>;
-+			};
-+		};
-+	};
-+
- 	sdhci@0,700b0400 {
- 		cd-gpios = <&gpio TEGRA_GPIO(V, 2) GPIO_ACTIVE_HIGH>;
- 		power-gpios = <&gpio TEGRA_GPIO(R, 0) GPIO_ACTIVE_HIGH>;
-@@ -906,33 +956,6 @@
- 		};
- 	};
- 
--	usb@0,7d000000 {
--		status = "okay";
--	};
--
--	usb-phy@0,7d000000 {
--		status = "okay";
--		vbus-supply = <&vdd_usb1_vbus>;
--	};
--
--	usb@0,7d004000 {
--		status = "okay";
--	};
--
--	usb-phy@0,7d004000 {
--		status = "okay";
--		vbus-supply = <&vdd_run_cam>;
--	};
--
--	usb@0,7d008000 {
--		status = "okay";
--	};
--
--	usb-phy@0,7d008000 {
--		status = "okay";
--		vbus-supply = <&vdd_usb3_vbus>;
--	};
--
- 	backlight: backlight {
- 		compatible = "pwm-backlight";
- 
--- 
-2.1.0.rc2.206.gedb03e5
+> 
+> Since clocks aren't real devices, we don't have the normal ->suspend()
+> and ->resume() of the device model, and have to use the ->suspend()
+> and ->resume() hooks of the syscore_ops mechanism. This mechanism has
+> the unfortunate idea of not providing a way of passing private data,
+> which requires us to change the driver to make the assumption that
+> there is only once instance of the gatable clock control structure.
+> 
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  drivers/clk/mvebu/common.c | 30 ++++++++++++++++++++++++++++--
+>  1 file changed, 28 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/clk/mvebu/common.c b/drivers/clk/mvebu/common.c
+> index b7fcb46..8799fb8 100644
+> --- a/drivers/clk/mvebu/common.c
+> +++ b/drivers/clk/mvebu/common.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/io.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+> +#include <linux/syscore_ops.h>
+>  
+>  #include "common.h"
+>  
+> @@ -177,14 +178,18 @@ struct clk_gating_ctrl {
+>         spinlock_t *lock;
+>         struct clk **gates;
+>         int num_gates;
+> +       struct syscore_ops syscore_ops;
+
+You are registering suspend/resume ops per clock. Have you considered
+registering a single set of ops for your clock controller driver? See
+drivers/clk/samsung/clk-exynos5420.c for an example.
+
+Combined with a table of clocks registered by your driver, centralized
+suspend/resume methods might be a cleaner solution.
+
+Regards,
+Mike
+
+> +       void __iomem *base;
+> +       u32 saved_reg;
+>  };
+>  
+>  #define to_clk_gate(_hw) container_of(_hw, struct clk_gate, hw)
+>  
+> +static struct clk_gating_ctrl *ctrl;
+> +
+>  static struct clk *clk_gating_get_src(
+>         struct of_phandle_args *clkspec, void *data)
+>  {
+> -       struct clk_gating_ctrl *ctrl = (struct clk_gating_ctrl *)data;
+>         int n;
+>  
+>         if (clkspec->args_count < 1)
+> @@ -199,15 +204,30 @@ static struct clk *clk_gating_get_src(
+>         return ERR_PTR(-ENODEV);
+>  }
+>  
+> +static int mvebu_clk_gating_suspend(void)
+> +{
+> +       ctrl->saved_reg = readl(ctrl->base);
+> +       return 0;
+> +}
+> +
+> +static void mvebu_clk_gating_resume(void)
+> +{
+> +       writel(ctrl->saved_reg, ctrl->base);
+> +}
+> +
+>  void __init mvebu_clk_gating_setup(struct device_node *np,
+>                                    const struct clk_gating_soc_desc *desc)
+>  {
+> -       struct clk_gating_ctrl *ctrl;
+>         struct clk *clk;
+>         void __iomem *base;
+>         const char *default_parent = NULL;
+>         int n;
+>  
+> +       if (ctrl) {
+> +               pr_err("mvebu-clk-gating: cannot instantiate more than one gatable clock device\n");
+> +               return;
+> +       }
+> +
+>         base = of_iomap(np, 0);
+>         if (WARN_ON(!base))
+>                 return;
+> @@ -225,6 +245,10 @@ void __init mvebu_clk_gating_setup(struct device_node *np,
+>         /* lock must already be initialized */
+>         ctrl->lock = &ctrl_gating_lock;
+>  
+> +       ctrl->base = base;
+> +       ctrl->syscore_ops.suspend = mvebu_clk_gating_suspend;
+> +       ctrl->syscore_ops.resume = mvebu_clk_gating_resume;
+> +
+>         /* Count, allocate, and register clock gates */
+>         for (n = 0; desc[n].name;)
+>                 n++;
+> @@ -246,6 +270,8 @@ void __init mvebu_clk_gating_setup(struct device_node *np,
+>  
+>         of_clk_add_provider(np, clk_gating_get_src, ctrl);
+>  
+> +       register_syscore_ops(&ctrl->syscore_ops);
+> +
+>         return;
+>  gates_out:
+>         kfree(ctrl);
+> -- 
+> 2.1.0
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
