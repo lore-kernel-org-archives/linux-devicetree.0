@@ -1,254 +1,97 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [RFC] adp1653: Add device tree bindings for LED controller
-Date: Mon, 17 Nov 2014 16:58:58 +0200
-Message-ID: <20141117145857.GO8907@valkosipuli.retiisi.org.uk>
-References: <20141116075928.GA9763@amd>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [U-Boot] [PATCH 5/6] sunxi: video: Add simplefb support
+Date: Mon, 17 Nov 2014 15:01:08 +0000
+Message-ID: <CACxGe6u=kQbHWpe1pFqD90viD0x2S+k0LL+T7S5LhTPmQSGy7g@mail.gmail.com>
+References: <1415984088-6800-1-git-send-email-hdegoede@redhat.com>
+ <1415984088-6800-6-git-send-email-hdegoede@redhat.com> <1416138607.25454.13.camel@hellion.org.uk>
+ <5468AC2E.80601@redhat.com> <1416148688.25454.22.camel@hellion.org.uk>
+ <5468BE9A.8050501@redhat.com> <1416154297.25454.24.camel@hellion.org.uk>
+ <CACxGe6vE0BdWOrdw1iQyk2-tmdnAUZ=oQCvGg_LESoiw055DLw@mail.gmail.com> <1416219254.27385.15.camel@hellion.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141116075928.GA9763@amd>
-Sender: linux-omap-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: pali.rohar@gmail.com, sre@debian.org, sre@ring0.de, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, freemangordon@abv.bg, bcousson@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, j.anaszewski@samsung.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416219254.27385.15.camel-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: U-Boot <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
+On Mon, Nov 17, 2014 at 10:14 AM, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org> wrote:
+> On Mon, 2014-11-17 at 09:58 +0000, Grant Likely wrote:
+>> I /DO/ want comments though. Putting the node in /chosen is
+>> unconventional. I want to hear if anyone has a good reason why the
+>> framebuffers shouldn't be placed into /chosen.
+>
+> I don't think putting it under /chosen is a problem at all. THe
+> semantics of some of hte convention properties are a bit odd under
+> there, but that's not insurmountable.
+>
+>> >> AFAIK Grant agrees with v5
+>> >
+>> > AFAIK Grant hasn't actually said that. If he does ack it (or if someone
+>> > points me to the correct mail) then I have no further objections.
+>>
+>> My word also isn't gospel.
+>
+> I suppose I should have said something like "I trust Grant's judgement
+> more than my own on things relating to DT" ;-).
+>
+>>  On controversial stuff I want to have
+>> consensus. For the clock patches and had a long conversation with Rob
+>> to make sure we were both in agreement before giving my final ack.
+>>
+>> > In fact it's a bit odd to have a reg property under /chosen at all,
+>> > since it doesn't really fit in with the bus structure. I've done
+>> > something similar in some bindings I've authored[0], but AIUI I got that
+>> > wrong and really should have used a set of non-reg properties with a
+>> > single value so there was no need to parse using #*-cells  (cf the
+>> > initrd-start + initrd-end properties under /chosen). Sadly DT is an ABI,
+>> > so for my bindings I'm kind of stuck with it for the foreseeable future.
+>> >
+>> > [0]
+>> > http://xenbits.xen.org/gitweb/?p=xen.git;a=blob;f=docs/misc/arm/device-tree/booting.txt;h=08ed7751859dbe2d2c32d86d7df371057d7b45a4;hb=HEAD
+>>
+>> Ironic isn't it that I though of that as precedence when I suggested
+>> /chosen! :-)
+>
+> :-)
+>
+>> I actually don't have a problem with it. We do need a way to specify
+>> runtime memory usage, and /chosen is as good a place as any,
+>> particularly when it represents things that won't necessarily be
+>> relevant on kexec or dom0 boot.
+>
+> The main issue which was explained to me with my Xen bindings was that
+> reg = <> isn't all that meaningful under /chosen because it doesn't fit
+> into the bus structure, so the #address-/size-cells stuff gets a bit
+> strange. It's probably tolerable for things which are strictly physical
+> RAM addresses (as opposed to mmio) since RAM isn't typically behind a
+> visible bus.
+>
+> The scheme used for initrds sidesteps all those issues by using separate
+> (multicellular) properties for the start and end regions and not using
+> reg=<> and therefore naturally breaking the expected semantic link with
+> bus topology which reg implies etc.
 
-On Sun, Nov 16, 2014 at 08:59:28AM +0100, Pavel Machek wrote:
-> For device tree people: Yes, I know I'll have to create file in
-> documentation, but does the binding below look acceptable?
-> 
-> I'll clean up driver code a bit more, remove the printks. Anything
-> else obviously wrong?
+I quite dislike the initrd multi-property approach. It has to be
+parsed in a completely separate way.
 
-Jacek Anaszewski is working on flash support for LED devices. I think it'd
-be good to sync the DT bindings for the two, as the types of devices
-supported by the LED API and the V4L2 flash API are quite similar.
+>> The other options are under either the /memory or the /reserved-memory
+>> tree. Rob and I talked about /reserved-memory quite a lot. We could
+>> put all the framebuffer details into the memory node that reserves the
+>> framebuffer. However, I don't like that idea because it kind of makes
+>> assumptions about how the framebuffer will be located inside the
+>> memory region and doesn't allow for multiple framebuffers within a
+>> single region.
+>
+> Yes, that sounds strictly worse than the current solution to me.
 
-Cc Jacek.
+Besides, the simple-framebuffer binding could easily be extended to
+allow a reserved-memory reference instead of a reg property if/when
+that becomes a better option for a specific platform.
 
-> Signed-off-by: Pavel Machek <pavel@ucw.cz>
-> 
-> Thanks,
-> 								Pavel
-> 
-> 
-> diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
-> index 739fcf2..ed0bfc1 100644
-> --- a/arch/arm/boot/dts/omap3-n900.dts
-> +++ b/arch/arm/boot/dts/omap3-n900.dts
-> @@ -553,6 +561,18 @@
->  
->  		ti,usb-charger-detection = <&isp1704>;
->  	};
-> +
-> +	adp1653: adp1653@30 {
-> +		compatible = "ad,adp1653";
-> +		reg = <0x30>;
-> +
-> +		max-flash-timeout-usec = <500000>;
-> +		max-flash-intensity-uA    = <320000>;
-> +		max-torch-intensity-uA     = <50000>;
-> +		max-indicator-intensity-uA = <17500>;
-> +
-> +		gpios = <&gpio3 24 GPIO_ACTIVE_HIGH>; /* Want 88 */
-> +	};
->  };
->  
->  &i2c3 {
-> diff --git a/drivers/media/i2c/adp1653.c b/drivers/media/i2c/adp1653.c
-> index 873fe19..e21ed02 100644
-> --- a/drivers/media/i2c/adp1653.c
-> +++ b/drivers/media/i2c/adp1653.c
-> @@ -8,6 +8,7 @@
->   * Contributors:
->   *	Sakari Ailus <sakari.ailus@iki.fi>
->   *	Tuukka Toivonen <tuukkat76@gmail.com>
-> + *      Pavel Machek <pavel@ucw.cz>
->   *
->   * This program is free software; you can redistribute it and/or
->   * modify it under the terms of the GNU General Public License
-> @@ -34,9 +35,12 @@
->  #include <linux/module.h>
->  #include <linux/i2c.h>
->  #include <linux/slab.h>
-> +#include <linux/of_gpio.h>
->  #include <media/adp1653.h>
->  #include <media/v4l2-device.h>
->  
-> +#include <linux/gpio.h>
-> +
->  #define TIMEOUT_MAX		820000
->  #define TIMEOUT_STEP		54600
->  #define TIMEOUT_MIN		(TIMEOUT_MAX - ADP1653_REG_CONFIG_TMR_SET_MAX \
-> @@ -308,7 +316,16 @@ __adp1653_set_power(struct adp1653_flash *flash, int on)
->  {
->  	int ret;
->  
-> -	ret = flash->platform_data->power(&flash->subdev, on);
-> +	if (flash->platform_data->power)
-> +		ret = flash->platform_data->power(&flash->subdev, on);
-> +	else {
-> +		gpio_set_value(flash->platform_data->power_gpio, on);
-> +		if (on) {
-> +			/* Some delay is apparently required. */
-> +			udelay(20);
-> +		}
-> +	}
-> +			
->  	if (ret < 0)
->  		return ret;
->  
-> @@ -316,8 +333,13 @@ __adp1653_set_power(struct adp1653_flash *flash, int on)
->  		return 0;
->  
->  	ret = adp1653_init_device(flash);
-> -	if (ret < 0)
-> +	if (ret >= 0)
-> +		return ret;
-> +
-> +	if (flash->platform_data->power)
->  		flash->platform_data->power(&flash->subdev, 0);
-> +	else
-> +		gpio_set_value(flash->platform_data->power_gpio, 0);
->  
->  	return ret;
->  }
-> @@ -407,21 +429,87 @@ static int adp1653_resume(struct device *dev)
->  
->  #endif /* CONFIG_PM */
->  
-> +
-> +
-> +
-> +
-> +
-> +
-> +
-> +
-> +
-> +
-> +
-> +
-> +
-> +static int adp1653_of_init(struct i2c_client *client, struct adp1653_flash *flash, 
-> +			   struct device_node *node)
-> +{
-> +	u32 val;
-> +	struct adp1653_platform_data *pd;
-> +	enum of_gpio_flags flags;
-> +	int gpio;
-> +
-> +	if (!node)
-> +		return -EINVAL;
-> +
-> +	printk("adp1653: no platform data\n");
-> +	pd = devm_kzalloc(&client->dev, sizeof(*pd), GFP_KERNEL);
-> +	if (!pd)
-> +		return -ENOMEM;
-> +	flash->platform_data = pd;
-> +
-> +
-> +
-> +
-> +
-> +
-> +
-> +	if (of_property_read_u32(node, "max-flash-timeout-usec", &val)) return -EINVAL;
-> +	pd->max_flash_timeout = val;
-> +	if (of_property_read_u32(node, "max-flash-intensity-uA", &val)) return -EINVAL;
-> +	pd->max_flash_intensity = val/1000;
-> +	if (of_property_read_u32(node, "max-torch-intensity-uA", &val)) return -EINVAL;
-> +	pd->max_torch_intensity = val/1000;
-> +	if (of_property_read_u32(node, "max-indicator-intensity-uA", &val)) return -EINVAL;
-> +	pd->max_indicator_intensity = val;
-> +
-> +	if (!of_find_property(node, "gpios", NULL)) {
-> +		printk("No gpio node\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	gpio = of_get_gpio_flags(node, 0, &flags);
-> +	if (gpio < 0) {
-> +		printk("Error getting GPIO\n"); 
-> +		return -EINVAL;
-> +	}
-> +
-> +	pd->power_gpio = gpio;
-> +
-> +	return 0;
-> +}
-> +
-> +
->  static int adp1653_probe(struct i2c_client *client,
->  			 const struct i2c_device_id *devid)
->  {
->  	struct adp1653_flash *flash;
->  	int ret;
->  
-> -	/* we couldn't work without platform data */
-> -	if (client->dev.platform_data == NULL)
-> -		return -ENODEV;
-> +	printk("adp1653: probe\n");
->  
->  	flash = devm_kzalloc(&client->dev, sizeof(*flash), GFP_KERNEL);
->  	if (flash == NULL)
->  		return -ENOMEM;
->  
-> -	flash->platform_data = client->dev.platform_data;
-> +	/* we couldn't work without platform data */
-> +	if (client->dev.platform_data == NULL) {
-> +		ret = adp1653_of_init(client, flash, client->dev.of_node);
-> +		if (ret)
-> +			return ret;
-> +	} else
-> +		flash->platform_data = client->dev.platform_data;
->  
->  	mutex_init(&flash->power_lock);
->  
-> @@ -439,9 +527,15 @@ static int adp1653_probe(struct i2c_client *client,
->  
->  	flash->subdev.entity.type = MEDIA_ENT_T_V4L2_SUBDEV_FLASH;
->  
-> +	__adp1653_set_power(flash, 1);
-> +
-> +	__adp1653_set_power(flash, 0);
-> +	printk("Flash should have blinked\n");
-> +
->  	return 0;
->  
->  free_and_quit:
-> +	printk("adp1653: something failed registering\n");
->  	v4l2_ctrl_handler_free(&flash->ctrls);
->  	return ret;
->  }
-> diff --git a/include/media/adp1653.h b/include/media/adp1653.h
-> index 1d9b48a..b556580 100644
-> --- a/include/media/adp1653.h
-> +++ b/include/media/adp1653.h
-> @@ -100,9 +100,11 @@ struct adp1653_platform_data {
->  	int (*power)(struct v4l2_subdev *sd, int on);
->  
->  	u32 max_flash_timeout;		/* flash light timeout in us */
-> -	u32 max_flash_intensity;	/* led intensity, flash mode */
-> -	u32 max_torch_intensity;	/* led intensity, torch mode */
-> -	u32 max_indicator_intensity;	/* indicator led intensity */
-> +	u32 max_flash_intensity;	/* led intensity, flash mode, mA */
-> +	u32 max_torch_intensity;	/* led intensity, torch mode, mA */
-> +	u32 max_indicator_intensity;	/* indicator led intensity, uA */
-> +
-> +	int power_gpio;			/* for device-tree based boot */
->  };
->  
->  #define to_adp1653_flash(sd)	container_of(sd, struct adp1653_flash, subdev)
-> 
-> -- 
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
-
--- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
