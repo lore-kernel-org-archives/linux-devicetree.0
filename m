@@ -1,37 +1,47 @@
-From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH V2 22/22] MIPS: Add multiplatform BMIPS target
-Date: Tue, 18 Nov 2014 00:06:48 +0100
-Message-ID: <CAOiHx=kutuOw4kTukm3FvSS-Fwah_yF2byDQFdpM9YQCn6x93g@mail.gmail.com>
-References: <1416097066-20452-1-git-send-email-cernekee@gmail.com>
- <2911624.UJRs5QOPN5@wuerfel> <CAJiQ=7BH8K=Q+JcWTKSfn6xAteOF4B6jahMu_qVd-FyZWD3pjA@mail.gmail.com>
- <3357597.nYlNZ6O0nJ@wuerfel> <CAJiQ=7B6Xwz2iqqH4vEG8WzPOzHj7NHsuGWqq49uy-E34RHp4A@mail.gmail.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH] ACPI / GPIO: Driver GPIO mappings for ACPI GPIOs
+Date: Tue, 18 Nov 2014 00:31:23 +0100
+Message-ID: <3901050.KoSeMVLBPy@vostro.rjw.lan>
+References: <CAAVeFuLW6fucvDxQvY5DDfnhPrgYM+1pi7WoHfBQa_BgYnc_Cw@mail.gmail.com> <CACRpkdb-T42Bqtf7zvc+2om03hgu4j8twDUqmsE4dcKaPXB9Wg@mail.gmail.com> <CAAVeFuLV2yR1tmxX-HicupqgwUYj5HzqvSoi0Bq3V7aVpvf9bg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJiQ=7B6Xwz2iqqH4vEG8WzPOzHj7NHsuGWqq49uy-E34RHp4A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Fraser <jfraser-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <CAAVeFuLV2yR1tmxX-HicupqgwUYj5HzqvSoi0Bq3V7aVpvf9bg@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Alexandre Courbot <gnurou@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 17, 2014 at 10:21 PM, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Currently the bootloader is responsible for decompressing the image.
-> On STB the bootloader typically loads a gzipped ELF file; on DSL/CM
-> the bootloader unpacks a custom image format containing an
-> LZMA-compressed kernel in some form.  So we would be
-> double-compressing the same kernel in this scheme.
+On Monday, November 17, 2014 01:28:54 PM Alexandre Courbot wrote:
+> On Fri, Nov 14, 2014 at 5:58 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> > On Mon, Nov 3, 2014 at 11:56 PM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> >> On Monday, November 03, 2014 02:22:10 PM Linus Walleij wrote:
+> >
+> >>> With that change:
+> >>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> >>
+> >> OK, made the changes and added your Reviewed-by.
+> >>
+> >> One semi-related question though.  Alexandre ACKed the patch before, so
+> >> what did that mean from the GPIO subsystem's perspective?  Was the patch
+> >> approved, not approved, semi-approved?
+> >
+> > It just means we are not always entirely aligned, it's not like
+> > Alexandre and I have meetings on the side and decide what to
+> > say, it's just these mails. I do trust him, I wouldn't get mad if it
+> > had been merged just wanted some polishing when I could get
+> > it...
+> 
+> In case of conflicting feedback between me and Linus, it goes without
+> saying that Linus' opinion should prevail. I am trying to help a bit
+> and take some of the burden off his shoulders, but have neither his
+> skill nor his experience (which shows when you compare our patch
+> reviews). So for important stuff it is a good idea to wait until both
+> of us give a ack - the most likely conflict scenario being that I give
+> a pass overlooking something that Linus will catch.
 
-For the latter I use a patch[1] for mips head.S that detects if
-there's a dtb appended to the vmlinux.bin, which would be trivial to
-adapt to what the well-defined (b)mips interface expects. Of course
-then there is no board detection at all, but I think that's an
-acceptable trade off.
+Thanks for the clarification!
 
+Rafael
 
-Jonas
-
-[1] http://git.openwrt.org/?p=openwrt.git;a=blob;f=target/linux/brcm63xx/patches-3.14/366-MIPS-add-support-for-vmlinux.bin-appended-DTB.patch;h=344e78b5b41e03bff5f3d1f9cce1e8e2cb1a9368;hb=HEAD
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
