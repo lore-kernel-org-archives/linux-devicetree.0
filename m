@@ -1,51 +1,36 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH v3 0/3] Amlogic Meson pinctrl driver
-Date: Mon, 17 Nov 2014 10:57:45 -0800
-Message-ID: <7d408e1ab6ad46b9ba9010dd18b0df54@BY2FFO11FD038.protection.gbl>
-References: <1416168856-12747-1-git-send-email-b.galvani@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1416168856-12747-1-git-send-email-b.galvani@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Beniamino Galvani <b.galvani@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Carlo Caione <carlo@caione.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jerry Cao <jerry.cao@amlogic.com>, Victor Wan <victor.wan@amlogic.com>
+From: George McCollister <george.mccollister-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 1/2] of: Add vendor prefix for NovaTech LLC
+Date: Mon, 17 Nov 2014 13:02:34 -0600
+Message-ID: <1416250957-11065-1-git-send-email-george.mccollister@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: George McCollister <george.mccollister-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Hayato Suzuki <hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Beniamino,
+For company details see:
+http://www.novatechweb.com
 
-On Sun, 2014-11-16 at 09:14PM +0100, Beniamino Galvani wrote:
-> Hi,
->=20
-> this is the third version of the pinctrl driver for Amlogic Meson. It
-> provides a common infrastructure than can be used by all the SoCs of
-> the family and configuration data specific for Meson8. Adding support
-> for other SoCs should be only matter of defining new pins and banks.
->=20
-> The driver uses generic DT properties for the definition of mux and
-> configuration nodes; since there is an ongoing effort to centralize
-> the parsing to generic code, I've reused the patch "pinctrl:
-> pinconf-generic: Infer map type from DT property" [1] posted a few
-> days ago by Soren Brinkmann. I will update the series if that patch i=
-s
-> going to change after the mailing list discussion.
+Signed-off-by: George McCollister <george.mccollister-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Looks really nice to me and it's great that you use my patch as basis.
-Looks like it works for more people than just me :)
-I hope we can convince Linus to take that patch more or less as is. Eve=
-n
-though "kludgy" I don't see an easy way for addressing Linus' comments
-without breaking current users of the interface. It may be easier/bette=
-r
-to gradually migrate to the newly defined bindings and remove the
-kludgyness as user that rely on the current behavior disappear.
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 723999d..8f1462e 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -105,6 +105,7 @@ netgear	NETGEAR
+ newhaven	Newhaven Display International
+ nintendo	Nintendo
+ nokia	Nokia
++novatech	NovaTech LLC
+ nvidia	NVIDIA
+ nxp	NXP Semiconductors
+ onnn	ON Semiconductor Corp.
+-- 
+2.1.0
 
-	Thanks,
-	S=C3=B6ren
 --
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
