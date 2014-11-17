@@ -1,70 +1,93 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v7 09/13] Documentation: bindings: add doc for the USB2
- ChipIdea USB driver
-Date: Mon, 17 Nov 2014 13:54:45 +0800
-Message-ID: <20141117055444.GD30017@shlinux2>
-References: <1415978763-27345-1-git-send-email-antoine.tenart@free-electrons.com>
- <1415978763-27345-10-git-send-email-antoine.tenart@free-electrons.com>
+From: Flora Fu <flora.fu@mediatek.com>
+Subject: Add Support for MediaTek PMIC MT6397 MFD Core and Regulator
+Date: Mon, 17 Nov 2014 15:40:20 +0800
+Message-ID: <1416210027-5562-1-git-send-email-flora.fu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1415978763-27345-10-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Ashwin Chaugule <ashwin.chaugule@linaro.org>, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, srv_heupstream@mediatek.com, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Flora Fu <flora.fu@mediatek.com>, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, Dongdong Cheng <dongdong.cheng@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 14, 2014 at 04:25:59PM +0100, Antoine Tenart wrote:
-> Document the USB2 ChipIdea driver (ci13xxx) bindings.
-> 
-> Signed-off-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  .../devicetree/bindings/usb/ci-hdrc-usb2.txt       | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-> new file mode 100644
-> index 000000000000..27f8b1e5ee46
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-> @@ -0,0 +1,24 @@
-> +* USB2 ChipIdea USB controller for ci13xxx
-> +
-> +Required properties:
-> +- compatible: should be "chipidea,usb2"
-> +- reg: base address and length of the registers
-> +- interrupts: interrupt for the USB controller
-> +
-> +Optional properties:
-> +- clocks: reference to the USB clock
-> +- phys: reference to the USB PHY
-> +- phy-names: should be "usb-phy"
-> +- vbus-supply: reference to the VBUS regulator
-> +
-> +Example:
-> +
-> +	usb@f7ed0000 {
-> +		compatible = "chipidea,usb2";
-> +		reg = <0xf7ed0000 0x10000>;
-> +		interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&chip CLKID_USB0>;
-> +		phys = <&usb_phy0>;
-> +		phy-names = "usb-phy";
-> +		vbus-supply = <&reg_usb0_vbus>;
-> +	};
-> -- 
-> 2.1.0
-> 
+Hi,
 
-Acked-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+The patch sets add support for MediaTek PMIC MT6397 MFD core and its regulator driver.
+This is hardware layout for access PMIC MT6397 from AP SoC MT8135.
+Between PMIC MT6397 and MT8135, the physical signal channel is SPI bus. 
+Tere is a specific hardware called PMIC Wrapper or PWRAP to handle access protocols in both PMIC and AP side.
 
--- 
++-----------------+           +---------------+
+|                 |           |               |
+| Mediatek AP SoC |           |               |
+| (ex. MT8135)    |           |    MT6397     |
+|                 |           |               |
+|      +--------+ | (SPI bus) | +--------+    |
+|      |        | |-----------| |        |    |
+|      |  PMIC  | |-----------| |  PMIC  |    |
+|      | Wrapper| |-----------| | Wrapper|    |
+|      |        | |-----------| |        |    |
+|      +--------+ |           | +--------+    |
+|                 |           |               |
++-----------------+           +---------------+
 
-Best Regards,
-Peter Chen
+The patch set: 
+Patch 1/7: Add core driver files for PMIC MT6397 MFD.
+Patch 2/7: Add PMIC wrapper of MT8135 to access MT6397 MFD. This is regmap of MT6397 MFD.
+Patch 3/7: PMIC provides regulator functions. This patch is MT6397 regulator driver.
+Patch 4/7: Add document for MT6397 MFD.
+Patch 5/7: Add document for MT6397 Regulator.
+Patch 6/7: Add device tree for MT6397 MFD and its regmap in mt8135.dtsi.
+Patch 7/7: Add device tree for MT6397 regulators in mt8135.dtsi.
+
+This driver is based on 3.18-rc1.
+Please notice that reset controller in Patch 2/7 is based previous patch in 
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/299141.html.
+
+Flora Fu (7):
+  mfd: MT6397: Add support for PMIC MT6397 MFD
+  mfd: MT6397: Add regmap for MT8135 and MT6397 SoC
+  regulator: MT6397: Add support for MT6397 regulator
+  dt-bindings: Add document for MT6397 MFD
+  dt-bindings: Add document for MT6397 regulator
+  ARM: dts: mt8135: Add support for PMIC MT6397 MFD
+  ARM: dts: mt8135: Add support for MT6397 regulator
+
+ Documentation/devicetree/bindings/mfd/mt6397.txt   |  87 +++
+ .../bindings/regulator/mt6397-regulator.txt        |  31 +
+ arch/arm/boot/dts/mt8135.dtsi                      | 211 +++++
+ drivers/mfd/Kconfig                                |  18 +
+ drivers/mfd/Makefile                               |   2 +
+ drivers/mfd/mt6397-core.c                          |  94 +++
+ drivers/mfd/mt8135-pmic-wrap.c                     | 847 +++++++++++++++++++++
+ drivers/mfd/mt8135-pmic-wrap.h                     | 138 ++++
+ drivers/mfd/mtk-pmic-wrap.h                        |  25 +
+ drivers/regulator/Kconfig                          |   6 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/mt6397-regulator.c               | 547 +++++++++++++
+ include/linux/mfd/mt6397/core.h                    |  27 +
+ include/linux/mfd/mt6397/registers.h               | 362 +++++++++
+ include/linux/regulator/mt6397-regulator.h         |  50 ++
+ 15 files changed, 2446 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/mt6397.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/mt6397-regulator.txt
+ create mode 100644 drivers/mfd/mt6397-core.c
+ create mode 100644 drivers/mfd/mt8135-pmic-wrap.c
+ create mode 100644 drivers/mfd/mt8135-pmic-wrap.h
+ create mode 100644 drivers/mfd/mtk-pmic-wrap.h
+ create mode 100644 drivers/regulator/mt6397-regulator.c
+ create mode 100644 include/linux/mfd/mt6397/core.h
+ create mode 100644 include/linux/mfd/mt6397/registers.h
+ create mode 100644 include/linux/regulator/mt6397-regulator.h
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.1.1.dirty
