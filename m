@@ -1,136 +1,30 @@
-From: Caesar Wang <caesar.wang@rock-chips.com>
-Subject: [PATCH v12 0/3] ARM: rk3288: Add PM Domain support
-Date: Mon, 17 Nov 2014 17:35:51 +0800
-Message-ID: <1416216954-24488-1-git-send-email-caesar.wang@rock-chips.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, Russell King <linux@arm.linux.org.uk>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, Ulf Hansson <ulf.hansson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, fzf@rock-chips.com, cf@rock-chips.com, caesar.wang@rock-chips.com, chris.zhong@rock-chips.com, xxm@rock-chips.com, chm@rock-chips.com, djkurtz@chromium.org, "jinkun.hong" <jinkun.hong@rock-chips.com>, Jack Dai <jack.dai@rock-chips.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] ARM: shmobile: r8a7790: add USBDMAC{0,1} clocks to device tree
+Date: Mon, 17 Nov 2014 10:36:58 +0100
+Message-ID: <CAMuHMdUyzjJJKq2tDTxTkNUJxJ9+UFpOe+PU__2dSXnBJZOYpw@mail.gmail.com>
+References: <5469BEF9.4010504@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <5469BEF9.4010504@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-    Add power domain drivers based on generic power domain for
-    Rockchip platform, and support RK3288.
+On Mon, Nov 17, 2014 at 10:25 AM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-    https://chromium-review.googlesource.com/#/c/220253/9
-    This is the GPU driver, add the following information in DT,
-    and it can support the PMDOMAIN
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-gpu: gpu@ffa30000 {
-    compatible = "arm,malit764",
-                 "arm,malit76x",
-                 "arm,malit7xx",
-                 "arm,mali-midgard";
-    reg = <0xffa30000 0x10000>;
-    interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-                 <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-                 <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-    interrupt-names = "JOB", "MMU", "GPU";
-    clocks = <&cru ACLK_GPU>;
-    clock-names = "aclk_gpu";
-    operating-points = <
-                /* KHz uV */
-                100000 800000
-                200000 850000
-                300000 950000
-                400000 1000000
-                600000 1150000
-    >;
-    power-domains = <&power RK3288_PD_GPU>;
-    status = "disabled";
-};
+Gr{oetje,eeting}s,
 
-Based on:
-    - [PATCH v4 1/3] PM / clock_ops: Add pm_clk_add_clk()
-    http://patchwork.kernel.org/patch/5242121/
+                        Geert
 
-Changes in v12:
-    - fix the title doamin->domain.
-    - updated device_attach and device_detach API,otherwise it will compile
-      fail on next kernel.
-    - Remove essential clocks from rk3288 PD_VIO domain,
-      Some clocks are essential for the system health and should not be
-      turned down. However there is no owner for them so if they listed as
-      belonging to power domain we'll try toggling them up and down during
-      power domain transition. As a result we either fail to suspend or resume
-      the system.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Changes in v11:
-    - fix pm_genpd_init(&pd->genpd, NULL, false);
-
-Changes in v10:
-    - this switches over domain infos to use masks instead of recomputing
-      them each time and also gets rid of custom domain translator and
-      uses standard onecell on.
-    - fix missing the #include <dt-bindings/power-domain/rk3288.h>
-    - remove the notes
-
-Changes in v9:
-    - add document decription
-    - fix v8 changes as follows:
-    - This reconciles the v2 and v7 code so that we power domain have
-      lists of clocks they toggle on and off during power transitions and
-      independently from power domains clocks we attach clocks to devices
-      comprising power domain and prepare them so they are turn on and off
-      by runtime PM.
-    - add rockchip_pm_add_one_domain() to control domains.
-    - add pd_start/pd_stop interface to control clocks
-    - add decription for power-doamin node
-
-Changes in v8:
-    - document go back to v2
-    - This reconciles the v2 and v7 code so that we power domain have
-      lists of clocks they toggle on and off during power transitions and
-      independently from power domains clocks we attach clocks to devices
-      comprising power domain and prepare them so they are turn on and off
-      by runtime PM.
-    - DTS go back to v2
-
-Changes in v7:
-    - Delete unused variables
-
-Changes in v6:
-    - delete pmu_lock
-    - modify dev_lock using mutex
-    - pm_clk_resume(pd->dev) change to pm_clk_resume(ed->dev)
-    - pm_clk_suspend(pd->dev) change to pm_clk_suspend(ed->dev)
-    - add devm_kfree(pd->dev, de) in rockchip_pm_domain_detach_dev
-
-Changes in v5:
-    - delete idle_lock
-    - add timeout in rockchip_pmu_set_idle_request()
-
-Changes in v4:
-    - use list storage dev
-
-Changes in v3:
-    - DT structure has changed
-    - change use pm_clk_resume() and pm_clk_suspend()
-    - Decomposition power-controller, changed to multiple controller
-    (gpu-power-controller, hevc-power-controller)
-
-Changes in v2:
-    - move clocks to "optional"
-    - remove the "pd->pd.of_node = np"
-    - make pd_vio clocks all one entry per line and alphabetize.
-    - power: power-controller move back to pinctrl: pinctrl.
-
-Caesar Wang (3):
-  dt-bindings: add document of Rockchip power domain
-  power-domain: rockchip: add power domain driver
-  ARM: dts: add rk3288 power-domain node
-
- .../bindings/arm/rockchip/power_domain.txt         |  48 +++
- arch/arm/boot/dts/rk3288.dtsi                      |  59 +++
- arch/arm/mach-rockchip/Kconfig                     |   1 +
- arch/arm/mach-rockchip/Makefile                    |   1 +
- arch/arm/mach-rockchip/pm_domains.c                | 472 +++++++++++++++++++++
- include/dt-bindings/power-domain/rk3288.h          |  11 +
- 6 files changed, 592 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/rockchip/power_domain.txt
- create mode 100644 arch/arm/mach-rockchip/pm_domains.c
- create mode 100644 include/dt-bindings/power-domain/rk3288.h
-
--- 
-1.9.1
-
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
