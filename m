@@ -1,50 +1,37 @@
-From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2 22/22] MIPS: Add multiplatform BMIPS target
-Date: Mon, 17 Nov 2014 13:21:45 -0800
-Message-ID: <CAJiQ=7B6Xwz2iqqH4vEG8WzPOzHj7NHsuGWqq49uy-E34RHp4A@mail.gmail.com>
-References: <1416097066-20452-1-git-send-email-cernekee@gmail.com>
- <2911624.UJRs5QOPN5@wuerfel> <CAJiQ=7BH8K=Q+JcWTKSfn6xAteOF4B6jahMu_qVd-FyZWD3pjA@mail.gmail.com>
- <3357597.nYlNZ6O0nJ@wuerfel>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH V5 4/4] clocksource: mips-gic: Add device-tree support
+Date: Mon, 17 Nov 2014 13:26:30 -0800
+Message-ID: <CAL1qeaHpK0a+ONK3bhVrRk-G7iwRw_HwpjtLwi6E6EJ+rccbww@mail.gmail.com>
+References: <1415821419-26974-1-git-send-email-abrestic@chromium.org>
+	<1415821419-26974-5-git-send-email-abrestic@chromium.org>
+	<546A66EA.3090107@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3357597.nYlNZ6O0nJ@wuerfel>
+In-Reply-To: <546A66EA.3090107-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Fraser <jfraser-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 17, 2014 at 12:40 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->> One possible complication: for BCM63xx/BCM7xxx (MIPS) there is no
->> decompressor in the kernel.  The firmware loads an ELF image into
->> memory and jumps directly to kernel_entry.
+On Mon, Nov 17, 2014 at 1:21 PM, Daniel Lezcano
+<daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 11/12/2014 08:43 PM, Andrew Bresticker wrote:
 >>
+>> Parse the GIC timer frequency and interrupt from the device-tree.
+>>
+>> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 >
-> Right, that complicates it a bit, but is there a reason why a decompressor
-> would be hard to do, or would be considered a bad thing?
-> There is already generic decompressor code in arch/mips/boot/compressed/
-> that I would assume you could use without firmware changes. Are you
-> worried about boot time overhead?
+>
+> Hi Andrew,
+>
+> through which tree is this patch supposed to go ?
+>
+> Is there any dependency ?
 
-Currently the bootloader is responsible for decompressing the image.
-On STB the bootloader typically loads a gzipped ELF file; on DSL/CM
-the bootloader unpacks a custom image format containing an
-LZMA-compressed kernel in some form.  So we would be
-double-compressing the same kernel in this scheme.
-
-STB/DSL should be able to boot the arch/mips/boot/compressed "vmlinuz"
-ELF file; I tested STB.  CM might be questionable, but doesn't need
-decompressor mods because the bootloader is DT-aware.
-
-Also, the decompressor may need to be modified so that it recognizes /
-passes / doesn't overwrite DTB blobs coming from the bootloader.  And
-to make sure it doesn't stomp on any of the code or data that our
-bootloaders use for their callback mechanisms.
-
-So, one possibility is to submit a V3 patch which allows 0 or 1 DTB
-files to be compiled in statically (similar to
-CONFIG_ARM_APPENDED_DTB) and requires a DT-aware bootloader or
-decompressor for anything else.  Any opinions?
+There are quite a few dependencies, so this series and all the other
+MIPS GIC stuff is going through the MIPS tree.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
