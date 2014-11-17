@@ -1,60 +1,51 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 06/11] ARM: STi: DT: STiH410: Add defines for STiH410 DT clocks
-Date: Mon, 17 Nov 2014 16:47:59 +0000
-Message-ID: <1416242884-5261-7-git-send-email-peter.griffin@linaro.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH v3 02/11] ARM: STi: DT: STiH416: Add DT node for the stih415/6
+ usb2 phy
+Date: Mon, 17 Nov 2014 16:47:55 +0000
+Message-ID: <1416242884-5261-3-git-send-email-peter.griffin@linaro.org>
 References: <1416242884-5261-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416242884-5261-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1416242884-5261-1-git-send-email-peter.griffin@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, arnd@arndb.de
+Cc: peter.griffin@linaro.org, devicetree@vger.kernel.org, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Although most clock outputs are the same as stih407 SoC, stih410
-also has some additional new clock outputs.
+This usb picophy is found on stih415/6 SoC.
 
-Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 ---
- include/dt-bindings/clock/stih410-clks.h | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 include/dt-bindings/clock/stih410-clks.h
+ arch/arm/boot/dts/stih416.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/include/dt-bindings/clock/stih410-clks.h b/include/dt-bindings/clock/stih410-clks.h
-new file mode 100644
-index 0000000..2097a4b
---- /dev/null
-+++ b/include/dt-bindings/clock/stih410-clks.h
-@@ -0,0 +1,25 @@
-+/*
-+ * This header provides constants clk index STMicroelectronics
-+ * STiH410 SoC.
-+ */
-+#ifndef _DT_BINDINGS_CLK_STIH410
-+#define _DT_BINDINGS_CLK_STIH410
+diff --git a/arch/arm/boot/dts/stih416.dtsi b/arch/arm/boot/dts/stih416.dtsi
+index 1137bdf..ff2ad35 100644
+--- a/arch/arm/boot/dts/stih416.dtsi
++++ b/arch/arm/boot/dts/stih416.dtsi
+@@ -316,5 +316,13 @@
+ 
+ 			status	        = "disabled";
+ 		};
 +
-+#include "stih407-clks.h"
-+
-+/* STiH410 introduces new clock outputs compared to STiH407 */
-+
-+/* CLOCKGEN C0 */
-+#define CLK_TX_ICN_HADES	32
-+#define CLK_RX_ICN_HADES	33
-+#define CLK_ICN_REG_16		34
-+#define CLK_PP_HADES		35
-+#define CLK_CLUST_HADES		36
-+#define CLK_HWPE_HADES		37
-+#define CLK_FC_HADES		38
-+
-+/* CLOCKGEN D0 */
-+#define CLK_PCMR10_MASTER	4
-+#define CLK_USB2_PHY		5
-+
-+#endif
++		usb2_phy: phy@0 {
++			compatible = "st,stih416-usb-phy";
++			#phy-cells = <0>;
++			st,syscfg = <&syscfg_rear>;
++			clocks = <&clk_sysin>;
++			clock-names = "osc_phy";
++		};
+ 	};
+ };
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
