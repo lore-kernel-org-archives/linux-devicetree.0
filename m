@@ -1,42 +1,61 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] i2c: core: Fix probing of i2c slaves without interrupts
-Date: Mon, 17 Nov 2014 15:08:25 -0200
-Message-ID: <CAOMZO5BsfCfP+bMfYWZ9C=Sp0sWkEr6WoRRygw18EfW2T_k3oQ@mail.gmail.com>
-References: <1416224580-4782-1-git-send-email-geert+renesas@glider.be>
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: Re: [PATCH 1/2] crypto: Add Imagination Technologies hw hash accelerator
+Date: Mon, 17 Nov 2014 09:11:48 -0800
+Message-ID: <CAL1qeaH9-K3GSD50WBQRJyBS_q9uSsnQDMmTYdsTOC1rovcHgQ@mail.gmail.com>
+References: <1415621455-10468-1-git-send-email-james.hartley@imgtec.com>
+	<1415621455-10468-2-git-send-email-james.hartley@imgtec.com>
+	<CAL1qeaGN9q_WHP2YJ3fY3r11v0pitcmwbjam5dRzeZhHCp7c8g@mail.gmail.com>
+	<5467070E.5040104@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416224580-4782-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <5467070E.5040104@gmail.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Corentin LABBE <clabbe.montjoie@gmail.com>
+Cc: James Hartley <james.hartley@imgtec.com>, Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, joe@perches.com, mchehab@osg.samsung.com, Antti Palosaari <crope@iki.fi>, jg1.han@samsung.com, linux-crypto@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 17, 2014 at 9:43 AM, Geert Uytterhoeven
-<geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> wrote:
-> Since commit 2fd36c55264926e2 ("i2c: core: Map OF IRQ at probe time"),
-> i2c slaves without interrupts (e.g. da9210 and at24 on r8a7791/koelsch)
-> fail to probe:
+On Fri, Nov 14, 2014 at 11:55 PM, Corentin LABBE
+<clabbe.montjoie@gmail.com> wrote:
+> Le 15/11/2014 00:59, Andrew Bresticker a =C3=A9crit :
+>> Hi James,
+>>
+>>> +
+>>> +struct img_hash_drv {
+>>> +       struct list_head dev_list;
+>>> +       spinlock_t lock;
+>>> +};
+>>> +
+>>> +static struct img_hash_drv img_hash =3D {
+>>> +       .dev_list =3D LIST_HEAD_INIT(img_hash.dev_list),
+>>> +       .lock =3D __SPIN_LOCK_UNLOCKED(img_hash.lock),
+>>> +};
+>>
+>> It looks like the only purpose of this list is to get the
+>> corresponding struct img_hash_dev in img_hash_init().  If there's
+>> never going to be multiple instances within an SoC, perhaps you coul=
+d
+>> just use a global?  Otherwise, you could do something like the
+>> qualcomm driver, see drivers/crypto/qce/sha.c.  It looks like there =
+is
+>> some precedent for this device list though...
+>>
 >
->     at24: probe of 2-0050 failed with error -22
+> I don't understand, you propose to use a global, something that lots =
+of people want to be removed in my driver.
+> It is not better than this global list.
 >
->     da9210: probe of 6-0068 failed with error -22
+> I have the fealing that there no good way to get a pointer to a drive=
+r structure inside the cryptoAPI.
+> What to you think about adding a void *data in struct crypto_alg
 >
-> This happens because the call to of_irq_get() in i2c_device_probe()
-> returns -EINVAL.
+> Before registering an alg you could do:
+> mv_aes_alg_ecb.data =3D myprivatedriverdata;
+> ret =3D crypto_register_alg(&mv_aes_alg_ecb);
 >
-> If a device node does not have an "interrupts" property,
-> of_irq_parse_one() fails. Unlike irq_of_parse_and_map(), of_irq_get()
-> does not ignore errors from of_irq_parse_one(), but forwards them.
->
-> Make i2c_device_probe() ignore all errors but -EPROBE_DEFER to fix this,
-> just like platform_get_irq() and platform_get_irq_byname() already do.
->
-> Fixes: 2fd36c55264926e2 ("i2c: core: Map OF IRQ at probe time")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> and then get it via
+> struct crypto_priv *cp =3D req->base.tfm->__crt_alg->data;
+> (a function will be better than that)
 
-With this patch applied my codec and PMIC can be probed again:
-
-Tested-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-
-Thanks
+That sounds good to me.
