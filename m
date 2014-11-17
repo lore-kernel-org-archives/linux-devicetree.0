@@ -1,15 +1,14 @@
 From: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v1 2/2] DT: eFuse: Add binding document for IMG
- Pistachio eFuse Controller
-Date: Mon, 17 Nov 2014 23:34:36 +0000
-Message-ID: <27E62D98F903554192E3C13AFCC91C3C2F506F94@hbmail01.hb.imgtec.org>
+Subject: RE: [PATCH v1 1/2] efuse: IMG Pistachio eFuse Controller
+Date: Mon, 17 Nov 2014 23:39:11 +0000
+Message-ID: <27E62D98F903554192E3C13AFCC91C3C2F506FAB@hbmail01.hb.imgtec.org>
 References: <1416237576-21542-1-git-send-email-arul.ramasamy@imgtec.com>
-	<1416237576-21542-3-git-send-email-arul.ramasamy@imgtec.com>,<CAL1qeaF47Xwq5eS17D_rS4QBP12eJ3F0N-RNx+_o0kr-H1ropw@mail.gmail.com>
+	<1416237576-21542-2-git-send-email-arul.ramasamy@imgtec.com>,<CAL1qeaF+Y8gPFFkAXq+CnKpXmpFQQoC_6T+tJuXq2yGS1STH-g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=Windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL1qeaF47Xwq5eS17D_rS4QBP12eJ3F0N-RNx+_o0kr-H1ropw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAL1qeaF+Y8gPFFkAXq+CnKpXmpFQQoC_6T+tJuXq2yGS1STH-g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Arul Ramasamy <Arul.Ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
@@ -20,53 +19,40 @@ Hi Andrew,
 
 Many thanks for the review.
 
->> +++ b/Documentation/devicetree/bindings/soc/pistachio/img-efuse.txt
->> @@ -0,0 +1,18 @@
->> +* IMG Pistachio eFuse controller
->> +
->> +Required properties:
->> +- compatible: Must be "img,pistachio-efuse".
->> +- reg: Must contain the base address and length of the eFuse regist=
-ers.
->> +- clocks: Must contain an entry for each entry in clock-names.
->> +  See ../clock/clock-bindings.txt for details.
->> +- clock-names: Must include the following entries:
->> +  - efuse: External oscillator clock
 
-> How is the external oscillator related to efuse?  Also, perhaps it
-> should be called "osc" since it's not an efuse-specific clock.
+> On Mon, Nov 17, 2014 at 7:19 AM,  <arul.ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+>> From: Arul Ramasamy <Arul.Ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>>
+>> The Pistachio SOC from Imagination Technologies includes a eFuse Controller
+>> which exposes the status of 128 EFUSE bits to the external world.
+>>
+>> Signed-off-by: Arul Ramasamy <Arul.Ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 
-This is what I read from the eFuse Controller TRM
-(Generic eFuse Controller.Technical Reference Manual.pdf) with respect =
-to this clock.
+>>  drivers/soc/Kconfig                    |   1 +
+>>  drivers/soc/Makefile                   |   1 +
+>>  drivers/soc/pistachio/Makefile         |   1 +
+>>  drivers/soc/pistachio/fuse/Kconfig     |   9 ++
+>>  drivers/soc/pistachio/fuse/Makefile    |   1 +
+>>  drivers/soc/pistachio/fuse/img-efuse.c | 184 +++++++++++++++++++++++++++++++++
+>>  include/soc/pistachio/img-efuse.h      |  17 +++
+>>  7 files changed, 214 insertions(+)
+>>  create mode 100644 drivers/soc/pistachio/Makefile
+>>  create mode 100644 drivers/soc/pistachio/fuse/Kconfig
+>>  create mode 100644 drivers/soc/pistachio/fuse/Makefile
+>>  create mode 100644 drivers/soc/pistachio/fuse/img-efuse.c
+>>  create mode 100644 include/soc/pistachio/img-efuse.h
 
-"Free-running oscillator clock =96 used to clock the fuse-unload state =
-machine. < 50Mhz"
+> Is this IP present on other ImgTec SoCs?  Perhaps it makes more sense
+> to create drivers/soc/img/ instead of drivers/soc/pistachio/?
 
-Please comment.
+Ok. Will do it.
 
->> +  - sys: eFuse system interface clock
 
-> I don't see a system interface gate clock for efuse in the TRM ...
-
-This is what I read from the above document about the sys_clk.
-
-"System bus clock, synchronous to the IMGBus1 input. < 400 MHz."
-
-I think this clock enables access to shadow RAM where the eFuses status=
- is stored.
-
-Please comment.
-
-regards,
+Regards,
 Naidu.
-
-
-
-
-
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
