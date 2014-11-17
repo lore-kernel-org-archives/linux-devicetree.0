@@ -1,84 +1,49 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] dt-bindings: simplefb-sunxi: Add sunxi
- simplefb extensions
-Date: Mon, 17 Nov 2014 13:39:18 +0000
-Message-ID: <CACxGe6vqiC08sP+o3bduGfvUdwRtHm8+_7EdZccJjS86qVKvxQ@mail.gmail.com>
-References: <1416224086-5698-1-git-send-email-hdegoede@redhat.com>
- <1416224086-5698-3-git-send-email-hdegoede@redhat.com> <20141117124721.GQ6414@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCJP567ORICBBGXVU6RQKGQE3RGCW4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20141117124721.GQ6414@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+From: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v8 06/13] Documentation: bindings: add doc for the Berlin USB PHY
+Date: Mon, 17 Nov 2014 14:35:40 +0100
+Message-ID: <1416231347-27193-7-git-send-email-antoine.tenart@free-electrons.com>
+References: <1416231347-27193-1-git-send-email-antoine.tenart@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416231347-27193-1-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 17, 2014 at 12:47 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Mon, Nov 17, 2014 at 12:34:46PM +0100, Hans de Goede wrote:
->> If pre-filled framebuffer nodes are used, the firmware may need extra
->> properties to find the right node. This documents the properties to use
->> for this on sunxi platforms.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>  .../bindings/video/simple-framebuffer-sunxi.txt    | 33 ++++++++++++++++++++++
->>  1 file changed, 33 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
->>
->> diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt b/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
->> new file mode 100644
->> index 0000000..84ca264
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
->> @@ -0,0 +1,33 @@
->> +Sunxi specific Simple Framebuffer bindings
->> +
->> +This binding documents sunxi specific extensions to the simple-framebuffer
->> +bindings. The sunxi simplefb u-boot code relies on the devicetree containing
->> +pre-populated simplefb nodes.
->> +
->> +These extensions are intended so that u-boot can select the right node based
->> +on which pipeline and output is being used. As such they are solely intended
->> +for firmware / bootloader use, and the OS should ignore them.
->> +
->> +Required properties:
->> +- compatible: "sunxi,framebuffer"
->> +- sunxi,pipeline:
->> +  <0> for the de_be0 -> lcdc0 -> output pipeline
->> +  <1> for the de_be1 -> lcdc1 -> output pipeline
->> +- sunxi,output: One of: "hdmi", "lcd", "vga", and "composite"
->> +
->> +Example:
->> +
->> +chosen {
->> +     #address-cells = <1>;
->> +     #size-cells = <1>;
->> +     ranges;
->> +
->> +     framebuffer@0 {
->> +             compatible = "sunxi,framebuffer", "simple-framebuffer";
->> +             sunxi,pipeline = <0>;
->> +             sunxi,output = "hdmi";
->> +             clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
->> +                      <&ahb_gates 44>;
->
-> If we're going that way, then maybe having to specify clock-names
-> would be better in order to know which clock is what?
+Document the bindings of the Marvell Berlin USB PHY driver.
 
-I wouldn't go that way with this binding since the driver has no need
-to differentiate between the clocks, and driver authors shouldn't be
-encouraged to do so. The purpose of the clocks in this node is only
-for itemizing dependencies, not for how to configure the clocks.
-Firmware shouldn't care at all about the clocks list, it only needs to
-find the correct pre-populated node to fill in and enable.
+Signed-off-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ Documentation/devicetree/bindings/phy/berlin-usb-phy.txt | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/berlin-usb-phy.txt
 
-g.
+diff --git a/Documentation/devicetree/bindings/phy/berlin-usb-phy.txt b/Documentation/devicetree/bindings/phy/berlin-usb-phy.txt
+new file mode 100644
+index 000000000000..be33780f668e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/berlin-usb-phy.txt
+@@ -0,0 +1,16 @@
++* Marvell Berlin USB PHY
++
++Required properties:
++- compatible: "marvell,berlin2-usb-phy" or "marvell,berlin2cd-usb-phy"
++- reg: base address and length of the registers
++- #phys-cells: should be 0
++- resets: reference to the reset controller
++
++Example:
++
++	usb-phy@f774000 {
++		compatible = "marvell,berlin2-usb-phy";
++		reg = <0xf774000 0x128>;
++		#phy-cells = <0>;
++		resets = <&chip 0x104 14>;
++	};
+-- 
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
