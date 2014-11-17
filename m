@@ -1,97 +1,73 @@
 From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 Subject: Re: [PATCH V2 22/22] MIPS: Add multiplatform BMIPS target
-Date: Mon, 17 Nov 2014 19:46:41 +0100
-Message-ID: <2911624.UJRs5QOPN5@wuerfel>
-References: <1416097066-20452-1-git-send-email-cernekee@gmail.com> <3480616.V2TMJFc7uE@wuerfel> <CAJiQ=7A29-v5mo1ybvE2UodOZx-FoGeBTHYcTZuX-LaqRaF1Lw@mail.gmail.com>
+Date: Mon, 17 Nov 2014 19:55:15 +0100
+Message-ID: <14461008.6cZzGdpat2@wuerfel>
+References: <1416097066-20452-1-git-send-email-cernekee@gmail.com> <2018325.yOrLZndTTm@wuerfel> <CAJiQ=7An5eZ3j2+Zkx1crV9pBSVodkEQ+6ESGcFk5z0tDV7cHA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJiQ=7A29-v5mo1ybvE2UodOZx-FoGeBTHYcTZuX-LaqRaF1Lw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAJiQ=7An5eZ3j2+Zkx1crV9pBSVodkEQ+6ESGcFk5z0tDV7cHA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Fraser <jfraser-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Fraser <jfraser-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 17 November 2014 09:01:02 Kevin Cernekee wrote:
-> On Mon, Nov 17, 2014 at 4:16 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> Under arch/mips/bcm47xx I see a single mach type, but different builds
-> for BMIPS3300 (R1/SSB) versus MIPS 74K (R2/BCMA).
-
-At least in Kconfig, the two are not mutually exclusive, so I assumed
-you could enable them both at the same time.
- 
-> >> Outside of the CPU, the BCM63xx/BCM33xx/BCM7xxx register maps and
-> >> peripherals look pretty different, and the arch/mips/bmips code makes
-> >> almost zero assumptions about the rest of the chip if a DTB is passed
-> >> in from the bootloader.  In this sense you can see the parallels to
-> >> CONFIG_ARCH_MULTI_Vx.
-> >>
-> >> Prior to this work, these product lines have never been able to share
-> >> a common kernel image.
+On Monday 17 November 2014 09:19:17 Kevin Cernekee wrote:
+> On Mon, Nov 17, 2014 at 8:13 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > This is not just DT, it's actually an implementation of a boot
+> > interface. The situation here seems much more to what we had on
+> > PowerPC a long time ago than what we had on ARM before the DT
+> > conversion. I think the best approach here would be to move the
+> > platform specific bits into the decompressor code, and allow
+> > multiple implementations of that. This way you can have the
+> > generic vmlinux file that has a common DT parser, and you wrap
+> > that into one decompressor per platform, some of which can have
+> > their own board detection logic or pre-boot setup where necessary.
 > >
-> > I still think this is different in the sense that ARM multiplatform
-> > support is about combining platforms from separate mach-* directories,
-> > while your approach was to rewrite multiple mach-* directories into
-> > a single new one that remains separate from the others.
+> > To be honest, I think having multiple DT files linked into the
+> > kernel is a really bad idea, because it doesn't solve the
+> > scalability problem at all. What we did on ARM was to force those
+> > hacks out into external projects such as the PXA impedence
+> > matcher [https://github.com/zonque/pxa-impedance-matcher]. This
+> > can handle all weird boot protocol and adapt them to the normal
+> > well-defined interfaces we have in the kernel.
 > 
-> There is at least one out-of-tree kernel for each of:
+> To some extent this is how BCM3384 was done[1].
 > 
-> arch/mips/bcm9338x
-> arch/mips/bcm963xx (which predates arch/mips/bcm63xx)
-> arch/mips/brcmstb
-> 
-> each of which was implementing and maintaining the same
-> CPU/SMP/cache/IRQ support a little bit differently.
-> 
-> The femtocell chips (BCM61xxx) may or may not have their own tree as
-> well - need to check.  Plus, here in mainline, we currently have an
-> arch/mips/bcm63xx tree supporting a different (usually older) subset
-> of BCM63xx chipsets.
-> 
-> It would be nice if we could identify the BMIPS chips that are still
-> actively used, and support them all with one mach type instead of 4+.
-> There might still be a few special cases but I suspect that several of
-> the extra mach directories can be eliminated.
+> There is a tradeoff here: to add support for the older platforms it is
+> easy to build a new DTB file into the kernel image, but it is a lot of
+> trouble to write a new 3rd stage bootloader.  Do we want to maximize
+> our list of supported boards, or are we shooting for a super clean
+> kernel implementation right off the bat?
 
-Absolutely agreed.
+Right, when the norm is that you can't detect the board, having
+the wrapper in the kernel is the better approach, as PowerPC, which
+has a few dozen ways of linking the compressed kernel, while the
+vmlinux file uses a common method and passes everything in DT.
 
-> > While this is
-> > a great improvement, it doesn't get you any closer to having a
-> > combined BMIPS+RALINK+JZ4740+ATH79 kernel for instance. I don't know
-> > if such a kernel is something that anybody wants, or if it's even
-> > technically possible.
-> 
-> Correct, that isn't the goal for now.
-> 
-> Given the differences between BMIPS and imgtec MIPS, it is possible
-> that making such a multiplatform kernel would be the equivalent of
-> making a single image that runs on ARMv5 + ARMv7.  We may want to
-> assess the tradeoffs at some point.
-> 
-> It is possible that a multiplatform BMIPS kernel may run fine on
-> reasonably simple non-BMIPS hardware, but that other hardware (e.g.
-> supporting SMP, system PM states, or more complicated caches) would
-> require a dedicated build.
+That way you can have the best of both.
 
-I see.
-
-> > If you wanted to do that however, starting with BMIPS you'd have
-> > to make it possible to define a new platform without the
-> > arch/mips/include/asm/mach-bmips/ directory (this should be possible
-> > already, so the hardest part is done), replace all global function
-> > calls (arch_init_irq, prom_init, get_system_type,  ...) with generic
-> > platform-independent implementations or wrappers around per-platform
-> > callbacks, and move the Kconfig section for CONFIG_BMIPS_MULTIPLATFORM
-> > outside of the "System type" choice statement.
+> >> And unless there is one, having a
+> >> multiplatform kernel does not make much sense, as there is no sane way
+> >> to tell apart different platforms on boot.
+> >
+> > How do you normally tell boards apart on MIPS when you don't use DT?
 > 
-> Right.  The other question is how much support for legacy non-DT
-> bootloaders really belongs in a true multiplatform kernel, as this
-> stuff gets hairy fast.
+> On BCM7xxx (STB) kernels, we could assume the chip ID was in a known
+> register, and also we could call back into the bootloader to get a
+> somewhat-accurate board name.
+> 
+> On BCM63xx there is logic in arch/mips/bcm63xx/cpu.c to try to guess
+> the chip identity from the CPU type/revision (because the latter can
+> be read directly from CP0).
+> 
+> These systems were never really designed to support multiplatform
+> kernels.  The ARM BCM7xxx variants, by contrast, were.
 
-Yes, that's why I suggested following PowerPC rather than ARM in this
-regard.  If you move the boot loader abstraction into the decompressor
-instead of the platform code, you can avoid a lot of the problems.
+Guessing the chip doesn't really help you all that much of course
+as long as you don't know the board, and once you know that,
+the chip is implied.
 
 	Arnd
 --
