@@ -1,58 +1,94 @@
-From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2 22/22] MIPS: Add multiplatform BMIPS target
-Date: Mon, 17 Nov 2014 11:47:12 -0800
-Message-ID: <CAJiQ=7CmFNhufdeoeH_6SuYOhf3Luwc2zwy_+8au1V8RW78rOw@mail.gmail.com>
-References: <1416097066-20452-1-git-send-email-cernekee@gmail.com>
- <2018325.yOrLZndTTm@wuerfel> <CAJiQ=7An5eZ3j2+Zkx1crV9pBSVodkEQ+6ESGcFk5z0tDV7cHA@mail.gmail.com>
- <14461008.6cZzGdpat2@wuerfel>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] watchdog: ImgTec PDC Watchdog Timer Driver
+Date: Mon, 17 Nov 2014 11:47:51 -0800
+Message-ID: <CAL1qeaG1xXXmasLiaM14A+RshnqewnHsuQvxb76CNnwiuAXn_A@mail.gmail.com>
+References: <1416237194-12033-1-git-send-email-naidu.tellapati@imgtec.com>
+	<1416237194-12033-2-git-send-email-naidu.tellapati@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <14461008.6cZzGdpat2@wuerfel>
+In-Reply-To: <1416237194-12033-2-git-send-email-naidu.tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Fraser <jfraser-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Naidu Tellapati <naidu.tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Jude Abraham <jude.abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Arul Ramasamy <arul.ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 17, 2014 at 10:55 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->> >> And unless there is one, having a
->> >> multiplatform kernel does not make much sense, as there is no sane way
->> >> to tell apart different platforms on boot.
->> >
->> > How do you normally tell boards apart on MIPS when you don't use DT?
->>
->> On BCM7xxx (STB) kernels, we could assume the chip ID was in a known
->> register, and also we could call back into the bootloader to get a
->> somewhat-accurate board name.
->>
->> On BCM63xx there is logic in arch/mips/bcm63xx/cpu.c to try to guess
->> the chip identity from the CPU type/revision (because the latter can
->> be read directly from CP0).
->>
->> These systems were never really designed to support multiplatform
->> kernels.  The ARM BCM7xxx variants, by contrast, were.
+On Mon, Nov 17, 2014 at 7:13 AM,  <naidu.tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+> From: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 >
-> Guessing the chip doesn't really help you all that much of course
-> as long as you don't know the board, and once you know that,
-> the chip is implied.
+> This commit adds support for ImgTec PowerDown Controller Watchdog Timer.
+>
+> Signed-off-by: Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 
-This mostly depends on the desired feature set, and the delta from one
-board to the next.  Many of the reference board sections are largely
-copied from a working design, but sometimes there are changes that
-affect us.  Other times there are tweaks that can be autodetected,
-like a different flash chip.
+A couple comments below, but otherwise this is looking good.
 
-The analog interfaces like SATA/USB/Ethernet don't tend to vary all
-that much (although some may be missing ports on the board, or
-disabled on the chip).
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
 
-The pin muxing situation leaves a lot of room for board differences,
-and on these platforms it isn't really handled in a central place.
-This gets even more challenging when combined with some of the power
-management requirements.
+> @@ -1235,6 +1235,16 @@ config BCM_KONA_WDT_DEBUG
+>
+>           If in doubt, say 'N'.
+>
+> +config IMGPDC_WDT
+> +       tristate "Imagination Technologies PDC Watchdog Timer"
+> +       depends on HAS_IOMEM
 
-The peripherals that I added in my patch submission are among the
-easiest / safest of the bunch.
+We probably don't want to make this visible for everyone with
+HAS_IOMEM, so perhaps MIPS || (HAS_IOMEM && COMPILE_TEST)?  Do we want
+to make this available for META as well?
+
+> --- /dev/null
+> +++ b/drivers/watchdog/imgpdc_wdt.c
+
+> +#ifdef CONFIG_COMMON_CLK
+> +#define to_pdc_wdt(_nb) container_of(_nb, struct pdc_wdt_dev, clk_nb)
+> +
+> +static int img_pdc_wdt_clk_notify(struct notifier_block *nb,
+> +                                 unsigned long action, void *data)
+> +{
+> +       struct pdc_wdt_dev *wdt = to_pdc_wdt(nb);
+> +
+> +       switch (action) {
+> +       case POST_RATE_CHANGE:
+> +               if (wdt->clk_rate == data->new_rate)
+> +                       return NOTIFY_OK;
+> +
+> +               /* We use the clock rate to calculate the max timeout */
+> +               if (data->new_rate < 1 ||
+> +                   data->new_rate > PDC_MAX_WD_CLK_RATE) {
+> +                       dev_err(wdt->dev, "invalid clock rate\n");
+> +                       return NOTIFY_BAD;
+> +               }
+> +               wdt->clk_rate = data->new_rate;
+> +               if (order_base_2(wdt->clk_rate) == 0)
+> +                       wdt->min_delay = 0;
+> +               else
+> +                       wdt->min_delay = order_base_2(wdt->clk_rate) - 1;
+> +
+> +               wdt->wdt_dev.max_timeout =
+> +                               (1 << (PDC_WD_MAX_DELAY - wdt->min_delay));
+> +               ret = watchdog_init_timeout(&wdt->wdt_dev, timeout, wdt->dev);
+> +               if (ret < 0)
+> +                       wdt->wdt_dev.timeout = wdt->wdt_dev.max_timeout;
+> +
+> +               pdc_wdt_stop(&wdt->wdt_dev);
+> +               pdc_wdt_set_timeout(&wdt->wdt_dev, wdt->wdt_dev.timeout);
+> +               pdc_wdt_start(&wdt->wdt_dev);
+> +               break;
+> +       default:
+> +               break;
+> +       }
+> +       return NOTIFY_OK;
+> +}
+> +#endif
+
+Do we really expect the watchdog clock to change out from under us?  I
+think we can just get the rate in probe() and set the timeout bounds
+based on that - no one outside the watchdog driver should be messing
+with the watchdog clock, right?  I know the samsung driver does
+something similar to this, but I believe that's because the watchdog
+clock is derived from the CPU clock.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
