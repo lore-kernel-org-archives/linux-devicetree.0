@@ -1,47 +1,50 @@
-From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v1 1/2] efuse: IMG Pistachio eFuse Controller
-Date: Mon, 17 Nov 2014 18:29:18 -0300
-Message-ID: <546A68AE.1060407@imgtec.com>
-References: <1416237576-21542-1-git-send-email-arul.ramasamy@imgtec.com> <1416237576-21542-2-git-send-email-arul.ramasamy@imgtec.com> <546A189B.3090202@imgtec.com> <546A5445.3020905@imgtec.com> <20141117212917.GH1739@jhogan-linux.le.imgtec.org>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v9 2/9] qcom: spm: Add Subsystem Power Manager driver
+Date: Mon, 17 Nov 2014 22:32:18 +0100
+Message-ID: <546A6962.9090801@linaro.org>
+References: <1414194024-55547-1-git-send-email-lina.iyer@linaro.org> <1414194024-55547-3-git-send-email-lina.iyer@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141117212917.GH1739-4bYivNCBEGTR3KXKvIWQxtm+Uo4AYnCiHZ5vskTnxNA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: arul.ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, naidu.tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, jude.abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1414194024-55547-3-git-send-email-lina.iyer@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 10/25/2014 01:40 AM, Lina Iyer wrote:
+
+Hi Lina,
+
+[ ... ]
+
+> +static inline void spm_register_write(struct spm_driver_data *drv,
+> +					enum spm_reg reg, u32 val)
+> +{
+> +	if (drv->reg_data->reg_offset[reg])
+> +		writel_relaxed(val, drv->reg_base +
+> +				drv->reg_data->reg_offset[reg]);
+
+Why not use writel and don't use 'wmb' below ?
+
+> +}
+> +
+
+[ ... ]
+
+> +	spm_register_write(drv, SPM_REG_SPM_CTL, ctl_val);
+> +
+> +	/* Ensure we have written the start address */
+> +	wmb();
 
 
-On 11/17/2014 06:29 PM, James Hogan wrote:
-> On Mon, Nov 17, 2014 at 05:02:13PM -0300, Ezequiel Garcia wrote:
->> Hi James,
->>
->> On 11/17/2014 12:47 PM, James Hogan wrote:
->>> Hi,
->>>
->>> Some comments below.
->>>
->>> Should this driver live in drivers/misc/fuse?
->>>
->>
->> You might want to take a look at the discussion around Tegra's eFuse
->> driver, which was originally proposed for drivers/misc and then got
->> merged in drivers/soc.
-> 
-> Thanks, I hadn't spotted that it got merged elsewhere (must've been
-> looking at an older versions of the patchset).
-> 
-> Curiously the tegra commit 783c8f4c84451bc444e314a71b447239c6ef6fd9 did
-> add an unused Makefile in drivers/misc/fuse/ ...
-> 
 
-And the fix for that is waiting: https://lkml.org/lkml/2014/10/28/848
--- 
-Ezequiel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
