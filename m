@@ -1,59 +1,88 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/2] serial: sh-sci: Add device tree support for r7s72100
-Date: Mon, 17 Nov 2014 10:37:58 +0900
-Message-ID: <20141117013757.GL11143@verge.net.au>
-References: <1415980772-13287-1-git-send-email-geert+renesas@glider.be>
- <1415980772-13287-2-git-send-email-geert+renesas@glider.be>
+From: Flora Fu <flora.fu@mediatek.com>
+Subject: Re: [PATCH v2] mfd: syscon: add child device support
+Date: Mon, 17 Nov 2014 10:18:30 +0800
+Message-ID: <1416190710.23178.5.camel@mtksdaap41>
+References: <1415006209-1312-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1415980772-13287-2-git-send-email-geert+renesas@glider.be>
-Sender: linux-serial-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1415006209-1312-1-git-send-email-p.zabel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 14, 2014 at 04:59:32PM +0100, Geert Uytterhoeven wrote:
-> Simply document the new compat string (and keep the list sorted by SoC).
-> There appears to be no need for a driver update.
+Hi, Philipp,
+
+How is the status of syscon patch in
+https://lkml.org/lkml/2014/5/27/422 ?
+Will this patch be accepted in feature release 3.19?
+
+Thanks,
+Flora
+
+On Mon, 2014-11-03 at 10:16 +0100, Philipp Zabel wrote:
+> For devices which have a complete register for themselves, it is possible to
+> place them next to the syscon device with overlapping reg ranges. The same is
+> not possible for devices which only occupy bitfields in registers shared with
+> other users.
+> For devices that are completely controlled by bitfields in the syscon address
+> range, such as multiplexers or voltage regulators, allow to put child devices
+> into the syscon device node.
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
-
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 > ---
->  Documentation/devicetree/bindings/serial/renesas,sci-serial.txt | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+> Changes since v1:
+>  - Reworded binding documentation to allow #size-cells = <1>, which is useful
+>    for syscon children that are controlled through a (possibly shared) register
+>    range.
+> ---
+>  Documentation/devicetree/bindings/mfd/syscon.txt | 13 +++++++++++++
+>  drivers/mfd/syscon.c                             |  3 +++
+>  2 files changed, 16 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> index 7b87eb2c66be3131..ae73bb0e9ad9e58b 100644
-> --- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> @@ -4,8 +4,7 @@ Required properties:
+> diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
+> index fe8150b..0c6b497 100644
+> --- a/Documentation/devicetree/bindings/mfd/syscon.txt
+> +++ b/Documentation/devicetree/bindings/mfd/syscon.txt
+> @@ -9,12 +9,25 @@ using a specific compatible value), interrogate the node (or associated
+>  OS driver) to determine the location of the registers, and access the
+>  registers directly.
 >  
->    - compatible: Must contain one of the following:
+> +Optionally, devices that are controlled exclusively through syscon registers,
+> +or even bitfields in shared syscon registers, can also be added as child nodes
+> +to the syscon device node. These devices can implicitly assume their parent
+> +node is a syscon provider without referencing it explicitly via phandle.
+> +In this case, the syscon node should have #address-cells = <1> and
+> +#size-cells = <0> or <1> and no ranges property.
+> +
+>  Required properties:
+>  - compatible: Should contain "syscon".
+>  - reg: the register region can be accessed from syscon
 >  
-> -    - "renesas,scifa-sh73a0" for SH73A0 (SH-Mobile AG5) SCIFA compatible UART.
-> -    - "renesas,scifb-sh73a0" for SH73A0 (SH-Mobile AG5) SCIFB compatible UART.
-> +    - "renesas,scif-r7s72100" for R7S72100 (RZ/A1H) SCIF compatible UART.
->      - "renesas,scifa-r8a73a4" for R8A73A4 (R-Mobile APE6) SCIFA compatible UART.
->      - "renesas,scifb-r8a73a4" for R8A73A4 (R-Mobile APE6) SCIFB compatible UART.
->      - "renesas,scifa-r8a7740" for R8A7740 (R-Mobile A1) SCIFA compatible UART.
-> @@ -24,6 +23,8 @@ Required properties:
->      - "renesas,scifa-r8a7794" for R8A7794 (R-Car E2) SCIFA compatible UART.
->      - "renesas,scifb-r8a7794" for R8A7794 (R-Car E2) SCIFB compatible UART.
->      - "renesas,hscif-r8a7794" for R8A7794 (R-Car E2) HSCIF compatible UART.
-> +    - "renesas,scifa-sh73a0" for SH73A0 (SH-Mobile AG5) SCIFA compatible UART.
-> +    - "renesas,scifb-sh73a0" for SH73A0 (SH-Mobile AG5) SCIFB compatible UART.
->      - "renesas,scif" for generic SCIF compatible UART.
->      - "renesas,scifa" for generic SCIFA compatible UART.
->      - "renesas,scifb" for generic SCIFB compatible UART.
-> -- 
-> 1.9.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+> +Optional properties:
+> +- #address-cells: Should be 1.
+> +- #size-cells: Should be 0 or 1.
+> +
+>  Examples:
+>  gpr: iomuxc-gpr@020e0000 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+>  	compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
+>  	reg = <0x020e0000 0x38>;
+>  };
+> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+> index ca15878..38da178 100644
+> --- a/drivers/mfd/syscon.c
+> +++ b/drivers/mfd/syscon.c
+> @@ -155,6 +155,9 @@ static int syscon_probe(struct platform_device *pdev)
+>  
+>  	dev_dbg(dev, "regmap %pR registered\n", res);
+>  
+> +	if (!of_device_is_compatible(pdev->dev.of_node, "simple-bus"))
+> +		of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
+> +
+>  	return 0;
+>  }
+>  
