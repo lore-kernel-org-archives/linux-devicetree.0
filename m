@@ -1,82 +1,125 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC] adp1653: Add device tree bindings for LED controller
-Date: Mon, 17 Nov 2014 11:09:45 +0100
-Message-ID: <201411171109.47795@pali>
-References: <20141116075928.GA9763@amd> <201411170943.20810@pali> <20141117100519.GA4353@amd>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 5/6] sunxi: video: Add simplefb support
+Date: Mon, 17 Nov 2014 11:10:16 +0100
+Message-ID: <5469C988.5040702@redhat.com>
+References: <1415984088-6800-1-git-send-email-hdegoede@redhat.com>
+	<1415984088-6800-6-git-send-email-hdegoede@redhat.com>
+	<1416138607.25454.13.camel@hellion.org.uk>
+	<5468AC2E.80601@redhat.com>
+	<1416148688.25454.22.camel@hellion.org.uk>
+	<5468BE9A.8050501@redhat.com>
+	<1416154297.25454.24.camel@hellion.org.uk>
+	<CACxGe6vE0BdWOrdw1iQyk2-tmdnAUZ=oQCvGg_LESoiw055DLw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart1476038.VxUQSkjrrd";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141117100519.GA4353@amd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org, sre-GFxCN5SEZAc@public.gmane.org, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, freemangordon-uiMcrn6V0Vs@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <CACxGe6vE0BdWOrdw1iQyk2-tmdnAUZ=oQCvGg_LESoiw055DLw@mail.gmail.com>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc@hellion.org.uk>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, U-Boot <u-boot@lists.denx.de>
 List-Id: devicetree@vger.kernel.org
 
---nextPart1476038.VxUQSkjrrd
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On Monday 17 November 2014 11:05:19 Pavel Machek wrote:
-> Hi!
->=20
-> On Mon 2014-11-17 09:43:19, Pali Roh=C3=A1r wrote:
-> > On Sunday 16 November 2014 08:59:28 Pavel Machek wrote:
-> > > For device tree people: Yes, I know I'll have to create
-> > > file in documentation, but does the binding below look
-> > > acceptable?
-> > >=20
-> > > I'll clean up driver code a bit more, remove the printks.
-> > > Anything else obviously wrong?
-> >=20
-> > I think that this patch is probably not good and specially
-> > not for n900. adp1653 should be registered throw omap3 isp
-> > camera subsystem which does not have DT support yet.
->=20
-> Can you explain?
->=20
-> adp1653 is independend device on i2c bus, and we have kernel
-> driver for it (unlike rest of n900 camera system). Just now
-> it is unusable due to lack of DT binding. It has two
-> functions, LED light and a camera flash; yes, the second one
-> should be integrated to the rest of camera system, but that
-> is not yet merged. That should not prevent us from merging DT
-> support for the flash, so that this part can be
-> tested/maintained.
->=20
+On 11/17/2014 10:58 AM, Grant Likely wrote:
+> On Sun, Nov 16, 2014 at 4:11 PM, Ian Campbell <ijc@hellion.org.uk> wrote:
+>> On Sun, 2014-11-16 at 16:11 +0100, Hans de Goede wrote:
 
-Ok. When ISP camera subsystem has DT support somebody will modify=20
-n900 DT to add camera flash from adp1653 to ISP... I believe it=20
-will not be hard.
+<snip>
 
-> > See n900 legacy board camera code in file
-> > board-rx51-camera.c.
->=20
-> I have seen that.
-> 									Pavel
+>>> Right, I forgot to add one important bit to my explanation, sorry, if
+>>> you look at the binding then it says that the name should be suffixed
+>>> with the output type, so currently the sunxi u-boot code will look for
+>>> /chosen/framebuffer0-hdmi. Which will e.g. also happen on any A10
+>>> based tablets which typically have both hdmi out and an lcd screen,
+>>> in the future I hope we will also get lcd support in u-boot, and then
+>>> logically on tablets the lcd screen would take precedence, so then
+>>> unless overriden through some config mechanism u-boot will chose
+>>> to use the lcd, and will look for /chosen/framebuffer0-lcd which has
+>>> a different set of clocks then /chosen/framebuffer0-hdmi.
+>>
+>> This sounds like a use for:
+>>         compatible = "simple-framebuffer,hdmi", "simple-framebuffer"
+>> or some such, that's almost exactly what multiople compatible strings
+>> are for. Relying on specific naming and/or path is rather
+>> unconventional.
+> 
+> Indeed, for a long time now finding nodes by path has been strongly
+> discouraged. It makes it hard to move nodes around when needed. I'm
+> not going to make a big deal about it because it doesn't affect the OS
+> interface, but Ian's suggestion is sane. simple-framebuffer is enough
+> to identify the binding, but you can use additional strings to
+> identify the specific hardware interface that U-Boot can use to locate
+> the node. ie. sunxi,framebuffer-hdml or some such. You can never be
+> sure when someone will produce a board that messes with your naming
+> assumptions. What if is suddenly needs to be named "framebuffer1-hdmi"
+> because they added and FPGA that they want as framebuffer0? (Yes, I'm
+> making stuff up, but I have to think about the corner cases)
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+I like the suggestion of using a compatible of : "sunxi,framebuffer-hdmi"
+although it will need to be : "sunxi,framebuffer0-hdmi" as u-boot
+needs to know which simplefb node to use for which display pipeline
+(so that the node has the right clocks and whats not).
 
---nextPart1476038.VxUQSkjrrd
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
+And I think it makes sense to put simple in there as it is a pre-populated
+simplefb node , so then we get:
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
+"sunxi,simple-framebuffer0-hdmi"
 
-iEYEABECAAYFAlRpyWsACgkQi/DJPQPkQ1Jy6QCglBKZqhyJBNS8eLewXZ7URYoB
-2bwAoMfx6J2TFeyK/vaZlkPvXdihCxKe
-=IbyL
------END PGP SIGNATURE-----
+And we can drop the unconventional lookup by path.
 
---nextPart1476038.VxUQSkjrrd--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'll go on irc now, and join #devicetree, Ian, maybe you can join us
+there to and we can hash out something we can all agree on ?
+
+And then I'll do yet another set of patches (to apply on top on the
+kernel side, and a new version of the u-boot patch), and we'll hopefully
+end up with something which makes us all happy
+
+<snip>
+
+>> In fact it's a bit odd to have a reg property under /chosen at all,
+>> since it doesn't really fit in with the bus structure. I've done
+>> something similar in some bindings I've authored[0], but AIUI I got that
+>> wrong and really should have used a set of non-reg properties with a
+>> single value so there was no need to parse using #*-cells  (cf the
+>> initrd-start + initrd-end properties under /chosen). Sadly DT is an ABI,
+>> so for my bindings I'm kind of stuck with it for the foreseeable future.
+>>
+>> [0]
+>> http://xenbits.xen.org/gitweb/?p=xen.git;a=blob;f=docs/misc/arm/device-tree/booting.txt;h=08ed7751859dbe2d2c32d86d7df371057d7b45a4;hb=HEAD
+> 
+> Ironic isn't it that I though of that as precedence when I suggested
+> /chosen! :-)
+> 
+> I actually don't have a problem with it. We do need a way to specify
+> runtime memory usage, and /chosen is as good a place as any,
+> particularly when it represents things that won't necessarily be
+> relevant on kexec or dom0 boot.
+> 
+> The other options are under either the /memory or the /reserved-memory
+> tree. Rob and I talked about /reserved-memory quite a lot. We could
+> put all the framebuffer details into the memory node that reserves the
+> framebuffer. However, I don't like that idea because it kind of makes
+> assumptions about how the framebuffer will be located inside the
+> memory region and doesn't allow for multiple framebuffers within a
+> single region.
+
+I'm not a devicetree expert, but /chosen already came to my mind even
+before Grant suggested it, /chosen seems the right place for this to me.
+
+Note that once we drop the path based lookup the location can always be
+changed later (to some degree, it still needs to be in a place where
+the kernel will bind to it).
+
+Regards,
+
+Hans
