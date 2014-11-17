@@ -1,88 +1,710 @@
-From: Flora Fu <flora.fu@mediatek.com>
-Subject: Re: [PATCH v2] mfd: syscon: add child device support
-Date: Mon, 17 Nov 2014 10:18:30 +0800
-Message-ID: <1416190710.23178.5.camel@mtksdaap41>
-References: <1415006209-1312-1-git-send-email-p.zabel@pengutronix.de>
+From: Caesar Wang <caesar.wang@rock-chips.com>
+Subject: Re: [PATCH v11 2/3] power-domain: rockchip: add power doamin driver
+Date: Mon, 17 Nov 2014 11:53:37 +0800
+Message-ID: <54697141.1050203@rock-chips.com>
+References: <1415829690-20236-1-git-send-email-caesar.wang@rock-chips.com> <1415829690-20236-3-git-send-email-caesar.wang@rock-chips.com> <CAGS+omCxtvk7VNr7_tJkDCwZpbW-ocFm2VL4ngujxbS5remmVA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415006209-1312-1-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, srv_heupstream@mediatek.com
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAGS+omCxtvk7VNr7_tJkDCwZpbW-ocFm2VL4ngujxbS5remmVA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Daniel Kurtz <djkurtz@chromium.org>
+Cc: linus.walleij@linaro.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Heiko Stuebner <heiko@sntech.de>, Russell King <linux@arm.linux.org.uk>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "jinkun.hong" <jinkun.hong@rock-chips.com>, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, ZhenFu Fang <fzf@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Eddie
 List-Id: devicetree@vger.kernel.org
 
-Hi, Philipp,
 
-How is the status of syscon patch in
-https://lkml.org/lkml/2014/5/27/422 ?
-Will this patch be accepted in feature release 3.19?
+=E5=9C=A8 2014=E5=B9=B411=E6=9C=8814=E6=97=A5 03:35, Daniel Kurtz =E5=86=
+=99=E9=81=93:
+> On Thu, Nov 13, 2014 at 6:01 AM, Caesar Wang <caesar.wang@rock-chips.=
+com> wrote:
+>> In order to meet high performance and low power requirements, a powe=
+r
+>> management unit is designed or saving power when RK3288 in low power=
+ mode.
+>> The RK3288 PMU is dedicated for managing the power ot the whole chip=
+=2E
+>>
+>> Signed-off-by: Jack Dai <jack.dai@rock-chips.com>
+>> Signed-off-by: jinkun.hong <jinkun.hong@rock-chips.com>
+>> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+>>
+>> ---
+>>
+>> Changes in v11:
+>>      - fix pm_genpd_init(&pd->genpd, NULL, false);
+>>
+>> Changes in v10:
+>>      - this switches over domain infos to use masks instead of recom=
+puting
+>>        them each time and also gets rid of custom domain translator =
+and
+>>        uses standard onecell on.
+>>
+>> Changes in v9:
+>>      - fix v8 changes as follows:
+>>      - This reconciles the v2 and v7 code so that we power domain ha=
+ve
+>>        lists of clocks they toggle on and off during power transitio=
+ns and
+>>        independently from power domains clocks we attach clocks to d=
+evices
+>>        comprising power domain and prepare them so they are turn on =
+and off
+>>        by runtime PM.
+>>      - add rockchip_pm_add_one_domain() to control domains.
+>>      - add pd_start/pd_stop interface to control clocks
+>>
+>> Changes in v8:
+>>      - This reconciles the v2 and v7 code so that we power domain ha=
+ve
+>>        lists of clocks they toggle on and off during power transitio=
+ns and
+>>        independently from power domains clocks we attach clocks to d=
+evices
+>>        comprising power domain and prepare them so they are turn on =
+and off
+>>        by runtime PM.
+>>
+>> Changes in v7:
+>>      - Delete unused variables
+>>
+>> Changes in v6:
+>>      - delete pmu_lock
+>>      - modify dev_lock using mutex
+>>      - pm_clk_resume(pd->dev) change to pm_clk_resume(ed->dev)
+>>      - pm_clk_suspend(pd->dev) change to pm_clk_suspend(ed->dev)
+>>      - add devm_kfree(pd->dev, de) in rockchip_pm_domain_detach_dev
+>>
+>> Changes in v5:
+>>      - delete idle_lock
+>>      - add timeout in rockchip_pmu_set_idle_request()
+>>
+>> Changes in v4:
+>>      - use list storage dev
+>>
+>> Changes in v3:
+>>      - change use pm_clk_resume() and pm_clk_suspend()
+>>
+>> Changes in v2:
+>>      - remove the "pd->pd.of_node =3D np"
+>>
+>>   arch/arm/mach-rockchip/Kconfig            |   1 +
+>>   arch/arm/mach-rockchip/Makefile           |   1 +
+>>   arch/arm/mach-rockchip/pm_domains.c       | 471 ++++++++++++++++++=
+++++++++++++
+>>   include/dt-bindings/power-domain/rk3288.h |  11 +
+>>   4 files changed, 484 insertions(+)
+>>   create mode 100644 arch/arm/mach-rockchip/pm_domains.c
+>>   create mode 100644 include/dt-bindings/power-domain/rk3288.h
+>>
+>> diff --git a/arch/arm/mach-rockchip/Kconfig b/arch/arm/mach-rockchip=
+/Kconfig
+>> index ac5803c..d033993 100644
+>> --- a/arch/arm/mach-rockchip/Kconfig
+>> +++ b/arch/arm/mach-rockchip/Kconfig
+>> @@ -13,6 +13,7 @@ config ARCH_ROCKCHIP
+>>          select DW_APB_TIMER_OF
+>>          select ARM_GLOBAL_TIMER
+>>          select CLKSRC_ARM_GLOBAL_TIMER_SCHED_CLOCK
+>> +       select PM_GENERIC_DOMAINS if PM
+>>          help
+>>            Support for Rockchip's Cortex-A9 Single-to-Quad-Core-SoCs
+>>            containing the RK2928, RK30xx and RK31xx series.
+>> diff --git a/arch/arm/mach-rockchip/Makefile b/arch/arm/mach-rockchi=
+p/Makefile
+>> index b29d8ea..17ea082 100644
+>> --- a/arch/arm/mach-rockchip/Makefile
+>> +++ b/arch/arm/mach-rockchip/Makefile
+>> @@ -1,4 +1,5 @@
+>>   CFLAGS_platsmp.o :=3D -march=3Darmv7-a
+>>
+>>   obj-$(CONFIG_ARCH_ROCKCHIP) +=3D rockchip.o
+>> +obj-$(CONFIG_PM_GENERIC_DOMAINS) +=3D pm_domains.o
+>>   obj-$(CONFIG_SMP) +=3D headsmp.o platsmp.o
+>> diff --git a/arch/arm/mach-rockchip/pm_domains.c b/arch/arm/mach-roc=
+kchip/pm_domains.c
+>> new file mode 100644
+>> index 0000000..00730eb
+>> --- /dev/null
+>> +++ b/arch/arm/mach-rockchip/pm_domains.c
+>> @@ -0,0 +1,471 @@
+>> +/*
+>> + * Rockchip Generic power domain support.
+>> + *
+>> + * Copyright (c) 2014 ROCKCHIP, Co. Ltd.
+>> + *
+>> + * This program is free software; you can redistribute it and/or mo=
+dify
+>> + * it under the terms of the GNU General Public License version 2 a=
+s
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/io.h>
+>> +#include <linux/err.h>
+>> +#include <linux/pm_clock.h>
+>> +#include <linux/pm_domain.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/of_platform.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/clk-provider.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/mfd/syscon.h>
+>> +#include <dt-bindings/power-domain/rk3288.h>
+>> +
+>> +struct rockchip_domain_info {
+>> +       int pwr_mask;
+>> +       int status_mask;
+>> +       int req_mask;
+>> +       int idle_mask;
+>> +       int ack_mask;
+>> +};
+>> +
+>> +struct rockchip_pmu_info {
+>> +       u32 pwr_offset;
+>> +       u32 status_offset;
+>> +       u32 req_offset;
+>> +       u32 idle_offset;
+>> +       u32 ack_offset;
+>> +
+>> +       int num_domains;
+>> +       const struct rockchip_domain_info *domain_info;
+>> +};
+>> +
+>> +struct rockchip_pm_domain {
+>> +       struct generic_pm_domain genpd;
+>> +       const struct rockchip_domain_info *info;
+>> +       struct rockchip_pmu *pmu;
+>> +       int num_clks;
+>> +       struct clk *clks[];
+>> +};
+>> +
+>> +struct rockchip_pmu {
+>> +       struct device *dev;
+>> +       struct regmap *regmap;
+>> +       const struct rockchip_pmu_info *info;
+>> +       struct mutex mutex; /* mutex lock for pmu */
+>> +       struct genpd_onecell_data genpd_data;
+>> +       struct generic_pm_domain *domains[];
+>> +};
+>> +
+>> +#define to_rockchip_pd(gpd) container_of(gpd, struct rockchip_pm_do=
+main, genpd)
+>> +
+>> +#define DOMAIN(pwr, status, req, idle, ack)    \
+>> +{                                              \
+>> +       .pwr_mask =3D BIT(pwr),                   \
+>> +       .status_mask =3D BIT(status),             \
+>> +       .req_mask =3D BIT(req),                   \
+>> +       .idle_mask =3D BIT(idle),                 \
+>> +       .ack_mask =3D BIT(ack),                   \
+>> +}
+>> +
+>> +#define DOMAIN_RK3288(pwr, status, req)                \
+>> +       DOMAIN(pwr, status, req, req, (req) + 16)
+>> +
+>> +static bool rockchip_pmu_domain_is_idle(struct rockchip_pm_domain *=
+pd)
+>> +{
+>> +       struct rockchip_pmu *pmu =3D pd->pmu;
+>> +       const struct rockchip_domain_info *pd_info =3D pd->info;
+>> +       unsigned int val;
+>> +
+>> +       regmap_read(pmu->regmap, pmu->info->idle_offset, &val);
+>> +       return (val & pd_info->idle_mask) =3D=3D pd_info->idle_mask;
+>> +}
+>> +
+>> +static int rockchip_pmu_set_idle_request(struct rockchip_pm_domain =
+*pd,
+>> +                                        bool idle)
+>> +{
+>> +       const struct rockchip_domain_info *pd_info =3D pd->info;
+>> +       struct rockchip_pmu *pmu =3D pd->pmu;
+>> +       unsigned int val;
+>> +
+>> +       regmap_update_bits(pmu->regmap, pmu->info->req_offset,
+>> +                          pd_info->req_mask, idle ? -1U : 0);
+>> +
+>> +       dsb();
+>> +
+>> +       do {
+>> +               regmap_read(pmu->regmap, pmu->info->ack_offset, &val=
+);
+>> +       } while ((val & pd_info->ack_mask) !=3D (idle ? pd_info->ack=
+_mask : 0));
+> Hi Caesar,
+>
+>
+> just a nit:
+> it would be slightly cleaner if you created a function for this like
+> you did for rockchip_pmu_domain_is_idle():
+>
+> static bool rockchip_pmu_domain_is_ack(struct rockchip_pm_domain *pd)
+> {
+>         struct rockchip_pmu *pmu =3D pd->pmu;
+>         const struct rockchip_domain_info *pd_info =3D pd->info;
+>         unsigned int val;
+>
+>         regmap_read(pmu->regmap, pmu->info->ack_offset, &val);
+>         return (val & pd_info->ack_mask) =3D=3D pd_info->ack_mask;
+> }
+>
+> ...
+>
+>    while (rockchip_pmu_domain_is_ack(pd) !=3D idle)
+>      cpu_relax();
 
-Thanks,
-Flora
+=46ixed.
 
-On Mon, 2014-11-03 at 10:16 +0100, Philipp Zabel wrote:
-> For devices which have a complete register for themselves, it is possible to
-> place them next to the syscon device with overlapping reg ranges. The same is
-> not possible for devices which only occupy bitfields in registers shared with
-> other users.
-> For devices that are completely controlled by bitfields in the syscon address
-> range, such as multiplexers or voltage regulators, allow to put child devices
-> into the syscon device node.
-> 
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
-> Changes since v1:
->  - Reworded binding documentation to allow #size-cells = <1>, which is useful
->    for syscon children that are controlled through a (possibly shared) register
->    range.
-> ---
->  Documentation/devicetree/bindings/mfd/syscon.txt | 13 +++++++++++++
->  drivers/mfd/syscon.c                             |  3 +++
->  2 files changed, 16 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
-> index fe8150b..0c6b497 100644
-> --- a/Documentation/devicetree/bindings/mfd/syscon.txt
-> +++ b/Documentation/devicetree/bindings/mfd/syscon.txt
-> @@ -9,12 +9,25 @@ using a specific compatible value), interrogate the node (or associated
->  OS driver) to determine the location of the registers, and access the
->  registers directly.
->  
-> +Optionally, devices that are controlled exclusively through syscon registers,
-> +or even bitfields in shared syscon registers, can also be added as child nodes
-> +to the syscon device node. These devices can implicitly assume their parent
-> +node is a syscon provider without referencing it explicitly via phandle.
-> +In this case, the syscon node should have #address-cells = <1> and
-> +#size-cells = <0> or <1> and no ranges property.
-> +
->  Required properties:
->  - compatible: Should contain "syscon".
->  - reg: the register region can be accessed from syscon
->  
-> +Optional properties:
-> +- #address-cells: Should be 1.
-> +- #size-cells: Should be 0 or 1.
-> +
->  Examples:
->  gpr: iomuxc-gpr@020e0000 {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
->  	compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
->  	reg = <0x020e0000 0x38>;
->  };
-> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-> index ca15878..38da178 100644
-> --- a/drivers/mfd/syscon.c
-> +++ b/drivers/mfd/syscon.c
-> @@ -155,6 +155,9 @@ static int syscon_probe(struct platform_device *pdev)
->  
->  	dev_dbg(dev, "regmap %pR registered\n", res);
->  
-> +	if (!of_device_is_compatible(pdev->dev.of_node, "simple-bus"))
-> +		of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
-> +
->  	return 0;
->  }
->  
+
+>> +
+>> +       while (rockchip_pmu_domain_is_idle(pd) !=3D idle)
+>> +               cpu_relax();
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static bool rockchip_pmu_domain_is_on(struct rockchip_pm_domain *pd=
+)
+>> +{
+>> +       struct rockchip_pmu *pmu =3D pd->pmu;
+>> +       unsigned int val;
+>> +
+>> +       regmap_read(pmu->regmap, pmu->info->status_offset, &val);
+>> +
+>> +       /* 1'b0: power on, 1'b1: power off */
+>> +       return !(val & pd->info->status_mask);
+>> +}
+>> +
+>> +static void rockchip_do_pmu_set_power_domain(struct rockchip_pm_dom=
+ain *pd,
+>> +                                            bool on)
+>> +{
+>> +       struct rockchip_pmu *pmu =3D pd->pmu;
+>> +
+>> +       regmap_update_bits(pmu->regmap, pmu->info->pwr_offset,
+>> +                          pd->info->pwr_mask, on ? 0 : -1U);
+>> +
+>> +       dsb();
+>> +
+>> +       while (rockchip_pmu_domain_is_on(pd) !=3D on)
+>> +               cpu_relax();
+>> +}
+>> +
+>> +static int rockchip_pd_power(struct rockchip_pm_domain *pd, bool po=
+wer_on)
+>> +{
+>> +       int i;
+>> +
+>> +       mutex_lock(&pd->pmu->mutex);
+>> +
+>> +       if (rockchip_pmu_domain_is_on(pd) !=3D power_on) {
+>> +               for (i =3D 0; i < pd->num_clks; i++)
+>> +                       clk_enable(pd->clks[i]);
+>> +
+>> +               if (!power_on) {
+>> +                       /* FIXME: add code to save AXI_QOS */
+>> +
+>> +                       /* if powering down, idle request to NIU fir=
+st */
+>> +                       rockchip_pmu_set_idle_request(pd, true);
+>> +               }
+>> +
+>> +               rockchip_do_pmu_set_power_domain(pd, power_on);
+>> +
+>> +               if (power_on) {
+>> +                       /* if powering up, leave idle mode */
+>> +                       rockchip_pmu_set_idle_request(pd, false);
+>> +
+>> +                       /* FIXME: add code to restore AXI_QOS */
+>> +               }
+>> +
+>> +               for (i =3D pd->num_clks - 1; i >=3D 0; i--)
+>> +                       clk_disable(pd->clks[i]);
+>> +       }
+>> +
+>> +       mutex_unlock(&pd->pmu->mutex);
+>> +       return 0;
+>> +}
+>> +
+>> +static int rockchip_pd_power_on(struct generic_pm_domain *domain)
+>> +{
+>> +       struct rockchip_pm_domain *pd =3D to_rockchip_pd(domain);
+>> +
+>> +       return rockchip_pd_power(pd, true);
+>> +}
+>> +
+>> +static int rockchip_pd_power_off(struct generic_pm_domain *domain)
+>> +{
+>> +       struct rockchip_pm_domain *pd =3D to_rockchip_pd(domain);
+>> +
+>> +       return rockchip_pd_power(pd, false);
+>> +}
+>> +
+>> +static void rockchip_pd_attach_dev(struct device *dev)
+>> +{
+>> +       struct generic_pm_domain *genpd =3D pd_to_genpd(dev->pm_doma=
+in);
+>> +       struct clk *clk;
+>> +       int i;
+>> +       int error;
+>> +
+>> +       dev_dbg(dev, "attaching to power domain '%s'\n", genpd->name=
+);
+>> +
+>> +       error =3D pm_clk_create(dev);
+>> +       if (error) {
+>> +               dev_err(dev, "pm_clk_create failed %d\n", error);
+>> +               return;
+>> +       }
+>> +
+>> +       while ((clk =3D of_clk_get(dev->of_node, i++)) && !IS_ERR(cl=
+k)) {
+>> +               error =3D pm_clk_add_clk(dev, clk);
+>> +               clk_put(clk);
+>> +               if (error) {
+>> +                       dev_err(dev, "pm_clk_add_clk failed %d\n", e=
+rror);
+>> +                       pm_clk_destroy(dev);
+>> +                       return;
+>> +               }
+>> +               dev_dbg(dev, "added clock '%s' to list of PM clocks\=
+n",
+>> +                       __clk_get_name(clk));
+>> +       }
+>> +}
+>> +
+>> +static void rockchip_pd_detach_dev(struct device *dev)
+>> +{
+>> +       struct generic_pm_domain *genpd =3D pd_to_genpd(dev->pm_doma=
+in);
+>> +
+>> +       dev_dbg(dev, "detaching from power domain %s\n", genpd->name=
+);
+>> +
+>> +       pm_clk_destroy(dev);
+>> +}
+>> +
+>> +static int rockchip_pd_start_dev(struct device *dev)
+>> +{
+>> +       struct generic_pm_domain *genpd =3D pd_to_genpd(dev->pm_doma=
+in);
+>> +
+>> +       dev_dbg(dev, "starting device in power domain '%s'\n", genpd=
+->name);
+>> +
+>> +       return pm_clk_resume(dev);
+>> +}
+>> +
+>> +static int rockchip_pd_stop_dev(struct device *dev)
+>> +{
+>> +       struct generic_pm_domain *genpd =3D pd_to_genpd(dev->pm_doma=
+in);
+>> +
+>> +       dev_dbg(dev, "stopping device in power domain '%s'\n", genpd=
+->name);
+>> +
+>> +       return pm_clk_suspend(dev);
+>> +}
+>> +
+>> +static int rockchip_pm_add_one_domain(struct rockchip_pmu *pmu,
+>> +                                     struct device_node *node)
+>> +{
+>> +       const struct rockchip_domain_info *pd_info;
+>> +       struct rockchip_pm_domain *pd;
+>> +       struct clk *clk;
+>> +       int clk_cnt;
+>> +       int i;
+>> +       u32 id;
+>> +       bool is_on;
+>> +       int error;
+>> +
+>> +       error =3D of_property_read_u32(node, "reg", &id);
+>> +       if (error) {
+>> +               dev_err(pmu->dev,
+>> +                       "%s: failed to retrieve domain id (reg): %d\=
+n",
+>> +                       node->name, error);
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       if (id >=3D pmu->info->num_domains) {
+>> +               dev_err(pmu->dev, "%s: invalid domain id %d\n",
+>> +                       node->name, id);
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       pd_info =3D &pmu->info->domain_info[id];
+>> +       if (!pd_info) {
+>> +               dev_err(pmu->dev, "%s: undefined domain id %d\n",
+>> +                       node->name, id);
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       clk_cnt =3D of_count_phandle_with_args(node, "clocks", "#clo=
+ck-cells");
+>> +       pd =3D devm_kzalloc(pmu->dev,
+>> +                         sizeof(*pd) + clk_cnt * sizeof(pd->clks[0]=
+),
+>> +                         GFP_KERNEL);
+>> +       if (!pd)
+>> +               return -ENOMEM;
+>> +
+>> +       pd->genpd.name =3D node->name;
+>> +       pd->genpd.power_off =3D rockchip_pd_power_off;
+>> +       pd->genpd.power_on =3D rockchip_pd_power_on;
+>> +       pd->genpd.attach_dev =3D rockchip_pd_attach_dev;
+>> +       pd->genpd.detach_dev =3D rockchip_pd_detach_dev;
+>> +       pd->genpd.dev_ops.start =3D rockchip_pd_start_dev;
+>> +       pd->genpd.dev_ops.stop =3D rockchip_pd_stop_dev;
+>> +
+>> +       pd->info =3D pd_info;
+>> +       pd->pmu =3D pmu;
+>> +       pd->num_clks =3D clk_cnt;
+>> +
+>> +       is_on =3D rockchip_pmu_domain_is_on(pd);
+>> +       pm_genpd_init(&pd->genpd, NULL, !is_on);
+>> +
+>> +       for (i =3D 0; i < clk_cnt; i++) {
+>> +               clk =3D of_clk_get(node, i);
+>> +               if (IS_ERR(clk)) {
+>> +                       error =3D PTR_ERR(clk);
+>> +                       dev_err(pmu->dev,
+>> +                               "%s: failed to get clk %s (index %d)=
+: %d\n",
+>> +                               node->name, __clk_get_name(clk), i, =
+error);
+>> +                       goto err_out;
+>> +               }
+>> +
+>> +               error =3D clk_prepare(clk);
+>> +               if (error) {
+>> +                       dev_err(pmu->dev,
+>> +                               "%s: failed to prepare clk %s (index=
+ %d): %d\n",
+>> +                               node->name, __clk_get_name(clk), i, =
+error);
+>> +                       clk_put(clk);
+>> +                       goto err_out;
+>> +               }
+>> +
+>> +               pd->clks[i] =3D clk;
+>> +
+>> +               dev_dbg(pmu->dev, "added clock '%s' to domain '%s'\n=
+",
+>> +                       __clk_get_name(clk), node->name);
+>> +       }
+>> +
+>> +       pmu->genpd_data.domains[id] =3D &pd->genpd;
+>> +       return 0;
+>> +
+>> +err_out:
+>> +       while (--i >=3D 0) {
+>> +               clk_unprepare(pd->clks[i]);
+>> +               clk_put(pd->clks[i]);
+>> +       }
+>> +       return error;
+>> +}
+>> +
+>> +static void rockchip_pm_remove_one_domain(struct rockchip_pm_domain=
+ *pd)
+>> +{
+>> +       int i;
+>> +
+>> +       for (i =3D 0; i < pd->num_clks; i++) {
+>> +               clk_unprepare(pd->clks[i]);
+>> +               clk_put(pd->clks[i]);
+>> +       }
+>> +
+>> +       /* devm will free our memory */
+>> +}
+>> +
+>> +static void rockchip_pm_domain_cleanup(struct rockchip_pmu *pmu)
+>> +{
+>> +       struct generic_pm_domain *genpd;
+>> +       struct rockchip_pm_domain *pd;
+>> +       int i;
+>> +
+>> +       for (i =3D 0; i < pmu->genpd_data.num_domains; i++) {
+>> +               genpd =3D pmu->genpd_data.domains[i];
+>> +               if (genpd) {
+>> +                       pd =3D to_rockchip_pd(genpd);
+>> +                       rockchip_pm_remove_one_domain(pd);
+>> +               }
+>> +       }
+>> +
+>> +       /* devm will free our memory */
+>> +}
+>> +
+>> +static int rockchip_pm_domain_probe(struct platform_device *pdev)
+>> +{
+>> +       struct device *dev =3D &pdev->dev;
+>> +       struct device_node *np =3D dev->of_node;
+>> +       struct device_node *node;
+>> +       struct rockchip_pmu *pmu;
+>> +       const struct of_device_id *match;
+>> +       const struct rockchip_pmu_info *pmu_info;
+>> +       int error;
+>> +
+>> +       if (!np) {
+>> +               dev_err(dev, "device tree node not found\n");
+>> +               return -ENXIO;
+>> +       }
+>> +
+>> +       match =3D of_match_device(dev->driver->of_match_table, dev);
+>> +       if (!match || !match->data) {
+>> +               dev_err(dev, "missing pmu data\n");
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       pmu_info =3D match->data;
+>> +
+>> +       pmu =3D devm_kzalloc(dev,
+>> +                          sizeof(*pmu) +
+>> +                               pmu_info->num_domains * sizeof(pmu->=
+domains[0]),
+>> +                          GFP_KERNEL);
+>> +       if (!pmu)
+>> +               return -ENOMEM;
+>> +
+>> +       pmu->dev =3D &pdev->dev;
+>> +       mutex_init(&pmu->mutex);
+>> +
+>> +       pmu->info =3D pmu_info;
+>> +
+>> +       pmu->genpd_data.domains =3D pmu->domains;
+>> +       pmu->genpd_data.num_domains =3D pmu_info->num_domains;
+>> +
+>> +       node =3D of_parse_phandle(np, "rockchip,pmu", 0);
+>> +       pmu->regmap =3D syscon_node_to_regmap(node);
+>> +       of_node_put(node);
+>> +       if (IS_ERR(pmu->regmap)) {
+>> +               error =3D PTR_ERR(pmu->regmap);
+>> +               dev_err(dev, "failed to get PMU regmap: %d\n", error=
+);
+>> +               return error;
+>> +       }
+>> +
+>> +       error =3D -ENXIO;
+>> +
+>> +       for_each_available_child_of_node(np, node) {
+>> +               error =3D rockchip_pm_add_one_domain(pmu, node);
+>> +               if (error) {
+>> +                       dev_err(dev, "failed to handle node %s: %d\n=
+",
+>> +                               node->name, error);
+>> +                       goto err_out;
+>> +               }
+>> +       }
+>> +
+>> +       if (error) {
+>> +               dev_dbg(dev, "no power domains defined\n");
+> Perhaps dev_err() or dev_warn(), to ensure this message is seen.
+> But, not have defined power domains doesn't seem like a fatal error.
+> Perhaps just return 0?
+>
+> -Daniel
+>
+
+=46ixed.
+
+
+Thanks!
+>> +               goto err_out;
+>> +       }
+>> +
+>> +       of_genpd_add_provider_onecell(np, &pmu->genpd_data);
+>> +
+>> +       return 0;
+>> +
+>> +err_out:
+>> +       rockchip_pm_domain_cleanup(pmu);
+>> +       return error;
+>> +}
+>> +
+>> +static const struct rockchip_domain_info rk3288_pm_domains[] =3D {
+>> +       [RK3288_PD_GPU]         =3D DOMAIN_RK3288(9, 9, 2),
+>> +       [RK3288_PD_VIO]         =3D DOMAIN_RK3288(7, 7, 4),
+>> +       [RK3288_PD_VIDEO]       =3D DOMAIN_RK3288(8, 8, 3),
+>> +       [RK3288_PD_HEVC]        =3D DOMAIN_RK3288(14, 10, 9),
+>> +};
+>> +
+>> +static const struct rockchip_pmu_info rk3288_pmu =3D {
+>> +       .pwr_offset =3D 0x08,
+>> +       .status_offset =3D 0x0c,
+>> +       .req_offset =3D 0x10,
+>> +       .idle_offset =3D 0x14,
+>> +       .ack_offset =3D 0x14,
+>> +       .num_domains =3D ARRAY_SIZE(rk3288_pm_domains),
+>> +       .domain_info =3D rk3288_pm_domains,
+>> +};
+>> +
+>> +static const struct of_device_id rockchip_pm_domain_dt_match[] =3D =
+{
+>> +       {
+>> +               .compatible =3D "rockchip,rk3288-power-controller",
+>> +               .data =3D (void *)&rk3288_pmu,
+>> +       },
+>> +       { /* sentinel */ },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, rockchip_pm_domain_dt_match);
+>> +
+>> +static struct platform_driver rockchip_pm_domain_driver =3D {
+>> +       .probe =3D rockchip_pm_domain_probe,
+>> +       .driver =3D {
+>> +               .name   =3D "rockchip-pm-domain",
+>> +               .owner  =3D THIS_MODULE,
+>> +               .of_match_table =3D rockchip_pm_domain_dt_match,
+>> +               /*
+>> +                * We can't forcibly eject devices form power domain=
+,
+>> +                * so we can't really remove power domains once they
+>> +                * were added.
+>> +                */
+>> +               .suppress_bind_attrs =3D true,
+>> +       },
+>> +};
+>> +
+>> +static int __init rockchip_pm_domain_drv_register(void)
+>> +{
+>> +       return platform_driver_register(&rockchip_pm_domain_driver);
+>> +}
+>> +postcore_initcall(rockchip_pm_domain_drv_register);
+>> diff --git a/include/dt-bindings/power-domain/rk3288.h b/include/dt-=
+bindings/power-domain/rk3288.h
+>> new file mode 100644
+>> index 0000000..ca68c11
+>> --- /dev/null
+>> +++ b/include/dt-bindings/power-domain/rk3288.h
+>> @@ -0,0 +1,11 @@
+>> +#ifndef __DT_BINDINGS_POWER_DOMAIN_RK3288_H__
+>> +#define __DT_BINDINGS_POWER_DOMAIN_RK3288_H__
+>> +
+>> +/* RK3288 power domain index */
+>> +#define RK3288_PD_GPU          0
+>> +#define RK3288_PD_VIO          1
+>> +#define RK3288_PD_VIDEO        2
+>> +#define RK3288_PD_HEVC         3
+>> +#define RK3288_PD_PERI         4
+>> +
+>> +#endif
+>> --
+>> 1.9.1
+>>
+>>
+>>
+>> _______________________________________________
+>> Linux-rockchip mailing list
+>> Linux-rockchip@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+>
+>
+
+--=20
+Best regards,
+Caesar
+
+
