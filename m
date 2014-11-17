@@ -1,251 +1,81 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v9 6/9] qcom: cpuidle: Add cpuidle driver for QCOM cpus
-Date: Mon, 17 Nov 2014 17:39:51 +0000
-Message-ID: <20141117173950.GA24304@e102568-lin.cambridge.arm.com>
-References: <1414194024-55547-1-git-send-email-lina.iyer@linaro.org>
- <1414194024-55547-7-git-send-email-lina.iyer@linaro.org>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH] i2c: core: Fix probing of i2c slaves without interrupts
+Date: Mon, 17 Nov 2014 19:12:14 +0100
+Message-ID: <20141117181214.GB12644@katana>
+References: <1416224580-4782-1-git-send-email-geert+renesas@glider.be>
+ <CAOMZO5BsfCfP+bMfYWZ9C=Sp0sWkEr6WoRRygw18EfW2T_k3oQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1414194024-55547-7-git-send-email-lina.iyer@linaro.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="zx4FCpZtqtKETZ7O"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-Sender: linux-pm-owner@vger.kernel.org
-To: Lina Iyer <lina.iyer@linaro.org>
-Cc: "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "khilman@linaro.org" <khilman@linaro.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "msivasub@codeaurora.org" <msivasub@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <CAOMZO5BsfCfP+bMfYWZ9C=Sp0sWkEr6WoRRygw18EfW2T_k3oQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-i2c <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 25, 2014 at 12:40:21AM +0100, Lina Iyer wrote:
-> Add cpuidle driver interface to allow cpus to go into C-States. Use the
-> cpuidle DT interface, common across ARM architectures, to provide the
-> C-State information to the cpuidle framework.
 
-"idle states", this is not ACPI.
+--zx4FCpZtqtKETZ7O
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Supported modes at this time are Standby and Standalone Power Collapse.
-> 
-> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
-> ---
->  .../bindings/arm/msm/qcom,idle-state.txt           | 81 ++++++++++++++++++++++
->  drivers/cpuidle/Kconfig.arm                        |  7 ++
->  drivers/cpuidle/Makefile                           |  1 +
->  drivers/cpuidle/cpuidle-qcom.c                     | 72 +++++++++++++++++++
->  4 files changed, 161 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,idle-state.txt
->  create mode 100644 drivers/cpuidle/cpuidle-qcom.c
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,idle-state.txt b/Documentation/devicetree/bindings/arm/msm/qcom,idle-state.txt
-> new file mode 100644
-> index 0000000..ae1b07f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/msm/qcom,idle-state.txt
-> @@ -0,0 +1,81 @@
-> +QCOM Idle States for cpuidle driver
-> +
-> +ARM provides idle-state node to define the cpuidle states, as defined in [1].
-> +cpuidle-qcom is the cpuidle driver for Qualcomm SoCs and uses these idle
-> +states. Idle states have different enter/exit latency and residency values.
-> +The idle states supported by the QCOM SoC are defined as -
-> +
-> +    * Standby
-> +    * Retention
-> +    * Standalone Power Collapse (Standalone PC or SPC)
-> +    * Power Collapse (PC)
-> +
-> +Standby: Standby does a little more in addition to architectural clock gating.
-> +When the WFI instruction is executed the ARM core would gate its internal
-> +clocks. In addition to gating the clocks, QCOM cpus use this instruction as a
-> +trigger to execute the SPM state machine. The SPM state machine waits for the
-> +interrupt to trigger the core back in to active. This triggers the cache
-> +hierarchy to enter standby states, when all cpus are idle. An interrupt brings
-> +the SPM state machine out of its wait, the next step is to ensure that the
-> +cache hierarchy is also out of standby, and then the cpu is allowed to resume
-> +execution.
-> +
-> +Retention: Retention is a low power state where the core is clock gated and
-> +the memory and the registers associated with the core are retained. The
-> +voltage may be reduced to the minimum value needed to keep the processor
-> +registers active. The SPM should be configured to execute the retention
-> +sequence and would wait for interrupt, before restoring the cpu to execution
-> +state. Retention may have a slightly higher latency than Standby.
-> +
-> +Standalone PC: A cpu can power down and warmboot if there is a sufficient time
-> +between the time it enters idle and the next known wake up. SPC mode is used
-> +to indicate a core entering a power down state without consulting any other
-> +cpu or the system resources. This helps save power only on that core.  The SPM
-> +sequence for this idle state is programmed to power down the supply to the
-> +core, wait for the interrupt, restore power to the core, and ensure the
-> +system state including cache hierarchy is ready before allowing core to
-> +resume. Applying power and resetting the core causes the core to warmboot
-> +back into Elevation Level (EL) which trampolines the control back to the
-> +kernel. Entering a power down state for the cpu, needs to be done by trapping
-> +into a EL. Failing to do so, would result in a crash enforced by the warm boot
-> +code in the EL for the SoC. On SoCs with write-back L1 cache, the cache has to
-> +be flushed in s/w, before powering down the core.
-> +
-> +Power Collapse: This state is similar to the SPC mode, but distinguishes
-> +itself in that the cpu acknowledges and permits the SoC to enter deeper sleep
-> +modes. In a hierarchical power domain SoC, this means L2 and other caches can
-> +be flushed, system bus, clocks - lowered, and SoC main XO clock gated and
-> +voltages reduced, provided all cpus enter this state.  Since the span of low
-> +power modes possible at this state is vast, the exit latency and the residency
-> +of this low power mode would be considered high even though at a cpu level,
-> +this essentially is cpu power down. The SPM in this state also may handshake
-> +with the Resource power manager processor in the SoC to indicate a complete
-> +application processor subsystem shut down.
-> +
-> +The idle-state for QCOM SoCs are distinguished by the compatible property of
-> +the idle-states device node.
-> +The devicetree representation of the idle state should be -
-> +
-> +Required properties:
-> +
-> +- compatible: Must be one of -
-> +			"qcom,idle-state-stby",
-> +			"qcom,idle-state-ret",
-> +			"qcom,idle-state-spc",
-> +			"qcom,idle-state-pc",
-> +		and "arm,idle-state".
-> +
-> +Other required and optional properties are specified in [1].
-> +
-> +Example:
-> +
-> +	idle-states {
-> +		CPU_SPC: spc {
-> +			compatible = "qcom,idle-state-spc", "arm,idle-state";
-> +			entry-latency-us = <150>;
-> +			exit-latency-us = <200>;
-> +			min-residency-us = <2000>;
-> +		};
-> +	};
-> +
-> +[1]. Documentation/devicetree/bindings/arm/idle-states.txt
-> diff --git a/drivers/cpuidle/Kconfig.arm b/drivers/cpuidle/Kconfig.arm
-> index 8c16ab2..13c7c1f 100644
-> --- a/drivers/cpuidle/Kconfig.arm
-> +++ b/drivers/cpuidle/Kconfig.arm
-> @@ -63,3 +63,10 @@ config ARM_MVEBU_V7_CPUIDLE
->  	depends on ARCH_MVEBU
->  	help
->  	  Select this to enable cpuidle on Armada 370, 38x and XP processors.
-> +
-> +config ARM_QCOM_CPUIDLE
-> +	bool "CPU Idle drivers for Qualcomm processors"
-> +	depends on QCOM_PM
-> +	select DT_IDLE_STATES
-> +	help
-> +	  Select this to enable cpuidle for QCOM processors
-> diff --git a/drivers/cpuidle/Makefile b/drivers/cpuidle/Makefile
-> index 4d177b9..6c222d5 100644
-> --- a/drivers/cpuidle/Makefile
-> +++ b/drivers/cpuidle/Makefile
-> @@ -17,6 +17,7 @@ obj-$(CONFIG_ARM_ZYNQ_CPUIDLE)		+= cpuidle-zynq.o
->  obj-$(CONFIG_ARM_U8500_CPUIDLE)         += cpuidle-ux500.o
->  obj-$(CONFIG_ARM_AT91_CPUIDLE)          += cpuidle-at91.o
->  obj-$(CONFIG_ARM_EXYNOS_CPUIDLE)        += cpuidle-exynos.o
-> +obj-$(CONFIG_ARM_QCOM_CPUIDLE)		+= cpuidle-qcom.o
->  
->  ###############################################################################
->  # MIPS drivers
-> diff --git a/drivers/cpuidle/cpuidle-qcom.c b/drivers/cpuidle/cpuidle-qcom.c
-> new file mode 100644
-> index 0000000..1c1dcbc
-> --- /dev/null
-> +++ b/drivers/cpuidle/cpuidle-qcom.c
-> @@ -0,0 +1,72 @@
-> +/*
-> + * Copyright (c) 2014, Linaro Limited.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + */
-> +
-> +#include <linux/cpuidle.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include <soc/qcom/pm.h>
-> +#include "dt_idle_states.h"
-> +
-> +static struct qcom_cpu_pm_ops *lpm_ops;
-> +
-> +static int qcom_cpu_stby(struct cpuidle_device *dev,
-> +				struct cpuidle_driver *drv, int index)
-> +{
-> +	lpm_ops->standby(NULL);
-> +
-> +	return index;
-> +}
-> +
-> +static int qcom_cpu_spc(struct cpuidle_device *dev,
-> +				struct cpuidle_driver *drv, int index)
-> +{
-> +	lpm_ops->spc(NULL);
-> +
-> +	return index;
-> +}
-> +
+On Mon, Nov 17, 2014 at 03:08:25PM -0200, Fabio Estevam wrote:
+> On Mon, Nov 17, 2014 at 9:43 AM, Geert Uytterhoeven
+> <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> wrote:
+> > Since commit 2fd36c55264926e2 ("i2c: core: Map OF IRQ at probe time"),
+> > i2c slaves without interrupts (e.g. da9210 and at24 on r8a7791/koelsch)
+> > fail to probe:
+> >
+> >     at24: probe of 2-0050 failed with error -22
+> >
+> >     da9210: probe of 6-0068 failed with error -22
+> >
+> > This happens because the call to of_irq_get() in i2c_device_probe()
+> > returns -EINVAL.
+> >
+> > If a device node does not have an "interrupts" property,
+> > of_irq_parse_one() fails. Unlike irq_of_parse_and_map(), of_irq_get()
+> > does not ignore errors from of_irq_parse_one(), but forwards them.
+> >
+> > Make i2c_device_probe() ignore all errors but -EPROBE_DEFER to fix this,
+> > just like platform_get_irq() and platform_get_irq_byname() already do.
+> >
+> > Fixes: 2fd36c55264926e2 ("i2c: core: Map OF IRQ at probe time")
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+>=20
+> With this patch applied my codec and PMIC can be probed again:
+>=20
+> Tested-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-I can't have a look at this and avoid thinking that this should look
-something like:
+Applied to for-next, thanks!
 
-static qcom_cpu_idle(...., int index)
-{
-	lpm_ops[index].enter_idle(...);
-	return index;
-}
 
-Before jumping to conclusions, see below.
+--zx4FCpZtqtKETZ7O
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> +static struct cpuidle_driver qcom_cpuidle_driver = {
-> +	.name	= "qcom_cpuidle",
-> +};
-> +
-> +static const struct of_device_id qcom_idle_state_match[] = {
-> +	{ .compatible = "qcom,idle-state-stby", .data = qcom_cpu_stby},
-> +	{ .compatible = "qcom,idle-state-spc", .data = qcom_cpu_spc },
-> +	{ },
-> +};
-> +
-> +static int qcom_cpuidle_probe(struct platform_device *pdev)
-> +{
-> +	struct cpuidle_driver *drv = &qcom_cpuidle_driver;
-> +	int ret;
-> +
-> +	lpm_ops = pdev->dev.platform_data;
-> +
-> +	/* Probe for other states, including standby */
-> +	ret = dt_init_idle_driver(drv, qcom_idle_state_match, 0);
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-This driver will be DT only. If an idle state is parsed correctly,
-it is initialized, otherwise it is skipped. Now, if we added glue
-code in arch arm (as arm64 does) that allows us to link an idle state
-index with the functions above (a DT idle state contains all information
-required to initialize its enter function, more so now that we are adding
-power domains to the picture), what would be the issue in defining a
-common API that just passes the index to the arch back-end ? No pointers
-to pass, no platform drivers required and still no arch/soc code in
-drivers/cpuidle.
+iQIcBAEBAgAGBQJUajp+AAoJEBQN5MwUoCm2GuQQAKeOuIgtjnK/BRm4YuKvF1ks
+Zim3GnThYz3T3aKYqp7GeOT0kG3FRR/1GkvPTh7nLJsNBZemmCW4pde8FGlWK0RW
+GaqGmNNVHdrhfNYbJceI2ikwMTjPmz+ACXZOOgFhfrMdALJ8KRRJI7Xom4n5w4nU
+yjhZ2Yg71qmrVFz/Ov/EeHGKEbi7bpgSnZYqUnu6sVfWikxO6JshKIVqQ3jxD/+j
+N3G3KlSiHCA2wh980VkKFO06MvxunD00e8GZGMVnCWsoYWF/pSzzCaZnHtlHBDIV
+4gdNPmUM6qyK9ZoIj2H5e7/enT6B1EaTKm4AvupzSa7O4XD4rAwo3mFs2TSbpZBY
+2YZ6M8uDYYi76K6ArOZOCVueilz4QO8VZIJoxashODwI2rZEtrGrwBIJYwDMwoJ4
+qHbqtB4g8jA0lGKnK/F5IZ8n5yH9+1KYEBZxxK942jAN9y2hBx/9SQ5he9W9mkph
+fBFxsrW1CHzJi0n6RtjEn/XFmW33R1Jd0yfLt8n4iT0rkpCJEjaaPe2+uBSiKCHY
+eHpoj4OeVDJzFmP3sGri/0JLhJboDLcVJB9vkGOfPMw6REDYiRtL4uvtdTsjO8e6
++TJM8vB4T/6Q4LjcCdkEdDo9TryGCHi610TvLPR1xtZOKxb+1q4a4XfIjlvc1ZeZ
+ZX5hUXoFIQG4rVdAZcRb
+=RFFv
+-----END PGP SIGNATURE-----
 
-I am obviously talking about DT CPUidle drivers only.
-
-If the idle state is parsed correctly and the backend initializer (let's
-call it arm_cpu_init_idle(cpu)) is successful (which means that DT idle
-states contain valid information and the enter functions could be
-initialized from DT properly) I do not see what's the problem, give it
-some thought.
-
-Anyway, I will put together an RFC to start the discussion when patch is
-merged and patch the relevant code as an example, you can go ahead with
-current code, I am reviewing it.
-
-Lorenzo
-
+--zx4FCpZtqtKETZ7O--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
