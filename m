@@ -1,82 +1,59 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/2] dt-bindings: simplefb-sunxi: Add sunxi
- simplefb extensions
-Date: Mon, 17 Nov 2014 14:07:23 +0100
-Message-ID: <5469F30B.7080507@redhat.com>
-References: <1416224086-5698-1-git-send-email-hdegoede@redhat.com> <1416224086-5698-3-git-send-email-hdegoede@redhat.com> <20141117124721.GQ6414@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v5 06/10] ARM: dts: am4372: Add DCAN nodes
+Date: Mon, 17 Nov 2014 15:08:45 +0200
+Message-ID: <5469F35D.80504@ti.com>
+References: <1415881371-4982-1-git-send-email-rogerq@ti.com> <1415881371-4982-7-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBFPGU6RQKGQEPHVURKA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20141117124721.GQ6414@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <1415881371-4982-7-git-send-email-rogerq@ti.com>
+Sender: linux-can-owner@vger.kernel.org
+To: tony@atomide.com
+Cc: wg@grandegger.com, mkl@pengutronix.de, wsa@the-dreams.de, mugunthanvnm@ti.com, george.cherian@ti.com, balbi@ti.com, nsekhar@ti.comnm@ti.com, sergei.shtylyov@cogentembedded.com, linux-omap@vger.kernel.org, linux-can@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The SoC contains 2 DCAN modules. Add them.
 
-On 11/17/2014 01:47 PM, Maxime Ripard wrote:
-> On Mon, Nov 17, 2014 at 12:34:46PM +0100, Hans de Goede wrote:
->> If pre-filled framebuffer nodes are used, the firmware may need extra
->> properties to find the right node. This documents the properties to use
->> for this on sunxi platforms.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>  .../bindings/video/simple-framebuffer-sunxi.txt    | 33 ++++++++++++++++++++++
->>  1 file changed, 33 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
->>
->> diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt b/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
->> new file mode 100644
->> index 0000000..84ca264
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
->> @@ -0,0 +1,33 @@
->> +Sunxi specific Simple Framebuffer bindings
->> +
->> +This binding documents sunxi specific extensions to the simple-framebuffer
->> +bindings. The sunxi simplefb u-boot code relies on the devicetree containing
->> +pre-populated simplefb nodes.
->> +
->> +These extensions are intended so that u-boot can select the right node based
->> +on which pipeline and output is being used. As such they are solely intended
->> +for firmware / bootloader use, and the OS should ignore them.
->> +
->> +Required properties:
->> +- compatible: "sunxi,framebuffer"
->> +- sunxi,pipeline:
->> +  <0> for the de_be0 -> lcdc0 -> output pipeline
->> +  <1> for the de_be1 -> lcdc1 -> output pipeline
->> +- sunxi,output: One of: "hdmi", "lcd", "vga", and "composite"  
->> +
->> +Example:
->> +
->> +chosen {
->> +	#address-cells = <1>;
->> +	#size-cells = <1>;
->> +	ranges;
->> +
->> +	framebuffer@0 {
->> +		compatible = "sunxi,framebuffer", "simple-framebuffer";
->> +		sunxi,pipeline = <0>;
->> +		sunxi,output = "hdmi";
->> +		clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
->> +			 <&ahb_gates 44>;
-> 
-> If we're going that way, then maybe having to specify clock-names
-> would be better in order to know which clock is what?
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+---
+ arch/arm/boot/dts/am4372.dtsi | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-I agree that using clock-names is more human readable then phandle's,
-but that is simply not how clocks are specified anywhere in dt.
+diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+index 899c57c..f0ff256 100644
+--- a/arch/arm/boot/dts/am4372.dtsi
++++ b/arch/arm/boot/dts/am4372.dtsi
+@@ -901,6 +901,28 @@
+ 			compatible = "mmio-sram";
+ 			reg = <0x40300000 0x40000>; /* 256k */
+ 		};
++
++		dcan0: can@481cc000 {
++			compatible = "ti,am4372-d_can", "ti,am3352-d_can";
++			ti,hwmods = "d_can0";
++			clocks = <&dcan0_fck>;
++			clock-names = "fck";
++			reg = <0x481cc000 0x2000>;
++			syscon-raminit = <&am43xx_control_module 0x644 0>;
++			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
++
++		dcan1: can@481d0000 {
++			compatible = "ti,am4372-d_can", "ti,am3352-d_can";
++			ti,hwmods = "d_can1";
++			clocks = <&dcan1_fck>;
++			clock-names = "fck";
++			reg = <0x481d0000 0x2000>;
++			syscon-raminit = <&am43xx_control_module 0x644 1>;
++			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
+ 	};
+ };
+ 
+-- 
+1.8.3.2
 
-Regards,
 
-Hans
