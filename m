@@ -1,142 +1,119 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V5 4/4] clocksource: mips-gic: Add device-tree support
-Date: Mon, 17 Nov 2014 22:21:46 +0100
-Message-ID: <546A66EA.3090107@linaro.org>
-References: <1415821419-26974-1-git-send-email-abrestic@chromium.org> <1415821419-26974-5-git-send-email-abrestic@chromium.org>
+From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] watchdog: ImgTec PDC Watchdog Timer Driver
+Date: Mon, 17 Nov 2014 21:21:55 +0000
+Message-ID: <20141117212155.GG1739@jhogan-linux.le.imgtec.org>
+References: <1416237194-12033-1-git-send-email-naidu.tellapati@imgtec.com>
+ <1416237194-12033-2-git-send-email-naidu.tellapati@imgtec.com>
+ <CAL1qeaG1xXXmasLiaM14A+RshnqewnHsuQvxb76CNnwiuAXn_A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415821419-26974-5-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL1qeaG1xXXmasLiaM14A+RshnqewnHsuQvxb76CNnwiuAXn_A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Naidu Tellapati <naidu.tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Jude Abraham <jude.abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Arul Ramasamy <arul.ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/12/2014 08:43 PM, Andrew Bresticker wrote:
-> Parse the GIC timer frequency and interrupt from the device-tree.
->
-> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+On Mon, Nov 17, 2014 at 11:47:51AM -0800, Andrew Bresticker wrote:
+> On Mon, Nov 17, 2014 at 7:13 AM,  <naidu.tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+> > From: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> >
+> > This commit adds support for ImgTec PowerDown Controller Watchdog Timer.
+> >
+> > Signed-off-by: Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> > Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> 
+> A couple comments below, but otherwise this is looking good.
+> 
+> > --- a/drivers/watchdog/Kconfig
+> > +++ b/drivers/watchdog/Kconfig
+> 
+> > @@ -1235,6 +1235,16 @@ config BCM_KONA_WDT_DEBUG
+> >
+> >           If in doubt, say 'N'.
+> >
+> > +config IMGPDC_WDT
+> > +       tristate "Imagination Technologies PDC Watchdog Timer"
+> > +       depends on HAS_IOMEM
+> 
+> We probably don't want to make this visible for everyone with
+> HAS_IOMEM, so perhaps MIPS || (HAS_IOMEM && COMPILE_TEST)?  Do we want
+> to make this available for META as well?
 
-Hi Andrew,
+yeh, can I suggest something like this:
+	depends on HAS_IOMEM
+	depends on METAG || MIPS || COMPILE_TEST
+More intuitive/scalable to have them separate IMO, since technically it
+needs HAS_IOMEM regardless of platform (even if the listed platforms are
+guaranteed to select HAS_IOMEM).
 
-through which tree is this patch supposed to go ?
+> 
+> > --- /dev/null
+> > +++ b/drivers/watchdog/imgpdc_wdt.c
+> 
+> > +#ifdef CONFIG_COMMON_CLK
+> > +#define to_pdc_wdt(_nb) container_of(_nb, struct pdc_wdt_dev, clk_nb)
+> > +
+> > +static int img_pdc_wdt_clk_notify(struct notifier_block *nb,
+> > +                                 unsigned long action, void *data)
+> > +{
+> > +       struct pdc_wdt_dev *wdt = to_pdc_wdt(nb);
+> > +
+> > +       switch (action) {
+> > +       case POST_RATE_CHANGE:
+> > +               if (wdt->clk_rate == data->new_rate)
+> > +                       return NOTIFY_OK;
+> > +
+> > +               /* We use the clock rate to calculate the max timeout */
+> > +               if (data->new_rate < 1 ||
+> > +                   data->new_rate > PDC_MAX_WD_CLK_RATE) {
+> > +                       dev_err(wdt->dev, "invalid clock rate\n");
+> > +                       return NOTIFY_BAD;
+> > +               }
+> > +               wdt->clk_rate = data->new_rate;
+> > +               if (order_base_2(wdt->clk_rate) == 0)
+> > +                       wdt->min_delay = 0;
+> > +               else
+> > +                       wdt->min_delay = order_base_2(wdt->clk_rate) - 1;
+> > +
+> > +               wdt->wdt_dev.max_timeout =
+> > +                               (1 << (PDC_WD_MAX_DELAY - wdt->min_delay));
+> > +               ret = watchdog_init_timeout(&wdt->wdt_dev, timeout, wdt->dev);
+> > +               if (ret < 0)
+> > +                       wdt->wdt_dev.timeout = wdt->wdt_dev.max_timeout;
+> > +
+> > +               pdc_wdt_stop(&wdt->wdt_dev);
+> > +               pdc_wdt_set_timeout(&wdt->wdt_dev, wdt->wdt_dev.timeout);
+> > +               pdc_wdt_start(&wdt->wdt_dev);
+> > +               break;
+> > +       default:
+> > +               break;
+> > +       }
+> > +       return NOTIFY_OK;
+> > +}
+> > +#endif
+> 
+> Do we really expect the watchdog clock to change out from under us?  I
+> think we can just get the rate in probe() and set the timeout bounds
+> based on that - no one outside the watchdog driver should be messing
+> with the watchdog clock, right?  I know the samsung driver does
+> something similar to this, but I believe that's because the watchdog
+> clock is derived from the CPU clock.
 
-Is there any dependency ?
+I agree (sorry if I implied wdt needed to be dynamic as well as reading
+the [probably constant] rate before).
 
-> ---
-> Changes from v4:
->   - don't probe from irqchip; just warn if DT is wrong
-> Changes from v3:
->   - probe from GIC irqchip
-> New for v3.
-> ---
->   drivers/clocksource/Kconfig          |  1 +
->   drivers/clocksource/mips-gic-timer.c | 41 +++++++++++++++++++++++++=
-+++++------
->   2 files changed, 35 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfi=
-g
-> index cb7e7f4..89836dc 100644
-> --- a/drivers/clocksource/Kconfig
-> +++ b/drivers/clocksource/Kconfig
-> @@ -226,5 +226,6 @@ config CLKSRC_VERSATILE
->   config CLKSRC_MIPS_GIC
->   	bool
->   	depends on MIPS_GIC
-> +	select CLKSRC_OF
->
->   endmenu
-> diff --git a/drivers/clocksource/mips-gic-timer.c b/drivers/clocksour=
-ce/mips-gic-timer.c
-> index a749c81..3bd31b1 100644
-> --- a/drivers/clocksource/mips-gic-timer.c
-> +++ b/drivers/clocksource/mips-gic-timer.c
-> @@ -11,6 +11,7 @@
->   #include <linux/interrupt.h>
->   #include <linux/irqchip/mips-gic.h>
->   #include <linux/notifier.h>
-> +#include <linux/of_irq.h>
->   #include <linux/percpu.h>
->   #include <linux/smp.h>
->   #include <linux/time.h>
-> @@ -101,8 +102,6 @@ static int gic_clockevent_init(void)
->   	if (!cpu_has_counter || !gic_frequency)
->   		return -ENXIO;
->
-> -	gic_timer_irq =3D MIPS_GIC_IRQ_BASE +
-> -		GIC_LOCAL_TO_HWIRQ(GIC_LOCAL_INT_COMPARE);
->   	setup_percpu_irq(gic_timer_irq, &gic_compare_irqaction);
->
->   	register_cpu_notifier(&gic_cpu_nb);
-> @@ -123,17 +122,45 @@ static struct clocksource gic_clocksource =3D {
->   	.flags	=3D CLOCK_SOURCE_IS_CONTINUOUS,
->   };
->
-> -void __init gic_clocksource_init(unsigned int frequency)
-> +static void __init __gic_clocksource_init(void)
->   {
-> -	gic_frequency =3D frequency;
-> -
->   	/* Set clocksource mask. */
->   	gic_clocksource.mask =3D CLOCKSOURCE_MASK(gic_get_count_width());
->
->   	/* Calculate a somewhat reasonable rating value. */
-> -	gic_clocksource.rating =3D 200 + frequency / 10000000;
-> +	gic_clocksource.rating =3D 200 + gic_frequency / 10000000;
->
-> -	clocksource_register_hz(&gic_clocksource, frequency);
-> +	clocksource_register_hz(&gic_clocksource, gic_frequency);
->
->   	gic_clockevent_init();
->   }
-> +
-> +void __init gic_clocksource_init(unsigned int frequency)
-> +{
-> +	gic_frequency =3D frequency;
-> +	gic_timer_irq =3D MIPS_GIC_IRQ_BASE +
-> +		GIC_LOCAL_TO_HWIRQ(GIC_LOCAL_INT_COMPARE);
-> +
-> +	__gic_clocksource_init();
-> +}
-> +
-> +static void __init gic_clocksource_of_init(struct device_node *node)
-> +{
-> +	if (WARN_ON(!gic_present || !node->parent ||
-> +		    !of_device_is_compatible(node->parent, "mti,gic")))
-> +		return;
-> +
-> +	if (of_property_read_u32(node, "clock-frequency", &gic_frequency)) =
-{
-> +		pr_err("GIC frequency not specified.\n");
-> +		return;
-> +	}
-> +	gic_timer_irq =3D irq_of_parse_and_map(node, 0);
-> +	if (!gic_timer_irq) {
-> +		pr_err("GIC timer IRQ not specified.\n");
-> +		return;
-> +	}
-> +
-> +	__gic_clocksource_init();
-> +}
-> +CLOCKSOURCE_OF_DECLARE(mips_gic_timer, "mti,gic-timer",
-> +		       gic_clocksource_of_init);
->
+Note, dynamic changes did happen on TZ1090, but only just before suspend
+(since the hardware would change the rate regardless of what software
+did when the power actually went down, so it at least allowed drivers to
+put their workarounds in place). I presume watchdog timers aren't meant
+to be active during suspend though, in which case even for TZ1090 it
+probably doesn't need to expect changes.
 
-
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Cheers
+James
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
