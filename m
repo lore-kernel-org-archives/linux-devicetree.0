@@ -1,64 +1,120 @@
-From: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
-Subject: Re: [PATCHv1 2/3] arm: mvebu: add .dts file for Synology DS213j
-Date: Tue, 18 Nov 2014 08:41:27 +1000
-Message-ID: <546A7997.1040603@killerwolves.net>
-References: <cover.1416095841.git.arno@natisbad.org>	<1eb26f8c1946622910a7e2318c895a7082fea7e5.1416095841.git.arno@natisbad.org>	<20141116020024.GC15870@lunn.ch> <87d28nb83u.fsf@natisbad.org>	<546931E1.5070909@killerwolves.net> <878ujas07o.fsf@natisbad.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <878ujas07o.fsf-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH V5 00/12] Tegra xHCI support
+Date: Mon, 17 Nov 2014 14:41:30 -0800
+Message-ID: <1416264102-1323-1-git-send-email-abrestic@chromium.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 17/11/14 18:25, Arnaud Ebalard wrote:
-> Hi,
-> 
-> Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org> writes:
-> 
->> On 16/11/2014 11:14 PM, Arnaud Ebalard wrote:
->>>>> +	gpio-fan-100-32-35 {
->>>> There is some logic to this naming, but i don't remember what it is.
->>>> Did you check this is appropriate?
->>> The 32-35 is for the MPP i.e. fan uses mpp32 to mpp35 (3 MPP for speed,
->>> one for alarm). I don't know what the 100 part means. What I did is I
->>> googled to see which fan supported kirkwood models have and noticed
->>> that the DS212j uses the exact same fan, i.e. Y.S.Tech FD129225LL-N so
->>> I opted for the same naming.
->>>
->>> On that aspect, you may be able to explain why the speed-map for this
->>> fan goes up to 5000 RPM. This fan is supposed to operate at 1900RPM.
->>> Note that it does not matter in practice.
->>
->> On the Kirkwood Diskstations, the first number (100, 120 or 150) refers
->> to the middle of the three fan speed resistors,
-> 
-> Would not have found that alone ;-) Thanks for clarifying.
-> 
->> the second number (15 or
->> 32) refers to the first fan control pin, and the third number (18 or 35)
->> refers to the first fan alarm pin.
->>
->> i.e. the 100-32-35 uses fan speed resistors of 33, 100 and 150 ohms,
->> uses pins 32-34 for fan control, and uses pin 35 for the fan alarm.
->>
->> The 5000RPM was interpolated from my measured RPM pulse rate (4200PPM)
->> of the 80mm fan in my DS211j (which uses the 150-32-35 fan config) at
->> maximum RPM.
-> 
-> Then, I think I need to change the speed map to have 1900 RPM as max
-> speed. Out of curiosity, how did you measured the RPM pulse rate
-> exactly?
+This series adds support for xHCI on NVIDIA Tegra SoCs.  This includes:
+ - patches 1, 2, and 3: minor cleanups for mailbox framework and xHCI,
+ - patches 4 and 5: adding a driver for the mailbox used to communicate
+   with the xHCI controller's firmware,
+ - patches 6 and 7: extending the XUSB pad controller driver to support
+   the USB PHY types (UTMI, HSIC, and USB3),
+ - patches 8 and 9: adding a xHCI host-controller driver, and
+ - patches 10, 11, and 12: updating the relevant DT files.
 
-I hooked a logic analyzer to the sense pin and measured the pulse rate.
+The mailbox driver (patch 5) has a compile-time dependency on patch 2 and
+a run-time dependency on patch 3.  Both the PHY (patch 7) and host (patch 9)
+drivers have compile-time dependencies on the mailbox driver.  The host
+driver also has a run-time dependency on patch 1.  Because of this, this
+entire series should probably go through the Tegra tree.  Patches 11 and 12
+should probably not be merged until the controller firmware [0] lands in
+linux-firmware since they disable the EHCI controllers.
 
-Looking at the specifications of the fan in this unit (an EC7025L12ER),
-it has a maximum fan speed of 3000RPM, so it looks like it uses two
-pulses per revolution and not one as I had assumed when I created the
-speed map.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tested on Venice2, Jetson TK1, and Big with a variety of USB2.0 and
+USB3.0 memory sticks and ethernet dongles.  This has also been tested,
+with additional out-of-tree patches, on a Tegra132-based board.
+
+Based on v3.18-rc5.  A branch with the entire series is available at:
+  https://github.com/abrestic/linux/commits/tegra-xhci-v5
+
+Notes:
+ - HSIC support is mostly untested and I think there are still some issues
+   to work out there.  I do have a Tegra124 board with a HSIC hub so I'll
+   try to sort those out later.
+ - The XUSB padctl driver doesn't play nice with the existing Tegra USB2.0
+   PHY driver, so all ports should be assigned to the XHCI controller.
+
+Based on work by:
+  a lot of people, but from what I can tell from the L4T tree [1], the
+  original authors of the Tegra xHCI driver are:
+    Ajay Gupta <ajayg-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+    Bharath Yadav <byadav-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+
+Changes from v4:
+ - Made USB support optional in padctl driver.
+ - Made usb3-port a pinconfig property again.
+ - Cleaned up mbox_request_channel() error handling and allowed it to defer
+   probing (patch 3).
+ - Minor xHCI (patch 1) and mailbox framework (patch 2) cleanups suggested
+   by Thierry.
+ - Addressed Thierry's review comments.
+
+Changes from v3:
+ - Fixed USB2.0 flakiness on Jetson-TK1.
+ - Switched to 32-bit DMA mask for host.
+ - Addressed Stephen's review comments.
+
+Chagnes from v2:
+ - Dropped mailbox channel specifier.  The mailbox driver allocates virtual
+   channels backed by the single physical channel.
+ - Added support for HS_CURR_LEVEL adjustment pinconfig property, which
+   will be required for the Blaze board.
+ - Addressed Stephen's review comments.
+
+Changes from v1:
+ - Converted mailbox driver to use the common mailbox framework.
+ - Fixed up host driver so that it can now be built and used as a module.
+ - Addressed Stephen's review comments.
+ - Misc. cleanups.
+
+Andrew Bresticker (11):
+  xhci: Set shared HCD's hcd_priv in xhci_gen_setup
+  mailbox: Make struct mbox_controller's ops field const
+  of: Add NVIDIA Tegra XUSB mailbox binding
+  mailbox: Add NVIDIA Tegra XUSB mailbox driver
+  of: Update Tegra XUSB pad controller binding for USB
+  pinctrl: tegra-xusb: Add USB PHY support
+  of: Add NVIDIA Tegra xHCI controller binding
+  usb: xhci: Add NVIDIA Tegra xHCI host-controller driver
+  ARM: tegra: Add Tegra124 XUSB mailbox and xHCI controller
+  ARM: tegra: jetson-tk1: Add xHCI support
+  ARM: tegra: venice2: Add xHCI support
+
+Benson Leung (1):
+  mailbox: Fix up error handling in mbox_request_channel()
+
+ .../bindings/mailbox/nvidia,tegra124-xusb-mbox.txt |   32 +
+ .../pinctrl/nvidia,tegra124-xusb-padctl.txt        |   63 +-
+ .../bindings/usb/nvidia,tegra124-xhci.txt          |  104 ++
+ arch/arm/boot/dts/tegra124-jetson-tk1.dts          |   46 +-
+ arch/arm/boot/dts/tegra124-venice2.dts             |   79 +-
+ arch/arm/boot/dts/tegra124.dtsi                    |   41 +
+ drivers/mailbox/Kconfig                            |    3 +
+ drivers/mailbox/Makefile                           |    2 +
+ drivers/mailbox/mailbox.c                          |   11 +-
+ drivers/mailbox/tegra-xusb-mailbox.c               |  280 +++++
+ drivers/pinctrl/Kconfig                            |    1 +
+ drivers/pinctrl/pinctrl-tegra-xusb.c               | 1262 +++++++++++++++++++-
+ drivers/usb/host/Kconfig                           |    9 +
+ drivers/usb/host/Makefile                          |    1 +
+ drivers/usb/host/xhci-pci.c                        |    5 -
+ drivers/usb/host/xhci-plat.c                       |    5 -
+ drivers/usb/host/xhci-tegra.c                      |  930 +++++++++++++++
+ drivers/usb/host/xhci.c                            |    6 +-
+ include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h   |    7 +
+ include/linux/mailbox_controller.h                 |    2 +-
+ include/soc/tegra/xusb.h                           |   50 +
+ 21 files changed, 2852 insertions(+), 87 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/nvidia,tegra124-xusb-mbox.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra124-xhci.txt
+ create mode 100644 drivers/mailbox/tegra-xusb-mailbox.c
+ create mode 100644 drivers/usb/host/xhci-tegra.c
+ create mode 100644 include/soc/tegra/xusb.h
+
+-- 
+2.1.0.rc2.206.gedb03e5
