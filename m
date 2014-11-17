@@ -1,42 +1,93 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [PATCH] ACPI / GPIO: Driver GPIO mappings for ACPI GPIOs
-Date: Mon, 17 Nov 2014 13:28:54 +0900
-Message-ID: <CAAVeFuLV2yR1tmxX-HicupqgwUYj5HzqvSoi0Bq3V7aVpvf9bg@mail.gmail.com>
-References: <CAAVeFuLW6fucvDxQvY5DDfnhPrgYM+1pi7WoHfBQa_BgYnc_Cw@mail.gmail.com>
- <2758495.RYBbleVHkC@vostro.rjw.lan> <CACRpkdanUC4QYbMXgMOkiGS+6oVyD1Opg_sFo95TEsyHJTM6_w@mail.gmail.com>
- <1433051.htaUTMPMBY@vostro.rjw.lan> <CACRpkdb-T42Bqtf7zvc+2om03hgu4j8twDUqmsE4dcKaPXB9Wg@mail.gmail.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: [RFC PATCH] ARM: DRA: hwmod: RTC: Add reset function for RTC
+Date: Mon, 17 Nov 2014 10:13:22 +0530
+Message-ID: <1416199402-3865-1-git-send-email-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdb-T42Bqtf7zvc+2om03hgu4j8twDUqmsE4dcKaPXB9Wg@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, t-kristo@ti.com, paul@pwsan.com, Lokesh Vutla <lokeshvutla@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 14, 2014 at 5:58 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Mon, Nov 3, 2014 at 11:56 PM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->> On Monday, November 03, 2014 02:22:10 PM Linus Walleij wrote:
->
->>> With that change:
->>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->>
->> OK, made the changes and added your Reviewed-by.
->>
->> One semi-related question though.  Alexandre ACKed the patch before, so
->> what did that mean from the GPIO subsystem's perspective?  Was the patch
->> approved, not approved, semi-approved?
->
-> It just means we are not always entirely aligned, it's not like
-> Alexandre and I have meetings on the side and decide what to
-> say, it's just these mails. I do trust him, I wouldn't get mad if it
-> had been merged just wanted some polishing when I could get
-> it...
+RTC IP have kicker feature which prevents spurious writes to its registers.
+In order to write into any of the RTC registers, KICK values has te be
+written to KICK registers. Currently hwmod is updating the IDLEMODE in rtc
+sysconfig register without writing into any kick register which is a noop.
+When autoidle is allowed for rtc, interruts are not received until IDLEMODE
+is set to SIDLE_SMART_WKUP.
+Adding a reset function to unlock RTC registers so that IDLEMODE is
+updated.
 
-In case of conflicting feedback between me and Linus, it goes without
-saying that Linus' opinion should prevail. I am trying to help a bit
-and take some of the burden off his shoulders, but have neither his
-skill nor his experience (which shows when you compare our patch
-reviews). So for important stuff it is a good idea to wait until both
-of us give a ack - the most likely conflict scenario being that I give
-a pass overlooking something that Linus will catch.
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+---
+ arch/arm/mach-omap2/omap_hwmod.h          |  1 +
+ arch/arm/mach-omap2/omap_hwmod_7xx_data.c |  1 +
+ arch/arm/mach-omap2/omap_hwmod_reset.c    | 23 +++++++++++++++++++++++
+ 3 files changed, 25 insertions(+)
+
+diff --git a/arch/arm/mach-omap2/omap_hwmod.h b/arch/arm/mach-omap2/omap_hwmod.h
+index 512f809..3703f99 100644
+--- a/arch/arm/mach-omap2/omap_hwmod.h
++++ b/arch/arm/mach-omap2/omap_hwmod.h
+@@ -744,6 +744,7 @@ const char *omap_hwmod_get_main_clk(struct omap_hwmod *oh);
+  */
+ 
+ extern int omap_hwmod_aess_preprogram(struct omap_hwmod *oh);
++int omap_hwmod_rtc_unlock(struct omap_hwmod *oh);
+ 
+ /*
+  * Chip variant-specific hwmod init routines - XXX should be converted
+diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+index 5684f11..90e1df4 100644
+--- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+@@ -1584,6 +1584,7 @@ static struct omap_hwmod_class_sysconfig dra7xx_rtcss_sysc = {
+ static struct omap_hwmod_class dra7xx_rtcss_hwmod_class = {
+ 	.name	= "rtcss",
+ 	.sysc	= &dra7xx_rtcss_sysc,
++	.reset	= &omap_hwmod_rtc_unlock,
+ };
+ 
+ /* rtcss */
+diff --git a/arch/arm/mach-omap2/omap_hwmod_reset.c b/arch/arm/mach-omap2/omap_hwmod_reset.c
+index 65e186c..b825a28 100644
+--- a/arch/arm/mach-omap2/omap_hwmod_reset.c
++++ b/arch/arm/mach-omap2/omap_hwmod_reset.c
+@@ -30,6 +30,12 @@
+ 
+ #include "omap_hwmod.h"
+ 
++#define RTC_KICK0_REG_OFFSET	0x6c
++#define RTC_KICK1_REG_OFFSET	0x70
++
++#define RTC_KICK0_VALUE		0x83E70B13
++#define RTC_KICK1_VALUE		0x95A4F1E0
++
+ /**
+  * omap_hwmod_aess_preprogram - enable AESS internal autogating
+  * @oh: struct omap_hwmod *
+@@ -51,3 +57,20 @@ int omap_hwmod_aess_preprogram(struct omap_hwmod *oh)
+ 
+ 	return 0;
+ }
++
++/**
++ * omap_hwmod_rtc_unlock - Reset and unlock the Kicker mechanism.
++ * @oh: struct omap_hwmod *
++ *
++ * RTC IP have kicker feature.  This prevents spurious writes to its registers.
++ * In order to write into any of the RTC registers, KICK values has te be
++ * written in respective KICK registers. This is needed for hwmod to write into
++ * sysconfig register.
++ */
++int omap_hwmod_rtc_unlock(struct omap_hwmod *oh)
++{
++	omap_hwmod_write(RTC_KICK0_VALUE, oh, RTC_KICK0_REG_OFFSET);
++	omap_hwmod_write(RTC_KICK1_VALUE, oh, RTC_KICK1_REG_OFFSET);
++
++	return 0;
++}
+-- 
+1.9.1
+
