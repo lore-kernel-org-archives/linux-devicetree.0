@@ -1,53 +1,51 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH 0/4] Touchscreen performance related fixes
-Date: Mon, 17 Nov 2014 17:48:43 +0530
-Message-ID: <5469E7A3.2000303@ti.com>
-References: <1414408111-2631-1-git-send-email-vigneshr@ti.com> <544E821D.5040004@linutronix.de> <912A29987EAE174BA6CF187D7CDFA9CE26F46B2B@DLEE08.ent.ti.com> <54577258.9080508@linutronix.de> <5458BC0B.1040803@ti.com> <5458C87F.80409@linutronix.de>
+From: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt-bindings: simplefb-sunxi: Add sunxi
+ simplefb extensions
+Date: Mon, 17 Nov 2014 12:22:34 +0000
+Message-ID: <1416226954.5466.8.camel@hellion.org.uk>
+References: <1416224086-5698-1-git-send-email-hdegoede@redhat.com>
+	 <1416224086-5698-3-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5458C87F.80409@linutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, "Griffis, Brad" <bgriffis@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jonathan Cameron <jic23@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, "Balbi, Felipe" <balbi@ti.com>, Jan Kardell <jan.kardell@telliq.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBC4Y5F6PT4PBBLORU6RQKGQEISNBM5I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1416224086-5698-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 2014-11-17 at 12:34 +0100, Hans de Goede wrote:
+> +- sunxi,pipeline:
+> +  <0> for the de_be0 -> lcdc0 -> output pipeline
+> +  <1> for the de_be1 -> lcdc1 -> output pipeline
 
+Can we express this as a more descriptive string rather than a number,
+to better handle future developments?
 
-On Tuesday 04 November 2014 06:07 PM, Sebastian Andrzej Siewior wrote:
-> On 11/04/2014 12:44 PM, Vignesh R wrote:
-> 
->> I ran following commands
->> $ evtest /dev/input/touchscreen0 &
->> (with heavy item on touchscreen)
->>  and
->> $ cat /sys/bus/iio/devices/iio\:device0/scan_elements/in_voltage4_en
->> (in a busy loop)
->> I tried above experiment on my board but I didn't hit any problem even
->> after running for close to 30 minutes. I was unable to reproduce failure
-> 
-> Just to make sure: You had the touchscreen and iio command running in
-> parallel and you saw evtest output while there was iio operation?
-> 
->> The problem may be in configuring correct charge-delay value. Please run:
->> $ ts_test > /dev/null
->> and let me know if pen events are being detected properly.
-> 
-> Well I get the touch events but not while busy loop on iio interface is
-> running (I get maybe one event every 5 seconds or so).
-> After all, it is the same HW you have.
+Otherwise both patches in this series look good to me.
 
-Were you able to test the latest version (v4) of this patch series?
-Please let me know if the performance is satisfactory.
-
-Regards
-Vignesh
-
-> 
-> Sebastian
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+> +- sunxi,output: One of: "hdmi", "lcd", "vga", and "composite"  
+> +
+> +Example:
+> +
+> +chosen {
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	ranges;
+> +
+> +	framebuffer@0 {
+> +		compatible = "sunxi,framebuffer", "simple-framebuffer";
+> +		sunxi,pipeline = <0>;
+> +		sunxi,output = "hdmi";
+> +		clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
+> +			 <&ahb_gates 44>;
+> +		status = "disabled";
+> +	};
+> +};
