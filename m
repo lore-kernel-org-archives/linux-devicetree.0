@@ -1,58 +1,84 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RESUBMIT PATCH v7 0/9] Add Skyworks SKY81452 device drivers
-Date: Mon, 17 Nov 2014 13:37:59 +0000
-Message-ID: <20141117133759.GZ2722@sirena.org.uk>
-References: <1416213190-20935-1-git-send-email-jack.yoo@skyworksinc.com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt-bindings: simplefb-sunxi: Add sunxi
+ simplefb extensions
+Date: Mon, 17 Nov 2014 13:39:18 +0000
+Message-ID: <CACxGe6vqiC08sP+o3bduGfvUdwRtHm8+_7EdZccJjS86qVKvxQ@mail.gmail.com>
+References: <1416224086-5698-1-git-send-email-hdegoede@redhat.com>
+ <1416224086-5698-3-git-send-email-hdegoede@redhat.com> <20141117124721.GQ6414@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="c6YcJYqqMhegfX14"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1416213190-20935-1-git-send-email-jack.yoo@skyworksinc.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gyungoh@gmail.com
-Cc: sameo@linux.intel.com, lee.jones@linaro.org, jg1.han@samsung.com, cooloney@gmail.com, lgirdwood@gmail.com, jack.yoo@skyworksinc.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, heiko@sntech.de, jason@lakedaemon.net, shawn.guo@freescale.com, treding@nvidia.com, florian.vaussard@epfl.ch, trivial@kernel.org, linux@roeck-us.net, andrew@lunn.ch, jic23@kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCJP567ORICBBGXVU6RQKGQE3RGCW4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20141117124721.GQ6414@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Nov 17, 2014 at 12:47 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Mon, Nov 17, 2014 at 12:34:46PM +0100, Hans de Goede wrote:
+>> If pre-filled framebuffer nodes are used, the firmware may need extra
+>> properties to find the right node. This documents the properties to use
+>> for this on sunxi platforms.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  .../bindings/video/simple-framebuffer-sunxi.txt    | 33 ++++++++++++++++++++++
+>>  1 file changed, 33 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt b/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
+>> new file mode 100644
+>> index 0000000..84ca264
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
+>> @@ -0,0 +1,33 @@
+>> +Sunxi specific Simple Framebuffer bindings
+>> +
+>> +This binding documents sunxi specific extensions to the simple-framebuffer
+>> +bindings. The sunxi simplefb u-boot code relies on the devicetree containing
+>> +pre-populated simplefb nodes.
+>> +
+>> +These extensions are intended so that u-boot can select the right node based
+>> +on which pipeline and output is being used. As such they are solely intended
+>> +for firmware / bootloader use, and the OS should ignore them.
+>> +
+>> +Required properties:
+>> +- compatible: "sunxi,framebuffer"
+>> +- sunxi,pipeline:
+>> +  <0> for the de_be0 -> lcdc0 -> output pipeline
+>> +  <1> for the de_be1 -> lcdc1 -> output pipeline
+>> +- sunxi,output: One of: "hdmi", "lcd", "vga", and "composite"
+>> +
+>> +Example:
+>> +
+>> +chosen {
+>> +     #address-cells = <1>;
+>> +     #size-cells = <1>;
+>> +     ranges;
+>> +
+>> +     framebuffer@0 {
+>> +             compatible = "sunxi,framebuffer", "simple-framebuffer";
+>> +             sunxi,pipeline = <0>;
+>> +             sunxi,output = "hdmi";
+>> +             clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
+>> +                      <&ahb_gates 44>;
+>
+> If we're going that way, then maybe having to specify clock-names
+> would be better in order to know which clock is what?
 
---c6YcJYqqMhegfX14
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I wouldn't go that way with this binding since the driver has no need
+to differentiate between the clocks, and driver authors shouldn't be
+encouraged to do so. The purpose of the clocks in this node is only
+for itemizing dependencies, not for how to configure the clocks.
+Firmware shouldn't care at all about the clocks list, it only needs to
+find the correct pre-populated node to fill in and enable.
 
-On Mon, Nov 17, 2014 at 05:33:01PM +0900, gyungoh@gmail.com wrote:
-> From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
->=20
-> This patch set includes regulator and backlight driver for SKY81452.
-> Also it includes documents for device tree and module.
-> The initial version of sky81452-regulator was applied. Fo this, increment=
-al
-> patches are included.
-
-Don't include things like RESUBMIT which just point out the obvious in
-your subject lines since it obscures useful content.  What I'm seeing in
-my inbox is things like:
-
-    307 N T 11/17 gyungoh@gmail.c (3.1K) =E2=94=9C=E2=94=80>[RESUBMIT PATCH=
- v7 7/9] regulator: s
-
-which don't give any indication if there's something important to be
-looked at.
-
---c6YcJYqqMhegfX14
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUafoxAAoJECTWi3JdVIfQijQH/icx4oNG++b4I/NloFBNsUqD
-/Q3Vy/x5ySzigE7ACwtgAZN6x0AIp/9KjqyPD74I+ZAuJpXdBod8cHLy6z6iD3Bu
-5QyLdKAB9NiJ+XoBzLRCN1qkrsKJprMut95X+zCybw9i7JBBkcBrmtOzOq2NP24w
-XzGLBiM63/PLB1OjSLypDnzc2VJSOubCsxcSpTERD+kYL07FTkdkRHw3VzSzAW45
-tczlsM/2kZmcJqR1eBHpjXr82BfMNuFen5d80RkPu8z1IszPwGD5P3s1zjJBeIGR
-akfRmKHrrhUQdCGugeDT9KcwKvucc2p1Im4iHZxEPcp1sfzLMBN33ST/9HdRMpI=
-=J/mR
------END PGP SIGNATURE-----
-
---c6YcJYqqMhegfX14--
+g.
