@@ -1,45 +1,39 @@
-From: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH v5 5/6] Documentation: dt-bindings: Add binding info for
- X-Gene QMTM UIO driver
-Date: Mon, 17 Nov 2014 11:43:14 +0100
-Message-ID: <5469D142.9090500@suse.de>
-References: <1416220572-13381-1-git-send-email-ankit.jindal@linaro.org> <1416220572-13381-6-git-send-email-ankit.jindal@linaro.org>
+From: Romain Perier <romain.perier@gmail.com>
+Subject: Re: [PATCH v4 1/2] of: Rename "poweroff-source" property to "system-power-controller"
+Date: Mon, 17 Nov 2014 11:51:29 +0100
+Message-ID: <CABgxDoK=Maxzw-=+pHZ4gdgBSJbdkgx_Q7rHNcwEBywBE3btCQ@mail.gmail.com>
+References: <1415885699-1465-1-git-send-email-user@radxa>
+	<1415885699-1465-2-git-send-email-user@radxa>
+	<20141113205528.77414C40BC2@trevor.secretlab.ca>
+	<CABgxDoL-N9bitxTU0=pD_69DLBovXPSKhHjmArVOHFdokvnEJA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416220572-13381-6-git-send-email-ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, patches-qTEPVZfXA3Y@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tushar Jagad <tushar.jagad-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Anup Patel <anup-aa5cPYPs4nSSZfiimGR9Ow@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CABgxDoL-N9bitxTU0=pD_69DLBovXPSKhHjmArVOHFdokvnEJA@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, robh <robh@kernel.org>, devicetree <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Felipe Balbi <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Am 17.11.2014 um 11:36 schrieb Ankit Jindal:
-> This patch adds device tree binding documentation for
-> X-Gene QMTM UIO driver.
->=20
-> Signed-off-by: Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Tushar Jagad <tushar.jagad-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../devicetree/bindings/uio/uio_xgene_qmtm.txt     |   50 ++++++++++=
-++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/uio/uio_xgene_q=
-mtm.txt
+@Most of the people who were ranting about this serie:  could you send
+feedbacks please ?
 
-=46WIW,
-
-Reviewed-by: Andreas F=E4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
-
-Thanks,
-Andreas
-
---=20
-SUSE LINUX GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 21284 AG N=FCrn=
-berg
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2014-11-14 8:22 GMT+01:00 Romain Perier <romain.perier@gmail.com>:
+> Hi,
+>
+> Who should merge this serie ? as Mark merged the previous one it would
+> probably make sense to do the same here (at least, in my opinion)
+>
+> Thanks for your feedbacks.
+>
+> Have a nice day,
+> Romain
+>
+> 2014-11-13 21:55 GMT+01:00 Grant Likely <grant.likely@linaro.org>:
+> igned-off-by: Romain Perier <romain.perier@gmail.com>
+>>
+>> Acked-by: Grant Likely <grant.likely@linaro.org>
+>>
+>> Please merge via whichever tree needs this change.
+>>
+>> g.
