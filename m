@@ -1,87 +1,63 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 01/11] ARM: STi: DT: STiH416: Add pinctl setup for usb controllers.
-Date: Mon, 17 Nov 2014 16:47:54 +0000
-Message-ID: <1416242884-5261-2-git-send-email-peter.griffin@linaro.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH v3 07/11] ARM: STi: DT: STiH410:  Add pinctl config for usb controllers.
+Date: Mon, 17 Nov 2014 16:48:00 +0000
+Message-ID: <1416242884-5261-8-git-send-email-peter.griffin@linaro.org>
 References: <1416242884-5261-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416242884-5261-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1416242884-5261-1-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, arnd@arndb.de
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the required pin config for all usb controllers
-on the stih416.
+This patch adds the required pin configiguration for the extra usb
+controllers found on the stih410 device.
 
-Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 ---
- arch/arm/boot/dts/stih416-pinctrl.dtsi | 34 ++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/stih410-pinctrl.dtsi | 34 ++++++++++++++++++++++++++++++++++
  1 file changed, 34 insertions(+)
+ create mode 100644 arch/arm/boot/dts/stih410-pinctrl.dtsi
 
-diff --git a/arch/arm/boot/dts/stih416-pinctrl.dtsi b/arch/arm/boot/dts/stih416-pinctrl.dtsi
-index c2025bc..9cccf2d 100644
---- a/arch/arm/boot/dts/stih416-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stih416-pinctrl.dtsi
-@@ -147,6 +147,15 @@
- 				};
- 			};
- 
-+			usb {
-+				pinctrl_usb3: usb3 {
+diff --git a/arch/arm/boot/dts/stih410-pinctrl.dtsi b/arch/arm/boot/dts/stih410-pinctrl.dtsi
+new file mode 100644
+index 0000000..b3e9dfc
+--- /dev/null
++++ b/arch/arm/boot/dts/stih410-pinctrl.dtsi
+@@ -0,0 +1,34 @@
++/*
++ * Copyright (C) 2014 STMicroelectronics Limited.
++ * Author: Peter Griffin <peter.griffin@linaro.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * publishhed by the Free Software Foundation.
++ */
++#include "st-pincfg.h"
++/ {
++
++	soc {
++		pin-controller-rear {
++
++			usb0 {
++				pinctrl_usb0: usb2-0 {
 +					st,pins {
-+						oc-detect = <&pio40 0 ALT1 IN>;
-+						pwr-enable = <&pio40 1 ALT1 OUT>;
++						usb-oc-detect = <&pio35 0 ALT1 IN>;
++						usb-pwr-enable = <&pio35 1 ALT1 OUT>;
 +					};
 +				};
 +			};
 +
- 			sbc_i2c1 {
- 				pinctrl_sbc_i2c1_default: sbc_i2c1-default {
- 					st,pins {
-@@ -318,6 +327,16 @@
- 				};
- 			};
- 
-+			usb {
-+				pinctrl_usb0: usb0 {
++			usb1 {
++				pinctrl_usb1: usb2-1 {
 +					st,pins {
-+						oc-detect = <&pio9 4 ALT1 IN>;
-+						pwr-enable = <&pio9 5 ALT1 OUT>;
++						usb-oc-detect = <&pio35 2 ALT1 IN>;
++						usb-pwr-enable = <&pio35 3 ALT1 OUT>;
 +					};
 +				};
 +			};
-+
-+
- 			i2c1 {
- 				pinctrl_i2c1_default: i2c1-default {
- 					st,pins {
-@@ -506,6 +525,21 @@
- 					};
- 				};
- 			};
-+
-+			usb {
-+				pinctrl_usb1: usb1 {
-+					st,pins {
-+						oc-detect = <&pio18 0 ALT1 IN>;
-+						pwr-enable = <&pio18 1 ALT1 OUT>;
-+					};
-+				};
-+				pinctrl_usb2: usb2 {
-+					st,pins {
-+						oc-detect = <&pio18 2 ALT1 IN>;
-+						pwr-enable = <&pio18 3 ALT1 OUT>;
-+					};
-+				};
-+			};
- 		};
- 
- 		pin-controller-fvdp-fe {
++		};
++	};
++};
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
