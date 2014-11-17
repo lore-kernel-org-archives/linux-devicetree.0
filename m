@@ -1,44 +1,62 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 2/5] ARM:dts:imx6:phyFLEX: Enable gpmi in module file
-Date: Mon, 17 Nov 2014 09:29:34 +0100
-Message-ID: <4491159.MZR4lFNflh@wuerfel>
-References: <1415971946-48975-1-git-send-email-c.hemp@phytec.de> <1445555.ZBLGLeHvnl@wuerfel> <3652599.ahZEGyuIxZ@lws-hemp>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/7] dmaengine: at_xdmac: prefer usage of
+ readl/writel_relaxed
+Date: Mon, 17 Nov 2014 14:04:00 +0530
+Message-ID: <20141117083400.GS24582@intel.com>
+References: <1415875965-6905-1-git-send-email-ludovic.desroches@atmel.com>
+ <1415875965-6905-2-git-send-email-ludovic.desroches@atmel.com>
+ <2791155.z0l2TZezWO@wuerfel>
+ <20141113153449.GO24582@intel.com>
+ <20141113154551.GV3639@ldesroches-Latitude-E6320>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3652599.ahZEGyuIxZ@lws-hemp>
+Content-Disposition: inline
+In-Reply-To: <20141113154551.GV3639@ldesroches-Latitude-E6320>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christian Hemp <c.hemp-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 17 November 2014 09:27:37 Christian Hemp wrote:
-> Am Freitag, 14. November 2014, 15:55:11 schrieb Arnd Bergmann:
-> > On Friday 14 November 2014 14:32:23 Christian Hemp wrote:
-> > > --- a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-> > > +++ b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-> > > @@ -91,7 +91,7 @@
+On Thu, Nov 13, 2014 at 04:45:51PM +0100, Ludovic Desroches wrote:
+> On Thu, Nov 13, 2014 at 09:04:49PM +0530, Vinod Koul wrote:
+> > On Thu, Nov 13, 2014 at 12:01:49PM +0100, Arnd Bergmann wrote:
+> > > On Thursday 13 November 2014 11:52:39 Ludovic Desroches wrote:
+> > > > _relaxed version of readl and writel are not implemented on all
+> > > > architecture so COMPILE_TEST has to be removed in order to not cause
+> > > > some build failures.
+> > > > 
+> > > > Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> > > > ---
+> > > > 
 > > > 
-> > >         pinctrl-names = "default";
-> > >         pinctrl-0 = <&pinctrl_gpmi_nand>;
-> > >         nand-on-flash-bbt;
-> > > 
-> > > -       status = "disabled";
-> > > +       status = "okay";
-> > > 
-> > >  };
-> > 
-> > No need for the property unless you are overriding a 'status="disabled"'
-> > from another file. Just remove this property here.
+> > > I've queued up Will Deacon's series to enable the relaxed accessors
+> > > on all architectures, so the Kconfig change should no longer
+> > > be required in 3.19.
+> > And why is _relaxed() version required for thsi driver. Why cant readl(),
+> > writel() with barriers do?
 > 
-> the status is disabled in 'arch/arm/boot/dts/imx6qdl.dtsi'. 
-> That why I enabled it in the 'arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi'.
+> Required not but preferred to my mind. I don't need a barrier for all
+> read and write I am performing. Barriers have been added when needed.
 > 
+> When you have fixed my code because of the compilation breakage on other
+> architecture, you only change the read and write macros. Currently, there are
+> some redundancies because of the barriers added in the code.
+> 
+> To be honest, I have no idea about the performance impact between the
+> use of read/write and read/write_relaxed. Then two choices:
+> - go back to relaxed version, good new can keep COMPILE_TEST thanks to
+>   Will Deacon
+But that would merged after merge window. This was also reported on next.
+So lets keep this patch for now and you can enabled COMPILE_TEST after next
+merge window.
+> - remove barrier since they are no more needed if using readl/writel
+I think that should be right fix along with checking performance of driver and
+optimize/stress it
 
-Ok, makes sense. Thanks for the clarification.
+So for now, I am applying this whole series.
 
-	Arnd
+-- 
+~Vinod
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
