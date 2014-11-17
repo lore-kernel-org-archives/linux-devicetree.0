@@ -1,61 +1,62 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: Re: [PATCH 1/2] crypto: Add Imagination Technologies hw hash accelerator
-Date: Mon, 17 Nov 2014 09:11:48 -0800
-Message-ID: <CAL1qeaH9-K3GSD50WBQRJyBS_q9uSsnQDMmTYdsTOC1rovcHgQ@mail.gmail.com>
-References: <1415621455-10468-1-git-send-email-james.hartley@imgtec.com>
-	<1415621455-10468-2-git-send-email-james.hartley@imgtec.com>
-	<CAL1qeaGN9q_WHP2YJ3fY3r11v0pitcmwbjam5dRzeZhHCp7c8g@mail.gmail.com>
-	<5467070E.5040104@gmail.com>
+From: Kevin Cernekee <cernekee@gmail.com>
+Subject: Re: [PATCH V2 22/22] MIPS: Add multiplatform BMIPS target
+Date: Mon, 17 Nov 2014 09:19:17 -0800
+Message-ID: <CAJiQ=7An5eZ3j2+Zkx1crV9pBSVodkEQ+6ESGcFk5z0tDV7cHA@mail.gmail.com>
+References: <1416097066-20452-1-git-send-email-cernekee@gmail.com>
+ <3480616.V2TMJFc7uE@wuerfel> <CAOiHx=ky5T7z3T3gX382d=3sw+gGUEfnwXwpcLGa_Oi5YyBwgw@mail.gmail.com>
+ <2018325.yOrLZndTTm@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <5467070E.5040104@gmail.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Corentin LABBE <clabbe.montjoie@gmail.com>
-Cc: James Hartley <james.hartley@imgtec.com>, Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, joe@perches.com, mchehab@osg.samsung.com, Antti Palosaari <crope@iki.fi>, jg1.han@samsung.com, linux-crypto@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2018325.yOrLZndTTm@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Jonas Gorski <jogo@openwrt.org>, Ralf Baechle <ralf@linux-mips.org>, Florian Fainelli <f.fainelli@gmail.com>, Jon Fraser <jfraser@broadcom.com>, Dmitry Torokhov <dtor@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 14, 2014 at 11:55 PM, Corentin LABBE
-<clabbe.montjoie@gmail.com> wrote:
-> Le 15/11/2014 00:59, Andrew Bresticker a =C3=A9crit :
->> Hi James,
->>
->>> +
->>> +struct img_hash_drv {
->>> +       struct list_head dev_list;
->>> +       spinlock_t lock;
->>> +};
->>> +
->>> +static struct img_hash_drv img_hash =3D {
->>> +       .dev_list =3D LIST_HEAD_INIT(img_hash.dev_list),
->>> +       .lock =3D __SPIN_LOCK_UNLOCKED(img_hash.lock),
->>> +};
->>
->> It looks like the only purpose of this list is to get the
->> corresponding struct img_hash_dev in img_hash_init().  If there's
->> never going to be multiple instances within an SoC, perhaps you coul=
-d
->> just use a global?  Otherwise, you could do something like the
->> qualcomm driver, see drivers/crypto/qce/sha.c.  It looks like there =
-is
->> some precedent for this device list though...
->>
+On Mon, Nov 17, 2014 at 8:13 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> This is not just DT, it's actually an implementation of a boot
+> interface. The situation here seems much more to what we had on
+> PowerPC a long time ago than what we had on ARM before the DT
+> conversion. I think the best approach here would be to move the
+> platform specific bits into the decompressor code, and allow
+> multiple implementations of that. This way you can have the
+> generic vmlinux file that has a common DT parser, and you wrap
+> that into one decompressor per platform, some of which can have
+> their own board detection logic or pre-boot setup where necessary.
 >
-> I don't understand, you propose to use a global, something that lots =
-of people want to be removed in my driver.
-> It is not better than this global list.
->
-> I have the fealing that there no good way to get a pointer to a drive=
-r structure inside the cryptoAPI.
-> What to you think about adding a void *data in struct crypto_alg
->
-> Before registering an alg you could do:
-> mv_aes_alg_ecb.data =3D myprivatedriverdata;
-> ret =3D crypto_register_alg(&mv_aes_alg_ecb);
->
-> and then get it via
-> struct crypto_priv *cp =3D req->base.tfm->__crt_alg->data;
-> (a function will be better than that)
+> To be honest, I think having multiple DT files linked into the
+> kernel is a really bad idea, because it doesn't solve the
+> scalability problem at all. What we did on ARM was to force those
+> hacks out into external projects such as the PXA impedence
+> matcher [https://github.com/zonque/pxa-impedance-matcher]. This
+> can handle all weird boot protocol and adapt them to the normal
+> well-defined interfaces we have in the kernel.
 
-That sounds good to me.
+To some extent this is how BCM3384 was done[1].
+
+There is a tradeoff here: to add support for the older platforms it is
+easy to build a new DTB file into the kernel image, but it is a lot of
+trouble to write a new 3rd stage bootloader.  Do we want to maximize
+our list of supported boards, or are we shooting for a super clean
+kernel implementation right off the bat?
+
+>> And unless there is one, having a
+>> multiplatform kernel does not make much sense, as there is no sane way
+>> to tell apart different platforms on boot.
+>
+> How do you normally tell boards apart on MIPS when you don't use DT?
+
+On BCM7xxx (STB) kernels, we could assume the chip ID was in a known
+register, and also we could call back into the bootloader to get a
+somewhat-accurate board name.
+
+On BCM63xx there is logic in arch/mips/bcm63xx/cpu.c to try to guess
+the chip identity from the CPU type/revision (because the latter can
+be read directly from CP0).
+
+These systems were never really designed to support multiplatform
+kernels.  The ARM BCM7xxx variants, by contrast, were.
+
+
+[1] https://github.com/Broadcom/aeolus
