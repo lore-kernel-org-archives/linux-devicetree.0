@@ -1,62 +1,72 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/7] dt-bindings: Add document for MT6397 MFD
-Date: Mon, 17 Nov 2014 23:31:58 +0000
-Message-ID: <20141117233158.GD22111@sirena.org.uk>
-References: <1416210027-5562-1-git-send-email-flora.fu@mediatek.com>
- <1416210027-5562-5-git-send-email-flora.fu@mediatek.com>
+From: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v1 2/2] DT: eFuse: Add binding document for IMG
+ Pistachio eFuse Controller
+Date: Mon, 17 Nov 2014 23:34:36 +0000
+Message-ID: <27E62D98F903554192E3C13AFCC91C3C2F506F94@hbmail01.hb.imgtec.org>
+References: <1416237576-21542-1-git-send-email-arul.ramasamy@imgtec.com>
+	<1416237576-21542-3-git-send-email-arul.ramasamy@imgtec.com>,<CAL1qeaF47Xwq5eS17D_rS4QBP12eJ3F0N-RNx+_o0kr-H1ropw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zbGR4y+acU1DwHSi"
+Content-Type: text/plain; charset=Windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1416210027-5562-5-git-send-email-flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <CAL1qeaF47Xwq5eS17D_rS4QBP12eJ3F0N-RNx+_o0kr-H1ropw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Flora Fu <flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Dongdong Cheng <dongdong.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Arul Ramasamy <Arul.Ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <James.Hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <Ezequiel.Garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Andrew,
 
---zbGR4y+acU1DwHSi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Many thanks for the review.
 
-On Mon, Nov 17, 2014 at 03:40:24PM +0800, Flora Fu wrote:
+>> +++ b/Documentation/devicetree/bindings/soc/pistachio/img-efuse.txt
+>> @@ -0,0 +1,18 @@
+>> +* IMG Pistachio eFuse controller
+>> +
+>> +Required properties:
+>> +- compatible: Must be "img,pistachio-efuse".
+>> +- reg: Must contain the base address and length of the eFuse regist=
+ers.
+>> +- clocks: Must contain an entry for each entry in clock-names.
+>> +  See ../clock/clock-bindings.txt for details.
+>> +- clock-names: Must include the following entries:
+>> +  - efuse: External oscillator clock
 
-> +		pmic {
-> +			compatible = "mediatek,mt6397";
-> +	}
+> How is the external oscillator related to efuse?  Also, perhaps it
+> should be called "osc" since it's not an efuse-specific clock.
 
-This looks like it's missing a closing brace and is just generally weird
-(having a subnode like this).
+This is what I read from the eFuse Controller TRM
+(Generic eFuse Controller.Technical Reference Manual.pdf) with respect =
+to this clock.
 
-> +- regulators : The regulators of mt6397
-> +	regulators {
-> +		regulator constratints.
-> +		refer Documentation/devicetree/bindings/regulator/regulator.txt
-> +	};
+"Free-running oscillator clock =96 used to clock the fuse-unload state =
+machine. < 50Mhz"
 
-You need to define the set of valid regulator names and how that maps
-onto the physical device, look at other regulator binding documents for
-examples.
+Please comment.
 
---zbGR4y+acU1DwHSi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+>> +  - sys: eFuse system interface clock
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> I don't see a system interface gate clock for efuse in the TRM ...
 
-iQEcBAEBAgAGBQJUaoVtAAoJECTWi3JdVIfQ8kgH/izzeNVKV3wqoRUD+YlTtGJv
-axaLPulZTC3jXb8nQ9F+zo4oRlpvPayFWViGTsKmDapYOw6AiCaIXUq3MG1QJc9g
-9VE21l99zXeYVmVoTjUlYIaUBbHqHi/9OVutgLJE2DeCyTPv+HMCBdFmE4jM889T
-E3buJd7WMIruoH9IXWZO2dGS8KvpyCWANPL7SzulSwaOgQ2mKb8rqCkFEC+NurgX
-usjyGaC5Wv4eqHhX58O9taFL8lqOxfUQfkLuX6sxE1K9Z3vqEpyuaJ8hP2C92f+Y
-+yGJdmf8tmUBEU75CoxipeUKPsViJsKdW/DVBznH9/JlTu7/L5Xo9LkbkPkwQ1o=
-=BJY6
------END PGP SIGNATURE-----
+This is what I read from the above document about the sys_clk.
 
---zbGR4y+acU1DwHSi--
+"System bus clock, synchronous to the IMGBus1 input. < 400 MHz."
+
+I think this clock enables access to shadow RAM where the eFuses status=
+ is stored.
+
+Please comment.
+
+regards,
+Naidu.
+
+
+
+
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
