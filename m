@@ -1,100 +1,44 @@
-From: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] ARM: keystone: pm: switch to use generic pm domains
-Date: Mon, 17 Nov 2014 11:14:16 -0800
-Message-ID: <7h389h3aif.fsf@deeprootsystems.com>
-References: <1415631557-22897-1-git-send-email-grygorii.strashko@ti.com>
-	<5331397.OQCQmJO78C@wuerfel> <5460F806.3040305@ti.com>
-	<1600093.60yAP0Qpua@wuerfel>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v1 1/2] efuse: IMG Pistachio eFuse Controller
+Date: Mon, 17 Nov 2014 11:21:49 -0800
+Message-ID: <CAL1qeaF+Y8gPFFkAXq+CnKpXmpFQQoC_6T+tJuXq2yGS1STH-g@mail.gmail.com>
+References: <1416237576-21542-1-git-send-email-arul.ramasamy@imgtec.com>
+	<1416237576-21542-2-git-send-email-arul.ramasamy@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1600093.60yAP0Qpua@wuerfel> (Arnd Bergmann's message of "Mon, 10
-	Nov 2014 21:36:55 +0100")
+In-Reply-To: <1416237576-21542-2-git-send-email-arul.ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Arul Ramasamy <arul.ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Naidu Tellapati <naidu.tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Jude Abraham <jude.abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
-
-> On Monday 10 November 2014 19:38:14 Grygorii Strashko wrote:
->> Hi Arnd,
->> 
->> On 11/10/2014 05:06 PM, Arnd Bergmann wrote:
->> > On Monday 10 November 2014 16:59:16 Grygorii Strashko wrote:
->> >> --- /dev/null
->> >> +++ b/Documentation/devicetree/bindings/power/ti,keystone-powerdomain.txt
->> >> @@ -0,0 +1,31 @@
->> >> +* TI Keystone 2 Generic PM Controller
->> >> +
->> >> +The TI Keystone 2 Generic PM Controller is responsible for Clock gating
->> >> +for each controlled IP module.
->> >> +
->> >> +Required properties:
->> >> +- compatible: Should be "ti,keystone-powerdomain"
->> >> +- #power-domain-cells: Should be 0, see below:
->> >> +
->> >> +The PM Controller node is a PM domain as documented in
->> >> +Documentation/devicetree/bindings/power/power_domain.txt.
->> >> +
->> >> +Example:
->> >> +
->> >> +       pm_controller: pm-controller {
->> >> +               compatible = "ti,keystone-powerdomain";
->> >> +               #power-domain-cells = <0>;
->> >> +       };
->> >> +
->> >> +       netcp: netcp@2090000 {
->> >> +               reg = <0x2620110 0x8>;
->> >> +               reg-names = "efuse";
->> >> +               ...
->> >> +               #address-cells = <1>;
->> >> +               #size-cells = <1>;
->> >> +               ranges;
->> >> +               power-domains = <&pm_controller>;
->> >> +
->> >> +               clocks = <&clkpa>, <&clkcpgmac>, <&chipclk12>;
->> >> +               dma-coherent;
->> >> +       }
->> > 
->> > I don't get it. What keystone specific about a "ti,keystone-powerdomain"
->> > device? It seems that the device has no registers whatsoever and the
->> > driver doesn't really do anything that relates to the platform.
->> 
->> That's true. but it was the only one acceptable way  to enable
->> Generic clock manipulation PM callbacks for the DT-boot case.
->> After several unsuccessful attempts the idea to use GPD
->> was introduced by Kevin there:
->>   https://lkml.org/lkml/2014/9/8/643
->> 
->> So, The Keystone 2 Generic PM Controller is just a proxy PM layer here between
->> device and Generic clock manipulation PM callbacks.
->> It fills per-device clock list when device is attached to GPD and
->> ensures that all clocks from that list enabled/disabled when device is
->> started/stopped.
+On Mon, Nov 17, 2014 at 7:19 AM,  <arul.ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+> From: Arul Ramasamy <Arul.Ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 >
-> The idea of such a generic power domain implementation sounds useful, but
-> it has absolutely no business in platform specific code.
+> The Pistachio SOC from Imagination Technologies includes a eFuse Controller
+> which exposes the status of 128 EFUSE bits to the external world.
+>
+> Signed-off-by: Arul Ramasamy <Arul.Ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 
-Yes it does.  This isn't a generic power domain implementation, but
-rather just the platform-specific glue that hooks up the clocks to the
-right devices and power-domains so that the generic power-domain and
-generic pm_clocks code does the right thing.
+>  drivers/soc/Kconfig                    |   1 +
+>  drivers/soc/Makefile                   |   1 +
+>  drivers/soc/pistachio/Makefile         |   1 +
+>  drivers/soc/pistachio/fuse/Kconfig     |   9 ++
+>  drivers/soc/pistachio/fuse/Makefile    |   1 +
+>  drivers/soc/pistachio/fuse/img-efuse.c | 184 +++++++++++++++++++++++++++++++++
+>  include/soc/pistachio/img-efuse.h      |  17 +++
+>  7 files changed, 214 insertions(+)
+>  create mode 100644 drivers/soc/pistachio/Makefile
+>  create mode 100644 drivers/soc/pistachio/fuse/Kconfig
+>  create mode 100644 drivers/soc/pistachio/fuse/Makefile
+>  create mode 100644 drivers/soc/pistachio/fuse/img-efuse.c
+>  create mode 100644 include/soc/pistachio/img-efuse.h
 
-> I suggest you either remove the power domain proxy from your drivers
-> and use the clocks directly, 
-
-No.  That's a step in the wrong direction.  This change isn't affecting
-drivers directly.  It's the runtime PM and generic power domain layers
-that handle this, and runtime PM adapted drivers don't need any changes.
- 
-> or come up with an implementation that can be used across other
-> platforms and CPU architectures.
-
-We already have those in the generic power domain and the pm_clock
-layers.  This series is just hooking those up for Keystone.
-
-Kevin
+Is this IP present on other ImgTec SoCs?  Perhaps it makes more sense
+to create drivers/soc/img/ instead of drivers/soc/pistachio/?
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
