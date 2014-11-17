@@ -1,102 +1,47 @@
-From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/6] input: touchscreen: ti_am335x_tsc: Remove udelay
- in interrupt handler
-Date: Mon, 17 Nov 2014 09:23:37 +0100
-Message-ID: <20141117082337.GA3946@localhost.localdomain>
-References: <1415941651-28962-1-git-send-email-vigneshr@ti.com>
- <1415941651-28962-3-git-send-email-vigneshr@ti.com>
- <20141115192739.GA18766@localhost.localdomain>
- <54697919.5030302@ti.com>
+From: Christian Hemp <c.hemp-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 2/5] ARM:dts:imx6:phyFLEX: Enable gpmi in module file
+Date: Mon, 17 Nov 2014 09:27:37 +0100
+Message-ID: <3652599.ahZEGyuIxZ@lws-hemp>
+References: <1415971946-48975-1-git-send-email-c.hemp@phytec.de> <1415971946-48975-3-git-send-email-c.hemp@phytec.de> <1445555.ZBLGLeHvnl@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <54697919.5030302-l0cyMroinI0@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Brad Griffis <bgriffis-l0cyMroinI0@public.gmane.org>, Sanjeev Sharma <sanjeev_sharma-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Jan Kardell <jan.kardell-KSZdJiTw9mzQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap@vger.k
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445555.ZBLGLeHvnl@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 17, 2014 at 09:57:05AM +0530, Vignesh R wrote:
-> My patches are based on v3.18rc2. I tested my patches on am335x-evm
-> using tslib.
+Hello Arnd,
 
-No beaglebone + cape testing?
+Am Freitag, 14. November 2014, 15:55:11 schrieb Arnd Bergmann:
+> On Friday 14 November 2014 14:32:23 Christian Hemp wrote:
+> > --- a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
+> > +++ b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
+> > @@ -91,7 +91,7 @@
+> > 
+> >         pinctrl-names = "default";
+> >         pinctrl-0 = <&pinctrl_gpmi_nand>;
+> >         nand-on-flash-bbt;
+> > 
+> > -       status = "disabled";
+> > +       status = "okay";
+> > 
+> >  };
+> 
+> No need for the property unless you are overriding a 'status="disabled"'
+> from another file. Just remove this property here.
 
-> Please explain "touch is broken"? What is the behaviour of TSC?
+the status is disabled in 'arch/arm/boot/dts/imx6qdl.dtsi'. 
+That why I enabled it in the 'arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi'.
 
-With plain v3.17 plus your series, the cursor is almost never near the
-pen. Mostly it jitters around the right hand edge.
+	Christian
 
-My customer had already changed the step delay (I think by trial and
-error, not sure) in order to get the cursor near the pen. I ported
-this change onto your series (see patch, below), but still the pen up
-event causes a huge cursor jump.
+> 
+> 	Arnd
 
-(Again, I did solve the pen up issue, but in a totally different
-way. I never posted the fix, because I could not be sure that it would
-work on a wide variety of boards.)
-
-> Which ADC channels are being used for TSC?
-
-&tscadc {
-	status = "okay";
-	tsc {
-		ti,wires = <4>;
-		ti,x-plate-resistance = <300>;
-		ti,coordinate-readouts = <5>;
-		ti,wire-config = <0x00 0x11 0x23 0x32>;
-	};
-
-	adc {
-		ti,adc-channels = <5 6 7>;
-	};
-};
-
-So for this particular design, your series really does not help, not
-even a little. You did not test the series on many boards. I am
-concerned that this series only works on the one board you did test,
-and that it may break functionality on other people's boards.
-
-Thanks,
-Richard
-
----
-diff --git a/drivers/input/touchscreen/ti_am335x_tsc.c b/drivers/input/touchscreen/ti_am335x_tsc.c
-index b84493f..77a4883 100644
---- a/drivers/input/touchscreen/ti_am335x_tsc.c
-+++ b/drivers/input/touchscreen/ti_am335x_tsc.c
-@@ -148,7 +148,7 @@ static void titsc_step_config(struct titsc *ts_dev)
- 	end_step = first_step + tsc_steps;
- 	for (i = end_step - ts_dev->coordinate_readouts; i < end_step; i++) {
- 		titsc_writel(ts_dev, REG_STEPCONFIG(i), config);
--		titsc_writel(ts_dev, REG_STEPDELAY(i), STEPCONFIG_OPENDLY);
-+		titsc_writel(ts_dev, REG_STEPDELAY(i), STEPCONFIG_OPENDLY | STEPDELAY_SAMPLE(20));
- 	}
- 
- 	config = 0;
-@@ -172,7 +172,7 @@ static void titsc_step_config(struct titsc *ts_dev)
- 	end_step = first_step + ts_dev->coordinate_readouts;
- 	for (i = first_step; i < end_step; i++) {
- 		titsc_writel(ts_dev, REG_STEPCONFIG(i), config);
--		titsc_writel(ts_dev, REG_STEPDELAY(i), STEPCONFIG_OPENDLY);
-+		titsc_writel(ts_dev, REG_STEPDELAY(i), STEPCONFIG_OPENDLY | STEPDELAY_SAMPLE(20));
- 	}
- 
- 	/* Make CHARGECONFIG same as IDLECONFIG */
-@@ -188,13 +188,13 @@ static void titsc_step_config(struct titsc *ts_dev)
- 			STEPCONFIG_INP(ts_dev->inp_xp);
- 	titsc_writel(ts_dev, REG_STEPCONFIG(end_step), config);
- 	titsc_writel(ts_dev, REG_STEPDELAY(end_step),
--			STEPCONFIG_OPENDLY);
-+			STEPCONFIG_OPENDLY | STEPDELAY_SAMPLE(20));
- 
- 	end_step++;
- 	config |= STEPCONFIG_INP(ts_dev->inp_yn);
- 	titsc_writel(ts_dev, REG_STEPCONFIG(end_step), config);
- 	titsc_writel(ts_dev, REG_STEPDELAY(end_step),
--			STEPCONFIG_OPENDLY);
-+			STEPCONFIG_OPENDLY | STEPDELAY_SAMPLE(20));
- 
- 	/* The steps end ... end - readouts * 2 + 2 and bit 0 for TS_Charge */
- 	stepenable = 1;
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
