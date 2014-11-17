@@ -1,85 +1,74 @@
 From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH V5 09/12] usb: xhci: Add NVIDIA Tegra xHCI host-controller driver
-Date: Mon, 17 Nov 2014 15:51:29 -0800
-Message-ID: <CAL1qeaG1=g39gsRHPrmCTBFbn3XQmW_2N7rm7uWa=-xOzDiDHQ@mail.gmail.com>
-References: <1416264102-1323-1-git-send-email-abrestic@chromium.org>
-	<1416264102-1323-10-git-send-email-abrestic@chromium.org>
-	<20141117231240.GB9716@saruman>
+Subject: Re: [PATCH v1 2/2] DT: eFuse: Add binding document for IMG Pistachio
+ eFuse Controller
+Date: Mon, 17 Nov 2014 15:57:37 -0800
+Message-ID: <CAL1qeaG9D0SJtHErMX6ivPMP7eYSbRn88=YOinvAKrcyYhrQ7Q@mail.gmail.com>
+References: <1416237576-21542-1-git-send-email-arul.ramasamy@imgtec.com>
+	<1416237576-21542-3-git-send-email-arul.ramasamy@imgtec.com>
+	<CAL1qeaF47Xwq5eS17D_rS4QBP12eJ3F0N-RNx+_o0kr-H1ropw@mail.gmail.com>
+	<27E62D98F903554192E3C13AFCC91C3C2F506F94@hbmail01.hb.imgtec.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141117231240.GB9716@saruman>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balbi-l0cyMroinI0@public.gmane.org
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TasMV2rI37PzA@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <27E62D98F903554192E3C13AFCC91C3C2F506F94-C8yLA94LPOy3snIXRfWIHVBRoQTxkR7k@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: Arul Ramasamy <Arul.Ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <James.Hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <Ezequiel.Garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Felipe,
+Hi Naidu,
 
-On Mon, Nov 17, 2014 at 3:12 PM, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
-> Hi,
+On Mon, Nov 17, 2014 at 3:34 PM, Naidu Tellapati
+<Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+> Hi Andrew,
 >
-> On Mon, Nov 17, 2014 at 02:41:39PM -0800, Andrew Bresticker wrote:
->> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
->> index a3ca137..e2415d3 100644
->> --- a/drivers/usb/host/Kconfig
->> +++ b/drivers/usb/host/Kconfig
->> @@ -50,6 +50,15 @@ config USB_XHCI_RCAR
->>         Say 'Y' to enable the support for the xHCI host controller
->>         found in Renesas R-Car ARM SoCs.
->>
->> +config USB_XHCI_TEGRA
->> +     tristate "xHCI support for NVIDIA Tegra SoCs"
->> +     depends on ARCH_TEGRA
+> Many thanks for the review.
 >
-> it would be nice if you could still leave || COMPILE_TEST here.
-
-Sure.
-
->> +static const struct {
->> +     const char *name;
->> +     unsigned int num;
->> +} tegra_xhci_phy_types[] = {
->> +     {
->> +             .name = "usb3",
->> +             .num = TEGRA_XUSB_USB3_PHYS,
->> +     }, {
->> +             .name = "utmi",
->> +             .num = TEGRA_XUSB_UTMI_PHYS,
->> +     }, {
->> +             .name = "hsic",
->> +             .num = TEGRA_XUSB_HSIC_PHYS,
->> +     },
+>>> +++ b/Documentation/devicetree/bindings/soc/pistachio/img-efuse.txt
+>>> @@ -0,0 +1,18 @@
+>>> +* IMG Pistachio eFuse controller
+>>> +
+>>> +Required properties:
+>>> +- compatible: Must be "img,pistachio-efuse".
+>>> +- reg: Must contain the base address and length of the eFuse regis=
+ters.
+>>> +- clocks: Must contain an entry for each entry in clock-names.
+>>> +  See ../clock/clock-bindings.txt for details.
+>>> +- clock-names: Must include the following entries:
+>>> +  - efuse: External oscillator clock
 >
-> these should be using the generic PHY subsystem (drivers/phy).
-
-This driver does use the generic PHY subsystem, see patch 7 in this series :).
-
->> +static int tegra_xhci_load_firmware(struct tegra_xhci_hcd *tegra)
->> +{
->> +     struct device *dev = tegra->dev;
->> +     struct tegra_xhci_fw_cfgtbl *cfg_tbl;
->> +     struct tm fw_tm;
->> +     u32 val, code_tag_blocks, code_size_blocks;
->> +     u64 fw_base;
->> +     time_t fw_time;
->> +     unsigned long timeout;
->> +
->> +     if (csb_readl(tegra, XUSB_CSB_MP_ILOAD_BASE_LO) != 0) {
->> +             dev_info(dev, "Firmware already loaded, Falcon state 0x%x\n",
->> +                      csb_readl(tegra, XUSB_FALC_CPUCTL));
->> +             return 0;
->> +     }
+>> How is the external oscillator related to efuse?  Also, perhaps it
+>> should be called "osc" since it's not an efuse-specific clock.
 >
-> won't this prevent rmmod && insmod from succeeding ? Maybe not, as you
-> return 0 anyway, but if the firmware side craps out, it might be useful
-> to reload the firmware and reset that block. I wonder if this prevents
-> that.
+> This is what I read from the eFuse Controller TRM
+> (Generic eFuse Controller.Technical Reference Manual.pdf) with respec=
+t to this clock.
+>
+> "Free-running oscillator clock =E2=80=93 used to clock the fuse-unloa=
+d state machine. < 50Mhz"
+>
+> Please comment.
 
-rmmod && insmod does work with the above since, as you mentioned, we
-return successfully if the controller is already running.  Attempting
-to re-load the firmware if the controller is already running won't
-work - it requires a full power-gate/ungate sequence of the
-controller.  Unfortunately, that sequence is rather complicated and I
-haven't had a chance to implement it yet.  it will hopefully be coming
-later, though.
+Hmm.. is this the 52Mhz external oscillator on Pistachio?  Or something=
+ else?
+
+>>> +  - sys: eFuse system interface clock
+>
+>> I don't see a system interface gate clock for efuse in the TRM ...
+>
+> This is what I read from the above document about the sys_clk.
+>
+> "System bus clock, synchronous to the IMGBus1 input. < 400 MHz."
+>
+> I think this clock enables access to shadow RAM where the eFuses stat=
+us is stored.
+
+I don't see a bit in CR_PERIP_CLKEN that corresponds to this... Is
+this clock derived directly from SYSCLKOUT or PERIPHSYSCLKOUT (i.e. no
+gate specifically for efuse)?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
