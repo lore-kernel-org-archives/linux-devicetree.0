@@ -1,130 +1,145 @@
-From: Peter Chen <peter.chen@freescale.com>
-Subject: Re: [PATCH v8 00/13] ARM: berlin: USB support
-Date: Tue, 18 Nov 2014 13:00:03 +0800
-Message-ID: <20141118050002.GC15650@shlinux2>
-References: <1416231347-27193-1-git-send-email-antoine.tenart@free-electrons.com>
+From: Ajay kumar <ajaynumb@gmail.com>
+Subject: Re: [PATCH V8 00/14] drm/exynos: few patches to enhance bridge chip
+ support
+Date: Tue, 18 Nov 2014 11:50:47 +0530
+Message-ID: <CAEC9eQOrKw2Z1q-ztFfadXmsL3CTcAkkv9kcS2QnDOAVSh2AuQ@mail.gmail.com>
+References: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1416231347-27193-1-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Antoine Tenart <antoine.tenart@free-electrons.com>
-Cc: sebastian.hesselbarth@gmail.com, balbi@ti.com, p.zabel@pengutronix.de, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Kukjin Kim <kgene.kim@samsung.com>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 17, 2014 at 02:35:34PM +0100, Antoine Tenart wrote:
-> This series adds the support for ChipIdea USB2 (ci13xxx) controllers,
-> the USB PHYs of the Marvell Berlin SoCs and also adds a reset
-> controller for these SoCs.
-> 
-> The reset controller is used by the PHY driver and shares the
-> existing chip controller node with the clocks and one pin controller.
-> 
-> The Marvell Berlin USB controllers are host only on the BG2Q and are
-> compatible with USB ChipIdea. We here add a glue to use the available
-> common functions for this kind of controllers, and add a generic USB2
-> ChipIdea driver. A PHY driver is also added to control the USB PHY.
-> 
-> This series applies on top of Peter Chen's ci-for-usb-next branch[1]
-> containing the generic PHY support in the USB framework[2].
-> 
-> Patches 1-4 should already have been taken by Sebastian.
-> 
-
-Applied patches 7-9, thanks.
-
-> Changes since v7:
-> 	- rebased on top of the latest CI for-next branch of Peter[1]
-> 	- removed CI_HDRC_REQUIRE_TRANSCEIVER
-> 	- added a missing tested-by
-> 	- some cosmetic fixes and a commit message reword
-> 
-> Changes since v6:
->         - removed ci_hdrc_usb2_dt_probe
->         - fixed a bug in the ChipIdea core for PHY handling
->         - called unconditionally dma_set_mask_and_coherent()
-> 
-> Changes since v5:
->         - added a missing header in ci_hdrc_usb2
-> 
-> Changes since v4:
->         - fixed the error handling of ci_hdrc_usb2_probe()
-> 
-> Changes since v3:
->         - removed the DMA mask property
->         - moved the clock handling in the common probe function
->         - fixed the documentation for the USB2 ChipIdea USB PHY binding
->         - made sure the reset bit is 0-31 in the reset driver
-> 
-> Changes since v2:
->         - moved the PHY driver to the generic PHY framework
->         - changed the compatible to 'chipidea,usb2'
->         - added a property to set the DMA mask in the USB2 CI driver
->         - separated dt specific calls in the CI probing function
->         - rebased on top of the generic PHY support for CI[2]
-> 
-> Changes since v1:
->         - made the Berlin CI USB driver a generic one
->         - added support to custom offset for the reset register
->         - added fixed regulators to support supply the VBUS
->         - modified the PHY driver to support the one one the BG2CD as
->           well
->         - documented the reset properties
->         - added bindings for the BG2CD
->         - cosmetic fixes
-> 
-> [1] https://github.com/hzpeterchen/linux-usb.git ci-for-usb-next
-> [2] git://git.free-electrons.com:users/antoine-tenart/linux.git usb-phy
-> 
-> Antoine Tenart (11):
->   reset: add the Berlin reset controller driver
->   Documentation: bindings: add reset bindings docs for Marvell Berlin
->     SoCs
->   ARM: Berlin: select the reset controller
->   ARM: dts: berlin: add a required reset property in the chip controller
->     node
->   phy: add the Berlin USB PHY driver
->   Documentation: bindings: add doc for the Berlin USB PHY
->   usb: chipidea: fix phy handling
->   usb: chipidea: add a usb2 driver for ci13xxx
->   Documentation: bindings: add doc for the USB2 ChipIdea USB driver
->   ARM: dts: berlin: add BG2Q nodes for USB support
->   ARM: dts: Berlin: enable USB on the BG2Q DMP
-> 
-> Sebastian Hesselbarth (2):
->   ARM: dts: berlin: add BG2CD nodes for USB support
->   ARM: dts: berlin: enable USB on the Google Chromecast
-> 
->  .../devicetree/bindings/arm/marvell,berlin.txt     |  10 +
->  .../devicetree/bindings/phy/berlin-usb-phy.txt     |  16 ++
->  .../devicetree/bindings/usb/ci-hdrc-usb2.txt       |  24 +++
->  arch/arm/boot/dts/berlin2.dtsi                     |   1 +
->  arch/arm/boot/dts/berlin2cd-google-chromecast.dts  |   4 +
->  arch/arm/boot/dts/berlin2cd.dtsi                   |  37 ++++
->  arch/arm/boot/dts/berlin2q-marvell-dmp.dts         |  53 +++++
->  arch/arm/boot/dts/berlin2q.dtsi                    |  56 ++++++
->  arch/arm/mach-berlin/Kconfig                       |   2 +
->  drivers/phy/Kconfig                                |   7 +
->  drivers/phy/Makefile                               |   1 +
->  drivers/phy/phy-berlin-usb.c                       | 224 +++++++++++++++++++++
->  drivers/reset/Makefile                             |   1 +
->  drivers/reset/reset-berlin.c                       | 131 ++++++++++++
->  drivers/usb/chipidea/Makefile                      |   1 +
->  drivers/usb/chipidea/ci_hdrc_usb2.c                | 116 +++++++++++
->  drivers/usb/chipidea/core.c                        |   4 +-
->  17 files changed, 686 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/phy/berlin-usb-phy.txt
->  create mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
->  create mode 100644 drivers/phy/phy-berlin-usb.c
->  create mode 100644 drivers/reset/reset-berlin.c
->  create mode 100644 drivers/usb/chipidea/ci_hdrc_usb2.c
-> 
-> -- 
-> 2.1.0
-> 
-
--- 
-
-Best Regards,
-Peter Chen
+T24gU2F0LCBOb3YgMTUsIDIwMTQgYXQgMzoyNCBQTSwgQWpheSBLdW1hciA8YWpheWt1bWFyLnJz
+QHNhbXN1bmcuY29tPiB3cm90ZToKPiBUaGlzIHNlcmllcyBpcyBiYXNlZCBvbiBtYXN0ZXIgYnJh
+bmNoIG9mIExpbnVzIHRyZWUgYXQ6Cj4gZ2l0Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51
+eC9rZXJuZWwvZ2l0L3RvcnZhbGRzL2xpbnV4LmdpdAo+Cj4gQ2hhbmdlcyBzaW5jZSBWMjoKPiAg
+ICAgICAgIC0tIEFkZHJlc3MgY29tbWVudHMgZnJvbSBKaW5nb28gSGFuIGZvciBwczg2MjIgZHJp
+dmVyCj4gICAgICAgICAtLSBBZGRyZXNzIGNvbW1lbnRzIGZyb20gRGFuaWVsLCBSb2IgYW5kIFRo
+aWVycnkgcmVnYXJkaW5nCj4gICAgICAgICAgICBicmlkZ2UgY2hhaW5pbmcKPiAgICAgICAgIC0t
+IEFkZHJlc3MgY29tbWVudHMgZnJvbSBUaGllcnJ5IHJlZ2FyZGluZyB0aGUgbmFtZXMgZm9yCj4g
+ICAgICAgICAgICBuZXcgZHJtX3BhbmVsIGZ1bmN0aW9ucwo+Cj4gQ2hhbmdlcyBzaW5jZSBWMzoK
+PiAgICAgICAgIC0tIFJlbW92ZSBob3RwbHVnIGJhc2VkIGluaXRpYWxpemF0aW9uIG9mIGV4eW5v
+c19kcAo+ICAgICAgICAgLS0gTWFrZSBleHlub3NfZHAgd29yayBkaXJlY3RseSB3aXRoIGRybV9w
+YW5lbCwgcmVtb3ZlCj4gICAgICAgICAgICBkZXBlbmRlbmN5IG9uIHBhbmVsX2JpbmRlcgo+ICAg
+ICAgICAgLS0gTWlub3IgY2xlYW51cHMgaW4gcGFuZWxfYmluZGVyIGFuZCBwYW5lbF9sdmRzIGRy
+aXZlcgo+Cj4gQ2hhbmdlcyBzaW5jZSBWNDoKPiAgICAgICAgIC0tIFVzZSBncGlvZCBpbnRlcmZh
+Y2UgZm9yIHBhbmVsLWx2ZHMgYW5kIHBzODYyMiBkcml2ZXJzLgo+ICAgICAgICAgLS0gQWRkcmVz
+cyBjb21tZW50cyBmcm9tIEphdmllci4KPiAgICAgICAgIC0tIEZpeCBjb21waWxhdGlvbiBpc3N1
+ZXMgd2hlbiBQQU5FTF9CSU5ERVIgaXMgc2VsZWN0ZWQgYXMgbW9kdWxlLgo+ICAgICAgICAgLS0g
+U3BsaXQgRG9jdW1lbnRhdGlvbiBwYXRjaGVzIGZyb20gZHJpdmVyIHBhdGNoZXMuCj4gICAgICAg
+ICAtLSBSZWJhc2Ugb24gdG9wIG9mIHRoZSB0cmVlLgo+Cj4gQ2hhbmdlcyBzaW5jZSBWNToKPiAg
+ICAgICAgIC0tIE1vZGlmeSBicmlkZ2UgZHJpdmVycyB0byBzdXBwb3J0IGRyaXZlciBtb2RlbC4K
+PiAgICAgICAgIC0tIERyb3AgdGhlIGNvbmNlcHQgb2YgYnJpZGdlIGNoYWluKHNpbmNsZSB0aGVy
+ZSBhcmUgbm8gMiByZWFsIGJyaWRnZXMpCj4gICAgICAgICAgICBIZW5jZSBkcm9wIGJyaWRnZS1w
+YW5lbF9iaW5kZXIgbGF5ZXIuCj4gICAgICAgICAtLSBEcm9wIHBhbmVsLWx2ZHMgZHJpdmVyIGFu
+ZCBhY2NvbW9kYXRlIHRoZSByZXF1aXJlZCBjaGFuZ2VzIGluCj4gICAgICAgICAgICBwYW5lbC1z
+aW1wbGUgZHJpdmVyLgo+ICAgICAgICAgLS0gVXNlIGdwaW9kIGludGVyZmFjZSBpbiBwdG4zNDYw
+IGRyaXZlci4KPiAgICAgICAgIC0tIEFkZHJlc3MgYWxsIGNvbW1lbnRzIGJ5IFRoaWVycnkgUmVk
+aW5nIGZvciBWNSBzZXJpZXMuCj4gICAgICAgICAtLSBBZGRyZXNzIGNvbW1lbnRzIGZyb20gU2Vh
+biBQYXVsIGZvciBleHlub3NfZHBfY29tbWl0IGlzc3VlLgo+Cj4gQ2hhbmdlcyBzaW5jZSBWNjoK
+PiAgICAgICAgIC0tIFBhbmVsIHBhdGNoZXMgd2VyZSBzZXBlcmF0ZWQgYW5kIHRoZXkgYXJlIG1l
+cmdlZCBhbHJlYWR5Lgo+ICAgICAgICAgLS0gRml4IGZldyBpc3N1ZXMgd2l0aCBwdG4zNDYwLCBi
+ZWZvcmUgbW9kaWZ5aW5nIHRoZSBicmlkZ2UgY29yZS4KPiAgICAgICAgIC0tIE1vZGlmeSBkcm1f
+YnJpZGdlIGFzIHBlciBUaGllcnJ5J3MgY29tbWVudHMgZm9yIFY2IHNlcmllcy4KPiAgICAgICAg
+IC0tIEFkZCBkcm1fYnJpZGdlIGNoYW5nZXMgbWluaW1hbGx5IHdpdGhvdXQgYnJlYWtpbmcgZXhp
+c3RpbmcgY29kZS4KPiAgICAgICAgIC0tIEFkZCBuZXcgZmVhdHVyZXMgZm9yIHB0bjM0NjAsIHN0
+ZXAtYnktc3RlcC4KPiAgICAgICAgIC0tIEFkZHJlc3MgY29tbWVudHMgZnJvbSBUaGllcnJ5IGFu
+ZCBBbmRyZWFzIGZvciBwdG4zNDYwIGFuZCBwczg2MjIuCj4gICAgICAgICAtLSBTcGxpdCBkb2N1
+bWVudGF0aW9uIHBhdGNoZXMgZnJvbSBkcml2ZXIgcGF0Y2hlcy4KPgo+IENoYW5nZXMgc2luY2Ug
+Vjc6Cj4gICAgICAgICAtLSBBZGRyZXNzIGNvbW1lbnRzIGZyb20gVG9taSBhbmQgTGF1cmVudDoK
+PiAgICAgICAgICAgICAgICAgLS0gVXNlIHZpZGVvcG9ydHMgYW5kIGVuZHBvaW50cyB0byByZXBy
+ZXNlbnQgdGhlIGNvbm5lY3Rpb24gYmV0d2Vlbgo+ICAgICAgICAgICAgICAgICAgICBlbmNvZGVy
+LCBicmlkZ2UgYW5kIHRoZSBwYW5lbCwgaW5zdGVhZCBvZiB1c2luZyBwaGFuZGxlcy4KPiAgICAg
+ICAgIC0tIEFkZHJlc3MgY29tbWVudHMgZnJvbSBEYW5pZWw6Cj4gICAgICAgICAgICAgICAgIC0t
+IE1ha2UgdGhlIHBhdGNoIGRlc2NyaXB0aW9uIG1vcmUgZGVzY3JpcHRpdmUuCj4gICAgICAgICAg
+ICAgICAgIC0tIHJlbW92ZSBkZXZpY2UgcG9pbnRlciBmcm9tIGRybV9icmlkZ2UsIGFuZCBqdXN0
+IHVzZQo+ICAgICAgICAgICAgICAgICAgICBkZXZpY2Vfbm9kZSBpbnN0ZWFkLgo+ICAgICAgICAg
+ICAgICAgICAtLSBkb24ndCBwYXNzIGVuY29kZXIgcG9pbnRlciB0byBicmlkZ2VfYXR0YWNoLgo+
+ICAgICAgICAgLS0gQWRkcmVzcyBjb21tZW50cyBmcm9tIFNlYW4gUGF1bDoKPiAgICAgICAgICAg
+ICAgICAgLS0gUmVtb3ZlIGJyaWRnZSBmcm9tIG1vZGVfY29uZmlnLCBhbmQgcHVsbCBvdXQgZHJt
+X2JyaWRnZQo+ICAgICAgICAgICAgICAgICAgICBmdW5jdGlvbnMgZnJvbSBkcm1fY3J0Yy5jIHRv
+IGRybV9icmlkZ2UuYwo+Cj4gTm90ZTogVGhpcyBwYXRjaHNldCBjcmVhdGVzIHRoZSBmb2xsb3dp
+bmcgS2NvbmZpZyBhbWJpZ3VpdHkuCj4gICAgICAgQW55IHBvaW50ZXJzIHRvIGZpeCB0aGUgc2Ft
+ZSBhcmUgd2VsY29tZS4KPgo+IGRyaXZlcnMvdmlkZW8vZmJkZXYvS2NvbmZpZzo1OmVycm9yOiBy
+ZWN1cnNpdmUgZGVwZW5kZW5jeSBkZXRlY3RlZCEKPiBkcml2ZXJzL3ZpZGVvL2ZiZGV2L0tjb25m
+aWc6NTogIHN5bWJvbCBGQiBpcyBzZWxlY3RlZCBieSBEUk1fS01TX0ZCX0hFTFBFUgo+IGRyaXZl
+cnMvZ3B1L2RybS9LY29uZmlnOjM0OiAgICAgc3ltYm9sIERSTV9LTVNfRkJfSEVMUEVSIGRlcGVu
+ZHMgb24gRFJNX0tNU19IRUxQRVIKPiBkcml2ZXJzL2dwdS9kcm0vS2NvbmZpZzoyODogICAgIHN5
+bWJvbCBEUk1fS01TX0hFTFBFUiBpcyBzZWxlY3RlZCBieSBEUk1fUFROMzQ2MAo+IGRyaXZlcnMv
+Z3B1L2RybS9icmlkZ2UvS2NvbmZpZzoxOiAgICAgICBzeW1ib2wgRFJNX1BUTjM0NjAgZGVwZW5k
+cyBvbiBJMkMKPiBkcml2ZXJzL2kyYy9LY29uZmlnOjc6ICBzeW1ib2wgSTJDIGlzIHNlbGVjdGVk
+IGJ5IEZCX0REQwo+IGRyaXZlcnMvdmlkZW8vZmJkZXYvS2NvbmZpZzo1OTogc3ltYm9sIEZCX0RE
+QyBpcyBzZWxlY3RlZCBieSBGQl9DWUJFUjIwMDBfRERDCj4gZHJpdmVycy92aWRlby9mYmRldi9L
+Y29uZmlnOjM3NDogICAgICAgIHN5bWJvbCBGQl9DWUJFUjIwMDBfRERDIGRlcGVuZHMgb24gRkJf
+Q1lCRVIyMDAwCj4gZHJpdmVycy92aWRlby9mYmRldi9LY29uZmlnOjM2MjogICAgICAgIHN5bWJv
+bCBGQl9DWUJFUjIwMDAgZGVwZW5kcyBvbiBGQgo+Cj4gQWpheSBLdW1hciAoMTMpOgo+ICAgW1BB
+VENIIFY4IDEvMTRdIGRybS9icmlkZ2U6IHB0bjM0NjA6IEZldyB0cml2aWFsIGNsZWFudXBzCj4g
+ICBbUEFUQ0ggVjggMi8xNF0gZHJtL2JyaWRnZTogZG8gbm90IHBhc3MgZHJtX2JyaWRnZV9mdW5j
+cyB0byBkcm1fYnJpZGdlX2luaXQKPiAgIFtQQVRDSCBWOCAzLzE0XSBkcm0vYnJpZGdlOiBtYWtl
+IGJyaWRnZSByZWdpc3RyYXRpb24gaW5kZXBlbmRlbnQgb2YgZHJtIGZsb3cKPiAgIFtQQVRDSCBW
+OCA0LzE0XSBkcm0vYnJpZGdlOiBwdG4zNDYwOiBDb252ZXJ0IHRvIGkyYyBkcml2ZXIgbW9kZWwK
+PiAgIFtQQVRDSCBWOCA1LzE0XSBkcm0vZXh5bm9zOiBkcDogc3VwcG9ydCBkcm1fYnJpZGdlCj4g
+ICBbUEFUQ0ggVjggNi8xNF0gZHJtL2JyaWRnZTogcHRuMzQ2MDogc3VwcG9ydCBkcm1fcGFuZWwK
+PiAgIFtQQVRDSCBWOCA3LzE0XSBkcm0vYnJpZGdlOiBwdG4zNDYwOiBwcm9iZSBjb25uZWN0b3Ig
+YXQgdGhlIGVuZCBvZiBicmlkZ2UgYXR0YWNoCj4gICBbUEFUQ0ggVjggOC8xNF0gZHJtL2JyaWRn
+ZTogcHRuMzQ2MDogdXNlIGdwaW9kIGludGVyZmFjZQo+ICAgW1BBVENIIFY4IDkvMTRdIERvY3Vt
+ZW50YXRpb246IGRybTogYnJpZGdlOiBtb3ZlIHRvIHZpZGVvL2JyaWRnZQo+ICAgW1BBVENIIFY4
+IDEwLzE0XSBEb2N1bWVudGF0aW9uOiBkZXZpY2V0cmVlOiBBZGQgdmVuZG9yIHByZWZpeCBmb3Ig
+cGFyYWRlCj4gICBbUEFUQ0ggVjggMTEvMTRdIERvY3VtZW50YXRpb246IGJyaWRnZTogQWRkIGRv
+Y3VtZW50YXRpb24gZm9yIHBzODYyMiBEVCBwcm9wZXJ0aWVzCj4gICBbUEFUQ0ggVjggMTMvMTRd
+IEFSTTogZHRzOiBzbm93OiByZXByZXNlbnQgdGhlIGNvbm5lY3Rpb24gYmV0d2VlbiBicmlkZ2Ug
+YW5kIHBhbmVsCj4gICAgIHVzaW5nIHZpZGVvcG9ydCBhbmQgZW5kcG9pbnRzCj4gICBbUEFUQ0gg
+VjggMTQvMTRdIEFSTTogZHRzOiBwZWFjaC1waXQ6IHJlcHJlc2VudCB0aGUgY29ubmVjdGlvbiBi
+ZXR3ZWVuIGJyaWRnZSBhbmQKPiAgICAgcGFuZWwgdXNpbmcgdmlkZW9wb3J0IGFuZCBlbmRwb2lu
+dHMKPgo+IFZpbmNlbnQgUGFsYXRpbiAoMSk6Cj4gICBbUEFUQ0ggVjggMTIvMTRdIGRybS9icmlk
+Z2U6IEFkZCBpMmMgYmFzZWQgZHJpdmVyIGZvciBwczg2MjIvcHM4NjI1IGJyaWRnZQo+Cj4gIC4u
+Li9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9icmlkZ2UvcHRuMzQ2MC50eHQgICAgIHwgICAyNyAt
+Cj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQgICAgICAgIHwg
+ICAgMSArCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2JyaWRnZS9wczg2MjIudHh0
+ICAgIHwgICAzMSArCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2JyaWRnZS9wdG4z
+NDYwLnR4dCAgIHwgICAzOSArKwo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9leHlu
+b3NfZHAudHh0ICAgICAgICB8ICAgMTIgKwo+ICBhcmNoL2FybS9ib290L2R0cy9leHlub3M1MjUw
+LXNub3cuZHRzICAgICAgICAgICAgICB8ICAgMzAgKy0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvZXh5
+bm9zNTQyMC1wZWFjaC1waXQuZHRzICAgICAgICAgfCAgIDMxICstCj4gIGRyaXZlcnMvZ3B1L2Ry
+bS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgMiArLQo+ICBkcml2ZXJz
+L2dwdS9kcm0vYnJpZGdlL0tjb25maWcgICAgICAgICAgICAgICAgICAgICB8ICAgMTIgKwo+ICBk
+cml2ZXJzL2dwdS9kcm0vYnJpZGdlL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICB8ICAgIDEg
+Kwo+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3BzODYyMi5jICAgICAgICAgICAgICAgICAgICB8
+ICA2ODQgKysrKysrKysrKysrKysrKysrKysKPiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9wdG4z
+NDYwLmMgICAgICAgICAgICAgICAgICAgfCAgMzEwICsrKysrLS0tLQo+ICBkcml2ZXJzL2dwdS9k
+cm0vZHJtX2JyaWRnZS5jICAgICAgICAgICAgICAgICAgICAgICB8ICAgOTEgKysrCj4gIGRyaXZl
+cnMvZ3B1L2RybS9kcm1fY3J0Yy5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA2OCAtLQo+
+ICBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcF9jb3JlLmMgICAgICAgICAgICB8ICAg
+NTMgKy0KPiAgZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHBfY29yZS5oICAgICAgICAg
+ICAgfCAgICAxICsKPiAgZHJpdmVycy9ncHUvZHJtL21zbS9oZG1pL2hkbWkuYyAgICAgICAgICAg
+ICAgICAgICAgfCAgICA3ICstCj4gIGRyaXZlcnMvZ3B1L2RybS9tc20vaGRtaS9oZG1pLmggICAg
+ICAgICAgICAgICAgICAgIHwgICAgMSArCj4gIGRyaXZlcnMvZ3B1L2RybS9tc20vaGRtaS9oZG1p
+X2JyaWRnZS5jICAgICAgICAgICAgIHwgICAgOCArLQo+ICBkcml2ZXJzL2dwdS9kcm0vc3RpL3N0
+aV9oZGEuYyAgICAgICAgICAgICAgICAgICAgICB8ICAgMTEgKy0KPiAgZHJpdmVycy9ncHUvZHJt
+L3N0aS9zdGlfaGRtaS5jICAgICAgICAgICAgICAgICAgICAgfCAgIDExICstCj4gIGluY2x1ZGUv
+ZHJtL2JyaWRnZS9wdG4zNDYwLmggICAgICAgICAgICAgICAgICAgICAgIHwgICAgOCArCj4gIGlu
+Y2x1ZGUvZHJtL2RybV9jcnRjLmggICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyNyAr
+LQo+ICAyMyBmaWxlcyBjaGFuZ2VkLCAxMTg0IGluc2VydGlvbnMoKyksIDI4MiBkZWxldGlvbnMo
+LSkKPiAgZGVsZXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kcm0vYnJpZGdlL3B0bjM0NjAudHh0Cj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vYnJpZGdlL3BzODYyMi50eHQKPiAgY3JlYXRl
+IG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9icmlk
+Z2UvcHRuMzQ2MC50eHQKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9icmlk
+Z2UvcHM4NjIyLmMKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9kcm1fYnJp
+ZGdlLmMKPgo+IC0tCj4gMS43LjkuNQo+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
+Zm8vZHJpLWRldmVsCg==
