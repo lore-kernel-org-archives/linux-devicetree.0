@@ -1,190 +1,158 @@
-From: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH 1/6] mfd: arizona: add support for WM8280/WM8281
-Date: Tue, 18 Nov 2014 15:56:23 +0000
-Message-ID: <20141118155623.GA25604@opensource.wolfsonmicro.com>
-References: <1415901046-3391-1-git-send-email-rf@opensource.wolfsonmicro.com> <1415901046-3391-2-git-send-email-rf@opensource.wolfsonmicro.com> <20141118154102.GA13959@x1>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [RFC] adp1653: Add device tree bindings for LED controller
+Date: Tue, 18 Nov 2014 17:02:14 +0100
+Message-ID: <546B6D86.8090701@samsung.com>
+References: <20141116075928.GA9763@amd>
+ <20141117145857.GO8907@valkosipuli.retiisi.org.uk>
+ <546AFEA5.9020000@samsung.com> <20141118084603.GC4059@amd>
+ <546B19C8.2090008@samsung.com> <20141118113256.GA10022@amd>
+ <546B40FA.2070409@samsung.com> <20141118132159.GA21089@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141118154102.GA13959@x1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20141118132159.GA21089@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, pali.rohar@gmail.com, sre@debian.org, sre@ring0.de, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, freemangordon@abv.bg, bcousson@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, Linux LED Subsystem <linux-leds@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 18, 2014 at 03:41:02PM +0000, Lee Jones wrote:
-> On Thu, 13 Nov 2014, Richard Fitzgerald wrote:
->=20
-> > This adds support for the Wolfson Microelectronics
-> > WM8280 and WM8281 codecs.
-> >=20
-> > Signed-off-by: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-> > ---
-> >  drivers/mfd/Kconfig              |    5 +++--
-> >  drivers/mfd/arizona-core.c       |   14 ++++++++++++--
-> >  drivers/mfd/arizona-i2c.c        |    2 ++
-> >  drivers/mfd/arizona-irq.c        |    1 +
-> >  drivers/mfd/arizona-spi.c        |    2 ++
-> >  include/linux/mfd/arizona/core.h |    1 +
-> >  6 files changed, 21 insertions(+), 4 deletions(-)
->=20
-> Patch looks fine.  Can I just take it?
+Hi Pavel,
 
-The other patches depends on the #define instroduce  here, so they
-need to be kept together. If you could take them through the mfd tree
-that would be great. We still need ack of the regulator patch and my
-re-worked devicetree binding patch.
+On 11/18/2014 02:21 PM, Pavel Machek wrote:
+> Hi!
+>
+>>>>> @@ -19,5 +30,10 @@ Examples:
+>>>>>   system-status {
+>>>>>   	       label = "Status";
+>>>>>   	       linux,default-trigger = "heartbeat";
+>>>>> +	       iout-torch = <500 500>;
+>>>>> +	       iout-flash = <1000 1000>;
+>>>>> +	       iout-indicator = <100 100>;
+>>>>> +	       flash-timeout = <1000>;
+>>>>> +
+>>>>> 	...
+>>>>>   };
+>>>>>
+>>>>> I don't get it; system-status describes single LED, why are iout-torch
+>>>>> (and friends) arrays of two?
+>>>>
+>>>> Some devices can control more than one led. The array is for such
+>>>> purposes. The system-status should be probably renamed to
+>>>> something more generic for both common leds and flash leds,
+>>>> e.g. system-led.
+>>>
+>>> No, sorry. The Documentation/devicetree/bindings/leds/common.txt
+>>> describes binding for _one LED_. Yes, your device can have two leds,
+>>> so your devices should have two such blocks in the device tree... Each
+>>> led should have its own label and default trigger, for example. And I
+>>> guess flash-timeout be per-LED, too.
+>>
+>> I think that a device tree binding describes a single physical device.
+>> No matter how many sub-leds a device controls, it is still one
+>> piece of hardware.
+>
+> You got this wrong, sorry.
+>
+> In my case, there are three physical devices:
+>
+> adp1653
+> 	white LED
+> 	red LED
+
+You've mentioned that your white led is torch/flash and indicator
+is the red led. They are probably connected to the HPLED and
+ILED pins of the ADP1653 device respectively. The device is just
+a regulator, that delivers electric current to the leds connected
+to it. Kernel cannot directly activate leds, but has to talk
+to the device through I2C bus. One I2C device can have only one
+related device tree binding.
+
+> Each LED should have an label, and probably default trigger -- default
+> trigger for red one should be "we are recording video" and for white
+> should be "this is flash for default camera".
+
+default-trigger is not mandatory, the device doesn't have to have
+associated led-trigger. I think that you should look at
+Documentation/leds/leds-class.txt and drivers/leds/triggers for
+more detailed information. In a nutshell triggers are kernel
+sources of led events. You can set e.g. "heartbeat", "timer"
+trigger etc.
+As for now the driver belongs to the V4L2 subsystem it doesn't
+support triggers. Moreover your event "we are recording a video"
+should be activated by setting V4L2_CID_FLASH_INDICATOR_INTENSITY
+v4l2 control followed by V4L2_FLASH_LED_MODE_TORCH. Your event
+"this is flash for default camera" seems to be flash strobe,
+that can be activated by setting V4L2_CID_FLASH_STROBE control.
+The driver by default sets the indicator current for both actions
+to the value previously set with V4L2_CID_FLASH_INDICATOR_INTENSITY.
+
+> If the hardware LED changes with one that needs different current, the
+> block for the adp1653 stays the same, but white LED block should be
+> updated with different value.
+
+I think that you are talking about sub nodes. Indeed I am leaning
+towards this type of design.
+
+>> default-trigger property should also be an array of strings.
+>
+> That is not how it currently works.
+
+OK, I agree.
+
+>
+>> I agree that flash-timeout should be per led - an array, similarly
+>> as in case of iout's.
+>
+> Agreed about per-led, disagreed about the array. As all the fields
+> would need arrays, and as LED system currently does not use arrays for
+> label and linux,default-trigger, I believe we should follow existing
+> design and model it as three devices. (It _is_ physically three devices.)
+
+Right, I missed that the leds/common.txt describes child node.
+
+I propose following modifications to the binding:
+
+Optional properties for child nodes:
+- iout-mode-led : 	maximum intensity in microamperes of the LED
+		  	(torch LED for flash devices)
+- iout-mode-flash : 	initial intensity in microamperes of the
+			flash LED; it is required to enable support
+			for the flash led
+- iout-mode-indicator : initial intensity in microamperes of the
+			indicator LED; it is required to enable support
+			for the indicator led
+- max-iout-mode-led : 	maximum intensity in microamperes of the LED
+		  	(torch LED for flash devices)
+- max-iout-mode-flash : maximum intensity in microamperes of the
+			flash LED
+- max-iout-mode-indicator : maximum intensity in microamperes of the
+			indicator LED
+- flash-timeout :	timeout in microseconds after which flash
+			led is turned off
+
+system-status {
+         label = "max77693_1";
+         iout-mode-led = <500>;
+         max-iout-mode-led = <500>;
+         ...
+};
+
+camera-flash1 {
+         label = "max77693_2";
+         iout-mode-led = <500>;
+         iout-mode-flash = <1000>;
+	iout-mode-indicator = <100>;
+         max-iout-mode-led = <500>;
+         max-iout-mode-flash = <1000>;
+         max-iout-mode-indicator = <100>;
+         flash-timeout = <1000>;
+         ...
+};
 
 
->=20
-> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > index abef204..e00a90f 100644
-> > --- a/drivers/mfd/Kconfig
-> > +++ b/drivers/mfd/Kconfig
-> > @@ -1236,10 +1236,11 @@ config MFD_WM5102
-> >  	  Support for Wolfson Microelectronics WM5102 low power audio SoC
-> > =20
-> >  config MFD_WM5110
-> > -	bool "Wolfson Microelectronics WM5110"
-> > +	bool "Wolfson Microelectronics WM5110 and WM8280/WM8281"
-> >  	depends on MFD_ARIZONA
-> >  	help
-> > -	  Support for Wolfson Microelectronics WM5110 low power audio SoC
-> > +	  Support for Wolfson Microelectronics WM5110 and WM8280/WM8281
-> > +	  low power audio SoC
-> > =20
-> >  config MFD_WM8997
-> >  	bool "Wolfson Microelectronics WM8997"
-> > diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.=
-c
-> > index bce7c07..6e6b732 100644
-> > --- a/drivers/mfd/arizona-core.c
-> > +++ b/drivers/mfd/arizona-core.c
-> > @@ -567,6 +567,7 @@ static int arizona_of_get_core_pdata(struct ari=
-zona *arizona)
-> >  const struct of_device_id arizona_of_match[] =3D {
-> >  	{ .compatible =3D "wlf,wm5102", .data =3D (void *)WM5102 },
-> >  	{ .compatible =3D "wlf,wm5110", .data =3D (void *)WM5110 },
-> > +	{ .compatible =3D "wlf,wm8280", .data =3D (void *)WM8280 },
-> >  	{ .compatible =3D "wlf,wm8997", .data =3D (void *)WM8997 },
-> >  	{},
-> >  };
-> > @@ -671,6 +672,7 @@ int arizona_dev_init(struct arizona *arizona)
-> >  	switch (arizona->type) {
-> >  	case WM5102:
-> >  	case WM5110:
-> > +	case WM8280:
-> >  	case WM8997:
-> >  		for (i =3D 0; i < ARRAY_SIZE(wm5102_core_supplies); i++)
-> >  			arizona->core_supplies[i].supply
-> > @@ -834,11 +836,18 @@ int arizona_dev_init(struct arizona *arizona)
-> >  #endif
-> >  #ifdef CONFIG_MFD_WM5110
-> >  	case 0x5110:
-> > -		type_name =3D "WM5110";
-> > -		if (arizona->type !=3D WM5110) {
-> > +		switch (arizona->type) {
-> > +		case WM5110:
-> > +			type_name =3D "WM5110";
-> > +			break;
-> > +		case WM8280:
-> > +			type_name =3D "WM8280";
-> > +			break;
-> > +		default:
-> >  			dev_err(arizona->dev, "WM5110 registered as %d\n",
-> >  				arizona->type);
-> >  			arizona->type =3D WM5110;
-> > +			break;
-> >  		}
-> >  		apply_patch =3D wm5110_patch;
-> >  		break;
-> > @@ -1010,6 +1019,7 @@ int arizona_dev_init(struct arizona *arizona)
-> >  				      ARRAY_SIZE(wm5102_devs), NULL, 0, NULL);
-> >  		break;
-> >  	case WM5110:
-> > +	case WM8280:
-> >  		ret =3D mfd_add_devices(arizona->dev, -1, wm5110_devs,
-> >  				      ARRAY_SIZE(wm5110_devs), NULL, 0, NULL);
-> >  		break;
-> > diff --git a/drivers/mfd/arizona-i2c.c b/drivers/mfd/arizona-i2c.c
-> > index 9d4156f..ff782a5 100644
-> > --- a/drivers/mfd/arizona-i2c.c
-> > +++ b/drivers/mfd/arizona-i2c.c
-> > @@ -44,6 +44,7 @@ static int arizona_i2c_probe(struct i2c_client *i=
-2c,
-> >  #endif
-> >  #ifdef CONFIG_MFD_WM5110
-> >  	case WM5110:
-> > +	case WM8280:
-> >  		regmap_config =3D &wm5110_i2c_regmap;
-> >  		break;
-> >  #endif
-> > @@ -87,6 +88,7 @@ static int arizona_i2c_remove(struct i2c_client *=
-i2c)
-> >  static const struct i2c_device_id arizona_i2c_id[] =3D {
-> >  	{ "wm5102", WM5102 },
-> >  	{ "wm5110", WM5110 },
-> > +	{ "wm8280", WM8280 },
-> >  	{ "wm8997", WM8997 },
-> >  	{ }
-> >  };
-> > diff --git a/drivers/mfd/arizona-irq.c b/drivers/mfd/arizona-irq.c
-> > index 3a3fe7c..d063b94 100644
-> > --- a/drivers/mfd/arizona-irq.c
-> > +++ b/drivers/mfd/arizona-irq.c
-> > @@ -211,6 +211,7 @@ int arizona_irq_init(struct arizona *arizona)
-> >  #endif
-> >  #ifdef CONFIG_MFD_WM5110
-> >  	case WM5110:
-> > +	case WM8280:
-> >  		aod =3D &wm5110_aod;
-> > =20
-> >  		switch (arizona->rev) {
-> > diff --git a/drivers/mfd/arizona-spi.c b/drivers/mfd/arizona-spi.c
-> > index 5145d78..721b93f 100644
-> > --- a/drivers/mfd/arizona-spi.c
-> > +++ b/drivers/mfd/arizona-spi.c
-> > @@ -44,6 +44,7 @@ static int arizona_spi_probe(struct spi_device *s=
-pi)
-> >  #endif
-> >  #ifdef CONFIG_MFD_WM5110
-> >  	case WM5110:
-> > +	case WM8280:
-> >  		regmap_config =3D &wm5110_spi_regmap;
-> >  		break;
-> >  #endif
-> > @@ -82,6 +83,7 @@ static int arizona_spi_remove(struct spi_device *=
-spi)
-> >  static const struct spi_device_id arizona_spi_ids[] =3D {
-> >  	{ "wm5102", WM5102 },
-> >  	{ "wm5110", WM5110 },
-> > +	{ "wm8280", WM8280 },
-> >  	{ },
-> >  };
-> >  MODULE_DEVICE_TABLE(spi, arizona_spi_ids);
-> > diff --git a/include/linux/mfd/arizona/core.h b/include/linux/mfd/a=
-rizona/core.h
-> > index 910e3aa..f970105 100644
-> > --- a/include/linux/mfd/arizona/core.h
-> > +++ b/include/linux/mfd/arizona/core.h
-> > @@ -24,6 +24,7 @@ enum arizona_type {
-> >  	WM5102 =3D 1,
-> >  	WM5110 =3D 2,
-> >  	WM8997 =3D 3,
-> > +	WM8280 =3D 4,
-> >  };
-> > =20
-> >  #define ARIZONA_IRQ_GP1                    0
->=20
-> --=20
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I propose to avoid name "torch", as for ordinary leds it would
+be misleading.
+
+Regards,
+Jacek
