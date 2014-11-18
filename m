@@ -1,69 +1,97 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] drivers/core/of: Add symlink to device-tree from devices
- with an OF node
-Date: Tue, 18 Nov 2014 10:37:08 -0600
-Message-ID: <CAL_Jsq+YyfMWxiOFv4x3g5hZJH0XRqCKj2He1XO9eyXWjHTMrg@mail.gmail.com>
-References: <1415342031.4925.27.camel@kernel.crashing.org> <1415342117.4925.29.camel@kernel.crashing.org>
- <1415596626.5769.14.camel@kernel.crashing.org> <CAL_JsqKG=vpeGKj3v-2VW9oGQsnmuYMHRfy6LuXDXE=ROjHT4w@mail.gmail.com>
- <1415841047.5124.62.camel@kernel.crashing.org>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [RFC] adp1653: Add device tree bindings for LED controller
+Date: Tue, 18 Nov 2014 17:51:48 +0100
+Message-ID: <20141118165148.GA11711@amd>
+References: <20141116075928.GA9763@amd>
+ <20141117145857.GO8907@valkosipuli.retiisi.org.uk>
+ <546AFEA5.9020000@samsung.com>
+ <20141118084603.GC4059@amd>
+ <546B19C8.2090008@samsung.com>
+ <20141118113256.GA10022@amd>
+ <546B40FA.2070409@samsung.com>
+ <20141118132159.GA21089@amd>
+ <546B6D86.8090701@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415841047.5124.62.camel@kernel.crashing.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@linaro.org>, Greg KH <gregkh@linuxfoundation.org>, Jeremy Kerr <jeremy.kerr@au1.ibm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <546B6D86.8090701@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, pali.rohar@gmail.com, sre@debian.org, sre@ring0.de, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, freemangordon@abv.bg, bcousson@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, Linux LED Subsystem <linux-leds@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 12, 2014 at 7:10 PM, Benjamin Herrenschmidt
-<benh@kernel.crashing.org> wrote:
-> So I've been annoyed lately with having a bunch of devices such as i2c
-> eeproms (for use by VPDs, server world !) and other bits and pieces that
-> I want to be able to identify from userspace, and possibly provide
-> additional data about from FW.
->
-> Basically, it boils down to correlating the sysfs device with the OF
-> tree device node, so that user space can use device-tree info such as
-> additional "location" or "label" (or whatever else we can come up with)
-> propreties to identify a given device, or get some attributes of use
-> about it, etc...
->
-> Now, so far, we've done that in some subsystem in a fairly ad-hoc basis
-> using "devspec" properties. For example, PCI creates them if it can
-> correlate the probed device with a DT node. Some powerpc specific busses
-> do that too.
->
-> However, i2c doesn't and it would be nice to have something more generic
-> since technically any device can have a corresponding device tree node.
->
-> This patch adds an "of_node" symlink to devices that have a non-NULL
-> dev->of_node pointer, the patch is pretty trivial and seems to work just
-> fine for me.
->
-> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> ---
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index 20da3ad..8c7b607 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -493,6 +493,15 @@ static int device_add_attrs(struct device *dev)
->                         goto err_remove_dev_groups;
->         }
->
-> +#ifdef CONFIG_OF
-> +       if (dev->of_node) {
+Hi!
 
-if (IS_ENABLED(CONFIG_OF) && dev->of_node)
+> >If the hardware LED changes with one that needs different current, the
+> >block for the adp1653 stays the same, but white LED block should be
+> >updated with different value.
+> 
+> I think that you are talking about sub nodes. Indeed I am leaning
+> towards this type of design.
 
-> +               error = sysfs_create_link(&dev->kobj, &dev->of_node->kobj,
-> +                                         "of_node");
-> +               if (error)
-> +                       dev_warn(dev, "Error %d creating of_node link\n", error);
-> +       }
-> +#endif /* CONFIG_OF */
-> +
->         return 0;
->
->   err_remove_dev_groups:
->
->
+I think I am :-).
+
+> >>I agree that flash-timeout should be per led - an array, similarly
+> >>as in case of iout's.
+> >
+> >Agreed about per-led, disagreed about the array. As all the fields
+> >would need arrays, and as LED system currently does not use arrays for
+> >label and linux,default-trigger, I believe we should follow existing
+> >design and model it as three devices. (It _is_ physically three devices.)
+> 
+> Right, I missed that the leds/common.txt describes child node.
+> 
+> I propose following modifications to the binding:
+> 
+> Optional properties for child nodes:
+> - iout-mode-led : 	maximum intensity in microamperes of the LED
+> 		  	(torch LED for flash devices)
+> - iout-mode-flash : 	initial intensity in microamperes of the
+> 			flash LED; it is required to enable support
+> 			for the flash led
+> - iout-mode-indicator : initial intensity in microamperes of the
+> 			indicator LED; it is required to enable support
+> 			for the indicator led
+> - max-iout-mode-led : 	maximum intensity in microamperes of the LED
+> 		  	(torch LED for flash devices)
+> - max-iout-mode-flash : maximum intensity in microamperes of the
+> 			flash LED
+> - max-iout-mode-indicator : maximum intensity in microamperes of the
+> 			indicator LED
+> - flash-timeout :	timeout in microseconds after which flash
+> 			led is turned off
+
+Ok, I took a look, and "iout" is notation I understand, but people may
+have trouble with and I don't see it used anywhere else.
+
+Also... do we need both "current" and "max-current" properties?
+
+But regulators already have "regulator-max-microamp" property. So what
+about:
+
+max-microamp : 	maximum intensity in microamperes of the LED
+ 		  	(torch LED for flash devices)
+max-flash-microamp : 	initial intensity in microamperes of the
+ 			flash LED; it is required to enable support
+ 			for the flash led
+flash-timeout-microseconds : timeout in microseconds after which flash
+ 			led is turned off
+
+If you had indicator on the same led, I guess
+
+indicator-microamp : recommended intensity in microamperes of the LED
+		         for indication
+
+...would do?
+
+> I propose to avoid name "torch", as for ordinary leds it would
+> be misleading.
+
+Agreed.
+
+Thanks,
+									Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
