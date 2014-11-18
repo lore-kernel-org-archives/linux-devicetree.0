@@ -1,95 +1,92 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 3/5] clk: s2mps11: Add the support for S2MPS13 PMIC clock
-Date: Tue, 18 Nov 2014 13:59:26 -0800
-Message-ID: <20141118215926.25314.90810@quantum>
-References: <1416301183-10478-1-git-send-email-cw00.choi@samsung.com>
- <1416301183-10478-4-git-send-email-cw00.choi@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5.5] of/fdt: export fdt blob as /sys/firmware/fdt
+Date: Tue, 18 Nov 2014 22:11:03 +0000
+Message-ID: <20141118221103.4ECB3C40966@trevor.secretlab.ca>
+References: <1415984735-32388-1-git-send-email-ard.biesheuvel@linaro.org>
+	<20141118165145.4F6A8C40966@trevor.secretlab.ca>
+	<20141118172545.GC14323@leverpostej>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416301183-10478-4-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20141118172545.GC14323@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, geunsik.lim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "geoff.levand-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <geoff.levand-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Chanwoo Choi (2014-11-18 00:59:41)
-> This patch adds the support for S2MPS13 PMIC clock which is same with existing
-> S2MPS14 RTC IP. But, S2MPS13 uses all of clocks (32khz_{ap|bt|cp}).
+On Tue, 18 Nov 2014 17:25:45 +0000
+, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+ wrote:
+> On Tue, Nov 18, 2014 at 04:51:45PM +0000, Grant Likely wrote:
+> > On Fri, 14 Nov 2014 18:05:35 +0100
+> > , Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >  wrote:
+> > > Create a new /sys entry '/sys/firmware/fdt' to export the FDT blob
+> > > that was passed to the kernel by the bootloader. This allows userland
+> > > applications such as kexec to access the raw binary.
+> > > 
+> > > The fact that this node does not reside under /sys/firmware/device-tree
+> > > is deliberate: FDT is also used on arm64 UEFI/ACPI systems to
+> > > communicate just the UEFI and ACPI entry points, but the FDT is never
+> > > unflattened and used to configure the system.
+> > > 
+> > > A CRC32 checksum is calculated over the entire FDT blob, and verified
+> > > at late_initcall time. The sysfs entry is instantiated only if the
+> > > checksum is valid, i.e., if the FDT blob has not been modified in the
+> > > mean time. Otherwise, a warning is printed.
+> > > 
+> > > Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > 
+> > So, I have a doubt...
+> > 
+> > When this patch is merged, we have two separate ABIs for extracting the
+> > DT from the kernel. /proc/device-tree and /sys/firmware/fdt. Merging it
+> > into mainline means we're committed to supporting both interfaces.
+> > 
+> > The whole purpose of this patch is to support kexec. Specifically, kexec
+> > on ACPI platforms that don't currently unflatten the tree.*  Would it
+> > not be better to always unflatten the tree and have only one interface
+> > that kexec needs to use to obtain the tree?
 > 
-> Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-
-Applied to clk-next.
-
-Regards,
-Mike
-
-> ---
->  drivers/clk/clk-s2mps11.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
+> The whole reasoning for not unflattening the DTB in the presence of ACPI
+> is that it's unlikely we can stop drivers using DTB information in
+> addition to ACPI, leaving us with a completely non-standard mess. We
+> really don't want people mixing the two, and it's going to be a struggle
+> if the information is readily available (even preventing probing based
+> on compatible string isn't enough because of some drivers which probe
+> from an initcall or look up magic paths).
 > 
-> diff --git a/drivers/clk/clk-s2mps11.c b/drivers/clk/clk-s2mps11.c
-> index b7797fb..7bb13af 100644
-> --- a/drivers/clk/clk-s2mps11.c
-> +++ b/drivers/clk/clk-s2mps11.c
-> @@ -23,6 +23,7 @@
->  #include <linux/clk-provider.h>
->  #include <linux/platform_device.h>
->  #include <linux/mfd/samsung/s2mps11.h>
-> +#include <linux/mfd/samsung/s2mps13.h>
->  #include <linux/mfd/samsung/s2mps14.h>
->  #include <linux/mfd/samsung/s5m8767.h>
->  #include <linux/mfd/samsung/core.h>
-> @@ -120,6 +121,24 @@ static struct clk_init_data s2mps11_clks_init[S2MPS11_CLKS_NUM] = {
->         },
->  };
->  
-> +static struct clk_init_data s2mps13_clks_init[S2MPS11_CLKS_NUM] = {
-> +       [S2MPS11_CLK_AP] = {
-> +               .name = "s2mps13_ap",
-> +               .ops = &s2mps11_clk_ops,
-> +               .flags = CLK_IS_ROOT,
-> +       },
-> +       [S2MPS11_CLK_CP] = {
-> +               .name = "s2mps13_cp",
-> +               .ops = &s2mps11_clk_ops,
-> +               .flags = CLK_IS_ROOT,
-> +       },
-> +       [S2MPS11_CLK_BT] = {
-> +               .name = "s2mps13_bt",
-> +               .ops = &s2mps11_clk_ops,
-> +               .flags = CLK_IS_ROOT,
-> +       },
-> +};
-> +
->  static struct clk_init_data s2mps14_clks_init[S2MPS11_CLKS_NUM] = {
->         [S2MPS11_CLK_AP] = {
->                 .name = "s2mps14_ap",
-> @@ -184,6 +203,10 @@ static int s2mps11_clk_probe(struct platform_device *pdev)
->                 s2mps11_reg = S2MPS11_REG_RTC_CTRL;
->                 clks_init = s2mps11_clks_init;
->                 break;
-> +       case S2MPS13X:
-> +               s2mps11_reg = S2MPS13_REG_RTCCTRL;
-> +               clks_init = s2mps13_clks_init;
-> +               break;
->         case S2MPS14X:
->                 s2mps11_reg = S2MPS14_REG_RTCCTRL;
->                 clks_init = s2mps14_clks_init;
-> @@ -279,6 +302,7 @@ static int s2mps11_clk_remove(struct platform_device *pdev)
->  
->  static const struct platform_device_id s2mps11_clk_id[] = {
->         { "s2mps11-clk", S2MPS11X},
-> +       { "s2mps13-clk", S2MPS13X},
->         { "s2mps14-clk", S2MPS14X},
->         { "s5m8767-clk", S5M8767X},
->         { },
-> -- 
-> 1.8.5.5
+> So if we were to unflatten the tree in the ACPI case, at a minimum it
+> needs to be unflattened to a separate root that only exists for sysfs,
+> and is not at exposed to the mercy of the rest of the kernel.
+
+Not setting the of_root pointer would do that. That should work.
+
+> > * It also helps with exposing the reserved map to userspace, but kexec
+> >   has done without that feature for years, and it is in the process of
+> >   being deprecated in favour of /reserved-memory anyway.
 > 
+> This is the first I'd heard of the reserve map being deprecated, and
+> we're going to have DTs with reserved map entries for a long time going
+> forwards.
+
+Deprecated, not removed or disabled. It will still work pretty much
+forever, but users should be encouraged to move to the reserve-memory
+tree.
+
+> Can't we expose the header fields under something like
+> /sys/firmware/devicetree/dtb-header/, parallel to the usual
+> /sys/firmware/devicetree/base for nodes?
+
+We could do that too.
+
+Honestly though, I'm just unsure of what the best thing to do is. If you
+and a few others tell me that, "no, exporting the raw dtb is the right
+thing to do", then I'll be okay, merge the patch and sleep properly.
+
+If you think my concerns have merit though, then say so and we'll do one
+of the above.
+
+g.
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
