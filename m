@@ -1,8 +1,8 @@
 From: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Subject: [PATCHv4 06/10] arm: mvebu: define and use common Armada 370 UART
+Subject: [PATCHv4 07/10] arm: mvebu: define and use common Armada XP UART2/3
  pinctrl settings
-Date: Wed, 19 Nov 2014 00:02:27 +0100
-Message-ID: <a3d6d0b3ad77e4bc4526809ed584461504e4cc53.1416351426.git.arno@natisbad.org>
+Date: Wed, 19 Nov 2014 00:02:35 +0100
+Message-ID: <48fff9def399198ff282ac4a0618059dfc3a1228.1416351426.git.arno@natisbad.org>
 References: <cover.1416351425.git.arno@natisbad.org>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,65 +14,56 @@ Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kern
 List-Id: devicetree@vger.kernel.org
 
 
-This patch defines common Armada 370 pinctrl settings for uart0 and
-uart1 interfaces:
+This patch defines common Armada XP pinctrl settings for uart2 and
+uart3 interfaces (uart0 and uart1 rx/tx do not rely on MPP):
 
- uart0: MPP0-1 as default
- uart1: MPP41-42 as default
-
-Note: this patch has the potential to break out-of-tree users w/o
-specific pinctrl settings for their uart interfaces if the default
-above does not match their config.
+ uart2: MPP42-43 as default
+ uart3: MPP44-45 as default
 
 Suggested-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
 ---
- arch/arm/boot/dts/armada-370.dtsi | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ arch/arm/boot/dts/armada-xp.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
-index f1284ae0cddd..b8de32b2a265 100644
---- a/arch/arm/boot/dts/armada-370.dtsi
-+++ b/arch/arm/boot/dts/armada-370.dtsi
-@@ -211,6 +211,21 @@
- 				pinctrl-names = "default";
- 			};
+diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
+index dcfef0311a88..acb236909649 100644
+--- a/arch/arm/boot/dts/armada-xp.dtsi
++++ b/arch/arm/boot/dts/armada-xp.dtsi
+@@ -55,6 +55,8 @@
  
-+			/*
-+			 * Default UART pinctrl setting without RTS/CTS, can
-+			 * be overwritten on board level if a different
-+			 * configuration is used.
-+			 */
-+			uart0: serial@12000 {
-+				pinctrl-0 = <&uart0_pins>;
+ 			uart2: serial@12200 {
+ 				compatible = "snps,dw-apb-uart";
++				pinctrl-0 = <&uart2_pins>;
 +				pinctrl-names = "default";
-+			};
-+
-+			uart1: serial@12100 {
-+				pinctrl-0 = <&uart1_pins>;
+ 				reg = <0x12200 0x100>;
+ 				reg-shift = <2>;
+ 				interrupts = <43>;
+@@ -65,6 +67,8 @@
+ 
+ 			uart3: serial@12300 {
+ 				compatible = "snps,dw-apb-uart";
++				pinctrl-0 = <&uart3_pins>;
 +				pinctrl-names = "default";
-+			};
-+
- 			usb@50000 {
- 				clocks = <&coreclk 0>;
- 			};
-@@ -281,6 +296,16 @@
- 		marvell,function = "spi1";
+ 				reg = <0x12300 0x100>;
+ 				reg-shift = <2>;
+ 				interrupts = <44>;
+@@ -235,4 +239,14 @@
+ 			       "mpp33", "mpp34", "mpp35";
+ 		marvell,function = "sd0";
  	};
- 
-+	uart0_pins: uart0-pins {
-+		marvell,pins = "mpp0", "mpp1";
-+		marvell,function = "uart0";
++
++	uart2_pins: uart2-pins {
++		marvell,pins = "mpp42", "mpp43";
++		marvell,function = "uart2";
 +	};
 +
-+	uart1_pins: uart1-pins {
-+		marvell,pins = "mpp41", "mpp42";
-+		marvell,function = "uart1";
++	uart3_pins: uart3-pins {
++		marvell,pins = "mpp44", "mpp45";
++		marvell,function = "uart3";
 +	};
-+
- 	sdio_pins1: sdio-pins1 {
- 		marvell,pins = "mpp9",  "mpp11", "mpp12",
- 				"mpp13", "mpp14", "mpp15";
+ };
+\ No newline at end of file
 -- 
 2.1.1
 
