@@ -1,8 +1,7 @@
 From: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Subject: [PATCHv4 01/10] arm: mvebu: fix vendor prefix typo in
- kirkwood-synology.dtsi
-Date: Wed, 19 Nov 2014 00:01:36 +0100
-Message-ID: <e1c3f3fbd9f494fa228de3ee5928c771d33b072e.1416351426.git.arno@natisbad.org>
+Subject: [PATCHv4 02/10] arm: mvebu: add uartX labels for Armada SoC serial nodes
+Date: Wed, 19 Nov 2014 00:01:47 +0100
+Message-ID: <8c622c408d74d5e9fc36b7c00f9e8aeb3f290683.1416351426.git.arno@natisbad.org>
 References: <cover.1416351425.git.arno@natisbad.org>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,29 +13,64 @@ Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kern
 List-Id: devicetree@vger.kernel.org
 
 
-As reported by Andrew, the vendor prefix for Seiko Instruments, Inc.
-S-35390A I2C RTC chip in kirkwood-synology.dtsi has a typo (ssi
-instead of sii). This patches fixes it.
+This patch adds uartX labels for Armada SoC serial nodes. This is
+a preliminary work to be able to easily reference the serial lines
+in Device Tree files. One expected use is when providing stdout-path
+property for barebox.
 
-Reported-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
 ---
- arch/arm/boot/dts/kirkwood-synology.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/armada-370-xp.dtsi | 5 +++--
+ arch/arm/boot/dts/armada-xp.dtsi     | 5 +++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/kirkwood-synology.dtsi b/arch/arm/boot/dts/kirkwood-synology.dtsi
-index 811e0971fc58..8be5b2e4626e 100644
---- a/arch/arm/boot/dts/kirkwood-synology.dtsi
-+++ b/arch/arm/boot/dts/kirkwood-synology.dtsi
-@@ -266,7 +266,7 @@
- 
- 			s35390a: s35390a@30 {
+diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
+index 83286ec9702c..2be9723bcdf3 100644
+--- a/arch/arm/boot/dts/armada-370-xp.dtsi
++++ b/arch/arm/boot/dts/armada-370-xp.dtsi
+@@ -151,7 +151,7 @@
  				status = "disabled";
--				compatible = "ssi,s35390a";
-+				compatible = "sii,s35390a";
- 				reg = <0x30>;
  			};
- 		};
+ 
+-			serial@12000 {
++			uart0: serial@12000 {
+ 				compatible = "snps,dw-apb-uart";
+ 				reg = <0x12000 0x100>;
+ 				reg-shift = <2>;
+@@ -160,7 +160,8 @@
+ 				clocks = <&coreclk 0>;
+ 				status = "disabled";
+ 			};
+-			serial@12100 {
++
++			uart1: serial@12100 {
+ 				compatible = "snps,dw-apb-uart";
+ 				reg = <0x12100 0x100>;
+ 				reg-shift = <2>;
+diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
+index a3919b644737..e4ba27ef109b 100644
+--- a/arch/arm/boot/dts/armada-xp.dtsi
++++ b/arch/arm/boot/dts/armada-xp.dtsi
+@@ -53,7 +53,7 @@
+ 				reg = <0x11100 0x100>;
+ 			};
+ 
+-			serial@12200 {
++			uart2: serial@12200 {
+ 				compatible = "snps,dw-apb-uart";
+ 				reg = <0x12200 0x100>;
+ 				reg-shift = <2>;
+@@ -62,7 +62,8 @@
+ 				clocks = <&coreclk 0>;
+ 				status = "disabled";
+ 			};
+-			serial@12300 {
++
++			uart3: serial@12300 {
+ 				compatible = "snps,dw-apb-uart";
+ 				reg = <0x12300 0x100>;
+ 				reg-shift = <2>;
 -- 
 2.1.1
 
