@@ -1,58 +1,51 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH v9 2/9] qcom: spm: Add Subsystem Power Manager driver
-Date: Tue, 18 Nov 2014 11:00:49 -0700
-Message-ID: <20141118180049.GC770@linaro.org>
-References: <1414194024-55547-1-git-send-email-lina.iyer@linaro.org>
- <1414194024-55547-3-git-send-email-lina.iyer@linaro.org>
- <546A6962.9090801@linaro.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v1] devicetree: bindings: add sandisk to the vendor prefixes
+Date: Tue, 18 Nov 2014 12:03:57 -0600
+Message-ID: <CAL_JsqLtmO4QCqvhqd47i=QwKqads95Ghqmu1P8F5mupnre9Mg@mail.gmail.com>
+References: <1411683987-11791-1-git-send-email-robert.jarzmik@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <546A6962.9090801@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1411683987-11791-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 17 2014 at 14:32 -0700, Daniel Lezcano wrote:
->On 10/25/2014 01:40 AM, Lina Iyer wrote:
+On Thu, Sep 25, 2014 at 5:26 PM, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote:
+> Add sandisk to the list of vendors. This prefix should be used
+> also for companies absorbed by Sandisk, like M-Systems.
 >
->Hi Lina,
->
->[ ... ]
->
->>+static inline void spm_register_write(struct spm_driver_data *drv,
->>+					enum spm_reg reg, u32 val)
->>+{
->>+	if (drv->reg_data->reg_offset[reg])
->>+		writel_relaxed(val, drv->reg_base +
->>+				drv->reg_data->reg_offset[reg]);
->
->Why not use writel and don't use 'wmb' below ?
->
->>+}
->>+
->
->[ ... ]
->
-Took the opportunity for optimization here, since I am writing to
-essentially the same page. I dont have to barrier after every write.
+> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
 
->>+	spm_register_write(drv, SPM_REG_SPM_CTL, ctl_val);
->>+
->>+	/* Ensure we have written the start address */
->>+	wmb();
+Applied, thanks.
+
+Rob
+
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 >
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 4d7f375..aaa32c7 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -111,6 +111,7 @@ renesas     Renesas Electronics Corporation
+>  ricoh  Ricoh Co. Ltd.
+>  rockchip       Fuzhou Rockchip Electronics Co., Ltd
+>  samsung        Samsung Semiconductor
+> +sandisk        Sandisk Corporation
+>  sbs    Smart Battery System
+>  schindler      Schindler
+>  seagate        Seagate Technology PLC
+> --
+> 2.0.0.rc2
 >
->
->--=20
-> <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
->
->Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-><http://twitter.com/#!/linaroorg> Twitter |
-><http://www.linaro.org/linaro-blog/> Blog
->
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
