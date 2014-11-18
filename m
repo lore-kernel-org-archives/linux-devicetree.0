@@ -1,112 +1,61 @@
-From: Thor Thayer <tthayer@opensource.altera.com>
-Subject: [RESEND PATCHv5 5/5] arm: dts: Add Altera L2 Cache and OCRAM EDAC
-Date: Tue, 18 Nov 2014 14:56:26 -0600
-Message-ID: <546BB27A.20405@opensource.altera.com>
-References: <1415751263-1830-1-git-send-email-tthayer@opensource.altera.com> <1415751263-1830-6-git-send-email-tthayer@opensource.altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415751263-1830-6-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+From: Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v3 0/2] Add support for the rockchip mmc clock phases using the framework
+Date: Tue, 18 Nov 2014 13:08:26 -0800
+Message-ID: <1416344908-5975-1-git-send-email-amstan@chromium.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, addy ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+For now all I have is the getter and setter for the phase, nothing that uses it
+(that is ready). You can test the getter like this:
+localhost ~ # cat /sys/kernel/debug/clk/clk_summary|grep sample -C 1
+    sclk_sdio1                            0            0    24000000          0 0
+       sdio1_sample                       0            0    12000000          0 0
+       sdio1_drv                          0            0    12000000          0 90
+--
+          sclk_sdmmc                      1            1   297000000          0 0
+             sdmmc_sample                 0            0   148500000          0 134
+             sdmmc_drv                    0            0   148500000          0 90
+--
+          sclk_sdio0                      1            1   100000000          0 0
+             sdio0_sample                 0            0    50000000          0 0
+             sdio0_drv                    0            0    50000000          0 90
+          sclk_emmc                       1            1   100000000          0 0
+             emmc_sample                  0            0    50000000          0 0
+             emmc_drv                     0            0    50000000          0 180
 
-On 11/11/2014 06:14 PM, tthayer@opensource.altera.com wrote:
-> From: Thor Thayer<tthayer@opensource.altera.com>
->
-> Adding the device tree entries and bindings needed to support
-> the Altera L2 cache and On-Chip RAM EDAC. This patch relies upon
-> an earlier patch to declare and setup On-chip RAM properly.
-> http://www.spinics.net/lists/devicetree/msg51117.html
+Next thing that will come is some dts changes that will make use of these new
+clocks, and eventually mmc code will be changed to tune with these clocks.
 
-Any comments on these devicetree additions?
+Changes in v3:
+- renamed everything internal from phase to just mmc_clock or mmc
+- added RK3288_MMC_CLKGEN_DIV instead of the magic number
+- added new paragraph to commit message
 
-Thanks,
-Thor
-> Signed-off-by: Thor Thayer<tthayer@opensource.altera.com>
-> ---
-> v2: Remove OCRAM declaration and reference prior patch.
->
-> v3-5: No Change
-> ---
->   .../bindings/arm/altera/socfpga-l2-edac.txt        |   15 +++++++++++++++
->   .../bindings/arm/altera/socfpga-ocram-edac.txt     |   16 ++++++++++++++++
->   arch/arm/boot/dts/socfpga.dtsi                     |   15 ++++++++++++++-
->   3 files changed, 45 insertions(+), 1 deletion(-)
->   create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
->   create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
->
-> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
-> new file mode 100644
-> index 0000000..35b19e3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
-> @@ -0,0 +1,15 @@
-> +Altera SoCFPGA L2 cache Error Detection and Correction [EDAC]
-> +
-> +Required Properties:
-> +- compatible : Should be "altr,l2-edac"
-> +- reg : Address and size for ECC error interrupt clear registers.
-> +- interrupts : Should be single bit error interrupt, then double bit error
-> +	interrupt. Note the rising edge type.
-> +
-> +Example:
-> +
-> +	l2edac@ffd08140 {
-> +		compatible = "altr,l2-edac";
-> +		reg = <0xffd08140 0x4>;
-> +		interrupts = <0 36 1>, <0 37 1>;
-> +	};
-> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
-> new file mode 100644
-> index 0000000..31ab205
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
-> @@ -0,0 +1,16 @@
-> +Altera SoCFPGA On-Chip RAM Error Detection and Correction [EDAC]
-> +
-> +OCRAM ECC Required Properties:
-> +- compatible : Should be "altr,ocram-edac"
-> +- reg : Address and size for ECC error interrupt clear registers.
-> +- iram : phandle to On-Chip RAM definition.
-> +- interrupts : Should be single bit error interrupt, then double bit error
-> +	interrupt. Note the rising edge type.
-> +
-> +Example:
-> +	ocramedac@ffd08144 {
-> +		compatible = "altr,ocram-edac";
-> +		reg = <0xffd08144 0x4>;
-> +		iram = <&ocram>;
-> +		interrupts = <0 178 1>, <0 179 1>;
-> +	};
-> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> index 6af96ed..32c63a3 100644
-> --- a/arch/arm/boot/dts/socfpga.dtsi
-> +++ b/arch/arm/boot/dts/socfpga.dtsi
-> @@ -618,8 +618,21 @@
->   			interrupts = <0 39 4>;
->   		};
->   
-> +		l2edac@ffd08140 {
-> +			compatible = "altr,l2-edac";
-> +			reg = <0xffd08140 0x4>;
-> +			interrupts = <0 36 1>, <0 37 1>;
-> +		};
-> +
-> +		ocramedac@ffd08144 {
-> +			compatible = "altr,ocram-edac";
-> +			reg = <0xffd08144 0x4>;
-> +			iram = <&ocram>;
-> +			interrupts = <0 178 1>, <0 179 1>;
-> +		};
-> +
->   		L2: l2-cache@fffef000 {
-> -			compatible = "arm,pl310-cache";
-> +			compatible = "arm,pl310-cache", "syscon";
->   			reg = <0xfffef000 0x1000>;
->   			interrupts = <0 38 0x04>;
->   			cache-unified;
+Changes in v2:
+- fixed my cc/to list
+- removed dangling #DEFINE DEBUG
+
+Alexandru M Stan (2):
+  clk: rockchip: add bindings for the mmc clocks
+  clk: rockchip: Add support for the mmc clock phases using the
+    framework
+
+ drivers/clk/rockchip/Makefile          |   1 +
+ drivers/clk/rockchip/clk-mmc-phase.c   | 151 +++++++++++++++++++++++++++++++++
+ drivers/clk/rockchip/clk-rk3288.c      |  12 +++
+ drivers/clk/rockchip/clk.c             |   8 ++
+ drivers/clk/rockchip/clk.h             |  23 +++++
+ include/dt-bindings/clock/rk3288-cru.h |  10 +++
+ 6 files changed, 205 insertions(+)
+ create mode 100644 drivers/clk/rockchip/clk-mmc-phase.c
+
+-- 
+2.1.0.rc2.206.gedb03e5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
