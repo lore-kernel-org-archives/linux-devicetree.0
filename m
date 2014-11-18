@@ -1,52 +1,111 @@
-From: Yadwinder Singh Brar <yadi.brar@samsung.com>
-Subject: [PATCH 2/2] ARM: dts: Add missing irq pinctrl for max77686 on smdk5250
-Date: Tue, 18 Nov 2014 17:38:29 +0530
-Message-ID: <1416312509-11530-2-git-send-email-yadi.brar@samsung.com>
-References: <1416312509-11530-1-git-send-email-yadi.brar@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1416312509-11530-1-git-send-email-yadi.brar@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: robh+dt@kernel.org, kgene.kim@samsung.com, yadi.brar01@gmail.com, Yadwinder Singh Brar <yadi.brar@samsung.com>
+From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH v5 00/14] Tegra124 EMC (external memory controller) support
+Date: Tue, 18 Nov 2014 13:13:02 +0100
+Message-ID: <1416312860-4446-1-git-send-email-tomeu.vizoso@collabora.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, mikko.perttunen-/1wQRMveznE@public.gmane.org, acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds pinctrl configuration for using configuring gpx3-2 as an
-external interrupt from max77686. Though max77686 RTC is enabled and gets
-probed by default, it doesnt work as its unable to get interrupt.
+Hello,
 
-This patch makes max77686 RTC work and also configures it as wakeup source.
+in this v5 you can find these changes:
 
-Signed-off-by: Yadwinder Singh Brar <yadi.brar@samsung.com>
----
- arch/arm/boot/dts/exynos5250-smdk5250.dts |   12 ++++++++++++
- 1 files changed, 12 insertions(+), 0 deletions(-)
+* Update EMC data to V5.0.17 version of the DVFS tables
 
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index 95b5b51..19cd918 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -131,6 +131,9 @@
- 		reg = <0x09>;
- 		interrupt-parent = <&gpx3>;
- 		interrupts = <2 IRQ_TYPE_NONE>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&max77686_irq>;
-+		wakeup-source;
- 
- 		voltage-regulators {
- 			ldo1_reg: LDO1 {
-@@ -411,3 +414,12 @@
- 		};
- 	};
- };
-+
-+&pinctrl_0 {
-+	max77686_irq: max77686-irq {
-+		samsung,pins = "gpx3-2";
-+		samsung,pin-function = <0xf>;
-+		samsung,pin-pud = <0>;
-+		samsung,pin-drv = <0>;
-+	};
-+};
+* Add struct tegra_emc as a parameter in the EMC API, removing the need for a
+global pointer.
+
+* Also add a reference to the EMC driver to the CAR node, for the EMC clock to
+use when calling the EMC API.
+
+There's an outstanding issue with frequencies lower than 102MHz, as the MC IP
+complains of EMEM arbitration errors when at those frequencies. Any suggestions
+welcome.
+
+It depends on Thierry's MC patches at [0] and a branch can be found at [1]. So
+far it has been tested only on a Jetson TK1.
+
+Patch 1: Removes the old EMC clock, that was unused and not functional
+
+Patch 2: Documents bindings for the new long-ram-code property
+
+Patch 3: Adds API for reading the ram code
+
+Patches 4 to 7: Document OF additions
+
+Patch 8: Adds EMC node to Tegra124 DT
+
+Patch 9: Adds timings for Jetson TK1 board
+
+Patch 10: Adds functions to the MC driver so the EMC driver can stay within its
+own registers
+
+Patch 11: Adds the actual EMC driver, making use of the new MC API
+
+Patch 12: Adds EMC clock driver, making use of API provided by the EMC driver
+
+Patch 13: Adds debugfs entry for getting and setting the EMC rate
+
+Patch 14: On Tegra124, have the EMC clock be the parent of the MC clock
+
+Regards,
+
+Tomeu
+
+[0] https://github.com/thierryreding/linux/commits/staging/iommu
+[1] http://cgit.collabora.com/git/user/tomeu/linux.git/log/?h=emc-v5
+
+Mikko Perttunen (9):
+  clk: tegra124: Remove old emc clock
+  soc/tegra: Add ram code reader helper
+  of: Add Tegra124 EMC bindings
+  ARM: tegra: Add EMC to Tegra124 device tree
+  ARM: tegra: Add EMC timings to Jetson TK1 device tree
+  memory: tegra: Add API needed by the EMC driver
+  memory: tegra: Add EMC (external memory controller) driver
+  clk: tegra: Add EMC clock driver
+  memory: tegra: Add debugfs entry for getting and setting the EMC rate
+
+Tomeu Vizoso (5):
+  of: Document long-ram-code property in nvidia,tegra20-apbmisc
+  of: document new emc-timings subnode in nvidia,tegra124-car
+  of: Document timings subnode of nvidia,tegra-mc
+  of: document external-memory-controller property in tegra124-car
+  clk: tegra: Set the EMC clock as the parent of the MC clock
+
+ .../bindings/clock/nvidia,tegra124-car.txt         |   44 +-
+ .../memory-controllers/nvidia,tegra-mc.txt         |   84 +-
+ .../bindings/memory-controllers/tegra-emc.txt      |  379 +++
+ .../bindings/misc/nvidia,tegra20-apbmisc.txt       |    2 +
+ arch/arm/boot/dts/tegra124-jetson-tk1-emc.dtsi     | 2469 ++++++++++++++++++++
+ arch/arm/boot/dts/tegra124-jetson-tk1.dts          |    2 +
+ arch/arm/boot/dts/tegra124.dtsi                    |    8 +
+ drivers/clk/tegra/Makefile                         |    2 +-
+ drivers/clk/tegra/clk-emc.c                        |  532 +++++
+ drivers/clk/tegra/clk-tegra124.c                   |   18 +-
+ drivers/clk/tegra/clk.h                            |    3 +
+ drivers/memory/tegra/Kconfig                       |   11 +
+ drivers/memory/tegra/Makefile                      |    2 +
+ drivers/memory/tegra/mc.c                          |  136 ++
+ drivers/memory/tegra/tegra124-emc.c                | 1164 +++++++++
+ drivers/memory/tegra/tegra124.c                    |   44 +
+ drivers/soc/tegra/fuse/tegra-apbmisc.c             |   19 +
+ include/soc/tegra/emc.h                            |   19 +
+ include/soc/tegra/fuse.h                           |    1 +
+ include/soc/tegra/mc.h                             |   14 +-
+ 20 files changed, 4934 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/tegra-emc.txt
+ create mode 100644 arch/arm/boot/dts/tegra124-jetson-tk1-emc.dtsi
+ create mode 100644 drivers/clk/tegra/clk-emc.c
+ create mode 100644 drivers/memory/tegra/tegra124-emc.c
+ create mode 100644 include/soc/tegra/emc.h
+
 -- 
-1.7.0.4
+1.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
