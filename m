@@ -1,113 +1,59 @@
-From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v3 00/11] Add stih410 SoC/board and USB2/1.1 support for
- stih416
-Date: Tue, 18 Nov 2014 09:47:57 +0100
-Message-ID: <546B07BD.4030400@st.com>
-References: <1416242884-5261-1-git-send-email-peter.griffin@linaro.org>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [RFC] adp1653: Add device tree bindings for LED controller
+Date: Tue, 18 Nov 2014 09:50:13 +0100
+Message-ID: <20141118085013.GD4059@amd>
+References: <20141116075928.GA9763@amd>
+ <20141117145857.GO8907@valkosipuli.retiisi.org.uk>
+ <546AFEA5.9020000@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416242884-5261-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <546AFEA5.9020000@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, pali.rohar@gmail.com, sre@debian.org, sre@ring0.de, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, freemangordon@abv.bg, bcousson@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue 2014-11-18 09:09:09, Jacek Anaszewski wrote:
+> Hi Pavel, Sakari,
+> 
+> On 11/17/2014 03:58 PM, Sakari Ailus wrote:
+> >Hi Pavel,
+> >
+> >On Sun, Nov 16, 2014 at 08:59:28AM +0100, Pavel Machek wrote:
+> >>For device tree people: Yes, I know I'll have to create file in
+> >>documentation, but does the binding below look acceptable?
+> >>
+> >>I'll clean up driver code a bit more, remove the printks. Anything
+> >>else obviously wrong?
+> >
+> >Jacek Anaszewski is working on flash support for LED devices. I think it'd
+> >be good to sync the DT bindings for the two, as the types of devices
+> >supported by the LED API and the V4L2 flash API are quite similar.
+> >
+> >Cc Jacek.
+> 
+> I've already submitted a patch [1] that updates leds common bindings.
+> I hasn't been merged yet, as the related LED Flash class patch [2]
+> still needs some indicator leds related discussion [3].
+> 
+> I think this is a good moment to discuss the flash related led common
+> bindings.
+> 
+> [2] http://www.spinics.net/lists/linux-media/msg83100.html
 
+Actually, would it be possible to do the patches the other way around?
 
-On 11/17/2014 05:47 PM, Peter Griffin wrote:
-> Hi folks,
->
-> This series adds the required device tree nodes to enable the usb2/1.1 phy
-> and usb2/1.1 controllers on the stih416-b2120 board.
->
-> It additionally re-works and adds support for the new stih410 SoC which is
-> very similar to the stih407 SoC, by abstracting out the common parts
-> into common dt files.
->
-> After Arnds feedback regarding mixing address spaces in the stih407-picophy
-> dt nodes, I've tempoarily removed these patches from the series until the
-> underlying driver has been fixed, as ideally I would like to get the rest
-> of this series into 3.19
->
-> As well as adding dt nodes it also enables the relevant drivers in the
-> multi_v7_defconfig.
->
-> Finally we update the default bootargs for stih407-b2120 and stih410-b2120
-> to boot with the clk_ignore_unused kernel parameter so as not to hang
-> the SoC when the (as yet) unreferenced interconnect clocks get disabled
-> by CCF (this is a tempoary solution).
->
-> This series has been tested on stih416-b2020 and stih410-b2120 SoC/boards.
->
-> Changes since v1:
-> - Leave bootargs & memory dt nodes in board files (Arnd)
-> - Remove '0x' from the unit address in all instances. (Arnd)
-> - Remove 'status="okay"' from some nodes (Arnd)
-> - Remove some legacy extra nodes which only contain status property (Arnd)
-> - Fix stih410 commit description (Maxime)
-> - Add a stih410.dtsi and stih410-pinctrl.dtsi files (Maxime)
-> - Remove superflous '\n' (Lee)
-> - Add a '\n' between the sentries and #include (Lee)
->
-> Changes since v2:
-> - Remove picophy and ehci/ohci dt nodes for stih407 / stih410 until reg binding is fixed
-> - Update miphy365 over to common convention of phy@ (Arnd)
->
-> Peter Griffin (11):
->    ARM: STi: DT: STiH416: Add pinctl setup for usb controllers.
->    ARM: STi: DT: STiH416: Add DT node for the stih415/6 usb2 phy
->    ARM: STi: DT: STiH416: Add DT nodes for the ehci and ohci usb
->      controllers.
->    ARM: multi_v7_defconfig: Enable st ohci and ehci HCD drivers.
->    ARM: multi_v7_defconfig: Enable stih415/6 usb2 phy driver.
->    ARM: STi: DT: STiH410: Add defines for STiH410 DT clocks
->    ARM: STi: DT: STiH410:  Add pinctl config for usb controllers.
->    ARM: STi: DT: STih407: Abstract common dt nodes into shared files.
->    ARM: STi: DT: STiH410: Add STiH410 SoC and b2120 board support.
->    ARM: STi: DT: STih407: STih410: Add clk_ignore_unused to kernel
->      bootargs
->    ARM: STi: DT: STiH416: Change miphy356 node name to phy@fe382000
+V4L2 api already knows about flash, torch and indicators. Provide
+glue, so that V4L2 torch automatically appears as two leds in the led
+subystem? (white and red in my case?)
 
-For the series,
+[Well, I kind of like the LED class API more, but it appears both you
+and me really have two LEDs in one package, and V4L2 already knows
+about that so it is better match....?]
 
-     Acked-by: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-
-     If Arnd is fine with the series, these patches will be part of my 
-next pull request.
-
-Regards,
-Maxime
-
->
->   arch/arm/boot/dts/Makefile               |   1 +
->   arch/arm/boot/dts/stih407-b2120.dts      |  55 +----
->   arch/arm/boot/dts/stih407-family.dtsi    | 278 +++++++++++++++++++++++++
->   arch/arm/boot/dts/stih407.dtsi           | 279 -------------------------
->   arch/arm/boot/dts/stih410-b2120.dts      |  29 +++
->   arch/arm/boot/dts/stih410-clock.dtsi     | 338 +++++++++++++++++++++++++++++++
->   arch/arm/boot/dts/stih410-pinctrl.dtsi   |  34 ++++
->   arch/arm/boot/dts/stih410.dtsi           |  14 ++
->   arch/arm/boot/dts/stih416-b2020.dts      |   2 +-
->   arch/arm/boot/dts/stih416-b2020e.dts     |   2 +-
->   arch/arm/boot/dts/stih416-pinctrl.dtsi   |  34 ++++
->   arch/arm/boot/dts/stih416.dtsi           | 131 +++++++++++-
->   arch/arm/boot/dts/stihxxx-b2120.dtsi     |  59 ++++++
->   arch/arm/configs/multi_v7_defconfig      |   3 +
->   include/dt-bindings/clock/stih410-clks.h |  25 +++
->   15 files changed, 951 insertions(+), 333 deletions(-)
->   create mode 100644 arch/arm/boot/dts/stih407-family.dtsi
->   delete mode 100644 arch/arm/boot/dts/stih407.dtsi
->   create mode 100644 arch/arm/boot/dts/stih410-b2120.dts
->   create mode 100644 arch/arm/boot/dts/stih410-clock.dtsi
->   create mode 100644 arch/arm/boot/dts/stih410-pinctrl.dtsi
->   create mode 100644 arch/arm/boot/dts/stih410.dtsi
->   create mode 100644 arch/arm/boot/dts/stihxxx-b2120.dtsi
->   create mode 100644 include/dt-bindings/clock/stih410-clks.h
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+									Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
