@@ -1,50 +1,60 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v1] devicetree: bindings: add sandisk to the vendor prefixes
-Date: Tue, 18 Nov 2014 12:03:57 -0600
-Message-ID: <CAL_JsqLtmO4QCqvhqd47i=QwKqads95Ghqmu1P8F5mupnre9Mg@mail.gmail.com>
-References: <1411683987-11791-1-git-send-email-robert.jarzmik@free.fr>
+Subject: Re: [PATCH] of/irq: Drop obsolete 'interrupts' vs 'interrupts-extended'
+ text
+Date: Tue, 18 Nov 2014 12:05:14 -0600
+Message-ID: <CAL_JsqK3DU8D9jyCvUMkpXEUTPNb2HMH2uuj3EgSNbYWa6ECPA@mail.gmail.com>
+References: <20141101233531.4958.96713.stgit@bhelgaas-glaptop2.roam.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411683987-11791-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+In-Reply-To: <20141101233531.4958.96713.stgit-1RhO1Y9PlrlHTL0Zs8A6p/gx64E7kk8eUsxypvmhUTTZJqsBc5GL+g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 25, 2014 at 5:26 PM, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote:
-> Add sandisk to the list of vendors. This prefix should be used
-> also for companies absorbed by Sandisk, like M-Systems.
+On Sat, Nov 1, 2014 at 6:35 PM, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
+> a9ecdc0fdc54 ("of/irq: Fix lookup to use 'interrupts-extended' property
+> first") updated the description to say that:
 >
-> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+>   - Both 'interrupts' and 'interrupts-extended' may be present
+>   - Software should prefer 'interrupts-extended'
+>   - Software that doesn't comprehend 'interrupts-extended' may use
+>     'interrupts'
+>
+> But there is still a paragraph at the end that prohibits having both and
+> says 'interrupts' should be preferred.
+>
+> Remove the contradictory text.
+>
+> Fixes: a9ecdc0fdc54 ("of/irq: Fix lookup to use 'interrupts-extended' property first")
+> Signed-off-by: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> CC: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org      # v3.13+
 
 Applied, thanks.
 
 Rob
 
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  .../bindings/interrupt-controller/interrupts.txt   |    4 ----
+>  1 file changed, 4 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 4d7f375..aaa32c7 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -111,6 +111,7 @@ renesas     Renesas Electronics Corporation
->  ricoh  Ricoh Co. Ltd.
->  rockchip       Fuzhou Rockchip Electronics Co., Ltd
->  samsung        Samsung Semiconductor
-> +sandisk        Sandisk Corporation
->  sbs    Smart Battery System
->  schindler      Schindler
->  seagate        Seagate Technology PLC
-> --
-> 2.0.0.rc2
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> index ce6a1a072028..8a3c40829899 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> @@ -30,10 +30,6 @@ should only be used when a device has multiple interrupt parents.
+>    Example:
+>         interrupts-extended = <&intc1 5 1>, <&intc2 1 0>;
 >
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -A device node may contain either "interrupts" or "interrupts-extended", but not
+> -both. If both properties are present, then the operating system should log an
+> -error and use only the data in "interrupts".
+> -
+>  2) Interrupt controller nodes
+>  -----------------------------
+>
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
