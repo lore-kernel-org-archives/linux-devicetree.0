@@ -1,68 +1,58 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 1/2] clk: rockchip: add bindings for the mmc clock phases
-Date: Tue, 18 Nov 2014 09:44:22 -0800
-Message-ID: <CAD=FV=XL7hht32hu5zxXAJ+8BKbQp7aQOP68cCjKtrytGGs8iA@mail.gmail.com>
-References: <1416005574-7756-1-git-send-email-amstan@chromium.org>
-	<1416005574-7756-2-git-send-email-amstan@chromium.org>
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: Re: [PATCH v9 2/9] qcom: spm: Add Subsystem Power Manager driver
+Date: Tue, 18 Nov 2014 11:00:49 -0700
+Message-ID: <20141118180049.GC770@linaro.org>
+References: <1414194024-55547-1-git-send-email-lina.iyer@linaro.org>
+ <1414194024-55547-3-git-send-email-lina.iyer@linaro.org>
+ <546A6962.9090801@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416005574-7756-2-git-send-email-amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, addy ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <546A6962.9090801@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Fri, Nov 14, 2014 at 2:52 PM, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> This will be used in a later patch for clock phase tuning.
+On Mon, Nov 17 2014 at 14:32 -0700, Daniel Lezcano wrote:
+>On 10/25/2014 01:40 AM, Lina Iyer wrote:
 >
-> Suggested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> Signed-off-by: Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
->  include/dt-bindings/clock/rk3288-cru.h | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+>Hi Lina,
 >
-> diff --git a/include/dt-bindings/clock/rk3288-cru.h b/include/dt-bindings/clock/rk3288-cru.h
-> index 100a08c..465d0f6 100644
-> --- a/include/dt-bindings/clock/rk3288-cru.h
-> +++ b/include/dt-bindings/clock/rk3288-cru.h
-> @@ -72,6 +72,16 @@
->  #define SCLK_HEVC_CABAC                111
->  #define SCLK_HEVC_CORE         112
+>[ ... ]
 >
-> +#define SCLK_SDMMC_DRV_PHASE   113
-> +#define SCLK_SDIO0_DRV_PHASE   114
-> +#define SCLK_SDIO1_DRV_PHASE   115
-> +#define SCLK_EMMC_DRV_PHASE    116
-> +
-> +#define SCLK_SDMMC_SAMPLE_PHASE        117
-> +#define SCLK_SDIO0_SAMPLE_PHASE        118
-> +#define SCLK_SDIO1_SAMPLE_PHASE        119
-> +#define SCLK_EMMC_SAMPLE_PHASE 120
-> +
+>>+static inline void spm_register_write(struct spm_driver_data *drv,
+>>+					enum spm_reg reg, u32 val)
+>>+{
+>>+	if (drv->reg_data->reg_offset[reg])
+>>+		writel_relaxed(val, drv->reg_base +
+>>+				drv->reg_data->reg_offset[reg]);
+>
+>Why not use writel and don't use 'wmb' below ?
+>
+>>+}
+>>+
+>
+>[ ... ]
+>
+Took the opportunity for optimization here, since I am writing to
+essentially the same page. I dont have to barrier after every write.
 
-Thinking about Mike T's comment, we might want to actually rename
-these defines and just remove the "_PHASE".  These clocks _are_ the
-drive and sample clocks.  Sure, they happen to have phases as one of
-the attributes, but they aren't "phase clocks".
-
-FYI, the TRM shows these clocks as:
-
-- Into "clkgen" you see cclkin (the *2 clock)
-- Out of "clkgen" you see:
-  --> "cclk_in" (the non *2 clock)
-  --> "cclk_in_drv" (the drive clock, which might be shifted)
-  --> "cclk_in_sample" (the sample clock, which might be shifted)
-
-Right now we're not modeling the non-shifted, non *2 clock.  I think
-that's OK (otherwise we've got a bunch of old device trees to change,
-since the old DTS files passed in the *2 clock as the card clock).
-
-
--Doug
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>+	spm_register_write(drv, SPM_REG_SPM_CTL, ctl_val);
+>>+
+>>+	/* Ensure we have written the start address */
+>>+	wmb();
+>
+>
+>
+>--=20
+> <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+>
+>Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+><http://twitter.com/#!/linaroorg> Twitter |
+><http://www.linaro.org/linaro-blog/> Blog
+>
