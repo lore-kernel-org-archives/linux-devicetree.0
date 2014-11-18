@@ -1,14 +1,12 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 3/4] simplefb: Change simplefb_init from
- module_init to fs_initcall
-Date: Tue, 18 Nov 2014 12:01:08 +0100
-Message-ID: <546B26F4.50302@redhat.com>
-References: <1415830124-28787-1-git-send-email-hdegoede@redhat.com> <1415830124-28787-3-git-send-email-hdegoede@redhat.com> <20141113085238.GE20972@lukather> <CAMuHMdXZ4V4GHvyDLOP8FYvPuGArc5G0aO6NCE9FKHT24YRGPg@mail.gmail.com> <20141118101911.GA15769@ulmo>
+Subject: [PATCH v2] ARM: dts: sunxi: Update simplfb nodes so
+ that u-boot can find them
+Date: Tue, 18 Nov 2014 12:07:13 +0100
+Message-ID: <1416308833-26739-1-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORB7WNVSRQKGQEU4ML5PY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20141118101911.GA15769@ulmo>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORB2OQVSRQKGQE6LZMDEQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -16,60 +14,98 @@ Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Review of the u-boot sunxi simplefb patches has led to the decision that
+u-boot should not use a specific path to find the nodes as this goes contrary
+to how devicetree usually works.
 
-On 11/18/2014 11:19 AM, Thierry Reding wrote:
-> On Thu, Nov 13, 2014 at 09:58:41AM +0100, Geert Uytterhoeven wrote:
->> Hi Maxime,
->>
->> On Thu, Nov 13, 2014 at 9:52 AM, Maxime Ripard
->> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->>>> -module_init(simplefb_init);
->>>> +/*
->>>> + * While this can be a module, if builtin it's most likely the console
->>>> + * So let's leave module_exit but move module_init to an earlier place
->>>> + */
->>>
->>> Not really related to this patch itself, but do we want to support
->>> simplefb as a module? It seems like it's going to be most of the time
->>> broken.
->>
->> If it depends on clocks, it won't work as a module, as CCF will have disabled
->> all unused clocks at that point.
-> 
-> If it does depend on anything beyond clocks it won't work at all. Clocks
-> are special because they get set up very early at boot time. If it turns
-> out that a simplefb ever needs a regulator to remain on, and that's even
-> quite likely to happen eventually, it's going to fail miserably, because
-> those regulators will typically be provided by a PMIC on an I2C bus. The
-> regulator won't be registered until very late into the boot process and
-> a regulator_get() call will almost certainly cause the simplefb driver
-> to defer probing.
+Instead a platform specific compatible + properties should be used for this.
 
-Right, this has been discussed already and the plan is to have simplefb
-continue its probe function and return success from it if it encounters
-any -eprobe_defer errors, while tracking which resources it misses.
+The simplefb bindings have already been updated to reflect this, this patch
+brings the sunxi devicetree files in line with the new binding, and the
+actual u-boot implementation as it is going upstream.
 
-And then have a late_initcall which will claim any resources which failed
-with -eprobe beforehand.
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+Changes in v2:
+-Use proper allwinner, vendor prefix instead of sunxi,
+-Rename compatible to allwinner,simple-framebuffer to make clear these are
+ vendor extensions to the simple-framebuffer bindings
 
-> Now deferring probing is a real showstopper for simplefb, because not
-> only does it make the framebuffer useless as early boot console, once
-> probing is attempted again the clocks that it would have needed to
-> acquire to keep going will already have been switched off, too.
+foo
+---
+ arch/arm/boot/dts/sun4i-a10.dtsi  | 5 +++--
+ arch/arm/boot/dts/sun5i-a10s.dtsi | 5 +++--
+ arch/arm/boot/dts/sun6i-a31.dtsi  | 5 +++--
+ arch/arm/boot/dts/sun7i-a20.dtsi  | 5 +++--
+ 4 files changed, 12 insertions(+), 8 deletions(-)
 
-That is not true, even with the current implementation, if all necessary
-drivers are built in, then simplefb will come up later, but it will still
-come up before the late_initcall which disables the clocks.
-
-Once we do the split probing described above (which is something which
-we plan to do when it becomes necessary), then simplefb will still come
-up early.
-
-Regards,
-
-Hans
+diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+index 92d8aa6..7eae1bc 100644
+--- a/arch/arm/boot/dts/sun4i-a10.dtsi
++++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+@@ -32,8 +32,9 @@
+ 		#size-cells = <1>;
+ 		ranges;
+ 
+-		framebuffer0-hdmi {
+-			compatible = "simple-framebuffer";
++		framebuffer@0 {
++			compatible = "allwinner,simple-framebuffer", "simple-framebuffer";
++			allwinner,pipeline = "de_be0-lcd0-hdmi";
+ 			clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
+ 				 <&ahb_gates 44>;
+ 			status = "disabled";
+diff --git a/arch/arm/boot/dts/sun5i-a10s.dtsi b/arch/arm/boot/dts/sun5i-a10s.dtsi
+index c678e56..431343f 100644
+--- a/arch/arm/boot/dts/sun5i-a10s.dtsi
++++ b/arch/arm/boot/dts/sun5i-a10s.dtsi
+@@ -29,8 +29,9 @@
+ 		#size-cells = <1>;
+ 		ranges;
+ 
+-		framebuffer0-hdmi {
+-			compatible = "simple-framebuffer";
++		framebuffer@0 {
++			compatible = "allwinner,simple-framebuffer", "simple-framebuffer";
++			allwinner,pipeline = "de_be0-lcd0-hdmi";
+ 			clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
+ 				 <&ahb_gates 44>;
+ 			status = "disabled";
+diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+index ccc03f3..a01b215 100644
+--- a/arch/arm/boot/dts/sun6i-a31.dtsi
++++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+@@ -67,8 +67,9 @@
+ 		#size-cells = <1>;
+ 		ranges;
+ 
+-		framebuffer0-hdmi {
+-			compatible = "simple-framebuffer";
++		framebuffer@0 {
++			compatible = "allwinner,simple-framebuffer", "simple-framebuffer";
++			allwinner,pipeline = "de_be0-lcd0-hdmi";
+ 			clocks = <&pll6>;
+ 			status = "disabled";
+ 		};
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 89766cb..d605182d 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -69,8 +69,9 @@
+ 		#size-cells = <1>;
+ 		ranges;
+ 
+-		framebuffer0-hdmi {
+-			compatible = "simple-framebuffer";
++		framebuffer@0 {
++			compatible = "allwinner,simple-framebuffer", "simple-framebuffer";
++			allwinner,pipeline = "de_be0-lcd0-hdmi";
+ 			clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
+ 				 <&ahb_gates 44>;
+ 			status = "disabled";
+-- 
+2.1.0
