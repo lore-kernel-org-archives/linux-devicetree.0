@@ -1,40 +1,60 @@
-From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
-Subject: Re: [PATCHv3 01/12] of: add "micron" vendor prefix for Micron
-Date: Tue, 18 Nov 2014 19:32:55 +0100
-Message-ID: <87vbmcbbqg.fsf@natisbad.org>
-References: <cover.1416266432.git.arno@natisbad.org>
-	<9cfc5635b14f36e68c499015c6a722804b407f29.1416266432.git.arno@natisbad.org>
-	<CAL_JsqKrEoRvt97k+7UHBsNFU739w7BeQbXf5V2TZ2OrmS1Afg@mail.gmail.com>
+From: James Hartley <James.Hartley@imgtec.com>
+Subject: RE: [PATCH 2/2] Documentation: crypto: Add DT binding info for the
+ img hw hash accelerator
+Date: Tue, 18 Nov 2014 18:33:29 +0000
+Message-ID: <72BC0C8BD7BB6F45988A99382E5FBAE5443427AE@hhmail02.hh.imgtec.org>
+References: <1415621455-10468-1-git-send-email-james.hartley@imgtec.com>
+	<1415621455-10468-3-git-send-email-james.hartley@imgtec.com>
+ <CAL1qeaEp_K2JYXBu1hvFuiJ6Ps3jBoLRtmvw1F7FPKHwKDjXmg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKrEoRvt97k+7UHBsNFU739w7BeQbXf5V2TZ2OrmS1Afg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-	(Rob Herring's message of "Tue, 18 Nov 2014 11:00:21 -0600")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <CAL1qeaEp_K2JYXBu1hvFuiJ6Ps3jBoLRtmvw1F7FPKHwKDjXmg@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-crypto-owner@vger.kernel.org
+To: Andrew Bresticker <abrestic@chromium.org>
+Cc: "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>, "davem@davemloft.net" <davem@davemloft.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "joe@perches.com" <joe@perches.com>, "mchehab@osg.samsung.com" <mchehab@osg.samsung.com>, "crope@iki.fi" <crope@iki.fi>, "jg1.han@samsung.com" <jg1.han@samsung.com>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ezequiel Garcia <Ezequiel.Garcia@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
-
-> On Mon, Nov 17, 2014 at 5:26 PM, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org> wrote:
->>
->> Micron vendor prefix is not listed yet in vendor-prefixes.txt file. Even
->> if the expected vendor prefix should be the NASDAQ symbol ("mu" in that
->> case), it seems reasonable to use "micron" here because it is what is
->> already found at various locations (e.g. under arch/arm/boot/dts/ for
->> instance).
->
-> Already have the same patch queued up.
-
-Perfect, I'll drop mine.
-
-Cheers,
-
-a+
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgQW5kcmV3DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogYWJyZXN0
+aWNAZ29vZ2xlLmNvbSBbbWFpbHRvOmFicmVzdGljQGdvb2dsZS5jb21dIE9uIEJlaGFsZiBPZg0K
+PiBBbmRyZXcgQnJlc3RpY2tlcg0KPiBTZW50OiAxMCBOb3ZlbWJlciAyMDE0IDE3OjMwDQo+IFRv
+OiBKYW1lcyBIYXJ0bGV5DQo+IENjOiBoZXJiZXJ0QGdvbmRvci5hcGFuYS5vcmcuYXU7IGRhdmVt
+QGRhdmVtbG9mdC5uZXQ7IEdyYW50IExpa2VseTsgUm9iDQo+IEhlcnJpbmc7IGFrcG1AbGludXgt
+Zm91bmRhdGlvbi5vcmc7IEdyZWcgS3JvYWgtSGFydG1hbjsNCj4gam9lQHBlcmNoZXMuY29tOyBt
+Y2hlaGFiQG9zZy5zYW1zdW5nLmNvbTsgY3JvcGVAaWtpLmZpOw0KPiBqZzEuaGFuQHNhbXN1bmcu
+Y29tOyBsaW51eC1jcnlwdG9Admdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2Vy
+bmVsLm9yZzsgUGF3ZWwgTW9sbDsgTWFyayBSdXRsYW5kOyBJYW4gQ2FtcGJlbGw7IEt1bWFyDQo+
+IEdhbGE7IEV6ZXF1aWVsIEdhcmNpYQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDIvMl0gRG9jdW1l
+bnRhdGlvbjogY3J5cHRvOiBBZGQgRFQgYmluZGluZyBpbmZvIGZvciB0aGUNCj4gaW1nIGh3IGhh
+c2ggYWNjZWxlcmF0b3INCj4gDQo+IEhpIEphbWVzLA0KPiANCj4gT24gTW9uLCBOb3YgMTAsIDIw
+MTQgYXQgNDoxMCBBTSwgSmFtZXMgSGFydGxleQ0KPiA8amFtZXMuaGFydGxleUBpbWd0ZWMuY29t
+PiB3cm90ZToNCj4gPiBTaWduZWQtb2ZmLWJ5OiBKYW1lcyBIYXJ0bGV5IDxqYW1lcy5oYXJ0bGV5
+QGltZ3RlYy5jb20+DQo+IA0KPiBBIGJyaWVmIGNvbW1pdCBtZXNzYWdlIGRlc2NyaWJpbmcgdGhl
+IGhhcmR3YXJlIGFuZCB3aGVyZSBpdCdzIGZvdW5kIHdvdWxkDQo+IGJlIG5pY2UuDQo+IA0KPiA+
+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY3J5cHRvL2lt
+Zy1oYXNoLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2NyeXB0
+by9pbWctaGFzaC50eHQNCj4gDQo+ID4gQEAgLTAsMCArMSwyOCBAQA0KPiA+ICsqIEltYWdpbmF0
+aW9uIFRlY2hub2xvZ2llcyBMdGQuIEhhc2ggQWNjZWxlcmF0b3INCj4gPiArDQo+ID4gK1RoZSBo
+YXNoIGFjY2VsZXJhdG9yIHByb3ZpZGVzIGhhcmR3YXJlIGhhc2hpbmcgYWNjZWxlcmF0aW9uIGZv
+ciBTSEExLA0KPiA+ICtTSEEyMjQsIFNIQTI1NiBhbmQgTUQ1IGhhc2hlcw0KPiA+ICsNCj4gPiAr
+UmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiArDQo+ID4gKy0gY29tcGF0aWJsZSA6ICJpbWcsaW1n
+LWhhc2gtYWNjZWxlcmF0b3ItcmV2MSINCj4gDQo+IEkga25vdyBJIG1lbnRpb25lZCBpbiB0aGUg
+aW50ZXJuYWwgcmV2aWV3IHRoYXQgaXQgd291bGQgYmUgZ29vZCB0byBoYXZlDQo+IHNvbWUgc29y
+dCBvZiB2ZXJzaW9uIGluZGljYXRvciwgYnV0IGl0IGxvb2tzIGxpa2UgZnJvbSB0aGUgVFJNIHRo
+YXQgdGhlIHZlcnNpb24NCj4gaXMgcHJvYmFibGUgKENSX0hBU0hfQ09SRV9SRVYpLiAgSWYgd2Ug
+ZXhwZWN0IHByb2JpbmcgZm9yIHRoZSByZXZpc2lvbg0KPiBudW1iZXIgdG8gYmUgc3VmZmljaWVu
+dCwgdGhlbiBwZXJoYXBzICJyZXYxIiBjYW4gYmUgZHJvcHBlZD8gIEFsc28sIHRoZQ0KPiBzZWNv
+bmQgImltZyIgaXMgcmVkdW5kYW50Lg0KDQpZZXMgdGhlIGNvcmUgSUQgYW5kIHZlcnNpb25zIGFy
+ZSBhdmFpbGFibGUsIHNvIEknbGwgZHJvcCByZXYtMSwgYW5kIHJlbW92ZSB0aGUgc2Vjb25kIGlt
+Zy4NCg0KPiANCj4gPiArLSByZWcgOiBPZmZzZXQgYW5kIGxlbmd0aCBvZiB0aGUgcmVnaXN0ZXIg
+c2V0IGZvciB0aGUgbW9kdWxlLCBhbmQgdGhlDQo+ID4gK0RNQSBwb3J0DQo+ID4gKy0gaW50ZXJy
+dXB0cyA6IFRoZSBkZXNpZ25hdGVkIElSUSBsaW5lIGZvciB0aGUgaGFzaGluZyBtb2R1bGUuDQo+
+ID4gKy0gZG1hcyA6IERNQSBzcGVjaWZpZXIgYXMgcGVyDQo+ID4gK0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kbWEvZG1hLnR4dA0KPiA+ICstIGRtYS1uYW1lcyA6IFNob3VsZCBi
+ZSAidHgiDQo+ID4gKy0gYnVzLWFkZHIgOiBUaGUgYnVzIGFkZHJlc3MgZm9yIHRoZSBpbnB1dCBk
+YXRhIGZvciBoYXNoaW5nIGJsb2NrDQo+IA0KPiBJIHRoaW5rIHRoaXMgY2FuIGJlIGRyb3BwZWQu
+ICBUaGlzIGlzIHRoZSBzYW1lIGFzIHRoZSBzZWNvbmQgInJlZyINCj4gZW50cnkgYWJvdmUsIGlz
+IGl0IG5vdD8NCg0KWWVzLCB0aGF0IHNob3VsZCBub3QgaGF2ZSBtYWRlIGl0IHRocm91Z2ggdG8g
+dGhlIHBhdGNoIC0gaXQgd2lsbCBiZSByZW1vdmVkLg0KDQpUaGFua3MsDQpKYW1lcy4NCg0K
