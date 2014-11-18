@@ -1,442 +1,217 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] Patch to improve device tree structure
-Date: Tue, 18 Nov 2014 15:10:26 +0000
-Message-ID: <20141118151026.D2D63C40966@trevor.secretlab.ca>
-References: <1416199976-21147-1-git-send-email-gaurav.minocha.os@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416199976-21147-1-git-send-email-gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/4] simplefb: Change simplefb_init from
+ module_init to fs_initcall
+Date: Tue, 18 Nov 2014 16:16:04 +0100
+Message-ID: <20141118151603.GA19426@ulmo>
+References: <1415830124-28787-1-git-send-email-hdegoede@redhat.com>
+ <1415830124-28787-3-git-send-email-hdegoede@redhat.com>
+ <20141113085238.GE20972@lukather>
+ <CAMuHMdXZ4V4GHvyDLOP8FYvPuGArc5G0aO6NCE9FKHT24YRGPg@mail.gmail.com>
+ <20141118101911.GA15769@ulmo>
+ <546B26F4.50302@redhat.com>
+ <20141118112123.GA3873@ulmo>
+ <546B31A7.9020804@redhat.com>
+ <546B3F3C.6050202@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="6TrnltStXW4iwmi0"
+Return-path: <linux-sunxi+bncBDTKFPPJUEHRBNWFVWRQKGQE2JEFBDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <546B3F3C.6050202-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 16 Nov 2014 20:52:56 -0800
-, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
- wrote:
-> This patch improves the implementation of device tree structure.
-> 
-> Traditional child and sibling linked list in device tree structure
-> is removed and is replaced by list_head (i.e. circular doubly linked
->  list) already available in Linux kernel.
-> 
-> Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Hi Gaurav,
+--6TrnltStXW4iwmi0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So, after you've done this work, I need to you rebase it (and of course
-it is non-trivial) onto linux-next. I've already got a patch queued up
-which gets rid of the of_allnodes/allnext list which will have conflicts
-with this patch.
+On Tue, Nov 18, 2014 at 01:44:44PM +0100, Hans de Goede wrote:
+> Hi,
+>=20
+> On 11/18/2014 12:46 PM, Hans de Goede wrote:
+> > Hi,
+> >=20
+> > On 11/18/2014 12:21 PM, Thierry Reding wrote:
+> >> On Tue, Nov 18, 2014 at 12:01:08PM +0100, Hans de Goede wrote:
+> >>> Hi,
+> >>>
+> >>> On 11/18/2014 11:19 AM, Thierry Reding wrote:
+> >>>> On Thu, Nov 13, 2014 at 09:58:41AM +0100, Geert Uytterhoeven wrote:
+> >>>>> Hi Maxime,
+> >>>>>
+> >>>>> On Thu, Nov 13, 2014 at 9:52 AM, Maxime Ripard
+> >>>>> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> >>>>>>> -module_init(simplefb_init);
+> >>>>>>> +/*
+> >>>>>>> + * While this can be a module, if builtin it's most likely the c=
+onsole
+> >>>>>>> + * So let's leave module_exit but move module_init to an earlier=
+ place
+> >>>>>>> + */
+> >>>>>>
+> >>>>>> Not really related to this patch itself, but do we want to support
+> >>>>>> simplefb as a module? It seems like it's going to be most of the t=
+ime
+> >>>>>> broken.
+> >>>>>
+> >>>>> If it depends on clocks, it won't work as a module, as CCF will hav=
+e disabled
+> >>>>> all unused clocks at that point.
+> >>>>
+> >>>> If it does depend on anything beyond clocks it won't work at all. Cl=
+ocks
+> >>>> are special because they get set up very early at boot time. If it t=
+urns
+> >>>> out that a simplefb ever needs a regulator to remain on, and that's =
+even
+> >>>> quite likely to happen eventually, it's going to fail miserably, bec=
+ause
+> >>>> those regulators will typically be provided by a PMIC on an I2C bus.=
+ The
+> >>>> regulator won't be registered until very late into the boot process =
+and
+> >>>> a regulator_get() call will almost certainly cause the simplefb driv=
+er
+> >>>> to defer probing.
+> >>>
+> >>> Right, this has been discussed already and the plan is to have simple=
+fb
+> >>> continue its probe function and return success from it if it encounte=
+rs
+> >>> any -eprobe_defer errors, while tracking which resources it misses.
+> >>>
+> >>> And then have a late_initcall which will claim any resources which fa=
+iled
+> >>> with -eprobe beforehand.
+> >>
+> >> How do you ensure that the late_initcall gets run before any of the
+> >> other late_initcalls that disable the resources?
+> >=20
+> >> Also my recollection is
+> >> that deferred probing will first be triggered the first time from a
+> >> late_initcall, so chances aren't very high that all resources have sho=
+wn
+> >> up by that time.
+> >=20
+> > So I just looked up the relevant code, and your right, this means that
+> > the whole model of "disable unused resources once probing is done" which
+> > we use for e.g. clocks, is already somewhat broken since there is
+> > no guarantee probing is really done when the cleanup code runs.
+> >=20
+> >>>> Now deferring probing is a real showstopper for simplefb, because not
+> >>>> only does it make the framebuffer useless as early boot console, once
+> >>>> probing is attempted again the clocks that it would have needed to
+> >>>> acquire to keep going will already have been switched off, too.
+> >>>
+> >>> That is not true, even with the current implementation, if all necess=
+ary
+> >>> drivers are built in, then simplefb will come up later, but it will s=
+till
+> >>> come up before the late_initcall which disables the clocks.
+> >>
+> >> Yes, in the current implementation because clocks typically are
+> >> registered very early and thus you don't hit the deferred probe. The
+> >> same is not true for other types of resources where it's actually quite
+> >> common to hit deferred probing (regulators is a very notorious one).
+> >>
+> >> It doesn't matter whether a driver is built-in or not, once you hit
+> >> deferred probing you lose.
+> >>
+> >>> Once we do the split probing described above (which is something which
+> >>> we plan to do when it becomes necessary), then simplefb will still co=
+me
+> >>> up early.
+> >>
+> >> It will come up early but won't have acquired all the resources that it
+> >> needs, so unless you somehow manage to order late_initcalls in exactly
+> >> the way that you need them, the frameworks will still turn off what you
+> >> haven't managed to claim yet.
+> >=20
+> > If it is a resource which only shows up as a result of deferred probing,
+> > then it may very well not have been probed & registered yet, when the
+> > framework cleanup functions runs, and thus will not get turned off...
+> >=20
+> > So yes you're right that deferred probing may cause issues, but it seems
+> > that this is not something simplefb specific, but rather a generic prob=
+lem
+> > with deferred-probing vs subsys cleanup functions.
+> >=20
+> > My view on this is simple, lets worry about this when we actually have
+> > a board which hits these issues, and then we'll see from there.
+>=20
+> So thinking more about this, I think this is not that hard to fix.
+>=20
+> First lets fix the generic conflict between eprobedefer and subsys cleanup
+> functions. This can be done by:
+>=20
+> 1) Having a linked list of subsys cleanup functions
+> to call in drivers/base/dd.c
+>=20
+> 2) Have subsystems register their cleanup function rather then using
+> late_initcall to get it called
+>=20
+> 3) Have deferred_probe_work_func iterate over the list and call the clean=
+up
+> functions once deferred_probe_active_list goes empty. It should also remo=
+ve
+> them once called, so that they only get called the first time
+> deferred_probe_active_list goes empty (iow when the deferred probing of'
+> build-in drivers is done).
+>=20
+> This way cleanup functions actually get run when all probing of (buildin)
+> drivers is done.
 
-I'll make comments below where still relevant.
+That sounds like a reasonable solution to me.
 
-> ---
->  drivers/of/base.c     |  36 ++++++++++----
->  drivers/of/dynamic.c  |  18 ++-----
->  drivers/of/fdt.c      |   7 ++-
->  drivers/of/selftest.c | 130 +++++++++++++++++++++++---------------------------
->  include/linux/of.h    |   4 +-
->  5 files changed, 97 insertions(+), 98 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 2305dc0..7acaeca 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -603,16 +603,25 @@ EXPORT_SYMBOL(of_get_next_parent);
->  static struct device_node *__of_get_next_child(const struct device_node *node,
->  						struct device_node *prev)
->  {
-> -	struct device_node *next;
-> +	struct device_node *next = NULL, *np;
-> +	struct list_head *pos;
-> +	int found = 0;
->  
->  	if (!node)
->  		return NULL;
->  
-> -	next = prev ? prev->sibling : node->child;
-> -	for (; next; next = next->sibling)
-> -		if (of_node_get(next))
-> -			break;
-> +	// move through the children list, and find the next node
-> +	list_for_each(pos, &node->children) {
-> +		np = list_entry(pos, struct device_node, siblings);
-> +		if ((!prev || (found == 1)) && of_node_get(np)) {
-> +				next = np;
-> +				break;
-> +		}
-> +		if (prev && strcmp(np->full_name, prev->full_name) == 0)
-> +			found = 1;
+> Then when we move simplefb to a 2 fase probe, we can simply register the
+> framebuffer at the first probe call, and claim any resources we get, but
+> return -eprobe_defer if some resources returned that themselves.
+>=20
+> Then when simplefb_probe gets re-called, it can first check if it did not
+> already register a fb, and if it did, it can use that and see which
+> resources are missing, and only try to claim those. If some resources
+> still return probe_defer, return eprobe_defer again, otherwise success.
 
-What is this 'found' stuff about? Why is this in the loop?
+I'm not sure you can check that the fb was already registered. When the
+driver probe fails the driver core will pretty much remove any trace of
+the driver, so checking for an already-reagistered framebuffer isn't
+going to be easy.
 
-> +	}
->  	of_node_put(prev);
+But if you can manage to make that work it should give us a pretty good
+solution that should be easy to make use of by other drivers as well.
 
-Most of this code can be eliminated by using list_for_each_entry().
-Actually, the use of a loop here in the original code is a little bit
-goofy simply because it never actually loops. It always exits on the
-first iteration, but it does conveniently calculate the next entry in
-the list. The thing to do here is take inspiration from the
-list_for_each_entry() implementation and do the following:
+Thierry
 
-	if (!prev) {
-		next = list_first_entry_or_null(&node->children, struct device_node, siblings);
-	} else if (prev->siblings.next != &node->children)
-		next = list_next_entry(prev, siblings);
-	} else {
-		next = NULL;
-	}
+--6TrnltStXW4iwmi0
+Content-Type: application/pgp-signature
 
-> +
->  	return next;
->  }
->  #define __for_each_child_of_node(parent, child) \
-> @@ -651,22 +660,29 @@ EXPORT_SYMBOL(of_get_next_child);
->  struct device_node *of_get_next_available_child(const struct device_node *node,
->  	struct device_node *prev)
->  {
-> -	struct device_node *next;
-> +	struct device_node *next = NULL, *np;
-> +	struct list_head *pos;
->  	unsigned long flags;
-> +	int found = 0;
->  
->  	if (!node)
->  		return NULL;
->  
->  	raw_spin_lock_irqsave(&devtree_lock, flags);
-> -	next = prev ? prev->sibling : node->child;
-> -	for (; next; next = next->sibling) {
-> -		if (!__of_device_is_available(next))
-> +	list_for_each(pos, &node->children) {
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Use list_for_each_entry_continue(), but there will be a bit of fiddling
-to make sure the first entry in the list is handled correctly. You can
-handle this by using list_entry on the &node->children list, but be
-careful to never actually dereference that pointer.
+iQIcBAEBAgAGBQJUa2KzAAoJEN0jrNd/PrOhjgMP+wRrkkjDMfyoY7U8b3IHhBGv
+t5znFkEo4XVN8IDzHJBj5j8p7kh10EXWzdKM74P8CScoGx36Oy6i9sY8oXJNgl0u
+RXYD0pnlQe38nTfY6DA1H9HeKTsebjbf5E8OOaOmy5FCPtRmZkLW3lp6jjmT0j+z
+oYS/RRvTLhg4PnLU9pm2TTTynRTUjX+uFes9sMaukylRg6pJ0DeIQwnY9TbNlOgG
+fMTzkU6HeEfJplZvNVL63ueYCaqT/53f3jesk94fmkHdUyKsqS5GyA81wPhO0szw
+zvfNRT91lKcjph8hokm9UwS8KTglnZlaN83A3TEfgqR4H1xjmPNzbo/s3MBnu8gh
+w5hkXJLt1E50vt1b4cYTjPYCrYsN7/sFkUBSHERBVzSlsbQNnSlr5XNT2+xBifC6
+j+sAd2xBfigIvhRj1mJ9cHgVk0/kByhzYmo1jxAZkkU74Zytdy/+MgiNRteep2kx
+KlAgXxVS2U8uVZsvLwo7cOywrRGlO/D7IzqDCiEaa3jNpWeBzcbQAcTO5N75QRvT
+3rZ2UuXyXL0Ph8xPWxv7H7oZz+s1zPKJF5Lm/nOjZYkcyE5SYfkuk8MNxZ/2Z4U7
+hqvcwn6RkUCN/HsKWW52GR5uV3Uz3rIVDC91+/7BLQWHOVgKe0Dh9m1vHWRo0xVU
+rKeysL47l4PdK5lMXbYz
+=lLOx
+-----END PGP SIGNATURE-----
 
-> +		np = list_entry(pos, struct device_node, siblings);
-> +		if (!__of_device_is_available(np))
->  			continue;
-> -		if (of_node_get(next))
-> +		if ((!prev || (found == 1)) && of_node_get(np)) {
-> +			next = np;
->  			break;
-> +		}
-> +		if (prev && strcmp(np->full_name, prev->full_name) == 0)
-> +			found = 1;
->  	}
->  	of_node_put(prev);
->  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +
->  	return next;
->  }
->  EXPORT_SYMBOL(of_get_next_available_child);
-> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-> index f297891..3ffc726 100644
-> --- a/drivers/of/dynamic.c
-> +++ b/drivers/of/dynamic.c
-> @@ -115,11 +115,12 @@ void __of_attach_node(struct device_node *np)
->  		phandle = __of_get_property(np, "ibm,phandle", &sz);
->  	np->phandle = (phandle && (sz >= 4)) ? be32_to_cpup(phandle) : 0;
->  
-> -	np->child = NULL;
-> -	np->sibling = np->parent->child;
-> +	INIT_LIST_HEAD(&np->siblings);
-> +	INIT_LIST_HEAD(&np->children);
-> +	list_add_tail(&(np->siblings), &(np->parent->children));
-> +
->  	np->allnext = np->parent->allnext;
->  	np->parent->allnext = np;
-> -	np->parent->child = np;
->  	of_node_clear_flag(np, OF_DETACHED);
->  }
->  
-> @@ -165,16 +166,7 @@ void __of_detach_node(struct device_node *np)
->  		prev->allnext = np->allnext;
->  	}
->  
-> -	if (parent->child == np)
-> -		parent->child = np->sibling;
-> -	else {
-> -		struct device_node *prevsib;
-> -		for (prevsib = np->parent->child;
-> -		     prevsib->sibling != np;
-> -		     prevsib = prevsib->sibling)
-> -			;
-> -		prevsib->sibling = np->sibling;
-> -	}
-> +	list_del(&np->siblings);
->  
->  	of_node_set_flag(np, OF_DETACHED);
->  }
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index d1ffca8..4cf2356 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -224,13 +224,12 @@ static void * unflatten_dt_node(void *blob,
->  		prev_pp = &np->properties;
->  		**allnextpp = np;
->  		*allnextpp = &np->allnext;
-> +		INIT_LIST_HEAD(&np->siblings);
-> +		INIT_LIST_HEAD(&np->children);
->  		if (dad != NULL) {
->  			np->parent = dad;
->  			/* we temporarily use the next field as `last_child'*/
-> -			if (dad->next == NULL)
-> -				dad->child = np;
-> -			else
-> -				dad->next->sibling = np;
-> +			list_add_tail(&(np->siblings), &(dad->children));
->  			dad->next = np;
->  		}
->  	}
-> diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
-> index 7800127..8ec8a22 100644
-> --- a/drivers/of/selftest.c
-> +++ b/drivers/of/selftest.c
-> @@ -25,10 +25,11 @@ static struct selftest_results {
->  	int failed;
->  } selftest_results;
->  
-> -#define NO_OF_NODES 3
-> -static struct device_node *nodes[NO_OF_NODES];
-> -static int last_node_index;
-> +#define MAX_NODES 50
-> +
-> +static int no_of_nodes;
->  static bool selftest_live_tree;
-> +static struct device_node* nodes[MAX_NODES];
-
-I think it's time to rework this structure. Instead of a static list,
-the code should figure out how many entries it needs and then kzalloc()
-the region.
-
->  
->  #define selftest(result, fmt, ...) { \
->  	if (!(result)) { \
-> @@ -417,7 +418,6 @@ static void __init of_selftest_changeset(void)
->  	n1->parent = parent;
->  	n2->parent = parent;
->  	n21->parent = n2;
-> -	n2->child = n21;
->  	ppremove = of_find_property(parent, "prop-remove", NULL);
->  	selftest(ppremove, "failed to find removal prop");
->  
-> @@ -713,44 +713,34 @@ static void update_node_properties(struct device_node *np,
->  		child->parent = dup;
->  }
->  
-> -/**
-> - *	attach_node_and_children - attaches nodes
-> - *	and its children to live tree
-> - *
-> - *	@np:	Node to attach to live tree
-> - */
-> -static int attach_node_and_children(struct device_node *np)
-> -{
-> -	struct device_node *next, *root = np, *dup;
->  
-> -	/* skip root node */
-> -	np = np->child;
-> -	/* storing a copy in temporary node */
-> -	dup = np;
-> +static void populate_node_list(struct device_node *np)
-> +{
-> +	struct list_head *pos;
->  
-> -	while (dup) {
-> -		if (WARN_ON(last_node_index >= NO_OF_NODES))
-> -			return -EINVAL;
-> -		nodes[last_node_index++] = dup;
-> -		dup = dup->sibling;
-> +	list_for_each(pos, &np->children) {
-> +		nodes[no_of_nodes] = list_entry(pos, struct device_node, siblings);
-> +		populate_node_list(nodes[no_of_nodes++]);
->  	}
-> -	dup = NULL;
-> +}
->  
-> -	while (np) {
-> -		next = np->allnext;
-> -		dup = of_find_node_by_path(np->full_name);
-> +static void attach_node_and_children(struct device_node *np)
-> +{
-> +	struct device_node *root = np, *dup, *temp;
-> +	int i;
-> +
-> +	populate_node_list(np);
-> +
-> +	for (i = 0; i < no_of_nodes && nodes[i]; i++) {
-> +		temp = nodes[i];
-> +		if (temp->parent == root)
-> +			temp->parent = of_allnodes;
-> +		dup = of_find_node_by_path(temp->full_name);
->  		if (dup)
-> -			update_node_properties(np, dup);
-> -		else {
-> -			np->child = NULL;
-> -			if (np->parent == root)
-> -				np->parent = of_allnodes;
-> -			of_attach_node(np);
-> -		}
-> -		np = next;
-> +			update_node_properties(temp, dup);
-> +		else
-> +			of_attach_node(temp);
->  	}
-> -
-> -	return 0;
->  }
->  
->  /**
-> @@ -764,7 +754,8 @@ static int __init selftest_data_add(void)
->  	extern uint8_t __dtb_testcases_begin[];
->  	extern uint8_t __dtb_testcases_end[];
->  	const int size = __dtb_testcases_end - __dtb_testcases_begin;
-> -	int rc;
-> +	struct list_head *pos;
-> +	int rc, i = 0;
->  
->  	if (!size) {
->  		pr_warn("%s: No testcase data to attach; not running tests\n",
-> @@ -796,65 +787,66 @@ static int __init selftest_data_add(void)
->  		/* enabling flag for removing nodes */
->  		selftest_live_tree = true;
->  		of_allnodes = selftest_data_node;
-> +		populate_node_list(selftest_data_node);
-> +
-> +		// attach the root node
-> +		__of_attach_node_sysfs(selftest_data_node);
-> +
-> +		while (i < no_of_nodes && nodes[i])
-> +			__of_attach_node_sysfs(nodes[i++]);
->  
-> -		for_each_of_allnodes(np)
-> -			__of_attach_node_sysfs(np);
->  		of_aliases = of_find_node_by_path("/aliases");
->  		of_chosen = of_find_node_by_path("/chosen");
->  		return 0;
->  	}
->  
-> +	list_for_each(pos, &selftest_data_node->children) {
-> +		np = list_entry(pos, struct device_node, siblings);
-> +		np->parent = of_allnodes;
-> +	}
-> +
-> +
->  	/* attach the sub-tree to live tree */
-> -	return attach_node_and_children(selftest_data_node);
-> -}
-> +	attach_node_and_children(selftest_data_node);
->  
-> -/**
-> - *	detach_node_and_children - detaches node
-> - *	and its children from live tree
-> - *
-> - *	@np:	Node to detach from live tree
-> - */
-> -static void detach_node_and_children(struct device_node *np)
-> -{
-> -	while (np->child)
-> -		detach_node_and_children(np->child);
-> -	of_detach_node(np);
-> +	return 0;
->  }
->  
-> -/**
-> - *	selftest_data_remove - removes the selftest data
-> - *	nodes from the live tree
-> - */
->  static void selftest_data_remove(void)
->  {
-> -	struct device_node *np;
->  	struct property *prop;
-> +	struct device_node *np, *temp;
-> +	int i = no_of_nodes;
->  
->  	if (selftest_live_tree) {
->  		of_node_put(of_aliases);
->  		of_node_put(of_chosen);
->  		of_aliases = NULL;
->  		of_chosen = NULL;
-> -		for_each_child_of_node(of_allnodes, np)
-> -			detach_node_and_children(np);
-> +		while (i >= 0) {
-> +			temp = nodes[i--];
-> +			if (temp)
-> +				of_detach_node(temp);
-> +		}
->  		__of_detach_node_sysfs(of_allnodes);
->  		of_allnodes = NULL;
->  		return;
->  	}
->  
-> -	while (last_node_index >= 0) {
-> -		if (nodes[last_node_index]) {
-> -			np = of_find_node_by_path(nodes[last_node_index]->full_name);
-> -			if (strcmp(np->full_name, "/aliases") != 0) {
-> -				detach_node_and_children(np);
-> -			} else {
-> -				for_each_property_of_node(np, prop) {
-> -					if (strcmp(prop->name, "testcase-alias") == 0)
-> +	while (i >= 0) {
-> +		temp = nodes[i--];
-> +		if (temp) {
-> +			if (strcmp(temp->full_name, "/aliases") == 0) {
-> +				for_each_property_of_node(temp, prop) {
-> +					if (strcmp(prop->name, "testcase-alias") == 0) {
-> +						np = of_find_node_by_path(temp->full_name);
->  						of_remove_property(np, prop);
-> +					}
->  				}
->  			}
-> +			else
-> +				of_detach_node(temp);
->  		}
-> -		last_node_index--;
->  	}
->  }
->  
-> @@ -865,6 +857,7 @@ static int __init of_selftest(void)
->  
->  	/* adding data for selftest */
->  	res = selftest_data_add();
-> +
->  	if (res)
->  		return res;
->  
-> @@ -891,7 +884,6 @@ static int __init of_selftest(void)
->  
->  	/* removing selftest data from live tree */
->  	selftest_data_remove();
-> -
->  	/* Double check linkage after removing testcase data */
->  	of_selftest_check_tree_linkage();
->  
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 6545e7a..84c708c 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -53,10 +53,10 @@ struct device_node {
->  	struct	property *properties;
->  	struct	property *deadprops;	/* removed properties */
->  	struct	device_node *parent;
-> -	struct	device_node *child;
-> -	struct	device_node *sibling;
->  	struct	device_node *next;	/* next device of same type */
->  	struct	device_node *allnext;	/* next in list of all nodes */
-> +	struct	list_head children;
-> +	struct	list_head siblings;
->  	struct	kobject kobj;
->  	unsigned long _flags;
->  	void	*data;
-> -- 
-> 1.9.1
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--6TrnltStXW4iwmi0--
