@@ -1,108 +1,106 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of/platform: Move platform devices
- =?iso-8859-1?Q?under=0D?= /sys/devices/platform
-Date: Tue, 18 Nov 2014 16:10:38 +0000
-Message-ID: <20141118161038.192B7C40966@trevor.secretlab.ca>
-References: <1415097920-30014-1-git-send-email-grant.likely@linaro.org>
-	<546B2123.7060406@samsung.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [RFC] pinctrl: Provide a generic device tree binding for per-pin
+ pin controllers
+Date: Tue, 18 Nov 2014 17:19:50 +0100
+Message-ID: <20141118161950.GG30369@pengutronix.de>
+References: <20141023132305.GG14443@pengutronix.de>
+ <5451B914.6020300@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <546B2123.7060406-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5451B914.6020300-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 18 Nov 2014 11:36:19 +0100
-, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
- wrote:
-> On 11/04/2014 11:45 AM, Grant Likely wrote:
-> > Currently the devices created by drivers/of/platform.c get created at
-> > the root of /sys/devices. This goes against the typical pattern for
-> > sysfs where the top level /sys/devices structure contains categories of
-> > devices, and the structure of devices is placed below that. To fix this,
-> > make the code in drivers/of/platform.c follow the drivers/base/platform.c
-> > behaviour, and use &platform_bus as the default parent for all new
-> > platform_devices and amba_devices.
+Hi Stephen,
+
+On Wed, Oct 29, 2014 at 10:05:40PM -0600, Stephen Warren wrote:
+> On 10/23/2014 07:23 AM, Sascha Hauer wrote:
+> > Most iomux controllers allow a configuration per pin. These currently
+> > have no common device tree binding. There are many different SoC
+> > specific bindings for this class of iomux controllers. Some controllers
+> > artificially group pins together where in hardware no groups exist (for
+> > example lantiq). Other controllers just put each pin into a separate
+> > group which explodes to many many strings to parse (Tegra30).
 > > 
-> > This change has been discussed for a long time, but nobody has actually
-> > acted on it. Userspace code that expects to find devices under a fixed
-> > /sys/devices/... path will be affected. It isn't /supposed/ to do that,
-> > but if anyone complains then I'll add a default-off workaround option to
-> > put them back into the root.
+> > 
+> > A pin controller has n pins, each muxable to m different positions.
 > 
-> One of side effects of this change is that platform drivers registering
-> other platform drivers or devices in their probe callback can deadlock
-> due to double device_lock on platform device. This is for example case
-> of exynos_drm driver[1]. I guess it could/should be fixed in exynos_drm.
-> Anyway it can affect other drivers as well. At least grep shows few
-> possible candidates:
+> I assume that sentence is meant to say something more specific:
+> 
+> This binding is intended to apply to pin controllers where each pin has
+> an independently selectable mux function.
 
-What on earth is that driver doing registering additional drivers in the
-probe hook?!? That's madness, and should be treated as a bug.
-
-g.
+Yes.
 
 > 
-> $ git grep -p platform_driver_register | grep -A1 -P '_probe\(struct
-> platform_device'
-> 
-> drivers/gpu/drm/exynos/exynos_drm_drv.c=static int
-> exynos_drm_platform_probe(struct platform_device *pdev)
-> drivers/gpu/drm/exynos/exynos_drm_drv.c:	ret =
-> platform_driver_register(&fimd_driver);
-> --
-> drivers/gpu/drm/sti/sti_drm_drv.c=static int
-> sti_drm_platform_probe(struct platform_device *pdev)
-> drivers/gpu/drm/sti/sti_drm_drv.c:
-> platform_driver_register(&sti_drm_master_driver);
-> --
-> drivers/mtd/nand/atmel_nand.c=static int atmel_nand_probe(struct
-> platform_device *pdev)
-> drivers/mtd/nand/atmel_nand.c:	res =
-> platform_driver_register(&atmel_nand_nfc_driver);
-> 
-> 
-> [1]: http://permalink.gmane.org/gmane.comp.video.dri.devel/117727
-> 
-> Regards
-> Andrzej
-> 
-> 
-> > 
-> > Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> > Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-> > Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> > ---
-> >  drivers/of/platform.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> > index 3b64d0bf5bba..7c6771986c06 100644
-> > --- a/drivers/of/platform.c
-> > +++ b/drivers/of/platform.c
-> > @@ -138,7 +138,7 @@ struct platform_device *of_device_alloc(struct device_node *np,
-> >  	}
-> >  
-> >  	dev->dev.of_node = of_node_get(np);
-> > -	dev->dev.parent = parent;
-> > +	dev->dev.parent = parent ? : &platform_bus;
-> >  
-> >  	if (bus_id)
-> >  		dev_set_name(&dev->dev, "%s", bus_id);
-> > @@ -291,7 +291,7 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
-> >  
-> >  	/* setup generic device info */
-> >  	dev->dev.of_node = of_node_get(node);
-> > -	dev->dev.parent = parent;
-> > +	dev->dev.parent = parent ? : &platform_bus;
-> >  	dev->dev.platform_data = platform_data;
-> >  	if (bus_id)
-> >  		dev_set_name(&dev->dev, "%s", bus_id);
-> > 
-> 
+> "A pin controller ..." sounds like a general statement that is intended
+> to apply to any pin controller. If that were intended, the statement you
+> made certainly wouldn't be true.
 
+Right.
+
+> 
+> > There exists a logical numbering for all pins, for most SoCs this will
+> > be defined by the register ordering so that the pin number can directly
+> > be translated to a register offset without the need of tables in the
+> > driver. The register usually takes m different numbers to specify the
+> > function the pin should have. Both the pin and its function can be
+> > described as a single 32bit number:
+> > 
+> > #define PINMUX_PIN(no, fn) (((no) & 0xffffff) << 8) | (fn) & 0xff)
+> > 
+> > This allows to put multiple pins into a single device tree property
+> > which is very efficiently parsable by the driver (or the pinmux core).
+> > We suggest to name this property 'pins' and to put it next to the
+> > generic pinconf binding.  This allows to describe multiple pins with the
+> > same pinconf settings in a single device tree node. Multiple of these
+> > nodes can be grouped under a pinctrl state node. This allows to put pins
+> > with different pinconf settings to a single state.
+> > 
+> > Example:
+> > 
+> > 	uart2 {
+> > 		uart2_default_mode: uart2_default {
+> > 			pins1 {
+> > 				pins = <PINMUX_PIN(127, 3), PINMUX_PIN(128, 3)>;
+> 
+> Within each of the nodes, the binding for pinmux is defined
+> independently by each pin controller. I don't have any /strong/
+> objection to any particular pin controller using this binding, or even
+> it being re-used across many similar pin controllers, or even being
+> the/a default binding style for new pin controllers.
+> 
+> I'm not totally sure whether blending the pin ID and mux function ID
+> into the same value is a good idea. That said, it does have advantages
+> as you state, and shouldn't cause any significant issues. In any case
+> where it would be a bad idea, the binding for the pin controller in
+> question can still choose to use some more appropriate binding, so
+> allowing this binding for some controllers won't force issues onto other
+> controllers. So, it seems fine.
+> 
+> Note however that we can't change existing bindings. Well, I suppose
+> certain bindings could be enhanced to support either a string-based or
+> an integer-base binding, but I don't think that'd be a good idea.
+
+I'm only talking about new bindings, no need to change existing
+bindings. For new bindings it surely has benefits when we can just point
+to a well established binding. Right now the existing bindings for the
+pin controllers which independently control each pin differ a lot.
+
+The next step should be to integrate the above into the pinctrl
+documentation.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
