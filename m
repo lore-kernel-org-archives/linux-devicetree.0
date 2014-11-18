@@ -1,135 +1,133 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 06/10] input: touchscreen: edt-ft5x06: fix driver
- autoprobing
-Date: Tue, 18 Nov 2014 13:21:12 -0600
-Message-ID: <20141118192112.GM6179@saruman>
-References: <1416334028-7766-1-git-send-email-balbi@ti.com>
- <1416334028-7766-6-git-send-email-balbi@ti.com>
- <20141118183847.GE3003@dtor-ws>
- <20141118190922.GL6179@saruman>
-Reply-To: <balbi@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 1/2] ARM: keystone: pm: switch to use generic pm domains
+Date: Tue, 18 Nov 2014 20:32:17 +0100
+Message-ID: <1709760.E0jX3Myv0h@wuerfel>
+References: <1415631557-22897-1-git-send-email-grygorii.strashko@ti.com> <7hsihhzecq.fsf@deeprootsystems.com> <546B95EC.5000705@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="dp9QYJgVRVEW2bsm"
-Return-path: <stable-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141118190922.GL6179@saruman>
-Sender: stable-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Tony Lindgren <tony@atomide.com>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Lothar =?iso-8859-1?Q?Wa=DFmann?= <lw@karo-electronics.de>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-input@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <546B95EC.5000705@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Kevin Hilman <khilman@kernel.org>, ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
---dp9QYJgVRVEW2bsm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tuesday 18 November 2014 20:54:36 Grygorii Strashko wrote:
+> Hi All,
+> 
+> Thank you for your comments.
+> 
+> On 11/17/2014 11:50 PM, Kevin Hilman wrote:
+> > Arnd Bergmann <arnd@arndb.de> writes:
+> > 
+> >> On Monday 17 November 2014 11:14:16 Kevin Hilman wrote:
+> >>>>>
+> >>>>> So, The Keystone 2 Generic PM Controller is just a proxy PM layer here between
+> >>>>> device and Generic clock manipulation PM callbacks.
+> >>>>> It fills per-device clock list when device is attached to GPD and
+> >>>>> ensures that all clocks from that list enabled/disabled when device is
+> >>>>> started/stopped.
+> >>>>
+> >>>> The idea of such a generic power domain implementation sounds useful, but
+> >>>> it has absolutely no business in platform specific code.
+> >>>
+> >>> Yes it does.  This isn't a generic power domain implementation, but
+> >>> rather just the platform-specific glue that hooks up the clocks to the
+> >>> right devices and power-domains so that the generic power-domain and
+> >>> generic pm_clocks code does the right thing.
+> >>
+> >> How would you do this on an arm64 version of keystone then? With
+> >> the current approach, you'd need to add a machine specific directory,
+> >> and that seems completely pointless since this is not even about
+> >> a hardware requirement.
+> > 
+> > Yeah, you're right.  I misunderstood you're original comment.
+> > 
+> >>>> I suggest you either remove the power domain proxy from your drivers
+> >>>> and use the clocks directly,
+> 
+> Hm. I've been thinking about this, but the problem is that Keystone 2
+> reuses a lot of IPs from Davinci and PM for Davinci is based on Generic clock
+> manipulation PM callbacks framework, but for non-DT case. So, I can't simply
+> use clocks directly.
 
-Hi,
+I think you could get that to work without too much trouble, but as Kevin
+comments, the generic pmdomain code is helpful here, and we should find
+a way to make it work better.
 
-On Tue, Nov 18, 2014 at 01:09:22PM -0600, Felipe Balbi wrote:
-> On Tue, Nov 18, 2014 at 10:38:47AM -0800, Dmitry Torokhov wrote:
-> > Hi Felipe,
-> >=20
-> > On Tue, Nov 18, 2014 at 12:07:04PM -0600, Felipe Balbi wrote:
-> > > i2c devices match against struct i2c_device_id
-> > > even for CONFIG_OF case, so adding a struct of_device_id
-> > > doesn't change anything. As a result, currently, edt-ft5x06
-> > > will not autoprobe if built as a module.
-> >=20
-> > Why doe snot it autoprobe? We properly declare MODULE_DEVICE_TABLE for
-> > OF, is it because we are missing some data in device uevent?
->=20
-> because of of_i2c_register_devices(). Maybe Wolfram can give a better
-> explanation here, but it just doesn't match through of_device_id.
->=20
-> Apply this:
->=20
-> diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
-> index 2f90ac6..f0dc16e 100644
-> --- a/drivers/i2c/i2c-core.c
-> +++ b/drivers/i2c/i2c-core.c
-> @@ -449,8 +449,10 @@ static const struct i2c_device_id *i2c_match_id(cons=
-t struct i2c_device_id *id,
->  						const struct i2c_client *client)
->  {
->  	while (id->name[0]) {
-> -		if (strcmp(client->name, id->name) =3D=3D 0)
-> +		if (strcmp(client->name, id->name) =3D=3D 0) {
-> +			dev_info(&client->dev, "i2c_device_id match\n");
->  			return id;
-> +		}
->  		id++;
->  	}
->  	return NULL;
-> @@ -465,8 +467,10 @@ static int i2c_device_match(struct device *dev, stru=
-ct device_driver *drv)
->  		return 0;
-> =20
->  	/* Attempt an OF style match */
-> -	if (of_driver_match_device(dev, drv))
-> +	if (of_driver_match_device(dev, drv)) {
-> +		dev_info(dev, "of driver match\n");
->  		return 1;
-> +	}
-> =20
->  	/* Then ACPI style match */
->  	if (acpi_driver_match_device(dev, drv))
-> @@ -1081,6 +1085,7 @@ i2c_new_device(struct i2c_adapter *adap, struct i2c=
-_board_info const *info)
->  	client->dev.bus =3D &i2c_bus_type;
->  	client->dev.type =3D &i2c_client_type;
->  	client->dev.of_node =3D info->of_node;
-> +	dev_info(&adap->dev, "%s: of_node %p\n", __func__, info->of_node);
->  	ACPI_COMPANION_SET(&client->dev, info->acpi_node.companion);
-> =20
->  	i2c_dev_set_name(adap, client);
-> @@ -1411,6 +1416,7 @@ static void of_i2c_register_devices(struct i2c_adap=
-ter *adap)
-> =20
->  		info.irq =3D irq_of_parse_and_map(node, 0);
->  		info.of_node =3D of_node_get(node);
-> +		dev_info(&adap->dev, "%s: of_node %p\n", __func__, info.of_node);
->  		info.archdata =3D &dev_ad;
-> =20
->  		if (of_get_property(node, "wakeup-source", NULL))
->=20
-> then boot the board and you get http://hastebin.com/oqemezajez
->=20
-> Interesting, it's matching against of but only when I modprobe.
->=20
-> Let me debug this one a little more.
+> >>> No.  That's a step in the wrong direction.  This change isn't affecting
+> >>> drivers directly.  It's the runtime PM and generic power domain layers
+> >>> that handle this, and runtime PM adapted drivers don't need any changes.
+> >>>   
+> >>>> or come up with an implementation that can be used across other
+> >>>> platforms and CPU architectures.
+> >>>
+> >>> We already have those in the generic power domain and the pm_clock
+> >>> layers.  This series is just hooking those up for Keystone.
+> >>
+> >> Then why not add the missing piece to the generic power domain
+> >> code to avoid having to add infrastructure to the platform
+> >> for it?
+> > 
+> > Yes, good point.  There is nothing keystone-specific in this glue.
+> > 
+> > Grygorii, what about adding a feature to the generic domain parsing so
+> > that it can get clocks from device nodes that are part of the domain,
+> > and so it sets up pm_clk accordingly.
+> 
+> I'd like to mention few points here:
+> 1)  not all platforms may need this
+> 
+> 2)  not all platforms may allow to add ALL clocks from "clocks" property
+>    to pm_clk as some of them can be optional or have to be controlled by drivers only
+>    (for example, initially, it was the case for SH-mobile https://lkml.org/lkml/2014/4/24/197
+>     also now, last implementation for shmobile add only first clock from "clocks" property
+>     to pm_clk https://lkml.org/lkml/2014/11/17/272).
+> 
+> 3)  such functionality have to be enabled for devices selectively, for example
+>    now we are going to enable it for devices which a ready for runtime PM.
+> 
+> Current implementation cover 1 & 3, but also it allows to cover 2 too, because
+> it's platform specific implementation and .attach_dev() can be updated to skip some 
+> clocks or devices if needed.
 
-this is a simpler patch:
+Well, not all drivers and not all platforms have to use it, I think it would
+just be good to make the case you are interested in really easy, and definitely
+work without platform specific code.
 
-+MODULE_ALIAS("i2c:edt-ft5206");
-+MODULE_ALIAS("i2c:edt-ft5306");
-+MODULE_ALIAS("i2c:edt-ft5406");
+> > I've recently seen other SoCs doing very similar, so this really should
+> > be generalized.
+> > 
+> > I've been looking at this primarily as a right incremental improvement
+> > from what is there for Keystone today, but Arnd is right.  This should
+> > be moved out of platform code.
+> 
+> I'm ready to do what ever you want, but I don't fully understand what exactly to do :(
+> Should I create some generic_pm_clk_domain.c?
+> - or - Do you mean to integrate it in domain.c (see no way to do it:()?
+> - or - smth. else
+> 
+> What about introduced DT bindings? For example, How will devices be
+> selected for attachment to Generic pm_clk domain if I'll introduce
+> generic_pm_clk_domain.c?
 
-I'll send it in a bit.
+I am not really familiar with the pmdomain code at all, but here is
+what I had thought the simplest generic pmdomain code would do:
 
---=20
-balbi
+Have one pmdomain driver in the generic code that knows about clocks,
+possibly also regulators and pins and just turns them on when needed.
+You can have a "simple-pmdomain" or "generic-pmdomain" compatible
+string.
 
---dp9QYJgVRVEW2bsm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+I'm a bit surprised that your pmdomain code looks up the clocks from the
+respective device, rather than know about the clocks itself. There is
+probably a good reason for this, but I don't see it yet.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Another option would be to have a special case for an empty
+"power-domains" property if this is the most common case: if that
+property exists but is empty, the pmdomain core could interpret
+it as an indication to control all the clocks/regulators/pins
+of a device.
 
-iQIcBAEBAgAGBQJUa5woAAoJEIaOsuA1yqREABsP/3N5plLWcPVGdO+1oKL+3k1S
-fGaZSywm+elnEMJzdA3Z26+h0xfsJPea8DdyH/j0aObYv/xLZpMrurrrJKLILvyr
-ocYPYhQdu0kZ7J1ZbhKTIPrF6NJThccZK9/D429XFU2Vingv7joCdI/2l30ExBQK
-uemqqdXLQaWOL83j2/VZCaIq2D6E2y/V8//K9nv+/zm+iQK7SHv2Qja0ikASFbov
-GQQwpzKUVkPwM5NIGS1LslRiQo1ieTrbGsW5Y9clhNMbPoiqiueKwbZGuLJjTeaq
-zQSpaxZoIJTtVuYssXw6hee69ZfIjhKAE85i/LdSYqmDXWVdoNt8/DXtQmUGcTxQ
-Z5s3WfkEa2l8puHPfB1cTmyNZ104MeDNw0ON+2qo+/K6YduE0erNcVcP2lR0QddZ
-XjpPHk4C4/LDkcYSXAFHUCvst+IK6JhT8GZ8CUe8sZYH/+JzkL0Osadfb000YKub
-KvUMHTLgII1JdRbaga+zRwxOFJ0aMohiCMv/nL4U6KlAXkmfsaz/HnBKVjDdeH+V
-Wi5ZZ923sveTBDDY4SWTL8+9XSZGD4gHnIxCO4xeDOs3+d0YChsoP/QepQLR09k6
-rUMKYG5/y9sH7s+4VM3P57FSPszBUKhhdRDCH0Ifdtm7jaOteJAyqx8dpwelaBXz
-Q1pKckWzXxgOIGwurSlk
-=ween
------END PGP SIGNATURE-----
-
---dp9QYJgVRVEW2bsm--
+	Arnd
