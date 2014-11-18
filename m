@@ -1,133 +1,114 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 1/2] ARM: keystone: pm: switch to use generic pm domains
-Date: Tue, 18 Nov 2014 20:32:17 +0100
-Message-ID: <1709760.E0jX3Myv0h@wuerfel>
-References: <1415631557-22897-1-git-send-email-grygorii.strashko@ti.com> <7hsihhzecq.fsf@deeprootsystems.com> <546B95EC.5000705@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <546B95EC.5000705@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Kevin Hilman <khilman@kernel.org>, ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v8 10/13] ARM: dts: berlin: add BG2Q nodes for USB support
+Date: Tue, 18 Nov 2014 20:36:49 +0100
+Message-ID: <546B9FD1.6040801@gmail.com>
+References: <1416231347-27193-1-git-send-email-antoine.tenart@free-electrons.com> <1416231347-27193-11-git-send-email-antoine.tenart@free-electrons.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416231347-27193-11-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 18 November 2014 20:54:36 Grygorii Strashko wrote:
-> Hi All,
-> 
-> Thank you for your comments.
-> 
-> On 11/17/2014 11:50 PM, Kevin Hilman wrote:
-> > Arnd Bergmann <arnd@arndb.de> writes:
-> > 
-> >> On Monday 17 November 2014 11:14:16 Kevin Hilman wrote:
-> >>>>>
-> >>>>> So, The Keystone 2 Generic PM Controller is just a proxy PM layer here between
-> >>>>> device and Generic clock manipulation PM callbacks.
-> >>>>> It fills per-device clock list when device is attached to GPD and
-> >>>>> ensures that all clocks from that list enabled/disabled when device is
-> >>>>> started/stopped.
-> >>>>
-> >>>> The idea of such a generic power domain implementation sounds useful, but
-> >>>> it has absolutely no business in platform specific code.
-> >>>
-> >>> Yes it does.  This isn't a generic power domain implementation, but
-> >>> rather just the platform-specific glue that hooks up the clocks to the
-> >>> right devices and power-domains so that the generic power-domain and
-> >>> generic pm_clocks code does the right thing.
-> >>
-> >> How would you do this on an arm64 version of keystone then? With
-> >> the current approach, you'd need to add a machine specific directory,
-> >> and that seems completely pointless since this is not even about
-> >> a hardware requirement.
-> > 
-> > Yeah, you're right.  I misunderstood you're original comment.
-> > 
-> >>>> I suggest you either remove the power domain proxy from your drivers
-> >>>> and use the clocks directly,
-> 
-> Hm. I've been thinking about this, but the problem is that Keystone 2
-> reuses a lot of IPs from Davinci and PM for Davinci is based on Generic clock
-> manipulation PM callbacks framework, but for non-DT case. So, I can't simply
-> use clocks directly.
+On 17.11.2014 14:35, Antoine Tenart wrote:
+> Adds nodes describing the Marvell Berlin BG2Q USB PHY and USB. The BG2Q
+> SoC has 3 USB host controller, compatible with ChipIdea.
+>
+> Signed-off-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-I think you could get that to work without too much trouble, but as Kevin
-comments, the generic pmdomain code is helpful here, and we should find
-a way to make it work better.
+Applied to berlin/dt with the whitespace removed that Sergei pointed
+out.
 
-> >>> No.  That's a step in the wrong direction.  This change isn't affecting
-> >>> drivers directly.  It's the runtime PM and generic power domain layers
-> >>> that handle this, and runtime PM adapted drivers don't need any changes.
-> >>>   
-> >>>> or come up with an implementation that can be used across other
-> >>>> platforms and CPU architectures.
-> >>>
-> >>> We already have those in the generic power domain and the pm_clock
-> >>> layers.  This series is just hooking those up for Keystone.
-> >>
-> >> Then why not add the missing piece to the generic power domain
-> >> code to avoid having to add infrastructure to the platform
-> >> for it?
-> > 
-> > Yes, good point.  There is nothing keystone-specific in this glue.
-> > 
-> > Grygorii, what about adding a feature to the generic domain parsing so
-> > that it can get clocks from device nodes that are part of the domain,
-> > and so it sets up pm_clk accordingly.
-> 
-> I'd like to mention few points here:
-> 1)  not all platforms may need this
-> 
-> 2)  not all platforms may allow to add ALL clocks from "clocks" property
->    to pm_clk as some of them can be optional or have to be controlled by drivers only
->    (for example, initially, it was the case for SH-mobile https://lkml.org/lkml/2014/4/24/197
->     also now, last implementation for shmobile add only first clock from "clocks" property
->     to pm_clk https://lkml.org/lkml/2014/11/17/272).
-> 
-> 3)  such functionality have to be enabled for devices selectively, for example
->    now we are going to enable it for devices which a ready for runtime PM.
-> 
-> Current implementation cover 1 & 3, but also it allows to cover 2 too, because
-> it's platform specific implementation and .attach_dev() can be updated to skip some 
-> clocks or devices if needed.
+Thanks!
 
-Well, not all drivers and not all platforms have to use it, I think it would
-just be good to make the case you are interested in really easy, and definitely
-work without platform specific code.
+> ---
+>   arch/arm/boot/dts/berlin2q.dtsi | 55 +++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 55 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
+> index 2de8d6f8973c..834142bdfbb1 100644
+> --- a/arch/arm/boot/dts/berlin2q.dtsi
+> +++ b/arch/arm/boot/dts/berlin2q.dtsi
+> @@ -114,6 +114,40 @@
+>   			#interrupt-cells = <3>;
+>   		};
+>
+> +		usb_phy2: phy@a2f400 {
+> +			compatible = "marvell,berlin2-usb-phy";
+> +			reg = <0xa2f400 0x128>;
+> +			#phy-cells = <0>;
+> +			resets = <&chip 0x104 14>;
+> +			status = "disabled";
+> +		};
+> +
+> +		usb2: usb@a30000 {
+> +			compatible = "chipidea,usb2";
+> +			reg = <0xa30000 0x10000>;
+> +			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&chip CLKID_USB2>;
+> +			phys = <&usb_phy2>;
+> +			phy-names = "usb-phy";
+> +			status = "disabled";
+> +		};
+> +
+> +		usb_phy0: phy@b74000 {
+> +			compatible = "marvell,berlin2-usb-phy";
+> +			reg = <0xb74000 0x128>;
+> +			#phy-cells = <0>;
+> +			resets = <&chip 0x104 12>;
+> +			status = "disabled";
+> +		};
+> +
+> +		usb_phy1: phy@b78000 {
+> +			compatible = "marvell,berlin2-usb-phy";
+> +			reg = <0xb78000 0x128>;
+> +			#phy-cells = <0>;
+> +			resets = <&chip 0x104 13>;
+> +			status = "disabled";
+> +		};
+> +
+>   		eth0: ethernet@b90000 {
+>   			compatible = "marvell,pxa168-eth";
+>   			reg = <0xb90000 0x10000>;
+> @@ -365,6 +399,26 @@
+>   			};
+>   		};
+>
+> +		usb0: usb@ed0000 {
+> +			compatible = "chipidea,usb2";
+> +			reg = <0xed0000 0x10000>;
+> +			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&chip CLKID_USB0>;
+> +			phys = <&usb_phy0>;
+> +			phy-names = "usb-phy";
+> +			status = "disabled";
+> +		};
+> +
+> +		usb1: usb@ee0000 {
+> +			compatible = "chipidea,usb2";
+> +			reg = <0xee0000 0x10000>;
+> +			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&chip CLKID_USB1>;
+> +			phys = <&usb_phy1>;
+> +			phy-names = "usb-phy";
+> +			status = "disabled";
+> +		};
+> +
+>   		apb@fc0000 {
+>   			compatible = "simple-bus";
+>   			#address-cells = <1>;
+> @@ -457,5 +511,6 @@
+>   				interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+>   			};
+>   		};
+> +
+>   	};
+>   };
+>
 
-> > I've recently seen other SoCs doing very similar, so this really should
-> > be generalized.
-> > 
-> > I've been looking at this primarily as a right incremental improvement
-> > from what is there for Keystone today, but Arnd is right.  This should
-> > be moved out of platform code.
-> 
-> I'm ready to do what ever you want, but I don't fully understand what exactly to do :(
-> Should I create some generic_pm_clk_domain.c?
-> - or - Do you mean to integrate it in domain.c (see no way to do it:()?
-> - or - smth. else
-> 
-> What about introduced DT bindings? For example, How will devices be
-> selected for attachment to Generic pm_clk domain if I'll introduce
-> generic_pm_clk_domain.c?
-
-I am not really familiar with the pmdomain code at all, but here is
-what I had thought the simplest generic pmdomain code would do:
-
-Have one pmdomain driver in the generic code that knows about clocks,
-possibly also regulators and pins and just turns them on when needed.
-You can have a "simple-pmdomain" or "generic-pmdomain" compatible
-string.
-
-I'm a bit surprised that your pmdomain code looks up the clocks from the
-respective device, rather than know about the clocks itself. There is
-probably a good reason for this, but I don't see it yet.
-
-Another option would be to have a special case for an empty
-"power-domains" property if this is the most common case: if that
-property exists but is empty, the pmdomain core could interpret
-it as an indication to control all the clocks/regulators/pins
-of a device.
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
