@@ -1,42 +1,29 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v1 1/2] efuse: IMG Pistachio eFuse Controller
-Date: Mon, 17 Nov 2014 16:26:53 -0800
-Message-ID: <CAL1qeaHSevOJ-o=nFqgze8utMgTk-Mh7Y9uRMa6wnjeofji98w@mail.gmail.com>
-References: <1416237576-21542-1-git-send-email-arul.ramasamy@imgtec.com>
-	<1416237576-21542-2-git-send-email-arul.ramasamy@imgtec.com>
-	<546A189B.3090202@imgtec.com>
-	<27E62D98F903554192E3C13AFCC91C3C2F506FE2@hbmail01.hb.imgtec.org>
+From: Sangbeom Kim <sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH 1/5] mfd: sec-core: Add support for S2MPS13 device
+Date: Tue, 18 Nov 2014 09:26:50 +0900
+Message-ID: <011f01d002c6$5f56f960$1e04ec20$@samsung.com>
+References: <1416184980-532-1-git-send-email-cw00.choi@samsung.com>
+ <1416184980-532-2-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <27E62D98F903554192E3C13AFCC91C3C2F506FE2-C8yLA94LPOy3snIXRfWIHVBRoQTxkR7k@public.gmane.org>
+In-reply-to: <1416184980-532-2-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-language: ko
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: James Hogan <James.Hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Arul Ramasamy <Arul.Ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <Ezequiel.Garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+To: 'Chanwoo Choi' <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, geunsik.lim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Naidu,
+Hi,
+On Monday, November 17, 2014 9:43 AM, Chanwoo Choi wrote:
 
-On Mon, Nov 17, 2014 at 4:12 PM, Naidu Tellapati
-<Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
-> Hi Andrew,
->
-> (We will respond to James Hogan's remaining review comments in a separate email)
->
->>>
->>> +obj-$(CONFIG_SOC_IMG)           += pistachio/
->
->> What is CONFIG_SOC_IMG? It sounds very generic.
->
-> May I have your suggestions on the above.
->
-> (Assuming we create drivers/soc/img/ instead of drivers/soc/pistachio/)
+> This patch adds the support for Samsung S2MPS13 PMIC device to the sec-core MFD
+> driver. The S2MPS13 is very similar with existing S2MPS14 and includes PMIC/
+> RTC/CLOCK devices.
 
-I don't have much visibility into ImgTec SoCs other than Pistachio,
-but I think introducing a SOC_IMG Kconfig symbol is a good idea as it
-gives drivers for various pieces of IP present on ImgTec SoCs
-(watchdog, I2C, DMA, etc.) a more specific dependency than say MIPS or
-METAG.  Maybe James has a suggestion for how to deal with this?
+Acked-by: Sangbeom Kim <sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
