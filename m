@@ -1,60 +1,119 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESUBMIT PATCH v7 7/9] regulator: sky81452: Modify Device Tree
- structure
-Date: Tue, 18 Nov 2014 11:20:56 +0000
-Message-ID: <20141118112056.GA14734@sirena.org.uk>
-References: <1416213190-20935-1-git-send-email-jack.yoo@skyworksinc.com>
- <1416213190-20935-8-git-send-email-jack.yoo@skyworksinc.com>
- <20141117141836.GA2722@sirena.org.uk>
- <20141118080451.GA3319@jack-ThinkPad-T520>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [RFC] adp1653: Add device tree bindings for LED controller
+Date: Tue, 18 Nov 2014 12:32:56 +0100
+Message-ID: <20141118113256.GA10022@amd>
+References: <20141116075928.GA9763@amd>
+ <20141117145857.GO8907@valkosipuli.retiisi.org.uk>
+ <546AFEA5.9020000@samsung.com>
+ <20141118084603.GC4059@amd>
+ <546B19C8.2090008@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zYM0uCDKw75PZbzx"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20141118080451.GA3319@jack-ThinkPad-T520>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+In-Reply-To: <546B19C8.2090008@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, pali.rohar@gmail.com, sre@debian.org, sre@ring0.de, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, freemangordon@abv.bg, bcousson@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---zYM0uCDKw75PZbzx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> >>I've already submitted a patch [1] that updates leds common bindings.
+> >>I hasn't been merged yet, as the related LED Flash class patch [2]
+> >>still needs some indicator leds related discussion [3].
+> >>
+> >>I think this is a good moment to discuss the flash related led common
+> >>bindings.
+> >
+> >Part of problem is that adp1653 is not regarded as "LED" device by
+> >current kernel driver.
+> 
+> It doesn't prevent us from keeping the flash devices related
+> DT bindings unified across kernel subsystems. The DT bindings
+> docs for the adp1653 could just provide a reference to the
+> led/common.txt bindings. In the future, when LED Flash
+> class will be merged, all the V4L2 Flash drivers might be
+> moved to the LED subsystem to gain the LED subsystem support.
 
-On Tue, Nov 18, 2014 at 05:04:51PM +0900, Gyungoh Yoo wrote:
-> On Mon, Nov 17, 2014 at 02:18:36PM +0000, Mark Brown wrote:
+Yeah, that makses sense.
 
-> > Don't open code this, use regulators_node and of_match as previously
-> > advised.
+> >@@ -19,5 +30,10 @@ Examples:
+> >  system-status {
+> >  	       label = "Status";
+> >  	       linux,default-trigger = "heartbeat";
+> >+	       iout-torch = <500 500>;
+> >+	       iout-flash = <1000 1000>;
+> >+	       iout-indicator = <100 100>;
+> >+	       flash-timeout = <1000>;
+> >+
+> >	...
+> >  };
+> >
+> >I don't get it; system-status describes single LED, why are iout-torch
+> >(and friends) arrays of two?
+> 
+> Some devices can control more than one led. The array is for such
+> purposes. The system-status should be probably renamed to
+> something more generic for both common leds and flash leds,
+> e.g. system-led.
 
-> I think I had a misunderstanding.
-> But I have no idea about regulators_node and of_match.
-> Could you let me know more about them?
+No, sorry. The Documentation/devicetree/bindings/leds/common.txt
+describes binding for _one LED_. Yes, your device can have two leds,
+so your devices should have two such blocks in the device tree... Each
+led should have its own label and default trigger, for example. And I
+guess flash-timeout be per-LED, too.
 
-They are fields in regulator_desc, there are documentation and examples
-in current mainline - take a look at that and ask questions if it is
-unclear.
+Would it make sense to include "-uA" and "-usec" suffixes in the dt
+property names?
 
---zYM0uCDKw75PZbzx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> >Also, at least on adp1653, these are actually two leds -- white and
+> >red. Torch and flash is white led, indicator is red led.
+> 
+> Then you should define three properties:
+> 
+> iout-torch = <[uA]>;
+> iout-flash = <[uA]>;
+> iout-indicator = <[uA]>;
+> 
+> iout-torch and iout-flash properties would determine the current
+> for the white led in the torch and flash modes respectively and
+> the iout-indicator property would determine the current for
+> the indicator led.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Yes, that would work. I have used
 
-iQEcBAEBAgAGBQJUayuXAAoJECTWi3JdVIfQaI4H/18xMT7GlZXmWY/mB6VXNSAZ
-j9t+XEI2DhBIdebvpsIftI1e/aOA4j/FU0LAPhXxQNBza5+Ty1HmbeazGQfOdfsZ
-8At5veBZ4kblIg+JhdRHdvBwD3EFGFqMnDrR5nQOqFoOuD7JfMb6mi8fVsxkRiFk
-1mU1X9Xr/eS/mqG9A6JmevR/hwoN5ts4vY/vVQHWXAJquw1ADW1H9BbxYgZKx4xr
-gOkNG4+kdrolzf1Gi3zPkWZTS2t0A99Fiji/IDYeXcpnQxCK2IDJ8VO2dvHdEzJO
-TqxBGHO2DMibo7PkvsW0siWi4fm3Y2iRXsWFayVbmHbJEvUuhQCv9iPcTiMYCOA=
-=K0/E
------END PGP SIGNATURE-----
++               max-flash-timeout-usec = <500000>;
++               max-flash-intensity-uA     = <320000>;
++               max-torch-intensity-uA     =  <50000>;
++               max-indicator-intensity-uA =  <17500>;
 
---zYM0uCDKw75PZbzx--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+. Which is pretty similar. (Actually, maybe the longer property names
+are easier to understand for more people?) (And yes, I should probably
+separate red and white led into separate groups).
+
+> >>[2] http://www.spinics.net/lists/linux-media/msg83100.html
+> >>[3] http://www.spinics.net/lists/linux-leds/msg02472.html
+> >
+> >What device are you using for testing? Can you cc me on future
+> >patches?
+> 
+> I am using max77693 [1] and aat1290 [2]. OK, I will add you on cc.
+
+Thanks for cc and thanks for links!
+
+I see max77693 has two different "white" leds, aat1290 has one "white"
+led, and neither of them has secondary red led for indication?
+
+> The v4l2-flash sub-device registers with v4l2-async API
+> in a media device. Exemplary support for v4l2-flash
+> sub-devices is added to the exynos4-is driver in the patch [5].
+
+Thanks for the links. It seems that aside from moving adp1653 driver
+to device tree, it should be moved to the LED framework, but that's a
+topic for another patch.
+
+Best regards,
+									Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
