@@ -1,77 +1,124 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v4 6/6] ARM: zynq: DT: Add OCM controller node
-Date: Tue, 18 Nov 2014 08:56:29 +0100
-Message-ID: <d7d71aa91adc49e5890fe3d64caed4bf@BN1BFFO11FD034.protection.gbl>
-References: <cover.1415962281.git.michal.simek@xilinx.com>
-	<0a88d52b5e71fb220ca619180ec9ca746edad2b1.1415962281.git.michal.simek@xilinx.com>
-	<546881CA.2020801@suse.de>
-	<c52187589f5c4cc6b908d899c2b9f7a6@BN1BFFO11FD036.protection.gbl>
- <CAEgOgz7j3jFbf1HxtimzPDMQ3oRu8AAHhHAUtg1boYjOUV5ygA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAEgOgz7j3jFbf1HxtimzPDMQ3oRu8AAHhHAUtg1boYjOUV5ygA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Crosthwaite <peter.crosthwaite@xilinx.com>, =?UTF-8?B?U8O2cmVuIA==?= =?UTF-8?B?QnJpbmttYW5u?= <soren.brinkmann@xilinx.com>
-Cc: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Michal Simek <michal.simek@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Josh Cartwright <josh.cartwright@ni.com>, Michal Simek <monstr@monstr.eu>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>
+From: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v12 0/3] Add drm driver for Rockchip Socs
+Date: Tue, 18 Nov 2014 15:59:47 +0800
+Message-ID: <1416297587-18959-1-git-send-email-mark.yao@rock-chips.com>
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rom Lemarchand <romlem-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dbehr-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yxj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/17/2014 12:00 AM, Peter Crosthwaite wrote:
-> On Mon, Nov 17, 2014 at 5:32 AM, S=C3=B6ren Brinkmann
-> <soren.brinkmann@xilinx.com> wrote:
->> On Sun, 2014-11-16 at 11:51AM +0100, Andreas F=C3=A4rber wrote:
->>> Hi Michal,
->>>
->>> Am 14.11.2014 um 11:52 schrieb Michal Simek:
->>>> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/=
-zynq-7000.dtsi
->>>> index ce2ef5bec4f2..e217fb1c1169 100644
->>>> --- a/arch/arm/boot/dts/zynq-7000.dtsi
->>>> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
->>>> @@ -150,6 +150,13 @@
->>>>                     reg =3D <0xf8006000 0x1000>;
->>>>             };
->>>>
->>>> +           ocmc: memory-controller@f800c000 {
->>>> +                   compatible =3D "xlnx,zynq-ocmc-1.0";
->>>> +                   interrupt-parent =3D <&intc>;
->>>> +                   interrupts =3D <0 3 4>;
->>>> +                   reg =3D <0xf800c000 0x1000>;
->>>> +           };
->>>> +
->>>>             uart0: serial@e0000000 {
->>>>                     compatible =3D "xlnx,xuartps", "cdns,uart-r1p8=
-";
->>>>                     status =3D "disabled";
->>>
->>> Not directly related to this patch: As one can see here, the node o=
-rder
->>> is quite a mess... According to Olof, nodes should be ordered by un=
-it
->>> address, whereas here some but not all seem ordered by node name. W=
-ould
->>> you welcome a cleanup patch, or can you fix that yourself?
->>
->> I wouldn't say it's a mess, just a different property to sort the no=
-des
->> by. For humans reading the DT, searching for nodes, alphabetical ord=
-er
->> helps finding the right node, IMHO.
->=20
-> I do generally find myself asking "whats that thing at that address"
-> more than I find myself asking the "wheres that piece of hardware" so
-> Andreas' sorting scheme makes more sense to me. Vertically scanning a
-> DT to give yourself an overview of the system level address map is
-> good too. Wheras alphabetic sorting doesn't mean to much.
+This a series of patches is a DRM Driver for Rockchip Socs, add support
+for vop devices. Future patches will add additional encoders/connectors,
+such as eDP, HDMI.
 
-IMHO the reason why we have names in DT is that it is easily to read/un=
-derstand them
-that's why name sorting seems to me more reasonable.
-Something like machine code and assembler - asm is also sorted by names=
- not by opcode.
+The basic "crtc" for rockchip is a "VOP" - Video Output Processor.
+the vop devices found on Rockchip rk3288 Soc, rk3288 soc have two similar
+Vop devices. Vop devices support iommu mapping, we use dma-mapping API with
+ARM_DMA_USE_IOMMU.
 
-Is this strict rule?
+Changes in v2:
+- add DRM master device node to list all display nodes that comprise
+  the graphics subsystem.
+- use the component framework to defer main drm driver probe
+  until all VOP devices have been probed.
+- use dma-mapping API with ARM_DMA_USE_IOMMU, create dma mapping by
+  master device and each vop device can shared the drm dma mapping.
+- use drm_crtc_init_with_planes and drm_universal_plane_init.
+- remove unnecessary middle layers.
+- add cursor set, move funcs to rockchip drm crtc.
+- add vop reset.
 
-Thanks,
-Michal
+Changes in v3:
+- change "crtc->fb" to "crtc->primary-fb"
+Adviced by Daniel Vetter
+- init cursor plane with universal api, remove unnecessary cursor set,move 
+
+Changes in v4:
+Adviced by David Herrmann
+- remove drm_platform_*() usage, use register drm device directly.
+Adviced by Rob Clark
+- remove special mmap ioctl, do userspace mmap with normal mmap() or mmap offset
+
+Changes in v5:
+Adviced by Arnd Bergmann
+- doing DMA start with a 32-bit masks with dma_mask and dma_coherent_mark
+- fix some incorrect dependencies.
+Adviced by Boris BREZILLON
+- fix some mistake and bugs. 
+Adviced by Daniel Vetter
+- drop all special ioctl and use generic kms ioctl instead.
+Adviced by Rob Clark
+- use unlocked api for drm_fb_helper_restore_fbdev_mode.
+- remove unused rockchip_gem_prime_import_sg_table.
+
+Changes in v6:
+- set gem buffer pitch 64 bytes align, needed by mali gpu.
+Adviced by Daniel Kurtz
+- fix some mistake, bugs, remove unused define, more better code style etc. 
+- use clk_prepare()/unprepare() at probe()/remove() and clk_enable()/disable()
+  at runtime instead of clk_prepare_enable().
+- provide a help function from vop for encoder to do mode config, instead of
+  using drm_diaplay_mode private method.
+- change vop mode_set timing to make it more safely. 
+
+Changes in v7:
+- fix memory leakage problem.
+
+Changes in v8:
+- fix iommu crash when use dual crtc.
+- use frame start interrupt for vsync instead of line flag interrupt,
+because the win config take affect at frame start time, if we use ling flag
+interrupt, the address check often failed.
+Adviced by Daniel Kurtz
+- fix some bugs, mistake, remove unused function
+- keep clock and vop disabled when probe end
+- use drm_plane_helper_check_update to check update_plane if vaild
+
+Changes in v9:
+- fix suspend and resume bug, make iommu attach and detach safely.
+- fix mail info style.
+
+Changes in v10:
+Adviced by Andrzej Hajda
+- check drm_dev if it's NULL at PM suspend/resume
+Adviced by Sean Paul
+- use drm_fb_helper_prepare to init fb_helper funcs
+- Optimized code structure and remove some unnecessary Variables.
+
+Changes in v11:
+- fix mistake that use wrong variable at rockchip sys_resume/sys_suspend
+
+Changes in v12:
+- fix compile problem with drm-next
+- Optimization framebuffer reference/unreference
+- Optimization Code structure
+- fix pm suspend/resume problem
+- fix vblank irq can't close problem
+
+
+Mark yao (3):
+  drm: rockchip: Add basic drm driver
+  dt-bindings: video: Add for rockchip display subsytem
+  dt-bindings: video: Add documentation for rockchip vop
+
+ .../devicetree/bindings/video/rockchip-drm.txt     |   19 +
+ .../devicetree/bindings/video/rockchip-vop.txt     |   58 +
+ drivers/gpu/drm/Kconfig                            |    2 +
+ drivers/gpu/drm/Makefile                           |    1 +
+ drivers/gpu/drm/rockchip/Kconfig                   |   17 +
+ drivers/gpu/drm/rockchip/Makefile                  |    8 +
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c        |  482 +++++++
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.h        |   55 +
+ drivers/gpu/drm/rockchip/rockchip_drm_fb.c         |  200 +++
+ drivers/gpu/drm/rockchip/rockchip_drm_fb.h         |   28 +
+ drivers/gpu/drm/rockchip/rockchip_drm_fbdev.c      |  210 +++
+ drivers/gpu/drm/rockchip/rockchip_drm_fbdev.h      |   20 +
+ drivers/gpu/drm/rockchip/rockchip_drm_gem.c        |  294 ++++
+ drivers/gpu/drm/rockchip/rockchip_drm_gem.h        |   54 +
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c        | 1459 ++++++++++++++++++++
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.h        |  201 +++
+ 16 files changed, 3108 insertions(+)
+
+-- 
+1.7.9.5
