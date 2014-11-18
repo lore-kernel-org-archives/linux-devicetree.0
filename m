@@ -1,84 +1,66 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sunxi: Update simplfb nodes so
- that u-boot can find them
-Date: Tue, 18 Nov 2014 09:21:45 +0100
-Message-ID: <546B0199.2050609@redhat.com>
-References: <1416238816-29627-1-git-send-email-hdegoede@redhat.com> <20141117155925.GV6414@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/5] mfd: sec-core: Add support for S2MPS13 device
+Date: Tue, 18 Nov 2014 08:22:07 +0000
+Message-ID: <20141118082207.GU24004@x1>
+References: <1416184980-532-1-git-send-email-cw00.choi@samsung.com>
+ <1416184980-532-2-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBIEDVSRQKGQECTBZCAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20141117155925.GV6414@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1416184980-532-2-git-send-email-cw00.choi@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: broonie@kernel.org, mturquette@linaro.org, a.zummo@towertech.it, lgirdwood@gmail.com, sbkim73@samsung.com, sameo@linux.intel.com, geunsik.lim@samsung.com, inki.dae@samsung.com, kyungmin.park@samsung.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, 17 Nov 2014, Chanwoo Choi wrote:
 
-On 11/17/2014 04:59 PM, Maxime Ripard wrote:
-> Hi,
-> 
-> On Mon, Nov 17, 2014 at 04:40:16PM +0100, Hans de Goede wrote:
->> Review of the u-boot sunxi simplefb patches has led to the decision that
->> u-boot should not use a specific path to find the nodes as this goes contrary
->> to how devicetree usually works.
->>
->> Instead a platform specific compatible + properties should be used for this.
->>
->> The simplefb bindings have already been updated to reflect this, this patch
->> brings the sunxi devicetree files in line with the new binding, and the
->> actual u-boot implementation as it is going upstream.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/sun4i-a10.dtsi  | 5 +++--
->>  arch/arm/boot/dts/sun5i-a10s.dtsi | 5 +++--
->>  arch/arm/boot/dts/sun6i-a31.dtsi  | 5 +++--
->>  arch/arm/boot/dts/sun7i-a20.dtsi  | 5 +++--
->>  4 files changed, 12 insertions(+), 8 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
->> index 92d8aa6..bbc366f 100644
->> --- a/arch/arm/boot/dts/sun4i-a10.dtsi
->> +++ b/arch/arm/boot/dts/sun4i-a10.dtsi
->> @@ -32,8 +32,9 @@
->>  		#size-cells = <1>;
->>  		ranges;
->>  
->> -		framebuffer0-hdmi {
->> -			compatible = "simple-framebuffer";
->> +		framebuffer@0 {
->> +			compatible = "sunxi,framebuffer", "simple-framebuffer";
-> 
-> This compatible isn't following the
-> standard. allwinner,sunxi-framebuffer would be more appropriate.
+> This patch adds the support for Samsung S2MPS13 PMIC device to the se=
+c-core MFD
+> driver. The S2MPS13 is very similar with existing S2MPS14 and include=
+s PMIC/
+> RTC/CLOCK devices.
+>=20
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>  drivers/mfd/sec-core.c           | 18 ++++++++++++++++++
+>  drivers/mfd/sec-irq.c            | 23 +++++++++++++++++------
+>  include/linux/mfd/samsung/core.h |  1 +
+>  3 files changed, 36 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/mfd/sec-core.c b/drivers/mfd/sec-core.c
+> index 5993608..48c0d4a 100644
+> --- a/drivers/mfd/sec-core.c
+> +++ b/drivers/mfd/sec-core.c
+> @@ -73,6 +73,17 @@ static const struct mfd_cell s2mps11_devs[] =3D {
+>  	}
+>  };
+> =20
+> +static const struct mfd_cell s2mps13_devs[] =3D {
+> +	{
+> +		.name =3D "s2mps13-pmic",
+> +	}, {
+> +		.name =3D "s2mps13-rtc",
+> +	}, {
+> +		.name =3D "s2mps13-clk",
+> +		.of_compatible =3D "samsung,s2mps13-clk",
+> +	}
+> +};
 
-Oh, good catch, I'll respin this patch set and the bindings documentation
-patches to change this.
+If you have to resubmit this for any reason, I'd like the one liners
+on one single line (curly braces and all).
 
-> I must say I'm also a bit concerned that this whole binding thing is
-> not stabilizing while we are quite close from the end of the ARM merge
-> window.
+But for now, for my reference:
 
-I understand, it was presumed to be stable when I posted the first set of dts
-patches, but then it turned out Ian had some concerns about how we had
-decided u-boot would find the prepopulated nodes. Ian and Grant and I discussed
-this on irc yesterday and came up with a solution we all like. Unfortunately
-we all missed the "sunxi," should be "allwinnner," thing. I'll go and fix that
-right away, and then these bindings should be 100% stable.
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-> I wouldn't be very pleased to merge any more patch modifying again
-> this binding.
+[...]
 
-Understood, and I do not expect there be any such patch.
-
-Regards,
-
-Hans
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
