@@ -1,114 +1,92 @@
-From: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v13 3/3] dt-bindings: video: Add documentation for rockchip vop
-Date: Tue, 18 Nov 2014 18:11:09 +0800
-Message-ID: <1416305469-27900-1-git-send-email-mark.yao@rock-chips.com>
-References: <1416305354-27789-1-git-send-email-mark.yao@rock-chips.com>
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416305354-27789-1-git-send-email-mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rom Lemarchand <romlem-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dbehr-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yxj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH V2 22/22] MIPS: Add multiplatform BMIPS target
+Date: Tue, 18 Nov 2014 11:15:24 +0100
+Message-ID: <5313988.cGSDdqXOcS@wuerfel>
+References: <1416097066-20452-1-git-send-email-cernekee@gmail.com> <2622492.TiaF5tO0a3@wuerfel> <CAJiQ=7AhyAyN6Hnvtdowdh6oPknbPFMe-_PrPdzyCGe5H7eE1g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJiQ=7AhyAyN6Hnvtdowdh6oPknbPFMe-_PrPdzyCGe5H7eE1g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Fraser <jfraser-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds binding documentation for Rockchip SoC VOP driver.
+On Monday 17 November 2014 13:57:07 Kevin Cernekee wrote:
+> On Mon, Nov 17, 2014 at 12:33 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> >> This mostly depends on the desired feature set, and the delta from one
+> >> board to the next.  Many of the reference board sections are largely
+> >> copied from a working design, but sometimes there are changes that
+> >> affect us.  Other times there are tweaks that can be autodetected,
+> >> like a different flash chip.
+> >>
+> >> The analog interfaces like SATA/USB/Ethernet don't tend to vary all
+> >> that much (although some may be missing ports on the board, or
+> >> disabled on the chip).
+> >>
+> >> The pin muxing situation leaves a lot of room for board differences,
+> >> and on these platforms it isn't really handled in a central place.
+> >> This gets even more challenging when combined with some of the power
+> >> management requirements.
+> >>
+> >> The peripherals that I added in my patch submission are among the
+> >> easiest / safest of the bunch.
+> >
+> > Right, that is exactly the danger: it's easy to get the basics working
+> > like this, but the differences between SoCs are not what we need DT
+> > for anyway, those are easily abstracted in kernel code if necessary,
+> > hardcoded by some soc version identifier.
+> 
+> That depends on how many SoC's we're talking about...
+> 
+> On MIPS we have literally dozens.  Most of the "building blocks" are
+> pretty similar, but the MMIO addresses, IRQ mappings, and
+> quantity/revision of each peripheral vary.  DT is ideal for
+> representing these differences and for rapidly bringing up a new
+> system.
 
-Signed-off-by: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
-Changes in v2:
-- rename "lcdc" to "vop"
-- add vop reset
-- add iommu node
-- add port for display-subsystem
+Of course you can abstract SoCs using DT, and we do that all the time
+now on a lot of architectures. My point is that it's possible to abstract
+a board using DT without also describing the SoC in detail, but you
+cannot do the reverse.
 
-Changes in v3: None
+> > What you end up with in your approach is a kernel that can support
+> > multiple SoCs but only some boards per SoC, and otherwise you still
+> > depend on compile-time configuration.
+> 
+> Agreed, but for legacy platforms this is somewhat inevitable.  These
+> systems are already in production so there is no manpower available to
+> go back and test every single one-off board.  It is most likely that a
+> small subset of "interesting" boards will receive the best support.
+> For instance, I see an arch/arm/boot/dts/bcm2835-rpi-b.dts, but that's
+> hardly the only BCM2835-based platform found in the wild.
 
-Changes in v4: None
+It's absolutely ok to not have the dts files for each board, and to
+not test all combinations, those can always come later if anyone is
+interested in it.
 
-Changes in v5: None
+The one thing I believe you shouldn't do is hardwire a dtb file to
+an SoC specific identifier, because that makes it impossible to
+support other boards that need additional DT nodes using the same
+boot method. Using a single appended dtb file instead of the built-in
+lookup table would solve this well enough.
 
-Changes in v6: None
+> The limited board support doesn't negate the value of having a generic
+> BMIPS kernel available upstream; this build still eliminates
+> duplicated efforts on many of the basic items (CPU/SMP/caching, IRQ
+> controllers, UART).  It also allows easy reuse of DT-ready peripherals
+> that are common to the CM/DSL/STB MIPS and ARM chips, which was the
+> original goal of the BCM3384 port.
+> 
+> Going forward I would expect that with this build available in
+> mainline, it will open up new opportunities for modernizing the
+> bootloaders on each product line.
 
-Changes in v7: None
+Yes, this is all good. 
 
-Changes in v8: None
-
-Changes in v9: None
-
-Changes in v10: None
-
-Changes in v11: None
-
-Changes in v12: None
-
-Changes in v13: None
-
- .../devicetree/bindings/video/rockchip-vop.txt     |   58 ++++++++++++++++++++
- 1 file changed, 58 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/rockchip-vop.txt
-
-diff --git a/Documentation/devicetree/bindings/video/rockchip-vop.txt b/Documentation/devicetree/bindings/video/rockchip-vop.txt
-new file mode 100644
-index 0000000..d15351f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/rockchip-vop.txt
-@@ -0,0 +1,58 @@
-+device-tree bindings for rockchip soc display controller (vop)
-+
-+VOP (Visual Output Processor) is the Display Controller for the Rockchip
-+series of SoCs which transfers the image data from a video memory
-+buffer to an external LCD interface.
-+
-+Required properties:
-+- compatible: value should be one of the following
-+		"rockchip,rk3288-vop";
-+
-+- interrupts: should contain a list of all VOP IP block interrupts in the
-+		 order: VSYNC, LCD_SYSTEM. The interrupt specifier
-+		 format depends on the interrupt controller used.
-+
-+- clocks: must include clock specifiers corresponding to entries in the
-+		clock-names property.
-+
-+- clock-names: Must contain
-+		aclk_vop: for ddr buffer transfer.
-+		hclk_vop: for ahb bus to R/W the phy regs.
-+		dclk_vop: pixel clock.
-+
-+- resets: Must contain an entry for each entry in reset-names.
-+  See ../reset/reset.txt for details.
-+- reset-names: Must include the following entries:
-+  - axi
-+  - ahb
-+  - dclk
-+
-+- iommus: required a iommu node
-+
-+- port: A port node with endpoint definitions as defined in
-+  Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Example:
-+SoC specific DT entry:
-+	vopb: vopb@ff930000 {
-+		compatible = "rockchip,rk3288-vop";
-+		reg = <0xff930000 0x19c>;
-+		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>;
-+		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
-+		resets = <&cru SRST_LCDC1_AXI>, <&cru SRST_LCDC1_AHB>, <&cru SRST_LCDC1_DCLK>;
-+		reset-names = "axi", "ahb", "dclk";
-+		iommus = <&vopb_mmu>;
-+		vopb_out: port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			vopb_out_edp: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint=<&edp_in_vopb>;
-+			};
-+			vopb_out_hdmi: endpoint@1 {
-+				reg = <1>;
-+				remote-endpoint=<&hdmi_in_vopb>;
-+			};
-+		};
-+	};
--- 
-1.7.9.5
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
