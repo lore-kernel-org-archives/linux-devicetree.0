@@ -1,108 +1,96 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH V2 09/10] serial: earlycon: Set UPIO_MEM32BE based on DT
- properties
-Date: Tue, 18 Nov 2014 21:50:07 +0000
-Message-ID: <20141118215007.7498FC40966@trevor.secretlab.ca>
-References: <1415825647-6024-1-git-send-email-cernekee@gmail.com>
-	<1415825647-6024-10-git-send-email-cernekee@gmail.com>
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1415825647-6024-10-git-send-email-cernekee@gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>, gregkh@linuxfoundation.org, jslaby@suse.cz, robh@kernel.org
-Cc: arnd@arndb.de, daniel@zonque.org, haojian.zhuang@gmail.com, robert.jarzmik@free.fr, f.fainelli@gmail.com, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv2 3/5] clk: s2mps11: Add the support for S2MPS13 PMIC clock
+Date: Tue, 18 Nov 2014 13:59:26 -0800
+Message-ID: <20141118215926.25314.90810@quantum>
+References: <1416301183-10478-1-git-send-email-cw00.choi@samsung.com>
+ <1416301183-10478-4-git-send-email-cw00.choi@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416301183-10478-4-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, geunsik.lim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 12 Nov 2014 12:54:06 -0800
-, Kevin Cernekee <cernekee@gmail.com>
- wrote:
-> If an earlycon (stdout-path) node is being used, check for "big-endian"
-> or "native-endian" properties and pass the appropriate iotype to the
-> driver.
+Quoting Chanwoo Choi (2014-11-18 00:59:41)
+> This patch adds the support for S2MPS13 PMIC clock which is same with existing
+> S2MPS14 RTC IP. But, S2MPS13 uses all of clocks (32khz_{ap|bt|cp}).
 > 
-> Note that LE sets UPIO_MEM (8-bit) but BE sets UPIO_MEM32BE (32-bit).  The
-> big-endian property only really makes sense in the context of 32-bit
-> registers, since 8-bit accesses never require data swapping.
-> 
-> At some point, the of_earlycon code may want to pass in the reg-io-width,
-> reg-offset, and reg-shift parameters too.
-> 
-> Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+> Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+
+Applied to clk-next.
+
+Regards,
+Mike
+
 > ---
->  drivers/of/fdt.c              | 9 ++++++++-
->  drivers/tty/serial/earlycon.c | 4 ++--
->  include/linux/serial_core.h   | 2 +-
->  3 files changed, 11 insertions(+), 4 deletions(-)
+>  drivers/clk/clk-s2mps11.c | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
 > 
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 30e97bc..15f80c9 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -10,6 +10,7 @@
->   */
+> diff --git a/drivers/clk/clk-s2mps11.c b/drivers/clk/clk-s2mps11.c
+> index b7797fb..7bb13af 100644
+> --- a/drivers/clk/clk-s2mps11.c
+> +++ b/drivers/clk/clk-s2mps11.c
+> @@ -23,6 +23,7 @@
+>  #include <linux/clk-provider.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/mfd/samsung/s2mps11.h>
+> +#include <linux/mfd/samsung/s2mps13.h>
+>  #include <linux/mfd/samsung/s2mps14.h>
+>  #include <linux/mfd/samsung/s5m8767.h>
+>  #include <linux/mfd/samsung/core.h>
+> @@ -120,6 +121,24 @@ static struct clk_init_data s2mps11_clks_init[S2MPS11_CLKS_NUM] = {
+>         },
+>  };
 >  
->  #include <linux/kernel.h>
-> +#include <linux/kconfig.h>
->  #include <linux/initrd.h>
->  #include <linux/memblock.h>
->  #include <linux/of.h>
-> @@ -784,7 +785,13 @@ int __init early_init_dt_scan_chosen_serial(void)
->  		if (!addr)
->  			return -ENXIO;
+> +static struct clk_init_data s2mps13_clks_init[S2MPS11_CLKS_NUM] = {
+> +       [S2MPS11_CLK_AP] = {
+> +               .name = "s2mps13_ap",
+> +               .ops = &s2mps11_clk_ops,
+> +               .flags = CLK_IS_ROOT,
+> +       },
+> +       [S2MPS11_CLK_CP] = {
+> +               .name = "s2mps13_cp",
+> +               .ops = &s2mps11_clk_ops,
+> +               .flags = CLK_IS_ROOT,
+> +       },
+> +       [S2MPS11_CLK_BT] = {
+> +               .name = "s2mps13_bt",
+> +               .ops = &s2mps11_clk_ops,
+> +               .flags = CLK_IS_ROOT,
+> +       },
+> +};
+> +
+>  static struct clk_init_data s2mps14_clks_init[S2MPS11_CLKS_NUM] = {
+>         [S2MPS11_CLK_AP] = {
+>                 .name = "s2mps14_ap",
+> @@ -184,6 +203,10 @@ static int s2mps11_clk_probe(struct platform_device *pdev)
+>                 s2mps11_reg = S2MPS11_REG_RTC_CTRL;
+>                 clks_init = s2mps11_clks_init;
+>                 break;
+> +       case S2MPS13X:
+> +               s2mps11_reg = S2MPS13_REG_RTCCTRL;
+> +               clks_init = s2mps13_clks_init;
+> +               break;
+>         case S2MPS14X:
+>                 s2mps11_reg = S2MPS14_REG_RTCCTRL;
+>                 clks_init = s2mps14_clks_init;
+> @@ -279,6 +302,7 @@ static int s2mps11_clk_remove(struct platform_device *pdev)
 >  
-> -		of_setup_earlycon(addr, match->data);
-> +		if (fdt_getprop(fdt, offset, "big-endian", NULL) ||
-> +		    (fdt_getprop(fdt, offset, "native-endian", NULL) &&
-> +		     IS_ENABLED(CONFIG_CPU_BIG_ENDIAN))) {
-> +			of_setup_earlycon(addr, UPIO_MEM32BE, match->data);
-> +		} else {
-> +			of_setup_earlycon(addr, UPIO_MEM, match->data);
-> +		}
-
-Perhaps also create an fdt_ version of the helper.
-
-Otherwise looks good to me.
-
-Acked-by: Grant Likely <grant.likely@linaro.org>
-
-g.
-
->  		return 0;
->  	}
->  	return -ENODEV;
-> diff --git a/drivers/tty/serial/earlycon.c b/drivers/tty/serial/earlycon.c
-> index a514ee6..548f7d7 100644
-> --- a/drivers/tty/serial/earlycon.c
-> +++ b/drivers/tty/serial/earlycon.c
-> @@ -148,13 +148,13 @@ int __init setup_earlycon(char *buf, const char *match,
->  	return 0;
->  }
->  
-> -int __init of_setup_earlycon(unsigned long addr,
-> +int __init of_setup_earlycon(unsigned long addr, unsigned char iotype,
->  			     int (*setup)(struct earlycon_device *, const char *))
->  {
->  	int err;
->  	struct uart_port *port = &early_console_dev.port;
->  
-> -	port->iotype = UPIO_MEM;
-> +	port->iotype = iotype;
->  	port->mapbase = addr;
->  	port->uartclk = BASE_BAUD * 16;
->  	port->membase = earlycon_map(addr, SZ_4K);
-> diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
-> index d2d5bf6..0d60c64 100644
-> --- a/include/linux/serial_core.h
-> +++ b/include/linux/serial_core.h
-> @@ -310,7 +310,7 @@ struct earlycon_device {
->  int setup_earlycon(char *buf, const char *match,
->  		   int (*setup)(struct earlycon_device *, const char *));
->  
-> -extern int of_setup_earlycon(unsigned long addr,
-> +extern int of_setup_earlycon(unsigned long addr, unsigned char iotype,
->  			     int (*setup)(struct earlycon_device *, const char *));
->  
->  #define EARLYCON_DECLARE(name, func) \
+>  static const struct platform_device_id s2mps11_clk_id[] = {
+>         { "s2mps11-clk", S2MPS11X},
+> +       { "s2mps13-clk", S2MPS13X},
+>         { "s2mps14-clk", S2MPS14X},
+>         { "s5m8767-clk", S5M8767X},
+>         { },
 > -- 
-> 2.1.1
+> 1.8.5.5
 > 
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
