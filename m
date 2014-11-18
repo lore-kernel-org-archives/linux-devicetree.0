@@ -1,107 +1,59 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v8 11/13] ARM: dts: Berlin: enable USB on the BG2Q DMP
-Date: Tue, 18 Nov 2014 20:37:12 +0100
-Message-ID: <546B9FE8.2010404@gmail.com>
-References: <1416231347-27193-1-git-send-email-antoine.tenart@free-electrons.com> <1416231347-27193-12-git-send-email-antoine.tenart@free-electrons.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1416231347-27193-12-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Antoine Tenart <antoine.tenart@free-electrons.com>, Peter.Chen@freescale.com, balbi@ti.com, p.zabel@pengutronix.de
-Cc: alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Subject: [PATCH v3 0/5] pwm: support backward compatibility of DTB extending PWM args
+Date: Tue, 18 Nov 2014 21:37:18 +0200
+Message-ID: <1416339438-7867-1-git-send-email-vladimir_zapolskiy@mentor.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>, Sascha Hauer <s.hauer@pengutronix.de>, Heiko Stuebner <heiko@sntech.de>, Tony Prisk <linux@prisktech.co.nz>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17.11.2014 14:35, Antoine Tenart wrote:
-> Enable the 2 available USB PHY and USB nodes on the Marvell Berlin BG2Q
-> DMP.
->
-> Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
+Please review this alternative in-house version of supporting backward
+compatibility of DTB files (new kernel/PWM driver and old DTS), overcom=
+ing
+a problem that pwms arguments of existing PWM drivers are to be extende=
+d
+with polarity field.
 
-Applied to berlin/dt.
+Unfortunately I've firstly created the change and only after that
+found that Lothar Wa=C3=9Fmann is working on his version, so I won't in=
+sist
+on formal preference, but still I like to share my variant since it
+technically different from Lothar's one.
 
-Thanks!
+Changes from v2 to v3:
+- improved commit messages
+- added two more patches removing of_pwm_xlate_with_flags()
 
-> ---
->   arch/arm/boot/dts/berlin2q-marvell-dmp.dts | 53 ++++++++++++++++++++++++++++++
->   1 file changed, 53 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
-> index ea1f99b8eed6..f7c25580e122 100644
-> --- a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
-> +++ b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
-> @@ -7,6 +7,8 @@
->    */
->
->   /dts-v1/;
-> +
-> +#include <dt-bindings/gpio/gpio.h>
->   #include "berlin2q.dtsi"
->
->   / {
-> @@ -21,6 +23,39 @@
->   	choosen {
->   		bootargs = "console=ttyS0,115200 earlyprintk";
->   	};
-> +
-> +	regulators {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		reg_usb0_vbus: regulator@0 {
-> +			compatible = "regulator-fixed";
-> +			regulator-name = "usb0_vbus";
-> +			regulator-min-microvolt = <5000000>;
-> +			regulator-max-microvolt = <5000000>;
-> +			gpio = <&portb 8 GPIO_ACTIVE_HIGH>;
-> +			enable-active-high;
-> +		};
-> +
-> +		reg_usb1_vbus: regulator@1 {
-> +			compatible = "regulator-fixed";
-> +			regulator-name = "usb1_vbus";
-> +			regulator-min-microvolt = <5000000>;
-> +			regulator-max-microvolt = <5000000>;
-> +			gpio = <&portb 10 GPIO_ACTIVE_HIGH>;
-> +			enable-active-high;
-> +		};
-> +
-> +		reg_usb2_vbus: regulator@2 {
-> +			compatible = "regulator-fixed";
-> +			regulator-name = "usb2_vbus";
-> +			regulator-min-microvolt = <5000000>;
-> +			regulator-max-microvolt = <5000000>;
-> +			gpio = <&portb 12 GPIO_ACTIVE_HIGH>;
-> +			enable-active-high;
-> +		};
-> +	};
->   };
->
->   &sdhci1 {
-> @@ -46,6 +81,24 @@
->   	status = "okay";
->   };
->
-> +&usb_phy0 {
-> +	status = "okay";
-> +};
-> +
-> +&usb_phy2 {
-> +	status = "okay";
-> +};
-> +
-> +&usb0 {
-> +	vbus-supply = <&reg_usb0_vbus>;
-> +	status = "okay";
-> +};
-> +
-> +&usb2 {
-> +	vbus-supply = <&reg_usb2_vbus>;
-> +	status = "okay";
-> +};
-> +
->   &eth0 {
->   	status = "okay";
->   };
->
+Changes from v1 to v2:
+- corrected the proper kernel log level, thanks to Lothar Wa=C3=9Fmann.
+
+Vladimir Zapolskiy (5):
+  pwm: process pwm polarity argument in of_pwm_simple_xlate()
+  pwm: push up dynamic printk level on errors in of_pwm_get()
+  pwm: set the actual number of pwms arguments defined in board dts
+  pwm: do not set of_pwm_xlate_with_flags() as a callback
+  pwm: remove of_pwm_xlate_with_flags() function
+
+ drivers/pwm/core.c            |   42 ++++++++++++---------------------=
+--------
+ drivers/pwm/pwm-atmel-hlcdc.c |    2 --
+ drivers/pwm/pwm-atmel-tcb.c   |    2 --
+ drivers/pwm/pwm-atmel.c       |    6 ------
+ drivers/pwm/pwm-bcm-kona.c    |    2 --
+ drivers/pwm/pwm-fsl-ftm.c     |    2 --
+ drivers/pwm/pwm-renesas-tpu.c |    2 --
+ drivers/pwm/pwm-rockchip.c    |    5 -----
+ drivers/pwm/pwm-samsung.c     |    3 ---
+ drivers/pwm/pwm-tiecap.c      |    2 --
+ drivers/pwm/pwm-tiehrpwm.c    |    2 --
+ drivers/pwm/pwm-vt8500.c      |    2 --
+ include/linux/pwm.h           |    3 ---
+ 13 files changed, 12 insertions(+), 63 deletions(-)
+
+--=20
+1.7.10.4
+
