@@ -1,91 +1,100 @@
-From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v1 1/2] efuse: IMG Pistachio eFuse Controller
-Date: Tue, 18 Nov 2014 10:32:31 +0000
-Message-ID: <546B203F.8060808@imgtec.com>
-References: <1416237576-21542-1-git-send-email-arul.ramasamy@imgtec.com> <CAL1qeaHSevOJ-o=nFqgze8utMgTk-Mh7Y9uRMa6wnjeofji98w@mail.gmail.com> <546B152D.1010804@imgtec.com> <1877949.WaxRIbih3M@wuerfel>
+From: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] of/platform: Move platform devices under
+ /sys/devices/platform
+Date: Tue, 18 Nov 2014 11:36:19 +0100
+Message-ID: <546B2123.7060406@samsung.com>
+References: <1415097920-30014-1-git-send-email-grant.likely@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="n2A5cI3rGnLmOlX2xLf81rT7PMj6aF92q"
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1877949.WaxRIbih3M@wuerfel>
+In-reply-to: <1415097920-30014-1-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Arul Ramasamy <Arul.Ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <Ezequiel.Garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Zubair <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---n2A5cI3rGnLmOlX2xLf81rT7PMj6aF92q
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On 11/04/2014 11:45 AM, Grant Likely wrote:
+> Currently the devices created by drivers/of/platform.c get created at
+> the root of /sys/devices. This goes against the typical pattern for
+> sysfs where the top level /sys/devices structure contains categories of
+> devices, and the structure of devices is placed below that. To fix this,
+> make the code in drivers/of/platform.c follow the drivers/base/platform.c
+> behaviour, and use &platform_bus as the default parent for all new
+> platform_devices and amba_devices.
+> 
+> This change has been discussed for a long time, but nobody has actually
+> acted on it. Userspace code that expects to find devices under a fixed
+> /sys/devices/... path will be affected. It isn't /supposed/ to do that,
+> but if anyone complains then I'll add a default-off workaround option to
+> put them back into the root.
 
-On 18/11/14 10:03, Arnd Bergmann wrote:
-> On Tuesday 18 November 2014 09:45:17 James Hogan wrote:
->> On 18/11/14 00:26, Andrew Bresticker wrote:
->>> Hi Naidu,
->>>
->>> On Mon, Nov 17, 2014 at 4:12 PM, Naidu Tellapati
->>> <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
->>>> Hi Andrew,
->>>>
->>>> (We will respond to James Hogan's remaining review comments in a sep=
-arate email)
->>>>
->>>>>>
->>>>>> +obj-$(CONFIG_SOC_IMG)           +=3D pistachio/
->>>>
->>>>> What is CONFIG_SOC_IMG? It sounds very generic.
->>>>
->>>> May I have your suggestions on the above.
->>>>
->>>> (Assuming we create drivers/soc/img/ instead of drivers/soc/pistachi=
-o/)
->>
->> What would "belong" in there?
->> Basically anything that doesn't belong in some particular subsystem?
->>
->>
->=20
-> I think we have reached the threshold of needing a proper subsystem for=
+One of side effects of this change is that platform drivers registering
+other platform drivers or devices in their probe callback can deadlock
+due to double device_lock on platform device. This is for example case
+of exynos_drm driver[1]. I guess it could/should be fixed in exynos_drm.
+Anyway it can affect other drivers as well. At least grep shows few
+possible candidates:
 
-> efuse/otp devices, and we should move the existing drivers into one
-> common directory and find a maintainer who can generalize the interface=
-s.
+$ git grep -p platform_driver_register | grep -A1 -P '_probe\(struct
+platform_device'
 
-In case anybody is interested, Zubair summarised sunxi and JZ4780 efuse
-contents here:
-https://groups.google.com/d/msg/mips-creator-ci20-dev/-PeqbbifWAQ/Y-tQQfn=
-HqEwJ
-
-It'd be interesting to hear what the IMG one is intended to hold.
-
-Cheers
-James
+drivers/gpu/drm/exynos/exynos_drm_drv.c=static int
+exynos_drm_platform_probe(struct platform_device *pdev)
+drivers/gpu/drm/exynos/exynos_drm_drv.c:	ret =
+platform_driver_register(&fimd_driver);
+--
+drivers/gpu/drm/sti/sti_drm_drv.c=static int
+sti_drm_platform_probe(struct platform_device *pdev)
+drivers/gpu/drm/sti/sti_drm_drv.c:
+platform_driver_register(&sti_drm_master_driver);
+--
+drivers/mtd/nand/atmel_nand.c=static int atmel_nand_probe(struct
+platform_device *pdev)
+drivers/mtd/nand/atmel_nand.c:	res =
+platform_driver_register(&atmel_nand_nfc_driver);
 
 
---n2A5cI3rGnLmOlX2xLf81rT7PMj6aF92q
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+[1]: http://permalink.gmane.org/gmane.comp.video.dri.devel/117727
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Regards
+Andrzej
 
-iQIcBAEBAgAGBQJUayA/AAoJEGwLaZPeOHZ6e18QAIqXhlvCM7s4+Ul1lB9TNuYk
-NUYrDK+AA6zq71INyZI9fHWFBOnExfLO9JN5/2HjxuncuFaKCDVCzzOAJvBb5Htp
-jDpARe7fdWm250iyIaDdZ4WUOTfRzaha26nEdRbXe3rJpNTXDWE4UoXt8lL/5RnO
-SZowMXlGn+KbbtM/xA9ZD8O1AEhjRyIo0usXrrnjI9limkWIrbJNYoc9FYNTXWov
-WQE7ZzGvLoF3zv478DYgIXXLPU/ECMIxPuaGgeUqanUEUCVNSxrKhVDaoXQM9l5f
-+xeUp912qY0m9WPtOMWJgNLSpcGe0w67TplzoIURj/UFicxECdbQulw4+60JvXvA
-JmmJPC2JmQimCCT3CJT5StggM/OzOYWIgSBc705bzHCX++XtpYV+zO3Y8+lbBG/9
-Q5bNj1+MYXNpX7/BVXo8CcH5NnH6Eg6wgkAQ7TJqRIC3yJmsFwTEmOjQxf0ueXSV
-NWYxjOouSKhwj9nRYiDZmtn8cXNSgmj5BIX73Lru8pqMZkQR7KNkYqowKJJDYCrr
-lWv/4CUAiCI33DNWt3DAX/vXL0GG+pQ7Fh8GXriS4rm/N28c+YZkr3fyS8V5UUWs
-HXkNrY+jdjf9NE+bB3C+il2GG4gKtvhJ7zcEabrU2VGqhnbWm1EKEHwsEfBFB0z3
-tLo3Ptmpjspq7kzIe4Tl
-=CB3m
------END PGP SIGNATURE-----
 
---n2A5cI3rGnLmOlX2xLf81rT7PMj6aF92q--
+> 
+> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+> Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+> ---
+>  drivers/of/platform.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index 3b64d0bf5bba..7c6771986c06 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -138,7 +138,7 @@ struct platform_device *of_device_alloc(struct device_node *np,
+>  	}
+>  
+>  	dev->dev.of_node = of_node_get(np);
+> -	dev->dev.parent = parent;
+> +	dev->dev.parent = parent ? : &platform_bus;
+>  
+>  	if (bus_id)
+>  		dev_set_name(&dev->dev, "%s", bus_id);
+> @@ -291,7 +291,7 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+>  
+>  	/* setup generic device info */
+>  	dev->dev.of_node = of_node_get(node);
+> -	dev->dev.parent = parent;
+> +	dev->dev.parent = parent ? : &platform_bus;
+>  	dev->dev.platform_data = platform_data;
+>  	if (bus_id)
+>  		dev_set_name(&dev->dev, "%s", bus_id);
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
