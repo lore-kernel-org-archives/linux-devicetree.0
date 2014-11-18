@@ -1,266 +1,69 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 1/5] mfd: rt5033: Add Richtek RT5033 driver core.
-Date: Tue, 18 Nov 2014 16:25:37 +0000
-Message-ID: <20141118162537.GE13959@x1>
-References: <1415794082-30277-1-git-send-email-beomho.seo@samsung.com>
- <1415794082-30277-2-git-send-email-beomho.seo@samsung.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] drivers/core/of: Add symlink to device-tree from devices
+ with an OF node
+Date: Tue, 18 Nov 2014 10:37:08 -0600
+Message-ID: <CAL_Jsq+YyfMWxiOFv4x3g5hZJH0XRqCKj2He1XO9eyXWjHTMrg@mail.gmail.com>
+References: <1415342031.4925.27.camel@kernel.crashing.org> <1415342117.4925.29.camel@kernel.crashing.org>
+ <1415596626.5769.14.camel@kernel.crashing.org> <CAL_JsqKG=vpeGKj3v-2VW9oGQsnmuYMHRfy6LuXDXE=ROjHT4w@mail.gmail.com>
+ <1415841047.5124.62.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1415794082-30277-2-git-send-email-beomho.seo@samsung.com>
+In-Reply-To: <1415841047.5124.62.camel@kernel.crashing.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Beomho Seo <beomho.seo@samsung.com>
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sameo@linux.intel.com, lee.jone@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, cw00.choi@samsung.com, geunsik.lim@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@linaro.org>, Greg KH <gregkh@linuxfoundation.org>, Jeremy Kerr <jeremy.kerr@au1.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 12 Nov 2014, Beomho Seo wrote:
-
-> This patch adds a new driver for Richtek RT5033 driver.
-> RT5033 is a Multifunction device which includes battery charger, fuel=
- gauge,
-> flash LED current source, LDO and synchronous Buck converter. It is i=
-nterfaced
-> to host controller using I2C interface.
->=20
-> Cc: Samuel Ortiz <sameo@linux.intel.com>
-> Cc: Lee Jones <lee.jone@linaro.org>
-> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
-> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-> ---
-> Changes in v3
-> - Correct sentence errors.
-> - Add author information the top of each drivers.
-> - Remove unnecessary pre-initialise, struct member(rt5033->i2c) and b=
-link.
-> - Change some return check.
-> - Use bool and of_match_ptr().
->=20
-> Changes in v2
-> - Remove volatile_reg callback. Because this driver not in use regmap=
- cache.
-> - Revmoe unnecessary subnode of_compatible.
-> - Add define for set_high impedance mode of charger.
-> ---
->=20
->  drivers/mfd/Kconfig                |   12 ++
->  drivers/mfd/Makefile               |    1 +
->  drivers/mfd/rt5033.c               |  141 +++++++++++++++++++
->  include/linux/mfd/rt5033-private.h |  260 ++++++++++++++++++++++++++=
-++++++++++
->  include/linux/mfd/rt5033.h         |   62 +++++++++
->  5 files changed, 476 insertions(+)
->  create mode 100644 drivers/mfd/rt5033.c
->  create mode 100644 include/linux/mfd/rt5033-private.h
->  create mode 100644 include/linux/mfd/rt5033.h
->=20
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 72d3808..55b6551 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -618,6 +618,18 @@ config MFD_RTSX_PCI
->  	  types of memory cards, such as Memory Stick, Memory Stick Pro,
->  	  Secure Digital and MultiMediaCard.
-> =20
-> +config MFD_RT5033
-> +	bool "Richtek RT5033 Power Management IC"
-> +	depends on I2C=3Dy
-> +	select MFD_CORE
-> +	select REGMAP_I2C
-> +	help
-> +	  This driver provides for the Richtek RT5033 Power Management IC,
-> +	  which includes the I2C driver and the Core APIs. This driver prov=
-ides
-> +	  common support for accessing the device. The device supports mult=
-iple
-> +	  sub-devices like charger, fuel gauge, flash LED, current source,
-> +	  LDO and Buck.
-
-What's stopping this from being built as a module?
-
->  config MFD_RTSX_USB
->  	tristate "Realtek USB card reader"
->  	depends on USB
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 53467e2..4059c24 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -176,6 +176,7 @@ obj-$(CONFIG_MFD_IPAQ_MICRO)	+=3D ipaq-micro.o
->  obj-$(CONFIG_MFD_MENF21BMC)	+=3D menf21bmc.o
->  obj-$(CONFIG_MFD_HI6421_PMIC)	+=3D hi6421-pmic-core.o
->  obj-$(CONFIG_MFD_DLN2)		+=3D dln2.o
-> +obj-$(CONFIG_MFD_RT5033)	+=3D rt5033.o
-> =20
->  intel-soc-pmic-objs		:=3D intel_soc_pmic_core.o intel_soc_pmic_crc.o
->  obj-$(CONFIG_INTEL_SOC_PMIC)	+=3D intel-soc-pmic.o
-> diff --git a/drivers/mfd/rt5033.c b/drivers/mfd/rt5033.c
-> new file mode 100644
-> index 0000000..e29c6d9
-> --- /dev/null
-> +++ b/drivers/mfd/rt5033.c
-> @@ -0,0 +1,141 @@
-> +/*
-> + * MFD core driver for the Richtek RT5033.
-> + *
-> + * Copyright (C) 2014 Samsung Electronics, Co., Ltd.
-> + * Author: Beomho Seo <beomho.seo@samsung.com>
-> + *
-> + * This program is free software; you can redistribute it and/or mod=
-ify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published bythe Free Software Foundation.
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/module.h>
-
-Why have you included this if you can't build as a module?
-
-> +#include <linux/interrupt.h>
-> +#include <linux/of_device.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/mfd/rt5033.h>
-> +#include <linux/mfd/rt5033-private.h>
-> +
-> +static const struct regmap_irq rt5033_irqs[] =3D {
-> +	{ .mask =3D RT5033_PMIC_IRQ_BUCKOCP, },
-> +	{ .mask =3D RT5033_PMIC_IRQ_BUCKLV, },
-> +	{ .mask =3D RT5033_PMIC_IRQ_SAFELDOLV, },
-> +	{ .mask =3D RT5033_PMIC_IRQ_LDOLV, },
-> +	{ .mask =3D RT5033_PMIC_IRQ_OT, },
-> +	{ .mask =3D RT5033_PMIC_IRQ_VDDA_UV, },
-> +};
-> +
-> +static const struct regmap_irq_chip rt5033_irq_chip =3D {
-> +	.name		=3D "rt5033",
-> +	.status_base	=3D RT5033_REG_PMIC_IRQ_STAT,
-> +	.mask_base	=3D RT5033_REG_PMIC_IRQ_CTRL,
-> +	.mask_invert	=3D true,
-> +	.num_regs	=3D 1,
-> +	.irqs		=3D rt5033_irqs,
-> +	.num_irqs	=3D ARRAY_SIZE(rt5033_irqs),
-> +};
-> +
-> +static const struct mfd_cell rt5033_devs[] =3D {
-> +	{
-> +		.name =3D "rt5033-regulator",
-> +	}, {
-
-Place this entry on one line.  Like you did in rt5033_irqs.
-
-> +		.name =3D "rt5033-charger",
-> +		.of_compatible =3D "richtek,rt5033-charger",
-> +	}, {
-> +		.name =3D "rt5033-battery",
-> +		.of_compatible =3D "richtek,rt5033-battery",
-> +	},
-> +};
-> +
-> +static const struct of_device_id rt5033_dt_match[] =3D {
-> +	{ .compatible =3D "richtek,rt5033", },
-> +	{ }
-> +};
-> +
-> +static const struct regmap_config rt5033_regmap_config =3D {
-> +	.reg_bits	=3D 8,
-> +	.val_bits	=3D 8,
-> +	.max_register	=3D RT5033_REG_END,
-> +};
-> +
-> +static int rt5033_i2c_probe(struct i2c_client *i2c,
-> +				const struct i2c_device_id *id)
-> +{
-> +	struct rt5033_dev *rt5033;
-> +	unsigned int data;
-> +	int ret;
-> +
-> +	rt5033 =3D devm_kzalloc(&i2c->dev, sizeof(*rt5033), GFP_KERNEL);
-> +	if (!rt5033)
-> +		return -ENOMEM;
-> +
-> +	i2c_set_clientdata(i2c, rt5033);
-> +	rt5033->dev =3D &i2c->dev;
-> +	rt5033->irq =3D i2c->irq;
-> +	rt5033->wakeup =3D true;
-> +
-> +	rt5033->regmap =3D devm_regmap_init_i2c(i2c, &rt5033_regmap_config)=
-;
-> +	if (IS_ERR(rt5033->regmap)) {
-> +		dev_err(&i2c->dev, "Failed to allocate register map.\n");
-> +		return PTR_ERR(rt5033->regmap);
-> +	}
-> +
-> +	ret =3D regmap_read(rt5033->regmap, RT5033_REG_DEVICE_ID, &data);
-> +	if (ret) {
-> +		dev_err(&i2c->dev, "Device not found\n");
-> +		return -ENODEV;
-> +	}
-> +	dev_info(&i2c->dev, "Device found Device ID: %04x\n", data);
-> +
-> +	ret =3D regmap_add_irq_chip(rt5033->regmap, rt5033->irq,
-> +			IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-> +			0, &rt5033_irq_chip, &rt5033->irq_data);
-> +	if (ret) {
-> +		dev_err(&i2c->dev, "Failed to request IRQ %d: %d\n",
-> +							rt5033->irq, ret);
-> +		return ret;
-> +	}
-> +
-> +	ret =3D mfd_add_devices(rt5033->dev, -1, rt5033_devs,
-> +			ARRAY_SIZE(rt5033_devs), NULL, 0,
-> +			regmap_irq_get_domain(rt5033->irq_data));
-> +	if (ret < 0) {
-> +		dev_err(&i2c->dev, "Failed to add RT5033 child device.\n");
-
-s/device/devices/
-
-> +		return ret;
-> +	}
-> +
-> +	device_init_wakeup(rt5033->dev, rt5033->wakeup);
-> +
-> +	return 0;
-> +}
-> +
-> +static int rt5033_i2c_remove(struct i2c_client *i2c)
-> +{
-> +	struct rt5033_dev *rt5033 =3D i2c_get_clientdata(i2c);
-> +
-> +	mfd_remove_devices(rt5033->dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct i2c_device_id rt5033_i2c_id[] =3D {
-> +	{ "rt5033", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, rt5033_i2c_id);
-
-Why do you need to export this if you're not building as a module?
-
-> +static struct i2c_driver rt5033_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "rt5033",
-> +		.of_match_table =3D of_match_ptr(rt5033_dt_match),
-> +	},
-> +	.probe =3D rt5033_i2c_probe,
-> +	.remove =3D rt5033_i2c_remove,
-> +	.id_table =3D rt5033_i2c_id,
-> +};
-> +module_i2c_driver(rt5033_driver);
+On Wed, Nov 12, 2014 at 7:10 PM, Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+> So I've been annoyed lately with having a bunch of devices such as i2c
+> eeproms (for use by VPDs, server world !) and other bits and pieces that
+> I want to be able to identify from userspace, and possibly provide
+> additional data about from FW.
 >
-> +MODULE_DESCRIPTION("Richtek RT5033 multi-function core driver");
-> +MODULE_AUTHOR("Beomho Seo <beomho.seo@samsung.com>");
-> +MODULE_LICENSE("GPL");
+> Basically, it boils down to correlating the sysfs device with the OF
+> tree device node, so that user space can use device-tree info such as
+> additional "location" or "label" (or whatever else we can come up with)
+> propreties to identify a given device, or get some attributes of use
+> about it, etc...
+>
+> Now, so far, we've done that in some subsystem in a fairly ad-hoc basis
+> using "devspec" properties. For example, PCI creates them if it can
+> correlate the probed device with a DT node. Some powerpc specific busses
+> do that too.
+>
+> However, i2c doesn't and it would be nice to have something more generic
+> since technically any device can have a corresponding device tree node.
+>
+> This patch adds an "of_node" symlink to devices that have a non-NULL
+> dev->of_node pointer, the patch is pretty trivial and seems to work just
+> fine for me.
+>
+> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> ---
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 20da3ad..8c7b607 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -493,6 +493,15 @@ static int device_add_attrs(struct device *dev)
+>                         goto err_remove_dev_groups;
+>         }
+>
+> +#ifdef CONFIG_OF
+> +       if (dev->of_node) {
 
-More module stuff?
+if (IS_ENABLED(CONFIG_OF) && dev->of_node)
 
-[...]
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+> +               error = sysfs_create_link(&dev->kobj, &dev->of_node->kobj,
+> +                                         "of_node");
+> +               if (error)
+> +                       dev_warn(dev, "Error %d creating of_node link\n", error);
+> +       }
+> +#endif /* CONFIG_OF */
+> +
+>         return 0;
+>
+>   err_remove_dev_groups:
+>
+>
