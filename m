@@ -1,48 +1,141 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v1 1/2] efuse: IMG Pistachio eFuse Controller
-Date: Tue, 18 Nov 2014 11:03:39 +0100
-Message-ID: <1877949.WaxRIbih3M@wuerfel>
-References: <1416237576-21542-1-git-send-email-arul.ramasamy@imgtec.com> <CAL1qeaHSevOJ-o=nFqgze8utMgTk-Mh7Y9uRMa6wnjeofji98w@mail.gmail.com> <546B152D.1010804@imgtec.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [RFC] adp1653: Add device tree bindings for LED controller
+Date: Tue, 18 Nov 2014 11:04:56 +0100
+Message-ID: <546B19C8.2090008@samsung.com>
+References: <20141116075928.GA9763@amd>
+ <20141117145857.GO8907@valkosipuli.retiisi.org.uk>
+ <546AFEA5.9020000@samsung.com> <20141118084603.GC4059@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <546B152D.1010804-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Arul Ramasamy <Arul.Ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <Ezequiel.Garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20141118084603.GC4059@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, pali.rohar@gmail.com, sre@debian.org, sre@ring0.de, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, freemangordon@abv.bg, bcousson@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 18 November 2014 09:45:17 James Hogan wrote:
-> On 18/11/14 00:26, Andrew Bresticker wrote:
-> > Hi Naidu,
-> > 
-> > On Mon, Nov 17, 2014 at 4:12 PM, Naidu Tellapati
-> > <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
-> >> Hi Andrew,
-> >>
-> >> (We will respond to James Hogan's remaining review comments in a separate email)
-> >>
-> >>>>
-> >>>> +obj-$(CONFIG_SOC_IMG)           += pistachio/
-> >>
-> >>> What is CONFIG_SOC_IMG? It sounds very generic.
-> >>
-> >> May I have your suggestions on the above.
-> >>
-> >> (Assuming we create drivers/soc/img/ instead of drivers/soc/pistachio/)
-> 
-> What would "belong" in there?
-> Basically anything that doesn't belong in some particular subsystem?
-> 
-> 
+On 11/18/2014 09:46 AM, Pavel Machek wrote:
+> On Tue 2014-11-18 09:09:09, Jacek Anaszewski wrote:
+>> Hi Pavel, Sakari,
+>>
+>> On 11/17/2014 03:58 PM, Sakari Ailus wrote:
+>>> Hi Pavel,
+>>>
+>>> On Sun, Nov 16, 2014 at 08:59:28AM +0100, Pavel Machek wrote:
+>>>> For device tree people: Yes, I know I'll have to create file in
+>>>> documentation, but does the binding below look acceptable?
+>>>>
+>>>> I'll clean up driver code a bit more, remove the printks. Anything
+>>>> else obviously wrong?
+>>>
+>>> Jacek Anaszewski is working on flash support for LED devices. I think it'd
+>>> be good to sync the DT bindings for the two, as the types of devices
+>>> supported by the LED API and the V4L2 flash API are quite similar.
+>>>
+>>> Cc Jacek.
+>>
+>> I've already submitted a patch [1] that updates leds common bindings.
+>> I hasn't been merged yet, as the related LED Flash class patch [2]
+>> still needs some indicator leds related discussion [3].
+>>
+>> I think this is a good moment to discuss the flash related led common
+>> bindings.
+>
+> Part of problem is that adp1653 is not regarded as "LED" device by
+> current kernel driver.
 
-I think we have reached the threshold of needing a proper subsystem for
-efuse/otp devices, and we should move the existing drivers into one
-common directory and find a maintainer who can generalize the interfaces.
+It doesn't prevent us from keeping the flash devices related
+DT bindings unified across kernel subsystems. The DT bindings
+docs for the adp1653 could just provide a reference to the
+led/common.txt bindings. In the future, when LED Flash
+class will be merged, all the V4L2 Flash drivers might be
+moved to the LED subsystem to gain the LED subsystem support.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> [1] http://www.spinics.net/lists/linux-leds/msg02121.html
+>
+> @@ -3,6 +3,17 @@ Common leds properties.
+>   Optional properties for child nodes:
+>   - label : The label for this LED.  If omitted, the label is
+>     taken from the node name (excluding the unit address).
+> +- iout-torch : Array of maximum intensities in microamperes of the
+>   torch
+> +	led currents in order from sub-led 0 to N-1, where N is the
+>   number
+> +	of torch sub-leds exposed by the device
+> +- iout-flash : Array of maximum intensities in microamperes of the
+>   flash
+> +	led currents in order from sub-led 0 to N-1, where N is the
+>   number
+> +	of flash sub-leds exposed by the device
+> +- iout-indicator : Array of maximum intensities in microamperes of
+> +  the indicator led currents in order from sub-led 0 to N-1,
+> +  where N is the number of indicator sub-leds exposed by the device
+> +- flash-timeout : timeout in microseconds after which flash led
+> +  is turned off
+>
+>   - linux,default-trigger :  This parameter, if present, is a
+>       string defining the trigger assigned to the LED.  Current
+>       triggers are:
+> @@ -19,5 +30,10 @@ Examples:
+>   system-status {
+>   	       label = "Status";
+>   	       linux,default-trigger = "heartbeat";
+> +	       iout-torch = <500 500>;
+> +	       iout-flash = <1000 1000>;
+> +	       iout-indicator = <100 100>;
+> +	       flash-timeout = <1000>;
+> +
+> 	...
+>   };
+>
+> I don't get it; system-status describes single LED, why are iout-torch
+> (and friends) arrays of two?
+
+Some devices can control more than one led. The array is for such
+purposes. The system-status should be probably renamed to
+something more generic for both common leds and flash leds,
+e.g. system-led.
+
+> Also, at least on adp1653, these are actually two leds -- white and
+> red. Torch and flash is white led, indicator is red led.
+
+Then you should define three properties:
+
+iout-torch = <[uA]>;
+iout-flash = <[uA]>;
+iout-indicator = <[uA]>;
+
+iout-torch and iout-flash properties would determine the current
+for the white led in the torch and flash modes respectively and
+the iout-indicator property would determine the current for
+the indicator led.
+
+>> [2] http://www.spinics.net/lists/linux-media/msg83100.html
+>> [3] http://www.spinics.net/lists/linux-leds/msg02472.html
+>
+> What device are you using for testing? Can you cc me on future
+> patches?
+
+I am using max77693 [1] and aat1290 [2]. OK, I will add you on cc.
+
+> Why do we need complex "flash LED class" support, and where is the
+> V4L2 glue?
+
+The rationale for unification of the LED and V4L2 Flash API
+can be found in the discussion [3]. The glue is the v4l2-flash [4]
+module which exposes a sub-device, that controls a LED Flash class
+device with use of LED Flash class API.
+
+The v4l2-flash sub-device registers with v4l2-async API
+in a media device. Exemplary support for v4l2-flash
+sub-devices is added to the exynos4-is driver in the patch [5].
+
+Best Regards,
+Jacek Anaszewski
+
+[1] http://www.spinics.net/lists/linux-leds/msg02326.html
+[2] http://www.spinics.net/lists/linux-media/msg81079.html
+[3] http://www.spinics.net/lists/linux-media/msg69012.html
+[4] http://www.spinics.net/lists/linux-leds/msg02322.html
+[5] http://www.spinics.net/lists/linux-leds/msg02323.html
