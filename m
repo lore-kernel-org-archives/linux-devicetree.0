@@ -1,63 +1,45 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [RFC] adp1653: Add device tree bindings for LED controller
-Date: Tue, 18 Nov 2014 19:35:45 +0100
-Message-ID: <20141118183545.GA16999@amd>
-References: <20141116075928.GA9763@amd>
- <20141117101553.GA21151@amd>
- <20141117145545.GC7046@atomide.com>
- <201411171601.32311@pali>
- <20141117150617.GD7046@atomide.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 06/10] input: touchscreen: edt-ft5x06: fix driver
+ autoprobing
+Date: Tue, 18 Nov 2014 10:38:47 -0800
+Message-ID: <20141118183847.GE3003@dtor-ws>
+References: <1416334028-7766-1-git-send-email-balbi@ti.com>
+ <1416334028-7766-6-git-send-email-balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20141117150617.GD7046-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org, sre-GFxCN5SEZAc@public.gmane.org, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, freemangordon-uiMcrn6V0Vs@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1416334028-7766-6-git-send-email-balbi@ti.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Lothar =?iso-8859-1?Q?Wa=DFmann?= <lw@karo-electronics.de>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-input@vger.kernel.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon 2014-11-17 07:06:17, Tony Lindgren wrote:
-> * Pali Roh=E1r <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [141117 07:03]:
-> > On Monday 17 November 2014 15:55:46 Tony Lindgren wrote:
-> > >=20
-> > > There's nothing stopping us from initializing the camera code
-> > > from pdata-quirks.c for now to keep it working. Certainly the
-> > > binding should be added to the driver, but that removes a
-> > > dependency to the legacy booting mode if things are otherwise
-> > > working.
-> >=20
-> > Tony, legacy board code for n900 is not in mainline tree. And=20
-> > that omap3 camera subsystem for n900 is broken since 3.5=20
-> > kernel... (both Front and Back camera on n900 show only green=20
-> > picture).
->=20
-> I'm still seeing the legacy board code for n900 in mainline tree :)
-> It's deprecated, but still there.
->=20
-> Are you maybe talking about some other piece of platform_data that's
-> no longer in the mainline kernel?
->=20
-> No idea what might be wrong with the camera though.
+Hi Felipe,
 
-Camera support for main and secondary cameras was never mainline, AFAIC=
-T.
+On Tue, Nov 18, 2014 at 12:07:04PM -0600, Felipe Balbi wrote:
+> i2c devices match against struct i2c_device_id
+> even for CONFIG_OF case, so adding a struct of_device_id
+> doesn't change anything. As a result, currently, edt-ft5x06
+> will not autoprobe if built as a module.
 
-Merging it will not be easy, as it lacks DT support... and was broken
-for long time.
+Why doe snot it autoprobe? We properly declare MODULE_DEVICE_TABLE for
+OF, is it because we are missing some data in device uevent?
 
-Anyway, flash is kind of important for me, since it makes phone useful
-as backup light; and it is simple piece of hw, so I intend to keep it
-useful.
+> 
+> To fix the issue and still maintain backwards compatibility
+> with all DTS files currently in tree, we're just moving
+> all ids from of_device_id to i2c_device_id while also
+> adding the following specific ids which should be used
+> from now on:
+> 
+> 	{ "edt-ft5206", 0, }
+> 	{ "edt-ft5306", 0, }
+> 	{ "edt-ft5406", 0, }
 
-       	       	   	    	      	      	  		     Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
-/blog.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Is this a tee-wide change? Link to the discussion?
+
+Thanks.
+
+-- 
+Dmitry
