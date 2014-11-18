@@ -1,55 +1,93 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v5 5/6] Documentation: dt-bindings: Add binding info for X-Gene QMTM UIO driver
-Date: Tue, 18 Nov 2014 14:10:35 +0100
-Message-ID: <1503477.DVdkExccIe@wuerfel>
-References: <1416220572-13381-1-git-send-email-ankit.jindal@linaro.org> <2279061.naADrHDgyn@wuerfel> <CAPTm99WYNyxtY-NCVN8pB0HwNPn+EFx-7w7yEevaEK1z7-Zqxg@mail.gmail.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v12 1/3] drm: rockchip: Add basic drm driver
+Date: Tue, 18 Nov 2014 14:21:30 +0100
+Message-ID: <20141118142130.6c12ab50@bbrezillon>
+References: <1416297587-18959-1-git-send-email-mark.yao@rock-chips.com>
+	<1416297629-19024-1-git-send-email-mark.yao@rock-chips.com>
+	<20141118083234.GZ25711@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPTm99WYNyxtY-NCVN8pB0HwNPn+EFx-7w7yEevaEK1z7-Zqxg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Anup Patel <anup-aa5cPYPs4nSSZfiimGR9Ow@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>, Tushar Jagad <tushar.jagad-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20141118083234.GZ25711@phenom.ffwll.local>
+Sender: linux-doc-owner@vger.kernel.org
+To: Daniel Vetter <daniel@ffwll.ch>
+Cc: Mark Yao <mark.yao@rock-chips.com>, heiko@sntech.de, David Airlie <airlied@gmail.com>, Rob Clark <robdclark@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Rom Lemarchand <romlem@google.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-api@vger.kernel.org, linux-rockchip@lists.infradead.org, dianders@chromium.org, marcheu@chromium.org, dbehr@chromium.org, olof@lixom.net, djkurtz@chromium.org, cf@rock-chips.com, xxm@rock-chips.com, huangtao@rock-chips.com, kever.yang@rock-chips.co
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 18 November 2014 14:59:54 Ankit Jindal wrote:
-> On 17 November 2014 16:47, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Monday 17 November 2014 16:06:11 Ankit Jindal wrote:
-> >> +
-> >> +       qmtm1_uio: qmtm_uio@1f200000 {
-> >> +               compatible = "apm,xgene-qmtm";
-> >> +               status = "disabled";
-> >> +               reg = <0x0 0x1f200000 0x0 0x10000>,
-> >> +                     <0x0 0x1b000000 0x0 0x400000>;
-> >> +               reg-names = "csr", "fabric";
-> >> +               qpool-memory = <&qmtm1_uio_qpool>;
-> >> +               clocks = <&qmtm1clk 0>;
-> >> +               num-queues = <0x400>;
-> >> +               devid = <1>;
-> >> +       };
-> >> +
-> >
-> > To make my previous review comments clearer:
-> >
-> > NAK
-> >
-> > Do not create device nodes that are meant for a specific use case in
-> > software and that are not usable for the common case. I don't think
-> > it makes any sense to keep on submitting a UIO driver for this until
-> > we have a proper network driver that uses this so we can make sure we
-> > have a working binding.
+Hi Daniel,
+
+On Tue, 18 Nov 2014 09:32:34 +0100
+Daniel Vetter <daniel@ffwll.ch> wrote:
+
+> On Tue, Nov 18, 2014 at 04:00:29PM +0800, Mark Yao wrote:
+> > From: Mark yao <mark.yao@rock-chips.com>
+> > 
+> > This patch adds the basic structure of a DRM Driver for Rockchip Socs.
+> > 
+> > Signed-off-by: Mark Yao <mark.yao@rock-chips.com>
+> > Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
+> > Acked-by: Daniel Vetter <daniel@ffwll.ch>
+> > Reviewed-by: Rob Clark <robdclark@gmail.com>
+> > ---
+> > Changes in v2:
+> > - use the component framework to defer main drm driver probe
+> >   until all VOP devices have been probed.
+> > - use dma-mapping API with ARM_DMA_USE_IOMMU, create dma mapping by
+> >   master device and each vop device can shared the drm dma mapping.
+> > - use drm_crtc_init_with_planes and drm_universal_plane_init.
+> > - remove unnecessary middle layers.
+> > - add cursor set, move funcs to rockchip drm crtc.
+> > - use vop reset at first init
+> > - reference framebuffer when used and unreference when swap out vop
+> > 
+> > Changes in v3:
+> > - change "crtc->fb" to "crtc->primary-fb"
+> > Adviced by Daniel Vetter
+> > - init cursor plane with universal api, remove unnecessary cursor set,move 
+> > 
+> > Changes in v4:
+> > Adviced by David Herrmann
+> > - remove drm_platform_*() usage, use register drm device directly.
 > 
-> The dataplane frameworks like OpenDataPlane etc, need to have access
-> to complete subsystem from the user space. Hence, we would like to
-> have this driver and some other UIO drivers to be the part of kernel
-> to have data plane frameworks working on our platform.
+> Minor fixup for that part below.
+> 
+> [snip]
+> 
+> > +static int rockchip_drm_bind(struct device *dev)
+> > +{
+> > +	struct drm_device *drm;
+> > +	int ret;
+> > +
+> > +	drm = drm_dev_alloc(&rockchip_drm_driver, dev);
+> > +	if (!drm)
+> > +		return -ENOMEM;
+> > +
+> > +	ret = drm_dev_set_unique(drm, "%s", dev_name(dev));
+> > +	if (ret)
+> > +		goto err_free;
+> 
+> Please call rockchip_drm_load here directly and don't put it as the ->load
+> function into the driver vtable. The point of the alloc/register split is
+> that the driver can be completely set up _before_ we register anything.
+> But for backwards compat and historical reasons ->load is called somewhere
+> in the middle (so that you could access the minor nodes if needed, since
+> some drivers do that).
 
-Please work with the people that do the in-kernel QMTM driver to come
-up with a common binding then.
+I tried to do the same in the atmel-hlcdc DRM driver, but I need the
+primary drm_minor to register the connectors (see this kernel
+backtrace [1]), which means I either initialize the connector in the
+wrong place (currently part of the drm load process), or I just can't
+call atmel_hlcdc_dc_load before registering the drm device...
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+
+Boris
+
+[1]http://code.bulix.org/fi7trt-87436
+
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
