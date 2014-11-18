@@ -1,54 +1,48 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [V3 PATCH 1/1] devicetree: bindings: Add vendor prefix for Micron
- Technology Co., Ltd.
-Date: Tue, 18 Nov 2014 12:07:57 -0600
-Message-ID: <CAL_JsqLeUnVoS1ThzK3hpQBrjUxOXVL4gCpQRXBYjZ_ts6WtFg@mail.gmail.com>
-References: <A765B125120D1346A63912DDE6D8B6315EB8F8@NTXXIAMBX02.xacn.micron.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: Add vendor prefix for Chips&Media, Inc.
+Date: Tue, 18 Nov 2014 12:11:22 -0600
+Message-ID: <CAL_Jsq+=oRcpuTBxQSNXWMk7-G0hMPw7RfP=79dm4YXgJfDm8A@mail.gmail.com>
+References: <1400059483-16259-1-git-send-email-p.zabel@pengutronix.de> <CAOMZO5AFKx5s25wD==nv4MftAWEFvPgu73B2gqv-do1CORV0RA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <A765B125120D1346A63912DDE6D8B6315EB8F8@NTXXIAMBX02.xacn.micron.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bpqw <bpqw@micron.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Mark Brown <broonie@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <treding@nvidia.com>, Florian Vaussard <florian.vaussard@epfl.ch>, Andrew Lunn <andrew@lunn.ch>, Silvio F <silvio.fricke@gmail.com>, Hayato Suzuki <hytszk@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOMZO5AFKx5s25wD==nv4MftAWEFvPgu73B2gqv-do1CORV0RA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 12, 2014 at 8:26 AM, bpqw <bpqw@micron.com> wrote:
-> This patch is used to add vendor prefix for Micron Technology Inc in the
-> vendor-prefixes.txt file.
+On Fri, Nov 14, 2014 at 1:43 PM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Rob,
 >
-> Micron Technology,Inc.is an American multinational corporation based in Boise,
-> Idaho,best known for producing many forms of semiconductor devices.This includes
-> DRAM,SDRAM,flash memory,eMMC and SSDs.
->
-> Signed-off-by: Bean Huo <bpqw@micron.com>
+> On Wed, May 14, 2014 at 6:24 AM, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+>> Chips&Media is a developer of Video Codec IP cores.
+>>
+>> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Applied, thanks.
+Oops. Applied, thanks.
 
 Rob
 
-> ---
-> V2:
->   - Add signed-off-by
->   - Modify commit logs that wrapped to less than 80 columns
-> V3:
->   - Remove the same signed-off-by owner's mailbox
->   - Modify proper name of signed-off-by
+>> ---
+>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> index e60c425..271fd70 100644
+>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> @@ -29,6 +29,7 @@ cavium        Cavium, Inc.
+>>  cdns   Cadence Design Systems Inc.
+>>  chrp   Common Hardware Reference Platform
+>>  chunghwa       Chunghwa Picture Tubes Ltd.
+>> +cnm    Chips&Media, Inc.
+>>  cirrus Cirrus Logic, Inc.
+>>  cortina        Cortina Systems, Inc.
+>>  crystalfontz   Crystalfontz America, Inc.
 >
->  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 723999d..a7bbf6e 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -92,6 +92,7 @@ maxim Maxim Integrated Products
->  mediatek       MediaTek Inc.
->  micrel Micrel Inc.
->  microchip      Microchip Technology Inc.
-> +micron Micron Technology Inc.
->  mitsubishi     Mitsubishi Electric Corporation
->  mosaixtech     Mosaix Technologies, Inc.
->  moxa   Moxa
-> --
-> 1.7.9.5
+> Could you apply this one?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
