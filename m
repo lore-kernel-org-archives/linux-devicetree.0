@@ -1,57 +1,42 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v3 3/3] ARM: dts: meson: add I2C controller nodes
-Date: Tue, 18 Nov 2014 16:19:27 +0100
-Message-ID: <20141118151927.GG30004@katana>
-References: <1415907123-4318-1-git-send-email-b.galvani@gmail.com>
- <1415907123-4318-4-git-send-email-b.galvani@gmail.com>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [RFC] Add of_path property for all devices with a node
+Date: Tue, 18 Nov 2014 15:18:29 +0000
+Message-ID: <CACxGe6vg8SxwCHZ8HxzLzimQOAf8Q81wd5eO=x2LavD4dv81Rw@mail.gmail.com>
+References: <1415342031.4925.27.camel@kernel.crashing.org> <1415342117.4925.29.camel@kernel.crashing.org>
+ <1415596626.5769.14.camel@kernel.crashing.org> <CAL_JsqKG=vpeGKj3v-2VW9oGQsnmuYMHRfy6LuXDXE=ROjHT4w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7uYPyRQQ5N0D02nI"
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1415907123-4318-4-git-send-email-b.galvani@gmail.com>
+In-Reply-To: <CAL_JsqKG=vpeGKj3v-2VW9oGQsnmuYMHRfy6LuXDXE=ROjHT4w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Beniamino Galvani <b.galvani@gmail.com>
-Cc: Carlo Caione <carlo@caione.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jerry Cao <jerry.cao@amlogic.com>, Victor Wan <victor.wan@amlogic.com>
+To: Rob Herring <robherring2@gmail.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Nov 10, 2014 at 2:06 PM, Rob Herring <robherring2@gmail.com> wrote:
+> Adding Grant.
+>
+> On Sun, Nov 9, 2014 at 11:17 PM, Benjamin Herrenschmidt
+> <benh@kernel.crashing.org> wrote:
+>> On Fri, 2014-11-07 at 17:35 +1100, Benjamin Herrenschmidt wrote:
+>>> On Fri, 2014-11-07 at 17:33 +1100, Benjamin Herrenschmidt wrote:
+>>>
+>>> > So I came up with this patch,
+>>>
+>>> And here is the actual patch, which might help :-) It's pretty trivial
+>>> and small...
+>>
+>> So not much reactions here .. a bit more on IRC, where Olof suggested
+>> that rather than a file containing a path, we could use a symlink since
+>> the devtree is now in sysfs, so we can do relative links.
+>
+> +1 on this. That was part of the motivation to move DT into sysfs.
+>
+> Rob
 
---7uYPyRQQ5N0D02nI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I had a patch that did exactly that. I wonder what happened to it...
 
-On Thu, Nov 13, 2014 at 08:32:03PM +0100, Beniamino Galvani wrote:
-> Add nodes for I2C controllers A,B,AO, which are available in both
-> Meson6 and Meson8.
->=20
-> Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
-> ---
+But regardless, as Frank said in his reply, this data is already in
+the uevent file for every device.
 
-I usually don't take DTS patches. They should go via arm-soc. Please say
-so if there are reasons I should take it.
-
-
---7uYPyRQQ5N0D02nI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUa2N/AAoJEBQN5MwUoCm2dxMQALJV9jfj0AxVKMIKBOBhd+3Z
-GHhiBCDE8OUG048ZA0UN10CK5oWuKH0cAjiPNkrVwNslljkb0h0OgDiotm52+Kop
-hwiJUxJHevq6QkQfyYNTvc9qZxJhXT2DFGSgcSND6mjddvgxnC3JVrbyYokU4Swq
-oizbF3Jcmd53SvioTH0YvgTG1+m6i3JOTFC8anfvjdRdxQZl7Jk3uPTSYj46IxcG
-s/y7yjH1BK58Q8A5yKmNOPfoR/I48OLu0q+9gnP9AZ2wxiptBbAgWGMhm/cuEQv3
-T9wneie6x+jBxRtHquSnfTcdkkccUthAzE24nq56FpepjvUnOkpucAsbAyKtMAC3
-EFKwQbqfWh+C6Ij+Sxv6NhLVWZmzb28JYyO6yRJpnO7IyiE4FWWAweS0Wn2De+WU
-4WHSN3wwq9eo3lCoS5wVFeUweVrhXOEFYsHjJfobuxKg5vW7L9uD0I3MPcaAqsU3
-1i5L3cVOO8ZjBQdNf7+hvtNOa4CHFHFcZoVyzhfOQPsJZMMtlOyve//juXrd092p
-iXfitCC6s/6UzOwBcBpX6X3oNalEoOicDQiK65BAhTfxthLiH3TjNIPG1U3KyY+/
-kiZY9DuoAGBs2/QvXQUbCxf+czz9fJYkDvvECtWX14pxI79MkgpY84x32JvokJvX
-T/0MLgi9KmSCfcX5ZjXg
-=xGBb
------END PGP SIGNATURE-----
-
---7uYPyRQQ5N0D02nI--
+g.
