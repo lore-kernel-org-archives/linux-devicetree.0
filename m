@@ -1,47 +1,49 @@
-From: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH v4 1/2] ARM: keystone: pm: switch to use generic pm domains
-Date: Mon, 17 Nov 2014 18:18:24 -0800
-Message-ID: <546AAC70.4070905@oracle.com>
-References: <1415631557-22897-1-git-send-email-grygorii.strashko@ti.com> <1600093.60yAP0Qpua@wuerfel> <7h389h3aif.fsf@deeprootsystems.com> <1618855.DXsjWXLqau@wuerfel>
+From: Alexandre Courbot <gnurou@gmail.com>
+Subject: Re: [PATCH/RFC] gpio: em: Use dynamic allocation of GPIOs
+Date: Tue, 18 Nov 2014 12:11:18 +0900
+Message-ID: <CAAVeFuKGYM56KP8TOZAwSjDGWrVNoK1phpxoOdEJ=Ng9haSnmg@mail.gmail.com>
+References: <1416234632-16166-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1618855.DXsjWXLqau@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>, ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1416234632-16166-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-SH <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/17/14 12:37 PM, Arnd Bergmann wrote:
-> On Monday 17 November 2014 11:14:16 Kevin Hilman wrote:
->>>>
->>>> So, The Keystone 2 Generic PM Controller is just a proxy PM layer here between
->>>> device and Generic clock manipulation PM callbacks.
->>>> It fills per-device clock list when device is attached to GPD and
->>>> ensures that all clocks from that list enabled/disabled when device is
->>>> started/stopped.
->>>
->>> The idea of such a generic power domain implementation sounds useful, but
->>> it has absolutely no business in platform specific code.
->>
->> Yes it does.  This isn't a generic power domain implementation, but
->> rather just the platform-specific glue that hooks up the clocks to the
->> right devices and power-domains so that the generic power-domain and
->> generic pm_clocks code does the right thing.
+On Mon, Nov 17, 2014 at 11:30 PM, Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> Use dynamic allocation of GPIOs instead of looking at the gpio%u alias
+> in DT.
+> ---
+>   - Is this correct? Not having to care about the alias would simplify the
+>     to-be-written DT binding documentation.
+>   - Completely untested.
 >
-> How would you do this on an arm64 version of keystone then? With
-> the current approach, you'd need to add a machine specific directory,
-> and that seems completely pointless since this is not even about
-> a hardware requirement.
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 >
-The Keystone PM domain code actually doesn't have to be under machine
-code. Infact my first patch I added that under drivers/bus/ and later
-based on Kevin's suggestion moved under machine. That time the Keystone
-64 bit arch point I couldn't bring up for other reasons.
+>  drivers/gpio/gpio-em.c | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-em.c b/drivers/gpio/gpio-em.c
+> index 21d34d4d473dcefe..c3434146f605748b 100644
+> --- a/drivers/gpio/gpio-em.c
+> +++ b/drivers/gpio/gpio-em.c
+> @@ -330,12 +330,7 @@ static int em_gio_probe(struct platform_device *pdev)
+>                         goto err0;
+>                 }
+>
+> -               ret = of_alias_get_id(pdev->dev.of_node, "gpio");
+> -               if (ret < 0) {
+> -                       dev_err(&pdev->dev, "Couldn't get OF id\n");
+> -                       goto err0;
+> -               }
+> -               pdata->gpio_base = ret * 32; /* 32 GPIOs per instance */
+> +               pdata->gpio_base = -1;
 
-But the code itself can be easily moved to drivers/power/ without
-any issue if thats what is the concern here.
-
-Regards,
-Santosh
+User-space might break because of GPIO renumbering. Why not setting
+gpio_base to -1 when the property is not present (instead of
+triggering an error), keeping support for the property so existing
+boards remain safe, and marking the property as deprecated in the
+bindings documentation?
