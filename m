@@ -1,49 +1,70 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [PATCH/RFC] gpio: em: Use dynamic allocation of GPIOs
-Date: Tue, 18 Nov 2014 12:11:18 +0900
-Message-ID: <CAAVeFuKGYM56KP8TOZAwSjDGWrVNoK1phpxoOdEJ=Ng9haSnmg@mail.gmail.com>
-References: <1416234632-16166-1-git-send-email-geert+renesas@glider.be>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: Re: [PATCH] ARM: dts: DRA7: Add node for RTC
+Date: Tue, 18 Nov 2014 10:31:04 +0530
+Message-ID: <546AD290.8080303@ti.com>
+References: <1416199509-3977-1-git-send-email-lokeshvutla@ti.com> <5469E76A.7020105@cogentembedded.com> <5469F271.9080102@ti.com> <546A1E5E.1040909@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1416234632-16166-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-SH <linux-sh@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <546A1E5E.1040909@cogentembedded.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-omap@vger.kernel.org
+Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, t-kristo@ti.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 17, 2014 at 11:30 PM, Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
-> Use dynamic allocation of GPIOs instead of looking at the gpio%u alias
-> in DT.
-> ---
->   - Is this correct? Not having to care about the alias would simplify the
->     to-be-written DT binding documentation.
->   - Completely untested.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
->  drivers/gpio/gpio-em.c | 7 +------
->  1 file changed, 1 insertion(+), 6 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-em.c b/drivers/gpio/gpio-em.c
-> index 21d34d4d473dcefe..c3434146f605748b 100644
-> --- a/drivers/gpio/gpio-em.c
-> +++ b/drivers/gpio/gpio-em.c
-> @@ -330,12 +330,7 @@ static int em_gio_probe(struct platform_device *pdev)
->                         goto err0;
->                 }
->
-> -               ret = of_alias_get_id(pdev->dev.of_node, "gpio");
-> -               if (ret < 0) {
-> -                       dev_err(&pdev->dev, "Couldn't get OF id\n");
-> -                       goto err0;
-> -               }
-> -               pdata->gpio_base = ret * 32; /* 32 GPIOs per instance */
-> +               pdata->gpio_base = -1;
+Hi,
+On Monday 17 November 2014 09:42 PM, Sergei Shtylyov wrote:
+> On 11/17/2014 4:04 PM, Lokesh Vutla wrote:
+> 
+>>> On 11/17/2014 7:45 AM, Lokesh Vutla wrote:
+> 
+>>>> Add node for RTC.
+> 
+>>>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+>>>> [nm@ti.com: update with rtc crossbar number]
+>>>> Signed-off-by: Nishanth Menon <nm@ti.com>
+>>>> ---
+>>>>    arch/arm/boot/dts/dra7.dtsi | 9 +++++++++
+>>>>    1 file changed, 9 insertions(+)
+> 
+>>>> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+>>>> index 9cc9843..f98f9f0 100644
+>>>> --- a/arch/arm/boot/dts/dra7.dtsi
+>>>> +++ b/arch/arm/boot/dts/dra7.dtsi
+>>>> @@ -1075,6 +1075,15 @@
+>>>>                status = "disabled";
+>>>>            };
+>>>>
+>>>> +        rtc: rtcss@48838000 {
+> 
+>>>     Please just name the node "rtc@48838000", in accordance with ePAPR.
+> 
+>> Okay. will update it.
+> 
+>>>> +            compatible = "ti,am3352-rtc";
+>>>> +            reg = <0x48838000 0x100>;
+>>>> +            interrupts = <GIC_SPI 217 IRQ_TYPE_LEVEL_HIGH>,
+>>>> +                     <GIC_SPI 217 IRQ_TYPE_LEVEL_HIGH>;
+> 
+>>>     2 similar interrupts?
+> 
+>> both rtc timer and rtc alarm uses same interrupt on DRA7 Soc.
+>> Driver handles it accordingly.
+>> So passing the same interrupt.
+> 
+>    I think it would have been better if the driver just handled a single interrupt.
+There are certain SoCs with RTC IP where timer and alarm uses different interrupts.
+Driver has to take care of that scenario also. So it expects two interrupts from dt. 
 
-User-space might break because of GPIO renumbering. Why not setting
-gpio_base to -1 when the property is not present (instead of
-triggering an error), keeping support for the property so existing
-boards remain safe, and marking the property as deprecated in the
-bindings documentation?
+Thanks and regards,
+Lokesh 
+> 
+>> Thanks and regards,
+>> Lokesh
+> 
+>>> [...]
+> 
+> WBR, Sergei
+> 
+
