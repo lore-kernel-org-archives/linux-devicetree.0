@@ -1,111 +1,35 @@
-From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: [PATCH v5 00/14] Tegra124 EMC (external memory controller) support
-Date: Tue, 18 Nov 2014 13:13:02 +0100
-Message-ID: <1416312860-4446-1-git-send-email-tomeu.vizoso@collabora.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, mikko.perttunen-/1wQRMveznE@public.gmane.org, acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: [PATCH v5 02/14] of: Document long-ram-code property in nvidia,tegra20-apbmisc
+Date: Tue, 18 Nov 2014 13:13:04 +0100
+Message-ID: <1416312860-4446-3-git-send-email-tomeu.vizoso@collabora.com>
+References: <1416312860-4446-1-git-send-email-tomeu.vizoso@collabora.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1416312860-4446-1-git-send-email-tomeu.vizoso@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-tegra@vger.kernel.org
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, mikko.perttunen@kapsi.fi, acourbot@nvidia.com, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Needed to properly decode the ram code register.
 
-in this v5 you can find these changes:
+Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
 
-* Update EMC data to V5.0.17 version of the DVFS tables
+---
 
-* Add struct tegra_emc as a parameter in the EMC API, removing the need for a
-global pointer.
+v3:	* Clarify wording as suggested by Mikko
+---
+ Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-* Also add a reference to the EMC driver to the CAR node, for the EMC clock to
-use when calling the EMC API.
-
-There's an outstanding issue with frequencies lower than 102MHz, as the MC IP
-complains of EMEM arbitration errors when at those frequencies. Any suggestions
-welcome.
-
-It depends on Thierry's MC patches at [0] and a branch can be found at [1]. So
-far it has been tested only on a Jetson TK1.
-
-Patch 1: Removes the old EMC clock, that was unused and not functional
-
-Patch 2: Documents bindings for the new long-ram-code property
-
-Patch 3: Adds API for reading the ram code
-
-Patches 4 to 7: Document OF additions
-
-Patch 8: Adds EMC node to Tegra124 DT
-
-Patch 9: Adds timings for Jetson TK1 board
-
-Patch 10: Adds functions to the MC driver so the EMC driver can stay within its
-own registers
-
-Patch 11: Adds the actual EMC driver, making use of the new MC API
-
-Patch 12: Adds EMC clock driver, making use of API provided by the EMC driver
-
-Patch 13: Adds debugfs entry for getting and setting the EMC rate
-
-Patch 14: On Tegra124, have the EMC clock be the parent of the MC clock
-
-Regards,
-
-Tomeu
-
-[0] https://github.com/thierryreding/linux/commits/staging/iommu
-[1] http://cgit.collabora.com/git/user/tomeu/linux.git/log/?h=emc-v5
-
-Mikko Perttunen (9):
-  clk: tegra124: Remove old emc clock
-  soc/tegra: Add ram code reader helper
-  of: Add Tegra124 EMC bindings
-  ARM: tegra: Add EMC to Tegra124 device tree
-  ARM: tegra: Add EMC timings to Jetson TK1 device tree
-  memory: tegra: Add API needed by the EMC driver
-  memory: tegra: Add EMC (external memory controller) driver
-  clk: tegra: Add EMC clock driver
-  memory: tegra: Add debugfs entry for getting and setting the EMC rate
-
-Tomeu Vizoso (5):
-  of: Document long-ram-code property in nvidia,tegra20-apbmisc
-  of: document new emc-timings subnode in nvidia,tegra124-car
-  of: Document timings subnode of nvidia,tegra-mc
-  of: document external-memory-controller property in tegra124-car
-  clk: tegra: Set the EMC clock as the parent of the MC clock
-
- .../bindings/clock/nvidia,tegra124-car.txt         |   44 +-
- .../memory-controllers/nvidia,tegra-mc.txt         |   84 +-
- .../bindings/memory-controllers/tegra-emc.txt      |  379 +++
- .../bindings/misc/nvidia,tegra20-apbmisc.txt       |    2 +
- arch/arm/boot/dts/tegra124-jetson-tk1-emc.dtsi     | 2469 ++++++++++++++++++++
- arch/arm/boot/dts/tegra124-jetson-tk1.dts          |    2 +
- arch/arm/boot/dts/tegra124.dtsi                    |    8 +
- drivers/clk/tegra/Makefile                         |    2 +-
- drivers/clk/tegra/clk-emc.c                        |  532 +++++
- drivers/clk/tegra/clk-tegra124.c                   |   18 +-
- drivers/clk/tegra/clk.h                            |    3 +
- drivers/memory/tegra/Kconfig                       |   11 +
- drivers/memory/tegra/Makefile                      |    2 +
- drivers/memory/tegra/mc.c                          |  136 ++
- drivers/memory/tegra/tegra124-emc.c                | 1164 +++++++++
- drivers/memory/tegra/tegra124.c                    |   44 +
- drivers/soc/tegra/fuse/tegra-apbmisc.c             |   19 +
- include/soc/tegra/emc.h                            |   19 +
- include/soc/tegra/fuse.h                           |    1 +
- include/soc/tegra/mc.h                             |   14 +-
- 20 files changed, 4934 insertions(+), 19 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/memory-controllers/tegra-emc.txt
- create mode 100644 arch/arm/boot/dts/tegra124-jetson-tk1-emc.dtsi
- create mode 100644 drivers/clk/tegra/clk-emc.c
- create mode 100644 drivers/memory/tegra/tegra124-emc.c
- create mode 100644 include/soc/tegra/emc.h
-
+diff --git a/Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt b/Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt
+index b97b8be..d034ff8 100644
+--- a/Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt
++++ b/Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt
+@@ -11,3 +11,5 @@ Required properties:
+        The second entry gives the physical address and length of the
+        registers indicating the strapping options.
+ 
++Optional properties:
++- nvidia,long-ram-code: If present, the RAM code is long (4 bit). If not, short (2 bit).
 -- 
 1.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
