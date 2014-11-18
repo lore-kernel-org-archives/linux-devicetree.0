@@ -1,99 +1,155 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [RFC] adp1653: Add device tree bindings for LED controller
-Date: Tue, 18 Nov 2014 14:21:59 +0100
-Message-ID: <20141118132159.GA21089@amd>
-References: <20141116075928.GA9763@amd>
- <20141117145857.GO8907@valkosipuli.retiisi.org.uk>
- <546AFEA5.9020000@samsung.com>
- <20141118084603.GC4059@amd>
- <546B19C8.2090008@samsung.com>
- <20141118113256.GA10022@amd>
- <546B40FA.2070409@samsung.com>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH 1/1] thermal: of: improve of-thermal sensor registration
+ API
+Date: Tue, 18 Nov 2014 08:50:31 -0400
+Message-ID: <20141118125029.GA15239@developer>
+References: <1416264255-10083-1-git-send-email-edubezval@gmail.com>
+ <1416269103-14149-1-git-send-email-edubezval@gmail.com>
+ <20141118083857.18e07130@amdc2363>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="AqsLC8rIMeq19msA"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <546B40FA.2070409@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>, pali.rohar@gmail.com, sre@debian.org, sre@ring0.de, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, freemangordon@abv.bg, bcousson@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, Linux LED Subsystem <linux-leds@vger.kernel.org>
+In-Reply-To: <20141118083857.18e07130@amdc2363>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lukasz Majewski <l.majewski@samsung.com>
+Cc: Linux PM <linux-pm@vger.kernel.org>, Caesar Wang <caesar.wang@rock-chips.com>, Wei Ni <wni@nvidia.com>, Mikko Perttunen <mikko.perttunen@kapsi.fi>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.de>, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, lm-sensors@lm-sensors.org, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Zhang Rui <rui.zhang@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
 
-> >>>@@ -19,5 +30,10 @@ Examples:
-> >>>  system-status {
-> >>>  	       label = "Status";
-> >>>  	       linux,default-trigger = "heartbeat";
-> >>>+	       iout-torch = <500 500>;
-> >>>+	       iout-flash = <1000 1000>;
-> >>>+	       iout-indicator = <100 100>;
-> >>>+	       flash-timeout = <1000>;
-> >>>+
-> >>>	...
-> >>>  };
-> >>>
-> >>>I don't get it; system-status describes single LED, why are iout-torch
-> >>>(and friends) arrays of two?
-> >>
-> >>Some devices can control more than one led. The array is for such
-> >>purposes. The system-status should be probably renamed to
-> >>something more generic for both common leds and flash leds,
-> >>e.g. system-led.
-> >
-> >No, sorry. The Documentation/devicetree/bindings/leds/common.txt
-> >describes binding for _one LED_. Yes, your device can have two leds,
-> >so your devices should have two such blocks in the device tree... Each
-> >led should have its own label and default trigger, for example. And I
-> >guess flash-timeout be per-LED, too.
-> 
-> I think that a device tree binding describes a single physical device.
-> No matter how many sub-leds a device controls, it is still one
-> piece of hardware.
+--AqsLC8rIMeq19msA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-You got this wrong, sorry.
 
-In my case, there are three physical devices:
+Hey Lukasz,
 
-adp1653
-	white LED
-	red LED
+On Tue, Nov 18, 2014 at 08:38:57AM +0100, Lukasz Majewski wrote:
+> Hi Eduardo,
+>=20
+> In the mail topic we have PATCH 1/1 but I think that it should be PATCH
+> v3 1/1.
+>=20
 
-Each LED should have an label, and probably default trigger -- default
-trigger for red one should be "we are recording video" and for white
-should be "this is flash for default camera".
+Yeah, sent it without checking that. Fixing in V4, no issues.
 
-If the hardware LED changes with one that needs different current, the
-block for the adp1653 stays the same, but white LED block should be
-updated with different value.
+<big cut>
 
-> default-trigger property should also be an array of strings.
+> > @@ -107,10 +106,7 @@ static int of_thermal_get_temp(struct
+> > thermal_zone_device *tz, {
+> >  	struct __thermal_zone *data =3D tz->devdata;
+> > =20
+> > -	if (!data->get_temp)
+> > -		return -EINVAL;
+>=20
+> To be consistent, I think that we should keep the above check [1].=20
+>=20
+> 	if (!data->ops->get_temp)
+> 		return -EINVAL;
+>=20
+> The same check is done with get_trend callback.
+>=20
 
-That is not how it currently works.
+OK. I agree, and disagree, :-). Now that you mention here, I will resend
+with your request applied. The reasoning is to, yes, keep the
+consistency. However, not to be the same as .get_trend, but in fact, to
+keep same behavior as the code as it is currently. The thing is
+=2Eget_temp is required field, while .get_trend is not. So, checking for
+required fields in the registration makes more sense than checking it
+only when the field is needed.
 
-> I agree that flash-timeout should be per led - an array, similarly
-> as in case of iout's.
+However, as I mentioned, to keep the same behavior, before and after the
+patch, it makes sense we keep the checks as they are. I will send v4
+with this amendment.
 
-Agreed about per-led, disagreed about the array. As all the fields
-would need arrays, and as LED system currently does not use arrays for
-label and linux,default-trigger, I believe we should follow existing
-design and model it as three devices. (It _is_ physically three devices.)
 
-> >>The v4l2-flash sub-device registers with v4l2-async API
-> >>in a media device. Exemplary support for v4l2-flash
-> >>sub-devices is added to the exynos4-is driver in the patch [5].
-> >
-> >Thanks for the links. It seems that aside from moving adp1653 driver
-> >to device tree, it should be moved to the LED framework, but that's a
-> >topic for another patch.
-> 
-> Like I mentioned in the previous message the LED Flash class patch
-> isn't in its final shape yet. Nonetheless I think that we should
-> agree on the leds/common.txt documentation improvements and
-> define DT documentation for adp1653 accordingly.
+> > -
+> > -	return data->get_temp(data->sensor_data, temp);
+> > +	return data->ops->get_temp(data->sensor_data, temp);
+> >  }
+> > =20
+> >  static int of_thermal_get_trend(struct thermal_zone_device *tz, int
+> > trip, @@ -120,10 +116,10 @@ static int of_thermal_get_trend(struct
+> > thermal_zone_device *tz, int trip, long dev_trend;
+> >  	int r;
+> > =20
+> > -	if (!data->get_trend)
+> > +	if (!data->ops->get_trend)
+> >  		return -EINVAL;
+> > =20
+> > -	r =3D data->get_trend(data->sensor_data, &dev_trend);
+> > +	r =3D data->ops->get_trend(data->sensor_data, &dev_trend);
+> >  	if (r)
+> >  		return r;
+> > =20
+> > @@ -324,8 +320,7 @@ static struct thermal_zone_device_ops
+> > of_thermal_ops =3D { static struct thermal_zone_device *
+> >  thermal_zone_of_add_sensor(struct device_node *zone,
+> >  			   struct device_node *sensor, void *data,
+> > -			   int (*get_temp)(void *, long *),
+> > -			   int (*get_trend)(void *, long *))
+> > +			   const struct thermal_zone_of_device_ops
+> > *ops) {
+> >  	struct thermal_zone_device *tzd;
+> >  	struct __thermal_zone *tz;
+> > @@ -336,9 +331,11 @@ thermal_zone_of_add_sensor(struct device_node
+> > *zone,=20
+> >  	tz =3D tzd->devdata;
+> > =20
+> > +	if (!(ops && ops->get_temp))
+> > +		return ERR_PTR(-EINVAL);
+>=20
+> IMHO, here we should only check:
+> 	if (!ops)
+> 		return ERR_PTR(-EINVAL);
+>=20
+> 	And check if specific callbacks are available in other
+> 	functions (like [1])
+>=20
 
-Agreed.
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+
+OK. For the sake of this change only, I agree. However, I might be
+sending patches on top of this one to keep the checks of required fields in=
+ the
+registration itself.
+
+
+Cheers,
+> >  }
+>=20
+> Despite this minor comments, feel free to add :-)
+>=20
+> Reviewed-by: Lukasz Majewski <l.majewski@samsung.com>
+
+OK. Thanks.
+
+>=20
+> --=20
+> Best regards,
+>=20
+> Lukasz Majewski
+>=20
+> Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
+
+
+Eduardo Valentin
+
+--AqsLC8rIMeq19msA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUa0CMAAoJEMLUO4d9pOJWdEgH/jM2BxYeN9sJi6SgxDrnfpsf
+XvPh75erC/6x9B5vCNN/RM0jQm+oucjdPAljDq+jeBqXxXV/jQH1mFXt4Eyg6rjQ
+GwbzvdVXQVjVbrGPQAzd2dtOFrh49pOyO3GnHO8gXftWnYbD3XSDugj9K+EVw/RD
++Agq3sTIGaX6AHbf7uNb9vJk0osI557JPoQpP/GB+qFeeFLeB/eVrZPTWfZxaPj5
+iO5Y3UydcBijEnCTX/sR9MbWKoaDg/IZlwn4TkD6xVfcMoc187xtox9BUY53P2eo
+8wz+DXU64zJ6E7aYfhbzBjovOCzE9Qfc6M+9cTXDi0cwnS5AB3fxY8ebwBamWwg=
+=SARx
+-----END PGP SIGNATURE-----
+
+--AqsLC8rIMeq19msA--
