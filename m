@@ -1,92 +1,90 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH V2 22/22] MIPS: Add multiplatform BMIPS target
-Date: Tue, 18 Nov 2014 11:15:24 +0100
-Message-ID: <5313988.cGSDdqXOcS@wuerfel>
-References: <1416097066-20452-1-git-send-email-cernekee@gmail.com> <2622492.TiaF5tO0a3@wuerfel> <CAJiQ=7AhyAyN6Hnvtdowdh6oPknbPFMe-_PrPdzyCGe5H7eE1g@mail.gmail.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/4] simplefb: Change simplefb_init from
+ module_init to fs_initcall
+Date: Tue, 18 Nov 2014 11:19:13 +0100
+Message-ID: <20141118101911.GA15769@ulmo>
+References: <1415830124-28787-1-git-send-email-hdegoede@redhat.com>
+ <1415830124-28787-3-git-send-email-hdegoede@redhat.com>
+ <20141113085238.GE20972@lukather>
+ <CAMuHMdXZ4V4GHvyDLOP8FYvPuGArc5G0aO6NCE9FKHT24YRGPg@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJiQ=7AhyAyN6Hnvtdowdh6oPknbPFMe-_PrPdzyCGe5H7eE1g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Fraser <jfraser-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Q68bSM7Ycu6FN28Q"
+Return-path: <linux-sunxi+bncBDTKFPPJUEHRBI52VSRQKGQE6MWOUGQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXZ4V4GHvyDLOP8FYvPuGArc5G0aO6NCE9FKHT24YRGPg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 17 November 2014 13:57:07 Kevin Cernekee wrote:
-> On Mon, Nov 17, 2014 at 12:33 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> >> This mostly depends on the desired feature set, and the delta from one
-> >> board to the next.  Many of the reference board sections are largely
-> >> copied from a working design, but sometimes there are changes that
-> >> affect us.  Other times there are tweaks that can be autodetected,
-> >> like a different flash chip.
-> >>
-> >> The analog interfaces like SATA/USB/Ethernet don't tend to vary all
-> >> that much (although some may be missing ports on the board, or
-> >> disabled on the chip).
-> >>
-> >> The pin muxing situation leaves a lot of room for board differences,
-> >> and on these platforms it isn't really handled in a central place.
-> >> This gets even more challenging when combined with some of the power
-> >> management requirements.
-> >>
-> >> The peripherals that I added in my patch submission are among the
-> >> easiest / safest of the bunch.
+
+--Q68bSM7Ycu6FN28Q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Nov 13, 2014 at 09:58:41AM +0100, Geert Uytterhoeven wrote:
+> Hi Maxime,
+>=20
+> On Thu, Nov 13, 2014 at 9:52 AM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> >> -module_init(simplefb_init);
+> >> +/*
+> >> + * While this can be a module, if builtin it's most likely the console
+> >> + * So let's leave module_exit but move module_init to an earlier place
+> >> + */
 > >
-> > Right, that is exactly the danger: it's easy to get the basics working
-> > like this, but the differences between SoCs are not what we need DT
-> > for anyway, those are easily abstracted in kernel code if necessary,
-> > hardcoded by some soc version identifier.
-> 
-> That depends on how many SoC's we're talking about...
-> 
-> On MIPS we have literally dozens.  Most of the "building blocks" are
-> pretty similar, but the MMIO addresses, IRQ mappings, and
-> quantity/revision of each peripheral vary.  DT is ideal for
-> representing these differences and for rapidly bringing up a new
-> system.
+> > Not really related to this patch itself, but do we want to support
+> > simplefb as a module? It seems like it's going to be most of the time
+> > broken.
+>=20
+> If it depends on clocks, it won't work as a module, as CCF will have disa=
+bled
+> all unused clocks at that point.
 
-Of course you can abstract SoCs using DT, and we do that all the time
-now on a lot of architectures. My point is that it's possible to abstract
-a board using DT without also describing the SoC in detail, but you
-cannot do the reverse.
+If it does depend on anything beyond clocks it won't work at all. Clocks
+are special because they get set up very early at boot time. If it turns
+out that a simplefb ever needs a regulator to remain on, and that's even
+quite likely to happen eventually, it's going to fail miserably, because
+those regulators will typically be provided by a PMIC on an I2C bus. The
+regulator won't be registered until very late into the boot process and
+a regulator_get() call will almost certainly cause the simplefb driver
+to defer probing.
 
-> > What you end up with in your approach is a kernel that can support
-> > multiple SoCs but only some boards per SoC, and otherwise you still
-> > depend on compile-time configuration.
-> 
-> Agreed, but for legacy platforms this is somewhat inevitable.  These
-> systems are already in production so there is no manpower available to
-> go back and test every single one-off board.  It is most likely that a
-> small subset of "interesting" boards will receive the best support.
-> For instance, I see an arch/arm/boot/dts/bcm2835-rpi-b.dts, but that's
-> hardly the only BCM2835-based platform found in the wild.
+Now deferring probing is a real showstopper for simplefb, because not
+only does it make the framebuffer useless as early boot console, once
+probing is attempted again the clocks that it would have needed to
+acquire to keep going will already have been switched off, too.
 
-It's absolutely ok to not have the dts files for each board, and to
-not test all combinations, those can always come later if anyone is
-interested in it.
+Thierry
 
-The one thing I believe you shouldn't do is hardwire a dtb file to
-an SoC specific identifier, because that makes it impossible to
-support other boards that need additional DT nodes using the same
-boot method. Using a single appended dtb file instead of the built-in
-lookup table would solve this well enough.
+--Q68bSM7Ycu6FN28Q
+Content-Type: application/pgp-signature
 
-> The limited board support doesn't negate the value of having a generic
-> BMIPS kernel available upstream; this build still eliminates
-> duplicated efforts on many of the basic items (CPU/SMP/caching, IRQ
-> controllers, UART).  It also allows easy reuse of DT-ready peripherals
-> that are common to the CM/DSL/STB MIPS and ARM chips, which was the
-> original goal of the BCM3384 port.
-> 
-> Going forward I would expect that with this build available in
-> mainline, it will open up new opportunities for modernizing the
-> bootloaders on each product line.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Yes, this is all good. 
+iQIcBAEBAgAGBQJUax0fAAoJEN0jrNd/PrOhETQP/R5d44xFLa57Z4IQn1njPzC5
+Wu7zh5R/fvBZ8p0MxblyA0ooyh27NQgI7inThI1zigU2goXhQ8DP2cJD9alCP1EY
+B/tAmBbi9t5kR53MvkInxE55CWjNkjpvKx/2YuPb1J8UOu4eQoQfW4eCTlbg2+W4
+qg3cT7zcEixZFqLm78Hq1uTDV7XFaDyFUBmlZZQn7JfqLs84topvZkVLqf2UO+nQ
+Vn6ucsw3tYq10qiO+X7PIR3/FedaZRDX5i5g+om33woRumim+XANUSrfO6LW+TIx
+O9+8F0ldVu2lNeT1+cI/sjoP6/y6GHRQCqFaEZOmV122xs8MWYOjgKBtXfz08oR5
+jlz/+P7SSSeNtLwp6nHMSD70xA2X35al3W86ggp7nOaGon/FWvNMk6E+gSU4TMcZ
+/WknJpjmgw+qQTqKDeNXvMNlDtagaJPeKOFCNiTI6dqxJERY1exDtBWmpP0css6x
+ogQcOHR883AsoLUkV3Foo/VQ3mW9CopW/gaPYyVZ4Chx91CgdBl3McDWDeWSwBQI
+3bjn3pX69BqnP/2pOSgIdJJAVIqABUmLENRZY+KfimJPIbF9975cvOa55bNjqpuv
+4d4OU7dzzPFHFw8doUSDCVzFoXkRdws6wYbIA/gf79NALGEkJM6+sLTaDxnPKQxq
+bCUp6zqHjARxUtRdWH87
+=oR9/
+-----END PGP SIGNATURE-----
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--Q68bSM7Ycu6FN28Q--
