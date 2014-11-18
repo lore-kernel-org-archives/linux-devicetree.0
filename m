@@ -1,145 +1,413 @@
-From: Ajay kumar <ajaynumb@gmail.com>
-Subject: Re: [PATCH V8 00/14] drm/exynos: few patches to enhance bridge chip
- support
-Date: Tue, 18 Nov 2014 11:50:47 +0530
-Message-ID: <CAEC9eQOrKw2Z1q-ztFfadXmsL3CTcAkkv9kcS2QnDOAVSh2AuQ@mail.gmail.com>
-References: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com>
+From: Lukasz Majewski <l.majewski@samsung.com>
+Subject: Re: [PATCH 1/1] thermal: of: improve of-thermal sensor registration API
+Date: Tue, 18 Nov 2014 08:38:57 +0100
+Message-ID: <20141118083857.18e07130@amdc2363>
+References: <1416264255-10083-1-git-send-email-edubezval@gmail.com>
+ <1416269103-14149-1-git-send-email-edubezval@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Kukjin Kim <kgene.kim@samsung.com>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <1416269103-14149-1-git-send-email-edubezval@gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: Linux PM <linux-pm@vger.kernel.org>, Caesar Wang <caesar.wang@rock-chips.com>, Wei Ni <wni@nvidia.com>, Mikko Perttunen <mikko.perttunen@kapsi.fi>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.de>, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, lm-sensors@lm-sensors.org, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Zhang Rui <rui.zhang@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCBOb3YgMTUsIDIwMTQgYXQgMzoyNCBQTSwgQWpheSBLdW1hciA8YWpheWt1bWFyLnJz
-QHNhbXN1bmcuY29tPiB3cm90ZToKPiBUaGlzIHNlcmllcyBpcyBiYXNlZCBvbiBtYXN0ZXIgYnJh
-bmNoIG9mIExpbnVzIHRyZWUgYXQ6Cj4gZ2l0Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51
-eC9rZXJuZWwvZ2l0L3RvcnZhbGRzL2xpbnV4LmdpdAo+Cj4gQ2hhbmdlcyBzaW5jZSBWMjoKPiAg
-ICAgICAgIC0tIEFkZHJlc3MgY29tbWVudHMgZnJvbSBKaW5nb28gSGFuIGZvciBwczg2MjIgZHJp
-dmVyCj4gICAgICAgICAtLSBBZGRyZXNzIGNvbW1lbnRzIGZyb20gRGFuaWVsLCBSb2IgYW5kIFRo
-aWVycnkgcmVnYXJkaW5nCj4gICAgICAgICAgICBicmlkZ2UgY2hhaW5pbmcKPiAgICAgICAgIC0t
-IEFkZHJlc3MgY29tbWVudHMgZnJvbSBUaGllcnJ5IHJlZ2FyZGluZyB0aGUgbmFtZXMgZm9yCj4g
-ICAgICAgICAgICBuZXcgZHJtX3BhbmVsIGZ1bmN0aW9ucwo+Cj4gQ2hhbmdlcyBzaW5jZSBWMzoK
-PiAgICAgICAgIC0tIFJlbW92ZSBob3RwbHVnIGJhc2VkIGluaXRpYWxpemF0aW9uIG9mIGV4eW5v
-c19kcAo+ICAgICAgICAgLS0gTWFrZSBleHlub3NfZHAgd29yayBkaXJlY3RseSB3aXRoIGRybV9w
-YW5lbCwgcmVtb3ZlCj4gICAgICAgICAgICBkZXBlbmRlbmN5IG9uIHBhbmVsX2JpbmRlcgo+ICAg
-ICAgICAgLS0gTWlub3IgY2xlYW51cHMgaW4gcGFuZWxfYmluZGVyIGFuZCBwYW5lbF9sdmRzIGRy
-aXZlcgo+Cj4gQ2hhbmdlcyBzaW5jZSBWNDoKPiAgICAgICAgIC0tIFVzZSBncGlvZCBpbnRlcmZh
-Y2UgZm9yIHBhbmVsLWx2ZHMgYW5kIHBzODYyMiBkcml2ZXJzLgo+ICAgICAgICAgLS0gQWRkcmVz
-cyBjb21tZW50cyBmcm9tIEphdmllci4KPiAgICAgICAgIC0tIEZpeCBjb21waWxhdGlvbiBpc3N1
-ZXMgd2hlbiBQQU5FTF9CSU5ERVIgaXMgc2VsZWN0ZWQgYXMgbW9kdWxlLgo+ICAgICAgICAgLS0g
-U3BsaXQgRG9jdW1lbnRhdGlvbiBwYXRjaGVzIGZyb20gZHJpdmVyIHBhdGNoZXMuCj4gICAgICAg
-ICAtLSBSZWJhc2Ugb24gdG9wIG9mIHRoZSB0cmVlLgo+Cj4gQ2hhbmdlcyBzaW5jZSBWNToKPiAg
-ICAgICAgIC0tIE1vZGlmeSBicmlkZ2UgZHJpdmVycyB0byBzdXBwb3J0IGRyaXZlciBtb2RlbC4K
-PiAgICAgICAgIC0tIERyb3AgdGhlIGNvbmNlcHQgb2YgYnJpZGdlIGNoYWluKHNpbmNsZSB0aGVy
-ZSBhcmUgbm8gMiByZWFsIGJyaWRnZXMpCj4gICAgICAgICAgICBIZW5jZSBkcm9wIGJyaWRnZS1w
-YW5lbF9iaW5kZXIgbGF5ZXIuCj4gICAgICAgICAtLSBEcm9wIHBhbmVsLWx2ZHMgZHJpdmVyIGFu
-ZCBhY2NvbW9kYXRlIHRoZSByZXF1aXJlZCBjaGFuZ2VzIGluCj4gICAgICAgICAgICBwYW5lbC1z
-aW1wbGUgZHJpdmVyLgo+ICAgICAgICAgLS0gVXNlIGdwaW9kIGludGVyZmFjZSBpbiBwdG4zNDYw
-IGRyaXZlci4KPiAgICAgICAgIC0tIEFkZHJlc3MgYWxsIGNvbW1lbnRzIGJ5IFRoaWVycnkgUmVk
-aW5nIGZvciBWNSBzZXJpZXMuCj4gICAgICAgICAtLSBBZGRyZXNzIGNvbW1lbnRzIGZyb20gU2Vh
-biBQYXVsIGZvciBleHlub3NfZHBfY29tbWl0IGlzc3VlLgo+Cj4gQ2hhbmdlcyBzaW5jZSBWNjoK
-PiAgICAgICAgIC0tIFBhbmVsIHBhdGNoZXMgd2VyZSBzZXBlcmF0ZWQgYW5kIHRoZXkgYXJlIG1l
-cmdlZCBhbHJlYWR5Lgo+ICAgICAgICAgLS0gRml4IGZldyBpc3N1ZXMgd2l0aCBwdG4zNDYwLCBi
-ZWZvcmUgbW9kaWZ5aW5nIHRoZSBicmlkZ2UgY29yZS4KPiAgICAgICAgIC0tIE1vZGlmeSBkcm1f
-YnJpZGdlIGFzIHBlciBUaGllcnJ5J3MgY29tbWVudHMgZm9yIFY2IHNlcmllcy4KPiAgICAgICAg
-IC0tIEFkZCBkcm1fYnJpZGdlIGNoYW5nZXMgbWluaW1hbGx5IHdpdGhvdXQgYnJlYWtpbmcgZXhp
-c3RpbmcgY29kZS4KPiAgICAgICAgIC0tIEFkZCBuZXcgZmVhdHVyZXMgZm9yIHB0bjM0NjAsIHN0
-ZXAtYnktc3RlcC4KPiAgICAgICAgIC0tIEFkZHJlc3MgY29tbWVudHMgZnJvbSBUaGllcnJ5IGFu
-ZCBBbmRyZWFzIGZvciBwdG4zNDYwIGFuZCBwczg2MjIuCj4gICAgICAgICAtLSBTcGxpdCBkb2N1
-bWVudGF0aW9uIHBhdGNoZXMgZnJvbSBkcml2ZXIgcGF0Y2hlcy4KPgo+IENoYW5nZXMgc2luY2Ug
-Vjc6Cj4gICAgICAgICAtLSBBZGRyZXNzIGNvbW1lbnRzIGZyb20gVG9taSBhbmQgTGF1cmVudDoK
-PiAgICAgICAgICAgICAgICAgLS0gVXNlIHZpZGVvcG9ydHMgYW5kIGVuZHBvaW50cyB0byByZXBy
-ZXNlbnQgdGhlIGNvbm5lY3Rpb24gYmV0d2Vlbgo+ICAgICAgICAgICAgICAgICAgICBlbmNvZGVy
-LCBicmlkZ2UgYW5kIHRoZSBwYW5lbCwgaW5zdGVhZCBvZiB1c2luZyBwaGFuZGxlcy4KPiAgICAg
-ICAgIC0tIEFkZHJlc3MgY29tbWVudHMgZnJvbSBEYW5pZWw6Cj4gICAgICAgICAgICAgICAgIC0t
-IE1ha2UgdGhlIHBhdGNoIGRlc2NyaXB0aW9uIG1vcmUgZGVzY3JpcHRpdmUuCj4gICAgICAgICAg
-ICAgICAgIC0tIHJlbW92ZSBkZXZpY2UgcG9pbnRlciBmcm9tIGRybV9icmlkZ2UsIGFuZCBqdXN0
-IHVzZQo+ICAgICAgICAgICAgICAgICAgICBkZXZpY2Vfbm9kZSBpbnN0ZWFkLgo+ICAgICAgICAg
-ICAgICAgICAtLSBkb24ndCBwYXNzIGVuY29kZXIgcG9pbnRlciB0byBicmlkZ2VfYXR0YWNoLgo+
-ICAgICAgICAgLS0gQWRkcmVzcyBjb21tZW50cyBmcm9tIFNlYW4gUGF1bDoKPiAgICAgICAgICAg
-ICAgICAgLS0gUmVtb3ZlIGJyaWRnZSBmcm9tIG1vZGVfY29uZmlnLCBhbmQgcHVsbCBvdXQgZHJt
-X2JyaWRnZQo+ICAgICAgICAgICAgICAgICAgICBmdW5jdGlvbnMgZnJvbSBkcm1fY3J0Yy5jIHRv
-IGRybV9icmlkZ2UuYwo+Cj4gTm90ZTogVGhpcyBwYXRjaHNldCBjcmVhdGVzIHRoZSBmb2xsb3dp
-bmcgS2NvbmZpZyBhbWJpZ3VpdHkuCj4gICAgICAgQW55IHBvaW50ZXJzIHRvIGZpeCB0aGUgc2Ft
-ZSBhcmUgd2VsY29tZS4KPgo+IGRyaXZlcnMvdmlkZW8vZmJkZXYvS2NvbmZpZzo1OmVycm9yOiBy
-ZWN1cnNpdmUgZGVwZW5kZW5jeSBkZXRlY3RlZCEKPiBkcml2ZXJzL3ZpZGVvL2ZiZGV2L0tjb25m
-aWc6NTogIHN5bWJvbCBGQiBpcyBzZWxlY3RlZCBieSBEUk1fS01TX0ZCX0hFTFBFUgo+IGRyaXZl
-cnMvZ3B1L2RybS9LY29uZmlnOjM0OiAgICAgc3ltYm9sIERSTV9LTVNfRkJfSEVMUEVSIGRlcGVu
-ZHMgb24gRFJNX0tNU19IRUxQRVIKPiBkcml2ZXJzL2dwdS9kcm0vS2NvbmZpZzoyODogICAgIHN5
-bWJvbCBEUk1fS01TX0hFTFBFUiBpcyBzZWxlY3RlZCBieSBEUk1fUFROMzQ2MAo+IGRyaXZlcnMv
-Z3B1L2RybS9icmlkZ2UvS2NvbmZpZzoxOiAgICAgICBzeW1ib2wgRFJNX1BUTjM0NjAgZGVwZW5k
-cyBvbiBJMkMKPiBkcml2ZXJzL2kyYy9LY29uZmlnOjc6ICBzeW1ib2wgSTJDIGlzIHNlbGVjdGVk
-IGJ5IEZCX0REQwo+IGRyaXZlcnMvdmlkZW8vZmJkZXYvS2NvbmZpZzo1OTogc3ltYm9sIEZCX0RE
-QyBpcyBzZWxlY3RlZCBieSBGQl9DWUJFUjIwMDBfRERDCj4gZHJpdmVycy92aWRlby9mYmRldi9L
-Y29uZmlnOjM3NDogICAgICAgIHN5bWJvbCBGQl9DWUJFUjIwMDBfRERDIGRlcGVuZHMgb24gRkJf
-Q1lCRVIyMDAwCj4gZHJpdmVycy92aWRlby9mYmRldi9LY29uZmlnOjM2MjogICAgICAgIHN5bWJv
-bCBGQl9DWUJFUjIwMDAgZGVwZW5kcyBvbiBGQgo+Cj4gQWpheSBLdW1hciAoMTMpOgo+ICAgW1BB
-VENIIFY4IDEvMTRdIGRybS9icmlkZ2U6IHB0bjM0NjA6IEZldyB0cml2aWFsIGNsZWFudXBzCj4g
-ICBbUEFUQ0ggVjggMi8xNF0gZHJtL2JyaWRnZTogZG8gbm90IHBhc3MgZHJtX2JyaWRnZV9mdW5j
-cyB0byBkcm1fYnJpZGdlX2luaXQKPiAgIFtQQVRDSCBWOCAzLzE0XSBkcm0vYnJpZGdlOiBtYWtl
-IGJyaWRnZSByZWdpc3RyYXRpb24gaW5kZXBlbmRlbnQgb2YgZHJtIGZsb3cKPiAgIFtQQVRDSCBW
-OCA0LzE0XSBkcm0vYnJpZGdlOiBwdG4zNDYwOiBDb252ZXJ0IHRvIGkyYyBkcml2ZXIgbW9kZWwK
-PiAgIFtQQVRDSCBWOCA1LzE0XSBkcm0vZXh5bm9zOiBkcDogc3VwcG9ydCBkcm1fYnJpZGdlCj4g
-ICBbUEFUQ0ggVjggNi8xNF0gZHJtL2JyaWRnZTogcHRuMzQ2MDogc3VwcG9ydCBkcm1fcGFuZWwK
-PiAgIFtQQVRDSCBWOCA3LzE0XSBkcm0vYnJpZGdlOiBwdG4zNDYwOiBwcm9iZSBjb25uZWN0b3Ig
-YXQgdGhlIGVuZCBvZiBicmlkZ2UgYXR0YWNoCj4gICBbUEFUQ0ggVjggOC8xNF0gZHJtL2JyaWRn
-ZTogcHRuMzQ2MDogdXNlIGdwaW9kIGludGVyZmFjZQo+ICAgW1BBVENIIFY4IDkvMTRdIERvY3Vt
-ZW50YXRpb246IGRybTogYnJpZGdlOiBtb3ZlIHRvIHZpZGVvL2JyaWRnZQo+ICAgW1BBVENIIFY4
-IDEwLzE0XSBEb2N1bWVudGF0aW9uOiBkZXZpY2V0cmVlOiBBZGQgdmVuZG9yIHByZWZpeCBmb3Ig
-cGFyYWRlCj4gICBbUEFUQ0ggVjggMTEvMTRdIERvY3VtZW50YXRpb246IGJyaWRnZTogQWRkIGRv
-Y3VtZW50YXRpb24gZm9yIHBzODYyMiBEVCBwcm9wZXJ0aWVzCj4gICBbUEFUQ0ggVjggMTMvMTRd
-IEFSTTogZHRzOiBzbm93OiByZXByZXNlbnQgdGhlIGNvbm5lY3Rpb24gYmV0d2VlbiBicmlkZ2Ug
-YW5kIHBhbmVsCj4gICAgIHVzaW5nIHZpZGVvcG9ydCBhbmQgZW5kcG9pbnRzCj4gICBbUEFUQ0gg
-VjggMTQvMTRdIEFSTTogZHRzOiBwZWFjaC1waXQ6IHJlcHJlc2VudCB0aGUgY29ubmVjdGlvbiBi
-ZXR3ZWVuIGJyaWRnZSBhbmQKPiAgICAgcGFuZWwgdXNpbmcgdmlkZW9wb3J0IGFuZCBlbmRwb2lu
-dHMKPgo+IFZpbmNlbnQgUGFsYXRpbiAoMSk6Cj4gICBbUEFUQ0ggVjggMTIvMTRdIGRybS9icmlk
-Z2U6IEFkZCBpMmMgYmFzZWQgZHJpdmVyIGZvciBwczg2MjIvcHM4NjI1IGJyaWRnZQo+Cj4gIC4u
-Li9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9icmlkZ2UvcHRuMzQ2MC50eHQgICAgIHwgICAyNyAt
-Cj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQgICAgICAgIHwg
-ICAgMSArCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2JyaWRnZS9wczg2MjIudHh0
-ICAgIHwgICAzMSArCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2JyaWRnZS9wdG4z
-NDYwLnR4dCAgIHwgICAzOSArKwo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9leHlu
-b3NfZHAudHh0ICAgICAgICB8ICAgMTIgKwo+ICBhcmNoL2FybS9ib290L2R0cy9leHlub3M1MjUw
-LXNub3cuZHRzICAgICAgICAgICAgICB8ICAgMzAgKy0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvZXh5
-bm9zNTQyMC1wZWFjaC1waXQuZHRzICAgICAgICAgfCAgIDMxICstCj4gIGRyaXZlcnMvZ3B1L2Ry
-bS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgMiArLQo+ICBkcml2ZXJz
-L2dwdS9kcm0vYnJpZGdlL0tjb25maWcgICAgICAgICAgICAgICAgICAgICB8ICAgMTIgKwo+ICBk
-cml2ZXJzL2dwdS9kcm0vYnJpZGdlL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICB8ICAgIDEg
-Kwo+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3BzODYyMi5jICAgICAgICAgICAgICAgICAgICB8
-ICA2ODQgKysrKysrKysrKysrKysrKysrKysKPiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9wdG4z
-NDYwLmMgICAgICAgICAgICAgICAgICAgfCAgMzEwICsrKysrLS0tLQo+ICBkcml2ZXJzL2dwdS9k
-cm0vZHJtX2JyaWRnZS5jICAgICAgICAgICAgICAgICAgICAgICB8ICAgOTEgKysrCj4gIGRyaXZl
-cnMvZ3B1L2RybS9kcm1fY3J0Yy5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA2OCAtLQo+
-ICBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcF9jb3JlLmMgICAgICAgICAgICB8ICAg
-NTMgKy0KPiAgZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHBfY29yZS5oICAgICAgICAg
-ICAgfCAgICAxICsKPiAgZHJpdmVycy9ncHUvZHJtL21zbS9oZG1pL2hkbWkuYyAgICAgICAgICAg
-ICAgICAgICAgfCAgICA3ICstCj4gIGRyaXZlcnMvZ3B1L2RybS9tc20vaGRtaS9oZG1pLmggICAg
-ICAgICAgICAgICAgICAgIHwgICAgMSArCj4gIGRyaXZlcnMvZ3B1L2RybS9tc20vaGRtaS9oZG1p
-X2JyaWRnZS5jICAgICAgICAgICAgIHwgICAgOCArLQo+ICBkcml2ZXJzL2dwdS9kcm0vc3RpL3N0
-aV9oZGEuYyAgICAgICAgICAgICAgICAgICAgICB8ICAgMTEgKy0KPiAgZHJpdmVycy9ncHUvZHJt
-L3N0aS9zdGlfaGRtaS5jICAgICAgICAgICAgICAgICAgICAgfCAgIDExICstCj4gIGluY2x1ZGUv
-ZHJtL2JyaWRnZS9wdG4zNDYwLmggICAgICAgICAgICAgICAgICAgICAgIHwgICAgOCArCj4gIGlu
-Y2x1ZGUvZHJtL2RybV9jcnRjLmggICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyNyAr
-LQo+ICAyMyBmaWxlcyBjaGFuZ2VkLCAxMTg0IGluc2VydGlvbnMoKyksIDI4MiBkZWxldGlvbnMo
-LSkKPiAgZGVsZXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kcm0vYnJpZGdlL3B0bjM0NjAudHh0Cj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vYnJpZGdlL3BzODYyMi50eHQKPiAgY3JlYXRl
-IG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9icmlk
-Z2UvcHRuMzQ2MC50eHQKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9icmlk
-Z2UvcHM4NjIyLmMKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9kcm1fYnJp
-ZGdlLmMKPgo+IC0tCj4gMS43LjkuNQo+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVsCg==
+Hi Eduardo,
+
+In the mail topic we have PATCH 1/1 but I think that it should be PATCH
+v3 1/1.
+
+> Different drivers request API extensions in of-thermal. For this
+> reason, additional callbacks are required to fit the new drivers
+> needs.
+> 
+> The current API implementation expects the registering sensor driver
+> to provide a get_temp and get_trend callbacks as function parameters.
+> As the amount of callbacks is growing, this patch changes the existing
+> implementation to use a .ops field to hold all the of thermal
+> callbacks to sensor drivers.
+> 
+> This patch also changes the existing of-thermal users to fit the new
+> API design. No functional change is introduced in this patch.
+> 
+> Cc: Alexandre Courbot <gnurou@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Jean Delvare <jdelvare@suse.de>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-tegra@vger.kernel.org
+> Cc: lm-sensors@lm-sensors.org
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Stephen Warren <swarren@wwwdotorg.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Zhang Rui <rui.zhang@intel.com>
+> Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
+> ---
+> Difference from V2:
+>   - Fix wrong assignment in tegra driver.
+> Difference from V1:
+>   - Fix error handling when .get_trend is not provided.
+> ---
+>  drivers/hwmon/lm75.c                               |  9 +++--
+>  drivers/hwmon/ntc_thermistor.c                     |  6 +++-
+>  drivers/hwmon/tmp102.c                             |  6 +++-
+>  drivers/thermal/of-thermal.c                       | 41
+> +++++++++-------------
+> drivers/thermal/tegra_soctherm.c                   |  7 ++--
+> drivers/thermal/ti-soc-thermal/ti-thermal-common.c |  8 +++--
+> include/linux/thermal.h                            | 24 +++++++++----
+> 7 files changed, 62 insertions(+), 39 deletions(-)
+> 
+> diff --git a/drivers/hwmon/lm75.c b/drivers/hwmon/lm75.c
+> index d16dbb3..e7c8bf9 100644
+> --- a/drivers/hwmon/lm75.c
+> +++ b/drivers/hwmon/lm75.c
+> @@ -176,6 +176,10 @@ static struct attribute *lm75_attrs[] = {
+>  };
+>  ATTRIBUTE_GROUPS(lm75);
+>  
+> +static const struct thermal_zone_of_device_ops lm75_of_thermal_ops =
+> {
+> +	.get_temp = lm75_read_temp,
+> +};
+> +
+>  /*-----------------------------------------------------------------------*/
+>  
+>  /* device probe and removal */
+> @@ -291,10 +295,9 @@ lm75_probe(struct i2c_client *client, const
+> struct i2c_device_id *id) if (IS_ERR(data->hwmon_dev))
+>  		return PTR_ERR(data->hwmon_dev);
+>  
+> -	data->tz = thermal_zone_of_sensor_register(data->hwmon_dev,
+> -						   0,
+> +	data->tz = thermal_zone_of_sensor_register(data->hwmon_dev,
+> 0, data->hwmon_dev,
+> -						   lm75_read_temp,
+> NULL);
+> +
+> &lm75_of_thermal_ops); if (IS_ERR(data->tz))
+>  		data->tz = NULL;
+>  
+> diff --git a/drivers/hwmon/ntc_thermistor.c
+> b/drivers/hwmon/ntc_thermistor.c index 4ff89b2..bca8521c8 100644
+> --- a/drivers/hwmon/ntc_thermistor.c
+> +++ b/drivers/hwmon/ntc_thermistor.c
+> @@ -486,6 +486,10 @@ static const struct attribute_group
+> ntc_attr_group = { .attrs = ntc_attributes,
+>  };
+>  
+> +static const struct thermal_zone_of_device_ops ntc_of_thermal_ops = {
+> +	.get_temp = ntc_read_temp,
+> +};
+> +
+>  static int ntc_thermistor_probe(struct platform_device *pdev)
+>  {
+>  	const struct of_device_id *of_id =
+> @@ -579,7 +583,7 @@ static int ntc_thermistor_probe(struct
+> platform_device *pdev) pdev_id->name);
+>  
+>  	data->tz = thermal_zone_of_sensor_register(data->dev, 0,
+> data->dev,
+> -						ntc_read_temp, NULL);
+> +
+> &ntc_of_thermal_ops); if (IS_ERR(data->tz)) {
+>  		dev_dbg(&pdev->dev, "Failed to register to thermal
+> fw.\n"); data->tz = NULL;
+> diff --git a/drivers/hwmon/tmp102.c b/drivers/hwmon/tmp102.c
+> index 5171995..ba9f478 100644
+> --- a/drivers/hwmon/tmp102.c
+> +++ b/drivers/hwmon/tmp102.c
+> @@ -158,6 +158,10 @@ ATTRIBUTE_GROUPS(tmp102);
+>  #define TMP102_CONFIG  (TMP102_CONF_TM | TMP102_CONF_EM |
+> TMP102_CONF_CR1) #define TMP102_CONFIG_RD_ONLY (TMP102_CONF_R0 |
+> TMP102_CONF_R1 | TMP102_CONF_AL) 
+> +static const struct thermal_zone_of_device_ops tmp102_of_thermal_ops
+> = {
+> +	.get_temp = tmp102_read_temp,
+> +};
+> +
+>  static int tmp102_probe(struct i2c_client *client,
+>  				  const struct i2c_device_id *id)
+>  {
+> @@ -215,7 +219,7 @@ static int tmp102_probe(struct i2c_client *client,
+>  	}
+>  	tmp102->hwmon_dev = hwmon_dev;
+>  	tmp102->tz = thermal_zone_of_sensor_register(hwmon_dev, 0,
+> hwmon_dev,
+> -
+> tmp102_read_temp, NULL);
+> +
+> &tmp102_of_thermal_ops); if (IS_ERR(tmp102->tz))
+>  		tmp102->tz = NULL;
+>  
+> diff --git a/drivers/thermal/of-thermal.c
+> b/drivers/thermal/of-thermal.c index f8eb625..3e025f0 100644
+> --- a/drivers/thermal/of-thermal.c
+> +++ b/drivers/thermal/of-thermal.c
+> @@ -30,6 +30,7 @@
+>  #include <linux/err.h>
+>  #include <linux/export.h>
+>  #include <linux/string.h>
+> +#include <linux/thermal.h>
+>  
+>  #include "thermal_core.h"
+>  
+> @@ -77,8 +78,7 @@ struct __thermal_bind_params {
+>   * @num_tbps: number of thermal bind params
+>   * @tbps: an array of thermal bind params (0..num_tbps - 1)
+>   * @sensor_data: sensor private data used while reading temperature
+> and trend
+> - * @get_temp: sensor callback to read temperature
+> - * @get_trend: sensor callback to read temperature trend
+> + * @ops: set of callbacks to handle the thermal zone based on DT
+>   */
+>  
+>  struct __thermal_zone {
+> @@ -96,8 +96,7 @@ struct __thermal_zone {
+>  
+>  	/* sensor interface */
+>  	void *sensor_data;
+> -	int (*get_temp)(void *, long *);
+> -	int (*get_trend)(void *, long *);
+> +	const struct thermal_zone_of_device_ops *ops;
+>  };
+>  
+>  /***   DT thermal zone device callbacks   ***/
+> @@ -107,10 +106,7 @@ static int of_thermal_get_temp(struct
+> thermal_zone_device *tz, {
+>  	struct __thermal_zone *data = tz->devdata;
+>  
+> -	if (!data->get_temp)
+> -		return -EINVAL;
+
+To be consistent, I think that we should keep the above check [1]. 
+
+	if (!data->ops->get_temp)
+		return -EINVAL;
+
+The same check is done with get_trend callback.
+
+> -
+> -	return data->get_temp(data->sensor_data, temp);
+> +	return data->ops->get_temp(data->sensor_data, temp);
+>  }
+>  
+>  static int of_thermal_get_trend(struct thermal_zone_device *tz, int
+> trip, @@ -120,10 +116,10 @@ static int of_thermal_get_trend(struct
+> thermal_zone_device *tz, int trip, long dev_trend;
+>  	int r;
+>  
+> -	if (!data->get_trend)
+> +	if (!data->ops->get_trend)
+>  		return -EINVAL;
+>  
+> -	r = data->get_trend(data->sensor_data, &dev_trend);
+> +	r = data->ops->get_trend(data->sensor_data, &dev_trend);
+>  	if (r)
+>  		return r;
+>  
+> @@ -324,8 +320,7 @@ static struct thermal_zone_device_ops
+> of_thermal_ops = { static struct thermal_zone_device *
+>  thermal_zone_of_add_sensor(struct device_node *zone,
+>  			   struct device_node *sensor, void *data,
+> -			   int (*get_temp)(void *, long *),
+> -			   int (*get_trend)(void *, long *))
+> +			   const struct thermal_zone_of_device_ops
+> *ops) {
+>  	struct thermal_zone_device *tzd;
+>  	struct __thermal_zone *tz;
+> @@ -336,9 +331,11 @@ thermal_zone_of_add_sensor(struct device_node
+> *zone, 
+>  	tz = tzd->devdata;
+>  
+> +	if (!(ops && ops->get_temp))
+> +		return ERR_PTR(-EINVAL);
+
+IMHO, here we should only check:
+	if (!ops)
+		return ERR_PTR(-EINVAL);
+
+	And check if specific callbacks are available in other
+	functions (like [1])
+
+> +
+>  	mutex_lock(&tzd->lock);
+> -	tz->get_temp = get_temp;
+> -	tz->get_trend = get_trend;
+> +	tz->ops = ops;
+>  	tz->sensor_data = data;
+>  
+>  	tzd->ops->get_temp = of_thermal_get_temp;
+> @@ -356,8 +353,8 @@ thermal_zone_of_add_sensor(struct device_node
+> *zone,
+>   *             than one sensors
+>   * @data: a private pointer (owned by the caller) that will be passed
+>   *        back, when a temperature reading is needed.
+> - * @get_temp: a pointer to a function that reads the sensor
+> temperature.
+> - * @get_trend: a pointer to a function that reads the sensor
+> temperature trend.
+> + * @ops: struct thermal_zone_of_device *. Must contain at
+> least .get_trend and
+> + *       .get_temp.
+>   *
+>   * This function will search the list of thermal zones described in
+> device
+>   * tree and look for the zone that refer to the sensor device
+> pointed by @@ -382,9 +379,8 @@ thermal_zone_of_add_sensor(struct
+> device_node *zone,
+>   * check the return value with help of IS_ERR() helper.
+>   */
+>  struct thermal_zone_device *
+> -thermal_zone_of_sensor_register(struct device *dev, int sensor_id,
+> -				void *data, int (*get_temp)(void *,
+> long *),
+> -				int (*get_trend)(void *, long *))
+> +thermal_zone_of_sensor_register(struct device *dev, int sensor_id,
+> void *data,
+> +				const struct
+> thermal_zone_of_device_ops *ops) {
+>  	struct device_node *np, *child, *sensor_np;
+>  
+> @@ -424,9 +420,7 @@ thermal_zone_of_sensor_register(struct device
+> *dev, int sensor_id, if (sensor_specs.np == sensor_np && id ==
+> sensor_id) { of_node_put(np);
+>  			return thermal_zone_of_add_sensor(child,
+> sensor_np,
+> -							  data,
+> -							  get_temp,
+> -							  get_trend);
+> +							  data, ops);
+>  		}
+>  	}
+>  	of_node_put(np);
+> @@ -468,8 +462,7 @@ void thermal_zone_of_sensor_unregister(struct
+> device *dev, tzd->ops->get_temp = NULL;
+>  	tzd->ops->get_trend = NULL;
+>  
+> -	tz->get_temp = NULL;
+> -	tz->get_trend = NULL;
+> +	tz->ops = NULL;
+>  	tz->sensor_data = NULL;
+>  	mutex_unlock(&tzd->lock);
+>  }
+> diff --git a/drivers/thermal/tegra_soctherm.c
+> b/drivers/thermal/tegra_soctherm.c index 70f7e9e..9197fc0 100644
+> --- a/drivers/thermal/tegra_soctherm.c
+> +++ b/drivers/thermal/tegra_soctherm.c
+> @@ -317,6 +317,10 @@ static int tegra_thermctl_get_temp(void *data,
+> long *out_temp) return 0;
+>  }
+>  
+> +static const struct thermal_zone_of_device_ops tegra_of_thermal_ops
+> = {
+> +	.get_temp = tegra_thermctl_get_temp,
+> +};
+> +
+>  static const struct of_device_id tegra_soctherm_of_match[] = {
+>  	{ .compatible = "nvidia,tegra124-soctherm" },
+>  	{ },
+> @@ -416,8 +420,7 @@ static int tegra_soctherm_probe(struct
+> platform_device *pdev) zone->shift =
+> t124_thermctl_temp_zones[i].shift; 
+>  		tz = thermal_zone_of_sensor_register(&pdev->dev, i,
+> zone,
+> -
+> tegra_thermctl_get_temp,
+> -						     NULL);
+> +
+> &tegra_of_thermal_ops); if (IS_ERR(tz)) {
+>  			err = PTR_ERR(tz);
+>  			dev_err(&pdev->dev, "failed to register
+> sensor: %d\n", diff --git
+> a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+> b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c index
+> 9eec26d..5fd0386 100644 ---
+> a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c +++
+> b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c @@ -286,6
+> +286,11 @@ static int ti_thermal_get_crit_temp(struct
+> thermal_zone_device *thermal, return
+> ti_thermal_get_trip_temp(thermal, OMAP_TRIP_NUMBER - 1, temp); }
+> +static const struct thermal_zone_of_device_ops ti_of_thermal_ops = {
+> +	.get_temp = __ti_thermal_get_temp,
+> +	.get_trend = __ti_thermal_get_trend,
+> +};
+> +
+>  static struct thermal_zone_device_ops ti_thermal_ops = {
+>  	.get_temp = ti_thermal_get_temp,
+>  	.get_trend = ti_thermal_get_trend,
+> @@ -333,8 +338,7 @@ int ti_thermal_expose_sensor(struct ti_bandgap
+> *bgp, int id, 
+>  	/* in case this is specified by DT */
+>  	data->ti_thermal = thermal_zone_of_sensor_register(bgp->dev,
+> id,
+> -					data, __ti_thermal_get_temp,
+> -					__ti_thermal_get_trend);
+> +					data, &ti_of_thermal_ops);
+>  	if (IS_ERR(data->ti_thermal)) {
+>  		/* Create thermal zone */
+>  		data->ti_thermal =
+> thermal_zone_device_register(domain, diff --git
+> a/include/linux/thermal.h b/include/linux/thermal.h index
+> ef90838..b565964 100644 --- a/include/linux/thermal.h
+> +++ b/include/linux/thermal.h
+> @@ -289,19 +289,31 @@ struct thermal_genl_event {
+>  	enum events event;
+>  };
+>  
+> +/**
+> + * struct thermal_zone_of_device_ops - scallbacks for handling DT
+> based zones
+> + *
+> + * Mandatory:
+> + * @get_temp: a pointer to a function that reads the sensor
+> temperature.
+> + *
+> + * Optional:
+> + * @get_trend: a pointer to a function that reads the sensor
+> temperature trend.
+> + */
+> +struct thermal_zone_of_device_ops {
+> +	int (*get_temp)(void *, long *);
+> +	int (*get_trend)(void *, long *);
+> +};
+> +
+>  /* Function declarations */
+>  #ifdef CONFIG_THERMAL_OF
+>  struct thermal_zone_device *
+> -thermal_zone_of_sensor_register(struct device *dev, int id,
+> -				void *data, int (*get_temp)(void *,
+> long *),
+> -				int (*get_trend)(void *, long *));
+> +thermal_zone_of_sensor_register(struct device *dev, int id, void
+> *data,
+> +				const struct
+> thermal_zone_of_device_ops *); void
+> thermal_zone_of_sensor_unregister(struct device *dev, struct
+> thermal_zone_device *tz); #else
+>  static inline struct thermal_zone_device *
+> -thermal_zone_of_sensor_register(struct device *dev, int id,
+> -				void *data, int (*get_temp)(void *,
+> long *),
+> -				int (*get_trend)(void *, long *))
+> +thermal_zone_of_sensor_register(struct device *dev, int id, void
+> *data,
+> +				const struct
+> thermal_zone_of_device_ops *) {
+>  	return NULL;
+>  }
+
+Despite this minor comments, feel free to add :-)
+
+Reviewed-by: Lukasz Majewski <l.majewski@samsung.com>
+
+-- 
+Best regards,
+
+Lukasz Majewski
+
+Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
