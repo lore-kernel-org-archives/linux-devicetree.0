@@ -1,92 +1,77 @@
-From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v1 1/2] efuse: IMG Pistachio eFuse Controller
-Date: Tue, 18 Nov 2014 09:45:17 +0000
-Message-ID: <546B152D.1010804@imgtec.com>
-References: <1416237576-21542-1-git-send-email-arul.ramasamy@imgtec.com>	<1416237576-21542-2-git-send-email-arul.ramasamy@imgtec.com>	<546A189B.3090202@imgtec.com>	<27E62D98F903554192E3C13AFCC91C3C2F506FE2@hbmail01.hb.imgtec.org> <CAL1qeaHSevOJ-o=nFqgze8utMgTk-Mh7Y9uRMa6wnjeofji98w@mail.gmail.com>
+From: Mark yao <mark.yao@rock-chips.com>
+Subject: Re: [PATCH v12 1/3] drm: rockchip: Add basic drm driver
+Date: Tue, 18 Nov 2014 17:57:44 +0800
+Message-ID: <546B1818.20907@rock-chips.com>
+References: <1416297587-18959-1-git-send-email-mark.yao@rock-chips.com> <1416297629-19024-1-git-send-email-mark.yao@rock-chips.com> <20141118083234.GZ25711@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="THNPLOi4jCv6bgm7IIX7S9UkSsfVKJVNQ"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL1qeaHSevOJ-o=nFqgze8utMgTk-Mh7Y9uRMa6wnjeofji98w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: Arul Ramasamy <Arul.Ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <Ezequiel.Garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141118083234.GZ25711@phenom.ffwll.local>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de, Boris BREZILLON <boris.brezillon@free-electrons.com>, David Airlie <airlied@gmail.com>, Rob Clark <robdclark@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Rom Lemarchand <romlem@google.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-api@vger.kernel.org, linux-rockchip@lists.infradead.org, dianders@chromium.org, marcheu@chromium.org, dbehr@chromium.org, olof@lixom.net, djkurtz@chromium.org, cf@rock-chips.com, xxm@rock-chips.com, huangtao@rock-chips.com, kever
 List-Id: devicetree@vger.kernel.org
 
---THNPLOi4jCv6bgm7IIX7S9UkSsfVKJVNQ
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-On 18/11/14 00:26, Andrew Bresticker wrote:
-> Hi Naidu,
->=20
-> On Mon, Nov 17, 2014 at 4:12 PM, Naidu Tellapati
-> <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
->> Hi Andrew,
+On 2014=E5=B9=B411=E6=9C=8818=E6=97=A5 16:32, Daniel Vetter wrote:
+> On Tue, Nov 18, 2014 at 04:00:29PM +0800, Mark Yao wrote:
+>> From: Mark yao <mark.yao@rock-chips.com>
 >>
->> (We will respond to James Hogan's remaining review comments in a separ=
-ate email)
+>> This patch adds the basic structure of a DRM Driver for Rockchip Soc=
+s.
 >>
->>>>
->>>> +obj-$(CONFIG_SOC_IMG)           +=3D pistachio/
+>> Signed-off-by: Mark Yao <mark.yao@rock-chips.com>
+>> Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
+>> Acked-by: Daniel Vetter <daniel@ffwll.ch>
+>> Reviewed-by: Rob Clark <robdclark@gmail.com>
+>> ---
+>> Changes in v2:
+>> - use the component framework to defer main drm driver probe
+>>    until all VOP devices have been probed.
+>> - use dma-mapping API with ARM_DMA_USE_IOMMU, create dma mapping by
+>>    master device and each vop device can shared the drm dma mapping.
+>> - use drm_crtc_init_with_planes and drm_universal_plane_init.
+>> - remove unnecessary middle layers.
+>> - add cursor set, move funcs to rockchip drm crtc.
+>> - use vop reset at first init
+>> - reference framebuffer when used and unreference when swap out vop
 >>
->>> What is CONFIG_SOC_IMG? It sounds very generic.
+>> Changes in v3:
+>> - change "crtc->fb" to "crtc->primary-fb"
+>> Adviced by Daniel Vetter
+>> - init cursor plane with universal api, remove unnecessary cursor se=
+t,move
 >>
->> May I have your suggestions on the above.
->>
->> (Assuming we create drivers/soc/img/ instead of drivers/soc/pistachio/=
-)
-
-What would "belong" in there?
-Basically anything that doesn't belong in some particular subsystem?
-
-> I don't have much visibility into ImgTec SoCs other than Pistachio,
-> but I think introducing a SOC_IMG Kconfig symbol is a good idea as it
-> gives drivers for various pieces of IP present on ImgTec SoCs
-> (watchdog, I2C, DMA, etc.) a more specific dependency than say MIPS or
-> METAG.  Maybe James has a suggestion for how to deal with this?
-
-I have very limited experience with IMG based SoCs other than Chorus2
-and TZ1090, but I'm not convinced an SOC_IMG adds any value tbh if it is
-simply a way to group drivers. Both SOC_IMG and METAG || MIPS would end
-up being fuzzy/inexact convenience dependencies to reduce clutter on
-other platforms, so perhaps it would be best kept simple, flexible and
-easily understandable. I don't feel strongly about it either way though.
-
-I suspect certain IP blocks may potentially get licensed separately and
-require exceptions (PDP springs to mind?), so it probably is technically
-a per-IP block thing. James Hartley might have a better idea about that.
-
-Cheers
-James
-
-
---THNPLOi4jCv6bgm7IIX7S9UkSsfVKJVNQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUaxU1AAoJEGwLaZPeOHZ63w0P/iZz4oOwcFQ/Si0djuYigPKm
-KMTgjEiasD7ElkF1LHhEOobJyoHSkzxo/9YlUjb+l9i727yMlxfOfcnfpGjDsaZ5
-HnFUlHuGEYeUewLsDJnFhzwuH3hvJ6FZqJjFLl8yxDdUlIsUlyxYq3iPK0VRUaoH
-LPvijAm1meZ8sQQbrG48qqQDBBmdtx2j4TIgS3EWuy1GLFZMRlwuF22+aL5YdoFW
-errzLa2L67LoBYNW/gIGzVNWfd+58EPn2bX+dg1V4Mt+2cq6hyGybD7ZQmDPYNGl
-XZPNMLxl1KdXXi7aCBQuwFxVKjTJDUwF1yI3sFyh4Prc6MpQwQWROkuDoAcl+sgD
-KS9838pDqAE8VPb1bETUfel2gQJ8oJCzIQcrBfWFkiZC6Wo/Apd2AxZfuIHttzSP
-qcZNZj6nNcTp8NkJ7li9H6OogLWmyvcBVqn4GIQShpcUhJv4OfvPfKoQwhnI0W9m
-+UqiCwoGNdYz1n8nM2dMHrjlQUGPTWNrFC0MmBjq/wEw1a3Yg3OBZTf3OMysZgZU
-ZcdAfsnYX9LZoUZ1yDxU7KYqXBGAtazrh5mp5hcPmqEF52Lqi4V38ZTQWzkLX/oh
-6ZAm4VczG92DYBam1r7lIaCmmj8CVU4/B36fT5h27Rg1q2pQqOY28ryb3H3xIC+H
-ZhPmTCVlJC54sv+1k+rQ
-=NiWm
------END PGP SIGNATURE-----
-
---THNPLOi4jCv6bgm7IIX7S9UkSsfVKJVNQ--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Changes in v4:
+>> Adviced by David Herrmann
+>> - remove drm_platform_*() usage, use register drm device directly.
+> Minor fixup for that part below.
+>
+> [snip]
+>
+>> +static int rockchip_drm_bind(struct device *dev)
+>> +{
+>> +	struct drm_device *drm;
+>> +	int ret;
+>> +
+>> +	drm =3D drm_dev_alloc(&rockchip_drm_driver, dev);
+>> +	if (!drm)
+>> +		return -ENOMEM;
+>> +
+>> +	ret =3D drm_dev_set_unique(drm, "%s", dev_name(dev));
+>> +	if (ret)
+>> +		goto err_free;
+> Please call rockchip_drm_load here directly and don't put it as the -=
+>load
+> function into the driver vtable. The point of the alloc/register spli=
+t is
+> that the driver can be completely set up _before_ we register anythin=
+g.
+> But for backwards compat and historical reasons ->load is called some=
+where
+> in the middle (so that you could access the minor nodes if needed, si=
+nce
+> some drivers do that).
+>
+> Cheers, Daniel
+OK, got it.
