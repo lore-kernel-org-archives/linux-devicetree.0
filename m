@@ -1,140 +1,68 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv3 00/12] arm: mvebu: add Synology DS213j and DS414 .dts
- files
-Date: Tue, 18 Nov 2014 11:43:45 +0100
-Message-ID: <546B22E1.4020507@gmail.com>
-References: <cover.1416266432.git.arno@natisbad.org>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] ARM: dts: DRA7: Add node for RTC
+Date: Tue, 18 Nov 2014 13:55:05 +0300
+Message-ID: <546B2589.1090504@cogentembedded.com>
+References: <1416199509-3977-1-git-send-email-lokeshvutla@ti.com> <5469E76A.7020105@cogentembedded.com> <5469F271.9080102@ti.com> <546A1E5E.1040909@cogentembedded.com> <546AD290.8080303@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1416266432.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <546AD290.8080303@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Lokesh Vutla <lokeshvutla@ti.com>, linux-omap@vger.kernel.org
+Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, t-kristo@ti.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/18/2014 12:26 AM, Arnaud Ebalard wrote:
-> This series adds .dts files for Synology DS213j (armada 370 2-bay NAS) and
-> DS414 (armada XP 4-bay NAS) devices. It is based on comments received on
-> a v0 submission of DS213j .dts file [1] and Andrew's comments on a v1 (
-> for both DS213j and DS414 .dts files) [2] and Andrew/Sebastian' comments
-> on v2 regarding pinctrl improvements [3].
->
-> Cheers,
->
-> a+
->
-> [1]: http://thread.gmane.org/gmane.linux.drivers.devicetree/95401
-> [2]: http://thread.gmane.org/gmane.linux.drivers.devicetree/98830
-> [3]: http://thread.gmane.org/gmane.linux.drivers.devicetree/98892
->
-> Changes since v2:
->
-> - Added various patches to improve/refactor Armada 370/XP pinctrl
->    nodes/properties and use sensible defaults when possible.
+Hello.
 
-Arnaud,
+On 11/18/2014 8:01 AM, Lokesh Vutla wrote:
 
-sorry I didn't remember earlier, but there has been a similar patch
-set that already deals with Armada-XP pinctrl and ethernet settings
-[1].
+>>>>> Add node for RTC.
 
-[1] 
-https://lkml.kernel.org/g/1411157684-6991-1-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+>>>>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+>>>>> [nm@ti.com: update with rtc crossbar number]
+>>>>> Signed-off-by: Nishanth Menon <nm@ti.com>
+>>>>> ---
+>>>>>     arch/arm/boot/dts/dra7.dtsi | 9 +++++++++
+>>>>>     1 file changed, 9 insertions(+)
 
-It has already been merged by Jason into mvebu/dt for v3.19, so it
-seems you'll have to rebase your patches on top of it. AFAIKS, you
-can drop pinctrl node consolidation for the SoCs (XP at least) and
-RGMII consolidation. The other changes you did for common 370/XP
-dtsi, UART, and SPI are valuable and you should keep them.
+>>>>> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+>>>>> index 9cc9843..f98f9f0 100644
+>>>>> --- a/arch/arm/boot/dts/dra7.dtsi
+>>>>> +++ b/arch/arm/boot/dts/dra7.dtsi
+>>>>> @@ -1075,6 +1075,15 @@
+>>>>>                 status = "disabled";
+>>>>>             };
+>>>>>
+>>>>> +        rtc: rtcss@48838000 {
 
-If I find some time, I'll have a closer look at both patch sets.
-Sorry again for not remembering earlier!
+>>>>      Please just name the node "rtc@48838000", in accordance with ePAPR.
 
-Sebastian
+>>> Okay. will update it.
 
-> - changed gpio-fan,speed-map to better match max rotation speed
->    (1900 RPM) for DS213j
->
-> Changes since v1:
->
-> - Added a patch to fix Seiko Instruments, Inc. prefix from "ssi" to
->    "sii" for s35390 RTC chip in kirkwood-synology.dtsi as reported by
->    Andrew
-> - Fixed DS414 and DS213j .dts files which had the same issue due to
->    a blind copy-and-paste.
-> - Added a patch for armada-xp-lenovo-ix4-300d.dts to use uart alias
->    for stdout-path, as suggested by Andrew.
-> - removed pinctrl properties for ethernet interface wrongly referencing
->    a RGMII pin configuration: the PHY is connected using SGMII.
-> - moved some DS213j pinctrl entries (spi0, uart0) in armada-370.dtsi
-> - same thing for DS414 pinctrl entries (ge0/1, spi0) moved to
->    armada-xp-mv78230.dtsi
-> - changed pinctrl nodes and labels to match naming convention found
->    in .dtsi: pmx_*: pmx- changed to *_pin: -pin.
-> - same thing for DS414
-> - added a comment in the .dts file about DS414 being susceptible at
->    boot when an USB/serial converter is connected to the UART pins.
->
-> Changes since v0:
->
-> - Added a comment at the beginning of DS213j and DS414j .dts file regarding
->    the need for a recent Marvell bootloader. Arnd suggested to do a specific
->    .dtb file for new and old bootloaders but I think if we follow this path
->    for DS414 and DS213j, we will probably have to do it for all Armada-based
->    synology NAS and possibly for other Armada 370/XP based devices. Opting
->    for recent bootloaders config and having a comment is easier. It is likely
->    that a user already has a recent bootloader. Otherwise, upgrade is a one
->    click process anyway. If a user thinks it is easier to have two different
->    .dts files in the kernel, she will still be able to push a patch.
-> - Added a comment in the .dts file about the bootloader screwing the kernel
->    if the environment is saved.
-> - Kept GPL licence for .dts file
-> - Fixed bad naming of node and alias (_ vs -)
-> - Added micron vendor prefix for n25q064 flash
-> - Disabled SoC RTC; a Seiko S-35390A is used as main RTC
-> - Added comments about the purpose of each serial port
-> - Added stdout-path = &uart0; to help barebox. A specific patch is included
->    in the series to provide labels for uart serial nodes
-> - Added patch for DS414 .dts file
->
->
-> Arnaud Ebalard (12):
->    of: add "micron" vendor prefix for Micron
->    arm: mvebu: fix vendor prefix typo in kirkwood-synology.dtsi
->    arm: mvebu: add uartX labels for Armada SoC serial nodes
->    arm: mvebu: use recently introduced uart label for stdout-path
->    arm: mvebu: remove duplications in pinctrl nodes for Armada 370/XP
->    arm: mvebu: define and use common Armada 370 SPI pinctrl settings
->    arm: mvebu: define and use common Armada 370 UART pinctrl settings
->    arm: mvebu: define and use common Armada XP UART2/3 pinctrl settings
->    arm: mvebu: define and use ge0/1 rgmii pinctrl settings for armada XP
->    arm: mvebu: define and use common Armada XP SPI pinctrl setting
->    arm: mvebu: add .dts file for Synology DS213j
->    arm: mvebu: add .dts file for Synology DS414
->
->   .../devicetree/bindings/vendor-prefixes.txt        |   1 +
->   arch/arm/boot/dts/Makefile                         |   6 +-
->   arch/arm/boot/dts/armada-370-db.dts                |   2 +
->   arch/arm/boot/dts/armada-370-synology-ds213j.dts   | 321 ++++++++++++++++++++
->   arch/arm/boot/dts/armada-370-xp.dtsi               |   9 +-
->   arch/arm/boot/dts/armada-370.dtsi                  |  58 +++-
->   arch/arm/boot/dts/armada-xp-axpwifiap.dts          |  25 +-
->   arch/arm/boot/dts/armada-xp-db.dts                 |   4 +
->   arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts    |   6 +-
->   arch/arm/boot/dts/armada-xp-mv78230.dtsi           |   7 -
->   arch/arm/boot/dts/armada-xp-mv78260.dtsi           |   7 -
->   arch/arm/boot/dts/armada-xp-mv78460.dtsi           |   7 -
->   arch/arm/boot/dts/armada-xp-netgear-rn2120.dts     |   4 +
->   arch/arm/boot/dts/armada-xp-synology-ds414.dts     | 330 +++++++++++++++++++++
->   arch/arm/boot/dts/armada-xp.dtsi                   |  52 +++-
->   arch/arm/boot/dts/kirkwood-synology.dtsi           |   2 +-
->   16 files changed, 788 insertions(+), 53 deletions(-)
->   create mode 100644 arch/arm/boot/dts/armada-370-synology-ds213j.dts
->   create mode 100644 arch/arm/boot/dts/armada-xp-synology-ds414.dts
->
+>>>>> +            compatible = "ti,am3352-rtc";
+>>>>> +            reg = <0x48838000 0x100>;
+>>>>> +            interrupts = <GIC_SPI 217 IRQ_TYPE_LEVEL_HIGH>,
+>>>>> +                     <GIC_SPI 217 IRQ_TYPE_LEVEL_HIGH>;
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>>      2 similar interrupts?
+
+>>> both rtc timer and rtc alarm uses same interrupt on DRA7 Soc.
+>>> Driver handles it accordingly.
+>>> So passing the same interrupt.
+
+>>     I think it would have been better if the driver just handled a single interrupt.
+
+> There are certain SoCs with RTC IP where timer and alarm uses different interrupts.
+
+    I understood.
+
+> Driver has to take care of that scenario also. So it expects two interrupts from dt.
+
+    You could also handle the missing second interrupt. I don't insist though...
+
+> Thanks and regards,
+> Lokesh
+
+WBR, Sergei
+
