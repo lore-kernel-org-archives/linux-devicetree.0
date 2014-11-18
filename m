@@ -1,70 +1,78 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [PATCH] ARM: dts: DRA7: Add node for RTC
-Date: Tue, 18 Nov 2014 10:31:04 +0530
-Message-ID: <546AD290.8080303@ti.com>
-References: <1416199509-3977-1-git-send-email-lokeshvutla@ti.com> <5469E76A.7020105@cogentembedded.com> <5469F271.9080102@ti.com> <546A1E5E.1040909@cogentembedded.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH] clk: sunxi: gmac-tx-clk mux is not a
+ CLK_MUX_INDEX_BIT mux
+Date: Mon, 17 Nov 2014 21:51:24 -0800
+Message-ID: <CAGb2v66hvvyT-_v6zVe28t_GBVrs0HgKtx5CNjdwgSToJKRsMw@mail.gmail.com>
+References: <1416142617-4094-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <546A1E5E.1040909@cogentembedded.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-omap@vger.kernel.org
-Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, t-kristo@ti.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB4F4VORQKGQE2J6LZCQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1416142617-4094-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
-On Monday 17 November 2014 09:42 PM, Sergei Shtylyov wrote:
-> On 11/17/2014 4:04 PM, Lokesh Vutla wrote:
-> 
->>> On 11/17/2014 7:45 AM, Lokesh Vutla wrote:
-> 
->>>> Add node for RTC.
-> 
->>>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
->>>> [nm@ti.com: update with rtc crossbar number]
->>>> Signed-off-by: Nishanth Menon <nm@ti.com>
->>>> ---
->>>>    arch/arm/boot/dts/dra7.dtsi | 9 +++++++++
->>>>    1 file changed, 9 insertions(+)
-> 
->>>> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
->>>> index 9cc9843..f98f9f0 100644
->>>> --- a/arch/arm/boot/dts/dra7.dtsi
->>>> +++ b/arch/arm/boot/dts/dra7.dtsi
->>>> @@ -1075,6 +1075,15 @@
->>>>                status = "disabled";
->>>>            };
->>>>
->>>> +        rtc: rtcss@48838000 {
-> 
->>>     Please just name the node "rtc@48838000", in accordance with ePAPR.
-> 
->> Okay. will update it.
-> 
->>>> +            compatible = "ti,am3352-rtc";
->>>> +            reg = <0x48838000 0x100>;
->>>> +            interrupts = <GIC_SPI 217 IRQ_TYPE_LEVEL_HIGH>,
->>>> +                     <GIC_SPI 217 IRQ_TYPE_LEVEL_HIGH>;
-> 
->>>     2 similar interrupts?
-> 
->> both rtc timer and rtc alarm uses same interrupt on DRA7 Soc.
->> Driver handles it accordingly.
->> So passing the same interrupt.
-> 
->    I think it would have been better if the driver just handled a single interrupt.
-There are certain SoCs with RTC IP where timer and alarm uses different interrupts.
-Driver has to take care of that scenario also. So it expects two interrupts from dt. 
 
-Thanks and regards,
-Lokesh 
-> 
->> Thanks and regards,
->> Lokesh
-> 
->>> [...]
-> 
-> WBR, Sergei
-> 
+On Sun, Nov 16, 2014 at 4:56 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> A CLK_MUX_INDEX_BIT mux has one bit per parent, but the sun7i-a20-gmac-clk
+> has 2 bits selecting between 3 possible parents using values of 0, 1, 2,
+> which makes it a regular mux which should not have CLK_MUX_INDEX_BIT set in
+> its flag.
+>
+> However we do not support parent 1 (an external clock), so use a table to
+> select parent 0 or 2, which are the 2 parents we support.
+>
+> Note this has not been causing any issues sofar, because we start with a
+> parent setting of parent 0, and only ever re-parent to parent 2 (for which
+> we use an index of 1 as we skip parent 1) and with CLK_MUX_INDEX_BIT set
+> we write a value of 2 for index 1.
 
+We never use parent 1, and some hardware doesn't even have it. So back
+then I went for CLK_MUX_INDEX_BIT to simplify it. Guess it's not the best
+way to do it.
+
+> Tested on both a cubietruck (which uses rgmii mode) as well as a cs908
+> (an a31s board which uses mii mode).
+>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/clk/sunxi/clk-a20-gmac.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/clk/sunxi/clk-a20-gmac.c b/drivers/clk/sunxi/clk-a20-gmac.c
+> index 5296fd6..0dcf4f2 100644
+> --- a/drivers/clk/sunxi/clk-a20-gmac.c
+> +++ b/drivers/clk/sunxi/clk-a20-gmac.c
+> @@ -53,6 +53,11 @@ static DEFINE_SPINLOCK(gmac_lock);
+>  #define SUN7I_A20_GMAC_MASK    0x3
+>  #define SUN7I_A20_GMAC_PARENTS 2
+>
+> +static u32 sun7i_a20_gmac_mux_table[SUN7I_A20_GMAC_PARENTS] = {
+> +       0x00, /* Select mii_phy_tx_clk */
+> +       0x02, /* Select gmac_int_tx_clk */
+> +};
+> +
+>  static void __init sun7i_a20_gmac_clk_setup(struct device_node *node)
+>  {
+>         struct clk *clk;
+> @@ -90,7 +95,7 @@ static void __init sun7i_a20_gmac_clk_setup(struct device_node *node)
+>         gate->lock = &gmac_lock;
+>         mux->reg = reg;
+>         mux->mask = SUN7I_A20_GMAC_MASK;
+> -       mux->flags = CLK_MUX_INDEX_BIT;
+> +       mux->table = sun7i_a20_gmac_mux_table;
+>         mux->lock = &gmac_lock;
+>
+>         clk = clk_register_composite(NULL, clk_name,
+> --
+> 2.1.0
+>
