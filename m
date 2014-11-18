@@ -1,31 +1,33 @@
-From: Sangbeom Kim <sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH 5/5] mfd: s2mps11: Add binding documentation for Samsung
- S2MPS13 PMIC
-Date: Tue, 18 Nov 2014 09:40:31 +0900
-Message-ID: <012501d002c8$41b107a0$c51316e0$@samsung.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH 4/5] rtc: s5m: Add the support for S2MPS13 RTC
+Date: Tue, 18 Nov 2014 09:55:08 +0900
+Message-ID: <546A98EC.8090009@samsung.com>
 References: <1416184980-532-1-git-send-email-cw00.choi@samsung.com>
- <1416184980-532-6-git-send-email-cw00.choi@samsung.com>
+ <1416184980-532-5-git-send-email-cw00.choi@samsung.com>
+ <012401d002c8$04efe610$0ecfb230$@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1416184980-532-6-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Content-language: ko
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Chanwoo Choi' <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, geunsik.lim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <012401d002c8$04efe610$0ecfb230$@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sangbeom Kim <sbkim73@samsung.com>
+Cc: lee.jones@linaro.org, broonie@kernel.org, mturquette@linaro.org, a.zummo@towertech.it, lgirdwood@gmail.com, sameo@linux.intel.com, geunsik.lim@samsung.com, inki.dae@samsung.com, kyungmin.park@samsung.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-On Monday, November 17, 2014 9:43 AM, Chanwoo Choi wrote:
-> This patch adds the binding documentation for Samsung S2MPS13 PMIC
-> which is similiar with existing S2MPS14 PMIC. S2MPS13 has the different number
-> of regulators from S2MPS14 and RTC/Clock is the same with the S2MPS14.
+Dear Sangbeom,
 
+On 11/18/2014 09:38 AM, Sangbeom Kim wrote:
+> Hi,
+> On Monday, November 17, 2014 9:43 AM, Chanwoo Choi wrote:
+>> This patch adds only the compatible string for S2MPS13 clock which is identical
+>> with S2MPS14 clock driver.
+> 
+> What's the relation of S2MPS14 RTC and clock driver?
 
-Acked-by: Sangbeom Kim <sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+I checked the difference between S2MPS13 and S2MPS14.
+But, all register (RTC) of both PMICs was the same completely.
+So, I just add S2MPS13 type to use existing S2MPS14 RTC feature for S2MPS13 RTC.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+Chanwoo Choi
