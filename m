@@ -1,127 +1,101 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/2] dt-bindings: simplefb-sunxi: Add sunxi
- simplefb extensions
-Date: Tue, 18 Nov 2014 10:09:38 +0100
-Message-ID: <546B0CD2.401@redhat.com>
-References: <1416224086-5698-1-git-send-email-hdegoede@redhat.com>	 <1416224086-5698-3-git-send-email-hdegoede@redhat.com>	 <20141117124721.GQ6414@lukather>	 <CACxGe6vqiC08sP+o3bduGfvUdwRtHm8+_7EdZccJjS86qVKvxQ@mail.gmail.com>	 <20141117155514.GU6414@lukather> <546B0026.2010107@redhat.com> <1416300438.25454.40.camel@hellion.org.uk>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBXEZVSRQKGQEMNS7MSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1416300438.25454.40.camel-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+From: Dmitry Lifshitz <lifshitz@compulab.co.il>
+Subject: [PATCH 2/9] ARM: dts: cm-t3x: add ADS7846 touchscreen support
+Date: Tue, 18 Nov 2014 11:13:17 +0200
+Message-ID: <1416302004-22199-3-git-send-email-lifshitz@compulab.co.il>
+References: <1416302004-22199-1-git-send-email-lifshitz@compulab.co.il>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1416302004-22199-1-git-send-email-lifshitz@compulab.co.il>
+Sender: linux-omap-owner@vger.kernel.org
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Dmitry Lifshitz <lifshitz@compulab.co.il>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add ADS7846 touchscreen support.
 
-On 11/18/2014 09:47 AM, Ian Campbell wrote:
-> On Tue, 2014-11-18 at 09:15 +0100, Hans de Goede wrote:
->> Hi,
->>
->> On 11/17/2014 04:55 PM, Maxime Ripard wrote:
->>> On Mon, Nov 17, 2014 at 01:39:18PM +0000, Grant Likely wrote:
->>>> On Mon, Nov 17, 2014 at 12:47 PM, Maxime Ripard
->>>> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->>>>> On Mon, Nov 17, 2014 at 12:34:46PM +0100, Hans de Goede wrote:
->>>>>> If pre-filled framebuffer nodes are used, the firmware may need extra
->>>>>> properties to find the right node. This documents the properties to use
->>>>>> for this on sunxi platforms.
->>>>>>
->>>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>>>> ---
->>>>>>  .../bindings/video/simple-framebuffer-sunxi.txt    | 33 ++++++++++++++++++++++
->>>>>>  1 file changed, 33 insertions(+)
->>>>>>  create mode 100644 Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt b/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
->>>>>> new file mode 100644
->>>>>> index 0000000..84ca264
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
->>>>>> @@ -0,0 +1,33 @@
->>>>>> +Sunxi specific Simple Framebuffer bindings
->>>>>> +
->>>>>> +This binding documents sunxi specific extensions to the simple-framebuffer
->>>>>> +bindings. The sunxi simplefb u-boot code relies on the devicetree containing
->>>>>> +pre-populated simplefb nodes.
->>>>>> +
->>>>>> +These extensions are intended so that u-boot can select the right node based
->>>>>> +on which pipeline and output is being used. As such they are solely intended
->>>>>> +for firmware / bootloader use, and the OS should ignore them.
->>>>>> +
->>>>>> +Required properties:
->>>>>> +- compatible: "sunxi,framebuffer"
->>>>>> +- sunxi,pipeline:
->>>>>> +  <0> for the de_be0 -> lcdc0 -> output pipeline
->>>>>> +  <1> for the de_be1 -> lcdc1 -> output pipeline
->>>>>> +- sunxi,output: One of: "hdmi", "lcd", "vga", and "composite"
->>>>>> +
->>>>>> +Example:
->>>>>> +
->>>>>> +chosen {
->>>>>> +     #address-cells = <1>;
->>>>>> +     #size-cells = <1>;
->>>>>> +     ranges;
->>>>>> +
->>>>>> +     framebuffer@0 {
->>>>>> +             compatible = "sunxi,framebuffer", "simple-framebuffer";
->>>>>> +             sunxi,pipeline = <0>;
->>>>>> +             sunxi,output = "hdmi";
->>>>>> +             clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
->>>>>> +                      <&ahb_gates 44>;
->>>>>
->>>>> If we're going that way, then maybe having to specify clock-names
->>>>> would be better in order to know which clock is what?
->>>>
->>>> I wouldn't go that way with this binding since the driver has no need
->>>> to differentiate between the clocks, and driver authors shouldn't be
->>>> encouraged to do so. The purpose of the clocks in this node is only
->>>> for itemizing dependencies, not for how to configure the clocks.
->>>> Firmware shouldn't care at all about the clocks list, it only needs to
->>>> find the correct pre-populated node to fill in and enable.
->>>
->>> Well, if we want to play the "DT as an ABI" stuff, you have no
->>> guarantee that in the future, simplefb will still be the driver bound
->>> to "sunxi,framebuffer"
->>
->> Huh? We do have that guarantee, or at least that a simplefb bindings
->> compatible driver is, the "sunxi,framebuffer" bindings live in:
->>
->> Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
->>
->> With the filename already being a big hint, further more it states that:
->>
->> "This binding documents sunxi specific extensions to the simple-framebuffer
->> bindings. The sunxi simplefb u-boot code relies on the devicetree containing
->> pre-populated simplefb nodes.
->>
->> These extensions are intended so that u-boot can select the right node based
->> on which pipeline is being used. As such they are solely intended for
->> firmware / bootloader use, and the OS should ignore them."
-> 
-> There may be an argument here for using the slightly redundant compat
-> string "allwinner,simple-framebuffer" in order to reinforce that this is
-> an extension to simple-framebuffer, as opposed to a binding for a
-> completely separate "non-simple" sunxi framebuffer driver which I think
-> is what Maxime may be imagining.
-> 
-> Alternatively (or as well) perhaps these extension should be a series of
-> extensions (one per platform) described in "appendices" of the main
-> simple-framebuffer.txt. I know Grant expressed a preference for a
-> separate document though and I think just using the more expressive name
-> above would be sufficient, but thought I'd mention it as a possible
-> option.
+Signed-off-by: Dmitry Lifshitz <lifshitz@compulab.co.il>
+---
+ arch/arm/boot/dts/omap3-cm-t3x.dtsi |   57 +++++++++++++++++++++++++++++++++++
+ 1 files changed, 57 insertions(+), 0 deletions(-)
 
-That is a good suggestion, as discussed on irc, lets go with that.
+diff --git a/arch/arm/boot/dts/omap3-cm-t3x.dtsi b/arch/arm/boot/dts/omap3-cm-t3x.dtsi
+index e4c0c56..3636fed 100644
+--- a/arch/arm/boot/dts/omap3-cm-t3x.dtsi
++++ b/arch/arm/boot/dts/omap3-cm-t3x.dtsi
+@@ -49,6 +49,13 @@
+ 		compatible = "usb-nop-xceiv";
+ 		vcc-supply = <&hsusb2_power>;
+ 	};
++
++	ads7846reg: ads7846-reg {
++		compatible = "regulator-fixed";
++		regulator-name = "ads7846-reg";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
+ };
+ 
+ &omap3_pmx_core {
+@@ -115,6 +122,21 @@
+ 			OMAP3_CORE1_IOPAD(0x20e6, PIN_OUTPUT | MUX_MODE0)	/* dss_data5.dss_data5 */
+ 		>;
+ 	};
++
++	ads7846_pins: pinmux_ads7846_pins {
++		pinctrl-single,pins = <
++			OMAP3_CORE1_IOPAD(0x20ba, PIN_INPUT_PULLUP | MUX_MODE4)	/* gpmc_ncs6.gpio_57 */
++		>;
++	};
++
++	mcspi1_pins: pinmux_mcspi1_pins {
++		pinctrl-single,pins = <
++			OMAP3_CORE1_IOPAD(0x21c8, PIN_INPUT | MUX_MODE0)	/* mcspi1_clk */
++			OMAP3_CORE1_IOPAD(0x21ca, PIN_INPUT | MUX_MODE0)	/* mcspi1_simo */
++			OMAP3_CORE1_IOPAD(0x21cc, PIN_INPUT | MUX_MODE0)	/* mcspi1_somi */
++			OMAP3_CORE1_IOPAD(0x21ce, PIN_INPUT_PULLDOWN | MUX_MODE0) /* mcspi1_cs0 */
++		>;
++	};
+ };
+ 
+ &uart3 {
+@@ -147,3 +169,38 @@
+ &usbhsehci {
+ 	phys = <&hsusb1_phy &hsusb2_phy>;
+ };
++
++&mcspi1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mcspi1_pins>;
++
++	/* touch controller */
++	ads7846@0 {
++		pinctrl-names = "default";
++		pinctrl-0 = <&ads7846_pins>;
++
++		compatible = "ti,ads7846";
++		vcc-supply = <&ads7846reg>;
++
++		reg = <0>;			/* CS0 */
++		spi-max-frequency = <1500000>;
++
++		interrupt-parent = <&gpio2>;
++		interrupts = <25 0>;		/* gpio_57 */
++		pendown-gpio = <&gpio2 25 0>;
++
++		ti,x-min = /bits/ 16 <0x0>;
++		ti,x-max = /bits/ 16 <0x0fff>;
++		ti,y-min = /bits/ 16 <0x0>;
++		ti,y-max = /bits/ 16 <0x0fff>;
++
++		ti,x-plate-ohms = /bits/ 16 <180>;
++		ti,pressure-max = /bits/ 16 <255>;
++
++		ti,debounce-max = /bits/ 16 <30>;
++		ti,debounce-tol = /bits/ 16 <10>;
++		ti,debounce-rep = /bits/ 16 <1>;
++
++		linux,wakeup;
++	};
++};
+-- 
+1.7.5.4
 
-Regards,
-
-Hans
