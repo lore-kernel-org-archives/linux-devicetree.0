@@ -1,32 +1,42 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 00/11] Add stih410 SoC/board and USB2/1.1 support for stih416
-Date: Tue, 18 Nov 2014 09:53:55 +0100
-Message-ID: <1795476.NaojQ17vPi@wuerfel>
-References: <1416242884-5261-1-git-send-email-peter.griffin@linaro.org> <546B07BD.4030400@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <546B07BD.4030400-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Cc: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCHv2 0/5] mfd: sec-core: Add support S2MPS13 PMIC device
+Date: Tue, 18 Nov 2014 17:59:38 +0900
+Message-ID: <1416301183-10478-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org, broonie@kernel.org, mturquette@linaro.org, a.zummo@towertech.it
+Cc: lgirdwood@gmail.com, sbkim73@samsung.com, sameo@linux.intel.com, geunsik.lim@samsung.com, inki.dae@samsung.com, kyungmin.park@samsung.com, k.kozlowski@samsung.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 18 November 2014 09:47:57 Maxime Coquelin wrote:
-> 
-> For the series,
-> 
->      Acked-by: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-> 
->      If Arnd is fine with the series, these patches will be part of my 
-> next pull request.
+This patchset adds Samsung S2MPS13 PMIC device driver in existing S2MPS11 PMIC
+driver. The S2MPS13 has just the differnet number of regulator from existing
+S2MPS14 PMIC and RTC/CLOCK IP of S2MPS13 is the same with S2MPS14. S2MPS13
+PMIC has LDO[1-40] and BUCK[1-10] regulators.
 
-Yes, it's all good. Just keep the defconfig change separate from the
-DT changes, as usual.
+Changes from v1:
+- Fix minor issue about coding style and wrong description
+- Fix wrong from of third patch(3/5) related to clk driver
+- Add acked tag by Mark Brown, Sangbeom Kim, Lee Jones
+- Add reviewed tag by Krzysztof Kozlowski
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Chanwoo Choi (5):
+  mfd: sec-core: Add support for S2MPS13 device
+  regulator: s2mps11: Add support S2MPS13 regulator device
+  clk: s2mps11: Add the support for S2MPS13 PMIC clock
+  rtc: s5m: Add the support for S2MPS13 RTC
+  mfd: s2mps11: Add binding documentation for Samsung S2MPS13 PMIC
+
+ Documentation/devicetree/bindings/mfd/s2mps11.txt |  22 +--
+ drivers/clk/clk-s2mps11.c                         |  24 +++
+ drivers/mfd/sec-core.c                            |  29 ++++
+ drivers/mfd/sec-irq.c                             |  23 ++-
+ drivers/regulator/Kconfig                         |  10 +-
+ drivers/regulator/s2mps11.c                       | 102 +++++++++++-
+ drivers/rtc/rtc-s5m.c                             |  15 +-
+ include/linux/mfd/samsung/core.h                  |   2 +
+ include/linux/mfd/samsung/s2mps13.h               | 186 ++++++++++++++++++++++
+ 9 files changed, 388 insertions(+), 25 deletions(-)
+ create mode 100644 include/linux/mfd/samsung/s2mps13.h
+
+-- 
+1.8.5.5
