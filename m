@@ -1,42 +1,31 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [RFC] Add of_path property for all devices with a node
-Date: Tue, 18 Nov 2014 15:18:29 +0000
-Message-ID: <CACxGe6vg8SxwCHZ8HxzLzimQOAf8Q81wd5eO=x2LavD4dv81Rw@mail.gmail.com>
-References: <1415342031.4925.27.camel@kernel.crashing.org> <1415342117.4925.29.camel@kernel.crashing.org>
- <1415596626.5769.14.camel@kernel.crashing.org> <CAL_JsqKG=vpeGKj3v-2VW9oGQsnmuYMHRfy6LuXDXE=ROjHT4w@mail.gmail.com>
+From: Carlo Caione <carlo@caione.org>
+Subject: Re: [PATCH v3 3/3] ARM: dts: meson: add I2C controller nodes
+Date: Tue, 18 Nov 2014 16:29:13 +0100
+Message-ID: <CAOQ7t2Yw5h61xWf2MW11Zsz5_gnv==ihB7Swj=yqcYc=J166gw@mail.gmail.com>
+References: <1415907123-4318-1-git-send-email-b.galvani@gmail.com>
+	<1415907123-4318-4-git-send-email-b.galvani@gmail.com>
+	<20141118151927.GG30004@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKG=vpeGKj3v-2VW9oGQsnmuYMHRfy6LuXDXE=ROjHT4w@mail.gmail.com>
+In-Reply-To: <20141118151927.GG30004@katana>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Beniamino Galvani <b.galvani@gmail.com>, Carlo Caione <carlo@caione.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Jerry Cao <jerry.cao@amlogic.com>, Victor Wan <victor.wan@amlogic.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 10, 2014 at 2:06 PM, Rob Herring <robherring2@gmail.com> wrote:
-> Adding Grant.
->
-> On Sun, Nov 9, 2014 at 11:17 PM, Benjamin Herrenschmidt
-> <benh@kernel.crashing.org> wrote:
->> On Fri, 2014-11-07 at 17:35 +1100, Benjamin Herrenschmidt wrote:
->>> On Fri, 2014-11-07 at 17:33 +1100, Benjamin Herrenschmidt wrote:
->>>
->>> > So I came up with this patch,
->>>
->>> And here is the actual patch, which might help :-) It's pretty trivial
->>> and small...
+On Tue, Nov 18, 2014 at 4:19 PM, Wolfram Sang <wsa@the-dreams.de> wrote:
+> On Thu, Nov 13, 2014 at 08:32:03PM +0100, Beniamino Galvani wrote:
+>> Add nodes for I2C controllers A,B,AO, which are available in both
+>> Meson6 and Meson8.
 >>
->> So not much reactions here .. a bit more on IRC, where Olof suggested
->> that rather than a file containing a path, we could use a symlink since
->> the devtree is now in sysfs, so we can do relative links.
+>> Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
+>> ---
 >
-> +1 on this. That was part of the motivation to move DT into sysfs.
->
-> Rob
+> I usually don't take DTS patches. They should go via arm-soc. Please say
+> so if there are reasons I should take it.
 
-I had a patch that did exactly that. I wonder what happened to it...
+I'll take them.
 
-But regardless, as Frank said in his reply, this data is already in
-the uevent file for every device.
-
-g.
+-- 
+Carlo Caione
