@@ -1,60 +1,63 @@
-From: James Hartley <James.Hartley@imgtec.com>
-Subject: RE: [PATCH 2/2] Documentation: crypto: Add DT binding info for the
- img hw hash accelerator
-Date: Tue, 18 Nov 2014 18:33:29 +0000
-Message-ID: <72BC0C8BD7BB6F45988A99382E5FBAE5443427AE@hhmail02.hh.imgtec.org>
-References: <1415621455-10468-1-git-send-email-james.hartley@imgtec.com>
-	<1415621455-10468-3-git-send-email-james.hartley@imgtec.com>
- <CAL1qeaEp_K2JYXBu1hvFuiJ6Ps3jBoLRtmvw1F7FPKHwKDjXmg@mail.gmail.com>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [RFC] adp1653: Add device tree bindings for LED controller
+Date: Tue, 18 Nov 2014 19:35:45 +0100
+Message-ID: <20141118183545.GA16999@amd>
+References: <20141116075928.GA9763@amd>
+ <20141117101553.GA21151@amd>
+ <20141117145545.GC7046@atomide.com>
+ <201411171601.32311@pali>
+ <20141117150617.GD7046@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <CAL1qeaEp_K2JYXBu1hvFuiJ6Ps3jBoLRtmvw1F7FPKHwKDjXmg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-crypto-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>
-Cc: "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>, "davem@davemloft.net" <davem@davemloft.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "joe@perches.com" <joe@perches.com>, "mchehab@osg.samsung.com" <mchehab@osg.samsung.com>, "crope@iki.fi" <crope@iki.fi>, "jg1.han@samsung.com" <jg1.han@samsung.com>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ezequiel Garcia <Ezequiel.Garcia@imgtec.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141117150617.GD7046-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org, sre-GFxCN5SEZAc@public.gmane.org, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, freemangordon-uiMcrn6V0Vs@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW5kcmV3DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogYWJyZXN0
-aWNAZ29vZ2xlLmNvbSBbbWFpbHRvOmFicmVzdGljQGdvb2dsZS5jb21dIE9uIEJlaGFsZiBPZg0K
-PiBBbmRyZXcgQnJlc3RpY2tlcg0KPiBTZW50OiAxMCBOb3ZlbWJlciAyMDE0IDE3OjMwDQo+IFRv
-OiBKYW1lcyBIYXJ0bGV5DQo+IENjOiBoZXJiZXJ0QGdvbmRvci5hcGFuYS5vcmcuYXU7IGRhdmVt
-QGRhdmVtbG9mdC5uZXQ7IEdyYW50IExpa2VseTsgUm9iDQo+IEhlcnJpbmc7IGFrcG1AbGludXgt
-Zm91bmRhdGlvbi5vcmc7IEdyZWcgS3JvYWgtSGFydG1hbjsNCj4gam9lQHBlcmNoZXMuY29tOyBt
-Y2hlaGFiQG9zZy5zYW1zdW5nLmNvbTsgY3JvcGVAaWtpLmZpOw0KPiBqZzEuaGFuQHNhbXN1bmcu
-Y29tOyBsaW51eC1jcnlwdG9Admdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2Vy
-bmVsLm9yZzsgUGF3ZWwgTW9sbDsgTWFyayBSdXRsYW5kOyBJYW4gQ2FtcGJlbGw7IEt1bWFyDQo+
-IEdhbGE7IEV6ZXF1aWVsIEdhcmNpYQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDIvMl0gRG9jdW1l
-bnRhdGlvbjogY3J5cHRvOiBBZGQgRFQgYmluZGluZyBpbmZvIGZvciB0aGUNCj4gaW1nIGh3IGhh
-c2ggYWNjZWxlcmF0b3INCj4gDQo+IEhpIEphbWVzLA0KPiANCj4gT24gTW9uLCBOb3YgMTAsIDIw
-MTQgYXQgNDoxMCBBTSwgSmFtZXMgSGFydGxleQ0KPiA8amFtZXMuaGFydGxleUBpbWd0ZWMuY29t
-PiB3cm90ZToNCj4gPiBTaWduZWQtb2ZmLWJ5OiBKYW1lcyBIYXJ0bGV5IDxqYW1lcy5oYXJ0bGV5
-QGltZ3RlYy5jb20+DQo+IA0KPiBBIGJyaWVmIGNvbW1pdCBtZXNzYWdlIGRlc2NyaWJpbmcgdGhl
-IGhhcmR3YXJlIGFuZCB3aGVyZSBpdCdzIGZvdW5kIHdvdWxkDQo+IGJlIG5pY2UuDQo+IA0KPiA+
-IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY3J5cHRvL2lt
-Zy1oYXNoLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2NyeXB0
-by9pbWctaGFzaC50eHQNCj4gDQo+ID4gQEAgLTAsMCArMSwyOCBAQA0KPiA+ICsqIEltYWdpbmF0
-aW9uIFRlY2hub2xvZ2llcyBMdGQuIEhhc2ggQWNjZWxlcmF0b3INCj4gPiArDQo+ID4gK1RoZSBo
-YXNoIGFjY2VsZXJhdG9yIHByb3ZpZGVzIGhhcmR3YXJlIGhhc2hpbmcgYWNjZWxlcmF0aW9uIGZv
-ciBTSEExLA0KPiA+ICtTSEEyMjQsIFNIQTI1NiBhbmQgTUQ1IGhhc2hlcw0KPiA+ICsNCj4gPiAr
-UmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiArDQo+ID4gKy0gY29tcGF0aWJsZSA6ICJpbWcsaW1n
-LWhhc2gtYWNjZWxlcmF0b3ItcmV2MSINCj4gDQo+IEkga25vdyBJIG1lbnRpb25lZCBpbiB0aGUg
-aW50ZXJuYWwgcmV2aWV3IHRoYXQgaXQgd291bGQgYmUgZ29vZCB0byBoYXZlDQo+IHNvbWUgc29y
-dCBvZiB2ZXJzaW9uIGluZGljYXRvciwgYnV0IGl0IGxvb2tzIGxpa2UgZnJvbSB0aGUgVFJNIHRo
-YXQgdGhlIHZlcnNpb24NCj4gaXMgcHJvYmFibGUgKENSX0hBU0hfQ09SRV9SRVYpLiAgSWYgd2Ug
-ZXhwZWN0IHByb2JpbmcgZm9yIHRoZSByZXZpc2lvbg0KPiBudW1iZXIgdG8gYmUgc3VmZmljaWVu
-dCwgdGhlbiBwZXJoYXBzICJyZXYxIiBjYW4gYmUgZHJvcHBlZD8gIEFsc28sIHRoZQ0KPiBzZWNv
-bmQgImltZyIgaXMgcmVkdW5kYW50Lg0KDQpZZXMgdGhlIGNvcmUgSUQgYW5kIHZlcnNpb25zIGFy
-ZSBhdmFpbGFibGUsIHNvIEknbGwgZHJvcCByZXYtMSwgYW5kIHJlbW92ZSB0aGUgc2Vjb25kIGlt
-Zy4NCg0KPiANCj4gPiArLSByZWcgOiBPZmZzZXQgYW5kIGxlbmd0aCBvZiB0aGUgcmVnaXN0ZXIg
-c2V0IGZvciB0aGUgbW9kdWxlLCBhbmQgdGhlDQo+ID4gK0RNQSBwb3J0DQo+ID4gKy0gaW50ZXJy
-dXB0cyA6IFRoZSBkZXNpZ25hdGVkIElSUSBsaW5lIGZvciB0aGUgaGFzaGluZyBtb2R1bGUuDQo+
-ID4gKy0gZG1hcyA6IERNQSBzcGVjaWZpZXIgYXMgcGVyDQo+ID4gK0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kbWEvZG1hLnR4dA0KPiA+ICstIGRtYS1uYW1lcyA6IFNob3VsZCBi
-ZSAidHgiDQo+ID4gKy0gYnVzLWFkZHIgOiBUaGUgYnVzIGFkZHJlc3MgZm9yIHRoZSBpbnB1dCBk
-YXRhIGZvciBoYXNoaW5nIGJsb2NrDQo+IA0KPiBJIHRoaW5rIHRoaXMgY2FuIGJlIGRyb3BwZWQu
-ICBUaGlzIGlzIHRoZSBzYW1lIGFzIHRoZSBzZWNvbmQgInJlZyINCj4gZW50cnkgYWJvdmUsIGlz
-IGl0IG5vdD8NCg0KWWVzLCB0aGF0IHNob3VsZCBub3QgaGF2ZSBtYWRlIGl0IHRocm91Z2ggdG8g
-dGhlIHBhdGNoIC0gaXQgd2lsbCBiZSByZW1vdmVkLg0KDQpUaGFua3MsDQpKYW1lcy4NCg0K
+On Mon 2014-11-17 07:06:17, Tony Lindgren wrote:
+> * Pali Roh=E1r <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [141117 07:03]:
+> > On Monday 17 November 2014 15:55:46 Tony Lindgren wrote:
+> > >=20
+> > > There's nothing stopping us from initializing the camera code
+> > > from pdata-quirks.c for now to keep it working. Certainly the
+> > > binding should be added to the driver, but that removes a
+> > > dependency to the legacy booting mode if things are otherwise
+> > > working.
+> >=20
+> > Tony, legacy board code for n900 is not in mainline tree. And=20
+> > that omap3 camera subsystem for n900 is broken since 3.5=20
+> > kernel... (both Front and Back camera on n900 show only green=20
+> > picture).
+>=20
+> I'm still seeing the legacy board code for n900 in mainline tree :)
+> It's deprecated, but still there.
+>=20
+> Are you maybe talking about some other piece of platform_data that's
+> no longer in the mainline kernel?
+>=20
+> No idea what might be wrong with the camera though.
+
+Camera support for main and secondary cameras was never mainline, AFAIC=
+T.
+
+Merging it will not be easy, as it lacks DT support... and was broken
+for long time.
+
+Anyway, flash is kind of important for me, since it makes phone useful
+as backup light; and it is simple piece of hw, so I intend to keep it
+useful.
+
+       	       	   	    	      	      	  		     Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
+/blog.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
