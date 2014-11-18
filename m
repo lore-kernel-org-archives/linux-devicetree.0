@@ -1,120 +1,105 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: [PATCH v3 2/2] clk-fixed-rate: support specified-clock binding
-Date: Tue, 18 Nov 2014 23:59:47 +0000
-Message-ID: <1416355187-11606-3-git-send-email-james.hogan@imgtec.com>
+From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 1/2] dt: binding: add specified-clock for discoverable rate clocks
+Date: Tue, 18 Nov 2014 23:59:46 +0000
+Message-ID: <1416355187-11606-2-git-send-email-james.hogan@imgtec.com>
 References: <1416355187-11606-1-git-send-email-james.hogan@imgtec.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1416355187-11606-1-git-send-email-james.hogan@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Hogan <james.hogan@imgtec.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416355187-11606-1-git-send-email-james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Implement the new specified-clock DT binding which uses a table to look
-up the fixed frequency based on the value in a register.
+The frequency of some fixed rate external oscillators on some SoCs (for
+example TZ1090's XTAL1) are specified by the board using pull-ups and
+pull-downs of configuration pins which are automatically latched on
+reset and available in an SoC register, so that the boot ROM and OS can
+automatically discover it.
 
-The discovery is done entirely within of_specified_clk_setup() since the
-clock rate is still fixed so there's no need to dynamically rediscover
-the rate. The register is iomapped, read, and iounmapped, then the field
-value is extracted and used to look up the clock frequency in the table
-property.
+These clocks are very similar to fixed-clocks since the rate never
+changes, but we still want to be able to automatically discover the
+frequency, so add a new binding to describe such clocks. Instead of
+using a "clock-frequency" property, use "reg", "bit-mask", "bit-shift"
+properties to describe the register field. The mapping from register
+values to clock frequencies is specified in a "table" property which
+contains pairs of register values and frequencies.
 
-Signed-off-by: James Hogan <james.hogan@imgtec.com>
-Cc: Mike Turquette <mturquette@linaro.org>
+There is scope to extend the binding further in future to handle other
+mapping types, by using different properties instead of "table".
+
+Signed-off-by: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
-No changes in v3.
+Changes in v3:
+ * Remove unused & unimplemented gpios property. Not sure why it was
+   there in the first place.
+
+I could easily have extended the fixed-rate binding instead, but there'd
+be no properties in common except the standard common clock properties
+so it seemed like it deserved a separate binding. I'm open to arguments
+to the contrary or better compatible string names though.
 
 Changes in v2:
- * Rewrite to use a fixed clock instead of an entirely new clock type.
+ * Borrow bit-mask and bit-shift bindings from Mike's mux clock binding
+   proposals.
 ---
- drivers/clk/clk-fixed-rate.c | 51 ++++++++++++++++++++++++++++++++++++++++++++
- include/linux/clk-provider.h |  1 +
- 2 files changed, 52 insertions(+)
+ .../devicetree/bindings/clock/specified-clock.txt  | 37 ++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/specified-clock.txt
 
-diff --git a/drivers/clk/clk-fixed-rate.c b/drivers/clk/clk-fixed-rate.c
-index 0fc56ab..b8bcb4d 100644
---- a/drivers/clk/clk-fixed-rate.c
-+++ b/drivers/clk/clk-fixed-rate.c
-@@ -9,12 +9,14 @@
-  * Fixed rate clock implementation
-  */
- 
-+#include <linux/bitops.h>
- #include <linux/clk-provider.h>
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/io.h>
- #include <linux/err.h>
- #include <linux/of.h>
-+#include <linux/of_address.h>
- 
- /*
-  * DOC: basic fixed-rate clock that cannot gate
-@@ -134,4 +136,53 @@ void of_fixed_clk_setup(struct device_node *node)
- }
- EXPORT_SYMBOL_GPL(of_fixed_clk_setup);
- CLK_OF_DECLARE(fixed_clk, "fixed-clock", of_fixed_clk_setup);
+diff --git a/Documentation/devicetree/bindings/clock/specified-clock.txt b/Documentation/devicetree/bindings/clock/specified-clock.txt
+new file mode 100644
+index 0000000..4a8e5d3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/specified-clock.txt
+@@ -0,0 +1,37 @@
++Binding for discoverable-fixed-rate clock sources.
 +
-+/**
-+ * of_specified_clk_setup() - Setup function for discoverable fixed rate clock
-+ */
-+void of_specified_clk_setup(struct device_node *node)
-+{
-+	struct clk *clk;
-+	const char *clk_name = node->name;
-+	u32 shift, mask, rate, reg_val, val;
-+	void __iomem *reg;
-+	struct property *prop;
-+	const __be32 *p;
++This binding uses the common clock binding[1].
 +
-+	/* Iomap and read the configuration register */
-+	reg = of_iomap(node, 0);
-+	if (!reg)
-+		return;
-+	reg_val = readl(reg);
-+	iounmap(reg);
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
 +
-+	/* Apply bit-mask */
-+	if (of_property_read_u32(node, "bit-mask", &mask))
-+		return;
-+	reg_val &= mask;
-+	/* Apply bit-shift */
-+	if (of_property_read_u32(node, "bit-shift", &shift))
-+		shift = ffs(mask) - 1;
-+	reg_val >>= shift;
++Required properties:
++- compatible : shall be "specified-clock".
++- #clock-cells : from common clock binding; shall be set to 0.
++- reg : Base address of configuration register specifying the frequency.
++- bit-mask : Mask of bits in the field specifying the frequency.
++- table : array of integer pairs defining register field values and
++  corresponding clock frequencies in Hz.
 +
-+	/* Look through the mapping for a matching frequency */
-+	of_property_for_each_u32(node, "table", prop, p, val) {
-+		p = of_prop_next_u32(prop, p, &rate);
-+		if (!p)
-+			break;
-+		if (val == reg_val)
-+			goto found_rate;
-+	}
-+	/* No match found */
-+	return;
-+found_rate:
++Optional properties:
++- bit-shift : Number of bits to shift the masked register value,
++  defaults to (ffs(bit-mask) - 1) if absent.
++- clock-output-names : From common clock binding.
 +
-+	of_property_read_string(node, "clock-output-names", &clk_name);
-+
-+	clk = clk_register_fixed_rate(NULL, clk_name, NULL, CLK_IS_ROOT, rate);
-+	if (!IS_ERR(clk))
-+		of_clk_add_provider(node, of_clk_src_simple_get, clk);
-+}
-+EXPORT_SYMBOL_GPL(of_specified_clk_setup);
-+CLK_OF_DECLARE(specified_clk, "specified-clock", of_specified_clk_setup);
- #endif
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index be21af1..7e5c1d3 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -257,6 +257,7 @@ struct clk *clk_register_fixed_rate_with_accuracy(struct device *dev,
- 		unsigned long fixed_rate, unsigned long fixed_accuracy);
- 
- void of_fixed_clk_setup(struct device_node *np);
-+void of_specified_clk_setup(struct device_node *np);
- 
- /**
-  * struct clk_gate - gating clock
++Example:
++	clock {
++		compatible = "specified-clock";
++		#clock-cells = <0>;
++		reg = <0x02004004 0x4>;		/* CR_PERIP_RESET_CFG */
++		bit-mask = <0x00000f00>;	/* FXTAL */
++		table =	/*	FXTAL	Frequency */
++				<0	16384000>,
++				<1	19200000>,
++				<2	24000000>,
++				<3	24576000>,
++				<4	26000000>,
++				<5	36000000>,
++				<6	36864000>,
++				<7	38400000>,
++				<8	40000000>;
++		clock-output-names = "xtal1";
++	};
 -- 
 2.0.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
