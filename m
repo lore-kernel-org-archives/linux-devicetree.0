@@ -1,185 +1,177 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/4] simplefb: Change simplefb_init from
- module_init to fs_initcall
-Date: Tue, 18 Nov 2014 16:28:47 +0100
-Message-ID: <20141118152847.GG6414@lukather>
-References: <1415830124-28787-1-git-send-email-hdegoede@redhat.com>
- <1415830124-28787-3-git-send-email-hdegoede@redhat.com>
- <20141113085238.GE20972@lukather>
- <CAMuHMdXZ4V4GHvyDLOP8FYvPuGArc5G0aO6NCE9FKHT24YRGPg@mail.gmail.com>
- <20141118101911.GA15769@ulmo>
- <546B26F4.50302@redhat.com>
- <20141118112123.GA3873@ulmo>
- <546B31A7.9020804@redhat.com>
- <546B3F3C.6050202@redhat.com>
- <20141118151603.GA19426@ulmo>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/6] mfd: arizona: add support for WM8280/WM8281
+Date: Tue, 18 Nov 2014 15:41:02 +0000
+Message-ID: <20141118154102.GA13959@x1>
+References: <1415901046-3391-1-git-send-email-rf@opensource.wolfsonmicro.com>
+ <1415901046-3391-2-git-send-email-rf@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5CFHAhYDCN3kIKuu"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB7GLVWRQKGQE7PYXE3Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20141118151603.GA19426@ulmo>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1415901046-3391-2-git-send-email-rf@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Cc: lgirdwood@gmail.com, myungjoo.ham@samsung.com, cw00.choi@samsung.com, linus.walleij@linaro.org, gnurou@gmail.com, broonie@kernel.org, tiwai@suse.de, perex@perex.cz, sameo@linux.intel.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, ckeepax@opensource.wolfsonmicro.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com, linux-gpio@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
---5CFHAhYDCN3kIKuu
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On Thu, 13 Nov 2014, Richard Fitzgerald wrote:
 
-On Tue, Nov 18, 2014 at 04:16:04PM +0100, Thierry Reding wrote:
-> On Tue, Nov 18, 2014 at 01:44:44PM +0100, Hans de Goede wrote:
-> > Hi,
-> > 
-> > On 11/18/2014 12:46 PM, Hans de Goede wrote:
-> > > Hi,
-> > > 
-> > > On 11/18/2014 12:21 PM, Thierry Reding wrote:
-> > >> On Tue, Nov 18, 2014 at 12:01:08PM +0100, Hans de Goede wrote:
-> > >>> Hi,
-> > >>>
-> > >>> On 11/18/2014 11:19 AM, Thierry Reding wrote:
-> > >>>> On Thu, Nov 13, 2014 at 09:58:41AM +0100, Geert Uytterhoeven wrote:
-> > >>>>> Hi Maxime,
-> > >>>>>
-> > >>>>> On Thu, Nov 13, 2014 at 9:52 AM, Maxime Ripard
-> > >>>>> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > >>>>>>> -module_init(simplefb_init);
-> > >>>>>>> +/*
-> > >>>>>>> + * While this can be a module, if builtin it's most likely the console
-> > >>>>>>> + * So let's leave module_exit but move module_init to an earlier place
-> > >>>>>>> + */
-> > >>>>>>
-> > >>>>>> Not really related to this patch itself, but do we want to support
-> > >>>>>> simplefb as a module? It seems like it's going to be most of the time
-> > >>>>>> broken.
-> > >>>>>
-> > >>>>> If it depends on clocks, it won't work as a module, as CCF will have disabled
-> > >>>>> all unused clocks at that point.
-> > >>>>
-> > >>>> If it does depend on anything beyond clocks it won't work at all. Clocks
-> > >>>> are special because they get set up very early at boot time. If it turns
-> > >>>> out that a simplefb ever needs a regulator to remain on, and that's even
-> > >>>> quite likely to happen eventually, it's going to fail miserably, because
-> > >>>> those regulators will typically be provided by a PMIC on an I2C bus. The
-> > >>>> regulator won't be registered until very late into the boot process and
-> > >>>> a regulator_get() call will almost certainly cause the simplefb driver
-> > >>>> to defer probing.
-> > >>>
-> > >>> Right, this has been discussed already and the plan is to have simplefb
-> > >>> continue its probe function and return success from it if it encounters
-> > >>> any -eprobe_defer errors, while tracking which resources it misses.
-> > >>>
-> > >>> And then have a late_initcall which will claim any resources which failed
-> > >>> with -eprobe beforehand.
-> > >>
-> > >> How do you ensure that the late_initcall gets run before any of the
-> > >> other late_initcalls that disable the resources?
-> > > 
-> > >> Also my recollection is
-> > >> that deferred probing will first be triggered the first time from a
-> > >> late_initcall, so chances aren't very high that all resources have shown
-> > >> up by that time.
-> > > 
-> > > So I just looked up the relevant code, and your right, this means that
-> > > the whole model of "disable unused resources once probing is done" which
-> > > we use for e.g. clocks, is already somewhat broken since there is
-> > > no guarantee probing is really done when the cleanup code runs.
-> > > 
-> > >>>> Now deferring probing is a real showstopper for simplefb, because not
-> > >>>> only does it make the framebuffer useless as early boot console, once
-> > >>>> probing is attempted again the clocks that it would have needed to
-> > >>>> acquire to keep going will already have been switched off, too.
-> > >>>
-> > >>> That is not true, even with the current implementation, if all necessary
-> > >>> drivers are built in, then simplefb will come up later, but it will still
-> > >>> come up before the late_initcall which disables the clocks.
-> > >>
-> > >> Yes, in the current implementation because clocks typically are
-> > >> registered very early and thus you don't hit the deferred probe. The
-> > >> same is not true for other types of resources where it's actually quite
-> > >> common to hit deferred probing (regulators is a very notorious one).
-> > >>
-> > >> It doesn't matter whether a driver is built-in or not, once you hit
-> > >> deferred probing you lose.
-> > >>
-> > >>> Once we do the split probing described above (which is something which
-> > >>> we plan to do when it becomes necessary), then simplefb will still come
-> > >>> up early.
-> > >>
-> > >> It will come up early but won't have acquired all the resources that it
-> > >> needs, so unless you somehow manage to order late_initcalls in exactly
-> > >> the way that you need them, the frameworks will still turn off what you
-> > >> haven't managed to claim yet.
-> > > 
-> > > If it is a resource which only shows up as a result of deferred probing,
-> > > then it may very well not have been probed & registered yet, when the
-> > > framework cleanup functions runs, and thus will not get turned off...
-> > > 
-> > > So yes you're right that deferred probing may cause issues, but it seems
-> > > that this is not something simplefb specific, but rather a generic problem
-> > > with deferred-probing vs subsys cleanup functions.
-> > > 
-> > > My view on this is simple, lets worry about this when we actually have
-> > > a board which hits these issues, and then we'll see from there.
-> > 
-> > So thinking more about this, I think this is not that hard to fix.
-> > 
-> > First lets fix the generic conflict between eprobedefer and subsys cleanup
-> > functions. This can be done by:
-> > 
-> > 1) Having a linked list of subsys cleanup functions
-> > to call in drivers/base/dd.c
-> > 
-> > 2) Have subsystems register their cleanup function rather then using
-> > late_initcall to get it called
-> > 
-> > 3) Have deferred_probe_work_func iterate over the list and call the cleanup
-> > functions once deferred_probe_active_list goes empty. It should also remove
-> > them once called, so that they only get called the first time
-> > deferred_probe_active_list goes empty (iow when the deferred probing of'
-> > build-in drivers is done).
-> > 
-> > This way cleanup functions actually get run when all probing of (buildin)
-> > drivers is done.
-> 
-> That sounds like a reasonable solution to me.
-> 
-> > Then when we move simplefb to a 2 fase probe, we can simply register the
-> > framebuffer at the first probe call, and claim any resources we get, but
-> > return -eprobe_defer if some resources returned that themselves.
-> > 
-> > Then when simplefb_probe gets re-called, it can first check if it did not
-> > already register a fb, and if it did, it can use that and see which
-> > resources are missing, and only try to claim those. If some resources
-> > still return probe_defer, return eprobe_defer again, otherwise success.
-> 
-> I'm not sure you can check that the fb was already registered. When the
-> driver probe fails the driver core will pretty much remove any trace of
-> the driver, so checking for an already-reagistered framebuffer isn't
-> going to be easy.
-> 
-> But if you can manage to make that work it should give us a pretty good
-> solution that should be easy to make use of by other drivers as well.
+> This adds support for the Wolfson Microelectronics
+> WM8280 and WM8281 codecs.
+>=20
+> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+> ---
+>  drivers/mfd/Kconfig              |    5 +++--
+>  drivers/mfd/arizona-core.c       |   14 ++++++++++++--
+>  drivers/mfd/arizona-i2c.c        |    2 ++
+>  drivers/mfd/arizona-irq.c        |    1 +
+>  drivers/mfd/arizona-spi.c        |    2 ++
+>  include/linux/mfd/arizona/core.h |    1 +
+>  6 files changed, 21 insertions(+), 4 deletions(-)
 
-What about handling priorities in the suggested cleanup mechanism, and
-just add the second phase as the highest priority cleanup callback?
+Patch looks fine.  Can I just take it?
 
-That way, we would be guaranteed to be run just before any cleanup
-function.
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index abef204..e00a90f 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1236,10 +1236,11 @@ config MFD_WM5102
+>  	  Support for Wolfson Microelectronics WM5102 low power audio SoC
+> =20
+>  config MFD_WM5110
+> -	bool "Wolfson Microelectronics WM5110"
+> +	bool "Wolfson Microelectronics WM5110 and WM8280/WM8281"
+>  	depends on MFD_ARIZONA
+>  	help
+> -	  Support for Wolfson Microelectronics WM5110 low power audio SoC
+> +	  Support for Wolfson Microelectronics WM5110 and WM8280/WM8281
+> +	  low power audio SoC
+> =20
+>  config MFD_WM8997
+>  	bool "Wolfson Microelectronics WM8997"
+> diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+> index bce7c07..6e6b732 100644
+> --- a/drivers/mfd/arizona-core.c
+> +++ b/drivers/mfd/arizona-core.c
+> @@ -567,6 +567,7 @@ static int arizona_of_get_core_pdata(struct arizo=
+na *arizona)
+>  const struct of_device_id arizona_of_match[] =3D {
+>  	{ .compatible =3D "wlf,wm5102", .data =3D (void *)WM5102 },
+>  	{ .compatible =3D "wlf,wm5110", .data =3D (void *)WM5110 },
+> +	{ .compatible =3D "wlf,wm8280", .data =3D (void *)WM8280 },
+>  	{ .compatible =3D "wlf,wm8997", .data =3D (void *)WM8997 },
+>  	{},
+>  };
+> @@ -671,6 +672,7 @@ int arizona_dev_init(struct arizona *arizona)
+>  	switch (arizona->type) {
+>  	case WM5102:
+>  	case WM5110:
+> +	case WM8280:
+>  	case WM8997:
+>  		for (i =3D 0; i < ARRAY_SIZE(wm5102_core_supplies); i++)
+>  			arizona->core_supplies[i].supply
+> @@ -834,11 +836,18 @@ int arizona_dev_init(struct arizona *arizona)
+>  #endif
+>  #ifdef CONFIG_MFD_WM5110
+>  	case 0x5110:
+> -		type_name =3D "WM5110";
+> -		if (arizona->type !=3D WM5110) {
+> +		switch (arizona->type) {
+> +		case WM5110:
+> +			type_name =3D "WM5110";
+> +			break;
+> +		case WM8280:
+> +			type_name =3D "WM8280";
+> +			break;
+> +		default:
+>  			dev_err(arizona->dev, "WM5110 registered as %d\n",
+>  				arizona->type);
+>  			arizona->type =3D WM5110;
+> +			break;
+>  		}
+>  		apply_patch =3D wm5110_patch;
+>  		break;
+> @@ -1010,6 +1019,7 @@ int arizona_dev_init(struct arizona *arizona)
+>  				      ARRAY_SIZE(wm5102_devs), NULL, 0, NULL);
+>  		break;
+>  	case WM5110:
+> +	case WM8280:
+>  		ret =3D mfd_add_devices(arizona->dev, -1, wm5110_devs,
+>  				      ARRAY_SIZE(wm5110_devs), NULL, 0, NULL);
+>  		break;
+> diff --git a/drivers/mfd/arizona-i2c.c b/drivers/mfd/arizona-i2c.c
+> index 9d4156f..ff782a5 100644
+> --- a/drivers/mfd/arizona-i2c.c
+> +++ b/drivers/mfd/arizona-i2c.c
+> @@ -44,6 +44,7 @@ static int arizona_i2c_probe(struct i2c_client *i2c=
+,
+>  #endif
+>  #ifdef CONFIG_MFD_WM5110
+>  	case WM5110:
+> +	case WM8280:
+>  		regmap_config =3D &wm5110_i2c_regmap;
+>  		break;
+>  #endif
+> @@ -87,6 +88,7 @@ static int arizona_i2c_remove(struct i2c_client *i2=
+c)
+>  static const struct i2c_device_id arizona_i2c_id[] =3D {
+>  	{ "wm5102", WM5102 },
+>  	{ "wm5110", WM5110 },
+> +	{ "wm8280", WM8280 },
+>  	{ "wm8997", WM8997 },
+>  	{ }
+>  };
+> diff --git a/drivers/mfd/arizona-irq.c b/drivers/mfd/arizona-irq.c
+> index 3a3fe7c..d063b94 100644
+> --- a/drivers/mfd/arizona-irq.c
+> +++ b/drivers/mfd/arizona-irq.c
+> @@ -211,6 +211,7 @@ int arizona_irq_init(struct arizona *arizona)
+>  #endif
+>  #ifdef CONFIG_MFD_WM5110
+>  	case WM5110:
+> +	case WM8280:
+>  		aod =3D &wm5110_aod;
+> =20
+>  		switch (arizona->rev) {
+> diff --git a/drivers/mfd/arizona-spi.c b/drivers/mfd/arizona-spi.c
+> index 5145d78..721b93f 100644
+> --- a/drivers/mfd/arizona-spi.c
+> +++ b/drivers/mfd/arizona-spi.c
+> @@ -44,6 +44,7 @@ static int arizona_spi_probe(struct spi_device *spi=
+)
+>  #endif
+>  #ifdef CONFIG_MFD_WM5110
+>  	case WM5110:
+> +	case WM8280:
+>  		regmap_config =3D &wm5110_spi_regmap;
+>  		break;
+>  #endif
+> @@ -82,6 +83,7 @@ static int arizona_spi_remove(struct spi_device *sp=
+i)
+>  static const struct spi_device_id arizona_spi_ids[] =3D {
+>  	{ "wm5102", WM5102 },
+>  	{ "wm5110", WM5110 },
+> +	{ "wm8280", WM8280 },
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(spi, arizona_spi_ids);
+> diff --git a/include/linux/mfd/arizona/core.h b/include/linux/mfd/ari=
+zona/core.h
+> index 910e3aa..f970105 100644
+> --- a/include/linux/mfd/arizona/core.h
+> +++ b/include/linux/mfd/arizona/core.h
+> @@ -24,6 +24,7 @@ enum arizona_type {
+>  	WM5102 =3D 1,
+>  	WM5110 =3D 2,
+>  	WM8997 =3D 3,
+> +	WM8280 =3D 4,
+>  };
+> =20
+>  #define ARIZONA_IRQ_GP1                    0
 
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---5CFHAhYDCN3kIKuu--
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
