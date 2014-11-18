@@ -1,92 +1,354 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 3/6] mfd: ti_am335x_tscadc: Remove unwanted
- reg_se_cache save
-Date: Tue, 18 Nov 2014 14:30:05 +0000
-Message-ID: <20141118143005.GF24004@x1>
-References: <1415941651-28962-1-git-send-email-vigneshr@ti.com>
- <1415941651-28962-4-git-send-email-vigneshr@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: [PATCHv4 1/1] thermal: of: improve of-thermal sensor registration API
+Date: Tue, 18 Nov 2014 10:39:35 -0400
+Message-ID: <1416321575-18348-2-git-send-email-edubezval@gmail.com>
+References: <1416321575-18348-1-git-send-email-edubezval@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1415941651-28962-4-git-send-email-vigneshr@ti.com>
+In-Reply-To: <1416321575-18348-1-git-send-email-edubezval@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, richardcochran@gmail.com, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Samuel Ortiz <sameo@linux.intel.com>, Felipe Balbi <balbi@ti.com>, Brad Griffis <bgriffis@ti.com>, Sanjeev Sharma <sanjeev_sharma@mentor.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Jan Kardell <jan.kardell@telliq.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: Caesar Wang <caesar.wang@rock-chips.com>, Wei Ni <wni@nvidia.com>, Lukasz Majewski <l.majewski@samsung.com>, Mikko Perttunen <mikko.perttunen@kapsi.fi>, Eduardo Valentin <edubezval@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.de>, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, lm-sensors@lm-sensors.org, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Zhang Rui <rui.zhang@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 14 Nov 2014, Vignesh R wrote:
+Different drivers request API extensions in of-thermal. For this reason,
+additional callbacks are required to fit the new drivers needs.
 
-> In one shot mode, sequencer automatically disables all enabled steps =
-at
-> the end of each cycle. (both ADC steps and TSC steps) Hence these ste=
-ps
-> need not be saved in reg_se_cache for clearing these steps at a later
-> stage.
-> Also, when ADC wakes up Sequencer should not be busy executing any of=
- the
-> config steps except for the charge step. Previously charge step was 1=
- ADC
-> clock cycle and hence it was ignored.
->=20
-> Signed-off-by: Vignesh R <vigneshr@ti.com>
-> ---
->  drivers/mfd/ti_am335x_tscadc.c       | 7 +++++--
->  include/linux/mfd/ti_am335x_tscadc.h | 1 +
->  2 files changed, 6 insertions(+), 2 deletions(-)
+The current API implementation expects the registering sensor driver
+to provide a get_temp and get_trend callbacks as function parameters.
+As the amount of callbacks is growing, this patch changes the existing
+implementation to use a .ops field to hold all the of thermal callbacks
+to sensor drivers.
 
-Code looks better now.
+This patch also changes the existing of-thermal users to fit the new
+API design. No functional change is introduced in this patch.
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>
+Cc: devicetree@vger.kernel.org
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Jean Delvare <jdelvare@suse.de>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+Cc: linux-tegra@vger.kernel.org
+Cc: lm-sensors@lm-sensors.org
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: Zhang Rui <rui.zhang@intel.com>
+Reviewed-by: Lukasz Majewski <l.majewski@samsung.com>
+Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
+---
+ drivers/hwmon/lm75.c                               |  9 +++--
+ drivers/hwmon/ntc_thermistor.c                     |  6 +++-
+ drivers/hwmon/tmp102.c                             |  6 +++-
+ drivers/thermal/of-thermal.c                       | 40 ++++++++++------------
+ drivers/thermal/tegra_soctherm.c                   |  7 ++--
+ drivers/thermal/ti-soc-thermal/ti-thermal-common.c |  8 +++--
+ include/linux/thermal.h                            | 24 +++++++++----
+ 7 files changed, 63 insertions(+), 37 deletions(-)
+---
+Difference from V3:
+  - Keep the same behavior regarding callback checks.
+    Change in behavior may be sent in a separate patch.
+Difference from V2:
+  - Fix wrong assignment in tegra driver.
+Difference from V1:
+  - Fix error handling when .get_trend is not provided.
 
-What's the plan for this series?
-
-> diff --git a/drivers/mfd/ti_am335x_tscadc.c b/drivers/mfd/ti_am335x_t=
-scadc.c
-> index d877e777cce6..110038859a8d 100644
-> --- a/drivers/mfd/ti_am335x_tscadc.c
-> +++ b/drivers/mfd/ti_am335x_tscadc.c
-> @@ -86,8 +86,12 @@ static void am335x_tscadc_need_adc(struct ti_tscad=
-c_dev *tsadc)
->  		spin_lock_irq(&tsadc->reg_lock);
->  		finish_wait(&tsadc->reg_se_wait, &wait);
-> =20
-> +		/*
-> +		 * Sequencer should either be idle or
-> +		 * busy applying the charge step.
-> +		 */
->  		reg =3D tscadc_readl(tsadc, REG_ADCFSM);
-> -		WARN_ON(reg & SEQ_STATUS);
-> +		WARN_ON((reg & SEQ_STATUS) && !(reg & CHARGE_STEP));
->  		tsadc->adc_waiting =3D false;
->  	}
->  	tsadc->adc_in_use =3D true;
-> @@ -96,7 +100,6 @@ static void am335x_tscadc_need_adc(struct ti_tscad=
-c_dev *tsadc)
->  void am335x_tsc_se_set_once(struct ti_tscadc_dev *tsadc, u32 val)
->  {
->  	spin_lock_irq(&tsadc->reg_lock);
-> -	tsadc->reg_se_cache |=3D val;
->  	am335x_tscadc_need_adc(tsadc);
-> =20
->  	tscadc_writel(tsadc, REG_SE, val);
-> diff --git a/include/linux/mfd/ti_am335x_tscadc.h b/include/linux/mfd=
-/ti_am335x_tscadc.h
-> index 3f4e994ace2b..1fd50dcfe47c 100644
-> --- a/include/linux/mfd/ti_am335x_tscadc.h
-> +++ b/include/linux/mfd/ti_am335x_tscadc.h
-> @@ -128,6 +128,7 @@
-> =20
->  /* Sequencer Status */
->  #define SEQ_STATUS BIT(5)
-> +#define CHARGE_STEP		0x11
-> =20
->  #define ADC_CLK			3000000
->  #define TOTAL_STEPS		16
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+diff --git a/drivers/hwmon/lm75.c b/drivers/hwmon/lm75.c
+index d16dbb3..e7c8bf9 100644
+--- a/drivers/hwmon/lm75.c
++++ b/drivers/hwmon/lm75.c
+@@ -176,6 +176,10 @@ static struct attribute *lm75_attrs[] = {
+ };
+ ATTRIBUTE_GROUPS(lm75);
+ 
++static const struct thermal_zone_of_device_ops lm75_of_thermal_ops = {
++	.get_temp = lm75_read_temp,
++};
++
+ /*-----------------------------------------------------------------------*/
+ 
+ /* device probe and removal */
+@@ -291,10 +295,9 @@ lm75_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 	if (IS_ERR(data->hwmon_dev))
+ 		return PTR_ERR(data->hwmon_dev);
+ 
+-	data->tz = thermal_zone_of_sensor_register(data->hwmon_dev,
+-						   0,
++	data->tz = thermal_zone_of_sensor_register(data->hwmon_dev, 0,
+ 						   data->hwmon_dev,
+-						   lm75_read_temp, NULL);
++						   &lm75_of_thermal_ops);
+ 	if (IS_ERR(data->tz))
+ 		data->tz = NULL;
+ 
+diff --git a/drivers/hwmon/ntc_thermistor.c b/drivers/hwmon/ntc_thermistor.c
+index 4ff89b2..bca8521c8 100644
+--- a/drivers/hwmon/ntc_thermistor.c
++++ b/drivers/hwmon/ntc_thermistor.c
+@@ -486,6 +486,10 @@ static const struct attribute_group ntc_attr_group = {
+ 	.attrs = ntc_attributes,
+ };
+ 
++static const struct thermal_zone_of_device_ops ntc_of_thermal_ops = {
++	.get_temp = ntc_read_temp,
++};
++
+ static int ntc_thermistor_probe(struct platform_device *pdev)
+ {
+ 	const struct of_device_id *of_id =
+@@ -579,7 +583,7 @@ static int ntc_thermistor_probe(struct platform_device *pdev)
+ 								pdev_id->name);
+ 
+ 	data->tz = thermal_zone_of_sensor_register(data->dev, 0, data->dev,
+-						ntc_read_temp, NULL);
++						   &ntc_of_thermal_ops);
+ 	if (IS_ERR(data->tz)) {
+ 		dev_dbg(&pdev->dev, "Failed to register to thermal fw.\n");
+ 		data->tz = NULL;
+diff --git a/drivers/hwmon/tmp102.c b/drivers/hwmon/tmp102.c
+index 5171995..ba9f478 100644
+--- a/drivers/hwmon/tmp102.c
++++ b/drivers/hwmon/tmp102.c
+@@ -158,6 +158,10 @@ ATTRIBUTE_GROUPS(tmp102);
+ #define TMP102_CONFIG  (TMP102_CONF_TM | TMP102_CONF_EM | TMP102_CONF_CR1)
+ #define TMP102_CONFIG_RD_ONLY (TMP102_CONF_R0 | TMP102_CONF_R1 | TMP102_CONF_AL)
+ 
++static const struct thermal_zone_of_device_ops tmp102_of_thermal_ops = {
++	.get_temp = tmp102_read_temp,
++};
++
+ static int tmp102_probe(struct i2c_client *client,
+ 				  const struct i2c_device_id *id)
+ {
+@@ -215,7 +219,7 @@ static int tmp102_probe(struct i2c_client *client,
+ 	}
+ 	tmp102->hwmon_dev = hwmon_dev;
+ 	tmp102->tz = thermal_zone_of_sensor_register(hwmon_dev, 0, hwmon_dev,
+-						     tmp102_read_temp, NULL);
++						     &tmp102_of_thermal_ops);
+ 	if (IS_ERR(tmp102->tz))
+ 		tmp102->tz = NULL;
+ 
+diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
+index f8eb625..e87ccdb 100644
+--- a/drivers/thermal/of-thermal.c
++++ b/drivers/thermal/of-thermal.c
+@@ -30,6 +30,7 @@
+ #include <linux/err.h>
+ #include <linux/export.h>
+ #include <linux/string.h>
++#include <linux/thermal.h>
+ 
+ #include "thermal_core.h"
+ 
+@@ -77,8 +78,7 @@ struct __thermal_bind_params {
+  * @num_tbps: number of thermal bind params
+  * @tbps: an array of thermal bind params (0..num_tbps - 1)
+  * @sensor_data: sensor private data used while reading temperature and trend
+- * @get_temp: sensor callback to read temperature
+- * @get_trend: sensor callback to read temperature trend
++ * @ops: set of callbacks to handle the thermal zone based on DT
+  */
+ 
+ struct __thermal_zone {
+@@ -96,8 +96,7 @@ struct __thermal_zone {
+ 
+ 	/* sensor interface */
+ 	void *sensor_data;
+-	int (*get_temp)(void *, long *);
+-	int (*get_trend)(void *, long *);
++	const struct thermal_zone_of_device_ops *ops;
+ };
+ 
+ /***   DT thermal zone device callbacks   ***/
+@@ -107,10 +106,10 @@ static int of_thermal_get_temp(struct thermal_zone_device *tz,
+ {
+ 	struct __thermal_zone *data = tz->devdata;
+ 
+-	if (!data->get_temp)
++	if (!data->ops->get_temp)
+ 		return -EINVAL;
+ 
+-	return data->get_temp(data->sensor_data, temp);
++	return data->ops->get_temp(data->sensor_data, temp);
+ }
+ 
+ static int of_thermal_get_trend(struct thermal_zone_device *tz, int trip,
+@@ -120,10 +119,10 @@ static int of_thermal_get_trend(struct thermal_zone_device *tz, int trip,
+ 	long dev_trend;
+ 	int r;
+ 
+-	if (!data->get_trend)
++	if (!data->ops->get_trend)
+ 		return -EINVAL;
+ 
+-	r = data->get_trend(data->sensor_data, &dev_trend);
++	r = data->ops->get_trend(data->sensor_data, &dev_trend);
+ 	if (r)
+ 		return r;
+ 
+@@ -324,8 +323,7 @@ static struct thermal_zone_device_ops of_thermal_ops = {
+ static struct thermal_zone_device *
+ thermal_zone_of_add_sensor(struct device_node *zone,
+ 			   struct device_node *sensor, void *data,
+-			   int (*get_temp)(void *, long *),
+-			   int (*get_trend)(void *, long *))
++			   const struct thermal_zone_of_device_ops *ops)
+ {
+ 	struct thermal_zone_device *tzd;
+ 	struct __thermal_zone *tz;
+@@ -336,9 +334,11 @@ thermal_zone_of_add_sensor(struct device_node *zone,
+ 
+ 	tz = tzd->devdata;
+ 
++	if (!ops)
++		return ERR_PTR(-EINVAL);
++
+ 	mutex_lock(&tzd->lock);
+-	tz->get_temp = get_temp;
+-	tz->get_trend = get_trend;
++	tz->ops = ops;
+ 	tz->sensor_data = data;
+ 
+ 	tzd->ops->get_temp = of_thermal_get_temp;
+@@ -356,8 +356,8 @@ thermal_zone_of_add_sensor(struct device_node *zone,
+  *             than one sensors
+  * @data: a private pointer (owned by the caller) that will be passed
+  *        back, when a temperature reading is needed.
+- * @get_temp: a pointer to a function that reads the sensor temperature.
+- * @get_trend: a pointer to a function that reads the sensor temperature trend.
++ * @ops: struct thermal_zone_of_device *. Must contain at least .get_trend and
++ *       .get_temp.
+  *
+  * This function will search the list of thermal zones described in device
+  * tree and look for the zone that refer to the sensor device pointed by
+@@ -382,9 +382,8 @@ thermal_zone_of_add_sensor(struct device_node *zone,
+  * check the return value with help of IS_ERR() helper.
+  */
+ struct thermal_zone_device *
+-thermal_zone_of_sensor_register(struct device *dev, int sensor_id,
+-				void *data, int (*get_temp)(void *, long *),
+-				int (*get_trend)(void *, long *))
++thermal_zone_of_sensor_register(struct device *dev, int sensor_id, void *data,
++				const struct thermal_zone_of_device_ops *ops)
+ {
+ 	struct device_node *np, *child, *sensor_np;
+ 
+@@ -424,9 +423,7 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id,
+ 		if (sensor_specs.np == sensor_np && id == sensor_id) {
+ 			of_node_put(np);
+ 			return thermal_zone_of_add_sensor(child, sensor_np,
+-							  data,
+-							  get_temp,
+-							  get_trend);
++							  data, ops);
+ 		}
+ 	}
+ 	of_node_put(np);
+@@ -468,8 +465,7 @@ void thermal_zone_of_sensor_unregister(struct device *dev,
+ 	tzd->ops->get_temp = NULL;
+ 	tzd->ops->get_trend = NULL;
+ 
+-	tz->get_temp = NULL;
+-	tz->get_trend = NULL;
++	tz->ops = NULL;
+ 	tz->sensor_data = NULL;
+ 	mutex_unlock(&tzd->lock);
+ }
+diff --git a/drivers/thermal/tegra_soctherm.c b/drivers/thermal/tegra_soctherm.c
+index 70f7e9e..9197fc0 100644
+--- a/drivers/thermal/tegra_soctherm.c
++++ b/drivers/thermal/tegra_soctherm.c
+@@ -317,6 +317,10 @@ static int tegra_thermctl_get_temp(void *data, long *out_temp)
+ 	return 0;
+ }
+ 
++static const struct thermal_zone_of_device_ops tegra_of_thermal_ops = {
++	.get_temp = tegra_thermctl_get_temp,
++};
++
+ static const struct of_device_id tegra_soctherm_of_match[] = {
+ 	{ .compatible = "nvidia,tegra124-soctherm" },
+ 	{ },
+@@ -416,8 +420,7 @@ static int tegra_soctherm_probe(struct platform_device *pdev)
+ 		zone->shift = t124_thermctl_temp_zones[i].shift;
+ 
+ 		tz = thermal_zone_of_sensor_register(&pdev->dev, i, zone,
+-						     tegra_thermctl_get_temp,
+-						     NULL);
++						     &tegra_of_thermal_ops);
+ 		if (IS_ERR(tz)) {
+ 			err = PTR_ERR(tz);
+ 			dev_err(&pdev->dev, "failed to register sensor: %d\n",
+diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+index 9eec26d..5fd0386 100644
+--- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
++++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+@@ -286,6 +286,11 @@ static int ti_thermal_get_crit_temp(struct thermal_zone_device *thermal,
+ 	return ti_thermal_get_trip_temp(thermal, OMAP_TRIP_NUMBER - 1, temp);
+ }
+ 
++static const struct thermal_zone_of_device_ops ti_of_thermal_ops = {
++	.get_temp = __ti_thermal_get_temp,
++	.get_trend = __ti_thermal_get_trend,
++};
++
+ static struct thermal_zone_device_ops ti_thermal_ops = {
+ 	.get_temp = ti_thermal_get_temp,
+ 	.get_trend = ti_thermal_get_trend,
+@@ -333,8 +338,7 @@ int ti_thermal_expose_sensor(struct ti_bandgap *bgp, int id,
+ 
+ 	/* in case this is specified by DT */
+ 	data->ti_thermal = thermal_zone_of_sensor_register(bgp->dev, id,
+-					data, __ti_thermal_get_temp,
+-					__ti_thermal_get_trend);
++					data, &ti_of_thermal_ops);
+ 	if (IS_ERR(data->ti_thermal)) {
+ 		/* Create thermal zone */
+ 		data->ti_thermal = thermal_zone_device_register(domain,
+diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+index ef90838..b565964 100644
+--- a/include/linux/thermal.h
++++ b/include/linux/thermal.h
+@@ -289,19 +289,31 @@ struct thermal_genl_event {
+ 	enum events event;
+ };
+ 
++/**
++ * struct thermal_zone_of_device_ops - scallbacks for handling DT based zones
++ *
++ * Mandatory:
++ * @get_temp: a pointer to a function that reads the sensor temperature.
++ *
++ * Optional:
++ * @get_trend: a pointer to a function that reads the sensor temperature trend.
++ */
++struct thermal_zone_of_device_ops {
++	int (*get_temp)(void *, long *);
++	int (*get_trend)(void *, long *);
++};
++
+ /* Function declarations */
+ #ifdef CONFIG_THERMAL_OF
+ struct thermal_zone_device *
+-thermal_zone_of_sensor_register(struct device *dev, int id,
+-				void *data, int (*get_temp)(void *, long *),
+-				int (*get_trend)(void *, long *));
++thermal_zone_of_sensor_register(struct device *dev, int id, void *data,
++				const struct thermal_zone_of_device_ops *);
+ void thermal_zone_of_sensor_unregister(struct device *dev,
+ 				       struct thermal_zone_device *tz);
+ #else
+ static inline struct thermal_zone_device *
+-thermal_zone_of_sensor_register(struct device *dev, int id,
+-				void *data, int (*get_temp)(void *, long *),
+-				int (*get_trend)(void *, long *))
++thermal_zone_of_sensor_register(struct device *dev, int id, void *data,
++				const struct thermal_zone_of_device_ops *)
+ {
+ 	return NULL;
+ }
+-- 
+2.1.3
