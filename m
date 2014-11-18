@@ -1,49 +1,60 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8 13/13] ARM: dts: berlin: enable USB on the Google Chromecast
-Date: Tue, 18 Nov 2014 20:38:26 +0100
-Message-ID: <546BA032.1000903@gmail.com>
-References: <1416231347-27193-1-git-send-email-antoine.tenart@free-electrons.com> <1416231347-27193-14-git-send-email-antoine.tenart@free-electrons.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416231347-27193-14-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Subject: [PATCH 2/5] pwm: push up dynamic printk level on errors in of_pwm_get()
+Date: Tue, 18 Nov 2014 21:38:40 +0200
+Message-ID: <1416339523-7967-2-git-send-email-vladimir_zapolskiy@mentor.com>
+References: <1416339438-7867-1-git-send-email-vladimir_zapolskiy@mentor.com>
+ <1416339523-7967-1-git-send-email-vladimir_zapolskiy@mentor.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1416339523-7967-1-git-send-email-vladimir_zapolskiy@mentor.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17.11.2014 14:35, Antoine Tenart wrote:
-> From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> Enable usb1 on Google Chromecast which is connected to micro-USB
-> plug used for external power supply, too.
->
-> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+The changed three user messages on fault are printed under pr_debug(),
+however all of them are unrecoverable and result in failed pwm device
+registration, report this to a user.
 
-Applied to berlin/dt.
+Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Cc: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>
+---
+ drivers/pwm/core.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Thanks!
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index 681d154..f6231c6 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -532,19 +532,19 @@ struct pwm_device *of_pwm_get(struct device_node =
+*np, const char *con_id)
+ 	err =3D of_parse_phandle_with_args(np, "pwms", "#pwm-cells", index,
+ 					 &args);
+ 	if (err) {
+-		pr_debug("%s(): can't parse \"pwms\" property\n", __func__);
++		pr_err("%s(): can't parse \"pwms\" property\n", __func__);
+ 		return ERR_PTR(err);
+ 	}
+=20
+ 	pc =3D of_node_to_pwmchip(args.np);
+ 	if (IS_ERR(pc)) {
+-		pr_debug("%s(): PWM chip not found\n", __func__);
++		pr_err("%s(): PWM chip not found\n", __func__);
+ 		pwm =3D ERR_CAST(pc);
+ 		goto put;
+ 	}
+=20
+ 	if (args.args_count !=3D pc->of_pwm_n_cells) {
+-		pr_debug("%s: wrong #pwm-cells for %s\n", np->full_name,
++		pr_err("%s: wrong #pwm-cells for %s\n", np->full_name,
+ 			 args.np->full_name);
+ 		pwm =3D ERR_PTR(-EINVAL);
+ 		goto put;
+--=20
+1.7.10.4
 
-> ---
->   arch/arm/boot/dts/berlin2cd-google-chromecast.dts | 4 ++++
->   1 file changed, 4 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
-> index bcd81ffc495d..5c42c3bfb613 100644
-> --- a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
-> +++ b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
-> @@ -27,3 +27,7 @@
->   };
->
->   &uart0 { status = "okay"; };
-> +
-> +&usb_phy1 { status = "okay"; };
-> +
-> +&usb1 { status = "okay"; };
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
