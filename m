@@ -1,58 +1,112 @@
-From: James Hartley <james.hartley@imgtec.com>
-Subject: [PATCH V2 2/2] Documentation: crypto: Add DT binding info for the img hw hash accelerator
-Date: Tue, 18 Nov 2014 20:48:47 +0000
-Message-ID: <1416343727-2178-3-git-send-email-james.hartley@imgtec.com>
-References: <1416343727-2178-1-git-send-email-james.hartley@imgtec.com>
+From: Thor Thayer <tthayer@opensource.altera.com>
+Subject: [RESEND PATCHv5 5/5] arm: dts: Add Altera L2 Cache and OCRAM EDAC
+Date: Tue, 18 Nov 2014 14:56:26 -0600
+Message-ID: <546BB27A.20405@opensource.altera.com>
+References: <1415751263-1830-1-git-send-email-tthayer@opensource.altera.com> <1415751263-1830-6-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <1416343727-2178-1-git-send-email-james.hartley@imgtec.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: herbert@gondor.apana.org.au, davem@davemloft.net, grant.likely@linaro.org, robh+dt@kernel.org, gregkh@linuxfoundation.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Ezequiel.Garcia@imgtec.com, abrestic@chromium.org, james.hartley@imgtec.com
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1415751263-1830-6-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This adds the binding documenation for the Imagination Technologies
-hash accelerator that provides hardware acceleration for
-SHA1/SHA224/SHA256/MD5 hashes.  This hardware will be present in
-the upcoming pistachio SoC.
+Hi all,
 
-Signed-off-by: James Hartley <james.hartley@imgtec.com>
----
- .../devicetree/bindings/crypto/img-hash.txt        |   26 ++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/crypto/img-hash.txt
+On 11/11/2014 06:14 PM, tthayer@opensource.altera.com wrote:
+> From: Thor Thayer<tthayer@opensource.altera.com>
+>
+> Adding the device tree entries and bindings needed to support
+> the Altera L2 cache and On-Chip RAM EDAC. This patch relies upon
+> an earlier patch to declare and setup On-chip RAM properly.
+> http://www.spinics.net/lists/devicetree/msg51117.html
 
-diff --git a/Documentation/devicetree/bindings/crypto/img-hash.txt b/Documentation/devicetree/bindings/crypto/img-hash.txt
-new file mode 100644
-index 0000000..72764a8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/crypto/img-hash.txt
-@@ -0,0 +1,26 @@
-+* Imagination Technologies Ltd. Hash Accelerator
-+
-+The hash accelerator provides hardware hashing acceleration for
-+SHA1, SHA224, SHA256 and MD5 hashes
-+
-+Required properties:
-+
-+- compatible : "img,hash-accelerator"
-+- reg : Offset and length of the register set for the module, and the DMA port
-+- interrupts : The designated IRQ line for the hashing module.
-+- dmas : DMA specifier as per Documentation/devicetree/bindings/dma/dma.txt
-+- dma-names : Should be "tx"
-+- clocks : Clock specifier
-+- clock-names : "hash_clk" Used to clock data through the accelerator
-+
-+Example:
-+
-+	hash: hash@18149600 {
-+	compatible = "img,hash-accelerator";
-+		reg = <0x18149600 0x100, 0x18101100 0x4>;
-+		interrupts = <59 4 2>;
-+		dmas = <&dma 8 0xffffffff>;
-+		dma-names = "tx";
-+		clocks = <&hash_clk>;
-+		clock-names = "hash_clk";
-+	};
--- 
-1.7.9.5
+Any comments on these devicetree additions?
+
+Thanks,
+Thor
+> Signed-off-by: Thor Thayer<tthayer@opensource.altera.com>
+> ---
+> v2: Remove OCRAM declaration and reference prior patch.
+>
+> v3-5: No Change
+> ---
+>   .../bindings/arm/altera/socfpga-l2-edac.txt        |   15 +++++++++++++++
+>   .../bindings/arm/altera/socfpga-ocram-edac.txt     |   16 ++++++++++++++++
+>   arch/arm/boot/dts/socfpga.dtsi                     |   15 ++++++++++++++-
+>   3 files changed, 45 insertions(+), 1 deletion(-)
+>   create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
+>   create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
+>
+> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
+> new file mode 100644
+> index 0000000..35b19e3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
+> @@ -0,0 +1,15 @@
+> +Altera SoCFPGA L2 cache Error Detection and Correction [EDAC]
+> +
+> +Required Properties:
+> +- compatible : Should be "altr,l2-edac"
+> +- reg : Address and size for ECC error interrupt clear registers.
+> +- interrupts : Should be single bit error interrupt, then double bit error
+> +	interrupt. Note the rising edge type.
+> +
+> +Example:
+> +
+> +	l2edac@ffd08140 {
+> +		compatible = "altr,l2-edac";
+> +		reg = <0xffd08140 0x4>;
+> +		interrupts = <0 36 1>, <0 37 1>;
+> +	};
+> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
+> new file mode 100644
+> index 0000000..31ab205
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
+> @@ -0,0 +1,16 @@
+> +Altera SoCFPGA On-Chip RAM Error Detection and Correction [EDAC]
+> +
+> +OCRAM ECC Required Properties:
+> +- compatible : Should be "altr,ocram-edac"
+> +- reg : Address and size for ECC error interrupt clear registers.
+> +- iram : phandle to On-Chip RAM definition.
+> +- interrupts : Should be single bit error interrupt, then double bit error
+> +	interrupt. Note the rising edge type.
+> +
+> +Example:
+> +	ocramedac@ffd08144 {
+> +		compatible = "altr,ocram-edac";
+> +		reg = <0xffd08144 0x4>;
+> +		iram = <&ocram>;
+> +		interrupts = <0 178 1>, <0 179 1>;
+> +	};
+> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> index 6af96ed..32c63a3 100644
+> --- a/arch/arm/boot/dts/socfpga.dtsi
+> +++ b/arch/arm/boot/dts/socfpga.dtsi
+> @@ -618,8 +618,21 @@
+>   			interrupts = <0 39 4>;
+>   		};
+>   
+> +		l2edac@ffd08140 {
+> +			compatible = "altr,l2-edac";
+> +			reg = <0xffd08140 0x4>;
+> +			interrupts = <0 36 1>, <0 37 1>;
+> +		};
+> +
+> +		ocramedac@ffd08144 {
+> +			compatible = "altr,ocram-edac";
+> +			reg = <0xffd08144 0x4>;
+> +			iram = <&ocram>;
+> +			interrupts = <0 178 1>, <0 179 1>;
+> +		};
+> +
+>   		L2: l2-cache@fffef000 {
+> -			compatible = "arm,pl310-cache";
+> +			compatible = "arm,pl310-cache", "syscon";
+>   			reg = <0xfffef000 0x1000>;
+>   			interrupts = <0 38 0x04>;
+>   			cache-unified;
