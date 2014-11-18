@@ -1,158 +1,109 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [RFC] adp1653: Add device tree bindings for LED controller
-Date: Tue, 18 Nov 2014 17:02:14 +0100
-Message-ID: <546B6D86.8090701@samsung.com>
-References: <20141116075928.GA9763@amd>
- <20141117145857.GO8907@valkosipuli.retiisi.org.uk>
- <546AFEA5.9020000@samsung.com> <20141118084603.GC4059@amd>
- <546B19C8.2090008@samsung.com> <20141118113256.GA10022@amd>
- <546B40FA.2070409@samsung.com> <20141118132159.GA21089@amd>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20141118132159.GA21089@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>, pali.rohar@gmail.com, sre@debian.org, sre@ring0.de, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, freemangordon@abv.bg, bcousson@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, Linux LED Subsystem <linux-leds@vger.kernel.org>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of/platform: Move platform devices
+ =?iso-8859-1?Q?under=0D?= /sys/devices/platform
+Date: Tue, 18 Nov 2014 16:10:38 +0000
+Message-ID: <20141118161038.192B7C40966@trevor.secretlab.ca>
+References: <1415097920-30014-1-git-send-email-grant.likely@linaro.org>
+	<546B2123.7060406@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <546B2123.7060406-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
+On Tue, 18 Nov 2014 11:36:19 +0100
+, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+ wrote:
+> On 11/04/2014 11:45 AM, Grant Likely wrote:
+> > Currently the devices created by drivers/of/platform.c get created at
+> > the root of /sys/devices. This goes against the typical pattern for
+> > sysfs where the top level /sys/devices structure contains categories of
+> > devices, and the structure of devices is placed below that. To fix this,
+> > make the code in drivers/of/platform.c follow the drivers/base/platform.c
+> > behaviour, and use &platform_bus as the default parent for all new
+> > platform_devices and amba_devices.
+> > 
+> > This change has been discussed for a long time, but nobody has actually
+> > acted on it. Userspace code that expects to find devices under a fixed
+> > /sys/devices/... path will be affected. It isn't /supposed/ to do that,
+> > but if anyone complains then I'll add a default-off workaround option to
+> > put them back into the root.
+> 
+> One of side effects of this change is that platform drivers registering
+> other platform drivers or devices in their probe callback can deadlock
+> due to double device_lock on platform device. This is for example case
+> of exynos_drm driver[1]. I guess it could/should be fixed in exynos_drm.
+> Anyway it can affect other drivers as well. At least grep shows few
+> possible candidates:
 
-On 11/18/2014 02:21 PM, Pavel Machek wrote:
-> Hi!
->
->>>>> @@ -19,5 +30,10 @@ Examples:
->>>>>   system-status {
->>>>>   	       label = "Status";
->>>>>   	       linux,default-trigger = "heartbeat";
->>>>> +	       iout-torch = <500 500>;
->>>>> +	       iout-flash = <1000 1000>;
->>>>> +	       iout-indicator = <100 100>;
->>>>> +	       flash-timeout = <1000>;
->>>>> +
->>>>> 	...
->>>>>   };
->>>>>
->>>>> I don't get it; system-status describes single LED, why are iout-torch
->>>>> (and friends) arrays of two?
->>>>
->>>> Some devices can control more than one led. The array is for such
->>>> purposes. The system-status should be probably renamed to
->>>> something more generic for both common leds and flash leds,
->>>> e.g. system-led.
->>>
->>> No, sorry. The Documentation/devicetree/bindings/leds/common.txt
->>> describes binding for _one LED_. Yes, your device can have two leds,
->>> so your devices should have two such blocks in the device tree... Each
->>> led should have its own label and default trigger, for example. And I
->>> guess flash-timeout be per-LED, too.
->>
->> I think that a device tree binding describes a single physical device.
->> No matter how many sub-leds a device controls, it is still one
->> piece of hardware.
->
-> You got this wrong, sorry.
->
-> In my case, there are three physical devices:
->
-> adp1653
-> 	white LED
-> 	red LED
+What on earth is that driver doing registering additional drivers in the
+probe hook?!? That's madness, and should be treated as a bug.
 
-You've mentioned that your white led is torch/flash and indicator
-is the red led. They are probably connected to the HPLED and
-ILED pins of the ADP1653 device respectively. The device is just
-a regulator, that delivers electric current to the leds connected
-to it. Kernel cannot directly activate leds, but has to talk
-to the device through I2C bus. One I2C device can have only one
-related device tree binding.
+g.
 
-> Each LED should have an label, and probably default trigger -- default
-> trigger for red one should be "we are recording video" and for white
-> should be "this is flash for default camera".
+> 
+> $ git grep -p platform_driver_register | grep -A1 -P '_probe\(struct
+> platform_device'
+> 
+> drivers/gpu/drm/exynos/exynos_drm_drv.c=static int
+> exynos_drm_platform_probe(struct platform_device *pdev)
+> drivers/gpu/drm/exynos/exynos_drm_drv.c:	ret =
+> platform_driver_register(&fimd_driver);
+> --
+> drivers/gpu/drm/sti/sti_drm_drv.c=static int
+> sti_drm_platform_probe(struct platform_device *pdev)
+> drivers/gpu/drm/sti/sti_drm_drv.c:
+> platform_driver_register(&sti_drm_master_driver);
+> --
+> drivers/mtd/nand/atmel_nand.c=static int atmel_nand_probe(struct
+> platform_device *pdev)
+> drivers/mtd/nand/atmel_nand.c:	res =
+> platform_driver_register(&atmel_nand_nfc_driver);
+> 
+> 
+> [1]: http://permalink.gmane.org/gmane.comp.video.dri.devel/117727
+> 
+> Regards
+> Andrzej
+> 
+> 
+> > 
+> > Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> > Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+> > Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+> > ---
+> >  drivers/of/platform.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> > index 3b64d0bf5bba..7c6771986c06 100644
+> > --- a/drivers/of/platform.c
+> > +++ b/drivers/of/platform.c
+> > @@ -138,7 +138,7 @@ struct platform_device *of_device_alloc(struct device_node *np,
+> >  	}
+> >  
+> >  	dev->dev.of_node = of_node_get(np);
+> > -	dev->dev.parent = parent;
+> > +	dev->dev.parent = parent ? : &platform_bus;
+> >  
+> >  	if (bus_id)
+> >  		dev_set_name(&dev->dev, "%s", bus_id);
+> > @@ -291,7 +291,7 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+> >  
+> >  	/* setup generic device info */
+> >  	dev->dev.of_node = of_node_get(node);
+> > -	dev->dev.parent = parent;
+> > +	dev->dev.parent = parent ? : &platform_bus;
+> >  	dev->dev.platform_data = platform_data;
+> >  	if (bus_id)
+> >  		dev_set_name(&dev->dev, "%s", bus_id);
+> > 
+> 
 
-default-trigger is not mandatory, the device doesn't have to have
-associated led-trigger. I think that you should look at
-Documentation/leds/leds-class.txt and drivers/leds/triggers for
-more detailed information. In a nutshell triggers are kernel
-sources of led events. You can set e.g. "heartbeat", "timer"
-trigger etc.
-As for now the driver belongs to the V4L2 subsystem it doesn't
-support triggers. Moreover your event "we are recording a video"
-should be activated by setting V4L2_CID_FLASH_INDICATOR_INTENSITY
-v4l2 control followed by V4L2_FLASH_LED_MODE_TORCH. Your event
-"this is flash for default camera" seems to be flash strobe,
-that can be activated by setting V4L2_CID_FLASH_STROBE control.
-The driver by default sets the indicator current for both actions
-to the value previously set with V4L2_CID_FLASH_INDICATOR_INTENSITY.
-
-> If the hardware LED changes with one that needs different current, the
-> block for the adp1653 stays the same, but white LED block should be
-> updated with different value.
-
-I think that you are talking about sub nodes. Indeed I am leaning
-towards this type of design.
-
->> default-trigger property should also be an array of strings.
->
-> That is not how it currently works.
-
-OK, I agree.
-
->
->> I agree that flash-timeout should be per led - an array, similarly
->> as in case of iout's.
->
-> Agreed about per-led, disagreed about the array. As all the fields
-> would need arrays, and as LED system currently does not use arrays for
-> label and linux,default-trigger, I believe we should follow existing
-> design and model it as three devices. (It _is_ physically three devices.)
-
-Right, I missed that the leds/common.txt describes child node.
-
-I propose following modifications to the binding:
-
-Optional properties for child nodes:
-- iout-mode-led : 	maximum intensity in microamperes of the LED
-		  	(torch LED for flash devices)
-- iout-mode-flash : 	initial intensity in microamperes of the
-			flash LED; it is required to enable support
-			for the flash led
-- iout-mode-indicator : initial intensity in microamperes of the
-			indicator LED; it is required to enable support
-			for the indicator led
-- max-iout-mode-led : 	maximum intensity in microamperes of the LED
-		  	(torch LED for flash devices)
-- max-iout-mode-flash : maximum intensity in microamperes of the
-			flash LED
-- max-iout-mode-indicator : maximum intensity in microamperes of the
-			indicator LED
-- flash-timeout :	timeout in microseconds after which flash
-			led is turned off
-
-system-status {
-         label = "max77693_1";
-         iout-mode-led = <500>;
-         max-iout-mode-led = <500>;
-         ...
-};
-
-camera-flash1 {
-         label = "max77693_2";
-         iout-mode-led = <500>;
-         iout-mode-flash = <1000>;
-	iout-mode-indicator = <100>;
-         max-iout-mode-led = <500>;
-         max-iout-mode-flash = <1000>;
-         max-iout-mode-indicator = <100>;
-         flash-timeout = <1000>;
-         ...
-};
-
-
-I propose to avoid name "torch", as for ordinary leds it would
-be misleading.
-
-Regards,
-Jacek
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
