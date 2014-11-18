@@ -1,66 +1,156 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: [PATCH v5 08/14] ARM: tegra: Add EMC to Tegra124 device tree
-Date: Tue, 18 Nov 2014 13:13:10 +0100
-Message-ID: <1416312860-4446-9-git-send-email-tomeu.vizoso@collabora.com>
-References: <1416312860-4446-1-git-send-email-tomeu.vizoso@collabora.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 3/4] simplefb: Change simplefb_init from
+ module_init to fs_initcall
+Date: Tue, 18 Nov 2014 13:44:44 +0100
+Message-ID: <546B3F3C.6050202@redhat.com>
+References: <1415830124-28787-1-git-send-email-hdegoede@redhat.com> <1415830124-28787-3-git-send-email-hdegoede@redhat.com> <20141113085238.GE20972@lukather> <CAMuHMdXZ4V4GHvyDLOP8FYvPuGArc5G0aO6NCE9FKHT24YRGPg@mail.gmail.com> <20141118101911.GA15769@ulmo> <546B26F4.50302@redhat.com> <20141118112123.GA3873@ulmo> <546B31A7.9020804@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1416312860-4446-1-git-send-email-tomeu.vizoso@collabora.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-tegra@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Mikko Perttunen <mperttunen@nvidia.com>, mikko.perttunen@kapsi.fi, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, acourbot@nvidia.com, Kumar Gala <galak@codeaurora.org>, Thierry Reding <thierry.reding@gmail.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBR76VSRQKGQE4FH5AWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <546B31A7.9020804-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Mikko Perttunen <mperttunen@nvidia.com>
+Hi,
 
-This adds a node for the EMC memory controller. It is always enabled, but only
-provides read-only functionality without board-specific timing tables.
+On 11/18/2014 12:46 PM, Hans de Goede wrote:
+> Hi,
+> 
+> On 11/18/2014 12:21 PM, Thierry Reding wrote:
+>> On Tue, Nov 18, 2014 at 12:01:08PM +0100, Hans de Goede wrote:
+>>> Hi,
+>>>
+>>> On 11/18/2014 11:19 AM, Thierry Reding wrote:
+>>>> On Thu, Nov 13, 2014 at 09:58:41AM +0100, Geert Uytterhoeven wrote:
+>>>>> Hi Maxime,
+>>>>>
+>>>>> On Thu, Nov 13, 2014 at 9:52 AM, Maxime Ripard
+>>>>> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>>>>>>> -module_init(simplefb_init);
+>>>>>>> +/*
+>>>>>>> + * While this can be a module, if builtin it's most likely the console
+>>>>>>> + * So let's leave module_exit but move module_init to an earlier place
+>>>>>>> + */
+>>>>>>
+>>>>>> Not really related to this patch itself, but do we want to support
+>>>>>> simplefb as a module? It seems like it's going to be most of the time
+>>>>>> broken.
+>>>>>
+>>>>> If it depends on clocks, it won't work as a module, as CCF will have disabled
+>>>>> all unused clocks at that point.
+>>>>
+>>>> If it does depend on anything beyond clocks it won't work at all. Clocks
+>>>> are special because they get set up very early at boot time. If it turns
+>>>> out that a simplefb ever needs a regulator to remain on, and that's even
+>>>> quite likely to happen eventually, it's going to fail miserably, because
+>>>> those regulators will typically be provided by a PMIC on an I2C bus. The
+>>>> regulator won't be registered until very late into the boot process and
+>>>> a regulator_get() call will almost certainly cause the simplefb driver
+>>>> to defer probing.
+>>>
+>>> Right, this has been discussed already and the plan is to have simplefb
+>>> continue its probe function and return success from it if it encounters
+>>> any -eprobe_defer errors, while tracking which resources it misses.
+>>>
+>>> And then have a late_initcall which will claim any resources which failed
+>>> with -eprobe beforehand.
+>>
+>> How do you ensure that the late_initcall gets run before any of the
+>> other late_initcalls that disable the resources?
+> 
+>> Also my recollection is
+>> that deferred probing will first be triggered the first time from a
+>> late_initcall, so chances aren't very high that all resources have shown
+>> up by that time.
+> 
+> So I just looked up the relevant code, and your right, this means that
+> the whole model of "disable unused resources once probing is done" which
+> we use for e.g. clocks, is already somewhat broken since there is
+> no guarantee probing is really done when the cleanup code runs.
+> 
+>>>> Now deferring probing is a real showstopper for simplefb, because not
+>>>> only does it make the framebuffer useless as early boot console, once
+>>>> probing is attempted again the clocks that it would have needed to
+>>>> acquire to keep going will already have been switched off, too.
+>>>
+>>> That is not true, even with the current implementation, if all necessary
+>>> drivers are built in, then simplefb will come up later, but it will still
+>>> come up before the late_initcall which disables the clocks.
+>>
+>> Yes, in the current implementation because clocks typically are
+>> registered very early and thus you don't hit the deferred probe. The
+>> same is not true for other types of resources where it's actually quite
+>> common to hit deferred probing (regulators is a very notorious one).
+>>
+>> It doesn't matter whether a driver is built-in or not, once you hit
+>> deferred probing you lose.
+>>
+>>> Once we do the split probing described above (which is something which
+>>> we plan to do when it becomes necessary), then simplefb will still come
+>>> up early.
+>>
+>> It will come up early but won't have acquired all the resources that it
+>> needs, so unless you somehow manage to order late_initcalls in exactly
+>> the way that you need them, the frameworks will still turn off what you
+>> haven't managed to claim yet.
+> 
+> If it is a resource which only shows up as a result of deferred probing,
+> then it may very well not have been probed & registered yet, when the
+> framework cleanup functions runs, and thus will not get turned off...
+> 
+> So yes you're right that deferred probing may cause issues, but it seems
+> that this is not something simplefb specific, but rather a generic problem
+> with deferred-probing vs subsys cleanup functions.
+> 
+> My view on this is simple, lets worry about this when we actually have
+> a board which hits these issues, and then we'll see from there.
 
-Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
-Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+So thinking more about this, I think this is not that hard to fix.
 
----
+First lets fix the generic conflict between eprobedefer and subsys cleanup
+functions. This can be done by:
 
-v5: Add a phandle to the CAR node that points to the EMC node
----
- arch/arm/boot/dts/tegra124.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+1) Having a linked list of subsys cleanup functions
+to call in drivers/base/dd.c
 
-diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
-index 43f71d8..1c8b941 100644
---- a/arch/arm/boot/dts/tegra124.dtsi
-+++ b/arch/arm/boot/dts/tegra124.dtsi
-@@ -207,6 +207,7 @@
- 		reg = <0x0 0x60006000 0x0 0x1000>;
- 		#clock-cells = <1>;
- 		#reset-cells = <1>;
-+		nvidia,external-memory-controller = <&emc>;
- 	};
- 
- 	flow-controller@0,60007000 {
-@@ -569,6 +570,13 @@
- 		#iommu-cells = <1>;
- 	};
- 
-+	emc: emc@0,7001b000 {
-+		compatible = "nvidia,tegra124-emc";
-+		reg = <0x0 0x7001b000 0x0 0x1000>;
-+
-+		nvidia,memory-controller = <&mc>;
-+	};
-+
- 	sata@0,70020000 {
- 		compatible = "nvidia,tegra124-ahci";
- 
--- 
-1.9.3
+2) Have subsystems register their cleanup function rather then using
+late_initcall to get it called
+
+3) Have deferred_probe_work_func iterate over the list and call the cleanup
+functions once deferred_probe_active_list goes empty. It should also remove
+them once called, so that they only get called the first time
+deferred_probe_active_list goes empty (iow when the deferred probing of'
+build-in drivers is done).
+
+This way cleanup functions actually get run when all probing of (buildin)
+drivers is done.
+
+Then when we move simplefb to a 2 fase probe, we can simply register the
+framebuffer at the first probe call, and claim any resources we get, but
+return -eprobe_defer if some resources returned that themselves.
+
+Then when simplefb_probe gets re-called, it can first check if it did not
+already register a fb, and if it did, it can use that and see which
+resources are missing, and only try to claim those. If some resources
+still return probe_defer, return eprobe_defer again, otherwise success.
+
+This way simplefb_probe will get called as long as resources are missing
+and other drivers are successfully completing deferred probes (if no
+driver successfully completes a deferred probe, deferred_probe_active_list
+will go empty).
+
+And then when the subsys cleanup functions run, simplefb will have been
+able to claim any resources registered by buildin drivers.
+
+Regards,
+
+Hans
