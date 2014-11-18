@@ -1,53 +1,107 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 2/5] regulator: s2mps11: Add support S2MPS13 regulator
- device
-Date: Tue, 18 Nov 2014 17:41:15 +0900
-Message-ID: <546B062B.3060406@samsung.com>
-References: <1416184980-532-1-git-send-email-cw00.choi@samsung.com>
- <1416184980-532-3-git-send-email-cw00.choi@samsung.com>
- <20141118081757.GS24004@x1>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [RFC] adp1653: Add device tree bindings for LED controller
+Date: Tue, 18 Nov 2014 09:46:03 +0100
+Message-ID: <20141118084603.GC4059@amd>
+References: <20141116075928.GA9763@amd>
+ <20141117145857.GO8907@valkosipuli.retiisi.org.uk>
+ <546AFEA5.9020000@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20141118081757.GS24004@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: broonie@kernel.org, mturquette@linaro.org, a.zummo@towertech.it, lgirdwood@gmail.com, sbkim73@samsung.com, sameo@linux.intel.com, geunsik.lim@samsung.com, inki.dae@samsung.com, kyungmin.park@samsung.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <546AFEA5.9020000-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org, sre-GFxCN5SEZAc@public.gmane.org, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, freemangordon-uiMcrn6V0Vs@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Lee,
+On Tue 2014-11-18 09:09:09, Jacek Anaszewski wrote:
+> Hi Pavel, Sakari,
+> 
+> On 11/17/2014 03:58 PM, Sakari Ailus wrote:
+> >Hi Pavel,
+> >
+> >On Sun, Nov 16, 2014 at 08:59:28AM +0100, Pavel Machek wrote:
+> >>For device tree people: Yes, I know I'll have to create file in
+> >>documentation, but does the binding below look acceptable?
+> >>
+> >>I'll clean up driver code a bit more, remove the printks. Anything
+> >>else obviously wrong?
+> >
+> >Jacek Anaszewski is working on flash support for LED devices. I think it'd
+> >be good to sync the DT bindings for the two, as the types of devices
+> >supported by the LED API and the V4L2 flash API are quite similar.
+> >
+> >Cc Jacek.
+> 
+> I've already submitted a patch [1] that updates leds common bindings.
+> I hasn't been merged yet, as the related LED Flash class patch [2]
+> still needs some indicator leds related discussion [3].
+> 
+> I think this is a good moment to discuss the flash related led common
+> bindings.
 
-On 11/18/2014 05:17 PM, Lee Jones wrote:
-> On Mon, 17 Nov 2014, Chanwoo Choi wrote:
-> 
->> This patch adds S2MPS13 regulator device to existing S2MPS11 device driver.
->> The S2MPS13 has just different number of regulators from S2MPS14.
->> The S2MPS13 regulator device includes LDO[1-40] and BUCK[1-10].
->>
->> Cc: Mark Brown <broonie@kernel.org>
->> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->> ---
->>  drivers/mfd/sec-core.c              |  13 +++
->>  drivers/regulator/Kconfig           |  10 +-
->>  drivers/regulator/s2mps11.c         | 102 +++++++++++++++++++-
->>  include/linux/mfd/samsung/core.h    |   1 +
->>  include/linux/mfd/samsung/s2mps13.h | 186 ++++++++++++++++++++++++++++++++++++
-> 
-> For my reference:
-> 
-> Acked-by: Lee Jones <lee.jones@linaro.org>
-> 
-> I does this set need to go in all at once, or can it be broken up?
+Part of problem is that adp1653 is not regarded as "LED" device by
+current kernel driver.
 
-If possible, I think that this patchset would be better to apply it on same git-repo at once.
+> [1] http://www.spinics.net/lists/linux-leds/msg02121.html
 
-Best Regards,
-Chanwoo Choi
+@@ -3,6 +3,17 @@ Common leds properties.
+ Optional properties for child nodes:
+ - label : The label for this LED.  If omitted, the label is
+   taken from the node name (excluding the unit address).
++- iout-torch : Array of maximum intensities in microamperes of the
+ torch
++	led currents in order from sub-led 0 to N-1, where N is the
+ number
++	of torch sub-leds exposed by the device
++- iout-flash : Array of maximum intensities in microamperes of the
+ flash
++	led currents in order from sub-led 0 to N-1, where N is the
+ number
++	of flash sub-leds exposed by the device
++- iout-indicator : Array of maximum intensities in microamperes of
++  the indicator led currents in order from sub-led 0 to N-1,
++  where N is the number of indicator sub-leds exposed by the device
++- flash-timeout : timeout in microseconds after which flash led
++  is turned off
+ 
+ - linux,default-trigger :  This parameter, if present, is a
+     string defining the trigger assigned to the LED.  Current
+     triggers are:
+@@ -19,5 +30,10 @@ Examples:
+ system-status {
+ 	       label = "Status";
+ 	       linux,default-trigger = "heartbeat";
++	       iout-torch = <500 500>;
++	       iout-flash = <1000 1000>;
++	       iout-indicator = <100 100>;
++	       flash-timeout = <1000>;
++
+	...
+ };
 
-> 
->>  5 files changed, 304 insertions(+), 8 deletions(-)
->>  create mode 100644 include/linux/mfd/samsung/s2mps13.h
-> 
-> [...]
-> 
+I don't get it; system-status describes single LED, why are iout-torch
+(and friends) arrays of two?
+
+Also, at least on adp1653, these are actually two leds -- white and
+red. Torch and flash is white led, indicator is red led.
+
+> [2] http://www.spinics.net/lists/linux-media/msg83100.html
+> [3] http://www.spinics.net/lists/linux-leds/msg02472.html
+
+What device are you using for testing? Can you cc me on future
+patches?
+
+Why do we need complex "flash LED class" support, and where is the
+V4L2 glue?
+
+Best regards,
+									Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
