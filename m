@@ -1,114 +1,51 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/2] dt-bindings: simplefb-sunxi: Add sunxi
- simplefb extensions
-Date: Tue, 18 Nov 2014 09:15:34 +0100
-Message-ID: <546B0026.2010107@redhat.com>
-References: <1416224086-5698-1-git-send-email-hdegoede@redhat.com> <1416224086-5698-3-git-send-email-hdegoede@redhat.com> <20141117124721.GQ6414@lukather> <CACxGe6vqiC08sP+o3bduGfvUdwRtHm8+_7EdZccJjS86qVKvxQ@mail.gmail.com> <20141117155514.GU6414@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 2/5] regulator: s2mps11: Add support S2MPS13 regulator
+ device
+Date: Tue, 18 Nov 2014 08:17:57 +0000
+Message-ID: <20141118081757.GS24004@x1>
+References: <1416184980-532-1-git-send-email-cw00.choi@samsung.com>
+ <1416184980-532-3-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBL4AVSRQKGQEM3FQPQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20141117155514.GU6414@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1416184980-532-3-git-send-email-cw00.choi@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: broonie@kernel.org, mturquette@linaro.org, a.zummo@towertech.it, lgirdwood@gmail.com, sbkim73@samsung.com, sameo@linux.intel.com, geunsik.lim@samsung.com, inki.dae@samsung.com, kyungmin.park@samsung.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, 17 Nov 2014, Chanwoo Choi wrote:
 
-On 11/17/2014 04:55 PM, Maxime Ripard wrote:
-> On Mon, Nov 17, 2014 at 01:39:18PM +0000, Grant Likely wrote:
->> On Mon, Nov 17, 2014 at 12:47 PM, Maxime Ripard
->> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->>> On Mon, Nov 17, 2014 at 12:34:46PM +0100, Hans de Goede wrote:
->>>> If pre-filled framebuffer nodes are used, the firmware may need extra
->>>> properties to find the right node. This documents the properties to use
->>>> for this on sunxi platforms.
->>>>
->>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>> ---
->>>>  .../bindings/video/simple-framebuffer-sunxi.txt    | 33 ++++++++++++++++++++++
->>>>  1 file changed, 33 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt b/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
->>>> new file mode 100644
->>>> index 0000000..84ca264
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
->>>> @@ -0,0 +1,33 @@
->>>> +Sunxi specific Simple Framebuffer bindings
->>>> +
->>>> +This binding documents sunxi specific extensions to the simple-framebuffer
->>>> +bindings. The sunxi simplefb u-boot code relies on the devicetree containing
->>>> +pre-populated simplefb nodes.
->>>> +
->>>> +These extensions are intended so that u-boot can select the right node based
->>>> +on which pipeline and output is being used. As such they are solely intended
->>>> +for firmware / bootloader use, and the OS should ignore them.
->>>> +
->>>> +Required properties:
->>>> +- compatible: "sunxi,framebuffer"
->>>> +- sunxi,pipeline:
->>>> +  <0> for the de_be0 -> lcdc0 -> output pipeline
->>>> +  <1> for the de_be1 -> lcdc1 -> output pipeline
->>>> +- sunxi,output: One of: "hdmi", "lcd", "vga", and "composite"
->>>> +
->>>> +Example:
->>>> +
->>>> +chosen {
->>>> +     #address-cells = <1>;
->>>> +     #size-cells = <1>;
->>>> +     ranges;
->>>> +
->>>> +     framebuffer@0 {
->>>> +             compatible = "sunxi,framebuffer", "simple-framebuffer";
->>>> +             sunxi,pipeline = <0>;
->>>> +             sunxi,output = "hdmi";
->>>> +             clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
->>>> +                      <&ahb_gates 44>;
->>>
->>> If we're going that way, then maybe having to specify clock-names
->>> would be better in order to know which clock is what?
->>
->> I wouldn't go that way with this binding since the driver has no need
->> to differentiate between the clocks, and driver authors shouldn't be
->> encouraged to do so. The purpose of the clocks in this node is only
->> for itemizing dependencies, not for how to configure the clocks.
->> Firmware shouldn't care at all about the clocks list, it only needs to
->> find the correct pre-populated node to fill in and enable.
-> 
-> Well, if we want to play the "DT as an ABI" stuff, you have no
-> guarantee that in the future, simplefb will still be the driver bound
-> to "sunxi,framebuffer"
+> This patch adds S2MPS13 regulator device to existing S2MPS11 device d=
+river.
+> The S2MPS13 has just different number of regulators from S2MPS14.
+> The S2MPS13 regulator device includes LDO[1-40] and BUCK[1-10].
+>=20
+> Cc: Mark Brown <broonie@kernel.org>
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>  drivers/mfd/sec-core.c              |  13 +++
+>  drivers/regulator/Kconfig           |  10 +-
+>  drivers/regulator/s2mps11.c         | 102 +++++++++++++++++++-
+>  include/linux/mfd/samsung/core.h    |   1 +
+>  include/linux/mfd/samsung/s2mps13.h | 186 ++++++++++++++++++++++++++=
+++++++++++
 
-Huh? We do have that guarantee, or at least that a simplefb bindings
-compatible driver is, the "sunxi,framebuffer" bindings live in:
+=46or my reference:
 
-Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-With the filename already being a big hint, further more it states that:
+I does this set need to go in all at once, or can it be broken up?
 
-"This binding documents sunxi specific extensions to the simple-framebuffer
-bindings. The sunxi simplefb u-boot code relies on the devicetree containing
-pre-populated simplefb nodes.
+>  5 files changed, 304 insertions(+), 8 deletions(-)
+>  create mode 100644 include/linux/mfd/samsung/s2mps13.h
 
-These extensions are intended so that u-boot can select the right node based
-on which pipeline is being used. As such they are solely intended for
-firmware / bootloader use, and the OS should ignore them."
+[...]
 
-Which to me seems to guarantee that we're talking about a simple-framebuffer
-compatible node here. The scope of these extensions are very narrow, there
-only purpose is to allow the bootloader to find the right pre-populated simplefb
-node, everything else is specified by the simplefb bindings, not these
-extensions.
-
-Regards,
-
-Hans
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
