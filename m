@@ -1,141 +1,54 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [RFC] adp1653: Add device tree bindings for LED controller
-Date: Tue, 18 Nov 2014 11:04:56 +0100
-Message-ID: <546B19C8.2090008@samsung.com>
-References: <20141116075928.GA9763@amd>
- <20141117145857.GO8907@valkosipuli.retiisi.org.uk>
- <546AFEA5.9020000@samsung.com> <20141118084603.GC4059@amd>
+From: xudong chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] ARM: mediatek: Add driver for Mediatek I2C
+ controller
+Date: Tue, 18 Nov 2014 18:07:01 +0800
+Message-ID: <1416305221.4982.23.camel@mhfsdcap03>
+References: <1415078977-18374-1-git-send-email-xudong.chen@mediatek.com>
+	 <20141113183122.GH1275@katana> <1415934752.2152.58.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20141118084603.GC4059@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>, pali.rohar@gmail.com, sre@debian.org, sre@ring0.de, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, freemangordon@abv.bg, bcousson@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415934752.2152.58.camel@mhfsdcap03>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Nathan Chung <nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YH Chen <yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/18/2014 09:46 AM, Pavel Machek wrote:
-> On Tue 2014-11-18 09:09:09, Jacek Anaszewski wrote:
->> Hi Pavel, Sakari,
->>
->> On 11/17/2014 03:58 PM, Sakari Ailus wrote:
->>> Hi Pavel,
->>>
->>> On Sun, Nov 16, 2014 at 08:59:28AM +0100, Pavel Machek wrote:
->>>> For device tree people: Yes, I know I'll have to create file in
->>>> documentation, but does the binding below look acceptable?
->>>>
->>>> I'll clean up driver code a bit more, remove the printks. Anything
->>>> else obviously wrong?
->>>
->>> Jacek Anaszewski is working on flash support for LED devices. I think it'd
->>> be good to sync the DT bindings for the two, as the types of devices
->>> supported by the LED API and the V4L2 flash API are quite similar.
->>>
->>> Cc Jacek.
->>
->> I've already submitted a patch [1] that updates leds common bindings.
->> I hasn't been merged yet, as the related LED Flash class patch [2]
->> still needs some indicator leds related discussion [3].
->>
->> I think this is a good moment to discuss the flash related led common
->> bindings.
->
-> Part of problem is that adp1653 is not regarded as "LED" device by
-> current kernel driver.
+On Fri, 2014-11-14 at 11:12 +0800, xudong chen wrote:
+> On Thu, 2014-11-13 at 19:31 +0100, Wolfram Sang wrote:
+> > > MTK I2C HW has some limitation.
+> > > 1. If the i2c_msg number is more than one, STOP will be issued instead of
+> > > RS(Repeat Start) between each message.
+> > > 
+> > > 2. Mediatek I2C controller support WRRD(write then read) mode, in WRRD
+> > > mode the Repeat Start will be issued between 2 messages.
+> > > In this driver if 2 messages is first write then read, the driver will
+> > > combine 2 messages using Write-Read mode so the RS will be issued between
+> > > the 2 messages.
+> > > Ex: W/R/R, driver will combine first W/R and then R.
+> > > 
+> > > 3. Due to HW limitation, in this version the max transfer data length is 255
+> > > in one message.
+> > 
+> > This looks to me more like an SMBUS controller instead of I2C. Maybe you
+> > should populate smbus_xfer rather than master_xfer?
+> 
+> This is the HW limitation, we will try to workaround this in the
+> separate patch.
+> 
+Except limited RS and limited length support, our HW follow I2C protocol
+spec.
+The length is compatible with most I2C devices, only a few I2C devices
+need transfer more than 255 bytes.
+The future Mediatek IC will fix the RS and length limitation.
 
-It doesn't prevent us from keeping the flash devices related
-DT bindings unified across kernel subsystems. The DT bindings
-docs for the adp1653 could just provide a reference to the
-led/common.txt bindings. In the future, when LED Flash
-class will be merged, all the V4L2 Flash drivers might be
-moved to the LED subsystem to gain the LED subsystem support.
+Thanks!
+> 
+> 
 
->> [1] http://www.spinics.net/lists/linux-leds/msg02121.html
->
-> @@ -3,6 +3,17 @@ Common leds properties.
->   Optional properties for child nodes:
->   - label : The label for this LED.  If omitted, the label is
->     taken from the node name (excluding the unit address).
-> +- iout-torch : Array of maximum intensities in microamperes of the
->   torch
-> +	led currents in order from sub-led 0 to N-1, where N is the
->   number
-> +	of torch sub-leds exposed by the device
-> +- iout-flash : Array of maximum intensities in microamperes of the
->   flash
-> +	led currents in order from sub-led 0 to N-1, where N is the
->   number
-> +	of flash sub-leds exposed by the device
-> +- iout-indicator : Array of maximum intensities in microamperes of
-> +  the indicator led currents in order from sub-led 0 to N-1,
-> +  where N is the number of indicator sub-leds exposed by the device
-> +- flash-timeout : timeout in microseconds after which flash led
-> +  is turned off
->
->   - linux,default-trigger :  This parameter, if present, is a
->       string defining the trigger assigned to the LED.  Current
->       triggers are:
-> @@ -19,5 +30,10 @@ Examples:
->   system-status {
->   	       label = "Status";
->   	       linux,default-trigger = "heartbeat";
-> +	       iout-torch = <500 500>;
-> +	       iout-flash = <1000 1000>;
-> +	       iout-indicator = <100 100>;
-> +	       flash-timeout = <1000>;
-> +
-> 	...
->   };
->
-> I don't get it; system-status describes single LED, why are iout-torch
-> (and friends) arrays of two?
 
-Some devices can control more than one led. The array is for such
-purposes. The system-status should be probably renamed to
-something more generic for both common leds and flash leds,
-e.g. system-led.
-
-> Also, at least on adp1653, these are actually two leds -- white and
-> red. Torch and flash is white led, indicator is red led.
-
-Then you should define three properties:
-
-iout-torch = <[uA]>;
-iout-flash = <[uA]>;
-iout-indicator = <[uA]>;
-
-iout-torch and iout-flash properties would determine the current
-for the white led in the torch and flash modes respectively and
-the iout-indicator property would determine the current for
-the indicator led.
-
->> [2] http://www.spinics.net/lists/linux-media/msg83100.html
->> [3] http://www.spinics.net/lists/linux-leds/msg02472.html
->
-> What device are you using for testing? Can you cc me on future
-> patches?
-
-I am using max77693 [1] and aat1290 [2]. OK, I will add you on cc.
-
-> Why do we need complex "flash LED class" support, and where is the
-> V4L2 glue?
-
-The rationale for unification of the LED and V4L2 Flash API
-can be found in the discussion [3]. The glue is the v4l2-flash [4]
-module which exposes a sub-device, that controls a LED Flash class
-device with use of LED Flash class API.
-
-The v4l2-flash sub-device registers with v4l2-async API
-in a media device. Exemplary support for v4l2-flash
-sub-devices is added to the exynos4-is driver in the patch [5].
-
-Best Regards,
-Jacek Anaszewski
-
-[1] http://www.spinics.net/lists/linux-leds/msg02326.html
-[2] http://www.spinics.net/lists/linux-media/msg81079.html
-[3] http://www.spinics.net/lists/linux-media/msg69012.html
-[4] http://www.spinics.net/lists/linux-leds/msg02322.html
-[5] http://www.spinics.net/lists/linux-leds/msg02323.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
