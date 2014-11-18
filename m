@@ -1,39 +1,98 @@
-From: Beniamino Galvani <b.galvani@gmail.com>
-Subject: [PATCH v3 3/3] ARM: dts: meson: add IR receiver node
-Date: Tue, 18 Nov 2014 21:22:35 +0100
-Message-ID: <1416342155-26820-4-git-send-email-b.galvani@gmail.com>
-References: <1416342155-26820-1-git-send-email-b.galvani@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1416342155-26820-1-git-send-email-b.galvani@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <m.chehab@samsung.com>
-Cc: linux-media@vger.kernel.org, Carlo Caione <carlo@caione.org>, Sean Young <sean@mess.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jerry Cao <jerry.cao@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Beniamino Galvani <b.galvani@gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v9 2/9] qcom: spm: Add Subsystem Power Manager driver
+Date: Tue, 18 Nov 2014 12:28:24 -0800
+Message-ID: <546BABE8.2030406@codeaurora.org>
+References: <1414194024-55547-1-git-send-email-lina.iyer@linaro.org> <1414194024-55547-3-git-send-email-lina.iyer@linaro.org> <20141114224620.GD11808@codeaurora.org> <20141118165614.GB770@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20141118165614.GB770@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>
+Cc: daniel.lezcano@linaro.org, khilman@linaro.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds a node for the IR remote control receiver to the Amlogic
-Meson DTS.
+On 11/18/2014 08:56 AM, Lina Iyer wrote:
+> On Fri, Nov 14 2014 at 15:46 -0700, Stephen Boyd wrote:
+>> On 10/24, Lina Iyer wrote:
+>
+>>> +{
+>>> +    struct spm_driver_data *drv = this_cpu_ptr(&cpu_spm_drv);
+>>> +    u32 start_index;
+>>> +    u32 ctl_val;
+>>> +
+>>> +    if (!drv->available)
+>>> +        return -ENXIO;
+>>
+>> It would be nice if we didn't need this by only registering the
+>> cpuidle device for this CPU once we've initialized the SPM
+>> hardware.
+>>
+> I did explore it. It strays our cpuidle code away from the standard code
+> that we are trying to go towards with idle-states framework.
+>
+>
 
-Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
----
- arch/arm/boot/dts/meson.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+So fix the framework?
 
-diff --git a/arch/arm/boot/dts/meson.dtsi b/arch/arm/boot/dts/meson.dtsi
-index e6539ea..6a37f15 100644
---- a/arch/arm/boot/dts/meson.dtsi
-+++ b/arch/arm/boot/dts/meson.dtsi
-@@ -106,5 +106,12 @@
- 			clocks = <&clk81>;
- 			status = "disabled";
- 		};
-+
-+		ir_receiver: ir-receiver@c8100480 {
-+			compatible= "amlogic,meson6-ir";
-+			reg = <0xc8100480 0x20>;
-+			interrupts = <0 15 1>;
-+			status = "disabled";
-+		};
- 	};
- }; /* end of / */
+>>> +
+>>> +    /* Write the SPM sequences, first.. */
+>>> +    addr = drv->reg_base +
+>>> drv->reg_data->reg_offset[SPM_REG_SEQ_ENTRY];
+>>> +    seq_data = (const u32 *)drv->reg_data->seq;
+>>
+>> Why do we need a cast?
+>>
+> Compiler warns otherwise.
+>
+>
+
+How?
+
+$ cat main.c
+extern int magic(const void *d);
+
+struct m {
+        unsigned int data[2];
+};
+
+struct s {
+        const struct m *m;
+};
+
+static const struct m m = {
+        .data = { 0x345, 0x34},
+};
+
+static const struct s s = {
+        .m = &m,
+};
+
+int main()
+{
+        const unsigned int *d;
+        d = s.m->data;
+        return magic(d);
+}
+
+$ gcc -c main.c
+
+>
+>>> +        .of_match_table = spm_match_table,
+>>> +    },
+>>> +};
+>>> +
+>>> +module_platform_driver(spm_driver);
+>>
+>> MODULE_LICENSE()?
+>> MODULE_ALIAS()?
+>>
+> MODULE_DESCRIPTION() would work?
+>
+
+Sure, add them all please.
+
 -- 
-1.9.1
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
