@@ -1,400 +1,170 @@
-From: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Subject: [PATCHv4 10/10] arm: mvebu: add .dts file for Synology DS414
-Date: Wed, 19 Nov 2014 00:03:01 +0100
-Message-ID: <e7b419140c4b4102e82ffd264d27b7554e9ca65b.1416351426.git.arno@natisbad.org>
-References: <cover.1416351425.git.arno@natisbad.org>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] watchdog: ImgTec PDC Watchdog Timer Driver
+Date: Tue, 18 Nov 2014 15:06:50 -0800
+Message-ID: <CAL1qeaFb1K0eD-wnnQPhzN5z9KWaz9LoS7S=fx2d7kUhuYmU6A@mail.gmail.com>
+References: <1416312442-15688-1-git-send-email-Naidu.Tellapati@imgtec.com>
+	<1416312442-15688-2-git-send-email-Naidu.Tellapati@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1416351425.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1416312442-15688-2-git-send-email-Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <Ezequiel.Garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Naidu,
 
-Synology DS414 is a 4-bay NAS powered by a Marvell Armada XP
-(mv78230 dual-core @1.33Ghz). It is very similar on many aspects
-to previous 4-bay synology models based on Marvell kirkwood SoC.
-Here is a short summary of the device:
+On Tue, Nov 18, 2014 at 4:07 AM,  <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+> From: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>
+> This commit adds support for ImgTec PowerDown Controller Watchdog Timer.
+>
+> Signed-off-by: Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 
- - 1GB RAM
- - Boot on SPI flash (64Mbit Micron N25Q064)
- - 2 GbE interfaces (Armada MAC connected to two Marvell 88E1512
-   PHY via RGMII)
- - 1 front USB 2.0 ports (directly handled by the Armada 370)
- - 2 rear USB 3.0 ports (handled by an EtronTech EJ168A XHCI
-   controller on the PCIe bus)
- - 4 internal SATA ports handled by a Marvell 88SX7042 SATA-II
-   controller on the PCIe bus)
- - Seiko S-35390A I2C RTC chip
- - UART0 providing serial console
- - UART1 used for poweroff (connected to a Microchip PIC16F883)
+Almost there, just a couple of comments:
 
-Additional note: the front LEDs the and the two fans are not directly
-connected to the SoC and under its control. The former are presumably
-driven by the SATA controller, the latter by the PIC.
+> --- /dev/null
+> +++ b/drivers/watchdog/imgpdc_wdt.c
 
-Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
----
- arch/arm/boot/dts/Makefile                     |   3 +-
- arch/arm/boot/dts/armada-xp-synology-ds414.dts | 330 +++++++++++++++++++++++++
- 2 files changed, 332 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/armada-xp-synology-ds414.dts
+> +#define PDC_WD_CONFIG                  0x004
+> +#define PDC_WD_MAX_DELAY               31 /* 4:0 bits */
+> +#define PDC_WD_CONFIG_ENABLE           BIT(31)
+> +#define PDC_WD_CONFIG_DELAY_MASK       0x0000001f
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index cfcf400a3a6c..88346b317d76 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -510,7 +510,8 @@ dtb-$(CONFIG_MACH_ARMADA_XP) += \
- 	armada-xp-lenovo-ix4-300d.dtb \
- 	armada-xp-matrix.dtb \
- 	armada-xp-netgear-rn2120.dtb \
--	armada-xp-openblocks-ax3-4.dtb
-+	armada-xp-openblocks-ax3-4.dtb \
-+	armada-xp-synology-ds414.dtb
- dtb-$(CONFIG_MACH_DOVE) += dove-cm-a510.dtb \
- 	dove-cubox.dtb \
- 	dove-cubox-es.dtb \
-diff --git a/arch/arm/boot/dts/armada-xp-synology-ds414.dts b/arch/arm/boot/dts/armada-xp-synology-ds414.dts
-new file mode 100644
-index 000000000000..468c754f0066
---- /dev/null
-+++ b/arch/arm/boot/dts/armada-xp-synology-ds414.dts
-@@ -0,0 +1,330 @@
-+/*
-+ * Device Tree file for Synology DS414
-+ *
-+ * Copyright (C) 2014, Arnaud EBALARD <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version
-+ * 2 of the License, or (at your option) any later version.
-+ *
-+ * Note: this Device Tree assumes that the bootloader has remapped the
-+ * internal registers to 0xf1000000 (instead of the old 0xd0000000).
-+ * The 0xf1000000 is the default used by the recent, DT-capable, U-Boot
-+ * bootloaders provided by Marvell. It is used in recent versions of
-+ * DSM software provided by Synology. Nonetheless, some earlier boards
-+ * were delivered with an older version of u-boot that left internal
-+ * registers mapped at 0xd0000000. If you have such a device you will
-+ * not be able to directly boot a kernel based on this Device Tree. In
-+ * that case, the preferred solution is to update your bootloader (e.g.
-+ * by upgrading to latest version of DSM, or building a new one and
-+ * installing it from u-boot prompt) or adjust the Devive Tree
-+ * (s/0xf1000000/0xd0000000/ in 'ranges' below).
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include "armada-xp-mv78230.dtsi"
-+
-+/ {
-+	model = "Synology DS414";
-+	compatible = "synology,ds414", "marvell,armadaxp-mv78230",
-+		     "marvell,armadaxp", "marvell,armada-370-xp";
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200 earlyprintk";
-+		stdout-path = &uart0;
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0 0x00000000 0 0x40000000>; /* 1GB */
-+	};
-+
-+	soc {
-+		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000
-+			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000>;
-+
-+		pcie-controller {
-+			status = "okay";
-+
-+			/*
-+			 * Connected to Marvell 88SX7042 SATA-II controller
-+			 * handling the four disks.
-+			 */
-+			pcie@1,0 {
-+				/* Port 0, Lane 0 */
-+				status = "okay";
-+			};
-+
-+			/*
-+			 * Connected to EtronTech EJ168A XHCI controller
-+			 * providing the two rear USB 3.0 ports.
-+			 */
-+			pcie@5,0 {
-+				/* Port 1, Lane 0 */
-+				status = "okay";
-+			};
-+		};
-+
-+		internal-regs {
-+			mdio {
-+				phy0: ethernet-phy@0 { /* Marvell 88E1512 */
-+					reg = <0>;
-+				};
-+
-+				phy1: ethernet-phy@1 { /* Marvell 88E1512 */
-+					reg = <1>;
-+				};
-+			};
-+
-+			ethernet@70000 {
-+				status = "okay";
-+				pinctrl-0 = <&ge0_rgmii_pins>;
-+				pinctrl-names = "default";
-+				phy = <&phy1>;
-+				phy-mode = "rgmii-id";
-+			};
-+
-+			ethernet@74000 {
-+				pinctrl-0 = <&ge1_rgmii_pins>;
-+				pinctrl-names = "default";
-+				status = "okay";
-+				phy = <&phy0>;
-+				phy-mode = "rgmii-id";
-+			};
-+
-+			spi0: spi@10600 {
-+				status = "okay";
-+
-+				spi-flash@0 {
-+					#address-cells = <1>;
-+					#size-cells = <1>;
-+					compatible = "micron,n25q064";
-+					reg = <0>; /* Chip select 0 */
-+					spi-max-frequency = <20000000>;
-+
-+					/*
-+					 * Warning!
-+					 *
-+					 * Synology u-boot uses its compiled-in environment
-+					 * and it seems Synology did not care to change u-boot
-+					 * default configuration in order to allow saving a
-+					 * modified environment at a sensible location. So,
-+					 * if you do a 'saveenv' under u-boot, your modified
-+					 * environment will be saved at 1MB after the start
-+					 * of the flash, i.e. in the middle of the uImage.
-+					 * For that reason, it is strongly advised not to
-+					 * change the default environment, unless you know
-+					 * what you are doing.
-+					 */
-+					partition@00000000 { /* u-boot */
-+						label = "RedBoot";
-+						reg = <0x00000000 0x000d0000>; /* 832KB */
-+					};
-+
-+					partition@000c0000 { /* uImage */
-+						label = "zImage";
-+						reg = <0x000d0000 0x002d0000>; /* 2880KB */
-+					};
-+
-+					partition@003a0000 { /* uInitramfs */
-+						label = "rd.gz";
-+						reg = <0x003a0000 0x00430000>; /* 4250KB */
-+					};
-+
-+					partition@007d0000 { /* MAC address and serial number */
-+						label = "vendor";
-+						reg = <0x007d0000 0x00010000>; /* 64KB */
-+					};
-+
-+					partition@007e0000 {
-+						label = "RedBoot config";
-+						reg = <0x007e0000 0x00010000>; /* 64KB */
-+					};
-+
-+					partition@007f0000 {
-+						label = "FIS directory";
-+						reg = <0x007f0000 0x00010000>; /* 64KB */
-+					};
-+				};
-+			};
-+
-+			/* Front USB 2.0 port */
-+			usb@50000 {
-+				status = "okay";
-+			};
-+
-+			i2c@11000 {
-+				clock-frequency = <400000>;
-+				status = "okay";
-+
-+				s35390a: s35390a@30 {
-+					 compatible = "sii,s35390a";
-+					 reg = <0x30>;
-+				};
-+			};
-+
-+			/* RTC is provided by Seiko S-35390A above */
-+			rtc@10300 {
-+				status = "disabled";
-+			};
-+
-+			/* Connected to a header on device's PCB. This
-+			 * provides the main console for the device.
-+			 *
-+			 * Warning: the device may not boot with a 3.3V
-+			 * USB-serial converter connected when the power
-+			 * button is pressed. The converter needs to be
-+			 * connected a few seconds after pressing the
-+			 * power button. This is possibly due to UART0_TXD
-+			 * pin being sampled at reset (bit 0 of SAR).
-+			 */
-+			serial@12000 {
-+				status = "okay";
-+			};
-+
-+			/* Connected to a Microchip PIC16F883 for power control */
-+			serial@12100 {
-+				status = "okay";
-+			};
-+
-+			poweroff@12100 {
-+				compatible = "synology,power-off";
-+				reg = <0x12100 0x100>;
-+				clocks = <&coreclk 0>;
-+			};
-+		};
-+	};
-+
-+	regulators {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		pinctrl-0 = <&sata1_pwr_pin &sata2_pwr_pin
-+			     &sata3_pwr_pin &sata4_pwr_pin>;
-+		pinctrl-names = "default";
-+
-+		sata1_regulator: sata1-regulator {
-+			compatible = "regulator-fixed";
-+			reg = <1>;
-+			regulator-name = "SATA1 Power";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			startup-delay-us = <2000000>;
-+			enable-active-high;
-+			regulator-always-on;
-+			regulator-boot-on;
-+			gpio = <&gpio1 10 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		sata2_regulator: sata2-regulator {
-+			compatible = "regulator-fixed";
-+			reg = <2>;
-+			regulator-name = "SATA2 Power";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			startup-delay-us = <4000000>;
-+			enable-active-high;
-+			regulator-always-on;
-+			regulator-boot-on;
-+			gpio = <&gpio1 12 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		sata3_regulator: sata3-regulator {
-+			compatible = "regulator-fixed";
-+			reg = <3>;
-+			regulator-name = "SATA3 Power";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			startup-delay-us = <6000000>;
-+			enable-active-high;
-+			regulator-always-on;
-+			regulator-boot-on;
-+			gpio = <&gpio1 13 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		sata4_regulator: sata4-regulator {
-+			compatible = "regulator-fixed";
-+			reg = <4>;
-+			regulator-name = "SATA4 Power";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			startup-delay-us = <8000000>;
-+			enable-active-high;
-+			regulator-always-on;
-+			regulator-boot-on;
-+			gpio = <&gpio1 14 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+};
-+
-+&pinctrl {
-+	sata1_pwr_pin: sata1-pwr-pin {
-+		marvell,pins = "mpp42";
-+		marvell,function = "gpio";
-+	};
-+
-+	sata2_pwr_pin: sata2-pwr-pin {
-+		marvell,pins = "mpp44";
-+		marvell,function = "gpio";
-+	};
-+
-+	sata3_pwr_pin: sata3-pwr-pin {
-+		marvell,pins = "mpp45";
-+		marvell,function = "gpio";
-+	};
-+
-+	sata4_pwr_pin: sata4-pwr-pin {
-+		marvell,pins = "mpp46";
-+		marvell,function = "gpio";
-+	};
-+
-+	sata1_pres_pin: sata1-pres-pin {
-+		marvell,pins = "mpp34";
-+		marvell,function = "gpio";
-+	};
-+
-+	sata2_pres_pin: sata2-pres-pin {
-+		marvell,pins = "mpp35";
-+		marvell,function = "gpio";
-+	};
-+
-+	sata3_pres_pin: sata3-pres-pin {
-+		marvell,pins = "mpp40";
-+		marvell,function = "gpio";
-+	};
-+
-+	sata4_pres_pin: sata4-pres-pin {
-+		marvell,pins = "mpp41";
-+		marvell,function = "gpio";
-+	};
-+
-+	syno_id_bit0_pin: syno-id-bit0-pin {
-+		marvell,pins = "mpp26";
-+		marvell,function = "gpio";
-+	};
-+
-+	pmx_syno_id_bit1: syno-id-bit1-pin {
-+		marvell,pins = "mpp28";
-+		marvell,function = "gpio";
-+	};
-+
-+	pmx_syno_id_bit2: syno-id-bit2-pin {
-+		marvell,pins = "mpp29";
-+		marvell,function = "gpio";
-+	};
-+
-+	pmx_fan1_alarm: fan1-alarm-pin {
-+		marvell,pins = "mpp33";
-+		marvell,function = "gpio";
-+	};
-+
-+	fan2_alarm_pin: fan2-alarm-pin {
-+		marvell,pins = "mpp32";
-+		marvell,function = "gpio";
-+	};
-+};
-+
--- 
-2.1.1
+PDC_WD_MAX_DELAY and PDC_WD_CONFIG_DELAY_MASK are the same thing -
+just pick one (probably PDC_WD_CONFIG_DELAY_MASK).
 
+> +struct pdc_wdt_dev {
+> +       struct device *dev;
+> +       struct watchdog_device wdt_dev;
+> +       struct clk *wdt_clk;
+> +       struct clk *sys_clk;
+> +       unsigned long clk_rate;
+> +       unsigned int min_delay;
+> +       void __iomem *base;
+> +       spinlock_t lock;
+
+Now that there's no clock notifier, I don't think you need this
+spinlock anymore.
+
+> +static int pdc_wdt_set_timeout(struct watchdog_device *wdt_dev,
+> +                              unsigned int new_timeout)
+> +{
+> +       unsigned int val;
+> +       struct pdc_wdt_dev *wdt = watchdog_get_drvdata(wdt_dev);
+> +
+> +       if (new_timeout < wdt->wdt_dev.min_timeout ||
+> +           new_timeout > wdt->wdt_dev.max_timeout)
+> +               return -EINVAL;
+
+The watchdog core already does this check for us.
+
+> +       spin_lock(&wdt->lock);
+> +       wdt->wdt_dev.timeout = new_timeout;
+> +       /* round up to the next power of 2 */
+> +       new_timeout = order_base_2(new_timeout);
+> +       val = readl(wdt->base + PDC_WD_CONFIG);
+> +       val &= ~(PDC_WD_CONFIG_DELAY_MASK << PDC_WD_CONFIG_DELAY_SHIFT);
+> +       val |= (new_timeout + wdt->min_delay);
+
+This should be shifted by PDC_WD_CONFIG_DELAY_SHIFT.
+
+> +static struct watchdog_info pdc_wdt_info = {
+> +       .options                = WDIOF_SETTIMEOUT |
+> +                                 WDIOF_KEEPALIVEPING |
+> +                                 WDIOF_MAGICCLOSE,
+> +       .identity = "PDC Watchdog",
+
+Maybe "IMG PDC Watchdog"?
+
+> +static int pdc_wdt_probe(struct platform_device *pdev)
+> +{
+> +       int ret, val;
+> +       struct resource *res;
+> +       struct pdc_wdt_dev *pdc_wdt;
+> +
+> +       pdc_wdt = devm_kzalloc(&pdev->dev, sizeof(*pdc_wdt), GFP_KERNEL);
+> +       if (!pdc_wdt)
+> +               return -ENOMEM;
+> +
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       pdc_wdt->base = devm_ioremap_resource(&pdev->dev, res);
+> +       if (IS_ERR(pdc_wdt->base))
+> +               return PTR_ERR(pdc_wdt->base);
+> +
+> +       pdc_wdt->sys_clk = devm_clk_get(&pdev->dev, "sys");
+> +       if (IS_ERR(pdc_wdt->sys_clk)) {
+> +               dev_err(&pdev->dev, "failed to get the sys clock.\n");
+> +               ret = PTR_ERR(pdc_wdt->wdt_clk);
+> +               goto out_wdt;
+> +       }
+> +
+> +       spin_lock_init(&pdc_wdt->lock);
+> +
+> +       pdc_wdt->wdt_clk = devm_clk_get(&pdev->dev, "wdt");
+> +       if (IS_ERR(pdc_wdt->wdt_clk)) {
+> +               dev_err(&pdev->dev, "failed to get the wdt clock.\n");
+> +               ret = PTR_ERR(pdc_wdt->wdt_clk);
+> +               goto out_wdt;
+> +       }
+> +
+> +       ret = clk_prepare_enable(pdc_wdt->sys_clk);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "could not prepare or enable sys clock.\n");
+> +               goto out_wdt;
+> +       }
+> +
+> +       ret = clk_prepare_enable(pdc_wdt->wdt_clk);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "could not prepare or enable wdt clock.\n");
+> +               goto disable_sys_clk;
+> +       }
+> +       /* We use the clock rate to calculate the max timeout */
+> +       pdc_wdt->clk_rate = clk_get_rate(pdc_wdt->wdt_clk);
+> +       if (pdc_wdt->clk_rate < 1 || pdc_wdt->clk_rate > PDC_WD_MAX_CLK_RATE) {
+> +               dev_err(&pdev->dev, "invalid clock rate\n");
+> +               ret = -EINVAL;
+> +               goto disable_wdt_clk;
+> +       }
+
+Does a maximum rate really need to be enforced?  I know rates greater
+than 50Mhz aren't recommended, but I believe you can still configure
+the clock controller to do so.
+The check for a clock rate of 0 is fine - that would indicate that
+clk_get_rate() failed to get the rate.
+
+> +       if (order_base_2(pdc_wdt->clk_rate)  == 0)
+> +               pdc_wdt->min_delay = 0;
+> +       else
+> +               pdc_wdt->min_delay = order_base_2(pdc_wdt->clk_rate) - 1;
+> +
+> +       pdc_wdt->wdt_dev.info = &pdc_wdt_info;
+> +       pdc_wdt->wdt_dev.ops = &pdc_wdt_ops;
+> +       pdc_wdt->wdt_dev.min_timeout = PDC_WD_MIN_TIMEOUT;
+> +       pdc_wdt->wdt_dev.max_timeout =
+> +                               (1 << (PDC_WD_MAX_DELAY - pdc_wdt->min_delay));
+> +       pdc_wdt->wdt_dev.parent = &pdev->dev;
+> +       pdc_wdt->dev = &pdev->dev;
+> +
+> +       ret = watchdog_init_timeout(&pdc_wdt->wdt_dev, timeout, &pdev->dev);
+> +       if (ret < 0)
+> +               pdc_wdt->wdt_dev.timeout = pdc_wdt->wdt_dev.max_timeout;
+> +
+> +       pdc_wdt_stop(&pdc_wdt->wdt_dev);
+> +       /* Set timeouts before userland has a chance to start the timer */
+> +       pdc_wdt_set_timeout(&pdc_wdt->wdt_dev, pdc_wdt->wdt_dev.timeout);
+
+The stop() is fine, but I don't think it's necessary to set the timeout.
+
+> +static int pdc_wdt_remove(struct platform_device *pdev)
+> +{
+> +       struct pdc_wdt_dev *pdc_wdt = platform_get_drvdata(pdev);
+> +
+> +       pdc_wdt_shutdown(pdev);
+
+Just call pdc_wdt_stop() directly.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
