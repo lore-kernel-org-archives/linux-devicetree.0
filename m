@@ -1,48 +1,56 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH] of/address: Don't throw errors on absent ranges
- properties
-Date: Tue, 18 Nov 2014 16:57:39 +0000
-Message-ID: <20141118165739.7382AC40966@trevor.secretlab.ca>
-References: <1415948303.666.50.camel@kernel.crashing.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415948303.666.50.camel@kernel.crashing.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Rob Herring <robherring2@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv3 01/12] of: add "micron" vendor prefix for Micron
+Date: Tue, 18 Nov 2014 11:00:21 -0600
+Message-ID: <CAL_JsqKrEoRvt97k+7UHBsNFU739w7BeQbXf5V2TZ2OrmS1Afg@mail.gmail.com>
+References: <cover.1416266432.git.arno@natisbad.org> <9cfc5635b14f36e68c499015c6a722804b407f29.1416266432.git.arno@natisbad.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9cfc5635b14f36e68c499015c6a722804b407f29.1416266432.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 14 Nov 2014 17:58:23 +1100
-, Benjamin Herrenschmidt <benh@kernel.crashing.org>
- wrote:
-> The core always tries to translate any "reg" property to construct the platform
-> device names. This results in a pile of "OF: no ranges; cannot translate" errors
-> in dmesg whenever we expose things like i2c devices that cannot directly translate
-> to the MMIO space.
+On Mon, Nov 17, 2014 at 5:26 PM, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org> wrote:
+>
+> Micron vendor prefix is not listed yet in vendor-prefixes.txt file. Even
+> if the expected vendor prefix should be the NASDAQ symbol ("mu" in that
+> case), it seems reasonable to use "micron" here because it is what is
+> already found at various locations (e.g. under arch/arm/boot/dts/ for
+> instance).
 
-I don't have a problem with the change, but it seems to be catching an
-odd usage of of_device_make_bus_id(). Why is of_device_make_bus_id()
-being called on i2c devices? Those shouldn't be modelled as
-platform_devices.
+Already have the same patch queued up.
 
-g.
+Rob
 
-> 
-> Turn this into a pr_debug instead
-> 
-> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> 
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index f0541fd..bf1f79d 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -444,7 +444,7 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
->  	 */
->  	ranges = of_get_property(parent, rprop, &rlen);
->  	if (ranges == NULL && !of_empty_ranges_quirk()) {
-> -		pr_err("OF: no ranges; cannot translate\n");
-> +		pr_debug("OF: no ranges; cannot translate\n");
->  		return 1;
->  	}
->  	if (ranges == NULL || rlen == 0) {
-> 
-> 
+>
+> Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 723999d73744..55a3a7f19063 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -96,6 +96,7 @@ mitsubishi    Mitsubishi Electric Corporation
+>  mosaixtech     Mosaix Technologies, Inc.
+>  moxa   Moxa
+>  mpl    MPL AG
+> +micron Micron Technology, Inc.
+>  mundoreader    Mundo Reader S.L.
+>  murata Murata Manufacturing Co., Ltd.
+>  mxicy  Macronix International Co., Ltd.
+> --
+> 2.1.1
+>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
