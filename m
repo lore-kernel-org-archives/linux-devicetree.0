@@ -1,357 +1,82 @@
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: Re: [PATCH 4/9] ASoC: ipq806x: Add LPASS CPU DAI driver
-Date: Wed, 19 Nov 2014 15:17:06 -0600
-Message-ID: <546D08D2.5030808@linux.intel.com>
-References: <1416423169-21865-1-git-send-email-kwestfie@codeaurora.org>
- <1416423169-21865-5-git-send-email-kwestfie@codeaurora.org>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3] clk_mux: Fix set_parent doing the wrong
+ thing when INDEX_BIT && index >= 3
+Date: Wed, 19 Nov 2014 14:04:49 -0800
+Message-ID: <20141119220449.25314.56163@quantum>
+References: <1416404939-609-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1416423169-21865-5-git-send-email-kwestfie@codeaurora.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Kenneth Westfield <kwestfie@codeaurora.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>
-Cc: Banajit Goswami <bgoswami@codeaurora.org>, Takashi Iwai <tiwai@suse.de>, Greg KH <gregkh@linuxfoundation.org>, Patrick Lai <plai@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Bryan Huntsman <bryanh@codeaurora.org>, Mark Brown <broonie@kernel.org>, David Brown <davidb@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDO333VC4INBBBVIWSRQKGQEQLEZLNY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1416404939-609-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+Cc: Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/19/14, 12:52 PM, Kenneth Westfield wrote:
-> From: Kenneth Westfield <kwestfie@codeaurora.org>
->
-> Add the CPU DAI driver for the QCOM LPASS SOC.
->
-> Change-Id: I64ac4407dd32bb9a3066d4b7427292002eaf5d14
-> Signed-off-by: Kenneth Westfield <kwestfie@codeaurora.org>
-> Signed-off-by: Banajit Goswami <bgoswami@codeaurora.org>
+Quoting Hans de Goede (2014-11-19 05:48:59)
+> If CLK_MUX_INDEX_BIT is set, then each bit turns on / off a single parent,
+> so theoretically multiple parents could be enabled at the same time, but in
+> practice only one bit should ever be 1. So to select parent 0, set
+> the register (*) to 0x01, to select parent 1 set it 0x02, parent 2, 0x04,
+> parent 3, 0x08, etc.
+> 
+> But the current code does:
+> 
+>                 if (mux->flags & CLK_MUX_INDEX_BIT)
+>                         index = (1 << ffs(index));
+> 
+> Which means that:
+> 
+> For an input index of 0, ffs returns 0, so we set the register
+> to 0x01, ok.
+> 
+> For an input index of 1, ffs returns 1, so we set the register
+> to 0x02, ok.
+> 
+> For an input index of 2, ffs returns 2, so we set the register
+> to 0x04, ok.
+> 
+> For an input index of 3, ffs returns 1, so we set the register
+> to 0x02, not good!
+> 
+> The code should simply be:
+> 
+>                 if (mux->flags & CLK_MUX_INDEX_BIT)
+>                         index = 1 << index;
+> 
+> Which always does the right thing, this commit fixes this.
+> 
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+
+Applied to clk-next towards 3.19. I don't think any merged platforms are
+hitting this bug in the field so I've not put it into -fixes.
+
+Thanks,
+Mike
+
 > ---
->   sound/soc/qcom/lpass-cpu-dai.c | 307 +++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 307 insertions(+)
->   create mode 100644 sound/soc/qcom/lpass-cpu-dai.c
->
-> diff --git a/sound/soc/qcom/lpass-cpu-dai.c b/sound/soc/qcom/lpass-cpu-dai.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..0693e761e01fd416f52684977bcfaf1579dc259c
-> --- /dev/null
-> +++ b/sound/soc/qcom/lpass-cpu-dai.c
-> @@ -0,0 +1,307 @@
-> +/*
-> + * Copyright (c) 2010-2011,2013-2014 The Linux Foundation. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/clk.h>
-> +#include <sound/soc.h>
-> +#include <sound/pcm_params.h>
-> +#include "lpass-lpaif.h"
-> +#include "lpass-pcm-mi2s.h"
-> +
-> +#define DRV_NAME	"lpass-cpu-dai"
-> +#define DRV_VERSION	"1.0"
-> +
-> +#define LPASS_INVALID	(-1)
-> +
-> +struct mi2s_hw_params {
-> +	uint8_t channels;
-> +	uint32_t freq;
-> +	uint8_t bit_width;
-> +};
-> +
-> +static struct clk *lpaif_mi2s_bit_clk;
-> +static struct clk *lpaif_mi2s_osr_clk;
-> +static struct mi2s_hw_params mi2s_params;
-> +
-> +/*
-> + * Returns the OSR to BIT clock divider that would be used with the given
-> + * stream characteristics.
-> + */
-> +static uint32_t lpass_cpu_get_bit_div(uint32_t samp_freq, uint32_t bit_width,
-> +							uint32_t channels)
-> +{
-> +	if (channels == 8) {
-> +		if (bit_width == 24 &&
-> +			((samp_freq != 176400) &&
-> +			(samp_freq != 192000)))
-> +			return 2;
-> +		return 1;
-> +	} else if (channels == 6) {
-> +		if ((bit_width == 32 && ((samp_freq == 176400) ||
-> +			(samp_freq == 192000))) || (bit_width == 24 &&
-> +			(samp_freq == 192000)))
-> +			return 1;
-> +		else
-> +			return 2;
-> +	}
-> +
-> +	switch (samp_freq) {
-> +	case 8000:
-> +	case 16000:
-> +	case 32000:
-> +	case 64000:
-> +		if (bit_width == 16)
-> +			return 4;
-
-Does this test have any value? the behavior is identical in all cases.
-
-> +		break;
-> +	case 48000:
-> +		if (bit_width == 24)
-> +			return 4;
-
-same.
-
-> +		break;
-> +	case 96000:
-> +	case 192000:
-> +		return 4;
-> +	case 176400:
-> +		return 2;
-> +	case 11025:
-> +	case 22050:
-> +	case 44100:
-> +	case 88200:
-> +	default:
-> +		pr_err("%s: Invalid PCM format given\n", __func__);
-> +		return LPASS_INVALID;
-> +	}
-> +
-> +	return 4;
-> +}
-> +
-> +static int lpass_cpu_mi2s_hw_params(struct snd_pcm_substream *substream,
-> +					struct snd_pcm_hw_params *params,
-> +					struct snd_soc_dai *dai)
-> +{
-> +	uint32_t ret = 0;
-> +	uint32_t bit_act;
-> +	uint16_t bit_div;
-> +	uint32_t bit_width = params_format(params);
-> +	uint32_t channels = params_channels(params);
-> +	uint32_t rate = params_rate(params);
-> +	struct snd_pcm_runtime *runtime = substream->runtime;
-> +	struct lpass_runtime_data_t *prtd = runtime->private_data;
-> +	struct mi2s_hw_params curr_params;
-> +
-> +	bit_act = snd_pcm_format_width(bit_width);
-> +	if (bit_act == LPASS_INVALID) {
-> +		dev_err(dai->dev, "%s: Invalid bit width given\n", __func__);
-> +		return -EINVAL;
-> +	}
-> +
-> +	prtd->pcm_stream_info.bit_width = bit_act;
-> +	curr_params.freq = rate;
-> +	curr_params.channels = channels;
-> +	curr_params.bit_width = bit_act;
-> +
-> +	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-> +		/* disable SPKR to make sure it will start in sane state */
-> +		lpaif_cfg_i2s_playback(0, 0, LPAIF_MI2S);
-> +
-> +		/*
-> +		 * Set channel info, it will take effect only if SPKR is
-> +		 * enabled
-> +		 */
-> +		ret = lpaif_cfg_mi2s_playback_hwparams_channels(channels,
-> +						LPAIF_MI2S, bit_act);
-> +	} else {
-> +		dev_err(dai->dev, "%s: Invalid stream direction\n", __func__);
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* Make sure our channel setting was success */
-> +	if (ret) {
-> +		/* shutdown would be called where we restore stuff */
-> +		dev_err(dai->dev, "%s: Channel setting unsuccessful\n",
-> +				__func__);
-> +		return -EINVAL;
-> +	}
-> +
-> +	mi2s_params.freq = rate;
-> +	mi2s_params.channels = channels;
-> +	mi2s_params.bit_width = bit_act;
-> +
-> +	ret = lpaif_cfg_mi2s_hwparams_bit_width(bit_width, LPAIF_MI2S);
-> +	if (ret) {
-> +		dev_err(dai->dev, "%s: Could not set bit width in HW\n",
-> +				__func__);
-> +		return -EINVAL;
-> +	}
-> +
-> +	bit_div = lpass_cpu_get_bit_div(rate, bit_act, channels);
-> +	if (bit_div == LPASS_INVALID) {
-> +		dev_err(dai->dev, "%s: Could not get bit clk divider\n",
-> +				__func__);
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = clk_set_rate(lpaif_mi2s_osr_clk,
-> +		(rate * bit_act * channels * bit_div));
-> +	if (ret) {
-> +		dev_err(dai->dev, "%s: error in setting mi2s osr clk\n",
-> +				__func__);
-> +		return ret;
-> +	}
-> +	ret = clk_prepare_enable(lpaif_mi2s_osr_clk);
-> +	if (ret) {
-> +		dev_err(dai->dev, "%s: error in enabling mi2s osr clk\n",
-> +				__func__);
-> +		return ret;
-> +	}
-> +	prtd->lpaif_clk.is_osr_clk_enabled = 1;
-> +
-> +	ret = clk_set_rate(lpaif_mi2s_bit_clk, rate * bit_act * channels);
-> +	if (ret) {
-> +		dev_err(dai->dev, "%s: error in setting mi2s bit clk\n",
-> +				__func__);
-> +		return ret;
-> +	}
-> +	ret = clk_prepare_enable(lpaif_mi2s_bit_clk);
-> +	if (ret) {
-> +		dev_err(dai->dev, "%s: error in enabling mi2s bit clk\n",
-> +				__func__);
-> +		return ret;
-> +	}
-> +	prtd->lpaif_clk.is_bit_clk_enabled = 1;
-> +
-> +	return 0;
-> +}
-> +
-> +static int lpass_cpu_mi2s_prepare(struct snd_pcm_substream *substream,
-> +					struct snd_soc_dai *dai)
-> +{
-> +	return 0;
-> +}
-> +
-> +static int lpass_cpu_mi2s_startup(struct snd_pcm_substream *substream,
-> +					struct snd_soc_dai *dai)
-> +{
-> +
-> +	lpaif_mi2s_osr_clk = clk_get(dai->dev, "mi2s_osr_clk");
-> +	if (IS_ERR(lpaif_mi2s_osr_clk)) {
-> +		dev_err(dai->dev, "%s: Error in getting mi2s_osr_clk\n",
-> +				__func__);
-> +		return PTR_ERR(lpaif_mi2s_osr_clk);
-> +	}
-> +
-> +	lpaif_mi2s_bit_clk = clk_get(dai->dev, "mi2s_bit_clk");
-> +	if (IS_ERR(lpaif_mi2s_bit_clk)) {
-> +		dev_err(dai->dev, "%s: Error in getting mi2s_bit_clk\n",
-> +				__func__);
-> +		return PTR_ERR(lpaif_mi2s_bit_clk);
-> +	}
-> +
-> +	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-> +		lpaif_cfg_i2s_playback(0, 0, LPAIF_MI2S);
-> +	} else {
-> +		dev_err(dai->dev, "%s: Invalid stream direction\n", __func__);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void lpass_cpu_mi2s_shutdown(struct snd_pcm_substream *substream,
-> +					struct snd_soc_dai *dai)
-> +{
-> +	struct snd_pcm_runtime *runtime = substream->runtime;
-> +	struct lpass_runtime_data_t *prtd = runtime->private_data;
-> +
-> +	if (prtd->lpaif_clk.is_osr_clk_enabled)
-> +		clk_disable_unprepare(lpaif_mi2s_osr_clk);
-> +	clk_put(lpaif_mi2s_osr_clk);
-> +
-> +	if (prtd->lpaif_clk.is_bit_clk_enabled)
-> +		clk_disable_unprepare(lpaif_mi2s_bit_clk);
-> +	clk_put(lpaif_mi2s_bit_clk);
-> +}
-> +
-> +static int lpass_cpu_mi2s_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
-> +{
-> +	return 0;
-> +}
-> +
-> +static struct snd_soc_dai_ops lpass_cpu_mi2s_ops = {
-> +	.startup	= lpass_cpu_mi2s_startup,
-> +	.prepare	= lpass_cpu_mi2s_prepare,
-> +	.hw_params	= lpass_cpu_mi2s_hw_params,
-> +	.shutdown	= lpass_cpu_mi2s_shutdown,
-> +	.set_fmt	= lpass_cpu_mi2s_set_fmt,
-> +};
-> +
-> +static struct snd_soc_dai_driver lpass_cpu_dais[] = {
-> +	{
-> +		.playback = {
-> +			.rates		= SNDRV_PCM_RATE_8000_192000,
-> +			.formats	= SNDRV_PCM_FMTBIT_S16 |
-> +					SNDRV_PCM_FMTBIT_S24 |
-> +					SNDRV_PCM_FMTBIT_S32,
-> +			.channels_min	= 2,
-> +			.channels_max	= 2,
-> +			.rate_min	= 8000,
-> +			.rate_max	= 192000,
-> +		},
-> +		.ops    = &lpass_cpu_mi2s_ops,
-> +		.name = "lpass-mi2s-dai"
-> +	},
-> +};
-> +
-> +static const struct snd_soc_component_driver lpass_cpu_component = {
-> +	.name           = DRV_NAME,
-> +};
-> +
-> +static int lpass_cpu_dai_probe(struct platform_device *pdev)
-> +{
-> +	int ret;
-> +
-> +	ret = snd_soc_register_component(&pdev->dev, &lpass_cpu_component,
-> +			lpass_cpu_dais, ARRAY_SIZE(lpass_cpu_dais));
-> +	if (ret)
-> +		dev_err(&pdev->dev, "%s: error registering soc dais\n",
-> +				__func__);
-> +
-> +	return ret;
-> +}
-> +
-> +static int lpass_cpu_dai_remove(struct platform_device *pdev)
-> +{
-> +	snd_soc_unregister_component(&pdev->dev);
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id lpass_cpu_dai_dt_match[] = {
-> +	{.compatible = "qcom,lpass-cpu-dai"},
-> +	{}
-> +};
-> +
-> +static struct platform_driver lpass_cpu_dai_driver = {
-> +	.probe	= lpass_cpu_dai_probe,
-> +	.remove	= lpass_cpu_dai_remove,
-> +	.driver	= {
-> +		.name	= DRV_NAME,
-> +		.owner	= THIS_MODULE,
-> +		.of_match_table = lpass_cpu_dai_dt_match,
-> +	},
-> +};
-> +module_platform_driver(lpass_cpu_dai_driver);
-> +
-> +MODULE_DESCRIPTION("QCOM LPASS CPU DAI DRIVER");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("platform:" DRV_NAME);
-> +MODULE_DEVICE_TABLE(of, lpass_cpu_dai_dt_match);
-> +MODULE_VERSION(DRV_VERSION);
->
+>  drivers/clk/clk-mux.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/clk-mux.c b/drivers/clk/clk-mux.c
+> index 4f96ff3..6e1ecf9 100644
+> --- a/drivers/clk/clk-mux.c
+> +++ b/drivers/clk/clk-mux.c
+> @@ -77,7 +77,7 @@ static int clk_mux_set_parent(struct clk_hw *hw, u8 index)
+>  
+>         else {
+>                 if (mux->flags & CLK_MUX_INDEX_BIT)
+> -                       index = (1 << ffs(index));
+> +                       index = 1 << index;
+>  
+>                 if (mux->flags & CLK_MUX_INDEX_ONE)
+>                         index++;
+> -- 
+> 2.1.0
+> 
