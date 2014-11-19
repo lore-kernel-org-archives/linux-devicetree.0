@@ -1,55 +1,84 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] drivers/core/of: Add symlink to device-tree from devices
- with an OF node
-Date: Wed, 19 Nov 2014 09:39:36 -0600
-Message-ID: <CAL_JsqJm9c+GozQssLmjuSLzcsqDiMW8=1P_fM6-Zfdk=N6Lqg@mail.gmail.com>
-References: <1415342031.4925.27.camel@kernel.crashing.org> <3422452.OFUjscQXRB@wuerfel>
- <CAL_JsqKk5UdFEa02wA+3N5BCM7coWAK=4jAr96Pw5eFh2n0ioQ@mail.gmail.com> <11269246.iBzpsM0jDI@wuerfel>
+From: Mikko Perttunen <mikko.perttunen@kapsi.fi>
+Subject: Re: [PATCHv4 1/1] thermal: of: improve of-thermal sensor registration
+ API
+Date: Wed, 19 Nov 2014 17:41:48 +0200
+Message-ID: <546CBA3C.9020709@kapsi.fi>
+References: <1416321575-18348-1-git-send-email-edubezval@gmail.com> <1416321575-18348-2-git-send-email-edubezval@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <11269246.iBzpsM0jDI@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jeremy.kerr-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1416321575-18348-2-git-send-email-edubezval@gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>, Linux PM <linux-pm@vger.kernel.org>
+Cc: Caesar Wang <caesar.wang@rock-chips.com>, Wei Ni <wni@nvidia.com>, Lukasz Majewski <l.majewski@samsung.com>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.de>, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, lm-sensors@lm-sensors.org, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Zhang Rui <rui.zhang@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 19, 2014 at 8:49 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Wednesday 19 November 2014 08:45:58 Rob Herring wrote:
->> > static inline struct device_node *dev_of_node(struct device *of_node)
->> > {
->> >         if (!IS_ENABLED(CONFIG_OF))
->> >                 return NULL;
->> >
->> >         return dev->of_node;
->> > }
->> >
->> > Adding the IS_ENABLED() in a lot of drivers isn't horrible, but we seem
->> > to be doing it a lot.
->>
->> I think you misread things. of_node is always present now, so it
->> should always be NULL for !CONFIG_OF.
->>
+On 11/18/2014 04:39 PM, Eduardo Valentin wrote:
+> Different drivers request API extensions in of-thermal. For this reason,
+> additional callbacks are required to fit the new drivers needs.
 >
-> No, I didn't misread it but I should have been clearer with the intention:
-> The idea is to tell the compiler that we know it will be NULL when CONFIG_OF
-> is unset, so it can optimize out all code that does
+> The current API implementation expects the registering sensor driver
+> to provide a get_temp and get_trend callbacks as function parameters.
+> As the amount of callbacks is growing, this patch changes the existing
+> implementation to use a .ops field to hold all the of thermal callbacks
+> to sensor drivers.
 >
->         struct device_node *dn = dev_of_node(dev);
+> This patch also changes the existing of-thermal users to fit the new
+> API design. No functional change is introduced in this patch.
 >
->         if (dn) {
->                 ...
->                 /* complex code */
->                 ...
->         }
+> Cc: Alexandre Courbot <gnurou@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Jean Delvare <jdelvare@suse.de>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-tegra@vger.kernel.org
+> Cc: lm-sensors@lm-sensors.org
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Stephen Warren <swarren@wwwdotorg.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Zhang Rui <rui.zhang@intel.com>
+> Reviewed-by: Lukasz Majewski <l.majewski@samsung.com>
+> Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
+> ---
+>   drivers/hwmon/lm75.c                               |  9 +++--
+>   drivers/hwmon/ntc_thermistor.c                     |  6 +++-
+>   drivers/hwmon/tmp102.c                             |  6 +++-
+>   drivers/thermal/of-thermal.c                       | 40 ++++++++++------------
+>   drivers/thermal/tegra_soctherm.c                   |  7 ++--
+>   drivers/thermal/ti-soc-thermal/ti-thermal-common.c |  8 +++--
+>   include/linux/thermal.h                            | 24 +++++++++----
+>   7 files changed, 63 insertions(+), 37 deletions(-)
+> ---
+> Difference from V3:
+>    - Keep the same behavior regarding callback checks.
+>      Change in behavior may be sent in a separate patch.
+> Difference from V2:
+>    - Fix wrong assignment in tegra driver.
+> Difference from V1:
+>    - Fix error handling when .get_trend is not provided.
 >
-> and we can avoid using an #ifdef or if(IS_ENABLED()) in the source to
-> compile out the DT-only sections of a driver.
+> @@ -356,8 +356,8 @@ thermal_zone_of_add_sensor(struct device_node *zone,
+>    *             than one sensors
+>    * @data: a private pointer (owned by the caller) that will be passed
+>    *        back, when a temperature reading is needed.
+> - * @get_temp: a pointer to a function that reads the sensor temperature.
+> - * @get_trend: a pointer to a function that reads the sensor temperature trend.
+> + * @ops: struct thermal_zone_of_device *. Must contain at least .get_trend and
+> + *       .get_temp.
 
-Oh, right. That would definitely be worthwhile to do.
+This comment seems to be incorrect, as .get_trend is optional.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>    *
+>    * This function will search the list of thermal zones described in device
+>    * tree and look for the zone that refer to the sensor device pointed by
+
+With that minor one fixed,
+
+Tested-by: Mikko Perttunen <mikko.perttunen@kapsi.fi>
+Reviewed-by: Mikko Perttunen <mikko.perttunen@kapsi.fi>
+
+Cheers,
+Mikko
