@@ -1,74 +1,119 @@
 From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] Patch to improve device tree structure
-Date: Wed, 19 Nov 2014 13:56:38 +0000
-Message-ID: <CACxGe6u1YwQAivktwmiOZx1K1Ch0F1ofx3EriBi1qEAU99X9PQ@mail.gmail.com>
-References: <1416199976-21147-1-git-send-email-gaurav.minocha.os@gmail.com>
- <20141118151026.D2D63C40966@trevor.secretlab.ca> <546BF447.6080300@gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: simplefb-sunxi: Add sunxi
+ simplefb extensions
+Date: Wed, 19 Nov 2014 14:05:48 +0000
+Message-ID: <CACxGe6tqRS=oCeqbrez86uLLXtQ_C4ETEesNqgxKGb38QOQ8SQ@mail.gmail.com>
+References: <1416224086-5698-1-git-send-email-hdegoede@redhat.com>
+ <1416224086-5698-3-git-send-email-hdegoede@redhat.com> <20141117124721.GQ6414@lukather>
+ <CACxGe6vqiC08sP+o3bduGfvUdwRtHm8+_7EdZccJjS86qVKvxQ@mail.gmail.com> <20141117155514.GU6414@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <546BF447.6080300-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCJP567ORICBBUGHWKRQKGQE2EEV2HY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20141117155514.GU6414@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 19, 2014 at 1:37 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 11/18/2014 7:10 AM, Grant Likely wrote:
->> On Sun, 16 Nov 2014 20:52:56 -0800
->> , Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>  wrote:
->>> This patch improves the implementation of device tree structure.
->>>
->>> Traditional child and sibling linked list in device tree structure
->>> is removed and is replaced by list_head (i.e. circular doubly linked
->>>  list) already available in Linux kernel.
->>>
->>> Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Mon, Nov 17, 2014 at 3:55 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Mon, Nov 17, 2014 at 01:39:18PM +0000, Grant Likely wrote:
+>> On Mon, Nov 17, 2014 at 12:47 PM, Maxime Ripard
+>> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> > On Mon, Nov 17, 2014 at 12:34:46PM +0100, Hans de Goede wrote:
+>> >> If pre-filled framebuffer nodes are used, the firmware may need extra
+>> >> properties to find the right node. This documents the properties to use
+>> >> for this on sunxi platforms.
+>> >>
+>> >> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> >> ---
+>> >>  .../bindings/video/simple-framebuffer-sunxi.txt    | 33 ++++++++++++++++++++++
+>> >>  1 file changed, 33 insertions(+)
+>> >>  create mode 100644 Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
+>> >>
+>> >> diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt b/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
+>> >> new file mode 100644
+>> >> index 0000000..84ca264
+>> >> --- /dev/null
+>> >> +++ b/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
+>> >> @@ -0,0 +1,33 @@
+>> >> +Sunxi specific Simple Framebuffer bindings
+>> >> +
+>> >> +This binding documents sunxi specific extensions to the simple-framebuffer
+>> >> +bindings. The sunxi simplefb u-boot code relies on the devicetree containing
+>> >> +pre-populated simplefb nodes.
+>> >> +
+>> >> +These extensions are intended so that u-boot can select the right node based
+>> >> +on which pipeline and output is being used. As such they are solely intended
+>> >> +for firmware / bootloader use, and the OS should ignore them.
+>> >> +
+>> >> +Required properties:
+>> >> +- compatible: "sunxi,framebuffer"
+>> >> +- sunxi,pipeline:
+>> >> +  <0> for the de_be0 -> lcdc0 -> output pipeline
+>> >> +  <1> for the de_be1 -> lcdc1 -> output pipeline
+>> >> +- sunxi,output: One of: "hdmi", "lcd", "vga", and "composite"
+>> >> +
+>> >> +Example:
+>> >> +
+>> >> +chosen {
+>> >> +     #address-cells = <1>;
+>> >> +     #size-cells = <1>;
+>> >> +     ranges;
+>> >> +
+>> >> +     framebuffer@0 {
+>> >> +             compatible = "sunxi,framebuffer", "simple-framebuffer";
+>> >> +             sunxi,pipeline = <0>;
+>> >> +             sunxi,output = "hdmi";
+>> >> +             clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
+>> >> +                      <&ahb_gates 44>;
+>> >
+>> > If we're going that way, then maybe having to specify clock-names
+>> > would be better in order to know which clock is what?
 >>
->> Hi Gaurav,
->>
->> So, after you've done this work, I need to you rebase it (and of course
->> it is non-trivial) onto linux-next. I've already got a patch queued up
->> which gets rid of the of_allnodes/allnext list which will have conflicts
->> with this patch.
->>
->> I'll make comments below where still relevant.
+>> I wouldn't go that way with this binding since the driver has no need
+>> to differentiate between the clocks, and driver authors shouldn't be
+>> encouraged to do so. The purpose of the clocks in this node is only
+>> for itemizing dependencies, not for how to configure the clocks.
+>> Firmware shouldn't care at all about the clocks list, it only needs to
+>> find the correct pre-populated node to fill in and enable.
 >
-> Grant,
->
-> My first reaction to this patch was that moving to using struct list_head
-> made the code less readable plus increased the size of struct device_node.
->
-> I reworked the changes to drivers/of/base.c to see if I could make
-> it a little more readable.  And I see below that you also have some
-> suggestions that make it more readable.
->
-> Even after that, I'm still feeling that the gain of moving to a more
-> standard list data type might not be greater than the downsides in
-> terms of readability and space.  The current list implementation does
-> seem like a decent fit to the problem space.
+> Well, if we want to play the "DT as an ABI" stuff, you have no
+> guarantee that in the future, simplefb will still be the driver bound
+> to "sunxi,framebuffer", and that this driver doesn't need to
+> differentiate which clocks it needs to protect and which are not
+> needed. Especially with the combination of the output that you now
+> hardcode.
 
-Moving to list_head has a couple of nice benefits. The prime
-motification is that using a standard list_head means that the OF code
-can be migrated to use the standard rcu operations and get rid of manual
-of_node_{get,put} management in the majority of code paths.
+As long as the node claims compatibility with "simple-framebuffer",
+then it must abide by the simple framebuffer rules. It cannot depend
+on the driver having special knowledge about what to do with the
+clocks. It is fine for a driver that understands "sunxi,framebuffer"
+to enable additional features over and above simple-framebuffer,
+providing it doesn't break the vanilla "simple-framebuffer" interface.
 
-A second reason to do this is it becomes easy to add nodes to the end of
-the list instead of the beginning. It's a small thing, but it makes
-unflattening simpler.
+The simple-framebuffer binding is clear that it will treat the clocks
+as dependencies only.
 
-I've also considered switching to a hlist_head/hlist_node to keep the
-footprint the same.* With an hlist_head the cost is a wash, but looses
-the ability to do O(1) addition to the end of the list.
+> Of course, if now we don't care at all about this ABI thing, it's
+> completely fine for me. But I'll archive this email preciously.
 
-* Gaurav's patch removes the *child and *sibling pointers, but doesn't
-  remove the *next pointer which can also be dropped. So, three pointers
-  get dropped from the structure. Using list_head adds 4 pointers (Net
-  +1). hlist_head adds 3 (Net 0).
+I do not in any way mean to say it is okay to break ABI.
+
+Also, my comments above are advice that I would give to U-Boot
+authors, not something that should go in the binding. The
+simple-framebuffer binding doesn't need to know about the clock names
+at all, and if the assumption is that firmware will merely enable a
+pre-populated framebuffer node in the tree, then it probably doesn't
+need to parse the clocks property either. However, if it actually is
+better for the U-Boot implementation to have clocks with names in the
+node, then I'm not going to object.
 
 g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
