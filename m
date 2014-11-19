@@ -1,226 +1,71 @@
 From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v7 2/4] ARM: mediatek: Add sysirq interrupt polarity
- support
-Date: Wed, 19 Nov 2014 18:04:48 +0000
-Message-ID: <20141119180448.GD12851@leverpostej>
+Subject: Re: [PATCH v7 4/4] dt-bindings: add bindings for mediatek sysirq
+Date: Wed, 19 Nov 2014 18:07:25 +0000
+Message-ID: <20141119180724.GE12851@leverpostej>
 References: <1416406451-4578-1-git-send-email-yingjoe.chen@mediatek.com>
- <1416406451-4578-3-git-send-email-yingjoe.chen@mediatek.com>
+ <1416406451-4578-5-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1416406451-4578-3-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1416406451-4578-5-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yijing Wang <wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <eddie.huang-NuS5LvNUpcLQFizaE/u3fw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 19, 2014 at 02:14:09PM +0000, Yingjoe Chen wrote:
-> Mediatek SoCs have interrupt polarity support in sysirq which
-> allows to invert polarity for given interrupt. Add this support
-> using hierarchy irq domain.
+On Wed, Nov 19, 2014 at 02:14:11PM +0000, Yingjoe Chen wrote:
+> Add binding documentation for Mediatek SoC SYSIRQ.
 > 
 > Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > ---
->  drivers/irqchip/Makefile         |   1 +
->  drivers/irqchip/irq-mtk-sysirq.c | 158 +++++++++++++++++++++++++++++++++++++++
->  2 files changed, 159 insertions(+)
->  create mode 100644 drivers/irqchip/irq-mtk-sysirq.c
+>  .../bindings/arm/mediatek/mediatek,sysirq.txt      | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
 > 
-> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> index 173bb5f..4e0f254 100644
-> --- a/drivers/irqchip/Makefile
-> +++ b/drivers/irqchip/Makefile
-> @@ -38,3 +38,4 @@ obj-$(CONFIG_IRQ_CROSSBAR)		+= irq-crossbar.o
->  obj-$(CONFIG_BRCMSTB_L2_IRQ)		+= irq-brcmstb-l2.o \
->  					   irq-bcm7120-l2.o
->  obj-$(CONFIG_KEYSTONE_IRQ)		+= irq-keystone.o
-> +obj-$(CONFIG_ARCH_MEDIATEK)		+= irq-mtk-sysirq.o
-> diff --git a/drivers/irqchip/irq-mtk-sysirq.c b/drivers/irqchip/irq-mtk-sysirq.c
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
 > new file mode 100644
-> index 0000000..93cb945
+> index 0000000..8669536
 > --- /dev/null
-> +++ b/drivers/irqchip/irq-mtk-sysirq.c
-> @@ -0,0 +1,158 @@
-> +/*
-> + * Copyright (c) 2014 MediaTek Inc.
-> + * Author: Joe.C <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
+> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
+> @@ -0,0 +1,26 @@
+> +Mediatek 65xx/81xx sysirq
 > +
-> +#include <linux/irq.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/of.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_address.h>
-> +#include <linux/io.h>
-> +#include <linux/slab.h>
-> +#include <linux/spinlock.h>
+> +Mediatek SOCs sysirq support controllable irq inverter for each GIC SPI
+> +interrupt.
 > +
-> +#include "irqchip.h"
-> +
-> +#define MT6577_SYS_INTPOL_NUM	(224)
-> +
-> +struct mtk_sysirq_chip_data {
-> +	spinlock_t lock;
-> +	void __iomem *intpol_base;
-> +};
-> +
-> +static int mtk_sysirq_set_type(struct irq_data *data, unsigned int type)
-> +{
-> +	irq_hw_number_t hwirq = data->hwirq;
-> +	struct mtk_sysirq_chip_data *chip_data = data->chip_data;
-> +	u32 offset, reg_index, value;
-> +	unsigned long flags;
-> +	int ret;
-> +
-> +	offset = hwirq & 0x1f;
-> +	reg_index = hwirq >> 5;
-> +
-> +	spin_lock_irqsave(&chip_data->lock, flags);
-> +	value = readl_relaxed(chip_data->intpol_base + reg_index * 4);
-> +	if (type == IRQ_TYPE_LEVEL_LOW || type == IRQ_TYPE_EDGE_FALLING) {
-> +		if (type == IRQ_TYPE_LEVEL_LOW)
-> +			type = IRQ_TYPE_LEVEL_HIGH;
-> +		else
-> +			type = IRQ_TYPE_EDGE_RISING;
-> +		value |= (1 << offset);
-> +	} else
-> +		value &= ~(1 << offset);
+> +Required properties:
+> +- compatible: should be one of:
+> +	"mediatek,mt8135-sysirq"
+> +	"mediatek,mt8127-sysirq"
+> +	"mediatek,mt6589-sysirq"
+> +	"mediatek,mt6582-sysirq"
+> +	"mediatek,mt6577-sysirq"
+> +- interrupt-controller : Identifies the node as an interrupt controller
+> +- #interrupt-cells : Must use the same cells/format as parent controller.
+> +- interrupt-parent: phandle of irq domain parent for sysirq.
 
-Nit: if one branch of an if statements is bracketed, both branches
-should be. Please bracket the else case.
+I'm concerned that this sounds very general while the binding assumes
+the GICv2 interrupt-specifier format. Either the driver needs to become
+more general, or this needs to be tightened up.
 
-> +	writel(value, chip_data->intpol_base + reg_index * 4);
-> +
-> +	data = data->parent_data;
-> +	ret = data->chip->irq_set_type(data, type);
-> +	spin_unlock_irqrestore(&chip_data->lock, flags);
-> +	return ret;
-> +}
-> +
-> +static struct irq_chip mtk_sysirq_chip = {
-> +	.name			= "MT_SYSIRQ",
-> +	.irq_mask		= irq_chip_mask_parent,
-> +	.irq_unmask		= irq_chip_unmask_parent,
-> +	.irq_eoi		= irq_chip_eoi_parent,
-> +	.irq_set_type		= mtk_sysirq_set_type,
-> +	.irq_retrigger		= irq_chip_retrigger_hierarchy,
-> +	.irq_set_affinity	= irq_chip_set_affinity_parent,
-> +};
-> +
-> +static int mtk_sysirq_domain_xlate(struct irq_domain *d,
-> +				   struct device_node *controller,
-> +				   const u32 *intspec, unsigned int intsize,
-> +				   unsigned long *out_hwirq,
-> +				   unsigned int *out_type)
-> +{
-> +	if (intsize < 3)
-> +		return -EINVAL;
-> +
-> +	/* sysirq doesn't support PPI */
-> +	if (intspec[0])
-> +		return -EINVAL;
-> +
-> +	*out_hwirq = intspec[1];
-> +	*out_type = intspec[2] & IRQ_TYPE_SENSE_MASK;
-
-All of this is very strongly tied to the GIC, but the binding made it
-sound like this was more generic (it didn't specify the number of cells
-or their meaning). It doesn't look like we validate that this is
-attached to a GIC.
-
-Do we expect this to only ever be attached to a GICv2?
-
-It would be nice to either make this generic or to describe the format
-in the binding.
-
-Also, surely you expect intsize == 3 if you expect a GICv2? Likewise in
-mtk_sysirq_domain_alloc.
+It's also odd to say "irq domain parent", as that's purely a Linux
+construct and has nothing to do with the HW.
 
 Thanks,
 Mark.
 
-> +	return 0;
-> +}
+> +- reg: Physical base address of the intpol registers and length of memory
+> +  mapped region.
 > +
-> +static int mtk_sysirq_domain_alloc(struct irq_domain *domain, unsigned int virq,
-> +				   unsigned int nr_irqs, void *arg)
-> +{
-> +	int i;
-> +	irq_hw_number_t hwirq;
-> +	struct of_phandle_args *irq_data = arg;
-> +	struct of_phandle_args gic_data = *irq_data;
-> +
-> +	if (irq_data->args_count < 3)
-> +		return -EINVAL;
-> +
-> +	hwirq = irq_data->args[1];
-> +	for (i = 0; i < nr_irqs; i++)
-> +		irq_domain_set_hwirq_and_chip(domain, virq + i, hwirq + i,
-> +					      &mtk_sysirq_chip,
-> +					      domain->host_data);
-> +
-> +	gic_data.np = domain->parent->of_node;
-> +	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, &gic_data);
-> +}
-> +
-> +static struct irq_domain_ops sysirq_domain_ops = {
-> +	.xlate = mtk_sysirq_domain_xlate,
-> +	.alloc = mtk_sysirq_domain_alloc,
-> +	.free = irq_domain_free_irqs_common,
-> +};
-> +
-> +static int __init mtk_sysirq_of_init(struct device_node *node,
-> +				     struct device_node *parent)
-> +{
-> +	struct irq_domain *domain, *domain_parent;
-> +	struct mtk_sysirq_chip_data *chip_data;
-> +	int ret = 0;
-> +
-> +	domain_parent = irq_find_host(parent);
-> +	if (!domain_parent) {
-> +		pr_err("mtk_sysirq: interrupt-parent not found\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	chip_data = kzalloc(sizeof(*chip_data), GFP_KERNEL);
-> +	if (!chip_data)
-> +		return -ENOMEM;
-> +
-> +	chip_data->intpol_base = of_io_request_and_map(node, 0, "intpol");
-> +	if (!chip_data->intpol_base) {
-> +		pr_err("mtk_sysirq: unable to map sysirq register\n");
-> +		ret = -ENOMEM;
-> +		goto out_free;
-> +	}
-> +
-> +	domain = irq_domain_add_hierarchy(domain_parent, 0,
-> +					  MT6577_SYS_INTPOL_NUM, node,
-> +					  &sysirq_domain_ops, chip_data);
-> +	if (!domain) {
-> +		ret = -ENOMEM;
-> +		goto out_unmap;
-> +	}
-> +	spin_lock_init(&chip_data->lock);
-> +
-> +	return 0;
-> +
-> +out_unmap:
-> +	iounmap(chip_data->intpol_base);
-> +out_free:
-> +	kfree(chip_data);
-> +	return ret;
-> +}
-> +IRQCHIP_DECLARE(mtk_sysirq, "mediatek,mt6577-sysirq", mtk_sysirq_of_init);
+> +Example:
+> +	sysirq: interrupt-controller@10200100 {
+> +		compatible = "mediatek,mt6589-sysirq", "mediatek,mt6577-sysirq";
+> +		interrupt-controller;
+> +		#interrupt-cells = <3>;
+> +		interrupt-parent = <&gic>;
+> +		reg = <0 0x10200100 0 0x1c>;
+> +	};
 > -- 
 > 1.8.1.1.dirty
 > 
