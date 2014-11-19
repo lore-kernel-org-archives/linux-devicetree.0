@@ -1,63 +1,71 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: [PATCH 07/10] dt/bindings: reformat micrel eth-phy documentation
-Date: Wed, 19 Nov 2014 12:59:20 +0100
-Message-ID: <1416398363-32306-8-git-send-email-johan@kernel.org>
-References: <1416398363-32306-1-git-send-email-johan@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1416398363-32306-1-git-send-email-johan@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Bruno Thomsen <bth@kamstrup.dk>, Sascha Hauer <s.hauer@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org
+From: Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] arm: dts: Exynos5: Use pmu_system_controller
+ phandle for dp phy
+Date: Wed, 19 Nov 2014 17:33:56 +0530
+Message-ID: <CAFp+6iEnTbXAUUYMU-bP27f4=X0pEtgmURAwKfRrqDQE4tRpKQ@mail.gmail.com>
+References: <1414675442-3471-1-git-send-email-gautam.vivek@samsung.com>
+	<1414675442-3471-2-git-send-email-gautam.vivek@samsung.com>
+	<000101cffe30$155793a0$4006bae0$%han@samsung.com>
+	<CABxcv=mams-iVBvACLZ-=Ozcs3KcHSEvxAsRSSV-eKaSnrcXSA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABxcv=mams-iVBvACLZ-=Ozcs3KcHSEvxAsRSSV-eKaSnrcXSA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Cc: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sean Paul <seanpaul-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Reduce indentation of Micrel PHY binding documentations somewhat.
+Hi Javier,
 
-Also fix "reference input clock" typo while at it.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- Documentation/devicetree/bindings/net/micrel.txt | 26 ++++++++++++------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+On Wed, Nov 19, 2014 at 5:06 PM, Javier Martinez Canillas
+<javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org> wrote:
+> [adding Kukjin to cc list]
+>
+> Hello Vivek,
+>
+> On Wed, Nov 12, 2014 at 5:21 AM, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>> On Thursday, October 30, 2014 10:24 PM, Vivek Gautam wrote:
+>>>
+>>> DP PHY now require pmu-system-controller to handle PMU register
+>>> to control PHY's power isolation. Adding the same to dp-phy
+>>> node.
+>>>
+>>> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>> Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>
+>> Reviewed-by: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>
+>
+> Tested-by: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/net/micrel.txt b/Documentation/devicetree/bindings/net/micrel.txt
-index a1bab5eaae02..20a6cac7abc6 100644
---- a/Documentation/devicetree/bindings/net/micrel.txt
-+++ b/Documentation/devicetree/bindings/net/micrel.txt
-@@ -6,21 +6,21 @@ Optional properties:
- 
-  - micrel,led-mode : LED mode value to set for PHYs with configurable LEDs.
- 
--              Configure the LED mode with single value. The list of PHYs and
--	      the bits that are currently supported:
-+	Configure the LED mode with single value. The list of PHYs and the
-+	bits that are currently supported:
- 
--	      KSZ8001: register 0x1e, bits 15..14
--	      KSZ8041: register 0x1e, bits 15..14
--	      KSZ8021: register 0x1f, bits 5..4
--	      KSZ8031: register 0x1f, bits 5..4
--	      KSZ8051: register 0x1f, bits 5..4
--	      KSZ8081: register 0x1f, bits 5..4
--	      KSZ8091: register 0x1f, bits 5..4
-+	KSZ8001: register 0x1e, bits 15..14
-+	KSZ8041: register 0x1e, bits 15..14
-+	KSZ8021: register 0x1f, bits 5..4
-+	KSZ8031: register 0x1f, bits 5..4
-+	KSZ8051: register 0x1f, bits 5..4
-+	KSZ8081: register 0x1f, bits 5..4
-+	KSZ8091: register 0x1f, bits 5..4
- 
--              See the respective PHY datasheet for the mode values.
-+	See the respective PHY datasheet for the mode values.
- 
-  - clocks, clock-names: contains clocks according to the common clock bindings.
- 
--              supported clocks:
--	      - KSZ8021, KSZ8031, KSZ8081, KSZ8091: "rmii-ref": The RMII
--		refence input clock. Used to determine the XI input clock.
-+	supported clocks:
-+	- KSZ8021, KSZ8031, KSZ8081, KSZ8091: "rmii-ref": The RMII reference
-+	  input clock. Used to determine the XI input clock.
+Thanks for testing.
+
+>
+> Kukjin,
+
+Sorry for not adding Kukjin to the list and thereby for the delay
+about this patch.
+
+>
+> This patch is -rc material and is needed to have display working in
+> 3.18 again since commit a5ec598 ("phy: exynos-dp-video: Use syscon
+> support to control pmu register") landed in 3.18 and broke the Exynos
+> Display Port PHY:
+>
+> exynos-dp-video-phy 10040728.video-phy: Failed to lookup PMU regmap
+
+Yes, we should pick this up and merge it since the driver patch is merged now.
+
+
+
 -- 
-2.0.4
+Best Regards
+Vivek Gautam
+Samsung R&D Institute, Bangalore
+India
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
