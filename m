@@ -1,74 +1,44 @@
-From: =?windows-1252?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Subject: Re: Looking for good references for ARM driver development
-Date: Wed, 19 Nov 2014 16:02:03 +0100
-Message-ID: <546CB0EB.9080005@suse.de>
-References: <546C920A.7060800@free.fr>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <546C920A.7060800@free.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mason <mpeg.blue@free.fr>
-Cc: LKML <linux-kernel@vger.kernel.org>, Device Tree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5.5] of/fdt: export fdt blob as /sys/firmware/fdt
+Date: Wed, 19 Nov 2014 15:07:28 +0000
+Message-ID: <20141119150728.9B083C40D73@trevor.secretlab.ca>
+References: <1415984735-32388-1-git-send-email-ard.biesheuvel@linaro.org>
+	<20141118165145.4F6A8C40966@trevor.secretlab.ca>
+	<20141118172545.GC14323@leverpostej>
+	<20141118221103.4ECB3C40966@trevor.secretlab.ca>
+	<1416402576.29243.35.camel@citrix.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416402576.29243.35.camel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "geoff.levand-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <geoff.levand-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, 19 Nov 2014 13:09:36 +0000
+, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+ wrote:
+> On Tue, 2014-11-18 at 22:11 +0000, Grant Likely wrote:
+> > > > * It also helps with exposing the reserved map to userspace, but kexec
+> > > >   has done without that feature for years, and it is in the process of
+> > > >   being deprecated in favour of /reserved-memory anyway.
+> > > 
+> > > This is the first I'd heard of the reserve map being deprecated, and
+> > > we're going to have DTs with reserved map entries for a long time going
+> > > forwards.
+> > 
+> > Deprecated, not removed or disabled. It will still work pretty much
+> > forever, but users should be encouraged to move to the reserve-memory
+> > tree.
+> 
+> I'm curious why that should be for the "OS should never touch this, here
+> be dragons" type memory, what are the benefits of the new scheme in that
+> case?
 
-Am 19.11.2014 um 13:50 schrieb Mason:
-> [...] I'm writing a driver for a temperature sensor, which is
-> supposed to work
-> within the hwmon/lm-sensors framework.
->=20
-> The sensor's API consists of 3 memory-mapped registers, which are
-> accessible over the
-> SoC's memory bus. [...]
->=20
-> 1) Which bus should I be using for this driver? Is the platform bus
-> appropriate?
+Merely for the reason of it makes the data available in exactly the same
+manner as all the rest of the data in the tree.
 
-Probably.
-
-> 2) platform.txt states
->=20
->> Some drivers are not fully converted to the driver model, because th=
-ey
->> take
->> on a non-driver role:  the driver registers its platform device,
->> rather than
->> leaving that for system infrastructure.  Such drivers can't be hotpl=
-ugged
->> or coldplugged, since those mechanisms require device creation to be=
- in a
->> different system component than the driver.
->=20
-> How do I "leave device registration for the system infrastructure"?
-> Where should I put that code?
-> Is it a good idea to separate device registration and driver registra=
-tion
-> in the case of a SoC, where the device is embedded in the SoC and is =
-not
-> "hot-plugged" (or anything-plugged for that matter, it's just "there"=
-).
-
-Since this appears to be about an ARM SoC according to your To list, in
-general, you create a device tree binding, that binding is registered
-within your platform/... driver code and referenced in the device tree
-for SoC or board, and then your driver will automatically be probed.
-
-> 4) Can I use platform_driver_probe, instead of platform_driver_regist=
-er?
-
-Most likely you do not need to call either yourself.
-
-Just compare other platform drivers on the one hand, and temparature
-sensor drivers on the other (such as I2C based gmt,g781 / LM90).
-Did you already check whether there is a driver that is both?
-
-Regards,
-Andreas
-
---=20
-SUSE LINUX GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 21284 AG N=FCrn=
-berg
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
