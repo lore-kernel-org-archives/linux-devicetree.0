@@ -1,39 +1,37 @@
-From: Paolo Pisati <p.pisati@gmail.com>
-Subject: Re: [PATCH V8 00/14] drm/exynos: few patches to enhance bridge chip
- support
-Date: Wed, 19 Nov 2014 17:22:24 +0100
-Message-ID: <20141119162224.GB5396@luxor.wired.org>
-References: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com>
- <CAEC9eQOrKw2Z1q-ztFfadXmsL3CTcAkkv9kcS2QnDOAVSh2AuQ@mail.gmail.com>
- <546C646C.4060303@collabora.co.uk>
- <20141119105527.GA5396@luxor.wired.org>
- <546C7D15.10605@collabora.co.uk>
+From: Kevin Cernekee <cernekee@gmail.com>
+Subject: Re: [PATCH V2 06/10] serial: pxa: Add fifo-size and
+ {big,native}-endian properties
+Date: Wed, 19 Nov 2014 08:23:35 -0800
+Message-ID: <CAJiQ=7BpOzAFTCmhER=ZVJgtQwoDKf3xPYKR8u+g-d1RQzhUKw@mail.gmail.com>
+References: <1415825647-6024-1-git-send-email-cernekee@gmail.com>
+ <1415825647-6024-7-git-send-email-cernekee@gmail.com> <20141119144911.9CA5FC40D73@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <546C7D15.10605@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Paolo Pisati <p.pisati@gmail.com>, Ajay kumar <ajaynumb@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, InKi Dae <inki.dae@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Sean Paul <seanpaul@google.com>, Thierry Reding <thierry.reding@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>, gustavo Padovan <gustavo.padovan@collabora.co.uk>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <20141119144911.9CA5FC40D73@trevor.secretlab.ca>
+Sender: linux-serial-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, daniel@zonque.org, Haojian Zhuang <haojian.zhuang@gmail.com>, robert.jarzmik@free.fr, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 19, 2014 at 12:20:53PM +0100, Javier Martinez Canillas wrote:
-> 
-> If someone else is interested, I've pushed a branch [0] with 3.18-rc5 + all
-> the needed patches.
-> 
-> Ajay, feel free to add to your series:
-> 
-> Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-> 
-> Best regards,
-> Javier
-> 
-> [0]: git://git.collabora.co.uk/git/user/javier/linux.git wip/exynos/dp-integ
+On Wed, Nov 19, 2014 at 6:49 AM, Grant Likely <grant.likely@linaro.org> wrote:
+> On Wed, 12 Nov 2014 12:54:03 -0800
+> , Kevin Cernekee <cernekee@gmail.com>
+>  wrote:
+>> With a few tweaks, the PXA serial driver can handle other 16550A clones.
+>> Add a fifo-size DT property to override the FIFO depth (BCM7xxx uses 32),
+>> and {native,big}-endian properties similar to regmap to support SoCs that
+>> have BE or "automagic endian" registers.
+>
+> Hold the phone, if these are 16550A clone ports, then why is the pxa
+> driver being adapted to drive them? I would expect the of_serial.c
+> driver to be used. It's already got support for multiple variants of the
+> 16550.
 
-doesn't peach pi require the same dts modification as peach pit/snow?
+Merely building serial8250 into a multiplatform kernel breaks every
+other serial driver that uses "ttyS" and major/minor 4/64.  Even if an
+8250/16550A device is never probed.
 
--- 
-bye,
-p.
+More discussion in this thread:
+
+http://www.spinics.net/lists/linux-serial/msg14811.html
