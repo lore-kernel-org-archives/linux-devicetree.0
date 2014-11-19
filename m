@@ -1,165 +1,51 @@
-From: Beomho Seo <beomho.seo@samsung.com>
-Subject: [PATCH v5 4/4] Documentation: Add documentation for rt5033
- multifunction device
-Date: Wed, 19 Nov 2014 13:52:40 +0900
-Message-ID: <1416372760-2090-5-git-send-email-beomho.seo@samsung.com>
-References: <1416372760-2090-1-git-send-email-beomho.seo@samsung.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <1416372760-2090-1-git-send-email-beomho.seo@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Cc: sameo@linux.intel.com, lee.jone@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, cw00.choi@samsung.com, geunsik.lim@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, Beomho Seo <beomho.seo@samsung.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] ARM: dts: fix PWM clock found on RK3288 Socs
+Date: Tue, 18 Nov 2014 21:14:46 -0800
+Message-ID: <CAD=FV=W+WU3j7OWKTxtGUv1Jt7qPesGXSOsoM=bsD5C15jttvA@mail.gmail.com>
+References: <1416367554-15185-1-git-send-email-caesar.wang@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1416367554-15185-1-git-send-email-caesar.wang@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Caesar Wang <caesar.wang@rock-chips.com>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Kever Yang <kever.yang@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, ZhenFu Fang <fzf@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Chris Zhong <chris.zhong@rock-chips.com>, Sonny Rao <sonnyrao@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch device tree binding documentation for rt5033 multifunction device.
+Caesar,
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
----
-Changes in v5:
-Changes in v4:
-Changes in v3:
-- none.
+On Tue, Nov 18, 2014 at 7:25 PM, Caesar Wang <caesar.wang@rock-chips.com> wrote:
+> We use the new PWM IP on RK3288,but the PWM's clock indeed incorrect.
+>
+> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+> ---
+>  arch/arm/boot/dts/rk3288.dtsi | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 
-Changes in v2:
-- Revise binding documentation.
----
- Documentation/devicetree/bindings/mfd/rt5033.txt   |  108 ++++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- 2 files changed, 109 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/rt5033.txt
+Right, I reported this when Kever was doing his "unused clocks" patch.
+That's why this clock is currently "ignore unused".
 
-diff --git a/Documentation/devicetree/bindings/mfd/rt5033.txt b/Documentation/devicetree/bindings/mfd/rt5033.txt
-new file mode 100644
-index 0000000..52a6d33
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/rt5033.txt
-@@ -0,0 +1,108 @@
-+Richtek RT5033 Power management Integrated Circuit
-+
-+RT5033 is a Multifunction device which includes battery charger, fuel gauge,
-+flash LED current source, LDO and synchronous Buck converter for portable
-+applications. It is interfaced to host controller using i2c interface.
-+
-+Required properties:
-+- compatible : Must be "richtek,rt5033"
-+- reg : Specifies the i2c slave address of general part.
-+- interrupts : This i2c devices has an IRQ line connected to the main SoC.
-+- interrupt-parent : The parent interrupt controller.
-+
-+Optional node:
-+Regulators: The regulators of RT5033 have to be instantiated under sub-node
-+named "regulators" usinge the following format.
-+
-+	regulators {
-+		regulator-name {
-+			regulator-name = LDO/BUCK
-+			regulator subnodes called X, Y and Z
-+		};
-+	};
-+	refer Documentation/devicetree/bindings/regulator/regulator.txt
-+
-+
-+Battery charger: There battery charger of RT5033 have to be instantiated under
-+sub-node named "charger" using the following format.
-+
-+Required properties:
-+- compatible : Must be "richtek,rt5033-charger".
-+- richtek,pre-uamp : Current of pre-charge mode. The pre-charge current levels
-+  are 350 mA to 650 mA programmed by I2C per 100 mA.
-+- richtek,pre-threshold-uvolt : Voltage of threshold pre-charge mode. Battery
-+  voltage is below pre-charge threshold voltage, the charger is in pre-charge
-+  mode with pre-charge current. Its levels are 2.3 V  to 3.8 V programmed
-+  by I2C per 0.1 V.
-+- richtek,fast-uamp : Current of fast-charge mode. The fast-charge current
-+  levels are 700 mA to 2000 mA programmed by I2C per 100 mA.
-+- richtek,const-uvolt :  Battery regulation voltage of constant voltage mode.
-+  This voltage level 3.65 V to 4.4 V bye I2C per 0.025 V.
-+- richtek,eoc-uamp : This property is end of charge current. Its level 150 mA
-+  to 200 mA.
-+
-+	charger {
-+		compatible = "richtek,rt5033-charger";
-+		richtek,pre-uamp = <350000>;
-+		richtek,pre-threshold-uvolt = <3400000>;
-+		richtek,fast-uamp = <2000000>;
-+		richtek,const-uvolt = <4350000>;
-+		richtek,eoc-uamp = <250000>;
-+	};
-+
-+
-+Fuelgauge: There fuelgauge of RT5033 to be instantiated node named "fuelgauge"
-+using the following format.
-+
-+Required properties:
-+- compatible = Must be "richtek,rt5033-battery".
-+
-+	i2c_fuel: i2c@1 {
-+		compatible = "i2c-gpio";
-+		standard i2c-gpio constraints...
-+		fuelgauge {
-+			compatible = "richtek,rt5033-battery".
-+		};
-+	};
-+
-+
-+Example:
-+
-+		rt5033@34 {
-+			compatible = "richtek,rt5033";
-+			reg = <0x34>;
-+			interrupt-parent = <&gpx1>;
-+			interrupts = <5 0>;
-+
-+			regulators {
-+				buck_reg: BUCK {
-+					regulator-name = "BUCK";
-+					regulator-min-microvolt = <1200000>;
-+					regulator-max-microvolt = <1200000>;
-+					regulator-always-on;
-+				};
-+			};
-+
-+			charger {
-+				compatible = "richtek,rt5033-charger";
-+				richtek,pre-uamp = <350000>;
-+				richtek,pre-threshold-uvolt = <3400000>;
-+				richtek,fast-uamp = <2000000>;
-+				richtek,const-uvolt = <4350000>;
-+				richtek,eoc-uamp = <250000>;
-+			};
-+
-+		};
-+
-+		i2c_fuel: i2c@10 {
-+			compatible = "i2c-gpio";
-+			gpios = <&gpm3 1 0
-+				&gpm3 0 0>;
-+
-+			fuel: rt5033-battery@35 {
-+				compatible = "richtek,rt5033-battery";
-+				interrupt-parent = <&gpx2>;
-+				interrupts = <3 0>;
-+				reg = <0x35>;
-+			};
-+		};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 723999d..611b543 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -124,6 +124,7 @@ ralink	Mediatek/Ralink Technology Corp.
- ramtron	Ramtron International
- realtek Realtek Semiconductor Corp.
- renesas	Renesas Electronics Corporation
-+richtek	Richtek Technology Corporation
- ricoh	Ricoh Co. Ltd.
- rockchip	Fuzhou Rockchip Electronics Co., Ltd
- samsung	Samsung Semiconductor
--- 
-1.7.9.5
+...but though your change is right, I'd rather your change doesn't
+land quite yet.  It totally wrecks havoc with the PWM regulator used
+on many rk3288 boards and will glitch the main "logic" voltage at
+bootup.  I have some patches that are MASSIVELY WIP:
 
+https://chromium-review.googlesource.com/230640
+WIP: regulator: pwm: Tell regulator framework that we can't turn off
+
+https://chromium-review.googlesource.com/230641
+WIP: PWM: handle the fact that firmware might have left us enabled
+
+https://chromium-review.googlesource.com/230642
+WIP: pwm-regulator stuff
+
+I think that last one might blow up into several patches.  We need to
+solve the problems from those patches before yours can really land.
+
+
+It's pretty high on my list to finish the above patches, but right now
+suspend/resume issues are higher priority so it's a bit stalled...  If
+someone wants to hijack any of the above patches please let me know--I
+won't be offended.
+
+-Doug
