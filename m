@@ -1,59 +1,47 @@
-From: =?windows-1252?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH V8 00/14] drm/exynos: few patches to enhance bridge chip
- support
-Date: Wed, 19 Nov 2014 17:44:14 +0100
-Message-ID: <546CC8DE.3050208@suse.de>
-References: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com> <CAEC9eQOrKw2Z1q-ztFfadXmsL3CTcAkkv9kcS2QnDOAVSh2AuQ@mail.gmail.com> <546C646C.4060303@collabora.co.uk> <20141119105527.GA5396@luxor.wired.org> <546C7D15.10605@collabora.co.uk> <20141119162224.GB5396@luxor.wired.org> <546CC546.5090900@collabora.co.uk>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH] ARM: dts: dove: add DT LCD controllers
+Date: Wed, 19 Nov 2014 16:47:13 +0000
+Message-ID: <20141119164713.GJ4042@n2100.arm.linux.org.uk>
+References: <E1Xr3Ur-0005Qx-Fx@rmk-PC.arm.linux.org.uk>
+ <20141119174050.122a0cc0@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <546CC546.5090900@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Paolo Pisati <p.pisati@gmail.com>, Ajay kumar <ajaynumb@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, InKi Dae <inki.dae@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Sean Paul <seanpaul@google.com>, Thierry Reding <thierry.reding@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>, gustavo Padovan <gustavo.padovan@collabora.co.uk>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20141119174050.122a0cc0@armhf>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Am 19.11.2014 um 17:28 schrieb Javier Martinez Canillas:
-> On 11/19/2014 05:22 PM, Paolo Pisati wrote:
->> On Wed, Nov 19, 2014 at 12:20:53PM +0100, Javier Martinez Canillas w=
-rote:
->>>
->>> If someone else is interested, I've pushed a branch [0] with 3.18-r=
-c5 + all
->>> the needed patches.
->>>
->>> Ajay, feel free to add to your series:
->>>
->>> Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.u=
-k>
->>>
->>> Best regards,
->>> Javier
->>>
->>> [0]: git://git.collabora.co.uk/git/user/javier/linux.git wip/exynos=
-/dp-integ
->>
->> doesn't peach pi require the same dts modification as peach pit/snow=
-?
->>
->=20
-> No, because the Peach Pit and Snow have an eDP to LVDS bridge chip bu=
-t the
-> Peach Pi does not have a bridge. Ajay's series is to add DRM bridge s=
-upport
-> to Exynos Display Port driver and so is only relevant to Snow and Pit=
-=2E
+On Wed, Nov 19, 2014 at 05:40:50PM +0100, Jean-Francois Moine wrote:
+> On Wed, 19 Nov 2014 11:32:29 +0000
+> Russell King <rmk+kernel@arm.linux.org.uk> wrote:
+> 
+> > +			lcd1: lcd-controller@810000 {
+> > +				compatible = "marvell,dove-lcd";
+> > +				reg = <0x810000 0x1000>;
+> > +				interrupts = <46>;
+> > +				status = "disabled";
+> > +			};
+> 
+> The I/O range of the LCDs is only 0x1c8. Why do you set it 0x1000?
 
-=2E.. and to Spring.
+Actually, a more correct value would be 0x10000, if you read table 145.
+Yes, the device may onlny have documented registers from 0x84 to 0x1c8,
+but that isn't to say that we should say that the device resources
+start at 0x810084 and have a size of 0x144, when the bus level decodes
+a 64K chunk of memory.
 
-So, what's the timing here - is this series headed for 3.20 now or 3.19=
-?
-
-Regards,
-Andreas
-
---=20
-SUSE LINUX GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 21284 AG N=FCrn=
-berg
+-- 
+FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
+according to speedtest.net.
