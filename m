@@ -1,76 +1,90 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v12 1/3] drm: rockchip: Add basic drm driver
-Date: Wed, 19 Nov 2014 14:17:58 +0100
-Message-ID: <20141119131758.GN25711@phenom.ffwll.local>
-References: <1416297587-18959-1-git-send-email-mark.yao@rock-chips.com>
- <1416297629-19024-1-git-send-email-mark.yao@rock-chips.com>
- <20141118083234.GZ25711@phenom.ffwll.local>
- <20141118142130.6c12ab50@bbrezillon>
- <20141118142447.GC25711@phenom.ffwll.local>
- <546BEDD9.1000205@rock-chips.com> <546BFA4D.3090700@rock-chips.com>
- <20141119100413.7ab613e9@bbrezillon>
+From: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv4 1/1] thermal: of: improve of-thermal sensor
+ registration API
+Date: Wed, 19 Nov 2014 08:03:22 -0400
+Message-ID: <20141119120320.GA10180@developer>
+References: <1416321575-18348-1-git-send-email-edubezval@gmail.com>
+ <1416321575-18348-2-git-send-email-edubezval@gmail.com>
+ <20141119092139.1965e44e@amdc2363>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="YiEDa0DAkWCtVeE4"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20141119100413.7ab613e9@bbrezillon>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, heiko@sntech.de, linux-doc@vger.kernel.org, kever.yang@rock-chips.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, xxm@rock-chips.com, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, huangtao@rock-chips.com, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, yxj@rock-chips.com, Rob Herring <robh+dt@kernel.org>, marcheu@chromium.org, Mark yao <mark.yao@rock-chips.com>, xw@rock-chips.com, linux-api@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, dianders@chromium.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, cf@rock-chips.com
+In-Reply-To: <20141119092139.1965e44e@amdc2363>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Caesar Wang <caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mikko Perttunen <mikko.perttunen-/1wQRMveznE@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBOb3YgMTksIDIwMTQgYXQgMTA6MDQ6MTNBTSArMDEwMCwgQm9yaXMgQnJlemlsbG9u
-IHdyb3RlOgo+IEFGQUlVLCB0aGUgc3VnZ2VzdGlvbiB3YXMgdG8gc3BsaXQgZHJtX2Nvbm5lY3Rv
-cl9pbml0IGFuZAo+IGRybV9jb25uZWN0b3JfcmVnaXN0ZXIgY2FsbHM6Cj4gIC0gZHJtX2Nvbm5l
-Y3Rvcl9pbml0IGNhbGwgc2hvdWxkIHN0aWxsIGJlIHBhcnQgb2YgdGhlIGxvYWQgcHJvY2VkdXJl
-Cj4gICAgKHRoaXMgZnVuY3Rpb24gYWRkcyB0aGUgY29ubmVjdG9yIHRvIHRoZSBjb25uZWN0b3Ig
-bGlzdCB3aGljaCBpcyB1c2VkCj4gICAgYnkgZHJtX21vZGVfZ3JvdXBfaW5pdF9sZWdhY3lfZ3Jv
-dXApCj4gIC0gZHJtX2Nvbm5lY3Rvcl9yZWdpc3RlciBzaG91bGQgYmUgY2FsbGVkIGFmdGVyIHRo
-ZSBkZXZpY2UgaGFzIGJlZW4KPiAgICByZWdpc3RlcmVkCj4gCj4gSGVyZSB3aGF0IEkndmUgZG9u
-ZSBhbmQgaXQgc2VlbXMgdG8gd29yazoKPiAKPiBzdGF0aWMgaW50IGF0bWVsX2hsY2RjX2RjX2Nv
-bm5lY3Rvcl9wbHVnX2FsbChzdHJ1Y3QgZHJtX2RldmljZSAqZGV2KQo+IHsKPiAJc3RydWN0IGRy
-bV9jb25uZWN0b3IgKmNvbm5lY3RvciwgKmZhaWxlZDsKPiAJaW50IHJldDsKPiAKPiAJbXV0ZXhf
-bG9jaygmZGV2LT5tb2RlX2NvbmZpZy5tdXRleCk7Cj4gCWxpc3RfZm9yX2VhY2hfZW50cnkoY29u
-bmVjdG9yLAo+IAkmZGV2LT5tb2RlX2NvbmZpZy5jb25uZWN0b3JfbGlzdCwgaGVhZCkgeyByZXQg
-PQo+IAlkcm1fY29ubmVjdG9yX3JlZ2lzdGVyKGNvbm5lY3Rvcik7IGlmIChyZXQpIHsKPiAJCQlm
-YWlsZWQgPSBjb25uZWN0b3I7Cj4gCQkJZ290byBlcnI7Cj4gCQl9Cj4gCX0KPiAJbXV0ZXhfdW5s
-b2NrKCZkZXYtPm1vZGVfY29uZmlnLm11dGV4KTsKPiAJcmV0dXJuIDA7Cj4gCj4gZXJyOgo+IAls
-aXN0X2Zvcl9lYWNoX2VudHJ5KGNvbm5lY3RvciwgJmRldi0+bW9kZV9jb25maWcuY29ubmVjdG9y
-X2xpc3QsIGhlYWQpIHsKPiAJCWlmIChmYWlsZWQgPT0gY29ubmVjdG9yKQo+IAkJCWJyZWFrOwo+
-IAo+IAkJZHJtX2Nvbm5lY3Rvcl91bnJlZ2lzdGVyKGNvbm5lY3Rvcik7Cj4gCX0KPiAJbXV0ZXhf
-dW5sb2NrKCZkZXYtPm1vZGVfY29uZmlnLm11dGV4KTsKPiAKPiAJcmV0dXJuIHJldDsKPiB9Cj4g
-Cj4gWy4uLl0KPiAKPiBzdGF0aWMgaW50IGF0bWVsX2hsY2RjX2RjX2RybV9wcm9iZShzdHJ1Y3Qg
-cGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+IHsKPiAJc3RydWN0IGRybV9kZXZpY2UgKmRkZXY7Cj4g
-CWludCByZXQ7Cj4gCj4gCWRkZXYgPSBkcm1fZGV2X2FsbG9jKCZhdG1lbF9obGNkY19kY19kcml2
-ZXIsICZwZGV2LT5kZXYpOwo+IAlpZiAoIWRkZXYpCj4gCQlyZXR1cm4gLUVOT01FTTsKPiAKPiAJ
-cmV0ID0gZHJtX2Rldl9zZXRfdW5pcXVlKGRkZXYsIGRldl9uYW1lKGRkZXYtPmRldikpOwo+IAlp
-ZiAocmV0KQo+IAkJZ290byBlcnJfdW5yZWY7Cj4gCj4gCXJldCA9IGF0bWVsX2hsY2RjX2RjX2xv
-YWQoZGRldik7Cj4gCWlmIChyZXQpCj4gCQlnb3RvIGVycl91bnJlZjsKPiAKPiAJcmV0ID0gZHJt
-X2Rldl9yZWdpc3RlcihkZGV2LCAwKTsKPiAJaWYgKHJldCkKPiAJCWdvdG8gZXJyX3VubG9hZDsK
-PiAKPiAJcmV0ID0gYXRtZWxfaGxjZGNfZGNfY29ubmVjdG9yX3BsdWdfYWxsKGRkZXYpOwo+IAlp
-ZiAocmV0KQo+IAkJZ290byBlcnJfdW5yZWdpc3RlcjsKPiAKPiAJcmV0dXJuIDA7Cj4gCj4gZXJy
-X3VucmVnaXN0ZXI6Cj4gCWRybV9kZXZfdW5yZWdpc3RlcihkZGV2KTsKPiAKPiBlcnJfdW5sb2Fk
-Ogo+IAlhdG1lbF9obGNkY19kY191bmxvYWQoZGRldik7Cj4gCj4gZXJyX3VucmVmOgo+IAlkcm1f
-ZGV2X3VucmVmKGRkZXYpOwo+IAo+IAlyZXR1cm4gcmV0Owo+IH0KPiAKPiBEYW5pZWwsIGNhbiB5
-b3UgY29uZmlybSB0aGF0J3Mgd2hhdCB5b3UgaGFkIGluIG1pbmQgPwoKWXVwLiBUbyBiZSBhYmxl
-IHRvIGhhdmUgcmFjZS1mcmVlIGRyaXZlciBsb2FkIHdlIG5lZWQgdG8gc3BsaXQgb2JqZWN0Cmlu
-dG8gYW4gX2luaXQgc3RlcCAoYWxsb2NhdGVzIHN0cnVjdHMgYW5kIGxpbmtzIHRvIGtlcm5lbC1p
-bnRlcm5hbCBsaXN0cykKYW5kIF9yZWdpc3RlciAobWFrZXMgdGhlIG9iamVjdCB1c2Vyc3BhY2Ut
-dmlzaWJsZSB0aHJvdWdoIHN5c2ZzIGFuZApkZXYtbm9kZSBrbXMgb2JqZWN0IGxvb2t1cCBpZHIp
-LgoKVGhpcyBlbnRpcmUgbWVzcyBpcyBhbGwgc3RpbGwgZmFsbG91dCBmcm9tIHRoZSBkYXJrIGFn
-ZXMgb2YgdGhlIGRybQptaWRsYXllciBhbmQgd2UnbGwgcHJvYmFibHkgaGF2ZSBmdW4gd2l0aCB0
-aGlzIGZvciBhbm90aGVyIGZldyB5ZWFycyA7LSkKLURhbmllbAotLSAKRGFuaWVsIFZldHRlcgpT
-b2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KKzQxICgwKSA3OSAzNjUgNTcgNDgg
-LSBodHRwOi8vYmxvZy5mZndsbC5jaApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
-ZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2RyaS1kZXZlbAo=
+
+--YiEDa0DAkWCtVeE4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+
+Hey Lukasz,
+
+On Wed, Nov 19, 2014 at 09:21:39AM +0100, Lukasz Majewski wrote:
+> Hi Eduardo,
+>=20
+
+<big cut>=20
+
+> >  }
+>=20
+> On which branch should I apply this patch?
+>=20
+
+This is based in my -linus branch. That means I will send this for the
+next major window, not rc. The branch -fixes of thermal-soc include
+patches for rc windows.
+
+> I've tried to apply this patch on top of newest linux-soc-thermal/next:
+> git://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal.=
+git
+> branch: next
+> SHA1:4027494124fd88e5d51127eebba315de5d8d57c8
+>=20
+> Unfortunately, it conflicts with:
+> "thermal: fix multiple disbalanced device node counters"
+> c2aad93c Vladimir Zapolskiy
+
+The -next branch is intended to contain patches for linux-next testing.
+I include the content of -linus and -fixes together to be tested in
+linux-next.
+
+However, as this patch has not been merged yet into -linus, I haven't
+rebuilt my -next branch.
+
+>=20
+>=20
+> --=20
+> Best regards,
+>=20
+> Lukasz Majewski
+>=20
+> Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
+
+--YiEDa0DAkWCtVeE4
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUbIb8AAoJEMLUO4d9pOJWkwgIAJVX3QS2UiIRUV9KeE20LzYW
+cMcbbGVEbqn6Vib/XW9zarPN5djBUTmXU+qTUM6Z4794uRME53/rXtUaCwbocKtZ
+fTjHnVMDHWQ//LDdXkwSgrfhbG8iYklo8MD4T6Er3Joec3BMv1JCo/GcM9n1d2Nr
+1dm6CiKWIbLKAim+3kZhCQmEFLXIWB5lH9ZAPTCLfn9jXN156UHPUc5tKij01S9D
+hIzhFFJ2mx7oQpiW3Ecj2Pq7zxHsvGTibi5RlWA3RcBTqYA3rAi50DTF0HWXvtCq
+ydWgShJxpTGd/oKjyvyEd+6u9PstW8mxFpQ4zG3zcNFlLWMy7HwO85hVBlTfGXc=
+=qst+
+-----END PGP SIGNATURE-----
+
+--YiEDa0DAkWCtVeE4--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
