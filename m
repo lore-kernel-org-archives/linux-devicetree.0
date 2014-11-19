@@ -1,59 +1,47 @@
-From: Russell King <rmk+kernel@arm.linux.org.uk>
-Subject: [PATCH] ARM: dts: dove: add DT LCD controllers
-Date: Wed, 19 Nov 2014 11:32:29 +0000
-Message-ID: <E1Xr3Ur-0005Qx-Fx@rmk-PC.arm.linux.org.uk>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH v2 2/2] arm: dts: Exynos5: Use pmu_system_controller
+ phandle for dp phy
+Date: Wed, 19 Nov 2014 12:36:11 +0100
+Message-ID: <CABxcv=mams-iVBvACLZ-=Ozcs3KcHSEvxAsRSSV-eKaSnrcXSA@mail.gmail.com>
+References: <1414675442-3471-1-git-send-email-gautam.vivek@samsung.com>
+	<1414675442-3471-2-git-send-email-gautam.vivek@samsung.com>
+	<000101cffe30$155793a0$4006bae0$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <000101cffe30$155793a0$4006bae0$%han@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vivek Gautam <gautam.vivek@samsung.com>
+Cc: Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the DT fragment for the Marvell Dove LCD controllers.
+[adding Kukjin to cc list]
 
-Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
----
-The documentation for this binding was submitted previously as part of
-the code which parses this - v3.17-rc1~82^2~32^2~2.
+Hello Vivek,
 
- arch/arm/boot/dts/dove.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+On Wed, Nov 12, 2014 at 5:21 AM, Jingoo Han <jg1.han@samsung.com> wrote:
+> On Thursday, October 30, 2014 10:24 PM, Vivek Gautam wrote:
+>>
+>> DP PHY now require pmu-system-controller to handle PMU register
+>> to control PHY's power isolation. Adding the same to dp-phy
+>> node.
+>>
+>> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+>> Cc: Jingoo Han <jg1.han@samsung.com>
+>
+> Reviewed-by: Jingoo Han <jg1.han@samsung.com>
+>
 
-diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
-index 3b891dd20993..a5441d5482a6 100644
---- a/arch/arm/boot/dts/dove.dtsi
-+++ b/arch/arm/boot/dts/dove.dtsi
-@@ -630,6 +630,20 @@
- 				reg = <0xe8400 0x0c>;
- 				ngpios = <8>;
- 			};
-+
-+			lcd1: lcd-controller@810000 {
-+				compatible = "marvell,dove-lcd";
-+				reg = <0x810000 0x1000>;
-+				interrupts = <46>;
-+				status = "disabled";
-+			};
-+
-+			lcd0: lcd-controller@820000 {
-+				compatible = "marvell,dove-lcd";
-+				reg = <0x820000 0x1000>;
-+				interrupts = <47>;
-+				status = "disabled";
-+			};
- 		};
- 	};
- };
--- 
-1.8.3.1
+Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+
+Kukjin,
+
+This patch is -rc material and is needed to have display working in
+3.18 again since commit a5ec598 ("phy: exynos-dp-video: Use syscon
+support to control pmu register") landed in 3.18 and broke the Exynos
+Display Port PHY:
+
+exynos-dp-video-phy 10040728.video-phy: Failed to lookup PMU regmap
+
+Best regards,
+Javier
