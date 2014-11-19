@@ -1,44 +1,87 @@
 From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [RFC] Add of_path property for all devices with a node
-Date: Wed, 19 Nov 2014 13:25:53 +1100
-Message-ID: <1416363953.5704.19.camel@kernel.crashing.org>
+Subject: Re: [PATCH] drivers/core/of: Add symlink to device-tree from
+ devices with an OF node
+Date: Wed, 19 Nov 2014 13:30:27 +1100
+Message-ID: <1416364227.5704.20.camel@kernel.crashing.org>
 References: <1415342031.4925.27.camel@kernel.crashing.org>
 	 <1415342117.4925.29.camel@kernel.crashing.org>
 	 <1415596626.5769.14.camel@kernel.crashing.org>
 	 <CAL_JsqKG=vpeGKj3v-2VW9oGQsnmuYMHRfy6LuXDXE=ROjHT4w@mail.gmail.com>
-	 <CACxGe6vg8SxwCHZ8HxzLzimQOAf8Q81wd5eO=x2LavD4dv81Rw@mail.gmail.com>
+	 <1415841047.5124.62.camel@kernel.crashing.org>
+	 <CAL_Jsq+YyfMWxiOFv4x3g5hZJH0XRqCKj2He1XO9eyXWjHTMrg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6vg8SxwCHZ8HxzLzimQOAf8Q81wd5eO=x2LavD4dv81Rw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAL_Jsq+YyfMWxiOFv4x3g5hZJH0XRqCKj2He1XO9eyXWjHTMrg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jeremy.kerr-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-11-18 at 15:18 +0000, Grant Likely wrote:
-> >> So not much reactions here .. a bit more on IRC, where Olof
-> suggested
-> >> that rather than a file containing a path, we could use a symlink
-> since
-> >> the devtree is now in sysfs, so we can do relative links.
+On Tue, 2014-11-18 at 10:37 -0600, Rob Herring wrote:
+> On Wed, Nov 12, 2014 at 7:10 PM, Benjamin Herrenschmidt
+> <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
+> > So I've been annoyed lately with having a bunch of devices such as i2c
+> > eeproms (for use by VPDs, server world !) and other bits and pieces that
+> > I want to be able to identify from userspace, and possibly provide
+> > additional data about from FW.
 > >
-> > +1 on this. That was part of the motivation to move DT into sysfs.
+> > Basically, it boils down to correlating the sysfs device with the OF
+> > tree device node, so that user space can use device-tree info such as
+> > additional "location" or "label" (or whatever else we can come up with)
+> > propreties to identify a given device, or get some attributes of use
+> > about it, etc...
 > >
-> > Rob
+> > Now, so far, we've done that in some subsystem in a fairly ad-hoc basis
+> > using "devspec" properties. For example, PCI creates them if it can
+> > correlate the probed device with a DT node. Some powerpc specific busses
+> > do that too.
+> >
+> > However, i2c doesn't and it would be nice to have something more generic
+> > since technically any device can have a corresponding device tree node.
+> >
+> > This patch adds an "of_node" symlink to devices that have a non-NULL
+> > dev->of_node pointer, the patch is pretty trivial and seems to work just
+> > fine for me.
+> >
+> > Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+> > ---
+> > diff --git a/drivers/base/core.c b/drivers/base/core.c
+> > index 20da3ad..8c7b607 100644
+> > --- a/drivers/base/core.c
+> > +++ b/drivers/base/core.c
+> > @@ -493,6 +493,15 @@ static int device_add_attrs(struct device *dev)
+> >                         goto err_remove_dev_groups;
+> >         }
+> >
+> > +#ifdef CONFIG_OF
+> > +       if (dev->of_node) {
 > 
-> I had a patch that did exactly that. I wonder what happened to it...
-> 
-> But regardless, as Frank said in his reply, this data is already in
-> the uevent file for every device.
+> if (IS_ENABLED(CONFIG_OF) && dev->of_node)
 
-I sent a patch doing the symlink days ago.... I think it's still
-valuable, the patch is triviall and the symlink is a lot easier to deal
-with than parsing the uevent file.
+Ok, I didn't realize the of_node field existed in struct device even
+without CONFIG_OF (otherwise that wouldn't have compiled). Grant, Rob,
+do you want to take this patch (with the above fixed) or should I not
+bother based on the fact that the info is in uevent ? I prefer still
+doing the symlink but you tell me.
 
-Cheers,
-Ben.
+> > +               error = sysfs_create_link(&dev->kobj, &dev->of_node->kobj,
+> > +                                         "of_node");
+> > +               if (error)
+> > +                       dev_warn(dev, "Error %d creating of_node link\n", error);
+> > +       }
+> > +#endif /* CONFIG_OF */
+> > +
+> >         return 0;
+> >
+> >   err_remove_dev_groups:
+> >
+> >
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
 
 --
