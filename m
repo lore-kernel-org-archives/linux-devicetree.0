@@ -1,95 +1,55 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/2] ARM: shmobile: sh73a0 dtsi: Add missing INTCA0 clock for irqpin module
-Date: Wed, 19 Nov 2014 16:27:00 +0100
-Message-ID: <1416410820-30020-3-git-send-email-geert+renesas@glider.be>
-References: <1416410820-30020-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1416410820-30020-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] drivers/core/of: Add symlink to device-tree from devices
+ with an OF node
+Date: Wed, 19 Nov 2014 09:39:36 -0600
+Message-ID: <CAL_JsqJm9c+GozQssLmjuSLzcsqDiMW8=1P_fM6-Zfdk=N6Lqg@mail.gmail.com>
+References: <1415342031.4925.27.camel@kernel.crashing.org> <3422452.OFUjscQXRB@wuerfel>
+ <CAL_JsqKk5UdFEa02wA+3N5BCM7coWAK=4jAr96Pw5eFh2n0ioQ@mail.gmail.com> <11269246.iBzpsM0jDI@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <11269246.iBzpsM0jDI@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jeremy.kerr-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This clock drives the irqpin controller modules.
-Before, it was assumed enabled by the bootloader or reset state.
-By making it available to the driver, we make sure it gets enabled when
-needed, and allow it to be managed by system or runtime PM.
+On Wed, Nov 19, 2014 at 8:49 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Wednesday 19 November 2014 08:45:58 Rob Herring wrote:
+>> > static inline struct device_node *dev_of_node(struct device *of_node)
+>> > {
+>> >         if (!IS_ENABLED(CONFIG_OF))
+>> >                 return NULL;
+>> >
+>> >         return dev->of_node;
+>> > }
+>> >
+>> > Adding the IS_ENABLED() in a lot of drivers isn't horrible, but we seem
+>> > to be doing it a lot.
+>>
+>> I think you misread things. of_node is always present now, so it
+>> should always be NULL for !CONFIG_OF.
+>>
+>
+> No, I didn't misread it but I should have been clearer with the intention:
+> The idea is to tell the compiler that we know it will be NULL when CONFIG_OF
+> is unset, so it can optimize out all code that does
+>
+>         struct device_node *dn = dev_of_node(dev);
+>
+>         if (dn) {
+>                 ...
+>                 /* complex code */
+>                 ...
+>         }
+>
+> and we can avoid using an #ifdef or if(IS_ENABLED()) in the source to
+> compile out the DT-only sections of a driver.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: devicetree@vger.kernel.org
----
-This depends on the series "[PATCH v5 0/6] sh73a0 common clock framework
-implementation".
----
- arch/arm/boot/dts/sh73a0.dtsi            | 15 +++++++++++++++
- include/dt-bindings/clock/sh73a0-clock.h |  3 +++
- 2 files changed, 18 insertions(+)
+Oh, right. That would definitely be worthwhile to do.
 
-diff --git a/arch/arm/boot/dts/sh73a0.dtsi b/arch/arm/boot/dts/sh73a0.dtsi
-index 0853a6fe2209a48a..c7ab55e55e23f8cb 100644
---- a/arch/arm/boot/dts/sh73a0.dtsi
-+++ b/arch/arm/boot/dts/sh73a0.dtsi
-@@ -78,6 +78,7 @@
- 			      0 6 IRQ_TYPE_LEVEL_HIGH
- 			      0 7 IRQ_TYPE_LEVEL_HIGH
- 			      0 8 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp5_clks SH73A0_CLK_INTCA0>;
- 	};
- 
- 	irqpin1: irqpin@e6900004 {
-@@ -97,6 +98,7 @@
- 			      0 14 IRQ_TYPE_LEVEL_HIGH
- 			      0 15 IRQ_TYPE_LEVEL_HIGH
- 			      0 16 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp5_clks SH73A0_CLK_INTCA0>;
- 		control-parent;
- 	};
- 
-@@ -117,6 +119,7 @@
- 			      0 22 IRQ_TYPE_LEVEL_HIGH
- 			      0 23 IRQ_TYPE_LEVEL_HIGH
- 			      0 24 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp5_clks SH73A0_CLK_INTCA0>;
- 	};
- 
- 	irqpin3: irqpin@e690000c {
-@@ -136,6 +139,7 @@
- 			      0 30 IRQ_TYPE_LEVEL_HIGH
- 			      0 31 IRQ_TYPE_LEVEL_HIGH
- 			      0 32 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp5_clks SH73A0_CLK_INTCA0>;
- 	};
- 
- 	i2c0: i2c@e6820000 {
-@@ -705,5 +709,16 @@
- 			clock-output-names =
- 				"iic3", "iic4", "keysc";
- 		};
-+		mstp5_clks: mstp5_clks@e6150144 {
-+			compatible = "renesas,sh73a0-mstp-clocks", "renesas,cpg-mstp-clocks";
-+			reg = <0xe6150144 4>, <0xe615003c 4>;
-+			clocks = <&cpg_clocks SH73A0_CLK_HP>;
-+			#clock-cells = <1>;
-+			clock-indices = <
-+				SH73A0_CLK_INTCA0
-+			>;
-+			clock-output-names =
-+				"intca0";
-+		};
- 	};
- };
-diff --git a/include/dt-bindings/clock/sh73a0-clock.h b/include/dt-bindings/clock/sh73a0-clock.h
-index 1dd3eb2b7d902afd..53369568c24c5dc6 100644
---- a/include/dt-bindings/clock/sh73a0-clock.h
-+++ b/include/dt-bindings/clock/sh73a0-clock.h
-@@ -76,4 +76,7 @@
- #define SH73A0_CLK_IIC4		10
- #define SH73A0_CLK_KEYSC	3
- 
-+/* MSTP5 */
-+#define SH73A0_CLK_INTCA0	8
-+
- #endif
--- 
-1.9.1
-
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
