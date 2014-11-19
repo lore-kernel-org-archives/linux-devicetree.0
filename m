@@ -1,33 +1,88 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/7] PM / Domains: Document SH-Mobile AG5 (sh73a0) binding
-Date: Wed, 19 Nov 2014 16:57:28 +0100
-Message-ID: <1416412654-6508-2-git-send-email-geert+renesas@glider.be>
-References: <1416412654-6508-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1416412654-6508-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Ulf Hansson <ulf.hansson@linaro.org>, Kevin Hilman <khilman@linaro.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Philipp Zabel <philipp.zabel@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Mason <mpeg.blue@free.fr>
+Subject: Re: Looking for good references for ARM driver development
+Date: Wed, 19 Nov 2014 17:05:00 +0100
+Message-ID: <546CBFAC.9040906@free.fr>
+References: <546C920A.7060800@free.fr> <546CB0EB.9080005@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; Format="flowed"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <546CB0EB.9080005@suse.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Cc: Device Tree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SH-Mobile AG5 (sh73a0) can be handled by the existing bindings.
+Hello Andreas,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt | 1 +
- 1 file changed, 1 insertion(+)
+On 19/11/2014 16:02, Andreas F=E4rber wrote:
 
-diff --git a/Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt b/Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt
-index 89ca3f35aec69750..061971bb387f7b27 100644
---- a/Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt
-+++ b/Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt
-@@ -12,6 +12,7 @@ Required properties:
- 	      fallback.
- 	      Examples with soctypes are:
- 		- "renesas,sysc-r8a7740" (R-Mobile A1)
-+		- "renesas,sysc-sh73a0" (SH-Mobile AG5)
- - reg: Two address start and address range blocks for the device:
-          - The first block refers to the normally accessible registers,
-          - the second block refers to the registers protected by the HPB
--- 
-1.9.1
+> Am 19.11.2014 um 13:50 schrieb Mason:
+>
+>> [...] I'm writing a driver for a temperature sensor, which is
+>> supposed to work within the hwmon/lm-sensors framework.
+>>
+>> The sensor's API consists of 3 memory-mapped registers, which are
+>> accessible over the SoC's memory bus. [...]
+>>
+>> 1) Which bus should I be using for this driver?
+>> Is the platform bus appropriate?
+>
+> Probably.
+
+Is there an exhaustive list of available buses (on the ARM platform)
+and an overview of when/where each one is appropriate?
+
+>> 2) platform.txt states
+>>
+>>> Some drivers are not fully converted to the driver model, because
+>>> they take on a non-driver role:  the driver registers its
+>>> platform device, rather than leaving that for system
+>>> infrastructure.  Such drivers can't be hotplugged or coldplugged,
+>>> since those mechanisms require device creation to be in a
+>>> different system component than the driver.
+>>
+>> How do I "leave device registration for the system
+>> infrastructure"? Where should I put that code? Is it a good idea to
+>> separate device registration and driver registration in the case of
+>> a SoC, where the device is embedded in the SoC and is not
+>> "hot-plugged" (or anything-plugged for that matter, it's just
+>> "there").
+>
+> Since this appears to be about an ARM SoC according to your To list,
+> in general, you create a device tree binding, that binding is
+> registered within your platform/... driver code and referenced in the
+> device tree for SoC or board, and then your driver will automatically
+> be probed.
+
+I know nothing about DT (aside from the Wikipedia entry).
+I'll take a closer look at Documentation/devicetree.
+Will that explain what platform/... is?
+
+I see a drivers/platform folder, but nothing ARM-specific there?
+
+>> 4) Can I use platform_driver_probe, instead of
+>> platform_driver_register?
+>
+> Most likely you do not need to call either yourself.
+
+Hmmm, color me even more confused. I had really come to believe that
+driver registration was a mandatory part of the driver, something
+that wasn't left to "infrastructure code".
+
+> Just compare other platform drivers on the one hand, and temperature
+> sensor drivers on the other (such as I2C based gmt,g781 / LM90). Did
+> you already check whether there is a driver that is both?
+
+Please excuse my naive question: what are platform drivers, and where
+are they stored in the kernel source tree?
+
+Regards.
