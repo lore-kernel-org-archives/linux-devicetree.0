@@ -1,159 +1,48 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Patch to improve device tree structure
-Date: Wed, 19 Nov 2014 11:30:12 -0800
-Message-ID: <546CEFC4.805@gmail.com>
-References: <1416199976-21147-1-git-send-email-gaurav.minocha.os@gmail.com> <20141118151026.D2D63C40966@trevor.secretlab.ca> <546BF447.6080300@gmail.com> <CACxGe6u1YwQAivktwmiOZx1K1Ch0F1ofx3EriBi1qEAU99X9PQ@mail.gmail.com>
-Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] watchdog: ImgTec PDC Watchdog Timer Driver
+Date: Wed, 19 Nov 2014 11:35:58 -0800
+Message-ID: <CAL1qeaFD735-BNC6r5fFMw=Ggnk22rCPp=Tc5iOjSwdJWscUMg@mail.gmail.com>
+References: <1416312442-15688-1-git-send-email-Naidu.Tellapati@imgtec.com>
+	<1416312442-15688-2-git-send-email-Naidu.Tellapati@imgtec.com>
+	<CAL1qeaGgs0CrWdUV8kYVxbJ-=46+Xhx__pZy390iX0OXTF1bHw@mail.gmail.com>
+	<546CEF0C.1090204@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6u1YwQAivktwmiOZx1K1Ch0F1ofx3EriBi1qEAU99X9PQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <546CEF0C.1090204-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/19/2014 5:56 AM, Grant Likely wrote:
-> On Wed, Nov 19, 2014 at 1:37 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On 11/18/2014 7:10 AM, Grant Likely wrote:
->>> On Sun, 16 Nov 2014 20:52:56 -0800
->>> , Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>  wrote:
->>>> This patch improves the implementation of device tree structure.
->>>>
->>>> Traditional child and sibling linked list in device tree structure
->>>> is removed and is replaced by list_head (i.e. circular doubly linked
->>>>  list) already available in Linux kernel.
->>>>
->>>> Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Wed, Nov 19, 2014 at 11:27 AM, Ezequiel Garcia
+<ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+>
+>
+> On 11/18/2014 08:12 PM, Andrew Bresticker wrote:
+>> Naidu,
+>>
+>> On Tue, Nov 18, 2014 at 4:07 AM,  <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+>>> From: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 >>>
->>> Hi Gaurav,
+>>> This commit adds support for ImgTec PowerDown Controller Watchdog Timer.
 >>>
->>> So, after you've done this work, I need to you rebase it (and of course
->>> it is non-trivial) onto linux-next. I've already got a patch queued up
->>> which gets rid of the of_allnodes/allnext list which will have conflicts
->>> with this patch.
->>>
->>> I'll make comments below where still relevant.
+>>> Signed-off-by: Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>>> Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 >>
->> Grant,
+>> checkpatch reports that there's trailing whitespace and that you're
+>> using DOS line endings.  Please be sure to fix that with this and your
+>> other patches.
 >>
->> My first reaction to this patch was that moving to using struct list_head
->> made the code less readable plus increased the size of struct device_node.
->>
->> I reworked the changes to drivers/of/base.c to see if I could make
->> it a little more readable.  And I see below that you also have some
->> suggestions that make it more readable.
->>
->> Even after that, I'm still feeling that the gain of moving to a more
->> standard list data type might not be greater than the downsides in
->> terms of readability and space.  The current list implementation does
->> seem like a decent fit to the problem space.
-> 
-> Moving to list_head has a couple of nice benefits. The prime
-> motification is that using a standard list_head means that the OF code
-> can be migrated to use the standard rcu operations and get rid of manual
-> of_node_{get,put} management in the majority of code paths.
+>
+> Andrew,
+>
+> Saving this patch with mutt as mbox and running checkpatch on it,
+> doesn't report any problems with it.
+>
+> Maybe it's your client?
 
-Oh yeah, I remember you mentioning that before.  That is what was missing
-from Gaurav's patch header, explaining the value of the change.  If this
-is the end goal, then I think it would be valuable to add a second patch
-to the series that shows what the actual changes for rcu will be so that
-the cost vs benefit of the end result can be evaluated.
-
-
-> A second reason to do this is it becomes easy to add nodes to the end of
-> the list instead of the beginning. It's a small thing, but it makes
-> unflattening simpler.
-
-Not a big change.  In the unflatten_dt_node() part of the patch, the
-result was 4 lines deleted, 3 lines added.  With my attached patch to
-remove the next field, it would have been 8 lines deleted, 3 lines
-added -- thus list_head is an even greater simplification.  But still
-tiny.
-
-
-> I've also considered switching to a hlist_head/hlist_node to keep the
-> footprint the same.* With an hlist_head the cost is a wash, but looses
-> the ability to do O(1) addition to the end of the list.
-> 
-> * Gaurav's patch removes the *child and *sibling pointers, but doesn't
->   remove the *next pointer which can also be dropped. So, three pointers
->   get dropped from the structure. Using list_head adds 4 pointers (Net
->   +1). hlist_head adds 3 (Net 0).
-
-I include a patch below to also drop the *next pointer.  Not to actually
-propose submitting the patch, but to suggest that Gaurav's patch should be
-counted as a net of +2 pointers.  I expect that you will accept either a
-list_head of an hlist_head patch, but if you do not then I will submit the
-below patch to remove *next or a patch to rename *next to match the actual
-usage of the field.
-
-I still do not have a strong opinion, but I am still feeling that the gain
-probably does not outweigh the cost.
-
--Frank
-
-> 
-> g.
-> 
-
-From: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-
-Decrease size of struct device_node by one pointer.
-The pointer is only used during the unflattening of the
-device tree at boot.
-
-The cost of removing the pointer is chasing through the
-sibling list to add new nodes instead of using the
-cached 'last_child'.  The cost is expected to be in the
-noise level.
-
-Signed-off-by: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
----
- drivers/of/fdt.c   |   14 +++++++++-----
- include/linux/of.h |    1 -
- 2 files changed, 9 insertions(+), 6 deletions(-)
-
-Index: b/include/linux/of.h
-===================================================================
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -55,7 +55,6 @@ struct device_node {
- 	struct	device_node *parent;
- 	struct	device_node *child;
- 	struct	device_node *sibling;
--	struct	device_node *next;	/* next device of same type */
- 	struct	device_node *allnext;	/* next in list of all nodes */
- 	struct	kobject kobj;
- 	unsigned long _flags;
-Index: b/drivers/of/fdt.c
-===================================================================
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -226,12 +226,16 @@ static void * unflatten_dt_node(void *bl
- 		*allnextpp = &np->allnext;
- 		if (dad != NULL) {
- 			np->parent = dad;
--			/* we temporarily use the next field as `last_child'*/
--			if (dad->next == NULL)
-+			if (dad->child == NULL)
- 				dad->child = np;
--			else
--				dad->next->sibling = np;
--			dad->next = np;
-+			else {
-+				struct device_node *next;
-+
-+				next = dad->child;
-+				while (next->sibling)
-+					next = next->sibling;
-+				next->sibling = np;
-+			}
- 		}
- 	}
- 	/* process properties */
+Oops, yes, you're right - my gmail settings have gotten screwed up somehow...
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
