@@ -1,83 +1,63 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 2/7] phy: miphy365x: Pass sysconfig register offsets via
- syscfg dt property.
-Date: Wed, 19 Nov 2014 10:42:55 +0000
-Message-ID: <20141119104255.GI13959@x1>
-References: <1416385632-5832-1-git-send-email-peter.griffin@linaro.org>
- <1416385632-5832-3-git-send-email-peter.griffin@linaro.org>
+From: Paolo Pisati <p.pisati@gmail.com>
+Subject: Re: [PATCH V8 00/14] drm/exynos: few patches to enhance bridge chip
+ support
+Date: Wed, 19 Nov 2014 11:55:27 +0100
+Message-ID: <20141119105527.GA5396@luxor.wired.org>
+References: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com>
+ <CAEC9eQOrKw2Z1q-ztFfadXmsL3CTcAkkv9kcS2QnDOAVSh2AuQ@mail.gmail.com>
+ <546C646C.4060303@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1416385632-5832-3-git-send-email-peter.griffin@linaro.org>
-Sender: netdev-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, peppe.cavallaro@st.com, kishon@ti.com, arnd@arndb.de, netdev@vger.kernel.org, devicetree@vger.kernel.org, alexandre.torgue@st.com
+In-Reply-To: <546C646C.4060303@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Ajay kumar <ajaynumb@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, InKi Dae <inki.dae@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Sean Paul <seanpaul@google.com>, Thierry Reding <thierry.reding@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>, gustavo Padovan <gustavo.padovan@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 19 Nov 2014, Peter Griffin wrote:
+On Wed, Nov 19, 2014 at 10:35:40AM +0100, Javier Martinez Canillas wrote:
+> Hello Ajay,
+> 
+> On 11/18/2014 07:20 AM, Ajay kumar wrote:
+> > On Sat, Nov 15, 2014 at 3:24 PM, Ajay Kumar <ajaykumar.rs@samsung.com> wrote:
+> >> This series is based on master branch of Linus tree at:
+> >> git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+> 
+> I applied your series on top of 3.18-rc5 + linux-next's commit:
+> 
+> 0ef76ae ("ARM: exynos_defconfig: Enable options for display panel support").
+> 
+> I think you should had mentioned what other patches are needed as a
+> dependency since I spent quite a bit of time figuring out why the
+> ps8622 bridge driver probe was always deferred due of_drm_find_panel()
+> failing and then I noticed that a patch from linux-next was needed:
+> 
+> e35e305 ("drm/panel: simple: Add AUO B116XW03 panel support")
+> 
+> With that commit the ps8622 drm bridge driver probe succeed but I still
+> don't have display working on an Exynos5240 Peach Pit, the kernel log shows:
+> 
+> platform 145b0000.dp-controller: Driver exynos-dp requests probe deferral
+> exynos-drm exynos-drm: bound 14400000.fimd (ops fimd_component_ops)
+> exynos-drm exynos-drm: failed to bind 145b0000.dp-controller (ops exynos_dp_ops): -517
+> exynos-drm exynos-drm: master bind failed: -517
+> platform 145b0000.dp-controller: Driver exynos-dp requests probe deferral
 
-> Based on Arnds review comments here https://lkml.org/lkml/2014/11/13/=
-161, update
-> the miphy365 phy driver to access sysconfig register offsets via sysc=
-fg dt property.
->=20
-> This is because the reg property should not be mixing address spaces =
-like it does
-> currently for miphy365. This change then also aligns us to how other =
-platforms such
-> as keystone and bcm7445 pass there syscon offsets via DT.
->=20
-> This patch breaks DT compatibility, but this platform is considered W=
-IP, and is only
-> used by a few developers who are upstreaming support for it. This cha=
-nge has been done
-> as a single atomic commit to ensure it is bisectable.
+do you have this in your dmesg?
 
-You should wrap your lines sooner (70-75 chars).
+...
+exynos-dp-video-phy 10040728.video-phy: Failed to lookup PMU regmap
+...
 
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> ---
->  .../devicetree/bindings/phy/phy-miphy365x.txt      | 15 +++++------
->  arch/arm/boot/dts/stih416.dtsi                     | 10 ++++----
->  drivers/phy/phy-miphy365x.c                        | 29 ++++++++----=
-----------
->  3 files changed, 23 insertions(+), 31 deletions(-)
+to get a working framebuffer out of linus 318rc4 on my peach pi, i had
+to cherry pick these 3 patches:
 
-[...]
+arm: dts: Exynos5: Use pmu_system_controller phandle for dp phy
+drm/exynos: dp: Remove support for unused dptx-phy
+ARM: exynos_defconfig: Enable options for display panel support
 
-> diff --git a/drivers/phy/phy-miphy365x.c b/drivers/phy/phy-miphy365x.=
-c
-> index 801afaf..7308afe 100644
-> --- a/drivers/phy/phy-miphy365x.c
-> +++ b/drivers/phy/phy-miphy365x.c
-
-[...]
-
->  		phy_set_drvdata(phy, miphy_dev->phys[port]);
-> +
->  		port++;
-> +		/*sysconfig offsets are not indexed from zero */
-
-You're missing a ' ' afrer '/*'.
-
-Probably better do say what they _are_ indexed from, rather than what
-they're not.
-
-> +		ret =3D of_property_read_u32_index(np, "st,syscfg", port,
-> +					&miphy_phy->ctrlreg);
-> +		if (ret) {
-> +			dev_err(&pdev->dev, "No sysconfig offset found\n");
-> +			return ret;
-> +		}
->  	}
-> =20
->  	provider =3D devm_of_phy_provider_register(&pdev->dev, miphy365x_xl=
-ate);
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Check if you have those.
+-- 
+bye,
+p.
