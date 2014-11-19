@@ -1,69 +1,78 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESUBMIT PATCH v7 7/9] regulator: sky81452: Modify Device Tree
- structure
-Date: Wed, 19 Nov 2014 10:14:20 +0000
-Message-ID: <20141119101420.GX22111@sirena.org.uk>
-References: <1416213190-20935-1-git-send-email-jack.yoo@skyworksinc.com>
- <1416213190-20935-8-git-send-email-jack.yoo@skyworksinc.com>
- <20141117141836.GA2722@sirena.org.uk>
- <20141118080451.GA3319@jack-ThinkPad-T520>
- <20141118112056.GA14734@sirena.org.uk>
- <20141119073954.GA3665@jack-ThinkPad-T520>
+From: Caesar Wang <caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: fix PWM clock found on RK3288 Socs
+Date: Wed, 19 Nov 2014 18:27:45 +0800
+Message-ID: <546C70A1.9090707@rock-chips.com>
+References: <1416367554-15185-1-git-send-email-caesar.wang@rock-chips.com> <CAD=FV=W+WU3j7OWKTxtGUv1Jt7qPesGXSOsoM=bsD5C15jttvA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3rzwkXnKuCXxoL5m"
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141119073954.GA3665@jack-ThinkPad-T520>
+In-Reply-To: <CAD=FV=W+WU3j7OWKTxtGUv1Jt7qPesGXSOsoM=bsD5C15jttvA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, ZhenFu Fang <fzf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chris Zhong <chris.zhong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Doug,
 
---3rzwkXnKuCXxoL5m
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+=E5=9C=A8 2014/11/19 13:14, Doug Anderson =E5=86=99=E9=81=93:
+> Caesar,
+>
+> On Tue, Nov 18, 2014 at 7:25 PM, Caesar Wang <caesar.wang@rock-chips.=
+com> wrote:
+>> We use the new PWM IP on RK3288,but the PWM's clock indeed incorrect=
+=2E
+>>
+>> Signed-off-by: Caesar Wang <caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/rk3288.dtsi | 8 ++++----
+>>   1 file changed, 4 insertions(+), 4 deletions(-)
+> Right, I reported this when Kever was doing his "unused clocks" patch=
+=2E
+> That's why this clock is currently "ignore unused".
+>
+> ...but though your change is right, I'd rather your change doesn't
+> land quite yet.  It totally wrecks havoc with the PWM regulator used
+> on many rk3288 boards and will glitch the main "logic" voltage at
+> bootup.  I have some patches that are MASSIVELY WIP:
+>
+> https://chromium-review.googlesource.com/230640
+> WIP: regulator: pwm: Tell regulator framework that we can't turn off
+>
+> https://chromium-review.googlesource.com/230641
+> WIP: PWM: handle the fact that firmware might have left us enabled
+>
+> https://chromium-review.googlesource.com/230642
+> WIP: pwm-regulator stuff
+>
+> I think that last one might blow up into several patches.  We need to
+> solve the problems from those patches before yours can really land.
+>
+>
+> It's pretty high on my list to finish the above patches, but right no=
+w
+> suspend/resume issues are higher priority so it's a bit stalled...  I=
+f
+> someone wants to hijack any of the above patches please let me know--=
+I
+> won't be offended.
 
-On Wed, Nov 19, 2014 at 04:39:54PM +0900, Gyungoh Yoo wrote:
+OK,I see.
 
-> If of_match and regulators_node are assigned, don't I need to
-> call of_regulator_match()? Does regulator_register() call it internally?
-> So can I write code like below?
->=20
-> static const struct regulator_desc sky81452_reg =3D {
-> 	.name =3D "LOUT",
-> 	.of_match =3D of_match_ptr("lout"),
-> 	.regulators_node =3D of_match_ptr("regulator"),
-> 	.ops =3D &sky81452_reg_ops,
-> 	...
-> };
 
-> 	config.regmap =3D dev_get_drvdata(dev->parent);
->=20
-> 	rdev =3D devm_regulator_register(dev, &sky81452_reg, &config);
+> -Doug
+>
+>
+>
 
-Yes, exactly.
+--=20
+Best regards,
+Caesar
 
---3rzwkXnKuCXxoL5m
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUbG17AAoJECTWi3JdVIfQRMMH+wQ4CWnx0TsuIabIPrnoNu0b
-yImmel5gWDXfT8TXYI5wSrYwFC+eQOFNjq91xNnwZAMFrFmgq0nO8NBPBm5gJSCB
-aOtnm/fvZ275QmnEPMgd9W/Sl1GYDo2Araqsv1FT4NpxUXbOIy7YMBfBJtFwX06L
-T5xHr21x/9RbdwT4++Z8UHYn4x+rY2TZk9MIIc/WN4wxALGhoEzIxgztlRiulvUY
-jTtBKXhwB3JrPisWOIegMZs3zO25E3c0p+23288QQlgi6IwnzHnzdGJZ+rqkrdHn
-TmFyqTZxy4QZADlrZ8L/neBxfoOtFwPyrfB5zD9asWDtaBsSz+Fjx6j9f8iQ/kY=
-=xZVg
------END PGP SIGNATURE-----
-
---3rzwkXnKuCXxoL5m--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
