@@ -1,231 +1,106 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: [PATCH 10/15] clk: tz1090: add deleter clock driver
-Date: Wed, 19 Nov 2014 23:15:38 +0000
-Message-ID: <1416438943-11429-11-git-send-email-james.hogan@imgtec.com>
+From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 07/15] dt: binding: add binding for TZ1090 mux bank
+Date: Wed, 19 Nov 2014 23:15:35 +0000
+Message-ID: <1416438943-11429-8-git-send-email-james.hogan@imgtec.com>
 References: <1416438943-11429-1-git-send-email-james.hogan@imgtec.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1416438943-11429-1-git-send-email-james.hogan@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, linux-metag@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: James Hogan <james.hogan@imgtec.com>
+Return-path: <linux-metag-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416438943-11429-1-git-send-email-james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: linux-metag-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-metag-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add driver for TZ1090 clock deleter, which deletes up to 1023 out of
-every 1024 clock pulses. Two of these exist, one for the Meta core and
-the other for the system clock.
+Add DT binding for a bank of clock muxes in the TZ1090 SoC. There are
+several such registers which contain only bits controlling clock muxes.
 
-Signed-off-by: James Hogan <james.hogan@imgtec.com>
-Cc: Mike Turquette <mturquette@linaro.org>
-Cc: linux-metag@vger.kernel.org
+The bit-mask property determines the mask of bits of the register which
+control muxes. The number of output clocks is equal to the number of set
+bits in the bit-mask, and the clock-output-names array lists the
+names from the least significant set bit in the mask to the most
+significant set bit. The number of input clocks is double the number of
+output clocks since each bit muxes between two input clocks, so the
+clocks array lists two input clocks per set bit.
+
+Signed-off-by: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: linux-metag-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
- drivers/clk/tz1090/Makefile             |   1 +
- drivers/clk/tz1090/clk-tz1090-deleter.c | 188 ++++++++++++++++++++++++++++++++
- 2 files changed, 189 insertions(+)
- create mode 100644 drivers/clk/tz1090/clk-tz1090-deleter.c
+ .../bindings/clock/img,tz1090-mux-bank.txt         | 56 ++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/img,tz1090-mux-bank.txt
 
-diff --git a/drivers/clk/tz1090/Makefile b/drivers/clk/tz1090/Makefile
-index ee6a6fe..d17e48c 100644
---- a/drivers/clk/tz1090/Makefile
-+++ b/drivers/clk/tz1090/Makefile
-@@ -1,4 +1,5 @@
- # Makefile for TZ1090-specific clocks
-+obj-y		+= clk-tz1090-deleter.o
- obj-y		+= clk-tz1090-gate-bank.o
- obj-y		+= clk-tz1090-mux-bank.o
- obj-y		+= clk-tz1090-pll.o
-diff --git a/drivers/clk/tz1090/clk-tz1090-deleter.c b/drivers/clk/tz1090/clk-tz1090-deleter.c
+diff --git a/Documentation/devicetree/bindings/clock/img,tz1090-mux-bank.txt b/Documentation/devicetree/bindings/clock/img,tz1090-mux-bank.txt
 new file mode 100644
-index 0000000..b814430
+index 0000000..2272f87
 --- /dev/null
-+++ b/drivers/clk/tz1090/clk-tz1090-deleter.c
-@@ -0,0 +1,188 @@
-+/*
-+ * Copyright (C) 2012 Imagination Technologies Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * Clock deleter in TZ1090
-+ */
++++ b/Documentation/devicetree/bindings/clock/img,tz1090-mux-bank.txt
+@@ -0,0 +1,56 @@
++Binding for TZ1090 clock mux bank.
 +
-+#include <linux/bitops.h>
-+#include <linux/clk-provider.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/slab.h>
++This binding uses the common clock binding[1]. It assumes a register-mapped bank
++of clock muxes, where each bit in the register can control a single mux. The
++number of clocks in the bank is specified indirectly by the number of set bits
++in the bit-mask property.
 +
-+/**
-+ * struct clk_tz1090_deleter - Clock deleter
-+ *
-+ * @hw:		handle between common and hardware-specific interfaces
-+ * @reg:	delete register
-+ * @period:	cycle period
-+ * @mask:	bit mask of delete field
-+ * @shift:	start bit of delete field
-+ *
-+ * Deleter in TZ1090.  Implements .recalc_rate, .set_rate and .round_rate
-+ */
-+struct clk_tz1090_deleter {
-+	struct clk_hw	hw;
-+	void __iomem	*reg;
-+	u32		period;
-+	u32		mask;
-+	u8		shift;
-+};
 +
-+/*
-+ * DOC: TZ1090 adjustable deleter clock that cannot gate
-+ *
-+ * Traits of this clock:
-+ * prepare - clk_prepare only ensures that parents are prepared
-+ * enable - clk_enable only ensures that parents are enabled
-+ * rate - rate is adjustable in hardware but set_rate unimplemented.
-+ *		clk->rate = (parent->rate * (period - delete)) / period
-+ * parent - fixed parent. No clk_set_parent support
-+ */
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
 +
-+#define to_clk_tz1090_deleter(_hw) \
-+	container_of(_hw, struct clk_tz1090_deleter, hw)
++Required properties:
++- compatible         : shall be "img,tz1090-mux-bank".
++- #clock-cells       : from common clock binding; shall be set to 1.
++- reg                : base address for register controlling muxes
++- bit-mask           : bitmask of bits in register controlling muxes
++- clocks             : clock specifiers of two parent clocks for each mux with a
++                       bit set in bit-mask
++- clock-output-names : from common clock binding. Name of each mux with bit set
++                       in bit-mask
 +
-+static unsigned long clk_tz1090_deleter_recalc_rate(struct clk_hw *hw,
-+						    unsigned long parent_rate)
-+{
-+	struct clk_tz1090_deleter *deleter = to_clk_tz1090_deleter(hw);
-+	u32 delete;
-+	u64 rate;
++Clock Specifier Definition:
++- <1st-cell>: mux number, counting from 0 (the mux controlled by the lowest set
++              bit in bit-mask) to the number of muxes - 1 (i.e.  omitting any
++              clear bits in bit-mask).
 +
-+	delete = (readl(deleter->reg) & deleter->mask) >> deleter->shift;
-+	rate = (u64)parent_rate * (deleter->period - delete);
-+	do_div(rate, deleter->period);
-+	return rate;
-+}
-+
-+static const struct clk_ops clk_tz1090_deleter_ops = {
-+	.recalc_rate = clk_tz1090_deleter_recalc_rate,
-+};
-+
-+/**
-+ * clk_register_tz1090_deleter_setup - register a clock deleter clock
-+ * @dev:		device registering this clock
-+ * @name:		name of this clock
-+ * @parent_name:	name of clock's parent
-+ * @flags:		framework-specific flags
-+ * @reg:		register address to adjust deleter
-+ * @period:		delete cycle period
-+ * @mask:		mask of delete field
-+ * @shift:		start bit of delete field
-+ *
-+ * Register a TZ1090 clock deleter with the clock framework.
-+ */
-+static struct clk *__init clk_register_tz1090_deleter(struct device *dev,
-+						      const char *name,
-+						      const char *parent_name,
-+						      unsigned long flags,
-+						      void __iomem *reg,
-+						      u32 period,
-+						      u32 mask,
-+						      u8 shift)
-+{
-+	struct clk_tz1090_deleter *deleter;
-+	struct clk *clk;
-+	struct clk_init_data init;
-+
-+	/* allocate the divider */
-+	deleter = kzalloc(sizeof(struct clk_tz1090_deleter), GFP_KERNEL);
-+	if (!deleter)
-+		return ERR_PTR(-ENOMEM);
-+
-+	init.name = name;
-+	init.ops = &clk_tz1090_deleter_ops;
-+	init.flags = flags | CLK_IS_BASIC;
-+	init.parent_names = (parent_name ? &parent_name : NULL);
-+	init.num_parents = (parent_name ? 1 : 0);
-+
-+	/* struct clk_tz1090_deleter assignments */
-+	deleter->reg = reg;
-+	deleter->period = period;
-+	deleter->mask = mask;
-+	deleter->shift = shift;
-+	deleter->hw.init = &init;
-+
-+	/* register the clock */
-+	clk = clk_register(dev, &deleter->hw);
-+
-+	if (IS_ERR(clk))
-+		kfree(deleter);
-+
-+	return clk;
-+}
-+
-+#ifdef CONFIG_OF
-+/**
-+ * of_tz1090_deleter_setup() - Setup function for clock deleter
-+ */
-+static void __init of_tz1090_deleter_setup(struct device_node *node)
-+{
-+	struct clk *clk;
-+	const char *clk_name = node->name;
-+	void __iomem *reg;
-+	u32 mask, shift, period;
-+	const char *parent_name;
-+
-+	of_property_read_string(node, "clock-output-names", &clk_name);
-+
-+	if (of_property_read_u32(node, "bit-mask", &mask)) {
-+		pr_err("%s(%s): could not read bit-mask property\n",
-+		       __func__, clk_name);
-+		return;
-+	}
-+
-+	if (of_property_read_u32(node, "bit-shift", &shift)) {
-+		shift = ffs(mask) - 1;
-+		pr_debug("%s(%s): bit-shift property defaults to %u\n",
-+			 __func__, clk_name, shift);
-+	}
-+
-+	if (of_property_read_u32(node, "cycle-period", &period)) {
-+		period = fls(mask);
-+		if (shift > period) {
-+			pr_err("%s(%s): bit-shift %u beyond top of bit-mask %#x\n",
-+			       __func__, clk_name, shift, mask);
-+			return;
-+		}
-+		period = 1 << (period - shift);
-+		pr_debug("%s(%s): cycle-period property defaults to %u\n",
-+			 __func__, clk_name, period);
-+	}
-+
-+	parent_name = of_clk_get_parent_name(node, 0);
-+	if (!parent_name) {
-+		pr_err("%s(%s): could not read parent clock\n",
-+		       __func__, clk_name);
-+		return;
-+	}
-+
-+	reg = of_iomap(node, 0);
-+	if (!reg) {
-+		pr_err("%s(%s): of_iomap failed\n",
-+		       __func__, clk_name);
-+		return;
-+	}
-+
-+	clk = clk_register_tz1090_deleter(NULL, clk_name, parent_name, 0, reg,
-+					  period, mask, shift);
-+	if (IS_ERR(clk))
-+		goto err_iounmap;
-+
-+	of_clk_add_provider(node, of_clk_src_simple_get, clk);
-+
-+	return;
-+
-+err_iounmap:
-+	iounmap(reg);
-+}
-+CLK_OF_DECLARE(tz1090_deleter_clk, "img,tz1090-deleter",
-+	       of_tz1090_deleter_setup);
-+#endif /* CONFIG_OF */
++Examples:
++	/*                       ___________
++	 * xtal1         ------o|clkout0_sw0\______
++	 * afe_progdiv1_to_soc -|___________/  2   |
++	 * sys_clk_undeleted --o|clkout0_sw1\____  |
++	 * if0_sw        -------|___________/  3 | |
++	 *                 ,-;==================='-'
++	 *                 | |   ___________
++	 * clkout0_sw0     | `-o|clkout0_sw2\______
++	 * xtal2         --|----|___________/  4   |
++	 *                 |  _____________________|
++	 *                 | |   ___________
++	 * clkout0_sw2     | `-o|clkout0_sw3\___________
++	 * clkout0_sw1     `----|___________/  5
++	 */
++	clkswitch: clkswitch {
++		compatible = "img,tz1090-mux-bank";
++		#clock-cells = <1>;
++		reg = <0x02005908 0x4>;
++		bit-mask = <0x0000003c>;
++		clock-output-names =
++			"out0_sw0",
++			"out0_sw1",
++			"out0_sw2",
++			"out0_sw3",
++		clocks =
++			<&xtal1>,		<&afe_progdiv1_to_soc>,
++			<&sys_clk_undeleted>,	<&clkswitch2 6>,
++			<&clkswitch 0>,		<&xtal2>,
++			<&clkswitch 2>,		<&clkswitch 1>,
++	};
 -- 
 2.0.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-metag" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
