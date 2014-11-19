@@ -1,59 +1,39 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH RESEND 0/4] hrng: atmel: add DT support
-Date: Wed, 19 Nov 2014 17:18:24 +0100
-Message-ID: <20141119171824.1e8dc40d@bbrezillon>
-References: <1416413278-10197-1-git-send-email-boris.brezillon@free-electrons.com>
-	<546CC233.6090605@atmel.com>
+From: Paolo Pisati <p.pisati@gmail.com>
+Subject: Re: [PATCH V8 00/14] drm/exynos: few patches to enhance bridge chip
+ support
+Date: Wed, 19 Nov 2014 17:22:24 +0100
+Message-ID: <20141119162224.GB5396@luxor.wired.org>
+References: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com>
+ <CAEC9eQOrKw2Z1q-ztFfadXmsL3CTcAkkv9kcS2QnDOAVSh2AuQ@mail.gmail.com>
+ <546C646C.4060303@collabora.co.uk>
+ <20141119105527.GA5396@luxor.wired.org>
+ <546C7D15.10605@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <546CC233.6090605@atmel.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <546C7D15.10605@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Paolo Pisati <p.pisati@gmail.com>, Ajay kumar <ajaynumb@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, InKi Dae <inki.dae@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Sean Paul <seanpaul@google.com>, Thierry Reding <thierry.reding@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>, gustavo Padovan <gustavo.padovan@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 19 Nov 2014 17:15:47 +0100
-Nicolas Ferre <nicolas.ferre@atmel.com> wrote:
-
-> On 19/11/2014 17:07, Boris Brezillon :
-> > Hello,
-> > 
-> > This series adds DT support for the TRNG (True Random Generator) block and
-> > adds missing trng nodes to dtsi files.
+On Wed, Nov 19, 2014 at 12:20:53PM +0100, Javier Martinez Canillas wrote:
 > 
-> Nitpicking: subject of this cover letter seems not good ;-)
-
-Sorry, you should read:
-
-"hrng: atmel: add DT support"
-
+> If someone else is interested, I've pushed a branch [0] with 3.18-rc5 + all
+> the needed patches.
 > 
-> Herbert, do you think you can take this series yourself or do I have to
-> take it?
+> Ajay, feel free to add to your series:
 > 
-> Bye,
+> Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 > 
-> > Boris Brezillon (4):
-> >   hwrng: atmel: use clk_prepapre_enable/_disable_unprepare
-> >   hwrng: atmel: add DT support
-> >   hwrng: atmel: Add TRNG DT binding doc
-> >   ARM: at91/dt: add trng node
-> > 
-> >  Documentation/devicetree/bindings/hwrng/atmel-trng.txt | 16 ++++++++++++++++
-> >  arch/arm/boot/dts/at91sam9g45.dtsi                     |  7 +++++++
-> >  drivers/char/hw_random/Kconfig                         |  2 +-
-> >  drivers/char/hw_random/atmel-rng.c                     | 15 +++++++++++----
-> >  4 files changed, 35 insertions(+), 5 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/hwrng/atmel-trng.txt
-> > 
+> Best regards,
+> Javier
 > 
-> 
+> [0]: git://git.collabora.co.uk/git/user/javier/linux.git wip/exynos/dp-integ
 
-
+doesn't peach pi require the same dts modification as peach pit/snow?
 
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+bye,
+p.
