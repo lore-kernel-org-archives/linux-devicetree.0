@@ -1,158 +1,74 @@
-From: Yijing Wang <wangyijing@huawei.com>
-Subject: Re: [RFC PATCH v2] drivers: pci: move PCI domain assignment to generic
- PCI code
-Date: Wed, 19 Nov 2014 17:16:34 +0800
-Message-ID: <546C5FF2.5090903@huawei.com>
-References: <1415637706-2195-1-git-send-email-lorenzo.pieralisi@arm.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH 2/2] drm/panel: Add support for Giantplus GPG482739QS5 panel
+Date: Wed, 19 Nov 2014 10:29:55 +0100
+Message-ID: <1416389395-15152-2-git-send-email-l.stach@pengutronix.de>
+References: <1416389395-15152-1-git-send-email-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1415637706-2195-1-git-send-email-lorenzo.pieralisi@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>, Liviu Dudau <liviu.dudau@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1416389395-15152-1-git-send-email-l.stach@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lorenzo,
-   You should send this to Bjorn instead of cc. Other, why put the OF related
-function in PCI core. Why not move it in drivers/of/of_pci.c ?
-
-On 2014/11/11 0:41, Lorenzo Pieralisi wrote:
-> The current logic used for PCI domain assignment in arm64
-> pci_bus_assign_domain_nr() is flawed in that, depending on the host
-> controllers configuration for a platform and the respective initialization
-> sequence, core code may end up allocating PCI domain numbers from both DT and
-> the core code generic domain counter, which would result in PCI domain
-> allocation aliases/errors.
-> 
-> This patch fixes the logic behind the PCI domain number assignment and
-> moves the resulting code to generic PCI core code so that the same domain
-> allocation logic is used on all platforms selecting
-> 
-> CONFIG_PCI_DOMAINS_GENERIC
-> 
-> instead of resorting to an arch specific implementation that might end up
-> duplicating the PCI domain assignment logic wrongly.
-> 
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Liviu Dudau <liviu.dudau@arm.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> ---
-> v1 => v2:
-> 
-> - Moved generic pci_bus_assign_domain_nr() code to PCI core instead of
->   adding an OF layer API
-> - Updated commit log and code comments
-> 
->  arch/arm64/kernel/pci.c | 22 ----------------------
->  drivers/pci/pci.c       | 50 +++++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 50 insertions(+), 22 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
-> index ce5836c..6f93c24 100644
-> --- a/arch/arm64/kernel/pci.c
-> +++ b/arch/arm64/kernel/pci.c
-> @@ -46,25 +46,3 @@ int pcibios_add_device(struct pci_dev *dev)
->  
->  	return 0;
->  }
-> -
-> -
-> -#ifdef CONFIG_PCI_DOMAINS_GENERIC
-> -static bool dt_domain_found = false;
-> -
-> -void pci_bus_assign_domain_nr(struct pci_bus *bus, struct device *parent)
-> -{
-> -	int domain = of_get_pci_domain_nr(parent->of_node);
-> -
-> -	if (domain >= 0) {
-> -		dt_domain_found = true;
-> -	} else if (dt_domain_found == true) {
-> -		dev_err(parent, "Node %s is missing \"linux,pci-domain\" property in DT\n",
-> -			parent->of_node->full_name);
-> -		return;
-> -	} else {
-> -		domain = pci_get_new_domain_nr();
-> -	}
-> -
-> -	bus->domain_nr = domain;
-> -}
-> -#endif
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 625a4ac..2279414 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -10,6 +10,8 @@
->  #include <linux/kernel.h>
->  #include <linux/delay.h>
->  #include <linux/init.h>
-> +#include <linux/of.h>
-> +#include <linux/of_pci.h>
->  #include <linux/pci.h>
->  #include <linux/pm.h>
->  #include <linux/slab.h>
-> @@ -4447,6 +4449,54 @@ int pci_get_new_domain_nr(void)
->  {
->  	return atomic_inc_return(&__domain_nr);
->  }
-> +
-> +#ifdef CONFIG_PCI_DOMAINS_GENERIC
-> +
-> +void pci_bus_assign_domain_nr(struct pci_bus *bus, struct device *parent)
-> +{
-> +	static int use_dt_domains = -1;
-> +	int domain = of_get_pci_domain_nr(parent->of_node);
-> +
-> +	/*
-> +	 * Check DT domain and use_dt_domains values.
-> +	 *
-> +	 * If DT domain property is valid (domain >= 0) and
-> +	 * use_dt_domains != 0, the DT assignment is valid since this means
-> +	 * we have not previously allocated a domain number by using
-> +	 * pci_get_new_domain_nr(); we should also update use_dt_domains to
-> +	 * 1, to indicate that we have just assigned a domain number from
-> +	 * DT.
-> +	 *
-> +	 * If DT domain property value is not valid (ie domain < 0), and we
-> +	 * have not previously assigned a domain number from DT
-> +	 * (use_dt_domains != 1) we should assign a domain number by
-> +	 * using the:
-> +	 *
-> +	 * pci_get_new_domain_nr()
-> +	 *
-> +	 * API and update the use_dt_domains value to keep track of method we
-> +	 * are using to assign domain numbers (use_dt_domains = 0).
-> +	 *
-> +	 * All other combinations imply we have a platform that is trying
-> +	 * to mix domain numbers obtained from DT and pci_get_new_domain_nr(),
-> +	 * which is a recipe for domain mishandling and it is prevented by
-> +	 * invalidating the domain value (domain = -1) and printing a
-> +	 * corresponding error.
-> +	 */
-> +	if (domain >= 0 && use_dt_domains) {
-> +		use_dt_domains = 1;
-> +	} else if (domain < 0 && use_dt_domains != 1) {
-> +		use_dt_domains = 0;
-> +		domain = pci_get_new_domain_nr();
-> +	} else {
-> +		dev_err(parent, "Node %s has inconsistent \"linux,pci-domain\" property in DT\n",
-> +			parent->of_node->full_name);
-> +		domain = -1;
-> +	}
-> +
-> +	bus->domain_nr = domain;
-> +}
-> +#endif
->  #endif
->  
->  /**
-> 
-
-
--- 
-Thanks!
-Yijing
+RnJvbTogUGhpbGlwcCBaYWJlbCA8cGhpbGlwcC56YWJlbEBnbWFpbC5jb20+CgpUaGlzIHBhdGNo
+IGFkZHMgc3VwcG9ydCBmb3IgdGhlIEdpYW50UGx1cyBHUEc0ODI3M1FTNSA0LjMiIFdRVkdBIFRG
+VCBMQ0QgcGFuZWwKdG8gdGhlIHNpbXBsZS1wYW5lbCBkcml2ZXIuCgpUaGlzIHBhbmVsIGlzIGNv
+bm5lY3RlZCB2aWEgYSBwYXJhbGxlbCBidXMgYW5kIHVzZXMgYm90aCBIU1lOQyBhbmQgVlNZTkMs
+Cndob3NlIGxlbmd0aHMgYXJlIHVuZm9ydHVuYXRlbHkgbm90IGNsZWFybHkgZGVmaW5lZC4gVGhl
+IGRhdGFzaGVldCBvbmx5CnNwZWNpZmllcyB0aGUgZnJvbnQtIGFuZCBiYWNrcG9yY2ggbGVuZ3Ro
+LCBidXQgdGhlIHRpbWluZyBkaWFncmFtIHN1Z2dlc3RzCnRoYXQgYm90aCBzeW5jIHNpZ25hbHMg
+c2hvdWxkIGJlIGFzc2VydGVkIGZvciBleGFjdGx5IG9uZSBjbG9jayBjeWNsZS4KClNpZ25lZC1v
+ZmYtYnk6IFBoaWxpcHAgWmFiZWwgPHBoaWxpcHAuemFiZWxAZ21haWwuY29tPgpTaWduZWQtb2Zm
+LWJ5OiBMdWNhcyBTdGFjaCA8bC5zdGFjaEBwZW5ndXRyb25peC5kZT4KLS0tCltsc3RdOiByZWJh
+c2VkIG9uIHRvcCBvZiBkcm0vcGFuZWwvZm9yLW5leHQgKyBhZGRlZCBjb21taXQgbWVzc2FnZQot
+LS0KIC4uLi9iaW5kaW5ncy9wYW5lbC9naWFudHBsdXMsZ3BnNDgyNzM5cXM1LnR4dCAgICAgIHwg
+IDcgKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgICAgICAgICAg
+ICAgICB8IDI2ICsrKysrKysrKysrKysrKysrKysrKysKIDIgZmlsZXMgY2hhbmdlZCwgMzMgaW5z
+ZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9wYW5lbC9naWFudHBsdXMsZ3BnNDgyNzM5cXM1LnR4dAoKZGlmZiAtLWdpdCBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wYW5lbC9naWFudHBsdXMsZ3BnNDgyNzM5
+cXM1LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wYW5lbC9naWFudHBs
+dXMsZ3BnNDgyNzM5cXM1LnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMDAw
+MDAuLjI0YjBiNjI0NDM0YgotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9wYW5lbC9naWFudHBsdXMsZ3BnNDgyNzM5cXM1LnR4dApAQCAtMCwwICsx
+LDcgQEAKK0dpYW50UGx1cyBHUEc0ODI3M1FTNSA0LjMiICg0ODB4MjcyKSBXUVZHQSBURlQgTENE
+IHBhbmVsCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6IHNob3VsZCBiZSAi
+Z2lhbnRwbHVzLGdwZzQ4MjczcXM1IgorCitUaGlzIGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRo
+IHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywgd2hpY2ggaXMgc3BlY2lmaWVkCitpbiBzaW1wbGUt
+cGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5LgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
+L3BhbmVsL3BhbmVsLXNpbXBsZS5jIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBs
+ZS5jCmluZGV4IGM0YjYxNjdhOGJmMy4uMWQ4ZWQyMDYyODQxIDEwMDY0NAotLS0gYS9kcml2ZXJz
+L2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVs
+L3BhbmVsLXNpbXBsZS5jCkBAIC01NjAsNiArNTYwLDI5IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
+cGFuZWxfZGVzYyBmb3hsaW5rX2ZsNTAwd3ZyMDBfYTB0ID0gewogCX0sCiB9OwogCitzdGF0aWMg
+Y29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgZ2lhbnRwbHVzX2dwZzQ4MjczOXFzNV9tb2Rl
+ID0geworCS5jbG9jayA9IDkwMDAsCisJLmhkaXNwbGF5ID0gNDgwLAorCS5oc3luY19zdGFydCA9
+IDQ4MCArIDUsCisJLmhzeW5jX2VuZCA9IDQ4MCArIDUgKyAxLAorCS5odG90YWwgPSA0ODAgKyA1
+ICsgMSArIDQwLAorCS52ZGlzcGxheSA9IDI3MiwKKwkudnN5bmNfc3RhcnQgPSAyNzIgKyA4LAor
+CS52c3luY19lbmQgPSAyNzIgKyA4ICsgMSwKKwkudnRvdGFsID0gMjcyICsgOCArIDEgKyA4LAor
+CS52cmVmcmVzaCA9IDYwLAorfTsKKworc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGdp
+YW50cGx1c19ncGc0ODI3MzlxczUgPSB7CisJLm1vZGVzID0gJmdpYW50cGx1c19ncGc0ODI3Mzlx
+czVfbW9kZSwKKwkubnVtX21vZGVzID0gMSwKKwkuYnBjID0gOCwKKwkuc2l6ZSA9IHsKKwkJLndp
+ZHRoID0gOTUsCisJCS5oZWlnaHQgPSA1NCwKKwl9LAorfTsKKwogc3RhdGljIGNvbnN0IHN0cnVj
+dCBkcm1fZGlzcGxheV9tb2RlIGhhbm5zdGFyX2hzZDA3MHB3dzFfbW9kZSA9IHsKIAkuY2xvY2sg
+PSA3MTEwMCwKIAkuaGRpc3BsYXkgPSAxMjgwLApAQCAtNzU3LDYgKzc4MCw5IEBAIHN0YXRpYyBj
+b25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHBsYXRmb3JtX29mX21hdGNoW10gPSB7CiAJCS5jb21w
+YXRpYmxlID0gImZveGxpbmssZmw1MDB3dnIwMC1hMHQiLAogCQkuZGF0YSA9ICZmb3hsaW5rX2Zs
+NTAwd3ZyMDBfYTB0LAogCX0sIHsKKwkJLmNvbXBhdGlibGUgPSAiZ2lhbnRwbHVzLGdwZzQ4Mjcz
+OXFzNSIsCisJCS5kYXRhID0gJmdpYW50cGx1c19ncGc0ODI3MzlxczUKKwl9LCB7CiAJCS5jb21w
+YXRpYmxlID0gImhhbm5zdGFyLGhzZDA3MHB3dzEiLAogCQkuZGF0YSA9ICZoYW5uc3Rhcl9oc2Qw
+NzBwd3cxLAogCX0sIHsKLS0gCjIuMS4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbAo=
