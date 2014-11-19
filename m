@@ -1,111 +1,141 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 09/10] serial: earlycon: Set UPIO_MEM32BE based on DT properties
-Date: Tue, 18 Nov 2014 21:16:08 -0600
-Message-ID: <CAL_JsqJ5+=kp-_bKiNxasB7gm1Pj4C6-FfO_+7DcyhvcgYEaAg@mail.gmail.com>
-References: <1415825647-6024-1-git-send-email-cernekee@gmail.com> <1415825647-6024-10-git-send-email-cernekee@gmail.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH 1/3] ARM: dts: imx6: add pm_power_off support for i.mx6
+ chips
+Date: Wed, 19 Nov 2014 11:18:24 +0800
+Message-ID: <20141119031823.GC27759@dragon>
+References: <1415780439-29728-1-git-send-email-b38343@freescale.com>
+ <1415780439-29728-2-git-send-email-b38343@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1415825647-6024-10-git-send-email-cernekee@gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Arnd Bergmann <arnd@arndb.de>, daniel@zonque.org, haojian.zhuang@gmail.com, robert.jarzmik@free.fr, Grant Likely <grant.likely@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux-MIPS <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1415780439-29728-2-git-send-email-b38343@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robin Gong <b38343@freescale.com>
+Cc: kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, smoch@web.de
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 12, 2014 at 2:54 PM, Kevin Cernekee <cernekee@gmail.com> wrote:
-> If an earlycon (stdout-path) node is being used, check for "big-endian"
-> or "native-endian" properties and pass the appropriate iotype to the
-> driver.
->
-> Note that LE sets UPIO_MEM (8-bit) but BE sets UPIO_MEM32BE (32-bit).  The
-> big-endian property only really makes sense in the context of 32-bit
-> registers, since 8-bit accesses never require data swapping.
->
-> At some point, the of_earlycon code may want to pass in the reg-io-width,
-> reg-offset, and reg-shift parameters too.
->
-> Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+On Wed, Nov 12, 2014 at 04:20:37PM +0800, Robin Gong wrote:
+> All chips of i.mx6 can be powered off by programming SNVS.
+> For example :
+> On i.mx6q-sabresd board, PMIC_ON_REQ connect with external
+> pmic ON/OFF pin, that will cause the whole PMIC powered off
+> except VSNVS. And system can restart once PMIC_ON_REQ goes
+> high by push POWRER key.
+> 
+> Signed-off-by: Robin Gong <b38343@freescale.com>
 > ---
->  drivers/of/fdt.c              | 9 ++++++++-
->  drivers/tty/serial/earlycon.c | 4 ++--
->  include/linux/serial_core.h   | 2 +-
->  3 files changed, 11 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 30e97bc..15f80c9 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -10,6 +10,7 @@
->   */
->
->  #include <linux/kernel.h>
-> +#include <linux/kconfig.h>
->  #include <linux/initrd.h>
->  #include <linux/memblock.h>
->  #include <linux/of.h>
-> @@ -784,7 +785,13 @@ int __init early_init_dt_scan_chosen_serial(void)
->                 if (!addr)
->                         return -ENXIO;
->
-> -               of_setup_earlycon(addr, match->data);
-> +               if (fdt_getprop(fdt, offset, "big-endian", NULL) ||
-> +                   (fdt_getprop(fdt, offset, "native-endian", NULL) &&
+>  arch/arm/boot/dts/imx6qdl-sabresd.dtsi |    4 ++++
+>  arch/arm/boot/dts/imx6qdl.dtsi         |    6 ++++++
+>  arch/arm/boot/dts/imx6sl-evk.dts       |    4 ++++
+>  arch/arm/boot/dts/imx6sl.dtsi          |    6 ++++++
+>  arch/arm/boot/dts/imx6sx-sdb.dts       |    4 ++++
+>  arch/arm/boot/dts/imx6sx.dtsi          |    6 ++++++
+>  6 files changed, 30 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> index 07fb302..ba12cc6 100644
+> --- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> @@ -531,6 +531,10 @@
+>  	status = "okay";
+>  };
+>  
+> +&snvs-poweroff {
+> +	status = "okay";
+> +};
+> +
+>  &ssi2 {
+>  	status = "okay";
+>  };
+> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+> index c701af9..3a032d1 100644
+> --- a/arch/arm/boot/dts/imx6qdl.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
+> @@ -645,6 +645,12 @@
+>  					interrupts = <0 19 IRQ_TYPE_LEVEL_HIGH>,
+>  						     <0 20 IRQ_TYPE_LEVEL_HIGH>;
+>  				};
+> +
+> +				snvs-poweroff: snvs-poweroff@38 {
 
-Is native-endian documented?
+I'm not sure if it's because my DTC version is too low or you didn't
+test, the DTC reports error in label name 'snvs-poweroff'.  IIRC, hyphen
+'-' cannot be used in label name, but underscore '_' can.
 
-> +                    IS_ENABLED(CONFIG_CPU_BIG_ENDIAN))) {
-> +                       of_setup_earlycon(addr, UPIO_MEM32BE, match->data);
-> +               } else {
-> +                       of_setup_earlycon(addr, UPIO_MEM, match->data);
-> +               }
+Shawn
 
-I'd rather see something like this, so we can more easily add any
-other properties later:
-
-               iotype = 0;
-               if (fdt_getprop(fdt, offset, "big-endian", NULL) ||
-                   (fdt_getprop(fdt, offset, "native-endian", NULL) &&
-                    IS_ENABLED(CONFIG_CPU_BIG_ENDIAN)))
-                          iotype = UPIO_MEM32BE;
-
-               of_setup_earlycon(addr, iotype ? : UPIO_MEM, match->data);
-
->                 return 0;
->         }
->         return -ENODEV;
-> diff --git a/drivers/tty/serial/earlycon.c b/drivers/tty/serial/earlycon.c
-> index a514ee6..548f7d7 100644
-> --- a/drivers/tty/serial/earlycon.c
-> +++ b/drivers/tty/serial/earlycon.c
-> @@ -148,13 +148,13 @@ int __init setup_earlycon(char *buf, const char *match,
->         return 0;
->  }
->
-> -int __init of_setup_earlycon(unsigned long addr,
-> +int __init of_setup_earlycon(unsigned long addr, unsigned char iotype,
->                              int (*setup)(struct earlycon_device *, const char *))
->  {
->         int err;
->         struct uart_port *port = &early_console_dev.port;
->
-> -       port->iotype = UPIO_MEM;
-> +       port->iotype = iotype;
->         port->mapbase = addr;
->         port->uartclk = BASE_BAUD * 16;
->         port->membase = earlycon_map(addr, SZ_4K);
-> diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
-> index d2d5bf6..0d60c64 100644
-> --- a/include/linux/serial_core.h
-> +++ b/include/linux/serial_core.h
-> @@ -310,7 +310,7 @@ struct earlycon_device {
->  int setup_earlycon(char *buf, const char *match,
->                    int (*setup)(struct earlycon_device *, const char *));
->
-> -extern int of_setup_earlycon(unsigned long addr,
-> +extern int of_setup_earlycon(unsigned long addr, unsigned char iotype,
->                              int (*setup)(struct earlycon_device *, const char *));
->
->  #define EARLYCON_DECLARE(name, func) \
-> --
-> 2.1.1
->
+> +					compatible = "fsl,sec-v4.0-poweroff";
+> +					reg = <0x38 0x4>;
+> +					status = "disabled";
+> +				};
+>  			};
+>  
+>  			epit1: epit@020d0000 { /* EPIT1 */
+> diff --git a/arch/arm/boot/dts/imx6sl-evk.dts b/arch/arm/boot/dts/imx6sl-evk.dts
+> index 3f9e041..dab588f 100644
+> --- a/arch/arm/boot/dts/imx6sl-evk.dts
+> +++ b/arch/arm/boot/dts/imx6sl-evk.dts
+> @@ -488,6 +488,10 @@
+>  	status = "okay";
+>  };
+>  
+> +&snvs-poweroff {
+> +	status = "okay";
+> +};
+> +
+>  &ssi2 {
+>  	status = "okay";
+>  };
+> diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+> index 505da9e..5e5ed07 100644
+> --- a/arch/arm/boot/dts/imx6sl.dtsi
+> +++ b/arch/arm/boot/dts/imx6sl.dtsi
+> @@ -565,6 +565,12 @@
+>  					interrupts = <0 19 IRQ_TYPE_LEVEL_HIGH>,
+>  						     <0 20 IRQ_TYPE_LEVEL_HIGH>;
+>  				};
+> +
+> +				snvs-poweroff: snvs-poweroff@38 {
+> +					compatible = "fsl,sec-v4.0-poweroff";
+> +					reg = <0x38 0x4>;
+> +					status = "disabled";
+> +				};
+>  			};
+>  
+>  			epit1: epit@020d0000 {
+> diff --git a/arch/arm/boot/dts/imx6sx-sdb.dts b/arch/arm/boot/dts/imx6sx-sdb.dts
+> index a3980d9..78dc031 100644
+> --- a/arch/arm/boot/dts/imx6sx-sdb.dts
+> +++ b/arch/arm/boot/dts/imx6sx-sdb.dts
+> @@ -251,6 +251,10 @@
+>  	};
+>  };
+>  
+> +&snvs-poweroff {
+> +	status = "okay";
+> +};
+> +
+>  &ssi2 {
+>  	status = "okay";
+>  };
+> diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+> index f4b9da6..652be9f 100644
+> --- a/arch/arm/boot/dts/imx6sx.dtsi
+> +++ b/arch/arm/boot/dts/imx6sx.dtsi
+> @@ -668,6 +668,12 @@
+>  					reg = <0x34 0x58>;
+>  					interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
+>  				};
+> +
+> +				snvs-poweroff: snvs-poweroff@38 {
+> +					compatible = "fsl,sec-v4.0-poweroff";
+> +					reg = <0x38 0x4>;
+> +					status = "disabled";
+> +				};
+>  			};
+>  
+>  			epit1: epit@020d0000 {
+> -- 
+> 1.7.9.5
+> 
