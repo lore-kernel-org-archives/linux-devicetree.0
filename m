@@ -1,368 +1,203 @@
-From: Mark yao <mark.yao@rock-chips.com>
-Subject: Re: [PATCH v12 1/3] drm: rockchip: Add basic drm driver
-Date: Wed, 19 Nov 2014 10:02:53 +0800
-Message-ID: <546BFA4D.3090700@rock-chips.com>
-References: <1416297587-18959-1-git-send-email-mark.yao@rock-chips.com>
- <1416297629-19024-1-git-send-email-mark.yao@rock-chips.com>
- <20141118083234.GZ25711@phenom.ffwll.local>
- <20141118142130.6c12ab50@bbrezillon>
- <20141118142447.GC25711@phenom.ffwll.local> <546BEDD9.1000205@rock-chips.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] ARM: keystone: pm: switch to use generic pm domains
+Date: Wed, 19 Nov 2014 13:32:45 +0200
+Message-ID: <546C7FDD.7030906@ti.com>
+References: <1415631557-22897-1-git-send-email-grygorii.strashko@ti.com> <7hsihhzecq.fsf@deeprootsystems.com> <546B95EC.5000705@ti.com> <1709760.E0jX3Myv0h@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1186294743=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <546BEDD9.1000205@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Boris Brezillon <boris.brezillon@free-electrons.com>, heiko@sntech.de, David Airlie <airlied@gmail.com>, Rob Clark <robdclark@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Rom Lemarchand <romlem@google.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-api@vger.kernel.org, linux-rockchip@lists.infradead.org, dianders@chromium.org, marcheu@chromium.org, dbehr@chromium.org, olof@lixom.net, djkurtz@chromium.org, cf@rock-chips.com, xxm@rock-chips.com, huangtao@rock-chips.c
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1709760.E0jX3Myv0h@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a multi-part message in MIME format.
---===============1186294743==
-Content-Type: multipart/alternative;
- boundary="------------040705000000090100050609"
+Hi Arnd,
 
-This is a multi-part message in MIME format.
---------------040705000000090100050609
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-
-On 2014=E5=B9=B411=E6=9C=8819=E6=97=A5 09:09, Mark yao wrote:
-> On 2014=E5=B9=B411=E6=9C=8818=E6=97=A5 22:24, Daniel Vetter wrote:
->> On Tue, Nov 18, 2014 at 02:21:30PM +0100, Boris Brezillon wrote:
->>> Hi Daniel,
+On 11/18/2014 09:32 PM, Arnd Bergmann wrote:
+> On Tuesday 18 November 2014 20:54:36 Grygorii Strashko wrote:
+>> Hi All,
+>>
+>> Thank you for your comments.
+>>
+>> On 11/17/2014 11:50 PM, Kevin Hilman wrote:
+>>> Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
 >>>
->>> On Tue, 18 Nov 2014 09:32:34 +0100
->>> Daniel Vetter <daniel@ffwll.ch> wrote:
+>>>> On Monday 17 November 2014 11:14:16 Kevin Hilman wrote:
+>>>>>>>
+>>>>>>> So, The Keystone 2 Generic PM Controller is just a proxy PM layer here between
+>>>>>>> device and Generic clock manipulation PM callbacks.
+>>>>>>> It fills per-device clock list when device is attached to GPD and
+>>>>>>> ensures that all clocks from that list enabled/disabled when device is
+>>>>>>> started/stopped.
+>>>>>>
+>>>>>> The idea of such a generic power domain implementation sounds useful, but
+>>>>>> it has absolutely no business in platform specific code.
+>>>>>
+>>>>> Yes it does.  This isn't a generic power domain implementation, but
+>>>>> rather just the platform-specific glue that hooks up the clocks to the
+>>>>> right devices and power-domains so that the generic power-domain and
+>>>>> generic pm_clocks code does the right thing.
+>>>>
+>>>> How would you do this on an arm64 version of keystone then? With
+>>>> the current approach, you'd need to add a machine specific directory,
+>>>> and that seems completely pointless since this is not even about
+>>>> a hardware requirement.
 >>>
->>>> On Tue, Nov 18, 2014 at 04:00:29PM +0800, Mark Yao wrote:
->>>>> From: Mark yao <mark.yao@rock-chips.com>
+>>> Yeah, you're right.  I misunderstood you're original comment.
+>>>
+>>>>>> I suggest you either remove the power domain proxy from your drivers
+>>>>>> and use the clocks directly,
+>>
+>> Hm. I've been thinking about this, but the problem is that Keystone 2
+>> reuses a lot of IPs from Davinci and PM for Davinci is based on Generic clock
+>> manipulation PM callbacks framework, but for non-DT case. So, I can't simply
+>> use clocks directly.
+> 
+> I think you could get that to work without too much trouble, but as Kevin
+> comments, the generic pmdomain code is helpful here, and we should find
+> a way to make it work better.
+> 
+>>>>> No.  That's a step in the wrong direction.  This change isn't affecting
+>>>>> drivers directly.  It's the runtime PM and generic power domain layers
+>>>>> that handle this, and runtime PM adapted drivers don't need any changes.
+>>>>>    
+>>>>>> or come up with an implementation that can be used across other
+>>>>>> platforms and CPU architectures.
 >>>>>
->>>>> This patch adds the basic structure of a DRM Driver for Rockchip=20
->>>>> Socs.
->>>>>
->>>>> Signed-off-by: Mark Yao <mark.yao@rock-chips.com>
->>>>> Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
->>>>> Acked-by: Daniel Vetter <daniel@ffwll.ch>
->>>>> Reviewed-by: Rob Clark <robdclark@gmail.com>
->>>>> ---
->>>>> Changes in v2:
->>>>> - use the component framework to defer main drm driver probe
->>>>>    until all VOP devices have been probed.
->>>>> - use dma-mapping API with ARM_DMA_USE_IOMMU, create dma mapping by
->>>>>    master device and each vop device can shared the drm dma mapping=
-.
->>>>> - use drm_crtc_init_with_planes and drm_universal_plane_init.
->>>>> - remove unnecessary middle layers.
->>>>> - add cursor set, move funcs to rockchip drm crtc.
->>>>> - use vop reset at first init
->>>>> - reference framebuffer when used and unreference when swap out vop
->>>>>
->>>>> Changes in v3:
->>>>> - change "crtc->fb" to "crtc->primary-fb"
->>>>> Adviced by Daniel Vetter
->>>>> - init cursor plane with universal api, remove unnecessary cursor=20
->>>>> set,move
->>>>>
->>>>> Changes in v4:
->>>>> Adviced by David Herrmann
->>>>> - remove drm_platform_*() usage, use register drm device directly.
->>>> Minor fixup for that part below.
+>>>>> We already have those in the generic power domain and the pm_clock
+>>>>> layers.  This series is just hooking those up for Keystone.
 >>>>
->>>> [snip]
->>>>
->>>>> +static int rockchip_drm_bind(struct device *dev)
->>>>> +{
->>>>> +    struct drm_device *drm;
->>>>> +    int ret;
->>>>> +
->>>>> +    drm =3D drm_dev_alloc(&rockchip_drm_driver, dev);
->>>>> +    if (!drm)
->>>>> +        return -ENOMEM;
->>>>> +
->>>>> +    ret =3D drm_dev_set_unique(drm, "%s", dev_name(dev));
->>>>> +    if (ret)
->>>>> +        goto err_free;
->>>> Please call rockchip_drm_load here directly and don't put it as the=20
->>>> ->load
->>>> function into the driver vtable. The point of the alloc/register=20
->>>> split is
->>>> that the driver can be completely set up _before_ we register=20
->>>> anything.
->>>> But for backwards compat and historical reasons ->load is called=20
->>>> somewhere
->>>> in the middle (so that you could access the minor nodes if needed,=20
->>>> since
->>>> some drivers do that).
->>> I tried to do the same in the atmel-hlcdc DRM driver, but I need the
->>> primary drm_minor to register the connectors (see this kernel
->>> backtrace [1]), which means I either initialize the connector in the
->>> wrong place (currently part of the drm load process), or I just can't
->>> call atmel_hlcdc_dc_load before registering the drm device...
->> Hm right, wonder who that works with rockchip tbh.
+>>>> Then why not add the missing piece to the generic power domain
+>>>> code to avoid having to add infrastructure to the platform
+>>>> for it?
+>>>
+>>> Yes, good point.  There is nothing keystone-specific in this glue.
+>>>
+>>> Grygorii, what about adding a feature to the generic domain parsing so
+>>> that it can get clocks from device nodes that are part of the domain,
+>>> and so it sets up pm_clk accordingly.
 >>
->> We did split up the drm_connector setup into _init and register, so=20
->> if you
->> want to do this then you need to move the call to drm_connector_regist=
-er
->> below the call to drm_dev_register.
+>> I'd like to mention few points here:
+>> 1)  not all platforms may need this
 >>
->> We should probably have a drm_connectors_register_all helper which doe=
-s
->> this for all connectors on the connector list. And also grabs the
->> appropriate lock.
+>> 2)  not all platforms may allow to add ALL clocks from "clocks" property
+>>     to pm_clk as some of them can be optional or have to be controlled by drivers only
+>>     (for example, initially, it was the case for SH-mobile https://lkml.org/lkml/2014/4/24/197
+>>      also now, last implementation for shmobile add only first clock from "clocks" property
+>>      to pm_clk https://lkml.org/lkml/2014/11/17/272).
 >>
->> I guess it's somewhat obvious that no one yet actually tried this ;-)
->> -Daniel
-> right, I re-test the driver with it, get the same problem with Boris.
-> I should move drm_connector_register below the drm_dev_register.
-I try move connector_register below drm_dev_register, but unfortunately,=20
-drm_dev_register call
-drm_mode_group_init_legacy_group to save crtc, connector into list, it=20
-need below  connector_register.
-so that problem is that now: connector_register need bewteen minor node=20
-create and
-drm_mode_group_init_legacy_group.
-=EF=BC=A9'm consider to revert the drm/rockchip v13.
+>> 3)  such functionality have to be enabled for devices selectively, for example
+>>     now we are going to enable it for devices which a ready for runtime PM.
+>>
+>> Current implementation cover 1 & 3, but also it allows to cover 2 too, because
+>> it's platform specific implementation and .attach_dev() can be updated to skip some
+>> clocks or devices if needed.
+> 
+> Well, not all drivers and not all platforms have to use it, I think it would
+> just be good to make the case you are interested in really easy, and definitely
+> work without platform specific code.
+> 
+>>> I've recently seen other SoCs doing very similar, so this really should
+>>> be generalized.
+>>>
+>>> I've been looking at this primarily as a right incremental improvement
+>>> from what is there for Keystone today, but Arnd is right.  This should
+>>> be moved out of platform code.
+>>
+>> I'm ready to do what ever you want, but I don't fully understand what exactly to do :(
+>> Should I create some generic_pm_clk_domain.c?
+>> - or - Do you mean to integrate it in domain.c (see no way to do it:()?
+>> - or - smth. else
+>>
+>> What about introduced DT bindings? For example, How will devices be
+>> selected for attachment to Generic pm_clk domain if I'll introduce
+>> generic_pm_clk_domain.c?
+> 
+> I am not really familiar with the pmdomain code at all, but here is
+> what I had thought the simplest generic pmdomain code would do:
+> 
+> Have one pmdomain driver in the generic code that knows about clocks,
+> possibly also regulators and pins and just turns them on when needed.
+> You can have a "simple-pmdomain" or "generic-pmdomain" compatible
+> string.
+> 
+> I'm a bit surprised that your pmdomain code looks up the clocks from the
+> respective device, rather than know about the clocks itself. There is
+> probably a good reason for this, but I don't see it yet.
+
+The keystone 2 uses simple PM schema based on clocks only:
+- clocks enabled -> dev is active
+- clocks disabled -> dev is suspended
+
+To achieve explained above the Generic clock manipulation PM callbacks framework (pm_clk) is used.
+- list of managed clocks is filled for each device (for non-DT case the con_id list
+  is specified by platform code like:
+	.con_ids = { "fck", "master", "slave", NULL }, 
+        - or - 
+	.con_ids = { }, <-- in this case only first clock will be added to pm_clk
+  )
+- dev.pm_domain is assigned to pm_clk_domain
+- pm_clk_domain has .runtime_resume/runtime_suspend callbacks set and implemented like:
+  static int keystone_pm_runtime_suspend(struct device *dev)
+  {
+	ret = pm_generic_runtime_suspend(dev);
+	if (ret)
+		return ret;
+
+	ret = pm_clk_suspend(dev);
+	if (ret) {
+		pm_generic_runtime_resume(dev);
+		return ret;
+	}
+
+	return 0;
+  }
+  static int keystone_pm_runtime_resume(struct device *dev)
+  {
+	pm_clk_resume(dev);
+
+	return pm_generic_runtime_resume(dev);
+  }
+Now this configuration can be done from Platform Bus notifier (clock_ops.c) only and It'll
+be done for ALL Platform devices and, once above steps have been done, the Runtime PM
+starts working for device.
+
+As was described early in this thread, Keystone 2 PM domain is glue layer which
+allows:
+ - configure pm_clk for devices from DT and get rid of .con_ids
+ - configure only selected devices
+ - get rid of using Platform Bus notifier
+ - enable suspend/resume for devices as side effect :)
+and which manages state of its devices through dev_ops->start()/stop() callbacks. 
+
+> 
+> Another option would be to have a special case for an empty
+> "power-domains" property if this is the most common case: if that
+> property exists but is empty, the pmdomain core could interpret
+> it as an indication to control all the clocks/regulators/pins
+> of a device.
+
+I can try to do the following:
+- move Keystone PM domain code in drivers/base/power/simple_domain.c
+- add DT bindings like:
++	clk_pmdomain: simple-clk-pmdomain {
++		compatible = "simple-clk-pmdomain", "simple-pmdomain";
++		#power-domain-cells = <0>;
++	};
+- in case if compatible == "simple-clk-pmdomain" it will do the same sings as in this patch
+
+In the future, additional support for regulators/clocks/gpios can be added and these resources
+can be managed in .power_on/power_off.
+
+Is it ok for you?
+
+Regards,
+- grygorii
 
 
---------------040705000000090100050609
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<html>
-  <head>
-    <meta content=3D"text/html; charset=3DUTF-8" http-equiv=3D"Content-Ty=
-pe">
-  </head>
-  <body text=3D"#000000" bgcolor=3D"#FFFFFF">
-    <div class=3D"moz-cite-prefix">On 2014=E5=B9=B411=E6=9C=8819=E6=97=A5=
- 09:09, Mark yao wrote:<br>
-    </div>
-    <blockquote cite=3D"mid:546BEDD9.1000205@rock-chips.com" type=3D"cite=
-">On
-      2014=E5=B9=B411=E6=9C=8818=E6=97=A5 22:24, Daniel Vetter wrote:
-      <br>
-      <blockquote type=3D"cite">On Tue, Nov 18, 2014 at 02:21:30PM +0100,
-        Boris Brezillon wrote:
-        <br>
-        <blockquote type=3D"cite">Hi Daniel,
-          <br>
-          <br>
-          On Tue, 18 Nov 2014 09:32:34 +0100
-          <br>
-          Daniel Vetter <a class=3D"moz-txt-link-rfc2396E" href=3D"mailto=
-:daniel@ffwll.ch">&lt;daniel@ffwll.ch&gt;</a> wrote:
-          <br>
-          <br>
-          <blockquote type=3D"cite">On Tue, Nov 18, 2014 at 04:00:29PM
-            +0800, Mark Yao wrote:
-            <br>
-            <blockquote type=3D"cite">From: Mark yao
-              <a class=3D"moz-txt-link-rfc2396E" href=3D"mailto:mark.yao@=
-rock-chips.com">&lt;mark.yao@rock-chips.com&gt;</a>
-              <br>
-              <br>
-              This patch adds the basic structure of a DRM Driver for
-              Rockchip Socs.
-              <br>
-              <br>
-              Signed-off-by: Mark Yao <a class=3D"moz-txt-link-rfc2396E" =
-href=3D"mailto:mark.yao@rock-chips.com">&lt;mark.yao@rock-chips.com&gt;</=
-a>
-              <br>
-              Signed-off-by: Daniel Kurtz <a class=3D"moz-txt-link-rfc239=
-6E" href=3D"mailto:djkurtz@chromium.org">&lt;djkurtz@chromium.org&gt;</a>
-              <br>
-              Acked-by: Daniel Vetter <a class=3D"moz-txt-link-rfc2396E" =
-href=3D"mailto:daniel@ffwll.ch">&lt;daniel@ffwll.ch&gt;</a>
-              <br>
-              Reviewed-by: Rob Clark <a class=3D"moz-txt-link-rfc2396E" h=
-ref=3D"mailto:robdclark@gmail.com">&lt;robdclark@gmail.com&gt;</a>
-              <br>
-              ---
-              <br>
-              Changes in v2:
-              <br>
-              - use the component framework to defer main drm driver
-              probe
-              <br>
-              =C2=A0=C2=A0 until all VOP devices have been probed.
-              <br>
-              - use dma-mapping API with ARM_DMA_USE_IOMMU, create dma
-              mapping by
-              <br>
-              =C2=A0=C2=A0 master device and each vop device can shared t=
-he drm
-              dma mapping.
-              <br>
-              - use drm_crtc_init_with_planes and
-              drm_universal_plane_init.
-              <br>
-              - remove unnecessary middle layers.
-              <br>
-              - add cursor set, move funcs to rockchip drm crtc.
-              <br>
-              - use vop reset at first init
-              <br>
-              - reference framebuffer when used and unreference when
-              swap out vop
-              <br>
-              <br>
-              Changes in v3:
-              <br>
-              - change "crtc-&gt;fb" to "crtc-&gt;primary-fb"
-              <br>
-              Adviced by Daniel Vetter
-              <br>
-              - init cursor plane with universal api, remove unnecessary
-              cursor set,move
-              <br>
-              <br>
-              Changes in v4:
-              <br>
-              Adviced by David Herrmann
-              <br>
-              - remove drm_platform_*() usage, use register drm device
-              directly.
-              <br>
-            </blockquote>
-            Minor fixup for that part below.
-            <br>
-            <br>
-            [snip]
-            <br>
-            <br>
-            <blockquote type=3D"cite">+static int rockchip_drm_bind(struc=
-t
-              device *dev)
-              <br>
-              +{
-              <br>
-              +=C2=A0=C2=A0=C2=A0 struct drm_device *drm;
-              <br>
-              +=C2=A0=C2=A0=C2=A0 int ret;
-              <br>
-              +
-              <br>
-              +=C2=A0=C2=A0=C2=A0 drm =3D drm_dev_alloc(&amp;rockchip_drm=
-_driver, dev);
-              <br>
-              +=C2=A0=C2=A0=C2=A0 if (!drm)
-              <br>
-              +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENOMEM;
-              <br>
-              +
-              <br>
-              +=C2=A0=C2=A0=C2=A0 ret =3D drm_dev_set_unique(drm, "%s", d=
-ev_name(dev));
-              <br>
-              +=C2=A0=C2=A0=C2=A0 if (ret)
-              <br>
-              +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto err_free;
-              <br>
-            </blockquote>
-            Please call rockchip_drm_load here directly and don't put it
-            as the -&gt;load
-            <br>
-            function into the driver vtable. The point of the
-            alloc/register split is
-            <br>
-            that the driver can be completely set up _before_ we
-            register anything.
-            <br>
-            But for backwards compat and historical reasons -&gt;load is
-            called somewhere
-            <br>
-            in the middle (so that you could access the minor nodes if
-            needed, since
-            <br>
-            some drivers do that).
-            <br>
-          </blockquote>
-          I tried to do the same in the atmel-hlcdc DRM driver, but I
-          need the
-          <br>
-          primary drm_minor to register the connectors (see this kernel
-          <br>
-          backtrace [1]), which means I either initialize the connector
-          in the
-          <br>
-          wrong place (currently part of the drm load process), or I
-          just can't
-          <br>
-          call atmel_hlcdc_dc_load before registering the drm device...
-          <br>
-        </blockquote>
-        Hm right, wonder who that works with rockchip tbh.
-        <br>
-        <br>
-        We did split up the drm_connector setup into _init and register,
-        so if you
-        <br>
-        want to do this then you need to move the call to
-        drm_connector_register
-        <br>
-        below the call to drm_dev_register.
-        <br>
-        <br>
-        We should probably have a drm_connectors_register_all helper
-        which does
-        <br>
-        this for all connectors on the connector list. And also grabs
-        the
-        <br>
-        appropriate lock.
-        <br>
-        <br>
-        I guess it's somewhat obvious that no one yet actually tried
-        this ;-)
-        <br>
-        -Daniel
-        <br>
-      </blockquote>
-      right, I re-test the driver with it, get the same problem with
-      Boris.
-      <br>
-      I should move drm_connector_register below the drm_dev_register.
-      <br>
-    </blockquote>
-    I try move connector_register below drm_dev_register, but
-    unfortunately<span style=3D"color: rgb(51, 51, 51); font-family:
-      arial; font-size: 18px; font-style: normal; font-variant: normal;
-      font-weight: normal; letter-spacing: normal; line-height: 22px;
-      orphans: auto; text-align: start; text-indent: 0px;
-      text-transform: none; white-space: normal; widows: auto;
-      word-spacing: 0px; -webkit-text-stroke-width: 0px;
-      background-color: rgb(255, 255, 255); display: inline !important;
-      float: none;">, </span>drm_dev_register call<br>
-    drm_mode_group_init_legacy_group to save crtc, connector into list,
-    it need below=C2=A0 connector_register.<br>
-    so that problem is that now: connector_register need bewteen minor
-    node create and<br>
-    drm_mode_group_init_legacy_group.<br>
-    =EF=BC=A9'm consider to revert the drm/rockchip v13.<br>
-    <br>
-  </body>
-</html>
-
---------------040705000000090100050609--
-
-
---===============1186294743==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
-
---===============1186294743==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
