@@ -1,40 +1,60 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: [PATCH 1/2] of: Add vendor prefix for Giantplus Technology Co., Ltd.
-Date: Wed, 19 Nov 2014 10:29:54 +0100
-Message-ID: <1416389395-15152-1-git-send-email-l.stach@pengutronix.de>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] spi: Add 'last' flag to spi_transfer structure
+Date: Wed, 19 Nov 2014 09:34:45 +0000
+Message-ID: <20141119093445.GV22111@sirena.org.uk>
+References: <1416264471-774-1-git-send-email-b.galvani@gmail.com>
+ <1416264471-774-2-git-send-email-b.galvani@gmail.com>
+ <20141118140658.GI22111@sirena.org.uk>
+ <20141118225546.GA27182@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, dri-devel@lists.freedesktop.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="s0H35NU0PUc8VBh+"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141118225546.GA27182-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogUGhpbGlwcCBaYWJlbCA8cGhpbGlwcC56YWJlbEBnbWFpbC5jb20+CgpTaWduZWQtb2Zm
-LWJ5OiBQaGlsaXBwIFphYmVsIDxwaGlsaXBwLnphYmVsQGdtYWlsLmNvbT4KU2lnbmVkLW9mZi1i
-eTogTHVjYXMgU3RhY2ggPGwuc3RhY2hAcGVuZ3V0cm9uaXguZGU+Ci0tLQogRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQgfCAxICsKIDEgZmlsZSBj
-aGFuZ2VkLCAxIGluc2VydGlvbigrKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQKaW5kZXggMGIyZmM3MzJmMWYzLi5jNjc4
-ZWU2M2U5MWMgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92
-ZW5kb3ItcHJlZml4ZXMudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy92ZW5kb3ItcHJlZml4ZXMudHh0CkBAIC01OSw2ICs1OSw3IEBAIGZzbAlGcmVlc2NhbGUgU2Vt
-aWNvbmR1Y3RvcgogR0VGYW51YwlHRSBGYW51YyBJbnRlbGxpZ2VudCBQbGF0Zm9ybXMgRW1iZWRk
-ZWQgU3lzdGVtcywgSW5jLgogZ2VmCUdFIEZhbnVjIEludGVsbGlnZW50IFBsYXRmb3JtcyBFbWJl
-ZGRlZCBTeXN0ZW1zLCBJbmMuCiBnZW5pYXRlY2gJR2VuaWF0ZWNoLCBJbmMuCitnaWFudHBsdXMJ
-R2lhbnRwbHVzIFRlY2hub2xvZ3kgQ28uLCBMdGQuCiBnbG9iYWxzY2FsZQlHbG9iYWxzY2FsZSBU
-ZWNobm9sb2dpZXMsIEluYy4KIGdtdAlHbG9iYWwgTWl4ZWQtbW9kZSBUZWNobm9sb2d5LCBJbmMu
-CiBnb29nbGUJR29vZ2xlLCBJbmMuCi0tIAoyLjEuMQoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--s0H35NU0PUc8VBh+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Nov 18, 2014 at 11:55:46PM +0100, Beniamino Galvani wrote:
+
+> Would it be better to introduce something like:
+
+> static inline bool
+> spi_transfer_is_last(struct spi_master *master, struct spi_transfer *xfer)
+> {
+>         return list_is_last(&xfer->transfer_list, &master->cur_msg->transfers);
+> }
+
+> or open code it in the driver?
+
+Adding the helper function seems better, it means we can change the
+implementation later.
+
+--s0H35NU0PUc8VBh+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUbGQxAAoJECTWi3JdVIfQe2sH/RfuVlJmbwTuMXxo8oXmtKoc
+BkHQLcXVYYGZL+9M7S/W/Pk2xzSqvQuWPMUWraFk39+5XHzlieHbsFkWOd/P7H5i
+0yekOEWxbVkHnRzOEBJsXlUNCJbepPUA+0YPBlIMtlTi3ClCDfPjgAZTcLDgLdH4
+F6DWpQgHcU6n+bnCUGBNcas1l3v8Q73QhJCtifjxnnS2aUaQ1jZPmWSc50kA8W1i
+n/HDZn3VFxnfCTJ+1z/vwAwf4BKC1SgI0qJezWIHLsI8yeG4LgIMqExnqpVXOTUF
+vW4JxSeNNtEweyIiEzqLvSFdCDrXUJfYnWoueQIRsOTpUh3mMrtWhInUdg8LFK4=
+=JxKc
+-----END PGP SIGNATURE-----
+
+--s0H35NU0PUc8VBh+--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
