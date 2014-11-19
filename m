@@ -1,29 +1,49 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH 4/4] ARM: dts: Add trackpad to exynos5250-spring
-Date: Wed, 19 Nov 2014 18:13:45 +0100
-Message-ID: <546CCFC9.2070709@collabora.co.uk>
-References: <1416412585-10809-1-git-send-email-afaerber@suse.de> <1416412585-10809-5-git-send-email-afaerber@suse.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1416412585-10809-5-git-send-email-afaerber@suse.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, linux-samsung-soc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Vincent Palatin <vpalatin@chromium.org>, Doug Anderson <dianders@chromium.org>, Tomasz Figa <t.figa@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, open list <linux-kernel@vger.kernel.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: [PATCH] of/selftest: Fix off-by-one error in removal path
+Date: Wed, 19 Nov 2014 17:18:22 +0000
+Message-ID: <1416417502-25869-1-git-send-email-grant.likely@linaro.org>
+Return-path: <stable-owner@vger.kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Kevin Hilman <khilman@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Gaurav Minocha <gaurav.minocha.os@gmail.com>, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Andreas,
+The removal path for selftest data has an off by one error that causes
+the code to dereference beyond the end of the nodes[] array on the first
+pass through. The old code only worked by chance on a lot of platforms,
+but the bug was recently exposed on aarch64.
 
-On 11/19/2014 04:56 PM, Andreas F=C3=A4rber wrote:
-> The HP Chromebook 11 uses an Atmel maXTouch as trackpad.
-> The keymap was found by trial-and-error.
->=20
-> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+The fix is simple. Decrement the node count before dereferencing, not
+after.
 
-Patch looks good to me.
+Reported-by: Kevin Hilman <khilman@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Gaurav Minocha <gaurav.minocha.os@gmail.com>
+Cc: <stable@vger.kernel.org> # v3.17+
+---
+ drivers/of/selftest.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-
-Best regards,
-Javier
+diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
+index 11b873c54a77..e6c14dc400e9 100644
+--- a/drivers/of/selftest.c
++++ b/drivers/of/selftest.c
+@@ -896,7 +896,7 @@ static void selftest_data_remove(void)
+ 		return;
+ 	}
+ 
+-	while (last_node_index >= 0) {
++	while (last_node_index-- > 0) {
+ 		if (nodes[last_node_index]) {
+ 			np = of_find_node_by_path(nodes[last_node_index]->full_name);
+ 			if (strcmp(np->full_name, "/aliases") != 0) {
+@@ -908,7 +908,6 @@ static void selftest_data_remove(void)
+ 				}
+ 			}
+ 		}
+-		last_node_index--;
+ 	}
+ }
+ 
+-- 
+1.9.1
