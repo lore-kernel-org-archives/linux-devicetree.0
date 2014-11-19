@@ -1,63 +1,41 @@
-From: Paolo Pisati <p.pisati@gmail.com>
-Subject: Re: [PATCH V8 00/14] drm/exynos: few patches to enhance bridge chip
- support
-Date: Wed, 19 Nov 2014 11:55:27 +0100
-Message-ID: <20141119105527.GA5396@luxor.wired.org>
-References: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com>
- <CAEC9eQOrKw2Z1q-ztFfadXmsL3CTcAkkv9kcS2QnDOAVSh2AuQ@mail.gmail.com>
- <546C646C.4060303@collabora.co.uk>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 0/3] new Atmel DMA controller
+Date: Wed, 19 Nov 2014 12:03:31 +0100
+Message-ID: <546C7903.8090901@atmel.com>
+References: <1413991340-11617-1-git-send-email-ludovic.desroches@atmel.com> <20141106052748.GR1870@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <546C646C.4060303@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Ajay kumar <ajaynumb@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, InKi Dae <inki.dae@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Sean Paul <seanpaul@google.com>, Thierry Reding <thierry.reding@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>, gustavo Padovan <gustavo.padovan@collabora.co.uk>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141106052748.GR1870-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 19, 2014 at 10:35:40AM +0100, Javier Martinez Canillas wrote:
-> Hello Ajay,
+On 06/11/2014 06:27, Vinod Koul :
+> On Wed, Oct 22, 2014 at 05:22:17PM +0200, Ludovic Desroches wrote:
+>> Hi,
+>>
+>> This set of patches introduces support for the new Atmel DMA controller know as
+>> XDMAC and available on SAMA5D4.
 > 
-> On 11/18/2014 07:20 AM, Ajay kumar wrote:
-> > On Sat, Nov 15, 2014 at 3:24 PM, Ajay Kumar <ajaykumar.rs@samsung.com> wrote:
-> >> This series is based on master branch of Linus tree at:
-> >> git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> 
-> I applied your series on top of 3.18-rc5 + linux-next's commit:
-> 
-> 0ef76ae ("ARM: exynos_defconfig: Enable options for display panel support").
-> 
-> I think you should had mentioned what other patches are needed as a
-> dependency since I spent quite a bit of time figuring out why the
-> ps8622 bridge driver probe was always deferred due of_drm_find_panel()
-> failing and then I noticed that a patch from linux-next was needed:
-> 
-> e35e305 ("drm/panel: simple: Add AUO B116XW03 panel support")
-> 
-> With that commit the ps8622 drm bridge driver probe succeed but I still
-> don't have display working on an Exynos5240 Peach Pit, the kernel log shows:
-> 
-> platform 145b0000.dp-controller: Driver exynos-dp requests probe deferral
-> exynos-drm exynos-drm: bound 14400000.fimd (ops fimd_component_ops)
-> exynos-drm exynos-drm: failed to bind 145b0000.dp-controller (ops exynos_dp_ops): -517
-> exynos-drm exynos-drm: master bind failed: -517
-> platform 145b0000.dp-controller: Driver exynos-dp requests probe deferral
+> Applied all, thanks
 
-do you have this in your dmesg?
+Vinod,
 
-...
-exynos-dp-video-phy 10040728.video-phy: Failed to lookup PMU regmap
-...
+I saw that you had created a topic branch for this driver: topic/at_xdmac.
 
-to get a working framebuffer out of linus 318rc4 on my peach pi, i had
-to cherry pick these 3 patches:
+If this branch is stable, can I use it for my work on at91 support and
+merge it in my at91-3.19-dt branch before sending it to the arm-soc tree?
+In fact I need the binding definitions that are created by the
+patch:(dmaengine: at_xdmac: creation of the atmel eXtended DMA
+Controller driver).
 
-arm: dts: Exynos5: Use pmu_system_controller phandle for dp phy
-drm/exynos: dp: Remove support for unused dptx-phy
-ARM: exynos_defconfig: Enable options for display panel support
-
-Check if you have those.
+Thanks, bye,
 -- 
-bye,
-p.
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
