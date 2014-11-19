@@ -1,45 +1,74 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] of: Add vendor prefix for Giantplus Technology Co., Ltd.
-Date: Wed, 19 Nov 2014 08:50:04 -0600
-Message-ID: <CAL_JsqKvqgzhSZTnB2r12U6T-sQ5q+Q6znGPQTFyNihDkVoJTw@mail.gmail.com>
-References: <1416389395-15152-1-git-send-email-l.stach@pengutronix.de>
+From: =?windows-1252?Q?Andreas_F=E4rber?= <afaerber@suse.de>
+Subject: Re: Looking for good references for ARM driver development
+Date: Wed, 19 Nov 2014 16:02:03 +0100
+Message-ID: <546CB0EB.9080005@suse.de>
+References: <546C920A.7060800@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416389395-15152-1-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <546C920A.7060800@free.fr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mason <mpeg.blue@free.fr>
+Cc: LKML <linux-kernel@vger.kernel.org>, Device Tree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 19, 2014 at 3:29 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> From: Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> Signed-off-by: Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Hi,
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Am 19.11.2014 um 13:50 schrieb Mason:
+> [...] I'm writing a driver for a temperature sensor, which is
+> supposed to work
+> within the hwmon/lm-sensors framework.
+>=20
+> The sensor's API consists of 3 memory-mapped registers, which are
+> accessible over the
+> SoC's memory bus. [...]
+>=20
+> 1) Which bus should I be using for this driver? Is the platform bus
+> appropriate?
 
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 0b2fc732f1f3..c678ee63e91c 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -59,6 +59,7 @@ fsl   Freescale Semiconductor
->  GEFanuc        GE Fanuc Intelligent Platforms Embedded Systems, Inc.
->  gef    GE Fanuc Intelligent Platforms Embedded Systems, Inc.
->  geniatech      Geniatech, Inc.
-> +giantplus      Giantplus Technology Co., Ltd.
->  globalscale    Globalscale Technologies, Inc.
->  gmt    Global Mixed-mode Technology, Inc.
->  google Google, Inc.
-> --
-> 2.1.1
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Probably.
+
+> 2) platform.txt states
+>=20
+>> Some drivers are not fully converted to the driver model, because th=
+ey
+>> take
+>> on a non-driver role:  the driver registers its platform device,
+>> rather than
+>> leaving that for system infrastructure.  Such drivers can't be hotpl=
+ugged
+>> or coldplugged, since those mechanisms require device creation to be=
+ in a
+>> different system component than the driver.
+>=20
+> How do I "leave device registration for the system infrastructure"?
+> Where should I put that code?
+> Is it a good idea to separate device registration and driver registra=
+tion
+> in the case of a SoC, where the device is embedded in the SoC and is =
+not
+> "hot-plugged" (or anything-plugged for that matter, it's just "there"=
+).
+
+Since this appears to be about an ARM SoC according to your To list, in
+general, you create a device tree binding, that binding is registered
+within your platform/... driver code and referenced in the device tree
+for SoC or board, and then your driver will automatically be probed.
+
+> 4) Can I use platform_driver_probe, instead of platform_driver_regist=
+er?
+
+Most likely you do not need to call either yourself.
+
+Just compare other platform drivers on the one hand, and temparature
+sensor drivers on the other (such as I2C based gmt,g781 / LM90).
+Did you already check whether there is a driver that is both?
+
+Regards,
+Andreas
+
+--=20
+SUSE LINUX GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 21284 AG N=FCrn=
+berg
