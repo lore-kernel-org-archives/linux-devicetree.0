@@ -1,56 +1,54 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: [PATCH v7 4/4] dt-bindings: add bindings for mediatek sysirq
-Date: Wed, 19 Nov 2014 22:14:11 +0800
-Message-ID: <1416406451-4578-5-git-send-email-yingjoe.chen@mediatek.com>
-References: <1416406451-4578-1-git-send-email-yingjoe.chen@mediatek.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 1/2] DT: i2c: Add more devices handled by the rtc-rs5c372
+ driver
+Date: Wed, 19 Nov 2014 15:21:45 +0100
+Message-ID: <20141119142144.GA1384@katana>
+References: <1415981011-13423-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1416406451-4578-1-git-send-email-yingjoe.chen@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jiang Liu <jiang.liu@linux.intel.com>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, hc.yen@mediatek.com, srv_heupstream@mediatek.com, yh.chen@mediatek.com, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Yijing Wang <wangyijing@huawei.com>, Rob Herring <robh+dt@kernel.org>, nathan.chung@mediatek.com, yingjoe.chen@gmail.com, Matthias Brugger <matthias.bgg@gmail.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, eddie.huang@mediatek.com, Bjorn Helgaas <bhelgaas@google.com>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1415981011-13423-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-input-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, devicetree@vger.kernel.org, linux-input@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation for Mediatek SoC SYSIRQ.
 
-Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
----
- .../bindings/arm/mediatek/mediatek,sysirq.txt      | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
+--5mCyUwZo2JvN/JJP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
-new file mode 100644
-index 0000000..8669536
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
-@@ -0,0 +1,26 @@
-+Mediatek 65xx/81xx sysirq
-+
-+Mediatek SOCs sysirq support controllable irq inverter for each GIC SPI
-+interrupt.
-+
-+Required properties:
-+- compatible: should be one of:
-+	"mediatek,mt8135-sysirq"
-+	"mediatek,mt8127-sysirq"
-+	"mediatek,mt6589-sysirq"
-+	"mediatek,mt6582-sysirq"
-+	"mediatek,mt6577-sysirq"
-+- interrupt-controller : Identifies the node as an interrupt controller
-+- #interrupt-cells : Must use the same cells/format as parent controller.
-+- interrupt-parent: phandle of irq domain parent for sysirq.
-+- reg: Physical base address of the intpol registers and length of memory
-+  mapped region.
-+
-+Example:
-+	sysirq: interrupt-controller@10200100 {
-+		compatible = "mediatek,mt6589-sysirq", "mediatek,mt6577-sysirq";
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+		interrupt-parent = <&gic>;
-+		reg = <0 0x10200100 0 0x1c>;
-+	};
--- 
-1.8.1.1.dirty
+On Fri, Nov 14, 2014 at 05:03:30PM +0100, Geert Uytterhoeven wrote:
+> This allows checkpatch to validate more DTSes.
+>=20
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Applied to for-next, thanks!
+
+
+--5mCyUwZo2JvN/JJP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUbKd4AAoJEBQN5MwUoCm2838QAJffzxDbam2ZA2yzs4DdKJ5P
+R5UJzwDIbHrPz6OXbqPQg6F/H7277SR6sQn7lXH33N6eQRFUobcFwyGnUZWzPSuO
+OanU/19ytO4xCACarJRJ1ySBLIvLRW5sY0vJpX1ERFBpFr8fP9G/+n31JcUPF8Zd
+8ZF2EAGnxWKlH5Unc32e2WMsBADYPPez3ZsWsiYWUXuGi6oUtEJP6lhGsJz/x2Ej
+0np6x3wtnUIkgerZD19qy0VFTjA09Brn5VAn8peFprfy12nQF6eVAmTKSRIptuIV
+yEiTGrdYI1WtWbvZs5o4vZKIPadPniP4ObCsDFIAE9ak/4sWIpiZpnx1b8wJFLm3
+MWLgKaBfPOnQYbF5LqrY3DeMut8aTutKTxArKHLCz/ItZ+GWCXgLG0x6Wy7rYtHW
+DF/hXGQ6BUCgbVYbAT+46HUxifQ5pQW3F5vwGFkNYs/tQ3syz7zzNRfbAw8hgnHi
+ne7HBVLrUd8k+7LLmafHBfc2sXsvmozsDFz0rXjugscJdIlXjtmPotBipTmr6yb0
+KpmC0YvWOuGxti/PKC31PbCMpcZGuFENHU6Ydp1USe5nprGiiqYx55I9lM45v0k4
+2fw5sRubNXjHXTi7N5iuouD9zivjTpde0e5dHsQJvBZJRkdLL2TPN6BjcaaRyj+G
+EJo8C2sPnodqqM9OmOKv
+=F2oV
+-----END PGP SIGNATURE-----
+
+--5mCyUwZo2JvN/JJP--
