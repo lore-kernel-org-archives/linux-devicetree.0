@@ -1,72 +1,115 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3] clk_mux: Fix set_parent doing the wrong
- thing when INDEX_BIT && index >= 3
-Date: Wed, 19 Nov 2014 14:48:59 +0100
-Message-ID: <1416404939-609-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: [PATCH v8 0/2] drm: add support for Atmel HLCDC Display Controller
+Date: Wed, 19 Nov 2014 14:56:20 +0100
+Message-ID: <1416405382-24692-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBVF7WKRQKGQEEUWU7VQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-If CLK_MUX_INDEX_BIT is set, then each bit turns on / off a single parent,
-so theoretically multiple parents could be enabled at the same time, but in
-practice only one bit should ever be 1. So to select parent 0, set
-the register (*) to 0x01, to select parent 1 set it 0x02, parent 2, 0x04,
-parent 3, 0x08, etc.
-
-But the current code does:
-
-                if (mux->flags & CLK_MUX_INDEX_BIT)
-                        index = (1 << ffs(index));
-
-Which means that:
-
-For an input index of 0, ffs returns 0, so we set the register
-to 0x01, ok.
-
-For an input index of 1, ffs returns 1, so we set the register
-to 0x02, ok.
-
-For an input index of 2, ffs returns 2, so we set the register
-to 0x04, ok.
-
-For an input index of 3, ffs returns 1, so we set the register
-to 0x02, not good!
-
-The code should simply be:
-
-                if (mux->flags & CLK_MUX_INDEX_BIT)
-                        index = 1 << index;
-
-Which always does the right thing, this commit fixes this.
-
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- drivers/clk/clk-mux.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/clk/clk-mux.c b/drivers/clk/clk-mux.c
-index 4f96ff3..6e1ecf9 100644
---- a/drivers/clk/clk-mux.c
-+++ b/drivers/clk/clk-mux.c
-@@ -77,7 +77,7 @@ static int clk_mux_set_parent(struct clk_hw *hw, u8 index)
- 
- 	else {
- 		if (mux->flags & CLK_MUX_INDEX_BIT)
--			index = (1 << ffs(index));
-+			index = 1 << index;
- 
- 		if (mux->flags & CLK_MUX_INDEX_ONE)
- 			index++;
--- 
-2.1.0
+SGVsbG8sCgpUaGlzIHBhdGNoIHNlcmllcyBhZGRzIHN1cHBvcnQgZm9yIHRoZSBBdG1lbCBITENE
+QyBEaXNwbGF5IENvbnRyb2xsZXIKZW1iZWRkZWQgaW4gdGhlIEhMQ0RDIGJsb2NrLgoKVGhlIGRy
+aXZlcnMgc3VwcG9ydHMgYmFzaWMgQ1JUQyBmdW5jdGlvbmFsaXRpZXMsIHNldmVyYWwgb3Zlcmxh
+eXMgYW5kCnByb3ZpZGVzIGFuIGhhcmR3YXJlIGN1cnNvci4KCkF0IHRoZSBtb21lbnQsIGl0IG9u
+bHkgc3VwcG9ydHMgY29ubmVjdGlvbiB0byBMQ0QgcGFuZWxzIHRocm91Z2ggYW4gUkdCCmNvbm5l
+Y3RvciAoZGVmaW5lZCBhcyBhbiBMVkRTIGNvbm5lY3RvciBpbiBteSBpbXBsZW1lbnRhdGlvbiks
+IHRob3VnaApjb25uZWN0aW9uIHRvIG90aGVyIGtpbmQgb2YgZGV2aWNlcyAobGlrZSBEUk0gYnJp
+ZGdlcykgY291bGQgYmUgYWRkZWQgbGF0ZXIuCgpJdCBhbHNvIHN1cHBvcnRzIHNldmVyYWwgUkdC
+IGZvcm1hdHMgb24gYWxsIHBsYW5lcyBhbmQgc29tZSBZVVYgZm9ybWF0cyBvbgp0aGUgSEVPIG92
+ZXJsYXkgcGxhbmUuCgpCZXN0IFJlZ2FyZHMsCgpCb3JpcwoKQ2hhbmdlcyBzaW5jZSB2NzoKIC0g
+c3BsaXQgTUZELCBQV00gYW5kIERpc3BsYXkgQ29udHJvbGxlciBkcml2ZXJzIGluIHNldmVyYWwg
+cGF0Y2ggc2VyaWVzCiAtIGZpeCBpbmxpbmUgZG9jdW1lbnRhdGlvbiAoc3VnZ2VzdGVkIGJ5IE5p
+Y29sYXMpCiAtIGZpeCBETUEgQlVSU1QgTEVOIGNvbmZpZyAoc3VnZ2VzdGVkIGJ5IE5pY29sYXMp
+CiAtIGNhbGwgbG9hZCBhbmQgdW5sb2FkIGluIHByb2JlIGFuZCByZW1vdmUgZnVuY3Rpb25zIGlu
+c3RlYWQgb2Ygc2V0dGluZwogICB0aGVtIGluIGRybV9kcml2ZXIgc3RydWN0CgpDaGFuZ2VzIHNp
+bmNlIHY2OgotIG1vdmUgaW50ZXJydXB0cyBwcm9wZXJ0eSBmcm9tIGhsY2RjIGRpc3BsYXkgY29u
+dHJvbGxlciBub2RlIHRvIGl0cwogIHBhcmVudCBub2RlICh0aGUgTUZEIGRldmljZSkKLSBhZGQg
+bW9kZV9zZXRfYmFzZSBpbXBsZW1lbnRhdGlvbgotIHJld29yayBwYWdlIGZsaXAgaGFuZGxpbmcg
+dG8gcmVseSBvbiB2YmxhbmsgZXZlbnRzIGluc3RlYWQgb2YgRE1BCiAgdHJhbnNmZXIgZXZlbnRz
+ICh0aGUgZW5kIG9mIGEgRE1BIHRyYW5zZmVyIGRvZXMgbm90IG1lYW4gdGhlIGZyYW1lCiAgaXMg
+YWN0dWFsbHkgZmxpcHBlZDogZGF0YSBhcmUgZmlyc3QgY29waWVkIHRvIGFuIG91dHB1dCBGSUZP
+IGJlZm9yZQogIGJlaW5nIHNlbnQgb24gdGhlIFJHQi9EUEkgY29ubmVjdG9yKQotIGZldyBtaW5v
+ciBjb2Rpbmcgc3R5bGUgZml4ZXMKCkNoYW5nZXMgc2luY2UgdjU6Ci0gZml4IEtjb25maWcgZGVw
+ZW5kZW5jeSBidWcKLSB1c2UgYWRqdXN0ZWQgbW9kZSBpbiBjcnRjIGNvbmZpZwotIG1vdmUgc2ln
+bmFsIGNvbmZpZyAoY2xrLCBoc3luYywgdnN5bmMpIGZyb20gY29ubmVjdG9yIHRvIGNydGMgbW9k
+ZV9zZXQKICBmdW5jdGlvbgotIHVzZSBzdGFuZGFyZCByb3RhdGlvbiBwcm9wZXJ0eQotIGNoZWNr
+IGRpc3BsYXlfbW9kZSB2YWxpZGl0eSBpbiBjb25uZWN0byBtb2RlX3ZhbGlkIGZ1bmN0aW9uCi0g
+cmVtb3ZlIGRtYV9zZXRfY29oZXJlbnQgbWFzayBjYWxsIChub3cgZG9uZSBpbiBNRkQgY29yZSkK
+LSBkbyBub3QgdXNlIGRybV9wbGF0Zm9ybV9pbml0CgpDaGFuZ2VzIHNpbmNlIHY0OgotIGZpeCBh
+IGZldyBtb3JlIGJ1Z3MgaW4gcm90YXRpb24gaGFuZGxpbmcgKHJvdGF0aW9uIHdhcyBidWdneSBv
+biBzb21lCiAgZm9ybWF0cykKLSByZXR1cm4gY29ubmVjdG9yX3N0YXR1c191bmtub3duIHVudGls
+IGEgcGFuZWwgaXMgZXhwb3NlZCBieSB0aGUKICBkcm1fcGFuZWwgaW5mcmFzdHJ1Y3R1cmUgKHBy
+ZXZlbnQgZmJkZXYgY3JlYXRpb24gdW50aWwgZXZlcnl0aW5nIGlzCiAgaW4gcGxhY2UpCi0gcmV3
+b3JrIEtjb25maWcgTUZEX0FUTUVMX0hMQ0RDIHNlbGVjdGlvbiB0byBzaW1wbGlmeSB0aGUgY29u
+ZmlndXJhdGlvbgogIChhdXRvbWF0aWNhbGx5IHNlbGVjdCB0aGlzIG9wdGlvbiB3aGVuIHNlbGVj
+dGluZyB0aGUgSExDREMgUE1XIG9yIERSTQogIGRyaXZlciwgaW5zdGVhZCBvZiBkZXBlbmRpbmcg
+b24gdGhpcyBvcHRpb24pCgpDaGFuZ2VzIHNpbmNlIHYzOgotIHJld29yayB0aGUgbGF5ZXIgY29k
+ZSB0byBzaW1wbGlmeSBzZXZlcmFsIHBhcnRzIChsb2NraW5nIGFuZCBsYXllcgogIGRpc2FibGlu
+ZykKLSBtYWtlIHVzZSBvZiB0aGUgZHJtX2ZsaXBfd29yayBpbmZyYXN0cnVjdHVyZQotIHJlbHkg
+b24gZGVmYXVsdCBIVyBjdXJzb3IgaW1wbGVtZW50YXRpb24gdXNpbmcgb24gdGhlIGN1cnNvciBw
+bGFuZQotIHJld29yayB0aGUgZGlzcGxheSBjb250cm9sbGVyIERUIGJpbmRpbmdzIChiYXNlZCBv
+biBPRiBncmFwaAogIHJlcHJlc2VudGF0aW9uKQotIGFkZCByb3RhdGlvbiBzdXBwb3J0Ci0gcmV0
+cml2ZSBSR0IgYnVzIGZvcm1hdCBmcm9tIGRybV9kaXNwbGF5X2luZm8KLSBkcm9wIHRoZSBkeW5h
+bWljIHBpbmN0cmwgc3RhdGUgc2VsZWN0aW9uCi0gcmV3b3JrIEhMQ0RDIG91dHB1dCBoYW5kbGlu
+ZyAocHJldmlvdXNseSBzcGVjaWFsaXplZCB0byBpbnRlcmZhY2UKICB3aXRoIExDRCBwYW5lbHMp
+Ci0gZHJvcCAiLm1vZHVsZSA9IFRISVNfTU9EVUxFIiBsaW5lcwotIGNoYW5nZSBkaXNwbGF5IGNv
+bnRyb2xsZXIgY29tcGF0aWJsZSBzdHJpbmcKCkNoYW5nZXMgc2luY2UgdjI6Ci0gZml4IGNvZGlu
+ZyBzdHlsZSBpc3N1ZXMgKG1hY3JvIGluZGVudGF0aW9uKQotIG1ha2UgdXNlIG9mIEdFTk1BU0sg
+aW4gc2V2ZXJhbCBwbGFjZXMKLSBkZWNsYXJlIHJlZ21hcCBjb25maWcgYXMgYSBzdGF0aWMgc3Ry
+dWN0dXJlCi0gcmV3b3JrIGhsY2RjIHBsYW5lIHVwZGF0ZSBBUEkKLSByZXdvcmsgY3Vyc29yIGhh
+bmRsaW5nIHRvIG1ha2UgdXNlIG9mIHRoZSBuZXcgcGxhbmUgdXBkYXRlIEFQSQotIGZpeCBiYWNr
+cG9yY2ggY29uZmlnCi0gZG8gbm90IHVzZSBkZXZtX3JlZ21hcF9pbml0X21taW9fY2xrIHRvIGF2
+b2lkIGV4dHJhIGNsa19lbmFibGUKICBjbGsgZGlzYWJsZSBjYWxscyB3aGVuIGFjY2Vzc2luZyBy
+ZWdpc3RlcnMKLSBleHBsaWNpdGVseSBpbmNsdWRlIHJlZ21hcCBhbmQgY2xrIGhlYWRlcnMgaW5z
+dGVhZCBvZiByZWx5aW5nIG9uCiAgYXRtZWwtaGxjZGMuaCBpbmNsdXNpb25zCi0gbWFrZSB0aGUg
+YXRtZWwtaGxjZGMgZHJpdmVyIGRlcGVuZHMgb24gQ09ORklHX09GCi0gc2VwYXJhdGUgRFQgYmlu
+ZGluZ3MgZG9jdW1lbnRhdGlvbiBmcm9tIGRyaXZlciBpbXBsZW1lbnRhdGlvbgotIHN1cHBvcnQg
+c2V2ZXJhbCBwaW4gbXV4aW5nIGZvciBITENEQyBwaW5zIG9uIHNhbWE1ZDMgU29DcwoKQ2hhbmdl
+cyBzaW5jZSB2MToKLSByZXBsYWNlIHRoZSBiYWNrbGlnaHQgZHJpdmVyIGJ5IGEgUFdNIGRyaXZl
+cgotIG1ha2UgdXNlIG9mIGRybV9wYW5lbCBpbmZyYXN0cnVjdHVyZQotIHNwbGl0IGRyaXZlciBj
+b2RlIGluIHNldmVyYWwgc3Vic3lzdGVtOiBNRkQsIFBXTSBhbmQgRFJNCi0gYWRkIHN1cHBvcnQg
+Zm9yIG92ZXJsYXlzCi0gYWRkIHN1cHBvcnQgZm9yIGhhcmR3YXJlIGN1cnNvcgoKQm9yaXMgQnJl
+emlsbG9uICgyKToKICBkcm06IGFkZCBBdG1lbCBITENEQyBEaXNwbGF5IENvbnRyb2xsZXIgc3Vw
+cG9ydAogIGRybTogYWRkIERUIGJpbmRpbmdzIGRvY3VtZW50YXRpb24gZm9yIGF0bWVsLWhsY2Rj
+LWRjIGRyaXZlcgoKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9hdG1lbC9obGNkYy1kYy50
+eHQgICAgIHwgIDUzICsrCiBkcml2ZXJzL2dwdS9kcm0vS2NvbmZpZyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICB8ICAgMiArCiBkcml2ZXJzL2dwdS9kcm0vTWFrZWZpbGUgICAgICAgICAgICAg
+ICAgICAgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL2dwdS9kcm0vYXRtZWwtaGxjZGMvS2NvbmZp
+ZyAgICAgICAgICAgICAgICB8ICAxMSArCiBkcml2ZXJzL2dwdS9kcm0vYXRtZWwtaGxjZGMvTWFr
+ZWZpbGUgICAgICAgICAgICAgICB8ICAgNyArCiBkcml2ZXJzL2dwdS9kcm0vYXRtZWwtaGxjZGMv
+YXRtZWxfaGxjZGNfY3J0Yy5jICAgICB8IDQwNiArKysrKysrKysrCiBkcml2ZXJzL2dwdS9kcm0v
+YXRtZWwtaGxjZGMvYXRtZWxfaGxjZGNfZGMuYyAgICAgICB8IDU3OSArKysrKysrKysrKysrKwog
+ZHJpdmVycy9ncHUvZHJtL2F0bWVsLWhsY2RjL2F0bWVsX2hsY2RjX2RjLmggICAgICAgfCAyMTMg
+KysrKysKIGRyaXZlcnMvZ3B1L2RybS9hdG1lbC1obGNkYy9hdG1lbF9obGNkY19sYXllci5jICAg
+IHwgNjY3ICsrKysrKysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9hdG1lbC1obGNkYy9hdG1l
+bF9obGNkY19sYXllci5oICAgIHwgMzk4ICsrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9hdG1l
+bC1obGNkYy9hdG1lbF9obGNkY19vdXRwdXQuYyAgIHwgMzIzICsrKysrKysrCiBkcml2ZXJzL2dw
+dS9kcm0vYXRtZWwtaGxjZGMvYXRtZWxfaGxjZGNfcGxhbmUuYyAgICB8IDg1NiArKysrKysrKysr
+KysrKysrKysrKysKIDEyIGZpbGVzIGNoYW5nZWQsIDM1MTYgaW5zZXJ0aW9ucygrKQogY3JlYXRl
+IG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYXRtZWwv
+aGxjZGMtZGMudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2F0bWVsLWhs
+Y2RjL0tjb25maWcKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYXRtZWwtaGxj
+ZGMvTWFrZWZpbGUKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYXRtZWwtaGxj
+ZGMvYXRtZWxfaGxjZGNfY3J0Yy5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJt
+L2F0bWVsLWhsY2RjL2F0bWVsX2hsY2RjX2RjLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
+L2dwdS9kcm0vYXRtZWwtaGxjZGMvYXRtZWxfaGxjZGNfZGMuaAogY3JlYXRlIG1vZGUgMTAwNjQ0
+IGRyaXZlcnMvZ3B1L2RybS9hdG1lbC1obGNkYy9hdG1lbF9obGNkY19sYXllci5jCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2F0bWVsLWhsY2RjL2F0bWVsX2hsY2RjX2xheWVy
+LmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYXRtZWwtaGxjZGMvYXRtZWxf
+aGxjZGNfb3V0cHV0LmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYXRtZWwt
+aGxjZGMvYXRtZWxfaGxjZGNfcGxhbmUuYwoKLS0gCjEuOS4xCgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
