@@ -1,47 +1,37 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 0/3] new Atmel DMA controller
-Date: Wed, 19 Nov 2014 16:37:18 +0530
-Message-ID: <20141119110718.GC2074@intel.com>
-References: <1413991340-11617-1-git-send-email-ludovic.desroches@atmel.com>
- <20141106052748.GR1870@intel.com>
- <546C7903.8090901@atmel.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH V8 00/14] drm/exynos: few patches to enhance bridge chip
+ support
+Date: Wed, 19 Nov 2014 12:20:53 +0100
+Message-ID: <546C7D15.10605@collabora.co.uk>
+References: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com> <CAEC9eQOrKw2Z1q-ztFfadXmsL3CTcAkkv9kcS2QnDOAVSh2AuQ@mail.gmail.com> <546C646C.4060303@collabora.co.uk> <20141119105527.GA5396@luxor.wired.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <546C7903.8090901-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20141119105527.GA5396@luxor.wired.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Paolo Pisati <p.pisati@gmail.com>
+Cc: Ajay kumar <ajaynumb@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, InKi Dae <inki.dae@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Sean Paul <seanpaul@google.com>, Thierry Reding <thierry.reding@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>, gustavo Padovan <gustavo.padovan@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 19, 2014 at 12:03:31PM +0100, Nicolas Ferre wrote:
-> On 06/11/2014 06:27, Vinod Koul :
-> > On Wed, Oct 22, 2014 at 05:22:17PM +0200, Ludovic Desroches wrote:
-> >> Hi,
-> >>
-> >> This set of patches introduces support for the new Atmel DMA controller know as
-> >> XDMAC and available on SAMA5D4.
-> > 
-> > Applied all, thanks
-> 
-> Vinod,
-> 
-> I saw that you had created a topic branch for this driver: topic/at_xdmac.
-> 
-> If this branch is stable, can I use it for my work on at91 support and
-> merge it in my at91-3.19-dt branch before sending it to the arm-soc tree?
-> In fact I need the binding definitions that are created by the
-> patch:(dmaengine: at_xdmac: creation of the atmel eXtended DMA
-> Controller driver).
-Yup please pull this, this wont be rebased
+Hello Paolo,
 
-Thanks
+On 11/19/2014 11:55 AM, Paolo Pisati wrote:
+> to get a working framebuffer out of linus 318rc4 on my peach pi, i had
+> to cherry pick these 3 patches:
+> 
+> arm: dts: Exynos5: Use pmu_system_controller phandle for dp phy
 
--- 
-~Vinod
+I was missing this patch, I've display working now. Thanks for the pointer!
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If someone else is interested, I've pushed a branch [0] with 3.18-rc5 + all
+the needed patches.
+
+Ajay, feel free to add to your series:
+
+Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+
+Best regards,
+Javier
+
+[0]: git://git.collabora.co.uk/git/user/javier/linux.git wip/exynos/dp-integ
