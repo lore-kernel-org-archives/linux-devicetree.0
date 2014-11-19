@@ -1,119 +1,92 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] dt-bindings: simplefb-sunxi: Add sunxi
- simplefb extensions
-Date: Wed, 19 Nov 2014 14:05:48 +0000
-Message-ID: <CACxGe6tqRS=oCeqbrez86uLLXtQ_C4ETEesNqgxKGb38QOQ8SQ@mail.gmail.com>
-References: <1416224086-5698-1-git-send-email-hdegoede@redhat.com>
- <1416224086-5698-3-git-send-email-hdegoede@redhat.com> <20141117124721.GQ6414@lukather>
- <CACxGe6vqiC08sP+o3bduGfvUdwRtHm8+_7EdZccJjS86qVKvxQ@mail.gmail.com> <20141117155514.GU6414@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v7 0/4] ARM: mediatek: Add support for interrupt polarity
+Date: Wed, 19 Nov 2014 22:14:07 +0800
+Message-ID: <1416406451-4578-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCJP567ORICBBUGHWKRQKGQE2EEV2HY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20141117155514.GU6414@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yijing Wang <wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 17, 2014 at 3:55 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Mon, Nov 17, 2014 at 01:39:18PM +0000, Grant Likely wrote:
->> On Mon, Nov 17, 2014 at 12:47 PM, Maxime Ripard
->> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> > On Mon, Nov 17, 2014 at 12:34:46PM +0100, Hans de Goede wrote:
->> >> If pre-filled framebuffer nodes are used, the firmware may need extra
->> >> properties to find the right node. This documents the properties to use
->> >> for this on sunxi platforms.
->> >>
->> >> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> >> ---
->> >>  .../bindings/video/simple-framebuffer-sunxi.txt    | 33 ++++++++++++++++++++++
->> >>  1 file changed, 33 insertions(+)
->> >>  create mode 100644 Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
->> >>
->> >> diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt b/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
->> >> new file mode 100644
->> >> index 0000000..84ca264
->> >> --- /dev/null
->> >> +++ b/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
->> >> @@ -0,0 +1,33 @@
->> >> +Sunxi specific Simple Framebuffer bindings
->> >> +
->> >> +This binding documents sunxi specific extensions to the simple-framebuffer
->> >> +bindings. The sunxi simplefb u-boot code relies on the devicetree containing
->> >> +pre-populated simplefb nodes.
->> >> +
->> >> +These extensions are intended so that u-boot can select the right node based
->> >> +on which pipeline and output is being used. As such they are solely intended
->> >> +for firmware / bootloader use, and the OS should ignore them.
->> >> +
->> >> +Required properties:
->> >> +- compatible: "sunxi,framebuffer"
->> >> +- sunxi,pipeline:
->> >> +  <0> for the de_be0 -> lcdc0 -> output pipeline
->> >> +  <1> for the de_be1 -> lcdc1 -> output pipeline
->> >> +- sunxi,output: One of: "hdmi", "lcd", "vga", and "composite"
->> >> +
->> >> +Example:
->> >> +
->> >> +chosen {
->> >> +     #address-cells = <1>;
->> >> +     #size-cells = <1>;
->> >> +     ranges;
->> >> +
->> >> +     framebuffer@0 {
->> >> +             compatible = "sunxi,framebuffer", "simple-framebuffer";
->> >> +             sunxi,pipeline = <0>;
->> >> +             sunxi,output = "hdmi";
->> >> +             clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
->> >> +                      <&ahb_gates 44>;
->> >
->> > If we're going that way, then maybe having to specify clock-names
->> > would be better in order to know which clock is what?
->>
->> I wouldn't go that way with this binding since the driver has no need
->> to differentiate between the clocks, and driver authors shouldn't be
->> encouraged to do so. The purpose of the clocks in this node is only
->> for itemizing dependencies, not for how to configure the clocks.
->> Firmware shouldn't care at all about the clocks list, it only needs to
->> find the correct pre-populated node to fill in and enable.
->
-> Well, if we want to play the "DT as an ABI" stuff, you have no
-> guarantee that in the future, simplefb will still be the driver bound
-> to "sunxi,framebuffer", and that this driver doesn't need to
-> differentiate which clocks it needs to protect and which are not
-> needed. Especially with the combination of the output that you now
-> hardcode.
+This series is 7th version of interrupt polarity support for MediaTek SoCs.
 
-As long as the node claims compatibility with "simple-framebuffer",
-then it must abide by the simple framebuffer rules. It cannot depend
-on the driver having special knowledge about what to do with the
-clocks. It is fine for a driver that understands "sunxi,framebuffer"
-to enable additional features over and above simple-framebuffer,
-providing it doesn't break the vanilla "simple-framebuffer" interface.
+I rebased previous version on latest tip/irq/irqdomain and use newly added
+helper function irq_domain_add_hierarchy(). I also changed according to
+Marc's suggestion.
 
-The simple-framebuffer binding is clear that it will treat the clocks
-as dependencies only.
+Simplified block diagram for interrupt on my system:
 
-> Of course, if now we don't care at all about this ABI thing, it's
-> completely fine for me. But I'll archive this email preciously.
+    +-------+      +-------+
+ ---| SYSIRQ|------|ARM GIC|
+ ---|       |------|       |
+ ---|       |------|       |
+ ---|       |------|       |
+ ---|       |------|       |
+    +-------+      +-------+
 
-I do not in any way mean to say it is okay to break ABI.
+In device tree, interrupt-parent for other devices is sysirq, child of gic.
+This describe HW better and allow device to specify polarity as it is sent
+by the device.
 
-Also, my comments above are advice that I would give to U-Boot
-authors, not something that should go in the binding. The
-simple-framebuffer binding doesn't need to know about the clock names
-at all, and if the assumption is that firmware will merely enable a
-pre-populated framebuffer node in the tree, then it probably doesn't
-need to parse the clocks property either. However, if it actually is
-better for the U-Boot implementation to have clocks with names in the
-node, then I'm not going to object.
+When using hierarchy irq domain, gic will use irq_domain_add_linear to
+create irqdomain and all interrupt numbers must come from device tree. My
+/proc/interrupts looks like this now:
 
-g.
+# cat /proc/interrupts
+           CPU0
+ 16:     149578  MT_SYSIRQ 113  mtk_timer
+ 20:       1082  MT_SYSIRQ  54  serial
+
+Changes in v7:
+ - Rebased to tip/irq/irqdomain
+ - In mtk_sysirq_domain_alloc, use copy of irq_data to workaound of_node
+   check in gic_irq_domain_xlate.
+
+Changes in v6:
+ - Discussed in [1]
+ - Rebased to tip/irq/irqdomain
+
+Changes in v5:
+ - Discussed in [2]
+ - Fix bug on mt6589 reported by Matthias
+ - Fix bug for irq_find_mapping in irq_create_of_mapping
+ - Merge Marc's change to proper handle non-DT case in gic_init_bases
+
+Changes in v4:
+ - Discussed in [3]
+ - Remove arm,hierarchy-irq-domain. When GIC is probed by DT, it will
+support hierarchy irqdomain.
+
+Changes in v3:
+ - Discussed in [4]
+ - First implementation using hierarchy irqdomain
+
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/302221.html
+[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/298161.html
+[3] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/296911.html
+[4] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/293766.html
+
+Yingjoe Chen (4):
+  irqchip: gic: Support hierarchy irq domain.
+  ARM: mediatek: Add sysirq interrupt polarity support
+  ARM: mediatek: Add sysirq in mt6589/mt8135/mt8127 dtsi
+  dt-bindings: add bindings for mediatek sysirq
+
+ .../bindings/arm/mediatek/mediatek,sysirq.txt      |  26 ++++
+ arch/arm/boot/dts/mt6589.dtsi                      |  14 +-
+ arch/arm/boot/dts/mt8127.dtsi                      |  14 +-
+ arch/arm/boot/dts/mt8135.dtsi                      |  14 +-
+ drivers/irqchip/Kconfig                            |   1 +
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-gic.c                          |  78 ++++++----
+ drivers/irqchip/irq-mtk-sysirq.c                   | 158 +++++++++++++++++++++
+ 8 files changed, 276 insertions(+), 30 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
+ create mode 100644 drivers/irqchip/irq-mtk-sysirq.c
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
