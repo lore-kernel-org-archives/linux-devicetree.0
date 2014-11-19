@@ -1,60 +1,52 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] spi: Add 'last' flag to spi_transfer structure
-Date: Wed, 19 Nov 2014 09:34:45 +0000
-Message-ID: <20141119093445.GV22111@sirena.org.uk>
-References: <1416264471-774-1-git-send-email-b.galvani@gmail.com>
- <1416264471-774-2-git-send-email-b.galvani@gmail.com>
- <20141118140658.GI22111@sirena.org.uk>
- <20141118225546.GA27182@gmail.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH V8 00/14] drm/exynos: few patches to enhance bridge chip
+ support
+Date: Wed, 19 Nov 2014 10:35:40 +0100
+Message-ID: <546C646C.4060303@collabora.co.uk>
+References: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com> <CAEC9eQOrKw2Z1q-ztFfadXmsL3CTcAkkv9kcS2QnDOAVSh2AuQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="s0H35NU0PUc8VBh+"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141118225546.GA27182-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAEC9eQOrKw2Z1q-ztFfadXmsL3CTcAkkv9kcS2QnDOAVSh2AuQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Ajay kumar <ajaynumb@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Ajay Kumar <ajaykumar.rs@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, InKi Dae <inki.dae@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Sean Paul <seanpaul@google.com>, Thierry Reding <thierry.reding@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>, gustavo Padovan <gustavo.padovan@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
+Hello Ajay,
 
---s0H35NU0PUc8VBh+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 11/18/2014 07:20 AM, Ajay kumar wrote:
+> On Sat, Nov 15, 2014 at 3:24 PM, Ajay Kumar <ajaykumar.rs@samsung.com> wrote:
+>> This series is based on master branch of Linus tree at:
+>> git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
 
-On Tue, Nov 18, 2014 at 11:55:46PM +0100, Beniamino Galvani wrote:
+I applied your series on top of 3.18-rc5 + linux-next's commit:
 
-> Would it be better to introduce something like:
+0ef76ae ("ARM: exynos_defconfig: Enable options for display panel support").
 
-> static inline bool
-> spi_transfer_is_last(struct spi_master *master, struct spi_transfer *xfer)
-> {
->         return list_is_last(&xfer->transfer_list, &master->cur_msg->transfers);
-> }
+I think you should had mentioned what other patches are needed as a
+dependency since I spent quite a bit of time figuring out why the
+ps8622 bridge driver probe was always deferred due of_drm_find_panel()
+failing and then I noticed that a patch from linux-next was needed:
 
-> or open code it in the driver?
+e35e305 ("drm/panel: simple: Add AUO B116XW03 panel support")
 
-Adding the helper function seems better, it means we can change the
-implementation later.
+With that commit the ps8622 drm bridge driver probe succeed but I still
+don't have display working on an Exynos5240 Peach Pit, the kernel log shows:
 
---s0H35NU0PUc8VBh+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+platform 145b0000.dp-controller: Driver exynos-dp requests probe deferral
+exynos-drm exynos-drm: bound 14400000.fimd (ops fimd_component_ops)
+exynos-drm exynos-drm: failed to bind 145b0000.dp-controller (ops exynos_dp_ops): -517
+exynos-drm exynos-drm: master bind failed: -517
+platform 145b0000.dp-controller: Driver exynos-dp requests probe deferral
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Any idea what else I could be missing here?
 
-iQEcBAEBAgAGBQJUbGQxAAoJECTWi3JdVIfQe2sH/RfuVlJmbwTuMXxo8oXmtKoc
-BkHQLcXVYYGZL+9M7S/W/Pk2xzSqvQuWPMUWraFk39+5XHzlieHbsFkWOd/P7H5i
-0yekOEWxbVkHnRzOEBJsXlUNCJbepPUA+0YPBlIMtlTi3ClCDfPjgAZTcLDgLdH4
-F6DWpQgHcU6n+bnCUGBNcas1l3v8Q73QhJCtifjxnnS2aUaQ1jZPmWSc50kA8W1i
-n/HDZn3VFxnfCTJ+1z/vwAwf4BKC1SgI0qJezWIHLsI8yeG4LgIMqExnqpVXOTUF
-vW4JxSeNNtEweyIiEzqLvSFdCDrXUJfYnWoueQIRsOTpUh3mMrtWhInUdg8LFK4=
-=JxKc
------END PGP SIGNATURE-----
+Your patches don't apply cleanly in linux-next btw, although the are many
+issues with the Exynos DRM currently in linux-next anyways so probably using
+3.18-rc as a base makes more sense for now until all those things get fixed
+but you should rebase so they can be picked.
 
---s0H35NU0PUc8VBh+--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Javier
