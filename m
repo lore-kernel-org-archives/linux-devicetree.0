@@ -1,62 +1,45 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v2 1/6] clk: shmobile: Deprecate renesas,clock-indices
-Date: Wed, 19 Nov 2014 11:21:04 -0800
-Message-ID: <20141119192104.25314.14333@quantum>
-References: <1415645379-3366-1-git-send-email-geert+renesas@glider.be>
- <1415645379-3366-2-git-send-email-geert+renesas@glider.be>
+From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] watchdog: ImgTec PDC Watchdog Timer Driver
+Date: Wed, 19 Nov 2014 16:27:08 -0300
+Message-ID: <546CEF0C.1090204@imgtec.com>
+References: <1416312442-15688-1-git-send-email-Naidu.Tellapati@imgtec.com>	<1416312442-15688-2-git-send-email-Naidu.Tellapati@imgtec.com> <CAL1qeaGgs0CrWdUV8kYVxbJ-=46+Xhx__pZy390iX0OXTF1bHw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1415645379-3366-2-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL1qeaGgs0CrWdUV8kYVxbJ-=46+Xhx__pZy390iX0OXTF1bHw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Geert Uytterhoeven (2014-11-10 10:49:34)
-> Commit 8e33f91a0b84ae19 ("clk: shmobile: clk-mstp: change to using
-> clock-indices") forgot to replace all occurrences of
-> "renesas,clock-indices" in the driver-specific binding documentation.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Acked-by: Simon Horman <horms+renesas@verge.net.au>
-> Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Applied to clk-next.
 
-Regards,
-Mike
+On 11/18/2014 08:12 PM, Andrew Bresticker wrote:
+> Naidu,
+> 
+> On Tue, Nov 18, 2014 at 4:07 AM,  <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+>> From: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>>
+>> This commit adds support for ImgTec PowerDown Controller Watchdog Timer.
+>>
+>> Signed-off-by: Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> 
+> checkpatch reports that there's trailing whitespace and that you're
+> using DOS line endings.  Please be sure to fix that with this and your
+> other patches.
+> 
 
-> ---
-> v2:
->   - Drop the reference to "renesas,clock-indices" completely,
->   - Add Acked-by.
-> ---
->  .../devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt         | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-> index e566fb79af9e4d37..0a80fa70ca265c0f 100644
-> --- a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-> @@ -27,11 +27,11 @@ Required Properties:
->      must appear in the same order as the output clocks.
->    - #clock-cells: Must be 1
->    - clock-output-names: The name of the clocks as free-form strings
-> -  - renesas,clock-indices: Indices of the gate clocks into the group (0 to 31)
-> +  - clock-indices: Indices of the gate clocks into the group (0 to 31)
->  
-> -The clocks, clock-output-names and renesas,clock-indices properties contain one
-> -entry per gate clock. The MSTP groups are sparsely populated. Unimplemented
-> -gate clocks must not be declared.
-> +The clocks, clock-output-names and clock-indices properties contain one entry
-> +per gate clock. The MSTP groups are sparsely populated. Unimplemented gate
-> +clocks must not be declared.
->  
->  
->  Example
-> -- 
-> 1.9.1
-> 
+Andrew,
+
+Saving this patch with mutt as mbox and running checkpatch on it,
+doesn't report any problems with it.
+
+Maybe it's your client?
+-- 
+Ezequiel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
