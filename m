@@ -1,47 +1,41 @@
-From: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v3 1/2] watchdog: ImgTec PDC Watchdog Timer Driver
-Date: Wed, 19 Nov 2014 19:41:25 +0000
-Message-ID: <27E62D98F903554192E3C13AFCC91C3C2F509194@hbmail01.hb.imgtec.org>
-References: <1416312442-15688-1-git-send-email-Naidu.Tellapati@imgtec.com>
-	<1416312442-15688-2-git-send-email-Naidu.Tellapati@imgtec.com>
-	<CAL1qeaGgs0CrWdUV8kYVxbJ-=46+Xhx__pZy390iX0OXTF1bHw@mail.gmail.com>
-	<546CEF0C.1090204@imgtec.com>,<CAL1qeaFD735-BNC6r5fFMw=Ggnk22rCPp=Tc5iOjSwdJWscUMg@mail.gmail.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] Patch to improve device tree structure
+Date: Wed, 19 Nov 2014 12:03:57 -0800
+Message-ID: <546CF7AD.8060707@gmail.com>
+References: <1416199976-21147-1-git-send-email-gaurav.minocha.os@gmail.com> <20141118151026.D2D63C40966@trevor.secretlab.ca> <546BF447.6080300@gmail.com> <CACxGe6u1YwQAivktwmiOZx1K1Ch0F1ofx3EriBi1qEAU99X9PQ@mail.gmail.com> <546CEFC4.805@gmail.com>
+Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL1qeaFD735-BNC6r5fFMw=Ggnk22rCPp=Tc5iOjSwdJWscUMg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <546CEFC4.805-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ezequiel Garcia <Ezequiel.Garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew & Ezequiel,
+On 11/19/2014 11:30 AM, Frank Rowand wrote:
+> On 11/19/2014 5:56 AM, Grant Likely wrote:
+>> On Wed, Nov 19, 2014 at 1:37 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
->>>>
->>>> Signed-off-by: Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
->>>> Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
->>>
->>> checkpatch reports that there's trailing whitespace and that you're
->>> using DOS line endings.  Please be sure to fix that with this and your
->>> other patches.
->>>
->>
->> Andrew,
->>
->> Saving this patch with mutt as mbox and running checkpatch on it,
->> doesn't report any problems with it.
->>
->> Maybe it's your client?
+< snip >
 
-> Oops, yes, you're right - my gmail settings have gotten screwed up somehow...
+> I include a patch below to also drop the *next pointer.  Not to actually
+> propose submitting the patch, but to suggest that Gaurav's patch should be
+> counted as a net of +2 pointers.  I expect that you will accept either a
+> list_head of an hlist_head patch, but if you do not then I will submit the
 
-I am little relieved now. It was a day of experimentation with my mail clients today.
+  list_head _or_ and hlist_head
 
-Thanks and regards,
-Naidu.
+stupid typos...
 
+> below patch to remove *next or a patch to rename *next to match the actual
+> usage of the field.
+> 
+> I still do not have a strong opinion, but I am still feeling that the gain
+> probably does not outweigh the cost.
+> 
+> -Frank
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
