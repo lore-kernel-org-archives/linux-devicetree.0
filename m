@@ -1,281 +1,107 @@
-From: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/5] mfd: rt5033: Add Richtek RT5033 driver core.
-Date: Wed, 19 Nov 2014 09:39:11 +0900
-Message-ID: <546BE6AF.8030601@samsung.com>
-References: <1415794082-30277-1-git-send-email-beomho.seo@samsung.com>
- <1415794082-30277-2-git-send-email-beomho.seo@samsung.com>
- <20141118162537.GE13959@x1>
+From: Mark yao <mark.yao@rock-chips.com>
+Subject: Re: [PATCH v12 1/3] drm: rockchip: Add basic drm driver
+Date: Wed, 19 Nov 2014 09:09:45 +0800
+Message-ID: <546BEDD9.1000205@rock-chips.com>
+References: <1416297587-18959-1-git-send-email-mark.yao@rock-chips.com> <1416297629-19024-1-git-send-email-mark.yao@rock-chips.com> <20141118083234.GZ25711@phenom.ffwll.local> <20141118142130.6c12ab50@bbrezillon> <20141118142447.GC25711@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20141118162537.GE13959@x1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, geunsik.lim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20141118142447.GC25711@phenom.ffwll.local>
+Sender: linux-doc-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>, heiko@sntech.de, David Airlie <airlied@gmail.com>, Rob Clark <robdclark@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Rom Lemarchand <romlem@google.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-api@vger.kernel.org, linux-rockchip@lists.infradead.org, dianders@chromium.org, marcheu@chromium.org, dbehr@chromium.org, olof@lixom.net, djkurtz@chromium.org, cf@rock-chips.com, xxm@rock-chips.com, huangtao@rock-chips.com, kever.
 List-Id: devicetree@vger.kernel.org
 
-Thank you for review.
-
-On 11/19/2014 01:25 AM, Lee Jones wrote:
-> On Wed, 12 Nov 2014, Beomho Seo wrote:
-> 
->> This patch adds a new driver for Richtek RT5033 driver.
->> RT5033 is a Multifunction device which includes battery charger, fuel gauge,
->> flash LED current source, LDO and synchronous Buck converter. It is interfaced
->> to host controller using I2C interface.
+On 2014=E5=B9=B411=E6=9C=8818=E6=97=A5 22:24, Daniel Vetter wrote:
+> On Tue, Nov 18, 2014 at 02:21:30PM +0100, Boris Brezillon wrote:
+>> Hi Daniel,
 >>
->> Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->> Cc: Lee Jones <lee.jone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> Acked-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> ---
->> Changes in v3
->> - Correct sentence errors.
->> - Add author information the top of each drivers.
->> - Remove unnecessary pre-initialise, struct member(rt5033->i2c) and blink.
->> - Change some return check.
->> - Use bool and of_match_ptr().
+>> On Tue, 18 Nov 2014 09:32:34 +0100
+>> Daniel Vetter <daniel@ffwll.ch> wrote:
 >>
->> Changes in v2
->> - Remove volatile_reg callback. Because this driver not in use regmap cache.
->> - Revmoe unnecessary subnode of_compatible.
->> - Add define for set_high impedance mode of charger.
->> ---
->>
->>  drivers/mfd/Kconfig                |   12 ++
->>  drivers/mfd/Makefile               |    1 +
->>  drivers/mfd/rt5033.c               |  141 +++++++++++++++++++
->>  include/linux/mfd/rt5033-private.h |  260 ++++++++++++++++++++++++++++++++++++
->>  include/linux/mfd/rt5033.h         |   62 +++++++++
->>  5 files changed, 476 insertions(+)
->>  create mode 100644 drivers/mfd/rt5033.c
->>  create mode 100644 include/linux/mfd/rt5033-private.h
->>  create mode 100644 include/linux/mfd/rt5033.h
->>
->> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->> index 72d3808..55b6551 100644
->> --- a/drivers/mfd/Kconfig
->> +++ b/drivers/mfd/Kconfig
->> @@ -618,6 +618,18 @@ config MFD_RTSX_PCI
->>  	  types of memory cards, such as Memory Stick, Memory Stick Pro,
->>  	  Secure Digital and MultiMediaCard.
->>  
->> +config MFD_RT5033
->> +	bool "Richtek RT5033 Power Management IC"
->> +	depends on I2C=y
->> +	select MFD_CORE
->> +	select REGMAP_I2C
->> +	help
->> +	  This driver provides for the Richtek RT5033 Power Management IC,
->> +	  which includes the I2C driver and the Core APIs. This driver provides
->> +	  common support for accessing the device. The device supports multiple
->> +	  sub-devices like charger, fuel gauge, flash LED, current source,
->> +	  LDO and Buck.
-> 
-> What's stopping this from being built as a module?
-> 
-
-I will change to possible building as a module.
-
->>  config MFD_RTSX_USB
->>  	tristate "Realtek USB card reader"
->>  	depends on USB
->> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
->> index 53467e2..4059c24 100644
->> --- a/drivers/mfd/Makefile
->> +++ b/drivers/mfd/Makefile
->> @@ -176,6 +176,7 @@ obj-$(CONFIG_MFD_IPAQ_MICRO)	+= ipaq-micro.o
->>  obj-$(CONFIG_MFD_MENF21BMC)	+= menf21bmc.o
->>  obj-$(CONFIG_MFD_HI6421_PMIC)	+= hi6421-pmic-core.o
->>  obj-$(CONFIG_MFD_DLN2)		+= dln2.o
->> +obj-$(CONFIG_MFD_RT5033)	+= rt5033.o
->>  
->>  intel-soc-pmic-objs		:= intel_soc_pmic_core.o intel_soc_pmic_crc.o
->>  obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
->> diff --git a/drivers/mfd/rt5033.c b/drivers/mfd/rt5033.c
->> new file mode 100644
->> index 0000000..e29c6d9
->> --- /dev/null
->> +++ b/drivers/mfd/rt5033.c
->> @@ -0,0 +1,141 @@
->> +/*
->> + * MFD core driver for the Richtek RT5033.
->> + *
->> + * Copyright (C) 2014 Samsung Electronics, Co., Ltd.
->> + * Author: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published bythe Free Software Foundation.
->> + */
->> +
->> +#include <linux/err.h>
->> +#include <linux/module.h>
-> 
-> Why have you included this if you can't build as a module?
-> 
-
-I will change that driver can build as a module.
-
->> +#include <linux/interrupt.h>
->> +#include <linux/of_device.h>
->> +#include <linux/mfd/core.h>
->> +#include <linux/mfd/rt5033.h>
->> +#include <linux/mfd/rt5033-private.h>
->> +
->> +static const struct regmap_irq rt5033_irqs[] = {
->> +	{ .mask = RT5033_PMIC_IRQ_BUCKOCP, },
->> +	{ .mask = RT5033_PMIC_IRQ_BUCKLV, },
->> +	{ .mask = RT5033_PMIC_IRQ_SAFELDOLV, },
->> +	{ .mask = RT5033_PMIC_IRQ_LDOLV, },
->> +	{ .mask = RT5033_PMIC_IRQ_OT, },
->> +	{ .mask = RT5033_PMIC_IRQ_VDDA_UV, },
->> +};
->> +
->> +static const struct regmap_irq_chip rt5033_irq_chip = {
->> +	.name		= "rt5033",
->> +	.status_base	= RT5033_REG_PMIC_IRQ_STAT,
->> +	.mask_base	= RT5033_REG_PMIC_IRQ_CTRL,
->> +	.mask_invert	= true,
->> +	.num_regs	= 1,
->> +	.irqs		= rt5033_irqs,
->> +	.num_irqs	= ARRAY_SIZE(rt5033_irqs),
->> +};
->> +
->> +static const struct mfd_cell rt5033_devs[] = {
->> +	{
->> +		.name = "rt5033-regulator",
->> +	}, {
-> 
-> Place this entry on one line.  Like you did in rt5033_irqs.
+>>> On Tue, Nov 18, 2014 at 04:00:29PM +0800, Mark Yao wrote:
+>>>> From: Mark yao <mark.yao@rock-chips.com>
+>>>>
+>>>> This patch adds the basic structure of a DRM Driver for Rockchip S=
+ocs.
+>>>>
+>>>> Signed-off-by: Mark Yao <mark.yao@rock-chips.com>
+>>>> Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
+>>>> Acked-by: Daniel Vetter <daniel@ffwll.ch>
+>>>> Reviewed-by: Rob Clark <robdclark@gmail.com>
+>>>> ---
+>>>> Changes in v2:
+>>>> - use the component framework to defer main drm driver probe
+>>>>    until all VOP devices have been probed.
+>>>> - use dma-mapping API with ARM_DMA_USE_IOMMU, create dma mapping b=
+y
+>>>>    master device and each vop device can shared the drm dma mappin=
+g.
+>>>> - use drm_crtc_init_with_planes and drm_universal_plane_init.
+>>>> - remove unnecessary middle layers.
+>>>> - add cursor set, move funcs to rockchip drm crtc.
+>>>> - use vop reset at first init
+>>>> - reference framebuffer when used and unreference when swap out vo=
+p
+>>>>
+>>>> Changes in v3:
+>>>> - change "crtc->fb" to "crtc->primary-fb"
+>>>> Adviced by Daniel Vetter
+>>>> - init cursor plane with universal api, remove unnecessary cursor =
+set,move
+>>>>
+>>>> Changes in v4:
+>>>> Adviced by David Herrmann
+>>>> - remove drm_platform_*() usage, use register drm device directly.
+>>> Minor fixup for that part below.
+>>>
+>>> [snip]
+>>>
+>>>> +static int rockchip_drm_bind(struct device *dev)
+>>>> +{
+>>>> +	struct drm_device *drm;
+>>>> +	int ret;
+>>>> +
+>>>> +	drm =3D drm_dev_alloc(&rockchip_drm_driver, dev);
+>>>> +	if (!drm)
+>>>> +		return -ENOMEM;
+>>>> +
+>>>> +	ret =3D drm_dev_set_unique(drm, "%s", dev_name(dev));
+>>>> +	if (ret)
+>>>> +		goto err_free;
+>>> Please call rockchip_drm_load here directly and don't put it as the=
+ ->load
+>>> function into the driver vtable. The point of the alloc/register sp=
+lit is
+>>> that the driver can be completely set up _before_ we register anyth=
+ing.
+>>> But for backwards compat and historical reasons ->load is called so=
+mewhere
+>>> in the middle (so that you could access the minor nodes if needed, =
+since
+>>> some drivers do that).
+>> I tried to do the same in the atmel-hlcdc DRM driver, but I need the
+>> primary drm_minor to register the connectors (see this kernel
+>> backtrace [1]), which means I either initialize the connector in the
+>> wrong place (currently part of the drm load process), or I just can'=
+t
+>> call atmel_hlcdc_dc_load before registering the drm device...
+> Hm right, wonder who that works with rockchip tbh.
 >
+> We did split up the drm_connector setup into _init and register, so i=
+f you
+> want to do this then you need to move the call to drm_connector_regis=
+ter
+> below the call to drm_dev_register.
+>
+> We should probably have a drm_connectors_register_all helper which do=
+es
+> this for all connectors on the connector list. And also grabs the
+> appropriate lock.
+>
+> I guess it's somewhat obvious that no one yet actually tried this ;-)
+> -Daniel
+right, I re-test the driver with it, get the same problem with Boris.
+I should move drm_connector_register below the drm_dev_register.
 
-OK, I will fix it like rt5033_irqs style.
-
->> +		.name = "rt5033-charger",
->> +		.of_compatible = "richtek,rt5033-charger",
->> +	}, {
->> +		.name = "rt5033-battery",
->> +		.of_compatible = "richtek,rt5033-battery",
->> +	},
->> +};
->> +
->> +static const struct of_device_id rt5033_dt_match[] = {
->> +	{ .compatible = "richtek,rt5033", },
->> +	{ }
->> +};
->> +
->> +static const struct regmap_config rt5033_regmap_config = {
->> +	.reg_bits	= 8,
->> +	.val_bits	= 8,
->> +	.max_register	= RT5033_REG_END,
->> +};
->> +
->> +static int rt5033_i2c_probe(struct i2c_client *i2c,
->> +				const struct i2c_device_id *id)
->> +{
->> +	struct rt5033_dev *rt5033;
->> +	unsigned int data;
->> +	int ret;
->> +
->> +	rt5033 = devm_kzalloc(&i2c->dev, sizeof(*rt5033), GFP_KERNEL);
->> +	if (!rt5033)
->> +		return -ENOMEM;
->> +
->> +	i2c_set_clientdata(i2c, rt5033);
->> +	rt5033->dev = &i2c->dev;
->> +	rt5033->irq = i2c->irq;
->> +	rt5033->wakeup = true;
->> +
->> +	rt5033->regmap = devm_regmap_init_i2c(i2c, &rt5033_regmap_config);
->> +	if (IS_ERR(rt5033->regmap)) {
->> +		dev_err(&i2c->dev, "Failed to allocate register map.\n");
->> +		return PTR_ERR(rt5033->regmap);
->> +	}
->> +
->> +	ret = regmap_read(rt5033->regmap, RT5033_REG_DEVICE_ID, &data);
->> +	if (ret) {
->> +		dev_err(&i2c->dev, "Device not found\n");
->> +		return -ENODEV;
->> +	}
->> +	dev_info(&i2c->dev, "Device found Device ID: %04x\n", data);
->> +
->> +	ret = regmap_add_irq_chip(rt5033->regmap, rt5033->irq,
->> +			IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
->> +			0, &rt5033_irq_chip, &rt5033->irq_data);
->> +	if (ret) {
->> +		dev_err(&i2c->dev, "Failed to request IRQ %d: %d\n",
->> +							rt5033->irq, ret);
->> +		return ret;
->> +	}
->> +
->> +	ret = mfd_add_devices(rt5033->dev, -1, rt5033_devs,
->> +			ARRAY_SIZE(rt5033_devs), NULL, 0,
->> +			regmap_irq_get_domain(rt5033->irq_data));
->> +	if (ret < 0) {
->> +		dev_err(&i2c->dev, "Failed to add RT5033 child device.\n");
-> 
-> s/device/devices/
-> 
-
-OK. I will fix it.
-
->> +		return ret;
->> +	}
->> +
->> +	device_init_wakeup(rt5033->dev, rt5033->wakeup);
->> +
->> +	return 0;
->> +}
->> +
->> +static int rt5033_i2c_remove(struct i2c_client *i2c)
->> +{
->> +	struct rt5033_dev *rt5033 = i2c_get_clientdata(i2c);
->> +
->> +	mfd_remove_devices(rt5033->dev);
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct i2c_device_id rt5033_i2c_id[] = {
->> +	{ "rt5033", },
->> +	{ }
->> +};
->> +MODULE_DEVICE_TABLE(i2c, rt5033_i2c_id);
-> 
-> Why do you need to export this if you're not building as a module?
-> 
-
-I will change possible building as a module.
-
->> +static struct i2c_driver rt5033_driver = {
->> +	.driver = {
->> +		.name = "rt5033",
->> +		.of_match_table = of_match_ptr(rt5033_dt_match),
->> +	},
->> +	.probe = rt5033_i2c_probe,
->> +	.remove = rt5033_i2c_remove,
->> +	.id_table = rt5033_i2c_id,
->> +};
->> +module_i2c_driver(rt5033_driver);
->>
->> +MODULE_DESCRIPTION("Richtek RT5033 multi-function core driver");
->> +MODULE_AUTHOR("Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
->> +MODULE_LICENSE("GPL");
-> 
-> More module stuff?
-> 
-> [...]
-> 
-OK. I will revise this patch on your advice.
-
-Again Thank you for your advice.
-I will submit next revision patch set.
-
-Regards,
-Beomho Seo
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
