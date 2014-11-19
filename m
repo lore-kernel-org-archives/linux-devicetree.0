@@ -1,51 +1,76 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] ARM: dts: fix PWM clock found on RK3288 Socs
-Date: Tue, 18 Nov 2014 21:14:46 -0800
-Message-ID: <CAD=FV=W+WU3j7OWKTxtGUv1Jt7qPesGXSOsoM=bsD5C15jttvA@mail.gmail.com>
-References: <1416367554-15185-1-git-send-email-caesar.wang@rock-chips.com>
+From: Soeren Moch <smoch@web.de>
+Subject: Re: [PATCH 1/3] ARM: dts: imx6: add pm_power_off support for i.mx6
+ chips
+Date: Wed, 19 Nov 2014 06:26:43 +0100
+Message-ID: <546C2A13.3010307@web.de>
+References: <1415780439-29728-1-git-send-email-b38343@freescale.com> <1415780439-29728-2-git-send-email-b38343@freescale.com> <20141119031823.GC27759@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1416367554-15185-1-git-send-email-caesar.wang@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Caesar Wang <caesar.wang@rock-chips.com>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Kever Yang <kever.yang@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, ZhenFu Fang <fzf@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Chris Zhong <chris.zhong@rock-chips.com>, Sonny Rao <sonnyrao@chromium.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20141119031823.GC27759@dragon>
+Sender: linux-pm-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>, Robin Gong <b38343@freescale.com>
+Cc: kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, sre@kernel.org, dbaryshkov@gmail.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Caesar,
 
-On Tue, Nov 18, 2014 at 7:25 PM, Caesar Wang <caesar.wang@rock-chips.com> wrote:
-> We use the new PWM IP on RK3288,but the PWM's clock indeed incorrect.
->
-> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
-> ---
->  arch/arm/boot/dts/rk3288.dtsi | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+On 19.11.2014 04:18, Shawn Guo wrote:
+> On Wed, Nov 12, 2014 at 04:20:37PM +0800, Robin Gong wrote:
+>> All chips of i.mx6 can be powered off by programming SNVS.
+>> For example :
+>> On i.mx6q-sabresd board, PMIC_ON_REQ connect with external
+>> pmic ON/OFF pin, that will cause the whole PMIC powered off
+>> except VSNVS. And system can restart once PMIC_ON_REQ goes
+>> high by push POWRER key.
+>>
+>> Signed-off-by: Robin Gong <b38343@freescale.com>
+>> ---
+>>  arch/arm/boot/dts/imx6qdl-sabresd.dtsi |    4 ++++
+>>  arch/arm/boot/dts/imx6qdl.dtsi         |    6 ++++++
+>>  arch/arm/boot/dts/imx6sl-evk.dts       |    4 ++++
+>>  arch/arm/boot/dts/imx6sl.dtsi          |    6 ++++++
+>>  arch/arm/boot/dts/imx6sx-sdb.dts       |    4 ++++
+>>  arch/arm/boot/dts/imx6sx.dtsi          |    6 ++++++
+>>  6 files changed, 30 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+>> index 07fb302..ba12cc6 100644
+>> --- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+>> +++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+>> @@ -531,6 +531,10 @@
+>>  	status = "okay";
+>>  };
+>>  
+>> +&snvs-poweroff {
+>> +	status = "okay";
+>> +};"
+>> +
+>>  &ssi2 {
+>>  	status = "okay";
+>>  };
+>> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+>> index c701af9..3a032d1 100644
+>> --- a/arch/arm/boot/dts/imx6qdl.dtsi
+>> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
+>> @@ -645,6 +645,12 @@
+>>  					interrupts = <0 19 IRQ_TYPE_LEVEL_HIGH>,
+>>  						     <0 20 IRQ_TYPE_LEVEL_HIGH>;
+>>  				};
+>> +
+>> +				snvs-poweroff: snvs-poweroff@38 {
+> 
+> I'm not sure if it's because my DTC version is too low or you didn't
+> test, the DTC reports error in label name 'snvs-poweroff'.  IIRC, hyphen
+> '-' cannot be used in label name, but underscore '_' can.
+> 
+> Shawn
 
-Right, I reported this when Kever was doing his "unused clocks" patch.
-That's why this clock is currently "ignore unused".
+In the patch series "[PATCH v4 0/3] add power off driver for i.mx6" from
+Sep 26 (what I have tested) snvs_poweroff was used. This worked as expected.
 
-...but though your change is right, I'd rather your change doesn't
-land quite yet.  It totally wrecks havoc with the PWM regulator used
-on many rk3288 boards and will glitch the main "logic" voltage at
-bootup.  I have some patches that are MASSIVELY WIP:
+So this series "[PATCH v4 0/3] add power off driver for i.mx6" (sent on
+Nov 12) apparently contains old patches and is not simply resent as
+stated in the cover letter.
 
-https://chromium-review.googlesource.com/230640
-WIP: regulator: pwm: Tell regulator framework that we can't turn off
-
-https://chromium-review.googlesource.com/230641
-WIP: PWM: handle the fact that firmware might have left us enabled
-
-https://chromium-review.googlesource.com/230642
-WIP: pwm-regulator stuff
-
-I think that last one might blow up into several patches.  We need to
-solve the problems from those patches before yours can really land.
-
-
-It's pretty high on my list to finish the above patches, but right now
-suspend/resume issues are higher priority so it's a bit stalled...  If
-someone wants to hijack any of the above patches please let me know--I
-won't be offended.
-
--Doug
+Soeren
