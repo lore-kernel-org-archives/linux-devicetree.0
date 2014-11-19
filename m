@@ -1,146 +1,77 @@
 From: Sakari Ailus <sakari.ailus@iki.fi>
 Subject: Re: [RFC] adp1653: Add device tree bindings for LED controller
-Date: Wed, 19 Nov 2014 19:53:15 +0200
-Message-ID: <546CD90B.8060903@iki.fi>
-References: <20141116075928.GA9763@amd> <20141117145857.GO8907@valkosipuli.retiisi.org.uk> <546AFEA5.9020000@samsung.com> <20141118084603.GC4059@amd> <546B19C8.2090008@samsung.com> <20141118113256.GA10022@amd> <546B40FA.2070409@samsung.com> <20141118132159.GA21089@amd> <546B6D86.8090701@samsung.com> <20141118165148.GA11711@amd> <546C66A5.6060201@samsung.com>
+Date: Wed, 19 Nov 2014 20:01:01 +0200
+Message-ID: <546CDADD.3080003@iki.fi>
+References: <20141116075928.GA9763@amd> <20141117101553.GA21151@amd> <20141117145545.GC7046@atomide.com> <201411171601.32311@pali> <20141117150617.GD7046@atomide.com> <20141118183545.GA16999@amd>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <546C66A5.6060201@samsung.com>
+In-Reply-To: <20141118183545.GA16999@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>, Pavel Machek <pavel@ucw.cz>
-Cc: pali.rohar@gmail.com, sre@debian.org, sre@ring0.de, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, freemangordon@abv.bg, bcousson@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, Linux LED Subsystem <linux-leds@vger.kernel.org>
+To: Pavel Machek <pavel@ucw.cz>, Tony Lindgren <tony@atomide.com>
+Cc: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, sre@debian.org, sre@ring0.de, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, khilman@kernel.org, aaro.koskinen@iki.fi, freemangordon@abv.bg, bcousson@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek and Pavel,
+Hi Pavel,
 
-Jacek Anaszewski wrote:
-> Hi Pavel, Sakari,
-> 
-> On 11/18/2014 05:51 PM, Pavel Machek wrote:
->> Hi!
->>
->>>> If the hardware LED changes with one that needs different current, the
->>>> block for the adp1653 stays the same, but white LED block should be
->>>> updated with different value.
->>>
->>> I think that you are talking about sub nodes. Indeed I am leaning
->>> towards this type of design.
->>
->> I think I am :-).
->>
->>>>> I agree that flash-timeout should be per led - an array, similarly
->>>>> as in case of iout's.
+Pavel Machek wrote:
+> On Mon 2014-11-17 07:06:17, Tony Lindgren wrote:
+>> * Pali Roh=C3=A1r <pali.rohar@gmail.com> [141117 07:03]:
+>>> On Monday 17 November 2014 15:55:46 Tony Lindgren wrote:
 >>>>
->>>> Agreed about per-led, disagreed about the array. As all the fields
->>>> would need arrays, and as LED system currently does not use arrays for
->>>> label and linux,default-trigger, I believe we should follow existing
->>>> design and model it as three devices. (It _is_ physically three
->>>> devices.)
+>>>> There's nothing stopping us from initializing the camera code
+>>>> from pdata-quirks.c for now to keep it working. Certainly the
+>>>> binding should be added to the driver, but that removes a
+>>>> dependency to the legacy booting mode if things are otherwise
+>>>> working.
 >>>
->>> Right, I missed that the leds/common.txt describes child node.
->>>
->>> I propose following modifications to the binding:
->>>
->>> Optional properties for child nodes:
->>> - iout-mode-led :     maximum intensity in microamperes of the LED
->>>               (torch LED for flash devices)
->>> - iout-mode-flash :     initial intensity in microamperes of the
->>>             flash LED; it is required to enable support
->>>             for the flash led
->>> - iout-mode-indicator : initial intensity in microamperes of the
->>>             indicator LED; it is required to enable support
->>>             for the indicator led
->>> - max-iout-mode-led :     maximum intensity in microamperes of the LED
->>>               (torch LED for flash devices)
->>> - max-iout-mode-flash : maximum intensity in microamperes of the
->>>             flash LED
->>> - max-iout-mode-indicator : maximum intensity in microamperes of the
->>>             indicator LED
->>> - flash-timeout :    timeout in microseconds after which flash
->>>             led is turned off
+>>> Tony, legacy board code for n900 is not in mainline tree. And=20
+>>> that omap3 camera subsystem for n900 is broken since 3.5=20
+>>> kernel... (both Front and Back camera on n900 show only green=20
+>>> picture).
 >>
->> Ok, I took a look, and "iout" is notation I understand, but people may
->> have trouble with and I don't see it used anywhere else.
+>> I'm still seeing the legacy board code for n900 in mainline tree :)
+>> It's deprecated, but still there.
 >>
->> Also... do we need both "current" and "max-current" properties?
+>> Are you maybe talking about some other piece of platform_data that's
+>> no longer in the mainline kernel?
 >>
->> But regulators already have "regulator-max-microamp" property. So what
->> about:
->>
->> max-microamp :     maximum intensity in microamperes of the LED
->>                 (torch LED for flash devices)
->> max-flash-microamp :     initial intensity in microamperes of the
->>               flash LED; it is required to enable support
->>               for the flash led
->> flash-timeout-microseconds : timeout in microseconds after which flash
->>               led is turned off
->>
->> If you had indicator on the same led, I guess
->>
->> indicator-microamp : recommended intensity in microamperes of the LED
->>                  for indication
+>> No idea what might be wrong with the camera though.
+>=20
+> Camera support for main and secondary cameras was never mainline, AFA=
+ICT.
+>=20
+> Merging it will not be easy, as it lacks DT support... and was broken
+> for long time.
 
-The value for the indicator is maximum as well, not just a recommendation.
+I have a smiapp patchset for DT support that I posted a while ago, here=
+:
 
->>
->> ...would do?
-> 
-> 
-> Ongoing discussion allowed me for taking a look at the indicator issue
-> from different perspective. This is also vital for the issue of
-> whether a v4l2-flash sub-device should be created per device or
-> per sub-led [1].
-> 
-> Currently each sub-led is represented as a separate device tree
-> sub node and the led drivers create separate LED class device for the
-> sub nodes. What this implies is that indicator led also must be
-> represented by the separate LED class device.
-> 
-> This is contrary to the way how V4L2 Flash API approaches this issue,
-> as it considers a flash device as a regulator chip driven through
-> a bus. The API allows to set the led in torch or flash mode and
-> implicitly assumes that there can be additional indicator led
-> supported, which can't be turned on separately, but the drivers apply
-> the indicator current to the indicator led when the torch or flash led
-> is activated.
+<URL:http://www.spinics.net/lists/linux-media/msg83285.html>
 
-The indicator is independent of the flash LED in V4L2 flash API. At
-least that's how it should be, and in adp1653 the two are independent,
-but the as3645a can't use indicator with the flash AFAIR.
+What's missing on top of that is the omap3isp support, plus something t=
+o
+toggle the sysctl registers based on the chosen receiver. I have a
+preliminary, not RFC yet but functional set here:
 
-> I propose to create separate v4l2-flash device for the indicator led,
-> and treat it as a regular sub-led similarly like it is done in the
-> LED subsystem. LED Flash class driver would only add a flag
-> LED_DEV_CAP_INDICATOR and basing on it the v4l2-flash sub-device
-> would create only V4L2_CID_FLASH_INDICATOR_INTENSITY control for it.
-> There could ba also additional control added:
-> V4L2_CID_FLASH_INDICATOR_PATTERN to support the feature
-> supported by some LED class drivers.
+<URL:http://vihersipuli.retiisi.org.uk/cgi-bin/gitweb.cgi?p=3D~sailus/l=
+inux.git;a=3Dshortlog;h=3Drefs/heads/rm696-045-dt>
 
-Interesting idea.
+The main camera support requires et8ek8 driver as well, and resolving
+the breakage with the image capture on 3430.
 
-The flash controller is still a single I2C device with common set of
-faults, for instance. Some devices refuse to work again in case of
-faults until they are cleared (= read).
+N9/N950 will be first, though. Lens controllers are another matter, but
+nothing too difficult on that side either.
 
-Could the indicator pattern control be present in the same sub-device?
+> Anyway, flash is kind of important for me, since it makes phone usefu=
+l
+> as backup light; and it is simple piece of hw, so I intend to keep it
+> useful.
 
-Are there any flash LED controllers that support such functionality?
+Me, too. :-)
 
-> From the media device perspective such an approach would
-> be harmful, as the indicator led could be turned on right
-> before strobing the flash or turning the torch on, by
-> separate calls to different v4l2-flash sub-devices.
-> 
-> The design described above would allow for avoiding issues I touched
-> in the message [1].
-
-Let me reply this separately. Feel free to ping me if I obviously appear
-to miss something.
-
--- 
+--=20
 Kind regards,
 
 Sakari Ailus
