@@ -1,64 +1,176 @@
-From: Ajay kumar <ajaynumb@gmail.com>
-Subject: Re: [PATCH V8 00/14] drm/exynos: few patches to enhance bridge chip
- support
-Date: Wed, 19 Nov 2014 15:08:59 +0530
-Message-ID: <CAEC9eQPz_7QeL7EDorb-OxiTjcb1tVUDbEbzbER4Yu2wSNNaxQ@mail.gmail.com>
-References: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com>
- <CAEC9eQOrKw2Z1q-ztFfadXmsL3CTcAkkv9kcS2QnDOAVSh2AuQ@mail.gmail.com>
- <546C646C.4060303@collabora.co.uk>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [RFC PATCH v2] drivers: pci: move PCI domain assignment to
+ generic PCI code
+Date: Wed, 19 Nov 2014 09:39:48 +0000
+Message-ID: <20141119093948.GA8751@red-moon>
+References: <1415637706-2195-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <546C5FF2.5090903@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <546C646C.4060303@collabora.co.uk>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, gustavo Padovan <gustavo.padovan@collabora.co.uk>, Daniel Vetter <daniel.vetter@ffwll.ch>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kukjin Kim <kgene.kim@samsung.com>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <546C5FF2.5090903@huawei.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Yijing Wang <wangyijing@huawei.com>, bhelgaas@google.com
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Liviu Dudau <Liviu.Dudau@arm.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmF2aWVyLAoKSW4gdGhlIGNvdmVyIGxldHRlciwgSSBoYXZlIG1lbnRpb25lZCB0aGF0IGl0
-IGlzIHRlc3RlZCBvbiBMaW51cyB0cmVlOgoKIlRoaXMgc2VyaWVzIGlzIGJhc2VkIG9uIG1hc3Rl
-ciBicmFuY2ggb2YgTGludXMgdHJlZSBhdDoKZ2l0Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9s
-aW51eC9rZXJuZWwvZ2l0L3RvcnZhbGRzL2xpbnV4LmdpdCIKCktpbmRseSB0ZXN0IHRoZSBwYXRj
-aGVzIHdpdGggdGhhdC4KCkFqYXkKCk9uIFdlZCwgTm92IDE5LCAyMDE0IGF0IDM6MDUgUE0sIEph
-dmllciBNYXJ0aW5leiBDYW5pbGxhcwo8amF2aWVyLm1hcnRpbmV6QGNvbGxhYm9yYS5jby51az4g
-d3JvdGU6Cj4gSGVsbG8gQWpheSwKPgo+IE9uIDExLzE4LzIwMTQgMDc6MjAgQU0sIEFqYXkga3Vt
-YXIgd3JvdGU6Cj4+IE9uIFNhdCwgTm92IDE1LCAyMDE0IGF0IDM6MjQgUE0sIEFqYXkgS3VtYXIg
-PGFqYXlrdW1hci5yc0BzYW1zdW5nLmNvbT4gd3JvdGU6Cj4+PiBUaGlzIHNlcmllcyBpcyBiYXNl
-ZCBvbiBtYXN0ZXIgYnJhbmNoIG9mIExpbnVzIHRyZWUgYXQ6Cj4+PiBnaXQ6Ly9naXQua2VybmVs
-Lm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvdG9ydmFsZHMvbGludXguZ2l0Cj4KPiBJIGFw
-cGxpZWQgeW91ciBzZXJpZXMgb24gdG9wIG9mIDMuMTgtcmM1ICsgbGludXgtbmV4dCdzIGNvbW1p
-dDoKPgo+IDBlZjc2YWUgKCJBUk06IGV4eW5vc19kZWZjb25maWc6IEVuYWJsZSBvcHRpb25zIGZv
-ciBkaXNwbGF5IHBhbmVsIHN1cHBvcnQiKS4KPgo+IEkgdGhpbmsgeW91IHNob3VsZCBoYWQgbWVu
-dGlvbmVkIHdoYXQgb3RoZXIgcGF0Y2hlcyBhcmUgbmVlZGVkIGFzIGEKPiBkZXBlbmRlbmN5IHNp
-bmNlIEkgc3BlbnQgcXVpdGUgYSBiaXQgb2YgdGltZSBmaWd1cmluZyBvdXQgd2h5IHRoZQo+IHBz
-ODYyMiBicmlkZ2UgZHJpdmVyIHByb2JlIHdhcyBhbHdheXMgZGVmZXJyZWQgZHVlIG9mX2RybV9m
-aW5kX3BhbmVsKCkKPiBmYWlsaW5nIGFuZCB0aGVuIEkgbm90aWNlZCB0aGF0IGEgcGF0Y2ggZnJv
-bSBsaW51eC1uZXh0IHdhcyBuZWVkZWQ6Cj4KPiBlMzVlMzA1ICgiZHJtL3BhbmVsOiBzaW1wbGU6
-IEFkZCBBVU8gQjExNlhXMDMgcGFuZWwgc3VwcG9ydCIpCj4KPiBXaXRoIHRoYXQgY29tbWl0IHRo
-ZSBwczg2MjIgZHJtIGJyaWRnZSBkcml2ZXIgcHJvYmUgc3VjY2VlZCBidXQgSSBzdGlsbAo+IGRv
-bid0IGhhdmUgZGlzcGxheSB3b3JraW5nIG9uIGFuIEV4eW5vczUyNDAgUGVhY2ggUGl0LCB0aGUg
-a2VybmVsIGxvZyBzaG93czoKPgo+IHBsYXRmb3JtIDE0NWIwMDAwLmRwLWNvbnRyb2xsZXI6IERy
-aXZlciBleHlub3MtZHAgcmVxdWVzdHMgcHJvYmUgZGVmZXJyYWwKPiBleHlub3MtZHJtIGV4eW5v
-cy1kcm06IGJvdW5kIDE0NDAwMDAwLmZpbWQgKG9wcyBmaW1kX2NvbXBvbmVudF9vcHMpCj4gZXh5
-bm9zLWRybSBleHlub3MtZHJtOiBmYWlsZWQgdG8gYmluZCAxNDViMDAwMC5kcC1jb250cm9sbGVy
-IChvcHMgZXh5bm9zX2RwX29wcyk6IC01MTcKPiBleHlub3MtZHJtIGV4eW5vcy1kcm06IG1hc3Rl
-ciBiaW5kIGZhaWxlZDogLTUxNwo+IHBsYXRmb3JtIDE0NWIwMDAwLmRwLWNvbnRyb2xsZXI6IERy
-aXZlciBleHlub3MtZHAgcmVxdWVzdHMgcHJvYmUgZGVmZXJyYWwKPgo+IEFueSBpZGVhIHdoYXQg
-ZWxzZSBJIGNvdWxkIGJlIG1pc3NpbmcgaGVyZT8KPgo+IFlvdXIgcGF0Y2hlcyBkb24ndCBhcHBs
-eSBjbGVhbmx5IGluIGxpbnV4LW5leHQgYnR3LCBhbHRob3VnaCB0aGUgYXJlIG1hbnkKPiBpc3N1
-ZXMgd2l0aCB0aGUgRXh5bm9zIERSTSBjdXJyZW50bHkgaW4gbGludXgtbmV4dCBhbnl3YXlzIHNv
-IHByb2JhYmx5IHVzaW5nCj4gMy4xOC1yYyBhcyBhIGJhc2UgbWFrZXMgbW9yZSBzZW5zZSBmb3Ig
-bm93IHVudGlsIGFsbCB0aG9zZSB0aGluZ3MgZ2V0IGZpeGVkCj4gYnV0IHlvdSBzaG91bGQgcmVi
-YXNlIHNvIHRoZXkgY2FuIGJlIHBpY2tlZC4KPgo+IEJlc3QgcmVnYXJkcywKPiBKYXZpZXIKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Wed, Nov 19, 2014 at 09:16:34AM +0000, Yijing Wang wrote:
+> Hi Lorenzo,
+>    You should send this to Bjorn instead of cc. Other, why put the OF related
+> function in PCI core. Why not move it in drivers/of/of_pci.c ?
+
+I did, you missed v1, and the problem is that with ACPI forthcoming we
+do not want to have domain assignment scattered in different places,
+but part of core code (ie a single function that prevents mixed
+initialization from DT/counter and so on).
+
+Bjorn, are you fine with this patch ? Do you want me to resend it as
+part of the ARM 32 PCI domain refactoring [1] ? [1] depends on this
+patch going in first.
+
+Thanks,
+Lorenzo
+
+[1] http://www.spinics.net/lists/arm-kernel/msg375423.html
+
+> On 2014/11/11 0:41, Lorenzo Pieralisi wrote:
+> > The current logic used for PCI domain assignment in arm64
+> > pci_bus_assign_domain_nr() is flawed in that, depending on the host
+> > controllers configuration for a platform and the respective initialization
+> > sequence, core code may end up allocating PCI domain numbers from both DT and
+> > the core code generic domain counter, which would result in PCI domain
+> > allocation aliases/errors.
+> > 
+> > This patch fixes the logic behind the PCI domain number assignment and
+> > moves the resulting code to generic PCI core code so that the same domain
+> > allocation logic is used on all platforms selecting
+> > 
+> > CONFIG_PCI_DOMAINS_GENERIC
+> > 
+> > instead of resorting to an arch specific implementation that might end up
+> > duplicating the PCI domain assignment logic wrongly.
+> > 
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Liviu Dudau <liviu.dudau@arm.com>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > ---
+> > v1 => v2:
+> > 
+> > - Moved generic pci_bus_assign_domain_nr() code to PCI core instead of
+> >   adding an OF layer API
+> > - Updated commit log and code comments
+> > 
+> >  arch/arm64/kernel/pci.c | 22 ----------------------
+> >  drivers/pci/pci.c       | 50 +++++++++++++++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 50 insertions(+), 22 deletions(-)
+> > 
+> > diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
+> > index ce5836c..6f93c24 100644
+> > --- a/arch/arm64/kernel/pci.c
+> > +++ b/arch/arm64/kernel/pci.c
+> > @@ -46,25 +46,3 @@ int pcibios_add_device(struct pci_dev *dev)
+> >  
+> >  	return 0;
+> >  }
+> > -
+> > -
+> > -#ifdef CONFIG_PCI_DOMAINS_GENERIC
+> > -static bool dt_domain_found = false;
+> > -
+> > -void pci_bus_assign_domain_nr(struct pci_bus *bus, struct device *parent)
+> > -{
+> > -	int domain = of_get_pci_domain_nr(parent->of_node);
+> > -
+> > -	if (domain >= 0) {
+> > -		dt_domain_found = true;
+> > -	} else if (dt_domain_found == true) {
+> > -		dev_err(parent, "Node %s is missing \"linux,pci-domain\" property in DT\n",
+> > -			parent->of_node->full_name);
+> > -		return;
+> > -	} else {
+> > -		domain = pci_get_new_domain_nr();
+> > -	}
+> > -
+> > -	bus->domain_nr = domain;
+> > -}
+> > -#endif
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index 625a4ac..2279414 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -10,6 +10,8 @@
+> >  #include <linux/kernel.h>
+> >  #include <linux/delay.h>
+> >  #include <linux/init.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_pci.h>
+> >  #include <linux/pci.h>
+> >  #include <linux/pm.h>
+> >  #include <linux/slab.h>
+> > @@ -4447,6 +4449,54 @@ int pci_get_new_domain_nr(void)
+> >  {
+> >  	return atomic_inc_return(&__domain_nr);
+> >  }
+> > +
+> > +#ifdef CONFIG_PCI_DOMAINS_GENERIC
+> > +
+> > +void pci_bus_assign_domain_nr(struct pci_bus *bus, struct device *parent)
+> > +{
+> > +	static int use_dt_domains = -1;
+> > +	int domain = of_get_pci_domain_nr(parent->of_node);
+> > +
+> > +	/*
+> > +	 * Check DT domain and use_dt_domains values.
+> > +	 *
+> > +	 * If DT domain property is valid (domain >= 0) and
+> > +	 * use_dt_domains != 0, the DT assignment is valid since this means
+> > +	 * we have not previously allocated a domain number by using
+> > +	 * pci_get_new_domain_nr(); we should also update use_dt_domains to
+> > +	 * 1, to indicate that we have just assigned a domain number from
+> > +	 * DT.
+> > +	 *
+> > +	 * If DT domain property value is not valid (ie domain < 0), and we
+> > +	 * have not previously assigned a domain number from DT
+> > +	 * (use_dt_domains != 1) we should assign a domain number by
+> > +	 * using the:
+> > +	 *
+> > +	 * pci_get_new_domain_nr()
+> > +	 *
+> > +	 * API and update the use_dt_domains value to keep track of method we
+> > +	 * are using to assign domain numbers (use_dt_domains = 0).
+> > +	 *
+> > +	 * All other combinations imply we have a platform that is trying
+> > +	 * to mix domain numbers obtained from DT and pci_get_new_domain_nr(),
+> > +	 * which is a recipe for domain mishandling and it is prevented by
+> > +	 * invalidating the domain value (domain = -1) and printing a
+> > +	 * corresponding error.
+> > +	 */
+> > +	if (domain >= 0 && use_dt_domains) {
+> > +		use_dt_domains = 1;
+> > +	} else if (domain < 0 && use_dt_domains != 1) {
+> > +		use_dt_domains = 0;
+> > +		domain = pci_get_new_domain_nr();
+> > +	} else {
+> > +		dev_err(parent, "Node %s has inconsistent \"linux,pci-domain\" property in DT\n",
+> > +			parent->of_node->full_name);
+> > +		domain = -1;
+> > +	}
+> > +
+> > +	bus->domain_nr = domain;
+> > +}
+> > +#endif
+> >  #endif
+> >  
+> >  /**
+> > 
+> 
+> 
+> -- 
+> Thanks!
+> Yijing
+> 
+> 
