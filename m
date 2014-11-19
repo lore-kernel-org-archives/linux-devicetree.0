@@ -1,60 +1,45 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Patch to improve device tree structure
-Date: Tue, 18 Nov 2014 17:37:11 -0800
-Message-ID: <546BF447.6080300@gmail.com>
-References: <1416199976-21147-1-git-send-email-gaurav.minocha.os@gmail.com> <20141118151026.D2D63C40966@trevor.secretlab.ca>
-Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [RFC] Add of_path property for all devices with a node
+Date: Wed, 19 Nov 2014 13:25:53 +1100
+Message-ID: <1416363953.5704.19.camel@kernel.crashing.org>
+References: <1415342031.4925.27.camel@kernel.crashing.org>
+	 <1415342117.4925.29.camel@kernel.crashing.org>
+	 <1415596626.5769.14.camel@kernel.crashing.org>
+	 <CAL_JsqKG=vpeGKj3v-2VW9oGQsnmuYMHRfy6LuXDXE=ROjHT4w@mail.gmail.com>
+	 <CACxGe6vg8SxwCHZ8HxzLzimQOAf8Q81wd5eO=x2LavD4dv81Rw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141118151026.D2D63C40966-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <CACxGe6vg8SxwCHZ8HxzLzimQOAf8Q81wd5eO=x2LavD4dv81Rw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/18/2014 7:10 AM, Grant Likely wrote:
-> On Sun, 16 Nov 2014 20:52:56 -0800
-> , Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->  wrote:
->> This patch improves the implementation of device tree structure.
->>
->> Traditional child and sibling linked list in device tree structure
->> is removed and is replaced by list_head (i.e. circular doubly linked
->>  list) already available in Linux kernel.
->>
->> Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Tue, 2014-11-18 at 15:18 +0000, Grant Likely wrote:
+> >> So not much reactions here .. a bit more on IRC, where Olof
+> suggested
+> >> that rather than a file containing a path, we could use a symlink
+> since
+> >> the devtree is now in sysfs, so we can do relative links.
+> >
+> > +1 on this. That was part of the motivation to move DT into sysfs.
+> >
+> > Rob
 > 
-> Hi Gaurav,
+> I had a patch that did exactly that. I wonder what happened to it...
 > 
-> So, after you've done this work, I need to you rebase it (and of course
-> it is non-trivial) onto linux-next. I've already got a patch queued up
-> which gets rid of the of_allnodes/allnext list which will have conflicts
-> with this patch.
-> 
-> I'll make comments below where still relevant.
+> But regardless, as Frank said in his reply, this data is already in
+> the uevent file for every device.
 
-Grant,
+I sent a patch doing the symlink days ago.... I think it's still
+valuable, the patch is triviall and the symlink is a lot easier to deal
+with than parsing the uevent file.
 
-My first reaction to this patch was that moving to using struct list_head
-made the code less readable plus increased the size of struct device_node.
+Cheers,
+Ben.
 
-I reworked the changes to drivers/of/base.c to see if I could make
-it a little more readable.  And I see below that you also have some
-suggestions that make it more readable.
-
-Even after that, I'm still feeling that the gain of moving to a more
-standard list data type might not be greater than the downsides in
-terms of readability and space.  The current list implementation does
-seem like a decent fit to the problem space.
-
-</ opinion, take it for what it is worth >
-
--Frank
-
-
-< snip - original patch, plus Grant's comments >
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
