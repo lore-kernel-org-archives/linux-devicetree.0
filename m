@@ -1,50 +1,44 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] drivers/core/of: Add symlink to device-tree from devices with an OF node
-Date: Wed, 19 Nov 2014 15:49:13 +0100
-Message-ID: <11269246.iBzpsM0jDI@wuerfel>
-References: <1415342031.4925.27.camel@kernel.crashing.org> <3422452.OFUjscQXRB@wuerfel> <CAL_JsqKk5UdFEa02wA+3N5BCM7coWAK=4jAr96Pw5eFh2n0ioQ@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] of: Add vendor prefix for Giantplus Technology Co., Ltd.
+Date: Wed, 19 Nov 2014 08:50:04 -0600
+Message-ID: <CAL_JsqKvqgzhSZTnB2r12U6T-sQ5q+Q6znGPQTFyNihDkVoJTw@mail.gmail.com>
+References: <1416389395-15152-1-git-send-email-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKk5UdFEa02wA+3N5BCM7coWAK=4jAr96Pw5eFh2n0ioQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1416389395-15152-1-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jeremy.kerr-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 19 November 2014 08:45:58 Rob Herring wrote:
-> > static inline struct device_node *dev_of_node(struct device *of_node)
-> > {
-> >         if (!IS_ENABLED(CONFIG_OF))
-> >                 return NULL;
-> >
-> >         return dev->of_node;
-> > }
-> >
-> > Adding the IS_ENABLED() in a lot of drivers isn't horrible, but we seem
-> > to be doing it a lot.
-> 
-> I think you misread things. of_node is always present now, so it
-> should always be NULL for !CONFIG_OF.
-> 
+On Wed, Nov 19, 2014 at 3:29 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> From: Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> Signed-off-by: Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-No, I didn't misread it but I should have been clearer with the intention:
-The idea is to tell the compiler that we know it will be NULL when CONFIG_OF
-is unset, so it can optimize out all code that does
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-	struct device_node *dn = dev_of_node(dev);
-
-	if (dn) {
-		...
-		/* complex code */
-		...
-	}
-
-and we can avoid using an #ifdef or if(IS_ENABLED()) in the source to
-compile out the DT-only sections of a driver.
-
-	Arnd
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 0b2fc732f1f3..c678ee63e91c 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -59,6 +59,7 @@ fsl   Freescale Semiconductor
+>  GEFanuc        GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+>  gef    GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+>  geniatech      Geniatech, Inc.
+> +giantplus      Giantplus Technology Co., Ltd.
+>  globalscale    Globalscale Technologies, Inc.
+>  gmt    Global Mixed-mode Technology, Inc.
+>  google Google, Inc.
+> --
+> 2.1.1
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
