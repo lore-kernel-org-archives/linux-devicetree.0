@@ -1,50 +1,58 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Patch to improve device tree structure
-Date: Wed, 19 Nov 2014 12:05:16 -0800
-Message-ID: <546CF7FC.1060407@gmail.com>
-References: <1416199976-21147-1-git-send-email-gaurav.minocha.os@gmail.com> <20141118151026.D2D63C40966@trevor.secretlab.ca> <546BF447.6080300@gmail.com> <CACxGe6u1YwQAivktwmiOZx1K1Ch0F1ofx3EriBi1qEAU99X9PQ@mail.gmail.com> <546CEFC4.805@gmail.com> <546CF7AD.8060707@gmail.com>
-Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <546CF7AD.8060707-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH 0/9] ASoC: QCOM: Add support for ipq806x SOC
+Date: Wed, 19 Nov 2014 14:16:10 -0600
+Message-ID: <AE8D85F1-A1E0-4656-B160-37AA3300FE58@codeaurora.org>
+References: <1416423169-21865-1-git-send-email-kwestfie@codeaurora.org>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1416423169-21865-1-git-send-email-kwestfie@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kenneth Westfield <kwestfie@codeaurora.org>
+Cc: ALSA Mailing List <alsa-devel@alsa-project.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, Greg KH <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/19/2014 12:03 PM, Frank Rowand wrote:
-> On 11/19/2014 11:30 AM, Frank Rowand wrote:
->> On 11/19/2014 5:56 AM, Grant Likely wrote:
->>> On Wed, Nov 19, 2014 at 1:37 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> 
-> < snip >
-> 
->> I include a patch below to also drop the *next pointer.  Not to actually
->> propose submitting the patch, but to suggest that Gaurav's patch should be
->> counted as a net of +2 pointers.  I expect that you will accept either a
->> list_head of an hlist_head patch, but if you do not then I will submit the
-> 
->   list_head _or_ and hlist_head
 
-    list_head _or_ an hlist_head
+On Nov 19, 2014, at 12:52 PM, Kenneth Westfield <kwestfie@codeaurora.or=
+g> wrote:
 
-darn it!
+> From: Kenneth Westfield <kwestfie@codeaurora.org>
+>=20
+> This set of patches adds support for audio on the Qualcomm Technologi=
+es
+> ipq806x SOC.
+>=20
+> The ipq806x SOC has audio-related hardware blocks in its low-power au=
+dio
+> subsystem (or LPASS).  One of the relevant blocks in the LPASS is its
+> low-power audio interface (or LPAIF).  This encapsulates the MI2S por=
+t,
+> which is what these drivers are configured to use.  The I2S pins are
+> connected to an external DAC/amp chip.  In addition, a single GPIO is
+> connected to the same DAC/amp, which gives the SOC enable/disable
+> control.
+>=20
+> The specific drivers added are:
+> - a machine driver that handles the board-specific pins
+> - a native driver that handles hardware access to the LPAIF
+> - a CPU DAI driver for controlling the LPAIF block
+> - a PCM MI2S platform driver
+>=20
+> Corresponding additions to the device tree for the ipq806x and its
+> documentation has also been added.  Also, as this is a new directory,
+> the MAINTAINERS file has been updated as well.
+>=20
+> - Ken
 
-> 
-> stupid typos...
-> 
->> below patch to remove *next or a patch to rename *next to match the actual
->> usage of the field.
->>
->> I still do not have a strong opinion, but I am still feeling that the gain
->> probably does not outweigh the cost.
->>
->> -Frank
-> 
+Some general comments, you shouldn=92t have gerrit Change-Id=92s in com=
+mit messages, the Kconfig/Makefile changes should be part of the patch =
+that adds the code associated with them.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- k
+
+--=20
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora For=
+um,
+a Linux Foundation Collaborative Project
