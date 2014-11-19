@@ -1,95 +1,74 @@
 From: James Hogan <james.hogan@imgtec.com>
-Subject: [PATCH 05/15] dt: binding: add binding for TZ1090 gate bank
-Date: Wed, 19 Nov 2014 23:15:33 +0000
-Message-ID: <1416438943-11429-6-git-send-email-james.hogan@imgtec.com>
+Subject: [PATCH 02/15] clk: divider: expose new clk_register_divider_mask
+Date: Wed, 19 Nov 2014 23:15:30 +0000
+Message-ID: <1416438943-11429-3-git-send-email-james.hogan@imgtec.com>
 References: <1416438943-11429-1-git-send-email-james.hogan@imgtec.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1416438943-11429-1-git-send-email-james.hogan@imgtec.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Mike Turquette <mturquette@linaro.org>, linux-metag@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: James Hogan <james.hogan@imgtec.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: James Hogan <james.hogan@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-Add DT binding for a bank of clock gates in the TZ1090 SoC. There are
-several such registers which contain only bits controlling clock gates.
-
-The bit-mask property determines the mask of bits of the register which
-control gates. The number of input (and output) clocks is equal to the
-number of set bits in the bit-mask, and the clocks and
-clock-output-names arrays list the clocks/names from the least
-significant set bit in the mask to the most significant set bit.
+Expose a new function clk_register_divider_mask to set up a mask based
+divider. This will be used by the upcoming TZ1090 divider driver whose
+DT binding takes a mask rather than a shift and width.
 
 Signed-off-by: James Hogan <james.hogan@imgtec.com>
 Cc: Mike Turquette <mturquette@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: linux-metag@vger.kernel.org
-Cc: devicetree@vger.kernel.org
 ---
- .../bindings/clock/img,tz1090-gate-bank.txt        | 52 ++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/img,tz1090-gate-bank.txt
+ drivers/clk/clk-divider.c    | 25 +++++++++++++++++++++++++
+ include/linux/clk-provider.h |  5 +++++
+ 2 files changed, 30 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/img,tz1090-gate-bank.txt b/Documentation/devicetree/bindings/clock/img,tz1090-gate-bank.txt
-new file mode 100644
-index 0000000..7a93f6a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/img,tz1090-gate-bank.txt
-@@ -0,0 +1,52 @@
-+Binding for TZ1090 clock gate bank.
+diff --git a/drivers/clk/clk-divider.c b/drivers/clk/clk-divider.c
+index a432cf8..23ef3df 100644
+--- a/drivers/clk/clk-divider.c
++++ b/drivers/clk/clk-divider.c
+@@ -462,3 +462,28 @@ struct clk *clk_register_divider_table(struct device *dev, const char *name,
+ 			((1 << width) - 1), clk_divider_flags, table, lock);
+ }
+ EXPORT_SYMBOL_GPL(clk_register_divider_table);
 +
-+This binding uses the common clock binding[1]. It assumes a register-mapped bank
-+of clock gates, where each bit in the register can control a single gate. The
-+number of clocks in the bank is specified indirectly by the number of set bits
-+in the bit-mask property.
-+
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+Required properties:
-+- compatible         : shall be "img,tz1090-gate-bank".
-+- #clock-cells       : from common clock binding; shall be set to 1.
-+- reg                : base address for register controlling gates
-+- bit-mask           : bitmask of bits in register controlling gates
-+- clocks             : clock specifiers of parent clock of each gate with bit
-+                       set in bit-mask
-+- clock-output-names : from common clock binding. Name of each gate with bit set
-+                       in bit-mask
-+
-+Clock Specifier Definition:
-+- <1st-cell>: gate number, counting from 0 (the gate controlled by the lowest
-+              set bit in bit-mask) to the number of gates - 1 (i.e.  omitting
-+              any clear bits in bit-mask)
-+
-+Examples:
-+	clkenab {
-+		compatible = "img,tz1090-gate-bank";
-+		#clock-cells = <1>;
-+		reg = <0x0200590c 0x4>;
-+		bit-mask = <0x020b7220>;
-+		clock-output-names =
-+			"out0_en",
-+			"out1_en",
-+			"i2s_en",
-+			"scb_en",
-+			"uart_en",
-+			"ext_stc1_en",
-+			"ext_stc1_en",
-+			"usb_en",
-+			"adcpll_en";
-+		clocks =
-+			<&clkswitch 5>,
-+			<&clkswitch 9>,
-+			<&clkswitch 12>,
-+			<&clkswitch 13>,
-+			<&clkswitch 14>,
-+			<&clkswitch 15>,
-+			<&clkswitch 16>,
-+			<&clkswitch 18>,
-+			<&clkswitch 24>;
-+	};
++/**
++ * clk_register_divider_mask - register a mask based divider clock with
++ * the clock framework
++ * @dev: device registering this clock
++ * @name: name of this clock
++ * @parent_name: name of clock's parent
++ * @flags: framework-specific flags
++ * @reg: register address to adjust divider
++ * @mask: mask of bitfield
++ * @width: width of the bitfield
++ * @clk_divider_flags: divider-specific flags for this clock
++ * @table: array of divider/value pairs ending with a div set to 0
++ * @lock: shared register lock for this clock
++ */
++struct clk *clk_register_divider_mask(struct device *dev, const char *name,
++		const char *parent_name, unsigned long flags,
++		void __iomem *reg, u8 shift, u32 mask,
++		u8 clk_divider_flags, const struct clk_div_table *table,
++		spinlock_t *lock)
++{
++	return _register_divider(dev, name, parent_name, flags, reg, shift,
++			mask, clk_divider_flags, table, lock);
++}
++EXPORT_SYMBOL_GPL(clk_register_divider_mask);
+diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+index 2c00215..85048fb 100644
+--- a/include/linux/clk-provider.h
++++ b/include/linux/clk-provider.h
+@@ -361,6 +361,11 @@ struct clk *clk_register_divider_table(struct device *dev, const char *name,
+ 		void __iomem *reg, u8 shift, u8 width,
+ 		u8 clk_divider_flags, const struct clk_div_table *table,
+ 		spinlock_t *lock);
++struct clk *clk_register_divider_mask(struct device *dev, const char *name,
++		const char *parent_name, unsigned long flags,
++		void __iomem *reg, u8 shift, u32 mask,
++		u8 clk_divider_flags, const struct clk_div_table *table,
++		spinlock_t *lock);
+ 
+ /**
+  * struct clk_mux - multiplexer clock
 -- 
 2.0.4
