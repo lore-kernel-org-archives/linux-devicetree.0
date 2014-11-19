@@ -1,241 +1,148 @@
-From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 08/15] clk: tz1090: add mux bank clock driver
-Date: Wed, 19 Nov 2014 23:15:36 +0000
-Message-ID: <1416438943-11429-9-git-send-email-james.hogan@imgtec.com>
+From: James Hogan <james.hogan@imgtec.com>
+Subject: [PATCH 14/15] clk: tz1090: add divider clock driver
+Date: Wed, 19 Nov 2014 23:15:42 +0000
+Message-ID: <1416438943-11429-15-git-send-email-james.hogan@imgtec.com>
 References: <1416438943-11429-1-git-send-email-james.hogan@imgtec.com>
-Return-path: <linux-metag-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416438943-11429-1-git-send-email-james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: linux-metag-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-metag-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1416438943-11429-1-git-send-email-james.hogan@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>, linux-metag@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: James Hogan <james.hogan@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a clock driver for banks of clock muxes in the TZ1090 SoC. A single
-32 bit register controls up to 32 separate clock muxes. The driver
-instantiates separate generic clock muxes. The clock operations are
-wrapped in order to acquire and release the Meta global exclusive lock
-(__global_lock2) to ensure atomicity with other non-Linux cores and
-threads which may need to control some of the clocks.
+Add driver for TZ1090 clock divider, which divides an input clock by an
+integer.
 
-Signed-off-by: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-metag-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Two policy decisions are made depending on the MMIO address of the
+divider:
+- The UART clock divider sets CLK_SET_RATE_PARENT so that clock changes
+  can propagate up to the CLK_UART_SW mux which allows more precision to
+  be achieved.
+- The Meta clock divider sets CLK_DIVIDER_READ_ONLY to prevent it being
+  changed dynamically. This is normally set by the bootloader along with
+  the system PLL and has a whole bunch of derivative peripheral clocks.
+
+Signed-off-by: James Hogan <james.hogan@imgtec.com>
+Cc: Mike Turquette <mturquette@linaro.org>
+Cc: linux-metag@vger.kernel.org
 ---
- drivers/clk/tz1090/Makefile              |   1 +
- drivers/clk/tz1090/clk-tz1090-mux-bank.c | 191 +++++++++++++++++++++++++++++++
- 2 files changed, 192 insertions(+)
- create mode 100644 drivers/clk/tz1090/clk-tz1090-mux-bank.c
+ drivers/clk/tz1090/Makefile             |  1 +
+ drivers/clk/tz1090/clk-tz1090-divider.c | 96 +++++++++++++++++++++++++++++++++
+ 2 files changed, 97 insertions(+)
+ create mode 100644 drivers/clk/tz1090/clk-tz1090-divider.c
 
 diff --git a/drivers/clk/tz1090/Makefile b/drivers/clk/tz1090/Makefile
-index ce36250..ee6a6fe 100644
+index 92e38a8..529c79c 100644
 --- a/drivers/clk/tz1090/Makefile
 +++ b/drivers/clk/tz1090/Makefile
-@@ -1,3 +1,4 @@
+@@ -1,5 +1,6 @@
  # Makefile for TZ1090-specific clocks
+ obj-y		+= clk-tz1090-deleter.o
++obj-y		+= clk-tz1090-divider.o
  obj-y		+= clk-tz1090-gate-bank.o
-+obj-y		+= clk-tz1090-mux-bank.o
- obj-y		+= clk-tz1090-pll.o
-diff --git a/drivers/clk/tz1090/clk-tz1090-mux-bank.c b/drivers/clk/tz1090/clk-tz1090-mux-bank.c
+ obj-y		+= clk-tz1090-mux-bank.o
+ obj-y		+= clk-tz1090-pdc.o
+diff --git a/drivers/clk/tz1090/clk-tz1090-divider.c b/drivers/clk/tz1090/clk-tz1090-divider.c
 new file mode 100644
-index 0000000..d9a2345
+index 0000000..92788f1
 --- /dev/null
-+++ b/drivers/clk/tz1090/clk-tz1090-mux-bank.c
-@@ -0,0 +1,191 @@
++++ b/drivers/clk/tz1090/clk-tz1090-divider.c
+@@ -0,0 +1,96 @@
 +/*
-+ * Copyright (C) 2013 Imagination Technologies Ltd.
++ * Copyright (C) 2011 Sascha Hauer, Pengutronix <s.hauer@pengutronix.de>
++ * Copyright (C) 2011 Richard Zhao, Linaro <richard.zhao@linaro.org>
++ * Copyright (C) 2011-2012 Mike Turquette, Linaro Ltd <mturquette@linaro.org>
++ * Copyright (C) 2014 Imagination Technologies Ltd.
 + *
-+ * This program is free software; you can redistribute it and/or modify it under
-+ * the terms of the GNU General Public License version 2 as published by the
-+ * Free Software Foundation.
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
 + *
-+ * TZ1090 Clock mux bank
++ * Basic clock divider in TZ1090 SoC.
 + */
 +
 +#include <linux/clk-provider.h>
 +#include <linux/err.h>
 +#include <linux/io.h>
-+#include <linux/module.h>
 +#include <linux/of.h>
 +#include <linux/of_address.h>
-+#include <linux/slab.h>
-+#include <asm/global_lock.h>
++
++#define CR_TOP_UARTCLK_DIV 0x02005928
++#define CR_TOP_META_CLKDIV 0x02005918
 +
 +/**
-+ * struct clk_tz1090_mux - tz1090 multiplexer clock
-+ *
-+ * @mux:	the parent class
-+ * @ops:	pointer to clk_ops of parent class
-+ *
-+ * Clock with multiple selectable parents. Extends basic mux by using a global
-+ * exclusive lock when read-modify-writing the mux field so that multiple
-+ * threads/cores can use different fields in the same register.
++ * tz1090_divider_policy() - Apply policy based on the specific divider.
++ * @res:		MMIO resource.
++ * @flags:		Clock flags to be modified depending on the divider.
++ * @divider_flags:	Divider flags to be modified depending on the divider.
 + */
-+struct clk_tz1090_mux {
-+	struct clk_mux		mux;
-+	const struct clk_ops	*ops;
-+};
-+
-+static inline struct clk_tz1090_mux *to_clk_tz1090_mux(struct clk_hw *hw)
++static void tz1090_divider_policy(const struct resource *res,
++				  unsigned long *flags, u8 *divider_flags)
 +{
-+	struct clk_mux *mux = container_of(hw, struct clk_mux, hw);
-+
-+	return container_of(mux, struct clk_tz1090_mux, mux);
-+}
-+
-+static u8 clk_tz1090_mux_get_parent(struct clk_hw *hw)
-+{
-+	struct clk_tz1090_mux *mux = to_clk_tz1090_mux(hw);
-+
-+	return mux->ops->get_parent(&mux->mux.hw);
-+}
-+
-+/* Acquire exclusive lock since other cores may access the same register */
-+static int clk_tz1090_mux_set_parent(struct clk_hw *hw, u8 index)
-+{
-+	struct clk_tz1090_mux *mux = to_clk_tz1090_mux(hw);
-+	int ret;
-+	unsigned long flags;
-+
-+	__global_lock2(flags);
-+	ret = mux->ops->set_parent(&mux->mux.hw, index);
-+	__global_unlock2(flags);
-+
-+	return ret;
-+}
-+
-+static long clk_tz1090_mux_determine_rate(struct clk_hw *hw, unsigned long rate,
-+				     unsigned long *prate,
-+				     struct clk **best_parent)
-+{
-+	struct clk_tz1090_mux *mux = to_clk_tz1090_mux(hw);
-+
-+	return mux->ops->determine_rate(&mux->mux.hw, rate, prate, best_parent);
-+}
-+
-+static const struct clk_ops clk_tz1090_mux_ops = {
-+	.get_parent = clk_tz1090_mux_get_parent,
-+	.set_parent = clk_tz1090_mux_set_parent,
-+	.determine_rate = clk_tz1090_mux_determine_rate,
-+};
-+
-+struct clk *__init
-+clk_register_tz1090_mux(const char *name, const char **parent_names,
-+			unsigned long flags, void __iomem *reg, u8 shift,
-+			u8 clk_mux_flags)
-+{
-+	struct clk_tz1090_mux *mux;
-+	struct clk *clk;
-+	struct clk_init_data init;
-+
-+	/* allocate the mux */
-+	mux = kzalloc(sizeof(struct clk_tz1090_mux), GFP_KERNEL);
-+	if (!mux)
-+		return ERR_PTR(-ENOMEM);
-+
-+	init.name = name;
-+	init.ops = &clk_tz1090_mux_ops;
-+	init.flags = flags | CLK_IS_BASIC;
-+	init.parent_names = parent_names;
-+	init.num_parents = 2;
-+
-+	/* struct clk_mux assignments */
-+	mux->mux.reg = reg;
-+	mux->mux.shift = shift;
-+	mux->mux.mask = 0x1;
-+	mux->mux.flags = clk_mux_flags;
-+	mux->mux.hw.init = &init;
-+
-+	/* struct clk_tz1090_mux assignments */
-+	mux->ops = &clk_mux_ops;
-+
-+	clk = clk_register(NULL, &mux->mux.hw);
-+
-+	if (IS_ERR(clk))
-+		kfree(mux);
-+
-+	return clk;
++	switch (res->start) {
++	case CR_TOP_UARTCLK_DIV:
++		/*
++		 * UART clock changes must propagate up to CLK_UART_SW, which
++		 * muxes between XTAL1 and sys_clk_undeleted, in order to get
++		 * enough precision.
++		 */
++		*flags |= CLK_SET_RATE_PARENT;
++		break;
++	case CR_TOP_META_CLKDIV:
++		/*
++		 * The output of this divider is sys_clk_undeleted. It is set up
++		 * by the bootloader along with the system PLL, and has a whole
++		 * bunch of derivative peripheral clocks. It would be a really
++		 * bad idea to allow it to change on the fly.
++		 */
++		*divider_flags |= CLK_DIVIDER_READ_ONLY;
++		break;
++	}
 +}
 +
 +/**
-+ * of_tz1090_mux_bank_setup() - Setup function for mux bank in TZ1090
++ * tz1090_divider_clk_setup() - Setup function for TZ1090 divider clock.
++ * @node:	DT node.
 + */
-+static void __init of_tz1090_mux_bank_setup(struct device_node *node)
++static void tz1090_divider_clk_setup(struct device_node *node)
 +{
 +	struct clk *clk;
 +	const char *clk_name = node->name;
 +	void __iomem *reg;
-+	const char *parent_name[2];
-+	u32 mask;
-+	unsigned int shift, i, j;
-+	unsigned int successes = 0;
-+	struct clk_onecell_data *provider_data = NULL;
-+	int count;
++	const char *parent_name;
++	unsigned long flags = 0;
++	u8 divider_flags = 0;
++	u32 mask = 0;
++	u32 shift = 0;
++	struct resource res;
 +
-+	if (of_property_read_u32(node, "bit-mask", &mask))
-+		return;
++	of_property_read_string(node, "clock-output-names", &clk_name);
 +
-+	count = of_property_count_strings(node, "clock-output-names");
-+	if (count < 1)
-+		return;
++	parent_name = of_clk_get_parent_name(node, 0);
 +
 +	reg = of_iomap(node, 0);
 +	if (!reg) {
-+		pr_err("%s(%s): of_iomap failed\n",
-+		       __func__, clk_name);
++		pr_err("%s: no memory mapped for property reg\n", __func__);
 +		return;
 +	}
 +
-+	provider_data = kzalloc(sizeof(*provider_data), GFP_KERNEL);
-+	if (!provider_data)
-+		goto done;
-+	provider_data->clks = kcalloc(count, sizeof(provider_data->clks[0]),
-+				      GFP_KERNEL);
-+	if (!provider_data->clks)
-+		goto done;
-+
-+	for (i = 0; mask && i < count; ++i) {
-+		/* Find next set bit in mask */
-+		shift = ffs(mask) - 1;
-+		mask &= ~BIT(shift);
-+
-+		if (of_property_read_string_index(node, "clock-output-names", i,
-+						  &clk_name))
-+			goto done;
-+
-+
-+		for (j = 0; j < 2; ++j) {
-+			parent_name[j] = of_clk_get_parent_name(node, i*2 + j);
-+			if (!parent_name[j])
-+				goto done;
-+		}
-+
-+		++provider_data->clk_num;
-+		clk = clk_register_tz1090_mux(clk_name, parent_name,
-+					      CLK_SET_RATE_PARENT, reg, shift,
-+					      0);
-+		if (!IS_ERR(clk))
-+			++successes;
-+		provider_data->clks[i] = clk;
-+	}
-+done:
-+
-+	if (!successes) {
-+		if (provider_data) {
-+			kfree(provider_data->clks);
-+			kfree(provider_data);
-+		}
-+		iounmap(reg);
++	if (of_property_read_u32(node, "bit-mask", &mask)) {
++		pr_err("%s: missing bit-mask property for %s\n",
++		       __func__, node->name);
 +		return;
 +	}
 +
-+	of_clk_add_provider(node, of_clk_src_onecell_get, provider_data);
++	/* Apply policy decisions depending on which divider this is */
++	if (of_address_to_resource(node, 0, &res))
++		return;
++	tz1090_divider_policy(&res, &flags, &divider_flags);
++
++	clk = clk_register_divider_mask(NULL, clk_name, parent_name, flags, reg,
++					shift, mask, divider_flags, NULL, NULL);
++
++	if (!IS_ERR(clk))
++		of_clk_add_provider(node, of_clk_src_simple_get, clk);
 +}
-+CLK_OF_DECLARE(tz1090_mux_bank_clk, "img,tz1090-mux-bank",
-+	       of_tz1090_mux_bank_setup);
++CLK_OF_DECLARE(divider_clk, "img,tz1090-divider", tz1090_divider_clk_setup);
 -- 
 2.0.4
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-metag" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
