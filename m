@@ -1,154 +1,44 @@
-From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RFC] adp1653: Add device tree bindings for LED controller
-Date: Wed, 19 Nov 2014 10:45:09 +0100
-Message-ID: <546C66A5.6060201@samsung.com>
-References: <20141116075928.GA9763@amd>
- <20141117145857.GO8907@valkosipuli.retiisi.org.uk>
- <546AFEA5.9020000@samsung.com> <20141118084603.GC4059@amd>
- <546B19C8.2090008@samsung.com> <20141118113256.GA10022@amd>
- <546B40FA.2070409@samsung.com> <20141118132159.GA21089@amd>
- <546B6D86.8090701@samsung.com> <20141118165148.GA11711@amd>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH V8 00/14] drm/exynos: few patches to enhance bridge chip
+ support
+Date: Wed, 19 Nov 2014 10:51:49 +0100
+Message-ID: <546C6835.7040802@collabora.co.uk>
+References: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com>	<CAEC9eQOrKw2Z1q-ztFfadXmsL3CTcAkkv9kcS2QnDOAVSh2AuQ@mail.gmail.com>	<546C646C.4060303@collabora.co.uk> <CAEC9eQPz_7QeL7EDorb-OxiTjcb1tVUDbEbzbER4Yu2wSNNaxQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20141118165148.GA11711@amd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Cc: pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org, sre-GFxCN5SEZAc@public.gmane.org, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, freemangordon-uiMcrn6V0Vs@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAEC9eQPz_7QeL7EDorb-OxiTjcb1tVUDbEbzbER4Yu2wSNNaxQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Ajay kumar <ajaynumb@gmail.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, InKi Dae <inki.dae@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Sean Paul <seanpaul@google.com>, Thierry Reding <thierry.reding@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>, gustavo Padovan <gustavo.padovan@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel, Sakari,
+Hello Ajay,
 
-On 11/18/2014 05:51 PM, Pavel Machek wrote:
-> Hi!
->
->>> If the hardware LED changes with one that needs different current, the
->>> block for the adp1653 stays the same, but white LED block should be
->>> updated with different value.
->>
->> I think that you are talking about sub nodes. Indeed I am leaning
->> towards this type of design.
->
-> I think I am :-).
->
->>>> I agree that flash-timeout should be per led - an array, similarly
->>>> as in case of iout's.
->>>
->>> Agreed about per-led, disagreed about the array. As all the fields
->>> would need arrays, and as LED system currently does not use arrays for
->>> label and linux,default-trigger, I believe we should follow existing
->>> design and model it as three devices. (It _is_ physically three devices.)
->>
->> Right, I missed that the leds/common.txt describes child node.
->>
->> I propose following modifications to the binding:
->>
->> Optional properties for child nodes:
->> - iout-mode-led : 	maximum intensity in microamperes of the LED
->> 		  	(torch LED for flash devices)
->> - iout-mode-flash : 	initial intensity in microamperes of the
->> 			flash LED; it is required to enable support
->> 			for the flash led
->> - iout-mode-indicator : initial intensity in microamperes of the
->> 			indicator LED; it is required to enable support
->> 			for the indicator led
->> - max-iout-mode-led : 	maximum intensity in microamperes of the LED
->> 		  	(torch LED for flash devices)
->> - max-iout-mode-flash : maximum intensity in microamperes of the
->> 			flash LED
->> - max-iout-mode-indicator : maximum intensity in microamperes of the
->> 			indicator LED
->> - flash-timeout :	timeout in microseconds after which flash
->> 			led is turned off
->
-> Ok, I took a look, and "iout" is notation I understand, but people may
-> have trouble with and I don't see it used anywhere else.
->
-> Also... do we need both "current" and "max-current" properties?
->
-> But regulators already have "regulator-max-microamp" property. So what
-> about:
->
-> max-microamp : 	maximum intensity in microamperes of the LED
->   		  	(torch LED for flash devices)
-> max-flash-microamp : 	initial intensity in microamperes of the
->   			flash LED; it is required to enable support
->   			for the flash led
-> flash-timeout-microseconds : timeout in microseconds after which flash
->   			led is turned off
->
-> If you had indicator on the same led, I guess
->
-> indicator-microamp : recommended intensity in microamperes of the LED
-> 		         for indication
->
-> ...would do?
+On 11/19/2014 10:38 AM, Ajay kumar wrote:
+> Hi Javier,
+> 
+> In the cover letter, I have mentioned that it is tested on Linus tree:
+> 
+> "This series is based on master branch of Linus tree at:
+> git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git"
+> 
+> Kindly test the patches with that.
+> 
 
+That's what I did... Linus' master branch is a moving target and if you
+look at his current HEAD, it is commit fc14f9c1 ("Linux 3.18-rc5") but
+as I said before, at least two patches that are needed didn't land in
+Linus' tree yet. These are:
 
-Ongoing discussion allowed me for taking a look at the indicator issue
-from different perspective. This is also vital for the issue of
-whether a v4l2-flash sub-device should be created per device or
-per sub-led [1].
+0ef76ae ("ARM: exynos_defconfig: Enable options for display panel support")
+e35e305 ("drm/panel: simple: Add AUO B116XW03 panel support")
 
-Currently each sub-led is represented as a separate device tree
-sub node and the led drivers create separate LED class device for the
-sub nodes. What this implies is that indicator led also must be
-represented by the separate LED class device.
+IOW, linux.git master branch + this series is not enough to have display
+working AFAICT so I was wondering if I'm missing something else.
 
-This is contrary to the way how V4L2 Flash API approaches this issue,
-as it considers a flash device as a regulator chip driven through
-a bus. The API allows to set the led in torch or flash mode and
-implicitly assumes that there can be additional indicator led
-supported, which can't be turned on separately, but the drivers apply
-the indicator current to the indicator led when the torch or flash led
-is activated.
+Do you have a public tree somewhere with the branch you are using to test?
 
-I propose to create separate v4l2-flash device for the indicator led,
-and treat it as a regular sub-led similarly like it is done in the
-LED subsystem. LED Flash class driver would only add a flag
-LED_DEV_CAP_INDICATOR and basing on it the v4l2-flash sub-device
-would create only V4L2_CID_FLASH_INDICATOR_INTENSITY control for it.
-There could ba also additional control added:
-V4L2_CID_FLASH_INDICATOR_PATTERN to support the feature
-supported by some LED class drivers.
-
- From the media device perspective such an approach would
-be harmful, as the indicator led could be turned on right
-before strobing the flash or turning the torch on, by
-separate calls to different v4l2-flash sub-devices.
-
-The design described above would allow for avoiding issues I touched
-in the message [1].
-
-Regarding DT documentation:
-
-I would also swap the segments of a property name to follow the 
-convention as in case of "regulator-max-microamp".
-
-Updated version:
-
-==========================================================
-
-Optional properties for child nodes:
-- max-microamp : maximum intensity in microamperes of the LED
-		 (torch LED for flash devices)
-- flash-max-microamp : maximum intensity in microamperes of the
-		       flash LED; it is mandatory if the led should
-		       support the flash mode
-- flash-timeout-microsec : timeout in microseconds after which the flash
-		           led is turned off
-- indicator-pattern : identifier of the blinking pattern for the
-		      indicator led
-
-==========================================================
-
-Regards,
-Jacek
-
-[1] 
-http://permalink.gmane.org/gmane.linux.drivers.video-input-infrastructure/84643
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Javier
