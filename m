@@ -1,98 +1,87 @@
-From: Mikko Perttunen <mikko.perttunen@kapsi.fi>
-Subject: Re: [PATCHv4 1/1] thermal: of: improve of-thermal sensor registration
- API
-Date: Wed, 19 Nov 2014 17:43:20 +0200
-Message-ID: <546CBA98.1040607@kapsi.fi>
-References: <1416321575-18348-1-git-send-email-edubezval@gmail.com> <1416321575-18348-2-git-send-email-edubezval@gmail.com> <546CBA3C.9020709@kapsi.fi>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 6/6] ARM: at91/dt: add ISI node
+Date: Wed, 19 Nov 2014 16:51:07 +0100
+Message-ID: <546CBC6B.2040408@atmel.com>
+References: <1412093987-30241-1-git-send-email-boris.brezillon@free-electrons.com> <1412093987-30241-7-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <546CBA3C.9020709@kapsi.fi>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>, Linux PM <linux-pm@vger.kernel.org>
-Cc: Caesar Wang <caesar.wang@rock-chips.com>, Wei Ni <wni@nvidia.com>, Lukasz Majewski <l.majewski@samsung.com>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.de>, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, lm-sensors@lm-sensors.org, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Zhang Rui <rui.zhang@intel.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1412093987-30241-7-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/19/2014 05:41 PM, Mikko Perttunen wrote:
-> On 11/18/2014 04:39 PM, Eduardo Valentin wrote:
->> Different drivers request API extensions in of-thermal. For this reason,
->> additional callbacks are required to fit the new drivers needs.
->>
->> The current API implementation expects the registering sensor driver
->> to provide a get_temp and get_trend callbacks as function parameters.
->> As the amount of callbacks is growing, this patch changes the existing
->> implementation to use a .ops field to hold all the of thermal callbacks
->> to sensor drivers.
->>
->> This patch also changes the existing of-thermal users to fit the new
->> API design. No functional change is introduced in this patch.
->>
->> Cc: Alexandre Courbot <gnurou@gmail.com>
->> Cc: devicetree@vger.kernel.org
->> Cc: Grant Likely <grant.likely@linaro.org>
->> Cc: Guenter Roeck <linux@roeck-us.net>
->> Cc: Jean Delvare <jdelvare@suse.de>
->> Cc: linux-kernel@vger.kernel.org
->> Cc: linux-pm@vger.kernel.org
->> Cc: linux-tegra@vger.kernel.org
->> Cc: lm-sensors@lm-sensors.org
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Stephen Warren <swarren@wwwdotorg.org>
->> Cc: Thierry Reding <thierry.reding@gmail.com>
->> Cc: Zhang Rui <rui.zhang@intel.com>
->> Reviewed-by: Lukasz Majewski <l.majewski@samsung.com>
->> Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
->> ---
->>   drivers/hwmon/lm75.c                               |  9 +++--
->>   drivers/hwmon/ntc_thermistor.c                     |  6 +++-
->>   drivers/hwmon/tmp102.c                             |  6 +++-
->>   drivers/thermal/of-thermal.c                       | 40
->> ++++++++++------------
->>   drivers/thermal/tegra_soctherm.c                   |  7 ++--
->>   drivers/thermal/ti-soc-thermal/ti-thermal-common.c |  8 +++--
->>   include/linux/thermal.h                            | 24 +++++++++----
->>   7 files changed, 63 insertions(+), 37 deletions(-)
->> ---
->> Difference from V3:
->>    - Keep the same behavior regarding callback checks.
->>      Change in behavior may be sent in a separate patch.
->> Difference from V2:
->>    - Fix wrong assignment in tegra driver.
->> Difference from V1:
->>    - Fix error handling when .get_trend is not provided.
->>
->> @@ -356,8 +356,8 @@ thermal_zone_of_add_sensor(struct device_node *zone,
->>    *             than one sensors
->>    * @data: a private pointer (owned by the caller) that will be passed
->>    *        back, when a temperature reading is needed.
->> - * @get_temp: a pointer to a function that reads the sensor temperature.
->> - * @get_trend: a pointer to a function that reads the sensor
->> temperature trend.
->> + * @ops: struct thermal_zone_of_device *. Must contain at least
->> .get_trend and
->> + *       .get_temp.
->
-> This comment seems to be incorrect, as .get_trend is optional.
+On 30/09/2014 18:19, Boris Brezillon :
+> Add ISI (Image Sensor Interface) DT node.
+> 
+> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Also, the parameter is of type struct thermal_zone_of_device_ops *, not 
-just thermal_zone_of_device.
+I take this one for at91-3.19-dt2
 
->
->>    *
->>    * This function will search the list of thermal zones described in
->> device
->>    * tree and look for the zone that refer to the sensor device
->> pointed by
->
-> With that minor one fixed,
->
-> Tested-by: Mikko Perttunen <mikko.perttunen@kapsi.fi>
-> Reviewed-by: Mikko Perttunen <mikko.perttunen@kapsi.fi>
->
-> Cheers,
-> Mikko
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-tegra" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks, best regards.
+
+> ---
+>  arch/arm/boot/dts/at91sam9g45.dtsi | 32 ++++++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+> index 790c890..5d8746a 100644
+> --- a/arch/arm/boot/dts/at91sam9g45.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+> @@ -804,6 +804,27 @@
+>  					};
+>  				};
+>  
+> +				isi {
+> +					pinctrl_isi: isi-0 {
+> +						atmel,pins = <AT91_PIOB 8 AT91_PERIPH_B AT91_PINCTRL_NONE /* D8 */
+> +							      AT91_PIOB 9 AT91_PERIPH_B AT91_PINCTRL_NONE /* D9 */
+> +							      AT91_PIOB 10 AT91_PERIPH_B AT91_PINCTRL_NONE /* D10 */
+> +							      AT91_PIOB 11 AT91_PERIPH_B AT91_PINCTRL_NONE /* D11 */
+> +							      AT91_PIOB 20 AT91_PERIPH_A AT91_PINCTRL_NONE /* D0 */
+> +							      AT91_PIOB 21 AT91_PERIPH_A AT91_PINCTRL_NONE /* D1 */
+> +							      AT91_PIOB 22 AT91_PERIPH_A AT91_PINCTRL_NONE /* D2 */
+> +							      AT91_PIOB 23 AT91_PERIPH_A AT91_PINCTRL_NONE /* D3 */
+> +							      AT91_PIOB 24 AT91_PERIPH_A AT91_PINCTRL_NONE /* D4 */
+> +							      AT91_PIOB 25 AT91_PERIPH_A AT91_PINCTRL_NONE /* D5 */
+> +							      AT91_PIOB 26 AT91_PERIPH_A AT91_PINCTRL_NONE /* D6 */
+> +							      AT91_PIOB 27 AT91_PERIPH_A AT91_PINCTRL_NONE /* D7 */
+> +							      AT91_PIOB 28 AT91_PERIPH_A AT91_PINCTRL_NONE /* PCK */
+> +							      AT91_PIOB 29 AT91_PERIPH_A AT91_PINCTRL_NONE /* VSYNC */
+> +							      AT91_PIOB 30 AT91_PERIPH_A AT91_PINCTRL_NONE /* HSYNC */
+> +							      AT91_PIOB 31 AT91_PERIPH_A AT91_PINCTRL_NONE /* MCK */>;
+> +					};
+> +				};
+> +
+>  				pioA: gpio@fffff200 {
+>  					compatible = "atmel,at91rm9200-gpio";
+>  					reg = <0xfffff200 0x200>;
+> @@ -1029,6 +1050,17 @@
+>  				};
+>  			};
+>  
+> +			isi@fffb4000 {
+> +				compatible = "atmel,at91sam9g45-isi";
+> +				reg = <0xfffb4000 0x4000>;
+> +				interrupts = <26 IRQ_TYPE_LEVEL_HIGH 5>;
+> +				clocks = <&isi_clk>;
+> +				clock-names = "isi_clk";
+> +				pinctrl-names = "default";
+> +				pinctrl-0 = <&pinctrl_isi>;
+> +				status = "disabled";
+> +			};
+> +
+>  			pwm0: pwm@fffb8000 {
+>  				compatible = "atmel,at91sam9rl-pwm";
+>  				reg = <0xfffb8000 0x300>;
+> 
+
+
+-- 
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
