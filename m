@@ -1,82 +1,50 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] clk_mux: Fix set_parent doing the wrong
- thing when INDEX_BIT && index >= 3
-Date: Wed, 19 Nov 2014 14:04:49 -0800
-Message-ID: <20141119220449.25314.56163@quantum>
-References: <1416404939-609-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Courtney Cavin <courtney.cavin@sonymobile.com>
+Subject: Re: [PATCH 9/9] ARM: dts: Model IPQ LPASS audio hardware
+Date: Wed, 19 Nov 2014 14:54:43 -0800
+Message-ID: <20141119225443.GB13013@sonymobile.com>
+References: <1416423169-21865-1-git-send-email-kwestfie@codeaurora.org>
+ <1416423169-21865-10-git-send-email-kwestfie@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDO333VC4INBBBVIWSRQKGQEQLEZLNY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1416404939-609-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-Cc: Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1416423169-21865-10-git-send-email-kwestfie@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kenneth Westfield <kwestfie@codeaurora.org>
+Cc: ALSA Mailing List <alsa-devel@alsa-project.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, Greg KH <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Hans de Goede (2014-11-19 05:48:59)
-> If CLK_MUX_INDEX_BIT is set, then each bit turns on / off a single parent,
-> so theoretically multiple parents could be enabled at the same time, but in
-> practice only one bit should ever be 1. So to select parent 0, set
-> the register (*) to 0x01, to select parent 1 set it 0x02, parent 2, 0x04,
-> parent 3, 0x08, etc.
+On Wed, Nov 19, 2014 at 07:52:49PM +0100, Kenneth Westfield wrote:
+> From: Kenneth Westfield <kwestfie@codeaurora.org>
 > 
-> But the current code does:
+> Model the LPASS audio hardware for the IPQ806X.
 > 
->                 if (mux->flags & CLK_MUX_INDEX_BIT)
->                         index = (1 << ffs(index));
-> 
-> Which means that:
-> 
-> For an input index of 0, ffs returns 0, so we set the register
-> to 0x01, ok.
-> 
-> For an input index of 1, ffs returns 1, so we set the register
-> to 0x02, ok.
-> 
-> For an input index of 2, ffs returns 2, so we set the register
-> to 0x04, ok.
-> 
-> For an input index of 3, ffs returns 1, so we set the register
-> to 0x02, not good!
-> 
-> The code should simply be:
-> 
->                 if (mux->flags & CLK_MUX_INDEX_BIT)
->                         index = 1 << index;
-> 
-> Which always does the right thing, this commit fixes this.
-> 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Change-Id: Ide1aa0d09c23d4496aa9c40e3c9878a968261f11
 
-Applied to clk-next towards 3.19. I don't think any merged platforms are
-hitting this bug in the field so I've not put it into -fixes.
+As Kumar mentioned, please exclude this.
 
-Thanks,
-Mike
+> Signed-off-by: Kenneth Westfield <kwestfie@codeaurora.org>
+> Signed-off-by: Banajit Goswami <bgoswami@codeaurora.org>
+
+Typically, the order of these SoB should match some sort of chain of delivery:
+ - The first should be the author of the patch
+ - The last should match the email source (you) <-- doesn't seem to be the case
 
 > ---
->  drivers/clk/clk-mux.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  arch/arm/boot/dts/qcom-ipq8064.dtsi | 33 +++++++++++++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
 > 
-> diff --git a/drivers/clk/clk-mux.c b/drivers/clk/clk-mux.c
-> index 4f96ff3..6e1ecf9 100644
-> --- a/drivers/clk/clk-mux.c
-> +++ b/drivers/clk/clk-mux.c
-> @@ -77,7 +77,7 @@ static int clk_mux_set_parent(struct clk_hw *hw, u8 index)
+> diff --git a/arch/arm/boot/dts/qcom-ipq8064.dtsi b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+> index 63b2146f563b541e4994697af5ee1bbb41a4abd1..0e5b3b625f0442964aa7fbbc993c6c818fe99041 100644
+> --- a/arch/arm/boot/dts/qcom-ipq8064.dtsi
+> +++ b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+> @@ -2,6 +2,7 @@
 >  
->         else {
->                 if (mux->flags & CLK_MUX_INDEX_BIT)
-> -                       index = (1 << ffs(index));
-> +                       index = 1 << index;
->  
->                 if (mux->flags & CLK_MUX_INDEX_ONE)
->                         index++;
-> -- 
-> 2.1.0
-> 
+>  #include "skeleton.dtsi"
+>  #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
+> +#include <dt-bindings/clock/qcom,lcc-ipq806x.h>
+
+Neither this file nor an associated clock controller driver exists in
+mainline.  Is there some other series this depends on?
+
+-Courtney
