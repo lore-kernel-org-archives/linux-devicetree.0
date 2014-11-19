@@ -1,45 +1,30 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCHv4 04/10] arm: mvebu: move Armada 370/XP pinctrl node
- definition armada-370-xp.dtsi
-Date: Wed, 19 Nov 2014 09:03:23 +0100
-Message-ID: <20141119080323.GS27002@pengutronix.de>
-References: <cover.1416351425.git.arno@natisbad.org>
- <f4b15c942f543b0c0becd7c82bce07e9e0b603cf.1416351426.git.arno@natisbad.org>
+From: Alexandre Courbot <gnurou@gmail.com>
+Subject: Re: [PATCHv4 1/1] thermal: of: improve of-thermal sensor registration API
+Date: Wed, 19 Nov 2014 17:06:24 +0900
+Message-ID: <CAAVeFu+aUdpV_hj50TAZDO_5JgRmPH2RtJuP7Qozx4RNEzO-6A@mail.gmail.com>
+References: <1416321575-18348-1-git-send-email-edubezval@gmail.com> <1416321575-18348-2-git-send-email-edubezval@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <f4b15c942f543b0c0becd7c82bce07e9e0b603cf.1416351426.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1416321575-18348-2-git-send-email-edubezval@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: Linux PM <linux-pm@vger.kernel.org>, Caesar Wang <caesar.wang@rock-chips.com>, Wei Ni <wni@nvidia.com>, Lukasz Majewski <l.majewski@samsung.com>, Mikko Perttunen <mikko.perttunen@kapsi.fi>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, lm-sensors@lm-sensors.org, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Zhang Rui <rui.zhang@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Arnaud,
+On Tue, Nov 18, 2014 at 11:39 PM, Eduardo Valentin <edubezval@gmail.com> wrote:
+> Different drivers request API extensions in of-thermal. For this reason,
+> additional callbacks are required to fit the new drivers needs.
+>
+> The current API implementation expects the registering sensor driver
+> to provide a get_temp and get_trend callbacks as function parameters.
+> As the amount of callbacks is growing, this patch changes the existing
+> implementation to use a .ops field to hold all the of thermal callbacks
+> to sensor drivers.
+>
+> This patch also changes the existing of-thermal users to fit the new
+> API design. No functional change is introduced in this patch.
 
-On Wed, Nov 19, 2014 at 12:02:11AM +0100, Arnaud Ebalard wrote:
-> +
-> +	sdio_pins: sdio-pins {
-> +		marvell,pins =3D "mpp30", "mpp31", "mpp32",
-> +			       "mpp33", "mpp34", "mpp35";
-> +		marvell,function =3D "sd0";
-> +	};
-> +};
-> \ No newline at end of file
-IMHO you should add this \n at the end.
+A good idea even if no ops were to be added!
 
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
