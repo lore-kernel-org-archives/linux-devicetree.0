@@ -1,47 +1,52 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH v2 2/2] arm: dts: Exynos5: Use pmu_system_controller
- phandle for dp phy
-Date: Wed, 19 Nov 2014 12:36:11 +0100
-Message-ID: <CABxcv=mams-iVBvACLZ-=Ozcs3KcHSEvxAsRSSV-eKaSnrcXSA@mail.gmail.com>
-References: <1414675442-3471-1-git-send-email-gautam.vivek@samsung.com>
-	<1414675442-3471-2-git-send-email-gautam.vivek@samsung.com>
-	<000101cffe30$155793a0$4006bae0$%han@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <000101cffe30$155793a0$4006bae0$%han@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <gautam.vivek@samsung.com>
-Cc: Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: [PATCH 08/10] dt/bindings: add clock-select function property to micrel phy binding
+Date: Wed, 19 Nov 2014 12:59:21 +0100
+Message-ID: <1416398363-32306-9-git-send-email-johan@kernel.org>
+References: <1416398363-32306-1-git-send-email-johan@kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1416398363-32306-1-git-send-email-johan@kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Bruno Thomsen <bth@kamstrup.dk>, Sascha Hauer <s.hauer@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-[adding Kukjin to cc list]
+Add "micrel,rmii-reference-clock-select-25-mhz" to Micrel ethernet PHY
+binding documentation.
 
-Hello Vivek,
+This property is needed to properly describe some revisions of Micrel
+PHYs which has the function of this configuration bit inverted so that
+setting it enables 25 MHz rather than 50 MHz clock mode.
 
-On Wed, Nov 12, 2014 at 5:21 AM, Jingoo Han <jg1.han@samsung.com> wrote:
-> On Thursday, October 30, 2014 10:24 PM, Vivek Gautam wrote:
->>
->> DP PHY now require pmu-system-controller to handle PMU register
->> to control PHY's power isolation. Adding the same to dp-phy
->> node.
->>
->> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
->> Cc: Jingoo Han <jg1.han@samsung.com>
->
-> Reviewed-by: Jingoo Han <jg1.han@samsung.com>
->
+Note that a clock reference ("rmii-ref") is still needed to actually
+select either mode.
 
-Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ Documentation/devicetree/bindings/net/micrel.txt | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Kukjin,
-
-This patch is -rc material and is needed to have display working in
-3.18 again since commit a5ec598 ("phy: exynos-dp-video: Use syscon
-support to control pmu register") landed in 3.18 and broke the Exynos
-Display Port PHY:
-
-exynos-dp-video-phy 10040728.video-phy: Failed to lookup PMU regmap
-
-Best regards,
-Javier
+diff --git a/Documentation/devicetree/bindings/net/micrel.txt b/Documentation/devicetree/bindings/net/micrel.txt
+index 20a6cac7abc6..87496a8c64ab 100644
+--- a/Documentation/devicetree/bindings/net/micrel.txt
++++ b/Documentation/devicetree/bindings/net/micrel.txt
+@@ -19,6 +19,17 @@ Optional properties:
+ 
+ 	See the respective PHY datasheet for the mode values.
+ 
++ - micrel,rmii-reference-clock-select-25-mhz: RMII Reference Clock Select
++						bit selects 25 MHz mode
++
++	Setting the RMII Reference Clock Select bit enables 25 MHz rather
++	than 50 MHz clock mode.
++
++	Note that this option in only needed for certain PHY revisions with a
++	non-standard, inverted function of this configuration bit.
++	Specifically, a clock reference ("rmii-ref" below) is always needed to
++	actually select a mode.
++
+  - clocks, clock-names: contains clocks according to the common clock bindings.
+ 
+ 	supported clocks:
+-- 
+2.0.4
