@@ -1,47 +1,46 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH] ARM: dts: dove: add DT LCD controllers
-Date: Wed, 19 Nov 2014 16:47:13 +0000
-Message-ID: <20141119164713.GJ4042@n2100.arm.linux.org.uk>
-References: <E1Xr3Ur-0005Qx-Fx@rmk-PC.arm.linux.org.uk>
- <20141119174050.122a0cc0@armhf>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 0/3] new Atmel DMA controller
+Date: Wed, 19 Nov 2014 17:54:55 +0100
+Message-ID: <546CCB5F.8040507@atmel.com>
+References: <1413991340-11617-1-git-send-email-ludovic.desroches@atmel.com> <20141106052748.GR1870@intel.com> <546C7903.8090901@atmel.com> <20141119110718.GC2074@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20141119174050.122a0cc0@armhf>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141119110718.GC2074-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 19, 2014 at 05:40:50PM +0100, Jean-Francois Moine wrote:
-> On Wed, 19 Nov 2014 11:32:29 +0000
-> Russell King <rmk+kernel@arm.linux.org.uk> wrote:
-> 
-> > +			lcd1: lcd-controller@810000 {
-> > +				compatible = "marvell,dove-lcd";
-> > +				reg = <0x810000 0x1000>;
-> > +				interrupts = <46>;
-> > +				status = "disabled";
-> > +			};
-> 
-> The I/O range of the LCDs is only 0x1c8. Why do you set it 0x1000?
+On 19/11/2014 12:07, Vinod Koul :
+> On Wed, Nov 19, 2014 at 12:03:31PM +0100, Nicolas Ferre wrote:
+>> On 06/11/2014 06:27, Vinod Koul :
+>>> On Wed, Oct 22, 2014 at 05:22:17PM +0200, Ludovic Desroches wrote:
+>>>> Hi,
+>>>>
+>>>> This set of patches introduces support for the new Atmel DMA controller know as
+>>>> XDMAC and available on SAMA5D4.
+>>>
+>>> Applied all, thanks
+>>
+>> Vinod,
+>>
+>> I saw that you had created a topic branch for this driver: topic/at_xdmac.
+>>
+>> If this branch is stable, can I use it for my work on at91 support and
+>> merge it in my at91-3.19-dt branch before sending it to the arm-soc tree?
+>> In fact I need the binding definitions that are created by the
+>> patch:(dmaengine: at_xdmac: creation of the atmel eXtended DMA
+>> Controller driver).
+> Yup please pull this, this wont be rebased
 
-Actually, a more correct value would be 0x10000, if you read table 145.
-Yes, the device may onlny have documented registers from 0x84 to 0x1c8,
-but that isn't to say that we should say that the device resources
-start at 0x810084 and have a size of 0x144, when the bus level decodes
-a 64K chunk of memory.
+Thanks for your blazing fast answer Vinod. My pull-request is sent now.
 
+Bye,
 -- 
-FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
-according to speedtest.net.
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
