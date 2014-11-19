@@ -1,87 +1,51 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH V2 06/10] serial: pxa: Add fifo-size and
- {big,native}-endian properties
-Date: Wed, 19 Nov 2014 14:49:11 +0000
-Message-ID: <20141119144911.9CA5FC40D73@trevor.secretlab.ca>
-References: <1415825647-6024-1-git-send-email-cernekee@gmail.com>
-	<1415825647-6024-7-git-send-email-cernekee@gmail.com>
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1415825647-6024-7-git-send-email-cernekee@gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>, gregkh@linuxfoundation.org, jslaby@suse.cz, robh@kernel.org
-Cc: arnd@arndb.de, daniel@zonque.org, haojian.zhuang@gmail.com, robert.jarzmik@free.fr, f.fainelli@gmail.com, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] drivers/core/of: Add symlink to device-tree from devices with an OF node
+Date: Wed, 19 Nov 2014 15:49:13 +0100
+Message-ID: <11269246.iBzpsM0jDI@wuerfel>
+References: <1415342031.4925.27.camel@kernel.crashing.org> <3422452.OFUjscQXRB@wuerfel> <CAL_JsqKk5UdFEa02wA+3N5BCM7coWAK=4jAr96Pw5eFh2n0ioQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKk5UdFEa02wA+3N5BCM7coWAK=4jAr96Pw5eFh2n0ioQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jeremy.kerr-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 12 Nov 2014 12:54:03 -0800
-, Kevin Cernekee <cernekee@gmail.com>
- wrote:
-> With a few tweaks, the PXA serial driver can handle other 16550A clones.
-> Add a fifo-size DT property to override the FIFO depth (BCM7xxx uses 32),
-> and {native,big}-endian properties similar to regmap to support SoCs that
-> have BE or "automagic endian" registers.
-
-Hold the phone, if these are 16550A clone ports, then why is the pxa
-driver being adapted to drive them? I would expect the of_serial.c
-driver to be used. It's already got support for multiple variants of the
-16550.
-
-g.
-
+On Wednesday 19 November 2014 08:45:58 Rob Herring wrote:
+> > static inline struct device_node *dev_of_node(struct device *of_node)
+> > {
+> >         if (!IS_ENABLED(CONFIG_OF))
+> >                 return NULL;
+> >
+> >         return dev->of_node;
+> > }
+> >
+> > Adding the IS_ENABLED() in a lot of drivers isn't horrible, but we seem
+> > to be doing it a lot.
 > 
-> Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
-> ---
->  drivers/tty/serial/pxa.c | 18 ++++++++++++++++--
->  1 file changed, 16 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/pxa.c b/drivers/tty/serial/pxa.c
-> index 21b7d8b..21406dc 100644
-> --- a/drivers/tty/serial/pxa.c
-> +++ b/drivers/tty/serial/pxa.c
-> @@ -60,13 +60,19 @@ struct uart_pxa_port {
->  static inline unsigned int serial_in(struct uart_pxa_port *up, int offset)
->  {
->  	offset <<= 2;
-> -	return readl(up->port.membase + offset);
-> +	if (up->port.iotype == UPIO_MEM32BE)
-> +		return ioread32be(up->port.membase + offset);
-> +	else
-> +		return readl(up->port.membase + offset);
->  }
->  
->  static inline void serial_out(struct uart_pxa_port *up, int offset, int value)
->  {
->  	offset <<= 2;
-> -	writel(value, up->port.membase + offset);
-> +	if (up->port.iotype == UPIO_MEM32BE)
-> +		iowrite32be(value, up->port.membase + offset);
-> +	else
-> +		writel(value, up->port.membase + offset);
->  }
->  
->  static void serial_pxa_enable_ms(struct uart_port *port)
-> @@ -833,6 +839,7 @@ static int serial_pxa_probe_dt(struct platform_device *pdev,
->  {
->  	struct device_node *np = pdev->dev.of_node;
->  	int ret;
-> +	u32 val;
->  
->  	if (!np)
->  		return 1;
-> @@ -843,6 +850,13 @@ static int serial_pxa_probe_dt(struct platform_device *pdev,
->  		return ret;
->  	}
->  	sport->port.line = ret;
-> +
-> +	if (of_property_read_u32(np, "fifo-size", &val) == 0)
-> +		sport->port.fifosize = val;
-> +
-> +	sport->port.iotype =
-> +		of_device_is_big_endian(np) ? UPIO_MEM32BE : UPIO_MEM32;
-> +
->  	return 0;
->  }
->  
-> -- 
-> 2.1.1
+> I think you misread things. of_node is always present now, so it
+> should always be NULL for !CONFIG_OF.
 > 
 
+No, I didn't misread it but I should have been clearer with the intention:
+The idea is to tell the compiler that we know it will be NULL when CONFIG_OF
+is unset, so it can optimize out all code that does
+
+	struct device_node *dn = dev_of_node(dev);
+
+	if (dn) {
+		...
+		/* complex code */
+		...
+	}
+
+and we can avoid using an #ifdef or if(IS_ENABLED()) in the source to
+compile out the DT-only sections of a driver.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
