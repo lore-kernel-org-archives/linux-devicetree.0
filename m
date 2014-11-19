@@ -1,15 +1,15 @@
 From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCHv4 02/10] arm: mvebu: add uartX labels for Armada SoC
- serial nodes
-Date: Wed, 19 Nov 2014 13:16:01 +0100
-Message-ID: <20141119131601.606bdad8@free-electrons.com>
+Subject: Re: [PATCHv4 03/10] arm: mvebu: use recently introduced uart label
+ for stdout-path
+Date: Wed, 19 Nov 2014 13:16:38 +0100
+Message-ID: <20141119131638.5e9735a9@free-electrons.com>
 References: <cover.1416351425.git.arno@natisbad.org>
-	<8c622c408d74d5e9fc36b7c00f9e8aeb3f290683.1416351426.git.arno@natisbad.org>
+	<206fa4769a1e02f3e6b139160cd5dd9d25c90837.1416351426.git.arno@natisbad.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8c622c408d74d5e9fc36b7c00f9e8aeb3f290683.1416351426.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <206fa4769a1e02f3e6b139160cd5dd9d25c90837.1416351426.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
 Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
@@ -17,19 +17,18 @@ List-Id: devicetree@vger.kernel.org
 
 Dear Arnaud Ebalard,
 
-On Wed, 19 Nov 2014 00:01:47 +0100, Arnaud Ebalard wrote:
+On Wed, 19 Nov 2014 00:01:59 +0100, Arnaud Ebalard wrote:
 > 
-> This patch adds uartX labels for Armada SoC serial nodes. This is
-> a preliminary work to be able to easily reference the serial lines
-> in Device Tree files. One expected use is when providing stdout-path
-> property for barebox.
+> Now that labels for uartX are available in Marvell Armada .dtsi files,
+> this patch replaces the "/soc/internal-regs/serial@12000" found in
+> armada-xp-lenovo-ix4-300d.dts file for stdout-path property by the more
+> concise &uart0.
 > 
-> Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> Suggested-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 > Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
 > ---
->  arch/arm/boot/dts/armada-370-xp.dtsi | 5 +++--
->  arch/arm/boot/dts/armada-xp.dtsi     | 5 +++--
->  2 files changed, 6 insertions(+), 4 deletions(-)
+>  arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
 Reviewed-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 -- 
