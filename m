@@ -1,73 +1,62 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH V8 00/14] drm/exynos: few patches to enhance bridge chip support
-Date: Wed, 19 Nov 2014 11:19:33 -0800
-Message-ID: <7hwq6ruhfe.fsf@deeprootsystems.com>
-References: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com>
-	<CAEC9eQOrKw2Z1q-ztFfadXmsL3CTcAkkv9kcS2QnDOAVSh2AuQ@mail.gmail.com>
-	<546C646C.4060303@collabora.co.uk>
-	<20141119105527.GA5396@luxor.wired.org>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v2 1/6] clk: shmobile: Deprecate renesas,clock-indices
+Date: Wed, 19 Nov 2014 11:21:04 -0800
+Message-ID: <20141119192104.25314.14333@quantum>
+References: <1415645379-3366-1-git-send-email-geert+renesas@glider.be>
+ <1415645379-3366-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20141119105527.GA5396@luxor.wired.org> (Paolo Pisati's message
-	of "Wed, 19 Nov 2014 11:55:27 +0100")
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Paolo Pisati <p.pisati@gmail.com>
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Ajay kumar <ajaynumb@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, InKi Dae <inki.dae@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Sean Paul <seanpaul@google.com>, Thierry Reding <thierry.reding@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>, gustavo Padovan <gustavo.padovan@collabora.co.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1415645379-3366-2-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Paolo Pisati <p.pisati@gmail.com> writes:
+Quoting Geert Uytterhoeven (2014-11-10 10:49:34)
+> Commit 8e33f91a0b84ae19 ("clk: shmobile: clk-mstp: change to using
+> clock-indices") forgot to replace all occurrences of
+> "renesas,clock-indices" in the driver-specific binding documentation.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Acked-by: Simon Horman <horms+renesas@verge.net.au>
+> Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-> On Wed, Nov 19, 2014 at 10:35:40AM +0100, Javier Martinez Canillas wrote:
->> Hello Ajay,
->> 
->> On 11/18/2014 07:20 AM, Ajay kumar wrote:
->> > On Sat, Nov 15, 2014 at 3:24 PM, Ajay Kumar <ajaykumar.rs@samsung.com> wrote:
->> >> This series is based on master branch of Linus tree at:
->> >> git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
->> 
->> I applied your series on top of 3.18-rc5 + linux-next's commit:
->> 
->> 0ef76ae ("ARM: exynos_defconfig: Enable options for display panel support").
->> 
->> I think you should had mentioned what other patches are needed as a
->> dependency since I spent quite a bit of time figuring out why the
->> ps8622 bridge driver probe was always deferred due of_drm_find_panel()
->> failing and then I noticed that a patch from linux-next was needed:
->> 
->> e35e305 ("drm/panel: simple: Add AUO B116XW03 panel support")
->> 
->> With that commit the ps8622 drm bridge driver probe succeed but I still
->> don't have display working on an Exynos5240 Peach Pit, the kernel log shows:
->> 
->> platform 145b0000.dp-controller: Driver exynos-dp requests probe deferral
->> exynos-drm exynos-drm: bound 14400000.fimd (ops fimd_component_ops)
->> exynos-drm exynos-drm: failed to bind 145b0000.dp-controller (ops exynos_dp_ops): -517
->> exynos-drm exynos-drm: master bind failed: -517
->> platform 145b0000.dp-controller: Driver exynos-dp requests probe deferral
->
-> do you have this in your dmesg?
->
-> ...
-> exynos-dp-video-phy 10040728.video-phy: Failed to lookup PMU regmap
-> ...
->
-> to get a working framebuffer out of linus 318rc4 on my peach pi, i had
-> to cherry pick these 3 patches:
->
-> arm: dts: Exynos5: Use pmu_system_controller phandle for dp phy
-> drm/exynos: dp: Remove support for unused dptx-phy
+Applied to clk-next.
 
-Excellent, thank you for pointing these out.  I've been struggling to
-get the display working on v3.18-rc and had missed these.
+Regards,
+Mike
 
-> ARM: exynos_defconfig: Enable options for display panel support
->
-> Check if you have those.
-
-With the 3 patches you mention, the display is working on my peach-pi as
-well.
-
-Thanks,
-
-Kevin
+> ---
+> v2:
+>   - Drop the reference to "renesas,clock-indices" completely,
+>   - Add Acked-by.
+> ---
+>  .../devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt         | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+> index e566fb79af9e4d37..0a80fa70ca265c0f 100644
+> --- a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+> @@ -27,11 +27,11 @@ Required Properties:
+>      must appear in the same order as the output clocks.
+>    - #clock-cells: Must be 1
+>    - clock-output-names: The name of the clocks as free-form strings
+> -  - renesas,clock-indices: Indices of the gate clocks into the group (0 to 31)
+> +  - clock-indices: Indices of the gate clocks into the group (0 to 31)
+>  
+> -The clocks, clock-output-names and renesas,clock-indices properties contain one
+> -entry per gate clock. The MSTP groups are sparsely populated. Unimplemented
+> -gate clocks must not be declared.
+> +The clocks, clock-output-names and clock-indices properties contain one entry
+> +per gate clock. The MSTP groups are sparsely populated. Unimplemented gate
+> +clocks must not be declared.
+>  
+>  
+>  Example
+> -- 
+> 1.9.1
+> 
