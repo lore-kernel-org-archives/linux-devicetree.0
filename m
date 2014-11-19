@@ -1,397 +1,122 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: Re: [PATCH v2 1/4] pwm: Imagination Technologies PWM DAC driver
-Date: Wed, 19 Nov 2014 15:15:54 -0800
-Message-ID: <CAL1qeaG=tSN_QUSNLpFejss=VS5qk-BJ6vEr3z52BcioJZm54w@mail.gmail.com>
-References: <1415979460-1093-1-git-send-email-naidu.tellapati@imgtec.com>
-	<1415979460-1093-2-git-send-email-naidu.tellapati@imgtec.com>
+From: James Hogan <james.hogan@imgtec.com>
+Subject: [PATCH 00/15] tz1090: add clock components
+Date: Wed, 19 Nov 2014 23:15:28 +0000
+Message-ID: <1416438943-11429-1-git-send-email-james.hogan@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1415979460-1093-2-git-send-email-naidu.tellapati@imgtec.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Naidu Tellapati <naidu.tellapati@imgtec.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, James Hartley <James.Hartley@imgtec.com>, Ezequiel Garcia <Ezequiel.Garcia@imgtec.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Arul Ramasamy <arul.ramasamy@imgtec.com>, Sai Masarapu <Sai.Masarapu@imgtec.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>, linux-metag@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: James Hogan <james.hogan@imgtec.com>, =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>, Heiko Stuebner <heiko@sntech.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Naidu,
+This patchset adds common clock framework support for the TZ1090 SoC.
 
-On Fri, Nov 14, 2014 at 7:37 AM,  <naidu.tellapati@imgtec.com> wrote:
-> From: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
->
-> The Pistachio SOC from Imagination Technologies includes a Pulse Width
-> Modulation DAC which produces 1 to 4 digital bit-outputs which represent
-> digital waveforms. These PWM outputs are primarily in charge of controlling
-> backlight LED devices.
->
-> Signed-off-by: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
-> Signed-off-by: Sai Masarapu <Sai.Masarapu@imgtec.com>
+Patches 1 and 2 are generic and switch clk-divider to use masks
+internally instead of shifts and width. Patch 1 came from Mike's divide=
+r
+DT bindings patchset from a while back. This is required by the TZ1090
+divider binding (patch 13).
 
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index ef2dd2e..7aff57c 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -110,6 +110,17 @@ config PWM_FSL_FTM
->           To compile this driver as a module, choose M here: the module
->           will be called pwm-fsl-ftm.
->
-> +config PWM_IMG
-> +       tristate "Imagination Technologies PWM driver"
-> +       depends on MFD_SYSCON
-> +       depends on HAS_IOMEM
+Patches 3 to 14 add TZ1090 clock types and associated DT bindings,
+specifically:
+* PLLs (True Circuits, but TZ1090 specific register interface)
+* Gate banks (a register containing clock gate bits)
+* Mux banks (a register containing clock mux bits)
+* Clock deleters (delete up to 1023 out of every 1024 clocks)
+* PDC clock (combined divider and mux)
+* Divider clock (pretty basic divider, but specific to TZ1090)
 
-That makes this driver selectable in an awful lot of configurations.
-Perhaps add a depends on MIPS || COMPILE_TEST (and METAG if this IP is
-present on META SoCs)?
+=46inally patch 15 defines most of the TZ1090 clocks using these
+components, with a few placeholders for less interesting clocks from
+more complex components. This is mostly for reference to give an idea
+how the clock components are intended to be used, and I'll take this on=
+e
+through the metag tree when the drivers/clk/ stuff is accepted.
 
-> new file mode 100755
-> index 0000000..49dfd07
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-img.c
-> @@ -0,0 +1,307 @@
-> +/*
-> + * Imagination Technologies Pulse Width Modulator driver
-> + *
-> + * Copyright (c) 2014, Imagination Technologies
-> + *
-> + * Based on drivers/pwm/pwm-tegra.c, Copyright (c) 2010, NVIDIA Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
+James Hogan (14):
+  clk: divider: expose new clk_register_divider_mask
+  dt: binding: add binding for tz1090-pll clock
+  clk: tz1090: add PLL clock driver
+  dt: binding: add binding for TZ1090 gate bank
+  clk: tz1090: add gate bank clock driver
+  dt: binding: add binding for TZ1090 mux bank
+  clk: tz1090: add mux bank clock driver
+  dt: binding: add binding for TZ1090 clock deleter
+  clk: tz1090: add deleter clock driver
+  dt: binding: add binding for TZ1090 PDC clock
+  clk: tz1090: add PDC clock driver
+  dt: binding: add binding for TZ1090 divider clock
+  clk: tz1090: add divider clock driver
+  metag: tz1090: add TZ1090 clocks to device tree
 
-Extra line here.
+Mike Turquette (1):
+  clk: divider: replace bitfield width with mask
 
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +
-> +/* PWM registers */
-> +#define CR_PWM_CTRL_CFG                                0x0000
-> +#define CR_PWM_CTRL_CFG_NO_SUB_DIV             0
-> +#define CR_PWM_CTRL_CFG_SUB_DIV0               1
-> +#define CR_PWM_CTRL_CFG_SUB_DIV1               2
-> +#define CR_PWM_CTRL_CFG_SUB_DIV0_DIV1          3
-> +#define CR_PWM_CTRL_CFG_DIV_MASK_SHIFT(ch)     (ch * 2 + 4)
+ .../bindings/clock/img,tz1090-deleter.txt          |  40 ++
+ .../bindings/clock/img,tz1090-divider.txt          |  37 +
+ .../bindings/clock/img,tz1090-gate-bank.txt        |  52 ++
+ .../bindings/clock/img,tz1090-mux-bank.txt         |  56 ++
+ .../bindings/clock/img,tz1090-pdc-clock.txt        |  44 ++
+ .../devicetree/bindings/clock/img,tz1090-pll.txt   |  33 +
+ arch/arm/mach-imx/clk-busy.c                       |   2 +-
+ arch/arm/mach-imx/clk-fixup-div.c                  |   2 +-
+ arch/metag/Kconfig.soc                             |   1 +
+ arch/metag/boot/dts/tz1090.dtsi                    |   4 +
+ arch/metag/boot/dts/tz1090_clk.dtsi                | 784 +++++++++++++=
+++++++++
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-divider.c                          |  58 +-
+ drivers/clk/mxs/clk-div.c                          |   2 +-
+ drivers/clk/rockchip/clk.c                         |   2 +-
+ drivers/clk/st/clk-flexgen.c                       |   4 +-
+ drivers/clk/st/clkgen-mux.c                        |   4 +-
+ drivers/clk/st/clkgen-pll.c                        |   2 +-
+ drivers/clk/sunxi/clk-sunxi.c                      |   2 +-
+ drivers/clk/ti/divider.c                           |   2 +-
+ drivers/clk/tz1090/Makefile                        |   7 +
+ drivers/clk/tz1090/clk-tz1090-deleter.c            | 188 +++++
+ drivers/clk/tz1090/clk-tz1090-divider.c            |  96 +++
+ drivers/clk/tz1090/clk-tz1090-gate-bank.c          | 199 ++++++
+ drivers/clk/tz1090/clk-tz1090-mux-bank.c           | 191 +++++
+ drivers/clk/tz1090/clk-tz1090-pdc.c                | 185 +++++
+ drivers/clk/tz1090/clk-tz1090-pll.c                | 305 ++++++++
+ include/linux/clk-private.h                        |   2 +-
+ include/linux/clk-provider.h                       |   7 +-
+ 29 files changed, 2282 insertions(+), 30 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/img,tz1090-=
+deleter.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/img,tz1090-=
+divider.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/img,tz1090-=
+gate-bank.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/img,tz1090-=
+mux-bank.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/img,tz1090-=
+pdc-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/img,tz1090-=
+pll.txt
+ create mode 100644 arch/metag/boot/dts/tz1090_clk.dtsi
+ create mode 100644 drivers/clk/tz1090/Makefile
+ create mode 100644 drivers/clk/tz1090/clk-tz1090-deleter.c
+ create mode 100644 drivers/clk/tz1090/clk-tz1090-divider.c
+ create mode 100644 drivers/clk/tz1090/clk-tz1090-gate-bank.c
+ create mode 100644 drivers/clk/tz1090/clk-tz1090-mux-bank.c
+ create mode 100644 drivers/clk/tz1090/clk-tz1090-pdc.c
+ create mode 100644 drivers/clk/tz1090/clk-tz1090-pll.c
 
-Parenthesize ch.  Also, I don't think the _MASK_ part of the name is necessary.
-
-> +#define CR_PWM_CTRL_CFG_DIV_MASK               0x3
-> +
-> +#define CR_PWM_CH_CFG(ch)                      (0x4 + (ch) * 4)
-> +#define CR_PWM_CH_CFG_TMBASE_SHIFT             0
-> +#define CR_PWM_CH_CFG_DUTY_SHIFT               16
-> +
-> +#define CR_PERIP_PWM_PDM_CONTROL               0x0140
-> +#define CR_PERIP_PWM_PDM_CONTROL_CH_SHIFT(ch)  (ch * 4)
-
-Parenthesize ch here as well.
-
-> +#define NUM_PWM                                        4
-
-That's a rather generic name.  Maybe IMG_NUM_PWM instead?
-
-> +#define MAX_TMBASE_STEPS                       65536
-> +
-> +struct img_pwm_chip {
-> +       struct device   *dev;
-> +       struct clk      *clk;
-> +       struct clk      *sys_clk;
-> +       struct pwm_chip chip;
-> +       void __iomem    *base;
-> +       struct regmap *periph_regs;
-
-Spacing is inconsistent here.
-
-> +};
-> +
-> +static inline struct img_pwm_chip *to_img_pwm_chip(struct pwm_chip *chip)
-> +{
-> +       return container_of(chip, struct img_pwm_chip, chip);
-> +}
-> +
-> +static inline void img_pwm_writel(struct img_pwm_chip *chip,
-> +                               unsigned int reg, unsigned long val)
-> +{
-> +       writel(val, chip->base + reg);
-> +}
-> +
-> +static inline unsigned int img_pwm_readl(struct img_pwm_chip *chip,
-> +                                       unsigned int reg)
-> +{
-> +       return readl(chip->base + reg);
-> +}
-> +
-> +static int img_pwm_get_div_and_tmbase(struct pwm_chip *chip,
-> +               unsigned long in_freq, unsigned long out_freq,
-> +               unsigned int *divider, unsigned int *tmbase)
-> +{
-> +       unsigned long mul;
-> +
-> +       mul = DIV_ROUND_UP(in_freq, out_freq);
-> +       if (mul > MAX_TMBASE_STEPS * 512)
-> +               return -EINVAL;
-> +
-> +       if (mul <= MAX_TMBASE_STEPS) {
-> +               *divider = 1;
-> +               *tmbase = mul;
-> +       } else if (mul <= MAX_TMBASE_STEPS * 8) {
-> +               *divider = 8;
-> +               *tmbase = mul / 8;
-> +               *tmbase += mul % 8;
-
-Hmm... I'm not sure this is right.  Are you sure you don't want tmbase
-= DIV_ROUND_UP(mul, 8) or DIV_ROUND_CLOSEST(mul, 8)?
-
-> +       } else if (mul <= MAX_TMBASE_STEPS * 64) {
-> +               *divider = 64;
-> +               *tmbase = mul / 64;
-> +               *tmbase += mul % 64;
-> +       } else if (mul <= MAX_TMBASE_STEPS * 512) {
-> +               *divider = 512;
-> +               *tmbase = mul / 512;
-> +               *tmbase += mul % 512;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static void img_pwm_ch_config(struct img_pwm_chip *chip,
-> +               unsigned int ch_num, unsigned int divider,
-> +               unsigned int tmbase_steps, unsigned int duty_steps)
-> +{
-> +       unsigned int div;
-> +       unsigned long val;
-> +
-> +       switch (divider) {
-> +       case 1:
-> +               div = CR_PWM_CTRL_CFG_NO_SUB_DIV;
-> +               break;
-> +       case 8:
-> +               div = CR_PWM_CTRL_CFG_SUB_DIV0;
-> +               break;
-> +       case 64:
-> +               div = CR_PWM_CTRL_CFG_SUB_DIV1;
-> +               break;
-> +       case 512:
-> +               div = CR_PWM_CTRL_CFG_SUB_DIV0_DIV1;
-> +               break;
-> +       }
-> +
-> +       val = img_pwm_readl(chip, CR_PWM_CTRL_CFG);
-> +       val &= ~(CR_PWM_CTRL_CFG_DIV_MASK <<
-> +                                       CR_PWM_CTRL_CFG_DIV_MASK_SHIFT(ch_num));
-> +       val |= (div & CR_PWM_CTRL_CFG_DIV_MASK) <<
-> +                                       CR_PWM_CTRL_CFG_DIV_MASK_SHIFT(ch_num);
-> +       img_pwm_writel(chip, CR_PWM_CTRL_CFG, val);
-> +
-> +       val = (duty_steps << CR_PWM_CH_CFG_DUTY_SHIFT) |
-> +                               (tmbase_steps << CR_PWM_CH_CFG_TMBASE_SHIFT);
-> +       img_pwm_writel(chip, CR_PWM_CH_CFG(ch_num), val);
-> +}
-> +
-> +static int img_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-> +                       int duty_ns, int period_ns)
-> +{
-> +       unsigned int divider;
-> +       unsigned int duty_steps;
-> +       unsigned int tmbase_steps;
-> +       unsigned long output_clk_hz;
-> +       unsigned long input_clk_hz;
-> +       struct img_pwm_chip *pwm_chip;
-> +
-> +       pwm_chip = to_img_pwm_chip(chip);
-> +
-> +       input_clk_hz = clk_get_rate(pwm_chip->clk);
-> +       output_clk_hz = DIV_ROUND_UP(NSEC_PER_SEC, period_ns);
-> +       if (img_pwm_get_div_and_tmbase(chip, input_clk_hz,
-> +                               output_clk_hz, &divider, &tmbase_steps) < 0) {
-> +               dev_err(chip->dev,
-> +                       "failed to configure timebase steps/divider value.\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       duty_steps = (tmbase_steps * duty_ns) / period_ns;
-> +       img_pwm_ch_config(pwm_chip, pwm->hwpwm, divider,
-> +                       tmbase_steps, duty_steps);
-
-IMO it would be cleaner if img_pwm_get_div_and_tmbase() and
-img_pwm_ch_config() were just folded into this function.
-
-> +
-> +       return 0;
-> +}
-> +
-> +static int img_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-> +{
-> +       unsigned int val;
-> +       struct img_pwm_chip *pwm_chip;
-> +
-> +       pwm_chip = to_img_pwm_chip(chip);
-> +
-> +       val = img_pwm_readl(pwm_chip, CR_PWM_CTRL_CFG);
-> +       val |= BIT(pwm->hwpwm);
-> +       img_pwm_writel(pwm_chip, CR_PWM_CTRL_CFG, val);
-> +
-> +       regmap_update_bits(pwm_chip->periph_regs, CR_PERIP_PWM_PDM_CONTROL,
-> +                       BIT(CR_PERIP_PWM_PDM_CONTROL_CH_SHIFT(pwm->hwpwm)),
-> +                       0 << CR_PERIP_PWM_PDM_CONTROL_CH_SHIFT(pwm->hwpwm));
-
-Just use 0 for this argument.
-
-> +
-> +       return 0;
-> +}
-> +
-> +static void img_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
-> +{
-> +       unsigned int val = 0;
-
-No need to initialize val.
-
-> +       struct img_pwm_chip *pwm_chip;
-> +
-> +       pwm_chip = to_img_pwm_chip(chip);
-> +
-> +       val = img_pwm_readl(pwm_chip, CR_PWM_CTRL_CFG);
-> +       val &= ~BIT(pwm->hwpwm);
-> +       img_pwm_writel(pwm_chip, CR_PWM_CTRL_CFG, val);
-> +
-> +       regmap_update_bits(pwm_chip->periph_regs, CR_PERIP_PWM_PDM_CONTROL,
-> +                       BIT(CR_PERIP_PWM_PDM_CONTROL_CH_SHIFT(pwm->hwpwm)),
-> +                       1 << (CR_PERIP_PWM_PDM_CONTROL_CH_SHIFT(pwm->hwpwm)));
-
-BIT(CR_PERIP_PWM_PDM_CONTROL_CH_SHIFT(...))?
-
-> +}
-> +
-> +static const struct pwm_ops img_pwm_ops = {
-> +       .config = img_pwm_config,
-> +       .enable = img_pwm_enable,
-> +       .disable = img_pwm_disable,
-> +       .owner = THIS_MODULE,
-> +};
-> +
-> +static int img_pwm_probe(struct platform_device *pdev)
-> +{
-> +       int ret;
-> +       struct resource *res;
-> +       struct img_pwm_chip *pwm;
-> +
-> +       pwm = devm_kzalloc(&pdev->dev, sizeof(*pwm), GFP_KERNEL);
-> +       if (!pwm)
-> +               return -ENOMEM;
-> +
-> +       pwm->dev = &pdev->dev;
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       pwm->base = devm_ioremap_resource(&pdev->dev, res);
-> +       if (IS_ERR(pwm->base))
-> +               return PTR_ERR(pwm->base);
-> +
-> +       pwm->periph_regs = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
-> +                                                       "img,cr-periph");
-> +       if (IS_ERR(pwm->periph_regs))
-> +               return PTR_ERR(pwm->periph_regs);
-> +
-> +       pwm->sys_clk = devm_clk_get(&pdev->dev, "sys");
-> +       if (IS_ERR(pwm->sys_clk)) {
-> +               dev_err(&pdev->dev, "failed to get the system clock.\n");
-> +               return PTR_ERR(pwm->sys_clk);
-> +       }
-> +
-> +       pwm->clk = devm_clk_get(&pdev->dev, "pwm");
-> +       if (IS_ERR(pwm->clk)) {
-> +               dev_err(&pdev->dev, "failed to get the clock.\n");
-> +               return PTR_ERR(pwm->clk);
-> +       }
-> +
-> +       ret = clk_prepare_enable(pwm->sys_clk);
-> +       if (ret < 0) {
-> +               dev_err(&pdev->dev, "could not prepare or enable pwm clock.\n");
-> +               return ret;
-> +       }
-> +
-> +       ret = clk_prepare_enable(pwm->clk);
-> +       if (ret < 0) {
-> +               dev_err(&pdev->dev, "could not prepare or enable pwm clock.\n");
-> +               goto disable_sysclk;
-> +       }
-> +
-> +       pwm->chip.dev = &pdev->dev;
-> +       pwm->chip.ops = &img_pwm_ops;
-> +       pwm->chip.base = -1;
-> +       pwm->chip.npwm = NUM_PWM;
-> +
-> +       ret = pwmchip_add(&pwm->chip);
-> +       if (ret < 0) {
-> +               dev_err(&pdev->dev, "pwmchip_add failed: %d\n", ret);
-> +               goto disable_pwmclk;
-> +       }
-> +
-> +       platform_set_drvdata(pdev, pwm);
-> +
-> +disable_pwmclk:
-> +       clk_disable_unprepare(pwm->clk);
-> +disable_sysclk:
-> +       clk_disable_unprepare(pwm->sys_clk);
-> +
-> +       return 0;
-> +}
-> +
-> +static int img_pwm_remove(struct platform_device *pdev)
-> +{
-> +       int i;
-
-unsigned
-
-> +       unsigned int val = 0;
-
-No need to initialize val.
-
-> +       struct img_pwm_chip *pwm_chip = platform_get_drvdata(pdev);
-> +
-> +       for (i = 0; i < NUM_PWM; i++) {
-> +               val = img_pwm_readl(pwm_chip, CR_PWM_CTRL_CFG);
-> +               val &= ~BIT(i);
-> +               img_pwm_writel(pwm_chip, CR_PWM_CTRL_CFG, val);
-> +       }
-> +
-> +       clk_disable_unprepare(pwm_chip->clk);
-> +       clk_disable_unprepare(pwm_chip->sys_clk);
-> +
-> +       return pwmchip_remove(&pwm_chip->chip);
-> +}
-> +
-> +static const struct of_device_id img_pwm_of_match[] = {
-> +       { .compatible = "img,pistachio-pwm", },
-> +       { }
-> +};
-> +MODULE_DEVICE_TABLE(of, img_pwm_of_match);
-> +
-> +static struct platform_driver img_pwm_driver = {
-> +       .driver = {
-> +               .name = "img-pwm",
-> +               .of_match_table = of_match_ptr(img_pwm_of_match),
-> +       },
-> +       .probe = img_pwm_probe,
-> +       .remove = img_pwm_remove,
-> +};
-> +module_platform_driver(img_pwm_driver);
-> +
-> +MODULE_AUTHOR("Sai Masarapu <Sai.Masarapu@imgtec.com>");
-> +MODULE_DESCRIPTION("Imagination Technologies PWM DAC driver");
-> +MODULE_LICENSE("GPL v2");
-> --
-> 1.7.0.4
->
+Cc: "Emilio L=C3=B3pez" <emilio@elopez.com.ar>
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Sascha Hauer <kernel@pengutronix.de>
+Cc: Shawn Guo <shawn.guo@linaro.org>
+Cc: Tero Kristo <t-kristo@ti.com>
+Cc: linux-omap@vger.kernel.org
+Cc: linux-rockchip@lists.infradead.org
+--=20
+2.0.4
