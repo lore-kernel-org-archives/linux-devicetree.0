@@ -1,48 +1,59 @@
-From: Ohad Ben-Cohen <ohad@wizery.com>
-Subject: Re: [PATCHv6 5/5] hwspinlock/omap: add support for dt nodes
-Date: Thu, 20 Nov 2014 08:36:55 +0200
-Message-ID: <CAK=WgbZMY5WyE9aVT3XTDnC3YJyBNXj1QoYBEdUMjwTbYAKA3g@mail.gmail.com>
-References: <1410553499-55951-1-git-send-email-s-anna@ti.com>
- <1410553499-55951-6-git-send-email-s-anna@ti.com> <CAK=WgbZE7_WrsNz5E+MDX7j2tAGEjv91zeCgqhB=Jsiu0+d8vw@mail.gmail.com>
- <CAJAp7OisV3UrL45UgRb0tMudyCJHe-xsmsRYV0uGG3P4PReHnA@mail.gmail.com>
+From: Paul Walmsley <paul@pwsan.com>
+Subject: Re: [PATCH v2 2/3] ARM: OMAP2+: hwmod: AM335x/AM43x: add hwmod
+ support for tscadc on am43x-evm
+Date: Thu, 20 Nov 2014 07:09:51 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1411200706441.9204@utopia.booyaka.com>
+References: <1415099728-10959-1-git-send-email-vigneshr@ti.com> <1415099728-10959-3-git-send-email-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAJAp7OisV3UrL45UgRb0tMudyCJHe-xsmsRYV0uGG3P4PReHnA@mail.gmail.com>
+In-Reply-To: <1415099728-10959-3-git-send-email-vigneshr@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn@kryo.se>
-Cc: Suman Anna <s-anna@ti.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Tony Lindgren <tony@atomide.com>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+To: Vignesh R <vigneshr@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+On Tue, 4 Nov 2014, Vignesh R wrote:
 
-On Thu, Nov 20, 2014 at 2:43 AM, Bjorn Andersson <bjorn@kryo.se> wrote:
-> I still have a huge problem understanding the awesomeness with the
-> "base_id". If you have a SoC with 2 hwlock blocks; say 8+8 locks, used
-> for interaction with e.g. a modem and a video core respectively.
-> Why would you in either remote system offset the locks with 8?
-> Wouldn't e.g the modem use locks hwlock0:0-7 and video core use locks
-> hwlock1:0-7?
+> This patch adds hwmod support for tscadc to work on am43xx-evm. The am33xx
+> hwmod structures of tscadc has been moved to ipblock_data so that it can
+> be reused in am43xx. The clock domain names are separately set for am33xx
+> and am43xx. Thus tscadc dt entries can now be added to am43xx board
+> dt files.
+> 
+> Signed-off-by: Vignesh R <vigneshr@ti.com>
 
-Please see below
+...
 
-> What systems use more than one hwlock block
+> diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
+> index 6e57b8ad0db5..b92a7c7825fa 100644
+> --- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
+> +++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
 
-None that we know of. This concern was raised some time ago by Arnd
-and since it was easy to deal with we added the 'base_id' notion.
+...
 
-> and do you know of any reasons why these hwlocks are globally numbered?
+> +static void am33xx_hwmod_clockdomain(void)
+> +{
+> +	CLKDMNAME(am33xx_l4_hs_hwmod, "l4hs_clkdm");
+> +	CLKDMNAME(am33xx_adc_tsc_hwmod, "l4_wkup_clkdm");
+> +}
+> +
+> +static void am43xx_hwmod_clockdomain(void)
+> +{
+> +	CLKDMNAME(am33xx_l4_hs_hwmod, "l3_clkdm");
+> +	CLKDMNAME(am33xx_adc_tsc_hwmod, "l3s_tsc_clkdm");
+> +}
+> +
 
-Because on an heterogeneous asymmetric multiprocessing systems you
-sometimes have use cases where hwlocks are dynamically allocated and
-their id numbers need to be synchronized between user space
-applications, the Linux kernel, and entities running on remote
-processors (which are likely not running Linux).
+...
 
-For this to work we have to have some system-wide global hwlocks
-naming that is predefined and known to all processors. A mere number
-seems like the simplest naming method. A dynamic hwlock request API
-could return "hwlock1:0" but a mere 8 seems easier to deal with.
+> +	am33xx_hwmod_clockdomain();
 
-Thanks,
-Ohad.
+I looked at this patch and the one before it.  Is there some reason why we 
+need to share these two hwmods between AM33xx and AM43xx?  It seems 
+cleaner just to add the ADC data directly to the AM43xx hwmod data file, 
+not touch the AM33xx data, and not add another runtime data update for the 
+clockdomains.  Unless there's something that I'm missing?
+
+
+- Paul
