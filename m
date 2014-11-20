@@ -1,57 +1,158 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4 1/2] ARM: keystone: pm: switch to use generic pm domains
-Date: Thu, 20 Nov 2014 22:54:07 +0100
-Message-ID: <CAMuHMdVXGPu7x706NxqO3rn3KuRbPbD_ZQsJtDH4Hf31AaRR+Q@mail.gmail.com>
-References: <1415631557-22897-1-git-send-email-grygorii.strashko@ti.com>
-	<1709760.E0jX3Myv0h@wuerfel>
-	<546C7FDD.7030906@ti.com>
-	<2900095.WIocOu7ue2@wuerfel>
-	<CAPDyKFqeZ3YU2OEN4tCOdcQ0pAho67Q8U_eCEOroG9aS0mp+-Q@mail.gmail.com>
-	<546DD87B.3080806@ti.com>
-	<CAPDyKFrBhZyqozM98_4pPdW0EMFt5W6VX1X7cz6Z=yNhW4vYTA@mail.gmail.com>
-	<CAMuHMdWtHT7QX3Kpa-GCLa49ToGODwjnNVgfxDzJzcM-FU1ffg@mail.gmail.com>
-	<546E0970.5090301@ti.com>
-	<7hh9xtr5ac.fsf@deeprootsystems.com>
-	<CAMuHMdV7zASj8_NtLRir1VubXEKTkq0vBGMXeYXDACu8UC2tZA@mail.gmail.com>
-	<7hbno1r1af.fsf@deeprootsystems.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [RFC PATCH v2] drivers: pci: move PCI domain assignment to
+ generic PCI code
+Date: Thu, 20 Nov 2014 15:54:49 -0700
+Message-ID: <20141120225449.GD7987@google.com>
+References: <1415637706-2195-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7hbno1r1af.fsf@deeprootsystems.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@kernel.org>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1415637706-2195-1-git-send-email-lorenzo.pieralisi@arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Liviu Dudau <liviu.dudau@arm.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 20, 2014 at 10:48 PM, Kevin Hilman <khilman@kernel.org> wrote:
->>> So what exactly are we talking about with "PM" clocks, and why are they
->>> "special" when it comes to PM domains?  IOW, why are the clocks to be
->>> managed during PM domain transitions for a given device any different
->>> than the clocks that need to be managed for a runtime suspend/resume (or
->>> system suspend/resume) sequence for the same device?
->>
->> (Speaking for my case, shmobile)
->>
->> They're not. The clocks to be managed during PM domain transitions are the
->> same as the clocks that need to be managed for a runtime suspend/resume
->> (or system suspend/resume) sequence.
->>
->> The special thing is that this is more a platform than a driver thing: the same
->> module may have a "PM/functional" clock (that is documented to enable/disable
->> the module) on one Soc, but noet on another.
->
-> So why isn't the presence or absence of the clock described in the .dtsi
-> for the SoC instead of being handled by special PM domain logic?
+On Mon, Nov 10, 2014 at 04:41:46PM +0000, Lorenzo Pieralisi wrote:
+> The current logic used for PCI domain assignment in arm64
+> pci_bus_assign_domain_nr() is flawed in that, depending on the host
+> controllers configuration for a platform and the respective initialization
+> sequence, core code may end up allocating PCI domain numbers from both DT and
+> the core code generic domain counter, which would result in PCI domain
+> allocation aliases/errors.
+> 
+> This patch fixes the logic behind the PCI domain number assignment and
+> moves the resulting code to generic PCI core code so that the same domain
+> allocation logic is used on all platforms selecting
+> 
+> CONFIG_PCI_DOMAINS_GENERIC
+> 
+> instead of resorting to an arch specific implementation that might end up
+> duplicating the PCI domain assignment logic wrongly.
+> 
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Liviu Dudau <liviu.dudau@arm.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 
-It is. Cfr. the presence/absence of clocks for renesas,rcar-gpio nodes.
+Applied with Liviu and Arnd's acks to pci/domain for v3.19, thanks.
 
-Gr{oetje,eeting}s,
+It doesn't matter whether I'm in the to: or cc: list.  The important thing
+is that it appears on the linux-pci list, because I use patchwork as my
+to-do list, and patchwork only vacuums up stuff from linux-pci.
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> ---
+> v1 => v2:
+> 
+> - Moved generic pci_bus_assign_domain_nr() code to PCI core instead of
+>   adding an OF layer API
+> - Updated commit log and code comments
+> 
+>  arch/arm64/kernel/pci.c | 22 ----------------------
+>  drivers/pci/pci.c       | 50 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 50 insertions(+), 22 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
+> index ce5836c..6f93c24 100644
+> --- a/arch/arm64/kernel/pci.c
+> +++ b/arch/arm64/kernel/pci.c
+> @@ -46,25 +46,3 @@ int pcibios_add_device(struct pci_dev *dev)
+>  
+>  	return 0;
+>  }
+> -
+> -
+> -#ifdef CONFIG_PCI_DOMAINS_GENERIC
+> -static bool dt_domain_found = false;
+> -
+> -void pci_bus_assign_domain_nr(struct pci_bus *bus, struct device *parent)
+> -{
+> -	int domain = of_get_pci_domain_nr(parent->of_node);
+> -
+> -	if (domain >= 0) {
+> -		dt_domain_found = true;
+> -	} else if (dt_domain_found == true) {
+> -		dev_err(parent, "Node %s is missing \"linux,pci-domain\" property in DT\n",
+> -			parent->of_node->full_name);
+> -		return;
+> -	} else {
+> -		domain = pci_get_new_domain_nr();
+> -	}
+> -
+> -	bus->domain_nr = domain;
+> -}
+> -#endif
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 625a4ac..2279414 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -10,6 +10,8 @@
+>  #include <linux/kernel.h>
+>  #include <linux/delay.h>
+>  #include <linux/init.h>
+> +#include <linux/of.h>
+> +#include <linux/of_pci.h>
+>  #include <linux/pci.h>
+>  #include <linux/pm.h>
+>  #include <linux/slab.h>
+> @@ -4447,6 +4449,54 @@ int pci_get_new_domain_nr(void)
+>  {
+>  	return atomic_inc_return(&__domain_nr);
+>  }
+> +
+> +#ifdef CONFIG_PCI_DOMAINS_GENERIC
+> +
+> +void pci_bus_assign_domain_nr(struct pci_bus *bus, struct device *parent)
+> +{
+> +	static int use_dt_domains = -1;
+> +	int domain = of_get_pci_domain_nr(parent->of_node);
+> +
+> +	/*
+> +	 * Check DT domain and use_dt_domains values.
+> +	 *
+> +	 * If DT domain property is valid (domain >= 0) and
+> +	 * use_dt_domains != 0, the DT assignment is valid since this means
+> +	 * we have not previously allocated a domain number by using
+> +	 * pci_get_new_domain_nr(); we should also update use_dt_domains to
+> +	 * 1, to indicate that we have just assigned a domain number from
+> +	 * DT.
+> +	 *
+> +	 * If DT domain property value is not valid (ie domain < 0), and we
+> +	 * have not previously assigned a domain number from DT
+> +	 * (use_dt_domains != 1) we should assign a domain number by
+> +	 * using the:
+> +	 *
+> +	 * pci_get_new_domain_nr()
+> +	 *
+> +	 * API and update the use_dt_domains value to keep track of method we
+> +	 * are using to assign domain numbers (use_dt_domains = 0).
+> +	 *
+> +	 * All other combinations imply we have a platform that is trying
+> +	 * to mix domain numbers obtained from DT and pci_get_new_domain_nr(),
+> +	 * which is a recipe for domain mishandling and it is prevented by
+> +	 * invalidating the domain value (domain = -1) and printing a
+> +	 * corresponding error.
+> +	 */
+> +	if (domain >= 0 && use_dt_domains) {
+> +		use_dt_domains = 1;
+> +	} else if (domain < 0 && use_dt_domains != 1) {
+> +		use_dt_domains = 0;
+> +		domain = pci_get_new_domain_nr();
+> +	} else {
+> +		dev_err(parent, "Node %s has inconsistent \"linux,pci-domain\" property in DT\n",
+> +			parent->of_node->full_name);
+> +		domain = -1;
+> +	}
+> +
+> +	bus->domain_nr = domain;
+> +}
+> +#endif
+>  #endif
+>  
+>  /**
+> -- 
+> 2.1.2
+> 
