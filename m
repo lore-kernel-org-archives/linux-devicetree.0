@@ -1,53 +1,48 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH] Add attributes neccessary for LED flashes to
- devicetree/bindings/leds/common.txt
-Date: Thu, 20 Nov 2014 17:03:49 +0200
-Message-ID: <20141120150349.GZ8907@valkosipuli.retiisi.org.uk>
-References: <20141120131713.GC27527@amd>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 8/9] of: add Fujitsu vendor prefix
+Date: Thu, 20 Nov 2014 09:07:27 -0600
+Message-ID: <CAL_JsqJdkVvcP95ZZ+dn2z4x7g5k2fs+7bWYUjY2EEo3yVELgw@mail.gmail.com>
+References: <1416486442-25200-1-git-send-email-Vincent.Yang@tw.fujitsu.com> <1416487165-25551-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141120131713.GC27527@amd>
-Sender: linux-doc-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: j.anaszewski@samsung.com, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-doc@vger.kernel.org, cooloney@gmail.com, rpurdie@rpsys.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416487165-25551-1-git-send-email-Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jaswinder Singh <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
+On Thu, Nov 20, 2014 at 6:39 AM, Vincent Yang
+<vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Add 'fujitsu' as the vendor prefix for Fujitsu Semiconductor Ltd.
+>
+> Signed-off-by: Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
+> Signed-off-by: Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
 
-On Thu, Nov 20, 2014 at 02:17:13PM +0100, Pavel Machek wrote:
-> 
-> Add attributes neccessary for LED flashes to
-> devicetree/bindings/leds/common.txt .
-> 
-> This will allow me to add device tree support for adp1653 i2c flash
-> LED driver, and allow Jacek Anaszewski to add support for more LED
-> drivers..
-> 
-> Signed-off-by: Pavel Machek <pavel@ucw.cz>
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-> index 2d88816..e9acbbc 100644
-> --- a/Documentation/devicetree/bindings/leds/common.txt
-> +++ b/Documentation/devicetree/bindings/leds/common.txt
-> @@ -14,6 +14,15 @@ Optional properties for child nodes:
->       "ide-disk" - LED indicates disk activity
->       "timer" - LED flashes at a fixed, configurable rate
->  
-> +- max-microamp : maximum intensity in microamperes of the LED
-> +  	         (torch LED for flash devices)
-> +- flash-max-microamp : maximum intensity in microamperes of the
-> +                       flash LED; it is mandatory if the LED should
-> +		       support the flash mode
-> +- flash-timeout-microsec : timeout in microseconds after which the flash
-> +                           LED is turned off
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-It might be good to add a note that these may be arrays, depending on the
-device.
-
--- 
-Regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 723999d..dbb7c97 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -56,6 +56,7 @@ everest       Everest Semiconductor Co. Ltd.
+>  excito Excito
+>  fcs    Fairchild Semiconductor
+>  fsl    Freescale Semiconductor
+> +fujitsu Fujitsu Semiconductor Ltd.
+>  GEFanuc        GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+>  gef    GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+>  geniatech      Geniatech, Inc.
+> --
+> 1.9.0
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
