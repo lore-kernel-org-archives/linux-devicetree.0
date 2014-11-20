@@ -1,36 +1,30 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v5 0/4] Correct vendor-prefix and document device isl29028
-Date: Thu, 20 Nov 2014 12:21:43 +0100
-Message-ID: <201411201221.43308.arnd@arndb.de>
-References: <1415467328-9745-1-git-send-email-darshanapadmadas@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 3.19 0/2] ARM: multi_v7_defconfig: Enable Broadcom Cygnus
+Date: Thu, 20 Nov 2014 12:28:16 +0100
+Message-ID: <201411201228.16581.arnd@arndb.de>
+References: <1415826197-6748-1-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1415467328-9745-1-git-send-email-darshanapadmadas@gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: linux-arm-kernel@lists.infradead.org
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, opw-kernel@googlegroups.com, Darshana Padmadas <darshanapadmadas@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415826197-6748-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 08 November 2014, Darshana Padmadas wrote:
-> Patchset documents correct and the deprecated vendor-prefix found by checkpatch
-> warning and also documents information of device isl29028 for compatibility.
-> Patchset also includes corrected vendor-prefix and device name in compatible
-> property for files with checkpatch warning of undocumented string "isil,isl29028".
+On Wednesday 12 November 2014, Florian Fainelli wrote:
+> Hi Olof, Arnd,
+> 
+> These two patches enable support for the Broadcom Cygnus SoC in the
+> multi_v7_defconfig and also remove one level of menuconfig.
 > 
 
-Since nobody else has picked these up, I've put them into the arm-soc
-tree in the next/dt branch now.
-
-Thanks and sorry for the delay,
+Both applied to next/defconfig now. Thanks and sorry for the delay.
 
 	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
