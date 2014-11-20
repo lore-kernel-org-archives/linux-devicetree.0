@@ -1,168 +1,41 @@
-From: Courtney Cavin <courtney.cavin@sonymobile.com>
-Subject: Re: [PATCH 4/9] ASoC: ipq806x: Add LPASS CPU DAI driver
-Date: Wed, 19 Nov 2014 16:20:49 -0800
-Message-ID: <20141120002049.GC13013@sonymobile.com>
-References: <1416423169-21865-1-git-send-email-kwestfie@codeaurora.org>
- <1416423169-21865-5-git-send-email-kwestfie@codeaurora.org>
+From: Bjorn Andersson <bjorn@kryo.se>
+Subject: Re: [PATCHv6 5/5] hwspinlock/omap: add support for dt nodes
+Date: Wed, 19 Nov 2014 16:43:46 -0800
+Message-ID: <CAJAp7OisV3UrL45UgRb0tMudyCJHe-xsmsRYV0uGG3P4PReHnA@mail.gmail.com>
+References: <1410553499-55951-1-git-send-email-s-anna@ti.com>
+	<1410553499-55951-6-git-send-email-s-anna@ti.com>
+	<CAK=WgbZE7_WrsNz5E+MDX7j2tAGEjv91zeCgqhB=Jsiu0+d8vw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1416423169-21865-5-git-send-email-kwestfie@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kenneth Westfield <kwestfie@codeaurora.org>
-Cc: ALSA Mailing List <alsa-devel@alsa-project.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, Greg KH <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK=WgbZE7_WrsNz5E+MDX7j2tAGEjv91zeCgqhB=Jsiu0+d8vw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ohad Ben-Cohen <ohad@wizery.com>
+Cc: Suman Anna <s-anna@ti.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Tony Lindgren <tony@atomide.com>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 19, 2014 at 07:52:44PM +0100, Kenneth Westfield wrote:
-> From: Kenneth Westfield <kwestfie@codeaurora.org>
-> 
-> Add the CPU DAI driver for the QCOM LPASS SOC.
-> 
-> Change-Id: I64ac4407dd32bb9a3066d4b7427292002eaf5d14
-> Signed-off-by: Kenneth Westfield <kwestfie@codeaurora.org>
-> Signed-off-by: Banajit Goswami <bgoswami@codeaurora.org>
-> ---
-[...]
-> +#include <linux/module.h>
-> +#include <linux/clk.h>
-> +#include <sound/soc.h>
-> +#include <sound/pcm_params.h>
-> +#include "lpass-lpaif.h"
-> +#include "lpass-pcm-mi2s.h"
+On Wed, Nov 12, 2014 at 11:14 AM, Ohad Ben-Cohen <ohad@wizery.com> wrote:
+> Hi Suman,
+[..]
+>
+> Does this mean you allow nodes not to have the base_id property? How
+> do we protect against multiple nodes not having a base_id property
+> then?
+>
+> Implicitly assuming a base_id value (zero in this case) may not be always safe.
+>
 
-This header and the associated structures are not added until 5/9:
-"ASoC: ipq806x: Add I2S PCM platform driver"...
+Hi Ohad,
 
-> +
-> +#define DRV_NAME	"lpass-cpu-dai"
-> +#define DRV_VERSION	"1.0"
-> +
-> +#define LPASS_INVALID	(-1)
-> +
-> +struct mi2s_hw_params {
-> +	uint8_t channels;
-> +	uint32_t freq;
-> +	uint8_t bit_width;
-> +};
+I still have a huge problem understanding the awesomeness with the
+"base_id". If you have a SoC with 2 hwlock blocks; say 8+8 locks, used
+for interaction with e.g. a modem and a video core respectively.
+Why would you in either remote system offset the locks with 8?
+Wouldn't e.g the modem use locks hwlock0:0-7 and video core use locks
+hwlock1:0-7?
 
-This struct, the static global instance of it below ('mi2s_params'), and
-the additional use of it in lpass_cpu_mi2s_hw_params() ('curr_params')
-are only ever written, never read.
+What systems use more than one hwlock block and do you know of any
+reasons why these hwlocks are globally numbered?
 
-> +
-> +static struct clk *lpaif_mi2s_bit_clk;
-> +static struct clk *lpaif_mi2s_osr_clk;
-
-It would seem more logical to me to put these in allocated private driver
-data for the DAI, managed from (struct snd_soc_dai_driver).probe/remove.
-
-> +static struct mi2s_hw_params mi2s_params;
-[...]
-> +static int lpass_cpu_mi2s_hw_params(struct snd_pcm_substream *substream,
-> +					struct snd_pcm_hw_params *params,
-> +					struct snd_soc_dai *dai)
-> +{
-[...]
-> +	ret = clk_set_rate(lpaif_mi2s_osr_clk,
-> +		(rate * bit_act * channels * bit_div));
-> +	if (ret) {
-> +		dev_err(dai->dev, "%s: error in setting mi2s osr clk\n",
-> +				__func__);
-> +		return ret;
-> +	}
-> +	ret = clk_prepare_enable(lpaif_mi2s_osr_clk);
-> +	if (ret) {
-> +		dev_err(dai->dev, "%s: error in enabling mi2s osr clk\n",
-> +				__func__);
-> +		return ret;
-> +	}
-> +	prtd->lpaif_clk.is_osr_clk_enabled = 1;
-> +
-> +	ret = clk_set_rate(lpaif_mi2s_bit_clk, rate * bit_act * channels);
-> +	if (ret) {
-> +		dev_err(dai->dev, "%s: error in setting mi2s bit clk\n",
-> +				__func__);
-> +		return ret;
-
-clk_disable_unprepare(lpaif_mi2s_osr_clk)?
-
-> +	}
-> +	ret = clk_prepare_enable(lpaif_mi2s_bit_clk);
-> +	if (ret) {
-> +		dev_err(dai->dev, "%s: error in enabling mi2s bit clk\n",
-> +				__func__);
-> +		return ret;
-
-clk_disable_unprepare(lpaif_mi2s_bit_clk)?
-clk_disable_unprepare(lpaif_mi2s_osr_clk)?
-
-> +	}
-> +	prtd->lpaif_clk.is_bit_clk_enabled = 1;
-> +
-> +	return 0;
-> +}
-> +
-> +static int lpass_cpu_mi2s_prepare(struct snd_pcm_substream *substream,
-> +					struct snd_soc_dai *dai)
-> +{
-> +	return 0;
-> +}
-
-Isn't this ((struct snd_soc_dai_ops).prepare) optional?
-
-> +
-> +static int lpass_cpu_mi2s_startup(struct snd_pcm_substream *substream,
-> +					struct snd_soc_dai *dai)
-> +{
-> +
-> +	lpaif_mi2s_osr_clk = clk_get(dai->dev, "mi2s_osr_clk");
-> +	if (IS_ERR(lpaif_mi2s_osr_clk)) {
-> +		dev_err(dai->dev, "%s: Error in getting mi2s_osr_clk\n",
-> +				__func__);
-> +		return PTR_ERR(lpaif_mi2s_osr_clk);
-> +	}
-> +
-> +	lpaif_mi2s_bit_clk = clk_get(dai->dev, "mi2s_bit_clk");
-> +	if (IS_ERR(lpaif_mi2s_bit_clk)) {
-> +		dev_err(dai->dev, "%s: Error in getting mi2s_bit_clk\n",
-> +				__func__);
-> +		return PTR_ERR(lpaif_mi2s_bit_clk);
-
-clk_put(lpaif_mi2s_osr_clk)?
-
-> +	}
-> +
-> +	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-> +		lpaif_cfg_i2s_playback(0, 0, LPAIF_MI2S);
-> +	} else {
-> +		dev_err(dai->dev, "%s: Invalid stream direction\n", __func__);
-> +		return -EINVAL;
-clk_put(lpaif_mi2s_bit_clk)?
-clk_put(lpaif_mi2s_osr_clk)?
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void lpass_cpu_mi2s_shutdown(struct snd_pcm_substream *substream,
-> +					struct snd_soc_dai *dai)
-> +{
-> +	struct snd_pcm_runtime *runtime = substream->runtime;
-> +	struct lpass_runtime_data_t *prtd = runtime->private_data;
-> +
-> +	if (prtd->lpaif_clk.is_osr_clk_enabled)
-> +		clk_disable_unprepare(lpaif_mi2s_osr_clk);
-
-This behavior is a bit odd.  If you clk_prepare_enable() the clocks in
-.hw_params, shouldn't you clk_disable_unprepare() in .hw_free?  Then you
-wouldn't need these booleans, or the associated lpaif_clk struct.
-
-> +	clk_put(lpaif_mi2s_osr_clk);
-> +
-> +	if (prtd->lpaif_clk.is_bit_clk_enabled)
-> +		clk_disable_unprepare(lpaif_mi2s_bit_clk);
-> +	clk_put(lpaif_mi2s_bit_clk);
-> +}
-
--Courtney
+Regards,
+Bjorn
