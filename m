@@ -1,148 +1,113 @@
-From: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH] [v2] power/fsl: add MDIO dt binding for FMan
-Date: Thu, 20 Nov 2014 13:00:44 +0000
-Message-ID: <20b19f779c5e45d7ac40964f21866ca3@DM2PR0301MB0864.namprd03.prod.outlook.com>
-References: <1415958800-9867-1-git-send-email-shh.xie@gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v4 1/2] ARM: keystone: pm: switch to use generic pm domains
+Date: Thu, 20 Nov 2014 14:12:41 +0100
+Message-ID: <CAPDyKFrBhZyqozM98_4pPdW0EMFt5W6VX1X7cz6Z=yNhW4vYTA@mail.gmail.com>
+References: <1415631557-22897-1-git-send-email-grygorii.strashko@ti.com>
+	<1709760.E0jX3Myv0h@wuerfel>
+	<546C7FDD.7030906@ti.com>
+	<2900095.WIocOu7ue2@wuerfel>
+	<CAPDyKFqeZ3YU2OEN4tCOdcQ0pAho67Q8U_eCEOroG9aS0mp+-Q@mail.gmail.com>
+	<546DD87B.3080806@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415958800-9867-1-git-send-email-shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Emilian Medve <Emilian.Medve-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <546DD87B.3080806@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>, ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Ping.
+On 20 November 2014 13:03, Grygorii Strashko <grygorii.strashko@ti.com> wrote:
+> On 11/20/2014 01:34 PM, Ulf Hansson wrote:
+>> On 19 November 2014 14:47, Arnd Bergmann <arnd@arndb.de> wrote:
+>>> On Wednesday 19 November 2014 13:32:45 Grygorii Strashko wrote:
+>>>> On 11/18/2014 09:32 PM, Arnd Bergmann wrote:
+>>>>> On Tuesday 18 November 2014 20:54:36 Grygorii Strashko wrote:
+>>>>>
+>>>>> Have one pmdomain driver in the generic code that knows about clocks,
+>>>>> possibly also regulators and pins and just turns them on when needed.
+>>>>> You can have a "simple-pmdomain" or "generic-pmdomain" compatible
+>>>>> string.
+>>>>>
+>>>>> I'm a bit surprised that your pmdomain code looks up the clocks from the
+>>>>> respective device, rather than know about the clocks itself. There is
+>>>>> probably a good reason for this, but I don't see it yet.
+>>>>
+>>>> The keystone 2 uses simple PM schema based on clocks only:
+>>>> - clocks enabled -> dev is active
+>>>> - clocks disabled -> dev is suspended
+>>>>
+>>>> To achieve explained above the Generic clock manipulation PM callbacks framework (pm_clk) is used.
+>>>> - list of managed clocks is filled for each device (for non-DT case the con_id list
+>>>>    is specified by platform code like:
+>>>>        .con_ids = { "fck", "master", "slave", NULL },
+>>>>          - or -
+>>>>        .con_ids = { }, <-- in this case only first clock will be added to pm_clk
+>>>>    )
+>>
+>> According to earlier comments in this thread, device's clocks are
+>> split into "functional" and "PM" clocks.
+>>
+>> If I understand correctly, a typical platform driver will enable it's
+>> "functional" clocks during ->probe() and you want the PM domain to
+>> take care of the "PM" clocks, when the device changes runtime PM
+>> status.
+>>
+>> How will you describe these different set of device clocks in DT?
+>
+> True :(  You can dig deeper in the history of this series if you wish.
+> - first Geert Uytterhoeven proposed to use CLK_RUNTIME_PM there
+>   https://lkml.org/lkml/2014/11/6/319
+> - second I proposed to introduce smth. like "clkops-clocks", "pm-clocks" there
+>   https://lkml.org/lkml/2014/6/12/436
+>  or "fck-clocks"/"opt-clocks" later.
+>
+> ^failed.
+>
+> So, this implementation picks up all clocks for each device, which is ok for
+> Keystone 2 and, because it's platform specific.
+>
+>>>
+>>> Yes, it would definitely solve the problem that I see with the infrastructure
+>>> code that the current version adds into the platform directory.
+>>>
+>>> The exact binding of course should be reviewed by the pmdomain and
+>>> DT maintainers, to ensure that it is done the best possible way, because
+>>> I assume we will end up using it a lot, and it would be a shame to get
+>>> it slightly wrong.
+>>>
+>>> One possible variation I can think of would be to just use "simple-pmdomain"
+>>> as the compatible string, and use properties in the node itself to decide
+>>> what the domain should control, e.g.
+>>>
+>>>          clk_pmdomain: pmdomain {
+>>>                  compatible = "simple-pmdomain";
+>>>                  pmdomain-enable-clocks;
+>>>                  #power-domain-cells = <0>;
+>>>          };
+>>>          clk_regulator_pmdomain: pmdomain {
+>>>                  compatible = "simple-pmdomain";
+>>>                  pmdomain-enable-clocks;
+>>>                  pmdomain-enable-regulators;
+>>>                  #power-domain-cells = <0>;
+>>>          };
+>>>
+>>> and then have each device link to one of the nodes as the pmdomain.
+>>>
+>>
+>> That's seems like a good approach to me.
+>
+> Yes, but your previous comment is still actual :(
 
-Best Regards, 
-Shaohui Xie
+Agree!
 
-> -----Original Message-----
-> From: shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org [mailto:shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
-> Sent: Friday, November 14, 2014 5:53 PM
-> To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Wood
-> Scott-B07421
-> Cc: Medve Emilian-EMMEDVE1; Liberman Igal-B31950; Xie Shaohui-B21989
-> Subject: [PATCH] [v2] power/fsl: add MDIO dt binding for FMan
-> 
-> From: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> 
-> This binding is for FMan MDIO, it covers FMan v2 & FMan v3.
-> 
-> Signed-off-by: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
-> changes in V2:
-> addressed comments from Scott in V1.
-> 
->  .../devicetree/bindings/powerpc/fsl/fman.txt       | 69
-> ++++++++++++++++++++++
->  1 file changed, 69 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-> b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-> index edeea16..1523a87 100644
-> --- a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-> +++ b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-> @@ -7,6 +7,7 @@ CONTENTS
->    - FMan MURAM Node
->    - FMan dTSEC/XGEC/mEMAC Node
->    - FMan IEEE 1588 Node
-> +  - FMan MDIO Node
->    - Example
-> 
-> 
-> =========================================================================
-> ====
-> @@ -357,6 +358,68 @@ ptp-timer@fe000 {
->  };
-> 
-> 
-> =========================================================================
-> ====
-> +FMan MDIO Node
-> +
-> +DESCRIPTION
-> +
-> +The MDIO is a bus to which the PHY devices are connected.
-> +
-> +PROPERTIES
-> +
-> +- compatible
-> +		Usage: required
-> +		Value type: <stringlist>
-> +		Definition: A standard property.
-> +		Must include "fsl,fman-mdio" for 1 Gb/s MDIO from FMan v2.
-> +		Must include "fsl,fman-xmdio" for 10 Gb/s MDIO from FMan v2.
-> +		Must include "fsl,fman-memac-mdio" for 1/10 Gb/s MDIO from
-> +		FMan v3.
-> +
-> +- reg
-> +		Usage: required
-> +		Value type: <prop-encoded-array>
-> +		Definition: A standard property.
-> +
-> +- bus-frequency
-> +		Usage: optional
-> +		Value type: <u32>
-> +		Definition: Specifies external MDIO bus clock speed which is
-> +		different from MDIO standard 2.5MHz. Should be defined for
-> SoCs
-> +		on which the standard one cannot work.
-> +
-> +- interrupts
-> +		Usage: optional
-> +		Value type: <prop-encoded-array>
-> +		Definition: Event interrupt of external MDIO controller.
-> +		1 Gb/s MDIO and 10 Gb/s MDIO has one interrupt respectively.
-> +
-> +- fsl,fman-internal-mdio
-> +		Usage: required for internal MDIO
-> +		Value type: boolean
-> +		Definition: Fman has internal MDIO for internal PCS(Physical
-> +		Coding Sublayer) PHYs and external MDIO for external PHYs.
-> +		The settings and programming routines for internal/external
-> +		MDIO are different. Must be included for internal MDIO.
-> +
-> +EXAMPLE
-> +
-> +Example for FMan v2 external MDIO:
-> +
-> +mdio@f1000 {
-> +	compatible = "fsl,fman-xmdio";
-> +	reg = <0xf1000 0x1000>;
-> +	bus-frequency = <20000>;
-> +};
-> +
-> +Example for FMan v3 internal MDIO:
-> +
-> +mdio@f1000 {
-> +	compatible = "fsl,fman-memac-mdio";
-> +	reg = <0xf1000 0x1000>;
-> +	fsl,fman-internal-mdio;
-> +};
-> +
-> +========================================================================
-> =====
->  Example
-> 
->  fman@400000 {
-> @@ -531,4 +594,10 @@ fman@400000 {
->  		compatible = "fsl,fman-ptp-timer";
->  		reg = <0xfe000 0x1000>;
->  	};
-> +
-> +	mdio@f1000 {
-> +		compatible = "fsl,fman-xmdio";
-> +		reg = <0xf1000 0x1000>;
-> +		bus-frequency = <20000>;
-> +	};
->  };
-> --
-> 1.8.4.1
+So I really think we need to decide on how to address the split of the
+device clocks. Before that's done, I don't think it make sense to add
+a "simple-pmdomain" compatible, since it will likely not be that many
+SoC that can use it.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So, does anyone have a suggestion on how to deal with the split of the
+device clocks into "functional" clocks and into "PM" clocks?
+
+Kind regards
+Uffe
