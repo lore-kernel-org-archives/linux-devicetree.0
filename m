@@ -1,52 +1,72 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [GIT PULL 3.19] Broadcom Cygnus SoC Device Tree changes
-Date: Thu, 20 Nov 2014 12:54:48 +0100
-Message-ID: <201411201254.48494.arnd@arndb.de>
-References: <1415826266-6867-1-git-send-email-f.fainelli@gmail.com> <1415826266-6867-2-git-send-email-f.fainelli@gmail.com>
+From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 01/15] clk: divider: replace bitfield width with mask
+Date: Thu, 20 Nov 2014 11:59:51 +0000
+Message-ID: <546DD7B7.3070408@imgtec.com>
+References: <1416438943-11429-1-git-send-email-james.hogan@imgtec.com> <1416438943-11429-2-git-send-email-james.hogan@imgtec.com> <546DCE53.8020004@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415826266-6867-2-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="3ECPGSX0RDXLFldwTNVnnLIWWLTDQlT6G"
+Return-path: <linux-metag-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <546DCE53.8020004-l0cyMroinI0@public.gmane.org>
+Sender: linux-metag-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-metag-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: =?UTF-8?B?RW1pbGlvIEzDs3Bleg==?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 12 November 2014, Florian Fainelli wrote:
-> The following changes since commit f114040e3ea6e07372334ade75d1ee0775c355e1:
-> 
->   Linux 3.18-rc1 (2014-10-19 18:08:38 -0700)
-> 
-> are available in the git repository at:
-> 
->   http://github.com/brcm/linux.git tags/arm-soc/for-3.19/cygnus-dts-v2
-> 
-> for you to fetch changes up to c9ad7bc5fe3c57c8c817fcb1bd264a02176a40c4:
-> 
->   ARM: dts: Enable Broadcom Cygnus SoC (2014-11-11 22:30:42 -0800)
-> 
-> ----------------------------------------------------------------
-> This pull request contains the Broadcom Cygnus Device Tree changes:
-> 
-> - binding documentation for the SoC and clock
-> - cygnus SoC and clock dtsi files
-> - DTS for Cygnus Entreprise phone, BCM911360K and BCM958300K
+--3ECPGSX0RDXLFldwTNVnnLIWWLTDQlT6G
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Something went wrong here: This branch contains the updated license
-statements, but Olof had already merged the branch with the original
-license statements that we didn't like, so all three patches conflict
-with the ones we already have.
+On 20/11/14 11:19, Tero Kristo wrote:
+> On 11/20/2014 01:15 AM, James Hogan wrote:
+>> - Updated assignment of clk_divider::width in imx, rockchip, st, sunxi=
+,
+>>    ti clock components to use mask instead (not tested), using the
+>>    following semantic patch:
+>=20
+> Hi James/Mike,
+>=20
+> This patch currently causes a build breakage with omap2plus_defconfig.
+> Reason being you are modifying the clk_divider struct, but not touching=
 
-I've done an merge of the new branch over the old one, which was
-literally the first thing in the next/dt branch. This isn't ideal,
-but I think it's the best way out of the mess.
+> the code under drivers/clk/ti/divider.c which uses it. The fixes are
+> basically the same you have done for clk-divider.c, the contents of thi=
+s
+> file are mostly just copied under TI clock driver.
 
-I hope we can avoid this in the future.
+Thanks for pointing that out! I'll fix and improve my grep-fu to find
+other such cases.
 
-	Arnd
+Cheers
+James
+
+
+--3ECPGSX0RDXLFldwTNVnnLIWWLTDQlT6G
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJUbde+AAoJEGwLaZPeOHZ6MuUQAJxW+C52BeSeukxmk6+p+CJG
+z/ww0Y3o6b/XUJnQARxHvkkDX/Kh/YKAtQSoySSgTOceeZHHPsDD7mHMZvCk9Av3
+yV9p8agyWUZ756OA9KFYBODaE8whAxExZBOEG550ZWlbeHXQpyqdYTWGyY6NaITC
+9jc8zq+2BomJaYhCWO29X+GW/xcetAYhtOBpf2IPw17E3JNSS2KTizvvzjzZz+17
+z2LV8LyaYhzMgeSiZcFh7z6QZMI+qY8ZArgZRP95KW91l2oeFjzmhWzO3gZUqg4o
+/f8qWD+Z9zV2coKZvPPiie0r3s8mzxA6pxq/OUtrDaSX2sghuugWY7fGnHjOwH7c
+MYztsc9UDIGNp3JEhUOps5gKM0slauvavDCzrY3Y9+5HGlwplGZkAJJAZEGn9Ln1
+dm4CkEeTC8oKgaJYD6zgS0k9squZZZY1cL+XgMxX6vywitsL6JIpHYwJzs3/a1JA
+wZIOl589UNoOLYt0JRtJ8ANG8JIylEhuLPwePJ5CrvD6x9A49my/pp9VwoRtyEiM
+ouiDlL4ZVAHisX2VYFO/hKJ61OGXr52Oiw1lhkBaDGHc9ZRwS4KSbYvBJoBr1E36
+671Vms+ggm3gGgmtgcdwUMla9WtLGLl8txOCMT862SA/GY/uuxKUmwzx1dxf2cjY
+vd8AXLD4GY7fpDhcqg5W
+=QhCs
+-----END PGP SIGNATURE-----
+
+--3ECPGSX0RDXLFldwTNVnnLIWWLTDQlT6G--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-metag" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
