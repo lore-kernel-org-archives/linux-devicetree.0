@@ -1,50 +1,53 @@
-From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2 00/22] Multiplatform BMIPS kernel
-Date: Thu, 20 Nov 2014 12:13:55 -0800
-Message-ID: <CAJiQ=7CbOtejxhcoTiJ2VOyM9CJNCdWAw7Cv5HTzwGa1VmO5Xg@mail.gmail.com>
-References: <1416097066-20452-1-git-send-email-cernekee@gmail.com>
- <20141120030434.GE24364@ld-irv-0074> <CAJiQ=7C8h-MAuRdgzZqx2=bg8bvy7v9pv7e7tGXWmA9ghYJiqQ@mail.gmail.com>
- <546E2E3E.5040305@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <546E2E3E.5040305-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Jon Fraser <jfraser-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH RFC 1/3] DT: add binding for mxs power subsystem
+Date: Thu, 20 Nov 2014 20:14:35 +0000
+Message-ID: <1416514477-19190-2-git-send-email-stefan.wahren@i2se.com>
+References: <1416514477-19190-1-git-send-email-stefan.wahren@i2se.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1416514477-19190-1-git-send-email-stefan.wahren@i2se.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Cc: Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 20, 2014 at 10:09 AM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Slightly unrelated, did you also try to use drivers/bus/brcmstb_gisb.c
-> on these MIPS platforms?
->
-> Its usefulness is probably lower on MIPS since we typically get accurate
-> bus errors to be decoded by the CPU and printed through the exception
-> handler, but I'd be curious if it works just fine as well.
+This patch adds the device tree bindings for the Freescale MXS
+power subsystem.
 
-Unfortunately ERR_CAP_CLR (the first register) starts at offset 0x7e4
-on 28nm, and offset 0x0c8 on 40nm/65nm.
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+---
+ .../devicetree/bindings/power/mxs_power.txt        |   23 ++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/mxs_power.txt
 
-Just for fun I tried setting the base address to (0x104000c8 - 0x7e4)
-= 0x103ff8e4 on 7420, and then noticed that the CAP_HI_ADDR register
-only exists on the new chips with 40-bit addressing.  This prevents
-the driver from reading the valid bit from the correct location, so
-the error handler exits prematurely.  After manually hacking the code
-to renumber the registers, it worked again:
-
-# devmem 0x103ffffc
-Data bus error, epc == 0040a21c, ra == 0040a1a0
-brcmstb_gisb_arb_decode_addr: timeout at 0x103ffffc [R timeout], core: cpu_0
-Bus error
-# devmem 0x103ffffc 32 0x5678
-brcmstb_gisb_arb_decode_addr: timeout at 0x103ffffc [W timeout], core: cpu_0
-#
-
-Last night I fixed up the brcmstb reset driver to work with the old
-chips.  I'm wondering if it makes sense to just split this work into a
-new patch series, since several of the BCM7xxx ARM drivers will need
-changes (both code and DT) to run on MIPS.
+diff --git a/Documentation/devicetree/bindings/power/mxs_power.txt b/Documentation/devicetree/bindings/power/mxs_power.txt
+new file mode 100644
+index 0000000..0817841
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/mxs_power.txt
+@@ -0,0 +1,23 @@
++Power subsystem for Freescale MX23/MX28
++
++Required properties:
++- compatible:
++  - "fsl,imx23-power" for MX23
++  - "fsl,imx28-power" for MX28
++- address-cells, size-cells, ranges: must be present as appropriate to
++  map children
++- reg: Address and length of the register set for the power subsystem.
++
++Optional properties;
++- interrupts: Interrupts used by the power subsystem
++
++Example for imx28:
++
++	power: power@80044000 {
++				compatible = "fsl,imx28-power";
++				#address-cells = <1>;
++				#size-cells = <1>;
++				reg = <0x80044000 0x2000>;
++				interrupts = <6>;
++				ranges;
++	}
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
+
