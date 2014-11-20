@@ -1,43 +1,74 @@
-From: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-Subject: Re: [PATCH RESEND v2 0/4] hwrng: atmel: add DT support
-Date: Thu, 20 Nov 2014 22:43:49 +0800
-Message-ID: <20141120144349.GC32061@gondor.apana.org.au>
-References: <cover.1416475860.git.nicolas.ferre@atmel.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH] Add attributes neccessary for LED flashes to
+ devicetree/bindings/leds/common.txt
+Date: Thu, 20 Nov 2014 15:48:26 +0100
+Message-ID: <546DFF3A.7020702@samsung.com>
+References: <20141120131713.GC27527@amd> <546DEEC3.7090508@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1416475860.git.nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <546DEEC3.7090508@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: sakari.ailus@iki.fi, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-doc@vger.kernel.org, cooloney@gmail.com, rpurdie@rpsys.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 20, 2014 at 10:43:21AM +0100, Nicolas Ferre wrote:
-> This is the patch series that Boris sent yesterday. I've just collected
-> "Acked-by" tags and resend it with updated cover letter.
-> 
-> This series adds DT support for the TRNG (True Random Generator) block and adds
-> missing trng nodes to at91sam9g45 dtsi files.
-> 
-> Herbert,
-> As you said that you can take this series, here is the latest vertion ready for you to
-> pick it up. Thanks for your help.
-> 
-> Bye,
-> 
-> Boris Brezillon (4):
->   hwrng: atmel: use clk_prepapre_enable/_disable_unprepare
->   hwrng: atmel: add DT support
->   hwrng: atmel: Add TRNG DT binding doc
->   ARM: at91/dt: add trng node to at91sam9g45
+On 11/20/2014 02:38 PM, Jacek Anaszewski wrote:
+> Hi Pavel,
+>
+> On 11/20/2014 02:17 PM, Pavel Machek wrote:
+>>
+>> Add attributes neccessary for LED flashes to
+>> devicetree/bindings/leds/common.txt .
+>>
+>> This will allow me to add device tree support for adp1653 i2c flash
+>> LED driver, and allow Jacek Anaszewski to add support for more LED
+>> drivers..
+>>
+>> Signed-off-by: Pavel Machek <pavel@ucw.cz>
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/common.txt
+>> b/Documentation/devicetree/bindings/leds/common.txt
+>> index 2d88816..e9acbbc 100644
+>> --- a/Documentation/devicetree/bindings/leds/common.txt
+>> +++ b/Documentation/devicetree/bindings/leds/common.txt
+>> @@ -14,6 +14,15 @@ Optional properties for child nodes:
+>>        "ide-disk" - LED indicates disk activity
+>>        "timer" - LED flashes at a fixed, configurable rate
+>>
+>> +- max-microamp : maximum intensity in microamperes of the LED
+>> +               (torch LED for flash devices)
+>> +- flash-max-microamp : maximum intensity in microamperes of the
+>> +                       flash LED; it is mandatory if the LED should
+>> +               support the flash mode
+>> +- flash-timeout-microsec : timeout in microseconds after which the flash
+>> +                           LED is turned off
+>> +
+>> +
+>>   Examples:
+>>
+>>   system-status {
+>> @@ -21,3 +30,10 @@ system-status {
+>>       linux,default-trigger = "heartbeat";
+>>       ...
+>>   };
+>> +
+>> +camera-flash {
+>> +    label = "Flash";
+>> +    max-microamp = <50000>;
+>> +    flash-max-microamp = <320000>;
+>> +    flash-timeout-microsec = <500000>;
+>> +}
+>>
+>
+> Why did you omit indicator-pattern?
 
-All applied.  Thanks!
--- 
-Email: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Actually, we've agreed with Sakari that we can handle
+indicator-pattern later.
+I would remove references to you, me and adp1653 driver from the commit
+message and mention that this modifications adjust the led common
+bindings to the LED Flash class that is to be added.
+
+Regards,
+Jacek
