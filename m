@@ -1,47 +1,57 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: [PATCH RESEND v2 4/4] ARM: at91/dt: add trng node to at91sam9g45
-Date: Thu, 20 Nov 2014 10:43:25 +0100
-Message-ID: <575b40c1f59408602161bb459ba5c90e5a1c19c3.1416475860.git.nicolas.ferre@atmel.com>
-References: <cover.1416475860.git.nicolas.ferre@atmel.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 0/9] ASoC: QCOM: Add support for ipq806x SOC
+Date: Thu, 20 Nov 2014 09:51:00 +0000
+Message-ID: <20141120095100.GK22111@sirena.org.uk>
+References: <1416423169-21865-1-git-send-email-kwestfie@codeaurora.org>
+ <AE8D85F1-A1E0-4656-B160-37AA3300FE58@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1416475860.git.nicolas.ferre@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, herbert@gondor.apana.org.au
-Cc: linux-kernel@vger.kernel.org, mpm@selenic.com, Boris BREZILLON <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, robh+dt@kernel.org, mark.rutland@arm.com, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, peter@korsgaard.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="n95ggtiZmkwHBchJ"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <AE8D85F1-A1E0-4656-B160-37AA3300FE58@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Kenneth Westfield <kwestfie@codeaurora.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, Greg KH <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
 
-Add a DT node for the TRNG (True Random Number Generator) block.
+--n95ggtiZmkwHBchJ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Keep this block enabled as it does not depend on any external connection,
-and thus should be available on all boards.
+On Wed, Nov 19, 2014 at 02:16:10PM -0600, Kumar Gala wrote:
 
-Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
----
- arch/arm/boot/dts/at91sam9g45.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+Kumar, as I keep saying please fix your mailer to word wrap within
+paragraphs.
 
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index d3f65130a1f8..6c0637a4bda5 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -940,6 +940,13 @@
- 				status = "disabled";
- 			};
- 
-+			trng@fffcc000 {
-+				compatible = "atmel,at91sam9g45-trng";
-+				reg = <0xfffcc000 0x4000>;
-+				interrupts = <6 IRQ_TYPE_LEVEL_HIGH 0>;
-+				clocks = <&trng_clk>;
-+			};
-+
- 			i2c0: i2c@fff84000 {
- 				compatible = "atmel,at91sam9g10-i2c";
- 				reg = <0xfff84000 0x100>;
--- 
-2.1.3
+> Some general comments, you shouldn=E2=80=99t have gerrit Change-Id=E2=80=
+=99s in commit
+
+Indeed.
+
+> messages, the Kconfig/Makefile changes should be part of the patch
+> that adds the code associated with them.
+
+No, it's totally fine for a large new driver like this that's split over
+many commits to add the Kconfig and Makefile at the end - there is no
+value in trying to split them up.
+
+--n95ggtiZmkwHBchJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUbbmEAAoJECTWi3JdVIfQ3CEH/1kR10+Fa4Dg60qiSNAob4l1
+S3YBWxzxLCdsXt0JFG/bi9LKiXMg3Z0SKpK3xHo1c8uMxzbdGfXffxUJ1yExAmpm
+SMEyicRcJXrKzpuASaZOD9xnw1HzU/U18A6UJUKo5ewenxoxQJOB8KOudTBekegV
+BYjDS+ks0gYlsoXCAthAOO0+C1sydR1RMELFsgWfse2YXCCA2HaIyr2oLMdrsYC9
+bf7nWC816Q1z29gLsGolb59DXjF8hoDn0fS0twYV24ATEA4ta7TIs8/00NMvtbZP
+SrTMzNby+XpbSkJgNbg7TpM1Uhvno0O4qS75yRJBq14XJVXdJ2xlnqCOVdJrwnI=
+=WIMX
+-----END PGP SIGNATURE-----
+
+--n95ggtiZmkwHBchJ--
