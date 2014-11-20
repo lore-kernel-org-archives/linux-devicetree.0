@@ -1,62 +1,57 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/2] Documentation: bindings: add doc for the Berlin USB PHY
-Date: Thu, 20 Nov 2014 22:53:26 +0100
-Message-ID: <1416520406-1852-2-git-send-email-sebastian.hesselbarth@gmail.com>
-References: <1416520406-1852-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416520406-1852-1-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v4 1/2] ARM: keystone: pm: switch to use generic pm domains
+Date: Thu, 20 Nov 2014 22:54:07 +0100
+Message-ID: <CAMuHMdVXGPu7x706NxqO3rn3KuRbPbD_ZQsJtDH4Hf31AaRR+Q@mail.gmail.com>
+References: <1415631557-22897-1-git-send-email-grygorii.strashko@ti.com>
+	<1709760.E0jX3Myv0h@wuerfel>
+	<546C7FDD.7030906@ti.com>
+	<2900095.WIocOu7ue2@wuerfel>
+	<CAPDyKFqeZ3YU2OEN4tCOdcQ0pAho67Q8U_eCEOroG9aS0mp+-Q@mail.gmail.com>
+	<546DD87B.3080806@ti.com>
+	<CAPDyKFrBhZyqozM98_4pPdW0EMFt5W6VX1X7cz6Z=yNhW4vYTA@mail.gmail.com>
+	<CAMuHMdWtHT7QX3Kpa-GCLa49ToGODwjnNVgfxDzJzcM-FU1ffg@mail.gmail.com>
+	<546E0970.5090301@ti.com>
+	<7hh9xtr5ac.fsf@deeprootsystems.com>
+	<CAMuHMdV7zASj8_NtLRir1VubXEKTkq0vBGMXeYXDACu8UC2tZA@mail.gmail.com>
+	<7hbno1r1af.fsf@deeprootsystems.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7hbno1r1af.fsf@deeprootsystems.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@kernel.org>
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+On Thu, Nov 20, 2014 at 10:48 PM, Kevin Hilman <khilman@kernel.org> wrote:
+>>> So what exactly are we talking about with "PM" clocks, and why are they
+>>> "special" when it comes to PM domains?  IOW, why are the clocks to be
+>>> managed during PM domain transitions for a given device any different
+>>> than the clocks that need to be managed for a runtime suspend/resume (or
+>>> system suspend/resume) sequence for the same device?
+>>
+>> (Speaking for my case, shmobile)
+>>
+>> They're not. The clocks to be managed during PM domain transitions are the
+>> same as the clocks that need to be managed for a runtime suspend/resume
+>> (or system suspend/resume) sequence.
+>>
+>> The special thing is that this is more a platform than a driver thing: the same
+>> module may have a "PM/functional" clock (that is documented to enable/disable
+>> the module) on one Soc, but noet on another.
+>
+> So why isn't the presence or absence of the clock described in the .dtsi
+> for the SoC instead of being handled by special PM domain logic?
 
-Document the bindings of the Marvell Berlin USB PHY driver.
+It is. Cfr. the presence/absence of clocks for renesas,rcar-gpio nodes.
 
-Signed-off-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
-Split-off patches from latest Berlin USB PHY patches
-  https://lkml.kernel.org/g/1416231347-27193-1-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Gr{oetje,eeting}s,
 
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- .../devicetree/bindings/phy/berlin-usb-phy.txt     |   16 ++++++++++++++++
- 1 files changed, 16 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/berlin-usb-phy.txt
-
-diff --git a/Documentation/devicetree/bindings/phy/berlin-usb-phy.txt b/Documentation/devicetree/bindings/phy/berlin-usb-phy.txt
-new file mode 100644
-index 0000000..be33780
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/berlin-usb-phy.txt
-@@ -0,0 +1,16 @@
-+* Marvell Berlin USB PHY
-+
-+Required properties:
-+- compatible: "marvell,berlin2-usb-phy" or "marvell,berlin2cd-usb-phy"
-+- reg: base address and length of the registers
-+- #phys-cells: should be 0
-+- resets: reference to the reset controller
-+
-+Example:
-+
-+	usb-phy@f774000 {
-+		compatible = "marvell,berlin2-usb-phy";
-+		reg = <0xf774000 0x128>;
-+		#phy-cells = <0>;
-+		resets = <&chip 0x104 14>;
-+	};
--- 
-1.7.2.5
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
