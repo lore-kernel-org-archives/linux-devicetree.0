@@ -1,30 +1,47 @@
-From: Ralf Baechle <ralf@linux-mips.org>
-Subject: Re: [PATCH V2 10/22] MIPS: BMIPS: Allow BMIPS3300 to utilize SMP
- ebase relocation code
-Date: Fri, 21 Nov 2014 00:40:10 +0100
-Message-ID: <20141120234010.GG21601@linux-mips.org>
-References: <1416097066-20452-1-git-send-email-cernekee@gmail.com>
- <1416097066-20452-11-git-send-email-cernekee@gmail.com>
+From: Benoit Parrot <bparrot@ti.com>
+Subject: [Patch v2 0/2] gpio: add GPIO hogging mechanism
+Date: Thu, 20 Nov 2014 17:54:42 -0600
+Message-ID: <1416527684-19017-1-git-send-email-bparrot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mips-bounce@linux-mips.org>
-Content-Disposition: inline
-In-Reply-To: <1416097066-20452-11-git-send-email-cernekee@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Kevin Cernekee <cernekee@gmail.com>
-Cc: f.fainelli@gmail.com, jfraser@broadcom.com, dtor@chromium.org, tglx@linutronix.de, jason@lakedaemon.net, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linus.walleij@linaro.org
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 15, 2014 at 04:17:34PM -0800, Kevin Cernekee wrote:
+This patch set re-introduces the gpio hogging concept first 
+presented by Boris Brezillion.
+This patch set provides a way to initally configure specific GPIO
+when the gpio controller is probed.
 
-And if this one v1 is also queued for 3.19.
+The actual DT scanning to collect the GPIO specific data is performed
+as part of the gpiochip_add().
 
-  Ralf
+The purpose of this is to allows specific GPIOs to be configured
+without any driver specific code.
+This particularly useful because board design are getting
+increasingly complex and given SoC pins can now have upward
+of 10 mux values a lot of connections are now dependent on
+external IO muxes to switch various modes and combination.
+
+Specific drivers should not necessarily need to be aware of
+what accounts to a specific board implementation. This board level
+"description" should be best kept as part of the dts file.
+
+Changes since v1:
+ * Split the devicetree bindings documentation in its own patch.
+ * Refactor the gpio-hog mechanism as private functions meant to
+   be to invoked from of_gpiochip_add().
+
+Benoit Parrot (2):
+  gpio: add GPIO hogging mechanism
+  gpio: Document GPIO hogging mechanism
+
+ Documentation/devicetree/bindings/gpio/gpio.txt |  25 ++++
+ drivers/gpio/gpiolib-of.c                       | 188 ++++++++++++++++++++++++
+ 2 files changed, 213 insertions(+)
+
+-- 
+1.8.5.1
+
