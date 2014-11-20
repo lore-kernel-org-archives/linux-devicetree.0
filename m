@@ -1,54 +1,121 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH RFC 3/3] ARM: dts: enable power subsystem for i.MX28
-Date: Thu, 20 Nov 2014 23:57:03 +0100 (CET)
-Message-ID: <1167895673.64469.1416524223868.JavaMail.open-xchange@oxbaltgw04.schlund.de>
-References: <1416514477-19190-1-git-send-email-stefan.wahren@i2se.com> <1416514477-19190-4-git-send-email-stefan.wahren@i2se.com> <CAOMZO5AWOs8ODsru+ySsLb=R4ezDL19nK_z0zAXdbrDfPT8KhA@mail.gmail.com>
-Reply-To: Stefan Wahren <stefan.wahren@i2se.com>
+From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/9] rc: sunxi-cir: Add support for an
+ optional reset controller
+Date: Fri, 21 Nov 2014 10:05:15 +1100
+Message-ID: <CAGRGNgXyYujdwGka_mQzWdjyAfHCE1hr7a3XPqCrRcKHf=MBew@mail.gmail.com>
+References: <1416498928-1300-1-git-send-email-hdegoede@redhat.com> <1416498928-1300-5-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5AWOs8ODsru+ySsLb=R4ezDL19nK_z0zAXdbrDfPT8KhA@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-sunxi+bncBDQIP76OUQLBBP7HXGRQKGQETEP22AA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1416498928-1300-5-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
+Hi Hans,
 
-> Fabio Estevam <festevam@gmail.com> hat am 20. November 2014 um 22:32
-> geschrieben:
+On Fri, Nov 21, 2014 at 2:55 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> On sun6i the cir block is attached to the reset controller, add support
+> for de-asserting the reset if a reset controller is specified in dt.
 >
->
-> Hi Stefan,
->
-> On Thu, Nov 20, 2014 at 6:14 PM, Stefan Wahren <stefan.wahren@i2se.com> wrote:
-> > This patch enables the power subsystem for all i.MX28 boards.
-> >
-> > Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> > ---
-> > arch/arm/boot/dts/imx28.dtsi | 6 +++++-
-> > 1 file changed, 5 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-> > index 47f68ac..5c163a5 100644
-> > --- a/arch/arm/boot/dts/imx28.dtsi
-> > +++ b/arch/arm/boot/dts/imx28.dtsi
-> > @@ -1022,8 +1022,12 @@
-> > };
-> >
-> > power: power@80044000 {
-> > + compatible = "fsl,imx28-power";
->
-> Should we have 'fsl,imx23-power' and 'fsl,imx28-power' as compatible strings?
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/media/rc/sunxi-cir.c | 25 +++++++++++++++++++++++--
+>  1 file changed, 23 insertions(+), 2 deletions(-)
 
-yes, of course.
+Shouldn't we be updating the binding documentation?
 
+> diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-cir.c
+> index bcee8e1..895fb65 100644
+> --- a/drivers/media/rc/sunxi-cir.c
+> +++ b/drivers/media/rc/sunxi-cir.c
+> @@ -23,6 +23,7 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/module.h>
+>  #include <linux/of_platform.h>
+> +#include <linux/reset.h>
+>  #include <media/rc-core.h>
 >
-> Or ''fsl,mxs-power' could be used for both?
+>  #define SUNXI_IR_DEV "sunxi-ir"
+> @@ -95,6 +96,7 @@ struct sunxi_ir {
+>         int             irq;
+>         struct clk      *clk;
+>         struct clk      *apb_clk;
+> +       struct reset_control *rst;
+>         const char      *map_name;
+>  };
+>
+> @@ -166,15 +168,29 @@ static int sunxi_ir_probe(struct platform_device *pdev)
+>                 return PTR_ERR(ir->clk);
+>         }
+>
+> +       /* Reset (optional) */
+> +       ir->rst = devm_reset_control_get_optional(dev, NULL);
+> +       if (IS_ERR(ir->rst)) {
+> +               ret = PTR_ERR(ir->rst);
+> +               if (ret == -EPROBE_DEFER)
+> +                       return ret;
+> +               ir->rst = NULL;
+> +       } else {
+> +               ret = reset_control_deassert(ir->rst);
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+>         ret = clk_set_rate(ir->clk, SUNXI_IR_BASE_CLK);
+>         if (ret) {
+>                 dev_err(dev, "set ir base clock failed!\n");
+> -               return ret;
+> +               goto exit_reset_assert;
+>         }
+>
+>         if (clk_prepare_enable(ir->apb_clk)) {
+>                 dev_err(dev, "try to enable apb_ir_clk failed\n");
+> -               return -EINVAL;
+> +               ret = -EINVAL;
+> +               goto exit_reset_assert;
+>         }
+>
+>         if (clk_prepare_enable(ir->clk)) {
+> @@ -271,6 +287,9 @@ exit_clkdisable_clk:
+>         clk_disable_unprepare(ir->clk);
+>  exit_clkdisable_apb_clk:
+>         clk_disable_unprepare(ir->apb_clk);
+> +exit_reset_assert:
+> +       if (ir->rst)
+> +               reset_control_assert(ir->rst);
+>
+>         return ret;
+>  }
+> @@ -282,6 +301,8 @@ static int sunxi_ir_remove(struct platform_device *pdev)
+>
+>         clk_disable_unprepare(ir->clk);
+>         clk_disable_unprepare(ir->apb_clk);
+> +       if (ir->rst)
+> +               reset_control_assert(ir->rst);
+>
+>         spin_lock_irqsave(&ir->ir_lock, flags);
+>         /* disable IR IRQ */
+> --
+> 2.1.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
 
-I think that would be a bad idea. I can't believe that all PMU register of
-i.MX23 and i.MX28 are identical. So in the future we will have to distinguish
-between them. It's better to do it now like most of the mxs driver does.
 
-Stefan
+
+-- 
+Julian Calaby
+
+Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Profile: http://www.google.com/profiles/julian.calaby/
