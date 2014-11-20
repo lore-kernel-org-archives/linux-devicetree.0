@@ -1,90 +1,109 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH] Add attributes neccessary for LED flashes to
- devicetree/bindings/leds/common.txt
-Date: Thu, 20 Nov 2014 20:19:19 +0100
-Message-ID: <20141120191919.GA9756@amd>
-References: <20141120131713.GC27527@amd>
- <546DEEC3.7090508@samsung.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 3/9] clk: sunxi: Add prcm mod0 clock driver
+Date: Thu, 20 Nov 2014 20:32:17 +0100
+Message-ID: <546E41C1.1070800@redhat.com>
+References: <1416498928-1300-1-git-send-email-hdegoede@redhat.com> <1416498928-1300-4-git-send-email-hdegoede@redhat.com> <CAGb2v66zoAy93mjZn+yf8zvCmkQ8AVWH92jKL-gyu90E5HLuuw@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <546DEEC3.7090508@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: sakari.ailus@iki.fi, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-doc@vger.kernel.org, cooloney@gmail.com, rpurdie@rpsys.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBUEDXGRQKGQEKQ2LCMQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAGb2v66zoAy93mjZn+yf8zvCmkQ8AVWH92jKL-gyu90E5HLuuw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu 2014-11-20 14:38:11, Jacek Anaszewski wrote:
-> Hi Pavel,
+Hi,
+
+On 11/20/2014 07:24 PM, Chen-Yu Tsai wrote:
+> Hi,
 > 
-> On 11/20/2014 02:17 PM, Pavel Machek wrote:
-> >
-> >Add attributes neccessary for LED flashes to
-> >devicetree/bindings/leds/common.txt .
-> >
-> >This will allow me to add device tree support for adp1653 i2c flash
-> >LED driver, and allow Jacek Anaszewski to add support for more LED
-> >drivers..
-> >
-> >Signed-off-by: Pavel Machek <pavel@ucw.cz>
-> >
-> >diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-> >index 2d88816..e9acbbc 100644
-> >--- a/Documentation/devicetree/bindings/leds/common.txt
-> >+++ b/Documentation/devicetree/bindings/leds/common.txt
-> >@@ -14,6 +14,15 @@ Optional properties for child nodes:
-> >       "ide-disk" - LED indicates disk activity
-> >       "timer" - LED flashes at a fixed, configurable rate
-> >
-> >+- max-microamp : maximum intensity in microamperes of the LED
-> >+  	         (torch LED for flash devices)
-> >+- flash-max-microamp : maximum intensity in microamperes of the
-> >+                       flash LED; it is mandatory if the LED should
-> >+		       support the flash mode
-> >+- flash-timeout-microsec : timeout in microseconds after which the flash
-> >+                           LED is turned off
-> >+
-> >+
-> >  Examples:
-> >
-> >  system-status {
-> >@@ -21,3 +30,10 @@ system-status {
-> >  	linux,default-trigger = "heartbeat";
-> >  	...
-> >  };
-> >+
-> >+camera-flash {
-> >+	label = "Flash";
-> >+	max-microamp = <50000>;
-> >+	flash-max-microamp = <320000>;
-> >+	flash-timeout-microsec = <500000>;
-> >+}
-> >
+> On Thu, Nov 20, 2014 at 7:55 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> Add a driver for mod0 clocks found in the prcm. Currently there is only
+>> one mod0 clocks in the prcm, the ir clock.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
+>>  drivers/clk/sunxi/Makefile                        |  2 +-
+>>  drivers/clk/sunxi/clk-sun6i-prcm-mod0.c           | 63 +++++++++++++++++++++++
+>>  drivers/mfd/sun6i-prcm.c                          | 14 +++++
+>>  4 files changed, 79 insertions(+), 1 deletion(-)
+>>  create mode 100644 drivers/clk/sunxi/clk-sun6i-prcm-mod0.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+>> index ed116df..342c75a 100644
+>> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
+>> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+>> @@ -56,6 +56,7 @@ Required properties:
+>>         "allwinner,sun4i-a10-usb-clk" - for usb gates + resets on A10 / A20
+>>         "allwinner,sun5i-a13-usb-clk" - for usb gates + resets on A13
+>>         "allwinner,sun6i-a31-usb-clk" - for usb gates + resets on A31
+>> +       "allwinner,sun6i-a31-ir-clk" - for the ir clock on A31
+>>
+>>  Required properties for all clocks:
+>>  - reg : shall be the control register address for the clock.
+>> diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
+>> index 7ddc2b5..daf8b1c 100644
+>> --- a/drivers/clk/sunxi/Makefile
+>> +++ b/drivers/clk/sunxi/Makefile
+>> @@ -10,4 +10,4 @@ obj-y += clk-sun8i-mbus.o
+>>
+>>  obj-$(CONFIG_MFD_SUN6I_PRCM) += \
+>>         clk-sun6i-ar100.o clk-sun6i-apb0.o clk-sun6i-apb0-gates.o \
+>> -       clk-sun8i-apb0.o
+>> +       clk-sun8i-apb0.o clk-sun6i-prcm-mod0.o
+>> diff --git a/drivers/clk/sunxi/clk-sun6i-prcm-mod0.c b/drivers/clk/sunxi/clk-sun6i-prcm-mod0.c
+>> new file mode 100644
+>> index 0000000..e80f18e
+>> --- /dev/null
+>> +++ b/drivers/clk/sunxi/clk-sun6i-prcm-mod0.c
+>> @@ -0,0 +1,63 @@
+>> +/*
+>> + * Allwinner A31 PRCM mod0 clock driver
+>> + *
+>> + * Copyright (C) 2014 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#include <linux/clk-provider.h>
+>> +#include <linux/clkdev.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/platform_device.h>
+>> +
+>> +#include "clk-factors.h"
+>> +#include "clk-mod0.h"
+>> +
+>> +static const struct of_device_id sun6i_a31_prcm_mod0_clk_dt_ids[] = {
+>> +       { .compatible = "allwinner,sun6i-a31-ir-clk" },
 > 
-> Why did you omit indicator-pattern?
+> Could we use a generic name, like "sun6i-a31-prcm-mod0-clk"?
+> IIRC, there is another one, the module clock for the 1-wire interface.
 
-Well, I think its going to be device specific, and it was not
-specified well enough -- and I believe it needs more discussion.
+I wish we could use a generic name, but that does not work for mfd device
+subnodes, as the mfd framework attaches resources (such as registers) to
+the subnodes based on the compatible.
 
-Indicator pattern would be basically some sequence of intensities in
-time, right?
+BTW it seems that that the 1-wire clock is not 100% mod0 clock compatible,
+at least the ccmu.h in the allwinner SDK uses a different struct definition
+for it.
 
-And your hardware has some preset number of patterns it can do...?
+Regards,
 
-There's a controller for 3-color LED in n900, and it takes programs
-for patterns. So I for example had a program that computed prime
-numbers and then blinked them on the LED, independently of the main
-CPU.
-
-So yes, patterns would be useful, but no, I don't know how to do them
-in generic way, and thus would prefer to avoid defining them in
-generic binding.
-
-									Pavel
-
-
-
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Hans
