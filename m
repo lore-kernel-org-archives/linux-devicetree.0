@@ -1,40 +1,64 @@
-From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
-Subject: Re: [PATCHv4 01/10] arm: mvebu: fix vendor prefix typo in kirkwood-synology.dtsi
-Date: Thu, 20 Nov 2014 09:28:49 +0100
-Message-ID: <871toytgvy.fsf@natisbad.org>
-References: <cover.1416351425.git.arno@natisbad.org>
-	<20141120015519.GA22670@titan.lakedaemon.net>
-	<20141120050213.GB2596@lunn.ch> <7770322.bXz9M2IL1d@wuerfel>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH 08/10] dt/bindings: add clock-select function property to
+ micrel phy binding
+Date: Thu, 20 Nov 2014 10:08:40 +0100
+Message-ID: <20141120090840.GI30369@pengutronix.de>
+References: <1416398363-32306-1-git-send-email-johan@kernel.org>
+ <1416398363-32306-9-git-send-email-johan@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7770322.bXz9M2IL1d@wuerfel> (Arnd Bergmann's message of "Thu, 20
-	Nov 2014 08:35:43 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1416398363-32306-9-git-send-email-johan@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Bruno Thomsen <bth@kamstrup.dk>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Nov 19, 2014 at 12:59:21PM +0100, Johan Hovold wrote:
+> Add "micrel,rmii-reference-clock-select-25-mhz" to Micrel ethernet PHY
+> binding documentation.
+> 
+> This property is needed to properly describe some revisions of Micrel
+> PHYs which has the function of this configuration bit inverted so that
+> setting it enables 25 MHz rather than 50 MHz clock mode.
+> 
+> Note that a clock reference ("rmii-ref") is still needed to actually
+> select either mode.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Johan Hovold <johan@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/net/micrel.txt | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/micrel.txt b/Documentation/devicetree/bindings/net/micrel.txt
+> index 20a6cac7abc6..87496a8c64ab 100644
+> --- a/Documentation/devicetree/bindings/net/micrel.txt
+> +++ b/Documentation/devicetree/bindings/net/micrel.txt
+> @@ -19,6 +19,17 @@ Optional properties:
+>  
+>  	See the respective PHY datasheet for the mode values.
+>  
+> + - micrel,rmii-reference-clock-select-25-mhz: RMII Reference Clock Select
+> +						bit selects 25 MHz mode
+> +
+> +	Setting the RMII Reference Clock Select bit enables 25 MHz rather
+> +	than 50 MHz clock mode.
+> +
+> +	Note that this option in only needed for certain PHY revisions with a
+> +	non-standard, inverted function of this configuration bit.
+> +	Specifically, a clock reference ("rmii-ref" below) is always needed to
+> +	actually select a mode.
 
-Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
+Nice, that should be clear.
 
->> > Should the driver now support both variants for backward compatibility?
->> 
->> Hi Jason
->> 
->> This is an i2c device. i2c totally ignores the vendor. It is optional.
->> So there is no backward compatibility issues.
->> 
->
-> This question keeps coming up, so I'd suggest explaining it in the
-> patch changelog.
+Acked-by: Sascha Hauer <s.hauer@pengutronix.de>
 
-Granted ;-)
+Sascha
 
-Cheers,
-
-a+
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
