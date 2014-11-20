@@ -1,56 +1,30 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH] of/address: Don't throw errors on absent ranges
- properties
-Date: Fri, 21 Nov 2014 10:07:59 +1100
-Message-ID: <1416524879.5704.55.camel@kernel.crashing.org>
-References: <1415948303.666.50.camel@kernel.crashing.org>
-	 <20141118165739.7382AC40966@trevor.secretlab.ca>
-	 <1416364351.5704.22.camel@kernel.crashing.org>
-	 <20141119103140.2B9F4C40551@trevor.secretlab.ca>
+From: Ralf Baechle <ralf@linux-mips.org>
+Subject: Re: [PATCH V2 10/22] MIPS: BMIPS: Allow BMIPS3300 to utilize SMP
+ ebase relocation code
+Date: Fri, 21 Nov 2014 00:40:10 +0100
+Message-ID: <20141120234010.GG21601@linux-mips.org>
+References: <1416097066-20452-1-git-send-email-cernekee@gmail.com>
+ <1416097066-20452-11-git-send-email-cernekee@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141119103140.2B9F4C40551-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mips-bounce@linux-mips.org>
+Content-Disposition: inline
+In-Reply-To: <1416097066-20452-11-git-send-email-cernekee@gmail.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Kevin Cernekee <cernekee@gmail.com>
+Cc: f.fainelli@gmail.com, jfraser@broadcom.com, dtor@chromium.org, tglx@linutronix.de, jason@lakedaemon.net, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-11-19 at 10:31 +0000, Grant Likely wrote:
-> was my explanation being full of crap. It's my i2c
-> > _controller_ which is a platform device, and is on the xscom bus
-> which
-> > isn't directly MMIO translatable.
-> 
-> Okay, that makes more sense, but if xscom is a different bus with
-> different access methods, then why is it using platform_bus_type? I
-> would expect it to have it's own bus_type and container for struct
-> device.
+On Sat, Nov 15, 2014 at 04:17:34PM -0800, Kevin Cernekee wrote:
 
-There is no point really. It's not really a bus we expose as such to
-Linux (mostly the FW uses it) though we use the xscom nodes as chip
-nodes.
+And if this one v1 is also queued for 3.19.
 
-We do expose selected devices we pick from underneath xscom such
-as the LPC bus and the i2c controllers as platform devices which then
-use FW interfaces to perform the actual LPC or i2c accesses.
-
-Creating a dedicated bus type would be completely pointless.
-
-The FW itself uses what's there more intensively.
-
-> > The patch still stands :)
-> 
-> Indeed, I merged it yesterday. :)
-
-Thanks!
-
-Cheers,
-Ben.
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+  Ralf
