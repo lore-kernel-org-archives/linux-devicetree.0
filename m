@@ -1,72 +1,98 @@
-From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 01/15] clk: divider: replace bitfield width with mask
-Date: Thu, 20 Nov 2014 11:59:51 +0000
-Message-ID: <546DD7B7.3070408@imgtec.com>
-References: <1416438943-11429-1-git-send-email-james.hogan@imgtec.com> <1416438943-11429-2-git-send-email-james.hogan@imgtec.com> <546DCE53.8020004@ti.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH v4 1/2] ARM: keystone: pm: switch to use generic pm domains
+Date: Thu, 20 Nov 2014 14:03:07 +0200
+Message-ID: <546DD87B.3080806@ti.com>
+References: <1415631557-22897-1-git-send-email-grygorii.strashko@ti.com>	<1709760.E0jX3Myv0h@wuerfel>	<546C7FDD.7030906@ti.com>	<2900095.WIocOu7ue2@wuerfel> <CAPDyKFqeZ3YU2OEN4tCOdcQ0pAho67Q8U_eCEOroG9aS0mp+-Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="3ECPGSX0RDXLFldwTNVnnLIWWLTDQlT6G"
-Return-path: <linux-metag-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <546DCE53.8020004-l0cyMroinI0@public.gmane.org>
-Sender: linux-metag-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-metag-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: =?UTF-8?B?RW1pbGlvIEzDs3Bleg==?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFqeZ3YU2OEN4tCOdcQ0pAho67Q8U_eCEOroG9aS0mp+-Q@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Kevin Hilman <khilman@kernel.org>, ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
---3ECPGSX0RDXLFldwTNVnnLIWWLTDQlT6G
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On 11/20/2014 01:34 PM, Ulf Hansson wrote:
+> On 19 November 2014 14:47, Arnd Bergmann <arnd@arndb.de> wrote:
+>> On Wednesday 19 November 2014 13:32:45 Grygorii Strashko wrote:
+>>> On 11/18/2014 09:32 PM, Arnd Bergmann wrote:
+>>>> On Tuesday 18 November 2014 20:54:36 Grygorii Strashko wrote:
+>>>>
+>>>> Have one pmdomain driver in the generic code that knows about clocks,
+>>>> possibly also regulators and pins and just turns them on when needed.
+>>>> You can have a "simple-pmdomain" or "generic-pmdomain" compatible
+>>>> string.
+>>>>
+>>>> I'm a bit surprised that your pmdomain code looks up the clocks from the
+>>>> respective device, rather than know about the clocks itself. There is
+>>>> probably a good reason for this, but I don't see it yet.
+>>>
+>>> The keystone 2 uses simple PM schema based on clocks only:
+>>> - clocks enabled -> dev is active
+>>> - clocks disabled -> dev is suspended
+>>>
+>>> To achieve explained above the Generic clock manipulation PM callbacks framework (pm_clk) is used.
+>>> - list of managed clocks is filled for each device (for non-DT case the con_id list
+>>>    is specified by platform code like:
+>>>        .con_ids = { "fck", "master", "slave", NULL },
+>>>          - or -
+>>>        .con_ids = { }, <-- in this case only first clock will be added to pm_clk
+>>>    )
+> 
+> According to earlier comments in this thread, device's clocks are
+> split into "functional" and "PM" clocks.
+> 
+> If I understand correctly, a typical platform driver will enable it's
+> "functional" clocks during ->probe() and you want the PM domain to
+> take care of the "PM" clocks, when the device changes runtime PM
+> status.
+> 
+> How will you describe these different set of device clocks in DT?
 
-On 20/11/14 11:19, Tero Kristo wrote:
-> On 11/20/2014 01:15 AM, James Hogan wrote:
->> - Updated assignment of clk_divider::width in imx, rockchip, st, sunxi=
-,
->>    ti clock components to use mask instead (not tested), using the
->>    following semantic patch:
->=20
-> Hi James/Mike,
->=20
-> This patch currently causes a build breakage with omap2plus_defconfig.
-> Reason being you are modifying the clk_divider struct, but not touching=
+True :(  You can dig deeper in the history of this series if you wish.
+- first Geert Uytterhoeven proposed to use CLK_RUNTIME_PM there 
+  https://lkml.org/lkml/2014/11/6/319
+- second I proposed to introduce smth. like "clkops-clocks", "pm-clocks" there
+  https://lkml.org/lkml/2014/6/12/436
+ or "fck-clocks"/"opt-clocks" later. 
 
-> the code under drivers/clk/ti/divider.c which uses it. The fixes are
-> basically the same you have done for clk-divider.c, the contents of thi=
-s
-> file are mostly just copied under TI clock driver.
+^failed.
 
-Thanks for pointing that out! I'll fix and improve my grep-fu to find
-other such cases.
+So, this implementation picks up all clocks for each device, which is ok for
+Keystone 2 and, because it's platform specific.
 
-Cheers
-James
+>>
+>> Yes, it would definitely solve the problem that I see with the infrastructure
+>> code that the current version adds into the platform directory.
+>>
+>> The exact binding of course should be reviewed by the pmdomain and
+>> DT maintainers, to ensure that it is done the best possible way, because
+>> I assume we will end up using it a lot, and it would be a shame to get
+>> it slightly wrong.
+>>
+>> One possible variation I can think of would be to just use "simple-pmdomain"
+>> as the compatible string, and use properties in the node itself to decide
+>> what the domain should control, e.g.
+>>
+>>          clk_pmdomain: pmdomain {
+>>                  compatible = "simple-pmdomain";
+>>                  pmdomain-enable-clocks;
+>>                  #power-domain-cells = <0>;
+>>          };
+>>          clk_regulator_pmdomain: pmdomain {
+>>                  compatible = "simple-pmdomain";
+>>                  pmdomain-enable-clocks;
+>>                  pmdomain-enable-regulators;
+>>                  #power-domain-cells = <0>;
+>>          };
+>>
+>> and then have each device link to one of the nodes as the pmdomain.
+>>
+> 
+> That's seems like a good approach to me.
+ 
+Yes, but your previous comment is still actual :(
 
-
---3ECPGSX0RDXLFldwTNVnnLIWWLTDQlT6G
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUbde+AAoJEGwLaZPeOHZ6MuUQAJxW+C52BeSeukxmk6+p+CJG
-z/ww0Y3o6b/XUJnQARxHvkkDX/Kh/YKAtQSoySSgTOceeZHHPsDD7mHMZvCk9Av3
-yV9p8agyWUZ756OA9KFYBODaE8whAxExZBOEG550ZWlbeHXQpyqdYTWGyY6NaITC
-9jc8zq+2BomJaYhCWO29X+GW/xcetAYhtOBpf2IPw17E3JNSS2KTizvvzjzZz+17
-z2LV8LyaYhzMgeSiZcFh7z6QZMI+qY8ZArgZRP95KW91l2oeFjzmhWzO3gZUqg4o
-/f8qWD+Z9zV2coKZvPPiie0r3s8mzxA6pxq/OUtrDaSX2sghuugWY7fGnHjOwH7c
-MYztsc9UDIGNp3JEhUOps5gKM0slauvavDCzrY3Y9+5HGlwplGZkAJJAZEGn9Ln1
-dm4CkEeTC8oKgaJYD6zgS0k9squZZZY1cL+XgMxX6vywitsL6JIpHYwJzs3/a1JA
-wZIOl589UNoOLYt0JRtJ8ANG8JIylEhuLPwePJ5CrvD6x9A49my/pp9VwoRtyEiM
-ouiDlL4ZVAHisX2VYFO/hKJ61OGXr52Oiw1lhkBaDGHc9ZRwS4KSbYvBJoBr1E36
-671Vms+ggm3gGgmtgcdwUMla9WtLGLl8txOCMT862SA/GY/uuxKUmwzx1dxf2cjY
-vd8AXLD4GY7fpDhcqg5W
-=QhCs
------END PGP SIGNATURE-----
-
---3ECPGSX0RDXLFldwTNVnnLIWWLTDQlT6G--
---
-To unsubscribe from this list: send the line "unsubscribe linux-metag" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+-grygorii
