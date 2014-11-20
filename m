@@ -1,130 +1,147 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 15/15] metag: tz1090: add TZ1090 clocks to device tree
-Date: Thu, 20 Nov 2014 13:56:24 +0100
-Message-ID: <2363265.Y6kZ4TuTy5@diego>
-References: <1416438943-11429-1-git-send-email-james.hogan@imgtec.com> <1416438943-11429-16-git-send-email-james.hogan@imgtec.com>
+From: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH] [v2] power/fsl: add MDIO dt binding for FMan
+Date: Thu, 20 Nov 2014 13:00:44 +0000
+Message-ID: <20b19f779c5e45d7ac40964f21866ca3@DM2PR0301MB0864.namprd03.prod.outlook.com>
+References: <1415958800-9867-1-git-send-email-shh.xie@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416438943-11429-16-git-send-email-james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1415958800-9867-1-git-send-email-shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-metag-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Emilian Medve <Emilian.Medve-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi James,
+Ping.
 
-interestingly I only got the cover-letter, so had to find the other patches 
-through my list-archive :-) .
+Best Regards, 
+Shaohui Xie
 
-
-Am Mittwoch, 19. November 2014, 23:15:43 schrieb James Hogan:
-> Enable the common clock framework for the TZ1090 SoC, add a tz1090_clk
-> device tree file describing the clocks, and connect the Meta core clock
-> so that the rate of the Meta timer can be determined.
+> -----Original Message-----
+> From: shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org [mailto:shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
+> Sent: Friday, November 14, 2014 5:53 PM
+> To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Wood
+> Scott-B07421
+> Cc: Medve Emilian-EMMEDVE1; Liberman Igal-B31950; Xie Shaohui-B21989
+> Subject: [PATCH] [v2] power/fsl: add MDIO dt binding for FMan
 > 
-> Most of the clock tree is described apart from some AFE clocks which
-> aren't usually of much interest to Linux. These are represented with
-> placeholder clocks.
+> From: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > 
-> Signed-off-by: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: linux-metag-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> This binding is for FMan MDIO, it covers FMan v2 & FMan v3.
+> 
+> Signed-off-by: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > ---
-
-
-I don't know enough about your clock structure, but it looks quite a bit like 
-Mike's mail from May [0] may apply here too.
-
-The register layout also suggests that it is indeed one clock ip-block:
-
-0x02005908 0x4	CR_TOP_CLKSWITCH 
-0x0200590c 0x4	CR_TOP_CLKENAB
-0x02005950 0x4	CR_TOP_SYSPLL_CTL0
-0x02005954 0x4	CR_TOP_SYSPLL_CTL1
-0x02005988 0x4	CR_TOP_CLKSWITCH2
-0x0200598c 0x4	CR_TOP_CLKENAB2
-...
-
-
-[0] https://lkml.org/lkml/2014/5/14/715
-
-
-
->  arch/metag/Kconfig.soc              |   1 +
->  arch/metag/boot/dts/tz1090.dtsi     |   4 +
->  arch/metag/boot/dts/tz1090_clk.dtsi | 784
-> ++++++++++++++++++++++++++++++++++++ 3 files changed, 789 insertions(+)
->  create mode 100644 arch/metag/boot/dts/tz1090_clk.dtsi
+> changes in V2:
+> addressed comments from Scott in V1.
 > 
-> diff --git a/arch/metag/Kconfig.soc b/arch/metag/Kconfig.soc
-> index 973640f..93c21c3 100644
-> --- a/arch/metag/Kconfig.soc
-> +++ b/arch/metag/Kconfig.soc
-> @@ -17,6 +17,7 @@ config META21_FPGA
->  config SOC_TZ1090
->  	bool "Toumaz Xenif TZ1090 SoC (Comet)"
->  	select ARCH_WANT_OPTIONAL_GPIOLIB
-> +	select COMMON_CLK
->  	select IMGPDC_IRQ
->  	select METAG_LNKGET_AROUND_CACHE
->  	select METAG_META21
-> diff --git a/arch/metag/boot/dts/tz1090.dtsi
-> b/arch/metag/boot/dts/tz1090.dtsi index 24ea7d2..9e8ef8b 100644
-> --- a/arch/metag/boot/dts/tz1090.dtsi
-> +++ b/arch/metag/boot/dts/tz1090.dtsi
-> @@ -9,12 +9,16 @@
->  #include "skeleton.dtsi"
+>  .../devicetree/bindings/powerpc/fsl/fman.txt       | 69
+> ++++++++++++++++++++++
+>  1 file changed, 69 insertions(+)
 > 
->  #include <dt-bindings/interrupt-controller/irq.h>
-> +#include "tz1090_clk.dtsi"
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+> b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+> index edeea16..1523a87 100644
+> --- a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+> +++ b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+> @@ -7,6 +7,7 @@ CONTENTS
+>    - FMan MURAM Node
+>    - FMan dTSEC/XGEC/mEMAC Node
+>    - FMan IEEE 1588 Node
+> +  - FMan MDIO Node
+>    - Example
 > 
->  / {
->  	compatible = "toumaz,tz1090", "img,meta";
 > 
->  	interrupt-parent = <&intc>;
+> =========================================================================
+> ====
+> @@ -357,6 +358,68 @@ ptp-timer@fe000 {
+>  };
 > 
-> +	clocks = <&meta_core_clk>;
-> +	clock-names = "core";
+> 
+> =========================================================================
+> ====
+> +FMan MDIO Node
 > +
->  	intc: interrupt-controller {
->  		compatible = "img,meta-intc";
->  		interrupt-controller;
-> diff --git a/arch/metag/boot/dts/tz1090_clk.dtsi
-> b/arch/metag/boot/dts/tz1090_clk.dtsi new file mode 100644
-> index 0000000..e21362d
-> --- /dev/null
-> +++ b/arch/metag/boot/dts/tz1090_clk.dtsi
-> @@ -0,0 +1,784 @@
-> +/*
-> + * Copyright (C) 2013 Imagination Technologies Ltd.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
+> +DESCRIPTION
 > +
-> +/*
-> + * ============ CLOCK SPECIFIER DEFINITIONS ============
-> + */
+> +The MDIO is a bus to which the PHY devices are connected.
 > +
-> +#define CLK_XTAL1_DIV	&pdc_clk	0
-> +#define CLK_32KHZ	&pdc_clk	1
+> +PROPERTIES
 > +
-> +#define CLK_SYSCLK0_SW	&top_clkswitch	0	/* bit 0 */
+> +- compatible
+> +		Usage: required
+> +		Value type: <stringlist>
+> +		Definition: A standard property.
+> +		Must include "fsl,fman-mdio" for 1 Gb/s MDIO from FMan v2.
+> +		Must include "fsl,fman-xmdio" for 10 Gb/s MDIO from FMan v2.
+> +		Must include "fsl,fman-memac-mdio" for 1/10 Gb/s MDIO from
+> +		FMan v3.
+> +
+> +- reg
+> +		Usage: required
+> +		Value type: <prop-encoded-array>
+> +		Definition: A standard property.
+> +
+> +- bus-frequency
+> +		Usage: optional
+> +		Value type: <u32>
+> +		Definition: Specifies external MDIO bus clock speed which is
+> +		different from MDIO standard 2.5MHz. Should be defined for
+> SoCs
+> +		on which the standard one cannot work.
+> +
+> +- interrupts
+> +		Usage: optional
+> +		Value type: <prop-encoded-array>
+> +		Definition: Event interrupt of external MDIO controller.
+> +		1 Gb/s MDIO and 10 Gb/s MDIO has one interrupt respectively.
+> +
+> +- fsl,fman-internal-mdio
+> +		Usage: required for internal MDIO
+> +		Value type: boolean
+> +		Definition: Fman has internal MDIO for internal PCS(Physical
+> +		Coding Sublayer) PHYs and external MDIO for external PHYs.
+> +		The settings and programming routines for internal/external
+> +		MDIO are different. Must be included for internal MDIO.
+> +
+> +EXAMPLE
+> +
+> +Example for FMan v2 external MDIO:
+> +
+> +mdio@f1000 {
+> +	compatible = "fsl,fman-xmdio";
+> +	reg = <0xf1000 0x1000>;
+> +	bus-frequency = <20000>;
+> +};
+> +
+> +Example for FMan v3 internal MDIO:
+> +
+> +mdio@f1000 {
+> +	compatible = "fsl,fman-memac-mdio";
+> +	reg = <0xf1000 0x1000>;
+> +	fsl,fman-internal-mdio;
+> +};
+> +
+> +========================================================================
+> =====
+>  Example
+> 
+>  fman@400000 {
+> @@ -531,4 +594,10 @@ fman@400000 {
+>  		compatible = "fsl,fman-ptp-timer";
+>  		reg = <0xfe000 0x1000>;
+>  	};
+> +
+> +	mdio@f1000 {
+> +		compatible = "fsl,fman-xmdio";
+> +		reg = <0xf1000 0x1000>;
+> +		bus-frequency = <20000>;
+> +	};
+>  };
+> --
+> 1.8.4.1
 
-I think the more established way is to specify only the index bit as named 
-constant, not the whole phandle+index.
-
-
-Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
