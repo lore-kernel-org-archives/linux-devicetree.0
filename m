@@ -1,48 +1,59 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH] Add attributes neccessary for LED flashes to
- devicetree/bindings/leds/common.txt
-Date: Thu, 20 Nov 2014 21:53:50 +0100
-Message-ID: <20141120205350.GB19174@amd>
-References: <20141120131713.GC27527@amd>
- <20141120150349.GZ8907@valkosipuli.retiisi.org.uk>
+From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [GIT PULL 3.19] Broadcom Cygnus SoC Device Tree changes
+Date: Thu, 20 Nov 2014 12:55:35 -0800
+Message-ID: <546E5547.2070302@broadcom.com>
+References: <1415826266-6867-1-git-send-email-f.fainelli@gmail.com> <1415826266-6867-2-git-send-email-f.fainelli@gmail.com> <201411201254.48494.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141120150349.GZ8907@valkosipuli.retiisi.org.uk>
-Sender: linux-leds-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: j.anaszewski@samsung.com, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-doc@vger.kernel.org, cooloney@gmail.com, rpurdie@rpsys.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net
+Content-Type: text/plain; charset="iso-8859-15"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201411201254.48494.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+On 14-11-20 03:54 AM, Arnd Bergmann wrote:
+> On Wednesday 12 November 2014, Florian Fainelli wrote:
+>> The following changes since commit f114040e3ea6e07372334ade75d1ee0775c355e1:
+>>
+>>    Linux 3.18-rc1 (2014-10-19 18:08:38 -0700)
+>>
+>> are available in the git repository at:
+>>
+>>    http://github.com/brcm/linux.git tags/arm-soc/for-3.19/cygnus-dts-v2
+>>
+>> for you to fetch changes up to c9ad7bc5fe3c57c8c817fcb1bd264a02176a40c4:
+>>
+>>    ARM: dts: Enable Broadcom Cygnus SoC (2014-11-11 22:30:42 -0800)
+>>
+>> ----------------------------------------------------------------
+>> This pull request contains the Broadcom Cygnus Device Tree changes:
+>>
+>> - binding documentation for the SoC and clock
+>> - cygnus SoC and clock dtsi files
+>> - DTS for Cygnus Entreprise phone, BCM911360K and BCM958300K
+>
+> Something went wrong here: This branch contains the updated license
+> statements, but Olof had already merged the branch with the original
+> license statements that we didn't like, so all three patches conflict
+> with the ones we already have.
+Hi Arnd,
 
-On Thu 2014-11-20 17:03:49, Sakari Ailus wrote:
-> On Thu, Nov 20, 2014 at 02:17:13PM +0100, Pavel Machek wrote:
+It seems like the devicetree/bindings patch from this tag was not merged 
+in to next/dt ?
 
-> > diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-> > index 2d88816..e9acbbc 100644
-> > --- a/Documentation/devicetree/bindings/leds/common.txt
-> > +++ b/Documentation/devicetree/bindings/leds/common.txt
-> > @@ -14,6 +14,15 @@ Optional properties for child nodes:
-> >       "ide-disk" - LED indicates disk activity
-> >       "timer" - LED flashes at a fixed, configurable rate
-> >  
-> > +- max-microamp : maximum intensity in microamperes of the LED
-> > +  	         (torch LED for flash devices)
-> > +- flash-max-microamp : maximum intensity in microamperes of the
-> > +                       flash LED; it is mandatory if the LED should
-> > +		       support the flash mode
-> > +- flash-timeout-microsec : timeout in microseconds after which the flash
-> > +                           LED is turned off
-> 
-> It might be good to add a note that these may be arrays, depending on the
-> device.
+>
+> I've done an merge of the new branch over the old one, which was
+> literally the first thing in the next/dt branch. This isn't ideal,
+> but I think it's the best way out of the mess.
+>
+> I hope we can avoid this in the future.
+>
+> 	Arnd
+>
 
-No, they really can't be arrays. AFAICT common.txt describes single
-LED, not array of them, and I don't think it is good idea to change
-that.
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
