@@ -1,59 +1,38 @@
-From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [GIT PULL 3.19] Broadcom Cygnus SoC Device Tree changes
-Date: Thu, 20 Nov 2014 12:55:35 -0800
-Message-ID: <546E5547.2070302@broadcom.com>
-References: <1415826266-6867-1-git-send-email-f.fainelli@gmail.com> <1415826266-6867-2-git-send-email-f.fainelli@gmail.com> <201411201254.48494.arnd@arndb.de>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH RFC 3/3] ARM: dts: enable power subsystem for i.MX28
+Date: Thu, 20 Nov 2014 19:32:02 -0200
+Message-ID: <CAOMZO5AWOs8ODsru+ySsLb=R4ezDL19nK_z0zAXdbrDfPT8KhA@mail.gmail.com>
+References: <1416514477-19190-1-git-send-email-stefan.wahren@i2se.com>
+	<1416514477-19190-4-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-15"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201411201254.48494.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1416514477-19190-4-git-send-email-stefan.wahren@i2se.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14-11-20 03:54 AM, Arnd Bergmann wrote:
-> On Wednesday 12 November 2014, Florian Fainelli wrote:
->> The following changes since commit f114040e3ea6e07372334ade75d1ee0775c355e1:
->>
->>    Linux 3.18-rc1 (2014-10-19 18:08:38 -0700)
->>
->> are available in the git repository at:
->>
->>    http://github.com/brcm/linux.git tags/arm-soc/for-3.19/cygnus-dts-v2
->>
->> for you to fetch changes up to c9ad7bc5fe3c57c8c817fcb1bd264a02176a40c4:
->>
->>    ARM: dts: Enable Broadcom Cygnus SoC (2014-11-11 22:30:42 -0800)
->>
->> ----------------------------------------------------------------
->> This pull request contains the Broadcom Cygnus Device Tree changes:
->>
->> - binding documentation for the SoC and clock
->> - cygnus SoC and clock dtsi files
->> - DTS for Cygnus Entreprise phone, BCM911360K and BCM958300K
->
-> Something went wrong here: This branch contains the updated license
-> statements, but Olof had already merged the branch with the original
-> license statements that we didn't like, so all three patches conflict
-> with the ones we already have.
-Hi Arnd,
+Hi Stefan,
 
-It seems like the devicetree/bindings patch from this tag was not merged 
-in to next/dt ?
+On Thu, Nov 20, 2014 at 6:14 PM, Stefan Wahren <stefan.wahren@i2se.com> wrote:
+> This patch enables the power subsystem for all i.MX28 boards.
+>
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> ---
+>  arch/arm/boot/dts/imx28.dtsi |    6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
+> index 47f68ac..5c163a5 100644
+> --- a/arch/arm/boot/dts/imx28.dtsi
+> +++ b/arch/arm/boot/dts/imx28.dtsi
+> @@ -1022,8 +1022,12 @@
+>                         };
+>
+>                         power: power@80044000 {
+> +                               compatible = "fsl,imx28-power";
 
->
-> I've done an merge of the new branch over the old one, which was
-> literally the first thing in the next/dt branch. This isn't ideal,
-> but I think it's the best way out of the mess.
->
-> I hope we can avoid this in the future.
->
-> 	Arnd
->
+Should we have 'fsl,imx23-power' and 'fsl,imx28-power' as compatible strings?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Or  ''fsl,mxs-power' could be used for both?
