@@ -1,436 +1,110 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 6/9] mmc: sdhci: host: add new f_sdh30
-Date: Thu, 20 Nov 2014 09:22:01 -0600
-Message-ID: <CAL_JsqKDVgpBBW7j1skOU4moF0tvh1j6Fm6jaE5JoP04OU07uw@mail.gmail.com>
-References: <1416486442-25200-1-git-send-email-Vincent.Yang@tw.fujitsu.com> <1416487081-25467-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH v4 1/2] ARM: keystone: pm: switch to use generic pm domains
+Date: Thu, 20 Nov 2014 17:32:00 +0200
+Message-ID: <546E0970.5090301@ti.com>
+References: <1415631557-22897-1-git-send-email-grygorii.strashko@ti.com>	<1709760.E0jX3Myv0h@wuerfel>	<546C7FDD.7030906@ti.com>	<2900095.WIocOu7ue2@wuerfel>	<CAPDyKFqeZ3YU2OEN4tCOdcQ0pAho67Q8U_eCEOroG9aS0mp+-Q@mail.gmail.com>	<546DD87B.3080806@ti.com>	<CAPDyKFrBhZyqozM98_4pPdW0EMFt5W6VX1X7cz6Z=yNhW4vYTA@mail.gmail.com> <CAMuHMdWtHT7QX3Kpa-GCLa49ToGODwjnNVgfxDzJzcM-FU1ffg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1416487081-25467-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Vincent Yang <vincent.yang.fujitsu@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, chris@printf.net, Ulf Hansson <ulf.hansson@linaro.org>, Andy Green <andy.green@linaro.org>, Linaro Patches <patches@linaro.org>, Jaswinder Singh <jaswinder.singh@linaro.org>, Vincent Yang <Vincent.Yang@tw.fujitsu.com>, Tetsuya Takinishi <t.takinishi@jp.fujitsu.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdWtHT7QX3Kpa-GCLa49ToGODwjnNVgfxDzJzcM-FU1ffg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>, ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 20, 2014 at 6:38 AM, Vincent Yang
-<vincent.yang.fujitsu@gmail.com> wrote:
-> This patch adds new host controller driver for
-> Fujitsu SDHCI controller f_sdh30.
->
-> Signed-off-by: Andy Green <andy.green@linaro.org>
-> Signed-off-by: Vincent Yang <Vincent.Yang@tw.fujitsu.com>
-> Signed-off-by: Tetsuya Takinishi <t.takinishi@jp.fujitsu.com>
-> ---
->  .../devicetree/bindings/mmc/sdhci-fujitsu.txt      |  35 +++
->  drivers/mmc/host/Kconfig                           |   9 +
->  drivers/mmc/host/Makefile                          |   1 +
->  drivers/mmc/host/sdhci_f_sdh30.c                   | 319 +++++++++++++++++++++
->  4 files changed, 364 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
->  create mode 100644 drivers/mmc/host/sdhci_f_sdh30.c
->
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
-> new file mode 100644
-> index 0000000..a1e0b64
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
-> @@ -0,0 +1,35 @@
-> +* Fujitsu SDHCI controller
-> +
-> +This file documents differences between the core properties in mmc.txt
-> +and the properties used by the sdhci_f_sdh30 driver.
-> +
-> +Required properties:
-> +- compatible: "fujitsu,mb86s70-sdh30"
+On 11/20/2014 03:32 PM, Geert Uytterhoeven wrote:
+> On Thu, Nov 20, 2014 at 2:12 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>>>> According to earlier comments in this thread, device's clocks are
+>>>> split into "functional" and "PM" clocks.
+>>>>
+>>>> If I understand correctly, a typical platform driver will enable it's
+>>>> "functional" clocks during ->probe() and you want the PM domain to
+>>>> take care of the "PM" clocks, when the device changes runtime PM
+>>>> status.
+>>>>
+>>>> How will you describe these different set of device clocks in DT?
+>>>
+>>> True :(  You can dig deeper in the history of this series if you wish.
+>>> - first Geert Uytterhoeven proposed to use CLK_RUNTIME_PM there
+>>>    https://lkml.org/lkml/2014/11/6/319
+>>> - second I proposed to introduce smth. like "clkops-clocks", "pm-clocks" there
+>>>    https://lkml.org/lkml/2014/6/12/436
+>>>   or "fck-clocks"/"opt-clocks" later.
+>>>
+>>> ^failed.
+>>>
+>>> So, this implementation picks up all clocks for each device, which is ok for
+>>> Keystone 2 and, because it's platform specific.
+>>>
+>>>>>
+>>>>> Yes, it would definitely solve the problem that I see with the infrastructure
+>>>>> code that the current version adds into the platform directory.
+>>>>>
+>>>>> The exact binding of course should be reviewed by the pmdomain and
+>>>>> DT maintainers, to ensure that it is done the best possible way, because
+>>>>> I assume we will end up using it a lot, and it would be a shame to get
+>>>>> it slightly wrong.
+>>>>>
+>>>>> One possible variation I can think of would be to just use "simple-pmdomain"
+>>>>> as the compatible string, and use properties in the node itself to decide
+>>>>> what the domain should control, e.g.
+>>>>>
+>>>>>           clk_pmdomain: pmdomain {
+>>>>>                   compatible = "simple-pmdomain";
+>>>>>                   pmdomain-enable-clocks;
+>>>>>                   #power-domain-cells = <0>;
+>>>>>           };
+>>>>>           clk_regulator_pmdomain: pmdomain {
+>>>>>                   compatible = "simple-pmdomain";
+>>>>>                   pmdomain-enable-clocks;
+>>>>>                   pmdomain-enable-regulators;
+>>>>>                   #power-domain-cells = <0>;
+>>>>>           };
+>>>>>
+>>>>> and then have each device link to one of the nodes as the pmdomain.
+>>>>>
+>>>>
+>>>> That's seems like a good approach to me.
+>>>
+>>> Yes, but your previous comment is still actual :(
+>>
+>> Agree!
+>>
+>> So I really think we need to decide on how to address the split of the
+>> device clocks. Before that's done, I don't think it make sense to add
+>> a "simple-pmdomain" compatible, since it will likely not be that many
+>> SoC that can use it.
+>>
+>> So, does anyone have a suggestion on how to deal with the split of the
+>> device clocks into "functional" clocks and into "PM" clocks?
 
-It would be nice to have sdhci in the name to indicate it is an SDHCI
-controller.
+Would it be better to say "functional" and "optional"? In my opinion
+"PM" == "functional". Also, such clock's separation is used in TRM/DM/UMs on HW.
 
-> +- voltage-ranges : This is a list of pairs. In each pair, two cells
-> +  are required. First cell specifies minimum slot voltage (mV), second
-> +  cell specifies maximum slot voltage (mV). In case of supported voltage
-> +  range is discontinuous, several ranges could be specified as a list.
-> +
-> +Optional properties:
-> +- vqmmc-supply: phandle to the regulator device tree node, mentioned
-> +  as the VCCQ/VDD_IO supply in the eMMC/SD specs.
-> +- clocks: Must contain an entry for each entry in clock-names. It is a
-> +  list of phandles and clock-specifier pairs.
-> +  See ../clocks/clock-bindings.txt for details.
-> +- clock-names: Should contain the following two entries:
-> +       "iface" - clock used for sdhci interface
-> +       "core"  - core clock for sdhci controller
-> +
-> +Example:
-> +
-> +       sdhci1: sdio@36600000 {
-> +               compatible = "fujitsu,mb86s70-sdh30";
-> +               reg = <0 0x36600000 0x1000>;
-> +               interrupts = <0 172 0x4>,
-> +                            <0 173 0x4>;
-> +               voltage-ranges = <1800 1800>, <3300 3300>;
-> +               bus-width = <4>;
-> +               vqmmc-supply = <&vccq_sdhci1>;
-> +               clocks = <&clk_hdmi_2_0>, <&clk_hdmi_3_0>;
-> +               clock-names = "iface", "core";
-> +       };
-> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> index 1386065..cbe5e3c 100644
-> --- a/drivers/mmc/host/Kconfig
-> +++ b/drivers/mmc/host/Kconfig
-> @@ -290,6 +290,15 @@ config MMC_SDHCI_BCM2835
->           This selects the BCM2835 SD/MMC controller. If you have a BCM2835
->           platform with SD or MMC devices, say Y or M here.
->
-> +config MMC_SDHCI_F_SDH30
-> +       tristate "SDHCI support for Fujitsu Semiconductor F_SDH30"
-> +       depends on ARCH_MB86S7X
-> +       depends on MMC_SDHCI_PLTFM
-> +       depends on OF
-> +       help
-> +         This selects the Secure Digital Host Controller Interface (SDHCI)
-> +         Needed by some Fujitsu SoC for MMC / SD / SDIO support.
-> +         If you have a controller with this interface, say Y or M here.
->           If unsure, say N.
->
->  config MMC_MOXART
-> diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
-> index b09ecfb..63efc38 100644
-> --- a/drivers/mmc/host/Makefile
-> +++ b/drivers/mmc/host/Makefile
-> @@ -16,6 +16,7 @@ obj-$(CONFIG_MMC_SDHCI_PXAV3) += sdhci-pxav3.o
->  obj-$(CONFIG_MMC_SDHCI_PXAV2)  += sdhci-pxav2.o
->  obj-$(CONFIG_MMC_SDHCI_S3C)    += sdhci-s3c.o
->  obj-$(CONFIG_MMC_SDHCI_SIRF)           += sdhci-sirf.o
-> +obj-$(CONFIG_MMC_SDHCI_F_SDH30)        += sdhci_f_sdh30.o
->  obj-$(CONFIG_MMC_SDHCI_SPEAR)  += sdhci-spear.o
->  obj-$(CONFIG_MMC_WBSD)         += wbsd.o
->  obj-$(CONFIG_MMC_AU1X)         += au1xmmc.o
-> diff --git a/drivers/mmc/host/sdhci_f_sdh30.c b/drivers/mmc/host/sdhci_f_sdh30.c
-> new file mode 100644
-> index 0000000..f6eba5a
-> --- /dev/null
-> +++ b/drivers/mmc/host/sdhci_f_sdh30.c
-> @@ -0,0 +1,319 @@
-> +/*
-> + * linux/drivers/mmc/host/sdhci_f_sdh30.c
-> + *
-> + * Copyright (C) 2013 - 2014 Fujitsu Semiconductor, Ltd
-> + *              Vincent Yang <vincent.yang@tw.fujitsu.com>
-> + * Copyright (C) 2014 Linaro Ltd  Andy Green <andy.green@linaro.org>
-> + *
-> + * This program is free software: you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation, version 2 of the License.
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/delay.h>
-> +#include <linux/module.h>
-> +#include <linux/mmc/sd.h>
-> +#include <linux/mmc/host.h>
-> +#include <linux/mmc/card.h>
-> +#include <linux/gpio.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/of_address.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/suspend.h>
-> +
-> +#include "sdhci.h"
-> +#include "sdhci-pltfm.h"
-> +
-> +/* F_SDH30 extended Controller registers */
-> +#define F_SDH30_AHB_CONFIG             0x100
-> +#define  F_SDH30_AHB_BIGED             0x00000040
-> +#define  F_SDH30_BUSLOCK_DMA           0x00000020
-> +#define  F_SDH30_BUSLOCK_EN            0x00000010
-> +#define  F_SDH30_SIN                   0x00000008
-> +#define  F_SDH30_AHB_INCR_16           0x00000004
-> +#define  F_SDH30_AHB_INCR_8            0x00000002
-> +#define  F_SDH30_AHB_INCR_4            0x00000001
-> +
-> +#define F_SDH30_TUNING_SETTING         0x108
-> +#define  F_SDH30_CMD_CHK_DIS           0x00010000
-> +
-> +#define F_SDH30_IO_CONTROL2            0x114
-> +#define  F_SDH30_CRES_O_DN             0x00080000
-> +#define  F_SDH30_MSEL_O_1_8            0x00040000
-> +
-> +#define F_SDH30_ESD_CONTROL            0x124
-> +#define  F_SDH30_EMMC_RST              0x00000002
-> +#define  F_SDH30_EMMC_HS200            0x01000000
-> +
-> +#define F_SDH30_CMD_DAT_DELAY          0x200
-> +
-> +#define F_SDH30_MIN_CLOCK              400000
-> +
-> +struct f_sdhost_priv {
-> +       struct clk *clk_iface;
-> +       struct clk *clk;
-> +       u32 vendor_hs200;
-> +       struct device *dev;
-> +};
-> +
-> +void sdhci_f_sdh30_soft_voltage_switch(struct sdhci_host *host)
-> +{
-> +       struct f_sdhost_priv *priv = sdhci_priv(host);
-> +       u32 ctrl = 0;
-> +
-> +       usleep_range(2500, 3000);
-> +       ctrl = sdhci_readl(host, F_SDH30_IO_CONTROL2);
-> +       ctrl |= F_SDH30_CRES_O_DN;
-> +       sdhci_writel(host, ctrl, F_SDH30_IO_CONTROL2);
-> +       ctrl |= F_SDH30_MSEL_O_1_8;
-> +       sdhci_writel(host, ctrl, F_SDH30_IO_CONTROL2);
-> +
-> +       ctrl &= ~F_SDH30_CRES_O_DN;
-> +       sdhci_writel(host, ctrl, F_SDH30_IO_CONTROL2);
-> +       usleep_range(2500, 3000);
-> +
-> +       if (priv->vendor_hs200) {
-> +               dev_info(priv->dev, "%s: setting hs200\n", __func__);
-> +               ctrl = sdhci_readl(host, F_SDH30_ESD_CONTROL);
-> +               ctrl |= priv->vendor_hs200;
-> +               sdhci_writel(host, ctrl, F_SDH30_ESD_CONTROL);
-> +       }
-> +
-> +       ctrl = sdhci_readl(host, F_SDH30_TUNING_SETTING);
-> +       ctrl |= F_SDH30_CMD_CHK_DIS;
-> +       sdhci_writel(host, ctrl, F_SDH30_TUNING_SETTING);
-> +}
-> +
-> +unsigned int sdhci_f_sdh30_get_min_clock(struct sdhci_host *host)
-> +{
-> +       return F_SDH30_MIN_CLOCK;
-> +}
-> +
-> +void sdhci_f_sdh30_reset(struct sdhci_host *host, u8 mask)
-> +{
-> +       if (sdhci_readw(host, SDHCI_CLOCK_CONTROL) == 0)
-> +               sdhci_writew(host, 0xBC01, SDHCI_CLOCK_CONTROL);
-> +
-> +       sdhci_reset(host, mask);
-> +}
-> +
-> +static const struct sdhci_ops sdhci_f_sdh30_ops = {
-> +       .voltage_switch = sdhci_f_sdh30_soft_voltage_switch,
-> +       .get_min_clock = sdhci_f_sdh30_get_min_clock,
-> +       .reset = sdhci_f_sdh30_reset,
-> +       .set_clock = sdhci_set_clock,
-> +       .set_bus_width = sdhci_set_bus_width,
-> +       .set_uhs_signaling = sdhci_set_uhs_signaling,
-> +};
-> +
-> +static int sdhci_f_sdh30_probe(struct platform_device *pdev)
-> +{
-> +       struct sdhci_host *host;
-> +       struct device *dev = &pdev->dev;
-> +       int irq, ctrl = 0, ret = 0;
-> +       struct f_sdhost_priv *priv;
-> +       u32 reg = 0;
-> +
-> +       irq = platform_get_irq(pdev, 0);
-> +       if (irq < 0) {
-> +               dev_err(dev, "%s: no irq specified\n", __func__);
-> +               ret = irq;
-> +               goto err;
-> +       }
-> +
-> +       host = sdhci_alloc_host(dev, sizeof(struct sdhci_host) +
-> +                                               sizeof(struct f_sdhost_priv));
-> +       if (IS_ERR(host)) {
-> +               dev_err(dev, "%s: host allocate error\n", __func__);
-> +               ret = -ENOMEM;
-> +               goto err;
-> +       }
-> +       priv = sdhci_priv(host);
-> +       priv->dev = dev;
-> +
-> +       host->quirks = SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC |
-> +                      SDHCI_QUIRK_INVERTED_WRITE_PROTECT;
-> +       host->quirks2 = SDHCI_QUIRK2_SUPPORT_SINGLE |
-> +                       SDHCI_QUIRK2_TUNING_WORK_AROUND;
-> +
-> +       ret = mmc_of_parse(host->mmc);
-> +       if (ret)
-> +               goto err_of_parse;
-> +
-> +       ret = mmc_of_parse_voltage(pdev->dev.of_node, &host->ocr_mask);
-> +       if (ret)
-> +               goto err_of_parse;
-> +
-> +       platform_set_drvdata(pdev, host);
-> +
-> +       sdhci_get_of_property(pdev);
-> +       host->hw_name = "f_sdh30";
-> +       host->ops = &sdhci_f_sdh30_ops;
-> +       host->irq = irq;
-> +
-> +       host->ioaddr = of_iomap(pdev->dev.of_node, 0);
-> +       if (!host->ioaddr) {
-> +               dev_err(dev, "%s: failed to remap registers\n", __func__);
-> +               ret = -ENXIO;
-> +               goto err_remap;
-> +       }
-> +
-> +       priv->clk_iface = clk_get(&pdev->dev, "iface");
-> +       if (!IS_ERR(priv->clk_iface)) {
-> +               ret = clk_prepare_enable(priv->clk_iface);
-> +               if (ret < 0) {
-> +                       dev_err(dev, "Failed to enable iface clock: %d\n", ret);
-> +                       goto err_clk1;
-> +               }
-> +       }
-> +       priv->clk = clk_get(&pdev->dev, "core");
-> +       if (!IS_ERR(priv->clk)) {
-> +               ret = clk_prepare_enable(priv->clk);
-> +               if (ret < 0) {
-> +                       dev_err(dev, "Failed to enable core clock: %d\n", ret);
-> +                       goto err_clk2;
-> +               }
-> +       }
-> +
-> +#ifdef CONFIG_PM_RUNTIME
-> +       pm_runtime_set_active(&pdev->dev);
-> +       pm_runtime_enable(&pdev->dev);
-> +       ret = pm_runtime_get_sync(&pdev->dev);
-> +       if (ret < 0)
-> +               dev_err(dev, "Failed to pm_runtime_get_sync: %d\n", ret);
-> +#endif
-> +
-> +       ret = sdhci_add_host(host);
-> +       if (ret) {
-> +               dev_err(dev, "%s: host add error\n", __func__);
-> +               goto err_add_host;
-> +       }
-> +
-> +       /* init vendor specific regs */
-> +       ctrl = sdhci_readw(host, F_SDH30_AHB_CONFIG);
-> +       ctrl |= F_SDH30_SIN | F_SDH30_AHB_INCR_16 | F_SDH30_AHB_INCR_8 |
-> +               F_SDH30_AHB_INCR_4;
-> +       ctrl &= ~(F_SDH30_AHB_BIGED | F_SDH30_BUSLOCK_EN);
-> +       sdhci_writew(host, ctrl, F_SDH30_AHB_CONFIG);
-> +
-> +       reg = sdhci_readl(host, F_SDH30_ESD_CONTROL);
-> +       sdhci_writel(host, reg & ~F_SDH30_EMMC_RST, F_SDH30_ESD_CONTROL);
-> +       msleep(20);
-> +       sdhci_writel(host, reg | F_SDH30_EMMC_RST, F_SDH30_ESD_CONTROL);
-> +
-> +       reg = sdhci_readl(host, SDHCI_CAPABILITIES);
-> +       if (reg & SDHCI_CAN_DO_8BIT)
-> +               priv->vendor_hs200 = F_SDH30_EMMC_HS200;
-> +       else
-> +               priv->vendor_hs200 = 0;
-> +
-> +       return 0;
-> +
-> +err_add_host:
-> +       clk_put(priv->clk);
-> +err_clk2:
-> +       clk_put(priv->clk_iface);
-> +err_clk1:
-> +       iounmap(host->ioaddr);
-> +err_remap:
-> +err_of_parse:
-> +       sdhci_free_host(host);
-> +err:
-> +       return ret;
-> +}
-> +
-> +static int sdhci_f_sdh30_remove(struct platform_device *pdev)
-> +{
-> +       struct sdhci_host *host = platform_get_drvdata(pdev);
-> +       struct f_sdhost_priv *priv = sdhci_priv(host);
-> +       struct resource *iomem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +
-> +       sdhci_remove_host(host, readl(host->ioaddr + SDHCI_INT_STATUS) ==
-> +                         0xffffffff);
-> +       iounmap(host->ioaddr);
-> +       release_mem_region(iomem->start, resource_size(iomem));
-> +
-> +       clk_disable_unprepare(priv->clk_iface);
-> +       clk_disable_unprepare(priv->clk);
-> +
-> +       clk_put(priv->clk);
-> +       clk_put(priv->clk_iface);
-> +
-> +       sdhci_free_host(host);
-> +       platform_set_drvdata(pdev, NULL);
-> +
-> +       return 0;
-> +}
-> +
-> +#ifdef CONFIG_PM_SLEEP
-> +static int sdhci_f_sdh30_suspend(struct device *dev)
-> +{
-> +       struct sdhci_host *host = dev_get_drvdata(dev);
-> +
-> +       return sdhci_suspend_host(host);
-> +}
-> +
-> +static int sdhci_f_sdh30_resume(struct device *dev)
-> +{
-> +       struct sdhci_host *host = dev_get_drvdata(dev);
-> +
-> +       return sdhci_resume_host(host);
-> +}
-> +#endif
-> +
-> +#ifdef CONFIG_PM_RUNTIME
-> +static int sdhci_f_sdh30_runtime_suspend(struct device *dev)
-> +{
-> +       struct sdhci_host *host = dev_get_drvdata(dev);
-> +
-> +       return sdhci_runtime_suspend_host(host);
-> +}
-> +
-> +static int sdhci_f_sdh30_runtime_resume(struct device *dev)
-> +{
-> +       struct sdhci_host *host = dev_get_drvdata(dev);
-> +
-> +       return sdhci_runtime_resume_host(host);
-> +}
-> +#endif
-> +
-> +#ifdef CONFIG_PM
-> +static const struct dev_pm_ops sdhci_f_sdh30_pmops = {
-> +       SET_SYSTEM_SLEEP_PM_OPS(sdhci_f_sdh30_suspend, sdhci_f_sdh30_resume)
-> +       SET_RUNTIME_PM_OPS(sdhci_f_sdh30_runtime_suspend,
-> +                          sdhci_f_sdh30_runtime_resume, NULL)
-> +};
-> +
-> +#define SDHCI_F_SDH30_PMOPS (&sdhci_f_sdh30_pmops)
-> +
-> +#else
-> +#define SDHCI_F_SDH30_PMOPS NULL
-> +#endif
-> +
-> +static const struct of_device_id f_sdh30_dt_ids[] = {
-> +       { .compatible = "fujitsu,mb86s70-sdh30" },
-> +       { /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, f_sdh30_dt_ids);
-> +
-> +static struct platform_driver sdhci_f_sdh30_driver = {
-> +       .driver = {
-> +               .name = "f_sdh30",
-> +               .of_match_table = f_sdh30_dt_ids,
-> +#ifdef CONFIG_PM_SLEEP
-> +               .pm     = SDHCI_F_SDH30_PMOPS,
-> +#endif
-> +       },
-> +       .probe  = sdhci_f_sdh30_probe,
-> +       .remove = sdhci_f_sdh30_remove,
-> +};
-> +
-> +module_platform_driver(sdhci_f_sdh30_driver);
-> +
-> +MODULE_DESCRIPTION("F_SDH30 SD Card Controller driver");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("FUJITSU SEMICONDUCTOR LTD.");
-> +MODULE_ALIAS("platform:f_sdh30");
-> --
-> 1.9.0
->
+> 
+> That's indeed the tricky part.
+> 
+> On shmobile, we just use the "NULL" clock, i.e. the first clock, for historical
+> reasons.
+> 
+> Using clock-names (e.g. "fck" and "pm") will conflict with existing bindings
+> for devices that already mandate specific clock names.
+> 
+> As the clock being a "PM" clock is a property of the clock provider
+> (at last on shmobile), I originally came up with not handling it in DT,
+> but advertising it in the clock provider driver:
+> 
+>>> - first Geert Uytterhoeven proposed to use CLK_RUNTIME_PM there
+>>>    https://lkml.org/lkml/2014/11/6/319
+
+As I mentioned previously I don't like it, because in many cases one driver is used for
+all/set_of clocks which support gating function. As result, some sort of tables will
+need to be created and maintained in code by these drivers per each SoC
+(or even per each SoC revision) for identification that clock is "PM clock".
+
+Additional points are : both parent and child clock can be gated; one clock
+can be used by two devices and be "functional" and "optional" at once :)
+
+regards,
+-grygorii
