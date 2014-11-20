@@ -1,360 +1,113 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH] mmc: dw_mmc: add quirk for data over interrupt timeout
-Date: Thu, 20 Nov 2014 19:01:05 +0900
-Message-ID: <546DBBE1.1050500@samsung.com>
-References: <1415970338-2637-1-git-send-email-addy.ke@rock-chips.com>
- <54660120.50305@samsung.com> <546A93B0.1040506@rock-chips.com>
- <546BF0D2.3000600@samsung.com> <546C310D.5040702@rock-chips.com>
- <546DB55D.90503@rock-chips.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v7 1/4] irqchip: gic: Support hierarchy irq domain.
+Date: Thu, 20 Nov 2014 10:07:21 +0000
+Message-ID: <87wq6q9odi.fsf@approximate.cambridge.arm.com>
+References: <1416406451-4578-1-git-send-email-yingjoe.chen@mediatek.com>
+	<1416406451-4578-2-git-send-email-yingjoe.chen@mediatek.com>
+	<87h9xvaz2p.fsf@approximate.cambridge.arm.com>
+	<546D6D62.4030005@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <546DB55D.90503@rock-chips.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: addy ke <addy.ke@rock-chips.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, heiko@sntech.de, olof@lixom.net, dianders@chromium.org, sonnyrao@chromium.org, amstan@chromium.org
-Cc: huangtao@rock-chips.com, devicetree@vger.kernel.org, hl@rock-chips.com, linux-doc@vger.kernel.org, yzq@rock-chips.com, zyw@rock-chips.com, zhangqing@rock-chips.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, kever.yang@rock-chips.com, lintao@rock-chips.com, linux-rockchip@lists.infradead.org, xjq@rock-chips.com, zhenfu.fang@rock-chips.com, chenfen@rock-chips.com, cf@rock-chips.com, hj@rock-chips.com, linux-arm-kernel@lists.infradead.org, zyf@rock-chips.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <546D6D62.4030005-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> (Jiang Liu's message of "Thu,
+	20 Nov 2014 04:26:10 +0000")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "hc.yen@mediatek.com" <hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "srv_heupstream@mediatek.com" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "yh.chen@mediatek.com" <yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely@linaro.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yijing Wang <wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "nathan.chung@mediatek.com" <nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "yingjoe.chen@gmail.com" <yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "eddie.huang@mediatek.com" <eddie.huang>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Addy.
+On Thu, Nov 20 2014 at  4:26:10 am GMT, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
 
-On 11/20/2014 06:33 PM, addy ke wrote:
-> Hi, Jaehoon
->=20
-> On 2014/11/19 13:56, addy ke wrote:
->> Hi Jaehoon
->>
->> On 2014/11/19 09:22, Jaehoon Chung Wrote:
->>> Hi, Addy.
->>>
->>> On 11/18/2014 09:32 AM, Addy wrote:
->>>>
->>>> On 2014=E5=B9=B411=E6=9C=8814=E6=97=A5 21:18, Jaehoon Chung wrote:
->>>>> Hi, Addy.
->>>>>
->>>>> Did you use the DW_MCI_QUIRK_IDMAC_DTO?
->>>>> I'm not sure, but i wonder if you get what result when you use ab=
-ove quirk.
->>>>
->>>> DW_MCI_QUIRK_IDMAC_DTO is only for version2.0 or below.
->>>>         /*
->>>>          * DTO fix - version 2.10a and below, and only if internal=
- DMA
->>>>          * is configured.
->>>>          */
->>>>         if (host->quirks & DW_MCI_QUIRK_IDMAC_DTO) {
->>>>                 if (!pending &&
->>>>                     ((mci_readl(host, STATUS) >> 17) & 0x1fff))
->>>>                         pending |=3D SDMMC_INT_DATA_OVER;
->>>>         }
->>>>
->>>> It meams that if interrupt comes, but pending =3D 0 && FIFO_COUNT(=
-bit17-29) !=3D0,
->>>> then force to set SDMMC_INT_DATA_OVER.
->>>> But in our case, FIFO_COUNT =3D 0 (STATUS register value is 0xad06=
-). This is
->>>> because that the card does not send data to host. So there is no i=
-nterrupts come,
->>>> and interrupt handle function(dw_mci_interrupt) will not be called=
-=2E So we need a
->>>> timer to handle this case.
->>>>
->>>> So I think  SDMMC_INT_DATA_OVER is not suitable for this case, and=
- we need a new
->>>> quirk.
->>>>
->>>>>
->>>>> And i will check more this patch at next week.
->>>>>
->>>>> Thanks for your efforts.
->>>>>
->>>>> Best Regards,
->>>>> Jaehoon Chung
->>>>>
->>>>> On 11/14/2014 10:05 PM, Addy Ke wrote:
->>>>>> From: Addy <addy.ke@rock-chips.com>
->>>>>>
->>>>>> This patch add a new quirk to notify the driver to teminate
->>>>>> current transfer and report a data timeout to the core,
->>>>>> if data over interrupt does NOT come within the given time.
->>>>>>
->>>>>> dw_mmc call mmc_request_done func to finish transfer depends on
->>>>>> data over interrupt. If data over interrupt does not come in
->>>>>> sending data state, the current transfer will be blocked.
->>>>>>
->>>>>> But this case really exists, when driver reads tuning data from
->>>>>> card on rk3288-pink2 board. I measured waveforms by oscilloscope
->>>>>> and found that card clock was always on and data lines were alwa=
-ys
->>>>>> holded high level in sending data state. This is the cause that
->>>>>> card does NOT send data to host.
->>>>>>
->>>>>> According to synopsys designware databook, the timeout counter i=
-s
->>>>>> started only after the card clock is stopped.
->>>>>>
->>>>>> So if card clock is always on, data read timeout interrupt will =
-NOT come,
->>>>>> and if data lines are always holded high level, all data-related
->>>>>> interrupt such as start-bit error, data crc error, data over int=
-errupt,
->>>>>> end-bit error, and so on, will NOT come too.
->>>>>>
->>>>>> So driver can't get the current state, it can do nothing but wai=
-t for.
->>>>>>
->>>>>> This patch is based on https://patchwork.kernel.org/patch/522794=
-1/
->>>>>>
->>>>>> Signed-off-by: Addy <addy.ke@rock-chips.com>
->>>>>> ---
->>>>>>   drivers/mmc/host/dw_mmc.c  | 47 ++++++++++++++++++++++++++++++=
-+++++++++++++++-
->>>>>>   include/linux/mmc/dw_mmc.h |  5 +++++
->>>>>>   2 files changed, 51 insertions(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc=
-=2Ec
->>>>>> index b4c3044..3960fc3 100644
->>>>>> --- a/drivers/mmc/host/dw_mmc.c
->>>>>> +++ b/drivers/mmc/host/dw_mmc.c
->>>>>> @@ -1448,6 +1448,17 @@ static int dw_mci_data_complete(struct dw=
-_mci *host, struct mmc_data *data)
->>>>>>       return data->error;
->>>>>>   }
->>>>>>   +static inline void dw_mci_dto_start_monitor(struct dw_mci *ho=
-st)
->>>>>> +{
->>>>>> +    unsigned int data_tmout_clks;
->>>>>> +    unsigned int data_tmout_ms;
->>>>>> +
->>>>>> +    data_tmout_clks =3D (mci_readl(host, TMOUT) >> 8);
->>>>>> +    data_tmout_ms =3D (data_tmout_clks * 1000 / host->bus_hz) +=
- 250;
->>>
->>> What's 250? And how about using the DIV_ROUND_UP?=20
->>>
->> 250ms is only for more timeout.
->> maybe data timeout read from TMOUT register is enough.
->> So, I will remove 250.
->> new code:
->> data_tmout_clks =3D (mci_readl(host, TMOUT) >> 8);
->> data_tmout_ms =3D DIV_ROUND_UP(data_tmout_clks * 100, host->bus_hz);
->> Is right?
->>
->>>>>> +
->>>>>> +    mod_timer(&host->dto_timer, jiffies + msecs_to_jiffies(data=
-_tmout_ms));
->>>>>> +}
->>>>>> +
->>>>>>   static void dw_mci_tasklet_func(unsigned long priv)
->>>>>>   {
->>>>>>       struct dw_mci *host =3D (struct dw_mci *)priv;
->>>>>> @@ -1522,8 +1533,11 @@ static void dw_mci_tasklet_func(unsigned =
-long priv)
->>>>>>               }
->>>>>>                 if (!test_and_clear_bit(EVENT_XFER_COMPLETE,
->>>>>> -                        &host->pending_events))
->>>>>> +                        &host->pending_events)) {
->>>>>> +                if (host->quirks & DW_MCI_QUIRK_DTO_TIMER)
->>>>>> +                    dw_mci_dto_start_monitor(host);
->>>
->>> if timer is starting at only here, dw_mci_dto_start_monitor() doesn=
-'t need.
->>>
->> Ok, I will change it in the next patch.
->>>>>>                   break;
->>>>>> +            }
->>>>>>                 set_bit(EVENT_XFER_COMPLETE, &host->completed_ev=
-ents);
->>>>>>   @@ -2115,6 +2129,9 @@ static irqreturn_t dw_mci_interrupt(int =
-irq, void *dev_id)
->>>>>>           }
->>>>>>             if (pending & SDMMC_INT_DATA_OVER) {
->>>>>> +            if (host->quirks & DW_MCI_QUIRK_DTO_TIMER)
->>>>>> +                del_timer(&host->dto_timer);
->>>>>> +
->>>>>>               mci_writel(host, RINTSTS, SDMMC_INT_DATA_OVER);
->>>>>>               if (!host->data_status)
->>>>>>                   host->data_status =3D pending;
->>>>>> @@ -2502,6 +2519,28 @@ ciu_out:
->>>>>>       return ret;
->>>>>>   }
->>>>>>   +static void dw_mci_dto_timer(unsigned long arg)
->>>>>> +{
->>>>>> +    struct dw_mci *host =3D (struct dw_mci *)arg;
->>>
->>> I prefer to use the "data" instead of "arg"
->>>
->> Ok, I will change it in the next patch.
->>>>>> +
->>>>>> +    switch (host->state) {
->>>>>> +    case STATE_SENDING_DATA:
->>>>>> +    case STATE_DATA_BUSY:
->>>>>> +        /*
->>>>>> +        * If data over interrupt does NOT come in sending data =
-state,
->>>>>> +        * we should notify the driver to teminate current trans=
-fer
->>> teminate/terminate?
->>>
->> Am, I will change it in the next patch.
->>>>>> +        * and report a data timeout to the core.
->>>>>> +        */
->>>>>> +        host->data_status =3D SDMMC_INT_DRTO;
->>>>>> +        set_bit(EVENT_DATA_ERROR, &host->pending_events);
->>>>>> +        set_bit(EVENT_DATA_COMPLETE, &host->pending_events);
->>>
->>> Dose it need to set EVENT_DATA_COMPLETE?
->>>
->> Yes, it is nessarry!
->> If not, dw_mci_data_complete function will not be called in my test.
->> Analysis as follows:
->> After host recevied command response, driver call tasklet_schedule t=
-o
->> set EVENT_CMD_COMPLETE, change state to STATE_SENDING_DATA, and call
->> mod_timer. Because there is no any interrupts come in this case,
->> tasklet_schedule function will not be called until dw_mci_timer is c=
-alled.
->>
->> dw_mci_timer-->
->> tasklet_schedule-->
->> dw_mci_tasklet_func-->
->> state =3D=3D STATE_SENDING_DATA  and EVENT_DATA_ERROR-->
->> dw_mci_stop_dma, set EVENT_XFER_COMPLETE, send_stop_abort, state =3D=
- STATE_DATA_ERROR, and then break;-->
->> check state again -->
->> state =3D=3D STATE_DATA_ERROR, if it NOT set EVENT_DATA_COMPLETE in =
-dw_mci_timer goto 1), else goto 2) -->
->>
->>
->> 1) in case STATE_DATA_BUSY, there does nothing but break, and dw_mci=
-_data_complete and dw_mci_request_end
->>    will not be called. then mmc blocks.
->>
->> 2) in case STATE_DATA_BUSY, becase EVENT_DATA_COMPLETE is set, dw_mc=
-i_data_complete and dw_mci_request_end
->>    will be called to report error to the core.
->>
->>
->>
->>>>>> +        tasklet_schedule(&host->tasklet);
->>>>>> +        break;
->>>>>> +    default:
->>>>>> +        break;
->>>>>> +    }
->>>>>> +}
->>>>>> +
->>>>>>   #ifdef CONFIG_OF
->>>>>>   static struct dw_mci_of_quirks {
->>>>>>       char *quirk;
->>>>>> @@ -2513,6 +2552,9 @@ static struct dw_mci_of_quirks {
->>>>>>       }, {
->>>>>>           .quirk    =3D "disable-wp",
->>>>>>           .id    =3D DW_MCI_QUIRK_NO_WRITE_PROTECT,
->>>>>> +    }, {
->>>>>> +        .quirk    =3D "dto-timer",
->>>>>> +        .id    =3D DW_MCI_QUIRK_DTO_TIMER,
->>>>>>       },
->>>
->>> Well, this is s/w timer, so i'm not sure this can be merged into dt=
--file.
->>> If this is generic solution, we can add s/w timer by default. how a=
-bout?
->> ok, I will change it in the next patch.
->>
-> We got the reply from synopsys today:
->  There are two counters but both use the same value of [31:8] bits.
->  Data timeout counter doesn=E2=80=99t wait for stop clock and you sho=
-uld get DRTO even when the clock is not stopped.
->  Host Starvation timeout counter is triggered with stop clock conditi=
-on.
+Hi Jiang,
 
-Then it doesn't need to add s/w timer. if it's working well, it should =
-get DRTO, right?
-And Did you try to disable "low-power control"?
+> On 2014/11/20 1:18, Marc Zyngier wrote:
+>> Hi Yingjoe,
+>> 
+>> On Wed, Nov 19 2014 at 2:14:08 pm GMT, Yingjoe Chen
+>> <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>>> +
+>>> +static const struct irq_domain_ops gic_irq_domain_hierarchy_ops = {
+>>> +	.xlate = gic_irq_domain_xlate,
+>>> +	.alloc = gic_irq_domain_alloc,
+>>> +	.free = irq_domain_free_irqs_top,
+>> 
+>> I'm convinced that irq_domain_free_irqs_top is the wrong function to
+>> call here, because you're calling it from the bottom, not the top-level
+>> (it has no parent).
+>> 
+>> I cannot verify this with your code as I don't a working platform with
+>> GICv2m, but if I enable something similar on GICv3, it dies a very
+>> painful way:
+>> 
+>> Unable to handle kernel NULL pointer dereference at virtual address 00000018
+>> pgd = ffffffc03d059000
+>> [00000018] *pgd=0000000081356003, *pud=0000000081356003, *pmd=0000000000000000
+>> Internal error: Oops: 96000006 [#1] SMP
+>> Modules linked in:
+>> CPU: 4 PID: 1052 Comm: sh Not tainted 3.18.0-rc4+ #3311
+>> task: ffffffc03e320000 ti: ffffffc001390000 task.ti: ffffffc001390000
+>> PC is at irq_domain_free_irqs_recursive+0x1c/0x80
+>> LR is at irq_domain_free_irqs_common+0x88/0x9c
+>> pc : [<ffffffc0000ed790>] lr : [<ffffffc0000ede20>] pstate: 60000145
+>> [...]
+>> [<ffffffc0000ed790>] irq_domain_free_irqs_recursive+0x1c/0x80
+>> [<ffffffc0000ede1c>] irq_domain_free_irqs_common+0x84/0x9c
+>> [<ffffffc0000ede98>] irq_domain_free_irqs_top+0x64/0x7c  <-- gic_domain.free()
+>> [<ffffffc0000ed798>] irq_domain_free_irqs_recursive+0x24/0x80
+>> [<ffffffc0000ee468>] irq_domain_free_irqs_parent+0x14/0x20
+>> [<ffffffc0003500b8>] its_irq_domain_free+0xc8/0x250
+>> [<ffffffc0000ed798>] irq_domain_free_irqs_recursive+0x24/0x80
+>> [<ffffffc0000ede1c>] irq_domain_free_irqs_common+0x84/0x9c
+>> [<ffffffc0000ede98>] irq_domain_free_irqs_top+0x64/0x7c
+>> [<ffffffc0000ef518>] msi_domain_free+0x70/0x88
+>> [<ffffffc0000ed798>] irq_domain_free_irqs_recursive+0x24/0x80
+>> [<ffffffc0000ee3ac>] irq_domain_free_irqs+0x108/0x17c
+>> [<ffffffc0000efb68>] msi_domain_free_irqs+0x28/0x4c
+>> [<ffffffc000369cac>] free_msi_irqs+0xb4/0x1c0
+>> [<ffffffc00036adec>] pci_disable_msix+0x3c/0x4c
+>> [...]
+>> 
+>> and I cannot see how this could work on the standard GIC either.
+>> 
+>> Thomas, Jiang: could you please confirm or infirm my suspicions? My
+>> understanding is that irq_domain_free_irqs_top can only be called from
+>> the top-level domain.
+> Hi Marc,
+> 	It indicates that irq_domain_free_irqs_top() is not a good name.
+> We have:
+> 1) irq_domain_set_hwirq_and_chip() to set irq_chip and chip_data
+> 2) irq_domain_set_info() to set irq_chip, chip_data, flow_handler and
+>    handler_data;
+> 3) irq_domain_reset_irq_data() resets irq_chip and chip_data.
+> 4) irq_domain_free_irqs_common() resets irq_chip, chip_data and calls
+>    parent domain's domain_ops.free() callback.
+> 5) irq_domain_free_irqs_top() resets irq_chip, chip_data, flow handler,
+>    handler_data and call parent domain's domain_ops.free() callback.
 
->=20
-> It seems that if card does not send data to host, DRTO interrupt will=
- come.
-> But I really have NOT gotten DRTO interrupt and DTO interrupt in RK3X=
- soc.
-> Is there other SOC which have the same problem?
+Yes, and this "call parent domain's free callback" is where the problem
+lies. Here, it is called from the innermost domain, with no parent.
 
-Did you get this problem at Only RK3X soc?
-Actually, i didn't have see similar problem before.
-If you have the error log, could you share it?
+> So there two possible improvements here:
+> 1) Rename irq_domain_free_irqs_top() with better name, any suggestions?
+>    It's named as is because it's always called by the outer-most
+>    irqdomains on x86.
+> 2) Change irq_domain_free_irqs_common() and irq_domain_free_irqs_top()
+>    to call parent domain's domain_ops.free() callback only if parent
+>    exists. By this way, they could be used for inner-most irqdomains.
+> If OK, I will respin a version 4 patch set based on tip/irq/irqdomain.
+> Thoughts?
 
->=20
-> If not, I think we need a quirk for it.
+Checking the parent is probably a safe solution (this is not a hot path
+anyway). I don't care much about the name though, and I the only thing I
+can think of is irq_domain_free_irqs_reset_flow, which looks so bad it's
+not even funny. I'll let the matter rest in your capable hands! ;-)
 
-if you need to add this quirks, how about using "broken-dto"?
-It means that RK3X soc has "broken Data transfer over scheme"
+Thanks,
 
-I will check with my board.
-
-Best Regards,
-Jaehoon Chung
-
->=20
->=20
->> And is there somewhere need to call del_timer?
->>>
->>> Best Regards,
->>> Jaehoon Chung
->>>
->>>>>>   };
->>>>>>   @@ -2654,6 +2696,9 @@ int dw_mci_probe(struct dw_mci *host)
->>>>>>         spin_lock_init(&host->lock);
->>>>>>       INIT_LIST_HEAD(&host->queue);
->>>>>> +    if (host->quirks & DW_MCI_QUIRK_DTO_TIMER)
->>>>>> +        setup_timer(&host->dto_timer,
->>>>>> +                dw_mci_dto_timer, (unsigned long)host);
->>>>>>         /*
->>>>>>        * Get the host data width - this assumes that HCON has be=
-en set with
->>>>>> diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_m=
-mc.h
->>>>>> index 42b724e..2477813 100644
->>>>>> --- a/include/linux/mmc/dw_mmc.h
->>>>>> +++ b/include/linux/mmc/dw_mmc.h
->>>>>> @@ -98,6 +98,7 @@ struct mmc_data;
->>>>>>    * @irq_flags: The flags to be passed to request_irq.
->>>>>>    * @irq: The irq value to be passed to request_irq.
->>>>>>    * @sdio_id0: Number of slot0 in the SDIO interrupt registers.
->>>>>> + * @dto_timer: Timer for data over interrupt timeout.
->>>>>>    *
->>>>>>    * Locking
->>>>>>    * =3D=3D=3D=3D=3D=3D=3D
->>>>>> @@ -196,6 +197,8 @@ struct dw_mci {
->>>>>>       int            irq;
->>>>>>         int            sdio_id0;
->>>>>> +
->>>>>> +    struct timer_list    dto_timer;
->>>>>>   };
->>>>>>     /* DMA ops for Internal/External DMAC interface */
->>>>>> @@ -220,6 +223,8 @@ struct dw_mci_dma_ops {
->>>>>>   #define DW_MCI_QUIRK_BROKEN_CARD_DETECTION    BIT(3)
->>>>>>   /* No write protect */
->>>>>>   #define DW_MCI_QUIRK_NO_WRITE_PROTECT        BIT(4)
->>>>>> +/* Timer for data over interrupt timeout */
->>>>>> +#define DW_MCI_QUIRK_DTO_TIMER            BIT(5)
->>>>>>     /* Slot level quirks */
->>>>>>   /* This slot has no write protect */
->>>>>>
->>>>>
->>>>>
->>>>>
->>>>
->>>>
->>>> _______________________________________________
->>>> linux-arm-kernel mailing list
->>>> linux-arm-kernel@lists.infradead.org
->>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>>
->>>
->>>
->>>
->=20
->=20
-
+	M.
+-- 
+Jazz is not dead. It just smells funny.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
