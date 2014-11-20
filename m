@@ -1,41 +1,65 @@
-From: Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 8/9] of: add Fujitsu vendor prefix
-Date: Thu, 20 Nov 2014 20:39:25 +0800
-Message-ID: <1416487165-25551-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
-References: <1416486442-25200-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416486442-25200-1-git-send-email-Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [RFC] adp1653: Add device tree bindings for LED controller
+Date: Thu, 20 Nov 2014 13:48:27 +0100
+Message-ID: <546DE31B.20602@samsung.com>
+References: <20141117145857.GO8907@valkosipuli.retiisi.org.uk>
+ <546AFEA5.9020000@samsung.com> <20141118084603.GC4059@amd>
+ <546B19C8.2090008@samsung.com> <20141118113256.GA10022@amd>
+ <546B40FA.2070409@samsung.com> <20141118132159.GA21089@amd>
+ <546B6D86.8090701@samsung.com> <20141118165148.GA11711@amd>
+ <546C66A5.6060201@samsung.com> <20141120121202.GA27527@amd>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <20141120121202.GA27527@amd>
+Sender: linux-leds-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, pali.rohar@gmail.com, sre@debian.org, sre@ring0.de, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, freemangordon@abv.bg, bcousson@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, Linux LED Subsystem <linux-leds@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add 'fujitsu' as the vendor prefix for Fujitsu Semiconductor Ltd.
+Hi Pavel,
 
-Signed-off-by: Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
-Signed-off-by: Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+On 11/20/2014 01:12 PM, Pavel Machek wrote:
+> Hi!
+>
+>> I would also swap the segments of a property name to follow the convention
+>> as in case of "regulator-max-microamp".
+>>
+>> Updated version:
+>>
+>> ==========================================================
+>>
+>> Optional properties for child nodes:
+>> - max-microamp : maximum intensity in microamperes of the LED
+>> 		 (torch LED for flash devices)
+>> - flash-max-microamp : maximum intensity in microamperes of the
+>> 		       flash LED; it is mandatory if the led should
+>> 		       support the flash mode
+>> - flash-timeout-microsec : timeout in microseconds after which the flash
+>> 		           led is turned off
+>
+> Works for me. Do you want to submit a patch or should I do it?
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 723999d..dbb7c97 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -56,6 +56,7 @@ everest	Everest Semiconductor Co. Ltd.
- excito	Excito
- fcs	Fairchild Semiconductor
- fsl	Freescale Semiconductor
-+fujitsu Fujitsu Semiconductor Ltd.
- GEFanuc	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
- gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
- geniatech	Geniatech, Inc.
--- 
-1.9.0
+You can submit a patch for leds/common.txt and a separate patch for the
+adp1653 with a reference to the leds/common.txt for the child nodes.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>> - indicator-pattern : identifier of the blinking pattern for the
+>> 		      indicator led
+>>
+>
+> This would need a bit more documentation, no?
+
+- indicator-pattern : identifier of the blinking pattern for the
+  		      indicator led; valid identifiers should be
+		      defined in the documentation of the parent
+		      node.
+
+I wouldn't go for pre-defined identifiers as the pattern
+can be a combination of various settings like ramp-up, ramp-down,
+pulse time etc. Drivers should expose only few combinations of
+these settings in my opinion, like e.g. leds-lm355x.c does.
+
+Regards,
+Jacek
