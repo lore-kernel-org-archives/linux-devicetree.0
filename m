@@ -1,12 +1,13 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 7/9] ARM: dts: sun6i: Add ir node
-Date: Thu, 20 Nov 2014 16:55:26 +0100
-Message-ID: <1416498928-1300-8-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 8/9] ARM: dts: sun6i: Add pinmux settings for
+ the ir pins
+Date: Thu, 20 Nov 2014 16:55:27 +0100
+Message-ID: <1416498928-1300-9-git-send-email-hdegoede@redhat.com>
 References: <1416498928-1300-1-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBCE6XCRQKGQEF6JEO2Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBC46XCRQKGQEK4N7HLI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1416498928-1300-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,33 +20,30 @@ To: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Maxime Ripard
 Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a node for the ir receiver found on the A31.
+Add pinmux settings for the ir receive pin of the A31.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun6i-a31.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm/boot/dts/sun6i-a31.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index 4aa628b..d33e758 100644
+index d33e758..90b7537 100644
 --- a/arch/arm/boot/dts/sun6i-a31.dtsi
 +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -900,6 +900,16 @@
- 			reg = <0x01f01c00 0x300>;
- 		};
- 
-+		ir@01f02000 {
-+			compatible = "allwinner,sun5i-a13-ir";
-+			clocks = <&apb0_gates 1>, <&ir_clk>;
-+			clock-names = "apb", "ir";
-+			resets = <&apb0_rst 1>;
-+			interrupts = <0 37 4>;
-+			reg = <0x01f02000 0x40>;
-+			status = "disabled";
-+		};
+@@ -922,6 +922,13 @@
+ 			#interrupt-cells = <2>;
+ 			#size-cells = <0>;
+ 			#gpio-cells = <3>;
 +
- 		r_pio: pinctrl@01f02c00 {
- 			compatible = "allwinner,sun6i-a31-r-pinctrl";
- 			reg = <0x01f02c00 0x400>;
++			ir_pins_a: ir@0 {
++				allwinner,pins = "PL4";
++				allwinner,function = "s_ir";
++				allwinner,drive = <0>;
++				allwinner,pull = <0>;
++			};
+ 		};
+ 	};
+ };
 -- 
 2.1.0
