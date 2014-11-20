@@ -1,38 +1,71 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH RFC 3/3] ARM: dts: enable power subsystem for i.MX28
-Date: Thu, 20 Nov 2014 19:32:02 -0200
-Message-ID: <CAOMZO5AWOs8ODsru+ySsLb=R4ezDL19nK_z0zAXdbrDfPT8KhA@mail.gmail.com>
-References: <1416514477-19190-1-git-send-email-stefan.wahren@i2se.com>
-	<1416514477-19190-4-git-send-email-stefan.wahren@i2se.com>
+From: Mason <mpeg.blue@free.fr>
+Subject: Re: Looking for good references for ARM driver development
+Date: Thu, 20 Nov 2014 22:41:35 +0100
+Message-ID: <546E600F.8020704@free.fr>
+References: <546C920A.7060800@free.fr> <546CCBF6.7070607@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1416514477-19190-4-git-send-email-stefan.wahren@i2se.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <546CCBF6.7070607@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Victor Ascroft <victorascroft@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
+On 19/11/2014 17:57, Victor Ascroft wrote:
 
-On Thu, Nov 20, 2014 at 6:14 PM, Stefan Wahren <stefan.wahren@i2se.com> wrote:
-> This patch enables the power subsystem for all i.MX28 boards.
->
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> ---
->  arch/arm/boot/dts/imx28.dtsi |    6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-> index 47f68ac..5c163a5 100644
-> --- a/arch/arm/boot/dts/imx28.dtsi
-> +++ b/arch/arm/boot/dts/imx28.dtsi
-> @@ -1022,8 +1022,12 @@
->                         };
->
->                         power: power@80044000 {
-> +                               compatible = "fsl,imx28-power";
+> On 11/19/2014 06:20 PM, Mason wrote:
+> 
+>> Are there more recent technical references, as good as LDD3, that
+>> cover "modern" aspects of kernel development?
+> 
+> The LDD3 is one of the best there is. A fourth edition is supposed
+> to come out sometime next year.
+> http://www.amazon.com/Linux-Device-Drivers-Jessica-McKellar/dp/1449371612
 
-Should we have 'fsl,imx23-power' and 'fsl,imx28-power' as compatible strings?
+That's the best news I've heard this week!
+Hope Jonathan gets well and lives happily ever after.
 
-Or  ''fsl,mxs-power' could be used for both?
+>> How do I "leave device registration for the system infrastructure"?
+>> Where should I put that code?
+>> Is it a good idea to separate device registration and driver registration
+>> in the case of a SoC, where the device is embedded in the SoC and is not
+>> "hot-plugged" (or anything-plugged for that matter, it's just "there").
+> 
+> For understanding this you need to understand how the platform infrastructure
+> works and why is it used.
+> http://lwn.net/Articles/448499/
+> http://lwn.net/Articles/448502/
+> and go through some of the relevant drivers.
+
+More of Jon's (great) work ;-)
+Will definitely read these articles carefully.
+
+>> 3) Why is the function used to "destroy a platform device" named
+>> platform_device_put? Why put?
+>> Put on a list of things to destroy at a later time?
+> 
+> This should be more clear once you go through LDD3.
+
+I'm coming up empty.
+AFAICT, it's unrelated to the _put_user* family of functions.
+I see that it has something to do with ref count decrement.
+[more reading...]
+Something about kref.
+https://lwn.net/Articles/336224/
+
+They mention "put" but not *why* it's called "put".
+Is it related to Dijkstra's P and V for semaphores?
+https://cs.nyu.edu/~yap/classes/os/resources/origin_of_PV.html
+Still confused...
+
+Regards.
