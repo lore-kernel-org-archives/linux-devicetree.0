@@ -1,36 +1,142 @@
-From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2 00/22] Multiplatform BMIPS kernel
-Date: Wed, 19 Nov 2014 19:55:15 -0800
-Message-ID: <CAJiQ=7C8h-MAuRdgzZqx2=bg8bvy7v9pv7e7tGXWmA9ghYJiqQ@mail.gmail.com>
-References: <1416097066-20452-1-git-send-email-cernekee@gmail.com> <20141120030434.GE24364@ld-irv-0074>
+From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v7 1/4] irqchip: gic: Support hierarchy irq domain.
+Date: Thu, 20 Nov 2014 11:57:20 +0800
+Message-ID: <1416455840.12869.17.camel@mtksdaap41>
+References: <1416406451-4578-1-git-send-email-yingjoe.chen@mediatek.com>
+	 <1416406451-4578-2-git-send-email-yingjoe.chen@mediatek.com>
+	 <87h9xvaz2p.fsf@approximate.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141120030434.GE24364@ld-irv-0074>
+In-Reply-To: <87h9xvaz2p.fsf-BgpFEFc6EmV6Fr0h90IsVGS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Fraser <jfraser-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yijing Wang <wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <eddie.huang-NuS5LvNUpcLQFizaE/u3fw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 19, 2014 at 7:04 PM, Brian Norris
-<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Sat, Nov 15, 2014 at 04:17:24PM -0800, Kevin Cernekee wrote:
->> The lack of a reboot handler is annoying; syscon-reboot probably won't work
->> on STB (because it requires two writes).
->
-> Can't you reuse drivers/power/reset/brcmstb-reboot.c ?
 
-Oops, I ran a quick check earlier by grepping for "sun-top-ctrl" and
-looking under drivers/reset, but assumed this driver wasn't merged yet
-when nothing came up in the code.  Thanks for the pointer.
+Hi Marc,
 
-It looks like the current driver will work for 40nm, but 65nm uses
-different bit positions: RESET_CTRL bit 3 to arm, and SW_RESET bit 31
-to trigger.  I'll add a new "brcm,brcmstb-reboot-65nm" compatible
-string to make this work.
+On Wed, 2014-11-19 at 17:18 +0000, Marc Zyngier wrote:
+> > +static int gic_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+> > +				unsigned int nr_irqs, void *arg)
+> > +{
+> > +	int i, ret;
+> > +	irq_hw_number_t hwirq;
+> > +	unsigned int type = IRQ_TYPE_NONE;
+> > +	struct of_phandle_args *irq_data = arg;
+> > +
+> > +	ret = gic_irq_domain_xlate(domain, irq_data->np, irq_data->args,
+> > +				   irq_data->args_count, &hwirq, &type);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	for (i = 0; i < nr_irqs; i++)
+> > +		gic_irq_domain_map(domain, virq+i, hwirq+i);
+> 
+> nit: spacing around '+'.
 
-Also, we'll need to take Guenter Roeck's register_restart_handler()
-patch in order to build on MIPS.
+OK.
+
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct irq_domain_ops gic_irq_domain_hierarchy_ops = {
+> > +	.xlate = gic_irq_domain_xlate,
+> > +	.alloc = gic_irq_domain_alloc,
+> > +	.free = irq_domain_free_irqs_top,
+> 
+> I'm convinced that irq_domain_free_irqs_top is the wrong function to
+> call here, because you're calling it from the bottom, not the top-level
+> (it has no parent).
+
+Base on the name, I though this is helper function for top level
+irq_domain?
+
+> I cannot verify this with your code as I don't a working platform with
+> GICv2m, but if I enable something similar on GICv3, it dies a very
+> painful way:
+> 
+> Unable to handle kernel NULL pointer dereference at virtual address 00000018
+> pgd = ffffffc03d059000
+> [00000018] *pgd=0000000081356003, *pud=0000000081356003, *pmd=0000000000000000
+> Internal error: Oops: 96000006 [#1] SMP
+> Modules linked in:
+> CPU: 4 PID: 1052 Comm: sh Not tainted 3.18.0-rc4+ #3311
+> task: ffffffc03e320000 ti: ffffffc001390000 task.ti: ffffffc001390000
+> PC is at irq_domain_free_irqs_recursive+0x1c/0x80
+> LR is at irq_domain_free_irqs_common+0x88/0x9c
+> pc : [<ffffffc0000ed790>] lr : [<ffffffc0000ede20>] pstate: 60000145
+> [...]
+> [<ffffffc0000ed790>] irq_domain_free_irqs_recursive+0x1c/0x80
+> [<ffffffc0000ede1c>] irq_domain_free_irqs_common+0x84/0x9c
+> [<ffffffc0000ede98>] irq_domain_free_irqs_top+0x64/0x7c  <-- gic_domain.free()
+> [<ffffffc0000ed798>] irq_domain_free_irqs_recursive+0x24/0x80
+> [<ffffffc0000ee468>] irq_domain_free_irqs_parent+0x14/0x20
+> [<ffffffc0003500b8>] its_irq_domain_free+0xc8/0x250
+> [<ffffffc0000ed798>] irq_domain_free_irqs_recursive+0x24/0x80
+> [<ffffffc0000ede1c>] irq_domain_free_irqs_common+0x84/0x9c
+> [<ffffffc0000ede98>] irq_domain_free_irqs_top+0x64/0x7c
+> [<ffffffc0000ef518>] msi_domain_free+0x70/0x88
+> [<ffffffc0000ed798>] irq_domain_free_irqs_recursive+0x24/0x80
+> [<ffffffc0000ee3ac>] irq_domain_free_irqs+0x108/0x17c
+> [<ffffffc0000efb68>] msi_domain_free_irqs+0x28/0x4c
+> [<ffffffc000369cac>] free_msi_irqs+0xb4/0x1c0
+> [<ffffffc00036adec>] pci_disable_msix+0x3c/0x4c
+> [...]
+> 
+> and I cannot see how this could work on the standard GIC either.
+
+I'm sorry, I just realize my testcase was too simple, irqs are populated
+by device tree and never got freed. I'll add that and test it again.
+
+> Thomas, Jiang: could you please confirm or infirm my suspicions? My
+> understanding is that irq_domain_free_irqs_top can only be called from
+> the top-level domain.
+> 
+> > +};
+> > +
+> >  static const struct irq_domain_ops gic_irq_domain_ops = {
+> >  	.map = gic_irq_domain_map,
+> >  	.unmap = gic_irq_domain_unmap,
+> > @@ -948,18 +972,6 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
+> >  		gic_cpu_map[i] = 0xff;
+> >  
+> >  	/*
+> > -	 * For primary GICs, skip over SGIs.
+> > -	 * For secondary GICs, skip over PPIs, too.
+> > -	 */
+> > -	if (gic_nr == 0 && (irq_start & 31) > 0) {
+> > -		hwirq_base = 16;
+> > -		if (irq_start != -1)
+> > -			irq_start = (irq_start & ~31) + 16;
+> > -	} else {
+> > -		hwirq_base = 32;
+> > -	}
+> > -
+> > -	/*
+> >  	 * Find out how many interrupts are supported.
+> >  	 * The GIC only supports up to 1020 interrupt sources.
+> >  	 */
+> > @@ -969,10 +981,32 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
+> >  		gic_irqs = 1020;
+> >  	gic->gic_irqs = gic_irqs;
+> >  
+> > -	gic_irqs -= hwirq_base; /* calculate # of irqs to allocate */
+> > +	if (node) {		/* DT case */
+> > +		const struct irq_domain_ops *ops =
+> > +					&gic_irq_domain_hierarchy_ops;
+> 
+> nit: please put this on the same line, even if it is longer than 80
+> characters.
+
+ok.
+
+Joe.C
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
