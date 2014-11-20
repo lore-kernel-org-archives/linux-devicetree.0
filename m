@@ -1,14 +1,14 @@
 From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [GIT PULL 3.19] Broadcom Cygnus SoC MAINTAINERS updates
-Date: Thu, 20 Nov 2014 13:05:01 +0100
-Message-ID: <201411201305.01621.arnd@arndb.de>
-References: <1415826266-6867-1-git-send-email-f.fainelli@gmail.com> <1415826266-6867-3-git-send-email-f.fainelli@gmail.com>
+Subject: Re: [GIT PULL 3.19] Broadcom Cygnus SoC platform support
+Date: Thu, 20 Nov 2014 13:11:14 +0100
+Message-ID: <201411201311.14549.arnd@arndb.de>
+References: <1415826266-6867-1-git-send-email-f.fainelli@gmail.com> <1415826266-6867-4-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
   charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415826266-6867-3-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1415826266-6867-4-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
@@ -21,25 +21,36 @@ On Wednesday 12 November 2014, Florian Fainelli wrote:
 > 
 > are available in the git repository at:
 > 
->   http://github.com/brcm/linux.git tags/arm-soc/for-3.19/cygnus-maintainers-v2
+>   http://github.com/brcm/linux.git tags/arm-soc/for-3.19/cygnus-platform-v2
 > 
-> for you to fetch changes up to 36c0237f1ae08f9ba538ade0ab6375bd58bb996c:
+> for you to fetch changes up to 64e74aa788f996cd0e328a1c4223e9d438b78e9c:
 > 
->   MAINTAINERS: Entry for Cygnus/iproc arm architecture (2014-11-11 23:04:25 -0800)
-> 
-> ----------------------------------------------------------------
-> This pull request contains the MAINTAINERS update to add the Broadcom Cygnus
-> SoC platform files, Device Tree sources and clock drivers.
+>   ARM: mach-bcm: ARCH_BCM_MOBILE: remove one level of menu from Kconfig (2014-11-11 22:35:45 -0800)
 > 
 > ----------------------------------------------------------------
-> Scott Branden (1):
->       MAINTAINERS: Entry for Cygnus/iproc arm architecture
+> This pull request contains the platform code to support the Broadcom Cygnus SoC
+> using the iProc architecture:
 > 
->  MAINTAINERS | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+> - add support for the Broadcom Cygnus SoC
+> - consolidate the BCM5301X Kconfig options under the iProc menuconfig entry
+> - remove one level of menu in menuconfig
+> 
+> ----------------------------------------------------------------
+> Jonathan Richardson (1):
+>       ARM: cygnus: Initial support for Broadcom Cygnus SoC
+> 
+> Scott Branden (2):
+>       ARM: mach-bcm: Consolidate currently supported IPROC SoCs
+>       ARM: mach-bcm: ARCH_BCM_MOBILE: remove one level of menu from Kconfig
+> 
+>  arch/arm/mach-bcm/Kconfig      | 93 ++++++++++++++++++++++++++----------------
+>  arch/arm/mach-bcm/Makefile     |  3 ++
+>  arch/arm/mach-bcm/bcm_cygnus.c | 25 ++++++++++++
+>  3 files changed, 85 insertions(+), 36 deletions(-)
+>  create mode 100644 arch/arm/mach-bcm/bcm_cygnus.c
 > 
 
-Pulled into next/fixes-non-critical, thanks!
+Pulled into next/soc, thanks!
 
 	Arnd
 --
