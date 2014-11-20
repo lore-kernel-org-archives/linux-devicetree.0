@@ -1,69 +1,37 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: Re: [PATCH v7 3/4] ARM: mediatek: Add sysirq in
- mt6589/mt8135/mt8127 dtsi
-Date: Thu, 20 Nov 2014 11:29:21 +0800
-Message-ID: <1416454161.12869.10.camel@mtksdaap41>
-References: <1416406451-4578-1-git-send-email-yingjoe.chen@mediatek.com>
-	 <1416406451-4578-4-git-send-email-yingjoe.chen@mediatek.com>
-	 <87d28jaxmq.fsf@approximate.cambridge.arm.com>
+From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V2 00/22] Multiplatform BMIPS kernel
+Date: Wed, 19 Nov 2014 19:55:15 -0800
+Message-ID: <CAJiQ=7C8h-MAuRdgzZqx2=bg8bvy7v9pv7e7tGXWmA9ghYJiqQ@mail.gmail.com>
+References: <1416097066-20452-1-git-send-email-cernekee@gmail.com> <20141120030434.GE24364@ld-irv-0074>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87d28jaxmq.fsf@approximate.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jiang Liu <jiang.liu@linux.intel.com>, Mark Rutland <Mark.Rutland@arm.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "hc.yen@mediatek.com" <hc.yen@mediatek.com>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, "yh.chen@mediatek.com" <yh.chen@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Yijing Wang <wangyijing@huawei.com>, Rob Herring <robh+dt@kernel.org>, "nathan.chung@mediatek.com" <nathan.chung@mediatek.com>, "yingjoe.chen@gmail.com" <yingjoe.chen@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, "eddie.huang@mediatek.com" <eddie.huang@mediatek.co>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141120030434.GE24364@ld-irv-0074>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Fraser <jfraser-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-11-19 at 17:49 +0000, Marc Zyngier wrote:
-> On Wed, Nov 19 2014 at  2:14:10 pm GMT, Yingjoe Chen <yingjoe.chen@mediatek.com> wrote:
-> > Add sysirq settings for mt6589/mt8135/mt8127
-> > This also correct timer interrupt flag. The old setting works
-> > because boot loader already set polarity for timer interrupt.
-> > Without intpol support, the setting was not changed so gic
-> > can get the irq correctly.
-> >
-> > Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
-> > ---
-> >  arch/arm/boot/dts/mt6589.dtsi | 14 ++++++++++++--
-> >  arch/arm/boot/dts/mt8127.dtsi | 14 ++++++++++++--
-> >  arch/arm/boot/dts/mt8135.dtsi | 14 ++++++++++++--
-> >  3 files changed, 36 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/arch/arm/boot/dts/mt6589.dtsi b/arch/arm/boot/dts/mt6589.dtsi
-> > index e3c7600..c91b2a9 100644
-> > --- a/arch/arm/boot/dts/mt6589.dtsi
-> > +++ b/arch/arm/boot/dts/mt6589.dtsi
-> > @@ -19,7 +19,7 @@
-> >  
-> >  / {
-> >  	compatible = "mediatek,mt6589";
-> > -	interrupt-parent = <&gic>;
-> > +	interrupt-parent = <&sysirq>;
-> 
-> This worries me a bit. Your sysirq cannot handle PPIs, and yet you make
-> it the top-level interrupt controller, without amending any PPI.
-> 
-> Does it mean you do not use *any* PPI? No per-cpu timer, nothing?
+On Wed, Nov 19, 2014 at 7:04 PM, Brian Norris
+<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Sat, Nov 15, 2014 at 04:17:24PM -0800, Kevin Cernekee wrote:
+>> The lack of a reboot handler is annoying; syscon-reboot probably won't work
+>> on STB (because it requires two writes).
+>
+> Can't you reuse drivers/power/reset/brcmstb-reboot.c ?
 
-Matthias had a patch to enable arch timer[1], but that is not merged
-yet. Node using PPI interrupts must add their own interrupt-parent. This
-works if we don't have node that use both PPI & SPI interrupts. For
-timer, we could do this:
+Oops, I ran a quick check earlier by grepping for "sun-top-ctrl" and
+looking under drivers/reset, but assumed this driver wasn't merged yet
+when nothing came up in the code.  Thanks for the pointer.
 
-+		timer2: timer {
-+			compatible = "arm,armv7-timer";
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) |
-IRQ_TYPE_LEVEL_LOW)>,
-+				     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+				     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+				     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-+			clock-frequency = <13000000>;
-+		};
+It looks like the current driver will work for 40nm, but 65nm uses
+different bit positions: RESET_CTRL bit 3 to arm, and SW_RESET bit 31
+to trigger.  I'll add a new "brcm,brcmstb-reboot-65nm" compatible
+string to make this work.
 
-[1]
-http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/277017.html
-
-Joe.C
+Also, we'll need to take Guenter Roeck's register_restart_handler()
+patch in order to build on MIPS.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
