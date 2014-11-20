@@ -1,57 +1,48 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCHv4 01/10] arm: mvebu: fix vendor prefix typo in
- kirkwood-synology.dtsi
-Date: Thu, 20 Nov 2014 06:02:13 +0100
-Message-ID: <20141120050213.GB2596@lunn.ch>
-References: <cover.1416351425.git.arno@natisbad.org>
- <e1c3f3fbd9f494fa228de3ee5928c771d33b072e.1416351426.git.arno@natisbad.org>
- <20141120015519.GA22670@titan.lakedaemon.net>
+From: Ohad Ben-Cohen <ohad@wizery.com>
+Subject: Re: [PATCHv6 5/5] hwspinlock/omap: add support for dt nodes
+Date: Thu, 20 Nov 2014 08:36:55 +0200
+Message-ID: <CAK=WgbZMY5WyE9aVT3XTDnC3YJyBNXj1QoYBEdUMjwTbYAKA3g@mail.gmail.com>
+References: <1410553499-55951-1-git-send-email-s-anna@ti.com>
+ <1410553499-55951-6-git-send-email-s-anna@ti.com> <CAK=WgbZE7_WrsNz5E+MDX7j2tAGEjv91zeCgqhB=Jsiu0+d8vw@mail.gmail.com>
+ <CAJAp7OisV3UrL45UgRb0tMudyCJHe-xsmsRYV0uGG3P4PReHnA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141120015519.GA22670-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CAJAp7OisV3UrL45UgRb0tMudyCJHe-xsmsRYV0uGG3P4PReHnA@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn@kryo.se>
+Cc: Suman Anna <s-anna@ti.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Tony Lindgren <tony@atomide.com>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 19, 2014 at 08:55:19PM -0500, Jason Cooper wrote:
-> Andrew,
-> 
-> On Wed, Nov 19, 2014 at 12:01:36AM +0100, Arnaud Ebalard wrote:
-> > 
-> > As reported by Andrew, the vendor prefix for Seiko Instruments, Inc.
-> > S-35390A I2C RTC chip in kirkwood-synology.dtsi has a typo (ssi
-> > instead of sii). This patches fixes it.
-> > 
-> > Reported-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> > Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/kirkwood-synology.dtsi | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/kirkwood-synology.dtsi b/arch/arm/boot/dts/kirkwood-synology.dtsi
-> > index 811e0971fc58..8be5b2e4626e 100644
-> > --- a/arch/arm/boot/dts/kirkwood-synology.dtsi
-> > +++ b/arch/arm/boot/dts/kirkwood-synology.dtsi
-> > @@ -266,7 +266,7 @@
-> >  
-> >  			s35390a: s35390a@30 {
-> >  				status = "disabled";
-> > -				compatible = "ssi,s35390a";
-> > +				compatible = "sii,s35390a";
-> 
-> Should the driver now support both variants for backward compatibility?
+Hi Bjorn,
 
-Hi Jason
+On Thu, Nov 20, 2014 at 2:43 AM, Bjorn Andersson <bjorn@kryo.se> wrote:
+> I still have a huge problem understanding the awesomeness with the
+> "base_id". If you have a SoC with 2 hwlock blocks; say 8+8 locks, used
+> for interaction with e.g. a modem and a video core respectively.
+> Why would you in either remote system offset the locks with 8?
+> Wouldn't e.g the modem use locks hwlock0:0-7 and video core use locks
+> hwlock1:0-7?
 
-This is an i2c device. i2c totally ignores the vendor. It is optional.
-So there is no backward compatibility issues.
+Please see below
 
-   Andrew
-     
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> What systems use more than one hwlock block
+
+None that we know of. This concern was raised some time ago by Arnd
+and since it was easy to deal with we added the 'base_id' notion.
+
+> and do you know of any reasons why these hwlocks are globally numbered?
+
+Because on an heterogeneous asymmetric multiprocessing systems you
+sometimes have use cases where hwlocks are dynamically allocated and
+their id numbers need to be synchronized between user space
+applications, the Linux kernel, and entities running on remote
+processors (which are likely not running Linux).
+
+For this to work we have to have some system-wide global hwlocks
+naming that is predefined and known to all processors. A mere number
+seems like the simplest naming method. A dynamic hwlock request API
+could return "hwlock1:0" but a mere 8 seems easier to deal with.
+
+Thanks,
+Ohad.
