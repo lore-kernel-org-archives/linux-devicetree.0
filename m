@@ -1,52 +1,36 @@
-From: Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: Re: [1/2] ARM: dts: Fix bootup issue on smdk5250
-Date: Thu, 20 Nov 2014 09:31:37 +0530
-Message-ID: <546D67A1.1080804@samsung.com>
-References: <1416312509-11530-1-git-send-email-yadi.brar@samsung.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH RESEND 0/4] ARM: at91: remove at91sam9g45/9m10 legacy
+ board support
+Date: Thu, 20 Nov 2014 12:05:55 +0800
+Message-ID: <20141120040555.GA28420@gondor.apana.org.au>
+References: <1416413278-10197-1-git-send-email-boris.brezillon@free-electrons.com>
+ <546CC233.6090605@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1416312509-11530-1-git-send-email-yadi.brar@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Yadwinder Singh Brar <yadi.brar@samsung.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: robh+dt@kernel.org, kgene.kim@samsung.com, yadi.brar01@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <546CC233.6090605@atmel.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Matt Mackall <mpm@selenic.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, Nov 19, 2014 at 05:15:47PM +0100, Nicolas Ferre wrote:
+> On 19/11/2014 17:07, Boris Brezillon :
+> > Hello,
+> > 
+> > This series adds DT support for the TRNG (True Random Generator) block and
+> > adds missing trng nodes to dtsi files.
+> 
+> Nitpicking: subject of this cover letter seems not good ;-)
+> 
+> Herbert, do you think you can take this series yourself or do I have to
+> take it?
 
-On Tuesday 18 November 2014 05:38 PM, Yadwinder Singh Brar wrote:
-> With default config on smdk5250 latest tree throws below message :
->
-> [    2.226049] thermal thermal_zone0: critical temperature reached(224 C),shutting down
-> [    2.227840] reboot: Failed to start orderly shutdown: forcing the issue
->
-> and hangs randomly because it reads wrong temperature value.
->
-> I can't figure out any direct relation between LDO10 and TMU from board
-> schematics which I have. So making LDO10 always-on to fix issue for now.
->
-> Signed-off-by: Yadwinder Singh Brar <yadi.brar@samsung.com>
->
+Sure I can take this.
 
-Tested this on SMDK5250 board, system boot is fine now, hence
-
-Tested-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-
-> ---
-> arch/arm/boot/dts/exynos5250-smdk5250.dts |    1 +
->   1 files changed, 1 insertions(+), 0 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> index bc27cc2..95b5b51 100644
-> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> @@ -190,6 +190,7 @@
->   				regulator-name = "P1.8V_LDO_OUT10";
->   				regulator-min-microvolt = <1800000>;
->   				regulator-max-microvolt = <1800000>;
-> +				regulator-always-on;
->   			};
->
->   			ldo11_reg: LDO11 {
->
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
