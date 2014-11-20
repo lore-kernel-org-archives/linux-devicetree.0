@@ -1,110 +1,63 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4 1/2] ARM: keystone: pm: switch to use generic pm domains
-Date: Thu, 20 Nov 2014 14:32:41 +0100
-Message-ID: <CAMuHMdWtHT7QX3Kpa-GCLa49ToGODwjnNVgfxDzJzcM-FU1ffg@mail.gmail.com>
-References: <1415631557-22897-1-git-send-email-grygorii.strashko@ti.com>
-	<1709760.E0jX3Myv0h@wuerfel>
-	<546C7FDD.7030906@ti.com>
-	<2900095.WIocOu7ue2@wuerfel>
-	<CAPDyKFqeZ3YU2OEN4tCOdcQ0pAho67Q8U_eCEOroG9aS0mp+-Q@mail.gmail.com>
-	<546DD87B.3080806@ti.com>
-	<CAPDyKFrBhZyqozM98_4pPdW0EMFt5W6VX1X7cz6Z=yNhW4vYTA@mail.gmail.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH] Add attributes neccessary for LED flashes to
+ devicetree/bindings/leds/common.txt
+Date: Thu, 20 Nov 2014 14:38:11 +0100
+Message-ID: <546DEEC3.7090508@samsung.com>
+References: <20141120131713.GC27527@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFrBhZyqozM98_4pPdW0EMFt5W6VX1X7cz6Z=yNhW4vYTA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>, ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <20141120131713.GC27527@amd>
+Sender: linux-leds-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: sakari.ailus@iki.fi, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-doc@vger.kernel.org, cooloney@gmail.com, rpurdie@rpsys.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 20, 2014 at 2:12 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->>> According to earlier comments in this thread, device's clocks are
->>> split into "functional" and "PM" clocks.
->>>
->>> If I understand correctly, a typical platform driver will enable it's
->>> "functional" clocks during ->probe() and you want the PM domain to
->>> take care of the "PM" clocks, when the device changes runtime PM
->>> status.
->>>
->>> How will you describe these different set of device clocks in DT?
->>
->> True :(  You can dig deeper in the history of this series if you wish.
->> - first Geert Uytterhoeven proposed to use CLK_RUNTIME_PM there
->>   https://lkml.org/lkml/2014/11/6/319
->> - second I proposed to introduce smth. like "clkops-clocks", "pm-clocks" there
->>   https://lkml.org/lkml/2014/6/12/436
->>  or "fck-clocks"/"opt-clocks" later.
->>
->> ^failed.
->>
->> So, this implementation picks up all clocks for each device, which is ok for
->> Keystone 2 and, because it's platform specific.
->>
->>>>
->>>> Yes, it would definitely solve the problem that I see with the infrastructure
->>>> code that the current version adds into the platform directory.
->>>>
->>>> The exact binding of course should be reviewed by the pmdomain and
->>>> DT maintainers, to ensure that it is done the best possible way, because
->>>> I assume we will end up using it a lot, and it would be a shame to get
->>>> it slightly wrong.
->>>>
->>>> One possible variation I can think of would be to just use "simple-pmdomain"
->>>> as the compatible string, and use properties in the node itself to decide
->>>> what the domain should control, e.g.
->>>>
->>>>          clk_pmdomain: pmdomain {
->>>>                  compatible = "simple-pmdomain";
->>>>                  pmdomain-enable-clocks;
->>>>                  #power-domain-cells = <0>;
->>>>          };
->>>>          clk_regulator_pmdomain: pmdomain {
->>>>                  compatible = "simple-pmdomain";
->>>>                  pmdomain-enable-clocks;
->>>>                  pmdomain-enable-regulators;
->>>>                  #power-domain-cells = <0>;
->>>>          };
->>>>
->>>> and then have each device link to one of the nodes as the pmdomain.
->>>>
->>>
->>> That's seems like a good approach to me.
->>
->> Yes, but your previous comment is still actual :(
+Hi Pavel,
+
+On 11/20/2014 02:17 PM, Pavel Machek wrote:
 >
-> Agree!
+> Add attributes neccessary for LED flashes to
+> devicetree/bindings/leds/common.txt .
 >
-> So I really think we need to decide on how to address the split of the
-> device clocks. Before that's done, I don't think it make sense to add
-> a "simple-pmdomain" compatible, since it will likely not be that many
-> SoC that can use it.
+> This will allow me to add device tree support for adp1653 i2c flash
+> LED driver, and allow Jacek Anaszewski to add support for more LED
+> drivers..
 >
-> So, does anyone have a suggestion on how to deal with the split of the
-> device clocks into "functional" clocks and into "PM" clocks?
+> Signed-off-by: Pavel Machek <pavel@ucw.cz>
+>
+> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+> index 2d88816..e9acbbc 100644
+> --- a/Documentation/devicetree/bindings/leds/common.txt
+> +++ b/Documentation/devicetree/bindings/leds/common.txt
+> @@ -14,6 +14,15 @@ Optional properties for child nodes:
+>        "ide-disk" - LED indicates disk activity
+>        "timer" - LED flashes at a fixed, configurable rate
+>
+> +- max-microamp : maximum intensity in microamperes of the LED
+> +  	         (torch LED for flash devices)
+> +- flash-max-microamp : maximum intensity in microamperes of the
+> +                       flash LED; it is mandatory if the LED should
+> +		       support the flash mode
+> +- flash-timeout-microsec : timeout in microseconds after which the flash
+> +                           LED is turned off
+> +
+> +
+>   Examples:
+>
+>   system-status {
+> @@ -21,3 +30,10 @@ system-status {
+>   	linux,default-trigger = "heartbeat";
+>   	...
+>   };
+> +
+> +camera-flash {
+> +	label = "Flash";
+> +	max-microamp = <50000>;
+> +	flash-max-microamp = <320000>;
+> +	flash-timeout-microsec = <500000>;
+> +}
+>
 
-That's indeed the tricky part.
-
-On shmobile, we just use the "NULL" clock, i.e. the first clock, for historical
-reasons.
-
-Using clock-names (e.g. "fck" and "pm") will conflict with existing bindings
-for devices that already mandate specific clock names.
-
-As the clock being a "PM" clock is a property of the clock provider
-(at last on shmobile), I originally came up with not handling it in DT,
-but advertising it in the clock provider driver:
-
-> > - first Geert Uytterhoeven proposed to use CLK_RUNTIME_PM there
-> >   https://lkml.org/lkml/2014/11/6/319
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Why did you omit indicator-pattern?
