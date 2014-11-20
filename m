@@ -1,109 +1,34 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 3/9] clk: sunxi: Add prcm mod0 clock driver
-Date: Thu, 20 Nov 2014 20:32:17 +0100
-Message-ID: <546E41C1.1070800@redhat.com>
-References: <1416498928-1300-1-git-send-email-hdegoede@redhat.com> <1416498928-1300-4-git-send-email-hdegoede@redhat.com> <CAGb2v66zoAy93mjZn+yf8zvCmkQ8AVWH92jKL-gyu90E5HLuuw@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBUEDXGRQKGQEKQ2LCMQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAGb2v66zoAy93mjZn+yf8zvCmkQ8AVWH92jKL-gyu90E5HLuuw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+From: Josh Cartwright <joshc@codeaurora.org>
+Subject: [PATCH 0/3] qcom_rpm: add support for IPQ8064 resources
+Date: Thu, 20 Nov 2014 13:41:22 -0600
+Message-ID: <1416512485-7292-1-git-send-email-joshc@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-kernel@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The IPQ8064 SoC has several Resource Power Manager (RPM) controlled resources:
+four regulators (two SMB208s, each controlling two regulators) and two fabric
+clocks for the Network Subsystem (NSS).  This patchset adds the appropriate
+definitions for these resources, and extends the existing RPM regulator driver
+to support the SMB208.
 
-On 11/20/2014 07:24 PM, Chen-Yu Tsai wrote:
-> Hi,
-> 
-> On Thu, Nov 20, 2014 at 7:55 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->> Add a driver for mod0 clocks found in the prcm. Currently there is only
->> one mod0 clocks in the prcm, the ir clock.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
->>  drivers/clk/sunxi/Makefile                        |  2 +-
->>  drivers/clk/sunxi/clk-sun6i-prcm-mod0.c           | 63 +++++++++++++++++++++++
->>  drivers/mfd/sun6i-prcm.c                          | 14 +++++
->>  4 files changed, 79 insertions(+), 1 deletion(-)
->>  create mode 100644 drivers/clk/sunxi/clk-sun6i-prcm-mod0.c
->>
->> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
->> index ed116df..342c75a 100644
->> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
->> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
->> @@ -56,6 +56,7 @@ Required properties:
->>         "allwinner,sun4i-a10-usb-clk" - for usb gates + resets on A10 / A20
->>         "allwinner,sun5i-a13-usb-clk" - for usb gates + resets on A13
->>         "allwinner,sun6i-a31-usb-clk" - for usb gates + resets on A31
->> +       "allwinner,sun6i-a31-ir-clk" - for the ir clock on A31
->>
->>  Required properties for all clocks:
->>  - reg : shall be the control register address for the clock.
->> diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
->> index 7ddc2b5..daf8b1c 100644
->> --- a/drivers/clk/sunxi/Makefile
->> +++ b/drivers/clk/sunxi/Makefile
->> @@ -10,4 +10,4 @@ obj-y += clk-sun8i-mbus.o
->>
->>  obj-$(CONFIG_MFD_SUN6I_PRCM) += \
->>         clk-sun6i-ar100.o clk-sun6i-apb0.o clk-sun6i-apb0-gates.o \
->> -       clk-sun8i-apb0.o
->> +       clk-sun8i-apb0.o clk-sun6i-prcm-mod0.o
->> diff --git a/drivers/clk/sunxi/clk-sun6i-prcm-mod0.c b/drivers/clk/sunxi/clk-sun6i-prcm-mod0.c
->> new file mode 100644
->> index 0000000..e80f18e
->> --- /dev/null
->> +++ b/drivers/clk/sunxi/clk-sun6i-prcm-mod0.c
->> @@ -0,0 +1,63 @@
->> +/*
->> + * Allwinner A31 PRCM mod0 clock driver
->> + *
->> + * Copyright (C) 2014 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +
->> +#include <linux/clk-provider.h>
->> +#include <linux/clkdev.h>
->> +#include <linux/module.h>
->> +#include <linux/of_address.h>
->> +#include <linux/platform_device.h>
->> +
->> +#include "clk-factors.h"
->> +#include "clk-mod0.h"
->> +
->> +static const struct of_device_id sun6i_a31_prcm_mod0_clk_dt_ids[] = {
->> +       { .compatible = "allwinner,sun6i-a31-ir-clk" },
-> 
-> Could we use a generic name, like "sun6i-a31-prcm-mod0-clk"?
-> IIRC, there is another one, the module clock for the 1-wire interface.
+This patchset is based ontop of v7 of Bjorne Andersson's RPM patchset [1].
 
-I wish we could use a generic name, but that does not work for mfd device
-subnodes, as the mfd framework attaches resources (such as registers) to
-the subnodes based on the compatible.
+1: http://lkml.kernel.org/r/1411428329-23172-1-git-send-email-bjorn.andersson@sonymobile.com
 
-BTW it seems that that the 1-wire clock is not 100% mod0 clock compatible,
-at least the ccmu.h in the allwinner SDK uses a different struct definition
-for it.
+Josh Cartwright (3):
+  mfd: devicetree: qcom_rpm: document IPQ8064 resources
+  mfd: qcom_rpm: add support for IPQ8064
+  regulator: rpm: add support for RPM-controller SMB208
 
-Regards,
+ Documentation/devicetree/bindings/mfd/qcom-rpm.txt |  6 +++-
+ drivers/mfd/qcom_rpm.c                             | 41 ++++++++++++++++++++++
+ drivers/regulator/qcom_rpm-regulator.c             | 19 ++++++++++
+ include/dt-bindings/mfd/qcom-rpm.h                 |  6 ++++
+ 4 files changed, 71 insertions(+), 1 deletion(-)
 
-Hans
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
