@@ -1,85 +1,42 @@
-From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v7 1/4] irqchip: gic: Support hierarchy irq domain.
-Date: Thu, 20 Nov 2014 17:41:51 +0800
-Message-ID: <1416476511.12869.24.camel@mtksdaap41>
-References: <1416406451-4578-1-git-send-email-yingjoe.chen@mediatek.com>
-	 <1416406451-4578-2-git-send-email-yingjoe.chen@mediatek.com>
-	 <87h9xvaz2p.fsf@approximate.cambridge.arm.com>
-	 <1416455840.12869.17.camel@mtksdaap41>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH RESEND v2 0/4] hwrng: atmel: add DT support
+Date: Thu, 20 Nov 2014 10:43:21 +0100
+Message-ID: <cover.1416475860.git.nicolas.ferre@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416455840.12869.17.camel@mtksdaap41>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yijing Wang <wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <eddie.huang-NuS5LvNUpcLQFizaE/u3fw@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This is the patch series that Boris sent yesterday. I've just collected
+"Acked-by" tags and resend it with updated cover letter.
 
-Hi Marc,
+This series adds DT support for the TRNG (True Random Generator) block and adds
+missing trng nodes to at91sam9g45 dtsi files.
 
-On Thu, 2014-11-20 at 11:57 +0800, Yingjoe Chen wrote:
-> On Wed, 2014-11-19 at 17:18 +0000, Marc Zyngier wrote:
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static const struct irq_domain_ops gic_irq_domain_hierarchy_ops = {
-> > > +	.xlate = gic_irq_domain_xlate,
-> > > +	.alloc = gic_irq_domain_alloc,
-> > > +	.free = irq_domain_free_irqs_top,
-> > 
-> > I'm convinced that irq_domain_free_irqs_top is the wrong function to
-> > call here, because you're calling it from the bottom, not the top-level
-> > (it has no parent).
-> 
-> Base on the name, I though this is helper function for top level
-> irq_domain?
-> 
-> > I cannot verify this with your code as I don't a working platform with
-> > GICv2m, but if I enable something similar on GICv3, it dies a very
-> > painful way:
-> > 
-> > Unable to handle kernel NULL pointer dereference at virtual address 00000018
-> > pgd = ffffffc03d059000
-> > [00000018] *pgd=0000000081356003, *pud=0000000081356003, *pmd=0000000000000000
-> > Internal error: Oops: 96000006 [#1] SMP
-> > Modules linked in:
-> > CPU: 4 PID: 1052 Comm: sh Not tainted 3.18.0-rc4+ #3311
-> > task: ffffffc03e320000 ti: ffffffc001390000 task.ti: ffffffc001390000
-> > PC is at irq_domain_free_irqs_recursive+0x1c/0x80
-> > LR is at irq_domain_free_irqs_common+0x88/0x9c
-> > pc : [<ffffffc0000ed790>] lr : [<ffffffc0000ede20>] pstate: 60000145
-> > [...]
-> > [<ffffffc0000ed790>] irq_domain_free_irqs_recursive+0x1c/0x80
-> > [<ffffffc0000ede1c>] irq_domain_free_irqs_common+0x84/0x9c
-> > [<ffffffc0000ede98>] irq_domain_free_irqs_top+0x64/0x7c  <-- gic_domain.free()
-> > [<ffffffc0000ed798>] irq_domain_free_irqs_recursive+0x24/0x80
-> > [<ffffffc0000ee468>] irq_domain_free_irqs_parent+0x14/0x20
-> > [<ffffffc0003500b8>] its_irq_domain_free+0xc8/0x250
-> > [<ffffffc0000ed798>] irq_domain_free_irqs_recursive+0x24/0x80
-> > [<ffffffc0000ede1c>] irq_domain_free_irqs_common+0x84/0x9c
-> > [<ffffffc0000ede98>] irq_domain_free_irqs_top+0x64/0x7c
-> > [<ffffffc0000ef518>] msi_domain_free+0x70/0x88
-> > [<ffffffc0000ed798>] irq_domain_free_irqs_recursive+0x24/0x80
-> > [<ffffffc0000ee3ac>] irq_domain_free_irqs+0x108/0x17c
-> > [<ffffffc0000efb68>] msi_domain_free_irqs+0x28/0x4c
-> > [<ffffffc000369cac>] free_msi_irqs+0xb4/0x1c0
-> > [<ffffffc00036adec>] pci_disable_msix+0x3c/0x4c
-> > [...]
-> > 
-> > and I cannot see how this could work on the standard GIC either.
-> 
-> I'm sorry, I just realize my testcase was too simple, irqs are populated
-> by device tree and never got freed. I'll add that and test it again.
+Herbert,
+As you said that you can take this series, here is the latest vertion ready for you to
+pick it up. Thanks for your help.
 
-On a second thoughts, unlike the MSI cases, gic_irq_domain_hierarchy_ops
-is only used when we use DT, so we probably will never use the free
-function. Is it OK to remove the free support here?
+Bye,
 
-Joe.C
+Boris Brezillon (4):
+  hwrng: atmel: use clk_prepapre_enable/_disable_unprepare
+  hwrng: atmel: add DT support
+  hwrng: atmel: Add TRNG DT binding doc
+  ARM: at91/dt: add trng node to at91sam9g45
 
+ Documentation/devicetree/bindings/hwrng/atmel-trng.txt | 16 ++++++++++++++++
+ arch/arm/boot/dts/at91sam9g45.dtsi                     |  7 +++++++
+ drivers/char/hw_random/Kconfig                         |  2 +-
+ drivers/char/hw_random/atmel-rng.c                     | 15 +++++++++++----
+ 4 files changed, 35 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/hwrng/atmel-trng.txt
+
+-- 
+2.1.3
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
