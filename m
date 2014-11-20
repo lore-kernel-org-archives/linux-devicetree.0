@@ -1,54 +1,50 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [RFC] adp1653: Add device tree bindings for LED controller
-Date: Thu, 20 Nov 2014 13:12:02 +0100
-Message-ID: <20141120121202.GA27527@amd>
-References: <20141117145857.GO8907@valkosipuli.retiisi.org.uk>
- <546AFEA5.9020000@samsung.com>
- <20141118084603.GC4059@amd>
- <546B19C8.2090008@samsung.com>
- <20141118113256.GA10022@amd>
- <546B40FA.2070409@samsung.com>
- <20141118132159.GA21089@amd>
- <546B6D86.8090701@samsung.com>
- <20141118165148.GA11711@amd>
- <546C66A5.6060201@samsung.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [GIT PULL 3.19] Broadcom Cygnus SoC defconfig
+Date: Thu, 20 Nov 2014 13:12:00 +0100
+Message-ID: <201411201312.00243.arnd@arndb.de>
+References: <1415826266-6867-1-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <546C66A5.6060201@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>, pali.rohar@gmail.com, sre@debian.org, sre@ring0.de, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, freemangordon@abv.bg, bcousson@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, Linux LED Subsystem <linux-leds@vger.kernel.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415826266-6867-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-> I would also swap the segments of a property name to follow the convention
-> as in case of "regulator-max-microamp".
+On Wednesday 12 November 2014, Florian Fainelli wrote:
+> The following changes since commit f114040e3ea6e07372334ade75d1ee0775c355e1:
 > 
-> Updated version:
+>   Linux 3.18-rc1 (2014-10-19 18:08:38 -0700)
 > 
-> ==========================================================
+> are available in the git repository at:
 > 
-> Optional properties for child nodes:
-> - max-microamp : maximum intensity in microamperes of the LED
-> 		 (torch LED for flash devices)
-> - flash-max-microamp : maximum intensity in microamperes of the
-> 		       flash LED; it is mandatory if the led should
-> 		       support the flash mode
-> - flash-timeout-microsec : timeout in microseconds after which the flash
-> 		           led is turned off
-
-Works for me. Do you want to submit a patch or should I do it?
-
-> - indicator-pattern : identifier of the blinking pattern for the
-> 		      indicator led
+>   http://github.com/brcm/linux.git tags/arm-soc/for-3.19/cygnus-defconfig-v2
+> 
+> for you to fetch changes up to b316a9f98a2e328d10f5ed3c341fa28880152af3:
+> 
+>   ARM: bcm_defconfig: remove one level of menu from Kconfig (2014-11-11 22:42:05 -0800)
+> 
+> ----------------------------------------------------------------
+> This pull requests removes one level in menuconfig for the BCM SoCs for the
+> bcm_defconfig file.
+> 
+> ----------------------------------------------------------------
+> Scott Branden (1):
+>       ARM: bcm_defconfig: remove one level of menu from Kconfig
+> 
+>  arch/arm/configs/bcm_defconfig | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
 
-This would need a bit more documentation, no?
+After taking a closer look, I ended up putting this into next/soc as well,
+not next/defconfig, since the change has a mutual dependency on the Kconfig
+change in that branch.
 
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
