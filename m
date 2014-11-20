@@ -1,50 +1,62 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2 00/22] Multiplatform BMIPS kernel
-Date: Thu, 20 Nov 2014 10:09:02 -0800
-Message-ID: <546E2E3E.5040305@gmail.com>
-References: <1416097066-20452-1-git-send-email-cernekee@gmail.com> <20141120030434.GE24364@ld-irv-0074> <CAJiQ=7C8h-MAuRdgzZqx2=bg8bvy7v9pv7e7tGXWmA9ghYJiqQ@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 6/9] mmc: sdhci: host: add new f_sdh30
+Date: Thu, 20 Nov 2014 12:18:17 -0600
+Message-ID: <CAL_JsqKe_NA_mQ1MVMntXMjFGP6nGvnpWb8gvBEzRZuZ+aMf1g@mail.gmail.com>
+References: <1416486442-25200-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+ <1416487081-25467-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+ <CAL_JsqKDVgpBBW7j1skOU4moF0tvh1j6Fm6jaE5JoP04OU07uw@mail.gmail.com> <CAOEd-H0_YGHobKu08pMr3A4EpqBdtpBcCZu5PoVY_SZ=GBg-3w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJiQ=7C8h-MAuRdgzZqx2=bg8bvy7v9pv7e7tGXWmA9ghYJiqQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Jon Fraser <jfraser-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAOEd-H0_YGHobKu08pMr3A4EpqBdtpBcCZu5PoVY_SZ=GBg-3w@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Vincent Yang <vincent.yang.fujitsu@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "chris@printf.net" <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Andy Green <andy.green@linaro.org>, Linaro Patches <patches@linaro.org>, Jaswinder Singh <jaswinder.singh@linaro.org>, Vincent Yang <Vincent.Yang@tw.fujitsu.com>, Tetsuya Takinishi <t.takinishi@jp.fujitsu.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/19/2014 07:55 PM, Kevin Cernekee wrote:
-> On Wed, Nov 19, 2014 at 7:04 PM, Brian Norris
-> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Sat, Nov 15, 2014 at 04:17:24PM -0800, Kevin Cernekee wrote:
->>> The lack of a reboot handler is annoying; syscon-reboot probably won't work
->>> on STB (because it requires two writes).
+On Thu, Nov 20, 2014 at 10:59 AM, Vincent Yang
+<vincent.yang.fujitsu@gmail.com> wrote:
+> 2014-11-20 23:22 GMT+08:00 Rob Herring <robherring2@gmail.com>:
+>> On Thu, Nov 20, 2014 at 6:38 AM, Vincent Yang
+>> <vincent.yang.fujitsu@gmail.com> wrote:
+>>> This patch adds new host controller driver for
+>>> Fujitsu SDHCI controller f_sdh30.
+>>>
+>>> Signed-off-by: Andy Green <andy.green@linaro.org>
+>>> Signed-off-by: Vincent Yang <Vincent.Yang@tw.fujitsu.com>
+>>> Signed-off-by: Tetsuya Takinishi <t.takinishi@jp.fujitsu.com>
+>>> ---
+>>>  .../devicetree/bindings/mmc/sdhci-fujitsu.txt      |  35 +++
+>>>  drivers/mmc/host/Kconfig                           |   9 +
+>>>  drivers/mmc/host/Makefile                          |   1 +
+>>>  drivers/mmc/host/sdhci_f_sdh30.c                   | 319 +++++++++++++++++++++
+>>>  4 files changed, 364 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
+>>>  create mode 100644 drivers/mmc/host/sdhci_f_sdh30.c
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
+>>> new file mode 100644
+>>> index 0000000..a1e0b64
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
+>>> @@ -0,0 +1,35 @@
+>>> +* Fujitsu SDHCI controller
+>>> +
+>>> +This file documents differences between the core properties in mmc.txt
+>>> +and the properties used by the sdhci_f_sdh30 driver.
+>>> +
+>>> +Required properties:
+>>> +- compatible: "fujitsu,mb86s70-sdh30"
 >>
->> Can't you reuse drivers/power/reset/brcmstb-reboot.c ?
-> 
-> Oops, I ran a quick check earlier by grepping for "sun-top-ctrl" and
-> looking under drivers/reset, but assumed this driver wasn't merged yet
-> when nothing came up in the code.  Thanks for the pointer.
-> 
-> It looks like the current driver will work for 40nm, but 65nm uses
-> different bit positions: RESET_CTRL bit 3 to arm, and SW_RESET bit 31
-> to trigger.  I'll add a new "brcm,brcmstb-reboot-65nm" compatible
-> string to make this work.
-> 
-> Also, we'll need to take Guenter Roeck's register_restart_handler()
-> patch in order to build on MIPS.
+>> It would be nice to have sdhci in the name to indicate it is an SDHCI
+>> controller.
+>
+> Yes, we will update it to "fujitsu,sdhci-f-sdh30"
+> Thanks for your review!
 
-Slightly unrelated, did you also try to use drivers/bus/brcmstb_gisb.c
-on these MIPS platforms?
+Not really what I had in mind as you are then dropping the chip name.
+Perhaps "fujitsu,mb86s70-sdhci-3.0". Is 3.0 the SD spec version or IP
+version? If the former, I think I'd drop it as IIRC that is available
+in a register.
 
-Its usefulness is probably lower on MIPS since we typically get accurate
-bus errors to be decoded by the CPU and printed through the exception
-handler, but I'd be curious if it works just fine as well.
-
-Thanks!
---
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
