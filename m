@@ -1,88 +1,106 @@
-From: Flora Fu <flora.fu@mediatek.com>
-Subject: Re: [PATCH 3/7] regulator: MT6397: Add support for MT6397 regulator
-Date: Fri, 21 Nov 2014 15:09:31 +0800
-Message-ID: <1416553771.19764.51.camel@mtksdaap41>
-References: <1416210027-5562-1-git-send-email-flora.fu@mediatek.com>
- <1416210027-5562-4-git-send-email-flora.fu@mediatek.com>
- <20141117234012.GE22111@sirena.org.uk>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v4 1/2] i2c: s3c2410: Handle i2c sys_cfg register in i2c
+ driver
+Date: Fri, 21 Nov 2014 08:25:45 +0100
+Message-ID: <20141121072545.GG1480@katana>
+References: <1414656270-8048-1-git-send-email-pankaj.dubey@samsung.com>
+ <1414656270-8048-2-git-send-email-pankaj.dubey@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20141117234012.GE22111@sirena.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Eddie Huang <eddie.huang@mediatek.com>, linux-arm-kernel@lists.infradead.org, Dongdong Cheng <dongdong.cheng@mediatek.com>, srv_heupstream@mediatek.com, Liam Girdwood <lgirdwood@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="yQbNiKLmgenwUfTN"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1414656270-8048-2-git-send-email-pankaj.dubey@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Pankaj Dubey <pankaj.dubey@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, linux@arm.linux.org.uk, thomas.ab@samsung.com, Rob Herring <robh+dt@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Mark, 
 
-On Mon, 2014-11-17 at 23:40 +0000, Mark Brown wrote:
-> On Mon, Nov 17, 2014 at 03:40:23PM +0800, Flora Fu wrote:
+--yQbNiKLmgenwUfTN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > +static int mt6397_buck_set_voltage_sel(struct regulator_dev *rdev, unsigned sel)
-> > +{
-> 
-> 
-> > +	vosel = info->buck_conf.vosel_reg;
-> > +	voselon = info->buck_conf.voselon_reg;
-> > +	vosel_mask = info->buck_conf.vosel_mask;
-> 
-> Please use the standard way of specifying data even if you can't use the
-> standard function.
-> 
+On Thu, Oct 30, 2014 at 01:34:29PM +0530, Pankaj Dubey wrote:
+> Let's handle i2c interrupt re-configuration in i2c driver. This will
+> help us in removing some soc specific checks from machine files and
+> will help in removing static iomapping of SYS register in exynos.c
+>=20
+> Since only Exynos5250, and Exynos5420 has i2c nodes in DT, added syscon
+> based phandle to i2c device nodes of respective SoC DT files.
+>=20
+> Also handle saving and restoring of SYS_I2C_CFG register during
+> suspend and resume of i2c driver.
+>=20
+> CC: Rob Herring <robh+dt@kernel.org>
+> CC: Randy Dunlap <rdunlap@infradead.org>
+> CC: Wolfram Sang <wsa@the-dreams.de>
+> CC: Russell King <linux@arm.linux.org.uk>
+> CC: devicetree@vger.kernel.org
+> CC: linux-doc@vger.kernel.org
+> CC: linux-i2c@vger.kernel.org
+> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> ---
+>  .../devicetree/bindings/i2c/i2c-s3c2410.txt        |    1 +
+>  arch/arm/boot/dts/exynos5250.dtsi                  |    4 +++
+>  arch/arm/boot/dts/exynos5420.dtsi                  |    4 +++
 
-Could you specify the standard way of specification data? Thanks. 
+I usually don't take DTS patches. They should go via arm-soc. Please say
+so if there are reasons I should take them.
 
-> > +
-> > +	ret = regmap_update_bits(rdev->regmap, vosel, vosel_mask, sel);
-> > +	if (ret != 0) {
-> > +		dev_err(&rdev->dev, "Failed to update vosel: %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	ret = regmap_update_bits(rdev->regmap, voselon, vosel_mask, sel);
-> > +	if (ret != 0) {
-> > +		dev_err(&rdev->dev, "Failed to update vosel_on: %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +	return 0;
-> 
-> You should add comments here explaining what's going on - it's very
-> strange to have to write the same value to two different registers and
-> the names of the registers look suspiciously like this is something to do
-> with a suspend mode...
-> 
+> @@ -1084,6 +1092,23 @@ s3c24xx_i2c_parse_dt(struct device_node *np, struc=
+t s3c24xx_i2c *i2c)
+>  	of_property_read_u32(np, "samsung,i2c-slave-addr", &pdata->slave_addr);
+>  	of_property_read_u32(np, "samsung,i2c-max-bus-freq",
+>  				(u32 *)&pdata->frequency);
+> +	/*
+> +	 * Exynos5's legacy i2c controller and new high speed i2c
+> +	 * controller have muxed interrupt sources. By default the
+> +	 * interrupts for 4-channel HS-I2C controller are enabled.
+> +	 * If node for first four channels of legacy i2c controller
 
-Yes, its is for suspend mode control usage.
-For registers "vosel", "voselon", they is called register mode or
-hardware control mode voltage settings. Register mode is a default mode
-on the buck control. For quickly normal/sleep mode switch, hardware
-control can be enabled by controlling buck output by a CTRL_PIN. In the
-following diagram, there is a static settings on vosel_sleep for suspend
-mode output. According to CTRL_PIN's level, Vout can have different
-output (voselon or vosel_sleep). 
+s/node/nodes/
 
-           +------------------------------------------------------+
-           |    MT6397                                            |
-           |                              -vosel     -            |
-CTRL_PIN   |     +-----------------+                  \ + nivosel-|-Vout
------------|-----| hardware control|---+  -voselon   -            |
-           |     +-----------------+    \ -vosel_sleep -          |
-           |                                                      |
-           +------------------------------------------------------+
+> +	 * are available then re-configure the interrupts via the
+> +	 * system register.
+> +	 */
+> +	id =3D of_alias_get_id(np, "i2c");
+> +	i2c->sysreg =3D syscon_regmap_lookup_by_phandle(np,
+> +			"samsung,sysreg-phandle");
+> +	if (IS_ERR(i2c->sysreg)) {
+> +		/* As this is not compulsory do not return error */
+> +		pr_info("i2c-%d skipping re-configuration of interrutps\n", id);
 
-In the design, voltage change on bucks are set both on registers vosel
-and voselon. I will add more comments on the function to clarify the
-implementation. 
+I'd say drop this message. If you want to keep it, it should be dev_dbg.
 
-Thanks, 
-Flora
+> +		return;
+> +	}
+> +	regmap_update_bits(i2c->sysreg, EXYNOS5_SYS_I2C_CFG, BIT(id), 0);
+>  }
+
+Rest looks good, thanks!
+
+--yQbNiKLmgenwUfTN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUbuj5AAoJEBQN5MwUoCm2hTsP/Az5+KkwKMv2AxxdjTHgErj3
+XGj9YmSGR3ISb8e3E+JBbWBlPxyYXdQgncO1+2uSqJPD7WGsE9r2/klSX8l7XKOF
++wek+ic9f0qzO+R+CnoYF1t54OtG7NLQBztSj7DXU5LpFc8amAmNqUAEoO/LK0W+
+dsgk+eOub6AZW6Tl33VKiDviWim+KutfHT7CAduRFcWAnAiAZU4Wx6cDLzGR0qMa
+3H4etNn0IX6m6suB0I9G7dC0qnw3BpsF8851kY5e5xTEieMubv7S9vrpp9rEkSB6
+4olSfTRNc/NZkh++XO95RqQMqAjkOtIRECMmUOhCNHSt8jVF5/juKp3spDFeOdvM
+PKN+qy/V1710UWykuYEqwPWxtpdiZ7gVOFh6A47cxBjyHP2wW3PWOIKsAwz4pjPr
+dAjZG40tpCmXtRuQcionSfeXtWLmOFBZMUCZMo/vH+K29esL2RMNkJYsQ2uyNvkx
+EP/ozVNj9H28WM/aOWBk+kMMOBJycUZ2MiH6H68ya7DOs/u2e8WMvb7ZzD0OPUlY
+uM4jg3z3Mom3BBwluMYqCzLSAbZnDaQQNMWrhb57RV0pQ6GEPelmkzZGi47lJ3QN
+9AQOl3HmKVeh4SZeg5vBOVIEcV1x8xeE9hx3u3dsYJ8Q/Sxqf2NHKRg9rbyXlZDs
+oTPciS5BQDe1p0JXQlvT
+=QkRc
+-----END PGP SIGNATURE-----
+
+--yQbNiKLmgenwUfTN--
