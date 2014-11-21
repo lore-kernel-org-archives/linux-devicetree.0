@@ -1,41 +1,63 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: Re: [PATCH RESEND v4 1/4] pwm: Imagination Technologies PWM DAC driver
-Date: Fri, 21 Nov 2014 13:23:58 -0800
-Message-ID: <CAL1qeaGt9K3eM-qDKo2qLrNEZK5EaStQEWJQH04_Kv6Sa3r04g@mail.gmail.com>
-References: <1416600795-10965-1-git-send-email-Naidu.Tellapati@gmail.com>
-	<1416600795-10965-2-git-send-email-Naidu.Tellapati@gmail.com>
+From: Ganapatrao Kulkarni <ganapatrao.kulkarni@caviumnetworks.com>
+Subject: [RFC PATCH v2 0/4] arm64:numa: Add numa support for arm64 platforms.
+Date: Sat, 22 Nov 2014 02:53:26 +0530
+Message-ID: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1416600795-10965-2-git-send-email-Naidu.Tellapati@gmail.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Naidu.Tellapati@gmail.com
-Cc: Thierry Reding <thierry.reding@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, James Hartley <James.Hartley@imgtec.com>, Ezequiel Garcia <Ezequiel.Garcia@imgtec.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arul Ramasamy <Arul.Ramasamy@imgtec.com>, Sai Masarapu <Sai.Masarapu@imgtec.com>, Naidu Tellapati <Naidu.Tellapati@imgtec.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, Will.Deacon@arm.com, catalin.marinas@arm.com, grant.likely@linaro.org, devicetree@vger.kernel.org, leif.lindholm@linaro.org, roy.franz@linaro.org, ard.biesheuvel@linaro.org, msalter@redhat.com, robh+dt@kernel.org, steve.capper@linaro.org, hanjun.guo@linaro.org, jchandra@broadcom.com, al.stone@linaro.org
+Cc: gpkulkarni@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Naidu,
+This is v2 patch set to support numa on arm64 based platforms.
+Tested these patches on cavium's multinode(2 node topology) simulator.
+In this patchset, defined and implemented dt bindings for numa mapping for core and memory.
+Tested using UEFI which passes multi memory range details through UEFI system
+table. Tried test-cases present in numactl-2.0.9 package.
 
-On Fri, Nov 21, 2014 at 12:13 PM,  <Naidu.Tellapati@gmail.com> wrote:
-> From: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
->
-> The Pistachio SOC from Imagination Technologies includes a Pulse Width
-> Modulation DAC which produces 1 to 4 digital bit-outputs which represent
-> digital waveforms. These PWM outputs are primarily in charge of controlling
-> backlight LED devices.
->
-> Signed-off-by: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
-> Signed-off-by: Sai Masarapu <Sai.Masarapu@imgtec.com>
+v2:
+Defined and implemented numa map for memory, cores to node and
+proximity distance matrix of nodes to each other. 
 
-One tiny comment below, otherwise:
+v1:
+Initial patchset to support numa on arm64 platforms.
 
-Reviewed-by: Andrew Bresticker <abrestic@chromium.org>
 
-> +static int img_pwm_remove(struct platform_device *pdev)
-> +{
-> +       unsigned int i;
-> +       unsigned int val;
-> +
+Ganapatrao Kulkarni (4):
+  arm64: defconfig: increase NR_CPUS range to 2-128
+  Documentation: arm64/arm: dt bindings for numa.
+  arm64:thunder: Add initial dts for Cavium's Thunder SoC in 2 Node
+    topology.
+  arm64:numa: adding numa support for arm64 platforms.
 
-No need for this newline.
+ Documentation/devicetree/bindings/arm/numa.txt | 103 ++++
+ arch/arm64/Kconfig                             |  37 +-
+ arch/arm64/boot/dts/thunder-88xx-2n.dts        |  88 ++++
+ arch/arm64/boot/dts/thunder-88xx-2n.dtsi       | 694 +++++++++++++++++++++++++
+ arch/arm64/include/asm/mmzone.h                |  32 ++
+ arch/arm64/include/asm/numa.h                  |  35 ++
+ arch/arm64/kernel/setup.c                      |   8 +
+ arch/arm64/kernel/smp.c                        |   2 +
+ arch/arm64/mm/Makefile                         |   1 +
+ arch/arm64/mm/init.c                           |  34 +-
+ arch/arm64/mm/numa.c                           | 631 ++++++++++++++++++++++
+ 11 files changed, 1657 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/numa.txt
+ create mode 100644 arch/arm64/boot/dts/thunder-88xx-2n.dts
+ create mode 100644 arch/arm64/boot/dts/thunder-88xx-2n.dtsi
+ create mode 100644 arch/arm64/include/asm/mmzone.h
+ create mode 100644 arch/arm64/include/asm/numa.h
+ create mode 100644 arch/arm64/mm/numa.c
 
-> +       struct img_pwm_chip *pwm_chip = platform_get_drvdata(pdev);
+-- 
+1.8.1.4
