@@ -1,37 +1,81 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCHv5 00/10] arm: mvebu: add Synology DS213j and DS414 .dts
- files
-Date: Fri, 21 Nov 2014 21:38:23 +0100
-Message-ID: <20141121203823.GI20238@lunn.ch>
-References: <cover.1416598536.git.arno@natisbad.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] mmc: dw_mmc: try pick the exact same voltage as vmmc for vqmmc
+Date: Fri, 21 Nov 2014 13:04:03 -0800
+Message-ID: <CAD=FV=UJT5zBkcj2a03Y_RWxad9+Pu83G_z79Xzzn74V=eRqww@mail.gmail.com>
+References: <1415109789-7046-1-git-send-email-addy.ke@rock-chips.com>
+	<1415678573-6093-1-git-send-email-addy.ke@rock-chips.com>
+	<CAPDyKFqUoBjhsbz8rkLa9PY_dpgMxnimz3k7OoA5WVhi7MacPQ@mail.gmail.com>
+	<CAD=FV=VQHZ6YmcoeAb1OEVLYRrYBnc_dM5Kjt1TZX_CQJC=EfA@mail.gmail.com>
+	<5464152E.7040209@rock-chips.com>
+	<CAPDyKFrzGfDew0eLLEcA+_iS_mo-O2bFU58fjirfXXA8AJ9UYQ@mail.gmail.com>
+	<CAD=FV=Ve1TY4+8quq1=18A1YOFvOWuFGrBmHLwMCwdWBSqzxOw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1416598536.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=Ve1TY4+8quq1=18A1YOFvOWuFGrBmHLwMCwdWBSqzxOw@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: addy ke <addy.ke@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Dinh Nguyen <dinguyen@altera.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, Sonny Rao <sonnyrao@chromium.org>, Alexandru Stan <amstan@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, open list:A
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 21, 2014 at 08:45:08PM +0100, Arnaud Ebalard wrote:
-> Hi,
-> 
-> This series adds .dts files for Synology DS213j (armada 370 2-bay NAS) and
-> DS414 (armada XP 4-bay NAS) devices.
+Hi,
 
-Hi Arnaud
+On Fri, Nov 21, 2014 at 9:42 AM, Doug Anderson <dianders@chromium.org> wrote:
+> Ulf,
+>
+> On Fri, Nov 21, 2014 at 4:06 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>> [...]
+>>
+>>> Sure
+>>> If the first card is sd2.0 since startup, dw_mci_switch_voltage will not be called,
+>>
+>> That can't be right. mmc_power_up() should trigger
+>> dw_mci_switch_voltage() to be invoked.
+>
+> Hmmm, I think you're right.  Addy: can you double check if it's only
+> the 2nd card for you?  I was thinking that if a regulator is currently
+> 3.3V and you request 2.7 - 3.3V the regulator framework will treat
+> that as a noop.  ...but that definitely doesn't appear to be the case.
+> When I boot up the first time even with no SD card plugged in, I see
+> this at bootup:
+>
+> [    3.042234] vccio_sd: 1800 <--> 3300 mV at 3300 mV
+>
+> ...showing that it started at 3.3V.  Then I see:
+>
+> $ grep "" /sys/class/regulator/regulator.16/{name,microvolts}
+> /sys/class/regulator/regulator.16/name:vccio_sd
+> /sys/class/regulator/regulator.16/microvolts:2700000
+>
+> ...so it is certainly getting changed even with no card plugged in.
+>
+>
+> BTW: I don't actually have one of these failing cards--all of mine
+> work.  Addy, do you know the make and model of the card you have that
+> fails?
 
-Apart from the minor comments i made about ordering:
+Just as a bit of a followup, I did some more digging...
 
-Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+1. It looks as if we now have a bit of "opposite" logic for vmmc vs.
+vqmmc.  In mmc_power_up() I see that it sets the initial voltage as:
 
-for the whole series.
+  host->ios.vdd = fls(ocr) - 1;
 
-Thanks for doing the extra pinctrl work.
+That actually means that we're going to pick the maximum voltage for
+vmmc (of the supported voltages).  For vqmmc dw_mmc is using the
+regulator framework which (as described in my previous message) will
+pick the minimum.
 
-       Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2. Several people I've talked to have expressed concerns that our
+minimum value is 2.7V.  Apparently that's really on the edge and makes
+EEs a little nervous.  The quick sample of cards sitting on my desk
+shows that they seem to claim 0x00ff8000, which doesn't include 2.7V.
+
+
+Both of the above make me feel like dw_mmc should try its best to pick
+a value for vqmmc that is closest to the value of vmmc (and >= 2.7V).
+That also happens to make us work exactly like hosts where vmmc and
+vqmmc are supplied by the same supply.
+
+
+-Doug
