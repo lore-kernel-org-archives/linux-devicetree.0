@@ -1,44 +1,68 @@
-From: Johannes Pointner <johannes.pointner@gmail.com>
-Subject: Re: [PATCH v4 3/6] mfd: ti_am335x_tscadc: Remove unwanted
- reg_se_cache save
-Date: Fri, 21 Nov 2014 19:17:18 +0100
-Message-ID: <CAJKbBDD=eYmU=LuViwLPNV=kYCziDQgKjL07bT7og4vsj0Ee7A@mail.gmail.com>
-References: <1415941651-28962-1-git-send-email-vigneshr@ti.com>
-	<1415941651-28962-4-git-send-email-vigneshr@ti.com>
-	<20141118143005.GF24004@x1>
-	<20141118171240.GB3003@dtor-ws>
-	<546DF2F0.9080405@ti.com>
-	<20141120144028.GB5809@localhost.localdomain>
-	<546F2BA4.4000808@ti.com>
-	<20141121131036.GA18931@localhost.localdomain>
-	<CAJKbBDDVTA+=priRu7sCD=vHrC8AUg4DM3kycuGrqbpF-5FGAA@mail.gmail.com>
-	<546F5C27.7040004@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <546F5C27.7040004@ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: Vignesh R <vigneshr@ti.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Samuel Ortiz <sameo@linux.intel.com>, Felipe Balbi <balbi@ti.com>, Brad Griffis <bgriffis@ti.com>, Sanjeev Sharma <sanjeev_sharma@mentor.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Jan Kardell <jan.kardell@telliq.com>, devicetree@vger.kernel.org, linux-kernel@vger
+From: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+Subject: [PATCH 1/4] clk: fractional-divider: add a read only version
+Date: Fri, 21 Nov 2014 19:34:00 +0100
+Message-ID: <1416594843-12352-1-git-send-email-albeu@free.fr>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Before the patches were also jumps but I thought it is something
-Vignesh should know. Maybe there is some fix for that too?
-As Richard also noted, it would be nice if ti could let us know how to
-get the delay values right. By trial and error is IMHO not the best
-way.
-For the testing I used 3.16.7.
+Allow defining fractional dividers that can't be set.
 
+Signed-off-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+---
+ drivers/clk/clk-fractional-divider.c | 10 +++++++++-
+ include/linux/clk-provider.h         |  3 +++
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
-2014-11-21 16:37 GMT+01:00 Sekhar Nori <nsekhar@ti.com>:
-> On Friday 21 November 2014 08:41 PM, Johannes Pointner wrote:
->> I tested version 4 of the patch series on a custom design and I saw
->> also the jumps as described by Richard. I played a little with the
->> sample delay and it got better but I couldn't completely remove the
->> jumps.
->
-> And before the patches were applied, there were no jumps at all? Which
-> kernel are you using for testing?
->
-> Thanks,
-> Sekhar
+diff --git a/drivers/clk/clk-fractional-divider.c b/drivers/clk/clk-fractional-divider.c
+index 82a59d0..b562281 100644
+--- a/drivers/clk/clk-fractional-divider.c
++++ b/drivers/clk/clk-fractional-divider.c
+@@ -96,6 +96,11 @@ const struct clk_ops clk_fractional_divider_ops = {
+ };
+ EXPORT_SYMBOL_GPL(clk_fractional_divider_ops);
+ 
++const struct clk_ops clk_fractional_divider_ro_ops = {
++	.recalc_rate = clk_fd_recalc_rate,
++};
++EXPORT_SYMBOL_GPL(clk_fractional_divider_ro_ops);
++
+ struct clk *clk_register_fractional_divider(struct device *dev,
+ 		const char *name, const char *parent_name, unsigned long flags,
+ 		void __iomem *reg, u8 mshift, u8 mwidth, u8 nshift, u8 nwidth,
+@@ -112,7 +117,10 @@ struct clk *clk_register_fractional_divider(struct device *dev,
+ 	}
+ 
+ 	init.name = name;
+-	init.ops = &clk_fractional_divider_ops;
++	if (clk_divider_flags & CLK_FRACTIONAL_DIVIDER_READ_ONLY)
++		init.ops = &clk_fractional_divider_ro_ops;
++	else
++		init.ops = &clk_fractional_divider_ops;
+ 	init.flags = flags | CLK_IS_BASIC;
+ 	init.parent_names = parent_name ? &parent_name : NULL;
+ 	init.num_parents = parent_name ? 1 : 0;
+diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+index be21af1..29ea77a 100644
+--- a/include/linux/clk-provider.h
++++ b/include/linux/clk-provider.h
+@@ -462,7 +462,10 @@ struct clk_fractional_divider {
+ 	spinlock_t	*lock;
+ };
+ 
++#define CLK_FRACTIONAL_DIVIDER_READ_ONLY		BIT(0)
++
+ extern const struct clk_ops clk_fractional_divider_ops;
++extern const struct clk_ops clk_fractional_divider_ro_ops;
+ struct clk *clk_register_fractional_divider(struct device *dev,
+ 		const char *name, const char *parent_name, unsigned long flags,
+ 		void __iomem *reg, u8 mshift, u8 mwidth, u8 nshift, u8 nwidth,
+-- 
+2.0.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
