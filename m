@@ -1,62 +1,36 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH] mmc: dw_mmc: try pick the exact same voltage as vmmc for
- vqmmc
-Date: Fri, 21 Nov 2014 21:29:58 +0900
-Message-ID: <546F3046.30209@samsung.com>
-References: <1415109789-7046-1-git-send-email-addy.ke@rock-chips.com>
- <1415678573-6093-1-git-send-email-addy.ke@rock-chips.com>
- <CAPDyKFqUoBjhsbz8rkLa9PY_dpgMxnimz3k7OoA5WVhi7MacPQ@mail.gmail.com>
- <CAD=FV=VQHZ6YmcoeAb1OEVLYRrYBnc_dM5Kjt1TZX_CQJC=EfA@mail.gmail.com>
- <5464152E.7040209@rock-chips.com>
- <CAPDyKFrzGfDew0eLLEcA+_iS_mo-O2bFU58fjirfXXA8AJ9UYQ@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 4/9] clk: Add clock driver for mb86s7x
+Date: Fri, 21 Nov 2014 14:03:52 +0100
+Message-ID: <2396055.pBuh1YtUHT@wuerfel>
+References: <1416486442-25200-1-git-send-email-Vincent.Yang@tw.fujitsu.com> <1416486975-25385-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <CAPDyKFrzGfDew0eLLEcA+_iS_mo-O2bFU58fjirfXXA8AJ9UYQ@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, addy ke <addy.ke@rock-chips.com>
-Cc: Doug Anderson <dianders@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Dinh Nguyen <dinguyen@altera.com>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, Sonny Rao <sonnyrao@chromium.org>, Alexandru Stan <amstan@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>linu
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416486975-25385-1-git-send-email-Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/21/2014 09:06 PM, Ulf Hansson wrote:
-> [...]
-> 
->> Sure
->> If the first card is sd2.0 since startup, dw_mci_switch_voltage will not be called,
-> 
-> That can't be right. mmc_power_up() should trigger
-> dw_mci_switch_voltage() to be invoked.
-
-Since dw_mci_switch_voltage() is invoked, voltage is changed from 1.8v to 2.7v (minimum value 2.7-3.6v), isn't?
-
-> 
->> and card can be identified. But if UHS card is pulgged in first, the vqmmc will be down to 1.8v.
->>
->> when sd2.0 card is pulgged in, mmc core will call dw_mci_switch_voltage to change vqmmc to 3.3v
->> (MMC_SINGLE_VOTAGE_330). So vqmmc will be set 2.7v, if we request 2.7-3.6v.
->>
->> But vmmc is always 3.3v,becuase it be set min_volt = max_volt = 3.3v in dt tables.
-
-vmmc is fixed voltage?
-
->>
->> So the result:
->> vmmc = 3.3v and vqmmc = 2.7v, and sd2.0 card is failed to identify in my test.
-> 
-> Hmm. I wonder why it works the first time? Could it be that your
-> regulator have voltage ramp up time that isn't properly considered?
-
-if oscilloscope can use, can we know more exactly?
-
-Best Regards,
-Jaehoon Chung
-> 
-> Kind regards
-> Uffe
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thursday 20 November 2014 20:36:15 Vincent Yang wrote:
+> +#define __DTS_MB86S70_CLK_H
+> +
+> +#define MB86S70_CRG11_ALW      0
+> +#define MB86S70_CRG11_DDR3     1
+> +#define MB86S70_CRG11_MAIN     2
+> +#define MB86S70_CRG11_CA15     3
+> +#define MB86S70_CRG11_HDMI     4
+> +#define MB86S70_CRG11_DPHY     5
+> +
+> +#define MB86S70_CRG11_UNGPRT   8
 > 
 
+The clock driver doesn't seem to use those macros at all, how does the
+driver know which clock you are referring to?
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
