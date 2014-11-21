@@ -1,8 +1,8 @@
 From: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Subject: [PATCHv5 07/10] arm: mvebu: define and use common Armada XP UART2/3
- pinctrl settings
-Date: Fri, 21 Nov 2014 20:45:59 +0100
-Message-ID: <31e3c46bf4794c08aae4e92099c840c792f19c3b.1416598537.git.arno@natisbad.org>
+Subject: [PATCHv5 08/10] arm: mvebu: define and use common Armada XP SPI
+ pinctrl setting
+Date: Fri, 21 Nov 2014 20:46:06 +0100
+Message-ID: <45747a6875f158a8783206953949834e31822cb7.1416598537.git.arno@natisbad.org>
 References: <cover.1416598536.git.arno@natisbad.org>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,55 +14,75 @@ Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kern
 List-Id: devicetree@vger.kernel.org
 
 
-This patch defines common Armada XP pinctrl settings for uart2 and
-uart3 interfaces (uart0 and uart1 rx/tx do not rely on MPP):
+This patch defines common Armada XP pinctrl settings in armada-xp.dtsi
+for the supported SPI interface (MPP36-39) and use it as default
+for Armada XP spi interface. That being done, it removes the now
+redundant definitions in armada-xp-axpwifiap.dts.
 
- uart2: MPP42-43 as default
- uart3: MPP44-45 as default
+Note: this patch has the potential to break out-of-tree users w/o
+specific pinctrl settings for their spi interfaces if the default
+above does not match their config (i.e. if they do not use CS0).
 
-Suggested-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
 ---
- arch/arm/boot/dts/armada-xp.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm/boot/dts/armada-xp-axpwifiap.dts |  7 -------
+ arch/arm/boot/dts/armada-xp.dtsi          | 11 +++++++++++
+ 2 files changed, 11 insertions(+), 7 deletions(-)
 
+diff --git a/arch/arm/boot/dts/armada-xp-axpwifiap.dts b/arch/arm/boot/dts/armada-xp-axpwifiap.dts
+index 0e53fad111de..c9d25bdbe795 100644
+--- a/arch/arm/boot/dts/armada-xp-axpwifiap.dts
++++ b/arch/arm/boot/dts/armada-xp-axpwifiap.dts
+@@ -100,8 +100,6 @@
+ 
+ 			spi0: spi@10600 {
+ 				status = "okay";
+-				pinctrl-0 = <&pmx_spi>;
+-				pinctrl-names = "default";
+ 
+ 				spi-flash@0 {
+ 					#address-cells = <1>;
+@@ -138,11 +136,6 @@
+ 		marvell,function = "gpio";
+ 	};
+ 
+-	pmx_spi: pmx-spi {
+-		marvell,pins = "mpp36", "mpp37", "mpp38", "mpp39";
+-		marvell,function = "spi";
+-	};
+-
+ 	pmx_phy_int: pmx-phy-int {
+ 		marvell,pins = "mpp32";
+ 		marvell,function = "gpio";
 diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
-index b59a83cf2f26..7cefb9b6d27c 100644
+index 7cefb9b6d27c..586085a172a7 100644
 --- a/arch/arm/boot/dts/armada-xp.dtsi
 +++ b/arch/arm/boot/dts/armada-xp.dtsi
-@@ -55,6 +55,8 @@
+@@ -53,6 +53,11 @@
+ 				reg = <0x11100 0x100>;
+ 			};
  
++			spi0: spi@10600 {
++				pinctrl-0 = <&spi0_pins>;
++				pinctrl-names = "default";
++			};
++
  			uart2: serial@12200 {
  				compatible = "snps,dw-apb-uart";
-+				pinctrl-0 = <&uart2_pins>;
-+				pinctrl-names = "default";
- 				reg = <0x12200 0x100>;
- 				reg-shift = <2>;
- 				interrupts = <43>;
-@@ -65,6 +67,8 @@
- 
- 			uart3: serial@12300 {
- 				compatible = "snps,dw-apb-uart";
-+				pinctrl-0 = <&uart3_pins>;
-+				pinctrl-names = "default";
- 				reg = <0x12300 0x100>;
- 				reg-shift = <2>;
- 				interrupts = <44>;
-@@ -235,4 +239,14 @@
- 			       "mpp33", "mpp34", "mpp35";
+ 				pinctrl-0 = <&uart2_pins>;
+@@ -240,6 +245,12 @@
  		marvell,function = "sd0";
  	};
-+
-+	uart2_pins: uart2-pins {
-+		marvell,pins = "mpp42", "mpp43";
-+		marvell,function = "uart2";
+ 
++	spi0_pins: spi0-pins {
++		marvell,pins = "mpp36", "mpp37",
++			       "mpp38", "mpp39";
++		marvell,function = "spi";
 +	};
 +
-+	uart3_pins: uart3-pins {
-+		marvell,pins = "mpp44", "mpp45";
-+		marvell,function = "uart3";
-+	};
- };
+ 	uart2_pins: uart2-pins {
+ 		marvell,pins = "mpp42", "mpp43";
+ 		marvell,function = "uart2";
 -- 
 2.1.1
 
