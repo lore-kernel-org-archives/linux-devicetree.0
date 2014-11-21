@@ -1,43 +1,59 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v7 0/2] clk: shmobile: DIV6 clock variable parent support
-Date: Fri, 21 Nov 2014 08:38:26 +0100
-Message-ID: <CAMuHMdW5hr3wtbjJdHszOgAh_-OowjwNbNMsWKi2pAJG0Vjy7g@mail.gmail.com>
-References: <1415375468-15378-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-	<CAMuHMdW=TGAySfRgXtVigcO-HuEudEDhnc2BhWuy8b0KJvE4oA@mail.gmail.com>
-	<CANqRtoQS_868tnScxyLpSkCRiAewVvMfGLh60PqSC+b-mhKakw@mail.gmail.com>
-	<CAMuHMdWkGtMq+gDZ+1YTmUh2E5xAUsCANcuG433=S3QOsPzjdg@mail.gmail.com>
-	<CANqRtoS33Aac3bKvMj7n6o2jhmk8kQAusad1ZPFRBmygVjgLiw@mail.gmail.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH] Add attributes neccessary for LED flashes to
+ devicetree/bindings/leds/common.txt
+Date: Fri, 21 Nov 2014 08:38:33 +0100
+Message-ID: <546EEBF9.9080006@samsung.com>
+References: <20141120131713.GC27527@amd>
+ <20141120150349.GZ8907@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CANqRtoS33Aac3bKvMj7n6o2jhmk8kQAusad1ZPFRBmygVjgLiw@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Simon Horman <horms@verge.net.au>, Mike Turquette <mturquette@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <20141120150349.GZ8907@valkosipuli.retiisi.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-doc@vger.kernel.org, cooloney@gmail.com, rpurdie@rpsys.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net
 List-Id: devicetree@vger.kernel.org
 
-Hi Magnus,
+Hi Pavel, Sakari,
 
-On Fri, Nov 21, 2014 at 6:54 AM, Magnus Damm <magnus.damm@gmail.com> wrote:
->>> From my side this series "[PATCH v7 0/2] clk: shmobile: DIV6 clock
->>> variable parent support" looks quite finalized. Would it be possible
->>
->> Does this mean I can add your acked-by?
+On 11/20/2014 04:03 PM, Sakari Ailus wrote:
+> Hi Pavel,
 >
-> My apologies for late reply and not being more clear. Feel free to add
-> my Acked-by for this series. No need to spend extra cycles and
-> reworking anything if you have queued up the patches already though.
+> On Thu, Nov 20, 2014 at 02:17:13PM +0100, Pavel Machek wrote:
+>>
+>> Add attributes neccessary for LED flashes to
+>> devicetree/bindings/leds/common.txt .
+>>
+>> This will allow me to add device tree support for adp1653 i2c flash
+>> LED driver, and allow Jacek Anaszewski to add support for more LED
+>> drivers..
+>>
+>> Signed-off-by: Pavel Machek <pavel@ucw.cz>
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+>> index 2d88816..e9acbbc 100644
+>> --- a/Documentation/devicetree/bindings/leds/common.txt
+>> +++ b/Documentation/devicetree/bindings/leds/common.txt
+>> @@ -14,6 +14,15 @@ Optional properties for child nodes:
+>>        "ide-disk" - LED indicates disk activity
+>>        "timer" - LED flashes at a fixed, configurable rate
+>>
+>> +- max-microamp : maximum intensity in microamperes of the LED
+>> +  	         (torch LED for flash devices)
+>> +- flash-max-microamp : maximum intensity in microamperes of the
+>> +                       flash LED; it is mandatory if the LED should
+>> +		       support the flash mode
+>> +- flash-timeout-microsec : timeout in microseconds after which the flash
+>> +                           LED is turned off
+>
+> It might be good to add a note that these may be arrays, depending on the
+> device.
+>
 
-Too late. Pushed, and already pulled by Mike, but not yet visible in
-clk-next.
+This binding is for a sub-node representing a single led.
+Do you know devices which would require an array of max currents
+for a sub-led?
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Regards,
+Jacek
