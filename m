@@ -1,150 +1,286 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 4/8] of: Add of_reconfig_get_state_change() of notifier helper.
-Date: Fri, 21 Nov 2014 01:35:11 +0000
-Message-ID: <1416533715-9758-5-git-send-email-grant.likely@linaro.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: [PATCH 3/8] of/resolver: Switch to new local fixups format.
+Date: Fri, 21 Nov 2014 01:35:10 +0000
+Message-ID: <1416533715-9758-4-git-send-email-grant.likely@linaro.org>
 References: <1416533715-9758-1-git-send-email-grant.likely@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416533715-9758-1-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1416533715-9758-1-git-send-email-grant.likely@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 
-Introduce of_reconfig_get_state_change() which allows an of notifier
-to query about device state changes.
+The original resolver format is way too cryptic, switch
+to using a tree based format that gets rid of repetitions,
+is more compact and readable.
 
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+At the same time, update the selftests to using the new local fixups
+format.
+
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+[grant.likely: Squashed in testcase changes and merged similar functions]
+Signed-off-by: Grant Likely <grant.likely@linaro.org>
 ---
- drivers/of/dynamic.c | 96 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/of.h   |  1 +
- 2 files changed, 97 insertions(+)
+ drivers/of/resolver.c                  | 128 ++++++++++++++++++++++++++-------
+ drivers/of/unittest-data/testcases.dts |  61 +++++++++-------
+ 2 files changed, 139 insertions(+), 50 deletions(-)
 
-diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index 7c095bffef3a..7634c2f69d4a 100644
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -85,6 +85,102 @@ int of_reconfig_notify(unsigned long action, void *p)
- 	return notifier_to_errno(rc);
+diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+index aed7959f800d..640eb4cb46e3 100644
+--- a/drivers/of/resolver.c
++++ b/drivers/of/resolver.c
+@@ -111,7 +111,8 @@ static void __of_adjust_tree_phandles(struct device_node *node,
+ 		__of_adjust_tree_phandles(child, phandle_delta);
  }
  
-+/*
-+ * of_reconfig_get_state_change()	- Returns new state of device
-+ * @action	- action of the of notifier
-+ * @arg		- argument of the of notifier
-+ *
-+ * Returns the new state of a device based on the notifier used.
-+ * Returns 0 on device going from enabled to disabled, 1 on device
-+ * going from disabled to enabled and -1 on no change.
-+ */
-+int of_reconfig_get_state_change(unsigned long action, void *arg)
-+{
-+	struct device_node *dn;
-+	struct property *prop, *old_prop;
-+	struct of_prop_reconfig *pr;
-+	int is_status, status_state, old_status_state, prev_state, new_state;
-+
-+	/* figure out if a device should be created or destroyed */
-+	dn = NULL;
-+	prop = old_prop = NULL;
-+	switch (action) {
-+	case OF_RECONFIG_ATTACH_NODE:
-+	case OF_RECONFIG_DETACH_NODE:
-+		dn = arg;
-+		prop = of_find_property(dn, "status", NULL);
-+		break;
-+	case OF_RECONFIG_ADD_PROPERTY:
-+	case OF_RECONFIG_REMOVE_PROPERTY:
-+		pr = arg;
-+		dn = pr->dn;
-+		prop = pr->prop;
-+		break;
-+	case OF_RECONFIG_UPDATE_PROPERTY:
-+		pr = arg;
-+		dn = pr->dn;
-+		prop = pr->prop;
-+		old_prop = pr->old_prop;
-+		break;
-+	default:
-+		return -1;	/* don't care */
-+	}
-+
-+	is_status = 0;
-+	status_state = -1;
-+	old_status_state = -1;
-+	prev_state = -1;
-+	new_state = -1;
-+
-+	if (prop && !strcmp(prop->name, "status")) {
-+		is_status = 1;
-+		status_state = !strcmp(prop->value, "okay") ||
-+			       !strcmp(prop->value, "ok");
-+		if (old_prop)
-+			old_status_state = !strcmp(old_prop->value, "okay") ||
-+					   !strcmp(old_prop->value, "ok");
-+	}
-+
-+	switch (action) {
-+	case OF_RECONFIG_ATTACH_NODE:
-+		prev_state = 0;
-+		/* -1 & 0 status either missing or okay */
-+		new_state = status_state != 0;
-+		break;
-+	case OF_RECONFIG_DETACH_NODE:
-+		/* -1 & 0 status either missing or okay */
-+		prev_state = status_state != 0;
-+		new_state = 0;
-+		break;
-+	case OF_RECONFIG_ADD_PROPERTY:
-+		if (is_status) {
-+			/* no status property -> enabled (legacy) */
-+			prev_state = 1;
-+			new_state = status_state;
-+		}
-+		break;
-+	case OF_RECONFIG_REMOVE_PROPERTY:
-+		if (is_status) {
-+			prev_state = status_state;
-+			/* no status property -> enabled (legacy) */
-+			new_state = 1;
-+		}
-+		break;
-+	case OF_RECONFIG_UPDATE_PROPERTY:
-+		if (is_status) {
-+			prev_state = old_status_state != 0;
-+			new_state = status_state != 0;
-+		}
-+		break;
-+	}
-+
-+	if (prev_state == new_state)
-+		return -1;
-+
-+	return new_state;
-+}
-+EXPORT_SYMBOL_GPL(of_reconfig_get_state_change);
-+
- int of_property_notify(int action, struct device_node *np,
- 		       struct property *prop, struct property *oldprop)
+-static int __of_adjust_phandle_ref(struct device_node *node, struct property *rprop, int value, bool is_delta)
++static int __of_adjust_phandle_ref(struct device_node *node,
++		struct property *rprop, int value)
  {
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 27635c89d8c2..96f678515d8f 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -327,6 +327,7 @@ struct of_prop_reconfig {
- extern int of_reconfig_notifier_register(struct notifier_block *);
- extern int of_reconfig_notifier_unregister(struct notifier_block *);
- extern int of_reconfig_notify(unsigned long, void *);
-+extern int of_reconfig_get_state_change(unsigned long action, void *arg);
+ 	phandle phandle;
+ 	struct device_node *refnode;
+@@ -181,7 +182,7 @@ static int __of_adjust_phandle_ref(struct device_node *node, struct property *rp
+ 			goto err_fail;
+ 		}
  
- extern int of_attach_node(struct device_node *);
- extern int of_detach_node(struct device_node *);
+-		phandle = is_delta ? be32_to_cpup(sprop->value + offset) + value : value;
++		phandle = value;
+ 		*(__be32 *)(sprop->value + offset) = cpu_to_be32(phandle);
+ 	}
+ 
+@@ -190,36 +191,97 @@ err_fail:
+ 	return err;
+ }
+ 
++/* compare nodes taking into account that 'name' strips out the @ part */
++static int __of_node_name_cmp(const struct device_node *dn1,
++		const struct device_node *dn2)
++{
++	const char *n1 = strrchr(dn1->full_name, '/') ? : "/";
++	const char *n2 = strrchr(dn2->full_name, '/') ? : "/";
++
++	return of_node_cmp(n1, n2);
++}
++
+ /*
+  * Adjust the local phandle references by the given phandle delta.
+- * Assumes the existances of a __local_fixups__ node at the root
+- * of the tree. Does not take any devtree locks so make sure you
+- * call this on a tree which is at the detached state.
++ * Assumes the existances of a __local_fixups__ node at the root.
++ * Assumes that __of_verify_tree_phandle_references has been called.
++ * Does not take any devtree locks so make sure you call this on a tree
++ * which is at the detached state.
+  */
+ static int __of_adjust_tree_phandle_references(struct device_node *node,
+-		int phandle_delta)
++		struct device_node *target, int phandle_delta)
+ {
+-	struct device_node *child;
+-	struct property *rprop;
+-	int err;
+-
+-	/* locate the symbols & fixups nodes on resolve */
+-	for_each_child_of_node(node, child)
+-		if (of_node_cmp(child->name, "__local_fixups__") == 0)
+-			break;
++	struct device_node *child, *childtarget;
++	struct property *rprop, *sprop;
++	int err, i, count;
++	unsigned int off;
++	phandle phandle;
+ 
+-	/* no local fixups */
+-	if (!child)
++	if (node == NULL)
+ 		return 0;
+ 
+-	/* find the local fixups property */
+-	for_each_property_of_node(child, rprop) {
++	for_each_property_of_node(node, rprop) {
++
+ 		/* skip properties added automatically */
+-		if (of_prop_cmp(rprop->name, "name") == 0)
++		if (of_prop_cmp(rprop->name, "name") == 0 ||
++		    of_prop_cmp(rprop->name, "phandle") == 0 ||
++		    of_prop_cmp(rprop->name, "linux,phandle") == 0)
+ 			continue;
+ 
+-		err = __of_adjust_phandle_ref(node, rprop, phandle_delta, true);
+-		if (err)
++		if ((rprop->length % 4) != 0 || rprop->length == 0) {
++			pr_err("%s: Illegal property (size) '%s' @%s\n",
++					__func__, rprop->name, node->full_name);
++			return -EINVAL;
++		}
++		count = rprop->length / sizeof(__be32);
++
++		/* now find the target property */
++		for_each_property_of_node(target, sprop) {
++			if (of_prop_cmp(sprop->name, rprop->name) == 0)
++				break;
++		}
++
++		if (sprop == NULL) {
++			pr_err("%s: Could not find target property '%s' @%s\n",
++					__func__, rprop->name, node->full_name);
++			return -EINVAL;
++		}
++
++		for (i = 0; i < count; i++) {
++			off = be32_to_cpu(((__be32 *)rprop->value)[i]);
++			/* make sure the offset doesn't overstep (even wrap) */
++			if (off >= sprop->length ||
++					(off + 4) > sprop->length) {
++				pr_err("%s: Illegal property '%s' @%s\n",
++						__func__, rprop->name,
++						node->full_name);
++				return -EINVAL;
++			}
++
++			if (phandle_delta) {
++				/* adjust */
++				phandle = be32_to_cpu(*(__be32 *)(sprop->value + off));
++				phandle += phandle_delta;
++				*(__be32 *)(sprop->value + off) = cpu_to_be32(phandle);
++			}
++		}
++	}
++
++	for_each_child_of_node(node, child) {
++
++		for_each_child_of_node(target, childtarget)
++			if (__of_node_name_cmp(child, childtarget) == 0)
++				break;
++
++		if (!childtarget) {
++			pr_err("%s: Could not find target child '%s' @%s\n",
++					__func__, child->name, node->full_name);
++			return -EINVAL;
++		}
++
++		err = __of_adjust_tree_phandle_references(child, childtarget,
++				phandle_delta);
++		if (err != 0)
+ 			return err;
+ 	}
+ 
+@@ -241,7 +303,7 @@ static int __of_adjust_tree_phandle_references(struct device_node *node,
+  */
+ int of_resolve_phandles(struct device_node *resolve)
+ {
+-	struct device_node *child, *refnode;
++	struct device_node *child, *childroot, *refnode;
+ 	struct device_node *root_sym, *resolve_sym, *resolve_fix;
+ 	struct property *rprop;
+ 	const char *refpath;
+@@ -255,9 +317,23 @@ int of_resolve_phandles(struct device_node *resolve)
+ 	/* first we need to adjust the phandles */
+ 	phandle_delta = of_get_tree_max_phandle() + 1;
+ 	__of_adjust_tree_phandles(resolve, phandle_delta);
+-	err = __of_adjust_tree_phandle_references(resolve, phandle_delta);
+-	if (err != 0)
+-		return err;
++
++	/* locate the local fixups */
++	childroot = NULL;
++	for_each_child_of_node(resolve, childroot)
++		if (of_node_cmp(childroot->name, "__local_fixups__") == 0)
++			break;
++
++	if (childroot != NULL) {
++		/* resolve root is guaranteed to be the '/' */
++		err = __of_adjust_tree_phandle_references(childroot,
++				resolve, 0);
++		if (err != 0)
++			return err;
++
++		BUG_ON(__of_adjust_tree_phandle_references(childroot,
++				resolve, phandle_delta));
++	}
+ 
+ 	root_sym = NULL;
+ 	resolve_sym = NULL;
+@@ -322,7 +398,7 @@ int of_resolve_phandles(struct device_node *resolve)
+ 		pr_debug("%s: %s phandle is 0x%08x\n",
+ 				__func__, rprop->name, phandle);
+ 
+-		err = __of_adjust_phandle_ref(resolve, rprop, phandle, false);
++		err = __of_adjust_phandle_ref(resolve, rprop, phandle);
+ 		if (err)
+ 			break;
+ 	}
+diff --git a/drivers/of/unittest-data/testcases.dts b/drivers/of/unittest-data/testcases.dts
+index 6994e15c24bf..b6bc41b2a185 100644
+--- a/drivers/of/unittest-data/testcases.dts
++++ b/drivers/of/unittest-data/testcases.dts
+@@ -23,28 +23,41 @@
+  * this a kernel-internal data format.
+  */
+ / { __local_fixups__ {
+-	fixup = "/testcase-data/testcase-device2:interrupt-parent:0",
+-		"/testcase-data/testcase-device1:interrupt-parent:0",
+-		"/testcase-data/interrupts/interrupts-extended0:interrupts-extended:60",
+-		"/testcase-data/interrupts/interrupts-extended0:interrupts-extended:52",
+-		"/testcase-data/interrupts/interrupts-extended0:interrupts-extended:44",
+-		"/testcase-data/interrupts/interrupts-extended0:interrupts-extended:36",
+-		"/testcase-data/interrupts/interrupts-extended0:interrupts-extended:24",
+-		"/testcase-data/interrupts/interrupts-extended0:interrupts-extended:8",
+-		"/testcase-data/interrupts/interrupts-extended0:interrupts-extended:0",
+-		"/testcase-data/interrupts/interrupts1:interrupt-parent:0",
+-		"/testcase-data/interrupts/interrupts0:interrupt-parent:0",
+-		"/testcase-data/interrupts/intmap1:interrupt-map:12",
+-		"/testcase-data/interrupts/intmap0:interrupt-map:52",
+-		"/testcase-data/interrupts/intmap0:interrupt-map:36",
+-		"/testcase-data/interrupts/intmap0:interrupt-map:16",
+-		"/testcase-data/interrupts/intmap0:interrupt-map:4",
+-		"/testcase-data/phandle-tests/consumer-a:phandle-list-bad-args:12",
+-		"/testcase-data/phandle-tests/consumer-a:phandle-list-bad-args:0",
+-		"/testcase-data/phandle-tests/consumer-a:phandle-list:56",
+-		"/testcase-data/phandle-tests/consumer-a:phandle-list:52",
+-		"/testcase-data/phandle-tests/consumer-a:phandle-list:40",
+-		"/testcase-data/phandle-tests/consumer-a:phandle-list:24",
+-		"/testcase-data/phandle-tests/consumer-a:phandle-list:8",
+-		"/testcase-data/phandle-tests/consumer-a:phandle-list:0";
++	testcase-data {
++		phandle-tests {
++			consumer-a {
++				phandle-list = <0x00000000 0x00000008
++						0x00000018 0x00000028
++						0x00000034 0x00000038>;
++				phandle-list-bad-args = <0x00000000 0x0000000c>;
++			};
++		};
++		interrupts {
++			intmap0 {
++				interrupt-map = <0x00000004 0x00000010
++						 0x00000024 0x00000034>;
++			};
++			intmap1 {
++				interrupt-map = <0x0000000c>;
++			};
++			interrupts0 {
++				interrupt-parent = <0x00000000>;
++			};
++			interrupts1 {
++				interrupt-parent = <0x00000000>;
++			};
++			interrupts-extended0 {
++				interrupts-extended = <0x00000000 0x00000008
++						       0x00000018 0x00000024
++						       0x0000002c 0x00000034
++						       0x0000003c>;
++			};
++		};
++		testcase-device1 {
++			interrupt-parent = <0x00000000>;
++		};
++		testcase-device2 {
++			interrupt-parent = <0x00000000>;
++		};
++	};
+ }; };
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
