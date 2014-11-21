@@ -1,48 +1,52 @@
-From: Ganapatrao Kulkarni <ganapatrao.kulkarni@caviumnetworks.com>
-Subject: [RFC PATCH v2 1/4] arm64: defconfig: increase NR_CPUS range to 2-128
-Date: Sat, 22 Nov 2014 02:53:27 +0530
-Message-ID: <1416605010-10442-2-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
-References: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH v4 3/6] mfd: ti_am335x_tscadc: Remove unwanted
+ reg_se_cache save
+Date: Fri, 21 Nov 2014 22:40:05 +0100
+Message-ID: <20141121214005.GA4020@localhost.localdomain>
+References: <1415941651-28962-4-git-send-email-vigneshr@ti.com>
+ <20141118143005.GF24004@x1>
+ <20141118171240.GB3003@dtor-ws>
+ <546DF2F0.9080405@ti.com>
+ <20141120144028.GB5809@localhost.localdomain>
+ <546F2BA4.4000808@ti.com>
+ <20141121131036.GA18931@localhost.localdomain>
+ <CAJKbBDDVTA+=priRu7sCD=vHrC8AUg4DM3kycuGrqbpF-5FGAA@mail.gmail.com>
+ <546F5C27.7040004@ti.com>
+ <CAJKbBDD=eYmU=LuViwLPNV=kYCziDQgKjL07bT7og4vsj0Ee7A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, Will.Deacon@arm.com, catalin.marinas@arm.com, grant.likely@linaro.org, devicetree@vger.kernel.org, leif.lindholm@linaro.org, roy.franz@linaro.org, ard.biesheuvel@linaro.org, msalter@redhat.com, robh+dt@kernel.org, steve.capper@linaro.org, hanjun.guo@linaro.org, jchandra@broadcom.com, al.stone@linaro.org
-Cc: gpkulkarni@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJKbBDD=eYmU=LuViwLPNV=kYCziDQgKjL07bT7og4vsj0Ee7A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Johannes Pointner <johannes.pointner@gmail.com>
+Cc: Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Samuel Ortiz <sameo@linux.intel.com>, Felipe Balbi <balbi@ti.com>, Brad Griffis <bgriffis@ti.com>, Sanjeev Sharma <sanjeev_sharma@mentor.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Jan Kardell <jan.kardell@telliq.com>, devicetree@vger
 List-Id: devicetree@vger.kernel.org
 
-Raising the maximum limit to 128. This is needed for Cavium's
-Thunder system that will have 96 cores on Multi-node system.
+On Fri, Nov 21, 2014 at 07:17:18PM +0100, Johannes Pointner wrote:
+> Before the patches were also jumps but I thought it is something
+> Vignesh should know. Maybe there is some fix for that too?
+> As Richard also noted, it would be nice if ti could let us know how to
+> get the delay values right. By trial and error is IMHO not the best
+> way.
 
-Signed-off-by: Ganapatrao Kulkarni <ganapatrao.kulkarni@caviumnetworks.com>
----
- arch/arm64/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+That is not only an opinion, it is a matter of fact. TI really dropped
+the ball on this one. I thought the patch series was a sign they
+finally were going to properly address this issue. Wrong again.
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index c1ad0df..f272926 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -302,8 +302,8 @@ config SCHED_SMT
- 	  places. If unsure say N here.
- 
- config NR_CPUS
--	int "Maximum number of CPUs (2-64)"
--	range 2 64
-+	int "Maximum number of CPUs (2-128)"
-+	range 2 128
- 	depends on SMP
- 	# These have to remain sorted largest to smallest
- 	default "64"
--- 
-1.8.1.4
+The data sheet for the TI part used to have a reference to an app-note
+for the touch controller.
+
+      spruh73f page 1154
+
+      The Pen IRQ can only occur if the correct Pen Ctrl bits are high
+      (AFE Pen Ctrl bits 6:5 in the TSC_ADC control register) and if
+      the correct ground transistor biasing is set in the StepConfig
+      [N] Register. Refer to the application notes for the correct
+      settings.
+
+I searched high and low for this application note. Then, the data
+sheet got revised.
+
+Thanks,
+Richard
