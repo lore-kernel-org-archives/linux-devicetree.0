@@ -1,49 +1,82 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCHv5 05/10] arm: mvebu: define and use common Armada 370 SPI
- pinctrl settings
-Date: Fri, 21 Nov 2014 21:22:53 +0100
-Message-ID: <20141121202253.GE20238@lunn.ch>
-References: <cover.1416598536.git.arno@natisbad.org>
- <a0eb580b7cc0f7cf39f1a69f0cc5747bded66300.1416598537.git.arno@natisbad.org>
+From: "Kenneth Westfield" <kwestfie@codeaurora.org>
+Subject: Re: [alsa-devel] [PATCH 0/9] ASoC: QCOM: Add support for ipq806x
+ SOC
+Date: Fri, 21 Nov 2014 12:24:33 -0800
+Message-ID: <9e2e849728c593bf1b8cde3ede3a1628.squirrel@www.codeaurora.org>
+References: <1416423169-21865-1-git-send-email-kwestfie@codeaurora.org>
+    <AE8D85F1-A1E0-4656-B160-37AA3300FE58@codeaurora.org>
+Reply-To: kwestfie@codeaurora.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <a0eb580b7cc0f7cf39f1a69f0cc5747bded66300.1416598537.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <AE8D85F1-A1E0-4656-B160-37AA3300FE58@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, Banajit Goswami <bgoswami@codeaurora.org>, Takashi Iwai <tiwai@suse.de>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Patrick Lai <plai@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Bryan Huntsman <bryanh@codeaurora.org>, Mark Brown <broonie@kernel.org>, Greg KH <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnaud
+On Wed, November 19, 2014 12:16 pm, Kumar Gala wrote:
+>
+> On Nov 19, 2014, at 12:52 PM, Kenneth Westfield <kwestfie@codeaurora.=
+org> wrote:
+>
+>> From: Kenneth Westfield <kwestfie@codeaurora.org>
+>>
+>> This set of patches adds support for audio on the Qualcomm Technolog=
+ies
+>> ipq806x SOC.
+>>
+>> The ipq806x SOC has audio-related hardware blocks in its low-power a=
+udio
+>> subsystem (or LPASS).  One of the relevant blocks in the LPASS is it=
+s
+>> low-power audio interface (or LPAIF).  This encapsulates the MI2S po=
+rt,
+>> which is what these drivers are configured to use.  The I2S pins are
+>> connected to an external DAC/amp chip.  In addition, a single GPIO i=
+s
+>> connected to the same DAC/amp, which gives the SOC enable/disable
+>> control.
+>>
+>> The specific drivers added are:
+>> - a machine driver that handles the board-specific pins
+>> - a native driver that handles hardware access to the LPAIF
+>> - a CPU DAI driver for controlling the LPAIF block
+>> - a PCM MI2S platform driver
+>>
+>> Corresponding additions to the device tree for the ipq806x and its
+>> documentation has also been added.  Also, as this is a new directory=
+,
+>> the MAINTAINERS file has been updated as well.
+>>
+>> - Ken
+>
+> Some general comments, you shouldn=92t have gerrit Change-Id=92s in c=
+ommit messages, the
+> Kconfig/Makefile changes should be part of the patch that adds the co=
+de associated with them.
+>
+> - k
+>
+> --
+> Qualcomm Innovation Center, Inc.
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora F=
+orum,
+> a Linux Foundation Collaborative Project
+>
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+>
 
-> diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
-> index 90e1286d414f..f1284ae0cddd 100644
-> --- a/arch/arm/boot/dts/armada-370.dtsi
-> +++ b/arch/arm/boot/dts/armada-370.dtsi
-> @@ -197,6 +197,20 @@
->  				status = "disabled";
->  			};
->  
-> +			/*
-> +			 * Default SPI pinctrl setting, can be overwritten on
-> +			 * board level if a different configuration is used.
-> +			 */
-> +			spi0: spi@10600 {
-> +				pinctrl-0 = <&spi0_pins1>;
-> +				pinctrl-names = "default";
-> +			};
-> +
-> +			spi1: spi@10680 {
-> +				pinctrl-0 = <&spi1_pins>;
-> +				pinctrl-names = "default";
-> +			};
-> +
+Thank you for your comments.  I will separately address each comment sh=
+ortly.
 
-Again, ordering. It looks like these should be between l2-cache and i2c0.
-
-       Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Kenneth Westfield
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora For=
+um,
+a Linux Foundation Collaborative Project
