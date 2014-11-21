@@ -1,53 +1,34 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [GIT PULL 3.19] Broadcom Cygnus SoC Device Tree changes
-Date: Fri, 21 Nov 2014 12:55:04 +0100
-Message-ID: <3132550.UOyhmffLBV@wuerfel>
-References: <1415826266-6867-1-git-send-email-f.fainelli@gmail.com> <201411201254.48494.arnd@arndb.de> <546E5547.2070302@broadcom.com>
+From: Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: colibri t30: fix on-module ethernet
+Date: Fri, 21 Nov 2014 12:57:52 +0100
+Message-ID: <1416571072.2744.4.camel@localhost.localdomain>
+References: <b1cdc96ce8bb15059d7eea282f6586a826bee124.1416566157.git.marcel@ziswiler.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <546E5547.2070302-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <b1cdc96ce8bb15059d7eea282f6586a826bee124.1416566157.git.marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org
+Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 20 November 2014 12:55:35 Scott Branden wrote:
-> On 14-11-20 03:54 AM, Arnd Bergmann wrote:
-> > On Wednesday 12 November 2014, Florian Fainelli wrote:
-> >> The following changes since commit f114040e3ea6e07372334ade75d1ee0775c355e1:
-> >>
-> >>    Linux 3.18-rc1 (2014-10-19 18:08:38 -0700)
-> >>
-> >> are available in the git repository at:
-> >>
-> >>    http://github.com/brcm/linux.git tags/arm-soc/for-3.19/cygnus-dts-v2
-> >>
-> >> for you to fetch changes up to c9ad7bc5fe3c57c8c817fcb1bd264a02176a40c4:
-> >>
-> >>    ARM: dts: Enable Broadcom Cygnus SoC (2014-11-11 22:30:42 -0800)
-> >>
-> >> ----------------------------------------------------------------
-> >> This pull request contains the Broadcom Cygnus Device Tree changes:
-> >>
-> >> - binding documentation for the SoC and clock
-> >> - cygnus SoC and clock dtsi files
-> >> - DTS for Cygnus Entreprise phone, BCM911360K and BCM958300K
-> >
-> > Something went wrong here: This branch contains the updated license
-> > statements, but Olof had already merged the branch with the original
-> > license statements that we didn't like, so all three patches conflict
-> > with the ones we already have.
-> Hi Arnd,
+On Fri, 2014-11-21 at 11:41 +0100, Marcel Ziswiler wrote:
+> Looks like Ethernet only ever worked if U-Boot properly brought it up
+> as both the reset as well as the VBUS lines were not actively handled
+> in-kernel.
+> This patch fixes this by just pulling up the reset GPIO
+
+Doing automatic power-cycle tests revealed that this is still not enough
+and a proper reset-cycle might be required. However I don't know as of
+yet how one can easily do that in mainline with a USB device otherwise
+not mentioned anywhere in the device tree. Any ideas?
+
+> and properly
+> enabling VBUS via a GPIO enabled fixed regulator VBUS supply.
 > 
-> It seems like the devicetree/bindings patch from this tag was not merged 
-> in to next/dt ?
+> Signed-off-by: Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
 
-I definitely see them here, can you pull our tree again and have a second
-look? Do you see them in linux-next?
-
-	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
