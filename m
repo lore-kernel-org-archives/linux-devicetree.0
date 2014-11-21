@@ -1,42 +1,39 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v1] usb: phy: nop: device tree documentation for vbus
-Date: Fri, 21 Nov 2014 18:17:58 +0100
-Message-ID: <87r3ww5v7d.fsf@free.fr>
-References: <1415538138-24434-1-git-send-email-robert.jarzmik@free.fr>
-	<20141121154506.GG7508@saruman>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCHv3 09/16] ARM: mvebu: implement suspend/resume support for
+ Armada XP
+Date: Fri, 21 Nov 2014 18:20:31 +0100
+Message-ID: <20141121172031.GC20238@lunn.ch>
+References: <1416585613-2113-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1416585613-2113-10-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20141121164142.GB20238@lunn.ch>
+ <20141121175957.6ef4f26d@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141121154506.GG7508@saruman> (Felipe Balbi's message of "Fri,
-	21 Nov 2014 09:45:06 -0600")
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141121175957.6ef4f26d-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> writes:
+> > Hi Thomas
+> > 
+> > Is this a well defined mechanism supported by mainline uboot, barebox
+> > etc. Or is it some Marvell extension to their uboot?
+> 
+> As far as I know, it is a Marvell extension to their "binary header",
+> so it's done even before U-Boot starts.
 
-> On Sun, Nov 09, 2014 at 02:02:18PM +0100, Robert Jarzmik wrote:
->>  	hsusb1_phy {
->> @@ -26,8 +31,11 @@ Example:
->>  		clock-names = "main_clk";
->>  		vcc-supply = <&hsusb1_vcc_regulator>;
->>  		reset-gpios = <&gpio1 7 GPIO_ACTIVE_LOW>;
->> +		vbus-gpios = <&gpio2 13 GPIO_ACTIVE_HIGH>;
->> +		vbus-regulator = <&vbus_regulator>;
->
-> not sure why you need vbus-gpios here. You can pass the gpio to the
-> regulator as enable-gpio, right ?
+Ah, O.K. So i miss understood what you meant by bootloader. It is the
+first stage boot loader as part of the BootROM that does this.
 
-Euh no. From my understanding a regulator enable-gpio is an _output_ gpio
-enabling the regulator. This vbus-gpio is an _input_ gpio detecting the vbus
-assertion. Maybe a name like "vbus-detect-gpio" would be more accurante ?
+If i've got this wrong, probably others will as well. So could you
+make the comments talk about BootROM bootloader?
 
-Cheers.
-
--- 
-Robert
+Thanks
+	Andrew
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
