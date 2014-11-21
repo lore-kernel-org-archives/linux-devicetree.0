@@ -1,63 +1,48 @@
-From: "Griffis, Brad" <bgriffis@ti.com>
-Subject: RE: [PATCH v4 3/6] mfd: ti_am335x_tscadc: Remove unwanted
- reg_se_cache save
-Date: Fri, 21 Nov 2014 22:25:50 +0000
-Message-ID: <912A29987EAE174BA6CF187D7CDFA9CE26F6D664@DLEE08.ent.ti.com>
-References: <1415941651-28962-4-git-send-email-vigneshr@ti.com>
- <20141118143005.GF24004@x1> <20141118171240.GB3003@dtor-ws>
- <546DF2F0.9080405@ti.com> <20141120144028.GB5809@localhost.localdomain>
- <546F2BA4.4000808@ti.com> <20141121131036.GA18931@localhost.localdomain>
- <CAJKbBDDVTA+=priRu7sCD=vHrC8AUg4DM3kycuGrqbpF-5FGAA@mail.gmail.com>
- <546F5C27.7040004@ti.com>
- <CAJKbBDD=eYmU=LuViwLPNV=kYCziDQgKjL07bT7og4vsj0Ee7A@mail.gmail.com>
- <20141121214005.GA4020@localhost.localdomain>
+From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
+Subject: Re: [PATCHv5 04/10] arm: mvebu: move Armada 370/XP pinctrl node definition armada-370-xp.dtsi
+Date: Sat, 22 Nov 2014 00:13:27 +0100
+Message-ID: <87mw7kb10o.fsf@natisbad.org>
+References: <cover.1416598536.git.arno@natisbad.org>
+	<2daf170fc0a35852111a3e101df73c789bbbb276.1416598536.git.arno@natisbad.org>
+	<20141121201844.GD20238@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20141121214005.GA4020@localhost.localdomain>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>, Johannes Pointner <johannes.pointner@gmail.com>
-Cc: "Nori, Sekhar" <nsekhar@ti.com>, "R, Vignesh" <vigneshr@ti.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Samuel Ortiz <sameo@linux.intel.com>, "Balbi, Felipe" <balbi@ti.com>, Sanjeev Sharma <sanjeev_sharma@mentor.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Jan Kardell <jan.kardell@telliq.com>, devicetree@vger.kernel.or
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141121201844.GD20238-g2DYL2Zd6BY@public.gmane.org> (Andrew Lunn's message of "Fri,
+	21 Nov 2014 21:18:44 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Andrew,
 
-> -----Original Message-----
-> From: Richard Cochran [mailto:richardcochran@gmail.com]
-> 
-> On Fri, Nov 21, 2014 at 07:17:18PM +0100, Johannes Pointner wrote:
-> > Before the patches were also jumps but I thought it is something
-> > Vignesh should know. Maybe there is some fix for that too?
+Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> writes:
 
-I believe I've seen the "jumping" behavior pop up at a couple random times in my testing.  I think it relates to the hardware not properly registering a pen-up interrupt.  When that's happening can you try running ts_calibrate?  If you're not registering a pen-up event then you won't be able to advance through those touch points.  Is this behavior related to capturing ADC samples, or do you see this behavior even without capturing ADC samples?
+>> diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
+>> index 2be9723bcdf3..8e65abf46fba 100644
+>> --- a/arch/arm/boot/dts/armada-370-xp.dtsi
+>> +++ b/arch/arm/boot/dts/armada-370-xp.dtsi
+>> @@ -103,6 +103,10 @@
+>>  			#size-cells = <1>;
+>>  			ranges = <0 MBUS_ID(0xf0, 0x01) 0 0x100000>;
+>>  
+>> +			pinctrl: pin-ctrl@18000 {
+>> +				reg = <0x18000 0x38>;
+>> +			};
+>> +
+>>  			rtc@10300 {
+>>  				compatible = "marvell,orion-rtc";
+>>  				reg = <0x10300 0x20>;
+>
+> We try to keep entries in these files in numeric address order.
+> So this should go after serial@12100
 
-> > As Richard also noted, it would be nice if ti could let us know how to
-> > get the delay values right. By trial and error is IMHO not the best
-> > way.
-> 
-> That is not only an opinion, it is a matter of fact. TI really dropped the ball on
-> this one. I thought the patch series was a sign they finally were going to
-> properly address this issue. Wrong again.
+I should have remembered that. I had this comment a long time ago on an
+unrelated series.
 
-These patches originate from work I did on TI's SDK 7.00 (3.12 kernel).  The touchscreen is working beautifully in that environment and we are putting forth significant effort to bring those improvements to the community. 
-
-Things do not seem to be working as well with the current mainline kernel.  I've been reviewing various patches between 3.12 and the mainline to understand why it's different.  I believe I have figured this out, and I have discussions going separately with individuals that contributed those patches in order to come up with the best possible solution, i.e. we likely need a few additional changes to this patch set.
-
-The CHARGECONFIG delay serves precisely the same purpose as the udelay in the original code base.  How did you determine the udelay value in the first place?  I went through the effort of figuring out a way to make the delay into a HARDWARE delay instead of a software delay so that it could be removed from the ISR.  That delay time relates to "settling time" and so it's going to be dependent on your PCB.  You could hook up an oscilloscope and attempt to capture this parameter from the signals themselves.  Personally I think that's a lot more difficult than just doing a few iterations of testing.
-
-> The data sheet for the TI part used to have a reference to an app-note for
-> the touch controller.
-> 
->       spruh73f page 1154
-> 
->       The Pen IRQ can only occur if the correct Pen Ctrl bits are high
->       (AFE Pen Ctrl bits 6:5 in the TSC_ADC control register) and if
->       the correct ground transistor biasing is set in the StepConfig
->       [N] Register. Refer to the application notes for the correct
->       settings.
-> 
-> I searched high and low for this application note. Then, the data sheet got
-> revised.
-
-Such an application note does not exist, which explains why you didn't find it and why we have removed that reference from the TRM.  Sorry for your trouble.  We always strive for accurate documentation.
+a+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
