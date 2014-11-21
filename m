@@ -1,57 +1,83 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: [PATCH v7 0/2] clk: shmobile: DIV6 clock variable parent support
-Date: Fri, 21 Nov 2014 14:54:01 +0900
-Message-ID: <CANqRtoS33Aac3bKvMj7n6o2jhmk8kQAusad1ZPFRBmygVjgLiw@mail.gmail.com>
-References: <1415375468-15378-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-	<CAMuHMdW=TGAySfRgXtVigcO-HuEudEDhnc2BhWuy8b0KJvE4oA@mail.gmail.com>
-	<CANqRtoQS_868tnScxyLpSkCRiAewVvMfGLh60PqSC+b-mhKakw@mail.gmail.com>
-	<CAMuHMdWkGtMq+gDZ+1YTmUh2E5xAUsCANcuG433=S3QOsPzjdg@mail.gmail.com>
+From: Victor Ascroft <victorascroft-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Looking for good references for ARM driver development
+Date: Fri, 21 Nov 2014 11:30:39 +0530
+Message-ID: <546ED507.1020503@gmail.com>
+References: <546C920A.7060800@free.fr> <546CCBF6.7070607@gmail.com> <546E600F.8020704@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWkGtMq+gDZ+1YTmUh2E5xAUsCANcuG433=S3QOsPzjdg@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Simon Horman <horms@verge.net.au>, Mike Turquette <mturquette@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <546E600F.8020704-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mason <mpeg.blue-GANU6spQydw@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
 
-On Wed, Nov 12, 2014 at 7:56 PM, Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> Hi Magnus,
+On Friday 21 November 2014 03:11 AM, Mason wrote:
+> On 19/11/2014 17:57, Victor Ascroft wrote:
 >
-> On Tue, Nov 11, 2014 at 11:16 AM, Magnus Damm <magnus.damm@gmail.com> wrote:
->> On Mon, Nov 10, 2014 at 6:16 PM, Geert Uytterhoeven
->> <geert@linux-m68k.org> wrote:
->>> On Fri, Nov 7, 2014 at 4:51 PM, Ulrich Hecht
->>> <ulrich.hecht+renesas@gmail.com> wrote:
->>>>  .../bindings/clock/renesas,cpg-div6-clocks.txt     |  18 ++--
->>>>  drivers/clk/shmobile/clk-div6.c                    | 113 ++++++++++++++++++---
->>>>  2 files changed, 113 insertions(+), 18 deletions(-)
->>>
->>> For the series:
->>> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> On 11/19/2014 06:20 PM, Mason wrote:
 >>
->> Thanks, Geert!
->>
->> From my side this series "[PATCH v7 0/2] clk: shmobile: DIV6 clock
->> variable parent support" looks quite finalized. Would it be possible
+>>> Are there more recent technical references, as good as LDD3, that
+>>> cover "modern" aspects of kernel development?
+>> The LDD3 is one of the best there is. A fourth edition is supposed
+>> to come out sometime next year.
+>> http://www.amazon.com/Linux-Device-Drivers-Jessica-McKellar/dp/1449371612
+> That's the best news I've heard this week!
+> Hope Jonathan gets well and lives happily ever after.
 >
-> Does this mean I can add your acked-by?
-
-My apologies for late reply and not being more clear. Feel free to add
-my Acked-by for this series. No need to spend extra cycles and
-reworking anything if you have queued up the patches already though.
-
-> Thanks!
+>>> How do I "leave device registration for the system infrastructure"?
+>>> Where should I put that code?
+>>> Is it a good idea to separate device registration and driver registration
+>>> in the case of a SoC, where the device is embedded in the SoC and is not
+>>> "hot-plugged" (or anything-plugged for that matter, it's just "there").
+>> For understanding this you need to understand how the platform infrastructure
+>> works and why is it used.
+>> http://lwn.net/Articles/448499/
+>> http://lwn.net/Articles/448502/
+>> and go through some of the relevant drivers.
+> More of Jon's (great) work ;-)
+> Will definitely read these articles carefully.
 >
->> for you to pick this up into the renesas-driver git repo? It would
->> also be great if you could lend a hand and make sure this series gets
->> picked up by Mike.
+>>> 3) Why is the function used to "destroy a platform device" named
+>>> platform_device_put? Why put?
+>>> Put on a list of things to destroy at a later time?
+>> This should be more clear once you go through LDD3.
+> I'm coming up empty.
+> AFAICT, it's unrelated to the _put_user* family of functions.
+> I see that it has something to do with ref count decrement.
+> [more reading...]
+> Something about kref.
+> https://lwn.net/Articles/336224/
 >
-> Will do.
+> They mention "put" but not *why* it's called "put".
+> Is it related to Dijkstra's P and V for semaphores?
+> https://cs.nyu.edu/~yap/classes/os/resources/origin_of_PV.html
+> Still confused...
+It has been quiet a while since I read LDD3, but, I remember this information
+being somewhere in it or may be I am wrong. Not aware if these are related to
+the P and V concept for semaphores.
 
-Great, thanks!
+Hmm.. You surprised me, I was not aware of put_user etc. myself. Never seen
+them anywhere. I have only used and seen copy_(to/from)_user or may be it's
+just that I have not worked, where these are used. I guess these _put_user family
+of functions, do not carry out any kind of verification.
 
-/ magnus
+Yes, you are right. The platform_device_put has got to with the reference count.
+platform_device_put in turn calls put_device and which in turn calls kobject_put.
+The reference count for the kobject is decremented. When the reference count
+reaches 0 for the kobject, kobject_cleanup is called to free the resources.
+
+You will find good explanation of all this, the Chapter 14 Linux Device Model  of
+LDD3. That is one of the best chapters to read in that book.
+
+-Regards
+
+>
+> Regards.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
