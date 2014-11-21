@@ -1,83 +1,198 @@
-From: Victor Ascroft <victorascroft-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Looking for good references for ARM driver development
-Date: Fri, 21 Nov 2014 11:30:39 +0530
-Message-ID: <546ED507.1020503@gmail.com>
-References: <546C920A.7060800@free.fr> <546CCBF6.7070607@gmail.com> <546E600F.8020704@free.fr>
+From: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
+Subject: RE: [PATCH v3 1/4] pwm: Imagination Technologies PWM DAC driver
+Date: Fri, 21 Nov 2014 06:14:27 +0000
+Message-ID: <27E62D98F903554192E3C13AFCC91C3C2F509B8E@hbmail01.hb.imgtec.org>
+References: <1416495240-22821-1-git-send-email-Naidu.Tellapati@imgtec.com>
+	<1416495240-22821-2-git-send-email-Naidu.Tellapati@imgtec.com>,<CAL1qeaE-QkyXtu30zEZgoA51L6oa8+=e5BewBQQ2+5XnfKOW1Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <546E600F.8020704-GANU6spQydw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mason <mpeg.blue-GANU6spQydw@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <CAL1qeaE-QkyXtu30zEZgoA51L6oa8+=e5BewBQQ2+5XnfKOW1Q@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-pwm-owner@vger.kernel.org
+To: Andrew Bresticker <abrestic@chromium.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, James Hartley <James.Hartley@imgtec.com>, Ezequiel Garcia <Ezequiel.Garcia@imgtec.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Arul Ramasamy <Arul.Ramasamy@imgtec.com>, Sai Masarapu <Sai.Masarapu@imgtec.com>, Phani Movva <Phani.Movva@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Andrew,
 
-On Friday 21 November 2014 03:11 AM, Mason wrote:
-> On 19/11/2014 17:57, Victor Ascroft wrote:
->
->> On 11/19/2014 06:20 PM, Mason wrote:
+Many thanks for the review.
+
+> On Thu, Nov 20, 2014 at 6:53 AM,  <Naidu.Tellapati@imgtec.com> wrote:
+>> From: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
 >>
->>> Are there more recent technical references, as good as LDD3, that
->>> cover "modern" aspects of kernel development?
->> The LDD3 is one of the best there is. A fourth edition is supposed
->> to come out sometime next year.
->> http://www.amazon.com/Linux-Device-Drivers-Jessica-McKellar/dp/1449371612
-> That's the best news I've heard this week!
-> Hope Jonathan gets well and lives happily ever after.
->
->>> How do I "leave device registration for the system infrastructure"?
->>> Where should I put that code?
->>> Is it a good idea to separate device registration and driver registration
->>> in the case of a SoC, where the device is embedded in the SoC and is not
->>> "hot-plugged" (or anything-plugged for that matter, it's just "there").
->> For understanding this you need to understand how the platform infrastructure
->> works and why is it used.
->> http://lwn.net/Articles/448499/
->> http://lwn.net/Articles/448502/
->> and go through some of the relevant drivers.
-> More of Jon's (great) work ;-)
-> Will definitely read these articles carefully.
->
->>> 3) Why is the function used to "destroy a platform device" named
->>> platform_device_put? Why put?
->>> Put on a list of things to destroy at a later time?
->> This should be more clear once you go through LDD3.
-> I'm coming up empty.
-> AFAICT, it's unrelated to the _put_user* family of functions.
-> I see that it has something to do with ref count decrement.
-> [more reading...]
-> Something about kref.
-> https://lwn.net/Articles/336224/
->
-> They mention "put" but not *why* it's called "put".
-> Is it related to Dijkstra's P and V for semaphores?
-> https://cs.nyu.edu/~yap/classes/os/resources/origin_of_PV.html
-> Still confused...
-It has been quiet a while since I read LDD3, but, I remember this information
-being somewhere in it or may be I am wrong. Not aware if these are related to
-the P and V concept for semaphores.
+>> The Pistachio SOC from Imagination Technologies includes a Pulse Width
+>> Modulation DAC which produces 1 to 4 digital bit-outputs which represent
+>> digital waveforms. These PWM outputs are primarily in charge of controlling
+>> backlight LED devices.
+>>
+>> Signed-off-by: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
+>> Signed-off-by: Sai Masarapu <Sai.Masarapu@imgtec.com>
 
-Hmm.. You surprised me, I was not aware of put_user etc. myself. Never seen
-them anywhere. I have only used and seen copy_(to/from)_user or may be it's
-just that I have not worked, where these are used. I guess these _put_user family
-of functions, do not carry out any kind of verification.
+>> diff --git a/drivers/pwm/pwm-img.c b/drivers/pwm/pwm-img.c
+>> new file mode 100644
+>> index 0000000..ed71148
+>> --- /dev/null
+>> +++ b/drivers/pwm/pwm-img.c
+v> @@ -0,0 +1,284 @@
+>> +/*
+>> + * Imagination Technologies Pulse Width Modulator driver
+>> + *
+>> + * Copyright (c) 2014, Imagination Technologies
+>> + *
+>> + * Based on drivers/pwm/pwm-tegra.c, Copyright (c) 2010, NVIDIA Corporation
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + *
 
-Yes, you are right. The platform_device_put has got to with the reference count.
-platform_device_put in turn calls put_device and which in turn calls kobject_put.
-The reference count for the kobject is decremented. When the reference count
-reaches 0 for the kobject, kobject_cleanup is called to free the resources.
+> Comment block should end on this line.
 
-You will find good explanation of all this, the Chapter 14 Linux Device Model  of
-LDD3. That is one of the best chapters to read in that book.
+OK. Will address this in the new Patch set.
 
--Regards
+>> + */
 
->
-> Regards.
+> Put a newline here.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+OK. Will address this in the new Patch set.
+
+>> +#include <linux/clk.h>
+>> +#include <linux/err.h>
+>> +#include <linux/io.h>
+>> +#include <linux/mfd/syscon.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/pwm.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/slab.h>
+>> +
+>> +/* PWM registers */
+>> +#define CR_PWM_CTRL_CFG                                0x0000
+v> +#define CR_PWM_CTRL_CFG_NO_SUB_DIV             0
+>> +#define CR_PWM_CTRL_CFG_SUB_DIV0               1
+>> +#define CR_PWM_CTRL_CFG_SUB_DIV1               2
+>> +#define CR_PWM_CTRL_CFG_SUB_DIV0_DIV1          3
+>> +#define CR_PWM_CTRL_CFG_DIV_SHIFT(ch)          ((ch) * 2 + 4)
+>> +#define CR_PWM_CTRL_CFG_DIV_MASK               0x3
+>> +
+>> +#define CR_PWM_CH_CFG(ch)                      (0x4 + (ch) * 4)
+>> +#define CR_PWM_CH_CFG_TMBASE_SHIFT             0
+>> +#define CR_PWM_CH_CFG_DUTY_SHIFT               16
+>> +
+>> +#define CR_PERIP_PWM_PDM_CONTROL               0x0140
+>> +#define CR_PERIP_PWM_PDM_CONTROL_CH_MASK       0x1
+>> +#define CR_PERIP_PWM_PDM_CONTROL_CH_SHIFT(ch)  ((ch) * 4)
+>> +
+>> +#define IMG_NUM_PWM                            4
+>> +#define MAX_TMBASE_STEPS                       65536
+>> +
+>> +struct img_pwm_chip {
+>> +       struct device   *dev;
+>> +       struct pwm_chip chip;
+>> +       struct clk      *pwm_clk;
+>> +       struct clk      *sys_clk;
+>> +       void __iomem    *base;
+>> +       struct regmap   *periph_regs;
+>> +};
+>> +
+>> +static inline struct img_pwm_chip *to_img_pwm_chip(struct pwm_chip *chip)
+>> +{
+>> +       return container_of(chip, struct img_pwm_chip, chip);
+>> +}
+>> +
+>> +static inline void img_pwm_writel(struct img_pwm_chip *chip,
+>> +                                 unsigned int reg, unsigned long val)
+>> +{
+>> +       writel(val, chip->base + reg);
+>> +}
+>> +
+>> +static inline unsigned int img_pwm_readl(struct img_pwm_chip *chip,
+>> +                                        unsigned int reg)
+>> +{
+>> +       return readl(chip->base + reg);
+>> +}
+>> +
+>> +static int img_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+>> +                         int duty_ns, int period_ns)
+>> +{
+>> +       unsigned int div;
+>> +       unsigned int divider;
+>> +       unsigned int duty_steps;
+>> +       unsigned int tmbase_steps;
+>> +       unsigned long val;
+>> +       unsigned long mul;
+>> +       unsigned long output_clk_hz;
+>> +       unsigned long input_clk_hz;
+>> +
+
+> No need for a newline here.
+
+OK. Will address this in the new Patch set.
+
+>> +       struct img_pwm_chip *pwm_chip;
+>> +
+>> +       pwm_chip = to_img_pwm_chip(chip);
+>> +
+>> +       input_clk_hz = clk_get_rate(pwm_chip->pwm_clk);
+>> +       output_clk_hz = DIV_ROUND_UP(NSEC_PER_SEC, period_ns);
+>> +
+>> +       mul = DIV_ROUND_UP(input_clk_hz, output_clk_hz);
+>> +       if (mul > MAX_TMBASE_STEPS * 512) {
+>> +               dev_err(chip->dev,
+>> +                       "failed to configure timebase steps/divider value.\n");
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       if (mul <= MAX_TMBASE_STEPS)
+>> +               divider = 1;
+>> +       else if (mul <= MAX_TMBASE_STEPS * 8)
+>> +               divider = 8;
+>> +       else if (mul <= MAX_TMBASE_STEPS * 64)
+>> +               divider = 64;
+>> +       else if (mul <= MAX_TMBASE_STEPS * 512)
+>> +               divider = 512;
+>> +
+>> +       tmbase_steps = DIV_ROUND_UP(mul, divider);
+>> +
+
+> ... or here.
+
+OK. Will address this in the new Patch set.
+
+>> +       duty_steps = DIV_ROUND_UP(tmbase_steps * duty_ns, period_ns);
+>> +
+>> +       switch (divider) {
+>> +       case 1:
+>> +               div = CR_PWM_CTRL_CFG_NO_SUB_DIV;
+>> +               break;
+>> +       case 8:
+>> +               div = CR_PWM_CTRL_CFG_SUB_DIV0;
+>> +               break;
+>> +       case 64:
+>> +               div = CR_PWM_CTRL_CFG_SUB_DIV1;
+>> +               break;
+>> +       case 512:
+>> +               div = CR_PWM_CTRL_CFG_SUB_DIV0_DIV1;
+>> +               break;
+>> +       }
+
+> I think the above if/else chain and switch statement can be combined
+> into a single block.  Something like:
+
+Ok. Will address this in the new Patch set.
+
+> if (mul <= MAX_TMBASE_STEPS) {
+>        div = CR_PWM_CTRL_CFG_NO_SUB_DIV;
+>        tmbase_steps = mul;
+> } else if (mul <= MAX_TMBASE_STEPS * 8) {
+>        div = CR_PWM_CTRL_CFG_SUB_DIV0;
+>        tmbase_steps = DIV_ROUND_UP(mul, 8);
+> } else if ...
+
+
+Regards,
+Naidu.
