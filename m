@@ -1,90 +1,31 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: Re: [PATCH v7 2/4] ARM: mediatek: Add sysirq interrupt polarity
- support
-Date: Fri, 21 Nov 2014 23:36:07 +0800
-Message-ID: <1416584167.24971.9.camel@mtksdaap41>
-References: <1416406451-4578-1-git-send-email-yingjoe.chen@mediatek.com>
-	 <1416406451-4578-3-git-send-email-yingjoe.chen@mediatek.com>
-	 <20141119180448.GD12851@leverpostej>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 3/6] mfd: ti_am335x_tscadc: Remove unwanted reg_se_cache
+ save
+Date: Fri, 21 Nov 2014 21:07:11 +0530
+Message-ID: <546F5C27.7040004@ti.com>
+References: <1415941651-28962-1-git-send-email-vigneshr@ti.com>	<1415941651-28962-4-git-send-email-vigneshr@ti.com>	<20141118143005.GF24004@x1>	<20141118171240.GB3003@dtor-ws>	<546DF2F0.9080405@ti.com>	<20141120144028.GB5809@localhost.localdomain>	<546F2BA4.4000808@ti.com>	<20141121131036.GA18931@localhost.localdomain> <CAJKbBDDVTA+=priRu7sCD=vHrC8AUg4DM3kycuGrqbpF-5FGAA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141119180448.GD12851@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jiang Liu <jiang.liu@linux.intel.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "hc.yen@mediatek.com" <hc.yen@mediatek.com>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, "yh.chen@mediatek.com" <yh.chen@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Yijing Wang <wangyijing@huawei.com>, Rob Herring <robh+dt@kernel.org>, "nathan.chung@mediatek.com" <nathan.chung@mediatek.com>, "yingjoe.chen@gmail.com" <yingjoe.chen@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, "eddie.huang@mediatek.com" <eddie.huang@mediatek.co>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJKbBDDVTA+=priRu7sCD=vHrC8AUg4DM3kycuGrqbpF-5FGAA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Johannes Pointner <johannes.pointner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Brad Griffis <bgriffis-l0cyMroinI0@public.gmane.org>, Sanjeev Sharma <sanjeev_sharma-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Jan Kardell <jan.kardell-KSZdJiTw9mzQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap@
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Friday 21 November 2014 08:41 PM, Johannes Pointner wrote:
+> I tested version 4 of the patch series on a custom design and I saw
+> also the jumps as described by Richard. I played a little with the
+> sample delay and it got better but I couldn't completely remove the
+> jumps.
 
+And before the patches were applied, there were no jumps at all? Which
+kernel are you using for testing?
 
-On Wed, 2014-11-19 at 18:04 +0000, Mark Rutland wrote:
-> On Wed, Nov 19, 2014 at 02:14:09PM +0000, Yingjoe Chen wrote:
-> > +	if (type == IRQ_TYPE_LEVEL_LOW || type == IRQ_TYPE_EDGE_FALLING) {
-> > +		if (type == IRQ_TYPE_LEVEL_LOW)
-> > +			type = IRQ_TYPE_LEVEL_HIGH;
-> > +		else
-> > +			type = IRQ_TYPE_EDGE_RISING;
-> > +		value |= (1 << offset);
-> > +	} else
-> > +		value &= ~(1 << offset);
-> 
-> Nit: if one branch of an if statements is bracketed, both branches
-> should be. Please bracket the else case.
-
-OK, will change in next version.
-
-> > +	writel(value, chip_data->intpol_base + reg_index * 4);
-> > +
-> > +	data = data->parent_data;
-> > +	ret = data->chip->irq_set_type(data, type);
-> > +	spin_unlock_irqrestore(&chip_data->lock, flags);
-> > +	return ret;
-> > +}
-> > +
-> > +static struct irq_chip mtk_sysirq_chip = {
-> > +	.name			= "MT_SYSIRQ",
-> > +	.irq_mask		= irq_chip_mask_parent,
-> > +	.irq_unmask		= irq_chip_unmask_parent,
-> > +	.irq_eoi		= irq_chip_eoi_parent,
-> > +	.irq_set_type		= mtk_sysirq_set_type,
-> > +	.irq_retrigger		= irq_chip_retrigger_hierarchy,
-> > +	.irq_set_affinity	= irq_chip_set_affinity_parent,
-> > +};
-> > +
-> > +static int mtk_sysirq_domain_xlate(struct irq_domain *d,
-> > +				   struct device_node *controller,
-> > +				   const u32 *intspec, unsigned int intsize,
-> > +				   unsigned long *out_hwirq,
-> > +				   unsigned int *out_type)
-> > +{
-> > +	if (intsize < 3)
-> > +		return -EINVAL;
-> > +
-> > +	/* sysirq doesn't support PPI */
-> > +	if (intspec[0])
-> > +		return -EINVAL;
-> > +
-> > +	*out_hwirq = intspec[1];
-> > +	*out_type = intspec[2] & IRQ_TYPE_SENSE_MASK;
-> 
-> All of this is very strongly tied to the GIC, but the binding made it
-> sound like this was more generic (it didn't specify the number of cells
-> or their meaning). It doesn't look like we validate that this is
-> attached to a GIC.
-> 
-> Do we expect this to only ever be attached to a GICv2?
-> 
-> It would be nice to either make this generic or to describe the format
-> in the binding.
-
-This expect the parent to use the same interrupt cells format as GIC.
-I'll fix the binding to make this more clear.
-
-> Also, surely you expect intsize == 3 if you expect a GICv2? Likewise in
-> mtk_sysirq_domain_alloc.
-
-OK, will change that in next version.
-
-Joe.C
+Thanks,
+Sekhar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
