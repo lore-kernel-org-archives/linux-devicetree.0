@@ -1,56 +1,57 @@
-From: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v4 1/2] watchdog: ImgTec PDC Watchdog Timer Driver
-Date: Fri, 21 Nov 2014 05:53:24 +0000
-Message-ID: <27E62D98F903554192E3C13AFCC91C3C2F509B54@hbmail01.hb.imgtec.org>
-References: <1416488526-22079-1-git-send-email-jude.abraham@imgtec.com>
-	<1416488526-22079-2-git-send-email-jude.abraham@imgtec.com>,<CAL1qeaGWK+ok1d48i_wrnLdfALjFCRiPZiwwiYUeBSdNdDkHEw@mail.gmail.com>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: Re: [PATCH v7 0/2] clk: shmobile: DIV6 clock variable parent support
+Date: Fri, 21 Nov 2014 14:54:01 +0900
+Message-ID: <CANqRtoS33Aac3bKvMj7n6o2jhmk8kQAusad1ZPFRBmygVjgLiw@mail.gmail.com>
+References: <1415375468-15378-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+	<CAMuHMdW=TGAySfRgXtVigcO-HuEudEDhnc2BhWuy8b0KJvE4oA@mail.gmail.com>
+	<CANqRtoQS_868tnScxyLpSkCRiAewVvMfGLh60PqSC+b-mhKakw@mail.gmail.com>
+	<CAMuHMdWkGtMq+gDZ+1YTmUh2E5xAUsCANcuG433=S3QOsPzjdg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL1qeaGWK+ok1d48i_wrnLdfALjFCRiPZiwwiYUeBSdNdDkHEw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Ezequiel Garcia <Ezequiel.Garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <James.Hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Arul Ramasamy <Arul.Ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdWkGtMq+gDZ+1YTmUh2E5xAUsCANcuG433=S3QOsPzjdg@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Simon Horman <horms@verge.net.au>, Mike Turquette <mturquette@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+Hi Geert,
 
-Many thanks for the review.
-
-> On Thu, Nov 20, 2014 at 5:02 AM,  <jude.abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
->> From: Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+On Wed, Nov 12, 2014 at 7:56 PM, Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+> Hi Magnus,
+>
+> On Tue, Nov 11, 2014 at 11:16 AM, Magnus Damm <magnus.damm@gmail.com> wrote:
+>> On Mon, Nov 10, 2014 at 6:16 PM, Geert Uytterhoeven
+>> <geert@linux-m68k.org> wrote:
+>>> On Fri, Nov 7, 2014 at 4:51 PM, Ulrich Hecht
+>>> <ulrich.hecht+renesas@gmail.com> wrote:
+>>>>  .../bindings/clock/renesas,cpg-div6-clocks.txt     |  18 ++--
+>>>>  drivers/clk/shmobile/clk-div6.c                    | 113 ++++++++++++++++++---
+>>>>  2 files changed, 113 insertions(+), 18 deletions(-)
+>>>
+>>> For the series:
+>>> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 >>
->> This commit adds support for ImgTec PowerDown Controller Watchdog Timer.
+>> Thanks, Geert!
 >>
->> Signed-off-by: Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
->> Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>> From my side this series "[PATCH v7 0/2] clk: shmobile: DIV6 clock
+>> variable parent support" looks quite finalized. Would it be possible
+>
+> Does this mean I can add your acked-by?
 
-> Reviewed-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+My apologies for late reply and not being more clear. Feel free to add
+my Acked-by for this series. No need to spend extra cycles and
+reworking anything if you have queued up the patches already though.
 
-> Two small comments you may want to fix if you need to re-spin the series though:
+> Thanks!
+>
+>> for you to pick this up into the renesas-driver git repo? It would
+>> also be great if you could lend a hand and make sure this series gets
+>> picked up by Mike.
+>
+> Will do.
 
-Will address following two review comments and submit new Patch set today.
+Great, thanks!
 
->> +static struct watchdog_info pdc_wdt_info = {
->> +       .options                = WDIOF_SETTIMEOUT |
->> +                                 WDIOF_KEEPALIVEPING |
->> +                                 WDIOF_MAGICCLOSE,
->> +       .identity = "IMG PDC Watchdog",
->> +};
-
-> Inconsistent spacing.
-
->> +       ret = watchdog_init_timeout(&pdc_wdt->wdt_dev, timeout, &pdev->dev);
->> +       if (ret < 0)
->> +               pdc_wdt->wdt_dev.timeout = pdc_wdt->wdt_dev.max_timeout;
-
-> Maybe print an error here?
-
-Regards,
-Naidu.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+/ magnus
