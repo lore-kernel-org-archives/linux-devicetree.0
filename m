@@ -1,61 +1,70 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 7/9] dt: mb86s7x: add dt files for MB86S7x evbs
-Date: Fri, 21 Nov 2014 21:14:55 +0100
-Message-ID: <8072233.paQXmTNncV@wuerfel>
-References: <1416486442-25200-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
- <6351620.x1OFSWlVbH@wuerfel>
- <CAJe_Zhee6XG5=izSccDDmL4cTyXLeYO3EdaUA=inmrV5MdF12Q@mail.gmail.com>
+From: "Kenneth Westfield" <kwestfie@codeaurora.org>
+Subject: Re: [alsa-devel] [PATCH 9/9] ARM: dts: Model IPQ LPASS audio
+ hardware
+Date: Fri, 21 Nov 2014 12:17:25 -0800
+Message-ID: <cfe24f81daa727ba7e7ace434784a04d.squirrel@www.codeaurora.org>
+References: <1416423169-21865-1-git-send-email-kwestfie@codeaurora.org>
+    <1416423169-21865-10-git-send-email-kwestfie@codeaurora.org>
+    <20141119225443.GB13013@sonymobile.com>
+Reply-To: kwestfie@codeaurora.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAJe_Zhee6XG5=izSccDDmL4cTyXLeYO3EdaUA=inmrV5MdF12Q@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jassi Brar <jaswinder.singh@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Andy Green <andy.green@linaro.org>, Pawel Moll <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Vincent Yang <vincent.yang.fujitsu@gmail.com>, Patch Tracking <patches@linaro.org>, Vincent Yang <Vincent.Yang@tw.fujitsu.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Tetsuya Nuriya <nuriya.tetsuya@jp.fujitsu.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20141119225443.GB13013@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Courtney Cavin <courtney.cavin@sonymobile.com>
+Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, Banajit Goswami <bgoswami@codeaurora.org>, Takashi Iwai <tiwai@suse.de>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Patrick Lai <plai@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Bryan Huntsman <bryanh@codeaurora.org>, Mark Brown <broonie@kernel.org>, Greg KH <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 21 November 2014 23:05:28 Jassi Brar wrote:
-> On 21 November 2014 22:39, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Friday 21 November 2014 22:19:43 Jassi Brar wrote:
-> >> >
-> >> > This seems weird: rather than have one clock controller node per
-> >> > clock source, why not just have one node with #clock-cells = >?
-> >> >
-> >> > Your controller seems perfectly capable of this, and you even
-> >> > put the numbers in the label. It would be much more straightforward
-> >> > to do
-> >> >
-> >> >         clocks = <&clk_alw 0 1>;
-> >> >
-> >> > than
-> >> >
-> >> >         clocks = <&clk_alw_0_1>;
-> >> >
-> >> > here. Possibly even
-> >> >
-> >> >         clocks = <&clk MB86S70_CRG11_ALW 0 1>;
-> >> >
-> >> > with #clock-cells = >
-> >> >
-> >> Is there a way to compact the dtsi and yet populate only clocks that
-> >> are actually ever used (instead of 6x16x9)?
-> >
-> > I believe the clock driver just wouldn't create the clocks until
-> > a device driver requests them.
-> >
-> Seems like the chicken-egg problem. Let me check.
+On Wed, November 19, 2014 2:54 pm, Courtney Cavin wrote:
 
-What I mean is that you should call of_clk_add_provider once for each
-of the six clock controllers, but not call clk_register_gate or
-clk_register for each possible output until it gets requested.
+> On Wed, Nov 19, 2014 at 07:52:49PM +0100, Kenneth Westfield wrote:
+>> From: Kenneth Westfield <kwestfie@codeaurora.org>
+>>
+>> Model the LPASS audio hardware for the IPQ806X.
+>>
+>> Change-Id: Ide1aa0d09c23d4496aa9c40e3c9878a968261f11
+>
+> As Kumar mentioned, please exclude this.
+>
+>> Signed-off-by: Kenneth Westfield <kwestfie@codeaurora.org>
+>> Signed-off-by: Banajit Goswami <bgoswami@codeaurora.org>
+>
+> Typically, the order of these SoB should match some sort of chain of delivery:
+>  - The first should be the author of the patch
+>  - The last should match the email source (you) <-- doesn't seem to be the case
+>
+>> ---
+>>  arch/arm/boot/dts/qcom-ipq8064.dtsi | 33 +++++++++++++++++++++++++++++++++
+>>  1 file changed, 33 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/qcom-ipq8064.dtsi b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+>> index 63b2146f563b541e4994697af5ee1bbb41a4abd1..0e5b3b625f0442964aa7fbbc993c6c818fe99041 100644
+>> --- a/arch/arm/boot/dts/qcom-ipq8064.dtsi
+>> +++ b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+>> @@ -2,6 +2,7 @@
+>>
+>>  #include "skeleton.dtsi"
+>>  #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
+>> +#include <dt-bindings/clock/qcom,lcc-ipq806x.h>
+>
+> Neither this file nor an associated clock controller driver exists in
+> mainline.  Is there some other series this depends on?
+>
+> -Courtney
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+>
 
-	Arnd
+Courtney
+
+Thank you for your comments.  I will separately address each comment shortly.
+
+-- 
+Kenneth Westfield
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
