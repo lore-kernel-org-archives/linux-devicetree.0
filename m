@@ -1,59 +1,153 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 4/9] clk: Add clock driver for mb86s7x
-Date: Fri, 21 Nov 2014 15:34:05 +0100
-Message-ID: <2147877.AXJukoovHQ@wuerfel>
-References: <1416486442-25200-1-git-send-email-Vincent.Yang@tw.fujitsu.com> <2396055.pBuh1YtUHT@wuerfel> <CAJe_ZhcxHnoUeBUk3w=_xyk5oMAuena9RjDnyRvzLtV2=LpQxw@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt-bindings: simplefb-sunxi: Add sunxi
+ simplefb extensions
+Date: Fri, 21 Nov 2014 15:36:04 +0100
+Message-ID: <20141121143604.GF4752@lukather>
+References: <1416224086-5698-1-git-send-email-hdegoede@redhat.com>
+ <1416224086-5698-3-git-send-email-hdegoede@redhat.com>
+ <20141117124721.GQ6414@lukather>
+ <CACxGe6vqiC08sP+o3bduGfvUdwRtHm8+_7EdZccJjS86qVKvxQ@mail.gmail.com>
+ <20141117155514.GU6414@lukather>
+ <CACxGe6tqRS=oCeqbrez86uLLXtQ_C4ETEesNqgxKGb38QOQ8SQ@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJe_ZhcxHnoUeBUk3w=_xyk5oMAuena9RjDnyRvzLtV2=LpQxw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="xkXJwpr35CY/Lc3I"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBRM5XWRQKGQES3NI35Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACxGe6tqRS=oCeqbrez86uLLXtQ_C4ETEesNqgxKGb38QOQ8SQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 21 November 2014 18:52:47 Jassi Brar wrote:
-> On 21 November 2014 18:33, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Thursday 20 November 2014 20:36:15 Vincent Yang wrote:
-> >> +#define __DTS_MB86S70_CLK_H
-> >> +
-> >> +#define MB86S70_CRG11_ALW      0
-> >> +#define MB86S70_CRG11_DDR3     1
-> >> +#define MB86S70_CRG11_MAIN     2
-> >> +#define MB86S70_CRG11_CA15     3
-> >> +#define MB86S70_CRG11_HDMI     4
-> >> +#define MB86S70_CRG11_DPHY     5
-> >> +
-> >> +#define MB86S70_CRG11_UNGPRT   8
+--xkXJwpr35CY/Lc3I
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+On Wed, Nov 19, 2014 at 02:05:48PM +0000, Grant Likely wrote:
+> On Mon, Nov 17, 2014 at 3:55 PM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > On Mon, Nov 17, 2014 at 01:39:18PM +0000, Grant Likely wrote:
+> >> On Mon, Nov 17, 2014 at 12:47 PM, Maxime Ripard
+> >> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> >> > On Mon, Nov 17, 2014 at 12:34:46PM +0100, Hans de Goede wrote:
+> >> >> If pre-filled framebuffer nodes are used, the firmware may need extra
+> >> >> properties to find the right node. This documents the properties to use
+> >> >> for this on sunxi platforms.
+> >> >>
+> >> >> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> >> >> ---
+> >> >>  .../bindings/video/simple-framebuffer-sunxi.txt    | 33 ++++++++++++++++++++++
+> >> >>  1 file changed, 33 insertions(+)
+> >> >>  create mode 100644 Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
+> >> >>
+> >> >> diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt b/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
+> >> >> new file mode 100644
+> >> >> index 0000000..84ca264
+> >> >> --- /dev/null
+> >> >> +++ b/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
+> >> >> @@ -0,0 +1,33 @@
+> >> >> +Sunxi specific Simple Framebuffer bindings
+> >> >> +
+> >> >> +This binding documents sunxi specific extensions to the simple-framebuffer
+> >> >> +bindings. The sunxi simplefb u-boot code relies on the devicetree containing
+> >> >> +pre-populated simplefb nodes.
+> >> >> +
+> >> >> +These extensions are intended so that u-boot can select the right node based
+> >> >> +on which pipeline and output is being used. As such they are solely intended
+> >> >> +for firmware / bootloader use, and the OS should ignore them.
+> >> >> +
+> >> >> +Required properties:
+> >> >> +- compatible: "sunxi,framebuffer"
+> >> >> +- sunxi,pipeline:
+> >> >> +  <0> for the de_be0 -> lcdc0 -> output pipeline
+> >> >> +  <1> for the de_be1 -> lcdc1 -> output pipeline
+> >> >> +- sunxi,output: One of: "hdmi", "lcd", "vga", and "composite"
+> >> >> +
+> >> >> +Example:
+> >> >> +
+> >> >> +chosen {
+> >> >> +     #address-cells = <1>;
+> >> >> +     #size-cells = <1>;
+> >> >> +     ranges;
+> >> >> +
+> >> >> +     framebuffer@0 {
+> >> >> +             compatible = "sunxi,framebuffer", "simple-framebuffer";
+> >> >> +             sunxi,pipeline = <0>;
+> >> >> +             sunxi,output = "hdmi";
+> >> >> +             clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
+> >> >> +                      <&ahb_gates 44>;
+> >> >
+> >> > If we're going that way, then maybe having to specify clock-names
+> >> > would be better in order to know which clock is what?
 > >>
+> >> I wouldn't go that way with this binding since the driver has no need
+> >> to differentiate between the clocks, and driver authors shouldn't be
+> >> encouraged to do so. The purpose of the clocks in this node is only
+> >> for itemizing dependencies, not for how to configure the clocks.
+> >> Firmware shouldn't care at all about the clocks list, it only needs to
+> >> find the correct pre-populated node to fill in and enable.
 > >
-> > The clock driver doesn't seem to use those macros at all, how does the
-> > driver know which clock you are referring to?
-> >
-> That was just an attempt to make a bit verbose the controller
-> instance. Instead of specifying controller:=4, it reads better
-> controller:=MB86S70_CRG11_HDMI in the clock DT nodes. The clock driver
-> simply fills in controller+domain+port of the given clock into mailbox
-> payload.
+> > Well, if we want to play the "DT as an ABI" stuff, you have no
+> > guarantee that in the future, simplefb will still be the driver bound
+> > to "sunxi,framebuffer", and that this driver doesn't need to
+> > differentiate which clocks it needs to protect and which are not
+> > needed. Especially with the combination of the output that you now
+> > hardcode.
+> 
+> As long as the node claims compatibility with "simple-framebuffer",
+> then it must abide by the simple framebuffer rules. It cannot depend
+> on the driver having special knowledge about what to do with the
+> clocks. It is fine for a driver that understands "sunxi,framebuffer"
+> to enable additional features over and above simple-framebuffer,
+> providing it doesn't break the vanilla "simple-framebuffer" interface.
+> 
+> The simple-framebuffer binding is clear that it will treat the clocks
+> as dependencies only.
 
-See my other comments on the clock nodes. If these are hardware properties,
-just leave them as numbers in the DT, the header files are only used to
-establish an interface between the binding and the driver in case there
-is no sensible way to express which one you have.
- 
-> Only MB86S70_CRG11_UNGPRT is marked to mean one special (non-maskable)
-> port on the controller, which the clock driver does make use of.
+Isn't the compatible list precisely made to be able to define more
+specific behaviours if needed?
 
-Is this the actual port number that is known to be non-maskable?
-How about adding a property to the clock node to mark the logical
-controller nonmaskable (in case you go for #clock-cells=2)?
+If I get a list with "sunxi,framebuffer", "simple-framebuffer", I've
+always thought that sunxi,framebuffer was defining exactly what the
+device was about, and that simple-framebuffer was only aimed at
+providing roughly the same functionnality, possibly with degraded
+features, and with a compatible DT bindings.
 
-For the #clock-cells=3 case, you should probably just hardcode this
-in the driver based on the compatible string.
+I don't see how if we require a clock-names list in sunxi,framebuffer
+that would break the binding of simple-framebuffer. It's just more
+information, that might prove useful in the future.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > Of course, if now we don't care at all about this ABI thing, it's
+> > completely fine for me. But I'll archive this email preciously.
+> 
+> I do not in any way mean to say it is okay to break ABI.
+> 
+> Also, my comments above are advice that I would give to U-Boot
+> authors, not something that should go in the binding. The
+> simple-framebuffer binding doesn't need to know about the clock names
+> at all, and if the assumption is that firmware will merely enable a
+> pre-populated framebuffer node in the tree, then it probably doesn't
+> need to parse the clocks property either. However, if it actually is
+> better for the U-Boot implementation to have clocks with names in the
+> node, then I'm not going to object.
+
+I'm not speaking about u-boot here, but the kernel itself.
+
+What if we want from that pipeline property to enable (or rather keep
+enabled) only a few clocks, and not all of them?
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--xkXJwpr35CY/Lc3I--
