@@ -1,58 +1,72 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 4/9] rc: sunxi-cir: Add support for an
- optional reset controller
-Date: Fri, 21 Nov 2014 09:51:07 +0100
-Message-ID: <20141121085107.GM24143@lukather>
-References: <1416498928-1300-1-git-send-email-hdegoede@redhat.com>
- <1416498928-1300-5-git-send-email-hdegoede@redhat.com>
- <20141120142831.003fb63e@recife.lan>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCHv2 08/16] clk: mvebu: add suspend/resume for gatable
+ clocks
+Date: Fri, 21 Nov 2014 09:59:54 +0100
+Message-ID: <20141121095954.5f708f54@free-electrons.com>
+References: <1415978496-9334-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1415978496-9334-9-git-send-email-thomas.petazzoni@free-electrons.com>
+	<20141117224604.25314.96198@quantum>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="lRF4gxo9Z9M++D0O"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB4X3XORQKGQETC6EC2I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141120142831.003fb63e-+RedX5hVuTR+urZeOPWqwQ@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141117224604.25314.96198@quantum>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---lRF4gxo9Z9M++D0O
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Dear Mike Turquette,
 
-Hi Mauro,
-
-On Thu, Nov 20, 2014 at 02:28:31PM -0200, Mauro Carvalho Chehab wrote:
-> Em Thu, 20 Nov 2014 16:55:23 +0100
-> Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> escreveu:
-> 
-> > On sun6i the cir block is attached to the reset controller, add support
-> > for de-asserting the reset if a reset controller is specified in dt.
+On Mon, 17 Nov 2014 14:46:04 -0800, Mike Turquette wrote:
+> Quoting Thomas Petazzoni (2014-11-14 07:21:28)
+> > This commit adds suspend/resume support for the gatable clock driver
+> > used on Marvell EBU platforms. When getting out of suspend, the
+> > Marvell EBU platforms go through the bootloader, which re-enables all
+> > gatable clocks. However, upon resume, the clock framework will not
+> > disable again all gatable clocks that are not used.
 > > 
-> > Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> > Therefore, if the clock driver does not save/restore the state of the
+> > gatable clocks, all gatable clocks that are not claimed by any device
+> > driver will remain enabled after a resume. This is why this driver
+> > saves and restores the state of those clocks.
 > 
-> As this is meant to be merged via some other tree:
+> It might be a good idea to call clk_disable_unused() from the clk core
+> after resuming from suspend.
+
+Yes, this might be an interesting clk core improvement.
+
+> > @@ -177,14 +178,18 @@ struct clk_gating_ctrl {
+> >         spinlock_t *lock;
+> >         struct clk **gates;
+> >         int num_gates;
+> > +       struct syscore_ops syscore_ops;
 > 
-> Acked-by: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+> You are registering suspend/resume ops per clock. Have you considered
+> registering a single set of ops for your clock controller driver? See
+> drivers/clk/samsung/clk-exynos5420.c for an example.
+> 
+> Combined with a table of clocks registered by your driver, centralized
+> suspend/resume methods might be a cleaner solution.
 
-Again, I think it'll be perfectly fine in your tree :)
+Ok, I've changed. To be honest, I don't think it makes much change: if
+we had two instances of a gatable clock controller, then we would have
+two calls to mvebu_clk_gating_setup(), which would register twice the
+same syscore_ops. But we were anyway already assuming that we have
+already one instance of a gatable clock controller, since the
+syscore_ops operation implementation already used a global pointer to
+the gatable clock controller.
 
-Once the documentation is updated,
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Will be part of the upcoming v3.
 
-Thanks,
-Maxime
+Thanks for the review!
 
+Thomas
 -- 
-Maxime Ripard, Free Electrons
+Thomas Petazzoni, CTO, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
---lRF4gxo9Z9M++D0O--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
