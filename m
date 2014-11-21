@@ -1,67 +1,62 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCHv3 02/16] ARM: mvebu: enable strex backoff delay
-Date: Fri, 21 Nov 2014 16:59:59 +0100
-Message-ID: <1416585613-2113-3-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCHv3 01/16] Documentation: dt-bindings: minimal documentation for MVEBU SDRAM controller
+Date: Fri, 21 Nov 2014 16:59:58 +0100
+Message-ID: <1416585613-2113-2-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1416585613-2113-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <1416585613-2113-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: stable-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>
-Cc: linux-arm-kernel@lists.infradead.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, stable@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416585613-2113-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Nadav Haklai <nadavh@marvell.com>
+The suspend/resume code for Armada XP has to modify certain registers
+of the SDRAM controller. Therefore, we need to define a Device Tree
+binding for this hardware block.
 
-Under extremely rare conditions, in an MPCore node consisting of at
-least 3 CPUs, two CPUs trying to perform a STREX to data on the same
-shared cache line can enter a livelock situation.
-
-This patch enables the HW mechanism that overcomes the bug. This fixes
-the incorrect setup of the STREX backoff delay bit due to a wrong
-description in the specification.
-
-Note that enabling the STREX backoff delay mechanism is done by
-leaving the bit *cleared*, while the bit was currently being set by
-the proc-v7.S code.
-
-[Thomas: adapt to latest mainline, slightly reword the commit log, add
-stable markers.]
-
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: <stable@vger.kernel.org> # v3.8+
-Fixes: de4901933f6d ("arm: mm: Add support for PJ4B cpu and init routines")
-Signed-off-by: Nadav Haklai <nadavh@marvell.com>
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Acked-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Reviewed-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
-This patch is submitted as part of the suspend/resume work, because
-the suspend/resume path is triggering this rare bug in a very
-reproducible fashion.
+ .../memory-controllers/mvebu-sdram-controller.txt   | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/mvebu-sdram-controller.txt
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
----
- arch/arm/mm/proc-v7.S | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/arch/arm/mm/proc-v7.S b/arch/arm/mm/proc-v7.S
-index b3a9478..22ac2a6 100644
---- a/arch/arm/mm/proc-v7.S
-+++ b/arch/arm/mm/proc-v7.S
-@@ -270,7 +270,6 @@ __v7_pj4b_setup:
- /* Auxiliary Debug Modes Control 1 Register */
- #define PJ4B_STATIC_BP (1 << 2) /* Enable Static BP */
- #define PJ4B_INTER_PARITY (1 << 8) /* Disable Internal Parity Handling */
--#define PJ4B_BCK_OFF_STREX (1 << 5) /* Enable the back off of STREX instr */
- #define PJ4B_CLEAN_LINE (1 << 16) /* Disable data transfer for clean line */
- 
- /* Auxiliary Debug Modes Control 2 Register */
-@@ -293,7 +292,6 @@ __v7_pj4b_setup:
- 	/* Auxiliary Debug Modes Control 1 Register */
- 	mrc	p15, 1,	r0, c15, c1, 1
- 	orr     r0, r0, #PJ4B_CLEAN_LINE
--	orr     r0, r0, #PJ4B_BCK_OFF_STREX
- 	orr     r0, r0, #PJ4B_INTER_PARITY
- 	bic	r0, r0, #PJ4B_STATIC_BP
- 	mcr	p15, 1,	r0, c15, c1, 1
+diff --git a/Documentation/devicetree/bindings/memory-controllers/mvebu-sdram-controller.txt b/Documentation/devicetree/bindings/memory-controllers/mvebu-sdram-controller.txt
+new file mode 100644
+index 0000000..89657d1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/memory-controllers/mvebu-sdram-controller.txt
+@@ -0,0 +1,21 @@
++Device Tree bindings for MVEBU SDRAM controllers
++
++The Marvell EBU SoCs all have a SDRAM controller. The SDRAM controller
++differs from one SoC variant to another, but they also share a number
++of commonalities.
++
++For now, this Device Tree binding documentation only documents the
++Armada XP SDRAM controller.
++
++Required properties:
++
++ - compatible: for Armada XP, "marvell,armada-xp-sdram-controller"
++ - reg: a resource specifier for the register space, which should
++   include all SDRAM controller registers as per the datasheet.
++
++Example:
++
++sdramc@1400 {
++	compatible = "marvell,armada-xp-sdram-controller";
++	reg = <0x1400 0x500>;
++};
 -- 
 2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
