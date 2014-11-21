@@ -1,45 +1,61 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCHv3 09/16] ARM: mvebu: implement suspend/resume support for
- Armada XP
-Date: Fri, 21 Nov 2014 17:41:42 +0100
-Message-ID: <20141121164142.GB20238@lunn.ch>
-References: <1416585613-2113-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1416585613-2113-10-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v4 1/2] i2c: s3c2410: Handle i2c sys_cfg register in i2c
+ driver
+Date: Fri, 21 Nov 2014 17:47:26 +0100
+Message-ID: <20141121164726.GA1426@katana>
+References: <1414656270-8048-1-git-send-email-pankaj.dubey@samsung.com>
+ <1414656270-8048-2-git-send-email-pankaj.dubey@samsung.com>
+ <20141121072545.GG1480@katana>
+ <546F1140.4050709@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="u3/rZRmxL6MmkK24"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1416585613-2113-10-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <546F1140.4050709@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Pankaj Dubey <pankaj.dubey@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, linux@arm.linux.org.uk, thomas.ab@samsung.com, Rob Herring <robh+dt@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> +static void mvebu_pm_store_bootinfo(void)
-> +{
-> +	u32 *store_addr;
-> +	phys_addr_t resume_pc;
-> +
-> +	store_addr = phys_to_virt(BOOT_INFO_ADDR);
-> +	resume_pc = virt_to_phys(armada_370_xp_cpu_resume);
-> +
-> +	/*
-> +	 * The bootloader expects the first two words to be a magic
-> +	 * value (BOOT_MAGIC_WORD), followed by the address of the
-> +	 * resume code to jump to. Then, it expects a sequence of
-> +	 * (address, value) pairs, which can be used to restore the
-> +	 * value of certain registers. This sequence must end with the
-> +	 * BOOT_MAGIC_LIST_END magic value.
-> +	 */
 
-Hi Thomas
+--u3/rZRmxL6MmkK24
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Is this a well defined mechanism supported by mainline uboot, barebox
-etc. Or is it some Marvell extension to their uboot?
 
-     Thanks
-	Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >I usually don't take DTS patches. They should go via arm-soc. Please say
+> >so if there are reasons I should take them.
+>=20
+> I CC'ed to you because same patch contains changes in i2c driver.
+
+Yes, those should absolutely go via my I2C tree. You need to make a
+seperate patch out of the dts changes which then also should go via
+samsung-soc, unless Kukjin says he really wants to go the via I2C. But I
+guess the latter will just create merge conflicts.
+
+
+--u3/rZRmxL6MmkK24
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUb2ydAAoJEBQN5MwUoCm2CuIP/0EDmy1XbiZ8nKtZZ51gE6Wn
+cXFcyI4V1NUKdXmQwDMrkzhZgUx4cam4cHyex3qcYXdC0dp6p5tgM+A9BPfBLTUD
+8CUBP+M9gV+UHOYWxF5w+O/uRGV5UyjuNf9iH66uDHpG0dzebnrj+XuN1+yE9Ett
+zLG1/i3UyDuFNbRKBBfEanBnqXzONreWWZYa9cX3JREDz4R4pVcqqRfPM46CJX00
+6T5CgTbh2+pWsdPfMMQeLe2YSkYu2BgFgak6MN7uOjSBNhr74oK+qTkhXBuoVN58
+AHbsOYOEDEqpkbxqYRr+LK5G/916dD6awgXxdprveeNL5AWeOEvdxN2Kbr6TfbA6
+PrhklVw0UQvFNY/qAWp76pR7EtBEw8IGygYp9W3XweUtw2KnvcptdXqU6xwCGt5K
+NGnlbtNTSP6yF1VqJbGtrgx0oBP9qK3OI8oD7ZE9oeUaub/sVN8/U1YpvVOFyX1q
+9wN6aznawsGguc9CxesC+qu2F3La58BzFT+rSyRCTMH/dlJ1/qamUjhqca/MeZef
+pRwZp/7z92NnWZ8v5f5E+FFkxZ9JT6ojD4k+3/0T40frqS5jT/5UiiKw3CYYG6UY
+AHPE8T0yp68v69fA2eOuLKu8NV9yHKQAVPPG+kznwz67x3XE1zOBX429A/f7Nqgb
+1CVNTC5UWoC4tp3tXfhR
+=/0Y7
+-----END PGP SIGNATURE-----
+
+--u3/rZRmxL6MmkK24--
