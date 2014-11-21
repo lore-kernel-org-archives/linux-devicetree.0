@@ -1,82 +1,64 @@
-From: "Kenneth Westfield" <kwestfie@codeaurora.org>
-Subject: Re: [alsa-devel] [PATCH 0/9] ASoC: QCOM: Add support for ipq806x
- SOC
-Date: Fri, 21 Nov 2014 12:24:33 -0800
-Message-ID: <9e2e849728c593bf1b8cde3ede3a1628.squirrel@www.codeaurora.org>
-References: <1416423169-21865-1-git-send-email-kwestfie@codeaurora.org>
-    <AE8D85F1-A1E0-4656-B160-37AA3300FE58@codeaurora.org>
-Reply-To: kwestfie@codeaurora.org
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCHv4 01/10] arm: mvebu: fix vendor prefix typo in
+ kirkwood-synology.dtsi
+Date: Fri, 21 Nov 2014 15:24:06 -0500
+Message-ID: <20141121202406.GC22670@titan.lakedaemon.net>
+References: <cover.1416351425.git.arno@natisbad.org>
+ <e1c3f3fbd9f494fa228de3ee5928c771d33b072e.1416351426.git.arno@natisbad.org>
+ <20141120015519.GA22670@titan.lakedaemon.net>
+ <20141120050213.GB2596@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <AE8D85F1-A1E0-4656-B160-37AA3300FE58@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, Banajit Goswami <bgoswami@codeaurora.org>, Takashi Iwai <tiwai@suse.de>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Patrick Lai <plai@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Bryan Huntsman <bryanh@codeaurora.org>, Mark Brown <broonie@kernel.org>, Greg KH <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141120050213.GB2596-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, November 19, 2014 12:16 pm, Kumar Gala wrote:
->
-> On Nov 19, 2014, at 12:52 PM, Kenneth Westfield <kwestfie@codeaurora.=
-org> wrote:
->
->> From: Kenneth Westfield <kwestfie@codeaurora.org>
->>
->> This set of patches adds support for audio on the Qualcomm Technolog=
-ies
->> ipq806x SOC.
->>
->> The ipq806x SOC has audio-related hardware blocks in its low-power a=
-udio
->> subsystem (or LPASS).  One of the relevant blocks in the LPASS is it=
-s
->> low-power audio interface (or LPAIF).  This encapsulates the MI2S po=
-rt,
->> which is what these drivers are configured to use.  The I2S pins are
->> connected to an external DAC/amp chip.  In addition, a single GPIO i=
-s
->> connected to the same DAC/amp, which gives the SOC enable/disable
->> control.
->>
->> The specific drivers added are:
->> - a machine driver that handles the board-specific pins
->> - a native driver that handles hardware access to the LPAIF
->> - a CPU DAI driver for controlling the LPAIF block
->> - a PCM MI2S platform driver
->>
->> Corresponding additions to the device tree for the ipq806x and its
->> documentation has also been added.  Also, as this is a new directory=
-,
->> the MAINTAINERS file has been updated as well.
->>
->> - Ken
->
-> Some general comments, you shouldn=92t have gerrit Change-Id=92s in c=
-ommit messages, the
-> Kconfig/Makefile changes should be part of the patch that adds the co=
-de associated with them.
->
-> - k
->
-> --
-> Qualcomm Innovation Center, Inc.
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora F=
-orum,
-> a Linux Foundation Collaborative Project
->
-> _______________________________________________
-> Alsa-devel mailing list
-> Alsa-devel@alsa-project.org
-> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
->
+On Thu, Nov 20, 2014 at 06:02:13AM +0100, Andrew Lunn wrote:
+> On Wed, Nov 19, 2014 at 08:55:19PM -0500, Jason Cooper wrote:
+> > Andrew,
+> > 
+> > On Wed, Nov 19, 2014 at 12:01:36AM +0100, Arnaud Ebalard wrote:
+> > > 
+> > > As reported by Andrew, the vendor prefix for Seiko Instruments, Inc.
+> > > S-35390A I2C RTC chip in kirkwood-synology.dtsi has a typo (ssi
+> > > instead of sii). This patches fixes it.
+> > > 
+> > > Reported-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> > > Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+> > > ---
+> > >  arch/arm/boot/dts/kirkwood-synology.dtsi | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/arch/arm/boot/dts/kirkwood-synology.dtsi b/arch/arm/boot/dts/kirkwood-synology.dtsi
+> > > index 811e0971fc58..8be5b2e4626e 100644
+> > > --- a/arch/arm/boot/dts/kirkwood-synology.dtsi
+> > > +++ b/arch/arm/boot/dts/kirkwood-synology.dtsi
+> > > @@ -266,7 +266,7 @@
+> > >  
+> > >  			s35390a: s35390a@30 {
+> > >  				status = "disabled";
+> > > -				compatible = "ssi,s35390a";
+> > > +				compatible = "sii,s35390a";
+> > 
+> > Should the driver now support both variants for backward compatibility?
+> 
+> Hi Jason
+> 
+> This is an i2c device. i2c totally ignores the vendor. It is optional.
+> So there is no backward compatibility issues.
 
-Thank you for your comments.  I will separately address each comment sh=
-ortly.
+In this case I think we're probably fine changing it, but your argument
+is a Linux implementation choice.  The BSDs and bootloaders may work
+differently.  Just something to keep in mind with these things.
 
---=20
-Kenneth Westfield
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora For=
-um,
-a Linux Foundation Collaborative Project
+thx,
+
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
