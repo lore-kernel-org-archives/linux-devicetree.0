@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCHv3 07/16] bus: mvebu-mbus: provide a mechanism to save SDRAM window configuration
-Date: Fri, 21 Nov 2014 17:00:04 +0100
-Message-ID: <1416585613-2113-8-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCHv3 10/16] ARM: mvebu: reserve the first 10 KB of each memory bank for suspend/resume
+Date: Fri, 21 Nov 2014 17:00:07 +0100
+Message-ID: <1416585613-2113-11-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1416585613-2113-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1416585613-2113-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,178 +10,106 @@ To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <a
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Marvell EBU platforms, when doing suspend/resume, the SDRAM window
-configuration must be saved on suspend, and restored on
-resume. However, it needs to be restored on resume *before*
-re-entering the kernel, because the SDRAM window configuration defines
-the layout of the memory. For this reason, it cannot simply be done in
-the ->suspend() and ->resume() hooks of the mvebu-mbus driver.
+When going out of suspend to RAM, the Marvell EBU platforms go through
+the bootloader, which re-configures the DRAM controller. To achieve
+this, the bootloader executes a piece of code called the "DDR3
+training code". It does some reads/writes to the memory to find out
+the optimal timings for the memory chip being used.
 
-Instead, it needs to be restored by the bootloader "boot info"
-mechanism used when resuming. This mechanism allows the kernel to
-define a list of (address, value) pairs when suspending, that the
-bootloader will restore on resume before jumping back into the kernel.
+This has the nasty side effect that the first 10 KB of each DRAM
+chip-select are overwritten by the bootloader when exiting the suspend
+to RAM state.
 
-This commit therefore adds a new function to the mvebu-mbus driver,
-called mvebu_mbus_save_cpu_target(), which will be called by the
-platform code to make the mvebu-mbus driver save the SDRAM window
-configuration in a way that can be understood by the bootloader "boot
-info" mechanism.
+Therefore, this commit implements the ->reserve() hook for the 'struct
+machine_desc' used on Armada XP, to reserve the 10 KB of each DRAM
+chip-select using the memblock API.
 
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Reviewed-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/bus/mvebu-mbus.c | 56 ++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/mbus.h     |  1 +
- 2 files changed, 57 insertions(+)
+ arch/arm/mach-mvebu/board-v7.c | 51 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-diff --git a/drivers/bus/mvebu-mbus.c b/drivers/bus/mvebu-mbus.c
-index e8c1593..eb7682d 100644
---- a/drivers/bus/mvebu-mbus.c
-+++ b/drivers/bus/mvebu-mbus.c
-@@ -110,6 +110,8 @@ struct mvebu_mbus_soc_data {
- 	bool has_mbus_bridge;
- 	unsigned int (*win_cfg_offset)(const int win);
- 	void (*setup_cpu_target)(struct mvebu_mbus_state *s);
-+	int (*save_cpu_target)(struct mvebu_mbus_state *s,
-+			       u32 *store_addr);
- 	int (*show_cpu_target)(struct mvebu_mbus_state *s,
- 			       struct seq_file *seq, void *v);
- };
-@@ -128,6 +130,7 @@ struct mvebu_mbus_state {
- 	void __iomem *mbuswins_base;
- 	void __iomem *sdramwins_base;
- 	void __iomem *mbusbridge_base;
-+	phys_addr_t sdramwins_phys_base;
- 	struct dentry *debugfs_root;
- 	struct dentry *debugfs_sdram;
- 	struct dentry *debugfs_devs;
-@@ -541,6 +544,28 @@ mvebu_mbus_default_setup_cpu_target(struct mvebu_mbus_state *mbus)
- 	mvebu_mbus_dram_info.num_cs = cs;
+diff --git a/arch/arm/mach-mvebu/board-v7.c b/arch/arm/mach-mvebu/board-v7.c
+index 6478626..bc52231 100644
+--- a/arch/arm/mach-mvebu/board-v7.c
++++ b/arch/arm/mach-mvebu/board-v7.c
+@@ -16,10 +16,12 @@
+ #include <linux/init.h>
+ #include <linux/clk-provider.h>
+ #include <linux/of_address.h>
++#include <linux/of_fdt.h>
+ #include <linux/of_platform.h>
+ #include <linux/io.h>
+ #include <linux/clocksource.h>
+ #include <linux/dma-mapping.h>
++#include <linux/memblock.h>
+ #include <linux/mbus.h>
+ #include <linux/signal.h>
+ #include <linux/slab.h>
+@@ -57,6 +59,54 @@ void __iomem *mvebu_get_scu_base(void)
  }
  
-+static int
-+mvebu_mbus_default_save_cpu_target(struct mvebu_mbus_state *mbus,
-+				   u32 *store_addr)
+ /*
++ * When returning from suspend, the platform goes through the
++ * bootloader, which executes its DDR3 training code. This code has
++ * the unfortunate idea of using the first 10 KB of each DRAM bank to
++ * exercise the RAM and calculate the optimal timings. Therefore, this
++ * area of RAM is overwritten, and shouldn't be used by the kernel if
++ * suspend/resume is supported.
++ */
++
++#ifdef CONFIG_SUSPEND
++#define MVEBU_DDR_TRAINING_AREA_SZ (10 * SZ_1K)
++static int __init mvebu_scan_mem(unsigned long node, const char *uname,
++				 int depth, void *data)
 +{
-+	int i;
++	const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
++	const __be32 *reg, *endp;
++	int l;
 +
-+	for (i = 0; i < 4; i++) {
-+		u32 base = readl(mbus->sdramwins_base + DDR_BASE_CS_OFF(i));
-+		u32 size = readl(mbus->sdramwins_base + DDR_SIZE_CS_OFF(i));
++	if (type == NULL || strcmp(type, "memory"))
++		return 0;
 +
-+		writel(mbus->sdramwins_phys_base + DDR_BASE_CS_OFF(i),
-+		       store_addr++);
-+		writel(base, store_addr++);
-+		writel(mbus->sdramwins_phys_base + DDR_SIZE_CS_OFF(i),
-+		       store_addr++);
-+		writel(size, store_addr++);
++	reg = of_get_flat_dt_prop(node, "linux,usable-memory", &l);
++	if (reg == NULL)
++		reg = of_get_flat_dt_prop(node, "reg", &l);
++	if (reg == NULL)
++		return 0;
++
++	endp = reg + (l / sizeof(__be32));
++	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
++		u64 base, size;
++
++		base = dt_mem_next_cell(dt_root_addr_cells, &reg);
++		size = dt_mem_next_cell(dt_root_size_cells, &reg);
++
++		memblock_reserve(base, MVEBU_DDR_TRAINING_AREA_SZ);
 +	}
 +
-+	/* We've written 16 words to the store address */
-+	return 16;
++	return 0;
 +}
 +
- static void __init
- mvebu_mbus_dove_setup_cpu_target(struct mvebu_mbus_state *mbus)
- {
-@@ -571,11 +596,35 @@ mvebu_mbus_dove_setup_cpu_target(struct mvebu_mbus_state *mbus)
- 	mvebu_mbus_dram_info.num_cs = cs;
- }
- 
-+static int
-+mvebu_mbus_dove_save_cpu_target(struct mvebu_mbus_state *mbus,
-+				u32 *store_addr)
++static void __init mvebu_memblock_reserve(void)
 +{
-+	int i;
-+
-+	for (i = 0; i < 2; i++) {
-+		u32 map = readl(mbus->sdramwins_base + DOVE_DDR_BASE_CS_OFF(i));
-+
-+		writel(mbus->sdramwins_phys_base + DOVE_DDR_BASE_CS_OFF(i),
-+		       store_addr++);
-+		writel(map, store_addr++);
-+	}
-+
-+	/* We've written 4 words to the store address */
-+	return 4;
++	of_scan_flat_dt(mvebu_scan_mem, NULL);
 +}
++#else
++static void __init mvebu_memblock_reserve(void) {}
++#endif
 +
-+int mvebu_mbus_save_cpu_target(u32 *store_addr)
-+{
-+	return mbus_state.soc->save_cpu_target(&mbus_state, store_addr);
-+}
-+
- static const struct mvebu_mbus_soc_data armada_370_xp_mbus_data = {
- 	.num_wins            = 20,
- 	.num_remappable_wins = 8,
- 	.has_mbus_bridge     = true,
- 	.win_cfg_offset      = armada_370_xp_mbus_win_offset,
-+	.save_cpu_target     = mvebu_mbus_default_save_cpu_target,
- 	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
- 	.show_cpu_target     = mvebu_sdram_debug_show_orion,
- };
-@@ -584,6 +633,7 @@ static const struct mvebu_mbus_soc_data kirkwood_mbus_data = {
- 	.num_wins            = 8,
- 	.num_remappable_wins = 4,
- 	.win_cfg_offset      = orion_mbus_win_offset,
-+	.save_cpu_target     = mvebu_mbus_default_save_cpu_target,
- 	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
- 	.show_cpu_target     = mvebu_sdram_debug_show_orion,
- };
-@@ -592,6 +642,7 @@ static const struct mvebu_mbus_soc_data dove_mbus_data = {
- 	.num_wins            = 8,
- 	.num_remappable_wins = 4,
- 	.win_cfg_offset      = orion_mbus_win_offset,
-+	.save_cpu_target     = mvebu_mbus_dove_save_cpu_target,
- 	.setup_cpu_target    = mvebu_mbus_dove_setup_cpu_target,
- 	.show_cpu_target     = mvebu_sdram_debug_show_dove,
- };
-@@ -604,6 +655,7 @@ static const struct mvebu_mbus_soc_data orion5x_4win_mbus_data = {
- 	.num_wins            = 8,
- 	.num_remappable_wins = 4,
- 	.win_cfg_offset      = orion_mbus_win_offset,
-+	.save_cpu_target     = mvebu_mbus_default_save_cpu_target,
- 	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
- 	.show_cpu_target     = mvebu_sdram_debug_show_orion,
- };
-@@ -612,6 +664,7 @@ static const struct mvebu_mbus_soc_data orion5x_2win_mbus_data = {
- 	.num_wins            = 8,
- 	.num_remappable_wins = 2,
- 	.win_cfg_offset      = orion_mbus_win_offset,
-+	.save_cpu_target     = mvebu_mbus_default_save_cpu_target,
- 	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
- 	.show_cpu_target     = mvebu_sdram_debug_show_orion,
- };
-@@ -620,6 +673,7 @@ static const struct mvebu_mbus_soc_data mv78xx0_mbus_data = {
- 	.num_wins            = 14,
- 	.num_remappable_wins = 8,
- 	.win_cfg_offset      = mv78xx0_mbus_win_offset,
-+	.save_cpu_target     = mvebu_mbus_default_save_cpu_target,
- 	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
- 	.show_cpu_target     = mvebu_sdram_debug_show_orion,
- };
-@@ -804,6 +858,8 @@ static int __init mvebu_mbus_common_init(struct mvebu_mbus_state *mbus,
- 		return -ENOMEM;
- 	}
++/*
+  * Early versions of Armada 375 SoC have a bug where the BootROM
+  * leaves an external data abort pending. The kernel is hit by this
+  * data abort as soon as it enters userspace, because it unmasks the
+@@ -210,6 +260,7 @@ DT_MACHINE_START(ARMADA_370_XP_DT, "Marvell Armada 370/XP (Device Tree)")
+ 	.init_machine	= mvebu_dt_init,
+ 	.init_irq       = mvebu_init_irq,
+ 	.restart	= mvebu_restart,
++	.reserve        = mvebu_memblock_reserve,
+ 	.dt_compat	= armada_370_xp_dt_compat,
+ MACHINE_END
  
-+	mbus->sdramwins_phys_base = sdramwins_phys_base;
-+
- 	if (mbusbridge_phys_base) {
- 		mbus->mbusbridge_base = ioremap(mbusbridge_phys_base,
- 						mbusbridge_size);
-diff --git a/include/linux/mbus.h b/include/linux/mbus.h
-index 550c88f..611b69f 100644
---- a/include/linux/mbus.h
-+++ b/include/linux/mbus.h
-@@ -61,6 +61,7 @@ static inline const struct mbus_dram_target_info *mv_mbus_dram_info(void)
- }
- #endif
- 
-+int mvebu_mbus_save_cpu_target(u32 *store_addr);
- void mvebu_mbus_get_pcie_mem_aperture(struct resource *res);
- void mvebu_mbus_get_pcie_io_aperture(struct resource *res);
- int mvebu_mbus_add_window_remap_by_id(unsigned int target,
 -- 
 2.1.0
 
