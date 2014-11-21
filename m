@@ -1,103 +1,108 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 8/8] of: Add debug output for OF_RECONFIG notifiers
-Date: Fri, 21 Nov 2014 01:35:15 +0000
-Message-ID: <1416533715-9758-9-git-send-email-grant.likely@linaro.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: [PATCH 1/8] of: Use vargs in __of_node_alloc
+Date: Fri, 21 Nov 2014 01:35:08 +0000
+Message-ID: <1416533715-9758-2-git-send-email-grant.likely@linaro.org>
 References: <1416533715-9758-1-git-send-email-grant.likely@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416533715-9758-1-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1416533715-9758-1-git-send-email-grant.likely@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add some additional debug output to cover OF_RECONFIG notifier activity.
-At the same time, refactor the changeset debug output to use the same
-strings as the notifier debug output.
+The overlay code needs to construct a new full_name from the parent name
+and the node name, but the current method has to allocate and then free
+an temporary string which is wasteful. Fix this problem by using vargs
+to pass in a format and arguments into __of_node_alloc().
 
-Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+At the same time remove the allocflags argument to __of_node_alloc().
+The only users all use GFP_KERNEL, so there is no need to provide it as
+an option. If there is ever a need later it can be added back.
+
+Signed-off-by: Grant Likely <grant.likely@linaro.org>
 ---
- drivers/of/dynamic.c | 48 ++++++++++++++++++++++++++++++++----------------
- 1 file changed, 32 insertions(+), 16 deletions(-)
+ drivers/of/dynamic.c    | 16 ++++++++--------
+ drivers/of/of_private.h |  2 +-
+ drivers/of/unittest.c   |  6 +++---
+ 3 files changed, 12 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index 7634c2f69d4a..de20ae46b370 100644
+index da2509d639c8..2d452be1200b 100644
 --- a/drivers/of/dynamic.c
 +++ b/drivers/of/dynamic.c
-@@ -77,10 +77,38 @@ int of_reconfig_notifier_unregister(struct notifier_block *nb)
- }
- EXPORT_SYMBOL_GPL(of_reconfig_notifier_unregister);
- 
-+#ifdef DEBUG
-+const char *action_names[] = {
-+	[OF_RECONFIG_ATTACH_NODE] = "ATTACH_NODE",
-+	[OF_RECONFIG_DETACH_NODE] = "DETACH_NODE",
-+	[OF_RECONFIG_ADD_PROPERTY] = "ADD_PROPERTY",
-+	[OF_RECONFIG_REMOVE_PROPERTY] = "REMOVE_PROPERTY",
-+	[OF_RECONFIG_UPDATE_PROPERTY] = "UPDATE_PROPERTY",
-+};
-+#endif
-+
- int of_reconfig_notify(unsigned long action, void *p)
+@@ -274,33 +274,33 @@ struct property *__of_prop_dup(const struct property *prop, gfp_t allocflags)
+ /**
+  * __of_node_alloc() - Create an empty device node dynamically.
+  * @full_name:	Full name of the new device node
+- * @allocflags:	Allocation flags (typically pass GFP_KERNEL)
+  *
+  * Create an empty device tree node, suitable for further modification.
+  * The node data are dynamically allocated and all the node flags
+  * have the OF_DYNAMIC & OF_DETACHED bits set.
+  * Returns the newly allocated node or NULL on out of memory error.
+  */
+-struct device_node *__of_node_alloc(const char *full_name, gfp_t allocflags)
++struct device_node *__of_node_alloc(const char *fmt, ...)
  {
- 	int rc;
-+#ifdef DEBUG
-+	struct device_node *dn = p;
-+	struct of_prop_reconfig *pr = p;
-+
-+	switch (action) {
-+	case OF_RECONFIG_ATTACH_NODE:
-+	case OF_RECONFIG_DETACH_NODE:
-+		pr_debug("of/notify %-15s %s\n", action_names[action],
-+			dn->full_name);
-+		break;
-+	case OF_RECONFIG_ADD_PROPERTY:
-+	case OF_RECONFIG_REMOVE_PROPERTY:
-+	case OF_RECONFIG_UPDATE_PROPERTY:
-+		pr_debug("of/notify %-15s %s:%s\n", action_names[action],
-+			pr->dn->full_name, pr->prop->name);
-+		break;
++	va_list vargs;
+ 	struct device_node *node;
  
-+	}
-+#endif
- 	rc = blocking_notifier_call_chain(&of_reconfig_chain, action, p);
- 	return notifier_to_errno(rc);
+-	node = kzalloc(sizeof(*node), allocflags);
++	node = kzalloc(sizeof(*node), GFP_KERNEL);
+ 	if (!node)
+ 		return NULL;
+-
+-	node->full_name = kstrdup(full_name, allocflags);
+-	of_node_set_flag(node, OF_DYNAMIC);
+-	of_node_set_flag(node, OF_DETACHED);
++	va_start(vargs, fmt);
++	node->full_name = kvasprintf(GFP_KERNEL, fmt, vargs);
++	va_end(vargs);
+ 	if (!node->full_name)
+ 		goto err_free;
+ 
++	of_node_set_flag(node, OF_DYNAMIC);
++	of_node_set_flag(node, OF_DETACHED);
+ 	of_node_init(node);
+ 
+ 	return node;
+ 
+  err_free:
+-	kfree(node->full_name);
+ 	kfree(node);
+ 	return NULL;
  }
-@@ -431,27 +459,15 @@ static void __of_changeset_entry_dump(struct of_changeset_entry *ce)
- {
- 	switch (ce->action) {
- 	case OF_RECONFIG_ADD_PROPERTY:
--		pr_debug("%p: %s %s/%s\n",
--			ce, "ADD_PROPERTY   ", ce->np->full_name,
--			ce->prop->name);
--		break;
- 	case OF_RECONFIG_REMOVE_PROPERTY:
--		pr_debug("%p: %s %s/%s\n",
--			ce, "REMOVE_PROPERTY", ce->np->full_name,
--			ce->prop->name);
--		break;
- 	case OF_RECONFIG_UPDATE_PROPERTY:
--		pr_debug("%p: %s %s/%s\n",
--			ce, "UPDATE_PROPERTY", ce->np->full_name,
--			ce->prop->name);
-+		pr_debug("of/cset<%p> %-15s %s/%s\n", ce, action_names[ce->action],
-+			ce->np->full_name, ce->prop->name);
- 		break;
- 	case OF_RECONFIG_ATTACH_NODE:
--		pr_debug("%p: %s %s\n",
--			ce, "ATTACH_NODE    ", ce->np->full_name);
--		break;
- 	case OF_RECONFIG_DETACH_NODE:
--		pr_debug("%p: %s %s\n",
--			ce, "DETACH_NODE    ", ce->np->full_name);
-+		pr_debug("of/cset<%p> %-15s %s\n", ce, action_names[ce->action],
-+			ce->np->full_name);
- 		break;
- 	}
- }
+diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+index 858e0a5d9a11..1e21b1c6de71 100644
+--- a/drivers/of/of_private.h
++++ b/drivers/of/of_private.h
+@@ -61,7 +61,7 @@ static inline int of_property_notify(int action, struct device_node *np,
+  * own the devtree lock or work on detached trees only.
+  */
+ struct property *__of_prop_dup(const struct property *prop, gfp_t allocflags);
+-struct device_node *__of_node_alloc(const char *full_name, gfp_t allocflags);
++struct device_node *__of_node_alloc(const char *fmt, ...);
+ 
+ extern const void *__of_get_property(const struct device_node *np,
+ 				     const char *name, int *lenp);
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 082bb2b6a5ad..79630760ea4f 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -449,11 +449,11 @@ static void __init of_selftest_changeset(void)
+ 	struct of_changeset chgset;
+ 
+ 	of_changeset_init(&chgset);
+-	n1 = __of_node_alloc("/testcase-data/changeset/n1", GFP_KERNEL);
++	n1 = __of_node_alloc("/testcase-data/changeset/n1");
+ 	selftest(n1, "testcase setup failure\n");
+-	n2 = __of_node_alloc("/testcase-data/changeset/n2", GFP_KERNEL);
++	n2 = __of_node_alloc("/testcase-data/changeset/n2");
+ 	selftest(n2, "testcase setup failure\n");
+-	n21 = __of_node_alloc("/testcase-data/changeset/n2/n21", GFP_KERNEL);
++	n21 = __of_node_alloc("/testcase-data/changeset/n2/n21");
+ 	selftest(n21, "testcase setup failure %p\n", n21);
+ 	nremove = of_find_node_by_path("/testcase-data/changeset/node-remove");
+ 	selftest(nremove, "testcase setup failure\n");
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
