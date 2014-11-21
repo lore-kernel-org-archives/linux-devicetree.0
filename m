@@ -1,95 +1,78 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: [PATCH v3 2/2] ARM: dts: AM43xx: add tscadc DT entries for am437x-evm and am43x-epos-evm
-Date: Fri, 21 Nov 2014 15:44:22 +0530
-Message-ID: <1416564862-23056-3-git-send-email-vigneshr@ti.com>
-References: <1416564862-23056-1-git-send-email-vigneshr@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 3/7] regulator: MT6397: Add support for MT6397 regulator
+Date: Fri, 21 Nov 2014 10:16:15 +0000
+Message-ID: <20141121101615.GP3815@sirena.org.uk>
+References: <1416210027-5562-1-git-send-email-flora.fu@mediatek.com>
+ <1416210027-5562-4-git-send-email-flora.fu@mediatek.com>
+ <20141117234012.GE22111@sirena.org.uk>
+ <1416553771.19764.51.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="411OKKGJLVBgRQv/"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1416564862-23056-1-git-send-email-vigneshr@ti.com>
+Content-Disposition: inline
+In-Reply-To: <1416553771.19764.51.camel@mtksdaap41>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul@pwsan.com>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Vignesh R <vigneshr@ti.com>
+To: Flora Fu <flora.fu@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, Dongdong Cheng <dongdong.cheng@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds tscadc DT entries for am437x-gp-evm
-and am43x-epos-evm.
 
-Signed-off-by: Vignesh R <vigneshr@ti.com>
----
- arch/arm/boot/dts/am4372.dtsi        | 20 ++++++++++++++++++++
- arch/arm/boot/dts/am437x-gp-evm.dts  |  8 ++++++++
- arch/arm/boot/dts/am43x-epos-evm.dts |  8 ++++++++
- 3 files changed, 36 insertions(+)
+--411OKKGJLVBgRQv/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index 46660ffd2b65..cb73e5eb6971 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -667,6 +667,26 @@
- 			};
- 		};
- 
-+		tscadc: tscadc@44e0d000 {
-+			compatible = "ti,am3359-tscadc";
-+			reg = <0x44e0d000 0x1000>;
-+			ti,hwmods = "adc_tsc";
-+			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&adc_tsc_fck>;
-+			clock-names = "fck";
-+			status = "disabled";
-+
-+			tsc {
-+				compatible = "ti,am3359-tsc";
-+			};
-+
-+			adc {
-+				#io-channel-cells = <1>;
-+				compatible = "ti,am3359-adc";
-+			};
-+
-+		};
-+
- 		sham: sham@53100000 {
- 			compatible = "ti,omap5-sham";
- 			ti,hwmods = "sham";
-diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
-index a521ac0a7d5a..7553bb7b2ca9 100644
---- a/arch/arm/boot/dts/am437x-gp-evm.dts
-+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-@@ -343,6 +343,14 @@
- 	status = "okay";
- };
- 
-+&tscadc {
-+	status = "okay";
-+
-+	adc {
-+		ti,adc-channels = <0 1 2 3 4 5 6 7>;
-+	};
-+};
-+
- &ecap0 {
- 	status = "okay";
- 	pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
-index f7e9bba10bd6..2ac693fd51da 100644
---- a/arch/arm/boot/dts/am43x-epos-evm.dts
-+++ b/arch/arm/boot/dts/am43x-epos-evm.dts
-@@ -519,6 +519,14 @@
- 	status = "okay";
- };
- 
-+&tscadc {
-+	status = "okay";
-+
-+	adc {
-+		ti,adc-channels = <0 1 2 3 4 5 6 7>;
-+	};
-+};
-+
- &ecap0 {
- 		status = "okay";
- 		pinctrl-names = "default";
--- 
-1.9.1
+On Fri, Nov 21, 2014 at 03:09:31PM +0800, Flora Fu wrote:
+> On Mon, 2014-11-17 at 23:40 +0000, Mark Brown wrote:
+
+> > > +	vosel =3D info->buck_conf.vosel_reg;
+> > > +	voselon =3D info->buck_conf.voselon_reg;
+> > > +	vosel_mask =3D info->buck_conf.vosel_mask;
+
+> > Please use the standard way of specifying data even if you can't use the
+> > standard function.
+
+> Could you specify the standard way of specification data? Thanks.=20
+
+Using the fields in the regulator_desc as you can see from the standard
+helpers.
+
+> > You should add comments here explaining what's going on - it's very
+> > strange to have to write the same value to two different registers and
+> > the names of the registers look suspiciously like this is something to =
+do
+> > with a suspend mode...
+
+> Yes, its is for suspend mode control usage.
+> For registers "vosel", "voselon", they is called register mode or
+> hardware control mode voltage settings. Register mode is a default mode
+> on the buck control. For quickly normal/sleep mode switch, hardware
+> control can be enabled by controlling buck output by a CTRL_PIN. In the
+> following diagram, there is a static settings on vosel_sleep for suspend
+> mode output. According to CTRL_PIN's level, Vout can have different
+> output (voselon or vosel_sleep).=20
+
+You need to represent this in your driver, the sleep mode controls
+should either be controlled using the suspend API or the GPIO control
+needs to be visible in the driver.  It's also OK to ignore the GPIO
+control for now and do it later if complex work is needed to represent
+it in the driver.
+
+--411OKKGJLVBgRQv/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUbxDrAAoJECTWi3JdVIfQxsYH/1EnydozK7WoOzEDmaoQOiXM
+3eLi6VTJhJqsnacl2Xr49kJGix/67XXR1Q1Txf/yr2Soxuom4QflD3oRUY+CHnmQ
+uqxJq8FDoABYH9kn+6OZ6mlozp7H6w0+38drF/ABUryVlfw3Pb8XteOXM3lPz0EU
+hhdfeLlokvP0qEIk1VXLO63Wf7hTUWjjKgX5PkVY4cSxQyVDFTGa159MM7l5hjcu
+zOFeBLxLs9VKElXECw9gumx6Xw2yuIygzsCluKjBbkir7kk/uLLkDMdoZXjSnjyO
+UGe4EvtKS5DyzftLxOEX+vkLZGm6X7ITy1jSd+xIy1C1Bwrwozwg1WPjXmLBVhU=
+=8buq
+-----END PGP SIGNATURE-----
+
+--411OKKGJLVBgRQv/--
