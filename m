@@ -1,58 +1,119 @@
 From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCHv3 01/16] Documentation: dt-bindings: minimal documentation for MVEBU SDRAM controller
-Date: Fri, 21 Nov 2014 16:59:58 +0100
-Message-ID: <1416585613-2113-2-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCHv3 03/16] irqchip: irq-armada-370-xp: suspend/resume support
+Date: Fri, 21 Nov 2014 17:00:00 +0100
+Message-ID: <1416585613-2113-4-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1416585613-2113-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1416585613-2113-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The suspend/resume code for Armada XP has to modify certain registers
-of the SDRAM controller. Therefore, we need to define a Device Tree
-binding for this hardware block.
+This commit adds suspend/resume support to the irqchip driver used on
+Armada XP platforms (amongst others). It does so by adding a set of
+suspend/resume syscore_ops, that will respectively save and restore
+the necessary registers to ensure interrupts continue to work after
+resume.
+
+It is worth mentioning that the affinity is lost during a
+suspend/resume cycle, because when a secondary CPU is brought
+off-line, all interrupts that are assigned to this CPU in terms of
+affinity gets re-assigned to a still running CPU. Therefore, right
+before entering suspend, all interrupts are assigned to the boot CPU.
 
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Reviewed-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
- .../memory-controllers/mvebu-sdram-controller.txt   | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/memory-controllers/mvebu-sdram-controller.txt
+ drivers/irqchip/irq-armada-370-xp.c | 52 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/mvebu-sdram-controller.txt b/Documentation/devicetree/bindings/memory-controllers/mvebu-sdram-controller.txt
-new file mode 100644
-index 0000000..89657d1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/memory-controllers/mvebu-sdram-controller.txt
-@@ -0,0 +1,21 @@
-+Device Tree bindings for MVEBU SDRAM controllers
+diff --git a/drivers/irqchip/irq-armada-370-xp.c b/drivers/irqchip/irq-armada-370-xp.c
+index 3e238cd..4ec137b 100644
+--- a/drivers/irqchip/irq-armada-370-xp.c
++++ b/drivers/irqchip/irq-armada-370-xp.c
+@@ -26,6 +26,7 @@
+ #include <linux/of_pci.h>
+ #include <linux/irqdomain.h>
+ #include <linux/slab.h>
++#include <linux/syscore_ops.h>
+ #include <linux/msi.h>
+ #include <asm/mach/arch.h>
+ #include <asm/exception.h>
+@@ -66,6 +67,7 @@
+ static void __iomem *per_cpu_int_base;
+ static void __iomem *main_int_base;
+ static struct irq_domain *armada_370_xp_mpic_domain;
++static u32 doorbell_mask_reg;
+ #ifdef CONFIG_PCI_MSI
+ static struct irq_domain *armada_370_xp_msi_domain;
+ static DECLARE_BITMAP(msi_used, PCI_MSI_DOORBELL_NR);
+@@ -474,6 +476,54 @@ armada_370_xp_handle_irq(struct pt_regs *regs)
+ 	} while (1);
+ }
+ 
++static int armada_370_xp_mpic_suspend(void)
++{
++	doorbell_mask_reg = readl(per_cpu_int_base +
++				  ARMADA_370_XP_IN_DRBEL_MSK_OFFS);
++	return 0;
++}
 +
-+The Marvell EBU SoCs all have a SDRAM controller. The SDRAM controller
-+differs from one SoC variant to another, but they also share a number
-+of commonalities.
++static void armada_370_xp_mpic_resume(void)
++{
++	int nirqs;
++	irq_hw_number_t irq;
 +
-+For now, this Device Tree binding documentation only documents the
-+Armada XP SDRAM controller.
++	/* Re-enable interrupts */
++	nirqs = (readl(main_int_base + ARMADA_370_XP_INT_CONTROL) >> 2) & 0x3ff;
++	for (irq = 0; irq < nirqs; irq++) {
++		struct irq_data *data;
++		int virq;
 +
-+Required properties:
++		virq = irq_linear_revmap(armada_370_xp_mpic_domain, irq);
++		if (virq == 0)
++			continue;
 +
-+ - compatible: for Armada XP, "marvell,armada-xp-sdram-controller"
-+ - reg: a resource specifier for the register space, which should
-+   include all SDRAM controller registers as per the datasheet.
++		if (irq != ARMADA_370_XP_TIMER0_PER_CPU_IRQ)
++			writel(irq, per_cpu_int_base +
++			       ARMADA_370_XP_INT_CLEAR_MASK_OFFS);
++		else
++			writel(irq, main_int_base +
++			       ARMADA_370_XP_INT_SET_ENABLE_OFFS);
 +
-+Example:
++		data = irq_get_irq_data(virq);
++		if (!irqd_irq_disabled(data))
++			armada_370_xp_irq_unmask(data);
++	}
 +
-+sdramc@1400 {
-+	compatible = "marvell,armada-xp-sdram-controller";
-+	reg = <0x1400 0x500>;
++	/* Reconfigure doorbells for IPIs and MSIs */
++	writel(doorbell_mask_reg,
++	       per_cpu_int_base + ARMADA_370_XP_IN_DRBEL_MSK_OFFS);
++	if (doorbell_mask_reg & IPI_DOORBELL_MASK)
++		writel(0, per_cpu_int_base + ARMADA_370_XP_INT_CLEAR_MASK_OFFS);
++	if (doorbell_mask_reg & PCI_MSI_DOORBELL_MASK)
++		writel(1, per_cpu_int_base + ARMADA_370_XP_INT_CLEAR_MASK_OFFS);
++}
++
++struct syscore_ops armada_370_xp_mpic_syscore_ops = {
++	.suspend	= armada_370_xp_mpic_suspend,
++	.resume		= armada_370_xp_mpic_resume,
 +};
++
+ static int __init armada_370_xp_mpic_of_init(struct device_node *node,
+ 					     struct device_node *parent)
+ {
+@@ -530,6 +580,8 @@ static int __init armada_370_xp_mpic_of_init(struct device_node *node,
+ 					armada_370_xp_mpic_handle_cascade_irq);
+ 	}
+ 
++	register_syscore_ops(&armada_370_xp_mpic_syscore_ops);
++
+ 	return 0;
+ }
+ 
 -- 
 2.1.0
 
