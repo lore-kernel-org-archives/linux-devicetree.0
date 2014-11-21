@@ -1,14 +1,16 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/9] clk: sunxi: Give sunxi_factors_register
- a registers parameter
-Date: Fri, 21 Nov 2014 09:44:51 +0100
-Message-ID: <546EFB83.1020806@redhat.com>
-References: <1416498928-1300-1-git-send-email-hdegoede@redhat.com> <1416498928-1300-2-git-send-email-hdegoede@redhat.com> <20141121083555.GK24143@lukather>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/9] clk: sunxi: Add prcm mod0 clock driver
+Date: Fri, 21 Nov 2014 09:49:33 +0100
+Message-ID: <20141121084933.GL24143@lukather>
+References: <1416498928-1300-1-git-send-email-hdegoede@redhat.com>
+ <1416498928-1300-4-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBDHXXORQKGQENTP2FYA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20141121083555.GK24143@lukather>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="WkHPBKJ2pKcVUM5H"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBO7ZXORQKGQECNEARMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1416498928-1300-4-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -16,113 +18,142 @@ Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+--WkHPBKJ2pKcVUM5H
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
 Hi,
 
-On 11/21/2014 09:35 AM, Maxime Ripard wrote:
-> Hi Hans,
+On Thu, Nov 20, 2014 at 04:55:22PM +0100, Hans de Goede wrote:
+> Add a driver for mod0 clocks found in the prcm. Currently there is only
+> one mod0 clocks in the prcm, the ir clock.
 > 
-> On Thu, Nov 20, 2014 at 04:55:20PM +0100, Hans de Goede wrote:
->> Before this commit sunxi_factors_register uses of_iomap(node, 0) to get
->> the clk registers. The sun6i prcm has factor clocks, for which we want to
->> use sunxi_factors_register, but of_iomap(node, 0) does not work for the prcm
->> factor clocks, because the prcm uses the mfd framework, so the registers
->> are not part of the dt-node, instead they are added to the platform_device,
->> as platform_device resources.
->>
->> This commit makes getting the registers the callers duty, so that
->> sunxi_factors_register can be used with mfd instantiated platform device too.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
+>  drivers/clk/sunxi/Makefile                        |  2 +-
+>  drivers/clk/sunxi/clk-sun6i-prcm-mod0.c           | 63 +++++++++++++++++++++++
+>  drivers/mfd/sun6i-prcm.c                          | 14 +++++
+>  4 files changed, 79 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/clk/sunxi/clk-sun6i-prcm-mod0.c
 > 
-> Funny, I was thinking of doing exactly the same thing for MMC clocks :)
-> 
->> ---
->>  drivers/clk/sunxi/clk-factors.c    | 10 ++++------
->>  drivers/clk/sunxi/clk-factors.h    |  7 ++++---
->>  drivers/clk/sunxi/clk-mod0.c       |  6 ++++--
->>  drivers/clk/sunxi/clk-sun8i-mbus.c |  2 +-
->>  drivers/clk/sunxi/clk-sunxi.c      |  3 ++-
->>  5 files changed, 15 insertions(+), 13 deletions(-)
->>
->> diff --git a/drivers/clk/sunxi/clk-factors.c b/drivers/clk/sunxi/clk-factors.c
->> index f83ba09..fc4f4b5 100644
->> --- a/drivers/clk/sunxi/clk-factors.c
->> +++ b/drivers/clk/sunxi/clk-factors.c
->> @@ -156,9 +156,10 @@ static const struct clk_ops clk_factors_ops = {
->>  	.set_rate = clk_factors_set_rate,
->>  };
->>  
->> -struct clk * __init sunxi_factors_register(struct device_node *node,
->> -					   const struct factors_data *data,
->> -					   spinlock_t *lock)
->> +struct clk *sunxi_factors_register(struct device_node *node,
->> +				   const struct factors_data *data,
->> +				   spinlock_t *lock,
->> +				   void __iomem *reg)
->>  {
->>  	struct clk *clk;
->>  	struct clk_factors *factors;
->> @@ -168,11 +169,8 @@ struct clk * __init sunxi_factors_register(struct device_node *node,
->>  	struct clk_hw *mux_hw = NULL;
->>  	const char *clk_name = node->name;
->>  	const char *parents[FACTORS_MAX_PARENTS];
->> -	void __iomem *reg;
->>  	int i = 0;
->>  
->> -	reg = of_iomap(node, 0);
->> -
->>  	/* if we have a mux, we will have >1 parents */
->>  	while (i < FACTORS_MAX_PARENTS &&
->>  	       (parents[i] = of_clk_get_parent_name(node, i)) != NULL)
->> diff --git a/drivers/clk/sunxi/clk-factors.h b/drivers/clk/sunxi/clk-factors.h
->> index 9913840..1f5526d 100644
->> --- a/drivers/clk/sunxi/clk-factors.h
->> +++ b/drivers/clk/sunxi/clk-factors.h
->> @@ -37,8 +37,9 @@ struct clk_factors {
->>  	spinlock_t *lock;
->>  };
->>  
->> -struct clk * __init sunxi_factors_register(struct device_node *node,
->> -					   const struct factors_data *data,
->> -					   spinlock_t *lock);
->> +struct clk *sunxi_factors_register(struct device_node *node,
->> +				   const struct factors_data *data,
->> +				   spinlock_t *lock,
->> +				   void __iomem *reg);
-> 
-> Why are you dropping the __init there?
+> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+> index ed116df..342c75a 100644
+> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
+> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+> @@ -56,6 +56,7 @@ Required properties:
+>  	"allwinner,sun4i-a10-usb-clk" - for usb gates + resets on A10 / A20
+>  	"allwinner,sun5i-a13-usb-clk" - for usb gates + resets on A13
+>  	"allwinner,sun6i-a31-usb-clk" - for usb gates + resets on A31
+> +	"allwinner,sun6i-a31-ir-clk" - for the ir clock on A31
+>  
+>  Required properties for all clocks:
+>  - reg : shall be the control register address for the clock.
+> diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
+> index 7ddc2b5..daf8b1c 100644
+> --- a/drivers/clk/sunxi/Makefile
+> +++ b/drivers/clk/sunxi/Makefile
+> @@ -10,4 +10,4 @@ obj-y += clk-sun8i-mbus.o
+>  
+>  obj-$(CONFIG_MFD_SUN6I_PRCM) += \
+>  	clk-sun6i-ar100.o clk-sun6i-apb0.o clk-sun6i-apb0-gates.o \
+> -	clk-sun8i-apb0.o
+> +	clk-sun8i-apb0.o clk-sun6i-prcm-mod0.o
+> diff --git a/drivers/clk/sunxi/clk-sun6i-prcm-mod0.c b/drivers/clk/sunxi/clk-sun6i-prcm-mod0.c
+> new file mode 100644
+> index 0000000..e80f18e
+> --- /dev/null
+> +++ b/drivers/clk/sunxi/clk-sun6i-prcm-mod0.c
+> @@ -0,0 +1,63 @@
+> +/*
+> + * Allwinner A31 PRCM mod0 clock driver
+> + *
+> + * Copyright (C) 2014 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/clkdev.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include "clk-factors.h"
+> +#include "clk-mod0.h"
+> +
+> +static const struct of_device_id sun6i_a31_prcm_mod0_clk_dt_ids[] = {
+> +	{ .compatible = "allwinner,sun6i-a31-ir-clk" },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +static DEFINE_SPINLOCK(sun6i_prcm_mod0_lock);
+> +
+> +static int sun6i_a31_prcm_mod0_clk_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct resource *r;
+> +	void __iomem *reg;
+> +
+> +	if (!np)
+> +		return -ENODEV;
+> +
+> +	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	reg = devm_ioremap_resource(&pdev->dev, r);
+> +	if (IS_ERR(reg))
+> +		return PTR_ERR(reg);
+> +
+> +	sunxi_factors_register(np, &sun4i_a10_mod0_data,
+> +			       &sun6i_prcm_mod0_lock, reg);
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver sun6i_a31_prcm_mod0_clk_driver = {
+> +	.driver = {
+> +		.name = "sun6i-a31-prcm-mod0-clk",
+> +		.of_match_table = sun6i_a31_prcm_mod0_clk_dt_ids,
+> +	},
+> +	.probe = sun6i_a31_prcm_mod0_clk_probe,
+> +};
+> +module_platform_driver(sun6i_a31_prcm_mod0_clk_driver);
+> +
+> +MODULE_DESCRIPTION("Allwinner A31 PRCM mod0 clock driver");
+> +MODULE_AUTHOR("Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>");
+> +MODULE_LICENSE("GPL");
 
-Because it is going to be used from mfd instantiation, so from a platform_dev
-probe function which is not __init.
+I don't think this is the right approach, mainly for two reasons: the
+compatible shouldn't change, and you're basically duplicating code
+there.
 
-> 
->>  
->>  #endif
->> diff --git a/drivers/clk/sunxi/clk-mod0.c b/drivers/clk/sunxi/clk-mod0.c
->> index 4a56385..9530833 100644
->> --- a/drivers/clk/sunxi/clk-mod0.c
->> +++ b/drivers/clk/sunxi/clk-mod0.c
->> @@ -78,7 +78,8 @@ static DEFINE_SPINLOCK(sun4i_a10_mod0_lock);
->>  
->>  static void __init sun4i_a10_mod0_setup(struct device_node *node)
->>  {
->> -	sunxi_factors_register(node, &sun4i_a10_mod0_data, &sun4i_a10_mod0_lock);
->> +	sunxi_factors_register(node, &sun4i_a10_mod0_data,
->> +			       &sun4i_a10_mod0_lock, of_iomap(node, 0));
-> 
-> As of_iomap can fail, I'd rather check the returned value before
-> calling sunxi_factors_register.
-> 
-> I know it wasn't done before, but it's the right thing to do, as it
-> would lead to an instant crash if that fails.
+I understand that you need the new compatible in order to avoid a
+double probing: one by CLK_OF_DECLARE, and one by the usual mechanism,
+and that also implies the second reason.
 
-Ok, I'll wait for you to review the rest of the series and then do a v2 of the
-patch-set with this fixed (as time permits).
+However, as those are not critical clocks that need to be here early
+at boot, you can also fix this by turning the mod0 driver into a
+platform driver itself. The compatible will be kept, the driver will
+be the same.
 
-Regards,
+The only thing we need to pay attention to is how "client" drivers
+react when they cannot grab their clock. They should return
+-EPROBE_DEFER, but that remains to be checked.
 
-Hans
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--WkHPBKJ2pKcVUM5H--
