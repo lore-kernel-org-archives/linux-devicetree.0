@@ -1,44 +1,65 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: [PATCH] Revert "mfd: tps65910: Convert ti,system-power-controller DT property to poweroff-source"
-Date: Fri, 21 Nov 2014 12:00:16 +0100
-Message-ID: <1416567616-10582-1-git-send-email-johan@kernel.org>
-References: <20141121105951.GA20679@localhost>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20141121105951.GA20679@localhost>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, heiko@sntech.de, grant.likely@linaro.org, robh@kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balbi@ti.com, Romain Perier <romain.perier@gmail.com>, Johan Hovold <johan@kernel.org>
+From: Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
+Subject: [PATCH] ARM: dts: rockchip: enable I2C0, SPI and SARADC on Radxa Rock
+Date: Fri, 21 Nov 2014 11:57:16 +0100
+Message-ID: <1416567436-26706-1-git-send-email-julien.chauveau@neo-technologies.fr>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "moderated list:ARM/Rockchip
+	SoC..." <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
 List-Id: devicetree@vger.kernel.org
 
-This reverts commit 25f833c1171d ("mfd: tps65910: Convert
-ti,system-power-controller DT property to poweroff-source"), which
-switched to a new device-tree property name for configuring the device
-as a power-off controller, but failed to update the affected device-tree
-sources and neither provided backward compatibility with the old
-property name.
+This enables user space access to the I2C0 bus, SPI0 bus, SPI1 bus
+and the 3 Analog-to-digital inputs available on the Radxa Rock headers.
 
-This fixes broken power-off functionality for all boards relying on
-tps65910 to power off the system.
+We have to disable UART1 because SPI0 and UART1 are multiplexed together.
 
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
 ---
- drivers/mfd/tps65910.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/rk3188-radxarock.dts | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/mfd/tps65910.c b/drivers/mfd/tps65910.c
-index b8dca8a0db41..7612d89850dd 100644
---- a/drivers/mfd/tps65910.c
-+++ b/drivers/mfd/tps65910.c
-@@ -423,7 +423,8 @@ static struct tps65910_board *tps65910_parse_dt(struct i2c_client *client,
+diff --git a/arch/arm/boot/dts/rk3188-radxarock.dts b/arch/arm/boot/dts/rk3188-radxarock.dts
+index 6eb62c0..06b2256 100644
+--- a/arch/arm/boot/dts/rk3188-radxarock.dts
++++ b/arch/arm/boot/dts/rk3188-radxarock.dts
+@@ -122,6 +122,10 @@
+ 	cpu0-supply = <&vdd_arm>;
+ };
  
- 	board_info->irq = client->irq;
- 	board_info->irq_base = -1;
--	board_info->pm_off = of_system_has_poweroff_source(np);
-+	board_info->pm_off = of_property_read_bool(np,
-+			"ti,system-power-controller");
++&i2c0 {
++	status = "okay";
++};
++
+ &i2c1 {
+ 	status = "okay";
+ 	clock-frequency = <400000>;
+@@ -294,14 +298,22 @@
+ 	};
+ };
  
- 	return board_info;
- }
++&saradc {
++	status = "okay";
++};
++
++&spi0 {
++	status = "okay";
++};
++
++&spi1 {
++	status = "okay";
++};
++
+ &uart0 {
+ 	status = "okay";
+ };
+ 
+-&uart1 {
+-	status = "okay";
+-};
+-
+ &uart2 {
+ 	status = "okay";
+ };
 -- 
-2.0.4
-
+2.1.0
