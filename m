@@ -1,87 +1,83 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v1] usb: phy: nop: device tree documentation for vbus
-Date: Fri, 21 Nov 2014 12:03:00 -0600
-Message-ID: <20141121180300.GW7508@saruman>
-References: <1415538138-24434-1-git-send-email-robert.jarzmik@free.fr>
- <20141121154506.GG7508@saruman>
- <87r3ww5v7d.fsf@free.fr>
- <20141121172259.GU7508@saruman>
- <87ioi85tqc.fsf@free.fr>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Cf1qy2gtPj5yoBMh"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87ioi85tqc.fsf-GANU6spQydw@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: [PATCH v10 01/10] qom: scm: Move scm-boot files to drivers/soc/qcom/ and include/soc/qcom
+Date: Fri, 21 Nov 2014 11:03:48 -0700
+Message-ID: <1416593037-27527-2-git-send-email-lina.iyer@linaro.org>
+References: <1416593037-27527-1-git-send-email-lina.iyer@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1416593037-27527-1-git-send-email-lina.iyer@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org, Lina Iyer <lina.iyer@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
---Cf1qy2gtPj5yoBMh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Follow the scm.c and move scm-boot files to drivers/soc/qcom. The
+guidance is to clean files out from mach-qcom and move to drivers/soc
+area.
 
-On Fri, Nov 21, 2014 at 06:49:47PM +0100, Robert Jarzmik wrote:
-> Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> writes:
->=20
-> > On Fri, Nov 21, 2014 at 06:17:58PM +0100, Robert Jarzmik wrote:
-> >> Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> writes:
-> >>=20
-> >> > On Sun, Nov 09, 2014 at 02:02:18PM +0100, Robert Jarzmik wrote:
-> >> >>  	hsusb1_phy {
-> >> >> @@ -26,8 +31,11 @@ Example:
-> >> >>  		clock-names =3D "main_clk";
-> >> >>  		vcc-supply =3D <&hsusb1_vcc_regulator>;
-> >> >>  		reset-gpios =3D <&gpio1 7 GPIO_ACTIVE_LOW>;
-> >> >> +		vbus-gpios =3D <&gpio2 13 GPIO_ACTIVE_HIGH>;
-> >> >> +		vbus-regulator =3D <&vbus_regulator>;
-> >> >
-> >> > not sure why you need vbus-gpios here. You can pass the gpio to the
-> >> > regulator as enable-gpio, right ?
-> >>=20
-> >> Euh no. From my understanding a regulator enable-gpio is an _output_ g=
-pio
-> >> enabling the regulator. This vbus-gpio is an _input_ gpio detecting th=
-e vbus
-> >> assertion. Maybe a name like "vbus-detect-gpio" would be more accurant=
-e ?
-> >
-> > aha, that clears it up, yeah. So the GPIO is detecting if we have VBUS
-> > from the host side while the regulator supplies VBUS ?
-> Yup, exactly. I'll amend the name for v2.
+Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+---
+ arch/arm/mach-qcom/Makefile                         | 1 -
+ arch/arm/mach-qcom/platsmp.c                        | 2 +-
+ drivers/soc/qcom/Makefile                           | 2 +-
+ {arch/arm/mach-qcom => drivers/soc/qcom}/scm-boot.c | 4 ++--
+ {arch/arm/mach-qcom => include/soc/qcom}/scm-boot.h | 0
+ 5 files changed, 4 insertions(+), 5 deletions(-)
+ rename {arch/arm/mach-qcom => drivers/soc/qcom}/scm-boot.c (97%)
+ rename {arch/arm/mach-qcom => include/soc/qcom}/scm-boot.h (100%)
 
-Thank you
+diff --git a/arch/arm/mach-qcom/Makefile b/arch/arm/mach-qcom/Makefile
+index db41e8c..e324375 100644
+--- a/arch/arm/mach-qcom/Makefile
++++ b/arch/arm/mach-qcom/Makefile
+@@ -1,3 +1,2 @@
+ obj-y			:= board.o
+ obj-$(CONFIG_SMP)	+= platsmp.o
+-obj-$(CONFIG_QCOM_SCM)	+= scm-boot.o
+diff --git a/arch/arm/mach-qcom/platsmp.c b/arch/arm/mach-qcom/platsmp.c
+index d690856..a692bcb 100644
+--- a/arch/arm/mach-qcom/platsmp.c
++++ b/arch/arm/mach-qcom/platsmp.c
+@@ -20,7 +20,7 @@
+ 
+ #include <asm/smp_plat.h>
+ 
+-#include "scm-boot.h"
++#include <soc/qcom/scm-boot.h>
+ 
+ #define VDD_SC1_ARRAY_CLAMP_GFS_CTL	0x35a0
+ #define SCSS_CPU1CORE_RESET		0x2d80
+diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
+index a39446d..70d52ed 100644
+--- a/drivers/soc/qcom/Makefile
++++ b/drivers/soc/qcom/Makefile
+@@ -1,3 +1,3 @@
+ obj-$(CONFIG_QCOM_GSBI)	+=	qcom_gsbi.o
+ CFLAGS_scm.o :=$(call as-instr,.arch_extension sec,-DREQUIRES_SEC=1)
+-obj-$(CONFIG_QCOM_SCM) += scm.o
++obj-$(CONFIG_QCOM_SCM) += scm.o scm-boot.o
+diff --git a/arch/arm/mach-qcom/scm-boot.c b/drivers/soc/qcom/scm-boot.c
+similarity index 97%
+rename from arch/arm/mach-qcom/scm-boot.c
+rename to drivers/soc/qcom/scm-boot.c
+index 5add20e..60ff7b4 100644
+--- a/arch/arm/mach-qcom/scm-boot.c
++++ b/drivers/soc/qcom/scm-boot.c
+@@ -17,9 +17,9 @@
+ 
+ #include <linux/module.h>
+ #include <linux/slab.h>
+-#include <soc/qcom/scm.h>
+ 
+-#include "scm-boot.h"
++#include <soc/qcom/scm.h>
++#include <soc/qcom/scm-boot.h>
+ 
+ /*
+  * Set the cold/warm boot address for one of the CPU cores.
+diff --git a/arch/arm/mach-qcom/scm-boot.h b/include/soc/qcom/scm-boot.h
+similarity index 100%
+rename from arch/arm/mach-qcom/scm-boot.h
+rename to include/soc/qcom/scm-boot.h
+-- 
+2.1.0
 
---=20
-balbi
-
---Cf1qy2gtPj5yoBMh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUb35UAAoJEIaOsuA1yqREKKwP/3pk5QiAYWGipDpErE70QiYj
-zdvbcML0Vc2fI2rgtIOYHIuiuAPJeQ/iSNPmZX95Qru8IQXXi7KDAWXb/2vSE3m9
-rrQcQyqCmhM1rPKW/dO7HGepQUGy5Dj40BPQIewe/trg7A63OHF1u/f+nyEnB2tY
-1m/zKCFdO/+snTrZPPCazgS7LlGQfP4V6cwWDarxj5+/q8cFEOgmaOaSbgHiV1Lz
-tdVRifugvJetdP87r1nSLfcSkxM1GfNKJta0JEXY03TSkw3iMrO1frlKc02UCS/l
-pv+I7MaX8/cQnFYh8iL+buaavHuStMc5VN3fU1T69fpHV0H1LjqTenyVCBSLSlPP
-/+64ErnSfMKV+44utc0VP4WyObAq0siVG4qAWhpz1rzyhJx4shNDQ2ejOt5PNZj/
-wrUnuxGrm575WH5M/HnTKYvEjJE6p6asVoaey9DELq/z1EwR6IV7L0yEoMg/VKbD
-sNUtYbE2I8lQFp+dJwu9XIHGQFAnfwVTARmEuz0UX2MWzATBFRV23Y+VbjgbPux8
-JyN1bxW6+zxxDJQdGO8331oo/5YCjljUdJvbBzLu3aHa0hAFSt1vE5pexjEe2Gkj
-ffZEVTf3QFfa/27qeMD+wUYYRrEFMmzhpUuc5K8hVhP8sUw5P9Z3aXjjusxRRjOK
-qv/DHc3e+YAGNy+IFYhC
-=YD70
------END PGP SIGNATURE-----
-
---Cf1qy2gtPj5yoBMh--
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
