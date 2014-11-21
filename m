@@ -1,71 +1,61 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCHv2 08/16] clk: mvebu: add suspend/resume for gatable
- clocks
-Date: Fri, 21 Nov 2014 09:59:54 +0100
-Message-ID: <20141121095954.5f708f54@free-electrons.com>
-References: <1415978496-9334-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1415978496-9334-9-git-send-email-thomas.petazzoni@free-electrons.com>
-	<20141117224604.25314.96198@quantum>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] ARM: keystone: pm: switch to use generic pm domains
+Date: Fri, 21 Nov 2014 10:04:47 +0100
+Message-ID: <CAMuHMdWLU7seisSE3bgDFi4-0qKpyLHJfZ1GO37ZUMVFwNV9gg@mail.gmail.com>
+References: <1415631557-22897-1-git-send-email-grygorii.strashko@ti.com>
+	<1709760.E0jX3Myv0h@wuerfel>
+	<546C7FDD.7030906@ti.com>
+	<2900095.WIocOu7ue2@wuerfel>
+	<CAPDyKFqeZ3YU2OEN4tCOdcQ0pAho67Q8U_eCEOroG9aS0mp+-Q@mail.gmail.com>
+	<546DD87B.3080806@ti.com>
+	<CAPDyKFrBhZyqozM98_4pPdW0EMFt5W6VX1X7cz6Z=yNhW4vYTA@mail.gmail.com>
+	<CAMuHMdWtHT7QX3Kpa-GCLa49ToGODwjnNVgfxDzJzcM-FU1ffg@mail.gmail.com>
+	<546E0970.5090301@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141117224604.25314.96198@quantum>
+In-Reply-To: <546E0970.5090301-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Mike Turquette,
+On Thu, Nov 20, 2014 at 4:32 PM, Grygorii Strashko
+<grygorii.strashko-l0cyMroinI0@public.gmane.org> wrote:
+>> That's indeed the tricky part.
+>>
+>> On shmobile, we just use the "NULL" clock, i.e. the first clock, for historical
+>> reasons.
+>>
+>> Using clock-names (e.g. "fck" and "pm") will conflict with existing bindings
+>> for devices that already mandate specific clock names.
+>>
+>> As the clock being a "PM" clock is a property of the clock provider
+>> (at last on shmobile), I originally came up with not handling it in DT,
+>> but advertising it in the clock provider driver:
+>>
+>>>> - first Geert Uytterhoeven proposed to use CLK_RUNTIME_PM there
+>>>>    https://lkml.org/lkml/2014/11/6/319
+>
+> As I mentioned previously I don't like it, because in many cases one driver is used for
+> all/set_of clocks which support gating function. As result, some sort of tables will
+> need to be created and maintained in code by these drivers per each SoC
+> (or even per each SoC revision) for identification that clock is "PM clock".
 
-On Mon, 17 Nov 2014 14:46:04 -0800, Mike Turquette wrote:
-> Quoting Thomas Petazzoni (2014-11-14 07:21:28)
-> > This commit adds suspend/resume support for the gatable clock driver
-> > used on Marvell EBU platforms. When getting out of suspend, the
-> > Marvell EBU platforms go through the bootloader, which re-enables all
-> > gatable clocks. However, upon resume, the clock framework will not
-> > disable again all gatable clocks that are not used.
-> > 
-> > Therefore, if the clock driver does not save/restore the state of the
-> > gatable clocks, all gatable clocks that are not claimed by any device
-> > driver will remain enabled after a resume. This is why this driver
-> > saves and restores the state of those clocks.
-> 
-> It might be a good idea to call clk_disable_unused() from the clk core
-> after resuming from suspend.
+That depends. On shmobile, there's a separate hardware module for those
+clocks, hence all clocks provided by drivers/clk/shmobile/clk-mstp.c are "PM"
+clocks.
 
-Yes, this might be an interesting clk core improvement.
+Gr{oetje,eeting}s,
 
-> > @@ -177,14 +178,18 @@ struct clk_gating_ctrl {
-> >         spinlock_t *lock;
-> >         struct clk **gates;
-> >         int num_gates;
-> > +       struct syscore_ops syscore_ops;
-> 
-> You are registering suspend/resume ops per clock. Have you considered
-> registering a single set of ops for your clock controller driver? See
-> drivers/clk/samsung/clk-exynos5420.c for an example.
-> 
-> Combined with a table of clocks registered by your driver, centralized
-> suspend/resume methods might be a cleaner solution.
+                        Geert
 
-Ok, I've changed. To be honest, I don't think it makes much change: if
-we had two instances of a gatable clock controller, then we would have
-two calls to mvebu_clk_gating_setup(), which would register twice the
-same syscore_ops. But we were anyway already assuming that we have
-already one instance of a gatable clock controller, since the
-syscore_ops operation implementation already used a global pointer to
-the gatable clock controller.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-Will be part of the upcoming v3.
-
-Thanks for the review!
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
