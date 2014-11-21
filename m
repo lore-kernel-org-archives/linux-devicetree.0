@@ -1,58 +1,87 @@
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/9] clk: Add clock driver for mb86s7x
-Date: Fri, 21 Nov 2014 23:28:38 +0530
-Message-ID: <CAJe_Zhc2UePxy-Y2LsU1Pn18OOknDKZw-8rjJ06DEWOhvs6CMw@mail.gmail.com>
-References: <1416486442-25200-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
-	<2147877.AXJukoovHQ@wuerfel>
-	<CAJe_Zhdg0tRx1SiACpCci3B2XaCxECGvkE7D=fne6vch4Bhk-w@mail.gmail.com>
-	<5451217.D7Cssxh5Uh@wuerfel>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v1] usb: phy: nop: device tree documentation for vbus
+Date: Fri, 21 Nov 2014 12:03:00 -0600
+Message-ID: <20141121180300.GW7508@saruman>
+References: <1415538138-24434-1-git-send-email-robert.jarzmik@free.fr>
+ <20141121154506.GG7508@saruman>
+ <87r3ww5v7d.fsf@free.fr>
+ <20141121172259.GU7508@saruman>
+ <87ioi85tqc.fsf@free.fr>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5451217.D7Cssxh5Uh@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Cf1qy2gtPj5yoBMh"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <87ioi85tqc.fsf-GANU6spQydw@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 21 November 2014 22:45, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Friday 21 November 2014 22:06:51 Jassi Brar wrote:
+--Cf1qy2gtPj5yoBMh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> >> Only MB86S70_CRG11_UNGPRT is marked to mean one special (non-maskable)
->> >> port on the controller, which the clock driver does make use of.
->> >
->> > Is this the actual port number that is known to be non-maskable?
->> >
->> Yes the clock comes out of the controller and is also the parent of
->> other 8 independently maskable clock ports of the domain.
->
-> I'm getting confused by the terminology here. Is MB86S70_CRG11_ALW
-> a port or a controller?
->
-Sorry, bad symbols. ALW..DPHY are controllers. UNGPRT is the ninth
-parent clock (port) of a domain that can't be masked.
-FYKI, there are 6 instances, of some CRG11 clock controller, under
-control of the remote f/w. The Mailbox protocol between remote f/w and
-Linux assigned indices [0-5] to these controllers.
+On Fri, Nov 21, 2014 at 06:49:47PM +0100, Robert Jarzmik wrote:
+> Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> writes:
+>=20
+> > On Fri, Nov 21, 2014 at 06:17:58PM +0100, Robert Jarzmik wrote:
+> >> Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> writes:
+> >>=20
+> >> > On Sun, Nov 09, 2014 at 02:02:18PM +0100, Robert Jarzmik wrote:
+> >> >>  	hsusb1_phy {
+> >> >> @@ -26,8 +31,11 @@ Example:
+> >> >>  		clock-names =3D "main_clk";
+> >> >>  		vcc-supply =3D <&hsusb1_vcc_regulator>;
+> >> >>  		reset-gpios =3D <&gpio1 7 GPIO_ACTIVE_LOW>;
+> >> >> +		vbus-gpios =3D <&gpio2 13 GPIO_ACTIVE_HIGH>;
+> >> >> +		vbus-regulator =3D <&vbus_regulator>;
+> >> >
+> >> > not sure why you need vbus-gpios here. You can pass the gpio to the
+> >> > regulator as enable-gpio, right ?
+> >>=20
+> >> Euh no. From my understanding a regulator enable-gpio is an _output_ g=
+pio
+> >> enabling the regulator. This vbus-gpio is an _input_ gpio detecting th=
+e vbus
+> >> assertion. Maybe a name like "vbus-detect-gpio" would be more accurant=
+e ?
+> >
+> > aha, that clears it up, yeah. So the GPIO is detecting if we have VBUS
+> > from the host side while the regulator supplies VBUS ?
+> Yup, exactly. I'll amend the name for v2.
 
->>  The firmware on remote master, lets say, don't wanna be bothered by
->> the clock topology. Even for set-rate the onus is on Linux to request
->> only appropriate rates at appropriate times so that other devices are
->> not messed up.
->
-> Is there any code to validate that, or does Linux just treat all
-> clocks transparently?
->
-The remote does not expose the clock topology and only accepts
-requests on port-basis. The remote f/w is supposed to keep track of
-which ports are used by Linux and then work out inter-dependencies
-upon receiving a request from Linux. So for Linux there are N
-independent 'root' clocks, ops on which may or may not succeed at any
-given time.
+Thank you
 
-thanks
-jassi
+--=20
+balbi
+
+--Cf1qy2gtPj5yoBMh
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUb35UAAoJEIaOsuA1yqREKKwP/3pk5QiAYWGipDpErE70QiYj
+zdvbcML0Vc2fI2rgtIOYHIuiuAPJeQ/iSNPmZX95Qru8IQXXi7KDAWXb/2vSE3m9
+rrQcQyqCmhM1rPKW/dO7HGepQUGy5Dj40BPQIewe/trg7A63OHF1u/f+nyEnB2tY
+1m/zKCFdO/+snTrZPPCazgS7LlGQfP4V6cwWDarxj5+/q8cFEOgmaOaSbgHiV1Lz
+tdVRifugvJetdP87r1nSLfcSkxM1GfNKJta0JEXY03TSkw3iMrO1frlKc02UCS/l
+pv+I7MaX8/cQnFYh8iL+buaavHuStMc5VN3fU1T69fpHV0H1LjqTenyVCBSLSlPP
+/+64ErnSfMKV+44utc0VP4WyObAq0siVG4qAWhpz1rzyhJx4shNDQ2ejOt5PNZj/
+wrUnuxGrm575WH5M/HnTKYvEjJE6p6asVoaey9DELq/z1EwR6IV7L0yEoMg/VKbD
+sNUtYbE2I8lQFp+dJwu9XIHGQFAnfwVTARmEuz0UX2MWzATBFRV23Y+VbjgbPux8
+JyN1bxW6+zxxDJQdGO8331oo/5YCjljUdJvbBzLu3aHa0hAFSt1vE5pexjEe2Gkj
+ffZEVTf3QFfa/27qeMD+wUYYRrEFMmzhpUuc5K8hVhP8sUw5P9Z3aXjjusxRRjOK
+qv/DHc3e+YAGNy+IFYhC
+=YD70
+-----END PGP SIGNATURE-----
+
+--Cf1qy2gtPj5yoBMh--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
