@@ -1,86 +1,90 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] of: spi: Export single device registration method
- =?iso-8859-1?Q?and=0D?= accessors (v2)
-Date: Fri, 21 Nov 2014 15:33:29 +0000
-Message-ID: <20141121153329.C4DDDC40D85@trevor.secretlab.ca>
-References: <1414572037-11306-1-git-send-email-pantelis.antoniou@konsulko.com>
-	<20141029101420.GT18557@sirena.org.uk>
-	<6A3753C0-251A-4645-AD96-CB1D6521175F@antoniou-consulting.com>
-	<20141029122204.GG18557@sirena.org.uk>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH v7 2/4] ARM: mediatek: Add sysirq interrupt polarity
+ support
+Date: Fri, 21 Nov 2014 23:36:07 +0800
+Message-ID: <1416584167.24971.9.camel@mtksdaap41>
+References: <1416406451-4578-1-git-send-email-yingjoe.chen@mediatek.com>
+	 <1416406451-4578-3-git-send-email-yingjoe.chen@mediatek.com>
+	 <20141119180448.GD12851@leverpostej>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141029122204.GG18557-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Cc: Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel Becker <jlbec-aKy9MeLSZ9dg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-fy+rA21nqHI@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141119180448.GD12851@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jiang Liu <jiang.liu@linux.intel.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "hc.yen@mediatek.com" <hc.yen@mediatek.com>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, "yh.chen@mediatek.com" <yh.chen@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Yijing Wang <wangyijing@huawei.com>, Rob Herring <robh+dt@kernel.org>, "nathan.chung@mediatek.com" <nathan.chung@mediatek.com>, "yingjoe.chen@gmail.com" <yingjoe.chen@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, "eddie.huang@mediatek.com" <eddie.huang@mediatek.co>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 29 Oct 2014 12:22:04 +0000
-, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
- wrote:
-> On Wed, Oct 29, 2014 at 01:48:06PM +0200, Pantelis Antoniou wrote:
-> > > On Oct 29, 2014, at 12:14 , Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote=
-:
->=20
-> > > This feels like there is an abstraction problem somewhere, whatev=
-er code
-> > > is supposed to use this is going to need to be taught about each
-> > > individual bus which is going to be tedious, I would expect that =
-we'd
-> > > have something like the bus being able to provide a callback whic=
-h will
-> > > get invoked whenever a new node appears on the parent node for th=
-e bus.
->=20
-> > There=E2=80=99s a whole patchset that does exactly this.=20
-> > Look at "OF: spi: Add OF notifier handler=E2=80=9D and you=E2=80=99=
-ll where this is used.
->=20
-> I deleted that unread I'm afraid; one of the reasons that you should =
-use
-> subject lines matching the styles for the subsystems is that it's one=
- of
-> the things people use to filter out things that actually need attenti=
-on,
-> if things are busy things that at first glance don't look terribly
-> relevant (like changes to the OF core in this case) are likely to get
-> looked at less urgently or just skipped.
->=20
-> A quick glance suggests that this is adding code inside the SPI core =
-so
-> it's still not explaining why anything is being exported, can you
-> clarify please?
+Hi Mark,
 
-I have the same question. This doesn't look like it should be exporting
-symbols.
 
-Also, the way the patch is written causes a lot of code changes to get
-interleaved in the diff. It would be better to split into two patches;
-one that creates the new of_register_spi_device(), and a separate patch
-to add the other new functions. It would be certainly easier to review
-that way.
+On Wed, 2014-11-19 at 18:04 +0000, Mark Rutland wrote:
+> On Wed, Nov 19, 2014 at 02:14:09PM +0000, Yingjoe Chen wrote:
+> > +	if (type == IRQ_TYPE_LEVEL_LOW || type == IRQ_TYPE_EDGE_FALLING) {
+> > +		if (type == IRQ_TYPE_LEVEL_LOW)
+> > +			type = IRQ_TYPE_LEVEL_HIGH;
+> > +		else
+> > +			type = IRQ_TYPE_EDGE_RISING;
+> > +		value |= (1 << offset);
+> > +	} else
+> > +		value &= ~(1 << offset);
+> 
+> Nit: if one branch of an if statements is bracketed, both branches
+> should be. Please bracket the else case.
 
->=20
-> > > SubmittingPatches says.  Please also try to keep your CC list san=
-e,
-> > > CCing random people just means that you're increasing the volume =
-of mail
-> > > they have to process.  I'm surprised kernel.org accepts so many C=
-Cs.
->=20
-> > > I have to say I don't recall ever seeing v1...
->=20
-> > All of them are in the CC list for a reason.=20
->=20
-> This is a single, standalone SPI patch - you didn't send it as part o=
-f a
-> series (which is the only reason I read it).
+OK, will change in next version.
 
-Yes, this is part of the OF overlay series. It should have at least bee=
-n
-marked as [PATCH 7/8] and that it replaced the previous, buggy, patch 7=
-=2E
+> > +	writel(value, chip_data->intpol_base + reg_index * 4);
+> > +
+> > +	data = data->parent_data;
+> > +	ret = data->chip->irq_set_type(data, type);
+> > +	spin_unlock_irqrestore(&chip_data->lock, flags);
+> > +	return ret;
+> > +}
+> > +
+> > +static struct irq_chip mtk_sysirq_chip = {
+> > +	.name			= "MT_SYSIRQ",
+> > +	.irq_mask		= irq_chip_mask_parent,
+> > +	.irq_unmask		= irq_chip_unmask_parent,
+> > +	.irq_eoi		= irq_chip_eoi_parent,
+> > +	.irq_set_type		= mtk_sysirq_set_type,
+> > +	.irq_retrigger		= irq_chip_retrigger_hierarchy,
+> > +	.irq_set_affinity	= irq_chip_set_affinity_parent,
+> > +};
+> > +
+> > +static int mtk_sysirq_domain_xlate(struct irq_domain *d,
+> > +				   struct device_node *controller,
+> > +				   const u32 *intspec, unsigned int intsize,
+> > +				   unsigned long *out_hwirq,
+> > +				   unsigned int *out_type)
+> > +{
+> > +	if (intsize < 3)
+> > +		return -EINVAL;
+> > +
+> > +	/* sysirq doesn't support PPI */
+> > +	if (intspec[0])
+> > +		return -EINVAL;
+> > +
+> > +	*out_hwirq = intspec[1];
+> > +	*out_type = intspec[2] & IRQ_TYPE_SENSE_MASK;
+> 
+> All of this is very strongly tied to the GIC, but the binding made it
+> sound like this was more generic (it didn't specify the number of cells
+> or their meaning). It doesn't look like we validate that this is
+> attached to a GIC.
+> 
+> Do we expect this to only ever be attached to a GICv2?
+> 
+> It would be nice to either make this generic or to describe the format
+> in the binding.
 
-g.
+This expect the parent to use the same interrupt cells format as GIC.
+I'll fix the binding to make this more clear.
+
+> Also, surely you expect intsize == 3 if you expect a GICv2? Likewise in
+> mtk_sysirq_domain_alloc.
+
+OK, will change that in next version.
+
+Joe.C
