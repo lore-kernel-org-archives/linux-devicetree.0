@@ -1,91 +1,121 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v1] usb: phy: nop: device tree documentation for vbus
-Date: Fri, 21 Nov 2014 09:45:06 -0600
-Message-ID: <20141121154506.GG7508@saruman>
-References: <1415538138-24434-1-git-send-email-robert.jarzmik@free.fr>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v7 1/4] irqchip: gic: Support hierarchy irq domain.
+Date: Fri, 21 Nov 2014 23:51:21 +0800
+Message-ID: <1416585081.24971.15.camel@mtksdaap41>
+References: <1416406451-4578-1-git-send-email-yingjoe.chen@mediatek.com>
+	 <1416406451-4578-2-git-send-email-yingjoe.chen@mediatek.com>
+	 <87h9xvaz2p.fsf@approximate.cambridge.arm.com>
+	 <546D6D62.4030005@linux.intel.com>
+	 <87wq6q9odi.fsf@approximate.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="L1c6L/cjZjI9d0Eq"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1415538138-24434-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87wq6q9odi.fsf-BgpFEFc6EmV6Fr0h90IsVGS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yijing Wang <wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---L1c6L/cjZjI9d0Eq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Nov 09, 2014 at 02:02:18PM +0100, Robert Jarzmik wrote:
-> Enhance the phy documentation by adding 2 new optional bindings :
->  - the vbus gpio, which detects usb insertion
->  - the vbus regulator, which provides current drawn from the usb cable
->=20
-> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt b/Do=
-cumentation/devicetree/bindings/usb/usb-nop-xceiv.txt
-> index 1bd37fa..65dfe4b 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
-> @@ -17,6 +17,11 @@ Optional properties:
-> =20
->  - reset-gpios: Should specify the GPIO for reset.
-> =20
-> +- vbus-gpios: should specify the GPIO detecting a VBus insertion
-> +              (see Documentation/devicetree/bindings/gpio/gpio.txt)
-> +- vbus-regulator : should specifiy the regulator supplying current drawn=
- from
-> +  the VBus line (see Documentation/devicetree/bindings/regulator/regulat=
-or.txt).
-> +
->  Example:
-> =20
->  	hsusb1_phy {
-> @@ -26,8 +31,11 @@ Example:
->  		clock-names =3D "main_clk";
->  		vcc-supply =3D <&hsusb1_vcc_regulator>;
->  		reset-gpios =3D <&gpio1 7 GPIO_ACTIVE_LOW>;
-> +		vbus-gpios =3D <&gpio2 13 GPIO_ACTIVE_HIGH>;
-> +		vbus-regulator =3D <&vbus_regulator>;
+Hi,
 
-not sure why you need vbus-gpios here. You can pass the gpio to the
-regulator as enable-gpio, right ?
+On Thu, 2014-11-20 at 10:07 +0000, Marc Zyngier wrote:
+> On Thu, Nov 20 2014 at  4:26:10 am GMT, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+> 
+> Hi Jiang,
+> 
+> > On 2014/11/20 1:18, Marc Zyngier wrote:
+> >> Hi Yingjoe,
+> >> 
+> >> On Wed, Nov 19 2014 at 2:14:08 pm GMT, Yingjoe Chen
+> >> <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> >>> +
+> >>> +static const struct irq_domain_ops gic_irq_domain_hierarchy_ops = {
+> >>> +	.xlate = gic_irq_domain_xlate,
+> >>> +	.alloc = gic_irq_domain_alloc,
+> >>> +	.free = irq_domain_free_irqs_top,
+> >> 
+> >> I'm convinced that irq_domain_free_irqs_top is the wrong function to
+> >> call here, because you're calling it from the bottom, not the top-level
+> >> (it has no parent).
+> >> 
+> >> I cannot verify this with your code as I don't a working platform with
+> >> GICv2m, but if I enable something similar on GICv3, it dies a very
+> >> painful way:
+> >> 
+> >> Unable to handle kernel NULL pointer dereference at virtual address 00000018
+> >> pgd = ffffffc03d059000
+> >> [00000018] *pgd=0000000081356003, *pud=0000000081356003, *pmd=0000000000000000
+> >> Internal error: Oops: 96000006 [#1] SMP
+> >> Modules linked in:
+> >> CPU: 4 PID: 1052 Comm: sh Not tainted 3.18.0-rc4+ #3311
+> >> task: ffffffc03e320000 ti: ffffffc001390000 task.ti: ffffffc001390000
+> >> PC is at irq_domain_free_irqs_recursive+0x1c/0x80
+> >> LR is at irq_domain_free_irqs_common+0x88/0x9c
+> >> pc : [<ffffffc0000ed790>] lr : [<ffffffc0000ede20>] pstate: 60000145
+> >> [...]
+> >> [<ffffffc0000ed790>] irq_domain_free_irqs_recursive+0x1c/0x80
+> >> [<ffffffc0000ede1c>] irq_domain_free_irqs_common+0x84/0x9c
+> >> [<ffffffc0000ede98>] irq_domain_free_irqs_top+0x64/0x7c  <-- gic_domain.free()
+> >> [<ffffffc0000ed798>] irq_domain_free_irqs_recursive+0x24/0x80
+> >> [<ffffffc0000ee468>] irq_domain_free_irqs_parent+0x14/0x20
+> >> [<ffffffc0003500b8>] its_irq_domain_free+0xc8/0x250
+> >> [<ffffffc0000ed798>] irq_domain_free_irqs_recursive+0x24/0x80
+> >> [<ffffffc0000ede1c>] irq_domain_free_irqs_common+0x84/0x9c
+> >> [<ffffffc0000ede98>] irq_domain_free_irqs_top+0x64/0x7c
+> >> [<ffffffc0000ef518>] msi_domain_free+0x70/0x88
+> >> [<ffffffc0000ed798>] irq_domain_free_irqs_recursive+0x24/0x80
+> >> [<ffffffc0000ee3ac>] irq_domain_free_irqs+0x108/0x17c
+> >> [<ffffffc0000efb68>] msi_domain_free_irqs+0x28/0x4c
+> >> [<ffffffc000369cac>] free_msi_irqs+0xb4/0x1c0
+> >> [<ffffffc00036adec>] pci_disable_msix+0x3c/0x4c
+> >> [...]
+> >> 
+> >> and I cannot see how this could work on the standard GIC either.
+> >> 
+> >> Thomas, Jiang: could you please confirm or infirm my suspicions? My
+> >> understanding is that irq_domain_free_irqs_top can only be called from
+> >> the top-level domain.
+> > Hi Marc,
+> > 	It indicates that irq_domain_free_irqs_top() is not a good name.
+> > We have:
+> > 1) irq_domain_set_hwirq_and_chip() to set irq_chip and chip_data
+> > 2) irq_domain_set_info() to set irq_chip, chip_data, flow_handler and
+> >    handler_data;
+> > 3) irq_domain_reset_irq_data() resets irq_chip and chip_data.
+> > 4) irq_domain_free_irqs_common() resets irq_chip, chip_data and calls
+> >    parent domain's domain_ops.free() callback.
+> > 5) irq_domain_free_irqs_top() resets irq_chip, chip_data, flow handler,
+> >    handler_data and call parent domain's domain_ops.free() callback.
+> 
+> Yes, and this "call parent domain's free callback" is where the problem
+> lies. Here, it is called from the innermost domain, with no parent.
+> 
+> > So there two possible improvements here:
+> > 1) Rename irq_domain_free_irqs_top() with better name, any suggestions?
+> >    It's named as is because it's always called by the outer-most
+> >    irqdomains on x86.
+> > 2) Change irq_domain_free_irqs_common() and irq_domain_free_irqs_top()
+> >    to call parent domain's domain_ops.free() callback only if parent
+> >    exists. By this way, they could be used for inner-most irqdomains.
+> > If OK, I will respin a version 4 patch set based on tip/irq/irqdomain.
+> > Thoughts?
+> 
+> Checking the parent is probably a safe solution (this is not a hot path
+> anyway). I don't care much about the name though, and I the only thing I
+> can think of is irq_domain_free_irqs_reset_flow, which looks so bad it's
+> not even funny. I'll let the matter rest in your capable hands! ;-)
 
---=20
-balbi
+I've applied Jiang's "irqdomain: Enhance irq_domain_free_irqs_common()
+to support parentless irqdomain" patch and it did fix the crash.
 
---L1c6L/cjZjI9d0Eq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Thanks Jiang, Marc
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Joe.C
 
-iQIcBAEBAgAGBQJUb14CAAoJEIaOsuA1yqREuewP/ixWqGSxrumNKPzM7r2/R6i2
-ONs1LQm9mAcss06xtHxgaVtNQk9Y+s82ZhLTyr8p5eZNfQgirSMX+EsKj7XBqqHn
-aulpBY1EDHOpVPHRr1fxG+G5X5QmpHYxqUz2T5TPLTsZsQWdORnEnMgqacR+kpQi
-rxvNpxSSm9AiXascQGqZsT2TJWr87EwNzcAwS4e37czZnBuTbJUHJUc1LjKos6fe
-VXMXYWn6uN54VnyY1FpALJ/2fn9PvO+USXnJfwg3P/S2IYaGczlb5KAwH02DrXeZ
-KYKe8GAyqKRQ0laX40CV0kyMAzwWdpQoIDM7n9mLmLSiPKkwsG3DfON9mE4U2lKa
-JZSKx9G9w77KpDJM/pgMbnoLTmP8d0OVOaHCJrRAuORWT91q8zjA3nSsIrWT0daG
-n8+9MGj0OnSd24/M/nxyzh5XzAGt/fhw/4/3bHwbfi/phstFQWXzfo50c49A39sq
-hpJdatQ8pzWCt8MC6vspCyYOICFsbUdulKIgH0RHE5+g1YTAyB4XSAdNdnmAkJM+
-YlH2Yr5eRh2OFDhtS1RNkbrds5S78spAQDSG2pBgI28GNlxCwmJWJDI+QWUxJelz
-Z+X+MQydtZ6pE5ZfHDTNxqvMX/oGlnnT/vWahtfLnTlfLhG50nwe6oD2K8U8dea3
-64mgonJ/YYL/+NETvEHO
-=sx6A
------END PGP SIGNATURE-----
 
---L1c6L/cjZjI9d0Eq--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
