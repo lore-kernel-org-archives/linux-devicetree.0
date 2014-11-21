@@ -1,126 +1,122 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCHv3 08/16] clk: mvebu: add suspend/resume for gatable clocks
-Date: Fri, 21 Nov 2014 17:00:05 +0100
-Message-ID: <1416585613-2113-9-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCHv3 13/16] ARM: mvebu: synchronize secondary CPU clocks on resume
+Date: Fri, 21 Nov 2014 17:00:10 +0100
+Message-ID: <1416585613-2113-14-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1416585613-2113-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1416585613-2113-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>
-Cc: linux-arm-kernel@lists.infradead.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Mike Turquette <mturquette@linaro.org>, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416585613-2113-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds suspend/resume support for the gatable clock driver
-used on Marvell EBU platforms. When getting out of suspend, the
-Marvell EBU platforms go through the bootloader, which re-enables all
-gatable clocks. However, upon resume, the clock framework will not
-disable again all gatable clocks that are not used.
+The Armada XP has multiple cores clocked by independent clocks. The
+SMP startup code contains a function called set_secondary_cpus_clock()
+called in armada_xp_smp_prepare_cpus() to ensure the clocks of the
+secondary CPUs match the clock of the boot CPU.
 
-Therefore, if the clock driver does not save/restore the state of the
-gatable clocks, all gatable clocks that are not claimed by any device
-driver will remain enabled after a resume. This is why this driver
-saves and restores the state of those clocks.
+With the introduction of suspend/resume, this operation is no longer
+needed when booting the system, but also when existing the suspend to
+RAM state. Therefore this commit reworks a bit the logic: instead of
+configuring the clock of all secondary CPUs in
+armada_xp_smp_prepare_cpus(), we do it on a per-secondary CPU basis in
+armada_xp_boot_secondary(), as this function gets called when existing
+suspend to RAM for each secondary CPU.
 
-Since clocks aren't real devices, we don't have the normal ->suspend()
-and ->resume() of the device model, and have to use the ->suspend()
-and ->resume() hooks of the syscore_ops mechanism. This mechanism has
-the unfortunate idea of not providing a way of passing private data,
-which requires us to change the driver to make the assumption that
-there is only once instance of the gatable clock control structure.
+Since the function now only takes care of one CPU, we rename it from
+set_secondary_cpus_clock() to set_secondary_cpu_clock(), and it looses
+its __init marker, as it is now used beyond the system initialization.
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Mike Turquette <mturquette@linaro.org>
-Cc: linux-kernel@vger.kernel.org
-Acked-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Note that we can't use smp_processor_id() directly, because when
+exiting from suspend to RAM, the code is apparently executed with
+preemption enabled, so smp_processor_id() is not happy (prints a
+warning). We therefore switch to using get_cpu()/put_cpu(), even
+though we pretty much have the guarantee that the code starting the
+secondary CPUs is going to run on the boot CPU and will not be
+migrated.
+
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/clk/mvebu/common.c | 32 ++++++++++++++++++++++++++++++--
- 1 file changed, 30 insertions(+), 2 deletions(-)
+ arch/arm/mach-mvebu/platsmp.c | 31 +++++++++++++++----------------
+ 1 file changed, 15 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/clk/mvebu/common.c b/drivers/clk/mvebu/common.c
-index b7fcb46..0d4d121 100644
---- a/drivers/clk/mvebu/common.c
-+++ b/drivers/clk/mvebu/common.c
-@@ -19,6 +19,7 @@
- #include <linux/io.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-+#include <linux/syscore_ops.h>
+diff --git a/arch/arm/mach-mvebu/platsmp.c b/arch/arm/mach-mvebu/platsmp.c
+index 895dc37..e65e69a 100644
+--- a/arch/arm/mach-mvebu/platsmp.c
++++ b/arch/arm/mach-mvebu/platsmp.c
+@@ -33,7 +33,7 @@
+ #define AXP_BOOTROM_BASE 0xfff00000
+ #define AXP_BOOTROM_SIZE 0x100000
  
- #include "common.h"
- 
-@@ -177,14 +178,17 @@ struct clk_gating_ctrl {
- 	spinlock_t *lock;
- 	struct clk **gates;
- 	int num_gates;
-+	void __iomem *base;
-+	u32 saved_reg;
- };
- 
- #define to_clk_gate(_hw) container_of(_hw, struct clk_gate, hw)
- 
-+static struct clk_gating_ctrl *ctrl;
-+
- static struct clk *clk_gating_get_src(
- 	struct of_phandle_args *clkspec, void *data)
+-static struct clk *__init get_cpu_clk(int cpu)
++static struct clk *get_cpu_clk(int cpu)
  {
--	struct clk_gating_ctrl *ctrl = (struct clk_gating_ctrl *)data;
- 	int n;
- 
- 	if (clkspec->args_count < 1)
-@@ -199,15 +203,35 @@ static struct clk *clk_gating_get_src(
- 	return ERR_PTR(-ENODEV);
+ 	struct clk *cpu_clk;
+ 	struct device_node *np = of_get_cpu_node(cpu, NULL);
+@@ -46,29 +46,28 @@ static struct clk *__init get_cpu_clk(int cpu)
+ 	return cpu_clk;
  }
  
-+static int mvebu_clk_gating_suspend(void)
-+{
-+	ctrl->saved_reg = readl(ctrl->base);
-+	return 0;
-+}
-+
-+static void mvebu_clk_gating_resume(void)
-+{
-+	writel(ctrl->saved_reg, ctrl->base);
-+}
-+
-+static struct syscore_ops clk_gate_syscore_ops = {
-+	.suspend = mvebu_clk_gating_suspend,
-+	.resume = mvebu_clk_gating_resume,
-+};
-+
- void __init mvebu_clk_gating_setup(struct device_node *np,
- 				   const struct clk_gating_soc_desc *desc)
+-static void __init set_secondary_cpus_clock(void)
++static void set_secondary_cpu_clock(unsigned int cpu)
  {
--	struct clk_gating_ctrl *ctrl;
- 	struct clk *clk;
- 	void __iomem *base;
- 	const char *default_parent = NULL;
- 	int n;
+-	int thiscpu, cpu;
++	int thiscpu;
+ 	unsigned long rate;
+ 	struct clk *cpu_clk;
  
-+	if (ctrl) {
-+		pr_err("mvebu-clk-gating: cannot instantiate more than one gatable clock device\n");
-+		return;
-+	}
+-	thiscpu = smp_processor_id();
++	thiscpu = get_cpu();
 +
- 	base = of_iomap(np, 0);
- 	if (WARN_ON(!base))
- 		return;
-@@ -225,6 +249,8 @@ void __init mvebu_clk_gating_setup(struct device_node *np,
- 	/* lock must already be initialized */
- 	ctrl->lock = &ctrl_gating_lock;
+ 	cpu_clk = get_cpu_clk(thiscpu);
+ 	if (!cpu_clk)
+-		return;
++		goto out;
+ 	clk_prepare_enable(cpu_clk);
+ 	rate = clk_get_rate(cpu_clk);
  
-+	ctrl->base = base;
+-	/* set all the other CPU clk to the same rate than the boot CPU */
+-	for_each_possible_cpu(cpu) {
+-		if (cpu == thiscpu)
+-			continue;
+-		cpu_clk = get_cpu_clk(cpu);
+-		if (!cpu_clk)
+-			return;
+-		clk_set_rate(cpu_clk, rate);
+-		clk_prepare_enable(cpu_clk);
+-	}
++	cpu_clk = get_cpu_clk(cpu);
++	if (!cpu_clk)
++		goto out;
++	clk_set_rate(cpu_clk, rate);
++	clk_prepare_enable(cpu_clk);
 +
- 	/* Count, allocate, and register clock gates */
- 	for (n = 0; desc[n].name;)
- 		n++;
-@@ -246,6 +272,8 @@ void __init mvebu_clk_gating_setup(struct device_node *np,
++out:
++	put_cpu();
+ }
  
- 	of_clk_add_provider(np, clk_gating_get_src, ctrl);
+ static int armada_xp_boot_secondary(unsigned int cpu, struct task_struct *idle)
+@@ -78,6 +77,7 @@ static int armada_xp_boot_secondary(unsigned int cpu, struct task_struct *idle)
+ 	pr_info("Booting CPU %d\n", cpu);
  
-+	register_syscore_ops(&clk_gate_syscore_ops);
-+
- 	return;
- gates_out:
- 	kfree(ctrl);
+ 	hw_cpu = cpu_logical_map(cpu);
++	set_secondary_cpu_clock(hw_cpu);
+ 	mvebu_pmsu_set_cpu_boot_addr(hw_cpu, armada_xp_secondary_startup);
+ 
+ 	/*
+@@ -126,7 +126,6 @@ static void __init armada_xp_smp_prepare_cpus(unsigned int max_cpus)
+ 	struct resource res;
+ 	int err;
+ 
+-	set_secondary_cpus_clock();
+ 	flush_cache_all();
+ 	set_cpu_coherent();
+ 
 -- 
 2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
