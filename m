@@ -1,27 +1,48 @@
-From: Romain Perier <romain.perier@gmail.com>
-Subject: Re: [PATCH v4 1/2] of: Rename "poweroff-source" property to "system-power-controller"
-Date: Fri, 21 Nov 2014 14:22:42 +0100
-Message-ID: <CABgxDoJkprh7GgXbjAQjvbYUanVQWxZo1M4TiiWDQr_TG40UCQ@mail.gmail.com>
-References: <1415885699-1465-1-git-send-email-user@radxa>
-	<1415885699-1465-2-git-send-email-user@radxa>
-	<20141121105951.GA20679@localhost>
-	<CABgxDoLy-+a7TAm7VWo5pYF7xZv4SM9=Zjcd1V6khnRqZbsFAw@mail.gmail.com>
+From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/9] clk: Add clock driver for mb86s7x
+Date: Fri, 21 Nov 2014 18:52:47 +0530
+Message-ID: <CAJe_ZhcxHnoUeBUk3w=_xyk5oMAuena9RjDnyRvzLtV2=LpQxw@mail.gmail.com>
+References: <1416486442-25200-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+	<1416486975-25385-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+	<2396055.pBuh1YtUHT@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CABgxDoLy-+a7TAm7VWo5pYF7xZv4SM9=Zjcd1V6khnRqZbsFAw@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Grant Likely <grant.likely@linaro.org>, robh <robh@kernel.org>, devicetree <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Felipe Balbi <balbi@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2396055.pBuh1YtUHT@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-11-21 14:18 GMT+01:00 Romain Perier <romain.perier@gmail.com>:
+On 21 November 2014 18:33, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Thursday 20 November 2014 20:36:15 Vincent Yang wrote:
+>> +#define __DTS_MB86S70_CLK_H
+>> +
+>> +#define MB86S70_CRG11_ALW      0
+>> +#define MB86S70_CRG11_DDR3     1
+>> +#define MB86S70_CRG11_MAIN     2
+>> +#define MB86S70_CRG11_CA15     3
+>> +#define MB86S70_CRG11_HDMI     4
+>> +#define MB86S70_CRG11_DPHY     5
+>> +
+>> +#define MB86S70_CRG11_UNGPRT   8
+>>
+>
+> The clock driver doesn't seem to use those macros at all, how does the
+> driver know which clock you are referring to?
+>
+That was just an attempt to make a bit verbose the controller
+instance. Instead of specifying controller:=4, it reads better
+controller:=MB86S70_CRG11_HDMI in the clock DT nodes. The clock driver
+simply fills in controller+domain+port of the given clock into mailbox
+payload.
 
-> it was merged by Lee Jones (so it was merged onto
-> the mfd tree)
+Only MB86S70_CRG11_UNGPRT is marked to mean one special (non-maskable)
+port on the controller, which the clock driver does make use of.
 
-It was done, for a previous serie, not this one . This is  when I
-proposed to update the dts too (for all boards using the custom
-property) until the discussion turned into a troll.
-
-Romain
+Thanks
+Jassi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
