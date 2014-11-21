@@ -1,51 +1,89 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH] Add attributes neccessary for LED flashes to
- devicetree/bindings/leds/common.txt
-Date: Fri, 21 Nov 2014 09:15:31 +0100
-Message-ID: <546EF4A3.2000101@samsung.com>
-References: <20141120131713.GC27527@amd> <546DEEC3.7090508@samsung.com>
- <546DFF3A.7020702@samsung.com> <20141120205254.GA19174@amd>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 5/9] rc: sunxi-cir: Add support for the larger fifo found
+ on sun5i and sun6i
+Date: Fri, 21 Nov 2014 09:26:20 +0100
+Message-ID: <20141121082620.GJ24143@lukather>
+References: <1416498928-1300-1-git-send-email-hdegoede@redhat.com>
+ <1416498928-1300-6-git-send-email-hdegoede@redhat.com>
+ <20141120142856.16b6562d@recife.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <20141120205254.GA19174@amd>
-Sender: linux-leds-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: sakari.ailus@iki.fi, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-doc@vger.kernel.org, cooloney@gmail.com, rpurdie@rpsys.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="apbmkPN6Hu/1dI3g"
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141120142856.16b6562d@recife.lan>
+Sender: linux-media-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Emilio Lopez <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
 
-On 11/20/2014 09:52 PM, Pavel Machek wrote:
-> On Thu 2014-11-20 15:48:26, Jacek Anaszewski wrote:
->> On 11/20/2014 02:38 PM, Jacek Anaszewski wrote:
->>> Hi Pavel,
->>>
->>> On 11/20/2014 02:17 PM, Pavel Machek wrote:
->>>>
->>>> Add attributes neccessary for LED flashes to
->>>> devicetree/bindings/leds/common.txt .
->>>>
->>>> This will allow me to add device tree support for adp1653 i2c flash
->>>> LED driver, and allow Jacek Anaszewski to add support for more LED
->>>> drivers..
-> ..
->>
->> Actually, we've agreed with Sakari that we can handle
->> indicator-pattern later.
->
-> Good.
->
->> I would remove references to you, me and adp1653 driver from the commit
->> message and mention that this modifications adjust the led common
->> bindings to the LED Flash class that is to be added.
->
-> Ok, who can take this patch? Can you edit the changelog, or should I
-> do it? Anything else that needs changing?
+--apbmkPN6Hu/1dI3g
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It's your patch :) For me the contents of the patch are ok.
-It requires device tree maintainer approval anyway.
+Hi Mauro,
 
-Regards,
-Jacek
+On Thu, Nov 20, 2014 at 02:28:56PM -0200, Mauro Carvalho Chehab wrote:
+> Em Thu, 20 Nov 2014 16:55:24 +0100
+> Hans de Goede <hdegoede@redhat.com> escreveu:
+>=20
+> > Add support for the larger fifo found on sun5i and sun6i, having a sepa=
+rate
+> > compatible for the ir found on sun5i & sun6i also is useful if we ever =
+want
+> > to add ir transmit support, because the sun5i & sun6i version do not ha=
+ve
+> > transmit support.
+> >=20
+> > Note this commits also adds checking for the end-of-packet interrupt fl=
+ag
+> > (which was already enabled), as the fifo-data-available interrupt flag =
+only
+> > gets set when the trigger-level is exceeded. So far we've been getting =
+away
+> > with not doing this because of the low trigger-level, but this is somet=
+hing
+> > which we should have done since day one.
+> >=20
+> > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>=20
+> As this is meant to be merged via some other tree:
+>=20
+> Acked-by: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+
+I think merging it through your tree would be just fine.
+
+Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--apbmkPN6Hu/1dI3g
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUbvcsAAoJEBx+YmzsjxAgWTkP/RTsNmPjmq4rC7DZIYDJM7B0
+sBdSsIE92j60ed3h8YN5eGukNtVauL5xZjqaoKH/w2a9LY/UFJ0euw2oe89lelR9
+jpRLhQ/Q//UAuZ+AnVVBf2T8dTDgixZWd3yfkeSAQ0tg995YQpriGcWKMYP3lXWn
+SpMXWxiJE1AEXMuouhTwCS2lty34C28qHaPfgsSeMFY2yccAp8A6fg+cuuUDXWdO
+hWc82iTyeU78E+sos/rr7tmpvG9nHoh21cwkKiutLDLKWIlGk4FWlMFl4FzSGYwc
+4zDz89JmVLy4y0N9ZZxALgrxedq4DUeaOj58T298I1g0XjPrOrrAgyTew2lqyBU8
+xCgYoYYvdLO446Tt1YpwoTdlhkvFH5cOrpc094NL8dvwu0gz5ng0b7zguOSMOKqy
+S8xM3PvLt3PavSaMLfCog1mTZjYFHk8YRocOtZl3VkMpxQcOEQaUlJVn3OioqVEo
+pa0cHVaRnGKFl5TKw5pjOaVu9rhrjJWWXa1MxY6B6N2JKj9PoUKrjJqnQfahPQqH
+kTFXtacSrJWfMIBXLKmb5Jopbc+uCMIMNzhwBXsIVyAHrYKzb1cV1aoB4UO3ERzl
+etmuRTyRadcYl6FGo5X282uchRM2jzglD4cW9xU6DV+hu754qzsFW0JoMJcUiIvo
+F9bBN1f7syvXHBX70gPx
+=x2+7
+-----END PGP SIGNATURE-----
+
+--apbmkPN6Hu/1dI3g--
