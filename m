@@ -1,96 +1,67 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [GIT PULL] DeviceTree fixes for 3.18
-Date: Thu, 20 Nov 2014 20:47:01 -0600
-Message-ID: <CAL_JsqJjvtQbAk4iDWDZtU9kvt_Vox7BVO4KsT0UFYSDW5CKzQ@mail.gmail.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH v2 2/3] ARM: OMAP2+: hwmod: AM335x/AM43x: add hwmod support
+ for tscadc on am43x-evm
+Date: Fri, 21 Nov 2014 10:30:04 +0530
+Message-ID: <546EC6D4.7080906@ti.com>
+References: <1415099728-10959-1-git-send-email-vigneshr@ti.com> <1415099728-10959-3-git-send-email-vigneshr@ti.com> <alpine.DEB.2.02.1411200706441.9204@utopia.booyaka.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.02.1411200706441.9204@utopia.booyaka.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Walmsley <paul@pwsan.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Linus,
 
-Please pull DT fixes for 3.18.
+On 11/20/2014 12:39 PM, Paul Walmsley wrote:
+> On Tue, 4 Nov 2014, Vignesh R wrote:
+>
+>> This patch adds hwmod support for tscadc to work on am43xx-evm. The am33xx
+>> hwmod structures of tscadc has been moved to ipblock_data so that it can
+>> be reused in am43xx. The clock domain names are separately set for am33xx
+>> and am43xx. Thus tscadc dt entries can now be added to am43xx board
+>> dt files.
+>>
+>> Signed-off-by: Vignesh R <vigneshr@ti.com>
+> ...
+>
+>> diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
+>> index 6e57b8ad0db5..b92a7c7825fa 100644
+>> --- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
+>> +++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
+> ...
+>
+>> +static void am33xx_hwmod_clockdomain(void)
+>> +{
+>> +	CLKDMNAME(am33xx_l4_hs_hwmod, "l4hs_clkdm");
+>> +	CLKDMNAME(am33xx_adc_tsc_hwmod, "l4_wkup_clkdm");
+>> +}
+>> +
+>> +static void am43xx_hwmod_clockdomain(void)
+>> +{
+>> +	CLKDMNAME(am33xx_l4_hs_hwmod, "l3_clkdm");
+>> +	CLKDMNAME(am33xx_adc_tsc_hwmod, "l3s_tsc_clkdm");
+>> +}
+>> +
+> ...
+>
+>> +	am33xx_hwmod_clockdomain();
+> I looked at this patch and the one before it.  Is there some reason why we 
+> need to share these two hwmods between AM33xx and AM43xx?  It seems 
+> cleaner just to add the ADC data directly to the AM43xx hwmod data file, 
+> not touch the AM33xx data, and not add another runtime data update for the 
+> clockdomains.  Unless there's something that I'm missing?
 
-Rob
 
-The following changes since commit fc14f9c1272f62c3e8d01300f52467c0d9af50f9:
+I wanted to reuse hwmod structures. Except for clockdomain and offset,
+rest of the hwmod data are same for AM33xx and AM43xx. Adding data to AM43xx
+hwmod file just duplicates these structures. Do you still want me to move them
+to AM43xx file?
 
-  Linux 3.18-rc5 (2014-11-16 16:36:20 -0800)
+Regards
+Vignesh
 
-are available in the git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-tags/devicetree-fixes-for-3.18
-
-for you to fetch changes up to 788ec2fc2ca295a2d929986e95231214ecd8d142:
-
-  of/selftest: Fix testing when /aliases is missing (2014-11-20 15:32:49 +0000)
-
-----------------------------------------------------------------
-DeviceTree fixes for 3.18:
-- 2 fixes for OF selftest code
-- Fix for PowerPC address parsing to disable work-around except on old
-  PowerMACs
-- Fix a crash when earlycon is enabled, but no device is found
-- DT documentation fixes and missing vendor prefixes
-
-All but the doc updates are also for stable.
-
-----------------------------------------------------------------
-Antony Pavlov (1):
-      devicetree: vendor-prefixes.txt: fix whitespace
-
-Benjamin Herrenschmidt (1):
-      of/base: Fix PowerPC address parsing hack
-
-Bjorn Helgaas (1):
-      of/irq: Drop obsolete 'interrupts' vs 'interrupts-extended' text
-
-Geert Uytterhoeven (1):
-      of: Spelling s/stucture/structure/
-
-Grant Likely (2):
-      of/selftest: Fix off-by-one error in removal path
-      of/selftest: Fix testing when /aliases is missing
-
-Kevin Cernekee (1):
-      of: Fix crash if an earlycon driver is not found
-
-Philipp Zabel (1):
-      of: Add vendor prefix for Chips&Media, Inc.
-
-Robert Jarzmik (1):
-      devicetree: bindings: add sandisk to the vendor prefixes
-
-Soren Brinkmann (1):
-      documentation: pinctrl bindings: Fix trivial typo 'abitrary'
-
-bpqw (1):
-      devicetree: bindings: Add vendor prefix for Micron Technology, Inc.
-
- .../bindings/interrupt-controller/interrupts.txt      |  4 ----
- .../bindings/pinctrl/img,tz1090-pdc-pinctrl.txt       |  2 +-
- .../bindings/pinctrl/img,tz1090-pinctrl.txt           |  2 +-
- .../bindings/pinctrl/lantiq,falcon-pinumx.txt         |  2 +-
- .../bindings/pinctrl/lantiq,xway-pinumx.txt           |  2 +-
- .../bindings/pinctrl/nvidia,tegra20-pinmux.txt        |  2 +-
- .../devicetree/bindings/pinctrl/pinctrl-sirf.txt      |  2 +-
- .../devicetree/bindings/pinctrl/pinctrl_spear.txt     |  2 +-
- .../bindings/pinctrl/qcom,apq8064-pinctrl.txt         |  2 +-
- .../bindings/pinctrl/qcom,apq8084-pinctrl.txt         |  2 +-
- .../bindings/pinctrl/qcom,ipq8064-pinctrl.txt         |  2 +-
- .../bindings/pinctrl/qcom,msm8960-pinctrl.txt         |  2 +-
- .../bindings/pinctrl/qcom,msm8974-pinctrl.txt         |  2 +-
- Documentation/devicetree/bindings/vendor-prefixes.txt |  5 ++++-
- drivers/of/address.c                                  | 19 ++++++++++++++++---
- drivers/of/dynamic.c                                  |  2 +-
- drivers/of/fdt.c                                      |  2 +-
- drivers/of/selftest.c                                 | 11 ++++++++---
- 18 files changed, 42 insertions(+), 25 deletions(-)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> - Paul
