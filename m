@@ -1,272 +1,102 @@
-From: Alban Bedel <albeu@free.fr>
-Subject: [PATCH 4/4] clk: add a generic MMIO clock controller
-Date: Fri, 21 Nov 2014 19:34:03 +0100
-Message-ID: <1416594843-12352-4-git-send-email-albeu@free.fr>
-References: <1416594843-12352-1-git-send-email-albeu@free.fr>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1416594843-12352-1-git-send-email-albeu@free.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Alban Bedel <albeu@free.fr>, Mike Turquette <mturquette@linaro.org>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH v4 1/2] ARM: keystone: pm: switch to use generic pm domains
+Date: Fri, 21 Nov 2014 20:58:01 +0200
+Message-ID: <546F8B39.1080106@ti.com>
+References: <1415631557-22897-1-git-send-email-grygorii.strashko@ti.com>	<1709760.E0jX3Myv0h@wuerfel>	<546C7FDD.7030906@ti.com>	<2900095.WIocOu7ue2@wuerfel>	<CAPDyKFqeZ3YU2OEN4tCOdcQ0pAho67Q8U_eCEOroG9aS0mp+-Q@mail.gmail.com>	<546DD87B.3080806@ti.com>	<CAPDyKFrBhZyqozM98_4pPdW0EMFt5W6VX1X7cz6Z=yNhW4vYTA@mail.gmail.com>	<CAMuHMdWtHT7QX3Kpa-GCLa49ToGODwjnNVgfxDzJzcM-FU1ffg@mail.gmail.com>	<546E0970.5090301@ti.com>	<7hh9xtr5ac.fsf@deeprootsystems.com>	<CAMuHMdV7zASj8_NtLRir1VubXEKTkq0vBGMXeYXDACu8UC2tZA@mail.gmail.com>	<7hbno1r1af.fsf@deeprootsystems.com>	<CAMuHMdVXGPu7x706NxqO3rn3KuRbPbD_ZQsJtDH4Hf31AaRR+Q@mail.gmail.com>	<7hppchpcfm.fsf@deeprootsystems.com> <CAMuHMdU6G35SP-P7bt6RJQk59CrGcKE2XM4N3o8Dv3qxZU7gxA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdU6G35SP-P7bt6RJQk59CrGcKE2XM4N3o8Dv3qxZU7gxA@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Kevin Hilman <khilman@kernel.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This driver allow defining simple MMIO clock controllers using only DT
-nodes. The clock controller driver map the configured MMIO range and
-allow creating simple clock trees using dividers, gates and muxers.
+Hi Kevin,
+On 11/21/2014 10:06 AM, Geert Uytterhoeven wrote:
+> On Fri, Nov 21, 2014 at 2:30 AM, Kevin Hilman <khilman@kernel.org> wrote:
+>> Geert Uytterhoeven <geert@linux-m68k.org> writes:
+>>> On Thu, Nov 20, 2014 at 10:48 PM, Kevin Hilman <khilman@kernel.org> wrote:
+>>>>>> So what exactly are we talking about with "PM" clocks, and why are they
+>>>>>> "special" when it comes to PM domains?  IOW, why are the clocks to be
+>>>>>> managed during PM domain transitions for a given device any different
+>>>>>> than the clocks that need to be managed for a runtime suspend/resume (or
+>>>>>> system suspend/resume) sequence for the same device?
+>>>>>
+>>>>> (Speaking for my case, shmobile)
+>>>>>
+>>>>> They're not. The clocks to be managed during PM domain transitions are the
+>>>>> same as the clocks that need to be managed for a runtime suspend/resume
+>>>>> (or system suspend/resume) sequence.
+>>>>>
+>>>>> The special thing is that this is more a platform than a driver thing: the same
+>>>>> module may have a "PM/functional" clock (that is documented to enable/disable
+>>>>> the module) on one Soc, but noet on another.
+>>>>
+>>>> So why isn't the presence or absence of the clock described in the .dtsi
+>>>> for the SoC instead of being handled by special PM domain logic?
+>>>
+>>> It is. Cfr. the presence/absence of clocks for renesas,rcar-gpio nodes.
+>>
+>> Hmm, OK, Good.
+>>
+>> So now I'm confused about why the PM domain has to do anything special
+>> if the presence/absence of the clocks is already handled by the DT.
+> 
+> Just adding a clock property to a device node in DT doesn't enable the clock
+> automatically, nor make it runtime-managed automatically.
+> Compare this to e.g. pinctrl, where adding pinctrl properties to DT does enable
+> them automatically, without the driver for the device having to care about it.
+> 
+> Drivers interfacing external hardware typically do care about clocks, as they
+> have to program clock generators for the external hardware interface (e.g.
+> driving spi or i2c buses at specific frequencies).
+> 
+> Other random drivers don't care about clocks, so they don't handle them.
+> But as long as they make basic pm_runtime_{enable,get_sync,put}() calls,
+> the (optional) clocks (and hardware PM domains) will "work" fine, if handled
+> by the PM (clock) domain.
 
-Signed-off-by: Alban Bedel <albeu@free.fr>
----
- drivers/clk/Kconfig               |   9 ++
- drivers/clk/Makefile              |   1 +
- drivers/clk/clk-mmio-controller.c | 208 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 218 insertions(+)
- create mode 100644 drivers/clk/clk-mmio-controller.c
+Personally, I don't see problems with "functional" clocks.
+The problem, in my opinion, is that we can't specify in DT that some clock is
+"optional", so no one should touch such clock except driver.
+For example:
+Keystone 2 NETCP module has 3 clocks:
+	clocks = <&papllclk>, <&clkcpgmac>, <&chipclk12>;
+	clock-names = "clk_pa", "clk_cpgmac", "cpsw_cpts_rft_clk";
+ and CPTS functionality is optional (in general) and can be enabled/disabled.
+Also, usual example is MMC hosts 
+- OMAP hsmmc has "functional" clock "hsmmc1_fclk", and may have
+"optional" clock "mmchsdb_fck". As you may remember, PM runtime
+for OMAP2+ implemented by OMAP PM domain which performs many things,
+but one thing which is done always is enabling/disabling of "fck"
+when get/put() are called.
 
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 455fd17..ca6b896 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -23,6 +23,15 @@ config COMMON_CLK
- menu "Common Clock Framework"
- 	depends on COMMON_CLK
- 
-+config COMMON_CLK_MMIO_CONTROLLER
-+	tristate "Generic driver for simple MMIO clock controller"
-+	depends on OF
-+	---help---
-+	  This driver allow supporting simple MMIO clock controllers that
-+	  only consist of dividers, muxes and gates. The clock tree and
-+	  register mapping can be fully configured from the devicetree
-+	  removing the need for a device specific driver.
-+
- config COMMON_CLK_WM831X
- 	tristate "Clock driver for WM831x/2x PMICs"
- 	depends on MFD_WM831X
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index d5fba5b..0d9c8e4 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -26,6 +26,7 @@ obj-$(CONFIG_MACH_LOONGSON1)		+= clk-ls1x.o
- obj-$(CONFIG_COMMON_CLK_MAX_GEN)	+= clk-max-gen.o
- obj-$(CONFIG_COMMON_CLK_MAX77686)	+= clk-max77686.o
- obj-$(CONFIG_COMMON_CLK_MAX77802)	+= clk-max77802.o
-+obj-$(CONFIG_COMMON_CLK_MMIO_CONTROLLER)+= clk-mmio-controller.o
- obj-$(CONFIG_ARCH_MOXART)		+= clk-moxart.o
- obj-$(CONFIG_ARCH_NOMADIK)		+= clk-nomadik.o
- obj-$(CONFIG_ARCH_NSPIRE)		+= clk-nspire.o
-diff --git a/drivers/clk/clk-mmio-controller.c b/drivers/clk/clk-mmio-controller.c
-new file mode 100644
-index 0000000..0e5fb50
---- /dev/null
-+++ b/drivers/clk/clk-mmio-controller.c
-@@ -0,0 +1,208 @@
-+/*
-+ * Copyright (C) 2014 Alban Bedel
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/of_address.h>
-+
-+#define of_printk(node, lvl, fmt, ...) \
-+	printk(lvl "%s: " fmt, node->full_name, ##__VA_ARGS__)
-+
-+#define of_err(node, ...) of_printk(node, KERN_ERR, __VA_ARGS__)
-+#define of_warn(node, ...) of_printk(node, KERN_WARNING, __VA_ARGS__)
-+
-+typedef struct clk *(*mmio_clock_probe_t)(
-+	struct device_node *np, void __iomem *reg, spinlock_t *lock);
-+
-+static struct clk *mux_clock_probe(
-+	struct device_node *np, void __iomem *reg, spinlock_t *lock)
-+{
-+	const char *parents[32] = {};
-+	unsigned int num_parents = 0;
-+	const char *clk_name;
-+	u8 clk_mux_flags = 0;
-+	u32 width, shift;
-+
-+	clk_name = np->name;
-+	of_property_read_string(np, "clock-output-names", &clk_name);
-+
-+	/* Read the parents */
-+	while (num_parents < ARRAY_SIZE(parents)) {
-+		parents[num_parents] = of_clk_get_parent_name(np, num_parents);
-+		if (parents[num_parents])
-+			num_parents++;
-+		else
-+			break;
-+	}
-+
-+	if (of_property_read_u32(np, "clock-mux-width", &width) || width > 31 ||
-+	    of_property_read_u32(np, "clock-mux-shift", &shift) || shift > 31)
-+		return ERR_PTR(-EINVAL);
-+
-+	if (of_property_read_bool(np, "index-plus-one"))
-+		clk_mux_flags |= CLK_MUX_INDEX_ONE;
-+	if (of_property_read_bool(np, "index-bitmask"))
-+		clk_mux_flags |= CLK_MUX_INDEX_BIT;
-+	if (of_property_read_bool(np, "high-word-mask"))
-+		clk_mux_flags |= CLK_MUX_HIWORD_MASK;
-+	if (of_property_read_bool(np, "read-only"))
-+		clk_mux_flags |= CLK_MUX_READ_ONLY;
-+
-+	return clk_register_mux_table(
-+		NULL, clk_name, parents, num_parents, 0, reg,
-+		shift, width, clk_mux_flags, NULL, lock);
-+}
-+
-+static struct clk *gate_clock_probe(
-+	struct device_node *np, void __iomem *reg, spinlock_t *lock)
-+{
-+	u8 clk_gate_flags = 0;
-+	const char *clk_name;
-+	u32 bit = 0;
-+
-+	clk_name = np->name;
-+	of_property_read_string(np, "clock-output-names", &clk_name);
-+
-+	if (of_property_read_u32(np, "clock-gate-bit", &bit) || bit > 31)
-+		return ERR_PTR(-EINVAL);
-+
-+	if (of_property_read_bool(np, "high-word-mask"))
-+		clk_gate_flags |= CLK_GATE_HIWORD_MASK;
-+
-+	return clk_register_gate(
-+		NULL, clk_name, of_clk_get_parent_name(np, 0), 0, reg,
-+		bit, clk_gate_flags, lock);
-+}
-+
-+static struct clk *divider_clock_probe(
-+	struct device_node *np, void __iomem *reg, spinlock_t *lock)
-+{
-+	u8 clk_divider_flags = 0;
-+	const char *clk_name;
-+	u32 div_shift = 0, div_width = 0;
-+	u32 mul_shift = 0, mul_width = 0;
-+
-+	clk_name = np->name;
-+	of_property_read_string(np, "clock-output-names", &clk_name);
-+
-+	of_property_read_u32(np, "clock-div-shift", &div_shift);
-+	of_property_read_u32(np, "clock-div-width", &div_width);
-+	of_property_read_u32(np, "clock-mult-shift", &mul_shift);
-+	of_property_read_u32(np, "clock-mult-width", &mul_width);
-+
-+	if (div_shift > 31 || div_width > 31 ||
-+	    mul_shift > 31 || mul_width > 31)
-+		return ERR_PTR(-EINVAL);
-+
-+	if (mul_width && div_width) {
-+		if (of_property_read_bool(np, "read-only"))
-+			clk_divider_flags |= CLK_FRACTIONAL_DIVIDER_READ_ONLY;
-+		if (of_property_read_bool(np, "divider-plus-one"))
-+			clk_divider_flags |=
-+				CLK_FRACTIONAL_DIVIDER_DIVISOR_PLUS_ONE;
-+
-+		return clk_register_fractional_divider(
-+			NULL, clk_name, of_clk_get_parent_name(np, 0), 0, reg,
-+			mul_shift, mul_width, div_shift, div_width,
-+			clk_divider_flags, lock);
-+	} else if (div_width) {
-+		if (of_property_read_bool(np, "read-only"))
-+			clk_divider_flags |= CLK_DIVIDER_READ_ONLY;
-+		if (!of_property_read_bool(np, "divider-plus-one"))
-+			clk_divider_flags |= CLK_DIVIDER_ONE_BASED;
-+		if (of_property_read_bool(np, "divider-power-of-two"))
-+			clk_divider_flags |= CLK_DIVIDER_POWER_OF_TWO;
-+		if (of_property_read_bool(np, "divider-allow-zero"))
-+			clk_divider_flags |= CLK_DIVIDER_ALLOW_ZERO;
-+		if (of_property_read_bool(np, "high-word-mask"))
-+			clk_divider_flags |= CLK_DIVIDER_HIWORD_MASK;
-+		if (of_property_read_bool(np, "divider-roud-closest"))
-+			clk_divider_flags |= CLK_DIVIDER_ROUND_CLOSEST;
-+
-+		return clk_register_divider(
-+			NULL, clk_name, of_clk_get_parent_name(np, 0), 0, reg,
-+			div_shift, div_width, clk_divider_flags, lock);
-+	} else {
-+		of_err(np, "Unsupported mode\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+}
-+
-+const struct of_device_id clk_mmio_controller_matches[] = {
-+	{
-+		.compatible = "mux-clock",
-+		.data = mux_clock_probe,
-+	},
-+	{
-+		.compatible = "gate-clock",
-+		.data = gate_clock_probe,
-+	},
-+	{
-+		.compatible = "divider-clock",
-+		.data = divider_clock_probe,
-+	},
-+	{ }
-+};
-+
-+static void __init mmio_clock_controller_register(struct device_node *np)
-+{
-+	const struct of_device_id *match;
-+	struct device_node *child;
-+	mmio_clock_probe_t probe;
-+	unsigned int count = 0;
-+	void __iomem *base;
-+	spinlock_t *lock;
-+	struct clk *clk;
-+	u32 reg;
-+	int err;
-+
-+	lock = kzalloc(sizeof(*lock), GFP_KERNEL);
-+	if (!lock)
-+		return;
-+	spin_lock_init(lock);
-+
-+	base = of_iomap(np, 0);
-+	if (!base) {
-+		of_err(np, "failed to get IO memory\n");
-+		kfree(lock);
-+		return;
-+	}
-+
-+	for_each_available_child_of_node(np, child) {
-+		match = of_match_node(clk_mmio_controller_matches, child);
-+		if (!match)
-+			continue;
-+
-+		if (of_property_read_u32(child, "reg", &reg)) {
-+			of_warn(child, "the reg property is missing!\n");
-+			continue;
-+		}
-+
-+		probe = match->data;
-+		clk = probe(child, base + reg, lock);
-+		if (IS_ERR(clk)) {
-+			of_err(child, "failed to register clock\n");
-+			continue;
-+		}
-+
-+		err = of_clk_add_provider(child, of_clk_src_simple_get, clk);
-+		if (err) {
-+			clk_unregister(clk);
-+			of_err(child, "failed to add clock provider\n");
-+		}
-+		count += 1;
-+	}
-+
-+	if (count == 0) {
-+		iounmap(base);
-+		kfree(lock);
-+	}
-+}
-+CLK_OF_DECLARE(clk_generic, "mmio-clock-controller",
-+		mmio_clock_controller_register);
--- 
-2.0.0
+Actually, pm_clk is very simple case of OMAP PM domain which should only
+handle clocks.
+
+In non-DT case, we have possibility to divide clocks on "fck" and "opt"
+(The way it can be done is not convenient, but it is - .con_id).
+
+For DT-case - no way now. Also, PM domains are not physically present on
+Keystone 2 and GPD was selected as glue layer to integrate DT, pm_clk and
+PM runtime all together (one big-fat-global PM domain :).
+
+So, I was able to find only following way to define "fck" clocks in DT:
+	clocks = <&papllclk>, <&clkcpgmac>, <&chipclk12>;
+	clock-names = "clk_pa", "clk_cpgmac", "cpsw_cpts_rft_clk";
+	fck-clocks = <&papllclk>, <&clkcpgmac>;
+As you can see - this will lead to data duplication in DT (
+
+Any propositions are welcome?
+
+Unfortunately, It seems that if we would not able to find DT solution
+then there will be following ways to move forward:
+- "remove the power domain proxy from your drivers and use the clocks directly" 
+((c) Arnd Bergmann).
+[As possibility - It can be allowed to use clk_pm APIs by drivers]
+- continue using platform specific implementations.
+
+regards,
+-grygorii
