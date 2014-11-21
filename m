@@ -1,62 +1,179 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] ARM: keystone: pm: switch to use generic pm domains
-Date: Fri, 21 Nov 2014 10:04:47 +0100
-Message-ID: <CAMuHMdWLU7seisSE3bgDFi4-0qKpyLHJfZ1GO37ZUMVFwNV9gg@mail.gmail.com>
-References: <1415631557-22897-1-git-send-email-grygorii.strashko@ti.com>
-	<1709760.E0jX3Myv0h@wuerfel>
-	<546C7FDD.7030906@ti.com>
-	<2900095.WIocOu7ue2@wuerfel>
-	<CAPDyKFqeZ3YU2OEN4tCOdcQ0pAho67Q8U_eCEOroG9aS0mp+-Q@mail.gmail.com>
-	<546DD87B.3080806@ti.com>
-	<CAPDyKFrBhZyqozM98_4pPdW0EMFt5W6VX1X7cz6Z=yNhW4vYTA@mail.gmail.com>
-	<CAMuHMdWtHT7QX3Kpa-GCLa49ToGODwjnNVgfxDzJzcM-FU1ffg@mail.gmail.com>
-	<546E0970.5090301@ti.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 3/9] clk: sunxi: Add prcm mod0 clock driver
+Date: Fri, 21 Nov 2014 10:13:10 +0100
+Message-ID: <546F0226.2040700@redhat.com>
+References: <1416498928-1300-1-git-send-email-hdegoede@redhat.com> <1416498928-1300-4-git-send-email-hdegoede@redhat.com> <20141121084933.GL24143@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <546E0970.5090301-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBL4EXSRQKGQEKQOT23I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20141121084933.GL24143@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 20, 2014 at 4:32 PM, Grygorii Strashko
-<grygorii.strashko-l0cyMroinI0@public.gmane.org> wrote:
->> That's indeed the tricky part.
+Hi,
+
+On 11/21/2014 09:49 AM, Maxime Ripard wrote:
+> Hi,
+> 
+> On Thu, Nov 20, 2014 at 04:55:22PM +0100, Hans de Goede wrote:
+>> Add a driver for mod0 clocks found in the prcm. Currently there is only
+>> one mod0 clocks in the prcm, the ir clock.
 >>
->> On shmobile, we just use the "NULL" clock, i.e. the first clock, for historical
->> reasons.
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
+>>  drivers/clk/sunxi/Makefile                        |  2 +-
+>>  drivers/clk/sunxi/clk-sun6i-prcm-mod0.c           | 63 +++++++++++++++++++++++
+>>  drivers/mfd/sun6i-prcm.c                          | 14 +++++
+>>  4 files changed, 79 insertions(+), 1 deletion(-)
+>>  create mode 100644 drivers/clk/sunxi/clk-sun6i-prcm-mod0.c
 >>
->> Using clock-names (e.g. "fck" and "pm") will conflict with existing bindings
->> for devices that already mandate specific clock names.
->>
->> As the clock being a "PM" clock is a property of the clock provider
->> (at last on shmobile), I originally came up with not handling it in DT,
->> but advertising it in the clock provider driver:
->>
->>>> - first Geert Uytterhoeven proposed to use CLK_RUNTIME_PM there
->>>>    https://lkml.org/lkml/2014/11/6/319
->
-> As I mentioned previously I don't like it, because in many cases one driver is used for
-> all/set_of clocks which support gating function. As result, some sort of tables will
-> need to be created and maintained in code by these drivers per each SoC
-> (or even per each SoC revision) for identification that clock is "PM clock".
+>> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+>> index ed116df..342c75a 100644
+>> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
+>> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+>> @@ -56,6 +56,7 @@ Required properties:
+>>  	"allwinner,sun4i-a10-usb-clk" - for usb gates + resets on A10 / A20
+>>  	"allwinner,sun5i-a13-usb-clk" - for usb gates + resets on A13
+>>  	"allwinner,sun6i-a31-usb-clk" - for usb gates + resets on A31
+>> +	"allwinner,sun6i-a31-ir-clk" - for the ir clock on A31
+>>  
+>>  Required properties for all clocks:
+>>  - reg : shall be the control register address for the clock.
+>> diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
+>> index 7ddc2b5..daf8b1c 100644
+>> --- a/drivers/clk/sunxi/Makefile
+>> +++ b/drivers/clk/sunxi/Makefile
+>> @@ -10,4 +10,4 @@ obj-y += clk-sun8i-mbus.o
+>>  
+>>  obj-$(CONFIG_MFD_SUN6I_PRCM) += \
+>>  	clk-sun6i-ar100.o clk-sun6i-apb0.o clk-sun6i-apb0-gates.o \
+>> -	clk-sun8i-apb0.o
+>> +	clk-sun8i-apb0.o clk-sun6i-prcm-mod0.o
+>> diff --git a/drivers/clk/sunxi/clk-sun6i-prcm-mod0.c b/drivers/clk/sunxi/clk-sun6i-prcm-mod0.c
+>> new file mode 100644
+>> index 0000000..e80f18e
+>> --- /dev/null
+>> +++ b/drivers/clk/sunxi/clk-sun6i-prcm-mod0.c
+>> @@ -0,0 +1,63 @@
+>> +/*
+>> + * Allwinner A31 PRCM mod0 clock driver
+>> + *
+>> + * Copyright (C) 2014 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#include <linux/clk-provider.h>
+>> +#include <linux/clkdev.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/platform_device.h>
+>> +
+>> +#include "clk-factors.h"
+>> +#include "clk-mod0.h"
+>> +
+>> +static const struct of_device_id sun6i_a31_prcm_mod0_clk_dt_ids[] = {
+>> +	{ .compatible = "allwinner,sun6i-a31-ir-clk" },
+>> +	{ /* sentinel */ }
+>> +};
+>> +
+>> +static DEFINE_SPINLOCK(sun6i_prcm_mod0_lock);
+>> +
+>> +static int sun6i_a31_prcm_mod0_clk_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device_node *np = pdev->dev.of_node;
+>> +	struct resource *r;
+>> +	void __iomem *reg;
+>> +
+>> +	if (!np)
+>> +		return -ENODEV;
+>> +
+>> +	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	reg = devm_ioremap_resource(&pdev->dev, r);
+>> +	if (IS_ERR(reg))
+>> +		return PTR_ERR(reg);
+>> +
+>> +	sunxi_factors_register(np, &sun4i_a10_mod0_data,
+>> +			       &sun6i_prcm_mod0_lock, reg);
+>> +	return 0;
+>> +}
+>> +
+>> +static struct platform_driver sun6i_a31_prcm_mod0_clk_driver = {
+>> +	.driver = {
+>> +		.name = "sun6i-a31-prcm-mod0-clk",
+>> +		.of_match_table = sun6i_a31_prcm_mod0_clk_dt_ids,
+>> +	},
+>> +	.probe = sun6i_a31_prcm_mod0_clk_probe,
+>> +};
+>> +module_platform_driver(sun6i_a31_prcm_mod0_clk_driver);
+>> +
+>> +MODULE_DESCRIPTION("Allwinner A31 PRCM mod0 clock driver");
+>> +MODULE_AUTHOR("Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>");
+>> +MODULE_LICENSE("GPL");
+> 
+> I don't think this is the right approach, mainly for two reasons: the
+> compatible shouldn't change, and you're basically duplicating code
+> there.
+> 
+> I understand that you need the new compatible in order to avoid a
+> double probing: one by CLK_OF_DECLARE, and one by the usual mechanism,
+> and that also implies the second reason.
 
-That depends. On shmobile, there's a separate hardware module for those
-clocks, hence all clocks provided by drivers/clk/shmobile/clk-mstp.c are "PM"
-clocks.
+Not only for that, we need a new compatible also because the mfd framework
+needs a separate compatible per sub-node as that is how it finds nodes
+to attach to the platform devices, so we need a new compatible anyways,
+with your make the mod0 clock driver a platform driver solution we could
+use:
 
-Gr{oetje,eeting}s,
+	compatible = "allwinner,sun6i-a31-ir-clk", "allwinner,sun4i-a10-mod0-clk";
 
-                        Geert
+To work around this, but there are other problems, your make mod0clk a
+platform driver solution cannot work because the clocks node in the dtsi
+is not simple-bus compatible, so no platform-devs will be instantiated for
+the clocks there.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+Besides the compatible (which as said we need a separate one anyways),
+your other worry is code duplication, but I've avoided that as much
+as possible already, the new drivers/clk/sunxi/clk-sun6i-prcm-mod0.c is
+just a very thin wrapper, waying in with all of 63 lines including
+16 lines GPL header.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So sorry, I disagree I believe that this is the best solution.
+
+> However, as those are not critical clocks that need to be here early
+> at boot, you can also fix this by turning the mod0 driver into a
+> platform driver itself. The compatible will be kept, the driver will
+> be the same.
+> 
+> The only thing we need to pay attention to is how "client" drivers
+> react when they cannot grab their clock. They should return
+> -EPROBE_DEFER, but that remains to be checked.
+
+-EPROBE_DEFER is yet another reason to not make mod0-clk a platform
+driver. Yes drivers should be able to handle this, but it is a pain,
+and the more we use it the more pain it is. Also it makes booting a lot
+slower as any driver using a mod0 clk now, will not complete its probe
+until all the other drivers are done probing and the late_initcall
+which starts the deferred-probe wq runs.
+
+Regards,
+
+Hans
