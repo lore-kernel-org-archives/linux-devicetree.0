@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCHv3 12/16] ARM: mvebu: make sure MMU is disabled in armada_370_xp_cpu_resume
-Date: Fri, 21 Nov 2014 17:00:09 +0100
-Message-ID: <1416585613-2113-13-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCHv3 07/16] bus: mvebu-mbus: provide a mechanism to save SDRAM window configuration
+Date: Fri, 21 Nov 2014 17:00:04 +0100
+Message-ID: <1416585613-2113-8-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1416585613-2113-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1416585613-2113-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,46 +10,178 @@ To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <a
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The armada_370_xp_cpu_resume() until now was used only as the function
-called by the SoC when returning from a deep idle state (as used in
-cpuidle, or when the CPU is brought offline using CPU hotplug).
+On Marvell EBU platforms, when doing suspend/resume, the SDRAM window
+configuration must be saved on suspend, and restored on
+resume. However, it needs to be restored on resume *before*
+re-entering the kernel, because the SDRAM window configuration defines
+the layout of the memory. For this reason, it cannot simply be done in
+the ->suspend() and ->resume() hooks of the mvebu-mbus driver.
 
-However, it is now also used when exiting the suspend to RAM state. In
-this case, it is the bootloader that calls back into this function,
-with the MMU left enabled by the BootROM. Having the MMU enabled when
-entering this function confuses the kerrnel because we are not using
-the kernel page tables at this point, but in other mvebu functions we
-use the information on whether the MMU is enabled or not to find out
-whether we should talk to the coherency fabric using a physical
-address or a virtual address. To fix that, we simply disable the MMU
-when entering this function, so that the kernel is in an expected
-situation.
+Instead, it needs to be restored by the bootloader "boot info"
+mechanism used when resuming. This mechanism allows the kernel to
+define a list of (address, value) pairs when suspending, that the
+bootloader will restore on resume before jumping back into the kernel.
+
+This commit therefore adds a new function to the mvebu-mbus driver,
+called mvebu_mbus_save_cpu_target(), which will be called by the
+platform code to make the mvebu-mbus driver save the SDRAM window
+configuration in a way that can be understood by the bootloader "boot
+info" mechanism.
 
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Reviewed-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/mach-mvebu/pmsu_ll.S | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/bus/mvebu-mbus.c | 56 ++++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/mbus.h     |  1 +
+ 2 files changed, 57 insertions(+)
 
-diff --git a/arch/arm/mach-mvebu/pmsu_ll.S b/arch/arm/mach-mvebu/pmsu_ll.S
-index a945756..ae7e6b0 100644
---- a/arch/arm/mach-mvebu/pmsu_ll.S
-+++ b/arch/arm/mach-mvebu/pmsu_ll.S
-@@ -18,6 +18,14 @@
-  */
- ENTRY(armada_370_xp_cpu_resume)
- ARM_BE8(setend	be )			@ go BE8 if entered LE
-+	/*
-+	 * Disable the MMU that might have been enabled in BootROM if
-+	 * this code is used in the resume path of a suspend/resume
-+	 * cycle.
-+	 */
-+	mrc	p15, 0, r1, c1, c0, 0
-+	bic	r1, #1
-+	mcr	p15, 0, r1, c1, c0, 0
- 	bl	ll_add_cpu_to_smp_group
- 	bl	ll_enable_coherency
- 	b	cpu_resume
+diff --git a/drivers/bus/mvebu-mbus.c b/drivers/bus/mvebu-mbus.c
+index e8c1593..eb7682d 100644
+--- a/drivers/bus/mvebu-mbus.c
++++ b/drivers/bus/mvebu-mbus.c
+@@ -110,6 +110,8 @@ struct mvebu_mbus_soc_data {
+ 	bool has_mbus_bridge;
+ 	unsigned int (*win_cfg_offset)(const int win);
+ 	void (*setup_cpu_target)(struct mvebu_mbus_state *s);
++	int (*save_cpu_target)(struct mvebu_mbus_state *s,
++			       u32 *store_addr);
+ 	int (*show_cpu_target)(struct mvebu_mbus_state *s,
+ 			       struct seq_file *seq, void *v);
+ };
+@@ -128,6 +130,7 @@ struct mvebu_mbus_state {
+ 	void __iomem *mbuswins_base;
+ 	void __iomem *sdramwins_base;
+ 	void __iomem *mbusbridge_base;
++	phys_addr_t sdramwins_phys_base;
+ 	struct dentry *debugfs_root;
+ 	struct dentry *debugfs_sdram;
+ 	struct dentry *debugfs_devs;
+@@ -541,6 +544,28 @@ mvebu_mbus_default_setup_cpu_target(struct mvebu_mbus_state *mbus)
+ 	mvebu_mbus_dram_info.num_cs = cs;
+ }
+ 
++static int
++mvebu_mbus_default_save_cpu_target(struct mvebu_mbus_state *mbus,
++				   u32 *store_addr)
++{
++	int i;
++
++	for (i = 0; i < 4; i++) {
++		u32 base = readl(mbus->sdramwins_base + DDR_BASE_CS_OFF(i));
++		u32 size = readl(mbus->sdramwins_base + DDR_SIZE_CS_OFF(i));
++
++		writel(mbus->sdramwins_phys_base + DDR_BASE_CS_OFF(i),
++		       store_addr++);
++		writel(base, store_addr++);
++		writel(mbus->sdramwins_phys_base + DDR_SIZE_CS_OFF(i),
++		       store_addr++);
++		writel(size, store_addr++);
++	}
++
++	/* We've written 16 words to the store address */
++	return 16;
++}
++
+ static void __init
+ mvebu_mbus_dove_setup_cpu_target(struct mvebu_mbus_state *mbus)
+ {
+@@ -571,11 +596,35 @@ mvebu_mbus_dove_setup_cpu_target(struct mvebu_mbus_state *mbus)
+ 	mvebu_mbus_dram_info.num_cs = cs;
+ }
+ 
++static int
++mvebu_mbus_dove_save_cpu_target(struct mvebu_mbus_state *mbus,
++				u32 *store_addr)
++{
++	int i;
++
++	for (i = 0; i < 2; i++) {
++		u32 map = readl(mbus->sdramwins_base + DOVE_DDR_BASE_CS_OFF(i));
++
++		writel(mbus->sdramwins_phys_base + DOVE_DDR_BASE_CS_OFF(i),
++		       store_addr++);
++		writel(map, store_addr++);
++	}
++
++	/* We've written 4 words to the store address */
++	return 4;
++}
++
++int mvebu_mbus_save_cpu_target(u32 *store_addr)
++{
++	return mbus_state.soc->save_cpu_target(&mbus_state, store_addr);
++}
++
+ static const struct mvebu_mbus_soc_data armada_370_xp_mbus_data = {
+ 	.num_wins            = 20,
+ 	.num_remappable_wins = 8,
+ 	.has_mbus_bridge     = true,
+ 	.win_cfg_offset      = armada_370_xp_mbus_win_offset,
++	.save_cpu_target     = mvebu_mbus_default_save_cpu_target,
+ 	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
+ 	.show_cpu_target     = mvebu_sdram_debug_show_orion,
+ };
+@@ -584,6 +633,7 @@ static const struct mvebu_mbus_soc_data kirkwood_mbus_data = {
+ 	.num_wins            = 8,
+ 	.num_remappable_wins = 4,
+ 	.win_cfg_offset      = orion_mbus_win_offset,
++	.save_cpu_target     = mvebu_mbus_default_save_cpu_target,
+ 	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
+ 	.show_cpu_target     = mvebu_sdram_debug_show_orion,
+ };
+@@ -592,6 +642,7 @@ static const struct mvebu_mbus_soc_data dove_mbus_data = {
+ 	.num_wins            = 8,
+ 	.num_remappable_wins = 4,
+ 	.win_cfg_offset      = orion_mbus_win_offset,
++	.save_cpu_target     = mvebu_mbus_dove_save_cpu_target,
+ 	.setup_cpu_target    = mvebu_mbus_dove_setup_cpu_target,
+ 	.show_cpu_target     = mvebu_sdram_debug_show_dove,
+ };
+@@ -604,6 +655,7 @@ static const struct mvebu_mbus_soc_data orion5x_4win_mbus_data = {
+ 	.num_wins            = 8,
+ 	.num_remappable_wins = 4,
+ 	.win_cfg_offset      = orion_mbus_win_offset,
++	.save_cpu_target     = mvebu_mbus_default_save_cpu_target,
+ 	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
+ 	.show_cpu_target     = mvebu_sdram_debug_show_orion,
+ };
+@@ -612,6 +664,7 @@ static const struct mvebu_mbus_soc_data orion5x_2win_mbus_data = {
+ 	.num_wins            = 8,
+ 	.num_remappable_wins = 2,
+ 	.win_cfg_offset      = orion_mbus_win_offset,
++	.save_cpu_target     = mvebu_mbus_default_save_cpu_target,
+ 	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
+ 	.show_cpu_target     = mvebu_sdram_debug_show_orion,
+ };
+@@ -620,6 +673,7 @@ static const struct mvebu_mbus_soc_data mv78xx0_mbus_data = {
+ 	.num_wins            = 14,
+ 	.num_remappable_wins = 8,
+ 	.win_cfg_offset      = mv78xx0_mbus_win_offset,
++	.save_cpu_target     = mvebu_mbus_default_save_cpu_target,
+ 	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
+ 	.show_cpu_target     = mvebu_sdram_debug_show_orion,
+ };
+@@ -804,6 +858,8 @@ static int __init mvebu_mbus_common_init(struct mvebu_mbus_state *mbus,
+ 		return -ENOMEM;
+ 	}
+ 
++	mbus->sdramwins_phys_base = sdramwins_phys_base;
++
+ 	if (mbusbridge_phys_base) {
+ 		mbus->mbusbridge_base = ioremap(mbusbridge_phys_base,
+ 						mbusbridge_size);
+diff --git a/include/linux/mbus.h b/include/linux/mbus.h
+index 550c88f..611b69f 100644
+--- a/include/linux/mbus.h
++++ b/include/linux/mbus.h
+@@ -61,6 +61,7 @@ static inline const struct mbus_dram_target_info *mv_mbus_dram_info(void)
+ }
+ #endif
+ 
++int mvebu_mbus_save_cpu_target(u32 *store_addr);
+ void mvebu_mbus_get_pcie_mem_aperture(struct resource *res);
+ void mvebu_mbus_get_pcie_io_aperture(struct resource *res);
+ int mvebu_mbus_add_window_remap_by_id(unsigned int target,
 -- 
 2.1.0
 
