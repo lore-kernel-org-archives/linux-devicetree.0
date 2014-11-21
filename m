@@ -1,90 +1,65 @@
-From: Marcel Ziswiler <marcel@ziswiler.com>
-Subject: [PATCH] ARM: tegra: colibri t30: fix on-module ethernet
-Date: Fri, 21 Nov 2014 11:41:41 +0100
-Message-ID: <b1cdc96ce8bb15059d7eea282f6586a826bee124.1416566157.git.marcel@ziswiler.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v4 1/2] of: Rename "poweroff-source" property to
+ "system-power-controller"
+Date: Fri, 21 Nov 2014 11:59:51 +0100
+Message-ID: <20141121105951.GA20679@localhost>
+References: <1415885699-1465-1-git-send-email-user@radxa>
+ <1415885699-1465-2-git-send-email-user@radxa>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: swarren@wwwdotorg.org, thierry.reding@gmail.com
-Cc: devicetree@vger.kernel.org, linux@arm.linux.org.uk, linux-kernel@vger.kernel.org, stefan@agner.ch, Marcel Ziswiler <marcel@ziswiler.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1415885699-1465-2-git-send-email-user@radxa>
+Sender: linux-pm-owner@vger.kernel.org
+To: Auto Configured <romain.perier@gmail.com>, Lee Jones <lee.jones@linaro.org>
+Cc: heiko@sntech.de, grant.likely@linaro.org, robh@kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org, johan@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balbi@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Looks like Ethernet only ever worked if U-Boot properly brought it up
-as both the reset as well as the VBUS lines were not actively handled
-in-kernel.
-This patch fixes this by just pulling up the reset GPIO and properly
-enabling VBUS via a GPIO enabled fixed regulator VBUS supply.
+On Thu, Nov 13, 2014 at 01:34:58PM +0000, Auto Configured wrote:
+> From: Romain Perier <romain.perier@gmail.com>
+> 
+> It reverts commit a4b4e0461ec5 ("of: Add standard property for poweroff capability").
+> As discussed on the mailing list, it makes more sense to rename back to the
+> old established property name, without the vendor prefix. Problem being that
+> the word "source" usually tends to be used for inputs and that is out of control
+> of the OS. The poweroff capability is an output which simply turns the
+> system-power off. Also, this property might be used by drivers which power-off
+> the system and power back on subsequent RTC alarms. This seems to suggest to
+> remove "poweroff" from the property name and to choose "system-power-controller"
+> as the more generic name. This patchs adds the required renaming changes and
+> defines an helper function which is compatible with both properties, the old one
+> which was only used by tps65910 and the new one without vendor-prefix.
 
-Signed-off-by: Marcel Ziswiler <marcel@ziswiler.com>
----
-Don't know whether this one could still make it into the current RC
-cycle as it is clearly a bug fix.
+Now this is a bit of a mess.
 
- arch/arm/boot/dts/tegra30-colibri.dtsi | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+There's a commit in the mfd tree, 25f833c1171d ("mfd: tps65910: Convert
+ti,system-power-controller DT property to poweroff-source"), which
+breaks all dts using tps65910 since these are never updated to the now
+retracted property name ("poweroff-source").
 
-diff --git a/arch/arm/boot/dts/tegra30-colibri.dtsi b/arch/arm/boot/dts/tegra30-colibri.dtsi
-index c4ed1be..ddbdb77 100644
---- a/arch/arm/boot/dts/tegra30-colibri.dtsi
-+++ b/arch/arm/boot/dts/tegra30-colibri.dtsi
-@@ -167,6 +167,22 @@
- 				nvidia,pull = <TEGRA_PIN_PULL_UP>;
- 				nvidia,tristate = <TEGRA_PIN_DISABLE>;
- 			};
-+
-+			/* LAN_RESET# */
-+			pex_l0_prsnt_n_pdd0 {
-+				nvidia,pins = "pex_l0_prsnt_n_pdd0";
-+				nvidia,function = "rsvd3";
-+				nvidia,pull = <TEGRA_PIN_PULL_UP>;
-+				nvidia,tristate = <TEGRA_PIN_DISABLE>;
-+			};
-+
-+			/* LAN_V_BUS */
-+			pex_l0_clkreq_n_pdd2 {
-+				nvidia,pins = "pex_l0_clkreq_n_pdd2";
-+				nvidia,function = "rsvd3";
-+				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
-+				nvidia,tristate = <TEGRA_PIN_DISABLE>;
-+			};
- 		};
- 	};
- 
-@@ -345,6 +361,7 @@
- 	usb-phy@7d004000 {
- 		status = "okay";
- 		nvidia,is-wired = <1>;
-+		vbus-supply = <&lan_vbus_reg>;
- 	};
- 
- 	clocks {
-@@ -382,5 +399,17 @@
- 			regulator-max-microvolt = <5000000>;
- 			regulator-always-on;
- 		};
-+
-+		/* LAN_V_BUS */
-+		lan_vbus_reg: regulator@102 {
-+			compatible = "regulator-fixed";
-+			reg = <102>;
-+			regulator-name = "lan_vbus";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			gpio = <&gpio TEGRA_GPIO(DD, 2) GPIO_ACTIVE_HIGH>;
-+			enable-active-high;
-+			vin-supply = <&charge_pump_5v0_reg>;
-+		};
- 	};
- };
--- 
-1.9.3
+This one should simply be reverted ASAP.
+
+> Signed-off-by: Romain Perier <romain.perier@gmail.com>
+> ---
+>  .../bindings/power/{poweroff.txt => power-controller.txt}        | 0
+>  .../devicetree/bindings/regulator/act8865-regulator.txt          | 4 ++--
+>  drivers/mfd/tps65910.c                                           | 9 ++++++++-
+>  drivers/regulator/act8865-regulator.c                            | 2 +-
+>  include/linux/of.h                                               | 6 +++---
+>  5 files changed, 14 insertions(+), 7 deletions(-)
+
+Romain, what tree is this patch against? The changes to the tps65910
+driver appears not to even be in the regulator tree, yet you asked Mark
+to merge this. And the MFD maintainer is not even on CC.
+
+Let's fix the breakage by reverting the offending commit in mfd. Then the
+new standard name can be introduced in regulator alone (e.g. this patch
+without the tps65910 bits) as nothing outside of regulator should be
+using the new power-off feature (or binding) for act8865. Then other
+drivers and dts can be converted to use the new property name (while
+retaining backwards compatibility) for 3.20.
+
+[ We should probably also consider adding an "of_device_is_" prefix to
+the helper name for consistency. ]
+
+Johan
