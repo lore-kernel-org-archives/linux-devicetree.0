@@ -1,46 +1,78 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCHv3 16/16] ARM: mvebu: add SDRAM controller description for Armada XP
-Date: Fri, 21 Nov 2014 17:00:13 +0100
-Message-ID: <1416585613-2113-17-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: [PATCHv3 04/16] clocksource: time-armada-370-xp: add suspend/resume support
+Date: Fri, 21 Nov 2014 17:00:01 +0100
+Message-ID: <1416585613-2113-5-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1416585613-2113-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416585613-2113-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1416585613-2113-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>
+Cc: linux-arm-kernel@lists.infradead.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The suspend/resume sequence on Armada XP needs to modify a number of
-registers in the SDRAM controller. Therefore, this commit updates the
-Armada XP Device Tree description to include the SDRAM controller
-Device Tree node.
+This commit adds a set of suspend/resume syscore_ops to respectively
+save and restore a number of timer registers, in order to make sure
+the clockevent and clocksource devices continue to work properly
+across a suspend/resume cycle.
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- arch/arm/boot/dts/armada-xp.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/clocksource/time-armada-370-xp.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
-index bff9f6c..2be244a 100644
---- a/arch/arm/boot/dts/armada-xp.dtsi
-+++ b/arch/arm/boot/dts/armada-xp.dtsi
-@@ -35,6 +35,11 @@
- 		};
+diff --git a/drivers/clocksource/time-armada-370-xp.c b/drivers/clocksource/time-armada-370-xp.c
+index 0451e62..ff37d3a 100644
+--- a/drivers/clocksource/time-armada-370-xp.c
++++ b/drivers/clocksource/time-armada-370-xp.c
+@@ -43,6 +43,7 @@
+ #include <linux/module.h>
+ #include <linux/sched_clock.h>
+ #include <linux/percpu.h>
++#include <linux/syscore_ops.h>
  
- 		internal-regs {
-+			sdramc@1400 {
-+				compatible = "marvell,armada-xp-sdram-controller";
-+				reg = <0x1400 0x500>;
-+			};
+ /*
+  * Timer block registers.
+@@ -223,6 +224,28 @@ static struct notifier_block armada_370_xp_timer_cpu_nb = {
+ 	.notifier_call = armada_370_xp_timer_cpu_notify,
+ };
+ 
++static u32 timer0_ctrl_reg, timer0_local_ctrl_reg;
 +
- 			L2: l2-cache {
- 				compatible = "marvell,aurora-system-cache";
- 				reg = <0x08000 0x1000>;
++static int armada_370_xp_timer_suspend(void)
++{
++	timer0_ctrl_reg = readl(timer_base + TIMER_CTRL_OFF);
++	timer0_local_ctrl_reg = readl(local_base + TIMER_CTRL_OFF);
++	return 0;
++}
++
++static void armada_370_xp_timer_resume(void)
++{
++	writel(0xffffffff, timer_base + TIMER0_VAL_OFF);
++	writel(0xffffffff, timer_base + TIMER0_RELOAD_OFF);
++	writel(timer0_ctrl_reg, timer_base + TIMER_CTRL_OFF);
++	writel(timer0_local_ctrl_reg, local_base + TIMER_CTRL_OFF);
++}
++
++struct syscore_ops armada_370_xp_timer_syscore_ops = {
++	.suspend	= armada_370_xp_timer_suspend,
++	.resume		= armada_370_xp_timer_resume,
++};
++
+ static void __init armada_370_xp_timer_common_init(struct device_node *np)
+ {
+ 	u32 clr = 0, set = 0;
+@@ -285,6 +308,8 @@ static void __init armada_370_xp_timer_common_init(struct device_node *np)
+ 	/* Immediately configure the timer on the boot CPU */
+ 	if (!res)
+ 		armada_370_xp_timer_setup(this_cpu_ptr(armada_370_xp_evt));
++
++	register_syscore_ops(&armada_370_xp_timer_syscore_ops);
+ }
+ 
+ static void __init armada_xp_timer_init(struct device_node *np)
 -- 
 2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
