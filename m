@@ -1,7 +1,8 @@
 From: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Subject: [PATCHv5 02/10] arm: mvebu: add uartX labels for Armada SoC serial nodes
-Date: Fri, 21 Nov 2014 20:45:21 +0100
-Message-ID: <fe66fb90b5af74d784bb946c79be63481977a6b6.1416598536.git.arno@natisbad.org>
+Subject: [PATCHv5 03/10] arm: mvebu: use recently introduced uart label for
+ stdout-path
+Date: Fri, 21 Nov 2014 20:45:28 +0100
+Message-ID: <401905040d8e32f3070c75ccca0102fad1cf323c.1416598536.git.arno@natisbad.org>
 References: <cover.1416598536.git.arno@natisbad.org>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -13,65 +14,31 @@ Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kern
 List-Id: devicetree@vger.kernel.org
 
 
-This patch adds uartX labels for Armada SoC serial nodes. This is
-a preliminary work to be able to easily reference the serial lines
-in Device Tree files. One expected use is when providing stdout-path
-property for barebox.
+Now that labels for uartX are available in Marvell Armada .dtsi files,
+this patch replaces the "/soc/internal-regs/serial@12000" found in
+armada-xp-lenovo-ix4-300d.dts file for stdout-path property by the more
+concise &uart0.
 
 Reviewed-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Suggested-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
 ---
- arch/arm/boot/dts/armada-370-xp.dtsi | 5 +++--
- arch/arm/boot/dts/armada-xp.dtsi     | 5 +++--
- 2 files changed, 6 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
-index 83286ec9702c..2be9723bcdf3 100644
---- a/arch/arm/boot/dts/armada-370-xp.dtsi
-+++ b/arch/arm/boot/dts/armada-370-xp.dtsi
-@@ -151,7 +151,7 @@
- 				status = "disabled";
- 			};
+diff --git a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
+index aa5463c91924..088d8d2fe9eb 100644
+--- a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
++++ b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
+@@ -22,7 +22,7 @@
  
--			serial@12000 {
-+			uart0: serial@12000 {
- 				compatible = "snps,dw-apb-uart";
- 				reg = <0x12000 0x100>;
- 				reg-shift = <2>;
-@@ -160,7 +160,8 @@
- 				clocks = <&coreclk 0>;
- 				status = "disabled";
- 			};
--			serial@12100 {
-+
-+			uart1: serial@12100 {
- 				compatible = "snps,dw-apb-uart";
- 				reg = <0x12100 0x100>;
- 				reg-shift = <2>;
-diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
-index a3919b644737..e4ba27ef109b 100644
---- a/arch/arm/boot/dts/armada-xp.dtsi
-+++ b/arch/arm/boot/dts/armada-xp.dtsi
-@@ -53,7 +53,7 @@
- 				reg = <0x11100 0x100>;
- 			};
+ 	chosen {
+ 		bootargs = "console=ttyS0,115200 earlyprintk";
+-		stdout-path = "/soc/internal-regs/serial@12000";
++		stdout-path = &uart0;
+ 	};
  
--			serial@12200 {
-+			uart2: serial@12200 {
- 				compatible = "snps,dw-apb-uart";
- 				reg = <0x12200 0x100>;
- 				reg-shift = <2>;
-@@ -62,7 +62,8 @@
- 				clocks = <&coreclk 0>;
- 				status = "disabled";
- 			};
--			serial@12300 {
-+
-+			uart3: serial@12300 {
- 				compatible = "snps,dw-apb-uart";
- 				reg = <0x12300 0x100>;
- 				reg-shift = <2>;
+ 	memory {
 -- 
 2.1.1
 
