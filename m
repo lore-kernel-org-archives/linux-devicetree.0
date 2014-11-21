@@ -1,103 +1,91 @@
-From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Subject: Re: [PATCH] of: spi: Export single device registration method and  accessors (v2)
-Date: Fri, 21 Nov 2014 17:44:00 +0200
-Message-ID: <CC185E77-95F6-4E4B-B431-59C9A9775453@antoniou-consulting.com>
-References: <1414572037-11306-1-git-send-email-pantelis.antoniou@konsulko.com> <20141029101420.GT18557@sirena.org.uk> <6A3753C0-251A-4645-AD96-CB1D6521175F@antoniou-consulting.com> <20141029122204.GG18557@sirena.org.uk> <20141121153329.C4DDDC40D85@trevor.secretlab.ca>
-Mime-Version: 1.0 (Mac OS X Mail 8.1 \(1993\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141121153329.C4DDDC40D85-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel Becker <jlbec-aKy9MeLSZ9dg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v1] usb: phy: nop: device tree documentation for vbus
+Date: Fri, 21 Nov 2014 09:45:06 -0600
+Message-ID: <20141121154506.GG7508@saruman>
+References: <1415538138-24434-1-git-send-email-robert.jarzmik@free.fr>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="L1c6L/cjZjI9d0Eq"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1415538138-24434-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+--L1c6L/cjZjI9d0Eq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Nov 21, 2014, at 17:33 , Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> =
-wrote:
+On Sun, Nov 09, 2014 at 02:02:18PM +0100, Robert Jarzmik wrote:
+> Enhance the phy documentation by adding 2 new optional bindings :
+>  - the vbus gpio, which detects usb insertion
+>  - the vbus regulator, which provides current drawn from the usb cable
 >=20
-> On Wed, 29 Oct 2014 12:22:04 +0000
-> , Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> wrote:
->> On Wed, Oct 29, 2014 at 01:48:06PM +0200, Pantelis Antoniou wrote:
->>>> On Oct 29, 2014, at 12:14 , Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>=20
->>>> This feels like there is an abstraction problem somewhere, whateve=
-r code
->>>> is supposed to use this is going to need to be taught about each
->>>> individual bus which is going to be tedious, I would expect that w=
-e'd
->>>> have something like the bus being able to provide a callback which=
- will
->>>> get invoked whenever a new node appears on the parent node for the=
- bus.
->>=20
->>> There=C3=A2=C2=80=C2=99s a whole patchset that does exactly this.=20
->>> Look at "OF: spi: Add OF notifier handler=C3=A2=C2=80=C2=9D and you=
-=C3=A2=C2=80=C2=99ll where this is used.
->>=20
->> I deleted that unread I'm afraid; one of the reasons that you should=
- use
->> subject lines matching the styles for the subsystems is that it's on=
-e of
->> the things people use to filter out things that actually need attent=
-ion,
->> if things are busy things that at first glance don't look terribly
->> relevant (like changes to the OF core in this case) are likely to ge=
-t
->> looked at less urgently or just skipped.
->>=20
->> A quick glance suggests that this is adding code inside the SPI core=
- so
->> it's still not explaining why anything is being exported, can you
->> clarify please?
+> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 >=20
-> I have the same question. This doesn't look like it should be exporti=
-ng
-> symbols.
->=20
-> Also, the way the patch is written causes a lot of code changes to ge=
-t
-> interleaved in the diff. It would be better to split into two patches=
-;
-> one that creates the new of_register_spi_device(), and a separate pat=
-ch
-> to add the other new functions. It would be certainly easier to revie=
-w
-> that way.
->=20
+> diff --git a/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt b/Do=
+cumentation/devicetree/bindings/usb/usb-nop-xceiv.txt
+> index 1bd37fa..65dfe4b 100644
+> --- a/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
+> +++ b/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
+> @@ -17,6 +17,11 @@ Optional properties:
+> =20
+>  - reset-gpios: Should specify the GPIO for reset.
+> =20
+> +- vbus-gpios: should specify the GPIO detecting a VBus insertion
+> +              (see Documentation/devicetree/bindings/gpio/gpio.txt)
+> +- vbus-regulator : should specifiy the regulator supplying current drawn=
+ from
+> +  the VBus line (see Documentation/devicetree/bindings/regulator/regulat=
+or.txt).
+> +
+>  Example:
+> =20
+>  	hsusb1_phy {
+> @@ -26,8 +31,11 @@ Example:
+>  		clock-names =3D "main_clk";
+>  		vcc-supply =3D <&hsusb1_vcc_regulator>;
+>  		reset-gpios =3D <&gpio1 7 GPIO_ACTIVE_LOW>;
+> +		vbus-gpios =3D <&gpio2 13 GPIO_ACTIVE_HIGH>;
+> +		vbus-regulator =3D <&vbus_regulator>;
 
-The diff does make a mess of things; it=E2=80=99s not that complex of a=
- patch.
+not sure why you need vbus-gpios here. You can pass the gpio to the
+regulator as enable-gpio, right ?
 
-Your wish shall be granted. I=E2=80=99ll respin this over the weekend.
+--=20
+balbi
 
->>=20
->>>> SubmittingPatches says.  Please also try to keep your CC list sane=
-,
->>>> CCing random people just means that you're increasing the volume o=
-f mail
->>>> they have to process.  I'm surprised kernel.org accepts so many CC=
-s.
->>=20
->>>> I have to say I don't recall ever seeing v1...
->>=20
->>> All of them are in the CC list for a reason.=20
->>=20
->> This is a single, standalone SPI patch - you didn't send it as part =
-of a
->> series (which is the only reason I read it).
->=20
-> Yes, this is part of the OF overlay series. It should have at least b=
-een
-> marked as [PATCH 7/8] and that it replaced the previous, buggy, patch=
- 7.
->=20
-> g.
->=20
+--L1c6L/cjZjI9d0Eq
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Regards
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-=E2=80=94 Pantelis
+iQIcBAEBAgAGBQJUb14CAAoJEIaOsuA1yqREuewP/ixWqGSxrumNKPzM7r2/R6i2
+ONs1LQm9mAcss06xtHxgaVtNQk9Y+s82ZhLTyr8p5eZNfQgirSMX+EsKj7XBqqHn
+aulpBY1EDHOpVPHRr1fxG+G5X5QmpHYxqUz2T5TPLTsZsQWdORnEnMgqacR+kpQi
+rxvNpxSSm9AiXascQGqZsT2TJWr87EwNzcAwS4e37czZnBuTbJUHJUc1LjKos6fe
+VXMXYWn6uN54VnyY1FpALJ/2fn9PvO+USXnJfwg3P/S2IYaGczlb5KAwH02DrXeZ
+KYKe8GAyqKRQ0laX40CV0kyMAzwWdpQoIDM7n9mLmLSiPKkwsG3DfON9mE4U2lKa
+JZSKx9G9w77KpDJM/pgMbnoLTmP8d0OVOaHCJrRAuORWT91q8zjA3nSsIrWT0daG
+n8+9MGj0OnSd24/M/nxyzh5XzAGt/fhw/4/3bHwbfi/phstFQWXzfo50c49A39sq
+hpJdatQ8pzWCt8MC6vspCyYOICFsbUdulKIgH0RHE5+g1YTAyB4XSAdNdnmAkJM+
+YlH2Yr5eRh2OFDhtS1RNkbrds5S78spAQDSG2pBgI28GNlxCwmJWJDI+QWUxJelz
+Z+X+MQydtZ6pE5ZfHDTNxqvMX/oGlnnT/vWahtfLnTlfLhG50nwe6oD2K8U8dea3
+64mgonJ/YYL/+NETvEHO
+=sx6A
+-----END PGP SIGNATURE-----
+
+--L1c6L/cjZjI9d0Eq--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
