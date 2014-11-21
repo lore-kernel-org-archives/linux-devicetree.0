@@ -1,160 +1,59 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCHv3 05/16] gpio: mvebu: add suspend/resume support
-Date: Fri, 21 Nov 2014 17:00:02 +0100
-Message-ID: <1416585613-2113-6-git-send-email-thomas.petazzoni@free-electrons.com>
-References: <1416585613-2113-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1416585613-2113-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>
-Cc: linux-arm-kernel@lists.infradead.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio@vger.kernel.org
+From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [GIT PULL 3.19] Broadcom Cygnus SoC Device Tree changes
+Date: Fri, 21 Nov 2014 08:11:01 -0800
+Message-ID: <546F6415.5000004@broadcom.com>
+References: <1415826266-6867-1-git-send-email-f.fainelli@gmail.com> <201411201254.48494.arnd@arndb.de> <546E5547.2070302@broadcom.com> <3132550.UOyhmffLBV@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3132550.UOyhmffLBV@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This commit adds the implementation of ->suspend() and ->resume()
-platform_driver hooks in order to save and restore the state of the
-GPIO configuration. In order to achieve that, additional fields are
-added to the mvebu_gpio_chip structure.
+On 14-11-21 03:55 AM, Arnd Bergmann wrote:
+> On Thursday 20 November 2014 12:55:35 Scott Branden wrote:
+>> On 14-11-20 03:54 AM, Arnd Bergmann wrote:
+>>> On Wednesday 12 November 2014, Florian Fainelli wrote:
+>>>> The following changes since commit f114040e3ea6e07372334ade75d1ee0775c355e1:
+>>>>
+>>>>     Linux 3.18-rc1 (2014-10-19 18:08:38 -0700)
+>>>>
+>>>> are available in the git repository at:
+>>>>
+>>>>     http://github.com/brcm/linux.git tags/arm-soc/for-3.19/cygnus-dts-v2
+>>>>
+>>>> for you to fetch changes up to c9ad7bc5fe3c57c8c817fcb1bd264a02176a40c4:
+>>>>
+>>>>     ARM: dts: Enable Broadcom Cygnus SoC (2014-11-11 22:30:42 -0800)
+>>>>
+>>>> ----------------------------------------------------------------
+>>>> This pull request contains the Broadcom Cygnus Device Tree changes:
+>>>>
+>>>> - binding documentation for the SoC and clock
+>>>> - cygnus SoC and clock dtsi files
+>>>> - DTS for Cygnus Entreprise phone, BCM911360K and BCM958300K
+>>>
+>>> Something went wrong here: This branch contains the updated license
+>>> statements, but Olof had already merged the branch with the original
+>>> license statements that we didn't like, so all three patches conflict
+>>> with the ones we already have.
+>> Hi Arnd,
+>>
+>> It seems like the devicetree/bindings patch from this tag was not merged
+>> in to next/dt ?
+>
+> I definitely see them here, can you pull our tree again and have a second
+> look? Do you see them in linux-next?
+I see them now.  Sorry, must have been doing something wrong yesterday.
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>
-Cc: linux-gpio@vger.kernel.org
-Acked-by: Alexandre Courbot <acourbot@nvidia.com>
-Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
----
- drivers/gpio/gpio-mvebu.c | 99 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 99 insertions(+)
+>
+> 	Arnd
+>
 
-diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-index 418e386..dd5545c 100644
---- a/drivers/gpio/gpio-mvebu.c
-+++ b/drivers/gpio/gpio-mvebu.c
-@@ -83,6 +83,14 @@ struct mvebu_gpio_chip {
- 	int		   irqbase;
- 	struct irq_domain *domain;
- 	int                soc_variant;
-+
-+	/* Used to preserve GPIO registers accross suspend/resume */
-+	u32                out_reg;
-+	u32                io_conf_reg;
-+	u32                blink_en_reg;
-+	u32                in_pol_reg;
-+	u32                edge_mask_regs[4];
-+	u32                level_mask_regs[4];
- };
- 
- /*
-@@ -554,6 +562,93 @@ static const struct of_device_id mvebu_gpio_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, mvebu_gpio_of_match);
- 
-+static int mvebu_gpio_suspend(struct platform_device *pdev, pm_message_t state)
-+{
-+	struct mvebu_gpio_chip *mvchip = platform_get_drvdata(pdev);
-+	int i;
-+
-+	mvchip->out_reg = readl(mvebu_gpioreg_out(mvchip));
-+	mvchip->io_conf_reg = readl(mvebu_gpioreg_io_conf(mvchip));
-+	mvchip->blink_en_reg = readl(mvebu_gpioreg_blink(mvchip));
-+	mvchip->in_pol_reg = readl(mvebu_gpioreg_in_pol(mvchip));
-+
-+	switch (mvchip->soc_variant) {
-+	case MVEBU_GPIO_SOC_VARIANT_ORION:
-+		mvchip->edge_mask_regs[0] =
-+			readl(mvchip->membase + GPIO_EDGE_MASK_OFF);
-+		mvchip->level_mask_regs[0] =
-+			readl(mvchip->membase + GPIO_LEVEL_MASK_OFF);
-+		break;
-+	case MVEBU_GPIO_SOC_VARIANT_MV78200:
-+		for (i = 0; i < 2; i++) {
-+			mvchip->edge_mask_regs[i] =
-+				readl(mvchip->membase +
-+				      GPIO_EDGE_MASK_MV78200_OFF(i));
-+			mvchip->level_mask_regs[i] =
-+				readl(mvchip->membase +
-+				      GPIO_LEVEL_MASK_MV78200_OFF(i));
-+		}
-+		break;
-+	case MVEBU_GPIO_SOC_VARIANT_ARMADAXP:
-+		for (i = 0; i < 4; i++) {
-+			mvchip->edge_mask_regs[i] =
-+				readl(mvchip->membase +
-+				      GPIO_EDGE_MASK_ARMADAXP_OFF(i));
-+			mvchip->level_mask_regs[i] =
-+				readl(mvchip->membase +
-+				      GPIO_LEVEL_MASK_ARMADAXP_OFF(i));
-+		}
-+		break;
-+	default:
-+		BUG();
-+	}
-+
-+	return 0;
-+}
-+
-+static int mvebu_gpio_resume(struct platform_device *pdev)
-+{
-+	struct mvebu_gpio_chip *mvchip = platform_get_drvdata(pdev);
-+	int i;
-+
-+	writel(mvchip->out_reg, mvebu_gpioreg_out(mvchip));
-+	writel(mvchip->io_conf_reg, mvebu_gpioreg_io_conf(mvchip));
-+	writel(mvchip->blink_en_reg, mvebu_gpioreg_blink(mvchip));
-+	writel(mvchip->in_pol_reg, mvebu_gpioreg_in_pol(mvchip));
-+
-+	switch (mvchip->soc_variant) {
-+	case MVEBU_GPIO_SOC_VARIANT_ORION:
-+		writel(mvchip->edge_mask_regs[0],
-+		       mvchip->membase + GPIO_EDGE_MASK_OFF);
-+		writel(mvchip->level_mask_regs[0],
-+		       mvchip->membase + GPIO_LEVEL_MASK_OFF);
-+		break;
-+	case MVEBU_GPIO_SOC_VARIANT_MV78200:
-+		for (i = 0; i < 2; i++) {
-+			writel(mvchip->edge_mask_regs[i],
-+			       mvchip->membase + GPIO_EDGE_MASK_MV78200_OFF(i));
-+			writel(mvchip->level_mask_regs[i],
-+			       mvchip->membase +
-+			       GPIO_LEVEL_MASK_MV78200_OFF(i));
-+		}
-+		break;
-+	case MVEBU_GPIO_SOC_VARIANT_ARMADAXP:
-+		for (i = 0; i < 4; i++) {
-+			writel(mvchip->edge_mask_regs[i],
-+			       mvchip->membase +
-+			       GPIO_EDGE_MASK_ARMADAXP_OFF(i));
-+			writel(mvchip->level_mask_regs[i],
-+			       mvchip->membase +
-+			       GPIO_LEVEL_MASK_ARMADAXP_OFF(i));
-+		}
-+		break;
-+	default:
-+		BUG();
-+	}
-+
-+	return 0;
-+}
-+
- static int mvebu_gpio_probe(struct platform_device *pdev)
- {
- 	struct mvebu_gpio_chip *mvchip;
-@@ -577,6 +672,8 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
- 	if (!mvchip)
- 		return -ENOMEM;
- 
-+	platform_set_drvdata(pdev, mvchip);
-+
- 	if (of_property_read_u32(pdev->dev.of_node, "ngpios", &ngpios)) {
- 		dev_err(&pdev->dev, "Missing ngpios OF property\n");
- 		return -ENODEV;
-@@ -735,5 +832,7 @@ static struct platform_driver mvebu_gpio_driver = {
- 		.of_match_table = mvebu_gpio_of_match,
- 	},
- 	.probe		= mvebu_gpio_probe,
-+	.suspend        = mvebu_gpio_suspend,
-+	.resume         = mvebu_gpio_resume,
- };
- module_platform_driver(mvebu_gpio_driver);
--- 
-2.1.0
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
