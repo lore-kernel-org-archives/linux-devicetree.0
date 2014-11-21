@@ -1,240 +1,123 @@
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 7/9] dt: mb86s7x: add dt files for MB86S7x evbs
-Date: Fri, 21 Nov 2014 22:19:43 +0530
-Message-ID: <CAJe_ZhfJBftYd7oYNqUsgZsVZS8ccRA5XngJ=msRnt7RSE+C2Q@mail.gmail.com>
-References: <1416486442-25200-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
-	<1416487126-25509-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
-	<2581182.ZW92kSfUJp@wuerfel>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] of: spi: Export single device registration method and
+ accessors (v2)
+Date: Fri, 21 Nov 2014 16:53:26 +0000
+Message-ID: <CACxGe6uwjzYs73bOCpij-dFHfJBfjj7f6T-eRivs7EdQaShAbg@mail.gmail.com>
+References: <1414572037-11306-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <20141029101420.GT18557@sirena.org.uk> <6A3753C0-251A-4645-AD96-CB1D6521175F@antoniou-consulting.com>
+ <20141029122204.GG18557@sirena.org.uk> <20141121153329.C4DDDC40D85@trevor.secretlab.ca>
+ <CC185E77-95F6-4E4B-B431-59C9A9775453@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2581182.ZW92kSfUJp@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CC185E77-95F6-4E4B-B431-59C9A9775453-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel Becker <jlbec-aKy9MeLSZ9dg9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Linux I2C <linux-i2c@vg>
 List-Id: devicetree@vger.kernel.org
 
-On 21 November 2014 19:56, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Thursday 20 November 2014 20:38:46 Vincent Yang wrote:
->> diff --git a/arch/arm/boot/dts/mb86s70eb.dts b/arch/arm/boot/dts/mb86s70eb.dts
->> new file mode 100644
->> index 0000000..a19c72f
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/mb86s70eb.dts
->> @@ -0,0 +1,52 @@
->> +/*
->> + * Copyright (C) 2013-2014 FUJITSU SEMICONDUCTOR LIMITED
->> + * Copyright (C) 2014 Linaro Ltd.
->> + *
->> + * This program is free software: you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation, version 2 of the License.
->> + */
->> +
->> +/dts-v1/;
->> +
->> +#include "mb86s70.dtsi"
->> +
->> +/ {
->> +     model = "Fujitsu MB86S70 EVB";
->> +     compatible = "fujitsu,mb86s70-evb";
->> +
->> +     memory {
->> +             device_type = "memory";
->> +             reg = <0 0x80000000 0x80000000>, <0x08 0x80000000 0x80000000>;
->> +
->> +     };
->> +
->> +     chosen {
->> +             bootargs = "loglevel=8 console=ttyS0,115200 root=/dev/mmcblk1p1 rootfstype=ext4 rootwait rw";
->> +             linux,initrd-start = <0xc0000000>;
->> +             linux,initrd-end =   <0xc0800000>;
->> +     };
+On Fri, Nov 21, 2014 at 3:44 PM, Pantelis Antoniou
+<panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
+> Hi Grant,
 >
-> The initrd parameters seem misplaced here, they should be set by the
-> boot loader. The loglevel=8 seems to be for debugging only, better
-> remove that.
+>> On Nov 21, 2014, at 17:33 , Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>=
+ wrote:
+>>
+>> On Wed, 29 Oct 2014 12:22:04 +0000
+>> , Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> wrote:
+>>> On Wed, Oct 29, 2014 at 01:48:06PM +0200, Pantelis Antoniou wrote:
+>>>>> On Oct 29, 2014, at 12:14 , Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote=
+:
+>>>
+>>>>> This feels like there is an abstraction problem somewhere, whatev=
+er code
+>>>>> is supposed to use this is going to need to be taught about each
+>>>>> individual bus which is going to be tedious, I would expect that =
+we'd
+>>>>> have something like the bus being able to provide a callback whic=
+h will
+>>>>> get invoked whenever a new node appears on the parent node for th=
+e bus.
+>>>
+>>>> There=E2 EURO (tm)s a whole patchset that does exactly this.
+>>>> Look at "OF: spi: Add OF notifier handler=E2 EURO  and you=E2 EURO=
+ (tm)ll where this is used.
+>>>
+>>> I deleted that unread I'm afraid; one of the reasons that you shoul=
+d use
+>>> subject lines matching the styles for the subsystems is that it's o=
+ne of
+>>> the things people use to filter out things that actually need atten=
+tion,
+>>> if things are busy things that at first glance don't look terribly
+>>> relevant (like changes to the OF core in this case) are likely to g=
+et
+>>> looked at less urgently or just skipped.
+>>>
+>>> A quick glance suggests that this is adding code inside the SPI cor=
+e so
+>>> it's still not explaining why anything is being exported, can you
+>>> clarify please?
+>>
+>> I have the same question. This doesn't look like it should be export=
+ing
+>> symbols.
+>>
+>> Also, the way the patch is written causes a lot of code changes to g=
+et
+>> interleaved in the diff. It would be better to split into two patche=
+s;
+>> one that creates the new of_register_spi_device(), and a separate pa=
+tch
+>> to add the other new functions. It would be certainly easier to revi=
+ew
+>> that way.
+>>
 >
-IIRC our custom made bootloader had some issues so we needed the
-initrd params here. I'll check internally. And will fix the loglevel.
+> The diff does make a mess of things; it's not that complex of a patch=
+=2E
+>
+> Your wish shall be granted. I'll respin this over the weekend.
 
->> +        vccq_sdhci1: regulator@0 {
->> +                compatible = "regulator-gpio";
->> +                regulator-name = "SDHCI1 VccQ";
->> +                regulator-min-microvolt = <1800000>;
->> +                regulator-max-microvolt = <3300000>;
->> +                gpios = <&gpio0 7 0>;
->> +                gpios-states = <1>;
->> +                states = <3300000 1
->> +                          1800000 0>;
->> +        };
->
-> This looks whitespace damaged, have you used checkpatch.pl to check your
-> patch before submitting?
->
-Sorry the sdhci and its supply node were added just before the
-patchset was sent out. We did run checkpatch on patches though.
+I've fixed it in my tree by moving the match functions into the second
+patch. The diffs are much easier to read now. I'll post the new
+versions to the list shortly, but if you can test that would be
+fantastic.
 
->> +     sdhci1: sdio@36600000 {
->
-> I think the node name should be 'mmc'
->
->> +             compatible = "fujitsu,mb86s70-sdh30";
->> +             reg = <0 0x36600000 0x1000>;
->> +             interrupts = <0 172 0x4>,
->> +                          <0 173 0x4>;
->> +             voltage-ranges = <1800 1800>, <3300 3300>;
->> +             bus-width = <4>;
->> +             clocks = <&clk_main_c_0>, <&clk_main_d_0>;
->> +             clock-names = "iface", "core";
->> +             vqmmc-supply = <&vccq_sdhci1>;
->> +     };
->> +};
->
-> Better move the actual node into the main dtsi file for the chip that
-> contains it, and add a 'status="disabled" property, then just
-> do this here:
->
->         &sdhci1 {
->                 status = "ok";
->         };
->
-> It probably makes sense to also leave the bus-width and voltage-ranges
-> properties in the per-board file if they are specific to the attached
-> device rather than the controller.
->
-Yes, I think the vqmmc-supply also needs to be moved in the dts.
+g.
 
->> diff --git a/arch/arm/boot/dts/mb86s73eb.dts b/arch/arm/boot/dts/mb86s73eb.dts
->> new file mode 100644
->> index 0000000..2bb55a3
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/mb86s73eb.dts
 >
-> Some comments for this file.
+>>>
+>>>>> SubmittingPatches says.  Please also try to keep your CC list san=
+e,
+>>>>> CCing random people just means that you're increasing the volume =
+of mail
+>>>>> they have to process.  I'm surprised kernel.org accepts so many C=
+Cs.
+>>>
+>>>>> I have to say I don't recall ever seeing v1...
+>>>
+>>>> All of them are in the CC list for a reason.
+>>>
+>>> This is a single, standalone SPI patch - you didn't send it as part=
+ of a
+>>> series (which is the only reason I read it).
+>>
+>> Yes, this is part of the OF overlay series. It should have at least =
+been
+>> marked as [PATCH 7/8] and that it replaced the previous, buggy, patc=
+h 7.
+>>
+>> g.
+>>
 >
->> diff --git a/arch/arm/boot/dts/mb86s7x.dtsi b/arch/arm/boot/dts/mb86s7x.dtsi
->> new file mode 100644
->> index 0000000..50dcf04
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/mb86s7x.dtsi
->> @@ -0,0 +1,595 @@
->> +/*
->> + * Copyright (C) 2013-2014 FUJITSU SEMICONDUCTOR LIMITED
->> + * Copyright (C) 2014 Linaro Ltd.
->> + *
->> + * This program is free software: you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation, version 2 of the License.
->> + */
->> +
->> +#include "skeleton.dtsi"
->> +#include <dt-bindings/clock/mb86s70-clk.h>
->> +
->> +/ {
->> +     interrupt-parent = <&gic>;
->> +     #address-cells = <2>;
->> +     #size-cells = <1>;
->> +
->> +     aliases {
->> +             serial0 = &uart0;
->> +             serial1 = &uart1;
->> +             serial2 = &uart2;
->> +     };
+> Regards
 >
-> Please move the aliases into the per-board file as well, some other
-> boards might not support all the uarts and should only list the
-> ones that have a connector.
->> +     /**
->> +      * The UngatedCLK is the source of 8 maskable clock ports
->> +      * as well as having its own output port which can't be masked.
->> +      */
->> +     clocks {
->> +             clk_alw_0_0: clk_alw_0_0 {
->> +                     compatible = "fujitsu,mb86s70-clk";
->> +                     #clock-cells = <0>;
->> +                     cntrlr = <MB86S70_CRG11_ALW>;
->> +                     domain = <0>;
->> +                     port = <0>;
->> +             };
->> +
->> +             clk_alw_0_1: clk_alw_0_1 {
->> +                     compatible = "fujitsu,mb86s70-clk";
->> +                     #clock-cells = <0>;
->> +                     cntrlr = <MB86S70_CRG11_ALW>;
->> +                     domain = <0>;
->> +                     port = <1>;
->> +             };
+> -- Pantelis
 >
-> This seems weird: rather than have one clock controller node per
-> clock source, why not just have one node with #clock-cells = <3>?
->
-> Your controller seems perfectly capable of this, and you even
-> put the numbers in the label. It would be much more straightforward
-> to do
->
->         clocks = <&clk_alw 0 1>;
->
-> than
->
->         clocks = <&clk_alw_0_1>;
->
-> here. Possibly even
->
->         clocks = <&clk MB86S70_CRG11_ALW 0 1>;
->
-> with #clock-cells = <3>
->
-Is there a way to compact the dtsi and yet populate only clocks that
-are actually ever used (instead of 6x16x9)?
-
->> +
->> +     timer0: timer@31080000 {
->> +             compatible = "arm,sp804", "arm,primecell";
->> +             reg = <0 0x31080000 0x1000>;
->> +             interrupts = <0 324 4>,
->> +                          <0 325 4>;
->> +             clocks = <&clk_alw_6_8>;
->> +             clock-names = "apb_pclk";
->> +     };
->> +
->> +     timer1: archtimer {
->> +             compatible = "arm,armv7-timer";
->> +             clock-frequency = <125000000>;
->> +             interrupts = <1 13 0xf08>,
->> +                          <1 14 0xf08>,
->> +                          <1 11 0xf08>,
->> +                          <1 10 0xf08>;
->> +     };
->
-> Inconsistent node names: please call the archtimer node 'timer'
-> as well, like the other one.
->
-> The label is free-form though, so you can just use 'archtimer:'
-> ther if you need to reference it.
->
->> +     sdhci0: emmc@300c0000 {
->> +             compatible = "fujitsu,mb86s70-sdh30";
->> +             reg = <0 0x300c0000 0x1000>;
->> +             interrupts = <0 164 0x4>,
->> +                          <0 165 0x4>;
->> +             voltage-ranges = <1800 1800>, <3300 3300>;
->> +             bus-width = <8>;
->> +             clocks = <&clk_alw_c_0>, <&clk_alw_b_0>;
->> +             clock-names = "iface", "core";
->> +     };
->> +};
->
-> Maybe also leave this as disabled in the base dtsi file and move the
-> status="ok" property and the bus width into the per-board file.
->
-> Also change the node name to mmc.
->
-Will address all comments.
-
-Thanks.
-Jassi
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
