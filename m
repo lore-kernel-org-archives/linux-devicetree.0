@@ -1,67 +1,49 @@
-From: Kukjin Kim <kgene@kernel.org>
-Subject: RE: [1/2] ARM: dts: Fix bootup issue on smdk5250
-Date: Sat, 22 Nov 2014 12:25:49 +0900
-Message-ID: <038501d00604$034a9640$09dfc2c0$@kernel.org>
-References: <1416312509-11530-1-git-send-email-yadi.brar@samsung.com>
- <546D67A1.1080804@samsung.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: mvebu: fix ordering in Armada 370 .dtsi
+Date: Fri, 21 Nov 2014 22:37:44 -0500
+Message-ID: <20141122033744.GS22670@titan.lakedaemon.net>
+References: <1415993776-3469-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <20141114204333.GS27002@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <546D67A1.1080804@samsung.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Pankaj Dubey' <pankaj.dubey@samsung.com>, 'Yadwinder Singh Brar' <yadi.brar@samsung.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: robh+dt@kernel.org, yadi.brar01@gmail.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141114204333.GS27002-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Pankaj Dubey wrote:
-> 
-> Hi,
-> 
-Hi,
+On Fri, Nov 14, 2014 at 09:43:33PM +0100, Uwe Kleine-K=F6nig wrote:
+> Commit a095b1c78a35 ("ARM: mvebu: sort DT nodes by address")
+> missed placing the system-controller in the correct order.           =
+                                                                       =
+                            =20
+>=20
+> Fixes: a095b1c78a35 ("ARM: mvebu: sort DT nodes by address")
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+> Hello Andrew,
+>=20
+> I guess your question concerning overlapping ranges doesn't stop this
+> patch from being useful, does it?
+>=20
+> Also thanks for the suggested wording which I nearly took as is.
+>=20
+> Best regards
+> Uwe
+>=20
+>  arch/arm/boot/dts/armada-370.dtsi | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 
-Yadwinder, please don't miss [PATCH 1/2] in subject, so that my e-mail client
-can't filter wrong ;)
+Applied to mvebu/dt with Andrew's Ack.
 
-> On Tuesday 18 November 2014 05:38 PM, Yadwinder Singh Brar wrote:
-> > With default config on smdk5250 latest tree throws below message :
-> >
-> > [    2.226049] thermal thermal_zone0: critical temperature reached(224 C),shutting down
-> > [    2.227840] reboot: Failed to start orderly shutdown: forcing the issue
-> >
-> > and hangs randomly because it reads wrong temperature value.
-> >
-> > I can't figure out any direct relation between LDO10 and TMU from board
-> > schematics which I have. So making LDO10 always-on to fix issue for now.
-> >
-Hmm...strange, I also can't see any relations now...but I need to contact to
-hardware guy before applying this, this fixes the problem though.
+thx,
 
-Thanks,
-Kukjin
-
-> > Signed-off-by: Yadwinder Singh Brar <yadi.brar@samsung.com>
-> >
-> 
-> Tested this on SMDK5250 board, system boot is fine now, hence
-> 
-> Tested-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> 
-> > ---
-> > arch/arm/boot/dts/exynos5250-smdk5250.dts |    1 +
-> >   1 files changed, 1 insertions(+), 0 deletions(-)
-> >
-> > diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> > index bc27cc2..95b5b51 100644
-> > --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> > +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> > @@ -190,6 +190,7 @@
-> >   				regulator-name = "P1.8V_LDO_OUT10";
-> >   				regulator-min-microvolt = <1800000>;
-> >   				regulator-max-microvolt = <1800000>;
-> > +				regulator-always-on;
-> >   			};
-> >
-> >   			ldo11_reg: LDO11 {
-> >
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
