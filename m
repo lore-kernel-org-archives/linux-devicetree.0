@@ -1,47 +1,86 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 00/11] Exynos7: Adding USB 3.0 support
-Date: Sat, 22 Nov 2014 14:10:16 +0530
-Message-ID: <54704BF0.1000903@ti.com>
-References: <1416576954-11997-1-git-send-email-gautam.vivek@samsung.com> <20141121151130.GD7508@saruman>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v4 6/7] ARM: mvebu: add PHY support to the dts for the
+ USB controllers on Armada 375
+Date: Sat, 22 Nov 2014 10:20:43 +0100
+Message-ID: <5470556B.6080608@free-electrons.com>
+References: <1415879269-29711-1-git-send-email-gregory.clement@free-electrons.com> <1415879269-29711-7-git-send-email-gregory.clement@free-electrons.com> <20141122020811.GO22670@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20141121151130.GD7508@saruman>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: balbi@ti.com, Vivek Gautam <gautam.vivek@samsung.com>
-Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, gregkh@linuxfoundation.org, tomasz.figa@gmail.com, s.nawrocki@samsung.com, robh+dt@kernel.org, stern@rowland.harvard.edu, kgene.kim@samsung.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141122020811.GO22670@titan.lakedaemon.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Jason,
 
-
-On Friday 21 November 2014 08:41 PM, Felipe Balbi wrote:
-> On Fri, Nov 21, 2014 at 07:05:43PM +0530, Vivek Gautam wrote:
->> The series has dependency on
->> a) "[PATCH v7 0/7] Enable support for Samsung Exynos7 SoC"
->>    http://www.spinics.net/lists/linux-samsung-soc/msg38734.html
->> b) "[GIT PULL] Samsung clock changes for 3.19" - specifically the clock dt
->>    bindings header.
->>    http://comments.gmane.org/gmane.linux.kernel.samsung-soc/39142
->> c) "tty: serial: samsung: Clean-up selection of number of available UARTs"
->>    http://www.spinics.net/lists/linux-samsung-soc/msg37418.html
->> d) "dts, kbuild: Implement support for dtb vendor subdirs"(merged in linux-next)
->>    https://lkml.org/lkml/2014/10/21/654
->> e) "Samsung pinctrl patches for v3.19"
->>    http://www.spinics.net/lists/linux-samsung-soc/msg38744.html
+On 22/11/2014 03:08, Jason Cooper wrote:
+> On Thu, Nov 13, 2014 at 12:47:48PM +0100, Gregory CLEMENT wrote:
+>> Now that the USB cluster node has been added, use it as a PHY provider
+>> for the USB controller linked to it: the first EHCI and the xHCI.
 >>
->> Tested on Exynos7-espresso board with 3.18-rc5 and above dependencies.
+>> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+>> ---
+>>  arch/arm/boot/dts/armada-375.dtsi | 5 +++++
+>>  1 file changed, 5 insertions(+)
 >>
->> Clubbing the pinctrl, clk, and usb driver changes alongwith the dt changes
->> together in this series only so as to avoid having 'n' number of dependencies.
->>
->> The USB driver patches in this series were part of [1] sent earlier.
->> [1] [PATCH v2 0/4] usb: dwc3/phy-exynos5-usbdrd: Extend support to Exynos7
->>     https://lkml.org/lkml/2014/10/7/191
+>> diff --git a/arch/arm/boot/dts/armada-375.dtsi b/arch/arm/boot/dts/armada-375.dtsi
+>> index 8f45cf5d2a50..f344ec420c95 100644
+>> --- a/arch/arm/boot/dts/armada-375.dtsi
+>> +++ b/arch/arm/boot/dts/armada-375.dtsi
+>> @@ -14,6 +14,7 @@
+>>  #include "skeleton.dtsi"
+>>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>  #include <dt-bindings/interrupt-controller/irq.h>
+>> +#include <dt-bindings/phy/phy.h>
 > 
-> I took dwc3 driver patches.
+> Odd.  The previous patch in this series simply adds a line to phy.h,
+> however, I get the following error during 'make dtbs':
+> 
+> ########
+>   DTC     arch/arm/boot/dts/armada-375-db.dtb
+> In file included from arch/arm/boot/dts/armada-375-db.dts:17:0:arch/arm/boot/dts/armada-375.dtsi:17:33:
+> fatal error: dt-bindings/phy/phy.h: No such file or directory
+>  #include <dt-bindings/phy/phy.h>
+>                                  ^
+> compilation terminated.
+> scripts/Makefile.lib:282: recipe for target 'arch/arm/boot/dts/armada-37 5-db.dtb' failed
+> ########
+> 
+> mvebu/dt is based on v3.18-rc1.  Is there a missing dependency
+> somewhere?  Perhaps we should let Kishon take the whole series and
+> handle the (hopefully trivial) merge conflict?
 
-I took the phy patches.
+Actually Kishon asked me to use the dt-bindings/phy/phy.h file which
+was introduced by the patch "phy: Add PHY header file for DT x Driver
+defines". So indeed I had to have a dependency on the phy_dt_header
+branch (which is based on v3.18-rc4 and have only this single commit).
+The git tree is located at
+git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git
 
-Thanks
-Kishon
+
+Maybe we could add this branch in mvebu as a dependency as it is done
+on arm-soc. I suggest this because I would prefer that we continue to
+be the only ones to merge the device tree files in order to reduce the
+merge conflict.
+
+Thanks,
+
+Gregory
+
+
+
+> 
+> thx,
+> 
+> Jason.
+> 
+
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
