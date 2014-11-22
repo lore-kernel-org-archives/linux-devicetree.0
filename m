@@ -1,37 +1,45 @@
-From: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Subject: Re: [RFC] adp1653: Add device tree bindings for LED controller
-Date: Sat, 22 Nov 2014 20:45:48 +0200
-Message-ID: <5470D9DC.70807@gmail.com>
-References: <20141116075928.GA9763@amd> <201411171601.32311@pali> <20141117150407.GP8907@valkosipuli.retiisi.org.uk> <201411171615.34822@pali>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH v2 2/2] arm: dts: Exynos5: Use pmu_system_controller
+ phandle for dp phy
+Date: Sat, 22 Nov 2014 19:56:17 +0100
+Message-ID: <CABxcv=m7_m=Y=Mr+0tm+-i=0_e2SU_FC3SDmRTSdkpi--GQtxQ@mail.gmail.com>
+References: <1414675442-3471-1-git-send-email-gautam.vivek@samsung.com>
+	<1414675442-3471-2-git-send-email-gautam.vivek@samsung.com>
+	<000101cffe30$155793a0$4006bae0$%han@samsung.com>
+	<CABxcv=mams-iVBvACLZ-=Ozcs3KcHSEvxAsRSSV-eKaSnrcXSA@mail.gmail.com>
+	<CAFp+6iEnTbXAUUYMU-bP27f4=X0pEtgmURAwKfRrqDQE4tRpKQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201411171615.34822@pali>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?UGFsaSBSb2jDoXI=?= <pali.rohar@gmail.com>, Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>, sre@debian.org, sre@ring0.de, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, khilman@kernel.org, aaro.koskinen@iki.fi, freemangordon@abv.bg, bcousson@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAFp+6iEnTbXAUUYMU-bP27f4=X0pEtgmURAwKfRrqDQE4tRpKQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Vivek Gautam <gautamvivek1987@gmail.com>
+Cc: Vivek Gautam <gautam.vivek@samsung.com>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+Hello Vivek
 
-Hi,
-
->> Can you capture raw bayer images correctly? I assume green
->> means YUV buffers that are all zero.
+On Wed, Nov 19, 2014 at 1:03 PM, Vivek Gautam <gautamvivek1987@gmail.com> wrote:
 >>
->> Do you know more specifically which patch breaks it?
+>> Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 >
-> CCing freemangordon (Ivaylo Dimitrov). He tried to debug it
-> months ago but without success. Should know more info about this
-> problem.
->
-> I think that commit which broke it was not bisected...
+> Thanks for testing.
 >
 
-According to my vague memories, the green captured image was a result 
-from the ISP IRQ never got triggered. I tried to find why, but never 
-succeeded.
+You are welcome
 
-Sakari, we discussed that on #maemo-ssu when I was playing with cameras, 
-and there is nothing new in that regard:
-http://mg.pov.lt/maemo-ssu-irclog/%23maemo-ssu.2013-09-18.log.html#t2013-09-18T18:46:38 
+>>
+>> Kukjin,
+>
+> Sorry for not adding Kukjin to the list and thereby for the delay
+> about this patch.
+>
+
+No worries but I'm not sure if Kukjin is aware of this patch. I see he
+has been applying other patches but didn't pick $subject.
+
+Maybe you can resend it to Kukjin just to be sure he will have it in
+his mailbox?
+
+Best regards,
+Javier
