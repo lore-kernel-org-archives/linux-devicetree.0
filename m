@@ -1,49 +1,41 @@
 From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: mvebu: fix ordering in Armada 370 .dtsi
-Date: Fri, 21 Nov 2014 22:37:44 -0500
-Message-ID: <20141122033744.GS22670@titan.lakedaemon.net>
-References: <1415993776-3469-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <20141114204333.GS27002@pengutronix.de>
+Subject: Re: [PATCH] ARM: dts: dove: add DT LCD controllers
+Date: Fri, 21 Nov 2014 23:12:19 -0500
+Message-ID: <20141122041219.GT22670@titan.lakedaemon.net>
+References: <E1Xr3Ur-0005Qx-Fx@rmk-PC.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20141114204333.GS27002-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <E1Xr3Ur-0005Qx-Fx-eh5Bv4kxaXIANfyc6IWni62ZND6+EDdj@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 14, 2014 at 09:43:33PM +0100, Uwe Kleine-K=F6nig wrote:
-> Commit a095b1c78a35 ("ARM: mvebu: sort DT nodes by address")
-> missed placing the system-controller in the correct order.           =
-                                                                       =
-                            =20
->=20
-> Fixes: a095b1c78a35 ("ARM: mvebu: sort DT nodes by address")
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+On Wed, Nov 19, 2014 at 11:32:29AM +0000, Russell King wrote:
+> Add the DT fragment for the Marvell Dove LCD controllers.
+> 
+> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 > ---
-> Hello Andrew,
->=20
-> I guess your question concerning overlapping ranges doesn't stop this
-> patch from being useful, does it?
->=20
-> Also thanks for the suggested wording which I nearly took as is.
->=20
-> Best regards
-> Uwe
->=20
->  arch/arm/boot/dts/armada-370.dtsi | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+> The documentation for this binding was submitted previously as part of
+> the code which parses this - v3.17-rc1~82^2~32^2~2.
+> 
+>  arch/arm/boot/dts/dove.dtsi | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 
-Applied to mvebu/dt with Andrew's Ack.
+hmmm... this was already applied:
+
+  087b04701111e ARM: dts: dove: add DT LCD controllers
+
+>From here:
+
+  https://lkml.kernel.org/r/E1XAKGS-0004WE-8h-eh5Bv4kxaXIANfyc6IWni62ZND6+EDdj@public.gmane.org
 
 thx,
 
 Jason.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
