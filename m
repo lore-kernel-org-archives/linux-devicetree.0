@@ -1,51 +1,67 @@
-From: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
-Subject: Re: [PATCHv6 10/10] arm: mvebu: add .dts file for Synology DS414
-Date: Sat, 22 Nov 2014 13:10:21 +1000
-Message-ID: <546FFE9D.2000502@killerwolves.net>
-References: <cover.1416613429.git.arno@natisbad.org> <5b678d6d1f2f42f4bf0d087878b9d8024d463ea7.1416613429.git.arno@natisbad.org>
+From: Kukjin Kim <kgene@kernel.org>
+Subject: RE: [1/2] ARM: dts: Fix bootup issue on smdk5250
+Date: Sat, 22 Nov 2014 12:25:49 +0900
+Message-ID: <038501d00604$034a9640$09dfc2c0$@kernel.org>
+References: <1416312509-11530-1-git-send-email-yadi.brar@samsung.com>
+ <546D67A1.1080804@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5b678d6d1f2f42f4bf0d087878b9d8024d463ea7.1416613429.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <546D67A1.1080804@samsung.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Pankaj Dubey' <pankaj.dubey@samsung.com>, 'Yadwinder Singh Brar' <yadi.brar@samsung.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: robh+dt@kernel.org, yadi.brar01@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 22/11/14 09:46, Arnaud Ebalard wrote:
-> +
-> +	syno_id_bit0_pin: syno-id-bit0-pin {
-> +		marvell,pins = "mpp26";
-> +		marvell,function = "gpio";
-> +	};
-> +
-> +	pmx_syno_id_bit1: syno-id-bit1-pin {
-> +		marvell,pins = "mpp28";
-> +		marvell,function = "gpio";
-> +	};
-> +
-> +	pmx_syno_id_bit2: syno-id-bit2-pin {
-> +		marvell,pins = "mpp29";
-> +		marvell,function = "gpio";
-> +	};
-> +
-> +	pmx_fan1_alarm: fan1-alarm-pin {
-> +		marvell,pins = "mpp33";
-> +		marvell,function = "gpio";
-> +	};
-
-It looks like you forgot to replace pmx_* with *_pin here.
-
-> +
-> +	fan2_alarm_pin: fan2-alarm-pin {
-> +		marvell,pins = "mpp32";
-> +		marvell,function = "gpio";
-> +	};
-> +};
+Pankaj Dubey wrote:
 > 
+> Hi,
+> 
+Hi,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yadwinder, please don't miss [PATCH 1/2] in subject, so that my e-mail client
+can't filter wrong ;)
+
+> On Tuesday 18 November 2014 05:38 PM, Yadwinder Singh Brar wrote:
+> > With default config on smdk5250 latest tree throws below message :
+> >
+> > [    2.226049] thermal thermal_zone0: critical temperature reached(224 C),shutting down
+> > [    2.227840] reboot: Failed to start orderly shutdown: forcing the issue
+> >
+> > and hangs randomly because it reads wrong temperature value.
+> >
+> > I can't figure out any direct relation between LDO10 and TMU from board
+> > schematics which I have. So making LDO10 always-on to fix issue for now.
+> >
+Hmm...strange, I also can't see any relations now...but I need to contact to
+hardware guy before applying this, this fixes the problem though.
+
+Thanks,
+Kukjin
+
+> > Signed-off-by: Yadwinder Singh Brar <yadi.brar@samsung.com>
+> >
+> 
+> Tested this on SMDK5250 board, system boot is fine now, hence
+> 
+> Tested-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> 
+> > ---
+> > arch/arm/boot/dts/exynos5250-smdk5250.dts |    1 +
+> >   1 files changed, 1 insertions(+), 0 deletions(-)
+> >
+> > diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> > index bc27cc2..95b5b51 100644
+> > --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> > +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> > @@ -190,6 +190,7 @@
+> >   				regulator-name = "P1.8V_LDO_OUT10";
+> >   				regulator-min-microvolt = <1800000>;
+> >   				regulator-max-microvolt = <1800000>;
+> > +				regulator-always-on;
+> >   			};
+> >
+> >   			ldo11_reg: LDO11 {
+> >
