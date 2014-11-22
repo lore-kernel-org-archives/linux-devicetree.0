@@ -1,54 +1,49 @@
-From: naidu.tellapati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH RESEND v2 2/2] DT: eFuse: Add binding document for IMG Generic eFuse Controller
-Date: Sat, 22 Nov 2014 08:24:33 +0530
-Message-ID: <1416624873-7823-3-git-send-email-Naidu.Tellapati@gmail.com>
-References: <1416624873-7823-1-git-send-email-Naidu.Tellapati@gmail.com>
+From: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
+Subject: Re: [PATCHv6 10/10] arm: mvebu: add .dts file for Synology DS414
+Date: Sat, 22 Nov 2014 13:10:21 +1000
+Message-ID: <546FFE9D.2000502@killerwolves.net>
+References: <cover.1416613429.git.arno@natisbad.org> <5b678d6d1f2f42f4bf0d087878b9d8024d463ea7.1416613429.git.arno@natisbad.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416624873-7823-1-git-send-email-Naidu.Tellapati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <5b678d6d1f2f42f4bf0d087878b9d8024d463ea7.1416613429.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, James.Hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Ezequiel.Garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arul Ramasamy <Arul.Ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Arul Ramasamy <Arul.Ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+On 22/11/14 09:46, Arnaud Ebalard wrote:
+> +
+> +	syno_id_bit0_pin: syno-id-bit0-pin {
+> +		marvell,pins = "mpp26";
+> +		marvell,function = "gpio";
+> +	};
+> +
+> +	pmx_syno_id_bit1: syno-id-bit1-pin {
+> +		marvell,pins = "mpp28";
+> +		marvell,function = "gpio";
+> +	};
+> +
+> +	pmx_syno_id_bit2: syno-id-bit2-pin {
+> +		marvell,pins = "mpp29";
+> +		marvell,function = "gpio";
+> +	};
+> +
+> +	pmx_fan1_alarm: fan1-alarm-pin {
+> +		marvell,pins = "mpp33";
+> +		marvell,function = "gpio";
+> +	};
 
-Add binding document for Imagination Technologies Generic eFuse Controller
-present on Pistachio SoC.
+It looks like you forgot to replace pmx_* with *_pin here.
 
-Signed-off-by: Arul Ramasamy <Arul.Ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
----
- .../devicetree/bindings/soc/img/img-efuse.txt          | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/img/img-efuse.txt
-
-diff --git a/Documentation/devicetree/bindings/soc/img/img-efuse.txt b/Documentation/devicetree/bindings/soc/img/img-efuse.txt
-new file mode 100644
-index 0000000..e87738f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/img/img-efuse.txt
-@@ -0,0 +1,18 @@
-+* Imagination Technologies Generic eFuse controller
-+
-+Required properties:
-+- compatible: Must be "img,efuse".
-+- reg: Must contain the base address and length of the eFuse registers.
-+- clocks: Must contain an entry for each entry in clock-names.
-+  See ../clock/clock-bindings.txt for details.
-+- clock-names: Must include the following entries:
-+  - osc: External oscillator clock
-+  - sys: eFuse system interface clock
-+
-+Example:
-+efuse: efuse@18149200 {
-+       compatible = "img,efuse";
-+       reg = <0x18149200 0x200>;
-+       clocks = <&osc>, <&system_clk>;
-+       clock-names = "osc", "sys";
-+};
--- 
-1.9.1
+> +
+> +	fan2_alarm_pin: fan2-alarm-pin {
+> +		marvell,pins = "mpp32";
+> +		marvell,function = "gpio";
+> +	};
+> +};
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
