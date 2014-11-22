@@ -1,78 +1,47 @@
-From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
-Subject: Re: [PATCHv6 00/10] arm: mvebu: add Synology DS213j and DS414 .dts files
-Date: Sat, 22 Nov 2014 09:13:33 +0100
-Message-ID: <87h9xrfyaa.fsf@natisbad.org>
-References: <cover.1416613429.git.arno@natisbad.org>
-	<20141122045430.GU22670@titan.lakedaemon.net>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 00/11] Exynos7: Adding USB 3.0 support
+Date: Sat, 22 Nov 2014 14:10:16 +0530
+Message-ID: <54704BF0.1000903@ti.com>
+References: <1416576954-11997-1-git-send-email-gautam.vivek@samsung.com> <20141121151130.GD7508@saruman>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20141121151130.GD7508@saruman>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: balbi@ti.com, Vivek Gautam <gautam.vivek@samsung.com>
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, gregkh@linuxfoundation.org, tomasz.figa@gmail.com, s.nawrocki@samsung.com, robh+dt@kernel.org, stern@rowland.harvard.edu, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Jason,
-
-Sorry for the trouble w/ my patches. I'll try and avoid such issues in
-the future.
-
-Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> writes:
-
->> Arnaud Ebalard (10):
->
-> These three patches had trouble:
->
->>   arm: mvebu: move Armada 370/XP pinctrl node definition armada-370-xp.dtsi
->
-> armada-370-db needed to be hand-jammed.  Please double-check that it
-> went through correctly.  The error was something about missing repository
-> info.  Usually that means the patch was based on something weird...
-
-After pushing v2, Sebastian's pointed there was some of the patches I
-had which he had already done and were sitting in your mvebu/dt banch.
-So I rebased my whole series on your mvebu/dt but used mvebu-dt-3.19
-at some point, which was behind the tip, i.e. had not the following
-patches:
-
-commit ab1e85372168892387dd1ac171158fc8c3119be4 <- your tip
-commit ad6a1b445bdc19199933051840a53fdd30b8f961
-commit ebf50c9651ff28341b76e78c531592d7d3489bc6
-commit 5e949f0c79917f3fd8512a3b66b0c861e03ec5a6
-commit 9ef90cbb0860d3434fdc4bf9674adca1b762f95e
-commit a6b334514be27aec1bf31c7673c2f55bd6fbd3e6
-commit b4607572ef86b288a856b9df410ea593c5371dec
-commit f5ed9ccc4c2dc275a13b765c88fa13211f60b57f <- mvebu-dt-3.19
 
 
->>   arm: mvebu: define and use common Armada 370 UART pinctrl settings
->
-> Same here, 'patch -Np1 <...patch' went fine, though.  Please double
-> check.
+On Friday 21 November 2014 08:41 PM, Felipe Balbi wrote:
+> On Fri, Nov 21, 2014 at 07:05:43PM +0530, Vivek Gautam wrote:
+>> The series has dependency on
+>> a) "[PATCH v7 0/7] Enable support for Samsung Exynos7 SoC"
+>>    http://www.spinics.net/lists/linux-samsung-soc/msg38734.html
+>> b) "[GIT PULL] Samsung clock changes for 3.19" - specifically the clock dt
+>>    bindings header.
+>>    http://comments.gmane.org/gmane.linux.kernel.samsung-soc/39142
+>> c) "tty: serial: samsung: Clean-up selection of number of available UARTs"
+>>    http://www.spinics.net/lists/linux-samsung-soc/msg37418.html
+>> d) "dts, kbuild: Implement support for dtb vendor subdirs"(merged in linux-next)
+>>    https://lkml.org/lkml/2014/10/21/654
+>> e) "Samsung pinctrl patches for v3.19"
+>>    http://www.spinics.net/lists/linux-samsung-soc/msg38744.html
+>>
+>> Tested on Exynos7-espresso board with 3.18-rc5 and above dependencies.
+>>
+>> Clubbing the pinctrl, clk, and usb driver changes alongwith the dt changes
+>> together in this series only so as to avoid having 'n' number of dependencies.
+>>
+>> The USB driver patches in this series were part of [1] sent earlier.
+>> [1] [PATCH v2 0/4] usb: dwc3/phy-exynos5-usbdrd: Extend support to Exynos7
+>>     https://lkml.org/lkml/2014/10/7/191
+> 
+> I took dwc3 driver patches.
 
-I will take a thorough look today at what you currently have in your
-tree (and more specifically regarding DS414) and do more tests on both
-NAS next week.
+I took the phy patches.
 
->>   arm: mvebu: add .dts file for Synology DS414
->
-> This broke the build :(  I did s/ge[01]_rgmii_pins/pmx_ge[01]_rgmii/ to
-> fix the issue.  Did you run 'make dtbs' before you sent?
-
-Each series was compiled and tested on the DS213j because DS414 is
-painful to handle (SAR issue pointed in the .dts file which requires
-unplugging/plugging the USB/serial + longer time to boot). The thing is
-when I merged the two development tres I had for the DS213j and DS414, I
-used the DS213j config ... which did not have CONFIG_MACH_ARMADA_XP.
-
-Again, my apologies for the trouble and manual handling.
-
-> At any rate, whole series applied to mvebu/dt.
-
-Thanks,
-
-a+
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Kishon
