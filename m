@@ -1,34 +1,49 @@
 From: Kukjin Kim <kgene@kernel.org>
-Subject: Re: [PATCH 1/4] ARM: dts: Add usb3503 pinctrl to exynos5250-spring
-Date: Sat, 22 Nov 2014 23:33:18 +0900
-Message-ID: <54709EAE.6020203@kernel.org>
-References: <1416412585-10809-1-git-send-email-afaerber@suse.de> <1416412585-10809-2-git-send-email-afaerber@suse.de> <546CCC89.1040502@collabora.co.uk>
+Subject: Re: [PATCH 00/11] Exynos7: Adding USB 3.0 support
+Date: Sun, 23 Nov 2014 00:12:05 +0900
+Message-ID: <5470A7C5.1070302@kernel.org>
+References: <1416576954-11997-1-git-send-email-gautam.vivek@samsung.com> <20141121151130.GD7508@saruman> <54704BF0.1000903@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <546CCC89.1040502@collabora.co.uk>
+In-Reply-To: <54704BF0.1000903@ti.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, linux-samsung-soc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tomasz Figa <t.figa@samsung.com>, Doug Anderson <dianders@chromium.org>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Ben Dooks <ben-linux@fluff.org>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: balbi@ti.com, Vivek Gautam <gautam.vivek@samsung.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, gregkh@linuxfoundation.org, tomasz.figa@gmail.com, s.nawrocki@samsung.com, robh+dt@kernel.org, stern@rowland.harvard.edu, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 11/20/14 01:59, Javier Martinez Canillas wrote:
-> Hello Andreas,
->=20
-> On 11/19/2014 04:56 PM, Andreas F=C3=A4rber wrote:
->> Reported-by: Doug Anderson <dianders@chromium.org>
->> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
->=20
-> Even though the patch is simple and is true that the subject explains
-> the change, I think that is always good to have a commit message anyw=
-ays.
->=20
-> Patch looks good to me though:
->=20
-> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.u=
-k>
->=20
-Applied this series, thanks.
+On 11/22/14 17:40, Kishon Vijay Abraham I wrote:
+> 
+> On Friday 21 November 2014 08:41 PM, Felipe Balbi wrote:
+>> On Fri, Nov 21, 2014 at 07:05:43PM +0530, Vivek Gautam wrote:
+>>> The series has dependency on
+>>> a) "[PATCH v7 0/7] Enable support for Samsung Exynos7 SoC"
+>>>    http://www.spinics.net/lists/linux-samsung-soc/msg38734.html
+>>> b) "[GIT PULL] Samsung clock changes for 3.19" - specifically the clock dt
+>>>    bindings header.
+>>>    http://comments.gmane.org/gmane.linux.kernel.samsung-soc/39142
+>>> c) "tty: serial: samsung: Clean-up selection of number of available UARTs"
+>>>    http://www.spinics.net/lists/linux-samsung-soc/msg37418.html
+>>> d) "dts, kbuild: Implement support for dtb vendor subdirs"(merged in linux-next)
+>>>    https://lkml.org/lkml/2014/10/21/654
+>>> e) "Samsung pinctrl patches for v3.19"
+>>>    http://www.spinics.net/lists/linux-samsung-soc/msg38744.html
+>>>
+>>> Tested on Exynos7-espresso board with 3.18-rc5 and above dependencies.
+>>>
+>>> Clubbing the pinctrl, clk, and usb driver changes alongwith the dt changes
+>>> together in this series only so as to avoid having 'n' number of dependencies.
+>>>
+>>> The USB driver patches in this series were part of [1] sent earlier.
+>>> [1] [PATCH v2 0/4] usb: dwc3/phy-exynos5-usbdrd: Extend support to Exynos7
+>>>     https://lkml.org/lkml/2014/10/7/191
+>>
+>> I took dwc3 driver patches.
+> 
+> I took the phy patches.
+> 
+I'll take DT changes once exynos7 is landing into samsung tree :)
 
-- Kukjin
+Thanks,
+Kukjin
