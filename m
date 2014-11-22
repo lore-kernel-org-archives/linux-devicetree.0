@@ -1,87 +1,56 @@
-From: naidu.tellapati@gmail.com
-Subject: [PATCH RESEND v4 4/4] DT: pdm: Add binding document for IMG PDM DAC
-Date: Sat, 22 Nov 2014 07:23:32 +0530
-Message-ID: <1416621212-11701-5-git-send-email-Naidu.Tellapati@gmail.com>
-References: <1416621212-11701-1-git-send-email-Naidu.Tellapati@gmail.com>
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1416621212-11701-1-git-send-email-Naidu.Tellapati@gmail.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: thierry.reding@gmail.com, abrestic@chromium.org, gregkh@linuxfoundation.org, arnd@arndb.de, James.Hartley@imgtec.com, Ezequiel.Garcia@imgtec.com
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Arul.Ramasamy@imgtec.com, Sai.Masarapu@imgtec.com, Naidu Tellapati <Naidu.Tellapati@imgtec.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH v4 6/7] ARM: mvebu: add PHY support to the dts for the
+ USB controllers on Armada 375
+Date: Fri, 21 Nov 2014 21:08:11 -0500
+Message-ID: <20141122020811.GO22670@titan.lakedaemon.net>
+References: <1415879269-29711-1-git-send-email-gregory.clement@free-electrons.com>
+ <1415879269-29711-7-git-send-email-gregory.clement@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1415879269-29711-7-git-send-email-gregory.clement@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
+On Thu, Nov 13, 2014 at 12:47:48PM +0100, Gregory CLEMENT wrote:
+> Now that the USB cluster node has been added, use it as a PHY provider
+> for the USB controller linked to it: the first EHCI and the xHCI.
+> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> ---
+>  arch/arm/boot/dts/armada-375.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/armada-375.dtsi b/arch/arm/boot/dts/armada-375.dtsi
+> index 8f45cf5d2a50..f344ec420c95 100644
+> --- a/arch/arm/boot/dts/armada-375.dtsi
+> +++ b/arch/arm/boot/dts/armada-375.dtsi
+> @@ -14,6 +14,7 @@
+>  #include "skeleton.dtsi"
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/phy/phy.h>
 
-Add binding document for the Pulse Density Modulator (PDM) DAC present on the
-Pistachio SOC.
+Odd.  The previous patch in this series simply adds a line to phy.h,
+however, I get the following error during 'make dtbs':
 
-Signed-off-by: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
-Signed-off-by: Arul Ramasamy <Arul.Ramasamy@imgtec.com>
----
- Documentation/devicetree/bindings/misc/img-pdm.txt |   54 ++++++++++++++++++++
- 1 files changed, 54 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/misc/img-pdm.txt
+########
+  DTC     arch/arm/boot/dts/armada-375-db.dtb
+In file included from arch/arm/boot/dts/armada-375-db.dts:17:0:arch/arm/boot/dts/armada-375.dtsi:17:33:
+fatal error: dt-bindings/phy/phy.h: No such file or directory
+ #include <dt-bindings/phy/phy.h>
+                                 ^
+compilation terminated.
+scripts/Makefile.lib:282: recipe for target 'arch/arm/boot/dts/armada-37 5-db.dtb' failed
+########
 
-diff --git a/Documentation/devicetree/bindings/misc/img-pdm.txt b/Documentation/devicetree/bindings/misc/img-pdm.txt
-new file mode 100644
-index 0000000..730d38a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/img-pdm.txt
-@@ -0,0 +1,54 @@
-+*Imagination Technologies Pulse Density Modulator (PDM) DAC.
-+
-+Required properties:
-+  - compatible: Must be "img,pistachio-pdm"
-+  - clocks: Must contain an entry for each entry in clock-names.
-+  - clock-names: Must include the following entry:
-+	Required elements: "pdm"
-+  - img,cr-periph: Must contain a phandle to the peripheral control
-+	syscon node which contains PDM control registers.
-+  - #pdm-cells: Must be 2.
-+  - The first cell is the PDM channel number (valid values: 0, 1, 2, 3)
-+  - The second cell is 12-bit pulse-in value
-+
-+Specifying PDM information for devices
-+======================================
-+
-+1. PDM User nodes
-+
-+PDM properties should be named "pdms". The exact meaning of each pdms property
-+is described above.
-+
-+	pdm-specifier : array of #pdm-cells specifying the given PDM
-+						(controller specific)
-+
-+The following example could be used to describe a PDM-based backlight device:
-+
-+	pdm: pdm {
-+		#pdm-cells = <2>;
-+	};
-+
-+	[...]
-+
-+	bl: backlight {
-+		pdms = <&pdm 2 0>;
-+	};
-+
-+pdm-specifier typically encodes the chip-relative PDM channel number and the
-+12-bit pulse-in value.
-+
-+2. PDM Controller nodes
-+
-+PDM controller nodes must specify the number of cells used for the specifier
-+using the '#pdm-cells' property.
-+
-+An example PDM controller might look like this:
-+
-+Example:
-+	pdm: pdm@18148000 {
-+		compatible = "img,pistachio-pdm";
-+		clocks = <&pdm_clk>;
-+		clk-names = "pdm";
-+		img,cr-periph = <&cr_periph>;
-+		#pdm-cells = <2>;
-+	};
--- 
-1.7.0.4
+mvebu/dt is based on v3.18-rc1.  Is there a missing dependency
+somewhere?  Perhaps we should let Kishon take the whole series and
+handle the (hopefully trivial) merge conflict?
 
+thx,
+
+Jason.
