@@ -1,56 +1,73 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v4 6/7] ARM: mvebu: add PHY support to the dts for the
- USB controllers on Armada 375
-Date: Fri, 21 Nov 2014 21:08:11 -0500
-Message-ID: <20141122020811.GO22670@titan.lakedaemon.net>
-References: <1415879269-29711-1-git-send-email-gregory.clement@free-electrons.com>
- <1415879269-29711-7-git-send-email-gregory.clement@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1415879269-29711-7-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+From: naidu.tellapati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH RESEND v2 0/2] Initial support for IMG Generic eFuse Controller
+Date: Sat, 22 Nov 2014 08:24:31 +0530
+Message-ID: <1416624873-7823-1-git-send-email-Naidu.Tellapati@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, James.Hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Ezequiel.Garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arul Ramasamy <Arul.Ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 13, 2014 at 12:47:48PM +0100, Gregory CLEMENT wrote:
-> Now that the USB cluster node has been added, use it as a PHY provider
-> for the USB controller linked to it: the first EHCI and the xHCI.
-> 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> ---
->  arch/arm/boot/dts/armada-375.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/armada-375.dtsi b/arch/arm/boot/dts/armada-375.dtsi
-> index 8f45cf5d2a50..f344ec420c95 100644
-> --- a/arch/arm/boot/dts/armada-375.dtsi
-> +++ b/arch/arm/boot/dts/armada-375.dtsi
-> @@ -14,6 +14,7 @@
->  #include "skeleton.dtsi"
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/phy/phy.h>
+From: Arul Ramasamy <Arul.Ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 
-Odd.  The previous patch in this series simply adds a line to phy.h,
-however, I get the following error during 'make dtbs':
+The Pistachio SoC from Imagination Technologies includes a generic eFuse
+controller which exposes 128 EFUSE bits to the Kernel drivers and the user
+applications. EFUSE bits are non-reversible fusible links that are blown in
+specific ways to enable / disable certain features on the Pistachio SoC.
 
-########
-  DTC     arch/arm/boot/dts/armada-375-db.dtb
-In file included from arch/arm/boot/dts/armada-375-db.dts:17:0:arch/arm/boot/dts/armada-375.dtsi:17:33:
-fatal error: dt-bindings/phy/phy.h: No such file or directory
- #include <dt-bindings/phy/phy.h>
-                                 ^
-compilation terminated.
-scripts/Makefile.lib:282: recipe for target 'arch/arm/boot/dts/armada-37 5-db.dtb' failed
-########
+This is based on v3.18-rc4.
 
-mvebu/dt is based on v3.18-rc1.  Is there a missing dependency
-somewhere?  Perhaps we should let Kishon take the whole series and
-handle the (hopefully trivial) merge conflict?
+I am re-sending the series with gmail SMTP as we had some problems with
+the mail server we used in the previous rounds.
 
-thx,
+Please review and provide your comments.
 
-Jason.
+Changes from v1:
+
+ * Created drivers/soc/img/ instead of drivers/soc/pistachio/.
+
+ * Changed name of the external oscillator clock reference.
+
+ * Changed of_device_id compatible name.
+
+ * Removed MAX_EFUSE_BYTE_OFFSET macro.
+
+ * Added range check against efuse_dev->size inside 'img_efuse_readl' function.
+
+ * Added 'efuse_dev' valid check inside 'img_efuse_readl' function before
+   invoking 'readl'.
+
+ * Removed 'THIS_MODULE' set.
+
+ * Moved 'img_efuse' structure definition to driver source file from header
+   file.
+
+ * Added include guard in header file.
+
+Arul Ramasamy (2):
+  efuse: Imagination Technologies Generic eFuse Controller
+  DT: eFuse: Add binding document for IMG Generic eFuse Controller
+
+ .../devicetree/bindings/soc/img/img-efuse.txt      |  18 ++
+ drivers/soc/Kconfig                                |   1 +
+ drivers/soc/Makefile                               |   1 +
+ drivers/soc/img/Makefile                           |   1 +
+ drivers/soc/img/fuse/Kconfig                       |   9 +
+ drivers/soc/img/fuse/Makefile                      |   1 +
+ drivers/soc/img/fuse/img-efuse.c                   | 192 +++++++++++++++++++++
+ include/soc/img/img-efuse.h                        |  15 ++
+ 8 files changed, 238 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/img/img-efuse.txt
+ create mode 100644 drivers/soc/img/Makefile
+ create mode 100644 drivers/soc/img/fuse/Kconfig
+ create mode 100644 drivers/soc/img/fuse/Makefile
+ create mode 100644 drivers/soc/img/fuse/img-efuse.c
+ create mode 100644 include/soc/img/img-efuse.h
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
