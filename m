@@ -1,19 +1,99 @@
-From: <luv2charitys-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Charity Work
-Date: Sun, 23 Nov 2014 04:29:54 -0600
-Message-ID: <HO-SRV2tJAteIUeJG2g0002927c@office.horkans.com>
-Reply-To: <paucharity-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/5] pinctrl: sun6i: Add some missing functions,
+ fix i2c3 muxing
+Date: Sun, 23 Nov 2014 13:54:39 +0100
+Message-ID: <1416747283-13489-2-git-send-email-hdegoede@redhat.com>
+References: <1416747283-13489-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Description: Mail message body
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBIFSY6RQKGQECIPXV2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1416747283-13489-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,this is Mr Paul N,i sent you an email on charity work but i am yet to hear fom you,do reply with this code CHA-2015 to my email address paulcharity-9uewiaClKEY@public.gmane.org  i Look forward to hearing from you this time,God bless  Brother Paul
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+While working on pinctrl for the A31s, I noticed that function 4 of
+PA15 - PA18 was missing, add these.
+
+I also noticed that i2c3 sck / sda got assigned to PB5 & PB6, this should
+be PB4 & PB5, fix this as well.
+
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/pinctrl/sunxi/pinctrl-sun6i-a31.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sun6i-a31.c b/drivers/pinctrl/sunxi/pinctrl-sun6i-a31.c
+index a2b4b85..fb19e15 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sun6i-a31.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sun6i-a31.c
+@@ -134,24 +134,28 @@ static const struct sunxi_desc_pin sun6i_a31_pins[] = {
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
+ 		  SUNXI_FUNCTION(0x2, "gmac"),		/* RXD4 */
+ 		  SUNXI_FUNCTION(0x3, "lcd1"),		/* D15 */
++		  SUNXI_FUNCTION(0x4, "clk_a_out"),
+ 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 15)),	/* PA_EINT15 */
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(A, 16),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
+ 		  SUNXI_FUNCTION(0x2, "gmac"),		/* RXD5 */
+ 		  SUNXI_FUNCTION(0x3, "lcd1"),		/* D16 */
++		  SUNXI_FUNCTION(0x4, "dmic"),		/* CLK */
+ 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 16)),	/* PA_EINT16 */
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(A, 17),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
+ 		  SUNXI_FUNCTION(0x2, "gmac"),		/* RXD6 */
+ 		  SUNXI_FUNCTION(0x3, "lcd1"),		/* D17 */
++		  SUNXI_FUNCTION(0x4, "dmic"),		/* DIN */
+ 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 17)),	/* PA_EINT17 */
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(A, 18),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
+ 		  SUNXI_FUNCTION(0x2, "gmac"),		/* RXD7 */
+ 		  SUNXI_FUNCTION(0x3, "lcd1"),		/* D18 */
++		  SUNXI_FUNCTION(0x4, "clk_b_out"),
+ 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 18)),	/* PA_EINT18 */
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(A, 19),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+@@ -207,6 +211,7 @@ static const struct sunxi_desc_pin sun6i_a31_pins[] = {
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
+ 		  SUNXI_FUNCTION(0x2, "gmac"),		/* MDC */
+ 		  SUNXI_FUNCTION(0x3, "lcd1"),		/* HSYNC */
++		  SUNXI_FUNCTION(0x4, "clk_c_out"),
+ 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 26)),	/* PA_EINT26 */
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(A, 27),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+@@ -242,20 +247,20 @@ static const struct sunxi_desc_pin sun6i_a31_pins[] = {
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
+ 		  SUNXI_FUNCTION(0x2, "i2s0"),		/* DO1 */
+ 		  SUNXI_FUNCTION(0x3, "uart3"),		/* RTS */
++		  SUNXI_FUNCTION(0x4, "i2c3"),		/* SCK */
+ 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 4)),	/* PB_EINT4 */
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 5),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
+ 		  SUNXI_FUNCTION(0x2, "i2s0"),		/* DO2 */
+ 		  SUNXI_FUNCTION(0x3, "uart3"),		/* TX */
+-		  SUNXI_FUNCTION(0x4, "i2c3"),		/* SCK */
++		  SUNXI_FUNCTION(0x4, "i2c3"),		/* SDA */
+ 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 5)),	/* PB_EINT5 */
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 6),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
+ 		  SUNXI_FUNCTION(0x2, "i2s0"),		/* DO3 */
+ 		  SUNXI_FUNCTION(0x3, "uart3"),		/* RX */
+-		  SUNXI_FUNCTION(0x4, "i2c3"),		/* SDA */
+ 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 6)),	/* PB_EINT6 */
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 7),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+-- 
+2.1.0
