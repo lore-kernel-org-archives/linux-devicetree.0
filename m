@@ -1,55 +1,50 @@
-From: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: dts: meson: enable Ethernet controller
-Date: Sun, 23 Nov 2014 17:08:48 +0100
-Message-ID: <1416758928-12640-1-git-send-email-b.galvani@gmail.com>
+From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v1] ARM: dts: rockchip: Update LEDs to work with the last leds-gpio driver on radxarock
+Date: Sun, 23 Nov 2014 16:19:35 +0000
+Message-ID: <1416759575-774-1-git-send-email-romain.perier@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a node for the Ethernet controller to Meson DTS file and
-enable it on the Geniatech ATV1200 board.
+The leds-gpio driver recently switched to the device property API. The device_node
+name is no longer retrieved if the "label" devicetree property is not found.
+In this case the driver tries to create entries with (null) name in
+/sys/class/leds, which is wrong and generates backtrace as several gpio_leds have
+the same name. Also renamed subnode "yellow" to "blue" to match the last
+schematics updates.
 
-Signed-off-by: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/meson.dtsi         | 11 +++++++++++
- arch/arm/boot/dts/meson6-atv1200.dts |  4 ++++
- 2 files changed, 15 insertions(+)
+ arch/arm/boot/dts/rk3188-radxarock.dts | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/meson.dtsi b/arch/arm/boot/dts/meson.dtsi
-index 03bcff8..4704b95 100644
---- a/arch/arm/boot/dts/meson.dtsi
-+++ b/arch/arm/boot/dts/meson.dtsi
-@@ -143,5 +143,16 @@
- 			#size-cells = <0>;
- 			status = "disabled";
+diff --git a/arch/arm/boot/dts/rk3188-radxarock.dts b/arch/arm/boot/dts/rk3188-radxarock.dts
+index 6eb62c0..9a09579 100644
+--- a/arch/arm/boot/dts/rk3188-radxarock.dts
++++ b/arch/arm/boot/dts/rk3188-radxarock.dts
+@@ -43,16 +43,19 @@
+ 		compatible = "gpio-leds";
+ 
+ 		green {
++			label = "rock:green:user1";
+ 			gpios = <&gpio0 12 GPIO_ACTIVE_LOW>;
+ 			default-state = "off";
  		};
-+
-+		ethmac: ethernet@c9410000 {
-+			compatible = "amlogic,meson6-dwmac", "snps,dwmac";
-+			reg = <0xc9410000 0x10000
-+			       0xc1108108 0x4>;
-+			interrupts = <0 8 1>;
-+			interrupt-names = "macirq";
-+			clocks = <&clk81>;
-+			clock-names = "stmmaceth";
-+			status = "disabled";
-+		};
- 	};
- }; /* end of / */
-diff --git a/arch/arm/boot/dts/meson6-atv1200.dts b/arch/arm/boot/dts/meson6-atv1200.dts
-index d7d351a..1237faa 100644
---- a/arch/arm/boot/dts/meson6-atv1200.dts
-+++ b/arch/arm/boot/dts/meson6-atv1200.dts
-@@ -64,3 +64,7 @@
- &uart_AO {
- 	status = "okay";
- };
-+
-+&ethmac {
-+	status = "okay";
-+};
+ 
+-		yellow {
++		blue {
++			label = "rock:blue:user2";
+ 			gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
+ 			default-state = "off";
+ 		};
+ 
+ 		sleep {
++			label = "rock:red:power";
+ 			gpios = <&gpio0 15 0>;
+ 			default-state = "off";
+ 		};
 -- 
 1.9.1
 
