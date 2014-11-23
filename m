@@ -1,12 +1,12 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 6/9] ARM: dts: sun6i: Add ir_clk node
-Date: Sun, 23 Nov 2014 14:38:12 +0100
-Message-ID: <1416749895-25013-7-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH v2 7/9] ARM: dts: sun6i: Add ir node
+Date: Sun, 23 Nov 2014 14:38:13 +0100
+Message-ID: <1416749895-25013-8-git-send-email-hdegoede@redhat.com>
 References: <1416749895-25013-1-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBYGGY6RQKGQE24TZCOQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBYWGY6RQKGQE5MD7XSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1416749895-25013-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,30 +19,33 @@ To: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Maxime Ripard
 Cc: Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add an ir_clk sub-node to the prcm node.
+Add a node for the ir receiver found on the A31.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun6i-a31.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/sun6i-a31.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index a01b215..4aa628b 100644
+index 4aa628b..d33e758 100644
 --- a/arch/arm/boot/dts/sun6i-a31.dtsi
 +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -882,6 +882,13 @@
- 						"apb0_i2c";
- 			};
+@@ -900,6 +900,16 @@
+ 			reg = <0x01f01c00 0x300>;
+ 		};
  
-+			ir_clk: ir_clk {
-+				#clock-cells = <0>;
-+				compatible = "allwinner,sun6i-a31-ir-clk";
-+				clocks = <&osc32k>, <&osc24M>;
-+				clock-output-names = "ir";
-+			};
++		ir@01f02000 {
++			compatible = "allwinner,sun5i-a13-ir";
++			clocks = <&apb0_gates 1>, <&ir_clk>;
++			clock-names = "apb", "ir";
++			resets = <&apb0_rst 1>;
++			interrupts = <0 37 4>;
++			reg = <0x01f02000 0x40>;
++			status = "disabled";
++		};
 +
- 			apb0_rst: apb0_rst {
- 				compatible = "allwinner,sun6i-a31-clock-reset";
- 				#reset-cells = <1>;
+ 		r_pio: pinctrl@01f02c00 {
+ 			compatible = "allwinner,sun6i-a31-r-pinctrl";
+ 			reg = <0x01f02c00 0x400>;
 -- 
 2.1.0
