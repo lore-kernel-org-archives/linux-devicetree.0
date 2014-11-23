@@ -1,214 +1,59 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v3 3/5] pinctrl: exynos: add exynos5410 SoC specific data
-Date: Sat, 22 Nov 2014 23:26:24 +0100
-Message-ID: <1416695185-5198-1-git-send-email-afaerber@suse.de>
-References: <547104D5.4030803@suse.de>
+From: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Subject: Re: [PATCH v2] mtd: fsl_upm: Support NAND ECC DTS properties
+Date: Sat, 22 Nov 2014 21:55:42 -0300
+Message-ID: <5471308E.908@vanguardiasur.com.ar>
+References: <1854666513.5578.1415473916534.JavaMail.zimbra@xes-inc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <547104D5.4030803@suse.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: Kukjin Kim <kgene@kernel.org>, =?UTF-8?q?=EA=B9=80=ED=95=99=EC=A3=BC?= <ruppi.kim@hardkernel.com>, Humberto Naves <hsnaves@gmail.com>, Jan Kiszka <jan.kiszka@siemens.com>, Johann Pfefferl <johann.pfefferl@siemens.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Tomasz Figa <tomasz.figa@gmail.com>, Thomas Abraham <thomas.abraham@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:PIN CONTROL SUBSY..." <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1854666513.5578.1415473916534.JavaMail.zimbra-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Aaron Sierra <asierra-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: Jordan Friendshuh <jfriendshuh-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-=46rom: Hakjoo Kim <ruppi.kim@hardkernel.com>
+On 11/08/2014 04:11 PM, Aaron Sierra wrote:
+> From: Jordan Friendshuh <jfriendshuh-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
+> 
+> Support the generic nand-ecc-mode and nand-ecc-strength device-tree
+> properties with the Freescale UPM NAND driver.
+> 
+> This patch preserves the default software ECC mode while adding the
+> ability to use BCH ECC for larger NAND devices.
+> 
+> Signed-off-by: Jordan Friendshuh <jfriendshuh-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Aaron Sierra <asierra-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
+> ---
+> v2:
+>     * Now using ECC mode and strength helpers from of_mtd.h
+>     * ECC mode and strength checking is more robust
+> 
+>  .../devicetree/bindings/mtd/fsl-upm-nand.txt       |  2 +
+>  drivers/mtd/nand/Kconfig                           |  1 +
+>  drivers/mtd/nand/fsl_upm.c                         | 51 +++++++++++++++++++---
+>  3 files changed, 49 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt b/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt
+> index fce4894..a9906f6 100644
+> --- a/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt
+> @@ -18,6 +18,8 @@ Optional properties:
+>  - chip-delay : chip dependent delay for transferring data from array to
+>  	read registers (tR). Required if property "gpios" is not used
+>  	(R/B# pins not connected).
+> +- nand-ecc-mode : as defined by nand.txt ("soft" and "soft_bch", only).
+> +- nand-ecc-strength : as defined by nand.txt.
+>  
 
-Add Samsung EXYNOS5410 SoC specific data to enable pinctrl
-support for all platforms based on EXYNOS5410.
+The nand.txt recommends that each binding documents the way these
+properties are interpreted.
 
-Signed-off-by: Hakjoo Kim <ruppi.kim@hardkernel.com>
-[AF: Rebased onto Exynos5260 and irq_chip consolidation]
-Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
----
- v2 -> v3:
- * Rebased (.svc, .{g,w}eint_{con,mask,pend} fields dropped)
-=20
- v1 -> v2:
- * Filled in Sob from Hakjoo Kim
-=20
- .../bindings/pinctrl/samsung-pinctrl.txt           |   1 +
- drivers/pinctrl/samsung/pinctrl-exynos.c           | 107 +++++++++++++=
-++++++++
- drivers/pinctrl/samsung/pinctrl-samsung.c          |   2 +
- drivers/pinctrl/samsung/pinctrl-samsung.h          |   1 +
- 4 files changed, 111 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.=
-txt b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-index e82aaf492517..b87a176e730e 100644
---- a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-@@ -17,6 +17,7 @@ Required Properties:
-   - "samsung,exynos4x12-pinctrl": for Exynos4x12 compatible pin-contro=
-ller.
-   - "samsung,exynos5250-pinctrl": for Exynos5250 compatible pin-contro=
-ller.
-   - "samsung,exynos5260-pinctrl": for Exynos5260 compatible pin-contro=
-ller.
-+  - "samsung,exynos5410-pinctrl": for Exynos5410 compatible pin-contro=
-ller.
-   - "samsung,exynos5420-pinctrl": for Exynos5420 compatible pin-contro=
-ller.
-=20
- - reg: Base address of the pin controller hardware module and length o=
-f
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl=
-/samsung/pinctrl-exynos.c
-index d7154ed0b0eb..0580399a6587 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
-@@ -1084,6 +1084,113 @@ struct samsung_pin_ctrl exynos5260_pin_ctrl[] =3D=
- {
- 	},
- };
-=20
-+/* pin banks of exynos5410 pin-controller 0 */
-+static struct samsung_pin_bank exynos5410_pin_banks0[] =3D {
-+	EXYNOS_PIN_BANK_EINTG(8, 0x000, "gpa0", 0x00),
-+	EXYNOS_PIN_BANK_EINTG(6, 0x020, "gpa1", 0x04),
-+	EXYNOS_PIN_BANK_EINTG(8, 0x040, "gpa2", 0x08),
-+	EXYNOS_PIN_BANK_EINTG(5, 0x060, "gpb0", 0x0c),
-+	EXYNOS_PIN_BANK_EINTG(5, 0x080, "gpb1", 0x10),
-+	EXYNOS_PIN_BANK_EINTG(4, 0x0A0, "gpb2", 0x14),
-+	EXYNOS_PIN_BANK_EINTG(4, 0x0C0, "gpb3", 0x18),
-+	EXYNOS_PIN_BANK_EINTG(7, 0x0E0, "gpc0", 0x1c),
-+	EXYNOS_PIN_BANK_EINTG(4, 0x100, "gpc3", 0x20),
-+	EXYNOS_PIN_BANK_EINTG(7, 0x120, "gpc1", 0x24),
-+	EXYNOS_PIN_BANK_EINTG(7, 0x140, "gpc2", 0x28),
-+	EXYNOS_PIN_BANK_EINTN(2, 0x160, "gpm5"),
-+	EXYNOS_PIN_BANK_EINTG(8, 0x180, "gpd1", 0x2c),
-+	EXYNOS_PIN_BANK_EINTG(8, 0x1A0, "gpe0", 0x30),
-+	EXYNOS_PIN_BANK_EINTG(2, 0x1C0, "gpe1", 0x34),
-+	EXYNOS_PIN_BANK_EINTG(6, 0x1E0, "gpf0", 0x38),
-+	EXYNOS_PIN_BANK_EINTG(8, 0x200, "gpf1", 0x3c),
-+	EXYNOS_PIN_BANK_EINTG(8, 0x220, "gpg0", 0x40),
-+	EXYNOS_PIN_BANK_EINTG(8, 0x240, "gpg1", 0x44),
-+	EXYNOS_PIN_BANK_EINTG(2, 0x260, "gpg2", 0x48),
-+	EXYNOS_PIN_BANK_EINTG(4, 0x280, "gph0", 0x4c),
-+	EXYNOS_PIN_BANK_EINTG(8, 0x2A0, "gph1", 0x50),
-+	EXYNOS_PIN_BANK_EINTN(8, 0x2C0, "gpm7"),
-+	EXYNOS_PIN_BANK_EINTN(6, 0x2E0, "gpy0"),
-+	EXYNOS_PIN_BANK_EINTN(4, 0x300, "gpy1"),
-+	EXYNOS_PIN_BANK_EINTN(6, 0x320, "gpy2"),
-+	EXYNOS_PIN_BANK_EINTN(8, 0x340, "gpy3"),
-+	EXYNOS_PIN_BANK_EINTN(8, 0x360, "gpy4"),
-+	EXYNOS_PIN_BANK_EINTN(8, 0x380, "gpy5"),
-+	EXYNOS_PIN_BANK_EINTN(8, 0x3A0, "gpy6"),
-+	EXYNOS_PIN_BANK_EINTN(8, 0x3C0, "gpy7"),
-+	EXYNOS_PIN_BANK_EINTW(8, 0xC00, "gpx0", 0x00),
-+	EXYNOS_PIN_BANK_EINTW(8, 0xC20, "gpx1", 0x04),
-+	EXYNOS_PIN_BANK_EINTW(8, 0xC40, "gpx2", 0x08),
-+	EXYNOS_PIN_BANK_EINTW(8, 0xC60, "gpx3", 0x0c),
-+};
-+
-+/* pin banks of exynos5410 pin-controller 1 */
-+static struct samsung_pin_bank exynos5410_pin_banks1[] =3D {
-+	EXYNOS_PIN_BANK_EINTG(5, 0x000, "gpj0", 0x00),
-+	EXYNOS_PIN_BANK_EINTG(8, 0x020, "gpj1", 0x04),
-+	EXYNOS_PIN_BANK_EINTG(8, 0x040, "gpj2", 0x08),
-+	EXYNOS_PIN_BANK_EINTG(8, 0x060, "gpj3", 0x0c),
-+	EXYNOS_PIN_BANK_EINTG(2, 0x080, "gpj4", 0x10),
-+	EXYNOS_PIN_BANK_EINTG(8, 0x0A0, "gpk0", 0x14),
-+	EXYNOS_PIN_BANK_EINTG(8, 0x0C0, "gpk1", 0x18),
-+	EXYNOS_PIN_BANK_EINTG(8, 0x0E0, "gpk2", 0x1c),
-+	EXYNOS_PIN_BANK_EINTG(7, 0x100, "gpk3", 0x20),
-+};
-+
-+/* pin banks of exynos5410 pin-controller 2 */
-+static struct samsung_pin_bank exynos5410_pin_banks2[] =3D {
-+	EXYNOS_PIN_BANK_EINTG(8, 0x000, "gpv0", 0x00),
-+	EXYNOS_PIN_BANK_EINTG(8, 0x020, "gpv1", 0x04),
-+	EXYNOS_PIN_BANK_EINTG(8, 0x060, "gpv2", 0x08),
-+	EXYNOS_PIN_BANK_EINTG(8, 0x080, "gpv3", 0x0c),
-+	EXYNOS_PIN_BANK_EINTG(2, 0x0C0, "gpv4", 0x10),
-+};
-+
-+/* pin banks of exynos5410 pin-controller 3 */
-+static struct samsung_pin_bank exynos5410_pin_banks3[] =3D {
-+	EXYNOS_PIN_BANK_EINTG(7, 0x000, "gpz", 0x00),
-+};
-+
-+/*
-+ * Samsung pinctrl driver data for Exynos5410 SoC. Exynos5410 SoC incl=
-udes
-+ * four gpio/pin-mux/pinconfig controllers.
-+ */
-+struct samsung_pin_ctrl exynos5410_pin_ctrl[] =3D {
-+	{
-+		/* pin-controller instance 0 data */
-+		.pin_banks	=3D exynos5410_pin_banks0,
-+		.nr_banks	=3D ARRAY_SIZE(exynos5410_pin_banks0),
-+		.eint_gpio_init =3D exynos_eint_gpio_init,
-+		.eint_wkup_init =3D exynos_eint_wkup_init,
-+		.suspend	=3D exynos_pinctrl_suspend,
-+		.resume		=3D exynos_pinctrl_resume,
-+		.label		=3D "exynos5410-gpio-ctrl0",
-+	}, {
-+		/* pin-controller instance 1 data */
-+		.pin_banks	=3D exynos5410_pin_banks1,
-+		.nr_banks	=3D ARRAY_SIZE(exynos5410_pin_banks1),
-+		.eint_gpio_init =3D exynos_eint_gpio_init,
-+		.suspend	=3D exynos_pinctrl_suspend,
-+		.resume		=3D exynos_pinctrl_resume,
-+		.label		=3D "exynos5410-gpio-ctrl1",
-+	}, {
-+		/* pin-controller instance 2 data */
-+		.pin_banks	=3D exynos5410_pin_banks2,
-+		.nr_banks	=3D ARRAY_SIZE(exynos5410_pin_banks2),
-+		.eint_gpio_init =3D exynos_eint_gpio_init,
-+		.suspend	=3D exynos_pinctrl_suspend,
-+		.resume		=3D exynos_pinctrl_resume,
-+		.label		=3D "exynos5410-gpio-ctrl2",
-+	}, {
-+		/* pin-controller instance 3 data */
-+		.pin_banks	=3D exynos5410_pin_banks3,
-+		.nr_banks	=3D ARRAY_SIZE(exynos5410_pin_banks3),
-+		.eint_gpio_init =3D exynos_eint_gpio_init,
-+		.suspend	=3D exynos_pinctrl_suspend,
-+		.resume		=3D exynos_pinctrl_resume,
-+		.label		=3D "exynos5410-gpio-ctrl3",
-+	},
-+};
-+
- /* pin banks of exynos5420 pin-controller 0 */
- static struct samsung_pin_bank exynos5420_pin_banks0[] =3D {
- 	EXYNOS_PIN_BANK_EINTG(8, 0x000, "gpy7", 0x00),
-diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctr=
-l/samsung/pinctrl-samsung.c
-index 2d37c8f49f3c..42de732c542f 100644
---- a/drivers/pinctrl/samsung/pinctrl-samsung.c
-+++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
-@@ -1222,6 +1222,8 @@ static const struct of_device_id samsung_pinctrl_=
-dt_match[] =3D {
- 		.data =3D (void *)exynos5250_pin_ctrl },
- 	{ .compatible =3D "samsung,exynos5260-pinctrl",
- 		.data =3D (void *)exynos5260_pin_ctrl },
-+	{ .compatible =3D "samsung,exynos5410-pinctrl",
-+		.data =3D (void *)exynos5410_pin_ctrl },
- 	{ .compatible =3D "samsung,exynos5420-pinctrl",
- 		.data =3D (void *)exynos5420_pin_ctrl },
- 	{ .compatible =3D "samsung,s5pv210-pinctrl",
-diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.h b/drivers/pinctr=
-l/samsung/pinctrl-samsung.h
-index 5cedc9d26390..d19bbf4c7f24 100644
---- a/drivers/pinctrl/samsung/pinctrl-samsung.h
-+++ b/drivers/pinctrl/samsung/pinctrl-samsung.h
-@@ -241,6 +241,7 @@ extern struct samsung_pin_ctrl exynos4210_pin_ctrl[=
-];
- extern struct samsung_pin_ctrl exynos4x12_pin_ctrl[];
- extern struct samsung_pin_ctrl exynos5250_pin_ctrl[];
- extern struct samsung_pin_ctrl exynos5260_pin_ctrl[];
-+extern struct samsung_pin_ctrl exynos5410_pin_ctrl[];
- extern struct samsung_pin_ctrl exynos5420_pin_ctrl[];
- extern struct samsung_pin_ctrl s3c64xx_pin_ctrl[];
- extern struct samsung_pin_ctrl s3c2412_pin_ctrl[];
---=20
-2.1.2
-
+Moreover, there's no nand-ecc-step usage? Are you assuming a 512-byte size?
+-- 
+Ezequiel Garcia, VanguardiaSur
+www.vanguardiasur.com.ar
 --
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
