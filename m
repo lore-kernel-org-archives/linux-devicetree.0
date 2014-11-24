@@ -1,61 +1,49 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/4] devicetree: add a binding for a regulator that
- constrains its supply
-Date: Mon, 24 Nov 2014 18:04:22 +0000
-Message-ID: <20141124180422.GO7712@sirena.org.uk>
-References: <1416834123-23139-1-git-send-email-alban.bedel@avionic-design.de>
- <20141124151527.GC7712@sirena.org.uk>
- <20141124181233.53580998@avionic-0020>
+From: deportment34112-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: Fix Penguin Penalty 17th October2014 ( mail-archive.com )
+Date: Mon, 24 Nov 2014 23:41:30 +0530
+Message-ID: <547374d5.8b12450a.50d9.46d8@mx.google.com>
+Reply-To: julia.kites-/E1597aS9LQAvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="yUmmepPgoWmUqRhm"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141124181233.53580998@avionic-0020>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alban Bedel <alban.bedel@avionic-design.de>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Dear Sir
 
---yUmmepPgoWmUqRhm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Did your website get hit by Google Penguin update on October 17th 2014?=
+ What basically is Google Penguin Update? It is actually a code name fo=
+r Google algorithm which aims at decreasing your websites search engine=
+ rankings that violate Google=92s guidelines by using black hat SEO tec=
+hniques to rank your webpage by giving number of spammy links to the pa=
+ge.
+=20
+We are one of those few SEO companies that can help you avoid penalties=
+ from Google Updates like Penguin and Panda. Our clients have survived =
+all the previous and present updates with ease. They have never been hi=
+t because we use 100% white hat SEO techniques to rank Webpages.  Simpl=
+e thing that we do to keep websites away from any Penguin or Panda pena=
+lties is follow Google guidelines and we give Google users the best ans=
+wers to their queries.
 
-On Mon, Nov 24, 2014 at 06:12:33PM +0100, Alban Bedel wrote:
+If you are looking to increase the quality of your websites and to get =
+more targeted traffic or save your websites from these Google penalties=
+ email us back with your interest.=20
 
-> Using this driver the DTS for the add-on board can further constrain
-> this supply to get the voltage it need, for example 3.3V. I understand
+We will be glad to serve you and help you grow your business.
 
-> I saw 3 ways to solve this problem:
+Regards
 
-> 1) This, use a "filter" regulator
-> 2) Extend each and every driver that use a voltage regulator to
->    optionally set the voltage
-> 3) Include the required range in the phandle reference
+Julia kites
 
-> #1 was the easiest :) #2 doesn't seems practical to me, #3 seems pretty
-> good but I'm really not sure if that would be acceptable.
-
-The DT overlay for the add on board should be setting the constraints
-for the parent regulator.  I wouldn't expect the final DT to look any
-different to how it looks with no hardware modularity unless the actual
-module is interesting enough to have a driver of its own.
-
---yUmmepPgoWmUqRhm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUc3MmAAoJECTWi3JdVIfQcb8H+wW0MTogKJyCaC7YefFGslSg
-GRAxfsH8dH14IZkbN2jMwrPjoEq0xqKXXQdTfhbqe7Qpy0z6zQR+4gpYR5EjiCxX
-x7iKw7o/loKB0ODFAOqGrxg6qopYbKFVm7sl6+f9Yg9dVULLGQ6N535rnNXm3R3t
-d5r8WRrN2UzQ0CbTTDRtKqNHhTrWX36AIfQfUKn9zXRZiXpt5JDaRxr1gYbIc72n
-BnRzELSjIOXsxZQQukY1bv4zkLzBWhbridC67FceXv1SsX1822xcfSEHab00e32/
-3mC9TjczMldjckcVYc2xbYwPQxYj7zc6DM8v8dtkj7WTHLNDUfTvP48Po+LQK2Q=
-=JUCo
------END PGP SIGNATURE-----
-
---yUmmepPgoWmUqRhm--
+SEO Manager ( TOB )
+B7 Green Avenue, Amritsar 143001 Punjab
+____________________________
+NO CLICK in the subject to STOP EMAILS
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
