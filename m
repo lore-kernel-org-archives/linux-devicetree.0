@@ -1,88 +1,70 @@
-From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH RESEND v5 1/2] watchdog: ImgTec PDC Watchdog Timer Driver
-Date: Mon, 24 Nov 2014 11:41:34 -0300
-Message-ID: <5473439E.4000901@imgtec.com>
-References: <1416597957-10516-1-git-send-email-Naidu.Tellapati@gmail.com> <1416597957-10516-2-git-send-email-Naidu.Tellapati@gmail.com>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH v7 4/4] dt-bindings: add bindings for mediatek sysirq
+Date: Mon, 24 Nov 2014 23:14:27 +0800
+Message-ID: <1416842067.28838.20.camel@mtksdaap41>
+References: <1416406451-4578-1-git-send-email-yingjoe.chen@mediatek.com>
+	 <1416406451-4578-5-git-send-email-yingjoe.chen@mediatek.com>
+	 <20141119180724.GE12851@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416597957-10516-2-git-send-email-Naidu.Tellapati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: naidu.tellapati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arul.ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141119180724.GE12851@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jiang Liu <jiang.liu@linux.intel.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "hc.yen@mediatek.com" <hc.yen@mediatek.com>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, "yh.chen@mediatek.com" <yh.chen@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Yijing Wang <wangyijing@huawei.com>, Rob Herring <robh+dt@kernel.org>, "nathan.chung@mediatek.com" <nathan.chung@mediatek.com>, "yingjoe.chen@gmail.com" <yingjoe.chen@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, "eddie.huang@mediatek.com" <eddie.huang@mediatek.co>
 List-Id: devicetree@vger.kernel.org
 
 
-Hi Naidu,
+Hi Mark,
 
-Just a few nitpicks on my side. See below.
-
-On 11/21/2014 04:25 PM, naidu.tellapati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+On Wed, 2014-11-19 at 18:07 +0000, Mark Rutland wrote:
+> On Wed, Nov 19, 2014 at 02:14:11PM +0000, Yingjoe Chen wrote:
+> > Add binding documentation for Mediatek SoC SYSIRQ.
+> > 
+> > Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+> > ---
+> >  .../bindings/arm/mediatek/mediatek,sysirq.txt      | 26 ++++++++++++++++++++++
+> >  1 file changed, 26 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
+> > new file mode 100644
+> > index 0000000..8669536
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
+> > @@ -0,0 +1,26 @@
+> > +Mediatek 65xx/81xx sysirq
+> > +
+> > +Mediatek SOCs sysirq support controllable irq inverter for each GIC SPI
+> > +interrupt.
+> > +
+> > +Required properties:
+> > +- compatible: should be one of:
+> > +	"mediatek,mt8135-sysirq"
+> > +	"mediatek,mt8127-sysirq"
+> > +	"mediatek,mt6589-sysirq"
+> > +	"mediatek,mt6582-sysirq"
+> > +	"mediatek,mt6577-sysirq"
+> > +- interrupt-controller : Identifies the node as an interrupt controller
+> > +- #interrupt-cells : Must use the same cells/format as parent controller.
+> > +- interrupt-parent: phandle of irq domain parent for sysirq.
 > 
-> This commit adds support for ImgTec PowerDown Controller Watchdog Timer.
+> I'm concerned that this sounds very general while the binding assumes
+> the GICv2 interrupt-specifier format. Either the driver needs to become
+> more general, or this needs to be tightened up.
 > 
-> Signed-off-by: Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> Reviewed-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-[..]
-> +
-> +struct pdc_wdt_dev {
-> +	struct device *dev;
+> It's also odd to say "irq domain parent", as that's purely a Linux
+> construct and has nothing to do with the HW.
 
-'dev' is unused.
+The implementation expect the parent to use the same interrupt-cells
+format as GIC. Based on the block diagram in the cover-letter, we could
+say GIC is the irq parent of sysirq. So I'm planning to change to this,
+hope this is OK.
 
-> +	struct watchdog_device wdt_dev;
-> +	struct clk *wdt_clk;
-> +	struct clk *sys_clk;
-> +	unsigned long clk_rate;
+- #interrupt-cells : Use the same format as specified by GIC in
+  Documentation/devicetree/bindings/arm/gic.txt
+- interrupt-parent: phandle of irq parent for sysirq. The parent must
+  use the same interrupt-cells format as GIC.
 
-'clk_rate' is unused.
-
-> +	int min_delay;
-> +	void __iomem *base;
-> +};
-> +
-[..]
-> +
-> +/* Start the watchdog timer (delay should already be set */
-
-Typo here: missing closing parenthesis.
-
-[..]
-> +
-> +static int pdc_wdt_probe(struct platform_device *pdev)
-> +{
-> +	int ret, val;
-> +	struct resource *res;
-> +	struct pdc_wdt_dev *pdc_wdt;
-> +
-> +	pdc_wdt = devm_kzalloc(&pdev->dev, sizeof(*pdc_wdt), GFP_KERNEL);
-> +	if (!pdc_wdt)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	pdc_wdt->base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(pdc_wdt->base))
-> +		return PTR_ERR(pdc_wdt->base);
-> +
-> +	pdc_wdt->sys_clk = devm_clk_get(&pdev->dev, "sys");
-> +	if (IS_ERR(pdc_wdt->sys_clk)) {
-> +		dev_err(&pdev->dev, "failed to get the sys clock.\n");
-> +		ret = PTR_ERR(pdc_wdt->wdt_clk);
-> +		goto out_wdt;
-
-I'd say remove all uses of the out_wdt label and just return ret.
-
-Reviewed-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-
-Wim: Any comments? We're aiming at having this driver merged for v3.19.
-
-Thanks!
--- 
-Ezequiel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Joe.C
