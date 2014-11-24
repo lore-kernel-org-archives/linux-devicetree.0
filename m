@@ -1,7 +1,7 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V3 02/11] irqchip: brcmstb-l2: don't clear wakeable interrupts at init time
-Date: Sun, 23 Nov 2014 18:40:37 -0800
-Message-ID: <1416796846-28149-3-git-send-email-cernekee@gmail.com>
+Subject: [PATCH V3 08/11] MIPS: Let __dt_register_buses accept a single bus type
+Date: Sun, 23 Nov 2014 18:40:43 -0800
+Message-ID: <1416796846-28149-9-git-send-email-cernekee@gmail.com>
 References: <1416796846-28149-1-git-send-email-cernekee@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1416796846-28149-1-git-send-email-cernekee@gmail.com>
@@ -10,50 +10,28 @@ To: ralf@linux-mips.org
 Cc: f.fainelli@gmail.com, jfraser@broadcom.com, dtor@chromium.org, tglx@linutronix.de, jason@lakedaemon.net, jogo@openwrt.org, arnd@arndb.de, computersforpeace@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Brian Norris <computersforpeace@gmail.com>
+Some machines only have one bus type to register (e.g. "simple-bus").
 
-Wakeable interrupts might be pending at boot/init time, because wakeup
-interrupts might have triggered a resume from S5. So don't clear such
-wakeups.
-
-This means that any driver which requests a wakeable interrupt bit
-should be prepared to handle an interrupt as soon as they call
-request_irq(). (This is technically already the correct development
-practice, but some drivers probably expect not to receive interrupts
-until they have performed some I/O.)
-
-Signed-off-by: Brian Norris <computersforpeace@gmail.com>
 Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
 ---
- drivers/irqchip/irq-brcmstb-l2.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/mips/kernel/prom.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-brcmstb-l2.c b/drivers/irqchip/irq-brcmstb-l2.c
-index 4aa653a0ac72..4edd27c486c4 100644
---- a/drivers/irqchip/irq-brcmstb-l2.c
-+++ b/drivers/irqchip/irq-brcmstb-l2.c
-@@ -136,7 +136,11 @@ int __init brcmstb_l2_intc_of_init(struct device_node *np,
+diff --git a/arch/mips/kernel/prom.c b/arch/mips/kernel/prom.c
+index 452d4350ce42..e303cb1ef2f4 100644
+--- a/arch/mips/kernel/prom.c
++++ b/arch/mips/kernel/prom.c
+@@ -64,7 +64,10 @@ int __init __dt_register_buses(const char *bus0, const char *bus1)
+ 		panic("device tree not present");
  
- 	/* Disable all interrupts by default */
- 	writel(0xffffffff, data->base + CPU_MASK_SET);
--	writel(0xffffffff, data->base + CPU_CLEAR);
-+
-+	/* Wakeup interrupts may be retained from S5 (cold boot) */
-+	data->can_wake = of_property_read_bool(np, "brcm,irq-can-wake");
-+	if (!data->can_wake)
-+		writel(0xffffffff, data->base + CPU_CLEAR);
+ 	strlcpy(of_ids[0].compatible, bus0, sizeof(of_ids[0].compatible));
+-	strlcpy(of_ids[1].compatible, bus1, sizeof(of_ids[1].compatible));
++	if (bus1) {
++		strlcpy(of_ids[1].compatible, bus1,
++			sizeof(of_ids[1].compatible));
++	}
  
- 	data->parent_irq = irq_of_parse_and_map(np, 0);
- 	if (data->parent_irq < 0) {
-@@ -188,8 +192,7 @@ int __init brcmstb_l2_intc_of_init(struct device_node *np,
- 	ct->chip.irq_suspend = brcmstb_l2_intc_suspend;
- 	ct->chip.irq_resume = brcmstb_l2_intc_resume;
- 
--	if (of_property_read_bool(np, "brcm,irq-can-wake")) {
--		data->can_wake = true;
-+	if (data->can_wake) {
- 		/* This IRQ chip can wake the system, set all child interrupts
- 		 * in wake_enabled mask
- 		 */
+ 	if (of_platform_populate(NULL, of_ids, NULL, NULL))
+ 		panic("failed to populate DT");
 -- 
 2.1.1
