@@ -1,117 +1,89 @@
-From: Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2 RESEND] arm: dts: Exynos5: Use pmu_system_controller
- phandle for dp phy
-Date: Mon, 24 Nov 2014 16:59:19 +0530
-Message-ID: <CAFp+6iFgXFL8=jvrdw4Z+vfPSzWO9FYxAHMD1Tr9wD0Sy=gHMg@mail.gmail.com>
-References: <1416807683-2257-1-git-send-email-gautam.vivek@samsung.com>
-	<20141124103249.GA26217@ulmo.nvidia.com>
-	<CAFp+6iE22FnHeXJZQyhytzGDNfnP4sdnYZuyFtmfzP_JVTVNPQ@mail.gmail.com>
-	<20141124105656.GA32478@ulmo.nvidia.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v4 1/2] of: Rename "poweroff-source" property to
+ "system-power-controller"
+Date: Mon, 24 Nov 2014 12:35:18 +0100
+Message-ID: <20141124113518.GC6875@localhost>
+References: <1415885699-1465-1-git-send-email-user@radxa>
+ <1415885699-1465-2-git-send-email-user@radxa>
+ <20141121105951.GA20679@localhost>
+ <20141124102456.GE4241@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141124105656.GA32478-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141124102456.GE4241@x1>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Johan Hovold <johan@kernel.org>, Auto Configured <romain.perier@gmail.com>, Mark Brown <broonie@kernel.org>, heiko@sntech.de, grant.likely@linaro.org, robh@kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balbi@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 24, 2014 at 4:26 PM, Thierry Reding
-<thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Mon, Nov 24, 2014 at 04:17:18PM +0530, Vivek Gautam wrote:
->> Hi,
->>
->>
->> On Mon, Nov 24, 2014 at 4:02 PM, Thierry Reding
->> <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> > On Mon, Nov 24, 2014 at 11:11:23AM +0530, Vivek Gautam wrote:
->> >> DP PHY now require pmu-system-controller to handle PMU register
->> >> to control PHY's power isolation. Adding the same to dp-phy
->> >> node.
->> >>
->> >> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> >> Reviewed-by: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> >> Tested-by: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
->> >> Cc: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> >> ---
->> >>  arch/arm/boot/dts/exynos5250.dtsi |    2 +-
->> >>  arch/arm/boot/dts/exynos5420.dtsi |    4 ++--
->> >>  2 files changed, 3 insertions(+), 3 deletions(-)
->> >>
->> >> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
->> >> index 0a588b4..bebd099 100644
->> >> --- a/arch/arm/boot/dts/exynos5250.dtsi
->> >> +++ b/arch/arm/boot/dts/exynos5250.dtsi
->> >> @@ -732,7 +732,7 @@
->> >>
->> >>       dp_phy: video-phy@10040720 {
->> >>               compatible = "samsung,exynos5250-dp-video-phy";
->> >> -             reg = <0x10040720 4>;
->> >> +             samsung,pmu-syscon = <&pmu_system_controller>;
->> >>               #phy-cells = <0>;
->> >>       };
->> >>
->> >> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
->> >> index 8617a03..1353a09 100644
->> >> --- a/arch/arm/boot/dts/exynos5420.dtsi
->> >> +++ b/arch/arm/boot/dts/exynos5420.dtsi
->> >> @@ -503,8 +503,8 @@
->> >>       };
->> >>
->> >>       dp_phy: video-phy@10040728 {
->> >> -             compatible = "samsung,exynos5250-dp-video-phy";
->> >> -             reg = <0x10040728 4>;
->> >> +             compatible = "samsung,exynos5420-dp-video-phy";
->> >> +             samsung,pmu-syscon = <&pmu_system_controller>;
->> >>               #phy-cells = <0>;
->> >>       };
->> >>
->> >
->> > It seems like these nodes have been in the Linux tree since 3.12 and
->> > 3.17, respectively and these changes break backwards-compatibility. Has
->> > anyone thought about the possible consequences?
->>
->> Sorry for my ignorance, but i have a doubt.
->> If the bindings and device node both are being changed in the same kernel
->> version (as fixes),
->> so that the stable will have both; then the only scenerio of backward
->> compatibility comes when kernel is upgraded but not dtbs.
->
-> Correct.
->
->> Does such upgradation makes sense for distros ?
->
-> Yes. Back at the time a decision was made that device trees need to be
-> stable ABI because eventually they'd be shipped with the device rather
-> than the distribution. As such it may not at all be possible to update
-> them (they could be in some sort of ROM).
->
-> For that reason new kernels need to keep working with old DTBs unless an
-> argument can be made that would justify breaking things. I don't think I
-> have ever seen anyone win such an argument.
-> One of the rare exceptions
-> that I know of is if you can prove that a given hardware block has never
-> been used in an upstream kernel, then changing the DTB in backwards-
-> incompatible ways would be okay because you wouldn't be breaking things
-> for existing users.
+On Mon, Nov 24, 2014 at 10:24:56AM +0000, Lee Jones wrote:
+> On Fri, 21 Nov 2014, Johan Hovold wrote:
+> > On Thu, Nov 13, 2014 at 01:34:58PM +0000, Auto Configured wrote:
+> > > From: Romain Perier <romain.perier@gmail.com>
+> > > 
+> > > It reverts commit a4b4e0461ec5 ("of: Add standard property for poweroff capability").
+> > > As discussed on the mailing list, it makes more sense to rename back to the
+> > > old established property name, without the vendor prefix. Problem being that
+> > > the word "source" usually tends to be used for inputs and that is out of control
+> > > of the OS. The poweroff capability is an output which simply turns the
+> > > system-power off. Also, this property might be used by drivers which power-off
+> > > the system and power back on subsequent RTC alarms. This seems to suggest to
+> > > remove "poweroff" from the property name and to choose "system-power-controller"
+> > > as the more generic name. This patchs adds the required renaming changes and
+> > > defines an helper function which is compatible with both properties, the old one
+> > > which was only used by tps65910 and the new one without vendor-prefix.
+> > 
+> > Now this is a bit of a mess.
+> > 
+> > There's a commit in the mfd tree, 25f833c1171d ("mfd: tps65910: Convert
+> > ti,system-power-controller DT property to poweroff-source"), which
+> > breaks all dts using tps65910 since these are never updated to the now
+> > retracted property name ("poweroff-source").
+> 
+> My word!
+> 
+> Romain, what conversation on the MLs are you talking about?
 
-I am pretty sure about the Chrome devices (which have not been
-upgraded to any kernel after
-3.8).
-Probably Javier may have better knowledge.
+I think Romain is referring to this thread:
 
-Javier, is there any other device using upstream kernel post 3.12 (any
-arndale octa based) ?
+	https://lkml.org/lkml/2014/10/23/161
 
+> > This one should simply be reverted ASAP.
+> 
+> No need to revert, I can just remove the patch from the MFD tree.
 
+Ok, good. Then this is limited to the regulator tree, and we could
+proceed as I outlined below.
 
+> > > Signed-off-by: Romain Perier <romain.perier@gmail.com>
+> > > ---
+> > >  .../bindings/power/{poweroff.txt => power-controller.txt}        | 0
+> > >  .../devicetree/bindings/regulator/act8865-regulator.txt          | 4 ++--
+> > >  drivers/mfd/tps65910.c                                           | 9 ++++++++-
+> > >  drivers/regulator/act8865-regulator.c                            | 2 +-
+> > >  include/linux/of.h                                               | 6 +++---
+> > >  5 files changed, 14 insertions(+), 7 deletions(-)
+> > 
+> > Romain, what tree is this patch against? The changes to the tps65910
+> > driver appears not to even be in the regulator tree, yet you asked Mark
+> > to merge this. And the MFD maintainer is not even on CC.
+> > 
+> > Let's fix the breakage by reverting the offending commit in mfd. Then the
+> > new standard name can be introduced in regulator alone (e.g. this patch
+> > without the tps65910 bits) as nothing outside of regulator should be
+> > using the new power-off feature (or binding) for act8865. Then other
+> > drivers and dts can be converted to use the new property name (while
+> > retaining backwards compatibility) for 3.20.
+> > 
+> > [ We should probably also consider adding an "of_device_is_" prefix to
+> > the helper name for consistency. ]
 
--- 
-Best Regards
-Vivek Gautam
-Samsung R&D Institute, Bangalore
-India
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Romain, care to resend this patch without the tps65910 chunks?
+
+You should also fix the commit message, which claims to define a "helper
+function which is compatible with both properties", something which was
+no longer the case.
+ 
+Thanks,
+Johan
