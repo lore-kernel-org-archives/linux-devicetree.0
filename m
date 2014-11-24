@@ -1,54 +1,46 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [alsa-devel] [PATCH 0/9] ASoC: QCOM: Add support for ipq806x SOC
-Date: Mon, 24 Nov 2014 18:52:25 +0000
-Message-ID: <20141124185225.GB7712@sirena.org.uk>
-References: <1416423169-21865-1-git-send-email-kwestfie@codeaurora.org>
- <AE8D85F1-A1E0-4656-B160-37AA3300FE58@codeaurora.org>
- <9e2e849728c593bf1b8cde3ede3a1628.squirrel@www.codeaurora.org>
+Subject: Re: [PATCH v3 1/4] spi: core: Add spi_transfer_is_last() helper
+Date: Mon, 24 Nov 2014 18:53:49 +0000
+Message-ID: <20141124185349.GC7712@sirena.org.uk>
+References: <1416669702-7841-1-git-send-email-b.galvani@gmail.com>
+ <1416669702-7841-2-git-send-email-b.galvani@gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="RQipzlYdbiO9/NWI"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="CV9g7MldeTA+KTr7"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <9e2e849728c593bf1b8cde3ede3a1628.squirrel@www.codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kenneth Westfield <kwestfie@codeaurora.org>
-Cc: Kumar Gala <galak@codeaurora.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, Banajit Goswami <bgoswami@codeaurora.org>, Takashi Iwai <tiwai@suse.de>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Patrick Lai <plai@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Bryan Huntsman <bryanh@codeaurora.org>, Greg KH <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>
+In-Reply-To: <1416669702-7841-2-git-send-email-b.galvani@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Beniamino Galvani <b.galvani@gmail.com>
+Cc: linux-spi@vger.kernel.org, Carlo Caione <carlo@caione.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jerry Cao <jerry.cao@amlogic.com>, Victor Wan <victor.wan@amlogic.com>
 List-Id: devicetree@vger.kernel.org
 
 
---RQipzlYdbiO9/NWI
+--CV9g7MldeTA+KTr7
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, Nov 21, 2014 at 12:24:33PM -0800, Kenneth Westfield wrote:
+On Sat, Nov 22, 2014 at 04:21:39PM +0100, Beniamino Galvani wrote:
+> This adds the function spi_transfer_is_last() which can be used by
+> drivers to know whether a given transfer is the last one in the
+> current message.
 
-> Thank you for your comments.  I will separately address each comment shortly.
+Applied, thanks.
 
-Please stop sending mails like this for every mail people send you -
-there's no content in them, it's just adding to the volume of mail
-people have to read.  If you're making some specific comment that's
-obviously fine but just saying effectively "I'm going to send you more
-mail in future" isn't adding much.
-
-Please also when you do reply to mails delete unneeded context from the
-mail, this makes it much easier for people to find any new content you
-have added.
-
---RQipzlYdbiO9/NWI
+--CV9g7MldeTA+KTr7
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBAgAGBQJUc35oAAoJECTWi3JdVIfQKOkH/19BszN5p0NLeTy7zkWXAv8s
-/CCEjxK08i2j34m49H2JK1nDNoDYV6bziZvcZZDqqlSHksj1zvEh9ELdh/s7f+RA
-ouL300bBm7iGMkW1Y9nhgJUAgsQAWqoVXaYeZpdfc9NtiCPDJkTAa6BIYmjyAauk
-MzM2AnboajNSPv4x9w4eH49snOJq8VFOEemnDC5AmLU/Kecd3M4CcSFtUXprbcp+
-28py3stiEVTQm/NJZZxUSKS5AWAx3VSk7E8PQeH0cxL9L0bXVFkMSmQV0YokaqSK
-vYFeqcSBnodAvRhqnPUz08vVVE0ne3tVoYcEnBTQZJxHqKTHHVf599LdySuSx60=
-=Y5F6
+iQEcBAEBAgAGBQJUc369AAoJECTWi3JdVIfQWdgH/0bi+oKJ+L9Zc44KLmesnlRK
+lRc9yLd5oIcuOm6sEuw7wEP8wfbhO12s3UNOtLSYYjB92bqA1HkzLtoLkJLohOLr
+VpqOxRiBMlZwkgGw3uI/01YJACpC/+ckaB8lBd6mfixf2HyNL6pmwJosbhziz+Xl
+qkIJS35i55YWoMHjYBEf5h2UKIK8Qn8NZa66vahRT588X8iuLkImvz4AD7mfHK+p
+qrqmFP0VfFlG0lvlPaUeSn1ANkJbl4NsBZwtkfgiqFS0iv1kBebLAtnxQdIXkO+Q
+lJA/neQ16z+Cg284GoHFZn6VgzbXxAztxizLHgeeEZeGkPy5XRU1AogV8oFYeAQ=
+=Gi7Z
 -----END PGP SIGNATURE-----
 
---RQipzlYdbiO9/NWI--
+--CV9g7MldeTA+KTr7--
