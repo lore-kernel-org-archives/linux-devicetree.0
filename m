@@ -1,45 +1,83 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: Re: [PATCH RESEND v4 1/4] pwm: Imagination Technologies PWM DAC driver
-Date: Mon, 24 Nov 2014 09:47:41 -0800
-Message-ID: <CAL1qeaEWawDwSP-GT_7EgMFHSq3SAAcbqDyxaD1b30AxMco5Cg@mail.gmail.com>
-References: <1416621212-11701-1-git-send-email-Naidu.Tellapati@gmail.com>
-	<1416621212-11701-2-git-send-email-Naidu.Tellapati@gmail.com>
-	<20141124101325.GB25912@ulmo.nvidia.com>
-	<27E62D98F903554192E3C13AFCC91C3C2F52EE89@hbmail01.hb.imgtec.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/4] devicetree: add a binding for a group of regulator
+Date: Mon, 24 Nov 2014 17:55:16 +0000
+Message-ID: <20141124175516.GM7712@sirena.org.uk>
+References: <1416834123-23139-1-git-send-email-alban.bedel@avionic-design.de>
+ <1416834123-23139-3-git-send-email-alban.bedel@avionic-design.de>
+ <20141124152433.GD7712@sirena.org.uk>
+ <20141124183204.79f3487e@avionic-0020>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <27E62D98F903554192E3C13AFCC91C3C2F52EE89@hbmail01.hb.imgtec.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, "naidu.tellapati@gmail.com" <naidu.tellapati@gmail.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "arnd@arndb.de" <arnd@arndb.de>, James Hartley <James.Hartley@imgtec.com>, Ezequiel Garcia <Ezequiel.Garcia@imgtec.com>, James Hogan <James.Hogan@imgtec.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arul Ramasamy <Arul.Ramasamy@imgtec.com>, Sai Masarapu <Sai.Masarapu@imgtec.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="SEFvVLxbW/dEDtN8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141124183204.79f3487e@avionic-0020>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alban Bedel <alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
->>> diff --git a/drivers/pwm/pwm-img.c b/drivers/pwm/pwm-img.c
-> [...]
->>> +/* PWM registers */
->>> +#define CR_PWM_CTRL_CFG                              0x0000
->>> +#define CR_PWM_CTRL_CFG_NO_SUB_DIV           0
->>> +#define CR_PWM_CTRL_CFG_SUB_DIV0             1
->>> +#define CR_PWM_CTRL_CFG_SUB_DIV1             2
->>> +#define CR_PWM_CTRL_CFG_SUB_DIV0_DIV1                3
->>> +#define CR_PWM_CTRL_CFG_DIV_SHIFT(ch)                ((ch) * 2 + 4)
->>> +#define CR_PWM_CTRL_CFG_DIV_MASK             0x3
->>> +
->>> +#define CR_PWM_CH_CFG(ch)                    (0x4 + (ch) * 4)
->>> +#define CR_PWM_CH_CFG_TMBASE_SHIFT           0
->>> +#define CR_PWM_CH_CFG_DUTY_SHIFT             16
->
->> What's with the CR_ prefix here? What does it stand for? Can't you just
->> drop it?
->
-> CR stands for Control Register. We have picked it from the datasheet and wanted to make the
-> register names compatible with the same in the datasheet.
->
-> Hope Andrew agrees with Thierry's comments here. Hope we can drop it.
->
-> Andrew, any comments here, please.
 
-I didn't think the CR_ prefix was totally necessary, but it matches
-what's in the TRM, so I didn't have an issue with it.  I'm fine with
-dropping it.
+--SEFvVLxbW/dEDtN8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Nov 24, 2014 at 06:32:04PM +0100, Alban Bedel wrote:
+
+> Honestly my primary aim wasn't the sequencing, but rather to increase
+> the usefulness of generic drivers. Generic driver generally only
+> manipulate a single supply, however many hardware might have more,
+> and won't need any specific power up ordering. Having to write a full
+> new driver just because of an extra supply doesn't seems to make much
+> sense to me.
+
+I'm having a really hard time following the above - you say "generic
+driver generally only manipulate a single supply" but that's absolutely
+not the case.  A driver should control exactly as many supplies as the
+device it is controlling does. =20
+
+The nearest I can get to something that I think I can understand is a
+device variant that has some changes in supplies but varaints aren't
+something that we need to write entirely new drivers for, just new
+device IDs and a few lines of conditional code.
+
+It's possible that I'm missing something but I'm really struggling to
+see the problem that you're trying to solve here or why this is an
+abstraction that makes sense.
+
+> As alternative solution to this problem I though about allowing a list
+> of regulator for the supplies:
+
+>  vin-supply =3D <&reg1>, <&reg2>;
+
+> The API could still return a single consumer but it would operate on
+> all the regulators in the list instead of just one. Would that be a
+> better solution?
+
+No, that's even worse - this is just hacking around whatever problem
+you're facing.  The device tree should accurately describe the hardware
+not some random thing that vaguely looks like the hardware because it
+happens to let us shoehorn things onto it.
+
+--SEFvVLxbW/dEDtN8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUc3EEAAoJECTWi3JdVIfQPEEH/RLOmYkaZrn1S5iAYK3KXtrx
+tmfcUWVcfTsqjxGZD7uhFiz5eGm85mjWHoJkpQL6tD9q9pEJ9/hrydsoVGwVSu9T
+oHXcBCZrc0ID/qjI0krbFdh5BGgq2icLKdkV8vrHkFr2FZ9F4WN9vWkXaMiLpdPO
+84ES0JT0jmJ/2iU64AnuImgqHn2UOTt8TX8ZgZXk2XwDsMpjGO2OwFA+ZTUsQ0Io
+iJff3QoTo33O8LcnOydynYdAWKAONBCIrMWPE0w79FwZpMrZzwnYWfUbvhW+PWHD
+oArJSldXA6OksCl7AMct30z8aJ89Ygj8wHHE0kbFetBBC4foUk2aNxlLb+WB+sI=
+=uMfH
+-----END PGP SIGNATURE-----
+
+--SEFvVLxbW/dEDtN8--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
