@@ -1,43 +1,31 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v5 06/10] ARM: dts: am4372: Add DCAN nodes
-Date: Mon, 24 Nov 2014 07:49:04 -0800
-Message-ID: <20141124154903.GC2817@atomide.com>
-References: <1415881371-4982-1-git-send-email-rogerq@ti.com>
- <1415881371-4982-7-git-send-email-rogerq@ti.com>
- <5469F35D.80504@ti.com>
- <20141121235032.GC7046@atomide.com>
- <20141122000853.GI7046@atomide.com>
- <54730144.9070106@ti.com>
- <54731250.9050909@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-can-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54731250.9050909@ti.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: wg@grandegger.com, mkl@pengutronix.de, wsa@the-dreams.de, mugunthanvnm@ti.com, george.cherian@ti.com, balbi@ti.com, nsekhar@ti.comnm@ti.com, sergei.shtylyov@cogentembedded.com, linux-omap@vger.kernel.org, linux-can@vger.kernel.org, devicetree@vger.kernel.org
+From: Tomas Novotny <tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>
+Subject: [PATCH 0/4] rtc: ds1307: add support for device tree and mcp7940x
+Date: Mon, 24 Nov 2014 16:49:20 +0100
+Message-ID: <1416844164-16782-1-git-send-email-tomas@novotny.cz>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomas Novotny <tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Roger Quadros <rogerq@ti.com> [141124 03:13]:
-> 
-> I couldn't reproduce the errors on linux-next nor on your branch. Maybe you had a conflict resolution issue?
+This series is tested with MCP79401 and it is based on 3.18-rc6.
 
-I guess it must have been a conflict resolution issue at my end then.
+Tomas Novotny (4):
+  rtc: ds1307: add support for mcp7940x chips
+  of: add vendor prefix for Pericom Technology
+  rtc: ds1307: add device tree bindings documentation
+  rtc: ds1307: add device tree support
 
-> I've rebased the patches on omap-for-v3.19/dt-v2 and are available for you to pull from:
-> 
-> The following changes since commit 0f39f7b906dbeabe2ffd8739d5201e890d102ea6:
-> 
->   ARM: dts: AM43xx: add tscadc DT entries for am437x-evm and am43x-epos-evm (2014-11-21 16:25:06 -0800)
-> 
-> are available in the git repository at:
-> 
->   git@github.com:rogerq/linux.git for-v3.19/omap-dts-dcan
+ .../devicetree/bindings/rtc/maxim,ds1307.txt       |  23 ++++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ drivers/rtc/rtc-ds1307.c                           | 149 ++++++++++++---------
+ 3 files changed, 110 insertions(+), 63 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/maxim,ds1307.txt
 
-Pulling into omap-for-v3.19/dts thanks. Let's also switch into fixes
-only mode for v3.19 now with -rc6 out.
+-- 
+2.1.2
 
-Regards,
-
-Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
