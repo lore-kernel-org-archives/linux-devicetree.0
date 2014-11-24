@@ -1,50 +1,41 @@
-From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V3 03/11] irqchip: brcmstb-l2: fix error handling of irq_of_parse_and_map
-Date: Sun, 23 Nov 2014 18:40:38 -0800
-Message-ID: <1416796846-28149-4-git-send-email-cernekee@gmail.com>
+From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH V3 09/11] MIPS: Fall back to the generic restart notifier
+Date: Sun, 23 Nov 2014 18:40:44 -0800
+Message-ID: <1416796846-28149-10-git-send-email-cernekee@gmail.com>
 References: <1416796846-28149-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1416796846-28149-1-git-send-email-cernekee@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: ralf@linux-mips.org
-Cc: f.fainelli@gmail.com, jfraser@broadcom.com, dtor@chromium.org, tglx@linutronix.de, jason@lakedaemon.net, jogo@openwrt.org, arnd@arndb.de, computersforpeace@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416796846-28149-1-git-send-email-cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jfraser-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Dmitry Torokhov <dtor@chromium.org>
+If the machine doesn't set its own _machine_restart callback, call the
+common do_kernel_restart() instead.  This allows arch-independent reset
+drivers from drivers/power/reset/ to be used to reboot the machine.
 
-Return value of irq_of_parse_and_map() is unsigned int, with 0
-indicating failure, so testing for negative result never works.
-
-Signed-off-by: Dmitry Torokhov <dtor@chromium.org>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Tested-by: Kevin Cernekee <cernekee@gmail.com>
+Signed-off-by: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/irqchip/irq-brcmstb-l2.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/mips/kernel/reset.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/irqchip/irq-brcmstb-l2.c b/drivers/irqchip/irq-brcmstb-l2.c
-index 4edd27c486c4..d6bcc6be0777 100644
---- a/drivers/irqchip/irq-brcmstb-l2.c
-+++ b/drivers/irqchip/irq-brcmstb-l2.c
-@@ -143,9 +143,9 @@ int __init brcmstb_l2_intc_of_init(struct device_node *np,
- 		writel(0xffffffff, data->base + CPU_CLEAR);
+diff --git a/arch/mips/kernel/reset.c b/arch/mips/kernel/reset.c
+index 07fc5244aed4..cf23ab520701 100644
+--- a/arch/mips/kernel/reset.c
++++ b/arch/mips/kernel/reset.c
+@@ -29,6 +29,8 @@ void machine_restart(char *command)
+ {
+ 	if (_machine_restart)
+ 		_machine_restart(command);
++	else
++		do_kernel_restart(command);
+ }
  
- 	data->parent_irq = irq_of_parse_and_map(np, 0);
--	if (data->parent_irq < 0) {
-+	if (!data->parent_irq) {
- 		pr_err("failed to find parent interrupt\n");
--		ret = data->parent_irq;
-+		ret = -EINVAL;
- 		goto out_unmap;
- 	}
- 
+ void machine_halt(void)
 -- 
 2.1.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
