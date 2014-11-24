@@ -1,147 +1,113 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: [PATCH v2 02/14] of: Refactor __of_node_alloc() into __of_node_dup()
-Date: Mon, 24 Nov 2014 22:33:30 +0000
-Message-ID: <1416868422-22103-3-git-send-email-grant.likely@linaro.org>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 01/14] of: Use vargs in __of_node_alloc
+Date: Mon, 24 Nov 2014 22:33:29 +0000
+Message-ID: <1416868422-22103-2-git-send-email-grant.likely@linaro.org>
 References: <1416868422-22103-1-git-send-email-grant.likely@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1416868422-22103-1-git-send-email-grant.likely@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416868422-22103-1-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a node argument to __of_node_alloc() and rename it to
-__of_node_dup() so that it can also be used to duplicate a node with
-its properties. This is important for the overlay code so that it can
-create new nodes without using separate changeset items for every single
-property.
+The overlay code needs to construct a new full_name from the parent name
+and the node name, but the current method has to allocate and then free
+an temporary string which is wasteful. Fix this problem by using vargs
+to pass in a format and arguments into __of_node_alloc().
 
-At the same time rework the overlay code to use the new function and
-drop the extra changeset items.
+At the same time remove the allocflags argument to __of_node_alloc().
+The only users all use GFP_KERNEL, so there is no need to provide it as
+an option. If there is ever a need later it can be added back.
 
-Signed-off-by: Grant Likely <grant.likely@linaro.org>
+Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- drivers/of/dynamic.c    | 40 +++++++++++++++++++++++++++++-----------
+ drivers/of/dynamic.c    | 16 ++++++++--------
  drivers/of/of_private.h |  2 +-
- drivers/of/unittest.c   | 14 ++++++++++----
- 3 files changed, 40 insertions(+), 16 deletions(-)
+ drivers/of/unittest.c   |  6 +++---
+ 3 files changed, 12 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index af1b1ecd6a3d..661ad2f5c00c 100644
+index d43f3059963b..af1b1ecd6a3d 100644
 --- a/drivers/of/dynamic.c
 +++ b/drivers/of/dynamic.c
-@@ -272,15 +272,16 @@ struct property *__of_prop_dup(const struct property *prop, gfp_t allocflags)
- }
- 
+@@ -274,33 +274,33 @@ struct property *__of_prop_dup(const struct property *prop, gfp_t allocflags)
  /**
-- * __of_node_alloc() - Create an empty device node dynamically.
-- * @full_name:	Full name of the new device node
-+ * __of_node_dup() - Duplicate or create an empty device node dynamically.
-+ * @fmt: Format string (plus vargs) for new full name of the device node
+  * __of_node_alloc() - Create an empty device node dynamically.
+  * @full_name:	Full name of the new device node
+- * @allocflags:	Allocation flags (typically pass GFP_KERNEL)
   *
-- * Create an empty device tree node, suitable for further modification.
-- * The node data are dynamically allocated and all the node flags
-- * have the OF_DYNAMIC & OF_DETACHED bits set.
-- * Returns the newly allocated node or NULL on out of memory error.
-+ * Create an device tree node, either by duplicating an empty node or by allocating
-+ * an empty one suitable for further modification.  The node data are
-+ * dynamically allocated and all the node flags have the OF_DYNAMIC &
-+ * OF_DETACHED bits set. Returns the newly allocated node or NULL on out of
-+ * memory error.
+  * Create an empty device tree node, suitable for further modification.
+  * The node data are dynamically allocated and all the node flags
+  * have the OF_DYNAMIC & OF_DETACHED bits set.
+  * Returns the newly allocated node or NULL on out of memory error.
   */
--struct device_node *__of_node_alloc(const char *fmt, ...)
-+struct device_node *__of_node_dup(const struct device_node *np, const char *fmt, ...)
+-struct device_node *__of_node_alloc(const char *full_name, gfp_t allocflags)
++struct device_node *__of_node_alloc(const char *fmt, ...)
  {
- 	va_list vargs;
++	va_list vargs;
  	struct device_node *node;
-@@ -291,17 +292,34 @@ struct device_node *__of_node_alloc(const char *fmt, ...)
- 	va_start(vargs, fmt);
- 	node->full_name = kvasprintf(GFP_KERNEL, fmt, vargs);
- 	va_end(vargs);
--	if (!node->full_name)
--		goto err_free;
-+	if (!node->full_name) {
-+		kfree(node);
-+		return NULL;
-+	}
  
- 	of_node_set_flag(node, OF_DYNAMIC);
- 	of_node_set_flag(node, OF_DETACHED);
+-	node = kzalloc(sizeof(*node), allocflags);
++	node = kzalloc(sizeof(*node), GFP_KERNEL);
+ 	if (!node)
+ 		return NULL;
+-
+-	node->full_name = kstrdup(full_name, allocflags);
+-	of_node_set_flag(node, OF_DYNAMIC);
+-	of_node_set_flag(node, OF_DETACHED);
++	va_start(vargs, fmt);
++	node->full_name = kvasprintf(GFP_KERNEL, fmt, vargs);
++	va_end(vargs);
+ 	if (!node->full_name)
+ 		goto err_free;
+ 
++	of_node_set_flag(node, OF_DYNAMIC);
++	of_node_set_flag(node, OF_DETACHED);
  	of_node_init(node);
  
-+	/* Iterate over and duplicate all properties */
-+	if (np) {
-+		struct property *pp, *new_pp;
-+		for_each_property_of_node(np, pp) {
-+			new_pp = __of_prop_dup(pp, GFP_KERNEL);
-+			if (!new_pp)
-+				goto err_prop;
-+			if (__of_add_property(node, new_pp)) {
-+				kfree(new_pp->name);
-+				kfree(new_pp->value);
-+				kfree(new_pp);
-+				goto err_prop;
-+			}
-+		}
-+	}
  	return node;
  
-- err_free:
--	kfree(node);
-+ err_prop:
-+	of_node_put(node); /* Frees the node and properties */
+  err_free:
+-	kfree(node->full_name);
+ 	kfree(node);
  	return NULL;
  }
- 
 diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-index 618abcad307e..8e882e706cd8 100644
+index 858e0a5d9a11..618abcad307e 100644
 --- a/drivers/of/of_private.h
 +++ b/drivers/of/of_private.h
 @@ -61,7 +61,7 @@ static inline int of_property_notify(int action, struct device_node *np,
   * own the devtree lock or work on detached trees only.
   */
  struct property *__of_prop_dup(const struct property *prop, gfp_t allocflags);
--__printf(1, 2) struct device_node *__of_node_alloc(const char *fmt, ...);
-+__printf(2, 3) struct device_node *__of_node_dup(const struct device_node *np, const char *fmt, ...);
+-struct device_node *__of_node_alloc(const char *full_name, gfp_t allocflags);
++__printf(1, 2) struct device_node *__of_node_alloc(const char *fmt, ...);
  
  extern const void *__of_get_property(const struct device_node *np,
  				     const char *name, int *lenp);
 diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 7634a17af1d5..1720b039cac7 100644
+index 46af7019d291..7634a17af1d5 100644
 --- a/drivers/of/unittest.c
 +++ b/drivers/of/unittest.c
-@@ -445,15 +445,15 @@ static void __init of_selftest_changeset(void)
- 	struct property *ppadd, padd = { .name = "prop-add", .length = 0, .value = "" };
- 	struct property *ppupdate, pupdate = { .name = "prop-update", .length = 5, .value = "abcd" };
- 	struct property *ppremove;
--	struct device_node *n1, *n2, *n21, *nremove, *parent;
-+	struct device_node *n1, *n2, *n21, *nremove, *parent, *np;
+@@ -449,11 +449,11 @@ static void __init of_selftest_changeset(void)
  	struct of_changeset chgset;
  
  	of_changeset_init(&chgset);
--	n1 = __of_node_alloc("/testcase-data/changeset/n1");
-+	n1 = __of_node_dup(NULL, "/testcase-data/changeset/n1");
+-	n1 = __of_node_alloc("/testcase-data/changeset/n1", GFP_KERNEL);
++	n1 = __of_node_alloc("/testcase-data/changeset/n1");
  	selftest(n1, "testcase setup failure\n");
--	n2 = __of_node_alloc("/testcase-data/changeset/n2");
-+	n2 = __of_node_dup(NULL, "/testcase-data/changeset/n2");
+-	n2 = __of_node_alloc("/testcase-data/changeset/n2", GFP_KERNEL);
++	n2 = __of_node_alloc("/testcase-data/changeset/n2");
  	selftest(n2, "testcase setup failure\n");
--	n21 = __of_node_alloc("/testcase-data/changeset/n2/n21");
-+	n21 = __of_node_dup(NULL, "%s/%s", "/testcase-data/changeset/n2", "n21");
+-	n21 = __of_node_alloc("/testcase-data/changeset/n2/n21", GFP_KERNEL);
++	n21 = __of_node_alloc("/testcase-data/changeset/n2/n21");
  	selftest(n21, "testcase setup failure %p\n", n21);
  	nremove = of_find_node_by_path("/testcase-data/changeset/node-remove");
  	selftest(nremove, "testcase setup failure\n");
-@@ -481,6 +481,12 @@ static void __init of_selftest_changeset(void)
- 	selftest(!of_changeset_apply(&chgset), "apply failed\n");
- 	mutex_unlock(&of_mutex);
- 
-+	/* Make sure node names are constructed correctly */
-+	selftest((np = of_find_node_by_path("/testcase-data/changeset/n2/n21")),
-+		 "'%s' not added\n", n21->full_name);
-+	if (np)
-+		of_node_put(np);
-+
- 	mutex_lock(&of_mutex);
- 	selftest(!of_changeset_revert(&chgset), "revert failed\n");
- 	mutex_unlock(&of_mutex);
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
