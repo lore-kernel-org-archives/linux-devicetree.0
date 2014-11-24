@@ -1,47 +1,67 @@
-From: Caesar Wang <caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v19 5/5] ARM: dts: enable Thermal on rk3288-evb board
-Date: Mon, 24 Nov 2014 12:59:02 +0800
-Message-ID: <1416805142-27304-6-git-send-email-caesar.wang@rock-chips.com>
-References: <1416805142-27304-1-git-send-email-caesar.wang@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416805142-27304-1-git-send-email-caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: zyf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, fzf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+From: Vivek Gautam <gautamvivek1987@gmail.com>
+Subject: Re: [PATCH 01/11] pinctrl: exynos: Add BUS1 pin controller for exynos7
+Date: Mon, 24 Nov 2014 10:30:19 +0530
+Message-ID: <CAFp+6iF-N63YSsdv2a6=MYp_mD=eQY_Oi8=9JVNU5dG0BA7YGQ@mail.gmail.com>
+References: <1416576954-11997-1-git-send-email-gautam.vivek@samsung.com>
+	<1416576954-11997-2-git-send-email-gautam.vivek@samsung.com>
+	<CAGOxZ53d_Vk1cF8Y2LNgMNeuCFeQJKmHQeN19pO5HfAdp4hx8A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGOxZ53d_Vk1cF8Y2LNgMNeuCFeQJKmHQeN19pO5HfAdp4hx8A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alim Akhtar <alim.akhtar@gmail.com>
+Cc: Vivek Gautam <gautam.vivek@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux USB Mailing List <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, kishon <kishon@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Tomasz Figa <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, robh+dt <robh+dt@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Kukjin Kim <kgene.kim@samsung.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-when a thermal temperature over TSHUT.Default to via
-CRU reset the entire chip on rk3288-evb Board,
-TSHUT is low active on rk3288-evb board.
+Hi Alim,
 
-Signed-off-by: Caesar Wang <caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Reviewed-by: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/rk3288-evb.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
-index cb83cea..3e067dd 100644
---- a/arch/arm/boot/dts/rk3288-evb.dtsi
-+++ b/arch/arm/boot/dts/rk3288-evb.dtsi
-@@ -148,6 +148,12 @@
- 	status = "okay";
- };
- 
-+&tsadc {
-+	rockchip,hw-tshut-mode = <0>; /* tshut mode 0:CRU 1:GPIO */
-+	rockchip,hw-tshut-polarity = <0>; /* tshut polarity 0:LOW 1:HIGH */
-+	status = "okay";
-+};
-+
- &pinctrl {
- 	backlight {
- 		bl_en: bl-en {
+On Sat, Nov 22, 2014 at 7:07 PM, Alim Akhtar <alim.akhtar@gmail.com> wrote:
+> Hi Vivek,
+>
+> On Fri, Nov 21, 2014 at 7:05 PM, Vivek Gautam <gautam.vivek@samsung.com> wrote:
+>> USB and Power regulator on Exynos7 require gpios available
+>> in BUS1 pin controller block.
+>> So adding the BUS1 pinctrl support.
+>>
+>> Signed-off-by: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+>> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>> ---
+>>  drivers/pinctrl/samsung/pinctrl-exynos.c |   12 ++++++++++++
+>>  1 file changed, 12 insertions(+)
+>>
+>> diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/samsung/pinctrl-exynos.c
+>> index d5d4cfc..caca5b5 100644
+>> --- a/drivers/pinctrl/samsung/pinctrl-exynos.c
+>> +++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
+>> @@ -1300,6 +1300,13 @@ static const struct samsung_pin_bank_data exynos7_pin_banks7[] __initconst = {
+>>         EXYNOS_PIN_BANK_EINTG(8, 0x060, "gpr3", 0x0c),
+>>  };
+>>
+>> +/* pin banks of exynos7 pin-controller - BUS1 */
+>> +static const struct samsung_pin_bank_data exynos7_pin_banks8[] __initconst = {
+>> +       EXYNOS_PIN_BANK_EINTG(8, 0x020, "gpf0", 0x00),
+>> +       EXYNOS_PIN_BANK_EINTG(8, 0x0a0, "gpf4", 0x10),
+>> +       EXYNOS_PIN_BANK_EINTG(6, 0x120, "gph1", 0x20),
+>> +};
+>> +
+> Looks like you are just trying to touch pin banks only related to USB
+> stuffs, but as this patch does not have any dependencies on other
+> patches in this series, will you consider adding other pin banks of
+> BUS1, just for completeness of BUS1 pin-controller.
+
+True, this just touches the USB related pinctrl.
+Will add the rest pin banks of BUS1 for completeness.
+Thanks for pointing out. :-)
+
+[snip]
+
+
+
 -- 
-1.9.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards
+Vivek Gautam
+Samsung R&D Institute, Bangalore
+India
