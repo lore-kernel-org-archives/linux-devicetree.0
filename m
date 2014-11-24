@@ -1,93 +1,101 @@
-From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V3 5/7] serial: earlycon: Set UPIO_MEM32BE based on DT properties
-Date: Mon, 24 Nov 2014 15:36:20 -0800
-Message-ID: <1416872182-6440-6-git-send-email-cernekee@gmail.com>
-References: <1416872182-6440-1-git-send-email-cernekee@gmail.com>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] powerpc/mpc85xx: Add FSL QorIQ DPAA BMan support
+ to device tree(s)
+Date: Mon, 24 Nov 2014 17:45:36 -0600
+Message-ID: <1416872736.15957.158.camel@freescale.com>
+References: <1416827243-16396-1-git-send-email-Emilian.Medve@Freescale.com>
+	 <1416827243-16396-4-git-send-email-Emilian.Medve@Freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416872182-6440-1-git-send-email-cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1416827243-16396-4-git-send-email-Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: arnd-r2nGTMty4D4@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+To: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Geoff Thorpe <Geoff.Thorpe-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Hai-Ying Wang <Haiying.Wang-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Chunhe Lan <Chunhe.Lan-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Poonam Aggrwal <poonam.aggrwal-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-If an earlycon (stdout-path) node is being used, check for "big-endian"
-or "native-endian" properties and pass the appropriate iotype to the
-driver.
+On Mon, 2014-11-24 at 05:07 -0600, Emil Medve wrote:
+> From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+> 
+> Change-Id: If643fa5ba0a903aef8f5056a2c90ebecc995b760
+> Signed-off-by: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+> Signed-off-by: Geoff Thorpe <Geoff.Thorpe-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Hai-Ying Wang <Haiying.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Chunhe Lan <Chunhe.Lan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> [Emil Medve: Sync with the upstream binding]
+> Signed-off-by: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+> ---
+>  arch/powerpc/boot/dts/b4qds.dtsi            |  20 ++-
+>  arch/powerpc/boot/dts/fsl/b4860si-post.dtsi |  60 ++++++-
+>  arch/powerpc/boot/dts/fsl/b4si-post.dtsi    |  84 ++++++++-
+>  arch/powerpc/boot/dts/fsl/p1023si-post.dtsi |  30 +++-
+>  arch/powerpc/boot/dts/fsl/p2041si-post.dtsi |   6 +-
+>  arch/powerpc/boot/dts/fsl/p3041si-post.dtsi |   6 +-
+>  arch/powerpc/boot/dts/fsl/p4080si-post.dtsi |   6 +-
+>  arch/powerpc/boot/dts/fsl/p5020si-post.dtsi |   6 +-
+>  arch/powerpc/boot/dts/fsl/p5040si-post.dtsi |   6 +-
+>  arch/powerpc/boot/dts/fsl/t1040si-post.dtsi |  60 ++++++-
+>  arch/powerpc/boot/dts/fsl/t2081si-post.dtsi | 100 ++++++++++-
+>  arch/powerpc/boot/dts/fsl/t4240si-post.dtsi | 260 +++++++++++++++++++++++++++-
+>  arch/powerpc/boot/dts/kmcoge4.dts           |  18 ++
+>  arch/powerpc/boot/dts/oca4080.dts           |  18 ++
+>  arch/powerpc/boot/dts/p1023rdb.dts          |  21 ++-
+>  arch/powerpc/boot/dts/p2041rdb.dts          |  20 ++-
+>  arch/powerpc/boot/dts/p3041ds.dts           |  20 ++-
+>  arch/powerpc/boot/dts/p4080ds.dts           |  20 ++-
+>  arch/powerpc/boot/dts/p5020ds.dts           |  20 ++-
+>  arch/powerpc/boot/dts/p5040ds.dts           |  20 ++-
+>  arch/powerpc/boot/dts/t104xqds.dtsi         |  20 ++-
+>  arch/powerpc/boot/dts/t104xrdb.dtsi         |  18 ++
+>  arch/powerpc/boot/dts/t208xqds.dtsi         |  20 ++-
+>  arch/powerpc/boot/dts/t208xrdb.dtsi         |  18 ++
+>  arch/powerpc/boot/dts/t4240qds.dts          |  20 ++-
+>  arch/powerpc/boot/dts/t4240rdb.dts          |  18 ++
+>  26 files changed, 893 insertions(+), 22 deletions(-)
+> 
+> diff --git a/arch/powerpc/boot/dts/b4qds.dtsi b/arch/powerpc/boot/dts/b4qds.dtsi
+> index 6188583..3a73103 100644
+> --- a/arch/powerpc/boot/dts/b4qds.dtsi
+> +++ b/arch/powerpc/boot/dts/b4qds.dtsi
+> @@ -1,7 +1,7 @@
+>  /*
+>   * B4420DS Device Tree Source
+>   *
+> - * Copyright 2012 Freescale Semiconductor, Inc.
+> + * Copyright 2012 - 2014 Freescale Semiconductor, Inc.
+>   *
+>   * Redistribution and use in source and binary forms, with or without
+>   * modification, are permitted provided that the following conditions are met:
+> @@ -104,10 +104,28 @@
+>  		device_type = "memory";
+>  	};
+>  
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		bman_fbpr: bman-fbpr {
+> +			compatible = "fsl,bman-fbpr";
+> +			alloc-ranges = <0 0 0xffff 0xffffffff>;
+> +			size = <0 0x1000000>;
+> +			alignment = <0 0x1000000>;
+> +			no-map;
+> +		};
 
-Note that LE sets UPIO_MEM (8-bit) but BE sets UPIO_MEM32BE (32-bit).  The
-big-endian property only really makes sense in the context of 32-bit
-registers, since 8-bit accesses never require data swapping.
+Again, I don't think this should have no-map.  It's not required by the
+hardware, it doesn't perform as advertised on PPC and would be
+burdensome to support on e500, we don't currently create a separate
+coherence domain for it, and you haven't indicated that there's been any
+benchmarks to show that using a separate coherence domain is beneficial.
 
-At some point, the of_earlycon code may want to pass in the reg-io-width,
-reg-offset, and reg-shift parameters too.
+Is there a reason why these reserved-memory nodes need to be repeated in
+each board dts rather than being in a dtsi?
 
-Signed-off-by: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/of/fdt.c              | 7 ++++++-
- drivers/tty/serial/earlycon.c | 4 ++--
- include/linux/serial_core.h   | 2 +-
- 3 files changed, 9 insertions(+), 4 deletions(-)
+-Scott
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 658656f..9d21472 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -794,6 +794,8 @@ int __init early_init_dt_scan_chosen_serial(void)
- 
- 	while (match->compatible[0]) {
- 		unsigned long addr;
-+		unsigned char iotype = UPIO_MEM;
-+
- 		if (fdt_node_check_compatible(fdt, offset, match->compatible)) {
- 			match++;
- 			continue;
-@@ -803,7 +805,10 @@ int __init early_init_dt_scan_chosen_serial(void)
- 		if (!addr)
- 			return -ENXIO;
- 
--		of_setup_earlycon(addr, match->data);
-+		if (of_fdt_is_big_endian(fdt, offset))
-+			iotype = UPIO_MEM32BE;
-+
-+		of_setup_earlycon(addr, iotype, match->data);
- 		return 0;
- 	}
- 	return -ENODEV;
-diff --git a/drivers/tty/serial/earlycon.c b/drivers/tty/serial/earlycon.c
-index a514ee6..548f7d7 100644
---- a/drivers/tty/serial/earlycon.c
-+++ b/drivers/tty/serial/earlycon.c
-@@ -148,13 +148,13 @@ int __init setup_earlycon(char *buf, const char *match,
- 	return 0;
- }
- 
--int __init of_setup_earlycon(unsigned long addr,
-+int __init of_setup_earlycon(unsigned long addr, unsigned char iotype,
- 			     int (*setup)(struct earlycon_device *, const char *))
- {
- 	int err;
- 	struct uart_port *port = &early_console_dev.port;
- 
--	port->iotype = UPIO_MEM;
-+	port->iotype = iotype;
- 	port->mapbase = addr;
- 	port->uartclk = BASE_BAUD * 16;
- 	port->membase = earlycon_map(addr, SZ_4K);
-diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
-index d2d5bf6..0d60c64 100644
---- a/include/linux/serial_core.h
-+++ b/include/linux/serial_core.h
-@@ -310,7 +310,7 @@ struct earlycon_device {
- int setup_earlycon(char *buf, const char *match,
- 		   int (*setup)(struct earlycon_device *, const char *));
- 
--extern int of_setup_earlycon(unsigned long addr,
-+extern int of_setup_earlycon(unsigned long addr, unsigned char iotype,
- 			     int (*setup)(struct earlycon_device *, const char *));
- 
- #define EARLYCON_DECLARE(name, func) \
--- 
-2.1.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
