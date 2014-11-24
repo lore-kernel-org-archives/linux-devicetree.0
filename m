@@ -1,66 +1,88 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCHv3 1/3] ARM: exynos: Add Exynos-based boards compatible string
- and description
-Date: Mon, 24 Nov 2014 19:57:48 +0900
-Message-ID: <1416826670-29438-2-git-send-email-cw00.choi@samsung.com>
-References: <1416826670-29438-1-git-send-email-cw00.choi@samsung.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v2] mfd: syscon: add child device support
+Date: Mon, 24 Nov 2014 12:11:10 +0100
+Message-ID: <1416827470.32191.1.camel@pengutronix.de>
+References: <1415006209-1312-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <1416826670-29438-1-git-send-email-cw00.choi@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: kgene.kim@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com
-Cc: inki.dae@samsung.com, geunsik.lim@samsung.com, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, sw0312.kim@samsung.com, linux-kernel@vger.kernel.org, yj44.cho@samsung.com, jh80.chung@samsung.com, cw00.choi@samsung.com, kyungmin.park@samsung.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1415006209-1312-1-git-send-email-p.zabel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Flora Fu <flora.fu@mediatek.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the missing compatible/description of Exynos-based boards
-to remove following build warning.
+Hi,
 
-	WARNING: DT compatible string "samsung,..." appears un-documented --
-	check ./Documentation/devicetree/bindings/
+On Mon, 2014-11-03 at 10:16 +0100, Philipp Zabel wrote:
+> For devices which have a complete register for themselves, it is possible to
+> place them next to the syscon device with overlapping reg ranges. The same is
+> not possible for devices which only occupy bitfields in registers shared with
+> other users.
+> For devices that are completely controlled by bitfields in the syscon address
+> range, such as multiplexers or voltage regulators, allow to put child devices
+> into the syscon device node.
 
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
----
- .../devicetree/bindings/arm/samsung-boards.txt         | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+Could I please get an ack for the device tree binding change so the MFD
+maintainers can take this patch? I'd like to queue the Mediatek reset
+driver, which depends on this.
 
-diff --git a/Documentation/devicetree/bindings/arm/samsung-boards.txt b/Documentation/devicetree/bindings/arm/samsung-boards.txt
-index 2168ed3..1f8287e 100644
---- a/Documentation/devicetree/bindings/arm/samsung-boards.txt
-+++ b/Documentation/devicetree/bindings/arm/samsung-boards.txt
-@@ -1,11 +1,19 @@
--* Samsung's Exynos4210 based SMDKV310 evaluation board
--
--SMDKV310 evaluation board is based on Samsung's Exynos4210 SoC.
-+* Samsung's Exynos SoC based boards
- 
- Required root node properties:
-     - compatible = should be one or more of the following.
--        (a) "samsung,smdkv310" - for Samsung's SMDKV310 eval board.
--        (b) "samsung,exynos4210"  - for boards based on Exynos4210 SoC.
-+	- "samsung,rinato"	- for Exynos3250-based Samsung Gear2 board.
-+	- "samsung,smdkv310"	- for Exynos4210-based Samsung SMDKV310 eval board.
-+	- "samsung,trats"	- for Exynos4210-based Tizen Reference board.
-+	- "samsung,universal_c210" - for Exynos4210-based Samsung board.
-+	- "samsung,smdk4412",	- for Exynos4412-based Samsung SMDK4412 eval board.
-+	- "samsung,trats2"	- for Exynos4412-based Tizen Reference board.
-+	- "samsung,smdk5250"	- for Exynos5250-based Samsung SMDK5250 eval board.
-+	- "samsung,xyref5260"	- for Exynos5260-based Samsung board.
-+	- "samsung,smdk5410"	- for Exynos5410-based Samsung SMDK5410 eval board.
-+	- "samsung,smdk5420"	- for Exynos5420-based Samsung SMDK5420 eval board.
-+	- "samsung,sd5v1"	- for Exynos5440-based Samsung board.
-+	- "samsung,ssdk5440"	- for Exynos5440-based Samsung board.
- 
- Optional:
-     - firmware node, specifying presence and type of secure firmware:
--- 
-1.8.5.5
+regards
+Philipp
+
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> ---
+> Changes since v1:
+>  - Reworded binding documentation to allow #size-cells = <1>, which is useful
+>    for syscon children that are controlled through a (possibly shared) register
+>    range.
+> ---
+>  Documentation/devicetree/bindings/mfd/syscon.txt | 13 +++++++++++++
+>  drivers/mfd/syscon.c                             |  3 +++
+>  2 files changed, 16 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
+> index fe8150b..0c6b497 100644
+> --- a/Documentation/devicetree/bindings/mfd/syscon.txt
+> +++ b/Documentation/devicetree/bindings/mfd/syscon.txt
+> @@ -9,12 +9,25 @@ using a specific compatible value), interrogate the node (or associated
+>  OS driver) to determine the location of the registers, and access the
+>  registers directly.
+>  
+> +Optionally, devices that are controlled exclusively through syscon registers,
+> +or even bitfields in shared syscon registers, can also be added as child nodes
+> +to the syscon device node. These devices can implicitly assume their parent
+> +node is a syscon provider without referencing it explicitly via phandle.
+> +In this case, the syscon node should have #address-cells = <1> and
+> +#size-cells = <0> or <1> and no ranges property.
+> +
+>  Required properties:
+>  - compatible: Should contain "syscon".
+>  - reg: the register region can be accessed from syscon
+>  
+> +Optional properties:
+> +- #address-cells: Should be 1.
+> +- #size-cells: Should be 0 or 1.
+> +
+>  Examples:
+>  gpr: iomuxc-gpr@020e0000 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+>  	compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
+>  	reg = <0x020e0000 0x38>;
+>  };
+> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+> index ca15878..38da178 100644
+> --- a/drivers/mfd/syscon.c
+> +++ b/drivers/mfd/syscon.c
+> @@ -155,6 +155,9 @@ static int syscon_probe(struct platform_device *pdev)
+>  
+>  	dev_dbg(dev, "regmap %pR registered\n", res);
+>  
+> +	if (!of_device_is_compatible(pdev->dev.of_node, "simple-bus"))
+> +		of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
+> +
+>  	return 0;
+>  }
+>  
