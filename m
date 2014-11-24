@@ -1,7 +1,7 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V3 04/11] irqchip: bcm7120-l2: fix error handling of irq_of_parse_and_map
-Date: Sun, 23 Nov 2014 18:40:39 -0800
-Message-ID: <1416796846-28149-5-git-send-email-cernekee@gmail.com>
+Subject: [PATCH V3 10/11] MIPS: Reorder MIPS_L1_CACHE_SHIFT priorities
+Date: Sun, 23 Nov 2014 18:40:45 -0800
+Message-ID: <1416796846-28149-11-git-send-email-cernekee@gmail.com>
 References: <1416796846-28149-1-git-send-email-cernekee@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1416796846-28149-1-git-send-email-cernekee@gmail.com>
@@ -10,33 +10,38 @@ To: ralf@linux-mips.org
 Cc: f.fainelli@gmail.com, jfraser@broadcom.com, dtor@chromium.org, tglx@linutronix.de, jason@lakedaemon.net, jogo@openwrt.org, arnd@arndb.de, computersforpeace@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Dmitry Torokhov <dtor@chromium.org>
+Enabling support for more than one BMIPS CPU in the same build may
+result in different L1_CACHE_SHIFT values, e.g.
 
-Return value of irq_of_parse_and_map() is unsigned int, with 0
-indicating failure, so testing for negative result never works.
+    CPU_BMIPS5000 selects MIPS_L1_CACHE_SHIFT_7
+    CPU_BMIPS4380 selects MIPS_L1_CACHE_SHIFT_6
+    anything else defaults to MIPS_L1_CACHE_SHIFT_5
 
-Signed-off-by: Dmitry Torokhov <dtor@chromium.org>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Tested-by: Kevin Cernekee <cernekee@gmail.com>
+Ensure that if more than one MIPS_L1_CACHE_SHIFT_x option is selected,
+Kconfig sets CONFIG_MIPS_L1_CACHE_SHIFT to the highest value.
+
+Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
 ---
- drivers/irqchip/irq-bcm7120-l2.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/mips/Kconfig | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/irqchip/irq-bcm7120-l2.c b/drivers/irqchip/irq-bcm7120-l2.c
-index e7c6155b23b8..8eec8e1201d9 100644
---- a/drivers/irqchip/irq-bcm7120-l2.c
-+++ b/drivers/irqchip/irq-bcm7120-l2.c
-@@ -102,9 +102,9 @@ static int bcm7120_l2_intc_init_one(struct device_node *dn,
- 	unsigned int idx;
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index ae8ae77b2ecd..9c09a5a43f87 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -1167,10 +1167,10 @@ config MIPS_L1_CACHE_SHIFT_7
  
- 	parent_irq = irq_of_parse_and_map(dn, irq);
--	if (parent_irq < 0) {
-+	if (!parent_irq) {
- 		pr_err("failed to map interrupt %d\n", irq);
--		return parent_irq;
-+		return -EINVAL;
- 	}
+ config MIPS_L1_CACHE_SHIFT
+ 	int
+-	default "4" if MIPS_L1_CACHE_SHIFT_4
+-	default "5" if MIPS_L1_CACHE_SHIFT_5
+-	default "6" if MIPS_L1_CACHE_SHIFT_6
+ 	default "7" if MIPS_L1_CACHE_SHIFT_7
++	default "6" if MIPS_L1_CACHE_SHIFT_6
++	default "5" if MIPS_L1_CACHE_SHIFT_5
++	default "4" if MIPS_L1_CACHE_SHIFT_4
+ 	default "5"
  
- 	/* For multiple parent IRQs with multiple words, this looks like:
+ config HAVE_STD_PC_SERIAL_PORT
 -- 
 2.1.1
