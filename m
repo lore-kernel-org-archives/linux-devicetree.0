@@ -1,79 +1,84 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH V2 RESEND] arm: dts: Exynos5: Use pmu_system_controller
- phandle for dp phy
-Date: Mon, 24 Nov 2014 13:43:06 +0100
-Message-ID: <547327DA.9090605@collabora.co.uk>
-References: <1416807683-2257-1-git-send-email-gautam.vivek@samsung.com>	<20141124103249.GA26217@ulmo.nvidia.com>	<CAFp+6iE22FnHeXJZQyhytzGDNfnP4sdnYZuyFtmfzP_JVTVNPQ@mail.gmail.com>	<20141124105656.GA32478@ulmo.nvidia.com> <CAFp+6iFgXFL8=jvrdw4Z+vfPSzWO9FYxAHMD1Tr9wD0Sy=gHMg@mail.gmail.com>
+From: Romain Perier <romain.perier@gmail.com>
+Subject: Re: [PATCH v4 1/2] of: Rename "poweroff-source" property to "system-power-controller"
+Date: Mon, 24 Nov 2014 13:58:50 +0100
+Message-ID: <CABgxDoLA=QL6vzU-v1w4vMZ3qhorjRdYOWFFMrjJE6xvZ7QO3g@mail.gmail.com>
+References: <1415885699-1465-1-git-send-email-user@radxa>
+	<1415885699-1465-2-git-send-email-user@radxa>
+	<20141121105951.GA20679@localhost>
+	<20141124102456.GE4241@x1>
+	<20141124113518.GC6875@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAFp+6iFgXFL8=jvrdw4Z+vfPSzWO9FYxAHMD1Tr9wD0Sy=gHMg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vivek Gautam <gautamvivek1987@gmail.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Vivek Gautam <gautam.vivek@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Jingoo Han <jg1.han@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Kukjin Kim <kgene@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141124113518.GC6875@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Grant Likely <grant.likely@linaro.org>, robh <robh@kernel.org>, devicetree <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Felipe Balbi <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Vivek, Thierry,
-
-On 11/24/2014 12:29 PM, Vivek Gautam wrote:
->> Yes. Back at the time a decision was made that device trees need to be
->> stable ABI because eventually they'd be shipped with the device rather
->> than the distribution. As such it may not at all be possible to update
->> them (they could be in some sort of ROM).
+2014-11-24 12:35 GMT+01:00 Johan Hovold <johan@kernel.org>:
+> On Mon, Nov 24, 2014 at 10:24:56AM +0000, Lee Jones wrote:
+>> On Fri, 21 Nov 2014, Johan Hovold wrote:
+>> > On Thu, Nov 13, 2014 at 01:34:58PM +0000, Auto Configured wrote:
+>> > > From: Romain Perier <romain.perier@gmail.com>
+>> > >
+>> > > It reverts commit a4b4e0461ec5 ("of: Add standard property for poweroff capability").
+>> > > As discussed on the mailing list, it makes more sense to rename back to the
+>> > > old established property name, without the vendor prefix. Problem being that
+>> > > the word "source" usually tends to be used for inputs and that is out of control
+>> > > of the OS. The poweroff capability is an output which simply turns the
+>> > > system-power off. Also, this property might be used by drivers which power-off
+>> > > the system and power back on subsequent RTC alarms. This seems to suggest to
+>> > > remove "poweroff" from the property name and to choose "system-power-controller"
+>> > > as the more generic name. This patchs adds the required renaming changes and
+>> > > defines an helper function which is compatible with both properties, the old one
+>> > > which was only used by tps65910 and the new one without vendor-prefix.
+>> >
+>> > Now this is a bit of a mess.
+>> >
+>> > There's a commit in the mfd tree, 25f833c1171d ("mfd: tps65910: Convert
+>> > ti,system-power-controller DT property to poweroff-source"), which
+>> > breaks all dts using tps65910 since these are never updated to the now
+>> > retracted property name ("poweroff-source").
 >>
->> For that reason new kernels need to keep working with old DTBs unless an
->> argument can be made that would justify breaking things. I don't think I
->> have ever seen anyone win such an argument.
+>> My word!
+>>
+>> Romain, what conversation on the MLs are you talking about?
+>
+> I think Romain is referring to this thread:
+>
+>         https://lkml.org/lkml/2014/10/23/161
 
-Although uncommon, there are cases when breaking a DT backward compatibility
-could make sense IMHO. For example the DT binding for the SPI controller
-found on Samsung SoCs (s3c64xx) used a custom binding to specify the chip
-select (CS) line. Later the binding was changed in mainline breaking backward
-compatibility and the breakage was not noticed in a year even when the change
-not only broke backward compatibility but also was wrong.
+Yes, this is this one.
 
-So the options were to a) keep the buggy DT which also broke backward compact,
-b) revert to the old binding breaking any DTS that were added the last year,
-c) break backward compatibility again but take the opportunity to fix the
-binding for good by dropping device specific bindings and use standard ones.
+>
+>> > This one should simply be reverted ASAP.
+>>
+>> No need to revert, I can just remove the patch from the MFD tree.
+>
+> Ok, good. Then this is limited to the regulator tree, and we could
+> proceed as I outlined below.
+>
+>
+> Romain, care to resend this patch without the tps65910 chunks?
 
-At the end it was decided that c) was the least bad option and was made in
-commit 306972c ("spi: s3c64xx: use the generic SPI "cs-gpios" property").
+If you can just drop the patch from mfd tree Lee, please do.
+Yes Johan, np, what I want is that we find a smart solution, nothing more.
 
->> One of the rare exceptions
->> that I know of is if you can prove that a given hardware block has never
->> been used in an upstream kernel, then changing the DTB in backwards-
->> incompatible ways would be okay because you wouldn't be breaking things
->> for existing users.
-> 
-> I am pretty sure about the Chrome devices (which have not been
-> upgraded to any kernel after
-> 3.8).
-> Probably Javier may have better knowledge.
-> 
+>
+> You should also fix the commit message, which claims to define a "helper
+> function which is compatible with both properties", something which was
+> no longer the case.
+>
+> Thanks,
+> Johan
 
-Correct. The Exynos based Chromebooks are using a 3.8 kernel and the FDT
-shipped can't be used with a mainline kernel since it used out-of-tree
-drivers whose DT bindings were changed during review to upstream inclusion.
+So I need to resend this patch which would only introduce an helper
+function which checks for "system-power-controller" property (it would
+also have a new commit message).
+As you suggested, this helper might be named
+"of_device_is_system_power_controller" ?
 
-Also, the stock boot-loader loads a FIT image which has a kernel and FDT
-bundled in the same image so in that case the FDT has to be shipped with
-the Linux kernel anyways.
+Everything is okay ?
 
-> Javier, is there any other device using upstream kernel post 3.12 (any
-> arndale octa based) ?
-> 
-
-Sorry, I don't know if there are other Exynos devices using a more recent
-kernel but AFAICT the DT binding for the Exynos Display Port was changed
-recently (v3.17) in a non-backward compatible way with commit 5f1dcd8
-("drm/exynos: dp: Modify driver to support drm_panel"). So anyone using a
-more recent kernel will have to update the FDT to have display working.
-
-Also display does not work for many Exynos5 devices that have an eDP to LVDS
-bridge chip for example so I think is safe to assume that anything related
-to the Exynos DP (like the DP PHY) would still not have a stable DT binding.
-
-Best regards,
-Javier
+Romain
