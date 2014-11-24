@@ -1,94 +1,179 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v5 06/10] ARM: dts: am4372: Add DCAN nodes
-Date: Mon, 24 Nov 2014 13:11:12 +0200
-Message-ID: <54731250.9050909@ti.com>
-References: <1415881371-4982-1-git-send-email-rogerq@ti.com> <1415881371-4982-7-git-send-email-rogerq@ti.com> <5469F35D.80504@ti.com> <20141121235032.GC7046@atomide.com> <20141122000853.GI7046@atomide.com> <54730144.9070106@ti.com>
+From: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v2 1/4] powerpc/mpc85xx: Create dts components for the FSL QorIQ DPAA BMan
+Date: Mon, 24 Nov 2014 05:07:20 -0600
+Message-ID: <1416827243-16396-2-git-send-email-Emilian.Medve@Freescale.com>
+References: <1416827243-16396-1-git-send-email-Emilian.Medve@Freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <54730144.9070106@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: wg@grandegger.com, mkl@pengutronix.de, wsa@the-dreams.de, mugunthanvnm@ti.com, george.cherian@ti.com, balbi@ti.com, nsekhar@ti.comnm@ti.com, sergei.shtylyov@cogentembedded.com, linux-omap@vger.kernel.org, linux-can@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416827243-16396-1-git-send-email-Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: scottwood-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Geoff Thorpe <Geoff.Thorpe-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Hai-Ying Wang <Haiying.Wang-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/24/2014 11:58 AM, Roger Quadros wrote:
-> On 11/22/2014 02:08 AM, Tony Lindgren wrote:
->> * Tony Lindgren <tony@atomide.com> [141121 15:52]:
->>> * Roger Quadros <rogerq@ti.com> [141117 05:10]:
->>>> The SoC contains 2 DCAN modules. Add them.
->>>
->>> Thanks applying all into omap-for-v3.19/dt-v2.
->>
->> Oops, have to drop these as they cause this on make dtbs:
->>
->>   DTC     arch/arm/boot/dts/dra7-evm.dtb
->> Warning (reg_format): "reg" property in /soc/can@481cc000 has invalid length (8 bytes) (#address-cells == 2, #size-cells == 1)
->> Warning (reg_format): "reg" property in /soc/can@481d0000 has invalid length (8 bytes) (#address-cells == 2, #size-cells == 1)
->> Warning (avoid_default_addr_size): Relying on default #address-cells value for /soc/can@481cc000
->> Warning (avoid_default_addr_size): Relying on default #size-cells value for /soc/can@481cc000
->> Warning (avoid_default_addr_size): Relying on default #address-cells value for /soc/can@481d0000
->> Warning (avoid_default_addr_size): Relying on default #size-cells value for /soc/can@481d0000
->>   DTC     arch/arm/boot/dts/am57xx-beagle-x15.dtb
->> Warning (reg_format): "reg" property in /soc/can@481cc000 has invalid length (8 bytes) (#address-cells == 2, #size-cells == 1)
->> Warning (reg_format): "reg" property in /soc/can@481d0000 has invalid length (8 bytes) (#address-cells == 2, #size-cells == 1)
->> Warning (avoid_default_addr_size): Relying on default #address-cells value for /soc/can@481cc000
->> Warning (avoid_default_addr_size): Relying on default #size-cells value for /soc/can@481cc000
->> Warning (avoid_default_addr_size): Relying on default #address-cells value for /soc/can@481d0000
->> Warning (avoid_default_addr_size): Relying on default #size-cells value for /soc/can@481d0000
->>   DTC     arch/arm/boot/dts/dra72-evm.dtb
->> Warning (reg_format): "reg" property in /soc/can@481cc000 has invalid length (8 bytes) (#address-cells == 2, #size-cells == 1)
->> Warning (reg_format): "reg" property in /soc/can@481d0000 has invalid length (8 bytes) (#address-cells == 2, #size-cells == 1)
->> Warning (avoid_default_addr_size): Relying on default #address-cells value for /soc/can@481cc000
->> Warning (avoid_default_addr_size): Relying on default #size-cells value for /soc/can@481cc000
->> Warning (avoid_default_addr_size): Relying on default #address-cells value for /soc/can@481d0000
->> Warning (avoid_default_addr_size): Relying on default #size-cells value for /soc/can@481d0000
->>
->> Care to update the patches for that and then do a pull request for me?
-> 
-> I didn't see these warnings on 3.18-rc1 though. Looks like some new checks were added in -next.
-> I'll fix these and send you an updated pull request.
+From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 
-I couldn't reproduce the errors on linux-next nor on your branch. Maybe you had a conflict resolution issue?
-I've rebased the patches on omap-for-v3.19/dt-v2 and are available for you to pull from:
+Change-Id: I16e63db731e55a3d60d4e147573c1af8718082d3
+Signed-off-by: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Signed-off-by: Geoff Thorpe <Geoff.Thorpe-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Hai-Ying Wang <Haiying.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+[Emil Medve: Sync with the upstream binding]
+Signed-off-by: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+---
+ arch/powerpc/boot/dts/fsl/qoriq-bman1-portals.dtsi | 90 ++++++++++++++++++++++
+ arch/powerpc/boot/dts/fsl/qoriq-bman1.dtsi         | 41 ++++++++++
+ 2 files changed, 131 insertions(+)
+ create mode 100644 arch/powerpc/boot/dts/fsl/qoriq-bman1-portals.dtsi
+ create mode 100644 arch/powerpc/boot/dts/fsl/qoriq-bman1.dtsi
 
-The following changes since commit 0f39f7b906dbeabe2ffd8739d5201e890d102ea6:
-
-  ARM: dts: AM43xx: add tscadc DT entries for am437x-evm and am43x-epos-evm (2014-11-21 16:25:06 -0800)
-
-are available in the git repository at:
-
-  git@github.com:rogerq/linux.git for-v3.19/omap-dts-dcan
-
-for you to fetch changes up to bae6665b8002282a833bf482b242e7df5d63b3d3:
-
-  ARM: dts: am335x-evm: Add DCAN1 details (2014-11-24 12:41:17 +0200)
-
-----------------------------------------------------------------
-Mugunthan V N (1):
-      arm: dts: am437x-gp: Add dcan support
-
-Roger Quadros (9):
-      ARM: dts: dra7: Add syscon regmap for CORE CONTROL area
-      ARM: dts: DRA7: Add DCAN nodes
-      ARM: dts: dra7-evm: Add CAN support
-      ARM: dts: dra72-evm: Add CAN support
-      ARM: dts: am4372: Add control module syscon node
-      ARM: dts: am4372: Add DCAN nodes
-      ARM: dts: am33xx: Add control module syscon node
-      ARM: dts: am33xx: Update DCAN nodes
-      ARM: dts: am335x-evm: Add DCAN1 details
-
- arch/arm/boot/dts/am335x-evm.dts    | 13 +++++++++++++
- arch/arm/boot/dts/am33xx.dtsi       | 25 +++++++++++++++++--------
- arch/arm/boot/dts/am4372.dtsi       | 27 +++++++++++++++++++++++++++
- arch/arm/boot/dts/am437x-gp-evm.dts | 26 ++++++++++++++++++++++++++
- arch/arm/boot/dts/dra7-evm.dts      | 22 ++++++++++++++++++++++
- arch/arm/boot/dts/dra7.dtsi         | 26 ++++++++++++++++++++++++++
- arch/arm/boot/dts/dra72-evm.dts     | 23 +++++++++++++++++++++++
- 7 files changed, 154 insertions(+), 8 deletions(-)
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-bman1-portals.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-bman1-portals.dtsi
+new file mode 100644
+index 0000000..5022432
+--- /dev/null
++++ b/arch/powerpc/boot/dts/fsl/qoriq-bman1-portals.dtsi
+@@ -0,0 +1,90 @@
++/*
++ * QorIQ BMan Portal device tree stub for 10 portals
++ *
++ * Copyright 2011 - 2014 Freescale Semiconductor Inc.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions are met:
++ *     * Redistributions of source code must retain the above copyright
++ *	 notice, this list of conditions and the following disclaimer.
++ *     * Redistributions in binary form must reproduce the above copyright
++ *	 notice, this list of conditions and the following disclaimer in the
++ *	 documentation and/or other materials provided with the distribution.
++ *     * Neither the name of Freescale Semiconductor nor the
++ *	 names of its contributors may be used to endorse or promote products
++ *	 derived from this software without specific prior written permission.
++ *
++ *
++ * ALTERNATIVELY, this software may be distributed under the terms of the
++ * GNU General Public License ("GPL") as published by the Free Software
++ * Foundation, either version 2 of that License or (at your option) any
++ * later version.
++ *
++ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
++ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
++ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
++ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
++ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++&bportals {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	compatible = "simple-bus";
++
++	bman-portal@0 {
++		compatible = "fsl,bman-portal";
++		reg = <0x0 0x4000>, <0x100000 0x1000>;
++		interrupts = <105 2 0 0>;
++	};
++	bman-portal@4000 {
++		compatible = "fsl,bman-portal";
++		reg = <0x4000 0x4000>, <0x101000 0x1000>;
++		interrupts = <107 2 0 0>;
++	};
++	bman-portal@8000 {
++		compatible = "fsl,bman-portal";
++		reg = <0x8000 0x4000>, <0x102000 0x1000>;
++		interrupts = <109 2 0 0>;
++	};
++	bman-portal@c000 {
++		compatible = "fsl,bman-portal";
++		reg = <0xc000 0x4000>, <0x103000 0x1000>;
++		interrupts = <111 2 0 0>;
++	};
++	bman-portal@10000 {
++		compatible = "fsl,bman-portal";
++		reg = <0x10000 0x4000>, <0x104000 0x1000>;
++		interrupts = <113 2 0 0>;
++	};
++	bman-portal@14000 {
++		compatible = "fsl,bman-portal";
++		reg = <0x14000 0x4000>, <0x105000 0x1000>;
++		interrupts = <115 2 0 0>;
++	};
++	bman-portal@18000 {
++		compatible = "fsl,bman-portal";
++		reg = <0x18000 0x4000>, <0x106000 0x1000>;
++		interrupts = <117 2 0 0>;
++	};
++	bman-portal@1c000 {
++		compatible = "fsl,bman-portal";
++		reg = <0x1c000 0x4000>, <0x107000 0x1000>;
++		interrupts = <119 2 0 0>;
++	};
++	bman-portal@20000 {
++		compatible = "fsl,bman-portal";
++		reg = <0x20000 0x4000>, <0x108000 0x1000>;
++		interrupts = <121 2 0 0>;
++	};
++	bman-portal@24000 {
++		compatible = "fsl,bman-portal";
++		reg = <0x24000 0x4000>, <0x109000 0x1000>;
++		interrupts = <123 2 0 0>;
++	};
++};
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-bman1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-bman1.dtsi
+new file mode 100644
+index 0000000..1adc09f
+--- /dev/null
++++ b/arch/powerpc/boot/dts/fsl/qoriq-bman1.dtsi
+@@ -0,0 +1,41 @@
++/*
++ * QorIQ BMan device tree stub [ controller @ offset 0x31a000 ]
++ *
++ * Copyright 2011 - 2014 Freescale Semiconductor Inc.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions are met:
++ *     * Redistributions of source code must retain the above copyright
++ *	 notice, this list of conditions and the following disclaimer.
++ *     * Redistributions in binary form must reproduce the above copyright
++ *	 notice, this list of conditions and the following disclaimer in the
++ *	 documentation and/or other materials provided with the distribution.
++ *     * Neither the name of Freescale Semiconductor nor the
++ *	 names of its contributors may be used to endorse or promote products
++ *	 derived from this software without specific prior written permission.
++ *
++ *
++ * ALTERNATIVELY, this software may be distributed under the terms of the
++ * GNU General Public License ("GPL") as published by the Free Software
++ * Foundation, either version 2 of that License or (at your option) any
++ * later version.
++ *
++ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
++ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
++ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
++ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
++ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++bman: bman@31a000 {
++	compatible = "fsl,bman";
++	reg = <0x31a000 0x1000>;
++	interrupts = <16 2 1 2>;
++	fsl,bman-portals = &bportals;
++	memory-region = <&bman_fbpr>;
++};
+-- 
+2.1.3
 
 --
-cheers,
--roger
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
