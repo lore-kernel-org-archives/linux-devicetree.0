@@ -1,43 +1,79 @@
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [PATCH v4 0/6] Touchscreen performance related fixes
-Date: Mon, 24 Nov 2014 13:35:06 +0100
-Message-ID: <547325FA.6020004@linutronix.de>
-References: <1415941651-28962-1-git-send-email-vigneshr@ti.com> <20141124115116.GA14997@linutronix.de> <547321A2.6010207@ti.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH V2 RESEND] arm: dts: Exynos5: Use pmu_system_controller
+ phandle for dp phy
+Date: Mon, 24 Nov 2014 13:43:06 +0100
+Message-ID: <547327DA.9090605@collabora.co.uk>
+References: <1416807683-2257-1-git-send-email-gautam.vivek@samsung.com>	<20141124103249.GA26217@ulmo.nvidia.com>	<CAFp+6iE22FnHeXJZQyhytzGDNfnP4sdnYZuyFtmfzP_JVTVNPQ@mail.gmail.com>	<20141124105656.GA32478@ulmo.nvidia.com> <CAFp+6iFgXFL8=jvrdw4Z+vfPSzWO9FYxAHMD1Tr9wD0Sy=gHMg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <547321A2.6010207@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, richardcochran@gmail.com, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Samuel Ortiz <sameo@linux.intel.com>, Felipe Balbi <balbi@ti.com>, Brad Griffis <bgriffis@ti.com>, Sanjeev Sharma <sanjeev_sharma@mentor.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Jan Kardell <jan.kardell@telliq.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kerne
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAFp+6iFgXFL8=jvrdw4Z+vfPSzWO9FYxAHMD1Tr9wD0Sy=gHMg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Vivek Gautam <gautamvivek1987@gmail.com>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Vivek Gautam <gautam.vivek@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Jingoo Han <jg1.han@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Kukjin Kim <kgene@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/24/2014 01:16 PM, Vignesh R wrote:
+Hello Vivek, Thierry,
 
-> I have tried running both IIO and TSC at the same time. But I have never
-> seen WARN_ON() even after running for close to 30 min. Can you send me
-> the exact script, so that it will be easy to reproduce?
+On 11/24/2014 12:29 PM, Vivek Gautam wrote:
+>> Yes. Back at the time a decision was made that device trees need to be
+>> stable ABI because eventually they'd be shipped with the device rather
+>> than the distribution. As such it may not at all be possible to update
+>> them (they could be in some sort of ROM).
+>>
+>> For that reason new kernels need to keep working with old DTBs unless an
+>> argument can be made that would justify breaking things. I don't think I
+>> have ever seen anyone win such an argument.
 
-Sure thing.
-- one shell
-	evtest /dev/input/event2
-- second shell
-	./iio-test.sh
-  with:
+Although uncommon, there are cases when breaking a DT backward compatibility
+could make sense IMHO. For example the DT binding for the SPI controller
+found on Samsung SoCs (s3c64xx) used a custom binding to specify the chip
+select (CS) line. Later the binding was changed in mainline breaking backward
+compatibility and the breakage was not noticed in a year even when the change
+not only broke backward compatibility but also was wrong.
 
-|#!/bin/sh
-|
-|while [ 1 = 1 ]
-|do
-|        cat /sys/bus/iio/devices/iio\:device0/in_voltage4_raw
-|done
+So the options were to a) keep the buggy DT which also broke backward compact,
+b) revert to the old binding breaking any DTS that were added the last year,
+c) break backward compatibility again but take the opportunity to fix the
+binding for good by dropping device specific bindings and use standard ones.
 
+At the end it was decided that c) was the least bad option and was made in
+commit 306972c ("spi: s3c64xx: use the generic SPI "cs-gpios" property").
 
-the kernel config: https://breakpoint.cc/am335x-config
-
+>> One of the rare exceptions
+>> that I know of is if you can prove that a given hardware block has never
+>> been used in an upstream kernel, then changing the DTB in backwards-
+>> incompatible ways would be okay because you wouldn't be breaking things
+>> for existing users.
 > 
-> Regards
-> Vignesh
+> I am pretty sure about the Chrome devices (which have not been
+> upgraded to any kernel after
+> 3.8).
+> Probably Javier may have better knowledge.
+> 
 
-Sebastian
+Correct. The Exynos based Chromebooks are using a 3.8 kernel and the FDT
+shipped can't be used with a mainline kernel since it used out-of-tree
+drivers whose DT bindings were changed during review to upstream inclusion.
+
+Also, the stock boot-loader loads a FIT image which has a kernel and FDT
+bundled in the same image so in that case the FDT has to be shipped with
+the Linux kernel anyways.
+
+> Javier, is there any other device using upstream kernel post 3.12 (any
+> arndale octa based) ?
+> 
+
+Sorry, I don't know if there are other Exynos devices using a more recent
+kernel but AFAICT the DT binding for the Exynos Display Port was changed
+recently (v3.17) in a non-backward compatible way with commit 5f1dcd8
+("drm/exynos: dp: Modify driver to support drm_panel"). So anyone using a
+more recent kernel will have to update the FDT to have display working.
+
+Also display does not work for many Exynos5 devices that have an eDP to LVDS
+bridge chip for example so I think is safe to assume that anything related
+to the Exynos DP (like the DP PHY) would still not have a stable DT binding.
+
+Best regards,
+Javier
