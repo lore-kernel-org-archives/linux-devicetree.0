@@ -1,54 +1,56 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: FIX ME in xsysace.c
-Date: Mon, 24 Nov 2014 15:32:52 +0100
-Message-ID: <5e95919de4e349a6a7c5261cb1e9fda5@BN1BFFO11FD012.protection.gbl>
-References: <5472B1D6.7080805@gmail.com>
- <5a8be93a4204429daf16bc8f62cdd0cd@BY2FFO11FD005.protection.gbl>
- <54731648.8010006@gmail.com>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH v12 0/11] dw-hdmi: convert imx hdmi to bridge/dw_hdmi
+Date: Mon, 24 Nov 2014 22:35:44 +0800
+Message-ID: <54734240.8070402@rock-chips.com>
+References: <1415793593-5075-1-git-send-email-andy.yan@rock-chips.com>
+ <1416221635-12797-1-git-send-email-andy.yan@rock-chips.com>
+ <54733DF3.7020609@rock-chips.com> <54733F34.5080405@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54731648.8010006-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: nick <xerofoify-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <54733F34.5080405@imgtec.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
+Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, mark.yao@rock-chips.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 11/24/2014 12:28 PM, nick wrote:
-> 
-> 
-> On 14-11-24 02:47 AM, Michal Simek wrote:
->> Hi,
->>
->> On 11/24/2014 05:19 AM, nick wrote:
->>> Greetings Michal and others,
->>> I am wondering about the FIX ME in xsysace.c as it seems not correct due to my knowledge of most hardware protocols using a predetermined bit wide and therefore this could be hard coded. If someone can respond on if I am correct in removing this fix me it would be greatly appreciated.
->>
->> I think that will be the best to c&p that fixme which you are talking about.
->> Definitely feel free to fix whatever fixme is there and send the patch
->> for fixing it.
->>
->> Thanks,
->> Michal
->>
-> Here is the fix me.
-> int bus_width = ACE_BUS_WIDTH_16; /* FIXME: should not be hard coded */
-
-FIXME is totally bogus and should be removed.
-
-I expect you want to use 8bit bus mode which driver itself supports.
-This line is just default setup to 16bit mode.
-
-If you add 8-bit property to dts you are there.
-	if (of_find_property(dev->dev.of_node, "8-bit", NULL))
-		bus_width = ACE_BUS_WIDTH_8;
-
-Thanks,
-Michal
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgWnViYWlyTEs6Ck9uIDIwMTTlubQxMeaciDI05pelIDIyOjIyLCBadWJhaXIgTHV0ZnVsbGFo
+IEtha2FraGVsIHdyb3RlOgo+IEhpIEFuZHksCj4KPiBPbiAyNC8xMS8xNCAxNDoxNywgQW5keSBZ
+YW4gd3JvdGU6Cj4+IEhpIFp1YmFpckxLLCBSdXNzZWwgS2luZywgR3JlZyBLcm9haC1IYXJ0bWFu
+ICwgUGhpbGlwcCBaYWJlbCBhbmQgRGFuaWVsOgo+PiAgICAgRG8geW91IGhhdmUgYW55IGZ1cnRo
+ZXIgb3BpbmlvbnMgb3Igc3VnZ2VzdGlvbnMgYWJvdXQgdGhlCj4+IHRoZSBjdXJyZW50IHBhdGNo
+IHNldD8KPiBJIGhhdmUgcmV2aWV3ZWQgdGhlIHBhdGNoZXMgYXMgbXVjaCBhcyBJIGNvdWxkLgo+
+Cj4gVGhleSBsb29rIGdvb2QgdG8gbWUuCj4KPiBCdXQgSSBkb24ndCBrbm93IHRoZSBpbm5lciBk
+ZXRhaWxzIG9mIERSTSB0byBiZSBhYmxlIHRvIGNvbW1lbnQgZnVydGhlci4KPgo+IFBsZWFzZSBk
+byBjYyBtZSBpbiBmdXJ0aGVyIHBhdGNoZXMuCgogIFRoYW5rcyB2ZXJ5IG11Y2ggZm9yIHlvdXIg
+Y2FyZWZ1bGx5IHJldmlldyB3b3JrLgogIEFuZCBpZiB5b3UgaGF2ZSBmdXJ0aGVyIGlkZWFzICwg
+cGxlYXNlIGxldCBtZSBrbm93Lgo+Cj4gQWxzbywgbXkgbWFpbCBjbGllbnQgbWFrZXMgdGhlc2Ug
+cGF0Y2hlcyBsb29rIGxpa2UgdGhlIG5ldyBzZXJpZXMgZ2V0cyBjYXNjYWRlZCBpbiB0aGUgb2xk
+ZXIgcGF0Y2ggOCBzZXJpZXMuCj4KPiBJdCBjb3VsZCBiZSBqdXN0IG15IHRodW5kZXJiaXJkLiBC
+dXQgcGxlYXNlIHN0YXJ0IGEgbmV3IHRocmVhZCB3aGVuIHlvdSBzZW5kIGEgbmV3IHNlcmllcy4K
+CiAgICBJIGRvIHRoZXNlIGJ5IHRha2luZyBSdXNzZWxsIEtpbmcncyBhZHZpY2UgaW4gUEFUQ0gj
+MTAodXNlIHRoZSBzYW1lIApyZWZlcmVuY2UgbWVzc2FnZSBpZCkuCgo+Cj4gVGhhbmsteW91Cj4g
+WnViYWlyTEsKPgo+PiBPbiAyMDE05bm0MTHmnIgxN+aXpSAxODo1MywgQW5keSBZYW4gd3JvdGU6
+Cj4+PiBXZSBmb3VuZCBGcmVlc2NhbGUgaW14NiBhbmQgUm9ja2NoaXAgcmszMjg4IGFuZCBJbmdl
+bmljIEpaNDc4MCAoWGJ1cnN0L01JUFMpCj4+PiB1c2UgdGhlIGludGVyZmFjZSBjb21wYXRpYmxl
+IERlc2lnbndhcmUgSERNSSBJUCwgYnV0IHRoZXkgYWxzbyBoYXZlIHNvbWUKPj4+IGxpZ2h0bHkg
+ZGlmZmVyZW5jZXMsIHN1Y2ggYXMgcGh5IHBsbCBjb25maWd1cmF0aW9uLCByZWdpc3RlciB3aWR0
+aChpbXggaGRtaQo+Pj4gcmVnaXN0ZXIgaXMgb25lIGJ5dGUsIGJ1dCByazMyODggaXMgNCBieXRl
+cyB3aWR0aCBhbmQgY2FuIG9ubHkgYmUgYWNjZXNzZWQKPj4+IGJ5IHdvcmQpLCA0SyBzdXBwb3J0
+KGlteDYgZG9lc24ndCBzdXBwb3J0IDRrLCBidXQgcmszMjg4IGRvZXMpLCBhbmQgSERNSTIuMAo+
+Pj4gc3VwcG9ydC4KPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwo+IExpbnV4LXJvY2tjaGlwIG1haWxpbmcgbGlzdAo+IExpbnV4LXJvY2tjaGlwQGxpc3Rz
+LmluZnJhZGVhZC5vcmcKPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2xpbnV4LXJvY2tjaGlwCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZGV2ZWwgbWFpbGluZyBsaXN0CmRldmVsQGxpbnV4ZHJpdmVycHJvamVjdC5v
+cmcKaHR0cDovL2RyaXZlcmRldi5saW51eGRyaXZlcnByb2plY3Qub3JnL21haWxtYW4vbGlzdGlu
+Zm8vZHJpdmVyZGV2LWRldmVsCg==
