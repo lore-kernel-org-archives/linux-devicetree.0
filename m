@@ -1,103 +1,74 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] powerpc/mpc85xx: Add FSL QorIQ DPAA BMan support
- to device tree(s)
-Date: Mon, 24 Nov 2014 17:45:36 -0600
-Message-ID: <1416872736.15957.158.camel@freescale.com>
-References: <1416827243-16396-1-git-send-email-Emilian.Medve@Freescale.com>
-	 <1416827243-16396-4-git-send-email-Emilian.Medve@Freescale.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH V3 0/7] serial: Configure {big,native}-endian MMIO accesses
+ via DT
+Date: Mon, 24 Nov 2014 15:55:25 -0800
+Message-ID: <5473C56D.1050308@gmail.com>
+References: <1416872182-6440-1-git-send-email-cernekee@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416827243-16396-4-git-send-email-Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Geoff Thorpe <Geoff.Thorpe-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Hai-Ying Wang <Haiying.Wang-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Chunhe Lan <Chunhe.Lan-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Poonam Aggrwal <poonam.aggrwal-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1416872182-6440-1-git-send-email-cernekee@gmail.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Kevin Cernekee <cernekee@gmail.com>, gregkh@linuxfoundation.org, jslaby@suse.cz, robh@kernel.org, grant.likely@linaro.org
+Cc: arnd@arndb.de, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2014-11-24 at 05:07 -0600, Emil Medve wrote:
-> From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+On 11/24/2014 03:36 PM, Kevin Cernekee wrote:
+> My last submission attempted to work around serial driver coexistence
+> problems on multiplatform kernels.  Since there are still questions
+> surrounding the best way to solve that problem, this patch series
+> will focus on the narrower topic of big endian MMIO support on serial.
+
+FWIW:
+
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+
 > 
-> Change-Id: If643fa5ba0a903aef8f5056a2c90ebecc995b760
-> Signed-off-by: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> Signed-off-by: Geoff Thorpe <Geoff.Thorpe-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Hai-Ying Wang <Haiying.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Chunhe Lan <Chunhe.Lan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> [Emil Medve: Sync with the upstream binding]
-> Signed-off-by: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-> ---
->  arch/powerpc/boot/dts/b4qds.dtsi            |  20 ++-
->  arch/powerpc/boot/dts/fsl/b4860si-post.dtsi |  60 ++++++-
->  arch/powerpc/boot/dts/fsl/b4si-post.dtsi    |  84 ++++++++-
->  arch/powerpc/boot/dts/fsl/p1023si-post.dtsi |  30 +++-
->  arch/powerpc/boot/dts/fsl/p2041si-post.dtsi |   6 +-
->  arch/powerpc/boot/dts/fsl/p3041si-post.dtsi |   6 +-
->  arch/powerpc/boot/dts/fsl/p4080si-post.dtsi |   6 +-
->  arch/powerpc/boot/dts/fsl/p5020si-post.dtsi |   6 +-
->  arch/powerpc/boot/dts/fsl/p5040si-post.dtsi |   6 +-
->  arch/powerpc/boot/dts/fsl/t1040si-post.dtsi |  60 ++++++-
->  arch/powerpc/boot/dts/fsl/t2081si-post.dtsi | 100 ++++++++++-
->  arch/powerpc/boot/dts/fsl/t4240si-post.dtsi | 260 +++++++++++++++++++++++++++-
->  arch/powerpc/boot/dts/kmcoge4.dts           |  18 ++
->  arch/powerpc/boot/dts/oca4080.dts           |  18 ++
->  arch/powerpc/boot/dts/p1023rdb.dts          |  21 ++-
->  arch/powerpc/boot/dts/p2041rdb.dts          |  20 ++-
->  arch/powerpc/boot/dts/p3041ds.dts           |  20 ++-
->  arch/powerpc/boot/dts/p4080ds.dts           |  20 ++-
->  arch/powerpc/boot/dts/p5020ds.dts           |  20 ++-
->  arch/powerpc/boot/dts/p5040ds.dts           |  20 ++-
->  arch/powerpc/boot/dts/t104xqds.dtsi         |  20 ++-
->  arch/powerpc/boot/dts/t104xrdb.dtsi         |  18 ++
->  arch/powerpc/boot/dts/t208xqds.dtsi         |  20 ++-
->  arch/powerpc/boot/dts/t208xrdb.dtsi         |  18 ++
->  arch/powerpc/boot/dts/t4240qds.dts          |  20 ++-
->  arch/powerpc/boot/dts/t4240rdb.dts          |  18 ++
->  26 files changed, 893 insertions(+), 22 deletions(-)
 > 
-> diff --git a/arch/powerpc/boot/dts/b4qds.dtsi b/arch/powerpc/boot/dts/b4qds.dtsi
-> index 6188583..3a73103 100644
-> --- a/arch/powerpc/boot/dts/b4qds.dtsi
-> +++ b/arch/powerpc/boot/dts/b4qds.dtsi
-> @@ -1,7 +1,7 @@
->  /*
->   * B4420DS Device Tree Source
->   *
-> - * Copyright 2012 Freescale Semiconductor, Inc.
-> + * Copyright 2012 - 2014 Freescale Semiconductor, Inc.
->   *
->   * Redistribution and use in source and binary forms, with or without
->   * modification, are permitted provided that the following conditions are met:
-> @@ -104,10 +104,28 @@
->  		device_type = "memory";
->  	};
->  
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		bman_fbpr: bman-fbpr {
-> +			compatible = "fsl,bman-fbpr";
-> +			alloc-ranges = <0 0 0xffff 0xffffffff>;
-> +			size = <0 0x1000000>;
-> +			alignment = <0 0x1000000>;
-> +			no-map;
-> +		};
+> V2->V3:
+> 
+>  - Document the new DT properties.
+> 
+>  - Add libfdt-based wrapper, to complement the "struct device_node" based
+>    version.
+> 
+>  - Restructure early_init_dt_scan_chosen_serial() changes to use a
+>    temporary variable, so it is easy to add more of_setup_earlycon()
+>    properties later.
+> 
+>  - Make of_serial and serial8250 honor the new "big-endian" property.
+> 
+> 
+> This series applies cleanly to:
+> 
+> git://git.kernel.org/pub/scm/linux/kernel/git/glikely/linux.git devicetree/next-overlay
+> 
+> but was tested on the mips-for-linux-next branch because my BE platform
+> isn't supported in mainline yet.
+> 
+> 
+> Kevin Cernekee (7):
+>   of: Add helper function to check MMIO register endianness
+>   of/fdt: Add endianness helper function for early init code
+>   of: Document {little,big,native}-endian bindings
+>   serial: core: Add big-endian iotype
+>   serial: earlycon: Set UPIO_MEM32BE based on DT properties
+>   serial: of_serial: Support big-endian register accesses
+>   serial: 8250: Add support for big-endian MMIO accesses
+> 
+>  .../devicetree/bindings/common-properties.txt      | 60 ++++++++++++++++++++++
+>  drivers/of/base.c                                  | 23 +++++++++
+>  drivers/of/fdt.c                                   | 26 +++++++++-
+>  drivers/tty/serial/8250/8250_core.c                | 20 ++++++++
+>  drivers/tty/serial/8250/8250_early.c               |  5 ++
+>  drivers/tty/serial/earlycon.c                      |  4 +-
+>  drivers/tty/serial/of_serial.c                     |  3 +-
+>  drivers/tty/serial/serial_core.c                   |  2 +
+>  include/linux/of.h                                 |  6 +++
+>  include/linux/of_fdt.h                             |  2 +
+>  include/linux/serial_core.h                        | 15 +++---
+>  11 files changed, 155 insertions(+), 11 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/common-properties.txt
+> 
 
-Again, I don't think this should have no-map.  It's not required by the
-hardware, it doesn't perform as advertised on PPC and would be
-burdensome to support on e500, we don't currently create a separate
-coherence domain for it, and you haven't indicated that there's been any
-benchmarks to show that using a separate coherence domain is beneficial.
-
-Is there a reason why these reserved-memory nodes need to be repeated in
-each board dts rather than being in a dtsi?
-
--Scott
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
