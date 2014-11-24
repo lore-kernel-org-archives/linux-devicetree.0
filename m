@@ -1,52 +1,31 @@
-From: Alban Bedel <alban.bedel@avionic-design.de>
-Subject: [PATCH 3/4] devicetree: add a binding for a group of regulator
-Date: Mon, 24 Nov 2014 14:02:02 +0100
-Message-ID: <1416834123-23139-3-git-send-email-alban.bedel@avionic-design.de>
-References: <1416834123-23139-1-git-send-email-alban.bedel@avionic-design.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1416834123-23139-1-git-send-email-alban.bedel@avionic-design.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Alban Bedel <alban.bedel@avionic-design.de>, Grant Likely <grant.likely@linaro.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v4 1/2] of: Rename "poweroff-source" property to "system-power-controller"
+Date: Mon, 24 Nov 2014 14:12:19 +0100
+Message-ID: <1651776.uhbV5BHLKC@diego>
+References: <1415885699-1465-1-git-send-email-user@radxa> <CABgxDoLA=QL6vzU-v1w4vMZ3qhorjRdYOWFFMrjJE6xvZ7QO3g@mail.gmail.com> <CABgxDo+t1DUMHwWygibR-w=FL458N6k0G68HM2M7R76gJugyVg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CABgxDo+t1DUMHwWygibR-w=FL458N6k0G68HM2M7R76gJugyVg@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Romain Perier <romain.perier@gmail.com>
+Cc: Johan Hovold <johan@kernel.org>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, robh <robh@kernel.org>, devicetree <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Felipe Balbi <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
----
- .../devicetree/bindings/regulator/group.txt        | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/group.txt
+Am Montag, 24. November 2014, 14:01:02 schrieb Romain Perier:
+> 2014-11-24 13:58 GMT+01:00 Romain Perier <romain.perier@gmail.com>:
+> > So I need to resend this patch which would only introduce an helper
+> > function which checks for "system-power-controller" property (it would
+> > also have a new commit message).
+> > As you suggested, this helper might be named
+> > "of_device_is_system_power_controller" ?
+> 
+> I mean, the backward compatibility can be handled directly from the
+> device driver which would use the new property, no ?
 
-diff --git a/Documentation/devicetree/bindings/regulator/group.txt b/Documentation/devicetree/bindings/regulator/group.txt
-new file mode 100644
-index 0000000..5f811cf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/group.txt
-@@ -0,0 +1,26 @@
-+Regulator Group
-+
-+This binding allow creating a group of regulators for use with simple
-+drivers that only expect a single power supply. Additionally it is
-+possible to enforce the enable ordering to create simple power up
-+sequences.
-+
-+Required properties:
-+- compatible : Must be "regulator-group".
-+- regulator-supplies : List of the supplies names.
-+- <name>-supply : One entry for each supply defined in regulator-supplies.
-+
-+Optional properties:
-+- ordered-supplies : set if the supplies should be enabled in order,
-+   otherwise they are all enable or disabled in parallel.
-+- any property defined in regulator.txt
-+
-+Example:
-+
-+  regulator {
-+	compatible = "regulator-group";
-+	regulator-supplies = "vcc_a", "vcc_b";
-+	vcc_a-supply = <&vcc_a>;
-+	vcc_b-supply = <&vcc_b>;
-+	ordered-supplies;
-+  };
--- 
-2.1.3
+yep, that is what Grant asked for ... to have drivers that need backward-
+compatibility (like with the "ti,"-prefix) to do this themselfs.
+
+
+Heiko
