@@ -1,31 +1,69 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v4 1/2] of: Rename "poweroff-source" property to "system-power-controller"
-Date: Mon, 24 Nov 2014 14:12:19 +0100
-Message-ID: <1651776.uhbV5BHLKC@diego>
-References: <1415885699-1465-1-git-send-email-user@radxa> <CABgxDoLA=QL6vzU-v1w4vMZ3qhorjRdYOWFFMrjJE6xvZ7QO3g@mail.gmail.com> <CABgxDo+t1DUMHwWygibR-w=FL458N6k0G68HM2M7R76gJugyVg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CABgxDo+t1DUMHwWygibR-w=FL458N6k0G68HM2M7R76gJugyVg@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Romain Perier <romain.perier@gmail.com>
-Cc: Johan Hovold <johan@kernel.org>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, robh <robh@kernel.org>, devicetree <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Felipe Balbi <balbi@ti.com>
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: [PATCH V2 1/2] pinctrl: exynos: Add BUS1 pin controller for exynos7
+Date: Mon, 24 Nov 2014 18:32:57 +0530
+Message-ID: <1416834177-11170-1-git-send-email-gautam.vivek@samsung.com>
+References: <CAFp+6iF-N63YSsdv2a6=MYp_mD=eQY_Oi8=9JVNU5dG0BA7YGQ@mail.gmail.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAFp+6iF-N63YSsdv2a6=MYp_mD=eQY_Oi8=9JVNU5dG0BA7YGQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+Cc: tomasz.figa@gmail.com, s.nawrocki@samsung.com, robh+dt@kernel.org, kgene@kernel.org, alim.akhtar@samsung.com, Vivek Gautam <gautam.vivek@samsung.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 24. November 2014, 14:01:02 schrieb Romain Perier:
-> 2014-11-24 13:58 GMT+01:00 Romain Perier <romain.perier@gmail.com>:
-> > So I need to resend this patch which would only introduce an helper
-> > function which checks for "system-power-controller" property (it would
-> > also have a new commit message).
-> > As you suggested, this helper might be named
-> > "of_device_is_system_power_controller" ?
-> 
-> I mean, the backward compatibility can be handled directly from the
-> device driver which would use the new property, no ?
+USB and Power regulator on Exynos7 require gpios available
+in BUS1 pin controller block.
+So adding the BUS1 pinctrl support.
 
-yep, that is what Grant asked for ... to have drivers that need backward-
-compatibility (like with the "ti,"-prefix) to do this themselfs.
+Signed-off-by: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+---
 
+This patch was part of series:
+"[PATCH 00/11] Exynos7: Adding USB 3.0 support"
+ https://lkml.org/lkml/2014/11/21/247
 
-Heiko
+Changes since V1:
+ - Added support for all pin banks which are part of BUS1 pin controller.
+
+ drivers/pinctrl/samsung/pinctrl-exynos.c |   19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/samsung/pinctrl-exynos.c
+index d5d4cfc..44e60dc 100644
+--- a/drivers/pinctrl/samsung/pinctrl-exynos.c
++++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
+@@ -1300,6 +1300,20 @@ static const struct samsung_pin_bank_data exynos7_pin_banks7[] __initconst = {
+ 	EXYNOS_PIN_BANK_EINTG(8, 0x060, "gpr3", 0x0c),
+ };
+ 
++/* pin banks of exynos7 pin-controller - BUS1 */
++static const struct samsung_pin_bank_data exynos7_pin_banks8[] __initconst = {
++	EXYNOS_PIN_BANK_EINTG(8, 0x020, "gpf0", 0x00),
++	EXYNOS_PIN_BANK_EINTG(8, 0x040, "gpf1", 0x04),
++	EXYNOS_PIN_BANK_EINTG(4, 0x060, "gpf2", 0x08),
++	EXYNOS_PIN_BANK_EINTG(5, 0x080, "gpf3", 0x0c),
++	EXYNOS_PIN_BANK_EINTG(8, 0x0a0, "gpf4", 0x10),
++	EXYNOS_PIN_BANK_EINTG(8, 0x0c0, "gpf5", 0x14),
++	EXYNOS_PIN_BANK_EINTG(5, 0x0e0, "gpg1", 0x18),
++	EXYNOS_PIN_BANK_EINTG(5, 0x100, "gpg2", 0x1c),
++	EXYNOS_PIN_BANK_EINTG(6, 0x120, "gph1", 0x20),
++	EXYNOS_PIN_BANK_EINTG(3, 0x140, "gpv6", 0x24),
++};
++
+ const struct samsung_pin_ctrl exynos7_pin_ctrl[] __initconst = {
+ 	{
+ 		/* pin-controller instance 0 Alive data */
+@@ -1342,5 +1356,10 @@ const struct samsung_pin_ctrl exynos7_pin_ctrl[] __initconst = {
+ 		.pin_banks	= exynos7_pin_banks7,
+ 		.nr_banks	= ARRAY_SIZE(exynos7_pin_banks7),
+ 		.eint_gpio_init = exynos_eint_gpio_init,
++	}, {
++		/* pin-controller instance 8 BUS1 data */
++		.pin_banks	= exynos7_pin_banks8,
++		.nr_banks	= ARRAY_SIZE(exynos7_pin_banks8),
++		.eint_gpio_init = exynos_eint_gpio_init,
+ 	},
+ };
+-- 
+1.7.10.4
