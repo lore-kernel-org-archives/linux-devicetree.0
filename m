@@ -1,84 +1,86 @@
-From: Johannes Pointner <johannes.pointner@gmail.com>
-Subject: Re: [PATCH v4 3/6] mfd: ti_am335x_tscadc: Remove unwanted
- reg_se_cache save
-Date: Mon, 24 Nov 2014 09:32:23 +0100
-Message-ID: <CAJKbBDCSjSWfXrbJawP3peRFhEk9ZaMyPyS=bNNVvqBv2am8ag@mail.gmail.com>
-References: <1415941651-28962-4-git-send-email-vigneshr@ti.com>
-	<20141118143005.GF24004@x1>
-	<20141118171240.GB3003@dtor-ws>
-	<546DF2F0.9080405@ti.com>
-	<20141120144028.GB5809@localhost.localdomain>
-	<546F2BA4.4000808@ti.com>
-	<20141121131036.GA18931@localhost.localdomain>
-	<CAJKbBDDVTA+=priRu7sCD=vHrC8AUg4DM3kycuGrqbpF-5FGAA@mail.gmail.com>
-	<546F5C27.7040004@ti.com>
-	<CAJKbBDD=eYmU=LuViwLPNV=kYCziDQgKjL07bT7og4vsj0Ee7A@mail.gmail.com>
-	<20141121214005.GA4020@localhost.localdomain>
-	<912A29987EAE174BA6CF187D7CDFA9CE26F6D664@DLEE08.ent.ti.com>
+From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V5 05/12] mailbox: Add NVIDIA Tegra XUSB mailbox driver
+Date: Mon, 24 Nov 2014 14:04:49 +0530
+Message-ID: <CAJe_ZhdTvZZqERttAM_o6U6MZCOjk=oXpWFPf8W=DdW1j=Nx=g@mail.gmail.com>
+References: <1416264102-1323-1-git-send-email-abrestic@chromium.org>
+	<1416264102-1323-6-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <912A29987EAE174BA6CF187D7CDFA9CE26F6D664@DLEE08.ent.ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: "Griffis, Brad" <bgriffis@ti.com>
-Cc: Richard Cochran <richardcochran@gmail.com>, "Nori, Sekhar" <nsekhar@ti.com>, "R, Vignesh" <vigneshr@ti.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Samuel Ortiz <sameo@linux.intel.com>, "Balbi, Felipe" <balbi@ti.com>, Sanjeev Sharma <sanjeev_sharma@mentor.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Jan Kardell <jan.kardell@telliq.>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416264102-1323-6-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>Kumar Gala <g>
 List-Id: devicetree@vger.kernel.org
 
-2014-11-21 23:25 GMT+01:00 Griffis, Brad <bgriffis@ti.com>:
->
->> -----Original Message-----
->> From: Richard Cochran [mailto:richardcochran@gmail.com]
->>
->> On Fri, Nov 21, 2014 at 07:17:18PM +0100, Johannes Pointner wrote:
->> > Before the patches were also jumps but I thought it is something
->> > Vignesh should know. Maybe there is some fix for that too?
->
-> I believe I've seen the "jumping" behavior pop up at a couple random times in my testing.  I think it relates to the hardware not properly registering a pen-up interrupt.  When that's happening can you try running ts_calibrate?  If you're not registering a pen-up event then you won't be able to advance through those touch points.  Is this behavior related to capturing ADC samples, or do you see this behavior even without capturing ADC samples?
+On 18 November 2014 at 04:11, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
 
-Is it the right way to test? Because I think the ts_lib will cover
-misbehavior of the touchscreen driver.
-
+> +
+> +static int tegra_xusb_mbox_send_data(struct mbox_chan *chan, void *data)
+> +{
+> +       struct tegra_xusb_mbox *mbox = to_tegra_mbox(chan->mbox);
+> +       struct tegra_xusb_mbox_msg *msg = data;
+> +       unsigned long flags;
+> +       u32 reg, owner;
+> +
+> +       dev_dbg(mbox->mbox.dev, "TX message %#x:%#x\n", msg->cmd, msg->data);
+> +
+> +       /* ACK/NAK must be sent with the controller as the mailbox owner */
+> +       if (msg->cmd == MBOX_CMD_ACK || msg->cmd == MBOX_CMD_NAK)
+> +               owner = MBOX_OWNER_FW;
+> +       else
+> +               owner = MBOX_OWNER_SW;
+> +
+> +       spin_lock_irqsave(&mbox->lock, flags);
+> +
+> +       /* Acquire mailbox */
+> +       if (mbox_readl(mbox, XUSB_CFG_ARU_MBOX_OWNER) != MBOX_OWNER_NONE) {
+> +               dev_err(mbox->mbox.dev, "Mailbox not idle\n");
+> +               goto busy;
+> +       }
+> +       mbox_writel(mbox, owner, XUSB_CFG_ARU_MBOX_OWNER);
+> +       if (mbox_readl(mbox, XUSB_CFG_ARU_MBOX_OWNER) != owner) {
+> +               dev_err(mbox->mbox.dev, "Failed to acquire mailbox");
+> +               goto busy;
+> +       }
+> +
+> +       mbox_writel(mbox, mbox_pack_msg(msg), XUSB_CFG_ARU_MBOX_DATA_IN);
+> +       reg = mbox_readl(mbox, XUSB_CFG_ARU_MBOX_CMD);
+> +       reg |= MBOX_INT_EN | MBOX_DEST_FALC;
+> +       mbox_writel(mbox, reg, XUSB_CFG_ARU_MBOX_CMD);
+> +
+> +       spin_unlock_irqrestore(&mbox->lock, flags);
+> +
+> +       return 0;
+> +busy:
+> +       spin_unlock_irqrestore(&mbox->lock, flags);
+> +       return -EBUSY;
+> +}
+> +
+> +static int tegra_xusb_mbox_startup(struct mbox_chan *chan)
+> +{
+> +       return 0;
+> +}
+> +
+> +static void tegra_xusb_mbox_shutdown(struct mbox_chan *chan)
+> +{
+> +}
+> +
+> +static bool tegra_xusb_mbox_last_tx_done(struct mbox_chan *chan)
+> +{
+> +       /*
+> +        * Transmissions are assumed to be completed as soon as they are
+> +        * written to the mailbox.
+> +        */
+> +       return true;
 >
->> > As Richard also noted, it would be nice if ti could let us know how to
->> > get the delay values right. By trial and error is IMHO not the best
->> > way.
->>
->> That is not only an opinion, it is a matter of fact. TI really dropped the ball on
->> this one. I thought the patch series was a sign they finally were going to
->> properly address this issue. Wrong again.
->
-> These patches originate from work I did on TI's SDK 7.00 (3.12 kernel).  The touchscreen is working beautifully in that environment and we are putting forth significant effort to bring those improvements to the community.
->
-> Things do not seem to be working as well with the current mainline kernel.  I've been reviewing various patches between 3.12 and the mainline to understand why it's different.  I believe I have figured this out, and I have discussions going separately with individuals that contributed those patches in order to come up with the best possible solution, i.e. we likely need a few additional changes to this patch set.
+In .send_data() you you mark the channel busy by setting the
+XUSB_CFG_ARU_MBOX_OWNER to !MBOX_OWNER_NONE, which remains so until
+you get an IRQ. So maybe you should check for the OWNER_NONE flag in
+.last_tx_done()?
 
-Ok, then I'm looking forward for a new patch set to test. Furthermore,
-I would be interested which changes you are talking about.
-
->
-> The CHARGECONFIG delay serves precisely the same purpose as the udelay in the original code base.  How did you determine the udelay value in the first place?  I went through the effort of figuring out a way to make the delay into a HARDWARE delay instead of a software delay so that it could be removed from the ISR.  That delay time relates to "settling time" and so it's going to be dependent on your PCB.  You could hook up an oscilloscope and attempt to capture this parameter from the signals themselves.  Personally I think that's a lot more difficult than just doing a few iterations of testing.
-
-I did measure with an oscilloscope to get the right charge delay and
-it looks fine to me. But I can't affect the jumps with the charge
-delay, the only thing that helped, was to add some sample delay. But
-it didn't solve it.
-
->
->> The data sheet for the TI part used to have a reference to an app-note for
->> the touch controller.
->>
->>       spruh73f page 1154
->>
->>       The Pen IRQ can only occur if the correct Pen Ctrl bits are high
->>       (AFE Pen Ctrl bits 6:5 in the TSC_ADC control register) and if
->>       the correct ground transistor biasing is set in the StepConfig
->>       [N] Register. Refer to the application notes for the correct
->>       settings.
->>
->> I searched high and low for this application note. Then, the data sheet got
->> revised.
->
-> Such an application note does not exist, which explains why you didn't find it and why we have removed that reference from the TRM.  Sorry for your trouble.  We always strive for accurate documentation.
-
-Thanks,
-Hannes
+-Jassi
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
