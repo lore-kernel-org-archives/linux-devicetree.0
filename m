@@ -1,57 +1,66 @@
-From: Vivek Gautam <gautamvivek1987@gmail.com>
-Subject: Re: [PATCH v2 2/2] arm: dts: Exynos5: Use pmu_system_controller
- phandle for dp phy
-Date: Mon, 24 Nov 2014 14:58:03 +0530
-Message-ID: <CAFp+6iHALherA8JF75qcAgvr-W7tGLSpMhL96QNhpnb_xTWc0w@mail.gmail.com>
-References: <1414675442-3471-1-git-send-email-gautam.vivek@samsung.com>
-	<1414675442-3471-2-git-send-email-gautam.vivek@samsung.com>
-	<000101cffe30$155793a0$4006bae0$%han@samsung.com>
-	<CABxcv=mams-iVBvACLZ-=Ozcs3KcHSEvxAsRSSV-eKaSnrcXSA@mail.gmail.com>
-	<CAFp+6iEnTbXAUUYMU-bP27f4=X0pEtgmURAwKfRrqDQE4tRpKQ@mail.gmail.com>
-	<CABxcv=m7_m=Y=Mr+0tm+-i=0_e2SU_FC3SDmRTSdkpi--GQtxQ@mail.gmail.com>
+From: Xudong Chen <xudong.chen@mediatek.com>
+Subject: [PATCH v3 0/2] ARM: mediatek: Add driver for Mediatek I2C controller
+Date: Mon, 24 Nov 2014 17:38:46 +0800
+Message-ID: <1416821928-11453-1-git-send-email-xudong.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CABxcv=m7_m=Y=Mr+0tm+-i=0_e2SU_FC3SDmRTSdkpi--GQtxQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: Vivek Gautam <gautam.vivek@samsung.com>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Wolfram Sang <wsa@the-dreams.de>
+Cc: srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Xudong Chen <xudong.chen@mediatek.com>, Jean Delvare <jdelvare@suse.de>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, Yingjoe Chen <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Nathan Chung <nathan.chung@mediatek.com>, YH Chen <yh.chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 23, 2014 at 12:26 AM, Javier Martinez Canillas
-<javier@dowhile0.org> wrote:
-> Hello Vivek
->
-> On Wed, Nov 19, 2014 at 1:03 PM, Vivek Gautam <gautamvivek1987@gmail.com> wrote:
->>>
->>> Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
->>
->> Thanks for testing.
->>
->
-> You are welcome
->
->>>
->>> Kukjin,
->>
->> Sorry for not adding Kukjin to the list and thereby for the delay
->> about this patch.
->>
->
-> No worries but I'm not sure if Kukjin is aware of this patch. I see he
-> has been applying other patches but didn't pick $subject.
-Right,
+This series is the third version of Mediatek SoCs I2C controller common
+bus driver.
+Compared to the second version,
+1. Add comments for clock in dt-bindings file i2c-mt6577.txt.
+2. Remove mt8135.dtsi because of the dependency on pinctrl and clock.
+3. Encode the feature have-dcm in i2c-mt65xx.c by checking the compatible.
 
->
-> Maybe you can resend it to Kukjin just to be sure he will have it in
-> his mailbox?
+This driver is based on 3.18-rc1.
 
-Posted a RESEND version of this patch. Thanks again for noticing.
+MTK I2C HW has some limitation.
+1. If the i2c_msg number is more than one, STOP will be issued instead of
+RS(Repeat Start) between each message.
+Such as: "START + ADDR + DATA_n + STOP + START + ADDR + DATA_n + STOP ..."
 
+2. Mediatek I2C controller support WRRD(write then read) mode, in WRRD
+mode the Repeat Start will be issued between 2 messages.
+In this driver if 2 messages is first write then read, the driver will
+combine 2 messages using Write-Read mode so the RS will be issued between
+the 2 messages.
+Ex: W/R/R, driver will combine first W/R and then R.
+The data series will be:
+"START + WriteADDR + DATA + RS + ReadADDR + DATA + STOP + START + ReadADDR +
+DATA + STOP".
 
+3. Due to HW limitation, in this version the max transfer data length is 255
+in one message. If want to transfer more than 255 bytes, HW needs the SW
+driver to split the data. Take 600 bytes for example, the data need to be
+divided into 3 parts 255 + 255 + 90. The data series will be:
+"START + ADDR + DATA_255 + RS + ADDR + DATA_255 + RS + ADDR +  DATA_90 + STOP"
+instead of "START + ADDR + DATA_900 + STOP".
+We haven't implement this yet, we will do this in the separate patch.
 
--- 
-Best Regards
-Vivek Gautam
-Samsung R&D Institute, Bangalore
-India
+MT8135 and MT6589 can control I2C pins on PMIC(MT6397) by setting the i2c
+registers in MT8135 side. In this case, driver should set OFFSET_PATH_DIR
+bit first, the operation on other registers are still the same.
+For now MT6589/MT8135 support this, MT6577/MT6595/MT8127 do not support.
+For example, If want to use I2C4/5/6 pins on MT8135 just need to enable
+the pinmux, else if want to use I2C pins on PMIC(MT6397) need to add
+"mediatek,have-pmic" property in the .dts file of each platform.
+
+Xudong Chen (2):
+  dt-bindings: Add I2C bindings for mt65xx/mt81xx.
+  I2C: mediatek: Add driver for MediaTek I2C controller
+
+ .../devicetree/bindings/i2c/i2c-mt6577.txt         |  40 ++
+ drivers/i2c/busses/Kconfig                         |   9 +
+ drivers/i2c/busses/Makefile                        |   1 +
+ drivers/i2c/busses/i2c-mt65xx.c                    | 742 +++++++++++++++++++++
+ 4 files changed, 792 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-mt6577.txt
+ create mode 100644 drivers/i2c/busses/i2c-mt65xx.c
+
+--
+1.8.1.1.dirty
