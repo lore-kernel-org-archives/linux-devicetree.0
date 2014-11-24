@@ -1,16 +1,16 @@
 From: Lee Jones <lee.jones@linaro.org>
 Subject: Re: [PATCH 1/3] mfd: devicetree: qcom_rpm: document IPQ8064 resources
-Date: Mon, 24 Nov 2014 10:33:34 +0000
-Message-ID: <20141124103334.GF4241@x1>
+Date: Mon, 24 Nov 2014 10:38:12 +0000
+Message-ID: <20141124103812.GG4241@x1>
 References: <1416512485-7292-1-git-send-email-joshc@codeaurora.org>
  <1416512485-7292-2-git-send-email-joshc@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
 In-Reply-To: <1416512485-7292-2-git-send-email-joshc@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Josh Cartwright <joshc@codeaurora.org>
 Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
@@ -26,9 +26,9 @@ On Thu, 20 Nov 2014, Josh Cartwright wrote:
 >  include/dt-bindings/mfd/qcom-rpm.h                 | 6 ++++++
 >  2 files changed, 11 insertions(+), 1 deletion(-)
 
-What do you want me to do with this patch?  I'm guessing the other
-patches in the set depend on these new defines?  I can't even check
-because you've only send me 2 of the 3 patches in the set.
+=46or my own reference:
+
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
 > diff --git a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt b/Doc=
 umentation/devicetree/bindings/mfd/qcom-rpm.txt
