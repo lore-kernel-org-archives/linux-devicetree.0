@@ -1,87 +1,103 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH RESEND v4 2/4] DT: pwm: Add binding document for IMG PWM
- DAC
-Date: Mon, 24 Nov 2014 11:14:51 +0100
-Message-ID: <20141124101449.GC25912@ulmo.nvidia.com>
-References: <1416621212-11701-1-git-send-email-Naidu.Tellapati@gmail.com>
- <1416621212-11701-3-git-send-email-Naidu.Tellapati@gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 1/2] of: Rename "poweroff-source" property to
+ "system-power-controller"
+Date: Mon, 24 Nov 2014 10:24:56 +0000
+Message-ID: <20141124102456.GE4241@x1>
+References: <1415885699-1465-1-git-send-email-user@radxa>
+ <1415885699-1465-2-git-send-email-user@radxa>
+ <20141121105951.GA20679@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Pk6IbRAofICFmK5e"
-Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1416621212-11701-3-git-send-email-Naidu.Tellapati@gmail.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: naidu.tellapati@gmail.com
-Cc: abrestic@chromium.org, gregkh@linuxfoundation.org, arnd@arndb.de, James.Hartley@imgtec.com, Ezequiel.Garcia@imgtec.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Arul.Ramasamy@imgtec.com, Sai.Masarapu@imgtec.com, Naidu Tellapati <Naidu.Tellapati@imgtec.com>
+In-Reply-To: <20141121105951.GA20679@localhost>
+Sender: linux-pm-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Auto Configured <romain.perier@gmail.com>, Mark Brown <broonie@kernel.org>, heiko@sntech.de, grant.likely@linaro.org, robh@kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balbi@ti.com
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 21 Nov 2014, Johan Hovold wrote:
 
---Pk6IbRAofICFmK5e
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat, Nov 22, 2014 at 07:23:30AM +0530, naidu.tellapati@gmail.com wrote:
-> From: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
+> On Thu, Nov 13, 2014 at 01:34:58PM +0000, Auto Configured wrote:
+> > From: Romain Perier <romain.perier@gmail.com>
+> >=20
+> > It reverts commit a4b4e0461ec5 ("of: Add standard property for powe=
+roff capability").
+> > As discussed on the mailing list, it makes more sense to rename bac=
+k to the
+> > old established property name, without the vendor prefix. Problem b=
+eing that
+> > the word "source" usually tends to be used for inputs and that is o=
+ut of control
+> > of the OS. The poweroff capability is an output which simply turns =
+the
+> > system-power off. Also, this property might be used by drivers whic=
+h power-off
+> > the system and power back on subsequent RTC alarms. This seems to s=
+uggest to
+> > remove "poweroff" from the property name and to choose "system-powe=
+r-controller"
+> > as the more generic name. This patchs adds the required renaming ch=
+anges and
+> > defines an helper function which is compatible with both properties=
+, the old one
+> > which was only used by tps65910 and the new one without vendor-pref=
+ix.
 >=20
-> Add binding document for IMG Pulse Width Modulator (PWM) DAC present on t=
-he
-> Pistachio SOC. The PWM DAC has four channels.
+> Now this is a bit of a mess.
 >=20
-> Signed-off-by: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
-> Signed-off-by: Sai Masarapu <Sai.Masarapu@imgtec.com>
-> Reviewed-by: Andrew Bresticker <abrestic@chromium.org>
-> ---
-> No changes from v3.
-> ---
->  Documentation/devicetree/bindings/pwm/img-pwm.txt |   23 +++++++++++++++=
-++++++
->  1 files changed, 23 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pwm/img-pwm.txt
+> There's a commit in the mfd tree, 25f833c1171d ("mfd: tps65910: Conve=
+rt
+> ti,system-power-controller DT property to poweroff-source"), which
+> breaks all dts using tps65910 since these are never updated to the no=
+w
+> retracted property name ("poweroff-source").
+
+My word!
+
+Romain, what conversation on the MLs are you talking about?
+
+> This one should simply be reverted ASAP.
+
+No need to revert, I can just remove the patch from the MFD tree.
+
+> > Signed-off-by: Romain Perier <romain.perier@gmail.com>
+> > ---
+> >  .../bindings/power/{poweroff.txt =3D> power-controller.txt}       =
+ | 0
+> >  .../devicetree/bindings/regulator/act8865-regulator.txt          |=
+ 4 ++--
+> >  drivers/mfd/tps65910.c                                           |=
+ 9 ++++++++-
+> >  drivers/regulator/act8865-regulator.c                            |=
+ 2 +-
+> >  include/linux/of.h                                               |=
+ 6 +++---
+> >  5 files changed, 14 insertions(+), 7 deletions(-)
 >=20
-> diff --git a/Documentation/devicetree/bindings/pwm/img-pwm.txt b/Document=
-ation/devicetree/bindings/pwm/img-pwm.txt
-> new file mode 100644
-> index 0000000..d3828dd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/img-pwm.txt
-> @@ -0,0 +1,23 @@
-> +*Imagination Technologies PWM DAC driver
-> +
-> +Required properties:
-> +  - compatible: Should be "img,pistachio-pwm"
-> +  - reg: Should contain physical base address and length of pwm register=
-s.
-> +  - clocks: Must contain an entry for each entry in clock-names.
-> +	See ../clock/clock-bindings.txt for details.
-> +  - clock-names: input clock names.
-> +	Required elements: "pwm" and "sys".
+> Romain, what tree is this patch against? The changes to the tps65910
+> driver appears not to even be in the regulator tree, yet you asked Ma=
+rk
+> to merge this. And the MFD maintainer is not even on CC.
+>=20
+> Let's fix the breakage by reverting the offending commit in mfd. Then=
+ the
+> new standard name can be introduced in regulator alone (e.g. this pat=
+ch
+> without the tps65910 bits) as nothing outside of regulator should be
+> using the new power-off feature (or binding) for act8865. Then other
+> drivers and dts can be converted to use the new property name (while
+> retaining backwards compatibility) for 3.20.
+>=20
+> [ We should probably also consider adding an "of_device_is_" prefix t=
+o
+> the helper name for consistency. ]
+>=20
+> Johan
 
-I think it'd be useful to explain at least what the "sys" clock is.
-"pwm" I'd assume that it clocks the IP block, but what does "sys" do?
-
-Thierry
-
---Pk6IbRAofICFmK5e
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUcwUZAAoJEN0jrNd/PrOh5TgP/2j9beYduFgaw6QnhiN/MmuJ
-CPPupGZMjnUkmez21dKwFNryaoDWe0Wfn33eDEGG+03gJ0vF0fYjL8P6rveUtr8V
-NmpnaCnEINCH329slBkN2/AIamSTqlMnfpetXZ1Gq9S3LrAi6HuTyhlb3ZRssFnc
-O+Au98fOPGwubuikp9G6S0udTPNjTpZzeMVTybEBfxEMs96DjTfnrOapQBBJfMG0
-R5Eh8+TtXeJxjCLNDqbKiFxxGjyH7Mr5LiZskrKoauzov5JUbWebYMkJlufN1bqH
-7yMQtK8hklIvdCMYzgswCaSpMo7RzqEOmJAzT+BBxgkaAz2c5tXzcItSyGXdfMFk
-Kg/I5KLXd97z7BV3NSWSUCOHBsldr8jxTTNIoBIvaMJHZo1knkG4lHW8xjGkSopP
-cXNU/XI4D0DUma5wuDHrYehKMXPl9UMnW9Go+UFmoFR5f19EGqVpnz3ox2iylB0C
-NBs0DWLcIG/lebX1Mfr3AMZPn5L33+cEGDlu3KeOpQqhEn1j0hDDOBiep+e7y4xg
-+VeVi8JSaL+5roAkN/tMSvDVZTC6v6YWTg5gbziNdPVIqWnhWAO+RAkclLVj/nwC
-Cu2N5knV+CdZdUjIcZZmx68Wr13ymgvEZm4YzFlOyZcATo6t1Djbu7+fTYUwL6Tf
-uwTL/rLbIwHQfqGinWke
-=jfc5
------END PGP SIGNATURE-----
-
---Pk6IbRAofICFmK5e--
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
