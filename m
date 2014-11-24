@@ -1,49 +1,49 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/4] spi: meson: Add support for Amlogic Meson SPIFC
-Date: Mon, 24 Nov 2014 18:55:05 +0000
-Message-ID: <20141124185505.GE7712@sirena.org.uk>
-References: <1416669702-7841-1-git-send-email-b.galvani@gmail.com>
- <1416669702-7841-4-git-send-email-b.galvani@gmail.com>
+From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
+Subject: Re: [PATCHv0 0/2] arm: mvebu: fixes for previous DS213j/DS414 series
+Date: Mon, 24 Nov 2014 20:04:45 +0100
+Message-ID: <87oarwmnci.fsf@natisbad.org>
+References: <cover.1416670812.git.arno@natisbad.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7sjjZzazJd4OX9P7"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1416669702-7841-4-git-send-email-b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <cover.1416670812.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org> (Arnaud Ebalard's
+	message of "Sat, 22 Nov 2014 17:19:21 +0100")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Jason,
 
---7sjjZzazJd4OX9P7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org> writes:
 
-On Sat, Nov 22, 2014 at 04:21:41PM +0100, Beniamino Galvani wrote:
-> This is a driver for the Amlogic Meson SPIFC (SPI flash controller),
-> which is one of the two SPI controllers available on the SoC. It
-> doesn't support DMA and has a 64-byte unified transmit/receive buffer.
+> This series contains two patches. I spent some time reading the patches
+> of my previous series you had to manually apply. I only noticed the error
+> Ben reported on v6 (i.e. some pinctrl entries still using pmx_ instead
+> of _pins) which patch 1 corrects.
+>
+> Regarding the second patch, having forgotten to enable MACH_ARMADA_XP in
+> my kernel config, I missed a renaming of ge0/1 pinctrl entries in
+> armada-xp.dtsi, which resulted in a non-compiling .dts file for DS414.
+> To fix my mistake, you did a s/ge[01]_rgmii_pins/pmx_ge[01]_rgmii/,
+> reintroducing some of the pmx_ naming that should have been removed in
+> the process. So, the second patch in that series finishes the work to
+> normalize pinctrl entries in Armada SoCs DT files.
+>
+> The patches do apply on your mvebu/dt branch. They do pass a whole
+> compilation (including 'make dtbs') and I can boot a resulting kernel on
+> my DS213j. I do not have a DS414 at hand but will test on this device
+> early next week.
+>
+> I hope eveyhting is now back in order w/ those. Feedback appreciated.
 
-Applied, thanks.
+Just tested the series on a DS414, booting a debian on a 4-disk RAID5
+array. I do get an IP via DHCP from both ethernet ports. Plugging an
+USB  device on rear ports (USB 3.0) or front port (USB 2.0) also works.
 
---7sjjZzazJd4OX9P7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Cheers,
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUc38JAAoJECTWi3JdVIfQ1VkIAILkSXvspAENmsjVW5ktnEy4
-/79f7Gc0md7x8Qig7ixDPY0OXpVBw/3SEFwho+I3E5gcbCakahu/HWe3AvF6G4PF
-aFHx+bpBcvnBj731GKXQdNNZXpd4taJyxMqTnO/qEOaBPqS9z149YTCth5T+QVCf
-bhr9N1Tjz6GonIHmsq86PJW3eSvM80qQiHCmau2k9pzD2zteTCLS/7uB5dWCuvNb
-7f7kckvWogbRyYNUB7BiUO1Fi+m7ORz3yd8a2yaBsNKG6xo85bZmcX7HKO6Pawpp
-kzmsvt/9uGbIAlTT7msh6MNwoZRPTBOhc66vGe298nlKV7DZvzOR4eo07PKUAvE=
-=7kd6
------END PGP SIGNATURE-----
-
---7sjjZzazJd4OX9P7--
+a+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
