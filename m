@@ -1,85 +1,58 @@
-From: Romain Perier <romain.perier@gmail.com>
-Subject: Re: [PATCH v4 1/2] of: Rename "poweroff-source" property to "system-power-controller"
-Date: Mon, 24 Nov 2014 14:01:02 +0100
-Message-ID: <CABgxDo+t1DUMHwWygibR-w=FL458N6k0G68HM2M7R76gJugyVg@mail.gmail.com>
-References: <1415885699-1465-1-git-send-email-user@radxa>
-	<1415885699-1465-2-git-send-email-user@radxa>
-	<20141121105951.GA20679@localhost>
-	<20141124102456.GE4241@x1>
-	<20141124113518.GC6875@localhost>
-	<CABgxDoLA=QL6vzU-v1w4vMZ3qhorjRdYOWFFMrjJE6xvZ7QO3g@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CABgxDoLA=QL6vzU-v1w4vMZ3qhorjRdYOWFFMrjJE6xvZ7QO3g@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Grant Likely <grant.likely@linaro.org>, robh <robh@kernel.org>, devicetree <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Felipe Balbi <balbi@ti.com>
+From: Alban Bedel <alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: [PATCH 1/4] devicetree: add a binding for a regulator that constrains its supply
+Date: Mon, 24 Nov 2014 14:02:00 +0100
+Message-ID: <1416834123-23139-1-git-send-email-alban.bedel@avionic-design.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alban Bedel <alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-11-24 13:58 GMT+01:00 Romain Perier <romain.perier@gmail.com>:
-> 2014-11-24 12:35 GMT+01:00 Johan Hovold <johan@kernel.org>:
->> On Mon, Nov 24, 2014 at 10:24:56AM +0000, Lee Jones wrote:
->>> On Fri, 21 Nov 2014, Johan Hovold wrote:
->>> > On Thu, Nov 13, 2014 at 01:34:58PM +0000, Auto Configured wrote:
->>> > > From: Romain Perier <romain.perier@gmail.com>
->>> > >
->>> > > It reverts commit a4b4e0461ec5 ("of: Add standard property for poweroff capability").
->>> > > As discussed on the mailing list, it makes more sense to rename back to the
->>> > > old established property name, without the vendor prefix. Problem being that
->>> > > the word "source" usually tends to be used for inputs and that is out of control
->>> > > of the OS. The poweroff capability is an output which simply turns the
->>> > > system-power off. Also, this property might be used by drivers which power-off
->>> > > the system and power back on subsequent RTC alarms. This seems to suggest to
->>> > > remove "poweroff" from the property name and to choose "system-power-controller"
->>> > > as the more generic name. This patchs adds the required renaming changes and
->>> > > defines an helper function which is compatible with both properties, the old one
->>> > > which was only used by tps65910 and the new one without vendor-prefix.
->>> >
->>> > Now this is a bit of a mess.
->>> >
->>> > There's a commit in the mfd tree, 25f833c1171d ("mfd: tps65910: Convert
->>> > ti,system-power-controller DT property to poweroff-source"), which
->>> > breaks all dts using tps65910 since these are never updated to the now
->>> > retracted property name ("poweroff-source").
->>>
->>> My word!
->>>
->>> Romain, what conversation on the MLs are you talking about?
->>
->> I think Romain is referring to this thread:
->>
->>         https://lkml.org/lkml/2014/10/23/161
->
-> Yes, this is this one.
->
->>
->>> > This one should simply be reverted ASAP.
->>>
->>> No need to revert, I can just remove the patch from the MFD tree.
->>
->> Ok, good. Then this is limited to the regulator tree, and we could
->> proceed as I outlined below.
->>
->>
->> Romain, care to resend this patch without the tps65910 chunks?
->
-> If you can just drop the patch from mfd tree Lee, please do.
-> Yes Johan, np, what I want is that we find a smart solution, nothing more.
->
->>
->> You should also fix the commit message, which claims to define a "helper
->> function which is compatible with both properties", something which was
->> no longer the case.
->>
->> Thanks,
->> Johan
->
-> So I need to resend this patch which would only introduce an helper
-> function which checks for "system-power-controller" property (it would
-> also have a new commit message).
-> As you suggested, this helper might be named
-> "of_device_is_system_power_controller" ?
+Signed-off-by: Alban Bedel <alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+---
+ .../bindings/regulator/constrained-supply.txt      | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/constrained-supply.txt
 
-I mean, the backward compatibility can be handled directly from the
-device driver which would use the new property, no ?
+diff --git a/Documentation/devicetree/bindings/regulator/constrained-supply.txt b/Documentation/devicetree/bindings/regulator/constrained-supply.txt
+new file mode 100644
+index 0000000..3c85430
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/constrained-supply.txt
+@@ -0,0 +1,29 @@
++Constrained Supply Regulator
++
++This binding allow creating a virtual regulator that constrain its
++supply to provides the requested voltage. This is to allow using
++simple drivers that don't explicitly request a voltage on boards
++that have adjustable hardware regulators.
++
++Required properties:
++- compatible : Must be "regulator-constrained-supply".
++- vin-supply : phandle to the parent supply/regulator node
++
++Optional properties:
++- any property defined in regulator.txt
++
++Example:
++
++  /* Adjustable regulator for extension boards */
++  vdd_ext: regulator@0 {
++  	regulator-min-microvolt = <1000000>;
++  	regulator-max-microvolt = <10000000>;
++  };
++
++  /* An extension board that need 3.3V */
++  vdd_ext_board1: regulator@1 {
++	compatible = "regulator-constrained-supply";
++  	regulator-min-microvolt = <3300000>;
++  	regulator-max-microvolt = <3300000>;
++	vin-supply = <&vdd_ext>;
++  };
+-- 
+2.1.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
