@@ -1,53 +1,40 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v5 06/10] ARM: dts: am4372: Add DCAN nodes
-Date: Mon, 24 Nov 2014 11:58:28 +0200
-Message-ID: <54730144.9070106@ti.com>
-References: <1415881371-4982-1-git-send-email-rogerq@ti.com> <1415881371-4982-7-git-send-email-rogerq@ti.com> <5469F35D.80504@ti.com> <20141121235032.GC7046@atomide.com> <20141122000853.GI7046@atomide.com>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH v4 3/6] mfd: ti_am335x_tscadc: Remove unwanted
+ reg_se_cache save
+Date: Mon, 24 Nov 2014 11:01:49 +0100
+Message-ID: <20141124100149.GA5124@localhost.localdomain>
+References: <1415941651-28962-1-git-send-email-vigneshr@ti.com>
+ <1415941651-28962-4-git-send-email-vigneshr@ti.com>
+ <20141118143005.GF24004@x1>
+ <20141118171240.GB3003@dtor-ws>
+ <546DF2F0.9080405@ti.com>
+ <20141120144028.GB5809@localhost.localdomain>
+ <546F2BA4.4000808@ti.com>
+ <20141121131036.GA18931@localhost.localdomain>
+ <5472F30A.1000608@linutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <20141122000853.GI7046@atomide.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: wg@grandegger.com, mkl@pengutronix.de, wsa@the-dreams.de, mugunthanvnm@ti.com, george.cherian@ti.com, balbi@ti.com, nsekhar@ti.comnm@ti.com, sergei.shtylyov@cogentembedded.com, linux-omap@vger.kernel.org, linux-can@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5472F30A.1000608@linutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Sekhar Nori <nsekhar@ti.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Vignesh R <vigneshr@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Samuel Ortiz <sameo@linux.intel.com>, Felipe Balbi <balbi@ti.com>, Brad Griffis <bgriffis@ti.com>, Sanjeev Sharma <sanjeev_sharma@mentor.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Jan Kardell <jan.kardell@telliq.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-om
 List-Id: devicetree@vger.kernel.org
 
-On 11/22/2014 02:08 AM, Tony Lindgren wrote:
-> * Tony Lindgren <tony@atomide.com> [141121 15:52]:
->> * Roger Quadros <rogerq@ti.com> [141117 05:10]:
->>> The SoC contains 2 DCAN modules. Add them.
->>
->> Thanks applying all into omap-for-v3.19/dt-v2.
+On Mon, Nov 24, 2014 at 09:57:46AM +0100, Sebastian Andrzej Siewior wrote:
+> On 11/21/2014 02:10 PM, Richard Cochran wrote:
 > 
-> Oops, have to drop these as they cause this on make dtbs:
+> > On the BB white using the LCD4 cape and the shipped debian kernel, the
+> > cursor *does* jump away, but not as often or as far as on the custom
+> > design I was working with.
 > 
->   DTC     arch/arm/boot/dts/dra7-evm.dtb
-> Warning (reg_format): "reg" property in /soc/can@481cc000 has invalid length (8 bytes) (#address-cells == 2, #size-cells == 1)
-> Warning (reg_format): "reg" property in /soc/can@481d0000 has invalid length (8 bytes) (#address-cells == 2, #size-cells == 1)
-> Warning (avoid_default_addr_size): Relying on default #address-cells value for /soc/can@481cc000
-> Warning (avoid_default_addr_size): Relying on default #size-cells value for /soc/can@481cc000
-> Warning (avoid_default_addr_size): Relying on default #address-cells value for /soc/can@481d0000
-> Warning (avoid_default_addr_size): Relying on default #size-cells value for /soc/can@481d0000
->   DTC     arch/arm/boot/dts/am57xx-beagle-x15.dtb
-> Warning (reg_format): "reg" property in /soc/can@481cc000 has invalid length (8 bytes) (#address-cells == 2, #size-cells == 1)
-> Warning (reg_format): "reg" property in /soc/can@481d0000 has invalid length (8 bytes) (#address-cells == 2, #size-cells == 1)
-> Warning (avoid_default_addr_size): Relying on default #address-cells value for /soc/can@481cc000
-> Warning (avoid_default_addr_size): Relying on default #size-cells value for /soc/can@481cc000
-> Warning (avoid_default_addr_size): Relying on default #address-cells value for /soc/can@481d0000
-> Warning (avoid_default_addr_size): Relying on default #size-cells value for /soc/can@481d0000
->   DTC     arch/arm/boot/dts/dra72-evm.dtb
-> Warning (reg_format): "reg" property in /soc/can@481cc000 has invalid length (8 bytes) (#address-cells == 2, #size-cells == 1)
-> Warning (reg_format): "reg" property in /soc/can@481d0000 has invalid length (8 bytes) (#address-cells == 2, #size-cells == 1)
-> Warning (avoid_default_addr_size): Relying on default #address-cells value for /soc/can@481cc000
-> Warning (avoid_default_addr_size): Relying on default #size-cells value for /soc/can@481cc000
-> Warning (avoid_default_addr_size): Relying on default #address-cells value for /soc/can@481d0000
-> Warning (avoid_default_addr_size): Relying on default #size-cells value for /soc/can@481d0000
-> 
-> Care to update the patches for that and then do a pull request for me?
+> This sounds like the ADC is still sampling while the input data becomes
+> invalid. Usually there is a resistor on the wiper line and the
+> touchscreen manual says how much it should be at least. Could you
+> please check if this is properly installed?
 
-I didn't see these warnings on 3.18-rc1 though. Looks like some new checks were added in -next.
-I'll fix these and send you an updated pull request.
+Wiper line? This is a four wire device.
 
-cheers,
--roger
+Thanks,
+Richard
