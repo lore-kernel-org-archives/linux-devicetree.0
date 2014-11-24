@@ -1,7 +1,7 @@
 From: Tomas Novotny <tomas@novotny.cz>
-Subject: [PATCH 2/4] of: add vendor prefix for Pericom Technology
-Date: Mon, 24 Nov 2014 16:49:22 +0100
-Message-ID: <1416844164-16782-3-git-send-email-tomas@novotny.cz>
+Subject: [PATCH 3/4] rtc: ds1307: add device tree bindings documentation
+Date: Mon, 24 Nov 2014 16:49:23 +0100
+Message-ID: <1416844164-16782-4-git-send-email-tomas@novotny.cz>
 References: <1416844164-16782-1-git-send-email-tomas@novotny.cz>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1416844164-16782-1-git-send-email-tomas@novotny.cz>
@@ -12,20 +12,38 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Tomas Novotny <tomas@novotny.cz>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/rtc/maxim,ds1307.txt       | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/maxim,ds1307.txt
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index a344ec2..8ebd82f 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -112,6 +112,7 @@ nxp	NXP Semiconductors
- onnn	ON Semiconductor Corp.
- opencores	OpenCores.org
- panasonic	Panasonic Corporation
-+pericom	Pericom Technology Inc.
- phytec	PHYTEC Messtechnik GmbH
- picochip	Picochip Ltd
- plathome	Plat'Home Co., Ltd.
+diff --git a/Documentation/devicetree/bindings/rtc/maxim,ds1307.txt b/Documentation/devicetree/bindings/rtc/maxim,ds1307.txt
+new file mode 100644
+index 0000000..eb6164c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/maxim,ds1307.txt
+@@ -0,0 +1,23 @@
++* Maxim (Dallas) DS1307 and compatible Real Time Clock
++
++For example, compatible chips are Maxim DS1337, Microchip MCP794xx,
++STMicroelectronics M41T00 and Epson RX-8025.
++
++Required properties:
++- compatible: For example "maxim,ds1307" (see rtc-ds1307.c driver for a full
++  list).
++- reg: i2c address
++
++Example for DS1307:
++
++ds1307: rtc@68 {
++	compatible = "maxim,ds1307";
++	reg = <0x68>;
++};
++
++Example for MCP79401:
++
++mcp7940x: rtc@6f {
++	compatible = "microchip,mcp7940x";
++	reg = <0x6f>;
++};
 -- 
 2.1.2
