@@ -1,50 +1,62 @@
-From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
-Subject: Re: [PATCHv0 0/2] arm: mvebu: fixes for previous DS213j/DS414 series
-Date: Mon, 24 Nov 2014 20:04:45 +0100
-Message-ID: <87oarwmnci.fsf@natisbad.org>
-References: <cover.1416670812.git.arno@natisbad.org>
+From: James Hartley <James.Hartley@imgtec.com>
+Subject: Re: [PATCH RESEND v4 1/4] pwm: Imagination Technologies PWM DAC
+ driver
+Date: Mon, 24 Nov 2014 19:09:07 +0000
+Message-ID: <1C907929-56BF-4FF7-9F64-866AA834090F@imgtec.com>
+References: <1416621212-11701-1-git-send-email-Naidu.Tellapati@gmail.com>
+	<1416621212-11701-2-git-send-email-Naidu.Tellapati@gmail.com>
+	<20141124101325.GB25912@ulmo.nvidia.com>
+	<27E62D98F903554192E3C13AFCC91C3C2F52EE89@hbmail01.hb.imgtec.org>
+	<20141124122807.GA4061@ulmo.nvidia.com>,<CAL1qeaH31ku6LTBV0HCDxzq+_gKWKeJR-4Gu+6dXkPU+FWvEaQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1416670812.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org> (Arnaud Ebalard's
-	message of "Sat, 22 Nov 2014 17:19:21 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <CAL1qeaH31ku6LTBV0HCDxzq+_gKWKeJR-4Gu+6dXkPU+FWvEaQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-pwm-owner@vger.kernel.org
+To: Andrew Bresticker <abrestic@chromium.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Naidu Tellapati <Naidu.Tellapati@imgtec.com>, "naidu.tellapati@gmail.com" <naidu.tellapati@gmail.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "arnd@arndb.de" <arnd@arndb.de>, Ezequiel Garcia <Ezequiel.Garcia@imgtec.com>, James Hogan <James.Hogan@imgtec.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arul Ramasamy <Arul.Ramasamy@imgtec.com>, Sai Masarapu <Sai.Masarapu@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jason,
 
-Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org> writes:
 
-> This series contains two patches. I spent some time reading the patches
-> of my previous series you had to manually apply. I only noticed the error
-> Ben reported on v6 (i.e. some pinctrl entries still using pmx_ instead
-> of _pins) which patch 1 corrects.
->
-> Regarding the second patch, having forgotten to enable MACH_ARMADA_XP in
-> my kernel config, I missed a renaming of ge0/1 pinctrl entries in
-> armada-xp.dtsi, which resulted in a non-compiling .dts file for DS414.
-> To fix my mistake, you did a s/ge[01]_rgmii_pins/pmx_ge[01]_rgmii/,
-> reintroducing some of the pmx_ naming that should have been removed in
-> the process. So, the second patch in that series finishes the work to
-> normalize pinctrl entries in Armada SoCs DT files.
->
-> The patches do apply on your mvebu/dt branch. They do pass a whole
-> compilation (including 'make dtbs') and I can boot a resulting kernel on
-> my DS213j. I do not have a DS414 at hand but will test on this device
-> early next week.
->
-> I hope eveyhting is now back in order w/ those. Feedback appreciated.
 
-Just tested the series on a DS414, booting a debian on a 4-disk RAID5
-array. I do get an IP via DHCP from both ethernet ports. Plugging an
-USB  device on rear ports (USB 3.0) or front port (USB 2.0) also works.
+On 24 Nov 2014, at 18:19, Andrew Bresticker <abrestic@chromium.org> wrote:
 
-Cheers,
+>>>>> +     val = img_pwm_readl(pwm_chip, CR_PWM_CTRL_CFG);
+>>>>> +     val |= BIT(pwm->hwpwm);
+>>>>> +     img_pwm_writel(pwm_chip, CR_PWM_CTRL_CFG, val);
+>>>>> +
+>>>>> +     regmap_update_bits(pwm_chip->periph_regs, CR_PERIP_PWM_PDM_CONTROL,
+>>>>> +                        CR_PERIP_PWM_PDM_CONTROL_CH_MASK <<
+>>>>> +                        CR_PERIP_PWM_PDM_CONTROL_CH_SHIFT(pwm->hwpwm), 0);
+>>> 
+>>>> This smells like pinmux and should probably be a separate driver.
+>>> 
+>>> Hope you are suggesting us to have a separate driver for pin muxing (might already have one for Pistachio)
+>>> and call the pin muxing driver APIs from here.
+>>> 
+>>> Please correct me if my understanding is wrong?
+>> 
+>> I don't think you need to call the pinmux API from here. Rather I'll
+>> assume that the muxing is fixed on a given board, so this configuration
+>> would be part of the static board-level pinmux so it will automatically
+>> be applied at boot time.
+> 
+> The issue here is that this register does not belong to the
+> pinmux/pinctrl block on this SoC and instead is part of the
+> "peripheral control" block which primarily provides system interface
+> gate clocks and resets (for which I was planning to write a clock
+> provider driver), but also has a bunch of control registers for
+> various IP blocks thrown together (like this one) which we're using
+> syscon to access.  I'm not sure it makes sense to create a pinmux
+> driver for these 4 bits, but I'll defer to others on that...
+> 
+> Another option would be to have the main pinctrl driver for Pistachio
+> control these bits, but that doesn't seem quite right since these bits
+> are completely separate from the pinctrl block.
 
-a+
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I would think the pinctrl driver should deal with this - yes it's a separate set of registers, but the config is expected to be static and can be represented in the DT.
+
+James. 
