@@ -1,70 +1,61 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: Re: [PATCH v7 4/4] dt-bindings: add bindings for mediatek sysirq
-Date: Mon, 24 Nov 2014 23:14:27 +0800
-Message-ID: <1416842067.28838.20.camel@mtksdaap41>
-References: <1416406451-4578-1-git-send-email-yingjoe.chen@mediatek.com>
-	 <1416406451-4578-5-git-send-email-yingjoe.chen@mediatek.com>
-	 <20141119180724.GE12851@leverpostej>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] devicetree: add a binding for a regulator that
+ constrains its supply
+Date: Mon, 24 Nov 2014 15:15:27 +0000
+Message-ID: <20141124151527.GC7712@sirena.org.uk>
+References: <1416834123-23139-1-git-send-email-alban.bedel@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141119180724.GE12851@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jiang Liu <jiang.liu@linux.intel.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "hc.yen@mediatek.com" <hc.yen@mediatek.com>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, "yh.chen@mediatek.com" <yh.chen@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Yijing Wang <wangyijing@huawei.com>, Rob Herring <robh+dt@kernel.org>, "nathan.chung@mediatek.com" <nathan.chung@mediatek.com>, "yingjoe.chen@gmail.com" <yingjoe.chen@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, "eddie.huang@mediatek.com" <eddie.huang@mediatek.co>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="uh9ZiVrAOUUm9fzH"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1416834123-23139-1-git-send-email-alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alban Bedel <alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
-Hi Mark,
+--uh9ZiVrAOUUm9fzH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, 2014-11-19 at 18:07 +0000, Mark Rutland wrote:
-> On Wed, Nov 19, 2014 at 02:14:11PM +0000, Yingjoe Chen wrote:
-> > Add binding documentation for Mediatek SoC SYSIRQ.
-> > 
-> > Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
-> > ---
-> >  .../bindings/arm/mediatek/mediatek,sysirq.txt      | 26 ++++++++++++++++++++++
-> >  1 file changed, 26 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
-> > new file mode 100644
-> > index 0000000..8669536
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
-> > @@ -0,0 +1,26 @@
-> > +Mediatek 65xx/81xx sysirq
-> > +
-> > +Mediatek SOCs sysirq support controllable irq inverter for each GIC SPI
-> > +interrupt.
-> > +
-> > +Required properties:
-> > +- compatible: should be one of:
-> > +	"mediatek,mt8135-sysirq"
-> > +	"mediatek,mt8127-sysirq"
-> > +	"mediatek,mt6589-sysirq"
-> > +	"mediatek,mt6582-sysirq"
-> > +	"mediatek,mt6577-sysirq"
-> > +- interrupt-controller : Identifies the node as an interrupt controller
-> > +- #interrupt-cells : Must use the same cells/format as parent controller.
-> > +- interrupt-parent: phandle of irq domain parent for sysirq.
-> 
-> I'm concerned that this sounds very general while the binding assumes
-> the GICv2 interrupt-specifier format. Either the driver needs to become
-> more general, or this needs to be tightened up.
-> 
-> It's also odd to say "irq domain parent", as that's purely a Linux
-> construct and has nothing to do with the HW.
+On Mon, Nov 24, 2014 at 02:02:00PM +0100, Alban Bedel wrote:
 
-The implementation expect the parent to use the same interrupt-cells
-format as GIC. Based on the block diagram in the cover-letter, we could
-say GIC is the irq parent of sysirq. So I'm planning to change to this,
-hope this is OK.
+> +Constrained Supply Regulator
+> +
+> +This binding allow creating a virtual regulator that constrain its
+> +supply to provides the requested voltage. This is to allow using
+> +simple drivers that don't explicitly request a voltage on boards
+> +that have adjustable hardware regulators.
+> +
+> +Required properties:
+> +- compatible : Must be "regulator-constrained-supply".
+> +- vin-supply : phandle to the parent supply/regulator node
 
-- #interrupt-cells : Use the same format as specified by GIC in
-  Documentation/devicetree/bindings/arm/gic.txt
-- interrupt-parent: phandle of irq parent for sysirq. The parent must
-  use the same interrupt-cells format as GIC.
+Reading this description I'm at a loss to explain what this is intended
+to achieve - it's obviously not describing hardware which is a rather
+large alarm bell and I don't really understand why the constraints
+wouldn't be set on the parent regulator.
 
-Joe.C
+--uh9ZiVrAOUUm9fzH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUc0uPAAoJECTWi3JdVIfQQZEH/1zCEnN2ttR//WYqwwaJa92Z
+IfsafQt4Wn6BZxWaRQ5hajGLL12y/Vv9nqW1oRtE4PfbMDO+SbntYwmbvO1/jcmJ
+tegnirXYAiNNPWpz77R8M4ZYzGCje19rqH35gVduDXp20grg03tqYTci2IxEnjjK
+b7a4vy/HsAR/orZF8KLf2kV6WuDoxcOPo47+ADOkQVfsDff2ctt1I0Bai98nWVTO
+7BSeXocGnbE1M+sduhKD9Bf4SwjbFzpHWQjBOZWGlHXmrAFp+C8zOFjazRbC11JT
+yW+aN2Fz+OrEK9Bu2dyodyTGqV+QSNuxDHneM+tHcier2XT7gGircPFc1sLvJA0=
+=29wA
+-----END PGP SIGNATURE-----
+
+--uh9ZiVrAOUUm9fzH--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
