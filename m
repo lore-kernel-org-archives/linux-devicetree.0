@@ -1,48 +1,64 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v19 0/5] Rockchip soc thermal driver
-Date: Tue, 25 Nov 2014 00:39:43 +0100
-Message-ID: <1771961.FfLxNDNiti@diego>
-References: <1416805142-27304-1-git-send-email-caesar.wang@rock-chips.com> <20141124201807.GA20404@developer>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20141124201807.GA20404@developer>
-Sender: linux-doc-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>
-Cc: Caesar Wang <caesar.wang@rock-chips.com>, rui.zhang@intel.com, zyf@rock-chips.com, dianders@chromium.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, cf@rock-chips.com, dmitry.torokhov@gmail.com, huangtao@rock-chips.com, fzf@rock-chips.com
+From: Kevin Cernekee <cernekee@gmail.com>
+Subject: [PATCH V3 0/7] serial: Configure {big,native}-endian MMIO accesses via DT
+Date: Mon, 24 Nov 2014 15:36:15 -0800
+Message-ID: <1416872182-6440-1-git-send-email-cernekee@gmail.com>
+Return-path: <linux-serial-owner@vger.kernel.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, jslaby@suse.cz, robh@kernel.org, grant.likely@linaro.org
+Cc: arnd@arndb.de, f.fainelli@gmail.com, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Caesar,
-
-Am Montag, 24. November 2014, 16:18:12 schrieb Eduardo Valentin:
-> Hello Caesar,
-> 
-> On Mon, Nov 24, 2014 at 12:58:57PM +0800, Caesar Wang wrote:
-> > This series patchs tested on rk3288 SDK board and pinky-v1,v2 board.
-> > I believe the driver can be used on the rk3288-evb board.
-> > 
-> > Add this driver, The system will shutdown when
-> > the thermal temperture over 100C.If for some reason we are unable to
-> > shut it down in orderly fashion (kernel is stuck holding a lock or
-> > similar)
-> > then hardware will reset it.
-> > 
-> > The patchs 1/5,2/5 can applay Eduardo's Branch
-> > git://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal.g
-> > it [branch "next-kernel"]
-> > 
-> > 	remote = origin
-> > 	merge = refs/heads/next
-> 
-> I applied your patches 1 and 2 in my -linus branch, and luckily will be
-> accepted for 3.19.
-
-and I've taken patches 3, 4 and 5 into my dts branch for 3.19 .
-
-I've adapted the commit messages in some places and removed the
-	/* sensor		ID */
-comments from the rk3288-thermal.dtsi.
+My last submission attempted to work around serial driver coexistence
+problems on multiplatform kernels.  Since there are still questions
+surrounding the best way to solve that problem, this patch series
+will focus on the narrower topic of big endian MMIO support on serial.
 
 
-Heiko
+V2->V3:
+
+ - Document the new DT properties.
+
+ - Add libfdt-based wrapper, to complement the "struct device_node" based
+   version.
+
+ - Restructure early_init_dt_scan_chosen_serial() changes to use a
+   temporary variable, so it is easy to add more of_setup_earlycon()
+   properties later.
+
+ - Make of_serial and serial8250 honor the new "big-endian" property.
+
+
+This series applies cleanly to:
+
+git://git.kernel.org/pub/scm/linux/kernel/git/glikely/linux.git devicetree/next-overlay
+
+but was tested on the mips-for-linux-next branch because my BE platform
+isn't supported in mainline yet.
+
+
+Kevin Cernekee (7):
+  of: Add helper function to check MMIO register endianness
+  of/fdt: Add endianness helper function for early init code
+  of: Document {little,big,native}-endian bindings
+  serial: core: Add big-endian iotype
+  serial: earlycon: Set UPIO_MEM32BE based on DT properties
+  serial: of_serial: Support big-endian register accesses
+  serial: 8250: Add support for big-endian MMIO accesses
+
+ .../devicetree/bindings/common-properties.txt      | 60 ++++++++++++++++++++++
+ drivers/of/base.c                                  | 23 +++++++++
+ drivers/of/fdt.c                                   | 26 +++++++++-
+ drivers/tty/serial/8250/8250_core.c                | 20 ++++++++
+ drivers/tty/serial/8250/8250_early.c               |  5 ++
+ drivers/tty/serial/earlycon.c                      |  4 +-
+ drivers/tty/serial/of_serial.c                     |  3 +-
+ drivers/tty/serial/serial_core.c                   |  2 +
+ include/linux/of.h                                 |  6 +++
+ include/linux/of_fdt.h                             |  2 +
+ include/linux/serial_core.h                        | 15 +++---
+ 11 files changed, 155 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/common-properties.txt
+
+-- 
+2.1.0
+
