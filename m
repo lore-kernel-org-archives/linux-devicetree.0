@@ -1,64 +1,58 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH RFC 0/3] Add "Simple" / Renesas Bus State Controller Driver
-Date: Mon, 24 Nov 2014 21:27:06 +0100
-Message-ID: <CAMuHMdVjpL-QgS0aAdMo4EHXibhpKCJC73yY+HDY=+Ae=LMigA@mail.gmail.com>
-References: <1416859808-18503-1-git-send-email-geert+renesas@glider.be>
-	<6261300.I132f1jLqB@wuerfel>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 1/2] devicetree: add a binding for GPIOs going though a
+ level shifter
+Date: Mon, 24 Nov 2014 15:01:39 -0600
+Message-ID: <CAL_JsqLZ+TMPg9np77xEvt-J9GTv1RyYL9zo=xsuRa6RxvRn9g@mail.gmail.com>
+References: <1416837696-28066-1-git-send-email-alban.bedel@avionic-design.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6261300.I132f1jLqB@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Ulf Hansson <ulf.hansson@linaro.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1416837696-28066-1-git-send-email-alban.bedel@avionic-design.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alban Bedel <alban.bedel@avionic-design.de>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
-
-On Mon, Nov 24, 2014 at 9:15 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Monday 24 November 2014 21:10:05 Geert Uytterhoeven wrote:
->> As this minimal BSC driver isn't hardware-specific at all, I'm wondering
->> if there's a simpler way to do this?
->>   - Should the driver be renamed to "simple-bus", and match "simple-bus"?
->>   - Should this be moved to core code, without an explicit driver for
->>     "simple-bus"? I.e. should the driver core just enable runtime PM for
->>     all devices not bound to a driver, as they may represent buses with
->>     child devices that do rely on runtime PM?
->>
->> Thanks for your comments and suggestions!
+On Mon, Nov 24, 2014 at 8:01 AM, Alban Bedel
+<alban.bedel@avionic-design.de> wrote:
+> Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
+> ---
+>  .../devicetree/bindings/gpio/gpio-level-shifter.txt       | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-level-shifter.txt
 >
-> My understanding of simple-bus is that it's something that does
-> not have any power-management capabilities, and I'd rather not
-> add clocks or interrupts to it.
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-level-shifter.txt b/Documentation/devicetree/bindings/gpio/gpio-level-shifter.txt
+> new file mode 100644
+> index 0000000..e108c43
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-level-shifter.txt
+> @@ -0,0 +1,15 @@
+> +GPIO level shifter
+> +
+> +This binding allow supporting GPIOs going though a level shifter.
+> +
+> +Required properties:
+> +- compatible : should be "gpio-level-shifter"
+> +- data-gpios : list of the data GPIO phandles
+> +- #gpio-cells : should be 2
+> +- gpio-controller : marks the device node as a GPIO controller
+> +
+> +Optional properties:
+> +- enable-gpio : phandle of the GPIO that control the level shifter enable pin
+> +- direction-gpio : phandle of the GPIO that control the level shifter direction
 
-OK.
+What if you had 2 level shifters with a common enable, but with
+different directions? We'd have to support an ORing of the enable
+state. That's largely a gpio subsystem problem I guess.
 
-> What I think makes more sense is to have a bus driver for it
-> in drivers/bus, remove the "simple-bus" compatibility value
-> and have the driver take care of registering the power domain
-> and probing the child devices using of_platform_populate on
-> itself.
+Otherwise, this looks pretty good to me:
 
-Registering power domains is already handled by the core code.
+Acked-by: Rob Herring <robh@kernel.org>
 
-So compared to my RFC code, I only have to
-  1. Drop "simple-bus" from the compatible property in the .dtsi,
-  2. Call of_platform_populate() from renesas_bsc_probe(), to
-     register the child devices, now the core code no longer does that.
+Rob
 
-I find it a bit strange having to add _more_ code, as the core code handles
-registering child devices fine. Doing it from my bus driver only protects
-against people trying to run a kernel without my bus driver included
-(which currently works fine, as long as no PM domain or clock is involved,
- e.g. if the clock is forgotten in the SoC's .dtsi :-).
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> +- vcca-supply : phandle of the regulator for side A of the level shifter
+> +- vccb-supply : phandle of the regulator for side B of the level shifter
+> --
+> 2.1.3
+>
