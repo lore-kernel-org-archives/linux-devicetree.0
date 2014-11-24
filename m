@@ -1,58 +1,190 @@
-From: Alban Bedel <alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: [PATCH 1/4] devicetree: add a binding for a regulator that constrains its supply
-Date: Mon, 24 Nov 2014 14:02:00 +0100
-Message-ID: <1416834123-23139-1-git-send-email-alban.bedel@avionic-design.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alban Bedel <alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Alban Bedel <alban.bedel@avionic-design.de>
+Subject: [PATCH 2/4] regulator: add a regulator that constrain its supply
+Date: Mon, 24 Nov 2014 14:02:01 +0100
+Message-ID: <1416834123-23139-2-git-send-email-alban.bedel@avionic-design.de>
+References: <1416834123-23139-1-git-send-email-alban.bedel@avionic-design.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1416834123-23139-1-git-send-email-alban.bedel@avionic-design.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Alban Bedel <alban.bedel@avionic-design.de>, Grant Likely <grant.likely@linaro.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Alban Bedel <alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
----
- .../bindings/regulator/constrained-supply.txt      | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/constrained-supply.txt
+This driver is meant for devices that are supplied by a settable
+regulator but that don't set their supply voltage explicitly.
+With this reglator those simple driver can just get and enable the
+regulator and they will get the correct voltage.
 
-diff --git a/Documentation/devicetree/bindings/regulator/constrained-supply.txt b/Documentation/devicetree/bindings/regulator/constrained-supply.txt
+Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
+---
+ drivers/regulator/Kconfig              |   8 +++
+ drivers/regulator/Makefile             |   1 +
+ drivers/regulator/constrained-supply.c | 126 +++++++++++++++++++++++++++++++++
+ 3 files changed, 135 insertions(+)
+ create mode 100644 drivers/regulator/constrained-supply.c
+
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index c8767b7..ebfd9a7 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -54,6 +54,14 @@ config REGULATOR_USERSPACE_CONSUMER
+ 
+ 	  If unsure, say no.
+ 
++config REGULATOR_CONSTRAINED_SUPPLY
++	tristate "Voltage regulator that constrain its supply"
++	depends on OF
++	help
++	  This driver provides a virtual regulator that constrains its supply.
++	  This is mostly useful to use drivers that don't explicitly set a
++	  voltage on boards that use variable regulators.
++
+ config REGULATOR_88PM800
+ 	tristate "Marvell 88PM800 Power regulators"
+ 	depends on MFD_88PM800
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index 37bb4b7..99c7979 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -8,6 +8,7 @@ obj-$(CONFIG_OF) += of_regulator.o
+ obj-$(CONFIG_REGULATOR_FIXED_VOLTAGE) += fixed.o
+ obj-$(CONFIG_REGULATOR_VIRTUAL_CONSUMER) += virtual.o
+ obj-$(CONFIG_REGULATOR_USERSPACE_CONSUMER) += userspace-consumer.o
++obj-$(CONFIG_REGULATOR_CONSTRAINED_SUPPLY) += constrained-supply.o
+ 
+ obj-$(CONFIG_REGULATOR_88PM800) += 88pm800.o
+ obj-$(CONFIG_REGULATOR_88PM8607) += 88pm8607.o
+diff --git a/drivers/regulator/constrained-supply.c b/drivers/regulator/constrained-supply.c
 new file mode 100644
-index 0000000..3c85430
+index 0000000..1ab94b0
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/constrained-supply.txt
-@@ -0,0 +1,29 @@
-+Constrained Supply Regulator
++++ b/drivers/regulator/constrained-supply.c
+@@ -0,0 +1,126 @@
++/*
++ * Regulator driver that constrain its supply
++ *
++ * Copyright (C) 2014 - Alban Bedel
++ *
++ * Author: Alban Bedel <alban.bedel@avionic-design.de>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
 +
-+This binding allow creating a virtual regulator that constrain its
-+supply to provides the requested voltage. This is to allow using
-+simple drivers that don't explicitly request a voltage on boards
-+that have adjustable hardware regulators.
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/err.h>
++#include <linux/of_device.h>
++#include <linux/of_gpio.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/of_regulator.h>
 +
-+Required properties:
-+- compatible : Must be "regulator-constrained-supply".
-+- vin-supply : phandle to the parent supply/regulator node
++/* Here we can't use rdev->supply as these functions are also
++ * called before the supply is set.
++ */
++static int constrained_supply_set_voltage(struct regulator_dev *rdev,
++					int min_uV, int max_uV,
++					unsigned *selector)
++{
++	struct regulator *supply = rdev_get_drvdata(rdev);
 +
-+Optional properties:
-+- any property defined in regulator.txt
++	return regulator_set_voltage(supply, min_uV, max_uV);
++}
 +
-+Example:
++static int constrained_supply_get_voltage(struct regulator_dev *rdev)
++{
++	struct regulator *supply = rdev_get_drvdata(rdev);
 +
-+  /* Adjustable regulator for extension boards */
-+  vdd_ext: regulator@0 {
-+  	regulator-min-microvolt = <1000000>;
-+  	regulator-max-microvolt = <10000000>;
-+  };
++	return regulator_get_voltage(supply);
++}
 +
-+  /* An extension board that need 3.3V */
-+  vdd_ext_board1: regulator@1 {
-+	compatible = "regulator-constrained-supply";
-+  	regulator-min-microvolt = <3300000>;
-+  	regulator-max-microvolt = <3300000>;
-+	vin-supply = <&vdd_ext>;
-+  };
++static int constrained_supply_regulator_enable(struct regulator_dev *rdev)
++{
++	return 0;
++}
++
++static int constrained_supply_regulator_disable(struct regulator_dev *rdev)
++{
++	return 0;
++}
++
++static int constrained_supply_regulator_is_enabled(struct regulator_dev *rdev)
++{
++	return rdev->use_count > 0;
++}
++
++static struct regulator_ops constrained_supply_regulator_ops = {
++	.get_voltage	= constrained_supply_get_voltage,
++	.set_voltage	= constrained_supply_set_voltage,
++	.enable		= constrained_supply_regulator_enable,
++	.disable	= constrained_supply_regulator_disable,
++	.is_enabled	= constrained_supply_regulator_is_enabled,
++};
++
++static const struct regulator_desc constrained_supply_regulator_desc = {
++	.name		= "constrained-supply",
++	.ops		= &constrained_supply_regulator_ops,
++	.type		= REGULATOR_VOLTAGE,
++	.owner		= THIS_MODULE,
++	.supply_name    = "vin",
++};
++
++static int constrained_supply_regulator_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct regulator_config config = {};
++	struct regulator_dev *regulator;
++	struct regulator *supply;
++
++	if (!np)
++		return -EINVAL;
++
++	/* We need the supply to be available */
++	supply = devm_regulator_get(&pdev->dev,
++				constrained_supply_regulator_desc.supply_name);
++	if (IS_ERR(supply)) {
++		dev_err(&pdev->dev, "Failed to get supply regulator\n");
++		return PTR_ERR(supply);
++	}
++
++	config.init_data = of_get_regulator_init_data(&pdev->dev, np);
++	if (!config.init_data)
++		return -ENOMEM;
++
++	config.of_node = np;
++	config.dev = &pdev->dev;
++	config.driver_data = supply;
++
++	regulator = devm_regulator_register(
++		&pdev->dev, &constrained_supply_regulator_desc, &config);
++	if (IS_ERR(regulator)) {
++		dev_err(&pdev->dev, "Failed to register regulator\n");
++		return PTR_ERR(regulator);
++	}
++
++	return 0;
++}
++
++static const struct of_device_id constrained_supply_of_match[] = {
++	{ .compatible = "regulator-constrained-supply" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, constrained_supply_of_match);
++
++static struct platform_driver constrained_supply_regulator_driver = {
++	.driver = {
++		.name		= "constrained-supply-regulator",
++		.owner		= THIS_MODULE,
++		.of_match_table = of_match_ptr(constrained_supply_of_match),
++	},
++	.probe = constrained_supply_regulator_probe,
++};
++module_platform_driver(constrained_supply_regulator_driver);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Alban Bedel <alban.bedel@avionic-design.de>");
++MODULE_DESCRIPTION("Constrained Supply Regulator Driver");
++MODULE_ALIAS("platform:-regulator");
 -- 
 2.1.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
