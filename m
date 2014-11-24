@@ -1,104 +1,75 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH v12 0/11] dw-hdmi: convert imx hdmi to bridge/dw_hdmi
-Date: Mon, 24 Nov 2014 22:17:23 +0800
-Message-ID: <54733DF3.7020609@rock-chips.com>
-References: <1415793593-5075-1-git-send-email-andy.yan@rock-chips.com>
- <1416221635-12797-1-git-send-email-andy.yan@rock-chips.com>
+From: Jonas Gorski <jogo@openwrt.org>
+Subject: Re: [PATCH V3 06/11] irqchip: bcm7120-l2: Change DT binding to allow
+ non-contiguous IRQEN/IRQSTAT
+Date: Mon, 24 Nov 2014 15:31:27 +0100
+Message-ID: <CAOiHx=ntm7AO5BU2Ge0JDC5nDgXSZwQDm05s5VTM8mLqYmCZRw@mail.gmail.com>
+References: <1416796846-28149-1-git-send-email-cernekee@gmail.com> <1416796846-28149-7-git-send-email-cernekee@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1416221635-12797-1-git-send-email-andy.yan@rock-chips.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
-Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, mark.yao@rock-chips.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1416796846-28149-7-git-send-email-cernekee@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Cernekee <cernekee@gmail.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>, Florian Fainelli <f.fainelli@gmail.com>, Jon Fraser <jfraser@broadcom.com>, Dmitry Torokhov <dtor@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, computersforpeace@gmail.com, MIPS Mailing List <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgWnViYWlyTEssIFJ1c3NlbCBLaW5nLCBHcmVnIEtyb2FoLUhhcnRtYW4gLCBQaGlsaXBwIFph
-YmVsIGFuZCBEYW5pZWw6CiAgICBEbyB5b3UgaGF2ZSBhbnkgZnVydGhlciBvcGluaW9ucyBvciBz
-dWdnZXN0aW9ucyBhYm91dCB0aGUKdGhlIGN1cnJlbnQgcGF0Y2ggc2V0PwpPbiAyMDE05bm0MTHm
-nIgxN+aXpSAxODo1MywgQW5keSBZYW4gd3JvdGU6Cj4gV2UgZm91bmQgRnJlZXNjYWxlIGlteDYg
-YW5kIFJvY2tjaGlwIHJrMzI4OCBhbmQgSW5nZW5pYyBKWjQ3ODAgKFhidXJzdC9NSVBTKQo+IHVz
-ZSB0aGUgaW50ZXJmYWNlIGNvbXBhdGlibGUgRGVzaWdud2FyZSBIRE1JIElQLCBidXQgdGhleSBh
-bHNvIGhhdmUgc29tZQo+IGxpZ2h0bHkgZGlmZmVyZW5jZXMsIHN1Y2ggYXMgcGh5IHBsbCBjb25m
-aWd1cmF0aW9uLCByZWdpc3RlciB3aWR0aChpbXggaGRtaQo+IHJlZ2lzdGVyIGlzIG9uZSBieXRl
-LCBidXQgcmszMjg4IGlzIDQgYnl0ZXMgd2lkdGggYW5kIGNhbiBvbmx5IGJlIGFjY2Vzc2VkCj4g
-Ynkgd29yZCksIDRLIHN1cHBvcnQoaW14NiBkb2Vzbid0IHN1cHBvcnQgNGssIGJ1dCByazMyODgg
-ZG9lcyksIGFuZCBIRE1JMi4wCj4gc3VwcG9ydC4KPgo+IFRvIHJldXNlIHRoZSBpbXgtaGRtaSBk
-cml2ZXIsIHdlIG1ha2UgdGhpcyBwYXRjaCBzZXQ6Cj4gKDEpOiBmaXggc29tZSBDb2RpbmdTdHls
-ZSB3YXJuaW5nIHRvIG1ha2UgY2hlY2twYXRjaCBoYXBweQo+ICgyKTogY29udmVydCBpbXgtaGRt
-aSB0byBkcm1fYnJpZGdlCj4gKDMpOiBtb3ZlIGlteC1oZG1pIHRvIGJyaWRnZS9kd19oZG1pLCBh
-bmQgc3BsaXQgcGxhdGZvcm0gc3BlY2lmaWMgY29kZQo+ICg0KTogZXh0ZW5kIGR3X2hkbWkuYyB0
-byBzdXBwb3J0IHJrMzI4OCBoZG1pCj4gKDUpOiBhZGQgcm9ja2NoaXAgcmszMjg4IHBsYXRmb3Jt
-IHNwZWNpZmljIGNvZGUgZHdfaGRtaS1yb2NrY2hpcC5jCj4KPiBDaGFuZ2VzIGluIHYxMjoKPiAt
-IHJlZmFjdG9yIG9mX25vZGVfcHV0KGRkY19ub2RlKQo+IC0gc3F1YXNoIHBhdGNoIDxjb252ZXJ0
-IGR3X2hkbWkgdG8gZHJtX2JyaWRnZT4gJiA8c3BsaXQgaW14IHNvYyBzcGVjaWZpYyBjb2RlIGZy
-b20gaW14LWhkbWk+Cj4gLSBhZGQgY29tbWVudCBmb3IgdGhlIGRlcGVuZCBvbiBwYXRjaAo+Cj4g
-Q2hhbmdlcyBpbiB2MTE6Cj4gLSBzcXVhc2ggcGF0Y2ggIDxzcGxpdCBzb21lIHBoeSBjb25maWd1
-cmF0aW9uIHRvIHBsYXRmb3JtIGRyaXZlcj4KPiAtIHNwbGl0IGZvcm0gcGF0Y2ggPGR3X2hkbWk6
-IGFkZCByazMyODggc3VwcG9ydD4KPiAtIHNwbGl0IGZyb20gcGF0Y2ggPGR3X2hkbWk6IGFkZCBy
-azMyODggc3VwcG9ydD4KPgo+IENoYW5nZXMgaW4gdjEwOgo+IC0gc3BsaXQgZ2VuZXJpYyBkd19o
-ZG1pLmMgaW1wcm92ZW1lbnRzIGZyb20gcGF0Y2gjMTEgKGFkZCByazMyODggc3VwcG9ydCkKPiAt
-IGFkZCBtb3JlIGRpc3BsYXkgbW9kZSBzdXBwb3J0IG1wbGwgY29uZmlndXJhdGlvbiBmb3Igcmsz
-Mjg4Cj4KPiBDaGFuZ2VzIGluIHY5Ogo+IC0gbW92ZSBzb21lIHBoeSBjb25maWd1cmF0aW9uIHRv
-IHBsYXRmb3JtIGRyaXZlcgo+Cj4gQ2hhbmdlcyBpbiB2ODoKPiAtIGNvcnJlY3Qgc29tZSBzcGVs
-bGluZyBtaXN0YWtlCj4gLSBtb2RpZnkgZGRjLWkyYy1idXMgYW5kIGludGVycnVwdCBkZXNjcmlw
-dGlvbgo+IC0gQWRkIGRvY3VtZW50YXRpb24gZm9yIHJvY2tjaGlwIGR3IGhkbWkKPgo+IENoYW5n
-ZXMgaW4gdjc6Cj4gLSByZW1vdmUgdW51c2VkIHZhcmlhYmxlcyBmcm9tIHN0cnVjdHVyZSBkd19o
-ZG1pCj4gLSByZW1vdmUgYSB3cm9uZyBtb2RpZmljYXRpb24KPiAtIGFkZCBjb3B5cmlnaHRzIGZv
-ciBkd19oZG1pLWlteC5jCj4KPiBDaGFuZ2VzIGluIHY2Ogo+IC0gcmVhcnJhbmdlIHRoZSBwYXRj
-aCBvcmRlcgo+IC0gbW92ZSBzb21lIG1vZGlmaWNhdGlvbiB0byAgcGF0Y2gjNgo+IC0gcmVmYWN0
-b3IgcmVnaXN0ZXIgYWNjZXNzIHdpdGhvdXQgcmVnX3NoaWZ0Cj4KPiBDaGFuZ2VzIGluIHY1Ogo+
-IC0gcmVmYWN0b3IgcmVnLWlvLXdpZHRoCj4KPiBDaGFuZ2VzIGluIHY0Ogo+IC0gZml4IGNoZWNr
-cGF0Y2ggQ0hFQ0sKPiAtIGRlZmVyIHByb2JlIGRkYyBpMmMgYWRhcHRlcgo+Cj4gQ2hhbmdlcyBp
-biB2MzoKPiAtIHNwbGl0IG11bHRpLXJlZ2lzdGVyIGFjY2VzcyB0byBvbmUgaW5kZXBlbnQgcGF0
-Y2gKPgo+IENoYW5nZXMgaW4gdjI6Cj4gLSB1c2UgZ2l0IGZvcm1hdCAtTSB0byBnZW5lcmF0ZSB0
-aGVzZSBwYXRjaAo+Cj4gQW5keSBZYW4gKDExKToKPiAgICBzdGFnaW5nOiBpbXgtZHJtOiBpbXgt
-aGRtaTogbWFrZSBjaGVja3BhdGNoIGhhcHB5Cj4gICAgc3RhZ2luZzogaW14LWRybTogaW14LWhk
-bWk6IHJldHVybiBkZWZlciBpZiBjYW4ndCBnZXQgZGRjIGkyYyBhZGFwdGVyCj4gICAgc3RhZ2lu
-ZzogaW14LWRybTogaW14LWhkbWk6IGNvbnZlcnQgaW14LWhkbWkgdG8gZHJtX2JyaWRnZSBtb2Rl
-Cj4gICAgc3RhZ2luZzogaW14LWRybTogaW14LWhkbWk6IG1vdmUgaW14LWhkbWkgdG8gYnJpZGdl
-L2R3X2hkbWkKPiAgICBkdC1iaW5kaW5nczogYWRkIGRvY3VtZW50IGZvciBkd19oZG1pCj4gICAg
-ZHJtOiBicmlkZ2UvZHdfaGRtaTogYWRkIHN1cHBvcnQgZm9yIG11bHRpLWJ5dGUgcmVnaXN0ZXIg
-d2lkdGggYWNjZXNzCj4gICAgZHJtOiBicmlkZ2UvZHdfaGRtaTogYWRkIG1vZGVfdmFsaWQgc3Vw
-cG9ydAo+ICAgIGRybTogYnJpZGdlL2R3X2hkbWk6IGNsZWFyIGkyY21waHlfc3RhdDAgcmVnIGlu
-IGhkbWlfcGh5X3dhaXRfaTJjX2RvbmUKPiAgICBkcm06IGJyaWRnZS9kd19oZG1pOiBhZGQgZnVu
-Y3Rpb24gZHdfaGRtaV9waHlfZW5hYmxlX3NwYXJlCj4gICAgZHQtYmluZGluZ3M6IEFkZCBkb2N1
-bWVudGF0aW9uIGZvciByb2NrY2hpcCBkdyBoZG1pCj4gICAgZHJtOiBicmlkZ2UvZHdfaGRtaTog
-YWRkIHJvY2tjaGlwIHJrMzI4OCBzdXBwb3J0Cj4KPiAgIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2RybS9icmlkZ2UvZHdfaGRtaS50eHQgICAgIHwgIDQwICsrCj4gICAuLi4vZGV2aWNldHJlZS9i
-aW5kaW5ncy92aWRlby9kd19oZG1pLXJvY2tjaGlwLnR4dCB8ICA0MyArKwo+ICAgZHJpdmVycy9n
-cHUvZHJtL2JyaWRnZS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgfCAgIDUgKwo+ICAgZHJp
-dmVycy9ncHUvZHJtL2JyaWRnZS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwo+
-ICAgLi4uL2lteC1oZG1pLmMgPT4gZ3B1L2RybS9icmlkZ2UvZHdfaGRtaS5jfSAgICAgICAgfCA3
-NjcgKysrKysrKysrLS0tLS0tLS0tLS0tCj4gICAuLi4vaW14LWhkbWkuaCA9PiBncHUvZHJtL2Jy
-aWRnZS9kd19oZG1pLmh9ICAgICAgICB8ICAgNyArLQo+ICAgZHJpdmVycy9ncHUvZHJtL3JvY2tj
-aGlwL0tjb25maWcgICAgICAgICAgICAgICAgICAgfCAgMTAgKwo+ICAgZHJpdmVycy9ncHUvZHJt
-L3JvY2tjaGlwL01ha2VmaWxlICAgICAgICAgICAgICAgICAgfCAgIDIgKy0KPiAgIGRyaXZlcnMv
-Z3B1L2RybS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLmMgICAgICAgIHwgMzU1ICsrKysrKysr
-KysKPiAgIGRyaXZlcnMvc3RhZ2luZy9pbXgtZHJtL0tjb25maWcgICAgICAgICAgICAgICAgICAg
-IHwgICAxICsKPiAgIGRyaXZlcnMvc3RhZ2luZy9pbXgtZHJtL01ha2VmaWxlICAgICAgICAgICAg
-ICAgICAgIHwgICAyICstCj4gICBkcml2ZXJzL3N0YWdpbmcvaW14LWRybS9kd19oZG1pLWlteC5j
-ICAgICAgICAgICAgICB8IDI3NCArKysrKysrKwo+ICAgaW5jbHVkZS9kcm0vYnJpZGdlL2R3X2hk
-bWkuaCAgICAgICAgICAgICAgICAgICAgICAgfCAgNjAgKysKPiAgIDEzIGZpbGVzIGNoYW5nZWQs
-IDExMzkgaW5zZXJ0aW9ucygrKSwgNDI4IGRlbGV0aW9ucygtKQo+ICAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3X2hkbWku
-dHh0Cj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3ZpZGVvL2R3X2hkbWktcm9ja2NoaXAudHh0Cj4gICByZW5hbWUgZHJpdmVycy97c3RhZ2lu
-Zy9pbXgtZHJtL2lteC1oZG1pLmMgPT4gZ3B1L2RybS9icmlkZ2UvZHdfaGRtaS5jfSAoNzAlKQo+
-ICAgcmVuYW1lIGRyaXZlcnMve3N0YWdpbmcvaW14LWRybS9pbXgtaGRtaS5oID0+IGdwdS9kcm0v
-YnJpZGdlL2R3X2hkbWkuaH0gKDk5JSkKPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dw
-dS9kcm0vcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC5jCj4gICBjcmVhdGUgbW9kZSAxMDA2NDQg
-ZHJpdmVycy9zdGFnaW5nL2lteC1kcm0vZHdfaGRtaS1pbXguYwo+ICAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IGluY2x1ZGUvZHJtL2JyaWRnZS9kd19oZG1pLmgKPgoKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmVsIG1haWxpbmcgbGlzdApkZXZlbEBsaW51
-eGRyaXZlcnByb2plY3Qub3JnCmh0dHA6Ly9kcml2ZXJkZXYubGludXhkcml2ZXJwcm9qZWN0Lm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaXZlcmRldi1kZXZlbAo=
+On Mon, Nov 24, 2014 at 3:40 AM, Kevin Cernekee <cernekee@gmail.com> wrote:
+> To date, all supported controllers have had the IRQEN register at offset
+> 0x00 and the IRQSTAT register at 0x04.  So in DT we would typically see
+> something like:
+>
+>     reg = <0xf0406800 0x8>;
+>
+> We still want to support this format, but we also need to support cases
+> where IRQEN and IRQSTAT aren't adjacent.  So, we will amend the driver to
+> accept an alternate format that looks like this:
+>
+>     reg = <0xf0406800 0x4 0xf0406804 0x4>;
+>
+> i.e. if the first resource_size() == 4, assume that the first resource
+> points to IRQEN and that the next resource points to IRQSTAT.  If the
+> first resource_size() == 8, retain the current behavior.
+>
+> Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+
+Hmm ... the more I think about this, the less I like it.
+
+Using the amount and size of the reg-properties to infer a certain
+layout seems rather hackish and dirty to me. Maybe we should just use
+different compatible match ids for that? E.g. brcm,bm7120-l2-intc for
+the 32-bit en/stat pairs, and e.g. brcm,bcm6368-l2-intc for the 64-bit
+wide one. Or maybe make the bcm63xx one a separate driver and let it
+share code with the bcm7120-l2-intc driver.
+
+This would avoid having to specify a lot of regs (let's assume we also
+add support for affinity), and cause a lot of io(re)map calls - the
+bcm63268 one would currently look like:
+
+        reg = <0x1000002c 0x4 0x1000003c 0x4>, /* irq 0..31 -> mips irq 2 */
+               <0x10000028 0x4 0x10000038 0x4>,  /* irq 32..63 -> mips irq 2 */
+               <0x10000024 0x4 0x10000034 0x4>, /* irq 64 .. 95 -> mips irq 2 */
+               <0x10000020 0x4 0x10000030 0x4>, /* irq 96 .. 127 ->
+mips irq 2 */
+               <0x1000004c 0x4 0x1000005c 0x4>, /* irq 0.. 31 -> mips irq 3 */
+               <0x10000048 0x4 0x10000058 0x4>, /* irq 32 .. 63 -> mips irq 3 */
+               <0x10000044 0x4 0x10000054 0x4>, /* irq 64 ... 95 ->
+mips irq 3 */
+              <0x10000040 0x4 0x10000050 0x4>; /* irq 96 ... 127 ->
+mips irq 3 */
+
+where as with a different match id, we could rather allow something like
+
+        reg = <0x10000020 0x20>, /* irq 0..127 -> mips irq 2 */
+               <0x10000040 0x20>;   /* irq 0..127 -> mips irq 3 */
+
+
+This would make the dts(i) files quite a bit more readable IMHO, and
+make it more likely that newer dts(i) files work with older kernels,
+e.g. where the mips irq3 routed registers were added - in the current
+style, the kernel would interpret these as additional irq banks. Not
+that I think this is expected/required to work, but it wouldn't hurt
+having at least a bit of backward compatibility for bisecting on a
+device that provides a newer dtb through the bootloader.
+
+
+Jonas
