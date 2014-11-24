@@ -1,36 +1,121 @@
-From: Andrew Bresticker <abrestic@google.com>
-Subject: Re: [PATCH V3 11/11] MIPS: Add multiplatform BMIPS target
-Date: Mon, 24 Nov 2014 11:29:40 -0800
-Message-ID: <CAL1qeaG+cmQDW3ceqq4kGgWBsf4RgfFpQ76OG0dg3SJy6nitgw@mail.gmail.com>
-References: <1416796846-28149-1-git-send-email-cernekee@gmail.com>
-	<1416796846-28149-12-git-send-email-cernekee@gmail.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v7 1/4] irqchip: gic: Support hierarchy irq domain.
+Date: Mon, 24 Nov 2014 19:31:44 +0000
+Message-ID: <547387A0.4000808@arm.com>
+References: <1416406451-4578-1-git-send-email-yingjoe.chen@mediatek.com>	 <1416406451-4578-2-git-send-email-yingjoe.chen@mediatek.com>	 <87h9xvaz2p.fsf@approximate.cambridge.arm.com>	 <546D6D62.4030005@linux.intel.com>	 <87wq6q9odi.fsf@approximate.cambridge.arm.com> <1416585081.24971.15.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1416796846-28149-12-git-send-email-cernekee@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Florian Fainelli <f.fainelli@gmail.com>, jfraser@broadcom.com, Dmitry Torokhov <dtor@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Jonas Gorski <jogo@openwrt.org>, Arnd Bergmann <arnd@arndb.de>, computersforpeace@gmail.com, Linux-MIPS <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416585081.24971.15.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yijing Wang <wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> diff --git a/arch/mips/bmips/setup.c b/arch/mips/bmips/setup.c
+On 21/11/14 15:51, Yingjoe Chen wrote:
+> 
+> Hi,
+> 
+> On Thu, 2014-11-20 at 10:07 +0000, Marc Zyngier wrote:
+>> On Thu, Nov 20 2014 at  4:26:10 am GMT, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+>>
+>> Hi Jiang,
+>>
+>>> On 2014/11/20 1:18, Marc Zyngier wrote:
+>>>> Hi Yingjoe,
+>>>>
+>>>> On Wed, Nov 19 2014 at 2:14:08 pm GMT, Yingjoe Chen
+>>>> <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>>>>> +
+>>>>> +static const struct irq_domain_ops gic_irq_domain_hierarchy_ops = {
+>>>>> +	.xlate = gic_irq_domain_xlate,
+>>>>> +	.alloc = gic_irq_domain_alloc,
+>>>>> +	.free = irq_domain_free_irqs_top,
+>>>>
+>>>> I'm convinced that irq_domain_free_irqs_top is the wrong function to
+>>>> call here, because you're calling it from the bottom, not the top-level
+>>>> (it has no parent).
+>>>>
+>>>> I cannot verify this with your code as I don't a working platform with
+>>>> GICv2m, but if I enable something similar on GICv3, it dies a very
+>>>> painful way:
+>>>>
+>>>> Unable to handle kernel NULL pointer dereference at virtual address 00000018
+>>>> pgd = ffffffc03d059000
+>>>> [00000018] *pgd=0000000081356003, *pud=0000000081356003, *pmd=0000000000000000
+>>>> Internal error: Oops: 96000006 [#1] SMP
+>>>> Modules linked in:
+>>>> CPU: 4 PID: 1052 Comm: sh Not tainted 3.18.0-rc4+ #3311
+>>>> task: ffffffc03e320000 ti: ffffffc001390000 task.ti: ffffffc001390000
+>>>> PC is at irq_domain_free_irqs_recursive+0x1c/0x80
+>>>> LR is at irq_domain_free_irqs_common+0x88/0x9c
+>>>> pc : [<ffffffc0000ed790>] lr : [<ffffffc0000ede20>] pstate: 60000145
+>>>> [...]
+>>>> [<ffffffc0000ed790>] irq_domain_free_irqs_recursive+0x1c/0x80
+>>>> [<ffffffc0000ede1c>] irq_domain_free_irqs_common+0x84/0x9c
+>>>> [<ffffffc0000ede98>] irq_domain_free_irqs_top+0x64/0x7c  <-- gic_domain.free()
+>>>> [<ffffffc0000ed798>] irq_domain_free_irqs_recursive+0x24/0x80
+>>>> [<ffffffc0000ee468>] irq_domain_free_irqs_parent+0x14/0x20
+>>>> [<ffffffc0003500b8>] its_irq_domain_free+0xc8/0x250
+>>>> [<ffffffc0000ed798>] irq_domain_free_irqs_recursive+0x24/0x80
+>>>> [<ffffffc0000ede1c>] irq_domain_free_irqs_common+0x84/0x9c
+>>>> [<ffffffc0000ede98>] irq_domain_free_irqs_top+0x64/0x7c
+>>>> [<ffffffc0000ef518>] msi_domain_free+0x70/0x88
+>>>> [<ffffffc0000ed798>] irq_domain_free_irqs_recursive+0x24/0x80
+>>>> [<ffffffc0000ee3ac>] irq_domain_free_irqs+0x108/0x17c
+>>>> [<ffffffc0000efb68>] msi_domain_free_irqs+0x28/0x4c
+>>>> [<ffffffc000369cac>] free_msi_irqs+0xb4/0x1c0
+>>>> [<ffffffc00036adec>] pci_disable_msix+0x3c/0x4c
+>>>> [...]
+>>>>
+>>>> and I cannot see how this could work on the standard GIC either.
+>>>>
+>>>> Thomas, Jiang: could you please confirm or infirm my suspicions? My
+>>>> understanding is that irq_domain_free_irqs_top can only be called from
+>>>> the top-level domain.
+>>> Hi Marc,
+>>> 	It indicates that irq_domain_free_irqs_top() is not a good name.
+>>> We have:
+>>> 1) irq_domain_set_hwirq_and_chip() to set irq_chip and chip_data
+>>> 2) irq_domain_set_info() to set irq_chip, chip_data, flow_handler and
+>>>    handler_data;
+>>> 3) irq_domain_reset_irq_data() resets irq_chip and chip_data.
+>>> 4) irq_domain_free_irqs_common() resets irq_chip, chip_data and calls
+>>>    parent domain's domain_ops.free() callback.
+>>> 5) irq_domain_free_irqs_top() resets irq_chip, chip_data, flow handler,
+>>>    handler_data and call parent domain's domain_ops.free() callback.
+>>
+>> Yes, and this "call parent domain's free callback" is where the problem
+>> lies. Here, it is called from the innermost domain, with no parent.
+>>
+>>> So there two possible improvements here:
+>>> 1) Rename irq_domain_free_irqs_top() with better name, any suggestions?
+>>>    It's named as is because it's always called by the outer-most
+>>>    irqdomains on x86.
+>>> 2) Change irq_domain_free_irqs_common() and irq_domain_free_irqs_top()
+>>>    to call parent domain's domain_ops.free() callback only if parent
+>>>    exists. By this way, they could be used for inner-most irqdomains.
+>>> If OK, I will respin a version 4 patch set based on tip/irq/irqdomain.
+>>> Thoughts?
+>>
+>> Checking the parent is probably a safe solution (this is not a hot path
+>> anyway). I don't care much about the name though, and I the only thing I
+>> can think of is irq_domain_free_irqs_reset_flow, which looks so bad it's
+>> not even funny. I'll let the matter rest in your capable hands! ;-)
+> 
+> I've applied Jiang's "irqdomain: Enhance irq_domain_free_irqs_common()
+> to support parentless irqdomain" patch and it did fix the crash.
 
-> +void __init plat_time_init(void)
-> +{
-> +       struct device_node *np;
-> +       u32 freq;
-> +
-> +       np = of_find_node_by_name(NULL, "cpus");
-> +       if (!np)
-> +               panic("missing 'cpus' DT node");
-> +       if (of_property_read_u32(np, "mips-hpt-frequency", &freq) < 0)
-> +               panic("missing 'mips-hpt-frequency' property");
-> +       of_node_put(np);
-> +
-> +       mips_hpt_frequency = freq;
-> +}
+Excellent.  I think this is pretty much getting there now. Any chance
+you could repost this series with the various fixes?
 
-Could you use common clock framework for this?  Isn't the HPT just a
-fixed factor of the CPU clock?  I'm planning on doing something very
-similar for ImgTec MIPS SoCs, so perhaps this could go in a common
-place, like the r4k clocksource driver?
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
