@@ -1,103 +1,100 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 1/2] of: Rename "poweroff-source" property to
- "system-power-controller"
-Date: Mon, 24 Nov 2014 10:24:56 +0000
-Message-ID: <20141124102456.GE4241@x1>
-References: <1415885699-1465-1-git-send-email-user@radxa>
- <1415885699-1465-2-git-send-email-user@radxa>
- <20141121105951.GA20679@localhost>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V2 RESEND] arm: dts: Exynos5: Use pmu_system_controller
+ phandle for dp phy
+Date: Mon, 24 Nov 2014 11:32:52 +0100
+Message-ID: <20141124103249.GA26217@ulmo.nvidia.com>
+References: <1416807683-2257-1-git-send-email-gautam.vivek@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ew6BAiZeqk4r7MaW"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20141121105951.GA20679@localhost>
-Sender: linux-pm-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Auto Configured <romain.perier@gmail.com>, Mark Brown <broonie@kernel.org>, heiko@sntech.de, grant.likely@linaro.org, robh@kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balbi@ti.com
+In-Reply-To: <1416807683-2257-1-git-send-email-gautam.vivek@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Vivek Gautam <gautam.vivek@samsung.com>
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, kgene.kim@samsung.com, dri-devel@lists.freedesktop.org, javier.martinez@collabora.co.uk, jg1.han@samsung.com, ajaykumar.rs@samsung.com, Kukjin Kim <kgene@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 21 Nov 2014, Johan Hovold wrote:
 
-> On Thu, Nov 13, 2014 at 01:34:58PM +0000, Auto Configured wrote:
-> > From: Romain Perier <romain.perier@gmail.com>
-> >=20
-> > It reverts commit a4b4e0461ec5 ("of: Add standard property for powe=
-roff capability").
-> > As discussed on the mailing list, it makes more sense to rename bac=
-k to the
-> > old established property name, without the vendor prefix. Problem b=
-eing that
-> > the word "source" usually tends to be used for inputs and that is o=
-ut of control
-> > of the OS. The poweroff capability is an output which simply turns =
-the
-> > system-power off. Also, this property might be used by drivers whic=
-h power-off
-> > the system and power back on subsequent RTC alarms. This seems to s=
-uggest to
-> > remove "poweroff" from the property name and to choose "system-powe=
-r-controller"
-> > as the more generic name. This patchs adds the required renaming ch=
-anges and
-> > defines an helper function which is compatible with both properties=
-, the old one
-> > which was only used by tps65910 and the new one without vendor-pref=
-ix.
+--ew6BAiZeqk4r7MaW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Nov 24, 2014 at 11:11:23AM +0530, Vivek Gautam wrote:
+> DP PHY now require pmu-system-controller to handle PMU register
+> to control PHY's power isolation. Adding the same to dp-phy
+> node.
 >=20
-> Now this is a bit of a mess.
+> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+> Reviewed-by: Jingoo Han <jg1.han@samsung.com>
+> Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> Cc: Kukjin Kim <kgene@kernel.org>
+> ---
+>  arch/arm/boot/dts/exynos5250.dtsi |    2 +-
+>  arch/arm/boot/dts/exynos5420.dtsi |    4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 >=20
-> There's a commit in the mfd tree, 25f833c1171d ("mfd: tps65910: Conve=
-rt
-> ti,system-power-controller DT property to poweroff-source"), which
-> breaks all dts using tps65910 since these are never updated to the no=
-w
-> retracted property name ("poweroff-source").
+> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos=
+5250.dtsi
+> index 0a588b4..bebd099 100644
+> --- a/arch/arm/boot/dts/exynos5250.dtsi
+> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> @@ -732,7 +732,7 @@
+> =20
+>  	dp_phy: video-phy@10040720 {
+>  		compatible =3D "samsung,exynos5250-dp-video-phy";
+> -		reg =3D <0x10040720 4>;
+> +		samsung,pmu-syscon =3D <&pmu_system_controller>;
+>  		#phy-cells =3D <0>;
+>  	};
+> =20
+> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos=
+5420.dtsi
+> index 8617a03..1353a09 100644
+> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> @@ -503,8 +503,8 @@
+>  	};
+> =20
+>  	dp_phy: video-phy@10040728 {
+> -		compatible =3D "samsung,exynos5250-dp-video-phy";
+> -		reg =3D <0x10040728 4>;
+> +		compatible =3D "samsung,exynos5420-dp-video-phy";
+> +		samsung,pmu-syscon =3D <&pmu_system_controller>;
+>  		#phy-cells =3D <0>;
+>  	};
+> =20
 
-My word!
+It seems like these nodes have been in the Linux tree since 3.12 and
+3.17, respectively and these changes break backwards-compatibility. Has
+anyone thought about the possible consequences?
 
-Romain, what conversation on the MLs are you talking about?
+Although, looking more closely it seems like this isn't the first time
+that backwards-compatibility was broken in these files, so perhaps
+nobody cares...
 
-> This one should simply be reverted ASAP.
+Thierry
 
-No need to revert, I can just remove the patch from the MFD tree.
+--ew6BAiZeqk4r7MaW
+Content-Type: application/pgp-signature
 
-> > Signed-off-by: Romain Perier <romain.perier@gmail.com>
-> > ---
-> >  .../bindings/power/{poweroff.txt =3D> power-controller.txt}       =
- | 0
-> >  .../devicetree/bindings/regulator/act8865-regulator.txt          |=
- 4 ++--
-> >  drivers/mfd/tps65910.c                                           |=
- 9 ++++++++-
-> >  drivers/regulator/act8865-regulator.c                            |=
- 2 +-
-> >  include/linux/of.h                                               |=
- 6 +++---
-> >  5 files changed, 14 insertions(+), 7 deletions(-)
->=20
-> Romain, what tree is this patch against? The changes to the tps65910
-> driver appears not to even be in the regulator tree, yet you asked Ma=
-rk
-> to merge this. And the MFD maintainer is not even on CC.
->=20
-> Let's fix the breakage by reverting the offending commit in mfd. Then=
- the
-> new standard name can be introduced in regulator alone (e.g. this pat=
-ch
-> without the tps65910 bits) as nothing outside of regulator should be
-> using the new power-off feature (or binding) for act8865. Then other
-> drivers and dts can be converted to use the new property name (while
-> retaining backwards compatibility) for 3.20.
->=20
-> [ We should probably also consider adding an "of_device_is_" prefix t=
-o
-> the helper name for consistency. ]
->=20
-> Johan
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+iQIcBAEBAgAGBQJUcwlRAAoJEN0jrNd/PrOhrXkQAJfG+54ckAxuZgIx2hUuIvVk
+xGz7wC26FeexLtVt27p/Q+KPxqutwW0YKf8mNUKSpogmbQ5CFdojrpv/V268dWpP
+wTEDPXu1EftLNT/NvSsimu5kOsZC/6447DQfmI39m/V3+dubodKOG76iRLbicGXY
+l6xzTseCJUd47iM87aiSfUA0R3Gtr/GWpyn7/Q7Jx6PKOq3z2cucERxCK84CaQ37
+60qbY5eKhkIfFs8c5Zrvo7gYD/GZn5wcV6l9RjBfIOrHvM+fVWQxps4UGQonPvNr
+hG+8mRwxJrq13Jx5feeu1pE+Byxa9S43yJwo6nXkxJO/ddHE3rzQqXfQHc2jRFNx
+7eD26kpLoOPSnKA5tPKExU5/P16YUPigmN1XWTuqs4bs5vcs6MGK6y2n4sDWukPu
+6jzRJB8DmBwm9wAwk6LsL//ccHg1OJ5sLQx4ASo2uYmZHDIBjvQlpp/mkU0zqkJD
+yhGiWsV3fEznPyZTtwAeOPWN/Kbmr4RQQEwl/OyXjeyd1iWpgfnybJSpKFqcQi8U
+IVpz4EWy1CFzimVb2sawHtHlw/zaUxfzqHlMln0Qn0xJcghTYev1jwjSfwLxZGNI
+0HzadBNOIyj0re7DcxXWF4dD4JkwUehqNZpppbiA3W/bKULwvdIIJVOIal4j4U4f
+1xCFAuUr7ZPIuA9KyiFz
+=rAYB
+-----END PGP SIGNATURE-----
+
+--ew6BAiZeqk4r7MaW--
