@@ -1,54 +1,54 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH V3 11/11] MIPS: Add multiplatform BMIPS target
-Date: Mon, 24 Nov 2014 10:34:15 -0800
-Message-ID: <CAL1qeaH8d0DAZ5SEyioPUM1WXvTgyEoXOqM88-tibnsd-MDT=Q@mail.gmail.com>
-References: <1416796846-28149-1-git-send-email-cernekee@gmail.com>
-	<1416796846-28149-12-git-send-email-cernekee@gmail.com>
-	<11772640.IZcxoRkMEM@wuerfel>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [alsa-devel] [PATCH 0/9] ASoC: QCOM: Add support for ipq806x SOC
+Date: Mon, 24 Nov 2014 18:52:25 +0000
+Message-ID: <20141124185225.GB7712@sirena.org.uk>
+References: <1416423169-21865-1-git-send-email-kwestfie@codeaurora.org>
+ <AE8D85F1-A1E0-4656-B160-37AA3300FE58@codeaurora.org>
+ <9e2e849728c593bf1b8cde3ede3a1628.squirrel@www.codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <11772640.IZcxoRkMEM@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, jfraser-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="RQipzlYdbiO9/NWI"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <9e2e849728c593bf1b8cde3ede3a1628.squirrel@www.codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kenneth Westfield <kwestfie@codeaurora.org>
+Cc: Kumar Gala <galak@codeaurora.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, Banajit Goswami <bgoswami@codeaurora.org>, Takashi Iwai <tiwai@suse.de>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Patrick Lai <plai@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Bryan Huntsman <bryanh@codeaurora.org>, Greg KH <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Mon, Nov 24, 2014 at 6:00 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->> ---
->>  .../devicetree/bindings/mips/brcm/bmips.txt        |   8 +
->>  .../devicetree/bindings/mips/brcm/soc.txt          |  12 ++
->>  arch/mips/Kbuild.platforms                         |   1 +
->>  arch/mips/Kconfig                                  |  36 ++++
->>  arch/mips/bmips/Kconfig                            |  50 ++++++
->>  arch/mips/bmips/Makefile                           |   1 +
->>  arch/mips/bmips/Platform                           |   7 +
->>  arch/mips/bmips/dma.c                              | 141 +++++++++++++++
->>  arch/mips/bmips/irq.c                              |  38 ++++
->>  arch/mips/bmips/setup.c                            | 195 +++++++++++++++++++++
->>  arch/mips/boot/dts/Makefile                        |   9 +
->>  arch/mips/boot/dts/bcm3384_viper.dtsi              | 108 ++++++++++++
->>  arch/mips/boot/dts/bcm3384_zephyr.dtsi             | 126 +++++++++++++
->>  arch/mips/boot/dts/bcm6328.dtsi                    |  87 +++++++++
->>  arch/mips/boot/dts/bcm6368.dtsi                    |  94 ++++++++++
->>  arch/mips/boot/dts/bcm7125.dtsi                    | 107 +++++++++++
->>  arch/mips/boot/dts/bcm7346.dtsi                    | 192 ++++++++++++++++++++
->>  arch/mips/boot/dts/bcm7360.dtsi                    | 129 ++++++++++++++
->>  arch/mips/boot/dts/bcm7420.dtsi                    | 151 ++++++++++++++++
->>  arch/mips/boot/dts/bcm7425.dtsi                    | 191 ++++++++++++++++++++
->
-> I hadn't noticed before that the dts files are now all in one
-> directory on MIPS, apparently after a patch from Andrew Brewsticker.
-> We should really coordinate these things better, we have just merged
-> an arm64 patch to split out the files into multiple directories.
+--RQipzlYdbiO9/NWI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-FWIW, I'm planning on sending a patch once 3.19-rc1 is released to
-move the DTs into per-vendor sub-directories.  I was expecting to do
-it for 3.19, but Robert Richter's series which added kbuild support
-for the vendor sub-directories did not end up landing in 3.18.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, Nov 21, 2014 at 12:24:33PM -0800, Kenneth Westfield wrote:
+
+> Thank you for your comments.  I will separately address each comment shortly.
+
+Please stop sending mails like this for every mail people send you -
+there's no content in them, it's just adding to the volume of mail
+people have to read.  If you're making some specific comment that's
+obviously fine but just saying effectively "I'm going to send you more
+mail in future" isn't adding much.
+
+Please also when you do reply to mails delete unneeded context from the
+mail, this makes it much easier for people to find any new content you
+have added.
+
+--RQipzlYdbiO9/NWI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUc35oAAoJECTWi3JdVIfQKOkH/19BszN5p0NLeTy7zkWXAv8s
+/CCEjxK08i2j34m49H2JK1nDNoDYV6bziZvcZZDqqlSHksj1zvEh9ELdh/s7f+RA
+ouL300bBm7iGMkW1Y9nhgJUAgsQAWqoVXaYeZpdfc9NtiCPDJkTAa6BIYmjyAauk
+MzM2AnboajNSPv4x9w4eH49snOJq8VFOEemnDC5AmLU/Kecd3M4CcSFtUXprbcp+
+28py3stiEVTQm/NJZZxUSKS5AWAx3VSk7E8PQeH0cxL9L0bXVFkMSmQV0YokaqSK
+vYFeqcSBnodAvRhqnPUz08vVVE0ne3tVoYcEnBTQZJxHqKTHHVf599LdySuSx60=
+=Y5F6
+-----END PGP SIGNATURE-----
+
+--RQipzlYdbiO9/NWI--
