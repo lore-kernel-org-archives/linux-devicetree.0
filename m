@@ -1,86 +1,115 @@
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V5 05/12] mailbox: Add NVIDIA Tegra XUSB mailbox driver
-Date: Mon, 24 Nov 2014 14:04:49 +0530
-Message-ID: <CAJe_ZhdTvZZqERttAM_o6U6MZCOjk=oXpWFPf8W=DdW1j=Nx=g@mail.gmail.com>
-References: <1416264102-1323-1-git-send-email-abrestic@chromium.org>
-	<1416264102-1323-6-git-send-email-abrestic@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416264102-1323-6-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>Kumar Gala <g>
+From: Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: [PATCH v6 1/2] i2c: s3c2410: add Sysreg phandle to i2c device nodes
+Date: Mon, 24 Nov 2014 14:17:46 +0530
+Message-ID: <1416818867-29156-2-git-send-email-pankaj.dubey@samsung.com>
+References: <1416818867-29156-1-git-send-email-pankaj.dubey@samsung.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <1416818867-29156-1-git-send-email-pankaj.dubey@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Cc: kgene.kim@samsung.com, tomasz.figa@gmail.com, thomas.ab@samsung.com, Pankaj Dubey <pankaj.dubey@samsung.com>, Rob Herring <robh+dt@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 18 November 2014 at 04:11, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+This patch adds syscon based phandle to i2c device nodes of exynos5250
+and exynos5420. These phandles will be used to save restore i2c sysreg
+configuration register during s2r from i2c driver.
 
-> +
-> +static int tegra_xusb_mbox_send_data(struct mbox_chan *chan, void *data)
-> +{
-> +       struct tegra_xusb_mbox *mbox = to_tegra_mbox(chan->mbox);
-> +       struct tegra_xusb_mbox_msg *msg = data;
-> +       unsigned long flags;
-> +       u32 reg, owner;
-> +
-> +       dev_dbg(mbox->mbox.dev, "TX message %#x:%#x\n", msg->cmd, msg->data);
-> +
-> +       /* ACK/NAK must be sent with the controller as the mailbox owner */
-> +       if (msg->cmd == MBOX_CMD_ACK || msg->cmd == MBOX_CMD_NAK)
-> +               owner = MBOX_OWNER_FW;
-> +       else
-> +               owner = MBOX_OWNER_SW;
-> +
-> +       spin_lock_irqsave(&mbox->lock, flags);
-> +
-> +       /* Acquire mailbox */
-> +       if (mbox_readl(mbox, XUSB_CFG_ARU_MBOX_OWNER) != MBOX_OWNER_NONE) {
-> +               dev_err(mbox->mbox.dev, "Mailbox not idle\n");
-> +               goto busy;
-> +       }
-> +       mbox_writel(mbox, owner, XUSB_CFG_ARU_MBOX_OWNER);
-> +       if (mbox_readl(mbox, XUSB_CFG_ARU_MBOX_OWNER) != owner) {
-> +               dev_err(mbox->mbox.dev, "Failed to acquire mailbox");
-> +               goto busy;
-> +       }
-> +
-> +       mbox_writel(mbox, mbox_pack_msg(msg), XUSB_CFG_ARU_MBOX_DATA_IN);
-> +       reg = mbox_readl(mbox, XUSB_CFG_ARU_MBOX_CMD);
-> +       reg |= MBOX_INT_EN | MBOX_DEST_FALC;
-> +       mbox_writel(mbox, reg, XUSB_CFG_ARU_MBOX_CMD);
-> +
-> +       spin_unlock_irqrestore(&mbox->lock, flags);
-> +
-> +       return 0;
-> +busy:
-> +       spin_unlock_irqrestore(&mbox->lock, flags);
-> +       return -EBUSY;
-> +}
-> +
-> +static int tegra_xusb_mbox_startup(struct mbox_chan *chan)
-> +{
-> +       return 0;
-> +}
-> +
-> +static void tegra_xusb_mbox_shutdown(struct mbox_chan *chan)
-> +{
-> +}
-> +
-> +static bool tegra_xusb_mbox_last_tx_done(struct mbox_chan *chan)
-> +{
-> +       /*
-> +        * Transmissions are assumed to be completed as soon as they are
-> +        * written to the mailbox.
-> +        */
-> +       return true;
->
-In .send_data() you you mark the channel busy by setting the
-XUSB_CFG_ARU_MBOX_OWNER to !MBOX_OWNER_NONE, which remains so until
-you get an IRQ. So maybe you should check for the OWNER_NONE flag in
-.last_tx_done()?
+CC: Rob Herring <robh+dt@kernel.org>
+CC: Randy Dunlap <rdunlap@infradead.org>
+CC: Russell King <linux@arm.linux.org.uk>
+CC: devicetree@vger.kernel.org
+CC: linux-doc@vger.kernel.org
+Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+---
+ .../devicetree/bindings/i2c/i2c-s3c2410.txt        |    1 +
+ arch/arm/boot/dts/exynos5250.dtsi                  |    4 ++++
+ arch/arm/boot/dts/exynos5420.dtsi                  |    4 ++++
+ 3 files changed, 9 insertions(+)
 
--Jassi
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-s3c2410.txt b/Documentation/devicetree/bindings/i2c/i2c-s3c2410.txt
+index 278de8e..89b3250 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-s3c2410.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-s3c2410.txt
+@@ -32,6 +32,7 @@ Optional properties:
+     specified, default value is 0.
+   - samsung,i2c-max-bus-freq: Desired frequency in Hz of the bus. If not
+     specified, the default value in Hz is 100000.
++  - samsung,sysreg-phandle - handle to syscon used to control the system registers
+ 
+ Example:
+ 
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index 0a588b4..d45a07e 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -293,6 +293,7 @@
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2c0_bus>;
++		samsung,sysreg-phandle = <&sysreg_system_controller>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -306,6 +307,7 @@
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2c1_bus>;
++		samsung,sysreg-phandle = <&sysreg_system_controller>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -319,6 +321,7 @@
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2c2_bus>;
++		samsung,sysreg-phandle = <&sysreg_system_controller>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -332,6 +335,7 @@
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2c3_bus>;
++		samsung,sysreg-phandle = <&sysreg_system_controller>;
+ 		status = "disabled";
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index 8617a03..90bf401 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -560,6 +560,7 @@
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2c0_bus>;
++		samsung,sysreg-phandle = <&sysreg_system_controller>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -573,6 +574,7 @@
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2c1_bus>;
++		samsung,sysreg-phandle = <&sysreg_system_controller>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -586,6 +588,7 @@
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2c2_bus>;
++		samsung,sysreg-phandle = <&sysreg_system_controller>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -599,6 +602,7 @@
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2c3_bus>;
++		samsung,sysreg-phandle = <&sysreg_system_controller>;
+ 		status = "disabled";
+ 	};
+ 
+-- 
+1.7.9.5
+
