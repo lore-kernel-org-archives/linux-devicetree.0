@@ -1,47 +1,44 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V3 10/11] MIPS: Reorder MIPS_L1_CACHE_SHIFT priorities
-Date: Sun, 23 Nov 2014 18:40:45 -0800
-Message-ID: <1416796846-28149-11-git-send-email-cernekee@gmail.com>
+Subject: [PATCH V3 01/11] irqchip: Update docs regarding irq_domain_add_tree()
+Date: Sun, 23 Nov 2014 18:40:36 -0800
+Message-ID: <1416796846-28149-2-git-send-email-cernekee@gmail.com>
 References: <1416796846-28149-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
 In-Reply-To: <1416796846-28149-1-git-send-email-cernekee@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: ralf@linux-mips.org
 Cc: f.fainelli@gmail.com, jfraser@broadcom.com, dtor@chromium.org, tglx@linutronix.de, jason@lakedaemon.net, jogo@openwrt.org, arnd@arndb.de, computersforpeace@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enabling support for more than one BMIPS CPU in the same build may
-result in different L1_CACHE_SHIFT values, e.g.
-
-    CPU_BMIPS5000 selects MIPS_L1_CACHE_SHIFT_7
-    CPU_BMIPS4380 selects MIPS_L1_CACHE_SHIFT_6
-    anything else defaults to MIPS_L1_CACHE_SHIFT_5
-
-Ensure that if more than one MIPS_L1_CACHE_SHIFT_x option is selected,
-Kconfig sets CONFIG_MIPS_L1_CACHE_SHIFT to the highest value.
+Several drivers now use this API, including the ARM GIC driver, so remove
+the outdated comment.
 
 Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
 ---
- arch/mips/Kconfig | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ Documentation/IRQ-domain.txt | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index ae8ae77b2ecd..9c09a5a43f87 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -1167,10 +1167,10 @@ config MIPS_L1_CACHE_SHIFT_7
+diff --git a/Documentation/IRQ-domain.txt b/Documentation/IRQ-domain.txt
+index 8a8b82c9ca53..0ccd7b7f6043 100644
+--- a/Documentation/IRQ-domain.txt
++++ b/Documentation/IRQ-domain.txt
+@@ -95,8 +95,7 @@ since it doesn't need to allocate a table as large as the largest
+ hwirq number.  The disadvantage is that hwirq to IRQ number lookup is
+ dependent on how many entries are in the table.
  
- config MIPS_L1_CACHE_SHIFT
- 	int
--	default "4" if MIPS_L1_CACHE_SHIFT_4
--	default "5" if MIPS_L1_CACHE_SHIFT_5
--	default "6" if MIPS_L1_CACHE_SHIFT_6
- 	default "7" if MIPS_L1_CACHE_SHIFT_7
-+	default "6" if MIPS_L1_CACHE_SHIFT_6
-+	default "5" if MIPS_L1_CACHE_SHIFT_5
-+	default "4" if MIPS_L1_CACHE_SHIFT_4
- 	default "5"
+-Very few drivers should need this mapping.  At the moment, powerpc
+-iseries is the only user.
++Very few drivers should need this mapping.
  
- config HAVE_STD_PC_SERIAL_PORT
+ ==== No Map ===-
+ irq_domain_add_nomap()
 -- 
 2.1.1
