@@ -1,85 +1,43 @@
-From: Aaron Sierra <asierra@xes-inc.com>
-Subject: Re: [PATCH v2] mtd: fsl_upm: Support NAND ECC DTS properties
-Date: Mon, 24 Nov 2014 09:22:33 -0600 (CST)
-Message-ID: <737777710.57195.1416842553156.JavaMail.zimbra@xes-inc.com>
-References: <1854666513.5578.1415473916534.JavaMail.zimbra@xes-inc.com>
- <5471308E.908@vanguardiasur.com.ar>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v5 06/10] ARM: dts: am4372: Add DCAN nodes
+Date: Mon, 24 Nov 2014 07:49:04 -0800
+Message-ID: <20141124154903.GC2817@atomide.com>
+References: <1415881371-4982-1-git-send-email-rogerq@ti.com>
+ <1415881371-4982-7-git-send-email-rogerq@ti.com>
+ <5469F35D.80504@ti.com>
+ <20141121235032.GC7046@atomide.com>
+ <20141122000853.GI7046@atomide.com>
+ <54730144.9070106@ti.com>
+ <54731250.9050909@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <5471308E.908@vanguardiasur.com.ar>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Cc: David Woodhouse <dwmw2@infradead.org>, devicetree@vger.kernel.org, Brian Norris <computersforpeace@gmail.com>, linux-mtd@lists.infradead.org, Jordan Friendshuh <jfriendshuh@xes-inc.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-can-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54731250.9050909@ti.com>
+Sender: linux-can-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: wg@grandegger.com, mkl@pengutronix.de, wsa@the-dreams.de, mugunthanvnm@ti.com, george.cherian@ti.com, balbi@ti.com, nsekhar@ti.comnm@ti.com, sergei.shtylyov@cogentembedded.com, linux-omap@vger.kernel.org, linux-can@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
------ Original Message -----
-> From: "Ezequiel Garcia" <ezequiel@vanguardiasur.com.ar>
-> Sent: Saturday, November 22, 2014 6:55:42 PM
+* Roger Quadros <rogerq@ti.com> [141124 03:13]:
 > 
-> On 11/08/2014 04:11 PM, Aaron Sierra wrote:
-> > From: Jordan Friendshuh <jfriendshuh@xes-inc.com>
-> > 
-> > Support the generic nand-ecc-mode and nand-ecc-strength device-tree
-> > properties with the Freescale UPM NAND driver.
-> > 
-> > This patch preserves the default software ECC mode while adding the
-> > ability to use BCH ECC for larger NAND devices.
-> > 
-> > Signed-off-by: Jordan Friendshuh <jfriendshuh@xes-inc.com>
-> > Signed-off-by: Aaron Sierra <asierra@xes-inc.com>
-> > ---
-> > v2:
-> >     * Now using ECC mode and strength helpers from of_mtd.h
-> >     * ECC mode and strength checking is more robust
-> > 
-> >  .../devicetree/bindings/mtd/fsl-upm-nand.txt       |  2 +
-> >  drivers/mtd/nand/Kconfig                           |  1 +
-> >  drivers/mtd/nand/fsl_upm.c                         | 51
-> >  +++++++++++++++++++---
-> >  3 files changed, 49 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt
-> > b/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt
-> > index fce4894..a9906f6 100644
-> > --- a/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt
-> > +++ b/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt
-> > @@ -18,6 +18,8 @@ Optional properties:
-> >  - chip-delay : chip dependent delay for transferring data from array to
-> >  	read registers (tR). Required if property "gpios" is not used
-> >  	(R/B# pins not connected).
-> > +- nand-ecc-mode : as defined by nand.txt ("soft" and "soft_bch", only).
-> > +- nand-ecc-strength : as defined by nand.txt.
-> >  
+> I couldn't reproduce the errors on linux-next nor on your branch. Maybe you had a conflict resolution issue?
+
+I guess it must have been a conflict resolution issue at my end then.
+
+> I've rebased the patches on omap-for-v3.19/dt-v2 and are available for you to pull from:
 > 
-> The nand.txt recommends that each binding documents the way these
-> properties are interpreted.
+> The following changes since commit 0f39f7b906dbeabe2ffd8739d5201e890d102ea6:
+> 
+>   ARM: dts: AM43xx: add tscadc DT entries for am437x-evm and am43x-epos-evm (2014-11-21 16:25:06 -0800)
+> 
+> are available in the git repository at:
+> 
+>   git@github.com:rogerq/linux.git for-v3.19/omap-dts-dcan
 
-Ezequiel,
-I assume you are referring to this statement, "implementations are
-encouraged to further specify the value(s) they support."
+Pulling into omap-for-v3.19/dts thanks. Let's also switch into fixes
+only mode for v3.19 now with -rc6 out.
 
-That is the only statement I found requesting documentation. I believe
-that request is satisfied, since I listed all of the modes that the driver
-would support with my patch applied. I used mxc-nand.txt as a reference.
+Regards,
 
-> Moreover, there's no nand-ecc-step usage? Are you assuming a 512-byte size?
-
-The ecc.bytes value is currently left to be calculated by the
-NAND_ECC_SOFT_BCH case in nand_base.c. That calculation assumes a 512-byte
-step size.
-
--Aaron
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Tony
