@@ -1,89 +1,90 @@
-From: James Hartley <James.Hartley@imgtec.com>
-Subject: RE: [PATCH V2 1/2] crypto: Add Imagination Technologies hw hash
- accelerator
-Date: Mon, 24 Nov 2014 17:22:10 +0000
-Message-ID: <72BC0C8BD7BB6F45988A99382E5FBAE54434BE34@hhmail02.hh.imgtec.org>
-References: <1416343727-2178-1-git-send-email-james.hartley@imgtec.com>
- <1416343727-2178-2-git-send-email-james.hartley@imgtec.com>
- <20141120142210.GA31745@gondor.apana.org.au>
+From: Alban Bedel <alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH 3/4] devicetree: add a binding for a group of regulator
+Date: Mon, 24 Nov 2014 18:32:04 +0100
+Message-ID: <20141124183204.79f3487e@avionic-0020>
+References: <1416834123-23139-1-git-send-email-alban.bedel@avionic-design.de>
+	<1416834123-23139-3-git-send-email-alban.bedel@avionic-design.de>
+	<20141124152433.GD7712@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <20141120142210.GA31745@gondor.apana.org.au>
-Content-Language: en-US
-Sender: linux-crypto-owner@vger.kernel.org
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: "davem@davemloft.net" <davem@davemloft.net>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Ezequiel Garcia <Ezequiel.Garcia@imgtec.com>, "abrestic@chromium.org" <abrestic@chromium.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ boundary="Sig_/QU=Byb/0kh.J=CXYMy64D.W"; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141124152433.GD7712-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Alban Bedel <alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Herbert,  thanks for the review.
+--Sig_/QU=Byb/0kh.J=CXYMy64D.W
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> -----Original Message-----
-> From: devicetree-owner@vger.kernel.org [mailto:devicetree-
-> owner@vger.kernel.org] On Behalf Of Herbert Xu
-> Sent: 20 November 2014 14:22
-> To: James Hartley
-> Cc: davem@davemloft.net; grant.likely@linaro.org; robh+dt@kernel.org;
-> gregkh@linuxfoundation.org; linux-crypto@vger.kernel.org;
-> devicetree@vger.kernel.org; pawel.moll@arm.com;
-> mark.rutland@arm.com; ijc+devicetree@hellion.org.uk;
-> galak@codeaurora.org; Ezequiel Garcia; abrestic@chromium.org
-> Subject: Re: [PATCH V2 1/2] crypto: Add Imagination Technologies hw hash
-> accelerator
-> 
-> On Tue, Nov 18, 2014 at 08:48:46PM +0000, James Hartley wrote:
-> >
-> > +struct img_hash_request_ctx {
-> > +	struct img_hash_dev	*hdev;
-> > +	u8 digest[SHA256_DIGEST_SIZE] __aligned(sizeof(u32));
-> > +	unsigned long		flags;
-> > +	size_t			digsize;
-> > +
-> > +	dma_addr_t		dma_addr;
-> > +	size_t			dma_ct;
-> > +
-> > +	/* sg root */
-> > +	struct scatterlist	*sgfirst;
-> > +	/* walk state */
-> > +	struct scatterlist	*sg;
-> > +	size_t			nents;
-> > +	size_t			offset;
-> > +	unsigned int		total;
-> > +	size_t			sent;
-> > +
-> > +	unsigned long		op;
-> > +
-> > +	size_t			bufcnt;
-> > +	u8 buffer[0] __aligned(sizeof(u32)); };
-> 
-> Unfortunately this is not consistent with our API since you're not storing the
-> non-final hash state in the request context.
-> 
-> It appears that you're finalising every request.  That means you can only
-> implement finup and digest.  With finup you'll also need to be able to import
-> a non-final hash state.  If the hardware cannot do that then you can only
-> implement digest.
-> 
-> Everything else would have to be done by a fallback driver.
-> 
-> So the question is can you obtain the non-final hash state from the hardware
-> and then reinsert it for the next operation?
+On Mon, 24 Nov 2014 15:24:33 +0000
+Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-I've looked into this and unfortunately the hardware cannot do that.  I'll spend some
-time looking into what this means (I'm not the author of the driver, so will need to 
-become a bit more familiar with it). 
+> On Mon, Nov 24, 2014 at 02:02:02PM +0100, Alban Bedel wrote:
+>=20
+> > +This binding allow creating a group of regulators for use with simple
+> > +drivers that only expect a single power supply. Additionally it is
+> > +possible to enforce the enable ordering to create simple power up
+> > +sequences.
+>=20
+> Absoutely not, this sort of scripting is not sensible - if the consumer
+> device has multiple supplies the consumer device should be working with
+> them independently and if the consumer has ordering constraints it needs
+> to enforce them itself.  Trying to solve this problem with a bodge in
+> the regulator API just isn't the right place, leaving aside the above
+> most power sequences involve things other than regulators like clocks
+> and reset signals so just doing things purely at the regulator API level
+> isn't ging to solve the problem. =20
+>=20
+> Please look for the generic power sequence stuff that was getting
+> discussed a while back and try to resurrect that if you feel there's a
+> compelling reason to have this functionality without doing it for
+> drivers.
 
-> 
-> Cheers,
-> --
-> Email: Herbert Xu <herbert@gondor.apana.org.au> Home Page:
-> http://gondor.apana.org.au/~herbert/
-> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in the
-> body of a message to majordomo@vger.kernel.org More majordomo info at
-> http://vger.kernel.org/majordomo-info.html
+Honestly my primary aim wasn't the sequencing, but rather to increase
+the usefulness of generic drivers. Generic driver generally only
+manipulate a single supply, however many hardware might have more,
+and won't need any specific power up ordering. Having to write a full
+new driver just because of an extra supply doesn't seems to make much
+sense to me.
 
-Thanks,
-James.
+As alternative solution to this problem I though about allowing a list
+of regulator for the supplies:
+
+ vin-supply =3D <&reg1>, <&reg2>;
+
+The API could still return a single consumer but it would operate on
+all the regulators in the list instead of just one. Would that be a
+better solution?
+
+Alban
+
+--Sig_/QU=Byb/0kh.J=CXYMy64D.W
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Disposition: attachment; filename=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUc2uUAAoJEHSUmkuduC28AqgP/RJggBptXAJDoGAPuT9UKVL1
+KwkvYyUe2A6BwZylDhvWJBNyADbOjDaXTGgCZEme/q/Hs4b3Z/mgStlxVp6/dwVS
+3BrMI7hLZ4GYPJUwwPrpQ+h0V6yWGgN7OaGqn3vS02aO8TwN29BNmUajxZMDySYg
+G0Lubcy8lRylMd6UrCCZ7S1ZltyrQ6a8ncAIS0MK40ilPbEB1/k1dZV2Tp2tSkG5
+fSHqNGk2xu0EaWw2dxxcOmbJdWLdGI2Sn+V9/ECWm/UHfjreX5Q0TmpeQol8aBCi
+GTP819nGuJ0CCrx55Cjz3ivJ4NgVkueGIoWeg2zL24CTqZciJVKI2bdhliPd+4JX
+8HRK9v/Pv5VLwXdsor28WjjKiRTwUFEYLxcw8JMN5nNrBrClDzUg06ZwctENd7RA
+/aW6xLA25sk+tDfczqWj4MvwRpX2aZvWi39vDC09d0+T+JjsOnDUqlR3960QHzeR
+Badjmst7hyD7HYuE9r6todrtZ0EgtFfFbdlGkEpTOZqPSwO3TCckWlovuqmtBkOp
+jmwQrO1MMbjj5XAYzW+KBNssnkrj0qTGyAvQ3ats0mO8SvWf2ABVLrgf3SIfwUFl
+3wyIA0VXI7aderzFCT+JAI5XP27n4tcSIFQ8jv0cQkb1W1E45MOu2V4EuJzB/Kmx
+nPzFJ2y7EPgFoLv/RMVH
+=h4Kj
+-----END PGP SIGNATURE-----
+
+--Sig_/QU=Byb/0kh.J=CXYMy64D.W--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
