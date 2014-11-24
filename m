@@ -1,75 +1,54 @@
-From: Jonas Gorski <jogo@openwrt.org>
-Subject: Re: [PATCH V3 06/11] irqchip: bcm7120-l2: Change DT binding to allow
- non-contiguous IRQEN/IRQSTAT
-Date: Mon, 24 Nov 2014 15:31:27 +0100
-Message-ID: <CAOiHx=ntm7AO5BU2Ge0JDC5nDgXSZwQDm05s5VTM8mLqYmCZRw@mail.gmail.com>
-References: <1416796846-28149-1-git-send-email-cernekee@gmail.com> <1416796846-28149-7-git-send-email-cernekee@gmail.com>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: FIX ME in xsysace.c
+Date: Mon, 24 Nov 2014 15:32:52 +0100
+Message-ID: <5e95919de4e349a6a7c5261cb1e9fda5@BN1BFFO11FD012.protection.gbl>
+References: <5472B1D6.7080805@gmail.com>
+ <5a8be93a4204429daf16bc8f62cdd0cd@BY2FFO11FD005.protection.gbl>
+ <54731648.8010006@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1416796846-28149-7-git-send-email-cernekee@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Florian Fainelli <f.fainelli@gmail.com>, Jon Fraser <jfraser@broadcom.com>, Dmitry Torokhov <dtor@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, computersforpeace@gmail.com, MIPS Mailing List <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54731648.8010006-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nick <xerofoify-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 24, 2014 at 3:40 AM, Kevin Cernekee <cernekee@gmail.com> wrote:
-> To date, all supported controllers have had the IRQEN register at offset
-> 0x00 and the IRQSTAT register at 0x04.  So in DT we would typically see
-> something like:
->
->     reg = <0xf0406800 0x8>;
->
-> We still want to support this format, but we also need to support cases
-> where IRQEN and IRQSTAT aren't adjacent.  So, we will amend the driver to
-> accept an alternate format that looks like this:
->
->     reg = <0xf0406800 0x4 0xf0406804 0x4>;
->
-> i.e. if the first resource_size() == 4, assume that the first resource
-> points to IRQEN and that the next resource points to IRQSTAT.  If the
-> first resource_size() == 8, retain the current behavior.
->
-> Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+Hi,
 
-Hmm ... the more I think about this, the less I like it.
+On 11/24/2014 12:28 PM, nick wrote:
+> 
+> 
+> On 14-11-24 02:47 AM, Michal Simek wrote:
+>> Hi,
+>>
+>> On 11/24/2014 05:19 AM, nick wrote:
+>>> Greetings Michal and others,
+>>> I am wondering about the FIX ME in xsysace.c as it seems not correct due to my knowledge of most hardware protocols using a predetermined bit wide and therefore this could be hard coded. If someone can respond on if I am correct in removing this fix me it would be greatly appreciated.
+>>
+>> I think that will be the best to c&p that fixme which you are talking about.
+>> Definitely feel free to fix whatever fixme is there and send the patch
+>> for fixing it.
+>>
+>> Thanks,
+>> Michal
+>>
+> Here is the fix me.
+> int bus_width = ACE_BUS_WIDTH_16; /* FIXME: should not be hard coded */
 
-Using the amount and size of the reg-properties to infer a certain
-layout seems rather hackish and dirty to me. Maybe we should just use
-different compatible match ids for that? E.g. brcm,bm7120-l2-intc for
-the 32-bit en/stat pairs, and e.g. brcm,bcm6368-l2-intc for the 64-bit
-wide one. Or maybe make the bcm63xx one a separate driver and let it
-share code with the bcm7120-l2-intc driver.
+FIXME is totally bogus and should be removed.
 
-This would avoid having to specify a lot of regs (let's assume we also
-add support for affinity), and cause a lot of io(re)map calls - the
-bcm63268 one would currently look like:
+I expect you want to use 8bit bus mode which driver itself supports.
+This line is just default setup to 16bit mode.
 
-        reg = <0x1000002c 0x4 0x1000003c 0x4>, /* irq 0..31 -> mips irq 2 */
-               <0x10000028 0x4 0x10000038 0x4>,  /* irq 32..63 -> mips irq 2 */
-               <0x10000024 0x4 0x10000034 0x4>, /* irq 64 .. 95 -> mips irq 2 */
-               <0x10000020 0x4 0x10000030 0x4>, /* irq 96 .. 127 ->
-mips irq 2 */
-               <0x1000004c 0x4 0x1000005c 0x4>, /* irq 0.. 31 -> mips irq 3 */
-               <0x10000048 0x4 0x10000058 0x4>, /* irq 32 .. 63 -> mips irq 3 */
-               <0x10000044 0x4 0x10000054 0x4>, /* irq 64 ... 95 ->
-mips irq 3 */
-              <0x10000040 0x4 0x10000050 0x4>; /* irq 96 ... 127 ->
-mips irq 3 */
+If you add 8-bit property to dts you are there.
+	if (of_find_property(dev->dev.of_node, "8-bit", NULL))
+		bus_width = ACE_BUS_WIDTH_8;
 
-where as with a different match id, we could rather allow something like
-
-        reg = <0x10000020 0x20>, /* irq 0..127 -> mips irq 2 */
-               <0x10000040 0x20>;   /* irq 0..127 -> mips irq 3 */
-
-
-This would make the dts(i) files quite a bit more readable IMHO, and
-make it more likely that newer dts(i) files work with older kernels,
-e.g. where the mips irq3 routed registers were added - in the current
-style, the kernel would interpret these as additional irq banks. Not
-that I think this is expected/required to work, but it wouldn't hurt
-having at least a bit of backward compatibility for bisecting on a
-device that provides a newer dtb through the bootloader.
-
-
-Jonas
+Thanks,
+Michal
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
