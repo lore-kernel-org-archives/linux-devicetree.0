@@ -1,44 +1,95 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [RFC PATCH v2 3/4] arm64:thunder: Add initial dts for Cavium's Thunder SoC in 2 Node topology.
-Date: Mon, 24 Nov 2014 18:01:58 +0100
-Message-ID: <2750247.HT2ynjYizJ@wuerfel>
-References: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com> <4080571.JcHDsAZ9EV@wuerfel> <CAFECyb8aObzJeiL4uB+N6D83GKqJ5tgYGJJJQXRQiEqMegg3Ng@mail.gmail.com>
+From: Alban Bedel <alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH 1/4] devicetree: add a binding for a regulator that
+ constrains its supply
+Date: Mon, 24 Nov 2014 18:12:33 +0100
+Message-ID: <20141124181233.53580998@avionic-0020>
+References: <1416834123-23139-1-git-send-email-alban.bedel@avionic-design.de>
+	<20141124151527.GC7712@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ boundary="Sig_/cw/fV0vWV54zuUO.XcDBZOH"; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFECyb8aObzJeiL4uB+N6D83GKqJ5tgYGJJJQXRQiEqMegg3Ng-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20141124151527.GC7712-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ganapat Rao P Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Alban Bedel <alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 24 November 2014 11:32:46 Roy Franz wrote:
-> >
-> > I don't know how much history is behind this binding. Have you looked
-> > at the sPAPR way of doing this? I don't remember exactly how that is
-> > done, but we'd need a good reason to discard that and implement
-> > something else for arm64.
-> >
-> > If we create a new binding, I don't think the 'numa-map' node you
-> > have here is the best solution. We already have device nodes for each
-> > memory segment and each CPU in the system. Why not work with those
-> > nodes directly?
-> 
-> The DT memory nodes don't exist in an EFI system, as the EFI memory
-> map is used instead.
-> Using EFI as the boot firmware doesn't require the use of ACPI for
-> hardware description,
-> so the EFI/DT case is one that we should support.
+--Sig_/cw/fV0vWV54zuUO.XcDBZOH
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-But they /could/ exist, right? Can we just require them to be
-present in order to use NUMA features?
+On Mon, 24 Nov 2014 15:15:27 +0000
+Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-I don't think it's a good idea to require a new representation
-of the memory nodes in DT to make NUMA work when we already have
-one that is almost always there.
+> On Mon, Nov 24, 2014 at 02:02:00PM +0100, Alban Bedel wrote:
+>=20
+> > +Constrained Supply Regulator
+> > +
+> > +This binding allow creating a virtual regulator that constrain its
+> > +supply to provides the requested voltage. This is to allow using
+> > +simple drivers that don't explicitly request a voltage on boards
+> > +that have adjustable hardware regulators.
+> > +
+> > +Required properties:
+> > +- compatible : Must be "regulator-constrained-supply".
+> > +- vin-supply : phandle to the parent supply/regulator node
+>=20
+> Reading this description I'm at a loss to explain what this is intended
+> to achieve - it's obviously not describing hardware which is a rather
+> large alarm bell and I don't really understand why the constraints
+> wouldn't be set on the parent regulator.
 
-	Arnd
+Yes, it is not real hardware. The use case is a generic base board with
+one regulator for add-on boards that has a settable voltage output. In
+the base board DTS the regulator constraints represent the whole range
+that the regulator is capable of, for example 1V to 12V.
+
+Using this driver the DTS for the add-on board can further constrain
+this supply to get the voltage it need, for example 3.3V. I understand
+that normally the drivers for the consumers on the add-on board should
+do this, however I don't really see how that is possible with generic
+drivers like simple-panel. Such driver target a large range of
+hardware, so just setting an  arbitrary voltage doesn't make much sense.
+Furthermore even driver that target a specific hardware usually don't
+set a voltage and in many case they couldn't do it without some
+knowledge of the board design.
+
+I saw 3 ways to solve this problem:
+
+1) This, use a "filter" regulator
+2) Extend each and every driver that use a voltage regulator to
+   optionally set the voltage
+3) Include the required range in the phandle reference
+
+#1 was the easiest :) #2 doesn't seems practical to me, #3 seems pretty
+good but I'm really not sure if that would be acceptable.
+
+Alban
+
+--Sig_/cw/fV0vWV54zuUO.XcDBZOH
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Disposition: attachment; filename=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUc2cBAAoJEHSUmkuduC28I3MP/1MGIxpCg6HmfeSnFzuwmgzO
+maXl8EmqfeOT2Kw0TOuveNgfSx+YYiEb51pRtCwjnA20XcB4NGxqiE4lJ22tib8N
+e5wwxQiRb5XaODTHwiUvBKwwx29GCSnJE3jfCTI3aLDjUTtKho3iCepo5ziZjy2F
+AnUHJ8GIDfYYbJHRTr69P15vhFqOyT4TAZehS8kGP6nI09yYoK5ubYaXdoh+28d2
+tng60bx/UuU0FTGBRxb5WH3OjKsQ5lrNYAtHye2+AR30pz+r7V+GNlrKQimJnP4J
+o7bCgxTDFcikb9lEBw+wGT39rtrjym1noMB21ZeT3yYLEWjb4XyguJCSVk2TIrAY
+Brusy7OGgRfpPBtOnMb8iAQN0mqnQgRTJUacFgzWzp5BJ2gcS9LKXqcSwOH+YK6u
+wZWxTP1camaKqGDcnX2Aj8QCAzd2OWIWnI2GzScZf32/4p6qmiH4V9DJlWyc/VZK
+ucEIsfujMeZyd8Kv25la7BAF+PKMyuENmMSaJD+yveTpt0QHr8TEW/e0eaed5gV5
+KJQpt1bEL+MxyBHgcr69+QBjHpTTPrHzTiy7VEF4KYEAacBx+EjVAz0XtRJR/nGZ
+6gQPxlPDHqiJPXRCrLg2qjFfhZonOpyw7EtgX34MwRdfRhtBdS9/6NN0Ak08lJsf
+Kfu6e9Fgf+C6S3jy+TtJ
+=WT5b
+-----END PGP SIGNATURE-----
+
+--Sig_/cw/fV0vWV54zuUO.XcDBZOH--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
