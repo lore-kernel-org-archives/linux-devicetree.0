@@ -1,49 +1,50 @@
-From: deportment34112-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: Fix Penguin Penalty 17th October2014 ( mail-archive.com )
-Date: Mon, 24 Nov 2014 23:41:30 +0530
-Message-ID: <547374d5.8b12450a.50d9.46d8@mx.google.com>
-Reply-To: julia.kites-/E1597aS9LQAvxtiuMwx3w@public.gmane.org
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: Re: [PATCH RESEND v4 1/4] pwm: Imagination Technologies PWM DAC driver
+Date: Mon, 24 Nov 2014 10:19:46 -0800
+Message-ID: <CAL1qeaH31ku6LTBV0HCDxzq+_gKWKeJR-4Gu+6dXkPU+FWvEaQ@mail.gmail.com>
+References: <1416621212-11701-1-git-send-email-Naidu.Tellapati@gmail.com>
+	<1416621212-11701-2-git-send-email-Naidu.Tellapati@gmail.com>
+	<20141124101325.GB25912@ulmo.nvidia.com>
+	<27E62D98F903554192E3C13AFCC91C3C2F52EE89@hbmail01.hb.imgtec.org>
+	<20141124122807.GA4061@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20141124122807.GA4061@ulmo.nvidia.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Naidu Tellapati <Naidu.Tellapati@imgtec.com>, "naidu.tellapati@gmail.com" <naidu.tellapati@gmail.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "arnd@arndb.de" <arnd@arndb.de>, James Hartley <James.Hartley@imgtec.com>, Ezequiel Garcia <Ezequiel.Garcia@imgtec.com>, James Hogan <James.Hogan@imgtec.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arul Ramasamy <Arul.Ramasamy@imgtec.com>, Sai Masarapu <Sai.Masarapu@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Sir
+>> >> +     val = img_pwm_readl(pwm_chip, CR_PWM_CTRL_CFG);
+>> >> +     val |= BIT(pwm->hwpwm);
+>> >> +     img_pwm_writel(pwm_chip, CR_PWM_CTRL_CFG, val);
+>> >> +
+>> >> +     regmap_update_bits(pwm_chip->periph_regs, CR_PERIP_PWM_PDM_CONTROL,
+>> >> +                        CR_PERIP_PWM_PDM_CONTROL_CH_MASK <<
+>> >> +                        CR_PERIP_PWM_PDM_CONTROL_CH_SHIFT(pwm->hwpwm), 0);
+>>
+>> > This smells like pinmux and should probably be a separate driver.
+>>
+>> Hope you are suggesting us to have a separate driver for pin muxing (might already have one for Pistachio)
+>> and call the pin muxing driver APIs from here.
+>>
+>> Please correct me if my understanding is wrong?
+>
+> I don't think you need to call the pinmux API from here. Rather I'll
+> assume that the muxing is fixed on a given board, so this configuration
+> would be part of the static board-level pinmux so it will automatically
+> be applied at boot time.
 
-Did your website get hit by Google Penguin update on October 17th 2014?=
- What basically is Google Penguin Update? It is actually a code name fo=
-r Google algorithm which aims at decreasing your websites search engine=
- rankings that violate Google=92s guidelines by using black hat SEO tec=
-hniques to rank your webpage by giving number of spammy links to the pa=
-ge.
-=20
-We are one of those few SEO companies that can help you avoid penalties=
- from Google Updates like Penguin and Panda. Our clients have survived =
-all the previous and present updates with ease. They have never been hi=
-t because we use 100% white hat SEO techniques to rank Webpages.  Simpl=
-e thing that we do to keep websites away from any Penguin or Panda pena=
-lties is follow Google guidelines and we give Google users the best ans=
-wers to their queries.
+The issue here is that this register does not belong to the
+pinmux/pinctrl block on this SoC and instead is part of the
+"peripheral control" block which primarily provides system interface
+gate clocks and resets (for which I was planning to write a clock
+provider driver), but also has a bunch of control registers for
+various IP blocks thrown together (like this one) which we're using
+syscon to access.  I'm not sure it makes sense to create a pinmux
+driver for these 4 bits, but I'll defer to others on that...
 
-If you are looking to increase the quality of your websites and to get =
-more targeted traffic or save your websites from these Google penalties=
- email us back with your interest.=20
-
-We will be glad to serve you and help you grow your business.
-
-Regards
-
-Julia kites
-
-SEO Manager ( TOB )
-B7 Green Avenue, Amritsar 143001 Punjab
-____________________________
-NO CLICK in the subject to STOP EMAILS
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Another option would be to have the main pinctrl driver for Pistachio
+control these bits, but that doesn't seem quite right since these bits
+are completely separate from the pinctrl block.
