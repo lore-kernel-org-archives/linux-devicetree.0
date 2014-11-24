@@ -1,49 +1,103 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v5 06/10] ARM: dts: am4372: Add DCAN nodes
-Date: Mon, 24 Nov 2014 08:05:00 -0800
-Message-ID: <20141124160459.GE2817@atomide.com>
-References: <1415881371-4982-1-git-send-email-rogerq@ti.com>
- <1415881371-4982-7-git-send-email-rogerq@ti.com>
- <5469F35D.80504@ti.com>
- <20141121235032.GC7046@atomide.com>
- <20141122000853.GI7046@atomide.com>
- <54730144.9070106@ti.com>
- <54731250.9050909@ti.com>
- <20141124154903.GC2817@atomide.com>
+From: Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH v2 3/4] arm64:thunder: Add initial dts for Cavium's
+ Thunder SoC in 2 Node topology.
+Date: Mon, 24 Nov 2014 11:32:46 -0500
+Message-ID: <CAFECyb8aObzJeiL4uB+N6D83GKqJ5tgYGJJJQXRQiEqMegg3Ng@mail.gmail.com>
+References: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+	<1416605010-10442-4-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+	<4080571.JcHDsAZ9EV@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-can-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141124154903.GC2817@atomide.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: wg@grandegger.com, mkl@pengutronix.de, wsa@the-dreams.de, mugunthanvnm@ti.com, george.cherian@ti.com, balbi@ti.com, nsekhar@ti.comnm@ti.com, sergei.shtylyov@cogentembedded.com, linux-omap@vger.kernel.org, linux-can@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4080571.JcHDsAZ9EV@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ganapat Rao P Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [141124 07:49]:
-> * Roger Quadros <rogerq@ti.com> [141124 03:13]:
-> > 
-> > I couldn't reproduce the errors on linux-next nor on your branch. Maybe you had a conflict resolution issue?
-> 
-> I guess it must have been a conflict resolution issue at my end then.
-> 
-> > I've rebased the patches on omap-for-v3.19/dt-v2 and are available for you to pull from:
-> > 
-> > The following changes since commit 0f39f7b906dbeabe2ffd8739d5201e890d102ea6:
-> > 
-> >   ARM: dts: AM43xx: add tscadc DT entries for am437x-evm and am43x-epos-evm (2014-11-21 16:25:06 -0800)
-> > 
-> > are available in the git repository at:
-> > 
-> >   git@github.com:rogerq/linux.git for-v3.19/omap-dts-dcan
-> 
-> Pulling into omap-for-v3.19/dts thanks. Let's also switch into fixes
-> only mode for v3.19 now with -rc6 out.
+On Mon, Nov 24, 2014 at 6:59 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Saturday 22 November 2014 02:53:29 Ganapatrao Kulkarni wrote:
+>> +/ {
+>> +     model = "Cavium ThunderX CN88XX board";
+>> +     compatible = "cavium,thunder-88xx";
+>
+> No wildcards in compatible strings or model names please. List the
+> exact chip that you are using.
+>
+>> +     aliases {
+>> +             serial0 = &uaa0;
+>> +             serial1 = &uaa1;
+>> +     };
+>> +
+>> +     memory@00c00000 {
+>> +             device_type = "memory";
+>> +             reg = <0x0 0x00000000 0x0 0x80000000>;
+>> +     };
+>> +
+>> +     memory@10000000000 {
+>> +             device_type = "memory";
+>> +             reg = <0x100 0x00000000 0x0 0x80000000>;
+>> +     };
+>> +
+>> +     numa-map {
+>> +             #address-cells = <2>;
+>> +             #size-cells = <1>;
+>> +             #node-count = <2>;
+>> +             mem-map = <0x0 0x00000000 0>,
+>> +                        <0x100 0x00000000 1>;
+>> +
+>> +               cpu-map = <0 47 0>,
+>> +                     <48 95 1>;
+>> +
+>> +             node-matrix=    <0 0 10>,
+>> +                             <0 1 20>,
+>> +                             <1 0 20>,
+>> +                             <1 1 10>;
+>
+> I don't know how much history is behind this binding. Have you looked
+> at the sPAPR way of doing this? I don't remember exactly how that is
+> done, but we'd need a good reason to discard that and implement
+> something else for arm64.
+>
+> If we create a new binding, I don't think the 'numa-map' node you
+> have here is the best solution. We already have device nodes for each
+> memory segment and each CPU in the system. Why not work with those
+> nodes directly?
 
-Knowing you most likely don't have anything else based on this branch,
-I ended up just picking the patches from your branch to unify the
-subject line for one of the patches.
+The DT memory nodes don't exist in an EFI system, as the EFI memory
+map is used instead.
+Using EFI as the boot firmware doesn't require the use of ACPI for
+hardware description,
+so the EFI/DT case is one that we should support.
 
-Regards,
-
-Tony
+>> +
+>> +     timer {
+>> +             compatible = "arm,armv8-timer";
+>> +             interrupts = <1 13 0xff01>,
+>> +                          <1 14 0xff01>,
+>> +                          <1 11 0xff01>,
+>> +                          <1 10 0xff01>;
+>> +     };
+>> +
+>> +     soc {
+>> +             compatible = "simple-bus";
+>> +             #address-cells = <2>;
+>> +             #size-cells = <2>;
+>> +             ranges;
+>> +
+>> +             refclk50mhz: refclk50mhz {
+>> +                     compatible = "fixed-clock";
+>> +                     #clock-cells = <0>;
+>> +                     clock-frequency = <50000000>;
+>> +                     clock-output-names = "refclk50mhz";
+>> +             };
+>
+> Why is the timer outside of the soc and the refclk is inside?
+> I would have expected the opposite.
+>
+>         Arnd
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
