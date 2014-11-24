@@ -1,89 +1,71 @@
-From: Vivek Gautam <gautamvivek1987@gmail.com>
-Subject: Re: [PATCH V2 RESEND] arm: dts: Exynos5: Use pmu_system_controller
- phandle for dp phy
-Date: Mon, 24 Nov 2014 16:17:18 +0530
-Message-ID: <CAFp+6iE22FnHeXJZQyhytzGDNfnP4sdnYZuyFtmfzP_JVTVNPQ@mail.gmail.com>
-References: <1416807683-2257-1-git-send-email-gautam.vivek@samsung.com>
-	<20141124103249.GA26217@ulmo.nvidia.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 1/2] ARM: keystone: pm: switch to use generic pm domains
+Date: Mon, 24 Nov 2014 11:50:28 +0100
+Message-ID: <2997659.fTX2lvxXfH@wuerfel>
+References: <1415631557-22897-1-git-send-email-grygorii.strashko@ti.com> <CAMuHMdU6G35SP-P7bt6RJQk59CrGcKE2XM4N3o8Dv3qxZU7gxA@mail.gmail.com> <546F8B39.1080106@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20141124103249.GA26217@ulmo.nvidia.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Vivek Gautam <gautam.vivek@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Jingoo Han <jg1.han@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Kukjin Kim <kgene@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <546F8B39.1080106@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Kevin Hilman <khilman@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robh+dt@kernel.org>, ssantosh@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Friday 21 November 2014 20:58:01 Grygorii Strashko wrote:
+> Hi Kevin,
+> On 11/21/2014 10:06 AM, Geert Uytterhoeven wrote:
+> > On Fri, Nov 21, 2014 at 2:30 AM, Kevin Hilman <khilman@kernel.org> wrote:
+> >> Geert Uytterhoeven <geert@linux-m68k.org> writes:
+> >>
+> >> So now I'm confused about why the PM domain has to do anything special
+> >> if the presence/absence of the clocks is already handled by the DT.
+> > 
+> > Just adding a clock property to a device node in DT doesn't enable the clock
+> > automatically, nor make it runtime-managed automatically.
+> > Compare this to e.g. pinctrl, where adding pinctrl properties to DT does enable
+> > them automatically, without the driver for the device having to care about it.
+> >
+> > Drivers interfacing external hardware typically do care about clocks, as they
+> > have to program clock generators for the external hardware interface (e.g.
+> > driving spi or i2c buses at specific frequencies).
 
+But is this a property of the driver or of the device? If this is true
+independent of the driver implementation, I don't see a problem with 
+the approach of linking to a power-domain that automatically manages
+all clocks for the devices that need this, and requires the driver to
+manage them itself when there are any clocks that can't be handled
+with the generic clk-power-domain implementation.
+ 
+> 
+> In non-DT case, we have possibility to divide clocks on "fck" and "opt"
+> (The way it can be done is not convenient, but it is - .con_id).
+> 
+> For DT-case - no way now. Also, PM domains are not physically present on
+> Keystone 2 and GPD was selected as glue layer to integrate DT, pm_clk and
+> PM runtime all together (one big-fat-global PM domain :).
+> 
+> So, I was able to find only following way to define "fck" clocks in DT:
+> 	clocks = <&papllclk>, <&clkcpgmac>, <&chipclk12>;
+> 	clock-names = "clk_pa", "clk_cpgmac", "cpsw_cpts_rft_clk";
+> 	fck-clocks = <&papllclk>, <&clkcpgmac>;
+> As you can see - this will lead to data duplication in DT (
+> 
+> Any propositions are welcome?
+> 
+> Unfortunately, It seems that if we would not able to find DT solution
+> then there will be following ways to move forward:
+> - "remove the power domain proxy from your drivers and use the clocks directly" 
+> ((c) Arnd Bergmann).
+> [As possibility - It can be allowed to use clk_pm APIs by drivers]
+> - continue using platform specific implementations.
 
-On Mon, Nov 24, 2014 at 4:02 PM, Thierry Reding
-<thierry.reding@gmail.com> wrote:
-> On Mon, Nov 24, 2014 at 11:11:23AM +0530, Vivek Gautam wrote:
->> DP PHY now require pmu-system-controller to handle PMU register
->> to control PHY's power isolation. Adding the same to dp-phy
->> node.
->>
->> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
->> Reviewed-by: Jingoo Han <jg1.han@samsung.com>
->> Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
->> Cc: Kukjin Kim <kgene@kernel.org>
->> ---
->>  arch/arm/boot/dts/exynos5250.dtsi |    2 +-
->>  arch/arm/boot/dts/exynos5420.dtsi |    4 ++--
->>  2 files changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
->> index 0a588b4..bebd099 100644
->> --- a/arch/arm/boot/dts/exynos5250.dtsi
->> +++ b/arch/arm/boot/dts/exynos5250.dtsi
->> @@ -732,7 +732,7 @@
->>
->>       dp_phy: video-phy@10040720 {
->>               compatible = "samsung,exynos5250-dp-video-phy";
->> -             reg = <0x10040720 4>;
->> +             samsung,pmu-syscon = <&pmu_system_controller>;
->>               #phy-cells = <0>;
->>       };
->>
->> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
->> index 8617a03..1353a09 100644
->> --- a/arch/arm/boot/dts/exynos5420.dtsi
->> +++ b/arch/arm/boot/dts/exynos5420.dtsi
->> @@ -503,8 +503,8 @@
->>       };
->>
->>       dp_phy: video-phy@10040728 {
->> -             compatible = "samsung,exynos5250-dp-video-phy";
->> -             reg = <0x10040728 4>;
->> +             compatible = "samsung,exynos5420-dp-video-phy";
->> +             samsung,pmu-syscon = <&pmu_system_controller>;
->>               #phy-cells = <0>;
->>       };
->>
->
-> It seems like these nodes have been in the Linux tree since 3.12 and
-> 3.17, respectively and these changes break backwards-compatibility. Has
-> anyone thought about the possible consequences?
+Could the driver maybe identify the clocks that it wants to manage itself
+to the pm-domain code? If it's safe for a device to have the clock turned
+on at the default rate before loading the driver, any device that is connected
+to the simple clk-pm-domain code could have all its clocks start out as
+owned by the pm-domain, but then claim the clocks it needs to reprogram for
+itself and take them out of the pmdomain.
 
-Sorry for my ignorance, but i have a doubt.
-If the bindings and device node both are being changed in the same kernel
-version (as fixes),
-so that the stable will have both; then the only scenerio of backward
-compatibility comes when kernel is upgraded but not dtbs.
-Does such upgradation makes sense for distros ?
-
->
-> Although, looking more closely it seems like this isn't the first time
-> that backwards-compatibility was broken in these files, so perhaps
-> nobody cares...
->
-> Thierry
-
-
-
--- 
-Best Regards
-Vivek Gautam
-Samsung R&D Institute, Bangalore
-India
+	Arnd
