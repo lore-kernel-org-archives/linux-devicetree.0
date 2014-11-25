@@ -1,63 +1,172 @@
-From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v8 4/4] dt-bindings: add bindings for mediatek sysirq
-Date: Tue, 25 Nov 2014 16:04:22 +0800
-Message-ID: <1416902662-19281-5-git-send-email-yingjoe.chen@mediatek.com>
-References: <1416902662-19281-1-git-send-email-yingjoe.chen@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416902662-19281-1-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yijing Wang <wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Addy Ke <addy.ke@rock-chips.com>
+Subject: [PATCH v2] mmc: dw_mmc: add quirk for broken data transfer over scheme
+Date: Tue, 25 Nov 2014 16:10:08 +0800
+Message-ID: <1416903008-4160-1-git-send-email-addy.ke@rock-chips.com>
+References: <1415970338-2637-1-git-send-email-addy.ke@rock-chips.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1415970338-2637-1-git-send-email-addy.ke@rock-chips.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, jh80.chung@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, heiko@sntech.de, olof@lixom.net, dianders@chromium.org, sonnyrao@chromium.org, amstan@chromium.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, zhenfu.fang@rock-chips.com, cf@rock-chips.com, lintao@rock-chips.com, chenfen@rock-chips.com, zyf@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, hj@rock-chips.com, kever.yang@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com, Addy Ke <addy.ke@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation for Mediatek SoC SYSIRQ.
+This patch add a new quirk to add a s/w timer to notify the driver
+to terminate current transfer and report a data timeout to the core,
+if DTO interrupt does NOT come within the given time.
 
-Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+dw_mmc call mmc_request_done func to finish transfer depends on
+DTO interrupt. If DTO interrupt does not come in sending data state,
+the current transfer will be blocked.
+
+But this case really exists, when driver reads tuning data from
+card on RK3288-pink2 board. I measured waveforms by oscilloscope
+and found that card clock was always on and data lines were always
+holded high level in sending data state.
+
+We got the reply from synopsys:
+There are two counters but both use the same value of [31:8] bits.
+Data timeout counter doesn't wait for stop clock and you should get
+DRTO even when the clock is not stopped.
+Host Starvation timeout counter is triggered with stop clock condition.
+
+This means that host should get DRTO and DTO interrupt.
+
+But we really don't get any data-related interrupt in RK3X SoCs.
+And driver can't get data transfer state, it can do nothing but wait for.
+
+Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
 ---
- .../bindings/arm/mediatek/mediatek,sysirq.txt      | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
+- fix some typo.
+- remove extra timeout value (250ms).
+- remove dw_mci_dto_start_monitor func.
+- use "broken-dto" for new quirk and change Subject for it.
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
-new file mode 100644
-index 0000000..d680b07
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
-@@ -0,0 +1,28 @@
-+Mediatek 65xx/81xx sysirq
+ drivers/mmc/host/dw_mmc.c  | 44 +++++++++++++++++++++++++++++++++++++++++++-
+ include/linux/mmc/dw_mmc.h |  5 +++++
+ 2 files changed, 48 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+index b4c3044..bc09f50 100644
+--- a/drivers/mmc/host/dw_mmc.c
++++ b/drivers/mmc/host/dw_mmc.c
+@@ -1457,6 +1457,8 @@ static void dw_mci_tasklet_func(unsigned long priv)
+ 	enum dw_mci_state state;
+ 	enum dw_mci_state prev_state;
+ 	unsigned int err;
++	unsigned int drto_clks;
++	unsigned int drto_ms;
+ 
+ 	spin_lock(&host->lock);
+ 
+@@ -1522,8 +1524,17 @@ static void dw_mci_tasklet_func(unsigned long priv)
+ 			}
+ 
+ 			if (!test_and_clear_bit(EVENT_XFER_COMPLETE,
+-						&host->pending_events))
++						&host->pending_events)) {
++				if (host->quirks & DW_MCI_QUIRK_BROKEN_DTO) {
++					drto_clks = mci_readl(host, TMOUT) >> 8;
++					drto_ms = DIV_ROUND_UP(drto_clks * 1000,
++							       host->bus_hz);
 +
-+Mediatek SOCs sysirq support controllable irq inverter for each GIC SPI
-+interrupt.
++					mod_timer(&host->dto_timer, jiffies +
++						msecs_to_jiffies(drto_ms));
++				}
+ 				break;
++			}
+ 
+ 			set_bit(EVENT_XFER_COMPLETE, &host->completed_events);
+ 
+@@ -2115,6 +2126,9 @@ static irqreturn_t dw_mci_interrupt(int irq, void *dev_id)
+ 		}
+ 
+ 		if (pending & SDMMC_INT_DATA_OVER) {
++			if (host->quirks & DW_MCI_QUIRK_BROKEN_DTO)
++				del_timer(&host->dto_timer);
 +
-+Required properties:
-+- compatible: should be one of:
-+	"mediatek,mt8135-sysirq"
-+	"mediatek,mt8127-sysirq"
-+	"mediatek,mt6589-sysirq"
-+	"mediatek,mt6582-sysirq"
-+	"mediatek,mt6577-sysirq"
-+- interrupt-controller : Identifies the node as an interrupt controller
-+- #interrupt-cells : Use the same format as specified by GIC in
-+  Documentation/devicetree/bindings/arm/gic.txt
-+- interrupt-parent: phandle of irq parent for sysirq. The parent must
-+  use the same interrupt-cells format as GIC.
-+- reg: Physical base address of the intpol registers and length of memory
-+  mapped region.
+ 			mci_writel(host, RINTSTS, SDMMC_INT_DATA_OVER);
+ 			if (!host->data_status)
+ 				host->data_status = pending;
+@@ -2502,6 +2516,28 @@ ciu_out:
+ 	return ret;
+ }
+ 
++static void dw_mci_dto_timer(unsigned long arg)
++{
++	struct dw_mci *host = (struct dw_mci *)arg;
 +
-+Example:
-+	sysirq: interrupt-controller@10200100 {
-+		compatible = "mediatek,mt6589-sysirq", "mediatek,mt6577-sysirq";
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+		interrupt-parent = <&gic>;
-+		reg = <0 0x10200100 0 0x1c>;
-+	};
++	switch (host->state) {
++	case STATE_SENDING_DATA:
++	case STATE_DATA_BUSY:
++		/*
++		* If DTO interrupt does NOT come in sending data state,
++		* we should notify the driver to terminate current transfer
++		* and report a data timeout to the core.
++		*/
++		host->data_status = SDMMC_INT_DRTO;
++		set_bit(EVENT_DATA_ERROR, &host->pending_events);
++		set_bit(EVENT_DATA_COMPLETE, &host->pending_events);
++		tasklet_schedule(&host->tasklet);
++		break;
++	default:
++		break;
++	}
++}
++
+ #ifdef CONFIG_OF
+ static struct dw_mci_of_quirks {
+ 	char *quirk;
+@@ -2513,6 +2549,9 @@ static struct dw_mci_of_quirks {
+ 	}, {
+ 		.quirk	= "disable-wp",
+ 		.id	= DW_MCI_QUIRK_NO_WRITE_PROTECT,
++	}, {
++		.quirk	= "broken-dto",
++		.id	= DW_MCI_QUIRK_BROKEN_DTO,
+ 	},
+ };
+ 
+@@ -2654,6 +2693,9 @@ int dw_mci_probe(struct dw_mci *host)
+ 
+ 	spin_lock_init(&host->lock);
+ 	INIT_LIST_HEAD(&host->queue);
++	if (host->quirks & DW_MCI_QUIRK_BROKEN_DTO)
++		setup_timer(&host->dto_timer,
++			    dw_mci_dto_timer, (unsigned long)host);
+ 
+ 	/*
+ 	 * Get the host data width - this assumes that HCON has been set with
+diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
+index 42b724e..ff9bd1e 100644
+--- a/include/linux/mmc/dw_mmc.h
++++ b/include/linux/mmc/dw_mmc.h
+@@ -98,6 +98,7 @@ struct mmc_data;
+  * @irq_flags: The flags to be passed to request_irq.
+  * @irq: The irq value to be passed to request_irq.
+  * @sdio_id0: Number of slot0 in the SDIO interrupt registers.
++ * @dto_timer: Timer for broken data transfer over scheme.
+  *
+  * Locking
+  * =======
+@@ -196,6 +197,8 @@ struct dw_mci {
+ 	int			irq;
+ 
+ 	int			sdio_id0;
++
++	struct timer_list	dto_timer;
+ };
+ 
+ /* DMA ops for Internal/External DMAC interface */
+@@ -220,6 +223,8 @@ struct dw_mci_dma_ops {
+ #define DW_MCI_QUIRK_BROKEN_CARD_DETECTION	BIT(3)
+ /* No write protect */
+ #define DW_MCI_QUIRK_NO_WRITE_PROTECT		BIT(4)
++/* Timer for broken data transfer over scheme */
++#define DW_MCI_QUIRK_BROKEN_DTO			BIT(5)
+ 
+ /* Slot level quirks */
+ /* This slot has no write protect */
 -- 
-1.8.1.1.dirty
+1.8.3.2
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
