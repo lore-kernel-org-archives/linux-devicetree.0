@@ -1,105 +1,69 @@
-From: Ganapatrao Kulkarni <gpkulkarni@gmail.com>
-Subject: Re: [RFC PATCH v2 2/4] Documentation: arm64/arm: dt bindings for numa.
-Date: Tue, 25 Nov 2014 08:15:47 -0500
-Message-ID: <CAFpQJXUjYsTiHSyHdgtN9JPWGN8CByR4VwtSMJhwkAUWA4iV9w@mail.gmail.com>
-References: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
- <5473FDA8.6080201@huawei.com> <54744F14.60004@linaro.org>
- <2966212.dpWQ0OTb0A@wuerfel>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] dt-bindings: simplefb-sunxi: Add
+ sunxi simplefb extensions
+Date: Tue, 25 Nov 2014 14:21:19 +0100
+Message-ID: <5474824F.8080000@redhat.com>
+References: <1416309051-26784-1-git-send-email-hdegoede@redhat.com> <1416309051-26784-3-git-send-email-hdegoede@redhat.com> <547476DA.2030004@ti.com> <54747B72.1050406@redhat.com> <54747DCF.9010502@ti.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2966212.dpWQ0OTb0A@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Steve Capper <steve.capper@linaro.org>, Al Stone <al.stone@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, msalter@redhat.com, Will Deacon <Will.Deacon@arm.com>, Leif Lindholm <leif.lindholm@linaro.org>, Roy Franz <roy.franz@linaro.org>, Rob Herring <robh+dt@kernel.org>, Hanjun Guo <hanjun.guo@linaro.org>, Shannon Zhao <zhaoshenglong@huawei.com>, Grant Likely <grant.likely@linaro.org>, jchandra@broadcom.com, Ganapatrao Kulkarni <ganapatrao.kulkarni@caviumnetworks.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBXEE2KRQKGQEU2E7KDY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <54747DCF.9010502-l0cyMroinI0@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Hi,
 
-On Tue, Nov 25, 2014 at 6:02 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Tuesday 25 November 2014 17:42:44 Hanjun Guo wrote:
->> On 2014-11-25 11:55, Shannon Zhao wrote:
->> > Hi,
->> >
->> > On 2014/11/22 5:23, Ganapatrao Kulkarni wrote:
->> [...]
->> >> +==============================================================================
->> >> +4 - Example dts
->> >> +==============================================================================
->> >> +
->> >> +Example 1: 2 Node system each having 8 CPUs and a Memory.
->> >> +
->> >> +    numa-map {
->> >> +            #address-cells = <2>;
->> >> +            #size-cells = <1>;
->> >> +            #node-count = <2>;
->> >> +            mem-map =  <0x0 0x00000000 0>,
->> >> +                       <0x100 0x00000000 1>;
->> >> +
->> >> +            cpu-map = <0 7 0>,
->> >> +                      <8 15 1>;
->> >
->> > The cpu range is continuous here. But if there is a situation like below:
->> >
->> > 0 2 4 6 belong to node 0
->> > 1 3 5 7 belong to node 1
->> >
->> > This case is very common on X86. I don't know the real situation of arm as
->> > I don't have a hardware with 2 nodes.
->> >
->> > How can we generate a DTS about this situation? like below? Can be parsed?
->> >
->> >               cpu-map = <0 2 4 6 0>,
->> >                         <1 3 5 7 1>;
+On 11/25/2014 02:02 PM, Tomi Valkeinen wrote:
+> On 25/11/14 14:52, Hans de Goede wrote:
+>
+>>>> +Required properties:
+>>>> +- compatible: "allwinner,simple-framebuffer"
+>>>> +- allwinner,pipeline, one of:
+>>>
+>>> Sorry my ignorance, but what's sunxi and what's allwinner? Both names
+>>> are mixed here.
 >>
->> I think the binding proposed here can not cover your needs, and I think this
->> binding is not suitable, there are some reasons.
+>> sunxi is the sun#i SoCs from Allwinner, Allwinner is the manufacturer
+>> and the
+>> SoC "code" names used everywhere in the kernel for their SoCs are sun4i,
+>> sun5i,
+>> sun6i, etc. Most people refer to these SoCs as sunxi. This is also what the
+>> linux-sunxi mailinglist in the Cc is about.
 >>
->>  - CPU logical ID is allocated by OS, and it depends on the order of CPU node
->>    in the device tree, so it may be in a clean order like this patch proposed,
->>    or it will like the order Shannon pointed out.
+>> The official devicetree vendor prefix for Allwinner is allwinner, hence the
+>> allwinner in the compatible name, see e.g. also
 >>
->>  - Since CPU logical ID is allocated by OS, DTS file will not know these
->>    numbers.
->
-> Also:
->
-> - you cannot support hierarchical NUMA topology
->
-> - you cannot have CPU-less or memory-less nodes
->
-> - you cannot associate I/O devices with NUMA nodes, only memory and CPU
->
->> So the problem behind this is the mappings between CPUs and NUMA nodes,
->> there is already mapping for CPU hardware ID (MPIDR) and CPU logical ID,
->> and MPIDR will be not changed, why not using MPIDR for the mapping of
->> NUMA node and CPU? then the mappings will be:
+>> Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
 >>
->> CPU logical ID <------> CPU MPIDR <-----> NUMA node ID <-----> proximity domain
->> (allocated by OS)      (constant)       (allocated by OS)
+>> Which also uses sunxi / sun4i everywhere except in the compatible vendor
+>> prefix.
 >
-> No, don't hardcode ARM specifics into a common binding either. I've looked
-> at the ibm,associativity properties again, and I think we should just use
-> those, they can cover all cases and are completely independent of the
-> architecture. We should probably discuss about the property name though,
-> as using the "ibm," prefix might not be the best idea.
-We have started with new proposal, since not got enough details how
-ibm/ppc is managing the numa using dt.
-there is no documentation and there is no power/PAPR spec for numa in
-public domain and there are no single dt file in arch/powerpc which
-describes the numa. if we get any one of these details, we can align
-to powerpc implementation.
+> Alright, thanks for explanation.
 >
->         Arnd
+> Shouldn't the compatible then be "allwinner,sunxi-simple-framebuffer",
+> to differentiate from some other SoC Allwinner has or might create in
+> the future? That is, presuming you're confident enough that a single
+> compatible string covers all the current and forthcoming sunxi SoCs.
 
-thanks
-ganapat
+This was discussed in an earlier thread, we (Ian Campbell, Grant and me)
+decided to settle on allwinner,simple-framebuffer to make it clear that
+these are allwinner extensions to the standard simple-framebuffer bindings,
+and that the node otherwise is simple-framebuffer compatible.
+
+We were afraid that e.g. sun4i-simple-framebuffer would signal that it
+is not a normal simple-framebuffer node, so we decided to go with just
+the allwinner, prefix to indicate that it uses allwinner specific
+extensions.
+
+Regards,
+
+Hans
