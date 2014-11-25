@@ -1,74 +1,47 @@
 From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: Question about fixed regulator DT properties
-Date: Tue, 25 Nov 2014 12:17:49 +0000
-Message-ID: <20141125121749.GV7712@sirena.org.uk>
-References: <546B5EF9.3080102@mentor.com>
- <546CAB49.8030103@mentor.com>
+Subject: Re: [PATCH v8 7/8] regulator: sky81452: Modify Device Tree structure
+Date: Tue, 25 Nov 2014 12:19:16 +0000
+Message-ID: <20141125121916.GW7712@sirena.org.uk>
+References: <1416898986-24530-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1416898986-24530-8-git-send-email-jack.yoo@skyworksinc.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="GkP4R6qzw9SWbMoL"
+	protocol="application/pgp-signature"; boundary="YOs9+ySvlQ/qtugP"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <546CAB49.8030103-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1416898986-24530-8-git-send-email-jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---GkP4R6qzw9SWbMoL
+--YOs9+ySvlQ/qtugP
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 19, 2014 at 04:38:01PM +0200, Vladimir Zapolskiy wrote:
-> Hello Mark,
->=20
-> On 18.11.2014 17:00, Vladimir Zapolskiy wrote:
+On Tue, Nov 25, 2014 at 04:03:05PM +0900, gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
 
-Your mail is really quite long and all in quotes which makes it hard to
-follow, brevity is really helpful to readers.
+This doesn't apply, please check and resend.
 
-> > | regulator-boot-on | enable-active-high | GPIO polarity | GPIO output |
-> > +-------------------+--------------------+---------------+-------------+
-> > |        no         |         yes        |  active high  |    low      |
-> > |        no         |          no        |  active low   |   high      |
-
-> > I'd rather think that both resulting GPIO outputs are incorrect or
-> > better to say do not correspond to my perception of "regulator-boot-on"
-> > and "enable-active-high" DTS properties described in the documentation,
-> > however above "enable-active-high" and actual GPIO polarity are the same
-> > (when they are not, it is another open topic for discussion).
-
-What you're saying seems sensible.
-
-> > Should documentation be updated to reflect "regulator-boot-on" role that
-> > a regulator is re-enabled by the kernel?
-
-I'm confused about this.  That's the sole purpose of the flag and as far
-as I can tell it's what the documentation says.
-
-> > Should "enable-active-high" be replaced by getting GPIO flags directly?
-
-Probably makes sense, it predates those flags by quite some time.
-
---GkP4R6qzw9SWbMoL
+--YOs9+ySvlQ/qtugP
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBAgAGBQJUdHNtAAoJECTWi3JdVIfQb1oH/AsnpwoEhS5tk5UMF7HYZphB
-04+FG7LtSNoDPuY+mJD37PIpivewQsg1gW3yYzxTvHf5H+7iTS5rDeBoTvsuj/+b
-r+5AsBc0RyiUOSlOxDa1B22KpiJ0AuJZfh0FZ+fYxx+nuz0KplfYWaZqVc4zYZI1
-RMVpU/GhDTkxYM1o4xr70XlEVE3aq5Sj8zIxOGo2rarnsidQEvvkQl+kHgyOxLjQ
-upCeFrwTVi2la/vrXlC0O3YFgqG+7knyvJo2R/igx78+nlFOZQiDikeXPtG/U+ui
-neFrzPKBCk9iWNJxUXpU0CuFJbT+fKOM8ukvCu5upghwnI3sfRGW4vdxqY+JcYA=
-=lvs6
+iQEcBAEBAgAGBQJUdHPEAAoJECTWi3JdVIfQnroH/AxoncX83cbbtgIm5+1xv9cP
+dw0QEOtVuXFv5gXmWWMurd+r1uQBB7sc9L1g71bOe1oWSjQfNn3fudJ54XxETI0x
+DDRaoVZcha2FL8POfDBl0u/8b3PEqi+ijQZg6krTo9uSMGlxMSMKJphwwa5zYarI
+BUqwYBSHXqZc4Zwp+1mRJ2Giq2QeBeRFiyhw5hz25k9E+9BVwR7fCvvDqL7ZjF8Z
+h/ziFofstMb/8ngQfwTbbDYhE7HJe8wAWM7pSjStm/MqtSwiZC2H3AxpbU7Y6e+2
+Z4jullSsQc+OUMJ0X83Tg9WhGfMfaN7mVY2pM+/1wE1KYtnFzzrEu1TKBo2r1hI=
+=Zzl2
 -----END PGP SIGNATURE-----
 
---GkP4R6qzw9SWbMoL--
+--YOs9+ySvlQ/qtugP--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
