@@ -1,38 +1,72 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 0/5] Add Spreadtrum Sharkl64 Platform support
-Date: Tue, 25 Nov 2014 13:59:42 +0100
-Message-ID: <5003189.80rNq67D5Z@wuerfel>
-References: <1416917818-10506-1-git-send-email-chunyan.zhang@spreadtrum.com>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] dt-bindings: simplefb-sunxi: Add
+ sunxi simplefb extensions
+Date: Tue, 25 Nov 2014 15:02:07 +0200
+Message-ID: <54747DCF.9010502@ti.com>
+References: <1416309051-26784-1-git-send-email-hdegoede@redhat.com> <1416309051-26784-3-git-send-email-hdegoede@redhat.com> <547476DA.2030004@ti.com> <54747B72.1050406@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1416917818-10506-1-git-send-email-chunyan.zhang@spreadtrum.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Cc: grant.likely@linaro.org, robh+dt@kernel.org, catalin.marinas@arm.com, gregkh@linuxfoundation.org, ijc+devicetree@hellion.org.uk, jslaby@suse.cz, galak@codeaurora.org, broonie@linaro.org, mark.rutland@arm.com, m-karicheri2@ti.com, pawel.moll@arm.com, artagnon@gmail.com, rrichter@cavium.com, will.deacon@arm.com, gnomes@lxorguk.ukuu.org.uk, corbet@lwn.net, jason@lakedaemon.net, broonie@kernel.org, heiko@sntech.de, shawn.guo@freescale.com, florian.vaussard@epfl.ch, andrew@lunn.ch, hytszk@gmail.com, orsonzhai@gmail.com, geng.ren@spreadtrum.com, zhizhou.zhang@spreadtrum.com, lanqing.liu@spreadtrum.com, zhang.lyra@gmail.com, wei.qiao@spreadtrum.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, sprdlinux@freelists.org, linux-doc@vger.kernel.org, linux-serial@vger.kernel.org, linux-api@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="PAKNBTKCbBFfRP6lAUVRwuD1U00Tt7h6G"
+Return-path: <linux-sunxi+bncBCGMHFOOT4LBBWP32GRQKGQE4A3T62Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <54747B72.1050406-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 25 November 2014 20:16:53 Chunyan Zhang wrote:
-> Spreadtrum is a rapid growing chip vendor providing smart phone total solutions.
-> 
-> Sharkl64 Platform is nominated as a SoC infrastructure that supports 4G/3G/2G
-> standards based on ARMv8 multiple core architecture.Now we have only one
-> SoC(SC9836) based on this Platform in developing.
-> 
-> This patchset adds Sharkl64 support in arm64 device tree and the serial driver
-> of SC9836-UART.
-> 
-> This patchset also has patches which address "sprd" prefix and DT compatible
-> strings for nodes which appear un-documented.
-> 
-> This version code was tesed on Fast Mode.
-> We use boot-wrapper-aarch64 as the bootloader.
+--PAKNBTKCbBFfRP6lAUVRwuD1U00Tt7h6G
+Content-Type: text/plain; charset=UTF-8
 
-Looks very good overall. I have two small comments to individual patches,
-but I think we can still merge them for 3.19. Please send the serial
-driver to Greg for inclusion, unless you get further comments, and send
-the updated version of the other patches to arm@kernel.org and ask
-for including them in the cover letter.
+On 25/11/14 14:52, Hans de Goede wrote:
 
-	Arnd
+>>> +Required properties:
+>>> +- compatible: "allwinner,simple-framebuffer"
+>>> +- allwinner,pipeline, one of:
+>>
+>> Sorry my ignorance, but what's sunxi and what's allwinner? Both names
+>> are mixed here.
+> 
+> sunxi is the sun#i SoCs from Allwinner, Allwinner is the manufacturer
+> and the
+> SoC "code" names used everywhere in the kernel for their SoCs are sun4i,
+> sun5i,
+> sun6i, etc. Most people refer to these SoCs as sunxi. This is also what the
+> linux-sunxi mailinglist in the Cc is about.
+> 
+> The official devicetree vendor prefix for Allwinner is allwinner, hence the
+> allwinner in the compatible name, see e.g. also
+> 
+> Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
+> 
+> Which also uses sunxi / sun4i everywhere except in the compatible vendor
+> prefix.
+
+Alright, thanks for explanation.
+
+Shouldn't the compatible then be "allwinner,sunxi-simple-framebuffer",
+to differentiate from some other SoC Allwinner has or might create in
+the future? That is, presuming you're confident enough that a single
+compatible string covers all the current and forthcoming sunxi SoCs.
+
+Perhaps simplefb is a bit special case, but I usually feel better if the
+compatible string is defined in a more specific manner. In this case I'd
+have:
+
+allwinner,sun4i-simple-framebuffer
+allwinner,sun5i-simple-framebuffer
+allwinner,sun6i-simple-framebuffer
+
+so that if sun7i has totally different display controller, there would
+be no conflict.
+
+ Tomi
+
+--PAKNBTKCbBFfRP6lAUVRwuD1U00Tt7h6G--
