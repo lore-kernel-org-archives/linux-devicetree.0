@@ -1,70 +1,74 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of/fdt: memblock_reserve /memreserve/ regions in the case
- of partial overlap
-Date: Tue, 25 Nov 2014 13:31:58 -0600
-Message-ID: <CAL_JsqJV6e2oO7uJEUHzep8QAA1YztTgdaUNynKVnr_ABv+-nQ@mail.gmail.com>
-References: <1416920095-31999-1-git-send-email-ian.campbell@citrix.com> <20141125143750.1BAAAC44343@trevor.secretlab.ca>
+From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v4 0/3] iio: Add Cosmic Circuits ADC support
+Date: Tue, 25 Nov 2014 16:52:44 -0300
+Message-ID: <1416945167-28165-1-git-send-email-ezequiel.garcia@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141125143750.1BAAAC44343-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, Mark.Rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 25, 2014 at 8:37 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, 25 Nov 2014 12:54:55 +0000
-> , Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
->  wrote:
->> memblock_is_region_reserved() returns true in the case of a partial
->> overlap, meaning that the current code fails to reserve the
->> non-overlapping portion.
->>
->> I observed this causing a Midway system with a buggy fdt (the header
->> declares itself to be larger than it really is) failing to boot
->> because the over-inflated size of the fdt was causing it to seem to
->> run into the swapper_pg_dir region, meaning the DT wasn't reserved.
->> The symptoms were failing to find an disks or network and failing to
->> boot. I think it is work printing a warning in this case.
->>
->> However given the ambiguity of whether things like the initrd are
->> covered by /memreserve/ and similar I think it is best to also
->> register the region rather than just ignoring it.
->>
->> Since memblock_reserve() handles overlaps just fine lets just warn and
->> carry on.
->>
->> Signed-off-by: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
->> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> ---
->>  drivers/of/fdt.c |    3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
->> index 30e97bc..4f0f24c 100644
->> --- a/drivers/of/fdt.c
->> +++ b/drivers/of/fdt.c
->> @@ -965,7 +965,8 @@ int __init __weak early_init_dt_reserve_memory_arch(phys_addr_t base,
->>                                       phys_addr_t size, bool nomap)
->>  {
->>       if (memblock_is_region_reserved(base, size))
->> -             return -EBUSY;
->> +             pr_warning("DT reserved region at 0x%pa is already reserved\n",
->> +                        &base);
->
-> Since memblock_remove/reserve does the right thing anyway, let's just
-> drop the test entirely.
+Fourth round of this series. Jonathan: If nobody has further comments,
+I'd like to get this merged for v3.19.
 
-If the region completely overlaps, then I agree it is okay to be
-quiet. But if we have partially overlapping region already with the
-dtb, then we should warn here. We want to know if someone passes a dtb
-that is too big.
+Changes from v3:
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+  * Fixed a few style nitpicks as per Hartmut's feedback.
+
+  * Used GENMASK() to build the channel mask, which fixes a very nasty
+    bug. Also found by Hartmut.
+
+Changes from v2:
+
+  * Changed a devicetree property from adc-available-channels to
+    adc-reserved-channels, so it can be made optional.
+
+  * Renamed the driver from cc_10001_xxx to cc10001_xxx so it's consistent
+    with the rest of the kernel style.
+
+  * Some more minor cosmetic fixes.
+
+Changes from v1:
+
+  * Removed unneeded header includes.
+
+  * Changed all the names and macros prefix: s/CC_10001_/CC10001_.
+
+  * Used .update_scan_mode callback to preallocate the buffer.
+
+  * Used indio_dev for the struct iio_dev.
+
+  * Only read the regulator voltage when needed.
+
+  * Fixed probe() error handling.
+
+  * Used for_each_set_bit() instead of open-coding it.
+
+  * Name the power-down register as _POWER_UP, to make the code
+    less silly.
+
+  * Error out when no valid sample can be read (i.e. when end-of-conversion
+    poll times out).
+
+  * ... plus some assorted code cleaning based on the feedback.
+
+Ezequiel Garcia (1):
+  DT: Add a vendor prefix for Cosmic Circuits
+
+Phani Movva (2):
+  iio: adc: Cosmic Circuits 10001 ADC driver
+  DT: iio: adc: Add CC_10001 binding documentation
+
+ .../devicetree/bindings/iio/adc/cc10001_adc.txt    |  22 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ drivers/iio/adc/Kconfig                            |  12 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/cc10001_adc.c                      | 424 +++++++++++++++++++++
+ 5 files changed, 460 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/cc10001_adc.txt
+ create mode 100644 drivers/iio/adc/cc10001_adc.c
+
+-- 
+2.1.0
