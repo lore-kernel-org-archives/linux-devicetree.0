@@ -1,88 +1,91 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/9] mailbox: arm_mhu: add driver for ARM MHU controller
-Date: Tue, 25 Nov 2014 18:01:01 +0000
-Message-ID: <5474C3DD.5060706@arm.com>
-References: <1416486442-25200-1-git-send-email-Vincent.Yang@tw.fujitsu.com>	<1416486872-25301-1-git-send-email-Vincent.Yang@tw.fujitsu.com>	<54749429.9080505@arm.com> <CAJe_ZhciCP2VbmRtrq9d14WhfLhnC-xaitCCiW_6Yf1S-0sdUg@mail.gmail.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH] i2c-qoriq: modified compatibility for correct prescaler
+Date: Tue, 25 Nov 2014 19:13:47 +0100
+Message-ID: <20141125181347.GC9716@katana>
+References: <1413538026-15739-1-git-send-email-valentin.longchamp@keymile.com>
+ <1414537731.23458.120.camel@snotra.buserror.net>
+ <5450AC85.40302@keymile.com>
+ <20141113003418.GE2062@katana>
+ <5465B285.7070005@keymile.com>
+ <20141114082832.GA2180@katana>
+ <1416274083.15957.96.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJe_ZhciCP2VbmRtrq9d14WhfLhnC-xaitCCiW_6Yf1S-0sdUg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="MnLPg7ZWsaic7Fhd"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1416274083.15957.96.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, Linux PowerPC Kernel <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux device trees <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Brunck, Holger" <Holger.Brunck-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, "Boschung, Rainer" <Rainer.Boschung-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
+--MnLPg7ZWsaic7Fhd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 25/11/14 16:51, Jassi Brar wrote:
-> On 25 November 2014 at 20:07, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->>
->>
->> On 20/11/14 12:34, Vincent Yang wrote:
->>>
->>> Add driver for the ARM Message-Handling-Unit (MHU).
->>>
->>> Signed-off-by: Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> Signed-off-by: Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
->>> Signed-off-by: Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
->>> ---
->>>    .../devicetree/bindings/mailbox/arm-mhu.txt        |  33 ++++
->>>    drivers/mailbox/Kconfig                            |   7 +
->>>    drivers/mailbox/Makefile                           |   2 +
->>>    drivers/mailbox/arm_mhu.c                          | 196
->>> +++++++++++++++++++++
->>>    4 files changed, 238 insertions(+)
->>>    create mode 100644 Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->>>    create mode 100644 drivers/mailbox/arm_mhu.c
->>>
->>> diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->>> b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->>> new file mode 100644
->>> index 0000000..b1b9888
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->>> @@ -0,0 +1,33 @@
->>> +ARM MHU Mailbox Driver
->>> +======================
->>> +
->>> +The ARM's Message-Handling-Unit (MHU) is a mailbox controller that has
->>> +3 independent channels/links to communicate with remote processor(s).
->>
->>
->> I had reviewed this before and I see not all the comments are addressed.
->> I had mentioned that you can't add support to _SECURE_ channel in Linux
->> as you need to assume Linux runs in non-secure privilege(and I gather
->> that's the case even on this platform from other email in the thread)
->>
-> Please revisit the old thread. After some discussion you had
-> graciously allowed me to keep the secure channel ;)
-> [
-> ... Even though I don't like you have secure channel access in Linux, you
-> have valid reasons. In case you decide to support it ....
-> ]
+On Mon, Nov 17, 2014 at 07:28:03PM -0600, Scott Wood wrote:
+> On Fri, 2014-11-14 at 09:28 +0100, Wolfram Sang wrote:
+> > > >=20
+> > > > If we're going to change the device tree I'd rather just add a prop=
+erty
+> > > > to say what the prescaler is.
+> > >=20
+> > >  We would however, leave the boards' device trees that use things like
+> > > "fsl,mpc8543-i2c" as is and introduce the prescaler for the others re=
+quiring it.
+> > >=20
+> > >=20
+> > > Now the drawback is that the driver would require a change, to parse =
+this
+> > > prescaler new prescaler property. Would this be OK from your point of=
+ view
+> > > Wolfram ? If yes, I will send the patches for it.
+> >=20
+> > I don't think it is OK.
+>=20
+> Why?
 
-Agreed but based on the other email in the same thread it looks like you
-want to run the same kernel both in secure and no-secure mode on this
-platform, in which case you _have_to_assume_ it's *non-secure only* 
-always unless you come up with some DT magic.
+Because I thought it could be deduced. Then, a seperate property would
+not be OK.
 
->   It seems you still don't get my point that the driver should manage
-> all channels - S & NS. If Linux is running in NS mode on a platform,
-> the DT will specify only some NS channel to be used. The controller
-> driver shouldn't be crippled just because you think Linux will never
-> be run in Secure mode.
->
+> >  I'd think it can be deduced from the compatible property.
+>=20
+> For almost all existing device trees it cannot be.
 
-Ok how do you handle that, I don't see that in the DT binding. As it
-stands, you can unconditionally try to access the secure channel and
-cause aborts if the platform is running in non-secure mode.
+Pity :( If we do introduce a new property, it should probably be
+"clock-div". Grepping through binding documentation, that seems
+accepted. We should ask DT maintainers, too, to be safe.
 
-Regards,
-Sudeep
+> If you want something that will work without changing device trees,
+> you'll need to use SVR to identify the SoC.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The driver is doing that already, see mpc_i2c_get_sec_cfg_8xxx(). Dunno
+if it makes sense to add to it for consistency reasons?
+
+
+--MnLPg7ZWsaic7Fhd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUdMbbAAoJEBQN5MwUoCm2BIsQAJ+N/XUWx2AclSWuY0H6ZtQD
+i5oOPHCbuu3GNjIqJlWjRRHYpMQb0wkl+u9Xbo8yzKULEeQ8cxb4FLOv70ylem/E
+kFkyecWGFdkRnLwTSk8FvywYayTmlb0ktNBeg83XJcx58ibN+Otwc0WzWNM0cLFX
+kKWhlNpKrz2LyNCJP4oFB7vhu5TClAo6VTdYBrN5bGY0BlEuhuRB7vx2RKTWvAWf
+VTIoMIBDVJAHbIYfMo1mFUgu0yK1j69/IAT8N1UZXttKlG0ZCbpeTXYrLds+n7ss
+DRChWvK9FH46gzzLmPbIAA/oUDAuetIcgyBwlwCt6xrW2MdncEML8YymhUjCF18p
+g739ZFA7Ukvn9J5NK/3+JfCy4Z5/aY1yiCHazwHVFK8wv7Asr994fl27HenDGjSq
+vupdCCv7cswoauVV4mydc0eZVovjFOijaVEwsFZLX6aXDLkw5OzEpA4xvh4lc9cm
+B/vr3iDYHn0+EuVpYUovh3Ob3vW+TGOObY2QV+Wh2R4jvBqZQ9sVNBomg4r0W/Nc
+61CQzvM5TpmwOVXnI6cXz++P079js300Qy4oAG/q6luchyPWBUk1vujCnXP3iRh4
+PvkUjdU0H7SbYYAd/LEFpwqv29go9dz6BLEoAB1P33XdOfAdXPGmtqQv3oFzXs91
+5vfrkJBSvxVChwOphWJf
+=A8Vc
+-----END PGP SIGNATURE-----
+
+--MnLPg7ZWsaic7Fhd--
