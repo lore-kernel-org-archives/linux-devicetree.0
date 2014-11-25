@@ -1,53 +1,85 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v5 1/2] of: Rename "poweroff-source" property to
- "system-power-controller"
-Date: Tue, 25 Nov 2014 17:12:34 +0000
-Message-ID: <20141125171234.GH7712@sirena.org.uk>
-References: <1416918506-9366-1-git-send-email-romain.perier@gmail.com>
- <1416918506-9366-2-git-send-email-romain.perier@gmail.com>
- <20141125144007.9904BC44343@trevor.secretlab.ca>
- <20141125145410.GD19910@localhost>
- <CABgxDoKUecAd00X0znkGiQncF4MwnLAM4BFV2AV_oMPF=4G7UA@mail.gmail.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 0/2] Increase the maximum cpu frequency of rk3288
+Date: Tue, 25 Nov 2014 09:37:40 -0800
+Message-ID: <CAD=FV=XJXHmRst-fcR0c7UfFPKgfS+g0aFhvxSk8RKRXN4L75Q@mail.gmail.com>
+References: <1416908253-31721-1-git-send-email-zyw@rock-chips.com>
+	<5474AAB4.2060301@rock-chips.com>
+	<3297542.UgVU3NH89O@diego>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="jLmGyUepE/aZfh+l"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CABgxDoKUecAd00X0znkGiQncF4MwnLAM4BFV2AV_oMPF=4G7UA@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Romain Perier <romain.perier@gmail.com>
-Cc: Johan Hovold <johan@kernel.org>, Grant Likely <grant.likely@linaro.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Lee Jones <lee.jones@linaro.org>, robh <robh@kernel.org>, devicetree <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Felipe Balbi <balbi@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3297542.UgVU3NH89O@diego>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---jLmGyUepE/aZfh+l
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Tue, Nov 25, 2014 at 8:23 AM, Heiko St=C3=BCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> w=
+rote:
+> Hi Chris, Kever,
+>
+> Am Mittwoch, 26. November 2014, 00:13:40 schrieb Kever Yang:
+>> On 11/25/2014 05:37 PM, Chris Zhong wrote:
+>> > The maximum cpu frequency of rk3288 can up to 1.8Ghz, but the vdd_=
+cpu need
+>> > set to 1.4v. I've tested these patches on rk3288 evb board.
+>>
+>> I'm not sure why you need this patch, I think we have a discuss
+>> for the cpu operating point before.
+>> In this case:
+>> 1. rk3288.dtsi is for all the rk3288 Soc based system, you may need
+>> a separate opp table in rk3288-evb-rk808.dts;
+>> 2. 1.4V may beyond the supported voltage range too much,
+>>      and it's not a good idea to add it to rk3288.dtsi as a safe vol=
+tage.
+>> 3. Do you have a stress/heavy load test on evb with 1.4v at 1.8GHz?
+>
+> That is how I remember it as well ... the default opp table is suppos=
+ed to
+> contain only the safest of values, while individual boards can then i=
+ncrease
+> those in conjunction with their thermal design.
+>
+> As the evb itself does only have the naked soc without any heat-sink =
+or
+> similar, I'm not even sure if these additional frequencies should be =
+enabled
+> there at all.
 
-On Tue, Nov 25, 2014 at 04:57:56PM +0100, Romain Perier wrote:
+I'm not sure that the story from Rockchip is all straight about all of
+this stuff, but I will say that:
 
-> Thanks for your feedbacks.  I think that Mark will probably wait until
-> there are more reviews on this serie. (this is exactly what he asked
-> for the previous one)
+* The latest datasheet I have (1.3) shows the maximum CPU frequency as
+1.8GHz.  It shows the maximum CPU voltage as TBD.  That indicates that
+rk3288.dtsi ought to list 1.8GHz values.
 
-Yeah, given the amount of often late arriving disagreement I'd rather
-let things cook for a while unless there are a lot of people being vocal
-about this being what we want to go with.
+* The 1.4V number comes from folks at Rockchip.  Please check with
+Jianqun Xu and Eddie Cai to check.  If 1.4V is not safe we certainly
+shouldn't use it.  I believe they have seen boards where 1.8GHz needed
+1.4V to be reliable.  Either the SoCs on these boards are out of spec
+or 1.4V is needed.
 
---jLmGyUepE/aZfh+l
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+* If you're worried about heat we should make sure that all the
+thermal changes are in.  That will still let you run at 1.8GHz
+temporarily.  You can put a heatsync on and run faster.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+* These numbers are still conservative as far as I understand.  For
+instance on rk3288-pinky 1.8GHz is a full .1V lower at 1.3V.
 
-iQEcBAEBAgAGBQJUdLiBAAoJECTWi3JdVIfQRL4IAIT4N24elGdFDrN0pdCuPxOm
-rfkI6Qp8RmEHCZqaU2O/lpjYGYfZ6yB+CggQb8Nxx52QBZ6w79nEQ+3RN8lWyadG
-ZuJNl5m63kXILtCAtkgEgvJlfSeN+8yth0aQY5/mAcLxzmpnwuOt3/f3D+r7nw5z
-Ux2rKzk7CyqDsh3J+4SNL3z0WAQhDs8TYxTpt7BbWsa4niMSU1S0wXwChXjXR6E7
-eul+LaY4DdaL+jmvrYA/4oZZtrHNtrFkOj8WcGhdhAFprTqEkYM5LmcAA2vEueAd
-Q5KcXntuqecXDgWq5moSHSzDH9ivhTJhhqOOUX7dFD7u34hHYL2sXM4tkt55iUA=
-=PQ9m
------END PGP SIGNATURE-----
+* If EVB was shipped with pre-production chips that can't support high
+voltages or frequencies, it should override the table to remove the
+high frequencies.  However, if the table that Chris submitted is
+generally correct (and conservative) for rk3288 devices that are
+expected in real products then it seems like it ought to land in
+rk3288.dtsi.
 
---jLmGyUepE/aZfh+l--
+
+-Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
