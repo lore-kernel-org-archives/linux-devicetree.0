@@ -1,49 +1,68 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 14/14] spi/of: Add OF notifier handler
-Date: Tue, 25 Nov 2014 11:44:49 +0000
-Message-ID: <20141125114449.GO7712@sirena.org.uk>
-References: <1416868422-22103-1-git-send-email-grant.likely@linaro.org>
- <1416868422-22103-15-git-send-email-grant.likely@linaro.org>
+From: Vivek Gautam <gautamvivek1987@gmail.com>
+Subject: Re: [PATCH 00/11] Exynos7: Adding USB 3.0 support
+Date: Tue, 25 Nov 2014 17:18:43 +0530
+Message-ID: <CAFp+6iE5XJ+TGu+8TvRFd3Up-kzki3VPD4k6gPXaYbscfwnz4w@mail.gmail.com>
+References: <1416576954-11997-1-git-send-email-gautam.vivek@samsung.com>
+	<20141121151130.GD7508@saruman>
+	<54704BF0.1000903@ti.com>
+	<5470A7C5.1070302@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7Vi1RbbjZdZQ982c"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1416868422-22103-15-git-send-email-grant.likely@linaro.org>
+In-Reply-To: <5470A7C5.1070302@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, linux-spi@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Felipe Balbi <balbi@ti.com>, Vivek Gautam <gautam.vivek@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux USB Mailing List <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Tomasz Figa <tomasz.figa@gmail.com>, robh+dt <robh+dt@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Kukjin Kim <kgene.kim@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Sylwester,
 
---7Vi1RbbjZdZQ982c
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 24, 2014 at 10:33:42PM +0000, Grant Likely wrote:
-> From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
->=20
-> Add OF notifier handler needed for creating/destroying spi devices
-> according to dynamic runtime changes in the DT live tree. This code is
-> enabled when CONFIG_OF_DYNAMIC is selected.
+On Sat, Nov 22, 2014 at 8:42 PM, Kukjin Kim <kgene@kernel.org> wrote:
+> On 11/22/14 17:40, Kishon Vijay Abraham I wrote:
+>>
+>> On Friday 21 November 2014 08:41 PM, Felipe Balbi wrote:
+>>> On Fri, Nov 21, 2014 at 07:05:43PM +0530, Vivek Gautam wrote:
+>>>> The series has dependency on
+>>>> a) "[PATCH v7 0/7] Enable support for Samsung Exynos7 SoC"
+>>>>    http://www.spinics.net/lists/linux-samsung-soc/msg38734.html
+>>>> b) "[GIT PULL] Samsung clock changes for 3.19" - specifically the clock dt
+>>>>    bindings header.
+>>>>    http://comments.gmane.org/gmane.linux.kernel.samsung-soc/39142
+>>>> c) "tty: serial: samsung: Clean-up selection of number of available UARTs"
+>>>>    http://www.spinics.net/lists/linux-samsung-soc/msg37418.html
+>>>> d) "dts, kbuild: Implement support for dtb vendor subdirs"(merged in linux-next)
+>>>>    https://lkml.org/lkml/2014/10/21/654
+>>>> e) "Samsung pinctrl patches for v3.19"
+>>>>    http://www.spinics.net/lists/linux-samsung-soc/msg38744.html
+>>>>
+>>>> Tested on Exynos7-espresso board with 3.18-rc5 and above dependencies.
+>>>>
+>>>> Clubbing the pinctrl, clk, and usb driver changes alongwith the dt changes
+>>>> together in this series only so as to avoid having 'n' number of dependencies.
+>>>>
+>>>> The USB driver patches in this series were part of [1] sent earlier.
+>>>> [1] [PATCH v2 0/4] usb: dwc3/phy-exynos5-usbdrd: Extend support to Exynos7
+>>>>     https://lkml.org/lkml/2014/10/7/191
+>>>
+>>> I took dwc3 driver patches.
+>>
+>> I took the phy patches.
+>>
+> I'll take DT changes once exynos7 is landing into samsung tree :)
+>
 
-Reviwed-by: Mark Brown <broonei@kernel.org>
+You too may want to pick the sole clock driver patch in this series
+for 3.19 ? :-)
+"clk: exynos7: Add required clock tree for USB"
 
---7Vi1RbbjZdZQ982c
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Please let me know if the merge window is still open on your side so
+that you can
+pick this patch.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
 
-iQEcBAEBAgAGBQJUdGuwAAoJECTWi3JdVIfQ6jAH/RUW0vMc+HnqwgvwlpuMhXAd
-ySikOk64bpyL07YkzTirUTv0ikWj83T2I9LfCru8kBY7uPmZtKJp7i0+/TY2XZ0J
-HxZUgzjyce2KVg30tGPJ7tFU3yWbJc2cxSSxtuDixUEghd0QABSddVpjWVpMK7Rr
-SY0YnnhZ++vr0T0DGePCl/U+E+eKe8AWIYF53wOy0pRYc0qnQSx2wvtO8pjetp09
-DYqwViiql4UaqnbsDxaejQfBVzCZs9Yrl5LOy1w1ABfqTy9yoQoQbthG6sOYP7Th
-fK9WEkRP/OkvIGHdWnRWKb7q8QRZT8vi7o4WBFwY+vaUgzICf6buuRBVeJS+MkY=
-=jsVk
------END PGP SIGNATURE-----
-
---7Vi1RbbjZdZQ982c--
+-- 
+Best Regards
+Vivek Gautam
+Samsung R&D Institute, Bangalore
+India
