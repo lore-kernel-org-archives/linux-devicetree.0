@@ -1,58 +1,131 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 6/9] ASoC: ipq806x: Add machine driver for IPQ806X SOC
-Date: Tue, 25 Nov 2014 22:03:39 +0000
-Message-ID: <20141125220339.GW7712@sirena.org.uk>
-References: <1416423169-21865-1-git-send-email-kwestfie@codeaurora.org>
- <1416423169-21865-7-git-send-email-kwestfie@codeaurora.org>
+From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] iio: adc: Cosmic Circuits 10001 ADC driver
+Date: Tue, 25 Nov 2014 19:03:52 -0300
+Message-ID: <5474FCC8.8080906@imgtec.com>
+References: <1415888044-16635-1-git-send-email-ezequiel.garcia@imgtec.com> <1415888044-16635-2-git-send-email-ezequiel.garcia@imgtec.com> <546FE3A7.6040308@gmx.de> <5474C062.2020604@imgtec.com> <5474F7A5.6030008@gmx.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="EL5yXklJx2AX5bob"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1416423169-21865-7-git-send-email-kwestfie@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kenneth Westfield <kwestfie@codeaurora.org>
-Cc: ALSA Mailing List <alsa-devel@alsa-project.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, Greg KH <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>
+Content-Type: text/plain; charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5474F7A5.6030008-Mmb7MZpHnFY@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, Mark.Rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---EL5yXklJx2AX5bob
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Wed, Nov 19, 2014 at 10:52:46AM -0800, Kenneth Westfield wrote:
+On 11/25/2014 06:41 PM, Hartmut Knaack wrote:
+>>
+>> Unless I'm missing something, that's exactly what XOR does.
+>>
+>> Example:
+>>
+>> reserved_channels = 0x2;
+>> channel_map = 0x7 ^ reserved_channels -> 0x5
+>>
+> You miss to check ret for a valid range, which you don't need to do when masking out channels.
+> Example:
+> reserved_channels = 0x8;
+> channel_map = 0x7 ^ reserved_channels -> 0xf
+> And this is actually happening in the current revision (with the wrong channel_map assignment), that a reserved channel in DT would become usable.
 
-> +static struct snd_soc_dai_link ipq_snd_dai[] = {
-> +	/* Front end DAI Links */
-> +	{
-> +		.name		= "IPQ806x Media1",
-> +		.stream_name	= "MultiMedia1",
-> +		.cpu_dai_name	= "lpass-cpu-dai",
-> +		.platform_name	= "lpass-pcm-mi2s",
-> +		.codec_dai_name	= "snd-soc-dummy-dai",
-> +		.codec_name	= "snd-soc-dummy",
-> +	},
-> +};
+Right, definitely a check is needed.
 
-OK, so the CODEC here is actually a dumb DAC with a GPIO enable?  You
-should write a driver for this CODEC that imposes the constraints the
-device has and manages the GPIO, then it looks like you should be able
-to use simple-card.
+>>>> +
+>>>> +	adc_dev->reg = devm_regulator_get(&pdev->dev, "vref");
+>>>> +	if (IS_ERR_OR_NULL(adc_dev->reg))
+>>>> +		return -EINVAL;
+>>> 	if (IS_ERR(adc_dev->reg))
+>>> 		return PTR_ERR(adc_dev->reg);
+>>
+>> Are you sure? What if devm_regulator_get() returns NULL?
+>>
+> I had a look at it, but couldn't figure out a condition in which it would return NULL. But I'd be happy to be informed of anything different.
 
---EL5yXklJx2AX5bob
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+If CONFIG_REGULATOR=n you get NULL there (although I added a select REGULATOR
+on the v4 I just posted).
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+>>>> +
+>>>> +	ret = regulator_enable(adc_dev->reg);
+>>>> +	if (ret)
+>>>> +		return ret;
+>>>> +
+>>>> +	indio_dev->dev.parent = &pdev->dev;
+>>>> +	indio_dev->name = dev_name(&pdev->dev);
+>>>> +	indio_dev->info = &cc10001_adc_info;
+>>>> +	indio_dev->modes = INDIO_DIRECT_MODE;
+>>>> +
+>>>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>>> +	adc_dev->reg_base = devm_ioremap_resource(&pdev->dev, res);
+>>>> +	if (IS_ERR(adc_dev->reg_base))
+>>> Need to put error code into ret.
+>>
+>> Right.
+>>
+>>>> +		goto err_disable_reg;
+>>>> +
+>>>> +	adc_dev->adc_clk = devm_clk_get(&pdev->dev, "adc");
+>>>> +	if (IS_ERR(adc_dev->adc_clk)) {
+>>>> +		dev_err(&pdev->dev, "Failed to get the clock\n");
+>>> Need to put error code into ret.
+>>>> +		goto err_disable_reg;
+>>>> +	}
+>>>> +
+>>>> +	ret = clk_prepare_enable(adc_dev->adc_clk);
+>>>> +	if (ret) {
+>>>> +		dev_err(&pdev->dev, "Failed to enable the clock\n");
+>>>> +		goto err_disable_reg;
+>>>> +	}
+>>>> +
+>>>> +	adc_clk_rate = clk_get_rate(adc_dev->adc_clk);
+>>>> +	if (!adc_clk_rate) {
+>>>> +		ret = -EINVAL;
+>>>> +		dev_err(&pdev->dev, "null clock rate!\n");
+>>> Start message with upper case?
+>>
+>> Actually, I'd rather make the others start with lower case.
+> Fair enough, unless they are full sentences like here. My english grammar tells me they should start with capital letters.
 
-iQEcBAEBAgAGBQJUdPy6AAoJECTWi3JdVIfQqEMH/3K6ksTwXoRAHbI6Od5W2lB9
-hyuiU05khwQVgdJ93V5V6a5MzVm60VZ3Rpzl8JJ7QsUn9QODZRN4JzZWls6eMy7P
-uFmRZ+Ysb89nwAmTNl/cGTWsFwENtkFmwwmz2PUSeyhU7/EwQsAjT2NLL9/a+sP2
-dZ/y2edimnrthD1QRGkS+P28pOhuDlpqPbcscDXBhpUcBtXDL+YJoZ7bIxNPMjjy
-xRFlrm7ftI+0U5DnZCXi169waN+gzfdOH+IECNCXMV+TEh4/F8j/DcCYWzafV/gp
-Ngk1/Fj5GP85YlaRrk4CnETTrEfHA6Z5O32G/r6hJD4+bnTDYd5/jcJ2Cl/IlyM=
-=jale
------END PGP SIGNATURE-----
+Yeah, but it's not the start of the message, as it's prefixed
+with the device stuff.
 
---EL5yXklJx2AX5bob--
+>>
+>>>> +		goto err_disable_clk;
+>>>> +	}
+>>>> +
+>>>> +	adc_dev->eoc_delay_ns = NSEC_PER_SEC / adc_clk_rate;
+>>>> +	adc_dev->start_delay_ns = adc_dev->eoc_delay_ns * CC10001_WAIT_CYCLES;
+>>>> +
+>>>> +	/* Setup the ADC channels available on the device */
+>>>> +	ret = cc10001_adc_channel_init(indio_dev);
+>>>> +	if (ret < 0) {
+>>>> +		dev_err(&pdev->dev, "Could not initialize the channels.\n");
+>>>> +		goto err_disable_clk;
+>>>> +	}
+>>>> +
+>>>> +	mutex_init(&adc_dev->lock);
+>>>> +
+>>>> +	ret = iio_triggered_buffer_setup(indio_dev, NULL,
+>>>> +					 &cc10001_adc_trigger_h, NULL);
+>>>> +	if (ret < 0)
+>>>> +		goto err_disable_clk;
+>>>> +
+>>>> +	ret = iio_device_register(indio_dev);
+>>>> +	if (ret < 0)
+>>>> +		goto err_cleanup_buffer;
+>>>> +
+>>>> +	platform_set_drvdata(pdev, indio_dev);
+>>> Move this above iio_device_register.
+>>
+>> What for?
+> To make iio_device_register the last operation of the probe.
+
+I really don't think it matters, since platform_get_drvdata
+is only called in the remove.
+
+I'll move it if you think it's worth it, though.
+
+Thanks for the review!
+-- 
+Ezequiel
