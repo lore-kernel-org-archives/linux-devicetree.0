@@ -1,56 +1,121 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH v4 1/2] ARM: keystone: pm: switch to use generic pm domains
-Date: Tue, 25 Nov 2014 16:53:56 +0200
-Message-ID: <54749804.8070400@ti.com>
-References: <1415631557-22897-1-git-send-email-grygorii.strashko@ti.com> <15074721.IbfeeI3ajE@wuerfel> <54746349.3000306@ti.com> <2301239.aDOlWg3gEs@wuerfel> <5474846C.2000308@ti.com> <20141125140440.GF3836@n2100.arm.linux.org.uk>
+From: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH v2 2/4] Documentation: arm64/arm: dt bindings for
+ numa.
+Date: Tue, 25 Nov 2014 22:54:15 +0800
+Message-ID: <54749817.2090103@linaro.org>
+References: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com> <5473FDA8.6080201@huawei.com> <54744F14.60004@linaro.org> <2966212.dpWQ0OTb0A@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20141125140440.GF3836@n2100.arm.linux.org.uk>
-Sender: linux-pm-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mike Turquette <mturquette@linaro.org>, Kevin Hilman <khilman@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2966212.dpWQ0OTb0A@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Will.Deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
+Hi Arnd,
 
-On 11/25/2014 04:04 PM, Russell King - ARM Linux wrote:
-> On Tue, Nov 25, 2014 at 03:30:20PM +0200, Grygorii Strashko wrote:
->> On 11/25/2014 02:09 PM, Arnd Bergmann wrote:
->>> It might be possible to do this implicitly if the driver calls clk_get(),
->>> basically doing clk_get() (or another call if necessary) would prevent the
->>> simple pmdomain from turning it off during suspend.
+On 2014=E5=B9=B411=E6=9C=8825=E6=97=A5 19:02, Arnd Bergmann wrote:
+> On Tuesday 25 November 2014 17:42:44 Hanjun Guo wrote:
+>> On 2014-11-25 11:55, Shannon Zhao wrote:
+>>> Hi,
+>>>
+>>> On 2014/11/22 5:23, Ganapatrao Kulkarni wrote:
+>> [...]
+>>>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D
+>>>> +4 - Example dts
+>>>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D
+>>>> +
+>>>> +Example 1: 2 Node system each having 8 CPUs and a Memory.
+>>>> +
+>>>> +    numa-map {
+>>>> +            #address-cells =3D <2>;
+>>>> +            #size-cells =3D <1>;
+>>>> +            #node-count =3D <2>;
+>>>> +            mem-map =3D  <0x0 0x00000000 0>,
+>>>> +                       <0x100 0x00000000 1>;
+>>>> +
+>>>> +            cpu-map =3D <0 7 0>,
+>>>> +                      <8 15 1>;
+>>>
+>>> The cpu range is continuous here. But if there is a situation like =
+below:
+>>>
+>>> 0 2 4 6 belong to node 0
+>>> 1 3 5 7 belong to node 1
+>>>
+>>> This case is very common on X86. I don't know the real situation of=
+ arm as
+>>> I don't have a hardware with 2 nodes.
+>>>
+>>> How can we generate a DTS about this situation? like below? Can be =
+parsed?
+>>>
+>>>                cpu-map =3D <0 2 4 6 0>,
+>>>                          <1 3 5 7 1>;
 >>
->> Unfortunately, clk_get() will not work, because drivers still need to use it
->> to get functional clocks even if they are not going to control them explicitly.
->> For example, if it need to know clock's rate.
-> 
-> If you don't want a clock to be turned off, then clk_get() it, then
-> clk_prepare() it, and finally clk_enable() it.
-> 
-> Even if someone else gets it, the only time that a clock is turned off
-> is when _all_ users of it mutually agree that it can be turned off - by
-> every user disabling (and possibly unpreparing) it.
-> 
-> So, if the PM domain code gets a clock, prepares and enables it, then
-> a driver gets the same clock, prepares and enables it also, it won't
-> be disabled until _both_ the PM domain code _and_ the driver disable
-> and unprepare the clock.
-> 
+>> I think the binding proposed here can not cover your needs, and I th=
+ink this
+>> binding is not suitable, there are some reasons.
+>>
+>>   - CPU logical ID is allocated by OS, and it depends on the order o=
+f CPU node
+>>     in the device tree, so it may be in a clean order like this patc=
+h proposed,
+>>     or it will like the order Shannon pointed out.
+>>
+>>   - Since CPU logical ID is allocated by OS, DTS file will not know =
+these
+>>     numbers.
+>
+> Also:
+>
+> - you cannot support hierarchical NUMA topology
+>
+> - you cannot have CPU-less or memory-less nodes
+>
+> - you cannot associate I/O devices with NUMA nodes, only memory and C=
+PU
 
-All 100% true :)
+Yes, I agree.
 
-But the question here is how prevent pm_clk domain (clock_ops.c) from
-getting the control on clock if this particular clock is optional from driver's
-perspective. So, only driver should control it. As opposite, all other clocks
-should be controlled by pm-domain (in case of GPD from .start/stop callbacks).
+>
+>> So the problem behind this is the mappings between CPUs and NUMA nod=
+es,
+>> there is already mapping for CPU hardware ID (MPIDR) and CPU logical=
+ ID,
+>> and MPIDR will be not changed, why not using MPIDR for the mapping o=
+f
+>> NUMA node and CPU? then the mappings will be:
+>>
+>> CPU logical ID <------> CPU MPIDR <-----> NUMA node ID <-----> proxi=
+mity domain
+>> (allocated by OS)      (constant)       (allocated by OS)
+>
+> No, don't hardcode ARM specifics into a common binding either. I've l=
+ooked
+> at the ibm,associativity properties again, and I think we should just=
+ use
+> those, they can cover all cases and are completely independent of the
+> architecture. We should probably discuss about the property name thou=
+gh,
+> as using the "ibm," prefix might not be the best idea.
 
-You can find more detailed description of problem which this patch was
-created to solve here:
-https://lkml.org/lkml/2014/11/19/225
+Is there any doc/code related to this? please give me some hints and I
+will read that.
 
-Thanks for your time.
-
-regards,
--grygorii
+Thanks
+Hanjun
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
