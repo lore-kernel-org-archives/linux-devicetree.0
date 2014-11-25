@@ -1,121 +1,54 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/9] ASoC: qcom: Add device tree binding docs
-Date: Tue, 25 Nov 2014 21:26:28 +0000
-Message-ID: <20141125212628.GS7712@sirena.org.uk>
-References: <1416423169-21865-1-git-send-email-kwestfie@codeaurora.org>
- <1416423169-21865-3-git-send-email-kwestfie@codeaurora.org>
+From: Michal Marek <mmarek@suse.cz>
+Subject: Re: [PATCH] ARM: kbuild: Fix forced rebuild after 'make dtbs'
+Date: Tue, 25 Nov 2014 22:41:35 +0100
+Message-ID: <5474F78F.2060906@suse.cz>
+References: <CACRpkdYmJWy1_vs0tWRA7SvkQnvbXXKqf7pHpH5b5tZ6vR+KJg@mail.gmail.com> <1414961549-31666-1-git-send-email-jason@lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5Zxee1w1CL9fzjN4"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1416423169-21865-3-git-send-email-kwestfie@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kenneth Westfield <kwestfie@codeaurora.org>
-Cc: ALSA Mailing List <alsa-devel@alsa-project.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, Greg KH <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1414961549-31666-1-git-send-email-jason@lakedaemon.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@linaro.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Dne 2.11.2014 v 21:52 Jason Cooper napsal(a):
+> After this patch:
+> 
+>   f4d4ffc03efc kbuild: dtbs_install: new make target
+> 
+> was added the kernel tree, Linus Walleij noticed that 'make dtbs' forced
+> a following 'make zImage' to rebuild the entire tree, even though
+> nothing had changed.  His report:
+> 
+>   After this patch a while back I have observed the following behaviour
+>   of the kernel build:
+> 
+>   make zImage
+>   make zImage
+>   -> incremental build, just relink
+> 
+>   make zImage
+>   make dtbs
+>   make zImage
+>   -> The whole kernel gets rebuilt
+> 
+>   So now if I happen to recompile my device trees, I suddenly want
+>   the entire zImage to be rebuilt to? It's by definition not changes
+>   that affect the kernel build :-(
+> 
+>   I noticed this because my build scripts calls make dtbs && make
+>   zImage, and started to rebuild absolutely everything all the time.
+> 
+> To fix this, we make only the dtbs_install target depend on the prepare
+> target.  It's needed to make sure KERNELVERSION is calculated prior to
+> installing.
 
---5Zxee1w1CL9fzjN4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+If a mere 'make prepare' causes a rebuild of the whole kernel, then
+there is something fishy in the ARM Makefiles. However, if you only need
+the KERNELRELEASE variable, then you do not need to depend on prepare.
+The main Makefile makes sure that silentoldconfig is ran and therefore
+KERNELRELEASE set for all targets except make *config.
 
-On Wed, Nov 19, 2014 at 10:52:42AM -0800, Kenneth Westfield wrote:
-
-> +* Qualcomm Technologies IPQ806x SoundCard
-> +
-> +This node models the Qualcomm Technologies IPQ806x LPASS Audio SoundCard,
-> +with a connection between the CPU MI2S DAI and the external DAC.
-
-> +Required properties:
-> +- compatible        : "qcom,ipq806x-snd-card"
-> +- qcom,model        : The user-visible name of this sound card
-> +- pinctrl-0         : The default state of the MI2S pins
-> +- pinctrl-names     : The name of the default state
-
-Why is a sound card doing pin control?  I would expect that the
-component devices would do their own pin control.  Also if you have
-named pin control states the set of valid names should be specified.
-
-> +- dac-gpios         : GPIO specifier to the GPIO -> DAC SDMODE pin
-
-Simiarly why is a sound card controlling the DAC GPIOs, is this not part
-of the CODEC?
-
-> +- clocks            : A list of clock specifiers in the following order:
-> +                        * AHBIX bus clock
-> +- clock-names       : A list of names in the following order:
-> +                        * ahbix_clk
-
-Again I'd really expect any devices on the AHB to be controlling the AHB
-related clocks rather than a sound card doing it.
-
-> +asoc-platform       : This is phandle list containing the references to platform device
-> +                      nodes that are used as part of the sound card dai-links.
-> +asoc-platform-names : This property contains list of platform names. The order of
-> +                      the platform names should match to that of the phandle order
-> +                      given in "asoc-platform".
-
-The device tree bindings should be OS neutral but ASoC is a Linux thing.
-This needs to be written in terms of the hardware it's describing.
-
-> +Required properties:
-> +- compatible  : "qcom,lpass-cpu-dai"
-> +- clocks      : A list of clock specifiers in the following order:
-> +                        * MI2S OSR clock
-> +                        * MI2S Bit clock
-> +- clock-names : A list of names in the following order:
-> +                        * mi2s_osr_clk
-> +                        * mi2s_bit_clk
-
-If there are names (which is good) why is the ordering important?  The
-whole point in having a mandatory list of names is to remove the
-ordering and completeness requirements.
-
-> +Required properties:
-> +- compatible      : "qcom,lpass-lpaif"
-> +- reg             : Address space for the LPASS subsystem registers
-> +- reg-names       : The name of the LPASS subsystem register address space
-> +- interrupts      : Phandle to the LPASS interrupt
-> +- interrupt-names : The names of the LPASS interrupt
-
-Again you need to document the valid names.
-
-> index 0000000000000000000000000000000000000000..d2ff501d44f7b7aa790cdadc8ba75c6a8bf37ccd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/qcom,lpass-pcm-mi2s.txt
-> @@ -0,0 +1,12 @@
-> +* Qualcomm Technologies IPQ806x PCM audio interface
-> +
-> +This node models the Qualcomm Technologies IPQ806x PCM audio interface.
-> +
-> +Required properties:
-> +- compatible: "qcom,lpass-pcm-mi2s"
-> +
-> +Example:
-> +
-> +lpass-pcm-mi2s {
-> +	compatible = "qcom,lpass-pcm-mi2s";
-> +};
-
-This doesn't appear to describe hardware - there are no register
-addresses or anything.  I'd guess this is most likely part of another
-hardware block and should be handled by the driver for that device.
-
---5Zxee1w1CL9fzjN4
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUdPQDAAoJECTWi3JdVIfQ1i4H/0pI1VFahaYWrWxJt7QGBDd6
-sITPJ0NMafCdfc+2bvUgV49y8K6KeU8cZ8Fj3Y8eGJAHw05j3m0laenLEmhZbwh1
-yoJVOgZWTvg2hBJkKdweDMDL1m4R4WqDVqUm4iomSFR9rj4CLqhLePI2ry58gioJ
-8QwzPpIGfuZD5ZHxNhFgj3rQG7tdZMbM4ruBI1ZWJTKoCc/jnDZG7eadYkTrzQ8N
-2LwoO/lFs1dm27fDqawWeyK/bo4rQ2s/K+BhmW2J2NsOcut3AZXFA1kEHUJNkbKD
-24Uis8gUYkL5wQlBE4BHJze9+XSzoL1QeWCywXMtnXYG2gFJfu5Cg5I+FOQNaR8=
-=vRS3
------END PGP SIGNATURE-----
-
---5Zxee1w1CL9fzjN4--
+Michal
