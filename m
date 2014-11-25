@@ -1,74 +1,73 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH V3 0/7] serial: Configure {big,native}-endian MMIO accesses
- via DT
-Date: Mon, 24 Nov 2014 15:55:25 -0800
-Message-ID: <5473C56D.1050308@gmail.com>
-References: <1416872182-6440-1-git-send-email-cernekee@gmail.com>
+From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: support passing console options with stdout-path
+Date: Tue, 25 Nov 2014 00:12:36 +0000
+Message-ID: <20141125001236.GA2361@bivouac.eciton.net>
+References: <1416867838-18652-1-git-send-email-leif.lindholm@linaro.org>
+ <20141124230016.GP20238@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1416872182-6440-1-git-send-email-cernekee@gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>, gregkh@linuxfoundation.org, jslaby@suse.cz, robh@kernel.org, grant.likely@linaro.org
-Cc: arnd@arndb.de, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141124230016.GP20238-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, ijc-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/24/2014 03:36 PM, Kevin Cernekee wrote:
-> My last submission attempted to work around serial driver coexistence
-> problems on multiplatform kernels.  Since there are still questions
-> surrounding the best way to solve that problem, this patch series
-> will focus on the narrower topic of big endian MMIO support on serial.
+On Tue, Nov 25, 2014 at 12:00:16AM +0100, Andrew Lunn wrote:
+> On Mon, Nov 24, 2014 at 10:23:58PM +0000, Leif Lindholm wrote:
+> > Support specifying console options (like with console=ttyXN,<options>)
+> > by appending them to the stdout-path property after a separating ':'.
+> > 
+> > Example:
+> > 	stdout-path = "uart0:115200";
+> > 
+> > This patch also modifies of_find_node_by_path() to match only the
+> > portion of the path before a ':'.
+> 
+> Hi Leif
+> 
+> These appears to somewhat conform to ePAPR, which says:
+> 
+>       A string that specifies the full path to the node representing
+>       the device to be used for boot console output. If the character
+>       ":" is present in the value it terminates the path.
+> 
+> So you can put any random junk after the :. However, are we going to
+> have backward/forward compatibility problems, and problems with
+> bootloaders? The current kernel code does not look for the :. So a new
+> DT blob on an old kernel will not work so well.
 
-FWIW:
+I _think_ this will be less of a problem in practice than it could be
+in theory.
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+The reason this is needed is that at least several platforms have
+different baudrate settings in firmware than the default provided by
+the kernel for their UART. As a result, stdout-path becomes
+semi-useless; the only thing it gives you is the ability to get
+earlycon output without specifying a specific device (and then the
+console turns to garbage once non-earlycon is enabled).
 
-> 
-> 
-> V2->V3:
-> 
->  - Document the new DT properties.
-> 
->  - Add libfdt-based wrapper, to complement the "struct device_node" based
->    version.
-> 
->  - Restructure early_init_dt_scan_chosen_serial() changes to use a
->    temporary variable, so it is easy to add more of_setup_earlycon()
->    properties later.
-> 
->  - Make of_serial and serial8250 honor the new "big-endian" property.
-> 
-> 
-> This series applies cleanly to:
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/glikely/linux.git devicetree/next-overlay
-> 
-> but was tested on the mips-for-linux-next branch because my BE platform
-> isn't supported in mainline yet.
-> 
-> 
-> Kevin Cernekee (7):
->   of: Add helper function to check MMIO register endianness
->   of/fdt: Add endianness helper function for early init code
->   of: Document {little,big,native}-endian bindings
->   serial: core: Add big-endian iotype
->   serial: earlycon: Set UPIO_MEM32BE based on DT properties
->   serial: of_serial: Support big-endian register accesses
->   serial: 8250: Add support for big-endian MMIO accesses
-> 
->  .../devicetree/bindings/common-properties.txt      | 60 ++++++++++++++++++++++
->  drivers/of/base.c                                  | 23 +++++++++
->  drivers/of/fdt.c                                   | 26 +++++++++-
->  drivers/tty/serial/8250/8250_core.c                | 20 ++++++++
->  drivers/tty/serial/8250/8250_early.c               |  5 ++
->  drivers/tty/serial/earlycon.c                      |  4 +-
->  drivers/tty/serial/of_serial.c                     |  3 +-
->  drivers/tty/serial/serial_core.c                   |  2 +
->  include/linux/of.h                                 |  6 +++
->  include/linux/of_fdt.h                             |  2 +
->  include/linux/serial_core.h                        | 15 +++---
->  11 files changed, 155 insertions(+), 11 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/common-properties.txt
-> 
+Hence, a platform that gets along happily today without the ability to
+specify console options in stdout-path would have no pressing need to
+add it to its dt. This should permit at least a very long, soft,
+transition path.
 
+(console= on kernel command line continues to override stdout-path.)
+
+> More worrying, barebox does not support the : either. So there is a
+> danger your bootloader suddenly goes silent after a dt blob update.
+
+_That_ would be most unfortunate.
+
+> Would it be safer to add a new property in chosen?
+
+My preference would be not, given the above, but the important thing
+is to get the functionality in so we get rid of mandatory console=.
+
+/
+    Leif
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
