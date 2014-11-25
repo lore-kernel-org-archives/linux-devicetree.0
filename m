@@ -1,75 +1,33 @@
-From: Aaron Sierra <asierra-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] mtd: fsl_upm: Support NAND ECC DTS properties
-Date: Tue, 25 Nov 2014 17:23:01 -0600 (CST)
-Message-ID: <1919968390.242626.1416957781902.JavaMail.zimbra@xes-inc.com>
-References: <1854666513.5578.1415473916534.JavaMail.zimbra@xes-inc.com> <5474E1DB.1090207@vanguardiasur.com.ar> <412246484.206926.1416953948359.JavaMail.zimbra@xes-inc.com> <547505E7.7000502@vanguardiasur.com.ar>
+From: Kevin Cernekee <cernekee@gmail.com>
+Subject: Re: [PATCH V2 01/10] tty: Fallback to use dynamic major number
+Date: Tue, 25 Nov 2014 15:37:16 -0800
+Message-ID: <CAJiQ=7DOxK2NzmC9gGsnARxGMN8wRQyGX+5u5YC_vt00ADVsDg@mail.gmail.com>
+References: <1415825647-6024-1-git-send-email-cernekee@gmail.com>
+ <1415825647-6024-2-git-send-email-cernekee@gmail.com> <20141125203431.GA9385@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <547505E7.7000502-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Jordan Friendshuh <jfriendshuh-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <20141125203431.GA9385@kroah.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Jiri Slaby <jslaby@suse.cz>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, daniel@zonque.org, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Grant Likely <grant.likely@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, tushar.b@samsung.com
 List-Id: devicetree@vger.kernel.org
 
------ Original Message -----
-> From: "Ezequiel Garcia" <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-> Sent: Tuesday, November 25, 2014 4:42:47 PM
-> 
-> On 11/25/2014 07:19 PM, Aaron Sierra wrote:
-> >> From: "Ezequiel Garcia" <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-> >> Sent: Tuesday, November 25, 2014 2:08:59 PM
-> >>
-> >> On 11/08/2014 04:11 PM, Aaron Sierra wrote:
-> >> [..]
-> >>> +
-> >>> +	/* We know mode is either NAND_ECC_SOFT or NAND_ECC_SOFT_BCH */
-> >>> +	if (strength < 0 && mode == NAND_ECC_SOFT_BCH) {
-> >>> +		dev_err(fun->dev,
-> >>> +			"ECC BCH mode requires nand-ecc-strength property");
-> >>> +		ret = -EINVAL;
-> >>> +		goto err;
-> >>> +	} else if (strength == 0) {
-> >>> +		dev_err(fun->dev, "ECC strength of 0 bits is unsupported");
-> >>> +		ret = -EINVAL;
-> >>> +		goto err;
-> >>> +	} else if (strength == 1 && mode == NAND_ECC_SOFT_BCH) {
-> >>> +		dev_err(fun->dev, "ECC BCH mode requires > 1-bit strength");
-> >>> +		ret = -EINVAL;
-> >>> +		goto err;
-> >>> +	} else if (strength > 1 && mode == NAND_ECC_SOFT) {
-> >>> +		dev_warn(fun->dev,
-> >>> +			"Forcing ECC BCH due to %d-bit strength\n", strength);
-> >>> +		mode = NAND_ECC_SOFT_BCH;
-> >>> +	}
-> >>> +	fun->chip.ecc.mode = mode;
-> >>> +	fun->chip.ecc.strength = strength;
-> >>> +
-> >>
-> 
+On Tue, Nov 25, 2014 at 12:34 PM, Greg KH <gregkh@linuxfoundation.org> wrote:
+> On Wed, Nov 12, 2014 at 12:53:58PM -0800, Kevin Cernekee wrote:
+>> From: Tushar Behera <tushar.behera@linaro.org>
+>
+> This email bounces, so I'm going to have to reject this patch.  I can't
+> accept a patch from a "fake" person, let alone something that touches
+> core code like this.
+>
+> Sorry, I can't accept anything in this series then.
 
-[ snip ]
+Oops, guess I probably should have updated his address after the V1
+emails bounced...
 
-> I'd say you should require an ECC step size in your binding, instead of
-> assuming the 512-byte that gets set if the ecc.size is 0.
-
-Yes, I agree that the fsl_upm driver should require that nand-ecc-step-size
-and nand-ecc-strength both be defined with "soft_bch".
-
-> BTW, how does this patch deal with old devicetree files?
-
-The fsl_upm driver previously only supported 1-bit "soft" ECC, so _this_
-patch expects that existing device trees don't define nand-ecc-strength
-or nand-ecc-mode. In that case "soft" ECC will be detected and used.
-
-However, if for some reason an existing device tree defines
-nand-ecc-strength, then the snippet that you provided above shows that
-the ECC mode would be overridden (forcing "soft_bch" for ECC strength
-values greater than 1).
-
--Aaron
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Before I send a new version, what do you think about the overall
+approach?  Should we try to make serial8250 coexist with the other
+"ttyS / major 4 / minor 64" drivers (possibly at the expense of
+compatibility) or is it better to start with a simpler, cleaner driver
+like serial/pxa?
