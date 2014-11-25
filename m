@@ -1,75 +1,60 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v2] clk: Add PWM clock driver
-Date: Tue, 25 Nov 2014 08:56:35 +0100
-Message-ID: <1416902195.3166.1.camel@pengutronix.de>
-References: <1415007078-7947-1-git-send-email-p.zabel@pengutronix.de>
-	 <20141125070720.12298.46343@quantum>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH RFC v2 08/12] soc: samsung: pm_domain: Add support for
+ parent power domain
+Date: Tue, 25 Nov 2014 08:59:29 +0100
+Message-ID: <CAPDyKFoBnViXQF=wDYp0x4gaOO4ht3a8KBeY6=k6_Zkkav28pQ@mail.gmail.com>
+References: <1416833572-6880-1-git-send-email-amit.daniel@samsung.com>
+	<1416834256-11225-1-git-send-email-amit.daniel@samsung.com>
+	<1416834256-11225-8-git-send-email-amit.daniel@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20141125070720.12298.46343@quantum>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Janusz =?UTF-8?Q?U=C5=BCycki?= <j.uzycki@elproma.com.pl>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1416834256-11225-8-git-send-email-amit.daniel@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Amit Daniel Kachhap <amit.daniel@samsung.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, pankaj.dubey@samsung.com, Kevin Hilman <khilman@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
+On 24 November 2014 at 14:04, Amit Daniel Kachhap
+<amit.daniel@samsung.com> wrote:
+> This patch adds supports for parent power domain. This will ensure
+> invoking of parent/child power domain on/off in a correct sequence.
+> In exynos7 SOC's, power domain controllers have parent and child
+> hierarchy.
+>
+> Cc: Kukjin Kim <kgene.kim@samsung.com>
+> Signed-off-by: Amit Daniel Kachhap <amit.daniel@samsung.com>
+> ---
+>  .../bindings/arm/exynos/power_domain.txt           |    2 +
+>  drivers/soc/samsung/pm_domains.c                   |   43 +++++++++++++++++++-
+>  2 files changed, 44 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/exynos/power_domain.txt b/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
+> index 00ebda1..0160bdc 100644
+> --- a/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
+> +++ b/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
+> @@ -24,6 +24,7 @@ Optional Properties:
+>         - pclkN, clkN: Pairs of parent of input clock and input clock to the
+>                 devices in this power domain. Maximum of 4 pairs (N = 0 to 3)
+>                 are supported currently.
+> +- parents: phandle of parent power domains.
+>
+>  Node of a device using power domains must have a samsung,power-domain property
+>  defined with a phandle to respective power domain.
+> @@ -48,6 +49,7 @@ Example:
+>         mfc_pd: power-domain@10044060 {
+>                 compatible = "samsung,exynos4210-pd", "samsung,exynos7-pd-mfc";
+>                 reg = <0x10044060 0x20>;
+> +               parents = <&pd_top>;
+>                 #power-domain-cells = <0>;
+>         };
 
-Am Montag, den 24.11.2014, 23:07 -0800 schrieb Mike Turquette:
-> Quoting Philipp Zabel (2014-11-03 01:31:18)
-> > Some board designers, when running out of clock output pads, decide to
-> > (mis)use PWM output pads to provide a clock to external components.
-> > This driver supports this practice by providing an adapter between the
-> > PWM and clock bindings in the device tree. As the PWM bindings specify
-> > the period in the device tree, this is a fixed clock.
-> > 
-> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > ---
-> > I'm resending this because last time the linux-pwm list was not in Cc:
-> > So far I have not received any comments on the patch itself. I have used
-> > it on a BoundaryDevices Nitrogen6X board to produce a master clock for
-> > the OV5640 MIPI CSI-2 camera module.
-> > 
-> > Changes since v1:
-> >  - none (rebased onto v3.18-rc3)
-> 
-> Hi Philipp,
-> 
-> Thanks for testing this. Is the Nitrogen6X board merged upstream? I'm OK
-> with the patch but prefer to merge things when a consumer is ready to
-> use it. I guess you are missing a patch to add the pwm-clock bits to the
-> Nitrogen6X dts?
+This seems like a good and generic approach to describe that a PM
+domain could have a parent. I would suggest to rename it, such it
+reflects its a PM domain binding though.
 
-The Nitrogen6X board is merged upstream already, I used this dts patch
-to register the clock:
+So, maybe we can add this as a common DT binding for the generic PM
+domain instead of having it as Exynos specific?
 
-diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-index 7628049..e2e7a22 100644
---- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-@@ -130,6 +130,18 @@
- 		power-supply = <&reg_3p3v>;
- 		status = "okay";
- 	};
-+
-+	mipi_mclk: mipi-mclk {
-+		compatible = "pwm-clock";
-+		clock-output-names = "mipi-mclk";
-+		/* Note: since the PWM reference clock is 66 MHz, the highest
-+		 * possible frequency with 50% duty cycle smaller than 27 MHz
-+		 * is 16.5 MHz: <&pwm3 0 61>;
-+		 * But we can also do 22 MHz with 33% duty cycle:
-+		 */
-+		pwms = <&pwm3 0 46>; /* 22 MHz */
-+		#clock-cells = <0>;
-+	};
- };
- 
- &audmux {
--- 
-2.1.1
-
-regards
-Philipp
-
+Kind regards
+Uffe
