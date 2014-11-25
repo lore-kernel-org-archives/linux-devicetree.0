@@ -1,171 +1,148 @@
-From: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC PATCH v2 2/4] Documentation: arm64/arm: dt bindings for
- numa.
-Date: Tue, 25 Nov 2014 11:55:20 +0800
-Message-ID: <5473FDA8.6080201@huawei.com>
-References: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com> <1416605010-10442-3-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: Re: [RFC PATCH] ARM: DRA: hwmod: RTC: Add reset function for RTC
+Date: Tue, 25 Nov 2014 09:32:48 +0530
+Message-ID: <5473FF68.3070805@ti.com>
+References: <1416199402-3865-1-git-send-email-lokeshvutla@ti.com> <546DB513.6000104@ti.com> <alpine.DEB.2.02.1411201644470.9204@utopia.booyaka.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416605010-10442-3-git-send-email-ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Will.Deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.02.1411201644470.9204@utopia.booyaka.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Paul Walmsley <paul@pwsan.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 2014/11/22 5:23, Ganapatrao Kulkarni wrote:
-> DT bindings for numa map for memory, cores to node and
-> proximity distance matrix of nodes to each other.
+Hi Paul,
+On Thursday 20 November 2014 10:26 PM, Paul Walmsley wrote:
+> On Thu, 20 Nov 2014, Lokesh Vutla wrote:
 > 
-> Signed-off-by: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/numa.txt | 103 +++++++++++++++++++++++++
->  1 file changed, 103 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/numa.txt
+>> On Monday 17 November 2014 10:13 AM, Lokesh Vutla wrote:
+>>> RTC IP have kicker feature which prevents spurious writes to its registers.
+>>> In order to write into any of the RTC registers, KICK values has te be
+>>> written to KICK registers. Currently hwmod is updating the IDLEMODE in rtc
+>>> sysconfig register without writing into any kick register which is a noop.
+>>> When autoidle is allowed for rtc, interruts are not received until IDLEMODE
+>>> is set to SIDLE_SMART_WKUP.
+>>> Adding a reset function to unlock RTC registers so that IDLEMODE is
+>>> updated.
+>> Ping..!!
+>> Is this patch acceptable?
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/numa.txt b/Documentation/devicetree/bindings/arm/numa.txt
-> new file mode 100644
-> index 0000000..ec6bf2d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/numa.txt
-> @@ -0,0 +1,103 @@
-> +==============================================================================
-> +NUMA binding description.
-> +==============================================================================
-> +
-> +==============================================================================
-> +1 - Introduction
-> +==============================================================================
-> +
-> +Systems employing a Non Uniform Memory Access (NUMA) architecture contain
-> +collections of hardware resources including processors, memory, and I/O buses,
-> +that comprise what is commonly known as a ??UMA node?? Processor
-> +accesses to memory within the local NUMA node is
-> +generally faster than processor accesses to memory outside of the local
-> +NUMA node. DT defines interfaces that allow the platform to convey NUMA node
-> +topology information to OS.
-> +
-> +==============================================================================
-> +2 - numa-map node
-> +==============================================================================
-> +
-> +DT Binding for NUMA can be defined for memory and CPUs to map them to
-> +respective NUMA nodes.
-> +
-> +The DT binding can defined using numa-map node.
-> +The numa-map will have following properties to define NUMA topology.
-> +
-> +- mem-map:	This property defines the association between a range of
-> +		memory and the proximity domain/numa node to which it belongs.
-> +
-> +note: memory range address is passed using either memory node of
-> +DT or UEFI system table and should match to the address defined in mem-map.
-> +
-> +- cpu-map:	This property defines the association of range of processors
-> +		(range of cpu ids) and the proximity domain to which
-> +		the processor belongs.
-> +
-> +- node-matrix:	This table provides a matrix that describes the relative
-> +		distance (memory latency) between all System Localities.
-> +		The value of each Entry[i j distance] in node-matrix table,
-> +		where i represents a row of a matrix and j represents a
-> +		column of a matrix, indicates the relative distances
-> +		from Proximity Domain/Numa node i to every other
-> +		node j in the system (including itself).
-> +
-> +The numa-map node must contain the appropriate #address-cells,
-> +#size-cells and #node-count properties.
-> +
-> +
-> +==============================================================================
-> +4 - Example dts
-> +==============================================================================
-> +
-> +Example 1: 2 Node system each having 8 CPUs and a Memory.
-> +
-> +	numa-map {
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +		#node-count = <2>;
-> +		mem-map =  <0x0 0x00000000 0>,
-> +		           <0x100 0x00000000 1>;
-> +
-> +		cpu-map = <0 7 0>,
-> +			  <8 15 1>;
+> Lokesh
+> 
+> 1. This looks like a fix.  Is this intended to go in as a v3.18-rc patch, 
+> or against v3.19?  If so it would be very helpful for the maintainers if 
+> you were to state that somewhere.
+Yes. This is a fix, intended to go in 3.18-rc. Sorry should have
+mentioned it.
+> 
+> 2. Your patch unlocks the RTC registers, but never relocks it.  This seems 
+> to defeat the point of the spurious write protection.  Shouldn't your 
+> patch only unlock the RTC immediately before the hwmod code touches the 
+> RTC registers, and then relock it immediately afterwards, per SPRUHZ6 
+> section 23.4.3.3?  If so then the .reset function pointer is the wrong 
+> place for this; I would suggest adding some .lock and .unlock function 
+> pointers that are to be called before and after any register write to the 
+> IP block.
+Yeah I agree with you.
+Currently rtc driver unlocks these kick registers in probe and leaves it unlocks for
+further use.
+But if hwmod does unlock and lock for every sysconfig write driver should also
+implement unlock and lock for every rtc register write, which adds an extra overhead.
+I am not sure if some one writes into rtc registers other than hwmod and driver.
+IMO we can leave it unlocked as the driver does.
+> 
+> 3. Your macros don't mention DRA7xx specifically.  Does this sequence 
+> apply to some other TI chips, or just DRA7xx?  Please document this in a 
+> comment above the macros, and possibly change the name of the macros to 
+> refer to DRA7XX.
+This sequence applies to AM43xx and AM33xx also. So made it generic.
+Ill document it.
 
-The cpu range is continuous here. But if there is a situation like below:
-
-0 2 4 6 belong to node 0
-1 3 5 7 belong to node 1
-
-This case is very common on X86. I don't know the real situation of arm as
-I don't have a hardware with 2 nodes.
-
-How can we generate a DTS about this situation? like below? Can be parsed?
-
-		cpu-map = <0 2 4 6 0>,
-			  <1 3 5 7 1>;
-
-Thanks,
-Shannon
-
-> +
-> +		node-matrix = <0 0 10>,
-> +			      <0 1 20>,
-> +			      <1 0 20>,
-> +			      <1 1 10>;
-> +	};
-> +
-> +Example 2: 4 Node system each having 4 CPUs and a Memory.
-> +
-> +	numa-map {
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +		#node-count = <2>;
-> +		mem-map =  <0x0 0x00000000 0>,
-> +		           <0x100 0x00000000 1>,
-> +		           <0x200 0x00000000 2>,
-> +		           <0x300 0x00000000 3>;
-> +
-> +		cpu-map = <0 7 0>,
-> +			  <8 15 1>,
-> +			  <16 23 2>,
-> +			  <24 31 3>;
-> +
-> +		node-matrix = <0 0 10>,
-> +			      <0 1 20>,
-> +			      <0 2 20>,
-> +			      <0 3 20>,
-> +			      <1 0 20>,
-> +			      <1 1 10>,
-> +			      <1 2 20>,
-> +			      <1 3 20>,
-> +			      <2 0 20>,
-> +			      <2 1 20>,
-> +			      <2 2 10>,
-> +			      <2 3 20>,
-> +			      <3 0 20>,
-> +			      <3 1 20>,
-> +			      <3 2 20>,
-> +			      <3 3 10>;
-> +	};
+Thanks and regards,
+Lokesh
 > 
 > 
+> - Paul
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>
+>> Thanks and regards,
+>> Lokesh
+>>>
+>>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+>>> ---
+>>>  arch/arm/mach-omap2/omap_hwmod.h          |  1 +
+>>>  arch/arm/mach-omap2/omap_hwmod_7xx_data.c |  1 +
+>>>  arch/arm/mach-omap2/omap_hwmod_reset.c    | 23 +++++++++++++++++++++++
+>>>  3 files changed, 25 insertions(+)
+>>>
+>>> diff --git a/arch/arm/mach-omap2/omap_hwmod.h b/arch/arm/mach-omap2/omap_hwmod.h
+>>> index 512f809..3703f99 100644
+>>> --- a/arch/arm/mach-omap2/omap_hwmod.h
+>>> +++ b/arch/arm/mach-omap2/omap_hwmod.h
+>>> @@ -744,6 +744,7 @@ const char *omap_hwmod_get_main_clk(struct omap_hwmod *oh);
+>>>   */
+>>>  
+>>>  extern int omap_hwmod_aess_preprogram(struct omap_hwmod *oh);
+>>> +int omap_hwmod_rtc_unlock(struct omap_hwmod *oh);
+>>>  
+>>>  /*
+>>>   * Chip variant-specific hwmod init routines - XXX should be converted
+>>> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>>> index 5684f11..90e1df4 100644
+>>> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>>> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>>> @@ -1584,6 +1584,7 @@ static struct omap_hwmod_class_sysconfig dra7xx_rtcss_sysc = {
+>>>  static struct omap_hwmod_class dra7xx_rtcss_hwmod_class = {
+>>>  	.name	= "rtcss",
+>>>  	.sysc	= &dra7xx_rtcss_sysc,
+>>> +	.reset	= &omap_hwmod_rtc_unlock,
+>>>  };
+>>>  
+>>>  /* rtcss */
+>>> diff --git a/arch/arm/mach-omap2/omap_hwmod_reset.c b/arch/arm/mach-omap2/omap_hwmod_reset.c
+>>> index 65e186c..b825a28 100644
+>>> --- a/arch/arm/mach-omap2/omap_hwmod_reset.c
+>>> +++ b/arch/arm/mach-omap2/omap_hwmod_reset.c
+>>> @@ -30,6 +30,12 @@
+>>>  
+>>>  #include "omap_hwmod.h"
+>>>  
+>>> +#define RTC_KICK0_REG_OFFSET	0x6c
+>>> +#define RTC_KICK1_REG_OFFSET	0x70
+>>> +
+>>> +#define RTC_KICK0_VALUE		0x83E70B13
+>>> +#define RTC_KICK1_VALUE		0x95A4F1E0
+>>> +
+>>>  /**
+>>>   * omap_hwmod_aess_preprogram - enable AESS internal autogating
+>>>   * @oh: struct omap_hwmod *
+>>> @@ -51,3 +57,20 @@ int omap_hwmod_aess_preprogram(struct omap_hwmod *oh)
+>>>  
+>>>  	return 0;
+>>>  }
+>>> +
+>>> +/**
+>>> + * omap_hwmod_rtc_unlock - Reset and unlock the Kicker mechanism.
+>>> + * @oh: struct omap_hwmod *
+>>> + *
+>>> + * RTC IP have kicker feature.  This prevents spurious writes to its registers.
+>>> + * In order to write into any of the RTC registers, KICK values has te be
+>>> + * written in respective KICK registers. This is needed for hwmod to write into
+>>> + * sysconfig register.
+>>> + */
+>>> +int omap_hwmod_rtc_unlock(struct omap_hwmod *oh)
+>>> +{
+>>> +	omap_hwmod_write(RTC_KICK0_VALUE, oh, RTC_KICK0_REG_OFFSET);
+>>> +	omap_hwmod_write(RTC_KICK1_VALUE, oh, RTC_KICK1_REG_OFFSET);
+>>> +
+>>> +	return 0;
+>>> +}
+>>>
+>>
+> 
+> 
+> - Paul
 > 
 
-
--- 
-Shannon
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
