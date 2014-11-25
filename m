@@ -1,34 +1,92 @@
-From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 3/3] DT: Add a vendor prefix for Cosmic Circuits
-Date: Tue, 25 Nov 2014 16:52:47 -0300
-Message-ID: <1416945167-28165-4-git-send-email-ezequiel.garcia@imgtec.com>
-References: <1416945167-28165-1-git-send-email-ezequiel.garcia@imgtec.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 5/5] tty/serial: Add Spreadtrum sc9836-uart driver
+ support
+Date: Tue, 25 Nov 2014 12:03:53 -0800
+Message-ID: <20141125200353.GA7653@kroah.com>
+References: <Sharkl64-v3>
+ <1416917818-10506-1-git-send-email-chunyan.zhang@spreadtrum.com>
+ <1416917818-10506-6-git-send-email-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416945167-28165-1-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, Mark.Rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1416917818-10506-6-git-send-email-chunyan.zhang@spreadtrum.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+Cc: grant.likely@linaro.org, robh+dt@kernel.org, catalin.marinas@arm.com, ijc+devicetree@hellion.org.uk, jslaby@suse.cz, galak@codeaurora.org, broonie@linaro.org, mark.rutland@arm.com, m-karicheri2@ti.com, pawel.moll@arm.com, artagnon@gmail.com, rrichter@cavium.com, will.deacon@arm.com, arnd@arndb.de, gnomes@lxorguk.ukuu.org.uk, corbet@lwn.net, jason@lakedaemon.net, broonie@kernel.org, heiko@sntech.de, shawn.guo@freescale.com, florian.vaussard@epfl.ch, andrew@lunn.ch, hytszk@gmail.com, orsonzhai@gmail.com, geng.ren@spreadtrum.com, zhizhou.zhang@spreadtrum.com, lanqing.liu@spreadtrum.com, zhang.lyra@gmail.com, wei.qiao@spreadtrum.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, sprdlinux@freelists.org, linux-doc@vger.kernel.org, linux-serial@vger.kernel.org, linux-api@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+On Tue, Nov 25, 2014 at 08:16:58PM +0800, Chunyan Zhang wrote:
+> Add a full sc9836-uart driver for SC9836 SoC which is based on the
+> spreadtrum sharkl64 platform.
+> This driver also support earlycon.
+> 
+> Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+> Signed-off-by: Orson Zhai <orson.zhai@spreadtrum.com>
+> Originally-by: Lanqing Liu <lanqing.liu@spreadtrum.com>
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 723999d..1bfa13a 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -35,6 +35,7 @@ chrp	Common Hardware Reference Platform
- chunghwa	Chunghwa Picture Tubes Ltd.
- cirrus	Cirrus Logic, Inc.
- cortina	Cortina Systems, Inc.
-+cosmic	Cosmic Circuits
- crystalfontz	Crystalfontz America, Inc.
- dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
- davicom	DAVICOM Semiconductor, Inc.
--- 
-2.1.0
+Some objections:
+
+> +static struct platform_driver sprd_platform_driver = {
+> +	.probe = sprd_probe,
+> +	.remove = sprd_remove,
+> +	.suspend = sprd_suspend,
+> +	.resume = sprd_resume,
+> +	.driver = {
+> +		   .name = "sprd_serial",
+> +		   .owner = THIS_MODULE,
+
+platform drivers don't need .owner in them anymore, it's handled by the
+driver core automatically.
+
+
+> +		   .of_match_table = of_match_ptr(serial_ids),
+> +		   },
+> +};
+> +
+> +static int __init sprd_serial_init(void)
+> +{
+> +	int ret = 0;
+> +
+> +	ret = uart_register_driver(&sprd_uart_driver);
+> +	if (unlikely(ret != 0))
+> +		return ret;
+
+NEVER use unlikely unless you can measure the difference without it.
+And even then, you better be able to justify it.  For something as dumb
+as this type of check, youare working against the complier and cpu which
+already knows that 0 is the usual response.
+
+So please remove all usages of likely/unlikely in this patch series.
+
+> +
+> +	ret = platform_driver_register(&sprd_platform_driver);
+> +	if (unlikely(ret != 0))
+> +		uart_unregister_driver(&sprd_uart_driver);
+> +
+> +	return ret;
+> +}
+> +
+> +static void __exit sprd_serial_exit(void)
+> +{
+> +	platform_driver_unregister(&sprd_platform_driver);
+> +	uart_unregister_driver(&sprd_uart_driver);
+> +}
+> +
+> +module_init(sprd_serial_init);
+> +module_exit(sprd_serial_exit);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_DESCRIPTION("Spreadtrum SoC serial driver series");
+> diff --git a/include/uapi/linux/serial_core.h b/include/uapi/linux/serial_core.h
+> index 16ad852..d9a8c88 100644
+> --- a/include/uapi/linux/serial_core.h
+> +++ b/include/uapi/linux/serial_core.h
+> @@ -247,4 +247,7 @@
+>  /* MESON */
+>  #define PORT_MESON	109
+>  
+> +/* SPRD SERIAL  */
+> +#define PORT_SPRD   110
+
+Please use a tab character here.
