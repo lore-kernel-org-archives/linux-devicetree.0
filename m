@@ -1,131 +1,86 @@
-From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] iio: adc: Cosmic Circuits 10001 ADC driver
-Date: Tue, 25 Nov 2014 19:03:52 -0300
-Message-ID: <5474FCC8.8080906@imgtec.com>
-References: <1415888044-16635-1-git-send-email-ezequiel.garcia@imgtec.com> <1415888044-16635-2-git-send-email-ezequiel.garcia@imgtec.com> <546FE3A7.6040308@gmx.de> <5474C062.2020604@imgtec.com> <5474F7A5.6030008@gmx.de>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 7/9] ASoC: qcom: Add ability to build QCOM drivers
+Date: Tue, 25 Nov 2014 22:07:38 +0000
+Message-ID: <20141125220737.GX7712@sirena.org.uk>
+References: <1416423169-21865-1-git-send-email-kwestfie@codeaurora.org>
+ <1416423169-21865-8-git-send-email-kwestfie@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5474F7A5.6030008-Mmb7MZpHnFY@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, Mark.Rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="cLQvRfYaHwHCueo/"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1416423169-21865-8-git-send-email-kwestfie@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kenneth Westfield <kwestfie@codeaurora.org>
+Cc: ALSA Mailing List <alsa-devel@alsa-project.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, Greg KH <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
 
+--cLQvRfYaHwHCueo/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 11/25/2014 06:41 PM, Hartmut Knaack wrote:
->>
->> Unless I'm missing something, that's exactly what XOR does.
->>
->> Example:
->>
->> reserved_channels = 0x2;
->> channel_map = 0x7 ^ reserved_channels -> 0x5
->>
-> You miss to check ret for a valid range, which you don't need to do when masking out channels.
-> Example:
-> reserved_channels = 0x8;
-> channel_map = 0x7 ^ reserved_channels -> 0xf
-> And this is actually happening in the current revision (with the wrong channel_map assignment), that a reserved channel in DT would become usable.
+On Wed, Nov 19, 2014 at 10:52:47AM -0800, Kenneth Westfield wrote:
 
-Right, definitely a check is needed.
+> +++ b/sound/soc/qcom/Kconfig
+> @@ -0,0 +1,43 @@
+> +#
+> +# Copyright (c) 2013-2014 The Linux Foundation. All rights reserved.
 
->>>> +
->>>> +	adc_dev->reg = devm_regulator_get(&pdev->dev, "vref");
->>>> +	if (IS_ERR_OR_NULL(adc_dev->reg))
->>>> +		return -EINVAL;
->>> 	if (IS_ERR(adc_dev->reg))
->>> 		return PTR_ERR(adc_dev->reg);
->>
->> Are you sure? What if devm_regulator_get() returns NULL?
->>
-> I had a look at it, but couldn't figure out a condition in which it would return NULL. But I'd be happy to be informed of anything different.
+Is there some kind of copyright assignment on file or something?  It's
+weird to have someone else without obvious authorship own the
+copyright...
 
-If CONFIG_REGULATOR=n you get NULL there (although I added a select REGULATOR
-on the v4 I just posted).
+> +# Permission to use, copy, modify, and/or distribute this software for any
+> +# purpose with or without fee is hereby granted, provided that the above
+> +# copyright notice and this permission notice appear in all copies.
+> +#
+> +# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+> +# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+> +# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+> +# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+> +# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+> +# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+> +# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
->>>> +
->>>> +	ret = regulator_enable(adc_dev->reg);
->>>> +	if (ret)
->>>> +		return ret;
->>>> +
->>>> +	indio_dev->dev.parent = &pdev->dev;
->>>> +	indio_dev->name = dev_name(&pdev->dev);
->>>> +	indio_dev->info = &cc10001_adc_info;
->>>> +	indio_dev->modes = INDIO_DIRECT_MODE;
->>>> +
->>>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>>> +	adc_dev->reg_base = devm_ioremap_resource(&pdev->dev, res);
->>>> +	if (IS_ERR(adc_dev->reg_base))
->>> Need to put error code into ret.
->>
->> Right.
->>
->>>> +		goto err_disable_reg;
->>>> +
->>>> +	adc_dev->adc_clk = devm_clk_get(&pdev->dev, "adc");
->>>> +	if (IS_ERR(adc_dev->adc_clk)) {
->>>> +		dev_err(&pdev->dev, "Failed to get the clock\n");
->>> Need to put error code into ret.
->>>> +		goto err_disable_reg;
->>>> +	}
->>>> +
->>>> +	ret = clk_prepare_enable(adc_dev->adc_clk);
->>>> +	if (ret) {
->>>> +		dev_err(&pdev->dev, "Failed to enable the clock\n");
->>>> +		goto err_disable_reg;
->>>> +	}
->>>> +
->>>> +	adc_clk_rate = clk_get_rate(adc_dev->adc_clk);
->>>> +	if (!adc_clk_rate) {
->>>> +		ret = -EINVAL;
->>>> +		dev_err(&pdev->dev, "null clock rate!\n");
->>> Start message with upper case?
->>
->> Actually, I'd rather make the others start with lower case.
-> Fair enough, unless they are full sentences like here. My english grammar tells me they should start with capital letters.
+Please just license the file under the GPL, all the drivers that get
+built from here are GPLed - I can't see any reason for this to have an
+odd license.
 
-Yeah, but it's not the start of the message, as it's prefixed
-with the device stuff.
+> +config SND_SOC_QCOM
+> +	bool "SoC Audio support for QCOM platforms"
+> +	help
+> +          Support for audio in Qualcomm Technologies SOC-based systems.
+> +          Say Y if you want to use audio devices that will run on IPQ806x and similar SOCs.
+> +
 
->>
->>>> +		goto err_disable_clk;
->>>> +	}
->>>> +
->>>> +	adc_dev->eoc_delay_ns = NSEC_PER_SEC / adc_clk_rate;
->>>> +	adc_dev->start_delay_ns = adc_dev->eoc_delay_ns * CC10001_WAIT_CYCLES;
->>>> +
->>>> +	/* Setup the ADC channels available on the device */
->>>> +	ret = cc10001_adc_channel_init(indio_dev);
->>>> +	if (ret < 0) {
->>>> +		dev_err(&pdev->dev, "Could not initialize the channels.\n");
->>>> +		goto err_disable_clk;
->>>> +	}
->>>> +
->>>> +	mutex_init(&adc_dev->lock);
->>>> +
->>>> +	ret = iio_triggered_buffer_setup(indio_dev, NULL,
->>>> +					 &cc10001_adc_trigger_h, NULL);
->>>> +	if (ret < 0)
->>>> +		goto err_disable_clk;
->>>> +
->>>> +	ret = iio_device_register(indio_dev);
->>>> +	if (ret < 0)
->>>> +		goto err_cleanup_buffer;
->>>> +
->>>> +	platform_set_drvdata(pdev, indio_dev);
->>> Move this above iio_device_register.
->>
->> What for?
-> To make iio_device_register the last operation of the probe.
+I'd expect this to be the first thing in the file not the last.  Why are
+things in here bools, shouldn't they be tristates?
 
-I really don't think it matters, since platform_get_drvdata
-is only called in the remove.
+> index 0000000000000000000000000000000000000000..0a74177df75f7aa5f7fbaab35da9b92689fa3d6a
+> --- /dev/null
+> +++ b/sound/soc/qcom/Makefile
+> @@ -0,0 +1,11 @@
+> +#QCOM SOUNDCARDS
+> +
 
-I'll move it if you think it's worth it, though.
+This appears to be CPU drivers as well as sound cards (as you'd expect
+for machine drivers) so the comment isn't quite right - just remove it.
 
-Thanks for the review!
--- 
-Ezequiel
+--cLQvRfYaHwHCueo/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUdP2pAAoJECTWi3JdVIfQgzgH/1G4c/kwG6+/EwQCxwAVK3PZ
+ipvWtstY/0vxzRMfXUL42oBy0NHenudNLmcAZ8bhaAejxG2G7gxXdMvonwFssx+4
+4JQBkJ5WyY7JWm/LZVINDAxTaJllEkCPmVoI4rUXt4W2Zi5VlOa5Xt3CsQIcW3gp
+D8Roo4eUjjSBPGrzA2jIvBqR5z0YIA9c/EtBO9/dZVzmfE0/py8OpMfX9GLyDyv9
+ErLAumSZTVpq+Ar/+J4ES/Odo8hrwG/1KFYVrFJICrGUnlg0turS2dlQCVS5sWGO
+5Sf8cVw+bRbpq7MVC82/EzZiyWuVrr3SHrnTGsNJyEXirsnfz+EfHuQG4usxmco=
+=+oBh
+-----END PGP SIGNATURE-----
+
+--cLQvRfYaHwHCueo/--
