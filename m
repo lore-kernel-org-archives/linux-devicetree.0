@@ -1,123 +1,134 @@
-From: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Subject: Re: [PATCH v2] mtd: fsl_upm: Support NAND ECC DTS properties
-Date: Tue, 25 Nov 2014 19:42:47 -0300
-Message-ID: <547505E7.7000502@vanguardiasur.com.ar>
-References: <1854666513.5578.1415473916534.JavaMail.zimbra@xes-inc.com> <5474E1DB.1090207@vanguardiasur.com.ar> <412246484.206926.1416953948359.JavaMail.zimbra@xes-inc.com>
+From: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] iio: adc: Cosmic Circuits 10001 ADC driver
+Date: Tue, 25 Nov 2014 23:53:18 +0100
+Message-ID: <5475085E.8090806@gmx.de>
+References: <1415888044-16635-1-git-send-email-ezequiel.garcia@imgtec.com> <1415888044-16635-2-git-send-email-ezequiel.garcia@imgtec.com> <546FE3A7.6040308@gmx.de> <5474C062.2020604@imgtec.com> <5474F7A5.6030008@gmx.de> <5474FCC8.8080906@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <412246484.206926.1416953948359.JavaMail.zimbra-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Aaron Sierra <asierra-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Jordan Friendshuh <jfriendshuh-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5474FCC8.8080906-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, Mark.Rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 11/25/2014 07:19 PM, Aaron Sierra wrote:
->> From: "Ezequiel Garcia" <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
->> Sent: Tuesday, November 25, 2014 2:08:59 PM
->>
->> On 11/08/2014 04:11 PM, Aaron Sierra wrote:
->> [..]
->>> +
->>> +	/* We know mode is either NAND_ECC_SOFT or NAND_ECC_SOFT_BCH */
->>> +	if (strength < 0 && mode == NAND_ECC_SOFT_BCH) {
->>> +		dev_err(fun->dev,
->>> +			"ECC BCH mode requires nand-ecc-strength property");
->>> +		ret = -EINVAL;
->>> +		goto err;
->>> +	} else if (strength == 0) {
->>> +		dev_err(fun->dev, "ECC strength of 0 bits is unsupported");
->>> +		ret = -EINVAL;
->>> +		goto err;
->>> +	} else if (strength == 1 && mode == NAND_ECC_SOFT_BCH) {
->>> +		dev_err(fun->dev, "ECC BCH mode requires > 1-bit strength");
->>> +		ret = -EINVAL;
->>> +		goto err;
->>> +	} else if (strength > 1 && mode == NAND_ECC_SOFT) {
->>> +		dev_warn(fun->dev,
->>> +			"Forcing ECC BCH due to %d-bit strength\n", strength);
->>> +		mode = NAND_ECC_SOFT_BCH;
->>> +	}
->>> +	fun->chip.ecc.mode = mode;
->>> +	fun->chip.ecc.strength = strength;
->>> +
->>
->> Aside from my comment about the lack of ECC specification in the
->> binding, I think the above is wrong.
->>
->> You don't have hardware ECC, but software ECC (either hamming or BCH).
->> So, you don't need to specify any nand_ecc_ctrl.strength (i.e.
->> ecc.strength above).
->>
->> It'll be set by the NAND core and override any value you set
->> See nand_scan_tail.
+Ezequiel Garcia schrieb am 25.11.2014 23:03:
 > 
-> Ezequiel,
-> This patch was originally the second of two patches. The first was applied
-> to l2-mtd.git on 11/5/2014:
 > 
->     mtd: nand: Base BCH ECC bytes on required strength
+> On 11/25/2014 06:41 PM, Hartmut Knaack wrote:
+>>>
+>>> Unless I'm missing something, that's exactly what XOR does.
+>>>
+>>> Example:
+>>>
+>>> reserved_channels = 0x2;
+>>> channel_map = 0x7 ^ reserved_channels -> 0x5
+>>>
+>> You miss to check ret for a valid range, which you don't need to do when masking out channels.
+>> Example:
+>> reserved_channels = 0x8;
+>> channel_map = 0x7 ^ reserved_channels -> 0xf
+>> And this is actually happening in the current revision (with the wrong channel_map assignment), that a reserved channel in DT would become usable.
 > 
-> It affects the code in nand_scan_tail that you're referring to so that it
-> looks like this:
+> Right, definitely a check is needed.
+No, that's not needed when using AND, as it can not add bits in the channel map. The following will do the job:
+		adc_dev->channel_map &= ~ret;
 > 
-> 		/*
-> 		 * Board driver should supply ecc.size and ecc.bytes values to
-> 		 * select how many bits are correctable; see nand_bch_init()
-> 		 * for details. Otherwise, default to 4 bits for large page
-> 		 * devices.
-> 		 */
-> 		if (!ecc->size && (mtd->oobsize >= 64)) {
-> 			ecc->size = 512;
-> 			ecc->bytes = DIV_ROUND_UP(13 * ecc->strength, 8);
-> 		}
-> 		ecc->priv = nand_bch_init(mtd, ecc->size, ecc->bytes,
-> 					       &ecc->layout);
-> 		if (!ecc->priv) {
-> 			pr_warn("BCH ECC initialization failed!\n");
-> 			BUG();
-> 		}
-> 		ecc->strength = ecc->bytes * 8 / fls(8 * ecc->size);
+>>>>> +
+>>>>> +	adc_dev->reg = devm_regulator_get(&pdev->dev, "vref");
+>>>>> +	if (IS_ERR_OR_NULL(adc_dev->reg))
+>>>>> +		return -EINVAL;
+>>>> 	if (IS_ERR(adc_dev->reg))
+>>>> 		return PTR_ERR(adc_dev->reg);
+>>>
+>>> Are you sure? What if devm_regulator_get() returns NULL?
+>>>
+>> I had a look at it, but couldn't figure out a condition in which it would return NULL. But I'd be happy to be informed of anything different.
 > 
-> In this case ecc->strength is unnecessarily recalculated at the end and
-> ecc->strength isn't checked for zero in the initial calculation. Perhaps
-> this block in nand_scan_tail should be patched again to preserve the
-> original behaviour if ecc->strength or ecc->size are zero.
+> If CONFIG_REGULATOR=n you get NULL there (although I added a select REGULATOR
+> on the v4 I just posted).
 > 
-
-Exactly, I was talking about that snippet. I missed the fact that
-ecc.strength is used to get bytes, and then re-calculated. Some comments
-are definitely needed there.
-
-> The only other in-kernel user of SOFT_BCH is sunxi_nand.c and it calculates
-> ecc->bytes from ecc->size and ecc->strength itself, so it has defined all
-> three values by this point.
+Indeed, thanks. Now I'm thinking if it would make sense to handle this special case in a special way (as it would be caused by an invalid kernel config). Well, I guess, I leave it up to you.
+>>>>> +
+>>>>> +	ret = regulator_enable(adc_dev->reg);
+>>>>> +	if (ret)
+>>>>> +		return ret;
+>>>>> +
+>>>>> +	indio_dev->dev.parent = &pdev->dev;
+>>>>> +	indio_dev->name = dev_name(&pdev->dev);
+>>>>> +	indio_dev->info = &cc10001_adc_info;
+>>>>> +	indio_dev->modes = INDIO_DIRECT_MODE;
+>>>>> +
+>>>>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>>>> +	adc_dev->reg_base = devm_ioremap_resource(&pdev->dev, res);
+>>>>> +	if (IS_ERR(adc_dev->reg_base))
+>>>> Need to put error code into ret.
+>>>
+>>> Right.
+>>>
+>>>>> +		goto err_disable_reg;
+>>>>> +
+>>>>> +	adc_dev->adc_clk = devm_clk_get(&pdev->dev, "adc");
+>>>>> +	if (IS_ERR(adc_dev->adc_clk)) {
+>>>>> +		dev_err(&pdev->dev, "Failed to get the clock\n");
+>>>> Need to put error code into ret.
+>>>>> +		goto err_disable_reg;
+>>>>> +	}
+>>>>> +
+>>>>> +	ret = clk_prepare_enable(adc_dev->adc_clk);
+>>>>> +	if (ret) {
+>>>>> +		dev_err(&pdev->dev, "Failed to enable the clock\n");
+>>>>> +		goto err_disable_reg;
+>>>>> +	}
+>>>>> +
+>>>>> +	adc_clk_rate = clk_get_rate(adc_dev->adc_clk);
+>>>>> +	if (!adc_clk_rate) {
+>>>>> +		ret = -EINVAL;
+>>>>> +		dev_err(&pdev->dev, "null clock rate!\n");
+>>>> Start message with upper case?
+>>>
+>>> Actually, I'd rather make the others start with lower case.
+>> Fair enough, unless they are full sentences like here. My english grammar tells me they should start with capital letters.
 > 
->> So, I'd say you just need to specify the nand-ecc-mode in the devicetree
->> binding.
->>
->> The nand-ecc-strength and nand-ecc-step-size are meant for controllers
->> with hardware ECC support.
+> Yeah, but it's not the start of the message, as it's prefixed
+> with the device stuff.
 > 
-> Software BCH allows controllers without hardware support for multiple
-> bit correction to be used with NAND devices that require multiple bit
-> correction, so like a hardware controller it needs to know how many
-> bits to correct.
+>>>
+>>>>> +		goto err_disable_clk;
+>>>>> +	}
+>>>>> +
+>>>>> +	adc_dev->eoc_delay_ns = NSEC_PER_SEC / adc_clk_rate;
+>>>>> +	adc_dev->start_delay_ns = adc_dev->eoc_delay_ns * CC10001_WAIT_CYCLES;
+>>>>> +
+>>>>> +	/* Setup the ADC channels available on the device */
+>>>>> +	ret = cc10001_adc_channel_init(indio_dev);
+>>>>> +	if (ret < 0) {
+>>>>> +		dev_err(&pdev->dev, "Could not initialize the channels.\n");
+>>>>> +		goto err_disable_clk;
+>>>>> +	}
+>>>>> +
+>>>>> +	mutex_init(&adc_dev->lock);
+>>>>> +
+>>>>> +	ret = iio_triggered_buffer_setup(indio_dev, NULL,
+>>>>> +					 &cc10001_adc_trigger_h, NULL);
+>>>>> +	if (ret < 0)
+>>>>> +		goto err_disable_clk;
+>>>>> +
+>>>>> +	ret = iio_device_register(indio_dev);
+>>>>> +	if (ret < 0)
+>>>>> +		goto err_cleanup_buffer;
+>>>>> +
+>>>>> +	platform_set_drvdata(pdev, indio_dev);
+>>>> Move this above iio_device_register.
+>>>
+>>> What for?
+>> To make iio_device_register the last operation of the probe.
 > 
-
-Right, right.
-
-I'd say you should require an ECC step size in your binding, instead of
-assuming the 512-byte that gets set if the ecc.size is 0.
-
-BTW, how does this patch deal with old devicetree files?
--- 
-Ezequiel Garcia, VanguardiaSur
-www.vanguardiasur.com.ar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> I really don't think it matters, since platform_get_drvdata
+> is only called in the remove.
+> 
+> I'll move it if you think it's worth it, though.
+> 
+> Thanks for the review!
+> 
