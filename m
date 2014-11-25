@@ -1,33 +1,67 @@
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V6 00/12] Tegra xHCI support
-Date: Tue, 25 Nov 2014 19:02:22 +0530
-Message-ID: <CAJe_Zhcz=WOLy0_98xRj6=i2+5MFeXQGPmYJhnpy1NfUEPJ-0w@mail.gmail.com>
-References: <1416874644-12070-1-git-send-email-abrestic@chromium.org>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] dt-bindings: simplefb-sunxi: Add
+ sunxi simplefb extensions
+Date: Tue, 25 Nov 2014 15:38:02 +0200
+Message-ID: <5474863A.5040801@ti.com>
+References: <1416309051-26784-1-git-send-email-hdegoede@redhat.com> <1416309051-26784-3-git-send-email-hdegoede@redhat.com> <547476DA.2030004@ti.com> <54747B72.1050406@redhat.com> <54747DCF.9010502@ti.com> <5474824F.8080000@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416874644-12070-1-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kumar Gala <galak@codeau>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="stKCBNMHWKr9p33iMngmxajA5t3O6jPtS"
+Return-path: <linux-sunxi+bncBCGMHFOOT4LBBSUM2KRQKGQEKOYMKVA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <5474824F.8080000-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 25 November 2014 at 05:47, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> This series adds support for xHCI on NVIDIA Tegra SoCs.  This includes:
->  - patches 1, 2, and 3: minor cleanups for mailbox framework and xHCI,
->  - patches 4 and 5: adding a driver for the mailbox used to communicate
->    with the xHCI controller's firmware,
->  - patches 6 and 7: extending the XUSB pad controller driver to support
->    the USB PHY types (UTMI, HSIC, and USB3),
->  - patches 8 and 9: adding a xHCI host-controller driver, and
->  - patches 10, 11, and 12: updating the relevant DT files.
->
-> The mailbox driver (patch 5) has a compile-time dependency on patch 2 and
-> a run-time dependency on patch 3.  Both the PHY (patch 7) and host (patch 9)
-> drivers have compile-time dependencies on the mailbox driver.  The host
-> driver also has a run-time dependency on patch 1.  Because of this, this
-> entire series should probably go through the Tegra tree.
->
-Why shouldn't I pick 2 & 3 at least?
+--stKCBNMHWKr9p33iMngmxajA5t3O6jPtS
+Content-Type: text/plain; charset=UTF-8
 
--Jassi
+On 25/11/14 15:21, Hans de Goede wrote:
+
+>> Shouldn't the compatible then be "allwinner,sunxi-simple-framebuffer",
+>> to differentiate from some other SoC Allwinner has or might create in
+>> the future? That is, presuming you're confident enough that a single
+>> compatible string covers all the current and forthcoming sunxi SoCs.
+> 
+> This was discussed in an earlier thread, we (Ian Campbell, Grant and me)
+
+Okay. Sorry for not having time at the moment to follow the discussions
+properly. =)
+
+> decided to settle on allwinner,simple-framebuffer to make it clear that
+> these are allwinner extensions to the standard simple-framebuffer bindings,
+> and that the node otherwise is simple-framebuffer compatible.
+> 
+> We were afraid that e.g. sun4i-simple-framebuffer would signal that it
+> is not a normal simple-framebuffer node, so we decided to go with just
+> the allwinner, prefix to indicate that it uses allwinner specific
+> extensions.
+
+Wouldn't
+
+compatible = "allwinner,sun4i-simple-framebuffer", "simple-framebuffer";
+
+tell that it's a simple-framebuffer, with allwinner's sun4i extensions?
+
+I guess you can have just "allwinner,simple-framebuffer", and then if a
+new Allwinner SoC has a totally different display controller, the
+documentation would specify that this property is for that SoC, and this
+another property is for that another SoC. But isn't the compatible
+string what's supposed to use in cases like this?
+
+And if the new SoC is not sunxi, but some totally other family, there's
+need for a new compatible string anyway, as
+"simple-framebuffer-sunxi.txt" is for sunxi only.
+
+ Tomi
+
+--stKCBNMHWKr9p33iMngmxajA5t3O6jPtS--
