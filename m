@@ -1,83 +1,42 @@
-From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Subject: [PATCH v3 2/5] Documentation: DT: Add bindings for Spreadtrum SoC
- Platform
-Date: Tue, 25 Nov 2014 20:16:55 +0800
-Message-ID: <1416917818-10506-3-git-send-email-chunyan.zhang@spreadtrum.com>
-References: <Sharkl64-v3>
- <1416917818-10506-1-git-send-email-chunyan.zhang@spreadtrum.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1416917818-10506-1-git-send-email-chunyan.zhang@spreadtrum.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: grant.likely@linaro.org, robh+dt@kernel.org, catalin.marinas@arm.com, gregkh@linuxfoundation.org, ijc+devicetree@hellion.org.uk, jslaby@suse.cz, galak@codeaurora.org, broonie@linaro.org, mark.rutland@arm.com, m-karicheri2@ti.com, pawel.moll@arm.com, artagnon@gmail.com, rrichter@cavium.com, will.deacon@arm.com, arnd@arndb.de, gnomes@lxorguk.ukuu.org.uk, corbet@lwn.net, jason@lakedaemon.net, broonie@kernel.org, heiko@sntech.de, shawn.guo@freescale.com, florian.vaussard@epfl.ch, andrew@lunn.ch, hytszk@gmail.com, orsonzhai@gmail.com, geng.ren@spreadtrum.com, zhizhou.zhang@spreadtrum.com, lanqing.liu@spreadtrum.com, zhang.lyra@gmail.com, wei.qiao@spreadtrum.com
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, sprdlinux@freelists.org, linux-arm-kernel@lists.infradead.org
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: [PATCH v5 0/4] ASoC: simple-card: Add multi-CODEC support
+Date: Tue, 25 Nov 2014 13:35:09 +0100
+Message-ID: <cover.1416918909.git.moinejf@free.fr>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Adds Spreadtrum's prefix "sprd" to vendor-prefixes file.
-Adds the devicetree binding documentations for Spreadtrum's sc9836-uart
-and SC9836 SoC based on the Sharkl64 Platform which is a 64-bit SoC
-Platform of Spreadtrum.
+This patch set adds multi-CODEC support to the simple card.
 
-Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Signed-off-by: Orson Zhai <orson.zhai@spreadtrum.com>
----
- Documentation/devicetree/bindings/arm/sprd.txt     |   11 +++++++++++
- .../devicetree/bindings/serial/sprd-uart.txt       |    6 ++++++
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- 3 files changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/sprd.txt
- create mode 100644 Documentation/devicetree/bindings/serial/sprd-uart.txt
+v5: accept only "sound-dai" as the dai link property (Arnd Bergmann)
+v4: (Mark Brown)
+	- document the new core function
+	- calculation of the number of codecs moved to the core function
+	- split the patch about simple-card.c
+	- less code changes
+	- remove the cast of pointers
+	- less changes in the DT binding example 2
+v3: rebase on broonie git 2014/11/03
+v2: accept list of CODECs in 'sound-dais' (Benoit Cousson)
 
-diff --git a/Documentation/devicetree/bindings/arm/sprd.txt b/Documentation/devicetree/bindings/arm/sprd.txt
-new file mode 100644
-index 0000000..31a629d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/sprd.txt
-@@ -0,0 +1,11 @@
-+Spreadtrum SoC Platforms Device Tree Bindings
-+----------------------------------------------------
-+
-+Sharkl64 is a Spreadtrum's SoC Platform which is based
-+on ARM 64-bit processor.
-+
-+SC9836 openphone board with SC9836 SoC based on the
-+Sharkl64 Platform shall have the following properties.
-+
-+Required root node properties:
-+        - compatible = "sprd,sc9836-openphone", "sprd,sc9836";
-diff --git a/Documentation/devicetree/bindings/serial/sprd-uart.txt b/Documentation/devicetree/bindings/serial/sprd-uart.txt
-new file mode 100644
-index 0000000..54e532f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/sprd-uart.txt
-@@ -0,0 +1,6 @@
-+* Spreadtrum serial UART
-+
-+Required properties:
-+- compatible: must be "sprd,sc9836-uart"
-+- reg: offset and length of the register set for the device
-+- interrupts: exactly one interrupt specifier
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 723999d..ce99ecdfb 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -142,6 +142,7 @@ snps 	Synopsys, Inc.
- solidrun	SolidRun
- sony	Sony Corporation
- spansion	Spansion Inc.
-+sprd	Spreadtrum Communications Inc.
- st	STMicroelectronics
- ste	ST-Ericsson
- stericsson	ST-Ericsson
+Jean-Francois Moine (4):
+  ASoC: core: add multi-codec support in DT
+  ASoC: simple-card: Remove useless function argument
+  ASoC: simple-card: add multi-CODECs in DT
+  ASoC: simple-card: Remove useless check
+
+ .../devicetree/bindings/sound/simple-card.txt      |  18 +---
+ include/sound/soc.h                                |   3 +
+ sound/soc/generic/simple-card.c                    |  87 ++++++++--------
+ sound/soc/soc-core.c                               | 110 ++++++++++++++++++---
+ 4 files changed, 149 insertions(+), 69 deletions(-)
+
 -- 
-1.7.9.5
+2.1.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
