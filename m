@@ -1,70 +1,104 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of/fdt: memblock_reserve /memreserve/ regions in the
- case of partial overlap
-Date: Tue, 25 Nov 2014 14:37:50 +0000
-Message-ID: <20141125143750.1BAAAC44343@trevor.secretlab.ca>
-References: <1416920095-31999-1-git-send-email-ian.campbell@citrix.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416920095-31999-1-git-send-email-ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v5 1/2] of: Rename "poweroff-source" property to
+ "system-power-controller"
+Date: Tue, 25 Nov 2014 14:40:07 +0000
+Message-ID: <20141125144007.9904BC44343@trevor.secretlab.ca>
+References: <1416918506-9366-1-git-send-email-romain.perier@gmail.com>
+	<1416918506-9366-2-git-send-email-romain.perier@gmail.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1416918506-9366-2-git-send-email-romain.perier@gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Romain Perier <romain.perier@gmail.com>, heiko@sntech.de
+Cc: johan@kernel.org, lee.jones@linaro.org, broonie@kernel.org, robh@kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balbi@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 25 Nov 2014 12:54:55 +0000
-, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+On Tue, 25 Nov 2014 12:28:25 +0000
+, Romain Perier <romain.perier@gmail.com>
  wrote:
-> memblock_is_region_reserved() returns true in the case of a partial
-> overlap, meaning that the current code fails to reserve the
-> non-overlapping portion.
+> It reverts commit a4b4e0461ec5 ("of: Add standard property for poweroff capability").
+> As discussed on the mailing list, it makes more sense to rename back to the
+> old established property name, without the vendor prefix. Problem being that
+> the word "source" usually tends to be used for inputs and that is out of control
+> of the OS. The poweroff capability is an output which simply turns the
+> system-power off. Also, this property might be used by drivers which power-off
+> the system and power back on subsequent RTC alarms. This seems to suggest to
+> remove "poweroff" from the property name and to choose "system-power-controller"
+> as the more generic name. This patchs adds the required renaming changes and
+> defines an helper function which checks if this property is set.
 > 
-> I observed this causing a Midway system with a buggy fdt (the header
-> declares itself to be larger than it really is) failing to boot
-> because the over-inflated size of the fdt was causing it to seem to
-> run into the swapper_pg_dir region, meaning the DT wasn't reserved.
-> The symptoms were failing to find an disks or network and failing to
-> boot. I think it is work printing a warning in this case.
-> 
-> However given the ambiguity of whether things like the initrd are
-> covered by /memreserve/ and similar I think it is best to also
-> register the region rather than just ignoring it.
-> 
-> Since memblock_reserve() handles overlaps just fine lets just warn and
-> carry on.
-> 
-> Signed-off-by: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->  drivers/of/fdt.c |    3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 30e97bc..4f0f24c 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -965,7 +965,8 @@ int __init __weak early_init_dt_reserve_memory_arch(phys_addr_t base,
->  					phys_addr_t size, bool nomap)
->  {
->  	if (memblock_is_region_reserved(base, size))
-> -		return -EBUSY;
-> +		pr_warning("DT reserved region at 0x%pa is already reserved\n",
-> +			   &base);
+> Signed-off-by: Romain Perier <romain.perier@gmail.com>
 
-Since memblock_remove/reserve does the right thing anyway, let's just
-drop the test entirely.
+For both patches:
+Acked-by: Grant Likely <grant.likely@linaro.org>
+
+Let me know if I need to take this series through my tree. Also, does it
+need to go into v3.18 and be backported to stable? Or just v3.19.
 
 g.
 
->  	if (nomap)
->  		return memblock_remove(base, size);
->  	return memblock_reserve(base, size);
+> ---
+>  .../bindings/power/{poweroff.txt => power-controller.txt}           | 0
+>  Documentation/devicetree/bindings/regulator/act8865-regulator.txt   | 4 ++--
+>  drivers/regulator/act8865-regulator.c                               | 2 +-
+>  include/linux/of.h                                                  | 6 +++---
+>  4 files changed, 6 insertions(+), 6 deletions(-)
+>  rename Documentation/devicetree/bindings/power/{poweroff.txt => power-controller.txt} (100%)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/poweroff.txt b/Documentation/devicetree/bindings/power/power-controller.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/power/poweroff.txt
+> rename to Documentation/devicetree/bindings/power/power-controller.txt
+> diff --git a/Documentation/devicetree/bindings/regulator/act8865-regulator.txt b/Documentation/devicetree/bindings/regulator/act8865-regulator.txt
+> index 01a5b07..dad6358 100644
+> --- a/Documentation/devicetree/bindings/regulator/act8865-regulator.txt
+> +++ b/Documentation/devicetree/bindings/regulator/act8865-regulator.txt
+> @@ -6,8 +6,8 @@ Required properties:
+>  - reg: I2C slave address
+>  
+>  Optional properties:
+> -- poweroff-source: Telling whether or not this pmic is controlling
+> -  the system power. See Documentation/devicetree/bindings/power/poweroff.txt .
+> +- system-power-controller: Telling whether or not this pmic is controlling
+> +  the system power. See Documentation/devicetree/bindings/power/power-controller.txt .
+>  
+>  Any standard regulator properties can be used to configure the single regulator.
+>  
+> diff --git a/drivers/regulator/act8865-regulator.c b/drivers/regulator/act8865-regulator.c
+> index 76301ed..9eec453 100644
+> --- a/drivers/regulator/act8865-regulator.c
+> +++ b/drivers/regulator/act8865-regulator.c
+> @@ -365,7 +365,7 @@ static int act8865_pmic_probe(struct i2c_client *client,
+>  		return ret;
+>  	}
+>  
+> -	if (of_system_has_poweroff_source(dev->of_node)) {
+> +	if (of_device_is_system_power_controller(dev->of_node)) {
+>  		if (!pm_power_off) {
+>  			act8865_i2c_client = client;
+>  			act8865->off_reg = off_reg;
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index b81dbcf..0abdd70 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -964,14 +964,14 @@ static inline int of_changeset_update_property(struct of_changeset *ocs,
+>  extern int of_resolve_phandles(struct device_node *tree);
+>  
+>  /**
+> - * of_system_has_poweroff_source - Tells if poweroff-source is found for device_node
+> + * of_device_is_system_power_controller - Tells if system-power-controller is found for device_node
+>   * @np: Pointer to the given device_node
+>   *
+>   * return true if present false otherwise
+>   */
+> -static inline bool of_system_has_poweroff_source(const struct device_node *np)
+> +static inline bool of_device_is_system_power_controller(const struct device_node *np)
+>  {
+> -	return of_property_read_bool(np, "poweroff-source");
+> +	return of_property_read_bool(np, "system-power-controller");
+>  }
+>  
+>  #endif /* _LINUX_OF_H */
 > -- 
-> 1.7.10.4
+> 1.9.1
 > 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
