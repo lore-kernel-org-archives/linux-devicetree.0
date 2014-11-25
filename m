@@ -1,277 +1,65 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 2/8] irqchip: Supply new driver for STi based devices
-Date: Tue, 25 Nov 2014 16:24:59 +0000
-Message-ID: <1416932705-16880-3-git-send-email-lee.jones@linaro.org>
-References: <1416932705-16880-1-git-send-email-lee.jones@linaro.org>
+From: santosh shilimkar <santosh.shilimkar@oracle.com>
+Subject: Re: [PATCH v4 1/2] ARM: keystone: pm: switch to use generic pm domains
+Date: Tue, 25 Nov 2014 08:28:33 -0800
+Message-ID: <5474AE31.8080901@oracle.com>
+References: <1415631557-22897-1-git-send-email-grygorii.strashko@ti.com> <15074721.IbfeeI3ajE@wuerfel> <54746349.3000306@ti.com> <2301239.aDOlWg3gEs@wuerfel> <5474846C.2000308@ti.com> <20141125140440.GF3836@n2100.arm.linux.org.uk> <54749804.8070400@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1416932705-16880-1-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: lee.jones@linaro.org, kernel@stlinux.com, tglx@linutronix.de, jason@lakedaemon.net, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <54749804.8070400@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mike Turquette <mturquette@linaro.org>, Kevin Hilman <khilman@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This driver is used to enable System Configuration Register controlled
-External, CTI (Core Sight), PMU (Performance Management), and PL310 L2
-Cache IRQs prior to use.
+Grygorii,
 
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/irqchip/Kconfig  |   7 ++
- drivers/irqchip/Makefile |   1 +
- drivers/irqchip/irq-st.c | 208 +++++++++++++++++++++++++++++++++++++++=
-++++++++
- 3 files changed, 216 insertions(+)
- create mode 100644 drivers/irqchip/irq-st.c
+On 11/25/2014 6:53 AM, Grygorii Strashko wrote:
+> Hi Russell,
+>
+> On 11/25/2014 04:04 PM, Russell King - ARM Linux wrote:
+>> On Tue, Nov 25, 2014 at 03:30:20PM +0200, Grygorii Strashko wrote:
+>>> On 11/25/2014 02:09 PM, Arnd Bergmann wrote:
+>>>> It might be possible to do this implicitly if the driver calls clk_get(),
+>>>> basically doing clk_get() (or another call if necessary) would prevent the
+>>>> simple pmdomain from turning it off during suspend.
+>>>
+>>> Unfortunately, clk_get() will not work, because drivers still need to use it
+>>> to get functional clocks even if they are not going to control them explicitly.
+>>> For example, if it need to know clock's rate.
+>>
+>> If you don't want a clock to be turned off, then clk_get() it, then
+>> clk_prepare() it, and finally clk_enable() it.
+>>
+>> Even if someone else gets it, the only time that a clock is turned off
+>> is when _all_ users of it mutually agree that it can be turned off - by
+>> every user disabling (and possibly unpreparing) it.
+>>
+>> So, if the PM domain code gets a clock, prepares and enables it, then
+>> a driver gets the same clock, prepares and enables it also, it won't
+>> be disabled until _both_ the PM domain code _and_ the driver disable
+>> and unprepare the clock.
+>>
+>
+> All 100% true :)
+>
+> But the question here is how prevent pm_clk domain (clock_ops.c) from
+> getting the control on clock if this particular clock is optional from driver's
+> perspective. So, only driver should control it. As opposite, all other clocks
+> should be controlled by pm-domain (in case of GPD from .start/stop callbacks).
+>
+I know there has been lot of back and forth, we have done on getting
+multiple clock handling and from the thread looks like we are converging
+with simple power domain approach. Since we have already made several
+different attempt to solve the problem and some how stumbled, I suggest
+you to do a new RFC with new $subject so that we can get rest of the
+folks eyes on it.
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index b21f12f..e502f15 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -93,6 +93,13 @@ config RENESAS_IRQC
- 	bool
- 	select IRQ_DOMAIN
-=20
-+config ST_IRQCHIP
-+	bool
-+	select REGMAP
-+	select MFD_SYSCON
-+	help
-+	  Enables SysCfg Controlled IRQs on STi based platforms.
-+
- config TB10X_IRQC
- 	bool
- 	select IRQ_DOMAIN
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 173bb5f..293b68d 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -31,6 +31,7 @@ obj-$(CONFIG_RENESAS_IRQC)		+=3D irq-renesas-irqc.o
- obj-$(CONFIG_VERSATILE_FPGA_IRQ)	+=3D irq-versatile-fpga.o
- obj-$(CONFIG_ARCH_NSPIRE)		+=3D irq-zevio.o
- obj-$(CONFIG_ARCH_VT8500)		+=3D irq-vt8500.o
-+obj-$(CONFIG_ST_IRQCHIP)		+=3D irq-st.o
- obj-$(CONFIG_TB10X_IRQC)		+=3D irq-tb10x.o
- obj-$(CONFIG_XTENSA)			+=3D irq-xtensa-pic.o
- obj-$(CONFIG_XTENSA_MX)			+=3D irq-xtensa-mx.o
-diff --git a/drivers/irqchip/irq-st.c b/drivers/irqchip/irq-st.c
-new file mode 100644
-index 0000000..181dad1
---- /dev/null
-+++ b/drivers/irqchip/irq-st.c
-@@ -0,0 +1,208 @@
-+/*
-+ *  drivers/irqchip/irq-st.c
-+ *
-+ *  Copyright (C) 2014 STMicroelectronics =E2=80=93 All Rights Reserve=
-d
-+ *
-+ *  Author: Lee Jones <lee.jones@linaro.org>
-+ *
-+ *  This is a re-write of Christophe Kerello's PMU driver.
-+ *
-+ * This program is free software; you can redistribute it and/or modif=
-y
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/irq-st.h>
-+#include <linux/err.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+
-+#define STIH415_SYSCFG_642		0x0a8
-+#define STIH416_SYSCFG_7543		0x87c
-+#define STIH407_SYSCFG_5102		0x198
-+#define STID127_SYSCFG_734		0x088
-+
-+#define ST_A9_IRQ_MASK			0x001FFFFF
-+#define ST_A9_IRQ_MAX_CHANS		2
-+
-+#define ST_A9_IRQ_EN_CTI_0		BIT(0)
-+#define ST_A9_IRQ_EN_CTI_1		BIT(1)
-+#define ST_A9_IRQ_EN_PMU_0		BIT(2)
-+#define ST_A9_IRQ_EN_PMU_1		BIT(3)
-+#define ST_A9_IRQ_EN_PL310_L2		BIT(4)
-+#define ST_A9_IRQ_EN_EXT_0		BIT(5)
-+#define ST_A9_IRQ_EN_EXT_1		BIT(6)
-+#define ST_A9_IRQ_EN_EXT_2		BIT(7)
-+
-+#define ST_A9_FIQ_N_SEL(dev, chan)	(dev << (8  + (chan * 3)))
-+#define ST_A9_IRQ_N_SEL(dev, chan)	(dev << (14 + (chan * 3)))
-+#define ST_A9_EXTIRQ_INV_SEL(dev)	(dev << 20)
-+
-+struct st_irq_syscfg {
-+	struct regmap *regmap;
-+	unsigned int syscfg;
-+	unsigned int config;
-+	bool ext_inverted;
-+};
-+
-+static const struct of_device_id st_irq_syscfg_match[] =3D {
-+	{
-+		.compatible =3D "st,stih415-irq-syscfg",
-+		.data =3D (void *)STIH415_SYSCFG_642,
-+	},
-+	{
-+		.compatible =3D "st,stih416-irq-syscfg",
-+		.data =3D (void *)STIH416_SYSCFG_7543,
-+	},
-+	{
-+		.compatible =3D "st,stih407-irq-syscfg",
-+		.data =3D (void *)STIH407_SYSCFG_5102,
-+	},
-+	{
-+		.compatible =3D "st,stid127-irq-syscfg",
-+		.data =3D (void *)STID127_SYSCFG_734,
-+	},
-+	{}
-+};
-+
-+static int st_irq_xlate(struct platform_device *pdev,
-+			int device, int channel, bool irq)
-+{
-+	struct st_irq_syscfg *ddata =3D dev_get_drvdata(&pdev->dev);
-+
-+	/* Set the device enable bit. */
-+	switch (device) {
-+	case ST_IRQ_SYSCFG_EXT_0 :
-+		ddata->config |=3D ST_A9_IRQ_EN_EXT_0;
-+		break;
-+	case ST_IRQ_SYSCFG_EXT_1 :
-+		ddata->config |=3D ST_A9_IRQ_EN_EXT_1;
-+		break;
-+	case ST_IRQ_SYSCFG_EXT_2 :
-+		ddata->config |=3D ST_A9_IRQ_EN_EXT_2;
-+		break;
-+	case ST_IRQ_SYSCFG_CTI_0 :
-+		ddata->config |=3D ST_A9_IRQ_EN_CTI_0;
-+		break;
-+	case ST_IRQ_SYSCFG_CTI_1 :
-+		ddata->config |=3D ST_A9_IRQ_EN_CTI_1;
-+		break;
-+	case ST_IRQ_SYSCFG_PMU_0 :
-+		ddata->config |=3D ST_A9_IRQ_EN_PMU_0;
-+		break;
-+	case ST_IRQ_SYSCFG_PMU_1 :
-+		ddata->config |=3D ST_A9_IRQ_EN_PMU_1;
-+		break;
-+	case ST_IRQ_SYSCFG_pl310_L2 :
-+		ddata->config |=3D ST_A9_IRQ_EN_PL310_L2;
-+		break;
-+	case ST_IRQ_SYSCFG_DISABLED :
-+		return 0;
-+	default :
-+		dev_err(&pdev->dev, "Unrecognised device %d\n", device);
-+		return -EINVAL;
-+	}
-+
-+	/* Select IRQ/FIQ channel for device. */
-+	ddata->config |=3D irq ?
-+		ST_A9_IRQ_N_SEL(device, channel) :
-+		ST_A9_FIQ_N_SEL(device, channel);
-+
-+	return 0;
-+}
-+
-+static int st_irq_syscfg_enable(struct platform_device *pdev)
-+{
-+	struct device_node *np =3D pdev->dev.of_node;
-+	struct st_irq_syscfg *ddata =3D dev_get_drvdata(&pdev->dev);
-+	int channels, ret, i;
-+	u32 device, invert;
-+
-+	channels =3D of_property_count_u32_elems(np, "st,irq-device");
-+	if (channels !=3D ST_A9_IRQ_MAX_CHANS) {
-+		dev_err(&pdev->dev, "st,enable-irq-device must have 2 elems\n");
-+		return -EINVAL;
-+	}
-+
-+	channels =3D of_property_count_u32_elems(np, "st,fiq-device");
-+	if (channels !=3D ST_A9_IRQ_MAX_CHANS) {
-+		dev_err(&pdev->dev, "st,enable-fiq-device must have 2 elems\n");
-+		return -EINVAL;
-+	}
-+
-+	for (i =3D 0; i < ST_A9_IRQ_MAX_CHANS; i++) {
-+		of_property_read_u32_index(np, "st,irq-device", i, &device);
-+
-+		ret =3D st_irq_xlate(pdev, device, i, true);
-+		if (ret)
-+			return ret;
-+
-+		of_property_read_u32_index(np, "st,fiq-device", i, &device);
-+
-+		ret =3D st_irq_xlate(pdev, device, i, false);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	/* External IRQs may be inverted. */
-+	of_property_read_u32(np, "st,invert-ext", &invert);
-+	ddata->config |=3D ST_A9_EXTIRQ_INV_SEL(invert);
-+
-+	return regmap_update_bits(ddata->regmap, ddata->syscfg,
-+				  ST_A9_IRQ_MASK, ddata->config);
-+}
-+
-+static int st_irq_syscfg_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np =3D pdev->dev.of_node;
-+	const struct of_device_id *match;
-+	struct st_irq_syscfg *ddata;
-+
-+	ddata =3D devm_kzalloc(&pdev->dev, sizeof(*ddata), GFP_KERNEL);
-+	if (!ddata)
-+		return -ENOMEM;
-+
-+	match =3D of_match_device(st_irq_syscfg_match, &pdev->dev);
-+	if (!match)
-+		return -ENODEV;
-+
-+	ddata->syscfg =3D (unsigned int)match->data;
-+
-+	ddata->regmap =3D syscon_regmap_lookup_by_phandle(np, "st,syscfg");
-+	if (IS_ERR(ddata->regmap)) {
-+		dev_err(&pdev->dev, "syscfg phandle missing\n");
-+		return PTR_ERR(ddata->regmap);
-+	}
-+
-+	dev_set_drvdata(&pdev->dev, ddata);
-+
-+	return st_irq_syscfg_enable(pdev);
-+}
-+
-+static int st_irq_syscfg_resume(struct device *dev)
-+{
-+	struct st_irq_syscfg *ddata =3D dev_get_drvdata(dev);
-+
-+	return regmap_update_bits(ddata->regmap, ddata->syscfg,
-+				  ST_A9_IRQ_MASK, ddata->config);
-+}
-+
-+static SIMPLE_DEV_PM_OPS(st_irq_syscfg_pm_ops, NULL, st_irq_syscfg_res=
-ume);
-+
-+static struct platform_driver st_irq_syscfg_driver =3D {
-+	.driver =3D {
-+		.name =3D "st_irq_syscfg",
-+		.pm =3D &st_irq_syscfg_pm_ops,
-+		.of_match_table =3D st_irq_syscfg_match,
-+	},
-+	.probe =3D st_irq_syscfg_probe,
-+};
-+
-+static int __init st_irq_syscfg_init(void)
-+{
-+	return platform_driver_register(&st_irq_syscfg_driver);
-+}
-+core_initcall(st_irq_syscfg_init);
---=20
-1.9.1
+The reason I say that because may be just because of $subject, some
+folks might ignore the thread ;-) and later raise objections.
+
+Thanks for persisting with it.
+
+Regards,
+Santosh
