@@ -1,45 +1,38 @@
-From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Subject: [PATCH v4 4/8] iio: da9150: Add DT binding documentation for GPADC
-Date: Tue, 25 Nov 2014 18:25:30 +0000
-Message-ID: <639b2d2b190284daac528d044855f3a0c72aee7c.1416938054.git.Adam.Thomson.Opensource@diasemi.com>
-References: <cover.1416938054.git.Adam.Thomson.Opensource@diasemi.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Sonny Rao <sonnyrao@chromium.org>
+Subject: [PATCH] ARM: dts: rk3288: add arm,cpu-registers-not-fw-configured
+Date: Tue, 25 Nov 2014 10:54:00 -0800
+Message-ID: <1416941640-324-1-git-send-email-sonnyrao@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1416938054.git.Adam.Thomson.Opensource@diasemi.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Joe Perches <joe@perches.com>, linux-api@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, support.opensource@diasemi.com
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dianders@chromium.org, olof@lixom.net, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kever Yang <kever.yang@rock-chips.com>, eddie.cai@rock-chips.com, Sonny Rao <sonnyrao@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Acked-by: Jonathan Cameron <jic23@kernel.org>
----
- .../devicetree/bindings/iio/adc/da9150-gpadc.txt         | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/da9150-gpadc.txt
+This will enable use of physical arch timers on rk3288, where each
+core comes out of reset with a different virtual offset.  Using
+physical timers will help with SMP booting on coreboot and older
+u-boot and should also allow suspend-resume and cpu-hotplug to work on
+all firmwares.
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/da9150-gpadc.txt b/Documentation/devicetree/bindings/iio/adc/da9150-gpadc.txt
-new file mode 100644
-index 0000000..c07228d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/da9150-gpadc.txt
-@@ -0,0 +1,16 @@
-+Dialog Semiconductor DA9150 IIO GPADC bindings
-+
-+Required properties:
-+- compatible: "dlg,da9150-gpadc" for DA9150 IIO GPADC
-+- #io-channel-cells: Should be set to <1>
-+  (See Documentation/devicetree/bindings/iio/iio-bindings.txt for further info)
-+
-+For further information on GPADC channels, see device datasheet.
-+
-+
-+Example:
-+
-+	gpadc: da9150-gpadc {
-+		compatible = "dlg,da9150-gpadc";
-+		#io-channel-cells = <1>;
-+	};
---
-1.9.3
+Firmware which does initialize the cpu registers properly at boot and
+cpu-hotplug can remove this property from the device tree.
+
+Signed-off-by: Sonny Rao <sonnyrao@chromium.org>
+---
+ arch/arm/boot/dts/rk3288.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 0f50d5d..c861f52 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -139,6 +139,7 @@
+ 
+ 	timer {
+ 		compatible = "arm,armv7-timer";
++		arm,cpu-registers-not-fw-configured;
+ 		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
+ 			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
+ 			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
+-- 
+2.1.2
