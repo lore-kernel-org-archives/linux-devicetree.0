@@ -1,65 +1,35 @@
-From: santosh shilimkar <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH v4 1/2] ARM: keystone: pm: switch to use generic pm domains
-Date: Tue, 25 Nov 2014 08:28:33 -0800
-Message-ID: <5474AE31.8080901@oracle.com>
-References: <1415631557-22897-1-git-send-email-grygorii.strashko@ti.com> <15074721.IbfeeI3ajE@wuerfel> <54746349.3000306@ti.com> <2301239.aDOlWg3gEs@wuerfel> <5474846C.2000308@ti.com> <20141125140440.GF3836@n2100.arm.linux.org.uk> <54749804.8070400@ti.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v14 0/3] Add drm driver for Rockchip Socs
+Date: Tue, 25 Nov 2014 17:38:27 +0100
+Message-ID: <23617908.6oA5uRuO3l@diego>
+References: <1416447994-9921-1-git-send-email-mark.yao@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <54749804.8070400@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mike Turquette <mturquette@linaro.org>, Kevin Hilman <khilman@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1416447994-9921-1-git-send-email-mark.yao@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Yao <mark.yao@rock-chips.com>
+Cc: Boris BREZILLON <boris.brezillon@free-electrons.com>, David Airlie <airlied@gmail.com>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Rom Lemarchand <romlem@google.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-api@vger.kernel.org, linux-rockchip@lists.infradead.org, dianders@chromium.org, marcheu@chromium.org, dbehr@chromium.org, olof@lixom.net, djkurtz@chromium.org, cf@rock-chips.com, xxm@rock-chips.com, huangtao@rock-
 List-Id: devicetree@vger.kernel.org
 
-Grygorii,
+Mark,
 
-On 11/25/2014 6:53 AM, Grygorii Strashko wrote:
-> Hi Russell,
->
-> On 11/25/2014 04:04 PM, Russell King - ARM Linux wrote:
->> On Tue, Nov 25, 2014 at 03:30:20PM +0200, Grygorii Strashko wrote:
->>> On 11/25/2014 02:09 PM, Arnd Bergmann wrote:
->>>> It might be possible to do this implicitly if the driver calls clk_get(),
->>>> basically doing clk_get() (or another call if necessary) would prevent the
->>>> simple pmdomain from turning it off during suspend.
->>>
->>> Unfortunately, clk_get() will not work, because drivers still need to use it
->>> to get functional clocks even if they are not going to control them explicitly.
->>> For example, if it need to know clock's rate.
->>
->> If you don't want a clock to be turned off, then clk_get() it, then
->> clk_prepare() it, and finally clk_enable() it.
->>
->> Even if someone else gets it, the only time that a clock is turned off
->> is when _all_ users of it mutually agree that it can be turned off - by
->> every user disabling (and possibly unpreparing) it.
->>
->> So, if the PM domain code gets a clock, prepares and enables it, then
->> a driver gets the same clock, prepares and enables it also, it won't
->> be disabled until _both_ the PM domain code _and_ the driver disable
->> and unprepare the clock.
->>
->
-> All 100% true :)
->
-> But the question here is how prevent pm_clk domain (clock_ops.c) from
-> getting the control on clock if this particular clock is optional from driver's
-> perspective. So, only driver should control it. As opposite, all other clocks
-> should be controlled by pm-domain (in case of GPD from .start/stop callbacks).
->
-I know there has been lot of back and forth, we have done on getting
-multiple clock handling and from the thread looks like we are converging
-with simple power domain approach. Since we have already made several
-different attempt to solve the problem and some how stumbled, I suggest
-you to do a new RFC with new $subject so that we can get rest of the
-folks eyes on it.
+Am Donnerstag, 20. November 2014, 09:46:34 schrieb Mark Yao:
+> This a series of patches is a DRM Driver for Rockchip Socs, add support
+> for vop devices. Future patches will add additional encoders/connectors,
+> such as eDP, HDMI.
+> 
+> The basic "crtc" for rockchip is a "VOP" - Video Output Processor.
+> the vop devices found on Rockchip rk3288 Soc, rk3288 soc have two similar
+> Vop devices. Vop devices support iommu mapping, we use dma-mapping API with
+> ARM_DMA_USE_IOMMU.
 
-The reason I say that because may be just because of $subject, some
-folks might ignore the thread ;-) and later raise objections.
+it looks like everybody is more or less happy with this version - in past 
+versions responses voicing concerns where quite swift.
 
-Thanks for persisting with it.
+As David requested a pull request the last time, it might be time to do so, so 
+that we maybe still reach 3.19. 
 
-Regards,
-Santosh
+
+Heiko
