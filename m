@@ -1,132 +1,53 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 5/5] mfd: s2mps11: Add binding documentation for
- Samsung S2MPS13 PMIC
-Date: Tue, 25 Nov 2014 15:51:51 +0000
-Message-ID: <20141125155151.GN4241@x1>
-References: <1416301183-10478-1-git-send-email-cw00.choi@samsung.com>
- <1416301183-10478-6-git-send-email-cw00.choi@samsung.com>
+From: Romain Perier <romain.perier@gmail.com>
+Subject: Re: [PATCH v5 1/2] of: Rename "poweroff-source" property to "system-power-controller"
+Date: Tue, 25 Nov 2014 16:57:56 +0100
+Message-ID: <CABgxDoKUecAd00X0znkGiQncF4MwnLAM4BFV2AV_oMPF=4G7UA@mail.gmail.com>
+References: <1416918506-9366-1-git-send-email-romain.perier@gmail.com>
+	<1416918506-9366-2-git-send-email-romain.perier@gmail.com>
+	<20141125144007.9904BC44343@trevor.secretlab.ca>
+	<20141125145410.GD19910@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1416301183-10478-6-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, geunsik.lim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20141125145410.GD19910@localhost>
+Sender: linux-pm-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Grant Likely <grant.likely@linaro.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, robh <robh@kernel.org>, devicetree <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Felipe Balbi <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 18 Nov 2014, Chanwoo Choi wrote:
+Thanks for your feedbacks.  I think that Mark will probably wait until
+there are more reviews on this serie. (this is exactly what he asked
+for the previous one)
 
-> This patch adds the binding documentation for Samsung S2MPS13 PMIC
-> which is similiar with existing S2MPS14 PMIC. S2MPS13 has the differe=
-nt number
-> of regulators from S2MPS14 and RTC/Clock is the same with the S2MPS14=
-=2E
->=20
-> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Acked-by: Sangbeom Kim <sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mfd/s2mps11.txt | 22 ++++++++++++-=
----------
->  1 file changed, 12 insertions(+), 10 deletions(-)
-
-Applied, thanks.
-
-> diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Docu=
-mentation/devicetree/bindings/mfd/s2mps11.txt
-> index 0e4026a..57a0450 100644
-> --- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
-> +++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-> @@ -1,5 +1,5 @@
-> =20
-> -* Samsung S2MPS11, S2MPS14 and S2MPU02 Voltage and Current Regulator
-> +* Samsung S2MPS11, S2MPS13, S2MPS14 and S2MPU02 Voltage and Current =
-Regulator
-> =20
->  The Samsung S2MPS11 is a multi-function device which includes voltag=
-e and
->  current regulators, RTC, charger controller and other sub-blocks. It=
- is
-> @@ -7,8 +7,8 @@ interfaced to the host controller using an I2C interf=
-ace. Each sub-block is
->  addressed by the host system using different I2C slave addresses.
-> =20
->  Required properties:
-> -- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps14-p=
-mic"
-> -              or "samsung,s2mpu02-pmic".
-> +- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps13-p=
-mic"
-> +	      or "samsung,s2mps14-pmic" or "samsung,s2mpu02-pmic".
->  - reg: Specifies the I2C slave address of the pmic block. It should =
-be 0x66.
-> =20
->  Optional properties:
-> @@ -17,8 +17,8 @@ Optional properties:
->  - interrupts: Interrupt specifiers for interrupt sources.
-> =20
->  Optional nodes:
-> -- clocks: s2mps11 and s5m8767 provide three(AP/CP/BT) buffered 32.76=
-8 KHz
-> -  outputs, so to register these as clocks with common clock framewor=
-k
-> +- clocks: s2mps11, s2mps13 and s5m8767 provide three(AP/CP/BT) buffe=
-red 32.768
-> +  KHz outputs, so to register these as clocks with common clock fram=
-ework
->    instantiate a sub-node named "clocks". It uses the common clock bi=
-nding
->    documented in :
->    [Documentation/devicetree/bindings/clock/clock-bindings.txt]
-> @@ -30,12 +30,12 @@ Optional nodes:
->      the clock which they consume.
->      Clock               ID           Devices
->      ----------------------------------------------------------
-> -    32KhzAP		0            S2MPS11, S2MPS14, S5M8767
-> -    32KhzCP		1            S2MPS11, S5M8767
-> -    32KhzBT		2            S2MPS11, S2MPS14, S5M8767
-> +    32KhzAP		0            S2MPS11, S2MPS13, S2MPS14, S5M8767
-> +    32KhzCP		1            S2MPS11, S2MPS13, S5M8767
-> +    32KhzBT		2            S2MPS11, S2MPS13, S2MPS14, S5M8767
-> =20
-> -  - compatible: Should be one of: "samsung,s2mps11-clk", "samsung,s2=
-mps14-clk",
-> -		"samsung,s5m8767-clk"
-> +  - compatible: Should be one of: "samsung,s2mps11-clk", "samsung,s2=
-mps13-clk",
-> +		"samsung,s2mps14-clk", "samsung,s5m8767-clk"
-> =20
->  - regulators: The regulators of s2mps11 that have to be instantiated=
- should be
->  included in a sub-node named 'regulators'. Regulator nodes included =
-in this
-> @@ -81,12 +81,14 @@ as per the datasheet of s2mps11.
->  	- LDOn
->  		  - valid values for n are:
->  			- S2MPS11: 1 to 38
-> +			- S2MPS13: 1 to 40
->  			- S2MPS14: 1 to 25
->  			- S2MPU02: 1 to 28
->  		  - Example: LDO1, LDO2, LDO28
->  	- BUCKn
->  		  - valid values for n are:
->  			- S2MPS11: 1 to 10
-> +			- S2MPS13: 1 to 10
->  			- S2MPS14: 1 to 5
->  			- S2MPU02: 1 to 7
->  		  - Example: BUCK1, BUCK2, BUCK9
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2014-11-25 15:54 GMT+01:00 Johan Hovold <johan@kernel.org>:
+> On Tue, Nov 25, 2014 at 02:40:07PM +0000, Grant Likely wrote:
+>> On Tue, 25 Nov 2014 12:28:25 +0000
+>> , Romain Perier <romain.perier@gmail.com>
+>>  wrote:
+>> > It reverts commit a4b4e0461ec5 ("of: Add standard property for poweroff capability").
+>> > As discussed on the mailing list, it makes more sense to rename back to the
+>> > old established property name, without the vendor prefix. Problem being that
+>> > the word "source" usually tends to be used for inputs and that is out of control
+>> > of the OS. The poweroff capability is an output which simply turns the
+>> > system-power off. Also, this property might be used by drivers which power-off
+>> > the system and power back on subsequent RTC alarms. This seems to suggest to
+>> > remove "poweroff" from the property name and to choose "system-power-controller"
+>> > as the more generic name. This patchs adds the required renaming changes and
+>> > defines an helper function which checks if this property is set.
+>> >
+>> > Signed-off-by: Romain Perier <romain.perier@gmail.com>
+>>
+>> For both patches:
+>> Acked-by: Grant Likely <grant.likely@linaro.org>
+>>
+>> Let me know if I need to take this series through my tree. Also, does it
+>> need to go into v3.18 and be backported to stable? Or just v3.19.
+>
+> It's only needed in the regulator tree for 3.19, and does not need to be
+> backported.
+>
+> We could convert the drivers (and dts) that currently use
+> "<vendor>,system-power-controller" to use the new helper (while
+> maintaining backward compatibility) after 3.19-rc1 is out.
+>
+> Johan
