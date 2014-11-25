@@ -1,58 +1,75 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [RFC PATCH v2 3/4] arm64:thunder: Add initial dts for Cavium's Thunder SoC in 2 Node topology.
-Date: Tue, 25 Nov 2014 13:45:38 +0100
-Message-ID: <2252604.UC349JiCpd@wuerfel>
-References: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com> <2750247.HT2ynjYizJ@wuerfel> <CAKv+Gu-EEmj1cV-N9tAijotV9Wj9drwajkoTVnRijHLiCskywg@mail.gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] dt-bindings: simplefb-sunxi: Add
+ sunxi simplefb extensions
+Date: Tue, 25 Nov 2014 13:52:02 +0100
+Message-ID: <54747B72.1050406@redhat.com>
+References: <1416309051-26784-1-git-send-email-hdegoede@redhat.com> <1416309051-26784-3-git-send-email-hdegoede@redhat.com> <547476DA.2030004@ti.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKv+Gu-EEmj1cV-N9tAijotV9Wj9drwajkoTVnRijHLiCskywg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Ganapat Rao P Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORB7HW2GRQKGQE5RO5BJI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <547476DA.2030004-l0cyMroinI0@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 25 November 2014 13:38:01 Ard Biesheuvel wrote:
-> On 24 November 2014 at 18:01, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Monday 24 November 2014 11:32:46 Roy Franz wrote:
-> >> >
-> >> > I don't know how much history is behind this binding. Have you looked
-> >> > at the sPAPR way of doing this? I don't remember exactly how that is
-> >> > done, but we'd need a good reason to discard that and implement
-> >> > something else for arm64.
-> >> >
-> >> > If we create a new binding, I don't think the 'numa-map' node you
-> >> > have here is the best solution. We already have device nodes for each
-> >> > memory segment and each CPU in the system. Why not work with those
-> >> > nodes directly?
-> >>
-> >> The DT memory nodes don't exist in an EFI system, as the EFI memory
-> >> map is used instead.
-> >> Using EFI as the boot firmware doesn't require the use of ACPI for
-> >> hardware description,
-> >> so the EFI/DT case is one that we should support.
-> >
-> > But they /could/ exist, right? Can we just require them to be
-> > present in order to use NUMA features?
-> >
-> 
-> Actually, currently the memory nodes are stripped from the device tree
-> by the EFI stub, so the kernel will never get to see them.
-> This is done more or less as a fixup, under the assumption that EFI
-> systems should not have DT memory nodes in the first place.
-> 
-> We could revisit this, of course, but it needs to be taken into
-> account in this discussion.
+Hi,
 
-Right. As we don't support NUMA yet, this would have to become
-a requirement for implementing NUMA: If you have no memory nodes,
-you could still use the DT binding for topology, but it would be
-limited to CPUs and I/O devices, which of course seriously limits
-the usefulness.
+On 11/25/2014 01:32 PM, Tomi Valkeinen wrote:
+> On 18/11/14 13:10, Hans de Goede wrote:
+>> If pre-filled framebuffer nodes are used, the firmware may need extra
+>> properties to find the right node. This documents the properties to use
+>> for this on sunxi platforms.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>   .../bindings/video/simple-framebuffer-sunxi.txt    | 33 ++++++++++++++++++++++
+>>   1 file changed, 33 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt b/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
+>> new file mode 100644
+>> index 0000000..c46ba64
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
+>> @@ -0,0 +1,33 @@
+>> +Sunxi specific Simple Framebuffer bindings
+>> +
+>> +This binding documents sunxi specific extensions to the simple-framebuffer
+>> +bindings. The sunxi simplefb u-boot code relies on the devicetree containing
+>> +pre-populated simplefb nodes.
+>> +
+>> +These extensions are intended so that u-boot can select the right node based
+>> +on which pipeline is being used. As such they are solely intended for
+>> +firmware / bootloader use, and the OS should ignore them.
+>> +
+>> +Required properties:
+>> +- compatible: "allwinner,simple-framebuffer"
+>> +- allwinner,pipeline, one of:
+>
+> Sorry my ignorance, but what's sunxi and what's allwinner? Both names
+> are mixed here.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+sunxi is the sun#i SoCs from Allwinner, Allwinner is the manufacturer and the
+SoC "code" names used everywhere in the kernel for their SoCs are sun4i, sun5i,
+sun6i, etc. Most people refer to these SoCs as sunxi. This is also what the
+linux-sunxi mailinglist in the Cc is about.
+
+The official devicetree vendor prefix for Allwinner is allwinner, hence the
+allwinner in the compatible name, see e.g. also
+
+Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
+
+Which also uses sunxi / sun4i everywhere except in the compatible vendor prefix.
+
+Regards,
+
+Hans
