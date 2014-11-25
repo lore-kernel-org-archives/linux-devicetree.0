@@ -1,45 +1,59 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 4/5] arm64: Add support for Spreadtrum's Sharkl64 Platform in Kconfig and defconfig
-Date: Tue, 25 Nov 2014 13:57:31 +0100
-Message-ID: <3490516.nCDXzA8J8x@wuerfel>
-References: <1416917818-10506-5-git-send-email-chunyan.zhang@spreadtrum.com>
+From: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] of/fdt: memblock_reserve /memreserve/ regions in the case of partial overlap
+Date: Tue, 25 Nov 2014 12:54:55 +0000
+Message-ID: <1416920095-31999-1-git-send-email-ian.campbell@citrix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1416917818-10506-5-git-send-email-chunyan.zhang@spreadtrum.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Cc: grant.likely@linaro.org, robh+dt@kernel.org, catalin.marinas@arm.com, gregkh@linuxfoundation.org, ijc+devicetree@hellion.org.uk, jslaby@suse.cz, galak@codeaurora.org, broonie@linaro.org, mark.rutland@arm.com, m-karicheri2@ti.com, pawel.moll@arm.com, artagnon@gmail.com, rrichter@cavium.com, will.deacon@arm.com, gnomes@lxorguk.ukuu.org.uk, corbet@lwn.net, jason@lakedaemon.net, broonie@kernel.org, heiko@sntech.de, shawn.guo@freescale.com, florian.vaussard@epfl.ch, andrew@lunn.ch, hytszk@gmail.com, orsonzhai@gmail.com, geng.ren@spreadtrum.com, zhizhou.zhang@spreadtrum.com, lanqing.liu@spreadtrum.com, zhang.lyra@gmail.com, wei.qiao@spreadtrum.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, sprdlinux@freelists.org, linux-doc@vger.kernel.org, linux-serial@vger.kernel.org, linux-api@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 25 November 2014 20:16:57 Chunyan Zhang wrote:
-> 
-> +menuconfig ARCH_SPRD
-> +       bool "Spreadtrum SoC platform"
-> +       depends on ARM64
-> +       help
-> +         Support for Spreadtrum ARM based SoCs
-> +
-> +if ARCH_SPRD
-> +
-> +config ARCH_SHARKL64
-> +       bool "Sharkl64 SoC Platform"
-> +       help
-> +         Sharkl64 is a Spreadtrum's SoC Platform which is based
-> +         on ARM 64-bit processor core including
-> +           sc9836
-> +
-> +endif #ARCH_SPRD
-> +
+memblock_is_region_reserved() returns true in the case of a partial
+overlap, meaning that the current code fails to reserve the
+non-overlapping portion.
 
-I don't think we need multiple levels here, it should be enough to
-have either ARCH_SPRD or ARCH_SHARKL64, because all device drivers
-are going to be optional anyway. Typically a Kconfig symbol covers
-all SoCs that are related, so if you Spreadtrum are doing both
-phone and server chips and these are designed independently, you
-would have two symbols, but if you only expect to see phone chips
-here that are all derived from the same product line, using ARCH_SPRD
-to refer to all of them should be enough.
+I observed this causing a Midway system with a buggy fdt (the header
+declares itself to be larger than it really is) failing to boot
+because the over-inflated size of the fdt was causing it to seem to
+run into the swapper_pg_dir region, meaning the DT wasn't reserved.
+The symptoms were failing to find an disks or network and failing to
+boot. I think it is work printing a warning in this case.
 
-	Arnd
+However given the ambiguity of whether things like the initrd are
+covered by /memreserve/ and similar I think it is best to also
+register the region rather than just ignoring it.
+
+Since memblock_reserve() handles overlaps just fine lets just warn and
+carry on.
+
+Signed-off-by: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ drivers/of/fdt.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 30e97bc..4f0f24c 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -965,7 +965,8 @@ int __init __weak early_init_dt_reserve_memory_arch(phys_addr_t base,
+ 					phys_addr_t size, bool nomap)
+ {
+ 	if (memblock_is_region_reserved(base, size))
+-		return -EBUSY;
++		pr_warning("DT reserved region at 0x%pa is already reserved\n",
++			   &base);
+ 	if (nomap)
+ 		return memblock_remove(base, size);
+ 	return memblock_reserve(base, size);
+-- 
+1.7.10.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
