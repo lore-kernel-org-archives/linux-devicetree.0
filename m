@@ -1,52 +1,45 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] of: support passing console options with stdout-path
-Date: Tue, 25 Nov 2014 13:54:24 +0100
-Message-ID: <20141125125424.GN14482@pengutronix.de>
-References: <1416867838-18652-1-git-send-email-leif.lindholm@linaro.org>
- <20141125103504.GA21525@leverpostej>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 4/5] arm64: Add support for Spreadtrum's Sharkl64 Platform in Kconfig and defconfig
+Date: Tue, 25 Nov 2014 13:57:31 +0100
+Message-ID: <3490516.nCDXzA8J8x@wuerfel>
+References: <1416917818-10506-5-git-send-email-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141125103504.GA21525@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org" <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, "ijc-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org" <ijc-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1416917818-10506-5-git-send-email-chunyan.zhang@spreadtrum.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+Cc: grant.likely@linaro.org, robh+dt@kernel.org, catalin.marinas@arm.com, gregkh@linuxfoundation.org, ijc+devicetree@hellion.org.uk, jslaby@suse.cz, galak@codeaurora.org, broonie@linaro.org, mark.rutland@arm.com, m-karicheri2@ti.com, pawel.moll@arm.com, artagnon@gmail.com, rrichter@cavium.com, will.deacon@arm.com, gnomes@lxorguk.ukuu.org.uk, corbet@lwn.net, jason@lakedaemon.net, broonie@kernel.org, heiko@sntech.de, shawn.guo@freescale.com, florian.vaussard@epfl.ch, andrew@lunn.ch, hytszk@gmail.com, orsonzhai@gmail.com, geng.ren@spreadtrum.com, zhizhou.zhang@spreadtrum.com, lanqing.liu@spreadtrum.com, zhang.lyra@gmail.com, wei.qiao@spreadtrum.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, sprdlinux@freelists.org, linux-doc@vger.kernel.org, linux-serial@vger.kernel.org, linux-api@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 25, 2014 at 10:35:04AM +0000, Mark Rutland wrote:
-> Hi Leif,
+On Tuesday 25 November 2014 20:16:57 Chunyan Zhang wrote:
 > 
-> On Mon, Nov 24, 2014 at 10:23:58PM +0000, Leif Lindholm wrote:
-> > Support specifying console options (like with console=ttyXN,<options>)
-> > by appending them to the stdout-path property after a separating ':'.
-> > 
-> > Example:
-> > 	stdout-path = "uart0:115200";
-> 
-> I would very much like to be able to use this -- it will allow
-> distributions to boot on a board without having to know _anything_ about
-> the console UART until userspace is up, which would make it possible to
-> have a completely generic installer image, without requiring the
-> platform to provide bootargs.
+> +menuconfig ARCH_SPRD
+> +       bool "Spreadtrum SoC platform"
+> +       depends on ARM64
+> +       help
+> +         Support for Spreadtrum ARM based SoCs
+> +
+> +if ARCH_SPRD
+> +
+> +config ARCH_SHARKL64
+> +       bool "Sharkl64 SoC Platform"
+> +       help
+> +         Sharkl64 is a Spreadtrum's SoC Platform which is based
+> +         on ARM 64-bit processor core including
+> +           sc9836
+> +
+> +endif #ARCH_SPRD
+> +
 
-Note there are several serial drivers that read back the console options
-from the hardware assuming it has been initialized correctly by the
-bootloader already. So when your bootloader already made some output
-on the console (which is likely) you can do that already. Of course
-this doesn't solve all problems, like if you want to use a different
-console for the kernel than for the bootloader.
-Anyway, this behaviour is very nice since the kernel always uses the
-same speed for the console as the bootloader does.
+I don't think we need multiple levels here, it should be enough to
+have either ARCH_SPRD or ARCH_SHARKL64, because all device drivers
+are going to be optional anyway. Typically a Kconfig symbol covers
+all SoCs that are related, so if you Spreadtrum are doing both
+phone and server chips and these are designed independently, you
+would have two symbols, but if you only expect to see phone chips
+here that are all derived from the same product line, using ARCH_SPRD
+to refer to all of them should be enough.
 
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
