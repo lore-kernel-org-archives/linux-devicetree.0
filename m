@@ -1,78 +1,82 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/9] clk: sunxi: Add prcm mod0 clock driver
-Date: Tue, 25 Nov 2014 16:57:44 +0000
-Message-ID: <20141125165744.GA17789@x1>
-References: <1416749895-25013-1-git-send-email-hdegoede@redhat.com>
- <1416749895-25013-4-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: =?windows-1251?B?zvHo7w==?= <x69-ymgSuTD02BPFhgArkDhKZUEOCMrvLtNR@public.gmane.org>
+Subject: =?windows-1251?b?0ODh7vLgLiDP7vfg8e7i4P8g7u/r4PLgIPLw8+Tg?=
+	=?windows-1251?b?LiDS7vDj7uLr/yDh6O3g8O377Ogg7u/26O7t4OzoLg==?=
+Date: Tue, 25 Nov 2014 17:01:28 +0000
+Message-ID: <9396207378AC8231EDE8A119FD0E719B@ohhajln>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBBD7K2KRQKGQEZU624SQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1416749895-25013-4-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============6091138344300475868=="
+Return-path: <nbd-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/nbd-general>,
+	<mailto:nbd-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=nbd-general>
+List-Post: <mailto:nbd-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:nbd-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/nbd-general>,
+	<mailto:nbd-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: nbd-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: "faisal.latif" <faisal.latif-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, netfilter <netfilter-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "paul.clements" <paul.clements-G8/ITkJZaeZWk0Htik3J/w@public.gmane.org>, nbd-general <nbd-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "steffen.klassert" <steffen.klassert-opNxpl+3fjRBDgjK7y7TUQ@public.gmane.org>, "manish.chopra" <manish.chopra-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org>, "sony.chacko" <sony.chacko-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org>, "rajesh.borundia" <rajesh.borundia-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org>, "lauro.venancio" <lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, "aloisio.almeida" <aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, "trond.myklebust" <trond.myklebust-7I+n7zu2hftEKMMhf/gKZA@public.gmane.org>, "jon.mason" <jon.mason-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, anton <anton-yrGDUoBaLx3QT0dZR+AlfA@public.gmane.org>, bcousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 23 Nov 2014, Hans de Goede wrote:
+This is a multi-part message in MIME format.
 
-> Add a driver for mod0 clocks found in the prcm. Currently there is only
-> one mod0 clocks in the prcm, the ir clock.
->=20
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
->  drivers/clk/sunxi/Makefile                        |  2 +-
->  drivers/clk/sunxi/clk-sun6i-prcm-mod0.c           | 63 +++++++++++++++++=
-++++++
->  drivers/mfd/sun6i-prcm.c                          | 14 +++++
->  4 files changed, 79 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/clk/sunxi/clk-sun6i-prcm-mod0.c
+--===============6091138344300475868==
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0F1F_01D008D1.74744B70"
 
-[...]
+This is a multi-part message in MIME format.
 
-> diff --git a/drivers/mfd/sun6i-prcm.c b/drivers/mfd/sun6i-prcm.c
-> index 283ab8d..ff1254f 100644
-> --- a/drivers/mfd/sun6i-prcm.c
-> +++ b/drivers/mfd/sun6i-prcm.c
-> @@ -41,6 +41,14 @@ static const struct resource sun6i_a31_apb0_gates_clk_=
-res[] =3D {
->  	},
->  };
-> =20
-> +static const struct resource sun6i_a31_ir_clk_res[] =3D {
-> +	{
-> +		.start =3D 0x54,
-> +		.end =3D 0x57,
-> +		.flags =3D IORESOURCE_MEM,
-> +	},
-> +};
+------=_NextPart_000_0F1F_01D008D1.74744B70
+Content-Type: text/plain;
+	charset="windows-1251"
+Content-Transfer-Encoding: quoted-printable
 
-I'm not overly keen on these magic numbers (and yes, I'm well aware
-that I SoB'ed the patch which started them off).
+=C7=E0=F0=E0=E1=EE=F2=EE=EA =ED=E0 =E1=E8=ED=E0=F0=ED=FB=F5 =EE=EF=F6=E8=EE=
+=ED=E0=F5 500$ =E2 =E4=E5=ED=FC. =C2=F1=E5 =E8=ED=F1=F2=F0=F3=EA=F6=E8=E8=
+ =E8 =EE=F2=E7=FB=E2=FB =ED=E0 =F1=E0=E9=F2=E5: http://drivertv.ru=20
 
-It's not a show stopper, although I'd prefer if they were fixed with a
-subsequent patch.
+------=_NextPart_000_0F1F_01D008D1.74744B70
+Content-Type: text/html;
+	charset="windows-1251"
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META content=3D"text/html; charset=3Dwindows-1251" http-equiv=3DContent-=
+Type>
+<META name=3DGENERATOR content=3D"MSHTML 11.00.9600.17105"></HEAD>
+<BODY>
+<DIV><FONT size=3D4>=C7=E0=F0=E0=E1=EE=F2=EE=EA =ED=E0 =E1=E8=ED=E0=F0=ED=
+=FB=F5 =EE=EF=F6=E8=EE=ED=E0=F5 500$ =E2 =E4=E5=ED=FC. =C2=F1=E5 =E8=ED=F1=
+=F2=F0=F3=EA=F6=E8=E8 =E8=20
+=EE=F2=E7=FB=E2=FB =ED=E0 =F1=E0=E9=F2=E5: </FONT><A href=3D"http://drive=
+rtv.ru"><FONT=20
+size=3D4>http://drivertv.ru</FONT></A> </DIV></BODY></HTML>
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+------=_NextPart_000_0F1F_01D008D1.74744B70--
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+
+
+--===============6091138344300475868==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+------------------------------------------------------------------------------
+Download BIRT iHub F-Type - The Free Enterprise-Grade BIRT Server
+from Actuate! Instantly Supercharge Your Business Reports and Dashboards
+with Interactivity, Sharing, Native Excel Exports, App Integration & more
+Get technology previously reserved for billion-dollar corporations, FREE
+http://pubads.g.doubleclick.net/gampad/clk?id=157005751&iu=/4140/ostg.clktrk
+--===============6091138344300475868==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+Nbd-general mailing list
+Nbd-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+https://lists.sourceforge.net/lists/listinfo/nbd-general
+
+--===============6091138344300475868==--
