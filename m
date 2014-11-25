@@ -1,117 +1,27 @@
-From: Leif Lindholm <leif.lindholm@linaro.org>
-Subject: Re: [PATCH] of: support passing console options with stdout-path
-Date: Tue, 25 Nov 2014 11:17:24 +0000
-Message-ID: <20141125111724.GC2361@bivouac.eciton.net>
-References: <1416867838-18652-1-git-send-email-leif.lindholm@linaro.org>
- <20141125103504.GA21525@leverpostej>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v8 1/4] irqchip: gic: Support hierarchy irq domain.
+Date: Tue, 25 Nov 2014 11:27:29 +0000
+Message-ID: <547467A1.8000900@arm.com>
+References: <1416902662-19281-1-git-send-email-yingjoe.chen@mediatek.com> <1416902662-19281-2-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141125103504.GA21525@leverpostej>
+In-Reply-To: <1416902662-19281-2-git-send-email-yingjoe.chen@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "plagnioj@jcrosoft.com" <plagnioj@jcrosoft.com>, "ijc@debian.org" <ijc@debian.org>
+To: Yingjoe Chen <yingjoe.chen@mediatek.com>, Mark Rutland <Mark.Rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Thomas Gleixner <tglx@linutronix.de>, Jiang Liu <jiang.liu@linux.intel.com>
+Cc: Boris BREZILLON <boris.brezillon@free-electrons.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "hc.yen@mediatek.com" <hc.yen@mediatek.com>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, "yh.chen@mediatek.com" <yh.chen@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Yijing Wang <wangyijing@huawei.com>, Rob Herring <robh+dt@kernel.org>, "nathan.chung@mediatek.com" <nathan.chung@mediatek.com>, "yingjoe.chen@gmail.com" <yingjoe.chen@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, "eddie.huang@mediatek.com" <eddie.huang@mediatek.com>, Bjorn Helgaas <bhelgaas@google.com>, Sascha Hauer <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradea>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 25, 2014 at 10:35:04AM +0000, Mark Rutland wrote:
-> On Mon, Nov 24, 2014 at 10:23:58PM +0000, Leif Lindholm wrote:
-> > Support specifying console options (like with console=ttyXN,<options>)
-> > by appending them to the stdout-path property after a separating ':'.
-> > 
-> > Example:
-> > 	stdout-path = "uart0:115200";
+On 25/11/14 08:04, Yingjoe Chen wrote:
+> Add support to use gic as a parent for stacked irq domain.
 > 
-> I would very much like to be able to use this -- it will allow
-> distributions to boot on a board without having to know _anything_ about
-> the console UART until userspace is up, which would make it possible to
-> have a completely generic installer image, without requiring the
-> platform to provide bootargs.
-> 
-> My only concern is that this conflates the set of kernel command line
-> options for the UART wit the DT binding for it. I don't know how good
-> people are at keeping those options stable, and I know they are
-> currently not documented -- we would need to add a stdout-path options
-> section to relevant UART bindings.
+> Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
 
-I don't disagree.
+Looks good to me.
 
-Current options are fairly well defined and stable, at least for any
-driver that uses uart_parse_options() (documented in
-Documentation/serial/driver).
+Acked-by: Marc Zyngier <marc.zyngier@arm.com>
 
->From drivers/tty/serial/serial_core.c:
-
-* uart_parse_options decodes a string containing the serial console
-* options.  The format of the string is <baud><parity><bits><flow>,
-* eg: 115200n8r
-
-/
-    Leif 
-> 
-> > 
-> > This patch also modifies of_find_node_by_path() to match only the
-> > portion of the path before a ':'.
-> > 
-> > Signed-off-by: Leif Lindholm <leif.lindholm@linaro.org>
-> > ---
-> >  drivers/of/base.c | 13 +++++++++++--
-> >  1 file changed, 11 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/of/base.c b/drivers/of/base.c
-> > index 3823edf..89c6b33 100644
-> > --- a/drivers/of/base.c
-> > +++ b/drivers/of/base.c
-> > @@ -37,6 +37,7 @@ EXPORT_SYMBOL(of_allnodes);
-> >  struct device_node *of_chosen;
-> >  struct device_node *of_aliases;
-> >  struct device_node *of_stdout;
-> > +static char *of_stdout_options;
-> >  
-> >  struct kset *of_kset;
-> >  
-> > @@ -703,6 +704,8 @@ static struct device_node *__of_find_node_by_path(struct device_node *parent,
-> >  	if (!len)
-> >  		return NULL;
-> >  
-> > +	len = strchrnul(path, ':') - path;
-> > +
-> >  	__for_each_child_of_node(parent, child) {
-> >  		const char *name = strrchr(child->full_name, '/');
-> >  		if (WARN(!name, "malformed device_node %s\n", child->full_name))
-> > @@ -747,6 +750,8 @@ struct device_node *of_find_node_by_path(const char *path)
-> >  		if (!of_aliases)
-> >  			return NULL;
-> >  
-> > +		len = strchrnul(path, ':') - path;
-> > +
-> >  		for_each_property_of_node(of_aliases, pp) {
-> >  			if (strlen(pp->name) == len && !strncmp(pp->name, path, len)) {
-> >  				np = of_find_node_by_path(pp->value);
-> > @@ -1830,8 +1835,12 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
-> >  			name = of_get_property(of_chosen, "linux,stdout-path", NULL);
-> >  		if (IS_ENABLED(CONFIG_PPC) && !name)
-> >  			name = of_get_property(of_aliases, "stdout", NULL);
-> > -		if (name)
-> > +		if (name) {
-> >  			of_stdout = of_find_node_by_path(name);
-> > +			of_stdout_options = strchr(name, ':');
-> > +			if (of_stdout_options != NULL)
-> > +				of_stdout_options++;
-> > +		}
-> >  	}
-> >  
-> >  	if (!of_aliases)
-> > @@ -1957,7 +1966,7 @@ bool of_console_check(struct device_node *dn, char *name, int index)
-> >  {
-> >  	if (!dn || dn != of_stdout || console_set_on_cmdline)
-> >  		return false;
-> > -	return !add_preferred_console(name, index, NULL);
-> > +	return !add_preferred_console(name, index, of_stdout_options);
-> >  }
-> >  EXPORT_SYMBOL_GPL(of_console_check);
-> >  
-> > -- 
-> > 1.9.1
-> > 
-> > 
+	M.
+-- 
+Jazz is not dead. It just smells funny...
