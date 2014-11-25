@@ -1,82 +1,109 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 9/9] ARM: dts: Model IPQ LPASS audio hardware
-Date: Tue, 25 Nov 2014 22:08:59 +0000
-Message-ID: <20141125220859.GY7712@sirena.org.uk>
-References: <1416423169-21865-1-git-send-email-kwestfie@codeaurora.org>
- <1416423169-21865-10-git-send-email-kwestfie@codeaurora.org>
+From: Aaron Sierra <asierra-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2] mtd: fsl_upm: Support NAND ECC DTS properties
+Date: Tue, 25 Nov 2014 16:19:08 -0600 (CST)
+Message-ID: <412246484.206926.1416953948359.JavaMail.zimbra@xes-inc.com>
+References: <1854666513.5578.1415473916534.JavaMail.zimbra@xes-inc.com> <5474E1DB.1090207@vanguardiasur.com.ar>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fsAKpJoU5qKzlS83"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1416423169-21865-10-git-send-email-kwestfie@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kenneth Westfield <kwestfie@codeaurora.org>
-Cc: ALSA Mailing List <alsa-devel@alsa-project.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, Greg KH <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5474E1DB.1090207-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Jordan Friendshuh <jfriendshuh-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+> From: "Ezequiel Garcia" <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+> Sent: Tuesday, November 25, 2014 2:08:59 PM
+> 
+> On 11/08/2014 04:11 PM, Aaron Sierra wrote:
+> [..]
+> > +
+> > +	/* We know mode is either NAND_ECC_SOFT or NAND_ECC_SOFT_BCH */
+> > +	if (strength < 0 && mode == NAND_ECC_SOFT_BCH) {
+> > +		dev_err(fun->dev,
+> > +			"ECC BCH mode requires nand-ecc-strength property");
+> > +		ret = -EINVAL;
+> > +		goto err;
+> > +	} else if (strength == 0) {
+> > +		dev_err(fun->dev, "ECC strength of 0 bits is unsupported");
+> > +		ret = -EINVAL;
+> > +		goto err;
+> > +	} else if (strength == 1 && mode == NAND_ECC_SOFT_BCH) {
+> > +		dev_err(fun->dev, "ECC BCH mode requires > 1-bit strength");
+> > +		ret = -EINVAL;
+> > +		goto err;
+> > +	} else if (strength > 1 && mode == NAND_ECC_SOFT) {
+> > +		dev_warn(fun->dev,
+> > +			"Forcing ECC BCH due to %d-bit strength\n", strength);
+> > +		mode = NAND_ECC_SOFT_BCH;
+> > +	}
+> > +	fun->chip.ecc.mode = mode;
+> > +	fun->chip.ecc.strength = strength;
+> > +
+> 
+> Aside from my comment about the lack of ECC specification in the
+> binding, I think the above is wrong.
+> 
+> You don't have hardware ECC, but software ECC (either hamming or BCH).
+> So, you don't need to specify any nand_ecc_ctrl.strength (i.e.
+> ecc.strength above).
+> 
+> It'll be set by the NAND core and override any value you set
+> See nand_scan_tail.
 
---fsAKpJoU5qKzlS83
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ezequiel,
+This patch was originally the second of two patches. The first was applied
+to l2-mtd.git on 11/5/2014:
 
-On Wed, Nov 19, 2014 at 10:52:49AM -0800, Kenneth Westfield wrote:
+    mtd: nand: Base BCH ECC bytes on required strength
 
-> --- a/arch/arm/boot/dts/qcom-ipq8064.dtsi
-> +++ b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+It affects the code in nand_scan_tail that you're referring to so that it
+looks like this:
 
-> +		sound {
-> +			compatible = "qcom,ipq806x-snd-card";
-> +			status = "disabled";
-> +			clocks = <&lcc AHBIX_CLK>;
-> +			clock-names = "ahbix_clk";
-> +			asoc-platform = <&pcm0>;
-> +			asoc-platform-names = "lpass-pcm-mi2s";
-> +			asoc-cpu = <&dai_mi2s>;
-> +			asoc-cpu-names = "lpass-cpu-dai";
-> +		};
+		/*
+		 * Board driver should supply ecc.size and ecc.bytes values to
+		 * select how many bits are correctable; see nand_bch_init()
+		 * for details. Otherwise, default to 4 bits for large page
+		 * devices.
+		 */
+		if (!ecc->size && (mtd->oobsize >= 64)) {
+			ecc->size = 512;
+			ecc->bytes = DIV_ROUND_UP(13 * ecc->strength, 8);
+		}
+		ecc->priv = nand_bch_init(mtd, ecc->size, ecc->bytes,
+					       &ecc->layout);
+		if (!ecc->priv) {
+			pr_warn("BCH ECC initialization failed!\n");
+			BUG();
+		}
+		ecc->strength = ecc->bytes * 8 / fls(8 * ecc->size);
 
-This appears to be part of the board but...
+In this case ecc->strength is unnecessarily recalculated at the end and
+ecc->strength isn't checked for zero in the initial calculation. Perhaps
+this block in nand_scan_tail should be patched again to preserve the
+original behaviour if ecc->strength or ecc->size are zero.
 
-> +		lpass-lpaif {
-> +			compatible = "qcom,lpass-lpaif";
-> +			status = "disabled";
-> +			reg = <0x28100000 0x10000>;
-> +			reg-names = "lpass-lpaif-mem";
-> +			interrupts = <0 85 1>;
-> +			interrupt-names = "lpass-lpaif-irq";
-> +		};
-> +
-> +		dai_mi2s: lpass-cpu-dai {
-> +			compatible = "qcom,lpass-cpu-dai";
-> +			status = "disabled";
-> +			clocks = <&lcc MI2S_OSR_CLK>, <&lcc MI2S_BIT_CLK>;
-> +			clock-names = "mi2s_osr_clk", "mi2s_bit_clk";
-> +		};
-> +
-> +		pcm0: lpass-pcm-mi2s {
-> +			compatible = "qcom,lpass-pcm-mi2s";
-> +			status = "disabled";
-> +		};
-> +
+The only other in-kernel user of SOFT_BCH is sunxi_nand.c and it calculates
+ecc->bytes from ecc->size and ecc->strength itself, so it has defined all
+three values by this point.
 
-...these are all part of the SoC.  I'd expect these to go into separate
-files.
+> So, I'd say you just need to specify the nand-ecc-mode in the devicetree
+> binding.
+> 
+> The nand-ecc-strength and nand-ecc-step-size are meant for controllers
+> with hardware ECC support.
 
---fsAKpJoU5qKzlS83
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Software BCH allows controllers without hardware support for multiple
+bit correction to be used with NAND devices that require multiple bit
+correction, so like a hardware controller it needs to know how many
+bits to correct.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUdP36AAoJECTWi3JdVIfQJJAH/3zKFY10GIQCWlZYRPehEOTC
-aiPtf+pNBG1YAlWT/OCSZGpV4BXI4Zbtlq5OYkOt0ctpAmxjDeLL+RtHHTMFEUgw
-SL8v4fgPcSSVxE73d8cQPHPcfS9gbgGscqrHTnt1nScJimB06xME1gDC/cfPc/g4
-mq9w8i3pCcuFIqHIZgTToSub171CpcrlBXOWzGrpQ3gYY+VON7q5b3NmVNtUpU5A
-clrmQF+XjODWGRH0fe7M8LH2wNTpuwNFqlsBfi/8P1g4M/2dHpp3JDzWx/SfP0+Z
-9b7gkpsqVofyNy1blb1Zz7Q7ZtLHIBIZSUO7tBafqcXI6OrnNeglvlYjYMB1NHs=
-=K0tj
------END PGP SIGNATURE-----
-
---fsAKpJoU5qKzlS83--
+> --
+> Ezequiel Garcia, VanguardiaSur
+> www.vanguardiasur.com.ar
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
