@@ -1,148 +1,53 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [RFC PATCH] ARM: DRA: hwmod: RTC: Add reset function for RTC
-Date: Tue, 25 Nov 2014 09:32:48 +0530
-Message-ID: <5473FF68.3070805@ti.com>
-References: <1416199402-3865-1-git-send-email-lokeshvutla@ti.com> <546DB513.6000104@ti.com> <alpine.DEB.2.02.1411201644470.9204@utopia.booyaka.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] mmc: dw_mmc: try pick the exact same voltage as vmmc for vqmmc
+Date: Mon, 24 Nov 2014 21:29:28 -0800
+Message-ID: <CAD=FV=UZT91rp2rgPCh5mY5s+g8J3iOrDsHKjuXAgEqoye5goQ@mail.gmail.com>
+References: <1415109789-7046-1-git-send-email-addy.ke@rock-chips.com>
+	<1415678573-6093-1-git-send-email-addy.ke@rock-chips.com>
+	<CAPDyKFqUoBjhsbz8rkLa9PY_dpgMxnimz3k7OoA5WVhi7MacPQ@mail.gmail.com>
+	<CAD=FV=VQHZ6YmcoeAb1OEVLYRrYBnc_dM5Kjt1TZX_CQJC=EfA@mail.gmail.com>
+	<5464152E.7040209@rock-chips.com>
+	<CAPDyKFrzGfDew0eLLEcA+_iS_mo-O2bFU58fjirfXXA8AJ9UYQ@mail.gmail.com>
+	<CAD=FV=Ve1TY4+8quq1=18A1YOFvOWuFGrBmHLwMCwdWBSqzxOw@mail.gmail.com>
+	<CAD=FV=UJT5zBkcj2a03Y_RWxad9+Pu83G_z79Xzzn74V=eRqww@mail.gmail.com>
+	<CAPDyKFqt4rrwi940KAPyPONpjixK1730QmHEsN27V97jyHH+Qw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1411201644470.9204@utopia.booyaka.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Paul Walmsley <paul@pwsan.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, t-kristo@ti.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFqt4rrwi940KAPyPONpjixK1730QmHEsN27V97jyHH+Qw@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: addy ke <addy.ke@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Dinh Nguyen <dinguyen@altera.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, Sonny Rao <sonnyrao@chromium.org>, Alexandru Stan <amstan@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, open list:A
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
-On Thursday 20 November 2014 10:26 PM, Paul Walmsley wrote:
-> On Thu, 20 Nov 2014, Lokesh Vutla wrote:
-> 
->> On Monday 17 November 2014 10:13 AM, Lokesh Vutla wrote:
->>> RTC IP have kicker feature which prevents spurious writes to its registers.
->>> In order to write into any of the RTC registers, KICK values has te be
->>> written to KICK registers. Currently hwmod is updating the IDLEMODE in rtc
->>> sysconfig register without writing into any kick register which is a noop.
->>> When autoidle is allowed for rtc, interruts are not received until IDLEMODE
->>> is set to SIDLE_SMART_WKUP.
->>> Adding a reset function to unlock RTC registers so that IDLEMODE is
->>> updated.
->> Ping..!!
->> Is this patch acceptable?
-> 
-> Lokesh
-> 
-> 1. This looks like a fix.  Is this intended to go in as a v3.18-rc patch, 
-> or against v3.19?  If so it would be very helpful for the maintainers if 
-> you were to state that somewhere.
-Yes. This is a fix, intended to go in 3.18-rc. Sorry should have
-mentioned it.
-> 
-> 2. Your patch unlocks the RTC registers, but never relocks it.  This seems 
-> to defeat the point of the spurious write protection.  Shouldn't your 
-> patch only unlock the RTC immediately before the hwmod code touches the 
-> RTC registers, and then relock it immediately afterwards, per SPRUHZ6 
-> section 23.4.3.3?  If so then the .reset function pointer is the wrong 
-> place for this; I would suggest adding some .lock and .unlock function 
-> pointers that are to be called before and after any register write to the 
-> IP block.
-Yeah I agree with you.
-Currently rtc driver unlocks these kick registers in probe and leaves it unlocks for
-further use.
-But if hwmod does unlock and lock for every sysconfig write driver should also
-implement unlock and lock for every rtc register write, which adds an extra overhead.
-I am not sure if some one writes into rtc registers other than hwmod and driver.
-IMO we can leave it unlocked as the driver does.
-> 
-> 3. Your macros don't mention DRA7xx specifically.  Does this sequence 
-> apply to some other TI chips, or just DRA7xx?  Please document this in a 
-> comment above the macros, and possibly change the name of the macros to 
-> refer to DRA7XX.
-This sequence applies to AM43xx and AM33xx also. So made it generic.
-Ill document it.
+Ulf,
 
-Thanks and regards,
-Lokesh
-> 
-> 
-> - Paul
-> 
->>
->> Thanks and regards,
->> Lokesh
->>>
->>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
->>> ---
->>>  arch/arm/mach-omap2/omap_hwmod.h          |  1 +
->>>  arch/arm/mach-omap2/omap_hwmod_7xx_data.c |  1 +
->>>  arch/arm/mach-omap2/omap_hwmod_reset.c    | 23 +++++++++++++++++++++++
->>>  3 files changed, 25 insertions(+)
->>>
->>> diff --git a/arch/arm/mach-omap2/omap_hwmod.h b/arch/arm/mach-omap2/omap_hwmod.h
->>> index 512f809..3703f99 100644
->>> --- a/arch/arm/mach-omap2/omap_hwmod.h
->>> +++ b/arch/arm/mach-omap2/omap_hwmod.h
->>> @@ -744,6 +744,7 @@ const char *omap_hwmod_get_main_clk(struct omap_hwmod *oh);
->>>   */
->>>  
->>>  extern int omap_hwmod_aess_preprogram(struct omap_hwmod *oh);
->>> +int omap_hwmod_rtc_unlock(struct omap_hwmod *oh);
->>>  
->>>  /*
->>>   * Chip variant-specific hwmod init routines - XXX should be converted
->>> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
->>> index 5684f11..90e1df4 100644
->>> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
->>> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
->>> @@ -1584,6 +1584,7 @@ static struct omap_hwmod_class_sysconfig dra7xx_rtcss_sysc = {
->>>  static struct omap_hwmod_class dra7xx_rtcss_hwmod_class = {
->>>  	.name	= "rtcss",
->>>  	.sysc	= &dra7xx_rtcss_sysc,
->>> +	.reset	= &omap_hwmod_rtc_unlock,
->>>  };
->>>  
->>>  /* rtcss */
->>> diff --git a/arch/arm/mach-omap2/omap_hwmod_reset.c b/arch/arm/mach-omap2/omap_hwmod_reset.c
->>> index 65e186c..b825a28 100644
->>> --- a/arch/arm/mach-omap2/omap_hwmod_reset.c
->>> +++ b/arch/arm/mach-omap2/omap_hwmod_reset.c
->>> @@ -30,6 +30,12 @@
->>>  
->>>  #include "omap_hwmod.h"
->>>  
->>> +#define RTC_KICK0_REG_OFFSET	0x6c
->>> +#define RTC_KICK1_REG_OFFSET	0x70
->>> +
->>> +#define RTC_KICK0_VALUE		0x83E70B13
->>> +#define RTC_KICK1_VALUE		0x95A4F1E0
->>> +
->>>  /**
->>>   * omap_hwmod_aess_preprogram - enable AESS internal autogating
->>>   * @oh: struct omap_hwmod *
->>> @@ -51,3 +57,20 @@ int omap_hwmod_aess_preprogram(struct omap_hwmod *oh)
->>>  
->>>  	return 0;
->>>  }
->>> +
->>> +/**
->>> + * omap_hwmod_rtc_unlock - Reset and unlock the Kicker mechanism.
->>> + * @oh: struct omap_hwmod *
->>> + *
->>> + * RTC IP have kicker feature.  This prevents spurious writes to its registers.
->>> + * In order to write into any of the RTC registers, KICK values has te be
->>> + * written in respective KICK registers. This is needed for hwmod to write into
->>> + * sysconfig register.
->>> + */
->>> +int omap_hwmod_rtc_unlock(struct omap_hwmod *oh)
->>> +{
->>> +	omap_hwmod_write(RTC_KICK0_VALUE, oh, RTC_KICK0_REG_OFFSET);
->>> +	omap_hwmod_write(RTC_KICK1_VALUE, oh, RTC_KICK1_REG_OFFSET);
->>> +
->>> +	return 0;
->>> +}
->>>
->>
-> 
-> 
-> - Paul
-> 
+On Mon, Nov 24, 2014 at 5:29 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>> 2. Several people I've talked to have expressed concerns that our
+>> minimum value is 2.7V.  Apparently that's really on the edge and makes
+>> EEs a little nervous.  The quick sample of cards sitting on my desk
+>> shows that they seem to claim 0x00ff8000, which doesn't include 2.7V.
+>
+> 0x00ff8000 states what values of VDD levels the device supports. Not VIO.
 
+Yup, I was just pointing out that possibly others were trying to get a
+little bit of margin (not going all the way down to 2.7V) too.
+
+>> Both of the above make me feel like dw_mmc should try its best to pick
+>> a value for vqmmc that is closest to the value of vmmc (and >= 2.7V).
+>> That also happens to make us work exactly like hosts where vmmc and
+>> vqmmc are supplied by the same supply.
+>
+> I do see your point. And I agree that it would be nice to achieve
+> something like this.
+>
+> The question is how to do this. For sure, we need to involve the mmc
+> core to handle this correctly.
+
+You could add a function to the core that we could call from
+dw_mci_switch_voltage() and it would do all the work except trying to
+set the UHS register.  That would certainly make it easy.  That could
+try to set the highest voltage that is <= vmmc when we're at
+MMC_SIGNAL_VOLTAGE_330.
+
+-Doug
