@@ -1,75 +1,35 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: simplefb-sunxi: Add
- sunxi simplefb extensions
-Date: Tue, 25 Nov 2014 13:52:02 +0100
-Message-ID: <54747B72.1050406@redhat.com>
-References: <1416309051-26784-1-git-send-email-hdegoede@redhat.com> <1416309051-26784-3-git-send-email-hdegoede@redhat.com> <547476DA.2030004@ti.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 2/5] Documentation: DT: Add bindings for Spreadtrum SoC Platform
+Date: Tue, 25 Nov 2014 13:52:42 +0100
+Message-ID: <2672926.PUHDU64fHa@wuerfel>
+References: <1416917818-10506-3-git-send-email-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORB7HW2GRQKGQE5RO5BJI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <547476DA.2030004-l0cyMroinI0@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1416917818-10506-3-git-send-email-chunyan.zhang@spreadtrum.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+Cc: grant.likely@linaro.org, robh+dt@kernel.org, catalin.marinas@arm.com, gregkh@linuxfoundation.org, ijc+devicetree@hellion.org.uk, jslaby@suse.cz, galak@codeaurora.org, broonie@linaro.org, mark.rutland@arm.com, m-karicheri2@ti.com, pawel.moll@arm.com, artagnon@gmail.com, rrichter@cavium.com, will.deacon@arm.com, gnomes@lxorguk.ukuu.org.uk, corbet@lwn.net, jason@lakedaemon.net, broonie@kernel.org, heiko@sntech.de, shawn.guo@freescale.com, florian.vaussard@epfl.ch, andrew@lunn.ch, hytszk@gmail.com, orsonzhai@gmail.com, geng.ren@spreadtrum.com, zhizhou.zhang@spreadtrum.com, lanqing.liu@spreadtrum.com, zhang.lyra@gmail.com, wei.qiao@spreadtrum.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, sprdlinux@freelists.org, linux-doc@vger.kernel.org, linux-serial@vger.kernel.org, linux-api@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tuesday 25 November 2014 20:16:55 Chunyan Zhang wrote:
+> diff --git a/Documentation/devicetree/bindings/serial/sprd-uart.txt b/Documentation/devicetree/bindings/serial/sprd-uart.txt
+> new file mode 100644
+> index 0000000..54e532f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/sprd-uart.txt
+> @@ -0,0 +1,6 @@
+> +* Spreadtrum serial UART
+> +
+> +Required properties:
+> +- compatible: must be "sprd,sc9836-uart"
+> +- reg: offset and length of the register set for the device
+> +- interrupts: exactly one interrupt specifier
+> 
 
-On 11/25/2014 01:32 PM, Tomi Valkeinen wrote:
-> On 18/11/14 13:10, Hans de Goede wrote:
->> If pre-filled framebuffer nodes are used, the firmware may need extra
->> properties to find the right node. This documents the properties to use
->> for this on sunxi platforms.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>   .../bindings/video/simple-framebuffer-sunxi.txt    | 33 ++++++++++++++++++++++
->>   1 file changed, 33 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
->>
->> diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt b/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
->> new file mode 100644
->> index 0000000..c46ba64
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/video/simple-framebuffer-sunxi.txt
->> @@ -0,0 +1,33 @@
->> +Sunxi specific Simple Framebuffer bindings
->> +
->> +This binding documents sunxi specific extensions to the simple-framebuffer
->> +bindings. The sunxi simplefb u-boot code relies on the devicetree containing
->> +pre-populated simplefb nodes.
->> +
->> +These extensions are intended so that u-boot can select the right node based
->> +on which pipeline is being used. As such they are solely intended for
->> +firmware / bootloader use, and the OS should ignore them.
->> +
->> +Required properties:
->> +- compatible: "allwinner,simple-framebuffer"
->> +- allwinner,pipeline, one of:
->
-> Sorry my ignorance, but what's sunxi and what's allwinner? Both names
-> are mixed here.
+The driver uses a clock, and the dts file lists a clock
+property, so it should be documented here, either as optional
+or mandatory, and with a description what this clock refers to.
 
-sunxi is the sun#i SoCs from Allwinner, Allwinner is the manufacturer and the
-SoC "code" names used everywhere in the kernel for their SoCs are sun4i, sun5i,
-sun6i, etc. Most people refer to these SoCs as sunxi. This is also what the
-linux-sunxi mailinglist in the Cc is about.
-
-The official devicetree vendor prefix for Allwinner is allwinner, hence the
-allwinner in the compatible name, see e.g. also
-
-Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
-
-Which also uses sunxi / sun4i everywhere except in the compatible vendor prefix.
-
-Regards,
-
-Hans
+	Arnd
