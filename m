@@ -1,73 +1,42 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH RFC v2 08/12] soc: samsung: pm_domain: Add support for
- parent power domain
-Date: Tue, 25 Nov 2014 10:19:28 +0100
-Message-ID: <CAMuHMdX+rcmUM+_4c72b16Zs_c5KMhO3bYSH5-AUp087cwGdeA@mail.gmail.com>
-References: <1416833572-6880-1-git-send-email-amit.daniel@samsung.com>
-	<1416834256-11225-1-git-send-email-amit.daniel@samsung.com>
-	<1416834256-11225-8-git-send-email-amit.daniel@samsung.com>
-	<CAPDyKFoBnViXQF=wDYp0x4gaOO4ht3a8KBeY6=k6_Zkkav28pQ@mail.gmail.com>
-	<CADGdYn4Vi2wV1y3Y0cTbPL0cFR2EEV7jT=82fHNYu+=xwZ7mBA@mail.gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v3 0/2] Add support for the rockchip mmc clock phases using the framework
+Date: Tue, 25 Nov 2014 10:35:06 +0100
+Message-ID: <3222595.cbGxNcWa4c@diego>
+References: <1416344908-5975-1-git-send-email-amstan@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CADGdYn4Vi2wV1y3Y0cTbPL0cFR2EEV7jT=82fHNYu+=xwZ7mBA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: amit daniel kachhap <amit.daniel@samsung.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Kevin Hilman <khilman@kernel.org>, Pankaj Dubey <pankaj.dubey@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1416344908-5975-1-git-send-email-amstan@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandru M Stan <amstan@chromium.org>, Mike Turquette <mturquette@linaro.org>
+Cc: Doug Anderson <dianders@chromium.org>, addy ke <addy.ke@rock-chips.com>, Sonny Rao <sonnyrao@chromium.org>, Kever Yang <kever.yang@rock-chips.com>, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, mark.yao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 25, 2014 at 9:57 AM, amit daniel kachhap
-<amit.daniel@samsung.com> wrote:
->>> diff --git a/Documentation/devicetree/bindings/arm/exynos/power_domain.txt b/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
->>> index 00ebda1..0160bdc 100644
->>> --- a/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
->>> +++ b/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
->>> @@ -24,6 +24,7 @@ Optional Properties:
->>>         - pclkN, clkN: Pairs of parent of input clock and input clock to the
->>>                 devices in this power domain. Maximum of 4 pairs (N = 0 to 3)
->>>                 are supported currently.
->>> +- parents: phandle of parent power domains.
+Am Dienstag, 18. November 2014, 13:08:26 schrieb Alexandru M Stan:
+> For now all I have is the getter and setter for the phase, nothing that uses
+> it (that is ready). You can test the getter like this:
+> localhost ~ # cat /sys/kernel/debug/clk/clk_summary|grep sample -C 1
+>     sclk_sdio1                            0            0    24000000        
+>  0 0 sdio1_sample                       0            0    12000000         
+> 0 0 sdio1_drv                          0            0    12000000         
+> 0 90 --
+>           sclk_sdmmc                      1            1   297000000        
+>  0 0 sdmmc_sample                 0            0   148500000          0 134
+> sdmmc_drv                    0            0   148500000          0 90 --
+>           sclk_sdio0                      1            1   100000000        
+>  0 0 sdio0_sample                 0            0    50000000          0 0
+> sdio0_drv                    0            0    50000000          0 90
+> sclk_emmc                       1            1   100000000          0 0
+> emmc_sample                  0            0    50000000          0 0
+> emmc_drv                     0            0    50000000          0 180
+> 
+> Next thing that will come is some dts changes that will make use of these
+> new clocks, and eventually mmc code will be changed to tune with these
+> clocks.
 
-Why not using just "power-domains = <&pd_top>"?
-This is consistent with how clocks refer to their parent clocks.
+As already said in v1, this looks nice to me, but I'll give Mike another day 
+or two to voice possible concerns.
 
->>>  Node of a device using power domains must have a samsung,power-domain property
->>>  defined with a phandle to respective power domain.
->>> @@ -48,6 +49,7 @@ Example:
->>>         mfc_pd: power-domain@10044060 {
->>>                 compatible = "samsung,exynos4210-pd", "samsung,exynos7-pd-mfc";
->>>                 reg = <0x10044060 0x20>;
->>> +               parents = <&pd_top>;
->>>                 #power-domain-cells = <0>;
->>>         };
->>
->> This seems like a good and generic approach to describe that a PM
->> domain could have a parent. I would suggest to rename it, such it
->> reflects its a PM domain binding though.
-> I am not sure if this is generic. I guess PD's represented like below
-> are more generic.
-> PD1 {
->         PD2 {
->                 PD3 {
->                 };
->         };
-> };
 
-Such a representation is not always possible.
-If you have one power-controller for a hierarchy of PM domains, you can
-use it.
-If you have multiple power-controllers, the power controller nodes are at the
-same level in DT, so you'll have to use "power-domains" properties to link
-them together.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Heiko
