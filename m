@@ -1,53 +1,87 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v7 0/2] clk: shmobile: DIV6 clock variable parent support
-Date: Tue, 25 Nov 2014 11:39:09 +0100
-Message-ID: <CAMuHMdU4vD2n_S-wasXA8U2G3FpvU0A1NhYeM41JAGObMDcSZw@mail.gmail.com>
-References: <1415375468-15378-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-	<CAMuHMdW=TGAySfRgXtVigcO-HuEudEDhnc2BhWuy8b0KJvE4oA@mail.gmail.com>
-	<CANqRtoQS_868tnScxyLpSkCRiAewVvMfGLh60PqSC+b-mhKakw@mail.gmail.com>
-	<CAMuHMdWkGtMq+gDZ+1YTmUh2E5xAUsCANcuG433=S3QOsPzjdg@mail.gmail.com>
-	<CANqRtoS33Aac3bKvMj7n6o2jhmk8kQAusad1ZPFRBmygVjgLiw@mail.gmail.com>
-	<CAMuHMdW5hr3wtbjJdHszOgAh_-OowjwNbNMsWKi2pAJG0Vjy7g@mail.gmail.com>
-	<20141125014915.12298.63530@quantum>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [RFC PATCH v2 2/4] Documentation: arm64/arm: dt bindings for numa.
+Date: Tue, 25 Nov 2014 12:02:08 +0100
+Message-ID: <2966212.dpWQ0OTb0A@wuerfel>
+References: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com> <5473FDA8.6080201@huawei.com> <54744F14.60004@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20141125014915.12298.63530@quantum>
-Sender: linux-sh-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54744F14.60004-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Will.Deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
+On Tuesday 25 November 2014 17:42:44 Hanjun Guo wrote:
+> On 2014-11-25 11:55, Shannon Zhao wrote:
+> > Hi,
+> > 
+> > On 2014/11/22 5:23, Ganapatrao Kulkarni wrote:
+> [...]
+> >> +==============================================================================
+> >> +4 - Example dts
+> >> +==============================================================================
+> >> +
+> >> +Example 1: 2 Node system each having 8 CPUs and a Memory.
+> >> +
+> >> +    numa-map {
+> >> +            #address-cells = <2>;
+> >> +            #size-cells = <1>;
+> >> +            #node-count = <2>;
+> >> +            mem-map =  <0x0 0x00000000 0>,
+> >> +                       <0x100 0x00000000 1>;
+> >> +
+> >> +            cpu-map = <0 7 0>,
+> >> +                      <8 15 1>;
+> > 
+> > The cpu range is continuous here. But if there is a situation like below:
+> > 
+> > 0 2 4 6 belong to node 0
+> > 1 3 5 7 belong to node 1
+> > 
+> > This case is very common on X86. I don't know the real situation of arm as
+> > I don't have a hardware with 2 nodes.
+> > 
+> > How can we generate a DTS about this situation? like below? Can be parsed?
+> > 
+> >               cpu-map = <0 2 4 6 0>,
+> >                         <1 3 5 7 1>;
+> 
+> I think the binding proposed here can not cover your needs, and I think this
+> binding is not suitable, there are some reasons.
+> 
+>  - CPU logical ID is allocated by OS, and it depends on the order of CPU node
+>    in the device tree, so it may be in a clean order like this patch proposed,
+>    or it will like the order Shannon pointed out.
+> 
+>  - Since CPU logical ID is allocated by OS, DTS file will not know these
+>    numbers.
 
-On Tue, Nov 25, 2014 at 2:49 AM, Mike Turquette <mturquette@linaro.org> wrote:
-> Quoting Geert Uytterhoeven (2014-11-20 23:38:26)
->> On Fri, Nov 21, 2014 at 6:54 AM, Magnus Damm <magnus.damm@gmail.com> wrote:
->> >>> From my side this series "[PATCH v7 0/2] clk: shmobile: DIV6 clock
->> >>> variable parent support" looks quite finalized. Would it be possible
->> >>
->> >> Does this mean I can add your acked-by?
->> >
->> > My apologies for late reply and not being more clear. Feel free to add
->> > my Acked-by for this series. No need to spend extra cycles and
->> > reworking anything if you have queued up the patches already though.
->>
->> Too late. Pushed, and already pulled by Mike, but not yet visible in
->> clk-next.
->
-> I also saw this email too late. I would have fixed it up locally but now
-> it is out in the wild and I can't rebase it :-/
+Also:
 
-I don't think it's out in the wild yet, unless I'm looking at the wrong place?
-https://git.linaro.org/people/mike.turquette/linux.git/shortlog/refs/heads/clk-next
+- you cannot support hierarchical NUMA topology
 
-Gr{oetje,eeting}s,
+- you cannot have CPU-less or memory-less nodes
 
-                        Geert
+- you cannot associate I/O devices with NUMA nodes, only memory and CPU
 
+> So the problem behind this is the mappings between CPUs and NUMA nodes,
+> there is already mapping for CPU hardware ID (MPIDR) and CPU logical ID,
+> and MPIDR will be not changed, why not using MPIDR for the mapping of
+> NUMA node and CPU? then the mappings will be:
+> 
+> CPU logical ID <------> CPU MPIDR <-----> NUMA node ID <-----> proximity domain
+> (allocated by OS)      (constant)       (allocated by OS)
+
+No, don't hardcode ARM specifics into a common binding either. I've looked
+at the ibm,associativity properties again, and I think we should just use
+those, they can cover all cases and are completely independent of the
+architecture. We should probably discuss about the property name though,
+as using the "ibm," prefix might not be the best idea.
+
+	Arnd
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
