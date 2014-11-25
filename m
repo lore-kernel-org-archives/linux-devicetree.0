@@ -1,64 +1,148 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v2 12/14] i2c/of: Add OF_RECONFIG notifier handler
-Date: Tue, 25 Nov 2014 15:11:43 +0100
-Message-ID: <20141125141143.GC1843@katana>
-References: <1416868422-22103-1-git-send-email-grant.likely@linaro.org>
- <1416868422-22103-13-git-send-email-grant.likely@linaro.org>
+From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: support passing console options with stdout-path
+Date: Tue, 25 Nov 2014 14:35:00 +0000
+Message-ID: <20141125143500.GE2361@bivouac.eciton.net>
+References: <1416867838-18652-1-git-send-email-leif.lindholm@linaro.org>
+ <20141125103504.GA21525@leverpostej>
+ <20141125111724.GC2361@bivouac.eciton.net>
+ <1416917249.32327.15.camel@debian.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ncSAzJYg3Aa9+CRW"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1416868422-22103-13-git-send-email-grant.likely@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, linux-i2c@vger.kernel.org
+In-Reply-To: <1416917249.32327.15.camel-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ian Campbell <ijc-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org" <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Nov 25, 2014 at 12:07:29PM +0000, Ian Campbell wrote:
+> My concern is that this is Linux specific, other OSes may have different
+> ideas about how stdout options should be formatted within this property.
+> (At least I don't know of any standardisation of the 115200n8 thing --
+> I'd love to be corrected!)
+> 
+> If I were a firmware author I'd be wary of specifying a stdout-path with
+> a Linux specific suffix.
+ 
+> Search ePAPR for baud it seems that the generic serial binding includes
+> a current-speed property in 6.2.1.2. It then goes on a bit ambiguously
+> to talk about the NS16550 in 6.2.2 but I think 6.2.1.2 was intended to
+> be generic. No mention of stop-bits/parity etc though, they are assumed
+> to be set already I think
+> 
+> One thought I had was to define a dt-stdout "pseudo-console" so that
+> console=dt-stdout,115200n8 or something could be used.
 
---ncSAzJYg3Aa9+CRW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'll wait for others to comment on the above.
+ 
+> Anyway I applied your patch to v3.18-rc5 and ran it on a Mustang and it
+> didn't work for some reason. I'm using:
+> 
+>         fdt set /chosen stdout-path "/soc/serial@1c020000:115200"
+>         setenv bootargs "earlycon=uart8250,mmio32,0x1c020000 root=/dev/sda3 rw debug"
+> 
+> So I get earlycon but then no proper console. Removing earlycon just
+> makes that stop working.
 
-On Mon, Nov 24, 2014 at 10:33:40PM +0000, Grant Likely wrote:
-> From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
->=20
-> CONFIG_OF_DYNAMIC enables runtime changes to the device tree which in
-> turn may trigger addition or removal of devices from Linux. Add an
-> OF_RECONFIG notifier handler to receive tree change events and to
-> creating or destroy i2c devices as required.
->=20
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-> [grant.likely: clean up #ifdefs and drop unneeded error handling]
-> Signed-off-by: Grant Likely <grant.likely@linaro.org>
-> Cc: Wolfram Sang <wsa@the-dreams.de>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-i2c@vger.kernel.org
+Right, so having debugged this a bit offline, I'm amazed I booted
+anything at all, given how badly I broke path scanning...
+Please ignore previous version - a fixed one follows:
 
-Reviewed-by: Wolfram Sang <wsa@the-dreams.de>
+/
+	Leif
 
+>From aef87fd958902afe881720286d525e10997462b8 Mon Sep 17 00:00:00 2001
+From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Date: Mon, 24 Nov 2014 22:23:58 +0000
+Subject: [PATCH] of: support passing console options with stdout-path
 
---ncSAzJYg3Aa9+CRW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Support specifying console options (like with console=ttyXN,<options>)
+by appending them to the stdout-path property after a separating ':'.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Example:
+	stdout-path = "uart0:115200";
 
-iQIcBAEBAgAGBQJUdI4fAAoJEBQN5MwUoCm2W4EP/3qb5u0igOYGh/2FevV4t+b4
-DJFLtEVwjwqQwIgZMpUwu0WT1CIsoI6s+q/lgiG4Fl9y2P2ZleoRECGx0dkxMZmG
-wL+Bg2S6MnUbJOp1+I6xoLO5LChOYIuj6k5bm41YF+7sABIlmdiBJUP1QMnv6VQH
-XHCxOjBwqlhzd19cbCTsrztGEO/QnbCJyu2oIk6pS5E3a6IWa7n8fEJI0bUVairm
-tqfCv5wZnYo9h+xYP9qoxJoy5wYSR1fHbflK/LCBh7Di5i69qc+ED/OJt8t/iK4a
-nhjGVguPE/zdJZKIITe6ekuwPxgy9LGDhwEbFymbOMGml/pak9v17osUqvaUSWmF
-XjSU+ojxALYk6NwJ7FXOPoTrY7EiOJc4v4BL3xa5waRkhLoWrCVs6B0SPGpykf+d
-g7jk9JNrPDTryxkiN+yMI9DOfElOxw7ebbRkBigVi//58qkTM8aWXWVlwEI/xUxK
-QXX8IUOemRJZPbt+YIQQdrerIyUXHPPuicI0eWC+SldYB7HmjO6EcvuQY6EvCY/B
-TcXE5tYsveAOTC6aYwf4bfd4f+GgzfV5SQanH1IGBSnyCSQNAFE+YR9tFY9745n+
-mQXlJ7GSIv2KyA9YSnx0D7NVd5jUQolJ2rjWYz+D3w7TIxUfqRZAAj9wSi6HgmhL
-6PvubW5n5gHEhs1DWFx2
-=1DXP
------END PGP SIGNATURE-----
+This patch also modifies of_find_node_by_path() to match only the
+portion of the path before a ':'.
 
---ncSAzJYg3Aa9+CRW--
+Signed-off-by: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ drivers/of/base.c |   19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 3823edf..ecd6290 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -37,6 +37,7 @@ EXPORT_SYMBOL(of_allnodes);
+ struct device_node *of_chosen;
+ struct device_node *of_aliases;
+ struct device_node *of_stdout;
++static char *of_stdout_options;
+ 
+ struct kset *of_kset;
+ 
+@@ -699,10 +700,15 @@ static struct device_node *__of_find_node_by_path(struct device_node *parent,
+ {
+ 	struct device_node *child;
+ 	int len = strchrnul(path, '/') - path;
++	int term;
+ 
+ 	if (!len)
+ 		return NULL;
+ 
++	term = strchrnul(path, ':') - path;
++	if (term < len)
++		len = term;
++
+ 	__for_each_child_of_node(parent, child) {
+ 		const char *name = strrchr(child->full_name, '/');
+ 		if (WARN(!name, "malformed device_node %s\n", child->full_name))
+@@ -742,11 +748,16 @@ struct device_node *of_find_node_by_path(const char *path)
+ 	if (*path != '/') {
+ 		char *p = strchrnul(path, '/');
+ 		int len = p - path;
++		int term;
+ 
+ 		/* of_aliases must not be NULL */
+ 		if (!of_aliases)
+ 			return NULL;
+ 
++		term = strchrnul(path, ':') - path;
++		if (term < len)
++			len = term;
++
+ 		for_each_property_of_node(of_aliases, pp) {
+ 			if (strlen(pp->name) == len && !strncmp(pp->name, path, len)) {
+ 				np = of_find_node_by_path(pp->value);
+@@ -1830,8 +1841,12 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
+ 			name = of_get_property(of_chosen, "linux,stdout-path", NULL);
+ 		if (IS_ENABLED(CONFIG_PPC) && !name)
+ 			name = of_get_property(of_aliases, "stdout", NULL);
+-		if (name)
++		if (name) {
+ 			of_stdout = of_find_node_by_path(name);
++			of_stdout_options = strchr(name, ':');
++			if (of_stdout_options != NULL)
++				of_stdout_options++;
++		}
+ 	}
+ 
+ 	if (!of_aliases)
+@@ -1957,7 +1972,7 @@ bool of_console_check(struct device_node *dn, char *name, int index)
+ {
+ 	if (!dn || dn != of_stdout || console_set_on_cmdline)
+ 		return false;
+-	return !add_preferred_console(name, index, NULL);
++	return !add_preferred_console(name, index, of_stdout_options);
+ }
+ EXPORT_SYMBOL_GPL(of_console_check);
+ 
+-- 
+1.7.10.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
