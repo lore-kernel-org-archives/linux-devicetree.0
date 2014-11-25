@@ -1,66 +1,142 @@
-From: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2] of/fdt: memblock_reserve /memreserve/ regions in the case of partial overlap
-Date: Tue, 25 Nov 2014 15:05:13 +0000
-Message-ID: <1416927913-2823-1-git-send-email-ian.campbell@citrix.com>
+From: Chanwoo Choi <cwchoi00-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv2 3/5] clk: s2mps11: Add the support for S2MPS13 PMIC clock
+Date: Wed, 26 Nov 2014 00:06:38 +0900
+Message-ID: <CAGTfZH0GFV5m3Cu3dgpxzv-e6kZiBBpSteSffgaZUVQn9HEJXg@mail.gmail.com>
+References: <1416301183-10478-1-git-send-email-cw00.choi@samsung.com>
+	<1416301183-10478-4-git-send-email-cw00.choi@samsung.com>
+	<20141118215926.25314.90810@quantum>
+	<20141119164310.GH1875@x1>
+	<5472F3C2.4030907@samsung.com>
+	<20141124100435.GA4241@x1>
+Reply-To: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141124100435.GA4241@x1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, geunsik.lim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-memblock_is_region_reserved() returns true in the case of a partial
-overlap, meaning that the current code fails to reserve the
-non-overlapping portion.
+Dear Lee,
 
-This call was introduced as part of d1552ce449eb "of/fdt: move
-memreserve and dtb memory reservations into core" which went into
-v3.16.
+Could you pick these patchset without RTC patch?
+I'll re-send etc patch separately.
 
-I observed this causing a Midway system with a buggy fdt (the header
-declares itself to be larger than it really is) failing to boot
-because the over-inflated size of the fdt was causing it to seem to
-run into the swapper_pg_dir region, meaning the DT wasn't reserved.
-The symptoms were failing to find an disks or network and failing to
-boot.
+Best Regards,
+Chanwoo Choi
 
-However given the ambiguity of whether things like the initrd are
-covered by /memreserve/ and similar I think it is best to also
-register the region rather than just ignoring it.
-
-Since memblock_reserve() handles overlaps just fine lets just warn and
-carry on.
-
-Signed-off-by: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org # v3.16+
----
-v2: Tag for stable v3.16+
-    Just drop the test, no need to log.
----
- drivers/of/fdt.c |    2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 30e97bc..d134710 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -964,8 +964,6 @@ void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
- int __init __weak early_init_dt_reserve_memory_arch(phys_addr_t base,
- 					phys_addr_t size, bool nomap)
- {
--	if (memblock_is_region_reserved(base, size))
--		return -EBUSY;
- 	if (nomap)
- 		return memblock_remove(base, size);
- 	return memblock_reserve(base, size);
--- 
-1.7.10.4
-
+On Mon, Nov 24, 2014 at 7:04 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote=
+:
+>> Could you please apply this patchset on your tree
+>> or Do we wait the Ack from RTC mainatiner for patch 4?
+>
+> We still need an Ack from Alessandro.
+>
+>> On 11/20/2014 01:43 AM, Lee Jones wrote:
+>> > On Tue, 18 Nov 2014, Mike Turquette wrote:
+>> >
+>> >> Quoting Chanwoo Choi (2014-11-18 00:59:41)
+>> >>> This patch adds the support for S2MPS13 PMIC clock which is same=
+ with existing
+>> >>> S2MPS14 RTC IP. But, S2MPS13 uses all of clocks (32khz_{ap|bt|cp=
+}).
+>> >>>
+>> >>> Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> >>> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> >>> Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> >>
+>> >> Applied to clk-next.
+>> >
+>> > I'm pretty sure you can't do that.  You have a dependency on
+>> > linux/mfd/samsung/s2mps13.h, which is satisfied in one of the earl=
+ier
+>> > patches in the set.  If you'd care to just provide an Ack for this
+>> > patch, I can send you a pull-request with the decencies met.
+>> >
+>> >>> ---
+>> >>>  drivers/clk/clk-s2mps11.c | 24 ++++++++++++++++++++++++
+>> >>>  1 file changed, 24 insertions(+)
+>> >>>
+>> >>> diff --git a/drivers/clk/clk-s2mps11.c b/drivers/clk/clk-s2mps11=
+=2Ec
+>> >>> index b7797fb..7bb13af 100644
+>> >>> --- a/drivers/clk/clk-s2mps11.c
+>> >>> +++ b/drivers/clk/clk-s2mps11.c
+>> >>> @@ -23,6 +23,7 @@
+>> >>>  #include <linux/clk-provider.h>
+>> >>>  #include <linux/platform_device.h>
+>> >>>  #include <linux/mfd/samsung/s2mps11.h>
+>> >>> +#include <linux/mfd/samsung/s2mps13.h>
+>> >>>  #include <linux/mfd/samsung/s2mps14.h>
+>> >>>  #include <linux/mfd/samsung/s5m8767.h>
+>> >>>  #include <linux/mfd/samsung/core.h>
+>> >>> @@ -120,6 +121,24 @@ static struct clk_init_data s2mps11_clks_in=
+it[S2MPS11_CLKS_NUM] =3D {
+>> >>>         },
+>> >>>  };
+>> >>>
+>> >>> +static struct clk_init_data s2mps13_clks_init[S2MPS11_CLKS_NUM]=
+ =3D {
+>> >>> +       [S2MPS11_CLK_AP] =3D {
+>> >>> +               .name =3D "s2mps13_ap",
+>> >>> +               .ops =3D &s2mps11_clk_ops,
+>> >>> +               .flags =3D CLK_IS_ROOT,
+>> >>> +       },
+>> >>> +       [S2MPS11_CLK_CP] =3D {
+>> >>> +               .name =3D "s2mps13_cp",
+>> >>> +               .ops =3D &s2mps11_clk_ops,
+>> >>> +               .flags =3D CLK_IS_ROOT,
+>> >>> +       },
+>> >>> +       [S2MPS11_CLK_BT] =3D {
+>> >>> +               .name =3D "s2mps13_bt",
+>> >>> +               .ops =3D &s2mps11_clk_ops,
+>> >>> +               .flags =3D CLK_IS_ROOT,
+>> >>> +       },
+>> >>> +};
+>> >>> +
+>> >>>  static struct clk_init_data s2mps14_clks_init[S2MPS11_CLKS_NUM]=
+ =3D {
+>> >>>         [S2MPS11_CLK_AP] =3D {
+>> >>>                 .name =3D "s2mps14_ap",
+>> >>> @@ -184,6 +203,10 @@ static int s2mps11_clk_probe(struct platfor=
+m_device *pdev)
+>> >>>                 s2mps11_reg =3D S2MPS11_REG_RTC_CTRL;
+>> >>>                 clks_init =3D s2mps11_clks_init;
+>> >>>                 break;
+>> >>> +       case S2MPS13X:
+>> >>> +               s2mps11_reg =3D S2MPS13_REG_RTCCTRL;
+>> >>> +               clks_init =3D s2mps13_clks_init;
+>> >>> +               break;
+>> >>>         case S2MPS14X:
+>> >>>                 s2mps11_reg =3D S2MPS14_REG_RTCCTRL;
+>> >>>                 clks_init =3D s2mps14_clks_init;
+>> >>> @@ -279,6 +302,7 @@ static int s2mps11_clk_remove(struct platfor=
+m_device *pdev)
+>> >>>
+>> >>>  static const struct platform_device_id s2mps11_clk_id[] =3D {
+>> >>>         { "s2mps11-clk", S2MPS11X},
+>> >>> +       { "s2mps13-clk", S2MPS13X},
+>> >>>         { "s2mps14-clk", S2MPS14X},
+>> >>>         { "s5m8767-clk", S5M8767X},
+>> >>>         { },
+>> >
+>>
+>
+> --
+> Lee Jones
+> Linaro STMicroelectronics Landing Team Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kerne=
+l" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
