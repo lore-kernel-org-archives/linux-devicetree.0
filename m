@@ -1,214 +1,237 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 3/9] clk: sunxi: Add prcm mod0 clock driver
-Date: Tue, 25 Nov 2014 09:29:21 +0100
-Message-ID: <54743DE1.7020704@redhat.com>
-References: <1416498928-1300-1-git-send-email-hdegoede@redhat.com> <1416498928-1300-4-git-send-email-hdegoede@redhat.com> <20141121084933.GL24143@lukather> <546F0226.2040700@redhat.com> <20141124220327.GS4752@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: amit daniel kachhap <amit.daniel@samsung.com>
+Subject: Re: [PATCH RFC v2 06/12] driver: soc: exynos-pmu: Add exynos7 power
+ domain on/off ops
+Date: Tue, 25 Nov 2014 14:03:16 +0530
+Message-ID: <CADGdYn43Up6D8EaXUr6ogki3tBMuS3WK7xXqbgjp8t4d8dQfqQ@mail.gmail.com>
+References: <1416833572-6880-1-git-send-email-amit.daniel@samsung.com>
+	<1416834256-11225-1-git-send-email-amit.daniel@samsung.com>
+	<1416834256-11225-6-git-send-email-amit.daniel@samsung.com>
+	<CAPDyKFpGjeWx8LkhN9BRLEczGSehXQBAB7A_M1DtCFN9tZOtYg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORB2732CRQKGQEKVNWQXI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20141124220327.GS4752@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFpGjeWx8LkhN9BRLEczGSehXQBAB7A_M1DtCFN9tZOtYg@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>, Kevin Hilman <khilman@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 11/24/2014 11:03 PM, Maxime Ripard wrote:
-> On Fri, Nov 21, 2014 at 10:13:10AM +0100, Hans de Goede wrote:
->> Hi,
+On Tue, Nov 25, 2014 at 1:00 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> On 24 November 2014 at 14:04, Amit Daniel Kachhap
+> <amit.daniel@samsung.com> wrote:
+>> This patch uses the restructuring done in PD handlers and adds PD
+>> on/off/status handlers for exynos7. In this SoC, some extra settings
+>> need to be done prior to turning on/off power domains. Some of those
+>> settings are also different from different power domains so is uses
+>> the power domain compatible name feature to distinguish between power
+>> domains.
 >>
->> On 11/21/2014 09:49 AM, Maxime Ripard wrote:
->>> Hi,
->>>
->>> On Thu, Nov 20, 2014 at 04:55:22PM +0100, Hans de Goede wrote:
->>>> Add a driver for mod0 clocks found in the prcm. Currently there is only
->>>> one mod0 clocks in the prcm, the ir clock.
->>>>
->>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>> ---
->>>>   Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
->>>>   drivers/clk/sunxi/Makefile                        |  2 +-
->>>>   drivers/clk/sunxi/clk-sun6i-prcm-mod0.c           | 63 +++++++++++++++++++++++
->>>>   drivers/mfd/sun6i-prcm.c                          | 14 +++++
->>>>   4 files changed, 79 insertions(+), 1 deletion(-)
->>>>   create mode 100644 drivers/clk/sunxi/clk-sun6i-prcm-mod0.c
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
->>>> index ed116df..342c75a 100644
->>>> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
->>>> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
->>>> @@ -56,6 +56,7 @@ Required properties:
->>>>   	"allwinner,sun4i-a10-usb-clk" - for usb gates + resets on A10 / A20
->>>>   	"allwinner,sun5i-a13-usb-clk" - for usb gates + resets on A13
->>>>   	"allwinner,sun6i-a31-usb-clk" - for usb gates + resets on A31
->>>> +	"allwinner,sun6i-a31-ir-clk" - for the ir clock on A31
->>>>
->>>>   Required properties for all clocks:
->>>>   - reg : shall be the control register address for the clock.
->>>> diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
->>>> index 7ddc2b5..daf8b1c 100644
->>>> --- a/drivers/clk/sunxi/Makefile
->>>> +++ b/drivers/clk/sunxi/Makefile
->>>> @@ -10,4 +10,4 @@ obj-y += clk-sun8i-mbus.o
->>>>
->>>>   obj-$(CONFIG_MFD_SUN6I_PRCM) += \
->>>>   	clk-sun6i-ar100.o clk-sun6i-apb0.o clk-sun6i-apb0-gates.o \
->>>> -	clk-sun8i-apb0.o
->>>> +	clk-sun8i-apb0.o clk-sun6i-prcm-mod0.o
->>>> diff --git a/drivers/clk/sunxi/clk-sun6i-prcm-mod0.c b/drivers/clk/sunxi/clk-sun6i-prcm-mod0.c
->>>> new file mode 100644
->>>> index 0000000..e80f18e
->>>> --- /dev/null
->>>> +++ b/drivers/clk/sunxi/clk-sun6i-prcm-mod0.c
->>>> @@ -0,0 +1,63 @@
->>>> +/*
->>>> + * Allwinner A31 PRCM mod0 clock driver
->>>> + *
->>>> + * Copyright (C) 2014 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>> + *
->>>> + * This program is free software; you can redistribute it and/or modify
->>>> + * it under the terms of the GNU General Public License as published by
->>>> + * the Free Software Foundation; either version 2 of the License, or
->>>> + * (at your option) any later version.
->>>> + *
->>>> + * This program is distributed in the hope that it will be useful,
->>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>>> + * GNU General Public License for more details.
->>>> + */
->>>> +
->>>> +#include <linux/clk-provider.h>
->>>> +#include <linux/clkdev.h>
->>>> +#include <linux/module.h>
->>>> +#include <linux/of_address.h>
->>>> +#include <linux/platform_device.h>
->>>> +
->>>> +#include "clk-factors.h"
->>>> +#include "clk-mod0.h"
->>>> +
->>>> +static const struct of_device_id sun6i_a31_prcm_mod0_clk_dt_ids[] = {
->>>> +	{ .compatible = "allwinner,sun6i-a31-ir-clk" },
->>>> +	{ /* sentinel */ }
->>>> +};
->>>> +
->>>> +static DEFINE_SPINLOCK(sun6i_prcm_mod0_lock);
->>>> +
->>>> +static int sun6i_a31_prcm_mod0_clk_probe(struct platform_device *pdev)
->>>> +{
->>>> +	struct device_node *np = pdev->dev.of_node;
->>>> +	struct resource *r;
->>>> +	void __iomem *reg;
->>>> +
->>>> +	if (!np)
->>>> +		return -ENODEV;
->>>> +
->>>> +	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>>> +	reg = devm_ioremap_resource(&pdev->dev, r);
->>>> +	if (IS_ERR(reg))
->>>> +		return PTR_ERR(reg);
->>>> +
->>>> +	sunxi_factors_register(np, &sun4i_a10_mod0_data,
->>>> +			       &sun6i_prcm_mod0_lock, reg);
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +static struct platform_driver sun6i_a31_prcm_mod0_clk_driver = {
->>>> +	.driver = {
->>>> +		.name = "sun6i-a31-prcm-mod0-clk",
->>>> +		.of_match_table = sun6i_a31_prcm_mod0_clk_dt_ids,
->>>> +	},
->>>> +	.probe = sun6i_a31_prcm_mod0_clk_probe,
->>>> +};
->>>> +module_platform_driver(sun6i_a31_prcm_mod0_clk_driver);
->>>> +
->>>> +MODULE_DESCRIPTION("Allwinner A31 PRCM mod0 clock driver");
->>>> +MODULE_AUTHOR("Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>");
->>>> +MODULE_LICENSE("GPL");
->>>
->>> I don't think this is the right approach, mainly for two reasons: the
->>> compatible shouldn't change, and you're basically duplicating code
->>> there.
->>>
->>> I understand that you need the new compatible in order to avoid a
->>> double probing: one by CLK_OF_DECLARE, and one by the usual mechanism,
->>> and that also implies the second reason.
+>> Signed-off-by: Amit Daniel Kachhap <amit.daniel@samsung.com>
+>> ---
+>>  drivers/soc/samsung/exynos-pmu.c            |  105 +++++++++++++++++++++++++++
+>>  include/linux/soc/samsung/exynos-regs-pmu.h |   17 +++++
+>>  2 files changed, 122 insertions(+)
 >>
->> Not only for that, we need a new compatible also because the mfd framework
->> needs a separate compatible per sub-node as that is how it finds nodes
->> to attach to the platform devices, so we need a new compatible anyways,
->> with your make the mod0 clock driver a platform driver solution we could
->> use:
+>> diff --git a/drivers/soc/samsung/exynos-pmu.c b/drivers/soc/samsung/exynos-pmu.c
+>> index e690f65..b9631d5 100644
+>> --- a/drivers/soc/samsung/exynos-pmu.c
+>> +++ b/drivers/soc/samsung/exynos-pmu.c
+>> @@ -1202,6 +1202,104 @@ static void exynos7_pmu_init(void)
+>>         }
+>>  }
+>>
+>> +static int exynos7_pd_extraconf_base(const char *pd_name)
+>> +{
+>> +       if (!pd_name)
+>> +               return -EINVAL;
+>> +
+>> +       if (!strcmp("samsung,exynos7-pd-mfc", pd_name))
+>> +               return EXYNOS7_CLKRUN_CMU_MFC_SYS_PWR_REG;
+>> +       else if (!strcmp("samsung,exynos7-pd-hevc", pd_name))
+>> +               return EXYNOS7_CLKRUN_CMU_HEVC_SYS_PWR_REG;
+>> +       else if (!strcmp("samsung,exynos7-pd-mscl", pd_name))
+>> +               return EXYNOS7_CLKRUN_CMU_MSCL_SYS_PWR_REG;
+>> +       else if (!strcmp("samsung,exynos7-pd-g2d", pd_name))
+>> +               return EXYNOS7_CLKRUN_CMU_G2D_SYS_PWR_REG;
+>> +       else if (!strcmp("samsung,exynos7-pd-fsys0", pd_name))
+>> +               return EXYNOS7_CLKRUN_CMU_FSYS0_SYS_PWR_REG;
+>> +       else if (!strcmp("samsung,exynos7-pd-fsys1", pd_name))
+>> +               return EXYNOS7_CLKRUN_CMU_FSYS1_SYS_PWR_REG;
+>> +       else if (!strcmp("samsung,exynos7-pd-aud", pd_name))
+>> +               return EXYNOS7_CLKRUN_CMU_AUD_SYS_PWR_REG;
+>> +       else if (!strcmp("samsung,exynos7-pd-disp", pd_name))
+>> +               return EXYNOS7_CLKRUN_CMU_DISP_SYS_PWR_REG;
+>> +       else if (!strcmp("samsung,exynos7-pd-vpp", pd_name))
+>> +               return EXYNOS7_CLKRUN_CMU_VPP_SYS_PWR_REG;
+>> +       else if (!strcmp("samsung,exynos7-pd-vpp", pd_name))
+>> +               return EXYNOS7_CLKRUN_CMU_VPP_SYS_PWR_REG;
+>> +       else if (!strcmp("samsung,exynos7-pd-isp0", pd_name))
+>> +               return EXYNOS7_CLKRUN_CMU_ISP0_SYS_PWR_REG;
+>> +       else if (!strcmp("samsung,exynos7-pd-isp1", pd_name))
+>> +               return EXYNOS7_CLKRUN_CMU_ISP1_SYS_PWR_REG;
+>> +       else if (!strcmp("samsung,exynos7-pd-cam0", pd_name))
+>> +               return EXYNOS7_CLKRUN_CMU_CAM0_SYS_PWR_REG;
+>> +       else if (!strcmp("samsung,exynos7-pd-cam1", pd_name))
+>> +               return EXYNOS7_CLKRUN_CMU_CAM1_SYS_PWR_REG;
+>> +       else if (!strcmp("samsung,exynos7-pd-g3d", pd_name))
+>> +               return EXYNOS7_CLKRUN_CMU_CAM1_SYS_PWR_REG;
 >
-> We have a single mod0 clock in there, so no, not really.
-
-We have a single mod0 clock there today, but who knows what tomorrow brings,
-arguably the 1wire clock is a mod0 clock too, so we already have 2 today.
-
-> Plus, that seems like a bogus limitation from MFD, and it really
-> shouldn't work that way.
-
-Well AFAIK that is how it works.
-
->> 	compatible = "allwinner,sun6i-a31-ir-clk", "allwinner,sun4i-a10-mod0-clk";
->>
->> To work around this, but there are other problems, your make mod0clk a
->> platform driver solution cannot work because the clocks node in the dtsi
->> is not simple-bus compatible, so no platform-devs will be instantiated for
->> the clocks there.
+> I think we should move away from using strings to find a matching PM
+> domain. Instead we should use a enum/define pointing to the PM domain
+> in an array of PM domains, or similar.
+Thanks for looking into the series.
+Here pd names are compatible string from the pd DT nodes. I think
+compatible names are
+used in many places like searching for platform data in DT based probe etc.
+yes enum can also be used to locate the PM domain. Will check.
 >
-> Then add the simple-bus compatible.
-
-No, just no, that goes against the whole design of how of-clocks work.
-
->> Besides the compatible (which as said we need a separate one anyways),
->> your other worry is code duplication, but I've avoided that as much
->> as possible already, the new drivers/clk/sunxi/clk-sun6i-prcm-mod0.c is
->> just a very thin wrapper, waying in with all of 63 lines including
->> 16 lines GPL header.
+> The UX500 SOC initial support for PM domains is queued for 3.19 and is
+> currently available in linux-next. You may want to get some
+> inspiration from that approach.
+ok will check them.
 >
-> 47 lines that are doing exactly the same thing as the other code is
-> doing. I'm sorry but you can't really argue it's not code duplication,
-> it really is.
-
-It is not doing the exact same thing, it is a platform driver, where as
-the other code is an of_clk driver.
-
->> So sorry, I disagree I believe that this is the best solution.
->>
->>> However, as those are not critical clocks that need to be here early
->>> at boot, you can also fix this by turning the mod0 driver into a
->>> platform driver itself. The compatible will be kept, the driver will
->>> be the same.
->>>
->>> The only thing we need to pay attention to is how "client" drivers
->>> react when they cannot grab their clock. They should return
->>> -EPROBE_DEFER, but that remains to be checked.
->>
->> -EPROBE_DEFER is yet another reason to not make mod0-clk a platform
->> driver. Yes drivers should be able to handle this, but it is a pain,
->> and the more we use it the more pain it is. Also it makes booting a lot
->> slower as any driver using a mod0 clk now, will not complete its probe
->> until all the other drivers are done probing and the late_initcall
->> which starts the deferred-probe wq runs.
+>> +
+>> +       pr_err("%s: Unsupported power domain\n", pd_name);
+>> +       return 0;
+>> +}
+>> +
+>> +static int exynos7_pd_powerdown(const char *pd_name, void __iomem *pd_addr)
+>> +{
 >
-> The whole EPROBE_DEFER mechanism might need some fixing, but it's not
-> really the point is it?
-
-Well one reasons why clocks are instantiated the way they are is to have
-them available as early as possible, which is really convenient and works
-really well.
-
-You are asking for a whole lot of stuff to be changed, arguably in a way
-which makes it worse, just to save 47 lines of code...
-
-Regards,
-
-Hans
+> Considering the suggestion above and to move away from using strings
+> like this; this function could take a pointer to the PM domain instead
+> of a string and the __iomem, right!?
+Actually in our case there are 2 files, pm-domain.c and exynos-pmu.c.
+I thought of abstracting out generic PD related stuffs from
+exynos-pmu.c file so this function
+takes these type of arguments.
+>
+>> +       int off_base = exynos7_pd_extraconf_base(pd_name);
+>> +
+>> +       if (!off_base)
+>> +               return -EINVAL;
+>> +
+>> +       /* Initialise the pd extraconf registers */
+>> +       pmu_raw_writel(0, off_base + EXYNOS7_CLKRUN_CMU_PD_SYS_PWR_REG);
+>> +       pmu_raw_writel(0, off_base + EXYNOS7_CLKSTOP_CMU_PD_SYS_PWR_REG);
+>> +       pmu_raw_writel(0, off_base + EXYNOS7_DISABLE_PLL_CMU_PD_SYS_PWR_REG);
+>> +       pmu_raw_writel(0, off_base + EXYNOS7_RESET_LOGIC_PD_SYS_PWR_REG);
+>> +       pmu_raw_writel(0, off_base + EXYNOS7_MEMORY_PD_SYS_PWR_REG);
+>> +       pmu_raw_writel(0, off_base + EXYNOS7_RESET_CMU_PD_SYS_PWR_REG);
+>> +
+>> +       if (!strcmp("samsung,exynos7-pd-fsys0", pd_name) ||
+>> +                       !strcmp("samsung,exynos7-pd-fsys1", pd_name))
+>> +               pmu_raw_writel(1,
+>> +                               off_base + EXYNOS7_RESET_SLEEP_PD_SYS_PWR_REG);
+>> +
+>> +       if (!strcmp("samsung,exynos7-pd-aud", pd_name)) {
+>> +               pmu_raw_writel(0, EXYNOS7_PAD_RETENTION_AUD_SYS_PWR_REG);
+>> +               pmu_raw_writel(0, EXYNOS7_GPIO_MODE_AUD_SYS_PWR_REG);
+>> +       }
+>> +
+>> +       writel_relaxed((EXYNOS7_USE_PROLONGED_LOGIC_RESET |
+>> +                       EXYNOS7_USE_SC_FEEDBACK), pd_addr + EXYNOS_PD_OPTION);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int exynos7_pd_poweron(const char *pd_name, void __iomem *pd_addr)
+>> +{
+>> +       if (exynos7_pd_powerdown(pd_name, pd_addr))
+>> +               return -EINVAL;
+>> +
+>> +       return __exynos_pd_poweron_off(true, pd_name, pd_addr,
+>> +                       EXYNOS7_INT_LOCAL_PWR_EN);
+>> +}
+>> +
+>> +static int exynos7_pd_poweroff(const char *pd_name, void __iomem *pd_addr)
+>> +{
+>> +       if (exynos7_pd_powerdown(pd_name, pd_addr))
+>> +               return -EINVAL;
+>> +
+>> +       return __exynos_pd_poweron_off(false, pd_name, pd_addr,
+>> +                       EXYNOS7_INT_LOCAL_PWR_EN);
+>> +}
+>> +
+>> +static bool exynos7_pd_status(void __iomem *pd_addr)
+>> +{
+>> +       unsigned int val;
+>> +
+>> +       val = readl_relaxed(pd_addr + EXYNOS_PD_STATUS) &
+>> +                               EXYNOS7_INT_LOCAL_PWR_EN;
+>> +       return  val ? true : false;
+>> +}
+>> +
+>>  static struct exynos_pmu_pd_ops exynos_pd_ops = {
+>>         .pd_on          = exynos_pd_poweron,
+>>         .pd_off         = exynos_pd_poweroff,
+>> @@ -1238,12 +1336,19 @@ static struct exynos_pmu_data exynos5420_pmu_data = {
+>>         .pd_ops         = &exynos_pd_ops,
+>>  };
+>>
+>> +static struct exynos_pmu_pd_ops exynos7_pd_ops = {
+>> +       .pd_on          = exynos7_pd_poweron,
+>> +       .pd_off         = exynos7_pd_poweroff,
+>> +       .pd_status      = exynos7_pd_status,
+>> +};
+>> +
+>>  static const struct exynos_pmu_data exynos7_pmu_data = {
+>>         .pmu_config             = exynos7_pmu_config,
+>>         .pmu_init               = exynos7_pmu_init,
+>>         .pmu_config_extra       = exynos7_pmu_config_extra,
+>>         .powerdown_conf         = exynos7_powerdown_conf,
+>>         .powerup_conf           = exynos7_powerup_conf,
+>> +       .pd_ops                 = &exynos7_pd_ops,
+>>  };
+>>
+>>  /*
+>> diff --git a/include/linux/soc/samsung/exynos-regs-pmu.h b/include/linux/soc/samsung/exynos-regs-pmu.h
+>> index c61f91a..520595f 100644
+>> --- a/include/linux/soc/samsung/exynos-regs-pmu.h
+>> +++ b/include/linux/soc/samsung/exynos-regs-pmu.h
+>> @@ -680,6 +680,8 @@ static inline unsigned int exynos_pmu_cpunr(unsigned int mpidr)
+>>  #define EXYNOS7_VPP_SYS_PWR_REG                                        (0x1438)
+>>  #define EXYNOS7_CLKRUN_CMU_AUD_SYS_PWR_REG                     (0x1440)
+>>  #define EXYNOS7_CLKRUN_CMU_BUS0_SYS_PWR_REG                    (0x1444)
+>> +#define EXYNOS7_CLKRUN_CMU_CAM0_SYS_PWR_REG                    (0x1448)
+>> +#define EXYNOS7_CLKRUN_CMU_CAM1_SYS_PWR_REG                    (0x144C)
+>>  #define EXYNOS7_CLKRUN_CMU_DISP_SYS_PWR_REG                    (0x1450)
+>>  #define EXYNOS7_CLKRUN_CMU_FSYS0_SYS_PWR_REG                   (0x1454)
+>>  #define EXYNOS7_CLKRUN_CMU_FSYS1_SYS_PWR_REG                   (0x1458)
+>> @@ -824,6 +826,7 @@ static inline unsigned int exynos_pmu_cpunr(unsigned int mpidr)
+>>  #define EXYNOS7_USE_STANDBYWFI                                 (0x1 << 16)
+>>  #define EXYNOS7_USE_SC_FEEDBACK                                        (0x1 << 1)
+>>  #define EXYNOS7_USE_SC_COUNTER                                 (0x1 << 0)
+>> +#define EXYNOS7_USE_PROLONGED_LOGIC_RESET                      (0x1 << 8)
+>>
+>>  /* EXYNOS7_PAD_RETENTION_AUD_OPTION */
+>>  #define PAD_INITIATE_WAKEUP                                    (0x1 << 28)
+>> @@ -841,4 +844,18 @@ static inline unsigned int exynos_pmu_cpunr(unsigned int mpidr)
+>>
+>>  #define EXYNOS7_CORE_ARMCLK_STOPCTRL           (0x1000)
+>>
+>> +#define EXYNOS7_INT_LOCAL_PWR_EN               0xF
+>> +
+>> +/*
+>> + * Power domain register offsets from the EXYNOS7
+>> + * CLKRUN_CMU_HEVC_SYS_PWR_REG configuration register.
+>> + */
+>> +#define EXYNOS7_CLKRUN_CMU_PD_SYS_PWR_REG      (0x0)
+>> +#define EXYNOS7_CLKSTOP_CMU_PD_SYS_PWR_REG     (0x40)
+>> +#define EXYNOS7_DISABLE_PLL_CMU_PD_SYS_PWR_REG (0x80)
+>> +#define EXYNOS7_RESET_LOGIC_PD_SYS_PWR_REG     (0xC0)
+>> +#define EXYNOS7_MEMORY_PD_SYS_PWR_REG          (0x100)
+>> +#define EXYNOS7_RESET_CMU_PD_SYS_PWR_REG       (0x140)
+>> +#define EXYNOS7_RESET_SLEEP_PD_SYS_PWR_REG     (0x180)
+>> +
+>>  #endif /* __ASM_ARCH_REGS_PMU_H */
+>> --
+>> 1.7.9.5
+>>
+>
+> Kind regards
+> Uffe
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
