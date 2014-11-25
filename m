@@ -1,89 +1,75 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH RFC v2 07/12] PM / Domains: export pm_genpd_lookup_name
-Date: Tue, 25 Nov 2014 08:35:08 +0100
-Message-ID: <CAPDyKFqE_qhrRs3X9s9juyPH_Zcq8vdE_amqKM3VUnMjHtL2Rg@mail.gmail.com>
-References: <1416833572-6880-1-git-send-email-amit.daniel@samsung.com>
-	<1416834256-11225-1-git-send-email-amit.daniel@samsung.com>
-	<1416834256-11225-7-git-send-email-amit.daniel@samsung.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v2] clk: Add PWM clock driver
+Date: Tue, 25 Nov 2014 08:56:35 +0100
+Message-ID: <1416902195.3166.1.camel@pengutronix.de>
+References: <1415007078-7947-1-git-send-email-p.zabel@pengutronix.de>
+	 <20141125070720.12298.46343@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1416834256-11225-7-git-send-email-amit.daniel@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Amit Daniel Kachhap <amit.daniel@samsung.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, pankaj.dubey@samsung.com, Kevin Hilman <khilman@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20141125070720.12298.46343@quantum>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Janusz =?UTF-8?Q?U=C5=BCycki?= <j.uzycki@elproma.com.pl>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 24 November 2014 at 14:04, Amit Daniel Kachhap
-<amit.daniel@samsung.com> wrote:
-> This API may be needed to set the power domain parent/child relationship
-> in the power domain platform driver. The parent relationship is
-> generally set after the child power domain is registered with the power
-> domain subsystem. In this case, pm_genpd_lookup_name API might be
-> useful.
+Hi Mike,
 
-I think this is a step in the wrong direction. Instead we should be
-working on removing the "name" based APIs from genpd.
+Am Montag, den 24.11.2014, 23:07 -0800 schrieb Mike Turquette:
+> Quoting Philipp Zabel (2014-11-03 01:31:18)
+> > Some board designers, when running out of clock output pads, decide to
+> > (mis)use PWM output pads to provide a clock to external components.
+> > This driver supports this practice by providing an adapter between the
+> > PWM and clock bindings in the device tree. As the PWM bindings specify
+> > the period in the device tree, this is a fixed clock.
+> > 
+> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > ---
+> > I'm resending this because last time the linux-pwm list was not in Cc:
+> > So far I have not received any comments on the patch itself. I have used
+> > it on a BoundaryDevices Nitrogen6X board to produce a master clock for
+> > the OV5640 MIPI CSI-2 camera module.
+> > 
+> > Changes since v1:
+> >  - none (rebased onto v3.18-rc3)
+> 
+> Hi Philipp,
+> 
+> Thanks for testing this. Is the Nitrogen6X board merged upstream? I'm OK
+> with the patch but prefer to merge things when a consumer is ready to
+> use it. I guess you are missing a patch to add the pwm-clock bits to the
+> Nitrogen6X dts?
 
-The proper way should be to pass the PM domain as a parameter to the
-APIs instead.
+The Nitrogen6X board is merged upstream already, I used this dts patch
+to register the clock:
 
-Kind regards
-Uffe
+diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+index 7628049..e2e7a22 100644
+--- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+@@ -130,6 +130,18 @@
+ 		power-supply = <&reg_3p3v>;
+ 		status = "okay";
+ 	};
++
++	mipi_mclk: mipi-mclk {
++		compatible = "pwm-clock";
++		clock-output-names = "mipi-mclk";
++		/* Note: since the PWM reference clock is 66 MHz, the highest
++		 * possible frequency with 50% duty cycle smaller than 27 MHz
++		 * is 16.5 MHz: <&pwm3 0 61>;
++		 * But we can also do 22 MHz with 33% duty cycle:
++		 */
++		pwms = <&pwm3 0 46>; /* 22 MHz */
++		#clock-cells = <0>;
++	};
+ };
+ 
+ &audmux {
+-- 
+2.1.1
 
->
-> Signed-off-by: Amit Daniel Kachhap <amit.daniel@samsung.com>
-> ---
->  drivers/base/power/domain.c |    3 ++-
->  include/linux/pm_domain.h   |    7 +++++++
->  2 files changed, 9 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-> index fb83d4a..b0e1c2f 100644
-> --- a/drivers/base/power/domain.c
-> +++ b/drivers/base/power/domain.c
-> @@ -49,7 +49,7 @@
->  static LIST_HEAD(gpd_list);
->  static DEFINE_MUTEX(gpd_list_lock);
->
-> -static struct generic_pm_domain *pm_genpd_lookup_name(const char *domain_name)
-> +struct generic_pm_domain *pm_genpd_lookup_name(const char *domain_name)
->  {
->         struct generic_pm_domain *genpd = NULL, *gpd;
->
-> @@ -66,6 +66,7 @@ static struct generic_pm_domain *pm_genpd_lookup_name(const char *domain_name)
->         mutex_unlock(&gpd_list_lock);
->         return genpd;
->  }
-> +EXPORT_SYMBOL_GPL(pm_genpd_lookup_name);
->
->  struct generic_pm_domain *dev_to_genpd(struct device *dev)
->  {
-> diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
-> index 2e0e06d..aedcec3 100644
-> --- a/include/linux/pm_domain.h
-> +++ b/include/linux/pm_domain.h
-> @@ -150,6 +150,8 @@ extern int pm_genpd_name_poweron(const char *domain_name);
->
->  extern struct dev_power_governor simple_qos_governor;
->  extern struct dev_power_governor pm_domain_always_on_gov;
-> +
-> +extern struct generic_pm_domain *pm_genpd_lookup_name(const char *domain_name);
->  #else
->
->  static inline struct generic_pm_domain_data *dev_gpd_data(struct device *dev)
-> @@ -221,6 +223,11 @@ static inline int pm_genpd_name_poweron(const char *domain_name)
->  {
->         return -ENOSYS;
->  }
-> +static inline
-> +struct generic_pm_domain *pm_genpd_lookup_name(const char *domain_name)
-> +{
-> +       return NULL;
-> +}
->  #define simple_qos_governor NULL
->  #define pm_domain_always_on_gov NULL
->  #endif
-> --
-> 1.7.9.5
->
+regards
+Philipp
+
