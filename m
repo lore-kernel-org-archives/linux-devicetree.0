@@ -1,7 +1,7 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 3/8] irqchip: irq-st: Add documentation for STi based syscfg IRQs
-Date: Tue, 25 Nov 2014 16:25:00 +0000
-Message-ID: <1416932705-16880-4-git-send-email-lee.jones@linaro.org>
+Subject: [PATCH v2 6/8] ARM: STi: STiH407: Enable Cortex-A9 PMU support
+Date: Tue, 25 Nov 2014 16:25:03 +0000
+Message-ID: <1416932705-16880-7-git-send-email-lee.jones@linaro.org>
 References: <1416932705-16880-1-git-send-email-lee.jones@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1416932705-16880-1-git-send-email-lee.jones@linaro.org>
@@ -10,52 +10,29 @@ To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc: lee.jones@linaro.org, kernel@stlinux.com, tglx@linutronix.de, jason@lakedaemon.net, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This is ARM's generic Performance Monitoring Unit.
+
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- .../interrupt-controller/st,sti-irq-syscfg.txt     | 35 ++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/st,sti-irq-syscfg.txt
+ arch/arm/boot/dts/stih407.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/st,sti-irq-syscfg.txt b/Documentation/devicetree/bindings/interrupt-controller/st,sti-irq-syscfg.txt
-new file mode 100644
-index 0000000..ced6014
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/st,sti-irq-syscfg.txt
-@@ -0,0 +1,35 @@
-+STMicroelectronics STi System Configuration Controlled IRQs
-+-----------------------------------------------------------
+diff --git a/arch/arm/boot/dts/stih407.dtsi b/arch/arm/boot/dts/stih407.dtsi
+index 4f9024f..53bfcd9 100644
+--- a/arch/arm/boot/dts/stih407.dtsi
++++ b/arch/arm/boot/dts/stih407.dtsi
+@@ -56,6 +56,12 @@
+ 		cache-level = <2>;
+ 	};
+ 
++	arm-pmu {
++		interrupt-parent = <&intc>;
++		compatible = "arm,cortex-a9-pmu";
++		interrupts = <GIC_PPI 15 IRQ_TYPE_LEVEL_HIGH>;
++	};
 +
-+On STi based systems; External, CTI (Core Sight), PMU (Performance Management),
-+and PL310 L2 Cache IRQs are controlled using System Configuration registers.
-+This driver is used to unmask them prior to use.
-+
-+Required properties:
-+- compatible	: Should be set to one of:
-+			"st,stih415-irq-syscfg"
-+			"st,stih416-irq-syscfg"
-+			"st,stih407-irq-syscfg"
-+			"st,stid127-irq-syscfg"
-+- st,syscfg	: Phandle to Cortex-A9 IRQ system config registers
-+- st,irq-device	: Array of IRQs to enable - should be 2 in length
-+- st,fiq-device	: Array of FIQs to enable - should be 2 in length
-+
-+Optional properties:
-+- st,invert-ext	: External IRQs can be inverted at will.  This property inverts
-+		  these IRQs using bitwise logic.  A number of defines have been
-+		  provided for convenience:
-+			ST_IRQ_SYSCFG_EXT_1_INV
-+			ST_IRQ_SYSCFG_EXT_2_INV
-+			ST_IRQ_SYSCFG_EXT_3_INV
-+Example:
-+
-+irq-syscfg {
-+	compatible    = "st,stih416-irq-syscfg";
-+	st,syscfg     = <&syscfg_cpu>;
-+	st,irq-device = <ST_IRQ_SYSCFG_PMU_0>,
-+			<ST_IRQ_SYSCFG_PMU_1>;
-+	st,fiq-device = <ST_IRQ_SYSCFG_DISABLED>,
-+			<ST_IRQ_SYSCFG_DISABLED>;
-+	st,invert-ext = <(ST_IRQ_SYSCFG_EXT_1_INV | ST_IRQ_SYSCFG_EXT_3_INV)>;
-+};
+ 	soc {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 -- 
 1.9.1
