@@ -1,72 +1,142 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] mmc: dw_mmc: try pick the exact same voltage as vmmc for vqmmc
-Date: Mon, 24 Nov 2014 21:36:04 -0800
-Message-ID: <CAD=FV=U9Hh-OR2aGh6Q9YAwnP8AuAbQtogD=7wQxgg9XvoWTMw@mail.gmail.com>
-References: <1415109789-7046-1-git-send-email-addy.ke@rock-chips.com>
-	<1415678573-6093-1-git-send-email-addy.ke@rock-chips.com>
-	<CAPDyKFqUoBjhsbz8rkLa9PY_dpgMxnimz3k7OoA5WVhi7MacPQ@mail.gmail.com>
-	<CAD=FV=VQHZ6YmcoeAb1OEVLYRrYBnc_dM5Kjt1TZX_CQJC=EfA@mail.gmail.com>
-	<5464152E.7040209@rock-chips.com>
-	<CAPDyKFrzGfDew0eLLEcA+_iS_mo-O2bFU58fjirfXXA8AJ9UYQ@mail.gmail.com>
-	<CAD=FV=Ve1TY4+8quq1=18A1YOFvOWuFGrBmHLwMCwdWBSqzxOw@mail.gmail.com>
-	<CAD=FV=UJT5zBkcj2a03Y_RWxad9+Pu83G_z79Xzzn74V=eRqww@mail.gmail.com>
-	<CAPDyKFqt4rrwi940KAPyPONpjixK1730QmHEsN27V97jyHH+Qw@mail.gmail.com>
-	<5473EB8B.3000803@rock-chips.com>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv3 08/16] clk: mvebu: add suspend/resume for gatable clocks
+Date: Mon, 24 Nov 2014 22:07:00 -0800
+Message-ID: <20141125060700.12298.14532@quantum>
+References: <1416585613-2113-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1416585613-2113-9-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <5473EB8B.3000803@rock-chips.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Addy <addy.ke@rock-chips.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Dinh Nguyen <dinguyen@altera.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, Sonny Rao <sonnyrao@chromium.org>, Alexandru Stan <amstan@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, open l
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416585613-2113-9-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Addy,
+Quoting Thomas Petazzoni (2014-11-21 08:00:05)
+> This commit adds suspend/resume support for the gatable clock driver
+> used on Marvell EBU platforms. When getting out of suspend, the
+> Marvell EBU platforms go through the bootloader, which re-enables all
+> gatable clocks. However, upon resume, the clock framework will not
+> disable again all gatable clocks that are not used.
+> 
+> Therefore, if the clock driver does not save/restore the state of the
+> gatable clocks, all gatable clocks that are not claimed by any device
+> driver will remain enabled after a resume. This is why this driver
+> saves and restores the state of those clocks.
+> 
+> Since clocks aren't real devices, we don't have the normal ->suspend()
+> and ->resume() of the device model, and have to use the ->suspend()
+> and ->resume() hooks of the syscore_ops mechanism. This mechanism has
+> the unfortunate idea of not providing a way of passing private data,
+> which requires us to change the driver to make the assumption that
+> there is only once instance of the gatable clock control structure.
+> 
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-On Mon, Nov 24, 2014 at 6:38 PM, Addy <addy.ke@rock-chips.com> wrote:
->> In worst case scenario, VDD = 3.6V and VIO = 2.7V. That gives as the
->> factor of 0.75, thus we are inside spec but without margins.
->
-> * From eMMC4.5 spec:
->   1. (VDDF)vcc: Supply voltage for flash memory,  which is  2.7v -- 3.3v
->   2. (VDD)vccq: Supply voltage for memory controller, which is  1.7v --
-> 1.95v  and 2,7v -- 3.6v
->
-> * And from RK3288 datasheet:
->   Digtial GPIO Power(SDMMC0_VDD --> vccq) is 3.0v -- 3.6v and 1.62v - 1.98v
->
-> So I think:
-> 3.3v:  (2.7v < vccq < 3.6v)   &&  (3.0v < vccq < 3.6v)  ==> (3.0v < vccq <
-> 3.6v)
-> 1.8v:  (1.7v < vccq < 1.95v)  && (1.62v < vccq < 1.98v) ==> (1.7v < vccq <
-> 1.95v)
->
-> and (2.7v < vcc < 3.3v)
->
-> * And according to our hardware engineer:
->   All of supply voltage must have +/- 10% cushion.
->
-> * And we have found in some worse card that there is 200mv voltage collapse
-> when these card is insert.
->
-> So I think the best resolution is that vcc and vccq is configurable int dt
-> table.
+Looks good to me. Which tree do you plan to take this through?
 
-Ah, interesting.  ...so what we really need to be able to do is to say
-that the regulator we for vqmmc have supports the ranges 3.0V - 3.3V
-and 1.7V - 1.95V but not anything in between 1.95V ad 3.0V.  I have no
-idea how to express that in the regulator framework.
+Regards,
+Mike
 
-Technically you could take the IO Voltage Domains code (responsible
-for choosing the 1.8V range or the 3.3V range) and have it communicate
-the requirements to the regulator framework if you could figure out
-how to communicate them.
-
-
-...of course if you implemented my suggestion of keeping vqmmc as the
-highest voltage <= vmmc then maybe the whole point is moot and we
-don't have to figure it out.  Just make sure that vmmc never goes
-below 3.0V.
-
-
--Doug
+> ---
+>  drivers/clk/mvebu/common.c | 32 ++++++++++++++++++++++++++++++--
+>  1 file changed, 30 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/clk/mvebu/common.c b/drivers/clk/mvebu/common.c
+> index b7fcb46..0d4d121 100644
+> --- a/drivers/clk/mvebu/common.c
+> +++ b/drivers/clk/mvebu/common.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/io.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+> +#include <linux/syscore_ops.h>
+>  
+>  #include "common.h"
+>  
+> @@ -177,14 +178,17 @@ struct clk_gating_ctrl {
+>         spinlock_t *lock;
+>         struct clk **gates;
+>         int num_gates;
+> +       void __iomem *base;
+> +       u32 saved_reg;
+>  };
+>  
+>  #define to_clk_gate(_hw) container_of(_hw, struct clk_gate, hw)
+>  
+> +static struct clk_gating_ctrl *ctrl;
+> +
+>  static struct clk *clk_gating_get_src(
+>         struct of_phandle_args *clkspec, void *data)
+>  {
+> -       struct clk_gating_ctrl *ctrl = (struct clk_gating_ctrl *)data;
+>         int n;
+>  
+>         if (clkspec->args_count < 1)
+> @@ -199,15 +203,35 @@ static struct clk *clk_gating_get_src(
+>         return ERR_PTR(-ENODEV);
+>  }
+>  
+> +static int mvebu_clk_gating_suspend(void)
+> +{
+> +       ctrl->saved_reg = readl(ctrl->base);
+> +       return 0;
+> +}
+> +
+> +static void mvebu_clk_gating_resume(void)
+> +{
+> +       writel(ctrl->saved_reg, ctrl->base);
+> +}
+> +
+> +static struct syscore_ops clk_gate_syscore_ops = {
+> +       .suspend = mvebu_clk_gating_suspend,
+> +       .resume = mvebu_clk_gating_resume,
+> +};
+> +
+>  void __init mvebu_clk_gating_setup(struct device_node *np,
+>                                    const struct clk_gating_soc_desc *desc)
+>  {
+> -       struct clk_gating_ctrl *ctrl;
+>         struct clk *clk;
+>         void __iomem *base;
+>         const char *default_parent = NULL;
+>         int n;
+>  
+> +       if (ctrl) {
+> +               pr_err("mvebu-clk-gating: cannot instantiate more than one gatable clock device\n");
+> +               return;
+> +       }
+> +
+>         base = of_iomap(np, 0);
+>         if (WARN_ON(!base))
+>                 return;
+> @@ -225,6 +249,8 @@ void __init mvebu_clk_gating_setup(struct device_node *np,
+>         /* lock must already be initialized */
+>         ctrl->lock = &ctrl_gating_lock;
+>  
+> +       ctrl->base = base;
+> +
+>         /* Count, allocate, and register clock gates */
+>         for (n = 0; desc[n].name;)
+>                 n++;
+> @@ -246,6 +272,8 @@ void __init mvebu_clk_gating_setup(struct device_node *np,
+>  
+>         of_clk_add_provider(np, clk_gating_get_src, ctrl);
+>  
+> +       register_syscore_ops(&clk_gate_syscore_ops);
+> +
+>         return;
+>  gates_out:
+>         kfree(ctrl);
+> -- 
+> 2.1.0
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
