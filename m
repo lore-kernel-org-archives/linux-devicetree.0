@@ -1,149 +1,63 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: [PATCH v8 3/4] ARM: mediatek: Add sysirq in mt6589/mt8135/mt8127 dtsi
-Date: Tue, 25 Nov 2014 16:04:21 +0800
-Message-ID: <1416902662-19281-4-git-send-email-yingjoe.chen@mediatek.com>
+From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v8 4/4] dt-bindings: add bindings for mediatek sysirq
+Date: Tue, 25 Nov 2014 16:04:22 +0800
+Message-ID: <1416902662-19281-5-git-send-email-yingjoe.chen@mediatek.com>
 References: <1416902662-19281-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1416902662-19281-1-git-send-email-yingjoe.chen@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Thomas Gleixner <tglx@linutronix.de>, Jiang Liu <jiang.liu@linux.intel.com>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: Boris BREZILLON <boris.brezillon@free-electrons.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, hc.yen@mediatek.com, srv_heupstream@mediatek.com, yh.chen@mediatek.com, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Yijing Wang <wangyijing@huawei.com>, Rob Herring <robh+dt@kernel.org>, nathan.chung@mediatek.com, yingjoe.chen@gmail.com, Matthias Brugger <matthias.bgg@gmail.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, eddie.huang@mediatek.com, Bjorn Helgaas <bhelgaas@google.com>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416902662-19281-1-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yijing Wang <wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add sysirq settings for mt6589/mt8135/mt8127
-This also correct timer interrupt flag. The old setting works
-because boot loader already set polarity for timer interrupt.
-Without intpol support, the setting was not changed so gic
-can get the irq correctly.
+Add binding documentation for Mediatek SoC SYSIRQ.
 
-Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm/boot/dts/mt6589.dtsi | 14 ++++++++++++--
- arch/arm/boot/dts/mt8127.dtsi | 14 ++++++++++++--
- arch/arm/boot/dts/mt8135.dtsi | 14 ++++++++++++--
- 3 files changed, 36 insertions(+), 6 deletions(-)
+ .../bindings/arm/mediatek/mediatek,sysirq.txt      | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
 
-diff --git a/arch/arm/boot/dts/mt6589.dtsi b/arch/arm/boot/dts/mt6589.dtsi
-index e3c7600..c91b2a9 100644
---- a/arch/arm/boot/dts/mt6589.dtsi
-+++ b/arch/arm/boot/dts/mt6589.dtsi
-@@ -19,7 +19,7 @@
- 
- / {
- 	compatible = "mediatek,mt6589";
--	interrupt-parent = <&gic>;
-+	interrupt-parent = <&sysirq>;
- 
- 	cpus {
- 		#address-cells = <1>;
-@@ -76,15 +76,25 @@
- 		timer: timer@10008000 {
- 			compatible = "mediatek,mt6577-timer";
- 			reg = <0x10008000 0x80>;
--			interrupts = <GIC_SPI 113 IRQ_TYPE_EDGE_RISING>;
-+			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>;
- 			clocks = <&system_clk>, <&rtc_clk>;
- 			clock-names = "system-clk", "rtc-clk";
- 		};
- 
-+		sysirq: interrupt-controller@10200100 {
-+			compatible = "mediatek,mt6589-sysirq",
-+				     "mediatek,mt6577-sysirq";
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			interrupt-parent = <&gic>;
-+			reg = <0x10200100 0x1c>;
-+		};
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
+new file mode 100644
+index 0000000..d680b07
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
+@@ -0,0 +1,28 @@
++Mediatek 65xx/81xx sysirq
 +
- 		gic: interrupt-controller@10211000 {
- 			compatible = "arm,cortex-a7-gic";
- 			interrupt-controller;
- 			#interrupt-cells = <3>;
-+			interrupt-parent = <&gic>;
- 			reg = <0x10211000 0x1000>,
- 			      <0x10212000 0x1000>,
- 			      <0x10214000 0x2000>,
-diff --git a/arch/arm/boot/dts/mt8127.dtsi b/arch/arm/boot/dts/mt8127.dtsi
-index c3ee060..49f5976 100644
---- a/arch/arm/boot/dts/mt8127.dtsi
-+++ b/arch/arm/boot/dts/mt8127.dtsi
-@@ -18,7 +18,7 @@
- 
- / {
- 	compatible = "mediatek,mt8127";
--	interrupt-parent = <&gic>;
-+	interrupt-parent = <&sysirq>;
- 
- 	cpus {
- 		#address-cells = <1>;
-@@ -82,15 +82,25 @@
- 			compatible = "mediatek,mt8127-timer",
- 					"mediatek,mt6577-timer";
- 			reg = <0 0x10008000 0 0x80>;
--			interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_LOW>;
- 			clocks = <&system_clk>, <&rtc_clk>;
- 			clock-names = "system-clk", "rtc-clk";
- 		};
- 
-+		sysirq: interrupt-controller@10200100 {
-+			compatible = "mediatek,mt8127-sysirq",
-+				     "mediatek,mt6577-sysirq";
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			interrupt-parent = <&gic>;
-+			reg = <0 0x10200100 0 0x1c>;
-+		};
++Mediatek SOCs sysirq support controllable irq inverter for each GIC SPI
++interrupt.
 +
- 		gic: interrupt-controller@10211000 {
- 			compatible = "arm,cortex-a7-gic";
- 			interrupt-controller;
- 			#interrupt-cells = <3>;
-+			interrupt-parent = <&gic>;
- 			reg = <0 0x10211000 0 0x1000>,
- 			      <0 0x10212000 0 0x1000>,
- 			      <0 0x10214000 0 0x2000>,
-diff --git a/arch/arm/boot/dts/mt8135.dtsi b/arch/arm/boot/dts/mt8135.dtsi
-index 5faae6e..60338d9 100644
---- a/arch/arm/boot/dts/mt8135.dtsi
-+++ b/arch/arm/boot/dts/mt8135.dtsi
-@@ -18,7 +18,7 @@
- 
- / {
- 	compatible = "mediatek,mt8135";
--	interrupt-parent = <&gic>;
-+	interrupt-parent = <&sysirq>;
- 
- 	cpu-map {
- 		cluster0 {
-@@ -105,15 +105,25 @@
- 			compatible = "mediatek,mt8135-timer",
- 					"mediatek,mt6577-timer";
- 			reg = <0 0x10008000 0 0x80>;
--			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>;
- 			clocks = <&system_clk>, <&rtc_clk>;
- 			clock-names = "system-clk", "rtc-clk";
- 		};
- 
-+		sysirq: interrupt-controller@10200030 {
-+			compatible = "mediatek,mt8135-sysirq",
-+				     "mediatek,mt6577-sysirq";
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			interrupt-parent = <&gic>;
-+			reg = <0 0x10200030 0 0x1c>;
-+		};
++Required properties:
++- compatible: should be one of:
++	"mediatek,mt8135-sysirq"
++	"mediatek,mt8127-sysirq"
++	"mediatek,mt6589-sysirq"
++	"mediatek,mt6582-sysirq"
++	"mediatek,mt6577-sysirq"
++- interrupt-controller : Identifies the node as an interrupt controller
++- #interrupt-cells : Use the same format as specified by GIC in
++  Documentation/devicetree/bindings/arm/gic.txt
++- interrupt-parent: phandle of irq parent for sysirq. The parent must
++  use the same interrupt-cells format as GIC.
++- reg: Physical base address of the intpol registers and length of memory
++  mapped region.
 +
- 		gic: interrupt-controller@10211000 {
- 			compatible = "arm,cortex-a15-gic";
- 			interrupt-controller;
- 			#interrupt-cells = <3>;
-+			interrupt-parent = <&gic>;
- 			reg = <0 0x10211000 0 0x1000>,
- 			      <0 0x10212000 0 0x1000>,
- 			      <0 0x10214000 0 0x2000>,
++Example:
++	sysirq: interrupt-controller@10200100 {
++		compatible = "mediatek,mt6589-sysirq", "mediatek,mt6577-sysirq";
++		interrupt-controller;
++		#interrupt-cells = <3>;
++		interrupt-parent = <&gic>;
++		reg = <0 0x10200100 0 0x1c>;
++	};
 -- 
 1.8.1.1.dirty
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
