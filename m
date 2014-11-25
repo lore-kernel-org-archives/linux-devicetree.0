@@ -1,55 +1,63 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [RFC PATCH v2 2/4] Documentation: arm64/arm: dt bindings for numa.
-Date: Tue, 25 Nov 2014 22:09:41 +0100
-Message-ID: <2301278.uLKBUrWKt0@wuerfel>
-References: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com> <CAFpQJXUjYsTiHSyHdgtN9JPWGN8CByR4VwtSMJhwkAUWA4iV9w@mail.gmail.com> <2065254.jRdQcinOdg@wuerfel>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH V3 0/7] serial: Configure {big,native}-endian MMIO
+ accesses via DT
+Date: Tue, 25 Nov 2014 13:11:16 -0800
+Message-ID: <20141125211116.GA9997@kroah.com>
+References: <1416872182-6440-1-git-send-email-cernekee@gmail.com>
+ <20141125151018.359EAC44343@trevor.secretlab.ca>
+ <20141125173859.GA27287@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2065254.jRdQcinOdg@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141125173859.GA27287@kroah.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Kevin Cernekee <cernekee@gmail.com>, jslaby@suse.cz, robh@kernel.org, arnd@arndb.de, f.fainelli@gmail.com, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 25 November 2014 20:00:42 Arnd Bergmann wrote:
-> On Tuesday 25 November 2014 08:15:47 Ganapatrao Kulkarni wrote:
-> > > No, don't hardcode ARM specifics into a common binding either. I've looked
-> > > at the ibm,associativity properties again, and I think we should just use
-> > > those, they can cover all cases and are completely independent of the
-> > > architecture. We should probably discuss about the property name though,
-> > > as using the "ibm," prefix might not be the best idea.
-> >
-> > We have started with new proposal, since not got enough details how
-> > ibm/ppc is managing the numa using dt.
-> > there is no documentation and there is no power/PAPR spec for numa in
-> > public domain and there are no single dt file in arch/powerpc which
-> > describes the numa. if we get any one of these details, we can align
-> > to powerpc implementation.
+On Tue, Nov 25, 2014 at 09:38:59AM -0800, Greg KH wrote:
+> On Tue, Nov 25, 2014 at 03:10:18PM +0000, Grant Likely wrote:
+> > On Mon, 24 Nov 2014 15:36:15 -0800
+> > , Kevin Cernekee <cernekee@gmail.com>
+> >  wrote:
+> > > My last submission attempted to work around serial driver coexistence
+> > > problems on multiplatform kernels.  Since there are still questions
+> > > surrounding the best way to solve that problem, this patch series
+> > > will focus on the narrower topic of big endian MMIO support on serial.
+> > > 
+> > > 
+> > > V2->V3:
+> > > 
+> > >  - Document the new DT properties.
+> > > 
+> > >  - Add libfdt-based wrapper, to complement the "struct device_node" based
+> > >    version.
+> > > 
+> > >  - Restructure early_init_dt_scan_chosen_serial() changes to use a
+> > >    temporary variable, so it is easy to add more of_setup_earlycon()
+> > >    properties later.
+> > > 
+> > >  - Make of_serial and serial8250 honor the new "big-endian" property.
+> > > 
+> > > 
+> > > This series applies cleanly to:
+> > > 
+> > > git://git.kernel.org/pub/scm/linux/kernel/git/glikely/linux.git devicetree/next-overlay
+> > > 
+> > > but was tested on the mips-for-linux-next branch because my BE platform
+> > > isn't supported in mainline yet.
+> > 
+> > For the whole series:
+> > Acked-by: Grant Likely <grant.likely@linaro.org>
+> > 
+> > Greg, which tree do you want to merge this through? My DT tree, or the
+> > tty tree?
 > 
-> Basically the idea is to have an "ibm,associativity" property in each
-> bus or device that is node specific, and this includes all CPUs and
-> memory nodes. ...
+> I can take these through my tty tree, thanks.
 
-I should have mentioned that the example I gave was still rather basic.
-In a larger real-world system, you have more levels of associativity,
-though not all of them are relevant for NUMA memory allocation.
-Also, when you have levels that are not just a crossbar but instead
-have multiple point-to-point connections or a ring bus, it gets more
-complex, but you can still represent it with these properties.
+I take that back, it doesn't apply to my tty tree due to changes in the
+of codebase.  So feel free to take all of these through your DT tree
+please:
 
-For task placement, the associativity would also represent the
-topology within one node (SMT threads, cores, clusters, chips,
-mcms, sockets) as separate levels, and in large installations you
-would have multiple levels of memory topology (memory controllers,
-sockets, board/blade, chassis, rack, ...), which can get taken into
-account for memory allocation to find the closest node. The metric
-that you use here is how many levels within the topology are matching
-between two devices (typically memory and i/o device, or memory and cpu).
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
