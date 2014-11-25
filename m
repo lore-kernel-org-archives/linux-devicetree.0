@@ -1,121 +1,117 @@
-From: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH v2 2/4] Documentation: arm64/arm: dt bindings for
- numa.
-Date: Tue, 25 Nov 2014 22:54:15 +0800
-Message-ID: <54749817.2090103@linaro.org>
-References: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com> <5473FDA8.6080201@huawei.com> <54744F14.60004@linaro.org> <2966212.dpWQ0OTb0A@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2966212.dpWQ0OTb0A@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Will.Deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH] of: support passing console options with stdout-path
+Date: Tue, 25 Nov 2014 14:55:37 +0000
+Message-ID: <20141125145537.36A71C44343@trevor.secretlab.ca>
+References: <1416867838-18652-1-git-send-email-leif.lindholm@linaro.org>
+	<20141125103504.GA21525@leverpostej>
+	<20141125111724.GC2361@bivouac.eciton.net>
+	<1416917249.32327.15.camel@debian.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1416917249.32327.15.camel@debian.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ian Campbell <ijc@debian.org>, Leif Lindholm <leif.lindholm@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "plagnioj@jcrosoft.com" <plagnioj@jcrosoft.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On Tue, 25 Nov 2014 12:07:29 +0000
+, Ian Campbell <ijc@debian.org>
+ wrote:
+> On Tue, 2014-11-25 at 11:17 +0000, Leif Lindholm wrote:
+> > On Tue, Nov 25, 2014 at 10:35:04AM +0000, Mark Rutland wrote:
+> > > On Mon, Nov 24, 2014 at 10:23:58PM +0000, Leif Lindholm wrote:
+> > > > Support specifying console options (like with console=ttyXN,<options>)
+> > > > by appending them to the stdout-path property after a separating ':'.
+> > > > 
+> > > > Example:
+> > > > 	stdout-path = "uart0:115200";
+> > > 
+> > > I would very much like to be able to use this -- it will allow
+> > > distributions to boot on a board without having to know _anything_ about
+> > > the console UART until userspace is up, which would make it possible to
+> > > have a completely generic installer image, without requiring the
+> > > platform to provide bootargs.
+> > > 
+> > > My only concern is that this conflates the set of kernel command line
+> > > options for the UART wit the DT binding for it. I don't know how good
+> > > people are at keeping those options stable, and I know they are
+> > > currently not documented -- we would need to add a stdout-path options
+> > > section to relevant UART bindings.
+> > 
+> > I don't disagree.
+> > 
+> > Current options are fairly well defined and stable, at least for any
+> > driver that uses uart_parse_options() (documented in
+> > Documentation/serial/driver).
+> 
+> My concern is that this is Linux specific, other OSes may have different
+> ideas about how stdout options should be formatted within this property.
+> (At least I don't know of any standardisation of the 115200n8 thing --
+> I'd love to be corrected!)
+> 
+> If I were a firmware author I'd be wary of specifying a stdout-path with
+> a Linux specific suffix.
+> 
+> Search ePAPR for baud it seems that the generic serial binding includes
+> a current-speed property in 6.2.1.2. It then goes on a bit ambiguously
+> to talk about the NS16550 in 6.2.2 but I think 6.2.1.2 was intended to
+> be generic. No mention of stop-bits/parity etc though, they are assumed
+> to be set already I think
+> 
+> One thought I had was to define a dt-stdout "pseudo-console" so that
+> console=dt-stdout,115200n8 or something could be used.
+> 
+> Anyway I applied your patch to v3.18-rc5 and ran it on a Mustang and it
+> didn't work for some reason. I'm using:
+> 
+>         fdt set /chosen stdout-path "/soc/serial@1c020000:115200"
+>         setenv bootargs "earlycon=uart8250,mmio32,0x1c020000 root=/dev/sda3 rw debug"
+> 
+> So I get earlycon but then no proper console. Removing earlycon just
+> makes that stop working.
+> 
+> With:
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 89c6b33..5dc1718 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -1840,6 +1840,8 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
+>  			of_stdout_options = strchr(name, ':');
+>  			if (of_stdout_options != NULL)
+>  				of_stdout_options++;
+> +			printk(KERN_CRIT "%s: name=%s of_stdout=%p options=%s\n",
+> +			       __func__, name, of_stdout, of_stdout_options);
+>  		}
+>  	}
+>  
+> 
+> I can see in dmesg:
+> [    0.000000] of_alias_scan: name=/soc/serial@1c020000:115200 of_stdout=          (null) options=115200
+> 
+> So it seems like of_find_node_by_path() is confused by the ":".
 
-On 2014=E5=B9=B411=E6=9C=8825=E6=97=A5 19:02, Arnd Bergmann wrote:
-> On Tuesday 25 November 2014 17:42:44 Hanjun Guo wrote:
->> On 2014-11-25 11:55, Shannon Zhao wrote:
->>> Hi,
->>>
->>> On 2014/11/22 5:23, Ganapatrao Kulkarni wrote:
->> [...]
->>>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D
->>>> +4 - Example dts
->>>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D
->>>> +
->>>> +Example 1: 2 Node system each having 8 CPUs and a Memory.
->>>> +
->>>> +    numa-map {
->>>> +            #address-cells =3D <2>;
->>>> +            #size-cells =3D <1>;
->>>> +            #node-count =3D <2>;
->>>> +            mem-map =3D  <0x0 0x00000000 0>,
->>>> +                       <0x100 0x00000000 1>;
->>>> +
->>>> +            cpu-map =3D <0 7 0>,
->>>> +                      <8 15 1>;
->>>
->>> The cpu range is continuous here. But if there is a situation like =
-below:
->>>
->>> 0 2 4 6 belong to node 0
->>> 1 3 5 7 belong to node 1
->>>
->>> This case is very common on X86. I don't know the real situation of=
- arm as
->>> I don't have a hardware with 2 nodes.
->>>
->>> How can we generate a DTS about this situation? like below? Can be =
-parsed?
->>>
->>>                cpu-map =3D <0 2 4 6 0>,
->>>                          <1 3 5 7 1>;
->>
->> I think the binding proposed here can not cover your needs, and I th=
-ink this
->> binding is not suitable, there are some reasons.
->>
->>   - CPU logical ID is allocated by OS, and it depends on the order o=
-f CPU node
->>     in the device tree, so it may be in a clean order like this patc=
-h proposed,
->>     or it will like the order Shannon pointed out.
->>
->>   - Since CPU logical ID is allocated by OS, DTS file will not know =
-these
->>     numbers.
->
-> Also:
->
-> - you cannot support hierarchical NUMA topology
->
-> - you cannot have CPU-less or memory-less nodes
->
-> - you cannot associate I/O devices with NUMA nodes, only memory and C=
-PU
+That would be a bug in of_find_node_by_path(). Should add a test case
+for that because ':' is supposed to terminate path parsing.
 
-Yes, I agree.
+> I've not tried it but I'd have expected something more like:
+> 		if (name) {
+> 			of_stdout_options = strchr(name, ':');
+> 			if (of_stdout_options != NULL) {
+> 				*of_stdout_options = '0';
+> 				of_stdout_options++;
+> 			}
+> 			of_stdout = of_find_node_by_path(name);
+> 		}
 
->
->> So the problem behind this is the mappings between CPUs and NUMA nod=
-es,
->> there is already mapping for CPU hardware ID (MPIDR) and CPU logical=
- ID,
->> and MPIDR will be not changed, why not using MPIDR for the mapping o=
-f
->> NUMA node and CPU? then the mappings will be:
->>
->> CPU logical ID <------> CPU MPIDR <-----> NUMA node ID <-----> proxi=
-mity domain
->> (allocated by OS)      (constant)       (allocated by OS)
->
-> No, don't hardcode ARM specifics into a common binding either. I've l=
-ooked
-> at the ibm,associativity properties again, and I think we should just=
- use
-> those, they can cover all cases and are completely independent of the
-> architecture. We should probably discuss about the property name thou=
-gh,
-> as using the "ibm," prefix might not be the best idea.
+This isn't really right because it modifies the property data which is
+supposed to be const. of_find_node_by_path() already does the search
+piecewise, so it should be fairly straightforward to add a test for the
+':'. Anyone care to take a look? If I need to do it then it will take a couple
+of weeks before I've got some free time. :-/
 
-Is there any doc/code related to this? please give me some hints and I
-will read that.
-
-Thanks
-Hanjun
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> i.e. strip the options then do the patch lookup. name is const so this
+> won't actually work, but something like it...
+> 
+> Ian.
+> 
