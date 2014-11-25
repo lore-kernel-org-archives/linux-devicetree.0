@@ -1,63 +1,85 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH V3 0/7] serial: Configure {big,native}-endian MMIO
- accesses via DT
-Date: Tue, 25 Nov 2014 13:11:16 -0800
-Message-ID: <20141125211116.GA9997@kroah.com>
-References: <1416872182-6440-1-git-send-email-cernekee@gmail.com>
- <20141125151018.359EAC44343@trevor.secretlab.ca>
- <20141125173859.GA27287@kroah.com>
+From: Alexandru Stan <amstan@chromium.org>
+Subject: Re: [PATCH] mmc: dw_mmc: try pick the exact same voltage as vmmc for vqmmc
+Date: Tue, 25 Nov 2014 13:11:43 -0800
+Message-ID: <CAHNYxRwT8YeR-AUa-BVPraufLWZtEaeLdNjGBs77CfkMWVCNqg@mail.gmail.com>
+References: <1415109789-7046-1-git-send-email-addy.ke@rock-chips.com>
+ <1415678573-6093-1-git-send-email-addy.ke@rock-chips.com> <CAPDyKFqUoBjhsbz8rkLa9PY_dpgMxnimz3k7OoA5WVhi7MacPQ@mail.gmail.com>
+ <CAD=FV=VQHZ6YmcoeAb1OEVLYRrYBnc_dM5Kjt1TZX_CQJC=EfA@mail.gmail.com>
+ <5464152E.7040209@rock-chips.com> <CAPDyKFrzGfDew0eLLEcA+_iS_mo-O2bFU58fjirfXXA8AJ9UYQ@mail.gmail.com>
+ <CAD=FV=Ve1TY4+8quq1=18A1YOFvOWuFGrBmHLwMCwdWBSqzxOw@mail.gmail.com>
+ <CAD=FV=UJT5zBkcj2a03Y_RWxad9+Pu83G_z79Xzzn74V=eRqww@mail.gmail.com>
+ <CAPDyKFqt4rrwi940KAPyPONpjixK1730QmHEsN27V97jyHH+Qw@mail.gmail.com>
+ <5473EB8B.3000803@rock-chips.com> <CAD=FV=U9Hh-OR2aGh6Q9YAwnP8AuAbQtogD=7wQxgg9XvoWTMw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141125173859.GA27287@kroah.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Kevin Cernekee <cernekee@gmail.com>, jslaby@suse.cz, robh@kernel.org, arnd@arndb.de, f.fainelli@gmail.com, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=U9Hh-OR2aGh6Q9YAwnP8AuAbQtogD=7wQxgg9XvoWTMw@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Addy <addy.ke@rock-chips.com>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Dinh Nguyen <dinguyen@altera.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, Sonny Rao <sonnyrao@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, open list:ARM
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 25, 2014 at 09:38:59AM -0800, Greg KH wrote:
-> On Tue, Nov 25, 2014 at 03:10:18PM +0000, Grant Likely wrote:
-> > On Mon, 24 Nov 2014 15:36:15 -0800
-> > , Kevin Cernekee <cernekee@gmail.com>
-> >  wrote:
-> > > My last submission attempted to work around serial driver coexistence
-> > > problems on multiplatform kernels.  Since there are still questions
-> > > surrounding the best way to solve that problem, this patch series
-> > > will focus on the narrower topic of big endian MMIO support on serial.
-> > > 
-> > > 
-> > > V2->V3:
-> > > 
-> > >  - Document the new DT properties.
-> > > 
-> > >  - Add libfdt-based wrapper, to complement the "struct device_node" based
-> > >    version.
-> > > 
-> > >  - Restructure early_init_dt_scan_chosen_serial() changes to use a
-> > >    temporary variable, so it is easy to add more of_setup_earlycon()
-> > >    properties later.
-> > > 
-> > >  - Make of_serial and serial8250 honor the new "big-endian" property.
-> > > 
-> > > 
-> > > This series applies cleanly to:
-> > > 
-> > > git://git.kernel.org/pub/scm/linux/kernel/git/glikely/linux.git devicetree/next-overlay
-> > > 
-> > > but was tested on the mips-for-linux-next branch because my BE platform
-> > > isn't supported in mainline yet.
-> > 
-> > For the whole series:
-> > Acked-by: Grant Likely <grant.likely@linaro.org>
-> > 
-> > Greg, which tree do you want to merge this through? My DT tree, or the
-> > tty tree?
-> 
-> I can take these through my tty tree, thanks.
+>From what I understand... High speed SD cards have 1.8V regulators
+inside them(sourced by vmmc (what we power the SD card with)). So in
+terms of the SD card IO pins they will either use exactly vmmc or
+1.8V. It doesn't make sense for vqmmc (the voltage we use to power the
+AP block connected to the SD cards) to be anything but exactly equal
+to vmmc or 1.8V. If vqmmc differs from vmmc(or 1.8V, depending on
+mode) by more than a little (~100-200mV), both up or down, you start
+getting leaks into the input protection diodes of the pins(either the
+AP or the SD card) which is a pretty BAD thing (you're essentially
+powering the sd card through the IO pins, or the SD card is powering
+the IO block on the AP).
 
-I take that back, it doesn't apply to my tty tree due to changes in the
-of codebase.  So feel free to take all of these through your DT tree
-please:
+Alexandru Stan (amstan)
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+On Mon, Nov 24, 2014 at 9:36 PM, Doug Anderson <dianders@chromium.org> wrote:
+> Addy,
+>
+> On Mon, Nov 24, 2014 at 6:38 PM, Addy <addy.ke@rock-chips.com> wrote:
+>>> In worst case scenario, VDD = 3.6V and VIO = 2.7V. That gives as the
+>>> factor of 0.75, thus we are inside spec but without margins.
+>>
+>> * From eMMC4.5 spec:
+>>   1. (VDDF)vcc: Supply voltage for flash memory,  which is  2.7v -- 3.3v
+>>   2. (VDD)vccq: Supply voltage for memory controller, which is  1.7v --
+>> 1.95v  and 2,7v -- 3.6v
+>>
+>> * And from RK3288 datasheet:
+>>   Digtial GPIO Power(SDMMC0_VDD --> vccq) is 3.0v -- 3.6v and 1.62v - 1.98v
+>>
+>> So I think:
+>> 3.3v:  (2.7v < vccq < 3.6v)   &&  (3.0v < vccq < 3.6v)  ==> (3.0v < vccq <
+>> 3.6v)
+>> 1.8v:  (1.7v < vccq < 1.95v)  && (1.62v < vccq < 1.98v) ==> (1.7v < vccq <
+>> 1.95v)
+>>
+>> and (2.7v < vcc < 3.3v)
+>>
+>> * And according to our hardware engineer:
+>>   All of supply voltage must have +/- 10% cushion.
+>>
+>> * And we have found in some worse card that there is 200mv voltage collapse
+>> when these card is insert.
+>>
+>> So I think the best resolution is that vcc and vccq is configurable int dt
+>> table.
+>
+> Ah, interesting.  ...so what we really need to be able to do is to say
+> that the regulator we for vqmmc have supports the ranges 3.0V - 3.3V
+> and 1.7V - 1.95V but not anything in between 1.95V ad 3.0V.  I have no
+> idea how to express that in the regulator framework.
+>
+> Technically you could take the IO Voltage Domains code (responsible
+> for choosing the 1.8V range or the 3.3V range) and have it communicate
+> the requirements to the regulator framework if you could figure out
+> how to communicate them.
+>
+>
+> ...of course if you implemented my suggestion of keeping vqmmc as the
+> highest voltage <= vmmc then maybe the whole point is moot and we
+> don't have to figure it out.  Just make sure that vmmc never goes
+> below 3.0V.
+>
+>
+> -Doug
