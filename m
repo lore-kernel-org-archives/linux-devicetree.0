@@ -1,65 +1,88 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH V3 0/7] serial: Configure {big,native}-endian MMIO
- accesses via DT
-Date: Tue, 25 Nov 2014 09:38:59 -0800
-Message-ID: <20141125173859.GA27287@kroah.com>
-References: <1416872182-6440-1-git-send-email-cernekee@gmail.com>
- <20141125151018.359EAC44343@trevor.secretlab.ca>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/9] mailbox: arm_mhu: add driver for ARM MHU controller
+Date: Tue, 25 Nov 2014 18:01:01 +0000
+Message-ID: <5474C3DD.5060706@arm.com>
+References: <1416486442-25200-1-git-send-email-Vincent.Yang@tw.fujitsu.com>	<1416486872-25301-1-git-send-email-Vincent.Yang@tw.fujitsu.com>	<54749429.9080505@arm.com> <CAJe_ZhciCP2VbmRtrq9d14WhfLhnC-xaitCCiW_6Yf1S-0sdUg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mips-bounce@linux-mips.org>
-Content-Disposition: inline
-In-Reply-To: <20141125151018.359EAC44343@trevor.secretlab.ca>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Kevin Cernekee <cernekee@gmail.com>, jslaby@suse.cz, robh@kernel.org, arnd@arndb.de, f.fainelli@gmail.com, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJe_ZhciCP2VbmRtrq9d14WhfLhnC-xaitCCiW_6Yf1S-0sdUg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 25, 2014 at 03:10:18PM +0000, Grant Likely wrote:
-> On Mon, 24 Nov 2014 15:36:15 -0800
-> , Kevin Cernekee <cernekee@gmail.com>
->  wrote:
-> > My last submission attempted to work around serial driver coexistence
-> > problems on multiplatform kernels.  Since there are still questions
-> > surrounding the best way to solve that problem, this patch series
-> > will focus on the narrower topic of big endian MMIO support on serial.
-> > 
-> > 
-> > V2->V3:
-> > 
-> >  - Document the new DT properties.
-> > 
-> >  - Add libfdt-based wrapper, to complement the "struct device_node" based
-> >    version.
-> > 
-> >  - Restructure early_init_dt_scan_chosen_serial() changes to use a
-> >    temporary variable, so it is easy to add more of_setup_earlycon()
-> >    properties later.
-> > 
-> >  - Make of_serial and serial8250 honor the new "big-endian" property.
-> > 
-> > 
-> > This series applies cleanly to:
-> > 
-> > git://git.kernel.org/pub/scm/linux/kernel/git/glikely/linux.git devicetree/next-overlay
-> > 
-> > but was tested on the mips-for-linux-next branch because my BE platform
-> > isn't supported in mainline yet.
-> 
-> For the whole series:
-> Acked-by: Grant Likely <grant.likely@linaro.org>
-> 
-> Greg, which tree do you want to merge this through? My DT tree, or the
-> tty tree?
 
-I can take these through my tty tree, thanks.
 
-greg k-h
+On 25/11/14 16:51, Jassi Brar wrote:
+> On 25 November 2014 at 20:07, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+>>
+>>
+>> On 20/11/14 12:34, Vincent Yang wrote:
+>>>
+>>> Add driver for the ARM Message-Handling-Unit (MHU).
+>>>
+>>> Signed-off-by: Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> Signed-off-by: Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
+>>> Signed-off-by: Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+>>> ---
+>>>    .../devicetree/bindings/mailbox/arm-mhu.txt        |  33 ++++
+>>>    drivers/mailbox/Kconfig                            |   7 +
+>>>    drivers/mailbox/Makefile                           |   2 +
+>>>    drivers/mailbox/arm_mhu.c                          | 196
+>>> +++++++++++++++++++++
+>>>    4 files changed, 238 insertions(+)
+>>>    create mode 100644 Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+>>>    create mode 100644 drivers/mailbox/arm_mhu.c
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+>>> b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+>>> new file mode 100644
+>>> index 0000000..b1b9888
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+>>> @@ -0,0 +1,33 @@
+>>> +ARM MHU Mailbox Driver
+>>> +======================
+>>> +
+>>> +The ARM's Message-Handling-Unit (MHU) is a mailbox controller that has
+>>> +3 independent channels/links to communicate with remote processor(s).
+>>
+>>
+>> I had reviewed this before and I see not all the comments are addressed.
+>> I had mentioned that you can't add support to _SECURE_ channel in Linux
+>> as you need to assume Linux runs in non-secure privilege(and I gather
+>> that's the case even on this platform from other email in the thread)
+>>
+> Please revisit the old thread. After some discussion you had
+> graciously allowed me to keep the secure channel ;)
+> [
+> ... Even though I don't like you have secure channel access in Linux, you
+> have valid reasons. In case you decide to support it ....
+> ]
+
+Agreed but based on the other email in the same thread it looks like you
+want to run the same kernel both in secure and no-secure mode on this
+platform, in which case you _have_to_assume_ it's *non-secure only* 
+always unless you come up with some DT magic.
+
+>   It seems you still don't get my point that the driver should manage
+> all channels - S & NS. If Linux is running in NS mode on a platform,
+> the DT will specify only some NS channel to be used. The controller
+> driver shouldn't be crippled just because you think Linux will never
+> be run in Secure mode.
+>
+
+Ok how do you handle that, I don't see that in the DT binding. As it
+stands, you can unconditionally try to access the secure channel and
+cause aborts if the platform is running in non-secure mode.
+
+Regards,
+Sudeep
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
