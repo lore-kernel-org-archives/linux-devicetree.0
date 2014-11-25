@@ -1,104 +1,64 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v4 1/2] ARM: keystone: pm: switch to use generic pm domains
-Date: Mon, 24 Nov 2014 22:44:06 -0800
-Message-ID: <20141125064406.12298.57929@quantum>
-References: <1415631557-22897-1-git-send-email-grygorii.strashko@ti.com>
- <CAMuHMdU6G35SP-P7bt6RJQk59CrGcKE2XM4N3o8Dv3qxZU7gxA@mail.gmail.com>
- <546F8B39.1080106@ti.com> <2997659.fTX2lvxXfH@wuerfel>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCHv3 08/16] clk: mvebu: add suspend/resume for gatable
+ clocks
+Date: Tue, 25 Nov 2014 07:48:01 +0100
+Message-ID: <20141125074801.1656b78b@free-electrons.com>
+References: <1416585613-2113-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1416585613-2113-9-git-send-email-thomas.petazzoni@free-electrons.com>
+	<20141125060700.12298.14532@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <2997659.fTX2lvxXfH@wuerfel>
-Sender: linux-pm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Kevin Hilman <khilman@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robh+dt@kernel.org>, ssantosh@kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141125060700.12298.14532@quantum>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Arnd Bergmann (2014-11-24 02:50:28)
-> On Friday 21 November 2014 20:58:01 Grygorii Strashko wrote:
-> > Hi Kevin,
-> > On 11/21/2014 10:06 AM, Geert Uytterhoeven wrote:
-> > > On Fri, Nov 21, 2014 at 2:30 AM, Kevin Hilman <khilman@kernel.org> wrote:
-> > >> Geert Uytterhoeven <geert@linux-m68k.org> writes:
-> > >>
-> > >> So now I'm confused about why the PM domain has to do anything special
-> > >> if the presence/absence of the clocks is already handled by the DT.
-> > > 
-> > > Just adding a clock property to a device node in DT doesn't enable the clock
-> > > automatically, nor make it runtime-managed automatically.
-> > > Compare this to e.g. pinctrl, where adding pinctrl properties to DT does enable
-> > > them automatically, without the driver for the device having to care about it.
-> > >
-> > > Drivers interfacing external hardware typically do care about clocks, as they
-> > > have to program clock generators for the external hardware interface (e.g.
-> > > driving spi or i2c buses at specific frequencies).
+Mike,
+
+On Mon, 24 Nov 2014 22:07:00 -0800, Mike Turquette wrote:
+> Quoting Thomas Petazzoni (2014-11-21 08:00:05)
+> > This commit adds suspend/resume support for the gatable clock driver
+> > used on Marvell EBU platforms. When getting out of suspend, the
+> > Marvell EBU platforms go through the bootloader, which re-enables all
+> > gatable clocks. However, upon resume, the clock framework will not
+> > disable again all gatable clocks that are not used.
+> > 
+> > Therefore, if the clock driver does not save/restore the state of the
+> > gatable clocks, all gatable clocks that are not claimed by any device
+> > driver will remain enabled after a resume. This is why this driver
+> > saves and restores the state of those clocks.
+> > 
+> > Since clocks aren't real devices, we don't have the normal ->suspend()
+> > and ->resume() of the device model, and have to use the ->suspend()
+> > and ->resume() hooks of the syscore_ops mechanism. This mechanism has
+> > the unfortunate idea of not providing a way of passing private data,
+> > which requires us to change the driver to make the assumption that
+> > there is only once instance of the gatable clock control structure.
+> > 
+> > Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > 
-> But is this a property of the driver or of the device? If this is true
-> independent of the driver implementation, I don't see a problem with 
-> the approach of linking to a power-domain that automatically manages
-> all clocks for the devices that need this, and requires the driver to
-> manage them itself when there are any clocks that can't be handled
-> with the generic clk-power-domain implementation.
->  
-> > 
-> > In non-DT case, we have possibility to divide clocks on "fck" and "opt"
-> > (The way it can be done is not convenient, but it is - .con_id).
-> > 
-> > For DT-case - no way now. Also, PM domains are not physically present on
-> > Keystone 2 and GPD was selected as glue layer to integrate DT, pm_clk and
-> > PM runtime all together (one big-fat-global PM domain :).
-> > 
-> > So, I was able to find only following way to define "fck" clocks in DT:
-> >       clocks = <&papllclk>, <&clkcpgmac>, <&chipclk12>;
-> >       clock-names = "clk_pa", "clk_cpgmac", "cpsw_cpts_rft_clk";
-> >       fck-clocks = <&papllclk>, <&clkcpgmac>;
-> > As you can see - this will lead to data duplication in DT (
-> > 
-> > Any propositions are welcome?
-> > 
-> > Unfortunately, It seems that if we would not able to find DT solution
-> > then there will be following ways to move forward:
-> > - "remove the power domain proxy from your drivers and use the clocks directly" 
-> > ((c) Arnd Bergmann).
-> > [As possibility - It can be allowed to use clk_pm APIs by drivers]
-> > - continue using platform specific implementations.
-> 
-> Could the driver maybe identify the clocks that it wants to manage itself
-> to the pm-domain code? If it's safe for a device to have the clock turned
-> on at the default rate before loading the driver, any device that is connected
-> to the simple clk-pm-domain code could have all its clocks start out as
-> owned by the pm-domain, but then claim the clocks it needs to reprogram for
-> itself and take them out of the pmdomain.
+> Looks good to me. Which tree do you plan to take this through?
 
-I was thinking along similar lines. The functional versus optional stuff
-is really a property of the consuming device, not the clock signal
-itself.
+I don't have any specific plans. Jason, do you have other clk changes
+for 3.19, which justify a pull request from you to Mike? Or could Mike
+just take this patch in his tree? There is no build dependency between
+this patch and the other patches in the series, so it can go through
+whatever tree.
 
-Instead of adding a new property to the clock binding (e.g. fck-clocks
-or optional-clocks), could we simply wrap those lists of clocks in
-another node? E.g:
+Thanks,
 
-mandatory-clocks {
-       clocks = <&papllclk>, <&clkcpgmac>;
-       clock-names = "clk_pa", "clk_cpgmac";
-}
-
-clocks = <&papllclk>, <&clkcpgmac>, <&chipclk12>;
-       clocks = <&clkcpgmac>;
-       clock-names = "cpsw_cpts_rft_clk";
-}
-
-I'm showing my DT ignorance on this one. I haven't really thought
-through how these sub-nodes would work with of_clk_* handlers in
-drivers/clk/clkdev.c.
-
-Regards,
-Mike
-
-> 
->         Arnd
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
