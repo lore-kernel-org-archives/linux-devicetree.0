@@ -1,141 +1,179 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH v2 2/4] Documentation: arm64/arm: dt bindings for numa.
-Date: Tue, 25 Nov 2014 20:00:42 +0100
-Message-ID: <2065254.jRdQcinOdg@wuerfel>
-References: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
- <2966212.dpWQ0OTb0A@wuerfel>
- <CAFpQJXUjYsTiHSyHdgtN9JPWGN8CByR4VwtSMJhwkAUWA4iV9w@mail.gmail.com>
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: Re: [PATCH v10 00/10] cpuidle driver for QCOM SoCs: 8064, 8074, 8084
+Date: Tue, 25 Nov 2014 12:11:37 -0700
+Message-ID: <20141125191137.GA594@linaro.org>
+References: <1416593037-27527-1-git-send-email-lina.iyer@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAFpQJXUjYsTiHSyHdgtN9JPWGN8CByR4VwtSMJhwkAUWA4iV9w@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Steve Capper <steve.capper@linaro.org>, Al Stone <al.stone@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Shannon Zhao <zhaoshenglong@huawei.com>, Will Deacon <Will.Deacon@arm.com>, Leif Lindholm <leif.lindholm@linaro.org>, Roy Franz <roy.franz@linaro.org>, Rob Herring <robh+dt@kernel.org>, Hanjun Guo <hanjun.guo@linaro.org>, msalter@redhat.com, Grant Likely <grant.likely@linaro.org>, jchandra@broadcom.com, Ganapatrao Kulkarni <ganapatrao.kulkarni@caviumnetworks.com>, Ganapatrao Kulkarni <gpkulkarni@gmail.com>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1416593037-27527-1-git-send-email-lina.iyer@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 25 November 2014 08:15:47 Ganapatrao Kulkarni wrote:
-> > No, don't hardcode ARM specifics into a common binding either. I've looked
-> > at the ibm,associativity properties again, and I think we should just use
-> > those, they can cover all cases and are completely independent of the
-> > architecture. We should probably discuss about the property name though,
-> > as using the "ibm," prefix might not be the best idea.
+Any comments?
+
+On Fri, Nov 21 2014 at 11:04 -0700, Lina Iyer wrote:
+>Changes since v9:
+>[ https://www.mail-archive.com/linux-arm-msm@vger.kernel.org/msg11714.html ]
+>- Address review comments on v9
+>Dependent patchsets -
+>        https://lkml.org/lkml/2014/8/4/767
+>        http://www.spinics.net/lists/linux-arm-msm/msg10799.html
+>        http://www.spinics.net/lists/linux-arm-msm/msg10795.html
 >
-> We have started with new proposal, since not got enough details how
-> ibm/ppc is managing the numa using dt.
-> there is no documentation and there is no power/PAPR spec for numa in
-> public domain and there are no single dt file in arch/powerpc which
-> describes the numa. if we get any one of these details, we can align
-> to powerpc implementation.
-
-Basically the idea is to have an "ibm,associativity" property in each
-bus or device that is node specific, and this includes all CPUs and
-memory nodes. The property contains an array of 32-bit integers that
-count the resources. Take an example of a NUMA cluster of two machines
-with four sockets and four cores each (32 cores total), a memory
-channel on each socket and one PCI host per board that is connected
-at equal speed to each socket on the board.
-
-The ibm,associativity property in each PCI host, CPU or memory device
-node consequently has an array of three (board, socket, core) integers:
-
-	memory@0,0 {
-		device_type = "memory";
-		reg = <0x0 0x0  0x4 0x0;
-		/* board 0, socket 0, no specific core */
-		ibm,asssociativity = <0 0 0xffff>;
-	};
-
-	memory@4,0 {
-		device_type = "memory";
-		reg = <0x4 0x0  0x4 0x0>;
-		/* board 0, socket 1, no specific core */
-		ibm,asssociativity = <0 1 0xffff>; 
-	};
-
-	...
-
-	memory@1c,0 {
-		device_type = "memory";
-		reg = <0x1c 0x0  0x4 0x0>;
-		/* board 0, socket 7, no specific core */
-		ibm,asssociativity = <1 7 0xffff>; 
-	};
-
-	cpus {
-		#address-cells = <2>;
-		#size-cells = <0>;
-		cpu@0 {
-			device_type = "cpu";
-			reg = <0 0>;
-			/* board 0, socket 0, core 0*/
-			ibm,asssociativity = <0 0 0>; 
-		};
-
-		cpu@1 {
-			device_type = "cpu";
-			reg = <0 0>;
-			/* board 0, socket 0, core 0*/
-			ibm,asssociativity = <0 0 0>; 
-		};
-
-		...
-
-		cpu@31 {
-			device_type = "cpu";
-			reg = <0 32>;
-			/* board 1, socket 7, core 31*/
-			ibm,asssociativity = <1 7 31>; 
-		};
-	};
-
-	pci@100,0 {
-		device_type = "pci";
-		/* board 0 */
-		ibm,associativity = <0 0xffff 0xffff>;
-		...
-	};
-
-	pci@200,0 {
-		device_type = "pci";
-		/* board 1 */
-		ibm,associativity = <1 0xffff 0xffff>;
-		...
-	};
-
-	ibm,associativity-reference-points = <0 1>;
-
-The "ibm,associativity-reference-points" property here indicates that index 2
-of each array is the most important NUMA boundary for the particular system,
-because the performance impact of allocating memory on the remote board 
-is more significant than the impact of using memory on a remote socket of the
-same board. Linux will consequently use the first field in the array as
-the NUMA node ID. If the link between the boards however is relatively fast,
-so you care mostly about allocating memory on the same socket, but going to
-another board isn't much worse than going to another socket on the same
-board, this would be
-
-	ibm,associativity-reference-points = <1 0>;
-
-so Linux would ignore the board ID and use the socket ID as the NUMA node
-number. The same would apply if you have only one (otherwise identical
-board, then you would get
-
-	ibm,associativity-reference-points = <1>;
-
-which means that index 0 is completely irrelevant for NUMA considerations
-and you just care about the socket ID. In this case, devices on the PCI
-bus would also not care about NUMA policy and just allocate buffers from
-anywhere, while in original example Linux would allocate DMA buffers only
-from the local board.
-
-	Arnd
+>Changes since v8:
+>[ https://www.mail-archive.com/linux-arm-msm@vger.kernel.org/msg11473.html ]
+>- Flatten out the file structure - merge pm.c into spm.c after discussions
+>- Add a new function to set warm boot address, in scm-boot.c
+>- Support for 8064 (New)
+>- Tested on 8074, 8084. 8064 was tested with a WIP tree
+>- Address review comments from v8
+>- Looking into possiblility of  initializing the cpuidle device for a cpu,
+>only when the corresponding spm device is probed successfully.
+>
+>Changes since v7:
+>[ https://www.mail-archive.com/linux-arm-msm@vger.kernel.org/msg11199.html ]
+>- Address review comments
+>- Tested on 8974 but not 8084
+>- WFI renamed to Standby
+>- Update commit text with original author and link to the downstream tree
+>
+>Changes since v6:
+>[ https://www.mail-archive.com/linux-arm-msm@vger.kernel.org/msg11012.html ]
+>- SPM device nodes merged with existing SAW DT nodes
+>- SPM register information is handled within the driver
+>- Clean up from using 'msm' to 'qcom'
+>        - Shorten some enumerations as well
+>- Review comments from v6 addressed
+>- New: Support for 8084 SoC
+>        - Not tested. I do not have a board with this SoC, but the SPM
+>        configuration should be identical for WFI and SPC
+>
+>Changes since v5:
+>[ https://www.mail-archive.com/linux-arm-msm@vger.kernel.org/msg10559.html ]
+>- Merge spm-devices.c and spm.c into one file and one patch
+>        - Simplify implementation of the driver.
+>        - Update documentation mapping the DT properties with corresponding
+>          SPM register information.
+>- Removed scm-boot changes for quad core warmboot, its has been pulled in.
+>
+>Changes since v4:
+>[ https://www.mail-archive.com/linux-arm-msm@vger.kernel.org/msg10327.html ]
+>- Update to the v8 of ARM generic idle states patches
+>- Use platform device model for cpuidle-qcom
+>- Clean up msm-pm.c to remove unnecessary include files and functions
+>- Update commit text and documentation for all idle states
+>- Remove scm-boot relocate patch from this series, submitted earlier
+>[ https://www.mail-archive.com/linux-arm-msm@vger.kernel.org/msg10518.html ]
+>
+>Changes since v3:
+>[ https://www.mail-archive.com/linux-arm-msm@vger.kernel.org/msg10288.html ]
+>- Fix CONFIG_QCOM_PM Kconfig as bool
+>- More clean ups in spm.c and spm-devices.c
+>        - Removed and re-organized data structures to make initialization simple
+>        - Remove export of sequence flush functions
+>        - Updated commit text
+>        - Comments for use of barriers.
+>- Rebase on top of 3.17-rc1
+>
+>Changes since v2:
+>[ https://www.mail-archive.com/linux-arm-msm@vger.kernel.org/msg10148.html ]
+>- Prune all the drivers to support basic WFI and power down cpuidle
+>  functionality. Remove debug code.
+>- Integrate KConfig changes into the drivers' patches.
+>- Use Lorenzo's ARM idle-states patches as the basis for reading cpuidle
+>  c-states from DT.
+>  [ http://marc.info/?l=linux-pm&m=140794514812383&w=2 ]
+>- Incorporate review comments
+>- Rebase on top of 3.16
+>
+>Changes since v1/RFC:
+>[ https://www.mail-archive.com/linux-arm-msm@vger.kernel.org/msg10065.html ]
+>- Remove hotplug from the patch series. Will submit it separately.
+>- Fix SPM drivers per the review comments
+>- Modify patch sequence to compile SPM drivers independent of msm-pm, so as to
+>  allow wfi() calls to use SPM even without SoC interface driver.
+>
+>8074/8084/8064 like any ARM SoC can do architectural clock gating, that helps save
+>on power, but not enough of leakage power.  Leakage power of the SoC can be
+>further reduced by turning off power to the core. To aid this, every core (cpu
+>and L2) is accompanied by a Sub-system Power Manager (SPM), that can be
+>configured to indicate the low power mode, the core would be put into and the
+>SPM programs the peripheral h/w accordingly to enter low power and turn off the
+>power rail to the core.
+>
+>The idle invocation hierarchy -
+>
+>CPUIDLE
+>        |
+>        cpuidle-qcom.c [CPUIdle driver]
+>        |
+>        ------> spm.c [SPM driver]
+>                |
+>                ------> scm-boot.c [SCM interface layer]
+>                        |
+>------------------------|--------------------------
+>(EL)                    Secure Monitor Code
+>                        |
+>                        |
+>                        wfi();
+>------------------------|--------------------------
+>(HW)                    [CPU] {clock gate}
+>                        |
+>                        -----> [SPM] {statemachine}
+>
+>
+>The patchset does the following -
+>
+>- Introduce the SPM driver to control power to the core
+>- Add device bindings for 8974, 8084, 8064 CPU SPM devices
+>- Add cpuidle driver for QCOM cpus, using ARM generic idle state definitions.
+>- Add device bindings for 8974, 8084, 8064 idle-states - WFI and SPC
+>
+>Thanks,
+>Lina
+>
+>Lina Iyer (10):
+>  qom: scm: Move scm-boot files to drivers/soc/qcom/ and
+>    include/soc/qcom
+>  qcom: scm: Add SCM warmboot support for quad core SoCs
+>  qcom: spm: Add Subsystem Power Manager driver
+>  arm: dts: qcom: Add power-controller device node for 8074 Krait CPUs
+>  arm: dts: qcom: Add power-controller device node for 8084 Krait CPUs
+>  arm: dts: qcom: Update power-controller device node for 8064 Krait
+>    CPUs
+>  qcom: cpuidle: Add cpuidle driver for QCOM cpus
+>  arm: dts: qcom: Add idle states device nodes for 8074
+>  arm: dts: qcom: Add idle states device nodes for 8084
+>  arm: dts: qcom: Add idle state device nodes for 8064
+>
+> .../bindings/arm/msm/qcom,idle-state.txt           |  81 +++++
+> .../devicetree/bindings/arm/msm/qcom,saw2.txt      |  31 +-
+> arch/arm/boot/dts/qcom-apq8064.dtsi                |  37 ++-
+> arch/arm/boot/dts/qcom-apq8084.dtsi                |  46 ++-
+> arch/arm/boot/dts/qcom-msm8974.dtsi                |  46 ++-
+> arch/arm/mach-qcom/Makefile                        |   1 -
+> arch/arm/mach-qcom/platsmp.c                       |   2 +-
+> drivers/cpuidle/Kconfig.arm                        |   7 +
+> drivers/cpuidle/Makefile                           |   1 +
+> drivers/cpuidle/cpuidle-qcom.c                     |  72 +++++
+> drivers/soc/qcom/Kconfig                           |   8 +
+> drivers/soc/qcom/Makefile                          |   3 +-
+> .../arm/mach-qcom => drivers/soc/qcom}/scm-boot.c  |  33 +-
+> drivers/soc/qcom/spm.c                             | 332 +++++++++++++++++++++
+> include/soc/qcom/pm.h                              |  31 ++
+> .../arm/mach-qcom => include/soc/qcom}/scm-boot.h  |   3 +-
+> 16 files changed, 712 insertions(+), 22 deletions(-)
+> create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,idle-state.txt
+> create mode 100644 drivers/cpuidle/cpuidle-qcom.c
+> rename {arch/arm/mach-qcom => drivers/soc/qcom}/scm-boot.c (63%)
+> create mode 100644 drivers/soc/qcom/spm.c
+> create mode 100644 include/soc/qcom/pm.h
+> rename {arch/arm/mach-qcom => include/soc/qcom}/scm-boot.h (91%)
+>
+>-- 
+>2.1.0
+>
