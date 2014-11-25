@@ -1,41 +1,42 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 0/2] Increase the maximum cpu frequency of rk3288
-Date: Tue, 25 Nov 2014 17:23:59 +0100
-Message-ID: <3297542.UgVU3NH89O@diego>
-References: <1416908253-31721-1-git-send-email-zyw@rock-chips.com> <5474AAB4.2060301@rock-chips.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH] of: support passing console options with stdout-path
+Date: Tue, 25 Nov 2014 17:21:21 +0100
+Message-ID: <20141125162121.GC3443@lunn.ch>
+References: <1416867838-18652-1-git-send-email-leif.lindholm@linaro.org>
+ <20141124230016.GP20238@lunn.ch>
+ <20141125144439.07212C44343@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5474AAB4.2060301@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kever Yang <kever.yang@rock-chips.com>
-Cc: Chris Zhong <zyw@rock-chips.com>, dianders@chromium.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141125144439.07212C44343-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris, Kever,
-
-Am Mittwoch, 26. November 2014, 00:13:40 schrieb Kever Yang:
-> On 11/25/2014 05:37 PM, Chris Zhong wrote:
-> > The maximum cpu frequency of rk3288 can up to 1.8Ghz, but the vdd_cpu need
-> > set to 1.4v. I've tested these patches on rk3288 evb board.
+> > More worrying, barebox does not support the : either. So there is a
+> > danger your bootloader suddenly goes silent after a dt blob update.
 > 
-> I'm not sure why you need this patch, I think we have a discuss
-> for the cpu operating point before.
-> In this case:
-> 1. rk3288.dtsi is for all the rk3288 Soc based system, you may need
-> a separate opp table in rk3288-evb-rk808.dts;
-> 2. 1.4V may beyond the supported voltage range too much,
->      and it's not a good idea to add it to rk3288.dtsi as a safe voltage.
-> 3. Do you have a stress/heavy load test on evb with 1.4v at 1.8GHz?
+> Is barebox parsing the property? Or updating it? Or both? I've got no
+> problem with this patch, but we can also support things like the
+> 'current-speed' property in the UART to set a default when the stdout
+> path doesn't have any arguments.
 
-That is how I remember it as well ... the default opp table is supposed to 
-contain only the safest of values, while individual boards can then increase 
-those in conjunction with their thermal design.
+Hi Grant
 
-As the evb itself does only have the naked soc without any heat-sink or 
-similar, I'm not even sure if these additional frequencies should be enabled 
-there at all.
+I'm no export with barebox. So i just grep'ed the code.
 
+It parses the property. Also as with linux, of_find_node_by_path()
+does not stop at : as you say it should.
 
-Heiko
+There is one case of the property being updated, but that is only for
+the PPC mpc85xx.
+
+Barebox does not appear to use 'current-speed' at all.
+
+	Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
