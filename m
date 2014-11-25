@@ -1,69 +1,68 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: simplefb-sunxi: Add
- sunxi simplefb extensions
-Date: Tue, 25 Nov 2014 14:21:19 +0100
-Message-ID: <5474824F.8080000@redhat.com>
-References: <1416309051-26784-1-git-send-email-hdegoede@redhat.com> <1416309051-26784-3-git-send-email-hdegoede@redhat.com> <547476DA.2030004@ti.com> <54747B72.1050406@redhat.com> <54747DCF.9010502@ti.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v5 1/4] ASoC: core: add multi-codec support
+	in DT
+Date: Tue, 25 Nov 2014 13:21:28 +0000
+Message-ID: <20141125132128.GD7712@sirena.org.uk>
+References: <cover.1416918909.git.moinejf@free.fr>
+ <d380c3d09646c9dda14639b5aa5f0f2b2dc80e33.1416918909.git.moinejf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBXEE2KRQKGQEU2E7KDY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <54747DCF.9010502-l0cyMroinI0@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============2072126618999132381=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <d380c3d09646c9dda14639b5aa5f0f2b2dc80e33.1416918909.git.moinejf@free.fr>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 11/25/2014 02:02 PM, Tomi Valkeinen wrote:
-> On 25/11/14 14:52, Hans de Goede wrote:
->
->>>> +Required properties:
->>>> +- compatible: "allwinner,simple-framebuffer"
->>>> +- allwinner,pipeline, one of:
->>>
->>> Sorry my ignorance, but what's sunxi and what's allwinner? Both names
->>> are mixed here.
->>
->> sunxi is the sun#i SoCs from Allwinner, Allwinner is the manufacturer
->> and the
->> SoC "code" names used everywhere in the kernel for their SoCs are sun4i,
->> sun5i,
->> sun6i, etc. Most people refer to these SoCs as sunxi. This is also what the
->> linux-sunxi mailinglist in the Cc is about.
->>
->> The official devicetree vendor prefix for Allwinner is allwinner, hence the
->> allwinner in the compatible name, see e.g. also
->>
->> Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
->>
->> Which also uses sunxi / sun4i everywhere except in the compatible vendor
->> prefix.
->
-> Alright, thanks for explanation.
->
-> Shouldn't the compatible then be "allwinner,sunxi-simple-framebuffer",
-> to differentiate from some other SoC Allwinner has or might create in
-> the future? That is, presuming you're confident enough that a single
-> compatible string covers all the current and forthcoming sunxi SoCs.
+--===============2072126618999132381==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="dDWkrvKzM17iuZge"
+Content-Disposition: inline
 
-This was discussed in an earlier thread, we (Ian Campbell, Grant and me)
-decided to settle on allwinner,simple-framebuffer to make it clear that
-these are allwinner extensions to the standard simple-framebuffer bindings,
-and that the node otherwise is simple-framebuffer compatible.
 
-We were afraid that e.g. sun4i-simple-framebuffer would signal that it
-is not a normal simple-framebuffer node, so we decided to go with just
-the allwinner, prefix to indicate that it uses allwinner specific
-extensions.
+--dDWkrvKzM17iuZge
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Regards,
+On Tue, Nov 25, 2014 at 01:16:12PM +0100, Jean-Francois Moine wrote:
+> This patch exports a core function which handles the DT description
+> of multi-codec links (as: "sound-dai = <&hdmi 0>, <&spdif_codec>;")
+> and creates a CODEC component array in the DAI link.
 
-Hans
+Applied, thanks.
+
+--dDWkrvKzM17iuZge
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUdIJXAAoJECTWi3JdVIfQDY8H/jVuQZCRI8Ra81oQENYBS2AZ
+kA2VXXS8q+GDwc/1lne9ys6uizVSnaovBJtrwIfjMi8nri5wpdqAkPTMJiCHnuF/
+PmZ5b2wKnM7r85v7PB9xg2xJ0ko4+JURETKmiHm89ZRijwnxnbvt1zxYkOJCQij5
+hXdSX8xe9mrgZA8UWS7hQaFi5uVLnp/OU3SH8RHSycDGMHSK3FJNtoPkgVrHUmKW
+n/SyfHEycN/J60qgStricuN21h0M9ue9F5xbOd17ucJSlRGU+ZocGEGrKPRSVDST
+UJE5EqF03cJe7ZLDdoujM9nqWDjeSdY0AnxEoUINZXdj1b5Divei/BKIAWGZ4N4=
+=bRME
+-----END PGP SIGNATURE-----
+
+--dDWkrvKzM17iuZge--
+
+--===============2072126618999132381==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============2072126618999132381==--
