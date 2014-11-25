@@ -1,65 +1,112 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 13/14] spi/of: Create new device registration method
- and accessors
-Date: Tue, 25 Nov 2014 11:32:51 +0000
-Message-ID: <20141125113251.GN7712@sirena.org.uk>
-References: <1416868422-22103-1-git-send-email-grant.likely@linaro.org>
- <1416868422-22103-14-git-send-email-grant.likely@linaro.org>
+From: James Hogan <james.hogan@imgtec.com>
+Subject: Re: [PATCH 15/15] metag: tz1090: add TZ1090 clocks to device tree
+Date: Tue, 25 Nov 2014 11:39:23 +0000
+Message-ID: <54746A6B.1050702@imgtec.com>
+References: <1416438943-11429-1-git-send-email-james.hogan@imgtec.com> <2363265.Y6kZ4TuTy5@diego> <20141121100647.GF12456@jhogan-linux.le.imgtec.org> <5932816.ccTTaBqqIv@diego>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="hF9BROpwVWvPzXeD"
+	protocol="application/pgp-signature";
+	boundary="lQhkCjV6btr5sI6pNnfL3iMC7EFUQDwXl"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1416868422-22103-14-git-send-email-grant.likely@linaro.org>
+In-Reply-To: <5932816.ccTTaBqqIv@diego>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, linux-spi@vger.kernel.org
+To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>
+Cc: Mike Turquette <mturquette@linaro.org>, linux-metag@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-
---hF9BROpwVWvPzXeD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--lQhkCjV6btr5sI6pNnfL3iMC7EFUQDwXl
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 24, 2014 at 10:33:41PM +0000, Grant Likely wrote:
-> From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+On 24/11/14 23:03, Heiko St=FCbner wrote:
+> Am Freitag, 21. November 2014, 10:06:47 schrieb James Hogan:
+>> On Thu, Nov 20, 2014 at 01:56:24PM +0100, Heiko St=FCbner wrote:
+>>> I don't know enough about your clock structure, but it looks quite a =
+bit
+>>> like Mike's mail from May [0] may apply here too.
+>>>
+>>> The register layout also suggests that it is indeed one clock ip-bloc=
+k:
+>>>
+>>> 0x02005908 0x4	CR_TOP_CLKSWITCH
+>>> 0x0200590c 0x4	CR_TOP_CLKENAB
+>>> 0x02005950 0x4	CR_TOP_SYSPLL_CTL0
+>>> 0x02005954 0x4	CR_TOP_SYSPLL_CTL1
+>>> 0x02005988 0x4	CR_TOP_CLKSWITCH2
+>>> 0x0200598c 0x4	CR_TOP_CLKENAB2
+>>> ...
+>>>
+>>>
+>>> [0] https://lkml.org/lkml/2014/5/14/715
+>>
+>> Thanks, that does make sense. It's probably more like 4 memory regions=
+
+>> ("top" level, "perip" peripheral registers, "hep" high end peripheral
+>> registers, and "pdc" powerdown controller registers), but it could
+>> certainly still have a single binding with multiple memory regions to
+>> simplify the clock specifiers.
 >=20
-> Dynamically inserting spi device nodes requires the use of a single
-> device registration method. Refactor the existing
-> of_register_spi_devices() to split out the core functionality for a
-> single device into a separate function; of_register_spi_device(). This
-> function will be used by the OF_DYNAMIC overlay code to make live
-> modifications to the tree.
+> It could also make sense to have 4 clock controller nodes for those. I =
+guess=20
+> it all depends on how the hardware is layed out.
 >=20
-> Methods to lookup a device/master using a device node are added
-> as well, of_find_spi_master_by_node() & of_find_spi_device_by_node().
+> For example on Rockchip SoCs, all of this is contained in the "APB CRU"=
+ (Clock=20
+> and Reset Unit) with a memory region of <0x20000000 0x4000> - so here o=
+ne=20
+
+/me twigs what CRU stands for!
+
+> hardware-block that contains all the clocks and also the reset controll=
+er.
 >=20
-> Changes since v1:
-> * Brown paper bug with parameter on of_register_spi_device().
+> On the other hand it might very well be more than one ip-block on your =
 
-Please don't include things like this in the commit message, if you want
-to include a changelog put it after the --- like SubmittingPatches says.
-Once it's in mainline this is just noise.
+> platform.=20
+>=20
+> So I guess it comes down to looking at the memory map [or documentation=
+ :-) ]=20
+> to determine how many ip blocks there really are.
 
-Otherwise
+I'll probably combine the TOP and HEP ones at least. HEP clock stuff is
+much simpler than TOP, and a couple of clocks feed both ways between
+them which otherwise wouldn't need to be visible, suggesting they're
+pretty closely coupled.
 
-Reviewed-by: Mark Brown <broonie@kernel.org>
+PERIP is pretty much a single bank of 14 system clock gates for
+individual peripherals, so that one's arguable. I'll probably separate
+it as there's only 1 input clock so it wouldn't be at all messy.
 
---hF9BROpwVWvPzXeD
+PDC is pretty independent and can remain mostly unchanged (that is
+consistent with irq, pinctrl and gpio drivers too, where PDC low power
+stuff is independent and fits nicely into separate drivers).
+
+Thanks for the suggestions!
+
+James
+
+
+--lQhkCjV6btr5sI6pNnfL3iMC7EFUQDwXl
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBAgAGBQJUdGjjAAoJECTWi3JdVIfQRO0H/20xoSTdwqX7g0P6SiVMcI2j
-XaNgzZED/Vvzk+U7oD4GxLPyk6eTTipeefYWy9exRB/tWriBWJwLiWY7+7MaSflI
-4Rr4dG/bhSVEu4Z0jTRJqFrxPxgxc5WNCfRkS8Lth74YmxK5Hd3C1f72fT/mHFAE
-668TWP7/Eklz0+uVtTMLjMq/jQTfFIwceFYULH6zOvknZCgBopPlUJOARPdJjX5/
-ve4w9mrauTDW02fpf128UOm6ecxq7jM9tXyHyJx8PMZMc0acsixBYtwPQt42cWTs
-yk3u1BJ2MQUwbJ+Lpr7qYofjYCuR9ixx987/9w4DdhJ4GGOlJyNHZjJCqhojcyw=
-=uJBJ
+iQIcBAEBAgAGBQJUdGpxAAoJEGwLaZPeOHZ6YUAP/3fjFLwSV9ttveY/1tOWe6lp
+T5O8Ktns9V6U4rBrmiJYRSYUsCpUU98Q9EFJBBEufBP7WfOPp61q1Hu4vucDVAWI
+2EreVVzX+Frtd9nCldyBghfbsLz0CMC2BQgJsyRqzP5mwCAc6GLcGX5fA8BsBpy/
+seBj8w+aPE8bPacES8Y+9qc6rMQLcVZbJstUQduTy67TWcy2KkNidcHP2ANqohal
+JvkdCkUN+3qYXo72Bq8URMXwapBBFyh10xbyLXw+Rbv34BTxUR4Y5uTa+m05w4wM
+XB8MmKDYOVPbCUcXbTRfykPX0/hfKP9BwNcdtaHYWX9M8Tleih2SyXKJsMyMWbor
+2yGt2gOTcHnAuZ/l0zRq0L/SYEFOMNCWwP1WJfne6jFcDf6fYFv+v5ErYLi+lYSi
+KTVNgEpbyzMBT4yBNT7EAGMiL0Nb/nr1XMKViXEnabpL72WGi0jbCY7YYGnmgAEK
+L7UMPmZKa1CPTkJ/yy2COI0x5qBF3vkuBqF1dt4kRfVmWPZoTKQ54Hv04Dewu7GQ
+KrRizRyCKXeMbueBpwG5tmulscW92tSij5GYIaF2LMP1+aC+GJcMOhcEAmtjzv1D
++Hmf+cvBpTrhyfgMdY7V9Ccz9Ih3AeJmEwFEtmxbQUlGcr6c5uo/92l5L56kf8+O
+ijvaPlC4kvWe4eH7grpC
+=wtYx
 -----END PGP SIGNATURE-----
 
---hF9BROpwVWvPzXeD--
+--lQhkCjV6btr5sI6pNnfL3iMC7EFUQDwXl--
