@@ -1,39 +1,67 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH V2 01/10] tty: Fallback to use dynamic major number
-Date: Tue, 25 Nov 2014 15:49:56 -0800
-Message-ID: <20141125234956.GA3138@kroah.com>
-References: <1415825647-6024-1-git-send-email-cernekee@gmail.com>
- <1415825647-6024-2-git-send-email-cernekee@gmail.com>
- <20141125203431.GA9385@kroah.com>
- <CAJiQ=7DOxK2NzmC9gGsnARxGMN8wRQyGX+5u5YC_vt00ADVsDg@mail.gmail.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH] ARM: kbuild: Fix forced rebuild after 'make dtbs'
+Date: Tue, 25 Nov 2014 23:51:50 +0000
+Message-ID: <20141125235150.GH3836@n2100.arm.linux.org.uk>
+References: <CACRpkdYmJWy1_vs0tWRA7SvkQnvbXXKqf7pHpH5b5tZ6vR+KJg@mail.gmail.com>
+ <1414961549-31666-1-git-send-email-jason@lakedaemon.net>
+ <5474F78F.2060906@suse.cz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAJiQ=7DOxK2NzmC9gGsnARxGMN8wRQyGX+5u5YC_vt00ADVsDg@mail.gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>
-Cc: Jiri Slaby <jslaby@suse.cz>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, daniel@zonque.org, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Grant Likely <grant.likely@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, tushar.b@samsung.com
+In-Reply-To: <5474F78F.2060906@suse.cz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Marek <mmarek@suse.cz>
+Cc: Jason Cooper <jason@lakedaemon.net>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 25, 2014 at 03:37:16PM -0800, Kevin Cernekee wrote:
-> On Tue, Nov 25, 2014 at 12:34 PM, Greg KH <gregkh@linuxfoundation.org> wrote:
-> > On Wed, Nov 12, 2014 at 12:53:58PM -0800, Kevin Cernekee wrote:
-> >> From: Tushar Behera <tushar.behera@linaro.org>
-> >
-> > This email bounces, so I'm going to have to reject this patch.  I can't
-> > accept a patch from a "fake" person, let alone something that touches
-> > core code like this.
-> >
-> > Sorry, I can't accept anything in this series then.
+On Tue, Nov 25, 2014 at 10:41:35PM +0100, Michal Marek wrote:
+> Dne 2.11.2014 v 21:52 Jason Cooper napsal(a):
+> > After this patch:
+> > 
+> >   f4d4ffc03efc kbuild: dtbs_install: new make target
+> > 
+> > was added the kernel tree, Linus Walleij noticed that 'make dtbs' forced
+> > a following 'make zImage' to rebuild the entire tree, even though
+> > nothing had changed.  His report:
+> > 
+> >   After this patch a while back I have observed the following behaviour
+> >   of the kernel build:
+> > 
+> >   make zImage
+> >   make zImage
+> >   -> incremental build, just relink
+> > 
+> >   make zImage
+> >   make dtbs
+> >   make zImage
+> >   -> The whole kernel gets rebuilt
+> > 
+> >   So now if I happen to recompile my device trees, I suddenly want
+> >   the entire zImage to be rebuilt to? It's by definition not changes
+> >   that affect the kernel build :-(
+> > 
+> >   I noticed this because my build scripts calls make dtbs && make
+> >   zImage, and started to rebuild absolutely everything all the time.
+> > 
+> > To fix this, we make only the dtbs_install target depend on the prepare
+> > target.  It's needed to make sure KERNELVERSION is calculated prior to
+> > installing.
 > 
-> Oops, guess I probably should have updated his address after the V1
-> emails bounced...
-> 
-> Before I send a new version, what do you think about the overall
-> approach?  Should we try to make serial8250 coexist with the other
-> "ttyS / major 4 / minor 64" drivers (possibly at the expense of
-> compatibility) or is it better to start with a simpler, cleaner driver
-> like serial/pxa?
+> If a mere 'make prepare' causes a rebuild of the whole kernel, then
+> there is something fishy in the ARM Makefiles. However, if you only need
+> the KERNELRELEASE variable, then you do not need to depend on prepare.
+> The main Makefile makes sure that silentoldconfig is ran and therefore
+> KERNELRELEASE set for all targets except make *config.
 
-We can't do anything "at the expense of compatibility", sorry.
+Running make prepare and then re-running a build doesn't rebuild anything
+for me.  However, I always build with O=  Also works if I do a make
+dtbs too.  So, everything seems to work as expected here.
+
+I think this needs a bit more debugging to see why the whole kernel is
+being rebuilt - the kernel build system has methods to tell you why stuff
+is being built, which would be a good place to start.
+
+-- 
+FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
+according to speedtest.net.
