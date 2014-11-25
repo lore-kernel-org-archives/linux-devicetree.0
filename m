@@ -1,7 +1,7 @@
 From: gyungoh@gmail.com
-Subject: [PATCH v8 8/8] devicetree: regulator: sky81452: Modify Device Tree structure
-Date: Tue, 25 Nov 2014 16:03:06 +0900
-Message-ID: <1416898986-24530-9-git-send-email-jack.yoo@skyworksinc.com>
+Subject: [PATCH v8 7/8] regulator: sky81452: Modify Device Tree structure
+Date: Tue, 25 Nov 2014 16:03:05 +0900
+Message-ID: <1416898986-24530-8-git-send-email-jack.yoo@skyworksinc.com>
 References: <1416898986-24530-1-git-send-email-jack.yoo@skyworksinc.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1416898986-24530-1-git-send-email-jack.yoo@skyworksinc.com>
@@ -15,55 +15,122 @@ From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
 Signed-off-by: Gyungoh Yoo <jack.yoo@skyworksinc.com>
 ---
 Changes v8:
-Nothing
+Changed the DT parsing of regulator using regulator_node and of_match
 
 Changes v7:
-Nothing
+Modified licensing text to GPLv2
+Splitted Kconfig renaming from DT patch
 
 Changes v6:
-Nothing
+Added new line character at the end of line of dev_err()
 
 Changes v5:
 Changed DT for regulator : 'lout' node should be defined under 'regulator'
-Removed compatible string from sky81452-regulator driver
+Removed compatible string
+Modified to return EINVAL when of_node is NULL
 
 Changes v4:
-Nothing
+Removed MODULE_VERSION()
+Modified license to GPLv2
 
 Changes v3:
-Nothing
+Modified to return ENODATA when of_node is NULL
+Modified the messages in error cases
 
 Changes v2:
 Added 'compatible' attribute in the driver
+Added message for exception or errors.
 
- .../devicetree/bindings/regulator/sky81452-regulator.txt       | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/regulator/sky81452-regulator.c | 46 +++++++---------------------------
+ 1 file changed, 9 insertions(+), 37 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt b/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt
-index 882455e..f9acbc1 100644
---- a/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt
-@@ -1,6 +1,7 @@
- SKY81452 voltage regulator
+diff --git a/drivers/regulator/sky81452-regulator.c b/drivers/regulator/sky81452-regulator.c
+index 97aff0c..6478606 100644
+--- a/drivers/regulator/sky81452-regulator.c
++++ b/drivers/regulator/sky81452-regulator.c
+@@ -5,9 +5,8 @@
+  * Author : Gyungoh Yoo <jack.yoo@skyworksinc.com>
+  *
+  * This program is free software; you can redistribute it and/or modify it
+- * under the terms of the GNU General Public License as published by the
+- * Free Software Foundation; either version 2, or (at your option) any
+- * later version.
++ * under the terms of the GNU General Public License version 2
++ * as published by the Free Software Foundation.
+  *
+  * This program is distributed in the hope that it will be useful, but
+  * WITHOUT ANY WARRANTY; without even the implied warranty of
+@@ -52,6 +51,8 @@ static const struct regulator_linear_range sky81452_reg_ranges[] = {
  
- Required properties:
-+- regulator node named lout.
- - any required generic properties defined in regulator.txt
+ static const struct regulator_desc sky81452_reg = {
+ 	.name = "LOUT",
++	.of_match = of_match_ptr("lout"),
++	.regulators_node = of_match_ptr("regulator"),
+ 	.ops = &sky81452_reg_ops,
+ 	.type = REGULATOR_VOLTAGE,
+ 	.owner = THIS_MODULE,
+@@ -64,30 +65,6 @@ static const struct regulator_desc sky81452_reg = {
+ 	.enable_mask = SKY81452_LEN,
+ };
  
- Optional properties:
-@@ -9,8 +10,9 @@ Optional properties:
- Example:
+-#ifdef CONFIG_OF
+-static struct regulator_init_data *sky81452_reg_parse_dt(struct device *dev)
+-{
+-	struct regulator_init_data *init_data;
+-	struct device_node *np;
+-
+-	np = of_get_child_by_name(dev->parent->of_node, "regulator");
+-	if (unlikely(!np)) {
+-		dev_err(dev, "regulator node not found");
+-		return NULL;
+-	}
+-
+-	init_data = of_get_regulator_init_data(dev, np);
+-
+-	of_node_put(np);
+-	return init_data;
+-}
+-#else
+-static struct regulator_init_data *sky81452_reg_parse_dt(struct device *dev)
+-{
+-	return ERR_PTR(-EINVAL);
+-}
+-#endif
+-
+ static int sky81452_reg_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -95,20 +72,16 @@ static int sky81452_reg_probe(struct platform_device *pdev)
+ 	struct regulator_config config = { };
+ 	struct regulator_dev *rdev;
  
- 	regulator {
--		/* generic regulator properties */
--		regulator-name = "touch_en";
--		regulator-min-microvolt = <4500000>;
--		regulator-max-microvolt = <8000000>;
-+		lout {
-+			regulator-name = "sky81452-lout";
-+			regulator-min-microvolt = <4500000>;
-+			regulator-max-microvolt = <8000000>;
-+		};
- 	};
+-	if (!init_data) {
+-		init_data = sky81452_reg_parse_dt(dev);
+-		if (IS_ERR(init_data))
+-			return PTR_ERR(init_data);
+-	}
+-
+-	config.dev = dev;
++	config.dev = dev->parent;
+ 	config.init_data = init_data;
+ 	config.of_node = dev->of_node;
+ 	config.regmap = dev_get_drvdata(dev->parent);
+ 
+ 	rdev = devm_regulator_register(dev, &sky81452_reg, &config);
+-	if (IS_ERR(rdev))
++	if (IS_ERR(rdev)) {
++		dev_err(dev, "failed to register. err=%ld\n", PTR_ERR(rdev));
+ 		return PTR_ERR(rdev);
++	}
+ 
+ 	platform_set_drvdata(pdev, rdev);
+ 
+@@ -126,5 +99,4 @@ module_platform_driver(sky81452_reg_driver);
+ 
+ MODULE_DESCRIPTION("Skyworks SKY81452 Regulator driver");
+ MODULE_AUTHOR("Gyungoh Yoo <jack.yoo@skyworksinc.com>");
+-MODULE_LICENSE("GPL");
+-MODULE_VERSION("1.0");
++MODULE_LICENSE("GPL v2");
 -- 
 1.9.1
