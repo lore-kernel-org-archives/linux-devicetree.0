@@ -1,80 +1,54 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH V3 0/7] serial: Configure {big,native}-endian MMIO
- accesses via DT
-Date: Tue, 25 Nov 2014 15:10:18 +0000
-Message-ID: <20141125151018.359EAC44343@trevor.secretlab.ca>
-References: <1416872182-6440-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1416872182-6440-1-git-send-email-cernekee@gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>, gregkh@linuxfoundation.org, jslaby@suse.cz, robh@kernel.org
-Cc: arnd@arndb.de, f.fainelli@gmail.com, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org
+From: Leif Lindholm <leif.lindholm@linaro.org>
+Subject: Re: [PATCH] of: support passing console options with stdout-path
+Date: Tue, 25 Nov 2014 15:15:16 +0000
+Message-ID: <20141125151515.GG2361@bivouac.eciton.net>
+References: <1416867838-18652-1-git-send-email-leif.lindholm@linaro.org>
+ <20141125145854.A46EDC44343@trevor.secretlab.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141125145854.A46EDC44343@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, plagnioj@jcrosoft.com, ijc@debian.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 24 Nov 2014 15:36:15 -0800
-, Kevin Cernekee <cernekee@gmail.com>
- wrote:
-> My last submission attempted to work around serial driver coexistence
-> problems on multiplatform kernels.  Since there are still questions
-> surrounding the best way to solve that problem, this patch series
-> will focus on the narrower topic of big endian MMIO support on serial.
+On Tue, Nov 25, 2014 at 02:58:54PM +0000, Grant Likely wrote:
+> > +		len = strchrnul(path, ':') - path;
+> > +
+> >  		for_each_property_of_node(of_aliases, pp) {
+> >  			if (strlen(pp->name) == len && !strncmp(pp->name, path, len)) {
+> >  				np = of_find_node_by_path(pp->value);
 > 
-> 
-> V2->V3:
-> 
->  - Document the new DT properties.
-> 
->  - Add libfdt-based wrapper, to complement the "struct device_node" based
->    version.
-> 
->  - Restructure early_init_dt_scan_chosen_serial() changes to use a
->    temporary variable, so it is easy to add more of_setup_earlycon()
->    properties later.
-> 
->  - Make of_serial and serial8250 honor the new "big-endian" property.
-> 
-> 
-> This series applies cleanly to:
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/glikely/linux.git devicetree/next-overlay
-> 
-> but was tested on the mips-for-linux-next branch because my BE platform
-> isn't supported in mainline yet.
+> Can you add a testcase to drivers/of/unittests.c for this new path
+> parsing? Then we know it's correct!
 
-For the whole series:
-Acked-by: Grant Likely <grant.likely@linaro.org>
+Will do.
+ 
+> > @@ -1830,8 +1835,12 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
+> >  			name = of_get_property(of_chosen, "linux,stdout-path", NULL);
+> >  		if (IS_ENABLED(CONFIG_PPC) && !name)
+> >  			name = of_get_property(of_aliases, "stdout", NULL);
+> > -		if (name)
+> > +		if (name) {
+> >  			of_stdout = of_find_node_by_path(name);
+> > +			of_stdout_options = strchr(name, ':');
+> > +			if (of_stdout_options != NULL)
+> > +				of_stdout_options++;
+> > +		}
+> 
+> Not so good. The ':' should actually be a generic part of
+> of_find_node_by_path(), it doesn't have to be limited to stdout parsing.
+> There are other places that would use it. I would add a second,
+> optional, argument to of_find_node_by_path() that will update a pointer
+> to the arguments after the ':'.
 
-Greg, which tree do you want to merge this through? My DT tree, or the
-tty tree?
+So, I agree this would be nicer...
 
-g.
+However, I'm counting 157 callers of this function outside of
+drivers/of and 43 inside. Any chance you'd let me get away with a
+separate of_find_extra_options_by_path()?
 
-> 
-> 
-> Kevin Cernekee (7):
->   of: Add helper function to check MMIO register endianness
->   of/fdt: Add endianness helper function for early init code
->   of: Document {little,big,native}-endian bindings
->   serial: core: Add big-endian iotype
->   serial: earlycon: Set UPIO_MEM32BE based on DT properties
->   serial: of_serial: Support big-endian register accesses
->   serial: 8250: Add support for big-endian MMIO accesses
-> 
->  .../devicetree/bindings/common-properties.txt      | 60 ++++++++++++++++++++++
->  drivers/of/base.c                                  | 23 +++++++++
->  drivers/of/fdt.c                                   | 26 +++++++++-
->  drivers/tty/serial/8250/8250_core.c                | 20 ++++++++
->  drivers/tty/serial/8250/8250_early.c               |  5 ++
->  drivers/tty/serial/earlycon.c                      |  4 +-
->  drivers/tty/serial/of_serial.c                     |  3 +-
->  drivers/tty/serial/serial_core.c                   |  2 +
->  include/linux/of.h                                 |  6 +++
->  include/linux/of_fdt.h                             |  2 +
->  include/linux/serial_core.h                        | 15 +++---
->  11 files changed, 155 insertions(+), 11 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/common-properties.txt
-> 
-> -- 
-> 2.1.0
-> 
-
+/
+    Leif
