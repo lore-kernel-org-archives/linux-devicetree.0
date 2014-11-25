@@ -1,42 +1,107 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 3/9] clk: sunxi: Add prcm mod0 clock driver
-Date: Tue, 25 Nov 2014 09:37:13 +0100
-Message-ID: <54743FB9.7070601@redhat.com>
-References: <1416498928-1300-1-git-send-email-hdegoede@redhat.com> <1416498928-1300-4-git-send-email-hdegoede@redhat.com> <20141121084933.GL24143@lukather> <546F0226.2040700@redhat.com> <20141124220327.GS4752@lukather> <54743DE1.7020704@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: amit daniel kachhap <amit.daniel@samsung.com>
+Subject: Re: [PATCH RFC v2 07/12] PM / Domains: export pm_genpd_lookup_name
+Date: Tue, 25 Nov 2014 14:18:33 +0530
+Message-ID: <CADGdYn6fAScrpz4Va=THtC1ZgT+rYN_gQuE6NnRaCiN4NErg5g@mail.gmail.com>
+References: <1416833572-6880-1-git-send-email-amit.daniel@samsung.com>
+	<1416834256-11225-1-git-send-email-amit.daniel@samsung.com>
+	<1416834256-11225-7-git-send-email-amit.daniel@samsung.com>
+	<CAPDyKFqE_qhrRs3X9s9juyPH_Zcq8vdE_amqKM3VUnMjHtL2Rg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBQX72CRQKGQEUYJSS4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <54743DE1.7020704-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFqE_qhrRs3X9s9juyPH_Zcq8vdE_amqKM3VUnMjHtL2Rg@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>, Kevin Hilman <khilman@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 11/25/2014 09:29 AM, Hans de Goede wrote:
-
-<snip>
-
-> Well one reasons why clocks are instantiated the way they are is to have
-> them available as early as possible, which is really convenient and works
-> really well.
+On Tue, Nov 25, 2014 at 1:05 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> On 24 November 2014 at 14:04, Amit Daniel Kachhap
+> <amit.daniel@samsung.com> wrote:
+>> This API may be needed to set the power domain parent/child relationship
+>> in the power domain platform driver. The parent relationship is
+>> generally set after the child power domain is registered with the power
+>> domain subsystem. In this case, pm_genpd_lookup_name API might be
+>> useful.
 >
-> You are asking for a whole lot of stuff to be changed, arguably in a way
-> which makes it worse, just to save 47 lines of code...
-
-Thinking more about this one alternative which should work is to just put the
-clocks in the prcm in the clocks node, then they get their own reg property,
-rather then being part of the prcm reg range, and the standard of_clk mod0
-driver we have will just work.
+> I think this is a step in the wrong direction. Instead we should be
+> working on removing the "name" based APIs from genpd.
+>
+> The proper way should be to pass the PM domain as a parameter to the
+> APIs instead.
+Yes i understand but i had a special requirement for using this API
+during pd probe.
+ I cannot use hierarchy to represent parent/child pd nodes as it will
+break the existing SoC's. In my case all the PD nodes are linear. The
+parent/child relationship are established in the second pass after all
+the PD entries are registered with the help of this API.
+Although there a way that i can always keep parent PD's before the
+child PD's in DT in linear order. Will check this approach.
 
 Regards,
-
-Hans
+Amit
+>
+> Kind regards
+> Uffe
+>
+>>
+>> Signed-off-by: Amit Daniel Kachhap <amit.daniel@samsung.com>
+>> ---
+>>  drivers/base/power/domain.c |    3 ++-
+>>  include/linux/pm_domain.h   |    7 +++++++
+>>  2 files changed, 9 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+>> index fb83d4a..b0e1c2f 100644
+>> --- a/drivers/base/power/domain.c
+>> +++ b/drivers/base/power/domain.c
+>> @@ -49,7 +49,7 @@
+>>  static LIST_HEAD(gpd_list);
+>>  static DEFINE_MUTEX(gpd_list_lock);
+>>
+>> -static struct generic_pm_domain *pm_genpd_lookup_name(const char *domain_name)
+>> +struct generic_pm_domain *pm_genpd_lookup_name(const char *domain_name)
+>>  {
+>>         struct generic_pm_domain *genpd = NULL, *gpd;
+>>
+>> @@ -66,6 +66,7 @@ static struct generic_pm_domain *pm_genpd_lookup_name(const char *domain_name)
+>>         mutex_unlock(&gpd_list_lock);
+>>         return genpd;
+>>  }
+>> +EXPORT_SYMBOL_GPL(pm_genpd_lookup_name);
+>>
+>>  struct generic_pm_domain *dev_to_genpd(struct device *dev)
+>>  {
+>> diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
+>> index 2e0e06d..aedcec3 100644
+>> --- a/include/linux/pm_domain.h
+>> +++ b/include/linux/pm_domain.h
+>> @@ -150,6 +150,8 @@ extern int pm_genpd_name_poweron(const char *domain_name);
+>>
+>>  extern struct dev_power_governor simple_qos_governor;
+>>  extern struct dev_power_governor pm_domain_always_on_gov;
+>> +
+>> +extern struct generic_pm_domain *pm_genpd_lookup_name(const char *domain_name);
+>>  #else
+>>
+>>  static inline struct generic_pm_domain_data *dev_gpd_data(struct device *dev)
+>> @@ -221,6 +223,11 @@ static inline int pm_genpd_name_poweron(const char *domain_name)
+>>  {
+>>         return -ENOSYS;
+>>  }
+>> +static inline
+>> +struct generic_pm_domain *pm_genpd_lookup_name(const char *domain_name)
+>> +{
+>> +       return NULL;
+>> +}
+>>  #define simple_qos_governor NULL
+>>  #define pm_domain_always_on_gov NULL
+>>  #endif
+>> --
+>> 1.7.9.5
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
