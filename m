@@ -1,295 +1,858 @@
-From: Tobias Klauser <tklauser@distanz.ch>
-Subject: Re: [PATCH v3 5/5] tty/serial: Add Spreadtrum sc9836-uart driver
- support
-Date: Wed, 26 Nov 2014 10:48:38 +0100
-Message-ID: <20141126094838.GB17980@distanz.ch>
-References: <Sharkl64-v3>
- <1416917818-10506-1-git-send-email-chunyan.zhang@spreadtrum.com>
- <1416917818-10506-6-git-send-email-chunyan.zhang@spreadtrum.com>
+From: Alexandre Courbot <gnurou@gmail.com>
+Subject: Re: [PATCH v2 2/3] PM / devfreq: tegra: add devfreq driver for Tegra
+ Activity Monitor
+Date: Wed, 26 Nov 2014 19:02:07 +0900
+Message-ID: <CAAVeFuKQcstteVi2O2ZE9PWeH9XfCzf9V3jhNnxXn9+1bcW6yA@mail.gmail.com>
+References: <1416832111-367-1-git-send-email-tomeu.vizoso@collabora.com> <1416832111-367-3-git-send-email-tomeu.vizoso@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1416917818-10506-6-git-send-email-chunyan.zhang@spreadtrum.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Cc: grant.likely@linaro.org, robh+dt@kernel.org, catalin.marinas@arm.com, gregkh@linuxfoundation.org, ijc+devicetree@hellion.org.uk, jslaby@suse.cz, galak@codeaurora.org, broonie@linaro.org, mark.rutland@arm.com, m-karicheri2@ti.com, pawel.moll@arm.com, artagnon@gmail.com, rrichter@cavium.com, will.deacon@arm.com, arnd@arndb.de, gnomes@lxorguk.ukuu.org.uk, corbet@lwn.net, jason@lakedaemon.net, broonie@kernel.org, heiko@sntech.de, shawn.guo@freescale.com, florian.vaussard@epfl.ch, andrew@lunn.ch, hytszk@gmail.com, orsonzhai@gmail.com, geng.ren@spreadtrum.com, zhizhou.zhang@spreadtrum.com, lanqing.liu@spreadtrum.com, zhang.lyra@gmail.com, wei.qiao@spreadtrum.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, sprdlinux@freelists.org, linux-doc@vger.kernel.org, linux-serial@vger.kernel.org, linux-api@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1416832111-367-3-git-send-email-tomeu.vizoso@collabora.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>, Arto Merilainen <amerilainen@nvidia.com>
+Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2014-11-25 at 13:16:58 +0100, Chunyan Zhang <chunyan.zhang@spreadtrum.com> wrote:
-> Add a full sc9836-uart driver for SC9836 SoC which is based on the
-> spreadtrum sharkl64 platform.
-> This driver also support earlycon.
-> 
-> Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-> Signed-off-by: Orson Zhai <orson.zhai@spreadtrum.com>
-> Originally-by: Lanqing Liu <lanqing.liu@spreadtrum.com>
+On Mon, Nov 24, 2014 at 9:28 PM, Tomeu Vizoso
+<tomeu.vizoso@collabora.com> wrote:
+> The ACTMON block can monitor several counters, providing averaging and firing
+> interrupts based on watermarking configuration. This implementation monitors
+> the MCALL and MCCPU counters to choose an appropriate frequency for the
+> external memory clock.
+>
+> This patch is based on work by Alex Frid <afrid@nvidia.com> and Mikko
+> Perttunen <mikko.perttunen@kapsi.fi>.
+
+Thanks for taking the time to adapt this driver to use devfreq.
+Looking at it, I am more and more convinced that's the correct way to
+do.
+
+I made some comments inline, but I'd like to bring Arto Merilainen
+into this discussion. Arto thought (and might even have some code)
+about adding watermarks support to devfreq's core and using a generic
+"watermark" governor which I believe would greatly benefit this patch
+set. Arto, do you have some concrete code you could submit here? If
+you lack the time for doing so, some guidance so we could implement
+this support ourselves would be great.
+
+>
+> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+>
 > ---
->  Documentation/devices.txt        |    3 +
->  drivers/tty/serial/Kconfig       |   23 ++
->  drivers/tty/serial/Makefile      |    1 +
->  drivers/tty/serial/sprd_serial.c |  752 ++++++++++++++++++++++++++++++++++++++
->  include/uapi/linux/serial_core.h |    3 +
->  5 files changed, 782 insertions(+)
->  create mode 100644 drivers/tty/serial/sprd_serial.c
-> 
-[...]
-> --- a/drivers/tty/serial/Kconfig
-> +++ b/drivers/tty/serial/Kconfig
-> @@ -1573,6 +1573,29 @@ config SERIAL_MEN_Z135
->  	  This driver can also be build as a module. If so, the module will be called
->  	  men_z135_uart.ko
->  
-> +config SERIAL_SPRD
-> +	tristate "Support for SPRD serial"
-> +	depends on ARCH_SPRD
-> +	select SERIAL_CORE
-> +	help
-> +          This enables the driver for the Spreadtrum's serial.
+>
+> v2:     * Use devfreq
+> ---
+>  drivers/devfreq/Kconfig         |  10 +
+>  drivers/devfreq/Makefile        |   1 +
+>  drivers/devfreq/tegra-devfreq.c | 718 ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 729 insertions(+)
+>  create mode 100644 drivers/devfreq/tegra-devfreq.c
+>
+> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+> index faf4e70..4aab799 100644
+> --- a/drivers/devfreq/Kconfig
+> +++ b/drivers/devfreq/Kconfig
+> @@ -87,4 +87,14 @@ config ARM_EXYNOS5_BUS_DEVFREQ
+>           It reads PPMU counters of memory controllers and adjusts the
+>           operating frequencies and voltages with OPP support.
+>
+> +config ARM_TEGRA_DEVFREQ
+> +       tristate "Tegra DEVFREQ Driver"
+> +       depends on ARCH_TEGRA_124_SOC
+> +       select DEVFREQ_GOV_SIMPLE_ONDEMAND
+> +       select PM_OPP
+> +       help
+> +         This adds the DEVFREQ driver for the Tegra family of SoCs.
+> +         It reads ACTMON counters of memory controllers and adjusts the
+> +         operating frequencies and voltages with OPP support.
 > +
-> +config SERIAL_SPRD_NR
-> +        int "Maximum number of sprd serial ports"
-> +        depends on SERIAL_SPRD
-> +        default "4"
-> +
-> +config SERIAL_SPRD_CONSOLE
-> +        bool "SPRD UART console support"
-> +        depends on SERIAL_SPRD=y
-> +        select SERIAL_CORE_CONSOLE
-> +	select SERIAL_EARLYCON
-> +        help
-> +	  Support for early debug console using Spreadtrum's serial. This enables
-> +	  the console before standard serial driver is probed. This is enabled
-> +	  with "earlycon" on the kernel command line. The console is
-> +	  enabled when early_param is processed.
-> +
->  endmenu
-
-Please consistently use tabs instead of spaces for indentation. The help
-text should be indented by one tabe + 2 spaces.
-
-[...]
-> diff --git a/drivers/tty/serial/sprd_serial.c b/drivers/tty/serial/sprd_serial.c
+>  endif # PM_DEVFREQ
+> diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
+> index 16138c9..0ea991f 100644
+> --- a/drivers/devfreq/Makefile
+> +++ b/drivers/devfreq/Makefile
+> @@ -7,3 +7,4 @@ obj-$(CONFIG_DEVFREQ_GOV_USERSPACE)     += governor_userspace.o
+>  # DEVFREQ Drivers
+>  obj-$(CONFIG_ARM_EXYNOS4_BUS_DEVFREQ)  += exynos/
+>  obj-$(CONFIG_ARM_EXYNOS5_BUS_DEVFREQ)  += exynos/
+> +obj-$(CONFIG_ARM_TEGRA_DEVFREQ)                += tegra-devfreq.o
+> diff --git a/drivers/devfreq/tegra-devfreq.c b/drivers/devfreq/tegra-devfreq.c
 > new file mode 100644
-> index 0000000..58214c8
+> index 0000000..3479096
 > --- /dev/null
-> +++ b/drivers/tty/serial/sprd_serial.c
-[...]
-> +static inline int handle_lsr_errors(struct uart_port *port,
-> +	unsigned int *flag, unsigned int *lsr)
+> +++ b/drivers/devfreq/tegra-devfreq.c
 
-This line should be aligned with the opening ( above.
+This file should probably be named tegra-actmon-devfreq.c, for nothing
+guarantees that we will not have more devfreq devices for Tegra in the
+future.
 
+> @@ -0,0 +1,718 @@
+> +/*
+> + * A devfreq driver for NVIDIA Tegra SoCs
+> + *
+> + * Copyright (c) 2014 NVIDIA CORPORATION. All rights reserved.
+> + * Copyright (C) 2014 Google, Inc
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
+> + *
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/cpufreq.h>
+> +#include <linux/devfreq.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_opp.h>
+> +#include <linux/reset.h>
+> +
+> +#include "governor.h"
+> +
+> +#define ACTMON_GLB_STATUS                                      0x0
+> +#define ACTMON_GLB_PERIOD_CTRL                                 0x4
+> +
+> +#define ACTMON_DEV_CTRL                                                0x0
+> +#define ACTMON_DEV_CTRL_K_VAL_SHIFT                            10
+> +#define ACTMON_DEV_CTRL_ENB_PERIODIC                           BIT(18)
+> +#define ACTMON_DEV_CTRL_AVG_BELOW_WMARK_EN                     BIT(20)
+> +#define ACTMON_DEV_CTRL_AVG_ABOVE_WMARK_EN                     BIT(21)
+> +#define ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_NUM_SHIFT      23
+> +#define ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_NUM_SHIFT      26
+> +#define ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN             BIT(29)
+> +#define ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN             BIT(30)
+> +#define ACTMON_DEV_CTRL_ENB                                    BIT(31)
+> +
+> +#define ACTMON_DEV_UPPER_WMARK                                 0x4
+> +#define ACTMON_DEV_LOWER_WMARK                                 0x8
+> +#define ACTMON_DEV_INIT_AVG                                    0xc
+> +#define ACTMON_DEV_AVG_UPPER_WMARK                             0x10
+> +#define ACTMON_DEV_AVG_LOWER_WMARK                             0x14
+> +#define ACTMON_DEV_COUNT_WEIGHT                                        0x18
+> +#define ACTMON_DEV_AVG_COUNT                                   0x20
+> +#define ACTMON_DEV_INTR_STATUS                                 0x24
+> +
+> +#define ACTMON_INTR_STATUS_CLEAR                               0xffffffff
+> +
+> +#define ACTMON_DEV_INTR_CONSECUTIVE_UPPER                      BIT(31)
+> +#define ACTMON_DEV_INTR_CONSECUTIVE_LOWER                      BIT(30)
+> +
+> +#define ACTMON_ABOVE_WMARK_WINDOW                              1
+> +#define ACTMON_BELOW_WMARK_WINDOW                              3
+> +#define ACTMON_BOOST_FREQ_STEP                                 16000
+> +
+> +/* activity counter is incremented every 256 memory transactions, and each
+> + * transaction takes 4 EMC clocks for Tegra124; So the COUNT_WEIGHT is
+> + * 4 * 256 = 1024.
+> + */
+> +#define ACTMON_COUNT_WEIGHT                                    0x400
+> +
+> +/*
+> + * ACTMON_AVERAGE_WINDOW_LOG2: default value for @DEV_CTRL_K_VAL, which
+> + * translates to 2 ^ (K_VAL + 1). ex: 2 ^ (6 + 1) = 128
+> + */
+> +#define ACTMON_AVERAGE_WINDOW_LOG2                     6
+> +#define ACTMON_SAMPLING_PERIOD                         12 /* ms */
+> +#define ACTMON_DEFAULT_AVG_BAND                                6  /* 1/10 of % */
+> +
+> +#define KHZ                                                    1000
+> +
+> +/* Assume that the bus is saturated if the utilization is 25% */
+> +#define BUS_SATURATION_RATIO                                   25
+> +
+> +/**
+> + * struct tegra_devfreq_device_config - configuration specific to an ACTMON
+> + * device
+> + *
+> + * Coefficients and thresholds are in %
+
+Short comments about what the members are for would be perfect (same
+for other structures). It is not immediatly obvious what e.g.
+avg_dependency_threshold is for.
+
+> + */
+> +struct tegra_devfreq_device_config {
+> +       u32             offset;
+> +       u32             irq_mask;
+> +
+> +       unsigned int    boost_up_coeff;
+> +       unsigned int    boost_down_coeff;
+> +       unsigned int    boost_up_threshold;
+> +       unsigned int    boost_down_threshold;
+> +       u32             avg_dependency_threshold;
+> +};
+> +
+> +enum tegra_actmon_device {
+> +       MCALL = 0,
+> +       MCCPU,
+> +};
+> +
+> +static struct tegra_devfreq_device_config actmon_device_configs[] = {
+> +       {
+> +               /* MCALL */
+> +               .offset = 0x1c0,
+> +               .irq_mask = 1 << 26,
+> +               .boost_up_coeff = 200,
+> +               .boost_down_coeff = 50,
+> +               .boost_up_threshold = 60,
+> +               .boost_down_threshold = 40,
+> +       },
+> +       {
+> +               /* MCCPU */
+> +               .offset = 0x200,
+> +               .irq_mask = 1 << 25,
+> +               .boost_up_coeff = 800,
+> +               .boost_down_coeff = 90,
+> +               .boost_up_threshold = 27,
+> +               .boost_down_threshold = 10,
+> +               .avg_dependency_threshold = 50000,
+
+The boost_* and avg_dependency_threshold parameters are calling to be
+exported through debugfs in some future patch. :)
+
+Just for my education, why do we need to monitor both MCALL and MCCPU,
+since MCCPU accesses are included in MCALL? Do we want to boost things
+differently in case of CPU activity?
+
+> +       },
+> +};
+> +
+> +/**
+> + * struct tegra_devfreq_device - state specific to an ACTMON device
+> + *
+> + * Frequencies are in kHz.
+> + */
+> +struct tegra_devfreq_device {
+> +       const struct tegra_devfreq_device_config *config;
+> +
+> +       void __iomem    *regs;
+> +       u32             avg_band_freq;
+> +       u32             avg_count;
+> +
+> +       unsigned long   target_freq;
+> +       unsigned long   boost_freq;
+> +};
+> +
+> +struct tegra_devfreq {
+> +       struct devfreq          *devfreq;
+> +
+> +       struct platform_device  *pdev;
+> +       struct reset_control    *reset;
+> +       struct clk              *clock;
+> +       void __iomem            *regs;
+> +
+> +       spinlock_t              lock;
+> +
+> +       struct clk              *emc_clock;
+> +       unsigned long           max_freq;
+> +       unsigned long           cur_freq;
+> +       struct notifier_block   rate_change_nb;
+> +
+> +       struct tegra_devfreq_device devices[ARRAY_SIZE(actmon_device_configs)];
+> +};
+> +
+> +struct tegra_actmon_emc_ratio {
+> +       unsigned long cpu_freq;
+> +       unsigned long emc_freq;
+> +};
+> +
+> +static struct tegra_actmon_emc_ratio actmon_emc_ratios[] = {
+> +       { 1400000, ULONG_MAX },
+> +       { 1200000,    750000 },
+> +       { 1100000,    600000 },
+> +       { 1000000,    500000 },
+> +       {  800000,    375000 },
+> +       {  500000,    200000 },
+> +       {  250000,    100000 },
+
+Aren't these numbers board-specific? Should they be moved to the DT maybe?
+
+> +};
+> +
+> +static unsigned long do_percent(unsigned long val, unsigned int pct)
 > +{
-> +	int ret = 0;
-> +
-> +	/* stastics */
-> +	if (*lsr & SPRD_LSR_BI) {
-> +		*lsr &= ~(SPRD_LSR_FE | SPRD_LSR_PE);
-> +		port->icount.brk++;
-> +		ret = uart_handle_break(port);
-> +		if (ret)
-> +			return ret;
-> +	} else if (*lsr & SPRD_LSR_PE)
-> +		port->icount.parity++;
-> +	else if (*lsr & SPRD_LSR_FE)
-> +		port->icount.frame++;
-> +	if (*lsr & SPRD_LSR_OE)
-> +		port->icount.overrun++;
-> +
-> +	/* mask off conditions which should be ignored */
-> +	*lsr &= port->read_status_mask;
-> +	if (*lsr & SPRD_LSR_BI)
-> +		*flag = TTY_BREAK;
-> +	else if (*lsr & SPRD_LSR_PE)
-> +		*flag = TTY_PARITY;
-> +	else if (*lsr & SPRD_LSR_FE)
-> +		*flag = TTY_FRAME;
-> +
-> +	return ret;
+> +       return val * pct / 100;
 > +}
 > +
-> +static inline void sprd_rx(int irq, void *dev_id)
+> +static void tegra_devfreq_update_avg_wmark(struct tegra_devfreq_device *dev)
 > +{
-> +	struct uart_port *port = (struct uart_port *)dev_id;
+> +       u32 avg = dev->avg_count;
+> +       u32 band = dev->avg_band_freq * ACTMON_SAMPLING_PERIOD;
+> +
+> +       writel(avg + band, dev->regs + ACTMON_DEV_AVG_UPPER_WMARK);
 
-No need to cast a void pointer.
+Having actmon_readl() and actmon_writel() inline functions that make
+the "dev->regs +" unnecessary would be nicer to read and less
+error-prone IMHO.
 
-> +	struct tty_port *tty = &port->state->port;
-> +	unsigned int ch, flag, lsr, max_count = 2048;
-> +
-> +	while ((serial_in(port, SPRD_STS1) & 0x00ff) && max_count--) {
-> +		lsr = serial_in(port, SPRD_LSR);
-> +		ch = serial_in(port, SPRD_RXD);
-> +		flag = TTY_NORMAL;
-> +		port->icount.rx++;
-> +
-> +		if (unlikely(lsr & (SPRD_LSR_BI | SPRD_LSR_PE
-> +				| SPRD_LSR_FE | SPRD_LSR_OE)))
-> +			if (handle_lsr_errors(port, &lsr, &flag))
-> +				continue;
-> +		if (uart_handle_sysrq_char(port, ch))
-> +			continue;
-> +
-> +		uart_insert_char(port, lsr, SPRD_LSR_OE, ch, flag);
-> +	}
-> +
-> +	tty_flip_buffer_push(tty);
-> +}
-[...]
-> +static void sprd_console_write(struct console *co, const char *s,
-> +				      unsigned int count)
-> +{
-> +	struct uart_port *port = (struct uart_port *)sprd_port[co->index];
-
-Better explicitly access the .port member of sprd_port[co->index] here
-instead of casting.
-
-> +	int ien;
-> +	int locked = 1;
-> +
-> +	if (oops_in_progress)
-> +		locked = spin_trylock(&port->lock);
-> +	else
-> +		spin_lock(&port->lock);
-> +	/* save the IEN then disable the interrupts */
-> +	ien = serial_in(port, SPRD_IEN);
-> +	serial_out(port, SPRD_IEN, 0x0);
-> +
-> +	uart_console_write(port, s, count, sprd_console_putchar);
-> +
-> +	/* wait for transmitter to become empty and restore the IEN */
-> +	wait_for_xmitr(port);
-> +	serial_out(port, SPRD_IEN, ien);
-> +	if (locked)
-> +		spin_unlock(&port->lock);
+> +       avg = max(avg, band);
+> +       writel(avg - band, dev->regs + ACTMON_DEV_AVG_LOWER_WMARK);
 > +}
 > +
-> +static int __init sprd_console_setup(struct console *co, char *options)
+> +static void tegra_devfreq_update_wmark(struct tegra_devfreq *tegra,
+> +                                      struct tegra_devfreq_device *dev)
 > +{
-> +	struct uart_port *port;
-> +	int baud = 115200;
-> +	int bits = 8;
-> +	int parity = 'n';
-> +	int flow = 'n';
+> +       u32 val = tegra->cur_freq * ACTMON_SAMPLING_PERIOD;
 > +
-> +	if (unlikely(co->index >= UART_NR_MAX || co->index < 0))
-> +		co->index = 0;
+> +       writel(do_percent(val, dev->config->boost_up_threshold),
+> +              dev->regs + ACTMON_DEV_UPPER_WMARK);
 > +
-> +	port = (struct uart_port *)sprd_port[co->index];
-
-Same here, use the .port member of struct sprd_port[co->index].
-
-> +	if (port == NULL) {
-> +		pr_info("srial port %d not yet initialized\n", co->index);
-
-Typo: should be serial instead of srial.
-
-> +		return -ENODEV;
-> +	}
-> +	if (options)
-> +		uart_parse_options(options, &baud, &parity, &bits, &flow);
-> +
-> +	return uart_set_options(port, co, baud, parity, bits, flow);
-> +}
-[...]
-> +static int sprd_probe(struct platform_device *pdev)
-> +{
-> +	struct resource *mem;
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct uart_port *up;
-> +	struct clk *clk;
-> +	int irq;
-> +
-> +
-> +	if (np)
-> +		pdev->id = of_alias_get_id(np, "serial");
-> +
-> +	if (unlikely(pdev->id < 0 || pdev->id >= UART_NR_MAX)) {
-> +		dev_err(&pdev->dev, "does not support id %d\n", pdev->id);
-> +		return -ENXIO;
-> +	}
-> +
-> +	sprd_port[pdev->id] = devm_kzalloc(&pdev->dev,
-> +		sizeof(*sprd_port[pdev->id]), GFP_KERNEL);
-> +	if (!sprd_port[pdev->id])
-> +		return -ENOMEM;
-> +
-> +	up = (struct uart_port *)sprd_port[pdev->id];
-> +	up->dev = &pdev->dev;
-> +	up->line = pdev->id;
-> +	up->type = PORT_SPRD;
-> +	up->iotype = SERIAL_IO_PORT;
-> +	up->uartclk = SPRD_DEF_RATE;
-> +	up->fifosize = SPRD_FIFO_SIZE;
-> +	up->ops = &serial_sprd_ops;
-> +	up->flags = ASYNC_BOOT_AUTOCONF;
-> +
-> +	clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (!IS_ERR(clk))
-> +		up->uartclk = clk_get_rate(clk);
-> +
-> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (unlikely(!mem)) {
-> +		dev_err(&pdev->dev, "not provide mem resource\n");
-> +		return -ENODEV;
-> +	}
-> +	up->mapbase = mem->start;
-> +	up->membase = ioremap(mem->start, resource_size(mem));
-
-Return value of ioremap() should be checked for NULL.
-
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (unlikely(irq < 0)) {
-> +		dev_err(&pdev->dev, "not provide irq resource\n");
-> +		return -ENODEV;
-> +	}
-> +	up->irq = irq;
-> +
-> +	platform_set_drvdata(pdev, up);
-> +
-> +	return uart_add_one_port(&sprd_uart_driver, up);
+> +       writel(do_percent(val, dev->config->boost_down_threshold),
+> +              dev->regs + ACTMON_DEV_LOWER_WMARK);
 > +}
 > +
-> +static int sprd_remove(struct platform_device *dev)
+> +static void actmon_write_barrier(struct tegra_devfreq *tegra)
 > +{
-> +	struct uart_port *up = platform_get_drvdata(dev);
-> +
-> +	return uart_remove_one_port(&sprd_uart_driver, up);
+> +       /* ensure the update has reached the ACTMON */
+> +       wmb();
+> +       readl(tegra->regs + ACTMON_GLB_STATUS);
 > +}
 > +
-> +static int sprd_suspend(struct platform_device *dev, pm_message_t state)
+> +static irqreturn_t actmon_isr(int irq, void *data)
 > +{
-> +	int id = dev->id;
-> +	struct uart_port *port = (struct uart_port *)sprd_port[id];
-> +	struct reg_backup *reg_bak = &(sprd_port[id]->reg_bak);
+> +       struct tegra_devfreq *tegra = data;
+> +       struct tegra_devfreq_device *dev = NULL;
+> +       unsigned long flags;
+> +       u32 val;
+> +       unsigned int i;
 > +
-> +	reg_bak->ien = serial_in(port, SPRD_IEN);
-> +	reg_bak->ctrl0 = serial_in(port, SPRD_LCR);
-> +	reg_bak->ctrl1 = serial_in(port, SPRD_CTL1);
-> +	reg_bak->ctrl2 = serial_in(port, SPRD_CTL2);
-> +	reg_bak->clkd0 = serial_in(port, SPRD_CLKD0);
-> +	reg_bak->clkd1 = serial_in(port, SPRD_CLKD1);
+> +       val = readl(tegra->regs + ACTMON_GLB_STATUS);
 > +
-> +	return 0;
-> +}
+> +       for (i = 0; i < ARRAY_SIZE(tegra->devices); i++) {
+> +               if (val & tegra->devices[i].config->irq_mask) {
+> +                       dev = tegra->devices + i;
+> +                       break;
+> +               }
+> +       }
 > +
-> +static int sprd_resume(struct platform_device *dev)
-> +{
-> +	int id = dev->id;
-> +	struct uart_port *port = (struct uart_port *)sprd_port[id];
+> +       if (!dev)
+> +               return IRQ_NONE;
+> +
+> +       spin_lock_irqsave(&tegra->lock, flags);
+> +
+> +       dev->avg_count = readl(dev->regs + ACTMON_DEV_AVG_COUNT);
+> +       tegra_devfreq_update_avg_wmark(dev);
+> +
+> +       val = readl(dev->regs + ACTMON_DEV_INTR_STATUS);
+> +       if (val & ACTMON_DEV_INTR_CONSECUTIVE_UPPER) {
+> +               val = readl(dev->regs + ACTMON_DEV_CTRL) |
+> +                       ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN |
+> +                       ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
+> +
+> +               /*
+> +                * new_boost = min(old_boost * up_coef + step, max_freq)
+> +                */
+> +               dev->boost_freq = do_percent(dev->boost_freq,
+> +                                            dev->config->boost_up_coeff);
+> +               dev->boost_freq += ACTMON_BOOST_FREQ_STEP;
+> +               if (dev->boost_freq >= tegra->max_freq) {
+> +                       dev->boost_freq = tegra->max_freq;
+> +                       val &= ~ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
 
-Access the .port member instead of the cast.
+Instead of setting this flag to possibly remove it later, maybe set it
+only if this condition is not met?
 
-> +	struct reg_backup *reg_bak = &(sprd_port[id]->reg_bak);
+> +               }
+> +               writel(val, dev->regs + ACTMON_DEV_CTRL);
+> +       } else if (val & ACTMON_DEV_INTR_CONSECUTIVE_LOWER) {
+> +               val = readl(dev->regs + ACTMON_DEV_CTRL) |
+> +                       ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN |
+> +                       ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
 > +
-> +	serial_out(port, SPRD_LCR, reg_bak->ctrl0);
-> +	serial_out(port, SPRD_CTL1, reg_bak->ctrl1);
-> +	serial_out(port, SPRD_CTL2, reg_bak->ctrl2);
-> +	serial_out(port, SPRD_CLKD0, reg_bak->clkd0);
-> +	serial_out(port, SPRD_CLKD1, reg_bak->clkd1);
-> +	serial_out(port, SPRD_IEN, reg_bak->ien);
+> +               /*
+> +                * new_boost = old_boost * down_coef
+> +                * or 0 if (old_boost * down_coef < step / 2)
+> +                */
+> +               dev->boost_freq = do_percent(dev->boost_freq,
+> +                                            dev->config->boost_down_coeff);
+> +               if (dev->boost_freq < (ACTMON_BOOST_FREQ_STEP >> 1)) {
+> +                       dev->boost_freq = 0;
+> +                       val &= ~ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
+
+Same here.
+
+> +               }
+> +               writel(val, dev->regs + ACTMON_DEV_CTRL);
+> +       }
 > +
-> +	return 0;
+> +       if (dev->config->avg_dependency_threshold) {
+> +               val = readl(dev->regs + ACTMON_DEV_CTRL);
+> +               if (dev->avg_count >= dev->config->avg_dependency_threshold)
+> +                       val |= ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
+> +               else if (dev->boost_freq == 0)
+> +                       val &= ~ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
+> +               writel(val, dev->regs + ACTMON_DEV_CTRL);
+> +       }
+> +
+> +       writel(ACTMON_INTR_STATUS_CLEAR, dev->regs + ACTMON_DEV_INTR_STATUS);
+> +
+> +       actmon_write_barrier(tegra);
+> +
+> +       spin_unlock_irqrestore(&tegra->lock, flags);
+> +
+> +       return IRQ_WAKE_THREAD;
 > +}
+> +
+> +static unsigned long actmon_cpu_to_emc_rate(struct tegra_devfreq *tegra,
+> +                                           unsigned long cpu_freq)
+> +{
+> +       unsigned int i;
+> +       struct tegra_actmon_emc_ratio *ratio = actmon_emc_ratios;
+> +
+> +       for (i = 0; i < ARRAY_SIZE(actmon_emc_ratios); i++, ratio++) {
+> +               if (cpu_freq >= ratio->cpu_freq) {
+> +                       if (ratio->emc_freq >= tegra->max_freq)
+> +                               return tegra->max_freq;
+> +                       else
+> +                               return ratio->emc_freq;
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static void actmon_update_target(struct tegra_devfreq *tegra,
+> +                                struct tegra_devfreq_device *dev)
+> +{
+> +       unsigned long cpu_freq = 0;
+> +       unsigned long static_cpu_emc_freq = 0;
+> +       unsigned int avg_sustain_coef;
+> +       unsigned long flags;
+> +
+> +       if (dev->config->avg_dependency_threshold) {
+> +               cpu_freq = cpufreq_get(0);
+> +               static_cpu_emc_freq = actmon_cpu_to_emc_rate(tegra, cpu_freq);
+> +       }
+> +
+> +       spin_lock_irqsave(&tegra->lock, flags);
+> +
+> +       dev->target_freq = dev->avg_count / ACTMON_SAMPLING_PERIOD;
+> +       avg_sustain_coef = 100 * 100 / dev->config->boost_up_threshold;
+> +       dev->target_freq = do_percent(dev->target_freq, avg_sustain_coef);
+> +       dev->target_freq += dev->boost_freq;
+> +
+> +       if (dev->avg_count >= dev->config->avg_dependency_threshold)
+> +               dev->target_freq = max(dev->target_freq, static_cpu_emc_freq);
+> +
+> +       spin_unlock_irqrestore(&tegra->lock, flags);
+> +}
+> +
+> +static irqreturn_t actmon_thread_isr(int irq, void *data)
+> +{
+> +       struct tegra_devfreq *tegra = data;
+> +
+> +       mutex_lock(&tegra->devfreq->lock);
+> +       update_devfreq(tegra->devfreq);
+> +       mutex_unlock(&tegra->devfreq->lock);
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static int tegra_actmon_rate_notify_cb(struct notifier_block *nb,
+> +                                      unsigned long action, void *ptr)
+> +{
+> +       struct clk_notifier_data *data = ptr;
+> +       struct tegra_devfreq *tegra = container_of(nb, struct tegra_devfreq,
+> +                                                  rate_change_nb);
+> +       unsigned int i;
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&tegra->lock, flags);
+> +
+> +       switch (action) {
+> +       case POST_RATE_CHANGE:
+> +               tegra->cur_freq = data->new_rate / KHZ;
+> +
+> +               for (i = 0; i < ARRAY_SIZE(tegra->devices); i++)
+> +                       tegra_devfreq_update_wmark(tegra, tegra->devices + i);
+> +
+> +               actmon_write_barrier(tegra);
+> +               break;
+> +       case PRE_RATE_CHANGE:
+> +               /* fall through */
+> +       case ABORT_RATE_CHANGE:
+
+Can't you use "default:" here instead?
+
+> +               break;
+> +       };
+> +
+> +       spin_unlock_irqrestore(&tegra->lock, flags);
+> +
+> +       return NOTIFY_OK;
+> +}
+> +
+> +static void tegra_actmon_configure_device(struct tegra_devfreq *tegra,
+> +                                         struct tegra_devfreq_device *dev)
+> +{
+> +       u32 val;
+> +
+> +       dev->avg_band_freq = tegra->max_freq * ACTMON_DEFAULT_AVG_BAND / KHZ;
+> +       dev->target_freq = tegra->cur_freq;
+> +
+> +       dev->avg_count = tegra->cur_freq * ACTMON_SAMPLING_PERIOD;
+> +       writel(dev->avg_count, dev->regs + ACTMON_DEV_INIT_AVG);
+> +
+> +       tegra_devfreq_update_avg_wmark(dev);
+> +       tegra_devfreq_update_wmark(tegra, dev);
+> +
+> +       writel(ACTMON_COUNT_WEIGHT, dev->regs + ACTMON_DEV_COUNT_WEIGHT);
+> +       writel(ACTMON_INTR_STATUS_CLEAR, dev->regs + ACTMON_DEV_INTR_STATUS);
+> +
+> +       val = 0;
+> +       val |= ACTMON_DEV_CTRL_ENB_PERIODIC |
+> +              ACTMON_DEV_CTRL_AVG_ABOVE_WMARK_EN |
+> +              ACTMON_DEV_CTRL_AVG_BELOW_WMARK_EN;
+> +       val |= (ACTMON_AVERAGE_WINDOW_LOG2 - 1)
+> +               << ACTMON_DEV_CTRL_K_VAL_SHIFT;
+> +       val |= (ACTMON_BELOW_WMARK_WINDOW - 1)
+> +               << ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_NUM_SHIFT;
+> +       val |= (ACTMON_ABOVE_WMARK_WINDOW - 1)
+> +               << ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_NUM_SHIFT;
+> +       val |= ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN |
+> +              ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
+> +
+> +       writel(val, dev->regs + ACTMON_DEV_CTRL);
+> +
+> +       actmon_write_barrier(tegra);
+> +
+> +       val = readl(dev->regs + ACTMON_DEV_CTRL);
+> +       val |= ACTMON_DEV_CTRL_ENB;
+> +       writel(val, dev->regs + ACTMON_DEV_CTRL);
+> +
+> +       actmon_write_barrier(tegra);
+> +}
+> +
+> +static int tegra_devfreq_suspend(struct device *dev)
+> +{
+> +       struct platform_device *pdev;
+> +       struct tegra_devfreq *tegra;
+> +       struct tegra_devfreq_device *actmon_dev;
+> +       unsigned int i;
+> +       u32 val;
+> +
+> +       pdev = container_of(dev, struct platform_device, dev);
+> +       tegra = platform_get_drvdata(pdev);
+> +
+> +       for (i = 0; i < ARRAY_SIZE(tegra->devices); i++) {
+> +               actmon_dev = &tegra->devices[i];
+> +
+> +               val = readl(actmon_dev->regs + ACTMON_DEV_CTRL);
+> +               val &= ~ACTMON_DEV_CTRL_ENB;
+> +               writel(val, actmon_dev->regs + ACTMON_DEV_CTRL);
+> +
+> +               writel(ACTMON_INTR_STATUS_CLEAR,
+> +                      actmon_dev->regs + ACTMON_DEV_INTR_STATUS);
+> +
+> +               actmon_write_barrier(tegra);
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int tegra_devfreq_resume(struct device *dev)
+> +{
+> +       struct platform_device *pdev;
+> +       struct tegra_devfreq *tegra;
+> +       struct tegra_devfreq_device *actmon_dev;
+> +       unsigned int i;
+> +
+> +       pdev = container_of(dev, struct platform_device, dev);
+> +       tegra = platform_get_drvdata(pdev);
+> +
+> +       for (i = 0; i < ARRAY_SIZE(tegra->devices); i++) {
+> +               actmon_dev = &tegra->devices[i];
+> +
+> +               tegra_actmon_configure_device(tegra, actmon_dev);
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
+> +                               u32 flags)
+> +{
+> +       struct platform_device *pdev;
+> +       struct tegra_devfreq *tegra;
+> +       struct dev_pm_opp *opp;
+> +       unsigned long rate = *freq * KHZ;
+> +
+> +       pdev = container_of(dev, struct platform_device, dev);
+> +       tegra = platform_get_drvdata(pdev);
+> +
+> +       rcu_read_lock();
+> +       opp = devfreq_recommended_opp(dev, &rate, flags);
+> +       if (IS_ERR(opp)) {
+> +               rcu_read_unlock();
+> +               dev_err(dev, "Failed to find opp for %lu KHz\n", *freq);
+> +               return PTR_ERR(opp);
+> +       }
+> +       rate = dev_pm_opp_get_freq(opp);
+> +       rcu_read_unlock();
+> +
+> +       /* TODO: Once we have per-user clk constraints, set a floor */
+> +       clk_set_rate(tegra->emc_clock, rate);
+> +
+> +       /* TODO: Set voltage as well */
+> +
+> +       return 0;
+> +}
+> +
+> +static int tegra_devfreq_get_dev_status(struct device *dev,
+> +                                       struct devfreq_dev_status *stat)
+> +{
+> +       struct platform_device *pdev;
+> +       struct tegra_devfreq *tegra;
+> +       struct tegra_devfreq_device *actmon_dev;
+> +
+> +       pdev = container_of(dev, struct platform_device, dev);
+> +       tegra = platform_get_drvdata(pdev);
+> +
+> +       stat->current_frequency = tegra->cur_freq;
+> +
+> +       /* To be used by the tegra governor */
+> +       stat->private_data = tegra;
+> +
+> +       /* The below are to be used by the other governors */
+> +
+> +       actmon_dev = &tegra->devices[MCALL];
+> +
+> +       /* Number of cycles spent on memory access */
+> +       stat->busy_time = actmon_dev->avg_count;
+> +
+> +       /* The bus can be considered to be saturated way before 100% */
+> +       stat->busy_time *= 100 / BUS_SATURATION_RATIO;
+> +
+> +       /* Number of cycles in a sampling period */
+> +       stat->total_time = ACTMON_SAMPLING_PERIOD * tegra->cur_freq;
+> +
+> +       return 0;
+> +}
+> +
+> +static int tegra_devfreq_get_target(struct devfreq *devfreq,
+> +                                   unsigned long *freq)
+> +{
+> +       struct devfreq_dev_status stat;
+> +       struct tegra_devfreq *tegra;
+> +       struct tegra_devfreq_device *dev;
+> +       unsigned long target_freq = 0;
+> +       unsigned int i;
+> +       int err;
+> +
+> +       err = devfreq->profile->get_dev_status(devfreq->dev.parent, &stat);
+> +       if (err)
+> +               return err;
+> +
+> +       tegra = stat.private_data;
+> +
+> +       for (i = 0; i < ARRAY_SIZE(tegra->devices); i++) {
+> +               dev = &tegra->devices[i];
+> +
+> +               actmon_update_target(tegra, dev);
+> +
+> +               target_freq = max(target_freq, dev->target_freq);
+> +       }
+
+I *think* you should be able to remove the dependency on
+tegra_devfreq_device from this function (ideally, governors should be
+device-agnostic). Since you call get_dev_status() from this function
+anyway, why not moving the actmon_update_target() calls into
+tegra_devfreq_get_dev_status(), and write busy_time/total_time values
+that will make tegra_devfreq_get_target() infer the right frequency?
+
+> +
+> +       *freq = target_freq;
+> +
+> +       return 0;
+> +}
+> +
+> +static int tegra_devfreq_event_handler(struct devfreq *devfreq,
+> +                                      unsigned int event, void *data)
+> +{
+> +       return 0;
+> +}
+
+I think you will need an implementation of this. Upon
+DEVFREQ_GOV_START/DEVFREQ_GOV_RESUME, enable actmon interrupts. On
+DEVFREQ_GOV_STOP/DEVFREQ_GOV_SUSPEND, disable interrupts. I know you
+are doing it somewhere, but it should be done here as this is what
+devfreq expects (e.g. to correctly stop interrupts if you switch from
+the "tegra" to the "performance" governor).
+
+Sadly, this adds the exact same dependency on tegra_devfreq that I
+tried to remove from the previous function, which is unfortunate. This
+is where watermarking support in devfreq would be useful - when
+starting the governor, we could ask the device to monitor some low and
+high marks through new hooks and handle all this nicely.
+
+> +
+> +static struct devfreq_governor tegra_devfreq_governor = {
+> +       .name = "tegra",
+
+This governor could certainly get a more specific name. :P
+
+> +       .get_target_freq = tegra_devfreq_get_target,
+> +       .event_handler = tegra_devfreq_event_handler,
+> +};
+> +
+> +static struct devfreq_dev_profile tegra_devfreq_profile = {
+> +       .polling_ms     = 0,
+> +       .target         = tegra_devfreq_target,
+> +       .get_dev_status = tegra_devfreq_get_dev_status,
+> +};
+
+Maybe move this declaration right after the declaration of
+tegra_devfreq_get_dev_status() to make things easier to put together
+in the reader's mind.
+
+> +
+> +static int tegra_devfreq_probe(struct platform_device *pdev)
+> +{
+> +       struct tegra_devfreq *tegra;
+> +       struct tegra_devfreq_device *dev;
+> +       struct resource *res;
+> +       unsigned long max_freq;
+> +       unsigned int i;
+> +       int irq;
+> +       int err;
+> +
+> +       tegra = devm_kzalloc(&pdev->dev, sizeof(*tegra), GFP_KERNEL);
+> +       if (!tegra)
+> +               return -ENOMEM;
+> +
+> +       spin_lock_init(&tegra->lock);
+> +
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       if (!res) {
+> +               dev_err(&pdev->dev, "Failed to get regs resource\n");
+> +               return -ENODEV;
+> +       }
+> +
+> +       tegra->regs = devm_ioremap_resource(&pdev->dev, res);
+> +       if (IS_ERR(tegra->regs)) {
+> +               dev_err(&pdev->dev, "Failed to get IO memory\n");
+> +               return PTR_ERR(tegra->regs);
+> +       }
+> +
+> +       tegra->reset = devm_reset_control_get(&pdev->dev, "actmon");
+> +       if (IS_ERR(tegra->reset)) {
+> +               dev_err(&pdev->dev, "Failed to get reset\n");
+> +               return PTR_ERR(tegra->reset);
+> +       }
+> +
+> +       tegra->clock = devm_clk_get(&pdev->dev, "actmon");
+> +       if (IS_ERR(tegra->clock)) {
+> +               dev_err(&pdev->dev, "Failed to get actmon clock\n");
+> +               return PTR_ERR(tegra->clock);
+> +       }
+> +
+> +       tegra->emc_clock = devm_clk_get(&pdev->dev, "emc");
+> +       if (IS_ERR(tegra->emc_clock)) {
+> +               dev_err(&pdev->dev, "Failed to get emc clock\n");
+> +               return PTR_ERR(tegra->emc_clock);
+> +       }
+> +
+> +       err = of_init_opp_table(&pdev->dev);
+> +       if (err) {
+> +               dev_err(&pdev->dev, "Failed to init operating point table\n");
+> +               return err;
+> +       }
+> +
+> +       tegra->rate_change_nb.notifier_call = tegra_actmon_rate_notify_cb;
+> +       err = clk_notifier_register(tegra->emc_clock, &tegra->rate_change_nb);
+> +       if (err) {
+> +               dev_err(&pdev->dev,
+> +                       "Failed to register rate change notifier\n");
+> +               return err;
+> +       }
+> +
+> +       reset_control_assert(tegra->reset);
+> +
+> +       err = clk_prepare_enable(tegra->clock);
+> +       if (err) {
+> +               reset_control_deassert(tegra->reset);
+> +               return err;
+> +       }
+> +
+> +       reset_control_deassert(tegra->reset);
+> +
+> +       max_freq = clk_round_rate(tegra->emc_clock, ULONG_MAX);
+> +       tegra->max_freq = max_freq / KHZ;
+> +
+> +       clk_set_rate(tegra->emc_clock, max_freq);
+> +
+> +       tegra->cur_freq = clk_get_rate(tegra->emc_clock) / KHZ;
+> +
+> +       writel(ACTMON_SAMPLING_PERIOD - 1,
+> +              tegra->regs + ACTMON_GLB_PERIOD_CTRL);
+> +
+> +       for (i = 0; i < ARRAY_SIZE(actmon_device_configs); i++) {
+> +               dev = tegra->devices + i;
+> +               dev->config = actmon_device_configs + i;
+> +               dev->regs = tegra->regs + dev->config->offset;
+> +
+> +               tegra_actmon_configure_device(tegra, tegra->devices + i);
+> +       }
+> +
+> +       err = devfreq_add_governor(&tegra_devfreq_governor);
+
+This should probably be done in an initcall (that would be executed
+before probe() is called). We can in theory have several instances of
+ACTMON, but the governor should only be added once in all cases. I
+understand that this is unlikely to happen in practice though.
+
+> +       if (err) {
+> +               dev_err(&pdev->dev, "Failed to add governor\n");
+> +               return err;
+> +       }
+> +
+> +       tegra_devfreq_profile.initial_freq = clk_get_rate(tegra->emc_clock);
+> +       tegra->devfreq = devm_devfreq_add_device(&pdev->dev,
+> +                                                &tegra_devfreq_profile,
+> +                                                "tegra",
+
+I think "tegra_actmon" would look better here. :)
+
+> +                                                NULL);
+> +
+> +       irq = platform_get_irq(pdev, 0);
+> +       err = devm_request_threaded_irq(&pdev->dev, irq, actmon_isr,
+> +                                       actmon_thread_isr, IRQF_SHARED,
+> +                                       "tegra-devfreq", tegra);
+
+You probably ought to do this *before* adding the devfreq device,
+otherwise you are at risk of receiving interrupts nobody will handle.
+
+> +       if (err) {
+> +               dev_err(&pdev->dev, "Interrupt request failed\n");
+> +               return err;
+> +       }
+> +
+> +       platform_set_drvdata(pdev, tegra);
+
+This should also be done before the call to devfreq_add_device().
+
+> +
+> +       return 0;
+> +}
+> +
+> +static int tegra_devfreq_remove(struct platform_device *pdev)
+> +{
+> +       struct tegra_devfreq *tegra = platform_get_drvdata(pdev);
+> +
+> +       clk_notifier_unregister(tegra->emc_clock, &tegra->rate_change_nb);
+> +
+> +       clk_disable_unprepare(tegra->clock);
+
+There seems to be a lot missing in this function, like removing the
+devfreq device?
