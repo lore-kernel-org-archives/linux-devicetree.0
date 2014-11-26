@@ -1,172 +1,82 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v9 2/9] qcom: spm: Add Subsystem Power Manager driver
-Date: Wed, 26 Nov 2014 12:19:00 +0100
-Message-ID: <5475B724.80202@linaro.org>
-References: <1414194024-55547-1-git-send-email-lina.iyer@linaro.org> <1414194024-55547-3-git-send-email-lina.iyer@linaro.org> <54662622.2020307@linaro.org> <20141119174339.GA891@linaro.org>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] arm64: Add Juno board device tree.
+Date: Wed, 26 Nov 2014 11:36:16 +0000
+Message-ID: <5475BB30.9080802@arm.com>
+References: <1415727131-4572-1-git-send-email-Liviu.Dudau@arm.com> <1415727131-4572-3-git-send-email-Liviu.Dudau@arm.com> <5475ABC0.3090007@arm.com> <20141126105918.GB828@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20141119174339.GA891@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lina Iyer <lina.iyer@linaro.org>
-Cc: khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141126105918.GB828-2JSQmVVBSi7ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Cc: "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, device tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/19/2014 06:43 PM, Lina Iyer wrote:
-> On Fri, Nov 14 2014 at 08:56 -0700, Daniel Lezcano wrote:
->> On 10/25/2014 01:40 AM, Lina Iyer wrote:
->
->>> +/**
->>> + * spm_set_low_power_mode() - Configure SPM start address for low
->>> power mode
->>> + * @mode: SPM LPM mode to enter
->>> + */
->>> +int qcom_spm_set_low_power_mode(enum pm_sleep_mode mode)
->>> +{
->>> +    struct spm_driver_data *drv =3D this_cpu_ptr(&cpu_spm_drv);
->>> +    u32 start_index;
->>> +    u32 ctl_val;
->>> +
->>> +    if (!drv->available)
->>> +        return -ENXIO;
+On 26/11/14 10:59, Liviu Dudau wrote:
+> On Wed, Nov 26, 2014 at 10:30:24AM +0000, Marc Zyngier wrote:
+>> Hi Liviu,
 >>
->> really weird how this was initialized.
+>> On 11/11/14 17:32, Liviu Dudau wrote:
+>>> This adds support for ARM's Juno development board (rev 0).
+>>> It enables most of the board peripherals: UART, I2C, USB, MMC and
+>>> 100Mb ethernet. There is no support at the moment for clock setting
+>>> and HDLCD driver which depends on it.
+>>>
+>>> Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+>>> ---
+>>>  arch/arm64/boot/dts/arm/Makefile              |   1 +
+>>>  arch/arm64/boot/dts/arm/juno-clocks.dtsi      |  45 ++++++
+>>>  arch/arm64/boot/dts/arm/juno-motherboard.dtsi | 129 +++++++++++++++
+>>>  arch/arm64/boot/dts/arm/juno.dts              | 218 ++++++++++++++++++++++++++
+>>>  4 files changed, 393 insertions(+)
+>>>  create mode 100644 arch/arm64/boot/dts/arm/juno-clocks.dtsi
+>>>  create mode 100644 arch/arm64/boot/dts/arm/juno-motherboard.dtsi
+>>>  create mode 100644 arch/arm64/boot/dts/arm/juno.dts
+>>>
 >>
->> Are you sure 'drv' is not NULL if it is not available ? (see below)
+>> [...]
 >>
-> 'drv' has some data that I need to decode the register address. Hence
-> cant have that NULL. Therefore, the available flag.
->
-> ...
->
->> +static int spm_dev_probe(struct platform_device *pdev)
->>> +{
->>> +    struct spm_driver_data *drv;
->>> +    struct resource *res;
->>> +    const struct of_device_id *match_id;
->>> +    void __iomem *addr;
->>> +    const u32 *seq_data;
->>> +    int cpu =3D -EINVAL;
->>> +    static bool cpuidle_drv_init;
->>> +
->>> +    drv =3D spm_get_drv(pdev, &cpu);
->>> +    if (!drv)
->>> +        return -EINVAL;
->>> +
->>> +    res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>> +    drv->reg_base =3D devm_ioremap_resource(&pdev->dev, res);
->>> +    if (IS_ERR(drv->reg_base))
->>> +        return PTR_ERR(drv->reg_base);
->>> +
->>> +    match_id =3D of_match_node(spm_match_table, pdev->dev.of_node)=
-;
->>> +    if (!match_id)
->>> +        return -ENODEV;
->>> +
->>> +    drv->reg_data =3D match_id->data;
->>> +    if (!drv->reg_data)
->>> +        return -EINVAL;
->>> +
->>> +    /* Write the SPM sequences, first.. */
->>> +    addr =3D drv->reg_base +
->>> drv->reg_data->reg_offset[SPM_REG_SEQ_ENTRY];
->>> +    seq_data =3D (const u32 *)drv->reg_data->seq;
->>> +    __iowrite32_copy(addr, seq_data, ARRAY_SIZE(drv->reg_data->seq=
-)/4);
->>> +
->>> +    /* ..and then, the control registers.
->>> +     * On some SoC's if the control registers are written first an=
-d
->>> if the
->>> +     * CPU was held in reset, the reset signal could trigger the S=
-PM
->>> state
->>> +     * machine, before the sequences are completely written.
->>> +     */
->>> +    spm_register_write(drv, SPM_REG_CFG, drv->reg_data->spm_cfg);
->>> +    spm_register_write(drv, SPM_REG_DLY, drv->reg_data->spm_dly);
->>> +    spm_register_write(drv, SPM_REG_PMIC_DLY, drv->reg_data->pmic_=
-dly);
->>> +
->>> +    spm_register_write(drv, SPM_REG_PMIC_DATA_0,
->>> +                drv->reg_data->pmic_data[0]);
->>> +    spm_register_write(drv, SPM_REG_PMIC_DATA_1,
->>> +                drv->reg_data->pmic_data[1]);
->>> +
->>> +    /**
->>> +     * Ensure all observers see the above register writes before t=
-he
->>> +     * cpuidle driver is allowed to use the SPM.
->>> +     */
->>> +    wmb();
->>> +    drv->available =3D true;
+>>> diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
+>>> new file mode 100644
+>>> index 0000000..097ecc4
+>>> --- /dev/null
+>>> +++ b/arch/arm64/boot/dts/arm/juno.dts
 >>
->> IMO if you have to do that, that means there is something wrong with
->> how is initialized the driver.
+>> [...]
 >>
->> It should be drv =3D=3D NULL =3D> not available
+>>> +       timer {
+>>> +               compatible = "arm,armv8-timer";
+>>> +               interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING)>,
+>>> +                            <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING)>,
+>>> +                            <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING)>,
+>>> +                            <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING)>;
+>>> +       };
 >>
-> drv has the register base that I dont want to pass seprately.
->
->>> +
->>> +    if ((cpu > -1) && !cpuidle_drv_init) {
->>> +        platform_device_register(&qcom_cpuidle_device);
->>> +        cpuidle_drv_init =3D true;
->>> +    }
->>
->> 'cpu' is always > -1.
->>
-> OK. I was hoping to use -1 for not a cpu (i.e, L2) SPM. For now, I wi=
-ll
-> change.
->
->
->> If the 'spm_get_drv' succeed, cpu is no longer equal to -EINVAL.
->> Otherwise we do not reach this point because we return right after
->> spm_get_drv with an error.
->>
->> Adding the platform_device_register depending in a static variable i=
-s
->> not very nice. Why not add it explicitely in a separate init routine
->> we know it will be called one time (eg. at the same place than cpufr=
-eq
->> is) ?
->>
-> We want to register the cpuidle device only if any of the SPM devices
-> have been probed.
->
-> Ideally, Stephen and I would like to register cpuidle device separate=
-ly
-> for each CPU SPM, when it is probed, so we would invoke cpuidle drive=
-r
-> and thereby the low power modes only for those cpus. However, the
-> complexity to do that, AFAICS, is very complex. I would need to chang=
-e
-> quite a bit of the framework and in the cpuidle driver, I may have to
-> stray from the recommended format.
->
-> Here I set up cpuidle device, when I know atleast 1 cpu is ready to
-> allow low power modes.
+>> Sorry, I should have spotted this earlier: all these interrupts are
+>> *level*, not edge. This happens to work because the GIC's config
+>> register is RO for PPIs on Juno, but still...
+> 
+> Yes, I've seen your other email to Suravee regarding interrupt triggering and I was trying to
+> find the relevant bits in Juno to tell me why I've put the info in DT this way. Maybe I *did*
+> copy-paste this part from FVP DT though.
+> 
+> I will send a patch to Olof to update.
 
-Yes, instead of using the generic cpuidle_register function, you can us=
-e=20
-the low level functions for that.
+Yeah, looks like most (if not all) DTs in the tree are broken. Any
+chance you could write a sweeping patch to fix them all (at least for
+the ARM implementations)?
 
-One call to cpuidle_register_driver in a single place and then=20
-cpuidle_register_device for each spm probe.
+The APM and Cavium implementations also carry the same values, and I
+suppose this is a bug too, but someone with access to documentation
+should figure this out.
 
-Wouldn't make sense ?
+Thanks,
 
-   -- Daniel
-
-
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+	M.
+-- 
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
