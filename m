@@ -1,122 +1,63 @@
-From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 1/2] backlight/lp855x: Refactor dt parsing code
-Date: Wed, 26 Nov 2014 14:11:03 -0500
-Message-ID: <1417029064-12460-1-git-send-email-seanpaul@chromium.org>
+From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: Re: Question about fixed regulator DT properties
+Date: Wed, 26 Nov 2014 21:13:50 +0200
+Message-ID: <5476266E.9040901@mentor.com>
+References: <546B5EF9.3080102@mentor.com> <546CAB49.8030103@mentor.com> <20141125121749.GV7712@sirena.org.uk> <54760D6A.9080306@mentor.com> <20141126175304.GM7712@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141126175304.GM7712-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, milo.kim-l0cyMroinI0@public.gmane.org
-Cc: seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch refactors the dt parsing code to avoid setting platform_data=
-,
-instead just setting lp->pdata directly. This facilitates easier
-probe deferral since the current scheme would require us to clear out
-dev->platform_data before deferring.
+Hi, MarkOn 26.11.2014 19:53, Mark Brown wrote:
+> On Wed, Nov 26, 2014 at 07:27:06PM +0200, Vladimir Zapolskiy wrote:
+>> On 25.11.2014 14:17, Mark Brown wrote:
+> 
+>> b) "regulator-boot-on" does not mean that the regulator is controlled by
+>> bootloader or firmware exclusively.
+> 
+> That's correct...
+> 
+>>>>> Should documentation be updated to reflect "regulator-boot-on" role that
+>>>>> a regulator is re-enabled by the kernel?
+> 
+>>> I'm confused about this.  That's the sole purpose of the flag and as far
+>>> as I can tell it's what the documentation says.
+> 
+>> Documentation/devicetree/bindings/regulator/regulator.txt says:
+> 
+>>   - regulator-boot-on: bootloader/firmware enabled regulator
+> 
+>> I would suggest to add Linux kernel to that list of regulator
+>> controllers, if it is the intention. In its current state the
+>> documentation makes an impression that "regulator-boot-on" property
+>> instructs the kernel to ignore regulator setup, since it is already
+>> controlled by bootloader or firmware.
+> 
+> No, not at all.  It's referring to the state when Linux starts.
+> 
 
-Cc: St=C3=A9phane Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
- drivers/video/backlight/lp855x_bl.c | 37 ++++++++++++++++++-----------=
---------
- 1 file changed, 18 insertions(+), 19 deletions(-)
+thank you for clarification, to grasp the underlying policy let me ask
+for some more information.
 
-diff --git a/drivers/video/backlight/lp855x_bl.c b/drivers/video/backli=
-ght/lp855x_bl.c
-index 25fb8e3..257b3ba 100644
---- a/drivers/video/backlight/lp855x_bl.c
-+++ b/drivers/video/backlight/lp855x_bl.c
-@@ -341,8 +341,10 @@ static const struct attribute_group lp855x_attr_gr=
-oup =3D {
- };
-=20
- #ifdef CONFIG_OF
--static int lp855x_parse_dt(struct device *dev, struct device_node *nod=
-e)
-+static int lp855x_parse_dt(struct lp855x *lp)
- {
-+	struct device *dev =3D lp->dev;
-+	struct device_node *node =3D dev->of_node;
- 	struct lp855x_platform_data *pdata;
- 	int rom_length;
-=20
-@@ -381,12 +383,12 @@ static int lp855x_parse_dt(struct device *dev, st=
-ruct device_node *node)
- 		pdata->rom_data =3D &rom[0];
- 	}
-=20
--	dev->platform_data =3D pdata;
-+	lp->pdata =3D pdata;
-=20
- 	return 0;
- }
- #else
--static int lp855x_parse_dt(struct device *dev, struct device_node *nod=
-e)
-+static int lp855x_parse_dt(struct lp855x *lp)
- {
- 	return -EINVAL;
- }
-@@ -395,18 +397,8 @@ static int lp855x_parse_dt(struct device *dev, str=
-uct device_node *node)
- static int lp855x_probe(struct i2c_client *cl, const struct i2c_device=
-_id *id)
- {
- 	struct lp855x *lp;
--	struct lp855x_platform_data *pdata =3D dev_get_platdata(&cl->dev);
--	struct device_node *node =3D cl->dev.of_node;
- 	int ret;
-=20
--	if (!pdata) {
--		ret =3D lp855x_parse_dt(&cl->dev, node);
--		if (ret < 0)
--			return ret;
--
--		pdata =3D dev_get_platdata(&cl->dev);
--	}
--
- 	if (!i2c_check_functionality(cl->adapter, I2C_FUNC_SMBUS_I2C_BLOCK))
- 		return -EIO;
-=20
-@@ -414,16 +406,23 @@ static int lp855x_probe(struct i2c_client *cl, co=
-nst struct i2c_device_id *id)
- 	if (!lp)
- 		return -ENOMEM;
-=20
--	if (pdata->period_ns > 0)
--		lp->mode =3D PWM_BASED;
--	else
--		lp->mode =3D REGISTER_BASED;
--
- 	lp->client =3D cl;
- 	lp->dev =3D &cl->dev;
--	lp->pdata =3D pdata;
- 	lp->chipname =3D id->name;
- 	lp->chip_id =3D id->driver_data;
-+	lp->pdata =3D dev_get_platdata(&cl->dev);
-+
-+	if (!lp->pdata) {
-+		ret =3D lp855x_parse_dt(lp);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	if (lp->pdata->period_ns > 0)
-+		lp->mode =3D PWM_BASED;
-+	else
-+		lp->mode =3D REGISTER_BASED;
-+
- 	i2c_set_clientdata(cl, lp);
-=20
- 	ret =3D lp855x_configure(lp);
---=20
-2.1.1
+If I want to enable a fixed regulator (not controlled by
+bootloader/firmware) by Linux on boot or when fixed.ko module is bound,
+shall I specify the same "regulator-boot-on" property? At least this is
+the practical way to enable a fixed and/or gpio regulator right now, but
+is it correct?
+
+Or should the regulator always be enabled externally (assuming
+"regulator-always-on" is omitted) after registration independently on
+"regulator-boot-on" property?
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+With best wishes,
+Vladimir
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
