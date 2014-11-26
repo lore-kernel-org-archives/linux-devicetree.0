@@ -1,43 +1,167 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v4 6/7] ARM: mvebu: add PHY support to the dts for the
- USB controllers on Armada 375
-Date: Wed, 26 Nov 2014 00:17:01 -0500
-Message-ID: <20141126051701.GU22670@titan.lakedaemon.net>
-References: <1415879269-29711-1-git-send-email-gregory.clement@free-electrons.com>
- <1415879269-29711-7-git-send-email-gregory.clement@free-electrons.com>
- <20141122020811.GO22670@titan.lakedaemon.net>
- <5470556B.6080608@free-electrons.com>
- <20141126035929.GJ22670@titan.lakedaemon.net>
- <54756164.3070206@ti.com>
+From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V3 06/11] irqchip: bcm7120-l2: Change DT binding to allow
+ non-contiguous IRQEN/IRQSTAT
+Date: Tue, 25 Nov 2014 21:18:44 -0800
+Message-ID: <CAJiQ=7CvpFWxDY1uad2bZz8MBG0Mvg2Jx8WBp6gHi-kD4TDvXA@mail.gmail.com>
+References: <1416796846-28149-1-git-send-email-cernekee@gmail.com>
+ <1416796846-28149-7-git-send-email-cernekee@gmail.com> <CAOiHx=ntm7AO5BU2Ge0JDC5nDgXSZwQDm05s5VTM8mLqYmCZRw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54756164.3070206@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOiHx=ntm7AO5BU2Ge0JDC5nDgXSZwQDm05s5VTM8mLqYmCZRw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Fraser <jfraser-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 26, 2014 at 10:43:08AM +0530, Kishon Vijay Abraham I wrote:
-> Hi,
-> 
-> On Wednesday 26 November 2014 09:29 AM, Jason Cooper wrote:
-> > On Sat, Nov 22, 2014 at 10:20:43AM +0100, Gregory CLEMENT wrote:
-> >> Hi Jason,
-> >>
-> >> On 22/11/2014 03:08, Jason Cooper wrote:
-> >>> On Thu, Nov 13, 2014 at 12:47:48PM +0100, Gregory CLEMENT wrote:
-> >>>> Now that the USB cluster node has been added, use it as a PHY provider
-> >>>> for the USB controller linked to it: the first EHCI and the xHCI.
-> >>>>
-> >>>> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> 
-> Looks like I'm not cc'ed in v4 of this patch series :-(
+On Mon, Nov 24, 2014 at 6:31 AM, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
+> On Mon, Nov 24, 2014 at 3:40 AM, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> To date, all supported controllers have had the IRQEN register at offset
+>> 0x00 and the IRQSTAT register at 0x04.  So in DT we would typically see
+>> something like:
+>>
+>>     reg = <0xf0406800 0x8>;
+>>
+>> We still want to support this format, but we also need to support cases
+>> where IRQEN and IRQSTAT aren't adjacent.  So, we will amend the driver to
+>> accept an alternate format that looks like this:
+>>
+>>     reg = <0xf0406800 0x4 0xf0406804 0x4>;
+>>
+>> i.e. if the first resource_size() == 4, assume that the first resource
+>> points to IRQEN and that the next resource points to IRQSTAT.  If the
+>> first resource_size() == 8, retain the current behavior.
+>>
+>> Signed-off-by: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> Hmm ... the more I think about this, the less I like it.
+>
+> Using the amount and size of the reg-properties to infer a certain
+> layout seems rather hackish and dirty to me. Maybe we should just use
+> different compatible match ids for that? E.g. brcm,bm7120-l2-intc for
+> the 32-bit en/stat pairs, and e.g. brcm,bcm6368-l2-intc for the 64-bit
+> wide one. Or maybe make the bcm63xx one a separate driver and let it
+> share code with the bcm7120-l2-intc driver.
 
-I've bounced emails maybe three times in my life.  Thought it might work
-here.  Did it?
+In my current proposal, it is easy to specify an arbitrary number of
+enable/status pairs located in any order and spread across different
+parts of the register space.  Even register indices (0,2,4,...) are
+enable registers, and odd register indices are status registers.
 
-thx,
+If I'm interpreting your post correctly, you don't agree that we need
+this level of flexibility.  But looking over the register listings,
+here are the cases we need to cover:
 
-Jason.
+
+6828,6318: 4x mask(exthi,extlo,hi,lo),status(exthi,extlo,hi,lo)
+
+TP0ExtIrqMaskHi
+TP0ExtIrqMaskLo
+TP0IrqMaskHi
+TP0IrqMaskLo
+TP0ExtIrqStatusHi
+TP0ExtIrqStatusLo
+TP0IrqStatusHi
+TP0IrqStatusLo
+
+TP1ExtIrqMaskHi
+TP1ExtIrqMaskLo
+...
+
+
+6816,6362,6328: 2x extmask,mask,extstatus,status
+
+ExtraChipIrqMask
+ChipIrqMask
+ExtraChipIrqStatus
+ChipIrqStatus
+ExtraChipIrqMask1 [1=TP1]
+ChipIrqMask1
+ExtraChipIrqStatus1
+ChipIrqStatus1
+
+
+6368: similar to above, but with yet another naming convention:
+
+IRQMASK_MIPS0_Hi
+IRQMASK_MIPS0_Lo
+IRQSTATUS_MIPS0_Hi
+IRQSTATUS_MIPS0_Lo
+IRQMASK_MIPS1_Hi
+IRQMASK_MIPS1_Lo
+IRQSTATUS_MIPS1_Hi
+IRQSTATUS_MIPS1_Lo
+
+
+
+6838,3384: interleaved "mystery meat" mask/status (same IRQ source
+names, with the output of each bcm7120-l2 routed to several different
+processors/threads):
+
+PeriphIRQMASK0
+PeriphIRQSTATUS0
+PeriphIRQMASK1 <- mine, if running on Zephyr
+PeriphIRQSTATUS1 <- mine, if running on Zephyr
+PeriphIRQMASK2
+PeriphIRQSTATUS2
+PeriphIRQMASK3 <- mine, if running on Viper
+PeriphIRQSTATUS3 <- mine, if running on Viper
+
+But wait, there's more!  There wasn't enough space in this block for
+>32 IRQ bits, so the upper bits spilled over into a separate
+"INT_EXT_PER" block that lives elsewhere in the register space:
+
+PeriphIRQMASK0_2
+PeriphIRQSTATUS0_2
+PeriphIRQMASK1_2 <- mine, if running on Zephyr
+PeriphIRQSTATUS1_2 <- mine, if running on Zephyr
+PeriphIRQMASK2_2
+PeriphIRQSTATUS2_2
+PeriphIRQMASK3_2 <- mine, if running on Viper
+PeriphIRQSTATUS3_2 <- mine, if running on Viper
+
+The "INT_PER" and "INT_EXT_PER" outputs are ORed into the same MIPS
+IRQ lines, so we need to treat them as two sides of a single
+controller.  AFAICT, unlike a shared device IRQ, there is no way to
+share a MIPS IRQ line between two controller instances.
+
+Additionally, we have a few other random MASK/STATUS pairs scattered
+around (ZMIPS, CMIPS blocks), and then we also have DQM IRQs with
+multiple mask registers + single status register:
+
+CMIPS_NOT_EMPTY_IRQ_MSK
+CMIPS1_NOT_EMPTY_IRQ_MSK <- mine, if running on Viper
+ZMIPS_NOT_EMPTY_IRQ_MSK <- mine, if running on Zephyr
+PMC_NOT_EMPTY_IRQ_MSK
+DFAP_NOT_EMPTY_IRQ_MSK
+NOT_EMPTY_IRQ_STS
+
+I suppose another alternative is to ioremap() a range large enough to
+cover enable + status, and then specify the offset of each one in
+another property.  This does run the risk of overlapping mappings.
+
+
+> This would avoid having to specify a lot of regs (let's assume we also
+> add support for affinity)
+
+I concede that I have no idea how affinity should be handled here.
+AFAICT it is completely off limits on BCM3384 because we just don't
+have enough L2 outputs to offer proper masking for all of the
+threads/CPUs in the system.
+
+Perhaps we could write a simple, SMP-capable driver for the
+saner/newer SoCs, and use the flexible-but-non-SMP version for the
+complicated ones.
+
+
+> and cause a lot of io(re)map calls
+
+Is the ioremap() call really that big of a deal?
+
+On MIPS it's basically computing CKSEG1ADDR(phys_addr).  On ARM, the
+top level (with 64 to 128+ IRQs) goes through the GIC.  On both,
+ioremap() is a one-time cost at startup.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
