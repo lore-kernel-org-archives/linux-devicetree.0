@@ -1,64 +1,57 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/9] mailbox: arm_mhu: add driver for ARM MHU controller
-Date: Wed, 26 Nov 2014 16:38:07 +0000
-Message-ID: <547601EF.7070307@arm.com>
-References: <1416486442-25200-1-git-send-email-Vincent.Yang@tw.fujitsu.com>	<1416486872-25301-1-git-send-email-Vincent.Yang@tw.fujitsu.com>	<54749429.9080505@arm.com>	<CAJe_ZhciCP2VbmRtrq9d14WhfLhnC-xaitCCiW_6Yf1S-0sdUg@mail.gmail.com>	<5474C3DD.5060706@arm.com>	<CAJe_ZhfkcSv7oBfXdiW5=F0bZvv+9z3m90cXdy=O66VwZWCQnw@mail.gmail.com>	<5475DD19.9000107@arm.com> <CAJe_ZheKfEkdzcNE_5cpDg4qbYNLEJ=kKi+ScRf2=a8irAfnDg@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 7/8] regulator: sky81452: Modify Device Tree structure
+Date: Wed, 26 Nov 2014 16:37:02 +0000
+Message-ID: <20141126163702.GI7712@sirena.org.uk>
+References: <1416898986-24530-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1416898986-24530-8-git-send-email-jack.yoo@skyworksinc.com>
+ <20141125121916.GW7712@sirena.org.uk>
+ <20141126014007.GA2876@jack-ThinkPad-T520>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="gPUs6siww+AY7XMI"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJe_ZheKfEkdzcNE_5cpDg4qbYNLEJ=kKi+ScRf2=a8irAfnDg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141126014007.GA2876@jack-ThinkPad-T520>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+To: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
+--gPUs6siww+AY7XMI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 26/11/14 16:20, Jassi Brar wrote:
-> On 26 November 2014 at 19:30, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->> On 26/11/14 05:37, Jassi Brar wrote:
->>>
->
->>>>>     It seems you still don't get my point that the driver should manage
->>>>> all channels - S & NS. If Linux is running in NS mode on a platform,
->>>>> the DT will specify only some NS channel to be used. The controller
->>>>> driver shouldn't be crippled just because you think Linux will never
->>>>> be run in Secure mode.
->>>>>
->>>>
->>>> Ok how do you handle that, I don't see that in the DT binding. As it
->>>> stands, you can unconditionally try to access the secure channel and
->>>> cause aborts if the platform is running in non-secure mode.
->>>>
->>> No. Please look at the dtsi again ....
->>>
->>>           mhu: mailbox@2b1f0000 {
->>>                   #mbox-cells = <1>;
->>>                   compatible = "arm,mbox-mhu";
->>>                   reg = <0 0x2b1f0000 0x1000>;
->>>                   interrupts = <0 36 4>, /* LP Non-Sec */
->>>                                <0 35 4>, /* HP Non-Sec */
->>>                                <0 37 4>; /* Secure */
->>
->>
->> One possible issue I can think of(though current driver design requests
->> irq only on channel startup, it could be moved to probe for optimization
->> in which case you need a way to make sure secure channel or irq is not
->> accessed)
->>
-> As you see it is fine as such.
+On Wed, Nov 26, 2014 at 10:40:07AM +0900, Gyungoh Yoo wrote:
+> On Tue, Nov 25, 2014 at 12:19:16PM +0000, Mark Brown wrote:
+> > On Tue, Nov 25, 2014 at 04:03:05PM +0900, gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> > > From: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
 
-Agreed, but assuming some driver logic. I would like to see some way of
-identifying that from DT if we adding the support for secure channel in
-the driver else I prefer not to add it unless there is a real user of
-it(which is not the case with your current patch set). That will be
-handy if there's any issue in future due to some firmware that can't be
-changed or upgraded.
+> > This doesn't apply, please check and resend.
 
-Regards,
-Sudeep
+> Could you please explain why this doesn't?
 
+When I tried to apply it to my topic/sky81452 branch git am barfed on
+it, presumably because the code you based it on is different to that
+branch.
+
+--gPUs6siww+AY7XMI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUdgGtAAoJECTWi3JdVIfQ0AIH/1KywIS5SmzYpSqMNV/Saco7
+9PP38VjEPiEN7YvRCn9HliuZ932X6x3SXPjObzLtlx4D3nVD+llYqEVHl6dKMgV4
+vRAFjRt6fkd2MVm+FRvKH2C/1hiBemXVYruUCLeaql8orN0D0ziAmuhSVgaMUXrp
+hSJBnEODoNSdetacOU3eG6ykIjyFA+dqygSc1CZKyN55n4hbZLI1fku5GvbdqaVP
+e1ytWy3EzLFazIMxuitAaXSejGDLdnKCT0B75ho0i0saqweFsQBsI6uWPd/tlbLU
+UeSym4pLvm8tK6VvzDp1WMBQdmmzXJWfKKcsrE5vbim8ujdGVukLQ1V2bYnMEmI=
+=hNu3
+-----END PGP SIGNATURE-----
+
+--gPUs6siww+AY7XMI--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
