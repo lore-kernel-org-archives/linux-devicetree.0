@@ -1,41 +1,55 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] phy: add the Berlin USB PHY driver
-Date: Wed, 26 Nov 2014 16:43:53 +0100
-Message-ID: <5475F539.7070807@gmail.com>
-References: <1416520406-1852-1-git-send-email-sebastian.hesselbarth@gmail.com> <5475D90B.9070908@gmail.com> <5475E2AE.6010905@ti.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5475E2AE.6010905-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2 5/5] i2c: davinci: use ICPFUNC to toggle I2C as gpio
+ for bus recovery
+Date: Wed, 26 Nov 2014 17:04:07 +0100
+Message-ID: <20141126160407.GN4431@pengutronix.de>
+References: <1417010393-30598-1-git-send-email-grygorii.strashko@ti.com>
+ <1417010393-30598-6-git-send-email-grygorii.strashko@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1417010393-30598-6-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Looijmans <milo-software-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/26/2014 03:24 PM, Kishon Vijay Abraham I wrote:
-> On Wednesday 26 November 2014 07:13 PM, Sebastian Hesselbarth wrote:
->> On 11/20/2014 10:53 PM, Sebastian Hesselbarth wrote:
->>> From: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>>
->>> Add the driver driving the Marvell Berlin USB PHY. This allows to
->>> initialize the PHY and to use it from the USB driver later.
->>>
->>> Signed-off-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>
->> Gentle ping.
->>
->> Kishon, anything wrong with these two patches?
->
-> It's already queued in linux-phy next.
+Hello,
 
-Oh, okay. Thanks for the heads-up. I thought you'd be sending
-informational mails when queuing patches. Looks like I missed
-this one.
+On Wed, Nov 26, 2014 at 03:59:53PM +0200, Grygorii Strashko wrote:
+> Having a board where the I2C bus locks up occasionally made it clear
+> that the bus recovery in the i2c-davinci driver will only work on
+> some boards, because on regular boards, this will only toggle GPIO
+> lines that aren't muxed to the actual pins.
+>=20
+> The I2C controller on SoCs like da850 (and da830), Keystone 2 has the
+> built-in capability to bit-bang its lines by using the ICPFUNC regist=
+ers
+> of the i2c controller.
+> Implement the suggested procedure by toggling SCL and checking SDA us=
+ing
+> the ICPFUNC registers of the I2C controller when present. Allow platf=
+orms
+> to indicate the presence of the ICPFUNC registers with a has_pfunc pl=
+atform
+> data flag and add optional DT property "ti,has-pfunc" to indicate
+> the same in DT.
+On what does it depend if this pfunc stuff works or not? Only the SoC,
+or also on some board specific properties? Given the former using the
+compatible string to detect its availability would be better. (In this
+case also sorry, didn't consider this case when requesting the property
+in the last round.)
 
-Anyway, Thanks!
+The patch looks ok.
 
-Sebastian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
