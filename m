@@ -1,75 +1,58 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v9 2/9] qcom: spm: Add Subsystem Power Manager driver
-Date: Wed, 26 Nov 2014 22:25:00 +0100
-Message-ID: <5476452C.9040107@linaro.org>
-References: <1414194024-55547-1-git-send-email-lina.iyer@linaro.org>	<1414194024-55547-3-git-send-email-lina.iyer@linaro.org> <7hy4qxet3c.fsf@deeprootsystems.com>
+From: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Subject: [RFC PATCH 0/3] remoteproc: Introduce wkup_m3_rproc driver
+Date: Wed, 26 Nov 2014 15:27:09 -0600
+Message-ID: <cover.1417029919.git.d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <7hy4qxet3c.fsf@deeprootsystems.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Kevin Hilman <khilman@kernel.org>, Lina Iyer <lina.iyer@linaro.org>
-Cc: sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/26/2014 07:04 PM, Kevin Hilman wrote:
-> Oops, I thought I had sent this, but it was sitting in the drafts
-> folder.  Sending anyways because it looks like most of these issues
-> still exist in v10.
+Hi,
+This patch series adds a wkup_m3_rproc driver for TI AM335x SoCs.
+This family of SoCs contains an ARM Cortex M3 coprocessor that is
+responsible for low-level power tasks that cannot be handled by the
+main ARM Cortex A8 so firmware running from the CM3 can be used instead.
+This driver handles loading of the firmware and reset of the CM3
+once it is booted.
 
-[ ... ]
+This patch was split off from v4 of the am335x suspend series, found
+here [1]. Because of this it is a dependency for v5 of that series. I have
+pushed a branch based on v3.18-rc6 containing all dependencies here [2] for
+am33xx suspend for a higher level view of the entire series of patch sets.
 
->> +	 * On some SoC's if the control registers are written first and if=
- the
->> +	 * CPU was held in reset, the reset signal could trigger the SPM s=
-tate
->> +	 * machine, before the sequences are completely written.
->> +	 */
->> +	spm_register_write(drv, SPM_REG_CFG, drv->reg_data->spm_cfg);
->> +	spm_register_write(drv, SPM_REG_DLY, drv->reg_data->spm_dly);
->> +	spm_register_write(drv, SPM_REG_PMIC_DLY, drv->reg_data->pmic_dly)=
-;
->> +
->> +	spm_register_write(drv, SPM_REG_PMIC_DATA_0,
->> +				drv->reg_data->pmic_data[0]);
->> +	spm_register_write(drv, SPM_REG_PMIC_DATA_1,
->> +				drv->reg_data->pmic_data[1]);
->> +
->> +	/**
->> +	 * Ensure all observers see the above register writes before the
->> +	 * cpuidle driver is allowed to use the SPM.
->> +	 */
->> +	wmb();
->> +	drv->available =3D true;
->
-> Others have already commented on this, but I'll add my $0.02 that thi=
-s
-> suggest something is not right in the init sequence.
+This patch set depends on series "couple of generic remoteproc enhancements"
+by Suman Anna found here [3] (Included already in previously mentioned branch)
 
-Yep, I did the same comment. There is very likely something wrong in th=
-e=20
-init sequence somewhere.
+Regards,
+Dave
 
-Lina, you really have to lean over that.
+[1] http://www.spinics.net/lists/linux-omap/msg109331.html
+[2] https://github.com/dgerlach/linux-pm/tree/rfc-pm-am335x-v3.18-rc6
+[3] http://www.spinics.net/lists/arm-kernel/msg362961.html
 
->> +	if ((cpu > -1) && !cpuidle_drv_init) {
->> +		platform_device_register(&qcom_cpuidle_device);
->> +		cpuidle_drv_init =3D true;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
+Dave Gerlach (3):
+  ARM: OMAP2+: Use pdata-quirks for wkup_m3 deassert_hardreset
+  Documentation: dt: add ti,am3353-wkup-m3 bindings
+  remoteproc: wkup_m3: Add wkup_m3 remote proc driver
 
-[ ... ]
+ .../bindings/remoteproc/wkup_m3_rproc.txt          |  32 ++++
+ arch/arm/mach-omap2/pdata-quirks.c                 |  13 ++
+ drivers/remoteproc/Kconfig                         |  12 ++
+ drivers/remoteproc/Makefile                        |   1 +
+ drivers/remoteproc/wkup_m3_rproc.c                 | 175 +++++++++++++++++++++
+ include/linux/platform_data/wkup_m3.h              |  23 +++
+ 6 files changed, 256 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/wkup_m3_rproc.txt
+ create mode 100644 drivers/remoteproc/wkup_m3_rproc.c
+ create mode 100644 include/linux/platform_data/wkup_m3.h
 
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
+-- 
+2.1.0
 
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
