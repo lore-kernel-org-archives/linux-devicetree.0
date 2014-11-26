@@ -1,36 +1,41 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 07/10] qcom: cpuidle: Add cpuidle driver for QCOM cpus
-Date: Wed, 26 Nov 2014 14:48:27 -0800
-Message-ID: <547658BB.9040300@codeaurora.org>
-References: <1417040910-43290-1-git-send-email-lina.iyer@linaro.org> <1417040910-43290-8-git-send-email-lina.iyer@linaro.org>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v9 4/4] ARM: dts: rockchip: add suspend settings for rk3288-evb-rk808
+Date: Wed, 26 Nov 2014 14:52:35 -0800
+Message-ID: <CAD=FV=V29zCpcEHE+rq6q_6SOZ_NOJgc5FiwmJ9jnRZK4mMUhw@mail.gmail.com>
+References: <1416900743-29204-1-git-send-email-zyw@rock-chips.com>
+	<1416900743-29204-5-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1417040910-43290-8-git-send-email-lina.iyer@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lina Iyer <lina.iyer@linaro.org>
-Cc: daniel.lezcano@linaro.org, khilman@linaro.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416900743-29204-5-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/26/2014 02:28 PM, Lina Iyer wrote:
-> +
-> +static struct platform_driver qcom_cpuidle_plat_driver = {
-> +	.probe	= qcom_cpuidle_probe,
-> +	.driver = {
-> +		.name = "qcom_cpuidle",
-> +	},
-> +};
-> +
-> +module_platform_driver(qcom_cpuidle_plat_driver);
+Chris,
 
-Said this a few reviews ago...
+On Mon, Nov 24, 2014 at 11:32 PM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+>                         vcc_ddr: DCDC_REG3 {
+>                                 regulator-always-on;
+>                                 regulator-boot-on;
+>                                 regulator-name = "vcc_ddr";
+> +                               regulator-suspend-mem-enabled;
 
-MODULE_LICENSE()?
-MODULE_ALIAS()?
-MODULE_DESCRIPTION()?
+The "regulator-suspend-mem-enabled" is not an upstream property and
+isn't doing anything.  It should be removed.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Possibly this is something Heiko could do when applying  (depends on
+what he wants) if no other spins are required.
+>                         vcc_18: LDO_REG7 {
+> @@ -128,6 +163,11 @@
+>                                 regulator-min-microvolt = <1800000>;
+>                                 regulator-max-microvolt = <1800000>;
+>                                 regulator-name = "vcc_18";
+> +                               regulator-suspend-mem-microvolt = <1800000>;
 
+Another non-upstream property: regulator-suspend-mem-microvolt
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
