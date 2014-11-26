@@ -1,46 +1,46 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/3] regulator: max77802: Fill regulator modes
- translation callback
-Date: Wed, 26 Nov 2014 19:43:34 +0000
-Message-ID: <20141126194334.GW7712@sirena.org.uk>
-References: <1415707485-28563-1-git-send-email-javier.martinez@collabora.co.uk>
- <1415707485-28563-3-git-send-email-javier.martinez@collabora.co.uk>
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCHv1 0/6] rtc: rtc-isl12057: fixes and alarm support
+Date: Wed, 26 Nov 2014 11:46:27 -0800
+Message-ID: <20141126114627.9c29947c6f524b0dd9883c15@linux-foundation.org>
+References: <cover.1416006090.git.arno@natisbad.org>
+	<874mtlyflf.fsf@natisbad.org>
+	<54762096.7040200@kleine-koenig.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HvxUWqUQYk36AMou"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1415707485-28563-3-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <54762096.7040200@kleine-koenig.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
+Cc: Arnaud Ebalard <arno@natisbad.org>, Mark Brown <broonie@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-doc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, linux-arm-kernel@lists.infradead.org, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 26 Nov 2014 19:48:54 +0100 Uwe Kleine-K__nig <uwe@kleine-koenig.org> wrote:
 
---HvxUWqUQYk36AMou
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Hello Arnaud,
+> 
+> On 11/26/2014 07:35 PM, Arnaud Ebalard wrote:
+> > I wonder if you could take a look at this series I sent providing fixes
+> > (patches #1-5) and alarm support (patch #6) for ISL12057 RTC Chip. As
+> > all people do for RTC patches - due to lack of feedback from maintainer
+> > - I am looking for someone to review the patches (Mark, patch 6 has a
+> > sticker w/ regmap-inside ;-)) and then push those upstream if they are
+> > ok (Jason, you handled that part for 70e123373c05: "rtc: Add support for
+> > Intersil ISL12057 I2C RTC chip" in 2013 for the same reason).
+> > 
+> > Note that I addressed previous comments and feedback received from Uwe
+> > and also spent time to do some soldering in order to support and test
+> > the last patch for both my use case (Alarm IRQ signal not routed to the
+> > SoC on ReadyNAS RN102, RN104 and RN2120) and the common case.
+> > 
+> > Do not hesitate to ask if you want me to resend!
+> akpm already applied the series, doesn't he?
+> 
+> I'm about to test the patches, just fighting with my NAS to boot my
+> custom kernel.
+> 
+> Apart from that patches 1 - 5 can have my Ack. Didn't look deep enough
+> into patch 6 yet. @akpm: No need to hurry adding them, I hope to be
+> able to also provide Tested-by:-tags later today.
 
-On Tue, Nov 11, 2014 at 01:04:44PM +0100, Javier Martinez Canillas wrote:
-> The max77802 PMIC regulators output can be configured in one of two
-> modes: Output ON (normal) and Output ON in Low Power Mode. Some of
-
-Applied, thanks.
-
---HvxUWqUQYk36AMou
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUdi1lAAoJECTWi3JdVIfQqO8H/ifaTgiQYAOHIoHtMRgpS2+w
-VpmdaYOtReg2WDDJ6q7lIO8tGmFPRj6wtnbNT7gKKXPmy5VrjKKVxCgXLMtIWb+/
-v5XfPmf+WXxtEPqUpxqnepBN0bgMdXOa7SMCnHgghrjwtuDHS5LI/HDiTfJMWmlN
-dq59dvCkuojtGQY7WRn4tOVWqaKsC0zwBipghpUB+pXJnbIfJze7t5LDBwKaNXxR
-8gmxQdNTq5PEfhui0ptsnoVoc7zP66Hwf70hNybxD09i/uarwO1GdpZnFl6C9oKR
-5C4fwYe9x54KDqMSoJtpspyd/0c4IXdRWCNIDhoqBELl3J7hEIlebl7Dic3zN/I=
-=aeW3
------END PGP SIGNATURE-----
-
---HvxUWqUQYk36AMou--
+Thanks, it really helps.
