@@ -1,102 +1,146 @@
-From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Subject: Re: [PATCH 5/8] of/overlay: Introduce DT overlay support
-Date: Wed, 26 Nov 2014 17:57:05 +0100
-Message-ID: <1417021025.29407.66.camel@x220>
-References: <1416533715-9758-1-git-send-email-grant.likely@linaro.org>
-	 <1416533715-9758-6-git-send-email-grant.likely@linaro.org>
-	 <1417007515.29407.54.camel@x220>
-	 <CACxGe6tw1FJsSvf-7u2Lx143_-GOWr3b-fLu1kCzK4JCCEwGSA@mail.gmail.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [RFC] cpufreq: Add "dvfs-method" binding to probe cpufreq drivers
+Date: Wed, 26 Nov 2014 17:00:11 +0000
+Message-ID: <5476071B.1060705@arm.com>
+References: <596a6d49f2b3e2837aa9a54a3e1249161d3c9265.1416991009.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6tw1FJsSvf-7u2Lx143_-GOWr3b-fLu1kCzK4JCCEwGSA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Valentin Rothberg <valentinrothberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <596a6d49f2b3e2837aa9a54a3e1249161d3c9265.1416991009.git.viresh.kumar@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, "rob.herring@linaro.org" <rob.herring@linaro.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Santosh Shilimkar <santosh.shilimkar@oracle.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Arnd Bergmann <arnd.bergmann@linaro.org>, Mike Turquette <mike.turquette@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kesavan.abhilash@gmail.com" <kesavan.abhilash@gmail.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "k.chander@samsung.com" <k.chander@samsung.com>, "olof@lixom.net" <olof@lixom.net>, "ta.omasab@gmail.com" <ta.omasab@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-11-26 at 15:18 +0000, Grant Likely wrote:
-> On Wed, Nov 26, 2014 at 1:11 PM, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org> wrote:
-> > On Fri, 2014-11-21 at 01:35 +0000, Grant Likely wrote:
-> >> From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> >>
-> >> Overlays are a method to dynamically modify part of the kernel's
-> >> device tree with dynamically loaded data. Add the core functionality to
-> >> parse, apply and remove an overlay changeset. The core functionality
-> >> takes care of managing the overlay data format and performing the add
-> >> and remove. Drivers are expected to use the overlay functionality to
-> >> support custom expansion busses commonly found on consumer development
-> >> boards like the BeagleBone or Raspberry Pi.
-> >>
-> >> The overlay code uses CONFIG_OF_DYNAMIC changesets to perform the low
-> >> level work of modifying the devicetree.
-> >>
-> >> Documentation about internal and APIs is provided in
-> >>       Documentation/devicetree/overlay-notes.txt
-> >>
-> >> v2:
-> >> - Switch from __of_node_alloc() to __of_node_dup()
-> >> - Documentation fixups
-> >> - Remove 2-pass processing of properties
-> >> - Remove separate ov_lock; just use the DT mutex.
-> >> v1:
-> >> - Drop delete capability using '-' prefix. The '-' prefixed names
-> >> are valid properties and nodes and there is no need for it just yet.
-> >> - Do not update special properties - name & phandle ones.
-> >> - Change order of node attachment, so that the special property update
-> >> works.
-> >>
-> >> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> >> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >
-> > Now commit 7518b5890d8a ("of/overlay: Introduce DT overlay support"),
-> > included in today's linux-next (next-20141126).
-> 
-> Yes, I pushed it out yesterday. Beyond merely stating a fact, I don't
-> understand what you're trying to point out here. Is this commit
-> causing a problem?
+Hi Viresh,
 
-Yes, the issue I pointed out in my next remark.
+On 26/11/14 08:46, Viresh Kumar wrote:
+> DT based cpufreq drivers doesn't require much support from platform code now a
+> days as most of the stuff is moved behind generic APIs. Like clk APIs for
+> changing clock rates, regulator APIs for changing voltages, etc.
+>
+> One of the bottleneck still left was how to select which cpufreq driver to probe
+> for a given platform as there might be multiple drivers available.
+>
+> Traditionally, we used to create platform devices from machine specific code
+> which binds with a cpufreq driver. And while we moved towards DT based device
+> creation, these devices stayed as is.
+>
+> The problem is getting worse now as we have architectures now with Zero platform
+> specific code. Forcefully these platforms have to create a new file in
+> drivers/cpufreq/ to just add these platform devices in order to use the generic
+> drivers like cpufreq-dt.c.
+>
+> This has been discussed again and again, but with no solution yet. Last it was
+> discussed here:
+>
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/256154.html
+>
+> This patch is an attempt towards getting the bindings.
+>
+> We only need to have one entry in cpus@cpu0 node which will match with drivers
+> name.
+>
 
-And I add a boring line like that to my messages to make sure its
-readers (which could be me, in case nothing happens within a week or
-two) have all the facts at hand when handling them. It spares them the
-trouble to look up these facts themselves.
+This seems fundamentally broken as the driver always needs to
+unconditionally refer to cpu0. Furthermore the node need not be called
+cpu0 as the name depends on its reg field.
 
-Perhaps this lines was ambiguous. Should I rephrase it? Please note that
-I usually use proper sentences. This one was a bit blunt. 
+> We can then add another file drivers/cpufreq/device_dt.c, which will add a
+> platform device with the name it finds from cpus@cpu0 node and existing drivers
+> will work without any change. Or something else if somebody have a better
+> proposal. But lets fix the bindings first.
 
-> >>[...]
-> >> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> >> index fbe8f8d418f7..18b2e2539f84 100644
-> >> --- a/drivers/of/Kconfig
-> >> +++ b/drivers/of/Kconfig
-> >> @@ -84,4 +84,11 @@ config OF_RESERVED_MEM
-> >>  config OF_RESOLVE
-> >>       bool
-> >>
-> >> +config OF_OVERLAY
-> >> +     bool
-> >> +     depends on OF
-> >> +     select OF_DYNAMIC
-> >> +     select OF_DEVICE
-> >
-> > There's currently no Kconfig symbol OF_DEVICE. So this select is now a
-> > nop. Will that symbol be added in a future patch?
-> 
-> That's a hanger-on from an earlier version of the patch. I'll apply a
-> fixup patch to remove it.
+IIUC you will retain the existing list of cpufreq-dt platform device
+creation as is. If not that breaks compatibility with old DT.
 
-I've seen your fixup already. It turns out OF_DEVICE is a symbol that
-was removed in v3.11.
+>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>   .../devicetree/bindings/cpufreq/drivers.txt        | 53 ++++++++++++++++++++++
+>   1 file changed, 53 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/cpufreq/drivers.txt
+>
+> diff --git a/Documentation/devicetree/bindings/cpufreq/drivers.txt b/Documentation/devicetree/bindings/cpufreq/drivers.txt
+> new file mode 100644
+> index 0000000..bd14917
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/cpufreq/drivers.txt
+> @@ -0,0 +1,53 @@
+> +Binding to select which cpufreq driver to register
+> +
+> +It is a generic DT binding for selecting which cpufreq-driver to register for
+> +any platform.
+> +
+> +The property  listed below must be defined under node /cpus/cpu@0 node. We don't
+> +support multiple CPUFreq driver currently for different cluster and so this
+> +information isn't required to be present in CPUs of all clusters.
+> +
+> +Required properties:
+> +- None
+> +
+> +Optional properties:
+> +- dvfs-method: CPUFreq driver to probe. For example: "arm-bL-cpufreq-dt",
+> +  "cpufreq-dt", etc
+> +
 
-Thanks!
+You should manage this with compatible rather than a new property as
+it's not a real hardware property. IMHO Rob's suggestion[1] should work
+fine.
 
+IIUC, you can have the driver which create this platform device if DT
+has generic compatible unconditionally(e.g "cpufreq-dt" as you have
+chosen above). For all existing DT you can create a blacklist of
+compatibles to match(as it doesn't have the generic compatible) covering
+all the existing platforms using cpufreq-dt driver, there by you can
+even remove the platform device creating from multiple places.
+IMO something like the patch below should work(not tested, also
+late_initcall is used just to demonstrate the idea)
 
-Paul Bolle
+Rob, please correct me if my understanding is wrong.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Sudeep
+
+[1] 
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/256191.html
+
+--->8
+
+diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
+index f657c571b18e..19a616e298e0 100644
+--- a/drivers/cpufreq/cpufreq-dt.c
++++ b/drivers/cpufreq/cpufreq-dt.c
+@@ -387,6 +387,32 @@ static struct platform_driver dt_cpufreq_platdrv = {
+  };
+  module_platform_driver(dt_cpufreq_platdrv);
+
++static const struct of_device_id compatible_machine_match[] = {
++       /* All new machines must have the below compatible to use this 
+driver */
++       { .compatible = "cpufreq-generic-dt" },
++       /* BLACKLIST of existing users of cpufreq-dt below */
++       { .compatible = "samsung,exynos5420" },
++       { .compatible = "samsung,exynos5800" },
++       {},
++};
++
++static int cpufreq_generic_dt_init(void)
++{
++       struct device_node *root = of_find_node_by_path("/");
++       struct platform_device_info devinfo = { .name = "cpufreq-dt", };
++       /*
++        * Initialize the device for the platforms either
++        * blacklisted or compliant to generic compatible
++        */
++       if (!of_match_node(compatible_machine_match, root))
++               return -ENODEV;
++
++       /* Instantiate cpufreq-dt */
++       platform_device_register_full(&devinfo);
++       return 0;
++}
++late_initcall(cpufreq_generic_dt_init);
++
+
