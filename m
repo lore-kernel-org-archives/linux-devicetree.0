@@ -1,55 +1,38 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] i2c: davinci: use ICPFUNC to toggle I2C as gpio
- for bus recovery
-Date: Wed, 26 Nov 2014 17:04:07 +0100
-Message-ID: <20141126160407.GN4431@pengutronix.de>
-References: <1417010393-30598-1-git-send-email-grygorii.strashko@ti.com>
- <1417010393-30598-6-git-send-email-grygorii.strashko@ti.com>
+From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 9/9] usb: {ohci,ehci}-platform: Use new OF big-endian
+ helper function
+Date: Wed, 26 Nov 2014 08:07:43 -0800
+Message-ID: <CAJiQ=7CuLA2vDpnkDysBU100R0uuUidB_ua3sZdV74vNPjV76w@mail.gmail.com>
+References: <1416962994-27095-10-git-send-email-cernekee@gmail.com> <Pine.LNX.4.44L0.1411261013340.1322-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1417010393-30598-6-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Looijmans <milo-software-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.44L0.1411261013340.1322-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc C <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux USB Mailing List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Wed, Nov 26, 2014 at 7:14 AM, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org> wrote:
+>> diff --git a/Documentation/devicetree/bindings/usb/usb-ehci.txt b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+>> index 43c1a4e..9505c31 100644
+>> --- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
+>> +++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+>> @@ -12,6 +12,8 @@ Optional properties:
+>>   - big-endian-regs : boolean, set this for hcds with big-endian registers
+>>   - big-endian-desc : boolean, set this for hcds with big-endian descriptors
+>>   - big-endian : boolean, for hcds with big-endian-regs + big-endian-desc
+>> + - native-endian : boolean, enables big-endian-regs + big-endian-desc
+>> +   iff the kernel was compiled for big endian
+>
+> Is this really a property of the hardware?  It appears to depend on the
+> kernel configuration.  As such, is it appropriate for DT?
 
-On Wed, Nov 26, 2014 at 03:59:53PM +0200, Grygorii Strashko wrote:
-> Having a board where the I2C bus locks up occasionally made it clear
-> that the bus recovery in the i2c-davinci driver will only work on
-> some boards, because on regular boards, this will only toggle GPIO
-> lines that aren't muxed to the actual pins.
->=20
-> The I2C controller on SoCs like da850 (and da830), Keystone 2 has the
-> built-in capability to bit-bang its lines by using the ICPFUNC regist=
-ers
-> of the i2c controller.
-> Implement the suggested procedure by toggling SCL and checking SDA us=
-ing
-> the ICPFUNC registers of the I2C controller when present. Allow platf=
-orms
-> to indicate the presence of the ICPFUNC registers with a has_pfunc pl=
-atform
-> data flag and add optional DT property "ti,has-pfunc" to indicate
-> the same in DT.
-On what does it depend if this pfunc stuff works or not? Only the SoC,
-or also on some board specific properties? Given the former using the
-compatible string to detect its availability would be better. (In this
-case also sorry, didn't consider this case when requesting the property
-in the last round.)
-
-The patch looks ok.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+Yes, the peripheral registers automatically adjust their endianness to
+match the CPU.  So if the CPU is running an LE kernel, the peripheral
+needs to be accessed in LE mode; if the CPU is running a BE kernel,
+the peripheral needs to be accessed in BE mode.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
