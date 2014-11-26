@@ -1,86 +1,53 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: [PATCH 09/10] arm: dts: qcom: Add idle states device nodes for 8084
-Date: Wed, 26 Nov 2014 15:28:29 -0700
-Message-ID: <1417040910-43290-10-git-send-email-lina.iyer@linaro.org>
-References: <1417040910-43290-1-git-send-email-lina.iyer@linaro.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 02/10] qcom: scm: Add SCM warmboot support for quad core
+ SoCs
+Date: Wed, 26 Nov 2014 14:36:28 -0800
+Message-ID: <547655EC.2040401@codeaurora.org>
+References: <1417040910-43290-1-git-send-email-lina.iyer@linaro.org> <1417040910-43290-3-git-send-email-lina.iyer@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1417040910-43290-1-git-send-email-lina.iyer@linaro.org>
+In-Reply-To: <1417040910-43290-3-git-send-email-lina.iyer@linaro.org>
 Sender: linux-pm-owner@vger.kernel.org
-To: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org, Lina Iyer <lina.iyer@linaro.org>
+To: Lina Iyer <lina.iyer@linaro.org>
+Cc: daniel.lezcano@linaro.org, khilman@linaro.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add ARM common idle states device bindings for cpuidle support for APQ
-8084.
+On 11/26/2014 02:28 PM, Lina Iyer wrote:
+> Quad core SoCs like APQ8074, APQ8064, APQ8084 need SCM support set up
+> warm boot addresses in the Secure Monitor. Extend the SCM flags to
+> support warm boot addresses for secondary cores.
+>
+> We do not need to export the warmboot flags. Move them into the
+> implementation file.
+>
+> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-Support standby and standalone power collapse (power down that does not
-affect any SoC idle states) for each cpu.
-
-Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
 Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
----
- arch/arm/boot/dts/qcom-apq8084.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom-apq8084.dtsi b/arch/arm/boot/dts/qcom-apq8084.dtsi
-index 71182bf..7172edf 100644
---- a/arch/arm/boot/dts/qcom-apq8084.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8084.dtsi
-@@ -22,6 +22,7 @@
- 			next-level-cache = <&L2>;
- 			qcom,acc = <&acc0>;
- 			qcom,saw = <&saw0>;
-+			cpu-idle-states = <&CPU_STBY &CPU_SPC>;
- 		};
- 
- 		cpu@1 {
-@@ -32,6 +33,7 @@
- 			next-level-cache = <&L2>;
- 			qcom,acc = <&acc1>;
- 			qcom,saw = <&saw1>;
-+			cpu-idle-states = <&CPU_STBY &CPU_SPC>;
- 		};
- 
- 		cpu@2 {
-@@ -42,6 +44,7 @@
- 			next-level-cache = <&L2>;
- 			qcom,acc = <&acc2>;
- 			qcom,saw = <&saw2>;
-+			cpu-idle-states = <&CPU_STBY &CPU_SPC>;
- 		};
- 
- 		cpu@3 {
-@@ -52,6 +55,7 @@
- 			next-level-cache = <&L2>;
- 			qcom,acc = <&acc3>;
- 			qcom,saw = <&saw3>;
-+			cpu-idle-states = <&CPU_STBY &CPU_SPC>;
- 		};
- 
- 		L2: l2-cache {
-@@ -59,6 +63,22 @@
- 			cache-level = <2>;
- 			qcom,saw = <&saw_l2>;
- 		};
-+
-+		idle-states {
-+			CPU_STBY: standby {
-+				compatible = "qcom,idle-state-stby", "arm,idle-state";
-+				entry-latency-us = <1>;
-+				exit-latency-us = <1>;
-+				min-residency-us = <2>;
-+			};
-+
-+			CPU_SPC: spc {
-+				compatible = "qcom,idle-state-spc", "arm,idle-state";
-+				entry-latency-us = <150>;
-+				exit-latency-us = <200>;
-+				min-residency-us = <2000>;
-+			};
-+		};
- 	};
- 
- 	cpu-pmu {
+> @@ -37,3 +54,20 @@ int scm_set_boot_addr(phys_addr_t addr, int flags)
+>   			&cmd, sizeof(cmd), NULL, 0);
+>   }
+>   EXPORT_SYMBOL(scm_set_boot_addr);
+> +
+> +int scm_set_warm_boot_addr(void *entry, int cpu)
+> +{
+> +	int ret;
+> +
+> +	/* Reassign only if we are switching from hotplug entry point
+> +	 * to cpuidle entry point or vice versa.
+> +	 */
+
+Multi-line comments are like this:
+
+/*
+  * Reassign only if we are ...
+  */
+
+
 -- 
-2.1.0
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
