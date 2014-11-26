@@ -1,64 +1,47 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH 2/3] soc: ti: Add wkup_m3_ipc driver
-Date: Wed, 26 Nov 2014 22:51:50 +0100
-Message-ID: <2763467.KfXHXHxPJd@wuerfel>
-References: <cover.1417029919.git.d-gerlach@ti.com> <3334d8483dca2d061cf43da9c047ec27f31e8719.1417029919.git.d-gerlach@ti.com>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: [PATCH v8 3/3] regulator: qcom-rpm: Add missing state flag in call to
+ RPM
+Date: Wed, 26 Nov 2014 13:51:01 -0800
+Message-ID: <1417038661-30209-4-git-send-email-bjorn.andersson@sonymobile.com>
+References: <1417038661-30209-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3334d8483dca2d061cf43da9c047ec27f31e8719.1417029919.git.d-gerlach@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Dave Gerlach <d-gerlach@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Ohad Ben-Cohen <ohad@wizery.com>, Paul Walmsley <paul@pwsan.com>, Kevin Hilman <khilman@linaro.org>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <bcousson@baylibre.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1417038661-30209-1-git-send-email-bjorn.andersson@sonymobile.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, Josh Cartwright <joshc@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 26 November 2014 15:38:09 Dave Gerlach wrote:
-> +
-> +static const struct wkup_m3_wakeup_src wakeups[] = {
-> +       {.irq_nr = 35,  .src = "USB0_PHY"},
-> +       {.irq_nr = 36,  .src = "USB1_PHY"},
-> +       {.irq_nr = 40,  .src = "I2C0"},
-> +       {.irq_nr = 41,  .src = "RTC Timer"},
-> +       {.irq_nr = 42,  .src = "RTC Alarm"},
-> +       {.irq_nr = 43,  .src = "Timer0"},
-> +       {.irq_nr = 44,  .src = "Timer1"},
-> +       {.irq_nr = 45,  .src = "UART"},
-> +       {.irq_nr = 46,  .src = "GPIO0"},
-> +       {.irq_nr = 48,  .src = "MPU_WAKE"},
-> +       {.irq_nr = 49,  .src = "WDT0"},
-> +       {.irq_nr = 50,  .src = "WDT1"},
-> +       {.irq_nr = 51,  .src = "ADC_TSC"},
-> +       {.irq_nr = 0,   .src = "Unknown"},
-> +};
-> 
+This adds the missing state parameter to the call down to the RPM. This
+is currently hard coded to the active state, as that's all we're
+supporting at this moment.
 
-This seems awfully specific to some SoC version, and not aware of
-IRQ domains. It also seems to be only used in a dev_dbg statement,
-so I guess you could just kill this off entirely.
+Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+---
+ drivers/regulator/qcom_rpm-regulator.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> +static struct rproc *wkup_m3_get_rproc(struct device *dev)
-> +{
-> +       struct device_node *node;
-> +       struct rproc *rp;
-> +
-> +       node = of_parse_phandle(dev->of_node, "ti,rproc", 0);
-> +       if (!node)
-> +               return NULL;
-> +
-> +       dev = bus_find_device(&platform_bus_type, NULL, node, match);
-> +       if (!dev)
-> +               return NULL;
-> +
-> +       rp = dev_get_drvdata(dev);
-> +       return rp;
-
-This is wrong on a number of levels. I suspect what you really want
-is an interface exported from drivers/remoteproc that looks up
-a 'struct rproc' and performs the necessary reference counting.
-
-That one can just use of_find_node_by_phandle() to get to
-a device_node and use that to look up the rproc device in
-a linked list it maintains.
-
-	Arnd
+diff --git a/drivers/regulator/qcom_rpm-regulator.c b/drivers/regulator/qcom_rpm-regulator.c
+index b55cd5b..8f66040 100644
+--- a/drivers/regulator/qcom_rpm-regulator.c
++++ b/drivers/regulator/qcom_rpm-regulator.c
+@@ -198,6 +198,7 @@ static int rpm_reg_write(struct qcom_rpm_reg *vreg,
+ 	vreg->val[req->word] |= value << req->shift;
+ 
+ 	return qcom_rpm_write(vreg->rpm,
++			      QCOM_RPM_ACTIVE_STATE,
+ 			      vreg->resource,
+ 			      vreg->val,
+ 			      vreg->parts->request_len);
+-- 
+1.8.2.2
