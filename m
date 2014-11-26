@@ -1,62 +1,73 @@
-From: Bryan Wu <cooloney@gmail.com>
-Subject: Re: [PATCH] Add attributes neccessary for LED flashes to devicetree/bindings/leds/common.txt
-Date: Tue, 25 Nov 2014 22:09:49 -0800
-Message-ID: <CAK5ve-+FBoHD+CPy8GmNDOd3BxvTn_6UB0ZOmjCrEJCpWGyAww@mail.gmail.com>
-References: <20141120131713.GC27527@amd> <546DEEC3.7090508@samsung.com>
- <546DFF3A.7020702@samsung.com> <20141120205254.GA19174@amd>
- <546EF4A3.2000101@samsung.com> <20141124225319.GA22383@amd>
+From: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 0/2] mtd: hisilicon: add a new driver for NAND
+ controller of hisilicon hip04 Soc
+Date: Wed, 26 Nov 2014 14:35:59 +0800
+Message-ID: <CAN1soZzd3CGazsCnv9cwtW5Pb3h9JrkegAm=f34crVNckjXHkA@mail.gmail.com>
+References: <1415105221-7732-1-git-send-email-wangzhou.bry@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20141124225319.GA22383@amd>
-Sender: linux-doc-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415105221-7732-1-git-send-email-wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, caizhiyong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, "xuwei (O)" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 24, 2014 at 2:53 PM, Pavel Machek <pavel@ucw.cz> wrote:
-> On Fri 2014-11-21 09:15:31, Jacek Anaszewski wrote:
->> Hi Pavel,
->>
->> On 11/20/2014 09:52 PM, Pavel Machek wrote:
->> >On Thu 2014-11-20 15:48:26, Jacek Anaszewski wrote:
->> >>On 11/20/2014 02:38 PM, Jacek Anaszewski wrote:
->> >>>Hi Pavel,
->> >>>
->> >>>On 11/20/2014 02:17 PM, Pavel Machek wrote:
->> >>>>
->> >>>>Add attributes neccessary for LED flashes to
->> >>>>devicetree/bindings/leds/common.txt .
->> >>>>
->> >>>>This will allow me to add device tree support for adp1653 i2c flash
->> >>>>LED driver, and allow Jacek Anaszewski to add support for more LED
->> >>>>drivers..
->> >..
->> >>
->> >>Actually, we've agreed with Sakari that we can handle
->> >>indicator-pattern later.
->> >
->> >Good.
->> >
->> >>I would remove references to you, me and adp1653 driver from the commit
->> >>message and mention that this modifications adjust the led common
->> >>bindings to the LED Flash class that is to be added.
->> >
->> >Ok, who can take this patch? Can you edit the changelog, or should I
->> >do it? Anything else that needs changing?
->>
->> It's your patch :) For me the contents of the patch are ok.
->> It requires device tree maintainer approval anyway.
+On Tue, Nov 4, 2014 at 8:46 PM, Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> This patchset adds the support for NAND controller of hisilicon hip04 Soc.
+> The NAND controller IP was developed by hisilicon and needs a new driver to
+> support it. This patchset is based on v3.18-rc1. I have tested that NAND flash
+> controller works fine in Hip04 D01 board.
 >
-> Yeah, I was hoping relevant maintainers would speak up. I was not
-> asking you to edit the changelog, sorry I was unclear.
+> Changes in v4:
+> - add mtd->dev.parent = &pdev->dev, thanks Frans Klaver.
+> Changes in v3:
+> - Modify code to eliminate some code style warnings.
+> - add ecc-bits input check.
+> - avoid using waterfall style in hisi_nfc_cmdfunc().
+> Changes in v2:
+> - Remove the patch for device tree, now patchset only has the driver and its
+>   device tree binding documentation.
+> - Change the file name: hisi_nand.c to hisi504_nand.c.
+> Changes in v1:
+> - Remove callback functions out of struct hinfc_host, and call them directly
+>   in relative functions.
+> - Change hinfc_read and hinfc_write from macros to inline functions.
+> - Instead of putting pointers, embed struct nand_chip and struct mtd_info in
+>   struct hinfc_host directly.
+> - rewrite some unclear lines in device tree binding document, correct some
+>   code style error.
 >
-> Bryan Wu, Richard Purdie: You are the maintainers. Can you take the
-> patch?
+> Link on v3:
+> - https://lkml.org/lkml/2014/10/28/386
+> Link on v2:
+> - https://www.mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg750071.html
+> Link on v1:
+> - https://lkml.org/lkml/2014/7/15/198
+>
+> Zhou Wang (2):
+>   mtd: hisilicon: add a new NAND controller driver for hisilicon hip04 Soc
+>   mtd: hisilicon: add device tree binding documentation
+>
+>  .../devicetree/bindings/mtd/hisi504-nand.txt       |   40 +
+>  drivers/mtd/nand/Kconfig                           |    5 +
+>  drivers/mtd/nand/Makefile                          |    1 +
+>  drivers/mtd/nand/hisi504_nand.c                    |  846 ++++++++++++++++++++
+>  4 files changed, 892 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/hisi504-nand.txt
+>  create mode 100644 drivers/mtd/nand/hisi504_nand.c
+>
+> --
+> 1.7.9.5
+>
 
-I'm OK for this patch, but since Jacek and Sakari are working on
-pushing LED Flash class and driver into our LED subsystem. I need you
-guys' Ack for this. Then I can take it in my tree.
+Hi David & Brian,
 
-Thanks,
--Bryan
+How do you think about this nand patch set? Could it be merged into v3.19?
+
+Best Regards
+Haojian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
