@@ -1,320 +1,185 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 1/2] phy: add the Berlin USB PHY driver
-Date: Wed, 26 Nov 2014 19:54:46 +0530
-Message-ID: <5475E2AE.6010905@ti.com>
-References: <1416520406-1852-1-git-send-email-sebastian.hesselbarth@gmail.com> <5475D90B.9070908@gmail.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH v2 5/5] clk: samsung: Fix memory leak of clock gate/divider/mux
+ structures
+Date: Wed, 26 Nov 2014 15:24:17 +0100
+Message-ID: <1417011857-10419-6-git-send-email-k.kozlowski@samsung.com>
+References: <1417011857-10419-1-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5475D90B.9070908@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Antoine Tenart <antoine.tenart@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <1417011857-10419-1-git-send-email-k.kozlowski@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Abraham <thomas.abraham@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Vivek Gautam <gautam.vivek@samsung.com>, Kevin Hilman <khilman@kernel.org>
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Russell King <linux@arm.linux.org.uk>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+While fixing audss clock access when domain is gated (commit "clk:
+samsung: Fix clock disable failure because domain being gated") generic
+code from clk-gate/divider/mux was taken and modified.
 
+This generic code leaks memory allocated for internal structures (struct
+clk_gate/clk_divider/clk_mux). Fix the leak by using resourced managed
+allocations.
 
-On Wednesday 26 November 2014 07:13 PM, Sebastian Hesselbarth wrote:
-> On 11/20/2014 10:53 PM, Sebastian Hesselbarth wrote:
->> From: Antoine Tenart <antoine.tenart@free-electrons.com>
->>
->> Add the driver driving the Marvell Berlin USB PHY. This allows to
->> initialize the PHY and to use it from the USB driver later.
->>
->> Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
-> 
-> Gentle ping.
-> 
-> Kishon, anything wrong with these two patches?
+The audss clocks are now attached to platform device.
 
-It's already queued in linux-phy next.
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+---
+ drivers/clk/samsung/clk-exynos-audss.c | 63 ++++++++++++++--------------------
+ 1 file changed, 26 insertions(+), 37 deletions(-)
 
-Thanks
-Kishon
-
-> 
-> Sebastian
-> 
->> ---
->> Split-off patches from latest Berlin USB PHY patches
->>   
->> https://lkml.kernel.org/g/1416231347-27193-1-git-send-email-antoine.tenart@free-electrons.com
->>
->>
->> Cc: Kishon Vijay Abraham I <kishon@ti.com>
->> Cc: Grant Likely <grant.likely@linaro.org>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Antoine Tenart <antoine.tenart@free-electrons.com>
->> Cc: devicetree@vger.kernel.org
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
->> ---
->>   drivers/phy/Kconfig          |    7 ++
->>   drivers/phy/Makefile         |    1 +
->>   drivers/phy/phy-berlin-usb.c |  224 ++++++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 232 insertions(+), 0 deletions(-)
->>   create mode 100644 drivers/phy/phy-berlin-usb.c
->>
->> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
->> index 2a436e6..38ca6ff 100644
->> --- a/drivers/phy/Kconfig
->> +++ b/drivers/phy/Kconfig
->> @@ -15,6 +15,13 @@ config GENERIC_PHY
->>         phy users can obtain reference to the PHY. All the users of this
->>         framework should select this config.
->>
->> +config PHY_BERLIN_USB
->> +    tristate "Marvell Berlin USB PHY Driver"
->> +    depends on ARCH_BERLIN && RESET_CONTROLLER && HAS_IOMEM && OF
->> +    select GENERIC_PHY
->> +    help
->> +      Enable this to support the USB PHY on Marvell Berlin SoCs.
->> +
->>   config PHY_BERLIN_SATA
->>       tristate "Marvell Berlin SATA PHY driver"
->>       depends on ARCH_BERLIN && HAS_IOMEM && OF
->> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
->> index c4590fc..6fd1f77 100644
->> --- a/drivers/phy/Makefile
->> +++ b/drivers/phy/Makefile
->> @@ -3,6 +3,7 @@
->>   #
->>
->>   obj-$(CONFIG_GENERIC_PHY)        += phy-core.o
->> +obj-$(CONFIG_PHY_BERLIN_USB)        += phy-berlin-usb.o
->>   obj-$(CONFIG_PHY_BERLIN_SATA)        += phy-berlin-sata.o
->>   obj-$(CONFIG_BCM_KONA_USB2_PHY)        += phy-bcm-kona-usb2.o
->>   obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)    += phy-exynos-dp-video.o
->> diff --git a/drivers/phy/phy-berlin-usb.c b/drivers/phy/phy-berlin-usb.c
->> new file mode 100644
->> index 0000000..f9f1306
->> --- /dev/null
->> +++ b/drivers/phy/phy-berlin-usb.c
->> @@ -0,0 +1,224 @@
->> +/*
->> + * Copyright (C) 2014 Marvell Technology Group Ltd.
->> + *
->> + * Antoine Tenart <antoine.tenart@free-electrons.com>
->> + * Jisheng Zhang <jszhang@marvell.com>
->> + *
->> + * This file is licensed under the terms of the GNU General Public
->> + * License version 2. This program is licensed "as is" without any
->> + * warranty of any kind, whether express or implied.
->> + */
->> +
->> +#include <linux/gpio.h>
->> +#include <linux/io.h>
->> +#include <linux/module.h>
->> +#include <linux/of_device.h>
->> +#include <linux/of_gpio.h>
->> +#include <linux/phy/phy.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/reset.h>
->> +
->> +#define USB_PHY_PLL        0x04
->> +#define USB_PHY_PLL_CONTROL    0x08
->> +#define USB_PHY_TX_CTRL0    0x10
->> +#define USB_PHY_TX_CTRL1    0x14
->> +#define USB_PHY_TX_CTRL2    0x18
->> +#define USB_PHY_RX_CTRL        0x20
->> +#define USB_PHY_ANALOG        0x34
->> +
->> +/* USB_PHY_PLL */
->> +#define CLK_REF_DIV(x)        ((x) << 4)
->> +#define FEEDBACK_CLK_DIV(x)    ((x) << 8)
->> +
->> +/* USB_PHY_PLL_CONTROL */
->> +#define CLK_STABLE        BIT(0)
->> +#define PLL_CTRL_PIN        BIT(1)
->> +#define PLL_CTRL_REG        BIT(2)
->> +#define PLL_ON            BIT(3)
->> +#define PHASE_OFF_TOL_125    (0x0 << 5)
->> +#define PHASE_OFF_TOL_250    BIT(5)
->> +#define KVC0_CALIB        (0x0 << 9)
->> +#define KVC0_REG_CTRL        BIT(9)
->> +#define KVC0_HIGH        (0x0 << 10)
->> +#define KVC0_LOW        (0x3 << 10)
->> +#define CLK_BLK_EN        BIT(13)
->> +
->> +/* USB_PHY_TX_CTRL0 */
->> +#define EXT_HS_RCAL_EN        BIT(3)
->> +#define EXT_FS_RCAL_EN        BIT(4)
->> +#define IMPCAL_VTH_DIV(x)    ((x) << 5)
->> +#define EXT_RS_RCAL_DIV(x)    ((x) << 8)
->> +#define EXT_FS_RCAL_DIV(x)    ((x) << 12)
->> +
->> +/* USB_PHY_TX_CTRL1 */
->> +#define TX_VDD15_14        (0x0 << 4)
->> +#define TX_VDD15_15        BIT(4)
->> +#define TX_VDD15_16        (0x2 << 4)
->> +#define TX_VDD15_17        (0x3 << 4)
->> +#define TX_VDD12_VDD        (0x0 << 6)
->> +#define TX_VDD12_11        BIT(6)
->> +#define TX_VDD12_12        (0x2 << 6)
->> +#define TX_VDD12_13        (0x3 << 6)
->> +#define LOW_VDD_EN        BIT(8)
->> +#define TX_OUT_AMP(x)        ((x) << 9)
->> +
->> +/* USB_PHY_TX_CTRL2 */
->> +#define TX_CHAN_CTRL_REG(x)    ((x) << 0)
->> +#define DRV_SLEWRATE(x)        ((x) << 4)
->> +#define IMP_CAL_FS_HS_DLY_0    (0x0 << 6)
->> +#define IMP_CAL_FS_HS_DLY_1    BIT(6)
->> +#define IMP_CAL_FS_HS_DLY_2    (0x2 << 6)
->> +#define IMP_CAL_FS_HS_DLY_3    (0x3 << 6)
->> +#define FS_DRV_EN_MASK(x)    ((x) << 8)
->> +#define HS_DRV_EN_MASK(x)    ((x) << 12)
->> +
->> +/* USB_PHY_RX_CTRL */
->> +#define PHASE_FREEZE_DLY_2_CL    (0x0 << 0)
->> +#define PHASE_FREEZE_DLY_4_CL    BIT(0)
->> +#define ACK_LENGTH_8_CL        (0x0 << 2)
->> +#define ACK_LENGTH_12_CL    BIT(2)
->> +#define ACK_LENGTH_16_CL    (0x2 << 2)
->> +#define ACK_LENGTH_20_CL    (0x3 << 2)
->> +#define SQ_LENGTH_3        (0x0 << 4)
->> +#define SQ_LENGTH_6        BIT(4)
->> +#define SQ_LENGTH_9        (0x2 << 4)
->> +#define SQ_LENGTH_12        (0x3 << 4)
->> +#define DISCON_THRESHOLD_260    (0x0 << 6)
->> +#define DISCON_THRESHOLD_270    BIT(6)
->> +#define DISCON_THRESHOLD_280    (0x2 << 6)
->> +#define DISCON_THRESHOLD_290    (0x3 << 6)
->> +#define SQ_THRESHOLD(x)        ((x) << 8)
->> +#define LPF_COEF(x)        ((x) << 12)
->> +#define INTPL_CUR_10        (0x0 << 14)
->> +#define INTPL_CUR_20        BIT(14)
->> +#define INTPL_CUR_30        (0x2 << 14)
->> +#define INTPL_CUR_40        (0x3 << 14)
->> +
->> +/* USB_PHY_ANALOG */
->> +#define ANA_PWR_UP        BIT(1)
->> +#define ANA_PWR_DOWN        BIT(2)
->> +#define V2I_VCO_RATIO(x)    ((x) << 7)
->> +#define R_ROTATE_90        (0x0 << 10)
->> +#define R_ROTATE_0        BIT(10)
->> +#define MODE_TEST_EN        BIT(11)
->> +#define ANA_TEST_DC_CTRL(x)    ((x) << 12)
->> +
->> +#define to_phy_berlin_usb_priv(p)    \
->> +    container_of((p), struct phy_berlin_usb_priv, phy)
->> +
->> +static const u32 phy_berlin_pll_dividers[] = {
->> +    /* Berlin 2 */
->> +    CLK_REF_DIV(0xc) | FEEDBACK_CLK_DIV(0x54),
->> +    /* Berlin 2CD */
->> +    CLK_REF_DIV(0x6) | FEEDBACK_CLK_DIV(0x55),
->> +};
->> +
->> +struct phy_berlin_usb_priv {
->> +    void __iomem        *base;
->> +    struct phy        *phy;
->> +    struct reset_control    *rst_ctrl;
->> +    u32            pll_divider;
->> +};
->> +
->> +static int phy_berlin_usb_power_on(struct phy *phy)
->> +{
->> +    struct phy_berlin_usb_priv *priv = dev_get_drvdata(phy->dev.parent);
->> +
->> +    reset_control_reset(priv->rst_ctrl);
->> +
->> +    writel(priv->pll_divider,
->> +           priv->base + USB_PHY_PLL);
->> +    writel(CLK_STABLE | PLL_CTRL_REG | PHASE_OFF_TOL_250 | KVC0_REG_CTRL |
->> +           CLK_BLK_EN, priv->base + USB_PHY_PLL_CONTROL);
->> +    writel(V2I_VCO_RATIO(0x5) | R_ROTATE_0 | ANA_TEST_DC_CTRL(0x5),
->> +           priv->base + USB_PHY_ANALOG);
->> +    writel(PHASE_FREEZE_DLY_4_CL | ACK_LENGTH_16_CL | SQ_LENGTH_12 |
->> +           DISCON_THRESHOLD_260 | SQ_THRESHOLD(0xa) | LPF_COEF(0x2) |
->> +           INTPL_CUR_30, priv->base + USB_PHY_RX_CTRL);
->> +
->> +    writel(TX_VDD12_13 | TX_OUT_AMP(0x3), priv->base + USB_PHY_TX_CTRL1);
->> +    writel(EXT_HS_RCAL_EN | IMPCAL_VTH_DIV(0x3) | EXT_RS_RCAL_DIV(0x4),
->> +           priv->base + USB_PHY_TX_CTRL0);
->> +
->> +    writel(EXT_HS_RCAL_EN | IMPCAL_VTH_DIV(0x3) | EXT_RS_RCAL_DIV(0x4) |
->> +           EXT_FS_RCAL_DIV(0x2), priv->base + USB_PHY_TX_CTRL0);
->> +
->> +    writel(EXT_HS_RCAL_EN | IMPCAL_VTH_DIV(0x3) | EXT_RS_RCAL_DIV(0x4),
->> +           priv->base + USB_PHY_TX_CTRL0);
->> +    writel(TX_CHAN_CTRL_REG(0xf) | DRV_SLEWRATE(0x3) | IMP_CAL_FS_HS_DLY_3 |
->> +           FS_DRV_EN_MASK(0xd), priv->base + USB_PHY_TX_CTRL2);
->> +
->> +    return 0;
->> +}
->> +
->> +static struct phy_ops phy_berlin_usb_ops = {
->> +    .power_on    = phy_berlin_usb_power_on,
->> +    .owner        = THIS_MODULE,
->> +};
->> +
->> +static const struct of_device_id phy_berlin_sata_of_match[] = {
->> +    {
->> +        .compatible = "marvell,berlin2-usb-phy",
->> +        .data = &phy_berlin_pll_dividers[0],
->> +    },
->> +    {
->> +        .compatible = "marvell,berlin2cd-usb-phy",
->> +        .data = &phy_berlin_pll_dividers[1],
->> +    },
->> +    { },
->> +};
->> +MODULE_DEVICE_TABLE(of, phy_berlin_sata_of_match);
->> +
->> +static int phy_berlin_usb_probe(struct platform_device *pdev)
->> +{
->> +    const struct of_device_id *match =
->> +        of_match_device(phy_berlin_sata_of_match, &pdev->dev);
->> +    struct phy_berlin_usb_priv *priv;
->> +    struct resource *res;
->> +    struct phy_provider *phy_provider;
->> +
->> +    priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
->> +    if (!priv)
->> +        return -ENOMEM;
->> +
->> +    res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +    priv->base = devm_ioremap_resource(&pdev->dev, res);
->> +    if (IS_ERR(priv->base))
->> +        return PTR_ERR(priv->base);
->> +
->> +    priv->rst_ctrl = devm_reset_control_get(&pdev->dev, NULL);
->> +    if (IS_ERR(priv->rst_ctrl))
->> +        return PTR_ERR(priv->rst_ctrl);
->> +
->> +    priv->pll_divider = *((u32 *)match->data);
->> +
->> +    priv->phy = devm_phy_create(&pdev->dev, NULL, &phy_berlin_usb_ops,
->> +                    NULL);
->> +    if (IS_ERR(priv->phy)) {
->> +        dev_err(&pdev->dev, "failed to create PHY\n");
->> +        return PTR_ERR(priv->phy);
->> +    }
->> +
->> +    platform_set_drvdata(pdev, priv);
->> +
->> +    phy_provider =
->> +        devm_of_phy_provider_register(&pdev->dev, of_phy_simple_xlate);
->> +    if (IS_ERR(phy_provider))
->> +        return PTR_ERR(phy_provider);
->> +
->> +    return 0;
->> +}
->> +
->> +static struct platform_driver phy_berlin_usb_driver = {
->> +    .probe    = phy_berlin_usb_probe,
->> +    .driver    = {
->> +        .name        = "phy-berlin-usb",
->> +        .owner        = THIS_MODULE,
->> +        .of_match_table    = phy_berlin_sata_of_match,
->> +     },
->> +};
->> +module_platform_driver(phy_berlin_usb_driver);
->> +
->> +MODULE_AUTHOR("Antoine Tenart <antoine.tenart@free-electrons.com>");
->> +MODULE_DESCRIPTION("Marvell Berlin PHY driver for USB");
->> +MODULE_LICENSE("GPL");
->>
-> 
+diff --git a/drivers/clk/samsung/clk-exynos-audss.c b/drivers/clk/samsung/clk-exynos-audss.c
+index 9ec7de866ab4..229d54981825 100644
+--- a/drivers/clk/samsung/clk-exynos-audss.c
++++ b/drivers/clk/samsung/clk-exynos-audss.c
+@@ -142,8 +142,6 @@ static const struct clk_ops audss_clk_gate_ops = {
+ /*
+  * A simplified copy of clk-gate.c:clk_register_gate() to mimic
+  * clk-gate behavior while using customized ops.
+- *
+- * TODO: just like clk-gate it leaks memory for struct clk_gate.
+  */
+ static struct clk *audss_clk_register_gate(struct device *dev, const char *name,
+ 		const char *parent_name, unsigned long flags, u8 bit_idx)
+@@ -153,7 +151,7 @@ static struct clk *audss_clk_register_gate(struct device *dev, const char *name,
+ 	struct clk_init_data init;
+ 
+ 	/* allocate the gate */
+-	gate = kzalloc(sizeof(struct clk_gate), GFP_KERNEL);
++	gate = devm_kzalloc(dev, sizeof(struct clk_gate), GFP_KERNEL);
+ 	if (!gate)
+ 		return ERR_PTR(-ENOMEM);
+ 
+@@ -172,9 +170,6 @@ static struct clk *audss_clk_register_gate(struct device *dev, const char *name,
+ 
+ 	clk = clk_register(dev, &gate->hw);
+ 
+-	if (IS_ERR(clk))
+-		kfree(gate);
+-
+ 	return clk;
+ }
+ 
+@@ -238,7 +233,7 @@ static struct clk *audss_clk_register_divider(struct device *dev,
+ 	struct clk_init_data init;
+ 
+ 	/* allocate the divider */
+-	div = kzalloc(sizeof(struct clk_divider), GFP_KERNEL);
++	div = devm_kzalloc(dev, sizeof(struct clk_divider), GFP_KERNEL);
+ 	if (!div)
+ 		return ERR_PTR(-ENOMEM);
+ 
+@@ -260,9 +255,6 @@ static struct clk *audss_clk_register_divider(struct device *dev,
+ 	/* register the clock */
+ 	clk = clk_register(dev, &div->hw);
+ 
+-	if (IS_ERR(clk))
+-		kfree(div);
+-
+ 	return clk;
+ }
+ 
+@@ -319,7 +311,7 @@ static struct clk *audss_clk_register_mux(struct device *dev, const char *name,
+ 	u32 mask = BIT(width) - 1;
+ 
+ 	/* allocate the mux */
+-	mux = kzalloc(sizeof(struct clk_mux), GFP_KERNEL);
++	mux = devm_kzalloc(dev, sizeof(struct clk_mux), GFP_KERNEL);
+ 	if (!mux)
+ 		return ERR_PTR(-ENOMEM);
+ 
+@@ -340,9 +332,6 @@ static struct clk *audss_clk_register_mux(struct device *dev, const char *name,
+ 
+ 	clk = clk_register(dev, &mux->hw);
+ 
+-	if (IS_ERR(clk))
+-		kfree(mux);
+-
+ 	return clk;
+ }
+ 
+@@ -398,9 +387,9 @@ static int exynos_audss_clk_probe(struct platform_device *pdev)
+ 
+ 	}
+ 
+-	clk_table[EXYNOS_MOUT_AUDSS] = audss_clk_register_mux(NULL, "mout_audss",
+-				mout_audss_p, ARRAY_SIZE(mout_audss_p),
+-				CLK_SET_RATE_NO_REPARENT, 0, 1);
++	clk_table[EXYNOS_MOUT_AUDSS] = audss_clk_register_mux(&pdev->dev,
++			"mout_audss", mout_audss_p, ARRAY_SIZE(mout_audss_p),
++			CLK_SET_RATE_NO_REPARENT, 0, 1);
+ 
+ 	cdclk = devm_clk_get(&pdev->dev, "cdclk");
+ 	sclk_audio = devm_clk_get(&pdev->dev, "sclk_audio");
+@@ -408,40 +397,40 @@ static int exynos_audss_clk_probe(struct platform_device *pdev)
+ 		mout_i2s_p[1] = __clk_get_name(cdclk);
+ 	if (!IS_ERR(sclk_audio))
+ 		mout_i2s_p[2] = __clk_get_name(sclk_audio);
+-	clk_table[EXYNOS_MOUT_I2S] = audss_clk_register_mux(NULL, "mout_i2s",
+-				mout_i2s_p, ARRAY_SIZE(mout_i2s_p),
+-				CLK_SET_RATE_NO_REPARENT, 2, 2);
++	clk_table[EXYNOS_MOUT_I2S] = audss_clk_register_mux(&pdev->dev,
++			"mout_i2s", mout_i2s_p, ARRAY_SIZE(mout_i2s_p),
++			CLK_SET_RATE_NO_REPARENT, 2, 2);
+ 
+-	clk_table[EXYNOS_DOUT_SRP] = audss_clk_register_divider(NULL, "dout_srp",
+-				"mout_audss", 0, 0, 4);
++	clk_table[EXYNOS_DOUT_SRP] = audss_clk_register_divider(&pdev->dev,
++			"dout_srp", "mout_audss", 0, 0, 4);
+ 
+-	clk_table[EXYNOS_DOUT_AUD_BUS] = audss_clk_register_divider(NULL,
++	clk_table[EXYNOS_DOUT_AUD_BUS] = audss_clk_register_divider(&pdev->dev,
+ 				"dout_aud_bus", "dout_srp", 0, 4, 4);
+ 
+-	clk_table[EXYNOS_DOUT_I2S] = audss_clk_register_divider(NULL, "dout_i2s",
+-				"mout_i2s", 0, 8, 4);
++	clk_table[EXYNOS_DOUT_I2S] = audss_clk_register_divider(&pdev->dev,
++			"dout_i2s", "mout_i2s", 0, 8, 4);
+ 
+-	clk_table[EXYNOS_SRP_CLK] = audss_clk_register_gate(NULL, "srp_clk",
+-				"dout_srp", CLK_SET_RATE_PARENT, 0);
++	clk_table[EXYNOS_SRP_CLK] = audss_clk_register_gate(&pdev->dev,
++			"srp_clk", "dout_srp", CLK_SET_RATE_PARENT, 0);
+ 
+-	clk_table[EXYNOS_I2S_BUS] = audss_clk_register_gate(NULL, "i2s_bus",
+-				"dout_aud_bus", CLK_SET_RATE_PARENT, 2);
++	clk_table[EXYNOS_I2S_BUS] = audss_clk_register_gate(&pdev->dev,
++			"i2s_bus", "dout_aud_bus", CLK_SET_RATE_PARENT, 2);
+ 
+-	clk_table[EXYNOS_SCLK_I2S] = audss_clk_register_gate(NULL, "sclk_i2s",
+-				"dout_i2s", CLK_SET_RATE_PARENT, 3);
++	clk_table[EXYNOS_SCLK_I2S] = audss_clk_register_gate(&pdev->dev,
++			"sclk_i2s", "dout_i2s", CLK_SET_RATE_PARENT, 3);
+ 
+-	clk_table[EXYNOS_PCM_BUS] = audss_clk_register_gate(NULL, "pcm_bus",
+-				 "sclk_pcm", CLK_SET_RATE_PARENT, 4);
++	clk_table[EXYNOS_PCM_BUS] = audss_clk_register_gate(&pdev->dev,
++			"pcm_bus", "sclk_pcm", CLK_SET_RATE_PARENT, 4);
+ 
+ 	sclk_pcm_in = devm_clk_get(&pdev->dev, "sclk_pcm_in");
+ 	if (!IS_ERR(sclk_pcm_in))
+ 		sclk_pcm_p = __clk_get_name(sclk_pcm_in);
+-	clk_table[EXYNOS_SCLK_PCM] = audss_clk_register_gate(NULL, "sclk_pcm",
+-				sclk_pcm_p, CLK_SET_RATE_PARENT, 5);
++	clk_table[EXYNOS_SCLK_PCM] = audss_clk_register_gate(&pdev->dev,
++			"sclk_pcm", sclk_pcm_p, CLK_SET_RATE_PARENT, 5);
+ 
+ 	if (variant == TYPE_EXYNOS5420) {
+-		clk_table[EXYNOS_ADMA] = audss_clk_register_gate(NULL, "adma",
+-				"dout_srp", CLK_SET_RATE_PARENT, 9);
++		clk_table[EXYNOS_ADMA] = audss_clk_register_gate(&pdev->dev,
++				"adma", "dout_srp", CLK_SET_RATE_PARENT, 9);
+ 	}
+ 
+ 	for (i = 0; i < clk_data.clk_num; i++) {
+-- 
+1.9.1
