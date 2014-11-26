@@ -1,39 +1,44 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH 1/2] asm-generic: io: Add exec versions of ioremap
-Date: Wed, 26 Nov 2014 22:32:47 +0100
-Message-ID: <2060921.TrTof4X6qj@wuerfel>
-References: <cover.1417029918.git.d-gerlach@ti.com> <cb5e9dd7bd71b13551cd3f32f28feb405ea9fcdd.1417029918.git.d-gerlach@ti.com>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: [RFC PATCH 3/3] ARM: dts: am33xx: Add wkup_m3_ipc node
+Date: Wed, 26 Nov 2014 15:38:10 -0600
+Message-ID: <4981daf0740253def2cfcf11a2994526191d9f32.1417029919.git.d-gerlach@ti.com>
+References: <cover.1417029919.git.d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cb5e9dd7bd71b13551cd3f32f28feb405ea9fcdd.1417029918.git.d-gerlach@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dave Gerlach <d-gerlach@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, Russ Dill <russ.dill@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Philipp Zabel <p.zabel@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>, Tony Lindgren <tony@atomide.com>, Anson.Huang@freescale.com, Russ Dill <Russ.Dill@ti.com>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <cover.1417029919.git.d-gerlach@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>, Benoit Cousson <bcousson@baylibre.com>, Kevin Hilman <khilman@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>, Suman Anna <s-anna@ti.com>, Dave Gerlach <d-gerlach@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 26 November 2014 15:14:00 Dave Gerlach wrote:
-> @@ -66,6 +66,11 @@ extern void ioport_unmap(void __iomem *);
->  #define ioremap_wc ioremap_nocache
->  #endif
->  
-> +#ifndef ARCH_HAS_IOREMAP_EXEC
-> +#define ioremap_exec ioremap
-> +#define ioremap_exec_nocache ioremap_nocache
-> +#endif
-> +
->  #ifdef CONFIG_PCI
->  /* Destroy a virtual mapping cookie for a PCI BAR (memory or IO) */
->  struct pci_dev;
-> 
+Add wkup_m3_ipc node for wkup_m3_ipc driver.
 
-ioremap and ioremap_nocache are the same, and there is no
-architecture-independent interface to map an MMIO range as
-cached because a lot of architectures can't do that.
+Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+---
+ arch/arm/boot/dts/am33xx.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Also, I think there are architectures that cannot execute
-from uncached memory, so I think adding this as a generic
-API is not a good idea.
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index 41659df..b86d8c0 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -848,6 +848,15 @@
+ 			reg = <0x48310000 0x2000>;
+ 			interrupts = <111>;
+ 		};
++
++		wkup_m3_ipc: wkup_m3_ipc@44e11324 {
++			compatible = "ti,am3353-wkup-m3-ipc";
++			reg = <0x44e11324 0x0024>;
++			reg-names = "ipc_regs";
++			interrupts = <78>;
++			ti,rproc = <&wkup_m3>;
++			mboxes = <&mailbox &mbox_wkupm3>;
++		};
+ 	};
+ };
+ 
+-- 
+2.1.0
 
-	Arnd
