@@ -1,104 +1,34 @@
-From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V3 11/11] MIPS: Add multiplatform BMIPS target
-Date: Wed, 26 Nov 2014 14:54:49 -0800
-Message-ID: <CAJiQ=7AJn_qDfuD=4MEDpxisrGaZ8U+62nP=xNEhBtz77omF4w@mail.gmail.com>
-References: <1416796846-28149-1-git-send-email-cernekee@gmail.com>
- <3146555.WCj2bhBSnP@wuerfel> <CAJiQ=7DwhSySAa19OxfUDkvT4DLWaZ3uhPU2QJzQ6Gc7YCvDgg@mail.gmail.com>
- <6239602.L0sNsMk5KV@wuerfel>
+From: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: randconfig build error with next-20141126, in
+ drivers/spi/spi-meson-spifc.c
+Date: Thu, 27 Nov 2014 00:12:25 +0100
+Message-ID: <20141126231225.GA17600@gmail.com>
+References: <CA+r1Zhh3Fhcvx9nSDxPnrC-gzR0Z50O7nwzvkhhX6QAS2qmasQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6239602.L0sNsMk5KV@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Fraser <jfraser-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felix Fietkau <nbd-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CA+r1Zhh3Fhcvx9nSDxPnrC-gzR0Z50O7nwzvkhhX6QAS2qmasQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jim Davis <jim.epost-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, linux-next <linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, broonie <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 26, 2014 at 1:28 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->> For the BMIPS case:
->>
->> plat_map_dma_mem* and plat_dma_addr_to_phys are just performing
->> remapping, so dma-ranges would work.
->>
->> plat_unmap_dma_mem is used to perform an extra BMIPS-specific
->> cacheflush operation.
->
-> Yes, the cacheflush again would have to be abstracted. This is normally
-> done using either a platform-specific dma_map_ops struct, or using
-> a further abstraction with another function pointer.
->
-> I'm surprised that you need the special flush operation only
-> for 'unmap' and not for 'dma_sync_*_for_cpu'. Can you check that
-> you are actually doing the right thing for drivers that reuse
-> a DMA buffer with the streaming API?
+On Wed, Nov 26, 2014 at 10:53:28AM -0700, Jim Davis wrote:
+> Building with the attached random configuration file,
+> 
+> drivers/built-in.o: In function `meson_spifc_probe':
+> spi-meson-spifc.c:(.text+0x14b4a8): undefined reference to
+> `devm_regmap_init_mmio_clk'
+> make: *** [vmlinux] Error 1
 
-That's a fantastic question.  I checked an older BCM7xxx kernel tree
-and noticed that we used to implement plat_extra_sync_for_device()
-locally to do this, but the API was "garbage collected" last year:
+Hi,
 
-commit 4e7f72660c39a81cc5745d5c6f23f9500f80d8d8
-Author: Felix Fietkau <nbd-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Date:   Thu Aug 15 11:28:30 2013 +0200
+I've just submitted a fix for the missing Kconfig dependency.
 
-    MIPS: Remove unnecessary platform dma helper functions
-
-    The semantics stay the same - on Cavium Octeon the functions were dead
-    code (it overrides the MIPS DMA ops) - on other platforms they contained
-    no code at all.
-
-    Signed-off-by: Felix Fietkau <nbd-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-    Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-    Patchwork: https://patchwork.linux-mips.org/patch/5720/
-    Signed-off-by: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-
-
-If nobody objects, I can revert this change and then add the extra
-flush to arch/mips/bmips/dma.c.
-
-Or I can add some BMIPS-specific code to dma-default.c, similar to
-cpu_needs_post_dma_flush().  Could even add it to that function
-directly, although that is less intuitive:
-
-diff --git a/arch/mips/mm/dma-default.c b/arch/mips/mm/dma-default.c
-index af5f046..ee6d12c 100644
---- a/arch/mips/mm/dma-default.c
-+++ b/arch/mips/mm/dma-default.c
-@@ -18,6 +18,7 @@
- #include <linux/highmem.h>
- #include <linux/dma-contiguous.h>
-
-+#include <asm/bmips.h>
- #include <asm/cache.h>
- #include <asm/cpu-type.h>
- #include <asm/io.h>
-@@ -69,6 +70,18 @@ static inline struct page *dma_addr_to_page(struct
-device *dev,
-  */
- static inline int cpu_needs_post_dma_flush(struct device *dev)
- {
-+    if (boot_cpu_type() == CPU_BMIPS3300 ||
-+        boot_cpu_type() == CPU_BMIPS4350 ||
-+        boot_cpu_type() == CPU_BMIPS4380) {
-+        void __iomem *cbr = BMIPS_GET_CBR();
-+
-+        /* Flush stale data out of the readahead cache */
-+        __raw_writel(0x100, cbr + BMIPS_RAC_CONFIG);
-+        __raw_readl(cbr + BMIPS_RAC_CONFIG);
-+
-+        return 0;
-+    }
-+
-     return !plat_device_is_coherent(dev) &&
-            (boot_cpu_type() == CPU_R10000 ||
-         boot_cpu_type() == CPU_R12000 ||
-
-
-This would allow for eliminating all flushes from
-arch/mips/bmips/dma.c, so the entire file could go away when we switch
-to the common dma-ranges code.
-
-Any preferences?
+Thanks,
+Beniamino
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
