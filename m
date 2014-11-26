@@ -1,96 +1,66 @@
-From: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC PATCH v2 2/4] Documentation: arm64/arm: dt bindings for
- numa.
-Date: Wed, 26 Nov 2014 10:29:01 +0800
-Message-ID: <54753AED.3050909@huawei.com>
-References: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com> <5473FDA8.6080201@huawei.com> <54744F14.60004@linaro.org> <2966212.dpWQ0OTb0A@wuerfel>
+From: Lyra Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 4/5] arm64: Add support for Spreadtrum's Sharkl64
+ Platform in Kconfig and defconfig
+Date: Wed, 26 Nov 2014 11:08:01 +0800
+Message-ID: <CAAfSe-uDk-ih2tqU9a3UEzr=BZgU_=+XJm9=zWbE3J4HMOuiog@mail.gmail.com>
+References: <1416917818-10506-5-git-send-email-chunyan.zhang@spreadtrum.com>
+	<3490516.nCDXzA8J8x@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2966212.dpWQ0OTb0A@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Will.Deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3490516.nCDXzA8J8x@wuerfel>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "jslaby-AlSwsSmVLrQ@public.gmane.org" <jslaby-AlSwsSmVLrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "m-karicheri2-l0cyMroinI0@public.gmane.org" <m-karicheri2-l0cyMroinI0@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ramkumar Ramachandra <artagnon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Orson Zhai <orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, geng.ren@spreadtrum.
 List-Id: devicetree@vger.kernel.org
 
-On 2014/11/25 19:02, Arnd Bergmann wrote:
-> On Tuesday 25 November 2014 17:42:44 Hanjun Guo wrote:
->> On 2014-11-25 11:55, Shannon Zhao wrote:
->>> Hi,
->>>
->>> On 2014/11/22 5:23, Ganapatrao Kulkarni wrote:
->> [...]
->>>> +==============================================================================
->>>> +4 - Example dts
->>>> +==============================================================================
->>>> +
->>>> +Example 1: 2 Node system each having 8 CPUs and a Memory.
->>>> +
->>>> +    numa-map {
->>>> +            #address-cells = <2>;
->>>> +            #size-cells = <1>;
->>>> +            #node-count = <2>;
->>>> +            mem-map =  <0x0 0x00000000 0>,
->>>> +                       <0x100 0x00000000 1>;
->>>> +
->>>> +            cpu-map = <0 7 0>,
->>>> +                      <8 15 1>;
->>>
->>> The cpu range is continuous here. But if there is a situation like below:
->>>
->>> 0 2 4 6 belong to node 0
->>> 1 3 5 7 belong to node 1
->>>
->>> This case is very common on X86. I don't know the real situation of arm as
->>> I don't have a hardware with 2 nodes.
->>>
->>> How can we generate a DTS about this situation? like below? Can be parsed?
->>>
->>>               cpu-map = <0 2 4 6 0>,
->>>                         <1 3 5 7 1>;
->>
->> I think the binding proposed here can not cover your needs, and I think this
->> binding is not suitable, there are some reasons.
->>
->>  - CPU logical ID is allocated by OS, and it depends on the order of CPU node
->>    in the device tree, so it may be in a clean order like this patch proposed,
->>    or it will like the order Shannon pointed out.
->>
->>  - Since CPU logical ID is allocated by OS, DTS file will not know these
->>    numbers.
-> 
-> Also:
-> 
-> - you cannot support hierarchical NUMA topology
-> 
-> - you cannot have CPU-less or memory-less nodes
-> 
-> - you cannot associate I/O devices with NUMA nodes, only memory and CPU
-> 
->> So the problem behind this is the mappings between CPUs and NUMA nodes,
->> there is already mapping for CPU hardware ID (MPIDR) and CPU logical ID,
->> and MPIDR will be not changed, why not using MPIDR for the mapping of
->> NUMA node and CPU? then the mappings will be:
->>
->> CPU logical ID <------> CPU MPIDR <-----> NUMA node ID <-----> proximity domain
->> (allocated by OS)      (constant)       (allocated by OS)
-> 
-> No, don't hardcode ARM specifics into a common binding either. I've looked
-> at the ibm,associativity properties again, and I think we should just use
-> those, they can cover all cases and are completely independent of the
-> architecture. We should probably discuss about the property name though,
-> as using the "ibm," prefix might not be the best idea.
-> 
+2014-11-25 20:57 GMT+08:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
+>
+> On Tuesday 25 November 2014 20:16:57 Chunyan Zhang wrote:
+> >
+> > +menuconfig ARCH_SPRD
+> > +       bool "Spreadtrum SoC platform"
+> > +       depends on ARM64
+> > +       help
+> > +         Support for Spreadtrum ARM based SoCs
+> > +
+> > +if ARCH_SPRD
+> > +
+> > +config ARCH_SHARKL64
+> > +       bool "Sharkl64 SoC Platform"
+> > +       help
+> > +         Sharkl64 is a Spreadtrum's SoC Platform which is based
+> > +         on ARM 64-bit processor core including
+> > +           sc9836
+> > +
+> > +endif #ARCH_SPRD
+> > +
+>
+> I don't think we need multiple levels here, it should be enough to
+> have either ARCH_SPRD or ARCH_SHARKL64, because all device drivers
+> are going to be optional anyway. Typically a Kconfig symbol covers
+> all SoCs that are related, so if you Spreadtrum are doing both
+> phone and server chips and these are designed independently, you
+> would have two symbols, but if you only expect to see phone chips
+> here that are all derived from the same product line, using ARCH_SPRD
+> to refer to all of them should be enough.
+>
+>         Arnd
 
-Yeah, I have read the relevant codes in qemu. I think the "ibm,associativity" is more scalable:-)
 
-About the prefix, my opinion is that as this is relevant with NUMA, maybe we can use "numa" as the prefix.
+For now, we have only one platform(Sharkl64) based on ARM64 been
+submitted, but we're intending to add support for more our platforms
+based on ARM64 or ARM32 in the future. There are many common devices
+on these platforms, such as serial. Our idea would be that if we had a
+'menuconfig ARCH_SPRD' in the Kconfig, these common devices only need
+to depend on ARCH_SPRD in the respective Kconfig, otherwise they may
+depend on a few Kconfig symbols for every platforms which include
+these common devices.
 
-Thanks,
-Shannon
+So, do you think whether we should define a menuconfig(ARCH_SPRD) in
+the Kconfig for this case ?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks!
+
+Best regards,
+Chunyan
