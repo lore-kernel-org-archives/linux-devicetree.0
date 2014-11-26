@@ -1,91 +1,87 @@
-From: Tony Prisk <linux@prisktech.co.nz>
-Subject: Re: [PATCH 9/9] usb: {ohci,ehci}-platform: Use new OF big-endian
- helper function
-Date: Wed, 26 Nov 2014 17:15:13 +1300
-Message-ID: <547553D1.3070908@prisktech.co.nz>
-References: <1416962994-27095-1-git-send-email-cernekee@gmail.com> <1416962994-27095-10-git-send-email-cernekee@gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v4 6/7] ARM: mvebu: add PHY support to the dts for the
+ USB controllers on Armada 375
+Date: Wed, 26 Nov 2014 10:43:08 +0530
+Message-ID: <54756164.3070206@ti.com>
+References: <1415879269-29711-1-git-send-email-gregory.clement@free-electrons.com> <1415879269-29711-7-git-send-email-gregory.clement@free-electrons.com> <20141122020811.GO22670@titan.lakedaemon.net> <5470556B.6080608@free-electrons.com> <20141126035929.GJ22670@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1416962994-27095-10-git-send-email-cernekee@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Kevin Cernekee <cernekee@gmail.com>, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, arnd@arndb.de, stern@rowland.harvard.edu, gregkh@linuxfoundation.org, f.fainelli@gmail.com
-Cc: grant.likely@linaro.org, robh+dt@kernel.org, computersforpeace@gmail.com, marc.ceeeee@gmail.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mips@linux-mips.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141126035929.GJ22670@titan.lakedaemon.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-On 26/11/14 13:49, Kevin Cernekee wrote:
-> This handles the existing "big-endian" case, and in addition, it also does
-> the right thing when "native-endian" is specified.
->
-> Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
-> ---
->   Documentation/devicetree/bindings/usb/usb-ehci.txt | 2 ++
->   Documentation/devicetree/bindings/usb/usb-ohci.txt | 2 ++
->   drivers/usb/host/ehci-platform.c                   | 2 +-
->   drivers/usb/host/ohci-platform.c                   | 2 +-
->   4 files changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/usb/usb-ehci.txt b/Documentation/devicetree/bindings/usb/usb-ehci.txt
-> index 43c1a4e..9505c31 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
-> @@ -12,6 +12,8 @@ Optional properties:
->    - big-endian-regs : boolean, set this for hcds with big-endian registers
->    - big-endian-desc : boolean, set this for hcds with big-endian descriptors
->    - big-endian : boolean, for hcds with big-endian-regs + big-endian-desc
-> + - native-endian : boolean, enables big-endian-regs + big-endian-desc
-> +   iff the kernel was compiled for big endian
-s/iff/if
->    - clocks : a list of phandle + clock specifier pairs
->    - phys : phandle + phy specifier pair
->    - phy-names : "usb"
-> diff --git a/Documentation/devicetree/bindings/usb/usb-ohci.txt b/Documentation/devicetree/bindings/usb/usb-ohci.txt
-> index 19233b7..3bb9673 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-ohci.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-ohci.txt
-> @@ -9,6 +9,8 @@ Optional properties:
->   - big-endian-regs : boolean, set this for hcds with big-endian registers
->   - big-endian-desc : boolean, set this for hcds with big-endian descriptors
->   - big-endian : boolean, for hcds with big-endian-regs + big-endian-desc
-> +- native-endian : boolean, enables big-endian-regs + big-endian-desc
-> +  iff the kernel was compiled for big endian
-s/iff/if
->   - no-big-frame-no : boolean, set if frame_no lives in bits [15:0] of HCCA
->   - num-ports : u32, to override the detected port count
->   - clocks : a list of phandle + clock specifier pairs
-> diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
-> index 2f5b9ce..0da9d70 100644
-> --- a/drivers/usb/host/ehci-platform.c
-> +++ b/drivers/usb/host/ehci-platform.c
-> @@ -187,7 +187,7 @@ static int ehci_platform_probe(struct platform_device *dev)
->   		if (of_property_read_bool(dev->dev.of_node, "big-endian-desc"))
->   			ehci->big_endian_desc = 1;
->   
-> -		if (of_property_read_bool(dev->dev.of_node, "big-endian"))
-> +		if (of_device_is_big_endian(dev->dev.of_node))
->   			ehci->big_endian_mmio = ehci->big_endian_desc = 1;
->   
->   		priv->phy = devm_phy_get(&dev->dev, "usb");
-> diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
-> index 7793c3c..029a606 100644
-> --- a/drivers/usb/host/ohci-platform.c
-> +++ b/drivers/usb/host/ohci-platform.c
-> @@ -157,7 +157,7 @@ static int ohci_platform_probe(struct platform_device *dev)
->   		if (of_property_read_bool(dev->dev.of_node, "big-endian-desc"))
->   			ohci->flags |= OHCI_QUIRK_BE_DESC;
->   
-> -		if (of_property_read_bool(dev->dev.of_node, "big-endian"))
-> +		if (of_device_is_big_endian(dev->dev.of_node))
->   			ohci->flags |= OHCI_QUIRK_BE_MMIO | OHCI_QUIRK_BE_DESC;
->   
->   		if (of_property_read_bool(dev->dev.of_node, "no-big-frame-no"))
+On Wednesday 26 November 2014 09:29 AM, Jason Cooper wrote:
+> On Sat, Nov 22, 2014 at 10:20:43AM +0100, Gregory CLEMENT wrote:
+>> Hi Jason,
+>>
+>> On 22/11/2014 03:08, Jason Cooper wrote:
+>>> On Thu, Nov 13, 2014 at 12:47:48PM +0100, Gregory CLEMENT wrote:
+>>>> Now that the USB cluster node has been added, use it as a PHY provider
+>>>> for the USB controller linked to it: the first EHCI and the xHCI.
+>>>>
+>>>> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+
+Looks like I'm not cc'ed in v4 of this patch series :-(
+
+-Kishon
+>>>> ---
+>>>>  arch/arm/boot/dts/armada-375.dtsi | 5 +++++
+>>>>  1 file changed, 5 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/armada-375.dtsi b/arch/arm/boot/dts/armada-375.dtsi
+>>>> index 8f45cf5d2a50..f344ec420c95 100644
+>>>> --- a/arch/arm/boot/dts/armada-375.dtsi
+>>>> +++ b/arch/arm/boot/dts/armada-375.dtsi
+>>>> @@ -14,6 +14,7 @@
+>>>>  #include "skeleton.dtsi"
+>>>>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>>>  #include <dt-bindings/interrupt-controller/irq.h>
+>>>> +#include <dt-bindings/phy/phy.h>
+>>>
+>>> Odd.  The previous patch in this series simply adds a line to phy.h,
+>>> however, I get the following error during 'make dtbs':
+>>>
+>>> ########
+>>>   DTC     arch/arm/boot/dts/armada-375-db.dtb
+>>> In file included from arch/arm/boot/dts/armada-375-db.dts:17:0:arch/arm/boot/dts/armada-375.dtsi:17:33:
+>>> fatal error: dt-bindings/phy/phy.h: No such file or directory
+>>>  #include <dt-bindings/phy/phy.h>
+>>>                                  ^
+>>> compilation terminated.
+>>> scripts/Makefile.lib:282: recipe for target 'arch/arm/boot/dts/armada-37 5-db.dtb' failed
+>>> ########
+>>>
+>>> mvebu/dt is based on v3.18-rc1.  Is there a missing dependency
+>>> somewhere?  Perhaps we should let Kishon take the whole series and
+>>> handle the (hopefully trivial) merge conflict?
+>>
+>> Actually Kishon asked me to use the dt-bindings/phy/phy.h file which
+>> was introduced by the patch "phy: Add PHY header file for DT x Driver
+>> defines". So indeed I had to have a dependency on the phy_dt_header
+>> branch (which is based on v3.18-rc4 and have only this single commit).
+>> The git tree is located at
+>> git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git
+>>
+>>
+>> Maybe we could add this branch in mvebu as a dependency as it is done
+>> on arm-soc. I suggest this because I would prefer that we continue to
+>> be the only ones to merge the device tree files in order to reduce the
+>> merge conflict.
+> 
+> Ok, I've applied patches 5 and 6 to mvebu/dt-usb_phy with a dependency
+> on tags/phy-dt-header.
+> 
+> Patches 1-4:
+> 
+> Acked-by: Jason Cooper <jason@lakedaemon.net>
+> 
+> thx,
+> 
+> Jason.
+> 
