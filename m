@@ -1,81 +1,34 @@
-From: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH] [v2] power/fsl: add MDIO dt binding for FMan
-Date: Wed, 26 Nov 2014 02:10:43 +0000
-Message-ID: <DM2PR0301MB0864D9EFC1F03FCBD7B7108FE2700@DM2PR0301MB0864.namprd03.prod.outlook.com>
-References: <1415958800-9867-1-git-send-email-shh.xie@gmail.com>
- <1416966592.15957.172.camel@freescale.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v12 0/11] dw-hdmi: convert imx hdmi to bridge/dw_hdmi
+Date: Wed, 26 Nov 2014 00:14:52 -0200
+Message-ID: <CAOMZO5BH0TwOk3aFeabAqE+JssG9YL=CsTz2Tq3Q1L46fTbcCQ@mail.gmail.com>
+References: <1415793593-5075-1-git-send-email-andy.yan@rock-chips.com>
+	<1416221635-12797-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416966592.15957.172.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1416221635-12797-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Emilian Medve <Emilian.Medve-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, DRI mailing list <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Josh Boyer <jwboyer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel@vg>
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBXb29kIFNjb3R0LUIwNzQyMQ0K
-PiBTZW50OiBXZWRuZXNkYXksIE5vdmVtYmVyIDI2LCAyMDE0IDk6NTAgQU0NCj4gVG86IHNoaC54
-aWVAZ21haWwuY29tDQo+IENjOiBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsgZGV2aWNl
-dHJlZUB2Z2VyLmtlcm5lbC5vcmc7IE1lZHZlDQo+IEVtaWxpYW4tRU1NRURWRTE7IExpYmVybWFu
-IElnYWwtQjMxOTUwOyBYaWUgU2hhb2h1aS1CMjE5ODkNCj4gU3ViamVjdDogUmU6IFtQQVRDSF0g
-W3YyXSBwb3dlci9mc2w6IGFkZCBNRElPIGR0IGJpbmRpbmcgZm9yIEZNYW4NCj4gDQo+IE9uIEZy
-aSwgMjAxNC0xMS0xNCBhdCAxNzo1MyArMDgwMCwgc2hoLnhpZUBnbWFpbC5jb20gd3JvdGU6DQo+
-ID4gRnJvbTogU2hhb2h1aSBYaWUgPFNoYW9odWkuWGllQGZyZWVzY2FsZS5jb20+DQo+ID4NCj4g
-PiBUaGlzIGJpbmRpbmcgaXMgZm9yIEZNYW4gTURJTywgaXQgY292ZXJzIEZNYW4gdjIgJiBGTWFu
-IHYzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogU2hhb2h1aSBYaWUgPFNoYW9odWkuWGllQGZy
-ZWVzY2FsZS5jb20+DQo+ID4gLS0tDQo+ID4gY2hhbmdlcyBpbiBWMjoNCj4gPiBhZGRyZXNzZWQg
-Y29tbWVudHMgZnJvbSBTY290dCBpbiBWMS4NCj4gPg0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5k
-aW5ncy9wb3dlcnBjL2ZzbC9mbWFuLnR4dCAgICAgICB8IDY5DQo+ICsrKysrKysrKysrKysrKysr
-KysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDY5IGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRp
-ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wv
-Zm1hbi50eHQNCj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBj
-L2ZzbC9mbWFuLnR4dA0KPiA+IGluZGV4IGVkZWVhMTYuLjE1MjNhODcgMTAwNjQ0DQo+ID4gLS0t
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2ZtYW4udHh0
-DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNs
-L2ZtYW4udHh0DQo+ID4gQEAgLTcsNiArNyw3IEBAIENPTlRFTlRTDQo+ID4gICAgLSBGTWFuIE1V
-UkFNIE5vZGUNCj4gPiAgICAtIEZNYW4gZFRTRUMvWEdFQy9tRU1BQyBOb2RlDQo+ID4gICAgLSBG
-TWFuIElFRUUgMTU4OCBOb2RlDQo+ID4gKyAgLSBGTWFuIE1ESU8gTm9kZQ0KPiA+ICAgIC0gRXhh
-bXBsZQ0KPiA+DQo+ID4NCj4gPiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQo+ID4gPT09PT09PSBAQCAtMzU3LDYg
-KzM1OCw2OCBAQCBwdHAtdGltZXJAZmUwMDAgeyAgfTsNCj4gPg0KPiA+DQo+ID4gPT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PQ0KPiA+ID09PT09PT0NCj4gPiArRk1hbiBNRElPIE5vZGUNCj4gPiArDQo+ID4gK0RFU0NS
-SVBUSU9ODQo+ID4gKw0KPiA+ICtUaGUgTURJTyBpcyBhIGJ1cyB0byB3aGljaCB0aGUgUEhZIGRl
-dmljZXMgYXJlIGNvbm5lY3RlZC4NCj4gPiArDQo+ID4gK1BST1BFUlRJRVMNCj4gPiArDQo+ID4g
-Ky0gY29tcGF0aWJsZQ0KPiA+ICsJCVVzYWdlOiByZXF1aXJlZA0KPiA+ICsJCVZhbHVlIHR5cGU6
-IDxzdHJpbmdsaXN0Pg0KPiA+ICsJCURlZmluaXRpb246IEEgc3RhbmRhcmQgcHJvcGVydHkuDQo+
-ID4gKwkJTXVzdCBpbmNsdWRlICJmc2wsZm1hbi1tZGlvIiBmb3IgMSBHYi9zIE1ESU8gZnJvbSBG
-TWFuIHYyLg0KPiA+ICsJCU11c3QgaW5jbHVkZSAiZnNsLGZtYW4teG1kaW8iIGZvciAxMCBHYi9z
-IE1ESU8gZnJvbSBGTWFuIHYyLg0KPiA+ICsJCU11c3QgaW5jbHVkZSAiZnNsLGZtYW4tbWVtYWMt
-bWRpbyIgZm9yIDEvMTAgR2IvcyBNRElPIGZyb20NCj4gPiArCQlGTWFuIHYzLg0KPiA+ICsNCj4g
-PiArLSByZWcNCj4gPiArCQlVc2FnZTogcmVxdWlyZWQNCj4gPiArCQlWYWx1ZSB0eXBlOiA8cHJv
-cC1lbmNvZGVkLWFycmF5Pg0KPiA+ICsJCURlZmluaXRpb246IEEgc3RhbmRhcmQgcHJvcGVydHku
-DQo+ID4gKw0KPiA+ICstIGJ1cy1mcmVxdWVuY3kNCj4gPiArCQlVc2FnZTogb3B0aW9uYWwNCj4g
-PiArCQlWYWx1ZSB0eXBlOiA8dTMyPg0KPiA+ICsJCURlZmluaXRpb246IFNwZWNpZmllcyBleHRl
-cm5hbCBNRElPIGJ1cyBjbG9jayBzcGVlZCB3aGljaCBpcw0KPiA+ICsJCWRpZmZlcmVudCBmcm9t
-IE1ESU8gc3RhbmRhcmQgMi41TUh6LiBTaG91bGQgYmUgZGVmaW5lZCBmb3INCj4gU29Dcw0KPiA+
-ICsJCW9uIHdoaWNoIHRoZSBzdGFuZGFyZCBvbmUgY2Fubm90IHdvcmsuDQo+ID4gKw0KPiA+ICst
-IGludGVycnVwdHMNCj4gPiArCQlVc2FnZTogb3B0aW9uYWwNCj4gPiArCQlWYWx1ZSB0eXBlOiA8
-cHJvcC1lbmNvZGVkLWFycmF5Pg0KPiA+ICsJCURlZmluaXRpb246IEV2ZW50IGludGVycnVwdCBv
-ZiBleHRlcm5hbCBNRElPIGNvbnRyb2xsZXIuDQo+ID4gKwkJMSBHYi9zIE1ESU8gYW5kIDEwIEdi
-L3MgTURJTyBoYXMgb25lIGludGVycnVwdCByZXNwZWN0aXZlbHkuDQo+ID4gKw0KPiA+ICstIGZz
-bCxmbWFuLWludGVybmFsLW1kaW8NCj4gPiArCQlVc2FnZTogcmVxdWlyZWQgZm9yIGludGVybmFs
-IE1ESU8NCj4gPiArCQlWYWx1ZSB0eXBlOiBib29sZWFuDQo+ID4gKwkJRGVmaW5pdGlvbjogRm1h
-biBoYXMgaW50ZXJuYWwgTURJTyBmb3IgaW50ZXJuYWwgUENTKFBoeXNpY2FsDQo+ID4gKwkJQ29k
-aW5nIFN1YmxheWVyKSBQSFlzIGFuZCBleHRlcm5hbCBNRElPIGZvciBleHRlcm5hbCBQSFlzLg0K
-PiA+ICsJCVRoZSBzZXR0aW5ncyBhbmQgcHJvZ3JhbW1pbmcgcm91dGluZXMgZm9yIGludGVybmFs
-L2V4dGVybmFsDQo+ID4gKwkJTURJTyBhcmUgZGlmZmVyZW50LiBNdXN0IGJlIGluY2x1ZGVkIGZv
-ciBpbnRlcm5hbCBNRElPLg0KPiA+ICsNCj4gPiArRVhBTVBMRQ0KPiA+ICsNCj4gPiArRXhhbXBs
-ZSBmb3IgRk1hbiB2MiBleHRlcm5hbCBNRElPOg0KPiA+ICsNCj4gPiArbWRpb0BmMTAwMCB7DQo+
-ID4gKwljb21wYXRpYmxlID0gImZzbCxmbWFuLXhtZGlvIjsNCj4gPiArCXJlZyA9IDwweGYxMDAw
-IDB4MTAwMD47DQo+ID4gKwlidXMtZnJlcXVlbmN5ID0gPDIwMDAwPjsNCj4gPiArfTsNCj4gDQo+
-IFNvIHRoZSBidXMgZnJlcXVlbmN5IGlzIG9ubHkgMjAgS0h6PyAgT3IgaXMgdGhlIHVuaXQgc3Vw
-cG9zZWQgdG8gYmUNCj4gc29tZXRoaW5nIG90aGVyIHRoYW4gSHo/DQpbUy5IXSBpdCdzIG9ubHkg
-YW4gZXhhbXBsZSwgaXQgY291bGQgYmUgZGlmZmVyZW50IG9uIHJlYWwgU29DcywgYnV0IHRoZXkg
-YWx3YXlzIGxvd2VyIHRoYW4gdGhlIHN0YW5kYXJkIG9uZSwNClRoZSBzdGFuZGFyZCBvbmUgaXMg
-Mi41TUh6LCBJIGhhdmUgdG8gdXNlIEh6IGZvciBpdC4NCg0KVGhhbmtzIQ0KU2hhb2h1aQ0K
+Hi Andy,
+
+On Mon, Nov 17, 2014 at 8:53 AM, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+
+> Andy Yan (11):
+>   staging: imx-drm: imx-hdmi: make checkpatch happy
+>   staging: imx-drm: imx-hdmi: return defer if can't get ddc i2c adapter
+>   staging: imx-drm: imx-hdmi: convert imx-hdmi to drm_bridge mode
+>   staging: imx-drm: imx-hdmi: move imx-hdmi to bridge/dw_hdmi
+
+imx-drm has moved out of staging.
+
+Please see Phillip's patch:
+http://cgit.freedesktop.org/~airlied/linux/commit/?h=drm-next&id=6556f7f82b9c401950d703072c0d8137b6f9f516
+
+So you need to re-submit your series against drm-next.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
