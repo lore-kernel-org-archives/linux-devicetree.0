@@ -1,83 +1,89 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v4] clocksource: arch_timer: Allow the device tree to
- specify uninitialized timer registers
-Date: Wed, 26 Nov 2014 13:53:21 +0100
-Message-ID: <5475CD41.8090903@linaro.org>
-References: <1412753627-28287-1-git-send-email-sonnyrao@chromium.org> <11522840.iniX5CHHHk@diego> <5475CC75.5030300@linaro.org> <19683112.9S9LAQsUEX@diego>
+From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Subject: Re: [PATCH 5/8] of/overlay: Introduce DT overlay support
+Date: Wed, 26 Nov 2014 14:11:55 +0100
+Message-ID: <1417007515.29407.54.camel@x220>
+References: <1416533715-9758-1-git-send-email-grant.likely@linaro.org>
+	 <1416533715-9758-6-git-send-email-grant.likely@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <19683112.9S9LAQsUEX@diego>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
-Cc: Doug Anderson <dianders@chromium.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Olof Johansson <olof@lixom.net>, Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Marc Zyngier <marc.zyngier@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Nathan Lynch <Nathan_Lynch@mentor.com>, Rob Herring <robh+dt@kernel.org>, Sonny Rao <sonnyrao@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416533715-9758-6-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Valentin Rothberg <valentinrothberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/26/2014 01:55 PM, Heiko St=C3=BCbner wrote:
-> Am Mittwoch, 26. November 2014, 13:49:57 schrieb Daniel Lezcano:
->> On 11/26/2014 01:48 PM, Heiko St=C3=BCbner wrote:
->>> Am Mittwoch, 26. November 2014, 13:30:58 schrieb Daniel Lezcano:
->>>> On 11/26/2014 01:06 PM, Heiko St=C3=BCbner wrote:
->>>>> Hi Daniel,
->>>>>
->>>>> Am Mittwoch, 26. November 2014, 12:51:08 schrieb Daniel Lezcano:
->>>>>> Hi Doug, Olof,
->>>>>>
->>>>>> IIUC, it sounds like this patch is needed from some other patche=
-s in
->>>>>> arm-soc. Olof was proposing to take this patch through its tree =
-to
->>>>>> facilitate the integration.
->>>>>>
->>>>>> Olof, is it this patch you were worried about ?
->>>>>
->>>>> I think this is one of two patches in question.
->>>>>
->>>>> "clocksource: arch_timer: Fix code to use physical timers when
->>>>> requested"
->>>>> [0] would be the second one.
->>>>>
->>>>> And the patch for arm-soc that Olof means would be "ARM: dts: rk3=
-288:
->>>>> add
->>>>> arm,cpu-registers-not-fw-configured" [1].
->>>>
->>>> Ok, so IIUC, "clocksource: arch_timer: Fix code to use physical ti=
-mers
->>>> when requested" should go via arm's tree, right ?
->>>
->>> If I'm reading Olof's irc-comments from yesterday correctly, that i=
-s right
->>> and the 3 patches should go in together:
->>>
->>> - "clocksource: arch_timer: Fix code to use physical timers
->>>
->>>     when requested" fixes the use of physical timers in general
->>>
->>> - "clocksource: arch_timer: Allow the device tree to specify uninit=
-ialized
->>>
->>>     timer registers" allows this to be set from dt
->>>
->>> - "ARM: dts: rk3288: add arm,cpu-registers-not-fw-configured" enabl=
-es this
->>> on>
->>>     rk3288
->>
->> Ok, then I drop them from my tree and will let Olof to handle them.
->
-> But maybe you could give them an Ack :-)
+On Fri, 2014-11-21 at 01:35 +0000, Grant Likely wrote:
+> From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> 
+> Overlays are a method to dynamically modify part of the kernel's
+> device tree with dynamically loaded data. Add the core functionality to
+> parse, apply and remove an overlay changeset. The core functionality
+> takes care of managing the overlay data format and performing the add
+> and remove. Drivers are expected to use the overlay functionality to
+> support custom expansion busses commonly found on consumer development
+> boards like the BeagleBone or Raspberry Pi.
+> 
+> The overlay code uses CONFIG_OF_DYNAMIC changesets to perform the low
+> level work of modifying the devicetree.
+> 
+> Documentation about internal and APIs is provided in
+> 	Documentation/devicetree/overlay-notes.txt
+> 
+> v2:
+> - Switch from __of_node_alloc() to __of_node_dup()
+> - Documentation fixups
+> - Remove 2-pass processing of properties
+> - Remove separate ov_lock; just use the DT mutex.
+> v1:
+> - Drop delete capability using '-' prefix. The '-' prefixed names
+> are valid properties and nodes and there is no need for it just yet.
+> - Do not update special properties - name & phandle ones.
+> - Change order of node attachment, so that the special property update
+> works.
+> 
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Already done :)
+Now commit 7518b5890d8a ("of/overlay: Introduce DT overlay support"),
+included in today's linux-next (next-20141126).
 
-   -- Daniel
+>  Documentation/devicetree/overlay-notes.txt | 133 +++++++
+>  drivers/of/Kconfig                         |   7 +
+>  drivers/of/Makefile                        |   1 +
+>  drivers/of/overlay.c                       | 562 +++++++++++++++++++++++++++++
+>  include/linux/of.h                         |  31 ++
+>  5 files changed, 734 insertions(+)
+>  create mode 100644 Documentation/devicetree/overlay-notes.txt
+>  create mode 100644 drivers/of/overlay.c
+> 
+>[...]
+> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+> index fbe8f8d418f7..18b2e2539f84 100644
+> --- a/drivers/of/Kconfig
+> +++ b/drivers/of/Kconfig
+> @@ -84,4 +84,11 @@ config OF_RESERVED_MEM
+>  config OF_RESOLVE
+>  	bool
+>  
+> +config OF_OVERLAY
+> +	bool
+> +	depends on OF
+> +	select OF_DYNAMIC
+> +	select OF_DEVICE
 
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
+There's currently no Kconfig symbol OF_DEVICE. So this select is now a
+nop. Will that symbol be added in a future patch?
 
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+> +	select OF_RESOLVE
+> +
+>  endmenu # OF
+
+
+Paul Bolle
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
