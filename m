@@ -1,66 +1,57 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v13 08/12] drm: bridge/dw_hdmi: add mode_valid support
-Date: Wed, 26 Nov 2014 17:23:05 +0100
-Message-ID: <1417018985.3177.8.camel@pengutronix.de>
-References: <1417008157-31861-1-git-send-email-andy.yan@rock-chips.com>
- <1417008811-32308-1-git-send-email-andy.yan@rock-chips.com>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH 9/9] usb: {ohci,ehci}-platform: Use new OF big-endian
+ helper function
+Date: Wed, 26 Nov 2014 11:24:25 -0500 (EST)
+Message-ID: <Pine.LNX.4.44L0.1411261120300.1322-100000@iolanthe.rowland.org>
+References: <CAJiQ=7CuLA2vDpnkDysBU100R0uuUidB_ua3sZdV74vNPjV76w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1417008811-32308-1-git-send-email-andy.yan@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, heiko@sntech.de, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Pawel Moll <pawel.moll@arm.com>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, rmk+kernel@arm.linux.org.uk, mark.yao@rock-chips.com, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Kumar Gala <galak@codeaurora.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJiQ=7CuLA2vDpnkDysBU100R0uuUidB_ua3sZdV74vNPjV76w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc C <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux USB Mailing List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QW0gTWl0dHdvY2gsIGRlbiAyNi4xMS4yMDE0LCAyMTozMyArMDgwMCBzY2hyaWViIEFuZHkgWWFu
-Ogo+IHNvbWUgcGxhdGZvcm0gbWF5IG5vdCBzdXBwb3J0IGFsbCB0aGUgZGlzcGxheSBtb2RlLAo+
-IGFkZCBtb2RlX3ZhbGlkIGludGVyZmFjZSBjaGVjayBpdAo+IAo+IGFsc28gYWRkIGRybV9jb25u
-ZWN0b3JfcmVnaXN0ZXIgd2hpY2ggYWRkIGEgZGVidWdmcwo+IGludGVyZmFjZSBmb3IgZHVtcCBk
-aXNwbGF5IG1vZGVzIGFuZCBlZGlkIGluZm9ybWF0aW9uCj4gCj4gU2lnbmVkLW9mZi1ieTogQW5k
-eSBZYW4gPGFuZHkueWFuQHJvY2stY2hpcHMuY29tPgo+IC0tLQo+IAo+IENoYW5nZXMgaW4gdjEz
-OiBOb25lCj4gQ2hhbmdlcyBpbiB2MTI6IE5vbmUKPiBDaGFuZ2VzIGluIHYxMTogTm9uZQo+IENo
-YW5nZXMgaW4gdjEwOiBOb25lCj4gQ2hhbmdlcyBpbiB2OTogTm9uZQo+IENoYW5nZXMgaW4gdjg6
-IE5vbmUKPiBDaGFuZ2VzIGluIHY3OiBOb25lCj4gQ2hhbmdlcyBpbiB2NjogTm9uZQo+IENoYW5n
-ZXMgaW4gdjU6IE5vbmUKPiBDaGFuZ2VzIGluIHY0OiBOb25lCj4gQ2hhbmdlcyBpbiB2MzogTm9u
-ZQo+IAo+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R3X2hkbWkuYyB8IDE3ICsrKysrKysrKysr
-KysrKysrCj4gIGluY2x1ZGUvZHJtL2JyaWRnZS9kd19oZG1pLmggICAgIHwgIDIgKysKPiAgMiBm
-aWxlcyBjaGFuZ2VkLCAxOSBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-Z3B1L2RybS9icmlkZ2UvZHdfaGRtaS5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kd19oZG1p
-LmMKPiBpbmRleCA1ZTg4YzhkLi5iMTNlNzgyIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2Ry
-bS9icmlkZ2UvZHdfaGRtaS5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kd19oZG1p
-LmMKPiBAQCAtMTQwNiw2ICsxNDA2LDIwIEBAIHN0YXRpYyBpbnQgZHdfaGRtaV9jb25uZWN0b3Jf
-Z2V0X21vZGVzKHN0cnVjdCBkcm1fY29ubmVjdG9yICpjb25uZWN0b3IpCj4gIAlyZXR1cm4gMDsK
-PiAgfQo+ICAKPiArc3RhdGljIGVudW0gZHJtX21vZGVfc3RhdHVzCj4gK2R3X2hkbWlfY29ubmVj
-dG9yX21vZGVfdmFsaWQoc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvciwKPiArCQkJICAg
-ICBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZSkKPiArewo+ICsJc3RydWN0IGR3X2hkbWkg
-KmhkbWkgPSBjb250YWluZXJfb2YoY29ubmVjdG9yLAo+ICsJCQkJCSAgIHN0cnVjdCBkd19oZG1p
-LCBjb25uZWN0b3IpOwo+ICsJZW51bSBkcm1fbW9kZV9zdGF0dXMgbW9kZV9zdGF0dXMgPSBNT0RF
-X09LOwo+ICsKPiArCWlmIChoZG1pLT5wbGF0X2RhdGEtPm1vZGVfdmFsaWQpCj4gKwkJbW9kZV9z
-dGF0dXMgPSBoZG1pLT5wbGF0X2RhdGEtPm1vZGVfdmFsaWQoY29ubmVjdG9yLCBtb2RlKTsKPiAr
-Cj4gKwlyZXR1cm4gbW9kZV9zdGF0dXM7Cj4gK30KPiArCj4gIHN0YXRpYyBzdHJ1Y3QgZHJtX2Vu
-Y29kZXIgKmR3X2hkbWlfY29ubmVjdG9yX2Jlc3RfZW5jb2RlcihzdHJ1Y3QgZHJtX2Nvbm5lY3Rv
-cgo+ICAJCQkJCQkJICAgKmNvbm5lY3RvcikKPiAgewo+IEBAIC0xNDMwLDYgKzE0NDQsNyBAQCBz
-dGF0aWMgc3RydWN0IGRybV9jb25uZWN0b3JfZnVuY3MgZHdfaGRtaV9jb25uZWN0b3JfZnVuY3Mg
-PSB7Cj4gIAo+ICBzdGF0aWMgc3RydWN0IGRybV9jb25uZWN0b3JfaGVscGVyX2Z1bmNzIGR3X2hk
-bWlfY29ubmVjdG9yX2hlbHBlcl9mdW5jcyA9IHsKPiAgCS5nZXRfbW9kZXMgPSBkd19oZG1pX2Nv
-bm5lY3Rvcl9nZXRfbW9kZXMsCj4gKwkubW9kZV92YWxpZCA9IGR3X2hkbWlfY29ubmVjdG9yX21v
-ZGVfdmFsaWQsCj4gIAkuYmVzdF9lbmNvZGVyID0gZHdfaGRtaV9jb25uZWN0b3JfYmVzdF9lbmNv
-ZGVyLAo+ICB9Owo+ICAKPiBAQCAtMTYzMSw2ICsxNjQ2LDggQEAgaW50IGR3X2hkbWlfYmluZChz
-dHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3RlciwKPiAgCj4gIAlkZXZfc2V0
-X2RydmRhdGEoZGV2LCBoZG1pKTsKPiAgCj4gKwlkcm1fY29ubmVjdG9yX3JlZ2lzdGVyKCZoZG1p
-LT5jb25uZWN0b3IpOwo+ICsKClRoaXMgaXMgbm90IHJpZ2h0LCB0aGUgY29ubmVjdG9yIGlzIHJl
-Z2lzdGVyZWQgYnkgdGhlIGlteC1kcm0gY29yZSBpbgp0aGUgZHJtX2RyaXZlciAubG9hZCBjYWxs
-YmFjay4KCnJlZ2FyZHMKUGhpbGlwcAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcmktZGV2ZWwK
+On Wed, 26 Nov 2014, Kevin Cernekee wrote:
+
+> On Wed, Nov 26, 2014 at 7:14 AM, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org> wrote:
+> >> diff --git a/Documentation/devicetree/bindings/usb/usb-ehci.txt b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+> >> index 43c1a4e..9505c31 100644
+> >> --- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
+> >> +++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+> >> @@ -12,6 +12,8 @@ Optional properties:
+> >>   - big-endian-regs : boolean, set this for hcds with big-endian registers
+> >>   - big-endian-desc : boolean, set this for hcds with big-endian descriptors
+> >>   - big-endian : boolean, for hcds with big-endian-regs + big-endian-desc
+> >> + - native-endian : boolean, enables big-endian-regs + big-endian-desc
+> >> +   iff the kernel was compiled for big endian
+> >
+> > Is this really a property of the hardware?  It appears to depend on the
+> > kernel configuration.  As such, is it appropriate for DT?
+> 
+> Yes, the peripheral registers automatically adjust their endianness to
+> match the CPU.  So if the CPU is running an LE kernel, the peripheral
+> needs to be accessed in LE mode; if the CPU is running a BE kernel,
+> the peripheral needs to be accessed in BE mode.
+
+Okay, then:
+
+Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+
+But you might want to update the description slightly to say:
+
+ - native-endian : boolean, enables big-endian-regs + big-endian-desc
+   iff the CPU is running in big-endian mode
+
+It's a very minor distinction, since you can't run a kernel that was 
+compiled for little endian if the CPU is running in big-endian mode, 
+but this makes it clear that you're talking about the hardware rather 
+than the software.
+
+Alan Stern
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
