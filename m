@@ -1,67 +1,62 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH V3 0/7] serial: Configure {big,native}-endian MMIO
- accesses via DT
-Date: Wed, 26 Nov 2014 13:14:52 +0000
-Message-ID: <CACxGe6uifCPz6RM59MVODWo2WGoVBMWSFzmL9Uz3AVJ0C9-hig@mail.gmail.com>
-References: <1416872182-6440-1-git-send-email-cernekee@gmail.com>
- <20141125151018.359EAC44343@trevor.secretlab.ca> <20141125173859.GA27287@kroah.com>
- <20141125211116.GA9997@kroah.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <20141125211116.GA9997@kroah.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Kevin Cernekee <cernekee@gmail.com>, Jiri Slaby <jslaby@suse.cz>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Florian Fainelli <f.fainelli@gmail.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-mips <linux-mips@linux-mips.org>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 07/14] of/reconfig: Always use the same structure
+ =?iso-8859-1?Q?for=0D?= notifiers
+Date: Wed, 26 Nov 2014 13:16:34 +0000
+Message-ID: <20141126131634.63DB7C4099B@trevor.secretlab.ca>
+References: <1416868422-22103-1-git-send-email-grant.likely@linaro.org>
+	<1416868422-22103-8-git-send-email-grant.likely@linaro.org>
+	<1416956874.5089.13.camel@kernel.crashing.org>
+	<547544FE.5020706@linux.vnet.ibm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <547544FE.5020706-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nathan Fontenot <nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 25, 2014 at 9:11 PM, Greg KH <gregkh@linuxfoundation.org> wrote:
-> On Tue, Nov 25, 2014 at 09:38:59AM -0800, Greg KH wrote:
->> On Tue, Nov 25, 2014 at 03:10:18PM +0000, Grant Likely wrote:
->> > On Mon, 24 Nov 2014 15:36:15 -0800
->> > , Kevin Cernekee <cernekee@gmail.com>
->> >  wrote:
->> > > My last submission attempted to work around serial driver coexistence
->> > > problems on multiplatform kernels.  Since there are still questions
->> > > surrounding the best way to solve that problem, this patch series
->> > > will focus on the narrower topic of big endian MMIO support on serial.
->> > >
->> > >
->> > > V2->V3:
->> > >
->> > >  - Document the new DT properties.
->> > >
->> > >  - Add libfdt-based wrapper, to complement the "struct device_node" based
->> > >    version.
->> > >
->> > >  - Restructure early_init_dt_scan_chosen_serial() changes to use a
->> > >    temporary variable, so it is easy to add more of_setup_earlycon()
->> > >    properties later.
->> > >
->> > >  - Make of_serial and serial8250 honor the new "big-endian" property.
->> > >
->> > >
->> > > This series applies cleanly to:
->> > >
->> > > git://git.kernel.org/pub/scm/linux/kernel/git/glikely/linux.git devicetree/next-overlay
->> > >
->> > > but was tested on the mips-for-linux-next branch because my BE platform
->> > > isn't supported in mainline yet.
->> >
->> > For the whole series:
->> > Acked-by: Grant Likely <grant.likely@linaro.org>
->> >
->> > Greg, which tree do you want to merge this through? My DT tree, or the
->> > tty tree?
->>
->> I can take these through my tty tree, thanks.
->
-> I take that back, it doesn't apply to my tty tree due to changes in the
-> of codebase.  So feel free to take all of these through your DT tree
-> please:
->
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+On Tue, 25 Nov 2014 21:11:58 -0600
+, Nathan Fontenot <nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+ wrote:
+> On 11/25/2014 05:07 PM, Benjamin Herrenschmidt wrote:
+> > On Mon, 2014-11-24 at 22:33 +0000, Grant Likely wrote:
+> >> The OF_RECONFIG notifier callback uses a different structure depending
+> >> on whether it is a node change or a property change. This is silly, and
+> >> not very safe. Rework the code to use the same data structure regardless
+> >> of the type of notifier.
+> > 
+> > I fell pretty good about this one except...
+> > 
+> >> diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
+> >> index b9d1dfdbe5bb..9fe6002c1d5a 100644
+> >> --- a/arch/powerpc/mm/numa.c
+> >> +++ b/arch/powerpc/mm/numa.c
+> >> @@ -1711,12 +1711,11 @@ static void stage_topology_update(int core_id)
+> >>  static int dt_update_callback(struct notifier_block *nb,
+> >>  				unsigned long action, void *data)
+> >>  {
+> >> -	struct of_prop_reconfig *update;
+> >> +	struct of_reconfig_data *update = data;
+> >>  	int rc = NOTIFY_DONE;
+> >>  
+> >>  	switch (action) {
+> >>  	case OF_RECONFIG_UPDATE_PROPERTY:
+> >> -		update = (struct of_prop_reconfig *)data;
+> > 
+> > Should we assert/bug on !update->dn / update->prop ?
+> > 
+> > (Same for the rest of the patch)
+> > 
+> > Or do you reckon it's pointless ?
+> > 
+> 
+> I'm not sure it's worth it, if those are NULL pointers the drivers/of
+> code would have tried to use them before invoking the notifier chain.
+> We won't make it this far if they're NULL.
 
-Applied all 7 patches. Thanks.
+Agreed. I'm going to merge it as-is.
 
 g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
