@@ -1,44 +1,40 @@
-From: Alan Stern <stern@rowland.harvard.edu>
-Subject: Re: [PATCH 9/9] usb: {ohci,ehci}-platform: Use new OF big-endian
- helper function
-Date: Wed, 26 Nov 2014 10:14:48 -0500 (EST)
-Message-ID: <Pine.LNX.4.44L0.1411261013340.1322-100000@iolanthe.rowland.org>
-References: <1416962994-27095-10-git-send-email-cernekee@gmail.com>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1416962994-27095-10-git-send-email-cernekee@gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>
-Cc: sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, arnd@arndb.de, linux@prisktech.co.nz, gregkh@linuxfoundation.org, f.fainelli@gmail.com, grant.likely@linaro.org, robh+dt@kernel.org, computersforpeace@gmail.com, marc.ceeeee@gmail.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mips@linux-mips.org
+From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Subject: [PATCH V2 0/6] Add support for the WM8280 and WM8281 codecs
+Date: Wed, 26 Nov 2014 15:13:02 +0000
+Message-ID: <1417014788-8311-1-git-send-email-rf@opensource.wolfsonmicro.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: lee.jones@linaro.org, broonie@kernel.org
+Cc: cw00.choi@samsung.com, linus.walleij@linaro.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, ckeepax@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 25 Nov 2014, Kevin Cernekee wrote:
+This set of patches adds support for the WM8280 and WM8281
+codecs to the Wolfson Arizona drivers.
 
-> This handles the existing "big-endian" case, and in addition, it also does
-> the right thing when "native-endian" is specified.
-> 
-> Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
-> ---
->  Documentation/devicetree/bindings/usb/usb-ehci.txt | 2 ++
->  Documentation/devicetree/bindings/usb/usb-ohci.txt | 2 ++
->  drivers/usb/host/ehci-platform.c                   | 2 +-
->  drivers/usb/host/ohci-platform.c                   | 2 +-
->  4 files changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/usb-ehci.txt b/Documentation/devicetree/bindings/usb/usb-ehci.txt
-> index 43c1a4e..9505c31 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
-> @@ -12,6 +12,8 @@ Optional properties:
->   - big-endian-regs : boolean, set this for hcds with big-endian registers
->   - big-endian-desc : boolean, set this for hcds with big-endian descriptors
->   - big-endian : boolean, for hcds with big-endian-regs + big-endian-desc
-> + - native-endian : boolean, enables big-endian-regs + big-endian-desc
-> +   iff the kernel was compiled for big endian
+Only change since V1 series is update to device tree binding
+documentation in patch 2
 
-Is this really a property of the hardware?  It appears to depend on the 
-kernel configuration.  As such, is it appropriate for DT?
+Richard Fitzgerald (6):
+  mfd: arizona: add support for WM8280/WM8281
+  Documentation: devicetree: arizona: Add bindings for WM8280
+  regulator: arizona-micsupp: Add support for WM8280/WM8281
+  gpio: arizona: Add support for WM8280/WM8281
+  extcon: arizona: Add support for WM8280/WM8281
+  ASoC: arizona: Add support for WM8280/WM8281
 
-Alan Stern
+ Documentation/devicetree/bindings/mfd/arizona.txt |   15 +++++++++++----
+ drivers/extcon/extcon-arizona.c                   |    1 +
+ drivers/gpio/gpio-arizona.c                       |    1 +
+ drivers/mfd/Kconfig                               |    5 +++--
+ drivers/mfd/arizona-core.c                        |   14 ++++++++++++--
+ drivers/mfd/arizona-i2c.c                         |    2 ++
+ drivers/mfd/arizona-irq.c                         |    1 +
+ drivers/mfd/arizona-spi.c                         |    2 ++
+ drivers/regulator/arizona-micsupp.c               |    1 +
+ include/linux/mfd/arizona/core.h                  |    1 +
+ sound/soc/codecs/arizona.c                        |    2 ++
+ 11 files changed, 37 insertions(+), 8 deletions(-)
+
+-- 
+1.7.2.5
 
