@@ -1,254 +1,241 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/9] clk: sunxi: Add prcm mod0 clock driver
-Date: Wed, 26 Nov 2014 22:13:18 +0100
-Message-ID: <20141126211318.GN25249@lukather>
-References: <54743DE1.7020704@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Subject: [RFC PATCH 2/2] lib: devres: Add exec versions of devm_ioremap_resource and friends
+Date: Wed, 26 Nov 2014 15:14:01 -0600
+Message-ID: <bde13d5e7931af9aa90ddc09a79be5c30e3eef94.1417029918.git.d-gerlach@ti.com>
+References: <cover.1417029918.git.d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ztcJpsdPpsnnlAp8"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBV4F3GRQKGQEY5KZBLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <54743DE1.7020704-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Boris Brezillon <boris-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1417029918.git.d-gerlach-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Russ Dill <russ.dill-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---ztcJpsdPpsnnlAp8
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+From: Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>
 
-Hi,
+Now that there is an _exec version of ioremap, add devm support for it.
 
-On Tue, Nov 25, 2014 at 09:29:21AM +0100, Hans de Goede wrote:
-> Hi,
-> 
-> On 11/24/2014 11:03 PM, Maxime Ripard wrote:
-> >On Fri, Nov 21, 2014 at 10:13:10AM +0100, Hans de Goede wrote:
-> >>Hi,
-> >>
-> >>On 11/21/2014 09:49 AM, Maxime Ripard wrote:
-> >>>Hi,
-> >>>
-> >>>On Thu, Nov 20, 2014 at 04:55:22PM +0100, Hans de Goede wrote:
-> >>>>Add a driver for mod0 clocks found in the prcm. Currently there is only
-> >>>>one mod0 clocks in the prcm, the ir clock.
-> >>>>
-> >>>>Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> >>>>---
-> >>>>  Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
-> >>>>  drivers/clk/sunxi/Makefile                        |  2 +-
-> >>>>  drivers/clk/sunxi/clk-sun6i-prcm-mod0.c           | 63 +++++++++++++++++++++++
-> >>>>  drivers/mfd/sun6i-prcm.c                          | 14 +++++
-> >>>>  4 files changed, 79 insertions(+), 1 deletion(-)
-> >>>>  create mode 100644 drivers/clk/sunxi/clk-sun6i-prcm-mod0.c
-> >>>>
-> >>>>diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
-> >>>>index ed116df..342c75a 100644
-> >>>>--- a/Documentation/devicetree/bindings/clock/sunxi.txt
-> >>>>+++ b/Documentation/devicetree/bindings/clock/sunxi.txt
-> >>>>@@ -56,6 +56,7 @@ Required properties:
-> >>>>  	"allwinner,sun4i-a10-usb-clk" - for usb gates + resets on A10 / A20
-> >>>>  	"allwinner,sun5i-a13-usb-clk" - for usb gates + resets on A13
-> >>>>  	"allwinner,sun6i-a31-usb-clk" - for usb gates + resets on A31
-> >>>>+	"allwinner,sun6i-a31-ir-clk" - for the ir clock on A31
-> >>>>
-> >>>>  Required properties for all clocks:
-> >>>>  - reg : shall be the control register address for the clock.
-> >>>>diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
-> >>>>index 7ddc2b5..daf8b1c 100644
-> >>>>--- a/drivers/clk/sunxi/Makefile
-> >>>>+++ b/drivers/clk/sunxi/Makefile
-> >>>>@@ -10,4 +10,4 @@ obj-y += clk-sun8i-mbus.o
-> >>>>
-> >>>>  obj-$(CONFIG_MFD_SUN6I_PRCM) += \
-> >>>>  	clk-sun6i-ar100.o clk-sun6i-apb0.o clk-sun6i-apb0-gates.o \
-> >>>>-	clk-sun8i-apb0.o
-> >>>>+	clk-sun8i-apb0.o clk-sun6i-prcm-mod0.o
-> >>>>diff --git a/drivers/clk/sunxi/clk-sun6i-prcm-mod0.c b/drivers/clk/sunxi/clk-sun6i-prcm-mod0.c
-> >>>>new file mode 100644
-> >>>>index 0000000..e80f18e
-> >>>>--- /dev/null
-> >>>>+++ b/drivers/clk/sunxi/clk-sun6i-prcm-mod0.c
-> >>>>@@ -0,0 +1,63 @@
-> >>>>+/*
-> >>>>+ * Allwinner A31 PRCM mod0 clock driver
-> >>>>+ *
-> >>>>+ * Copyright (C) 2014 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> >>>>+ *
-> >>>>+ * This program is free software; you can redistribute it and/or modify
-> >>>>+ * it under the terms of the GNU General Public License as published by
-> >>>>+ * the Free Software Foundation; either version 2 of the License, or
-> >>>>+ * (at your option) any later version.
-> >>>>+ *
-> >>>>+ * This program is distributed in the hope that it will be useful,
-> >>>>+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> >>>>+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> >>>>+ * GNU General Public License for more details.
-> >>>>+ */
-> >>>>+
-> >>>>+#include <linux/clk-provider.h>
-> >>>>+#include <linux/clkdev.h>
-> >>>>+#include <linux/module.h>
-> >>>>+#include <linux/of_address.h>
-> >>>>+#include <linux/platform_device.h>
-> >>>>+
-> >>>>+#include "clk-factors.h"
-> >>>>+#include "clk-mod0.h"
-> >>>>+
-> >>>>+static const struct of_device_id sun6i_a31_prcm_mod0_clk_dt_ids[] = {
-> >>>>+	{ .compatible = "allwinner,sun6i-a31-ir-clk" },
-> >>>>+	{ /* sentinel */ }
-> >>>>+};
-> >>>>+
-> >>>>+static DEFINE_SPINLOCK(sun6i_prcm_mod0_lock);
-> >>>>+
-> >>>>+static int sun6i_a31_prcm_mod0_clk_probe(struct platform_device *pdev)
-> >>>>+{
-> >>>>+	struct device_node *np = pdev->dev.of_node;
-> >>>>+	struct resource *r;
-> >>>>+	void __iomem *reg;
-> >>>>+
-> >>>>+	if (!np)
-> >>>>+		return -ENODEV;
-> >>>>+
-> >>>>+	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >>>>+	reg = devm_ioremap_resource(&pdev->dev, r);
-> >>>>+	if (IS_ERR(reg))
-> >>>>+		return PTR_ERR(reg);
-> >>>>+
-> >>>>+	sunxi_factors_register(np, &sun4i_a10_mod0_data,
-> >>>>+			       &sun6i_prcm_mod0_lock, reg);
-> >>>>+	return 0;
-> >>>>+}
-> >>>>+
-> >>>>+static struct platform_driver sun6i_a31_prcm_mod0_clk_driver = {
-> >>>>+	.driver = {
-> >>>>+		.name = "sun6i-a31-prcm-mod0-clk",
-> >>>>+		.of_match_table = sun6i_a31_prcm_mod0_clk_dt_ids,
-> >>>>+	},
-> >>>>+	.probe = sun6i_a31_prcm_mod0_clk_probe,
-> >>>>+};
-> >>>>+module_platform_driver(sun6i_a31_prcm_mod0_clk_driver);
-> >>>>+
-> >>>>+MODULE_DESCRIPTION("Allwinner A31 PRCM mod0 clock driver");
-> >>>>+MODULE_AUTHOR("Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>");
-> >>>>+MODULE_LICENSE("GPL");
-> >>>
-> >>>I don't think this is the right approach, mainly for two reasons: the
-> >>>compatible shouldn't change, and you're basically duplicating code
-> >>>there.
-> >>>
-> >>>I understand that you need the new compatible in order to avoid a
-> >>>double probing: one by CLK_OF_DECLARE, and one by the usual mechanism,
-> >>>and that also implies the second reason.
-> >>
-> >>Not only for that, we need a new compatible also because the mfd framework
-> >>needs a separate compatible per sub-node as that is how it finds nodes
-> >>to attach to the platform devices, so we need a new compatible anyways,
-> >>with your make the mod0 clock driver a platform driver solution we could
-> >>use:
-> >
-> >We have a single mod0 clock in there, so no, not really.
-> 
-> We have a single mod0 clock there today, but who knows what tomorrow brings,
-> arguably the 1wire clock is a mod0 clock too, so we already have 2 today.
+Signed-off-by: Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+---
+ include/linux/device.h |  19 +++++++-
+ include/linux/io.h     |   9 +++-
+ lib/devres.c           | 125 +++++++++++++++++++++++++++++++++++++++++++++++--
+ 3 files changed, 147 insertions(+), 6 deletions(-)
 
-I remember someone (Chen-Yu? Boris?) saying that the 1wire clock was
-not really a mod0 clk. From what I could gather from the source code,
-it seems to have a wider m divider, so we could argue that it should
-need a new compatible.
-
-> >Plus, that seems like a bogus limitation from MFD, and it really
-> >shouldn't work that way.
-> 
-> Well AFAIK that is how it works.
-
-That kind of argument doesn't work. You could make exactly the same
-statement about the fact that two identical hardware blocks in the DT
-should have the same compatible, and it's how it works.
-
-With the minor exception that we can't change that fact for the DT,
-while we can change the MTD code.
-
-> >>	compatible = "allwinner,sun6i-a31-ir-clk", "allwinner,sun4i-a10-mod0-clk";
-> >>
-> >>To work around this, but there are other problems, your make mod0clk a
-> >>platform driver solution cannot work because the clocks node in the dtsi
-> >>is not simple-bus compatible, so no platform-devs will be instantiated for
-> >>the clocks there.
-> >
-> >Then add the simple-bus compatible.
-> 
-> No, just no, that goes against the whole design of how of-clocks work.
-
-Which is... ?
-
-There's a number of other clocks being platform drivers, including on
-other platforms, and as far as I know, CLK_OF_DECLARE is only really
-useful on clocks that are critical. Mike, what's your view on this?
-
-> >>Besides the compatible (which as said we need a separate one anyways),
-> >>your other worry is code duplication, but I've avoided that as much
-> >>as possible already, the new drivers/clk/sunxi/clk-sun6i-prcm-mod0.c is
-> >>just a very thin wrapper, waying in with all of 63 lines including
-> >>16 lines GPL header.
-> >
-> >47 lines that are doing exactly the same thing as the other code is
-> >doing. I'm sorry but you can't really argue it's not code duplication,
-> >it really is.
-> 
-> It is not doing the exact same thing, it is a platform driver, where as
-> the other code is an of_clk driver.
-> 
-> >>So sorry, I disagree I believe that this is the best solution.
-> >>
-> >>>However, as those are not critical clocks that need to be here early
-> >>>at boot, you can also fix this by turning the mod0 driver into a
-> >>>platform driver itself. The compatible will be kept, the driver will
-> >>>be the same.
-> >>>
-> >>>The only thing we need to pay attention to is how "client" drivers
-> >>>react when they cannot grab their clock. They should return
-> >>>-EPROBE_DEFER, but that remains to be checked.
-> >>
-> >>-EPROBE_DEFER is yet another reason to not make mod0-clk a platform
-> >>driver. Yes drivers should be able to handle this, but it is a pain,
-> >>and the more we use it the more pain it is. Also it makes booting a lot
-> >>slower as any driver using a mod0 clk now, will not complete its probe
-> >>until all the other drivers are done probing and the late_initcall
-> >>which starts the deferred-probe wq runs.
-> >
-> >The whole EPROBE_DEFER mechanism might need some fixing, but it's not
-> >really the point is it?
-> 
-> Well one reasons why clocks are instantiated the way they are is to have
-> them available as early as possible, which is really convenient and works
-> really well.
-
-Yeah, you need them early for critical and early stuff like timers,
-console, etc. You really don't need this mechanism if you don't have
-to handle early probed devices.
-
-> You are asking for a whole lot of stuff to be changed, arguably in a way
-> which makes it worse, just to save 47 lines of code...
-
-No, really, I'm not. All I ask for is adding 1 line in the DT, and
-removing 5 lines in clk-sunxi.c. That's all.
-
-You're the one being unhappy with EPROBE_DEFER, not me.
-
-Maxime
-
+diff --git a/include/linux/device.h b/include/linux/device.h
+index ce1f2160..d336465 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -635,7 +635,24 @@ extern unsigned long devm_get_free_pages(struct device *dev,
+ 					 gfp_t gfp_mask, unsigned int order);
+ extern void devm_free_pages(struct device *dev, unsigned long addr);
+ 
+-void __iomem *devm_ioremap_resource(struct device *dev, struct resource *res);
++void __iomem *__devm_ioremap_resource(struct device *dev, struct resource *res,
++				      bool exec);
++static inline void __iomem *devm_ioremap_resource(struct device *dev,
++						  struct resource *res)
++{
++	return __devm_ioremap_resource(dev, res, false);
++}
++void __iomem *devm_request_and_ioremap(struct device *dev,
++				       struct resource *res);
++
++static inline void __iomem *devm_ioremap_exec_resource(struct device *dev,
++						       struct resource *res)
++{
++	return __devm_ioremap_resource(dev, res, true);
++}
++
++void __iomem *devm_request_and_ioremap_exec(struct device *dev,
++					    struct resource *res);
+ 
+ /* allows to add/remove a custom action to devres stack */
+ int devm_add_action(struct device *dev, void (*action)(void *), void *data);
+diff --git a/include/linux/io.h b/include/linux/io.h
+index d5fc9b8..0c6405a 100644
+--- a/include/linux/io.h
++++ b/include/linux/io.h
+@@ -61,9 +61,14 @@ static inline void devm_ioport_unmap(struct device *dev, void __iomem *addr)
+ #define IOMEM_ERR_PTR(err) (__force void __iomem *)ERR_PTR(err)
+ 
+ void __iomem *devm_ioremap(struct device *dev, resource_size_t offset,
+-			    unsigned long size);
++			   unsigned long size);
+ void __iomem *devm_ioremap_nocache(struct device *dev, resource_size_t offset,
+-				    unsigned long size);
++				   unsigned long size);
++void __iomem *devm_ioremap_exec(struct device *dev, resource_size_t offset,
++				unsigned long size);
++void __iomem *devm_ioremap_exec_nocache(struct device *dev,
++					resource_size_t offset,
++					unsigned long size);
+ void devm_iounmap(struct device *dev, void __iomem *addr);
+ int check_signature(const volatile void __iomem *io_addr,
+ 			const unsigned char *signature, int length);
+diff --git a/lib/devres.c b/lib/devres.c
+index f4a195a..f5d0eac 100644
+--- a/lib/devres.c
++++ b/lib/devres.c
+@@ -72,6 +72,64 @@ void __iomem *devm_ioremap_nocache(struct device *dev, resource_size_t offset,
+ EXPORT_SYMBOL(devm_ioremap_nocache);
+ 
+ /**
++ * devm_ioremap_exec - Managed ioremap_exec()
++ * @dev: Generic device to remap IO address for
++ * @offset: BUS offset to map
++ * @size: Size of map
++ *
++ * Managed ioremap_exec().  Map is automatically unmapped on driver detach.
++ */
++void __iomem *devm_ioremap_exec(struct device *dev, resource_size_t offset,
++				unsigned long size)
++{
++	void __iomem **ptr, *addr;
++
++	ptr = devres_alloc(devm_ioremap_release, sizeof(*ptr), GFP_KERNEL);
++	if (!ptr)
++		return NULL;
++
++	addr = ioremap_exec(offset, size);
++	if (addr) {
++		*ptr = addr;
++		devres_add(dev, ptr);
++	} else
++		devres_free(ptr);
++
++	return addr;
++}
++EXPORT_SYMBOL(devm_ioremap_exec);
++
++/**
++ * devm_ioremap_exec_nocache - Managed ioremap_exec_nocache()
++ * @dev: Generic device to remap IO address for
++ * @offset: BUS offset to map
++ * @size: Size of map
++ *
++ * Managed ioremap_exec_nocache().  Map is automatically unmapped on driver
++ * detach.
++ */
++void __iomem *devm_ioremap_exec_nocache(struct device *dev,
++					resource_size_t offset,
++					unsigned long size)
++{
++	void __iomem **ptr, *addr;
++
++	ptr = devres_alloc(devm_ioremap_release, sizeof(*ptr), GFP_KERNEL);
++	if (!ptr)
++		return NULL;
++
++	addr = ioremap_exec_nocache(offset, size);
++	if (addr) {
++		*ptr = addr;
++		devres_add(dev, ptr);
++	} else
++		devres_free(ptr);
++
++	return addr;
++}
++EXPORT_SYMBOL(devm_ioremap_exec_nocache);
++
++/**
+  * devm_iounmap - Managed iounmap()
+  * @dev: Generic device to unmap for
+  * @addr: Address to unmap
+@@ -104,7 +162,8 @@ EXPORT_SYMBOL(devm_iounmap);
+  *	if (IS_ERR(base))
+  *		return PTR_ERR(base);
+  */
+-void __iomem *devm_ioremap_resource(struct device *dev, struct resource *res)
++void __iomem *__devm_ioremap_resource(struct device *dev, struct resource *res,
++				      bool exec)
+ {
+ 	resource_size_t size;
+ 	const char *name;
+@@ -125,7 +184,11 @@ void __iomem *devm_ioremap_resource(struct device *dev, struct resource *res)
+ 		return IOMEM_ERR_PTR(-EBUSY);
+ 	}
+ 
+-	if (res->flags & IORESOURCE_CACHEABLE)
++	if (exec && res->flags & IORESOURCE_CACHEABLE)
++		dest_ptr = devm_ioremap_exec(dev, res->start, size);
++	else if (exec)
++		dest_ptr = devm_ioremap_exec_nocache(dev, res->start, size);
++	else if (res->flags & IORESOURCE_CACHEABLE)
+ 		dest_ptr = devm_ioremap(dev, res->start, size);
+ 	else
+ 		dest_ptr = devm_ioremap_nocache(dev, res->start, size);
+@@ -138,7 +201,63 @@ void __iomem *devm_ioremap_resource(struct device *dev, struct resource *res)
+ 
+ 	return dest_ptr;
+ }
+-EXPORT_SYMBOL(devm_ioremap_resource);
++EXPORT_SYMBOL(__devm_ioremap_resource);
++
++/**
++ * devm_request_and_ioremap() - Check, request region, and ioremap resource
++ * @dev: Generic device to handle the resource for
++ * @res: resource to be handled
++ *
++ * Takes all necessary steps to ioremap a mem resource. Uses managed device, so
++ * everything is undone on driver detach. Checks arguments, so you can feed
++ * it the result from e.g. platform_get_resource() directly. Returns the
++ * remapped pointer or NULL on error. Usage example:
++ *
++ *	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++ *	base = devm_request_and_ioremap(&pdev->dev, res);
++ *	if (!base)
++ *		return -EADDRNOTAVAIL;
++ */
++void __iomem *devm_request_and_ioremap(struct device *device,
++				       struct resource *res)
++{
++	void __iomem *dest_ptr;
++
++	dest_ptr = devm_ioremap_resource(device, res);
++	if (IS_ERR(dest_ptr))
++		return NULL;
++
++	return dest_ptr;
++}
++EXPORT_SYMBOL(devm_request_and_ioremap);
++
++/**
++ * devm_request_and_ioremap_exec() - Check, request region, and ioremap resource
++ * @dev: Generic device to handle the resource for
++ * @res: resource to be handled
++ *
++ * Takes all necessary steps to ioremap a mem resource. Uses managed device, so
++ * everything is undone on driver detach. Checks arguments, so you can feed
++ * it the result from e.g. platform_get_resource() directly. Returns the
++ * remapped pointer or NULL on error. Usage example:
++ *
++ *	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++ *	base = devm_request_and_ioremap_exec(&pdev->dev, res);
++ *	if (!base)
++ *		return -EADDRNOTAVAIL;
++ */
++void __iomem *devm_request_and_ioremap_exec(struct device *device,
++					    struct resource *res)
++{
++	void __iomem *dest_ptr;
++
++	dest_ptr = devm_ioremap_exec_resource(device, res);
++	if (IS_ERR(dest_ptr))
++		return NULL;
++
++	return dest_ptr;
++}
++EXPORT_SYMBOL(devm_request_and_ioremap_exec);
+ 
+ #ifdef CONFIG_HAS_IOPORT_MAP
+ /*
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---ztcJpsdPpsnnlAp8--
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
