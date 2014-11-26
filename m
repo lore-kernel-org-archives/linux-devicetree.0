@@ -1,33 +1,77 @@
-From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Subject: [PATCH V2 4/6] gpio: arizona: Add support for WM8280/WM8281
-Date: Wed, 26 Nov 2014 15:13:06 +0000
-Message-ID: <1417014788-8311-5-git-send-email-rf@opensource.wolfsonmicro.com>
-References: <1417014788-8311-1-git-send-email-rf@opensource.wolfsonmicro.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1417014788-8311-1-git-send-email-rf@opensource.wolfsonmicro.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: lee.jones@linaro.org, broonie@kernel.org
-Cc: cw00.choi@samsung.com, linus.walleij@linaro.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, ckeepax@opensource.wolfsonmicro.com
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH 5/8] of/overlay: Introduce DT overlay support
+Date: Wed, 26 Nov 2014 15:18:21 +0000
+Message-ID: <CACxGe6tw1FJsSvf-7u2Lx143_-GOWr3b-fLu1kCzK4JCCEwGSA@mail.gmail.com>
+References: <1416533715-9758-1-git-send-email-grant.likely@linaro.org>
+ <1416533715-9758-6-git-send-email-grant.likely@linaro.org> <1417007515.29407.54.camel@x220>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1417007515.29407.54.camel@x220>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Bolle <pebolle@tiscali.nl>
+Cc: Valentin Rothberg <valentinrothberg@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/gpio/gpio-arizona.c |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+On Wed, Nov 26, 2014 at 1:11 PM, Paul Bolle <pebolle@tiscali.nl> wrote:
+> On Fri, 2014-11-21 at 01:35 +0000, Grant Likely wrote:
+>> From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+>>
+>> Overlays are a method to dynamically modify part of the kernel's
+>> device tree with dynamically loaded data. Add the core functionality to
+>> parse, apply and remove an overlay changeset. The core functionality
+>> takes care of managing the overlay data format and performing the add
+>> and remove. Drivers are expected to use the overlay functionality to
+>> support custom expansion busses commonly found on consumer development
+>> boards like the BeagleBone or Raspberry Pi.
+>>
+>> The overlay code uses CONFIG_OF_DYNAMIC changesets to perform the low
+>> level work of modifying the devicetree.
+>>
+>> Documentation about internal and APIs is provided in
+>>       Documentation/devicetree/overlay-notes.txt
+>>
+>> v2:
+>> - Switch from __of_node_alloc() to __of_node_dup()
+>> - Documentation fixups
+>> - Remove 2-pass processing of properties
+>> - Remove separate ov_lock; just use the DT mutex.
+>> v1:
+>> - Drop delete capability using '-' prefix. The '-' prefixed names
+>> are valid properties and nodes and there is no need for it just yet.
+>> - Do not update special properties - name & phandle ones.
+>> - Change order of node attachment, so that the special property update
+>> works.
+>>
+>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+>> Signed-off-by: Grant Likely <grant.likely@linaro.org>
+>
+> Now commit 7518b5890d8a ("of/overlay: Introduce DT overlay support"),
+> included in today's linux-next (next-20141126).
 
-diff --git a/drivers/gpio/gpio-arizona.c b/drivers/gpio/gpio-arizona.c
-index fe369f5..9665d0a 100644
---- a/drivers/gpio/gpio-arizona.c
-+++ b/drivers/gpio/gpio-arizona.c
-@@ -116,6 +116,7 @@ static int arizona_gpio_probe(struct platform_device *pdev)
- 	switch (arizona->type) {
- 	case WM5102:
- 	case WM5110:
-+	case WM8280:
- 	case WM8997:
- 		arizona_gpio->gpio_chip.ngpio = 5;
- 		break;
--- 
-1.7.2.5
+Yes, I pushed it out yesterday. Beyond merely stating a fact, I don't
+understand what you're trying to point out here. Is this commit
+causing a problem?
 
+>>[...]
+>> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+>> index fbe8f8d418f7..18b2e2539f84 100644
+>> --- a/drivers/of/Kconfig
+>> +++ b/drivers/of/Kconfig
+>> @@ -84,4 +84,11 @@ config OF_RESERVED_MEM
+>>  config OF_RESOLVE
+>>       bool
+>>
+>> +config OF_OVERLAY
+>> +     bool
+>> +     depends on OF
+>> +     select OF_DYNAMIC
+>> +     select OF_DEVICE
+>
+> There's currently no Kconfig symbol OF_DEVICE. So this select is now a
+> nop. Will that symbol be added in a future patch?
+
+That's a hanger-on from an earlier version of the patch. I'll apply a
+fixup patch to remove it.
+
+g.
