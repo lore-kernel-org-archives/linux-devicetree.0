@@ -1,85 +1,40 @@
-From: Naidu Tellapati <naidu.tellapati@gmail.com>
-Subject: [PATCH v5 4/4] DT: pdm: Add binding document for IMG PDM DAC
-Date: Wed, 26 Nov 2014 20:54:20 +0530
-Message-ID: <1417015460-11908-5-git-send-email-Naidu.Tellapati@gmail.com>
-References: <1417015460-11908-1-git-send-email-Naidu.Tellapati@gmail.com>
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1417015460-11908-1-git-send-email-Naidu.Tellapati@gmail.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: thierry.reding@gmail.com, abrestic@chromium.org, gregkh@linuxfoundation.org, arnd@arndb.de, James.Hartley@imgtec.com, Ezequiel.Garcia@imgtec.com
-Cc: devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, Arul.Ramasamy@imgtec.com, Sai.Masarapu@imgtec.com, Naidu Tellapati <Naidu.Tellapati@gmail.com>, Naidu Tellapati <Naidu.Tellapati@imgtec.com>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: [PATCH] of: remove select of non-existant OF_DEVICE config symbol
+Date: Wed, 26 Nov 2014 15:40:24 +0000
+Message-ID: <1417016424-9647-1-git-send-email-grant.likely@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, Paul Bolle <pebolle@tiscali.nl>, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Grant Likely <grant.likely@linaro.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 List-Id: devicetree@vger.kernel.org
 
-Add binding document for the Pulse Density Modulator (PDM) DAC present on the
-Pistachio SOC.
+The OF_OVERLAY option selects OF_DEVICE, but OF_DEVICE was removed in
+commit ba166e900b, "of: remove CONFIG_OF_DEVICE". Remove the unnecessary
+select.
 
-Signed-off-by: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
-Signed-off-by: Arul Ramasamy <Arul.Ramasamy@imgtec.com>
+Signed-off-by: Grant Likely <grant.likely@linaro.org>
+Reported-by: Paul Bolle <pebolle@tiscali.nl>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 ---
- Documentation/devicetree/bindings/misc/img-pdm.txt |   54 ++++++++++++++++++++
- 1 files changed, 54 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/misc/img-pdm.txt
 
-diff --git a/Documentation/devicetree/bindings/misc/img-pdm.txt b/Documentation/devicetree/bindings/misc/img-pdm.txt
-new file mode 100644
-index 0000000..730d38a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/img-pdm.txt
-@@ -0,0 +1,54 @@
-+*Imagination Technologies Pulse Density Modulator (PDM) DAC.
-+
-+Required properties:
-+  - compatible: Must be "img,pistachio-pdm"
-+  - clocks: Must contain an entry for each entry in clock-names.
-+  - clock-names: Must include the following entry:
-+	Required elements: "pdm"
-+  - img,cr-periph: Must contain a phandle to the peripheral control
-+	syscon node which contains PDM control registers.
-+  - #pdm-cells: Must be 2.
-+  - The first cell is the PDM channel number (valid values: 0, 1, 2, 3)
-+  - The second cell is 12-bit pulse-in value
-+
-+Specifying PDM information for devices
-+======================================
-+
-+1. PDM User nodes
-+
-+PDM properties should be named "pdms". The exact meaning of each pdms property
-+is described above.
-+
-+	pdm-specifier : array of #pdm-cells specifying the given PDM
-+						(controller specific)
-+
-+The following example could be used to describe a PDM-based backlight device:
-+
-+	pdm: pdm {
-+		#pdm-cells = <2>;
-+	};
-+
-+	[...]
-+
-+	bl: backlight {
-+		pdms = <&pdm 2 0>;
-+	};
-+
-+pdm-specifier typically encodes the chip-relative PDM channel number and the
-+12-bit pulse-in value.
-+
-+2. PDM Controller nodes
-+
-+PDM controller nodes must specify the number of cells used for the specifier
-+using the '#pdm-cells' property.
-+
-+An example PDM controller might look like this:
-+
-+Example:
-+	pdm: pdm@18148000 {
-+		compatible = "img,pistachio-pdm";
-+		clocks = <&pdm_clk>;
-+		clk-names = "pdm";
-+		img,cr-periph = <&cr_periph>;
-+		#pdm-cells = <2>;
-+	};
+This fixes a bug in my devicetree/next branch which is included in
+linux-next. It doesn't apply against mainline. I'll be applying it
+directly to my tree.
+
+ drivers/of/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index 18b2e2539f84..b5e0c873d4e1 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -88,7 +88,6 @@ config OF_OVERLAY
+ 	bool
+ 	depends on OF
+ 	select OF_DYNAMIC
+-	select OF_DEVICE
+ 	select OF_RESOLVE
+ 
+ endmenu # OF
 -- 
-1.7.0.4
-
+1.9.1
