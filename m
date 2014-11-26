@@ -1,92 +1,60 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [RFC] cpufreq: Add "dvfs-method" binding to probe cpufreq drivers
-Date: Wed, 26 Nov 2014 17:04:33 +0000
-Message-ID: <54760821.5020909@arm.com>
-References: <596a6d49f2b3e2837aa9a54a3e1249161d3c9265.1416991009.git.viresh.kumar@linaro.org> <5476071B.1060705@arm.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 5/5] i2c: davinci: use ICPFUNC to toggle I2C as gpio
+ for bus recovery
+Date: Wed, 26 Nov 2014 19:05:31 +0200
+Message-ID: <5476085B.40009@ti.com>
+References: <1417010393-30598-1-git-send-email-grygorii.strashko@ti.com> <1417010393-30598-6-git-send-email-grygorii.strashko@ti.com> <20141126160407.GN4431@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <5476071B.1060705@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, "rob.herring@linaro.org" <rob.herring@linaro.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Santosh Shilimkar <santosh.shilimkar@oracle.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Arnd Bergmann <arnd.bergmann@linaro.org>, Mike Turquette <mike.turquette@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kesavan.abhilash@gmail.com" <kesavan.abhilash@gmail.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "k.chander@samsung.com" <k.chander@samsung.com>, "olof@lixom.net" <olof@lixom.net>, "ta.omasab@gmail.com" <ta.omasab@gmail.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141126160407.GN4431-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?windows-1252?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Looijmans <milo-software-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 11/26/2014 06:04 PM, Uwe Kleine-K=F6nig wrote:
+> On Wed, Nov 26, 2014 at 03:59:53PM +0200, Grygorii Strashko wrote:
+>> Having a board where the I2C bus locks up occasionally made it clear
+>> that the bus recovery in the i2c-davinci driver will only work on
+>> some boards, because on regular boards, this will only toggle GPIO
+>> lines that aren't muxed to the actual pins.
+>>
+>> The I2C controller on SoCs like da850 (and da830), Keystone 2 has th=
+e
+>> built-in capability to bit-bang its lines by using the ICPFUNC regis=
+ters
+>> of the i2c controller.
+>> Implement the suggested procedure by toggling SCL and checking SDA u=
+sing
+>> the ICPFUNC registers of the I2C controller when present. Allow plat=
+forms
+>> to indicate the presence of the ICPFUNC registers with a has_pfunc p=
+latform
+>> data flag and add optional DT property "ti,has-pfunc" to indicate
+>> the same in DT.
+> On what does it depend if this pfunc stuff works or not? Only the SoC=
+,
+> or also on some board specific properties?
 
+SoC / set of SoCs. Also, similar feature is supported by OMAP and AM335=
+x/AM437x SoCs
+using I2C_SYSTEST register.
 
-On 26/11/14 17:00, Sudeep Holla wrote:
-> Hi Viresh,
->
+> Given the former using the
+> compatible string to detect its availability would be better. (In thi=
+s
+> case also sorry, didn't consider this case when requesting the proper=
+ty
+> in the last round.)
+>=20
+> The patch looks ok.
 
-[...]
-
->> diff --git a/Documentation/devicetree/bindings/cpufreq/drivers.txt b/Documentation/devicetree/bindings/cpufreq/drivers.txt
->> new file mode 100644
->> index 0000000..bd14917
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/cpufreq/drivers.txt
->> @@ -0,0 +1,53 @@
->> +Binding to select which cpufreq driver to register
->> +
->> +It is a generic DT binding for selecting which cpufreq-driver to register for
->> +any platform.
->> +
->> +The property  listed below must be defined under node /cpus/cpu@0 node. We don't
->> +support multiple CPUFreq driver currently for different cluster and so this
->> +information isn't required to be present in CPUs of all clusters.
->> +
->> +Required properties:
->> +- None
->> +
->> +Optional properties:
->> +- dvfs-method: CPUFreq driver to probe. For example: "arm-bL-cpufreq-dt",
->> +  "cpufreq-dt", etc
->> +
->
-> You should manage this with compatible rather than a new property as
-> it's not a real hardware property. IMHO Rob's suggestion[1] should work
-> fine.
->
-> IIUC, you can have the driver which create this platform device if DT
-> has generic compatible unconditionally(e.g "cpufreq-dt" as you have
-> chosen above). For all existing DT you can create a blacklist of
-> compatibles to match(as it doesn't have the generic compatible) covering
-> all the existing platforms using cpufreq-dt driver, there by you can
-> even remove the platform device creating from multiple places.
-> IMO something like the patch below should work(not tested, also
-> late_initcall is used just to demonstrate the idea)
->
-> Rob, please correct me if my understanding is wrong.
->
-> Regards,
-> Sudeep
->
-> [1]
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/256191.html
->
-> --->8
->
-> diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
-> index f657c571b18e..19a616e298e0 100644
-> --- a/drivers/cpufreq/cpufreq-dt.c
-> +++ b/drivers/cpufreq/cpufreq-dt.c
-> @@ -387,6 +387,32 @@ static struct platform_driver dt_cpufreq_platdrv = {
->    };
->    module_platform_driver(dt_cpufreq_platdrv);
->
-> +static const struct of_device_id compatible_machine_match[] = {
-> +       /* All new machines must have the below compatible to use this
-> driver */
-> +       { .compatible = "cpufreq-generic-dt" },
-> +       /* BLACKLIST of existing users of cpufreq-dt below */
-> +       { .compatible = "samsung,exynos5420" },
-> +       { .compatible = "samsung,exynos5800" },
-
-Please ignore the above 2 compatible values in this context, I just
-chose randomly 2 values but I now realize that there are big-little
-platforms and might not use this driver :(
-
-Regards,
-Sudeep
-
+regards,
+-grygorii
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
