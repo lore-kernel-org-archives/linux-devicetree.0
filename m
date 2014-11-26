@@ -1,177 +1,137 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] ARM: kbuild: Fix forced rebuild after 'make dtbs'
-Date: Wed, 26 Nov 2014 14:57:42 +0100
-Message-ID: <CACRpkdZJoWbQeuZ4ZXGbQr0+SNG_9ZA+cQkAA0C2F9rnZDYtyQ@mail.gmail.com>
-References: <CACRpkdYmJWy1_vs0tWRA7SvkQnvbXXKqf7pHpH5b5tZ6vR+KJg@mail.gmail.com>
-	<1414961549-31666-1-git-send-email-jason@lakedaemon.net>
-	<5474F78F.2060906@suse.cz>
-	<20141125235150.GH3836@n2100.arm.linux.org.uk>
-	<20141126005710.GE22670@titan.lakedaemon.net>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/9] mailbox: arm_mhu: add driver for ARM MHU controller
+Date: Wed, 26 Nov 2014 14:00:57 +0000
+Message-ID: <5475DD19.9000107@arm.com>
+References: <1416486442-25200-1-git-send-email-Vincent.Yang@tw.fujitsu.com>	<1416486872-25301-1-git-send-email-Vincent.Yang@tw.fujitsu.com>	<54749429.9080505@arm.com>	<CAJe_ZhciCP2VbmRtrq9d14WhfLhnC-xaitCCiW_6Yf1S-0sdUg@mail.gmail.com>	<5474C3DD.5060706@arm.com> <CAJe_ZhfkcSv7oBfXdiW5=F0bZvv+9z3m90cXdy=O66VwZWCQnw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141126005710.GE22670@titan.lakedaemon.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Michal Marek <mmarek@suse.cz>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJe_ZhfkcSv7oBfXdiW5=F0bZvv+9z3m90cXdy=O66VwZWCQnw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 26, 2014 at 1:57 AM, Jason Cooper <jason@lakedaemon.net> wrote:
-> On Tue, Nov 25, 2014 at 11:51:50PM +0000, Russell King - ARM Linux wrote:
 
->> I think this needs a bit more debugging to see why the whole kernel is
->> being rebuilt - the kernel build system has methods to tell you why stuff
->> is being built, which would be a good place to start.
+
+On 26/11/14 05:37, Jassi Brar wrote:
+> On 25 November 2014 at 23:31, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+>>
+>>
+>> On 25/11/14 16:51, Jassi Brar wrote:
+>>>
+>>> On 25 November 2014 at 20:07, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 20/11/14 12:34, Vincent Yang wrote:
+>>>>>
+>>>>>
+>>>>> Add driver for the ARM Message-Handling-Unit (MHU).
+>>>>>
+>>>>> Signed-off-by: Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>>> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>>> Signed-off-by: Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
+>>>>> Signed-off-by: Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+>>>>> ---
+>>>>>     .../devicetree/bindings/mailbox/arm-mhu.txt        |  33 ++++
+>>>>>     drivers/mailbox/Kconfig                            |   7 +
+>>>>>     drivers/mailbox/Makefile                           |   2 +
+>>>>>     drivers/mailbox/arm_mhu.c                          | 196
+>>>>> +++++++++++++++++++++
+>>>>>     4 files changed, 238 insertions(+)
+>>>>>     create mode 100644
+>>>>> Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+>>>>>     create mode 100644 drivers/mailbox/arm_mhu.c
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+>>>>> b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+>>>>> new file mode 100644
+>>>>> index 0000000..b1b9888
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+>>>>> @@ -0,0 +1,33 @@
+>>>>> +ARM MHU Mailbox Driver
+>>>>> +======================
+>>>>> +
+>>>>> +The ARM's Message-Handling-Unit (MHU) is a mailbox controller that has
+>>>>> +3 independent channels/links to communicate with remote processor(s).
+>>>>
+>>>>
+>>>>
+>>>> I had reviewed this before and I see not all the comments are addressed.
+>>>> I had mentioned that you can't add support to _SECURE_ channel in Linux
+>>>> as you need to assume Linux runs in non-secure privilege(and I gather
+>>>> that's the case even on this platform from other email in the thread)
+>>>>
+>>> Please revisit the old thread. After some discussion you had
+>>> graciously allowed me to keep the secure channel ;)
+>>> [
+>>> ... Even though I don't like you have secure channel access in Linux, you
+>>> have valid reasons. In case you decide to support it ....
+>>> ]
+>>
+>>
+>> Agreed but based on the other email in the same thread it looks like you
+>> want to run the same kernel both in secure and no-secure mode on this
+>> platform, in which case you _have_to_assume_ it's *non-secure only* always
+>> unless you come up with some DT magic.
+>>
+> Yes, the S vs NS mode should ideally be defined in DT. The kernel
+> image should remain the same.
 >
-> Linus, since you were the one experiencing the regression, care to take
-> a whack at that?
 
-OK this full example should be possible to repeat for anyone
-with a cross compiler, and uses a separate build dir, and yeah
-there was something fishy: the bug only appears if you specify
-CONFIG_DEBUG_SECTION_MISMATCH=y:
+That's good :)
 
-make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
-KBUILD_OUTPUT=build-u300 u300_defconfig
-make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
-KBUILD_OUTPUT=build-u300 zImage
-make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
-KBUILD_OUTPUT=build-u300 zImage
+>>>    It seems you still don't get my point that the driver should manage
+>>> all channels - S & NS. If Linux is running in NS mode on a platform,
+>>> the DT will specify only some NS channel to be used. The controller
+>>> driver shouldn't be crippled just because you think Linux will never
+>>> be run in Secure mode.
+>>>
+>>
+>> Ok how do you handle that, I don't see that in the DT binding. As it
+>> stands, you can unconditionally try to access the secure channel and
+>> cause aborts if the platform is running in non-secure mode.
+>>
+> No. Please look at the dtsi again ....
+>
+>          mhu: mailbox@2b1f0000 {
+>                  #mbox-cells = <1>;
+>                  compatible = "arm,mbox-mhu";
+>                  reg = <0 0x2b1f0000 0x1000>;
+>                  interrupts = <0 36 4>, /* LP Non-Sec */
+>                               <0 35 4>, /* HP Non-Sec */
+>                               <0 37 4>; /* Secure */
 
--> no rebuild, just relink
+One possible issue I can think of(though current driver design requests
+irq only on channel startup, it could be moved to probe for optimization
+in which case you need a way to make sure secure channel or irq is not
+accessed)
 
-make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
-KBUILD_OUTPUT=build-u300 u300_defconfig
-make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
-KBUILD_OUTPUT=build-u300 zImage CONFIG_DEBUG_SECTION_MISMATCH=y
-make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
-KBUILD_OUTPUT=build-u300 zImage CONFIG_DEBUG_SECTION_MISMATCH=y
+>          };
+>
+>          mhu_client: scb@2e000000 {
+>                  compatible = "fujitsu,mb86s70-scb-1.0";
+>                  reg = <0 0x2e000000 0x4000>; /* SHM for IPC */
+>                  mboxes = <&mhu 1>;
+>          };
+>
+> See the DT for mbox client specifies that it uses channel-1 which is
+> High-Priority_Non-Secure channel.
+>
 
--> no rebuild, just relink
+Yes I noticed that, but still a wrong entry of another mhu_client with
+secure channel might end up crashing MHU driver or even whole system.
+Not sure but still probably one could try to play around with DT
+overlays in future, just a thought. So you need to ensure that's handled
+properly in the MHU driver.
 
-make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
-KBUILD_OUTPUT=build-u300 u300_defconfig
-make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
-KBUILD_OUTPUT=build-u300 zImage
-make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
-KBUILD_OUTPUT=build-u300 dtbs
-make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
-KBUILD_OUTPUT=build-u300 zImage
+Regards,
+Sudeep
 
--> no rebuild, just relink
-
-make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
-KBUILD_OUTPUT=build-u300 u300_defconfig
-make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
-KBUILD_OUTPUT=build-u300 zImage CONFIG_DEBUG_SECTION_MISMATCH=y
-make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
-KBUILD_OUTPUT=build-u300 dtbs
-make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
-KBUILD_OUTPUT=build-u300 zImage CONFIG_DEBUG_SECTION_MISMATCH=y
-
--> Rebuilds everything.
-
-This doesn't occur before the offending commit. So it only happens
-when specifying extra
-environment variables on the command line.
-
-So I can get rid of the rebuilding by making my scripts less
-strict by removing CONFIG_DEBUG_SECTION_MISMATCH=y.
-
-But is this really correct?
-
-Two last examples with more detail:
-
-make[1]: Entering directory `/home/linus/linux/build-u300'
-  CHK     include/config/kernel.release
-  GEN     ./Makefile
-  CHK     include/generated/uapi/linux/version.h
-  CHK     include/generated/utsrelease.h
-  Using .. as source for kernel
-make[2]: `include/generated/mach-types.h' is up to date.
-  CALL    ../scripts/checksyscalls.sh - due to target missing
-  CHK     include/generated/compile.h
-  Kernel: arch/arm/boot/Image is ready
-  Kernel: arch/arm/boot/zImage is ready
-make[1]: Leaving directory `/home/linus/linux/build-u300'
-
-make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
-KBUILD_OUTPUT=build-u300 zImage CONFIG_DEBUG_SECTION_MISMATCH=y V=2
-
-make[1]: Entering directory `/home/linus/linux/build-u300'
-  CHK     include/config/kernel.release
-  GEN     ./Makefile
-  CHK     include/generated/uapi/linux/version.h
-  CHK     include/generated/utsrelease.h
-  Using .. as source for kernel
-  CC      scripts/mod/empty.o - due to command line change
-  CC      scripts/mod/devicetable-offsets.s - due to command line change
-  MKELF   scripts/mod/elfconfig.h - due to: scripts/mod/empty.o
-  HOSTCC  scripts/mod/modpost.o - due to: scripts/mod/elfconfig.h
-  HOSTCC  scripts/mod/sumversion.o - due to: scripts/mod/elfconfig.h
-  GEN     scripts/mod/devicetable-offsets.h - due to:
-scripts/mod/devicetable-offsets.s
-  HOSTCC  scripts/mod/file2alias.o - due to: scripts/mod/elfconfig.h
-scripts/mod/devicetable-offsets.h
-  HOSTLD  scripts/mod/modpost - due to: scripts/mod/modpost.o
-scripts/mod/file2alias.o scripts/mod/sumversion.o
-make[2]: `include/generated/mach-types.h' is up to date.
-  CC      kernel/bounds.s - due to command line change
-  GEN     include/generated/bounds.h - due to: kernel/bounds.s
-  CC      arch/arm/kernel/asm-offsets.s - due to: include/generated/bounds.h
-  GEN     include/generated/asm-offsets.h - due to:
-arch/arm/kernel/asm-offsets.s
-  CALL    ../scripts/checksyscalls.sh - due to target missing
-  CC      init/main.o - due to: include/generated/bounds.h
-  CC      arch/arm/common/firmware.o - due to: include/generated/bounds.h
-  CC      arch/arm/mm/dma-mapping.o - due to: include/generated/bounds.h
-  CC      arch/arm/kernel/elf.o - due to: include/generated/bounds.h
-  CC      arch/arm/mach-u300/core.o - due to: include/generated/bounds.h
-  AS      arch/arm/kernel/entry-common.o - due to:
-include/generated/asm-offsets.h
-  LD      arch/arm/common/built-in.o - due to: arch/arm/common/firmware.o
-  CHK     include/generated/compile.h
-  CC      arch/arm/kernel/irq.o - due to: include/generated/bounds.h
-  CC      arch/arm/mach-u300/dummyspichip.o - due to: include/generated/bounds.h
-  CC      init/do_mounts.o - due to: include/generated/bounds.h
-  CC      arch/arm/mm/extable.o - due to: include/generated/bounds.h
-  CC      arch/arm/kernel/opcodes.o - due to: include/generated/bounds.h
-(...)
-
-If I revert commit f4d4ffc03efc:
-
-make[1]: Entering directory `/home/linus/linux/build-u300'
-  CHK     include/config/kernel.release
-  GEN     ./Makefile
-  CHK     include/generated/uapi/linux/version.h
-  Using .. as source for kernel
-  CHK     include/generated/utsrelease.h
-make[2]: `include/generated/mach-types.h' is up to date.
-  CC      scripts/mod/empty.o - due to command line change
-  CC      scripts/mod/devicetable-offsets.s - due to command line change
-  CALL    ../scripts/checksyscalls.sh - due to target missing
-  MKELF   scripts/mod/elfconfig.h - due to: scripts/mod/empty.o
-  HOSTCC  scripts/mod/modpost.o - due to: scripts/mod/elfconfig.h
-  HOSTCC  scripts/mod/sumversion.o - due to: scripts/mod/elfconfig.h
-  GEN     scripts/mod/devicetable-offsets.h - due to:
-scripts/mod/devicetable-offsets.s
-  HOSTCC  scripts/mod/file2alias.o - due to: scripts/mod/elfconfig.h
-scripts/mod/devicetable-offsets.h
-  HOSTLD  scripts/mod/modpost - due to: scripts/mod/modpost.o
-scripts/mod/file2alias.o scripts/mod/sumversion.o
-  CHK     include/generated/compile.h
-  Kernel: arch/arm/boot/Image is ready
-  Kernel: arch/arm/boot/zImage is ready
-make[1]: Leaving directory `/home/linus/linux/build-u300'
-
-So in both cases a changed command line is detected and
-empty.o and devicetable-offsets.s is rebuilt.
-
-But after the commit the rebuild goes on to rebuild
-kernel/bounds.s which generates bounds.h which in
-turn rebuilds the whole world.
-
-I don't know why the behaviour changed like this :(
-
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
