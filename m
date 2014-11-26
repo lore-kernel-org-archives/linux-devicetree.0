@@ -1,175 +1,299 @@
-From: Alim Akhtar <alim.akhtar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2 2/2] arm64: exynos: Add bus1 pinctrl node on exynos7
-Date: Wed, 26 Nov 2014 18:59:01 +0530
-Message-ID: <CAGOxZ52XtT-Aq-HJFq7GAzfAq6GEdrzKeez_=fwJR-Z2rkUF+g@mail.gmail.com>
-References: <CAGOxZ53TUvZhSDLfeCuyvBwVcrkQhFnftQzk1DbkU_krdoFbZA@mail.gmail.com>
- <1416834381-11314-1-git-send-email-gautam.vivek@samsung.com>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH v13 04/12] drm: imx: imx-hdmi: split phy configuration to
+ platform driver
+Date: Wed, 26 Nov 2014 21:30:04 +0800
+Message-ID: <1417008604-32115-1-git-send-email-andy.yan@rock-chips.com>
+References: <1417008157-31861-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416834381-11314-1-git-send-email-gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1417008157-31861-1-git-send-email-andy.yan@rock-chips.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: airlied@linux.ie, Philipp Zabel <p.zabel@pengutronix.de>, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
+Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, mark.yao@rock-chips.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Kumar Gala <galak@codeaurora.org>, Andy Yan <andy.yan@rock-chips.com>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vivek,
+hdmi phy configuration is platform specific, which can be adusted
+according to the board to get the best SI
 
-On Mon, Nov 24, 2014 at 6:36 PM, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> BUS1 pinctrl provides gpios for usb and power regulator
-> available on exynos7-espresso board. So add relevant device
-> node for pinctrl-bus1.
->
-> Signed-off-by: Naveen Krishna Ch <naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->
-Looks good to me.
-Reviewed-by: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
 
-> This patch was part of series:
-> "[PATCH 00/11] Exynos7: Adding USB 3.0 support"
->  https://lkml.org/lkml/2014/11/21/247
->
-> Changes since V1:
->  - Added support for all pin banks which are part of BUS1 pin controller.
->
->  arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi |   82 +++++++++++++++++++++++
->  arch/arm64/boot/dts/exynos/exynos7.dtsi         |    7 ++
->  2 files changed, 89 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi b/arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi
-> index 2eef4a2..c367f0a 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi
-> +++ b/arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi
-> @@ -335,6 +335,88 @@
->         };
->  };
->
-> +&pinctrl_bus1 {
-> +       gpf0: gpf0 {
-> +               gpio-controller;
-> +               #gpio-cells = <2>;
-> +
-> +               interrupt-controller;
-> +               #interrupt-cells = <2>;
-> +       };
-> +
-> +       gpf1: gpf1 {
-> +               gpio-controller;
-> +               #gpio-cells = <2>;
-> +
-> +               interrupt-controller;
-> +               #interrupt-cells = <2>;
-> +       };
-> +
-> +       gpf2: gpf2 {
-> +               gpio-controller;
-> +               #gpio-cells = <2>;
-> +
-> +               interrupt-controller;
-> +               #interrupt-cells = <2>;
-> +       };
-> +
-> +       gpf3: gpf3 {
-> +               gpio-controller;
-> +               #gpio-cells = <2>;
-> +
-> +               interrupt-controller;
-> +               #interrupt-cells = <2>;
-> +       };
-> +
-> +       gpf4: gpf4 {
-> +               gpio-controller;
-> +               #gpio-cells = <2>;
-> +
-> +               interrupt-controller;
-> +               #interrupt-cells = <2>;
-> +       };
-> +
-> +       gpf5: gpf5 {
-> +               gpio-controller;
-> +               #gpio-cells = <2>;
-> +
-> +               interrupt-controller;
-> +               #interrupt-cells = <2>;
-> +       };
-> +
-> +       gpg1: gpg1 {
-> +               gpio-controller;
-> +               #gpio-cells = <2>;
-> +
-> +               interrupt-controller;
-> +               #interrupt-cells = <2>;
-> +       };
-> +
-> +       gpg2: gpg2 {
-> +               gpio-controller;
-> +               #gpio-cells = <2>;
-> +
-> +               interrupt-controller;
-> +               #interrupt-cells = <2>;
-> +       };
-> +
-> +       gph1: gph1 {
-> +               gpio-controller;
-> +               #gpio-cells = <2>;
-> +
-> +               interrupt-controller;
-> +               #interrupt-cells = <2>;
-> +       };
-> +
-> +       gpv6: gpv6 {
-> +               gpio-controller;
-> +               #gpio-cells = <2>;
-> +
-> +               interrupt-controller;
-> +               #interrupt-cells = <2>;
-> +       };
-> +};
-> +
->  &pinctrl_nfc {
->         gpj0: gpj0 {
->                 gpio-controller;
-> diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-> index 1d9e4c9..e633b02 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
-> +++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-> @@ -26,6 +26,7 @@
->                 pinctrl5 = &pinctrl_ese;
->                 pinctrl6 = &pinctrl_fsys0;
->                 pinctrl7 = &pinctrl_fsys1;
-> +               pinctrl8 = &pinctrl_bus1;
->         };
->
->         cpus {
-> @@ -242,6 +243,12 @@
->                         interrupts = <0 383 0>;
->                 };
->
-> +               pinctrl_bus1: pinctrl@14870000 {
-> +                       compatible = "samsung,exynos7-pinctrl";
-> +                       reg = <0x14870000 0x1000>;
-> +                       interrupts = <0 384 0>;
-> +               };
-> +
->                 pinctrl_nfc: pinctrl@14cd0000 {
->                         compatible = "samsung,exynos7-pinctrl";
->                         reg = <0x14cd0000 0x1000>;
-> --
-> 1.7.10.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+---
 
+Changes in v13:
+- split phy configuration from patch#4
 
+Changes in v12: None
+Changes in v11: None
+Changes in v10: None
+Changes in v9: None
+Changes in v8: None
+Changes in v7: None
+Changes in v6: None
+Changes in v5: None
+Changes in v4: None
+Changes in v3: None
 
+ drivers/gpu/drm/imx/imx-hdmi.c       | 85 +++++++-----------------------------
+ drivers/gpu/drm/imx/imx-hdmi.h       | 29 ++++++++++++
+ drivers/gpu/drm/imx/imx-hdmi_pltfm.c | 57 ++++++++++++++++++++++++
+ 3 files changed, 101 insertions(+), 70 deletions(-)
+
+diff --git a/drivers/gpu/drm/imx/imx-hdmi.c b/drivers/gpu/drm/imx/imx-hdmi.c
+index 4c3047f..9503728 100644
+--- a/drivers/gpu/drm/imx/imx-hdmi.c
++++ b/drivers/gpu/drm/imx/imx-hdmi.c
+@@ -711,76 +711,14 @@ static void imx_hdmi_phy_sel_interface_control(struct imx_hdmi *hdmi, u8 enable)
+ 			 HDMI_PHY_CONF0_SELDIPIF_MASK);
+ }
+ 
+-enum {
+-	RES_8,
+-	RES_10,
+-	RES_12,
+-	RES_MAX,
+-};
+-
+-struct mpll_config {
+-	unsigned long mpixelclock;
+-	struct {
+-		u16 cpce;
+-		u16 gmp;
+-	} res[RES_MAX];
+-};
+-
+-static const struct mpll_config mpll_config[] = {
+-	{
+-		45250000, {
+-			{ 0x01e0, 0x0000 },
+-			{ 0x21e1, 0x0000 },
+-			{ 0x41e2, 0x0000 }
+-		},
+-	}, {
+-		92500000, {
+-			{ 0x0140, 0x0005 },
+-			{ 0x2141, 0x0005 },
+-			{ 0x4142, 0x0005 },
+-		},
+-	}, {
+-		148500000, {
+-			{ 0x00a0, 0x000a },
+-			{ 0x20a1, 0x000a },
+-			{ 0x40a2, 0x000a },
+-		},
+-	}, {
+-		~0UL, {
+-			{ 0x00a0, 0x000a },
+-			{ 0x2001, 0x000f },
+-			{ 0x4002, 0x000f },
+-		},
+-	}
+-};
+-
+-struct curr_ctrl {
+-	unsigned long mpixelclock;
+-	u16 curr[RES_MAX];
+-};
+-
+-static const struct curr_ctrl curr_ctrl[] = {
+-	/*	pixelclk     bpp8    bpp10   bpp12 */
+-	{
+-		 54000000, { 0x091c, 0x091c, 0x06dc },
+-	}, {
+-		 58400000, { 0x091c, 0x06dc, 0x06dc },
+-	}, {
+-		 72000000, { 0x06dc, 0x06dc, 0x091c },
+-	}, {
+-		 74250000, { 0x06dc, 0x0b5c, 0x091c },
+-	}, {
+-		118800000, { 0x091c, 0x091c, 0x06dc },
+-	}, {
+-		216000000, { 0x06dc, 0x0b5c, 0x091c },
+-	}
+-};
+-
+ static int hdmi_phy_configure(struct imx_hdmi *hdmi, unsigned char prep,
+ 			      unsigned char res, int cscon)
+ {
+ 	unsigned res_idx, i;
+ 	u8 val, msec;
++	const struct mpll_config *mpll_config = hdmi->plat_data->mpll_cfg;
++	const struct curr_ctrl   *curr_ctrl = hdmi->plat_data->cur_ctr;
++	const struct sym_term *sym_term =  hdmi->plat_data->sym_term;
+ 
+ 	if (prep)
+ 		return -EINVAL;
+@@ -826,7 +764,7 @@ static int hdmi_phy_configure(struct imx_hdmi *hdmi, unsigned char prep,
+ 	hdmi_phy_test_clear(hdmi, 0);
+ 
+ 	/* PLL/MPLL Cfg - always match on final entry */
+-	for (i = 0; i < ARRAY_SIZE(mpll_config) - 1; i++)
++	for (i = 0; mpll_config[i].mpixelclock != (~0UL); i++)
+ 		if (hdmi->hdmi_data.video_mode.mpixelclock <=
+ 		    mpll_config[i].mpixelclock)
+ 			break;
+@@ -834,12 +772,12 @@ static int hdmi_phy_configure(struct imx_hdmi *hdmi, unsigned char prep,
+ 	hdmi_phy_i2c_write(hdmi, mpll_config[i].res[res_idx].cpce, 0x06);
+ 	hdmi_phy_i2c_write(hdmi, mpll_config[i].res[res_idx].gmp, 0x15);
+ 
+-	for (i = 0; i < ARRAY_SIZE(curr_ctrl); i++)
++	for (i = 0; curr_ctrl[i].mpixelclock != (~0UL); i++)
+ 		if (hdmi->hdmi_data.video_mode.mpixelclock <=
+ 		    curr_ctrl[i].mpixelclock)
+ 			break;
+ 
+-	if (i >= ARRAY_SIZE(curr_ctrl)) {
++	if (curr_ctrl[i].mpixelclock == (~0UL)) {
+ 		dev_err(hdmi->dev, "Pixel clock %d - unsupported by HDMI\n",
+ 			hdmi->hdmi_data.video_mode.mpixelclock);
+ 		return -EINVAL;
+@@ -850,10 +788,17 @@ static int hdmi_phy_configure(struct imx_hdmi *hdmi, unsigned char prep,
+ 
+ 	hdmi_phy_i2c_write(hdmi, 0x0000, 0x13);  /* PLLPHBYCTRL */
+ 	hdmi_phy_i2c_write(hdmi, 0x0006, 0x17);
++
++	for (i = 0; sym_term[i].mpixelclock != (~0UL); i++)
++		if (hdmi->hdmi_data.video_mode.mpixelclock <=
++		    sym_term[i].mpixelclock)
++			break;
++
+ 	/* RESISTANCE TERM 133Ohm Cfg */
+-	hdmi_phy_i2c_write(hdmi, 0x0005, 0x19);  /* TXTERM */
++	hdmi_phy_i2c_write(hdmi, sym_term[i].term, 0x19);  /* TXTERM */
+ 	/* PREEMP Cgf 0.00 */
+-	hdmi_phy_i2c_write(hdmi, 0x800d, 0x09);  /* CKSYMTXCTRL */
++	hdmi_phy_i2c_write(hdmi, sym_term[i].sym_ctr, 0x09);  /* CKSYMTXCTRL */
++
+ 	/* TX/CK LVL 10 */
+ 	hdmi_phy_i2c_write(hdmi, 0x01ad, 0x0E);  /* VLEVCTRL */
+ 	/* REMOVE CLK TERM */
+diff --git a/drivers/gpu/drm/imx/imx-hdmi.h b/drivers/gpu/drm/imx/imx-hdmi.h
+index 14e593e..bced9ef 100644
+--- a/drivers/gpu/drm/imx/imx-hdmi.h
++++ b/drivers/gpu/drm/imx/imx-hdmi.h
+@@ -1037,6 +1037,35 @@ enum imx_hdmi_devtype {
+ 
+ struct imx_hdmi_plat_data {
+ 	enum imx_hdmi_devtype dev_type;
++	const struct mpll_config *mpll_cfg;
++	const struct curr_ctrl *cur_ctr;
++	const struct sym_term *sym_term;
++};
++
++enum {
++	RES_8,
++	RES_10,
++	RES_12,
++	RES_MAX,
++};
++
++struct mpll_config {
++	unsigned long mpixelclock;
++	struct {
++		u16 cpce;
++		u16 gmp;
++	} res[RES_MAX];
++};
++
++struct curr_ctrl {
++	unsigned long mpixelclock;
++	u16 curr[RES_MAX];
++};
++
++struct sym_term {
++	unsigned long mpixelclock;
++	u16 sym_ctr;    /*clock symbol and transmitter control*/
++	u16 term;       /*transmission termination value*/
+ };
+ 
+ int imx_hdmi_bind(struct device *dev, struct device *master,
+diff --git a/drivers/gpu/drm/imx/imx-hdmi_pltfm.c b/drivers/gpu/drm/imx/imx-hdmi_pltfm.c
+index a7983f2..519a22d 100644
+--- a/drivers/gpu/drm/imx/imx-hdmi_pltfm.c
++++ b/drivers/gpu/drm/imx/imx-hdmi_pltfm.c
+@@ -31,6 +31,57 @@ struct imx_hdmi_priv {
+ 	struct regmap *regmap;
+ };
+ 
++static const struct mpll_config imx_mpll_cfg[] = {
++	{
++		45250000, {
++			{ 0x01e0, 0x0000 },
++			{ 0x21e1, 0x0000 },
++			{ 0x41e2, 0x0000 }
++		},
++	}, {
++		92500000, {
++			{ 0x0140, 0x0005 },
++			{ 0x2141, 0x0005 },
++			{ 0x4142, 0x0005 },
++	},
++	}, {
++		148500000, {
++			{ 0x00a0, 0x000a },
++			{ 0x20a1, 0x000a },
++			{ 0x40a2, 0x000a },
++		},
++	}, {
++		~0UL, {
++			{ 0x00a0, 0x000a },
++			{ 0x2001, 0x000f },
++			{ 0x4002, 0x000f },
++		},
++	}
++};
++
++static const struct curr_ctrl imx_cur_ctr[] = {
++	/*      pixelclk     bpp8    bpp10   bpp12 */
++	{
++		54000000, { 0x091c, 0x091c, 0x06dc },
++	}, {
++		58400000, { 0x091c, 0x06dc, 0x06dc },
++	}, {
++		72000000, { 0x06dc, 0x06dc, 0x091c },
++	}, {
++		74250000, { 0x06dc, 0x0b5c, 0x091c },
++	}, {
++		118800000, { 0x091c, 0x091c, 0x06dc },
++	}, {
++		216000000, { 0x06dc, 0x0b5c, 0x091c },
++	}
++};
++
++static const struct sym_term imx_sym_term[] = {
++	/*pixelclk   symbol   term*/
++	{ 148500000, 0x800d, 0x0005 },
++	{ ~0UL,      0x0000, 0x0000 }
++};
++
+ static int imx_hdmi_parse_dt(struct imx_hdmi_priv *hdmi)
+ {
+ 	struct device_node *np = hdmi->dev->of_node;
+@@ -103,10 +154,16 @@ static struct drm_encoder_funcs imx_hdmi_encoder_funcs = {
+ };
+ 
+ static struct imx_hdmi_plat_data imx6q_hdmi_drv_data = {
++	.mpll_cfg = imx_mpll_cfg,
++	.cur_ctr  = imx_cur_ctr,
++	.sym_term = imx_sym_term,
+ 	.dev_type = IMX6Q_HDMI,
+ };
+ 
+ static struct imx_hdmi_plat_data imx6dl_hdmi_drv_data = {
++	.mpll_cfg = imx_mpll_cfg,
++	.cur_ctr  = imx_cur_ctr,
++	.sym_term = imx_sym_term,
+ 	.dev_type = IMX6DL_HDMI,
+ };
+ 
 -- 
-Regards,
-Alim
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
