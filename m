@@ -1,42 +1,73 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 1/2] clk: rockchip: add binding ID for DMC (memory controller) clocks on rk3288
-Date: Tue, 25 Nov 2014 16:13:02 -0800
-Message-ID: <1416960783-25119-1-git-send-email-dianders@chromium.org>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH] i2c: core: Fix probing of i2c slaves without interrupts
+Date: Wed, 26 Nov 2014 02:22:42 +0200
+Message-ID: <1869027.VfW5YtiRHN@avalon>
+References: <1416224580-4782-1-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416224580-4782-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Derek Basehore <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jeff Chen <cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Hi Geert,
 
-The DMC clocks need to be turned off at runtime, so we should have IDs
-so we can export them.
+On Monday 17 November 2014 12:43:00 Geert Uytterhoeven wrote:
+> Since commit 2fd36c55264926e2 ("i2c: core: Map OF IRQ at probe time"),
+> i2c slaves without interrupts (e.g. da9210 and at24 on r8a7791/koelsch)
+> fail to probe:
+> 
+>     at24: probe of 2-0050 failed with error -22
+> 
+>     da9210: probe of 6-0068 failed with error -22
+> 
+> This happens because the call to of_irq_get() in i2c_device_probe()
+> returns -EINVAL.
+> 
+> If a device node does not have an "interrupts" property,
+> of_irq_parse_one() fails. Unlike irq_of_parse_and_map(), of_irq_get()
+> does not ignore errors from of_irq_parse_one(), but forwards them.
+> 
+> Make i2c_device_probe() ignore all errors but -EPROBE_DEFER to fix this,
+> just like platform_get_irq() and platform_get_irq_byname() already do.
 
-Signed-off-by: Jeff Chen <cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-[dianders: split into two patches; adjusted commit msg]
-Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
- include/dt-bindings/clock/rk3288-cru.h | 4 ++++
- 1 file changed, 4 insertions(+)
+Thank you for fixing my mistake.
 
-diff --git a/include/dt-bindings/clock/rk3288-cru.h b/include/dt-bindings/clock/rk3288-cru.h
-index 100a08c..8e19ed5 100644
---- a/include/dt-bindings/clock/rk3288-cru.h
-+++ b/include/dt-bindings/clock/rk3288-cru.h
-@@ -141,6 +141,10 @@
- #define PCLK_VIO2_H2P		361
- #define PCLK_CPU		362
- #define PCLK_PERI		363
-+#define PCLK_DDRUPCTL0		364
-+#define PCLK_PUBL0		365
-+#define PCLK_DDRUPCTL1		366
-+#define PCLK_PUBL1		367
- 
- /* hclk gates */
- #define HCLK_GPS		448
+> Fixes: 2fd36c55264926e2 ("i2c: core: Map OF IRQ at probe time")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+
+Just for the record, even if it's too late,
+
+Acked-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+
+> ---
+>  drivers/i2c/i2c-core.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
+> index a0768d6dffc28aae..cf830915713b387a 100644
+> --- a/drivers/i2c/i2c-core.c
+> +++ b/drivers/i2c/i2c-core.c
+> @@ -629,8 +629,10 @@ static int i2c_device_probe(struct device *dev)
+>  	if (!client->irq && dev->of_node) {
+>  		int irq = of_irq_get(dev->of_node, 0);
+> 
+> -		if (irq < 0)
+> +		if (irq == -EPROBE_DEFER)
+>  			return irq;
+> +		if (irq < 0)
+> +			irq = 0;
+> 
+>  		client->irq = irq;
+>  	}
+
 -- 
-2.1.0.rc2.206.gedb03e5
+Regards,
+
+Laurent Pinchart
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
