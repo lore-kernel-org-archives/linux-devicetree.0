@@ -1,69 +1,67 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 1/2] clk: rockchip: add binding ID for DMC (memory
- controller) clocks on rk3288
-Date: Tue, 25 Nov 2014 16:49:08 -0800
-Message-ID: <CAD=FV=WxeFFZekYOkttx4YcDq=td+Vpu9rFALuNu_6zs+7b2tw@mail.gmail.com>
-References: <1416960783-25119-1-git-send-email-dianders@chromium.org>
-	<1717801.sWHeWsmqUi@diego>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1717801.sWHeWsmqUi@diego>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: jeff chen <cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Derek Basehore <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/9] Extend various drivers to run on bi-endian BMIPS hosts
+Date: Tue, 25 Nov 2014 16:49:45 -0800
+Message-ID: <1416962994-27095-1-git-send-email-cernekee@gmail.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Heiko,
+This patch series incorporates the following changes:
 
-On Tue, Nov 25, 2014 at 4:45 PM, Heiko St=C3=BCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> w=
-rote:
-> Am Dienstag, 25. November 2014, 16:13:02 schrieb Doug Anderson:
->> From: Jeff Chen <cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>
->> The DMC clocks need to be turned off at runtime, so we should have I=
-Ds
->> so we can export them.
->>
->> Signed-off-by: Jeff Chen <cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> [dianders: split into two patches; adjusted commit msg]
->> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->
-> both patches look ok to me and I'll probably pick them up tomorrow.
+ - Extend brcmstb reset driver to work on MIPS (currently ARM-only).
 
-OK, thanks!
+ - Extend brcmstb GISB bus driver to work on MIPS (currently ARM-only).
+
+ - Extend brcmstb GISB bus driver to work on BE systems (currently LE-only).
+
+ - Extend both drivers to support the older register layouts used on many
+   of the BMIPS platforms.
+
+ - Extend {ohci,ehci}-platform drivers to accept the new "native-endian"
+   DT property, to accommodate BCM7xxx platforms that can be switched
+   between LE/BE with a board jumper.
 
 
-> Just as handling question, do you plan on sending dts changes using t=
-hese
-> clocks in time for 3.19 [i.e. in the next couple of days]?
+Dependencies:
 
-There's pretty much zero chance.  Maybe negative.
+power/reset: brcmstb: Register with kernel restart handler (Guenter Roeck)
+of: Add helper function to check MMIO register endianness (Kevin Cernekee)
+
+These are both tentatively accepted, but might not be present in the same
+tree yet.  As such, we might want to "review now, merge later."
 
 
-> We have currently three clock patches/series adding new clock ids [th=
-is one,
-> the mmc phases and Sonny's i2s_clkout] and I'm trying to dertermine i=
-f I need
-> a shared branch for those.
->
-> Currently it doesn't look like the others will provide dts patches us=
-ing the
-> clocks in time, so it looks like I can skip the shared branch and we =
-can use
-> the clock ids regularly after the merge-window. Some true for your cl=
-ocks?
+Kevin Cernekee (9):
+  power/reset: brcmstb: Make the driver buildable on MIPS
+  power/reset: brcmstb: Use the DT "compatible" string to indicate bit
+    positions
+  power/reset: brcmstb: Add support for old 65nm chips
+  bus: brcmstb_gisb: Make the driver buildable on MIPS
+  bus: brcmstb_gisb: Introduce wrapper functions for MMIO accesses
+  bus: brcmstb_gisb: Look up register offsets in a table
+  bus: brcmstb_gisb: Add register offset tables for older chips
+  bus: brcmstb_gisb: Honor the "big-endian" and "native-endian" DT
+    properties
+  usb: {ohci,ehci}-platform: Use new OF big-endian helper function
 
-Yup, no problem for me.  I provided this as two patches to you just in
-case it was convenient, since I saw that as feedback in previous
-submissions.
+ .../devicetree/bindings/arm/brcm-brcmstb.txt       |   4 +-
+ .../devicetree/bindings/bus/brcm,gisb-arb.txt      |   6 +-
+ Documentation/devicetree/bindings/usb/usb-ehci.txt |   2 +
+ Documentation/devicetree/bindings/usb/usb-ohci.txt |   2 +
+ drivers/bus/Kconfig                                |   2 +-
+ drivers/bus/brcmstb_gisb.c                         | 127 ++++++++++++++++++---
+ drivers/power/reset/Kconfig                        |   9 +-
+ drivers/power/reset/brcmstb-reboot.c               |  41 +++++--
+ drivers/usb/host/ehci-platform.c                   |   2 +-
+ drivers/usb/host/ohci-platform.c                   |   2 +-
+ 10 files changed, 161 insertions(+), 36 deletions(-)
 
-Thanks!
+-- 
+2.1.0
 
--Doug
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
