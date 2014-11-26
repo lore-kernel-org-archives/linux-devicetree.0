@@ -1,150 +1,84 @@
-From: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH v2 2/4] Documentation: arm64/arm: dt bindings for
- numa.
-Date: Wed, 26 Nov 2014 17:12:49 +0800
-Message-ID: <54759991.50204@linaro.org>
-References: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com> <2966212.dpWQ0OTb0A@wuerfel> <CAFpQJXUjYsTiHSyHdgtN9JPWGN8CByR4VwtSMJhwkAUWA4iV9w@mail.gmail.com> <2065254.jRdQcinOdg@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+From: Naidu Tellapati <naidu.tellapati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v6 0/2] watchdog: Add support for ImgTec PowerDown Controller Watchdog Timer
+Date: Wed, 26 Nov 2014 14:56:32 +0530
+Message-ID: <1416993994-8456-1-git-send-email-Naidu.Tellapati@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2065254.jRdQcinOdg@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+To: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arul.ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, jude.abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Naidu Tellapati <Naidu.Tellapati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2014-11-26 3:00, Arnd Bergmann wrote:
-> On Tuesday 25 November 2014 08:15:47 Ganapatrao Kulkarni wrote:
->>> No, don't hardcode ARM specifics into a common binding either. I've looked
->>> at the ibm,associativity properties again, and I think we should just use
->>> those, they can cover all cases and are completely independent of the
->>> architecture. We should probably discuss about the property name though,
->>> as using the "ibm," prefix might not be the best idea.
->>
->> We have started with new proposal, since not got enough details how
->> ibm/ppc is managing the numa using dt.
->> there is no documentation and there is no power/PAPR spec for numa in
->> public domain and there are no single dt file in arch/powerpc which
->> describes the numa. if we get any one of these details, we can align
->> to powerpc implementation.
-> 
-> Basically the idea is to have an "ibm,associativity" property in each
-> bus or device that is node specific, and this includes all CPUs and
-> memory nodes. The property contains an array of 32-bit integers that
-> count the resources. Take an example of a NUMA cluster of two machines
-> with four sockets and four cores each (32 cores total), a memory
-> channel on each socket and one PCI host per board that is connected
-> at equal speed to each socket on the board.
-> 
-> The ibm,associativity property in each PCI host, CPU or memory device
-> node consequently has an array of three (board, socket, core) integers:
-> 
-> 	memory@0,0 {
-> 		device_type = "memory";
-> 		reg = <0x0 0x0  0x4 0x0;
-> 		/* board 0, socket 0, no specific core */
-> 		ibm,asssociativity = <0 0 0xffff>;
-> 	};
-> 
-> 	memory@4,0 {
-> 		device_type = "memory";
-> 		reg = <0x4 0x0  0x4 0x0>;
-> 		/* board 0, socket 1, no specific core */
-> 		ibm,asssociativity = <0 1 0xffff>; 
-> 	};
-> 
-> 	...
-> 
-> 	memory@1c,0 {
-> 		device_type = "memory";
-> 		reg = <0x1c 0x0  0x4 0x0>;
-> 		/* board 0, socket 7, no specific core */
-> 		ibm,asssociativity = <1 7 0xffff>; 
-> 	};
-> 
-> 	cpus {
-> 		#address-cells = <2>;
-> 		#size-cells = <0>;
-> 		cpu@0 {
-> 			device_type = "cpu";
-> 			reg = <0 0>;
-> 			/* board 0, socket 0, core 0*/
-> 			ibm,asssociativity = <0 0 0>; 
-> 		};
-> 
-> 		cpu@1 {
-> 			device_type = "cpu";
-> 			reg = <0 0>;
-> 			/* board 0, socket 0, core 0*/
-> 			ibm,asssociativity = <0 0 0>; 
-> 		};
-> 
-> 		...
-> 
-> 		cpu@31 {
-> 			device_type = "cpu";
-> 			reg = <0 32>;
-> 			/* board 1, socket 7, core 31*/
-> 			ibm,asssociativity = <1 7 31>; 
-> 		};
-> 	};
-> 
-> 	pci@100,0 {
-> 		device_type = "pci";
-> 		/* board 0 */
-> 		ibm,associativity = <0 0xffff 0xffff>;
-> 		...
-> 	};
-> 
-> 	pci@200,0 {
-> 		device_type = "pci";
-> 		/* board 1 */
-> 		ibm,associativity = <1 0xffff 0xffff>;
-> 		...
-> 	};
-> 
-> 	ibm,associativity-reference-points = <0 1>;
-> 
-> The "ibm,associativity-reference-points" property here indicates that index 2
-> of each array is the most important NUMA boundary for the particular system,
-> because the performance impact of allocating memory on the remote board 
-> is more significant than the impact of using memory on a remote socket of the
-> same board. Linux will consequently use the first field in the array as
-> the NUMA node ID. If the link between the boards however is relatively fast,
-> so you care mostly about allocating memory on the same socket, but going to
-> another board isn't much worse than going to another socket on the same
-> board, this would be
-> 
-> 	ibm,associativity-reference-points = <1 0>;
-> 
-> so Linux would ignore the board ID and use the socket ID as the NUMA node
-> number. The same would apply if you have only one (otherwise identical
-> board, then you would get
-> 
-> 	ibm,associativity-reference-points = <1>;
-> 
-> which means that index 0 is completely irrelevant for NUMA considerations
-> and you just care about the socket ID. In this case, devices on the PCI
-> bus would also not care about NUMA policy and just allocate buffers from
-> anywhere, while in original example Linux would allocate DMA buffers only
-> from the local board.
+This patchset provides support for the PowerDown Controller (PDC) Watchdog Timer
+found on Pistachio SOC from Imagination Technologies (ImgTec).
 
-Thanks for the detail information. I have the concerns about the distance
-for NUMA nodes, does the "ibm,associativity-reference-points" property can
-represent the distance between NUMA nodes?
+The series is based on 3.18-rc5.
 
-For example, a system with 4 sockets connected like below:
+Changes from v5:
 
-Socket 0  <---->  Socket 1  <---->  Socket 2  <---->  Socket 3
+ * Removed unused struct pdc_wdt_dev variables.
 
-So from socket 0 to socket 1 (maybe on the same board), it just need 1
-jump to access the memory, but from socket 0 to socket 2/3, it needs
-2/3 jumps and the *distance* relative longer. Can
-"ibm,associativity-reference-points" property cover this?
+ * Removed out_wdt label in probe function.
 
-Thanks
-Hanjun
+Changes from v4:
+
+ * Added warning message if initial timeout value exceeds maximum timeout.
+
+Changes from v3:
+
+ * Removed PDC_WD_MAX_DELAY.
+
+ * Removed spinlock.
+
+ * Removed timeout check inside pdc_wdt_set_timeout function.
+
+ * Changed identity to IMG PDC Watchdog.
+
+ * Removed pdc_wdt_set_timeout call from the probe function.
+
+ * Removed pdc_wdt_shutdown function call from pdc_wdt_remove function
+   and added pdc_wdt_stop function call instead.
+
+Changes from v2:
+
+ * Removed interrupt.h header file.
+
+ * Removed clock rate-change notifier callback.
+
+Changes from v1:
+
+ * Arranged all include files in alphabetical order.
+
+ * Arranged register field masks/shifts defines next to their
+   corresponding register
+
+ * Registered clock rate-change notifier callback.
+
+ * Removed all references to 32 kHz fixed clock rate.
+   Now the clock rate is read dynamically using clk_get_rate().
+
+ * Defined a macro PDC_WD_CONFIG_ENABLE.
+
+ * Added code for getting system clock.
+
+ * Moved module_param stuffs next to the corresponding variable defines.
+
+ * Added code in the function pdc_wdt_remove for stopping watchdog.
+
+ * Removed MODULE_ALIAS.
+
+ * Removed few unwanted spaces and unwanted blank lines.
+
+Naidu Tellapati (2):
+  watchdog: ImgTec PDC Watchdog Timer Driver
+  DT: watchdog: Add ImgTec PDC Watchdog Timer binding documentation
+
+ .../devicetree/bindings/watchdog/imgpdc-wdt.txt    |   18 ++
+ drivers/watchdog/Kconfig                           |   11 +
+ drivers/watchdog/Makefile                          |    1 +
+ drivers/watchdog/imgpdc_wdt.c                      |  298 ++++++++++++++++++++
+ 4 files changed, 328 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/imgpdc-wdt.txt
+ create mode 100644 drivers/watchdog/imgpdc_wdt.c
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
