@@ -1,57 +1,42 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 7/8] regulator: sky81452: Modify Device Tree structure
-Date: Wed, 26 Nov 2014 16:37:02 +0000
-Message-ID: <20141126163702.GI7712@sirena.org.uk>
-References: <1416898986-24530-1-git-send-email-jack.yoo@skyworksinc.com>
- <1416898986-24530-8-git-send-email-jack.yoo@skyworksinc.com>
- <20141125121916.GW7712@sirena.org.uk>
- <20141126014007.GA2876@jack-ThinkPad-T520>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [RFC PATCH v2 2/4] Documentation: arm64/arm: dt bindings for numa.
+Date: Wed, 26 Nov 2014 17:51:39 +0100
+Message-ID: <2133591.n7Y4zNvRib@wuerfel>
+References: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com> <2966212.dpWQ0OTb0A@wuerfel> <54753AED.3050909@huawei.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gPUs6siww+AY7XMI"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141126014007.GA2876@jack-ThinkPad-T520>
+In-Reply-To: <54753AED.3050909-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Will.Deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wednesday 26 November 2014 10:29:01 Shannon Zhao wrote:
+> On 2014/11/25 19:02, Arnd Bergmann wrote:
+> > No, don't hardcode ARM specifics into a common binding either. I've looked
+> > at the ibm,associativity properties again, and I think we should just use
+> > those, they can cover all cases and are completely independent of the
+> > architecture. We should probably discuss about the property name though,
+> > as using the "ibm," prefix might not be the best idea.
+> > 
+> 
+> Yeah, I have read the relevant codes in qemu. I think the "ibm,associativity" is more scalable:-)
 
---gPUs6siww+AY7XMI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ok
 
-On Wed, Nov 26, 2014 at 10:40:07AM +0900, Gyungoh Yoo wrote:
-> On Tue, Nov 25, 2014 at 12:19:16PM +0000, Mark Brown wrote:
-> > On Tue, Nov 25, 2014 at 04:03:05PM +0900, gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> > > From: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
+> About the prefix, my opinion is that as this is relevant with NUMA,
+> maybe we can use "numa" as the prefix.
 
-> > This doesn't apply, please check and resend.
+A prefix should really be the name of a company or institution, so it could
+be "arm" or "linux", but not "numa". Would could use "numa-associativity"
+with a dash instead of a comma, but that would still be somewhat imprecise
+because the associativity property is about system topology inside of
+a NUMA domain as well, such as cores, core clusters or SMT threads that
+only share caches but not physical memory addresses.
 
-> Could you please explain why this doesn't?
-
-When I tried to apply it to my topic/sky81452 branch git am barfed on
-it, presumably because the code you based it on is different to that
-branch.
-
---gPUs6siww+AY7XMI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUdgGtAAoJECTWi3JdVIfQ0AIH/1KywIS5SmzYpSqMNV/Saco7
-9PP38VjEPiEN7YvRCn9HliuZ932X6x3SXPjObzLtlx4D3nVD+llYqEVHl6dKMgV4
-vRAFjRt6fkd2MVm+FRvKH2C/1hiBemXVYruUCLeaql8orN0D0ziAmuhSVgaMUXrp
-hSJBnEODoNSdetacOU3eG6ykIjyFA+dqygSc1CZKyN55n4hbZLI1fku5GvbdqaVP
-e1ytWy3EzLFazIMxuitAaXSejGDLdnKCT0B75ho0i0saqweFsQBsI6uWPd/tlbLU
-UeSym4pLvm8tK6VvzDp1WMBQdmmzXJWfKKcsrE5vbim8ujdGVukLQ1V2bYnMEmI=
-=hNu3
------END PGP SIGNATURE-----
-
---gPUs6siww+AY7XMI--
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
