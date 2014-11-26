@@ -1,72 +1,57 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: [RFC PATCH 1/3] Documentation: dt: add ti,am3352-emif bindings
-Date: Wed, 26 Nov 2014 15:39:05 -0600
-Message-ID: <8103cf8683cac55efdd690c61f44005289e62856.1417029919.git.d-gerlach@ti.com>
-References: <cover.1417029919.git.d-gerlach@ti.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2 2/2] of: support passing console options with
+ stdout-path
+Date: Wed, 26 Nov 2014 22:48:47 +0100
+Message-ID: <20141126214847.GJ3443@lunn.ch>
+References: <1417023640-23464-1-git-send-email-leif.lindholm@linaro.org>
+ <1417023640-23464-3-git-send-email-leif.lindholm@linaro.org>
+ <20141126183052.GH3443@lunn.ch>
+ <CACxGe6tYZ8aE_TKw1cYMY5DDjpSXPSnhhAam-rG5NgdjpKJe+A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1417029919.git.d-gerlach@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kevin Hilman <khilman@linaro.org>, Benoit Cousson <bcousson@baylibre.com>, Dave Gerlach <d-gerlach@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACxGe6tYZ8aE_TKw1cYMY5DDjpSXPSnhhAam-rG5NgdjpKJe+A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Leif Lindholm <leif.lindholm@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Ian Campbell <ijc@debian.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Add the device tree bindings document for ti,am3352-emif which
-is used by the ti-emif-sram driver to provide low-level PM
-functionality.
+On Wed, Nov 26, 2014 at 09:07:33PM +0000, Grant Likely wrote:
+> On Wed, Nov 26, 2014 at 6:30 PM, Andrew Lunn <andrew@lunn.ch> wrote:
+> > On Wed, Nov 26, 2014 at 05:40:40PM +0000, Leif Lindholm wrote:
+> >> Support specifying console options (like with console=ttyXN,<options>)
+> >> by appending them to the stdout-path property after a separating ':'.
+> >>
+> >> Example:
+> >>         stdout-path = "uart0:115200";
+> >
+> > Hi Leif
+> >
+> > This should be documented somewhere under
+> > Documentation/devicetree/bindings/
+> >
+> > Not sure where thought. Maybe a top level chosen.txt?
+> 
+> Actually, this one doesn't. It is already documented in ePAPR
 
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
----
- .../bindings/memory-controllers/ti/emif-sram.txt   | 31 ++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/memory-controllers/ti/emif-sram.txt
+Hi Grant
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/ti/emif-sram.txt b/Documentation/devicetree/bindings/memory-controllers/ti/emif-sram.txt
-new file mode 100644
-index 0000000..72d6db0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/memory-controllers/ti/emif-sram.txt
-@@ -0,0 +1,31 @@
-+EMIF SRAM Driver
-+=====================
-+
-+TI AMx3 family of devices use a similar EMIF to other TI SoCs but have
-+different PM requirements. Late suspend code runs from SRAM and requires
-+save and restore of EMIF context and placing the SDRAM in and out of
-+self-refresh. Because of this, the ti-emif-sram driver introduces
-+relocatable PM function that can run from SRAM and place the EMIF in
-+the proper state for low-power mode transition.
-+
-+EMIF Device Node:
-+====================
-+A emif node is used to represent an EMIF IP instance within an SoC. The node
-+must contain a phandle to an sram node so the ti-emif-sram driver can allocate
-+space within the sram and copy the relocatable PM functions.
-+
-+Required properties:
-+--------------------
-+- compatible:		Should be "ti,am3352-emif" for AM33xx SoCs
-+- reg:			Contains the emif register address ranges.
-+- sram:			Phandle for generic sram node for the driver
-+			to use to copy PM functions to.
-+
-+Example:
-+--------
-+/* AM33xx */
-+emif: emif@4c000000 {
-+	compatible = "ti,am3352-emif";
-+	reg =	<0x4C000000 0x1000>;
-+	sram = <&ocmcram>;
-+};
--- 
-2.1.0
+Humm, do i have an old version of ePAPR?
+
+All i see is that in Table 3-4 It says:
+
+stdout-path O <string> A string that specifies the full path to the
+	      	       node representing the device to be used for
+	      	       boot console output. If the character ":" is
+	      	       present in the value it terminates the
+	      	       path. The value may be an alias.
+
+		       If the stdin-path property is not specified,
+		       stdout-path should be assumed to define the input device.
+
+So what is before the : is defined. What comes afterwards,
+baudrate/parity/bits/flow control does not appear to the defined in
+ePAPR. Should we not document the extension being added here?
+
+       Andrew
