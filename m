@@ -1,111 +1,127 @@
-Return-Path: <ruppi.kim@hardkernel.com>
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: base64
-From: "=?utf-8?B?6rmA7ZWZ7KO8?=" <ruppi.kim@hardkernel.com>
-Subject: RE: Re: [PATCH v2 5/5] ARM: dts: exynos5410: Add ODROID-XU LEDs
-Date: Wed, 26 Nov 2014 15:06:26 +0900 (KST)
-Message-Id: <20141126150626.HM.0000000000002pU@ruppi75.wwl1546.hanmail.net>
-Errors-To: <ruppi75@daum.net>
+Return-Path: <zhang.lyra@gmail.com>
 MIME-Version: 1.0
-To: =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-Cc: linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Humberto Naves <hsnaves@gmail.com>, Jan Kiszka <jan.kiszka@siemens.com>, Johann Pfefferl <johann.pfefferl@siemens.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
+In-Reply-To: <3490516.nCDXzA8J8x@wuerfel>
+References: <1416917818-10506-5-git-send-email-chunyan.zhang@spreadtrum.com>
+	<3490516.nCDXzA8J8x@wuerfel>
+Date: Wed, 26 Nov 2014 10:32:35 +0800
+Message-ID: <CAAfSe-uoXOJ8=agCFuBnXhj7nBBTskQ=8_jMtv_SAjor2gfO2w@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] arm64: Add support for Spreadtrum's Sharkl64
+ Platform in Kconfig and defconfig
+From: Lyra Zhang <zhang.lyra@gmail.com>
+Content-Type: multipart/alternative; boundary=f46d0418270228c4690508b9d76a
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, grant.likely@linaro.org, "robh+dt@kernel.org" <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "jslaby@suse.cz" <jslaby@suse.cz>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, Pawel Moll <pawel.moll@arm.com>, Ramkumar Ramachandra <artagnon@gmail.com>, "rrichter@cavium.com" <rrichter@cavium.com>, Will Deacon <will.deacon@arm.com>, gnomes@lxorguk.ukuu.org.uk, corbet@lwn.net, jason@lakedaemon.net, Mark Brown <broonie@kernel.org>, heiko@sntech.de, shawn.guo@freescale.com, florian.vaussard@epfl.ch, andrew@lunn.ch, hytszk@gmail.com, Orson Zhai <orsonzhai@gmail.com>, "geng.ren@spreadtrum.com" <geng.ren@spreadtrum.com>, "zhizhou.zhang" <zhizhou.zhang@spreadtrum.com>, lanqing.liu@spreadtrum.com, =?UTF-8?B?V2VpIFFpYW8gKOS5lOS8nyk=?= <wei.qiao@spreadtrum.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "sprdlinux@freelists.org" <sprdlinux@freelists.org>, linux-doc@vger.kernel.org, linux-serial@vger.kernel.org, linux-api@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-PGh0bWw+PGhlYWQ+PHN0eWxlPiBwIHttYXJnaW4tdG9wOjBweDttYXJnaW4tYm90dG9tOjBw
-eDt9IDwvc3R5bGU+PC9oZWFkPgo8Ym9keT48ZGl2IHN0eWxlPSJmb250LXNpemU6MTJweDsg
-Zm9udC1mYW1pbHk66rW066a8LOq1tOumvOyytCxHdWxpbSxCYWVrbXVrIERvdHVtLFVuZG90
-dW0sQXBwbGUgR290aGljLExhdGluIGZvbnQsc2Fucy1zZXJpZjsiPgo8dGFibGUgYm9yZGVy
-PTAgd2lkdGg9MTAwJSBzdHlsZT0nbWFyZ2luIDAgYXV0bztiYWNrZ3JvdW5kOiA7JyBjZWxs
-cGFkZGluZz0wIGNlbGxzcGFjaW5nPTA+Cgk8dHI+Cgk8dGQgdmFsaWduPXRvcCBzdHlsZT0n
-cGFkZGluZzo4cHQ7Jz4KPGRpdiBjbGFzcz0idHgtaGFubWFpbC1jb250ZW50LXdyYXBwZXIi
-IHN0eWxlPSJjb2xvcjogcmdiKDUxLCA1MSwgNTEpOyBmb250LWZhbWlseTog64+L7JuAOyBm
-b250LXNpemU6IDEwcHQ7IGJhY2tncm91bmQtY29sb3I6IHRyYW5zcGFyZW50OyBsaW5lLWhl
-aWdodDogMS41OyI+PHA+SGVsbG8gQW5kcmVhcyw8L3A+PHA+PGJyPjwvcD48cD48c3BhbiBj
-bGFzcz0ic3QiPkkgYW0gc29ycnkgZm9yIG15IGxhdGUgcmVwbHkuPC9zcGFuPjwvcD48cD5J
-IHNpZ25lZCBvZmYgYW5kIHVwZGF0ZWQgb3VyIGJyYW5jaCBhY2NvcmRpbmdseTo8L3A+PHA+
-aHR0cHM6Ly9naXRodWIuY29tL2hhcmRrZXJuZWwvbGludXgvY29tbWl0LzgzM2YzMTNjYTY2
-YTE4MmZhOWY5MGQ5NjY3MDc2OGI3MGU3ZTk4ODQ8L3A+PHA+PGJyPjwvcD48cD5UaGFua3Ms
-PC9wPjxwPkhha2pvbyBLaW08YnI+PC9wPjxwPjxicj48L3A+PHNwYW4gc3R5bGU9Im1hcmdp
-bi1sZWZ0OjAuOGV4O2ZvbnQtZmFtaWx5OmFyaWFsLOuPi+ybgCI+LS0tLS0tLS0tIOybkOuz
-uCDrqZTsnbwgLS0tLS0tLS0tPGJyPjwvc3Bhbj48YmxvY2txdW90ZSBzdHlsZT0iZm9udC1z
-aXplOjEycHg7Ym9yZGVyLWxlZnQtc3R5bGU6c29saWQ7Ym9yZGVyLWxlZnQtd2lkdGg6MnB4
-O21hcmdpbi1ib3R0b206MHB0O21hcmdpbi1sZWZ0OjAuOGV4O21hcmdpbi1yaWdodDowcHQ7
-bWFyZ2luLXRvcDowcHQ7cGFkZGluZy1sZWZ0OjFleDsiPjxkaXYgc3R5bGU9ImZvbnQtZmFt
-aWx5OmFyaWFsLOuPi+ybgDtsaW5lLWhlaWdodDoyMHB4Ij48Yj7rs7Trgrjsgqzrnow8L2I+
-OiBBbmRyZWFzIEbDpHJiZXIgJmx0O2FmYWVyYmVyQHN1c2UuZGUmZ3Q7PGJyPjxiPuuwm+uK
-lOyCrOuejDwvYj4gOiDquYDtlZnso7wgJmx0O3J1cHBpLmtpbUBoYXJka2VybmVsLmNvbSZn
-dDs8YnI+PGI+7LC47KGwPC9iPiA6IGxpbnV4LXNhbXN1bmctc29jQHZnZXIua2VybmVsLm9y
-ZywgS3VramluIEtpbSAmbHQ7a2dlbmVAa2VybmVsLm9yZyZndDssSHVtYmVydG8gTmF2ZXMg
-Jmx0O2hzbmF2ZXNAZ21haWwuY29tJmd0OyxKYW4gS2lzemthICZsdDtqYW4ua2lzemthQHNp
-ZW1lbnMuY29tJmd0OyxKb2hhbm4gUGZlZmZlcmwgJmx0O2pvaGFubi5wZmVmZmVybEBzaWVt
-ZW5zLmNvbSZndDssbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnLCBsaW51
-eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnLEJlbiBEb29rcyAmbHQ7YmVuLWxpbnV4QGZsdWZm
-Lm9yZyZndDssS3VramluIEtpbSAmbHQ7a2dlbmUua2ltQHNhbXN1bmcuY29tJmd0OywgUm9i
-IEhlcnJpbmcgJmx0O3JvYmgrZHRAa2VybmVsLm9yZyZndDssUGF3ZWwgTW9sbCAmbHQ7cGF3
-ZWwubW9sbEBhcm0uY29tJmd0OyxNYXJrIFJ1dGxhbmQgJmx0O21hcmsucnV0bGFuZEBhcm0u
-Y29tJmd0OyxJYW4gQ2FtcGJlbGwgJmx0O2lqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVr
-Jmd0OyxLdW1hciBHYWxhICZsdDtnYWxha0Bjb2RlYXVyb3JhLm9yZyZndDssIFJ1c3NlbGwg
-S2luZyAmbHQ7bGludXhAYXJtLmxpbnV4Lm9yZy51ayZndDssIk9QRU4gRklSTVdBUkUgQU5E
-Li4uIiAmbHQ7ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcmZ3Q7PGJyPjxiPuuCoOynnDwv
-Yj46IDIwMTTrhYQgMTHsm5QgMjPsnbwg7J287JqU7J28LCAxMOyLnCAzMeu2hCAzMey0iCAr
-MDkwMDxicj48Yj7soJzrqqk8L2I+OiBSZTogW1BBVENIIHYyIDUvNV0gQVJNOiBkdHM6IGV4
-eW5vczU0MTA6IEFkZCBPRFJPSUQtWFUgTEVEczxicj48ZGl2IGNsYXNzPSJ2aWV3bWFpbC10
-ZXh0SHRtbCIgbmFtZT0idmlld21haWwtdGV4dEh0bWwiIGlkPSJ2aWV3bWFpbC10ZXh0SHRt
-bCI+DQo8IS0tIOuCtOyaqSDrtoDrtoQgU3RhcnQtLT4NCglIZWxsbyBIYWtqb28sPGJyPg0K
-PGJyPg0KQW0gMjIuMTEuMjAxNCB1bSAyMToyNiBzY2hyaWViIEFuZHJlYXMgRsOkcmJlcjo8
-YnI+DQomZ3Q7IFNpZ25lZC1vZmYtYnk6IEhha2pvbyBLaW0gJmx0OzxhIGhyZWY9Ii9oYW5t
-YWlsL21haWwvTWFpbENvbXBvc2VGcmFtZS5kYXVtP1RPPXJ1cHBpLmtpbUBoYXJka2VybmVs
-LmNvbSI+cnVwcGkua2ltQGhhcmRrZXJuZWwuY29tPC9hPiZndDs8YnI+DQo8YnI+DQpTb3Jy
-eSwgSSB3YXMgdG9vIHF1aWNrIGhlcmU6IE9ubHkgdGhlIHByZXZpb3VzIHR3byBwYXRjaGVz
-IGdvdCBzaWduZWQ8YnI+DQpvZmYgYnkgeW91LCBwbHVzIHRoZSBsYXN0IG9uZSBvbiB5b3Vy
-IDMuMTQgYnJhbmNoLiBBcmUgeW91IGFibGUgdG8gc2lnbjxicj4NCm9mZiBhbGwgcGF0Y2hl
-cyBhdXRob3JlZCBieSB5b3UgdGhlcmU/IChBbiBlbWFpbCByZXBseSBpbmRpY2F0aW5nIHRo
-ZTxicj4NClNpZ25lZC1vZmYtYnkgc2hvdWxkIGRvLCBpZiB1cGRhdGluZyB0aGUgYnJhbmNo
-IGlzIHRvbyBtdWNoIHdvcmsuKTxicj4NCjxicj4NClRoYW5rcyw8YnI+DQpBbmRyZWFzPGJy
-Pg0KPGJyPg0KJmd0OyBTaWduZWQtb2ZmLWJ5OiBBbmRyZWFzIEbDpHJiZXIgJmx0OzxhIGhy
-ZWY9Ii9oYW5tYWlsL21haWwvTWFpbENvbXBvc2VGcmFtZS5kYXVtP1RPPWFmYWVyYmVyQHN1
-c2UuZGUiPmFmYWVyYmVyQHN1c2UuZGU8L2E+Jmd0Ozxicj4NCiZndDsgLS0tPGJyPg0KJmd0
-OyB2MSAtJmd0OyB2Mjo8YnI+DQomZ3Q7ICogRmlsbGVkIGluIFNvYiBmcm9tIEhha2pvbyBL
-aW08YnI+DQomZ3Q7IDxicj4NCiZndDsgIGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0MTAt
-b2Ryb2lkeHUuZHRzIHwgMjUgKysrKysrKysrKysrKysrKysrKysrKysrKzxicj4NCiZndDsg
-IDEgZmlsZSBjaGFuZ2VkLCAyNSBpbnNlcnRpb25zKCspPGJyPg0KJmd0OyA8YnI+DQomZ3Q7
-IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9leHlub3M1NDEwLW9kcm9pZHh1LmR0
-cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0MTAtb2Ryb2lkeHUuZHRzPGJyPg0KJmd0
-OyBpbmRleCA5NzMxMGJiNzI3ZTIuLmIwMmNkM2FiN2IzOCAxMDA2NDQ8YnI+DQomZ3Q7IC0t
-LSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0MTAtb2Ryb2lkeHUuZHRzPGJyPg0KJmd0
-OyArKysgYi9hcmNoL2FybS9ib290L2R0cy9leHlub3M1NDEwLW9kcm9pZHh1LmR0czxicj4N
-CiZndDsgQEAgLTE1LDYgKzE1LDcgQEA8YnI+DQomZ3Q7ICA8YnI+DQomZ3Q7ICAvZHRzLXYx
-Lzs8YnI+DQomZ3Q7ICAjaW5jbHVkZSAiZXh5bm9zNTQxMC5kdHNpIjxicj4NCiZndDsgKyNp
-bmNsdWRlICZsdDtkdC1iaW5kaW5ncy9ncGlvL2dwaW8uaCZndDs8YnI+DQomZ3Q7ICAvIHs8
-YnI+DQomZ3Q7ICAJbW9kZWwgPSAiT0RST0lELVhVIGJhc2VkIG9uIEVYWU5PUzU0MTAiOzxi
-cj4NCiZndDsgIAljb21wYXRpYmxlID0gImhhcmRrZXJuZWwsb2Ryb2lkLXh1IiwgInNhbXN1
-bmcsZXh5bm9zNTQxMCIsICJzYW1zdW5nLGV4eW5vczUiOzxicj4NCiZndDsgQEAgLTM5LDYg
-KzQwLDMwIEBAPGJyPg0KJmd0OyAgCQlyZWcgPSAmbHQ7MHgwMjAzNzAwMCAweDEwMDAmZ3Q7
-Ozxicj4NCiZndDsgIAl9Ozxicj4NCiZndDsgIDxicj4NCiZndDsgKwlsZWRzIHs8YnI+DQom
-Z3Q7ICsJCWNvbXBhdGlibGUgPSAiZ3Bpby1sZWRzIjs8YnI+DQomZ3Q7ICs8YnI+DQomZ3Q7
-ICsJCWJsdWUgezxicj4NCiZndDsgKwkJCWxhYmVsID0gImJsdWU6aGVhcnRiZWF0Ijs8YnI+
-DQomZ3Q7ICsJCQlncGlvcyA9ICZsdDsmYW1wO2dwYjIgMiBHUElPX0FDVElWRV9ISUdIJmd0
-Ozs8YnI+DQomZ3Q7ICsJCQlkZWZhdWx0LXN0YXRlID0gIm9mZiI7PGJyPg0KJmd0OyArCQkJ
-bGludXgsZGVmYXVsdC10cmlnZ2VyID0gImhlYXJ0YmVhdCI7PGJyPg0KJmd0OyArCQl9Ozxi
-cj4NCiZndDsgKzxicj4NCiZndDsgKwkJZ3JlZW4gezxicj4NCiZndDsgKwkJCWxhYmVsID0g
-ImdyZWVuOmFjdGl2aXR5Ijs8YnI+DQomZ3Q7ICsJCQlncGlvcyA9ICZsdDsmYW1wO2dwYjIg
-MSBHUElPX0FDVElWRV9ISUdIJmd0Ozs8YnI+DQomZ3Q7ICsJCQlkZWZhdWx0LXN0YXRlID0g
-Im9mZiI7PGJyPg0KJmd0OyArCQkJbGludXgsZGVmYXVsdC10cmlnZ2VyID0gIm1tYzAiOzxi
-cj4NCiZndDsgKwkJfTs8YnI+DQomZ3Q7ICs8YnI+DQomZ3Q7ICsJCXJlZCB7PGJyPg0KJmd0
-OyArCQkJbGFiZWwgPSAicmVkOmFjdGl2aXR5Ijs8YnI+DQomZ3Q7ICsJCQlncGlvcyA9ICZs
-dDsmYW1wO2dweDIgMyBHUElPX0FDVElWRV9ISUdIJmd0Ozs8YnI+DQomZ3Q7ICsJCQlkZWZh
-dWx0LXN0YXRlID0gIm9mZiI7PGJyPg0KJmd0OyArCQkJbGludXgsZGVmYXVsdC10cmlnZ2Vy
-ID0gIm1tYzEiOzxicj4NCiZndDsgKwkJfTs8YnI+DQomZ3Q7ICsJfTs8YnI+DQomZ3Q7ICB9
-Ozxicj4NCiZndDsgIDxicj4NCiZndDsgICZhbXA7bW1jXzAgezxicj4NCiZndDsgPGJyPg0K
-PGJyPg0KPGJyPg0KLS0gPGJyPg0KU1VTRSBMSU5VWCBHbWJILCBNYXhmZWxkc3RyLiA1LCA5
-MDQwOSBOw7xybmJlcmcsIEdlcm1hbnk8YnI+DQpHRjogSmVmZiBIYXduLCBKZW5uaWZlciBH
-dWlsZCwgRmVsaXggSW1lbmTDtnJmZmVyOyBIUkIgMjEyODQgQUcgTsO8cm5iZXJnPGJyPg0K
-DQoJPCEtLSDrgrTsmqkg67aA67aEIEVuZCAtLT4JDQo8L2Rpdj48YnI+PGJyPjwvZGl2Pjwv
-YmxvY2txdW90ZT48c3R5bGU+cCAge2ZvbnQtc2l6ZToxMHB0ICEgaW1wb3J0YW50O2ZvbnQt
-ZmFtaWx5OuuPi+ybgCwn6rW066a8JyxndWxpbSx0YWhvbWEsc2Fucy1zZXJpZiAhIGltcG9y
-dGFudDt9PC9zdHlsZT48cD48YnI+PC9wPjwvZGl2PjwvdGQ+PC90cj4KPC90YWJsZT4KPC9k
-aXY+PC9ib2R5PjwvaHRtbD4KCgo8IS0tIF9fSGFubWFpbC1zaWctU3RhcnRfXyAtLT4KCjwh
-LS0gX19IYW5tYWlsLXNpZy1FbmRfXyAtLT4KCiAKPGltZyBzcmM9Imh0dHA6Ly93d2wxNTQ2
-Lmhhbm1haWwubmV0OjQyODAvQGZyb209cnVwcGk3NSZyY3B0PXJvYmglMkJkdCU0MGtlcm5l
-bCUyRW9yZyZtc2dpZD0lM0MyMDE0MTEyNjE1MDYyNiUyRUhNJTJFMDAwMDAwMDAwMDAwMnBV
-JTQwcnVwcGk3NSUyRXd3bDE1NDYlMkVoYW5tYWlsJTJFbmV0JTNFIj4K
+--f46d0418270228c4690508b9d76a
+Content-Type: text/plain; charset=UTF-8
+
+2014-11-25 20:57 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
+
+> On Tuesday 25 November 2014 20:16:57 Chunyan Zhang wrote:
+> >
+> > +menuconfig ARCH_SPRD
+> > +       bool "Spreadtrum SoC platform"
+> > +       depends on ARM64
+> > +       help
+> > +         Support for Spreadtrum ARM based SoCs
+> > +
+> > +if ARCH_SPRD
+> > +
+> > +config ARCH_SHARKL64
+> > +       bool "Sharkl64 SoC Platform"
+> > +       help
+> > +         Sharkl64 is a Spreadtrum's SoC Platform which is based
+> > +         on ARM 64-bit processor core including
+> > +           sc9836
+> > +
+> > +endif #ARCH_SPRD
+> > +
+>
+> I don't think we need multiple levels here, it should be enough to
+> have either ARCH_SPRD or ARCH_SHARKL64, because all device drivers
+> are going to be optional anyway. Typically a Kconfig symbol covers
+> all SoCs that are related, so if you Spreadtrum are doing both
+> phone and server chips and these are designed independently, you
+> would have two symbols, but if you only expect to see phone chips
+> here that are all derived from the same product line, using ARCH_SPRD
+> to refer to all of them should be enough.
+>
+>         Arnd
+>
+
+For now, we have only one platform(Sharkl64) based on ARM64 been submitted,
+but we're intending to add support for more our platforms based on ARM64 or
+ARM32 in the future. There are many common devices on these platforms, such
+as serial. Our idea would be that if we had a 'menuconfig ARCH_SPRD' in the
+Kconfig, these common devices only need to depend on ARCH_SPRD in the
+respective Kconfig, otherwise they may depend on a few Kconfig symbols for
+every platforms which include these common devices.
+
+So, do you think whether we should define a menuconfig(ARCH_SPRD) in the
+Kconfig for this case ?
+
+Thanks!
+
+Best regards,
+Chunyan
+
+--f46d0418270228c4690508b9d76a
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
+te">2014-11-25 20:57 GMT+08:00 Arnd Bergmann <span dir=3D"ltr">&lt;<a href=
+=3D"mailto:arnd@arndb.de" target=3D"_blank">arnd@arndb.de</a>&gt;</span>:<b=
+r><blockquote class=3D"gmail_quote" style=3D"margin:0pt 0pt 0pt 0.8ex;borde=
+r-left:1px solid rgb(204,204,204);padding-left:1ex"><span class=3D"">On Tue=
+sday 25 November 2014 20:16:57 Chunyan Zhang wrote:<br>
+&gt;<br>
+&gt; +menuconfig ARCH_SPRD<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0bool &quot;Spreadtrum SoC platform&quot;<b=
+r>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0depends on ARM64<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0help<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0Support for Spreadtrum ARM based So=
+Cs<br>
+&gt; +<br>
+&gt; +if ARCH_SPRD<br>
+&gt; +<br>
+&gt; +config ARCH_SHARKL64<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0bool &quot;Sharkl64 SoC Platform&quot;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0help<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0Sharkl64 is a Spreadtrum&#39;s SoC =
+Platform which is based<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0on ARM 64-bit processor core includ=
+ing<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0sc9836<br>
+&gt; +<br>
+&gt; +endif #ARCH_SPRD<br>
+&gt; +<br>
+<br>
+</span>I don&#39;t think we need multiple levels here, it should be enough =
+to<br>
+have either ARCH_SPRD or ARCH_SHARKL64, because all device drivers<br>
+are going to be optional anyway. Typically a Kconfig symbol covers<br>
+all SoCs that are related, so if you Spreadtrum are doing both<br>
+phone and server chips and these are designed independently, you<br>
+would have two symbols, but if you only expect to see phone chips<br>
+here that are all derived from the same product line, using ARCH_SPRD<br>
+to refer to all of them should be enough.<br>
+<span class=3D""><font color=3D"#888888"><br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 Arnd<br></font></span></blockquote><div>=C2=A0<=
+/div></div>For now, we have only one platform(Sharkl64) based on ARM64 been=
+ submitted, but we&#39;re intending to add support for more our platforms b=
+ased on ARM64 or ARM32 in the future. There are many common devices on thes=
+e platforms, such as serial. Our idea would be that if we had a &#39;menuco=
+nfig ARCH_SPRD&#39; in the Kconfig, these common devices  only need to depe=
+nd on ARCH_SPRD in the <span></span><span class=3D"" id=3D"tran_1_16">respe=
+ctive</span><span> </span>Kconfig, otherwise they may depend on a few Kconf=
+ig symbols for every platforms which include these common devices. <br><br>=
+</div><div class=3D"gmail_extra">So, do you think whether we should define =
+a menuconfig(ARCH_SPRD) in the Kconfig for this case ?<br><br></div><div cl=
+ass=3D"gmail_extra">Thanks!<br><br></div><div class=3D"gmail_extra">Best re=
+gards,<br></div><div class=3D"gmail_extra">Chunyan<br></div><div class=3D"g=
+mail_extra"><br></div></div>
+
+--f46d0418270228c4690508b9d76a--
