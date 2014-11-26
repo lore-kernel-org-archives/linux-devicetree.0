@@ -1,62 +1,50 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH v10 07/10] qcom: cpuidle: Add cpuidle driver for QCOM cpus
-Date: Wed, 26 Nov 2014 11:43:01 -0800
-Message-ID: <7hegspeoje.fsf@deeprootsystems.com>
-References: <1416593037-27527-1-git-send-email-lina.iyer@linaro.org>
-	<1416593037-27527-8-git-send-email-lina.iyer@linaro.org>
-	<5475A599.1010601@linaro.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] regulator: max77802: Document binding for regulator
+ operating modes
+Date: Wed, 26 Nov 2014 19:43:25 +0000
+Message-ID: <20141126194325.GV7712@sirena.org.uk>
+References: <1415707485-28563-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1415707485-28563-2-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <5475A599.1010601@linaro.org> (Daniel Lezcano's message of "Wed,
-	26 Nov 2014 11:04:09 +0100")
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Lina Iyer <lina.iyer@linaro.org>, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="LvG3mvTpA2cBjRlj"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1415707485-28563-2-git-send-email-javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Daniel Lezcano <daniel.lezcano@linaro.org> writes:
 
-> On 11/21/2014 07:03 PM, Lina Iyer wrote:
->> Add cpuidle driver interface to allow cpus to go into C-States. Use the
->> cpuidle DT interface, common across ARM architectures, to provide the
->> idle state information to the cpuidle framework.
->>
->> Supported modes at this time are Standby and Standalone Power Collapse.
->>
->> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
->
-> One nit and one comment below. Other than that:
->
-> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
->
-> [ ... ]
->
->> +static int qcom_cpu_stby(struct cpuidle_device *dev,
->> +				struct cpuidle_driver *drv, int index)
->> +{
->> +	lpm_ops->standby(NULL);
->
-> In my last comment I was referring about a check for entering
-> successfully the idle state:
->
-> 	if (lpm_ops->standby(NULL))
-> 		return -1;
->
->> +	return index;
->> +}
->> +
->> +static int qcom_cpu_spc(struct cpuidle_device *dev,
->> +				struct cpuidle_driver *drv, int index)
->> +{
->> +	lpm_ops->spc(NULL);
->> +
->> +	return index;
- 
-Similar to Daniel's comment above.  if lpm_ops->spc() fails, do you want
-to fall back to standby.
+--LvG3mvTpA2cBjRlj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hmm, using the DT idle states, it doesn't look as straight forward as it
-used to be to fall back to a "safe state."
+On Tue, Nov 11, 2014 at 01:04:43PM +0100, Javier Martinez Canillas wrote:
+> Some regulators from the max77802 PMIC support to be configured in one
+> of two operating mode: Output ON (normal) and Output On Low Power Mode.
 
-Kevin
+Applied, thanks.
+
+--LvG3mvTpA2cBjRlj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUdi1cAAoJECTWi3JdVIfQk74H/RuwhvDQuQSYjAciH7PhsDb6
+fejs4N/80NdNeJtyOXLE2B8jDVxySeo9nu6iqWQjlWvqzWpzQkNVetnb+ZRQ2JA3
+sqrcV+lG0a9MvJSXowYSgqZW+J0t5nC2f9r0+JD13bIqMLtYoTLoR4e2y55i/AxZ
+TML5R7eub/bCG/DCOAmgv4qG42zcNT/RXBOu+ujmclvP1xwGHhUgTOHXCpUpPM4X
+cJsBVWHqrrty95ga211FYOLNHVVDK3amW41/8Qg67M8nJq+fwp5z3JtbgI7HEW39
+Jx7DDMTG73vwsamVuiVDPZjTrhINqJgWm+MtRERueLia8Qp15w/jkTPqihgLOwg=
+=2eWC
+-----END PGP SIGNATURE-----
+
+--LvG3mvTpA2cBjRlj--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
