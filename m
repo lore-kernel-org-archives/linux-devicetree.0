@@ -1,51 +1,84 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 6/7] ARM: mvebu: add PHY support to the dts for the
- USB controllers on Armada 375
-Date: Wed, 26 Nov 2014 10:53:51 +0530
-Message-ID: <547563E7.7080106@ti.com>
-References: <1415879269-29711-1-git-send-email-gregory.clement@free-electrons.com> <1415879269-29711-7-git-send-email-gregory.clement@free-electrons.com> <20141122020811.GO22670@titan.lakedaemon.net> <5470556B.6080608@free-electrons.com> <20141126035929.GJ22670@titan.lakedaemon.net> <54756164.3070206@ti.com> <20141126051701.GU22670@titan.lakedaemon.net>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 0/9] Extend various drivers to run on bi-endian BMIPS hosts
+Date: Tue, 25 Nov 2014 21:33:20 -0800
+Message-ID: <CAGVrzcZrOY+y1H_86X1Rj9GvpRhSaYLMw59vZyt84MAkUmEHHg@mail.gmail.com>
+References: <1416962994-27095-1-git-send-email-cernekee@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141126051701.GU22670-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1416962994-27095-1-git-send-email-cernekee@gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Kevin Cernekee <cernekee@gmail.com>
+Cc: sre@kernel.org, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Tony Prisk <linux@prisktech.co.nz>, Alan Stern <stern@rowland.harvard.edu>, Greg KH <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Brian Norris <computersforpeace@gmail.com>, Marc Carino <marc.ceeeee@gmail.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-usb <linux-usb@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
+2014-11-25 16:49 GMT-08:00 Kevin Cernekee <cernekee@gmail.com>:
+> This patch series incorporates the following changes:
+>
+>  - Extend brcmstb reset driver to work on MIPS (currently ARM-only).
+>
+>  - Extend brcmstb GISB bus driver to work on MIPS (currently ARM-only).
+>
+>  - Extend brcmstb GISB bus driver to work on BE systems (currently LE-only).
+>
+>  - Extend both drivers to support the older register layouts used on many
+>    of the BMIPS platforms.
+>
+>  - Extend {ohci,ehci}-platform drivers to accept the new "native-endian"
+>    DT property, to accommodate BCM7xxx platforms that can be switched
+>    between LE/BE with a board jumper.
+>
+>
+> Dependencies:
+>
+> power/reset: brcmstb: Register with kernel restart handler (Guenter Roeck)
+> of: Add helper function to check MMIO register endianness (Kevin Cernekee)
+>
+> These are both tentatively accepted, but might not be present in the same
+> tree yet.  As such, we might want to "review now, merge later."
+
+For the entire series:
+
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+
+I will probably take the brcmstb_gisb.c changes separately and submit
+them to arm-soc as a "drivers" pull request since this driver has
+typically been routed that way.
+
+Thanks!
+
+>
+>
+> Kevin Cernekee (9):
+>   power/reset: brcmstb: Make the driver buildable on MIPS
+>   power/reset: brcmstb: Use the DT "compatible" string to indicate bit
+>     positions
+>   power/reset: brcmstb: Add support for old 65nm chips
+>   bus: brcmstb_gisb: Make the driver buildable on MIPS
+>   bus: brcmstb_gisb: Introduce wrapper functions for MMIO accesses
+>   bus: brcmstb_gisb: Look up register offsets in a table
+>   bus: brcmstb_gisb: Add register offset tables for older chips
+>   bus: brcmstb_gisb: Honor the "big-endian" and "native-endian" DT
+>     properties
+>   usb: {ohci,ehci}-platform: Use new OF big-endian helper function
+>
+>  .../devicetree/bindings/arm/brcm-brcmstb.txt       |   4 +-
+>  .../devicetree/bindings/bus/brcm,gisb-arb.txt      |   6 +-
+>  Documentation/devicetree/bindings/usb/usb-ehci.txt |   2 +
+>  Documentation/devicetree/bindings/usb/usb-ohci.txt |   2 +
+>  drivers/bus/Kconfig                                |   2 +-
+>  drivers/bus/brcmstb_gisb.c                         | 127 ++++++++++++++++++---
+>  drivers/power/reset/Kconfig                        |   9 +-
+>  drivers/power/reset/brcmstb-reboot.c               |  41 +++++--
+>  drivers/usb/host/ehci-platform.c                   |   2 +-
+>  drivers/usb/host/ohci-platform.c                   |   2 +-
+>  10 files changed, 161 insertions(+), 36 deletions(-)
+>
+> --
+> 2.1.0
+>
 
 
-On Wednesday 26 November 2014 10:47 AM, Jason Cooper wrote:
-> On Wed, Nov 26, 2014 at 10:43:08AM +0530, Kishon Vijay Abraham I wrote:
->> Hi,
->>
->> On Wednesday 26 November 2014 09:29 AM, Jason Cooper wrote:
->>> On Sat, Nov 22, 2014 at 10:20:43AM +0100, Gregory CLEMENT wrote:
->>>> Hi Jason,
->>>>
->>>> On 22/11/2014 03:08, Jason Cooper wrote:
->>>>> On Thu, Nov 13, 2014 at 12:47:48PM +0100, Gregory CLEMENT wrote:
->>>>>> Now that the USB cluster node has been added, use it as a PHY provider
->>>>>> for the USB controller linked to it: the first EHCI and the xHCI.
->>>>>>
->>>>>> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>
->> Looks like I'm not cc'ed in v4 of this patch series :-(
-> 
-> I've bounced emails maybe three times in my life.  Thought it might work
-> here.  Did it?
 
-Actually I'm CC'ed, just that search didn't find it. Sorry for the noise.
-
-Thanks
-Kishon
-> 
-> thx,
-> 
-> Jason.
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Florian
