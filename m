@@ -1,92 +1,45 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v14 0/3] Add drm driver for Rockchip Socs
-Date: Wed, 26 Nov 2014 01:37:51 +0100
-Message-ID: <1557742.FTdLsE0bVs@diego>
-References: <1416447994-9921-1-git-send-email-mark.yao@rock-chips.com> <23617908.6oA5uRuO3l@diego> <CAPM=9tzvvb5U+8KaCO+K6CJi=rwWOkoW+4ZSFW_Oo9gTncvkWA@mail.gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] clk: rockchip: add binding ID for DMC (memory controller) clocks on rk3288
+Date: Wed, 26 Nov 2014 01:45:12 +0100
+Message-ID: <1717801.sWHeWsmqUi@diego>
+References: <1416960783-25119-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAPM=9tzvvb5U+8KaCO+K6CJi=rwWOkoW+4ZSFW_Oo9gTncvkWA@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Dave Airlie <airlied@gmail.com>, Joerg Roedel <jroedel@suse.de>
-Cc: Mark Yao <mark.yao@rock-chips.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Rom Lemarchand <romlem@google.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-api@vger.kernel.org, linux-rockchip@lists.infradead.org, Douglas Anderson <dianders@chromium.org>, =?ISO-8859-1?Q?St=E9phane?= Marchesin <marcheu@chromium.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416960783-25119-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Derek Basehore <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Joerg, Dave,
+Am Dienstag, 25. November 2014, 16:13:02 schrieb Doug Anderson:
+> From: Jeff Chen <cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> 
+> The DMC clocks need to be turned off at runtime, so we should have IDs
+> so we can export them.
+> 
+> Signed-off-by: Jeff Chen <cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> [dianders: split into two patches; adjusted commit msg]
+> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-Am Mittwoch, 26. November 2014, 09:12:56 schrieb Dave Airlie:
-> On 26 November 2014 at 02:38, Heiko St=FCbner <heiko@sntech.de> wrote=
-:
-> > Mark,
-> >=20
-> > Am Donnerstag, 20. November 2014, 09:46:34 schrieb Mark Yao:
-> >> This a series of patches is a DRM Driver for Rockchip Socs, add su=
-pport
-> >> for vop devices. Future patches will add additional encoders/conne=
-ctors,
-> >> such as eDP, HDMI.
-> >>=20
-> >> The basic "crtc" for rockchip is a "VOP" - Video Output Processor.
-> >> the vop devices found on Rockchip rk3288 Soc, rk3288 soc have two =
-similar
-> >> Vop devices. Vop devices support iommu mapping, we use dma-mapping=
- API
-> >> with
-> >> ARM_DMA_USE_IOMMU.
-> >=20
-> > it looks like everybody is more or less happy with this version - i=
-n past
-> > versions responses voicing concerns where quite swift.
-> >=20
-> > As David requested a pull request the last time, it might be time t=
-o do
-> > so, so that we maybe still reach 3.19.
->=20
-> I need the iommu changes the drm driver depends on in a stable
-> maintainer git tree,
-> I'm not pulling in code I can't build.
+both patches look ok to me and I'll probably pick them up tomorrow.
 
-Joerg, is your arm/rockchip branch [0] considered stable?
+Just as handling question, do you plan on sending dts changes using these 
+clocks in time for 3.19 [i.e. in the next couple of days]?
 
-[0] https://git.kernel.org/cgit/linux/kernel/git/joro/iommu.git/log/?h=3D=
-arm/rockchip
+We have currently three clock patches/series adding new clock ids [this one, 
+the mmc phases and Sonny's i2s_clkout] and I'm trying to dertermine if I need 
+a shared branch for those.
+
+Currently it doesn't look like the others will provide dts patches using the 
+clocks in time, so it looks like I can skip the shared branch and we can use 
+the clock ids regularly after the merge-window. Some true for your clocks?
 
 
-> I'm happy if the rockchip drm pull stays static and I can pull it in
-> once the iommu bits
-> are done.
-
-While testing this I noticed a quite big kconfig warning
-(on both 3.18-rc1 and 3.18-rc6):
-
-drivers/video/fbdev/Kconfig:5:error: recursive dependency detected!
-drivers/video/fbdev/Kconfig:5:  symbol FB is selected by DRM_KMS_FB_HEL=
-PER
-drivers/gpu/drm/Kconfig:34:     symbol DRM_KMS_FB_HELPER is selected by=
- DRM_ROCKCHIP
-drivers/gpu/drm/rockchip/Kconfig:1:     symbol DRM_ROCKCHIP depends on =
-ARM_DMA_USE_IOMMU
-arch/arm/Kconfig:95:    symbol ARM_DMA_USE_IOMMU is selected by VIDEO_O=
-MAP3
-drivers/media/platform/Kconfig:96:      symbol VIDEO_OMAP3 depends on V=
-IDEO_V4L2
-drivers/media/v4l2-core/Kconfig:6:      symbol VIDEO_V4L2 depends on I2=
-C
-drivers/i2c/Kconfig:7:  symbol I2C is selected by FB_DDC
-drivers/video/fbdev/Kconfig:59: symbol FB_DDC is selected by FB_CYBER20=
-00_DDC
-drivers/video/fbdev/Kconfig:374:        symbol FB_CYBER2000_DDC depends=
- on FB_CYBER2000
-drivers/video/fbdev/Kconfig:362:        symbol FB_CYBER2000 depends on =
-=46B
-
-It looks like the VIDEO_OMAP3 is selecting ARM_DMA_USE_IOMMU and
-OMAP_IOMMU instead of depending on it.
-
-I'm not sure which driver should change but looking at the exynos drm
-driver it is also depends on the iommu parts instead of selecting them
-[like the rockchip drm currently does]
-
-
+Thanks
 Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
