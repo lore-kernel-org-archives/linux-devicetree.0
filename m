@@ -1,114 +1,292 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH][RFC] spi: sh-msiof: Configure MSIOF sync signal timing in device tree
-Date: Sun, 30 Nov 2014 22:23:15 +0200
-Message-ID: <3485316.4muPRcz2if@avalon>
-References: <5477EFD7.50307@renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5477EFD7.50307-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, damm-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-List-Id: devicetree@vger.kernel.org
+Return-Path: <andy.green@linaro.org>
+MIME-Version: 1.0
+In-Reply-To: <CAJe_ZhfkcSv7oBfXdiW5=F0bZvv+9z3m90cXdy=O66VwZWCQnw@mail.gmail.com>
+References: <1416486442-25200-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+	<1416486872-25301-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+	<54749429.9080505@arm.com>
+	<CAJe_ZhciCP2VbmRtrq9d14WhfLhnC-xaitCCiW_6Yf1S-0sdUg@mail.gmail.com>
+	<5474C3DD.5060706@arm.com>
+	<CAJe_ZhfkcSv7oBfXdiW5=F0bZvv+9z3m90cXdy=O66VwZWCQnw@mail.gmail.com>
+Date: Wed, 26 Nov 2014 13:44:44 +0800
+Message-ID: <CAAfg0W6eXw8HQZ=gbhGAaOfCYktq4ZBFU2=XLOAhevy6eHGfjw@mail.gmail.com>
+Subject: Re: [PATCH 2/9] mailbox: arm_mhu: add driver for ARM MHU controller
+From: Andy Green <andy.green@linaro.org>
+Content-Type: multipart/alternative; boundary=047d7bf1617e54b00c0508bc86ee
+To: Jassi Brar <jaswinder.singh@linaro.org>
+Cc: Vincent Yang <vincent.yang.fujitsu@gmail.com>, Vincent Yang <Vincent.Yang@tw.fujitsu.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, Mark Rutland <Mark.Rutland@arm.com>, Tetsuya Nuriya <nuriya.tetsuya@jp.fujitsu.com>, "patches@linaro.org" <patches@linaro.org>, "olof@lixom.net" <olof@lixom.net>, Pawel Moll <Pawel.Moll@arm.com>
+List-ID: <devicetree@vger.kernel.org>
 
-Hi Shimoda-san,
+--047d7bf1617e54b00c0508bc86ee
+Content-Type: text/plain; charset=UTF-8
 
-Thank you for the patch.
+On 26 Nov 2014 13:37, "Jassi Brar" <jaswinder.singh@linaro.org> wrote:
+>
+> On 25 November 2014 at 23:31, Sudeep Holla <sudeep.holla@arm.com> wrote:
+> >
+> >
+> > On 25/11/14 16:51, Jassi Brar wrote:
+> >>
+> >> On 25 November 2014 at 20:07, Sudeep Holla <sudeep.holla@arm.com>
+wrote:
+> >>>
+> >>>
+> >>>
+> >>> On 20/11/14 12:34, Vincent Yang wrote:
+> >>>>
+> >>>>
+> >>>> Add driver for the ARM Message-Handling-Unit (MHU).
+> >>>>
+> >>>> Signed-off-by: Andy Green <andy.green@linaro.org>
+> >>>> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+> >>>> Signed-off-by: Vincent Yang <Vincent.Yang@tw.fujitsu.com>
+> >>>> Signed-off-by: Tetsuya Nuriya <nuriya.tetsuya@jp.fujitsu.com>
+> >>>> ---
+> >>>>    .../devicetree/bindings/mailbox/arm-mhu.txt        |  33 ++++
+> >>>>    drivers/mailbox/Kconfig                            |   7 +
+> >>>>    drivers/mailbox/Makefile                           |   2 +
+> >>>>    drivers/mailbox/arm_mhu.c                          | 196
+> >>>> +++++++++++++++++++++
+> >>>>    4 files changed, 238 insertions(+)
+> >>>>    create mode 100644
+> >>>> Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+> >>>>    create mode 100644 drivers/mailbox/arm_mhu.c
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+> >>>> b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+> >>>> new file mode 100644
+> >>>> index 0000000..b1b9888
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+> >>>> @@ -0,0 +1,33 @@
+> >>>> +ARM MHU Mailbox Driver
+> >>>> +======================
+> >>>> +
+> >>>> +The ARM's Message-Handling-Unit (MHU) is a mailbox controller that
+has
+> >>>> +3 independent channels/links to communicate with remote
+processor(s).
+> >>>
+> >>>
+> >>>
+> >>> I had reviewed this before and I see not all the comments are
+addressed.
+> >>> I had mentioned that you can't add support to _SECURE_ channel in
+Linux
+> >>> as you need to assume Linux runs in non-secure privilege(and I gather
+> >>> that's the case even on this platform from other email in the thread)
+> >>>
+> >> Please revisit the old thread. After some discussion you had
+> >> graciously allowed me to keep the secure channel ;)
+> >> [
+> >> ... Even though I don't like you have secure channel access in Linux,
+you
+> >> have valid reasons. In case you decide to support it ....
+> >> ]
+> >
+> >
+> > Agreed but based on the other email in the same thread it looks like you
+> > want to run the same kernel both in secure and no-secure mode on this
+> > platform, in which case you _have_to_assume_ it's *non-secure only*
+always
+> > unless you come up with some DT magic.
+> >
+> Yes, the S vs NS mode should ideally be defined in DT. The kernel
+> image should remain the same.
 
-On Friday 28 November 2014 12:45:27 Yoshihiro Shimoda wrote:
-> The MSIOF controller has DTDL and SYNCDL in SITMDR1 and SIRMDR1
-> registers. So, this patch adds new properties like the following
-> commit:
->   d0fb47a5237d8b9576113568bacfd27892308b62
->   (spi: fsl-espi: Configure FSL eSPI CSBEF and CSAFT)
-> 
-> The DTDL is the chip select (SYNC) setup time.
->  b'000: No bit delay
->  b'001: 1-clock-cycle delay
->  b'010: 2-clock-cycle delay
->  b'101: 0.5-clock-cycle delay
->  b'110: 1.5-clock-cycle delay
-> 
-> The SYNCDL is the chip select (SYNC) hold time.
->  b'000: No bit delay
->  b'001: 1-clock-cycle delay
->  b'010: 2-clock-cycle delay
->  b'011: 3-clock-cycle delay
->  b'101: 0.5-clock-cycle delay
->  b'110: 1.5-clock-cycle delay
-> 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> ---
-> 
->  I would like to add new properties for sh-msiof driver to adjust
-> the SYNC siginal timing using DTDL and SYNCDL. In the current driver,
-> these parameters are hardcoded to 0. And then, I checked other spi
-> drivers, and I found the following commit:
->   d0fb47a5237d8b9576113568bacfd27892308b62
->   (spi: fsl-espi: Configure FSL eSPI CSBEF and CSAFT)
-> 
-> If this patch is reasonable, I will modify the sh-msiof driver.
-> Or, should we add a new function for this timing adjusting in the
-> spi framework?
-> 
->  Documentation/devicetree/bindings/spi/sh-msiof.txt |    8 ++++++++
->  drivers/spi/spi-sh-msiof.c                         |    2 ++
->  2 files changed, 10 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt
-> b/Documentation/devicetree/bindings/spi/sh-msiof.txt index d11c372..5fe8ffd
-> 100644
-> --- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
-> +++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-> @@ -30,6 +30,14 @@ Optional properties:
->  			 specifiers, one for transmission, and one for
->  			 reception.
->  - dma-names            : Must contain a list of two DMA names, "tx" and
-> "rx".
-> +- renesas,tdmr-dtdl    : delay sync signal (setup) in transmit mode
-> +			 (default is 0, we can set it to 0, 1, 2, 5, or 6)
-> +- renesas,tdmr-syncdl  : delay sync signal (hold) in transmit mode
-> +			 (default is 0, we can set it to 0, 1, 2, 3, 5, or 6)
-> +- renesas,rdmr-dtdl    : delay sync signal (setup) in receive mode
-> +			 (default is 0, we can set it to 0, 1, 2, 5, or 6)
-> +- renesas,rdmr-syncdl  : delay sync signal (hold) in receive mode
-> +			 (default is 0, we can set it to 0, 1, 2, 3, 5, or 6)
+If this is desirable, we can edit the related dtb path in memory
+accordingly at the bootloader, since that knows at runtime if he's secure
+or nonsecure.
 
-Was it really the intent of this patch to add DT properties without providing 
-an implementation in the sh-msiof driver ?
+-Andy
 
->  Optional properties, deprecated for soctype-specific bindings:
->  - renesas,tx-fifo-size : Overrides the default tx fifo size given in words
-> diff --git a/drivers/spi/spi-sh-msiof.c b/drivers/spi/spi-sh-msiof.c
-> index 3f36540..09e0c38 100644
-> --- a/drivers/spi/spi-sh-msiof.c
-> +++ b/drivers/spi/spi-sh-msiof.c
-> @@ -296,11 +296,13 @@ static void sh_msiof_spi_set_pin_regs(struct
-> sh_msiof_spi_priv *p, tmp = MDR1_SYNCMD_SPI | 1 << MDR1_FLD_SHIFT |
-> MDR1_XXSTP;
->  	tmp |= !cs_high << MDR1_SYNCAC_SHIFT;
->  	tmp |= lsb_first << MDR1_BITLSB_SHIFT;
-> +printk("%s: TMDR1 = %x\n", __func__, tmp | MDR1_TRMD | TMDR1_PCON);
->  	sh_msiof_write(p, TMDR1, tmp | MDR1_TRMD | TMDR1_PCON);
->  	if (p->chipdata->master_flags & SPI_MASTER_MUST_TX) {
->  		/* These bits are reserved if RX needs TX */
->  		tmp &= ~0x0000ffff;
->  	}
-> +printk("%s: RMDR1 = %x\n", __func__, tmp);
+> >>   It seems you still don't get my point that the driver should manage
+> >> all channels - S & NS. If Linux is running in NS mode on a platform,
+> >> the DT will specify only some NS channel to be used. The controller
+> >> driver shouldn't be crippled just because you think Linux will never
+> >> be run in Secure mode.
+> >>
+> >
+> > Ok how do you handle that, I don't see that in the DT binding. As it
+> > stands, you can unconditionally try to access the secure channel and
+> > cause aborts if the platform is running in non-secure mode.
+> >
+> No. Please look at the dtsi again ....
+>
+>         mhu: mailbox@2b1f0000 {
+>                 #mbox-cells = <1>;
+>                 compatible = "arm,mbox-mhu";
+>                 reg = <0 0x2b1f0000 0x1000>;
+>                 interrupts = <0 36 4>, /* LP Non-Sec */
+>                              <0 35 4>, /* HP Non-Sec */
+>                              <0 37 4>; /* Secure */
+>         };
+>
+>         mhu_client: scb@2e000000 {
+>                 compatible = "fujitsu,mb86s70-scb-1.0";
+>                 reg = <0 0x2e000000 0x4000>; /* SHM for IPC */
+>                 mboxes = <&mhu 1>;
+>         };
+>
+> See the DT for mbox client specifies that it uses channel-1 which is
+> High-Priority_Non-Secure channel.
+>
+> -jassi
 
-I suppose these printk are debugging leftovers.
+--047d7bf1617e54b00c0508bc86ee
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
->  	sh_msiof_write(p, RMDR1, tmp);
-> 
->  	tmp = 0;
+<p dir=3D"ltr"><br>
+On 26 Nov 2014 13:37, &quot;Jassi Brar&quot; &lt;<a href=3D"mailto:jaswinde=
+r.singh@linaro.org">jaswinder.singh@linaro.org</a>&gt; wrote:<br>
+&gt;<br>
+&gt; On 25 November 2014 at 23:31, Sudeep Holla &lt;<a href=3D"mailto:sudee=
+p.holla@arm.com">sudeep.holla@arm.com</a>&gt; wrote:<br>
+&gt; &gt;<br>
+&gt; &gt;<br>
+&gt; &gt; On 25/11/14 16:51, Jassi Brar wrote:<br>
+&gt; &gt;&gt;<br>
+&gt; &gt;&gt; On 25 November 2014 at 20:07, Sudeep Holla &lt;<a href=3D"mai=
+lto:sudeep.holla@arm.com">sudeep.holla@arm.com</a>&gt; wrote:<br>
+&gt; &gt;&gt;&gt;<br>
+&gt; &gt;&gt;&gt;<br>
+&gt; &gt;&gt;&gt;<br>
+&gt; &gt;&gt;&gt; On 20/11/14 12:34, Vincent Yang wrote:<br>
+&gt; &gt;&gt;&gt;&gt;<br>
+&gt; &gt;&gt;&gt;&gt;<br>
+&gt; &gt;&gt;&gt;&gt; Add driver for the ARM Message-Handling-Unit (MHU).<b=
+r>
+&gt; &gt;&gt;&gt;&gt;<br>
+&gt; &gt;&gt;&gt;&gt; Signed-off-by: Andy Green &lt;<a href=3D"mailto:andy.=
+green@linaro.org">andy.green@linaro.org</a>&gt;<br>
+&gt; &gt;&gt;&gt;&gt; Signed-off-by: Jassi Brar &lt;<a href=3D"mailto:jaswi=
+nder.singh@linaro.org">jaswinder.singh@linaro.org</a>&gt;<br>
+&gt; &gt;&gt;&gt;&gt; Signed-off-by: Vincent Yang &lt;<a href=3D"mailto:Vin=
+cent.Yang@tw.fujitsu.com">Vincent.Yang@tw.fujitsu.com</a>&gt;<br>
+&gt; &gt;&gt;&gt;&gt; Signed-off-by: Tetsuya Nuriya &lt;<a href=3D"mailto:n=
+uriya.tetsuya@jp.fujitsu.com">nuriya.tetsuya@jp.fujitsu.com</a>&gt;<br>
+&gt; &gt;&gt;&gt;&gt; ---<br>
+&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 .../devicetree/bindings/mailbox/arm-mhu.=
+txt=C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 33 ++++<br>
+&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 drivers/mailbox/Kconfig=C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 |=C2=A0 =C2=A07 +<br>
+&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 drivers/mailbox/Makefile=C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0|=C2=A0 =C2=A02 +<br>
+&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 drivers/mailbox/arm_mhu.c=C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 | 196<br>
+&gt; &gt;&gt;&gt;&gt; +++++++++++++++++++++<br>
+&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 4 files changed, 238 insertions(+)<br>
+&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 create mode 100644<br>
+&gt; &gt;&gt;&gt;&gt; Documentation/devicetree/bindings/mailbox/arm-mhu.txt=
+<br>
+&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 create mode 100644 drivers/mailbox/arm_m=
+hu.c<br>
+&gt; &gt;&gt;&gt;&gt;<br>
+&gt; &gt;&gt;&gt;&gt; diff --git a/Documentation/devicetree/bindings/mailbo=
+x/arm-mhu.txt<br>
+&gt; &gt;&gt;&gt;&gt; b/Documentation/devicetree/bindings/mailbox/arm-mhu.t=
+xt<br>
+&gt; &gt;&gt;&gt;&gt; new file mode 100644<br>
+&gt; &gt;&gt;&gt;&gt; index 0000000..b1b9888<br>
+&gt; &gt;&gt;&gt;&gt; --- /dev/null<br>
+&gt; &gt;&gt;&gt;&gt; +++ b/Documentation/devicetree/bindings/mailbox/arm-m=
+hu.txt<br>
+&gt; &gt;&gt;&gt;&gt; @@ -0,0 +1,33 @@<br>
+&gt; &gt;&gt;&gt;&gt; +ARM MHU Mailbox Driver<br>
+&gt; &gt;&gt;&gt;&gt; +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D<br>
+&gt; &gt;&gt;&gt;&gt; +<br>
+&gt; &gt;&gt;&gt;&gt; +The ARM&#39;s Message-Handling-Unit (MHU) is a mailb=
+ox controller that has<br>
+&gt; &gt;&gt;&gt;&gt; +3 independent channels/links to communicate with rem=
+ote processor(s).<br>
+&gt; &gt;&gt;&gt;<br>
+&gt; &gt;&gt;&gt;<br>
+&gt; &gt;&gt;&gt;<br>
+&gt; &gt;&gt;&gt; I had reviewed this before and I see not all the comments=
+ are addressed.<br>
+&gt; &gt;&gt;&gt; I had mentioned that you can&#39;t add support to _SECURE=
+_ channel in Linux<br>
+&gt; &gt;&gt;&gt; as you need to assume Linux runs in non-secure privilege(=
+and I gather<br>
+&gt; &gt;&gt;&gt; that&#39;s the case even on this platform from other emai=
+l in the thread)<br>
+&gt; &gt;&gt;&gt;<br>
+&gt; &gt;&gt; Please revisit the old thread. After some discussion you had<=
+br>
+&gt; &gt;&gt; graciously allowed me to keep the secure channel ;)<br>
+&gt; &gt;&gt; [<br>
+&gt; &gt;&gt; ... Even though I don&#39;t like you have secure channel acce=
+ss in Linux, you<br>
+&gt; &gt;&gt; have valid reasons. In case you decide to support it ....<br>
+&gt; &gt;&gt; ]<br>
+&gt; &gt;<br>
+&gt; &gt;<br>
+&gt; &gt; Agreed but based on the other email in the same thread it looks l=
+ike you<br>
+&gt; &gt; want to run the same kernel both in secure and no-secure mode on =
+this<br>
+&gt; &gt; platform, in which case you _have_to_assume_ it&#39;s *non-secure=
+ only* always<br>
+&gt; &gt; unless you come up with some DT magic.<br>
+&gt; &gt;<br>
+&gt; Yes, the S vs NS mode should ideally be defined in DT. The kernel<br>
+&gt; image should remain the same.</p>
+<p dir=3D"ltr">If this is desirable, we can edit the related dtb path in me=
+mory accordingly at the bootloader, since that knows at runtime if he&#39;s=
+ secure or nonsecure.</p>
+<p dir=3D"ltr">-Andy</p>
+<p dir=3D"ltr">&gt; &gt;&gt;=C2=A0 =C2=A0It seems you still don&#39;t get m=
+y point that the driver should manage<br>
+&gt; &gt;&gt; all channels - S &amp; NS. If Linux is running in NS mode on =
+a platform,<br>
+&gt; &gt;&gt; the DT will specify only some NS channel to be used. The cont=
+roller<br>
+&gt; &gt;&gt; driver shouldn&#39;t be crippled just because you think Linux=
+ will never<br>
+&gt; &gt;&gt; be run in Secure mode.<br>
+&gt; &gt;&gt;<br>
+&gt; &gt;<br>
+&gt; &gt; Ok how do you handle that, I don&#39;t see that in the DT binding=
+. As it<br>
+&gt; &gt; stands, you can unconditionally try to access the secure channel =
+and<br>
+&gt; &gt; cause aborts if the platform is running in non-secure mode.<br>
+&gt; &gt;<br>
+&gt; No. Please look at the dtsi again ....<br>
+&gt;<br>
+&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 mhu: mailbox@2b1f0000 {<br>
+&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 #mbox-cells =
+=3D &lt;1&gt;;<br>
+&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 compatible =3D=
+ &quot;arm,mbox-mhu&quot;;<br>
+&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 reg =3D &lt;0 =
+0x2b1f0000 0x1000&gt;;<br>
+&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 interrupts =3D=
+ &lt;0 36 4&gt;, /* LP Non-Sec */<br>
+&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&lt;0 35 4&gt;, /* HP Non-Sec */<br>
+&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&lt;0 37 4&gt;; /* Secure */<br>
+&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 };<br>
+&gt;<br>
+&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 mhu_client: scb@2e000000 {<br>
+&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 compatible =3D=
+ &quot;fujitsu,mb86s70-scb-1.0&quot;;<br>
+&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 reg =3D &lt;0 =
+0x2e000000 0x4000&gt;; /* SHM for IPC */<br>
+&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 mboxes =3D &lt=
+;&amp;mhu 1&gt;;<br>
+&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 };<br>
+&gt;<br>
+&gt; See the DT for mbox client specifies that it uses channel-1 which is<b=
+r>
+&gt; High-Priority_Non-Secure channel.<br>
+&gt;<br>
+&gt; -jassi<br>
+</p>
 
--- 
-Regards,
-
-Laurent Pinchart
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--047d7bf1617e54b00c0508bc86ee--
