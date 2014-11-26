@@ -1,119 +1,95 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v13 0/12] dw-hdmi: convert imx hdmi to bridge/dw_hdmi
-Date: Wed, 26 Nov 2014 21:22:37 +0800
-Message-ID: <1417008157-31861-1-git-send-email-andy.yan@rock-chips.com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of/fdt: memblock_reserve /memreserve/ regions in the case
+ of partial overlap
+Date: Wed, 26 Nov 2014 13:26:01 +0000
+Message-ID: <CACxGe6uTF=v3L_2Nh=ZHSbVMiPMu22_-5hxStABA6MeryNz-3Q@mail.gmail.com>
+References: <1416920095-31999-1-git-send-email-ian.campbell@citrix.com>
+ <20141125143750.1BAAAC44343@trevor.secretlab.ca> <CAL_JsqJV6e2oO7uJEUHzep8QAA1YztTgdaUNynKVnr_ABv+-nQ@mail.gmail.com>
+ <1417007670.11944.52.camel@citrix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
-Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, mark.yao@rock-chips.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Andy Yan <andy.yan@rock-chips.com>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1417007670.11944.52.camel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Nov 26, 2014 at 1:14 PM, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org> wrote:
+> On Tue, 2014-11-25 at 13:31 -0600, Rob Herring wrote:
+>> On Tue, Nov 25, 2014 at 8:37 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> > On Tue, 25 Nov 2014 12:54:55 +0000
+>> > , Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+>> >  wrote:
+>> >> memblock_is_region_reserved() returns true in the case of a partial
+>> >> overlap, meaning that the current code fails to reserve the
+>> >> non-overlapping portion.
+>> >>
+>> >> I observed this causing a Midway system with a buggy fdt (the header
+>> >> declares itself to be larger than it really is) failing to boot
+>> >> because the over-inflated size of the fdt was causing it to seem to
+>> >> run into the swapper_pg_dir region, meaning the DT wasn't reserved.
+>> >> The symptoms were failing to find an disks or network and failing to
+>> >> boot. I think it is work printing a warning in this case.
+>> >>
+>> >> However given the ambiguity of whether things like the initrd are
+>> >> covered by /memreserve/ and similar I think it is best to also
+>> >> register the region rather than just ignoring it.
+>> >>
+>> >> Since memblock_reserve() handles overlaps just fine lets just warn and
+>> >> carry on.
+>> >>
+>> >> Signed-off-by: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+>> >> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> >> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> >> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> >> ---
+>> >>  drivers/of/fdt.c |    3 ++-
+>> >>  1 file changed, 2 insertions(+), 1 deletion(-)
+>> >>
+>> >> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+>> >> index 30e97bc..4f0f24c 100644
+>> >> --- a/drivers/of/fdt.c
+>> >> +++ b/drivers/of/fdt.c
+>> >> @@ -965,7 +965,8 @@ int __init __weak early_init_dt_reserve_memory_arch(phys_addr_t base,
+>> >>                                       phys_addr_t size, bool nomap)
+>> >>  {
+>> >>       if (memblock_is_region_reserved(base, size))
+>> >> -             return -EBUSY;
+>> >> +             pr_warning("DT reserved region at 0x%pa is already reserved\n",
+>> >> +                        &base);
+>> >
+>> > Since memblock_remove/reserve does the right thing anyway, let's just
+>> > drop the test entirely.
+>>
+>> If the region completely overlaps, then I agree it is okay to be
+>> quiet. But if we have partially overlapping region already with the
+>> dtb, then we should warn here. We want to know if someone passes a dtb
+>> that is too big.
+>
+> Unfortunately memblock isn't currently capable of distinguishing partial
+> vs total overlap.
+>
+> We could perhaps warn iff only on of the first and last byte of the new
+> region are already reserved, but not if they both are. i.e.
+>         if (memblock_is_region_reserved(base, size) &&
+>            !!memblock_is_region_reserved(base, 1) != !!memblock_is_region_reserved(base+size-1, 1))
+>
+> That wouldn't handle
+> ----RESERVED---|            |----RESERVED-----
+>             |----- NEW REGION----|
+>
+> But maybe it's better than nothing.
+>
+> Or we could pull the warning up to the caller which reserves the DTB but
+> not for the /memreserve/ loop.
 
-We found Freescale imx6 and Rockchip rk3288 and Ingenic JZ4780 (Xburst/MIPS)
-use the interface compatible Designware HDMI IP, but they also have some
-lightly differences, such as phy pll configuration, register width(imx hdmi
-register is one byte, but rk3288 is 4 bytes width and can only be accessed
-by word), 4K support(imx6 doesn't support 4k, but rk3288 does), and HDMI2.0
-support.
+I've merged the patch to always reserve the region since it is safe.
+I'll expect a followup patch to print a warning in the partial overlap
+case.
 
-To reuse the imx-hdmi driver, we make this patch set:
-(1): fix some CodingStyle warning to make checkpatch happy
-(2): convert imx-hdmi to drm_bridge
-(3): split platform specific code
-(4): move imx-hdmi to bridge/dw_hdmi
-(5): extend dw_hdmi.c to support rk3288 hdmi
-(6): add rockchip rk3288 platform specific code dw_hdmi-rockchip.c
-
-Changes in v13:
-- patch against drm-next
-- split phy configuration from patch#4
-
-Changes in v12:
-- refactor of_node_put(ddc_node)
-- squash patch <convert dw_hdmi to drm_bridge>
-- add comment for the depend on patch
-
-Changes in v11:
-- squash patch  <split some phy configuration to platform driver>
-- split form patch <dw_hdmi: add rk3288 support>
-
-Changes in v10:
-- split generic dw_hdmi.c improvements from patch#11 (add rk3288 support)
-- add more display mode support mpll configuration for rk3288
-
-Changes in v9:
-- move some phy configuration to platform driver
-
-Changes in v8:
-- correct some spelling mistake
-- modify ddc-i2c-bus and interrupt description
-- Add documentation for rockchip dw hdmi
-
-Changes in v7:
-- remove unused variables from structure dw_hdmi
-- remove a wrong modification
-- add copyrights for dw_hdmi-imx.c
-
-Changes in v6:
-- rearrange the patch order
-- refactor register access without reg_shift
-
-Changes in v5:
-- refactor reg-io-width
-
-Changes in v4:
-- fix checkpatch CHECK
-- defer probe ddc i2c adapter
-
-Changes in v3:
-- split multi-register access to one indepent patch
-
-Andy Yan (12):
-  drm: imx: imx-hdmi: make checkpatch happy
-  drm: imx: imx-hdmi: return defer if can't get ddc i2c adapter
-  drm: imx: imx-hdmi: convert imx-hdmi to drm_bridge mode
-  drm: imx: imx-hdmi: split phy configuration to platform driver
-  drm: imx: imx-hdmi: move imx-hdmi to bridge/dw_hdmi
-  dt-bindings: add document for dw_hdmi
-  drm: bridge/dw_hdmi: add support for multi-byte register width access
-  drm: bridge/dw_hdmi: add mode_valid support
-  drm: bridge/dw_hdmi: clear i2cmphy_stat0 reg in hdmi_phy_wait_i2c_done
-  drm: bridge/dw_hdmi: add function dw_hdmi_phy_enable_spare
-  dt-bindings: Add documentation for rockchip dw hdmi
-  drm: bridge/dw_hdmi: add rockchip rk3288 support
-
- .../devicetree/bindings/drm/bridge/dw_hdmi.txt     |  40 ++
- .../devicetree/bindings/video/dw_hdmi-rockchip.txt |  43 ++
- drivers/gpu/drm/bridge/Kconfig                     |   5 +
- drivers/gpu/drm/bridge/Makefile                    |   1 +
- .../gpu/drm/{imx/imx-hdmi.c => bridge/dw_hdmi.c}   | 757 +++++++++------------
- .../gpu/drm/{imx/imx-hdmi.h => bridge/dw_hdmi.h}   |   4 +-
- drivers/gpu/drm/imx/Kconfig                        |   1 +
- drivers/gpu/drm/imx/Makefile                       |   2 +-
- drivers/gpu/drm/imx/dw_hdmi-imx.c                  | 273 ++++++++
- drivers/gpu/drm/rockchip/Kconfig                   |  10 +
- drivers/gpu/drm/rockchip/Makefile                  |   2 +-
- drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c        | 355 ++++++++++
- include/drm/bridge/dw_hdmi.h                       |  60 ++
- 13 files changed, 1132 insertions(+), 421 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt
- create mode 100644 Documentation/devicetree/bindings/video/dw_hdmi-rockchip.txt
- rename drivers/gpu/drm/{imx/imx-hdmi.c => bridge/dw_hdmi.c} (71%)
- rename drivers/gpu/drm/{imx/imx-hdmi.h => bridge/dw_hdmi.h} (99%)
- create mode 100644 drivers/gpu/drm/imx/dw_hdmi-imx.c
- create mode 100644 drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
- create mode 100644 include/drm/bridge/dw_hdmi.h
-
--- 
-1.9.1
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
