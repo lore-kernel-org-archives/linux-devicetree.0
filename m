@@ -1,82 +1,128 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] arm64: Add Juno board device tree.
-Date: Wed, 26 Nov 2014 11:36:16 +0000
-Message-ID: <5475BB30.9080802@arm.com>
-References: <1415727131-4572-1-git-send-email-Liviu.Dudau@arm.com> <1415727131-4572-3-git-send-email-Liviu.Dudau@arm.com> <5475ABC0.3090007@arm.com> <20141126105918.GB828@e106497-lin.cambridge.arm.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v4] clocksource: arch_timer: Allow the device tree to
+ specify uninitialized timer registers
+Date: Wed, 26 Nov 2014 12:51:08 +0100
+Message-ID: <5475BEAC.9020208@linaro.org>
+References: <1412753627-28287-1-git-send-email-sonnyrao@chromium.org> <CAD=FV=VhaMo4fNide3a2S6jdLiq2pyOqY3hmx7ai0iDTPxCsPA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141126105918.GB828-2JSQmVVBSi7ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, device tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=VhaMo4fNide3a2S6jdLiq2pyOqY3hmx7ai0iDTPxCsPA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Olof Johansson <olof@lixom.net>, Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Marc Zyngier <marc.zyngier@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Nathan Lynch <Nathan_Lynch@mentor.com>, Rob Herring <robh+dt@kernel.org>, Sonny Rao <sonnyrao@chromium.org>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-On 26/11/14 10:59, Liviu Dudau wrote:
-> On Wed, Nov 26, 2014 at 10:30:24AM +0000, Marc Zyngier wrote:
->> Hi Liviu,
->>
->> On 11/11/14 17:32, Liviu Dudau wrote:
->>> This adds support for ARM's Juno development board (rev 0).
->>> It enables most of the board peripherals: UART, I2C, USB, MMC and
->>> 100Mb ethernet. There is no support at the moment for clock setting
->>> and HDLCD driver which depends on it.
->>>
->>> Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
->>> ---
->>>  arch/arm64/boot/dts/arm/Makefile              |   1 +
->>>  arch/arm64/boot/dts/arm/juno-clocks.dtsi      |  45 ++++++
->>>  arch/arm64/boot/dts/arm/juno-motherboard.dtsi | 129 +++++++++++++++
->>>  arch/arm64/boot/dts/arm/juno.dts              | 218 ++++++++++++++++++++++++++
->>>  4 files changed, 393 insertions(+)
->>>  create mode 100644 arch/arm64/boot/dts/arm/juno-clocks.dtsi
->>>  create mode 100644 arch/arm64/boot/dts/arm/juno-motherboard.dtsi
->>>  create mode 100644 arch/arm64/boot/dts/arm/juno.dts
->>>
->>
->> [...]
->>
->>> diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
->>> new file mode 100644
->>> index 0000000..097ecc4
->>> --- /dev/null
->>> +++ b/arch/arm64/boot/dts/arm/juno.dts
->>
->> [...]
->>
->>> +       timer {
->>> +               compatible = "arm,armv8-timer";
->>> +               interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING)>,
->>> +                            <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING)>,
->>> +                            <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING)>,
->>> +                            <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING)>;
->>> +       };
->>
->> Sorry, I should have spotted this earlier: all these interrupts are
->> *level*, not edge. This happens to work because the GIC's config
->> register is RO for PPIs on Juno, but still...
-> 
-> Yes, I've seen your other email to Suravee regarding interrupt triggering and I was trying to
-> find the relevant bits in Juno to tell me why I've put the info in DT this way. Maybe I *did*
-> copy-paste this part from FVP DT though.
-> 
-> I will send a patch to Olof to update.
 
-Yeah, looks like most (if not all) DTs in the tree are broken. Any
-chance you could write a sweeping patch to fix them all (at least for
-the ARM implementations)?
+Hi Doug, Olof,
 
-The APM and Cavium implementations also carry the same values, and I
-suppose this is a bug too, but someone with access to documentation
-should figure this out.
+IIUC, it sounds like this patch is needed from some other patches in=20
+arm-soc. Olof was proposing to take this patch through its tree to=20
+facilitate the integration.
 
-Thanks,
+Olof, is it this patch you were worried about ?
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+
+   -- Daniel
+
+On 11/20/2014 12:01 AM, Doug Anderson wrote:
+> Daniel,
+>
+> On Wed, Oct 8, 2014 at 12:33 AM, Sonny Rao <sonnyrao@chromium.org> wr=
+ote:
+>> From: Doug Anderson <dianders@chromium.org>
+>>
+>> Some 32-bit (ARMv7) systems are architected like this:
+>>
+>> * The firmware doesn't know and doesn't care about hypervisor mode a=
+nd
+>>    we don't want to add the complexity of hypervisor there.
+>>
+>> * The firmware isn't involved in SMP bringup or resume.
+>>
+>> * The ARCH timer come up with an uninitialized offset (CNTVOFF)
+>>    between the virtual and physical counters.  Each core gets a
+>>    different random offset.
+>>
+>> * The device boots in "Secure SVC" mode.
+>>
+>> * Nothing has touched the reset value of CNTHCTL.PL1PCEN or
+>>    CNTHCTL.PL1PCTEN (both default to 1 at reset)
+>>
+>> On systems like the above, it doesn't make sense to use the virtual
+>> counter.  There's nobody managing the offset and each time a core go=
+es
+>> down and comes back up it will get reinitialized to some other rando=
+m
+>> value.
+>>
+>> This adds an optional property which can inform the kernel of this
+>> situation, and firmware is free to remove the property if it is goin=
+g
+>> to initialize the CNTVOFF registers when each CPU comes out of reset=
+=2E
+>>
+>> Currently, the best course of action in this case is to use the
+>> physical timer, which is why it is important that CNTHCTL hasn't bee=
+n
+>> changed from its reset value and it's a reasonable assumption given
+>> that the firmware has never entered HYP mode.
+>>
+>> Note that it's been said that on ARMv8 systems the firmware and
+>> kernel really can't be architected as described above.  That means
+>> using the physical timer like this really only makes sense for ARMv7
+>> systems.
+>>
+>> Signed-off-by: Doug Anderson <dianders@chromium.org>
+>> Signed-off-by: Sonny Rao <sonnyrao@chromium.org>
+>> Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+>> ---
+>> Changes in v2:
+>> - Add "#ifdef CONFIG_ARM" as per Will Deacon
+>>
+>> Changes in v3:
+>> - change property name to arm,cntvoff-not-fw-configured and specify
+>>    that the value of CNTHCTL.PL1PC(T)EN must still be the reset valu=
+e
+>>    of 1 as per Mark Rutland
+>>
+>> Changes in v4:
+>> - change property name to arm,cpu-registers-not-fw-configured and
+>>    specify that all cpu registers must have architected reset values
+>>    per Mark Rutland
+>> - change from "#ifdef CONFIG_ARM" to "if (IS_ENABLED(CONFIG_ARM))" p=
+er
+>>    Arnd Bergmann
+>> ---
+>>   Documentation/devicetree/bindings/arm/arch_timer.txt | 8 ++++++++
+>>   drivers/clocksource/arm_arch_timer.c                 | 8 ++++++++
+>>   2 files changed, 16 insertions(+)
+>
+> Do you know what the status of this patch is?  This patch and Sonny's
+> patch at <https://patchwork.kernel.org/patch/5051901/> are needed on
+> Rockchip rk3288 for some specific things:
+>
+> 1. To make SMP happy with coreboot.
+>
+> 2. To (I assume) make SMP happy after S2R (no matter which firmware i=
+s
+> used since I don't think anyone has PSCI for rk3288).
+>
+> ...we still need a DTS entry atop these patches, but that's trivial t=
+o
+> add once these land.
+>
+> Thanks!
+>
+
+
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
