@@ -1,56 +1,24 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH v2 8/8] devicetree: bindings: Document qcom,lcc
-Date: Tue, 25 Nov 2014 17:35:35 -0800
-Message-ID: <1416965735-10583-9-git-send-email-sboyd@codeaurora.org>
-References: <1416965735-10583-1-git-send-email-sboyd@codeaurora.org>
+From: Gyungoh Yoo <gyungoh@gmail.com>
+Subject: Re: [PATCH v8 7/8] regulator: sky81452: Modify Device Tree structure
+Date: Wed, 26 Nov 2014 10:40:07 +0900
+Message-ID: <20141126014007.GA2876@jack-ThinkPad-T520>
+References: <1416898986-24530-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1416898986-24530-8-git-send-email-jack.yoo@skyworksinc.com>
+ <20141125121916.GW7712@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1416965735-10583-1-git-send-email-sboyd@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20141125121916.GW7712@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kenneth Westfield <kwestfie@codeaurora.org>, Josh Cartwright <joshc@codeaurora.org>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: sameo@linux.intel.com, lee.jones@linaro.org, jg1.han@samsung.com, cooloney@gmail.com, lgirdwood@gmail.com, jack.yoo@skyworksinc.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, heiko@sntech.de, jason@lakedaemon.net, shawn.guo@freescale.com, treding@nvidia.com, florian.vaussard@epfl.ch, trivial@kernel.org, linux@roeck-us.net, andrew@lunn.ch, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rajendra Nayak <rnayak@codeaurora.org>
+On Tue, Nov 25, 2014 at 12:19:16PM +0000, Mark Brown wrote:
+> On Tue, Nov 25, 2014 at 04:03:05PM +0900, gyungoh@gmail.com wrote:
+> > From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
+> 
+> This doesn't apply, please check and resend.
 
-Document the LPASS (low power audio subsystem) clock controller
-found on Qualcomm devices.
-
-Cc: <devicetree@vger.kernel.org>
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-Signed-off-by: Kumar Gala <galak@codeaurora.org>
-Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
----
- .../devicetree/bindings/clock/qcom,lcc.txt          | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,lcc.txt
-
-diff --git a/Documentation/devicetree/bindings/clock/qcom,lcc.txt b/Documentation/devicetree/bindings/clock/qcom,lcc.txt
-new file mode 100644
-index 000000000000..dd755be63a01
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/qcom,lcc.txt
-@@ -0,0 +1,21 @@
-+Qualcomm LPASS Clock & Reset Controller Binding
-+------------------------------------------------
-+
-+Required properties :
-+- compatible : shall contain only one of the following:
-+
-+			"qcom,lcc-msm8960"
-+			"qcom,lcc-apq8064"
-+			"qcom,lcc-ipq8064"
-+
-+- reg : shall contain base register location and length
-+- #clock-cells : shall contain 1
-+- #reset-cells : shall contain 1
-+
-+Example:
-+	clock-controller@28000000 {
-+		compatible = "qcom,lcc-ipq8064";
-+		reg = <0x28000000 0x1000>;
-+		#clock-cells = <1>;
-+		#reset-cells = <1>;
-+	};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Could you please explain why this doesn't?
