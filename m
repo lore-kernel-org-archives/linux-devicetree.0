@@ -1,52 +1,89 @@
-From: =?windows-1252?Q?Uwe_Kleine-K=F6nig?= <uwe@kleine-koenig.org>
-Subject: Re: [PATCHv1 0/6] rtc: rtc-isl12057: fixes and alarm support
-Date: Wed, 26 Nov 2014 19:48:54 +0100
-Message-ID: <54762096.7040200@kleine-koenig.org>
-References: <cover.1416006090.git.arno@natisbad.org>
- <874mtlyflf.fsf@natisbad.org>
+From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V3 06/11] irqchip: bcm7120-l2: Change DT binding to allow
+ non-contiguous IRQEN/IRQSTAT
+Date: Wed, 26 Nov 2014 10:54:15 -0800
+Message-ID: <CAJiQ=7DXQX8h-1+K4-NSWjFqmr8nDCU62KzcyKKXiuvLUSHpEg@mail.gmail.com>
+References: <1416796846-28149-1-git-send-email-cernekee@gmail.com>
+ <1416796846-28149-7-git-send-email-cernekee@gmail.com> <CAOiHx=ntm7AO5BU2Ge0JDC5nDgXSZwQDm05s5VTM8mLqYmCZRw@mail.gmail.com>
+ <CAJiQ=7CvpFWxDY1uad2bZz8MBG0Mvg2Jx8WBp6gHi-kD4TDvXA@mail.gmail.com>
+ <CAOiHx=m+At9u=eepphG89kcusOKbBi1qqxT8k-Qyx-OMdMAJKw@mail.gmail.com> <CAOiHx=k_4r=jtQdi0ABvfKAw0JtHY9Z46pVUfetDmKz4d0XoFQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <874mtlyflf.fsf@natisbad.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnaud Ebalard <arno@natisbad.org>, Mark Brown <broonie@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Alessandro Zummo <a.zummo@towertech.it>, Pawel Moll <pawel.moll@arm.com>, rtc-linux@googlegroups.com, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-doc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Peter Huewe <peter.huewe@infineon.com>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <treding@nvidia.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOiHx=k_4r=jtQdi0ABvfKAw0JtHY9Z46pVUfetDmKz4d0XoFQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Fraser <jfraser-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Arnaud,
+On Wed, Nov 26, 2014 at 2:25 AM, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
+> On Wed, Nov 26, 2014 at 10:45 AM, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
+>> As far as I can see, we have three distinct layouts here:
+>>
+>> a) An arbitrary number of 32-bit Mask/Status-pairs (3384/6838). No per
+>> thread support (well, not sure about 60333).
+>>
+>> b) An arbitrary length (32 to 128 bit) Mask register, followed by a
+>> same length Status register (63xx except 63381, 6818, 6828); repeated
+>> for each thread.
+>>
+>> c) A single arbitrary length (currently only 128 bit) Status register,
+>> followed by per thread same length Mask registers (63381).
+>>
+>> On a first glance this could translate to three distinct
+>> drivers/compatible properties, where each expects different reg = <>;
+>> contents.
+>>
+>> For a), it should be enough to expand the current 7120-l2 driver to
+>> accept/use more than one 0x8 length register, which should simplify
+>> the register map setup.
+>>
+>> For b) we could add a a new compatible name (maybe bcm6358-l2, because
+>> that was AFAICT the first one with blocks) that will use the 8 to 32
+>> byte length regs (one for each block). For now we could ignore the SMP
+>> capability of it and make it a variant of the 7120-l2 driver, and when
+>> we add SMP support, split it into a second different driver if we want
+>> to avoid having all the spinlock for register accesses even for a).
+>>
+>> We could then even easily document/add the extra block registers /
+>> interrrupts in documentation / the dtsi files before actually
+>> supporting them, because we only have a fixed amount of regs/irqs to
+>> expect in the !SMP case and can easily ignore the extra
+>> registers/interrupts.
+>>
+>> For c) we could add a a third compatible name (bcm63381-l2), also with
+>> its own setup routine. I would guess it doesn't matter if both
+>> thread's irqstatus register pointers point to the same region.
+>
+> This split-up is especially tempting to me after I had a closer look
+> at the current 7120-l2 driver, which already accepts more than one
+> interrupt, but uses it in a different way. So even if we try to make
+> it very flexible with only one compatible property,
+>
+>    reg = <irqstatus0 irqmask0 irqstatus1 irqmask1>;
+>    interrupts = <irq0>, <irq1>;
+>
+> Could then mean either irq0 is for interrupts 0..31 (mask/status0) and
+> irq1 for interrupts 32 .. 64 (mask/status1), or irq0 is for interrupts
+> 0..31 on cpu0, and irq1 is for interrupts 0..31 on cpu1, and then
+> would require an additional property to tell them apart, for which we
+> then also could just use a different compatible name, and have (IMHO)
+> a lot less headache.  (I wonder why we couldn't just have had more
+> than one instance of 7120-l2 in the dts for the first case)
 
-On 11/26/2014 07:35 PM, Arnaud Ebalard wrote:
-> I wonder if you could take a look at this series I sent providing fixes
-> (patches #1-5) and alarm support (patch #6) for ISL12057 RTC Chip. As
-> all people do for RTC patches - due to lack of feedback from maintainer
-> - I am looking for someone to review the patches (Mark, patch 6 has a
-> sticker w/ regmap-inside ;-)) and then push those upstream if they are
-> ok (Jason, you handled that part for 70e123373c05: "rtc: Add support for
-> Intersil ISL12057 I2C RTC chip" in 2013 for the same reason).
-> 
-> Note that I addressed previous comments and feedback received from Uwe
-> and also spent time to do some soldering in order to support and test
-> the last patch for both my use case (Alarm IRQ signal not routed to the
-> SoC on ReadyNAS RN102, RN104 and RN2120) and the common case.
-> 
-> Do not hesitate to ask if you want me to resend!
-akpm already applied the series, doesn't he?
+I don't think we've used this driver to implement the first case yet.
 
-I'm about to test the patches, just fighting with my NAS to boot my
-custom kernel.
+The initial use of the driver was for the BCM7xxx IRQ0 block, which is
+wired up according to the ASCII art diagram in
+Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7120-l2-intc.txt
+.  i.e. different sets of bits in a single irqstatus0/irqmask0 pair
+map to different parent IRQs.  The bits handled by each parent IRQ are
+indicated in the brcm,int-map-mask property.
 
-Apart from that patches 1 - 5 can have my Ack. Didn't look deep enough
-into patch 6 yet. @akpm: No need to hurry adding them, I hope to be
-able to also provide Tested-by:-tags later today.
-
-Best regards
-Uwe
+And now on BCM3384, of course, we're seeing the output from two 32-bit
+irqstatus/irqmask words ORed together into a single parent IRQ, for
+periph_intc.  The other instances do have their own DT nodes.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
