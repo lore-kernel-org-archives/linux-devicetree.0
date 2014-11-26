@@ -1,87 +1,90 @@
-From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Subject: Re: [PATCH 5/8] of/overlay: Introduce DT overlay support
-Date: Wed, 26 Nov 2014 14:11:55 +0100
-Message-ID: <1417007515.29407.54.camel@x220>
-References: <1416533715-9758-1-git-send-email-grant.likely@linaro.org>
-	 <1416533715-9758-6-git-send-email-grant.likely@linaro.org>
+From: Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] of/fdt: memblock_reserve /memreserve/ regions in the
+ case of partial overlap
+Date: Wed, 26 Nov 2014 13:14:30 +0000
+Message-ID: <1417007670.11944.52.camel@citrix.com>
+References: <1416920095-31999-1-git-send-email-ian.campbell@citrix.com>
+	 <20141125143750.1BAAAC44343@trevor.secretlab.ca>
+	 <CAL_JsqJV6e2oO7uJEUHzep8QAA1YztTgdaUNynKVnr_ABv+-nQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416533715-9758-6-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <CAL_JsqJV6e2oO7uJEUHzep8QAA1YztTgdaUNynKVnr_ABv+-nQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Valentin Rothberg <valentinrothberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2014-11-21 at 01:35 +0000, Grant Likely wrote:
-> From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+On Tue, 2014-11-25 at 13:31 -0600, Rob Herring wrote:
+> On Tue, Nov 25, 2014 at 8:37 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > On Tue, 25 Nov 2014 12:54:55 +0000
+> > , Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+> >  wrote:
+> >> memblock_is_region_reserved() returns true in the case of a partial
+> >> overlap, meaning that the current code fails to reserve the
+> >> non-overlapping portion.
+> >>
+> >> I observed this causing a Midway system with a buggy fdt (the header
+> >> declares itself to be larger than it really is) failing to boot
+> >> because the over-inflated size of the fdt was causing it to seem to
+> >> run into the swapper_pg_dir region, meaning the DT wasn't reserved.
+> >> The symptoms were failing to find an disks or network and failing to
+> >> boot. I think it is work printing a warning in this case.
+> >>
+> >> However given the ambiguity of whether things like the initrd are
+> >> covered by /memreserve/ and similar I think it is best to also
+> >> register the region rather than just ignoring it.
+> >>
+> >> Since memblock_reserve() handles overlaps just fine lets just warn and
+> >> carry on.
+> >>
+> >> Signed-off-by: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+> >> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> >> ---
+> >>  drivers/of/fdt.c |    3 ++-
+> >>  1 file changed, 2 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> >> index 30e97bc..4f0f24c 100644
+> >> --- a/drivers/of/fdt.c
+> >> +++ b/drivers/of/fdt.c
+> >> @@ -965,7 +965,8 @@ int __init __weak early_init_dt_reserve_memory_arch(phys_addr_t base,
+> >>                                       phys_addr_t size, bool nomap)
+> >>  {
+> >>       if (memblock_is_region_reserved(base, size))
+> >> -             return -EBUSY;
+> >> +             pr_warning("DT reserved region at 0x%pa is already reserved\n",
+> >> +                        &base);
+> >
+> > Since memblock_remove/reserve does the right thing anyway, let's just
+> > drop the test entirely.
 > 
-> Overlays are a method to dynamically modify part of the kernel's
-> device tree with dynamically loaded data. Add the core functionality to
-> parse, apply and remove an overlay changeset. The core functionality
-> takes care of managing the overlay data format and performing the add
-> and remove. Drivers are expected to use the overlay functionality to
-> support custom expansion busses commonly found on consumer development
-> boards like the BeagleBone or Raspberry Pi.
-> 
-> The overlay code uses CONFIG_OF_DYNAMIC changesets to perform the low
-> level work of modifying the devicetree.
-> 
-> Documentation about internal and APIs is provided in
-> 	Documentation/devicetree/overlay-notes.txt
-> 
-> v2:
-> - Switch from __of_node_alloc() to __of_node_dup()
-> - Documentation fixups
-> - Remove 2-pass processing of properties
-> - Remove separate ov_lock; just use the DT mutex.
-> v1:
-> - Drop delete capability using '-' prefix. The '-' prefixed names
-> are valid properties and nodes and there is no need for it just yet.
-> - Do not update special properties - name & phandle ones.
-> - Change order of node attachment, so that the special property update
-> works.
-> 
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> If the region completely overlaps, then I agree it is okay to be
+> quiet. But if we have partially overlapping region already with the
+> dtb, then we should warn here. We want to know if someone passes a dtb
+> that is too big.
 
-Now commit 7518b5890d8a ("of/overlay: Introduce DT overlay support"),
-included in today's linux-next (next-20141126).
+Unfortunately memblock isn't currently capable of distinguishing partial
+vs total overlap.
 
->  Documentation/devicetree/overlay-notes.txt | 133 +++++++
->  drivers/of/Kconfig                         |   7 +
->  drivers/of/Makefile                        |   1 +
->  drivers/of/overlay.c                       | 562 +++++++++++++++++++++++++++++
->  include/linux/of.h                         |  31 ++
->  5 files changed, 734 insertions(+)
->  create mode 100644 Documentation/devicetree/overlay-notes.txt
->  create mode 100644 drivers/of/overlay.c
-> 
->[...]
-> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> index fbe8f8d418f7..18b2e2539f84 100644
-> --- a/drivers/of/Kconfig
-> +++ b/drivers/of/Kconfig
-> @@ -84,4 +84,11 @@ config OF_RESERVED_MEM
->  config OF_RESOLVE
->  	bool
->  
-> +config OF_OVERLAY
-> +	bool
-> +	depends on OF
-> +	select OF_DYNAMIC
-> +	select OF_DEVICE
+We could perhaps warn iff only on of the first and last byte of the new
+region are already reserved, but not if they both are. i.e. 
+	if (memblock_is_region_reserved(base, size) && 
+           !!memblock_is_region_reserved(base, 1) != !!memblock_is_region_reserved(base+size-1, 1))
 
-There's currently no Kconfig symbol OF_DEVICE. So this select is now a
-nop. Will that symbol be added in a future patch?
+That wouldn't handle 
+----RESERVED---|            |----RESERVED-----
+            |----- NEW REGION----|
 
-> +	select OF_RESOLVE
-> +
->  endmenu # OF
+But maybe it's better than nothing.
 
+Or we could pull the warning up to the caller which reserves the DTB but
+not for the /memreserve/ loop.
 
-Paul Bolle
+Ian.
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
