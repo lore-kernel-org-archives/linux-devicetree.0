@@ -1,45 +1,126 @@
-From: Peter Hurley <peter@hurleysoftware.com>
-Subject: Re: [PATCH V2 01/10] tty: Fallback to use dynamic major number
-Date: Wed, 26 Nov 2014 09:34:20 -0500
-Message-ID: <5475E4EC.7090309@hurleysoftware.com>
-References: <1415825647-6024-1-git-send-email-cernekee@gmail.com>	<1415825647-6024-2-git-send-email-cernekee@gmail.com>	<20141125203431.GA9385@kroah.com>	<CAJiQ=7DOxK2NzmC9gGsnARxGMN8wRQyGX+5u5YC_vt00ADVsDg@mail.gmail.com> <20141126133306.659E9C4099B@trevor.secretlab.ca>
+From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4] clocksource: arch_timer: Allow the device tree to
+ specify uninitialized timer registers
+Date: Wed, 26 Nov 2014 22:41:33 +0800
+Message-ID: <1417012893.12707.12.camel@mtksdaap41>
+References: <1412753627-28287-1-git-send-email-sonnyrao@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <20141126133306.659E9C4099B@trevor.secretlab.ca>
-Sender: linux-serial-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Kevin Cernekee <cernekee@gmail.com>, Greg KH <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jslaby@suse.cz>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, daniel@zonque.org, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, tushar.b@samsung.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1412753627-28287-1-git-send-email-sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Nathan Lynch <Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/26/2014 08:33 AM, Grant Likely wrote:
-> On Tue, 25 Nov 2014 15:37:16 -0800
-> , Kevin Cernekee <cernekee@gmail.com>
->  wrote:
->> On Tue, Nov 25, 2014 at 12:34 PM, Greg KH <gregkh@linuxfoundation.org> wrote:
->>> On Wed, Nov 12, 2014 at 12:53:58PM -0800, Kevin Cernekee wrote:
->>>> From: Tushar Behera <tushar.behera@linaro.org>
->>>
->>> This email bounces, so I'm going to have to reject this patch.  I can't
->>> accept a patch from a "fake" person, let alone something that touches
->>> core code like this.
->>>
->>> Sorry, I can't accept anything in this series then.
->>
->> Oops, guess I probably should have updated his address after the V1
->> emails bounced...
->>
->> Before I send a new version, what do you think about the overall
->> approach?  Should we try to make serial8250 coexist with the other
->> "ttyS / major 4 / minor 64" drivers (possibly at the expense of
->> compatibility) or is it better to start with a simpler, cleaner driver
->> like serial/pxa?
+On Wed, 2014-10-08 at 15:33 +0800, Sonny Rao wrote:
+> From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 > 
-> Co-existing really needs to be fixed.
+> Some 32-bit (ARMv7) systems are architected like this:
+> 
+> * The firmware doesn't know and doesn't care about hypervisor mode and
+>   we don't want to add the complexity of hypervisor there.
+> 
+> * The firmware isn't involved in SMP bringup or resume.
+> 
+> * The ARCH timer come up with an uninitialized offset (CNTVOFF)
+>   between the virtual and physical counters.  Each core gets a
+>   different random offset.
+> 
+> * The device boots in "Secure SVC" mode.
+> 
+> * Nothing has touched the reset value of CNTHCTL.PL1PCEN or
+>   CNTHCTL.PL1PCTEN (both default to 1 at reset)
+> 
+> On systems like the above, it doesn't make sense to use the virtual
+> counter.  There's nobody managing the offset and each time a core goes
+> down and comes back up it will get reinitialized to some other random
+> value.
+> 
+> This adds an optional property which can inform the kernel of this
+> situation, and firmware is free to remove the property if it is going
+> to initialize the CNTVOFF registers when each CPU comes out of reset.
+> 
+> Currently, the best course of action in this case is to use the
+> physical timer, which is why it is important that CNTHCTL hasn't been
+> changed from its reset value and it's a reasonable assumption given
+> that the firmware has never entered HYP mode.
+> 
+> Note that it's been said that on ARMv8 systems the firmware and
+> kernel really can't be architected as described above.  That means
+> using the physical timer like this really only makes sense for ARMv7
+> systems.
+> 
+> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Reviewed-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> ---
+> Changes in v2:
+> - Add "#ifdef CONFIG_ARM" as per Will Deacon
+> 
+> Changes in v3:
+> - change property name to arm,cntvoff-not-fw-configured and specify
+>   that the value of CNTHCTL.PL1PC(T)EN must still be the reset value
+>   of 1 as per Mark Rutland
+> 
+> Changes in v4:
+> - change property name to arm,cpu-registers-not-fw-configured and
+>   specify that all cpu registers must have architected reset values
+>   per Mark Rutland
+> - change from "#ifdef CONFIG_ARM" to "if (IS_ENABLED(CONFIG_ARM))" per
+>   Arnd Bergmann
+> ---
+>  Documentation/devicetree/bindings/arm/arch_timer.txt | 8 ++++++++
+>  drivers/clocksource/arm_arch_timer.c                 | 8 ++++++++
+>  2 files changed, 16 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
+> index 37b2caf..256b4d8 100644
+> --- a/Documentation/devicetree/bindings/arm/arch_timer.txt
+> +++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
+> @@ -22,6 +22,14 @@ to deliver its interrupts via SPIs.
+>  - always-on : a boolean property. If present, the timer is powered through an
+>    always-on power domain, therefore it never loses context.
+> 
+> +** Optional properties:
+> +
+> +- arm,cpu-registers-not-fw-configured : Firmware does not initialize
+> +  any of the generic timer CPU registers, which contain their
+> +  architecturally-defined reset values. Only supported for 32-bit
+> +  systems which follow the ARMv7 architected reset values.
+> +
+> +
 
-What are the requirements for co-existence?
-Is it sufficient to provide 1st come-1st served minor allocation?
+Hi,
 
-Anything done should be designed to solve this name problem forever,
-not some expeditious band-aid.
+Sorry for the (very) late reply.
+I just realize today MT8135 need this and the other patch [1] to boot
+SMP correctly. I've applied both patches and they works fine. Thanks :)
+
+However, I'm not sure if we really need to add new property.
+arm_arch_timer driver will only use virtual timer when virtual PPI
+interrupt is provided, so the following patch to timer dtsi will also
+works. I think if the firmware doesn't support virtual timer, it make
+sense to not supply virtual interrupt.
+
+        timer {
+                compatible = "arm,armv7-timer";
+                interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
+-                            <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
+-                            <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
+-                            <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
++                            <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>;
+                clock-frequency = <13000000>;
+        };
+
+Joe.C
+
+[1]
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/305436.html
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
