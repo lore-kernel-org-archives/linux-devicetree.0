@@ -1,68 +1,39 @@
-From: arno@natisbad.org (Arnaud Ebalard)
-Subject: Re: [PATCHv1 0/6] rtc: rtc-isl12057: fixes and alarm support
-Date: Wed, 26 Nov 2014 20:28:53 +0100
-Message-ID: <87y4qxwykq.fsf@natisbad.org>
-References: <cover.1416006090.git.arno@natisbad.org>
-	<874mtlyflf.fsf@natisbad.org> <54762096.7040200@kleine-koenig.org>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH V6 00/12] Tegra xHCI support
+Date: Wed, 26 Nov 2014 11:31:17 -0800
+Message-ID: <CAL1qeaHkJhJ52jxJLic8Ey6TwA2TxLydeV995OA=Mpi8rjgnLA@mail.gmail.com>
+References: <1416874644-12070-1-git-send-email-abrestic@chromium.org>
+	<CAJe_Zhcz=WOLy0_98xRj6=i2+5MFeXQGPmYJhnpy1NfUEPJ-0w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <54762096.7040200@kleine-koenig.org> ("Uwe \=\?utf-8\?Q\?Kleine-K\?\=
- \=\?utf-8\?Q\?\=C3\=B6nig\=22's\?\=
-	message of "Wed, 26 Nov 2014 19:48:54 +0100")
-Sender: linux-doc-owner@vger.kernel.org
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
-Cc: Mark Brown <broonie@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Morton <akpm@linux-foundation.org>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-doc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, linux-arm-kernel@lists.infradead.org, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJe_Zhcz=WOLy0_98xRj6=i2+5MFeXQGPmYJhnpy1NfUEPJ-0w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kumar Gala <galak@codeau>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Nov 25, 2014 at 5:32 AM, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 25 November 2014 at 05:47, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+>> This series adds support for xHCI on NVIDIA Tegra SoCs.  This includes:
+>>  - patches 1, 2, and 3: minor cleanups for mailbox framework and xHCI,
+>>  - patches 4 and 5: adding a driver for the mailbox used to communicate
+>>    with the xHCI controller's firmware,
+>>  - patches 6 and 7: extending the XUSB pad controller driver to support
+>>    the USB PHY types (UTMI, HSIC, and USB3),
+>>  - patches 8 and 9: adding a xHCI host-controller driver, and
+>>  - patches 10, 11, and 12: updating the relevant DT files.
+>>
+>> The mailbox driver (patch 5) has a compile-time dependency on patch 2 and
+>> a run-time dependency on patch 3.  Both the PHY (patch 7) and host (patch 9)
+>> drivers have compile-time dependencies on the mailbox driver.  The host
+>> driver also has a run-time dependency on patch 1.  Because of this, this
+>> entire series should probably go through the Tegra tree.
+>>
+> Why shouldn't I pick 2 & 3 at least?
 
-Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig.org> writes:
-
-> On 11/26/2014 07:35 PM, Arnaud Ebalard wrote:
->> I wonder if you could take a look at this series I sent providing fi=
-xes
->> (patches #1-5) and alarm support (patch #6) for ISL12057 RTC Chip. A=
-s
->> all people do for RTC patches - due to lack of feedback from maintai=
-ner
->> - I am looking for someone to review the patches (Mark, patch 6 has =
-a
->> sticker w/ regmap-inside ;-)) and then push those upstream if they a=
-re
->> ok (Jason, you handled that part for 70e123373c05: "rtc: Add support=
- for
->> Intersil ISL12057 I2C RTC chip" in 2013 for the same reason).
->>=20
->> Note that I addressed previous comments and feedback received from U=
-we
->> and also spent time to do some soldering in order to support and tes=
-t
->> the last patch for both my use case (Alarm IRQ signal not routed to =
-the
->> SoC on ReadyNAS RN102, RN104 and RN2120) and the common case.
->>=20
->> Do not hesitate to ask if you want me to resend!
-> akpm already applied the series, doesn't he?
-
-I am not really familiar w/ -mm tree workflow. It was not clear to me
-whether it was sitting in -mm tree waiting for reviewed-by and
-acked-by.
-
-> I'm about to test the patches, just fighting with my NAS to boot my
-> custom kernel.
->
-> Apart from that patches 1 - 5 can have my Ack. Didn't look deep enoug=
-h
-> into patch 6 yet. @akpm: No need to hurry adding them, I hope to be
-> able to also provide Tested-by:-tags later today.
-
-I'll be happy to handle comments and possible requests for additional
-changes if needed.
-
-Cheers,
-
-a+
-
-ps: anyway, thanks Andrew!
+I don't see why not.  Because of the PHY API change I'm going to have
+to re-spin the series and at this point 3.19 is looking pretty
+unlikely.  Maybe we could get a Tegra maintainer's ACK for patches 4
+and 5 so that you could take them through your tree as well for 3.19?
+(Stephen, Thierry, Alex?)
