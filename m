@@ -1,41 +1,36 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v9 4/4] ARM: dts: rockchip: add suspend settings for rk3288-evb-rk808
-Date: Wed, 26 Nov 2014 14:52:35 -0800
-Message-ID: <CAD=FV=V29zCpcEHE+rq6q_6SOZ_NOJgc5FiwmJ9jnRZK4mMUhw@mail.gmail.com>
-References: <1416900743-29204-1-git-send-email-zyw@rock-chips.com>
-	<1416900743-29204-5-git-send-email-zyw@rock-chips.com>
+From: Dave Airlie <airlied@gmail.com>
+Subject: Re: [PATCH v14 0/3] Add drm driver for Rockchip Socs
+Date: Thu, 27 Nov 2014 08:53:43 +1000
+Message-ID: <CAPM=9tzhZLShA5=ShGTKhyZR6ddKycQDUWBZxXpUBb+1tGp-mQ@mail.gmail.com>
+References: <1416447994-9921-1-git-send-email-mark.yao@rock-chips.com>
+	<23617908.6oA5uRuO3l@diego>
+	<CAPM=9tzvvb5U+8KaCO+K6CJi=rwWOkoW+4ZSFW_Oo9gTncvkWA@mail.gmail.com>
+	<1557742.FTdLsE0bVs@diego>
+	<20141126073430.GD3156@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416900743-29204-5-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20141126073430.GD3156@suse.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Joerg Roedel <jroedel@suse.de>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Mark Yao <mark.yao@rock-chips.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Rom Lemarchand <romlem@google.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-api@vger.kernel.org, linux-rockchip@lists.infradead.org, Douglas Anderson <dianders@chromium.org>, =?UTF-8?Q?S
 List-Id: devicetree@vger.kernel.org
 
-Chris,
+On 26 November 2014 at 17:34, Joerg Roedel <jroedel@suse.de> wrote:
+> On Wed, Nov 26, 2014 at 01:37:51AM +0100, Heiko St=C3=BCbner wrote:
+>>
+>> Joerg, is your arm/rockchip branch [0] considered stable?
+>>
+>> [0] https://git.kernel.org/cgit/linux/kernel/git/joro/iommu.git/log/=
+?h=3Darm/rockchip
+>>
+>
+> Yes, this branch will not be rebased. It can be pulled into another
+> tree.
 
-On Mon, Nov 24, 2014 at 11:32 PM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
->                         vcc_ddr: DCDC_REG3 {
->                                 regulator-always-on;
->                                 regulator-boot-on;
->                                 regulator-name = "vcc_ddr";
-> +                               regulator-suspend-mem-enabled;
+Great, so if we can get a rockchip drm tree based on drm-next with
+that tree pulled into it
+that would be good.
 
-The "regulator-suspend-mem-enabled" is not an upstream property and
-isn't doing anything.  It should be removed.
-
-Possibly this is something Heiko could do when applying  (depends on
-what he wants) if no other spins are required.
->                         vcc_18: LDO_REG7 {
-> @@ -128,6 +163,11 @@
->                                 regulator-min-microvolt = <1800000>;
->                                 regulator-max-microvolt = <1800000>;
->                                 regulator-name = "vcc_18";
-> +                               regulator-suspend-mem-microvolt = <1800000>;
-
-Another non-upstream property: regulator-suspend-mem-microvolt
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Dave.
