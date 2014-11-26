@@ -1,42 +1,101 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [RFC PATCH v2 2/4] Documentation: arm64/arm: dt bindings for numa.
-Date: Wed, 26 Nov 2014 17:51:39 +0100
-Message-ID: <2133591.n7Y4zNvRib@wuerfel>
-References: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com> <2966212.dpWQ0OTb0A@wuerfel> <54753AED.3050909@huawei.com>
+From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Subject: Re: [PATCH 5/8] of/overlay: Introduce DT overlay support
+Date: Wed, 26 Nov 2014 17:57:05 +0100
+Message-ID: <1417021025.29407.66.camel@x220>
+References: <1416533715-9758-1-git-send-email-grant.likely@linaro.org>
+	 <1416533715-9758-6-git-send-email-grant.likely@linaro.org>
+	 <1417007515.29407.54.camel@x220>
+	 <CACxGe6tw1FJsSvf-7u2Lx143_-GOWr3b-fLu1kCzK4JCCEwGSA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54753AED.3050909-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <CACxGe6tw1FJsSvf-7u2Lx143_-GOWr3b-fLu1kCzK4JCCEwGSA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Will.Deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Valentin Rothberg <valentinrothberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 26 November 2014 10:29:01 Shannon Zhao wrote:
-> On 2014/11/25 19:02, Arnd Bergmann wrote:
-> > No, don't hardcode ARM specifics into a common binding either. I've looked
-> > at the ibm,associativity properties again, and I think we should just use
-> > those, they can cover all cases and are completely independent of the
-> > architecture. We should probably discuss about the property name though,
-> > as using the "ibm," prefix might not be the best idea.
-> > 
+On Wed, 2014-11-26 at 15:18 +0000, Grant Likely wrote:
+> On Wed, Nov 26, 2014 at 1:11 PM, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org> wrote:
+> > On Fri, 2014-11-21 at 01:35 +0000, Grant Likely wrote:
+> >> From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> >>
+> >> Overlays are a method to dynamically modify part of the kernel's
+> >> device tree with dynamically loaded data. Add the core functionality to
+> >> parse, apply and remove an overlay changeset. The core functionality
+> >> takes care of managing the overlay data format and performing the add
+> >> and remove. Drivers are expected to use the overlay functionality to
+> >> support custom expansion busses commonly found on consumer development
+> >> boards like the BeagleBone or Raspberry Pi.
+> >>
+> >> The overlay code uses CONFIG_OF_DYNAMIC changesets to perform the low
+> >> level work of modifying the devicetree.
+> >>
+> >> Documentation about internal and APIs is provided in
+> >>       Documentation/devicetree/overlay-notes.txt
+> >>
+> >> v2:
+> >> - Switch from __of_node_alloc() to __of_node_dup()
+> >> - Documentation fixups
+> >> - Remove 2-pass processing of properties
+> >> - Remove separate ov_lock; just use the DT mutex.
+> >> v1:
+> >> - Drop delete capability using '-' prefix. The '-' prefixed names
+> >> are valid properties and nodes and there is no need for it just yet.
+> >> - Do not update special properties - name & phandle ones.
+> >> - Change order of node attachment, so that the special property update
+> >> works.
+> >>
+> >> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> >> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >
+> > Now commit 7518b5890d8a ("of/overlay: Introduce DT overlay support"),
+> > included in today's linux-next (next-20141126).
 > 
-> Yeah, I have read the relevant codes in qemu. I think the "ibm,associativity" is more scalable:-)
+> Yes, I pushed it out yesterday. Beyond merely stating a fact, I don't
+> understand what you're trying to point out here. Is this commit
+> causing a problem?
 
-Ok
+Yes, the issue I pointed out in my next remark.
 
-> About the prefix, my opinion is that as this is relevant with NUMA,
-> maybe we can use "numa" as the prefix.
+And I add a boring line like that to my messages to make sure its
+readers (which could be me, in case nothing happens within a week or
+two) have all the facts at hand when handling them. It spares them the
+trouble to look up these facts themselves.
 
-A prefix should really be the name of a company or institution, so it could
-be "arm" or "linux", but not "numa". Would could use "numa-associativity"
-with a dash instead of a comma, but that would still be somewhat imprecise
-because the associativity property is about system topology inside of
-a NUMA domain as well, such as cores, core clusters or SMT threads that
-only share caches but not physical memory addresses.
+Perhaps this lines was ambiguous. Should I rephrase it? Please note that
+I usually use proper sentences. This one was a bit blunt. 
 
-	Arnd
+> >>[...]
+> >> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+> >> index fbe8f8d418f7..18b2e2539f84 100644
+> >> --- a/drivers/of/Kconfig
+> >> +++ b/drivers/of/Kconfig
+> >> @@ -84,4 +84,11 @@ config OF_RESERVED_MEM
+> >>  config OF_RESOLVE
+> >>       bool
+> >>
+> >> +config OF_OVERLAY
+> >> +     bool
+> >> +     depends on OF
+> >> +     select OF_DYNAMIC
+> >> +     select OF_DEVICE
+> >
+> > There's currently no Kconfig symbol OF_DEVICE. So this select is now a
+> > nop. Will that symbol be added in a future patch?
+> 
+> That's a hanger-on from an earlier version of the patch. I'll apply a
+> fixup patch to remove it.
+
+I've seen your fixup already. It turns out OF_DEVICE is a symbol that
+was removed in v3.11.
+
+Thanks!
+
+
+Paul Bolle
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
