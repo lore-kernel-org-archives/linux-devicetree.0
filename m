@@ -1,77 +1,82 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH 5/8] of/overlay: Introduce DT overlay support
-Date: Wed, 26 Nov 2014 15:18:21 +0000
-Message-ID: <CACxGe6tw1FJsSvf-7u2Lx143_-GOWr3b-fLu1kCzK4JCCEwGSA@mail.gmail.com>
-References: <1416533715-9758-1-git-send-email-grant.likely@linaro.org>
- <1416533715-9758-6-git-send-email-grant.likely@linaro.org> <1417007515.29407.54.camel@x220>
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: Re: [PATCH v9 2/9] qcom: spm: Add Subsystem Power Manager driver
+Date: Wed, 26 Nov 2014 08:20:03 -0700
+Message-ID: <20141126152003.GC594@linaro.org>
+References: <1414194024-55547-1-git-send-email-lina.iyer@linaro.org>
+ <1414194024-55547-3-git-send-email-lina.iyer@linaro.org>
+ <54662622.2020307@linaro.org>
+ <20141119174339.GA891@linaro.org>
+ <5475B724.80202@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1417007515.29407.54.camel@x220>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>
-Cc: Valentin Rothberg <valentinrothberg@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5475B724.80202@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 26, 2014 at 1:11 PM, Paul Bolle <pebolle@tiscali.nl> wrote:
-> On Fri, 2014-11-21 at 01:35 +0000, Grant Likely wrote:
->> From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+On Wed, Nov 26 2014 at 04:19 -0700, Daniel Lezcano wrote:
+>On 11/19/2014 06:43 PM, Lina Iyer wrote:
+>>On Fri, Nov 14 2014 at 08:56 -0700, Daniel Lezcano wrote:
+>>>On 10/25/2014 01:40 AM, Lina Iyer wrote:
 >>
->> Overlays are a method to dynamically modify part of the kernel's
->> device tree with dynamically loaded data. Add the core functionality to
->> parse, apply and remove an overlay changeset. The core functionality
->> takes care of managing the overlay data format and performing the add
->> and remove. Drivers are expected to use the overlay functionality to
->> support custom expansion busses commonly found on consumer development
->> boards like the BeagleBone or Raspberry Pi.
->>
->> The overlay code uses CONFIG_OF_DYNAMIC changesets to perform the low
->> level work of modifying the devicetree.
->>
->> Documentation about internal and APIs is provided in
->>       Documentation/devicetree/overlay-notes.txt
->>
->> v2:
->> - Switch from __of_node_alloc() to __of_node_dup()
->> - Documentation fixups
->> - Remove 2-pass processing of properties
->> - Remove separate ov_lock; just use the DT mutex.
->> v1:
->> - Drop delete capability using '-' prefix. The '-' prefixed names
->> are valid properties and nodes and there is no need for it just yet.
->> - Do not update special properties - name & phandle ones.
->> - Change order of node attachment, so that the special property update
->> works.
->>
->> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
->> Signed-off-by: Grant Likely <grant.likely@linaro.org>
 >
-> Now commit 7518b5890d8a ("of/overlay: Introduce DT overlay support"),
-> included in today's linux-next (next-20141126).
-
-Yes, I pushed it out yesterday. Beyond merely stating a fact, I don't
-understand what you're trying to point out here. Is this commit
-causing a problem?
-
->>[...]
->> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
->> index fbe8f8d418f7..18b2e2539f84 100644
->> --- a/drivers/of/Kconfig
->> +++ b/drivers/of/Kconfig
->> @@ -84,4 +84,11 @@ config OF_RESERVED_MEM
->>  config OF_RESOLVE
->>       bool
+>>>>+
+>>>>+    if ((cpu > -1) && !cpuidle_drv_init) {
+>>>>+        platform_device_register(&qcom_cpuidle_device);
+>>>>+        cpuidle_drv_init = true;
+>>>>+    }
+>>>
+>>>'cpu' is always > -1.
+>>>
+>>OK. I was hoping to use -1 for not a cpu (i.e, L2) SPM. For now, I will
+>>change.
 >>
->> +config OF_OVERLAY
->> +     bool
->> +     depends on OF
->> +     select OF_DYNAMIC
->> +     select OF_DEVICE
+>>
+>>>If the 'spm_get_drv' succeed, cpu is no longer equal to -EINVAL.
+>>>Otherwise we do not reach this point because we return right after
+>>>spm_get_drv with an error.
+>>>
+>>>Adding the platform_device_register depending in a static variable is
+>>>not very nice. Why not add it explicitely in a separate init routine
+>>>we know it will be called one time (eg. at the same place than cpufreq
+>>>is) ?
+>>>
+>>We want to register the cpuidle device only if any of the SPM devices
+>>have been probed.
+>>
+>>Ideally, Stephen and I would like to register cpuidle device separately
+>>for each CPU SPM, when it is probed, so we would invoke cpuidle driver
+>>and thereby the low power modes only for those cpus. However, the
+>>complexity to do that, AFAICS, is very complex. I would need to change
+>>quite a bit of the framework and in the cpuidle driver, I may have to
+>>stray from the recommended format.
+>>
+>>Here I set up cpuidle device, when I know atleast 1 cpu is ready to
+>>allow low power modes.
 >
-> There's currently no Kconfig symbol OF_DEVICE. So this select is now a
-> nop. Will that symbol be added in a future patch?
+>Yes, instead of using the generic cpuidle_register function, you can 
+>use the low level functions for that.
+>
+>One call to cpuidle_register_driver in a single place and then 
+>cpuidle_register_device for each spm probe.
+>
+>Wouldn't make sense ?
 
-That's a hanger-on from an earlier version of the patch. I'll apply a
-fixup patch to remove it.
+Yes, but there are some assumptions if we dont use
+MULTIPLE_CPUIDLE_DRIVERS like this -
 
-g.
+static void __cpuidle_driver_init(struct cpuidle_driver *drv)
+{
+        int i;
+	
+	drv->refcnt = 0; // Overwrites any cpuidle_driver_get()
+
+
+The clean way was to use MULTIPLE_CPUIDLE_DRIVERS, which seems like an
+incorrect use for this SoC.
+
+Thanks,
+Lina
