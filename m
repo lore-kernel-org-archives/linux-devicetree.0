@@ -1,62 +1,91 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCHv0 0/2] arm: mvebu: fixes for previous DS213j/DS414
- series
-Date: Tue, 25 Nov 2014 23:12:51 -0500
-Message-ID: <20141126041251.GL22670@titan.lakedaemon.net>
-References: <cover.1416670812.git.arno@natisbad.org>
+From: Tony Prisk <linux@prisktech.co.nz>
+Subject: Re: [PATCH 9/9] usb: {ohci,ehci}-platform: Use new OF big-endian
+ helper function
+Date: Wed, 26 Nov 2014 17:15:13 +1300
+Message-ID: <547553D1.3070908@prisktech.co.nz>
+References: <1416962994-27095-1-git-send-email-cernekee@gmail.com> <1416962994-27095-10-git-send-email-cernekee@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1416670812.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <1416962994-27095-10-git-send-email-cernekee@gmail.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Kevin Cernekee <cernekee@gmail.com>, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, arnd@arndb.de, stern@rowland.harvard.edu, gregkh@linuxfoundation.org, f.fainelli@gmail.com
+Cc: grant.likely@linaro.org, robh+dt@kernel.org, computersforpeace@gmail.com, marc.ceeeee@gmail.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 22, 2014 at 05:19:21PM +0100, Arnaud Ebalard wrote:
-> Hi Jason,
-> 
-> This series contains two patches. I spent some time reading the patches
-> of my previous series you had to manually apply. I only noticed the error
-> Ben reported on v6 (i.e. some pinctrl entries still using pmx_ instead
-> of _pins) which patch 1 corrects.
-> 
-> Regarding the second patch, having forgotten to enable MACH_ARMADA_XP in
-> my kernel config, I missed a renaming of ge0/1 pinctrl entries in
-> armada-xp.dtsi, which resulted in a non-compiling .dts file for DS414.
-> To fix my mistake, you did a s/ge[01]_rgmii_pins/pmx_ge[01]_rgmii/,
-> reintroducing some of the pmx_ naming that should have been removed in
-> the process. So, the second patch in that series finishes the work to
-> normalize pinctrl entries in Armada SoCs DT files.
-> 
-> The patches do apply on your mvebu/dt branch. They do pass a whole
-> compilation (including 'make dtbs') and I can boot a resulting kernel on
-> my DS213j. I do not have a DS414 at hand but will test on this device
-> early next week.
-> 
-> I hope eveyhting is now back in order w/ those. Feedback appreciated.
-> 
-> Cheers,
-> 
-> a+
-> 
-> Arnaud Ebalard (2):
->   arm: mvebu: fix wrongly named DS414 pinctrl entries
->   arm: mvebu: normalize pinctrl entries for Armada SoCs
-> 
->  arch/arm/boot/dts/armada-xp-axpwifiap.dts       | 12 ++++++------
->  arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts |  4 ++--
->  arch/arm/boot/dts/armada-xp-synology-ds414.dts  | 10 +++++-----
->  arch/arm/boot/dts/armada-xp.dtsi                |  6 +++---
->  4 files changed, 16 insertions(+), 16 deletions(-)
 
-Thanks for taking care of this.  Applied to mvebu/dt
-
-thx,
-
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 26/11/14 13:49, Kevin Cernekee wrote:
+> This handles the existing "big-endian" case, and in addition, it also does
+> the right thing when "native-endian" is specified.
+>
+> Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+> ---
+>   Documentation/devicetree/bindings/usb/usb-ehci.txt | 2 ++
+>   Documentation/devicetree/bindings/usb/usb-ohci.txt | 2 ++
+>   drivers/usb/host/ehci-platform.c                   | 2 +-
+>   drivers/usb/host/ohci-platform.c                   | 2 +-
+>   4 files changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/usb/usb-ehci.txt b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+> index 43c1a4e..9505c31 100644
+> --- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
+> +++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+> @@ -12,6 +12,8 @@ Optional properties:
+>    - big-endian-regs : boolean, set this for hcds with big-endian registers
+>    - big-endian-desc : boolean, set this for hcds with big-endian descriptors
+>    - big-endian : boolean, for hcds with big-endian-regs + big-endian-desc
+> + - native-endian : boolean, enables big-endian-regs + big-endian-desc
+> +   iff the kernel was compiled for big endian
+s/iff/if
+>    - clocks : a list of phandle + clock specifier pairs
+>    - phys : phandle + phy specifier pair
+>    - phy-names : "usb"
+> diff --git a/Documentation/devicetree/bindings/usb/usb-ohci.txt b/Documentation/devicetree/bindings/usb/usb-ohci.txt
+> index 19233b7..3bb9673 100644
+> --- a/Documentation/devicetree/bindings/usb/usb-ohci.txt
+> +++ b/Documentation/devicetree/bindings/usb/usb-ohci.txt
+> @@ -9,6 +9,8 @@ Optional properties:
+>   - big-endian-regs : boolean, set this for hcds with big-endian registers
+>   - big-endian-desc : boolean, set this for hcds with big-endian descriptors
+>   - big-endian : boolean, for hcds with big-endian-regs + big-endian-desc
+> +- native-endian : boolean, enables big-endian-regs + big-endian-desc
+> +  iff the kernel was compiled for big endian
+s/iff/if
+>   - no-big-frame-no : boolean, set if frame_no lives in bits [15:0] of HCCA
+>   - num-ports : u32, to override the detected port count
+>   - clocks : a list of phandle + clock specifier pairs
+> diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
+> index 2f5b9ce..0da9d70 100644
+> --- a/drivers/usb/host/ehci-platform.c
+> +++ b/drivers/usb/host/ehci-platform.c
+> @@ -187,7 +187,7 @@ static int ehci_platform_probe(struct platform_device *dev)
+>   		if (of_property_read_bool(dev->dev.of_node, "big-endian-desc"))
+>   			ehci->big_endian_desc = 1;
+>   
+> -		if (of_property_read_bool(dev->dev.of_node, "big-endian"))
+> +		if (of_device_is_big_endian(dev->dev.of_node))
+>   			ehci->big_endian_mmio = ehci->big_endian_desc = 1;
+>   
+>   		priv->phy = devm_phy_get(&dev->dev, "usb");
+> diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
+> index 7793c3c..029a606 100644
+> --- a/drivers/usb/host/ohci-platform.c
+> +++ b/drivers/usb/host/ohci-platform.c
+> @@ -157,7 +157,7 @@ static int ohci_platform_probe(struct platform_device *dev)
+>   		if (of_property_read_bool(dev->dev.of_node, "big-endian-desc"))
+>   			ohci->flags |= OHCI_QUIRK_BE_DESC;
+>   
+> -		if (of_property_read_bool(dev->dev.of_node, "big-endian"))
+> +		if (of_device_is_big_endian(dev->dev.of_node))
+>   			ohci->flags |= OHCI_QUIRK_BE_MMIO | OHCI_QUIRK_BE_DESC;
+>   
+>   		if (of_property_read_bool(dev->dev.of_node, "no-big-frame-no"))
