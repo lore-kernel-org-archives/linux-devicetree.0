@@ -1,34 +1,38 @@
-From: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: randconfig build error with next-20141126, in
- drivers/spi/spi-meson-spifc.c
-Date: Thu, 27 Nov 2014 00:12:25 +0100
-Message-ID: <20141126231225.GA17600@gmail.com>
-References: <CA+r1Zhh3Fhcvx9nSDxPnrC-gzR0Z50O7nwzvkhhX6QAS2qmasQ@mail.gmail.com>
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: Re: [PATCH 04/10] arm: dts: qcom: Add power-controller device node
+ for 8074 Krait CPUs
+Date: Wed, 26 Nov 2014 16:41:31 -0700
+Message-ID: <20141126234131.GG594@linaro.org>
+References: <1417040910-43290-1-git-send-email-lina.iyer@linaro.org>
+ <1417040910-43290-5-git-send-email-lina.iyer@linaro.org>
+ <5476576E.6010608@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CA+r1Zhh3Fhcvx9nSDxPnrC-gzR0Z50O7nwzvkhhX6QAS2qmasQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jim Davis <jim.epost-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, linux-next <linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, broonie <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <5476576E.6010608@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: daniel.lezcano@linaro.org, khilman@linaro.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 26, 2014 at 10:53:28AM -0700, Jim Davis wrote:
-> Building with the attached random configuration file,
-> 
-> drivers/built-in.o: In function `meson_spifc_probe':
-> spi-meson-spifc.c:(.text+0x14b4a8): undefined reference to
-> `devm_regmap_init_mmio_clk'
-> make: *** [vmlinux] Error 1
+On Wed, Nov 26 2014 at 15:42 -0700, Stephen Boyd wrote:
+>On 11/26/2014 02:28 PM, Lina Iyer wrote:
+>>Each Krait CPU in the QCOM 8074/8974 SoC has an SAW power controller to
+>>regulate the power to the cpu and aide the core in entering idle states.
+>>Reference the SAW instance and associate the instance with the CPU core.
+>>
+>>Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+>>
+>
+>Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
+>
+>I imagine all these dts changes will go through qcom tree -> arm-soc?
 
-Hi,
+I will ping Kumar.
 
-I've just submitted a fix for the missing Kconfig dependency.
-
-Thanks,
-Beniamino
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>-- 
+>Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+>a Linux Foundation Collaborative Project
+>
