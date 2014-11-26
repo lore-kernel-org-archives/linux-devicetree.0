@@ -1,311 +1,177 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] phy: add the Berlin USB PHY driver
-Date: Wed, 26 Nov 2014 14:43:39 +0100
-Message-ID: <5475D90B.9070908@gmail.com>
-References: <1416520406-1852-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416520406-1852-1-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] ARM: kbuild: Fix forced rebuild after 'make dtbs'
+Date: Wed, 26 Nov 2014 14:57:42 +0100
+Message-ID: <CACRpkdZJoWbQeuZ4ZXGbQr0+SNG_9ZA+cQkAA0C2F9rnZDYtyQ@mail.gmail.com>
+References: <CACRpkdYmJWy1_vs0tWRA7SvkQnvbXXKqf7pHpH5b5tZ6vR+KJg@mail.gmail.com>
+	<1414961549-31666-1-git-send-email-jason@lakedaemon.net>
+	<5474F78F.2060906@suse.cz>
+	<20141125235150.GH3836@n2100.arm.linux.org.uk>
+	<20141126005710.GE22670@titan.lakedaemon.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141126005710.GE22670@titan.lakedaemon.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Michal Marek <mmarek@suse.cz>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/20/2014 10:53 PM, Sebastian Hesselbarth wrote:
-> From: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->
-> Add the driver driving the Marvell Berlin USB PHY. This allows to
-> initialize the PHY and to use it from the USB driver later.
->
-> Signed-off-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+On Wed, Nov 26, 2014 at 1:57 AM, Jason Cooper <jason@lakedaemon.net> wrote:
+> On Tue, Nov 25, 2014 at 11:51:50PM +0000, Russell King - ARM Linux wrote:
 
-Gentle ping.
+>> I think this needs a bit more debugging to see why the whole kernel is
+>> being rebuilt - the kernel build system has methods to tell you why stuff
+>> is being built, which would be a good place to start.
+>
+> Linus, since you were the one experiencing the regression, care to take
+> a whack at that?
 
-Kishon, anything wrong with these two patches?
+OK this full example should be possible to repeat for anyone
+with a cross compiler, and uses a separate build dir, and yeah
+there was something fishy: the bug only appears if you specify
+CONFIG_DEBUG_SECTION_MISMATCH=y:
 
-Sebastian
+make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+KBUILD_OUTPUT=build-u300 u300_defconfig
+make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+KBUILD_OUTPUT=build-u300 zImage
+make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+KBUILD_OUTPUT=build-u300 zImage
 
-> ---
-> Split-off patches from latest Berlin USB PHY patches
->    https://lkml.kernel.org/g/1416231347-27193-1-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
->
-> Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->   drivers/phy/Kconfig          |    7 ++
->   drivers/phy/Makefile         |    1 +
->   drivers/phy/phy-berlin-usb.c |  224 ++++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 232 insertions(+), 0 deletions(-)
->   create mode 100644 drivers/phy/phy-berlin-usb.c
->
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index 2a436e6..38ca6ff 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -15,6 +15,13 @@ config GENERIC_PHY
->   	  phy users can obtain reference to the PHY. All the users of this
->   	  framework should select this config.
->
-> +config PHY_BERLIN_USB
-> +	tristate "Marvell Berlin USB PHY Driver"
-> +	depends on ARCH_BERLIN && RESET_CONTROLLER && HAS_IOMEM && OF
-> +	select GENERIC_PHY
-> +	help
-> +	  Enable this to support the USB PHY on Marvell Berlin SoCs.
-> +
->   config PHY_BERLIN_SATA
->   	tristate "Marvell Berlin SATA PHY driver"
->   	depends on ARCH_BERLIN && HAS_IOMEM && OF
-> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> index c4590fc..6fd1f77 100644
-> --- a/drivers/phy/Makefile
-> +++ b/drivers/phy/Makefile
-> @@ -3,6 +3,7 @@
->   #
->
->   obj-$(CONFIG_GENERIC_PHY)		+= phy-core.o
-> +obj-$(CONFIG_PHY_BERLIN_USB)		+= phy-berlin-usb.o
->   obj-$(CONFIG_PHY_BERLIN_SATA)		+= phy-berlin-sata.o
->   obj-$(CONFIG_BCM_KONA_USB2_PHY)		+= phy-bcm-kona-usb2.o
->   obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+= phy-exynos-dp-video.o
-> diff --git a/drivers/phy/phy-berlin-usb.c b/drivers/phy/phy-berlin-usb.c
-> new file mode 100644
-> index 0000000..f9f1306
-> --- /dev/null
-> +++ b/drivers/phy/phy-berlin-usb.c
-> @@ -0,0 +1,224 @@
-> +/*
-> + * Copyright (C) 2014 Marvell Technology Group Ltd.
-> + *
-> + * Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> + * Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2. This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +
-> +#include <linux/gpio.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reset.h>
-> +
-> +#define USB_PHY_PLL		0x04
-> +#define USB_PHY_PLL_CONTROL	0x08
-> +#define USB_PHY_TX_CTRL0	0x10
-> +#define USB_PHY_TX_CTRL1	0x14
-> +#define USB_PHY_TX_CTRL2	0x18
-> +#define USB_PHY_RX_CTRL		0x20
-> +#define USB_PHY_ANALOG		0x34
-> +
-> +/* USB_PHY_PLL */
-> +#define CLK_REF_DIV(x)		((x) << 4)
-> +#define FEEDBACK_CLK_DIV(x)	((x) << 8)
-> +
-> +/* USB_PHY_PLL_CONTROL */
-> +#define CLK_STABLE		BIT(0)
-> +#define PLL_CTRL_PIN		BIT(1)
-> +#define PLL_CTRL_REG		BIT(2)
-> +#define PLL_ON			BIT(3)
-> +#define PHASE_OFF_TOL_125	(0x0 << 5)
-> +#define PHASE_OFF_TOL_250	BIT(5)
-> +#define KVC0_CALIB		(0x0 << 9)
-> +#define KVC0_REG_CTRL		BIT(9)
-> +#define KVC0_HIGH		(0x0 << 10)
-> +#define KVC0_LOW		(0x3 << 10)
-> +#define CLK_BLK_EN		BIT(13)
-> +
-> +/* USB_PHY_TX_CTRL0 */
-> +#define EXT_HS_RCAL_EN		BIT(3)
-> +#define EXT_FS_RCAL_EN		BIT(4)
-> +#define IMPCAL_VTH_DIV(x)	((x) << 5)
-> +#define EXT_RS_RCAL_DIV(x)	((x) << 8)
-> +#define EXT_FS_RCAL_DIV(x)	((x) << 12)
-> +
-> +/* USB_PHY_TX_CTRL1 */
-> +#define TX_VDD15_14		(0x0 << 4)
-> +#define TX_VDD15_15		BIT(4)
-> +#define TX_VDD15_16		(0x2 << 4)
-> +#define TX_VDD15_17		(0x3 << 4)
-> +#define TX_VDD12_VDD		(0x0 << 6)
-> +#define TX_VDD12_11		BIT(6)
-> +#define TX_VDD12_12		(0x2 << 6)
-> +#define TX_VDD12_13		(0x3 << 6)
-> +#define LOW_VDD_EN		BIT(8)
-> +#define TX_OUT_AMP(x)		((x) << 9)
-> +
-> +/* USB_PHY_TX_CTRL2 */
-> +#define TX_CHAN_CTRL_REG(x)	((x) << 0)
-> +#define DRV_SLEWRATE(x)		((x) << 4)
-> +#define IMP_CAL_FS_HS_DLY_0	(0x0 << 6)
-> +#define IMP_CAL_FS_HS_DLY_1	BIT(6)
-> +#define IMP_CAL_FS_HS_DLY_2	(0x2 << 6)
-> +#define IMP_CAL_FS_HS_DLY_3	(0x3 << 6)
-> +#define FS_DRV_EN_MASK(x)	((x) << 8)
-> +#define HS_DRV_EN_MASK(x)	((x) << 12)
-> +
-> +/* USB_PHY_RX_CTRL */
-> +#define PHASE_FREEZE_DLY_2_CL	(0x0 << 0)
-> +#define PHASE_FREEZE_DLY_4_CL	BIT(0)
-> +#define ACK_LENGTH_8_CL		(0x0 << 2)
-> +#define ACK_LENGTH_12_CL	BIT(2)
-> +#define ACK_LENGTH_16_CL	(0x2 << 2)
-> +#define ACK_LENGTH_20_CL	(0x3 << 2)
-> +#define SQ_LENGTH_3		(0x0 << 4)
-> +#define SQ_LENGTH_6		BIT(4)
-> +#define SQ_LENGTH_9		(0x2 << 4)
-> +#define SQ_LENGTH_12		(0x3 << 4)
-> +#define DISCON_THRESHOLD_260	(0x0 << 6)
-> +#define DISCON_THRESHOLD_270	BIT(6)
-> +#define DISCON_THRESHOLD_280	(0x2 << 6)
-> +#define DISCON_THRESHOLD_290	(0x3 << 6)
-> +#define SQ_THRESHOLD(x)		((x) << 8)
-> +#define LPF_COEF(x)		((x) << 12)
-> +#define INTPL_CUR_10		(0x0 << 14)
-> +#define INTPL_CUR_20		BIT(14)
-> +#define INTPL_CUR_30		(0x2 << 14)
-> +#define INTPL_CUR_40		(0x3 << 14)
-> +
-> +/* USB_PHY_ANALOG */
-> +#define ANA_PWR_UP		BIT(1)
-> +#define ANA_PWR_DOWN		BIT(2)
-> +#define V2I_VCO_RATIO(x)	((x) << 7)
-> +#define R_ROTATE_90		(0x0 << 10)
-> +#define R_ROTATE_0		BIT(10)
-> +#define MODE_TEST_EN		BIT(11)
-> +#define ANA_TEST_DC_CTRL(x)	((x) << 12)
-> +
-> +#define to_phy_berlin_usb_priv(p)	\
-> +	container_of((p), struct phy_berlin_usb_priv, phy)
-> +
-> +static const u32 phy_berlin_pll_dividers[] = {
-> +	/* Berlin 2 */
-> +	CLK_REF_DIV(0xc) | FEEDBACK_CLK_DIV(0x54),
-> +	/* Berlin 2CD */
-> +	CLK_REF_DIV(0x6) | FEEDBACK_CLK_DIV(0x55),
-> +};
-> +
-> +struct phy_berlin_usb_priv {
-> +	void __iomem		*base;
-> +	struct phy		*phy;
-> +	struct reset_control	*rst_ctrl;
-> +	u32			pll_divider;
-> +};
-> +
-> +static int phy_berlin_usb_power_on(struct phy *phy)
-> +{
-> +	struct phy_berlin_usb_priv *priv = dev_get_drvdata(phy->dev.parent);
-> +
-> +	reset_control_reset(priv->rst_ctrl);
-> +
-> +	writel(priv->pll_divider,
-> +	       priv->base + USB_PHY_PLL);
-> +	writel(CLK_STABLE | PLL_CTRL_REG | PHASE_OFF_TOL_250 | KVC0_REG_CTRL |
-> +	       CLK_BLK_EN, priv->base + USB_PHY_PLL_CONTROL);
-> +	writel(V2I_VCO_RATIO(0x5) | R_ROTATE_0 | ANA_TEST_DC_CTRL(0x5),
-> +	       priv->base + USB_PHY_ANALOG);
-> +	writel(PHASE_FREEZE_DLY_4_CL | ACK_LENGTH_16_CL | SQ_LENGTH_12 |
-> +	       DISCON_THRESHOLD_260 | SQ_THRESHOLD(0xa) | LPF_COEF(0x2) |
-> +	       INTPL_CUR_30, priv->base + USB_PHY_RX_CTRL);
-> +
-> +	writel(TX_VDD12_13 | TX_OUT_AMP(0x3), priv->base + USB_PHY_TX_CTRL1);
-> +	writel(EXT_HS_RCAL_EN | IMPCAL_VTH_DIV(0x3) | EXT_RS_RCAL_DIV(0x4),
-> +	       priv->base + USB_PHY_TX_CTRL0);
-> +
-> +	writel(EXT_HS_RCAL_EN | IMPCAL_VTH_DIV(0x3) | EXT_RS_RCAL_DIV(0x4) |
-> +	       EXT_FS_RCAL_DIV(0x2), priv->base + USB_PHY_TX_CTRL0);
-> +
-> +	writel(EXT_HS_RCAL_EN | IMPCAL_VTH_DIV(0x3) | EXT_RS_RCAL_DIV(0x4),
-> +	       priv->base + USB_PHY_TX_CTRL0);
-> +	writel(TX_CHAN_CTRL_REG(0xf) | DRV_SLEWRATE(0x3) | IMP_CAL_FS_HS_DLY_3 |
-> +	       FS_DRV_EN_MASK(0xd), priv->base + USB_PHY_TX_CTRL2);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct phy_ops phy_berlin_usb_ops = {
-> +	.power_on	= phy_berlin_usb_power_on,
-> +	.owner		= THIS_MODULE,
-> +};
-> +
-> +static const struct of_device_id phy_berlin_sata_of_match[] = {
-> +	{
-> +		.compatible = "marvell,berlin2-usb-phy",
-> +		.data = &phy_berlin_pll_dividers[0],
-> +	},
-> +	{
-> +		.compatible = "marvell,berlin2cd-usb-phy",
-> +		.data = &phy_berlin_pll_dividers[1],
-> +	},
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, phy_berlin_sata_of_match);
-> +
-> +static int phy_berlin_usb_probe(struct platform_device *pdev)
-> +{
-> +	const struct of_device_id *match =
-> +		of_match_device(phy_berlin_sata_of_match, &pdev->dev);
-> +	struct phy_berlin_usb_priv *priv;
-> +	struct resource *res;
-> +	struct phy_provider *phy_provider;
-> +
-> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	priv->base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(priv->base))
-> +		return PTR_ERR(priv->base);
-> +
-> +	priv->rst_ctrl = devm_reset_control_get(&pdev->dev, NULL);
-> +	if (IS_ERR(priv->rst_ctrl))
-> +		return PTR_ERR(priv->rst_ctrl);
-> +
-> +	priv->pll_divider = *((u32 *)match->data);
-> +
-> +	priv->phy = devm_phy_create(&pdev->dev, NULL, &phy_berlin_usb_ops,
-> +				    NULL);
-> +	if (IS_ERR(priv->phy)) {
-> +		dev_err(&pdev->dev, "failed to create PHY\n");
-> +		return PTR_ERR(priv->phy);
-> +	}
-> +
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	phy_provider =
-> +		devm_of_phy_provider_register(&pdev->dev, of_phy_simple_xlate);
-> +	if (IS_ERR(phy_provider))
-> +		return PTR_ERR(phy_provider);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver phy_berlin_usb_driver = {
-> +	.probe	= phy_berlin_usb_probe,
-> +	.driver	= {
-> +		.name		= "phy-berlin-usb",
-> +		.owner		= THIS_MODULE,
-> +		.of_match_table	= phy_berlin_sata_of_match,
-> +	 },
-> +};
-> +module_platform_driver(phy_berlin_usb_driver);
-> +
-> +MODULE_AUTHOR("Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>");
-> +MODULE_DESCRIPTION("Marvell Berlin PHY driver for USB");
-> +MODULE_LICENSE("GPL");
->
+-> no rebuild, just relink
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+KBUILD_OUTPUT=build-u300 u300_defconfig
+make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+KBUILD_OUTPUT=build-u300 zImage CONFIG_DEBUG_SECTION_MISMATCH=y
+make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+KBUILD_OUTPUT=build-u300 zImage CONFIG_DEBUG_SECTION_MISMATCH=y
+
+-> no rebuild, just relink
+
+make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+KBUILD_OUTPUT=build-u300 u300_defconfig
+make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+KBUILD_OUTPUT=build-u300 zImage
+make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+KBUILD_OUTPUT=build-u300 dtbs
+make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+KBUILD_OUTPUT=build-u300 zImage
+
+-> no rebuild, just relink
+
+make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+KBUILD_OUTPUT=build-u300 u300_defconfig
+make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+KBUILD_OUTPUT=build-u300 zImage CONFIG_DEBUG_SECTION_MISMATCH=y
+make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+KBUILD_OUTPUT=build-u300 dtbs
+make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+KBUILD_OUTPUT=build-u300 zImage CONFIG_DEBUG_SECTION_MISMATCH=y
+
+-> Rebuilds everything.
+
+This doesn't occur before the offending commit. So it only happens
+when specifying extra
+environment variables on the command line.
+
+So I can get rid of the rebuilding by making my scripts less
+strict by removing CONFIG_DEBUG_SECTION_MISMATCH=y.
+
+But is this really correct?
+
+Two last examples with more detail:
+
+make[1]: Entering directory `/home/linus/linux/build-u300'
+  CHK     include/config/kernel.release
+  GEN     ./Makefile
+  CHK     include/generated/uapi/linux/version.h
+  CHK     include/generated/utsrelease.h
+  Using .. as source for kernel
+make[2]: `include/generated/mach-types.h' is up to date.
+  CALL    ../scripts/checksyscalls.sh - due to target missing
+  CHK     include/generated/compile.h
+  Kernel: arch/arm/boot/Image is ready
+  Kernel: arch/arm/boot/zImage is ready
+make[1]: Leaving directory `/home/linus/linux/build-u300'
+
+make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+KBUILD_OUTPUT=build-u300 zImage CONFIG_DEBUG_SECTION_MISMATCH=y V=2
+
+make[1]: Entering directory `/home/linus/linux/build-u300'
+  CHK     include/config/kernel.release
+  GEN     ./Makefile
+  CHK     include/generated/uapi/linux/version.h
+  CHK     include/generated/utsrelease.h
+  Using .. as source for kernel
+  CC      scripts/mod/empty.o - due to command line change
+  CC      scripts/mod/devicetable-offsets.s - due to command line change
+  MKELF   scripts/mod/elfconfig.h - due to: scripts/mod/empty.o
+  HOSTCC  scripts/mod/modpost.o - due to: scripts/mod/elfconfig.h
+  HOSTCC  scripts/mod/sumversion.o - due to: scripts/mod/elfconfig.h
+  GEN     scripts/mod/devicetable-offsets.h - due to:
+scripts/mod/devicetable-offsets.s
+  HOSTCC  scripts/mod/file2alias.o - due to: scripts/mod/elfconfig.h
+scripts/mod/devicetable-offsets.h
+  HOSTLD  scripts/mod/modpost - due to: scripts/mod/modpost.o
+scripts/mod/file2alias.o scripts/mod/sumversion.o
+make[2]: `include/generated/mach-types.h' is up to date.
+  CC      kernel/bounds.s - due to command line change
+  GEN     include/generated/bounds.h - due to: kernel/bounds.s
+  CC      arch/arm/kernel/asm-offsets.s - due to: include/generated/bounds.h
+  GEN     include/generated/asm-offsets.h - due to:
+arch/arm/kernel/asm-offsets.s
+  CALL    ../scripts/checksyscalls.sh - due to target missing
+  CC      init/main.o - due to: include/generated/bounds.h
+  CC      arch/arm/common/firmware.o - due to: include/generated/bounds.h
+  CC      arch/arm/mm/dma-mapping.o - due to: include/generated/bounds.h
+  CC      arch/arm/kernel/elf.o - due to: include/generated/bounds.h
+  CC      arch/arm/mach-u300/core.o - due to: include/generated/bounds.h
+  AS      arch/arm/kernel/entry-common.o - due to:
+include/generated/asm-offsets.h
+  LD      arch/arm/common/built-in.o - due to: arch/arm/common/firmware.o
+  CHK     include/generated/compile.h
+  CC      arch/arm/kernel/irq.o - due to: include/generated/bounds.h
+  CC      arch/arm/mach-u300/dummyspichip.o - due to: include/generated/bounds.h
+  CC      init/do_mounts.o - due to: include/generated/bounds.h
+  CC      arch/arm/mm/extable.o - due to: include/generated/bounds.h
+  CC      arch/arm/kernel/opcodes.o - due to: include/generated/bounds.h
+(...)
+
+If I revert commit f4d4ffc03efc:
+
+make[1]: Entering directory `/home/linus/linux/build-u300'
+  CHK     include/config/kernel.release
+  GEN     ./Makefile
+  CHK     include/generated/uapi/linux/version.h
+  Using .. as source for kernel
+  CHK     include/generated/utsrelease.h
+make[2]: `include/generated/mach-types.h' is up to date.
+  CC      scripts/mod/empty.o - due to command line change
+  CC      scripts/mod/devicetable-offsets.s - due to command line change
+  CALL    ../scripts/checksyscalls.sh - due to target missing
+  MKELF   scripts/mod/elfconfig.h - due to: scripts/mod/empty.o
+  HOSTCC  scripts/mod/modpost.o - due to: scripts/mod/elfconfig.h
+  HOSTCC  scripts/mod/sumversion.o - due to: scripts/mod/elfconfig.h
+  GEN     scripts/mod/devicetable-offsets.h - due to:
+scripts/mod/devicetable-offsets.s
+  HOSTCC  scripts/mod/file2alias.o - due to: scripts/mod/elfconfig.h
+scripts/mod/devicetable-offsets.h
+  HOSTLD  scripts/mod/modpost - due to: scripts/mod/modpost.o
+scripts/mod/file2alias.o scripts/mod/sumversion.o
+  CHK     include/generated/compile.h
+  Kernel: arch/arm/boot/Image is ready
+  Kernel: arch/arm/boot/zImage is ready
+make[1]: Leaving directory `/home/linus/linux/build-u300'
+
+So in both cases a changed command line is detected and
+empty.o and devicetable-offsets.s is rebuilt.
+
+But after the commit the rebuild goes on to rebuild
+kernel/bounds.s which generates bounds.h which in
+turn rebuilds the whole world.
+
+I don't know why the behaviour changed like this :(
+
+Yours,
+Linus Walleij
