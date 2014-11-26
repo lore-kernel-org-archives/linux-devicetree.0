@@ -1,62 +1,81 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v4] clocksource: arch_timer: Allow the device tree to
- specify uninitialized timer registers
-Date: Wed, 26 Nov 2014 08:14:05 -0800
-Message-ID: <CAD=FV=XFcWEp=nZ3=8QEausKzpBbPCzFUSHY-g0K5y+VPpU3Vw@mail.gmail.com>
-References: <1412753627-28287-1-git-send-email-sonnyrao@chromium.org>
-	<1417012893.12707.12.camel@mtksdaap41>
+From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/9] mailbox: arm_mhu: add driver for ARM MHU controller
+Date: Wed, 26 Nov 2014 21:50:49 +0530
+Message-ID: <CAJe_ZheKfEkdzcNE_5cpDg4qbYNLEJ=kKi+ScRf2=a8irAfnDg@mail.gmail.com>
+References: <1416486442-25200-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+	<1416486872-25301-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+	<54749429.9080505@arm.com>
+	<CAJe_ZhciCP2VbmRtrq9d14WhfLhnC-xaitCCiW_6Yf1S-0sdUg@mail.gmail.com>
+	<5474C3DD.5060706@arm.com>
+	<CAJe_ZhfkcSv7oBfXdiW5=F0bZvv+9z3m90cXdy=O66VwZWCQnw@mail.gmail.com>
+	<5475DD19.9000107@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417012893.12707.12.camel@mtksdaap41>
+In-Reply-To: <5475DD19.9000107-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Nathan Lynch <Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Yingjoe,
+On 26 November 2014 at 19:30, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+> On 26/11/14 05:37, Jassi Brar wrote:
+>>
 
-On Wed, Nov 26, 2014 at 6:41 AM, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> Sorry for the (very) late reply.
-> I just realize today MT8135 need this and the other patch [1] to boot
-> SMP correctly. I've applied both patches and they works fine. Thanks :)
-
-Excellent.  It's helpful to include a Tested-by: tag in your email.
-You'd have a line with just "Tested-by: Yingjoe Chen
-<yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>"
-
-
-> However, I'm not sure if we really need to add new property.
-> arm_arch_timer driver will only use virtual timer when virtual PPI
-> interrupt is provided, so the following patch to timer dtsi will also
-> works. I think if the firmware doesn't support virtual timer, it make
-> sense to not supply virtual interrupt.
+>>>>    It seems you still don't get my point that the driver should manage
+>>>> all channels - S & NS. If Linux is running in NS mode on a platform,
+>>>> the DT will specify only some NS channel to be used. The controller
+>>>> driver shouldn't be crippled just because you think Linux will never
+>>>> be run in Secure mode.
+>>>>
+>>>
+>>> Ok how do you handle that, I don't see that in the DT binding. As it
+>>> stands, you can unconditionally try to access the secure channel and
+>>> cause aborts if the platform is running in non-secure mode.
+>>>
+>> No. Please look at the dtsi again ....
+>>
+>>          mhu: mailbox@2b1f0000 {
+>>                  #mbox-cells = <1>;
+>>                  compatible = "arm,mbox-mhu";
+>>                  reg = <0 0x2b1f0000 0x1000>;
+>>                  interrupts = <0 36 4>, /* LP Non-Sec */
+>>                               <0 35 4>, /* HP Non-Sec */
+>>                               <0 37 4>; /* Secure */
 >
->         timer {
->                 compatible = "arm,armv7-timer";
->                 interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
-> -                            <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
-> -                            <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
-> -                            <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
-> +                            <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>;
->                 clock-frequency = <13000000>;
->         };
+>
+> One possible issue I can think of(though current driver design requests
+> irq only on channel startup, it could be moved to probe for optimization
+> in which case you need a way to make sure secure channel or irq is not
+> accessed)
+>
+As you see it is fine as such.
+I don't think acquiring all irqs during probe is a good idea.
+mbox_request_channel() is when we should actually be reserving
+resources.
 
-Once you have Sonny's patch then I believe that the above would work.
-However we rejected something like this because device tree is
-supposed to describe the hardware.  The hardware really does provide
-the virtual timer interrupts and they really are at PPI 11 and PPI 10.
-It's just that firmware doesn't handle things properly so they can't
-be used.
+>>          };
+>>
+>>          mhu_client: scb@2e000000 {
+>>                  compatible = "fujitsu,mb86s70-scb-1.0";
+>>                  reg = <0 0x2e000000 0x4000>; /* SHM for IPC */
+>>                  mboxes = <&mhu 1>;
+>>          };
+>>
+>> See the DT for mbox client specifies that it uses channel-1 which is
+>> High-Priority_Non-Secure channel.
+>>
+>
+> Yes I noticed that, but still a wrong entry of another mhu_client with
+> secure channel might end up crashing MHU driver or even whole system.
+> Not sure but still probably one could try to play around with DT
+> overlays in future, just a thought. So you need to ensure that's handled
+> properly in the MHU driver.
+>
+You worry too much ;)  what if some 'wrong entry' in DT specifies
+memory where there is none or some voltage that could toast the board?
 
-NOTE: If we add the "arm,cpu-registers-not-fw-configured" to the
-device tree and firmware actually works out how to configure things
-(like if somehow has firmware that has a hypervisor) then it can
-easily remove this device tree property before calling through to the
-kernel.  It would be much harder for the firmware to add back in the
-"PPI 11" and "PPI 10" entries to the timer.
-
--Doug
+-Jassi
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
