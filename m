@@ -1,84 +1,119 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 0/9] Extend various drivers to run on bi-endian BMIPS hosts
-Date: Tue, 25 Nov 2014 21:33:20 -0800
-Message-ID: <CAGVrzcZrOY+y1H_86X1Rj9GvpRhSaYLMw59vZyt84MAkUmEHHg@mail.gmail.com>
-References: <1416962994-27095-1-git-send-email-cernekee@gmail.com>
+From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/9] mailbox: arm_mhu: add driver for ARM MHU controller
+Date: Wed, 26 Nov 2014 11:07:27 +0530
+Message-ID: <CAJe_ZhfkcSv7oBfXdiW5=F0bZvv+9z3m90cXdy=O66VwZWCQnw@mail.gmail.com>
+References: <1416486442-25200-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+	<1416486872-25301-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+	<54749429.9080505@arm.com>
+	<CAJe_ZhciCP2VbmRtrq9d14WhfLhnC-xaitCCiW_6Yf1S-0sdUg@mail.gmail.com>
+	<5474C3DD.5060706@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1416962994-27095-1-git-send-email-cernekee@gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>
-Cc: sre@kernel.org, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Tony Prisk <linux@prisktech.co.nz>, Alan Stern <stern@rowland.harvard.edu>, Greg KH <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Brian Norris <computersforpeace@gmail.com>, Marc Carino <marc.ceeeee@gmail.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-usb <linux-usb@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5474C3DD.5060706-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-11-25 16:49 GMT-08:00 Kevin Cernekee <cernekee@gmail.com>:
-> This patch series incorporates the following changes:
->
->  - Extend brcmstb reset driver to work on MIPS (currently ARM-only).
->
->  - Extend brcmstb GISB bus driver to work on MIPS (currently ARM-only).
->
->  - Extend brcmstb GISB bus driver to work on BE systems (currently LE-only).
->
->  - Extend both drivers to support the older register layouts used on many
->    of the BMIPS platforms.
->
->  - Extend {ohci,ehci}-platform drivers to accept the new "native-endian"
->    DT property, to accommodate BCM7xxx platforms that can be switched
->    between LE/BE with a board jumper.
+On 25 November 2014 at 23:31, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
 >
 >
-> Dependencies:
+> On 25/11/14 16:51, Jassi Brar wrote:
+>>
+>> On 25 November 2014 at 20:07, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+>>>
+>>>
+>>>
+>>> On 20/11/14 12:34, Vincent Yang wrote:
+>>>>
+>>>>
+>>>> Add driver for the ARM Message-Handling-Unit (MHU).
+>>>>
+>>>> Signed-off-by: Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>> Signed-off-by: Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
+>>>> Signed-off-by: Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+>>>> ---
+>>>>    .../devicetree/bindings/mailbox/arm-mhu.txt        |  33 ++++
+>>>>    drivers/mailbox/Kconfig                            |   7 +
+>>>>    drivers/mailbox/Makefile                           |   2 +
+>>>>    drivers/mailbox/arm_mhu.c                          | 196
+>>>> +++++++++++++++++++++
+>>>>    4 files changed, 238 insertions(+)
+>>>>    create mode 100644
+>>>> Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+>>>>    create mode 100644 drivers/mailbox/arm_mhu.c
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+>>>> b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+>>>> new file mode 100644
+>>>> index 0000000..b1b9888
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+>>>> @@ -0,0 +1,33 @@
+>>>> +ARM MHU Mailbox Driver
+>>>> +======================
+>>>> +
+>>>> +The ARM's Message-Handling-Unit (MHU) is a mailbox controller that has
+>>>> +3 independent channels/links to communicate with remote processor(s).
+>>>
+>>>
+>>>
+>>> I had reviewed this before and I see not all the comments are addressed.
+>>> I had mentioned that you can't add support to _SECURE_ channel in Linux
+>>> as you need to assume Linux runs in non-secure privilege(and I gather
+>>> that's the case even on this platform from other email in the thread)
+>>>
+>> Please revisit the old thread. After some discussion you had
+>> graciously allowed me to keep the secure channel ;)
+>> [
+>> ... Even though I don't like you have secure channel access in Linux, you
+>> have valid reasons. In case you decide to support it ....
+>> ]
 >
-> power/reset: brcmstb: Register with kernel restart handler (Guenter Roeck)
-> of: Add helper function to check MMIO register endianness (Kevin Cernekee)
 >
-> These are both tentatively accepted, but might not be present in the same
-> tree yet.  As such, we might want to "review now, merge later."
+> Agreed but based on the other email in the same thread it looks like you
+> want to run the same kernel both in secure and no-secure mode on this
+> platform, in which case you _have_to_assume_ it's *non-secure only* always
+> unless you come up with some DT magic.
+>
+Yes, the S vs NS mode should ideally be defined in DT. The kernel
+image should remain the same.
 
-For the entire series:
-
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-
-I will probably take the brcmstb_gisb.c changes separately and submit
-them to arm-soc as a "drivers" pull request since this driver has
-typically been routed that way.
-
-Thanks!
-
+>>   It seems you still don't get my point that the driver should manage
+>> all channels - S & NS. If Linux is running in NS mode on a platform,
+>> the DT will specify only some NS channel to be used. The controller
+>> driver shouldn't be crippled just because you think Linux will never
+>> be run in Secure mode.
+>>
 >
+> Ok how do you handle that, I don't see that in the DT binding. As it
+> stands, you can unconditionally try to access the secure channel and
+> cause aborts if the platform is running in non-secure mode.
 >
-> Kevin Cernekee (9):
->   power/reset: brcmstb: Make the driver buildable on MIPS
->   power/reset: brcmstb: Use the DT "compatible" string to indicate bit
->     positions
->   power/reset: brcmstb: Add support for old 65nm chips
->   bus: brcmstb_gisb: Make the driver buildable on MIPS
->   bus: brcmstb_gisb: Introduce wrapper functions for MMIO accesses
->   bus: brcmstb_gisb: Look up register offsets in a table
->   bus: brcmstb_gisb: Add register offset tables for older chips
->   bus: brcmstb_gisb: Honor the "big-endian" and "native-endian" DT
->     properties
->   usb: {ohci,ehci}-platform: Use new OF big-endian helper function
->
->  .../devicetree/bindings/arm/brcm-brcmstb.txt       |   4 +-
->  .../devicetree/bindings/bus/brcm,gisb-arb.txt      |   6 +-
->  Documentation/devicetree/bindings/usb/usb-ehci.txt |   2 +
->  Documentation/devicetree/bindings/usb/usb-ohci.txt |   2 +
->  drivers/bus/Kconfig                                |   2 +-
->  drivers/bus/brcmstb_gisb.c                         | 127 ++++++++++++++++++---
->  drivers/power/reset/Kconfig                        |   9 +-
->  drivers/power/reset/brcmstb-reboot.c               |  41 +++++--
->  drivers/usb/host/ehci-platform.c                   |   2 +-
->  drivers/usb/host/ohci-platform.c                   |   2 +-
->  10 files changed, 161 insertions(+), 36 deletions(-)
->
-> --
-> 2.1.0
->
+No. Please look at the dtsi again ....
 
+        mhu: mailbox@2b1f0000 {
+                #mbox-cells = <1>;
+                compatible = "arm,mbox-mhu";
+                reg = <0 0x2b1f0000 0x1000>;
+                interrupts = <0 36 4>, /* LP Non-Sec */
+                             <0 35 4>, /* HP Non-Sec */
+                             <0 37 4>; /* Secure */
+        };
 
+        mhu_client: scb@2e000000 {
+                compatible = "fujitsu,mb86s70-scb-1.0";
+                reg = <0 0x2e000000 0x4000>; /* SHM for IPC */
+                mboxes = <&mhu 1>;
+        };
 
--- 
-Florian
+See the DT for mbox client specifies that it uses channel-1 which is
+High-Priority_Non-Secure channel.
+
+-jassi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
