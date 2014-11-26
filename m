@@ -1,87 +1,96 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH v9 2/9] qcom: spm: Add Subsystem Power Manager driver
-Date: Wed, 26 Nov 2014 08:22:06 -0700
-Message-ID: <20141126152206.GD594@linaro.org>
-References: <1414194024-55547-1-git-send-email-lina.iyer@linaro.org>
- <1414194024-55547-3-git-send-email-lina.iyer@linaro.org>
- <54662622.2020307@linaro.org>
- <20141119174339.GA891@linaro.org>
- <5475B724.80202@linaro.org>
- <20141126152003.GC594@linaro.org>
+From: Naidu Tellapati <naidu.tellapati@gmail.com>
+Subject: [PATCH v5 0/4] Initial support for ImgTec PWM DAC and PDM DAC
+Date: Wed, 26 Nov 2014 20:54:16 +0530
+Message-ID: <1417015460-11908-1-git-send-email-Naidu.Tellapati@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141126152003.GC594@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: thierry.reding@gmail.com, abrestic@chromium.org, gregkh@linuxfoundation.org, arnd@arndb.de, James.Hartley@imgtec.com, Ezequiel.Garcia@imgtec.com
+Cc: devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, Arul.Ramasamy@imgtec.com, Sai.Masarapu@imgtec.com, Naidu Tellapati <Naidu.Tellapati@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 26 2014 at 08:20 -0700, Lina Iyer wrote:
->On Wed, Nov 26 2014 at 04:19 -0700, Daniel Lezcano wrote:
->>On 11/19/2014 06:43 PM, Lina Iyer wrote:
->>>On Fri, Nov 14 2014 at 08:56 -0700, Daniel Lezcano wrote:
->>>>On 10/25/2014 01:40 AM, Lina Iyer wrote:
->>>
->>
->>>>>+
->>>>>+    if ((cpu > -1) && !cpuidle_drv_init) {
->>>>>+        platform_device_register(&qcom_cpuidle_device);
->>>>>+        cpuidle_drv_init = true;
->>>>>+    }
->>>>
->>>>'cpu' is always > -1.
->>>>
->>>OK. I was hoping to use -1 for not a cpu (i.e, L2) SPM. For now, I will
->>>change.
->>>
->>>
->>>>If the 'spm_get_drv' succeed, cpu is no longer equal to -EINVAL.
->>>>Otherwise we do not reach this point because we return right after
->>>>spm_get_drv with an error.
->>>>
->>>>Adding the platform_device_register depending in a static variable is
->>>>not very nice. Why not add it explicitely in a separate init routine
->>>>we know it will be called one time (eg. at the same place than cpufreq
->>>>is) ?
->>>>
->>>We want to register the cpuidle device only if any of the SPM devices
->>>have been probed.
->>>
->>>Ideally, Stephen and I would like to register cpuidle device separately
->>>for each CPU SPM, when it is probed, so we would invoke cpuidle driver
->>>and thereby the low power modes only for those cpus. However, the
->>>complexity to do that, AFAICS, is very complex. I would need to change
->>>quite a bit of the framework and in the cpuidle driver, I may have to
->>>stray from the recommended format.
->>>
->>>Here I set up cpuidle device, when I know atleast 1 cpu is ready to
->>>allow low power modes.
->>
->>Yes, instead of using the generic cpuidle_register function, you can 
->>use the low level functions for that.
->>
->>One call to cpuidle_register_driver in a single place and then 
->>cpuidle_register_device for each spm probe.
->>
->>Wouldn't make sense ?
->
->Yes, but there are some assumptions if we dont use
->MULTIPLE_CPUIDLE_DRIVERS like this -
->
->static void __cpuidle_driver_init(struct cpuidle_driver *drv)
->{
->       int i;
->	
->	drv->refcnt = 0; // Overwrites any cpuidle_driver_get()
->
->
->The clean way was to use MULTIPLE_CPUIDLE_DRIVERS, which seems like an
->incorrect use for this SoC.
->
-Also, I probe and parse the cpuidle dt states for every SPM, which seems
-redundant and any optimization looks as hackish as this check.
+The Pistachio SOC from Imagination Technologies includes =E2=80=93 4x P=
+DM blocks
+and 1x =E2=80=9Cbasic PWM=E2=80=9D block with four output channels. The=
+se share 4 MFIO pins,
+each PWM channel being muxed with each PDM block output (0-3 muxed with=
+ 0-3)
+using the CR_PERIP_PWM_PDM_CONTROL register in the peripheral wrapper
+register bank (offset 0x140). The PDM and PWM outputs are used to contr=
+ol
+targets such as LCD backlight.
 
->Thanks,
->Lina
+The PWM driver uses Linux PWM framework. Since the PDM does not fit int=
+o PWM
+framework we have implemented it as a MISC driver.
+
+The series is based on v3.18-rc5.
+
+Changes from v4:
+
+ * Removed CR_prefix from the defined macros.
+
+ * Folded same data type varibles in one line.
+=20
+ * Removed cr-periph property from PWM DT binding document.
+
+ * Removed regmap_update_bits from img_pwm_enable and img_pwm_disable f=
+unctions.
+
+ * Addressed few more comments given in v4.
+
+Changes from v3:
+
+ * Addressed couple of comments given in v3.
+
+Changes from v2:
+
+ * Added depends on MIPS || COMPILE_TEST.
+
+ * Corrected the logic while calculating time base steps.
+
+ * Addressed few other minor comments given in v2.
+
+Changes from v1:
+
+ * Used regmap_update_bits at some places in the driver.
+
+ * Placed some #defines next to their register.
+
+ * Added depends on HAS_IOMEM in Kconfig.
+
+ * Removed unnecessary paragraph from file header.
+
+ * Defined register masks in a readable way.
+
+ * Renamed clk-names with clock-names.
+
+ * Added system interface clock in DT binding document.
+
+ * Addressed few other minor review comments given in v1.
+
+Naidu Tellapati (4):
+  pwm: Imagination Technologies PWM DAC driver
+  DT: pwm: Add binding document for IMG PWM DAC
+  pdm: Imagination Technologies PDM DAC driver
+  DT: pdm: Add binding document for IMG PDM DAC
+
+ Documentation/devicetree/bindings/misc/img-pdm.txt |   54 ++
+ Documentation/devicetree/bindings/pwm/img-pwm.txt  |   21 +
+ drivers/misc/Kconfig                               |   16 +
+ drivers/misc/Makefile                              |    1 +
+ drivers/misc/img-pdm.c                             |  653 ++++++++++++=
+++++++++
+ drivers/pwm/Kconfig                                |   12 +
+ drivers/pwm/Makefile                               |    1 +
+ drivers/pwm/pwm-img.c                              |  240 +++++++
+ include/linux/img_pdm.h                            |   52 ++
+ 9 files changed, 1050 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/misc/img-pdm.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/img-pwm.txt
+ create mode 100644 drivers/misc/img-pdm.c
+ create mode 100644 drivers/pwm/pwm-img.c
+ create mode 100644 include/linux/img_pdm.h
+
