@@ -1,137 +1,215 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/9] mailbox: arm_mhu: add driver for ARM MHU controller
-Date: Wed, 26 Nov 2014 14:00:57 +0000
-Message-ID: <5475DD19.9000107@arm.com>
-References: <1416486442-25200-1-git-send-email-Vincent.Yang@tw.fujitsu.com>	<1416486872-25301-1-git-send-email-Vincent.Yang@tw.fujitsu.com>	<54749429.9080505@arm.com>	<CAJe_ZhciCP2VbmRtrq9d14WhfLhnC-xaitCCiW_6Yf1S-0sdUg@mail.gmail.com>	<5474C3DD.5060706@arm.com> <CAJe_ZhfkcSv7oBfXdiW5=F0bZvv+9z3m90cXdy=O66VwZWCQnw@mail.gmail.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH v2 5/5] i2c: davinci: use ICPFUNC to toggle I2C as gpio for bus recovery
+Date: Wed, 26 Nov 2014 15:59:53 +0200
+Message-ID: <1417010393-30598-6-git-send-email-grygorii.strashko@ti.com>
+References: <1417010393-30598-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJe_ZhfkcSv7oBfXdiW5=F0bZvv+9z3m90cXdy=O66VwZWCQnw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1417010393-30598-1-git-send-email-grygorii.strashko@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, Sekhar Nori <nsekhar@ti.com>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mike Looijmans <milo-software@users.sourceforge.net>, Grygorii Strashko <grygorii.strashko@ti.com>, Kevin Hilman <khilman@deeprootsystems.com>, Santosh Shilimkar <ssantosh@kernel.org>, Murali Karicheri <m-karicheri2@ti.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Having a board where the I2C bus locks up occasionally made it clear
+that the bus recovery in the i2c-davinci driver will only work on
+some boards, because on regular boards, this will only toggle GPIO
+lines that aren't muxed to the actual pins.
 
+The I2C controller on SoCs like da850 (and da830), Keystone 2 has the
+built-in capability to bit-bang its lines by using the ICPFUNC registers
+of the i2c controller.
+Implement the suggested procedure by toggling SCL and checking SDA using
+the ICPFUNC registers of the I2C controller when present. Allow platforms
+to indicate the presence of the ICPFUNC registers with a has_pfunc platform
+data flag and add optional DT property "ti,has-pfunc" to indicate
+the same in DT.
 
-On 26/11/14 05:37, Jassi Brar wrote:
-> On 25 November 2014 at 23:31, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->>
->>
->> On 25/11/14 16:51, Jassi Brar wrote:
->>>
->>> On 25 November 2014 at 20:07, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->>>>
->>>>
->>>>
->>>> On 20/11/14 12:34, Vincent Yang wrote:
->>>>>
->>>>>
->>>>> Add driver for the ARM Message-Handling-Unit (MHU).
->>>>>
->>>>> Signed-off-by: Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>> Signed-off-by: Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
->>>>> Signed-off-by: Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
->>>>> ---
->>>>>     .../devicetree/bindings/mailbox/arm-mhu.txt        |  33 ++++
->>>>>     drivers/mailbox/Kconfig                            |   7 +
->>>>>     drivers/mailbox/Makefile                           |   2 +
->>>>>     drivers/mailbox/arm_mhu.c                          | 196
->>>>> +++++++++++++++++++++
->>>>>     4 files changed, 238 insertions(+)
->>>>>     create mode 100644
->>>>> Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->>>>>     create mode 100644 drivers/mailbox/arm_mhu.c
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->>>>> b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->>>>> new file mode 100644
->>>>> index 0000000..b1b9888
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->>>>> @@ -0,0 +1,33 @@
->>>>> +ARM MHU Mailbox Driver
->>>>> +======================
->>>>> +
->>>>> +The ARM's Message-Handling-Unit (MHU) is a mailbox controller that has
->>>>> +3 independent channels/links to communicate with remote processor(s).
->>>>
->>>>
->>>>
->>>> I had reviewed this before and I see not all the comments are addressed.
->>>> I had mentioned that you can't add support to _SECURE_ channel in Linux
->>>> as you need to assume Linux runs in non-secure privilege(and I gather
->>>> that's the case even on this platform from other email in the thread)
->>>>
->>> Please revisit the old thread. After some discussion you had
->>> graciously allowed me to keep the secure channel ;)
->>> [
->>> ... Even though I don't like you have secure channel access in Linux, you
->>> have valid reasons. In case you decide to support it ....
->>> ]
->>
->>
->> Agreed but based on the other email in the same thread it looks like you
->> want to run the same kernel both in secure and no-secure mode on this
->> platform, in which case you _have_to_assume_ it's *non-secure only* always
->> unless you come up with some DT magic.
->>
-> Yes, the S vs NS mode should ideally be defined in DT. The kernel
-> image should remain the same.
->
+CC: Sekhar Nori <nsekhar@ti.com>
+CC: Kevin Hilman <khilman@deeprootsystems.com>
+CC: Santosh Shilimkar <ssantosh@kernel.org>
+CC: Murali Karicheri <m-karicheri2@ti.com>
+CC: <devicetree@vger.kernel.org>
+Signed-off-by: Ben Gardiner <bengardiner@nanometrics.ca>
+Signed-off-by: Mike Looijmans <milo-software@users.sourceforge.net>
+[grygorii.strashko@ti.com: combined patches from Ben Gardiner and
+Mike Looijmans and reimplemented ICPFUNC bus recovery using I2C
+bus recovery infrastructure]
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ .../devicetree/bindings/i2c/i2c-davinci.txt        |   3 +
+ drivers/i2c/busses/i2c-davinci.c                   | 102 ++++++++++++++++++++-
+ include/linux/platform_data/i2c-davinci.h          |   1 +
+ 3 files changed, 105 insertions(+), 1 deletion(-)
 
-That's good :)
-
->>>    It seems you still don't get my point that the driver should manage
->>> all channels - S & NS. If Linux is running in NS mode on a platform,
->>> the DT will specify only some NS channel to be used. The controller
->>> driver shouldn't be crippled just because you think Linux will never
->>> be run in Secure mode.
->>>
->>
->> Ok how do you handle that, I don't see that in the DT binding. As it
->> stands, you can unconditionally try to access the secure channel and
->> cause aborts if the platform is running in non-secure mode.
->>
-> No. Please look at the dtsi again ....
->
->          mhu: mailbox@2b1f0000 {
->                  #mbox-cells = <1>;
->                  compatible = "arm,mbox-mhu";
->                  reg = <0 0x2b1f0000 0x1000>;
->                  interrupts = <0 36 4>, /* LP Non-Sec */
->                               <0 35 4>, /* HP Non-Sec */
->                               <0 37 4>; /* Secure */
-
-One possible issue I can think of(though current driver design requests
-irq only on channel startup, it could be moved to probe for optimization
-in which case you need a way to make sure secure channel or irq is not
-accessed)
-
->          };
->
->          mhu_client: scb@2e000000 {
->                  compatible = "fujitsu,mb86s70-scb-1.0";
->                  reg = <0 0x2e000000 0x4000>; /* SHM for IPC */
->                  mboxes = <&mhu 1>;
->          };
->
-> See the DT for mbox client specifies that it uses channel-1 which is
-> High-Priority_Non-Secure channel.
->
-
-Yes I noticed that, but still a wrong entry of another mhu_client with
-secure channel might end up crashing MHU driver or even whole system.
-Not sure but still probably one could try to play around with DT
-overlays in future, just a thought. So you need to ensure that's handled
-properly in the MHU driver.
-
-Regards,
-Sudeep
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-davinci.txt b/Documentation/devicetree/bindings/i2c/i2c-davinci.txt
+index 2dc935b..a4e1cbc 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-davinci.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-davinci.txt
+@@ -10,6 +10,9 @@ Required properties:
+ Recommended properties :
+ - interrupts : standard interrupt property.
+ - clock-frequency : desired I2C bus clock frequency in Hz.
++- ti,has-pfunc: boolean; if defined, it indicates that SoC supports PFUNC
++	registers. PFUNC registers allow to switch I2C pins to function as
++	GPIOs, so they can by toggled manually.
+ 
+ Example (enbw_cmc board):
+ 	i2c@1c22000 {
+diff --git a/drivers/i2c/busses/i2c-davinci.c b/drivers/i2c/busses/i2c-davinci.c
+index b8605b4..f7dae10f 100644
+--- a/drivers/i2c/busses/i2c-davinci.c
++++ b/drivers/i2c/busses/i2c-davinci.c
+@@ -64,6 +64,12 @@
+ #define DAVINCI_I2C_IVR_REG	0x28
+ #define DAVINCI_I2C_EMDR_REG	0x2c
+ #define DAVINCI_I2C_PSC_REG	0x30
++#define DAVINCI_I2C_FUNC_REG	0x48
++#define DAVINCI_I2C_DIR_REG	0x4c
++#define DAVINCI_I2C_DIN_REG	0x50
++#define DAVINCI_I2C_DOUT_REG	0x54
++#define DAVINCI_I2C_DSET_REG	0x58
++#define DAVINCI_I2C_DCLR_REG	0x5c
+ 
+ #define DAVINCI_I2C_IVR_AAS	0x07
+ #define DAVINCI_I2C_IVR_SCD	0x06
+@@ -97,6 +103,29 @@
+ #define DAVINCI_I2C_IMR_NACK	BIT(1)
+ #define DAVINCI_I2C_IMR_AL	BIT(0)
+ 
++/* set SDA and SCL as GPIO */
++#define DAVINCI_I2C_FUNC_PFUNC0	BIT(0)
++
++/* set SCL as output when used as GPIO*/
++#define DAVINCI_I2C_DIR_PDIR0	BIT(0)
++/* set SDA as output when used as GPIO*/
++#define DAVINCI_I2C_DIR_PDIR1	BIT(1)
++
++/* read SCL GPIO level */
++#define DAVINCI_I2C_DIN_PDIN0 BIT(0)
++/* read SDA GPIO level */
++#define DAVINCI_I2C_DIN_PDIN1 BIT(1)
++
++/*set the SCL GPIO high */
++#define DAVINCI_I2C_DSET_PDSET0	BIT(0)
++/*set the SDA GPIO high */
++#define DAVINCI_I2C_DSET_PDSET1	BIT(1)
++
++/* set the SCL GPIO low */
++#define DAVINCI_I2C_DCLR_PDCLR0	BIT(0)
++/* set the SDA GPIO low */
++#define DAVINCI_I2C_DCLR_PDCLR1	BIT(1)
++
+ struct davinci_i2c_dev {
+ 	struct device           *dev;
+ 	void __iomem		*base;
+@@ -257,6 +286,71 @@ static struct i2c_bus_recovery_info davinci_i2c_gpio_recovery_info = {
+ 	.unprepare_recovery = davinci_i2c_unprepare_recovery,
+ };
+ 
++static void davinci_i2c_set_scl(struct i2c_adapter *adap, int val)
++{
++	struct davinci_i2c_dev *dev = i2c_get_adapdata(adap);
++
++	if (val)
++		davinci_i2c_write_reg(dev, DAVINCI_I2C_DSET_REG,
++				      DAVINCI_I2C_DSET_PDSET0);
++	else
++		davinci_i2c_write_reg(dev, DAVINCI_I2C_DCLR_REG,
++				      DAVINCI_I2C_DCLR_PDCLR0);
++}
++
++static int davinci_i2c_get_scl(struct i2c_adapter *adap)
++{
++	struct davinci_i2c_dev *dev = i2c_get_adapdata(adap);
++	int val;
++
++	/* read the state of SCL */
++	val = davinci_i2c_read_reg(dev, DAVINCI_I2C_DIN_REG);
++	return val & DAVINCI_I2C_DIN_PDIN0;
++}
++
++static int davinci_i2c_get_sda(struct i2c_adapter *adap)
++{
++	struct davinci_i2c_dev *dev = i2c_get_adapdata(adap);
++	int val;
++
++	/* read the state of SDA */
++	val = davinci_i2c_read_reg(dev, DAVINCI_I2C_DIN_REG);
++	return val & DAVINCI_I2C_DIN_PDIN1;
++}
++
++static void davinci_i2c_scl_prepare_recovery(struct i2c_adapter *adap)
++{
++	struct davinci_i2c_dev *dev = i2c_get_adapdata(adap);
++
++	davinci_i2c_prepare_recovery(adap);
++
++	/* SCL output, SDA input */
++	davinci_i2c_write_reg(dev, DAVINCI_I2C_DIR_REG, DAVINCI_I2C_DIR_PDIR0);
++
++	/* change to GPIO mode */
++	davinci_i2c_write_reg(dev, DAVINCI_I2C_FUNC_REG,
++			      DAVINCI_I2C_FUNC_PFUNC0);
++}
++
++static void davinci_i2c_scl_unprepare_recovery(struct i2c_adapter *adap)
++{
++	struct davinci_i2c_dev *dev = i2c_get_adapdata(adap);
++
++	/* change back to I2C mode */
++	davinci_i2c_write_reg(dev, DAVINCI_I2C_FUNC_REG, 0);
++
++	davinci_i2c_unprepare_recovery(adap);
++}
++
++static struct i2c_bus_recovery_info davinci_i2c_scl_recovery_info = {
++	.recover_bus = i2c_generic_scl_recovery,
++	.set_scl = davinci_i2c_set_scl,
++	.get_scl = davinci_i2c_get_scl,
++	.get_sda = davinci_i2c_get_sda,
++	.prepare_recovery = davinci_i2c_scl_prepare_recovery,
++	.unprepare_recovery = davinci_i2c_scl_unprepare_recovery,
++};
++
+ /*
+  * Waiting for bus not busy
+  */
+@@ -669,6 +763,10 @@ static int davinci_i2c_probe(struct platform_device *pdev)
+ 		if (!of_property_read_u32(pdev->dev.of_node, "clock-frequency",
+ 			&prop))
+ 			dev->pdata->bus_freq = prop / 1000;
++
++		dev->pdata->has_pfunc =
++			of_property_read_bool(pdev->dev.of_node,
++					      "ti,has-pfunc");
+ 	} else if (!dev->pdata) {
+ 		dev->pdata = &davinci_i2c_platform_data_default;
+ 	}
+@@ -710,7 +808,9 @@ static int davinci_i2c_probe(struct platform_device *pdev)
+ 	adap->timeout = DAVINCI_I2C_TIMEOUT;
+ 	adap->dev.of_node = pdev->dev.of_node;
+ 
+-	if (dev->pdata->scl_pin) {
++	if (dev->pdata->has_pfunc)
++		adap->bus_recovery_info = &davinci_i2c_scl_recovery_info;
++	else if (dev->pdata->scl_pin) {
+ 		adap->bus_recovery_info = &davinci_i2c_gpio_recovery_info;
+ 		adap->bus_recovery_info->scl_gpio = dev->pdata->scl_pin;
+ 		adap->bus_recovery_info->sda_gpio = dev->pdata->sda_pin;
+diff --git a/include/linux/platform_data/i2c-davinci.h b/include/linux/platform_data/i2c-davinci.h
+index 2312d19..89fd347 100644
+--- a/include/linux/platform_data/i2c-davinci.h
++++ b/include/linux/platform_data/i2c-davinci.h
+@@ -18,6 +18,7 @@ struct davinci_i2c_platform_data {
+ 	unsigned int	bus_delay;	/* post-transaction delay (usec) */
+ 	unsigned int    sda_pin;        /* GPIO pin ID to use for SDA */
+ 	unsigned int    scl_pin;        /* GPIO pin ID to use for SCL */
++	bool		has_pfunc;	/*chip has a ICPFUNC register */
+ };
+ 
+ /* for board setup code */
+-- 
+1.9.1
