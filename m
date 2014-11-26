@@ -1,470 +1,309 @@
-From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v13 12/12] drm: bridge/dw_hdmi: add rockchip rk3288 support
-Date: Wed, 26 Nov 2014 21:37:17 +0800
-Message-ID: <1417009037-32506-1-git-send-email-andy.yan@rock-chips.com>
-References: <1417008157-31861-1-git-send-email-andy.yan@rock-chips.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] phy: add the Berlin USB PHY driver
+Date: Wed, 26 Nov 2014 14:43:39 +0100
+Message-ID: <5475D90B.9070908@gmail.com>
+References: <1416520406-1852-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417008157-31861-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <1416520406-1852-1-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: airlied-cv59FeDIM0c@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Josh Boyer <jwboyer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Rockchip RK3288 hdmi is compatible with dw_hdmi
+On 11/20/2014 10:53 PM, Sebastian Hesselbarth wrote:
+> From: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>
+> Add the driver driving the Marvell Berlin USB PHY. This allows to
+> initialize the PHY and to use it from the USB driver later.
+>
+> Signed-off-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-this patch is depend on patch by Mark Yao Add drm
-driver for Rockchip Socs
+Gentle ping.
 
-see https://lkml.org/lkml/2014/11/19/1153
+Kishon, anything wrong with these two patches?
 
-Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sebastian
 
----
-
-Changes in v13: None
-Changes in v12:
-- add comment for the depend on patch
-
-Changes in v11: None
-Changes in v10:
-- add more display mode support mpll configuration for rk3288
-
-Changes in v9:
-- move some phy configuration to platform driver
-
-Changes in v8: None
-Changes in v7: None
-Changes in v6: None
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-
- drivers/gpu/drm/bridge/dw_hdmi.c            |   3 +
- drivers/gpu/drm/rockchip/Kconfig            |  10 +
- drivers/gpu/drm/rockchip/Makefile           |   2 +-
- drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 355 ++++++++++++++++++++++++++++
- include/drm/bridge/dw_hdmi.h                |   1 +
- 5 files changed, 370 insertions(+), 1 deletion(-)
- create mode 100644 drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-
-diff --git a/drivers/gpu/drm/bridge/dw_hdmi.c b/drivers/gpu/drm/bridge/dw_hdmi.c
-index 160f8c7..8305390 100644
---- a/drivers/gpu/drm/bridge/dw_hdmi.c
-+++ b/drivers/gpu/drm/bridge/dw_hdmi.c
-@@ -853,6 +853,9 @@ static int hdmi_phy_configure(struct dw_hdmi *hdmi, unsigned char prep,
- 	dw_hdmi_phy_gen2_txpwron(hdmi, 1);
- 	dw_hdmi_phy_gen2_pddq(hdmi, 0);
- 
-+	if (hdmi->dev_type == RK3288_HDMI)
-+		dw_hdmi_phy_enable_spare(hdmi, 1);
-+
- 	/*Wait for PHY PLL lock */
- 	msec = 5;
- 	do {
-diff --git a/drivers/gpu/drm/rockchip/Kconfig b/drivers/gpu/drm/rockchip/Kconfig
-index 0ff6682..06371ae 100644
---- a/drivers/gpu/drm/rockchip/Kconfig
-+++ b/drivers/gpu/drm/rockchip/Kconfig
-@@ -15,3 +15,13 @@ config DRM_ROCKCHIP
- 	  management to userspace. This driver does not provide
- 	  2D or 3D acceleration; acceleration is performed by other
- 	  IP found on the SoC.
-+
-+config ROCKCHIP_DW_HDMI
-+        bool "Rockchip specific extensions for Synopsys DW HDMI"
-+        depends on DRM_ROCKCHIP
-+        select DRM_DW_HDMI
-+        help
-+	  This selects support for Rockchip SoC specific extensions
-+	  for the Synopsys DesignWare HDMI driver. If you want to
-+	  enable HDMI on RK3288 based SoC, you should selet this
-+	  option.
-diff --git a/drivers/gpu/drm/rockchip/Makefile b/drivers/gpu/drm/rockchip/Makefile
-index b3a5193..347e65c 100644
---- a/drivers/gpu/drm/rockchip/Makefile
-+++ b/drivers/gpu/drm/rockchip/Makefile
-@@ -4,5 +4,5 @@
- 
- rockchipdrm-y := rockchip_drm_drv.o rockchip_drm_fb.o rockchip_drm_fbdev.o \
- 		rockchip_drm_gem.o rockchip_drm_vop.o
--
-+rockchipdrm-$(CONFIG_ROCKCHIP_DW_HDMI) += dw_hdmi-rockchip.o
- obj-$(CONFIG_DRM_ROCKCHIP) += rockchipdrm.o
-diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-new file mode 100644
-index 0000000..16cad75
---- /dev/null
-+++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-@@ -0,0 +1,355 @@
-+/*
-+ * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/regmap.h>
-+#include <linux/clk.h>
-+#include <drm/drm_of.h>
-+#include <drm/drmP.h>
-+#include <drm/drm_crtc_helper.h>
-+#include <drm/drm_edid.h>
-+#include <drm/drm_encoder_slave.h>
-+#include <drm/bridge/dw_hdmi.h>
-+
-+#include "rockchip_drm_drv.h"
-+#include "rockchip_drm_vop.h"
-+
-+#define GRF_SOC_CON6                    0x025c
-+#define HDMI_SEL_VOP_LIT                (1 << 4)
-+
-+struct rockchip_hdmi {
-+	struct device *dev;
-+	struct clk *clk;
-+	struct clk *hdcp_clk;
-+	struct regmap *regmap;
-+	struct drm_encoder encoder;
-+};
-+
-+#define to_rockchip_hdmi(x)	container_of(x, struct rockchip_hdmi, x)
-+
-+static const struct mpll_config rockchip_mpll_cfg[] = {
-+	{
-+		27000000, {
-+			{ 0x00b3, 0x0000},
-+			{ 0x2153, 0x0000},
-+			{ 0x40f3, 0x0000}
-+		},
-+	}, {
-+		36000000, {
-+			{ 0x00b3, 0x0000},
-+			{ 0x2153, 0x0000},
-+			{ 0x40f3, 0x0000}
-+		},
-+	}, {
-+		40000000, {
-+			{ 0x00b3, 0x0000},
-+			{ 0x2153, 0x0000},
-+			{ 0x40f3, 0x0000}
-+		},
-+	}, {
-+		54000000, {
-+			{ 0x0072, 0x0001},
-+			{ 0x2142, 0x0001},
-+			{ 0x40a2, 0x0001},
-+		},
-+	}, {
-+		65000000, {
-+			{ 0x0072, 0x0001},
-+			{ 0x2142, 0x0001},
-+			{ 0x40a2, 0x0001},
-+		},
-+	}, {
-+		66000000, {
-+			{ 0x013e, 0x0003},
-+			{ 0x217e, 0x0002},
-+			{ 0x4061, 0x0002}
-+		},
-+	}, {
-+		74250000, {
-+			{ 0x0072, 0x0001},
-+			{ 0x2145, 0x0002},
-+			{ 0x4061, 0x0002}
-+		},
-+	}, {
-+		83500000, {
-+			{ 0x0072, 0x0001},
-+		},
-+	}, {
-+		108000000, {
-+			{ 0x0051, 0x0002},
-+			{ 0x2145, 0x0002},
-+			{ 0x4061, 0x0002}
-+		},
-+	}, {
-+		106500000, {
-+			{ 0x0051, 0x0002},
-+			{ 0x2145, 0x0002},
-+			{ 0x4061, 0x0002}
-+		},
-+	}, {
-+		146250000, {
-+			{ 0x0051, 0x0002},
-+			{ 0x2145, 0x0002},
-+			{ 0x4061, 0x0002}
-+		},
-+	}, {
-+		148500000, {
-+			{ 0x0051, 0x0003},
-+			{ 0x214c, 0x0003},
-+			{ 0x4064, 0x0003}
-+		},
-+	}, {
-+		~0UL, {
-+			{ 0x00a0, 0x000a },
-+			{ 0x2001, 0x000f },
-+			{ 0x4002, 0x000f },
-+		},
-+	}
-+};
-+
-+static const struct curr_ctrl rockchip_cur_ctr[] = {
-+	/*      pixelclk    bpp8    bpp10   bpp12 */
-+	{
-+		40000000,  { 0x0018, 0x0018, 0x0018 },
-+	}, {
-+		65000000,  { 0x0028, 0x0028, 0x0028 },
-+	}, {
-+		66000000,  { 0x0038, 0x0038, 0x0038 },
-+	}, {
-+		74250000,  { 0x0028, 0x0038, 0x0038 },
-+	}, {
-+		83500000,  { 0x0028, 0x0038, 0x0038 },
-+	}, {
-+		146250000, { 0x0038, 0x0038, 0x0038 },
-+	}, {
-+		148500000, { 0x0000, 0x0038, 0x0038 },
-+	}, {
-+		~0UL,      { 0x0000, 0x0000, 0x0000},
-+	}
-+};
-+
-+static const struct sym_term rockchip_sym_term[] = {
-+	/*pixelclk   symbol   term*/
-+	{ 74250000,  0x8009, 0x0004 },
-+	{ 148500000, 0x8029, 0x0004 },
-+	{ 297000000, 0x8039, 0x0005 },
-+	{ ~0UL,	     0x0000, 0x0000 }
-+};
-+
-+static int rockchip_hdmi_parse_dt(struct rockchip_hdmi *hdmi)
-+{
-+	struct device_node *np = hdmi->dev->of_node;
-+
-+	hdmi->regmap = syscon_regmap_lookup_by_phandle(np, "rockchip,grf");
-+	if (IS_ERR(hdmi->regmap)) {
-+		dev_err(hdmi->dev, "Unable to get rockchip,grf\n");
-+		return PTR_ERR(hdmi->regmap);
-+	}
-+
-+	hdmi->clk = devm_clk_get(hdmi->dev, "clk");
-+	if (IS_ERR(hdmi->clk)) {
-+		dev_err(hdmi->dev, "Unable to get HDMI clk\n");
-+	       return PTR_ERR(hdmi->clk);
-+	}
-+
-+	hdmi->hdcp_clk = devm_clk_get(hdmi->dev, "hdcp_clk");
-+	if (IS_ERR(hdmi->hdcp_clk)) {
-+		dev_err(hdmi->dev, "Unable to get HDMI hdcp clk\n");
-+		return PTR_ERR(hdmi->hdcp_clk);
-+	}
-+
-+	return 0;
-+}
-+
-+static enum drm_mode_status
-+dw_hdmi_rockchip_mode_valid(struct drm_connector *connector,
-+			    struct drm_display_mode *mode)
-+{
-+	const struct mpll_config *mpll_cfg = rockchip_mpll_cfg;
-+	int pclk = mode->clock * 1000;
-+	bool valid = false;
-+	int i;
-+
-+	for (i = 0; mpll_cfg[i].mpixelclock != (~0UL); i++) {
-+		if (pclk == mpll_cfg[i].mpixelclock) {
-+			valid = true;
-+			break;
-+		}
-+	}
-+
-+	return (valid) ? MODE_OK : MODE_BAD;
-+}
-+
-+static struct drm_encoder_funcs dw_hdmi_encoder_funcs = {
-+	.destroy = drm_encoder_cleanup,
-+};
-+
-+static void dw_hdmi_rockchip_disable(struct drm_encoder *encoder)
-+{
-+}
-+
-+static bool dw_hdmi_rockchip_mode_fixup(struct drm_encoder *encoder,
-+					const struct drm_display_mode *mode,
-+					struct drm_display_mode *adjusted_mode)
-+{
-+	return true;
-+}
-+
-+static void dw_hdmi_rockchip_mode_set(struct drm_encoder *encoder,
-+				      struct drm_display_mode *mode,
-+				      struct drm_display_mode *adjusted_mode)
-+{
-+}
-+
-+static void dw_hdmi_rockchip_commit(struct drm_encoder *encoder)
-+{
-+	struct rockchip_hdmi *hdmi = to_rockchip_hdmi(encoder);
-+	u32 val;
-+	int mux;
-+
-+	mux = rockchip_drm_encoder_get_mux_id(hdmi->dev->of_node, encoder);
-+	if (mux)
-+		val = HDMI_SEL_VOP_LIT | (HDMI_SEL_VOP_LIT << 16);
-+	else
-+		val = HDMI_SEL_VOP_LIT << 16;
-+
-+	regmap_write(hdmi->regmap, GRF_SOC_CON6, val);
-+	dev_dbg(hdmi->dev, "vop %s output to hdmi\n",
-+		(mux) ? "LIT" : "BIG");
-+}
-+
-+static void dw_hdmi_rockchip_prepare(struct drm_encoder *encoder)
-+{
-+	rockchip_drm_crtc_mode_config(encoder->crtc, DRM_MODE_CONNECTOR_HDMIA,
-+				      ROCKCHIP_OUT_MODE_AAAA);
-+}
-+
-+static struct drm_encoder_helper_funcs dw_hdmi_encoder_helper_funcs = {
-+	.mode_fixup = dw_hdmi_rockchip_mode_fixup,
-+	.mode_set = dw_hdmi_rockchip_mode_set,
-+	.prepare = dw_hdmi_rockchip_prepare,
-+	.commit = dw_hdmi_rockchip_commit,
-+	.disable = dw_hdmi_rockchip_disable,
-+};
-+
-+static const struct dw_hdmi_plat_data rockchip_hdmi_drv_data = {
-+	.mode_valid		= dw_hdmi_rockchip_mode_valid,
-+	.mpll_cfg		= rockchip_mpll_cfg,
-+	.cur_ctr		= rockchip_cur_ctr,
-+	.sym_term		= rockchip_sym_term,
-+	.dev_type		= RK3288_HDMI,
-+};
-+
-+static const struct of_device_id dw_hdmi_rockchip_ids[] = {
-+	{ .compatible = "rockchip,rk3288-dw-hdmi",
-+	  .data = &rockchip_hdmi_drv_data
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, dw_hdmi_rockchip_dt_ids);
-+
-+static int dw_hdmi_rockchip_bind(struct device *dev, struct device *master,
-+				 void *data)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	const struct dw_hdmi_plat_data *plat_data;
-+	const struct of_device_id *match;
-+	struct drm_device *drm = data;
-+	struct drm_encoder *encoder;
-+	struct rockchip_hdmi *hdmi;
-+	int ret;
-+
-+	if (!pdev->dev.of_node)
-+		return -ENODEV;
-+
-+	hdmi = devm_kzalloc(&pdev->dev, sizeof(*hdmi), GFP_KERNEL);
-+	if (!hdmi)
-+		return -ENOMEM;
-+
-+	match = of_match_node(dw_hdmi_rockchip_ids, pdev->dev.of_node);
-+	plat_data = match->data;
-+	hdmi->dev = &pdev->dev;
-+	encoder = &hdmi->encoder;
-+	platform_set_drvdata(pdev, hdmi);
-+
-+	ret = rockchip_hdmi_parse_dt(hdmi);
-+	if (ret) {
-+		dev_err(hdmi->dev, "Unable to parse OF data\n");
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(hdmi->clk);
-+	if (ret) {
-+		dev_err(hdmi->dev, "Cannot enable HDMI clock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(hdmi->hdcp_clk);
-+	if (ret) {
-+		dev_err(hdmi->dev, "Cannot enable HDMI hdcp clock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	encoder->possible_crtcs = drm_of_find_possible_crtcs(drm, dev->of_node);
-+
-+	drm_encoder_helper_add(encoder, &dw_hdmi_encoder_helper_funcs);
-+	drm_encoder_init(drm, encoder, &dw_hdmi_encoder_funcs,
-+			 DRM_MODE_ENCODER_TMDS);
-+
-+	return dw_hdmi_bind(dev, master, data, encoder, plat_data);
-+}
-+
-+static void dw_hdmi_rockchip_unbind(struct device *dev, struct device *master,
-+				    void *data)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct rockchip_hdmi *hdmi = platform_get_drvdata(pdev);
-+
-+	clk_disable_unprepare(hdmi->clk);
-+	clk_disable_unprepare(hdmi->hdcp_clk);
-+
-+	return dw_hdmi_unbind(dev, master, data);
-+}
-+
-+static const struct component_ops dw_hdmi_rockchip_ops = {
-+	.bind	= dw_hdmi_rockchip_bind,
-+	.unbind	= dw_hdmi_rockchip_unbind,
-+};
-+
-+static int dw_hdmi_rockchip_probe(struct platform_device *pdev)
-+{
-+	return component_add(&pdev->dev, &dw_hdmi_rockchip_ops);
-+}
-+
-+static int dw_hdmi_rockchip_remove(struct platform_device *pdev)
-+{
-+	component_del(&pdev->dev, &dw_hdmi_rockchip_ops);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver dw_hdmi_rockchip_pltfm_driver = {
-+	.probe  = dw_hdmi_rockchip_probe,
-+	.remove = dw_hdmi_rockchip_remove,
-+	.driver = {
-+		.name = "dwhdmi-rockchip",
-+		.owner = THIS_MODULE,
-+		.of_match_table = dw_hdmi_rockchip_ids,
-+	},
-+};
-+
-+module_platform_driver(dw_hdmi_rockchip_pltfm_driver);
-+
-+MODULE_AUTHOR("Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
-+MODULE_AUTHOR("Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
-+MODULE_DESCRIPTION("Rockchip Specific DW-HDMI Driver Extension");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:dwhdmi-rockchip");
-diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
-index 1777ab4..b898bb1 100644
---- a/include/drm/bridge/dw_hdmi.h
-+++ b/include/drm/bridge/dw_hdmi.h
-@@ -22,6 +22,7 @@ enum {
- enum dw_hdmi_devtype {
- 	IMX6Q_HDMI,
- 	IMX6DL_HDMI,
-+	RK3288_HDMI,
- };
- 
- struct mpll_config {
--- 
-1.9.1
+> ---
+> Split-off patches from latest Berlin USB PHY patches
+>    https://lkml.kernel.org/g/1416231347-27193-1-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+>
+> Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>   drivers/phy/Kconfig          |    7 ++
+>   drivers/phy/Makefile         |    1 +
+>   drivers/phy/phy-berlin-usb.c |  224 ++++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 232 insertions(+), 0 deletions(-)
+>   create mode 100644 drivers/phy/phy-berlin-usb.c
+>
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index 2a436e6..38ca6ff 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -15,6 +15,13 @@ config GENERIC_PHY
+>   	  phy users can obtain reference to the PHY. All the users of this
+>   	  framework should select this config.
+>
+> +config PHY_BERLIN_USB
+> +	tristate "Marvell Berlin USB PHY Driver"
+> +	depends on ARCH_BERLIN && RESET_CONTROLLER && HAS_IOMEM && OF
+> +	select GENERIC_PHY
+> +	help
+> +	  Enable this to support the USB PHY on Marvell Berlin SoCs.
+> +
+>   config PHY_BERLIN_SATA
+>   	tristate "Marvell Berlin SATA PHY driver"
+>   	depends on ARCH_BERLIN && HAS_IOMEM && OF
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index c4590fc..6fd1f77 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -3,6 +3,7 @@
+>   #
+>
+>   obj-$(CONFIG_GENERIC_PHY)		+= phy-core.o
+> +obj-$(CONFIG_PHY_BERLIN_USB)		+= phy-berlin-usb.o
+>   obj-$(CONFIG_PHY_BERLIN_SATA)		+= phy-berlin-sata.o
+>   obj-$(CONFIG_BCM_KONA_USB2_PHY)		+= phy-bcm-kona-usb2.o
+>   obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+= phy-exynos-dp-video.o
+> diff --git a/drivers/phy/phy-berlin-usb.c b/drivers/phy/phy-berlin-usb.c
+> new file mode 100644
+> index 0000000..f9f1306
+> --- /dev/null
+> +++ b/drivers/phy/phy-berlin-usb.c
+> @@ -0,0 +1,224 @@
+> +/*
+> + * Copyright (C) 2014 Marvell Technology Group Ltd.
+> + *
+> + * Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> + * Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2. This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +#include <linux/gpio.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset.h>
+> +
+> +#define USB_PHY_PLL		0x04
+> +#define USB_PHY_PLL_CONTROL	0x08
+> +#define USB_PHY_TX_CTRL0	0x10
+> +#define USB_PHY_TX_CTRL1	0x14
+> +#define USB_PHY_TX_CTRL2	0x18
+> +#define USB_PHY_RX_CTRL		0x20
+> +#define USB_PHY_ANALOG		0x34
+> +
+> +/* USB_PHY_PLL */
+> +#define CLK_REF_DIV(x)		((x) << 4)
+> +#define FEEDBACK_CLK_DIV(x)	((x) << 8)
+> +
+> +/* USB_PHY_PLL_CONTROL */
+> +#define CLK_STABLE		BIT(0)
+> +#define PLL_CTRL_PIN		BIT(1)
+> +#define PLL_CTRL_REG		BIT(2)
+> +#define PLL_ON			BIT(3)
+> +#define PHASE_OFF_TOL_125	(0x0 << 5)
+> +#define PHASE_OFF_TOL_250	BIT(5)
+> +#define KVC0_CALIB		(0x0 << 9)
+> +#define KVC0_REG_CTRL		BIT(9)
+> +#define KVC0_HIGH		(0x0 << 10)
+> +#define KVC0_LOW		(0x3 << 10)
+> +#define CLK_BLK_EN		BIT(13)
+> +
+> +/* USB_PHY_TX_CTRL0 */
+> +#define EXT_HS_RCAL_EN		BIT(3)
+> +#define EXT_FS_RCAL_EN		BIT(4)
+> +#define IMPCAL_VTH_DIV(x)	((x) << 5)
+> +#define EXT_RS_RCAL_DIV(x)	((x) << 8)
+> +#define EXT_FS_RCAL_DIV(x)	((x) << 12)
+> +
+> +/* USB_PHY_TX_CTRL1 */
+> +#define TX_VDD15_14		(0x0 << 4)
+> +#define TX_VDD15_15		BIT(4)
+> +#define TX_VDD15_16		(0x2 << 4)
+> +#define TX_VDD15_17		(0x3 << 4)
+> +#define TX_VDD12_VDD		(0x0 << 6)
+> +#define TX_VDD12_11		BIT(6)
+> +#define TX_VDD12_12		(0x2 << 6)
+> +#define TX_VDD12_13		(0x3 << 6)
+> +#define LOW_VDD_EN		BIT(8)
+> +#define TX_OUT_AMP(x)		((x) << 9)
+> +
+> +/* USB_PHY_TX_CTRL2 */
+> +#define TX_CHAN_CTRL_REG(x)	((x) << 0)
+> +#define DRV_SLEWRATE(x)		((x) << 4)
+> +#define IMP_CAL_FS_HS_DLY_0	(0x0 << 6)
+> +#define IMP_CAL_FS_HS_DLY_1	BIT(6)
+> +#define IMP_CAL_FS_HS_DLY_2	(0x2 << 6)
+> +#define IMP_CAL_FS_HS_DLY_3	(0x3 << 6)
+> +#define FS_DRV_EN_MASK(x)	((x) << 8)
+> +#define HS_DRV_EN_MASK(x)	((x) << 12)
+> +
+> +/* USB_PHY_RX_CTRL */
+> +#define PHASE_FREEZE_DLY_2_CL	(0x0 << 0)
+> +#define PHASE_FREEZE_DLY_4_CL	BIT(0)
+> +#define ACK_LENGTH_8_CL		(0x0 << 2)
+> +#define ACK_LENGTH_12_CL	BIT(2)
+> +#define ACK_LENGTH_16_CL	(0x2 << 2)
+> +#define ACK_LENGTH_20_CL	(0x3 << 2)
+> +#define SQ_LENGTH_3		(0x0 << 4)
+> +#define SQ_LENGTH_6		BIT(4)
+> +#define SQ_LENGTH_9		(0x2 << 4)
+> +#define SQ_LENGTH_12		(0x3 << 4)
+> +#define DISCON_THRESHOLD_260	(0x0 << 6)
+> +#define DISCON_THRESHOLD_270	BIT(6)
+> +#define DISCON_THRESHOLD_280	(0x2 << 6)
+> +#define DISCON_THRESHOLD_290	(0x3 << 6)
+> +#define SQ_THRESHOLD(x)		((x) << 8)
+> +#define LPF_COEF(x)		((x) << 12)
+> +#define INTPL_CUR_10		(0x0 << 14)
+> +#define INTPL_CUR_20		BIT(14)
+> +#define INTPL_CUR_30		(0x2 << 14)
+> +#define INTPL_CUR_40		(0x3 << 14)
+> +
+> +/* USB_PHY_ANALOG */
+> +#define ANA_PWR_UP		BIT(1)
+> +#define ANA_PWR_DOWN		BIT(2)
+> +#define V2I_VCO_RATIO(x)	((x) << 7)
+> +#define R_ROTATE_90		(0x0 << 10)
+> +#define R_ROTATE_0		BIT(10)
+> +#define MODE_TEST_EN		BIT(11)
+> +#define ANA_TEST_DC_CTRL(x)	((x) << 12)
+> +
+> +#define to_phy_berlin_usb_priv(p)	\
+> +	container_of((p), struct phy_berlin_usb_priv, phy)
+> +
+> +static const u32 phy_berlin_pll_dividers[] = {
+> +	/* Berlin 2 */
+> +	CLK_REF_DIV(0xc) | FEEDBACK_CLK_DIV(0x54),
+> +	/* Berlin 2CD */
+> +	CLK_REF_DIV(0x6) | FEEDBACK_CLK_DIV(0x55),
+> +};
+> +
+> +struct phy_berlin_usb_priv {
+> +	void __iomem		*base;
+> +	struct phy		*phy;
+> +	struct reset_control	*rst_ctrl;
+> +	u32			pll_divider;
+> +};
+> +
+> +static int phy_berlin_usb_power_on(struct phy *phy)
+> +{
+> +	struct phy_berlin_usb_priv *priv = dev_get_drvdata(phy->dev.parent);
+> +
+> +	reset_control_reset(priv->rst_ctrl);
+> +
+> +	writel(priv->pll_divider,
+> +	       priv->base + USB_PHY_PLL);
+> +	writel(CLK_STABLE | PLL_CTRL_REG | PHASE_OFF_TOL_250 | KVC0_REG_CTRL |
+> +	       CLK_BLK_EN, priv->base + USB_PHY_PLL_CONTROL);
+> +	writel(V2I_VCO_RATIO(0x5) | R_ROTATE_0 | ANA_TEST_DC_CTRL(0x5),
+> +	       priv->base + USB_PHY_ANALOG);
+> +	writel(PHASE_FREEZE_DLY_4_CL | ACK_LENGTH_16_CL | SQ_LENGTH_12 |
+> +	       DISCON_THRESHOLD_260 | SQ_THRESHOLD(0xa) | LPF_COEF(0x2) |
+> +	       INTPL_CUR_30, priv->base + USB_PHY_RX_CTRL);
+> +
+> +	writel(TX_VDD12_13 | TX_OUT_AMP(0x3), priv->base + USB_PHY_TX_CTRL1);
+> +	writel(EXT_HS_RCAL_EN | IMPCAL_VTH_DIV(0x3) | EXT_RS_RCAL_DIV(0x4),
+> +	       priv->base + USB_PHY_TX_CTRL0);
+> +
+> +	writel(EXT_HS_RCAL_EN | IMPCAL_VTH_DIV(0x3) | EXT_RS_RCAL_DIV(0x4) |
+> +	       EXT_FS_RCAL_DIV(0x2), priv->base + USB_PHY_TX_CTRL0);
+> +
+> +	writel(EXT_HS_RCAL_EN | IMPCAL_VTH_DIV(0x3) | EXT_RS_RCAL_DIV(0x4),
+> +	       priv->base + USB_PHY_TX_CTRL0);
+> +	writel(TX_CHAN_CTRL_REG(0xf) | DRV_SLEWRATE(0x3) | IMP_CAL_FS_HS_DLY_3 |
+> +	       FS_DRV_EN_MASK(0xd), priv->base + USB_PHY_TX_CTRL2);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct phy_ops phy_berlin_usb_ops = {
+> +	.power_on	= phy_berlin_usb_power_on,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +static const struct of_device_id phy_berlin_sata_of_match[] = {
+> +	{
+> +		.compatible = "marvell,berlin2-usb-phy",
+> +		.data = &phy_berlin_pll_dividers[0],
+> +	},
+> +	{
+> +		.compatible = "marvell,berlin2cd-usb-phy",
+> +		.data = &phy_berlin_pll_dividers[1],
+> +	},
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, phy_berlin_sata_of_match);
+> +
+> +static int phy_berlin_usb_probe(struct platform_device *pdev)
+> +{
+> +	const struct of_device_id *match =
+> +		of_match_device(phy_berlin_sata_of_match, &pdev->dev);
+> +	struct phy_berlin_usb_priv *priv;
+> +	struct resource *res;
+> +	struct phy_provider *phy_provider;
+> +
+> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	priv->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(priv->base))
+> +		return PTR_ERR(priv->base);
+> +
+> +	priv->rst_ctrl = devm_reset_control_get(&pdev->dev, NULL);
+> +	if (IS_ERR(priv->rst_ctrl))
+> +		return PTR_ERR(priv->rst_ctrl);
+> +
+> +	priv->pll_divider = *((u32 *)match->data);
+> +
+> +	priv->phy = devm_phy_create(&pdev->dev, NULL, &phy_berlin_usb_ops,
+> +				    NULL);
+> +	if (IS_ERR(priv->phy)) {
+> +		dev_err(&pdev->dev, "failed to create PHY\n");
+> +		return PTR_ERR(priv->phy);
+> +	}
+> +
+> +	platform_set_drvdata(pdev, priv);
+> +
+> +	phy_provider =
+> +		devm_of_phy_provider_register(&pdev->dev, of_phy_simple_xlate);
+> +	if (IS_ERR(phy_provider))
+> +		return PTR_ERR(phy_provider);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver phy_berlin_usb_driver = {
+> +	.probe	= phy_berlin_usb_probe,
+> +	.driver	= {
+> +		.name		= "phy-berlin-usb",
+> +		.owner		= THIS_MODULE,
+> +		.of_match_table	= phy_berlin_sata_of_match,
+> +	 },
+> +};
+> +module_platform_driver(phy_berlin_usb_driver);
+> +
+> +MODULE_AUTHOR("Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>");
+> +MODULE_DESCRIPTION("Marvell Berlin PHY driver for USB");
+> +MODULE_LICENSE("GPL");
+>
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
