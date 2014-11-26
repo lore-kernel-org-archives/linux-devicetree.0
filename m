@@ -1,68 +1,137 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] clk: rockchip: add binding ID for DMC (memory controller) clocks on rk3288
-Date: Wed, 26 Nov 2014 18:43:40 +0100
-Message-ID: <3545025.lFcuKWk0o9@diego>
-References: <1416960783-25119-1-git-send-email-dianders@chromium.org> <1717801.sWHeWsmqUi@diego> <CAD=FV=WxeFFZekYOkttx4YcDq=td+Vpu9rFALuNu_6zs+7b2tw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAD=FV=WxeFFZekYOkttx4YcDq=td+Vpu9rFALuNu_6zs+7b2tw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: jeff chen <cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Derek Basehore <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Leif Lindholm <leif.lindholm@linaro.org>
+Subject: [PATCH v2 0/2] of: support passing console options with stdout-path
+Date: Wed, 26 Nov 2014 17:40:38 +0000
+Message-ID: <1417023640-23464-1-git-send-email-leif.lindholm@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, grant.likely@linaro.org, robh+dt@kernel.org, plagnioj@jcrosoft.com, ijc@debian.org, andrew@lunn.ch, s.hauer@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 25. November 2014, 16:49:08 schrieb Doug Anderson:
-> Heiko,
->=20
-> On Tue, Nov 25, 2014 at 4:45 PM, Heiko St=FCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wr=
-ote:
-> > Am Dienstag, 25. November 2014, 16:13:02 schrieb Doug Anderson:
-> >> From: Jeff Chen <cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> >>=20
-> >> The DMC clocks need to be turned off at runtime, so we should have=
- IDs
-> >> so we can export them.
-> >>=20
-> >> Signed-off-by: Jeff Chen <cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> >> [dianders: split into two patches; adjusted commit msg]
-> >> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> >=20
-> > both patches look ok to me and I'll probably pick them up tomorrow.
->=20
-> OK, thanks!
+This used to be a simple little patch, enabling support for passing
+console parameters via stdout-path. It is now a two-part monstrosity
+series, changing a core dt function interface and touching 107 files.
 
-I've now added both patches to my clk branch.
+Due to its invasiveness, checkpatch throws both errors and warnings
+on 1/2, as it maintains existing whitespace errors.
 
+Changes since v1:
+- Change interface of of_get_node_by_path() to take an additional
+  argument, and update all of its callers to keep working.
+- Rework original patch to use this interface.
 
-> > We have currently three clock patches/series adding new clock ids [=
-this
-> > one, the mmc phases and Sonny's i2s_clkout] and I'm trying to derte=
-rmine
-> > if I need a shared branch for those.
-> >=20
-> > Currently it doesn't look like the others will provide dts patches =
-using
-> > the clocks in time, so it looks like I can skip the shared branch a=
-nd we
-> > can use the clock ids regularly after the merge-window. Some true f=
-or
-> > your clocks?
-> Yup, no problem for me.  I provided this as two patches to you just i=
-n
-> case it was convenient, since I saw that as feedback in previous
-> submissions.
+Leif Lindholm (2):
+  of: add optional options parameter to of_find_node_by_path()
+  of: support passing console options with stdout-path
 
-Yep, I think it is the sanest of doing it in one way all the time, so w=
-e have=20
-the option of easily creating shared branches depending on what is need=
-ed.
+ arch/arm/kernel/devtree.c                       |    2 +-
+ arch/arm/mach-bcm/kona_smp.c                    |    2 +-
+ arch/arm/mach-imx/clk.c                         |    2 +-
+ arch/arm/mach-imx/cpu.c                         |    2 +-
+ arch/arm/mach-integrator/integrator_ap.c        |    4 +-
+ arch/arm/mach-mxs/mach-mxs.c                    |    2 +-
+ arch/arm/mach-nomadik/cpu-8815.c                |    2 +-
+ arch/arm/mach-shmobile/timer.c                  |    2 +-
+ arch/arm/mach-u300/core.c                       |    2 +-
+ arch/arm64/kernel/topology.c                    |    2 +-
+ arch/microblaze/kernel/reset.c                  |    2 +-
+ arch/powerpc/include/asm/kvm_para.h             |    2 +-
+ arch/powerpc/kernel/btext.c                     |    2 +-
+ arch/powerpc/kernel/ibmebus.c                   |    4 +-
+ arch/powerpc/kernel/legacy_serial.c             |    4 +-
+ arch/powerpc/kernel/machine_kexec.c             |    2 +-
+ arch/powerpc/kernel/machine_kexec_64.c          |    2 +-
+ arch/powerpc/kernel/pci_32.c                    |    4 +-
+ arch/powerpc/kernel/proc_powerpc.c              |    2 +-
+ arch/powerpc/kernel/rtas.c                      |    2 +-
+ arch/powerpc/kernel/rtas_pci.c                  |    2 +-
+ arch/powerpc/kernel/setup-common.c              |    6 +-
+ arch/powerpc/kernel/setup_64.c                  |    2 +-
+ arch/powerpc/mm/numa.c                          |   15 +++--
+ arch/powerpc/platforms/52xx/efika.c             |    4 +-
+ arch/powerpc/platforms/85xx/xes_mpc85xx.c       |    2 +-
+ arch/powerpc/platforms/8xx/mpc885ads_setup.c    |    4 +-
+ arch/powerpc/platforms/cell/celleb_setup.c      |    2 +-
+ arch/powerpc/platforms/cell/qpace_setup.c       |    2 +-
+ arch/powerpc/platforms/cell/ras.c               |    2 +-
+ arch/powerpc/platforms/cell/setup.c             |    4 +-
+ arch/powerpc/platforms/cell/spufs/inode.c       |    2 +-
+ arch/powerpc/platforms/chrp/pci.c               |    4 +-
+ arch/powerpc/platforms/chrp/setup.c             |   12 ++--
+ arch/powerpc/platforms/embedded6xx/ls_uart.c    |    2 +-
+ arch/powerpc/platforms/maple/pci.c              |    2 +-
+ arch/powerpc/platforms/maple/setup.c            |    2 +-
+ arch/powerpc/platforms/pasemi/pci.c             |    2 +-
+ arch/powerpc/platforms/pasemi/setup.c           |    2 +-
+ arch/powerpc/platforms/powermac/feature.c       |    6 +-
+ arch/powerpc/platforms/powermac/pci.c           |    2 +-
+ arch/powerpc/platforms/powermac/setup.c         |    7 ++-
+ arch/powerpc/platforms/powermac/smp.c           |    4 +-
+ arch/powerpc/platforms/powermac/udbg_scc.c      |    2 +-
+ arch/powerpc/platforms/powernv/opal-async.c     |    2 +-
+ arch/powerpc/platforms/powernv/opal-sysparam.c  |    2 +-
+ arch/powerpc/platforms/powernv/opal.c           |    4 +-
+ arch/powerpc/platforms/powernv/setup.c          |    2 +-
+ arch/powerpc/platforms/ps3/os-area.c            |    4 +-
+ arch/powerpc/platforms/pseries/dlpar.c          |    8 +--
+ arch/powerpc/platforms/pseries/hotplug-memory.c |    6 +-
+ arch/powerpc/platforms/pseries/io_event_irq.c   |    2 +-
+ arch/powerpc/platforms/pseries/lparcfg.c        |    6 +-
+ arch/powerpc/platforms/pseries/pseries_energy.c |    4 +-
+ arch/powerpc/platforms/pseries/ras.c            |    4 +-
+ arch/powerpc/platforms/pseries/reconfig.c       |    6 +-
+ arch/powerpc/platforms/pseries/setup.c          |    4 +-
+ arch/powerpc/sysdev/mpic_msgr.c                 |    2 +-
+ arch/powerpc/sysdev/mv64x60_dev.c               |    2 +-
+ arch/powerpc/sysdev/mv64x60_udbg.c              |    2 +-
+ arch/sparc/kernel/chmc.c                        |    2 +-
+ arch/sparc/kernel/irq_64.c                      |    2 +-
+ arch/sparc/kernel/leon_kernel.c                 |    2 +-
+ arch/sparc/kernel/leon_smp.c                    |    2 +-
+ arch/sparc/kernel/of_device_32.c                |    2 +-
+ arch/sparc/kernel/of_device_64.c                |    2 +-
+ arch/sparc/kernel/prom_32.c                     |    2 +-
+ arch/sparc/kernel/time_64.c                     |    2 +-
+ arch/x86/platform/olpc/olpc.c                   |    2 +-
+ drivers/ata/pata_macio.c                        |    2 +-
+ drivers/cpufreq/pmac64-cpufreq.c                |    5 +-
+ drivers/cpufreq/powernv-cpufreq.c               |    2 +-
+ drivers/cpuidle/cpuidle-big_little.c            |    2 +-
+ drivers/cpuidle/cpuidle-powernv.c               |    2 +-
+ drivers/edac/cpc925_edac.c                      |    2 +-
+ drivers/hwmon/ibmpowernv.c                      |    4 +-
+ drivers/ide/pmac.c                              |    2 +-
+ drivers/input/misc/sparcspkr.c                  |    2 +-
+ drivers/input/serio/i8042-sparcio.h             |    4 +-
+ drivers/irqchip/irq-atmel-aic-common.c          |    2 +-
+ drivers/macintosh/therm_pm72.c                  |    4 +-
+ drivers/macintosh/via-pmu-led.c                 |    2 +-
+ drivers/macintosh/windfarm_mpu.h                |    2 +-
+ drivers/macintosh/windfarm_pm72.c               |    2 +-
+ drivers/mtd/nand/mpc5121_nfc.c                  |    2 +-
+ drivers/net/ethernet/amd/sunlance.c             |    2 +-
+ drivers/of/base.c                               |   34 +++++++----
+ drivers/of/platform.c                           |    4 +-
+ drivers/of/resolver.c                           |    4 +-
+ drivers/of/selftest.c                           |   73 ++++++++++++++---------
+ drivers/sbus/char/display7seg.c                 |    2 +-
+ drivers/sbus/char/envctrl.c                     |    2 +-
+ drivers/sbus/char/openprom.c                    |   10 ++--
+ drivers/scsi/ibmvscsi/ibmvfc.c                  |    2 +-
+ drivers/scsi/ibmvscsi/ibmvscsi.c                |    2 +-
+ drivers/soc/tegra/common.c                      |    2 +-
+ drivers/tty/hvc/hvc_opal.c                      |    4 +-
+ drivers/tty/serial/nwpserial.c                  |    2 +-
+ drivers/tty/serial/suncore.c                    |    2 +-
+ drivers/tty/serial/sunsu.c                      |    6 +-
+ drivers/tty/sysrq.c                             |    2 +-
+ drivers/video/fbdev/aty/radeon_monitor.c        |    2 +-
+ drivers/virt/fsl_hypervisor.c                   |    2 +-
+ drivers/watchdog/cpwd.c                         |    2 +-
+ fs/openpromfs/inode.c                           |    2 +-
+ include/linux/of.h                              |    5 +-
+ sound/soc/fsl/fsl_ssi.c                         |    2 +-
+ 107 files changed, 234 insertions(+), 195 deletions(-)
 
-
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.7.10.4
