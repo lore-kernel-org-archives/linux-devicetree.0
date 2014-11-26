@@ -1,55 +1,72 @@
-From: Naidu Tellapati <naidu.tellapati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v6 2/2] DT: watchdog: Add ImgTec PDC Watchdog Timer binding documentation
-Date: Wed, 26 Nov 2014 14:56:34 +0530
-Message-ID: <1416993994-8456-3-git-send-email-Naidu.Tellapati@gmail.com>
-References: <1416993994-8456-1-git-send-email-Naidu.Tellapati@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416993994-8456-1-git-send-email-Naidu.Tellapati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arul.ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, jude.abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Naidu Tellapati <Naidu.Tellapati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jude Abraham <Jude.Abraham-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Johan Hovold <johan@kernel.org>
+Subject: [PATCH] rtc: omap: drop vendor-prefix from power-controller dt property
+Date: Wed, 26 Nov 2014 10:33:35 +0100
+Message-ID: <1416994415-22367-1-git-send-email-johan@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Morton <akpm@linux-foundation.org>, Tony Lindgren <tony@atomide.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Felipe Balbi <balbi@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the devicetree binding document for ImgTec PDC Watchdog Timer.
+Drop the vendor-prefix from the "ti,system-power-controller" device-tree
+property name.
 
-Signed-off-by: Naidu Tellapati <Naidu.Tellapati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Jude Abraham <Jude.Abraham-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Reviewed-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
-No changes from v5.
----
- .../devicetree/bindings/watchdog/imgpdc-wdt.txt    |   18 ++++++++++++++++++
- 1 files changed, 18 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/watchdog/imgpdc-wdt.txt
+It has been agreed to make "system-power-controller" a standard property
+and to drop the vendor-prefix that is currently used by several drivers.
 
-diff --git a/Documentation/devicetree/bindings/watchdog/imgpdc-wdt.txt b/Documentation/devicetree/bindings/watchdog/imgpdc-wdt.txt
-new file mode 100644
-index 0000000..2f9ba77
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/imgpdc-wdt.txt
-@@ -0,0 +1,18 @@
-+*ImgTec PowerDown Controller (PDC) Watchdog Timer (WDT)
-+
-+Required properties:
-+- compatible : Should be "img,pdc-wdt"
-+- reg : Should contain WDT registers location and length
-+- clocks: Must contain an entry for each entry in clock-names.
-+- clock-names: Should contain "wdt" and "sys"
-+- interrupts : Should contain WDT interrupt
-+
-+Examples:
-+
-+wdt@18102100 {
-+	compatible = "img,pdc-wdt";
-+	reg = <0x18102100 0x100>;
-+	clocks = <&pdc_wdt_clk>, <&sys_clk>;
-+	clock-names = "wdt", "sys";
-+	interrupts = <0 52 IRQ_TYPE_LEVEL_HIGH>;
-+};
+Note that drivers that have used "<vendor>,system-power-controller" in a
+released kernel will need to support both versions.
+
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ Documentation/devicetree/bindings/rtc/rtc-omap.txt | 4 ++--
+ arch/arm/boot/dts/am335x-boneblack.dts             | 2 +-
+ drivers/rtc/rtc-omap.c                             | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-omap.txt b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+index 750efd40c72e..4ba4dbd34289 100644
+--- a/Documentation/devicetree/bindings/rtc/rtc-omap.txt
++++ b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+@@ -13,7 +13,7 @@ Required properties:
+ - interrupt-parent: phandle for the interrupt controller
+ 
+ Optional properties:
+-- ti,system-power-controller: whether the rtc is controlling the system power
++- system-power-controller: whether the rtc is controlling the system power
+   through pmic_power_en
+ 
+ Example:
+@@ -24,5 +24,5 @@ rtc@1c23000 {
+ 	interrupts = <19
+ 		      19>;
+ 	interrupt-parent = <&intc>;
+-	ti,system-power-controller;
++	system-power-controller;
+ };
+diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
+index 0c8cdc9520b7..d4affb7e3b61 100644
+--- a/arch/arm/boot/dts/am335x-boneblack.dts
++++ b/arch/arm/boot/dts/am335x-boneblack.dts
+@@ -77,5 +77,5 @@
+ };
+ 
+ &rtc {
+-	ti,system-power-controller;
++	system-power-controller;
+ };
+diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
+index fba13e53c278..4f1c6ca97211 100644
+--- a/drivers/rtc/rtc-omap.c
++++ b/drivers/rtc/rtc-omap.c
+@@ -502,7 +502,7 @@ static int __init omap_rtc_probe(struct platform_device *pdev)
+ 		rtc->type = of_id->data;
+ 		rtc->is_pmic_controller = rtc->type->has_pmic_mode &&
+ 				of_property_read_bool(pdev->dev.of_node,
+-						"ti,system-power-controller");
++						"system-power-controller");
+ 	} else {
+ 		id_entry = platform_get_device_id(pdev);
+ 		rtc->type = (void *)id_entry->driver_data;
 -- 
-1.7.0.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.0.4
