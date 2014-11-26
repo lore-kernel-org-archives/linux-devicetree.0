@@ -1,68 +1,113 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 3/9] clk: sunxi: Add prcm mod0 clock driver
-Date: Wed, 26 Nov 2014 09:04:57 +0100
-Message-ID: <547589A9.5060802@redhat.com>
-References: <1416749895-25013-1-git-send-email-hdegoede@redhat.com> <1416749895-25013-4-git-send-email-hdegoede@redhat.com> <20141125165744.GA17789@x1>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v8 0/4] ARM: mediatek: Add support for interrupt
+ polarity
+Date: Wed, 26 Nov 2014 03:08:19 -0500
+Message-ID: <20141126080819.GD22670@titan.lakedaemon.net>
+References: <1416902662-19281-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBNET22RQKGQEYQ2JSWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20141125165744.GA17789@x1>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1416902662-19281-1-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yijing Wang <wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Yingjoe,
 
-On 11/25/2014 05:57 PM, Lee Jones wrote:
-> On Sun, 23 Nov 2014, Hans de Goede wrote:
->
->> Add a driver for mod0 clocks found in the prcm. Currently there is only
->> one mod0 clocks in the prcm, the ir clock.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>   Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
->>   drivers/clk/sunxi/Makefile                        |  2 +-
->>   drivers/clk/sunxi/clk-sun6i-prcm-mod0.c           | 63 +++++++++++++++++++++++
->>   drivers/mfd/sun6i-prcm.c                          | 14 +++++
->>   4 files changed, 79 insertions(+), 1 deletion(-)
->>   create mode 100644 drivers/clk/sunxi/clk-sun6i-prcm-mod0.c
->
-> [...]
->
->> diff --git a/drivers/mfd/sun6i-prcm.c b/drivers/mfd/sun6i-prcm.c
->> index 283ab8d..ff1254f 100644
->> --- a/drivers/mfd/sun6i-prcm.c
->> +++ b/drivers/mfd/sun6i-prcm.c
->> @@ -41,6 +41,14 @@ static const struct resource sun6i_a31_apb0_gates_clk_res[] = {
->>   	},
->>   };
->>
->> +static const struct resource sun6i_a31_ir_clk_res[] = {
->> +	{
->> +		.start = 0x54,
->> +		.end = 0x57,
->> +		.flags = IORESOURCE_MEM,
->> +	},
->> +};
->
-> I'm not overly keen on these magic numbers (and yes, I'm well aware
-> that I SoB'ed the patch which started them off).
->
-> It's not a show stopper, although I'd prefer if they were fixed with a
-> subsequent patch.
+On Tue, Nov 25, 2014 at 04:04:18PM +0800, Yingjoe Chen wrote:
+> This series is 8th version of interrupt polarity support for MediaTek SoCs.
+> 
+> I rebased previous version to latest tip/irq/irqdomain, and fix issues
+> raised by Marc & Mark. The interrupt & irq free work fine on mt8135 board.
+> 
+> Simplified block diagram for interrupt on my system:
+> 
+>     +-------+      +-------+
+>  ---| SYSIRQ|------|ARM GIC|
+>  ---|       |------|       |
+>  ---|       |------|       |
+>  ---|       |------|       |
+>  ---|       |------|       |
+>     +-------+      +-------+
+> 
+> In device tree, interrupt-parent for other devices is sysirq, child of gic.
+> This describe HW better and allow device to specify polarity as it is sent
+> by the device.
+> 
+> When using hierarchy irq domain, gic will use irq_domain_add_linear to
+> create irqdomain and all interrupt numbers must come from device tree. My
+> /proc/interrupts looks like this now:
+> 
+> # cat /proc/interrupts
+>            CPU0
+>  16:     149578  MT_SYSIRQ 113  mtk_timer
+>  20:       1082  MT_SYSIRQ  54  serial
+> 
+> Changes in v8:
+>  - Rebased to new tip/irq/irqdomain
+>  - Update mediatek,sysirq.txt bindinds to document interrupt-cells format
+>    and interrupt-parents
+>  - Change interrupt-cells format check in mtk_sysirq.
+>  - Minor coding style fix
+> 
+> Changes in v7:
+>  - Discussed in [1]
+>  - Rebased to tip/irq/irqdomain
+>  - In mtk_sysirq_domain_alloc, use copy of irq_data to workaound of_node
+>    check in gic_irq_domain_xlate.
+> 
+> Changes in v6:
+>  - Discussed in [2]
+>  - Rebased to tip/irq/irqdomain
+> 
+> Changes in v5:
+>  - Discussed in [3]
+>  - Fix bug on mt6589 reported by Matthias
+>  - Fix bug for irq_find_mapping in irq_create_of_mapping
+>  - Merge Marc's change to proper handle non-DT case in gic_init_bases
+> 
+> Changes in v4:
+>  - Discussed in [4]
+>  - Remove arm,hierarchy-irq-domain. When GIC is probed by DT, it will
+> support hierarchy irqdomain.
+> 
+> Changes in v3:
+>  - Discussed in [5]
+>  - First implementation using hierarchy irqdomain
+> 
+> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/304119.html
+> [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/302221.html
+> [3] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/298161.html
+> [4] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/296911.html
+> [5] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/293766.html
+> 
+> Yingjoe Chen (4):
+>   irqchip: gic: Support hierarchy irq domain.
+>   ARM: mediatek: Add sysirq interrupt polarity support
+>   ARM: mediatek: Add sysirq in mt6589/mt8135/mt8127 dtsi
+>   dt-bindings: add bindings for mediatek sysirq
+> 
+>  .../bindings/arm/mediatek/mediatek,sysirq.txt      |  28 ++++
+>  arch/arm/boot/dts/mt6589.dtsi                      |  14 +-
+>  arch/arm/boot/dts/mt8127.dtsi                      |  14 +-
+>  arch/arm/boot/dts/mt8135.dtsi                      |  14 +-
+>  drivers/irqchip/Kconfig                            |   1 +
+>  drivers/irqchip/Makefile                           |   1 +
+>  drivers/irqchip/irq-gic.c                          |  77 +++++++---
+>  drivers/irqchip/irq-mtk-sysirq.c                   | 163 +++++++++++++++++++++
+>  8 files changed, 282 insertions(+), 30 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
+>  create mode 100644 drivers/irqchip/irq-mtk-sysirq.c
 
-These are offsets of the relevant registers inside the prcm register block,
-if not done this way, then how should they be done ?
+Patches 1, 2, and 4 applied to irqchip/core with a dependency on
+tip/irq/irqdomain with a few small subject line tweaks.
 
-Regards,
+thx,
 
-Hans
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
