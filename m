@@ -1,73 +1,114 @@
-From: Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: kbuild: Fix forced rebuild after 'make dtbs'
-Date: Wed, 26 Nov 2014 10:39:48 +0100
-Message-ID: <54759FE4.5030700@suse.cz>
-References: <CACRpkdYmJWy1_vs0tWRA7SvkQnvbXXKqf7pHpH5b5tZ6vR+KJg@mail.gmail.com> <1414961549-31666-1-git-send-email-jason@lakedaemon.net> <5474F78F.2060906@suse.cz> <20141125235150.GH3836@n2100.arm.linux.org.uk>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v10 02/10] qcom: scm: Add SCM warmboot support for quad
+ core SoCs
+Date: Wed, 26 Nov 2014 10:41:35 +0100
+Message-ID: <5475A04F.9070508@linaro.org>
+References: <1416593037-27527-1-git-send-email-lina.iyer@linaro.org> <1416593037-27527-3-git-send-email-lina.iyer@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141125235150.GH3836-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1416593037-27527-3-git-send-email-lina.iyer@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2014-11-26 00:51, Russell King - ARM Linux wrote:
-> On Tue, Nov 25, 2014 at 10:41:35PM +0100, Michal Marek wrote:
->> Dne 2.11.2014 v 21:52 Jason Cooper napsal(a):
->>> After this patch:
->>>
->>>   f4d4ffc03efc kbuild: dtbs_install: new make target
->>>
->>> was added the kernel tree, Linus Walleij noticed that 'make dtbs' forced
->>> a following 'make zImage' to rebuild the entire tree, even though
->>> nothing had changed.  His report:
->>>
->>>   After this patch a while back I have observed the following behaviour
->>>   of the kernel build:
->>>
->>>   make zImage
->>>   make zImage
->>>   -> incremental build, just relink
->>>
->>>   make zImage
->>>   make dtbs
->>>   make zImage
->>>   -> The whole kernel gets rebuilt
->>>
->>>   So now if I happen to recompile my device trees, I suddenly want
->>>   the entire zImage to be rebuilt to? It's by definition not changes
->>>   that affect the kernel build :-(
->>>
->>>   I noticed this because my build scripts calls make dtbs && make
->>>   zImage, and started to rebuild absolutely everything all the time.
->>>
->>> To fix this, we make only the dtbs_install target depend on the prepare
->>> target.  It's needed to make sure KERNELVERSION is calculated prior to
->>> installing.
->>
->> If a mere 'make prepare' causes a rebuild of the whole kernel, then
->> there is something fishy in the ARM Makefiles. However, if you only need
->> the KERNELRELEASE variable, then you do not need to depend on prepare.
->> The main Makefile makes sure that silentoldconfig is ran and therefore
->> KERNELRELEASE set for all targets except make *config.
-> 
-> Running make prepare and then re-running a build doesn't rebuild anything
-> for me.  However, I always build with O=  Also works if I do a make
-> dtbs too.  So, everything seems to work as expected here.
+On 11/21/2014 07:03 PM, Lina Iyer wrote:
+> Quad core SoCs like APQ8074, APQ8064, APQ8084 need SCM support set up
+> warm boot addresses in the Secure Monitor. Extend the SCM flags to
+> support warm boot addresses for secondary cores.
+>
+> We do not need to export the warmboot flags. Move them into the
+> implementation file.
+>
+> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
 
-Good :).
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+
++ one comment below
+
+> ---
+>   drivers/soc/qcom/scm-boot.c | 31 +++++++++++++++++++++++++++++++
+>   include/soc/qcom/scm-boot.h |  3 +--
+>   2 files changed, 32 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/soc/qcom/scm-boot.c b/drivers/soc/qcom/scm-boot.=
+c
+> index 60ff7b4..0871659 100644
+> --- a/drivers/soc/qcom/scm-boot.c
+> +++ b/drivers/soc/qcom/scm-boot.c
+> @@ -21,6 +21,23 @@
+>   #include <soc/qcom/scm.h>
+>   #include <soc/qcom/scm-boot.h>
+>
+> +#define SCM_FLAG_WARMBOOT_CPU0		0x04
+> +#define SCM_FLAG_WARMBOOT_CPU1		0x02
+> +#define SCM_FLAG_WARMBOOT_CPU2		0x10
+> +#define SCM_FLAG_WARMBOOT_CPU3		0x40
+> +
+> +struct scm_warmboot {
+> +	int flag;
+> +	void *entry;
+> +};
+> +
+> +static struct scm_warmboot scm_flags[] =3D {
+> +	{ .flag =3D SCM_FLAG_WARMBOOT_CPU0 },
+> +	{ .flag =3D SCM_FLAG_WARMBOOT_CPU1 },
+> +	{ .flag =3D SCM_FLAG_WARMBOOT_CPU2 },
+> +	{ .flag =3D SCM_FLAG_WARMBOOT_CPU3 },
+> +};
+> +
+>   /*
+>    * Set the cold/warm boot address for one of the CPU cores.
+>    */
+> @@ -37,3 +54,17 @@ int scm_set_boot_addr(phys_addr_t addr, int flags)
+>   			&cmd, sizeof(cmd), NULL, 0);
+>   }
+>   EXPORT_SYMBOL(scm_set_boot_addr);
+> +
+> +int scm_set_warm_boot_addr(void *entry, int cpu)
+> +{
+> +	int ret;
+> +
+> +	if (entry =3D=3D scm_flags[cpu].entry)
+> +		return 0;
+
+IMO, this test deserves a comment of why this is needed.
+
+> +
+> +	ret =3D scm_set_boot_addr(virt_to_phys(entry), scm_flags[cpu].flag)=
+;
+> +	if (!ret)
+> +		scm_flags[cpu].entry  =3D entry;
+> +
+> +	return ret;
+> +}
+> diff --git a/include/soc/qcom/scm-boot.h b/include/soc/qcom/scm-boot.=
+h
+> index 6aabb24..529f55a 100644
+> --- a/include/soc/qcom/scm-boot.h
+> +++ b/include/soc/qcom/scm-boot.h
+> @@ -16,9 +16,8 @@
+>   #define SCM_FLAG_COLDBOOT_CPU1		0x01
+>   #define SCM_FLAG_COLDBOOT_CPU2		0x08
+>   #define SCM_FLAG_COLDBOOT_CPU3		0x20
+> -#define SCM_FLAG_WARMBOOT_CPU0		0x04
+> -#define SCM_FLAG_WARMBOOT_CPU1		0x02
+>
+>   int scm_set_boot_addr(phys_addr_t addr, int flags);
+> +int scm_set_warm_boot_addr(void *entry, int cpu);
+>
+>   #endif
+>
 
 
-> I think this needs a bit more debugging to see why the whole kernel is
-> being rebuilt - the kernel build system has methods to tell you why stuff
-> is being built, which would be a good place to start.
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
 
-Right, this is make V=2.
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
-Michal
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
