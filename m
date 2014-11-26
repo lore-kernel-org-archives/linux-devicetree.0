@@ -1,292 +1,111 @@
-Return-Path: <andy.green@linaro.org>
+Return-Path: <ruppi.kim@hardkernel.com>
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: base64
+From: "=?utf-8?B?6rmA7ZWZ7KO8?=" <ruppi.kim@hardkernel.com>
+Subject: RE: Re: [PATCH v2 5/5] ARM: dts: exynos5410: Add ODROID-XU LEDs
+Date: Wed, 26 Nov 2014 15:06:26 +0900 (KST)
+Message-Id: <20141126150626.HM.0000000000002pU@ruppi75.wwl1546.hanmail.net>
+Errors-To: <ruppi75@daum.net>
 MIME-Version: 1.0
-In-Reply-To: <CAJe_ZhfkcSv7oBfXdiW5=F0bZvv+9z3m90cXdy=O66VwZWCQnw@mail.gmail.com>
-References: <1416486442-25200-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
-	<1416486872-25301-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
-	<54749429.9080505@arm.com>
-	<CAJe_ZhciCP2VbmRtrq9d14WhfLhnC-xaitCCiW_6Yf1S-0sdUg@mail.gmail.com>
-	<5474C3DD.5060706@arm.com>
-	<CAJe_ZhfkcSv7oBfXdiW5=F0bZvv+9z3m90cXdy=O66VwZWCQnw@mail.gmail.com>
-Date: Wed, 26 Nov 2014 13:44:44 +0800
-Message-ID: <CAAfg0W6eXw8HQZ=gbhGAaOfCYktq4ZBFU2=XLOAhevy6eHGfjw@mail.gmail.com>
-Subject: Re: [PATCH 2/9] mailbox: arm_mhu: add driver for ARM MHU controller
-From: Andy Green <andy.green@linaro.org>
-Content-Type: multipart/alternative; boundary=047d7bf1617e54b00c0508bc86ee
-To: Jassi Brar <jaswinder.singh@linaro.org>
-Cc: Vincent Yang <vincent.yang.fujitsu@gmail.com>, Vincent Yang <Vincent.Yang@tw.fujitsu.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, Mark Rutland <Mark.Rutland@arm.com>, Tetsuya Nuriya <nuriya.tetsuya@jp.fujitsu.com>, "patches@linaro.org" <patches@linaro.org>, "olof@lixom.net" <olof@lixom.net>, Pawel Moll <Pawel.Moll@arm.com>
+To: =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+Cc: linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Humberto Naves <hsnaves@gmail.com>, Jan Kiszka <jan.kiszka@siemens.com>, Johann Pfefferl <johann.pfefferl@siemens.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
---047d7bf1617e54b00c0508bc86ee
-Content-Type: text/plain; charset=UTF-8
-
-On 26 Nov 2014 13:37, "Jassi Brar" <jaswinder.singh@linaro.org> wrote:
->
-> On 25 November 2014 at 23:31, Sudeep Holla <sudeep.holla@arm.com> wrote:
-> >
-> >
-> > On 25/11/14 16:51, Jassi Brar wrote:
-> >>
-> >> On 25 November 2014 at 20:07, Sudeep Holla <sudeep.holla@arm.com>
-wrote:
-> >>>
-> >>>
-> >>>
-> >>> On 20/11/14 12:34, Vincent Yang wrote:
-> >>>>
-> >>>>
-> >>>> Add driver for the ARM Message-Handling-Unit (MHU).
-> >>>>
-> >>>> Signed-off-by: Andy Green <andy.green@linaro.org>
-> >>>> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
-> >>>> Signed-off-by: Vincent Yang <Vincent.Yang@tw.fujitsu.com>
-> >>>> Signed-off-by: Tetsuya Nuriya <nuriya.tetsuya@jp.fujitsu.com>
-> >>>> ---
-> >>>>    .../devicetree/bindings/mailbox/arm-mhu.txt        |  33 ++++
-> >>>>    drivers/mailbox/Kconfig                            |   7 +
-> >>>>    drivers/mailbox/Makefile                           |   2 +
-> >>>>    drivers/mailbox/arm_mhu.c                          | 196
-> >>>> +++++++++++++++++++++
-> >>>>    4 files changed, 238 insertions(+)
-> >>>>    create mode 100644
-> >>>> Documentation/devicetree/bindings/mailbox/arm-mhu.txt
-> >>>>    create mode 100644 drivers/mailbox/arm_mhu.c
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
-> >>>> b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
-> >>>> new file mode 100644
-> >>>> index 0000000..b1b9888
-> >>>> --- /dev/null
-> >>>> +++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
-> >>>> @@ -0,0 +1,33 @@
-> >>>> +ARM MHU Mailbox Driver
-> >>>> +======================
-> >>>> +
-> >>>> +The ARM's Message-Handling-Unit (MHU) is a mailbox controller that
-has
-> >>>> +3 independent channels/links to communicate with remote
-processor(s).
-> >>>
-> >>>
-> >>>
-> >>> I had reviewed this before and I see not all the comments are
-addressed.
-> >>> I had mentioned that you can't add support to _SECURE_ channel in
-Linux
-> >>> as you need to assume Linux runs in non-secure privilege(and I gather
-> >>> that's the case even on this platform from other email in the thread)
-> >>>
-> >> Please revisit the old thread. After some discussion you had
-> >> graciously allowed me to keep the secure channel ;)
-> >> [
-> >> ... Even though I don't like you have secure channel access in Linux,
-you
-> >> have valid reasons. In case you decide to support it ....
-> >> ]
-> >
-> >
-> > Agreed but based on the other email in the same thread it looks like you
-> > want to run the same kernel both in secure and no-secure mode on this
-> > platform, in which case you _have_to_assume_ it's *non-secure only*
-always
-> > unless you come up with some DT magic.
-> >
-> Yes, the S vs NS mode should ideally be defined in DT. The kernel
-> image should remain the same.
-
-If this is desirable, we can edit the related dtb path in memory
-accordingly at the bootloader, since that knows at runtime if he's secure
-or nonsecure.
-
--Andy
-
-> >>   It seems you still don't get my point that the driver should manage
-> >> all channels - S & NS. If Linux is running in NS mode on a platform,
-> >> the DT will specify only some NS channel to be used. The controller
-> >> driver shouldn't be crippled just because you think Linux will never
-> >> be run in Secure mode.
-> >>
-> >
-> > Ok how do you handle that, I don't see that in the DT binding. As it
-> > stands, you can unconditionally try to access the secure channel and
-> > cause aborts if the platform is running in non-secure mode.
-> >
-> No. Please look at the dtsi again ....
->
->         mhu: mailbox@2b1f0000 {
->                 #mbox-cells = <1>;
->                 compatible = "arm,mbox-mhu";
->                 reg = <0 0x2b1f0000 0x1000>;
->                 interrupts = <0 36 4>, /* LP Non-Sec */
->                              <0 35 4>, /* HP Non-Sec */
->                              <0 37 4>; /* Secure */
->         };
->
->         mhu_client: scb@2e000000 {
->                 compatible = "fujitsu,mb86s70-scb-1.0";
->                 reg = <0 0x2e000000 0x4000>; /* SHM for IPC */
->                 mboxes = <&mhu 1>;
->         };
->
-> See the DT for mbox client specifies that it uses channel-1 which is
-> High-Priority_Non-Secure channel.
->
-> -jassi
-
---047d7bf1617e54b00c0508bc86ee
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<p dir=3D"ltr"><br>
-On 26 Nov 2014 13:37, &quot;Jassi Brar&quot; &lt;<a href=3D"mailto:jaswinde=
-r.singh@linaro.org">jaswinder.singh@linaro.org</a>&gt; wrote:<br>
-&gt;<br>
-&gt; On 25 November 2014 at 23:31, Sudeep Holla &lt;<a href=3D"mailto:sudee=
-p.holla@arm.com">sudeep.holla@arm.com</a>&gt; wrote:<br>
-&gt; &gt;<br>
-&gt; &gt;<br>
-&gt; &gt; On 25/11/14 16:51, Jassi Brar wrote:<br>
-&gt; &gt;&gt;<br>
-&gt; &gt;&gt; On 25 November 2014 at 20:07, Sudeep Holla &lt;<a href=3D"mai=
-lto:sudeep.holla@arm.com">sudeep.holla@arm.com</a>&gt; wrote:<br>
-&gt; &gt;&gt;&gt;<br>
-&gt; &gt;&gt;&gt;<br>
-&gt; &gt;&gt;&gt;<br>
-&gt; &gt;&gt;&gt; On 20/11/14 12:34, Vincent Yang wrote:<br>
-&gt; &gt;&gt;&gt;&gt;<br>
-&gt; &gt;&gt;&gt;&gt;<br>
-&gt; &gt;&gt;&gt;&gt; Add driver for the ARM Message-Handling-Unit (MHU).<b=
-r>
-&gt; &gt;&gt;&gt;&gt;<br>
-&gt; &gt;&gt;&gt;&gt; Signed-off-by: Andy Green &lt;<a href=3D"mailto:andy.=
-green@linaro.org">andy.green@linaro.org</a>&gt;<br>
-&gt; &gt;&gt;&gt;&gt; Signed-off-by: Jassi Brar &lt;<a href=3D"mailto:jaswi=
-nder.singh@linaro.org">jaswinder.singh@linaro.org</a>&gt;<br>
-&gt; &gt;&gt;&gt;&gt; Signed-off-by: Vincent Yang &lt;<a href=3D"mailto:Vin=
-cent.Yang@tw.fujitsu.com">Vincent.Yang@tw.fujitsu.com</a>&gt;<br>
-&gt; &gt;&gt;&gt;&gt; Signed-off-by: Tetsuya Nuriya &lt;<a href=3D"mailto:n=
-uriya.tetsuya@jp.fujitsu.com">nuriya.tetsuya@jp.fujitsu.com</a>&gt;<br>
-&gt; &gt;&gt;&gt;&gt; ---<br>
-&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 .../devicetree/bindings/mailbox/arm-mhu.=
-txt=C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 33 ++++<br>
-&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 drivers/mailbox/Kconfig=C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 |=C2=A0 =C2=A07 +<br>
-&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 drivers/mailbox/Makefile=C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0|=C2=A0 =C2=A02 +<br>
-&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 drivers/mailbox/arm_mhu.c=C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 | 196<br>
-&gt; &gt;&gt;&gt;&gt; +++++++++++++++++++++<br>
-&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 4 files changed, 238 insertions(+)<br>
-&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 create mode 100644<br>
-&gt; &gt;&gt;&gt;&gt; Documentation/devicetree/bindings/mailbox/arm-mhu.txt=
-<br>
-&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 create mode 100644 drivers/mailbox/arm_m=
-hu.c<br>
-&gt; &gt;&gt;&gt;&gt;<br>
-&gt; &gt;&gt;&gt;&gt; diff --git a/Documentation/devicetree/bindings/mailbo=
-x/arm-mhu.txt<br>
-&gt; &gt;&gt;&gt;&gt; b/Documentation/devicetree/bindings/mailbox/arm-mhu.t=
-xt<br>
-&gt; &gt;&gt;&gt;&gt; new file mode 100644<br>
-&gt; &gt;&gt;&gt;&gt; index 0000000..b1b9888<br>
-&gt; &gt;&gt;&gt;&gt; --- /dev/null<br>
-&gt; &gt;&gt;&gt;&gt; +++ b/Documentation/devicetree/bindings/mailbox/arm-m=
-hu.txt<br>
-&gt; &gt;&gt;&gt;&gt; @@ -0,0 +1,33 @@<br>
-&gt; &gt;&gt;&gt;&gt; +ARM MHU Mailbox Driver<br>
-&gt; &gt;&gt;&gt;&gt; +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D<br>
-&gt; &gt;&gt;&gt;&gt; +<br>
-&gt; &gt;&gt;&gt;&gt; +The ARM&#39;s Message-Handling-Unit (MHU) is a mailb=
-ox controller that has<br>
-&gt; &gt;&gt;&gt;&gt; +3 independent channels/links to communicate with rem=
-ote processor(s).<br>
-&gt; &gt;&gt;&gt;<br>
-&gt; &gt;&gt;&gt;<br>
-&gt; &gt;&gt;&gt;<br>
-&gt; &gt;&gt;&gt; I had reviewed this before and I see not all the comments=
- are addressed.<br>
-&gt; &gt;&gt;&gt; I had mentioned that you can&#39;t add support to _SECURE=
-_ channel in Linux<br>
-&gt; &gt;&gt;&gt; as you need to assume Linux runs in non-secure privilege(=
-and I gather<br>
-&gt; &gt;&gt;&gt; that&#39;s the case even on this platform from other emai=
-l in the thread)<br>
-&gt; &gt;&gt;&gt;<br>
-&gt; &gt;&gt; Please revisit the old thread. After some discussion you had<=
-br>
-&gt; &gt;&gt; graciously allowed me to keep the secure channel ;)<br>
-&gt; &gt;&gt; [<br>
-&gt; &gt;&gt; ... Even though I don&#39;t like you have secure channel acce=
-ss in Linux, you<br>
-&gt; &gt;&gt; have valid reasons. In case you decide to support it ....<br>
-&gt; &gt;&gt; ]<br>
-&gt; &gt;<br>
-&gt; &gt;<br>
-&gt; &gt; Agreed but based on the other email in the same thread it looks l=
-ike you<br>
-&gt; &gt; want to run the same kernel both in secure and no-secure mode on =
-this<br>
-&gt; &gt; platform, in which case you _have_to_assume_ it&#39;s *non-secure=
- only* always<br>
-&gt; &gt; unless you come up with some DT magic.<br>
-&gt; &gt;<br>
-&gt; Yes, the S vs NS mode should ideally be defined in DT. The kernel<br>
-&gt; image should remain the same.</p>
-<p dir=3D"ltr">If this is desirable, we can edit the related dtb path in me=
-mory accordingly at the bootloader, since that knows at runtime if he&#39;s=
- secure or nonsecure.</p>
-<p dir=3D"ltr">-Andy</p>
-<p dir=3D"ltr">&gt; &gt;&gt;=C2=A0 =C2=A0It seems you still don&#39;t get m=
-y point that the driver should manage<br>
-&gt; &gt;&gt; all channels - S &amp; NS. If Linux is running in NS mode on =
-a platform,<br>
-&gt; &gt;&gt; the DT will specify only some NS channel to be used. The cont=
-roller<br>
-&gt; &gt;&gt; driver shouldn&#39;t be crippled just because you think Linux=
- will never<br>
-&gt; &gt;&gt; be run in Secure mode.<br>
-&gt; &gt;&gt;<br>
-&gt; &gt;<br>
-&gt; &gt; Ok how do you handle that, I don&#39;t see that in the DT binding=
-. As it<br>
-&gt; &gt; stands, you can unconditionally try to access the secure channel =
-and<br>
-&gt; &gt; cause aborts if the platform is running in non-secure mode.<br>
-&gt; &gt;<br>
-&gt; No. Please look at the dtsi again ....<br>
-&gt;<br>
-&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 mhu: mailbox@2b1f0000 {<br>
-&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 #mbox-cells =
-=3D &lt;1&gt;;<br>
-&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 compatible =3D=
- &quot;arm,mbox-mhu&quot;;<br>
-&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 reg =3D &lt;0 =
-0x2b1f0000 0x1000&gt;;<br>
-&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 interrupts =3D=
- &lt;0 36 4&gt;, /* LP Non-Sec */<br>
-&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&lt;0 35 4&gt;, /* HP Non-Sec */<br>
-&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&lt;0 37 4&gt;; /* Secure */<br>
-&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 };<br>
-&gt;<br>
-&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 mhu_client: scb@2e000000 {<br>
-&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 compatible =3D=
- &quot;fujitsu,mb86s70-scb-1.0&quot;;<br>
-&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 reg =3D &lt;0 =
-0x2e000000 0x4000&gt;; /* SHM for IPC */<br>
-&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 mboxes =3D &lt=
-;&amp;mhu 1&gt;;<br>
-&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 };<br>
-&gt;<br>
-&gt; See the DT for mbox client specifies that it uses channel-1 which is<b=
-r>
-&gt; High-Priority_Non-Secure channel.<br>
-&gt;<br>
-&gt; -jassi<br>
-</p>
-
---047d7bf1617e54b00c0508bc86ee--
+PGh0bWw+PGhlYWQ+PHN0eWxlPiBwIHttYXJnaW4tdG9wOjBweDttYXJnaW4tYm90dG9tOjBw
+eDt9IDwvc3R5bGU+PC9oZWFkPgo8Ym9keT48ZGl2IHN0eWxlPSJmb250LXNpemU6MTJweDsg
+Zm9udC1mYW1pbHk66rW066a8LOq1tOumvOyytCxHdWxpbSxCYWVrbXVrIERvdHVtLFVuZG90
+dW0sQXBwbGUgR290aGljLExhdGluIGZvbnQsc2Fucy1zZXJpZjsiPgo8dGFibGUgYm9yZGVy
+PTAgd2lkdGg9MTAwJSBzdHlsZT0nbWFyZ2luIDAgYXV0bztiYWNrZ3JvdW5kOiA7JyBjZWxs
+cGFkZGluZz0wIGNlbGxzcGFjaW5nPTA+Cgk8dHI+Cgk8dGQgdmFsaWduPXRvcCBzdHlsZT0n
+cGFkZGluZzo4cHQ7Jz4KPGRpdiBjbGFzcz0idHgtaGFubWFpbC1jb250ZW50LXdyYXBwZXIi
+IHN0eWxlPSJjb2xvcjogcmdiKDUxLCA1MSwgNTEpOyBmb250LWZhbWlseTog64+L7JuAOyBm
+b250LXNpemU6IDEwcHQ7IGJhY2tncm91bmQtY29sb3I6IHRyYW5zcGFyZW50OyBsaW5lLWhl
+aWdodDogMS41OyI+PHA+SGVsbG8gQW5kcmVhcyw8L3A+PHA+PGJyPjwvcD48cD48c3BhbiBj
+bGFzcz0ic3QiPkkgYW0gc29ycnkgZm9yIG15IGxhdGUgcmVwbHkuPC9zcGFuPjwvcD48cD5J
+IHNpZ25lZCBvZmYgYW5kIHVwZGF0ZWQgb3VyIGJyYW5jaCBhY2NvcmRpbmdseTo8L3A+PHA+
+aHR0cHM6Ly9naXRodWIuY29tL2hhcmRrZXJuZWwvbGludXgvY29tbWl0LzgzM2YzMTNjYTY2
+YTE4MmZhOWY5MGQ5NjY3MDc2OGI3MGU3ZTk4ODQ8L3A+PHA+PGJyPjwvcD48cD5UaGFua3Ms
+PC9wPjxwPkhha2pvbyBLaW08YnI+PC9wPjxwPjxicj48L3A+PHNwYW4gc3R5bGU9Im1hcmdp
+bi1sZWZ0OjAuOGV4O2ZvbnQtZmFtaWx5OmFyaWFsLOuPi+ybgCI+LS0tLS0tLS0tIOybkOuz
+uCDrqZTsnbwgLS0tLS0tLS0tPGJyPjwvc3Bhbj48YmxvY2txdW90ZSBzdHlsZT0iZm9udC1z
+aXplOjEycHg7Ym9yZGVyLWxlZnQtc3R5bGU6c29saWQ7Ym9yZGVyLWxlZnQtd2lkdGg6MnB4
+O21hcmdpbi1ib3R0b206MHB0O21hcmdpbi1sZWZ0OjAuOGV4O21hcmdpbi1yaWdodDowcHQ7
+bWFyZ2luLXRvcDowcHQ7cGFkZGluZy1sZWZ0OjFleDsiPjxkaXYgc3R5bGU9ImZvbnQtZmFt
+aWx5OmFyaWFsLOuPi+ybgDtsaW5lLWhlaWdodDoyMHB4Ij48Yj7rs7Trgrjsgqzrnow8L2I+
+OiBBbmRyZWFzIEbDpHJiZXIgJmx0O2FmYWVyYmVyQHN1c2UuZGUmZ3Q7PGJyPjxiPuuwm+uK
+lOyCrOuejDwvYj4gOiDquYDtlZnso7wgJmx0O3J1cHBpLmtpbUBoYXJka2VybmVsLmNvbSZn
+dDs8YnI+PGI+7LC47KGwPC9iPiA6IGxpbnV4LXNhbXN1bmctc29jQHZnZXIua2VybmVsLm9y
+ZywgS3VramluIEtpbSAmbHQ7a2dlbmVAa2VybmVsLm9yZyZndDssSHVtYmVydG8gTmF2ZXMg
+Jmx0O2hzbmF2ZXNAZ21haWwuY29tJmd0OyxKYW4gS2lzemthICZsdDtqYW4ua2lzemthQHNp
+ZW1lbnMuY29tJmd0OyxKb2hhbm4gUGZlZmZlcmwgJmx0O2pvaGFubi5wZmVmZmVybEBzaWVt
+ZW5zLmNvbSZndDssbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnLCBsaW51
+eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnLEJlbiBEb29rcyAmbHQ7YmVuLWxpbnV4QGZsdWZm
+Lm9yZyZndDssS3VramluIEtpbSAmbHQ7a2dlbmUua2ltQHNhbXN1bmcuY29tJmd0OywgUm9i
+IEhlcnJpbmcgJmx0O3JvYmgrZHRAa2VybmVsLm9yZyZndDssUGF3ZWwgTW9sbCAmbHQ7cGF3
+ZWwubW9sbEBhcm0uY29tJmd0OyxNYXJrIFJ1dGxhbmQgJmx0O21hcmsucnV0bGFuZEBhcm0u
+Y29tJmd0OyxJYW4gQ2FtcGJlbGwgJmx0O2lqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVr
+Jmd0OyxLdW1hciBHYWxhICZsdDtnYWxha0Bjb2RlYXVyb3JhLm9yZyZndDssIFJ1c3NlbGwg
+S2luZyAmbHQ7bGludXhAYXJtLmxpbnV4Lm9yZy51ayZndDssIk9QRU4gRklSTVdBUkUgQU5E
+Li4uIiAmbHQ7ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcmZ3Q7PGJyPjxiPuuCoOynnDwv
+Yj46IDIwMTTrhYQgMTHsm5QgMjPsnbwg7J287JqU7J28LCAxMOyLnCAzMeu2hCAzMey0iCAr
+MDkwMDxicj48Yj7soJzrqqk8L2I+OiBSZTogW1BBVENIIHYyIDUvNV0gQVJNOiBkdHM6IGV4
+eW5vczU0MTA6IEFkZCBPRFJPSUQtWFUgTEVEczxicj48ZGl2IGNsYXNzPSJ2aWV3bWFpbC10
+ZXh0SHRtbCIgbmFtZT0idmlld21haWwtdGV4dEh0bWwiIGlkPSJ2aWV3bWFpbC10ZXh0SHRt
+bCI+DQo8IS0tIOuCtOyaqSDrtoDrtoQgU3RhcnQtLT4NCglIZWxsbyBIYWtqb28sPGJyPg0K
+PGJyPg0KQW0gMjIuMTEuMjAxNCB1bSAyMToyNiBzY2hyaWViIEFuZHJlYXMgRsOkcmJlcjo8
+YnI+DQomZ3Q7IFNpZ25lZC1vZmYtYnk6IEhha2pvbyBLaW0gJmx0OzxhIGhyZWY9Ii9oYW5t
+YWlsL21haWwvTWFpbENvbXBvc2VGcmFtZS5kYXVtP1RPPXJ1cHBpLmtpbUBoYXJka2VybmVs
+LmNvbSI+cnVwcGkua2ltQGhhcmRrZXJuZWwuY29tPC9hPiZndDs8YnI+DQo8YnI+DQpTb3Jy
+eSwgSSB3YXMgdG9vIHF1aWNrIGhlcmU6IE9ubHkgdGhlIHByZXZpb3VzIHR3byBwYXRjaGVz
+IGdvdCBzaWduZWQ8YnI+DQpvZmYgYnkgeW91LCBwbHVzIHRoZSBsYXN0IG9uZSBvbiB5b3Vy
+IDMuMTQgYnJhbmNoLiBBcmUgeW91IGFibGUgdG8gc2lnbjxicj4NCm9mZiBhbGwgcGF0Y2hl
+cyBhdXRob3JlZCBieSB5b3UgdGhlcmU/IChBbiBlbWFpbCByZXBseSBpbmRpY2F0aW5nIHRo
+ZTxicj4NClNpZ25lZC1vZmYtYnkgc2hvdWxkIGRvLCBpZiB1cGRhdGluZyB0aGUgYnJhbmNo
+IGlzIHRvbyBtdWNoIHdvcmsuKTxicj4NCjxicj4NClRoYW5rcyw8YnI+DQpBbmRyZWFzPGJy
+Pg0KPGJyPg0KJmd0OyBTaWduZWQtb2ZmLWJ5OiBBbmRyZWFzIEbDpHJiZXIgJmx0OzxhIGhy
+ZWY9Ii9oYW5tYWlsL21haWwvTWFpbENvbXBvc2VGcmFtZS5kYXVtP1RPPWFmYWVyYmVyQHN1
+c2UuZGUiPmFmYWVyYmVyQHN1c2UuZGU8L2E+Jmd0Ozxicj4NCiZndDsgLS0tPGJyPg0KJmd0
+OyB2MSAtJmd0OyB2Mjo8YnI+DQomZ3Q7ICogRmlsbGVkIGluIFNvYiBmcm9tIEhha2pvbyBL
+aW08YnI+DQomZ3Q7IDxicj4NCiZndDsgIGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0MTAt
+b2Ryb2lkeHUuZHRzIHwgMjUgKysrKysrKysrKysrKysrKysrKysrKysrKzxicj4NCiZndDsg
+IDEgZmlsZSBjaGFuZ2VkLCAyNSBpbnNlcnRpb25zKCspPGJyPg0KJmd0OyA8YnI+DQomZ3Q7
+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9leHlub3M1NDEwLW9kcm9pZHh1LmR0
+cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0MTAtb2Ryb2lkeHUuZHRzPGJyPg0KJmd0
+OyBpbmRleCA5NzMxMGJiNzI3ZTIuLmIwMmNkM2FiN2IzOCAxMDA2NDQ8YnI+DQomZ3Q7IC0t
+LSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0MTAtb2Ryb2lkeHUuZHRzPGJyPg0KJmd0
+OyArKysgYi9hcmNoL2FybS9ib290L2R0cy9leHlub3M1NDEwLW9kcm9pZHh1LmR0czxicj4N
+CiZndDsgQEAgLTE1LDYgKzE1LDcgQEA8YnI+DQomZ3Q7ICA8YnI+DQomZ3Q7ICAvZHRzLXYx
+Lzs8YnI+DQomZ3Q7ICAjaW5jbHVkZSAiZXh5bm9zNTQxMC5kdHNpIjxicj4NCiZndDsgKyNp
+bmNsdWRlICZsdDtkdC1iaW5kaW5ncy9ncGlvL2dwaW8uaCZndDs8YnI+DQomZ3Q7ICAvIHs8
+YnI+DQomZ3Q7ICAJbW9kZWwgPSAiT0RST0lELVhVIGJhc2VkIG9uIEVYWU5PUzU0MTAiOzxi
+cj4NCiZndDsgIAljb21wYXRpYmxlID0gImhhcmRrZXJuZWwsb2Ryb2lkLXh1IiwgInNhbXN1
+bmcsZXh5bm9zNTQxMCIsICJzYW1zdW5nLGV4eW5vczUiOzxicj4NCiZndDsgQEAgLTM5LDYg
+KzQwLDMwIEBAPGJyPg0KJmd0OyAgCQlyZWcgPSAmbHQ7MHgwMjAzNzAwMCAweDEwMDAmZ3Q7
+Ozxicj4NCiZndDsgIAl9Ozxicj4NCiZndDsgIDxicj4NCiZndDsgKwlsZWRzIHs8YnI+DQom
+Z3Q7ICsJCWNvbXBhdGlibGUgPSAiZ3Bpby1sZWRzIjs8YnI+DQomZ3Q7ICs8YnI+DQomZ3Q7
+ICsJCWJsdWUgezxicj4NCiZndDsgKwkJCWxhYmVsID0gImJsdWU6aGVhcnRiZWF0Ijs8YnI+
+DQomZ3Q7ICsJCQlncGlvcyA9ICZsdDsmYW1wO2dwYjIgMiBHUElPX0FDVElWRV9ISUdIJmd0
+Ozs8YnI+DQomZ3Q7ICsJCQlkZWZhdWx0LXN0YXRlID0gIm9mZiI7PGJyPg0KJmd0OyArCQkJ
+bGludXgsZGVmYXVsdC10cmlnZ2VyID0gImhlYXJ0YmVhdCI7PGJyPg0KJmd0OyArCQl9Ozxi
+cj4NCiZndDsgKzxicj4NCiZndDsgKwkJZ3JlZW4gezxicj4NCiZndDsgKwkJCWxhYmVsID0g
+ImdyZWVuOmFjdGl2aXR5Ijs8YnI+DQomZ3Q7ICsJCQlncGlvcyA9ICZsdDsmYW1wO2dwYjIg
+MSBHUElPX0FDVElWRV9ISUdIJmd0Ozs8YnI+DQomZ3Q7ICsJCQlkZWZhdWx0LXN0YXRlID0g
+Im9mZiI7PGJyPg0KJmd0OyArCQkJbGludXgsZGVmYXVsdC10cmlnZ2VyID0gIm1tYzAiOzxi
+cj4NCiZndDsgKwkJfTs8YnI+DQomZ3Q7ICs8YnI+DQomZ3Q7ICsJCXJlZCB7PGJyPg0KJmd0
+OyArCQkJbGFiZWwgPSAicmVkOmFjdGl2aXR5Ijs8YnI+DQomZ3Q7ICsJCQlncGlvcyA9ICZs
+dDsmYW1wO2dweDIgMyBHUElPX0FDVElWRV9ISUdIJmd0Ozs8YnI+DQomZ3Q7ICsJCQlkZWZh
+dWx0LXN0YXRlID0gIm9mZiI7PGJyPg0KJmd0OyArCQkJbGludXgsZGVmYXVsdC10cmlnZ2Vy
+ID0gIm1tYzEiOzxicj4NCiZndDsgKwkJfTs8YnI+DQomZ3Q7ICsJfTs8YnI+DQomZ3Q7ICB9
+Ozxicj4NCiZndDsgIDxicj4NCiZndDsgICZhbXA7bW1jXzAgezxicj4NCiZndDsgPGJyPg0K
+PGJyPg0KPGJyPg0KLS0gPGJyPg0KU1VTRSBMSU5VWCBHbWJILCBNYXhmZWxkc3RyLiA1LCA5
+MDQwOSBOw7xybmJlcmcsIEdlcm1hbnk8YnI+DQpHRjogSmVmZiBIYXduLCBKZW5uaWZlciBH
+dWlsZCwgRmVsaXggSW1lbmTDtnJmZmVyOyBIUkIgMjEyODQgQUcgTsO8cm5iZXJnPGJyPg0K
+DQoJPCEtLSDrgrTsmqkg67aA67aEIEVuZCAtLT4JDQo8L2Rpdj48YnI+PGJyPjwvZGl2Pjwv
+YmxvY2txdW90ZT48c3R5bGU+cCAge2ZvbnQtc2l6ZToxMHB0ICEgaW1wb3J0YW50O2ZvbnQt
+ZmFtaWx5OuuPi+ybgCwn6rW066a8JyxndWxpbSx0YWhvbWEsc2Fucy1zZXJpZiAhIGltcG9y
+dGFudDt9PC9zdHlsZT48cD48YnI+PC9wPjwvZGl2PjwvdGQ+PC90cj4KPC90YWJsZT4KPC9k
+aXY+PC9ib2R5PjwvaHRtbD4KCgo8IS0tIF9fSGFubWFpbC1zaWctU3RhcnRfXyAtLT4KCjwh
+LS0gX19IYW5tYWlsLXNpZy1FbmRfXyAtLT4KCiAKPGltZyBzcmM9Imh0dHA6Ly93d2wxNTQ2
+Lmhhbm1haWwubmV0OjQyODAvQGZyb209cnVwcGk3NSZyY3B0PXJvYmglMkJkdCU0MGtlcm5l
+bCUyRW9yZyZtc2dpZD0lM0MyMDE0MTEyNjE1MDYyNiUyRUhNJTJFMDAwMDAwMDAwMDAwMnBV
+JTQwcnVwcGk3NSUyRXd3bDE1NDYlMkVoYW5tYWlsJTJFbmV0JTNFIj4K
