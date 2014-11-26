@@ -1,103 +1,100 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: [RFC PATCH v5 4/4] ARM: OMAP2+: AM33XX: Hookup AM33XX PM code into OMAP builds
-Date: Wed, 26 Nov 2014 15:52:33 -0600
-Message-ID: <c5c9586aef3eb4ccddeefd0f40b20d60eeb062c8.1417038624.git.d-gerlach@ti.com>
-References: <cover.1417038624.git.d-gerlach@ti.com>
+From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] of: add optional options parameter to
+ of_find_node_by_path()
+Date: Wed, 26 Nov 2014 22:19:03 +0000
+Message-ID: <20141126221903.GI2361@bivouac.eciton.net>
+References: <1417023640-23464-1-git-send-email-leif.lindholm@linaro.org>
+ <1417023640-23464-2-git-send-email-leif.lindholm@linaro.org>
+ <CACxGe6tQ5rWzCUcS+_fFY+rjEyua2khApAoCVKpTuJAghU=N_w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <cover.1417038624.git.d-gerlach@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Tony Lindgren <tony@atomide.com>, Benoit Cousson <bcousson@baylibre.com>, Paul Walmsley <paul@pwsan.com>, Kevin Hilman <khilman@linaro.org>, Dave Gerlach <d-gerlach@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACxGe6tQ5rWzCUcS+_fFY+rjEyua2khApAoCVKpTuJAghU=N_w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Ian Campbell <ijc-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-With all the requisite changes in place we can now enable basic
-PM support for AM33xx. This patch updates the various OMAP files
-to enable suspend-resume on AM33xx.
+On Wed, Nov 26, 2014 at 09:06:33PM +0000, Grant Likely wrote:
+> On Wed, Nov 26, 2014 at 5:40 PM, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > Update of_find_node_by_path():
+> > 1) Ignore any part of the path beyond and including the ':' separator.
+> > 2) Set the new provided pointer argument to the beginning of the string
+> >    following the ':' separator.
+> >
+> > Coccinelle fixup using:
+> >
+> > @@
+> > expression E1;
+> > @@
+> >
+> > - of_find_node_by_path(E1)
+> > + of_find_node_by_path(E1, NULL)
+> >
+> > drivers/of/resolver.c manually updated, since spatch fails to parse
+> > it correctly.
+> >
+> > Signed-off-by: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> Okay, so you're probably going to kill me for the next comment...
+> After actually looking at this I can see that it's going to be a hard
+> patch to merge because of conflicts. It will need to be merged at the
+> end of a merge window to catch all the users, but that will mean that
+> the important part of the patch won't be able to be queued up in
+> linux-next.
 
-Because the suspend resume functionality is different on AM33xx
-than other OMAP platforms due to the need for M3 firmware and an
-IPC channel to be in place, separate PM ops are used instead of
-omap_pm_ops.
+Not to worry - I'll simply keep this to guilt trip you with at some
+point in the future.
 
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
----
- arch/arm/mach-omap2/Makefile | 2 ++
- arch/arm/mach-omap2/common.h | 9 +++++++++
- arch/arm/mach-omap2/io.c     | 1 +
- arch/arm/mach-omap2/pm.h     | 6 ++++++
- 4 files changed, 18 insertions(+)
+Seeing get_maintainer take 1m42s on a quad-i7 with the entire kernel
+tree in disk cache was nearly reward enough :)
 
-diff --git a/arch/arm/mach-omap2/Makefile b/arch/arm/mach-omap2/Makefile
-index d9e9412..6d1464d 100644
---- a/arch/arm/mach-omap2/Makefile
-+++ b/arch/arm/mach-omap2/Makefile
-@@ -90,6 +90,7 @@ omap-4-5-pm-common			=  pm44xx.o omap-mpuss-lowpower.o
- obj-$(CONFIG_ARCH_OMAP4)		+= $(omap-4-5-pm-common)
- obj-$(CONFIG_SOC_OMAP5)			+= $(omap-4-5-pm-common)
- obj-$(CONFIG_SOC_DRA7XX)		+= $(omap-4-5-pm-common)
-+obj-$(CONFIG_SOC_AM33XX)		+= pm33xx.o sleep33xx.o
- obj-$(CONFIG_PM_DEBUG)			+= pm-debug.o
- 
- obj-$(CONFIG_POWER_AVS_OMAP)		+= sr_device.o
-@@ -97,6 +98,7 @@ obj-$(CONFIG_POWER_AVS_OMAP_CLASS3)    += smartreflex-class3.o
- 
- AFLAGS_sleep24xx.o			:=-Wa,-march=armv6
- AFLAGS_sleep34xx.o			:=-Wa,-march=armv7-a$(plus_sec)
-+AFLAGS_sleep33xx.o			:=-Wa,-march=armv7-a$(plus_sec)
- 
- endif
- 
-diff --git a/arch/arm/mach-omap2/common.h b/arch/arm/mach-omap2/common.h
-index 377eea8..64bf9a8 100644
---- a/arch/arm/mach-omap2/common.h
-+++ b/arch/arm/mach-omap2/common.h
-@@ -76,6 +76,15 @@ static inline int omap4_pm_init_early(void)
- }
- #endif
- 
-+#if defined(CONFIG_PM) && defined(CONFIG_SOC_AM33XX)
-+int am33xx_pm_init(void);
-+#else
-+static inline int am33xx_pm_init(void)
-+{
-+	return 0;
-+}
-+#endif
-+
- #ifdef CONFIG_OMAP_MUX
- int omap_mux_late_init(void);
- #else
-diff --git a/arch/arm/mach-omap2/io.c b/arch/arm/mach-omap2/io.c
-index 03cbb16..4b7828a 100644
---- a/arch/arm/mach-omap2/io.c
-+++ b/arch/arm/mach-omap2/io.c
-@@ -575,6 +575,7 @@ void __init am33xx_init_early(void)
- void __init am33xx_init_late(void)
- {
- 	omap_common_late_init();
-+	am33xx_pm_init();
- }
- #endif
- 
-diff --git a/arch/arm/mach-omap2/pm.h b/arch/arm/mach-omap2/pm.h
-index 425bfcd..9e19340 100644
---- a/arch/arm/mach-omap2/pm.h
-+++ b/arch/arm/mach-omap2/pm.h
-@@ -81,6 +81,12 @@ extern unsigned int omap3_do_wfi_sz;
- /* ... and its pointer from SRAM after copy */
- extern void (*omap3_do_wfi_sram)(void);
- 
-+/* am33xx_do_wfi function pointer and size, for copy to SRAM */
-+extern void am33xx_do_wfi(void);
-+extern unsigned int am33xx_do_wfi_sz;
-+extern unsigned int am33xx_resume_offset;
-+extern unsigned long am33xx_emif_sram_table;
-+
- /* save_secure_ram_context function pointer and size, for copy to SRAM */
- extern int save_secure_ram_context(u32 *addr);
- extern unsigned int save_secure_ram_context_sz;
--- 
-2.1.0
+> So you were right the first time around. Create a new function name
+> that adds the extra argument and make of_find_node_by_path() a static
+> inline wrapper. That way I can queue it up into linux-next immediately
+> and the cleanup across the tree can be generated and submitted at the
+> very end of the merge window.
 
+That will also make it a lot less invasive to potentially get it
+backported to debian-kernel, so we can have this support for the
+Jessie installer.
+
+I'll whip that up tomorrow morning.
+
+/
+    Leif
+
+> > @@ -380,7 +380,8 @@ static inline struct device_node *of_find_matching_node_and_match(
+> >         return NULL;
+> >  }
+> >
+> > -static inline struct device_node *of_find_node_by_path(const char *path)
+> > +static inline struct device_node *of_find_node_by_path(const char *path,
+> > +       char **opts)
+> 
+> const char **opts
+> 
+> >  {
+> >         return NULL;
+> >  }
+> > diff --git a/sound/soc/fsl/fsl_ssi.c b/sound/soc/fsl/fsl_ssi.c
+> > index e695517..0056963 100644
+> > --- a/sound/soc/fsl/fsl_ssi.c
+> > +++ b/sound/soc/fsl/fsl_ssi.c
+> > @@ -1427,7 +1427,7 @@ static int fsl_ssi_probe(struct platform_device *pdev)
+> >          * device tree.  We also pass the address of the CPU DAI driver
+> >          * structure.
+> >          */
+> > -       sprop = of_get_property(of_find_node_by_path("/"), "compatible", NULL);
+> > +       sprop = of_get_property(of_find_node_by_path("/", NULL), "compatible", NULL);
+> >         /* Sometimes the compatible name has a "fsl," prefix, so we strip it. */
+> >         p = strrchr(sprop, ',');
+> >         if (p)
+> > --
+> > 1.7.10.4
+> >
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
