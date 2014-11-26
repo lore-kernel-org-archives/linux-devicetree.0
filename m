@@ -1,73 +1,47 @@
-From: Jonas Gorski <jogo@openwrt.org>
-Subject: Re: [PATCH V3 06/11] irqchip: bcm7120-l2: Change DT binding to allow
- non-contiguous IRQEN/IRQSTAT
-Date: Wed, 26 Nov 2014 11:25:14 +0100
-Message-ID: <CAOiHx=k_4r=jtQdi0ABvfKAw0JtHY9Z46pVUfetDmKz4d0XoFQ@mail.gmail.com>
-References: <1416796846-28149-1-git-send-email-cernekee@gmail.com>
- <1416796846-28149-7-git-send-email-cernekee@gmail.com> <CAOiHx=ntm7AO5BU2Ge0JDC5nDgXSZwQDm05s5VTM8mLqYmCZRw@mail.gmail.com>
- <CAJiQ=7CvpFWxDY1uad2bZz8MBG0Mvg2Jx8WBp6gHi-kD4TDvXA@mail.gmail.com> <CAOiHx=m+At9u=eepphG89kcusOKbBi1qqxT8k-Qyx-OMdMAJKw@mail.gmail.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH RFC 0/3] power: mxs_power: add driver for mxs power subsystem
+Date: Wed, 26 Nov 2014 11:26:03 +0100
+Message-ID: <5475AABB.1050303@i2se.com>
+References: <1416514477-19190-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOiHx=m+At9u=eepphG89kcusOKbBi1qqxT8k-Qyx-OMdMAJKw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Florian Fainelli <f.fainelli@gmail.com>, Jon Fraser <jfraser@broadcom.com>, Dmitry Torokhov <dtor@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Brian Norris <computersforpeace@gmail.com>, MIPS Mailing List <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1416514477-19190-1-git-send-email-stefan.wahren@i2se.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 26, 2014 at 10:45 AM, Jonas Gorski <jogo@openwrt.org> wrote:
-> As far as I can see, we have three distinct layouts here:
+> This patch series adds support for Freescale i.MX23, i.xM28 power subsystem.
 >
-> a) An arbitrary number of 32-bit Mask/Status-pairs (3384/6838). No per
-> thread support (well, not sure about 60333).
+> The idea for this driver was born in the discussion with Mark Rutland
+> about the mxs-regulator driver [1].
 >
-> b) An arbitrary length (32 to 128 bit) Mask register, followed by a
-> same length Status register (63xx except 63381, 6818, 6828); repeated
-> for each thread.
+> The main use is to trigger driver probing of the underlying DT child nodes
+> like on-chip regulators. But it's also the first step for cpufreq-dt support.
 >
-> c) A single arbitrary length (currently only 128 bit) Status register,
-> followed by per thread same length Mask registers (63381).
+> [1] - https://lkml.org/lkml/2014/9/29/283
 >
-> On a first glance this could translate to three distinct
-> drivers/compatible properties, where each expects different reg = <>;
-> contents.
+> Stefan Wahren (3):
+>   DT: add binding for mxs power subsystem
+>   power: mxs_power: add driver for mxs power subsystem
+>   ARM: dts: enable power subsystem for i.MX28
 >
-> For a), it should be enough to expand the current 7120-l2 driver to
-> accept/use more than one 0x8 length register, which should simplify
-> the register map setup.
+>  .../devicetree/bindings/power/mxs_power.txt        |   23 ++
+>  arch/arm/boot/dts/imx28.dtsi                       |    6 +-
+>  drivers/power/Kconfig                              |    8 +
+>  drivers/power/Makefile                             |    1 +
+>  drivers/power/mxs_power.c                          |  226 ++++++++++++++++++++
+>  5 files changed, 263 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/power/mxs_power.txt
+>  create mode 100644 drivers/power/mxs_power.c
 >
-> For b) we could add a a new compatible name (maybe bcm6358-l2, because
-> that was AFAICT the first one with blocks) that will use the 8 to 32
-> byte length regs (one for each block). For now we could ignore the SMP
-> capability of it and make it a variant of the 7120-l2 driver, and when
-> we add SMP support, split it into a second different driver if we want
-> to avoid having all the spinlock for register accesses even for a).
+> --
+> 1.7.9.5
 >
-> We could then even easily document/add the extra block registers /
-> interrrupts in documentation / the dtsi files before actually
-> supporting them, because we only have a fixed amount of regs/irqs to
-> expect in the !SMP case and can easily ignore the extra
-> registers/interrupts.
->
-> For c) we could add a a third compatible name (bcm63381-l2), also with
-> its own setup routine. I would guess it doesn't matter if both
-> thread's irqstatus register pointers point to the same region.
 
-This split-up is especially tempting to me after I had a closer look
-at the current 7120-l2 driver, which already accepts more than one
-interrupt, but uses it in a different way. So even if we try to make
-it very flexible with only one compatible property,
+Are there any other questions or suggestions about these patch series?
 
-   reg = <irqstatus0 irqmask0 irqstatus1 irqmask1>;
-   interrupts = <irq0>, <irq1>;
+Stefan
 
-Could then mean either irq0 is for interrupts 0..31 (mask/status0) and
-irq1 for interrupts 32 .. 64 (mask/status1), or irq0 is for interrupts
-0..31 on cpu0, and irq1 is for interrupts 0..31 on cpu1, and then
-would require an additional property to tell them apart, for which we
-then also could just use a different compatible name, and have (IMHO)
-a lot less headache.  (I wonder why we couldn't just have had more
-than one instance of 7120-l2 in the dts for the first case)
-
-
-Jonas
