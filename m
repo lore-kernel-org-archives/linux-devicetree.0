@@ -1,98 +1,116 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v13 07/12] drm: bridge/dw_hdmi: add support for
- multi-byte register width access
-Date: Wed, 26 Nov 2014 17:34:17 +0100
-Message-ID: <1417019657.3177.10.camel@pengutronix.de>
-References: <1417008157-31861-1-git-send-email-andy.yan@rock-chips.com>
- <1417008759-32257-1-git-send-email-andy.yan@rock-chips.com>
+From: santosh shilimkar <santosh.shilimkar@oracle.com>
+Subject: Re: [RFC] cpufreq: Add "dvfs-method" binding to probe cpufreq drivers
+Date: Wed, 26 Nov 2014 08:34:15 -0800
+Message-ID: <54760107.3010205@oracle.com>
+References: <596a6d49f2b3e2837aa9a54a3e1249161d3c9265.1416991009.git.viresh.kumar@linaro.org> <CAKohpomBijLiBgV31ZhZDTctsTLccBZ+93r+esG-WRZAS4sqww@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1417008759-32257-1-git-send-email-andy.yan@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, heiko@sntech.de, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Pawel Moll <pawel.moll@arm.com>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, rmk+kernel@arm.linux.org.uk, mark.yao@rock-chips.com, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAKohpomBijLiBgV31ZhZDTctsTLccBZ+93r+esG-WRZAS4sqww@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>
+Cc: Lists linaro-kernel <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Arnd Bergmann <arnd.bergmann@linaro.org>, Mike Turquette <mike.turquette@linaro.org>, Rob Herring <rob.herring@linaro.org>, Grant Likely <grant.likely@linaro.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Chander Kashyap <k.chander@samsung.com>, "olof@lixom.net" <olof@lixom.net>, Thomas Abraham <ta.omasab@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-QW0gTWl0dHdvY2gsIGRlbiAyNi4xMS4yMDE0LCAyMTozMiArMDgwMCBzY2hyaWViIEFuZHkgWWFu
-Ogo+IE9uIHJvY2tjaGlwIHJrMzI4OCwgb25seSB3b3JkKDMyLWJpdCkgYWNjZXNzZXMgYXJlCj4g
-cGVybWl0dGVkIGZvciBoZG1pIHJlZ2lzdGVycy4gIEJ5dGUgd2lkdGggYWNjZXNzZXMgKHdyaXRl
-YiwKPiByZWFkYikgZ2VuZXJhdGUgYW4gaW1wcmVjaXNlIGV4dGVybmFsIGFib3J0Lgo+Cj4gU2ln
-bmVkLW9mZi1ieTogQW5keSBZYW4gPGFuZHkueWFuQHJvY2stY2hpcHMuY29tPgo+IAo+IC0tLQo+
-IAo+IENoYW5nZXMgaW4gdjEzOiBOb25lCj4gQ2hhbmdlcyBpbiB2MTI6IE5vbmUKPiBDaGFuZ2Vz
-IGluIHYxMTogTm9uZQo+IENoYW5nZXMgaW4gdjEwOiBOb25lCj4gQ2hhbmdlcyBpbiB2OTogTm9u
-ZQo+IENoYW5nZXMgaW4gdjg6IE5vbmUKPiBDaGFuZ2VzIGluIHY3OiBOb25lCj4gQ2hhbmdlcyBp
-biB2NjoKPiAtIHJlZmFjdG9yIHJlZ2lzdGVyIGFjY2VzcyB3aXRob3V0IHJlZ19zaGlmdAo+IAo+
-IENoYW5nZXMgaW4gdjU6Cj4gLSByZWZhY3RvciByZWctaW8td2lkdGgKPiAKPiBDaGFuZ2VzIGlu
-IHY0OiBOb25lCj4gQ2hhbmdlcyBpbiB2MzoKPiAtIHNwbGl0IG11bHRpLXJlZ2lzdGVyIGFjY2Vz
-cyB0byBvbmUgaW5kZXBlbnQgcGF0Y2gKPiAKPiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kd19o
-ZG1pLmMgfCA1NyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tCj4gIDEg
-ZmlsZSBjaGFuZ2VkLCA1MSBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYg
-LS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R3X2hkbWkuYyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9icmlkZ2UvZHdfaGRtaS5jCj4gaW5kZXggYTUzYmY2My4uNWU4OGM4ZCAxMDA2NDQKPiAtLS0g
-YS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R3X2hkbWkuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9icmlkZ2UvZHdfaGRtaS5jCj4gQEAgLTEwMCw2ICsxMDAsMTEgQEAgc3RydWN0IGhkbWlfZGF0
-YV9pbmZvIHsKPiAgCXN0cnVjdCBoZG1pX3Ztb2RlIHZpZGVvX21vZGU7Cj4gIH07Cj4gIAo+ICt1
-bmlvbiBkd19yZWdfcHRyIHsKPiArCXUzMiBfX2lvbWVtICpwMzI7Cj4gKwl1OCBfX2lvbWVtICpw
-ODsKPiArfTsKCkkgc2VlIG5vIG5lZWQgdG8gaW50cm9kdWNlIHRoaXMuIEp1c3QgZXhwbGljaXRs
-eSBtdWx0aXBseSB0aGUgb2Zmc2V0IGluCmR3X2hkbWlfd3JpdGVsLgoKPiAgc3RydWN0IGR3X2hk
-bWkgewo+ICAJc3RydWN0IGRybV9jb25uZWN0b3IgY29ubmVjdG9yOwo+ICAJc3RydWN0IGRybV9l
-bmNvZGVyICplbmNvZGVyOwo+IEBAIC0xMjEsMjAgKzEyNiw0MyBAQCBzdHJ1Y3QgZHdfaGRtaSB7
-Cj4gIAo+ICAJc3RydWN0IHJlZ21hcCAqcmVnbWFwOwo+ICAJc3RydWN0IGkyY19hZGFwdGVyICpk
-ZGM7Cj4gLQl2b2lkIF9faW9tZW0gKnJlZ3M7Cj4gKwl1bmlvbiBkd19yZWdfcHRyIHJlZ3M7CgpL
-ZWVwIHRoaXMgYXMgdm9pZCBfX2lvbWVtICoKCj4gIAl1bnNpZ25lZCBpbnQgc2FtcGxlX3JhdGU7
-Cj4gIAlpbnQgcmF0aW87Cj4gKwo+ICsJdm9pZCAoKndyaXRlKShzdHJ1Y3QgZHdfaGRtaSAqaGRt
-aSwgdTggdmFsLCBpbnQgb2Zmc2V0KTsKPiArCXU4ICgqcmVhZCkoc3RydWN0IGR3X2hkbWkgKmhk
-bWksIGludCBvZmZzZXQpOwo+ICB9Owo+ICAKPiArc3RhdGljIHZvaWQgZHdfaGRtaV93cml0ZWwo
-c3RydWN0IGR3X2hkbWkgKmhkbWksIHU4IHZhbCwgaW50IG9mZnNldCkKPiArewo+ICsJd3JpdGVs
-KHZhbCwgaGRtaS0+cmVncy5wMzIgKyBvZmZzZXQpOwoKaGRtaS0+cmVncyArIDQgKiBvZmZzZXQK
-Cj4gK30KPiArCj4gK3N0YXRpYyB1OCBkd19oZG1pX3JlYWRsKHN0cnVjdCBkd19oZG1pICpoZG1p
-LCBpbnQgb2Zmc2V0KQo+ICt7Cj4gKwlyZXR1cm4gcmVhZGwoaGRtaS0+cmVncy5wMzIgKyBvZmZz
-ZXQpOwoKc2FtZSBoZXJlCgo+ICt9Cj4gKwo+ICtzdGF0aWMgdm9pZCBkd19oZG1pX3dyaXRlYihz
-dHJ1Y3QgZHdfaGRtaSAqaGRtaSwgdTggdmFsLCBpbnQgb2Zmc2V0KQo+ICt7Cj4gKwl3cml0ZWIo
-dmFsLCBoZG1pLT5yZWdzLnA4ICsgb2Zmc2V0KTsKPiArfQo+ICsKPiArc3RhdGljIHU4IGR3X2hk
-bWlfcmVhZGIoc3RydWN0IGR3X2hkbWkgKmhkbWksIGludCBvZmZzZXQpCj4gK3sKPiArCXJldHVy
-biByZWFkYihoZG1pLT5yZWdzLnA4ICsgb2Zmc2V0KTsKPiArfQo+ICsKPiAgc3RhdGljIGlubGlu
-ZSB2b2lkIGhkbWlfd3JpdGViKHN0cnVjdCBkd19oZG1pICpoZG1pLCB1OCB2YWwsIGludCBvZmZz
-ZXQpCj4gIHsKPiAtCXdyaXRlYih2YWwsIGhkbWktPnJlZ3MgKyBvZmZzZXQpOwo+ICsJaGRtaS0+
-d3JpdGUoaGRtaSwgdmFsLCBvZmZzZXQpOwo+ICB9Cj4gIAo+ICBzdGF0aWMgaW5saW5lIHU4IGhk
-bWlfcmVhZGIoc3RydWN0IGR3X2hkbWkgKmhkbWksIGludCBvZmZzZXQpCj4gIHsKPiAtCXJldHVy
-biByZWFkYihoZG1pLT5yZWdzICsgb2Zmc2V0KTsKPiArCXJldHVybiBoZG1pLT5yZWFkKGhkbWks
-IG9mZnNldCk7Cj4gIH0KPgo+ICBzdGF0aWMgdm9pZCBoZG1pX21vZGIoc3RydWN0IGR3X2hkbWkg
-KmhkbWksIHU4IGRhdGEsIHU4IG1hc2ssIHVuc2lnbmVkIHJlZykKPiBAQCAtMTUwOCw2ICsxNTM2
-LDcgQEAgaW50IGR3X2hkbWlfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2Ug
-Km1hc3RlciwKPiAgCXN0cnVjdCBkd19oZG1pICpoZG1pOwo+ICAJc3RydWN0IHJlc291cmNlICpp
-b3JlczsKPiAgCWludCByZXQsIGlycTsKPiArCXUzMiB2YWwgPSAxOwo+ICAKPiAgCWhkbWkgPSBk
-ZXZtX2t6YWxsb2MoJnBkZXYtPmRldiwgc2l6ZW9mKCpoZG1pKSwgR0ZQX0tFUk5FTCk7Cj4gIAlp
-ZiAoIWhkbWkpCj4gQEAgLTE1MjAsNiArMTU0OSwyMiBAQCBpbnQgZHdfaGRtaV9iaW5kKHN0cnVj
-dCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLAo+ICAJaGRtaS0+cmF0aW8gPSAx
-MDA7Cj4gIAloZG1pLT5lbmNvZGVyID0gZW5jb2RlcjsKPiAgCj4gKwlvZl9wcm9wZXJ0eV9yZWFk
-X3UzMihucCwgInJlZy1pby13aWR0aCIsICZ2YWwpOwo+ICsKPiArCXN3aXRjaCAodmFsKSB7Cj4g
-KwljYXNlIDQ6Cj4gKwkJaGRtaS0+d3JpdGUgPSBkd19oZG1pX3dyaXRlbDsKPiArCQloZG1pLT5y
-ZWFkID0gZHdfaGRtaV9yZWFkbDsKPiArCQlicmVhazsKPiArCWNhc2UgMToKPiArCQloZG1pLT53
-cml0ZSA9IGR3X2hkbWlfd3JpdGViOwo+ICsJCWhkbWktPnJlYWQgPSBkd19oZG1pX3JlYWRiOwo+
-ICsJCWJyZWFrOwo+ICsJZGVmYXVsdDoKPiArCQlkZXZfZXJyKGRldiwgInJlZy1pby13aWR0aCBt
-dXN0IGJlIDEgb3IgNFxuIik7Cj4gKwkJcmV0dXJuIC1FSU5WQUw7Cj4gKwl9Cj4gKwo+ICAJZGRj
-X25vZGUgPSBvZl9wYXJzZV9waGFuZGxlKG5wLCAiZGRjLWkyYy1idXMiLCAwKTsKPiAgCWlmIChk
-ZGNfbm9kZSkgewo+ICAJCWhkbWktPmRkYyA9IG9mX2ZpbmRfaTJjX2FkYXB0ZXJfYnlfbm9kZShk
-ZGNfbm9kZSk7Cj4gQEAgLTE1NDQsOSArMTU4OSw5IEBAIGludCBkd19oZG1pX2JpbmQoc3RydWN0
-IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsCj4gIAkJcmV0dXJuIHJldDsKPiAg
-Cj4gIAlpb3JlcyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2LCBJT1JFU09VUkNFX01FTSwg
-MCk7Cj4gLQloZG1pLT5yZWdzID0gZGV2bV9pb3JlbWFwX3Jlc291cmNlKGRldiwgaW9yZXMpOwo+
-IC0JaWYgKElTX0VSUihoZG1pLT5yZWdzKSkKPiAtCQlyZXR1cm4gUFRSX0VSUihoZG1pLT5yZWdz
-KTsKPiArCWhkbWktPnJlZ3MucDMyID0gZGV2bV9pb3JlbWFwX3Jlc291cmNlKGRldiwgaW9yZXMp
-Owo+ICsJaWYgKElTX0VSUihoZG1pLT5yZWdzLnAzMikpCj4gKwkJcmV0dXJuIFBUUl9FUlIoaGRt
-aS0+cmVncy5wMzIpOwo+ICAKPiAgCS8qIFByb2R1Y3QgYW5kIHJldmlzaW9uIElEcyAqLwo+ICAJ
-ZGV2X2luZm8oZGV2LAoKcmVnYXJkcwpQaGlsaXBwCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
-aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 11/26/2014 12:49 AM, Viresh Kumar wrote:
+> Fixing Santosh's email id as he switched employer ..
+>
+Yeah I did ;-)
+
+> On 26 November 2014 at 14:16, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>> DT based cpufreq drivers doesn't require much support from platform code now a
+>> days as most of the stuff is moved behind generic APIs. Like clk APIs for
+>> changing clock rates, regulator APIs for changing voltages, etc.
+>>
+>> One of the bottleneck still left was how to select which cpufreq driver to probe
+>> for a given platform as there might be multiple drivers available.
+>>
+>> Traditionally, we used to create platform devices from machine specific code
+>> which binds with a cpufreq driver. And while we moved towards DT based device
+>> creation, these devices stayed as is.
+>>
+>> The problem is getting worse now as we have architectures now with Zero platform
+>> specific code. Forcefully these platforms have to create a new file in
+>> drivers/cpufreq/ to just add these platform devices in order to use the generic
+>> drivers like cpufreq-dt.c.
+>>
+We should definitely avoid that since that code is just pointless. Good
+to see that you picked up that.
+
+>> This has been discussed again and again, but with no solution yet. Last it was
+>> discussed here:
+>>
+>> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/256154.html
+>>
+>> This patch is an attempt towards getting the bindings.
+>>
+>> We only need to have one entry in cpus@cpu0 node which will match with drivers
+>> name.
+>>
+>> We can then add another file drivers/cpufreq/device_dt.c, which will add a
+>> platform device with the name it finds from cpus@cpu0 node and existing drivers
+>> will work without any change. Or something else if somebody have a better
+>> proposal. But lets fix the bindings first.
+>>
+>> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+>> ---
+>>   .../devicetree/bindings/cpufreq/drivers.txt        | 53 ++++++++++++++++++++++
+>>   1 file changed, 53 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/cpufreq/drivers.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/cpufreq/drivers.txt b/Documentation/devicetree/bindings/cpufreq/drivers.txt
+>> new file mode 100644
+>> index 0000000..bd14917
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/cpufreq/drivers.txt
+>> @@ -0,0 +1,53 @@
+>> +Binding to select which cpufreq driver to register
+>> +
+>> +It is a generic DT binding for selecting which cpufreq-driver to register for
+>> +any platform.
+>> +
+>> +The property  listed below must be defined under node /cpus/cpu@0 node. We don't
+>> +support multiple CPUFreq driver currently for different cluster and so this
+>> +information isn't required to be present in CPUs of all clusters.
+>> +
+>> +Required properties:
+>> +- None
+>> +
+>> +Optional properties:
+>> +- dvfs-method: CPUFreq driver to probe. For example: "arm-bL-cpufreq-dt",
+>> +  "cpufreq-dt", etc
+>> +
+>> +Examples:
+>> +
+>> +cpus {
+>> +       #address-cells = <1>;
+>> +       #size-cells = <0>;
+>> +
+>> +       cpu@0 {
+>> +               compatible = "arm,cortex-a9";
+>> +               reg = <0>;
+>> +               next-level-cache = <&L2>;
+>> +               operating-points = <
+>> +                       /* kHz    uV */
+>> +                       792000  1100000
+>> +                       396000  950000
+>> +                       198000  850000
+>> +               >;
+>> +               dvfs-method = "cpufreq-dt";
+>> +       };
+
+Its really not 'dvfs-method' but really the actual driver which you
+want to probe. Also we should just have one global way to parse
+DT vs non-DT cpufreq drivers. In other words, instead of matching
+multiple driver strings for different drivers, we should come up with
+slightly generic binding. Probably 'cpufreq-dt' for all DT based probed
+CPUFREQ drivers.
+
+What you say ?
+
+Regards,
+Santosh
+
+
+
