@@ -1,150 +1,55 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/5] pinctrl: sun6i: Add some missing
- functions, fix i2c3 muxing
-Date: Thu, 27 Nov 2014 09:28:11 +0100
-Message-ID: <5476E09B.3020601@redhat.com>
-References: <1416747283-13489-1-git-send-email-hdegoede@redhat.com> <1416747283-13489-2-git-send-email-hdegoede@redhat.com> <20141125180455.GA25249@lukather> <54758FB0.4010503@redhat.com> <20141126184408.GL25249@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [v3, 1/2] arm64: Create link to include/dt-bindings to enable C
+ preprocessor use.
+Date: Thu, 27 Nov 2014 14:04:29 +0530
+Message-ID: <5476E215.5020405@samsung.com>
+References: <1415727131-4572-2-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBJOB3ORQKGQEAYQUUTI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20141126184408.GL25249@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1415727131-4572-2-git-send-email-Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, device tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Liviu,
 
-On 11/26/2014 07:44 PM, Maxime Ripard wrote:
-> On Wed, Nov 26, 2014 at 09:30:40AM +0100, Hans de Goede wrote:
->> Hi,
->>
->> On 11/25/2014 07:04 PM, Maxime Ripard wrote:
->>> Hi,
->>>
->>> On Sun, Nov 23, 2014 at 01:54:39PM +0100, Hans de Goede wrote:
->>>> While working on pinctrl for the A31s, I noticed that function 4 of
->>>> PA15 - PA18 was missing, add these.
->>>>
->>>> I also noticed that i2c3 sck / sda got assigned to PB5 & PB6, this should
->>>> be PB4 & PB5, fix this as well.
->>>>
->>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>> ---
->>>>   drivers/pinctrl/sunxi/pinctrl-sun6i-a31.c | 9 +++++++--
->>>>   1 file changed, 7 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun6i-a31.c b/drivers/pinctrl/sunxi/pinctrl-sun6i-a31.c
->>>> index a2b4b85..fb19e15 100644
->>>> --- a/drivers/pinctrl/sunxi/pinctrl-sun6i-a31.c
->>>> +++ b/drivers/pinctrl/sunxi/pinctrl-sun6i-a31.c
->>>> @@ -134,24 +134,28 @@ static const struct sunxi_desc_pin sun6i_a31_pins[] = {
->>>>   		  SUNXI_FUNCTION(0x1, "gpio_out"),
->>>>   		  SUNXI_FUNCTION(0x2, "gmac"),		/* RXD4 */
->>>>   		  SUNXI_FUNCTION(0x3, "lcd1"),		/* D15 */
->>>> +		  SUNXI_FUNCTION(0x4, "clk_a_out"),
->>>
->>> It's called clk_out_a on the A20, I'd rather stick with the same
->>> scheme here.
->>
->> Will fix.
->>
->>>>   		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 15)),	/* PA_EINT15 */
->>>>   	SUNXI_PIN(SUNXI_PINCTRL_PIN(A, 16),
->>>>   		  SUNXI_FUNCTION(0x0, "gpio_in"),
->>>>   		  SUNXI_FUNCTION(0x1, "gpio_out"),
->>>>   		  SUNXI_FUNCTION(0x2, "gmac"),		/* RXD5 */
->>>>   		  SUNXI_FUNCTION(0x3, "lcd1"),		/* D16 */
->>>> +		  SUNXI_FUNCTION(0x4, "dmic"),		/* CLK */
->>>>   		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 16)),	/* PA_EINT16 */
->>>>   	SUNXI_PIN(SUNXI_PINCTRL_PIN(A, 17),
->>>>   		  SUNXI_FUNCTION(0x0, "gpio_in"),
->>>>   		  SUNXI_FUNCTION(0x1, "gpio_out"),
->>>>   		  SUNXI_FUNCTION(0x2, "gmac"),		/* RXD6 */
->>>>   		  SUNXI_FUNCTION(0x3, "lcd1"),		/* D17 */
->>>> +		  SUNXI_FUNCTION(0x4, "dmic"),		/* DIN */
->>>>   		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 17)),	/* PA_EINT17 */
->>>>   	SUNXI_PIN(SUNXI_PINCTRL_PIN(A, 18),
->>>>   		  SUNXI_FUNCTION(0x0, "gpio_in"),
->>>>   		  SUNXI_FUNCTION(0x1, "gpio_out"),
->>>>   		  SUNXI_FUNCTION(0x2, "gmac"),		/* RXD7 */
->>>>   		  SUNXI_FUNCTION(0x3, "lcd1"),		/* D18 */
->>>> +		  SUNXI_FUNCTION(0x4, "clk_b_out"),
->>>>   		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 18)),	/* PA_EINT18 */
->>>>   	SUNXI_PIN(SUNXI_PINCTRL_PIN(A, 19),
->>>>   		  SUNXI_FUNCTION(0x0, "gpio_in"),
->>>> @@ -207,6 +211,7 @@ static const struct sunxi_desc_pin sun6i_a31_pins[] = {
->>>>   		  SUNXI_FUNCTION(0x1, "gpio_out"),
->>>>   		  SUNXI_FUNCTION(0x2, "gmac"),		/* MDC */
->>>>   		  SUNXI_FUNCTION(0x3, "lcd1"),		/* HSYNC */
->>>> +		  SUNXI_FUNCTION(0x4, "clk_c_out"),
->>>>   		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 26)),	/* PA_EINT26 */
->>>>   	SUNXI_PIN(SUNXI_PINCTRL_PIN(A, 27),
->>>>   		  SUNXI_FUNCTION(0x0, "gpio_in"),
->>>> @@ -242,20 +247,20 @@ static const struct sunxi_desc_pin sun6i_a31_pins[] = {
->>>>   		  SUNXI_FUNCTION(0x1, "gpio_out"),
->>>>   		  SUNXI_FUNCTION(0x2, "i2s0"),		/* DO1 */
->>>>   		  SUNXI_FUNCTION(0x3, "uart3"),		/* RTS */
->>>> +		  SUNXI_FUNCTION(0x4, "i2c3"),		/* SCK */
->>>>   		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 4)),	/* PB_EINT4 */
->>>>   	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 5),
->>>>   		  SUNXI_FUNCTION(0x0, "gpio_in"),
->>>>   		  SUNXI_FUNCTION(0x1, "gpio_out"),
->>>>   		  SUNXI_FUNCTION(0x2, "i2s0"),		/* DO2 */
->>>>   		  SUNXI_FUNCTION(0x3, "uart3"),		/* TX */
->>>> -		  SUNXI_FUNCTION(0x4, "i2c3"),		/* SCK */
->>>> +		  SUNXI_FUNCTION(0x4, "i2c3"),		/* SDA */
->>>>   		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 5)),	/* PB_EINT5 */
->>>>   	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 6),
->>>>   		  SUNXI_FUNCTION(0x0, "gpio_in"),
->>>>   		  SUNXI_FUNCTION(0x1, "gpio_out"),
->>>>   		  SUNXI_FUNCTION(0x2, "i2s0"),		/* DO3 */
->>>>   		  SUNXI_FUNCTION(0x3, "uart3"),		/* RX */
->>>> -		  SUNXI_FUNCTION(0x4, "i2c3"),		/* SDA */
->>>
->>> Where did you get that info from? The datasheet still reports that
->>> information.
->>
->> I assume with the datasheet you mean "A31 User Manual V1.20.pdf", which
->> was last updated on September 20, 2013. I did not check that one, now I
->> see where the original pinctrl code from.
->>
->> So I've done some more digging:
->>
->> "A31 Datasheet - v1.00 (2012-12-24).pdf" also has twi3 sck / sda on pin
->> PB5 / PB6 like the current pinctrl code.
->>
->> But "A31 Datasheet V1.40.pdf" which has the following in its revision log:
->> "1.4 Dec 10,2013 Modify Pin Description"
->>
->> Moves them to PB4 / PB5 and that is where I got this from (and was the only
->> place I initially looked), I think that this is an intentional change, and
->> that PB4 / PB5 are the correct pins.
+On Tuesday 11 November 2014 11:02 PM, Liviu Dudau wrote:
+> DT files used in the compilation phase can be preprocessed by the C
+> preprocessor. This requires an include/dt-bindings directory to be
+> present in the arch/arm64/boot/dts directory.
 >
-> Funny, I was looking at the A31 datasheet v1.4 from 10/12/2013 that is
-> in the allwinner's repo, and that's where I got this from (or some
-> earlier version of it)
+> Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
 >
-> https://github.com/allwinner-zh/documents/blob/master/A31/A31%20datasheet%20V1.4%2020131210.pdf
+
+Same change already has been posted as part of adding Exynos7 SoC 
+support, as Exynos7 patches have been accepted in Kukjin's tree, I think 
+following patch [1] as part of Exynos7 series [2] can also be taken.
+
+1: http://www.spinics.net/lists/devicetree/msg56552.html
+2: http://www.spinics.net/lists/devicetree/msg56551.html
+
+Thanks,
+Pankaj Dubey
+
+> ---
+> arch/arm64/boot/dts/include/dt-bindings | 1 +
+>   1 file changed, 1 insertion(+)
+>   create mode 120000 arch/arm64/boot/dts/include/dt-bindings
 >
-> Something's weird here :)
-
-Oh, on double checking my "A31 Datasheet V1.40.pdf" also has the ins at PB5/6, only the
-A31s data sheet V1.4 has them at PB4/5.
-
->> I will ask Allwinner which is correct, so that we know for sure.
+> \ No newline at end of file
 >
-> Yep, I saw that, thanks for clearing that up.
-
-So lets wait for their answer.
-
-Regards,
-
-Hans
+> diff --git a/arch/arm64/boot/dts/include/dt-bindings b/arch/arm64/boot/dts/include/dt-bindings
+> new file mode 120000
+> index 0000000..08c00e4
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/include/dt-bindings
+> @@ -0,0 +1 @@
+> +../../../../../include/dt-bindings
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
