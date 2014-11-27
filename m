@@ -1,42 +1,240 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] iio: adc: Cosmic Circuits 10001 ADC driver
-Date: Thu, 27 Nov 2014 16:16:58 +0100
-Message-ID: <5477406A.8020403@metafoo.de>
-References: <1415888044-16635-1-git-send-email-ezequiel.garcia@imgtec.com> <1415888044-16635-2-git-send-email-ezequiel.garcia@imgtec.com> <546FE3A7.6040308@gmx.de> <5474C062.2020604@imgtec.com> <5474F7A5.6030008@gmx.de> <5474FCC8.8080906@imgtec.com> <5475085E.8090806@gmx.de> <54773E63.4020300@imgtec.com>
+From: Chanwoo Choi <cwchoi00@gmail.com>
+Subject: Re: [PATCH 11/19] clk: samsung: exynos5433: Add clocks for
+ CMU_BUS{0|1|2} domains
+Date: Fri, 28 Nov 2014 00:17:40 +0900
+Message-ID: <CAGTfZH1DdBGYKXv6VgWYfqfcyWVMm8MLux1U7sn_rX5h3-TGNQ@mail.gmail.com>
+References: <1417073716-22997-1-git-send-email-cw00.choi@samsung.com>
+	<2232281.fbydzq3GMs@wuerfel>
+	<CAGTfZH3KmwhJNFdmeWnujbbUbtLf5vSi6i2dbV62DeCtV7n4TQ@mail.gmail.com>
+	<2120788.f3P3CC6nYQ@wuerfel>
+Reply-To: cw00.choi@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54773E63.4020300-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, Mark.Rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2120788.f3P3CC6nYQ@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "olof@lixom.net" <olof@lixom.net>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "inki.dae@samsung.com" <inki.dae@samsung.com>, "chanho61.park@samsung.com" <chanho61.park@samsung.com>, "geunsik.lim@samsung.com" <geunsik.lim@samsung.com>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, "jh80.chung@samsung.com" <jh80.chung@samsu>
 List-Id: devicetree@vger.kernel.org
 
-[...]
->>>
->>>>>>> +
->>>>>>> +	adc_dev->reg = devm_regulator_get(&pdev->dev, "vref");
->>>>>>> +	if (IS_ERR_OR_NULL(adc_dev->reg))
->>>>>>> +		return -EINVAL;
->>>>>> 	if (IS_ERR(adc_dev->reg))
->>>>>> 		return PTR_ERR(adc_dev->reg);
->>>>>
->>>>> Are you sure? What if devm_regulator_get() returns NULL?
->>>>>
->>>> I had a look at it, but couldn't figure out a condition in which it would return NULL. But I'd be happy to be informed of anything different.
->>>
->>> If CONFIG_REGULATOR=n you get NULL there (although I added a select REGULATOR
->>> on the v4 I just posted).
->>>
->> Indeed, thanks. Now I'm thinking if it would make sense to handle this special case in a special way (as it would be caused by an invalid kernel config). Well, I guess, I leave it up to you.
+On Thu, Nov 27, 2014 at 11:02 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Thursday 27 November 2014 22:41:49 Chanwoo Choi wrote:
+>> 2014=EB=85=84 11=EC=9B=94 27=EC=9D=BC =EB=AA=A9=EC=9A=94=EC=9D=BC, A=
+rnd Bergmann<arnd@arndb.de>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1=ED=95=9C=
+ =EB=A9=94=EC=8B=9C=EC=A7=80:
+>>
+>> > On Thursday 27 November 2014 21:58:53 Chanwoo Choi wrote:
+>> > > Dear Arnd,
+>> > >
+>> > > On 11/27/2014 09:35 PM, Arnd Bergmann wrote:
+>> > > > On Thursday 27 November 2014 13:12:08 Sylwester Nawrocki wrote=
+:
+>> > > >> On 27/11/14 12:56, Chanwoo Choi wrote:
+>> > > >>> On 11/27/2014 08:41 PM, Arnd Bergmann wrote:
+>> > > >>>>> On Thursday 27 November 2014 16:35:08 Chanwoo Choi wrote:
+>> > > >>>>>>> +  - "samsung,exynos5433-cmu-bus0", "samsung,exynos5433-=
+cmu-bus1"
+>> > > >>>>>>> +    and "samsung,exynos5433-cmu-bus2" - clock controlle=
+r
+>> > compatible for CMU_BUS
+>> > > >>>>>>> +    which generates global data buses clock and global
+>> > peripheral buses clock.
+>> > > >>>>>>>
+>> > > >>>>>>>  - reg: physical base address of the controller and leng=
+th of
+>> > memory mapped
+>> > > >>>>>>>    region.
+>> > > >>>>>>>
+>> > > >>>>>
+>> > > >>>>> This looks like you are duplicating the bindings and the c=
+ode, but
+>> > > >>>>> it's really the same hardware multiple times with minor va=
+riations
+>> > > >>>>> that you should be able to describe properly here. Why not=
+ make
+>> > > >>>>> three nodes with the same compatible string and have them =
+handled
+>> > > >>>>> by the same code?
+>> > > >>>
+>> > > >>> Each CMU_BUSx domain of Exynos5433 have different base addre=
+ss as
+>> > following:
+>> > > >>> - CMU_BUS0's base address and range : 0x1360_0000 ~ 0x1360_0=
+b04
+>> > > >>> - CMU_BUS1's base address and range : 0x1480_0000 ~ 0x1480_0=
+b04
+>> > > >>> - CMU_BUS2's base address and range : 0x1340_0000 ~ 0x1340_0=
+b04
+>> > > >>>
+>> > > >>> So, I implement CMU_BUSx domain which has each compatible st=
+ring.
+>> > > >
+>> > > > But the base address is in the reg property, not in the compat=
+ible
+>> > > > property. What I mean is to have multiple nodes like
+>> > >
+>> > > The merged clock driver in mainline have different compatible st=
+ring
+>> > > if base addresss of clock domain is different. So, I implemented=
+ each
+>> > CMU_BUSx domain
+>> > > with different compatible string.
+>> >
+>> > Why?
+>>
+>>
+>> As I explained on below, each clock domain have different clocks.
+>> So, clocks have unique clock name.
+>>
+>>  If clock driver use only one compatible for various clock domain, c=
+lock
+>> driver have to know the base address of each domain for distinction =
+of
+>> clock domain. I think It is stong dependency between device and driv=
+er.
 >
-> Well, adding the select REGULATOR that shouldn't happen, so let's better
-> drop the NULL check entirely.
+> No, not at all. You can have lots of clock controllers with the same
+> compatible string defining different instances of the same IP block,
+> e.g. for compatible=3D"fixed-clock".
 
-Doing a 'select REGULATOR' can (and probably will sooner or later) create 
-nasty dependency loops. User selectable config items should not be selected 
-by another config item. If the driver really has a hard dependency on the 
-regulator framework then 'depends on REGULATOR' is the right thing to do.
+But, "fixed-clock" pass all properties from dt file to
+driver/clk/clk-fixed-rate.c.
+and "fixed-clock" driver has not the data dependent on h/w. e.g.,
+clock offset, parent clock.
 
-- Lars
+>
+>> >
+>> > > >     clock-controller@113600000 {
+>> > > >             reg =3D <0 0x113600000 0 0x1000>;
+>> > > >             compatible =3D "samsung,exynos5433-cmu";
+>> > > >             #clock-cells =3D <1>;
+>> > > >     };
+>> > > >
+>> > > >     clock-controller@114800000 {
+>> > > >             reg =3D <0 0x114800000 0 0x1000>;
+>> > > >             compatible =3D "samsung,exynos5433-cmu";
+>> > > >             #clock-cells =3D <1>;
+>> > > >     };
+>> > > >
+>> > > > The code will just map the local registers for each instance a=
+nd then
+>> > > > provide the clocks of the right instance when asked for it.
+>> > >
+>> > > Each clock domain has not the same mux/divider/clock. So, just o=
+ne
+>> > compatible
+>> > > string could not support all of clock domains.
+>> >
+>> > What are the specific differences?
+>>
+>>
+>>
+>> > I'm not sure that difference among clock domains because I think i=
+t is
+>> dependent on the opinion of architect of SoC.
+>>
+>> cmu_bus0/1/2 are much similar. Just cmu_bus2 has one more mux/gate c=
+lock
+>> than cmu_bus0/1.
+>
+> Yes, that's what I mean. You can simply model that extra mux/gate
+> in the driver, as long as nothing ever tries to access the clock.
+
+If only use one compatible to support CMU_BUSx domains,
+I would implement it as following with Sylwester's guide.
+
+To Sylwester, Tomaz,
+Are you agree following method to support CMU_BUSx domains
+by using one compatible string?
+
++/*
++ * Register offset definitions for CMU_BUS{0|1}
++ */
++#define DIV_BUS                0x0600
++#define DIV_STAT_BUS            0x0700
++#define ENABLE_ACLK_BUS            0x0800
++#define ENABLE_PCLK_BUS            0x0900
++#define ENABLE_IP_BUS0            0x0b00
++#define ENABLE_IP_BUS1            0x0b04
++
++#define bus_clk_regs(num)                \
++static unsigned long bus##num_clk_regs[] __initdata =3D {    \
++    DIV_BUS,                    \
++    DIV_STAT_BUS,                    \
++    ENABLE_ACLK_BUS,                \
++    ENABLE_PCLK_BUS,                \
++    ENABLE_IP_BUS0,                    \
++    ENABLE_IP_BUS1,                    \
++};                            \
++
++#define bus_div_clks(num)                        \
++static struct samsung_div_clock bus##num_div_clks[] __initdata =3D {  =
+  \
++    /* DIV_BUS */                            \
++    DIV(CLK_DIV_PCLK_BUS##num_133, "div_pclk_bus"#num"_133",    \
++            "aclk_bus"#num"_400", DIV_BUS##num, 0, 3),    \
++};                                    \
++
++#define bus_gate_clks(num)                        \
++static struct samsung_gate_clock bus##num_gate_clks[] __initdata =3D {=
+    \
++    /* ENABLE_ACLK_BUS */                        \
++    GATE(CLK_ACLK_AHB2APB_BUS##num, "aclk_ahb2apb_bus"#num"p",    \
++            "div_pclk_bus"#num"_133", ENABLE_ACLK_BUS##num,    \
++            4, CLK_IGNORE_UNUSED, 0),            \
++    GATE(CLK_ACLK_BUS##numNP_133, "aclk_bus"#num"np_133",        \
++            "div_pclk_bus"##num"_133", ENABLE_ACLK_BUS##num,\
++            2, CLK_IGNORE_UNUSED, 0),            \
++    GATE(CLK_ACLK_BUS##numND_400, "aclk_bus"#num"nd_400",        \
++            "aclk_bus"#num"_400", ENABLE_ACLK_BUS##num,    \
++            0, CLK_IGNORE_UNUSED, 0),            \
++                                    \
++    /* ENABLE_PCLK_BUS */                        \
++    GATE(CLK_PCLK_BUS##numSRVND_133, "pclk_bus"#num"srvnd_133",    \
++            "div_pclk_bus"#num"_133", ENABLE_PCLK_BUS##num,    \
++            2, 0, 0),                    \
++    GATE(CLK_PCLK_PMU_BUS##num, "pclk_pmu_bus"#num,            \
++            "div_pclk_bus"#num"_133", ENABLE_PCLK_BUS##num,    \
++            1, CLK_IGNORE_UNUSED, 0),            \
++    GATE(CLK_PCLK_SYSREG_BUS##num, "pclk_sysreg_bus"#num,        \
++            "div_pclk_bus"#num"_133", ENABLE_PCLK_BUS##num,    \
++            0, 0, 0),                    \
++};                                    \
++
++#define bus_clk_regs(0)
++#define bus_div_clks(0)
++#define bus_gate_clks(0)
++
++#define bus_clk_regs(1)
++#define bus_div_clks(1)
++#define bus_gate_clks(1)
++
++static void __init exynos5433_cmu_bus_init(struct device_node *np)
++{
++    void __iomem *reg_base_bus0, *reg_base_bus1;
++
++    reg_base_bus0 =3D of_iomap(np, 0);
++    reg_base_bus1 =3D of_iomap(np, 1);
++
++    bus0_ctx =3D samsung_clk_init(np, reg_base_bus0, BUS0_NR_CLKS);
++    bus1_ctx =3D samsung_clk_init(np, reg_base_bus0, BUS0_NR_CLKS);
++
++    samsung_clk_register_div(bus0_ctx, bus0_div_clks,
++                    ARRAY_SIZE(bus0_div_clks));
++    samsung_clk_register_gate(bus0_ctx, bus0_gate_clks,
++                    ARRAY_SIZE(bus0_gate_clks));
++    samsung_clk_register_div(bus1_ctx, bus1_div_clks,
++                    ARRAY_SIZE(bus1_div_clks));
++    samsung_clk_register_gate(bus1_ctx, bus1_gate_clks,
++                    ARRAY_SIZE(bus1_gate_clks));
++
++    samsung_clk_of_provider(np, bus0_ctx);
++    samsung_clk_of_provider(np, bus1_ctx);
++
++}
++CLK_OF_DECLARE(exynos5433_cmu_bus, "samsung,exynos5433-cmu-bus",
++        exynos5433_cmu_bus_init);
+
+Best Regards,
+Chanwoo Choi
