@@ -1,151 +1,45 @@
-From: "Kim, Milo" <milo.kim-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/2] backlight/lp855x: Add supply regulator to lp855x
-Date: Thu, 27 Nov 2014 10:32:51 +0900
-Message-ID: <54767F43.2060901@ti.com>
-References: <1417029064-12460-1-git-send-email-seanpaul@chromium.org> <1417029064-12460-2-git-send-email-seanpaul@chromium.org>
+From: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v14 0/3] Add drm driver for Rockchip Socs
+Date: Thu, 27 Nov 2014 09:40:23 +0800
+Message-ID: <54768107.2090402@rock-chips.com>
+References: <1416447994-9921-1-git-send-email-mark.yao@rock-chips.com>	<23617908.6oA5uRuO3l@diego>	<CAPM=9tzvvb5U+8KaCO+K6CJi=rwWOkoW+4ZSFW_Oo9gTncvkWA@mail.gmail.com>	<1557742.FTdLsE0bVs@diego>	<20141126073430.GD3156@suse.de> <CAPM=9tzhZLShA5=ShGTKhyZR6ddKycQDUWBZxXpUBb+1tGp-mQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
+Content-Type: text/plain; charset=UTF-8;
 	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417029064-12460-2-git-send-email-seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <CAPM=9tzhZLShA5=ShGTKhyZR6ddKycQDUWBZxXpUBb+1tGp-mQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: =?UTF-8?B?U3TDqXBoYW5lIE1hcmNoZXNpbg==?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Aaron Durbin <adurbin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
+Cc: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rom Lemarchand <romlem-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>=?UTF-8?B?U3TDqXBoYW5lIE1hcmNoZXNpbg==?= <marc>
 List-Id: devicetree@vger.kernel.org
 
-(Looping backlight class subsystem maintainers)
+On 2014=E5=B9=B411=E6=9C=8827=E6=97=A5 06:53, Dave Airlie wrote:
+> On 26 November 2014 at 17:34, Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org> wrote:
+>> On Wed, Nov 26, 2014 at 01:37:51AM +0100, Heiko St=C3=BCbner wrote:
+>>> Joerg, is your arm/rockchip branch [0] considered stable?
+>>>
+>>> [0] https://git.kernel.org/cgit/linux/kernel/git/joro/iommu.git/log=
+/?h=3Darm/rockchip
+>>>
+>> Yes, this branch will not be rebased. It can be pulled into another
+>> tree.
+> Great, so if we can get a rockchip drm tree based on drm-next with
+> that tree pulled into it
+> that would be good.
+>
+> Dave.
+>
+>
+>
+Hi Dave
+     Do you mean that I need send you a branch, based on drm-next, merg=
+e=20
+with iommu tree and rockchip drm?
 
-Hi Sean,
+- Mark
 
-Please see my comments below. Thanks!
-On 11/27/2014 4:11 AM, Sean Paul wrote:
-> This patch adds a supply regulator to the lp855x platform data to fac=
-ilitate
-> powering on/off the 3V rail attached to the controller.
->
-> Cc: St=C3=A9phane Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Cc: Aaron Durbin <adurbin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
->   .../devicetree/bindings/video/backlight/lp855x.txt      |  2 ++
->   drivers/video/backlight/lp855x_bl.c                     | 17 ++++++=
-+++++++++++
->   include/linux/platform_data/lp855x.h                    |  2 ++
->   3 files changed, 21 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/video/backlight/lp855x=
-=2Etxt b/Documentation/devicetree/bindings/video/backlight/lp855x.txt
-> index 96e83a5..0a3ecbc 100644
-> --- a/Documentation/devicetree/bindings/video/backlight/lp855x.txt
-> +++ b/Documentation/devicetree/bindings/video/backlight/lp855x.txt
-> @@ -12,6 +12,7 @@ Optional properties:
->     - pwm-period: PWM period value. Set only PWM input mode used (u32=
-)
->     - rom-addr: Register address of ROM area to be updated (u8)
->     - rom-val: Register value to be updated (u8)
-> +  - power-supply: Regulator which controls the 3V rail
->
->   Example:
->
-> @@ -56,6 +57,7 @@ Example:
->   	backlight@2c {
->   		compatible =3D "ti,lp8557";
->   		reg =3D <0x2c>;
-> +		power-supply =3D <&backlight_vdd>;
->
->   		dev-ctrl =3D /bits/ 8 <0x41>;
->   		init-brt =3D /bits/ 8 <0x0a>;
-> diff --git a/drivers/video/backlight/lp855x_bl.c b/drivers/video/back=
-light/lp855x_bl.c
-> index 257b3ba..8021009 100644
-> --- a/drivers/video/backlight/lp855x_bl.c
-> +++ b/drivers/video/backlight/lp855x_bl.c
-> @@ -17,6 +17,7 @@
->   #include <linux/of.h>
->   #include <linux/platform_data/lp855x.h>
->   #include <linux/pwm.h>
-> +#include <linux/regulator/consumer.h>
->
->   /* LP8550/1/2/3/6 Registers */
->   #define LP855X_BRIGHTNESS_CTRL		0x00
-> @@ -383,6 +384,13 @@ static int lp855x_parse_dt(struct lp855x *lp)
->   		pdata->rom_data =3D &rom[0];
->   	}
->
-> +	pdata->supply =3D devm_regulator_get(dev, "power");
-> +	if (IS_ERR(pdata->supply)) {
-> +		if (PTR_ERR(pdata->supply) =3D=3D -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +		pdata->supply =3D NULL;
 
-This optional data, 'supply' is set to NULL.
-Please refer to my comments below.
-
-> +	}
-> +
->   	lp->pdata =3D pdata;
->
->   	return 0;
-> @@ -423,6 +431,14 @@ static int lp855x_probe(struct i2c_client *cl, c=
-onst struct i2c_device_id *id)
->   	else
->   		lp->mode =3D REGISTER_BASED;
->
-> +	if (lp->pdata->supply) {
-> +		ret =3D regulator_enable(lp->pdata->supply);
-> +		if (ret < 0) {
-> +			dev_err(&cl->dev, "failed to enable supply: %d\n", ret);
-> +			return ret;
-> +		}
-> +	}
-> +
->   	i2c_set_clientdata(cl, lp);
->
->   	ret =3D lp855x_configure(lp);
-> @@ -454,6 +470,7 @@ static int lp855x_remove(struct i2c_client *cl)
->
->   	lp->bl->props.brightness =3D 0;
->   	backlight_update_status(lp->bl);
-> +	regulator_disable(lp->pdata->supply);
-
-The 'lp->pdata->supply' is optional, what happens if it is NULL?
-This will cause the kernel OOPS inside regulator_disable() API.
-
-int regulator_disable(struct regulator *regulator)
-{
-	struct regulator_dev *rdev =3D regulator->rdev;
-=2E..
-}
-
->   	sysfs_remove_group(&lp->dev->kobj, &lp855x_attr_group);
->
->   	return 0;
-> diff --git a/include/linux/platform_data/lp855x.h b/include/linux/pla=
-tform_data/lp855x.h
-> index 1b2ba24..9c7fd1e 100644
-> --- a/include/linux/platform_data/lp855x.h
-> +++ b/include/linux/platform_data/lp855x.h
-> @@ -136,6 +136,7 @@ struct lp855x_rom_data {
->   		Only valid when mode is PWM_BASED.
->    * @size_program : total size of lp855x_rom_data
->    * @rom_data : list of new eeprom/eprom registers
-> + * @supply : regulator that supplies 3V input
->    */
->   struct lp855x_platform_data {
->   	const char *name;
-> @@ -144,6 +145,7 @@ struct lp855x_platform_data {
->   	unsigned int period_ns;
->   	int size_program;
->   	struct lp855x_rom_data *rom_data;
-> +	struct regulator *supply;
->   };
->
->   #endif
->
-
-Best regards,
-Milo
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
