@@ -1,54 +1,69 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V2 01/10] tty: Fallback to use dynamic major number
-Date: Thu, 27 Nov 2014 15:33:58 +0100
-Message-ID: <4316435.J1BtEYnd6C@wuerfel>
-References: <1415825647-6024-1-git-send-email-cernekee@gmail.com> <5475E4EC.7090309@hurleysoftware.com> <CACxGe6uLWZav=AfaK2w17PW6vtxF8S0=OUvCMB-uFSvhs2cLtw@mail.gmail.com>
+From: Alexander Stein <alexander.stein@systec-electronic.com>
+Subject: Re: [PATCH 3/3] gpio: mcp23s08: Add option to configure IRQ as active high
+Date: Thu, 27 Nov 2014 15:36:39 +0100
+Message-ID: <3020714.NCVpEFcdBT@ws-stein>
+References: <1416213491-9775-1-git-send-email-alexander.stein@systec-electronic.com> <1416213491-9775-3-git-send-email-alexander.stein@systec-electronic.com> <CACRpkdZCA7Zxs0HDpFZSmFmg5hYYAHmeNySFpM-Xq3G322mmbw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <CACxGe6uLWZav=AfaK2w17PW6vtxF8S0=OUvCMB-uFSvhs2cLtw@mail.gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Peter Hurley <peter@hurleysoftware.com>, Kevin Cernekee <cernekee@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Rob Herring <robh@kernel.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, tushar.b@samsung.com
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZCA7Zxs0HDpFZSmFmg5hYYAHmeNySFpM-Xq3G322mmbw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 27 November 2014 13:50:01 Grant Likely wrote:
+On Thursday 27 November 2014 14:58:39, Linus Walleij wrote:
+> On Mon, Nov 17, 2014 at 9:38 AM, Alexander Stein
+> <alexander.stein@systec-electronic.com> wrote:
 > 
-> Should be sufficient. Basically, if the hardware doesn't exist, the
-> driver shouldn't be trying to grab the minor numbers.
+> > Default is active low, but if property is specified in DT set INTPOL flag.
+> >
+> > Signed-off-by: Alexander Stein <alexander.stein@systec-electronic.com>
+> > ---
+> >  .../devicetree/bindings/gpio/gpio-mcp23s08.txt     |  2 ++
+> >  drivers/gpio/gpio-mcp23s08.c                       | 30 +++++++++++++++++-----
+> >  2 files changed, 25 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt b/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
+> > index c306a2d0..47dab72 100644
+> > --- a/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
+> > +++ b/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
+> > @@ -57,6 +57,8 @@ Optional device specific properties:
+> >          occurred on. If it is not set, the interrupt are only generated for the
+> >          bank they belong to.
+> >          On devices with only one interrupt output this property is useless.
+> > +- microchip,irq-active-high: Sets the INTPOL flag in the IOCON register. This
+> > +        configures the IRQ output as active high.
 > 
-> Also, on hardware where both exists, there should be some sane
-> fallback so that all UARTs get assigned numbers. On DT systems we can
-> also use /aliases to ensure consistent assignment of numbers.
+> I don't understand this AT ALL.
+> 
+> The normal way is that the *client* using the resource specify the
+> polarity.
+> 
+> #include <dt-bindings/interrupt-controller/irq.h>
+> 
+> interrupts = <0 60 IRQ_TYPE_LEVEL_LOW>;
+> 
+> This will then result in .set_type() being called on the irqchip.
+> 
+> I suspect the real change you want to do is to support
+> IRQ_TYPE_LEVEL_HIGH and IRQ_TYPE_LEVEL_LOW
+> in the .set_type() callback or something, or just switch all
+> clients from rising to falling edge or vice versa.
+> 
+> And it says is "configures the IRQ output", this seems more like
+> an input trigger?
+> 
+> Sorry too confused by this, can you explain?
 
->From what I can see, this is really the ISA compatibility code
-in the 8250 driver, and we should be able to make that optional
-or even move it into a separate glue driver.
+Sure. Until now ODR is cleared as reset default while INTPOL explicitly gets cleared. So the INT output pin on the MCP23S17 is an active-low output pin which will trigger an active-low interrupt. While this is useually great, as most interrupt pins are active low, our board design requires an active-high output. This is done that the voltage level shift required for the interrupt pin can be done by a simple transistor.
+So, setting IRQ_TYPE_LEVEL_HIGH is simply wrong and this still won't work either as no interrupt will ever arive at the controller. What I need to do, is to change the interrupt polarity (to active high) at MCP23S17 while retaining the interrupt polarity on the controller as active-low.
+So I configure the chip to set the interrupt line as high upon IRQ, thus IRQF_TRIGGER_HIGH has to be passed to request_*irq.
+You might wonder why I then also changed IRQF_TRIGGER_LOW to IRQF_TRIGGER_HIGH for my board the interrupt line is actually active low. This is due the fact that GIC only supports active high-interrupts (any other flag results in request fail) but the microcontroller has a feature to inverse these interrupt triggers.
+I don't know if there is a feature to inverse interrupt polarity individually due to board designs.
+I hope this makes things a bit more clear.
 
-Basically the serial8250_init function tries to do a lot of things
-at once (skipping error handling):
+Best regards,
+Alexander
 
-        serial8250_isa_init_ports();
-        ret = sunserial_register_minors(&serial8250_reg, UART_NR);
-	serial8250_reg.nr = UART_NR;
-        ret = uart_register_driver(&serial8250_reg);
-        ret = serial8250_pnp_init();
-        serial8250_isa_devs = platform_device_alloc("serial8250",
-                                                   PLAT8250_DEV_LEGACY);
-        ret = platform_device_add(serial8250_isa_devs);
-        serial8250_register_ports(&serial8250_reg, &serial8250_isa_devs->dev);
-        ret = platform_driver_register(&serial8250_isa_driver);
-
-The only thing we want from this is the uart_register_driver() call,
-everything else is only needed together with the ISA support. The way
-that uart_register_driver() works unfortunately implies that you know
-the maximum number of ports at driver init time, which would need
-to be changed if you want to share the numbers.
-
-One idea I had a few years ago when we discussed this was to treat
-the major 4 allocation differently so you could share it between all
-sorts of drivers as an opt-in, but could have all unmodified continue
-using their own device names and numbers.
-
-	Arnd
