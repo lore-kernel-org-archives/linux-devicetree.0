@@ -1,101 +1,50 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 4/7] regulator: Use ena_gpio supplied with generic
- regulator bindings
-Date: Thu, 27 Nov 2014 18:43:42 +0000
-Message-ID: <20141127184342.GC7712@sirena.org.uk>
-References: <1417087253-12306-1-git-send-email-k.kozlowski@samsung.com>
- <1417087253-12306-5-git-send-email-k.kozlowski@samsung.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCHv2 05/16] gpio: mvebu: add suspend/resume support
+Date: Thu, 27 Nov 2014 19:44:18 +0100
+Message-ID: <20141127194418.43e03e80@free-electrons.com>
+References: <1415978496-9334-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1415978496-9334-6-git-send-email-thomas.petazzoni@free-electrons.com>
+	<CACRpkdb5S7Fv4+Ck2btLPTYWaWr_E-iMcQGeATB4NMwx_T-4GA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="VkCVF37ElD4C4GZ7"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1417087253-12306-5-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdb5S7Fv4+Ck2btLPTYWaWr_E-iMcQGeATB4NMwx_T-4GA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Dear Linus Walleij,
 
---VkCVF37ElD4C4GZ7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, 27 Nov 2014 14:29:47 +0100, Linus Walleij wrote:
+> On Fri, Nov 14, 2014 at 4:21 PM, Thomas Petazzoni
+> <thomas.petazzoni@free-electrons.com> wrote:
+> 
+> > This commit adds the implementation of ->suspend() and ->resume()
+> > platform_driver hooks in order to save and restore the state of the
+> > GPIO configuration. In order to achieve that, additional fields are
+> > added to the mvebu_gpio_chip structure.
+> >
+> > Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Cc: Alexandre Courbot <gnurou@gmail.com>
+> > Cc: linux-gpio@vger.kernel.org
+> > Acked-by: Alexandre Courbot <acourbot@nvidia.com>
+> > Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> 
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> Do you want me to merge the patch or is it dependent on other patches?
 
-On Thu, Nov 27, 2014 at 12:20:50PM +0100, Krzysztof Kozlowski wrote:
-> Use ena_gpio from regulator constraints (filled by parsing generic
-> bindings) to initialize the GPIO enable control. Support also the old
-> way: ena_gpio supplied in regulator_config structure.
->=20
-> This also adds a new set_ena_gpio() callback in regulator_ops structure
-> which driver may provide to actually enable the GPIO control in
-> hardware.
+This patch has already been merged by you, and is already in
+linux-next. See
+https://git.kernel.org/cgit/linux/kernel/git/linusw/linux-gpio.git/commit/?h=for-next&id=b5b7b487431b01619f2947d91dadd7c7a233692e.
 
-This seems really confused like it's trying to work around some other
-problem - this all feels like it's at the wrong abstraction level.  As
-far as I can tell this is trying to fix bugs in the previous patch and
-do some other refactorings (the "also add this other random op" bit
-especially) but I'm really not clear what the goal is.
+Best regards,
 
-Please try to think if the code you're writing makes sense at the big
-picture level rather than just band aiding specific problems you see.
-It's also a good idea to keep random code motion separate from
-functional changes since it makes it much easier to follow what each is
-supposed to do.
-
-> @@ -1044,6 +1045,14 @@ static int set_machine_constraints(struct regulato=
-r_dev *rdev,
->  		}
->  	}
-> =20
-> +	if (rdev->constraints->use_ena_gpio && ops->set_ena_gpio) {
-> +		ret =3D ops->set_ena_gpio(rdev);
-> +		if (ret < 0) {
-> +			rdev_err(rdev, "failed to set enable GPIO control\n");
-> +			goto out;
-> +		}
-> +	}
-
-Why do we need some special magic operation for GPIO based enables
-that's separate to any other enable operation?  This seems really
-confusing, if the constraint setting doesn't work somehow for GPIO based
-enables we should fix that.  Though since this operation takes no
-parameters it's hard to see how it's supposed to apply constraints
-unless it reparses them which doesn't seem like a good idea...
-
->  static int regulator_ena_gpio_request(struct regulator_dev *rdev,
-> -				const struct regulator_config *config)
-
-> -	ret =3D gpio_request_one(config->ena_gpio,
-> -				GPIOF_DIR_OUT | config->ena_gpio_flags,
-> +	ret =3D gpio_request_one(gpio, GPIOF_DIR_OUT | gpio_flags,
->  				rdev_get_name(rdev));
-
-> +/*
-> + * Request GPIO for enable control from regulator_config
-> + * or init_data->constraints.
-> + */
-> +static int regulator_ena_gpio_setup(struct regulator_dev *rdev,
-> +			const struct regulator_config *config,
-> +			const struct regulator_init_data *init_data)
-
-Why is setting up the GPIO different to requesting it, especially given
-that we have an existing function called _request() which still exists?
-
---VkCVF37ElD4C4GZ7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUd3DdAAoJECTWi3JdVIfQubEH/jxO9kh8fwL2jJoGAEkeE20D
-btT3H3TlSuPN9k96FKZEPARBKUkSjH8cORtPl1PE0qOkMMTjl+Zh2dotUEtZf+lK
-cxxYt4HRo8uSbg7Kmz5waZsVE3fRgmCzzJW/hiYakiuSI2t9792fyokpJdpTphoS
-8gZ5bxUXQedUrrqn9V3qvorZOBFzhENsKpnrdDG9R4Y74SBqpwf0lPRNEdlKK2C9
-UzVh2riLgJofGjvzxV1ykcUt1596rEbEXc5rZJ2ekRsWmfcuB4a0X01ZNvKV/Tjq
-92aIHq9qwq9EKfYa6rCr5GMAGH439jcPIX16nW25CYvNgCSNFvlcywKwbr8EUh4=
-=WT6H
------END PGP SIGNATURE-----
-
---VkCVF37ElD4C4GZ7--
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
