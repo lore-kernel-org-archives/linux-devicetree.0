@@ -1,47 +1,90 @@
-From: Beniamino Galvani <b.galvani@gmail.com>
-Subject: Re: [PATCH v3 2/3] pinctrl: add driver for Amlogic Meson SoCs
-Date: Thu, 27 Nov 2014 23:34:02 +0100
-Message-ID: <20141127223402.GA11418@gmail.com>
-References: <1416168856-12747-1-git-send-email-b.galvani@gmail.com>
- <1416168856-12747-3-git-send-email-b.galvani@gmail.com>
- <CACRpkda-U5OuKdBVGJ8UWprJkAtmTL1m11+AbNskVULPfyS72A@mail.gmail.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v3] can: Convert to runtime_pm
+Date: Thu, 27 Nov 2014 14:47:41 -0800
+Message-ID: <820358d5369f465188dfa9306eae5658@BL2FFO11FD009.protection.gbl>
+References: <6b6db31d46074512a322eae6e4ef64d4@BN1BFFO11FD038.protection.gbl>
+ <54779501.8060009@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-can-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkda-U5OuKdBVGJ8UWprJkAtmTL1m11+AbNskVULPfyS72A@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Carlo Caione <carlo@caione.org>, Soren Brinkmann <soren.brinkmann@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jerry Cao <jerry.cao@amlogic.com>, Victor Wan <victor.wan@amlogic.com>
+In-Reply-To: <54779501.8060009@pengutronix.de>
+Sender: linux-can-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Kedareswara rao Appana <appana.durga.rao@xilinx.com>, wg@grandegger.com, michal.simek@xilinx.com, grant.likely@linaro.org, robh+dt@kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kedareswara rao Appana <appanad@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 27, 2014 at 02:48:31PM +0100, Linus Walleij wrote:
-> On Sun, Nov 16, 2014 at 9:14 PM, Beniamino Galvani <b.galvani@gmail.c=
-om> wrote:
+On Thu, 2014-11-27 at 10:17PM +0100, Marc Kleine-Budde wrote:
+> On 11/27/2014 02:08 PM, Kedareswara rao Appana wrote:
+> > Instead of enabling/disabling clocks at several locations in the dr=
+iver,
+> > use the runtime_pm framework. This consolidates the actions for
+> > runtime PM in the appropriate callbacks and makes the driver more
+> > readable and mantainable.
+> >=20
+> > Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> > Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+> > ---
+> > Changes for v3:
+> >   - Converted the driver to use runtime_pm.
+> > Changes for v2:
+> >   - Removed the struct platform_device* from suspend/resume
+> >     as suggest by Lothar.
+> >=20
+> >  drivers/net/can/xilinx_can.c |  119 +++++++++++++++++++++++++-----=
+-----------
+> >  1 files changed, 72 insertions(+), 47 deletions(-)
+> >=20
+> > diff --git a/drivers/net/can/xilinx_can.c b/drivers/net/can/xilinx_=
+can.c
+> > index 8a998e3..1be28ed 100644
+> > --- a/drivers/net/can/xilinx_can.c
+> > +++ b/drivers/net/can/xilinx_can.c
+[...]
+> > @@ -1030,7 +1046,10 @@ static int __maybe_unused xcan_resume(struct=
+ device *dev)
+> >  	return 0;
+> >  }
+> > =20
+> > -static SIMPLE_DEV_PM_OPS(xcan_dev_pm_ops, xcan_suspend, xcan_resum=
+e);
+> > +static const struct dev_pm_ops xcan_dev_pm_ops =3D {
+> > +	SET_SYSTEM_SLEEP_PM_OPS(xcan_suspend, xcan_resume)
+> > +	SET_PM_RUNTIME_PM_OPS(xcan_runtime_suspend, xcan_runtime_resume, =
+NULL)
+> > +};
+> > =20
+> >  /**
+> >   * xcan_probe - Platform registration call
+> > @@ -1071,7 +1090,7 @@ static int xcan_probe(struct platform_device =
+*pdev)
+> >  		return -ENOMEM;
+> > =20
+> >  	priv =3D netdev_priv(ndev);
+> > -	priv->dev =3D ndev;
+> > +	priv->dev =3D &pdev->dev;
+> >  	priv->can.bittiming_const =3D &xcan_bittiming_const;
+> >  	priv->can.do_set_mode =3D xcan_do_set_mode;
+> >  	priv->can.do_get_berr_counter =3D xcan_get_berr_counter;
+> > @@ -1137,6 +1156,11 @@ static int xcan_probe(struct platform_device=
+ *pdev)
+> > =20
+> >  	netif_napi_add(ndev, &priv->napi, xcan_rx_poll, rx_max);
+> > =20
+> > +	pm_runtime_set_active(&pdev->dev);
+> > +	pm_runtime_irq_safe(&pdev->dev);
 >=20
-> > This is a driver for the pinmux and GPIO controller available in
-> > Amlogic Meson SoCs. At the moment it only supports Meson8 devices,
-> > however other SoC families like Meson6 and Meson8b (the Cortex-A5
-> > variant) appear to be similar, with just different sets of banks an=
-d
-> > registers.
-> >
-> > GPIO interrupts are not supported at the moment due to lack of
-> > documentation.
-> >
-> > Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
->=20
-> This is dependent on S=F6ren's patches I guess?
->=20
-> OK I'll merge this once we have that other code sorted out.
+> You use just clock_enable()/disable() in the runtime functions, thus =
+you
+> can say they are irq_safe. On the other the the zync grpio driver use=
+s
+> "full" prepare_enable/disable_unprepare calls. What's best practice h=
+ere?
 
-Yes, this depends on Soren's patches.
+IIRC, the prepare/unprepare functions can sleep. xcan_get_berr_counter
+is called from atomic context. So, I think we have to use the
+disable/enable functions without the prepare/unprepare.
+In the GPIO driver the that problem does not exist.
 
-Thanks,
-Beniamino
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	S=C3=B6ren
