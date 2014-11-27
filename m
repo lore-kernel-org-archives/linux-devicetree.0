@@ -1,168 +1,63 @@
-From: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
-Subject: [PATCH v4 2/2] ath10k: read calibration data from Device Tree
-Date: Thu, 27 Nov 2014 14:09:18 +0200
-Message-ID: <20141127120917.17546.44254.stgit@potku.adurom.net>
-References: <20141127120727.17546.61202.stgit@potku.adurom.net>
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 11/19] clk: samsung: exynos5433: Add clocks for
+ CMU_BUS{0|1|2} domains
+Date: Thu, 27 Nov 2014 13:12:08 +0100
+Message-ID: <54771518.1010004@samsung.com>
+References: <1417073716-22997-1-git-send-email-cw00.choi@samsung.com>
+ <1417073716-22997-12-git-send-email-cw00.choi@samsung.com>
+ <6217579.xNXtO7YiDs@wuerfel> <54771173.6090408@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141127120727.17546.61202.stgit-5n+v4hRq/7bEFBQscRVz1g@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, toshik-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <54771173.6090408-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, geunsik.lim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Toshi Kikuchi <toshik-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Hi,
 
-This patch adds support for reading calibration data from Device Tree.
-It looks for the calibration data in Device Tree if it can't find it
-in a file. If there's no node in Device Tree, ath10k will try to find the
-calibration data from OTP.
+On 27/11/14 12:56, Chanwoo Choi wrote:
+> On 11/27/2014 08:41 PM, Arnd Bergmann wrote:
+>> > On Thursday 27 November 2014 16:35:08 Chanwoo Choi wrote:
+>>> >> +  - "samsung,exynos5433-cmu-bus0", "samsung,exynos5433-cmu-bus1"
+>>> >> +    and "samsung,exynos5433-cmu-bus2" - clock controller compatible for CMU_BUS
+>>> >> +    which generates global data buses clock and global peripheral buses clock.
+>>> >>  
+>>> >>  - reg: physical base address of the controller and length of memory mapped
+>>> >>    region.
+>>> >>
+>> > 
+>> > This looks like you are duplicating the bindings and the code, but
+>> > it's really the same hardware multiple times with minor variations
+>> > that you should be able to describe properly here. Why not make
+>> > three nodes with the same compatible string and have them handled
+>> > by the same code?
+>
+> Each CMU_BUSx domain of Exynos5433 have different base address as following:
+> - CMU_BUS0's base address and range : 0x1360_0000 ~ 0x1360_0b04
+> - CMU_BUS1's base address and range : 0x1480_0000 ~ 0x1480_0b04
+> - CMU_BUS2's base address and range : 0x1340_0000 ~ 0x1340_0b04
+> 
+> So, I implement CMU_BUSx domain which has each compatible string.
 
-The node for the calibration data should be defined like this:
+You can always have multiple entries in the reg property. I've done
+something like this for the exynos4415 CMU_ISPx units:
 
-pci {
-        pcie@0 {
-                reg = <0 0 0 0 0>;
-                #interrupt-cells = <1>;
-                #size-cells = <2>;
-                #address-cells = <3>;
-                device_type = "pci";
+	cmu_isp: clock-controller@12060000 {
+		compatible = "samsung,exynos4415-cmu-isp";
+		reg = <0x12060000 0xB10>, <0x12070000 0xB10>;
+		#clock-cells = <1>;
 
-                ath10k@0,0 {
-                        reg = <0 0 0 0 0>;
-                        device_type = "pci";
-                        qcom,ath10k-calibration-data = [ 01 02 03 ... ];
-                };
-        };
-};
-
-Signed-off-by: Toshi Kikuchi <toshik-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
----
- drivers/net/wireless/ath/ath10k/core.c |   70 ++++++++++++++++++++++++++++++++
- drivers/net/wireless/ath/ath10k/core.h |    3 +
- 2 files changed, 72 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/ath/ath10k/core.c b/drivers/net/wireless/ath/ath10k/core.c
-index 7762061a1944..6165f2735b35 100644
---- a/drivers/net/wireless/ath/ath10k/core.c
-+++ b/drivers/net/wireless/ath/ath10k/core.c
-@@ -17,6 +17,7 @@
- 
- #include <linux/module.h>
- #include <linux/firmware.h>
-+#include <linux/of.h>
- 
- #include "core.h"
- #include "mac.h"
-@@ -249,6 +250,63 @@ static int ath10k_download_cal_file(struct ath10k *ar)
- 	return 0;
- }
- 
-+static int ath10k_download_cal_dt(struct ath10k *ar)
-+{
-+	struct device_node *node;
-+	int data_len;
-+	void *data;
-+	int ret;
-+
-+	node = ar->dev->of_node;
-+	if (!node)
-+		/* Device Tree is optional, don't print any warnings if
-+		 * there's no node for ath10k.
-+		 */
-+		return -ENOENT;
-+
-+	if (!of_get_property(node, "qcom,ath10k-calibration-data",
-+			     &data_len)) {
-+		/* The calibration data node is optional */
-+		return -ENOENT;
-+	}
-+
-+	if (data_len != QCA988X_CAL_DATA_LEN) {
-+		ath10k_warn(ar, "invalid calibration data length in DT: %d\n",
-+			    data_len);
-+		ret = -EMSGSIZE;
-+		goto out;
-+	}
-+
-+	data = kmalloc(data_len, GFP_KERNEL);
-+	if (!data) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
-+	ret = of_property_read_u8_array(node, "qcom,ath10k-calibration-data",
-+					data, data_len);
-+	if (ret) {
-+		ath10k_warn(ar, "failed to read calibration data from DT: %d\n",
-+			    ret);
-+		goto out_free;
-+	}
-+
-+	ret = ath10k_download_board_data(ar, data, data_len);
-+	if (ret) {
-+		ath10k_warn(ar, "failed to download calibration data from Device Tree: %d\n",
-+			    ret);
-+		goto out_free;
-+	}
-+
-+	ret = 0;
-+
-+out_free:
-+	kfree(data);
-+
-+out:
-+	return ret;
-+}
-+
- static int ath10k_download_and_run_otp(struct ath10k *ar)
- {
- 	u32 result, address = ar->hw_params.patch_load_addr;
-@@ -662,7 +720,17 @@ static int ath10k_download_cal_data(struct ath10k *ar)
- 	}
- 
- 	ath10k_dbg(ar, ATH10K_DBG_BOOT,
--		   "boot did not find a calibration file, try OTP next: %d\n",
-+		   "boot did not find a calibration file, try DT next: %d\n",
-+		   ret);
-+
-+	ret = ath10k_download_cal_dt(ar);
-+	if (ret == 0) {
-+		ar->cal_mode = ATH10K_CAL_MODE_DT;
-+		goto done;
-+	}
-+
-+	ath10k_dbg(ar, ATH10K_DBG_BOOT,
-+		   "boot did not find DT entry, try OTP next: %d\n",
- 		   ret);
- 
- 	ret = ath10k_download_and_run_otp(ar);
-diff --git a/drivers/net/wireless/ath/ath10k/core.h b/drivers/net/wireless/ath/ath10k/core.h
-index 4a294987736c..2dd1bb05a3fc 100644
---- a/drivers/net/wireless/ath/ath10k/core.h
-+++ b/drivers/net/wireless/ath/ath10k/core.h
-@@ -400,6 +400,7 @@ enum ath10k_dev_flags {
- enum ath10k_cal_mode {
- 	ATH10K_CAL_MODE_FILE,
- 	ATH10K_CAL_MODE_OTP,
-+	ATH10K_CAL_MODE_DT,
- };
- 
- static inline const char *ath10k_cal_mode_str(enum ath10k_cal_mode mode)
-@@ -409,6 +410,8 @@ static inline const char *ath10k_cal_mode_str(enum ath10k_cal_mode mode)
- 		return "file";
- 	case ATH10K_CAL_MODE_OTP:
- 		return "otp";
-+	case ATH10K_CAL_MODE_DT:
-+		return "dt";
- 	}
- 
- 	return "unknown";
+		assigned-clocks = <&cmu CLK_FOUT_ISP_PLL>;
+		assigned-clock-rates = <300000000>;
+	};
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+Regards,
+Sylwester
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
