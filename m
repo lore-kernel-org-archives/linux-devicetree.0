@@ -1,54 +1,79 @@
-From: Naidu Tellapati <naidu.tellapati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH RESEND v6 2/2] DT: watchdog: Add ImgTec PDC Watchdog Timer binding documentation
-Date: Thu, 27 Nov 2014 10:24:05 +0530
-Message-ID: <1417064045-13274-3-git-send-email-Naidu.Tellapati@gmail.com>
-References: <1417064045-13274-1-git-send-email-Naidu.Tellapati@gmail.com>
+From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/9] mailbox: arm_mhu: add driver for ARM MHU controller
+Date: Thu, 27 Nov 2014 10:41:54 +0530
+Message-ID: <CAJe_Zhdmup3DB5R3gufiveYtOOU+zrMQJVanQxbjSQ996=ZLXQ@mail.gmail.com>
+References: <1416486442-25200-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+	<1416486872-25301-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+	<54749429.9080505@arm.com>
+	<CAJe_ZhciCP2VbmRtrq9d14WhfLhnC-xaitCCiW_6Yf1S-0sdUg@mail.gmail.com>
+	<5474C3DD.5060706@arm.com>
+	<CAJe_ZhfkcSv7oBfXdiW5=F0bZvv+9z3m90cXdy=O66VwZWCQnw@mail.gmail.com>
+	<5475DD19.9000107@arm.com>
+	<CAJe_ZheKfEkdzcNE_5cpDg4qbYNLEJ=kKi+ScRf2=a8irAfnDg@mail.gmail.com>
+	<547601EF.7070307@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417064045-13274-1-git-send-email-Naidu.Tellapati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <547601EF.7070307-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
-Cc: naidu.tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, arul.ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Naidu Tellapati <Naidu.Tellapati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Jude Abraham <Jude.Abraham-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the devicetree binding document for ImgTec PDC Watchdog Timer.
+On 26 November 2014 at 22:08, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+>
+>
+> On 26/11/14 16:20, Jassi Brar wrote:
+>>
+>> On 26 November 2014 at 19:30, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+>>>
+>>> On 26/11/14 05:37, Jassi Brar wrote:
+>>>>
+>>>>
+>>
+>>>>>>     It seems you still don't get my point that the driver should
+>>>>>> manage
+>>>>>> all channels - S & NS. If Linux is running in NS mode on a platform,
+>>>>>> the DT will specify only some NS channel to be used. The controller
+>>>>>> driver shouldn't be crippled just because you think Linux will never
+>>>>>> be run in Secure mode.
+>>>>>>
+>>>>>
+>>>>> Ok how do you handle that, I don't see that in the DT binding. As it
+>>>>> stands, you can unconditionally try to access the secure channel and
+>>>>> cause aborts if the platform is running in non-secure mode.
+>>>>>
+>>>> No. Please look at the dtsi again ....
+>>>>
+>>>>           mhu: mailbox@2b1f0000 {
+>>>>                   #mbox-cells = <1>;
+>>>>                   compatible = "arm,mbox-mhu";
+>>>>                   reg = <0 0x2b1f0000 0x1000>;
+>>>>                   interrupts = <0 36 4>, /* LP Non-Sec */
+>>>>                                <0 35 4>, /* HP Non-Sec */
+>>>>                                <0 37 4>; /* Secure */
+>>>
+>>>
+>>>
+>>> One possible issue I can think of(though current driver design requests
+>>> irq only on channel startup, it could be moved to probe for optimization
+>>> in which case you need a way to make sure secure channel or irq is not
+>>> accessed)
+>>>
+>> As you see it is fine as such.
+>
+>
+> Agreed, but assuming some driver logic. I would like to see some way of
+> identifying that from DT if we adding the support for secure channel in
+> the driver else I prefer not to add it unless there is a real user of
+> it(which is not the case with your current patch set). That will be
+> handy if there's any issue in future due to some firmware that can't be
+> changed or upgraded.
+>
+Could you please suggest some way of identifying that from DT if we
+adding the support for secure channel in the driver?
 
-Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Jude Abraham <Jude.Abraham-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Reviewed-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
-No changes from v5.
----
- .../devicetree/bindings/watchdog/imgpdc-wdt.txt    |   18 ++++++++++++++++++
- 1 files changed, 18 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/watchdog/imgpdc-wdt.txt
-
-diff --git a/Documentation/devicetree/bindings/watchdog/imgpdc-wdt.txt b/Documentation/devicetree/bindings/watchdog/imgpdc-wdt.txt
-new file mode 100644
-index 0000000..2f9ba77
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/imgpdc-wdt.txt
-@@ -0,0 +1,18 @@
-+*ImgTec PowerDown Controller (PDC) Watchdog Timer (WDT)
-+
-+Required properties:
-+- compatible : Should be "img,pdc-wdt"
-+- reg : Should contain WDT registers location and length
-+- clocks: Must contain an entry for each entry in clock-names.
-+- clock-names: Should contain "wdt" and "sys"
-+- interrupts : Should contain WDT interrupt
-+
-+Examples:
-+
-+wdt@18102100 {
-+	compatible = "img,pdc-wdt";
-+	reg = <0x18102100 0x100>;
-+	clocks = <&pdc_wdt_clk>, <&sys_clk>;
-+	clock-names = "wdt", "sys";
-+	interrupts = <0 52 IRQ_TYPE_LEVEL_HIGH>;
-+};
--- 
-1.7.0.4
-
+-jassi
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
