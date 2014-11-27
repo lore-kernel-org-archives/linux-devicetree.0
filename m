@@ -1,76 +1,57 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: Re: [PATCH v4] clocksource: arch_timer: Allow the device tree to
- specify uninitialized timer registers
-Date: Thu, 27 Nov 2014 10:27:04 +0800
-Message-ID: <1417055224.12707.24.camel@mtksdaap41>
-References: <1412753627-28287-1-git-send-email-sonnyrao@chromium.org>
-	 <1417012893.12707.12.camel@mtksdaap41>
-	 <CAD=FV=XFcWEp=nZ3=8QEausKzpBbPCzFUSHY-g0K5y+VPpU3Vw@mail.gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v5 2/6] uio: Add new UIO_MEM_PHYS_CACHE type for mem
+ regions
+Date: Wed, 26 Nov 2014 16:01:47 -0800
+Message-ID: <20141127000147.GC5313@kroah.com>
+References: <1416220572-13381-1-git-send-email-ankit.jindal@linaro.org>
+ <1416220572-13381-3-git-send-email-ankit.jindal@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=XFcWEp=nZ3=8QEausKzpBbPCzFUSHY-g0K5y+VPpU3Vw@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1416220572-13381-3-git-send-email-ankit.jindal@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Sonny Rao <sonnyrao@chromium.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Olof Johansson <olof@lixom.net>, Nathan Lynch <Nathan_Lynch@mentor.com>, Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@codeaurora.org>
+To: Ankit Jindal <ankit.jindal@linaro.org>
+Cc: linux-kernel@vger.kernel.org, "Hans J. Koch" <hjk@hansjkoch.de>, patches@apm.com, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Tushar Jagad <tushar.jagad@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Varka Bhadram <varkabhadram@gmail.com>, Kumar Gala <galak@codeaurora.org>, Anup Patel <anup@brainfault.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Nov 17, 2014 at 04:06:08PM +0530, Ankit Jindal wrote:
+> Currently, three types of mem regions are supported: UIO_MEM_PHYS,
+> UIO_MEM_LOGICAL and UIO_MEM_VIRTUAL. Among these UIO_MEM_PHYS helps
+> UIO driver export physcial memory to user space as non-cacheable
+> user memory. Typcially memory-mapped registers of a device are exported
+> to user space as UIO_MEM_PHYS type mem region. The UIO_MEM_PHYS type
+> is not efficient if dma-capable devices are capable of maintaining coherency
+> with CPU caches.
 
-Hi,
+Not efficient in what way?
 
-On Wed, 2014-11-26 at 08:14 -0800, Doug Anderson wrote:
-> Yingjoe,
+> This patch adds new type UIO_MEM_PHYS_CACHE for mem regions to enable
+> cacheable access to physical memory from user space.
 > 
-> On Wed, Nov 26, 2014 at 6:41 AM, Yingjoe Chen <yingjoe.chen@mediatek.com> wrote:
-> > Sorry for the (very) late reply.
-> > I just realize today MT8135 need this and the other patch [1] to boot
-> > SMP correctly. I've applied both patches and they works fine. Thanks :)
+> Signed-off-by: Ankit Jindal <ankit.jindal@linaro.org>
+> Signed-off-by: Tushar Jagad <tushar.jagad@linaro.org>
+> ---
+>  drivers/uio/uio.c          |   11 ++++++++---
+>  include/linux/uio_driver.h |    1 +
+>  2 files changed, 9 insertions(+), 3 deletions(-)
 > 
-> Excellent.  It's helpful to include a Tested-by: tag in your email.
-> You'd have a line with just "Tested-by: Yingjoe Chen
-> <yingjoe.chen@mediatek.com>"
+> diff --git a/drivers/uio/uio.c b/drivers/uio/uio.c
+> index 97e6444..120a84b 100644
+> --- a/drivers/uio/uio.c
+> +++ b/drivers/uio/uio.c
+> @@ -644,7 +644,7 @@ static const struct vm_operations_struct uio_physical_vm_ops = {
+>  #endif
+>  };
+>  
+> -static int uio_mmap_physical(struct vm_area_struct *vma)
+> +static int uio_mmap_physical(struct vm_area_struct *vma, bool cacheable)
 
-sure, here's my tested-by for the 2 patches
+I despise "bool" flags in a function, as they don't give any idea of
+what is going on when you see the function being called.  Please create
+a new function that does this properly, with a correct name, if it's
+needed.
 
-Tested-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+thanks,
 
-I'll remember to add it next time :)
-
-
-> > However, I'm not sure if we really need to add new property.
-> > arm_arch_timer driver will only use virtual timer when virtual PPI
-> > interrupt is provided, so the following patch to timer dtsi will also
-> > works. I think if the firmware doesn't support virtual timer, it make
-> > sense to not supply virtual interrupt.
-> >
-> >         timer {
-> >                 compatible = "arm,armv7-timer";
-> >                 interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
-> > -                            <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
-> > -                            <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
-> > -                            <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
-> > +                            <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>;
-> >                 clock-frequency = <13000000>;
-> >         };
-> 
-> Once you have Sonny's patch then I believe that the above would work.
-> However we rejected something like this because device tree is
-> supposed to describe the hardware.  The hardware really does provide
-> the virtual timer interrupts and they really are at PPI 11 and PPI 10.
-> It's just that firmware doesn't handle things properly so they can't
-> be used.
-> 
-> NOTE: If we add the "arm,cpu-registers-not-fw-configured" to the
-> device tree and firmware actually works out how to configure things
-> (like if somehow has firmware that has a hypervisor) then it can
-> easily remove this device tree property before calling through to the
-> kernel.  It would be much harder for the firmware to add back in the
-> "PPI 11" and "PPI 10" entries to the timer.
-> 
-> -Doug
-
-I see your point, that's good for me then.
-Thanks.
-
-Joe.C
+greg k-h
