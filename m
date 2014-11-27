@@ -1,16 +1,17 @@
 From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 1/2] backlight/lp855x: Refactor dt parsing code
-Date: Thu, 27 Nov 2014 04:22:08 -0800
-Message-ID: <CAOw6vbKTsOJEV28XFmFumwmr2jzAUymxSWEZOkmNh1f+q778Rw@mail.gmail.com>
-References: <1417029064-12460-1-git-send-email-seanpaul@chromium.org> <54767F37.3020006@ti.com>
+Subject: Re: [PATCH 2/2] backlight/lp855x: Add supply regulator to lp855x
+Date: Thu, 27 Nov 2014 04:23:30 -0800
+Message-ID: <CAOw6vb+nUpBs8MaRC3TgJt2DYun5HWE73=8MNyokt3ed9NQzNg@mail.gmail.com>
+References: <1417029064-12460-1-git-send-email-seanpaul@chromium.org>
+ <1417029064-12460-2-git-send-email-seanpaul@chromium.org> <54767F43.2060901@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54767F37.3020006-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <54767F43.2060901-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: "Kim, Milo" <milo.kim-l0cyMroinI0@public.gmane.org>
-Cc: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-fbdev <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-fbdev <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Aaron Durbin <adurbin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On Wed, Nov 26, 2014 at 5:32 PM, Kim, Milo <milo.kim-l0cyMroinI0@public.gmane.org> wrote:
@@ -18,155 +19,150 @@ On Wed, Nov 26, 2014 at 5:32 PM, Kim, Milo <milo.kim-l0cyMroinI0@public.gmane.or
 >
 > Hi Sean,
 >
-> Thanks for checking this. I'd like to describe why the original code =
-is
-> preferred.
+> Please see my comments below. Thanks!
 >
-> The original code is copying the values of the lp855x platform data f=
-rom the
-> DT in advance of allocating lp855x data.
-> It guarantees returning quickly in case of invalid platform data.
-> In other words, no memory allocation of lp855x proceeds if parsing th=
-e DT
-> gets failed.
-> However, this patch allocates the lp855x first and checking the DT.
-> Of course, devm_kzalloc() will free allocated memory later but origin=
-al code
-> does NOT try to allocate it.
-> So I'd prefer to keep this way.
+> On 11/27/2014 4:11 AM, Sean Paul wrote:
+>>
+>> This patch adds a supply regulator to the lp855x platform data to
+>> facilitate
+>> powering on/off the 3V rail attached to the controller.
+>>
+>> Cc: St=C3=A9phane Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> Cc: Aaron Durbin <adurbin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> ---
+>>   .../devicetree/bindings/video/backlight/lp855x.txt      |  2 ++
+>>   drivers/video/backlight/lp855x_bl.c                     | 17
+>> +++++++++++++++++
+>>   include/linux/platform_data/lp855x.h                    |  2 ++
+>>   3 files changed, 21 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/video/backlight/lp855=
+x.txt
+>> b/Documentation/devicetree/bindings/video/backlight/lp855x.txt
+>> index 96e83a5..0a3ecbc 100644
+>> --- a/Documentation/devicetree/bindings/video/backlight/lp855x.txt
+>> +++ b/Documentation/devicetree/bindings/video/backlight/lp855x.txt
+>> @@ -12,6 +12,7 @@ Optional properties:
+>>     - pwm-period: PWM period value. Set only PWM input mode used (u3=
+2)
+>>     - rom-addr: Register address of ROM area to be updated (u8)
+>>     - rom-val: Register value to be updated (u8)
+>> +  - power-supply: Regulator which controls the 3V rail
+>>
+>>   Example:
+>>
+>> @@ -56,6 +57,7 @@ Example:
+>>         backlight@2c {
+>>                 compatible =3D "ti,lp8557";
+>>                 reg =3D <0x2c>;
+>> +               power-supply =3D <&backlight_vdd>;
+>>
+>>                 dev-ctrl =3D /bits/ 8 <0x41>;
+>>                 init-brt =3D /bits/ 8 <0x0a>;
+>> diff --git a/drivers/video/backlight/lp855x_bl.c
+>> b/drivers/video/backlight/lp855x_bl.c
+>> index 257b3ba..8021009 100644
+>> --- a/drivers/video/backlight/lp855x_bl.c
+>> +++ b/drivers/video/backlight/lp855x_bl.c
+>> @@ -17,6 +17,7 @@
+>>   #include <linux/of.h>
+>>   #include <linux/platform_data/lp855x.h>
+>>   #include <linux/pwm.h>
+>> +#include <linux/regulator/consumer.h>
+>>
+>>   /* LP8550/1/2/3/6 Registers */
+>>   #define LP855X_BRIGHTNESS_CTRL                0x00
+>> @@ -383,6 +384,13 @@ static int lp855x_parse_dt(struct lp855x *lp)
+>>                 pdata->rom_data =3D &rom[0];
+>>         }
+>>
+>> +       pdata->supply =3D devm_regulator_get(dev, "power");
+>> +       if (IS_ERR(pdata->supply)) {
+>> +               if (PTR_ERR(pdata->supply) =3D=3D -EPROBE_DEFER)
+>> +                       return -EPROBE_DEFER;
+>> +               pdata->supply =3D NULL;
+>
+>
+> This optional data, 'supply' is set to NULL.
+> Please refer to my comments below.
+>
+>> +       }
+>> +
+>>         lp->pdata =3D pdata;
+>>
+>>         return 0;
+>> @@ -423,6 +431,14 @@ static int lp855x_probe(struct i2c_client *cl, =
+const
+>> struct i2c_device_id *id)
+>>         else
+>>                 lp->mode =3D REGISTER_BASED;
+>>
+>> +       if (lp->pdata->supply) {
+>> +               ret =3D regulator_enable(lp->pdata->supply);
+>> +               if (ret < 0) {
+>> +                       dev_err(&cl->dev, "failed to enable supply: =
+%d\n",
+>> ret);
+>> +                       return ret;
+>> +               }
+>> +       }
+>> +
+>>         i2c_set_clientdata(cl, lp);
+>>
+>>         ret =3D lp855x_configure(lp);
+>> @@ -454,6 +470,7 @@ static int lp855x_remove(struct i2c_client *cl)
+>>
+>>         lp->bl->props.brightness =3D 0;
+>>         backlight_update_status(lp->bl);
+>> +       regulator_disable(lp->pdata->supply);
+>
+>
+> The 'lp->pdata->supply' is optional, what happens if it is NULL?
+> This will cause the kernel OOPS inside regulator_disable() API.
 >
 
-Hi Milo,
-Thanks for the quick response. The reason I'm changing the existing
-code is that it causes problems in the probe deferral case.
-
-A concrete example: In my follow-on patch, I call devm_regulator_get
-in the parse_dt function. Assume that something later on in probe()
-returns -EPROBEDEFER. If we didn't have this patch, dev->platform_data
-would continue to be set the next time probe() was called. This would
-causes us to skip the parse_dt() function (because pdata is non-null
-from last time) and we would have an invalid pointer to the regulator
-we got the last time.
+bleh. Thanks for catching this, I'll re-spin and send a new version nex=
+t week.
 
 Sean
 
 
 
-> Best regards,
-> Milo
+> int regulator_disable(struct regulator *regulator)
+> {
+>         struct regulator_dev *rdev =3D regulator->rdev;
+> ...
+> }
 >
->
-> On 11/27/2014 4:11 AM, Sean Paul wrote:
->>
->> This patch refactors the dt parsing code to avoid setting platform_d=
-ata,
->> instead just setting lp->pdata directly. This facilitates easier
->> probe deferral since the current scheme would require us to clear ou=
-t
->> dev->platform_data before deferring.
->>
->> Cc: St=C3=A9phane Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> ---
->>   drivers/video/backlight/lp855x_bl.c | 37
->> ++++++++++++++++++-------------------
->>   1 file changed, 18 insertions(+), 19 deletions(-)
->>
->> diff --git a/drivers/video/backlight/lp855x_bl.c
->> b/drivers/video/backlight/lp855x_bl.c
->> index 25fb8e3..257b3ba 100644
->> --- a/drivers/video/backlight/lp855x_bl.c
->> +++ b/drivers/video/backlight/lp855x_bl.c
->> @@ -341,8 +341,10 @@ static const struct attribute_group lp855x_attr=
-_group
->> =3D {
->>   };
->>
->>   #ifdef CONFIG_OF
->> -static int lp855x_parse_dt(struct device *dev, struct device_node *=
-node)
->> +static int lp855x_parse_dt(struct lp855x *lp)
->>   {
->> +       struct device *dev =3D lp->dev;
->> +       struct device_node *node =3D dev->of_node;
->>         struct lp855x_platform_data *pdata;
->>         int rom_length;
->>
->> @@ -381,12 +383,12 @@ static int lp855x_parse_dt(struct device *dev,
->> struct device_node *node)
->>                 pdata->rom_data =3D &rom[0];
->>         }
->>
->> -       dev->platform_data =3D pdata;
->> +       lp->pdata =3D pdata;
+>>         sysfs_remove_group(&lp->dev->kobj, &lp855x_attr_group);
 >>
 >>         return 0;
->>   }
->>   #else
->> -static int lp855x_parse_dt(struct device *dev, struct device_node *=
-node)
->> +static int lp855x_parse_dt(struct lp855x *lp)
->>   {
->>         return -EINVAL;
->>   }
->> @@ -395,18 +397,8 @@ static int lp855x_parse_dt(struct device *dev, =
-struct
->> device_node *node)
->>   static int lp855x_probe(struct i2c_client *cl, const struct
->> i2c_device_id *id)
->>   {
->>         struct lp855x *lp;
->> -       struct lp855x_platform_data *pdata =3D dev_get_platdata(&cl-=
->dev);
->> -       struct device_node *node =3D cl->dev.of_node;
->>         int ret;
+>> diff --git a/include/linux/platform_data/lp855x.h
+>> b/include/linux/platform_data/lp855x.h
+>> index 1b2ba24..9c7fd1e 100644
+>> --- a/include/linux/platform_data/lp855x.h
+>> +++ b/include/linux/platform_data/lp855x.h
+>> @@ -136,6 +136,7 @@ struct lp855x_rom_data {
+>>                 Only valid when mode is PWM_BASED.
+>>    * @size_program : total size of lp855x_rom_data
+>>    * @rom_data : list of new eeprom/eprom registers
+>> + * @supply : regulator that supplies 3V input
+>>    */
+>>   struct lp855x_platform_data {
+>>         const char *name;
+>> @@ -144,6 +145,7 @@ struct lp855x_platform_data {
+>>         unsigned int period_ns;
+>>         int size_program;
+>>         struct lp855x_rom_data *rom_data;
+>> +       struct regulator *supply;
+>>   };
 >>
->> -       if (!pdata) {
->> -               ret =3D lp855x_parse_dt(&cl->dev, node);
->> -               if (ret < 0)
->> -                       return ret;
->> -
->> -               pdata =3D dev_get_platdata(&cl->dev);
->> -       }
->> -
->>         if (!i2c_check_functionality(cl->adapter,
->> I2C_FUNC_SMBUS_I2C_BLOCK))
->>                 return -EIO;
->>
->> @@ -414,16 +406,23 @@ static int lp855x_probe(struct i2c_client *cl,=
- const
->> struct i2c_device_id *id)
->>         if (!lp)
->>                 return -ENOMEM;
->>
->> -       if (pdata->period_ns > 0)
->> -               lp->mode =3D PWM_BASED;
->> -       else
->> -               lp->mode =3D REGISTER_BASED;
->> -
->>         lp->client =3D cl;
->>         lp->dev =3D &cl->dev;
->> -       lp->pdata =3D pdata;
->>         lp->chipname =3D id->name;
->>         lp->chip_id =3D id->driver_data;
->> +       lp->pdata =3D dev_get_platdata(&cl->dev);
->> +
->> +       if (!lp->pdata) {
->> +               ret =3D lp855x_parse_dt(lp);
->> +               if (ret < 0)
->> +                       return ret;
->> +       }
->> +
->> +       if (lp->pdata->period_ns > 0)
->> +               lp->mode =3D PWM_BASED;
->> +       else
->> +               lp->mode =3D REGISTER_BASED;
->> +
->>         i2c_set_clientdata(cl, lp);
->>
->>         ret =3D lp855x_configure(lp);
+>>   #endif
 >>
 >
+> Best regards,
+> Milo
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
