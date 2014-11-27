@@ -1,47 +1,70 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH V2 2/2] m32r: Add missing big-endian I/O accessors
-Date: Fri, 28 Nov 2014 00:15:08 +0100
-Message-ID: <3737870.23qKxazWvK@wuerfel>
-References: <1417112193-14400-1-git-send-email-cernekee@gmail.com> <1417112193-14400-2-git-send-email-cernekee@gmail.com> <20141127222034.GB16647@wfg-t540p.sh.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: [PATCH] ARM vf610: add compatibilty strings of supported Vybrid SoC's
+Date: Fri, 28 Nov 2014 00:27:05 +0100
+Message-ID: <1417130825-2818-1-git-send-email-stefan@agner.ch>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141127222034.GB16647-q6ZYBFIlbFFi0tQiZxhdj1DQ4js95KgL@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fengguang Wu <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kbuild-all-JC7UmRfGjtg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hirokazu Takata <takata-TMSiXQfHlQjsTix1lMzHGQ@public.gmane.org>
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 27 November 2014 14:20:34 Fengguang Wu wrote:
-> Add CC to Hirokazu.
-> 
-> > Side note for Fengguang: both with and without my patches, m32r modules
-> > fail to link using the make.cross script on Ubuntu 14.10:
->  
-> Yes, the memory_start/memory_end link errors are really old m32r
-> specific errors. The config file that can trigger this error is
-> m32r-m32104ut_defconfig.
+The Vybrid SoC family (in the kernel known as vf610) is a familiy
+of multiple similar SoC's. The VF5xx series comes without secondary
+Cortex-M4 core, while the second number VFx1x indicates the presence
+of a L2 cache controller.
 
-These should be trivial to fix:
+Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/fsl.txt | 12 ++++++++++++
+ arch/arm/mach-imx/mach-vf610.c                |  5 ++++-
+ 2 files changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/arch/m32r/kernel/setup.c b/arch/m32r/kernel/setup.c
-index 0392112a5d70..a5ecef7188ba 100644
---- a/arch/m32r/kernel/setup.c
-+++ b/arch/m32r/kernel/setup.c
-@@ -81,7 +81,10 @@ static struct resource code_resource = {
+diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
+index 4e8b7df..c830b5b 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.txt
++++ b/Documentation/devicetree/bindings/arm/fsl.txt
+@@ -75,6 +75,18 @@ i.MX6q generic board
+ Required root node properties:
+     - compatible = "fsl,imx6q";
+ 
++Freescale Vybrid Platform Device Tree Bindings
++----------------------------------------------
++
++For the Vybrid SoC familiy all variants with DDR controller are supported,
++which is the VF5xx and VF6xx series. Out of historical reasons, in most
++places the kernel uses vf610 to refer to the whole familiy.
++
++Required root node compatible property (one of them):
++    - compatible = "fsl,vf500";
++    - compatible = "fsl,vf510";
++    - compatible = "fsl,vf600";
++    - compatible = "fsl,vf610";
+ 
+ Freescale LS1021A Platform Device Tree Bindings
+ ------------------------------------------------
+diff --git a/arch/arm/mach-imx/mach-vf610.c b/arch/arm/mach-imx/mach-vf610.c
+index c11ab6a..2e7c75b 100644
+--- a/arch/arm/mach-imx/mach-vf610.c
++++ b/arch/arm/mach-imx/mach-vf610.c
+@@ -13,11 +13,14 @@
+ #include <asm/hardware/cache-l2x0.h>
+ 
+ static const char * const vf610_dt_compat[] __initconst = {
++	"fsl,vf500",
++	"fsl,vf510",
++	"fsl,vf600",
+ 	"fsl,vf610",
+ 	NULL,
  };
  
- unsigned long memory_start;
-+EXPORT_SYMBOL(memory_start);
-+
- unsigned long memory_end;
-+EXPORT_SYMBOL(memory_end);
- 
- void __init setup_arch(char **);
- int get_cpuinfo(char *);
+-DT_MACHINE_START(VYBRID_VF610, "Freescale Vybrid VF610 (Device Tree)")
++DT_MACHINE_START(VYBRID_VF610, "Freescale Vybrid VF5xx/VF6xx (Device Tree)")
+ 	.l2c_aux_val	= 0,
+ 	.l2c_aux_mask	= ~0,
+ 	.dt_compat	= vf610_dt_compat,
+-- 
+2.1.3
 
-	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
