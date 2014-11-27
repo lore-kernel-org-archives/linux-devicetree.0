@@ -1,31 +1,35 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 11/19] clk: samsung: exynos5433: Add clocks for CMU_BUS{0|1|2} domains
-Date: Thu, 27 Nov 2014 12:41:51 +0100
-Message-ID: <6217579.xNXtO7YiDs@wuerfel>
-References: <1417073716-22997-1-git-send-email-cw00.choi@samsung.com> <1417073716-22997-12-git-send-email-cw00.choi@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1417073716-22997-12-git-send-email-cw00.choi@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, kgene.kim@samsung.com, mark.rutland@arm.com, olof@lixom.net, catalin.marinas@arm.com, will.deacon@arm.com, s.nawrocki@samsung.com, tomasz.figa@gmail.com, thomas.abraham@linaro.org, linus.walleij@linaro.org, kyungmin.park@samsung.com, inki.dae@samsung.com, chanho61.park@samsung.com, geunsik.lim@samsung.com, sw0312.kim@samsung.com, jh80.chung@samsung.com, a.kesavan@samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/4] spi: st: New driver for ST's SPI Controller
+Date: Thu, 27 Nov 2014 11:43:52 +0000
+Message-ID: <1417088636-11994-1-git-send-email-lee.jones@linaro.org>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 27 November 2014 16:35:08 Chanwoo Choi wrote:
-> +  - "samsung,exynos5433-cmu-bus0", "samsung,exynos5433-cmu-bus1"
-> +    and "samsung,exynos5433-cmu-bus2" - clock controller compatible for CMU_BUS
-> +    which generates global data buses clock and global peripheral buses clock.
->  
->  - reg: physical base address of the controller and length of memory mapped
->    region.
-> 
+This is a new driver which controls the SPI component of ST's
+Synchronous Serial Controller (SSC).
 
-This looks like you are duplicating the bindings and the code, but
-it's really the same hardware multiple times with minor variations
-that you should be able to describe properly here. Why not make
-three nodes with the same compatible string and have them handled
-by the same code?
+Lee Jones (4):
+  spi: Add new driver for STMicroelectronics' SPI Controller
+  spi: st: Provide Device Tree binding documentation
+  ARM: sti: Provide DT nodes for SSC[0..4]
+  ARM: sti: Provide DT nodes for SBC SSC[0..2]
 
-	Arnd
+ Documentation/devicetree/bindings/spi/spi-st.txt |  40 ++
+ arch/arm/boot/dts/stih407.dtsi                   |  85 ++++
+ drivers/spi/Kconfig                              |   8 +
+ drivers/spi/Makefile                             |   1 +
+ drivers/spi/spi-st.c                             | 535 +++++++++++++++++++++++
+ 5 files changed, 669 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-st.txt
+ create mode 100644 drivers/spi/spi-st.c
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
