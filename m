@@ -1,99 +1,183 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 11/19] clk: samsung: exynos5433: Add clocks for
- CMU_BUS{0|1|2} domains
-Date: Thu, 27 Nov 2014 21:58:53 +0900
-Message-ID: <5477200D.5030706@samsung.com>
-References: <1417073716-22997-1-git-send-email-cw00.choi@samsung.com>
- <54771173.6090408@samsung.com> <54771518.1010004@samsung.com>
- <3556463.Me1EFEY7Zb@wuerfel>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] spi: Add new driver for STMicroelectronics' SPI
+ Controller
+Date: Thu, 27 Nov 2014 12:59:04 +0000
+Message-ID: <20141127125904.GV7712@sirena.org.uk>
+References: <1417088636-11994-1-git-send-email-lee.jones@linaro.org>
+ <1417088636-11994-2-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <3556463.Me1EFEY7Zb@wuerfel>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, kgene.kim@samsung.com, mark.rutland@arm.com, olof@lixom.net, catalin.marinas@arm.com, will.deacon@arm.com, tomasz.figa@gmail.com, thomas.abraham@linaro.org, linus.walleij@linaro.org, kyungmin.park@samsung.com, inki.dae@samsung.com, chanho61.park@samsung.com, geunsik.lim@samsung.com, sw0312.kim@samsung.com, jh80.chung@samsung.com, a.kesavan@samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="WRti+3vh3AAwVLXR"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1417088636-11994-2-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Arnd,
 
-On 11/27/2014 09:35 PM, Arnd Bergmann wrote:
-> On Thursday 27 November 2014 13:12:08 Sylwester Nawrocki wrote:
->> On 27/11/14 12:56, Chanwoo Choi wrote:
->>> On 11/27/2014 08:41 PM, Arnd Bergmann wrote:
->>>>> On Thursday 27 November 2014 16:35:08 Chanwoo Choi wrote:
->>>>>>> +  - "samsung,exynos5433-cmu-bus0", "samsung,exynos5433-cmu-bus1"
->>>>>>> +    and "samsung,exynos5433-cmu-bus2" - clock controller compatible for CMU_BUS
->>>>>>> +    which generates global data buses clock and global peripheral buses clock.
->>>>>>>  
->>>>>>>  - reg: physical base address of the controller and length of memory mapped
->>>>>>>    region.
->>>>>>>
->>>>>
->>>>> This looks like you are duplicating the bindings and the code, but
->>>>> it's really the same hardware multiple times with minor variations
->>>>> that you should be able to describe properly here. Why not make
->>>>> three nodes with the same compatible string and have them handled
->>>>> by the same code?
->>>
->>> Each CMU_BUSx domain of Exynos5433 have different base address as following:
->>> - CMU_BUS0's base address and range : 0x1360_0000 ~ 0x1360_0b04
->>> - CMU_BUS1's base address and range : 0x1480_0000 ~ 0x1480_0b04
->>> - CMU_BUS2's base address and range : 0x1340_0000 ~ 0x1340_0b04
->>>
->>> So, I implement CMU_BUSx domain which has each compatible string.
-> 
-> But the base address is in the reg property, not in the compatible
-> property. What I mean is to have multiple nodes like
+--WRti+3vh3AAwVLXR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The merged clock driver in mainline have different compatible string
-if base addresss of clock domain is different. So, I implemented each CMU_BUSx domain
-with different compatible string.
+On Thu, Nov 27, 2014 at 11:43:53AM +0000, Lee Jones wrote:
 
-> 
-> 	clock-controller@113600000 {
-> 		reg = <0 0x113600000 0 0x1000>;
-> 		compatible = "samsung,exynos5433-cmu";
-> 		#clock-cells = <1>;
-> 	};
-> 
-> 	clock-controller@114800000 {
-> 		reg = <0 0x114800000 0 0x1000>;
-> 		compatible = "samsung,exynos5433-cmu";
-> 		#clock-cells = <1>;
-> 	};
-> 
-> The code will just map the local registers for each instance and then
-> provide the clocks of the right instance when asked for it.
+> +config SPI_ST
+> +	tristate "STMicroelectronics SPI SSC-based driver"
 
-Each clock domain has not the same mux/divider/clock. So, just one compatible
-string could not support all of clock domains.
+Please select a more specific symbol, I bet ST already have other sPI
+controllers.  Based on the descripton SPI_ST_SSC might work.
 
-Best Regards,
-Chanwoo Choi
+> +	depends on ARCH_STI
 
-> 
->> You can always have multiple entries in the reg property. I've done
->> something like this for the exynos4415 CMU_ISPx units:
->>
->>         cmu_isp: clock-controller@12060000 {
->>                 compatible = "samsung,exynos4415-cmu-isp";
->>                 reg = <0x12060000 0xB10>, <0x12070000 0xB10>;
->>                 #clock-cells = <1>;
->>
->>                 assigned-clocks = <&cmu CLK_FOUT_ISP_PLL>;
->>                 assigned-clock-rates = <300000000>;
->>         };
-> 
-> This is a different problem, this is a clock controller with multiple
-> sets of registers that are all different. In case of the cmu, it seems
-> that they are all the same, you just have multiple copies at different
-> locations, and they are connected to different devices.
-> 
-> 	Arnd
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+Please add an || COMPILE_TEST unless there's a good reason not to,
+there's no obvious one.  You may have an OF dependency though if the
+functions you call aren't stubbed, I've not checked.
+
+> +struct spi_st {
+> +	/* SSC SPI Controller */
+> +	struct spi_bitbang	bitbang;
+
+Is there a good reason for using bitbang over the core transmit_one()
+interface?  The operations are basically the same but more modern and
+the functionality is more discoverable.
+
+> +static void spi_st_gpio_chipselect(struct spi_device *spi, int is_active)
+> +{
+> +	int cs =3D spi->cs_gpio;
+> +	int out;
+> +
+> +	if (cs =3D=3D -ENOENT)
+> +		return;
+> +
+> +	out =3D (spi->mode & SPI_CS_HIGH) ? is_active : !is_active;
+> +	gpio_set_value(cs, out);
+
+The core can handle GPIO chip selects automatically.
+
+> +static int spi_st_setup_transfer(struct spi_device *spi,
+> +				 struct spi_transfer *t)
+> +{
+> +	struct spi_st *spi_st =3D spi_master_get_devdata(spi->master);
+> +	u32 spi_st_clk, sscbrg, var, hz;
+> +	u8 bits_per_word;
+> +
+> +	bits_per_word 	=3D t ? t->bits_per_word	: spi->bits_per_word;
+> +	hz		=3D t ? t->speed_hz	: spi->max_speed_hz;
+
+Please avoid the ternery operator; in this case the core should already
+be ensuring that these parameters are configured on every transfer.
+
+> +	/* Actually, can probably support 2-16 without any other changees */
+> +	if (bits_per_word !=3D 8 && bits_per_word !=3D 16) {
+> +		dev_err(&spi->dev, "unsupported bits_per_word %d\n",
+> +			bits_per_word);
+> +		return -EINVAL;
+> +	}
+
+Set bits_per_word_mask and the core will do this.
+
+> +	} else if (spi_st->bits_per_word =3D=3D 8 && !(t->len & 0x1)) {
+> +		/*
+> +		 * If transfer is even-length, and 8 bits-per-word, then
+> +		 * implement as half-length 16 bits-per-word transfer
+> +		 */
+> +		spi_st->bytes_per_word =3D 2;
+> +		spi_st->words_remaining =3D t->len/2;
+> +
+> +		/* Set SSC_CTL to 16 bits-per-word */
+> +		ctl =3D readl_relaxed(spi_st->base + SSC_CTL);
+> +		writel_relaxed((ctl | 0xf), spi_st->base + SSC_CTL);
+> +
+> +		readl_relaxed(spi_st->base + SSC_RBUF);
+
+No byte swapping issues here?
+
+> +	init_completion(&spi_st->done);
+
+reinit_completion().
+
+> +	/* Wait for transfer to complete */
+> +	wait_for_completion(&spi_st->done);
+
+Should have a timeout of some kind, if you use transfer_one() it'll
+provide one.
+
+> +	pm_runtime_put(spi_st->dev);
+
+The core can do runtime PM for you.
+
+> +	printk("LEE: %s: %s()[%d]: Probing\n", __FILE__, __func__, __LINE__);
+
+Tsk.
+
+> +	spi_st->clk =3D of_clk_get_by_name(np, "ssc");
+> +	if (IS_ERR(spi_st->clk)) {
+> +		dev_err(&pdev->dev, "Unable to request clock\n");
+> +		ret =3D PTR_ERR(spi_st->clk);
+> +		goto free_master;
+> +	}
+
+Why is this of_get_clk_by_name() and not just devm_clk_get()?
+
+> +	/* Disable I2C and Reset SSC */
+> +	writel_relaxed(0x0, spi_st->base + SSC_I2C);
+> +	var =3D readw(spi_st->base + SSC_CTL);
+> +	var |=3D SSC_CTL_SR;
+> +	writel_relaxed(var, spi_st->base + SSC_CTL);
+> +
+> +	udelay(1);
+> +	var =3D readl_relaxed(spi_st->base + SSC_CTL);
+> +	var &=3D ~SSC_CTL_SR;
+> +	writel_relaxed(var, spi_st->base + SSC_CTL);
+> +
+> +	/* Set SSC into slave mode before reconfiguring PIO pins */
+> +	var =3D readl_relaxed(spi_st->base + SSC_CTL);
+> +	var &=3D ~SSC_CTL_MS;
+> +	writel_relaxed(var, spi_st->base + SSC_CTL);
+
+We requested the interrupt before putting the hardware into a known good
+state - it'd be safer to do things the other way around.
+
+> +	dev_info(&pdev->dev, "registered SPI Bus %d\n", master->bus_num);
+
+This is just noise, remove it.
+
+> +	/* by default the device is on */
+> +	pm_runtime_set_active(&pdev->dev);
+> +	pm_runtime_enable(&pdev->dev);
+
+You should do this before registering the device so that we don't get
+confused about runtime PM if we start using the device immediately.
+
+> +#ifdef CONFIG_PM_SLEEP
+> +static int spi_st_suspend(struct device *dev)
+
+> +static SIMPLE_DEV_PM_OPS(spi_st_pm, spi_st_suspend, spi_st_resume);
+
+These look like they should be runtime PM ops too - I'd expect to at
+least have the clocks disabled by runtime PM,=20
+
+--WRti+3vh3AAwVLXR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUdyAXAAoJECTWi3JdVIfQXHIH/0wng3wh9YTGIObOn5M44p4b
+FuFFI2jamNB6XIAd7Cxmx2gERTh+aEsvO23HGuRdkqKB3t/ndEw/CTjaotnUn+Tp
+xQBObQuaL6Cn49IxS3Vb+sCqsEEEU8WOZ67hxwvjiH2FBn9MUlUJ1PIfQOLy8NUr
+T0Dp88PTxTVGXSngj6hhW5tWfh+yo7D4IzeI8TQIPQENx42C67er2YvfUXuxmLgR
+g100FOoalz7P3v9jD5DQjqlZnE0rj2AzYXg7Sp4IKzQoEg63EMBYzybM1DdYMk2E
+IdKyDDKcKEYLwveMlvVkr9CZXsTGW/0Scw09DcXlkubmgQNUdq9132LsyHwrOoo=
+=rR6Q
+-----END PGP SIGNATURE-----
+
+--WRti+3vh3AAwVLXR--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
