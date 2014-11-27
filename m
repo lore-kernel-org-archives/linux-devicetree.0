@@ -1,76 +1,109 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 11/19] clk: samsung: exynos5433: Add clocks for CMU_BUS{0|1|2} domains
-Date: Thu, 27 Nov 2014 14:15:18 +0100
-Message-ID: <2232281.fbydzq3GMs@wuerfel>
-References: <1417073716-22997-1-git-send-email-cw00.choi@samsung.com> <3556463.Me1EFEY7Zb@wuerfel> <5477200D.5030706@samsung.com>
+From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] of: support passing console options with
+ stdout-path
+Date: Thu, 27 Nov 2014 13:16:36 +0000
+Message-ID: <20141127131635.GJ2361@bivouac.eciton.net>
+References: <1417023640-23464-1-git-send-email-leif.lindholm@linaro.org>
+ <1417023640-23464-3-git-send-email-leif.lindholm@linaro.org>
+ <20141126183052.GH3443@lunn.ch>
+ <CACxGe6tYZ8aE_TKw1cYMY5DDjpSXPSnhhAam-rG5NgdjpKJe+A@mail.gmail.com>
+ <20141126214847.GJ3443@lunn.ch>
+ <20141127121543.GG857@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5477200D.5030706@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, kgene.kim@samsung.com, mark.rutland@arm.com, olof@lixom.net, catalin.marinas@arm.com, will.deacon@arm.com, tomasz.figa@gmail.com, thomas.abraham@linaro.org, linus.walleij@linaro.org, kyungmin.park@samsung.com, inki.dae@samsung.com, chanho61.park@samsung.com, geunsik.lim@samsung.com, sw0312.kim@samsung.com, jh80.chung@samsung.com, a.kesavan@samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141127121543.GG857@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Ian Campbell <ijc-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 27 November 2014 21:58:53 Chanwoo Choi wrote:
-> Dear Arnd,
-> 
-> On 11/27/2014 09:35 PM, Arnd Bergmann wrote:
-> > On Thursday 27 November 2014 13:12:08 Sylwester Nawrocki wrote:
-> >> On 27/11/14 12:56, Chanwoo Choi wrote:
-> >>> On 11/27/2014 08:41 PM, Arnd Bergmann wrote:
-> >>>>> On Thursday 27 November 2014 16:35:08 Chanwoo Choi wrote:
-> >>>>>>> +  - "samsung,exynos5433-cmu-bus0", "samsung,exynos5433-cmu-bus1"
-> >>>>>>> +    and "samsung,exynos5433-cmu-bus2" - clock controller compatible for CMU_BUS
-> >>>>>>> +    which generates global data buses clock and global peripheral buses clock.
-> >>>>>>>  
-> >>>>>>>  - reg: physical base address of the controller and length of memory mapped
-> >>>>>>>    region.
-> >>>>>>>
-> >>>>>
-> >>>>> This looks like you are duplicating the bindings and the code, but
-> >>>>> it's really the same hardware multiple times with minor variations
-> >>>>> that you should be able to describe properly here. Why not make
-> >>>>> three nodes with the same compatible string and have them handled
-> >>>>> by the same code?
-> >>>
-> >>> Each CMU_BUSx domain of Exynos5433 have different base address as following:
-> >>> - CMU_BUS0's base address and range : 0x1360_0000 ~ 0x1360_0b04
-> >>> - CMU_BUS1's base address and range : 0x1480_0000 ~ 0x1480_0b04
-> >>> - CMU_BUS2's base address and range : 0x1340_0000 ~ 0x1340_0b04
-> >>>
-> >>> So, I implement CMU_BUSx domain which has each compatible string.
+On Thu, Nov 27, 2014 at 12:15:43PM +0000, Mark Rutland wrote:
+> On Wed, Nov 26, 2014 at 09:48:47PM +0000, Andrew Lunn wrote:
+> > On Wed, Nov 26, 2014 at 09:07:33PM +0000, Grant Likely wrote:
+> > > On Wed, Nov 26, 2014 at 6:30 PM, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+> > > > On Wed, Nov 26, 2014 at 05:40:40PM +0000, Leif Lindholm wrote:
+> > > >> Support specifying console options (like with console=ttyXN,<options>)
+> > > >> by appending them to the stdout-path property after a separating ':'.
+> > > >>
+> > > >> Example:
+> > > >>         stdout-path = "uart0:115200";
+> > > >
+> > > > Hi Leif
+> > > >
+> > > > This should be documented somewhere under
+> > > > Documentation/devicetree/bindings/
+> > > >
+> > > > Not sure where thought. Maybe a top level chosen.txt?
+> > > 
+> > > Actually, this one doesn't. It is already documented in ePAPR
 > > 
-> > But the base address is in the reg property, not in the compatible
-> > property. What I mean is to have multiple nodes like
-> 
-> The merged clock driver in mainline have different compatible string
-> if base addresss of clock domain is different. So, I implemented each CMU_BUSx domain
-> with different compatible string.
-
-Why?
-
-> > 	clock-controller@113600000 {
-> > 		reg = <0 0x113600000 0 0x1000>;
-> > 		compatible = "samsung,exynos5433-cmu";
-> > 		#clock-cells = <1>;
-> > 	};
+> > Hi Grant
 > > 
-> > 	clock-controller@114800000 {
-> > 		reg = <0 0x114800000 0 0x1000>;
-> > 		compatible = "samsung,exynos5433-cmu";
-> > 		#clock-cells = <1>;
-> > 	};
+> > Humm, do i have an old version of ePAPR?
 > > 
-> > The code will just map the local registers for each instance and then
-> > provide the clocks of the right instance when asked for it.
+> > All i see is that in Table 3-4 It says:
+> > 
+> > stdout-path O <string> A string that specifies the full path to the
+> > 	      	       node representing the device to be used for
+> > 	      	       boot console output. If the character ":" is
+> > 	      	       present in the value it terminates the
+> > 	      	       path. The value may be an alias.
+> > 
+> > 		       If the stdin-path property is not specified,
+> > 		       stdout-path should be assumed to define the input device.
+> > 
+> > So what is before the : is defined. What comes afterwards,
+> > baudrate/parity/bits/flow control does not appear to the defined in
+> > ePAPR. Should we not document the extension being added here?
 > 
-> Each clock domain has not the same mux/divider/clock. So, just one compatible
-> string could not support all of clock domains.
+> I believe that we should, and it should be relatively trivial to add a
+> document stating that the format and meaning of the parts after the ':'
+> are device-specific. 
 
-What are the specific differences? I saw that one of them has more
-outputs than the others but it seemed like a superset, so you just
-wouldn't be allowed to access the non-connected outputs.
+Device-specific is a bit broad though?
 
-	Arnd
+> So how about Documentation/devicetree/bindings/serial/stdout-path.txt,
+> with something like the following:
+
+There is, however, nothing serial-specific about this functionality -
+it console-specific.
+
+Could it be bindings/console/stdout-path.txt?
+ 
+> ---->8----
+> Device trees may specify the device to be used for boot console output
+> with a stdout-path property under /chosen, as described in ePAPR, e.g.
+> 
+> / {
+> 	chosen {
+> 		stdout-path = "/serial@f00:115200";
+> 	};
+> 
+> 	serial@f00 {
+> 		compatible = "vendor,some-uart";
+> 		reg = <0xf00 0x10>;
+> 	};
+> };
+> 
+> If the character ":" is present in the value, this terminates the path.
+> The meaning of any cahracters following the ":" is device-specific, and
+> must be specified in the relevant binding documentation.
+> ---->8----
+> 
+> The more difficult part is documenting those (and I'm still uneasy about
+> conflating the Linux driver command line options with the DT binding for
+> that reason).
+
+For the current situation, which _is_ serial-specific, could we then
+add a serial/stdout-path.txt describing the mapping to
+uart_parse_options - making that interface an implicit requirement for
+the use of stdout-path?
+
+/
+    Leif
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
