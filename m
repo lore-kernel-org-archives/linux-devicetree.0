@@ -1,33 +1,52 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 2/2] m32r: Add missing big-endian I/O accessors
-Date: Thu, 27 Nov 2014 18:52:58 +0100
-Message-ID: <75201216.LyHlPqmjDS@wuerfel>
-References: <1417110404-13297-1-git-send-email-cernekee@gmail.com> <1417110404-13297-2-git-send-email-cernekee@gmail.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCHv2 05/16] gpio: mvebu: add suspend/resume support
+Date: Thu, 27 Nov 2014 12:53:18 -0500
+Message-ID: <20141127175318.GL22670@titan.lakedaemon.net>
+References: <1415978496-9334-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1415978496-9334-6-git-send-email-thomas.petazzoni@free-electrons.com>
+ <CACRpkdb5S7Fv4+Ck2btLPTYWaWr_E-iMcQGeATB4NMwx_T-4GA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417110404-13297-2-git-send-email-cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kbuild-all-JC7UmRfGjtg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdb5S7Fv4+Ck2btLPTYWaWr_E-iMcQGeATB4NMwx_T-4GA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 27 November 2014 09:46:44 Kevin Cernekee wrote:
->  #define iowrite32 writel
->  
-> +#define ioread16be(addr)       be16_to_cpu(readw(addr))
-> +#define ioread32be(addr)       be32_to_cpu(readl(addr))
-> +#define iowrite16be(val, addr) writew(cpu_to_be16(val), addr)
-> +#define iowrite32be(val, addr) writel(cpu_to_be32(val), addr)
-> +
+On Thu, Nov 27, 2014 at 02:29:47PM +0100, Linus Walleij wrote:
+> On Fri, Nov 14, 2014 at 4:21 PM, Thomas Petazzoni
+> <thomas.petazzoni@free-electrons.com> wrote:
 > 
+> > This commit adds the implementation of ->suspend() and ->resume()
+> > platform_driver hooks in order to save and restore the state of the
+> > GPIO configuration. In order to achieve that, additional fields are
+> > added to the mvebu_gpio_chip structure.
+> >
+> > Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Cc: Alexandre Courbot <gnurou@gmail.com>
+> > Cc: linux-gpio@vger.kernel.org
+> > Acked-by: Alexandre Courbot <acourbot@nvidia.com>
+> > Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> 
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> Do you want me to merge the patch or is it dependent on other patches?
 
-m32r can be either little-endian or big-endian, so these need to
-unconditionally swap instead.
+I have a separate branch for this series, mvebu/soc-suspend which
+contains everything.  I've been a bit wrapped around the axle this
+cycle, and didn't want the series to suffer for lack of testing.  So
+when I had a moment, I put the whole thing into mvebu/for-next.  It's
+been there for a while.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If you don't mind, I can just send a pull request to arm-soc for the
+branch as is.
+
+I can break it up also, but I can't guarantee my availability for the
+next week or two.  So there a risk of the arch changes not making it in.
+
+thx,
+
+Jason.
