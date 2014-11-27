@@ -1,50 +1,50 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCHv2 05/16] gpio: mvebu: add suspend/resume support
-Date: Thu, 27 Nov 2014 19:44:18 +0100
-Message-ID: <20141127194418.43e03e80@free-electrons.com>
-References: <1415978496-9334-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1415978496-9334-6-git-send-email-thomas.petazzoni@free-electrons.com>
-	<CACRpkdb5S7Fv4+Ck2btLPTYWaWr_E-iMcQGeATB4NMwx_T-4GA@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 3/7] regulator: of: Parse ena-gpios property from DTS
+Date: Thu, 27 Nov 2014 18:45:44 +0000
+Message-ID: <20141127184544.GD7712@sirena.org.uk>
+References: <1417087253-12306-1-git-send-email-k.kozlowski@samsung.com>
+ <1417087253-12306-4-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdb5S7Fv4+Ck2btLPTYWaWr_E-iMcQGeATB4NMwx_T-4GA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="RtgGjXQ2kxhQeAcX"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1417087253-12306-4-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Linus Walleij,
 
-On Thu, 27 Nov 2014 14:29:47 +0100, Linus Walleij wrote:
-> On Fri, Nov 14, 2014 at 4:21 PM, Thomas Petazzoni
-> <thomas.petazzoni@free-electrons.com> wrote:
-> 
-> > This commit adds the implementation of ->suspend() and ->resume()
-> > platform_driver hooks in order to save and restore the state of the
-> > GPIO configuration. In order to achieve that, additional fields are
-> > added to the mvebu_gpio_chip structure.
-> >
-> > Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Cc: Alexandre Courbot <gnurou@gmail.com>
-> > Cc: linux-gpio@vger.kernel.org
-> > Acked-by: Alexandre Courbot <acourbot@nvidia.com>
-> > Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> 
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> 
-> Do you want me to merge the patch or is it dependent on other patches?
+--RtgGjXQ2kxhQeAcX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This patch has already been merged by you, and is already in
-linux-next. See
-https://git.kernel.org/cgit/linux/kernel/git/linusw/linux-gpio.git/commit/?h=for-next&id=b5b7b487431b01619f2947d91dadd7c7a233692e.
+On Thu, Nov 27, 2014 at 12:20:49PM +0100, Krzysztof Kozlowski wrote:
 
-Best regards,
+> +	constraints->ena_gpio = of_get_named_gpio_flags(np, "ena-gpios", 0,
+> +							&gpio_flags);
+> +	if (gpio_is_valid(constraints->ena_gpio)) {
 
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+No, this isn't sensible - in what way would an enable control GPIO be a
+constraint?  The whole reason we have separate constraint and config
+structures is that these are different things.  Keep the GPIO setup in
+the configuration.
+
+--RtgGjXQ2kxhQeAcX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUd3FXAAoJECTWi3JdVIfQQJEH/R1aQvgsi1/2ZrlcnqxUo59H
+UoTLEbE51P0zusADbV9oHGuwNfBfXMdi/yd6tfisgWYsd2XDbziq9DZyOmUyqymE
+8wgiPqzxCKL0FPFatJQJ06XhVrc5nhjzbvi1TM3T2cIplhGRjkx9PHPUPVWxjyTY
+bWcBXOhCmUN+kW1PvpV24+OFMqOLOM8NBwcFHpZpBSkP+N4uYIBw39ErqRLgd5ec
+nYUMTYLw5JskSyiTjAI9srpVYcsAIM/0fyUBcxU/+xJwY0tqw5ELJw3jvW79qNkB
+5QD/k/jlNRGeogvszq6Sur7d8Vh7BtptXUZXpYgcrVHzJaEWLz3/JlgWyhvVviQ=
+=3zNe
+-----END PGP SIGNATURE-----
+
+--RtgGjXQ2kxhQeAcX--
