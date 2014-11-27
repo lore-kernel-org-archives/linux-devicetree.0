@@ -1,63 +1,68 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH V2 01/10] tty: Fallback to use dynamic major number
-Date: Thu, 27 Nov 2014 12:10:46 +0100
-Message-ID: <CAMuHMdV7Uo7JBAXDa6z8R+9v7HaDYQ=QpKf8FMBqvmt372oSsA@mail.gmail.com>
-References: <1415825647-6024-1-git-send-email-cernekee@gmail.com>
-	<1415825647-6024-2-git-send-email-cernekee@gmail.com>
-	<20141125203431.GA9385@kroah.com>
-	<CAJiQ=7DOxK2NzmC9gGsnARxGMN8wRQyGX+5u5YC_vt00ADVsDg@mail.gmail.com>
-	<20141126133306.659E9C4099B@trevor.secretlab.ca>
-	<5475E4EC.7090309@hurleysoftware.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [RFC] cpufreq: Add "dvfs-method" binding to probe cpufreq drivers
+Date: Thu, 27 Nov 2014 11:15:20 +0000
+Message-ID: <547707C8.3080108@arm.com>
+References: <596a6d49f2b3e2837aa9a54a3e1249161d3c9265.1416991009.git.viresh.kumar@linaro.org>	<5476071B.1060705@arm.com>	<CAKohpomFE6xg+HfOicha4Ntkr9osqDK2gxdKce=BU_q35jfBxA@mail.gmail.com>	<5476F4ED.6040206@arm.com> <CAKohpok+M+HuuQBJ3EJ_3e+Uv-Me5za7EO2TVguU_tCXNtahvQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <5475E4EC.7090309@hurleysoftware.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Peter Hurley <peter@hurleysoftware.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Kevin Cernekee <cernekee@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, daniel@zonque.org, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, tushar.b@samsung.com
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAKohpok+M+HuuQBJ3EJ_3e+Uv-Me5za7EO2TVguU_tCXNtahvQ@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Rafael Wysocki <rjw@rjwysocki.net>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Santosh Shilimkar <santosh.shilimkar@oracle.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Arnd Bergmann <arnd.bergmann@linaro.org>, Mike Turquette <mike.turquette@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kesavan.abhilash@gmail.com" <kesavan.abhilash@gmail.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "k.chander@samsung.com" <k.chander@samsung.com>, "olof@lixom.net" <olof@lixom.net>, "ta.omasab@gmail.com" <ta.omasab@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 26, 2014 at 3:34 PM, Peter Hurley <peter@hurleysoftware.com> wrote:
-> On 11/26/2014 08:33 AM, Grant Likely wrote:
->> On Tue, 25 Nov 2014 15:37:16 -0800
->> , Kevin Cernekee <cernekee@gmail.com>
->>  wrote:
->>> On Tue, Nov 25, 2014 at 12:34 PM, Greg KH <gregkh@linuxfoundation.org> wrote:
->>>> On Wed, Nov 12, 2014 at 12:53:58PM -0800, Kevin Cernekee wrote:
->>>>> From: Tushar Behera <tushar.behera@linaro.org>
->>>>
->>>> This email bounces, so I'm going to have to reject this patch.  I can't
->>>> accept a patch from a "fake" person, let alone something that touches
->>>> core code like this.
->>>>
->>>> Sorry, I can't accept anything in this series then.
->>>
->>> Oops, guess I probably should have updated his address after the V1
->>> emails bounced...
->>>
->>> Before I send a new version, what do you think about the overall
->>> approach?  Should we try to make serial8250 coexist with the other
->>> "ttyS / major 4 / minor 64" drivers (possibly at the expense of
->>> compatibility) or is it better to start with a simpler, cleaner driver
->>> like serial/pxa?
->>
->> Co-existing really needs to be fixed.
+
+
+On 27/11/14 10:22, Viresh Kumar wrote:
+> On 27 November 2014 at 15:24, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>> No that won't suffice. You can't modify the DTs of the platforms using
+>> cpufreq-dt.c as of today. They should continue to work, so either you
+>> retain all the existing platform device creation in platform code as is
+>> or do something like below with the blacklist for those platforms.
 >
-> What are the requirements for co-existence?
-> Is it sufficient to provide 1st come-1st served minor allocation?
+> Is the meaning of "backward compatibility" for DTs mentioned somewhere?
+> I am not sure if we have to *always* follow the compatibility you are talking
+> about.
 >
-> Anything done should be designed to solve this name problem forever,
-> not some expeditious band-aid.
 
-+1
+It's the general understanding, I am not sure if it's specified anywhere
+in the kernel Documentation, but I could find the below excerpts from [1]:
 
-Gr{oetje,eeting}s,
+"The compatibility rules say that new kernels must work with older
+device trees. If changes are required, they should be put into new
+properties; the old ones can then be deprecated but not removed. New
+properties should be optional, so that device trees lacking those
+properties continue to work. The device tree developers will provide a
+set of guidelines for the creation of future-proof bindings."
 
-                        Geert
+> Probably we want new DTs to continue supporting older version of kernels.
+> Not that older DTs should work with new kernel changes.
+>
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+It's *exactly opposite* as DTs are considered as part of firmware that
+gets shipped with the boards and any kernel should work with that DT if
+it is compliance with the DT bindings(even old, as the DT bindings
+should never get changed only gets extended)
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> So, even with another field in cpuX node, we wouldn't break older kernels
+> as they will anyway get the device from platform code.
+>
+
+Yes, but that's not what we want.
+
+>> OK, in this way you still continue to work on existing platforms with
+>> *old DT*.
+>
+> Probably not.
+>
+
+No, you *must* :). That's backward compatibility. Just consider a simple
+case where the bootloader is generating DT and we don't want to upgrade it.
+
+Regards,
+Sudeep
+
+[1] http://lwn.net/Articles/572114/
+
