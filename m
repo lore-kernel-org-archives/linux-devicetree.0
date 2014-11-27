@@ -1,46 +1,65 @@
-From: Bryan Huntsman <bryanh@codeaurora.org>
-Subject: Re: [PATCH 7/9] ASoC: qcom: Add ability to build QCOM drivers
-Date: Wed, 26 Nov 2014 17:26:28 -0800
-Message-ID: <54767DC4.7060808@codeaurora.org>
-References: <1416423169-21865-1-git-send-email-kwestfie@codeaurora.org> <1416423169-21865-8-git-send-email-kwestfie@codeaurora.org> <20141125220737.GX7712@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20141125220737.GX7712@sirena.org.uk>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Kenneth Westfield <kwestfie@codeaurora.org>
-Cc: ALSA Mailing List <alsa-devel@alsa-project.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, Greg KH <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>
+From: Alexandru M Stan <amstan@chromium.org>
+Subject: [PATCH v4 0/2] Add support for the rockchip mmc clock phases using the framework
+Date: Wed, 26 Nov 2014 17:30:25 -0800
+Message-ID: <1417051827-12564-1-git-send-email-amstan@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>, Heiko Stuebner <heiko@sntech.de>, Doug Anderson <dianders@chromium.org>, addy ke <addy.ke@rock-chips.com>
+Cc: Sonny Rao <sonnyrao@chromium.org>, Kever Yang <kever.yang@rock-chips.com>, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Alexandru M Stan <amstan@chromium.org>, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, mark.yao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On 11/25/2014 02:07 PM, Mark Brown wrote:
-> On Wed, Nov 19, 2014 at 10:52:47AM -0800, Kenneth Westfield wrote:
-> 
->> +++ b/sound/soc/qcom/Kconfig
->> @@ -0,0 +1,43 @@
-...
->> +# Permission to use, copy, modify, and/or distribute this software for any
->> +# purpose with or without fee is hereby granted, provided that the above
->> +# copyright notice and this permission notice appear in all copies.
->> +#
->> +# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
->> +# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
->> +# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
->> +# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
->> +# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
->> +# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
->> +# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-> 
-> Please just license the file under the GPL, all the drivers that get
-> built from here are GPLed - I can't see any reason for this to have an
-> odd license.
+For now all I have is the getter and setter for the phase, nothing that uses it
+(that is ready). You can test the getter like this:
+localhost ~ # cat /sys/kernel/debug/clk/clk_summary|grep sample -C 1
+sclk_sdio1                            0            0    24000000          0 0
+	sdio1_sample                       0            0    12000000          0 0
+	sdio1_drv                          0            0    12000000          0 90
+--
+	sclk_sdmmc                      1            1   297000000          0 0
+		sdmmc_sample                 0            0   148500000          0 134
+		sdmmc_drv                    0            0   148500000          0 90
+--
+	sclk_sdio0                      1            1   100000000          0 0
+		sdio0_sample                 0            0    50000000          0 0
+		sdio0_drv                    0            0    50000000          0 90
+	sclk_emmc                       1            1   100000000          0 0
+		emmc_sample                  0            0    50000000          0 0
+		emmc_drv                     0            0    50000000          0 180
 
-Why is there even a license blurb here?  Just drop it.
+Next thing that will come is some dts changes that will make use of these new
+clocks, and eventually mmc code will be changed to tune with these clocks. You
+can see some WIP on https://chromium-review.googlesource.com/#/c/227240
 
-- Bryan
 
+Changes in v4:
+- Changed set_phase to 22.5 increments, it seems better for tuning, better at
+splitting up big ranges where we might have used an iffy phase from the middle.
+- renamed ROCKCHIP_MMC_DELAY_ELEMENT_PSEC
+- saner mask of 0x07ff
+- only set ROCKCHIP_MMC_DELAYNUM_OFFSET when we need it
+
+Changes in v3:
+- renamed everything internal from phase to just mmc_clock or mmc
+- added RK3288_MMC_CLKGEN_DIV instead of the magic number
+- added new paragraph to commit message
+
+Changes in v2:
+- fixed my cc/to list
+- removed dangling #DEFINE DEBUG
+
+Alexandru M Stan (2):
+  clk: rockchip: add bindings for the mmc clocks
+  clk: rockchip: Add support for the mmc clock phases using the
+    framework
+
+ drivers/clk/rockchip/Makefile          |   1 +
+ drivers/clk/rockchip/clk-mmc-phase.c   | 154 +++++++++++++++++++++++++++++++++
+ drivers/clk/rockchip/clk-rk3288.c      |  12 +++
+ drivers/clk/rockchip/clk.c             |   8 ++
+ drivers/clk/rockchip/clk.h             |  23 +++++
+ include/dt-bindings/clock/rk3288-cru.h |  10 +++
+ 6 files changed, 208 insertions(+)
+ create mode 100644 drivers/clk/rockchip/clk-mmc-phase.c
 
 -- 
-Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a
-Linux Foundation Collaborative Project
+2.2.0.rc0.207.ga3a616c
