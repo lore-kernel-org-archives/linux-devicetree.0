@@ -1,67 +1,50 @@
 From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH] ARM vf610: add compatibilty strings of supported Vybrid SoC's
-Date: Fri, 28 Nov 2014 00:27:05 +0100
-Message-ID: <1417130825-2818-1-git-send-email-stefan@agner.ch>
+Subject: [PATCH] ARM: dts: vf610: enable watchdog for Cortex-A5 dt's
+Date: Fri, 28 Nov 2014 00:35:36 +0100
+Message-ID: <1417131336-3136-1-git-send-email-stefan@agner.ch>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Vybrid SoC family (in the kernel known as vf610) is a familiy
-of multiple similar SoC's. The VF5xx series comes without secondary
-Cortex-M4 core, while the second number VFx1x indicates the presence
-of a L2 cache controller.
+During restructuring of the device tree files the watchdog was
+changed to be disabled by default. However, since the watchdog
+instance is dedicated to the Cortex-A5, enable the peripheral
+by default in the base device tree vf500.dtsi.
 
 Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/fsl.txt | 12 ++++++++++++
- arch/arm/mach-imx/mach-vf610.c                |  5 ++++-
- 2 files changed, 16 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/vf500.dtsi | 5 +++++
+ arch/arm/boot/dts/vfxxx.dtsi | 2 +-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
-index 4e8b7df..c830b5b 100644
---- a/Documentation/devicetree/bindings/arm/fsl.txt
-+++ b/Documentation/devicetree/bindings/arm/fsl.txt
-@@ -75,6 +75,18 @@ i.MX6q generic board
- Required root node properties:
-     - compatible = "fsl,imx6q";
- 
-+Freescale Vybrid Platform Device Tree Bindings
-+----------------------------------------------
-+
-+For the Vybrid SoC familiy all variants with DDR controller are supported,
-+which is the VF5xx and VF6xx series. Out of historical reasons, in most
-+places the kernel uses vf610 to refer to the whole familiy.
-+
-+Required root node compatible property (one of them):
-+    - compatible = "fsl,vf500";
-+    - compatible = "fsl,vf510";
-+    - compatible = "fsl,vf600";
-+    - compatible = "fsl,vf610";
- 
- Freescale LS1021A Platform Device Tree Bindings
- ------------------------------------------------
-diff --git a/arch/arm/mach-imx/mach-vf610.c b/arch/arm/mach-imx/mach-vf610.c
-index c11ab6a..2e7c75b 100644
---- a/arch/arm/mach-imx/mach-vf610.c
-+++ b/arch/arm/mach-imx/mach-vf610.c
-@@ -13,11 +13,14 @@
- #include <asm/hardware/cache-l2x0.h>
- 
- static const char * const vf610_dt_compat[] __initconst = {
-+	"fsl,vf500",
-+	"fsl,vf510",
-+	"fsl,vf600",
- 	"fsl,vf610",
- 	NULL,
+diff --git a/arch/arm/boot/dts/vf500.dtsi b/arch/arm/boot/dts/vf500.dtsi
+index de67005..ea0f74f 100644
+--- a/arch/arm/boot/dts/vf500.dtsi
++++ b/arch/arm/boot/dts/vf500.dtsi
+@@ -169,3 +169,8 @@
+ &usbphy1 {
+ 	interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
  };
++
++&wdoga5 {
++	interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+index 505969a..7126468 100644
+--- a/arch/arm/boot/dts/vfxxx.dtsi
++++ b/arch/arm/boot/dts/vfxxx.dtsi
+@@ -184,7 +184,7 @@
+ 				status = "disabled";
+ 			};
  
--DT_MACHINE_START(VYBRID_VF610, "Freescale Vybrid VF610 (Device Tree)")
-+DT_MACHINE_START(VYBRID_VF610, "Freescale Vybrid VF5xx/VF6xx (Device Tree)")
- 	.l2c_aux_val	= 0,
- 	.l2c_aux_mask	= ~0,
- 	.dt_compat	= vf610_dt_compat,
+-			wdog@4003e000 {
++			wdoga5: wdog@4003e000 {
+ 				compatible = "fsl,vf610-wdt", "fsl,imx21-wdt";
+ 				reg = <0x4003e000 0x1000>;
+ 				clocks = <&clks VF610_CLK_WDT>;
 -- 
 2.1.3
 
