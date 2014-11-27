@@ -1,33 +1,76 @@
-From: Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v14 0/3] Add drm driver for Rockchip Socs
-Date: Thu, 27 Nov 2014 12:12:30 +1000
-Message-ID: <CAPM=9tyZpDEPcipYDq2_qdQ9zK2bnPFYTUL2qDvAd7QoUOm-QQ@mail.gmail.com>
-References: <1416447994-9921-1-git-send-email-mark.yao@rock-chips.com>
-	<23617908.6oA5uRuO3l@diego>
-	<CAPM=9tzvvb5U+8KaCO+K6CJi=rwWOkoW+4ZSFW_Oo9gTncvkWA@mail.gmail.com>
-	<1557742.FTdLsE0bVs@diego>
-	<20141126073430.GD3156@suse.de>
-	<CAPM=9tzhZLShA5=ShGTKhyZR6ddKycQDUWBZxXpUBb+1tGp-mQ@mail.gmail.com>
-	<54768107.2090402@rock-chips.com>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH v4] clocksource: arch_timer: Allow the device tree to
+ specify uninitialized timer registers
+Date: Thu, 27 Nov 2014 10:27:04 +0800
+Message-ID: <1417055224.12707.24.camel@mtksdaap41>
+References: <1412753627-28287-1-git-send-email-sonnyrao@chromium.org>
+	 <1417012893.12707.12.camel@mtksdaap41>
+	 <CAD=FV=XFcWEp=nZ3=8QEausKzpBbPCzFUSHY-g0K5y+VPpU3Vw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54768107.2090402-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rom Lemarchand <romlem-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?UTF-8?Q?St=C3
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=XFcWEp=nZ3=8QEausKzpBbPCzFUSHY-g0K5y+VPpU3Vw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Sonny Rao <sonnyrao@chromium.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Olof Johansson <olof@lixom.net>, Nathan Lynch <Nathan_Lynch@mentor.com>, Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
->>
->>
-> Hi Dave
->     Do you mean that I need send you a branch, based on drm-next, merge with
-> iommu tree and rockchip drm?
 
-Yes, grab drm-next, git pull the arm/rockchip branch from Joerg's
-tree, put rockchip drm
-patches on top, send me pull request.
+Hi,
 
-I'll validate it then.
+On Wed, 2014-11-26 at 08:14 -0800, Doug Anderson wrote:
+> Yingjoe,
+> 
+> On Wed, Nov 26, 2014 at 6:41 AM, Yingjoe Chen <yingjoe.chen@mediatek.com> wrote:
+> > Sorry for the (very) late reply.
+> > I just realize today MT8135 need this and the other patch [1] to boot
+> > SMP correctly. I've applied both patches and they works fine. Thanks :)
+> 
+> Excellent.  It's helpful to include a Tested-by: tag in your email.
+> You'd have a line with just "Tested-by: Yingjoe Chen
+> <yingjoe.chen@mediatek.com>"
 
-Dave.
+sure, here's my tested-by for the 2 patches
+
+Tested-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+
+I'll remember to add it next time :)
+
+
+> > However, I'm not sure if we really need to add new property.
+> > arm_arch_timer driver will only use virtual timer when virtual PPI
+> > interrupt is provided, so the following patch to timer dtsi will also
+> > works. I think if the firmware doesn't support virtual timer, it make
+> > sense to not supply virtual interrupt.
+> >
+> >         timer {
+> >                 compatible = "arm,armv7-timer";
+> >                 interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
+> > -                            <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
+> > -                            <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
+> > -                            <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
+> > +                            <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>;
+> >                 clock-frequency = <13000000>;
+> >         };
+> 
+> Once you have Sonny's patch then I believe that the above would work.
+> However we rejected something like this because device tree is
+> supposed to describe the hardware.  The hardware really does provide
+> the virtual timer interrupts and they really are at PPI 11 and PPI 10.
+> It's just that firmware doesn't handle things properly so they can't
+> be used.
+> 
+> NOTE: If we add the "arm,cpu-registers-not-fw-configured" to the
+> device tree and firmware actually works out how to configure things
+> (like if somehow has firmware that has a hypervisor) then it can
+> easily remove this device tree property before calling through to the
+> kernel.  It would be much harder for the firmware to add back in the
+> "PPI 11" and "PPI 10" entries to the timer.
+> 
+> -Doug
+
+I see your point, that's good for me then.
+Thanks.
+
+Joe.C
