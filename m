@@ -1,84 +1,109 @@
-From: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
-Subject: RE: [PATCH RESEND v4 1/4] pwm: Imagination Technologies PWM DAC
- driver
-Date: Thu, 27 Nov 2014 16:03:57 +0000
-Message-ID: <27E62D98F903554192E3C13AFCC91C3C2F53597A@hbmail01.hb.imgtec.org>
-References: <1416621212-11701-1-git-send-email-Naidu.Tellapati@gmail.com>
-	<1416621212-11701-2-git-send-email-Naidu.Tellapati@gmail.com>
-	<20141124101325.GB25912@ulmo.nvidia.com>
-	<27E62D98F903554192E3C13AFCC91C3C2F52EE89@hbmail01.hb.imgtec.org>
-	<20141124122807.GA4061@ulmo.nvidia.com>,<CAL1qeaH31ku6LTBV0HCDxzq+_gKWKeJR-4Gu+6dXkPU+FWvEaQ@mail.gmail.com>,<1C907929-56BF-4FF7-9F64-866AA834090F@imgtec.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1C907929-56BF-4FF7-9F64-866AA834090F@imgtec.com>
-Content-Language: en-US
-Sender: linux-pwm-owner@vger.kernel.org
-To: James Hartley <James.Hartley@imgtec.com>, Andrew Bresticker <abrestic@chromium.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, "naidu.tellapati@gmail.com" <naidu.tellapati@gmail.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "arnd@arndb.de" <arnd@arndb.de>, Ezequiel Garcia <Ezequiel.Garcia@imgtec.com>, James Hogan <James.Hogan@imgtec.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arul Ramasamy <Arul.Ramasamy@imgtec.com>, Sai Masarapu <Sai.Masarapu@imgtec.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: [PATCH v2] arm64: ARM: Fix the Generic Timers interrupt active level description
+Date: Thu, 27 Nov 2014 16:21:23 +0000
+Message-ID: <1417105283-19575-1-git-send-email-Liviu.Dudau@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <Marc.Zyngier@arm.com>, Olof Johansson <olof@lixom.net>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Rob Herring <robherring2@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi James, Andrew, Thierry and all,
+The Cortex-A5x TRM states in paragraph "9.2 Generic Timer functional
+description" that generic timers provide a level not edge interrupt
+output. Fix the device trees to correctly describe this.
 
+While doing this update the CPU mask to match the number of described
+CPUs as well as the DT bindings documentation for Generic Timers.
 
-> On 24 Nov 2014, at 18:19, Andrew Bresticker <abrestic@chromium.org> wrote:
+Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+---
 
->>>>>> +     val = img_pwm_readl(pwm_chip, CR_PWM_CTRL_CFG);
->>>>>> +     val |= BIT(pwm->hwpwm);
->>>>>> +     img_pwm_writel(pwm_chip, CR_PWM_CTRL_CFG, val);
->>>>>> +
->>>>>> +     regmap_update_bits(pwm_chip->periph_regs, CR_PERIP_PWM_PDM_CONTROL,
->>>>>> +                        CR_PERIP_PWM_PDM_CONTROL_CH_MASK <<
->>>>>> +                        CR_PERIP_PWM_PDM_CONTROL_CH_SHIFT(pwm->hwpwm), 0);
->>>>
->>>>> This smells like pinmux and should probably be a separate driver.
->>>>
->>>> Hope you are suggesting us to have a separate driver for pin muxing (might already have one for Pistachio)
->>>> and call the pin muxing driver APIs from here.
->>>>
->>>> Please correct me if my understanding is wrong?
->>>
->>> I don't think you need to call the pinmux API from here. Rather I'll
->>> assume that the muxing is fixed on a given board, so this configuration
->>> would be part of the static board-level pinmux so it will automatically
->>> be applied at boot time.
->>
->> The issue here is that this register does not belong to the
->> pinmux/pinctrl block on this SoC and instead is part of the
->> "peripheral control" block which primarily provides system interface
->> gate clocks and resets (for which I was planning to write a clock
->> provider driver), but also has a bunch of control registers for
->> various IP blocks thrown together (like this one) which we're using
->> syscon to access.  I'm not sure it makes sense to create a pinmux
->> driver for these 4 bits, but I'll defer to others on that...
->>
->> Another option would be to have the main pinctrl driver for Pistachio
->> control these bits, but that doesn't seem quite right since these bits
->> are completely separate from the pinctrl block.
+Arnd, Olof: This is on top of linux-next/master as it patches Juno's
+as well as all the other ARM DTs.
 
-> I would think the pinctrl driver should deal with this - yes it's a separate set of registers,
-> but the config is expected to be static and can be represented in the DT.
+--
 
-> James.
+ Documentation/devicetree/bindings/arm/arch_timer.txt | 8 ++++----
+ arch/arm64/boot/dts/arm/foundation-v8.dts            | 8 ++++----
+ arch/arm64/boot/dts/arm/juno.dts                     | 8 ++++----
+ arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts           | 8 ++++----
+ 4 files changed, 16 insertions(+), 16 deletions(-)
 
-I have discussed with the hardware team one more time today and discovered that
-the value we configure to CR_PERIP_PWM_PDM_CONTROL not only configures PWM/PDM
-output mux, but also enables control signal for PDM blocks.
-
-As an example, if the PDM user wants to enable PDM block 2, he needs to set bit 8 to 1 in the
-register CR_PERIP_PWM_PDM_CONTROL. Please also note that setting bit 8  to 1 not only
-configures the output PWM/PDM mux, but also enables control signal for PDM block 2.
-He needs access to this register from the PDM driver at least to configure (enable/disable)
-PDM control signal.
-
-And also because of the reasons explained by Andrew above, I think it is better to use syscon
-(instead of handling it in Pinctrl driver) to access this register both in PWM and PDM drivers.
-
-Please let us know comments and suggestions.
-
-Thanks and regards,
-Naidu.
-
-
-
+diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
+index 37b2caf..6d2aa87 100644
+--- a/Documentation/devicetree/bindings/arm/arch_timer.txt
++++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
+@@ -27,10 +27,10 @@ Example:
+ 	timer {
+ 		compatible = "arm,cortex-a15-timer",
+ 			     "arm,armv7-timer";
+-		interrupts = <1 13 0xf08>,
+-			     <1 14 0xf08>,
+-			     <1 11 0xf08>,
+-			     <1 10 0xf08>;
++		interrupts = <1 13 0xf04>,
++			     <1 14 0xf04>,
++			     <1 11 0xf04>,
++			     <1 10 0xf04>;
+ 		clock-frequency = <100000000>;
+ 	};
+ 
+diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dts b/arch/arm64/boot/dts/arm/foundation-v8.dts
+index 4a06090..8c0214e 100644
+--- a/arch/arm64/boot/dts/arm/foundation-v8.dts
++++ b/arch/arm64/boot/dts/arm/foundation-v8.dts
+@@ -78,10 +78,10 @@
+ 
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+-		interrupts = <1 13 0xff01>,
+-			     <1 14 0xff01>,
+-			     <1 11 0xff01>,
+-			     <1 10 0xff01>;
++		interrupts = <1 13 0xf04>,
++			     <1 14 0xf04>,
++			     <1 11 0xf04>,
++			     <1 10 0xf04>;
+ 		clock-frequency = <100000000>;
+ 	};
+ 
+diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
+index 097ecc4..551a688 100644
+--- a/arch/arm64/boot/dts/arm/juno.dts
++++ b/arch/arm64/boot/dts/arm/juno.dts
+@@ -98,10 +98,10 @@
+ 
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+-		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING)>,
+-			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING)>,
+-			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING)>,
+-			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING)>;
++		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_HIGH)>,
++			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_HIGH)>,
++			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_HIGH)>,
++			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_HIGH)>;
+ 	};
+ 
+ 	pmu {
+diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts b/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
+index 572005e..49d1b19 100644
+--- a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
++++ b/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
+@@ -81,10 +81,10 @@
+ 
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+-		interrupts = <1 13 0xff01>,
+-			     <1 14 0xff01>,
+-			     <1 11 0xff01>,
+-			     <1 10 0xff01>;
++		interrupts = <1 13 0xf04>,
++			     <1 14 0xf04>,
++			     <1 11 0xf04>,
++			     <1 10 0xf04>;
+ 		clock-frequency = <100000000>;
+ 	};
+ 
+-- 
+2.1.3
