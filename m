@@ -1,52 +1,64 @@
-From: Lyra Zhang <zhang.lyra@gmail.com>
-Subject: Re: [PATCH v3 1/5] Documentation: DT: Renamed of-serial.txt to 8250.txt
-Date: Thu, 27 Nov 2014 20:08:51 +0800
-Message-ID: <CAAfSe-uGF2DbE894ij9ezH7dZuU_iMWX4G-Lb77CoZ1ApS_vgg@mail.gmail.com>
-References: <1416917818-10506-1-git-send-email-chunyan.zhang@spreadtrum.com>
-	<1416917818-10506-2-git-send-email-chunyan.zhang@spreadtrum.com>
-	<20141127113819.GD857@leverpostej>
+From: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
+Subject: [PATCH v4 1/2] dt: bindings: add ath10k wireless device
+Date: Thu, 27 Nov 2014 14:08:56 +0200
+Message-ID: <20141127120856.17546.32014.stgit@potku.adurom.net>
+References: <20141127120727.17546.61202.stgit@potku.adurom.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141127113819.GD857@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "jslaby@suse.cz" <jslaby@suse.cz>, "galak@codeaurora.org" <galak@codeaurora.org>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, Pawel Moll <Pawel.Moll@arm.com>, "artagnon@gmail.com" <artagnon@gmail.com>, "rrichter@cavium.com" <rrichter@cavium.com>, Will Deacon <Will.Deacon@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "gnomes@lxorguk.ukuu.org.uk" <gnomes@lxorguk.ukuu.org.uk>, "corbet@lwn.net" <corbet@lwn.net>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "broonie@kernel.org" <broonie@kernel.org>, "heiko@sntech.de" <heiko@sntech.de>, "florian.vaussard@epfl.ch" <flo>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141127120727.17546.61202.stgit-5n+v4hRq/7bEFBQscRVz1g@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, toshik-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2014-11-27 19:38 GMT+08:00 Mark Rutland <mark.rutland@arm.com>:
-> On Tue, Nov 25, 2014 at 12:16:54PM +0000, Chunyan Zhang wrote:
->> The file of-serial.txt was only for 8250 compatible UART implementations,
->> so renamed it to 8250.txt to avoid confusing other persons.
->> This is recommended by Arnd, see:
->> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-September/291455.html
->>
->> Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
->
-> My prior Ack [1] still applies (given you've just changed the way the
-> patch was generated, as Arnd and I suggested).
->
-OK, I'll add in v4.
+Document how calibration data can be provided to ath10k via Device Tree.
 
-> Mark.
->
-> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/295152.html
->
->> ---
->>  .../bindings/serial/{of-serial.txt => 8250.txt}    |    0
->>  1 file changed, 0 insertions(+), 0 deletions(-)
->>  rename Documentation/devicetree/bindings/serial/{of-serial.txt => 8250.txt} (100%)
->>
->> diff --git a/Documentation/devicetree/bindings/serial/of-serial.txt b/Documentation/devicetree/bindings/serial/8250.txt
->> similarity index 100%
->> rename from Documentation/devicetree/bindings/serial/of-serial.txt
->> rename to Documentation/devicetree/bindings/serial/8250.txt
->> --
->> 1.7.9.5
->>
->>
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+Signed-off-by: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
+---
+ .../bindings/net/wireless/qcom,ath10k.txt          |   30 ++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+
+diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+new file mode 100644
+index 000000000000..edefc26c6204
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+@@ -0,0 +1,30 @@
++* Qualcomm Atheros ath10k wireless devices
++
++For ath10k devices the calibration data can be provided through Device
++Tree. The node is a child node of the PCI controller.
++
++Required properties:
++-compatible : Should be "qcom,ath10k"
++
++Optional properties:
++- qcom,ath10k-calibration-data : calibration data as an array, the
++				 length can vary between hw versions
++
++
++Example:
++
++pci {
++	pcie@0 {
++		reg = <0 0 0 0 0>;
++		#interrupt-cells = <1>;
++		#size-cells = <2>;
++		#address-cells = <3>;
++		device_type = "pci";
++
++		ath10k@0,0 {
++			reg = <0 0 0 0 0>;
++			device_type = "pci";
++			qcom,ath10k-calibration-data = [ 01 02 03 ... ];
++		};
++	};
++};
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
