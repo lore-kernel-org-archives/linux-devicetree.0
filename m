@@ -1,225 +1,54 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] ARM: mediatek: Add Pinctrl/GPIO driver for mt8135.
-Date: Thu, 27 Nov 2014 10:14:49 +0100
-Message-ID: <CACRpkdY5cen-GicF6tuDaXzJXGD3DZUYODQEgpKCWoLP-MDBsA@mail.gmail.com>
-References: <1415709535-31515-1-git-send-email-hongzhou.yang@mediatek.com>
-	<1415709535-31515-2-git-send-email-hongzhou.yang@mediatek.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 2/8] irqchip: Supply new driver for STi based devices
+Date: Thu, 27 Nov 2014 10:15 +0100
+Message-ID: <35179358.tOpRGufXmc@wuerfel>
+References: <1416932705-16880-1-git-send-email-lee.jones@linaro.org> <2433040.4NqTrOMmEE@wuerfel> <20141127090255.GD4628@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415709535-31515-2-git-send-email-hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, huang eddie <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, dandan.he-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, alan.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, toby.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141127090255.GD4628@x1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, jason@lakedaemon.net, linux-kernel@vger.kernel.org, tglx@linutronix.de, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-()On Tue, Nov 11, 2014 at 1:38 PM, Hongzhou Yang
-<hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+On Thursday 27 November 2014 09:02:55 Lee Jones wrote:
+> On Tue, 25 Nov 2014, Arnd Bergmann wrote:
+> 
+> > On Tuesday 25 November 2014 16:24:59 Lee Jones wrote:
+> > 
+> > > diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> > > index b21f12f..e502f15 100644
+> > > --- a/drivers/irqchip/Kconfig
+> > > +++ b/drivers/irqchip/Kconfig
+> > > @@ -93,6 +93,13 @@ config RENESAS_IRQC
+> > >     bool
+> > >     select IRQ_DOMAIN
+> > >  
+> > > +config ST_IRQCHIP
+> > > +   bool
+> > > +   select REGMAP
+> > > +   select MFD_SYSCON
+> > > +   help
+> > > +     Enables SysCfg Controlled IRQs on STi based platforms.
+> > > +
+> > 
+> > I'm confused by the purpose of this code. It's apparently a driver
+> > in drivers/irqchip, the Kconfig symbol contains the string IRQCHIP,
+> > yet it doesn't actually register an irq_chip.
+> > 
+> > Also, the name is a bit too generic, ST has lots of different irqchips,
+> > and this apparently isn't even one of them 
+> 
+> Hmm... now you're going to ask me to remember who I had the
+> conversation with that alluded to this as the best location for this
+> driver.  Unfortunately, I cannot.  Can you think of a better place to
+> put it then?
 
-> From: Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->
-> The mediatek SoCs have GPIO controller that handle both the muxing and GPIOs.
->
-> The GPIO controller have pinmux, pull enable, pull select, direction and output high/low control.
->
-> This driver include common driver and mt8135 part.
-> The common driver include the pinctrl driver and GPIO driver.
-> The mt8135 part contain its special device data.
->
-> Signed-off-by: Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-(...)
->  menuconfig ARCH_MEDIATEK
->         bool "Mediatek MT65xx & MT81xx SoC" if ARCH_MULTI_V7
->         select ARM_GIC
-> +       select PINCTRL
+I suspect it's in the right place but should actually be an irqchip
+driver. I'm having trouble understanding what this code actually does,
+can you you explain the functionality in more detail so we can figure
+out what to do with it?
 
-Should it not also select PINCTRL_MTK8135 for the right SoC?
-
-(...)
-> +++ b/drivers/pinctrl/mediatek/Kconfig
-> @@ -0,0 +1,12 @@
-> +if ARCH_MEDIATEK
-> +
-> +config PINCTRL_MTK_COMMON
-> +       bool
-> +       select PINMUX
-> +       select GENERIC_PINCONF
-
-This is also a GPIO driver but it fails to select GPIOLIB,
-OF_GPIO and also possibly GPIOLIB_IRQCHIP.
-
-(...)
-> +static int mtk_pctrl_dt_node_to_map_config(struct mtk_pinctrl *pctl, u32 pin,
-> +               unsigned long *configs, unsigned num_configs,
-> +               struct pinctrl_map **map, unsigned *cnt_maps,
-> +               unsigned *num_maps)
-> +{
-> +       struct mtk_pinctrl_group *grp;
-> +       unsigned long *cfgs;
-> +
-> +       if (*num_maps == *cnt_maps)
-> +               return -ENOSPC;
-> +
-> +       cfgs = kmemdup(configs, num_configs * sizeof(*cfgs),
-> +                      GFP_KERNEL);
-> +       if (cfgs == NULL)
-> +               return -ENOMEM;
-> +
-> +       grp = mtk_pctrl_find_group_by_pin(pctl, pin);
-> +       if (!grp) {
-> +               dev_err(pctl->dev, "unable to match pin %d to group\n", pin);
-> +               return -EINVAL;
-> +       }
-> +
-> +       (*map)[*num_maps].type = PIN_MAP_TYPE_CONFIGS_GROUP;
-> +       (*map)[*num_maps].data.configs.group_or_pin = grp->name;
-> +       (*map)[*num_maps].data.configs.configs = cfgs;
-> +       (*map)[*num_maps].data.configs.num_configs = num_configs;
-> +       (*num_maps)++;
-> +
-> +       return 0;
-> +}
-
-Can't this use pinctrl_utils_add_map_configs()?
-
-> +static void mtk_pctrl_dt_free_map(struct pinctrl_dev *pctldev,
-> +                                   struct pinctrl_map *map,
-> +                                   unsigned num_maps)
-> +{
-> +       int i;
-> +
-> +       for (i = 0; i < num_maps; i++) {
-> +               if (map[i].type == PIN_MAP_TYPE_CONFIGS_GROUP)
-> +                       kfree(map[i].data.configs.configs);
-> +       }
-> +
-> +       kfree(map);
-> +}
-
-Use pinctrl_utils_dt_free_map() instead.
-
-> +static int mtk_dt_cnt_map(struct pinctrl_map **map, unsigned *cnt_maps,
-> +               unsigned *num_maps, unsigned cnt)
-> +{
-> +       unsigned old_num = *cnt_maps;
-> +       unsigned new_num = *num_maps + cnt;
-> +       struct pinctrl_map *new_map;
-> +
-> +       if (old_num >= new_num)
-> +               return 0;
-> +
-> +       new_map = krealloc(*map, sizeof(*new_map) * new_num, GFP_KERNEL);
-> +       if (!new_map)
-> +               return -ENOMEM;
-> +
-> +       memset(new_map + old_num, 0, (new_num - old_num) * sizeof(*new_map));
-> +
-> +       *map = new_map;
-> +       *cnt_maps = new_num;
-> +
-> +       return 0;
-> +}
-
-Use pinctrl_utils_reserve_map() instead.
-
-> +static int mtk_pctrl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
-> +                                     struct device_node *node,
-> +                                     struct pinctrl_map **map,
-> +                                     unsigned *num_maps, unsigned *cnt_maps)
-> +{
-> +       struct property *pins;
-> +       u32 pinfunc, pin, func;
-> +       int num_pins, num_funcs, maps_per_pin;
-> +       unsigned long *configs;
-> +       unsigned int num_configs;
-> +       bool has_config = 0;
-> +       int i, err;
-> +       unsigned cnt = 0;
-> +       struct mtk_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
-> +
-> +       pins = of_find_property(node, "mediatek,pins", NULL);
-> +       if (!pins) {
-> +               dev_err(pctl->dev, "missing mediatek,pins property in node %s .\n",
-> +                               node->name);
-> +               return -EINVAL;
-> +       }
-> +
-> +       err = pinconf_generic_parse_dt_config(node, &configs, &num_configs);
-> +       if (num_configs)
-> +               has_config = 1;
-
-I'd prefer we first identify if it's a config or mux subnode, then go on to
-parse it as mux or config. See comments on patch 2/3.
-
-> +
-> +       num_pins = pins->length / sizeof(u32);
-> +       num_funcs = num_pins;
-> +       maps_per_pin = 0;
-> +       if (num_funcs)
-> +               maps_per_pin++;
-> +       if (has_config && num_pins >= 1)
-> +               maps_per_pin++;
-> +
-> +       if (!num_pins || !maps_per_pin)
-> +               return -EINVAL;
-> +
-> +       cnt = num_pins * maps_per_pin;
-> +
-> +       err = mtk_dt_cnt_map(map, cnt_maps, num_maps, cnt);
-> +       if (err < 0)
-> +               goto fail;
-> +
-> +       for (i = 0; i < num_pins; i++) {
-> +               err = of_property_read_u32_index(node, "mediatek,pins",
-> +                               i, &pinfunc);
-
-As mentioned use just "pins" and let's figure out how to handle
-this in a generic way.
-
-> +static int mtk_gpio_request(struct gpio_chip *chip, unsigned offset)
-> +{
-> +       return pinctrl_request_gpio(chip->base + offset);
-> +}
-> +
-> +static void mtk_gpio_free(struct gpio_chip *chip, unsigned offset)
-> +{
-> +       pinctrl_free_gpio(chip->base + offset);
-> +}
-> +
-> +static int mtk_gpio_direction_input(struct gpio_chip *chip,
-> +                                       unsigned offset)
-> +{
-> +       return pinctrl_gpio_direction_input(chip->base + offset);
-> +}
-> +
-> +static int mtk_gpio_direction_output(struct gpio_chip *chip,
-> +                                       unsigned offset, int value)
-> +{
-> +       mtk_gpio_set(chip, offset, value);
-> +       return pinctrl_gpio_direction_output(chip->base + offset);
-> +}
-
-This is kinda nice!
-
-> +static int mtk_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
-> +{
-> +       struct mtk_pinctrl *pctl = dev_get_drvdata(chip->dev);
-> +       struct mtk_pinctrl_group *g = pctl->groups + offset;
-> +       struct mtk_desc_function *desc =
-> +                       mtk_pctrl_desc_find_irq_function_from_name(
-> +                                       pctl, g->name);
-> +       if (!desc)
-> +               return -EINVAL;
-> +
-> +       return desc->irqnum;
-> +}
-
-I don't quite get this still. Does this mean every single GPIO line
-potentially has it's own unique IRQ line?
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
