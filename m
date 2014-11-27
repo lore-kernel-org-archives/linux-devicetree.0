@@ -1,61 +1,99 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 5/5] tty/serial: Add Spreadtrum sc9836-uart driver support
-Date: Thu, 27 Nov 2014 13:57:57 +0100
-Message-ID: <3400511.2SONqVcoEr@wuerfel>
-References: <1416917818-10506-1-git-send-email-chunyan.zhang@spreadtrum.com> <54761BFC.4020705@ti.com> <CAAfSe-uMqy7zwiEK+nDoMPw_oni8L_vq7oW2Me5AY8z8KGpjwQ@mail.gmail.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH 11/19] clk: samsung: exynos5433: Add clocks for
+ CMU_BUS{0|1|2} domains
+Date: Thu, 27 Nov 2014 21:58:53 +0900
+Message-ID: <5477200D.5030706@samsung.com>
+References: <1417073716-22997-1-git-send-email-cw00.choi@samsung.com>
+ <54771173.6090408@samsung.com> <54771518.1010004@samsung.com>
+ <3556463.Me1EFEY7Zb@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAfSe-uMqy7zwiEK+nDoMPw_oni8L_vq7oW2Me5AY8z8KGpjwQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lyra Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "jslaby-AlSwsSmVLrQ@public.gmane.org" <jslaby-AlSwsSmVLrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ramkumar Ramachandra <artagnon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, florian.vaussard-p8DiymsW2f8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Hayato Suzuki <hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Orson Zhai <orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <3556463.Me1EFEY7Zb@wuerfel>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, kgene.kim@samsung.com, mark.rutland@arm.com, olof@lixom.net, catalin.marinas@arm.com, will.deacon@arm.com, tomasz.figa@gmail.com, thomas.abraham@linaro.org, linus.walleij@linaro.org, kyungmin.park@samsung.com, inki.dae@samsung.com, chanho61.park@samsung.com, geunsik.lim@samsung.com, sw0312.kim@samsung.com, jh80.chung@samsung.com, a.kesavan@samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 27 November 2014 19:59:46 Lyra Zhang wrote:
-> 2014-11-27 2:29 GMT+08:00 Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>:
-> > On 11/25/2014 07:16 AM, Chunyan Zhang wrote:
-> >>
-> >> Add a full sc9836-uart driver for SC9836 SoC which is based on the
+Dear Arnd,
+
+On 11/27/2014 09:35 PM, Arnd Bergmann wrote:
+> On Thursday 27 November 2014 13:12:08 Sylwester Nawrocki wrote:
+>> On 27/11/14 12:56, Chanwoo Choi wrote:
+>>> On 11/27/2014 08:41 PM, Arnd Bergmann wrote:
+>>>>> On Thursday 27 November 2014 16:35:08 Chanwoo Choi wrote:
+>>>>>>> +  - "samsung,exynos5433-cmu-bus0", "samsung,exynos5433-cmu-bus1"
+>>>>>>> +    and "samsung,exynos5433-cmu-bus2" - clock controller compatible for CMU_BUS
+>>>>>>> +    which generates global data buses clock and global peripheral buses clock.
+>>>>>>>  
+>>>>>>>  - reg: physical base address of the controller and length of memory mapped
+>>>>>>>    region.
+>>>>>>>
+>>>>>
+>>>>> This looks like you are duplicating the bindings and the code, but
+>>>>> it's really the same hardware multiple times with minor variations
+>>>>> that you should be able to describe properly here. Why not make
+>>>>> three nodes with the same compatible string and have them handled
+>>>>> by the same code?
+>>>
+>>> Each CMU_BUSx domain of Exynos5433 have different base address as following:
+>>> - CMU_BUS0's base address and range : 0x1360_0000 ~ 0x1360_0b04
+>>> - CMU_BUS1's base address and range : 0x1480_0000 ~ 0x1480_0b04
+>>> - CMU_BUS2's base address and range : 0x1340_0000 ~ 0x1340_0b04
+>>>
+>>> So, I implement CMU_BUSx domain which has each compatible string.
 > 
-> >> +#include<linux/clk.h>
-> >
-> > How about sorting this includes? asm/irq.h go first followed linux/ in
-> > alphabatical order?
+> But the base address is in the reg property, not in the compatible
+> property. What I mean is to have multiple nodes like
+
+The merged clock driver in mainline have different compatible string
+if base addresss of clock domain is different. So, I implemented each CMU_BUSx domain
+with different compatible string.
+
 > 
-> >> +static irqreturn_t sprd_handle_irq(int irq, void *dev_id)
-> >> +{
-> >> +       struct uart_port *port = (struct uart_port *)dev_id;
-> >> +       u32 ims;
-> >> +
-> >> +       ims = serial_in(port, SPRD_IMSR);
-> >> +
-> >> +       serial_out(port, SPRD_ICLR, ~0);
-> >> +
-> >> +       if (ims&  (SPRD_IMSR_RX_FIFO_FULL |
-> >> +               SPRD_IMSR_BREAK_DETECT | SPRD_IMSR_TIMEOUT)) {
-> >> +               sprd_rx(irq, port);
-> >> +       }
-> >> +       if (ims&  SPRD_IMSR_TX_FIFO_EMPTY)
-> >> +               sprd_tx(irq, port);
-> >> +
-> >> +       return IRQ_HANDLED;
-> >
-> > You are always returning IRQ_HANDLED and this is registered as a SHARED irq.
-> > Is there a chance this handler is called and the irq event doesn't
-> > belong to this device?
-> >
-> > Murali
+> 	clock-controller@113600000 {
+> 		reg = <0 0x113600000 0 0x1000>;
+> 		compatible = "samsung,exynos5433-cmu";
+> 		#clock-cells = <1>;
+> 	};
 > 
-> You are right, this is not a SHARED irq. I'll pass 0 for irqflags when
-> called 'devm_request_irq' in the next version patch.
+> 	clock-controller@114800000 {
+> 		reg = <0 0x114800000 0 0x1000>;
+> 		compatible = "samsung,exynos5433-cmu";
+> 		#clock-cells = <1>;
+> 	};
+> 
+> The code will just map the local registers for each instance and then
+> provide the clocks of the right instance when asked for it.
 
-I think you could also add
+Each clock domain has not the same mux/divider/clock. So, just one compatible
+string could not support all of clock domains.
 
-	if (!ims)
-		return IRQ_NONE;
+Best Regards,
+Chanwoo Choi
 
-which would make it work on shared interrupt lines.
-
-	Arnd
+> 
+>> You can always have multiple entries in the reg property. I've done
+>> something like this for the exynos4415 CMU_ISPx units:
+>>
+>>         cmu_isp: clock-controller@12060000 {
+>>                 compatible = "samsung,exynos4415-cmu-isp";
+>>                 reg = <0x12060000 0xB10>, <0x12070000 0xB10>;
+>>                 #clock-cells = <1>;
+>>
+>>                 assigned-clocks = <&cmu CLK_FOUT_ISP_PLL>;
+>>                 assigned-clock-rates = <300000000>;
+>>         };
+> 
+> This is a different problem, this is a clock controller with multiple
+> sets of registers that are all different. In case of the cmu, it seems
+> that they are all the same, you just have multiple copies at different
+> locations, and they are connected to different devices.
+> 
+> 	Arnd
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
