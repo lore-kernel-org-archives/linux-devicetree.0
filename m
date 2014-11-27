@@ -1,57 +1,47 @@
-From: Fengguang Wu <fengguang.wu@intel.com>
-Subject: Re: [PATCH V2 2/2] m32r: Add missing big-endian I/O accessors
-Date: Thu, 27 Nov 2014 14:20:34 -0800
-Message-ID: <20141127222034.GB16647@wfg-t540p.sh.intel.com>
-References: <1417112193-14400-1-git-send-email-cernekee@gmail.com>
- <1417112193-14400-2-git-send-email-cernekee@gmail.com>
+From: Beniamino Galvani <b.galvani@gmail.com>
+Subject: Re: [PATCH v3 2/3] pinctrl: add driver for Amlogic Meson SoCs
+Date: Thu, 27 Nov 2014 23:34:02 +0100
+Message-ID: <20141127223402.GA11418@gmail.com>
+References: <1416168856-12747-1-git-send-email-b.galvani@gmail.com>
+ <1416168856-12747-3-git-send-email-b.galvani@gmail.com>
+ <CACRpkda-U5OuKdBVGJ8UWprJkAtmTL1m11+AbNskVULPfyS72A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1417112193-14400-2-git-send-email-cernekee@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>
-Cc: grant.likely@linaro.org, kbuild-all@01.org, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, arnd@arndb.de, Hirokazu Takata <takata@linux-m32r.org>
+In-Reply-To: <CACRpkda-U5OuKdBVGJ8UWprJkAtmTL1m11+AbNskVULPfyS72A@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Carlo Caione <carlo@caione.org>, Soren Brinkmann <soren.brinkmann@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jerry Cao <jerry.cao@amlogic.com>, Victor Wan <victor.wan@amlogic.com>
 List-Id: devicetree@vger.kernel.org
 
-Add CC to Hirokazu.
+On Thu, Nov 27, 2014 at 02:48:31PM +0100, Linus Walleij wrote:
+> On Sun, Nov 16, 2014 at 9:14 PM, Beniamino Galvani <b.galvani@gmail.c=
+om> wrote:
+>=20
+> > This is a driver for the pinmux and GPIO controller available in
+> > Amlogic Meson SoCs. At the moment it only supports Meson8 devices,
+> > however other SoC families like Meson6 and Meson8b (the Cortex-A5
+> > variant) appear to be similar, with just different sets of banks an=
+d
+> > registers.
+> >
+> > GPIO interrupts are not supported at the moment due to lack of
+> > documentation.
+> >
+> > Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
+>=20
+> This is dependent on S=F6ren's patches I guess?
+>=20
+> OK I'll merge this once we have that other code sorted out.
 
-> Side note for Fengguang: both with and without my patches, m32r modules
-> fail to link using the make.cross script on Ubuntu 14.10:
- 
-Yes, the memory_start/memory_end link errors are really old m32r
-specific errors. The config file that can trigger this error is
-m32r-m32104ut_defconfig.
-
->   CC      init/version.o
->   LD      init/built-in.o
->   KSYM    .tmp_kallsyms1.o
->   KSYM    .tmp_kallsyms2.o
->   LD      vmlinux
->   SYSMAP  System.map
->   Building modules, stage 2.
->   OBJCOPY arch/m32r/boot/compressed/vmlinux.bin
->   MODPOST 96 modules
->   GZIP    arch/m32r/boot/compressed/vmlinux.bin.gz
-> ERROR: "memory_start" [fs/udf/udf.ko] undefined!
-> ERROR: "memory_end" [fs/udf/udf.ko] undefined!
-> ERROR: "memory_end" [drivers/scsi/sg.ko] undefined!
-> ERROR: "memory_start" [drivers/scsi/sg.ko] undefined!
-> ERROR: "memory_end" [drivers/i2c/i2c-dev.ko] undefined!
-> ERROR: "memory_start" [drivers/i2c/i2c-dev.ko] undefined!
-> scripts/Makefile.modpost:90: recipe for target '__modpost' failed
-> make[1]: *** [__modpost] Error 1
-> Makefile:1098: recipe for target 'modules' failed
-> make: *** [modules] Error 2
-> make: *** Waiting for unfinished jobs....
->   LD      arch/m32r/boot/compressed/piggy.o
-> /usr/local/gcc-4.9.0-nolibc/m32r-linux/bin/m32r-linux-ld: target elf32-m32r not found
-> arch/m32r/boot/compressed/Makefile:51: recipe for target 'arch/m32r/boot/compressed/piggy.o' failed
-> make[2]: *** [arch/m32r/boot/compressed/piggy.o] Error 1
-> arch/m32r/boot/Makefile:18: recipe for target 'arch/m32r/boot/compressed/vmlinux' failed
-> make[1]: *** [arch/m32r/boot/compressed/vmlinux] Error 2
-> arch/m32r/Makefile:53: recipe for target 'zImage' failed
-> make: *** [zImage] Error 2
+Yes, this depends on Soren's patches.
 
 Thanks,
-Fengguang
+Beniamino
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
