@@ -1,111 +1,49 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [RFC] cpufreq: Add "dvfs-method" binding to probe cpufreq drivers
-Date: Thu, 27 Nov 2014 10:59:52 +0530
-Message-ID: <CAKohpomFE6xg+HfOicha4Ntkr9osqDK2gxdKce=BU_q35jfBxA@mail.gmail.com>
-References: <596a6d49f2b3e2837aa9a54a3e1249161d3c9265.1416991009.git.viresh.kumar@linaro.org>
-	<5476071B.1060705@arm.com>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH] drivers/core/of: Add symlink to device-tree from
+ devices with an OF node
+Date: Thu, 27 Nov 2014 17:24:55 +1100
+Message-ID: <1417069495.2852.2.camel@kernel.crashing.org>
+References: <1415342031.4925.27.camel@kernel.crashing.org>
+	 <1415342117.4925.29.camel@kernel.crashing.org>
+	 <1415596626.5769.14.camel@kernel.crashing.org>
+	 <CAL_JsqKG=vpeGKj3v-2VW9oGQsnmuYMHRfy6LuXDXE=ROjHT4w@mail.gmail.com>
+	 <1415841047.5124.62.camel@kernel.crashing.org>
+	 <20141127033923.GA28286@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <5476071B.1060705@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Santosh Shilimkar <santosh.shilimkar@oracle.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Arnd Bergmann <arnd.bergmann@linaro.org>, Mike Turquette <mike.turquette@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kesavan.abhilash@gmail.com" <kesavan.abhilash@gmail.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "k.chander@samsung.com" <k.chander@samsung.com>, "olof@lixom.net" <olof@lixom.net>, "ta.omasab@gmail.com" <ta.omasab@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141127033923.GA28286-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jeremy Kerr <jeremy.kerr-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sudeep,
+On Wed, 2014-11-26 at 19:39 -0800, Greg KH wrote:
 
-On 26 November 2014 at 22:30, Sudeep Holla <sudeep.holla@arm.com> wrote:
-> On 26/11/14 08:46, Viresh Kumar wrote:
->> We only need to have one entry in cpus@cpu0 node which will match with
->> drivers
->> name.
+> Are you going to resend a changed version of this?
 
-> This seems fundamentally broken as the driver always needs to
-> unconditionally refer to cpu0. Furthermore the node need not be called
-> cpu0 as the name depends on its reg field.
+Yes, I've been distracted by a few other things, but I suppose I should
+do it :-)
 
-I meant CPU0's node, whatever the name is. Its normally cpu0 now a days
-but yes it can be something else as well :)
+Possibly tomorrow. Arnd, are you doing that helper you suggested to get
+to the of_node or should I ?
 
->> We can then add another file drivers/cpufreq/device_dt.c, which will add a
->> platform device with the name it finds from cpus@cpu0 node and existing
->> drivers
->> will work without any change. Or something else if somebody have a better
->> proposal. But lets fix the bindings first.
->
-> IIUC you will retain the existing list of cpufreq-dt platform device
-> creation as is. If not that breaks compatibility with old DT.
-
-I couldn't get what exactly you understood :), but this is what I meant.
-- Currently cpufreq drivers (like cpufreq-dt.c) are registering a
-platform_driver
-and platform specific code are registering a platform-device to match to this
-driver.
-- What will change is this platform specific code. The driver will stay as is.
-- Now the devices wouldn't get created from platform-specific code, but
-cpufreq core (may be a separate file for this: device_dt.c) will create platform
-device based on the string it got from DT.
-
-Makes sense?
+Cheers,
+Ben.
 
 
->> +Optional properties:
->> +- dvfs-method: CPUFreq driver to probe. For example: "arm-bL-cpufreq-dt",
->> +  "cpufreq-dt", etc
->
-> You should manage this with compatible rather than a new property as
-> it's not a real hardware property. IMHO Rob's suggestion[1] should work
-> fine.
->
-> IIUC, you can have the driver which create this platform device if DT
-> has generic compatible unconditionally(e.g "cpufreq-dt" as you have
-> chosen above). For all existing DT you can create a blacklist of
-> compatibles to match(as it doesn't have the generic compatible) covering
+> thanks,
+> 
+> greg k-h
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 
-I didn't get why you asked for a blacklist here. Why wouldn't "cpufreq-dt" in
-compatible work for them ?
 
-> all the existing platforms using cpufreq-dt driver, there by you can
-> even remove the platform device creating from multiple places.
-
-Yeah, we can remove all such occurrences for a single driver this way.
-What I was suggesting earlier was to do this from a driver independent
-file, so that its done once for all possible DT drivers. Like "cpufreq-dt",
-"arm_big_little_dt". The same compatible property can be used there
-too..
-
-> IMO something like the patch below should work(not tested, also
-> late_initcall is used just to demonstrate the idea)
->
-> Rob, please correct me if my understanding is wrong.
-
-> +static const struct of_device_id compatible_machine_match[] = {
-> +       /* All new machines must have the below compatible to use this
-> driver */
-> +       { .compatible = "cpufreq-generic-dt" },
-> +       /* BLACKLIST of existing users of cpufreq-dt below */
-> +       { .compatible = "samsung,exynos5420" },
-> +       { .compatible = "samsung,exynos5800" },
-> +       {},
-> +};
-> +
-> +static int cpufreq_generic_dt_init(void)
-> +{
-> +       struct device_node *root = of_find_node_by_path("/");
-> +       struct platform_device_info devinfo = { .name = "cpufreq-dt", };
-> +       /*
-> +        * Initialize the device for the platforms either
-> +        * blacklisted or compliant to generic compatible
-> +        */
-> +       if (!of_match_node(compatible_machine_match, root))
-> +               return -ENODEV;
-> +
-> +       /* Instantiate cpufreq-dt */
-> +       platform_device_register_full(&devinfo);
-> +       return 0;
-> +}
-> +late_initcall(cpufreq_generic_dt_init);
-
-Looks fine to me. Looks similar to what I had in mind for creating
-devices from platform-independent code.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
