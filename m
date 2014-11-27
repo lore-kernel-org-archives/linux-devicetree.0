@@ -1,68 +1,215 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [RFC] cpufreq: Add "dvfs-method" binding to probe cpufreq drivers
-Date: Thu, 27 Nov 2014 11:15:20 +0000
-Message-ID: <547707C8.3080108@arm.com>
-References: <596a6d49f2b3e2837aa9a54a3e1249161d3c9265.1416991009.git.viresh.kumar@linaro.org>	<5476071B.1060705@arm.com>	<CAKohpomFE6xg+HfOicha4Ntkr9osqDK2gxdKce=BU_q35jfBxA@mail.gmail.com>	<5476F4ED.6040206@arm.com> <CAKohpok+M+HuuQBJ3EJ_3e+Uv-Me5za7EO2TVguU_tCXNtahvQ@mail.gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 16/19] arm64: dts: exynos: Add dts files for 64-bit
+ Exynos5433 SoC
+Date: Thu, 27 Nov 2014 11:18:34 +0000
+Message-ID: <20141127111834.GB857@leverpostej>
+References: <1417073716-22997-1-git-send-email-cw00.choi@samsung.com>
+ <1417073716-22997-17-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAKohpok+M+HuuQBJ3EJ_3e+Uv-Me5za7EO2TVguU_tCXNtahvQ@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Rafael Wysocki <rjw@rjwysocki.net>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Santosh Shilimkar <santosh.shilimkar@oracle.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Arnd Bergmann <arnd.bergmann@linaro.org>, Mike Turquette <mike.turquette@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kesavan.abhilash@gmail.com" <kesavan.abhilash@gmail.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "k.chander@samsung.com" <k.chander@samsung.com>, "olof@lixom.net" <olof@lixom.net>, "ta.omasab@gmail.com" <ta.omasab@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1417073716-22997-17-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "geunsik.lim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <geunsik.lim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, a.kesavan@samsung.
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 27/11/14 10:22, Viresh Kumar wrote:
-> On 27 November 2014 at 15:24, Sudeep Holla <sudeep.holla@arm.com> wrote:
->> No that won't suffice. You can't modify the DTs of the platforms using
->> cpufreq-dt.c as of today. They should continue to work, so either you
->> retain all the existing platform device creation in platform code as is
->> or do something like below with the blacklist for those platforms.
+On Thu, Nov 27, 2014 at 07:35:13AM +0000, Chanwoo Choi wrote:
+> This patch adds new Exynos5433 dtsi to support 64-bit Exynos5433 SoC
+> based on Octal core CPUs (quad Cortex-A57 and quad Cortex-A53).
 >
-> Is the meaning of "backward compatibility" for DTs mentioned somewhere?
-> I am not sure if we have to *always* follow the compatibility you are talking
-> about.
->
+> Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+> Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Acked-by: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Acked-by: Geunsik Lim <geunsik.lim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi | 698 +++++++++++++++++++++
+>  arch/arm64/boot/dts/exynos/exynos5433.dtsi         | 523 +++++++++++++++
+>  2 files changed, 1221 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi
+>  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433.dtsi
 
-It's the general understanding, I am not sure if it's specified anywhere
-in the kernel Documentation, but I could find the below excerpts from [1]:
+[...]
 
-"The compatibility rules say that new kernels must work with older
-device trees. If changes are required, they should be put into new
-properties; the old ones can then be deprecated but not removed. New
-properties should be optional, so that device trees lacking those
-properties continue to work. The device tree developers will provide a
-set of guidelines for the creation of future-proof bindings."
+> diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+> new file mode 100644
+> index 0000000..3d8b576
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+> @@ -0,0 +1,523 @@
+> +/*
+> + * Samsung's Exynos5433 SoC device tree source
+> + *
+> + * Copyright (c) 2014 Samsung Electronics Co., Ltd.
+> + *             http://www.samsung.com
+> + *
+> + * Samsung's Exynos5433 SoC device nodes are listed in this file. Exynos5433
+> + * based board files can include this file and provide values for board specfic
+> + * bindings.
+> + *
+> + * Note: This file does not include device nodes for all the controllers in
+> + * Exynos5433 SoC. As device tree coverage for Exynos5433 increases, additional
+> + * nodes can be added to this file.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include "skeleton.dtsi"
+> +#include <dt-bindings/clock/exynos5433.h>
+> +
 
-> Probably we want new DTs to continue supporting older version of kernels.
-> Not that older DTs should work with new kernel changes.
->
+Just to check: no memory reservations required for any reason?
 
-It's *exactly opposite* as DTs are considered as part of firmware that
-gets shipped with the boards and any kernel should work with that DT if
-it is compliance with the DT bindings(even old, as the DT bindings
-should never get changed only gets extended)
+There also don't appear to be any memory nodes. Typically if that's
+filled in by the bootloader/FW we'd have an empty node (or one with a
+zero size entry) and a comment regarding the FW.
 
-> So, even with another field in cpuX node, we wouldn't break older kernels
-> as they will anyway get the device from platform code.
->
+> +/ {
+> +       compatible = "samsung,exynos5433";
+> +       #address-cells = <1>;
+> +       #size-cells = <1>;
 
-Yes, but that's not what we want.
+Not two, on both counts? The CPUs can address more than 32 bits.
 
->> OK, in this way you still continue to work on existing platforms with
->> *old DT*.
->
-> Probably not.
->
+Is there nothing in the physical address space above 0xffffffff?
 
-No, you *must* :). That's backward compatibility. Just consider a simple
-case where the bootloader is generating DT and we don't want to upgrade it.
+[...]
 
-Regards,
-Sudeep
+> +       cpus {
+> +               #address-cells = <2>;
+> +               #size-cells = <0>;
+> +
+> +               cpu0: cpu@100 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a53", "arm,armv8";
+> +                       enable-method = "psci";
 
-[1] http://lwn.net/Articles/572114/
+While the CPU nodes have enable-methods, I didn't spot a PSCI node
+anywhere, so this dts cannot possibly have been used to bring up an SMP
+system.
 
+How has this dts been tested?
+
+What PSCI revision have you implemented? Have have you tested it?
+
+I take it from the presence of GICH/GICV in the gic node that CPUs enter
+the kernel at EL2?
+
+> +                       reg = <0x0 0x100>;
+> +                       clock-frequency = <1050000000>;
+
+What uses this?
+
+> +               };
+
+[...]
+
+> +       soc: soc {
+> +               compatible = "simple-bus";
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               ranges;
+> +
+> +               fixed-rate-clocks {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +
+> +                       xusbxti: clock@0 {
+> +                               compatible = "fixed-clock";
+> +                               clock-output-names = "xusbxti";
+> +                               #clock-cells = <0>;
+> +                       };
+> +               };
+
+Get rid of the fixed-rate-clocks container node. It's pointless and
+messy. Given you only have one there's no need for the bogus
+unit-address either.
+
+> +
+> +               cmu_top: clock-controller@0x10030000{
+
+s/@0x/@/ -- a unit-address should not have the leading '0x'. Please
+apply that to the rest of the file.
+
+> +                       compatible = "samsung,exynos5433-cmu-top";
+> +                       reg = <0x10030000 0x0c04>;
+> +                       #clock-cells = <1>;
+> +               };
+
+[...]
+
+> +               mct@101c0000 {
+> +                       compatible = "samsung,exynos4210-mct";
+> +                       reg = <0x101c0000 0x800>;
+> +                       interrupts = <0 102 0>, <0 103 0>, <0 104 0>, <0 105 0>,
+> +                               <0 106 0>, <0 107 0>, <0 108 0>, <0 109>,
+> +                               <0 110 0>, <0 111 0>, <0 112 0>, <0 113 0>;
+> +                       clocks = <&cmu_top CLK_FIN_PLL>, <&cmu_peris CLK_PCLK_MCT>;
+> +                       clock-names = "fin_pll", "mct";
+> +               };
+
+Hase this block had no changes whatsoever since its use in Exynos4210?
+Do we not need a "samsung,exynos5433-mct" comaptible string too?
+
+> +
+> +               gic:interrupt-controller@11001000 {
+> +                       compatible = "arm,cortex-a15-gic";
+
+Given this is multi-cluster, surely this is an external GIC-400, for
+which we have a supported compatible string?
+
+So this should at least be:
+
+	compatible = "arm,gic-400", "arm,cortex-a15-gic";
+
+> +                       #interrupt-cells = <3>;
+> +                       interrupt-controller;
+> +                       reg =   <0x11001000 0x1000>,
+> +                               <0x11002000 0x1000>,
+> +                               <0x11004000 0x2000>,
+> +                               <0x11006000 0x2000>;
+
+As far as I am aware, the GICC size is 8KiB. Regardless of whether we
+currently use the second page of registers, they should be described.
+
+> +                       interrupts = <1 9 0xf04>;
+> +               };
+> +
+> +               serial_0: serial@14C10000 {
+
+Nit: Please be consistent with capitalisation of hex. IMO it's better
+to leave it all lower-case.
+
+[...]
+
+> +               timer {
+> +                       compatible = "arm,armv8-timer";
+> +                       interrupts = <1 13 0xff01>,
+> +                                    <1 14 0xff01>,
+> +                                    <1 11 0xff01>,
+> +                                    <1 10 0xff01>;
+> +                       clock-frequency = <24000000>;
+> +                       use-clocksource-only;
+> +                       use-physical-timer;
+
+As Marc said, NAK for these last three properties.
+
+There is no excuse for not setting CNTFRQ_EL0, especially given a PSCI
+implementation. The last two properties have never been supported in
+mainline, and shouldn't be necessary regardless.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
