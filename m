@@ -1,41 +1,144 @@
-From: Tomas Novotny <tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>
-Subject: Re: [PATCH 0/4] rtc: ds1307: add support for device tree and
- mcp7940x
-Date: Thu, 27 Nov 2014 16:17:41 +0100
-Message-ID: <20141127161741.52e8d300@tomas>
-References: <1416844164-16782-1-git-send-email-tomas@novotny.cz>
+From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] arm64: ARM: Fix the Generic Timers interrupt active
+ level description
+Date: Thu, 27 Nov 2014 15:33:21 +0000
+Message-ID: <20141127153321.GQ828@e106497-lin.cambridge.arm.com>
+References: <1417099005-18638-1-git-send-email-Liviu.Dudau@arm.com>
+ <5477389A.8010606@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416844164-16782-1-git-send-email-tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>
+In-Reply-To: <5477389A.8010606-5wv7dgnIgG8@public.gmane.org>
+Content-Disposition: inline
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 24 Nov 2014 16:49:20 +0100
-Tomas Novotny <tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org> wrote:
+On Thu, Nov 27, 2014 at 02:43:38PM +0000, Marc Zyngier wrote:
+> On 27/11/14 14:36, Liviu Dudau wrote:
+> > The Cortex-A5x TRM states in paragraph "9.2 Generic Timer functiona=
+l
+> > description" that generic timers provide an active-LOW interrupt
+> > output. Fix the device trees to correctly describe this.
+> >=20
+> > While doing this update the CPU mask to match the number of describ=
+ed
+> > CPUs as well.
+> >=20
+> > Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+> > ---
+> >=20
+> > Arnd, Olof: This is on top of linux-next/master as it patches the J=
+uno
+> > as well as all the other ARM DTs.
+> >=20
+> >  arch/arm64/boot/dts/arm/foundation-v8.dts  | 8 ++++----
+> >  arch/arm64/boot/dts/arm/juno.dts           | 8 ++++----
+> >  arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts | 8 ++++----
+> >  3 files changed, 12 insertions(+), 12 deletions(-)
+> >=20
+> > diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dts b/arch/arm64=
+/boot/dts/arm/foundation-v8.dts
+> > index 4a06090..27f3296 100644
+> > --- a/arch/arm64/boot/dts/arm/foundation-v8.dts
+> > +++ b/arch/arm64/boot/dts/arm/foundation-v8.dts
+> > @@ -78,10 +78,10 @@
+> > =20
+> >  	timer {
+> >  		compatible =3D "arm,armv8-timer";
+> > -		interrupts =3D <1 13 0xff01>,
+> > -			     <1 14 0xff01>,
+> > -			     <1 11 0xff01>,
+> > -			     <1 10 0xff01>;
+> > +		interrupts =3D <1 13 0xf08>,
+> > +			     <1 14 0xf08>,
+> > +			     <1 11 0xf08>,
+> > +			     <1 10 0xf08>;
+> >  		clock-frequency =3D <100000000>;
+> >  	};
+> > =20
+> > diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts=
+/arm/juno.dts
+> > index 097ecc4..cb3073e 100644
+> > --- a/arch/arm64/boot/dts/arm/juno.dts
+> > +++ b/arch/arm64/boot/dts/arm/juno.dts
+> > @@ -98,10 +98,10 @@
+> > =20
+> >  	timer {
+> >  		compatible =3D "arm,armv8-timer";
+> > -		interrupts =3D <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_ED=
+GE_RISING)>,
+> > -			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING=
+)>,
+> > -			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING=
+)>,
+> > -			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING=
+)>;
+> > +		interrupts =3D <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LE=
+VEL_LOW)>,
+> > +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>=
+,
+> > +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>=
+,
+> > +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>=
+;
+> >  	};
+> > =20
+> >  	pmu {
+> > diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts b/arch/arm6=
+4/boot/dts/arm/rtsm_ve-aemv8a.dts
+> > index 572005e..efc59b3 100644
+> > --- a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
+> > +++ b/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
+> > @@ -81,10 +81,10 @@
+> > =20
+> >  	timer {
+> >  		compatible =3D "arm,armv8-timer";
+> > -		interrupts =3D <1 13 0xff01>,
+> > -			     <1 14 0xff01>,
+> > -			     <1 11 0xff01>,
+> > -			     <1 10 0xff01>;
+> > +		interrupts =3D <1 13 0xf08>,
+> > +			     <1 14 0xf08>,
+> > +			     <1 11 0xf08>,
+> > +			     <1 10 0xf08>;
+> >  		clock-frequency =3D <100000000>;
+> >  	};
+> > =20
+> >=20
+>=20
+> Sorry, but that's wrong. Despite the *cores* having an level-low outp=
+ut,
+> the GIC only triggers on *level-high*. Yes, there is probably an
+> inverter in between.
 
-> This series is tested with MCP79401 and it is based on 3.18-rc6.
-> 
-> Tomas Novotny (4):
->   rtc: ds1307: add support for mcp7940x chips
->   of: add vendor prefix for Pericom Technology
->   rtc: ds1307: add device tree bindings documentation
->   rtc: ds1307: add device tree support
-> 
->  .../devicetree/bindings/rtc/maxim,ds1307.txt       |  23 ++++
->  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
->  drivers/rtc/rtc-ds1307.c                           | 149 ++++++++++++---------
->  3 files changed, 110 insertions(+), 63 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/rtc/maxim,ds1307.txt
+Hah, one can never read enough specs to get the right answer!
 
-It is now in the -mm and linux-next.
-Thanks to Andrew for pick up,
+I'll update the patch.
 
-Tomas
+Best regards,
+Liviu
+
+>=20
+> 	M.
+> --=20
+> Jazz is not dead. It just smells funny...
+>=20
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
