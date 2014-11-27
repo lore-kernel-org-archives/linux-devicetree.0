@@ -1,108 +1,48 @@
-From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] of: support passing console options with
- stdout-path
-Date: Thu, 27 Nov 2014 13:16:36 +0000
-Message-ID: <20141127131635.GJ2361@bivouac.eciton.net>
-References: <1417023640-23464-1-git-send-email-leif.lindholm@linaro.org>
- <1417023640-23464-3-git-send-email-leif.lindholm@linaro.org>
- <20141126183052.GH3443@lunn.ch>
- <CACxGe6tYZ8aE_TKw1cYMY5DDjpSXPSnhhAam-rG5NgdjpKJe+A@mail.gmail.com>
- <20141126214847.GJ3443@lunn.ch>
- <20141127121543.GG857@leverpostej>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 5/6] ARM: zynq: Add OCM controller driver
+Date: Thu, 27 Nov 2014 14:20:24 +0100
+Message-ID: <CACRpkdbZ8Pwy=04dhJq5ONZ1B-SQK1f=eLZjjCDmV7UQ0aHduA@mail.gmail.com>
+References: <cover.1415962281.git.michal.simek@xilinx.com>
+	<6741d995fbec801d795c5db481e39425bd912f8a.1415962281.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141127121543.GG857@leverpostej>
+In-Reply-To: <6741d995fbec801d795c5db481e39425bd912f8a.1415962281.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Ian Campbell <ijc-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Josh Cartwright <josh.cartwright-acOepvfBmUk@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Jingoo
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 27, 2014 at 12:15:43PM +0000, Mark Rutland wrote:
-> On Wed, Nov 26, 2014 at 09:48:47PM +0000, Andrew Lunn wrote:
-> > On Wed, Nov 26, 2014 at 09:07:33PM +0000, Grant Likely wrote:
-> > > On Wed, Nov 26, 2014 at 6:30 PM, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
-> > > > On Wed, Nov 26, 2014 at 05:40:40PM +0000, Leif Lindholm wrote:
-> > > >> Support specifying console options (like with console=ttyXN,<options>)
-> > > >> by appending them to the stdout-path property after a separating ':'.
-> > > >>
-> > > >> Example:
-> > > >>         stdout-path = "uart0:115200";
-> > > >
-> > > > Hi Leif
-> > > >
-> > > > This should be documented somewhere under
-> > > > Documentation/devicetree/bindings/
-> > > >
-> > > > Not sure where thought. Maybe a top level chosen.txt?
-> > > 
-> > > Actually, this one doesn't. It is already documented in ePAPR
-> > 
-> > Hi Grant
-> > 
-> > Humm, do i have an old version of ePAPR?
-> > 
-> > All i see is that in Table 3-4 It says:
-> > 
-> > stdout-path O <string> A string that specifies the full path to the
-> > 	      	       node representing the device to be used for
-> > 	      	       boot console output. If the character ":" is
-> > 	      	       present in the value it terminates the
-> > 	      	       path. The value may be an alias.
-> > 
-> > 		       If the stdin-path property is not specified,
-> > 		       stdout-path should be assumed to define the input device.
-> > 
-> > So what is before the : is defined. What comes afterwards,
-> > baudrate/parity/bits/flow control does not appear to the defined in
-> > ePAPR. Should we not document the extension being added here?
-> 
-> I believe that we should, and it should be relatively trivial to add a
-> document stating that the format and meaning of the parts after the ':'
-> are device-specific. 
+On Fri, Nov 14, 2014 at 11:52 AM, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
 
-Device-specific is a bit broad though?
+> The driver provide memory allocator which can
+> be used by others drivers to allocate memory inside OCM.
+> All location for 64kB blocks are supported
 
-> So how about Documentation/devicetree/bindings/serial/stdout-path.txt,
-> with something like the following:
+Allocation?
 
-There is, however, nothing serial-specific about this functionality -
-it console-specific.
+> and driver is trying to allocate the largest continuous
+> block of memory.
 
-Could it be bindings/console/stdout-path.txt?
- 
-> ---->8----
-> Device trees may specify the device to be used for boot console output
-> with a stdout-path property under /chosen, as described in ePAPR, e.g.
-> 
-> / {
-> 	chosen {
-> 		stdout-path = "/serial@f00:115200";
-> 	};
-> 
-> 	serial@f00 {
-> 		compatible = "vendor,some-uart";
-> 		reg = <0xf00 0x10>;
-> 	};
-> };
-> 
-> If the character ":" is present in the value, this terminates the path.
-> The meaning of any cahracters following the ":" is device-specific, and
-> must be specified in the relevant binding documentation.
-> ---->8----
-> 
-> The more difficult part is documenting those (and I'm still uneasy about
-> conflating the Linux driver command line options with the DT binding for
-> that reason).
+Isn't all genalloc allocations continuous?
 
-For the current situation, which _is_ serial-specific, could we then
-add a serial/stdout-path.txt describing the mapping to
-uart_parse_options - making that interface an implicit requirement for
-the use of stdout-path?
+(...)
+> +       zynq_ocmc->pool = devm_gen_pool_create(&pdev->dev,
+> +                                              ilog2(ZYNQ_OCMC_GRANULARITY),
+> +                                              -1);
 
-/
-    Leif
+Do this:
+
+#include <linux/sizes.h>
+
+zynq_ocmc->pool = devm_gen_pool_create(&pdev->dev,
+                                       ilog2(SZ_64K),
+                                       -1);
+
+And get rid of the #define for ZYNQ_OCMC_GRANULARITY
+
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
