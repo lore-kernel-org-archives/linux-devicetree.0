@@ -1,82 +1,95 @@
-From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [v3, 1/2] arm64: Create link to include/dt-bindings to enable C
- preprocessor use.
-Date: Thu, 27 Nov 2014 11:24:13 +0000
-Message-ID: <20141127112413.GL828@e106497-lin.cambridge.arm.com>
-References: <1415727131-4572-2-git-send-email-Liviu.Dudau@arm.com>
- <5476E215.5020405@samsung.com>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 02/19] clk: samsung: Add binding documentation for
+ Exynos5433 clock controller
+Date: Thu, 27 Nov 2014 20:29:20 +0900
+Message-ID: <54770B10.3050804@samsung.com>
+References: <1417073716-22997-1-git-send-email-cw00.choi@samsung.com>
+ <1417073716-22997-3-git-send-email-cw00.choi@samsung.com>
+ <20141127112113.GC857@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5476E215.5020405-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Content-Disposition: inline
+In-reply-to: <20141127112113.GC857@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, device tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "geunsik.lim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <geunsik.lim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, a.kesavan@samsung.
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 27, 2014 at 08:34:29AM +0000, Pankaj Dubey wrote:
-> Hi Liviu,
->=20
-> On Tuesday 11 November 2014 11:02 PM, Liviu Dudau wrote:
-> > DT files used in the compilation phase can be preprocessed by the C
-> > preprocessor. This requires an include/dt-bindings directory to be
-> > present in the arch/arm64/boot/dts directory.
-> >
-> > Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-> >
->=20
-> Same change already has been posted as part of adding Exynos7 SoC=20
-> support, as Exynos7 patches have been accepted in Kukjin's tree, I th=
-ink=20
-> following patch [1] as part of Exynos7 series [2] can also be taken.
->=20
-> 1: http://www.spinics.net/lists/devicetree/msg56552.html
-> 2: http://www.spinics.net/lists/devicetree/msg56551.html
+Dear Mark,
 
-Hi Pankaj,
+On 11/27/2014 08:21 PM, Mark Rutland wrote:
+> On Thu, Nov 27, 2014 at 07:34:59AM +0000, Chanwoo Choi wrote:
+>> This patch add binding documentation for Exynos5433 clock controller.
+>> Exynos5433 has various clock domains So, this documentation explains
+>> the detailed clock domains ans usage guide.
+>>
+>> Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Acked-by: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Acked-by: Geunsik Lim <geunsik.lim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/clock/exynos5433-clock.txt | 106 +++++++++++++++++++++
+>>  1 file changed, 106 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/clock/exynos5433-clock.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/exynos5433-clock.txt b/Documentation/devicetree/bindings/clock/exynos5433-clock.txt
+>> new file mode 100644
+>> index 0000000..72cd0ba
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/exynos5433-clock.txt
+>> @@ -0,0 +1,106 @@
+>> +* Samsung Exynos5433 CMU (Clock Management Units)
+>> +
+>> +The Exynos5433 clock controller generates and supplies clock to various
+>> +controllers within the Exynos5433 SoC.
+>> +
+>> +Required Properties:
+>> +
+>> +- compatible: should be one of the following.
+>> +  - "samsung,exynos5433-cmu-top"   - clock controller compatible for CMU_TOP
+>> +    which generates clocks for IMEM/FSYS/G3D/GSCL/HEVC/MSCL/G2D/MFC/PERIC/PERIS
+>> +    domains and bus clocks.
+>> +  - "samsung,exynos5433-cmu-cpif"  - clock controller compatible for CMU_CPIF
+>> +    which generates clocks for LLI (Low Latency Interface) IP.
+>> +  - "samsung,exynos5433-cmu-mif"   - clock controller compatible for CMU_MIF
+>> +    which generates clocks for DRAM Memory Controller domain.
+>> +  - "samsung,exynos5433-cmu-peric" - clock controller compatible for CMU_PERIC
+>> +    which generates clocks for UART/I2C/SPI/I2S/PCM/SPDIF/PWM/SLIMBUS IPs.
+>> +  - "samsung,exynos5433-cmu-peris" - clock controller compatible for CMU_PERIS
+>> +    which generates clocks for PMU/TMU/MCT/WDT/RTC/SECKEY/TZPC IPs.
+>> +  - "samsung,exynos5433-cmu-fsys"  - clock controller compatible for CMU_FSYS
+>> +    which generates clocks for USB/UFS/SDMMC/TSI/PDMA IPs.
+>> +
+>> +- reg: physical base address of the controller and length of memory mapped
+>> +  region.
+>> +
+>> +- #clock-cells: should be 1.
+>> +
+>> +Each clock is assigned an identifier and client nodes can use this identifier
+>> +to specify the clock which they consume.
+>> +
+>> +All available clocks are defined as preprocessor macros in
+>> +dt-bindings/clock/exynos5433.h header and can be used in device
+>> +tree sources.
+> 
+> That header should be added as part of this patch, otehrwise this is
+> incomplete.
 
-I don't know how Olof and Arnd are going to handle this, but I believe
-Arnd has already merged my patchset into the arm-soc tree.
+OK, I'll merge two patches (patch2 and patch3) by solving this issue.
 
-Best regards,
-Liviu
+patch2 : [PATCH 02/19] clk: samsung: Add binding documentation for Exynos5433 clock controller
+patch3 : [PATCH 03/19] clk: samsung: exynos5433: Add clocks using common clock framework
 
->=20
-> Thanks,
-> Pankaj Dubey
->=20
-> > ---
-> > arch/arm64/boot/dts/include/dt-bindings | 1 +
-> >   1 file changed, 1 insertion(+)
-> >   create mode 120000 arch/arm64/boot/dts/include/dt-bindings
-> >
-> > \ No newline at end of file
-> >
-> > diff --git a/arch/arm64/boot/dts/include/dt-bindings b/arch/arm64/b=
-oot/dts/include/dt-bindings
-> > new file mode 120000
-> > index 0000000..08c00e4
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/include/dt-bindings
-> > @@ -0,0 +1 @@
-> > +../../../../../include/dt-bindings
-> >
->=20
+Thanks for your review.
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+Best Regards,
+Chanwoo Choi
+
+
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
