@@ -1,97 +1,65 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/8] irqchip: Supply new driver for STi based devices
-Date: Thu, 27 Nov 2014 09:55:44 +0000
-Message-ID: <20141127095544.GF4628@x1>
-References: <1416932705-16880-1-git-send-email-lee.jones@linaro.org>
- <35179358.tOpRGufXmc@wuerfel>
- <20141127092901.GE4628@x1>
- <2111250.BPZOtBCtcF@wuerfel>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 3/9] clk: sunxi: Add prcm mod0 clock driver
+Date: Thu, 27 Nov 2014 11:10:51 +0100
+Message-ID: <5476F8AB.2000601@redhat.com>
+References: <20141126211318.GN25249@lukather> <5476E3A5.4000708@redhat.com> <CAGb2v652m0bCdPWFF4LWwjcrCJZvnLibFPw8xXJ3Q-Ge+_-p7g@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2111250.BPZOtBCtcF@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBO7R3ORQKGQEB44UPNQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAGb2v652m0bCdPWFF4LWwjcrCJZvnLibFPw8xXJ3Q-Ge+_-p7g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 27 Nov 2014, Arnd Bergmann wrote:
+Hi,
 
-> On Thursday 27 November 2014 09:29:01 Lee Jones wrote:
-> > On Thu, 27 Nov 2014, Arnd Bergmann wrote:
-> > > On Thursday 27 November 2014 09:02:55 Lee Jones wrote:
-> > > > On Tue, 25 Nov 2014, Arnd Bergmann wrote:
-> > > >=20
-> > > > > On Tuesday 25 November 2014 16:24:59 Lee Jones wrote:
-> > > > >=20
-> > > > > > diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kcon=
-fig
-> > > > > > index b21f12f..e502f15 100644
-> > > > > > --- a/drivers/irqchip/Kconfig
-> > > > > > +++ b/drivers/irqchip/Kconfig
-> > > > > > @@ -93,6 +93,13 @@ config RENESAS_IRQC
-> > > > > >     bool
-> > > > > >     select IRQ_DOMAIN
-> > > > > > =20
-> > > > > > +config ST_IRQCHIP
-> > > > > > +   bool
-> > > > > > +   select REGMAP
-> > > > > > +   select MFD_SYSCON
-> > > > > > +   help
-> > > > > > +     Enables SysCfg Controlled IRQs on STi based platforms=
-=2E
-> > > > > > +
-> > > > >=20
-> > > > > I'm confused by the purpose of this code. It's apparently a d=
-river
-> > > > > in drivers/irqchip, the Kconfig symbol contains the string IR=
-QCHIP,
-> > > > > yet it doesn't actually register an irq_chip.
-> > > > >=20
-> > > > > Also, the name is a bit too generic, ST has lots of different=
- irqchips,
-> > > > > and this apparently isn't even one of them=20
-> > > >=20
-> > > > Hmm... now you're going to ask me to remember who I had the
-> > > > conversation with that alluded to this as the best location for=
- this
-> > > > driver.  Unfortunately, I cannot.  Can you think of a better pl=
-ace to
-> > > > put it then?
-> > >=20
-> > > I suspect it's in the right place but should actually be an irqch=
-ip
-> > > driver. I'm having trouble understanding what this code actually =
-does,
-> > > can you you explain the functionality in more detail so we can fi=
-gure
-> > > out what to do with it?
-> >=20
-> > In the simplest terms it's an IRQ unmasker.  A9 Core IRQs are disab=
-led
-> > on boot; PMU, CTI (CoreSight), PL310_L2 and EXT.  In order for you =
-to
-> > make use of them they need to be unmasked in SYSCFG.
->=20
-> So you just apply static configuration once, or are there reasons why=
- you
-> would mask the interrupts again later?
->=20
-> If it's all static, why doesn't the boot loader unmask all interrupts=
- before
-> starting the kernel?
+On 11/27/2014 10:28 AM, Chen-Yu Tsai wrote:
+> Hi,
+>
+> On Thu, Nov 27, 2014 at 4:41 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
 
-We'd like to configure them at boot-time, via DT.
+<snip>
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> I notice that you've not responded to my proposal to simple make the clock
+>> node a child node of the clocks node in the dt, that should work nicely, and
+>> avoid the need for any kernel level changes to support it, I'm beginning to
+>> think that that is probably the best solution.
+>
+> Would that not cause an overlap of the io regions, and cause one of them
+> to fail? AFAIK the OF subsystem doesn't like overlapping resources.
+
+No the overlap check is done by the platform dev resource code, and of_clk_declare
+does not use that. So the overlap would be there, but not an issue (in theory
+I did not test this).
+
+Thinking more about this, I believe that using the MFD framework for the prcm seems
+like a mistake to me. It gains us nothing, since we have no irq to de-multiplex or
+some such. We're not using MFD for the CMU, why use it for CMU2 (which the prcm
+effectively is) ?
+
+So I think it would be best to remove the prcm node from the dt, and simply put the
+different blocks inside it directly under the soc node, this will work fine with
+current kernels, since as said we do not use any MFD features, we use it to
+create platform devs and assign resources, something which will happen automatically
+if we put the nodes directly under the soc node, since then simple-bus will do the
+work for us.
+
+And then in a release or 2 we can remove the mfd prcm driver from the kernel, and we
+have the same functionality we have now with less code.
+
+We could then also chose to move the existing prcm clock nodes to of_clk_declare
+(this will work once they are nodes directly under soc with a proper reg property).
+and the ir-clk can use allwinner,sun4i-a10-mod0-clk compatible and can live under
+either clocks or soc, depending on what we want to do with the other prcm clocks.
+
+Regards,
+
+Hans
