@@ -1,65 +1,128 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 2/7] regulator: dt-bindings: Document the ena-gpios
- property
-Date: Thu, 27 Nov 2014 18:30:58 +0000
-Message-ID: <20141127183058.GB7712@sirena.org.uk>
-References: <1417087253-12306-1-git-send-email-k.kozlowski@samsung.com>
- <1417087253-12306-3-git-send-email-k.kozlowski@samsung.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2] arm64: ARM: Fix the Generic Timers interrupt active
+ level description
+Date: Thu, 27 Nov 2014 18:39:28 +0000
+Message-ID: <54776FE0.8030600@arm.com>
+References: <1417105283-19575-1-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="4802fQj3DlSA+WXC"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1417087253-12306-3-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1417105283-19575-1-git-send-email-Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 27/11/14 16:21, Liviu Dudau wrote:
+> The Cortex-A5x TRM states in paragraph "9.2 Generic Timer functional
+> description" that generic timers provide a level not edge interrupt
+> output. Fix the device trees to correctly describe this.
+> 
+> While doing this update the CPU mask to match the number of described
+> CPUs as well as the DT bindings documentation for Generic Timers.
+> 
+> Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
 
---4802fQj3DlSA+WXC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
 
-On Thu, Nov 27, 2014 at 12:20:48PM +0100, Krzysztof Kozlowski wrote:
+	M.
 
-> +- ena-gpios: GPIO to use for enable control. Actual implementation depends
-> +  on regulator driver. The bindings documentation for given driver describes
-> +  which regulator actually supports it.
-> +- ena-gpio-open-drain: GPIO is open drain type.
+> ---
+> 
+> Arnd, Olof: This is on top of linux-next/master as it patches Juno's
+> as well as all the other ARM DTs.
+> 
+> --
+> 
+>  Documentation/devicetree/bindings/arm/arch_timer.txt | 8 ++++----
+>  arch/arm64/boot/dts/arm/foundation-v8.dts            | 8 ++++----
+>  arch/arm64/boot/dts/arm/juno.dts                     | 8 ++++----
+>  arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts           | 8 ++++----
+>  4 files changed, 16 insertions(+), 16 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
+> index 37b2caf..6d2aa87 100644
+> --- a/Documentation/devicetree/bindings/arm/arch_timer.txt
+> +++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
+> @@ -27,10 +27,10 @@ Example:
+>  	timer {
+>  		compatible = "arm,cortex-a15-timer",
+>  			     "arm,armv7-timer";
+> -		interrupts = <1 13 0xf08>,
+> -			     <1 14 0xf08>,
+> -			     <1 11 0xf08>,
+> -			     <1 10 0xf08>;
+> +		interrupts = <1 13 0xf04>,
+> +			     <1 14 0xf04>,
+> +			     <1 11 0xf04>,
+> +			     <1 10 0xf04>;
+>  		clock-frequency = <100000000>;
+>  	};
+>  
+> diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dts b/arch/arm64/boot/dts/arm/foundation-v8.dts
+> index 4a06090..8c0214e 100644
+> --- a/arch/arm64/boot/dts/arm/foundation-v8.dts
+> +++ b/arch/arm64/boot/dts/arm/foundation-v8.dts
+> @@ -78,10 +78,10 @@
+>  
+>  	timer {
+>  		compatible = "arm,armv8-timer";
+> -		interrupts = <1 13 0xff01>,
+> -			     <1 14 0xff01>,
+> -			     <1 11 0xff01>,
+> -			     <1 10 0xff01>;
+> +		interrupts = <1 13 0xf04>,
+> +			     <1 14 0xf04>,
+> +			     <1 11 0xf04>,
+> +			     <1 10 0xf04>;
+>  		clock-frequency = <100000000>;
+>  	};
+>  
+> diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
+> index 097ecc4..551a688 100644
+> --- a/arch/arm64/boot/dts/arm/juno.dts
+> +++ b/arch/arm64/boot/dts/arm/juno.dts
+> @@ -98,10 +98,10 @@
+>  
+>  	timer {
+>  		compatible = "arm,armv8-timer";
+> -		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING)>,
+> -			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING)>,
+> -			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING)>,
+> -			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING)>;
+> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_HIGH)>,
+> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_HIGH)>,
+> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_HIGH)>,
+> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_HIGH)>;
+>  	};
+>  
+>  	pmu {
+> diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts b/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
+> index 572005e..49d1b19 100644
+> --- a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
+> +++ b/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
+> @@ -81,10 +81,10 @@
+>  
+>  	timer {
+>  		compatible = "arm,armv8-timer";
+> -		interrupts = <1 13 0xff01>,
+> -			     <1 14 0xff01>,
+> -			     <1 11 0xff01>,
+> -			     <1 10 0xff01>;
+> +		interrupts = <1 13 0xf04>,
+> +			     <1 14 0xf04>,
+> +			     <1 11 0xf04>,
+> +			     <1 10 0xf04>;
+>  		clock-frequency = <100000000>;
+>  	};
+>  
+> 
 
-I'm relly not a big fan of adding a fixed name property here with no
-override capability, it means that the naming won't reflect the specific
-regulator design so closely and in practice for many of the PMICs the
-GPIO control can do rather more than just control enables and supports
-reprogramming.  The latter case where we've got a signal which can
-sometimes be simply and enable but sometimes more makes it especially
-worrying to have the property always be there, it's something that might
-work in some configurations but could easily be broken if we try to
-exploit more advanced functionality (things also triggering other
-configuration changes at the same time).
 
-Factoring out the code is good but it seems better to have it be
-something which drivers can control, for example by having them
-explicitly specify a property name to use or perhaps a flag to enable
-the default name.
-
-We also need an invert option.
-
---4802fQj3DlSA+WXC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUd23hAAoJECTWi3JdVIfQay8H/jIeCloCCEW8WC1Fzf3AW8ft
-F2rYuuVJnc7vDyzFLIrN6V9pYN2IE2HHdwzat5NCUipdHkZIO0fDXez4Y+YYsdPO
-nSq7o3UxMEwawaxcxjOiGNzVuEwl80PQCGh1Gzn2bvZpwUDsZvBbT/vnRGMe75dr
-ywom1+xXPOCiaxatdvNmWJShQOgQwMfvXIDOh78qbx5baSvlAatShRB3Cr745lb1
-YDHun+mZ/EDarhwPaH9/oS5BjMsPjItVQqHO6ep3JrFHy8faJTdW5yypuW9RdbUS
-hh75PD9fLXoHApI0y4zEXZvytxnlgcSNJChDFBumjir69Ji3V1jYftFRGG94g1M=
-=7Ncs
------END PGP SIGNATURE-----
-
---4802fQj3DlSA+WXC--
+-- 
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
