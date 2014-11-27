@@ -1,170 +1,43 @@
-From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 2/2] backlight/lp855x: Add supply regulator to lp855x
-Date: Thu, 27 Nov 2014 04:23:30 -0800
-Message-ID: <CAOw6vb+nUpBs8MaRC3TgJt2DYun5HWE73=8MNyokt3ed9NQzNg@mail.gmail.com>
-References: <1417029064-12460-1-git-send-email-seanpaul@chromium.org>
- <1417029064-12460-2-git-send-email-seanpaul@chromium.org> <54767F43.2060901@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] dt: bindings: add ath10k wireless device
+Date: Thu, 27 Nov 2014 13:28:45 +0100
+Message-ID: <3202372.2AaH3c4qv1@wuerfel>
+References: <20141127120727.17546.61202.stgit@potku.adurom.net> <20141127120856.17546.32014.stgit@potku.adurom.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54767F43.2060901-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Kim, Milo" <milo.kim-l0cyMroinI0@public.gmane.org>
-Cc: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-fbdev <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Aaron Durbin <adurbin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141127120856.17546.32014.stgit-5n+v4hRq/7bEFBQscRVz1g@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
+Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, toshik-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 26, 2014 at 5:32 PM, Kim, Milo <milo.kim-l0cyMroinI0@public.gmane.org> wrote:
-> (Looping backlight class subsystem maintainers)
->
-> Hi Sean,
->
-> Please see my comments below. Thanks!
->
-> On 11/27/2014 4:11 AM, Sean Paul wrote:
->>
->> This patch adds a supply regulator to the lp855x platform data to
->> facilitate
->> powering on/off the 3V rail attached to the controller.
->>
->> Cc: St=C3=A9phane Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> Cc: Aaron Durbin <adurbin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> ---
->>   .../devicetree/bindings/video/backlight/lp855x.txt      |  2 ++
->>   drivers/video/backlight/lp855x_bl.c                     | 17
->> +++++++++++++++++
->>   include/linux/platform_data/lp855x.h                    |  2 ++
->>   3 files changed, 21 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/video/backlight/lp855=
-x.txt
->> b/Documentation/devicetree/bindings/video/backlight/lp855x.txt
->> index 96e83a5..0a3ecbc 100644
->> --- a/Documentation/devicetree/bindings/video/backlight/lp855x.txt
->> +++ b/Documentation/devicetree/bindings/video/backlight/lp855x.txt
->> @@ -12,6 +12,7 @@ Optional properties:
->>     - pwm-period: PWM period value. Set only PWM input mode used (u3=
-2)
->>     - rom-addr: Register address of ROM area to be updated (u8)
->>     - rom-val: Register value to be updated (u8)
->> +  - power-supply: Regulator which controls the 3V rail
->>
->>   Example:
->>
->> @@ -56,6 +57,7 @@ Example:
->>         backlight@2c {
->>                 compatible =3D "ti,lp8557";
->>                 reg =3D <0x2c>;
->> +               power-supply =3D <&backlight_vdd>;
->>
->>                 dev-ctrl =3D /bits/ 8 <0x41>;
->>                 init-brt =3D /bits/ 8 <0x0a>;
->> diff --git a/drivers/video/backlight/lp855x_bl.c
->> b/drivers/video/backlight/lp855x_bl.c
->> index 257b3ba..8021009 100644
->> --- a/drivers/video/backlight/lp855x_bl.c
->> +++ b/drivers/video/backlight/lp855x_bl.c
->> @@ -17,6 +17,7 @@
->>   #include <linux/of.h>
->>   #include <linux/platform_data/lp855x.h>
->>   #include <linux/pwm.h>
->> +#include <linux/regulator/consumer.h>
->>
->>   /* LP8550/1/2/3/6 Registers */
->>   #define LP855X_BRIGHTNESS_CTRL                0x00
->> @@ -383,6 +384,13 @@ static int lp855x_parse_dt(struct lp855x *lp)
->>                 pdata->rom_data =3D &rom[0];
->>         }
->>
->> +       pdata->supply =3D devm_regulator_get(dev, "power");
->> +       if (IS_ERR(pdata->supply)) {
->> +               if (PTR_ERR(pdata->supply) =3D=3D -EPROBE_DEFER)
->> +                       return -EPROBE_DEFER;
->> +               pdata->supply =3D NULL;
->
->
-> This optional data, 'supply' is set to NULL.
-> Please refer to my comments below.
->
->> +       }
->> +
->>         lp->pdata =3D pdata;
->>
->>         return 0;
->> @@ -423,6 +431,14 @@ static int lp855x_probe(struct i2c_client *cl, =
-const
->> struct i2c_device_id *id)
->>         else
->>                 lp->mode =3D REGISTER_BASED;
->>
->> +       if (lp->pdata->supply) {
->> +               ret =3D regulator_enable(lp->pdata->supply);
->> +               if (ret < 0) {
->> +                       dev_err(&cl->dev, "failed to enable supply: =
-%d\n",
->> ret);
->> +                       return ret;
->> +               }
->> +       }
->> +
->>         i2c_set_clientdata(cl, lp);
->>
->>         ret =3D lp855x_configure(lp);
->> @@ -454,6 +470,7 @@ static int lp855x_remove(struct i2c_client *cl)
->>
->>         lp->bl->props.brightness =3D 0;
->>         backlight_update_status(lp->bl);
->> +       regulator_disable(lp->pdata->supply);
->
->
-> The 'lp->pdata->supply' is optional, what happens if it is NULL?
-> This will cause the kernel OOPS inside regulator_disable() API.
->
+On Thursday 27 November 2014 14:08:56 Kalle Valo wrote:
+> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> new file mode 100644
+> index 000000000000..edefc26c6204
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> @@ -0,0 +1,30 @@
+> +* Qualcomm Atheros ath10k wireless devices
+> +
+> +For ath10k devices the calibration data can be provided through Device
+> +Tree. The node is a child node of the PCI controller.
+> +
+> +Required properties:
+> +-compatible : Should be "qcom,ath10k"
+> +
+> +Optional properties:
+> +- qcom,ath10k-calibration-data : calibration data as an array, the
+> +                                length can vary between hw versions
+> +
 
-bleh. Thanks for catching this, I'll re-spin and send a new version nex=
-t week.
+Does the device always have a valid mac address in hardware? If not,
+how about listing that as well using the mac-address property?
 
-Sean
-
-
-
-> int regulator_disable(struct regulator *regulator)
-> {
->         struct regulator_dev *rdev =3D regulator->rdev;
-> ...
-> }
->
->>         sysfs_remove_group(&lp->dev->kobj, &lp855x_attr_group);
->>
->>         return 0;
->> diff --git a/include/linux/platform_data/lp855x.h
->> b/include/linux/platform_data/lp855x.h
->> index 1b2ba24..9c7fd1e 100644
->> --- a/include/linux/platform_data/lp855x.h
->> +++ b/include/linux/platform_data/lp855x.h
->> @@ -136,6 +136,7 @@ struct lp855x_rom_data {
->>                 Only valid when mode is PWM_BASED.
->>    * @size_program : total size of lp855x_rom_data
->>    * @rom_data : list of new eeprom/eprom registers
->> + * @supply : regulator that supplies 3V input
->>    */
->>   struct lp855x_platform_data {
->>         const char *name;
->> @@ -144,6 +145,7 @@ struct lp855x_platform_data {
->>         unsigned int period_ns;
->>         int size_program;
->>         struct lp855x_rom_data *rom_data;
->> +       struct regulator *supply;
->>   };
->>
->>   #endif
->>
->
-> Best regards,
-> Milo
+	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
