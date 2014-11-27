@@ -1,111 +1,118 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] arm64: ARM: Fix the Generic Timers interrupt active level
- description
-Date: Thu, 27 Nov 2014 15:48:47 +0000
-Message-ID: <547747DF.9070402@arm.com>
-References: <1417099005-18638-1-git-send-email-Liviu.Dudau@arm.com> <5477389A.8010606@arm.com> <20141127153453.GR828@e106497-lin.cambridge.arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 11/19] clk: samsung: exynos5433: Add clocks for CMU_BUS{0|1|2} domains
+Date: Thu, 27 Nov 2014 16:51:35 +0100
+Message-ID: <3844465.a5d3AtOSOo@wuerfel>
+References: <1417073716-22997-1-git-send-email-cw00.choi@samsung.com> <2150099.t3m9xROUE3@wuerfel> <CAGTfZH1C28s7trTh9+PhrnLnmJ9vpsKtAA61ASK-LA_1d_cihg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141127153453.GR828-2JSQmVVBSi7ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAGTfZH1C28s7trTh9+PhrnLnmJ9vpsKtAA61ASK-LA_1d_cihg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: cw00.choi@samsung.com
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "olof@lixom.net" <olof@lixom.net>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "inki.dae@samsung.com" <inki.dae@samsung.com>, "chanho61.park@samsung.com" <chanho61.park@samsung.com>, "geunsik.lim@samsung.com" <geunsik.lim@samsung.com>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, "jh80.chung@samsung.com" <jh80.chung@samsu>
 List-Id: devicetree@vger.kernel.org
 
-On 27/11/14 15:34, Liviu Dudau wrote:
-> On Thu, Nov 27, 2014 at 02:43:38PM +0000, Marc Zyngier wrote:
->> On 27/11/14 14:36, Liviu Dudau wrote:
->>> The Cortex-A5x TRM states in paragraph "9.2 Generic Timer functional
->>> description" that generic timers provide an active-LOW interrupt
->>> output. Fix the device trees to correctly describe this.
->>>
->>> While doing this update the CPU mask to match the number of described
->>> CPUs as well.
->>>
->>> Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
->>> ---
->>>
->>> Arnd, Olof: This is on top of linux-next/master as it patches the Juno
->>> as well as all the other ARM DTs.
->>>
->>>  arch/arm64/boot/dts/arm/foundation-v8.dts  | 8 ++++----
->>>  arch/arm64/boot/dts/arm/juno.dts           | 8 ++++----
->>>  arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts | 8 ++++----
->>>  3 files changed, 12 insertions(+), 12 deletions(-)
->>>
->>> diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dts b/arch/arm64/boot/dts/arm/foundation-v8.dts
->>> index 4a06090..27f3296 100644
->>> --- a/arch/arm64/boot/dts/arm/foundation-v8.dts
->>> +++ b/arch/arm64/boot/dts/arm/foundation-v8.dts
->>> @@ -78,10 +78,10 @@
->>>  
->>>  	timer {
->>>  		compatible = "arm,armv8-timer";
->>> -		interrupts = <1 13 0xff01>,
->>> -			     <1 14 0xff01>,
->>> -			     <1 11 0xff01>,
->>> -			     <1 10 0xff01>;
->>> +		interrupts = <1 13 0xf08>,
->>> +			     <1 14 0xf08>,
->>> +			     <1 11 0xf08>,
->>> +			     <1 10 0xf08>;
->>>  		clock-frequency = <100000000>;
->>>  	};
->>>  
->>> diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
->>> index 097ecc4..cb3073e 100644
->>> --- a/arch/arm64/boot/dts/arm/juno.dts
->>> +++ b/arch/arm64/boot/dts/arm/juno.dts
->>> @@ -98,10 +98,10 @@
->>>  
->>>  	timer {
->>>  		compatible = "arm,armv8-timer";
->>> -		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING)>,
->>> -			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING)>,
->>> -			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING)>,
->>> -			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING)>;
->>> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
->>> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
->>> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
->>> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>;
->>>  	};
->>>  
->>>  	pmu {
->>> diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts b/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
->>> index 572005e..efc59b3 100644
->>> --- a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
->>> +++ b/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
->>> @@ -81,10 +81,10 @@
->>>  
->>>  	timer {
->>>  		compatible = "arm,armv8-timer";
->>> -		interrupts = <1 13 0xff01>,
->>> -			     <1 14 0xff01>,
->>> -			     <1 11 0xff01>,
->>> -			     <1 10 0xff01>;
->>> +		interrupts = <1 13 0xf08>,
->>> +			     <1 14 0xf08>,
->>> +			     <1 11 0xf08>,
->>> +			     <1 10 0xf08>;
->>>  		clock-frequency = <100000000>;
->>>  	};
->>>  
->>>
->>
->> Sorry, but that's wrong. Despite the *cores* having an level-low output,
->> the GIC only triggers on *level-high*. Yes, there is probably an
->> inverter in between.
+On Friday 28 November 2014 00:44:07 Chanwoo Choi wrote:
+> >
+> >> +#define bus_div_clks(num)                        \
+> >> +static struct samsung_div_clock bus##num_div_clks[] __initdata = {    \
+> >> +    /* DIV_BUS */                            \
+> >> +    DIV(CLK_DIV_PCLK_BUS##num_133, "div_pclk_bus"#num"_133",    \
+> >> +            "aclk_bus"#num"_400", DIV_BUS##num, 0, 3),    \
+> >> +};                                    \
+> >
+> > To illustrate my point further: CLK_DIV_PCLK_BUS0/1/2 are all the
+> > same, and so are DIV_BUS0/1/2, so you should not need to duplicate
+> > the definitions at all but just call them 'CLK_DIV_PCLK_BUS'
+> > and 'DIV_BUS'.
 > 
-> BTW, should I also update the bindings example to get this right?
+> CLK_DIV_PCLK_BUS0/1/2 is not all the same.
+> Each CLK_DIV_PCLK_BUS0/1/2 must need the unique clock number.
+> Because some device may need some clocks by using unique clock number.
 
-Definitely. I'm pretty sure I got it wrong too at some point...
+This is from your original patch:
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
++/* CMU_BUS0 */
++#define CLK_DIV_PCLK_BUS0_133                          1
++
++#define CLK_ACLK_AHB2APB_BUS0P                         2
++#define CLK_ACLK_BUS0NP_133                            3
++#define CLK_ACLK_BUS0ND_400                            4
++#define CLK_PCLK_BUS0SRVND_133                         5
++#define CLK_PCLK_PMU_BUS0                              6
++#define CLK_PCLK_SYSREG_BUS0                           7
++
++#define BUS0_NR_CLK                                    8
++
++/* CMU_BUS1 */
++#define CLK_DIV_PCLK_BUS1_133                          1
++
++#define CLK_ACLK_AHB2APB_BUS1P                         2
++#define CLK_ACLK_BUS1NP_133                            3
++#define CLK_ACLK_BUS1ND_400                            4
++#define CLK_PCLK_BUS1SRVND_133                         5
++#define CLK_PCLK_PMU_BUS1                              6
++#define CLK_PCLK_SYSREG_BUS1                           7
++
++#define BUS1_NR_CLK                                    8
++
++/* CMU_BUS2 */
++#define CLK_MOUT_ACLK_BUS2_400_USER                    1
++
++#define CLK_DIV_PCLK_BUS2_133                          2
++
++#define CLK_ACLK_AHB2APB_BUS2P                         3
++#define CLK_ACLK_BUS2NP_133                            4
++#define CLK_ACLK_BUS2BEND_400                          5
++#define CLK_ACLK_BUS2RTND_400                          6
++#define CLK_PCLK_BUS2SRVND_133                         7
++#define CLK_PCLK_PMU_BUS2                              8
++#define CLK_PCLK_SYSREG_BUS2                           9
++
++#define BUS2_NR_CLK                                    10
+
+
+The numbers are arbitrarily assigned, but for bus0 and bus1,
+they are all identical, while bus2 uses a lightly different
+numbering, which you could easily change, e.g. by using the
+numbers you have for bus2 on bus0 and bus1 as well.
+
++ * Register offset definitions for CMU_BUS0
++ */
++#define DIV_BUS0                       0x0600
++#define DIV_STAT_BUS0                  0x0700
++#define ENABLE_ACLK_BUS0               0x0800
++#define ENABLE_PCLK_BUS0               0x0900
++#define ENABLE_IP_BUS0                 0x0b00
++#define ENABLE_IP_BUS1                 0x0b04
++
+
++/*
++ * Register offset definitions for CMU_BUS1
++ */
++#define DIV_BUS1                       0x0600
++#define DIV_STAT_BUS1                  0x0700
++#define ENABLE_ACLK_BUS1               0x0800
++#define ENABLE_PCLK_BUS1               0x0900
++#define ENABLE_IP_BUS10                        0x0b00
++#define ENABLE_IP_BUS11                        0x0b04
+
++/*
++ * Register offset definitions for CMU_BUS2
++ */
++#define MUX_SEL_BUS2                   0x0200
++#define MUX_ENABLE_BUS2                        0x0300
++#define MUX_STAT_BUS2                  0x0400
++#define DIV_BUS2                       0x0600
++#define DIV_STAT_BUS2                  0x0700
++#define ENABLE_ACLK_BUS2               0x0800
++#define ENABLE_PCLK_BUS2               0x0900
++#define ENABLE_IP_BUS20                        0x0b00
++#define ENABLE_IP_BUS21                        0x0b04
+
+More importantly, the register offsets are all identical, except that
+bus2 has the additional MUX_SEL and MUX_ENABLE definitions. It's very
+obvious that this is the same hardware block in multiple instances.
+
+	Arnd
