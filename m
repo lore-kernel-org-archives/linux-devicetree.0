@@ -1,241 +1,213 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [PATCH 5/9] gpio: Add Fujitsu MB86S7x GPIO driver
-Date: Thu, 27 Nov 2014 16:33:54 +0900
-Message-ID: <CAAVeFuL+RKOt1b=JiRTiajGq159_W0kJ2KOiiHa7ZwMBwuk3qg@mail.gmail.com>
-References: <1416486442-25200-1-git-send-email-Vincent.Yang@tw.fujitsu.com> <1416487023-25426-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1416487023-25426-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Vincent Yang <vincent.yang.fujitsu@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, andy.green@linaro.org, patches@linaro.org, jaswinder.singh@linaro.org, Vincent Yang <Vincent.Yang@tw.fujitsu.com>, Tetsuya Nuriya <nuriya.tetsuya@jp.fujitsu.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH 05/19] clk: samsung: exynos5433: Add clocks for CMU_PERIC domain
+Date: Thu, 27 Nov 2014 16:35:02 +0900
+Message-ID: <1417073716-22997-6-git-send-email-cw00.choi@samsung.com>
+References: <1417073716-22997-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1417073716-22997-1-git-send-email-cw00.choi@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: kgene.kim@samsung.com, mark.rutland@arm.com, arnd@arndb.de, olof@lixom.net, catalin.marinas@arm.com, will.deacon@arm.com, s.nawrocki@samsung.com, tomasz.figa@gmail.com, thomas.abraham@linaro.org, linus.walleij@linaro.org, kyungmin.park@samsung.com, inki.dae@samsung.com, chanho61.park@samsung.com, geunsik.lim@samsung.com, sw0312.kim@samsung.com, jh80.chung@samsung.com, cw00.choi@samsung.com, a.kesavan@samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Inha Song <ideal.song@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 20, 2014 at 9:37 PM, Vincent Yang
-<vincent.yang.fujitsu@gmail.com> wrote:
-> Driver for Fujitsu MB86S7x SoCs that have a memory mapped GPIO controller.
->
-> Signed-off-by: Andy Green <andy.green@linaro.org>
-> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
-> Signed-off-by: Vincent Yang <Vincent.Yang@tw.fujitsu.com>
-> Signed-off-by: Tetsuya Nuriya <nuriya.tetsuya@jp.fujitsu.com>
-> ---
->  .../bindings/gpio/fujitsu,mb86s70-gpio.txt         |  18 ++
->  drivers/gpio/Kconfig                               |   6 +
->  drivers/gpio/Makefile                              |   1 +
->  drivers/gpio/gpio-mb86s7x.c                        | 211 +++++++++++++++++++++
->  4 files changed, 236 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/fujitsu,mb86s70-gpio.txt
->  create mode 100644 drivers/gpio/gpio-mb86s7x.c
->
-> diff --git a/Documentation/devicetree/bindings/gpio/fujitsu,mb86s70-gpio.txt b/Documentation/devicetree/bindings/gpio/fujitsu,mb86s70-gpio.txt
-> new file mode 100644
-> index 0000000..38300ee
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/fujitsu,mb86s70-gpio.txt
-> @@ -0,0 +1,18 @@
-> +Fujitsu MB86S7x GPIO Controller
-> +-------------------------------
-> +
-> +Required properties:
-> +- compatible: Should be "fujitsu,mb86s70-gpio"
-> +- gpio-controller: Marks the device node as a gpio controller.
-> +- #gpio-cells: Should be <2>. The first cell is the pin number and the
-> +  second cell is used to specify optional parameters:
-> +   - bit 0 specifies polarity (0 for normal, 1 for inverted).
+This patch adds missing divider/gate clocks of CMU_PERIC domain
+which includes I2S/PCM/SPDIF/PWM/SLIMBUS IPs. The SPI/I2S may use
+external input clock which has 'ioclk_*' prefix.
 
-According to the example below and the code, "reg" and "clocks" are
-also required properties.
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+[ideal.song: Change clk flags of to pclk_gpio_* clk, pclk_gpio_* should be always on.]
+Signed-off-by: Inha Song <ideal.song@samsung.com>
+Acked-by: Inki Dae <inki.dae@samsung.com>
+Acked-by: Geunsik Lim <geunsik.lim@samsung.com>
+---
+ drivers/clk/samsung/clk-exynos5433.c   | 79 +++++++++++++++++++++++++++++++++-
+ include/dt-bindings/clock/exynos5433.h | 34 ++++++++++++++-
+ 2 files changed, 111 insertions(+), 2 deletions(-)
 
-> +
-> +Examples:
-> +       gpio0: gpio@31000000 {
-> +               compatible = "fujitsu,mb86s70-gpio";
-> +               reg = <0 0x31000000 0x10000>;
-> +               gpio-controller;
-> +               #gpio-cells = <2>;
-> +               clocks = <&clk_alw_2_1>;
-
-Maybe add a "clocks-names" property so the clock can be given a meaningful name?
-
-> +       };
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 0959ca9..493b7fe 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -181,6 +181,12 @@ config GPIO_F7188X
->           To compile this driver as a module, choose M here: the module will
->           be called f7188x-gpio.
->
-> +config GPIO_MB86S7X
-> +       bool "GPIO support for Fujitsu MB86S7x Platforms"
-> +       depends on ARCH_MB86S7X
-> +       help
-> +         Say yes here to support the GPIO controller in LSI ZEVIO SoCs.
-> +
->  config GPIO_MOXART
->         bool "MOXART GPIO support"
->         depends on ARCH_MOXART
-> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-> index e5d346c..eec0664 100644
-> --- a/drivers/gpio/Makefile
-> +++ b/drivers/gpio/Makefile
-> @@ -46,6 +46,7 @@ obj-$(CONFIG_GPIO_MAX730X)    += gpio-max730x.o
->  obj-$(CONFIG_GPIO_MAX7300)     += gpio-max7300.o
->  obj-$(CONFIG_GPIO_MAX7301)     += gpio-max7301.o
->  obj-$(CONFIG_GPIO_MAX732X)     += gpio-max732x.o
-> +obj-$(CONFIG_GPIO_MB86S7X)     += gpio-mb86s7x.o
->  obj-$(CONFIG_GPIO_MC33880)     += gpio-mc33880.o
->  obj-$(CONFIG_GPIO_MC9S08DZ60)  += gpio-mc9s08dz60.o
->  obj-$(CONFIG_GPIO_MCP23S08)    += gpio-mcp23s08.o
-> diff --git a/drivers/gpio/gpio-mb86s7x.c b/drivers/gpio/gpio-mb86s7x.c
-> new file mode 100644
-> index 0000000..f0b2dc0
-> --- /dev/null
-> +++ b/drivers/gpio/gpio-mb86s7x.c
-> @@ -0,0 +1,211 @@
-> +/*
-> + *  linux/drivers/gpio/gpio-mb86s7x.c
-> + *
-> + *  Copyright (C) 2014 Fujitsu Semiconductor Limited
-> + *  Copyright (C) 2014 Linaro Ltd.
-> + *
-> + *  This program is free software: you can redistribute it and/or modify
-> + *  it under the terms of the GNU General Public License as published by
-> + *  the Free Software Foundation, version 2 of the License.
-> + *
-> + *  This program is distributed in the hope that it will be useful,
-> + *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *  GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/io.h>
-> +#include <linux/init.h>
-> +#include <linux/clk.h>
-> +#include <linux/gpio.h>
-> +#include <linux/module.h>
-> +#include <linux/err.h>
-> +#include <linux/errno.h>
-> +#include <linux/ioport.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/slab.h>
-> +
-> +#define PDR(x) (0x0 + x)
-> +#define DDR(x) (0x10 + x)
-> +#define PFR(x) (0x20 + x)
-
-Everytime these macros are used in the code, they are called in the
-form PFR(offset / 8 * 4). How about doing this operation in the macros
-instead of repeating it at every call?
-
-> +
-> +struct mb86s70_gpio_chip {
-> +       spinlock_t lock;
-> +       struct clk *clk;
-> +       void __iomem *base;
-> +       struct gpio_chip gc;
-> +};
-> +
-> +static int mb86s70_gpio_request(struct gpio_chip *gc, unsigned offset)
-> +{
-> +       struct mb86s70_gpio_chip *gchip = container_of(gc,
-> +                                       struct mb86s70_gpio_chip, gc);
-
-Please have a chip_to_mb86s70() macro to avoid that cumbersome call to
-container_of in every function. Also I suggest you move the gpio_chip
-to the top of your mb86s70_gpio_chip structure so the container_of
-translates to a simple recast without any arithmetic.
-
-> +       unsigned long flags;
-> +       u32 val;
-> +
-> +       spin_lock_irqsave(&gchip->lock, flags);
-> +       val = readl(gchip->base + PFR(offset / 8 * 4));
-
-Same, having mb86s70_readl()/mb86s70_writel() functions would prevent
-you from explicitly doing pointer arithmetic every time you write a
-register.
-
-> +       val &= ~(1 << (offset % 8)); /* as gpio-port */
-
-val &= ~BIT(offset % 8); ? Same everywhere it applies.
-
-> +       writel(val, gchip->base + PFR(offset / 8 * 4));
-> +       spin_unlock_irqrestore(&gchip->lock, flags);
-> +
-> +       return 0;
-> +}
-> +
-> +static void mb86s70_gpio_free(struct gpio_chip *gc, unsigned offset)
-> +{
-> +       struct mb86s70_gpio_chip *gchip = container_of(gc,
-> +                                       struct mb86s70_gpio_chip, gc);
-> +       unsigned long flags;
-> +       u32 val;
-> +
-> +       spin_lock_irqsave(&gchip->lock, flags);
-> +       val = readl(gchip->base + PFR(offset / 8 * 4));
-> +       val |= (1 << (offset % 8)); /* as peri-port */
-> +       writel(val, gchip->base + PFR(offset / 8 * 4));
-> +       spin_unlock_irqrestore(&gchip->lock, flags);
-> +}
-> +
-> +static int mb86s70_gpio_direction_input(struct gpio_chip *gc, unsigned offset)
-> +{
-> +       struct mb86s70_gpio_chip *gchip =
-> +                       container_of(gc, struct mb86s70_gpio_chip, gc);
-> +       unsigned long flags;
-> +       unsigned char val;
-> +
-> +       spin_lock_irqsave(&gchip->lock, flags);
-> +       val = readl(gchip->base + DDR(offset / 8 * 4));
-> +       val &= ~(1 << (offset % 8));
-> +       writel(val, gchip->base + DDR(offset / 8 * 4));
-> +       spin_unlock_irqrestore(&gchip->lock, flags);
-> +
-> +       return 0;
-> +}
-> +
-> +static int mb86s70_gpio_direction_output(struct gpio_chip *gc,
-> +                                        unsigned offset, int value)
-> +{
-> +       struct mb86s70_gpio_chip *gchip =
-> +                       container_of(gc, struct mb86s70_gpio_chip, gc);
-> +       unsigned long flags;
-> +       unsigned char val;
-> +
-> +       spin_lock_irqsave(&gchip->lock, flags);
-> +
-> +       val = readl(gchip->base + PDR(offset / 8 * 4));
-> +       if (value)
-> +               val |= (1 << (offset % 8));
-> +       else
-> +               val &= ~(1 << (offset % 8));
-> +       writel(val, gchip->base + PDR(offset / 8 * 4));
-> +
-> +       val = readl(gchip->base + DDR(offset / 8 * 4));
-> +       val |= (1 << (offset % 8));
-> +       writel(val, gchip->base + DDR(offset / 8 * 4));
-> +
-> +       spin_unlock_irqrestore(&gchip->lock, flags);
-> +
-> +       return 0;
-> +}
-> +
-> +static int mb86s70_gpio_get(struct gpio_chip *gc, unsigned offset)
-> +{
-> +       struct mb86s70_gpio_chip *gchip =
-> +                       container_of(gc, struct mb86s70_gpio_chip, gc);
-> +       unsigned char val;
-> +
-> +       val = readl(gchip->base + PDR(offset / 8 * 4));
-> +       val &= (1 << (offset % 8));
-> +       return val ? 1 : 0;
-
-Shouldn't this function be protected by the spin lock as well?
-
-These minor comments aside, the driver looks nice and simple.
+diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
+index e0d71fd..11ee2d8 100644
+--- a/drivers/clk/samsung/clk-exynos5433.c
++++ b/drivers/clk/samsung/clk-exynos5433.c
+@@ -259,6 +259,14 @@ static struct samsung_fixed_rate_clock top_fixed_clks[] __initdata = {
+ 	FRATE(0, "ioclk_audiocdclk0", NULL, CLK_IS_ROOT, 100000000),
+ 	/* Xi2s1SDI input clock for SPDIF */
+ 	FRATE(0, "ioclk_spdif_extclk", NULL, CLK_IS_ROOT, 100000000),
++	/* XspiCLK[4:0] input clock for SPI */
++	FRATE(0, "ioclk_spi4_clk_in", NULL, CLK_IS_ROOT, 50000000),
++	FRATE(0, "ioclk_spi3_clk_in", NULL, CLK_IS_ROOT, 50000000),
++	FRATE(0, "ioclk_spi2_clk_in", NULL, CLK_IS_ROOT, 50000000),
++	FRATE(0, "ioclk_spi1_clk_in", NULL, CLK_IS_ROOT, 50000000),
++	FRATE(0, "ioclk_spi0_clk_in", NULL, CLK_IS_ROOT, 50000000),
++	/* Xi2s1SCLK input clock for I2S1_BCLK */
++	FRATE(0, "ioclk_i2s1_bclk_in", NULL, CLK_IS_ROOT, 12288000),
+ };
+ 
+ static struct samsung_mux_clock top_mux_clks[] __initdata = {
+@@ -763,6 +771,7 @@ CLK_OF_DECLARE(exynos5433_cmu_mif, "samsung,exynos5433-cmu-mif",
+  * Register offset definitions for CMU_PERIC
+  */
+ #define DIV_PERIC			0x0600
++#define DIV_STAT_PERIC			0x0700
+ #define ENABLE_ACLK_PERIC		0x0800
+ #define ENABLE_PCLK_PERIC0		0x0900
+ #define ENABLE_PCLK_PERIC1		0x0904
+@@ -773,6 +782,7 @@ CLK_OF_DECLARE(exynos5433_cmu_mif, "samsung,exynos5433-cmu-mif",
+ 
+ static unsigned long peric_clk_regs[] __initdata = {
+ 	DIV_PERIC,
++	DIV_STAT_PERIC,
+ 	ENABLE_ACLK_PERIC,
+ 	ENABLE_PCLK_PERIC0,
+ 	ENABLE_PCLK_PERIC1,
+@@ -782,14 +792,56 @@ static unsigned long peric_clk_regs[] __initdata = {
+ 	ENABLE_IP_PERIC2,
+ };
+ 
++static struct samsung_div_clock peric_div_clks[] __initdata = {
++	/* DIV_PERIC */
++	DIV(CLK_DIV_SCLK_SCI, "div_sclk_sci", "fin_pll", DIV_PERIC, 4, 8),
++	DIV(CLK_DIV_SCLK_SC_IN, "div_sclk_sc_in", "fin_pll", DIV_PERIC, 0, 4),
++};
++
+ static struct samsung_gate_clock peric_gate_clks[] __initdata = {
++	/* ENABLE_ACLK_PERIC */
++	GATE(CLK_ACLK_AHB2APB_PERIC2P, "aclk_ahb2apb_peric2p", "aclk_peric_66",
++			ENABLE_ACLK_PERIC, 3, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_ACLK_AHB2APB_PERIC1P, "aclk_ahb2apb_peric1p", "aclk_peric_66",
++			ENABLE_ACLK_PERIC, 2, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_ACLK_AHB2APB_PERIC0P, "aclk_ahb2apb_peric0p", "aclk_peric_66",
++			ENABLE_ACLK_PERIC, 1, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_ACLK_PERICNP_66, "aclk_pericnp_66", "aclk_peric_66",
++			ENABLE_ACLK_PERIC, 0, CLK_IGNORE_UNUSED, 0),
++
+ 	/* ENABLE_PCLK_PERIC0 */
++	GATE(CLK_PCLK_SCI, "pclk_sci", "aclk_peric_66", ENABLE_PCLK_PERIC0,
++			31, CLK_SET_RATE_PARENT, 0),
++	GATE(CLK_PCLK_GPIO_FINGER, "pclk_gpio_finger", "aclk_peric_66",
++			ENABLE_PCLK_PERIC0, 30, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_PCLK_GPIO_ESE, "pclk_gpio_ese", "aclk_peric_66",
++			ENABLE_PCLK_PERIC0, 29, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_PCLK_PWM, "pclk_pwm", "aclk_peric_66", ENABLE_PCLK_PERIC0,
++			28, CLK_SET_RATE_PARENT, 0),
++	GATE(CLK_PCLK_SPDIF, "pclk_spdif", "aclk_peric_66", ENABLE_PCLK_PERIC0,
++			26, CLK_SET_RATE_PARENT, 0),
++	GATE(CLK_PCLK_PCM1, "pclk_pcm1", "aclk_peric_66", ENABLE_PCLK_PERIC0,
++			25, CLK_SET_RATE_PARENT, 0),
++	GATE(CLK_PCLK_I2S1, "pclk_i2s", "aclk_peric_66", ENABLE_PCLK_PERIC0,
++			24, CLK_SET_RATE_PARENT, 0),
+ 	GATE(CLK_PCLK_SPI2, "pclk_spi2", "aclk_peric_66", ENABLE_PCLK_PERIC0,
+ 			23, CLK_SET_RATE_PARENT, 0),
+ 	GATE(CLK_PCLK_SPI1, "pclk_spi1", "aclk_peric_66", ENABLE_PCLK_PERIC0,
+ 			22, CLK_SET_RATE_PARENT, 0),
+ 	GATE(CLK_PCLK_SPI0, "pclk_spi0", "aclk_peric_66", ENABLE_PCLK_PERIC0,
+ 			21, CLK_SET_RATE_PARENT, 0),
++	GATE(CLK_PCLK_ADCIF, "pclk_adcif", "aclk_peric_66", ENABLE_PCLK_PERIC0,
++			20, CLK_SET_RATE_PARENT, 0),
++	GATE(CLK_PCLK_GPIO_TOUCH, "pclk_gpio_touch", "aclk_peric_66",
++			ENABLE_PCLK_PERIC0, 19, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_PCLK_GPIO_NFC, "pclk_gpio_nfc", "aclk_peric_66",
++			ENABLE_PCLK_PERIC0, 18, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_PCLK_GPIO_PERIC, "pclk_gpio_peric", "aclk_peric_66",
++			ENABLE_PCLK_PERIC0, 17, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_PCLK_PMU_PERIC, "pclk_pmu_peric", "aclk_peric_66",
++			ENABLE_PCLK_PERIC0, 16, CLK_SET_RATE_PARENT, 0),
++	GATE(CLK_PCLK_SYSREG_PERIC, "pclk_sysreg_peric", "aclk_peric_66",
++			ENABLE_PCLK_PERIC0, 15, CLK_SET_RATE_PARENT, 0),
+ 	GATE(CLK_PCLK_UART2, "pclk_uart2", "aclk_peric_66", ENABLE_PCLK_PERIC0,
+ 			14, CLK_SET_RATE_PARENT, 0),
+ 	GATE(CLK_PCLK_UART1, "pclk_uart1", "aclk_peric_66", ENABLE_PCLK_PERIC0,
+@@ -844,11 +896,34 @@ static struct samsung_gate_clock peric_gate_clks[] __initdata = {
+ 			ENABLE_PCLK_PERIC1, 0, CLK_SET_RATE_PARENT, 0),
+ 
+ 	/* ENABLE_SCLK_PERIC */
++	GATE(CLK_SCLK_IOCLK_SPI4, "sclk_ioclk_spi4", "ioclk_spi4_clk_in",
++			ENABLE_SCLK_PERIC, 21, CLK_SET_RATE_PARENT, 0),
++	GATE(CLK_SCLK_IOCLK_SPI3, "sclk_ioclk_spi3", "ioclk_spi3_clk_in",
++			ENABLE_SCLK_PERIC, 20, CLK_SET_RATE_PARENT, 0),
+ 	GATE(CLK_SCLK_SPI4, "sclk_spi4", "sclk_spi4_peric", ENABLE_SCLK_PERIC,
+ 			19, CLK_SET_RATE_PARENT, 0),
+ 	GATE(CLK_SCLK_SPI3, "sclk_spi3", "sclk_spi3_peric", ENABLE_SCLK_PERIC,
+ 			18, CLK_SET_RATE_PARENT, 0),
+-
++	GATE(CLK_SCLK_SCI, "sclk_sci", "div_sclk_sci", ENABLE_SCLK_PERIC,
++			17, 0, 0),
++	GATE(CLK_SCLK_SC_IN, "sclk_sc_in", "div_sclk_sc_in", ENABLE_SCLK_PERIC,
++			16, 0, 0),
++	GATE(CLK_SCLK_PWM, "sclk_pwm", "fin_pll", ENABLE_SCLK_PERIC, 15, 0, 0),
++	GATE(CLK_SCLK_IOCLK_SPI2, "sclk_ioclk_spi2", "ioclk_spi2_clk_in",
++			ENABLE_SCLK_PERIC, 13, CLK_SET_RATE_PARENT, 0),
++	GATE(CLK_SCLK_IOCLK_SPI1, "sclk_ioclk_spi1", "ioclk_spi1_clk_in",
++			ENABLE_SCLK_PERIC, 12, CLK_SET_RATE_PARENT, 0),
++	GATE(CLK_SCLK_IOCLK_SPI0, "sclk_ioclk_spi0", "ioclk_spi0_clk_in",
++			ENABLE_SCLK_PERIC, 11, CLK_SET_RATE_PARENT, 0),
++	GATE(CLK_SCLK_IOCLK_I2S1_BCLK, "sclk_ioclk_i2s1_bclk",
++			"ioclk_i2s1_bclk_in", ENABLE_SCLK_PERIC, 10,
++			CLK_SET_RATE_PARENT, 0),
++	GATE(CLK_SCLK_SPDIF, "sclk_spdif", "sclk_spdif_peric",
++			ENABLE_SCLK_PERIC, 8, CLK_SET_RATE_PARENT, 0),
++	GATE(CLK_SCLK_PCM1, "sclk_pcm1", "sclk_pcm1_peric",
++			ENABLE_SCLK_PERIC, 7, CLK_SET_RATE_PARENT, 0),
++	GATE(CLK_SCLK_I2S1, "sclk_i2s1", "sclk_i2s1_peric",
++			ENABLE_SCLK_PERIC, 6, CLK_SET_RATE_PARENT, 0),
+ 	GATE(CLK_SCLK_SPI2, "sclk_spi2", "sclk_spi2_peric", ENABLE_SCLK_PERIC,
+ 			5, CLK_SET_RATE_PARENT, 0),
+ 	GATE(CLK_SCLK_SPI1, "sclk_spi1", "sclk_spi1_peric", ENABLE_SCLK_PERIC,
+@@ -864,6 +939,8 @@ static struct samsung_gate_clock peric_gate_clks[] __initdata = {
+ };
+ 
+ static struct samsung_cmu_info peric_cmu_info __initdata = {
++	.div_clks		= peric_div_clks,
++	.nr_div_clks		= ARRAY_SIZE(peric_div_clks),
+ 	.gate_clks		= peric_gate_clks,
+ 	.nr_gate_clks		= ARRAY_SIZE(peric_gate_clks),
+ 	.nr_clk_ids		= PERIC_NR_CLK,
+diff --git a/include/dt-bindings/clock/exynos5433.h b/include/dt-bindings/clock/exynos5433.h
+index 3e9960b..3d7d0cf 100644
+--- a/include/dt-bindings/clock/exynos5433.h
++++ b/include/dt-bindings/clock/exynos5433.h
+@@ -182,8 +182,40 @@
+ #define CLK_SCLK_UART2			34
+ #define CLK_SCLK_UART1			35
+ #define CLK_SCLK_UART0			36
++#define CLK_ACLK_AHB2APB_PERIC2P	37
++#define CLK_ACLK_AHB2APB_PERIC1P	38
++#define CLK_ACLK_AHB2APB_PERIC0P	39
++#define CLK_ACLK_PERICNP_66		40
++#define CLK_PCLK_SCI			41
++#define CLK_PCLK_GPIO_FINGER		42
++#define CLK_PCLK_GPIO_ESE		43
++#define CLK_PCLK_PWM			44
++#define CLK_PCLK_SPDIF			45
++#define CLK_PCLK_PCM1			46
++#define CLK_PCLK_I2S1			47
++#define CLK_PCLK_ADCIF			48
++#define CLK_PCLK_GPIO_TOUCH		49
++#define CLK_PCLK_GPIO_NFC		50
++#define CLK_PCLK_GPIO_PERIC		51
++#define CLK_PCLK_PMU_PERIC		52
++#define CLK_PCLK_SYSREG_PERIC		53
++#define CLK_SCLK_IOCLK_SPI4		54
++#define CLK_SCLK_IOCLK_SPI3		55
++#define CLK_SCLK_SCI			56
++#define CLK_SCLK_SC_IN			57
++#define CLK_SCLK_PWM			58
++#define CLK_SCLK_IOCLK_SPI2		59
++#define CLK_SCLK_IOCLK_SPI1		60
++#define CLK_SCLK_IOCLK_SPI0		61
++#define CLK_SCLK_IOCLK_I2S1_BCLK	62
++#define CLK_SCLK_SPDIF			63
++#define CLK_SCLK_PCM1			64
++#define CLK_SCLK_I2S1			65
+ 
+-#define PERIC_NR_CLK			37
++#define CLK_DIV_SCLK_SCI		70
++#define CLK_DIV_SCLK_SC_IN		71
++
++#define PERIC_NR_CLK			72
+ 
+ /* CMU_PERIS */
+ #define	CLK_PCLK_HPM_APBIF		1
+-- 
+1.8.5.5
