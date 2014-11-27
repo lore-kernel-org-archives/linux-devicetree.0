@@ -1,272 +1,71 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 3/9] clk: sunxi: Add prcm mod0 clock driver
-Date: Thu, 27 Nov 2014 09:41:09 +0100
-Message-ID: <5476E3A5.4000708@redhat.com>
-References: <20141126211318.GN25249@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH v13 03/10] qcom: spm: Add Subsystem Power Manager driver
+Date: Thu, 27 Nov 2014 10:44:23 +0200
+Message-ID: <1417077863.10282.3.camel@mm-sol.com>
+References: <1417065854-37745-1-git-send-email-lina.iyer@linaro.org>
+	 <1417065854-37745-4-git-send-email-lina.iyer@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBMWH3ORQKGQEIFTZN2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20141126211318.GN25249@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1417065854-37745-4-git-send-email-lina.iyer@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>
+Cc: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 11/26/2014 10:13 PM, Maxime Ripard wrote:
-> Hi,
->
-> On Tue, Nov 25, 2014 at 09:29:21AM +0100, Hans de Goede wrote:
->> Hi,
->>
->> On 11/24/2014 11:03 PM, Maxime Ripard wrote:
->>> On Fri, Nov 21, 2014 at 10:13:10AM +0100, Hans de Goede wrote:
->>>> Hi,
->>>>
->>>> On 11/21/2014 09:49 AM, Maxime Ripard wrote:
->>>>> Hi,
->>>>>
->>>>> On Thu, Nov 20, 2014 at 04:55:22PM +0100, Hans de Goede wrote:
->>>>>> Add a driver for mod0 clocks found in the prcm. Currently there is only
->>>>>> one mod0 clocks in the prcm, the ir clock.
->>>>>>
->>>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>>>> ---
->>>>>>   Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
->>>>>>   drivers/clk/sunxi/Makefile                        |  2 +-
->>>>>>   drivers/clk/sunxi/clk-sun6i-prcm-mod0.c           | 63 +++++++++++++++++++++++
->>>>>>   drivers/mfd/sun6i-prcm.c                          | 14 +++++
->>>>>>   4 files changed, 79 insertions(+), 1 deletion(-)
->>>>>>   create mode 100644 drivers/clk/sunxi/clk-sun6i-prcm-mod0.c
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
->>>>>> index ed116df..342c75a 100644
->>>>>> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
->>>>>> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
->>>>>> @@ -56,6 +56,7 @@ Required properties:
->>>>>>   	"allwinner,sun4i-a10-usb-clk" - for usb gates + resets on A10 / A20
->>>>>>   	"allwinner,sun5i-a13-usb-clk" - for usb gates + resets on A13
->>>>>>   	"allwinner,sun6i-a31-usb-clk" - for usb gates + resets on A31
->>>>>> +	"allwinner,sun6i-a31-ir-clk" - for the ir clock on A31
->>>>>>
->>>>>>   Required properties for all clocks:
->>>>>>   - reg : shall be the control register address for the clock.
->>>>>> diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
->>>>>> index 7ddc2b5..daf8b1c 100644
->>>>>> --- a/drivers/clk/sunxi/Makefile
->>>>>> +++ b/drivers/clk/sunxi/Makefile
->>>>>> @@ -10,4 +10,4 @@ obj-y += clk-sun8i-mbus.o
->>>>>>
->>>>>>   obj-$(CONFIG_MFD_SUN6I_PRCM) += \
->>>>>>   	clk-sun6i-ar100.o clk-sun6i-apb0.o clk-sun6i-apb0-gates.o \
->>>>>> -	clk-sun8i-apb0.o
->>>>>> +	clk-sun8i-apb0.o clk-sun6i-prcm-mod0.o
->>>>>> diff --git a/drivers/clk/sunxi/clk-sun6i-prcm-mod0.c b/drivers/clk/sunxi/clk-sun6i-prcm-mod0.c
->>>>>> new file mode 100644
->>>>>> index 0000000..e80f18e
->>>>>> --- /dev/null
->>>>>> +++ b/drivers/clk/sunxi/clk-sun6i-prcm-mod0.c
->>>>>> @@ -0,0 +1,63 @@
->>>>>> +/*
->>>>>> + * Allwinner A31 PRCM mod0 clock driver
->>>>>> + *
->>>>>> + * Copyright (C) 2014 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>>>> + *
->>>>>> + * This program is free software; you can redistribute it and/or modify
->>>>>> + * it under the terms of the GNU General Public License as published by
->>>>>> + * the Free Software Foundation; either version 2 of the License, or
->>>>>> + * (at your option) any later version.
->>>>>> + *
->>>>>> + * This program is distributed in the hope that it will be useful,
->>>>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->>>>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>>>>> + * GNU General Public License for more details.
->>>>>> + */
->>>>>> +
->>>>>> +#include <linux/clk-provider.h>
->>>>>> +#include <linux/clkdev.h>
->>>>>> +#include <linux/module.h>
->>>>>> +#include <linux/of_address.h>
->>>>>> +#include <linux/platform_device.h>
->>>>>> +
->>>>>> +#include "clk-factors.h"
->>>>>> +#include "clk-mod0.h"
->>>>>> +
->>>>>> +static const struct of_device_id sun6i_a31_prcm_mod0_clk_dt_ids[] = {
->>>>>> +	{ .compatible = "allwinner,sun6i-a31-ir-clk" },
->>>>>> +	{ /* sentinel */ }
->>>>>> +};
->>>>>> +
->>>>>> +static DEFINE_SPINLOCK(sun6i_prcm_mod0_lock);
->>>>>> +
->>>>>> +static int sun6i_a31_prcm_mod0_clk_probe(struct platform_device *pdev)
->>>>>> +{
->>>>>> +	struct device_node *np = pdev->dev.of_node;
->>>>>> +	struct resource *r;
->>>>>> +	void __iomem *reg;
->>>>>> +
->>>>>> +	if (!np)
->>>>>> +		return -ENODEV;
->>>>>> +
->>>>>> +	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>>>>> +	reg = devm_ioremap_resource(&pdev->dev, r);
->>>>>> +	if (IS_ERR(reg))
->>>>>> +		return PTR_ERR(reg);
->>>>>> +
->>>>>> +	sunxi_factors_register(np, &sun4i_a10_mod0_data,
->>>>>> +			       &sun6i_prcm_mod0_lock, reg);
->>>>>> +	return 0;
->>>>>> +}
->>>>>> +
->>>>>> +static struct platform_driver sun6i_a31_prcm_mod0_clk_driver = {
->>>>>> +	.driver = {
->>>>>> +		.name = "sun6i-a31-prcm-mod0-clk",
->>>>>> +		.of_match_table = sun6i_a31_prcm_mod0_clk_dt_ids,
->>>>>> +	},
->>>>>> +	.probe = sun6i_a31_prcm_mod0_clk_probe,
->>>>>> +};
->>>>>> +module_platform_driver(sun6i_a31_prcm_mod0_clk_driver);
->>>>>> +
->>>>>> +MODULE_DESCRIPTION("Allwinner A31 PRCM mod0 clock driver");
->>>>>> +MODULE_AUTHOR("Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>");
->>>>>> +MODULE_LICENSE("GPL");
->>>>>
->>>>> I don't think this is the right approach, mainly for two reasons: the
->>>>> compatible shouldn't change, and you're basically duplicating code
->>>>> there.
->>>>>
->>>>> I understand that you need the new compatible in order to avoid a
->>>>> double probing: one by CLK_OF_DECLARE, and one by the usual mechanism,
->>>>> and that also implies the second reason.
->>>>
->>>> Not only for that, we need a new compatible also because the mfd framework
->>>> needs a separate compatible per sub-node as that is how it finds nodes
->>>> to attach to the platform devices, so we need a new compatible anyways,
->>>> with your make the mod0 clock driver a platform driver solution we could
->>>> use:
->>>
->>> We have a single mod0 clock in there, so no, not really.
->>
->> We have a single mod0 clock there today, but who knows what tomorrow brings,
->> arguably the 1wire clock is a mod0 clock too, so we already have 2 today.
->
-> I remember someone (Chen-Yu? Boris?) saying that the 1wire clock was
-> not really a mod0 clk. From what I could gather from the source code,
-> it seems to have a wider m divider, so we could argue that it should
-> need a new compatible.
->
->>> Plus, that seems like a bogus limitation from MFD, and it really
->>> shouldn't work that way.
->>
->> Well AFAIK that is how it works.
->
-> That kind of argument doesn't work. You could make exactly the same
-> statement about the fact that two identical hardware blocks in the DT
-> should have the same compatible, and it's how it works.
->
-> With the minor exception that we can't change that fact for the DT,
-> while we can change the MTD code.
+Hi,=20
 
-As I already said, we could do something like this to make clear this
-is a mod0 clock:
+On Wed, 2014-11-26 at 22:24 -0700, Lina Iyer wrote:
+>=20
 
->>>> 	compatible = "allwinner,sun6i-a31-ir-clk", "allwinner,sun4i-a10-mod0-clk";
+>  - compatible:
+> @@ -14,10 +23,13 @@ PROPERTIES
+>         Value type: <string>
+>         Definition: shall contain "qcom,saw2". A more specific value =
+should be
+>                                                 one of:
 
-The problem with that is it will cause early binding because of
-CLK_OF_DECLARE and early binding does not work on MFD instantiated devices,
-because they have no reg property.
+Which driver is supposed to handle this property?
 
+> -                               "qcom,saw2-v1"
+> -                               "qcom,saw2-v1.1"
+> -                               "qcom,saw2-v2"
+> -                               "qcom,saw2-v2.1"
+> +                       "qcom,saw2-v1"
+> +                       "qcom,saw2-v1.1"
+> +                       "qcom,saw2-v2"
+> +                       "qcom,saw2-v2.1"
 
+Doesn't seems to be used or supported?
 
->>>>
->>>> To work around this, but there are other problems, your make mod0clk a
->>>> platform driver solution cannot work because the clocks node in the dtsi
->>>> is not simple-bus compatible, so no platform-devs will be instantiated for
->>>> the clocks there.
->>>
->>> Then add the simple-bus compatible.
->>
->> No, just no, that goes against the whole design of how of-clocks work.
->
-> Which is... ?
+> +                       "qcom,apq8064-saw2-v1.1-cpu"
+> +                       "qcom,msm8974-saw2-v2.1-cpu"
+> +                       "qcom,apq8084-saw2-v2.1-cpu"
+>=20
 
-That they are child nodes of a clocks node, which is NOT simple-bus compatible
-and get instantiated early using CLK_OF_DECLARE.
+<snip>
 
-> There's a number of other clocks being platform drivers, including on
-> other platforms, and as far as I know, CLK_OF_DECLARE is only really
-> useful on clocks that are critical. Mike, what's your view on this?
->
->>>> Besides the compatible (which as said we need a separate one anyways),
->>>> your other worry is code duplication, but I've avoided that as much
->>>> as possible already, the new drivers/clk/sunxi/clk-sun6i-prcm-mod0.c is
->>>> just a very thin wrapper, waying in with all of 63 lines including
->>>> 16 lines GPL header.
->>>
->>> 47 lines that are doing exactly the same thing as the other code is
->>> doing. I'm sorry but you can't really argue it's not code duplication,
->>> it really is.
->>
->> It is not doing the exact same thing, it is a platform driver, where as
->> the other code is an of_clk driver.
->>
->>>> So sorry, I disagree I believe that this is the best solution.
->>>>
->>>>> However, as those are not critical clocks that need to be here early
->>>>> at boot, you can also fix this by turning the mod0 driver into a
->>>>> platform driver itself. The compatible will be kept, the driver will
->>>>> be the same.
->>>>>
->>>>> The only thing we need to pay attention to is how "client" drivers
->>>>> react when they cannot grab their clock. They should return
->>>>> -EPROBE_DEFER, but that remains to be checked.
->>>>
->>>> -EPROBE_DEFER is yet another reason to not make mod0-clk a platform
->>>> driver. Yes drivers should be able to handle this, but it is a pain,
->>>> and the more we use it the more pain it is. Also it makes booting a lot
->>>> slower as any driver using a mod0 clk now, will not complete its probe
->>>> until all the other drivers are done probing and the late_initcall
->>>> which starts the deferred-probe wq runs.
->>>
->>> The whole EPROBE_DEFER mechanism might need some fixing, but it's not
->>> really the point is it?
->>
->> Well one reasons why clocks are instantiated the way they are is to have
->> them available as early as possible, which is really convenient and works
->> really well.
->
-> Yeah, you need them early for critical and early stuff like timers,
-> console, etc. You really don't need this mechanism if you don't have
-> to handle early probed devices.
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0regulator@2099000 {
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0power-controller@2099000 {
+>                 compatible =3D "qcom,saw2";
+>                 reg =3D <0x02099000 0x1000>, <0x02009000 0x1000>;
+> +               regulator;
+>=20
 
-And we do need some clocks for that, if we add the simple bus compatible then
-*all* of them become platform devices.
+<snip>
 
-Or are you suggesting to still bind all the other clocks using CLK_OF_DECLARE
-and only turn mod0 into a platform driver, that would be rather inconsistent.
-
->> You are asking for a whole lot of stuff to be changed, arguably in a way
->> which makes it worse, just to save 47 lines of code...
->
-> No, really, I'm not. All I ask for is adding 1 line in the DT, and
-> removing 5 lines in clk-sunxi.c. That's all.
-
-And adding platform driver glue for the mod0 clks, which would pretty much
-introduce the same 47 lines in a different place.
-
-I notice that you've not responded to my proposal to simple make the clock
-node a child node of the clocks node in the dt, that should work nicely, and
-avoid the need for any kernel level changes to support it, I'm beginning to
-think that that is probably the best solution.
+> +static const struct of_device_id spm_match_table[] =3D {
+> +       { .compatible =3D "qcom,msm8974-saw2-v2.1-cpu",
+> +                       .data =3D &spm_reg_8974_8084_cpu },
+> +       { .compatible =3D "qcom,apq8084-saw2-v2.1-cpu",
+> +                       .data =3D &spm_reg_8974_8084_cpu },
+> +       { .compatible =3D "qcom,apq8064-saw2-v1.1-cpu",
+> +                       .data =3D &spm_reg_8064_cpu },
+> +       { },
+> +};
+> +
 
 Regards,
-
-Hans
+Ivan
