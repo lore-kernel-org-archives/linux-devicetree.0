@@ -1,45 +1,55 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 11/19] clk: samsung: exynos5433: Add clocks for
- CMU_BUS{0|1|2} domains
-Date: Thu, 27 Nov 2014 20:56:35 +0900
-Message-ID: <54771173.6090408@samsung.com>
-References: <1417073716-22997-1-git-send-email-cw00.choi@samsung.com>
- <1417073716-22997-12-git-send-email-cw00.choi@samsung.com>
- <6217579.xNXtO7YiDs@wuerfel>
+From: Lyra Zhang <zhang.lyra@gmail.com>
+Subject: Re: [PATCH v3 5/5] tty/serial: Add Spreadtrum sc9836-uart driver support
+Date: Thu, 27 Nov 2014 19:59:46 +0800
+Message-ID: <CAAfSe-uMqy7zwiEK+nDoMPw_oni8L_vq7oW2Me5AY8z8KGpjwQ@mail.gmail.com>
+References: <1416917818-10506-1-git-send-email-chunyan.zhang@spreadtrum.com>
+	<1416917818-10506-6-git-send-email-chunyan.zhang@spreadtrum.com>
+	<54761BFC.4020705@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <6217579.xNXtO7YiDs@wuerfel>
+In-Reply-To: <54761BFC.4020705@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, kgene.kim@samsung.com, mark.rutland@arm.com, olof@lixom.net, catalin.marinas@arm.com, will.deacon@arm.com, s.nawrocki@samsung.com, tomasz.figa@gmail.com, thomas.abraham@linaro.org, linus.walleij@linaro.org, kyungmin.park@samsung.com, inki.dae@samsung.com, chanho61.park@samsung.com, geunsik.lim@samsung.com, sw0312.kim@samsung.com, jh80.chung@samsung.com, a.kesavan@samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, Grant Likely <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "jslaby@suse.cz" <jslaby@suse.cz>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ramkumar Ramachandra <artagnon@gmail.com>, "rrichter@cavium.com" <rrichter@cavium.com>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>, gnomes@lxorguk.ukuu.org.uk, Jonathan Corbet <corbet@lwn.net>, jason@lakedaemon.net, Mark Brown <broonie@kernel.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, florian.vaussard@epfl.ch, andrew@lunn.ch, Hayato Suzuki <hytszk@gmail.com>, Orson Zhai <orsonzhai@gmail.com>, geng.ren
 List-Id: devicetree@vger.kernel.org
 
-Dear Arnd,
-
-On 11/27/2014 08:41 PM, Arnd Bergmann wrote:
-> On Thursday 27 November 2014 16:35:08 Chanwoo Choi wrote:
->> +  - "samsung,exynos5433-cmu-bus0", "samsung,exynos5433-cmu-bus1"
->> +    and "samsung,exynos5433-cmu-bus2" - clock controller compatible for CMU_BUS
->> +    which generates global data buses clock and global peripheral buses clock.
->>  
->>  - reg: physical base address of the controller and length of memory mapped
->>    region.
+2014-11-27 2:29 GMT+08:00 Murali Karicheri <m-karicheri2@ti.com>:
+> On 11/25/2014 07:16 AM, Chunyan Zhang wrote:
 >>
-> 
-> This looks like you are duplicating the bindings and the code, but
-> it's really the same hardware multiple times with minor variations
-> that you should be able to describe properly here. Why not make
-> three nodes with the same compatible string and have them handled
-> by the same code?
+>> Add a full sc9836-uart driver for SC9836 SoC which is based on the
 
-Each CMU_BUSx domain of Exynos5433 have different base address as following:
-- CMU_BUS0's base address and range : 0x1360_0000 ~ 0x1360_0b04
-- CMU_BUS1's base address and range : 0x1480_0000 ~ 0x1480_0b04
-- CMU_BUS2's base address and range : 0x1340_0000 ~ 0x1340_0b04
+>> +#include<linux/clk.h>
+>
+> How about sorting this includes? asm/irq.h go first followed linux/ in
+> alphabatical order?
 
-So, I implement CMU_BUSx domain which has each compatible string.
+>> +static irqreturn_t sprd_handle_irq(int irq, void *dev_id)
+>> +{
+>> +       struct uart_port *port = (struct uart_port *)dev_id;
+>> +       u32 ims;
+>> +
+>> +       ims = serial_in(port, SPRD_IMSR);
+>> +
+>> +       serial_out(port, SPRD_ICLR, ~0);
+>> +
+>> +       if (ims&  (SPRD_IMSR_RX_FIFO_FULL |
+>> +               SPRD_IMSR_BREAK_DETECT | SPRD_IMSR_TIMEOUT)) {
+>> +               sprd_rx(irq, port);
+>> +       }
+>> +       if (ims&  SPRD_IMSR_TX_FIFO_EMPTY)
+>> +               sprd_tx(irq, port);
+>> +
+>> +       return IRQ_HANDLED;
+>
+> You are always returning IRQ_HANDLED and this is registered as a SHARED irq.
+> Is there a chance this handler is called and the irq event doesn't
+> belong to this device?
+>
+> Murali
 
-Best Regards,
-Chanwoo Choi
+You are right, this is not a SHARED irq. I'll pass 0 for irqflags when
+called 'devm_request_irq' in the next version patch.
+
+Thank you,
+Chunyan
