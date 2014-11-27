@@ -1,105 +1,160 @@
-From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V2 2/2] m32r: Add missing big-endian I/O accessors
-Date: Thu, 27 Nov 2014 10:16:33 -0800
-Message-ID: <1417112193-14400-2-git-send-email-cernekee@gmail.com>
-References: <1417112193-14400-1-git-send-email-cernekee@gmail.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v3] can: Convert to runtime_pm
+Date: Thu, 27 Nov 2014 10:23:37 -0800
+Message-ID: <6268c783e4514fe9bbae2aff8fd75edd@BY2FFO11FD043.protection.gbl>
+References: <6b6db31d46074512a322eae6e4ef64d4@BN1BFFO11FD038.protection.gbl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1417112193-14400-1-git-send-email-cernekee@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <6b6db31d46074512a322eae6e4ef64d4@BN1BFFO11FD038.protection.gbl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: grant.likely@linaro.org, fengguang.wu@intel.com
-Cc: kbuild-all@01.org, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, arnd@arndb.de
+To: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
+Cc: wg@grandegger.com, mkl@pengutronix.de, michal.simek@xilinx.com, grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-can@vger.kernel.org, Kedareswara rao Appana <appanad@xilinx.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-m32r doesn't use GENERIC_IOMAP, and it doesn't currently implement e.g.
-ioread32be() on its own.  Add definitions to <asm/io.h> to fix build
-failures in common drivers that use these functions.
+Hi Kedar,
 
-   drivers/tty/serial/8250/8250_core.c: In function 'mem32be_serial_out':
->> drivers/tty/serial/8250/8250_core.c:434:2: error: implicit declaration of function 'iowrite32be' [-Werror=implicit-function-declaration]
-     iowrite32be(value, p->membase + offset);
-     ^
-   drivers/tty/serial/8250/8250_core.c: In function 'mem32be_serial_in':
->> drivers/tty/serial/8250/8250_core.c:440:2: error: implicit declaration of function 'ioread32be' [-Werror=implicit-function-declaration]
-     return ioread32be(p->membase + offset);
-     ^
-   cc1: some warnings being treated as errors
+On Thu, 2014-11-27 at 06:38PM +0530, Kedareswara rao Appana wrote:
+> Instead of enabling/disabling clocks at several locations in the driv=
+er,
+> use the runtime_pm framework. This consolidates the actions for
+> runtime PM in the appropriate callbacks and makes the driver more
+> readable and mantainable.
+>=20
+> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+> ---
+> Changes for v3:
+>   - Converted the driver to use runtime_pm.
+> Changes for v2:
+>   - Removed the struct platform_device* from suspend/resume
+>     as suggest by Lothar.
+>=20
+>  drivers/net/can/xilinx_can.c |  119 +++++++++++++++++++++++++-------=
+---------
+>  1 files changed, 72 insertions(+), 47 deletions(-)
+>=20
+> diff --git a/drivers/net/can/xilinx_can.c b/drivers/net/can/xilinx_ca=
+n.c
+> index 8a998e3..1be28ed 100644
+> --- a/drivers/net/can/xilinx_can.c
+> +++ b/drivers/net/can/xilinx_can.c
+> @@ -32,6 +32,7 @@
+>  #include <linux/can/dev.h>
+>  #include <linux/can/error.h>
+>  #include <linux/can/led.h>
+> +#include <linux/pm_runtime.h>
+> =20
+>  #define DRIVER_NAME	"xilinx_can"
+> =20
+> @@ -138,7 +139,7 @@ struct xcan_priv {
+>  	u32 (*read_reg)(const struct xcan_priv *priv, enum xcan_reg reg);
+>  	void (*write_reg)(const struct xcan_priv *priv, enum xcan_reg reg,
+>  			u32 val);
+> -	struct net_device *dev;
+> +	struct device *dev;
+>  	void __iomem *reg_base;
+>  	unsigned long irq_flags;
+>  	struct clk *bus_clk;
+> @@ -842,6 +843,13 @@ static int xcan_open(struct net_device *ndev)
+>  	struct xcan_priv *priv =3D netdev_priv(ndev);
+>  	int ret;
+> =20
+> +	ret =3D pm_runtime_get_sync(priv->dev);
+> +	if (ret < 0) {
+> +		netdev_err(ndev, "%s: runtime CAN resume failed(%d)\n\r",
 
-Compile-tested only.
+There might be other issues than the resume that make this fail. It
+should probably just say 'pm_runtime_get failed'.
+The CAN in the string should not be needed, the netdev_err macro makes
+sure the device name is printed.
+Can we have a space between 'failed' and the error code?
+There should not be a '\r'
 
-Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
----
- arch/m32r/include/asm/io.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+> +				__func__, ret);
+> +		return ret;
+> +	}
+> +
+>  	ret =3D request_irq(ndev->irq, xcan_interrupt, priv->irq_flags,
+>  			ndev->name, ndev);
+>  	if (ret < 0) {
+> @@ -849,29 +857,17 @@ static int xcan_open(struct net_device *ndev)
+>  		goto err;
+>  	}
+> =20
+> -	ret =3D clk_prepare_enable(priv->can_clk);
+> -	if (ret) {
+> -		netdev_err(ndev, "unable to enable device clock\n");
+> -		goto err_irq;
+> -	}
+> -
+> -	ret =3D clk_prepare_enable(priv->bus_clk);
+> -	if (ret) {
+> -		netdev_err(ndev, "unable to enable bus clock\n");
+> -		goto err_can_clk;
+> -	}
+> -
+>  	/* Set chip into reset mode */
+>  	ret =3D set_reset_mode(ndev);
+>  	if (ret < 0) {
+>  		netdev_err(ndev, "mode resetting failed!\n");
+> -		goto err_bus_clk;
+> +		goto err_irq;
+>  	}
+> =20
+>  	/* Common open */
+>  	ret =3D open_candev(ndev);
+>  	if (ret)
+> -		goto err_bus_clk;
+> +		goto err_irq;
+> =20
+>  	ret =3D xcan_chip_start(ndev);
+>  	if (ret < 0) {
+> @@ -887,13 +883,11 @@ static int xcan_open(struct net_device *ndev)
+> =20
+>  err_candev:
+>  	close_candev(ndev);
+> -err_bus_clk:
+> -	clk_disable_unprepare(priv->bus_clk);
+> -err_can_clk:
+> -	clk_disable_unprepare(priv->can_clk);
+>  err_irq:
+>  	free_irq(ndev->irq, ndev);
+>  err:
+> +	pm_runtime_put(priv->dev);
+> +
+>  	return ret;
+>  }
+> =20
+> @@ -910,12 +904,11 @@ static int xcan_close(struct net_device *ndev)
+>  	netif_stop_queue(ndev);
+>  	napi_disable(&priv->napi);
+>  	xcan_chip_stop(ndev);
+> -	clk_disable_unprepare(priv->bus_clk);
+> -	clk_disable_unprepare(priv->can_clk);
+>  	free_irq(ndev->irq, ndev);
+>  	close_candev(ndev);
+> =20
+>  	can_led_event(ndev, CAN_LED_EVENT_STOP);
+> +	pm_runtime_put(priv->dev);
+> =20
+>  	return 0;
+>  }
+> @@ -934,27 +927,21 @@ static int xcan_get_berr_counter(const struct n=
+et_device *ndev,
+>  	struct xcan_priv *priv =3D netdev_priv(ndev);
+>  	int ret;
+> =20
+> -	ret =3D clk_prepare_enable(priv->can_clk);
+> -	if (ret)
+> -		goto err;
+> +	ret =3D pm_runtime_get_sync(priv->dev);
+> +	if (ret < 0) {
+> +		netdev_err(ndev, "%s: runtime resume failed(%d)\n\r",
+> +				__func__, ret);
 
+As above.
 
-V1->V2:
-
-Use an unconditional swap, per Arnd:
-
-"m32r can be either little-endian or big-endian, so these need to
-unconditionally swap instead."
-
-Disclaimer: I don't claim to understand why this is correct, but I've
-never even looked at m32r before so I will defer to the experts...
-
-Side note for Fengguang: both with and without my patches, m32r modules
-fail to link using the make.cross script on Ubuntu 14.10:
-
-  CC      init/version.o
-  LD      init/built-in.o
-  KSYM    .tmp_kallsyms1.o
-  KSYM    .tmp_kallsyms2.o
-  LD      vmlinux
-  SYSMAP  System.map
-  Building modules, stage 2.
-  OBJCOPY arch/m32r/boot/compressed/vmlinux.bin
-  MODPOST 96 modules
-  GZIP    arch/m32r/boot/compressed/vmlinux.bin.gz
-ERROR: "memory_start" [fs/udf/udf.ko] undefined!
-ERROR: "memory_end" [fs/udf/udf.ko] undefined!
-ERROR: "memory_end" [drivers/scsi/sg.ko] undefined!
-ERROR: "memory_start" [drivers/scsi/sg.ko] undefined!
-ERROR: "memory_end" [drivers/i2c/i2c-dev.ko] undefined!
-ERROR: "memory_start" [drivers/i2c/i2c-dev.ko] undefined!
-scripts/Makefile.modpost:90: recipe for target '__modpost' failed
-make[1]: *** [__modpost] Error 1
-Makefile:1098: recipe for target 'modules' failed
-make: *** [modules] Error 2
-make: *** Waiting for unfinished jobs....
-  LD      arch/m32r/boot/compressed/piggy.o
-/usr/local/gcc-4.9.0-nolibc/m32r-linux/bin/m32r-linux-ld: target elf32-m32r not found
-arch/m32r/boot/compressed/Makefile:51: recipe for target 'arch/m32r/boot/compressed/piggy.o' failed
-make[2]: *** [arch/m32r/boot/compressed/piggy.o] Error 1
-arch/m32r/boot/Makefile:18: recipe for target 'arch/m32r/boot/compressed/vmlinux' failed
-make[1]: *** [arch/m32r/boot/compressed/vmlinux] Error 2
-arch/m32r/Makefile:53: recipe for target 'zImage' failed
-make: *** [zImage] Error 2
-
-
-
-diff --git a/arch/m32r/include/asm/io.h b/arch/m32r/include/asm/io.h
-index 343ae4c..f76999c 100644
---- a/arch/m32r/include/asm/io.h
-+++ b/arch/m32r/include/asm/io.h
-@@ -3,6 +3,7 @@
- 
- #include <linux/string.h>
- #include <linux/compiler.h>
-+#include <linux/swab.h>
- #include <asm/page.h>  /* __va */
- 
- #ifdef __KERNEL__
-@@ -169,6 +170,11 @@ static inline void _writel(unsigned long l, unsigned long addr)
- #define iowrite16 writew
- #define iowrite32 writel
- 
-+#define ioread16be(addr)	swab16(readw(addr))
-+#define ioread32be(addr)	swab32(readl(addr))
-+#define iowrite16be(val, addr)	writew(swab16(val), addr)
-+#define iowrite32be(val, addr)	writel(swab32(val), addr)
-+
- #define mmiowb()
- 
- #define flush_write_buffers() do { } while (0)  /* M32R_FIXME */
--- 
-2.1.0
+	S=C3=B6ren
