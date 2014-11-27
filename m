@@ -1,65 +1,54 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH RFC v2 07/12] PM / Domains: export pm_genpd_lookup_name
-Date: Thu, 27 Nov 2014 15:20:42 +0100
-Message-ID: <CAPDyKFo0epKqKuwHS_CKMG2hF+J=Fdve9kPK2EVeeR7FvdoJmg@mail.gmail.com>
-References: <1416833572-6880-1-git-send-email-amit.daniel@samsung.com>
-	<1416834256-11225-1-git-send-email-amit.daniel@samsung.com>
-	<1416834256-11225-7-git-send-email-amit.daniel@samsung.com>
-	<CAPDyKFqE_qhrRs3X9s9juyPH_Zcq8vdE_amqKM3VUnMjHtL2Rg@mail.gmail.com>
-	<CADGdYn6fAScrpz4Va=THtC1ZgT+rYN_gQuE6NnRaCiN4NErg5g@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V2 01/10] tty: Fallback to use dynamic major number
+Date: Thu, 27 Nov 2014 15:33:58 +0100
+Message-ID: <4316435.J1BtEYnd6C@wuerfel>
+References: <1415825647-6024-1-git-send-email-cernekee@gmail.com> <5475E4EC.7090309@hurleysoftware.com> <CACxGe6uLWZav=AfaK2w17PW6vtxF8S0=OUvCMB-uFSvhs2cLtw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CADGdYn6fAScrpz4Va=THtC1ZgT+rYN_gQuE6NnRaCiN4NErg5g@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: amit daniel kachhap <amit.daniel@samsung.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>, Kevin Hilman <khilman@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6uLWZav=AfaK2w17PW6vtxF8S0=OUvCMB-uFSvhs2cLtw@mail.gmail.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Peter Hurley <peter@hurleysoftware.com>, Kevin Cernekee <cernekee@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Rob Herring <robh@kernel.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, tushar.b@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 25 November 2014 at 09:48, amit daniel kachhap
-<amit.daniel@samsung.com> wrote:
-> On Tue, Nov 25, 2014 at 1:05 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->> On 24 November 2014 at 14:04, Amit Daniel Kachhap
->> <amit.daniel@samsung.com> wrote:
->>> This API may be needed to set the power domain parent/child relationship
->>> in the power domain platform driver. The parent relationship is
->>> generally set after the child power domain is registered with the power
->>> domain subsystem. In this case, pm_genpd_lookup_name API might be
->>> useful.
->>
->> I think this is a step in the wrong direction. Instead we should be
->> working on removing the "name" based APIs from genpd.
->>
->> The proper way should be to pass the PM domain as a parameter to the
->> APIs instead.
-> Yes i understand but i had a special requirement for using this API
-> during pd probe.
->  I cannot use hierarchy to represent parent/child pd nodes as it will
-> break the existing SoC's. In my case all the PD nodes are linear. The
-> parent/child relationship are established in the second pass after all
-> the PD entries are registered with the help of this API.
-> Although there a way that i can always keep parent PD's before the
-> child PD's in DT in linear order. Will check this approach.
+On Thursday 27 November 2014 13:50:01 Grant Likely wrote:
+> 
+> Should be sufficient. Basically, if the hardware doesn't exist, the
+> driver shouldn't be trying to grab the minor numbers.
+> 
+> Also, on hardware where both exists, there should be some sane
+> fallback so that all UARTs get assigned numbers. On DT systems we can
+> also use /aliases to ensure consistent assignment of numbers.
 
-I had some thinking around this, could the below approach work?
+>From what I can see, this is really the ISA compatibility code
+in the 8250 driver, and we should be able to make that optional
+or even move it into a separate glue driver.
 
-I just posted a patch[1] adding a new pm_genpd_lookup() API, which is
-using a "DT device node" to fetch the genpd. The idea is to use that
-API to get the genpd handle which is needed to configure a subdomain
-through pm_genpd_add_subdomain() API.
+Basically the serial8250_init function tries to do a lot of things
+at once (skipping error handling):
 
-In principle you will have to walk through the DT a couple of times,
-initialize those domains (and subdomains) which either don't have a
-parent domain or which parent domain already has been initialized. I
-guess you need a somewhat clever loop to do that, but I think it's
-doable.
+        serial8250_isa_init_ports();
+        ret = sunserial_register_minors(&serial8250_reg, UART_NR);
+	serial8250_reg.nr = UART_NR;
+        ret = uart_register_driver(&serial8250_reg);
+        ret = serial8250_pnp_init();
+        serial8250_isa_devs = platform_device_alloc("serial8250",
+                                                   PLAT8250_DEV_LEGACY);
+        ret = platform_device_add(serial8250_isa_devs);
+        serial8250_register_ports(&serial8250_reg, &serial8250_isa_devs->dev);
+        ret = platform_driver_register(&serial8250_isa_driver);
 
-Obviously we also need to have a generic binding for a "parent
-domain". I like Geert's proposal from the other patch, which means
-using "power-domains = <&pd_xyz>".
+The only thing we want from this is the uart_register_driver() call,
+everything else is only needed together with the ISA support. The way
+that uart_register_driver() works unfortunately implies that you know
+the maximum number of ports at driver init time, which would need
+to be changed if you want to share the numbers.
 
-Kind regards
-Uffe
+One idea I had a few years ago when we discussed this was to treat
+the major 4 allocation differently so you could share it between all
+sorts of drivers as an opt-in, but could have all unmodified continue
+using their own device names and numbers.
 
-[1]
-http://marc.info/?l=linux-pm&m=141709766008458&w=2
+	Arnd
