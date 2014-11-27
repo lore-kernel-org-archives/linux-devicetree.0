@@ -1,30 +1,54 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 3/3] ARM: meson: select PINCTRL_MESON and ARCH_REQUIRE_GPIOLIB
-Date: Thu, 27 Nov 2014 14:49:24 +0100
-Message-ID: <CACRpkdYSvOqvttyZw0wgDhXxRGR0KLfRi-N5Ym5W4mzjAV9=Eg@mail.gmail.com>
-References: <1416168856-12747-1-git-send-email-b.galvani@gmail.com>
-	<1416168856-12747-4-git-send-email-b.galvani@gmail.com>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH V2 01/10] tty: Fallback to use dynamic major number
+Date: Thu, 27 Nov 2014 13:50:01 +0000
+Message-ID: <CACxGe6uLWZav=AfaK2w17PW6vtxF8S0=OUvCMB-uFSvhs2cLtw@mail.gmail.com>
+References: <1415825647-6024-1-git-send-email-cernekee@gmail.com>
+ <1415825647-6024-2-git-send-email-cernekee@gmail.com> <20141125203431.GA9385@kroah.com>
+ <CAJiQ=7DOxK2NzmC9gGsnARxGMN8wRQyGX+5u5YC_vt00ADVsDg@mail.gmail.com>
+ <20141126133306.659E9C4099B@trevor.secretlab.ca> <5475E4EC.7090309@hurleysoftware.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1416168856-12747-4-git-send-email-b.galvani@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Beniamino Galvani <b.galvani@gmail.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Carlo Caione <carlo@caione.org>, Soren Brinkmann <soren.brinkmann@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jerry Cao <jerry.cao@amlogic.com>, Victor Wan <victor.wan@amlogic.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <5475E4EC.7090309@hurleysoftware.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Peter Hurley <peter@hurleysoftware.com>
+Cc: Kevin Cernekee <cernekee@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, tushar.b@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 16, 2014 at 9:14 PM, Beniamino Galvani <b.galvani@gmail.com> wrote:
-
-> Make sure that the Meson pinctrl driver is built whenever Meson
-> support is enabled.
+On Wed, Nov 26, 2014 at 2:34 PM, Peter Hurley <peter@hurleysoftware.com> wrote:
+> On 11/26/2014 08:33 AM, Grant Likely wrote:
+>> On Tue, 25 Nov 2014 15:37:16 -0800
+>> , Kevin Cernekee <cernekee@gmail.com>
+>>  wrote:
+>>> On Tue, Nov 25, 2014 at 12:34 PM, Greg KH <gregkh@linuxfoundation.org> wrote:
+>>>> On Wed, Nov 12, 2014 at 12:53:58PM -0800, Kevin Cernekee wrote:
+>>>>> From: Tushar Behera <tushar.behera@linaro.org>
+>>>>
+>>>> This email bounces, so I'm going to have to reject this patch.  I can't
+>>>> accept a patch from a "fake" person, let alone something that touches
+>>>> core code like this.
+>>>>
+>>>> Sorry, I can't accept anything in this series then.
+>>>
+>>> Oops, guess I probably should have updated his address after the V1
+>>> emails bounced...
+>>>
+>>> Before I send a new version, what do you think about the overall
+>>> approach?  Should we try to make serial8250 coexist with the other
+>>> "ttyS / major 4 / minor 64" drivers (possibly at the expense of
+>>> compatibility) or is it better to start with a simpler, cleaner driver
+>>> like serial/pxa?
+>>
+>> Co-existing really needs to be fixed.
 >
-> Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
+> What are the requirements for co-existence?
+> Is it sufficient to provide 1st come-1st served minor allocation?
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Should be sufficient. Basically, if the hardware doesn't exist, the
+driver shouldn't be trying to grab the minor numbers.
 
-(Given we can merge the pinctrl driver)
+Also, on hardware where both exists, there should be some sane
+fallback so that all UARTs get assigned numbers. On DT systems we can
+also use /aliases to ensure consistent assignment of numbers.
 
-Please merge this through the ARM SoC tree.
-
-Yours,
-Linus Walleij
+g.
