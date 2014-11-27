@@ -1,101 +1,237 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH] arm64: ARM: Fix the Generic Timers interrupt active level
- description
-Date: Thu, 27 Nov 2014 14:43:38 +0000
-Message-ID: <5477389A.8010606@arm.com>
-References: <1417099005-18638-1-git-send-email-Liviu.Dudau@arm.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH v3] can: Convert to runtime_pm
+Date: Thu, 27 Nov 2014 15:46:32 +0100
+Message-ID: <e7afe187b4694ca591b2c22adafa8449@BL2FFO11FD053.protection.gbl>
+References: <1417093733-29576-1-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1417099005-18638-1-git-send-email-Liviu.Dudau@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Rob Herring <robherring2@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Will Deacon <Will.Deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1417093733-29576-1-git-send-email-appanad@xilinx.com>
+Sender: netdev-owner@vger.kernel.org
+To: Kedareswara rao Appana <appana.durga.rao@xilinx.com>, wg@grandegger.com, mkl@pengutronix.de, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, grant.likely@linaro.org, robh+dt@kernel.org
+Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kedareswara rao Appana <appanad@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On 27/11/14 14:36, Liviu Dudau wrote:
-> The Cortex-A5x TRM states in paragraph "9.2 Generic Timer functional
-> description" that generic timers provide an active-LOW interrupt
-> output. Fix the device trees to correctly describe this.
+On 11/27/2014 02:08 PM, Kedareswara rao Appana wrote:
+> Instead of enabling/disabling clocks at several locations in the driver,
+> use the runtime_pm framework. This consolidates the actions for
+> runtime PM in the appropriate callbacks and makes the driver more
+> readable and mantainable.
 > 
-> While doing this update the CPU mask to match the number of described
-> CPUs as well.
-> 
-> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
 > ---
+> Changes for v3:
+>   - Converted the driver to use runtime_pm.
+> Changes for v2:
+>   - Removed the struct platform_device* from suspend/resume
+>     as suggest by Lothar.
 > 
-> Arnd, Olof: This is on top of linux-next/master as it patches the Juno
-> as well as all the other ARM DTs.
+>  drivers/net/can/xilinx_can.c |  119 +++++++++++++++++++++++++----------------
+>  1 files changed, 72 insertions(+), 47 deletions(-)
 > 
->  arch/arm64/boot/dts/arm/foundation-v8.dts  | 8 ++++----
->  arch/arm64/boot/dts/arm/juno.dts           | 8 ++++----
->  arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts | 8 ++++----
->  3 files changed, 12 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dts b/arch/arm64/boot/dts/arm/foundation-v8.dts
-> index 4a06090..27f3296 100644
-> --- a/arch/arm64/boot/dts/arm/foundation-v8.dts
-> +++ b/arch/arm64/boot/dts/arm/foundation-v8.dts
-> @@ -78,10 +78,10 @@
+> diff --git a/drivers/net/can/xilinx_can.c b/drivers/net/can/xilinx_can.c
+> index 8a998e3..1be28ed 100644
+> --- a/drivers/net/can/xilinx_can.c
+> +++ b/drivers/net/can/xilinx_can.c
+> @@ -32,6 +32,7 @@
+>  #include <linux/can/dev.h>
+>  #include <linux/can/error.h>
+>  #include <linux/can/led.h>
+> +#include <linux/pm_runtime.h>
 >  
->  	timer {
->  		compatible = "arm,armv8-timer";
-> -		interrupts = <1 13 0xff01>,
-> -			     <1 14 0xff01>,
-> -			     <1 11 0xff01>,
-> -			     <1 10 0xff01>;
-> +		interrupts = <1 13 0xf08>,
-> +			     <1 14 0xf08>,
-> +			     <1 11 0xf08>,
-> +			     <1 10 0xf08>;
->  		clock-frequency = <100000000>;
->  	};
+>  #define DRIVER_NAME	"xilinx_can"
 >  
-> diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
-> index 097ecc4..cb3073e 100644
-> --- a/arch/arm64/boot/dts/arm/juno.dts
-> +++ b/arch/arm64/boot/dts/arm/juno.dts
-> @@ -98,10 +98,10 @@
+> @@ -138,7 +139,7 @@ struct xcan_priv {
+>  	u32 (*read_reg)(const struct xcan_priv *priv, enum xcan_reg reg);
+>  	void (*write_reg)(const struct xcan_priv *priv, enum xcan_reg reg,
+>  			u32 val);
+> -	struct net_device *dev;
+> +	struct device *dev;
+>  	void __iomem *reg_base;
+>  	unsigned long irq_flags;
+>  	struct clk *bus_clk;
+> @@ -842,6 +843,13 @@ static int xcan_open(struct net_device *ndev)
+>  	struct xcan_priv *priv = netdev_priv(ndev);
+>  	int ret;
 >  
->  	timer {
->  		compatible = "arm,armv8-timer";
-> -		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING)>,
-> -			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING)>,
-> -			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING)>,
-> -			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING)>;
-> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>;
->  	};
+> +	ret = pm_runtime_get_sync(priv->dev);
+> +	if (ret < 0) {
+> +		netdev_err(ndev, "%s: runtime CAN resume failed(%d)\n\r",
+> +				__func__, ret);
+> +		return ret;
+> +	}
+> +
+>  	ret = request_irq(ndev->irq, xcan_interrupt, priv->irq_flags,
+>  			ndev->name, ndev);
+>  	if (ret < 0) {
+> @@ -849,29 +857,17 @@ static int xcan_open(struct net_device *ndev)
+>  		goto err;
+>  	}
 >  
->  	pmu {
-> diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts b/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
-> index 572005e..efc59b3 100644
-> --- a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
-> +++ b/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
-> @@ -81,10 +81,10 @@
+> -	ret = clk_prepare_enable(priv->can_clk);
+> -	if (ret) {
+> -		netdev_err(ndev, "unable to enable device clock\n");
+> -		goto err_irq;
+> -	}
+> -
+> -	ret = clk_prepare_enable(priv->bus_clk);
+> -	if (ret) {
+> -		netdev_err(ndev, "unable to enable bus clock\n");
+> -		goto err_can_clk;
+> -	}
+> -
+>  	/* Set chip into reset mode */
+>  	ret = set_reset_mode(ndev);
+>  	if (ret < 0) {
+>  		netdev_err(ndev, "mode resetting failed!\n");
+> -		goto err_bus_clk;
+> +		goto err_irq;
+>  	}
 >  
->  	timer {
->  		compatible = "arm,armv8-timer";
-> -		interrupts = <1 13 0xff01>,
-> -			     <1 14 0xff01>,
-> -			     <1 11 0xff01>,
-> -			     <1 10 0xff01>;
-> +		interrupts = <1 13 0xf08>,
-> +			     <1 14 0xf08>,
-> +			     <1 11 0xf08>,
-> +			     <1 10 0xf08>;
->  		clock-frequency = <100000000>;
->  	};
+>  	/* Common open */
+>  	ret = open_candev(ndev);
+>  	if (ret)
+> -		goto err_bus_clk;
+> +		goto err_irq;
 >  
-> 
+>  	ret = xcan_chip_start(ndev);
+>  	if (ret < 0) {
+> @@ -887,13 +883,11 @@ static int xcan_open(struct net_device *ndev)
+>  
+>  err_candev:
+>  	close_candev(ndev);
+> -err_bus_clk:
+> -	clk_disable_unprepare(priv->bus_clk);
+> -err_can_clk:
+> -	clk_disable_unprepare(priv->can_clk);
+>  err_irq:
+>  	free_irq(ndev->irq, ndev);
+>  err:
+> +	pm_runtime_put(priv->dev);
+> +
+>  	return ret;
+>  }
+>  
+> @@ -910,12 +904,11 @@ static int xcan_close(struct net_device *ndev)
+>  	netif_stop_queue(ndev);
+>  	napi_disable(&priv->napi);
+>  	xcan_chip_stop(ndev);
+> -	clk_disable_unprepare(priv->bus_clk);
+> -	clk_disable_unprepare(priv->can_clk);
+>  	free_irq(ndev->irq, ndev);
+>  	close_candev(ndev);
+>  
+>  	can_led_event(ndev, CAN_LED_EVENT_STOP);
+> +	pm_runtime_put(priv->dev);
+>  
+>  	return 0;
+>  }
+> @@ -934,27 +927,21 @@ static int xcan_get_berr_counter(const struct net_device *ndev,
+>  	struct xcan_priv *priv = netdev_priv(ndev);
+>  	int ret;
+>  
+> -	ret = clk_prepare_enable(priv->can_clk);
+> -	if (ret)
+> -		goto err;
+> +	ret = pm_runtime_get_sync(priv->dev);
+> +	if (ret < 0) {
+> +		netdev_err(ndev, "%s: runtime resume failed(%d)\n\r",
+> +				__func__, ret);
+> +		return ret;
+> +	}
+>  
+> -	ret = clk_prepare_enable(priv->bus_clk);
+> -	if (ret)
+> -		goto err_clk;
+>  
+>  	bec->txerr = priv->read_reg(priv, XCAN_ECR_OFFSET) & XCAN_ECR_TEC_MASK;
+>  	bec->rxerr = ((priv->read_reg(priv, XCAN_ECR_OFFSET) &
+>  			XCAN_ECR_REC_MASK) >> XCAN_ESR_REC_SHIFT);
+>  
+> -	clk_disable_unprepare(priv->bus_clk);
+> -	clk_disable_unprepare(priv->can_clk);
+> +	pm_runtime_put(priv->dev);
+>  
+>  	return 0;
+> -
+> -err_clk:
+> -	clk_disable_unprepare(priv->can_clk);
+> -err:
+> -	return ret;
+>  }
+>  
+>  
+> @@ -967,15 +954,45 @@ static const struct net_device_ops xcan_netdev_ops = {
+>  
+>  /**
+>   * xcan_suspend - Suspend method for the driver
+> - * @dev:	Address of the platform_device structure
+> + * @dev:	Address of the net_device structure
 
-Sorry, but that's wrong. Despite the *cores* having an level-low output,
-the GIC only triggers on *level-high*. Yes, there is probably an
-inverter in between.
+This is just the device structure.
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+>   *
+>   * Put the driver into low power mode.
+> - * Return: 0 always
+> + * Return: 0 on success and failure value on error
+>   */
+>  static int __maybe_unused xcan_suspend(struct device *dev)
+>  {
+> -	struct platform_device *pdev = dev_get_drvdata(dev);
+> -	struct net_device *ndev = platform_get_drvdata(pdev);
+> +	if (!device_may_wakeup(dev))
+> +		return pm_runtime_force_suspend(dev);
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * xcan_resume - Resume from suspend
+> + * @dev:	Address of the net_device structure
+
+ditto
+
+> + *
+> + * Resume operation after suspend.
+> + * Return: 0 on success and failure value on error
+> + */
+> +static int __maybe_unused xcan_resume(struct device *dev)
+> +{
+> +	if (!device_may_wakeup(dev))
+> +		return pm_runtime_force_resume(dev);
+> +
+> +	return 0;
+> +
+> +}
+> +
+> +/**
+> + * xcan_runtime_suspend - Runtime suspend method for the driver
+> + * @dev:	Address of the net_device structure
+
+ditto.
+
+> + *
+> + * Put the driver into low power mode.
+> + * Return: 0 always
+> + */
+> +static int __maybe_unused xcan_runtime_suspend(struct device *dev)
+> +{
+> +	struct net_device *ndev = dev_get_drvdata(dev);
+>  	struct xcan_priv *priv = netdev_priv(ndev);
+>  
+>  	if (netif_running(ndev)) {
+> @@ -993,16 +1010,15 @@ static int __maybe_unused xcan_suspend(struct device *dev)
+>  }
+>  
+>  /**
+> - * xcan_resume - Resume from suspend
+> - * @dev:	Address of the platformdevice structure
+> + * xcan_runtime_resume - Runtime resume from suspend
+> + * @dev:	Address of the net_device structure
+
+ditto.
+
+Thanks,
+Michal
