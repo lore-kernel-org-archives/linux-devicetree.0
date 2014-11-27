@@ -1,77 +1,72 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH] drivers/core/of: Add symlink to device-tree from devices
- with an OF node
-Date: Wed, 26 Nov 2014 19:39:23 -0800
-Message-ID: <20141127033923.GA28286@kroah.com>
-References: <1415342031.4925.27.camel@kernel.crashing.org>
- <1415342117.4925.29.camel@kernel.crashing.org>
- <1415596626.5769.14.camel@kernel.crashing.org>
- <CAL_JsqKG=vpeGKj3v-2VW9oGQsnmuYMHRfy6LuXDXE=ROjHT4w@mail.gmail.com>
- <1415841047.5124.62.camel@kernel.crashing.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 1/1] thermal: cpu_cooling: check for the readiness of
+ cpufreq layer
+Date: Thu, 27 Nov 2014 09:38:39 +0530
+Message-ID: <CAKohponxUWVT1mjRfJarNtj-+=rXNOa_ONHUjmdu_+6N+=ZjPQ@mail.gmail.com>
+References: <1417024212-1775-1-git-send-email-edubezval@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1415841047.5124.62.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jeremy Kerr <jeremy.kerr-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1417024212-1775-1-git-send-email-edubezval@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: Linux PM <linux-pm@vger.kernel.org>, Lukasz Majewski <l.majewski@samsung.com>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 13, 2014 at 12:10:47PM +1100, Benjamin Herrenschmidt wrote:
-> So I've been annoyed lately with having a bunch of devices such as i2c
-> eeproms (for use by VPDs, server world !) and other bits and pieces that
-> I want to be able to identify from userspace, and possibly provide
-> additional data about from FW.
-> 
-> Basically, it boils down to correlating the sysfs device with the OF
-> tree device node, so that user space can use device-tree info such as
-> additional "location" or "label" (or whatever else we can come up with)
-> propreties to identify a given device, or get some attributes of use
-> about it, etc...
-> 
-> Now, so far, we've done that in some subsystem in a fairly ad-hoc basis
-> using "devspec" properties. For example, PCI creates them if it can
-> correlate the probed device with a DT node. Some powerpc specific busses
-> do that too.
-> 
-> However, i2c doesn't and it would be nice to have something more generic
-> since technically any device can have a corresponding device tree node.
-> 
-> This patch adds an "of_node" symlink to devices that have a non-NULL
-> dev->of_node pointer, the patch is pretty trivial and seems to work just
-> fine for me.
-> 
-> Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Few nits..
+
+On 26 November 2014 at 23:20, Eduardo Valentin <edubezval@gmail.com> wrote:
+
+> Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
 > ---
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index 20da3ad..8c7b607 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -493,6 +493,15 @@ static int device_add_attrs(struct device *dev)
->  			goto err_remove_dev_groups;
->  	}
->  
-> +#ifdef CONFIG_OF
-> +	if (dev->of_node) {
-> +		error = sysfs_create_link(&dev->kobj, &dev->of_node->kobj,
-> +					  "of_node");
-> +		if (error)
-> +			dev_warn(dev, "Error %d creating of_node link\n", error);
-> +	}
-> +#endif /* CONFIG_OF */
-> +
->  	return 0;
->  
->   err_remove_dev_groups:
-> 
 
-Are you going to resend a changed version of this?
+The normal practice is to write the non-commitable part here ...
 
-thanks,
+>  drivers/thermal/cpu_cooling.c                      | 5 +++++
+>  drivers/thermal/db8500_cpufreq_cooling.c           | 5 -----
+>  drivers/thermal/imx_thermal.c                      | 5 -----
+>  drivers/thermal/samsung/exynos_thermal_common.c    | 2 +-
+>  drivers/thermal/ti-soc-thermal/ti-thermal-common.c | 6 ------
+>  5 files changed, 6 insertions(+), 17 deletions(-)
+> ---
 
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+But this works as well :)
+
+> This is attempt to organize the cpu cooling vs. cpufreq boot sequencing.
+> The main change in this patch, as in the commit log, is to have the check
+> for the cpufreq layer in the cpu cooling device registration, instead of
+> in thermal drivers. This way, drivers don't need to bother about it, they
+> just need to propagate the error value.
+>
+> This change was tested on top of:
+> (0) - Viresh's change in cpufreq layer and cpufreq-dt (up to patch 4):
+> https://patchwork.kernel.org/patch/5384141/
+> https://patchwork.kernel.org/patch/5384151/
+> https://patchwork.kernel.org/patch/5384161/
+> https://patchwork.kernel.org/patch/5384171/
+> (1) - fix of thermal core:
+> https://patchwork.kernel.org/patch/5326991/
+>
+> After Viresh's changes, cpufreq-dt is properly sequenced with cpu cooling
+> registration. Non-of based drivers also should take advantage if these
+> changes, as now they do not need to check for cpufreq layer. The check is
+> where it belongs, in cpu cooling device registration.
+>
+> BR, Eduardo Valentin
+>
+>
+> diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
+> index 1ab0018..9e6945b 100644
+> --- a/drivers/thermal/cpu_cooling.c
+> +++ b/drivers/thermal/cpu_cooling.c
+> @@ -440,6 +440,11 @@ __cpufreq_cooling_register(struct device_node *np,
+>         int ret = 0, i;
+>         struct cpufreq_policy policy;
+>
+> +       if (!cpufreq_get_current_driver() || !cpufreq_frequency_get_table(0)) {
+
+Only !cpufreq_frequency_get_table(0) is enough here.
+
+For rest:
+
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
