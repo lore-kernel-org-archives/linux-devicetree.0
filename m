@@ -1,60 +1,67 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/4] spi: st: Provide Device Tree binding documentation
-Date: Thu, 27 Nov 2014 16:30:59 +0000
-Message-ID: <20141127163059.GZ7712@sirena.org.uk>
-References: <1417088636-11994-1-git-send-email-lee.jones@linaro.org>
- <1417088636-11994-3-git-send-email-lee.jones@linaro.org>
- <20141127130053.GW7712@sirena.org.uk>
- <20141127145542.GH4628@x1>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/9] clk: sunxi: Add prcm mod0 clock driver
+Date: Thu, 27 Nov 2014 17:40:56 +0100
+Message-ID: <20141127174056.6697cde3@bbrezillon>
+References: <54743DE1.7020704@redhat.com>
+	<20141126211318.GN25249@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="dfAulW8sdm/Y0CsS"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141127145542.GH4628@x1>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCIPJ6FA2QLBB4NJ3WRQKGQECVMX55A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20141126211318.GN25249@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Boris Brezillon <boris-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---dfAulW8sdm/Y0CsS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Wed, 26 Nov 2014 22:13:18 +0100
+Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-On Thu, Nov 27, 2014 at 02:55:42PM +0000, Lee Jones wrote:
-> On Thu, 27 Nov 2014, Mark Brown wrote:
+[...]
 
-> > What do the two different compatible strings mean (for example, should
-> > ssc4 be used for version 4 and higher or is it just a quirk for that
-> > version)?
+> 
+> I remember someone (Chen-Yu? Boris?) saying that the 1wire clock was
+> not really a mod0 clk. From what I could gather from the source code,
+> it seems to have a wider m divider, so we could argue that it should
+> need a new compatible.
 
-> This appears to be historical.  There aren't any functional
-> differences i.e. we don't match on them.  I believe the former is a
-> more informal, generic name and the latter is the official name of the
-> IP block.  The I2C component already upstreamed has the same naming
-> conventions by the looks of it.
+Wasn't me :-).
 
-Probably best to say something or retire one then.
+Regarding the rest of the discussion I miss some context, but here's
+what I remember decided us to choose the MFD approach for the PRCM
+block:
 
---dfAulW8sdm/Y0CsS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+1) it's embedding several unrelated functional blocks (reset, clk, and
+some other things I don't remember).
+2) none of the functionalities provided by the PRCM were required in
+the early boot stage
+3) We wanted to represent the HW blocks as they are really described in
+the memory mapping instead of splitting small register chunks over the
+DT.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Can someone sum-up the current issue you're trying to solve ?
 
-iQEcBAEBAgAGBQJUd1HCAAoJECTWi3JdVIfQOWoH/1hYO3qV5JbFVeE0xphBa4Td
-1xry2lXjk5lelhXBiNcpkEq2hLJVXQntjaLu5L2syKi9TvD9JNT6HycJvVv33vU3
-jlkcY7A6hM+ol8ExKBH0rcUQS/mWFPqj19+WtKKR01NlP08qaN5KHJmxcAseGxNV
-J2Y9t4usSRw2XTtxOXN/R4KcwZqZSFdLA+NPFJv92B9UVnzEnlKCLDxdB8ETSfCS
-C7MBYmmYyDvbF1waozT0bLBV2qMLj8L+pA3CGWBW8zZQANL1FNHsC1ciNx3Qa2y7
-Di1Mgs1UexxS+zl7OgWGyPc3MQorck6DOPhJkBwct7HliP9egEUCvw1yVsY7dk0=
-=mAJ2
------END PGP SIGNATURE-----
+IMHO, if you really want to split those functionalities over the DT
+(some nodes under clks and other under reset controller), then I
+suggest to use..............
+(Maxime, please stop smiling :P)
+..............
 
---dfAulW8sdm/Y0CsS--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SYSCON
+
+Best Regards,
+
+Boris
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
