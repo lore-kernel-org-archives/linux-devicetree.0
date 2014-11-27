@@ -1,52 +1,47 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/4] spi: st: Provide Device Tree binding documentation
-Date: Thu, 27 Nov 2014 13:00:53 +0000
-Message-ID: <20141127130053.GW7712@sirena.org.uk>
-References: <1417088636-11994-1-git-send-email-lee.jones@linaro.org>
- <1417088636-11994-3-git-send-email-lee.jones@linaro.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 1/7] mfd: max77686/802: Remove support for board files
+Date: Thu, 27 Nov 2014 13:03:01 +0000
+Message-ID: <20141127130301.GX7712@sirena.org.uk>
+References: <1417087253-12306-1-git-send-email-k.kozlowski@samsung.com>
+ <1417087253-12306-2-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mv22/3EYgOJmG2Gb"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="OyvoBEGRARVUNgID"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1417088636-11994-3-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1417087253-12306-2-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
 
---mv22/3EYgOJmG2Gb
+--OyvoBEGRARVUNgID
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Nov 27, 2014 at 11:43:54AM +0000, Lee Jones wrote:
+On Thu, Nov 27, 2014 at 12:20:47PM +0100, Krzysztof Kozlowski wrote:
+> The driver is used only on Exynos based boards with DTS support.
+> After removal of board file support from max77686 and max77802 regulator
+> drivers, the MFD driver can be converted to DTS-only version. This
+> simplifies a little the code:
 
-> +Required properties:
-> +- compatible	: "st,comms-ssc-spi" or "st,comms-ssc4-spi"
+Why is this a dependency for new features in the regulator core?
 
-What do the two different compatible strings mean (for example, should
-ssc4 be used for version 4 and higher or is it just a quirk for that
-version)?
-
---mv22/3EYgOJmG2Gb
+--OyvoBEGRARVUNgID
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBAgAGBQJUdyCFAAoJECTWi3JdVIfQyZkH/jf2ZF5qoC1l32gbd1cJ69YV
-k/Gne/q1Idfy43qupB73e5HonqJ4e448EImpxQSJ38TcY7xuaP3KE1zsRCY8c6VF
-ai7x4si1ejQ8pzqncY+BpjcP8sR9y8oHPOEHcYPFL+myfUHxJvLFVYRNXH8EM0hK
-AAKF1qHqq/sAhyiRDa1lRICW0fcO+8s4DOu451GrqUEdixxUn4Uf/P59FKm1587r
-R4IUFfN7RMRd6R0jc+0YxLFC8FH2bc9pz2SVN28W8QaRGzJ9CYGfu9QyOGlxrUJt
-8Zd7PV8mVRccAvbVuD/1XfXpIFRexipJKPMpbNz32UasNJM49Bw9U/AwgC9B428=
-=gWma
+iQEcBAEBAgAGBQJUdyEEAAoJECTWi3JdVIfQvlAH/2uI9u76rfQSrvibGcW40bC4
+TXugFJSI9ZTqjRDu/b4Np5axJ10YaBd38I/KcOOp3gSrMf55NuJLbdIad8h1tv0R
+u6tCUwlBZBodj7hVbUSk04GP/wXhxYtVoz0W+gnrrwXwyf+aVGil8N/75GdpNqFs
+lQkVv8lSeqQBpzYLBPTyLHP96InULspDMQMFM3GNL2x3QkKXxD6UYWseTUeKnQLg
+XLYf44ngTwTOmCaCGH+x79L+YkwH2C383y4g2dUM9SMAQQ8QpVXz4FWPW0HT9aWL
+oa8t03T9AimjQJM95Z9C01nmTppRLabWD7nPfbPZrLAAmkHO+9Jc5FC5ozYgZWU=
+=7jjJ
 -----END PGP SIGNATURE-----
 
---mv22/3EYgOJmG2Gb--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--OyvoBEGRARVUNgID--
