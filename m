@@ -1,68 +1,41 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 2/4] spi: st: Provide Device Tree binding documentation
-Date: Thu, 27 Nov 2014 11:43:54 +0000
-Message-ID: <1417088636-11994-3-git-send-email-lee.jones@linaro.org>
-References: <1417088636-11994-1-git-send-email-lee.jones@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1417088636-11994-1-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: lee.jones@linaro.org, kernel@stlinux.com, broonie@kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 01/19] pinctrl: exynos: Add support for Exynos5433
+Date: Thu, 27 Nov 2014 12:45:45 +0100
+Message-ID: <3904347.Bp2gmpYM49@wuerfel>
+References: <1417073716-22997-1-git-send-email-cw00.choi@samsung.com> <1417073716-22997-2-git-send-email-cw00.choi@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1417073716-22997-2-git-send-email-cw00.choi@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, kgene.kim@samsung.com, mark.rutland@arm.com, olof@lixom.net, catalin.marinas@arm.com, will.deacon@arm.com, s.nawrocki@samsung.com, tomasz.figa@gmail.com, thomas.abraham@linaro.org, linus.walleij@linaro.org, kyungmin.park@samsung.com, inki.dae@samsung.com, chanho61.park@samsung.com, geunsik.lim@samsung.com, sw0312.kim@samsung.com, jh80.chung@samsung.com, a.kesavan@samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds DT documentation for the SPI portion of ST's SSC device.
+On Thursday 27 November 2014 16:34:58 Chanwoo Choi wrote:
+> +
+> +/*
+> + * Samsung pinctrl driver data for Exynos5433 SoC. Exynos5433 SoC includes
+> + * four gpio/pin-mux/pinconfig controllers.
+> + */
+> +struct samsung_pin_ctrl exynos5433_pin_ctrl[] = {
+> +       {
+> +               /* pin-controller instance 0 data */
+> +               .pin_banks      = exynos5433_pin_banks0,
+> +               .nr_banks       = ARRAY_SIZE(exynos5433_pin_banks0),
+> +               .eint_wkup_init = exynos_eint_wkup_init,
+> +               .suspend        = exynos_pinctrl_suspend,
+> +               .resume         = exynos_pinctrl_resume,
+> +               .label          = "exynos5433-gpio-ctrl0",
+> +       }, {
+> 
 
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- Documentation/devicetree/bindings/spi/spi-st.txt | 40 ++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-st.txt
+I'm counting nine controllers, not four ;-)
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-st.txt b/Documentation/devicetree/bindings/spi/spi-st.txt
-new file mode 100644
-index 0000000..efef468e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-st.txt
-@@ -0,0 +1,40 @@
-+STMicroelectronics SSC (SPI) Controller
-+---------------------------------------
-+
-+Required properties:
-+- compatible	: "st,comms-ssc-spi" or "st,comms-ssc4-spi"
-+- reg		: Offset and length of the device's register set
-+- interrupts	: The interrupt specifier
-+- clock-names	: Must contain "ssc"
-+- clocks	: Must contain an entry for each name in clock-names
-+		    See ../clk/*
-+- pinctrl-names	: Uses "default", can use "sleep" if provided
-+		    See ../pinctrl/pinctrl-binding.txt
-+
-+Optional properties:
-+- cs-gpios	: List of GPIO chip selects
-+		    See ../spi/spi-bus.txt
-+
-+Child nodes represent devices on the SPI bus
-+  See ../spi/spi-bus.txt
-+
-+Example:
-+	spi@9840000 {
-+		compatible	= "st,comms-ssc-spi";
-+		reg		= <0x9840000 0x110>;
-+		interrupts	= <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks		= <&clk_s_c0_flexgen CLK_EXT2F_A9>;
-+		clock-names	= "ssc";
-+		pinctrl-0	= <&pinctrl_spi0_default>;
-+		pinctrl-names	= "default";
-+		cs-gpios	= <&pio17 5 0>;
-+		#address-cells	= <1>;
-+		#size-cells	= <0>;
-+
-+		st95hf@0{
-+			compatible		= "st,st95hf";
-+			reg			= <0>;
-+			spi-max-frequency	= <1000000>;
-+			interrupts		= <2 IRQ_TYPE_EDGE_FALLING>;
-+		};
-+	};
--- 
-1.9.1
+These seem to all be fairly regular, my impression is that with the
+move to arm64, you should come up with a new binding that can fully
+describe each controller so you don't have to add new code and bindings
+for each future SoC that uses the same scheme.
+
+	Arnd
