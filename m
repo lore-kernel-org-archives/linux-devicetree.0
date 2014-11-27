@@ -1,79 +1,107 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/8] irqchip: Supply new driver for STi based devices
-Date: Thu, 27 Nov 2014 09:29:01 +0000
-Message-ID: <20141127092901.GE4628@x1>
-References: <1416932705-16880-1-git-send-email-lee.jones@linaro.org>
- <2433040.4NqTrOMmEE@wuerfel>
- <20141127090255.GD4628@x1>
- <35179358.tOpRGufXmc@wuerfel>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [RFC PATCH 2/2] lib: devres: Add exec versions of
+ devm_ioremap_resource and friends
+Date: Thu, 27 Nov 2014 10:41:23 +0100
+Message-ID: <CAMuHMdWn3mgzwX55+OCWwMZwvfXkh7B+n-b0uChAW5gbx9b7Dw@mail.gmail.com>
+References: <cover.1417029918.git.d-gerlach@ti.com>
+	<bde13d5e7931af9aa90ddc09a79be5c30e3eef94.1417029918.git.d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <35179358.tOpRGufXmc@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <bde13d5e7931af9aa90ddc09a79be5c30e3eef94.1417029918.git.d-gerlach@ti.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Dave Gerlach <d-gerlach@ti.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russ Dill <russ.dill@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Philipp Zabel <p.zabel@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>, Tony Lindgren <tony@atomide.com>, Anson.Huang@freescale.com, Josh Triplett <josh@joshtriplett.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 27 Nov 2014, Arnd Bergmann wrote:
+On Wed, Nov 26, 2014 at 10:14 PM, Dave Gerlach <d-gerlach@ti.com> wrote:
+> --- a/lib/devres.c
+> +++ b/lib/devres.c
+> @@ -72,6 +72,64 @@ void __iomem *devm_ioremap_nocache(struct device *dev, resource_size_t offset,
+>  EXPORT_SYMBOL(devm_ioremap_nocache);
+>
+>  /**
+> + * devm_ioremap_exec - Managed ioremap_exec()
+> + * @dev: Generic device to remap IO address for
+> + * @offset: BUS offset to map
+> + * @size: Size of map
+> + *
+> + * Managed ioremap_exec().  Map is automatically unmapped on driver detach.
+> + */
+> +void __iomem *devm_ioremap_exec(struct device *dev, resource_size_t offset,
+> +                               unsigned long size)
+> +{
 
-> On Thursday 27 November 2014 09:02:55 Lee Jones wrote:
-> > On Tue, 25 Nov 2014, Arnd Bergmann wrote:
-> >=20
-> > > On Tuesday 25 November 2014 16:24:59 Lee Jones wrote:
-> > >=20
-> > > > diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> > > > index b21f12f..e502f15 100644
-> > > > --- a/drivers/irqchip/Kconfig
-> > > > +++ b/drivers/irqchip/Kconfig
-> > > > @@ -93,6 +93,13 @@ config RENESAS_IRQC
-> > > >     bool
-> > > >     select IRQ_DOMAIN
-> > > > =20
-> > > > +config ST_IRQCHIP
-> > > > +   bool
-> > > > +   select REGMAP
-> > > > +   select MFD_SYSCON
-> > > > +   help
-> > > > +     Enables SysCfg Controlled IRQs on STi based platforms.
-> > > > +
-> > >=20
-> > > I'm confused by the purpose of this code. It's apparently a drive=
-r
-> > > in drivers/irqchip, the Kconfig symbol contains the string IRQCHI=
-P,
-> > > yet it doesn't actually register an irq_chip.
-> > >=20
-> > > Also, the name is a bit too generic, ST has lots of different irq=
-chips,
-> > > and this apparently isn't even one of them=20
-> >=20
-> > Hmm... now you're going to ask me to remember who I had the
-> > conversation with that alluded to this as the best location for thi=
-s
-> > driver.  Unfortunately, I cannot.  Can you think of a better place =
-to
-> > put it then?
->=20
-> I suspect it's in the right place but should actually be an irqchip
-> driver. I'm having trouble understanding what this code actually does=
-,
-> can you you explain the functionality in more detail so we can figure
-> out what to do with it?
+[...]
 
-In the simplest terms it's an IRQ unmasker.  A9 Core IRQs are disabled
-on boot; PMU, CTI (CoreSight), PL310_L2 and EXT.  In order for you to
-make use of them they need to be unmasked in SYSCFG.
+> +       addr = ioremap_exec(offset, size);
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+[...]
+
+> +}
+> +EXPORT_SYMBOL(devm_ioremap_exec);
+> +
+> +/**
+> + * devm_ioremap_exec_nocache - Managed ioremap_exec_nocache()
+> + * @dev: Generic device to remap IO address for
+> + * @offset: BUS offset to map
+> + * @size: Size of map
+> + *
+> + * Managed ioremap_exec_nocache().  Map is automatically unmapped on driver
+> + * detach.
+> + */
+> +void __iomem *devm_ioremap_exec_nocache(struct device *dev,
+> +                                       resource_size_t offset,
+> +                                       unsigned long size)
+> +{
+
+[...]
+
+> +       addr = ioremap_exec_nocache(offset, size);
+
+[...]
+
+> +}
+> +EXPORT_SYMBOL(devm_ioremap_exec_nocache);
+> +
+
+Both of these are identical to the already-existing devm_ioremap() and
+devm_ioremap_nocache(), except for the call to the underlying
+ioremap*() variant.
+
+Can't the variant selection be done by passing a flag around, set by
+the top-level inline functions, to avoid code duplication?
+Some architecture-specific ioremap() implementations already work that
+way, cfr. arch/m68k/include/asm/io_mm.h:
+
+static inline void __iomem *ioremap(unsigned long physaddr, unsigned long size)
+{
+        return __ioremap(physaddr, size, IOMAP_NOCACHE_SER);
+}
+static inline void __iomem *ioremap_nocache(unsigned long physaddr,
+unsigned lonn
+g size)
+{
+        return __ioremap(physaddr, size, IOMAP_NOCACHE_SER);
+}
+static inline void __iomem *ioremap_writethrough(unsigned long physaddr,
+                                         unsigned long size)
+{
+        return __ioremap(physaddr, size, IOMAP_WRITETHROUGH);
+}
+static inline void __iomem *ioremap_fullcache(unsigned long physaddr,
+                                      unsigned long size)
+{
+        return __ioremap(physaddr, size, IOMAP_FULL_CACHING);
+}
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
