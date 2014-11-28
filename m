@@ -1,78 +1,92 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] Patch to improve device tree structure
-Date: Fri, 28 Nov 2014 15:46:26 +0000
-Message-ID: <20141128154626.EFAE0C40884@trevor.secretlab.ca>
-References: <1416199976-21147-1-git-send-email-gaurav.minocha.os@gmail.com>
-	<20141118151026.D2D63C40966@trevor.secretlab.ca>
-	<CA+rpMbKZvMb4uxSFabvXG5nRNQnNXnAKUhdjn0Vp_wZBFN8COw@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] ARM: hip04: set ARCH_NR_GPIO to 128
+Date: Fri, 28 Nov 2014 16:54:44 +0100
+Message-ID: <CACRpkdbahD314DL-ONQNkOzu9yHc_av4mxkqrYi8dS0PP43n8Q@mail.gmail.com>
+References: <1417156188-500-1-git-send-email-wangzhou.bry@gmail.com>
+	<1417156188-500-2-git-send-email-wangzhou.bry@gmail.com>
+	<3094004.3WUKgY6xNz@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+rpMbKZvMb4uxSFabvXG5nRNQnNXnAKUhdjn0Vp_wZBFN8COw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <3094004.3WUKgY6xNz@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 23 Nov 2014 17:22:22 -0800
-, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
- wrote:
-> On Tue, Nov 18, 2014 at 7:10 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > On Sun, 16 Nov 2014 20:52:56 -0800
-> > , Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >  wrote:
-> >> This patch improves the implementation of device tree structure.
-> >>
-> >> Traditional child and sibling linked list in device tree structure
-> >> is removed and is replaced by list_head (i.e. circular doubly linked
-> >>  list) already available in Linux kernel.
-> >>
-> >> Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >
-> > Hi Gaurav,
-> >
-> > So, after you've done this work, I need to you rebase it (and of course
-> > it is non-trivial) onto linux-next. I've already got a patch queued up
-> > which gets rid of the of_allnodes/allnext list which will have conflicts
-> > with this patch.
-> >
-> 
-> I am using http://git.kernel.org/pub/scm/linux/kernel/git/glikely/linux.git
-> There is no branch linux-next in it. Also, I believe http://git.secretlab.ca/
-> is not up yet. Please correct.
+On Fri, Nov 28, 2014 at 10:33 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Friday 28 November 2014 14:29:47 Zhou Wang wrote:
 
-The branch is devicetree/next. That is the branch that gets pulled into
-linux-next every day.
+>> Set ARCH_NR_GPIO for Hisilicon Soc Hip04, which has 4 GPIO
+>> controllers with 32 GPIOs each.
+>>
+>> Signed-off-by: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  arch/arm/Kconfig                |    1 +
+>>  arch/arm/configs/hisi_defconfig |    3 +++
+>>  2 files changed, 4 insertions(+)
+>>
+>> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+>> index 89c4b5c..26aae1e 100644
+>> --- a/arch/arm/Kconfig
+>> +++ b/arch/arm/Kconfig
+>> @@ -1509,6 +1509,7 @@ config ARCH_NR_GPIO
+>>         default 352 if ARCH_VT8500
+>>         default 288 if ARCH_ROCKCHIP
+>>         default 264 if MACH_H4700
+>> +       default 128 if ARCH_HIP04
+>>         default 0
+>>         help
+>>           Maximum number of GPIOs in the system.
+>>
+>
+> If I remember correctly, you don't actually need to set this if all gpio
+> clients are using the new gpio descriptor interfaces instead of gpio
+> numbers.
 
-git.secretlab.ca is now gone. I'm not going to resurrect it.
+Unfortunately you still have to. We are working on removing the
+dependency on ARCH_NR_GPIO, old habits die hard. But I just
+merged this patch:
+http://marc.info/?l=linux-gpio&m=141638350328535&w=2
 
-> >> -#define NO_OF_NODES 3
-> >> -static struct device_node *nodes[NO_OF_NODES];
-> >> -static int last_node_index;
-> >> +#define MAX_NODES 50
-> >> +
-> >> +static int no_of_nodes;
-> >>  static bool selftest_live_tree;
-> >> +static struct device_node* nodes[MAX_NODES];
-> >
-> > I think it's time to rework this structure. Instead of a static list,
-> > the code should figure out how many entries it needs and then kzalloc()
-> > the region.
-> 
-> Ok.
+Which makes the situation better.
 
-For now I would like to you focus on this change and on making the
-unittests independent of OF_DYNAMIC. Frank had some good comments. I'd
-like to think on it some more before proceeding. The only time that the
-single linked list is a problem is when unflattening the tree, but even
-that can be mitigated by reordering it after unflatting has completed
-instead of trying to keep it in order all the time.
+There is however some other use of this define, so there is
+some work required still to get rid of it.
 
-The biggest question is whether or not we can switch to RCU operations.
-It isn't necessary to use list_head to switch to RCU, but RCU is a lot
-better understood when list_head is used.
+And that patch may blow up in testing too...
 
-So, work on OF_DYNAMIC for now and we'll revisit list_head later.
+> Linus, one question for you: Does the ARCH_NR_GPIO actually work as designed?
+> I see that e.g. OMAP4 defines 192 GPIO lines but does not have an ARCH_NR_GPIO
+> setting. In an OMAP4-only kernel you would get the default value (512)
+> from include/asm-generic/gpio.h, and in a multiplatform kernel you get at
+> least 512 if any of the (ARCH_EXYNOS || ARCH_KEYSTONE || SOC_OMAP5 || \
+> SOC_DRA7XX || ARCH_S3C24XX || ARCH_S3C64XX || ARCH_S5PV210 || ARCH_SHMOBILE
+> || ARCH_TEGRA) are set, so that is still good.
 
-g.
+Yeah that is how it kind of works...
+
+> However if one builds a kernel that just enables OMAP4 and HIP04, I suspect
+> it can't work on OMAP4 for any gpio line above 128, which seems to be
+> a fundamental multiplatform problem.
+
+Yes I guess you are right :(
+
+It's probably just so that so many platforms converge on 512.
+
+> Do we neet to increase the default to 512 for all ARCH_MULTIPLATFORM
+> configurations and just leave ARCH_SHMOBILE, ARCH_TEGRA and MACH_H4700
+> here as special cases?
+
+That'd be good while we are working to kill off
+ARCH_NR_GPIO for good.
+
+I guess there could be arch-specific problems with trying
+to get rid of ARCH_NR_GPIO for good, do you have some
+input on this? (Arch maintainer hat on...)
+
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
