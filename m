@@ -1,59 +1,44 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V4 02/16] irqchip: brcmstb-l2: don't clear wakeable interrupts at init time
-Date: Thu, 27 Nov 2014 20:32:08 -0800
-Message-ID: <1417149142-3756-3-git-send-email-cernekee@gmail.com>
+Subject: [PATCH V4 01/16] irqchip: Update docs regarding irq_domain_add_tree()
+Date: Thu, 27 Nov 2014 20:32:07 -0800
+Message-ID: <1417149142-3756-2-git-send-email-cernekee@gmail.com>
 References: <1417149142-3756-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
 In-Reply-To: <1417149142-3756-1-git-send-email-cernekee@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: ralf@linux-mips.org
 Cc: f.fainelli@gmail.com, jfraser@broadcom.com, dtor@chromium.org, tglx@linutronix.de, jason@lakedaemon.net, jogo@openwrt.org, arnd@arndb.de, computersforpeace@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Brian Norris <computersforpeace@gmail.com>
+Several drivers now use this API, including the ARM GIC driver, so remove
+the outdated comment.
 
-Wakeable interrupts might be pending at boot/init time, because wakeup
-interrupts might have triggered a resume from S5. So don't clear such
-wakeups.
-
-This means that any driver which requests a wakeable interrupt bit
-should be prepared to handle an interrupt as soon as they call
-request_irq(). (This is technically already the correct development
-practice, but some drivers probably expect not to receive interrupts
-until they have performed some I/O.)
-
-Signed-off-by: Brian Norris <computersforpeace@gmail.com>
 Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
 ---
- drivers/irqchip/irq-brcmstb-l2.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ Documentation/IRQ-domain.txt | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/irq-brcmstb-l2.c b/drivers/irqchip/irq-brcmstb-l2.c
-index 4aa653a0ac72..4edd27c486c4 100644
---- a/drivers/irqchip/irq-brcmstb-l2.c
-+++ b/drivers/irqchip/irq-brcmstb-l2.c
-@@ -136,7 +136,11 @@ int __init brcmstb_l2_intc_of_init(struct device_node *np,
+diff --git a/Documentation/IRQ-domain.txt b/Documentation/IRQ-domain.txt
+index 8a8b82c9ca53..0ccd7b7f6043 100644
+--- a/Documentation/IRQ-domain.txt
++++ b/Documentation/IRQ-domain.txt
+@@ -95,8 +95,7 @@ since it doesn't need to allocate a table as large as the largest
+ hwirq number.  The disadvantage is that hwirq to IRQ number lookup is
+ dependent on how many entries are in the table.
  
- 	/* Disable all interrupts by default */
- 	writel(0xffffffff, data->base + CPU_MASK_SET);
--	writel(0xffffffff, data->base + CPU_CLEAR);
-+
-+	/* Wakeup interrupts may be retained from S5 (cold boot) */
-+	data->can_wake = of_property_read_bool(np, "brcm,irq-can-wake");
-+	if (!data->can_wake)
-+		writel(0xffffffff, data->base + CPU_CLEAR);
+-Very few drivers should need this mapping.  At the moment, powerpc
+-iseries is the only user.
++Very few drivers should need this mapping.
  
- 	data->parent_irq = irq_of_parse_and_map(np, 0);
- 	if (data->parent_irq < 0) {
-@@ -188,8 +192,7 @@ int __init brcmstb_l2_intc_of_init(struct device_node *np,
- 	ct->chip.irq_suspend = brcmstb_l2_intc_suspend;
- 	ct->chip.irq_resume = brcmstb_l2_intc_resume;
- 
--	if (of_property_read_bool(np, "brcm,irq-can-wake")) {
--		data->can_wake = true;
-+	if (data->can_wake) {
- 		/* This IRQ chip can wake the system, set all child interrupts
- 		 * in wake_enabled mask
- 		 */
+ ==== No Map ===-
+ irq_domain_add_nomap()
 -- 
 2.1.0
