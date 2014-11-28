@@ -1,46 +1,129 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [kernel PATCH] devicetree: document ARM bindings for QEMU's Firmware Config interface
-Date: Fri, 28 Nov 2014 13:59:43 +0100
-Message-ID: <4081425.dh6XptxTnn@wuerfel>
-References: <1417177604-21194-1-git-send-email-lersek@redhat.com>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCHv2 1/1] thermal: cpu_cooling: check for the readiness of
+ cpufreq layer
+Date: Fri, 28 Nov 2014 09:14:27 -0400
+Message-ID: <20141128131425.GA23622@developer>
+References: <1417097577-3548-1-git-send-email-edubezval@gmail.com>
+ <CAKohponu_PRrqsuMdCJDznhiO_-=iCaYPhCCad8F4WS3rNxo5A@mail.gmail.com>
+ <20141128111824.533c4641@jawa>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417177604-21194-1-git-send-email-lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="C7zPtVaVf+AK4Oqc"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141128111824.533c4641@jawa>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lukasz Majewski <l.majewski@majess.pl>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Linux PM <linux-pm@vger.kernel.org>, Lukasz Majewski <l.majewski@samsung.com>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 28 November 2014 13:26:44 Laszlo Ersek wrote:
-> +Example:
-> +
-> +/ {
-> +       #size-cells = <0x2>;
-> +       #address-cells = <0x2>;
-> +
-> +       fw-cfg@9020000 {
-> +               reg = <0x0 0x9020000 0x0 0x2 0x0 0x9020002 0x0 0x1>;
-> +               compatible = "fw-cfg,mmio";
-> +       };
-> +};
-> 
 
-"fw-cfg" is not a valid vendor string. Are you emulating an actual piece
-of hardware here or is this something that comes from qemu?
-How about using "qemu,fwcfg" as the compatible string, and documenting
-"qemu" as an official vendor string in Documentation/devicetree/bindings/vendor-prefixes.txt
+--C7zPtVaVf+AK4Oqc
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-We don't normally list contiguous registers separately. Maybe just round
-up to one page and make the register property
 
-	reg = <0x0 0x9020000 0x0 0x1000>;
+Hello Folks,
 
-Finally, isn't there also an interrupt associated with this virtual device?
+On Fri, Nov 28, 2014 at 11:18:24AM +0100, Lukasz Majewski wrote:
+> On Fri, 28 Nov 2014 13:35:49 +0530
+> Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>=20
+> > On 27 November 2014 at 19:42, Eduardo Valentin <edubezval@gmail.com>
+> > wrote:
+> > > (I'm sorry VireshK, I am still using my normal practice) :-)
+> >=20
+> > That's fine :)
+> >=20
+> > > diff --git a/drivers/thermal/cpu_cooling.c
+> > > b/drivers/thermal/cpu_cooling.c index 1ab0018..bed3fa2 100644
+> > > --- a/drivers/thermal/cpu_cooling.c
+> > > +++ b/drivers/thermal/cpu_cooling.c
+> > > @@ -440,6 +440,11 @@ __cpufreq_cooling_register(struct device_node
+> > > *np, int ret =3D 0, i;
+> > >         struct cpufreq_policy policy;
+> > >
+> > > +       if (!cpufreq_frequency_get_table(0)) {
+> > > +               pr_err("cpu_cooling: cpufreq layer not ready!
+> > > Deferring.\n");
+> >=20
+> > Throwing an error here doesn't look to be the right thing. Ultimately
+> > we will register the cooling dev when probed again after some time.
+> >=20
+> > So, a pr_debug() suits more here.
+> >=20
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yeah, I agree here.=20
+
+> > Also, this breaks existing exynos thermal drivers as they don't handle
+> > -EPROBE_DEFER well right now.
+>=20
+> Unfortunately Viresh is correct here. Current (before rework) Exynos
+> TMU driver expects that cpu_cooling device will succeed.
+>=20
+
+
+Well, I wouldn't say unfortunately, but fortunately! :-)
+
+Ok. But I believe it is a matter of propagating the error code. As I
+included in this patch:=20
+
+diff --git a/drivers/thermal/samsung/exynos_thermal_common.c b/drivers/ther=
+mal/samsung/exynos_thermal_common.c
+index 3f5ad25..f84975e 100644
+--- a/drivers/thermal/samsung/exynos_thermal_common.c
++++ b/drivers/thermal/samsung/exynos_thermal_common.c
+@@ -373,7 +373,7 @@ int exynos_register_thermal(struct thermal_sensor_conf =
+*sensor_conf)
+ 		if (IS_ERR(th_zone->cool_dev[th_zone->cool_dev_size])) {
+ 			dev_err(sensor_conf->dev,
+ 				"Failed to register cpufreq cooling device\n");
+-			ret =3D -EINVAL;
++			ret =3D PTR_ERR(th_zone->cool_dev[th_zone->cool_dev_size]);
+ 			goto err_unregister;
+ 		}
+ 		th_zone->cool_dev_size++;
+
+
+
+> >=20
+> > I reached here, because one of my patches had something similar to
+> > what you wrote. Just for this file though, haven't updated any other
+> > drivers though.
+> >=20
+> > Will be sending you my small patchset by end of day today, please see
+> > if they make any sense at all..
+
+The version you sent (for exynos) is better because there is a check for
+not print error messages in case of deferring.
+
+However, I would prefer, at least to what comes to deferring, to update
+the drivers altogether with the inclusion of the check in cpu cooling.
+This way the change in behavior is atomic, in terms of commit changes.
+
+Viresh, if you don't mind, I will merge your patch 04/26 into this one.
+
+>=20
+> Best regards,
+> =C5=81ukasz Majewski
+
+BR, Eduardo Valentin
+
+--C7zPtVaVf+AK4Oqc
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUeHUpAAoJEMLUO4d9pOJWPAYH/RZ2pwN7Ksx7Wkgg8Xjl1AfC
+IHecRQ0+0k61qf5rbso1Kr+w4sZ+UXD1xIw+4Mgkcfk8GSpTSEB57Hsi0CpIb6rN
+kGBHPK2SIuemS25XV06rVZFidCnHUS3GZ82ZgsUBADkKcey/ZVPb7pNrtvpS/uzN
+e5YPbQXpEXGYCSDiEtgTr/dO1+I7IL0rdnkVS5Rn6gBPXcqKey5XZC/kOi+UQ3NI
+ch4Sw0BrMOiJBxfwNdHOb5OlMDdUJKPuhLcHX+NQEeLZ7pKT5RexBedISVFDlJZX
+CulOwfyuHQgGdMjkLnfCMRndhVpI6a3oNxXwdQpg1PBUAYRi8GLpTpNrjdukrRg=
+=wr2c
+-----END PGP SIGNATURE-----
+
+--C7zPtVaVf+AK4Oqc--
