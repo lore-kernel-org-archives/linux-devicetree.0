@@ -1,223 +1,157 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V4 00/16] Generic BMIPS kernel
-Date: Thu, 27 Nov 2014 20:32:06 -0800
-Message-ID: <1417149142-3756-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+Subject: [PATCH V4 05/16] irqchip: bcm7120-l2: Refactor driver for arbitrary IRQEN/IRQSTAT offsets
+Date: Thu, 27 Nov 2014 20:32:11 -0800
+Message-ID: <1417149142-3756-6-git-send-email-cernekee@gmail.com>
+References: <1417149142-3756-1-git-send-email-cernekee@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1417149142-3756-1-git-send-email-cernekee@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: ralf@linux-mips.org
 Cc: f.fainelli@gmail.com, jfraser@broadcom.com, dtor@chromium.org, tglx@linutronix.de, jason@lakedaemon.net, jogo@openwrt.org, arnd@arndb.de, computersforpeace@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series REPLACES the following commits in Ralf's
-mips-for-linux-next branch:
+Currently the driver assumes that REG_BASE+0x00 is the IRQ enable mask,
+and REG_BASE+0x04 is the IRQ status mask.  This is true on BCM3384 and
+BCM7xxx, but it is not true for some of the controllers found on BCM63xx
+chips.  So we will change a couple of key assumptions:
 
-846deacebfe1 Documentation: DT: Add entries for BCM3384 and its peripherals
-d666cd0246f7 MIPS: bcm3384: Initial commit of bcm3384 platform support
-a2f6734c5f68 MAINTAINERS: Add entry for BCM33xx cable chips
+ - Don't assume that both the IRQEN and IRQSTAT registers will be
+   covered by a single ioremap() operation.
 
-(if you just want to drop the above commits and target this for 3.20+,
-that's fine.)
+ - Don't assume any particular ordering (IRQSTAT might show up before
+   IRQEN on some chips).
 
+ - For an L2 controller with >=64 IRQs, don't assume that every
+   IRQEN/IRQSTAT pair will use the same register spacing.
 
-V3->V4:
+This patch changes the "plumbing" but doesn't yet provide a way for users
+to instantiate a controller with arbitrary IRQEN/IRQSTAT offsets.
 
- - Rename "Multiplatform BMIPS kernel" to "Generic BMIPS kernel".
+Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+---
+ drivers/irqchip/irq-bcm7120-l2.c | 41 +++++++++++++++++++++++++++-------------
+ 1 file changed, 28 insertions(+), 13 deletions(-)
 
- - Split the "Generic BMIPS kernel" work into two separate commits: one
-   for code and one for DTS.
-
- - Drop set_io_port_base stuff; this can be added later when PCI(e)
-   support is done.
-
- - Document the boot interface (entry points, register contents).
-
- - Document the special FIXMAP requirement.
-
- - Create a mach-generic/war.h to reduce copy/paste.
-
- - Change "compatible" strings to distinguish bcm7120-style
-   "IRQEN/IRQSTAT" controllers from bcm3380-style "free form"
-   controllers.
-
- - Add DT nodes for brcmstb-reboot.c and brcmstb_gisb.c.
-
- - Rebase on Ralf's latest tree.
-
-
-This series is based on mips-for-linux-next, minus the three 3384 patches
-listed above, plus these non-MIPS patches:
-
-http://patchwork.linux-mips.org/bundle/cernekee/bmips-multi-v4-deps/?state=%2a
-http://marc.info/?l=linux-usb&m=141305106215886&w=2 (all 3/3)
-http://marc.info/?l=linux-usb&m=141696309127730&w=2 (all 9/9)
-
-I believe the irq-b*-l2.c patches are the only compile-time dependencies;
-you may want to take 01-08 through the irqchip tree since they build on
-top of other pending commits there.
-
-My branch can be viewed here:
-
-https://github.com/Broadcom/stblinux/commits/bmips-generic-v4
-
-
-Brian Norris (1):
-  irqchip: brcmstb-l2: don't clear wakeable interrupts at init time
-
-Dmitry Torokhov (2):
-  irqchip: brcmstb-l2: fix error handling of irq_of_parse_and_map
-  irqchip: bcm7120-l2: fix error handling of irq_of_parse_and_map
-
-Kevin Cernekee (13):
-  irqchip: Update docs regarding irq_domain_add_tree()
-  irqchip: bcm7120-l2: Refactor driver for arbitrary IRQEN/IRQSTAT
-    offsets
-  irqchip: bcm7120-l2: Split STB-specific logic into its own function
-  irqchip: bcm7120-l2: Add support for BCM3380-style controllers
-  irqchip: Add new driver for BCM7038-style level 1 interrupt
-    controllers
-  MIPS: Let __dt_register_buses accept a single bus type
-  MIPS: Fall back to the generic restart notifier
-  MIPS: Reorder MIPS_L1_CACHE_SHIFT priorities
-  MIPS: Create a common <asm/mach-generic/war.h>
-  MIPS: BMIPS: Flush the readahead cache after DMA
-  MIPS: BMIPS: Document the firmware->kernel DTB interface
-  MIPS: Add Generic BMIPS target
-  MIPS: BMIPS: Add DTS files for several platforms
-
- Documentation/IRQ-domain.txt                       |   3 +-
- .../interrupt-controller/brcm,bcm3380-l2-intc.txt  |  41 +++
- .../interrupt-controller/brcm,bcm7038-l1-intc.txt  |  52 ++++
- .../interrupt-controller/brcm,bcm7120-l2-intc.txt  |  12 +-
- .../devicetree/bindings/mips/brcm/bmips.txt        |   8 +
- .../devicetree/bindings/mips/brcm/soc.txt          |  12 +
- Documentation/devicetree/booting-without-of.txt    |  28 ++
- arch/mips/Kbuild.platforms                         |   1 +
- arch/mips/Kconfig                                  |  41 ++-
- arch/mips/bmips/Kconfig                            |  50 +++
- arch/mips/bmips/Makefile                           |   1 +
- arch/mips/bmips/Platform                           |   7 +
- arch/mips/bmips/dma.c                              | 121 ++++++++
- arch/mips/bmips/irq.c                              |  38 +++
- arch/mips/bmips/setup.c                            | 191 ++++++++++++
- arch/mips/boot/dts/Makefile                        |   9 +
- arch/mips/boot/dts/bcm3384_viper.dtsi              | 108 +++++++
- arch/mips/boot/dts/bcm3384_zephyr.dtsi             | 126 ++++++++
- arch/mips/boot/dts/bcm6328.dtsi                    |  86 ++++++
- arch/mips/boot/dts/bcm6368.dtsi                    |  93 ++++++
- arch/mips/boot/dts/bcm7125.dtsi                    | 139 +++++++++
- arch/mips/boot/dts/bcm7346.dtsi                    | 224 ++++++++++++++
- arch/mips/boot/dts/bcm7360.dtsi                    | 161 ++++++++++
- arch/mips/boot/dts/bcm7420.dtsi                    | 184 +++++++++++
- arch/mips/boot/dts/bcm7425.dtsi                    | 225 ++++++++++++++
- arch/mips/boot/dts/bcm93384wvg.dts                 |  25 ++
- arch/mips/boot/dts/bcm93384wvg_viper.dts           |  25 ++
- arch/mips/boot/dts/bcm96368mvwg.dts                |  31 ++
- arch/mips/boot/dts/bcm97125cbmb.dts                |  31 ++
- arch/mips/boot/dts/bcm97346dbsmb.dts               |  58 ++++
- arch/mips/boot/dts/bcm97360svmb.dts                |  34 +++
- arch/mips/boot/dts/bcm97420c.dts                   |  45 +++
- arch/mips/boot/dts/bcm97425svmb.dts                |  60 ++++
- arch/mips/boot/dts/bcm9ejtagprb.dts                |  22 ++
- arch/mips/configs/bmips_be_defconfig               |  88 ++++++
- arch/mips/configs/bmips_stb_defconfig              |  88 ++++++
- arch/mips/include/asm/mach-ar7/war.h               |  24 --
- arch/mips/include/asm/mach-ath25/war.h             |  25 --
- arch/mips/include/asm/mach-ath79/war.h             |  24 --
- arch/mips/include/asm/mach-au1x00/war.h            |  24 --
- arch/mips/include/asm/mach-bcm47xx/war.h           |  24 --
- arch/mips/include/asm/mach-bcm63xx/war.h           |  24 --
- arch/mips/include/asm/mach-bmips/dma-coherence.h   |  48 +++
- arch/mips/include/asm/mach-bmips/spaces.h          |  18 ++
- arch/mips/include/asm/mach-cavium-octeon/war.h     |  25 --
- arch/mips/include/asm/mach-cobalt/war.h            |  24 --
- arch/mips/include/asm/mach-dec/war.h               |  24 --
- arch/mips/include/asm/mach-emma2rh/war.h           |  24 --
- arch/mips/include/asm/mach-generic/war.h           |  24 ++
- arch/mips/include/asm/mach-jazz/war.h              |  24 --
- arch/mips/include/asm/mach-jz4740/war.h            |  24 --
- arch/mips/include/asm/mach-lantiq/war.h            |  23 --
- arch/mips/include/asm/mach-lasat/war.h             |  24 --
- arch/mips/include/asm/mach-loongson/war.h          |  24 --
- arch/mips/include/asm/mach-loongson1/war.h         |  24 --
- arch/mips/include/asm/mach-netlogic/war.h          |  25 --
- arch/mips/include/asm/mach-paravirt/war.h          |  25 --
- arch/mips/include/asm/mach-pnx833x/war.h           |  24 --
- arch/mips/include/asm/mach-ralink/war.h            |  24 --
- arch/mips/include/asm/mach-tx39xx/war.h            |  24 --
- arch/mips/include/asm/mach-vr41xx/war.h            |  24 --
- arch/mips/kernel/prom.c                            |   5 +-
- arch/mips/kernel/reset.c                           |   2 +
- arch/mips/mm/dma-default.c                         |  13 +
- drivers/irqchip/Kconfig                            |   5 +
- drivers/irqchip/Makefile                           |   1 +
- drivers/irqchip/irq-bcm7038-l1.c                   | 335 +++++++++++++++++++++
- drivers/irqchip/irq-bcm7120-l2.c                   | 197 ++++++++----
- drivers/irqchip/irq-brcmstb-l2.c                   |  13 +-
- 69 files changed, 3048 insertions(+), 612 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm3380-l2-intc.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
- create mode 100644 Documentation/devicetree/bindings/mips/brcm/bmips.txt
- create mode 100644 Documentation/devicetree/bindings/mips/brcm/soc.txt
- create mode 100644 arch/mips/bmips/Kconfig
- create mode 100644 arch/mips/bmips/Makefile
- create mode 100644 arch/mips/bmips/Platform
- create mode 100644 arch/mips/bmips/dma.c
- create mode 100644 arch/mips/bmips/irq.c
- create mode 100644 arch/mips/bmips/setup.c
- create mode 100644 arch/mips/boot/dts/bcm3384_viper.dtsi
- create mode 100644 arch/mips/boot/dts/bcm3384_zephyr.dtsi
- create mode 100644 arch/mips/boot/dts/bcm6328.dtsi
- create mode 100644 arch/mips/boot/dts/bcm6368.dtsi
- create mode 100644 arch/mips/boot/dts/bcm7125.dtsi
- create mode 100644 arch/mips/boot/dts/bcm7346.dtsi
- create mode 100644 arch/mips/boot/dts/bcm7360.dtsi
- create mode 100644 arch/mips/boot/dts/bcm7420.dtsi
- create mode 100644 arch/mips/boot/dts/bcm7425.dtsi
- create mode 100644 arch/mips/boot/dts/bcm93384wvg.dts
- create mode 100644 arch/mips/boot/dts/bcm93384wvg_viper.dts
- create mode 100644 arch/mips/boot/dts/bcm96368mvwg.dts
- create mode 100644 arch/mips/boot/dts/bcm97125cbmb.dts
- create mode 100644 arch/mips/boot/dts/bcm97346dbsmb.dts
- create mode 100644 arch/mips/boot/dts/bcm97360svmb.dts
- create mode 100644 arch/mips/boot/dts/bcm97420c.dts
- create mode 100644 arch/mips/boot/dts/bcm97425svmb.dts
- create mode 100644 arch/mips/boot/dts/bcm9ejtagprb.dts
- create mode 100644 arch/mips/configs/bmips_be_defconfig
- create mode 100644 arch/mips/configs/bmips_stb_defconfig
- delete mode 100644 arch/mips/include/asm/mach-ar7/war.h
- delete mode 100644 arch/mips/include/asm/mach-ath25/war.h
- delete mode 100644 arch/mips/include/asm/mach-ath79/war.h
- delete mode 100644 arch/mips/include/asm/mach-au1x00/war.h
- delete mode 100644 arch/mips/include/asm/mach-bcm47xx/war.h
- delete mode 100644 arch/mips/include/asm/mach-bcm63xx/war.h
- create mode 100644 arch/mips/include/asm/mach-bmips/dma-coherence.h
- create mode 100644 arch/mips/include/asm/mach-bmips/spaces.h
- delete mode 100644 arch/mips/include/asm/mach-cavium-octeon/war.h
- delete mode 100644 arch/mips/include/asm/mach-cobalt/war.h
- delete mode 100644 arch/mips/include/asm/mach-dec/war.h
- delete mode 100644 arch/mips/include/asm/mach-emma2rh/war.h
- create mode 100644 arch/mips/include/asm/mach-generic/war.h
- delete mode 100644 arch/mips/include/asm/mach-jazz/war.h
- delete mode 100644 arch/mips/include/asm/mach-jz4740/war.h
- delete mode 100644 arch/mips/include/asm/mach-lantiq/war.h
- delete mode 100644 arch/mips/include/asm/mach-lasat/war.h
- delete mode 100644 arch/mips/include/asm/mach-loongson/war.h
- delete mode 100644 arch/mips/include/asm/mach-loongson1/war.h
- delete mode 100644 arch/mips/include/asm/mach-netlogic/war.h
- delete mode 100644 arch/mips/include/asm/mach-paravirt/war.h
- delete mode 100644 arch/mips/include/asm/mach-pnx833x/war.h
- delete mode 100644 arch/mips/include/asm/mach-ralink/war.h
- delete mode 100644 arch/mips/include/asm/mach-tx39xx/war.h
- delete mode 100644 arch/mips/include/asm/mach-vr41xx/war.h
- create mode 100644 drivers/irqchip/irq-bcm7038-l1.c
-
+diff --git a/drivers/irqchip/irq-bcm7120-l2.c b/drivers/irqchip/irq-bcm7120-l2.c
+index 8eec8e1201d9..da5b5745003c 100644
+--- a/drivers/irqchip/irq-bcm7120-l2.c
++++ b/drivers/irqchip/irq-bcm7120-l2.c
+@@ -34,11 +34,15 @@
+ #define IRQSTAT		0x04
+ 
+ #define MAX_WORDS	4
++#define MAX_MAPPINGS	MAX_WORDS
+ #define IRQS_PER_WORD	32
+ 
+ struct bcm7120_l2_intc_data {
+ 	unsigned int n_words;
+-	void __iomem *base[MAX_WORDS];
++	void __iomem *map_base[MAX_MAPPINGS];
++	void __iomem *pair_base[MAX_WORDS];
++	int en_offset[MAX_WORDS];
++	int stat_offset[MAX_WORDS];
+ 	struct irq_domain *domain;
+ 	bool can_wake;
+ 	u32 irq_fwd_mask[MAX_WORDS];
+@@ -61,7 +65,8 @@ static void bcm7120_l2_intc_irq_handle(unsigned int irq, struct irq_desc *desc)
+ 		int hwirq;
+ 
+ 		irq_gc_lock(gc);
+-		pending = irq_reg_readl(gc, IRQSTAT) & gc->mask_cache;
++		pending = irq_reg_readl(gc, b->stat_offset[idx]) &
++			  gc->mask_cache;
+ 		irq_gc_unlock(gc);
+ 
+ 		for_each_set_bit(hwirq, &pending, IRQS_PER_WORD) {
+@@ -76,21 +81,24 @@ static void bcm7120_l2_intc_irq_handle(unsigned int irq, struct irq_desc *desc)
+ static void bcm7120_l2_intc_suspend(struct irq_data *d)
+ {
+ 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
++	struct irq_chip_type *ct = irq_data_get_chip_type(d);
+ 	struct bcm7120_l2_intc_data *b = gc->private;
+ 
+ 	irq_gc_lock(gc);
+ 	if (b->can_wake)
+-		irq_reg_writel(gc, gc->mask_cache | gc->wake_active, IRQEN);
++		irq_reg_writel(gc, gc->mask_cache | gc->wake_active,
++			       ct->regs.mask);
+ 	irq_gc_unlock(gc);
+ }
+ 
+ static void bcm7120_l2_intc_resume(struct irq_data *d)
+ {
+ 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
++	struct irq_chip_type *ct = irq_data_get_chip_type(d);
+ 
+ 	/* Restore the saved mask */
+ 	irq_gc_lock(gc);
+-	irq_reg_writel(gc, gc->mask_cache, IRQEN);
++	irq_reg_writel(gc, gc->mask_cache, ct->regs.mask);
+ 	irq_gc_unlock(gc);
+ }
+ 
+@@ -137,9 +145,14 @@ int __init bcm7120_l2_intc_of_init(struct device_node *dn,
+ 		return -ENOMEM;
+ 
+ 	for (idx = 0; idx < MAX_WORDS; idx++) {
+-		data->base[idx] = of_iomap(dn, idx);
+-		if (!data->base[idx])
++		data->map_base[idx] = of_iomap(dn, idx);
++		if (!data->map_base[idx])
+ 			break;
++
++		data->pair_base[idx] = data->map_base[idx];
++		data->en_offset[idx] = IRQEN;
++		data->stat_offset[idx] = IRQSTAT;
++
+ 		data->n_words = idx + 1;
+ 	}
+ 	if (!data->n_words) {
+@@ -157,7 +170,8 @@ int __init bcm7120_l2_intc_of_init(struct device_node *dn,
+ 	if (ret == 0 || ret == -EINVAL) {
+ 		for (idx = 0; idx < data->n_words; idx++)
+ 			__raw_writel(data->irq_fwd_mask[idx],
+-				     data->base[idx] + IRQEN);
++				     data->pair_base[idx] +
++				     data->en_offset[idx]);
+ 	} else {
+ 		/* property exists but has the wrong number of words */
+ 		pr_err("invalid int-fwd-mask property\n");
+@@ -215,11 +229,12 @@ int __init bcm7120_l2_intc_of_init(struct device_node *dn,
+ 		gc = irq_get_domain_generic_chip(data->domain, irq);
+ 
+ 		gc->unused = 0xffffffff & ~data->irq_map_mask[idx];
+-		gc->reg_base = data->base[idx];
+ 		gc->private = data;
+ 		ct = gc->chip_types;
+ 
+-		ct->regs.mask = IRQEN;
++		gc->reg_base = data->pair_base[idx];
++		ct->regs.mask = data->en_offset[idx];
++
+ 		ct->chip.irq_mask = irq_gc_mask_clr_bit;
+ 		ct->chip.irq_unmask = irq_gc_mask_set_bit;
+ 		ct->chip.irq_ack = irq_gc_noop;
+@@ -237,16 +252,16 @@ int __init bcm7120_l2_intc_of_init(struct device_node *dn,
+ 	}
+ 
+ 	pr_info("registered BCM7120 L2 intc (mem: 0x%p, parent IRQ(s): %d)\n",
+-			data->base[0], num_parent_irqs);
++			data->map_base[0], num_parent_irqs);
+ 
+ 	return 0;
+ 
+ out_free_domain:
+ 	irq_domain_remove(data->domain);
+ out_unmap:
+-	for (idx = 0; idx < MAX_WORDS; idx++) {
+-		if (data->base[idx])
+-			iounmap(data->base[idx]);
++	for (idx = 0; idx < MAX_MAPPINGS; idx++) {
++		if (data->map_base[idx])
++			iounmap(data->map_base[idx]);
+ 	}
+ 	kfree(data);
+ 	return ret;
 -- 
 2.1.0
