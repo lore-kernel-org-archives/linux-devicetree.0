@@ -1,88 +1,249 @@
-From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V2] usb: {ohci,ehci}-platform: Use new OF big-endian helper function
-Date: Thu, 27 Nov 2014 20:43:43 -0800
-Message-ID: <1417149823-4168-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org
+From: hongzhou yang <hongzhou.yang@mediatek.com>
+Subject: Re: [PATCH v3 1/3] ARM: mediatek: Add Pinctrl/GPIO driver for mt8135.
+Date: Fri, 28 Nov 2014 13:06:58 +0800
+Message-ID: <1417151218.25975.12.camel@mhfsdcap03>
+References: <1415709535-31515-1-git-send-email-hongzhou.yang@mediatek.com>
+ <1415709535-31515-2-git-send-email-hongzhou.yang@mediatek.com>
+ <CACRpkdY5cen-GicF6tuDaXzJXGD3DZUYODQEgpKCWoLP-MDBsA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdY5cen-GicF6tuDaXzJXGD3DZUYODQEgpKCWoLP-MDBsA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, dandan.he@mediatek.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, alan.cheng@mediatek.com, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, toby.liu@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, "Joe.C" <yingjoe.chen@mediatek.com>, huang eddie <eddie.huang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This handles the existing "big-endian" case, and in addition, it also does
-the right thing when "native-endian" is specified.
+On Thu, 2014-11-27 at 10:14 +0100, Linus Walleij wrote:
+> ()On Tue, Nov 11, 2014 at 1:38 PM, Hongzhou Yang
+> <hongzhou.yang@mediatek.com> wrote:
+> 
+> > From: Hongzhou Yang <hongzhou.yang@mediatek.com>
+> >
+> > The mediatek SoCs have GPIO controller that handle both the muxing and GPIOs.
+> >
+> > The GPIO controller have pinmux, pull enable, pull select, direction and output high/low control.
+> >
+> > This driver include common driver and mt8135 part.
+> > The common driver include the pinctrl driver and GPIO driver.
+> > The mt8135 part contain its special device data.
+> >
+> > Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
+> (...)
+> >  menuconfig ARCH_MEDIATEK
+> >         bool "Mediatek MT65xx & MT81xx SoC" if ARCH_MULTI_V7
+> >         select ARM_GIC
+> > +       select PINCTRL
+> 
+> Should it not also select PINCTRL_MTK8135 for the right SoC?
 
-Signed-off-by: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
----
- Documentation/devicetree/bindings/usb/usb-ehci.txt | 2 ++
- Documentation/devicetree/bindings/usb/usb-ohci.txt | 2 ++
- drivers/usb/host/ehci-platform.c                   | 2 +-
- drivers/usb/host/ohci-platform.c                   | 2 +-
- 4 files changed, 6 insertions(+), 2 deletions(-)
+Ok, I will add it in next version.Thanks.
 
+> (...)
+> > +++ b/drivers/pinctrl/mediatek/Kconfig
+> > @@ -0,0 +1,12 @@
+> > +if ARCH_MEDIATEK
+> > +
+> > +config PINCTRL_MTK_COMMON
+> > +       bool
+> > +       select PINMUX
+> > +       select GENERIC_PINCONF
+> 
+> This is also a GPIO driver but it fails to select GPIOLIB,
+> OF_GPIO and also possibly GPIOLIB_IRQCHIP.
 
-V1->V2: Tweak documentation per feedback on the list
+Ok, I will add it in next version. Thanks.
 
-This depends on the new of_device_is_big_endian() function, which is being
-handled through Grant's tree.
+> (...)
+> > +static int mtk_pctrl_dt_node_to_map_config(struct mtk_pinctrl *pctl, u32 pin,
+> > +               unsigned long *configs, unsigned num_configs,
+> > +               struct pinctrl_map **map, unsigned *cnt_maps,
+> > +               unsigned *num_maps)
+> > +{
+> > +       struct mtk_pinctrl_group *grp;
+> > +       unsigned long *cfgs;
+> > +
+> > +       if (*num_maps == *cnt_maps)
+> > +               return -ENOSPC;
+> > +
+> > +       cfgs = kmemdup(configs, num_configs * sizeof(*cfgs),
+> > +                      GFP_KERNEL);
+> > +       if (cfgs == NULL)
+> > +               return -ENOMEM;
+> > +
+> > +       grp = mtk_pctrl_find_group_by_pin(pctl, pin);
+> > +       if (!grp) {
+> > +               dev_err(pctl->dev, "unable to match pin %d to group\n", pin);
+> > +               return -EINVAL;
+> > +       }
+> > +
+> > +       (*map)[*num_maps].type = PIN_MAP_TYPE_CONFIGS_GROUP;
+> > +       (*map)[*num_maps].data.configs.group_or_pin = grp->name;
+> > +       (*map)[*num_maps].data.configs.configs = cfgs;
+> > +       (*map)[*num_maps].data.configs.num_configs = num_configs;
+> > +       (*num_maps)++;
+> > +
+> > +       return 0;
+> > +}
+> 
+> Can't this use pinctrl_utils_add_map_configs()?
 
+Yes, it can use it, I will use it, thanks.
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-ehci.txt b/Documentation/devicetree/bindings/usb/usb-ehci.txt
-index 43c1a4e06767..927757b13ff7 100644
---- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
-@@ -12,6 +12,8 @@ Optional properties:
-  - big-endian-regs : boolean, set this for hcds with big-endian registers
-  - big-endian-desc : boolean, set this for hcds with big-endian descriptors
-  - big-endian : boolean, for hcds with big-endian-regs + big-endian-desc
-+ - native-endian : boolean, enables big-endian-regs + big-endian-desc
-+   if the CPU is running in big-endian mode
-  - clocks : a list of phandle + clock specifier pairs
-  - phys : phandle + phy specifier pair
-  - phy-names : "usb"
-diff --git a/Documentation/devicetree/bindings/usb/usb-ohci.txt b/Documentation/devicetree/bindings/usb/usb-ohci.txt
-index 19233b7365e1..42f63b865b97 100644
---- a/Documentation/devicetree/bindings/usb/usb-ohci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-ohci.txt
-@@ -9,6 +9,8 @@ Optional properties:
- - big-endian-regs : boolean, set this for hcds with big-endian registers
- - big-endian-desc : boolean, set this for hcds with big-endian descriptors
- - big-endian : boolean, for hcds with big-endian-regs + big-endian-desc
-+- native-endian : boolean, enables big-endian-regs + big-endian-desc
-+  if the CPU is running in big-endian mode
- - no-big-frame-no : boolean, set if frame_no lives in bits [15:0] of HCCA
- - num-ports : u32, to override the detected port count
- - clocks : a list of phandle + clock specifier pairs
-diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
-index 2f5b9ce3e042..0da9d7061108 100644
---- a/drivers/usb/host/ehci-platform.c
-+++ b/drivers/usb/host/ehci-platform.c
-@@ -187,7 +187,7 @@ static int ehci_platform_probe(struct platform_device *dev)
- 		if (of_property_read_bool(dev->dev.of_node, "big-endian-desc"))
- 			ehci->big_endian_desc = 1;
- 
--		if (of_property_read_bool(dev->dev.of_node, "big-endian"))
-+		if (of_device_is_big_endian(dev->dev.of_node))
- 			ehci->big_endian_mmio = ehci->big_endian_desc = 1;
- 
- 		priv->phy = devm_phy_get(&dev->dev, "usb");
-diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
-index 7793c3cfcf1f..029a606e4d4a 100644
---- a/drivers/usb/host/ohci-platform.c
-+++ b/drivers/usb/host/ohci-platform.c
-@@ -157,7 +157,7 @@ static int ohci_platform_probe(struct platform_device *dev)
- 		if (of_property_read_bool(dev->dev.of_node, "big-endian-desc"))
- 			ohci->flags |= OHCI_QUIRK_BE_DESC;
- 
--		if (of_property_read_bool(dev->dev.of_node, "big-endian"))
-+		if (of_device_is_big_endian(dev->dev.of_node))
- 			ohci->flags |= OHCI_QUIRK_BE_MMIO | OHCI_QUIRK_BE_DESC;
- 
- 		if (of_property_read_bool(dev->dev.of_node, "no-big-frame-no"))
--- 
-2.1.0
+> > +static void mtk_pctrl_dt_free_map(struct pinctrl_dev *pctldev,
+> > +                                   struct pinctrl_map *map,
+> > +                                   unsigned num_maps)
+> > +{
+> > +       int i;
+> > +
+> > +       for (i = 0; i < num_maps; i++) {
+> > +               if (map[i].type == PIN_MAP_TYPE_CONFIGS_GROUP)
+> > +                       kfree(map[i].data.configs.configs);
+> > +       }
+> > +
+> > +       kfree(map);
+> > +}
+> 
+> Use pinctrl_utils_dt_free_map() instead.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok, thanks.
+
+> > +static int mtk_dt_cnt_map(struct pinctrl_map **map, unsigned *cnt_maps,
+> > +               unsigned *num_maps, unsigned cnt)
+> > +{
+> > +       unsigned old_num = *cnt_maps;
+> > +       unsigned new_num = *num_maps + cnt;
+> > +       struct pinctrl_map *new_map;
+> > +
+> > +       if (old_num >= new_num)
+> > +               return 0;
+> > +
+> > +       new_map = krealloc(*map, sizeof(*new_map) * new_num, GFP_KERNEL);
+> > +       if (!new_map)
+> > +               return -ENOMEM;
+> > +
+> > +       memset(new_map + old_num, 0, (new_num - old_num) * sizeof(*new_map));
+> > +
+> > +       *map = new_map;
+> > +       *cnt_maps = new_num;
+> > +
+> > +       return 0;
+> > +}
+> 
+> Use pinctrl_utils_reserve_map() instead.
+
+Ok, thanks.
+
+> > +static int mtk_pctrl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+> > +                                     struct device_node *node,
+> > +                                     struct pinctrl_map **map,
+> > +                                     unsigned *num_maps, unsigned *cnt_maps)
+> > +{
+> > +       struct property *pins;
+> > +       u32 pinfunc, pin, func;
+> > +       int num_pins, num_funcs, maps_per_pin;
+> > +       unsigned long *configs;
+> > +       unsigned int num_configs;
+> > +       bool has_config = 0;
+> > +       int i, err;
+> > +       unsigned cnt = 0;
+> > +       struct mtk_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
+> > +
+> > +       pins = of_find_property(node, "mediatek,pins", NULL);
+> > +       if (!pins) {
+> > +               dev_err(pctl->dev, "missing mediatek,pins property in node %s .\n",
+> > +                               node->name);
+> > +               return -EINVAL;
+> > +       }
+> > +
+> > +       err = pinconf_generic_parse_dt_config(node, &configs, &num_configs);
+> > +       if (num_configs)
+> > +               has_config = 1;
+> 
+> I'd prefer we first identify if it's a config or mux subnode, then go on to
+> parse it as mux or config. See comments on patch 2/3.
+
+I think this need more discuss, thanks.
+
+> > +
+> > +       num_pins = pins->length / sizeof(u32);
+> > +       num_funcs = num_pins;
+> > +       maps_per_pin = 0;
+> > +       if (num_funcs)
+> > +               maps_per_pin++;
+> > +       if (has_config && num_pins >= 1)
+> > +               maps_per_pin++;
+> > +
+> > +       if (!num_pins || !maps_per_pin)
+> > +               return -EINVAL;
+> > +
+> > +       cnt = num_pins * maps_per_pin;
+> > +
+> > +       err = mtk_dt_cnt_map(map, cnt_maps, num_maps, cnt);
+> > +       if (err < 0)
+> > +               goto fail;
+> > +
+> > +       for (i = 0; i < num_pins; i++) {
+> > +               err = of_property_read_u32_index(node, "mediatek,pins",
+> > +                               i, &pinfunc);
+> 
+> As mentioned use just "pins" and let's figure out how to handle
+> this in a generic way.
+
+Ok, I will modify it, thanks.
+
+> > +static int mtk_gpio_request(struct gpio_chip *chip, unsigned offset)
+> > +{
+> > +       return pinctrl_request_gpio(chip->base + offset);
+> > +}
+> > +
+> > +static void mtk_gpio_free(struct gpio_chip *chip, unsigned offset)
+> > +{
+> > +       pinctrl_free_gpio(chip->base + offset);
+> > +}
+> > +
+> > +static int mtk_gpio_direction_input(struct gpio_chip *chip,
+> > +                                       unsigned offset)
+> > +{
+> > +       return pinctrl_gpio_direction_input(chip->base + offset);
+> > +}
+> > +
+> > +static int mtk_gpio_direction_output(struct gpio_chip *chip,
+> > +                                       unsigned offset, int value)
+> > +{
+> > +       mtk_gpio_set(chip, offset, value);
+> > +       return pinctrl_gpio_direction_output(chip->base + offset);
+> > +}
+> 
+> This is kinda nice!
+> 
+> > +static int mtk_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
+> > +{
+> > +       struct mtk_pinctrl *pctl = dev_get_drvdata(chip->dev);
+> > +       struct mtk_pinctrl_group *g = pctl->groups + offset;
+> > +       struct mtk_desc_function *desc =
+> > +                       mtk_pctrl_desc_find_irq_function_from_name(
+> > +                                       pctl, g->name);
+> > +       if (!desc)
+> > +               return -EINVAL;
+> > +
+> > +       return desc->irqnum;
+> > +}
+> 
+> I don't quite get this still. Does this mean every single GPIO line
+> potentially has it's own unique IRQ line?
+
+For this question, we will add irq support in another patch, then we can
+explain it, thanks.
+
+Regards,
+Hongzhou
