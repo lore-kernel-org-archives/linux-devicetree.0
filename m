@@ -1,204 +1,217 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 3/9] clk: sunxi: Add prcm mod0 clock driver
-Date: Fri, 28 Nov 2014 14:37:14 +0100
-Message-ID: <54787A8A.6040209@redhat.com>
-References: <20141126211318.GN25249@lukather> <5476E3A5.4000708@redhat.com> <CAGb2v652m0bCdPWFF4LWwjcrCJZvnLibFPw8xXJ3Q-Ge+_-p7g@mail.gmail.com> <5476F8AB.2000601@redhat.com> <20141127190509.GR25249@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/2] gpio: add a driver for GPIOs going through a level shifter
+Date: Fri, 28 Nov 2014 14:37:27 +0100
+Message-ID: <CACRpkdZ=qwO9qcr8tt3Pxs+kEPSGo58R8TzNCu9bC=dxHimDBQ@mail.gmail.com>
+References: <1416837696-28066-1-git-send-email-alban.bedel@avionic-design.de>
+	<1416837696-28066-2-git-send-email-alban.bedel@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------070704020809030602050306"
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBF7V4GRQKGQEXW6TOQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20141127190509.GR25249@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Boris Brezillon <boris-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1416837696-28066-2-git-send-email-alban.bedel@avionic-design.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alban Bedel <alban.bedel@avionic-design.de>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------070704020809030602050306
-Content-Type: text/plain; charset=UTF-8; format=flowed
+On Mon, Nov 24, 2014 at 3:01 PM, Alban Bedel
+<alban.bedel@avionic-design.de> wrote:
 
-Hi,
-
-On 11/27/2014 08:05 PM, Maxime Ripard wrote:
-> Hi,
+> This driver support setting the level shifter direction and/or enable
+> as needed.
 >
-> On Thu, Nov 27, 2014 at 11:10:51AM +0100, Hans de Goede wrote:
->> Hi,
->>
->> On 11/27/2014 10:28 AM, Chen-Yu Tsai wrote:
->>> Hi,
->>>
->>> On Thu, Nov 27, 2014 at 4:41 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->>
->> <snip>
->>
->>>> I notice that you've not responded to my proposal to simple make the clock
->>>> node a child node of the clocks node in the dt, that should work nicely, and
->>>> avoid the need for any kernel level changes to support it, I'm beginning to
->>>> think that that is probably the best solution.
->>>
->>> Would that not cause an overlap of the io regions, and cause one of them
->>> to fail? AFAIK the OF subsystem doesn't like overlapping resources.
->>
->> No the overlap check is done by the platform dev resource code, and of_clk_declare
->> does not use that. So the overlap would be there, but not an issue (in theory
->> I did not test this).
->
-> An overlap is always an issue.
->
->> Thinking more about this, I believe that using the MFD framework for the prcm seems
->> like a mistake to me. It gains us nothing, since we have no irq to de-multiplex or
->> some such. We're not using MFD for the CMU, why use it for CMU2 (which the prcm
->> effectively is) ?
->
-> Because the PRCM is much more than that. It also handles the power
-> domains for example.
+> Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
 
-Ok, so thinking more about this, I'm still convinced that the MFD framework is only
-getting in the way here. But I can see having things represented in devicetree
-properly, with the clocks, etc. as child nodes of the prcm being something which
-we want.
+Very interesting patch!
 
-So since all we are using the MFD for is to instantiate platform devices under the prcm
-nodes, and assign an io resource for the regs to them, why not simply make the prcm node
-itself a simple-bus.
+I have some worries. What if the backing GPIO chip supports interrupts
+on GPIO lines, and consumers do gpiod_get() from this level
+shifter front-end, followed by gpio_to_irq()? Then the line will
+not be converted to an IRQ properly.
 
-This does everything the MFD prcm driver currently does, without actually needing a specific
-kernel driver, and as added bonus this will move the definition of the mfd function reg offsets
-out of the kernel and into the devicetree where they belong in the first place.
+In the device tree case I guess you can refer to the backing
+GPIO chip with the interrupt property, but then you have to
+coordinate setting the line as input both on this front-end and
+on the back-end. Now the drivers won't properly enforce that.
 
-Please see the attached patches, I've tested this on sun6i, if we go this route we should
-make the same change on sun8i (I can make the change, but not test it).
+So it would be much nicer if the level shifter front-end would
+also propagate irqchip stuff to the back-end. I don't know if that
+will be easy.
 
-Regards,
+The second problem is that of handling a level shifter backed
+by more than one GPIO chip, as mentioned by Rob for the other
+patch. It's better if we store the backing GPIO chip on a per-line
+basis. Make struct level_shifter_gpio contain a list of lines and
+for each line have another struct that contain per-line data
+like the gpiod for that line (so you can find the gpio_chip and
+have it unique if need be).
 
-Hans
+Then I wonder if all level shifters are such that you set the direction
+for all lines going in/out of it, or if there are level shifters where this
+is controlled on a per-line basis.
 
--- 
-You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Patch MAINTAINERS so that you are indicated as maintainer
+of this driver.
 
---------------070704020809030602050306
-Content-Type: text/x-patch;
- name="0001-ARM-dts-sun6i-Change-prcm-node-into-a-simple-bus.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename*0="0001-ARM-dts-sun6i-Change-prcm-node-into-a-simple-bus.patch"
+Would you consider also maintaining
+drivers/gpio/gpio-adnp.c?
 
->From 6756574293a1f291a8dcc29427b27f32f83acb2d Mon Sep 17 00:00:00 2001
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Date: Fri, 28 Nov 2014 13:48:58 +0100
-Subject: [PATCH v2 1/2] ARM: dts: sun6i: Change prcm node into a simple-bus
+> +config GPIO_LEVEL_SHIFTER
+> +       tristate "Level shifter GPIO support"
 
-The prcm node's purpose is to group the various prcm sub-devices together,
-it does not need any special handling beyond that, there is no need to
-handle shared resources like a shared (multiplexed) interrupt or a shared
-i2c bus.
+depends on OF_GPIO or select OF_GPIO?
+select REGULATOR?
 
-As such there really is no need to have a separate compatible for it, using
-simple-bus for it works fine. This also allows us to specify the register
-offsets of the various child-devices directly into the dts, rather then having
-to specify them in the OS implementation, putting the register offsets where
-the belong.
+(...)
+> +#include <linux/module.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/regulator/consumer.h>
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/sun6i-a31.dtsi | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+Thanks for using descriptors solely.
 
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index 29e6438..4b8541f 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -846,11 +846,15 @@
- 		};
- 
- 		prcm@01f01400 {
--			compatible = "allwinner,sun6i-a31-prcm";
-+			compatible = "simple-bus";
- 			reg = <0x01f01400 0x200>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
- 
- 			ar100: ar100_clk {
- 				compatible = "allwinner,sun6i-a31-ar100-clk";
-+				reg = <0x01f01400 0x4>;
- 				#clock-cells = <0>;
- 				clocks = <&osc32k>, <&osc24M>, <&pll6>, <&pll6>;
- 				clock-output-names = "ar100";
-@@ -867,6 +871,7 @@
- 
- 			apb0: apb0_clk {
- 				compatible = "allwinner,sun6i-a31-apb0-clk";
-+				reg = <0x01f0140c 0x4>;
- 				#clock-cells = <0>;
- 				clocks = <&ahb0>;
- 				clock-output-names = "apb0";
-@@ -874,6 +879,7 @@
- 
- 			apb0_gates: apb0_gates_clk {
- 				compatible = "allwinner,sun6i-a31-apb0-gates-clk";
-+				reg = <0x01f01428 0x4>;
- 				#clock-cells = <1>;
- 				clocks = <&apb0>;
- 				clock-output-names = "apb0_pio", "apb0_ir",
-@@ -884,6 +890,7 @@
- 
- 			apb0_rst: apb0_rst {
- 				compatible = "allwinner,sun6i-a31-clock-reset";
-+				reg = <0x01f014b0 0x4>;
- 				#reset-cells = <1>;
- 			};
- 		};
--- 
-2.1.0
+> +#define MAX_DATA_GPIO 32
 
+Why? Use a list with dynamic allocation instead of such
+arbitrary restrictions.
 
---------------070704020809030602050306
-Content-Type: text/x-patch;
- name="0002-ARM-dts-sun6i-Add-ir_clk-node.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="0002-ARM-dts-sun6i-Add-ir_clk-node.patch"
+> +enum level_shifter_direction {
+> +       DIRECTION_NONE,
+> +       DIRECTION_INPUT,
+> +       DIRECTION_OUTPUT
+> +};
+> +
+> +struct level_shifter_gpio {
+> +       struct gpio_chip gc;
+> +
+> +       spinlock_t lock;
+> +       int num_requested;
+> +
+> +       struct gpio_desc *data_gpio[MAX_DATA_GPIO];
+> +       struct gpio_desc *enable_gpio;
+> +       struct gpio_desc *direction_gpio;
+> +       enum level_shifter_direction direction;
+> +
+> +       struct regulator *vcc_a;
+> +       struct regulator *vcc_b;
 
->From a152b0405d446c748fef146915736e4a8fc548b1 Mon Sep 17 00:00:00 2001
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Date: Fri, 28 Nov 2014 13:54:14 +0100
-Subject: [PATCH v2 2/2] ARM: dts: sun6i: Add ir_clk node
+Is VCC_A and VCC_B really the right terminology?
 
-Add an ir_clk sub-node to the prcm node.
+I see this in some datasheets but the pinout seems top be
+VCC and VDD, which one is it? Needs crystal clear documentation
+anyways.
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/sun6i-a31.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+> +};
 
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index 4b8541f..92a1c95 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -888,6 +888,14 @@
- 						"apb0_i2c";
- 			};
- 
-+			ir_clk: ir_clk {
-+				reg = <0x01f01454 0x4>;
-+				#clock-cells = <0>;
-+				compatible = "allwinner,sun4i-a10-mod0-clk";
-+				clocks = <&osc32k>, <&osc24M>;
-+				clock-output-names = "ir";
-+			};
-+
- 			apb0_rst: apb0_rst {
- 				compatible = "allwinner,sun6i-a31-clock-reset";
- 				reg = <0x01f014b0 0x4>;
---------------070704020809030602050306--
+Add kerneldoc to this struct.
+
+> +#define to_level_shifter_gpio(c) \
+> +       container_of(c, struct level_shifter_gpio, gc)
+> +
+> +int level_shifter_gpio_request(struct gpio_chip *chip, unsigned offset)
+> +{
+> +       struct level_shifter_gpio *ls = to_level_shifter_gpio(chip);
+> +
+> +       spin_lock(&ls->lock);
+
+Since the backend may be slow (e.g. on an I2C bus)
+it is not wise to use a spinlock here.
+
+Exactly what is it protecting really? I think you can just
+remove it.
+
+> +       if (ls->num_requested == 0 && ls->enable_gpio)
+> +               gpiod_set_value(ls->enable_gpio, 1);
+> +
+> +       ls->num_requested++;
+
+Instead of your own refence counting, use struct kref for
+whatever it is you need to keep track of. It will handle
+callbacks when references reach 0 etc.
+
+<linux/kref.h> grep kernel for examples.
+
+(...)
+> +void level_shifter_gpio_free(struct gpio_chip *chip, unsigned offset)
+> +{
+> +       struct level_shifter_gpio *ls = to_level_shifter_gpio(chip);
+> +
+> +       spin_lock(&ls->lock);
+> +
+> +       ls->num_requested--;
+> +
+> +       if (ls->num_requested == 0) {
+> +               if (ls->enable_gpio)
+> +                       gpiod_set_value(ls->enable_gpio, 0);
+> +               if (ls->direction_gpio)
+> +                       ls->direction = DIRECTION_NONE;
+
+Is that really true? Isn't it just keeping what it used to be?
+
+DIRECTION_DONT_CARE seems more appropriate if you
+use it like this.
+
+(...)
+> +static int level_shifter_gpio_probe(struct platform_device *pdev)
+> +{
+> +       struct device_node *np = pdev->dev.of_node;
+> +       struct level_shifter_gpio *ls;
+> +       struct gpio_desc *gpiod;
+> +       int err, i;
+> +
+> +       ls = devm_kzalloc(&pdev->dev, sizeof(*ls), GFP_KERNEL);
+> +       if (!ls)
+> +               return -ENOMEM;
+> +
+> +       spin_lock_init(&ls->lock);
+> +
+> +       if (np)
+> +               ls->gc.label = np->name;
+> +       else
+> +               ls->gc.label = "level-shifter-gpio";
+> +
+> +       ls->gc.of_node = pdev->dev.of_node;
+> +       ls->gc.base = -1;
+> +       ls->gc.request = level_shifter_gpio_request;
+> +       ls->gc.free = level_shifter_gpio_free;
+> +       ls->gc.set = level_shifter_gpio_set;
+> +       ls->gc.direction_output = level_shifter_gpio_direction_output;
+> +       ls->gc.get = level_shifter_gpio_get;
+> +       ls->gc.direction_input = level_shifter_gpio_direction_input;
+> +
+> +       for (i = 0; i < MAX_DATA_GPIO; i++) {
+> +               gpiod = devm_gpiod_get_index_optional(
+> +                       &pdev->dev, "data", i, GPIOD_IN);
+
+Instead just keep getting indexes until we get
+a -ENOENT and add dynamically to a gpiod list.
+
+ +       ls->vcc_a = devm_regulator_get_optional(&pdev->dev, "vcca");
+> +       if (IS_ERR(ls->vcc_a) && PTR_ERR(ls->vcc_a) != -ENODEV)
+> +               return PTR_ERR(ls->vcc_a);
+> +       if (!IS_ERR(ls->vcc_a)) {
+> +               err = regulator_enable(ls->vcc_a);
+> +               if (err)
+> +                       return err;
+> +       }
+> +
+> +       ls->vcc_b = devm_regulator_get_optional(&pdev->dev, "vccb");
+> +       if (IS_ERR(ls->vcc_b) && PTR_ERR(ls->vcc_b) != -ENODEV)
+> +               return PTR_ERR(ls->vcc_b);
+> +       if (!IS_ERR(ls->vcc_b)) {
+> +               err = regulator_enable(ls->vcc_b);
+> +               if (err)
+> +                       return err;
+> +       }
+
+Why are the regulators enabled even if the level shifter is not
+in use?
+
+Should these regulator_enable() calls be done at the same
+place as the other enablement, when a GPIO is requested
+and num_requested goes from 0->1?
+
+Yours,
+Linus Walleij
