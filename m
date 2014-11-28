@@ -1,120 +1,100 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: [PATCH] irqchip: gic: Allow interrupt level to be set for PPIs.
-Date: Fri, 28 Nov 2014 17:55:40 +0000
-Message-ID: <1417197340-27298-1-git-send-email-Liviu.Dudau@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Haojian Zhuang <haojian.zhuang@linaro.org>
-Cc: devicetree@vger.kernel.org, Marc Zyngier <Marc.Zyngier@arm.com>, LAKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>
+From: Naidu Tellapati <naidu.tellapati@gmail.com>
+Subject: [PATCH v6 0/4] Initial support for ImgTec PWM DAC and PDM DAC
+Date: Fri, 28 Nov 2014 23:42:21 +0530
+Message-ID: <1417198345-19633-1-git-send-email-Naidu.Tellapati@gmail.com>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: thierry.reding@gmail.com, abrestic@chromium.org, gregkh@linuxfoundation.org, arnd@arndb.de, James.Hartley@imgtec.com, Ezequiel.Garcia@imgtec.com
+Cc: devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, Arul.Ramasamy@imgtec.com, Sai.Masarapu@imgtec.com, Naidu Tellapati <Naidu.Tellapati@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-During a recent cleanup of the arm64 DTs it has become clear that
-the handling of PPIs in xxxx_set_type() is incorrect. The ARM TRMs
-for GICv2 and later allow for "implementation defined" support for
-setting the edge or level type of the PPI interrupts and don't restrict
-the activation level of the signal. Current ARM implementations
-do restrict the PPI level type to IRQ_TYPE_LEVEL_LOW, but licensees
-of the IP can decide to shoot themselves in the foot at any time.
+The Pistachio SOC from Imagination Technologies includes =E2=80=93 4x P=
+DM blocks
+and 1x =E2=80=9Cbasic PWM=E2=80=9D block with four output channels. The=
+se share 4 MFIO pins,
+each PWM channel being muxed with each PDM block output (0-3 muxed with=
+ 0-3)
+using the CR_PERIP_PWM_PDM_CONTROL register in the peripheral wrapper
+register bank (offset 0x140). The PDM and PWM outputs are used to contr=
+ol
+targets such as LCD backlight.
 
-Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
----
- Documentation/devicetree/bindings/arm/gic.txt |  8 ++++++--
- drivers/irqchip/irq-gic-v3.c                  | 12 ++++++++++++
- drivers/irqchip/irq-gic.c                     | 12 ++++++++++++
- drivers/irqchip/irq-hip04.c                   | 12 ++++++++++++
- 4 files changed, 42 insertions(+), 2 deletions(-)
+The PWM driver uses Linux PWM framework. Since the PDM does not fit int=
+o PWM
+framework we have implemented it as a MISC driver.
 
-diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
-index 8112d0c..c97484b 100644
---- a/Documentation/devicetree/bindings/arm/gic.txt
-+++ b/Documentation/devicetree/bindings/arm/gic.txt
-@@ -32,12 +32,16 @@ Main node required properties:
-   The 3rd cell is the flags, encoded as follows:
- 	bits[3:0] trigger type and level flags.
- 		1 = low-to-high edge triggered
--		2 = high-to-low edge triggered
-+		2 = high-to-low edge triggered (invalid for SPIs)
- 		4 = active high level-sensitive
--		8 = active low level-sensitive
-+		8 = active low level-sensitive (invalid for SPIs).
- 	bits[15:8] PPI interrupt cpu mask.  Each bit corresponds to each of
- 	the 8 possible cpus attached to the GIC.  A bit set to '1' indicated
- 	the interrupt is wired to that CPU.  Only valid for PPI interrupts.
-+	Also note that the configurability of PPI interrupts is IMPLEMENTATION
-+	DEFINED and as such not guaranteed to be present (most SoC available
-+	in 2014 seem to ignore the setting of this flag and use the hardware
-+	default value).
- 
- - reg : Specifies base physical address(s) and size of the GIC registers. The
-   first region is the GIC distributor register base and size. The 2nd region is
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 1a146cc..f529ba5 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -238,6 +238,18 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
- 	if (irq < 16)
- 		return -EINVAL;
- 
-+	/*
-+	 * PPIs are optionally configurable, but we cannot distinguish
-+	 * between high and low, nor falling and rising. Change the
-+	 * type so that it passes the next check.
-+	 */
-+	if (gicirq < 32) {
-+		if (type == IRQ_TYPE_LEVEL_LOW)
-+			type = IRQ_TYPE_LEVEL_HIGH;
-+		if (type == IRQ_TYPE_EDGE_FALLING)
-+			type = IRQ_TYPE_EDGE_RISING;
-+	}
-+
- 	if (type != IRQ_TYPE_LEVEL_HIGH && type != IRQ_TYPE_EDGE_RISING)
- 		return -EINVAL;
- 
-diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-index d617ee5..0d56673 100644
---- a/drivers/irqchip/irq-gic.c
-+++ b/drivers/irqchip/irq-gic.c
-@@ -193,6 +193,18 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
- 	if (gicirq < 16)
- 		return -EINVAL;
- 
-+	/*
-+	 * PPIs are optionally configurable, but we cannot distinguish
-+	 * between high and low, nor falling and rising. Change the
-+	 * type so that it passes the next check.
-+	 */
-+	if (gicirq < 32) {
-+		if (type == IRQ_TYPE_LEVEL_LOW)
-+			type = IRQ_TYPE_LEVEL_HIGH;
-+		if (type == IRQ_TYPE_EDGE_FALLING)
-+			type = IRQ_TYPE_EDGE_RISING;
-+	}
-+
- 	if (type != IRQ_TYPE_LEVEL_HIGH && type != IRQ_TYPE_EDGE_RISING)
- 		return -EINVAL;
- 
-diff --git a/drivers/irqchip/irq-hip04.c b/drivers/irqchip/irq-hip04.c
-index 29b8f21..32fdedf 100644
---- a/drivers/irqchip/irq-hip04.c
-+++ b/drivers/irqchip/irq-hip04.c
-@@ -125,6 +125,18 @@ static int hip04_irq_set_type(struct irq_data *d, unsigned int type)
- 	if (irq < 16)
- 		return -EINVAL;
- 
-+	/*
-+	 * PPIs are optionally configurable, but we cannot distinguish
-+	 * between high and low, nor falling and rising. Change the
-+	 * type so that it passes the next check.
-+	 */
-+	if (gicirq < 32) {
-+		if (type == IRQ_TYPE_LEVEL_LOW)
-+			type = IRQ_TYPE_LEVEL_HIGH;
-+		if (type == IRQ_TYPE_EDGE_FALLING)
-+			type = IRQ_TYPE_EDGE_RISING;
-+	}
-+
- 	if (type != IRQ_TYPE_LEVEL_HIGH && type != IRQ_TYPE_EDGE_RISING)
- 		return -EINVAL;
- 
--- 
-2.1.3
+The series is based on v3.18-rc5.
+
+Changes from v5:
+
+ * Used syscon for accessing PWM & PDM control register.
+
+Changes from v4:
+
+ * Removed CR_prefix from the defined macros.
+
+ * Folded same data type varibles in one line.
+
+ * Removed cr-periph property from PWM DT binding document.
+
+ * Removed regmap_update_bits from img_pwm_enable and img_pwm_disable f=
+unctions.
+
+ * Addressed few more comments given in v4.
+
+Changes from v3:
+
+ * Addressed couple of comments given in v3.
+
+Changes from v2:
+
+ * Added depends on MIPS || COMPILE_TEST.
+
+ * Corrected the logic while calculating time base steps.
+
+ * Addressed few other minor comments given in v2.
+
+Changes from v1:
+
+ * Used regmap_update_bits at some places in the driver.
+
+ * Placed some #defines next to their register.
+
+ * Added depends on HAS_IOMEM in Kconfig.
+
+ * Removed unnecessary paragraph from file header.
+
+ * Defined register masks in a readable way.
+
+ * Renamed clk-names with clock-names.
+
+ * Added system interface clock in DT binding document.
+
+ * Addressed few other minor review comments given in v1.
+
+Naidu Tellapati (4):
+  pwm: Imagination Technologies PWM DAC driver
+  DT: pwm: Add binding document for IMG PWM DAC
+  pdm: Imagination Technologies PDM DAC driver
+  DT: pdm: Add binding document for IMG PDM DAC
+
+ Documentation/devicetree/bindings/misc/img-pdm.txt |   54 ++
+ Documentation/devicetree/bindings/pwm/img-pwm.txt  |   24 +
+ drivers/misc/Kconfig                               |   13 +
+ drivers/misc/Makefile                              |    1 +
+ drivers/misc/img-pdm.c                             |  672 ++++++++++++=
+++++++++
+ drivers/pwm/Kconfig                                |   13 +
+ drivers/pwm/Makefile                               |    1 +
+ drivers/pwm/pwm-img.c                              |  250 ++++++++
+ include/linux/img_pdm.h                            |   35 +
+ 9 files changed, 1063 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/misc/img-pdm.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/img-pwm.txt
+ create mode 100644 drivers/misc/img-pdm.c
+ create mode 100644 drivers/pwm/pwm-img.c
+ create mode 100644 include/linux/img_pdm.h
+
