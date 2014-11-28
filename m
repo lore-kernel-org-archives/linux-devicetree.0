@@ -1,45 +1,34 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 3/5] pinctrl: exynos: add exynos5410 SoC specific data
-Date: Fri, 28 Nov 2014 12:59:35 +0100
-Message-ID: <CACRpkdZie8JJGxSPkc8PPvC3qZkWhe5WqmpSKSoDFwqRd6tR_Q@mail.gmail.com>
-References: <547104D5.4030803@suse.de>
-	<1416695185-5198-1-git-send-email-afaerber@suse.de>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/5] sun6i: Add A31s (pinctrl) support
+Date: Fri, 28 Nov 2014 13:01:11 +0100
+Message-ID: <CACRpkdb3P+KM+ANqe6fKqJcRnBp6zvJhWUFZDap8qFDWdY1JNQ@mail.gmail.com>
+References: <1416747283-13489-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1416695185-5198-1-git-send-email-afaerber@suse.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Tomasz Figa <tomasz.figa@gmail.com>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene@kernel.org>, =?UTF-8?B?6rmA7ZWZ7KO8?= <ruppi.kim@hardkernel.com>, Humberto Naves <hsnaves@gmail.com>, Jan Kiszka <jan.kiszka@siemens.com>, Johann Pfefferl <johann.pfefferl@siemens.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Abraham <thomas.abraham@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:PIN CONTROL SUBSY..." <linux-gpio@vger.kernel.org>
+Return-path: <linux-sunxi+bncBDE6RCFOWIARBCGI4GRQKGQEDTKXIPI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1416747283-13489-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 22, 2014 at 11:26 PM, Andreas F=C3=A4rber <afaerber@suse.de=
-> wrote:
+On Sun, Nov 23, 2014 at 1:54 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
 
-> From: Hakjoo Kim <ruppi.kim@hardkernel.com>
->
-> Add Samsung EXYNOS5410 SoC specific data to enable pinctrl
-> support for all platforms based on EXYNOS5410.
->
-> Signed-off-by: Hakjoo Kim <ruppi.kim@hardkernel.com>
-> [AF: Rebased onto Exynos5260 and irq_chip consolidation]
-> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
-> ---
->  v2 -> v3:
->  * Rebased (.svc, .{g,w}eint_{con,mask,pend} fields dropped)
->
->  v1 -> v2:
->  * Filled in Sob from Hakjoo Kim
+> I'm not sure if sunxi pinctrl patches go through Maxime's tree or Linus' tree,
+> so I'll leave figuring out who takes what patches to you two.
 
-Is this based on the pinctrl devel branch so I can apply it?
-
-I'd like Tomasz ACK on it first though.
+The changes in drivers/pinctrl and arch/* are usually orthogonal
+(just Kconfig symbols and DTS changes, no cross calls or header
+files that break compilation etc) and then they can be
+applied orthogonally. I just put the pinctrl patch in my tree and
+the rest in the platform tree.
 
 Yours,
 Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
