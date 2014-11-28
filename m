@@ -1,33 +1,56 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v4 3/7] regulator: of: Parse ena-gpios property from DTS
-Date: Fri, 28 Nov 2014 10:19:56 +0100
-Message-ID: <1417166396.18249.16.camel@AMDC1943>
-References: <1417087253-12306-1-git-send-email-k.kozlowski@samsung.com>
- <1417087253-12306-4-git-send-email-k.kozlowski@samsung.com>
- <20141127184544.GD7712@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: [PATCH/RFC v8 08/14] DT: Add documentation for exynos4-is 'flashes'
+ property
+Date: Fri, 28 Nov 2014 10:18:00 +0100
+Message-ID: <1417166286-27685-9-git-send-email-j.anaszewski@samsung.com>
+References: <1417166286-27685-1-git-send-email-j.anaszewski@samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20141127184544.GD7712@sirena.org.uk>
+In-reply-to: <1417166286-27685-1-git-send-email-j.anaszewski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+To: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: kyungmin.park@samsung.com, b.zolnierkie@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On czw, 2014-11-27 at 18:45 +0000, Mark Brown wrote:
-> On Thu, Nov 27, 2014 at 12:20:49PM +0100, Krzysztof Kozlowski wrote:
-> 
-> > +	constraints->ena_gpio = of_get_named_gpio_flags(np, "ena-gpios", 0,
-> > +							&gpio_flags);
-> > +	if (gpio_is_valid(constraints->ena_gpio)) {
-> 
-> No, this isn't sensible - in what way would an enable control GPIO be a
-> constraint?  The whole reason we have separate constraint and config
-> structures is that these are different things.  Keep the GPIO setup in
-> the configuration.
+This patch adds a description of 'flashes' property
+to the samsung-fimc.txt.
 
-OK, I'll change it to config.
+Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: <devicetree@vger.kernel.org>
+---
+ .../devicetree/bindings/media/samsung-fimc.txt     |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Best regards,
-Krzysztof
+diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt b/Documentation/devicetree/bindings/media/samsung-fimc.txt
+index 922d6f8..4b7ed03 100644
+--- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
++++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
+@@ -40,6 +40,12 @@ should be inactive. For the "active-a" state the camera port A must be activated
+ and the port B deactivated and for the state "active-b" it should be the other
+ way around.
+ 
++Optional properties:
++
++- flashes - array of strings with flash led names; the name has to
++	    be same with the related led label
++	    (see Documentation/devicetree/bindings/leds/common.txt)
++
+ The 'camera' node must include at least one 'fimc' child node.
+ 
+ 
+@@ -166,6 +172,7 @@ Example:
+ 		clock-output-names = "cam_a_clkout", "cam_b_clkout";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&cam_port_a_clk_active>;
++		flashes = "max77693-flash1", "max77693-flash2";
+ 		status = "okay";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-- 
+1.7.9.5
