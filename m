@@ -1,59 +1,80 @@
-From: Tomas Novotny <tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>
-Subject: Re: [PATCH 0/4] rtc: ds1307: add support for device tree and
- mcp7940x
-Date: Fri, 28 Nov 2014 13:14:45 +0100
-Message-ID: <20141128131445.181a6e27@tomas.local.tbs-biometrics.cz>
-References: <1416844164-16782-1-git-send-email-tomas@novotny.cz>
-	<20141127161741.52e8d300@tomas>
+From: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] dt: bindings: add ath10k wireless device
+Date: Fri, 28 Nov 2014 14:21:39 +0200
+Message-ID: <874mtjsegc.fsf@kamboji.qca.qualcomm.com>
+References: <20141127120727.17546.61202.stgit@potku.adurom.net>
+	<3202372.2AaH3c4qv1@wuerfel> <87fvd3sl9c.fsf@kamboji.qca.qualcomm.com>
+	<5247714.HacITJUipJ@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141127161741.52e8d300@tomas>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5247714.HacITJUipJ@wuerfel> (Arnd Bergmann's message of "Fri, 28
+	Nov 2014 11:23:08 +0100")
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, toshik-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
 
-On Thu, 27 Nov 2014 16:17:41 +0100, Tomas Novotny <tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org> wrote:
-> On Mon, 24 Nov 2014 16:49:20 +0100
-> Tomas Novotny <tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org> wrote:
-> 
-> > This series is tested with MCP79401 and it is based on 3.18-rc6.
-> > 
-> > Tomas Novotny (4):
-> >   rtc: ds1307: add support for mcp7940x chips
-> >   of: add vendor prefix for Pericom Technology
-> >   rtc: ds1307: add device tree bindings documentation
-> >   rtc: ds1307: add device tree support
-> >
-> >  .../devicetree/bindings/rtc/maxim,ds1307.txt       |  23 ++++
-> >  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
-> >  drivers/rtc/rtc-ds1307.c                           | 149 ++++++++++++---------
-> >  3 files changed, 110 insertions(+), 63 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/rtc/maxim,ds1307.txt
-> 
-> It is now in the -mm and linux-next.
-> Thanks to Andrew for pick up,
-> 
-> Tomas
+> On Friday 28 November 2014 11:54:39 Kalle Valo wrote:
+>> 
+>> Right now ath10k does not support that, but in the future we might want
+>> to add mac address as well. We need to do some testing with the firmware
+>> to make sure that we can safely change the "main" address from ath10k.
+>
+> This is from Documentation/devicetree/bindings/net/ethernet.txt:
+>
+> - local-mac-address: array of 6 bytes, specifies the MAC address that was
+>   assigned to the network device;
+> - mac-address: array of 6 bytes, specifies the MAC address that was last used by
+>   the boot program; should be used in cases where the MAC address assigned to
+>   the device by the boot program is different from the "local-mac-address"
+>   property;
+>
+> If the address is fixed, you might still be able to use the local-mac-address
+> property to communicate the main address. Normally you only have to pass
+> the mac address in DT if the device itself doesn't know the address. Do you
+> know where the main address is stored?
 
-could you please remove my last two patches:
-rtc-ds1307-add-device-tree-bindings-documentation.patch
-rtc-ds1307-add-device-tree-support.patch
-from the -mm?
-	I missed that some compatible RTC's are already listed in
-i2c/trivial-devices.txt. These two patches shouldn't break anything, but
-document and handle already working thing.
-	Better would be to follow the trivial-devices.txt and add the missing
-compatibles there.
-	The first two patches are ok.
-	Sorry for the noise and thanks,
+The ath10k main address is stored in the calibration data and the
+firmware delivers the address to ath10k.
 
-	Tomas
+> If it's always known to the card, we don't need to pass it, and if the
+> card doesn't know it, I suspect it would be safe to change it.
+
+I suspect we can change the address afterwards, but I need to check to
+be sure.
+
+>> And because of Virtual AP (mBSSID) feature we actually would need to
+>> provide multiple addresses, not just one. Maybe with addr_mask like
+>> struct wiphy has?
+>> 
+>>  * @perm_addr: permanent MAC address of this device
+>>  * @addr_mask: If the device supports multiple MAC addresses by masking,
+>>  *      set this to a mask with variable bits set to 1, e.g. if the last
+>>  *      four bits are variable then set it to 00-00-00-00-00-0f. The actual
+>>  *      variable bits shall be determined by the interfaces added, with
+>>  *      interfaces not matching the mask being rejected to be brought up.
+>> 
+>>         /* permanent MAC address(es) */
+>>         u8 perm_addr[ETH_ALEN];
+>>         u8 addr_mask[ETH_ALEN];
+>
+> We don't have a common binding for this yet, I think drivers that do this
+> at the moment just know how many addresses they are allowed to take.
+>
+> If the mask is generally considered useful, we could probably add that to
+> the binding though.
+
+Currently ath10k supports up to 8 Virtual APs but the manufacturer can
+choose to allocate any number of MAC addresses (1-8). Something like
+addr_mask would be good way to inform ath10k what address range it has
+available.
+
+-- 
+Kalle Valo
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
