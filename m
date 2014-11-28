@@ -1,13 +1,13 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/2] gpio: add a driver for GPIOs going through a level shifter
-Date: Fri, 28 Nov 2014 14:37:27 +0100
-Message-ID: <CACRpkdZ=qwO9qcr8tt3Pxs+kEPSGo58R8TzNCu9bC=dxHimDBQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] devicetree: add a binding for GPIOs going though a
+ level shifter
+Date: Fri, 28 Nov 2014 14:39:01 +0100
+Message-ID: <CACRpkdbRtqSeEayrZ6sZPM6g65q=zmkhJKpz=n8X311DNGe5pw@mail.gmail.com>
 References: <1416837696-28066-1-git-send-email-alban.bedel@avionic-design.de>
-	<1416837696-28066-2-git-send-email-alban.bedel@avionic-design.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1416837696-28066-2-git-send-email-alban.bedel@avionic-design.de>
+In-Reply-To: <1416837696-28066-1-git-send-email-alban.bedel@avionic-design.de>
 Sender: linux-gpio-owner@vger.kernel.org
 To: Alban Bedel <alban.bedel@avionic-design.de>
 Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
@@ -16,202 +16,43 @@ List-Id: devicetree@vger.kernel.org
 On Mon, Nov 24, 2014 at 3:01 PM, Alban Bedel
 <alban.bedel@avionic-design.de> wrote:
 
-> This driver support setting the level shifter direction and/or enable
-> as needed.
->
 > Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
-
-Very interesting patch!
-
-I have some worries. What if the backing GPIO chip supports interrupts
-on GPIO lines, and consumers do gpiod_get() from this level
-shifter front-end, followed by gpio_to_irq()? Then the line will
-not be converted to an IRQ properly.
-
-In the device tree case I guess you can refer to the backing
-GPIO chip with the interrupt property, but then you have to
-coordinate setting the line as input both on this front-end and
-on the back-end. Now the drivers won't properly enforce that.
-
-So it would be much nicer if the level shifter front-end would
-also propagate irqchip stuff to the back-end. I don't know if that
-will be easy.
-
-The second problem is that of handling a level shifter backed
-by more than one GPIO chip, as mentioned by Rob for the other
-patch. It's better if we store the backing GPIO chip on a per-line
-basis. Make struct level_shifter_gpio contain a list of lines and
-for each line have another struct that contain per-line data
-like the gpiod for that line (so you can find the gpio_chip and
-have it unique if need be).
-
-Then I wonder if all level shifters are such that you set the direction
-for all lines going in/out of it, or if there are level shifters where this
-is controlled on a per-line basis.
-
-Patch MAINTAINERS so that you are indicated as maintainer
-of this driver.
-
-Would you consider also maintaining
-drivers/gpio/gpio-adnp.c?
-
-> +config GPIO_LEVEL_SHIFTER
-> +       tristate "Level shifter GPIO support"
-
-depends on OF_GPIO or select OF_GPIO?
-select REGULATOR?
-
-(...)
-> +#include <linux/module.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/regulator/consumer.h>
-
-Thanks for using descriptors solely.
-
-> +#define MAX_DATA_GPIO 32
-
-Why? Use a list with dynamic allocation instead of such
-arbitrary restrictions.
-
-> +enum level_shifter_direction {
-> +       DIRECTION_NONE,
-> +       DIRECTION_INPUT,
-> +       DIRECTION_OUTPUT
-> +};
+> ---
+>  .../devicetree/bindings/gpio/gpio-level-shifter.txt       | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-level-shifter.txt
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-level-shifter.txt b/Documentation/devicetree/bindings/gpio/gpio-level-shifter.txt
+> new file mode 100644
+> index 0000000..e108c43
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-level-shifter.txt
+> @@ -0,0 +1,15 @@
+> +GPIO level shifter
 > +
-> +struct level_shifter_gpio {
-> +       struct gpio_chip gc;
+> +This binding allow supporting GPIOs going though a level shifter.
 > +
-> +       spinlock_t lock;
-> +       int num_requested;
+> +Required properties:
+> +- compatible : should be "gpio-level-shifter"
+> +- data-gpios : list of the data GPIO phandles
+> +- #gpio-cells : should be 2
+> +- gpio-controller : marks the device node as a GPIO controller
 > +
-> +       struct gpio_desc *data_gpio[MAX_DATA_GPIO];
-> +       struct gpio_desc *enable_gpio;
-> +       struct gpio_desc *direction_gpio;
-> +       enum level_shifter_direction direction;
-> +
-> +       struct regulator *vcc_a;
-> +       struct regulator *vcc_b;
+> +Optional properties:
+> +- enable-gpio : phandle of the GPIO that control the level shifter enable pin
+> +- direction-gpio : phandle of the GPIO that control the level shifter direction
+> +- vcca-supply : phandle of the regulator for side A of the level shifter
+> +- vccb-supply : phandle of the regulator for side B of the level shifter
 
-Is VCC_A and VCC_B really the right terminology?
+It must be clear which side is facing the parent GPIO controller,
+A or B.
 
-I see this in some datasheets but the pinout seems top be
-VCC and VDD, which one is it? Needs crystal clear documentation
-anyways.
+It must be clear which one of these two should be used if the level shifter
+has ony VCC.
 
-> +};
+And isn't the proper terminology VCC+VDD?
 
-Add kerneldoc to this struct.
-
-> +#define to_level_shifter_gpio(c) \
-> +       container_of(c, struct level_shifter_gpio, gc)
-> +
-> +int level_shifter_gpio_request(struct gpio_chip *chip, unsigned offset)
-> +{
-> +       struct level_shifter_gpio *ls = to_level_shifter_gpio(chip);
-> +
-> +       spin_lock(&ls->lock);
-
-Since the backend may be slow (e.g. on an I2C bus)
-it is not wise to use a spinlock here.
-
-Exactly what is it protecting really? I think you can just
-remove it.
-
-> +       if (ls->num_requested == 0 && ls->enable_gpio)
-> +               gpiod_set_value(ls->enable_gpio, 1);
-> +
-> +       ls->num_requested++;
-
-Instead of your own refence counting, use struct kref for
-whatever it is you need to keep track of. It will handle
-callbacks when references reach 0 etc.
-
-<linux/kref.h> grep kernel for examples.
-
-(...)
-> +void level_shifter_gpio_free(struct gpio_chip *chip, unsigned offset)
-> +{
-> +       struct level_shifter_gpio *ls = to_level_shifter_gpio(chip);
-> +
-> +       spin_lock(&ls->lock);
-> +
-> +       ls->num_requested--;
-> +
-> +       if (ls->num_requested == 0) {
-> +               if (ls->enable_gpio)
-> +                       gpiod_set_value(ls->enable_gpio, 0);
-> +               if (ls->direction_gpio)
-> +                       ls->direction = DIRECTION_NONE;
-
-Is that really true? Isn't it just keeping what it used to be?
-
-DIRECTION_DONT_CARE seems more appropriate if you
-use it like this.
-
-(...)
-> +static int level_shifter_gpio_probe(struct platform_device *pdev)
-> +{
-> +       struct device_node *np = pdev->dev.of_node;
-> +       struct level_shifter_gpio *ls;
-> +       struct gpio_desc *gpiod;
-> +       int err, i;
-> +
-> +       ls = devm_kzalloc(&pdev->dev, sizeof(*ls), GFP_KERNEL);
-> +       if (!ls)
-> +               return -ENOMEM;
-> +
-> +       spin_lock_init(&ls->lock);
-> +
-> +       if (np)
-> +               ls->gc.label = np->name;
-> +       else
-> +               ls->gc.label = "level-shifter-gpio";
-> +
-> +       ls->gc.of_node = pdev->dev.of_node;
-> +       ls->gc.base = -1;
-> +       ls->gc.request = level_shifter_gpio_request;
-> +       ls->gc.free = level_shifter_gpio_free;
-> +       ls->gc.set = level_shifter_gpio_set;
-> +       ls->gc.direction_output = level_shifter_gpio_direction_output;
-> +       ls->gc.get = level_shifter_gpio_get;
-> +       ls->gc.direction_input = level_shifter_gpio_direction_input;
-> +
-> +       for (i = 0; i < MAX_DATA_GPIO; i++) {
-> +               gpiod = devm_gpiod_get_index_optional(
-> +                       &pdev->dev, "data", i, GPIOD_IN);
-
-Instead just keep getting indexes until we get
-a -ENOENT and add dynamically to a gpiod list.
-
- +       ls->vcc_a = devm_regulator_get_optional(&pdev->dev, "vcca");
-> +       if (IS_ERR(ls->vcc_a) && PTR_ERR(ls->vcc_a) != -ENODEV)
-> +               return PTR_ERR(ls->vcc_a);
-> +       if (!IS_ERR(ls->vcc_a)) {
-> +               err = regulator_enable(ls->vcc_a);
-> +               if (err)
-> +                       return err;
-> +       }
-> +
-> +       ls->vcc_b = devm_regulator_get_optional(&pdev->dev, "vccb");
-> +       if (IS_ERR(ls->vcc_b) && PTR_ERR(ls->vcc_b) != -ENODEV)
-> +               return PTR_ERR(ls->vcc_b);
-> +       if (!IS_ERR(ls->vcc_b)) {
-> +               err = regulator_enable(ls->vcc_b);
-> +               if (err)
-> +                       return err;
-> +       }
-
-Why are the regulators enabled even if the level shifter is not
-in use?
-
-Should these regulator_enable() calls be done at the same
-place as the other enablement, when a GPIO is requested
-and num_requested goes from 0->1?
+An example must be provided.
 
 Yours,
 Linus Walleij
