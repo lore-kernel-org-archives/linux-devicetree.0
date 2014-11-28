@@ -1,114 +1,57 @@
 From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/2] pinctrl: at91: allow disabled gpio controllers
-Date: Fri, 28 Nov 2014 17:49:26 +0100
-Message-ID: <1417193367-12422-1-git-send-email-ludovic.desroches@atmel.com>
+Subject: [PATCH 2/2] ARM: at91/dt: sama5d4: add pioD controller
+Date: Fri, 28 Nov 2014 17:49:27 +0100
+Message-ID: <1417193367-12422-2-git-send-email-ludovic.desroches@atmel.com>
+References: <1417193367-12422-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1417193367-12422-1-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch allows to have gpio controller with status set to disabled.
-
-gpio_banks represents all the gpio banks available on the device whereas
-nbanks represents the gpio banks used. Having a disabled gpio controller
-involves that nbanks value is lower than gpio_banks and that some
-pointers in the gpio_chips array are NULL. This patch deals with these
-specific cases.
+PioD controller was not described in the device tree since we don't use
+it. As pinctrl-at91 allows disabled gpio controllers in the device
+tree, we can add it to complete the device description.
 
 Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 ---
+ arch/arm/boot/dts/sama5d4.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Hi,
-
-Without this patch, pinctrl is broken on sama5d4 because pinctrl-at91 doesn't
-support unused gpio bank.
-
-
- drivers/pinctrl/pinctrl-at91.c | 30 ++++++++++++++++++------------
- 1 file changed, 18 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-index 94643bb..95ae122 100644
---- a/drivers/pinctrl/pinctrl-at91.c
-+++ b/drivers/pinctrl/pinctrl-at91.c
-@@ -981,7 +981,8 @@ static void at91_pinctrl_child_count(struct at91_pinctrl *info,
+diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
+index e0157b0..2cc3cfe 100644
+--- a/arch/arm/boot/dts/sama5d4.dtsi
++++ b/arch/arm/boot/dts/sama5d4.dtsi
+@@ -61,6 +61,7 @@
+ 		gpio0 = &pioA;
+ 		gpio1 = &pioB;
+ 		gpio2 = &pioC;
++		gpio3 = &pioD;
+ 		gpio4 = &pioE;
+ 		tcb0 = &tcb0;
+ 		tcb1 = &tcb1;
+@@ -1042,6 +1043,18 @@
+ 					clocks = <&pioC_clk>;
+ 				};
  
- 	for_each_child_of_node(np, child) {
- 		if (of_device_is_compatible(child, gpio_compat)) {
--			info->nbanks++;
-+			if (of_device_is_available(child))
-+				info->nbanks++;
- 		} else {
- 			info->nfunctions++;
- 			info->ngroups += of_get_child_count(child);
-@@ -1003,11 +1004,11 @@ static int at91_pinctrl_mux_mask(struct at91_pinctrl *info,
- 	}
- 
- 	size /= sizeof(*list);
--	if (!size || size % info->nbanks) {
-+	if (!size || size % gpio_banks) {
- 		dev_err(info->dev, "wrong mux mask array should be by %d\n", info->nbanks);
- 		return -EINVAL;
- 	}
--	info->nmux = size / info->nbanks;
-+	info->nmux = size / gpio_banks;
- 
- 	info->mux_mask = devm_kzalloc(info->dev, sizeof(u32) * size, GFP_KERNEL);
- 	if (!info->mux_mask) {
-@@ -1185,7 +1186,7 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
- {
- 	struct at91_pinctrl *info;
- 	struct pinctrl_pin_desc *pdesc;
--	int ret, i, j, k;
-+	int ret, i, j, k, ngpio_chips_enabled = 0;
- 
- 	info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
- 	if (!info)
-@@ -1200,12 +1201,14 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
- 	 * to obtain references to the struct gpio_chip * for them, and we
- 	 * need this to proceed.
- 	 */
--	for (i = 0; i < info->nbanks; i++) {
--		if (!gpio_chips[i]) {
--			dev_warn(&pdev->dev, "GPIO chip %d not registered yet\n", i);
--			devm_kfree(&pdev->dev, info);
--			return -EPROBE_DEFER;
--		}
-+	for (i = 0; i < gpio_banks; i++) {
-+		if (gpio_chips[i])
-+			ngpio_chips_enabled++;
-+	}
-+	if (ngpio_chips_enabled < info->nbanks) {
-+		dev_warn(&pdev->dev, "All GPIO chips are not registered yet\n");
-+		devm_kfree(&pdev->dev, info);
-+		return -EPROBE_DEFER;
- 	}
- 
- 	at91_pinctrl_desc.name = dev_name(&pdev->dev);
-@@ -1234,8 +1237,9 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
- 	}
- 
- 	/* We will handle a range of GPIO pins */
--	for (i = 0; i < info->nbanks; i++)
--		pinctrl_add_gpio_range(info->pctl, &gpio_chips[i]->range);
-+	for (i = 0; i < gpio_banks; i++)
-+		if (gpio_chips[i])
-+			pinctrl_add_gpio_range(info->pctl, &gpio_chips[i]->range);
- 
- 	dev_info(&pdev->dev, "initialized AT91 pinctrl driver\n");
- 
-@@ -1681,6 +1685,8 @@ static void at91_gpio_probe_fixup(void)
- 
- 	for (i = 0; i < gpio_banks; i++) {
- 		at91_gpio = gpio_chips[i];
-+		if (!at91_gpio)
-+			continue;
- 
- 		/*
- 		 * GPIO controller are grouped on some SoC:
++				pioD: gpio@fc068000 {
++					compatible = "atmel,at91sam9x5-gpio", "atmel,at91rm9200-gpio";
++					reg = <0xfc068000 0x100>;
++					interrupts = <5 IRQ_TYPE_LEVEL_HIGH 1>;
++					#gpio-cells = <2>;
++					gpio-controller;
++					interrupt-controller;
++					#interrupt-cells = <2>;
++					clocks = <&pioD_clk>;
++					status = "disabled";
++				};
++
+ 				pioE: gpio@fc06d000 {
+ 					compatible = "atmel,at91sam9x5-gpio", "atmel,at91rm9200-gpio";
+ 					reg = <0xfc06d000 0x100>;
 -- 
 2.0.3
 
