@@ -1,37 +1,121 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v13 0/12] dw-hdmi: convert imx hdmi to bridge/dw_hdmi
-Date: Fri, 28 Nov 2014 17:14:22 +0100
-Message-ID: <1417191262.3721.6.camel@pengutronix.de>
-References: <1417008157-31861-1-git-send-email-andy.yan@rock-chips.com>
- <1417018856.3177.6.camel@pengutronix.de> <547846F7.3080708@rock-chips.com>
+From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] of: add optional options parameter to?
+ of_find_node_by_path()
+Date: Fri, 28 Nov 2014 16:38:07 +0000
+Message-ID: <20141128163807.GN2361@bivouac.eciton.net>
+References: <1417110967-16284-1-git-send-email-leif.lindholm@linaro.org>
+ <1417110967-16284-3-git-send-email-leif.lindholm@linaro.org>
+ <20141128004403.08D90C40A7F@trevor.secretlab.ca>
+ <20141128113428.GM2361@bivouac.eciton.net>
+ <20141128152512.2152EC40884@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <547846F7.3080708@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, heiko@sntech.de, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Pawel Moll <pawel.moll@arm.com>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, rmk+kernel@arm.linux.org.uk, mark.yao@rock-chips.com, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141128152512.2152EC40884-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, ijc-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-QW0gRnJlaXRhZywgZGVuIDI4LjExLjIwMTQsIDE3OjU3ICswODAwIHNjaHJpZWIgQW5keSBZYW46
-Cj4gSGkgUGhpbGlwcDoKWy4uLl0KPiAgICBWZXJ5IHNvcnJ5IGFib3V0IHRoaXMgdHJvdWJsZS4g
-QmVjYXVzZSBJIGhhdmUgbm8gaW14IGJvYXJkLCB3ZSBkbyBhbGwgCj4gdGhlIHRlc3Qgb24KPiBS
-SzMyODggYm9hcmQuCj4gICAgIEkgaGFkIHNlbnQgYSBtYWlsIHdpdGggYSBkZWJ1ZyBwYXRjaCB0
-byB5b3UgZGlyZWN0bHkgeWVzdGVyZGF5LCBob3BlIAo+IGl0IHdpbGwgaGVscGZ1bC4KPiBJZiB5
-b3UgaGF2ZSByZWNlaXZlZCB0aGUgbWFpbCwgd291bGQgeW91IHBsZWFzZSBnaXZlIG1lIGEgcmVw
-bHk/CgpZZXMsIHRoYXQgd2FzIGhlbHBmdWwsIHRoYW5rIHlvdS4KSSBuZWVkZWQgdG8gYXBwbHkg
-UnVzc2VsbCdzICJpbXgtZHJtOiBjb252ZXJ0IGlteC1kcm0gdG8gdXNlIHRoZSBnZW5lcmljCkRS
-TSBPRiBoZWxwZXIiIHBhdGNoIGZvciBkcm1fb2ZfZmluZF9wb3NzaWJsZV9jcnRjcyB0byB3b3Jr
-IG9uIGlteC1kcm0uCgpyZWdhcmRzClBoaWxpcHAKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
-bGlzdGluZm8vZHJpLWRldmVsCg==
+On Fri, Nov 28, 2014 at 03:25:12PM +0000, Grant Likely wrote:
+> On Fri, 28 Nov 2014 11:34:28 +0000
+> , Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>  wrote:
+> > On Fri, Nov 28, 2014 at 12:44:03AM +0000, Grant Likely wrote:
+> > > > +	separator = strchr(path, ':');
+> > > > +	if (separator && opts)
+> > > > +		*opts = separator + 1;
+> > > > +
+> > > 
+> > > What about when there are no opts? Do we require the caller to make sure
+> > > opts is NULL before calling the function (which sounds like a good
+> > > source of bugs) or do we clear it on successful return?
+> > > 
+> > > I think if opts is passed in, but there are no options, then it should
+> > > set *opts = NULL.
+> > 
+> > Yeah, oops.
+> > 
+> > > There should be test cases for this also. Must set opts to NULL on
+> > > successful return, and (I think) should leave opts alone on an
+> > > unsuccessful search.
+> > 
+> > I would actually argue for always nuking the opts - since that could
+> > (theoretically) prevent something working by accident in spite of
+> > error conditions.
+> > 
+> > How about the below?
+> 
+> Perfect, applied with one fixup below...
+
+Thanks!
+
+And since it's Friday... *cough*
+
+>From 5c469dad81961164c444da7d6c4e1c5b1c097aab Mon Sep 17 00:00:00 2001
+From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Date: Fri, 28 Nov 2014 16:27:25 +0000
+Subject: [PATCH] of: fix options clearing when path is "/"
+
+The addition of the optional options extraction on
+of_find_node_opts_by_path failed to clear incoming options pointer
+if the specified path was "/".
+
+Resolve this case, and add a test to detect it.
+
+Signed-off-by: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ drivers/of/base.c     |   11 ++++++-----
+ drivers/of/selftest.c |    5 +++++
+ 2 files changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 5e16c6b..32664d1 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -743,15 +743,16 @@ struct device_node *of_find_node_opts_by_path(const char *path, const char **opt
+ 	struct device_node *np = NULL;
+ 	struct property *pp;
+ 	unsigned long flags;
+-	char *separator;
++	char *separator = NULL;
++
++	if (opts) {
++		separator = strchr(path, ':');
++		*opts = separator ? separator + 1 : NULL;
++	}
+ 
+ 	if (strcmp(path, "/") == 0)
+ 		return of_node_get(of_allnodes);
+ 
+-	separator = strchr(path, ':');
+-	if (opts)
+-		*opts = separator ? separator + 1 : NULL;
+-
+ 	/* The path could begin with an alias */
+ 	if (*path != '/') {
+ 		char *p = strchrnul(path, '/');
+diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
+index 721b2a4..914f0ae 100644
+--- a/drivers/of/selftest.c
++++ b/drivers/of/selftest.c
+@@ -100,6 +100,11 @@ static void __init of_selftest_find_node_by_name(void)
+ 	np = of_find_node_opts_by_path("testcase-alias", &options);
+ 	selftest(np && !options, "option clearing test failed\n");
+ 	of_node_put(np);
++
++	options = "testoption";
++	np = of_find_node_opts_by_path("/", &options);
++	selftest(np && !options, "option clearing root node test failed\n");
++	of_node_put(np);
+ }
+ 
+ static void __init of_selftest_dynamic(void)
+-- 
+1.7.10.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
