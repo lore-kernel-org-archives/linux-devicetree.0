@@ -1,173 +1,106 @@
-From: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/4] media: ov2640: add primary dt support
-Date: Fri, 28 Nov 2014 18:28:25 +0800
-Message-ID: <1417170507-11172-3-git-send-email-josh.wu@atmel.com>
-References: <1417170507-11172-1-git-send-email-josh.wu@atmel.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v4 4/7] regulator: Use ena_gpio supplied with generic
+ regulator bindings
+Date: Fri, 28 Nov 2014 11:30:55 +0100
+Message-ID: <1417170655.18249.24.camel@AMDC1943>
+References: <1417087253-12306-1-git-send-email-k.kozlowski@samsung.com>
+ <1417087253-12306-5-git-send-email-k.kozlowski@samsung.com>
+ <20141127184342.GC7712@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417170507-11172-1-git-send-email-josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, g.liakhovetski-Mmb7MZpHnFY@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20141127184342.GC7712@sirena.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree support for ov2640.
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
- drivers/media/i2c/soc_camera/ov2640.c | 95 ++++++++++++++++++++++++++++++++---
- 1 file changed, 89 insertions(+), 6 deletions(-)
+On czw, 2014-11-27 at 18:43 +0000, Mark Brown wrote:
+> On Thu, Nov 27, 2014 at 12:20:50PM +0100, Krzysztof Kozlowski wrote:
+> > Use ena_gpio from regulator constraints (filled by parsing generic
+> > bindings) to initialize the GPIO enable control. Support also the old
+> > way: ena_gpio supplied in regulator_config structure.
+> > 
+> > This also adds a new set_ena_gpio() callback in regulator_ops structure
+> > which driver may provide to actually enable the GPIO control in
+> > hardware.
+> 
+> This seems really confused like it's trying to work around some other
+> problem - this all feels like it's at the wrong abstraction level.  As
+> far as I can tell this is trying to fix bugs in the previous patch and
+> do some other refactorings (the "also add this other random op" bit
+> especially) but I'm really not clear what the goal is.
+> 
+> Please try to think if the code you're writing makes sense at the big
+> picture level rather than just band aiding specific problems you see.
+> It's also a good idea to keep random code motion separate from
+> functional changes since it makes it much easier to follow what each is
+> supposed to do.
+> 
+> > @@ -1044,6 +1045,14 @@ static int set_machine_constraints(struct regulator_dev *rdev,
+> >  		}
+> >  	}
+> >  
+> > +	if (rdev->constraints->use_ena_gpio && ops->set_ena_gpio) {
+> > +		ret = ops->set_ena_gpio(rdev);
+> > +		if (ret < 0) {
+> > +			rdev_err(rdev, "failed to set enable GPIO control\n");
+> > +			goto out;
+> > +		}
+> > +	}
+> 
+> Why do we need some special magic operation for GPIO based enables
+> that's separate to any other enable operation?  This seems really
+> confusing, if the constraint setting doesn't work somehow for GPIO based
+> enables we should fix that.  Though since this operation takes no
+> parameters it's hard to see how it's supposed to apply constraints
+> unless it reparses them which doesn't seem like a good idea...
 
-diff --git a/drivers/media/i2c/soc_camera/ov2640.c b/drivers/media/i2c/soc_camera/ov2640.c
-index 9ee910d..6506126 100644
---- a/drivers/media/i2c/soc_camera/ov2640.c
-+++ b/drivers/media/i2c/soc_camera/ov2640.c
-@@ -18,6 +18,8 @@
- #include <linux/i2c.h>
- #include <linux/slab.h>
- #include <linux/delay.h>
-+#include <linux/gpio.h>
-+#include <linux/of_gpio.h>
- #include <linux/v4l2-mediabus.h>
- #include <linux/videodev2.h>
- 
-@@ -283,6 +285,10 @@ struct ov2640_priv {
- 	u32	cfmt_code;
- 	struct v4l2_clk			*clk;
- 	const struct ov2640_win_size	*win;
-+
-+	struct soc_camera_subdev_desc	ssdd_dt;
-+	int reset_pin;
-+	int pwr_down_pin;
- };
- 
- /*
-@@ -1047,6 +1053,70 @@ static struct v4l2_subdev_ops ov2640_subdev_ops = {
- 	.video	= &ov2640_subdev_video_ops,
- };
- 
-+/* OF probe functions */
-+static int ov2640_hw_power(struct device *dev, int on)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct ov2640_priv *priv = to_ov2640(client);
-+
-+	dev_dbg(&client->dev, "%s: %s the camera\n",
-+			__func__, on ? "ENABLE" : "DISABLE");
-+
-+	/* enable or disable the camera */
-+	gpio_direction_output(priv->pwr_down_pin, !on);
-+
-+	return 0;
-+}
-+
-+static int ov2640_hw_reset(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct ov2640_priv *priv = to_ov2640(client);
-+
-+	/* If enabled, give a reset impulse */
-+	gpio_direction_output(priv->reset_pin, 0);
-+	msleep(20);
-+	gpio_direction_output(priv->reset_pin, 1);
-+	msleep(100);
-+
-+	return 0;
-+}
-+
-+static int ov2640_probe_dt(struct i2c_client *client,
-+		struct ov2640_priv *priv)
-+{
-+	struct device_node *np = client->dev.of_node;
-+	int ret;
-+
-+	priv->reset_pin = of_get_named_gpio(np, "reset-gpio", 0);
-+	priv->pwr_down_pin = of_get_named_gpio(np, "power-down-gpio", 0);
-+	if (!gpio_is_valid(priv->reset_pin) ||
-+			!gpio_is_valid(priv->pwr_down_pin))
-+		return -EINVAL;
-+
-+	ret = devm_gpio_request(&client->dev, priv->pwr_down_pin,
-+			"power-down-pin");
-+	if (ret < 0) {
-+		dev_err(&client->dev, "request gpio pin %d failed\n",
-+				priv->pwr_down_pin);
-+		return ret;
-+	}
-+
-+	ret = devm_gpio_request(&client->dev, priv->reset_pin, "reset_pin");
-+	if (ret < 0) {
-+		dev_err(&client->dev, "request gpio pin %d failed\n",
-+				priv->reset_pin);
-+		return ret;
-+	}
-+
-+	/* Initialize the soc_camera_subdev_desc */
-+	priv->ssdd_dt.power = ov2640_hw_power;
-+	priv->ssdd_dt.reset = ov2640_hw_reset;
-+	client->dev.platform_data = &priv->ssdd_dt;
-+
-+	return 0;
-+}
-+
- /*
-  * i2c_driver functions
-  */
-@@ -1058,12 +1128,6 @@ static int ov2640_probe(struct i2c_client *client,
- 	struct i2c_adapter	*adapter = to_i2c_adapter(client->dev.parent);
- 	int			ret;
- 
--	if (!ssdd) {
--		dev_err(&adapter->dev,
--			"OV2640: Missing platform_data for driver\n");
--		return -EINVAL;
--	}
--
- 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA)) {
- 		dev_err(&adapter->dev,
- 			"OV2640: I2C-Adapter doesn't support SMBUS\n");
-@@ -1077,6 +1141,18 @@ static int ov2640_probe(struct i2c_client *client,
- 		return -ENOMEM;
- 	}
- 
-+	if (!ssdd) {
-+		if (client->dev.of_node) {
-+			ret = ov2640_probe_dt(client, priv);
-+			if (ret)
-+				return ret;
-+		} else {
-+			dev_err(&client->dev,
-+				"Missing platform_data for driver\n");
-+			return  -EINVAL;
-+		}
-+	}
-+
- 	v4l2_i2c_subdev_init(&priv->subdev, client, &ov2640_subdev_ops);
- 	v4l2_ctrl_handler_init(&priv->hdl, 2);
- 	v4l2_ctrl_new_std(&priv->hdl, &ov2640_ctrl_ops,
-@@ -1123,9 +1199,16 @@ static const struct i2c_device_id ov2640_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, ov2640_id);
- 
-+static const struct of_device_id ov2640_of_match[] = {
-+	{.compatible = "omnivision,ov2640", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, ov2640_of_match);
-+
- static struct i2c_driver ov2640_i2c_driver = {
- 	.driver = {
- 		.name = "ov2640",
-+		.of_match_table = of_match_ptr(ov2640_of_match),
- 	},
- 	.probe    = ov2640_probe,
- 	.remove   = ov2640_remove,
--- 
-1.9.1
+The regulator driver no longer parses GPIO control from DTS. So somehow
+it should be notified that regulator core parsed this and GPIO should be
+enabled.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+That is the purpose of ops->set_ena_gpio() call.
+
+> 
+> >  static int regulator_ena_gpio_request(struct regulator_dev *rdev,
+> > -				const struct regulator_config *config)
+> 
+> > -	ret = gpio_request_one(config->ena_gpio,
+> > -				GPIOF_DIR_OUT | config->ena_gpio_flags,
+> > +	ret = gpio_request_one(gpio, GPIOF_DIR_OUT | gpio_flags,
+> >  				rdev_get_name(rdev));
+> 
+> > +/*
+> > + * Request GPIO for enable control from regulator_config
+> > + * or init_data->constraints.
+> > + */
+> > +static int regulator_ena_gpio_setup(struct regulator_dev *rdev,
+> > +			const struct regulator_config *config,
+> > +			const struct regulator_init_data *init_data)
+> 
+> Why is setting up the GPIO different to requesting it, especially given
+> that we have an existing function called _request() which still exists?
+
+Maybe the name was not a best choice. The setup calls request.
+
+My patchset here tried to retain the compatibility with
+"config.ena_gpio" way so the core would accept GPIOs passed in one of
+two ways:
+1. old: config.ena_gpio,
+2. new: parsed by core from DTS.
+
+The request function previously worked only on "config.ena_gpio" and I
+changed it here to accept any GPIO. The setup uses one of GPIO methods
+(old or new) and calls request with appropriate GPIO.
+
+Anyway this will change after your comments about not using constraints
+(patch 3/7). I'll keep your comments about big picture level in mind and
+start working on next version.
+
+Thanks for feedback!
+
+Best regards,
+Krzysztof
