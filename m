@@ -1,34 +1,43 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCHv2 05/16] gpio: mvebu: add suspend/resume support
-Date: Fri, 28 Nov 2014 16:42:14 +0100
-Message-ID: <CACRpkdaVaTmhRgSkJPCmsHXvkqd4b-BZBsQEbXcZrHdhyMS0WQ@mail.gmail.com>
-References: <1415978496-9334-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1415978496-9334-6-git-send-email-thomas.petazzoni@free-electrons.com>
-	<CACRpkdb5S7Fv4+Ck2btLPTYWaWr_E-iMcQGeATB4NMwx_T-4GA@mail.gmail.com>
-	<20141127194418.43e03e80@free-electrons.com>
+Subject: Re: [PATCH V2 1/2] pinctrl: exynos: Add BUS1 pin controller for exynos7
+Date: Fri, 28 Nov 2014 16:45:44 +0100
+Message-ID: <CACRpkdY8sEJMr-cxzrUEW1sqP3bGLH=Q2hDP1NBQ5m9A+RhP5Q@mail.gmail.com>
+References: <CAFp+6iF-N63YSsdv2a6=MYp_mD=eQY_Oi8=9JVNU5dG0BA7YGQ@mail.gmail.com>
+	<1416834177-11170-1-git-send-email-gautam.vivek@samsung.com>
+	<CAGOxZ51P30BY2sOhUeMRK64CGF1fNcc-63RCXiAqZ6Rgpv3K7Q@mail.gmail.com>
+	<CAFp+6iFcMGTBQDcdK0cbcu0s9a3022nogaUvbPA2ZsCN80hRSA@mail.gmail.com>
+	<CAFp+6iFaf_RMprLCLXK=o=KGSTQuVL3geKx5yfevTuvFdjYLNg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20141127194418.43e03e80@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAFp+6iFaf_RMprLCLXK=o=KGSTQuVL3geKx5yfevTuvFdjYLNg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Vivek Gautam <gautamvivek1987@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Alim Akhtar <alim.akhtar@gmail.com>, Vivek Gautam <gautam.vivek@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-usb <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, robh+dt <robh+dt@kernel.org>, kgene <kgene@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 27, 2014 at 7:44 PM, Thomas Petazzoni
-<thomas.petazzoni@free-electrons.com> wrote:
-> Dear Linus Walleij,
+On Fri, Nov 28, 2014 at 4:39 AM, Vivek Gautam <gautamvivek1987@gmail.com> wrote:
+> On Fri, Nov 28, 2014 at 9:05 AM, Vivek Gautam <gautamvivek1987@gmail.com> wrote:
 
->> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->>
->> Do you want me to merge the patch or is it dependent on other patches?
+>>> On Mon, Nov 24, 2014 at 6:32 PM, Vivek Gautam <gautam.vivek@samsung.com> wrote:
+>>>> USB and Power regulator on Exynos7 require gpios available
+>>>> in BUS1 pin controller block.
+>>>> So adding the BUS1 pinctrl support.
+>>>>
+>>>> Signed-off-by: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+>>>> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+>>>> Cc: Linus Walleij <linus.walleij@linaro.org>
 >
-> This patch has already been merged by you, and is already in
-> linux-next. See
-> https://git.kernel.org/cgit/linux/kernel/git/linusw/linux-gpio.git/commit/?h=for-next&id=b5b7b487431b01619f2947d91dadd7c7a233692e.
+> If the change looks good, will it be possible to pick it fo 3.19-rc1 ?
+> That will really help enabling USB IP on exynos7.
 
-Argh, haha yeah it was the resending that confused me... too many
-patches floating around. Well then, it lands upstream.
+As you know the Exynos driver has a maintainer, Tomasz Figa, I will not
+merge patches without his ACK.
+
+Apart from that, there are *again* a lot of Exynos patches flying around and
+I start to loose track of them. If they do not apply together and start to
+conflict I will just ask Tomasz to stack them and provide a pull request
+again.
 
 Yours,
 Linus Walleij
