@@ -1,129 +1,147 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCHv2 1/1] thermal: cpu_cooling: check for the readiness of
- cpufreq layer
-Date: Fri, 28 Nov 2014 09:14:27 -0400
-Message-ID: <20141128131425.GA23622@developer>
-References: <1417097577-3548-1-git-send-email-edubezval@gmail.com>
- <CAKohponu_PRrqsuMdCJDznhiO_-=iCaYPhCCad8F4WS3rNxo5A@mail.gmail.com>
- <20141128111824.533c4641@jawa>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [kernel PATCH] devicetree: document ARM bindings for QEMU's
+ Firmware Config interface
+Date: Fri, 28 Nov 2014 13:17:43 +0000
+Message-ID: <20141128131743.GF25883@leverpostej>
+References: <1417177604-21194-1-git-send-email-lersek@redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="C7zPtVaVf+AK4Oqc"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20141128111824.533c4641@jawa>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lukasz Majewski <l.majewski@majess.pl>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Linux PM <linux-pm@vger.kernel.org>, Lukasz Majewski <l.majewski@samsung.com>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>
+In-Reply-To: <1417177604-21194-1-git-send-email-lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: "peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org" <qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---C7zPtVaVf+AK4Oqc
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Nov 28, 2014 at 12:26:44PM +0000, Laszlo Ersek wrote:
+> Peter Maydell suggested that we describe new devices / DTB nodes in the
+> kernel Documentation tree that we expose to arm "virt" guests in QEMU.
+> 
+> Although the kernel is not required to access the fw_cfg interface,
+> "Documentation/devicetree/bindings/arm" is probably the best central spot
+> to keep the fw_cfg description in.
+> 
+> Suggested-by: Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/fw-cfg.txt | 47 ++++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/fw-cfg.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/fw-cfg.txt b/Documentation/devicetree/bindings/arm/fw-cfg.txt
+> new file mode 100644
+> index 0000000..d131453
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/fw-cfg.txt
+> @@ -0,0 +1,47 @@
+> +* QEMU Firmware Configuration bindings for ARM
+> +
+> +QEMU's arm-softmmu and aarch64-softmmu emulation / virtualization targets
+> +provide the following Firmware Configuration interface on the "virt" machine
+> +type:
+> +
+> +- A write-only, 16-bit wide selector (or control) register,
+> +- a read-write, 8-bit wide data register.
+> +
+> +The guest writes a selector value (a key) to the selector register, and then
+> +can read the corresponding data (produced by QEMU) via the data port. If the
+> +selected entry is writable, the guest can rewrite it through the data port. The
+> +authoritative registry of the valid selector values and their meanings is the
+> +QEMU source code.
+> +
+> +QEMU exposes the control and data register to x86 guests at fixed IO ports. ARM
+> +guests can access them as memory mapped registers, and their location is
+> +communicated to the guest's UEFI firmware in the DTB that QEMU places at the
+> +bottom of the guest's DRAM.
 
+What exactly is this interface used for? And what's the protocol that
+goes over the read/write sequences descrbied above? Is there any
+documentation of that we can refer to here?
 
-Hello Folks,
+Is version information probeable from this, or does that need to be
+described?
 
-On Fri, Nov 28, 2014 at 11:18:24AM +0100, Lukasz Majewski wrote:
-> On Fri, 28 Nov 2014 13:35:49 +0530
-> Viresh Kumar <viresh.kumar@linaro.org> wrote:
->=20
-> > On 27 November 2014 at 19:42, Eduardo Valentin <edubezval@gmail.com>
-> > wrote:
-> > > (I'm sorry VireshK, I am still using my normal practice) :-)
-> >=20
-> > That's fine :)
-> >=20
-> > > diff --git a/drivers/thermal/cpu_cooling.c
-> > > b/drivers/thermal/cpu_cooling.c index 1ab0018..bed3fa2 100644
-> > > --- a/drivers/thermal/cpu_cooling.c
-> > > +++ b/drivers/thermal/cpu_cooling.c
-> > > @@ -440,6 +440,11 @@ __cpufreq_cooling_register(struct device_node
-> > > *np, int ret =3D 0, i;
-> > >         struct cpufreq_policy policy;
-> > >
-> > > +       if (!cpufreq_frequency_get_table(0)) {
-> > > +               pr_err("cpu_cooling: cpufreq layer not ready!
-> > > Deferring.\n");
-> >=20
-> > Throwing an error here doesn't look to be the right thing. Ultimately
-> > we will register the cooling dev when probed again after some time.
-> >=20
-> > So, a pr_debug() suits more here.
-> >=20
+> +The guest kernel is not expected to use these registers (although it is
+> +certainly allowed to); the device tree bindings are documented here because
+> +this is where device tree bindings reside in general.
+> +
+> +The addresses and sizes of the Firmware Configuration registers are given by
+> +the /fw-cfg node. The "virt" board invariably uses <2> as #size-cells and
+> +#address-cells in the context of this node.
 
-Yeah, I agree here.=20
+This paragraph can go -- #address-cells and #size-cells are
+well-understood common properties.
 
-> > Also, this breaks existing exynos thermal drivers as they don't handle
-> > -EPROBE_DEFER well right now.
->=20
-> Unfortunately Viresh is correct here. Current (before rework) Exynos
-> TMU driver expects that cpu_cooling device will succeed.
->=20
+> +
+> +The "reg" property is therefore an array of four uint64_t elements (eight
+> +uint32_t cells in total), the first uint64_t pair describing the address and
+> +size of the control register, the second uint64_t pair describing the address
+> +and size of the data register. (See
+> +<http://devicetree.org/Device_Tree_Usage#How_Addressing_Works>.)
 
+The reg property is a list of <address size> tuples. The size of the
+entiries depends on #address-cells and #size-cells in the parent node,
+but they are certainly not guaranteed to be uint64_t values (if nothing
+else, they're encoded big-endian in the DTB). We just need to describe
+what the entries are w.r.t. the device, not the particulars of the DTB
+format.
 
-Well, I wouldn't say unfortunately, but fortunately! :-)
+Are these registers always contiguous? I assume so, and vif so you can
+cover them with a single reg entry (read it as 'region' rather than
+'register').
 
-Ok. But I believe it is a matter of propagating the error code. As I
-included in this patch:=20
+> +
+> +The first string in the "compatible" property is "fw-cfg,mmio".
 
-diff --git a/drivers/thermal/samsung/exynos_thermal_common.c b/drivers/ther=
-mal/samsung/exynos_thermal_common.c
-index 3f5ad25..f84975e 100644
---- a/drivers/thermal/samsung/exynos_thermal_common.c
-+++ b/drivers/thermal/samsung/exynos_thermal_common.c
-@@ -373,7 +373,7 @@ int exynos_register_thermal(struct thermal_sensor_conf =
-*sensor_conf)
- 		if (IS_ERR(th_zone->cool_dev[th_zone->cool_dev_size])) {
- 			dev_err(sensor_conf->dev,
- 				"Failed to register cpufreq cooling device\n");
--			ret =3D -EINVAL;
-+			ret =3D PTR_ERR(th_zone->cool_dev[th_zone->cool_dev_size]);
- 			goto err_unregister;
- 		}
- 		th_zone->cool_dev_size++;
+"fw-cfg" is not a vendor prefix. I guess we need a "qemu" vendor prefix?
+Then we'd have something like "qemu,fw-cfg-mmio" as the compatible
+string.
 
+Also, the string should not be required to be the first entry in the
+list, as that breaks the fallback semantics of the compatible list. The
+string should just need to be present in the list.
 
+Please try to format the binding something like:
 
-> >=20
-> > I reached here, because one of my patches had something similar to
-> > what you wrote. Just for this file though, haven't updated any other
-> > drivers though.
-> >=20
-> > Will be sending you my small patchset by end of day today, please see
-> > if they make any sense at all..
+---->8----
+Required properties:
 
-The version you sent (for exynos) is better because there is a check for
-not print error messages in case of deferring.
+- compatible: should contain "qemu,fw-cfg-mmio".
 
-However, I would prefer, at least to what comes to deferring, to update
-the drivers altogether with the inclusion of the check in cpu cooling.
-This way the change in behavior is atomic, in terms of commit changes.
+- reg: The MMIO regions used by the device:
+  * The first entry describes the control register.
+  * The second entry describes the data register.
+---->8----
 
-Viresh, if you don't mind, I will merge your patch 04/26 into this one.
+Though I hope we can just use a single reg entry to cover all the
+registers the device has.
 
->=20
-> Best regards,
-> =C5=81ukasz Majewski
+> +
+> +Example:
+> +
+> +/ {
+> +	#size-cells = <0x2>;
+> +	#address-cells = <0x2>;
+> +
+> +	fw-cfg@9020000 {
+> +		reg = <0x0 0x9020000 0x0 0x2 0x0 0x9020002 0x0 0x1>;
 
-BR, Eduardo Valentin
+Please bracket list entries individually, e.g.
 
---C7zPtVaVf+AK4Oqc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+	reg = <0x0 0x9020000 0x0 0x2>,
+	      <0x0 0x9020002 0x0 0x1>;
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> +		compatible = "fw-cfg,mmio";
 
-iQEcBAEBAgAGBQJUeHUpAAoJEMLUO4d9pOJWPAYH/RZ2pwN7Ksx7Wkgg8Xjl1AfC
-IHecRQ0+0k61qf5rbso1Kr+w4sZ+UXD1xIw+4Mgkcfk8GSpTSEB57Hsi0CpIb6rN
-kGBHPK2SIuemS25XV06rVZFidCnHUS3GZ82ZgsUBADkKcey/ZVPb7pNrtvpS/uzN
-e5YPbQXpEXGYCSDiEtgTr/dO1+I7IL0rdnkVS5Rn6gBPXcqKey5XZC/kOi+UQ3NI
-ch4Sw0BrMOiJBxfwNdHOb5OlMDdUJKPuhLcHX+NQEeLZ7pKT5RexBedISVFDlJZX
-CulOwfyuHQgGdMjkLnfCMRndhVpI6a3oNxXwdQpg1PBUAYRi8GLpTpNrjdukrRg=
-=wr2c
------END PGP SIGNATURE-----
+And please place the compatible property before the reg (it makes things
+easier to read).
 
---C7zPtVaVf+AK4Oqc--
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
