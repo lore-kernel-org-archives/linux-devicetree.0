@@ -1,146 +1,332 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [kernel PATCH] devicetree: document ARM bindings for QEMU's
- Firmware Config interface
-Date: Fri, 28 Nov 2014 13:17:43 +0000
-Message-ID: <20141128131743.GF25883@leverpostej>
-References: <1417177604-21194-1-git-send-email-lersek@redhat.com>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 16/19] arm64: dts: exynos: Add dts files for 64-bit
+ Exynos5433 SoC
+Date: Fri, 28 Nov 2014 22:18:25 +0900
+Message-ID: <54787621.4000503@samsung.com>
+References: <1417073716-22997-1-git-send-email-cw00.choi@samsung.com>
+ <1417073716-22997-17-git-send-email-cw00.choi@samsung.com>
+ <20141127111834.GB857@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1417177604-21194-1-git-send-email-lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-reply-to: <20141127111834.GB857@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: "peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org" <qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "geunsik.lim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <geunsik.lim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, a.kesavan@samsung.
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Dear Mark,
 
-On Fri, Nov 28, 2014 at 12:26:44PM +0000, Laszlo Ersek wrote:
-> Peter Maydell suggested that we describe new devices / DTB nodes in the
-> kernel Documentation tree that we expose to arm "virt" guests in QEMU.
+On 11/27/2014 08:18 PM, Mark Rutland wrote:
+> On Thu, Nov 27, 2014 at 07:35:13AM +0000, Chanwoo Choi wrote:
+>> This patch adds new Exynos5433 dtsi to support 64-bit Exynos5433 SoC
+>> based on Octal core CPUs (quad Cortex-A57 and quad Cortex-A53).
+>>
+>> Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>> Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+>> Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+>> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Acked-by: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Acked-by: Geunsik Lim <geunsik.lim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>  arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi | 698 +++++++++++++++++++++
+>>  arch/arm64/boot/dts/exynos/exynos5433.dtsi         | 523 +++++++++++++++
+>>  2 files changed, 1221 insertions(+)
+>>  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi
+>>  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433.dtsi
 > 
-> Although the kernel is not required to access the fw_cfg interface,
-> "Documentation/devicetree/bindings/arm" is probably the best central spot
-> to keep the fw_cfg description in.
+> [...]
 > 
-> Suggested-by: Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/fw-cfg.txt | 47 ++++++++++++++++++++++++
->  1 file changed, 47 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/fw-cfg.txt
+>> diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+>> new file mode 100644
+>> index 0000000..3d8b576
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+>> @@ -0,0 +1,523 @@
+>> +/*
+>> + * Samsung's Exynos5433 SoC device tree source
+>> + *
+>> + * Copyright (c) 2014 Samsung Electronics Co., Ltd.
+>> + *             http://www.samsung.com
+>> + *
+>> + * Samsung's Exynos5433 SoC device nodes are listed in this file. Exynos5433
+>> + * based board files can include this file and provide values for board specfic
+>> + * bindings.
+>> + *
+>> + * Note: This file does not include device nodes for all the controllers in
+>> + * Exynos5433 SoC. As device tree coverage for Exynos5433 increases, additional
+>> + * nodes can be added to this file.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +#include "skeleton.dtsi"
+>> +#include <dt-bindings/clock/exynos5433.h>
+>> +
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/fw-cfg.txt b/Documentation/devicetree/bindings/arm/fw-cfg.txt
-> new file mode 100644
-> index 0000000..d131453
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/fw-cfg.txt
-> @@ -0,0 +1,47 @@
-> +* QEMU Firmware Configuration bindings for ARM
-> +
-> +QEMU's arm-softmmu and aarch64-softmmu emulation / virtualization targets
-> +provide the following Firmware Configuration interface on the "virt" machine
-> +type:
-> +
-> +- A write-only, 16-bit wide selector (or control) register,
-> +- a read-write, 8-bit wide data register.
-> +
-> +The guest writes a selector value (a key) to the selector register, and then
-> +can read the corresponding data (produced by QEMU) via the data port. If the
-> +selected entry is writable, the guest can rewrite it through the data port. The
-> +authoritative registry of the valid selector values and their meanings is the
-> +QEMU source code.
-> +
-> +QEMU exposes the control and data register to x86 guests at fixed IO ports. ARM
-> +guests can access them as memory mapped registers, and their location is
-> +communicated to the guest's UEFI firmware in the DTB that QEMU places at the
-> +bottom of the guest's DRAM.
+> Just to check: no memory reservations required for any reason?
+> 
+> There also don't appear to be any memory nodes. Typically if that's
+> filled in by the bootloader/FW we'd have an empty node (or one with a
+> zero size entry) and a comment regarding the FW.
 
-What exactly is this interface used for? And what's the protocol that
-goes over the read/write sequences descrbied above? Is there any
-documentation of that we can refer to here?
+I add the memory node to board dtsi file because memory information
+is more dependent on on h/w target than SoC.
 
-Is version information probeable from this, or does that need to be
-described?
+> 
+>> +/ {
+>> +       compatible = "samsung,exynos5433";
+>> +       #address-cells = <1>;
+>> +       #size-cells = <1>;
+> 
+> Not two, on both counts? The CPUs can address more than 32 bits.
 
-> +The guest kernel is not expected to use these registers (although it is
-> +certainly allowed to); the device tree bindings are documented here because
-> +this is where device tree bindings reside in general.
-> +
-> +The addresses and sizes of the Firmware Configuration registers are given by
-> +the /fw-cfg node. The "virt" board invariably uses <2> as #size-cells and
-> +#address-cells in the context of this node.
+You're right. I'll fix it as two and then retry to test it.
 
-This paragraph can go -- #address-cells and #size-cells are
-well-understood common properties.
+> 
+> Is there nothing in the physical address space above 0xffffffff?
+> 
+> [...]
+> 
+>> +       cpus {
+>> +               #address-cells = <2>;
+>> +               #size-cells = <0>;
+>> +
+>> +               cpu0: cpu@100 {
+>> +                       device_type = "cpu";
+>> +                       compatible = "arm,cortex-a53", "arm,armv8";
+>> +                       enable-method = "psci";
+> 
+> While the CPU nodes have enable-methods, I didn't spot a PSCI node
+> anywhere, so this dts cannot possibly have been used to bring up an SMP
+> system.
+> 
+> How has this dts been tested?
+> 
+> What PSCI revision have you implemented? Have have you tested it?
 
-> +
-> +The "reg" property is therefore an array of four uint64_t elements (eight
-> +uint32_t cells in total), the first uint64_t pair describing the address and
-> +size of the control register, the second uint64_t pair describing the address
-> +and size of the data register. (See
-> +<http://devicetree.org/Device_Tree_Usage#How_Addressing_Works>.)
+My mistake,
+Exynos5433 supports PSCI v0.1. I'll add following PSCI nodes: 
+I tested the boot of secondary cpu.
 
-The reg property is a list of <address size> tuples. The size of the
-entiries depends on #address-cells and #size-cells in the parent node,
-but they are certainly not guaranteed to be uint64_t values (if nothing
-else, they're encoded big-endian in the DTB). We just need to describe
-what the entries are w.r.t. the device, not the particulars of the DTB
-format.
+	psci {
+		compatible = "arm,psci";
+		method = "smc";
+		cpu_off = <0x84000002>;
+		cpu_on = <0xC4000003>;
+	};
 
-Are these registers always contiguous? I assume so, and vif so you can
-cover them with a single reg entry (read it as 'region' rather than
-'register').
+> 
+> I take it from the presence of GICH/GICV in the gic node that CPUs enter
+> the kernel at EL2?
+> 
+>> +                       reg = <0x0 0x100>;
+>> +                       clock-frequency = <1050000000>;
+> 
+> What uses this?
 
-> +
-> +The first string in the "compatible" property is "fw-cfg,mmio".
+It is un-used. I'll drop it.
 
-"fw-cfg" is not a vendor prefix. I guess we need a "qemu" vendor prefix?
-Then we'd have something like "qemu,fw-cfg-mmio" as the compatible
-string.
+> 
+>> +               };
+> 
+> [...]
+> 
+>> +       soc: soc {
+>> +               compatible = "simple-bus";
+>> +               #address-cells = <1>;
+>> +               #size-cells = <1>;
+>> +               ranges;
+>> +
+>> +               fixed-rate-clocks {
+>> +                       #address-cells = <1>;
+>> +                       #size-cells = <0>;
+>> +
+>> +                       xusbxti: clock@0 {
+>> +                               compatible = "fixed-clock";
+>> +                               clock-output-names = "xusbxti";
+>> +                               #clock-cells = <0>;
+>> +                       };
+>> +               };
+> 
+> Get rid of the fixed-rate-clocks container node. It's pointless and
+> messy. Given you only have one there's no need for the bogus
+> unit-address either.
 
-Also, the string should not be required to be the first entry in the
-list, as that breaks the fallback semantics of the compatible list. The
-string should just need to be present in the list.
+OK, I'll remove unneeded code and will add following dt node for fin_pll.
 
-Please try to format the binding something like:
+	fin_pll: xxti {
+		compatible = "fixed-clock";
+		clock-output-names = "fin_pll";
+		#clock-cells = <0>;
+	};
 
----->8----
-Required properties:
+> 
+>> +
+>> +               cmu_top: clock-controller@0x10030000{
+> 
+> s/@0x/@/ -- a unit-address should not have the leading '0x'. Please
+> apply that to the rest of the file.
 
-- compatible: should contain "qemu,fw-cfg-mmio".
+I'll remove '0x'.
 
-- reg: The MMIO regions used by the device:
-  * The first entry describes the control register.
-  * The second entry describes the data register.
----->8----
+> 
+>> +                       compatible = "samsung,exynos5433-cmu-top";
+>> +                       reg = <0x10030000 0x0c04>;
+>> +                       #clock-cells = <1>;
+>> +               };
+> 
+> [...]
+> 
+>> +               mct@101c0000 {
+>> +                       compatible = "samsung,exynos4210-mct";
+>> +                       reg = <0x101c0000 0x800>;
+>> +                       interrupts = <0 102 0>, <0 103 0>, <0 104 0>, <0 105 0>,
+>> +                               <0 106 0>, <0 107 0>, <0 108 0>, <0 109>,
+>> +                               <0 110 0>, <0 111 0>, <0 112 0>, <0 113 0>;
+>> +                       clocks = <&cmu_top CLK_FIN_PLL>, <&cmu_peris CLK_PCLK_MCT>;
+>> +                       clock-names = "fin_pll", "mct";
+>> +               };
+> 
+> Hase this block had no changes whatsoever since its use in Exynos4210?
+> Do we not need a "samsung,exynos5433-mct" comaptible string too?
 
-Though I hope we can just use a single reg entry to cover all the
-registers the device has.
+The type of Exynos5433's MCT(Multi-Core Timer) IP is the same with the type of Exynos4210 MCT.
+Just Exynos5433 have eight local timer for Octa cores.
 
-> +
-> +Example:
-> +
-> +/ {
-> +	#size-cells = <0x2>;
-> +	#address-cells = <0x2>;
-> +
-> +	fw-cfg@9020000 {
-> +		reg = <0x0 0x9020000 0x0 0x2 0x0 0x9020002 0x0 0x1>;
+           CPU0       CPU1       CPU2       CPU3       CPU4       CPU5       CPU6       CPU7       
+134:          0          0          0          0          0          0          0          0       GIC 134  mct_comp_irq
+138:       3189          0          0          0          0          0          0          0       GIC 138  mct_tick0
+139:          0       2670          0          0          0          0          0          0       GIC 139  mct_tick1
+140:          0          0       2763          0          0          0          0          0       GIC 140  mct_tick2
+141:          0          0          0       2732          0          0          0          0       GIC 141  mct_tick3
+142:          0          0          0          0       2998          0          0          0       GIC 142  mct_tick4
+143:          0          0          0          0          0       2664          0          0       GIC 143  mct_tick5
+144:          0          0          0          0          0          0       2485          0       GIC 144  mct_tick6
+145:          0          0          0          0          0          0          0       2681       GIC 145  mct_tick7
 
-Please bracket list entries individually, e.g.
+But, existing exynos-mct.c driver(drivers/clocksource/exynos-mct.c) used
+'register_current_timer_delay()' function which is supported on arm 32bit.
+I fix it as following diff and then I'll send it to support 64-bit Exynos SoC on exynos-mct.c.
 
-	reg = <0x0 0x9020000 0x0 0x2>,
-	      <0x0 0x9020002 0x0 0x1>;
+ drivers/clocksource/Kconfig      | 1 -
+ drivers/clocksource/exynos_mct.c | 4 ++++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-> +		compatible = "fw-cfg,mmio";
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index 9042060..27ef3fa 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -134,7 +134,6 @@ config CLKSRC_METAG_GENERIC
 
-And please place the compatible property before the reg (it makes things
-easier to read).
+ config CLKSRC_EXYNOS_MCT
+        def_bool y if ARCH_EXYNOS
+-       depends on !ARM64
+        help
+          Support for Multi Core Timer controller on Exynos SoCs.
 
-Thanks,
-Mark.
+diff --git a/drivers/clocksource/exynos_mct.c b/drivers/clocksource/exynos_mct.c
+index 9403061..d9c7dbb 100644
+--- a/drivers/clocksource/exynos_mct.c
++++ b/drivers/clocksource/exynos_mct.c
+@@ -223,6 +223,7 @@ static u64 notrace exynos4_read_sched_clock(void)
+        return exynos4_read_count_32();
+ }
+
++#if !defined(CONFIG_ARM64)
+ static struct delay_timer exynos4_delay_timer;
+
+ static cycles_t exynos4_read_current_timer(void)
+@@ -231,14 +232,17 @@ static cycles_t exynos4_read_current_timer(void)
+                         "cycles_t needs to move to 32-bit for ARM64 usage");
+        return exynos4_read_count_32();
+ }
++#endif
+
+ static void __init exynos4_clocksource_init(void)
+ {
+        exynos4_mct_frc_start();
+
++#if !defined(CONFIG_ARM64)
+        exynos4_delay_timer.read_current_timer = &exynos4_read_current_timer;
+        exynos4_delay_timer.freq = clk_rate;
+        register_current_timer_delay(&exynos4_delay_timer);
++#endif
+
+> 
+>> +
+>> +               gic:interrupt-controller@11001000 {
+>> +                       compatible = "arm,cortex-a15-gic";
+> 
+> Given this is multi-cluster, surely this is an external GIC-400, for
+> which we have a supported compatible string?
+> 
+> So this should at least be:
+> 
+> 	compatible = "arm,gic-400", "arm,cortex-a15-gic";
+
+Exynos5433 used GIC-400. I'll modify it as following:
+
+ 	compatible = "arm,gic-400";
+
+> 
+>> +                       #interrupt-cells = <3>;
+>> +                       interrupt-controller;
+>> +                       reg =   <0x11001000 0x1000>,
+>> +                               <0x11002000 0x1000>,
+>> +                               <0x11004000 0x2000>,
+>> +                               <0x11006000 0x2000>;
+> 
+> As far as I am aware, the GICC size is 8KiB. Regardless of whether we
+> currently use the second page of registers, they should be described.
+
+The GICC (CPU Interface Register) register of Exynos5433 is range of 0x1100_2000 ~ 0x1100_2100.
+But, I'll modify GICC size from 4KiB to 8KiB as following according to your comment:
+	<0x11002000 0x1000> -> <0x11002000 0x2000>
+
+> 
+>> +                       interrupts = <1 9 0xf04>;
+>> +               };
+>> +
+>> +               serial_0: serial@14C10000 {
+> 
+> Nit: Please be consistent with capitalisation of hex. IMO it's better
+> to leave it all lower-case.
+
+I'll use the lower-case for all base address.
+
+> 
+> [...]
+> 
+>> +               timer {
+>> +                       compatible = "arm,armv8-timer";
+>> +                       interrupts = <1 13 0xff01>,
+>> +                                    <1 14 0xff01>,
+>> +                                    <1 11 0xff01>,
+>> +                                    <1 10 0xff01>;
+>> +                       clock-frequency = <24000000>;
+>> +                       use-clocksource-only;
+>> +                       use-physical-timer;
+> 
+> As Marc said, NAK for these last three properties.
+> 
+> There is no excuse for not setting CNTFRQ_EL0, especially given a PSCI
+> implementation. The last two properties have never been supported in
+> mainline, and shouldn't be necessary regardless.
+
+OK, I'll remove last three properties.
+
+Thanks for your review sincerely.
+
+Best Regards,
+Chanwoo Choi
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
