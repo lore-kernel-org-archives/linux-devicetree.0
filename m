@@ -1,102 +1,63 @@
-From: Lukasz Majewski <l.majewski@majess.pl>
-Subject: Re: [PATCHv2 1/1] thermal: cpu_cooling: check for the readiness of
- cpufreq layer
-Date: Fri, 28 Nov 2014 11:18:24 +0100
-Message-ID: <20141128111824.533c4641@jawa>
-References: <1417097577-3548-1-git-send-email-edubezval@gmail.com>
- <CAKohponu_PRrqsuMdCJDznhiO_-=iCaYPhCCad8F4WS3rNxo5A@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] dt: bindings: add ath10k wireless device
+Date: Fri, 28 Nov 2014 11:23:08 +0100
+Message-ID: <5247714.HacITJUipJ@wuerfel>
+References: <20141127120727.17546.61202.stgit@potku.adurom.net> <3202372.2AaH3c4qv1@wuerfel> <87fvd3sl9c.fsf@kamboji.qca.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7202054068646201035=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAKohponu_PRrqsuMdCJDznhiO_-=iCaYPhCCad8F4WS3rNxo5A@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, Eduardo Valentin <edubezval@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lukasz Majewski <l.majewski@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Zhang Rui <rui.zhang@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87fvd3sl9c.fsf-HodKDYzPHsUD5k0oWYwrnHL1okKdlPRT@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
+Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, toshik-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---===============7202054068646201035==
-Content-Type: multipart/signed; micalg=PGP-SHA1;
- boundary="Sig_/2y2TlDVtawGQDt5HAADLGWz"; protocol="application/pgp-signature"
+On Friday 28 November 2014 11:54:39 Kalle Valo wrote:
+> 
+> Right now ath10k does not support that, but in the future we might want
+> to add mac address as well. We need to do some testing with the firmware
+> to make sure that we can safely change the "main" address from ath10k.
 
---Sig_/2y2TlDVtawGQDt5HAADLGWz
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+This is from Documentation/devicetree/bindings/net/ethernet.txt:
 
-On Fri, 28 Nov 2014 13:35:49 +0530
-Viresh Kumar <viresh.kumar@linaro.org> wrote:
+- local-mac-address: array of 6 bytes, specifies the MAC address that was
+  assigned to the network device;
+- mac-address: array of 6 bytes, specifies the MAC address that was last used by
+  the boot program; should be used in cases where the MAC address assigned to
+  the device by the boot program is different from the "local-mac-address"
+  property;
 
-> On 27 November 2014 at 19:42, Eduardo Valentin <edubezval@gmail.com>
-> wrote:
-> > (I'm sorry VireshK, I am still using my normal practice) :-)
->=20
-> That's fine :)
->=20
-> > diff --git a/drivers/thermal/cpu_cooling.c
-> > b/drivers/thermal/cpu_cooling.c index 1ab0018..bed3fa2 100644
-> > --- a/drivers/thermal/cpu_cooling.c
-> > +++ b/drivers/thermal/cpu_cooling.c
-> > @@ -440,6 +440,11 @@ __cpufreq_cooling_register(struct device_node
-> > *np, int ret =3D 0, i;
-> >         struct cpufreq_policy policy;
-> >
-> > +       if (!cpufreq_frequency_get_table(0)) {
-> > +               pr_err("cpu_cooling: cpufreq layer not ready!
-> > Deferring.\n");
->=20
-> Throwing an error here doesn't look to be the right thing. Ultimately
-> we will register the cooling dev when probed again after some time.
->=20
-> So, a pr_debug() suits more here.
->=20
-> Also, this breaks existing exynos thermal drivers as they don't handle
-> -EPROBE_DEFER well right now.
+If the address is fixed, you might still be able to use the local-mac-address
+property to communicate the main address. Normally you only have to pass
+the mac address in DT if the device itself doesn't know the address. Do you
+know where the main address is stored? If it's always known to the card,
+we don't need to pass it, and if the card doesn't know it, I suspect it would
+be safe to change it.
 
-Unfortunately Viresh is correct here. Current (before rework) Exynos
-TMU driver expects that cpu_cooling device will succeed.
+> And because of Virtual AP (mBSSID) feature we actually would need to
+> provide multiple addresses, not just one. Maybe with addr_mask like
+> struct wiphy has?
+> 
+>  * @perm_addr: permanent MAC address of this device
+>  * @addr_mask: If the device supports multiple MAC addresses by masking,
+>  *      set this to a mask with variable bits set to 1, e.g. if the last
+>  *      four bits are variable then set it to 00-00-00-00-00-0f. The actual
+>  *      variable bits shall be determined by the interfaces added, with
+>  *      interfaces not matching the mask being rejected to be brought up.
+> 
+>         /* permanent MAC address(es) */
+>         u8 perm_addr[ETH_ALEN];
+>         u8 addr_mask[ETH_ALEN];
 
->=20
-> I reached here, because one of my patches had something similar to
-> what you wrote. Just for this file though, haven't updated any other
-> drivers though.
->=20
-> Will be sending you my small patchset by end of day today, please see
-> if they make any sense at all..
+We don't have a common binding for this yet, I think drivers that do this
+at the moment just know how many addresses they are allowed to take.
 
-Best regards,
-=C5=81ukasz Majewski
+If the mask is generally considered useful, we could probably add that to
+the binding though.
 
---Sig_/2y2TlDVtawGQDt5HAADLGWz
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Disposition: attachment; filename=signature.asc
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlR4S/EACgkQf9/hG2YwgjEx1gCfRbftm8wzjq7xJwyC/PFISSNC
-dloAoMnOf3s6RAA95fkGjSsfp1md5fns
-=hgj5
------END PGP SIGNATURE-----
-
---Sig_/2y2TlDVtawGQDt5HAADLGWz--
-
-
---===============7202054068646201035==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============7202054068646201035==--
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
