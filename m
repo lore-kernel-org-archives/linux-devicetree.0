@@ -1,80 +1,83 @@
-From: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] dt: bindings: add ath10k wireless device
-Date: Fri, 28 Nov 2014 14:21:39 +0200
-Message-ID: <874mtjsegc.fsf@kamboji.qca.qualcomm.com>
-References: <20141127120727.17546.61202.stgit@potku.adurom.net>
-	<3202372.2AaH3c4qv1@wuerfel> <87fvd3sl9c.fsf@kamboji.qca.qualcomm.com>
-	<5247714.HacITJUipJ@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5247714.HacITJUipJ@wuerfel> (Arnd Bergmann's message of "Fri, 28
-	Nov 2014 11:23:08 +0100")
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, toshik-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+From: Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [kernel PATCH] devicetree: document ARM bindings for QEMU's Firmware Config interface
+Date: Fri, 28 Nov 2014 13:26:44 +0100
+Message-ID: <1417177604-21194-1-git-send-email-lersek@redhat.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
+Peter Maydell suggested that we describe new devices / DTB nodes in the
+kernel Documentation tree that we expose to arm "virt" guests in QEMU.
 
-> On Friday 28 November 2014 11:54:39 Kalle Valo wrote:
->> 
->> Right now ath10k does not support that, but in the future we might want
->> to add mac address as well. We need to do some testing with the firmware
->> to make sure that we can safely change the "main" address from ath10k.
->
-> This is from Documentation/devicetree/bindings/net/ethernet.txt:
->
-> - local-mac-address: array of 6 bytes, specifies the MAC address that was
->   assigned to the network device;
-> - mac-address: array of 6 bytes, specifies the MAC address that was last used by
->   the boot program; should be used in cases where the MAC address assigned to
->   the device by the boot program is different from the "local-mac-address"
->   property;
->
-> If the address is fixed, you might still be able to use the local-mac-address
-> property to communicate the main address. Normally you only have to pass
-> the mac address in DT if the device itself doesn't know the address. Do you
-> know where the main address is stored?
+Although the kernel is not required to access the fw_cfg interface,
+"Documentation/devicetree/bindings/arm" is probably the best central spot
+to keep the fw_cfg description in.
 
-The ath10k main address is stored in the calibration data and the
-firmware delivers the address to ath10k.
+Suggested-by: Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/fw-cfg.txt | 47 ++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/fw-cfg.txt
 
-> If it's always known to the card, we don't need to pass it, and if the
-> card doesn't know it, I suspect it would be safe to change it.
-
-I suspect we can change the address afterwards, but I need to check to
-be sure.
-
->> And because of Virtual AP (mBSSID) feature we actually would need to
->> provide multiple addresses, not just one. Maybe with addr_mask like
->> struct wiphy has?
->> 
->>  * @perm_addr: permanent MAC address of this device
->>  * @addr_mask: If the device supports multiple MAC addresses by masking,
->>  *      set this to a mask with variable bits set to 1, e.g. if the last
->>  *      four bits are variable then set it to 00-00-00-00-00-0f. The actual
->>  *      variable bits shall be determined by the interfaces added, with
->>  *      interfaces not matching the mask being rejected to be brought up.
->> 
->>         /* permanent MAC address(es) */
->>         u8 perm_addr[ETH_ALEN];
->>         u8 addr_mask[ETH_ALEN];
->
-> We don't have a common binding for this yet, I think drivers that do this
-> at the moment just know how many addresses they are allowed to take.
->
-> If the mask is generally considered useful, we could probably add that to
-> the binding though.
-
-Currently ath10k supports up to 8 Virtual APs but the manufacturer can
-choose to allocate any number of MAC addresses (1-8). Something like
-addr_mask would be good way to inform ath10k what address range it has
-available.
-
+diff --git a/Documentation/devicetree/bindings/arm/fw-cfg.txt b/Documentation/devicetree/bindings/arm/fw-cfg.txt
+new file mode 100644
+index 0000000..d131453
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/fw-cfg.txt
+@@ -0,0 +1,47 @@
++* QEMU Firmware Configuration bindings for ARM
++
++QEMU's arm-softmmu and aarch64-softmmu emulation / virtualization targets
++provide the following Firmware Configuration interface on the "virt" machine
++type:
++
++- A write-only, 16-bit wide selector (or control) register,
++- a read-write, 8-bit wide data register.
++
++The guest writes a selector value (a key) to the selector register, and then
++can read the corresponding data (produced by QEMU) via the data port. If the
++selected entry is writable, the guest can rewrite it through the data port. The
++authoritative registry of the valid selector values and their meanings is the
++QEMU source code.
++
++QEMU exposes the control and data register to x86 guests at fixed IO ports. ARM
++guests can access them as memory mapped registers, and their location is
++communicated to the guest's UEFI firmware in the DTB that QEMU places at the
++bottom of the guest's DRAM.
++
++The guest kernel is not expected to use these registers (although it is
++certainly allowed to); the device tree bindings are documented here because
++this is where device tree bindings reside in general.
++
++The addresses and sizes of the Firmware Configuration registers are given by
++the /fw-cfg node. The "virt" board invariably uses <2> as #size-cells and
++#address-cells in the context of this node.
++
++The "reg" property is therefore an array of four uint64_t elements (eight
++uint32_t cells in total), the first uint64_t pair describing the address and
++size of the control register, the second uint64_t pair describing the address
++and size of the data register. (See
++<http://devicetree.org/Device_Tree_Usage#How_Addressing_Works>.)
++
++The first string in the "compatible" property is "fw-cfg,mmio".
++
++Example:
++
++/ {
++	#size-cells = <0x2>;
++	#address-cells = <0x2>;
++
++	fw-cfg@9020000 {
++		reg = <0x0 0x9020000 0x0 0x2 0x0 0x9020002 0x0 0x1>;
++		compatible = "fw-cfg,mmio";
++	};
++};
 -- 
-Kalle Valo
+1.8.3.1
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
