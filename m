@@ -1,117 +1,99 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v3 3/5] arm64: dts: Add support for Spreadtrum SC9836 SoC
- in dts and Makefile
-Date: Fri, 28 Nov 2014 15:09:12 +0000
-Message-ID: <20141128150912.GI7144@arm.com>
-References: <Sharkl64-v3>
- <1416917818-10506-1-git-send-email-chunyan.zhang@spreadtrum.com>
- <1416917818-10506-4-git-send-email-chunyan.zhang@spreadtrum.com>
- <20141127115042.GE857@leverpostej>
- <20141127121214.GF11511@e104818-lin.cambridge.arm.com>
- <20141127134309.GJ857@leverpostej>
- <20141128142913.GB5393@localhost>
- <20141128143532.GI25883@leverpostej>
- <20141128144412.GG7144@arm.com>
- <20141128150325.GC24370@e104818-lin.cambridge.arm.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/8] regulator: MT6397: Add support for MT6397
+ regulator
+Date: Fri, 28 Nov 2014 15:22:47 +0000
+Message-ID: <20141128152247.GR7712@sirena.org.uk>
+References: <1417146874-5232-1-git-send-email-flora.fu@mediatek.com>
+ <1417146874-5232-4-git-send-email-flora.fu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="9GzRb0CqzA06KMG9"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20141128150325.GC24370@e104818-lin.cambridge.arm.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "andrew@lunn.ch" <andrew@lunn.ch>, "heiko@sntech.de" <heiko@sntech.de>, "gnomes@lxorguk.ukuu.org.uk" <gnomes@lxorguk.ukuu.org.uk>, Chunyan Zhang <chunyan.zhang@spreadtrum.com>, "jslaby@suse.cz" <jslaby@suse.cz>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "lanqing.liu@spreadtrum.com" <lanqing.liu@spreadtrum.com>, Pawel Moll <Pawel.Moll@arm.com>, "corbet@lwn.net" <corbet@lwn.net>, "zhang.lyra@gmail.com" <zhang.lyra@gmail.com>, "zhizhou.zhang@spreadtrum.com" <zhizhou.zhang@spreadtrum.com>, "geng.ren@spreadtrum.com" <geng.ren@spreadtrum.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "shawn.guo@freescale.com" <shawn.guo@freescale.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "orsonzhai@gmail.com" <orsonzhai@gmail.com>, "florian.vaussard@epfl.ch" <flori>
+In-Reply-To: <1417146874-5232-4-git-send-email-flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Flora Fu <flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Sandeep Nair <sandeep_n-l0cyMroinI0@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Joe.C" <yi>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 28, 2014 at 03:03:26PM +0000, Catalin Marinas wrote:
-> On Fri, Nov 28, 2014 at 02:44:12PM +0000, Will Deacon wrote:
-> > On Fri, Nov 28, 2014 at 02:35:32PM +0000, Mark Rutland wrote:
-> > > On Fri, Nov 28, 2014 at 02:29:13PM +0000, Catalin Marinas wrote:
-> > > > On Thu, Nov 27, 2014 at 01:43:09PM +0000, Mark Rutland wrote:
-> > > > > On Thu, Nov 27, 2014 at 12:12:15PM +0000, Catalin Marinas wrote:
-> > > > > > On Thu, Nov 27, 2014 at 11:50:43AM +0000, Mark Rutland wrote:
-> > > > > > > On Tue, Nov 25, 2014 at 12:16:56PM +0000, Chunyan Zhang wrote:
-> > > > > > > > +
-> > > > > > > > +       timer {
-> > > > > > > > +               compatible = "arm,armv8-timer";
-> > > > > > > > +               interrupts = <1 13 0xff01>,
-> > > > > > > > +                            <1 14 0xff01>,
-> > > > > > > > +                            <1 11 0xff01>,
-> > > > > > > > +                            <1 10 0xff01>;
-> > > > > > > > +               clock-frequency = <26000000>;
-> > > > > > > 
-> > > > > > > Please remove the clock-frequency property. Your FW should initialise
-> > > > > > > CNTFRQ_EL0 on all CPUs (certainly PSCI 0.2 requires that you do this).
-> > > > > > 
-> > > > > > Since this comes up regularly, I think we need a dev_warn() in the arch
-> > > > > > timer driver when CONFIG_ARM64.
-> > > > > 
-> > > > > I'll ack such a patch ;)
-> > > > 
-> > > > How rude would this be?
-> > > > 
-> > > > diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-> > > > index 2133f9d59d06..aaaf3433ccb9 100644
-> > > > --- a/drivers/clocksource/arm_arch_timer.c
-> > > > +++ b/drivers/clocksource/arm_arch_timer.c
-> > > > @@ -371,7 +371,8 @@ arch_timer_detect_rate(void __iomem *cntbase, struct device_node *np)
-> > > > 		return;
-> > > >  
-> > > > 	/* Try to determine the frequency from the device tree or CNTFRQ */
-> > > > -	if (of_property_read_u32(np, "clock-frequency", &arch_timer_rate)) {
-> > > > +	if (IS_ENABLED(CONFIG_ARM64) ||
-> > > > +	    of_property_read_u32(np, "clock-frequency", &arch_timer_rate)) {
-> > > > 		if (cntbase)
-> > > > 			arch_timer_rate = readl_relaxed(cntbase + CNTFRQ);
-> > > > 		else
-> > > >
-> > > 
-> > > Probably too rude, given it doesn't WARN() the user.
-> > 
-> > We override broken hardware ID registers all the time in device-tree without
-> > dumping stack. Why is this any different?
-> 
-> I'm not for dumping the stack, it's not relevant (just more noise).
-> 
-> > > We should be extremely loud if we see the clock-frequency property on an
-> > > arm64 system. Whether or not we should ignore the property is another
-> > > matter.
-> > 
-> > I don't really see the point in ignoring it. We will see broken hardware
-> > [1] and this is just preventing ourselves from working around it. I'd much
-> > rather have arch-timers with a "clock-frequence" property than have some
-> > other timer instead because the kernel driver is being stubborn.
-> 
-> I agree that sooner or later we'll need a workaround (we already did for
-> Juno). My point is that many consider such overriding behaviour to be
-> the default - i.e. don't bother writing any sane value in CNTFRQ in
-> firmware at boot because Linux can cope without. It gets worse when
-> companies develop their firmware long before starting to upstream kernel
-> patches, so too late to fix it.
-> 
-> > [1] A previous version of the Juno firmware, for example.
-> 
-> What about CONFIG_BROKEN_FIRMWARE, default off?
 
-I'd rather have a `firmware test' module, which could be as noisy as it
-likes when it finds issues like this. It could also do things like fuzz the
-PSCI interface.
+--9GzRb0CqzA06KMG9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> In the meantime I think we can be more tolerant:
-> 
-> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-> index 2133f9d59d06..87f67a93fcc7 100644
-> --- a/drivers/clocksource/arm_arch_timer.c
-> +++ b/drivers/clocksource/arm_arch_timer.c
-> @@ -376,6 +376,8 @@ arch_timer_detect_rate(void __iomem *cntbase, struct device_node *np)
->  			arch_timer_rate = readl_relaxed(cntbase + CNTFRQ);
->  		else
->  			arch_timer_rate = arch_timer_get_cntfrq();
-> +	} else if (IS_ENABLED(CONFIG_ARM64)) {
-> +		pr_warn("Architected timer frequency overridden by DT (broken firmware?)\n");
->  	}
+On Fri, Nov 28, 2014 at 11:54:29AM +0800, Flora Fu wrote:
 
-That looks sensible. It would be interesting to print the value of CNTFRQ
-too.
+> @@ -96,5 +97,4 @@ obj-$(CONFIG_REGULATOR_WM8350) +=3D wm8350-regulator.o
+>  obj-$(CONFIG_REGULATOR_WM8400) +=3D wm8400-regulator.o
+>  obj-$(CONFIG_REGULATOR_WM8994) +=3D wm8994-regulator.o
+> =20
+> -
+>  ccflags-$(CONFIG_REGULATOR_DEBUG) +=3D -DDEBUG
 
-Will
+Random whitespace change here...
+
+> +	/* For HW design, buck voltage control register has two parts.
+> +	 * part 1: vsel_reg for register mode
+> +	 * part 2: voselon_reg or hw control mode
+> +	 * Both parts should be updated and sync when user set voltage.
+> +	 */
+
+Why does nothing else in the driver know about this "hw control mode" -
+what does it actually mean, shouldn't it affect some of the other
+operations?
+
+> +	ret =3D regmap_update_bits(rdev->regmap, info->desc.vsel_reg,
+> +		info->desc.vsel_mask, sel);
+> +	if (ret !=3D 0) {
+> +		dev_err(&rdev->dev, "Failed to update vsel: %d\n", ret);
+> +		return ret;
+> +	}
+> +	ret =3D regmap_update_bits(rdev->regmap, info->voselon_reg,
+
+Missing blank line between these blocks.
+
+> +static int mt6397_buck_get_voltage_sel(struct regulator_dev *rdev)
+> +{
+
+> +static int mt6397_regulator_is_enabled(struct regulator_dev *rdev)
+> +{
+
+To repeat my comments on the last version: please use the generic regmap
+operations rather than copying them.
+
+> +	np =3D of_node_get(pdev->dev.parent->of_node);
+> +	if (!np)
+> +		return -EINVAL;
+> +
+> +	regulators =3D of_get_child_by_name(np, "regulators");
+
+To further repeat my previous review comments:
+
+| Define regulators_node and of_match in the regulator desc and you can
+| remove both this table and all your DT matching code in the driver, the
+| core will handle it for you.
+
+Please don't ignore review comments.
+
+--9GzRb0CqzA06KMG9
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUeJNGAAoJECTWi3JdVIfQuWoH/jYZ78/0hq8D2jvV/qB6YYc2
+SR2UIn5Hy4g1+O/gkyC108xKxfQz0EW5C595VOGWni6GP4qGvBJNsEXIc/bg32Z2
+CVbUeEccj34Xu5U38HR6HR2xUuIJFmKOeHjGWe2hImfC/QfitWphbnHtcIVVzkFX
+LUj1L9V/9q9lGKGzinWjiN2WB/7SMW1IJPJfbeoIdNRMV6lvnFZKCd/V/sUw/De3
+HOqZ0PsdM7COkpm873alMPG3q2aM4usq17SZKso8Xr3Hh9xcgEQTEalRHINnLes/
+Txvyc2rAZJNAYmnndsjhtznMREtD9Ej0+NSOvAj/RQzv0q6kMH4q3PUlT/wZK/w=
+=MlFV
+-----END PGP SIGNATURE-----
+
+--9GzRb0CqzA06KMG9--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
