@@ -1,45 +1,45 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 1/2] mmc: core: allow a reset gpio to be configured.
-Date: Fri, 28 Nov 2014 12:56:33 +0100
-Message-ID: <CAPDyKFrx98NspRU1nV3uJ6XwTuA4tZQkrYTfDoeXGR+f5htODQ@mail.gmail.com>
-References: <20141108000919.5629.55381.stgit@notabene.brown>
-	<20141108001411.5629.25179.stgit@notabene.brown>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 3/5] pinctrl: exynos: add exynos5410 SoC specific data
+Date: Fri, 28 Nov 2014 12:59:35 +0100
+Message-ID: <CACRpkdZie8JJGxSPkc8PPvC3qZkWhe5WqmpSKSoDFwqRd6tR_Q@mail.gmail.com>
+References: <547104D5.4030803@suse.de>
+	<1416695185-5198-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20141108001411.5629.25179.stgit@notabene.brown>
-Sender: linux-mmc-owner@vger.kernel.org
-To: NeilBrown <neilb@suse.de>
-Cc: Chris Ball <chris@printf.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, GTA04 owners <gta04-owner@goldelico.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1416695185-5198-1-git-send-email-afaerber@suse.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Tomasz Figa <tomasz.figa@gmail.com>
+Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene@kernel.org>, =?UTF-8?B?6rmA7ZWZ7KO8?= <ruppi.kim@hardkernel.com>, Humberto Naves <hsnaves@gmail.com>, Jan Kiszka <jan.kiszka@siemens.com>, Johann Pfefferl <johann.pfefferl@siemens.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Abraham <thomas.abraham@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:PIN CONTROL SUBSY..." <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8 November 2014 at 01:14, NeilBrown <neilb@suse.de> wrote:
-> If the regulator supplying an SDIO device is shared
-> with another device, the turning the regulator 'on' and 'off'
-> will not actually cycle power and so will not reset
-> the device.
+On Sat, Nov 22, 2014 at 11:26 PM, Andreas F=C3=A4rber <afaerber@suse.de=
+> wrote:
+
+> From: Hakjoo Kim <ruppi.kim@hardkernel.com>
 >
-> This is particularly a problem for some wi2si wireless modules which
-> have a BT module on chip and can share power lines.
-> Without the power-cycle, subsequent reset commands fail.
+> Add Samsung EXYNOS5410 SoC specific data to enable pinctrl
+> support for all platforms based on EXYNOS5410.
 >
-> So allow a 'reset' gpio to be specified.  If provided, the
-> line is asserted during power-up.
+> Signed-off-by: Hakjoo Kim <ruppi.kim@hardkernel.com>
+> [AF: Rebased onto Exynos5260 and irq_chip consolidation]
+> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+> ---
+>  v2 -> v3:
+>  * Rebased (.svc, .{g,w}eint_{con,mask,pend} fields dropped)
+>
+>  v1 -> v2:
+>  * Filled in Sob from Hakjoo Kim
 
-There have been several attempts to fix similar issues as this patch
-does. The latest one I posted a few month ago, which wasn't accepted.
-http://comments.gmane.org/gmane.linux.power-management.general/46635
+Is this based on the pinctrl devel branch so I can apply it?
 
-There has also been some off-list discussions on especially how we
-should describe this in DT and there were actually some consensus made
-around that. Still I haven't seen any patches on the mailing lists.
+I'd like Tomasz ACK on it first though.
 
-So to summarize, I am really concerned that we keep having these power
-sequence issues for SDIO devices and right now the discussion has been
-on hold. I am considering to hack on it myself, since I am tired of
-waiting. :-)
-
-Regarding this patch, I don't intent to apply it.
-
-Kind regards
-Uffe
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
