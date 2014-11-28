@@ -1,108 +1,68 @@
-From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 3/5] arm64: dts: Add support for Spreadtrum SC9836 SoC
- in dts and Makefile
-Date: Fri, 28 Nov 2014 15:03:26 +0000
-Message-ID: <20141128150325.GC24370@e104818-lin.cambridge.arm.com>
-References: <Sharkl64-v3>
- <1416917818-10506-1-git-send-email-chunyan.zhang@spreadtrum.com>
- <1416917818-10506-4-git-send-email-chunyan.zhang@spreadtrum.com>
- <20141127115042.GE857@leverpostej>
- <20141127121214.GF11511@e104818-lin.cambridge.arm.com>
- <20141127134309.GJ857@leverpostej>
- <20141128142913.GB5393@localhost>
- <20141128143532.GI25883@leverpostej>
- <20141128144412.GG7144@arm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 4/7] regulator: Use ena_gpio supplied with generic
+ regulator bindings
+Date: Fri, 28 Nov 2014 15:07:29 +0000
+Message-ID: <20141128150729.GP7712@sirena.org.uk>
+References: <1417087253-12306-1-git-send-email-k.kozlowski@samsung.com>
+ <1417087253-12306-5-git-send-email-k.kozlowski@samsung.com>
+ <20141127184342.GC7712@sirena.org.uk>
+ <1417170655.18249.24.camel@AMDC1943>
+ <20141128113859.GH7712@sirena.org.uk>
+ <1417184044.18249.39.camel@AMDC1943>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="5YTekl7Q9pOfbcU3"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20141128144412.GG7144-5wv7dgnIgG8@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org" <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "jslaby-AlSwsSmVLrQ@public.gmane.org" <jslaby-AlSwsSmVLrQ@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "lanqing.liu-lxIno14LUO0EEoCn2XhGlw@public.gmane.org" <lanqing.liu-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "corbet-T1hC0tSOHrs@public.gmane.org" <corbet-T1hC0tSOHrs@public.gmane.org>, "zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org" <zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org" <geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "m-karicheri2-l0cyMroinI0@public.gmane.org" <m-karicheri2-l0cyMroinI0@public.gmane.org>, "shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "florian.vaussard-p8DiymsW2f8@public.gmane.org" <flori>
+In-Reply-To: <1417184044.18249.39.camel@AMDC1943>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 28, 2014 at 02:44:12PM +0000, Will Deacon wrote:
-> On Fri, Nov 28, 2014 at 02:35:32PM +0000, Mark Rutland wrote:
-> > On Fri, Nov 28, 2014 at 02:29:13PM +0000, Catalin Marinas wrote:
-> > > On Thu, Nov 27, 2014 at 01:43:09PM +0000, Mark Rutland wrote:
-> > > > On Thu, Nov 27, 2014 at 12:12:15PM +0000, Catalin Marinas wrote:
-> > > > > On Thu, Nov 27, 2014 at 11:50:43AM +0000, Mark Rutland wrote:
-> > > > > > On Tue, Nov 25, 2014 at 12:16:56PM +0000, Chunyan Zhang wrote:
-> > > > > > > +
-> > > > > > > +       timer {
-> > > > > > > +               compatible = "arm,armv8-timer";
-> > > > > > > +               interrupts = <1 13 0xff01>,
-> > > > > > > +                            <1 14 0xff01>,
-> > > > > > > +                            <1 11 0xff01>,
-> > > > > > > +                            <1 10 0xff01>;
-> > > > > > > +               clock-frequency = <26000000>;
-> > > > > > 
-> > > > > > Please remove the clock-frequency property. Your FW should initialise
-> > > > > > CNTFRQ_EL0 on all CPUs (certainly PSCI 0.2 requires that you do this).
-> > > > > 
-> > > > > Since this comes up regularly, I think we need a dev_warn() in the arch
-> > > > > timer driver when CONFIG_ARM64.
-> > > > 
-> > > > I'll ack such a patch ;)
-> > > 
-> > > How rude would this be?
-> > > 
-> > > diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-> > > index 2133f9d59d06..aaaf3433ccb9 100644
-> > > --- a/drivers/clocksource/arm_arch_timer.c
-> > > +++ b/drivers/clocksource/arm_arch_timer.c
-> > > @@ -371,7 +371,8 @@ arch_timer_detect_rate(void __iomem *cntbase, struct device_node *np)
-> > > 		return;
-> > >  
-> > > 	/* Try to determine the frequency from the device tree or CNTFRQ */
-> > > -	if (of_property_read_u32(np, "clock-frequency", &arch_timer_rate)) {
-> > > +	if (IS_ENABLED(CONFIG_ARM64) ||
-> > > +	    of_property_read_u32(np, "clock-frequency", &arch_timer_rate)) {
-> > > 		if (cntbase)
-> > > 			arch_timer_rate = readl_relaxed(cntbase + CNTFRQ);
-> > > 		else
-> > >
-> > 
-> > Probably too rude, given it doesn't WARN() the user.
-> 
-> We override broken hardware ID registers all the time in device-tree without
-> dumping stack. Why is this any different?
 
-I'm not for dumping the stack, it's not relevant (just more noise).
+--5YTekl7Q9pOfbcU3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > We should be extremely loud if we see the clock-frequency property on an
-> > arm64 system. Whether or not we should ignore the property is another
-> > matter.
-> 
-> I don't really see the point in ignoring it. We will see broken hardware
-> [1] and this is just preventing ourselves from working around it. I'd much
-> rather have arch-timers with a "clock-frequence" property than have some
-> other timer instead because the kernel driver is being stubborn.
+On Fri, Nov 28, 2014 at 03:14:04PM +0100, Krzysztof Kozlowski wrote:
+> On pi=C4=85, 2014-11-28 at 11:38 +0000, Mark Brown wrote:
 
-I agree that sooner or later we'll need a workaround (we already did for
-Juno). My point is that many consider such overriding behaviour to be
-the default - i.e. don't bother writing any sane value in CNTFRQ in
-firmware at boot because Linux can cope without. It gets worse when
-companies develop their firmware long before starting to upstream kernel
-patches, so too late to fix it.
+> > This sort of thing is a sign that we're not saving much by moving the
+> > parsing to the core and perhaps there's more flexiblity here...=20
 
-> [1] A previous version of the Juno firmware, for example.
+> The driver receive callbacks (or exposes other kind of interface) for
+> other core-generalized code. Recent example is parsing regulator mode
+> (added by Javier) and .of_map_mode() callback.
 
-What about CONFIG_BROKEN_FIRMWARE, default off?
+Right, but that's actually doing some device specific translation and
+successfully factoring out the bulk of the code - the fact that it's
+taking parameters and returning data is a good sign.  This is a callback
+placed randomly away from any other related code (adding to the
+confusion - it's not integrated into the rest of the flow around this at
+all) without a clear purpose.
 
-In the meantime I think we can be more tolerant:
+> I thought how to do this without this additional set_ena_gpio() call.
+> One way would be to extend the regulator modes (FAST/IDLE/STANDBY/ and
+> GPIO) but this would look somehow unnatural.
 
-diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-index 2133f9d59d06..87f67a93fcc7 100644
---- a/drivers/clocksource/arm_arch_timer.c
-+++ b/drivers/clocksource/arm_arch_timer.c
-@@ -376,6 +376,8 @@ arch_timer_detect_rate(void __iomem *cntbase, struct device_node *np)
- 			arch_timer_rate = readl_relaxed(cntbase + CNTFRQ);
- 		else
- 			arch_timer_rate = arch_timer_get_cntfrq();
-+	} else if (IS_ENABLED(CONFIG_ARM64)) {
-+		pr_warn("Architected timer frequency overridden by DT (broken firmware?)\n");
- 	}
- 
- 	/* Check the timer frequency. */
+Yes, that's absolutely hideous.
+
+--5YTekl7Q9pOfbcU3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUeI+xAAoJECTWi3JdVIfQwhwH/1CrTJZXExrRsl5sFVkCURuQ
+pyRP5xBkiVsZ1fTL4Y/em9spw7tfbx2/iA43qcLyo8YyWN309vVQWcUaVcts2ulg
+TCPAVgVb8EUfrrqPJddIVxCKqURz0qGwdGJFmJvsswG4S6rN9fvN2j8VHTTKstEb
+i0QPy91wNNNl8l12+SGJinE8heOgnXiiplUzDhxtunq+MRZCQdTNoPoeEWRr9pic
+4vYdwTrnwRg/GDd2E+Qdl4lSHaO2BDsmRX4sUlBlD95BIi8MfDOOCAoxmumoUQiU
+FOJqdSvQhkvbXGK/hhTkrTi1DXXYxMNQaCWnDpV+oHvs9D7dDyR2t8b8pkgPxYY=
+=1wcJ
+-----END PGP SIGNATURE-----
+
+--5YTekl7Q9pOfbcU3--
