@@ -1,50 +1,59 @@
-From: Wang Long <long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 0/7] ARM: hisi: enable HiP01 SoC
-Date: Fri, 28 Nov 2014 02:15:43 +0000
-Message-ID: <1417140950-67103-1-git-send-email-long.wanglong@huawei.com>
+From: Wang Long <long.wanglong@huawei.com>
+Subject: [PATCH 1/7] ARM: debug: add HiP01 debug uart
+Date: Fri, 28 Nov 2014 02:15:44 +0000
+Message-ID: <1417140950-67103-2-git-send-email-long.wanglong@huawei.com>
+References: <1417140950-67103-1-git-send-email-long.wanglong@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, yanhaifeng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, obh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peifeiyue-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1417140950-67103-1-git-send-email-long.wanglong@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: xuwei5@hisilicon.com, arnd@arndb.de, yanhaifeng@gmail.com, zhangfei.gao@linaro.org, haojian.zhuang@linaro.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, jason@lakedaemon.net, jh80.chung@samsung.com, khilman@linaro.org, lee.jones@linaro.org, linux@arm.linux.org.uk, long.wanglong@huawei.com, mark.rutland@arm.com, maxime.ripard@free-electrons.com, obh+dt@kernel.org, olof@lixom.net, pawel.moll@arm.com, swarren@nvidia.com, thomas.petazzoni@free-electrons.com
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peifeiyue@huawei.com, huxinwei@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-This series patch enable Hisilicon HiP01 SoC. The HiP01 SoC series
-chip is designed for networking product, it integrates a rich peripheral
-interfaces to support network applications and supports both one 
-core or dual cores and quad cores. The core is Cortex A9. 
+Add the support of Hisilicon HiP01 debug uart.
+The uart of hip01 is 8250 compatible.
 
-Wang Long (7):
-  ARM: debug: add HiP01 debug uart
-  ARM: hisi: enable HiP01 SoC
-  ARM: dts: Add hip01-ca9x2 dts file
-  ARM: config: enable ARCH_HIP01
-  ARM: hisi: add a common smp_prepares_cpus function
-  ARM: hisi: rename secondary_startup function
-  ARM: hisi: enable smp for HiP01
+Signed-off-by: Wang Long <long.wanglong@huawei.com>
+---
+ arch/arm/Kconfig.debug | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
- .../bindings/arm/hisilicon/hisilicon.txt           |  25 +++++
- arch/arm/Kconfig.debug                             |  10 ++
- arch/arm/boot/dts/Makefile                         |   1 +
- arch/arm/boot/dts/hip01-ca9x2.dts                  |  52 ++++++++++
- arch/arm/boot/dts/hip01.dtsi                       | 110 +++++++++++++++++++++
- arch/arm/configs/hisi_defconfig                    |   1 +
- arch/arm/configs/multi_v7_defconfig                |   1 +
- arch/arm/mach-hisi/Kconfig                         |   8 ++
- arch/arm/mach-hisi/core.h                          |   5 +-
- arch/arm/mach-hisi/headsmp.S                       |   2 +-
- arch/arm/mach-hisi/hisilicon.c                     |  10 ++
- arch/arm/mach-hisi/hotplug.c                       |  31 ++++++
- arch/arm/mach-hisi/platsmp.c                       |  56 ++++++++++-
- 13 files changed, 307 insertions(+), 5 deletions(-)
- create mode 100644 arch/arm/boot/dts/hip01-ca9x2.dts
- create mode 100644 arch/arm/boot/dts/hip01.dtsi
-
+diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+index d8f6a2e..ab65e58 100644
+--- a/arch/arm/Kconfig.debug
++++ b/arch/arm/Kconfig.debug
+@@ -240,6 +240,14 @@ choice
+ 		  Say Y here if you want the debug print routines to direct
+ 		  their output to the UART on Highbank based devices.
+ 
++	config DEBUG_HIP01_UART
++		bool "Hisilicon Hip01 Debug UART"
++		depends on ARCH_HIP01
++		select DEBUG_UART_8250
++		help
++		  Say Y here if you want kernel low-level debugging support
++		  on HIP01 UART.
++
+ 	config DEBUG_HIP04_UART
+ 		bool "Hisilicon HiP04 Debug UART"
+ 		depends on ARCH_HIP04
+@@ -1117,6 +1125,7 @@ config DEBUG_UART_PHYS
+ 	default 0x16000000 if ARCH_INTEGRATOR
+ 	default 0x18000300 if DEBUG_BCM_5301X
+ 	default 0x1c090000 if DEBUG_VEXPRESS_UART0_RS1
++	default 0x20001000 if DEBUG_HIP01_UART
+ 	default 0x20060000 if DEBUG_RK29_UART0
+ 	default 0x20064000 if DEBUG_RK29_UART1 || DEBUG_RK3X_UART2
+ 	default 0x20068000 if DEBUG_RK29_UART2 || DEBUG_RK3X_UART3
+@@ -1240,6 +1249,7 @@ config DEBUG_UART_VIRT
+ 	default 0xfef36000 if DEBUG_HIGHBANK_UART
+ 	default 0xfefff700 if ARCH_IOP33X
+ 	default 0xff003000 if DEBUG_U300_UART
++	default 0xffd01000 if DEBUG_HIP01_UART
+ 	default DEBUG_UART_PHYS if !MMU
+ 	depends on DEBUG_LL_UART_8250 || DEBUG_LL_UART_PL01X || \
+ 		DEBUG_UART_8250 || DEBUG_UART_PL01X || DEBUG_MESON_UARTAO || \
 -- 
 1.8.3.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
