@@ -1,101 +1,204 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [kernel PATCH] devicetree: document ARM bindings for QEMU's
- Firmware Config interface
-Date: Fri, 28 Nov 2014 13:33:00 +0000
-Message-ID: <20141128133300.GG25883@leverpostej>
-References: <1417177604-21194-1-git-send-email-lersek@redhat.com>
- <4081425.dh6XptxTnn@wuerfel>
- <54787715.6030407@redhat.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 3/9] clk: sunxi: Add prcm mod0 clock driver
+Date: Fri, 28 Nov 2014 14:37:14 +0100
+Message-ID: <54787A8A.6040209@redhat.com>
+References: <20141126211318.GN25249@lukather> <5476E3A5.4000708@redhat.com> <CAGb2v652m0bCdPWFF4LWwjcrCJZvnLibFPw8xXJ3Q-Ge+_-p7g@mail.gmail.com> <5476F8AB.2000601@redhat.com> <20141127190509.GR25249@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <54787715.6030407-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org" <qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/mixed;
+ boundary="------------070704020809030602050306"
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBF7V4GRQKGQEXW6TOQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20141127190509.GR25249@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Boris Brezillon <boris-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 28, 2014 at 01:22:29PM +0000, Laszlo Ersek wrote:
-> On 11/28/14 13:59, Arnd Bergmann wrote:
-> > On Friday 28 November 2014 13:26:44 Laszlo Ersek wrote:
-> >> +Example:
-> >> +
-> >> +/ {
-> >> +       #size-cells = <0x2>;
-> >> +       #address-cells = <0x2>;
-> >> +
-> >> +       fw-cfg@9020000 {
-> >> +               reg = <0x0 0x9020000 0x0 0x2 0x0 0x9020002 0x0 0x1>;
-> >> +               compatible = "fw-cfg,mmio";
-> >> +       };
-> >> +};
-> >>
-> > 
-> > "fw-cfg" is not a valid vendor string. Are you emulating an actual piece
-> > of hardware here or is this something that comes from qemu?
-> 
-> It's a made up name.
-> 
-> > How about using "qemu,fwcfg" as the compatible string, and documenting
-> > "qemu" as an official vendor string in Documentation/devicetree/bindings/vendor-prefixes.txt
-> 
-> I can do that, certainly, but I'm not sure if that implies other QEMU
-> devices should follow suit.
-> 
-> For example, the virtio-mmio transports that qemu advertises have the
-> "compatible" property "virtio,mmio". "virtio" is not a vendor prefix
-> either (according to the above text file).
+This is a multi-part message in MIME format.
+--------------070704020809030602050306
+Content-Type: text/plain; charset=UTF-8; format=flowed
 
-True, but it's a documented standard. It's obvious that 'virtio' has
-something to do with the virtio standard, while it's not obvious that
-'fw-cfg' as a prefix is for a qemu-specific device.
+Hi,
 
-We should probably add 'virtio' as a vendor prefix.
+On 11/27/2014 08:05 PM, Maxime Ripard wrote:
+> Hi,
+>
+> On Thu, Nov 27, 2014 at 11:10:51AM +0100, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 11/27/2014 10:28 AM, Chen-Yu Tsai wrote:
+>>> Hi,
+>>>
+>>> On Thu, Nov 27, 2014 at 4:41 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>>
+>> <snip>
+>>
+>>>> I notice that you've not responded to my proposal to simple make the clock
+>>>> node a child node of the clocks node in the dt, that should work nicely, and
+>>>> avoid the need for any kernel level changes to support it, I'm beginning to
+>>>> think that that is probably the best solution.
+>>>
+>>> Would that not cause an overlap of the io regions, and cause one of them
+>>> to fail? AFAIK the OF subsystem doesn't like overlapping resources.
+>>
+>> No the overlap check is done by the platform dev resource code, and of_clk_declare
+>> does not use that. So the overlap would be there, but not an issue (in theory
+>> I did not test this).
+>
+> An overlap is always an issue.
+>
+>> Thinking more about this, I believe that using the MFD framework for the prcm seems
+>> like a mistake to me. It gains us nothing, since we have no irq to de-multiplex or
+>> some such. We're not using MFD for the CMU, why use it for CMU2 (which the prcm
+>> effectively is) ?
+>
+> Because the PRCM is much more than that. It also handles the power
+> domains for example.
 
-> 
-> Here's the full list of compatible strings from the generated DTB:
-> 
->   compatible = "arm,cortex-a15";
->   compatible = "arm,armv7-timer";
->   compatible = "arm,cortex-a15-gic";
->   compatible = "arm,pl011", "arm,primecell";
->   compatible = "arm,pl031", "arm,primecell";
->   compatible = "arm,psci-0.2", "arm,psci";
+Ok, so thinking more about this, I'm still convinced that the MFD framework is only
+getting in the way here. But I can see having things represented in devicetree
+properly, with the clocks, etc. as child nodes of the prcm being something which
+we want.
 
-All of these are emulated real devices or standards from ARM, so that
-makes sense.
+So since all we are using the MFD for is to instantiate platform devices under the prcm
+nodes, and assign an io resource for the regs to them, why not simply make the prcm node
+itself a simple-bus.
 
->   compatible = "cfi-flash";
->   compatible = "fixed-clock";
+This does everything the MFD prcm driver currently does, without actually needing a specific
+kernel driver, and as added bonus this will move the definition of the mfd function reg offsets
+out of the kernel and into the devicetree where they belong in the first place.
 
-These are generic bindings, arguably they should have been 'linux,'
-prefixed but it's too late now.
+Please see the attached patches, I've tested this on sun6i, if we go this route we should
+make the same change on sun8i (I can make the change, but not test it).
 
->   compatible = "fw-cfg,mmio";
->   compatible = "virtio,mmio";
->   compatible = "linux,dummy-virt";
-> 
-> According to
-> <http://devicetree.org/Device_Tree_Usage#Understanding_the_compatible_Property>,
-> "cfi-flash" and "fixed-clock" don't even have the correct format
-> (there's no comma separating <manufacturer> from <model>).
-> 
-> > We don't normally list contiguous registers separately. Maybe just round
-> > up to one page and make the register property
-> > 
-> > 	reg = <0x0 0x9020000 0x0 0x1000>;
-> 
-> The registers are not necessarily placed shoulder to shoulder (it's not
-> a requirement in the QEMU source).
+Regards,
 
-It might not be at the moment, but if no-one separates them it could be
-a requirement for using this binding. Is there any benefit to having
-them separated?
+Hans
 
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--------------070704020809030602050306
+Content-Type: text/x-patch;
+ name="0001-ARM-dts-sun6i-Change-prcm-node-into-a-simple-bus.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename*0="0001-ARM-dts-sun6i-Change-prcm-node-into-a-simple-bus.patch"
+
+>From 6756574293a1f291a8dcc29427b27f32f83acb2d Mon Sep 17 00:00:00 2001
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Date: Fri, 28 Nov 2014 13:48:58 +0100
+Subject: [PATCH v2 1/2] ARM: dts: sun6i: Change prcm node into a simple-bus
+
+The prcm node's purpose is to group the various prcm sub-devices together,
+it does not need any special handling beyond that, there is no need to
+handle shared resources like a shared (multiplexed) interrupt or a shared
+i2c bus.
+
+As such there really is no need to have a separate compatible for it, using
+simple-bus for it works fine. This also allows us to specify the register
+offsets of the various child-devices directly into the dts, rather then having
+to specify them in the OS implementation, putting the register offsets where
+the belong.
+
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/sun6i-a31.dtsi | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+index 29e6438..4b8541f 100644
+--- a/arch/arm/boot/dts/sun6i-a31.dtsi
++++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+@@ -846,11 +846,15 @@
+ 		};
+ 
+ 		prcm@01f01400 {
+-			compatible = "allwinner,sun6i-a31-prcm";
++			compatible = "simple-bus";
+ 			reg = <0x01f01400 0x200>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
+ 
+ 			ar100: ar100_clk {
+ 				compatible = "allwinner,sun6i-a31-ar100-clk";
++				reg = <0x01f01400 0x4>;
+ 				#clock-cells = <0>;
+ 				clocks = <&osc32k>, <&osc24M>, <&pll6>, <&pll6>;
+ 				clock-output-names = "ar100";
+@@ -867,6 +871,7 @@
+ 
+ 			apb0: apb0_clk {
+ 				compatible = "allwinner,sun6i-a31-apb0-clk";
++				reg = <0x01f0140c 0x4>;
+ 				#clock-cells = <0>;
+ 				clocks = <&ahb0>;
+ 				clock-output-names = "apb0";
+@@ -874,6 +879,7 @@
+ 
+ 			apb0_gates: apb0_gates_clk {
+ 				compatible = "allwinner,sun6i-a31-apb0-gates-clk";
++				reg = <0x01f01428 0x4>;
+ 				#clock-cells = <1>;
+ 				clocks = <&apb0>;
+ 				clock-output-names = "apb0_pio", "apb0_ir",
+@@ -884,6 +890,7 @@
+ 
+ 			apb0_rst: apb0_rst {
+ 				compatible = "allwinner,sun6i-a31-clock-reset";
++				reg = <0x01f014b0 0x4>;
+ 				#reset-cells = <1>;
+ 			};
+ 		};
+-- 
+2.1.0
+
+
+--------------070704020809030602050306
+Content-Type: text/x-patch;
+ name="0002-ARM-dts-sun6i-Add-ir_clk-node.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="0002-ARM-dts-sun6i-Add-ir_clk-node.patch"
+
+>From a152b0405d446c748fef146915736e4a8fc548b1 Mon Sep 17 00:00:00 2001
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Date: Fri, 28 Nov 2014 13:54:14 +0100
+Subject: [PATCH v2 2/2] ARM: dts: sun6i: Add ir_clk node
+
+Add an ir_clk sub-node to the prcm node.
+
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/sun6i-a31.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+index 4b8541f..92a1c95 100644
+--- a/arch/arm/boot/dts/sun6i-a31.dtsi
++++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+@@ -888,6 +888,14 @@
+ 						"apb0_i2c";
+ 			};
+ 
++			ir_clk: ir_clk {
++				reg = <0x01f01454 0x4>;
++				#clock-cells = <0>;
++				compatible = "allwinner,sun4i-a10-mod0-clk";
++				clocks = <&osc32k>, <&osc24M>;
++				clock-output-names = "ir";
++			};
++
+ 			apb0_rst: apb0_rst {
+ 				compatible = "allwinner,sun6i-a31-clock-reset";
+ 				reg = <0x01f014b0 0x4>;
+--------------070704020809030602050306--
