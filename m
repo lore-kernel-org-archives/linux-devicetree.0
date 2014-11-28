@@ -1,58 +1,30 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/2] devicetree: add a binding for GPIOs going though a
- level shifter
-Date: Fri, 28 Nov 2014 14:39:01 +0100
-Message-ID: <CACRpkdbRtqSeEayrZ6sZPM6g65q=zmkhJKpz=n8X311DNGe5pw@mail.gmail.com>
-References: <1416837696-28066-1-git-send-email-alban.bedel@avionic-design.de>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCHv2 1/1] thermal: cpu_cooling: check for the readiness of
+ cpufreq layer
+Date: Fri, 28 Nov 2014 19:13:02 +0530
+Message-ID: <CAKohpokh9oGTOrGB3L=qD2o+nSLJCyBLrpGu4DHiFPU-ByRLpg@mail.gmail.com>
+References: <1417097577-3548-1-git-send-email-edubezval@gmail.com>
+	<CAKohponu_PRrqsuMdCJDznhiO_-=iCaYPhCCad8F4WS3rNxo5A@mail.gmail.com>
+	<20141128111824.533c4641@jawa>
+	<20141128131425.GA23622@developer>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1416837696-28066-1-git-send-email-alban.bedel@avionic-design.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alban Bedel <alban.bedel@avionic-design.de>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20141128131425.GA23622@developer>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: Lukasz Majewski <l.majewski@majess.pl>, Linux PM <linux-pm@vger.kernel.org>, Lukasz Majewski <l.majewski@samsung.com>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 24, 2014 at 3:01 PM, Alban Bedel
-<alban.bedel@avionic-design.de> wrote:
+On 28 November 2014 at 18:44, Eduardo Valentin <edubezval@gmail.com> wrote:
+> Well, I wouldn't say unfortunately, but fortunately! :-)
 
-> Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
-> ---
->  .../devicetree/bindings/gpio/gpio-level-shifter.txt       | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-level-shifter.txt
++1 :)
+
+> However, I would prefer, at least to what comes to deferring, to update
+> the drivers altogether with the inclusion of the check in cpu cooling.
+> This way the change in behavior is atomic, in terms of commit changes.
 >
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-level-shifter.txt b/Documentation/devicetree/bindings/gpio/gpio-level-shifter.txt
-> new file mode 100644
-> index 0000000..e108c43
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-level-shifter.txt
-> @@ -0,0 +1,15 @@
-> +GPIO level shifter
-> +
-> +This binding allow supporting GPIOs going though a level shifter.
-> +
-> +Required properties:
-> +- compatible : should be "gpio-level-shifter"
-> +- data-gpios : list of the data GPIO phandles
-> +- #gpio-cells : should be 2
-> +- gpio-controller : marks the device node as a GPIO controller
-> +
-> +Optional properties:
-> +- enable-gpio : phandle of the GPIO that control the level shifter enable pin
-> +- direction-gpio : phandle of the GPIO that control the level shifter direction
-> +- vcca-supply : phandle of the regulator for side A of the level shifter
-> +- vccb-supply : phandle of the regulator for side B of the level shifter
+> Viresh, if you don't mind, I will merge your patch 04/26 into this one.
 
-It must be clear which side is facing the parent GPIO controller,
-A or B.
-
-It must be clear which one of these two should be used if the level shifter
-has ony VCC.
-
-And isn't the proper terminology VCC+VDD?
-
-An example must be provided.
-
-Yours,
-Linus Walleij
+Sure, go ahead.
