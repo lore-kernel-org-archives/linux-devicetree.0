@@ -1,78 +1,111 @@
-From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] arm64: ARM: Fix the Generic Timers interrupt active
- level description
-Date: Fri, 28 Nov 2014 11:12:52 +0800
-Message-ID: <20141128111252.4a6e8892@xhacker>
-References: <1417105283-19575-1-git-send-email-Liviu.Dudau@arm.com>
-	<54776FE0.8030600@arm.com>
+From: Vivek Gautam <gautamvivek1987@gmail.com>
+Subject: Re: [PATCH V2 1/2] pinctrl: exynos: Add BUS1 pin controller for exynos7
+Date: Fri, 28 Nov 2014 09:05:36 +0530
+Message-ID: <CAFp+6iFcMGTBQDcdK0cbcu0s9a3022nogaUvbPA2ZsCN80hRSA@mail.gmail.com>
+References: <CAFp+6iF-N63YSsdv2a6=MYp_mD=eQY_Oi8=9JVNU5dG0BA7YGQ@mail.gmail.com>
+	<1416834177-11170-1-git-send-email-gautam.vivek@samsung.com>
+	<CAGOxZ51P30BY2sOhUeMRK64CGF1fNcc-63RCXiAqZ6Rgpv3K7Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54776FE0.8030600-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAGOxZ51P30BY2sOhUeMRK64CGF1fNcc-63RCXiAqZ6Rgpv3K7Q@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Alim Akhtar <alim.akhtar@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Vivek Gautam <gautam.vivek@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-usb <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, robh+dt <robh+dt@kernel.org>, kgene <kgene@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Marc and Liviu,
+Hi Alim,
 
-On Thu, 27 Nov 2014 10:39:28 -0800
-Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
 
-> On 27/11/14 16:21, Liviu Dudau wrote:
-> > The Cortex-A5x TRM states in paragraph "9.2 Generic Timer functional
-> > description" that generic timers provide a level not edge interrupt
-> > output. Fix the device trees to correctly describe this.
-> > 
-> > While doing this update the CPU mask to match the number of described
-> > CPUs as well as the DT bindings documentation for Generic Timers.
-> > 
-> > Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-> 
-> Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-> 
-> 	M.
-> 
-> > ---
-> > 
-> > Arnd, Olof: This is on top of linux-next/master as it patches Juno's
-> > as well as all the other ARM DTs.
-> > 
-> > --
-> > 
-> >  Documentation/devicetree/bindings/arm/arch_timer.txt | 8 ++++----
-> >  arch/arm64/boot/dts/arm/foundation-v8.dts            | 8 ++++----
-> >  arch/arm64/boot/dts/arm/juno.dts                     | 8 ++++----
-> >  arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts           | 8 ++++----
-> >  4 files changed, 16 insertions(+), 16 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt
-> > b/Documentation/devicetree/bindings/arm/arch_timer.txt index
-> > 37b2caf..6d2aa87 100644 ---
-> > a/Documentation/devicetree/bindings/arm/arch_timer.txt +++
-> > b/Documentation/devicetree/bindings/arm/arch_timer.txt @@ -27,10 +27,10
-> > @@ Example: timer {
-> >  		compatible = "arm,cortex-a15-timer",
-> >  			     "arm,armv7-timer";
-> > -		interrupts = <1 13 0xf08>,
-> > -			     <1 14 0xf08>,
-> > -			     <1 11 0xf08>,
-> > -			     <1 10 0xf08>;
-> > +		interrupts = <1 13 0xf04>,
-> > +			     <1 14 0xf04>,
-> > +			     <1 11 0xf04>,
-> > +			     <1 10 0xf04>;
-> >  		clock-frequency = <100000000>;
-> >  	};
-> >  
+On Wed, Nov 26, 2014 at 7:03 PM, Alim Akhtar <alim.akhtar@gmail.com> wrote:
+> Hi Vivek,
+>
+> On Mon, Nov 24, 2014 at 6:32 PM, Vivek Gautam <gautam.vivek@samsung.com> wrote:
+>> USB and Power regulator on Exynos7 require gpios available
+>> in BUS1 pin controller block.
+>> So adding the BUS1 pinctrl support.
+>>
+>> Signed-off-by: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+>> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>> ---
+> Looks good to me.
+> Thanks!
+>
+> Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
 
-Does it mean we also need to fix the interrupt level description under
-arch/arm/boot/dts? I found they are also wrong or I misunderstand something?
+Thanks for the review.
 
-Thanks,
-Jisheng
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>>
+>> This patch was part of series:
+>> "[PATCH 00/11] Exynos7: Adding USB 3.0 support"
+>>  https://lkml.org/lkml/2014/11/21/247
+>>
+>> Changes since V1:
+>>  - Added support for all pin banks which are part of BUS1 pin controller.
+>>
+>>  drivers/pinctrl/samsung/pinctrl-exynos.c |   19 +++++++++++++++++++
+>>  1 file changed, 19 insertions(+)
+>>
+>> diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/samsung/pinctrl-exynos.c
+>> index d5d4cfc..44e60dc 100644
+>> --- a/drivers/pinctrl/samsung/pinctrl-exynos.c
+>> +++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
+>> @@ -1300,6 +1300,20 @@ static const struct samsung_pin_bank_data exynos7_pin_banks7[] __initconst = {
+>>         EXYNOS_PIN_BANK_EINTG(8, 0x060, "gpr3", 0x0c),
+>>  };
+>>
+>> +/* pin banks of exynos7 pin-controller - BUS1 */
+>> +static const struct samsung_pin_bank_data exynos7_pin_banks8[] __initconst = {
+>> +       EXYNOS_PIN_BANK_EINTG(8, 0x020, "gpf0", 0x00),
+>> +       EXYNOS_PIN_BANK_EINTG(8, 0x040, "gpf1", 0x04),
+>> +       EXYNOS_PIN_BANK_EINTG(4, 0x060, "gpf2", 0x08),
+>> +       EXYNOS_PIN_BANK_EINTG(5, 0x080, "gpf3", 0x0c),
+>> +       EXYNOS_PIN_BANK_EINTG(8, 0x0a0, "gpf4", 0x10),
+>> +       EXYNOS_PIN_BANK_EINTG(8, 0x0c0, "gpf5", 0x14),
+>> +       EXYNOS_PIN_BANK_EINTG(5, 0x0e0, "gpg1", 0x18),
+>> +       EXYNOS_PIN_BANK_EINTG(5, 0x100, "gpg2", 0x1c),
+>> +       EXYNOS_PIN_BANK_EINTG(6, 0x120, "gph1", 0x20),
+>> +       EXYNOS_PIN_BANK_EINTG(3, 0x140, "gpv6", 0x24),
+>> +};
+>> +
+>>  const struct samsung_pin_ctrl exynos7_pin_ctrl[] __initconst = {
+>>         {
+>>                 /* pin-controller instance 0 Alive data */
+>> @@ -1342,5 +1356,10 @@ const struct samsung_pin_ctrl exynos7_pin_ctrl[] __initconst = {
+>>                 .pin_banks      = exynos7_pin_banks7,
+>>                 .nr_banks       = ARRAY_SIZE(exynos7_pin_banks7),
+>>                 .eint_gpio_init = exynos_eint_gpio_init,
+>> +       }, {
+>> +               /* pin-controller instance 8 BUS1 data */
+>> +               .pin_banks      = exynos7_pin_banks8,
+>> +               .nr_banks       = ARRAY_SIZE(exynos7_pin_banks8),
+>> +               .eint_gpio_init = exynos_eint_gpio_init,
+>>         },
+>>  };
+>> --
+>> 1.7.10.4
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>
+>
+> --
+> Regards,
+> Alim
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
+-- 
+Best Regards
+Vivek Gautam
+Samsung R&D Institute, Bangalore
+India
