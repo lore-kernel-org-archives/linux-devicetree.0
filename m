@@ -1,35 +1,45 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCHv3 05/16] gpio: mvebu: add suspend/resume support
-Date: Fri, 28 Nov 2014 12:55:16 +0100
-Message-ID: <CACRpkdbPowMLHsw3+Ayi9zAJbd3Y8oTcnn=wb0H_Rmy74v8s7w@mail.gmail.com>
-References: <1416585613-2113-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1416585613-2113-6-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 1/2] mmc: core: allow a reset gpio to be configured.
+Date: Fri, 28 Nov 2014 12:56:33 +0100
+Message-ID: <CAPDyKFrx98NspRU1nV3uJ6XwTuA4tZQkrYTfDoeXGR+f5htODQ@mail.gmail.com>
+References: <20141108000919.5629.55381.stgit@notabene.brown>
+	<20141108001411.5629.25179.stgit@notabene.brown>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1416585613-2113-6-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20141108001411.5629.25179.stgit@notabene.brown>
+Sender: linux-mmc-owner@vger.kernel.org
+To: NeilBrown <neilb@suse.de>
+Cc: Chris Ball <chris@printf.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, GTA04 owners <gta04-owner@goldelico.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 21, 2014 at 5:00 PM, Thomas Petazzoni
-<thomas.petazzoni@free-electrons.com> wrote:
-
-> This commit adds the implementation of ->suspend() and ->resume()
-> platform_driver hooks in order to save and restore the state of the
-> GPIO configuration. In order to achieve that, additional fields are
-> added to the mvebu_gpio_chip structure.
+On 8 November 2014 at 01:14, NeilBrown <neilb@suse.de> wrote:
+> If the regulator supplying an SDIO device is shared
+> with another device, the turning the regulator 'on' and 'off'
+> will not actually cycle power and so will not reset
+> the device.
 >
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Alexandre Courbot <gnurou@gmail.com>
-> Cc: linux-gpio@vger.kernel.org
-> Acked-by: Alexandre Courbot <acourbot@nvidia.com>
-> Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> This is particularly a problem for some wi2si wireless modules which
+> have a BT module on chip and can share power lines.
+> Without the power-cycle, subsequent reset commands fail.
+>
+> So allow a 'reset' gpio to be specified.  If provided, the
+> line is asserted during power-up.
 
-I already have this patch applied to the GPIO tree, I guess you're
-just resending the whole set on routine...
+There have been several attempts to fix similar issues as this patch
+does. The latest one I posted a few month ago, which wasn't accepted.
+http://comments.gmane.org/gmane.linux.power-management.general/46635
 
-Yours,
-Linus Walleij
+There has also been some off-list discussions on especially how we
+should describe this in DT and there were actually some consensus made
+around that. Still I haven't seen any patches on the mailing lists.
+
+So to summarize, I am really concerned that we keep having these power
+sequence issues for SDIO devices and right now the discussion has been
+on hold. I am considering to hack on it myself, since I am tired of
+waiting. :-)
+
+Regarding this patch, I don't intent to apply it.
+
+Kind regards
+Uffe
