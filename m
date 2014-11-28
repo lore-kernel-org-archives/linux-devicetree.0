@@ -1,133 +1,60 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH] arm64: ARM: Fix the Generic Timers interrupt active
- level description
-Date: Fri, 28 Nov 2014 11:50:02 +0000
-Message-ID: <20141128115002.GZ828@e106497-lin.cambridge.arm.com>
-References: <1417099005-18638-1-git-send-email-Liviu.Dudau@arm.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [RFC] cpufreq: Add "dvfs-method" binding to probe cpufreq drivers
+Date: Fri, 28 Nov 2014 11:51:29 +0000
+Message-ID: <547861C1.4040904@arm.com>
+References: <596a6d49f2b3e2837aa9a54a3e1249161d3c9265.1416991009.git.viresh.kumar@linaro.org>	<5476071B.1060705@arm.com>	<CAKohpomFE6xg+HfOicha4Ntkr9osqDK2gxdKce=BU_q35jfBxA@mail.gmail.com>	<5476F4ED.6040206@arm.com>	<CAKohpok+M+HuuQBJ3EJ_3e+Uv-Me5za7EO2TVguU_tCXNtahvQ@mail.gmail.com>	<547707C8.3080108@arm.com> <CAKohpokwKzJ1TJQu2YGS+veDPuGFKehWWbdYKrHyPz6vK-Vy3A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1417099005-18638-1-git-send-email-Liviu.Dudau@arm.com>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <Marc.Zyngier@arm.com>, Olof Johansson <olof@lixom.net>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAKohpokwKzJ1TJQu2YGS+veDPuGFKehWWbdYKrHyPz6vK-Vy3A@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Rafael Wysocki <rjw@rjwysocki.net>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Santosh Shilimkar <santosh.shilimkar@oracle.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Arnd Bergmann <arnd.bergmann@linaro.org>, Mike Turquette <mike.turquette@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kesavan.abhilash@gmail.com" <kesavan.abhilash@gmail.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "k.chander@samsung.com" <k.chander@samsung.com>, "olof@lixom.net" <olof@lixom.net>, "ta.omasab@gmail.com" <ta.omasab@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 27, 2014 at 02:36:45PM +0000, Liviu Dudau wrote:
-> The Cortex-A5x TRM states in paragraph "9.2 Generic Timer functional
-> description" that generic timers provide an active-LOW interrupt
-> output. Fix the device trees to correctly describe this.
->=20
-> While doing this update the CPU mask to match the number of described
-> CPUs as well.
->=20
-> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
 
-arm-soc maintainers: Please discard my v2 patch as it proved to be the =
-wrong fix.
-This patch should still be considered for inclusion for v3.19 as it fix=
-es the
-arm64 DT files.
 
-Marc, care to Ack this patch?
+On 28/11/14 06:31, Viresh Kumar wrote:
+> On 27 November 2014 at 16:45, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>> It's the general understanding, I am not sure if it's specified anywhere
+>> in the kernel Documentation, but I could find the below excerpts from [1]:
+>>
+>> "The compatibility rules say that new kernels must work with older
+>> device trees. If changes are required, they should be put into new
+>> properties; the old ones can then be deprecated but not removed. New
+>> properties should be optional, so that device trees lacking those
+>> properties continue to work. The device tree developers will provide a
+>> set of guidelines for the creation of future-proof bindings."
+>>
+>> It's *exactly opposite* as DTs are considered as part of firmware that
+>> gets shipped with the boards and any kernel should work with that DT if
+>> it is compliance with the DT bindings(even old, as the DT bindings
+>> should never get changed only gets extended)
+>
+> Okay, I was completely wrong. :)
+>
+>> No, you *must* :). That's backward compatibility. Just consider a simple
+>> case where the bootloader is generating DT and we don't want to upgrade it.
+>
+> Now these are the options we have for existing platforms:
+>
+> - Update those platforms to check if DT has "compatible" string in CPU node.
+> If yes, don't create a device as this will be created by cpufreq-dt.
+>
 
-Best regards,
-Liviu
+This fixes how it will work with new DTs, how about old DTs ?
+IMO we still need the blacklist kind of logic I sent before.
+Do you see any issues with that ?
 
-> ---
->=20
-> Arnd, Olof: This is on top of linux-next/master as it patches the Jun=
-o
-> as well as all the other ARM DTs.
->=20
->  arch/arm64/boot/dts/arm/foundation-v8.dts  | 8 ++++----
->  arch/arm64/boot/dts/arm/juno.dts           | 8 ++++----
->  arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts | 8 ++++----
->  3 files changed, 12 insertions(+), 12 deletions(-)
->=20
-> diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dts b/arch/arm64/b=
-oot/dts/arm/foundation-v8.dts
-> index 4a06090..27f3296 100644
-> --- a/arch/arm64/boot/dts/arm/foundation-v8.dts
-> +++ b/arch/arm64/boot/dts/arm/foundation-v8.dts
-> @@ -78,10 +78,10 @@
-> =20
->  	timer {
->  		compatible =3D "arm,armv8-timer";
-> -		interrupts =3D <1 13 0xff01>,
-> -			     <1 14 0xff01>,
-> -			     <1 11 0xff01>,
-> -			     <1 10 0xff01>;
-> +		interrupts =3D <1 13 0xf08>,
-> +			     <1 14 0xf08>,
-> +			     <1 11 0xf08>,
-> +			     <1 10 0xf08>;
->  		clock-frequency =3D <100000000>;
->  	};
-> =20
-> diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/a=
-rm/juno.dts
-> index 097ecc4..cb3073e 100644
-> --- a/arch/arm64/boot/dts/arm/juno.dts
-> +++ b/arch/arm64/boot/dts/arm/juno.dts
-> @@ -98,10 +98,10 @@
-> =20
->  	timer {
->  		compatible =3D "arm,armv8-timer";
-> -		interrupts =3D <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE=
-_RISING)>,
-> -			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING)>=
-,
-> -			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING)>=
-,
-> -			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_EDGE_RISING)>=
-;
-> +		interrupts =3D <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVE=
-L_LOW)>,
-> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>;
->  	};
-> =20
->  	pmu {
-> diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts b/arch/arm64/=
-boot/dts/arm/rtsm_ve-aemv8a.dts
-> index 572005e..efc59b3 100644
-> --- a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
-> +++ b/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
-> @@ -81,10 +81,10 @@
-> =20
->  	timer {
->  		compatible =3D "arm,armv8-timer";
-> -		interrupts =3D <1 13 0xff01>,
-> -			     <1 14 0xff01>,
-> -			     <1 11 0xff01>,
-> -			     <1 10 0xff01>;
-> +		interrupts =3D <1 13 0xf08>,
-> +			     <1 14 0xf08>,
-> +			     <1 11 0xf08>,
-> +			     <1 10 0xf08>;
->  		clock-frequency =3D <100000000>;
->  	};
-> =20
-> --=20
-> 2.1.3
->=20
->=20
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->=20
+> - Just remove the device creation from those paths if the Maintainers of
+> those platforms want to cleanup their code, accepting the loss of backward
+> compatibility..
+>
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+I don't think this is something acceptable, why will someone want to
+lose a working feature with new kernel.
+
+Regards,
+Sudeep
+
