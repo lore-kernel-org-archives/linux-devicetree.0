@@ -1,41 +1,87 @@
-From: Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [kernel PATCH] devicetree: document ARM bindings for QEMU's Firmware
- Config interface
-Date: Fri, 28 Nov 2014 14:49:31 +0100
-Message-ID: <54787D6B.5000302@redhat.com>
-References: <1417177604-21194-1-git-send-email-lersek@redhat.com> <4081425.dh6XptxTnn@wuerfel> <54787715.6030407@redhat.com> <20141128133300.GG25883@leverpostej>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH 16/19] arm64: dts: exynos: Add dts files for 64-bit
+ Exynos5433 SoC
+Date: Fri, 28 Nov 2014 22:51:03 +0900
+Message-ID: <54787DC7.3040600@samsung.com>
+References: <1417073716-22997-1-git-send-email-cw00.choi@samsung.com>
+ <1417073716-22997-17-git-send-email-cw00.choi@samsung.com>
+ <5476FC55.1020606@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141128133300.GG25883@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org" <qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <5476FC55.1020606@arm.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "geunsik.lim@samsung.com" <geunsik.lim@samsung.com>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "arnd@arndb.de" <arnd@arndb.de>, Catalin Marinas <Catalin.Marinas@arm.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, Will Deacon <Will.Deacon@arm.com>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, "a.kesavan@samsung.com" <a.kesavan@samsung.com>, "inki.dae@samsung.com" <inki.dae@samsung.com>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.o>
 List-Id: devicetree@vger.kernel.org
 
-On 11/28/14 14:33, Mark Rutland wrote:
-> On Fri, Nov 28, 2014 at 01:22:29PM +0000, Laszlo Ersek wrote:
->> On 11/28/14 13:59, Arnd Bergmann wrote:
+Dear Marc,
 
->>> We don't normally list contiguous registers separately. Maybe just round
->>> up to one page and make the register property
->>>
->>> 	reg = <0x0 0x9020000 0x0 0x1000>;
+On 11/27/2014 07:26 PM, Marc Zyngier wrote:
+> On 27/11/14 07:35, Chanwoo Choi wrote:
+>> This patch adds new Exynos5433 dtsi to support 64-bit Exynos5433 SoC
+>> based on Octal core CPUs (quad Cortex-A57 and quad Cortex-A53).
 >>
->> The registers are not necessarily placed shoulder to shoulder (it's not
->> a requirement in the QEMU source).
+>> Cc: Kukjin Kim <kgene.kim@samsung.com>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Arnd Bergmann <arnd@arndb.de>
+>> Cc: Olof Johansson <olof@lixom.net>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will.deacon@arm.com>
+>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> Acked-by: Inki Dae <inki.dae@samsung.com>
+>> Acked-by: Geunsik Lim <geunsik.lim@samsung.com>
+>> ---
+>>  arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi | 698 +++++++++++++++++++++
+>>  arch/arm64/boot/dts/exynos/exynos5433.dtsi         | 523 +++++++++++++++
+>>  2 files changed, 1221 insertions(+)
+>>  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi
+>>  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433.dtsi
+>>
 > 
-> It might not be at the moment, but if no-one separates them it could be
-> a requirement for using this binding. Is there any benefit to having
-> them separated?
+> [...]
+> 
+>> diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+>> new file mode 100644
+>> index 0000000..3d8b576
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+> 
+> [...]
+> 
+>> +               timer {
+>> +                       compatible = "arm,armv8-timer";
+>> +                       interrupts = <1 13 0xff01>,
+>> +                                    <1 14 0xff01>,
+>> +                                    <1 11 0xff01>,
+>> +                                    <1 10 0xff01>;
+> 
+> This is wrong. Timer interrupts for both A53 and A57 are level triggered.
 
-I couldn't name any.
+I'll fix it level triggering instead of edge triggering.
 
-Thanks
-Laszlo
+If possible, could you give the document url to check the correct type of level trigger?
+whether irq is high level trigger or low level trigger.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+>> +                       clock-frequency = <24000000>;
+> 
+> Please go and fix your firmware. Really...
+> 
+>> +                       use-clocksource-only;
+>> +                       use-physical-timer;
+>> +               };
+> 
+> Well, that's a total NAK. Neither of these properties are part of the
+> binding, and we've already established that none of that would never be
+> valid on arm64.
+> 
+> I suggest you finally do what we've been asking for years, which is to
+> fix your boot ROM by adding the 5 lines of assembly code that are needed
+> instead of repeatedly post the same bogus DT files.
+
+I'll remove last three properties.
+
+Best Regards,
+Chanwoo Choi
