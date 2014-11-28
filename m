@@ -1,74 +1,34 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v3 3/3] of: support passing console options with
- stdout-path
-Date: Fri, 28 Nov 2014 15:39:18 +0000
-Message-ID: <20141128153918.95D11C40884@trevor.secretlab.ca>
-References: <1417110967-16284-1-git-send-email-leif.lindholm@linaro.org>
-	<1417110967-16284-4-git-send-email-leif.lindholm@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1417110967-16284-4-git-send-email-leif.lindholm@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leif Lindholm <leif.lindholm@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, robh+dt@kernel.org, plagnioj@jcrosoft.com, ijc@debian.org, andrew@lunn.ch, s.hauer@pengutronix.de
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCHv2 05/16] gpio: mvebu: add suspend/resume support
+Date: Fri, 28 Nov 2014 16:42:14 +0100
+Message-ID: <CACRpkdaVaTmhRgSkJPCmsHXvkqd4b-BZBsQEbXcZrHdhyMS0WQ@mail.gmail.com>
+References: <1415978496-9334-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1415978496-9334-6-git-send-email-thomas.petazzoni@free-electrons.com>
+	<CACRpkdb5S7Fv4+Ck2btLPTYWaWr_E-iMcQGeATB4NMwx_T-4GA@mail.gmail.com>
+	<20141127194418.43e03e80@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20141127194418.43e03e80@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 27 Nov 2014 17:56:07 +0000
-, Leif Lindholm <leif.lindholm@linaro.org>
- wrote:
-> Support specifying console options (like with console=ttyXN,<options>)
-> by appending them to the stdout-path property after a separating ':'.
-> 
-> Example:
->         stdout-path = "uart0:115200";
-> 
-> Signed-off-by: Leif Lindholm <leif.lindholm@linaro.org>
+On Thu, Nov 27, 2014 at 7:44 PM, Thomas Petazzoni
+<thomas.petazzoni@free-electrons.com> wrote:
+> Dear Linus Walleij,
 
-Applied with a slight change below.
+>> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>>
+>> Do you want me to merge the patch or is it dependent on other patches?
+>
+> This patch has already been merged by you, and is already in
+> linux-next. See
+> https://git.kernel.org/cgit/linux/kernel/git/linusw/linux-gpio.git/commit/?h=for-next&id=b5b7b487431b01619f2947d91dadd7c7a233692e.
 
-Thanks!
+Argh, haha yeah it was the resending that confused me... too many
+patches floating around. Well then, it lands upstream.
 
-> ---
->  drivers/of/base.c |    9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 7f0e5f7..6d2d45e 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -37,6 +37,7 @@ EXPORT_SYMBOL(of_allnodes);
->  struct device_node *of_chosen;
->  struct device_node *of_aliases;
->  struct device_node *of_stdout;
-> +static const char *of_stdout_options;
->  
->  struct kset *of_kset;
->  
-> @@ -1844,7 +1845,7 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
->  		if (IS_ENABLED(CONFIG_PPC) && !name)
->  			name = of_get_property(of_aliases, "stdout", NULL);
->  		if (name)
-> -			of_stdout = of_find_node_by_path(name);
-> +			of_stdout = of_find_node_opts_by_path(name, &of_stdout_options);
->  	}
->  
->  	if (!of_aliases)
-> @@ -1968,9 +1969,13 @@ EXPORT_SYMBOL_GPL(of_prop_next_string);
->   */
->  bool of_console_check(struct device_node *dn, char *name, int index)
->  {
-> +	char *console_options;
-> +
->  	if (!dn || dn != of_stdout || console_set_on_cmdline)
->  		return false;
-> -	return !add_preferred_console(name, index, NULL);
-> +
-> +	console_options = kstrdup(of_stdout_options, GFP_KERNEL);
-> +	return !add_preferred_console(name, index, console_options);
-
-I changed this to simply:
-	return !add_preferred_console(name, index,
-				      kstrdup(of_stdout_options, GFP_KERNEL));
-
-Not a big deal, just makes for a slightly shorter function.
-
-g.
+Yours,
+Linus Walleij
