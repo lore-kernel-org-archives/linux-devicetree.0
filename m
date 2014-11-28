@@ -1,52 +1,70 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 1/8] soc: mediatek: Add PMIC wrapper for MT8135 and
- MT6397 SoC
-Date: Fri, 28 Nov 2014 15:32:37 +0000
-Message-ID: <20141128153237.GU7712@sirena.org.uk>
-References: <1417146874-5232-1-git-send-email-flora.fu@mediatek.com>
- <1417146874-5232-2-git-send-email-flora.fu@mediatek.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 5/6] ARM: zynq: Add OCM controller driver
+Date: Fri, 28 Nov 2014 16:35:03 +0100
+Message-ID: <CACRpkdbL=yOwjC7j=eacg9K2Mb3rwcKy3b0F8y2H9Nz8RsRRcg@mail.gmail.com>
+References: <cover.1415962281.git.michal.simek@xilinx.com>
+	<6741d995fbec801d795c5db481e39425bd912f8a.1415962281.git.michal.simek@xilinx.com>
+	<CACRpkdbZ8Pwy=04dhJq5ONZ1B-SQK1f=eLZjjCDmV7UQ0aHduA@mail.gmail.com>
+	<857cab03bd6445c59cc345349a00f67c@BL2FFO11FD010.protection.gbl>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="h6kYMYtSOeQy+8K8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1417146874-5232-2-git-send-email-flora.fu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Flora Fu <flora.fu@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Sandeep Nair <sandeep_n@ti.com>, Andy Gross <agross@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <treding@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Catalin Marinas <catalin.marinas@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "Joe.C" <yi>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <857cab03bd6445c59cc345349a00f67c-xjCwUguQ55+P1V7ZRuPZVmYJ4DzVTqeXkX/xN29GLwg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Josh Cartwright <josh.cartwright-acOepvfBmUk@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Jingoo
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Nov 27, 2014 at 2:57 PM, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> On 11/27/2014 02:20 PM, Linus Walleij wrote:
+>> On Fri, Nov 14, 2014 at 11:52 AM, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
 
---h6kYMYtSOeQy+8K8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+>> (...)
+>>> +       zynq_ocmc->pool = devm_gen_pool_create(&pdev->dev,
+>>> +                                              ilog2(ZYNQ_OCMC_GRANULARITY),
+>>> +                                              -1);
+>>
+>> Do this:
+>>
+>> #include <linux/sizes.h>
+>>
+>> zynq_ocmc->pool = devm_gen_pool_create(&pdev->dev,
+>>                                        ilog2(SZ_64K),
+>>                                        -1);
+>>
+>> And get rid of the #define for ZYNQ_OCMC_GRANULARITY
+>
+> ilog2 from 32 is different to ilog2 from ilog2 from 0x10000.
 
-On Fri, Nov 28, 2014 at 11:54:27AM +0800, Flora Fu wrote:
+Bah I misread the code, forget this comment.
 
-> +config MT8135_PMIC_WRAP
-> +	tristate "MediaTek MT8135 PMIC Wrapper Support"
-> +	depends on ARCH_MEDIATEK
-> +	help
+Maybe it's more like I wanted
 
-> +#include <linux/regmap.h>
++#define ZYNQ_OCMC_BLOCK_SIZE   0x10000
 
-This uses regmap but doesn't select anything from the regmap framework
-so won't build if nothing else selects regmap.
+To be replaced with SZ_64K
 
---h6kYMYtSOeQy+8K8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+But it's a petty detail anyway.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> Do you have any opinion regarding calling zynq_slcr_get_ocm_config()?
+>
+> Is it better to expose slcr this interface to drivers?
+> Or use regmap and read this value directly?
 
-iQEcBAEBAgAGBQJUeJWVAAoJECTWi3JdVIfQwpwH/jhaBBVFupIaYovNOJgAAlMB
-Ze4RkJr8udwxRbsc9SkKGlsuAheMAOrCyD4+WH6XkcV1BOZMPqs5ws3rPoL7LqWQ
-/anX75lfyi+M3ecezhN/zJunrqgnvVq/4vuWhGYWu6KUPYl8A+2N91AoCqiBkBJw
-Zet3DQXb6dM9wYGioTPtUlbFQqX4jhVOIDI8hmUOmvU457CNY9VTpnM2IGnPjN2D
-kETh1vziy17G2j2lp+uSfy6Jn8w/IG0d/JS1YseqW5un7BXjbrn3taCylVR6Q13H
-BfD7DXvxbGEWEPQhIPz5CjAlvp15+SdhVArJfheixpNcuGTXgMu7VL0FObTugQk=
-=J1lX
------END PGP SIGNATURE-----
+Depends on what provides that call. The pattern I usually follow
+is to expose the mixed-registers range as a syscon device
+using drivers/mfd/syscon.c and then use one of the methods from
+<linux/mfd/syscon.h> to look up a reference to the regmap and
+use it to access misc registers.
 
---h6kYMYtSOeQy+8K8--
+> Also I do read for CONFIG_SMP case jump trampoline size - maybe
+> you can have better idea how this can be done.
+
+No I have no clue about that... :(
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
