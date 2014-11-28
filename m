@@ -1,66 +1,105 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] ARM: hip04: set ARCH_NR_GPIO to 128
-Date: Fri, 28 Nov 2014 10:33:36 +0100
-Message-ID: <3094004.3WUKgY6xNz@wuerfel>
-References: <1417156188-500-1-git-send-email-wangzhou.bry@gmail.com> <1417156188-500-2-git-send-email-wangzhou.bry@gmail.com>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH v13 07/12] drm: bridge/dw_hdmi: add support for multi-byte
+ register width access
+Date: Fri, 28 Nov 2014 17:43:21 +0800
+Message-ID: <547843B9.6000806@rock-chips.com>
+References: <1417008157-31861-1-git-send-email-andy.yan@rock-chips.com>	
+ <1417008759-32257-1-git-send-email-andy.yan@rock-chips.com>
+ <1417019657.3177.10.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417156188-500-2-git-send-email-wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1417019657.3177.10.camel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Pawel Moll <pawel.moll@arm.com>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, rmk+kernel@arm.linux.org.uk, mark.yao@rock-chips.com, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 28 November 2014 14:29:47 Zhou Wang wrote:
-> Set ARCH_NR_GPIO for Hisilicon Soc Hip04, which has 4 GPIO
-> controllers with 32 GPIOs each.
-> 
-> Signed-off-by: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/Kconfig                |    1 +
->  arch/arm/configs/hisi_defconfig |    3 +++
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 89c4b5c..26aae1e 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -1509,6 +1509,7 @@ config ARCH_NR_GPIO
->         default 352 if ARCH_VT8500
->         default 288 if ARCH_ROCKCHIP
->         default 264 if MACH_H4700
-> +       default 128 if ARCH_HIP04
->         default 0
->         help
->           Maximum number of GPIOs in the system.
-> 
-
-If I remember correctly, you don't actually need to set this if all gpio
-clients are using the new gpio descriptor interfaces instead of gpio
-numbers. Would that work for you? You'd have to know which devices
-can be connected to the gpio controller for all hip04 based machines,
-but I think this is a short list of boards.
-
-Linus, one question for you: Does the ARCH_NR_GPIO actually work as designed?
-I see that e.g. OMAP4 defines 192 GPIO lines but does not have an ARCH_NR_GPIO
-setting. In an OMAP4-only kernel you would get the default value (512)
-from include/asm-generic/gpio.h, and in a multiplatform kernel you get at
-least 512 if any of the (ARCH_EXYNOS || ARCH_KEYSTONE || SOC_OMAP5 || \
-SOC_DRA7XX || ARCH_S3C24XX || ARCH_S3C64XX || ARCH_S5PV210 || ARCH_SHMOBILE
-|| ARCH_TEGRA) are set, so that is still good.
-
-However if one builds a kernel that just enables OMAP4 and HIP04, I suspect
-it can't work on OMAP4 for any gpio line above 128, which seems to be
-a fundamental multiplatform problem.
-
-Do we neet to increase the default to 512 for all ARCH_MULTIPLATFORM
-configurations and just leave ARCH_SHMOBILE, ARCH_TEGRA and MACH_H4700
-here as special cases?
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgWmFiZWw6Ck9uIDIwMTTlubQxMeaciDI35pelIDAwOjM0LCBQaGlsaXBwIFphYmVsIHdyb3Rl
+Ogo+IEFtIE1pdHR3b2NoLCBkZW4gMjYuMTEuMjAxNCwgMjE6MzIgKzA4MDAgc2NocmllYiBBbmR5
+IFlhbjoKPj4gT24gcm9ja2NoaXAgcmszMjg4LCBvbmx5IHdvcmQoMzItYml0KSBhY2Nlc3NlcyBh
+cmUKPj4gcGVybWl0dGVkIGZvciBoZG1pIHJlZ2lzdGVycy4gIEJ5dGUgd2lkdGggYWNjZXNzZXMg
+KHdyaXRlYiwKPj4gcmVhZGIpIGdlbmVyYXRlIGFuIGltcHJlY2lzZSBleHRlcm5hbCBhYm9ydC4K
+Pj4KPj4gU2lnbmVkLW9mZi1ieTogQW5keSBZYW4gPGFuZHkueWFuQHJvY2stY2hpcHMuY29tPgo+
+Pgo+PiAtLS0KPj4KPj4gQ2hhbmdlcyBpbiB2MTM6IE5vbmUKPj4gQ2hhbmdlcyBpbiB2MTI6IE5v
+bmUKPj4gQ2hhbmdlcyBpbiB2MTE6IE5vbmUKPj4gQ2hhbmdlcyBpbiB2MTA6IE5vbmUKPj4gQ2hh
+bmdlcyBpbiB2OTogTm9uZQo+PiBDaGFuZ2VzIGluIHY4OiBOb25lCj4+IENoYW5nZXMgaW4gdjc6
+IE5vbmUKPj4gQ2hhbmdlcyBpbiB2NjoKPj4gLSByZWZhY3RvciByZWdpc3RlciBhY2Nlc3Mgd2l0
+aG91dCByZWdfc2hpZnQKPj4KPj4gQ2hhbmdlcyBpbiB2NToKPj4gLSByZWZhY3RvciByZWctaW8t
+d2lkdGgKPj4KPj4gQ2hhbmdlcyBpbiB2NDogTm9uZQo+PiBDaGFuZ2VzIGluIHYzOgo+PiAtIHNw
+bGl0IG11bHRpLXJlZ2lzdGVyIGFjY2VzcyB0byBvbmUgaW5kZXBlbnQgcGF0Y2gKPj4KPj4gICBk
+cml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R3X2hkbWkuYyB8IDU3ICsrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrLS0tLS0KPj4gICAxIGZpbGUgY2hhbmdlZCwgNTEgaW5zZXJ0aW9ucygr
+KSwgNiBkZWxldGlvbnMoLSkKPj4KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9icmlk
+Z2UvZHdfaGRtaS5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kd19oZG1pLmMKPj4gaW5kZXgg
+YTUzYmY2My4uNWU4OGM4ZCAxMDA2NDQKPj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9k
+d19oZG1pLmMKPj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kd19oZG1pLmMKPj4gQEAg
+LTEwMCw2ICsxMDAsMTEgQEAgc3RydWN0IGhkbWlfZGF0YV9pbmZvIHsKPj4gICAJc3RydWN0IGhk
+bWlfdm1vZGUgdmlkZW9fbW9kZTsKPj4gICB9Owo+PiAgIAo+PiArdW5pb24gZHdfcmVnX3B0ciB7
+Cj4+ICsJdTMyIF9faW9tZW0gKnAzMjsKPj4gKwl1OCBfX2lvbWVtICpwODsKPj4gK307Cj4gSSBz
+ZWUgbm8gbmVlZCB0byBpbnRyb2R1Y2UgdGhpcy4gSnVzdCBleHBsaWNpdGx5IG11bHRpcGx5IHRo
+ZSBvZmZzZXQgaW4KPiBkd19oZG1pX3dyaXRlbC4KPgogICAgIElzIHRoZXJlIGFueSBkaXNhZHZh
+bnRhZ2UgdG8gZG8gbGlrZSB0aGlzPwogICAgIFRoZSBjb21waWxlciBjYW4gaGVscCB1cyBkbyB0
+aGUgZXhwbGljaXRseSBtdWx0aXBseSBieSB0aGlzIHdheS4KPj4gICBzdHJ1Y3QgZHdfaGRtaSB7
+Cj4+ICAgCXN0cnVjdCBkcm1fY29ubmVjdG9yIGNvbm5lY3RvcjsKPj4gICAJc3RydWN0IGRybV9l
+bmNvZGVyICplbmNvZGVyOwo+PiBAQCAtMTIxLDIwICsxMjYsNDMgQEAgc3RydWN0IGR3X2hkbWkg
+ewo+PiAgIAo+PiAgIAlzdHJ1Y3QgcmVnbWFwICpyZWdtYXA7Cj4+ICAgCXN0cnVjdCBpMmNfYWRh
+cHRlciAqZGRjOwo+PiAtCXZvaWQgX19pb21lbSAqcmVnczsKPj4gKwl1bmlvbiBkd19yZWdfcHRy
+IHJlZ3M7Cj4gS2VlcCB0aGlzIGFzIHZvaWQgX19pb21lbSAqCj4KPj4gICAJdW5zaWduZWQgaW50
+IHNhbXBsZV9yYXRlOwo+PiAgIAlpbnQgcmF0aW87Cj4+ICsKPj4gKwl2b2lkICgqd3JpdGUpKHN0
+cnVjdCBkd19oZG1pICpoZG1pLCB1OCB2YWwsIGludCBvZmZzZXQpOwo+PiArCXU4ICgqcmVhZCko
+c3RydWN0IGR3X2hkbWkgKmhkbWksIGludCBvZmZzZXQpOwo+PiAgIH07Cj4+ICAgCj4+ICtzdGF0
+aWMgdm9pZCBkd19oZG1pX3dyaXRlbChzdHJ1Y3QgZHdfaGRtaSAqaGRtaSwgdTggdmFsLCBpbnQg
+b2Zmc2V0KQo+PiArewo+PiArCXdyaXRlbCh2YWwsIGhkbWktPnJlZ3MucDMyICsgb2Zmc2V0KTsK
+PiBoZG1pLT5yZWdzICsgNCAqIG9mZnNldAo+Cj4+ICt9Cj4+ICsKPj4gK3N0YXRpYyB1OCBkd19o
+ZG1pX3JlYWRsKHN0cnVjdCBkd19oZG1pICpoZG1pLCBpbnQgb2Zmc2V0KQo+PiArewo+PiArCXJl
+dHVybiByZWFkbChoZG1pLT5yZWdzLnAzMiArIG9mZnNldCk7Cj4gc2FtZSBoZXJlCj4KPj4gK30K
+Pj4gKwo+PiArc3RhdGljIHZvaWQgZHdfaGRtaV93cml0ZWIoc3RydWN0IGR3X2hkbWkgKmhkbWks
+IHU4IHZhbCwgaW50IG9mZnNldCkKPj4gK3sKPj4gKwl3cml0ZWIodmFsLCBoZG1pLT5yZWdzLnA4
+ICsgb2Zmc2V0KTsKPj4gK30KPj4gKwo+PiArc3RhdGljIHU4IGR3X2hkbWlfcmVhZGIoc3RydWN0
+IGR3X2hkbWkgKmhkbWksIGludCBvZmZzZXQpCj4+ICt7Cj4+ICsJcmV0dXJuIHJlYWRiKGhkbWkt
+PnJlZ3MucDggKyBvZmZzZXQpOwo+PiArfQo+PiArCj4+ICAgc3RhdGljIGlubGluZSB2b2lkIGhk
+bWlfd3JpdGViKHN0cnVjdCBkd19oZG1pICpoZG1pLCB1OCB2YWwsIGludCBvZmZzZXQpCj4+ICAg
+ewo+PiAtCXdyaXRlYih2YWwsIGhkbWktPnJlZ3MgKyBvZmZzZXQpOwo+PiArCWhkbWktPndyaXRl
+KGhkbWksIHZhbCwgb2Zmc2V0KTsKPj4gICB9Cj4+ICAgCj4+ICAgc3RhdGljIGlubGluZSB1OCBo
+ZG1pX3JlYWRiKHN0cnVjdCBkd19oZG1pICpoZG1pLCBpbnQgb2Zmc2V0KQo+PiAgIHsKPj4gLQly
+ZXR1cm4gcmVhZGIoaGRtaS0+cmVncyArIG9mZnNldCk7Cj4+ICsJcmV0dXJuIGhkbWktPnJlYWQo
+aGRtaSwgb2Zmc2V0KTsKPj4gICB9Cj4+Cj4+ICAgc3RhdGljIHZvaWQgaGRtaV9tb2RiKHN0cnVj
+dCBkd19oZG1pICpoZG1pLCB1OCBkYXRhLCB1OCBtYXNrLCB1bnNpZ25lZCByZWcpCj4+IEBAIC0x
+NTA4LDYgKzE1MzYsNyBAQCBpbnQgZHdfaGRtaV9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3Ry
+dWN0IGRldmljZSAqbWFzdGVyLAo+PiAgIAlzdHJ1Y3QgZHdfaGRtaSAqaGRtaTsKPj4gICAJc3Ry
+dWN0IHJlc291cmNlICppb3JlczsKPj4gICAJaW50IHJldCwgaXJxOwo+PiArCXUzMiB2YWwgPSAx
+Owo+PiAgIAo+PiAgIAloZG1pID0gZGV2bV9remFsbG9jKCZwZGV2LT5kZXYsIHNpemVvZigqaGRt
+aSksIEdGUF9LRVJORUwpOwo+PiAgIAlpZiAoIWhkbWkpCj4+IEBAIC0xNTIwLDYgKzE1NDksMjIg
+QEAgaW50IGR3X2hkbWlfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1h
+c3RlciwKPj4gICAJaGRtaS0+cmF0aW8gPSAxMDA7Cj4+ICAgCWhkbWktPmVuY29kZXIgPSBlbmNv
+ZGVyOwo+PiAgIAo+PiArCW9mX3Byb3BlcnR5X3JlYWRfdTMyKG5wLCAicmVnLWlvLXdpZHRoIiwg
+JnZhbCk7Cj4+ICsKPj4gKwlzd2l0Y2ggKHZhbCkgewo+PiArCWNhc2UgNDoKPj4gKwkJaGRtaS0+
+d3JpdGUgPSBkd19oZG1pX3dyaXRlbDsKPj4gKwkJaGRtaS0+cmVhZCA9IGR3X2hkbWlfcmVhZGw7
+Cj4+ICsJCWJyZWFrOwo+PiArCWNhc2UgMToKPj4gKwkJaGRtaS0+d3JpdGUgPSBkd19oZG1pX3dy
+aXRlYjsKPj4gKwkJaGRtaS0+cmVhZCA9IGR3X2hkbWlfcmVhZGI7Cj4+ICsJCWJyZWFrOwo+PiAr
+CWRlZmF1bHQ6Cj4+ICsJCWRldl9lcnIoZGV2LCAicmVnLWlvLXdpZHRoIG11c3QgYmUgMSBvciA0
+XG4iKTsKPj4gKwkJcmV0dXJuIC1FSU5WQUw7Cj4+ICsJfQo+PiArCj4+ICAgCWRkY19ub2RlID0g
+b2ZfcGFyc2VfcGhhbmRsZShucCwgImRkYy1pMmMtYnVzIiwgMCk7Cj4+ICAgCWlmIChkZGNfbm9k
+ZSkgewo+PiAgIAkJaGRtaS0+ZGRjID0gb2ZfZmluZF9pMmNfYWRhcHRlcl9ieV9ub2RlKGRkY19u
+b2RlKTsKPj4gQEAgLTE1NDQsOSArMTU4OSw5IEBAIGludCBkd19oZG1pX2JpbmQoc3RydWN0IGRl
+dmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsCj4+ICAgCQlyZXR1cm4gcmV0Owo+PiAg
+IAo+PiAgIAlpb3JlcyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2LCBJT1JFU09VUkNFX01F
+TSwgMCk7Cj4+IC0JaGRtaS0+cmVncyA9IGRldm1faW9yZW1hcF9yZXNvdXJjZShkZXYsIGlvcmVz
+KTsKPj4gLQlpZiAoSVNfRVJSKGhkbWktPnJlZ3MpKQo+PiAtCQlyZXR1cm4gUFRSX0VSUihoZG1p
+LT5yZWdzKTsKPj4gKwloZG1pLT5yZWdzLnAzMiA9IGRldm1faW9yZW1hcF9yZXNvdXJjZShkZXYs
+IGlvcmVzKTsKPj4gKwlpZiAoSVNfRVJSKGhkbWktPnJlZ3MucDMyKSkKPj4gKwkJcmV0dXJuIFBU
+Ul9FUlIoaGRtaS0+cmVncy5wMzIpOwo+PiAgIAo+PiAgIAkvKiBQcm9kdWN0IGFuZCByZXZpc2lv
+biBJRHMgKi8KPj4gICAJZGV2X2luZm8oZGV2LAo+IHJlZ2FyZHMKPiBQaGlsaXBwCj4KPgo+Cj4K
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmVsIG1h
+aWxpbmcgbGlzdApkZXZlbEBsaW51eGRyaXZlcnByb2plY3Qub3JnCmh0dHA6Ly9kcml2ZXJkZXYu
+bGludXhkcml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaXZlcmRldi1kZXZlbAo=
