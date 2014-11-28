@@ -1,62 +1,59 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v2 3/5] pinctrl: exynos: Fix GPIO setup failure because
- domain clock being gated
-Date: Fri, 28 Nov 2014 15:08:44 +0100
-Message-ID: <1417183724.18249.36.camel@AMDC1943>
-References: <1417011857-10419-1-git-send-email-k.kozlowski@samsung.com>
- <1417011857-10419-4-git-send-email-k.kozlowski@samsung.com>
- <CACRpkdb8F8YcvFeHPvOKHjx_p4HEpimck3XRabB3oHpZTdmRQQ@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: kbuild: Fix forced rebuild after 'make dtbs'
+Date: Fri, 28 Nov 2014 15:10:30 +0100
+Message-ID: <CACRpkdYwQT3+RLxP_b_kYJoHV4L7sZ7yiU=JZWVq_zHKz0EY_g@mail.gmail.com>
+References: <CACRpkdYmJWy1_vs0tWRA7SvkQnvbXXKqf7pHpH5b5tZ6vR+KJg@mail.gmail.com>
+	<1414961549-31666-1-git-send-email-jason@lakedaemon.net>
+	<5474F78F.2060906@suse.cz>
+	<20141125235150.GH3836@n2100.arm.linux.org.uk>
+	<20141126005710.GE22670@titan.lakedaemon.net>
+	<CACRpkdZJoWbQeuZ4ZXGbQr0+SNG_9ZA+cQkAA0C2F9rnZDYtyQ@mail.gmail.com>
+	<20141126144153.GK3836@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CACRpkdb8F8YcvFeHPvOKHjx_p4HEpimck3XRabB3oHpZTdmRQQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <thomas.abraham@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Vivek Gautam <gautam.vivek@samsung.com>, Kevin Hilman <khilman@kernel.org>, Russell King <linux@arm.linux.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141126144153.GK3836-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On pi=C4=85, 2014-11-28 at 15:04 +0100, Linus Walleij wrote:
-> On Wed, Nov 26, 2014 at 3:24 PM, Krzysztof Kozlowski
-> <k.kozlowski@samsung.com> wrote:
->=20
-> > The audio subsystem on Exynos 5420 has separate clocks and GPIO. To
-> > operate properly on GPIOs the main block clock 'mau_epll' must be
-> > enabled.
-> >
-> > This was observed on Peach Pi/Pit and Arndale Octa (after enabling =
-i2s0)
-> > after introducing runtime PM to pl330 DMA driver. After that commit=
- the
-> > 'mau_epll' was gated, because the "amba" clock was disabled and the=
-re
-> > were no more users of mau_epll.
-> >
-> > The system hang just before probing i2s0 because
-> > samsung_pinmux_setup() tried to access memory from audss block whic=
-h was
-> > gated.
-> >
-> > Add a clock property to the pinctrl driver and enable the clock dur=
-ing
-> > GPIO setup. During normal GPIO operations (set, get, set_direction)=
- the
-> > clock is not enabled.
-> >
-> > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->=20
-> Waiting for Tomasz to review this.
->=20
-> Can this patch be applied in separation from the others?
+On Wed, Nov 26, 2014 at 3:41 PM, Russell King - ARM Linux
+<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> On Wed, Nov 26, 2014 at 02:57:42PM +0100, Linus Walleij wrote:
+>> make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+>> KBUILD_OUTPUT=build-u300 u300_defconfig
+>> make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+>> KBUILD_OUTPUT=build-u300 zImage CONFIG_DEBUG_SECTION_MISMATCH=y
+>> make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+>> KBUILD_OUTPUT=build-u300 dtbs
+>> make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+>> KBUILD_OUTPUT=build-u300 zImage CONFIG_DEBUG_SECTION_MISMATCH=y
+>>
+>> -> Rebuilds everything.
+>>
+>> This doesn't occur before the offending commit. So it only happens
+>> when specifying extra environment variables on the command line.
+>
+> I suspect if you also provide the CONFIG_DEBUG_SECTION_MISMATCH=y on the
+> dtbs line, everything will work properly.
 
-Yes, it can be picked independently.
+Yay, it works! :)
 
-The commit message is somehow misleading because issue is actually fixe=
-d
-by enabling this in DTS. So the next patch (4/5: ARM: dts: exynos5420:
-Add clock for audss pinctrl) actually fixes the issue on Arndale Octa
-board from pinctrl perspective. Unfortunately I spot that mistake (in
-commit msg) later...
+> The problem is that dtbs line executes a prepare, which I guess rebuilds
+> the bounds stuff.  So, the dtbs target results in it being rebuilt without
+> the section mismatch, and then you re-execute a make with it, causing
+> the bounds stuff to be rebuilt again.
 
-Best regards,
-Krzysztof
+Yep. Not very intuitive to require passing section mismatch debug
+flags to DTB rebuilding but whatever, it's not so bad I can't live with
+it.
+
+Strange that it worked before.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
