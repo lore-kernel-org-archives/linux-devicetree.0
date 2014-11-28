@@ -1,7 +1,7 @@
 From: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 1/2] ARM: hip04: set ARCH_NR_GPIO to 128
-Date: Fri, 28 Nov 2014 14:29:47 +0800
-Message-ID: <1417156188-500-2-git-send-email-wangzhou.bry@gmail.com>
+Subject: [PATCH v3 2/2] ARM: dts: hip04: add GPIO pieces
+Date: Fri, 28 Nov 2014 14:29:48 +0800
+Message-ID: <1417156188-500-3-git-send-email-wangzhou.bry@gmail.com>
 References: <1417156188-500-1-git-send-email-wangzhou.bry@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1417156188-500-1-git-send-email-wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -10,41 +10,101 @@ To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Set ARCH_NR_GPIO for Hisilicon Soc Hip04, which has 4 GPIO
-controllers with 32 GPIOs each.
+Hisilicon Soc hip04 has four GPIO controllers, each one has 32
+GPIOs and can be configured to be an interrupt controller.The GPIO
+controllers are compatible with the snps,dw-apb-gpio driver.
+This patch add the corresponding device tree nodes.
 
 Signed-off-by: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/Kconfig                |    1 +
- arch/arm/configs/hisi_defconfig |    3 +++
- 2 files changed, 4 insertions(+)
+ arch/arm/boot/dts/hip04.dtsi |   75 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 89c4b5c..26aae1e 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -1509,6 +1509,7 @@ config ARCH_NR_GPIO
- 	default 352 if ARCH_VT8500
- 	default 288 if ARCH_ROCKCHIP
- 	default 264 if MACH_H4700
-+	default 128 if ARCH_HIP04
- 	default 0
- 	help
- 	  Maximum number of GPIOs in the system.
-diff --git a/arch/arm/configs/hisi_defconfig b/arch/arm/configs/hisi_defconfig
-index 1772505..130292b 100644
---- a/arch/arm/configs/hisi_defconfig
-+++ b/arch/arm/configs/hisi_defconfig
-@@ -41,6 +41,9 @@ CONFIG_SPI_PL022=y
- CONFIG_PINCTRL_SINGLE=y
- CONFIG_GPIO_GENERIC_PLATFORM=y
- CONFIG_REGULATOR_GPIO=y
-+CONFIG_GPIOLIB=y
-+CONFIG_GPIO_DWAPB=y
-+CONFIG_GPIO_SYSFS=y
- CONFIG_DRM=y
- CONFIG_FB_SIMPLE=y
- CONFIG_USB=y
+diff --git a/arch/arm/boot/dts/hip04.dtsi b/arch/arm/boot/dts/hip04.dtsi
+index 93b6c90..c0f76b8 100644
+--- a/arch/arm/boot/dts/hip04.dtsi
++++ b/arch/arm/boot/dts/hip04.dtsi
+@@ -263,5 +263,80 @@
+ 			interrupts = <0 372 4>;
+ 		};
+ 
++		gpio@4003000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,dw-apb-gpio";
++			reg = <0x4003000 0x1000>;
++
++			gpio3: gpio-controller@0 {
++				compatible = "snps,dw-apb-gpio-port";
++				gpio-controller;
++				#gpio-cells = <2>;
++				snps,nr-gpios = <32>;
++				reg = <0>;
++				interrupt-parent = <&gic>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				interrupts = <0 392 4>;
++			};
++		};
++
++		gpio@4002000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,dw-apb-gpio";
++			reg = <0x4002000 0x1000>;
++
++			gpio2: gpio-controller@0 {
++			compatible = "snps,dw-apb-gpio-port";
++				gpio-controller;
++				#gpio-cells = <2>;
++				snps,nr-gpios = <32>;
++				reg = <0>;
++				interrupt-parent = <&gic>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				interrupts = <0 391 4>;
++			};
++		};
++
++		gpio@4001000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,dw-apb-gpio";
++			reg = <0x4001000 0x1000>;
++
++			gpio1: gpio-controller@0 {
++				compatible = "snps,dw-apb-gpio-port";
++				gpio-controller;
++				#gpio-cells = <2>;
++				snps,nr-gpios = <32>;
++				reg = <0>;
++				interrupt-parent = <&gic>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				interrupts = <0 390 4>;
++			};
++		};
++
++		gpio@4000000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,dw-apb-gpio";
++			reg = <0x4000000 0x1000>;
++
++			gpio0: gpio-controller@0 {
++				compatible = "snps,dw-apb-gpio-port";
++				gpio-controller;
++				#gpio-cells = <2>;
++				snps,nr-gpios = <32>;
++				reg = <0>;
++				interrupt-parent = <&gic>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				interrupts = <0 389 4>;
++			};
++		};
+ 	};
+ };
 -- 
 1.7.9.5
 
