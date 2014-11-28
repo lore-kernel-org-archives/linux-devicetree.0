@@ -1,114 +1,51 @@
-From: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 2/2] ARM: dts: hip04: add GPIO pieces
-Date: Fri, 28 Nov 2014 14:29:48 +0800
-Message-ID: <1417156188-500-3-git-send-email-wangzhou.bry@gmail.com>
-References: <1417156188-500-1-git-send-email-wangzhou.bry@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417156188-500-1-git-send-email-wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [RFC] cpufreq: Add "dvfs-method" binding to probe cpufreq drivers
+Date: Fri, 28 Nov 2014 12:01:42 +0530
+Message-ID: <CAKohpokwKzJ1TJQu2YGS+veDPuGFKehWWbdYKrHyPz6vK-Vy3A@mail.gmail.com>
+References: <596a6d49f2b3e2837aa9a54a3e1249161d3c9265.1416991009.git.viresh.kumar@linaro.org>
+	<5476071B.1060705@arm.com>
+	<CAKohpomFE6xg+HfOicha4Ntkr9osqDK2gxdKce=BU_q35jfBxA@mail.gmail.com>
+	<5476F4ED.6040206@arm.com>
+	<CAKohpok+M+HuuQBJ3EJ_3e+Uv-Me5za7EO2TVguU_tCXNtahvQ@mail.gmail.com>
+	<547707C8.3080108@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <547707C8.3080108@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Santosh Shilimkar <santosh.shilimkar@oracle.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Arnd Bergmann <arnd.bergmann@linaro.org>, Mike Turquette <mike.turquette@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kesavan.abhilash@gmail.com" <kesavan.abhilash@gmail.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "k.chander@samsung.com" <k.chander@samsung.com>, "olof@lixom.net" <olof@lixom.net>, "ta.omasab@gmail.com" <ta.omasab@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hisilicon Soc hip04 has four GPIO controllers, each one has 32
-GPIOs and can be configured to be an interrupt controller.The GPIO
-controllers are compatible with the snps,dw-apb-gpio driver.
-This patch add the corresponding device tree nodes.
+On 27 November 2014 at 16:45, Sudeep Holla <sudeep.holla@arm.com> wrote:
+> It's the general understanding, I am not sure if it's specified anywhere
+> in the kernel Documentation, but I could find the below excerpts from [1]:
+>
+> "The compatibility rules say that new kernels must work with older
+> device trees. If changes are required, they should be put into new
+> properties; the old ones can then be deprecated but not removed. New
+> properties should be optional, so that device trees lacking those
+> properties continue to work. The device tree developers will provide a
+> set of guidelines for the creation of future-proof bindings."
+>
+> It's *exactly opposite* as DTs are considered as part of firmware that
+> gets shipped with the boards and any kernel should work with that DT if
+> it is compliance with the DT bindings(even old, as the DT bindings
+> should never get changed only gets extended)
 
-Signed-off-by: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/hip04.dtsi |   75 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
+Okay, I was completely wrong. :)
 
-diff --git a/arch/arm/boot/dts/hip04.dtsi b/arch/arm/boot/dts/hip04.dtsi
-index 93b6c90..c0f76b8 100644
---- a/arch/arm/boot/dts/hip04.dtsi
-+++ b/arch/arm/boot/dts/hip04.dtsi
-@@ -263,5 +263,80 @@
- 			interrupts = <0 372 4>;
- 		};
- 
-+		gpio@4003000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "snps,dw-apb-gpio";
-+			reg = <0x4003000 0x1000>;
-+
-+			gpio3: gpio-controller@0 {
-+				compatible = "snps,dw-apb-gpio-port";
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				snps,nr-gpios = <32>;
-+				reg = <0>;
-+				interrupt-parent = <&gic>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				interrupts = <0 392 4>;
-+			};
-+		};
-+
-+		gpio@4002000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "snps,dw-apb-gpio";
-+			reg = <0x4002000 0x1000>;
-+
-+			gpio2: gpio-controller@0 {
-+			compatible = "snps,dw-apb-gpio-port";
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				snps,nr-gpios = <32>;
-+				reg = <0>;
-+				interrupt-parent = <&gic>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				interrupts = <0 391 4>;
-+			};
-+		};
-+
-+		gpio@4001000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "snps,dw-apb-gpio";
-+			reg = <0x4001000 0x1000>;
-+
-+			gpio1: gpio-controller@0 {
-+				compatible = "snps,dw-apb-gpio-port";
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				snps,nr-gpios = <32>;
-+				reg = <0>;
-+				interrupt-parent = <&gic>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				interrupts = <0 390 4>;
-+			};
-+		};
-+
-+		gpio@4000000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "snps,dw-apb-gpio";
-+			reg = <0x4000000 0x1000>;
-+
-+			gpio0: gpio-controller@0 {
-+				compatible = "snps,dw-apb-gpio-port";
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				snps,nr-gpios = <32>;
-+				reg = <0>;
-+				interrupt-parent = <&gic>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				interrupts = <0 389 4>;
-+			};
-+		};
- 	};
- };
--- 
-1.7.9.5
+> No, you *must* :). That's backward compatibility. Just consider a simple
+> case where the bootloader is generating DT and we don't want to upgrade it.
+
+Now these are the options we have for existing platforms:
+
+- Update those platforms to check if DT has "compatible" string in CPU node.
+If yes, don't create a device as this will be created by cpufreq-dt.
+
+- Just remove the device creation from those paths if the Maintainers of
+those platforms want to cleanup their code, accepting the loss of backward
+compatibility..
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+viresh
