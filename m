@@ -1,44 +1,74 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 3/3] gpio: mcp23s08: Add option to configure IRQ as active high
-Date: Fri, 28 Nov 2014 16:39:31 +0100
-Message-ID: <CACRpkdasOLsPm2jGCLjLa=-mWSuu2GLQLaxbtr8TL6EeQhjPfg@mail.gmail.com>
-References: <1416213491-9775-1-git-send-email-alexander.stein@systec-electronic.com>
-	<1416213491-9775-3-git-send-email-alexander.stein@systec-electronic.com>
-	<CACRpkdZCA7Zxs0HDpFZSmFmg5hYYAHmeNySFpM-Xq3G322mmbw@mail.gmail.com>
-	<3020714.NCVpEFcdBT@ws-stein>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <3020714.NCVpEFcdBT@ws-stein>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexander Stein <alexander.stein@systec-electronic.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v3 3/3] of: support passing console options with
+ stdout-path
+Date: Fri, 28 Nov 2014 15:39:18 +0000
+Message-ID: <20141128153918.95D11C40884@trevor.secretlab.ca>
+References: <1417110967-16284-1-git-send-email-leif.lindholm@linaro.org>
+	<1417110967-16284-4-git-send-email-leif.lindholm@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1417110967-16284-4-git-send-email-leif.lindholm@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Leif Lindholm <leif.lindholm@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, robh+dt@kernel.org, plagnioj@jcrosoft.com, ijc@debian.org, andrew@lunn.ch, s.hauer@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 27, 2014 at 3:36 PM, Alexander Stein
-<alexander.stein@systec-electronic.com> wrote:
-> On Thursday 27 November 2014 14:58:39, Linus Walleij wrote:
+On Thu, 27 Nov 2014 17:56:07 +0000
+, Leif Lindholm <leif.lindholm@linaro.org>
+ wrote:
+> Support specifying console options (like with console=ttyXN,<options>)
+> by appending them to the stdout-path property after a separating ':'.
+> 
+> Example:
+>         stdout-path = "uart0:115200";
+> 
+> Signed-off-by: Leif Lindholm <leif.lindholm@linaro.org>
 
->> Sorry too confused by this, can you explain?
->
-> Sure. Until now ODR is cleared as reset default while INTPOL explicitly gets cleared.
-> So the INT output pin on the MCP23S17 is an active-low output pin which will trigger
-> an active-low interrupt.
+Applied with a slight change below.
 
-OK... I thought it was some kind of input line to the device. Now I get it, it
-is what is generated *out* of this device. Please state this in the bindings.
+Thanks!
 
-> While this is useually great, as most interrupt pins are active low, our board design
-> requires an active-high output.
+> ---
+>  drivers/of/base.c |    9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 7f0e5f7..6d2d45e 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -37,6 +37,7 @@ EXPORT_SYMBOL(of_allnodes);
+>  struct device_node *of_chosen;
+>  struct device_node *of_aliases;
+>  struct device_node *of_stdout;
+> +static const char *of_stdout_options;
+>  
+>  struct kset *of_kset;
+>  
+> @@ -1844,7 +1845,7 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
+>  		if (IS_ENABLED(CONFIG_PPC) && !name)
+>  			name = of_get_property(of_aliases, "stdout", NULL);
+>  		if (name)
+> -			of_stdout = of_find_node_by_path(name);
+> +			of_stdout = of_find_node_opts_by_path(name, &of_stdout_options);
+>  	}
+>  
+>  	if (!of_aliases)
+> @@ -1968,9 +1969,13 @@ EXPORT_SYMBOL_GPL(of_prop_next_string);
+>   */
+>  bool of_console_check(struct device_node *dn, char *name, int index)
+>  {
+> +	char *console_options;
+> +
+>  	if (!dn || dn != of_stdout || console_set_on_cmdline)
+>  		return false;
+> -	return !add_preferred_console(name, index, NULL);
+> +
+> +	console_options = kstrdup(of_stdout_options, GFP_KERNEL);
+> +	return !add_preferred_console(name, index, console_options);
 
-OK I get it :)
+I changed this to simply:
+	return !add_preferred_console(name, index,
+				      kstrdup(of_stdout_options, GFP_KERNEL));
 
-> You might wonder why I then also changed IRQF_TRIGGER_LOW to
-> IRQF_TRIGGER_HIGH for my board the interrupt line is actually active low.
-> This is due the fact that GIC only supports active high-interrupts (any other flag
-> results in request fail) but the microcontroller has a feature to inverse these interrupt triggers.
+Not a big deal, just makes for a slightly shorter function.
 
-Very convoluted, but common in electronics, OK, no problem.
-
-Yours,
-Linus Walleij
+g.
