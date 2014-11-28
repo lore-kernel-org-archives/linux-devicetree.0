@@ -1,54 +1,52 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 6/8] dt-bindings: Add document for MT6397 regulator
-Date: Fri, 28 Nov 2014 15:30:56 +0000
-Message-ID: <20141128153056.GT7712@sirena.org.uk>
-References: <1417146874-5232-1-git-send-email-flora.fu@mediatek.com>
- <1417146874-5232-7-git-send-email-flora.fu@mediatek.com>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: Re: [PATCH v3 2/3] of: add optional options parameter to of_find_node_by_path()
+Date: Fri, 28 Nov 2014 15:33:08 +0000
+Message-ID: <CACxGe6s=PETLBN_Y5Mk6zM677-1SrNUwAJoUK4bHdkPObBH4JQ@mail.gmail.com>
+References: <1417110967-16284-1-git-send-email-leif.lindholm@linaro.org>
+ <1417110967-16284-3-git-send-email-leif.lindholm@linaro.org>
+ <20141128004403.08D90C40A7F@trevor.secretlab.ca> <20141128113428.GM2361@bivouac.eciton.net>
+ <20141128152512.2152EC40884@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gnqr8uuXGD2cvyzH"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1417146874-5232-7-git-send-email-flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Flora Fu <flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Sandeep Nair <sandeep_n-l0cyMroinI0@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Joe.C" <yi>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141128152512.2152EC40884@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Leif Lindholm <leif.lindholm@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Ian Campbell <ijc@debian.org>, Andrew Lunn <andrew@lunn.ch>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Nov 28, 2014 at 3:25 PM, Grant Likely <grant.likely@linaro.org> wrote:
+> On Fri, 28 Nov 2014 11:34:28 +0000
+> , Leif Lindholm <leif.lindholm@linaro.org>
+>  wrote:
+>> On Fri, Nov 28, 2014 at 12:44:03AM +0000, Grant Likely wrote:
+>> > > + separator = strchr(path, ':');
+>> > > + if (separator && opts)
+>> > > +         *opts = separator + 1;
+>> > > +
+>> >
+>> > What about when there are no opts? Do we require the caller to make sure
+>> > opts is NULL before calling the function (which sounds like a good
+>> > source of bugs) or do we clear it on successful return?
+>> >
+>> > I think if opts is passed in, but there are no options, then it should
+>> > set *opts = NULL.
+>>
+>> Yeah, oops.
+>>
+>> > There should be test cases for this also. Must set opts to NULL on
+>> > successful return, and (I think) should leave opts alone on an
+>> > unsuccessful search.
+>>
+>> I would actually argue for always nuking the opts - since that could
+>> (theoretically) prevent something working by accident in spite of
+>> error conditions.
+>>
+>> How about the below?
+>
+> Perfect, applied with one fixup below...
 
---gnqr8uuXGD2cvyzH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+And by the way, let me say well done on this patch. It is elegantly
+implemented within the framework already there.
 
-On Fri, Nov 28, 2014 at 11:54:32AM +0800, Flora Fu wrote:
-
-> +- compatible: "mediatek,mt6397"
-> +- regulators: This is the list of child nodes that specify the regulator
-> +  initialization data for defined regulators. The definition for each of these
-> +  nodes is defined using the standard binding for regulators found at
-> +  Documentation/devicetree/bindings/regulator/regulator.txt.
-
-You need to specify which regulator names are valid and how they
-correspond to the hardware as part of the binding.
-
---gnqr8uuXGD2cvyzH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUeJUwAAoJECTWi3JdVIfQTOwH/2/ilGREaWay/MZBpgOUhq4w
-d+5T2C0fKtkHglE4NTTexGsm/EOjmnizQ4EL9bWi/v0KL7VRldSLLQeutTyapNa8
-2Mm1rqfgkq2zkf9N7hel+YoX1rubYv9iA7Nc+F9In5zcye2zB/jxA4/DmJ/LcI6E
-yUgqiDipuavtJ8jpg7RUEdpVxQ9AM8Jfi8xFg0QeNAQvMBOP1vRbWqDFts4Uucs9
-zF35LJE8vcvIehyPe1aCarL+EfZjMmMPxDVCjR4RuvarnKlOh6Vq6ZhS4pwT1QnQ
-uoP+8o72sopVNmd5Z7Q6QGC4A4Ma9shZDko5cDPVdqi1OfbS1Lp4hSZ7mz729J4=
-=/fGV
------END PGP SIGNATURE-----
-
---gnqr8uuXGD2cvyzH--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+g.
