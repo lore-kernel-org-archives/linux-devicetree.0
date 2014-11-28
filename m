@@ -1,97 +1,108 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH][RFC] spi: sh-msiof: Configure MSIOF sync signal timing in
- device tree
-Date: Fri, 28 Nov 2014 12:45:27 +0900
-Message-ID: <5477EFD7.50307@renesas.com>
+From: Flora Fu <flora.fu@mediatek.com>
+Subject: [PATCH v2 0/8] Add Support for MediaTek PMIC MT6397 MFD Core and
+ Regulator
+Date: Fri, 28 Nov 2014 11:54:26 +0800
+Message-ID: <1417146874-5232-1-git-send-email-flora.fu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org
-Cc: damm-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@arm.linux.org.uk>, Dongdong Cheng <dongdong.cheng@mediatek.com>, Sandeep Nair <sandeep_n@ti.com>, Flora Fu <flora.fu@mediatek.com>, Grant Likely <grant.likely@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@nvidia.com>, Eddie Huang <eddie.huang@mediatek.com>, srv_heupstream@mediatek.com, Peter De Schrijver <pdeschrijver@nvidia.com>, linux-kernel@vger.kernel.org, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-The MSIOF controller has DTDL and SYNCDL in SITMDR1 and SIRMDR1
-registers. So, this patch adds new properties like the following
-commit:
-  d0fb47a5237d8b9576113568bacfd27892308b62
-  (spi: fsl-espi: Configure FSL eSPI CSBEF and CSAFT)
 
-The DTDL is the chip select (SYNC) setup time.
- b'000: No bit delay
- b'001: 1-clock-cycle delay
- b'010: 2-clock-cycle delay
- b'101: 0.5-clock-cycle delay
- b'110: 1.5-clock-cycle delay
+The patch sets add support for MediaTek PMIC MT6397 MFD core and its regulator driver.
+This is hardware layout for access PMIC MT6397 from AP SoC MT8135.
+Between PMIC MT6397 and MT8135, the physical signal channel is SPI bus.
+A specific hardware called PMIC Wrapper or PWRAP to handle access protocols in both PMIC and AP side.
 
-The SYNCDL is the chip select (SYNC) hold time.
- b'000: No bit delay
- b'001: 1-clock-cycle delay
- b'010: 2-clock-cycle delay
- b'011: 3-clock-cycle delay
- b'101: 0.5-clock-cycle delay
- b'110: 1.5-clock-cycle delay
++-----------------+           +---------------+
+|                 |           |               |
+| Mediatek AP SoC |           |               |
+| (ex. MT8135)    |           |    MT6397     |
+|                 |           |               |
+|      +--------+ | (SPI bus) | +--------+    |
+|      |        | |-----------| |        |    |
+|      |  PMIC  | |-----------| |  PMIC  |    |
+|      | Wrapper| |-----------| | Wrapper|    |
+|      |        | |-----------| |        |    |
+|      +--------+ |           | +--------+    |
+|                 |           |               |
++-----------------+           +---------------+
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
+Changes since v1
+================
+(1) Patch 1/8: Add MT8135 PMIC wrapper driver for SoC's proprietary hardware.
+(2) Patch 2/8: Update patch of MT6397 MFD driver to contain only MFD related codes and fix defeat of coding styles.
+(3) Patch 3/8: Update MT6397 regulator driver
+	- use helpers and standard ways for specifying data in regulator description.
+	- add more comments to explaining why the driver implement its own regulator_ops for ".is_enabled", ".set_voltage_sel" and ".get_voltage_sel".
+	- update driver implement for coding styles.
+(4) Patch 4/8: Add document for MT8135 PMIC wrapper.
+(5) Patch 5/8: Update document for MT6397 MFD.
+(6) Patch 6/8: Update document for MT6397 regulators.
+(7) Patch 7/8: Add device tree for MT6397 MFD in mt8135.dtsi.
+(8) Patch 8/8: Update device tree for MT6397 regulators in mt8135.dtsi.
 
- I would like to add new properties for sh-msiof driver to adjust
-the SYNC siginal timing using DTDL and SYNCDL. In the current driver,
-these parameters are hardcoded to 0. And then, I checked other spi
-drivers, and I found the following commit:
-  d0fb47a5237d8b9576113568bacfd27892308b62
-  (spi: fsl-espi: Configure FSL eSPI CSBEF and CSAFT)
+Initial version (v1):
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/302984.html
 
-If this patch is reasonable, I will modify the sh-msiof driver.
-Or, should we add a new function for this timing adjusting in the
-spi framework?
+This driver is based on 3.18-rc1.
 
- Documentation/devicetree/bindings/spi/sh-msiof.txt |    8 ++++++++
- drivers/spi/spi-sh-msiof.c                         |    2 ++
- 2 files changed, 10 insertions(+)
+Flora Fu (8):
+  soc: mediatek: Add PMIC wrapper for MT8135 and MT6397 SoC
+  mfd: MT6397: Add support for PMIC MT6397 MFD
+  regulator: MT6397: Add support for MT6397 regulator
+  dt-bindings:: Add document for MT8135 PMIC Wrapper
+  dt-bindings: Add document for MT6397 MFD
+  dt-bindings: Add document for MT6397 regulator
+  ARM: dts: mt8135: Add support for PMIC MT6397 MFD
+  ARM: dts: mt8135: Add support for MT6397 regulator
 
-diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-index d11c372..5fe8ffd 100644
---- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
-+++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-@@ -30,6 +30,14 @@ Optional properties:
- 			 specifiers, one for transmission, and one for
- 			 reception.
- - dma-names            : Must contain a list of two DMA names, "tx" and "rx".
-+- renesas,tdmr-dtdl    : delay sync signal (setup) in transmit mode
-+			 (default is 0, we can set it to 0, 1, 2, 5, or 6)
-+- renesas,tdmr-syncdl  : delay sync signal (hold) in transmit mode
-+			 (default is 0, we can set it to 0, 1, 2, 3, 5, or 6)
-+- renesas,rdmr-dtdl    : delay sync signal (setup) in receive mode
-+			 (default is 0, we can set it to 0, 1, 2, 5, or 6)
-+- renesas,rdmr-syncdl  : delay sync signal (hold) in receive mode
-+			 (default is 0, we can set it to 0, 1, 2, 3, 5, or 6)
-
- Optional properties, deprecated for soctype-specific bindings:
- - renesas,tx-fifo-size : Overrides the default tx fifo size given in words
-diff --git a/drivers/spi/spi-sh-msiof.c b/drivers/spi/spi-sh-msiof.c
-index 3f36540..09e0c38 100644
---- a/drivers/spi/spi-sh-msiof.c
-+++ b/drivers/spi/spi-sh-msiof.c
-@@ -296,11 +296,13 @@ static void sh_msiof_spi_set_pin_regs(struct sh_msiof_spi_priv *p,
- 	tmp = MDR1_SYNCMD_SPI | 1 << MDR1_FLD_SHIFT | MDR1_XXSTP;
- 	tmp |= !cs_high << MDR1_SYNCAC_SHIFT;
- 	tmp |= lsb_first << MDR1_BITLSB_SHIFT;
-+printk("%s: TMDR1 = %x\n", __func__, tmp | MDR1_TRMD | TMDR1_PCON);
- 	sh_msiof_write(p, TMDR1, tmp | MDR1_TRMD | TMDR1_PCON);
- 	if (p->chipdata->master_flags & SPI_MASTER_MUST_TX) {
- 		/* These bits are reserved if RX needs TX */
- 		tmp &= ~0x0000ffff;
- 	}
-+printk("%s: RMDR1 = %x\n", __func__, tmp);
- 	sh_msiof_write(p, RMDR1, tmp);
-
- 	tmp = 0;
--- 
-1.7.9.5
+ Documentation/devicetree/bindings/mfd/mt6397.txt   |  73 ++
+ .../bindings/regulator/mt6397-regulator.txt        |  32 +
+ .../soc/mediatek/mediatek,mt8135-pwrap.txt         |  79 ++
+ arch/arm/boot/dts/mt8135.dtsi                      | 211 ++++++
+ drivers/mfd/Kconfig                                |  10 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/mt6397-core.c                          |  84 ++
+ drivers/regulator/Kconfig                          |   9 +
+ drivers/regulator/Makefile                         |   2 +-
+ drivers/regulator/mt6397-regulator.c               | 369 +++++++++
+ drivers/soc/Kconfig                                |   1 +
+ drivers/soc/Makefile                               |   1 +
+ drivers/soc/mediatek/Kconfig                       |  11 +
+ drivers/soc/mediatek/Makefile                      |   1 +
+ drivers/soc/mediatek/mt8135-pmic-wrap.c            | 844 +++++++++++++++++++++
+ drivers/soc/mediatek/mt8135-pmic-wrap.h            | 138 ++++
+ include/linux/mfd/mt6397/core.h                    |  23 +
+ include/linux/mfd/mt6397/registers.h               | 362 +++++++++
+ include/linux/regulator/mt6397-regulator.h         |  49 ++
+ include/linux/soc/mediatek/mtk-pmic-wrap.h         |  25 +
+ 20 files changed, 2324 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/mt6397.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/mt6397-regulator.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/mediatek/mediatek,mt8135-pwrap.txt
+ create mode 100644 drivers/mfd/mt6397-core.c
+ create mode 100644 drivers/regulator/mt6397-regulator.c
+ create mode 100644 drivers/soc/mediatek/Kconfig
+ create mode 100644 drivers/soc/mediatek/Makefile
+ create mode 100644 drivers/soc/mediatek/mt8135-pmic-wrap.c
+ create mode 100644 drivers/soc/mediatek/mt8135-pmic-wrap.h
+ create mode 100644 include/linux/mfd/mt6397/core.h
+ create mode 100644 include/linux/mfd/mt6397/registers.h
+ create mode 100644 include/linux/regulator/mt6397-regulator.h
+ create mode 100644 include/linux/soc/mediatek/mtk-pmic-wrap.h
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.1.1.dirty
