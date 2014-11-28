@@ -1,191 +1,97 @@
-From: Vivek Gautam <gautamvivek1987@gmail.com>
-Subject: Re: [PATCH V2 2/2] arm64: exynos: Add bus1 pinctrl node on exynos7
-Date: Fri, 28 Nov 2014 09:10:24 +0530
-Message-ID: <CAFp+6iHG42h3oCkO8mWG4DnpP-X-kh4VanoQOv3By831Ly5DdA@mail.gmail.com>
-References: <CAGOxZ53TUvZhSDLfeCuyvBwVcrkQhFnftQzk1DbkU_krdoFbZA@mail.gmail.com>
-	<1416834381-11314-1-git-send-email-gautam.vivek@samsung.com>
-	<CAGOxZ52XtT-Aq-HJFq7GAzfAq6GEdrzKeez_=fwJR-Z2rkUF+g@mail.gmail.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH][RFC] spi: sh-msiof: Configure MSIOF sync signal timing in
+ device tree
+Date: Fri, 28 Nov 2014 12:45:27 +0900
+Message-ID: <5477EFD7.50307@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAGOxZ52XtT-Aq-HJFq7GAzfAq6GEdrzKeez_=fwJR-Z2rkUF+g@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>
-Cc: Alim Akhtar <alim.akhtar@gmail.com>, Vivek Gautam <gautam.vivek@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-usb <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, robh+dt <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alim Akhtar <alim.akhtar@samsung.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org
+Cc: damm-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kukjin,
+The MSIOF controller has DTDL and SYNCDL in SITMDR1 and SIRMDR1
+registers. So, this patch adds new properties like the following
+commit:
+  d0fb47a5237d8b9576113568bacfd27892308b62
+  (spi: fsl-espi: Configure FSL eSPI CSBEF and CSAFT)
 
+The DTDL is the chip select (SYNC) setup time.
+ b'000: No bit delay
+ b'001: 1-clock-cycle delay
+ b'010: 2-clock-cycle delay
+ b'101: 0.5-clock-cycle delay
+ b'110: 1.5-clock-cycle delay
 
-On Wed, Nov 26, 2014 at 6:59 PM, Alim Akhtar <alim.akhtar@gmail.com> wrote:
-> Hi Vivek,
->
-> On Mon, Nov 24, 2014 at 6:36 PM, Vivek Gautam <gautam.vivek@samsung.com> wrote:
->> BUS1 pinctrl provides gpios for usb and power regulator
->> available on exynos7-espresso board. So add relevant device
->> node for pinctrl-bus1.
->>
->> Signed-off-by: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
->> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
->> ---
+The SYNCDL is the chip select (SYNC) hold time.
+ b'000: No bit delay
+ b'001: 1-clock-cycle delay
+ b'010: 2-clock-cycle delay
+ b'011: 3-clock-cycle delay
+ b'101: 0.5-clock-cycle delay
+ b'110: 1.5-clock-cycle delay
 
-We can pick this up for 3.19 rc1 ?
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+---
 
->>
-> Looks good to me.
-> Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
->
->> This patch was part of series:
->> "[PATCH 00/11] Exynos7: Adding USB 3.0 support"
->>  https://lkml.org/lkml/2014/11/21/247
->>
->> Changes since V1:
->>  - Added support for all pin banks which are part of BUS1 pin controller.
->>
->>  arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi |   82 +++++++++++++++++++++++
->>  arch/arm64/boot/dts/exynos/exynos7.dtsi         |    7 ++
->>  2 files changed, 89 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi b/arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi
->> index 2eef4a2..c367f0a 100644
->> --- a/arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi
->> +++ b/arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi
->> @@ -335,6 +335,88 @@
->>         };
->>  };
->>
->> +&pinctrl_bus1 {
->> +       gpf0: gpf0 {
->> +               gpio-controller;
->> +               #gpio-cells = <2>;
->> +
->> +               interrupt-controller;
->> +               #interrupt-cells = <2>;
->> +       };
->> +
->> +       gpf1: gpf1 {
->> +               gpio-controller;
->> +               #gpio-cells = <2>;
->> +
->> +               interrupt-controller;
->> +               #interrupt-cells = <2>;
->> +       };
->> +
->> +       gpf2: gpf2 {
->> +               gpio-controller;
->> +               #gpio-cells = <2>;
->> +
->> +               interrupt-controller;
->> +               #interrupt-cells = <2>;
->> +       };
->> +
->> +       gpf3: gpf3 {
->> +               gpio-controller;
->> +               #gpio-cells = <2>;
->> +
->> +               interrupt-controller;
->> +               #interrupt-cells = <2>;
->> +       };
->> +
->> +       gpf4: gpf4 {
->> +               gpio-controller;
->> +               #gpio-cells = <2>;
->> +
->> +               interrupt-controller;
->> +               #interrupt-cells = <2>;
->> +       };
->> +
->> +       gpf5: gpf5 {
->> +               gpio-controller;
->> +               #gpio-cells = <2>;
->> +
->> +               interrupt-controller;
->> +               #interrupt-cells = <2>;
->> +       };
->> +
->> +       gpg1: gpg1 {
->> +               gpio-controller;
->> +               #gpio-cells = <2>;
->> +
->> +               interrupt-controller;
->> +               #interrupt-cells = <2>;
->> +       };
->> +
->> +       gpg2: gpg2 {
->> +               gpio-controller;
->> +               #gpio-cells = <2>;
->> +
->> +               interrupt-controller;
->> +               #interrupt-cells = <2>;
->> +       };
->> +
->> +       gph1: gph1 {
->> +               gpio-controller;
->> +               #gpio-cells = <2>;
->> +
->> +               interrupt-controller;
->> +               #interrupt-cells = <2>;
->> +       };
->> +
->> +       gpv6: gpv6 {
->> +               gpio-controller;
->> +               #gpio-cells = <2>;
->> +
->> +               interrupt-controller;
->> +               #interrupt-cells = <2>;
->> +       };
->> +};
->> +
->>  &pinctrl_nfc {
->>         gpj0: gpj0 {
->>                 gpio-controller;
->> diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
->> index 1d9e4c9..e633b02 100644
->> --- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
->> +++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
->> @@ -26,6 +26,7 @@
->>                 pinctrl5 = &pinctrl_ese;
->>                 pinctrl6 = &pinctrl_fsys0;
->>                 pinctrl7 = &pinctrl_fsys1;
->> +               pinctrl8 = &pinctrl_bus1;
->>         };
->>
->>         cpus {
->> @@ -242,6 +243,12 @@
->>                         interrupts = <0 383 0>;
->>                 };
->>
->> +               pinctrl_bus1: pinctrl@14870000 {
->> +                       compatible = "samsung,exynos7-pinctrl";
->> +                       reg = <0x14870000 0x1000>;
->> +                       interrupts = <0 384 0>;
->> +               };
->> +
->>                 pinctrl_nfc: pinctrl@14cd0000 {
->>                         compatible = "samsung,exynos7-pinctrl";
->>                         reg = <0x14cd0000 0x1000>;
->> --
->> 1.7.10.4
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
->
->
-> --
-> Regards,
-> Alim
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ I would like to add new properties for sh-msiof driver to adjust
+the SYNC siginal timing using DTDL and SYNCDL. In the current driver,
+these parameters are hardcoded to 0. And then, I checked other spi
+drivers, and I found the following commit:
+  d0fb47a5237d8b9576113568bacfd27892308b62
+  (spi: fsl-espi: Configure FSL eSPI CSBEF and CSAFT)
 
+If this patch is reasonable, I will modify the sh-msiof driver.
+Or, should we add a new function for this timing adjusting in the
+spi framework?
 
+ Documentation/devicetree/bindings/spi/sh-msiof.txt |    8 ++++++++
+ drivers/spi/spi-sh-msiof.c                         |    2 ++
+ 2 files changed, 10 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt b/Documentation/devicetree/bindings/spi/sh-msiof.txt
+index d11c372..5fe8ffd 100644
+--- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
++++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
+@@ -30,6 +30,14 @@ Optional properties:
+ 			 specifiers, one for transmission, and one for
+ 			 reception.
+ - dma-names            : Must contain a list of two DMA names, "tx" and "rx".
++- renesas,tdmr-dtdl    : delay sync signal (setup) in transmit mode
++			 (default is 0, we can set it to 0, 1, 2, 5, or 6)
++- renesas,tdmr-syncdl  : delay sync signal (hold) in transmit mode
++			 (default is 0, we can set it to 0, 1, 2, 3, 5, or 6)
++- renesas,rdmr-dtdl    : delay sync signal (setup) in receive mode
++			 (default is 0, we can set it to 0, 1, 2, 5, or 6)
++- renesas,rdmr-syncdl  : delay sync signal (hold) in receive mode
++			 (default is 0, we can set it to 0, 1, 2, 3, 5, or 6)
+
+ Optional properties, deprecated for soctype-specific bindings:
+ - renesas,tx-fifo-size : Overrides the default tx fifo size given in words
+diff --git a/drivers/spi/spi-sh-msiof.c b/drivers/spi/spi-sh-msiof.c
+index 3f36540..09e0c38 100644
+--- a/drivers/spi/spi-sh-msiof.c
++++ b/drivers/spi/spi-sh-msiof.c
+@@ -296,11 +296,13 @@ static void sh_msiof_spi_set_pin_regs(struct sh_msiof_spi_priv *p,
+ 	tmp = MDR1_SYNCMD_SPI | 1 << MDR1_FLD_SHIFT | MDR1_XXSTP;
+ 	tmp |= !cs_high << MDR1_SYNCAC_SHIFT;
+ 	tmp |= lsb_first << MDR1_BITLSB_SHIFT;
++printk("%s: TMDR1 = %x\n", __func__, tmp | MDR1_TRMD | TMDR1_PCON);
+ 	sh_msiof_write(p, TMDR1, tmp | MDR1_TRMD | TMDR1_PCON);
+ 	if (p->chipdata->master_flags & SPI_MASTER_MUST_TX) {
+ 		/* These bits are reserved if RX needs TX */
+ 		tmp &= ~0x0000ffff;
+ 	}
++printk("%s: RMDR1 = %x\n", __func__, tmp);
+ 	sh_msiof_write(p, RMDR1, tmp);
+
+ 	tmp = 0;
 -- 
-Best Regards
-Vivek Gautam
-Samsung R&D Institute, Bangalore
-India
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
