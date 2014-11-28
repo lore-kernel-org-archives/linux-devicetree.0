@@ -1,58 +1,91 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: kbuild: Fix forced rebuild after 'make dtbs'
-Date: Fri, 28 Nov 2014 15:10:30 +0100
-Message-ID: <CACRpkdYwQT3+RLxP_b_kYJoHV4L7sZ7yiU=JZWVq_zHKz0EY_g@mail.gmail.com>
-References: <CACRpkdYmJWy1_vs0tWRA7SvkQnvbXXKqf7pHpH5b5tZ6vR+KJg@mail.gmail.com>
-	<1414961549-31666-1-git-send-email-jason@lakedaemon.net>
-	<5474F78F.2060906@suse.cz>
-	<20141125235150.GH3836@n2100.arm.linux.org.uk>
-	<20141126005710.GE22670@titan.lakedaemon.net>
-	<CACRpkdZJoWbQeuZ4ZXGbQr0+SNG_9ZA+cQkAA0C2F9rnZDYtyQ@mail.gmail.com>
-	<20141126144153.GK3836@n2100.arm.linux.org.uk>
+From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH/RFC v8 08/14] DT: Add documentation for exynos4-is
+ 'flashes' property
+Date: Fri, 28 Nov 2014 15:11:04 +0100
+Message-ID: <54788278.7080101@samsung.com>
+References: <1417166286-27685-1-git-send-email-j.anaszewski@samsung.com>
+ <1417166286-27685-9-git-send-email-j.anaszewski@samsung.com>
+ <20141128111404.GB25883@leverpostej> <547865EA.5010700@samsung.com>
+ <20141128123003.GE25883@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141126144153.GK3836-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+In-reply-to: <20141128123003.GE25883@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "pavel-+ZI9xUNit7I@public.gmane.org" <pavel-+ZI9xUNit7I@public.gmane.org>, "cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org" <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, "sakari.ailus-X3B1VOXEql0@public.gmane.org" <sakari.ailus-X3B1VOXEql0@public.gmane.org>, "s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 26, 2014 at 3:41 PM, Russell King - ARM Linux
-<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
-> On Wed, Nov 26, 2014 at 02:57:42PM +0100, Linus Walleij wrote:
->> make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
->> KBUILD_OUTPUT=build-u300 u300_defconfig
->> make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
->> KBUILD_OUTPUT=build-u300 zImage CONFIG_DEBUG_SECTION_MISMATCH=y
->> make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
->> KBUILD_OUTPUT=build-u300 dtbs
->> make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
->> KBUILD_OUTPUT=build-u300 zImage CONFIG_DEBUG_SECTION_MISMATCH=y
+On 11/28/2014 01:30 PM, Mark Rutland wrote:
+> On Fri, Nov 28, 2014 at 12:09:14PM +0000, Jacek Anaszewski wrote:
+>> On 11/28/2014 12:14 PM, Mark Rutland wrote:
+>>> On Fri, Nov 28, 2014 at 09:18:00AM +0000, Jacek Anaszewski wrote:
+>>>> This patch adds a description of 'flashes' property
+>>>> to the samsung-fimc.txt.
+>>>>
+>>>> Signed-off-by: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>>> Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>>> Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>>> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+>>>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>>>> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+>>>> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>>> Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+>>>> ---
+>>>>    .../devicetree/bindings/media/samsung-fimc.txt     |    7 +++++++
+>>>>    1 file changed, 7 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt b/Documentation/devicetree/bindings/media/samsung-fimc.txt
+>>>> index 922d6f8..4b7ed03 100644
+>>>> --- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
+>>>> +++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
+>>>> @@ -40,6 +40,12 @@ should be inactive. For the "active-a" state the camera port A must be activated
+>>>>    and the port B deactivated and for the state "active-b" it should be the other
+>>>>    way around.
+>>>>
+>>>> +Optional properties:
+>>>> +
+>>>> +- flashes - array of strings with flash led names; the name has to
+>>>> +	    be same with the related led label
+>>>> +	    (see Documentation/devicetree/bindings/leds/common.txt)
+>>>> +
+>>>
+>>> Why is this not an array of phandles to the LED nodes? That's much
+>>> better than strings.
 >>
->> -> Rebuilds everything.
->>
->> This doesn't occur before the offending commit. So it only happens
->> when specifying extra environment variables on the command line.
+>> This is because a single flash led device can control many sub-leds,
+>> which are represented by child nodes in the Device Tree.
+>> Every sub-led is registered as a separate LED Flash class device
+>> in the LED subsystem, but in fact they share the same struct device
+>> and thus have access only to the parent's phandle.
 >
-> I suspect if you also provide the CONFIG_DEBUG_SECTION_MISMATCH=y on the
-> dtbs line, everything will work properly.
+> But that's a Linux infrastrcture issue, no? You don't have to use the
+> node from the struct device to find the relevant phandle.
 
-Yay, it works! :)
+Right.
 
-> The problem is that dtbs line executes a prepare, which I guess rebuilds
-> the bounds stuff.  So, the dtbs target results in it being rebuilt without
-> the section mismatch, and then you re-execute a make with it, causing
-> the bounds stuff to be rebuilt again.
+>> The LED Flash
+>> class devices are wrapped by V4L2 sub-devices and register
+>> asynchronously within a media device. Since the v4l2_subdev structure
+>> has a 'name' field, it is convenient to initialize it with
+>> parsed 'label' property of a child led node and match the
+>> sub-devices in the media device basing on it.
+>
+> While that might be convenient, I don't think it's fantastic to use that
+> to describe the relationship, as this leaks Linux internals (e.g. I can
+> refer to a name that doesn't exist in the DT but happens to be what
+> Linux used, and it would work). Also, are the labels guaranteed to be
+> globally unique?
 
-Yep. Not very intuitive to require passing section mismatch debug
-flags to DTB rebuilding but whatever, it's not so bad I can't live with
-it.
+The labels are used for initializing class device name and kernel
+doesn't allow to initialize two devices with same names.
+This implies that labels are guaranteed to be globally unique.
+Unless I am missing something.
 
-Strange that it worked before.
-
-Yours,
-Linus Walleij
+Regards,
+Jacek
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
