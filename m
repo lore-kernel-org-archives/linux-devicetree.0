@@ -1,175 +1,37 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V4 07/16] irqchip: bcm7120-l2: Add support for BCM3380-style controllers
-Date: Thu, 27 Nov 2014 20:32:13 -0800
-Message-ID: <1417149142-3756-8-git-send-email-cernekee@gmail.com>
+Subject: [PATCH V4 09/16] MIPS: Let __dt_register_buses accept a single bus type
+Date: Thu, 27 Nov 2014 20:32:15 -0800
+Message-ID: <1417149142-3756-10-git-send-email-cernekee@gmail.com>
 References: <1417149142-3756-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1417149142-3756-1-git-send-email-cernekee@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+Sender: linux-kernel-owner@vger.kernel.org
 To: ralf@linux-mips.org
 Cc: f.fainelli@gmail.com, jfraser@broadcom.com, dtor@chromium.org, tglx@linutronix.de, jason@lakedaemon.net, jogo@openwrt.org, arnd@arndb.de, computersforpeace@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-These controllers support multiple enable/status pairs (64+ IRQs),
-can put the enable/status words at different offsets, and do not
-support multiple parent IRQs.
+Some machines only have one bus type to register (e.g. "simple-bus").
 
 Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
 ---
- .../interrupt-controller/brcm,bcm3380-l2-intc.txt  | 41 ++++++++++++++++
- drivers/irqchip/irq-bcm7120-l2.c                   | 57 ++++++++++++++++++++--
- 2 files changed, 93 insertions(+), 5 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm3380-l2-intc.txt
+ arch/mips/kernel/prom.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm3380-l2-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm3380-l2-intc.txt
-new file mode 100644
-index 000000000000..8f48aad50868
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm3380-l2-intc.txt
-@@ -0,0 +1,41 @@
-+Broadcom BCM3380-style Level 1 / Level 2 interrupt controller
-+
-+This interrupt controller shows up in various forms on many BCM338x/BCM63xx
-+chipsets.  It has the following properties:
-+
-+- outputs a single interrupt signal to its interrupt controller parent
-+
-+- contains one or more enable/status word pairs, which often appear at
-+  different offsets in different blocks
-+
-+- no atomic set/clear operations
-+
-+Required properties:
-+
-+- compatible: should be "brcm,bcm3380-l2-intc"
-+- reg: specifies one or more enable/status pairs, in the following format:
-+  <enable_reg 0x4 status_reg 0x4>...
-+- interrupt-controller: identifies the node as an interrupt controller
-+- #interrupt-cells: specifies the number of cells needed to encode an interrupt
-+  source, should be 1.
-+- interrupt-parent: specifies the phandle to the parent interrupt controller
-+  this one is cascaded from
-+- interrupts: specifies the interrupt line in the interrupt-parent controller
-+  node, valid values depend on the type of parent interrupt controller
-+
-+Optional properties:
-+
-+- brcm,irq-can-wake: if present, this means the L2 controller can be used as a
-+  wakeup source for system suspend/resume.
-+
-+Example:
-+
-+irq0_intc: interrupt-controller@10000020 {
-+	compatible = "brcm,bcm3380-l2-intc";
-+	reg = <0x10000024 0x4 0x1000002c 0x4>,
-+	      <0x10000020 0x4 0x10000028 0x4>;
-+	interrupt-controller;
-+	#interrupt-cells = <1>;
-+	interrupt-parent = <&cpu_intc>;
-+	interrupts = <2>;
-+};
-diff --git a/drivers/irqchip/irq-bcm7120-l2.c b/drivers/irqchip/irq-bcm7120-l2.c
-index 36014b27844a..561670cfb6d8 100644
---- a/drivers/irqchip/irq-bcm7120-l2.c
-+++ b/drivers/irqchip/irq-bcm7120-l2.c
-@@ -14,6 +14,7 @@
- #include <linux/slab.h>
- #include <linux/module.h>
- #include <linux/kconfig.h>
-+#include <linux/kernel.h>
- #include <linux/platform_device.h>
- #include <linux/of.h>
- #include <linux/of_irq.h>
-@@ -34,7 +35,7 @@
- #define IRQSTAT		0x04
+diff --git a/arch/mips/kernel/prom.c b/arch/mips/kernel/prom.c
+index 452d4350ce42..e303cb1ef2f4 100644
+--- a/arch/mips/kernel/prom.c
++++ b/arch/mips/kernel/prom.c
+@@ -64,7 +64,10 @@ int __init __dt_register_buses(const char *bus0, const char *bus1)
+ 		panic("device tree not present");
  
- #define MAX_WORDS	4
--#define MAX_MAPPINGS	MAX_WORDS
-+#define MAX_MAPPINGS	(MAX_WORDS * 2)
- #define IRQS_PER_WORD	32
- 
- struct bcm7120_l2_intc_data {
-@@ -120,10 +121,15 @@ static int bcm7120_l2_intc_init_one(struct device_node *dn,
- 	/* For multiple parent IRQs with multiple words, this looks like:
- 	 * <irq0_w0 irq0_w1 irq1_w0 irq1_w1 ...>
- 	 */
--	for (idx = 0; idx < data->n_words; idx++)
--		data->irq_map_mask[idx] |=
--			be32_to_cpup(data->map_mask_prop +
--				     irq * data->n_words + idx);
-+	for (idx = 0; idx < data->n_words; idx++) {
-+		if (data->map_mask_prop) {
-+			data->irq_map_mask[idx] |=
-+				be32_to_cpup(data->map_mask_prop +
-+					     irq * data->n_words + idx);
-+		} else {
-+			data->irq_map_mask[idx] = 0xffffffff;
-+		}
+ 	strlcpy(of_ids[0].compatible, bus0, sizeof(of_ids[0].compatible));
+-	strlcpy(of_ids[1].compatible, bus1, sizeof(of_ids[1].compatible));
++	if (bus1) {
++		strlcpy(of_ids[1].compatible, bus1,
++			sizeof(of_ids[1].compatible));
 +	}
  
- 	irq_set_handler_data(parent_irq, data);
- 	irq_set_chained_handler(parent_irq, bcm7120_l2_intc_irq_handle);
-@@ -165,6 +171,37 @@ static int __init bcm7120_l2_intc_iomap_7120(struct device_node *dn,
- 	return 0;
- }
- 
-+static int __init bcm7120_l2_intc_iomap_3380(struct device_node *dn,
-+					     struct bcm7120_l2_intc_data *data)
-+{
-+	unsigned int gc_idx;
-+
-+	for (gc_idx = 0; gc_idx < MAX_WORDS; gc_idx++) {
-+		unsigned int map_idx = gc_idx * 2;
-+		void __iomem *en = of_iomap(dn, map_idx + 0);
-+		void __iomem *stat = of_iomap(dn, map_idx + 1);
-+		void __iomem *base = min(en, stat);
-+
-+		data->map_base[map_idx + 0] = en;
-+		data->map_base[map_idx + 1] = stat;
-+
-+		if (!base)
-+			break;
-+
-+		data->pair_base[gc_idx] = base;
-+		data->en_offset[gc_idx] = en - base;
-+		data->stat_offset[gc_idx] = stat - base;
-+	}
-+
-+	if (!gc_idx) {
-+		pr_err("unable to map registers\n");
-+		return -EINVAL;
-+	}
-+
-+	data->n_words = gc_idx;
-+	return 0;
-+}
-+
- int __init bcm7120_l2_intc_probe(struct device_node *dn,
- 				 struct device_node *parent,
- 				 int (*iomap_regs_fn)(struct device_node *,
-@@ -279,5 +316,15 @@ int __init bcm7120_l2_intc_probe_7120(struct device_node *dn,
- 				     "BCM7120 L2");
- }
- 
-+int __init bcm7120_l2_intc_probe_3380(struct device_node *dn,
-+				      struct device_node *parent)
-+{
-+	return bcm7120_l2_intc_probe(dn, parent, bcm7120_l2_intc_iomap_3380,
-+				     "BCM3380 L2");
-+}
-+
- IRQCHIP_DECLARE(bcm7120_l2_intc, "brcm,bcm7120-l2-intc",
- 		bcm7120_l2_intc_probe_7120);
-+
-+IRQCHIP_DECLARE(bcm3380_l2_intc, "brcm,bcm3380-l2-intc",
-+		bcm7120_l2_intc_probe_3380);
+ 	if (of_platform_populate(NULL, of_ids, NULL, NULL))
+ 		panic("failed to populate DT");
 -- 
 2.1.0
