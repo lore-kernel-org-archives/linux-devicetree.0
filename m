@@ -1,100 +1,193 @@
-From: "iPhone 6 Shop" <x17540-qYPWnVLwaZDq0dX+Y9Q8gw@public.gmane.org>
-Subject: =?windows-1251?b?0uDq7uPuIOX55SDt5SDh++vuLiDS7vft4P8g6u7v?=
-	=?windows-1251?q?=E8=FF_iPhone_6!?=
-Date: Fri, 28 Nov 2014 00:34:28 +0000
-Message-ID: <787DCB989347688B57521BA347E39BE0@vxdyfcdf>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1107147829750684838=="
-Return-path: <nbd-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/nbd-general>,
-	<mailto:nbd-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=nbd-general>
-List-Post: <mailto:nbd-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:nbd-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/nbd-general>,
-	<mailto:nbd-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: nbd-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: nbd-general <nbd-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "steffen.klassert" <steffen.klassert-opNxpl+3fjRBDgjK7y7TUQ@public.gmane.org>, "manish.chopra" <manish.chopra-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org>, "sony.chacko" <sony.chacko-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org>, "rajesh.borundia" <rajesh.borundia-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org>, "lauro.venancio" <lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, "aloisio.almeida" <aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, "trond.myklebust" <trond.myklebust-7I+n7zu2hftEKMMhf/gKZA@public.gmane.org>, "jon.mason" <jon.mason-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, anton <anton-yrGDUoBaLx3QT0dZR+AlfA@public.gmane.org>, bcousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, khilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, rnayak <rnayak-l0cyMroinI0@public.gmane.org>, "peter.ujfalusi" <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] of: add optional options parameter to
+ of_find_node_by_path()
+Date: Fri, 28 Nov 2014 00:44:03 +0000
+Message-ID: <20141128004403.08D90C40A7F@trevor.secretlab.ca>
+References: <1417110967-16284-1-git-send-email-leif.lindholm@linaro.org>
+	<1417110967-16284-3-git-send-email-leif.lindholm@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1417110967-16284-3-git-send-email-leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, ijc-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is a multi-part message in MIME format.
+On Thu, 27 Nov 2014 17:56:06 +0000
+, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+ wrote:
+> Update of_find_node_by_path():
+> 1) Rename function to of_find_node_opts_by_path(), adding an optional
+>    pointer argument. Provide a static inline wrapper version of
+>    of_find_node_by_path() which calls the new function with NULL as
+>    the optional argument.
+> 2) Ignore any part of the path beyond and including the ':' separator.
+> 3) Set the new provided pointer argument to the beginning of the string
+>    following the ':' separator.
+> 4: Add tests.
+> 
+> Signed-off-by: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/of/base.c     |   21 +++++++++++++++++----
+>  drivers/of/selftest.c |   12 ++++++++++++
+>  include/linux/of.h    |   14 +++++++++++++-
+>  3 files changed, 42 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 3823edf..7f0e5f7 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -699,10 +699,15 @@ static struct device_node *__of_find_node_by_path(struct device_node *parent,
+>  {
+>  	struct device_node *child;
+>  	int len = strchrnul(path, '/') - path;
+> +	int term;
+>  
+>  	if (!len)
+>  		return NULL;
+>  
+> +	term = strchrnul(path, ':') - path;
+> +	if (term < len)
+> +		len = term;
+> +
+>  	__for_each_child_of_node(parent, child) {
+>  		const char *name = strrchr(child->full_name, '/');
+>  		if (WARN(!name, "malformed device_node %s\n", child->full_name))
+> @@ -715,11 +720,14 @@ static struct device_node *__of_find_node_by_path(struct device_node *parent,
+>  }
+>  
+>  /**
+> - *	of_find_node_by_path - Find a node matching a full OF path
+> + *	of_find_node_opts_by_path - Find a node matching a full OF path
+>   *	@path: Either the full path to match, or if the path does not
+>   *	       start with '/', the name of a property of the /aliases
+>   *	       node (an alias).  In the case of an alias, the node
+>   *	       matching the alias' value will be returned.
+> + *	@opts: Address of a pointer into which to store the start of
+> + *	       an options string appended to the end of the path with
+> + *	       a ':' separator.
+>   *
+>   *	Valid paths:
+>   *		/foo/bar	Full path
+> @@ -729,19 +737,24 @@ static struct device_node *__of_find_node_by_path(struct device_node *parent,
+>   *	Returns a node pointer with refcount incremented, use
+>   *	of_node_put() on it when done.
+>   */
+> -struct device_node *of_find_node_by_path(const char *path)
+> +struct device_node *of_find_node_opts_by_path(const char *path, const char **opts)
+>  {
+>  	struct device_node *np = NULL;
+>  	struct property *pp;
+>  	unsigned long flags;
+> +	char *separator;
+>  
+>  	if (strcmp(path, "/") == 0)
+>  		return of_node_get(of_allnodes);
+>  
+> +	separator = strchr(path, ':');
+> +	if (separator && opts)
+> +		*opts = separator + 1;
+> +
 
---===============1107147829750684838==
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0305_01D00AA3.11D170F0"
+What about when there are no opts? Do we require the caller to make sure
+opts is NULL before calling the function (which sounds like a good
+source of bugs) or do we clear it on successful return?
 
-This is a multi-part message in MIME format.
+I think if opts is passed in, but there are no options, then it should
+set *opts = NULL.
 
-------=_NextPart_000_0305_01D00AA3.11D170F0
-Content-Type: text/plain;
-	charset="windows-1251"
-Content-Transfer-Encoding: quoted-printable
+There should be test cases for this also. Must set opts to NULL on
+successful return, and (I think) should leave opts alone on an
+unsuccessful search.
 
-=CA=E0=F7=E5=F1=F2=E2=E5=ED=ED=E0=FF =EA=EE=EF=E8=FF iPhone 6! =CE=F2 =EE=
-=F0=E8=E3=E8=ED=E0=EB=E0 =E2=EE=EE=E1=F9=E5 =ED=E5 =EE=F2=EB=E8=F7=E8=F2=FC=
-! =D5=EE=F7=E5=F8=FC =F1=F2=E0=F2=FC =EE=E4=ED=E8=EC =E8=E7 =EF=E5=F0=E2=FB=
-=F5 =EE=E1=EB=E0=E4=E0=F2=E5=EB=E5=E9 iPhone 6? =CF=EE=E4=F0=EE=E1=ED=EE=F1=
-=F2=E8 =E7=E4=E5=F1=FC>>>>
+Otherwise the patch looks good. If it wasn't for the above ambiguity I
+would merge it right now.
 
+g.
 
+>  	/* The path could begin with an alias */
+>  	if (*path != '/') {
+>  		char *p = strchrnul(path, '/');
+> -		int len = p - path;
+> +		int len = separator ? separator - path : p - path;
+>  
+>  		/* of_aliases must not be NULL */
+>  		if (!of_aliases)
+> @@ -770,7 +783,7 @@ struct device_node *of_find_node_by_path(const char *path)
+>  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>  	return np;
+>  }
+> -EXPORT_SYMBOL(of_find_node_by_path);
+> +EXPORT_SYMBOL(of_find_node_opts_by_path);
+>  
+>  /**
+>   *	of_find_node_by_name - Find a node by its "name" property
+> diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
+> index e2d79af..c298065 100644
+> --- a/drivers/of/selftest.c
+> +++ b/drivers/of/selftest.c
+> @@ -43,6 +43,7 @@ static bool selftest_live_tree;
+>  static void __init of_selftest_find_node_by_name(void)
+>  {
+>  	struct device_node *np;
+> +	const char *options;
+>  
+>  	np = of_find_node_by_path("/testcase-data");
+>  	selftest(np && !strcmp("/testcase-data", np->full_name),
+> @@ -83,6 +84,17 @@ static void __init of_selftest_find_node_by_name(void)
+>  	np = of_find_node_by_path("testcase-alias/missing-path");
+>  	selftest(!np, "non-existent alias with relative path returned node %s\n", np->full_name);
+>  	of_node_put(np);
+> +
+> +	np = of_find_node_opts_by_path("/testcase-data:testoption", &options);
+> +	selftest(np && !strcmp("testoption", options),
+> +		 "option path test failed\n");
+> +	of_node_put(np);
+> +
+> +	np = of_find_node_opts_by_path("testcase-alias:testaliasoption",
+> +				       &options);
+> +	selftest(np && !strcmp("testaliasoption", options),
+> +		 "option alias path test failed\n");
+> +	of_node_put(np);
+>  }
+>  
+>  static void __init of_selftest_dynamic(void)
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 29f0adc..a36be70 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -228,7 +228,13 @@ extern struct device_node *of_find_matching_node_and_match(
+>  	const struct of_device_id *matches,
+>  	const struct of_device_id **match);
+>  
+> -extern struct device_node *of_find_node_by_path(const char *path);
+> +extern struct device_node *of_find_node_opts_by_path(const char *path,
+> +	const char **opts);
+> +static inline struct device_node *of_find_node_by_path(const char *path)
+> +{
+> +	return of_find_node_opts_by_path(path, NULL);
+> +}
+> +
+>  extern struct device_node *of_find_node_by_phandle(phandle handle);
+>  extern struct device_node *of_get_parent(const struct device_node *node);
+>  extern struct device_node *of_get_next_parent(struct device_node *node);
+> @@ -385,6 +391,12 @@ static inline struct device_node *of_find_node_by_path(const char *path)
+>  	return NULL;
+>  }
+>  
+> +static inline struct device_node *of_find_node_opts_by_path(const char *path,
+> +	const char **opts)
+> +{
+> +	return NULL;
+> +}
+> +
+>  static inline struct device_node *of_get_parent(const struct device_node *node)
+>  {
+>  	return NULL;
+> -- 
+> 1.7.10.4
+> 
 
-
-=EE=F2=EF=E8=F1=E0=F2=FC=F1=FF =EE=F2 =F0=E0=F1=F1=FB=EB=EA=E8
-
-------=_NextPart_000_0305_01D00AA3.11D170F0
-Content-Type: text/html;
-	charset="windows-1251"
-Content-Transfer-Encoding: quoted-printable
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META content=3D"text/html; charset=3Dwindows-1251" http-equiv=3DContent-=
-Type>
-<META name=3DGENERATOR content=3D"MSHTML 10.00.9200.16897">
-<STYLE></STYLE>
-</HEAD>
-<BODY bgColor=3D#ffffff>
-<DIV align=3Dleft><FONT size=3D4 face=3DArial>=CA=E0=F7=E5=F1=F2=E2=E5=ED=
-=ED=E0=FF =EA=EE=EF=E8=FF iPhone 6! =CE=F2=20
-=EE=F0=E8=E3=E8=ED=E0=EB=E0 =E2=EE=EE=E1=F9=E5 =ED=E5 =EE=F2=EB=E8=F7=E8=F2=
-=FC! =D5=EE=F7=E5=F8=FC =F1=F2=E0=F2=FC =EE=E4=ED=E8=EC =E8=E7 =EF=E5=F0=E2=
-=FB=F5 =EE=E1=EB=E0=E4=E0=F2=E5=EB=E5=E9 iPhone 6?=20
-<A href=3D"http://investmentsavailable.com/x/kg0e5.php">=CF=EE=E4=F0=EE=E1=
-=ED=EE=F1=F2=E8=20
-=E7=E4=E5=F1=FC&gt;&gt;&gt;&gt;</A></FONT></DIV>
-<DIV align=3Dleft><FONT size=3D4 face=3DArial></FONT>&nbsp;</DIV>
-<DIV align=3Dleft>&nbsp;</DIV>
-<DIV align=3Dleft>&nbsp;</DIV>
-<DIV align=3Dleft>&nbsp;</DIV>
-<DIV align=3Dleft><A href=3D"mailto:legallaz1994-JGs/UdohzUI@public.gmane.org?subject=3Ddelete=
-">=EE=F2=EF=E8=F1=E0=F2=FC=F1=FF=20
-=EE=F2 =F0=E0=F1=F1=FB=EB=EA=E8</A></DIV></BODY></HTML>
-
-------=_NextPart_000_0305_01D00AA3.11D170F0--
-
-
-
---===============1107147829750684838==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-------------------------------------------------------------------------------
-Download BIRT iHub F-Type - The Free Enterprise-Grade BIRT Server
-from Actuate! Instantly Supercharge Your Business Reports and Dashboards
-with Interactivity, Sharing, Native Excel Exports, App Integration & more
-Get technology previously reserved for billion-dollar corporations, FREE
-http://pubads.g.doubleclick.net/gampad/clk?id=157005751&iu=/4140/ostg.clktrk
---===============1107147829750684838==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-Nbd-general mailing list
-Nbd-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-https://lists.sourceforge.net/lists/listinfo/nbd-general
-
---===============1107147829750684838==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
