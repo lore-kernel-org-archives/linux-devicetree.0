@@ -1,58 +1,58 @@
-From: =?windows-1252?Q?Andreas_F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [RFC 0/7] ARM: vf610m4: Add Vybrid Cortex-M4 support
-Date: Fri, 28 Nov 2014 15:17:59 +0100
-Message-ID: <54788417.6020408@suse.de>
-References: <cover.1413136383.git.stefan@agner.ch>
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v3 3/5] arm64: dts: Add support for Spreadtrum SC9836 SoC
+ in dts and Makefile
+Date: Fri, 28 Nov 2014 14:29:13 +0000
+Message-ID: <20141128142913.GB5393@localhost>
+References: <Sharkl64-v3>
+ <1416917818-10506-1-git-send-email-chunyan.zhang@spreadtrum.com>
+ <1416917818-10506-4-git-send-email-chunyan.zhang@spreadtrum.com>
+ <20141127115042.GE857@leverpostej>
+ <20141127121214.GF11511@e104818-lin.cambridge.arm.com>
+ <20141127134309.GJ857@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1413136383.git.stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141127134309.GJ857@leverpostej>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "gnomes@lxorguk.ukuu.org.uk" <gnomes@lxorguk.ukuu.org.uk>, "heiko@sntech.de" <heiko@sntech.de>, "broonie@linaro.org" <broonie@linaro.org>, Will Deacon <Will.Deacon@arm.com>, "andrew@lunn.ch" <andrew@lunn.ch>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, Chunyan Zhang <chunyan.zhang@spreadtrum.com>, "artagnon@gmail.com" <artagnon@gmail.com>, "lanqing.liu@spreadtrum.com" <lanqing.liu@spreadtrum.com>, "arnd@arndb.de" <arnd@arndb.de>, "zhang.lyra@gmail.com" <zhang.lyra@gmail.com>, "corbet@lwn.net" <corbet@lwn.net>, "jslaby@suse.cz" <jslaby@suse.cz>, "zhizhou.zhang@spreadtrum.com" <zhizhou.zhang@spreadtrum.com>, "geng.ren@spreadtrum.com" <geng.ren@spreadtrum.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, grant.li
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
+On Thu, Nov 27, 2014 at 01:43:09PM +0000, Mark Rutland wrote:
+> On Thu, Nov 27, 2014 at 12:12:15PM +0000, Catalin Marinas wrote:
+> > On Thu, Nov 27, 2014 at 11:50:43AM +0000, Mark Rutland wrote:
+> > > On Tue, Nov 25, 2014 at 12:16:56PM +0000, Chunyan Zhang wrote:
+> > > > +
+> > > > +       timer {
+> > > > +               compatible = "arm,armv8-timer";
+> > > > +               interrupts = <1 13 0xff01>,
+> > > > +                            <1 14 0xff01>,
+> > > > +                            <1 11 0xff01>,
+> > > > +                            <1 10 0xff01>;
+> > > > +               clock-frequency = <26000000>;
+> > > 
+> > > Please remove the clock-frequency property. Your FW should initialise
+> > > CNTFRQ_EL0 on all CPUs (certainly PSCI 0.2 requires that you do this).
+> > 
+> > Since this comes up regularly, I think we need a dev_warn() in the arch
+> > timer driver when CONFIG_ARM64.
+> 
+> I'll ack such a patch ;)
 
-Am 12.10.2014 um 20:13 schrieb Stefan Agner:
-> One thing I noticed that when I move the xipImage below the DRAM base
-> address, the kernel freezes:
-> ...
-> Mount-cache hash table entries: 1024 (order: 0, 4096 bytes)
-> Mountpoint-cache hash table entries: 1024 (order: 0, 4096 bytes)
-> [freeze]
->=20
-> I think it happens when the scheduler gets started. Any idea what cou=
-ld
-> go wrong here?
+How rude would this be?
 
-I ran into a similar issue on STM32F4 recently - hanging there, or:
-
-Unhandled exception: IPSR =3D 00000006 LR =3D fffffff1
-CPU: 0 PID: 1 Comm: swapper Not tainted 3.18.0-rc5-00003-g489983a-dirty=
- #25
-task: 90432000 ti: 90434000 task.ti: 90434000
-
-Unhandled exception: IPSR =3D 00000003 LR =3D fffffff1
-CPU: 0 PID: 1 Comm: swapper Not tainted 3.18.0-rc5-00003-g489983a-dirty=
- #25
-task: 90432000 ti: 90434000 task.ti: 90434000
--Boot 2010.03-00003-g934021a-dirty (Nov 26 2014 - 06:52:49)
-
-My debugging indicated that %pF was not working, used among others in
-checking for blacklisted initcalls. Disabling CONFIG_KALLSYMS worked
-around this, so I assume something there is not compatible with XIP...
-
-Regards,
-Andreas
-
---=20
-SUSE LINUX GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 21284 AG N=FCrn=
-berg
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+index 2133f9d59d06..aaaf3433ccb9 100644
+--- a/drivers/clocksource/arm_arch_timer.c
++++ b/drivers/clocksource/arm_arch_timer.c
+@@ -371,7 +371,8 @@ arch_timer_detect_rate(void __iomem *cntbase, struct device_node *np)
+		return;
+ 
+	/* Try to determine the frequency from the device tree or CNTFRQ */
+-	if (of_property_read_u32(np, "clock-frequency", &arch_timer_rate)) {
++	if (IS_ENABLED(CONFIG_ARM64) ||
++	    of_property_read_u32(np, "clock-frequency", &arch_timer_rate)) {
+		if (cntbase)
+			arch_timer_rate = readl_relaxed(cntbase + CNTFRQ);
+		else
