@@ -1,47 +1,73 @@
-From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-Subject: Re: [PATCH v3 3/5] pinctrl: exynos: add exynos5410 SoC specific data
-Date: Fri, 28 Nov 2014 13:07:03 +0100
-Message-ID: <54786567.4050305@suse.de>
-References: <547104D5.4030803@suse.de>	<1416695185-5198-1-git-send-email-afaerber@suse.de> <CACRpkdZie8JJGxSPkc8PPvC3qZkWhe5WqmpSKSoDFwqRd6tR_Q@mail.gmail.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH/RFC v8 08/14] DT: Add documentation for exynos4-is
+ 'flashes' property
+Date: Fri, 28 Nov 2014 13:09:14 +0100
+Message-ID: <547865EA.5010700@samsung.com>
+References: <1417166286-27685-1-git-send-email-j.anaszewski@samsung.com>
+ <1417166286-27685-9-git-send-email-j.anaszewski@samsung.com>
+ <20141128111404.GB25883@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZie8JJGxSPkc8PPvC3qZkWhe5WqmpSKSoDFwqRd6tR_Q@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene@kernel.org>, =?UTF-8?B?6rmA7ZWZ7KO8?= <ruppi.kim@hardkernel.com>, Humberto Naves <hsnaves@gmail.com>, Jan Kiszka <jan.kiszka@siemens.com>, Johann Pfefferl <johann.pfefferl@siemens.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Abraham <thomas.abraham@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, "OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "PIN CONTROL SUBSY..." <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <20141128111404.GB25883@leverpostej>
+Sender: linux-leds-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>, "pavel@ucw.cz" <pavel@ucw.cz>, "cooloney@gmail.com" <cooloney@gmail.com>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "sakari.ailus@iki.fi" <sakari.ailus@iki.fi>, "s.nawrocki@samsung.com" <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 28.11.2014 um 12:59 schrieb Linus Walleij:
-> On Sat, Nov 22, 2014 at 11:26 PM, Andreas F=C3=A4rber <afaerber@suse.=
-de> wrote:
->=20
->> From: Hakjoo Kim <ruppi.kim@hardkernel.com>
+On 11/28/2014 12:14 PM, Mark Rutland wrote:
+> On Fri, Nov 28, 2014 at 09:18:00AM +0000, Jacek Anaszewski wrote:
+>> This patch adds a description of 'flashes' property
+>> to the samsung-fimc.txt.
 >>
->> Add Samsung EXYNOS5410 SoC specific data to enable pinctrl
->> support for all platforms based on EXYNOS5410.
->>
->> Signed-off-by: Hakjoo Kim <ruppi.kim@hardkernel.com>
->> [AF: Rebased onto Exynos5260 and irq_chip consolidation]
->> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+>> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Pawel Moll <pawel.moll@arm.com>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+>> Cc: Kumar Gala <galak@codeaurora.org>
+>> Cc: <devicetree@vger.kernel.org>
 >> ---
->>  v2 -> v3:
->>  * Rebased (.svc, .{g,w}eint_{con,mask,pend} fields dropped)
+>>   .../devicetree/bindings/media/samsung-fimc.txt     |    7 +++++++
+>>   1 file changed, 7 insertions(+)
 >>
->>  v1 -> v2:
->>  * Filled in Sob from Hakjoo Kim
->=20
-> Is this based on the pinctrl devel branch so I can apply it?
+>> diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt b/Documentation/devicetree/bindings/media/samsung-fimc.txt
+>> index 922d6f8..4b7ed03 100644
+>> --- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
+>> +++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
+>> @@ -40,6 +40,12 @@ should be inactive. For the "active-a" state the camera port A must be activated
+>>   and the port B deactivated and for the state "active-b" it should be the other
+>>   way around.
+>>
+>> +Optional properties:
+>> +
+>> +- flashes - array of strings with flash led names; the name has to
+>> +	    be same with the related led label
+>> +	    (see Documentation/devicetree/bindings/leds/common.txt)
+>> +
+>
+> Why is this not an array of phandles to the LED nodes? That's much
+> better than strings.
 
-It was based on the Samsung for-next tree. I can rebase if needed.
+This is because a single flash led device can control many sub-leds,
+which are represented by child nodes in the Device Tree.
+Every sub-led is registered as a separate LED Flash class device
+in the LED subsystem, but in fact they share the same struct device
+and thus have access only to the parent's phandle. The LED Flash
+class devices are wrapped by V4L2 sub-devices and register
+asynchronously within a media device. Since the v4l2_subdev structure
+has a 'name' field, it is convenient to initialize it with
+parsed 'label' property of a child led node and match the
+sub-devices in the media device basing on it.
 
-> I'd like Tomasz ACK on it first though.
+> Also, I only seem to have recevied the documentation patches and none of
+> the code -- in future when posting RFC DT patches, please Cc for the
+> code too as it's useful context.
 
-Thanks,
-Andreas
+Of course, I'll keep it in mind.
 
---=20
-SUSE LINUX GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 21284 AG N=C3=
-=BCrnberg
+Regards,
+Jacek
