@@ -1,74 +1,89 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [GIT PULL] Immutable branch between MFD, Regulator and Clk, due for v3.19
-Date: Fri, 28 Nov 2014 21:13:02 -0800
-Message-ID: <20141129051302.8497.54128@quantum>
-References: <1416301183-10478-1-git-send-email-cw00.choi@samsung.com>
- <20141125155918.GO4241@x1>
+From: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] ARM: hip04: set ARCH_NR_GPIO to 128
+Date: Sat, 29 Nov 2014 15:11:59 +0800
+Message-ID: <547971BF.1050706@gmail.com>
+References: <1417156188-500-1-git-send-email-wangzhou.bry@gmail.com> <1417156188-500-2-git-send-email-wangzhou.bry@gmail.com> <3094004.3WUKgY6xNz@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141125155918.GO4241@x1>
+In-Reply-To: <3094004.3WUKgY6xNz@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, geunsik.lim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Lee Jones (2014-11-25 07:59:18)
-> Mark, Mike,
->=20
-> Please merge this into your trees for v3.19.
->=20
-> The following changes since commit f114040e3ea6e07372334ade75d1ee0775=
-c355e1:
->=20
->   Linux 3.18-rc1 (2014-10-19 18:08:38 -0700)
->=20
-> are available in the git repository at:
->=20
->   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-m=
-fd-regulator-clk-v3.19
->=20
-> for you to fetch changes up to 159a5e920446aed12fe373ecc3c7b3dc667091=
-ae:
->=20
->   mfd: s2mps11: Add binding documentation for Samsung S2MPS13 PMIC (2=
-014-11-25 15:55:12 +0000)
+On 2014=E5=B9=B411=E6=9C=8828=E6=97=A5 17:33, Arnd Bergmann wrote:
+> On Friday 28 November 2014 14:29:47 Zhou Wang wrote:
+>> Set ARCH_NR_GPIO for Hisilicon Soc Hip04, which has 4 GPIO
+>> controllers with 32 GPIOs each.
+>>
+>> Signed-off-by: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>   arch/arm/Kconfig                |    1 +
+>>   arch/arm/configs/hisi_defconfig |    3 +++
+>>   2 files changed, 4 insertions(+)
+>>
+>> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+>> index 89c4b5c..26aae1e 100644
+>> --- a/arch/arm/Kconfig
+>> +++ b/arch/arm/Kconfig
+>> @@ -1509,6 +1509,7 @@ config ARCH_NR_GPIO
+>>          default 352 if ARCH_VT8500
+>>          default 288 if ARCH_ROCKCHIP
+>>          default 264 if MACH_H4700
+>> +       default 128 if ARCH_HIP04
+>>          default 0
+>>          help
+>>            Maximum number of GPIOs in the system.
+>>
+>
+> If I remember correctly, you don't actually need to set this if all g=
+pio
+> clients are using the new gpio descriptor interfaces instead of gpio
+> numbers. Would that work for you? You'd have to know which devices
 
-Pulled.
+Hi Arnd,
 
-Thanks,
-Mike
+If I don't set this, it will use the default ARCH_NR_GPIO(512), then
+the range of GPIO number will be 384~511 which is very strange to users=
+,
+because Hip04 based machines can only support 128 GPIOs.
 
->=20
-> ----------------------------------------------------------------
-> Immutable branch between MFD, Regulator and Clk, due for v3.19
->=20
-> ----------------------------------------------------------------
-> Chanwoo Choi (4):
->       mfd: sec-core: Add support for S2MPS13 device
->       regulator: s2mps11: Add support S2MPS13 regulator device
->       clk: s2mps11: Add the support for S2MPS13 PMIC clock
->       mfd: s2mps11: Add binding documentation for Samsung S2MPS13 PMI=
-C
->=20
->  Documentation/devicetree/bindings/mfd/s2mps11.txt |  22 +--
->  drivers/clk/clk-s2mps11.c                         |  24 +++
->  drivers/mfd/sec-core.c                            |  29 ++++
->  drivers/mfd/sec-irq.c                             |  23 ++-
->  drivers/regulator/Kconfig                         |  10 +-
->  drivers/regulator/s2mps11.c                       | 102 +++++++++++-
->  include/linux/mfd/samsung/core.h                  |   2 +
->  include/linux/mfd/samsung/s2mps13.h               | 186 ++++++++++++=
-++++++++++
->  8 files changed, 374 insertions(+), 24 deletions(-)
->  create mode 100644 include/linux/mfd/samsung/s2mps13.h
->=20
-> --=20
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+Best Regards,
+Zhou Wang
+
+> can be connected to the gpio controller for all hip04 based machines,
+> but I think this is a short list of boards.
+>
+> Linus, one question for you: Does the ARCH_NR_GPIO actually work as d=
+esigned?
+> I see that e.g. OMAP4 defines 192 GPIO lines but does not have an ARC=
+H_NR_GPIO
+> setting. In an OMAP4-only kernel you would get the default value (512=
+)
+> from include/asm-generic/gpio.h, and in a multiplatform kernel you ge=
+t at
+> least 512 if any of the (ARCH_EXYNOS || ARCH_KEYSTONE || SOC_OMAP5 ||=
+ \
+> SOC_DRA7XX || ARCH_S3C24XX || ARCH_S3C64XX || ARCH_S5PV210 || ARCH_SH=
+MOBILE
+> || ARCH_TEGRA) are set, so that is still good.
+>
+> However if one builds a kernel that just enables OMAP4 and HIP04, I s=
+uspect
+> it can't work on OMAP4 for any gpio line above 128, which seems to be
+> a fundamental multiplatform problem.
+>
+> Do we neet to increase the default to 512 for all ARCH_MULTIPLATFORM
+> configurations and just leave ARCH_SHMOBILE, ARCH_TEGRA and MACH_H470=
+0
+> here as special cases?
+>
+> 	Arnd
+>
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
