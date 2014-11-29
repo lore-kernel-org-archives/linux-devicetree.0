@@ -1,18 +1,41 @@
-From: <luv2charitys-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Charity Work
-Date: Fri, 28 Nov 2014 19:56:41 -0600
-Message-ID: <HO-SRV2ZXiZQTnC04XL000a9590@office.horkans.com>
-Reply-To: <paucharity-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] mtd: gpmi: Remove "We support only one NAND chip" from
+ bindings doc
+Date: Sat, 29 Nov 2014 10:40:50 +0800
+Message-ID: <20141129024047.GA5056@localhost.localdomain>
+References: <1417097929-17832-1-git-send-email-sr@denx.de>
+ <20141128014832.GA3113@localhost.localdomain>
+ <54781DD5.5030801@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Description: Mail message body
+Content-Disposition: inline
+In-Reply-To: <54781DD5.5030801-ynQEQJNshbs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,this is Mr Paul N,i sent you an email on charity work but i am yet to hear fom you,do reply with this code CHA-2015 to my email address paulcharity-9uewiaClKEY@public.gmane.org  i Look forward to hearing from you this time,God bless  Brother Paul
+On Fri, Nov 28, 2014 at 08:01:41AM +0100, Stefan Roese wrote:
+> On 28.11.2014 02:48, Huang Shijie wrote:
+> >On Thu, Nov 27, 2014 at 03:18:49PM +0100, Stefan Roese wrote:
+> >>This sentence "We support only one NAND chip now" is not true any more.
+> >>Multiple chips are supported. So lets remove this sentence to not
+> >
+> >The gpmi can only supports one chip. Of course, there are maybe two dies
+> >in this single chip.
+> 
+> Now I'm a bit confused. The i.MX6 supports 4 chips select signals. And isn't
+> "two dies in this single chip" not practically the same as connecting 2 (or
+> more) chips (same device) to multiple chip selects of the SoC? Where is the
+> difference here?
+The "one chip" here is means the "one package" (TSOP or BGA ....).
+
+(In logic, "two dies in this single chip" is same as connecting 2 chips
+to the gpmi.)
+
+thanks
+Huang Shijie
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
