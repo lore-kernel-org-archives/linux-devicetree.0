@@ -1,91 +1,187 @@
-From: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH v3 1/2] ARM: hip04: set ARCH_NR_GPIO to 128
-Date: Sat, 29 Nov 2014 15:11:59 +0800
-Message-ID: <547971BF.1050706@gmail.com>
-References: <1417156188-500-1-git-send-email-wangzhou.bry@gmail.com> <1417156188-500-2-git-send-email-wangzhou.bry@gmail.com> <3094004.3WUKgY6xNz@wuerfel>
+Date: Sat, 29 Nov 2014 16:14:52 +0900
+Message-ID: <CAAVeFu+Ejfdjbi1FOF-GVQKL8jr78VawJsfHB_8Wg1KLqt8TXQ@mail.gmail.com>
+References: <1417156188-500-1-git-send-email-wangzhou.bry@gmail.com>
+ <3094004.3WUKgY6xNz@wuerfel> <CACRpkdbahD314DL-ONQNkOzu9yHc_av4mxkqrYi8dS0PP43n8Q@mail.gmail.com>
+ <2635255.iDIbPckc8L@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3094004.3WUKgY6xNz@wuerfel>
+In-Reply-To: <2635255.iDIbPckc8L@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2014=E5=B9=B411=E6=9C=8828=E6=97=A5 17:33, Arnd Bergmann wrote:
-> On Friday 28 November 2014 14:29:47 Zhou Wang wrote:
->> Set ARCH_NR_GPIO for Hisilicon Soc Hip04, which has 4 GPIO
->> controllers with 32 GPIOs each.
+On Sat, Nov 29, 2014 at 6:16 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Friday 28 November 2014 16:54:44 Linus Walleij wrote:
+>> On Fri, Nov 28, 2014 at 10:33 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>> > On Friday 28 November 2014 14:29:47 Zhou Wang wrote:
 >>
->> Signed-off-by: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>   arch/arm/Kconfig                |    1 +
->>   arch/arm/configs/hisi_defconfig |    3 +++
->>   2 files changed, 4 insertions(+)
+>> >> Set ARCH_NR_GPIO for Hisilicon Soc Hip04, which has 4 GPIO
+>> >> controllers with 32 GPIOs each.
+>> >>
+>> >> Signed-off-by: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> >> ---
+>> >>  arch/arm/Kconfig                |    1 +
+>> >>  arch/arm/configs/hisi_defconfig |    3 +++
+>> >>  2 files changed, 4 insertions(+)
+>> >>
+>> >> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+>> >> index 89c4b5c..26aae1e 100644
+>> >> --- a/arch/arm/Kconfig
+>> >> +++ b/arch/arm/Kconfig
+>> >> @@ -1509,6 +1509,7 @@ config ARCH_NR_GPIO
+>> >>         default 352 if ARCH_VT8500
+>> >>         default 288 if ARCH_ROCKCHIP
+>> >>         default 264 if MACH_H4700
+>> >> +       default 128 if ARCH_HIP04
+>> >>         default 0
+>> >>         help
+>> >>           Maximum number of GPIOs in the system.
+>> >>
+>> >
+>> > If I remember correctly, you don't actually need to set this if all gpio
+>> > clients are using the new gpio descriptor interfaces instead of gpio
+>> > numbers.
 >>
->> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
->> index 89c4b5c..26aae1e 100644
->> --- a/arch/arm/Kconfig
->> +++ b/arch/arm/Kconfig
->> @@ -1509,6 +1509,7 @@ config ARCH_NR_GPIO
->>          default 352 if ARCH_VT8500
->>          default 288 if ARCH_ROCKCHIP
->>          default 264 if MACH_H4700
->> +       default 128 if ARCH_HIP04
->>          default 0
->>          help
->>            Maximum number of GPIOs in the system.
+>> Unfortunately you still have to. We are working on removing the
+>> dependency on ARCH_NR_GPIO, old habits die hard.
+>
+> Ok, I see.
+>
+>> But I just
+>> merged this patch:
+>> http://marc.info/?l=linux-gpio&m=141638350328535&w=2
 >>
+>> Which makes the situation better.
 >
-> If I remember correctly, you don't actually need to set this if all g=
-pio
-> clients are using the new gpio descriptor interfaces instead of gpio
-> numbers. Would that work for you? You'd have to know which devices
+> Ah, cool!
+>
+>> There is however some other use of this define, so there is
+>> some work required still to get rid of it.
+>
+> These are the only ones I could find:
+>
+> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
+> index 9f0682534e2f..fe05d8b375ca 100644
+> --- a/drivers/gpio/gpio-davinci.c
+> +++ b/drivers/gpio/gpio-davinci.c
+> @@ -224,9 +224,6 @@ static int davinci_gpio_probe(struct platform_device *pdev)
+>                 return -EINVAL;
+>         }
+>
+> -       if (WARN_ON(ARCH_NR_GPIOS < ngpio))
+> -               ngpio = ARCH_NR_GPIOS;
+> -
+>         chips = devm_kzalloc(dev,
+>                              ngpio * sizeof(struct davinci_gpio_controller),
+>                              GFP_KERNEL);
+> diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik.c b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
+> index 746db6acf648..4f70024c2f9a 100644
+> --- a/drivers/pinctrl/nomadik/pinctrl-nomadik.c
+> +++ b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
+> @@ -281,12 +281,12 @@ struct nmk_pinctrl {
+>         void __iomem *prcm_base;
+>  };
+>
+> -static struct nmk_gpio_chip *
+> -nmk_gpio_chips[DIV_ROUND_UP(ARCH_NR_GPIOS, NMK_GPIO_PER_CHIP)];
+> +#define NUM_BANKS 9 /* increase if necessary */
+> +
+> +static struct nmk_gpio_chip *nmk_gpio_chips[NUM_BANKS];
+>
+>  static DEFINE_SPINLOCK(nmk_gpio_slpm_lock);
+>
+> -#define NUM_BANKS ARRAY_SIZE(nmk_gpio_chips)
+>
+>  static void __nmk_gpio_set_mode(struct nmk_gpio_chip *nmk_chip,
+>                                 unsigned offset, int gpio_mode)
+> diff --git a/include/asm-generic/gpio.h b/include/asm-generic/gpio.h
+> index 383ade1a211b..b53bcf5c58e7 100644
+> --- a/include/asm-generic/gpio.h
+> +++ b/include/asm-generic/gpio.h
+> @@ -13,23 +13,6 @@
+>  #include <linux/gpio/driver.h>
+>  #include <linux/gpio/consumer.h>
+>
+> -/* Platforms may implement their GPIO interface with library code,
+> - * at a small performance cost for non-inlined operations and some
+> - * extra memory (for code and for per-GPIO table entries).
+> - *
+> - * While the GPIO programming interface defines valid GPIO numbers
+> - * to be in the range 0..MAX_INT, this library restricts them to the
+> - * smaller range 0..ARCH_NR_GPIOS-1.
+> - *
+> - * ARCH_NR_GPIOS is somewhat arbitrary; it usually reflects the sum of
+> - * builtin/SoC GPIOs plus a number of GPIOs on expanders; the latter is
+> - * actually an estimate of a board-specific value.
+> - */
+> -
+> -#ifndef ARCH_NR_GPIOS
+> -#define ARCH_NR_GPIOS          512
+> -#endif
+> -
+>  /*
+>   * "valid" GPIO numbers are nonnegative and may be passed to
+>   * setup routines like gpio_request().  only some valid numbers
+> @@ -41,7 +24,11 @@
+>
+>  static inline bool gpio_is_valid(int number)
+>  {
+> -       return number >= 0 && number < ARCH_NR_GPIOS;
+> +#ifdef ARCH_NR_GPIOS
+> +       if (number > ARCH_NR_GPIOS)
+> +               return 0;
+> +#endif
+> +       return number >= 0;
+>  }
+>
+>  struct device;
+>
+>> > However if one builds a kernel that just enables OMAP4 and HIP04, I suspect
+>> > it can't work on OMAP4 for any gpio line above 128, which seems to be
+>> > a fundamental multiplatform problem.
+>>
+>> Yes I guess you are right :(
+>>
+>> It's probably just so that so many platforms converge on 512.
+>>
+>> > Do we neet to increase the default to 512 for all ARCH_MULTIPLATFORM
+>> > configurations and just leave ARCH_SHMOBILE, ARCH_TEGRA and MACH_H4700
+>> > here as special cases?
+>>
+>> That'd be good while we are working to kill off
+>> ARCH_NR_GPIO for good.
+>>
+>> I guess there could be arch-specific problems with trying
+>> to get rid of ARCH_NR_GPIO for good, do you have some
+>> input on this? (Arch maintainer hat on...)
+>
+> I think killing off the hardcoded number as soon as possible is
+> best, but it doesn't seem appropriate for stable backports or 3.18,
+> so let's do the 512 default on arm32-multiplatform with stable
+> backports.
 
-Hi Arnd,
+The main problem I see with killing ARCH_NR_GPIO is that it is used to
+find a free GPIO range for GPIO chips which base GPIO is not
+pre-decided (i.e. base < 0). gpiochip_find_base() returns the highest
+free range matching the chip's needs. Removing it, we will have two
+issues:
 
-If I don't set this, it will use the default ARCH_NR_GPIO(512), then
-the range of GPIO number will be 384~511 which is very strange to users=
-,
-because Hip04 based machines can only support 128 GPIOs.
+1) how do we decide the GPIO base for chips which base member is < 0?
+We could take an arbitrarily high number, but this leads to...
+2) ... are we ok with GPIO base number changing for such chips,
+especially since this number is potentially exported by the sysfs
+interface?
 
-Best Regards,
-Zhou Wang
-
-> can be connected to the gpio controller for all hip04 based machines,
-> but I think this is a short list of boards.
->
-> Linus, one question for you: Does the ARCH_NR_GPIO actually work as d=
-esigned?
-> I see that e.g. OMAP4 defines 192 GPIO lines but does not have an ARC=
-H_NR_GPIO
-> setting. In an OMAP4-only kernel you would get the default value (512=
-)
-> from include/asm-generic/gpio.h, and in a multiplatform kernel you ge=
-t at
-> least 512 if any of the (ARCH_EXYNOS || ARCH_KEYSTONE || SOC_OMAP5 ||=
- \
-> SOC_DRA7XX || ARCH_S3C24XX || ARCH_S3C64XX || ARCH_S5PV210 || ARCH_SH=
-MOBILE
-> || ARCH_TEGRA) are set, so that is still good.
->
-> However if one builds a kernel that just enables OMAP4 and HIP04, I s=
-uspect
-> it can't work on OMAP4 for any gpio line above 128, which seems to be
-> a fundamental multiplatform problem.
->
-> Do we neet to increase the default to 512 for all ARCH_MULTIPLATFORM
-> configurations and just leave ARCH_SHMOBILE, ARCH_TEGRA and MACH_H470=
-0
-> here as special cases?
->
-> 	Arnd
->
-
+This talks in favor of named GPIO exports, but the problem of
+user-space compatibility will remain. This problem apart, I'm all for
+removing ARCH_NR_GPIOs and actually already have patches that do so,
+provided the static GPIO array removal patch survives a few weeks of
+testing in -next.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
