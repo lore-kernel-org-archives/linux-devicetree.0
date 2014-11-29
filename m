@@ -1,42 +1,76 @@
-From: Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] mtd: gpmi: Remove "We support only one NAND chip" from
- bindings doc
-Date: Sat, 29 Nov 2014 10:40:50 +0800
-Message-ID: <20141129024047.GA5056@localhost.localdomain>
-References: <1417097929-17832-1-git-send-email-sr@denx.de>
- <20141128014832.GA3113@localhost.localdomain>
- <54781DD5.5030801@denx.de>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [GIT PULL] Immutable branch between MFD, Regulator and Clk, due for v3.19
+Date: Fri, 28 Nov 2014 21:13:02 -0800
+Message-ID: <20141129051302.8497.54128@quantum>
+References: <1416301183-10478-1-git-send-email-cw00.choi@samsung.com>
+ <20141125155918.GO4241@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <54781DD5.5030801-ynQEQJNshbs@public.gmane.org>
+In-Reply-To: <20141125155918.GO4241@x1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, geunsik.lim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 28, 2014 at 08:01:41AM +0100, Stefan Roese wrote:
-> On 28.11.2014 02:48, Huang Shijie wrote:
-> >On Thu, Nov 27, 2014 at 03:18:49PM +0100, Stefan Roese wrote:
-> >>This sentence "We support only one NAND chip now" is not true any more.
-> >>Multiple chips are supported. So lets remove this sentence to not
-> >
-> >The gpmi can only supports one chip. Of course, there are maybe two dies
-> >in this single chip.
-> 
-> Now I'm a bit confused. The i.MX6 supports 4 chips select signals. And isn't
-> "two dies in this single chip" not practically the same as connecting 2 (or
-> more) chips (same device) to multiple chip selects of the SoC? Where is the
-> difference here?
-The "one chip" here is means the "one package" (TSOP or BGA ....).
+Quoting Lee Jones (2014-11-25 07:59:18)
+> Mark, Mike,
+>=20
+> Please merge this into your trees for v3.19.
+>=20
+> The following changes since commit f114040e3ea6e07372334ade75d1ee0775=
+c355e1:
+>=20
+>   Linux 3.18-rc1 (2014-10-19 18:08:38 -0700)
+>=20
+> are available in the git repository at:
+>=20
+>   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-m=
+fd-regulator-clk-v3.19
+>=20
+> for you to fetch changes up to 159a5e920446aed12fe373ecc3c7b3dc667091=
+ae:
+>=20
+>   mfd: s2mps11: Add binding documentation for Samsung S2MPS13 PMIC (2=
+014-11-25 15:55:12 +0000)
 
-(In logic, "two dies in this single chip" is same as connecting 2 chips
-to the gpmi.)
+Pulled.
 
-thanks
-Huang Shijie
+Thanks,
+Mike
+
+>=20
+> ----------------------------------------------------------------
+> Immutable branch between MFD, Regulator and Clk, due for v3.19
+>=20
+> ----------------------------------------------------------------
+> Chanwoo Choi (4):
+>       mfd: sec-core: Add support for S2MPS13 device
+>       regulator: s2mps11: Add support S2MPS13 regulator device
+>       clk: s2mps11: Add the support for S2MPS13 PMIC clock
+>       mfd: s2mps11: Add binding documentation for Samsung S2MPS13 PMI=
+C
+>=20
+>  Documentation/devicetree/bindings/mfd/s2mps11.txt |  22 +--
+>  drivers/clk/clk-s2mps11.c                         |  24 +++
+>  drivers/mfd/sec-core.c                            |  29 ++++
+>  drivers/mfd/sec-irq.c                             |  23 ++-
+>  drivers/regulator/Kconfig                         |  10 +-
+>  drivers/regulator/s2mps11.c                       | 102 +++++++++++-
+>  include/linux/mfd/samsung/core.h                  |   2 +
+>  include/linux/mfd/samsung/s2mps13.h               | 186 ++++++++++++=
+++++++++++
+>  8 files changed, 374 insertions(+), 24 deletions(-)
+>  create mode 100644 include/linux/mfd/samsung/s2mps13.h
+>=20
+> --=20
+> Lee Jones
+> Linaro STMicroelectronics Landing Team Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
