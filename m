@@ -1,51 +1,83 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] mtd: gpmi: Remove "We support only one NAND chip" from
- bindings doc
-Date: Sat, 29 Nov 2014 22:53:26 -0800
-Message-ID: <20141130065326.GB3608@norris-Latitude-E6410>
-References: <1417097929-17832-1-git-send-email-sr@denx.de>
- <20141128014832.GA3113@localhost.localdomain>
- <54781DD5.5030801@denx.de>
- <20141129024047.GA5056@localhost.localdomain>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v4 2/2] mtd: hisilicon: add device tree binding
+ documentation
+Date: Sun, 30 Nov 2014 00:56:54 -0800
+Message-ID: <20141130085654.GE3608@norris-Latitude-E6410>
+References: <1415105221-7732-1-git-send-email-wangzhou.bry@gmail.com>
+ <1415105221-7732-3-git-send-email-wangzhou.bry@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20141129024047.GA5056-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1415105221-7732-3-git-send-email-wangzhou.bry@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Zhou Wang <wangzhou.bry@gmail.com>
+Cc: David Woodhouse <dwmw2@infradead.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, caizhiyong@huawei.com, haojian.zhuang@gmail.com, xuwei5@hisilicon.com, wangzhou1@hisilicon.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 29, 2014 at 10:40:50AM +0800, Huang Shijie wrote:
-> On Fri, Nov 28, 2014 at 08:01:41AM +0100, Stefan Roese wrote:
-> > On 28.11.2014 02:48, Huang Shijie wrote:
-> > >On Thu, Nov 27, 2014 at 03:18:49PM +0100, Stefan Roese wrote:
-> > >>This sentence "We support only one NAND chip now" is not true any more.
-> > >>Multiple chips are supported. So lets remove this sentence to not
-> > >
-> > >The gpmi can only supports one chip. Of course, there are maybe two dies
-> > >in this single chip.
-> > 
-> > Now I'm a bit confused. The i.MX6 supports 4 chips select signals. And isn't
-> > "two dies in this single chip" not practically the same as connecting 2 (or
-> > more) chips (same device) to multiple chip selects of the SoC? Where is the
-> > difference here?
-> The "one chip" here is means the "one package" (TSOP or BGA ....).
+On Tue, Nov 04, 2014 at 08:47:01PM +0800, Zhou Wang wrote:
+> Signed-off-by: Zhou Wang <wangzhou.bry@gmail.com>
+> ---
+>  .../devicetree/bindings/mtd/hisi504-nand.txt       |   40 ++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/hisi504-nand.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/hisi504-nand.txt b/Documentation/devicetree/bindings/mtd/hisi504-nand.txt
+> new file mode 100644
+> index 0000000..c8b3988
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/hisi504-nand.txt
+> @@ -0,0 +1,40 @@
+> +Hisilicon Hip04 Soc NAND controller DT binding
+> +
+> +Required properties:
+> +- compatible:          Should be "hisilicon,504-nfc".
+> +- reg:                 The first contains base physical address and size of
+> +                       NAND controller's registers. The second contains base
+> +                       physical address and size of NAND controller's buffer.
+> +- interrupts:          Interrupt number for nfc.
+> +- nand-bus-width:      See nand.txt.
+> +- nand-ecc-mode:       See nand.txt.
 
-Then why is this even in the DT binding doc? Isn't that a board-level
-constraint (and not a chip property) which should be obvious to the
-user? If so, then should we just drop the language? Or at a minimum,
-make it more specific so it doesn't confuse readers.
+Do you support all modes, or just "hw"? Might be worth noting here.
 
-> (In logic, "two dies in this single chip" is same as connecting 2 chips
-> to the gpmi.)
+> +- hisi,nand-ecc-bits:  ECC bits type support.
+> +                 <0>:  none ecc
+> +                 <1>:  Can correct 1bit per 512byte.
+> +                 <6>:  Can correct 16bits per 1K byte.
 
-...which means that logically, you can connect more than one chip to the
-GPMI, right?
+You should re-use the nand-ecc-strength and nand-ecc-step-size
+properties here. So you'll support these options:
+
+  nand-ecc-strength=0  nand-ecc-step-size=<don't care>
+  nand-ecc-strength=1  nand-ecc-step-size=512
+  nand-ecc-strength=16 nand-ecc-step-size=1024
+
+> +- #address-cells:      partition address, should be set 1.
+> +- #size-cells:         partition size, should be set 1.
+> +
+> +Flash chip may optionally contain additional sub-nodes describing partitions of
+> +the address space. See partition.txt for more detail.
+> +
+> +Example:
+> +
+> +	nand: nand@4020000 {
+> +		compatible = "hisilicon,504-nfc";
+> +		reg = <0x4020000 0x10000>, <0x5000000 0x1000>;
+> +		interrupts = <0 379 4>;
+> +		nand-bus-width = <8>;
+> +		nand-ecc-mode = "hw";
+> +		hisi,nand-ecc-bits = <1>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +
+> +		partition@0 {
+> +			label = "nand_text";
+> +			reg = <0x00000000 0x00400000>;
+> +		};
+> +
+> +		...
+> +
+> +	};
 
 Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
