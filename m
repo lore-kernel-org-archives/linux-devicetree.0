@@ -1,69 +1,88 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v2 3/5] pinctrl: exynos: Fix GPIO setup failure because
- domain clock being gated
-Date: Sun, 30 Nov 2014 21:19:44 +0900
-Message-ID: <CA+Ln22Ejo51VPWf6DmuRvV_fZr_H=-BXAshSPSOokNE1bz=-QA@mail.gmail.com>
-References: <1417011857-10419-1-git-send-email-k.kozlowski@samsung.com>
-	<1417011857-10419-4-git-send-email-k.kozlowski@samsung.com>
-	<CACRpkdb8F8YcvFeHPvOKHjx_p4HEpimck3XRabB3oHpZTdmRQQ@mail.gmail.com>
-	<1417183724.18249.36.camel@AMDC1943>
+From: Peter =?utf-8?q?H=C3=BCwe?= <PeterHuewe-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [PATCH v4 09/15] tpm/tpm_i2c_stm_st33/dts/st33zp24_i2c: Add DTS Documentation
+Date: Sun, 30 Nov 2014 13:55:34 +0100
+Message-ID: <201411301355.35211.PeterHuewe@gmx.de>
+References: <1413753085-9958-1-git-send-email-christophe-h.ricard@st.com> <1413753085-9958-10-git-send-email-christophe-h.ricard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: Text/Plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1417183724.18249.36.camel@AMDC1943>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <thomas.abraham@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Vivek Gautam <gautam.vivek@samsung.com>, Kevin Hilman <khilman@kernel.org>, Russell King <linux@arm.linux.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1413753085-9958-10-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+Hi,
 
-2014-11-28 23:08 GMT+09:00 Krzysztof Kozlowski <k.kozlowski@samsung.com=
->:
-> On pi=C4=85, 2014-11-28 at 15:04 +0100, Linus Walleij wrote:
->> On Wed, Nov 26, 2014 at 3:24 PM, Krzysztof Kozlowski
->> <k.kozlowski@samsung.com> wrote:
->>
->> > The audio subsystem on Exynos 5420 has separate clocks and GPIO. T=
-o
->> > operate properly on GPIOs the main block clock 'mau_epll' must be
->> > enabled.
->> >
->> > This was observed on Peach Pi/Pit and Arndale Octa (after enabling=
- i2s0)
->> > after introducing runtime PM to pl330 DMA driver. After that commi=
-t the
->> > 'mau_epll' was gated, because the "amba" clock was disabled and th=
-ere
->> > were no more users of mau_epll.
->> >
->> > The system hang just before probing i2s0 because
->> > samsung_pinmux_setup() tried to access memory from audss block whi=
-ch was
->> > gated.
->> >
->> > Add a clock property to the pinctrl driver and enable the clock du=
-ring
->> > GPIO setup. During normal GPIO operations (set, get, set_direction=
-) the
->> > clock is not enabled.
+can I get an ACK from the device tree gurus?
 
-Could you make sure that possibility of gating this clock is worth the
-effort of adding gating code to all affected drivers? If there is no
-significant change in power consumption maybe it could be simply keep
-running all the time?
+Am Sonntag, 19. Oktober 2014, 23:11:19 schrieb Christophe Ricard:
+> st33zp24 tpm can be seen as a trivial i2c device as other i2c tpm.
+> However several other properties needs to be documented such as lpcpd=
+=2E
+>=20
+> Reviewed-By: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+> Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+> ---
+>  .../devicetree/bindings/security/tpm/st33zp24.txt  | 36
+> ++++++++++++++++++++++ 1 file changed, 36 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/security/tpm/st33zp24.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/security/tpm/st33zp24.=
+txt
+> b/Documentation/devicetree/bindings/security/tpm/st33zp24.txt new fil=
+e
+> mode 100644
+> index 0000000..eb48222
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/security/tpm/st33zp24.txt
+> @@ -0,0 +1,36 @@
+> +* STMicroelectronics SAS. ST33ZP24 TPM SoC
+> +
+> +Required properties:
+> +- compatible: Should be "st,st33zp24_i2c".
+> +- clock-frequency: I=C2=B2C work frequency.
+> +- reg: address on the bus
+> +
+> +Optional ST33ZP24 Properties:
+> +- interrupt-parent: phandle for the interrupt gpio controller
+> +- interrupts: GPIO interrupt to which the chip is connected
+> +- lpcpd-gpios: Output GPIO pin used for ST33ZP24 power management D1=
+/D2
+> state. +If set vps must present when the platform is going into
+> sleep/hibernate mode. +
+> +Optional SoC Specific Properties:
+> +- pinctrl-names: Contains only one value - "default".
+> +- pintctrl-0: Specifies the pin control groups used for this control=
+ler.
+> +
+> +Example (for ARM-based BeagleBoard xM with ST33ZP24 on I2C2):
+> +
+> +&i2c2 {
+> +
+> +        status =3D "okay";
+> +
+> +        st33zp24: st33zp24@13 {
+> +
+> +                compatible =3D "st,st33zp24_i2c";
+> +
+> +                reg =3D <0x013>;
+> +                clock-frequency =3D <400000>;
+> +
+> +                interrupt-parent =3D <&gpio5>;
+> +                interrupts =3D <7 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +                lpcpd-gpios =3D <&gpio5 15 GPIO_ACTIVE_HIGH>;
+> +        };
+> +};
 
-Also isn't a similar problem happening due to power domains? I believe
-the whole maudio block is located in a separate power domain but
-somehow it doesn't get turned off?
 
-Could you investigate the above, please?
-
-Best regards,
-Tomasz
+Thanks,
+Peter
 --
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
-the body of a message to majordomo@vger.kernel.org
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
