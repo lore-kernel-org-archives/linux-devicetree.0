@@ -1,188 +1,165 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: [REVIEW PATCH v2.1 09/11] smiapp: Obtain device information from the Device Tree if OF node exists
-Date: Sun, 30 Nov 2014 18:28:47 +0200
-Message-ID: <1417364927-4894-1-git-send-email-sakari.ailus@iki.fi>
-References: <1416289426-804-10-git-send-email-sakari.ailus@iki.fi>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1416289426-804-10-git-send-email-sakari.ailus@iki.fi>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org
+From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH v2 2/4] Documentation: arm64/arm: dt bindings for numa.
+Date: Sun, 30 Nov 2014 08:38:02 -0800
+Message-ID: <CAFpQJXU4fsCn5rW20qqL1_MYm0Np_beF5gni7uMZSLFLRvVrcQ@mail.gmail.com>
+References: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+	<2966212.dpWQ0OTb0A@wuerfel>
+	<CAFpQJXUjYsTiHSyHdgtN9JPWGN8CByR4VwtSMJhwkAUWA4iV9w@mail.gmail.com>
+	<2065254.jRdQcinOdg@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2065254.jRdQcinOdg@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Platform data support is retained.
+Hi Arnd,
 
-of_property_read_u64_array() isn't used yet as it's not in yet.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
----
-since v2:
-- Don't use of_property_read_u64_array() yet.
+On Tue, Nov 25, 2014 at 11:00 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Tuesday 25 November 2014 08:15:47 Ganapatrao Kulkarni wrote:
+>> > No, don't hardcode ARM specifics into a common binding either. I've looked
+>> > at the ibm,associativity properties again, and I think we should just use
+>> > those, they can cover all cases and are completely independent of the
+>> > architecture. We should probably discuss about the property name though,
+>> > as using the "ibm," prefix might not be the best idea.
+>>
+>> We have started with new proposal, since not got enough details how
+>> ibm/ppc is managing the numa using dt.
+>> there is no documentation and there is no power/PAPR spec for numa in
+>> public domain and there are no single dt file in arch/powerpc which
+>> describes the numa. if we get any one of these details, we can align
+>> to powerpc implementation.
+>
+> Basically the idea is to have an "ibm,associativity" property in each
+> bus or device that is node specific, and this includes all CPUs and
+> memory nodes. The property contains an array of 32-bit integers that
+> count the resources. Take an example of a NUMA cluster of two machines
+> with four sockets and four cores each (32 cores total), a memory
+> channel on each socket and one PCI host per board that is connected
+> at equal speed to each socket on the board.
+thanks for the detailed information.
+IMHO, linux-numa code does not care about how the hardware design is,
+like how many boards and how many sockets it has. It only needs to
+know how many numa nodes system has, how resources are mapped to nodes
+and node-distance to define inter node memory access latency. i think
+it will be simple, if we merge board and socket to single entry say
+node.
+also we are assuming here that numa h/w design will have multiple
+boards and sockets, what if it has something different/more.
 
- drivers/media/i2c/smiapp/smiapp-core.c |  114 +++++++++++++++++++++++++++++++-
- 1 file changed, 112 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/media/i2c/smiapp/smiapp-core.c b/drivers/media/i2c/smiapp/smiapp-core.c
-index b02fa64..465c42f 100644
---- a/drivers/media/i2c/smiapp/smiapp-core.c
-+++ b/drivers/media/i2c/smiapp/smiapp-core.c
-@@ -25,11 +25,13 @@
- #include <linux/device.h>
- #include <linux/gpio.h>
- #include <linux/module.h>
-+#include <linux/of_gpio.h>
- #include <linux/regulator/consumer.h>
- #include <linux/slab.h>
- #include <linux/smiapp.h>
- #include <linux/v4l2-mediabus.h>
- #include <media/v4l2-device.h>
-+#include <media/v4l2-of.h>
- 
- #include "smiapp.h"
- 
-@@ -2921,19 +2923,121 @@ static int smiapp_resume(struct device *dev)
- 
- #endif /* CONFIG_PM */
- 
-+static struct smiapp_platform_data *smiapp_get_pdata(struct device *dev)
-+{
-+	struct smiapp_platform_data *pdata;
-+	struct v4l2_of_endpoint bus_cfg;
-+	struct device_node *ep;
-+	struct property *prop;
-+	__be32 *val;
-+	uint32_t asize;
-+	unsigned int i;
-+	int rval;
-+
-+	if (!dev->of_node)
-+		return dev->platform_data;
-+
-+	ep = of_graph_get_next_endpoint(dev->of_node, NULL);
-+	if (!ep)
-+		return NULL;
-+
-+	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata) {
-+		rval = -ENOMEM;
-+		goto out_err;
-+	}
-+
-+	v4l2_of_parse_endpoint(ep, &bus_cfg);
-+
-+	switch (bus_cfg.bus_type) {
-+	case V4L2_MBUS_CSI2:
-+		pdata->csi_signalling_mode = SMIAPP_CSI_SIGNALLING_MODE_CSI2;
-+		break;
-+		/* FIXME: add CCP2 support. */
-+	default:
-+		rval = -EINVAL;
-+		goto out_err;
-+	}
-+
-+	pdata->lanes = bus_cfg.bus.mipi_csi2.num_data_lanes;
-+	dev_dbg(dev, "lanes %u\n", pdata->lanes);
-+
-+	/* xshutdown GPIO is optional */
-+	pdata->xshutdown = of_get_named_gpio(dev->of_node, "reset-gpios", 0);
-+
-+	/* NVM size is not mandatory */
-+	of_property_read_u32(dev->of_node, "nokia,nvm-size",
-+				    &pdata->nvm_size);
-+
-+	rval = of_property_read_u32(dev->of_node, "clock-frequency",
-+				    &pdata->ext_clk);
-+	if (rval) {
-+		dev_warn(dev, "can't get clock-frequency\n");
-+		goto out_err;
-+	}
-+
-+	dev_dbg(dev, "reset %d, nvm %d, clk %d, csi %d\n", pdata->xshutdown,
-+		pdata->nvm_size, pdata->ext_clk, pdata->csi_signalling_mode);
-+
-+	rval = of_get_property(
-+		dev->of_node, "link-frequency", &asize) ? 0 : -ENOENT;
-+	if (rval) {
-+		dev_warn(dev, "can't get link-frequency array size\n");
-+		goto out_err;
-+	}
-+
-+	pdata->op_sys_clock = devm_kzalloc(dev, asize, GFP_KERNEL);
-+	if (!pdata->op_sys_clock) {
-+		rval = -ENOMEM;
-+		goto out_err;
-+	}
-+
-+	asize /= sizeof(*pdata->op_sys_clock);
-+	/*
-+	 * Read a 64-bit array --- this will be replaced with a
-+	 * of_property_read_u64_array() once it's merged.
-+	 */
-+	prop = of_find_property(dev->of_node, "link-frequency", NULL);
-+	if (!prop)
-+		goto out_err;
-+	if (!prop->value)
-+		goto out_err;
-+	if (asize * sizeof(*pdata->op_sys_clock) > prop->length)
-+		goto out_err;
-+	val = prop->value;
-+	if (IS_ERR(val))
-+		goto out_err;
-+
-+	for (i = 0; i < asize; i++)
-+		pdata->op_sys_clock[i] = of_read_number(val + i * 2, 2);
-+
-+	for (; asize > 0; asize--)
-+		dev_dbg(dev, "freq %d: %lld\n", asize - 1,
-+			pdata->op_sys_clock[asize - 1]);
-+
-+	of_node_put(ep);
-+	return pdata;
-+
-+out_err:
-+	of_node_put(ep);
-+	return NULL;
-+}
-+
- static int smiapp_probe(struct i2c_client *client,
- 			const struct i2c_device_id *devid)
- {
- 	struct smiapp_sensor *sensor;
-+	struct smiapp_platform_data *pdata = smiapp_get_pdata(&client->dev);
-+	int rval;
- 
--	if (client->dev.platform_data == NULL)
-+	if (pdata == NULL)
- 		return -ENODEV;
- 
- 	sensor = devm_kzalloc(&client->dev, sizeof(*sensor), GFP_KERNEL);
- 	if (sensor == NULL)
- 		return -ENOMEM;
- 
--	sensor->platform_data = client->dev.platform_data;
-+	sensor->platform_data = pdata;
- 	mutex_init(&sensor->mutex);
- 	mutex_init(&sensor->power_mutex);
- 	sensor->src = &sensor->ssds[sensor->ssds_used];
-@@ -2992,6 +3096,11 @@ static int smiapp_remove(struct i2c_client *client)
- 	return 0;
- }
- 
-+static const struct of_device_id smiapp_of_table[] = {
-+	{ .compatible = "nokia,smia" },
-+	{ },
-+};
-+
- static const struct i2c_device_id smiapp_id_table[] = {
- 	{ SMIAPP_NAME, 0 },
- 	{ },
-@@ -3005,6 +3114,7 @@ static const struct dev_pm_ops smiapp_pm_ops = {
- 
- static struct i2c_driver smiapp_i2c_driver = {
- 	.driver	= {
-+		.of_match_table = smiapp_of_table,
- 		.name = SMIAPP_NAME,
- 		.pm = &smiapp_pm_ops,
- 	},
--- 
-1.7.10.4
+>
+> The ibm,associativity property in each PCI host, CPU or memory device
+> node consequently has an array of three (board, socket, core) integers:
+>
+>         memory@0,0 {
+>                 device_type = "memory";
+>                 reg = <0x0 0x0  0x4 0x0;
+>                 /* board 0, socket 0, no specific core */
+>                 ibm,asssociativity = <0 0 0xffff>;
+>         };
+>
+>         memory@4,0 {
+>                 device_type = "memory";
+>                 reg = <0x4 0x0  0x4 0x0>;
+>                 /* board 0, socket 1, no specific core */
+>                 ibm,asssociativity = <0 1 0xffff>;
+>         };
+>
+>         ...
+>
+>         memory@1c,0 {
+>                 device_type = "memory";
+>                 reg = <0x1c 0x0  0x4 0x0>;
+>                 /* board 0, socket 7, no specific core */
+>                 ibm,asssociativity = <1 7 0xffff>;
+>         };
+>
+>         cpus {
+>                 #address-cells = <2>;
+>                 #size-cells = <0>;
+>                 cpu@0 {
+>                         device_type = "cpu";
+>                         reg = <0 0>;
+>                         /* board 0, socket 0, core 0*/
+>                         ibm,asssociativity = <0 0 0>;
+>                 };
+>
+>                 cpu@1 {
+>                         device_type = "cpu";
+>                         reg = <0 0>;
+>                         /* board 0, socket 0, core 0*/
+>                         ibm,asssociativity = <0 0 0>;
+>                 };
+>
+>                 ...
+>
+>                 cpu@31 {
+>                         device_type = "cpu";
+>                         reg = <0 32>;
+>                         /* board 1, socket 7, core 31*/
+>                         ibm,asssociativity = <1 7 31>;
+>                 };
+>         };
+>
+>         pci@100,0 {
+>                 device_type = "pci";
+>                 /* board 0 */
+>                 ibm,associativity = <0 0xffff 0xffff>;
+>                 ...
+>         };
+>
+>         pci@200,0 {
+>                 device_type = "pci";
+>                 /* board 1 */
+>                 ibm,associativity = <1 0xffff 0xffff>;
+>                 ...
+>         };
+>
+>         ibm,associativity-reference-points = <0 1>;
+>
+> The "ibm,associativity-reference-points" property here indicates that index 2
+> of each array is the most important NUMA boundary for the particular system,
+> because the performance impact of allocating memory on the remote board
+> is more significant than the impact of using memory on a remote socket of the
+> same board. Linux will consequently use the first field in the array as
+> the NUMA node ID. If the link between the boards however is relatively fast,
+> so you care mostly about allocating memory on the same socket, but going to
+> another board isn't much worse than going to another socket on the same
+> board, this would be
+>
+>         ibm,associativity-reference-points = <1 0>;
+i am not able to understand fully, it will be grate help, if you
+explain, how we capture the node distance matrix using
+"ibm,associativity-reference-points "
+for example, how DT looks like for the system with 4 nodes, with below
+inter-node distance matrix.
+node 0 1 distance 20
+node 0 2 distance 20
+node 0 3 distance 20
+node 1 2 distance 20
+node 1 3 distance 20
+node 2 3 distance 20
+>
+> so Linux would ignore the board ID and use the socket ID as the NUMA node
+> number. The same would apply if you have only one (otherwise identical
+> board, then you would get
+>
+>         ibm,associativity-reference-points = <1>;
+>
+> which means that index 0 is completely irrelevant for NUMA considerations
+> and you just care about the socket ID. In this case, devices on the PCI
+> bus would also not care about NUMA policy and just allocate buffers from
+> anywhere, while in original example Linux would allocate DMA buffers only
+> from the local board.
+>
+>         Arnd
+thanks
+ganapat
+ps: sorry for the delayed reply.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
