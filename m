@@ -1,100 +1,46 @@
-From: Christophe RICARD <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 00/15] ST33 I2C TPM driver cleanup
-Date: Sun, 30 Nov 2014 17:41:20 +0100
-Message-ID: <20141130174120.618e9fe1@toffy-MacBookPro>
-References: <1413753085-9958-1-git-send-email-christophe-h.ricard@st.com>
-	<201411301437.18703.PeterHuewe@gmx.de>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCHv2 05/16] gpio: mvebu: add suspend/resume support
+Date: Sun, 30 Nov 2014 11:49:11 -0500
+Message-ID: <20141130164911.GS22670@titan.lakedaemon.net>
+References: <1415978496-9334-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1415978496-9334-6-git-send-email-thomas.petazzoni@free-electrons.com>
+ <CACRpkdb5S7Fv4+Ck2btLPTYWaWr_E-iMcQGeATB4NMwx_T-4GA@mail.gmail.com>
+ <20141127194418.43e03e80@free-electrons.com>
+ <CACRpkdaVaTmhRgSkJPCmsHXvkqd4b-BZBsQEbXcZrHdhyMS0WQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201411301437.18703.PeterHuewe-Mmb7MZpHnFY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter =?UTF-8?B?SMO8d2U=?= <PeterHuewe-Mmb7MZpHnFY@public.gmane.org>
-Cc: ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdaVaTmhRgSkJPCmsHXvkqd4b-BZBsQEbXcZrHdhyMS0WQ@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+Linus, Stephen,
 
-Thank you for your feedback (on Sunday :)).
+On Fri, Nov 28, 2014 at 04:42:14PM +0100, Linus Walleij wrote:
+> On Thu, Nov 27, 2014 at 7:44 PM, Thomas Petazzoni
+> <thomas.petazzoni@free-electrons.com> wrote:
+> > Dear Linus Walleij,
+> 
+> >> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> >>
+> >> Do you want me to merge the patch or is it dependent on other patches?
+> >
+> > This patch has already been merged by you, and is already in
+> > linux-next. See
+> > https://git.kernel.org/cgit/linux/kernel/git/linusw/linux-gpio.git/commit/?h=for-next&id=b5b7b487431b01619f2947d91dadd7c7a233692e.
+> 
+> Argh, haha yeah it was the resending that confused me... too many
+> patches floating around. Well then, it lands upstream.
 
-To be honest i missed those warnings. I figured they come when CONFIG_O=
-=46
-is not set :/.
+Odd.  I've had the same patch in mvebu/for-next since the 22nd of
+November...  You'd think it would have caused a merge conflict.
 
-No problem to send a v5 with tpm/tpm_i2c_stm_st33: Fix potential bug in
-tpm_stm_i2c_send and replace r by ret. The purpose here was more to
-have a kind of convention inside the driver rather than mixing
-r/ret/err.
+At any rate, I've dropped it from the mvebu/soc-suspend branch and
+updated mvebu/for-next.
 
-I hope to send this by tonight.
+thx,
 
-Best Regards
-Christophe
-
-On Sun, 30 Nov 2014 14:37:18 +0100
-Peter H=C3=BCwe <PeterHuewe-Mmb7MZpHnFY@public.gmane.org> wrote:
-
-> Hi Christophe,
->=20
-> sorry for the late reply :/
-> =20
-> > This new patchset version is taking into account as much as possibl=
-e
-> > Jason Gunthorpe feedbacks. I hope, i am not missing any.
-> >=20
-> > It still brings:
-> > - Some few code clean up from code style up to structure
-> > - Device tree support keeping static platform data configuration
-> > support.
-> > - Fixes & improvement for irq support.
-> > - Update the GPLv2 license header
-> >=20
-> > I am also adding the mention Reviewed-By: Jason Gunthorpe
-> > <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org> on all those patches.
-> > Jason, please feel free to let me know if i am mistaking here. :).
-> >=20
-> > This patchset apply on top of James Morris linux-security tree
->=20
-> Unfortunately I get compile warnings:
->=20
-> /data/data-old/linux-2.6/drivers/char/tpm/tpm_i2c_stm_st33.c: In
-> function 'tpm_stm_i2c_probe':
-> /data/data-old/linux-2.6/drivers/char/tpm/tpm_i2c_stm_st33.c:748:3:
-> warning: passing argument 1 of 'tpm_stm_i2c_of_request_resources'
-> from incompatible pointer type [enabled by default]
-> /data/data-old/linux-2.6/drivers/char/tpm/tpm_i2c_stm_st33.c:670:12:
-> note: expected 'struct i2c_client *' but argument is of type 'struct
-> tpm_chip
-> *' /data/data-old/linux-2.6/drivers/char/tpm/tpm_i2c_stm_st33.c:722:3=
-:
-> warning: 'chip' may be used uninitialized in this function
-> [-Wuninitialized]
->=20
-> Smatch complains:
-> /data/data-old/linux-2.6/drivers/char/tpm/tpm_i2c_stm_st33.c:722=20
-> tpm_stm_i2c_probe() error: potentially dereferencing uninitialized
-> 'chip'.
->=20
->=20
->=20
-> Can you fix this up?
->=20
-> (also if you redo the patchset, moving=20
-> tpm/tpm_i2c_stm_st33: Fix potential bug in tpm_stm_i2c_send
-> to the front would be nice, as indicated by Jason on v3
->=20
->=20
-> Nitpick: maybe you could use ret instead of r in your return code
-> cleanup. I'm not a fan of one letter variables, except counters)
->=20
->=20
-> Peter
->=20
->=20
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jason.
