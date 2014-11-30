@@ -1,70 +1,66 @@
-From: Peter =?iso-8859-15?q?H=FCwe?= <PeterHuewe-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH v4 00/15] ST33 I2C TPM driver cleanup
-Date: Sun, 30 Nov 2014 14:37:18 +0100
-Message-ID: <201411301437.18703.PeterHuewe@gmx.de>
-References: <1413753085-9958-1-git-send-email-christophe-h.ricard@st.com>
+From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v1] ARM: dts: rockchip: Update LEDs to work with the last
+ leds-gpio driver on radxarock
+Date: Sun, 30 Nov 2014 15:10:13 +0100
+Message-ID: <CABgxDoLx+5Bc_7TfRLOTrhP26=xQF8dawmEENqmXTUpBep_b4w@mail.gmail.com>
+References: <1416759575-774-1-git-send-email-romain.perier@gmail.com>
+	<CABgxDoLwqYttcPYc+Wth3B17P=e2cbV8G=hqbRfWx+PVTiAPig@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1413753085-9958-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <CABgxDoLwqYttcPYc+Wth3B17P=e2cbV8G=hqbRfWx+PVTiAPig-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Christophe,
+ping :)
 
-sorry for the late reply :/
- 
-> This new patchset version is taking into account as much as possible
-> Jason Gunthorpe feedbacks. I hope, i am not missing any.
-> 
-> It still brings:
-> - Some few code clean up from code style up to structure
-> - Device tree support keeping static platform data configuration support.
-> - Fixes & improvement for irq support.
-> - Update the GPLv2 license header
-> 
-> I am also adding the mention Reviewed-By: Jason Gunthorpe
-> <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org> on all those patches.
-> Jason, please feel free to let me know if i am mistaking here. :).
-> 
-> This patchset apply on top of James Morris linux-security tree
-
-Unfortunately I get compile warnings:
-
-/data/data-old/linux-2.6/drivers/char/tpm/tpm_i2c_stm_st33.c: In function 
-'tpm_stm_i2c_probe':
-/data/data-old/linux-2.6/drivers/char/tpm/tpm_i2c_stm_st33.c:748:3: warning: 
-passing argument 1 of 'tpm_stm_i2c_of_request_resources' from incompatible 
-pointer type [enabled by default]
-/data/data-old/linux-2.6/drivers/char/tpm/tpm_i2c_stm_st33.c:670:12: note: 
-expected 'struct i2c_client *' but argument is of type 'struct tpm_chip *'
-/data/data-old/linux-2.6/drivers/char/tpm/tpm_i2c_stm_st33.c:722:3: warning: 
-'chip' may be used uninitialized in this function [-Wuninitialized]
-
-Smatch complains:
-/data/data-old/linux-2.6/drivers/char/tpm/tpm_i2c_stm_st33.c:722 
-tpm_stm_i2c_probe() error: potentially dereferencing uninitialized 'chip'.
-
-
-
-Can you fix this up?
-
-(also if you redo the patchset, moving 
-tpm/tpm_i2c_stm_st33: Fix potential bug in tpm_stm_i2c_send
-to the front would be nice, as indicated by Jason on v3
-
-
-Nitpick: maybe you could use ret instead of r in your return code cleanup.
-I'm not a fan of one letter variables, except counters)
-
-
-Peter
-
-
+2014-11-23 17:20 GMT+01:00 Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> See https://www.kernel.org/doc/Documentation/leds/leds-class.txt for
+> LEDs device naming
+>
+> 2014-11-23 17:19 GMT+01:00 Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+>> The leds-gpio driver recently switched to the device property API. The device_node
+>> name is no longer retrieved if the "label" devicetree property is not found.
+>> In this case the driver tries to create entries with (null) name in
+>> /sys/class/leds, which is wrong and generates backtrace as several gpio_leds have
+>> the same name. Also renamed subnode "yellow" to "blue" to match the last
+>> schematics updates.
+>>
+>> Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/rk3188-radxarock.dts | 5 ++++-
+>>  1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/rk3188-radxarock.dts b/arch/arm/boot/dts/rk3188-radxarock.dts
+>> index 6eb62c0..9a09579 100644
+>> --- a/arch/arm/boot/dts/rk3188-radxarock.dts
+>> +++ b/arch/arm/boot/dts/rk3188-radxarock.dts
+>> @@ -43,16 +43,19 @@
+>>                 compatible = "gpio-leds";
+>>
+>>                 green {
+>> +                       label = "rock:green:user1";
+>>                         gpios = <&gpio0 12 GPIO_ACTIVE_LOW>;
+>>                         default-state = "off";
+>>                 };
+>>
+>> -               yellow {
+>> +               blue {
+>> +                       label = "rock:blue:user2";
+>>                         gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
+>>                         default-state = "off";
+>>                 };
+>>
+>>                 sleep {
+>> +                       label = "rock:red:power";
+>>                         gpios = <&gpio0 15 0>;
+>>                         default-state = "off";
+>>                 };
+>> --
+>> 1.9.1
+>>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
