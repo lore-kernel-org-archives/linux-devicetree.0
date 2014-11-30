@@ -1,44 +1,30 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] mtd: hisilicon: add device tree binding
- documentation
-Date: Sun, 30 Nov 2014 01:01:06 -0800
-Message-ID: <20141130090106.GF3608@norris-Latitude-E6410>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v4 0/2] mtd: hisilicon: add a new driver for NAND
+ controller of hisilicon hip04 Soc
+Date: Sun, 30 Nov 2014 01:08:53 -0800
+Message-ID: <20141130090853.GG3608@norris-Latitude-E6410>
 References: <1415105221-7732-1-git-send-email-wangzhou.bry@gmail.com>
- <1415105221-7732-3-git-send-email-wangzhou.bry@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1415105221-7732-3-git-send-email-wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, caizhiyong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1415105221-7732-1-git-send-email-wangzhou.bry@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Zhou Wang <wangzhou.bry@gmail.com>
+Cc: David Woodhouse <dwmw2@infradead.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, caizhiyong@huawei.com, haojian.zhuang@gmail.com, xuwei5@hisilicon.com, wangzhou1@hisilicon.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-One more thing:
+On Tue, Nov 04, 2014 at 08:46:59PM +0800, Zhou Wang wrote:
+> This patchset adds the support for NAND controller of hisilicon hip04 Soc.
+> The NAND controller IP was developed by hisilicon and needs a new driver to
+> support it. This patchset is based on v3.18-rc1. I have tested that NAND flash
+> controller works fine in Hip04 D01 board.
 
-On Tue, Nov 04, 2014 at 08:47:01PM +0800, Zhou Wang wrote:
-> diff --git a/Documentation/devicetree/bindings/mtd/hisi504-nand.txt b/Documentation/devicetree/bindings/mtd/hisi504-nand.txt
-> new file mode 100644
-> index 0000000..c8b3988
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/hisi504-nand.txt
-> @@ -0,0 +1,40 @@
-> +Hisilicon Hip04 Soc NAND controller DT binding
-> +
-> +Required properties:
-> +- compatible:          Should be "hisilicon,504-nfc".
+Have you tested on the MTD test modules (drivers/mtd/tests/*)? This is
+important, as we seem to regularly get UBIFS bug reports from users
+whose drivers have not even passed some of the simple tests.
 
-I notice you use "NFC" naming throughout. I know others have had
-complaints about overloading the acronym NFC which sometimes means "Near
-Field Communication", instead of the intended "NAND Flash Controller."
-Is there any kind of naming convention within Hisilicon documentation
-that insists on calling this NFC, or can we avoid that confusing name?
-
-If possible, I'd suggest "hisilicon,504-nand" as an alternative.
+Also, it might be worth testing out the UBI tests found in the mtd-utils
+package.
 
 Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
