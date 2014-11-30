@@ -1,59 +1,111 @@
-From: Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] mtd: gpmi: Remove "We support only one NAND chip" from
- bindings doc
-Date: Sun, 30 Nov 2014 23:42:58 +0800
-Message-ID: <20141130154255.GB14834@localhost.localdomain>
-References: <1417097929-17832-1-git-send-email-sr@denx.de>
- <20141128014832.GA3113@localhost.localdomain>
- <54781DD5.5030801@denx.de>
- <20141129024047.GA5056@localhost.localdomain>
- <20141130065326.GB3608@norris-Latitude-E6410>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141130065326.GB3608@norris-Latitude-E6410>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: [REVIEW PATCH v2.1 08/11] of: smiapp: Add documentation
+Date: Sun, 30 Nov 2014 18:26:48 +0200
+Message-ID: <1417364809-4693-1-git-send-email-sakari.ailus@iki.fi>
+References: <1416289426-804-9-git-send-email-sakari.ailus@iki.fi>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1416289426-804-9-git-send-email-sakari.ailus@iki.fi>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 29, 2014 at 10:53:26PM -0800, Brian Norris wrote:
-> On Sat, Nov 29, 2014 at 10:40:50AM +0800, Huang Shijie wrote:
-> > On Fri, Nov 28, 2014 at 08:01:41AM +0100, Stefan Roese wrote:
-> > > On 28.11.2014 02:48, Huang Shijie wrote:
-> > > >On Thu, Nov 27, 2014 at 03:18:49PM +0100, Stefan Roese wrote:
-> > > >>This sentence "We support only one NAND chip now" is not true any more.
-> > > >>Multiple chips are supported. So lets remove this sentence to not
-> > > >
-> > > >The gpmi can only supports one chip. Of course, there are maybe two dies
-> > > >in this single chip.
-> > > 
-> > > Now I'm a bit confused. The i.MX6 supports 4 chips select signals. And isn't
-> > > "two dies in this single chip" not practically the same as connecting 2 (or
-> > > more) chips (same device) to multiple chip selects of the SoC? Where is the
-> > > difference here?
-> > The "one chip" here is means the "one package" (TSOP or BGA ....).
-> 
-> Then why is this even in the DT binding doc? Isn't that a board-level
-> constraint (and not a chip property) which should be obvious to the
-> user? If so, then should we just drop the language? Or at a minimum,
-> make it more specific so it doesn't confuse readers.
+Document the smiapp device tree properties.
 
-yes. It is okay to send a patch to make it more clear.
+Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
+---
+since v2:
+- Cleanups
+- Removed clock-names property documentation
+- Port node documentation was really endpoint node documentation
+- Added remote-endpoint as mandatory endpoint node properties
 
-> 
-> > (In logic, "two dies in this single chip" is same as connecting 2 chips
-> > to the gpmi.)
-> 
-> ...which means that logically, you can connect more than one chip to the
-> GPMI, right?
-The gpmi can only connect with one physical chip now, but there maybe
-two DIEs in this chip.
+ .../devicetree/bindings/media/i2c/nokia,smia.txt   |   64 ++++++++++++++++++++
+ MAINTAINERS                                        |    1 +
+ 2 files changed, 65 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
 
-thanks
-Huang Shijie
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt b/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
+new file mode 100644
+index 0000000..2114a4d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
+@@ -0,0 +1,64 @@
++SMIA/SMIA++ sensor
++
++SMIA (Standard Mobile Imaging Architecture) is an image sensor standard
++defined jointly by Nokia and ST. SMIA++, defined by Nokia, is an extension
++of that. These definitions are valid for both types of sensors.
++
++More detailed documentation can be found in
++Documentation/devicetree/bindings/media/video-interfaces.txt .
++
++
++Mandatory properties
++--------------------
++
++- compatible: "nokia,smia"
++- reg: I2C address (0x10, or an alternative address)
++- vana-supply: Analogue voltage supply (VANA), typically 2,8 volts (sensor
++  dependent).
++- clocks: External clock phandle
++- clock-frequency: Frequency of the external clock to the sensor
++- link-frequency: List of allowed data link frequencies. An array of 64-bit
++  elements.
++
++
++Optional properties
++-------------------
++
++- nokia,nvm-size: The size of the NVM, in bytes. If the size is not given,
++  the NVM contents will not be read.
++- reset-gpios: XSHUTDOWN GPIO
++
++
++Endpoint node mandatory properties
++----------------------------------
++
++- clock-lanes: <0>
++- data-lanes: <1..n>
++- remote-endpoint: A phandle to the bus receiver's endpoint node.
++
++
++Example
++-------
++
++&i2c2 {
++	clock-frequency = <400000>;
++
++	smiapp_1: camera@10 {
++		compatible = "nokia,smia";
++		reg = <0x10>;
++		reset-gpios = <&gpio3 20 0>;
++		vana-supply = <&vaux3>;
++		clocks = <&omap3_isp 0>;
++		clock-names = "ext_clk";
++		clock-frequency = <9600000>;
++		nokia,nvm-size = <512>; /* 8 * 64 */
++		link-frequency = /bits/ 64 <199200000 210000000 499200000>;
++		port {
++			smiapp_1_1: endpoint {
++				clock-lanes = <0>;
++				data-lanes = <1 2>;
++				remote-endpoint = <&csi2a_ep>;
++			};
++		};
++	};
++};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2378a5f..285c1ba 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8619,6 +8619,7 @@ F:	include/media/smiapp.h
+ F:	drivers/media/i2c/smiapp-pll.c
+ F:	drivers/media/i2c/smiapp-pll.h
+ F:	include/uapi/linux/smiapp.h
++F:	Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
+ 
+ SMM665 HARDWARE MONITOR DRIVER
+ M:	Guenter Roeck <linux@roeck-us.net>
+-- 
+1.7.10.4
