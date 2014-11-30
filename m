@@ -1,66 +1,58 @@
-From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v1] ARM: dts: rockchip: Update LEDs to work with the last
- leds-gpio driver on radxarock
-Date: Sun, 30 Nov 2014 15:10:13 +0100
-Message-ID: <CABgxDoLx+5Bc_7TfRLOTrhP26=xQF8dawmEENqmXTUpBep_b4w@mail.gmail.com>
-References: <1416759575-774-1-git-send-email-romain.perier@gmail.com>
-	<CABgxDoLwqYttcPYc+Wth3B17P=e2cbV8G=hqbRfWx+PVTiAPig@mail.gmail.com>
+From: Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] mtd: gpmi: Remove "We support only one NAND chip" from
+ bindings doc
+Date: Sun, 30 Nov 2014 23:42:58 +0800
+Message-ID: <20141130154255.GB14834@localhost.localdomain>
+References: <1417097929-17832-1-git-send-email-sr@denx.de>
+ <20141128014832.GA3113@localhost.localdomain>
+ <54781DD5.5030801@denx.de>
+ <20141129024047.GA5056@localhost.localdomain>
+ <20141130065326.GB3608@norris-Latitude-E6410>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABgxDoLwqYttcPYc+Wth3B17P=e2cbV8G=hqbRfWx+PVTiAPig-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141130065326.GB3608@norris-Latitude-E6410>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-ping :)
+On Sat, Nov 29, 2014 at 10:53:26PM -0800, Brian Norris wrote:
+> On Sat, Nov 29, 2014 at 10:40:50AM +0800, Huang Shijie wrote:
+> > On Fri, Nov 28, 2014 at 08:01:41AM +0100, Stefan Roese wrote:
+> > > On 28.11.2014 02:48, Huang Shijie wrote:
+> > > >On Thu, Nov 27, 2014 at 03:18:49PM +0100, Stefan Roese wrote:
+> > > >>This sentence "We support only one NAND chip now" is not true any more.
+> > > >>Multiple chips are supported. So lets remove this sentence to not
+> > > >
+> > > >The gpmi can only supports one chip. Of course, there are maybe two dies
+> > > >in this single chip.
+> > > 
+> > > Now I'm a bit confused. The i.MX6 supports 4 chips select signals. And isn't
+> > > "two dies in this single chip" not practically the same as connecting 2 (or
+> > > more) chips (same device) to multiple chip selects of the SoC? Where is the
+> > > difference here?
+> > The "one chip" here is means the "one package" (TSOP or BGA ....).
+> 
+> Then why is this even in the DT binding doc? Isn't that a board-level
+> constraint (and not a chip property) which should be obvious to the
+> user? If so, then should we just drop the language? Or at a minimum,
+> make it more specific so it doesn't confuse readers.
 
-2014-11-23 17:20 GMT+01:00 Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> See https://www.kernel.org/doc/Documentation/leds/leds-class.txt for
-> LEDs device naming
->
-> 2014-11-23 17:19 GMT+01:00 Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
->> The leds-gpio driver recently switched to the device property API. The device_node
->> name is no longer retrieved if the "label" devicetree property is not found.
->> In this case the driver tries to create entries with (null) name in
->> /sys/class/leds, which is wrong and generates backtrace as several gpio_leds have
->> the same name. Also renamed subnode "yellow" to "blue" to match the last
->> schematics updates.
->>
->> Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/rk3188-radxarock.dts | 5 ++++-
->>  1 file changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/rk3188-radxarock.dts b/arch/arm/boot/dts/rk3188-radxarock.dts
->> index 6eb62c0..9a09579 100644
->> --- a/arch/arm/boot/dts/rk3188-radxarock.dts
->> +++ b/arch/arm/boot/dts/rk3188-radxarock.dts
->> @@ -43,16 +43,19 @@
->>                 compatible = "gpio-leds";
->>
->>                 green {
->> +                       label = "rock:green:user1";
->>                         gpios = <&gpio0 12 GPIO_ACTIVE_LOW>;
->>                         default-state = "off";
->>                 };
->>
->> -               yellow {
->> +               blue {
->> +                       label = "rock:blue:user2";
->>                         gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
->>                         default-state = "off";
->>                 };
->>
->>                 sleep {
->> +                       label = "rock:red:power";
->>                         gpios = <&gpio0 15 0>;
->>                         default-state = "off";
->>                 };
->> --
->> 1.9.1
->>
+yes. It is okay to send a patch to make it more clear.
+
+> 
+> > (In logic, "two dies in this single chip" is same as connecting 2 chips
+> > to the gpmi.)
+> 
+> ...which means that logically, you can connect more than one chip to the
+> GPMI, right?
+The gpmi can only connect with one physical chip now, but there maybe
+two DIEs in this chip.
+
+thanks
+Huang Shijie
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
