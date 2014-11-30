@@ -1,40 +1,52 @@
-From: Peter =?utf-8?q?H=C3=BCwe?= <PeterHuewe-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH v4 00/15] ST33 I2C TPM driver cleanup
-Date: Sun, 30 Nov 2014 18:47:04 +0100
-Message-ID: <201411301847.04422.PeterHuewe@gmx.de>
-References: <1413753085-9958-1-git-send-email-christophe-h.ricard@st.com> <201411301437.18703.PeterHuewe@gmx.de> <20141130174120.618e9fe1@toffy-MacBookPro>
+From: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
+Subject: Re: [RFC] cpufreq: Add "dvfs-method" binding to probe cpufreq drivers
+Date: Sun, 30 Nov 2014 12:04:46 -0800
+Message-ID: <547B785E.6020404@oracle.com>
+References: <596a6d49f2b3e2837aa9a54a3e1249161d3c9265.1416991009.git.viresh.kumar@linaro.org>	<CAKohpomBijLiBgV31ZhZDTctsTLccBZ+93r+esG-WRZAS4sqww@mail.gmail.com>	<54760107.3010205@oracle.com> <CAKohpokLeX+NoD9KX1MWWjyZtu6otw_oryt1f4gwLz7TffcExQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141130174120.618e9fe1@toffy-MacBookPro>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christophe RICARD <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAKohpokLeX+NoD9KX1MWWjyZtu6otw_oryt1f4gwLz7TffcExQ@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Arnd Bergmann <arnd.bergmann@linaro.org>, Mike Turquette <mike.turquette@linaro.org>, Rob Herring <rob.herring@linaro.org>, Grant Likely <grant.likely@linaro.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Chander Kashyap <k.chander@samsung.com>, "olof@lixom.net" <olof@lixom.net>, Thomas Abraham <ta.omasab@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Christophe,
-
-> Thank you for your feedback (on Sunday :)).
-> 
-> To be honest i missed those warnings. I figured they come when CONFIG_OF
-> is not set :/.
-> 
-> No problem to send a v5 with tpm/tpm_i2c_stm_st33: Fix potential bug in
-> tpm_stm_i2c_send and replace r by ret. The purpose here was more to
-> have a kind of convention inside the driver rather than mixing
-> r/ret/err.
-> 
-> I hope to send this by tonight.
-
-Would be great! - usually I try to sort this stuff out myself, but this is not 
-possible at the moment.
 
 
-Thanks,
-Peter
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 11/26/14 9:14 PM, Viresh Kumar wrote:
+> On 26 November 2014 at 22:04, santosh shilimkar
+> <santosh.shilimkar@oracle.com> wrote:
+>> Its really not 'dvfs-method' but really the actual driver which you
+>> want to probe. Also we should just have one global way to parse
+>> DT vs non-DT cpufreq drivers. In other words, instead of matching
+>> multiple driver strings for different drivers, we should come up with
+>> slightly generic binding. Probably 'cpufreq-dt' for all DT based probed
+>> CPUFREQ drivers.
+>>
+>> What you say ?
+>
+> I got a bit confused. :(
+>
+> The whole purpose of this binding is to select which cpufreq driver to
+> choose from the available ones.
+>
+> Are you saying that we should have only one cpufreq driver that works
+> with DT ? I don't think that would be the right decision, but we should
+> try to reuse cpufreq-dt wherever possible.
+>
+I didn't mean one CPUFreq driver which works with DT.
+
+> Or are you saying that some common code should parse this DT information?
+Yes.
+
+> This is what I said in the patch, we can write another file which will
+> just create
+> a platform_device for us, depending on the string that came in.
+>
+Sounds good.
+
+Regards,
+Santosh
+
