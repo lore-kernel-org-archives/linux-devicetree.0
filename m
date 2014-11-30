@@ -1,165 +1,100 @@
-From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH v2 2/4] Documentation: arm64/arm: dt bindings for numa.
-Date: Sun, 30 Nov 2014 08:38:02 -0800
-Message-ID: <CAFpQJXU4fsCn5rW20qqL1_MYm0Np_beF5gni7uMZSLFLRvVrcQ@mail.gmail.com>
-References: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
-	<2966212.dpWQ0OTb0A@wuerfel>
-	<CAFpQJXUjYsTiHSyHdgtN9JPWGN8CByR4VwtSMJhwkAUWA4iV9w@mail.gmail.com>
-	<2065254.jRdQcinOdg@wuerfel>
+From: Christophe RICARD <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 00/15] ST33 I2C TPM driver cleanup
+Date: Sun, 30 Nov 2014 17:41:20 +0100
+Message-ID: <20141130174120.618e9fe1@toffy-MacBookPro>
+References: <1413753085-9958-1-git-send-email-christophe-h.ricard@st.com>
+	<201411301437.18703.PeterHuewe@gmx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2065254.jRdQcinOdg@wuerfel>
+In-Reply-To: <201411301437.18703.PeterHuewe-Mmb7MZpHnFY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+To: Peter =?UTF-8?B?SMO8d2U=?= <PeterHuewe-Mmb7MZpHnFY@public.gmane.org>
+Cc: ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Hi Peter,
 
+Thank you for your feedback (on Sunday :)).
 
-On Tue, Nov 25, 2014 at 11:00 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Tuesday 25 November 2014 08:15:47 Ganapatrao Kulkarni wrote:
->> > No, don't hardcode ARM specifics into a common binding either. I've looked
->> > at the ibm,associativity properties again, and I think we should just use
->> > those, they can cover all cases and are completely independent of the
->> > architecture. We should probably discuss about the property name though,
->> > as using the "ibm," prefix might not be the best idea.
->>
->> We have started with new proposal, since not got enough details how
->> ibm/ppc is managing the numa using dt.
->> there is no documentation and there is no power/PAPR spec for numa in
->> public domain and there are no single dt file in arch/powerpc which
->> describes the numa. if we get any one of these details, we can align
->> to powerpc implementation.
->
-> Basically the idea is to have an "ibm,associativity" property in each
-> bus or device that is node specific, and this includes all CPUs and
-> memory nodes. The property contains an array of 32-bit integers that
-> count the resources. Take an example of a NUMA cluster of two machines
-> with four sockets and four cores each (32 cores total), a memory
-> channel on each socket and one PCI host per board that is connected
-> at equal speed to each socket on the board.
-thanks for the detailed information.
-IMHO, linux-numa code does not care about how the hardware design is,
-like how many boards and how many sockets it has. It only needs to
-know how many numa nodes system has, how resources are mapped to nodes
-and node-distance to define inter node memory access latency. i think
-it will be simple, if we merge board and socket to single entry say
-node.
-also we are assuming here that numa h/w design will have multiple
-boards and sockets, what if it has something different/more.
+To be honest i missed those warnings. I figured they come when CONFIG_O=
+=46
+is not set :/.
 
->
-> The ibm,associativity property in each PCI host, CPU or memory device
-> node consequently has an array of three (board, socket, core) integers:
->
->         memory@0,0 {
->                 device_type = "memory";
->                 reg = <0x0 0x0  0x4 0x0;
->                 /* board 0, socket 0, no specific core */
->                 ibm,asssociativity = <0 0 0xffff>;
->         };
->
->         memory@4,0 {
->                 device_type = "memory";
->                 reg = <0x4 0x0  0x4 0x0>;
->                 /* board 0, socket 1, no specific core */
->                 ibm,asssociativity = <0 1 0xffff>;
->         };
->
->         ...
->
->         memory@1c,0 {
->                 device_type = "memory";
->                 reg = <0x1c 0x0  0x4 0x0>;
->                 /* board 0, socket 7, no specific core */
->                 ibm,asssociativity = <1 7 0xffff>;
->         };
->
->         cpus {
->                 #address-cells = <2>;
->                 #size-cells = <0>;
->                 cpu@0 {
->                         device_type = "cpu";
->                         reg = <0 0>;
->                         /* board 0, socket 0, core 0*/
->                         ibm,asssociativity = <0 0 0>;
->                 };
->
->                 cpu@1 {
->                         device_type = "cpu";
->                         reg = <0 0>;
->                         /* board 0, socket 0, core 0*/
->                         ibm,asssociativity = <0 0 0>;
->                 };
->
->                 ...
->
->                 cpu@31 {
->                         device_type = "cpu";
->                         reg = <0 32>;
->                         /* board 1, socket 7, core 31*/
->                         ibm,asssociativity = <1 7 31>;
->                 };
->         };
->
->         pci@100,0 {
->                 device_type = "pci";
->                 /* board 0 */
->                 ibm,associativity = <0 0xffff 0xffff>;
->                 ...
->         };
->
->         pci@200,0 {
->                 device_type = "pci";
->                 /* board 1 */
->                 ibm,associativity = <1 0xffff 0xffff>;
->                 ...
->         };
->
->         ibm,associativity-reference-points = <0 1>;
->
-> The "ibm,associativity-reference-points" property here indicates that index 2
-> of each array is the most important NUMA boundary for the particular system,
-> because the performance impact of allocating memory on the remote board
-> is more significant than the impact of using memory on a remote socket of the
-> same board. Linux will consequently use the first field in the array as
-> the NUMA node ID. If the link between the boards however is relatively fast,
-> so you care mostly about allocating memory on the same socket, but going to
-> another board isn't much worse than going to another socket on the same
-> board, this would be
->
->         ibm,associativity-reference-points = <1 0>;
-i am not able to understand fully, it will be grate help, if you
-explain, how we capture the node distance matrix using
-"ibm,associativity-reference-points "
-for example, how DT looks like for the system with 4 nodes, with below
-inter-node distance matrix.
-node 0 1 distance 20
-node 0 2 distance 20
-node 0 3 distance 20
-node 1 2 distance 20
-node 1 3 distance 20
-node 2 3 distance 20
->
-> so Linux would ignore the board ID and use the socket ID as the NUMA node
-> number. The same would apply if you have only one (otherwise identical
-> board, then you would get
->
->         ibm,associativity-reference-points = <1>;
->
-> which means that index 0 is completely irrelevant for NUMA considerations
-> and you just care about the socket ID. In this case, devices on the PCI
-> bus would also not care about NUMA policy and just allocate buffers from
-> anywhere, while in original example Linux would allocate DMA buffers only
-> from the local board.
->
->         Arnd
-thanks
-ganapat
-ps: sorry for the delayed reply.
+No problem to send a v5 with tpm/tpm_i2c_stm_st33: Fix potential bug in
+tpm_stm_i2c_send and replace r by ret. The purpose here was more to
+have a kind of convention inside the driver rather than mixing
+r/ret/err.
+
+I hope to send this by tonight.
+
+Best Regards
+Christophe
+
+On Sun, 30 Nov 2014 14:37:18 +0100
+Peter H=C3=BCwe <PeterHuewe-Mmb7MZpHnFY@public.gmane.org> wrote:
+
+> Hi Christophe,
+>=20
+> sorry for the late reply :/
+> =20
+> > This new patchset version is taking into account as much as possibl=
+e
+> > Jason Gunthorpe feedbacks. I hope, i am not missing any.
+> >=20
+> > It still brings:
+> > - Some few code clean up from code style up to structure
+> > - Device tree support keeping static platform data configuration
+> > support.
+> > - Fixes & improvement for irq support.
+> > - Update the GPLv2 license header
+> >=20
+> > I am also adding the mention Reviewed-By: Jason Gunthorpe
+> > <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org> on all those patches.
+> > Jason, please feel free to let me know if i am mistaking here. :).
+> >=20
+> > This patchset apply on top of James Morris linux-security tree
+>=20
+> Unfortunately I get compile warnings:
+>=20
+> /data/data-old/linux-2.6/drivers/char/tpm/tpm_i2c_stm_st33.c: In
+> function 'tpm_stm_i2c_probe':
+> /data/data-old/linux-2.6/drivers/char/tpm/tpm_i2c_stm_st33.c:748:3:
+> warning: passing argument 1 of 'tpm_stm_i2c_of_request_resources'
+> from incompatible pointer type [enabled by default]
+> /data/data-old/linux-2.6/drivers/char/tpm/tpm_i2c_stm_st33.c:670:12:
+> note: expected 'struct i2c_client *' but argument is of type 'struct
+> tpm_chip
+> *' /data/data-old/linux-2.6/drivers/char/tpm/tpm_i2c_stm_st33.c:722:3=
+:
+> warning: 'chip' may be used uninitialized in this function
+> [-Wuninitialized]
+>=20
+> Smatch complains:
+> /data/data-old/linux-2.6/drivers/char/tpm/tpm_i2c_stm_st33.c:722=20
+> tpm_stm_i2c_probe() error: potentially dereferencing uninitialized
+> 'chip'.
+>=20
+>=20
+>=20
+> Can you fix this up?
+>=20
+> (also if you redo the patchset, moving=20
+> tpm/tpm_i2c_stm_st33: Fix potential bug in tpm_stm_i2c_send
+> to the front would be nice, as indicated by Jason on v3
+>=20
+>=20
+> Nitpick: maybe you could use ret instead of r in your return code
+> cleanup. I'm not a fan of one letter variables, except counters)
+>=20
+>=20
+> Peter
+>=20
+>=20
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
