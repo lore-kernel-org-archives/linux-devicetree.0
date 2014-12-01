@@ -1,28 +1,21 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [RFC V1 0/8] CPUFreq: create platform-dev for DT based cpufreq drivers
-Date: Mon, 1 Dec 2014 20:18:43 +0530
-Message-ID: <CAKohpo=xDrizL5+5zeVAj_x1BhMuidCa8Ed90YOQbzSTQ_yb2A@mail.gmail.com>
-References: <cover.1417433163.git.viresh.kumar@linaro.org>
-	<CAKohpo=EPOH-WJ4mmAr-1BzzAEpvC-F0Y99Ox_yL7meUcRNx6Q@mail.gmail.com>
-	<547C6E9D.2090205@arm.com>
-	<23115535.r6kXsReHU2@wuerfel>
+From: Finance Department <vdelgado-zR9jn83fVkPG66mcB53EVw@public.gmane.org>
+Subject: Payment
+Date: Mon, 1 Dec 2014 09:54:11 -0430 (VET)
+Message-ID: <1139676446.905124.1417443851922.JavaMail.zimbra@inavi.gob.ve>
+Reply-To: Finance Department <defnce-9uewiaClKEY@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <23115535.r6kXsReHU2@wuerfel>
-Sender: linux-pm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sudeep Holla <sudeep.holla@arm.com>, Nishanth Menon <nm@ti.com>, "rob.herring@linaro.org" <rob.herring@linaro.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, Thomas Abraham <ta.omasab@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Chander Kashyap <k.chander@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, "olof@lixom.net" <olof@lixom.net>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Mike Turquette <mike.turquette@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, santosh shilimkar <santosh.shilimkar@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 1 December 2014 at 19:41, Arnd Bergmann <arnd@arndb.de> wrote:
-> I would prefer the /cpus node over the /chosen node because the former
-> describes the hardware while the latter is supposed to be user-settable
-> (on real open-firmware at least). But I think either one is better than
-> using the / node compatible string.
->
-> How about a "linux,cpu-dvfs-method" property in the root node? Would
-> that work better for you than a "linux,dvfs-method" in the "/cpus"
-> node?
+Dear Recipient,
 
-I will choose "linux,dvfs-method" in the "/cpus" node.
+You have been awarded the sum of  8,000,000.00 (Eight Million Pounds sterling) with reference number 77100146 by office of the ministry of finance UK.Send us your personal details to deliver your funds.
+
+Gloria Peter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
