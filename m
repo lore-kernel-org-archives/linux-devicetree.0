@@ -1,102 +1,55 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Subject: Re: [PATCH v2 1/3] power: reset: read priority from device tree
-Date: Mon, 01 Dec 2014 18:24:37 +0100
-Message-ID: <e5c5a44c84b95c4e48ed01c4dcffd35a@agner.ch>
+Date: Mon, 1 Dec 2014 09:22:19 -0800
+Message-ID: <20141201172219.GA24692@roeck-us.net>
 References: <1417453389-1588-1-git-send-email-stefan@agner.ch>
  <1417453389-1588-2-git-send-email-stefan@agner.ch>
  <20141201171126.GB22708@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
 In-Reply-To: <20141201171126.GB22708@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fkan-qTEPVZfXA3Y@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "fkan-qTEPVZfXA3Y@public.gmane.org" <fkan-qTEPVZfXA3Y@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2014-12-01 18:11, Mark Rutland wrote:
+On Mon, Dec 01, 2014 at 05:11:26PM +0000, Mark Rutland wrote:
 > On Mon, Dec 01, 2014 at 05:03:07PM +0000, Stefan Agner wrote:
->> This patch adds an optional property which allows to specify the
->> reset source priority. This priority is used by the kernel restart
->> handler call chain to sort out the proper reset/restart method.
->> Depending on the power design of a board or other machine/board
->> specific peculiarity, it is not possible to pick a generic priority.
->>
->> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/power/reset/syscon-reboot.txt | 3 +++
->>  drivers/power/reset/syscon-reboot.c                             | 5 ++++-
->>  2 files changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
->> index 1190631..ee41d9c 100644
->> --- a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
->> +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
->> @@ -11,6 +11,9 @@ Required properties:
->>  - offset: offset in the register map for the reboot register (in bytes)
->>  - mask: the reset value written to the reboot register (32 bit access)
->>
->> +Optional properties:
->> +- priority: define the priority of the reset (0-255, defaults to 128)
->> +
+> > This patch adds an optional property which allows to specify the
+> > reset source priority. This priority is used by the kernel restart
+> > handler call chain to sort out the proper reset/restart method.
+> > Depending on the power design of a board or other machine/board
+> > specific peculiarity, it is not possible to pick a generic priority.
+> > 
+> > Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/power/reset/syscon-reboot.txt | 3 +++
+> >  drivers/power/reset/syscon-reboot.c                             | 5 ++++-
+> >  2 files changed, 7 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+> > index 1190631..ee41d9c 100644
+> > --- a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+> > +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+> > @@ -11,6 +11,9 @@ Required properties:
+> >  - offset: offset in the register map for the reboot register (in bytes)
+> >  - mask: the reset value written to the reboot register (32 bit access)
+> >  
+> > +Optional properties:
+> > +- priority: define the priority of the reset (0-255, defaults to 128)
+> > +
 > 
 > NAK. This is a leak of Linux-internal details.
 > 
 > What is this necessary for?
 > 
-> Mark.
+It establishes which restart handler to use if there more than one means
+to reset the system. See documentation to register_restart_handler() in
+kernel/reboot.c.
 
-Hi Mark,
-
-In my case, it is necessary to be called ahead of the watchdog, which
-has a priority of 128. This syscon-reboot driver currently has a default
-priority of 128 too. I could live with a higher default priority for the
-syscon-reboot driver, in fact I proposed that in the discussion of v1 of
-that patch:
-https://lkml.org/lkml/2014/11/28/484
-
-IMHO, this priority might make sense for most cases, I guess that
-dedicated "syscon" capabilities are usually better suited as a reboot
-source than watchdog.
-
-If dt, then the question which arises: If there are different
-capabilities to reset/reboot a whole system, how do we reflect which is
-the best suited one in dt?
-
---
-Stefan
-
-> 
->>  Default will be little endian mode, 32 bit access only.
->>
->>  Examples:
->> diff --git a/drivers/power/reset/syscon-reboot.c b/drivers/power/reset/syscon-reboot.c
->> index 815b901..3060d6b 100644
->> --- a/drivers/power/reset/syscon-reboot.c
->> +++ b/drivers/power/reset/syscon-reboot.c
->> @@ -67,8 +67,11 @@ static int syscon_reboot_probe(struct platform_device *pdev)
->>  	if (of_property_read_u32(pdev->dev.of_node, "mask", &ctx->mask))
->>  		return -EINVAL;
->>
->> -	ctx->restart_handler.notifier_call = syscon_restart_handle;
->>  	ctx->restart_handler.priority = 128;
->> +	of_property_read_u32(pdev->dev.of_node, "priority",
->> +			     &ctx->restart_handler.priority);
->> +
->> +	ctx->restart_handler.notifier_call = syscon_restart_handle;
->>  	err = register_restart_handler(&ctx->restart_handler);
->>  	if (err)
->>  		dev_err(dev, "can't register restart notifier (err=%d)\n", err);
->> --
->> 2.1.3
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
-
+Guenter
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
