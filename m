@@ -1,55 +1,51 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH/RFC v8 11/14] DT: Add documentation for the mfd Maxim
- max77693
-Date: Mon, 1 Dec 2014 14:02:31 +0100
-Message-ID: <20141201130231.GA24737@amd>
-References: <1417166286-27685-1-git-send-email-j.anaszewski@samsung.com>
- <1417166286-27685-12-git-send-email-j.anaszewski@samsung.com>
- <20141129192607.GB17355@amd>
- <547C65F7.4090801@samsung.com>
+From: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 0/2] mtd: hisilicon: add a new driver for NAND controller
+ of hisilicon hip04 Soc
+Date: Mon, 01 Dec 2014 21:06:59 +0800
+Message-ID: <547C67F3.7080807@gmail.com>
+References: <1415105221-7732-1-git-send-email-wangzhou.bry@gmail.com> <20141130090853.GG3608@norris-Latitude-E6410>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <547C65F7.4090801@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, SangYoung Son <hello.son@smasung.com>, Samuel Ortiz <sameo@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141130090853.GG3608@norris-Latitude-E6410>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, caizhiyong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+On 2014=E5=B9=B411=E6=9C=8830=E6=97=A5 17:08, Brian Norris wrote:
+> On Tue, Nov 04, 2014 at 08:46:59PM +0800, Zhou Wang wrote:
+>> This patchset adds the support for NAND controller of hisilicon hip0=
+4 Soc.
+>> The NAND controller IP was developed by hisilicon and needs a new dr=
+iver to
+>> support it. This patchset is based on v3.18-rc1. I have tested that =
+NAND flash
+>> controller works fine in Hip04 D01 board.
+>
+> Have you tested on the MTD test modules (drivers/mtd/tests/*)? This i=
+s
+> important, as we seem to regularly get UBIFS bug reports from users
+> whose drivers have not even passed some of the simple tests.
+>
+> Also, it might be worth testing out the UBI tests found in the mtd-ut=
+ils
+> package.
+>
+> Brian
+>
 
-> >Is this one needed? Just ommit child note if it is not there.
-> 
-> It is needed because you can have one led connected two both
-> outputs. This allows to describe such a design.
+Hi Brian,
 
-Ok.
+I have not tested on the MTD test modules, I will do this test and
+the UBI tests ASAP. Thank you very much for so many helpful comments!
 
-> >>+- maxim,trigger-type : Array of trigger types in order: flash, torch
-> >>+	Possible trigger types:
-> >>+		0 - Rising edge of the signal triggers the flash/torch,
-> >>+		1 - Signal level controls duration of the flash/torch.
-> >>+- maxim,trigger : Array of flags indicating which trigger can activate given led
-> >>+	in order: fled1, fled2
-> >>+	Possible flag values (can be combined):
-> >>+		1 - FLASH pin of the chip,
-> >>+		2 - TORCH pin of the chip,
-> >>+		4 - software via I2C command.
-> >
-> >Is it good idea to have bitfields like this?
-> >
-> >Make these required properties of the subnode?
-> 
-> This is related to a single property: trigger. I think that splitting
-> it to three properties would make unnecessary noise in the
-> binding.
-
-Well, maybe it is not that much noise, and you'll have useful names
-(not a bitfield).
-
-Should these properties move to the LED subnode?
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Best Regards,
+Zhou Wang
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
