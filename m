@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v6 09/15] tpm/tpm_i2c_stm_st33: Replace tpm_st33_* function with tpm_stm_*
-Date: Mon,  1 Dec 2014 19:32:54 +0100
-Message-ID: <1417458780-25977-10-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v6 08/15] tpm/tpm_i2c_stm_st33: Replace err/rc/ret by ret for a function return code
+Date: Mon,  1 Dec 2014 19:32:53 +0100
+Message-ID: <1417458780-25977-9-git-send-email-christophe-h.ricard@st.com>
 References: <1417458780-25977-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1417458780-25977-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
@@ -10,168 +10,212 @@ To: peterhuewe-Mmb7MZpHnFY@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@publi
 Cc: tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-For sanity, replace every tpm_st33_* with tpm_stm_*
+Some functions return err, rc or ret for a status code.
+
+Return ret instead for all of them.
 
 Reviewed-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/char/tpm/tpm_i2c_stm_st33.c | 50 ++++++++++++++++++-------------------
- 1 file changed, 25 insertions(+), 25 deletions(-)
+ drivers/char/tpm/tpm_i2c_stm_st33.c | 61 ++++++++++++++++++-------------------
+ 1 file changed, 30 insertions(+), 31 deletions(-)
 
 diff --git a/drivers/char/tpm/tpm_i2c_stm_st33.c b/drivers/char/tpm/tpm_i2c_stm_st33.c
-index d425fa1..7f03663 100644
+index 7286116..d425fa1 100644
 --- a/drivers/char/tpm/tpm_i2c_stm_st33.c
 +++ b/drivers/char/tpm/tpm_i2c_stm_st33.c
-@@ -224,7 +224,7 @@ static int wait_for_serirq_timeout(struct tpm_chip *chip, bool condition,
- 			status = 1;
+@@ -291,7 +291,7 @@ static int check_locality(struct tpm_chip *chip)
+ static int request_locality(struct tpm_chip *chip)
+ {
+ 	unsigned long stop;
+-	long rc;
++	long ret;
+ 	struct tpm_stm_dev *tpm_dev;
+ 	u8 data;
+ 
+@@ -301,15 +301,15 @@ static int request_locality(struct tpm_chip *chip)
+ 		return chip->vendor.locality;
+ 
+ 	data = TPM_ACCESS_REQUEST_USE;
+-	rc = I2C_WRITE_DATA(tpm_dev, TPM_ACCESS, &data, 1);
+-	if (rc < 0)
++	ret = I2C_WRITE_DATA(tpm_dev, TPM_ACCESS, &data, 1);
++	if (ret < 0)
+ 		goto end;
+ 
+ 	if (chip->vendor.irq) {
+-		rc = wait_for_serirq_timeout(chip, (check_locality
++		ret = wait_for_serirq_timeout(chip, (check_locality
+ 						       (chip) >= 0),
+ 						      chip->vendor.timeout_a);
+-		if (rc > 0)
++		if (ret > 0)
+ 			return chip->vendor.locality;
+ 	} else {
+ 		stop = jiffies + chip->vendor.timeout_a;
+@@ -319,9 +319,9 @@ static int request_locality(struct tpm_chip *chip)
+ 			msleep(TPM_TIMEOUT);
+ 		} while (time_before(jiffies, stop));
  	}
- 	return status;
--}
-+} /* wait_for_serirq_timeout() */
+-	rc = -EACCES;
++	ret = -EACCES;
+ end:
+-	return rc;
++	return ret;
+ } /* request_locality() */
  
  /*
-  * tpm_stm_i2c_cancel, cancel is not implemented.
-@@ -241,7 +241,7 @@ static void tpm_stm_i2c_cancel(struct tpm_chip *chip)
- 	I2C_WRITE_DATA(tpm_dev, TPM_STS, &data, 1);
- 	if (chip->vendor.irq)
- 		wait_for_serirq_timeout(chip, 1, chip->vendor.timeout_a);
--}	/* tpm_stm_i2c_cancel() */
-+} /* tpm_stm_i2c_cancel() */
- 
- /*
-  * tpm_stm_spi_status return the TPM_STS register
-@@ -257,7 +257,7 @@ static u8 tpm_stm_i2c_status(struct tpm_chip *chip)
- 
- 	I2C_READ_DATA(tpm_dev, TPM_STS, &data, 1);
- 	return data;
--}				/* tpm_stm_i2c_status() */
-+} /* tpm_stm_i2c_status() */
- 
- 
- /*
-@@ -591,7 +591,7 @@ out:
- 	return size;
- }
- 
--static bool tpm_st33_i2c_req_canceled(struct tpm_chip *chip, u8 status)
-+static bool tpm_stm_i2c_req_canceled(struct tpm_chip *chip, u8 status)
+@@ -388,14 +388,14 @@ static int wait_for_stat(struct tpm_chip *chip, u8 mask, unsigned long timeout,
+ 			 wait_queue_head_t *queue)
  {
- 	return (status == TPM_STS_COMMAND_READY);
- }
-@@ -603,7 +603,7 @@ static const struct tpm_class_ops st_i2c_tpm = {
- 	.status = tpm_stm_i2c_status,
- 	.req_complete_mask = TPM_STS_DATA_AVAIL | TPM_STS_VALID,
- 	.req_complete_val = TPM_STS_DATA_AVAIL | TPM_STS_VALID,
--	.req_canceled = tpm_st33_i2c_req_canceled,
-+	.req_canceled = tpm_stm_i2c_req_canceled,
- };
+ 	unsigned long stop;
+-	long rc;
++	long ret;
+ 	u8 status;
  
- static int interrupts;
-@@ -615,14 +615,14 @@ module_param(power_mgt, int, 0444);
- MODULE_PARM_DESC(power_mgt, "Power Management");
- 
- /*
-- * tpm_st33_i2c_probe initialize the TPM device
-+ * tpm_stm_i2c_probe initialize the TPM device
-  * @param: client, the i2c_client drescription (TPM I2C description).
-  * @param: id, the i2c_device_id struct.
-  * @return: 0 in case of success.
-  *	 -1 in other case.
-  */
+ 	 if (chip->vendor.irq) {
+-		rc = wait_for_serirq_timeout(chip, ((tpm_stm_i2c_status
++		ret = wait_for_serirq_timeout(chip, ((tpm_stm_i2c_status
+ 							(chip) & mask) ==
+ 						       mask), timeout);
+-		if (rc > 0)
++		if (ret > 0)
+ 			return 0;
+ 	} else {
+ 		stop = jiffies + timeout;
+@@ -624,7 +624,7 @@ MODULE_PARM_DESC(power_mgt, "Power Management");
  static int
--tpm_st33_i2c_probe(struct i2c_client *client, const struct i2c_device_id *id)
-+tpm_stm_i2c_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ tpm_st33_i2c_probe(struct i2c_client *client, const struct i2c_device_id *id)
  {
- 	int ret;
+-	int err;
++	int ret;
  	u8 intmask;
-@@ -747,12 +747,12 @@ end:
+ 	struct tpm_chip *chip;
+ 	struct st33zp24_platform_data *platform_data;
+@@ -633,20 +633,20 @@ tpm_st33_i2c_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 	if (client == NULL) {
+ 		pr_info("%s: i2c client is NULL. Device not accessible.\n",
+ 			__func__);
+-		err = -ENODEV;
++		ret = -ENODEV;
+ 		goto end;
+ 	}
+ 
+ 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
+ 		dev_info(&client->dev, "client not i2c capable\n");
+-		err = -ENODEV;
++		ret = -ENODEV;
+ 		goto end;
+ 	}
+ 
+ 	tpm_dev = devm_kzalloc(&client->dev, sizeof(struct tpm_stm_dev),
+ 			       GFP_KERNEL);
+ 	if (!tpm_dev) {
+-		err = -ENOMEM;
++		ret = -ENOMEM;
+ 		goto _tpm_clean_answer;
+ 	}
+ 
+@@ -654,7 +654,7 @@ tpm_st33_i2c_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 
+ 	if (!platform_data) {
+ 		dev_info(&client->dev, "chip not available\n");
+-		err = -ENODEV;
++		ret = -ENODEV;
+ 		goto _tpm_clean_answer;
+ 	}
+ 
+@@ -675,8 +675,8 @@ tpm_st33_i2c_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 	chip->vendor.locality = LOCALITY0;
+ 
+ 	if (power_mgt) {
+-		err = gpio_request(platform_data->io_lpcpd, "TPM IO_LPCPD");
+-		if (err)
++		ret = gpio_request(platform_data->io_lpcpd, "TPM IO_LPCPD");
++		if (ret)
+ 			goto _gpio_init1;
+ 		gpio_set_value(platform_data->io_lpcpd, 1);
+ 	}
+@@ -684,23 +684,23 @@ tpm_st33_i2c_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 	if (interrupts) {
+ 		init_completion(&tpm_dev->irq_detection);
+ 		if (request_locality(chip) != LOCALITY0) {
+-			err = -ENODEV;
++			ret = -ENODEV;
+ 			goto _tpm_clean_answer;
+ 		}
+ 
+ 		clear_interruption(tpm_dev);
+-		err = request_irq(client->irq,
++		ret = request_irq(client->irq,
+ 				&tpm_ioserirq_handler,
+ 				IRQF_TRIGGER_HIGH,
+ 				"TPM SERIRQ management", chip);
+-		if (err < 0) {
++		if (ret < 0) {
+ 			dev_err(chip->dev , "TPM SERIRQ signals %d not available\n",
+ 				client->irq);
+ 			goto _irq_set;
+ 		}
+ 
+-		err = I2C_READ_DATA(tpm_dev, TPM_INT_ENABLE, &intmask, 1);
+-		if (err < 0)
++		ret = I2C_READ_DATA(tpm_dev, TPM_INT_ENABLE, &intmask, 1);
++		if (ret < 0)
+ 			goto _irq_set;
+ 
+ 		intmask |= TPM_INTF_CMD_READY_INT
+@@ -710,18 +710,18 @@ tpm_st33_i2c_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 			|  TPM_INTF_STS_VALID_INT
+ 			|  TPM_INTF_DATA_AVAIL_INT;
+ 
+-		err = I2C_WRITE_DATA(tpm_dev, TPM_INT_ENABLE, &intmask, 1);
+-		if (err < 0)
++		ret = I2C_WRITE_DATA(tpm_dev, TPM_INT_ENABLE, &intmask, 1);
++		if (ret < 0)
+ 			goto _irq_set;
+ 
+ 		intmask = TPM_GLOBAL_INT_ENABLE;
+-		err = I2C_WRITE_DATA(tpm_dev, (TPM_INT_ENABLE + 3),
++		ret = I2C_WRITE_DATA(tpm_dev, (TPM_INT_ENABLE + 3),
+ 				     &intmask, 1);
+-		if (err < 0)
++		if (ret < 0)
+ 			goto _irq_set;
+ 
+-		err = I2C_READ_DATA(tpm_dev, TPM_INT_STATUS, &intmask, 1);
+-		if (err < 0)
++		ret = I2C_READ_DATA(tpm_dev, TPM_INT_STATUS, &intmask, 1);
++		if (ret < 0)
+ 			goto _irq_set;
+ 
+ 		chip->vendor.irq = interrupts;
+@@ -743,7 +743,7 @@ _tpm_clean_answer:
+ 	tpm_remove_hardware(chip->dev);
+ end:
+ 	pr_info("TPM I2C initialisation fail\n");
+-	return err;
++	return ret;
  }
  
  /*
-- * tpm_st33_i2c_remove remove the TPM device
-+ * tpm_stm_i2c_remove remove the TPM device
-  * @param: client, the i2c_client drescription (TPM I2C description).
- 		clear_bit(0, &chip->is_open);
-  * @return: 0 in case of success.
-  */
--static int tpm_st33_i2c_remove(struct i2c_client *client)
-+static int tpm_stm_i2c_remove(struct i2c_client *client)
- {
- 	struct tpm_chip *chip =
- 		(struct tpm_chip *) i2c_get_clientdata(client);
-@@ -765,12 +765,12 @@ static int tpm_st33_i2c_remove(struct i2c_client *client)
- 
- #ifdef CONFIG_PM_SLEEP
- /*
-- * tpm_st33_i2c_pm_suspend suspend the TPM device
-+ * tpm_stm_i2c_pm_suspend suspend the TPM device
-  * @param: client, the i2c_client drescription (TPM I2C description).
-  * @param: mesg, the power management message.
-  * @return: 0 in case of success.
-  */
--static int tpm_st33_i2c_pm_suspend(struct device *dev)
-+static int tpm_stm_i2c_pm_suspend(struct device *dev)
- {
- 	struct st33zp24_platform_data *pin_infos = dev->platform_data;
- 	int ret = 0;
-@@ -780,14 +780,14 @@ static int tpm_st33_i2c_pm_suspend(struct device *dev)
+@@ -779,7 +779,6 @@ static int tpm_st33_i2c_pm_suspend(struct device *dev)
+ 		gpio_set_value(pin_infos->io_lpcpd, 0);
  	else
  		ret = tpm_pm_suspend(dev);
+-
  	return ret;
--}				/* tpm_st33_i2c_suspend() */
-+}				/* tpm_stm_i2c_suspend() */
+ }				/* tpm_st33_i2c_suspend() */
  
- /*
-- * tpm_st33_i2c_pm_resume resume the TPM device
-+ * tpm_stm_i2c_pm_resume resume the TPM device
-  * @param: client, the i2c_client drescription (TPM I2C description).
-  * @return: 0 in case of success.
-  */
--static int tpm_st33_i2c_pm_resume(struct device *dev)
-+static int tpm_stm_i2c_pm_resume(struct device *dev)
- {
- 	struct tpm_chip *chip = dev_get_drvdata(dev);
- 	struct st33zp24_platform_data *pin_infos = dev->platform_data;
-@@ -806,28 +806,28 @@ static int tpm_st33_i2c_pm_resume(struct device *dev)
+@@ -807,7 +806,7 @@ static int tpm_st33_i2c_pm_resume(struct device *dev)
  			tpm_do_selftest(chip);
  	}
  	return ret;
--} /* tpm_st33_i2c_pm_resume() */
-+} /* tpm_stm_i2c_pm_resume() */
+-}				/* tpm_st33_i2c_pm_resume() */
++} /* tpm_st33_i2c_pm_resume() */
  #endif
  
--static const struct i2c_device_id tpm_st33_i2c_id[] = {
-+static const struct i2c_device_id tpm_stm_i2c_id[] = {
- 	{TPM_ST33_I2C, 0},
- 	{}
- };
--MODULE_DEVICE_TABLE(i2c, tpm_st33_i2c_id);
--static SIMPLE_DEV_PM_OPS(tpm_st33_i2c_ops, tpm_st33_i2c_pm_suspend,
--	tpm_st33_i2c_pm_resume);
--static struct i2c_driver tpm_st33_i2c_driver = {
-+MODULE_DEVICE_TABLE(i2c, tpm_stm_i2c_id);
-+static SIMPLE_DEV_PM_OPS(tpm_stm_i2c_ops, tpm_stm_i2c_pm_suspend,
-+	tpm_stm_i2c_pm_resume);
-+static struct i2c_driver tpm_stm_i2c_driver = {
- 	.driver = {
- 		   .owner = THIS_MODULE,
- 		   .name = TPM_ST33_I2C,
--		   .pm = &tpm_st33_i2c_ops,
-+		   .pm = &tpm_stm_i2c_ops,
- 		   },
--	.probe = tpm_st33_i2c_probe,
--	.remove = tpm_st33_i2c_remove,
--	.id_table = tpm_st33_i2c_id
-+	.probe = tpm_stm_i2c_probe,
-+	.remove = tpm_stm_i2c_remove,
-+	.id_table = tpm_stm_i2c_id
- };
- 
--module_i2c_driver(tpm_st33_i2c_driver);
-+module_i2c_driver(tpm_stm_i2c_driver);
- 
- MODULE_AUTHOR("Christophe Ricard (tpmsupport-qxv4g6HH51o@public.gmane.org)");
- MODULE_DESCRIPTION("STM TPM I2C ST33 Driver");
+ static const struct i2c_device_id tpm_st33_i2c_id[] = {
 -- 
 2.1.0
 
