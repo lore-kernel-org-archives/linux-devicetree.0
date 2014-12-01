@@ -1,144 +1,136 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH 2/2] rockchip: efuse: add efuse driver for rk3288 efuse
-Date: Mon, 1 Dec 2014 22:01:12 +0100 (CET)
-Message-ID: <1479569208.4563.1417467672633.JavaMail.open-xchange@oxbaltgw06.schlund.de>
-References: <1417419281-9243-1-git-send-email-jay.xu@rock-chips.com> <1417419281-9243-3-git-send-email-jay.xu@rock-chips.com>
-Reply-To: Stefan Wahren <stefan.wahren@i2se.com>
+From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v2 2/2] backlight/lp855x: Add supply regulator to lp855x
+Date: Mon,  1 Dec 2014 13:07:59 -0800
+Message-ID: <1417468079-4990-1-git-send-email-seanpaul@chromium.org>
+References: <54767F43.2060901@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1417419281-9243-3-git-send-email-jay.xu@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux@arm.linux.org.uk, robh+dt@kernel.org, Jianqun Xu <jay.xu@rock-chips.com>, heiko@sntech.de, grant.likely@linaro.org
-Cc: linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54767F43.2060901-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, milo.kim-l0cyMroinI0@public.gmane.org
+Cc: jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Aaron Durbin <adurbin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jianqun,
+This patch adds a supply regulator to the lp855x platform data to facil=
+itate
+powering on/off the 3V rail attached to the controller.
 
-> Jianqun Xu <jay.xu@rock-chips.com> hat am 1. Dezember 2014 um 08:34
-> geschrieben:
->
->
-> Add driver for efuse found on rk3288 board based on rk3288 SoC.
-> Driver will read fuse information of chip at the boot stage of
-> kernel, this information new is for further usage.
->
-> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
-> ---
-> arch/arm/mach-rockchip/efuse.c | 165 +++++++++++++++++++++++++++++++++++++++++
-> arch/arm/mach-rockchip/efuse.h | 15 ++++
-> 2 files changed, 180 insertions(+)
-> create mode 100644 arch/arm/mach-rockchip/efuse.c
-> create mode 100644 arch/arm/mach-rockchip/efuse.h
->
-> diff --git a/arch/arm/mach-rockchip/efuse.c b/arch/arm/mach-rockchip/efuse.c
-> new file mode 100644
-> index 0000000..326d81e
-> --- /dev/null
-> +++ b/arch/arm/mach-rockchip/efuse.c
-> @@ -0,0 +1,165 @@
-> +/* mach-rockchip/efuse.c
-> + *
-> + * Copyright (c) 2014 Rockchip Electronics Co. Ltd.
-> + * Author: Jianqun Xu <jay.xu@rock-chips.com>
-> + *
-> + * Tmis program is free software; you can redistribute it and/or modify it
-> + * under the terms of version 2 of the GNU General Public License as
-> + * published by the Free Software Foundation.
-> + *
-> + * Tmis program is distributed in the hope that it will be useful, but
-> WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along
-> with
-> + * tmis program; if not, write to the Free Software Foundation, Inc.,
-> + * 51 Franklin Street, Fifth Floor, Boston, MA 02110, USA
+Cc: St=C3=A9phane Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Aaron Durbin <adurbin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
 
-as far as i know this address is outdated and should be removed.
+Changes in v2:
+	- Add NULL check in lp855x_remove
 
-> + *
-> + * Tme full GNU General Public License is included in this distribution in
-> the
-> + * file called LICENSE.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/device.h>
-> +#include <linux/delay.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of_address.h>
-> +#include <linux/io.h>
 
-Please order the includes alphabetical.
+ .../devicetree/bindings/video/backlight/lp855x.txt     |  2 ++
+ drivers/video/backlight/lp855x_bl.c                    | 18 ++++++++++=
+++++++++
+ include/linux/platform_data/lp855x.h                   |  2 ++
+ 3 files changed, 22 insertions(+)
 
-> +
-> +#include "efuse.h"
-> +
-> +#define EFUSE_BUF_SIZE (32)
-> +#define EFUSE_BUF_LKG_CPU (23)
-> +#define EFUSE_BUF_LKG_GPU (24)
-> +#define EFUSE_BUF_LKG_LOG (25)
-> +
-> +struct rk_efuse_info {
-> + /* Platform device */
-> + struct device *dev;
+diff --git a/Documentation/devicetree/bindings/video/backlight/lp855x.t=
+xt b/Documentation/devicetree/bindings/video/backlight/lp855x.txt
+index 96e83a5..0a3ecbc 100644
+--- a/Documentation/devicetree/bindings/video/backlight/lp855x.txt
++++ b/Documentation/devicetree/bindings/video/backlight/lp855x.txt
+@@ -12,6 +12,7 @@ Optional properties:
+   - pwm-period: PWM period value. Set only PWM input mode used (u32)
+   - rom-addr: Register address of ROM area to be updated (u8)
+   - rom-val: Register value to be updated (u8)
++  - power-supply: Regulator which controls the 3V rail
+=20
+ Example:
+=20
+@@ -56,6 +57,7 @@ Example:
+ 	backlight@2c {
+ 		compatible =3D "ti,lp8557";
+ 		reg =3D <0x2c>;
++		power-supply =3D <&backlight_vdd>;
+=20
+ 		dev-ctrl =3D /bits/ 8 <0x41>;
+ 		init-brt =3D /bits/ 8 <0x0a>;
+diff --git a/drivers/video/backlight/lp855x_bl.c b/drivers/video/backli=
+ght/lp855x_bl.c
+index 257b3ba..a26d3bb 100644
+--- a/drivers/video/backlight/lp855x_bl.c
++++ b/drivers/video/backlight/lp855x_bl.c
+@@ -17,6 +17,7 @@
+ #include <linux/of.h>
+ #include <linux/platform_data/lp855x.h>
+ #include <linux/pwm.h>
++#include <linux/regulator/consumer.h>
+=20
+ /* LP8550/1/2/3/6 Registers */
+ #define LP855X_BRIGHTNESS_CTRL		0x00
+@@ -383,6 +384,13 @@ static int lp855x_parse_dt(struct lp855x *lp)
+ 		pdata->rom_data =3D &rom[0];
+ 	}
+=20
++	pdata->supply =3D devm_regulator_get(dev, "power");
++	if (IS_ERR(pdata->supply)) {
++		if (PTR_ERR(pdata->supply) =3D=3D -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++		pdata->supply =3D NULL;
++	}
++
+ 	lp->pdata =3D pdata;
+=20
+ 	return 0;
+@@ -423,6 +431,14 @@ static int lp855x_probe(struct i2c_client *cl, con=
+st struct i2c_device_id *id)
+ 	else
+ 		lp->mode =3D REGISTER_BASED;
+=20
++	if (lp->pdata->supply) {
++		ret =3D regulator_enable(lp->pdata->supply);
++		if (ret < 0) {
++			dev_err(&cl->dev, "failed to enable supply: %d\n", ret);
++			return ret;
++		}
++	}
++
+ 	i2c_set_clientdata(cl, lp);
+=20
+ 	ret =3D lp855x_configure(lp);
+@@ -454,6 +470,8 @@ static int lp855x_remove(struct i2c_client *cl)
+=20
+ 	lp->bl->props.brightness =3D 0;
+ 	backlight_update_status(lp->bl);
++	if (lp->pdata->supply)
++		regulator_disable(lp->pdata->supply);
+ 	sysfs_remove_group(&lp->dev->kobj, &lp855x_attr_group);
+=20
+ 	return 0;
+diff --git a/include/linux/platform_data/lp855x.h b/include/linux/platf=
+orm_data/lp855x.h
+index 1b2ba24..9c7fd1e 100644
+--- a/include/linux/platform_data/lp855x.h
++++ b/include/linux/platform_data/lp855x.h
+@@ -136,6 +136,7 @@ struct lp855x_rom_data {
+ 		Only valid when mode is PWM_BASED.
+  * @size_program : total size of lp855x_rom_data
+  * @rom_data : list of new eeprom/eprom registers
++ * @supply : regulator that supplies 3V input
+  */
+ struct lp855x_platform_data {
+ 	const char *name;
+@@ -144,6 +145,7 @@ struct lp855x_platform_data {
+ 	unsigned int period_ns;
+ 	int size_program;
+ 	struct lp855x_rom_data *rom_data;
++	struct regulator *supply;
+ };
+=20
+ #endif
+--=20
+2.2.0.rc0.207.ga3a616c
 
-I think it's not really necessary to store this in the driver data. Better call
-the relevant functions with struct platform_device as parameter and get your
-driver data from their.
-
-> +
-> + /* Hardware resources */
-> + void __iomem *regs;
-> +
-> + /* buffer to store registers' values */
-> + unsigned int buf[EFUSE_BUF_SIZE];
-
-The variable name buf isn't very helpful.
-
-> +};
-> +
-> +static void efuse_writel(struct rk_efuse_info *efuse,
-> + unsigned int value,
-> + unsigned int offset)
-> +{
-> + writel_relaxed(value, efuse->regs + offset);
-> +}
-> +
-> +static unsigned int efuse_readl(struct rk_efuse_info *efuse,
-> + unsigned int offset)
-> +{
-> + return readl_relaxed(efuse->regs + offset);
-> +}
-> +
-> +static unsigned int rockchip_efuse_leakage(struct rk_efuse_info *efuse,
-> + int channel)
-> +{
-> + switch (channel) {
-> + case EFUSE_BUF_LKG_CPU:
-> + case EFUSE_BUF_LKG_GPU:
-> + case EFUSE_BUF_LKG_LOG:
-> + return efuse->buf[channel];
-> + default:
-> + dev_err(efuse->dev, "unknown channel\n");
-> + return -EINVAL;
-
-Returning a negative value in a function with unsigned return type isn't good.
-
-Printing only "unknown channel" isn't optimal, it would be more helpful to print
-also the invalid value.
-
-> + }
-> +
-> + return 0;
-
-Looks like unreachable code, maybe you could move the default case above down.
-
-Thanks
-
-Stefan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
