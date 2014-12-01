@@ -1,199 +1,152 @@
-From: arno@natisbad.org (Arnaud Ebalard)
-Subject: Re: [PATCHv1 6/6] rtc: rtc-isl12057: add alarm support to Intersil ISL12057 RTC driver
-Date: Mon, 01 Dec 2014 21:11:21 +0100
-Message-ID: <87tx1fnn9y.fsf@natisbad.org>
-References: <cover.1416006090.git.arno@natisbad.org>
-	<986ee8d9d3e6862007f398ffddc2a4bb2368933e.1416006090.git.arno@natisbad.org>
-	<5476ED9F.2070600@kleine-koenig.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: [PATCH v4 00/10] Xilinx Video IP Core support
+Date: Mon,  1 Dec 2014 22:13:30 +0200
+Message-ID: <1417464820-6718-1-git-send-email-laurent.pinchart@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5476ED9F.2070600@kleine-koenig.org> ("Uwe \=\?utf-8\?Q\?Kleine-K\?\=
- \=\?utf-8\?Q\?\=C3\=B6nig\=22's\?\=
-	message of "Thu, 27 Nov 2014 10:23:43 +0100")
-Sender: linux-doc-owner@vger.kernel.org
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Andrew Morton <akpm@linux-foundation.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: Michal Simek <michal.simek@xilinx.com>, Chris Kohn <christian.kohn@xilinx.com>, Hyun Kwon <hyun.kwon@xilinx.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Uwe,
+Hello,
 
-Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig.org> writes:
+Here's the fourth version of the Xilinx FPGA Video IP Cores kernel driv=
+ers.
 
-> finally I managed to test this series on my (unmodified) rn104.
->
-> For patch 1: Maybe point out that the issue with the century bit isn'=
-t
-> that critical, because this bit is not expected to be set before year
-> 2100.
+I won't detail in great lengths the Xilinx Video IP architecture here, =
+as that
+would result in dozens of pages of documentation. The interested reader=
+ can
+refer to the Zynq ZC702 Base TRD (Targeted Reference Design) User Guide
+(http://www.xilinx.com/support/documentation/boards_and_kits/zc702_zvik=
+/2014_2/ug925-zynq-zc702-base-trd.pdf).
 
-It has:
+In a nutshell, the Xilinx Video IP Cores architecture specifies how
+video-related IP cores need to be designed to interoperate and how to a=
+ssemble
+them in pipelines of various complexities. The concepts map neatly to t=
+he
+media controller architecture, which this patch set uses extensively.
 
-    This was tested by putting a device 100 years in the future (using =
-a
-    specific kernel due to the inability of userland tools such as date=
- or
-    hwclock to pass year 2038), rebooting on a kernel w/ this patch app=
-lied
-    and verifying the device was still 100 years in the future.
+The series starts with various new V4L2 core features, bug fixes or cle=
+anups,
+with a small documentation enhancement (01/10), the addition of new med=
+ia bus
+formats needed by the new drivers (02/10 to 04/10) and a new V4L2 OF li=
+nk
+parsing function (05/10).
 
+The next two patches (06/10 and 07/10) fix two race conditions in video=
+buf2.
+I'd like to get them in v3.19, either as part of this series or indepen=
+dently.
 
-> For patch 3: This patch adds a few dev_err calls that get later amend=
-ed
-> in patch 5 to also include an error code. IMHO these should already b=
-e
-> added in patch 3. Patch 5 should only add it to the already existing
-> strings (if applicable).
+The last three patches are the core of this series.
 
-will do that next time.
+Patch 08/10 adds support for the Xilinx Video IP architecture core in t=
+he form
+of a base object to model video IP cores (xilinx-vip.c - Video IP), a
+framework that parses a DT representation of a video pipeline and conne=
+cts the
+corresponding V4L2 subdevices together (xilinx-vipp.c - Video IP Pipeli=
+ne) and
+a glue between the Video DMA engine driver and the V4L2 API (xilinx-dma=
+=2Ec).
 
-> For patch 4: Maybe
-> s/obsolete/for backwards compatibility, don't use in new code/.
->
->
-> Some further comments inline ...
->
-> On 11/15/2014 12:07 AM, Arnaud Ebalard wrote:
->> The latter is the one found on current 3 kernel users of the chip
->> for which support was initially developed (Netgear ReadyNAS 102,
->> 104 and 2120 NAS). On those devices, the IRQ#2 pin of the chip is no=
-t
->> connected to the SoC but to a PMIC. This allows setting an alarm,
->> powering off the device and have it wake up when the alarm rings.
->> To support that configuration the driver does the following:
->>=20
->>  1. it has alarm_irq_enable() function returns -ENOTTY when no IRQ
->>     is passed to the driver.
->>  2. it marks the device as a wakeup source in all cases (whether an
->>     IRQ is passed to the driver or not) to have 'wakealarm' sysfs
->>     entry created.
-> This is not pretty, but I don't know if there is a nicer alternative.
-> Maybe this should only be done in the presence of a flag in the devic=
-e
-> tree (say: can-wakeup-machine, a prefix would be nice, but "isil," fe=
-els
-> wrong).
+Patch =C3=A09/10 adds a driver for the Video Timing Controller (VTC) IP=
+ core. While
+not strictly a video processing IP core, the VTC is required by other v=
+ideo IP
+core drivers.
 
-I can prepare a v0 patch for a "can-wakeup-machine" property to mark th=
-e
-device as a wakeup source when the IRQ is absent. Will fix the prefix
-in a v1.
+=46inally, patch 10/10 adds a first video IP core driver for the Test P=
+attern
+Generator (TPG). Drivers for other IP cores will be added in the future=
+=2E
 
+Changes since v3:
 
->> [...]
->> FWIW, if someone is looking for a way to test alarm support on a sys=
-tem
->> on which the chip IRQ line has the ability to boot the system (e.g.
->> ReadyNAS 102, 104, etc):
->>=20
->>     # echo 0 > /sys/class/rtc/rtc0/wakealarm
-> Why is this needed?
+- Drop the three Xilinx Video DMA patches since they have been merged i=
+n the
+  dmaengine tree
+- Manage the subdevs clocks explicitly
+- Add and use resource init and cleanup helpers
+- Rename V4L2_MBUS_FMT_* to MEDIA_BUS_FMT_*
+- Cleanup unused vdma configuration.
+- Return buffers to vb2 when media pipeline start fails
 
-It disable the alarm. It's not required.
+Cc: devicetree@vger.kernel.org
 
+Hyun Kwon (2):
+  v4l: Sort YUV formats of v4l2_mbus_pixelcode
+  v4l: Add VUY8 24 bits bus format
 
->>     # echo `date '+%s' -d '+ 1 minutes'` > /sys/class/rtc/rtc0/wakea=
-larm
->>     # shutdown -h now
->>=20
->> With the commandes above, after a minute, the system comes back to l=
-ife.
-> s/commandes/commands/
+Laurent Pinchart (8):
+  media: entity: Document the media_entity_ops structure
+  v4l: Add RBG and RGB 8:8:8 media bus formats on 24 and 32 bit busses
+  v4l: of: Add v4l2_of_parse_link() function
+  v4l: vb2: Fix race condition in vb2_fop_poll
+  v4l: vb2: Fix race condition in _vb2_fop_release
+  v4l: xilinx: Add Xilinx Video IP core
+  v4l: xilinx: Add Video Timing Controller driver
+  v4l: xilinx: Add Test Pattern Generator driver
 
-useless french letter.
+ Documentation/DocBook/media/v4l/subdev-formats.xml | 719 +++++++++----=
+---
+ .../devicetree/bindings/media/xilinx/video.txt     |  52 ++
+ .../devicetree/bindings/media/xilinx/xlnx,v-tc.txt |  33 +
+ .../bindings/media/xilinx/xlnx,v-tpg.txt           |  71 ++
+ .../bindings/media/xilinx/xlnx,video.txt           |  55 ++
+ MAINTAINERS                                        |  10 +
+ drivers/media/platform/Kconfig                     |   1 +
+ drivers/media/platform/Makefile                    |   2 +
+ drivers/media/platform/xilinx/Kconfig              |  23 +
+ drivers/media/platform/xilinx/Makefile             |   5 +
+ drivers/media/platform/xilinx/xilinx-dma.c         | 753 +++++++++++++=
+++++
+ drivers/media/platform/xilinx/xilinx-dma.h         | 109 +++
+ drivers/media/platform/xilinx/xilinx-tpg.c         | 925 +++++++++++++=
+++++++++
+ drivers/media/platform/xilinx/xilinx-vip.c         | 296 +++++++
+ drivers/media/platform/xilinx/xilinx-vip.h         | 233 ++++++
+ drivers/media/platform/xilinx/xilinx-vipp.c        | 669 +++++++++++++=
+++
+ drivers/media/platform/xilinx/xilinx-vipp.h        |  49 ++
+ drivers/media/platform/xilinx/xilinx-vtc.c         | 380 +++++++++
+ drivers/media/platform/xilinx/xilinx-vtc.h         |  42 +
+ drivers/media/v4l2-core/v4l2-of.c                  |  61 ++
+ drivers/media/v4l2-core/videobuf2-core.c           |  35 +-
+ include/media/media-entity.h                       |   9 +
+ include/media/v4l2-of.h                            |  27 +
+ include/uapi/linux/Kbuild                          |   1 +
+ include/uapi/linux/media-bus-format.h              |  19 +-
+ include/uapi/linux/xilinx-v4l2-controls.h          |  73 ++
+ 26 files changed, 4310 insertions(+), 342 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/xilinx/vide=
+o.txt
+ create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx=
+,v-tc.txt
+ create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx=
+,v-tpg.txt
+ create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx=
+,video.txt
+ create mode 100644 drivers/media/platform/xilinx/Kconfig
+ create mode 100644 drivers/media/platform/xilinx/Makefile
+ create mode 100644 drivers/media/platform/xilinx/xilinx-dma.c
+ create mode 100644 drivers/media/platform/xilinx/xilinx-dma.h
+ create mode 100644 drivers/media/platform/xilinx/xilinx-tpg.c
+ create mode 100644 drivers/media/platform/xilinx/xilinx-vip.c
+ create mode 100644 drivers/media/platform/xilinx/xilinx-vip.h
+ create mode 100644 drivers/media/platform/xilinx/xilinx-vipp.c
+ create mode 100644 drivers/media/platform/xilinx/xilinx-vipp.h
+ create mode 100644 drivers/media/platform/xilinx/xilinx-vtc.c
+ create mode 100644 drivers/media/platform/xilinx/xilinx-vtc.h
+ create mode 100644 include/uapi/linux/xilinx-v4l2-controls.h
 
+--=20
+Regards,
 
->> +	ret =3D regmap_update_bits(data->regmap, ISL12057_REG_INT,
->> +				 ISL12057_REG_INT_A1IE,
->> +				 enable ? ISL12057_REG_INT_A1IE : 0);
->> +	if (ret)
->> +		dev_err(dev, "%s: changing alarm interrupt flag failed (%d)\n",
->> +			__func__, ret);
->> +
->> +	return ret;
->> +}
-> Maybe point out in the commit log that the first alarm (of two) is us=
-ed,
-> and the event is signaled on pin $Ididntlookitup.
-> (IIRC the 2nd alarm register set doesn't support seconds, but in retu=
-rn
-> has year and month field.)
-
-I can add that in the documentation.
-
-
->> [...]
->> +	/*
->> +	 * This is needed to have 'wakealarm' sysfs entry available. One
->> +	 * would expect the device to be marked as a wakeup source only
->> +	 * when an IRQ pin of the RTC is routed to an interrupt line of th=
-e
->> +	 * CPU. In practice, such an IRQ pin can be connected to a PMIC an=
-d
->> +	 * this allows the device to be powered up when RTC alarm rings.
-> Maybe add the machines you know of that have this setup to the
-> comment.
-
-ditto.
-
-
->> +	 */
->> +	device_init_wakeup(dev, true);
->> +
->> +	data->rtc =3D devm_rtc_device_register(dev, DRV_NAME, &rtc_ops,
->> +					     THIS_MODULE);
->> +	ret =3D PTR_ERR_OR_ZERO(data->rtc);
->> +	if (ret) {
->> +		dev_err(dev, "%s: unable to register RTC device (%d)\n",
->> +			__func__, ret);
->> +		goto err;
->> +	}
->> +
->> +	/* We cannot support UIE mode if we do not have an IRQ line */
->> +	if (!data->irq)
->> +		data->rtc->uie_unsupported =3D 1;
->> +
->> +err:
->> +	return ret;
->>  }
->> =20
->> +static int isl12057_remove(struct i2c_client *client)
->> +{
->> +	struct isl12057_rtc_data *rtc_data =3D dev_get_drvdata(&client->de=
-v);
->> +
->> +	if (rtc_data->irq > 0)
->> +		device_init_wakeup(&client->dev, false);
-> I didn't check, but I wonder it that could be/is done by the device
-> core already?
->
->> +	return 0;
->> +}
->> +
->> +#ifdef CONFIG_PM_SLEEP
->> +static int isl12057_rtc_suspend(struct device *dev)
->> +{
->> +	struct isl12057_rtc_data *rtc_data =3D dev_get_drvdata(dev);
->> +
->> +	if (device_may_wakeup(dev))
->> +		return enable_irq_wake(rtc_data->irq);
-> Does this need a check for data->irq?
->
->> +	return 0;
->> +}
->> +
->> +static int isl12057_rtc_resume(struct device *dev)
->> +{
->> +	struct isl12057_rtc_data *rtc_data =3D dev_get_drvdata(dev);
->> +
->> +	if (device_may_wakeup(dev))
->> +		return disable_irq_wake(rtc_data->irq);
-> ditto.
-
-Hum, I will take a look at those irq vs wakeup cpabilities when adding
-support for "can-wakeup-machine" property to consolidate the behavior.
-
-Cheers,
-
-a+
+Laurent Pinchart
