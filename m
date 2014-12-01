@@ -1,70 +1,79 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v2 2/3] ARM: dts: vf610: add system reset controller and syscon-reboot
-Date: Mon,  1 Dec 2014 18:03:08 +0100
-Message-ID: <1417453389-1588-3-git-send-email-stefan@agner.ch>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] power: reset: read priority from device tree
+Date: Mon, 1 Dec 2014 17:11:26 +0000
+Message-ID: <20141201171126.GB22708@leverpostej>
 References: <1417453389-1588-1-git-send-email-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1417453389-1588-1-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawn.guo@linaro.org, kernel@pengutronix.de, linux@roeck-us.net, arnd@arndb.de, sre@kernel.org, fkan@apm.com, grant.likely@linaro.org, robh+dt@kernel.org
-Cc: dbaryshkov@gmail.com, dwmw2@infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stefan@agner.ch
+ <1417453389-1588-2-git-send-email-stefan@agner.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1417453389-1588-2-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "fkan-qTEPVZfXA3Y@public.gmane.org" <fkan-qTEPVZfXA3Y@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the system reset controller (SRC) module and use syscon-reboot
-to register a restart handler which restarts the SoC using the
-SRC SW_RST bit.
+On Mon, Dec 01, 2014 at 05:03:07PM +0000, Stefan Agner wrote:
+> This patch adds an optional property which allows to specify the
+> reset source priority. This priority is used by the kernel restart
+> handler call chain to sort out the proper reset/restart method.
+> Depending on the power design of a board or other machine/board
+> specific peculiarity, it is not possible to pick a generic priority.
+> 
+> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/power/reset/syscon-reboot.txt | 3 +++
+>  drivers/power/reset/syscon-reboot.c                             | 5 ++++-
+>  2 files changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+> index 1190631..ee41d9c 100644
+> --- a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+> +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+> @@ -11,6 +11,9 @@ Required properties:
+>  - offset: offset in the register map for the reboot register (in bytes)
+>  - mask: the reset value written to the reboot register (32 bit access)
+>  
+> +Optional properties:
+> +- priority: define the priority of the reset (0-255, defaults to 128)
+> +
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
- arch/arm/boot/dts/vf500.dtsi |  4 ++++
- arch/arm/boot/dts/vfxxx.dtsi | 13 +++++++++++++
- 2 files changed, 17 insertions(+)
+NAK. This is a leak of Linux-internal details.
 
-diff --git a/arch/arm/boot/dts/vf500.dtsi b/arch/arm/boot/dts/vf500.dtsi
-index de67005..3f38f49 100644
---- a/arch/arm/boot/dts/vf500.dtsi
-+++ b/arch/arm/boot/dts/vf500.dtsi
-@@ -130,6 +130,10 @@
- 	interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
- };
- 
-+&src {
-+	interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
-+};
-+
- &uart0 {
- 	interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
- };
-diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-index 505969a..3e696d7 100644
---- a/arch/arm/boot/dts/vfxxx.dtsi
-+++ b/arch/arm/boot/dts/vfxxx.dtsi
-@@ -43,6 +43,14 @@
- 		clock-frequency = <32768>;
- 	};
- 
-+	reboot: syscon-reboot {
-+		compatible = "syscon-reboot";
-+		regmap = <&src>;
-+		offset = <0x0>;
-+		mask = <0x1000>;
-+		priority = <192>;
-+	};
-+
- 	soc {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -318,6 +326,11 @@
- 				clocks = <&clks VF610_CLK_USBC0>;
- 				status = "disabled";
- 			};
-+
-+			src: src@4006e000 {
-+				compatible = "fsl,vf610-src", "syscon";
-+				reg = <0x4006e000 0x1000>;
-+			};
- 		};
- 
- 		aips1: aips-bus@40080000 {
--- 
-2.1.3
+What is this necessary for?
+
+Mark.
+
+>  Default will be little endian mode, 32 bit access only.
+>  
+>  Examples:
+> diff --git a/drivers/power/reset/syscon-reboot.c b/drivers/power/reset/syscon-reboot.c
+> index 815b901..3060d6b 100644
+> --- a/drivers/power/reset/syscon-reboot.c
+> +++ b/drivers/power/reset/syscon-reboot.c
+> @@ -67,8 +67,11 @@ static int syscon_reboot_probe(struct platform_device *pdev)
+>  	if (of_property_read_u32(pdev->dev.of_node, "mask", &ctx->mask))
+>  		return -EINVAL;
+>  
+> -	ctx->restart_handler.notifier_call = syscon_restart_handle;
+>  	ctx->restart_handler.priority = 128;
+> +	of_property_read_u32(pdev->dev.of_node, "priority",
+> +			     &ctx->restart_handler.priority);
+> +
+> +	ctx->restart_handler.notifier_call = syscon_restart_handle;
+>  	err = register_restart_handler(&ctx->restart_handler);
+>  	if (err)
+>  		dev_err(dev, "can't register restart notifier (err=%d)\n", err);
+> -- 
+> 2.1.3
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
