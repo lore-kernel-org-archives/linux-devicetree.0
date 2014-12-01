@@ -1,72 +1,38 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: [PATCH] ARM: BCM5301X: Add IRQs to Broadcom's bus-axi in DTS file
-Date: Mon,  1 Dec 2014 22:51:07 +0100
-Message-ID: <1417470667-15679-1-git-send-email-hauke@hauke-m.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH] ARM: zynq: DT: Add USB to device tree
+Date: Mon, 1 Dec 2014 13:51:26 -0800
+Message-ID: <71b9e172438946a5ba74efb430d1418c@BN1AFFO11FD060.protection.gbl>
+References: <1417459352-23401-1-git-send-email-soren.brinkmann@xilinx.com>
+ <7088901.UGmPabvHQ0@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <7088901.UGmPabvHQ0@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, linux-kernel@vger.kernel.org, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>
 List-Id: devicetree@vger.kernel.org
 
-IRQ support for Broadcom's bus-axi driver bcma was merged into John
-Linville's wireless tree and will show up in 3.19. This patch makes use
-of this feature in the DTS file for the the BCM5301X SoCs. I left the
-PCIe controller out, because this still needs some discussion.
+Hi Arnd,
 
-Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
----
- arch/arm/boot/dts/bcm5301x.dtsi | 34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+On Mon, 2014-12-01 at 10:26PM +0100, Arnd Bergmann wrote:
+> On Monday 01 December 2014 10:42:32 Soren Brinkmann wrote:
+> > +       usb_phy0: usb-phy@0 {
+> > +               compatible =3D "usb-nop-xceiv";
+> > +               #phy-cells =3D <0>;
+> > +       };
+> >  };
+>=20
+> As discussed in an unrelated thread today, please drop the "@0" in th=
+e
+> node name, since the device has no 'reg' property.
 
-diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
-index 6d80922..b7c4e9e 100644
---- a/arch/arm/boot/dts/bcm5301x.dtsi
-+++ b/arch/arm/boot/dts/bcm5301x.dtsi
-@@ -101,6 +101,40 @@
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0x000fffff 0xffff>;
-+		interrupt-map = 
-+			/* ChipCommon */
-+			<0x00000000 0 &gic GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
-+
-+			/* USB 2.0 Controller */
-+			<0x00021000 0 &gic GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>,
-+
-+			/* USB 3.0 Controller */
-+			<0x00023000 0 &gic GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>,
-+
-+			/* Ethernet Controller 0 */
-+			<0x00024000 0 &gic GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
-+
-+			/* Ethernet Controller 1 */
-+			<0x00025000 0 &gic GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-+
-+			/* Ethernet Controller 2 */
-+			<0x00026000 0 &gic GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>,
-+
-+			/* Ethernet Controller 3 */
-+			<0x00027000 0 &gic GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>,
-+
-+			/* NAND Controller */
-+			<0x00028000 0 &gic GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>,
-+			<0x00028000 1 &gic GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
-+			<0x00028000 2 &gic GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>,
-+			<0x00028000 3 &gic GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
-+			<0x00028000 4 &gic GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
-+			<0x00028000 5 &gic GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
-+			<0x00028000 6 &gic GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
-+			<0x00028000 7 &gic GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
-+
- 		chipcommon: chipcommon@0 {
- 			reg = <0x00000000 0x1000>;
- 
--- 
-1.9.1
+What is the best practice for naming such nodes then? On these boards
+it's not the case, but Zynq has two USB cores. So, there may be DTs tha=
+t
+will have two phys in there. Would we just do 'usb-phy-0'?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Thanks,
+	S=C3=B6ren
