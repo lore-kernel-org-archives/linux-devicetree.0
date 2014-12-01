@@ -1,47 +1,119 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 0/7] Fix sti drivers whcih mix reg address spaces
-Date: Mon, 01 Dec 2014 16:36:51 +0100
-Message-ID: <8237128.RmunIxMfYX@wuerfel>
-References: <1416385632-5832-1-git-send-email-peter.griffin@linaro.org>
+From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/3] staging: imx-drm: document internal HDMI I2C master
+ controller DT binding
+Date: Mon, 1 Dec 2014 17:39:10 +0200
+Message-ID: <547C8B9E.8050605@mentor.com>
+References: <1416073759-19939-1-git-send-email-vladimir_zapolskiy@mentor.com>	 <1416073759-19939-2-git-send-email-vladimir_zapolskiy@mentor.com>	 <547C8113.3050100@mentor.com> <1417446703.4624.18.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416385632-5832-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1417446703.4624.18.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 19 November 2014 08:27:05 Peter Griffin wrote:
-> Hi,
+On 01.12.2014 17:11, Philipp Zabel wrote:
+> Am Montag, den 01.12.2014, 16:54 +0200 schrieb Vladimir Zapolskiy:
+>> Hi Philipp and Shawn,
+>>
+>> On 15.11.2014 19:49, Vladimir Zapolskiy wrote:
+>>> Provide information about how to bind internal iMX6Q/DL HDMI DDC I2C
+>>> master controller. The property is set as optional one, because iMX6
+>>> HDMI DDC bus may be represented by one of general purpose I2C busses
+>>> found on SoC.
+>>>
+>>> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+>>> Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+>>> Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>>> Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>>> Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> ---
+>>>  Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt |   10 +++++++++-
+>>>  1 file changed, 9 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt b/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
+>>> index 1b756cf..43c8924 100644
+>>> --- a/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
+>>> +++ b/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
+>>> @@ -10,6 +10,8 @@ Required properties:
+>>>   - #address-cells : should be <1>
+>>>   - #size-cells : should be <0>
+>>>   - compatible : should be "fsl,imx6q-hdmi" or "fsl,imx6dl-hdmi".
+>>> +   If internal HDMI DDC I2C master controller is supposed to be used,
+>>> +   then "simple-bus" should be added to compatible value.
+>>>   - gpr : should be <&gpr>.
+>>>     The phandle points to the iomuxc-gpr region containing the HDMI
+>>>     multiplexer control register.
+>>> @@ -22,6 +24,7 @@ Required properties:
+>>>  
+>>>  Optional properties:
+>>>   - ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
+>>> + - ddc: internal HDMI DDC I2C master controller
+>>>  
+>>>  example:
+>>>  
+>>> @@ -32,7 +35,7 @@ example:
+>>>          hdmi: hdmi@0120000 {
+>>>                  #address-cells = <1>;
+>>>                  #size-cells = <0>;
+>>> -                compatible = "fsl,imx6q-hdmi";
+>>> +                compatible = "fsl,imx6q-hdmi", "simple-bus";
+>>>                  reg = <0x00120000 0x9000>;
+>>>                  interrupts = <0 115 0x04>;
+>>>                  gpr = <&gpr>;
+>>> @@ -40,6 +43,11 @@ example:
+>>>                  clock-names = "iahb", "isfr";
+>>>                  ddc-i2c-bus = <&i2c2>;
+>>>  
+>>> +                hdmi_ddc: ddc {
+>>> +                        compatible = "fsl,imx6q-hdmi-ddc";
+>>> +                        status = "disabled";
+>>> +                };
+>>> +
+>>>                  port@0 {
+>>>                          reg = <0>;
+>>>  
+>>>
+>>
+>> knowing in advance that I2C framework lacks a graceful support of non
+>> fully compliant I2C devices, do you have any objections to the proposed
+>> iMX HDMI DTS change?
 > 
-> Following on from Arnds comments about the picophy driver here
-> https://lkml.org/lkml/2014/11/13/161, this series fixes the
-> remaining upstreamed drivers for STI, which are mixing address spaces
-> in the reg property. We do this in a way similar to the keystone
-> and bcm7445 platforms, by having sysconfig phandle/ offset pair (
-> where only one register is required). Or phandle / integer array
-> where multiple offsets in the same bank are needed).
+> I'm not sure about this. Have you seen "drm: Decouple EDID parsing from
+> I2C adapter"? I feel like in the absence of a ddc-i2c-bus property the
+> imx-hdmi/dw-hdmi driver should try to use the internal HDMI DDC I2C
+> master controller, bypassing the I2C framework altogether.
 > 
-> This series breaks DT compatability! But the platform support
-> is WIP and only being used by the few developers who are upstreaming
-> support for it. I've made each change to the driver / dt doc / dt
-> file as a single atomic commit so the kernel will remain bisectable. 
-> 
-> This series then also enables the picophy driver, and adds back in
-> the ehci/ohci dt nodes for stih410 which make use of the picophy.
 
-This all looks very good to me, nice work!
+My idea is exactly not to bypass the I2C framework, briefly the
+rationale is that
+* it allows to reuse I2C UAPI/tools naturally applied to the internal
+iMX HDMI DDC bus,
+* it allows to use iMX HDMI DDC bus as an additional feature-limited I2C
+bus on SoC (who knows, I absolutely won't be surprised, if anyone needs
+it on practice),
+* if an HDMI controller supports an external I2C bus, the integration
+with HDMI DDC bus driver based on I2C framework is seamless.
 
-Reviewed-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+However I agree that the selected approach may look odd, the question is
+if the oddness comes from the technical side or from the fact that
+nobody has done it before this way.
 
-I have one comment for patch 4, but I don't have a good solution for
-that, hopefully someone on the devicetree-discuss list has some insight,
-otherwise we just keep your version.
+I'm open to any critique, if the proposal of creating an I2C bus from
+HDMI DDC bus is lame, then I suppose the shared iMX HDMI DDC bus driver
+should be converted to something formless and internally used by
+imx-hdmi. The negative side-effects of such a change from my point of
+view are
+* more or less natural modularity is lost,
+* a number of I2C framework API/functions should be copy-pasted to the
+updated HDMI DDC bus driver to support a subset of I2C read/write
+transactions.
 
-	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+With best wishes,
+Vladimir
