@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v5 15/15] tpm/tpm_i2c_stm_st33: Increment driver version to 1.2.1.
-Date: Mon,  1 Dec 2014 01:20:47 +0100
-Message-ID: <1417393247-4479-16-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v5 14/15] tpm/tpm_i2c_stm_st33: Remove useless i2c read on interrupt registers
+Date: Mon,  1 Dec 2014 01:20:46 +0100
+Message-ID: <1417393247-4479-15-git-send-email-christophe-h.ricard@st.com>
 References: <1417393247-4479-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1417393247-4479-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
@@ -10,42 +10,40 @@ To: peterhuewe-Mmb7MZpHnFY@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@publi
 Cc: tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Many changes were added to the driver so increment the version.
+Remove useless i2c read on TPM_INT_ENABLE and TPM_INT_STATUS
 
 Reviewed-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/char/tpm/tpm_i2c_stm_st33.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/char/tpm/tpm_i2c_stm_st33.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
 diff --git a/drivers/char/tpm/tpm_i2c_stm_st33.c b/drivers/char/tpm/tpm_i2c_stm_st33.c
-index 52f0b0d..473e149 100644
+index e239317..52f0b0d 100644
 --- a/drivers/char/tpm/tpm_i2c_stm_st33.c
 +++ b/drivers/char/tpm/tpm_i2c_stm_st33.c
-@@ -1,6 +1,6 @@
- /*
-  * STMicroelectronics TPM I2C Linux driver for TPM ST33ZP24
-- * Copyright (C) 2009, 2010  STMicroelectronics
-+ * Copyright (C) 2009, 2010, 2014  STMicroelectronics
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License as published by
-@@ -15,7 +15,7 @@
-  * You should have received a copy of the GNU General Public License
-  * along with this program; if not, see <http://www.gnu.org/licenses/>.
-  *
-- * STMicroelectronics version 1.2.0, Copyright (C) 2010
-+ * STMicroelectronics version 1.2.1, Copyright (C) 2014
-  * STMicroelectronics comes with ABSOLUTELY NO WARRANTY.
-  * This is free software, and you are welcome to redistribute it
-  * under certain conditions.
-@@ -918,5 +918,5 @@ module_i2c_driver(tpm_stm_i2c_driver);
+@@ -791,10 +791,6 @@ tpm_stm_i2c_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 			goto _tpm_clean_answer;
+ 		}
  
- MODULE_AUTHOR("Christophe Ricard (tpmsupport-qxv4g6HH51o@public.gmane.org)");
- MODULE_DESCRIPTION("STM TPM I2C ST33 Driver");
--MODULE_VERSION("1.2.0");
-+MODULE_VERSION("1.2.1");
- MODULE_LICENSE("GPL");
+-		ret = I2C_READ_DATA(tpm_dev, TPM_INT_ENABLE, &intmask, 1);
+-		if (ret < 0)
+-			goto _tpm_clean_answer;
+-
+ 		intmask |= TPM_INTF_CMD_READY_INT
+ 			|  TPM_INTF_STS_VALID_INT
+ 			|  TPM_INTF_DATA_AVAIL_INT;
+@@ -809,10 +805,6 @@ tpm_stm_i2c_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 		if (ret < 0)
+ 			goto _tpm_clean_answer;
+ 
+-		ret = I2C_READ_DATA(tpm_dev, TPM_INT_STATUS, &intmask, 1);
+-		if (ret < 0)
+-			goto _tpm_clean_answer;
+-
+ 		chip->vendor.irq = client->irq;
+ 
+ 		disable_irq_nosync(chip->vendor.irq);
 -- 
 2.1.0
 
