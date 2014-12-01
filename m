@@ -1,237 +1,70 @@
-From: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v3 2/4] powerpc/mpc85xx: Create dts components for the FSL QorIQ DPAA QMan
-Date: Mon, 1 Dec 2014 04:02:13 -0600
-Message-ID: <1417428135-12895-3-git-send-email-Emilian.Medve@Freescale.com>
-References: <1417428135-12895-1-git-send-email-Emilian.Medve@Freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 00/11] memory: add Atmel EBI (External Bus Interface) driver
+Date: Mon,  1 Dec 2014 11:27:16 +0100
+Message-ID: <1417429647-3419-1-git-send-email-boris.brezillon@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417428135-12895-1-git-send-email-Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: scottwood-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Geoff Thorpe <Geoff.Thorpe-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Hai-Ying Wang <Haiying.Wang-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+The EBI (External Bus Interface) is used to access external peripherals
+(NOR, SRAM, NAND, and other specific devices like ethernet controllers).
+Each device is assigned a CS line and an address range and can have its
+own configuration (timings, access mode, bus width, ...).
+This driver provides a generic DT binding to configure a device according
+to its requirements.
+For specific device controllers (like the NAND one) the SMC timings
+should be configured by the controller driver through the matrix and
+smc syscon regmaps.
 
-Change-Id: I16e63db731e55a3d60d4e147573c1af8718082d3
-Signed-off-by: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Signed-off-by: Geoff Thorpe <Geoff.Thorpe-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Hai-Ying Wang <Haiying.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-[Emil Medve: Sync with the upstream binding]
-Signed-off-by: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
----
- arch/powerpc/boot/dts/fsl/qoriq-qman1-portals.dtsi | 101 +++++++++++++++++++++
- arch/powerpc/boot/dts/fsl/qoriq-qman1.dtsi         |  41 +++++++++
- arch/powerpc/boot/dts/fsl/qoriq-qman3.dtsi         |  41 +++++++++
- 3 files changed, 183 insertions(+)
- create mode 100644 arch/powerpc/boot/dts/fsl/qoriq-qman1-portals.dtsi
- create mode 100644 arch/powerpc/boot/dts/fsl/qoriq-qman1.dtsi
- create mode 100644 arch/powerpc/boot/dts/fsl/qoriq-qman3.dtsi
+The first 4 patches introduce 2 syscon devices needed to configure the
+EBI bus, patch 5 and 6 adds support for the EBI bus, and the remaining
+patches declares the EBI related nodes in sama5d3 dts[i] files.
 
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-qman1-portals.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-qman1-portals.dtsi
-new file mode 100644
-index 0000000..05d51ac
---- /dev/null
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-qman1-portals.dtsi
-@@ -0,0 +1,101 @@
-+/*
-+ * QorIQ QMan Portal device tree stub for 10 portals & 15 pool channels
-+ *
-+ * Copyright 2011 - 2014 Freescale Semiconductor Inc.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions are met:
-+ *     * Redistributions of source code must retain the above copyright
-+ *	 notice, this list of conditions and the following disclaimer.
-+ *     * Redistributions in binary form must reproduce the above copyright
-+ *	 notice, this list of conditions and the following disclaimer in the
-+ *	 documentation and/or other materials provided with the distribution.
-+ *     * Neither the name of Freescale Semiconductor nor the
-+ *	 names of its contributors may be used to endorse or promote products
-+ *	 derived from this software without specific prior written permission.
-+ *
-+ *
-+ * ALTERNATIVELY, this software may be distributed under the terms of the
-+ * GNU General Public License ("GPL") as published by the Free Software
-+ * Foundation, either version 2 of that License or (at your option) any
-+ * later version.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
-+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-+ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
-+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+&qportals {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "simple-bus";
-+
-+	qportal0: qman-portal@0 {
-+		compatible = "fsl,qman-portal";
-+		reg = <0x0 0x4000>, <0x100000 0x1000>;
-+		interrupts = <104 2 0 0>;
-+		fsl,qman-channel-id = <0x0>;
-+	};
-+	qportal1: qman-portal@4000 {
-+		compatible = "fsl,qman-portal";
-+		reg = <0x4000 0x4000>, <0x101000 0x1000>;
-+		interrupts = <106 2 0 0>;
-+		fsl,qman-channel-id = <1>;
-+	};
-+	qportal2: qman-portal@8000 {
-+		compatible = "fsl,qman-portal";
-+		reg = <0x8000 0x4000>, <0x102000 0x1000>;
-+		interrupts = <108 2 0 0>;
-+		fsl,qman-channel-id = <2>;
-+	};
-+	qportal3: qman-portal@c000 {
-+		compatible = "fsl,qman-portal";
-+		reg = <0xc000 0x4000>, <0x103000 0x1000>;
-+		interrupts = <110 2 0 0>;
-+		fsl,qman-channel-id = <3>;
-+	};
-+	qportal4: qman-portal@10000 {
-+		compatible = "fsl,qman-portal";
-+		reg = <0x10000 0x4000>, <0x104000 0x1000>;
-+		interrupts = <112 2 0 0>;
-+		fsl,qman-channel-id = <4>;
-+	};
-+	qportal5: qman-portal@14000 {
-+		compatible = "fsl,qman-portal";
-+		reg = <0x14000 0x4000>, <0x105000 0x1000>;
-+		interrupts = <114 2 0 0>;
-+		fsl,qman-channel-id = <5>;
-+	};
-+	qportal6: qman-portal@18000 {
-+		compatible = "fsl,qman-portal";
-+		reg = <0x18000 0x4000>, <0x106000 0x1000>;
-+		interrupts = <116 2 0 0>;
-+		fsl,qman-channel-id = <6>;
-+	};
-+
-+	qportal7: qman-portal@1c000 {
-+		compatible = "fsl,qman-portal";
-+		reg = <0x1c000 0x4000>, <0x107000 0x1000>;
-+		interrupts = <118 2 0 0>;
-+		fsl,qman-channel-id = <7>;
-+	};
-+	qportal8: qman-portal@20000 {
-+		compatible = "fsl,qman-portal";
-+		reg = <0x20000 0x4000>, <0x108000 0x1000>;
-+		interrupts = <120 2 0 0>;
-+		fsl,qman-channel-id = <8>;
-+	};
-+	qportal9: qman-portal@24000 {
-+		compatible = "fsl,qman-portal";
-+		reg = <0x24000 0x4000>, <0x109000 0x1000>;
-+		interrupts = <122 2 0 0>;
-+		fsl,qman-channel-id = <9>;
-+	};
-+};
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-qman1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-qman1.dtsi
-new file mode 100644
-index 0000000..5c63b76
---- /dev/null
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-qman1.dtsi
-@@ -0,0 +1,41 @@
-+/*
-+ * QorIQ QMan device tree stub [ controller @ offset 0x318000 ]
-+ *
-+ * Copyright 2011 - 2014 Freescale Semiconductor Inc.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions are met:
-+ *     * Redistributions of source code must retain the above copyright
-+ *	 notice, this list of conditions and the following disclaimer.
-+ *     * Redistributions in binary form must reproduce the above copyright
-+ *	 notice, this list of conditions and the following disclaimer in the
-+ *	 documentation and/or other materials provided with the distribution.
-+ *     * Neither the name of Freescale Semiconductor nor the
-+ *	 names of its contributors may be used to endorse or promote products
-+ *	 derived from this software without specific prior written permission.
-+ *
-+ *
-+ * ALTERNATIVELY, this software may be distributed under the terms of the
-+ * GNU General Public License ("GPL") as published by the Free Software
-+ * Foundation, either version 2 of that License or (at your option) any
-+ * later version.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
-+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-+ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
-+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+qman: qman@318000 {
-+	compatible = "fsl,qman";
-+	reg = <0x318000 0x1000>;
-+	interrupts = <16 2 1 3>;
-+	fsl,qman-portals = &qportals;
-+	memory-region = <&qman_fqd &qman_pfdr>;
-+};
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-qman3.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-qman3.dtsi
-new file mode 100644
-index 0000000..f3f57c6
---- /dev/null
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-qman3.dtsi
-@@ -0,0 +1,41 @@
-+/*
-+ * QorIQ QMan rev3 device tree stub [ controller @ offset 0x318000 ]
-+ *
-+ * Copyright 2014 Freescale Semiconductor Inc.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions are met:
-+ *     * Redistributions of source code must retain the above copyright
-+ *	 notice, this list of conditions and the following disclaimer.
-+ *     * Redistributions in binary form must reproduce the above copyright
-+ *	 notice, this list of conditions and the following disclaimer in the
-+ *	 documentation and/or other materials provided with the distribution.
-+ *     * Neither the name of Freescale Semiconductor nor the
-+ *	 names of its contributors may be used to endorse or promote products
-+ *	 derived from this software without specific prior written permission.
-+ *
-+ *
-+ * ALTERNATIVELY, this software may be distributed under the terms of the
-+ * GNU General Public License ("GPL") as published by the Free Software
-+ * Foundation, either version 2 of that License or (at your option) any
-+ * later version.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
-+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-+ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
-+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+qman: qman@318000 {
-+	compatible = "fsl,qman";
-+	reg = <0x318000 0x2000>;
-+	interrupts = <16 2 1 3>;
-+	fsl,qman-portals = &qportals;
-+	memory-region = <&qman_fqd &qman_pfdr>;
-+};
+Changes since v2:
+- minor fixes int DT bindings doc
+- fix SMC macros
+- make use of SMC macros defined in include/linux/mfd/syscon/atmel-smc.h
+
+Changes since v1:
+- almost everything :-)
+
+Boris Brezillon (11):
+  mfd: syscon: Add atmel-matrix registers definition
+  mfd: syscon: Add Atmel Matrix bus DT binding documentation
+  mfd: syscon: Add atmel-smc registers definition
+  mfd: syscon: Add Atmel SMC binding doc
+  memory: add Atmel EBI (External Bus Interface) driver
+  memory: atmel-ebi: add DT bindings documentation
+  ARM: at91: select ATMEL_EBI when compiling a kernel for at91sam9 or
+    sama5d3
+  ARM: at91/dt: add HSMC (Static Memory Controller) node in sama5d3 dtsi
+  ARM: at91/dt: add matrix node in sama5d3 dtsi
+  ARM: at91/dt: add EBI (External Bus Interface) node in sama5d3 dtsi
+  ARM: at91/dt: add NOR definition in sama5d3xcm dtsi
+
+ .../bindings/memory-controllers/atmel-ebi.txt      | 155 +++++
+ .../devicetree/bindings/mfd/atmel-matrix.txt       |  24 +
+ .../devicetree/bindings/mfd/atmel-smc.txt          |  19 +
+ arch/arm/boot/dts/sama5d3.dtsi                     |  93 +++
+ arch/arm/boot/dts/sama5d3xcm.dtsi                  |  34 ++
+ arch/arm/mach-at91/Kconfig                         |   2 +
+ drivers/memory/Kconfig                             |  11 +
+ drivers/memory/Makefile                            |   1 +
+ drivers/memory/atmel-ebi.c                         | 627 +++++++++++++++++++++
+ include/linux/mfd/syscon/atmel-matrix.h            | 114 ++++
+ include/linux/mfd/syscon/atmel-smc.h               |  65 +++
+ 11 files changed, 1145 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/atmel-ebi.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/atmel-matrix.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/atmel-smc.txt
+ create mode 100644 drivers/memory/atmel-ebi.c
+ create mode 100644 include/linux/mfd/syscon/atmel-matrix.h
+ create mode 100644 include/linux/mfd/syscon/atmel-smc.h
+
 -- 
-2.1.3
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
