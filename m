@@ -1,94 +1,80 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 05/11] memory: add Atmel EBI (External Bus Interface)
- driver
-Date: Mon, 1 Dec 2014 19:29:23 +0100
-Message-ID: <20141201192923.6a85e52b@bbrezillon>
-References: <1417429647-3419-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1417429647-3419-6-git-send-email-boris.brezillon@free-electrons.com>
-	<4214030.Z2iCEM6hVA@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v6 00/15] ST33 I2C TPM driver cleanup
+Date: Mon,  1 Dec 2014 19:32:45 +0100
+Message-ID: <1417458780-25977-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4214030.Z2iCEM6hVA@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: peterhuewe-Mmb7MZpHnFY@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org
+Cc: tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
 
-On Mon, 01 Dec 2014 17:26:27 +0100
-Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+Hi Peter,
 
-> On Monday 01 December 2014 11:27:21 Boris Brezillon wrote:
-> > The EBI (External Bus Interface) is used to access external peripherals
-> > (NOR, SRAM, NAND, and other specific devices like ethernet controllers).
-> > Each device is assigned a CS line and an address range and can have its
-> > own configuration (timings, access mode, bus width, ...).
-> > This driver provides a generic DT binding to configure a device according
-> > to its requirements.
-> > For specific device controllers (like the NAND one) the SMC timings
-> > should be configured by the controller driver through the matrix and
-> > smc syscon regmaps.
-> 
-> Nice!
-> 
-> > +
-> > +#define AT91_EBICSA_REGFIELD(soc)			\
-> > +	REG_FIELD(soc ## _MATRIX_EBICSA_OFF, 0,		\
-> > +		  AT91_MATRIX_EBI_NUM_CS - 1)
-> > +
-> > +#define AT91_MULTI_EBICSA_REGFIELD(soc, n)		\
-> > +	REG_FIELD(soc ## _MATRIX_EBI ## n ## CSA_OFF,	\
-> > +		  0, AT91_MATRIX_EBI_NUM_CS - 1)
-> 
-> I don't like the use macros that concatenate symbol names like
-> this. Why not do either
-> 
-> - open-code the macro contents in the few uses, to allow
->   grepping for them, or
+I have seen one mistake done during the rebase on v5 on patch
+0010-tpm-tpm_i2c_stm_st33-Add-devicetree-structure.
+~~ Please discard v5. ~~
 
-I'm not sure to get this one, are you suggesting to do something like
-this:
+This new patchset version is taking into account as much as possible
+Jason Gunthorpe feedbacks as well as yours. I hope, i am not missing any.
 
-#define AT91_EBICSA_REGFIELD(off)			\
-	REG_FIELD(ebicsa_off, AT91_MATRIX_EBI_NUM_CS - 1)
+I have also aligned dts compatible string with other drivers and rephrase one part
+of the st33zp24 dts documentation as pointed by Mark Rutland.
 
-> 
-> - put the register number in the syscon reference and look it
->   up from there (this would be slightly more complicated for the
->   second macro)
+It still brings:
+- Some few code clean up from code style up to structure
+- Device tree support keeping static platform data configuration support.
+- Fixes & improvement for irq support.
+- Update the GPLv2 license header
 
-I've told several times not to encode register offsets or register ids
-in the DT :-) (and if I'm not mistaken that's what you're suggesting
-here).
+I have moved previous patch 0013 tpm/tpm_i2c_stm_st33: Fix potential bug in
+tpm_stm_i2c_send to 0001 as per your request. I have fixed as some build errors
+seen during the rebase :(. My bad.
+I have also changed the convention in the driver from r to ret.
 
-> 
-> > +
-> > +	np = of_parse_phandle(pdev->dev.of_node, "atmel,smc", 0);
-> > +	if (!np)
-> > +		return -EINVAL;
-> > +
-> > +	ebi->smc = syscon_node_to_regmap(np);
-> > +	if (IS_ERR(ebi->smc))
-> > +		return PTR_ERR(ebi->smc);
-> 
-> I think this and the second instance of it can be shortened to
-> 
-> 	ebi->smc = syscon_regmap_lookup_by_phandle(pdev->dev.of_node, "atmel,smc");
+This patchset apply on top of James Morris linux-security tree
+on top of ac14ae25b676d721b6bfcfb046dc53a9f7760d83 on next branch
+Hope i am targetting the correct tree.
 
-Sure.
+Best Regards
+Christophe
 
-Regards,
+Christophe Ricard (15):
+  tpm/tpm_i2c_stm_st33: Fix potential bug in tpm_stm_i2c_send
+  tpm/tpm_i2c_stm_st33: Update Kconfig in order to be inline to other
+    similar product
+  tpm/tpm_i2c_stm_st33: Change License header to have up to date address
+    information
+  tpm/tpm_i2c_stm_st33: Fix few coding style error reported by
+    scripts/checkpatch.pl
+  tpm/tpm_i2c_stm_st33: Move tpm registers to tpm_i2c_stm_st33.c
+  tpm/tpm_i2c_stm_st33: Add new tpm_stm_dev structure and remove
+    tpm_i2c_buffer[0], [1] buffer.
+  tpm/tpm_i2c_stm_st33: Remove reference to io_serirq
+  tpm/tpm_i2c_stm_st33: Replace err/rc/ret by ret for a function return
+    code
+  tpm/tpm_i2c_stm_st33: Replace tpm_st33_* function with tpm_stm_*
+  tpm/tpm_i2c_stm_st33: Add devicetree structure
+  tpm/tpm_i2c_stm_st33/dts/st33zp24_i2c: Add DTS Documentation
+  tpm/tpm_i2c_stm_st33: Few code cleanup
+  tpm/tpm_i2c_stm_st33: Interrupt management improvement
+  tpm/tpm_i2c_stm_st33: Remove useless i2c read on interrupt registers
+  tpm/tpm_i2c_stm_st33: Increment driver version to 1.2.1.
 
-Boris
-
+ .../devicetree/bindings/security/tpm/st33zp24.txt  |  36 ++
+ drivers/char/tpm/Kconfig                           |   4 +-
+ drivers/char/tpm/Makefile                          |   2 +-
+ drivers/char/tpm/tpm_i2c_stm_st33.c                | 643 ++++++++++++---------
+ drivers/char/tpm/tpm_i2c_stm_st33.h                |  61 --
+ include/linux/platform_data/tpm_i2c_stm_st33.h     |  39 ++
+ 6 files changed, 434 insertions(+), 351 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/security/tpm/st33zp24.txt
+ delete mode 100644 drivers/char/tpm/tpm_i2c_stm_st33.h
+ create mode 100644 include/linux/platform_data/tpm_i2c_stm_st33.h
 
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+2.1.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
