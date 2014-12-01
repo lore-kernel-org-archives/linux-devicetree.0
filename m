@@ -1,170 +1,87 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] pinctrl: exynos: Fix GPIO setup failure because
- domain clock being gated
-Date: Mon, 01 Dec 2014 15:52:08 +0100
-Message-ID: <1417445528.31392.8.camel@AMDC1943>
-References: <1417011857-10419-1-git-send-email-k.kozlowski@samsung.com>
- <1417011857-10419-4-git-send-email-k.kozlowski@samsung.com>
- <CACRpkdb8F8YcvFeHPvOKHjx_p4HEpimck3XRabB3oHpZTdmRQQ@mail.gmail.com>
- <1417183724.18249.36.camel@AMDC1943>
- <CA+Ln22Ejo51VPWf6DmuRvV_fZr_H=-BXAshSPSOokNE1bz=-QA@mail.gmail.com>
- <1417423043.4055.14.camel@AMDC1943>
- <CA+Ln22H_a9CWxrYO_i9Esm6keXA8XLLYmE1Vg-8ynamJ1sAwpQ@mail.gmail.com>
+From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/3] staging: imx-drm: document internal HDMI I2C master
+ controller DT binding
+Date: Mon, 1 Dec 2014 16:54:11 +0200
+Message-ID: <547C8113.3050100@mentor.com>
+References: <1416073759-19939-1-git-send-email-vladimir_zapolskiy@mentor.com> <1416073759-19939-2-git-send-email-vladimir_zapolskiy@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <CA+Ln22H_a9CWxrYO_i9Esm6keXA8XLLYmE1Vg-8ynamJ1sAwpQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416073759-19939-2-git-send-email-vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On pon, 2014-12-01 at 23:34 +0900, Tomasz Figa wrote:
-> 2014-12-01 17:37 GMT+09:00 Krzysztof Kozlowski <k.kozlowski@samsung.c=
-om>:
-> >
-> > On nie, 2014-11-30 at 21:19 +0900, Tomasz Figa wrote:
-> >> Hi Krzysztof,
-> >>
-> >> 2014-11-28 23:08 GMT+09:00 Krzysztof Kozlowski <k.kozlowski@samsun=
-g.com>:
-> >> > On pi=C4=85, 2014-11-28 at 15:04 +0100, Linus Walleij wrote:
-> >> >> On Wed, Nov 26, 2014 at 3:24 PM, Krzysztof Kozlowski
-> >> >> <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> >> >>
-> >> >> > The audio subsystem on Exynos 5420 has separate clocks and GP=
-IO. To
-> >> >> > operate properly on GPIOs the main block clock 'mau_epll' mus=
-t be
-> >> >> > enabled.
-> >> >> >
-> >> >> > This was observed on Peach Pi/Pit and Arndale Octa (after ena=
-bling i2s0)
-> >> >> > after introducing runtime PM to pl330 DMA driver. After that =
-commit the
-> >> >> > 'mau_epll' was gated, because the "amba" clock was disabled a=
-nd there
-> >> >> > were no more users of mau_epll.
-> >> >> >
-> >> >> > The system hang just before probing i2s0 because
-> >> >> > samsung_pinmux_setup() tried to access memory from audss bloc=
-k which was
-> >> >> > gated.
-> >> >> >
-> >> >> > Add a clock property to the pinctrl driver and enable the clo=
-ck during
-> >> >> > GPIO setup. During normal GPIO operations (set, get, set_dire=
-ction) the
-> >> >> > clock is not enabled.
-> >>
-> >> Could you make sure that possibility of gating this clock is worth=
- the
-> >> effort of adding gating code to all affected drivers? If there is =
-no
-> >> significant change in power consumption maybe it could be simply k=
-eep
-> >> running all the time?
-> >
-> > I had an impression that last time you disliked such idea:
-> > http://www.spinics.net/lists/arm-kernel/msg338127.html
-> > That's why I developed these patches. Because keeping a clock alway=
-s on,
-> > even when it is unused, is undesirable.
->=20
-> I was mostly concerned about the particular solution implemented by
-> that patch that kept the clocks enabled on all platforms, not only th=
-e
-> affected one. However...
->=20
-> >
-> > Anyway, I did some simple measurements (after booting Arndale Octa
-> > to /bin/sh, idle):
-> >  - with mau_epll gated: ~523 mA
-> >  - with mau_epll always on: ~531 mA
-> >
-> > Keeping it on increases energy usage by 1.5% in idle (with measurem=
-ent
-> > uncertainty ~0.4%).
-> >
->=20
-> ...this definitely shows that the effort isn't worthless, which means
-> that your patch goes in the right direction.
+Hi Philipp and Shawn,
 
-Great!
+On 15.11.2014 19:49, Vladimir Zapolskiy wrote:
+> Provide information about how to bind internal iMX6Q/DL HDMI DDC I2C
+> master controller. The property is set as optional one, because iMX6
+> HDMI DDC bus may be represented by one of general purpose I2C busses
+> found on SoC.
+> 
+> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+> Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>  Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt |   10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt b/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
+> index 1b756cf..43c8924 100644
+> --- a/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
+> +++ b/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
+> @@ -10,6 +10,8 @@ Required properties:
+>   - #address-cells : should be <1>
+>   - #size-cells : should be <0>
+>   - compatible : should be "fsl,imx6q-hdmi" or "fsl,imx6dl-hdmi".
+> +   If internal HDMI DDC I2C master controller is supposed to be used,
+> +   then "simple-bus" should be added to compatible value.
+>   - gpr : should be <&gpr>.
+>     The phandle points to the iomuxc-gpr region containing the HDMI
+>     multiplexer control register.
+> @@ -22,6 +24,7 @@ Required properties:
+>  
+>  Optional properties:
+>   - ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
+> + - ddc: internal HDMI DDC I2C master controller
+>  
+>  example:
+>  
+> @@ -32,7 +35,7 @@ example:
+>          hdmi: hdmi@0120000 {
+>                  #address-cells = <1>;
+>                  #size-cells = <0>;
+> -                compatible = "fsl,imx6q-hdmi";
+> +                compatible = "fsl,imx6q-hdmi", "simple-bus";
+>                  reg = <0x00120000 0x9000>;
+>                  interrupts = <0 115 0x04>;
+>                  gpr = <&gpr>;
+> @@ -40,6 +43,11 @@ example:
+>                  clock-names = "iahb", "isfr";
+>                  ddc-i2c-bus = <&i2c2>;
+>  
+> +                hdmi_ddc: ddc {
+> +                        compatible = "fsl,imx6q-hdmi-ddc";
+> +                        status = "disabled";
+> +                };
+> +
+>                  port@0 {
+>                          reg = <0>;
+>  
+> 
 
->=20
-> >
-> >> Also isn't a similar problem happening due to power domains? I bel=
-ieve
-> >> the whole maudio block is located in a separate power domain but
-> >> somehow it doesn't get turned off?
-> >
-> > There is Maudio power domain... but I think it is not related here.
->=20
-> Could you somehow check what happens when the maudio power domain is
-> turned off and maudio pin controller is accessed? Could you also chec=
-k
-> the difference in power consumption with this domain powered on and
-> off?
-
-I can try. I'll let you know the results.
-
->=20
-> > Pinctrl driver does not have runtime PM and is not attached to a do=
-main.
-> > I thought about other solution to this problem (with utilization of
-> > power domains):
-> >  - add runtime PM to pinctrl and audss clocks,
-> >  - attach pinctrl and audss clocks to maudio power domain,
-> >  - enable the clock when power domain is turned on.
-> > However almost the same changes had to be added to pinctrl and auds=
-s
-> > clocks drivers (replace clock_enable() with pm_runtime_get_sync()).
->=20
-> Well, if the dependency is there due to hardware design, I think it
-> needs to be reflected in the drivers as well.
->=20
-> Few other issues that came to my mind:
->=20
->  - Your previous patch added clock control only to pinctrl operations=
-=2E
-> Shouldn't GPIO operations be included as well?
-
-Yeah... but does it make any sense? For example imagine GPIO is
-configured as input. Enabling the clock won't change anything because
-already that clock should be enabled by peripheral which writes to such
-GPIO.
-
->  - If power domain dependency is there too, what happens with GPIO
-> pins if the domain is powered off? If they lose their states, wouldn'=
-t
-> it necessary to keep the domain powered on whenever there is some GPI=
-O
-> pin requested (which usually =3D in use)? (I'd assume that special
-> functions shouldn't take a reference on runtime PM, because they are
-> related to IP blocks in the same PM domain, which will implicitly kee=
-p
-> the domain powered on.)
-
-What you're saying makes sense but that look like job for sound soc
-driver? Anyway the domain is not present in DTS so by default it is
-turned on.
-
->  - Doesn't the clock controller also lose its state whenever the powe=
-r
-> domain is powered off? I guess that would be similar to ISP clock
-> controller, issues of which are still not resolved in mainline.
-> Sylwester could tell you more about this, I guess.
-
-Once again - the domain.
-
-Best regards,
-Krzysztof
-
+knowing in advance that I2C framework lacks a graceful support of non
+fully compliant I2C devices, do you have any objections to the proposed
+iMX HDMI DTS change?
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+With best wishes,
+Vladimir
