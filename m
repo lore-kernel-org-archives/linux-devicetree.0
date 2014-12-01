@@ -1,51 +1,84 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] irqchip: gic: Allow interrupt level to be set for PPIs.
-Date: Mon, 01 Dec 2014 11:31:05 +0000
-Message-ID: <547C5179.5020505@arm.com>
-References: <1417197340-27298-1-git-send-email-Liviu.Dudau@arm.com> <20141201104145.GY3836@n2100.arm.linux.org.uk> <20141201104612.GM828@e106497-lin.cambridge.arm.com> <20141201110358.GA3836@n2100.arm.linux.org.uk> <547C4ECD.20802@arm.com> <20141201112302.GC3836@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141201112302.GC3836-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [RFC V1 0/8] CPUFreq: create platform-dev for DT based cpufreq drivers
+Date: Mon,  1 Dec 2014 17:11:21 +0530
+Message-ID: <cover.1417433163.git.viresh.kumar@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rafael Wysocki <rjw@rjwysocki.net>, Arnd Bergmann <arnd.bergmann@linaro.org>, Rob Herring <rob.herring@linaro.org>, Grant Likely <grant.likely@linaro.org>
+Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, Nishanth Menon <nm@ti.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, santosh shilimkar <santosh.shilimkar@oracle.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Mike Turquette <mike.turquette@linaro.org>, kesavan.abhilash@gmail.com, catalin.marinas@arm.com, k.chander@samsung.com, olof@lixom.net, ta.omasab@gmail.com, linux-arm-kernel@lists.infradead.org, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/12/14 11:23, Russell King - ARM Linux wrote:
-> On Mon, Dec 01, 2014 at 11:19:41AM +0000, Marc Zyngier wrote:
->> Hi Russell,
->>
->> On 01/12/14 11:03, Russell King - ARM Linux wrote:
->>> If all you want to do is to bypass the following check, what's wrong
->>> with actually doing that:
->>>
->>> -	if (type != IRQ_TYPE_LEVEL_HIGH && type != IRQ_TYPE_EDGE_RISING)
->>> +	if (gicirq >= 32 && type != IRQ_TYPE_LEVEL_HIGH &&
->>> +	    type != IRQ_TYPE_EDGE_RISING)
->>> 		return -EINVAL;
->>>
->>
->> I think that will require some additional changes to gic_configure_irq
->> (in irq-gic-common.c).
-> 
-> I don't think so - gic_configure_irq() will treat it as a no-op as far
-> as trying to configure the IRQ settings.
+Hi Guys,
 
-I agree. But that's following ARM's tradition of making PPIs
-non-configurable. I seem to remember that there is at least one
-occurrence of a GIC with configurable PPIs (Qualcomm, IIRC).
+DT based cpufreq drivers doesn't require much support from platform code now a
+days as most of the stuff is moved behind generic APIs. Like clk APIs for
+changing clock rates, regulator APIs for changing voltages, etc.
 
-With this use case in mind, Liviu's patch allows an active-low interrupt
-to be correctly configured as level, for example.
+One of the bottleneck still left was how to select which cpufreq driver to probe
+for a given platform as there might be multiple drivers available.
 
-Thanks,
+Traditionally, we used to create platform devices from machine specific code
+which binds with a cpufreq driver. And while we moved towards DT based device
+creation, these devices stayed as is.
 
-	M.
+The problem is getting worse now as we have architectures now with Zero platform
+specific code. Forcefully these platforms have to create a new file in
+drivers/cpufreq/ to just add these platform devices in order to use the generic
+drivers like cpufreq-dt.c.
+
+This has been discussed again and again, but with no solution yet. Last it was
+discussed here:
+
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/256154.html
+
+This patch is an attempt towards getting the bindings.
+
+We only need to have cpufreq drivers name string present in "compatible"
+property for the root node.. If a cpufreq driver with DT support exists with
+that name, then cpufreq core will create a platform device for that.
+
+The first patch presents the new binding, second one creates another file
+responsible for creating platform devices for all DT based cpufreq drivers.
+
+And later patches update platforms to migrate to it one by one.
+
+A BLACKLIST of platforms already supported by these drivers is also created for
+backward compatibility of newer kernels with older DTs. And so for such
+platforms DT files aren't updated.
+
+An initial RFC that presented the idea was discussed here:
+https://www.mail-archive.com/devicetree@vger.kernel.org/msg52509.html
+
+Tested-ON: Exynos5250. (The last patch for exynos depends on some commits to be
+upstreamed in 3.19, presented here just for testing).
+
+Viresh Kumar (8):
+  cpufreq: Reuse "compatible" binding to probe cpufreq drivers
+  cpufreq: Create cpufreq platform-device based on "compatible" from DT
+  cpufreq: imx: reuse dt_device.c to create cpufreq platform device
+  cpufreq: mvebu: reuse dt_device.c to create cpufreq platform device
+  cpufreq: shmobile: reuse dt_device.c to create cpufreq platform device
+  cpufreq: zynq: reuse dt_device.c to create cpufreq platform device
+  cpufreq: calxeda: reuse dt_device.c to create cpufreq platform device
+  cpufreq: exynos: reuse dt_device.c to create cpufreq platform device
+
+ .../devicetree/bindings/cpufreq/drivers.txt        | 46 +++++++++++++++
+ arch/arm/mach-exynos/exynos.c                      | 27 +++------
+ arch/arm/mach-imx/imx27-dt.c                       |  4 --
+ arch/arm/mach-imx/mach-imx51.c                     |  3 -
+ arch/arm/mach-mvebu/pmsu.c                         |  1 -
+ arch/arm/mach-shmobile/Makefile                    |  1 -
+ arch/arm/mach-shmobile/common.h                    |  7 ---
+ arch/arm/mach-shmobile/cpufreq.c                   | 17 ------
+ arch/arm/mach-zynq/common.c                        |  2 -
+ drivers/cpufreq/Makefile                           |  2 +-
+ drivers/cpufreq/dt_device.c                        | 68 ++++++++++++++++++++++
+ drivers/cpufreq/highbank-cpufreq.c                 |  5 --
+ 12 files changed, 123 insertions(+), 60 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/cpufreq/drivers.txt
+ delete mode 100644 arch/arm/mach-shmobile/cpufreq.c
+ create mode 100644 drivers/cpufreq/dt_device.c
+
 -- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.0.3.693.g996b0fd
+
