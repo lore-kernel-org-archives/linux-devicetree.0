@@ -1,32 +1,199 @@
-From: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v10 0/4] This suspend patch is only support cut off the power of cpu and some external
-Date: Mon, 01 Dec 2014 11:51:03 -0800
-Message-ID: <7htx1f409k.fsf@deeprootsystems.com>
-References: <1417423940-1669-1-git-send-email-zyw@rock-chips.com>
+From: arno@natisbad.org (Arnaud Ebalard)
+Subject: Re: [PATCHv1 6/6] rtc: rtc-isl12057: add alarm support to Intersil ISL12057 RTC driver
+Date: Mon, 01 Dec 2014 21:11:21 +0100
+Message-ID: <87tx1fnn9y.fsf@natisbad.org>
+References: <cover.1416006090.git.arno@natisbad.org>
+	<986ee8d9d3e6862007f398ffddc2a4bb2368933e.1416006090.git.arno@natisbad.org>
+	<5476ED9F.2070600@kleine-koenig.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417423940-1669-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> (Chris
-	Zhong's message of "Mon, 1 Dec 2014 16:52:16 +0800")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Tony Xie <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5476ED9F.2070600@kleine-koenig.org> ("Uwe \=\?utf-8\?Q\?Kleine-K\?\=
+ \=\?utf-8\?Q\?\=C3\=B6nig\=22's\?\=
+	message of "Thu, 27 Nov 2014 10:23:43 +0100")
+Sender: linux-doc-owner@vger.kernel.org
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Andrew Morton <akpm@linux-foundation.org>
 List-Id: devicetree@vger.kernel.org
 
-Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> writes:
+Hi Uwe,
 
-> devices, since we still lack power_domain driver, so the other power rail
-> of rk3288 need keep power on.
-> I have tested it on rk3288-evb board, atop next-20141112. goto suspend by type
-> "echo mem > /sys/power/state", vdd_cpu is about 0mv by measuring, so it can be
-> determined in sleep mode, then press power button to wakeup it.
+Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig.org> writes:
 
-I tested this on top of today's linux-next (next-20141201) and it
-suspends, but doesn't wake up from any of the button presses.  What
-wakeup sources are configured for the rk3288-evb-rk808?
+> finally I managed to test this series on my (unmodified) rn104.
+>
+> For patch 1: Maybe point out that the issue with the century bit isn'=
+t
+> that critical, because this bit is not expected to be set before year
+> 2100.
 
-Kevin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It has:
+
+    This was tested by putting a device 100 years in the future (using =
+a
+    specific kernel due to the inability of userland tools such as date=
+ or
+    hwclock to pass year 2038), rebooting on a kernel w/ this patch app=
+lied
+    and verifying the device was still 100 years in the future.
+
+
+> For patch 3: This patch adds a few dev_err calls that get later amend=
+ed
+> in patch 5 to also include an error code. IMHO these should already b=
+e
+> added in patch 3. Patch 5 should only add it to the already existing
+> strings (if applicable).
+
+will do that next time.
+
+> For patch 4: Maybe
+> s/obsolete/for backwards compatibility, don't use in new code/.
+>
+>
+> Some further comments inline ...
+>
+> On 11/15/2014 12:07 AM, Arnaud Ebalard wrote:
+>> The latter is the one found on current 3 kernel users of the chip
+>> for which support was initially developed (Netgear ReadyNAS 102,
+>> 104 and 2120 NAS). On those devices, the IRQ#2 pin of the chip is no=
+t
+>> connected to the SoC but to a PMIC. This allows setting an alarm,
+>> powering off the device and have it wake up when the alarm rings.
+>> To support that configuration the driver does the following:
+>>=20
+>>  1. it has alarm_irq_enable() function returns -ENOTTY when no IRQ
+>>     is passed to the driver.
+>>  2. it marks the device as a wakeup source in all cases (whether an
+>>     IRQ is passed to the driver or not) to have 'wakealarm' sysfs
+>>     entry created.
+> This is not pretty, but I don't know if there is a nicer alternative.
+> Maybe this should only be done in the presence of a flag in the devic=
+e
+> tree (say: can-wakeup-machine, a prefix would be nice, but "isil," fe=
+els
+> wrong).
+
+I can prepare a v0 patch for a "can-wakeup-machine" property to mark th=
+e
+device as a wakeup source when the IRQ is absent. Will fix the prefix
+in a v1.
+
+
+>> [...]
+>> FWIW, if someone is looking for a way to test alarm support on a sys=
+tem
+>> on which the chip IRQ line has the ability to boot the system (e.g.
+>> ReadyNAS 102, 104, etc):
+>>=20
+>>     # echo 0 > /sys/class/rtc/rtc0/wakealarm
+> Why is this needed?
+
+It disable the alarm. It's not required.
+
+
+>>     # echo `date '+%s' -d '+ 1 minutes'` > /sys/class/rtc/rtc0/wakea=
+larm
+>>     # shutdown -h now
+>>=20
+>> With the commandes above, after a minute, the system comes back to l=
+ife.
+> s/commandes/commands/
+
+useless french letter.
+
+
+>> +	ret =3D regmap_update_bits(data->regmap, ISL12057_REG_INT,
+>> +				 ISL12057_REG_INT_A1IE,
+>> +				 enable ? ISL12057_REG_INT_A1IE : 0);
+>> +	if (ret)
+>> +		dev_err(dev, "%s: changing alarm interrupt flag failed (%d)\n",
+>> +			__func__, ret);
+>> +
+>> +	return ret;
+>> +}
+> Maybe point out in the commit log that the first alarm (of two) is us=
+ed,
+> and the event is signaled on pin $Ididntlookitup.
+> (IIRC the 2nd alarm register set doesn't support seconds, but in retu=
+rn
+> has year and month field.)
+
+I can add that in the documentation.
+
+
+>> [...]
+>> +	/*
+>> +	 * This is needed to have 'wakealarm' sysfs entry available. One
+>> +	 * would expect the device to be marked as a wakeup source only
+>> +	 * when an IRQ pin of the RTC is routed to an interrupt line of th=
+e
+>> +	 * CPU. In practice, such an IRQ pin can be connected to a PMIC an=
+d
+>> +	 * this allows the device to be powered up when RTC alarm rings.
+> Maybe add the machines you know of that have this setup to the
+> comment.
+
+ditto.
+
+
+>> +	 */
+>> +	device_init_wakeup(dev, true);
+>> +
+>> +	data->rtc =3D devm_rtc_device_register(dev, DRV_NAME, &rtc_ops,
+>> +					     THIS_MODULE);
+>> +	ret =3D PTR_ERR_OR_ZERO(data->rtc);
+>> +	if (ret) {
+>> +		dev_err(dev, "%s: unable to register RTC device (%d)\n",
+>> +			__func__, ret);
+>> +		goto err;
+>> +	}
+>> +
+>> +	/* We cannot support UIE mode if we do not have an IRQ line */
+>> +	if (!data->irq)
+>> +		data->rtc->uie_unsupported =3D 1;
+>> +
+>> +err:
+>> +	return ret;
+>>  }
+>> =20
+>> +static int isl12057_remove(struct i2c_client *client)
+>> +{
+>> +	struct isl12057_rtc_data *rtc_data =3D dev_get_drvdata(&client->de=
+v);
+>> +
+>> +	if (rtc_data->irq > 0)
+>> +		device_init_wakeup(&client->dev, false);
+> I didn't check, but I wonder it that could be/is done by the device
+> core already?
+>
+>> +	return 0;
+>> +}
+>> +
+>> +#ifdef CONFIG_PM_SLEEP
+>> +static int isl12057_rtc_suspend(struct device *dev)
+>> +{
+>> +	struct isl12057_rtc_data *rtc_data =3D dev_get_drvdata(dev);
+>> +
+>> +	if (device_may_wakeup(dev))
+>> +		return enable_irq_wake(rtc_data->irq);
+> Does this need a check for data->irq?
+>
+>> +	return 0;
+>> +}
+>> +
+>> +static int isl12057_rtc_resume(struct device *dev)
+>> +{
+>> +	struct isl12057_rtc_data *rtc_data =3D dev_get_drvdata(dev);
+>> +
+>> +	if (device_may_wakeup(dev))
+>> +		return disable_irq_wake(rtc_data->irq);
+> ditto.
+
+Hum, I will take a look at those irq vs wakeup cpabilities when adding
+support for "can-wakeup-machine" property to consolidate the behavior.
+
+Cheers,
+
+a+
