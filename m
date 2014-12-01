@@ -1,87 +1,121 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/3] staging: imx-drm: document internal HDMI I2C master
- controller DT binding
-Date: Mon, 1 Dec 2014 16:54:11 +0200
-Message-ID: <547C8113.3050100@mentor.com>
-References: <1416073759-19939-1-git-send-email-vladimir_zapolskiy@mentor.com> <1416073759-19939-2-git-send-email-vladimir_zapolskiy@mentor.com>
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v12 0/3] ARM: rk3288: Add PM Domain support
+Date: Mon, 1 Dec 2014 23:57:01 +0900
+Message-ID: <CAAFQd5BvNKsuRmMkh7C9hYPQCwiDFXUuN2SwcxtfLu5KmHdymA@mail.gmail.com>
+References: <1416217842-4716-1-git-send-email-caesar.wang@rock-chips.com> <1454366.cVgT9MeyeC@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416073759-19939-2-git-send-email-vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1454366.cVgT9MeyeC@diego>
+Sender: linux-doc-owner@vger.kernel.org
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc: Caesar Wang <caesar.wang@rock-chips.com>, khilman@kernel.org, linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, Ulf Hansson <ulf.hansson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, fzf@rock-chips.com, cf@rock-chips.com, chris.zhong@rock-chips.com, xxm@rock-chips.com, chm@rock-chips.com, djkurtz@chromium.org, "jinkun.hong" <jinkun.hong@rock-chips.com>, Jack Dai <jack.dai@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp and Shawn,
+On Fri, Nov 28, 2014 at 6:57 PM, Heiko St=C3=BCbner <heiko@sntech.de> w=
+rote:
+>
+> Am Montag, 17. November 2014, 17:50:38 schrieb Caesar Wang:
+> >     Add power domain drivers based on generic power domain for
+> >     Rockchip platform, and support RK3288.
+> >
+> >     https://chromium-review.googlesource.com/#/c/220253/9
+> >     This is the GPU driver, add the following information in DT,
+> >     and it can support the PMDOMAIN
+>
+> I'm not sure what to do with this series. Kevin had concerns about th=
+e clocks
+> being part of the power-domains and I don't see them actually address=
+ed and/or
+> Kevin being satisfied - actually he isn't even on the recipients list=
+ of this
+> version of the series.
+>
+>
+> @Ceasar: you should include people being part of important previous
+> conversations in new versions of patchsets - especially when they hav=
+e voiced
+> concerns.
+>
+>
+> I've added Tomasz whom I remember having previous experience on the E=
+xynos
+> Powerdomains, so maybe he can add some other perspective - new ideas.
+>
 
-On 15.11.2014 19:49, Vladimir Zapolskiy wrote:
-> Provide information about how to bind internal iMX6Q/DL HDMI DDC I2C
-> master controller. The property is set as optional one, because iMX6
-> HDMI DDC bus may be represented by one of general purpose I2C busses
-> found on SoC.
-> 
-> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-> Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-> Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->  Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt |   10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt b/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
-> index 1b756cf..43c8924 100644
-> --- a/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
-> +++ b/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
-> @@ -10,6 +10,8 @@ Required properties:
->   - #address-cells : should be <1>
->   - #size-cells : should be <0>
->   - compatible : should be "fsl,imx6q-hdmi" or "fsl,imx6dl-hdmi".
-> +   If internal HDMI DDC I2C master controller is supposed to be used,
-> +   then "simple-bus" should be added to compatible value.
->   - gpr : should be <&gpr>.
->     The phandle points to the iomuxc-gpr region containing the HDMI
->     multiplexer control register.
-> @@ -22,6 +24,7 @@ Required properties:
->  
->  Optional properties:
->   - ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
-> + - ddc: internal HDMI DDC I2C master controller
->  
->  example:
->  
-> @@ -32,7 +35,7 @@ example:
->          hdmi: hdmi@0120000 {
->                  #address-cells = <1>;
->                  #size-cells = <0>;
-> -                compatible = "fsl,imx6q-hdmi";
-> +                compatible = "fsl,imx6q-hdmi", "simple-bus";
->                  reg = <0x00120000 0x9000>;
->                  interrupts = <0 115 0x04>;
->                  gpr = <&gpr>;
-> @@ -40,6 +43,11 @@ example:
->                  clock-names = "iahb", "isfr";
->                  ddc-i2c-bus = <&i2c2>;
->  
-> +                hdmi_ddc: ddc {
-> +                        compatible = "fsl,imx6q-hdmi-ddc";
-> +                        status = "disabled";
-> +                };
-> +
->                  port@0 {
->                          reg = <0>;
->  
-> 
+Thanks Heiko for adding me to this thread.
 
-knowing in advance that I2C framework lacks a graceful support of non
-fully compliant I2C devices, do you have any objections to the proposed
-iMX HDMI DTS change?
+>
+> @Tomasz: this is the part of Kevin's concerns from v10 of the powerdo=
+main
+> series:
+>
+> Am Donnerstag, 13. November 2014, 12:24:47 schrieben Kevin Hilman:
+> > Heiko St=C3=BCbner <heiko@sntech.de> writes:
+> > > Am Dienstag, 11. November 2014, 08:53:13 schrieb Kevin Hilman:
+> > >> I still don't like having lists of clocks in the power-domain DT=
+=2E
+> > >>
+> > >> DT is supposed to describe the hardware, and clocks are properti=
+es of
+> > >> devices, not power-domains, so the DT description should follow =
+from
+> > >> that.
+> > >
+> > > on the policy side one could argue that if the clock needs to be =
+enabled
+> > > to
+> > > achieve sucessful domain state-changes, that it is also a propert=
+y of the
+> > > domain itself in addition to the device.
+> >
+> > You could, but from a hardware perspective, the clock is a property=
+ of
+> > the device.
+> >
 
---
-With best wishes,
-Vladimir
+Well, the system controller which control the power domains is also a
+device. In DT we do not represent the domains alone, but rather the
+system controller, which acts as a power domain provider. If it need
+certain clocks to do its work, then I believe it should have them
+listed in its node. However the dependencies between clocks and power
+domains are not clear to me either, so I don't have any strong opinion
+on whether this would be the best solution.
+
+> > > And on the pratical side we don't have drivers nor bindings for a=
+ big part
+> > > of the domain users - and this will probably be true for quite so=
+me time.
+> > > This of course makes it very impractical (or impossible) to colle=
+ct the
+> > > clocks for parts like the gpu (mali), hevc, vcodec (video
+> > > encoder/decoder), rga (2d stuff), iep, isp.
+> >
+> > This doesn't sound impossible at all.
+> >
+> > You have to collect the clocks anyways.  The only debate is whether=
+ to
+> > list them in the device node or the power-domain node.
+> >
+> > Even for devices without drivers, you just need a minimal node in t=
+he DT if
+> > which lists the clocks and has a phandle to the parent power domain=
+=2E
+> >
+> > Sounds rather simple to me, and since the DT is supposed to describ=
+e the
+> > hardware, doing it this way makes looking at the DT actually help
+> > understand the hardware.
+>
+
+If the dependency between clocks and power domain is kind of "all
+clocks of all devices in this domain should be enabled when performing
+operation on the domain" then IMHO it should be more reasonable to put
+the clocks only in nodes of respective devices and then follow the
+links from the domain to devices inside of it and retrieve the clocks
+from there, so that they don't have to be duplicated. AFAIK, we don't
+like redundancy in DT.
+
+Best regards,
+Tomasz
