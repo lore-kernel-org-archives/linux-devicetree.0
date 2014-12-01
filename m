@@ -1,88 +1,51 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [RFC V1 0/8] CPUFreq: create platform-dev for DT based cpufreq
- drivers
-Date: Mon, 01 Dec 2014 16:56:08 +0000
-Message-ID: <547C9DA8.3080403@arm.com>
-References: <cover.1417433163.git.viresh.kumar@linaro.org> <23115535.r6kXsReHU2@wuerfel> <547C8423.2090300@arm.com> <2342930.0NFoS1nEgv@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <2342930.0NFoS1nEgv@wuerfel>
-Sender: linux-pm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Viresh Kumar <viresh.kumar@linaro.org>, Nishanth Menon <nm@ti.com>, "rob.herring@linaro.org" <rob.herring@linaro.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, Thomas Abraham <ta.omasab@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Chander Kashyap <k.chander@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, "olof@lixom.net" <olof@lixom.net>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Mike Turquette <mike.turquette@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, santosh
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: [PATCH v2 0/3] power: reset: vf610 system reset controller
+Date: Mon,  1 Dec 2014 18:03:06 +0100
+Message-ID: <1417453389-1588-1-git-send-email-stefan@agner.ch>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fkan-qTEPVZfXA3Y@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This second version does essentially the same as v1, but with a lot
+less code due to the usage of syscon and syscon-reboot driver. My
+earlier misgivings that it might be a problem for the suspend/resume
+implementation later on did not hold true: I tested my prelinear
+suspend code and in case the code really needs to access some
+registers form assembler, it is possible to map temporarly the
+relevant region again.
 
+I refrained from adding POWER_RESET_SYSCON as a hard dependency for
+Vybrid (SOC_VF610): In its dual-core configuration, one might want
+have the Cortex-M4 in charge of the system reset... Hence the user
+should be able to build a kernel without the system reset (beside
+the option to create a board specific device tree with disabled
+SRC node).
 
-On 01/12/14 16:03, Arnd Bergmann wrote:
-> On Monday 01 December 2014 15:07:15 Sudeep Holla wrote:
->> On 01/12/14 14:11, Arnd Bergmann wrote:
->>> On Monday 01 December 2014 13:35:25 Sudeep Holla wrote:
->>>> On 01/12/14 13:29, Viresh Kumar wrote:
->>>>> On 1 December 2014 at 18:24, Arnd Bergmann <arnd@arndb.de> wrote:
->>>>>> Thanks a lot for working on this, we really need to figure it out one day!
->>>>>
->>>>>
->>>>>
->>>>>> Your patches seem well-implemented, so if everybody thinks the general
->>>>>> approach is the best solution, we should do that. From my point of view,
->>>>>> there are two things I would do differently:
->>>>>>
->>>>>> - In the DT binding, I would strongly prefer anything but the root compatible
->>>>>>      property as the key for the new platforms. Clearly we have to keep using
->>>>>>      it for the backwards-compatibility case, as you do, but I think there
->>>>>>      are more appropriate places to put it. Sorting from most favorite to least
->>>>>>      favorite, my list would be:
->>>>>>            1. a new property in /cpus/
->>>>>>            2. a new property each /cpus/cpu@... node.
->>>>>
->>>>> I did it this way earlier and named it dvfs-method but probably putting this
->>>>> into the /cpus/ node is far better. But then Sudeep asked to utilize
->>>>> compatible property only..
->>>>>
->>>>> Are you fine with the name here? "dvfs-method"
->>>>>
->>>>
->>>> That's right, I don't like driver specific method in the cpu node as you
->>>> initially did. But if it's a property in the chosen node (where we
->>>> usually put the Linux specific properties), I am fine with
->>>> that as Arnd has illustrated in his patch.
->>>
->>> I would prefer the /cpus node over the /chosen node because the former
->>> describes the hardware while the latter is supposed to be user-settable
->>> (on real open-firmware at least). But I think either one is better than
->>> using the / node compatible string.
->>>
->>
->> Agreed, the main reason for objection was that in the initial proposal
->> it was more a Linux configuration rather than hardware property.
->>
->> <dvfs-method> = "cpufreq-dt";
->>
->> I don't see anything hardware feature presented with that. On the other
->> hand, we could represent the some thing like whether the cpu share
->> clock or are they independently clocked as a hardware property in the
->> cpu nodes.
->
-> My interpretation of the dvfs-method property is that the string states
-> how dvfs works. In particular, it would be used to tell the difference
-> between machines that just rely on the clocks and regulators properties
-> of the CPU nodes as defined in bindings/cpufreq/cpufreq-dt.txt compared
-> to those that need platform-specific properties beyond that. The value
-> of the string should indeed not be "cpufreq-dt", as that would be a linux
-> implementation detail and inappropriate here.
->
+Shawn, the defconfig change is based on the latest (almost-merged?)
+defconfig patch.
 
-May be I misunderstood, but from Viresh's initial proposal my
-understanding was that the value of the property would indicate that it
-should use the cpufreq-dt driver and that sounded like Linux specific.
+Changes since v1:
+- Total rework using syscon/syscon-reboot capabilities
+- Enhance syscon-reboot with priority capabilities (as suggested by Guenter)
 
-If it's not going to be used in that manner and is what have explained
-above, I am fine with that as that's exactly what I am trying to convey
-in this thread(though I now realize that I have not been so clear :( )
+Stefan Agner (3):
+  power: reset: read priority from device tree
+  ARM: dts: vf610: add system reset controller and syscon-reboot
+  ARM: imx_v6_v7_defconfig: add POWER_RESET_SYSCON
 
-Regards,
-Sudeep
+ .../devicetree/bindings/power/reset/syscon-reboot.txt       |  3 +++
+ arch/arm/boot/dts/vf500.dtsi                                |  4 ++++
+ arch/arm/boot/dts/vfxxx.dtsi                                | 13 +++++++++++++
+ arch/arm/configs/imx_v6_v7_defconfig                        |  8 ++++----
+ drivers/power/reset/syscon-reboot.c                         |  5 ++++-
+ 5 files changed, 28 insertions(+), 5 deletions(-)
 
+-- 
+2.1.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
