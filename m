@@ -1,56 +1,55 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC V1 0/8] CPUFreq: create platform-dev for DT based cpufreq drivers
-Date: Mon, 01 Dec 2014 15:11:10 +0100
-Message-ID: <23115535.r6kXsReHU2@wuerfel>
-References: <cover.1417433163.git.viresh.kumar@linaro.org> <CAKohpo=EPOH-WJ4mmAr-1BzzAEpvC-F0Y99Ox_yL7meUcRNx6Q@mail.gmail.com> <547C6E9D.2090205@arm.com>
+From: Vivek Gautam <gautamvivek1987@gmail.com>
+Subject: Re: [PATCH V2 1/2] pinctrl: exynos: Add BUS1 pin controller for exynos7
+Date: Mon, 1 Dec 2014 19:51:53 +0530
+Message-ID: <CAFp+6iHiC9mouT-v_yGHm5adDerCpT-s7EeWwwwYi-NzdLBnrA@mail.gmail.com>
+References: <CAFp+6iF-N63YSsdv2a6=MYp_mD=eQY_Oi8=9JVNU5dG0BA7YGQ@mail.gmail.com>
+	<1416834177-11170-1-git-send-email-gautam.vivek@samsung.com>
+	<CAGOxZ51P30BY2sOhUeMRK64CGF1fNcc-63RCXiAqZ6Rgpv3K7Q@mail.gmail.com>
+	<CAFp+6iFcMGTBQDcdK0cbcu0s9a3022nogaUvbPA2ZsCN80hRSA@mail.gmail.com>
+	<CAFp+6iFaf_RMprLCLXK=o=KGSTQuVL3geKx5yfevTuvFdjYLNg@mail.gmail.com>
+	<CACRpkdY8sEJMr-cxzrUEW1sqP3bGLH=Q2hDP1NBQ5m9A+RhP5Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <547C6E9D.2090205@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, Nishanth Menon <nm@ti.com>, "rob.herring@linaro.org" <rob.herring@linaro.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, Thomas Abraham <ta.omasab@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Chander Kashyap <k.chander@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, "olof@lixom.net" <olof@lixom.net>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Mike Turquette <mike.turquette@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, santosh shilimkar <santosh.shilimkar@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdY8sEJMr-cxzrUEW1sqP3bGLH=Q2hDP1NBQ5m9A+RhP5Q@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Alim Akhtar <alim.akhtar@gmail.com>, Vivek Gautam <gautam.vivek@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-usb <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, robh+dt <robh+dt@kernel.org>, kgene <kgene@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 01 December 2014 13:35:25 Sudeep Holla wrote:
-> On 01/12/14 13:29, Viresh Kumar wrote:
-> > On 1 December 2014 at 18:24, Arnd Bergmann <arnd@arndb.de> wrote:
-> >> Thanks a lot for working on this, we really need to figure it out one day!
-> >
-> > 
-> >
-> >> Your patches seem well-implemented, so if everybody thinks the general
-> >> approach is the best solution, we should do that. From my point of view,
-> >> there are two things I would do differently:
-> >>
-> >> - In the DT binding, I would strongly prefer anything but the root compatible
-> >>    property as the key for the new platforms. Clearly we have to keep using
-> >>    it for the backwards-compatibility case, as you do, but I think there
-> >>    are more appropriate places to put it. Sorting from most favorite to least
-> >>    favorite, my list would be:
-> >>          1. a new property in /cpus/
-> >>          2. a new property each /cpus/cpu@... node.
-> >
-> > I did it this way earlier and named it dvfs-method but probably putting this
-> > into the /cpus/ node is far better. But then Sudeep asked to utilize
-> > compatible property only..
-> >
-> > Are you fine with the name here? "dvfs-method"
-> >
-> 
-> That's right, I don't like driver specific method in the cpu node as you
-> initially did. But if it's a property in the chosen node (where we
-> usually put the Linux specific properties), I am fine with
-> that as Arnd has illustrated in his patch.
+On Fri, Nov 28, 2014 at 9:15 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Fri, Nov 28, 2014 at 4:39 AM, Vivek Gautam <gautamvivek1987@gmail.com> wrote:
+>> On Fri, Nov 28, 2014 at 9:05 AM, Vivek Gautam <gautamvivek1987@gmail.com> wrote:
+>
+>>>> On Mon, Nov 24, 2014 at 6:32 PM, Vivek Gautam <gautam.vivek@samsung.com> wrote:
+>>>>> USB and Power regulator on Exynos7 require gpios available
+>>>>> in BUS1 pin controller block.
+>>>>> So adding the BUS1 pinctrl support.
+>>>>>
+>>>>> Signed-off-by: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+>>>>> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+>>>>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>>
+>> If the change looks good, will it be possible to pick it fo 3.19-rc1 ?
+>> That will really help enabling USB IP on exynos7.
+>
+> As you know the Exynos driver has a maintainer, Tomasz Figa, I will not
+> merge patches without his ACK.
+>
+> Apart from that, there are *again* a lot of Exynos patches flying around and
+> I start to loose track of them. If they do not apply together and start to
+> conflict I will just ask Tomasz to stack them and provide a pull request
+> again.
 
-I would prefer the /cpus node over the /chosen node because the former
-describes the hardware while the latter is supposed to be user-settable
-(on real open-firmware at least). But I think either one is better than
-using the / node compatible string.
+True, this merge cycle has surely got number of exynos7 related
+patches in flight,
+which are difficult to keep track of.
+Thanks for asking Tomasz.
 
-How about a "linux,cpu-dvfs-method" property in the root node? Would
-that work better for you than a "linux,dvfs-method" in the "/cpus"
-node?
 
-	Arnd
+
+-- 
+Best Regards
+Vivek Gautam
+Samsung R&D Institute, Bangalore
+India
