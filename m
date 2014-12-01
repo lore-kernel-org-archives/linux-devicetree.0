@@ -1,60 +1,59 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 8/8] ARM: dts: mt8135: Add support for MT6397 regulator
-Date: Mon, 1 Dec 2014 11:16:12 +0000
-Message-ID: <20141201111612.GF7712@sirena.org.uk>
-References: <1417146874-5232-1-git-send-email-flora.fu@mediatek.com>
- <1417146874-5232-9-git-send-email-flora.fu@mediatek.com>
- <20141128153008.GS7712@sirena.org.uk>
- <1417403967.9547.2.camel@mtksdaap41>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] irqchip: gic: Allow interrupt level to be set for PPIs.
+Date: Mon, 01 Dec 2014 11:19:41 +0000
+Message-ID: <547C4ECD.20802@arm.com>
+References: <1417197340-27298-1-git-send-email-Liviu.Dudau@arm.com> <20141201104145.GY3836@n2100.arm.linux.org.uk> <20141201104612.GM828@e106497-lin.cambridge.arm.com> <20141201110358.GA3836@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fUAgMX1mmt35sX2N"
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1417403967.9547.2.camel@mtksdaap41>
+In-Reply-To: <20141201110358.GA3836-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Flora Fu <flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Sandeep Nair <sandeep_n-l0cyMroinI0@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Joe.C" <yi>
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Russell,
 
---fUAgMX1mmt35sX2N
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 01/12/14 11:03, Russell King - ARM Linux wrote:
+> On Mon, Dec 01, 2014 at 10:46:13AM +0000, Liviu Dudau wrote:
+>> On Mon, Dec 01, 2014 at 10:41:45AM +0000, Russell King - ARM Linux wrote:
+>>> On Fri, Nov 28, 2014 at 05:55:40PM +0000, Liviu Dudau wrote:
+>>>> +	/*
+>>>> +	 * PPIs are optionally configurable, but we cannot distinguish
+>>>> +	 * between high and low, nor falling and rising. Change the
+>>>> +	 * type so that it passes the next check.
+>>>
+>>> This comment could do with a /lot/ of improvement.  It sounds like the
+>>> only reason this code exists is to bypass the check.  If that's all
+>>> that's being done, there's better ways to code it.
+>>
+>> Hi Russell,
+>>
+>> You are right, all I want to do is bypass the next check because *if*
+>> the PPIs can be configured, then any combination is valid (edge 
+>> raising/falling, level low/high). In real systems, PPIs tend to be
+>> configured with active level low. That falls the existing check.
+> 
+>  "fails" :)
+> 
+> If all you want to do is to bypass the following check, what's wrong
+> with actually doing that:
+> 
+> -	if (type != IRQ_TYPE_LEVEL_HIGH && type != IRQ_TYPE_EDGE_RISING)
+> +	if (gicirq >= 32 && type != IRQ_TYPE_LEVEL_HIGH &&
+> +	    type != IRQ_TYPE_EDGE_RISING)
+> 		return -EINVAL;
+> 
 
-On Mon, Dec 01, 2014 at 11:19:25AM +0800, Flora Fu wrote:
-> On Fri, 2014-11-28 at 15:30 +0000, Mark Brown wrote:=20
+I think that will require some additional changes to gic_configure_irq
+(in irq-gic-common.c).
 
-> > This appears to be the DT fragment for a SoC but you are defining the
-> > system integration for the PMIC.  That's bad, the PMIC is a separate
-> > device so should be hooked up by the board using it.  If there's common
-> > elements from a reference design they should be in their own .dtsi.
+Thanks,
 
-> Do you mean that we should add a mt6397.dtsi and include it from
-> mt8135.dtsi? For board specific, update them in mt8135.dtsi?=20
-
-More likely you should just add any integration needed in the board
-file.  There should be no need to specify anything generically for the
-regulators on a PMIC except registering the device.
-
---fUAgMX1mmt35sX2N
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUfE37AAoJECTWi3JdVIfQi20H/im8teQUzpvlbmmrjqEIK63a
-HqY0GfzbjgID2Qfnt6hRrKwg7wmB9jy2iF0I0VuXhlNECm8lFLtlQTkhYr4AOmlO
-AgAbWIW0zezngY3XmiwCACgJnExUdLaSEPYFuOg6QsM51hMet+6c15mFA2m7SVhL
-1rWxLT0L5r9YaWhWPzbQlTBbr45CRHY2s2wuOFmSXTsALymqYM2rFSMmDaWlrXMA
-VdLit4jpcXbTmilAroblI/wrRsxvxbAN8/7g845mBeQZ9KsErbp3mZ21Zj37vIXj
-r4DrTMfkNfLhk6qexHR8OCcqPT0Xl1MNX/cW16D36U/qVe5UkNerHsv7z3SBjF8=
-=YkfB
------END PGP SIGNATURE-----
-
---fUAgMX1mmt35sX2N--
+	M.
+-- 
+Jazz is not dead. It just smells funny...
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
