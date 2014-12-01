@@ -1,66 +1,90 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 05/11] memory: add Atmel EBI (External Bus Interface) driver
-Date: Mon, 01 Dec 2014 17:26:27 +0100
-Message-ID: <4214030.Z2iCEM6hVA@wuerfel>
-References: <1417429647-3419-1-git-send-email-boris.brezillon@free-electrons.com> <1417429647-3419-6-git-send-email-boris.brezillon@free-electrons.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [Patch v2 1/2] gpio: add GPIO hogging mechanism
+Date: Mon, 1 Dec 2014 17:36:39 +0100
+Message-ID: <20141201163639.GI25249@lukather>
+References: <1416527684-19017-1-git-send-email-bparrot@ti.com>
+ <1416527684-19017-2-git-send-email-bparrot@ti.com>
+ <CAAVeFu+VZiuzobB7McSAUehKUHJjBv1o8ZpYjSHJAKjr3o5wTA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417429647-3419-6-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="b+chlBtRKJDCtqTb"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAAVeFu+VZiuzobB7McSAUehKUHJjBv1o8ZpYjSHJAKjr3o5wTA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexandre Courbot <gnurou@gmail.com>
+Cc: Benoit Parrot <bparrot@ti.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 01 December 2014 11:27:21 Boris Brezillon wrote:
-> The EBI (External Bus Interface) is used to access external peripherals
-> (NOR, SRAM, NAND, and other specific devices like ethernet controllers).
-> Each device is assigned a CS line and an address range and can have its
-> own configuration (timings, access mode, bus width, ...).
-> This driver provides a generic DT binding to configure a device according
-> to its requirements.
-> For specific device controllers (like the NAND one) the SMC timings
-> should be configured by the controller driver through the matrix and
-> smc syscon regmaps.
 
-Nice!
+--b+chlBtRKJDCtqTb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +
-> +#define AT91_EBICSA_REGFIELD(soc)			\
-> +	REG_FIELD(soc ## _MATRIX_EBICSA_OFF, 0,		\
-> +		  AT91_MATRIX_EBI_NUM_CS - 1)
-> +
-> +#define AT91_MULTI_EBICSA_REGFIELD(soc, n)		\
-> +	REG_FIELD(soc ## _MATRIX_EBI ## n ## CSA_OFF,	\
-> +		  0, AT91_MATRIX_EBI_NUM_CS - 1)
+Hi,
 
-I don't like the use macros that concatenate symbol names like
-this. Why not do either
+On Fri, Nov 28, 2014 at 04:30:01PM +0900, Alexandre Courbot wrote:
+> > +/**
+> > + * do_gpio_hog - Given node is a GPIO hog configuration, handle it
+> > + * @np:                device node to get GPIO from
+> > + *
+> > + * This is only used by of_gpiochip_add to request/set GPIO initial
+> > + * configuration.
+> > + */
+> > +static int do_gpio_hog(struct device_node *np)
+> > +{
+> > +       struct gpio_desc *desc =3D NULL;
+> > +       int err;
+> > +       const char *name;
+> > +       enum gpio_lookup_flags lflags;
+> > +       enum gpiod_flags dflags;
+> > +
+> > +       desc =3D of_get_gpio_hog(np, &name, &lflags, &dflags);
+> > +       if (!desc)
+> > +               return -ENOTSUPP;
+> > +       else if (IS_ERR(desc))
+> > +               return PTR_ERR(desc);
+> > +
+> > +       err =3D gpiod_request(desc, name);
+>=20
+> Using this function means that a GPIO chip module cannot be unloaded
+> if it uses GPIO hogs. Is it the intended behavior? If not, please use
+> gpiochip_request_own_desc() instead, and make sure to call
+> gpiochip_free_own_desc() for each hog when the driver is unloaded.
 
-- open-code the macro contents in the few uses, to allow
-  grepping for them, or
+The only thing I'd like to have would be that the request here would
+be non-exclusive, so that a later driver would still be allowed later
+on to request that GPIO later on and manage it itself (ideally using
+the usual gpiod_request function).
 
-- put the register number in the syscon reference and look it
-  up from there (this would be slightly more complicated for the
-  second macro)
+Maxime
 
-> +
-> +	np = of_parse_phandle(pdev->dev.of_node, "atmel,smc", 0);
-> +	if (!np)
-> +		return -EINVAL;
-> +
-> +	ebi->smc = syscon_node_to_regmap(np);
-> +	if (IS_ERR(ebi->smc))
-> +		return PTR_ERR(ebi->smc);
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-I think this and the second instance of it can be shortened to
+--b+chlBtRKJDCtqTb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-	ebi->smc = syscon_regmap_lookup_by_phandle(pdev->dev.of_node, "atmel,smc");
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
+iQIcBAEBAgAGBQJUfJkXAAoJEBx+YmzsjxAgqY0QAJbT5ky9AzUmJVMbI/JXLVEJ
+sRSHFLrRDQzD9VMaE8tVERMyKOW2KLVZKY74MY6qxhtokSgSa49KICJkSc5nIKIR
+J0Tp73BpB2XPcBHBahtvWiKSvvekpKn3+FslG0Fx4s+8UkgYdPlweNT9D7lWuuTx
+wgBhkU+c7ehPloiKFg4m1EDW0OhL3iAkrXGgh7zVcglGOb489B1sc8FvDvn+DL2o
+kQoxJkoc1ZQMlLV74Uf/fYLeDNWAGiB0f9sDLS3ZLYw0IPgxREV7UJJxXbJkTLZa
+rjKVfD0uDrlKt5THovz/Mw4jA1VAnnkGNJF3YvidPm0bsMoKimJ3i2YKK3ZKnU2F
+gRqA3Ew1AXNLLuBWaR6kfhX4TcJ6KoYIXQOLZYM02jhjkZkyuefunlnBMGiGDnOn
+wwIx6jhYtKIEWxolQBYcISBYnG5XPkxbmW+bb6pKObutlTQP/cPZr6Z4/whbjQvY
+Z3ClNygSoX2PlsvD4iC90o0X11rseJgaLZV0A6f/bFXxyfeTy2o8mmqLOOb+XkA7
+wILCrA8NAe9oKj744/qCj+obtwDd5rbNkm2XwXWEPs17xDyJzMT0QDskrABxNSTV
+N3wLFGE7jhy+fdHRS8GBdr6BQb+u8L6EQHyij6sNDtu5jbqEGqozjy1LzdFxFwlX
+84/vYq92GfF/7QNVUGp2
+=Oa5f
+-----END PGP SIGNATURE-----
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--b+chlBtRKJDCtqTb--
