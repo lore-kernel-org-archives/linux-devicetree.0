@@ -1,49 +1,78 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v5 0/2] poweroff-source DT property renaming
-Date: Mon, 1 Dec 2014 19:33:57 +0000
-Message-ID: <20141201193357.GO7712@sirena.org.uk>
-References: <1416918506-9366-1-git-send-email-romain.perier@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 05/11] memory: add Atmel EBI (External Bus Interface) driver
+Date: Mon, 01 Dec 2014 20:43:31 +0100
+Message-ID: <2476626.8iiXDzb2Te@wuerfel>
+References: <1417429647-3419-1-git-send-email-boris.brezillon@free-electrons.com> <4214030.Z2iCEM6hVA@wuerfel> <20141201192923.6a85e52b@bbrezillon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="0vZOSZtHto+Zdlc0"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1416918506-9366-1-git-send-email-romain.perier@gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Romain Perier <romain.perier@gmail.com>
-Cc: heiko@sntech.de, johan@kernel.org, lee.jones@linaro.org, grant.likely@linaro.org, robh@kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balbi@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141201192923.6a85e52b@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Monday 01 December 2014 19:29:23 Boris Brezillon wrote:
+> Hi Arnd,
+> 
+> On Mon, 01 Dec 2014 17:26:27 +0100
+> Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> 
+> > On Monday 01 December 2014 11:27:21 Boris Brezillon wrote:
+> > > The EBI (External Bus Interface) is used to access external peripherals
+> > > (NOR, SRAM, NAND, and other specific devices like ethernet controllers).
+> > > Each device is assigned a CS line and an address range and can have its
+> > > own configuration (timings, access mode, bus width, ...).
+> > > This driver provides a generic DT binding to configure a device according
+> > > to its requirements.
+> > > For specific device controllers (like the NAND one) the SMC timings
+> > > should be configured by the controller driver through the matrix and
+> > > smc syscon regmaps.
+> > 
+> > Nice!
+> > 
+> > > +
+> > > +#define AT91_EBICSA_REGFIELD(soc)			\
+> > > +	REG_FIELD(soc ## _MATRIX_EBICSA_OFF, 0,		\
+> > > +		  AT91_MATRIX_EBI_NUM_CS - 1)
+> > > +
+> > > +#define AT91_MULTI_EBICSA_REGFIELD(soc, n)		\
+> > > +	REG_FIELD(soc ## _MATRIX_EBI ## n ## CSA_OFF,	\
+> > > +		  0, AT91_MATRIX_EBI_NUM_CS - 1)
+> > 
+> > I don't like the use macros that concatenate symbol names like
+> > this. Why not do either
+> > 
+> > - open-code the macro contents in the few uses, to allow
+> >   grepping for them, or
+> 
+> I'm not sure to get this one, are you suggesting to do something like
+> this:
+> 
+> #define AT91_EBICSA_REGFIELD(off)			\
+> 	REG_FIELD(ebicsa_off, AT91_MATRIX_EBI_NUM_CS - 1)
+> 
 
---0vZOSZtHto+Zdlc0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+That would be acceptable too, but what I really meant is one step further:
 
-On Tue, Nov 25, 2014 at 12:28:24PM +0000, Romain Perier wrote:
-> The goal of this serie is to rename the property "poweroff-source" to
-> "system-power-controller". After discussions, it makes more sense to rename back
-> to the old established property name. This patches serie reverts
-> commit a4b4e0461ec5 ("of: Add standard property for poweroff capability").
+static const struct reg_field at91sam9260_ebi_csa = 
+	REG_FIELD(AT91SAM9260_MATRIX_EBICSA_OFF, 0, AT91_MATRIX_EBI_NUM_CS - 1);
 
-> Changes since v4:
->   - Renamed the helper function to of_device_is_system_power_controller
+> > - put the register number in the syscon reference and look it
+> >   up from there (this would be slightly more complicated for the
+> >   second macro)
+> 
+> I've told several times not to encode register offsets or register ids
+> in the DT :-) (and if I'm not mistaken that's what you're suggesting
+> here).
 
-Applied both, thanks.
+I think it's actually fine for syscon references, although in general
+I would agree with that. The difference in my opinion is that syscon
+by nature is a set of registers.
 
---0vZOSZtHto+Zdlc0
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUfMKkAAoJECTWi3JdVIfQSJIH+wSNcmiYnzlZRt4VuDHTomaW
-0VXUzfmD25BkY3HfzYObobws7UTVDdIVJuhhHxrt1v54n7gR9IvvzNmE5OZLs+yl
-1tmLMGfx4Dv/I40967XtBUpPNNSV/sA2yyV90GqoKA3sd2S0ulJR3y6CKV+vJi6p
-iuVttSQNiJeiOpuDbYoSSqoCGP9YiWortLGdf5YgVLK+g/P5Ryqg0StkBipao6w5
-FhJkOUdSzuVNrBeGUpfPeIIaGGQZ6zIyS8WPqZyk+1STRMKVG15+vq9Rztz2Ew81
-Xc3HVdhyw2L+H9041W7gNRJydIoHbg6p05HiF0Rsgg+IcEkbmJYW6PrhWuoflvc=
-=daGv
------END PGP SIGNATURE-----
-
---0vZOSZtHto+Zdlc0--
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
