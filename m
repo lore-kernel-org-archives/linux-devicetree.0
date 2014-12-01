@@ -1,55 +1,67 @@
-From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] pinctrl: at91: allow disabled gpio controllers
-Date: Mon, 1 Dec 2014 15:39:27 +0100
-Message-ID: <20141201143927.GT2714@ldesroches-Latitude-E6320>
-References: <1417193367-12422-1-git-send-email-ludovic.desroches@atmel.com>
- <CACRpkdbXuXyfwAyFTHVDGa4OS88KsHXZeDDAeXf6ZJ_JQmduoQ@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] ARM: hip04: set ARCH_NR_GPIO to 128
+Date: Mon, 01 Dec 2014 15:47:03 +0100
+Message-ID: <2571535.P78Okb1jGf@wuerfel>
+References: <1417156188-500-1-git-send-email-wangzhou.bry@gmail.com> <547971BF.1050706@gmail.com> <CACRpkdb1nZN-vOXLC-QFUAT9wDGM2Nm5YeH0qY_u2JV9toOaVg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbXuXyfwAyFTHVDGa4OS88KsHXZeDDAeXf6ZJ_JQmduoQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CACRpkdb1nZN-vOXLC-QFUAT9wDGM2Nm5YeH0qY_u2JV9toOaVg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 01, 2014 at 02:56:22PM +0100, Linus Walleij wrote:
-> On Fri, Nov 28, 2014 at 5:49 PM, Ludovic Desroches
-> <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
-> 
-> > This patch allows to have gpio controller with status set to disabled.
+On Monday 01 December 2014 15:04:49 Linus Walleij wrote:
+> On Sat, Nov 29, 2014 at 8:11 AM, Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> w=
+rote:
+> > On 2014=E5=B9=B411=E6=9C=8828=E6=97=A5 17:33, Arnd Bergmann wrote:
+> >> On Friday 28 November 2014 14:29:47 Zhou Wang wrote:
+>=20
+> >>>          default 264 if MACH_H4700
+> >>> +       default 128 if ARCH_HIP04
+> >>>          default 0
+> >>>          help
+> >>>            Maximum number of GPIOs in the system.
+> >>>
+> >>
+> >> If I remember correctly, you don't actually need to set this if al=
+l gpio
+> >> clients are using the new gpio descriptor interfaces instead of gp=
+io
+> >> numbers. Would that work for you? You'd have to know which devices
 > >
-> > gpio_banks represents all the gpio banks available on the device whereas
-> > nbanks represents the gpio banks used. Having a disabled gpio controller
-> > involves that nbanks value is lower than gpio_banks and that some
-> > pointers in the gpio_chips array are NULL. This patch deals with these
-> > specific cases.
-> >
-> > Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> 
-> (...)
-> >         /* We will handle a range of GPIO pins */
-> > -       for (i = 0; i < info->nbanks; i++)
-> > -               pinctrl_add_gpio_range(info->pctl, &gpio_chips[i]->range);
-> > +       for (i = 0; i < gpio_banks; i++)
-> > +               if (gpio_chips[i])
-> > +                       pinctrl_add_gpio_range(info->pctl, &gpio_chips[i]->range);
-> 
-> I highly suspect the real solution to this problem is to get rid
-> of the pinctrl_add_gpio_range() call from the driver.
-> 
-> Remobe these calls, and instead in at91_gpio_probe() in the same
-> file, call gpiochip_add_pingroup_range() for each GPIO chip.
-> 
-> That way the GPIO ranges are inserted from the GPIO side instead
-> of the pinctrl side, which is way better, since it is more relative,
-> and make you only add ranges for the gpio chips actually there.
+> > If I don't set this, it will use the default ARCH_NR_GPIO(512), the=
+n
+> > the range of GPIO number will be 384~511 which is very strange to u=
+sers,
+> > because Hip04 based machines can only support 128 GPIOs.
+>=20
+> That is a totally different problem.
+>=20
+> Not that these numbers have ever been stable...
 
-Thanks for your advices, I'll try to do it the way you recommend.
+Right, in particular, it would be different between hisi_defconfig
+and multi_v7_defconfig.
 
-Ludovic
+> Think of a patch to gpiochip_find_base() in
+> drivers/gpio/gpiolib.c to fix this so that numbers are
+> assigned a better way rather than doing
+> random hacks with numbers like this.
+
+Maybe we can find the highest number that is ever allocated
+statically by any driver (since it's all from source code), and do
+the dynamic allocations forward from that number instead of allocating
+backward?
+
+Or could we try to find the drivers that use DT /and/ allocate a static
+number and then see if we can avoid the need for static numbers for
+those?
+
+	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
