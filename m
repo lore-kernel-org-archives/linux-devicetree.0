@@ -1,53 +1,84 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH] irqchip: gic: Allow interrupt level to be set for PPIs.
-Date: Mon, 1 Dec 2014 11:03:58 +0000
-Message-ID: <20141201110358.GA3836@n2100.arm.linux.org.uk>
-References: <1417197340-27298-1-git-send-email-Liviu.Dudau@arm.com>
- <20141201104145.GY3836@n2100.arm.linux.org.uk>
- <20141201104612.GM828@e106497-lin.cambridge.arm.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH 2/2] drm/panel: Add support for Giantplus GPG482739QS5
+ panel
+Date: Mon, 01 Dec 2014 12:07:38 +0100
+Message-ID: <1417432058.2391.1.camel@pengutronix.de>
+References: <1416389395-15152-1-git-send-email-l.stach@pengutronix.de>
+ <1416389395-15152-2-git-send-email-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141201104612.GM828-2JSQmVVBSi7ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1416389395-15152-2-git-send-email-l.stach@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 01, 2014 at 10:46:13AM +0000, Liviu Dudau wrote:
-> On Mon, Dec 01, 2014 at 10:41:45AM +0000, Russell King - ARM Linux wrote:
-> > On Fri, Nov 28, 2014 at 05:55:40PM +0000, Liviu Dudau wrote:
-> > > +	/*
-> > > +	 * PPIs are optionally configurable, but we cannot distinguish
-> > > +	 * between high and low, nor falling and rising. Change the
-> > > +	 * type so that it passes the next check.
-> > 
-> > This comment could do with a /lot/ of improvement.  It sounds like the
-> > only reason this code exists is to bypass the check.  If that's all
-> > that's being done, there's better ways to code it.
-> 
-> Hi Russell,
-> 
-> You are right, all I want to do is bypass the next check because *if*
-> the PPIs can be configured, then any combination is valid (edge 
-> raising/falling, level low/high). In real systems, PPIs tend to be
-> configured with active level low. That falls the existing check.
-
- "fails" :)
-
-If all you want to do is to bypass the following check, what's wrong
-with actually doing that:
-
--	if (type != IRQ_TYPE_LEVEL_HIGH && type != IRQ_TYPE_EDGE_RISING)
-+	if (gicirq >= 32 && type != IRQ_TYPE_LEVEL_HIGH &&
-+	    type != IRQ_TYPE_EDGE_RISING)
-		return -EINVAL;
-
--- 
-FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgVGhpZXJyeSwKCmp1c3QgYSBnZW50bGUgcGluZyBmb3IgdGhvc2UgMiBwYXRjaGVzLiBJdCB3
+b3VsZCBiZSBuaWNlIGlmIHlvdSBjb3VsZApwaWNrIHRoZW0gdXAsIHNvIHRoZXkgY2FuIGdvIGlu
+dG8gdGhlIG5leHQgbWVyZ2V3aW5kb3cuCgpSZWdhcmRzLApMdWNhcwoKQW0gTWl0dHdvY2gsIGRl
+biAxOS4xMS4yMDE0LCAxMDoyOSArMDEwMCBzY2hyaWViIEx1Y2FzIFN0YWNoOgo+IEZyb206IFBo
+aWxpcHAgWmFiZWwgPHBoaWxpcHAuemFiZWxAZ21haWwuY29tPgo+IAo+IFRoaXMgcGF0Y2ggYWRk
+cyBzdXBwb3J0IGZvciB0aGUgR2lhbnRQbHVzIEdQRzQ4MjczUVM1IDQuMyIgV1FWR0EgVEZUIExD
+RCBwYW5lbAo+IHRvIHRoZSBzaW1wbGUtcGFuZWwgZHJpdmVyLgo+IAo+IFRoaXMgcGFuZWwgaXMg
+Y29ubmVjdGVkIHZpYSBhIHBhcmFsbGVsIGJ1cyBhbmQgdXNlcyBib3RoIEhTWU5DIGFuZCBWU1lO
+QywKPiB3aG9zZSBsZW5ndGhzIGFyZSB1bmZvcnR1bmF0ZWx5IG5vdCBjbGVhcmx5IGRlZmluZWQu
+IFRoZSBkYXRhc2hlZXQgb25seQo+IHNwZWNpZmllcyB0aGUgZnJvbnQtIGFuZCBiYWNrcG9yY2gg
+bGVuZ3RoLCBidXQgdGhlIHRpbWluZyBkaWFncmFtIHN1Z2dlc3RzCj4gdGhhdCBib3RoIHN5bmMg
+c2lnbmFscyBzaG91bGQgYmUgYXNzZXJ0ZWQgZm9yIGV4YWN0bHkgb25lIGNsb2NrIGN5Y2xlLgo+
+IAo+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHAgWmFiZWwgPHBoaWxpcHAuemFiZWxAZ21haWwuY29t
+Pgo+IFNpZ25lZC1vZmYtYnk6IEx1Y2FzIFN0YWNoIDxsLnN0YWNoQHBlbmd1dHJvbml4LmRlPgo+
+IC0tLQo+IFtsc3RdOiByZWJhc2VkIG9uIHRvcCBvZiBkcm0vcGFuZWwvZm9yLW5leHQgKyBhZGRl
+ZCBjb21taXQgbWVzc2FnZQo+IC0tLQo+ICAuLi4vYmluZGluZ3MvcGFuZWwvZ2lhbnRwbHVzLGdw
+ZzQ4MjczOXFzNS50eHQgICAgICB8ICA3ICsrKysrKwo+ICBkcml2ZXJzL2dwdS9kcm0vcGFuZWwv
+cGFuZWwtc2ltcGxlLmMgICAgICAgICAgICAgICB8IDI2ICsrKysrKysrKysrKysrKysrKysrKysK
+PiAgMiBmaWxlcyBjaGFuZ2VkLCAzMyBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGFuZWwvZ2lhbnRwbHVzLGdwZzQ4
+MjczOXFzNS50eHQKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3BhbmVsL2dpYW50cGx1cyxncGc0ODI3MzlxczUudHh0IGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3BhbmVsL2dpYW50cGx1cyxncGc0ODI3MzlxczUudHh0Cj4gbmV3
+IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLjI0YjBiNjI0NDM0Ygo+IC0t
+LSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGFu
+ZWwvZ2lhbnRwbHVzLGdwZzQ4MjczOXFzNS50eHQKPiBAQCAtMCwwICsxLDcgQEAKPiArR2lhbnRQ
+bHVzIEdQRzQ4MjczUVM1IDQuMyIgKDQ4MHgyNzIpIFdRVkdBIFRGVCBMQ0QgcGFuZWwKPiArCj4g
+K1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJnaWFudHBs
+dXMsZ3BnNDgyNzNxczUiCj4gKwo+ICtUaGlzIGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRo
+ZSBzaW1wbGUtcGFuZWwgYmluZGluZywgd2hpY2ggaXMgc3BlY2lmaWVkCj4gK2luIHNpbXBsZS1w
+YW5lbC50eHQgaW4gdGhpcyBkaXJlY3RvcnkuCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2Ry
+bS9wYW5lbC9wYW5lbC1zaW1wbGUuYyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1w
+bGUuYwo+IGluZGV4IGM0YjYxNjdhOGJmMy4uMWQ4ZWQyMDYyODQxIDEwMDY0NAo+IC0tLSBhL2Ry
+aXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2Ry
+bS9wYW5lbC9wYW5lbC1zaW1wbGUuYwo+IEBAIC01NjAsNiArNTYwLDI5IEBAIHN0YXRpYyBjb25z
+dCBzdHJ1Y3QgcGFuZWxfZGVzYyBmb3hsaW5rX2ZsNTAwd3ZyMDBfYTB0ID0gewo+ICAJfSwKPiAg
+fTsKPiAgCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBnaWFudHBsdXNf
+Z3BnNDgyNzM5cXM1X21vZGUgPSB7Cj4gKwkuY2xvY2sgPSA5MDAwLAo+ICsJLmhkaXNwbGF5ID0g
+NDgwLAo+ICsJLmhzeW5jX3N0YXJ0ID0gNDgwICsgNSwKPiArCS5oc3luY19lbmQgPSA0ODAgKyA1
+ICsgMSwKPiArCS5odG90YWwgPSA0ODAgKyA1ICsgMSArIDQwLAo+ICsJLnZkaXNwbGF5ID0gMjcy
+LAo+ICsJLnZzeW5jX3N0YXJ0ID0gMjcyICsgOCwKPiArCS52c3luY19lbmQgPSAyNzIgKyA4ICsg
+MSwKPiArCS52dG90YWwgPSAyNzIgKyA4ICsgMSArIDgsCj4gKwkudnJlZnJlc2ggPSA2MCwKPiAr
+fTsKPiArCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyBnaWFudHBsdXNfZ3BnNDgy
+NzM5cXM1ID0gewo+ICsJLm1vZGVzID0gJmdpYW50cGx1c19ncGc0ODI3MzlxczVfbW9kZSwKPiAr
+CS5udW1fbW9kZXMgPSAxLAo+ICsJLmJwYyA9IDgsCj4gKwkuc2l6ZSA9IHsKPiArCQkud2lkdGgg
+PSA5NSwKPiArCQkuaGVpZ2h0ID0gNTQsCj4gKwl9LAo+ICt9Owo+ICsKPiAgc3RhdGljIGNvbnN0
+IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIGhhbm5zdGFyX2hzZDA3MHB3dzFfbW9kZSA9IHsKPiAg
+CS5jbG9jayA9IDcxMTAwLAo+ICAJLmhkaXNwbGF5ID0gMTI4MCwKPiBAQCAtNzU3LDYgKzc4MCw5
+IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHBsYXRmb3JtX29mX21hdGNoW10g
+PSB7Cj4gIAkJLmNvbXBhdGlibGUgPSAiZm94bGluayxmbDUwMHd2cjAwLWEwdCIsCj4gIAkJLmRh
+dGEgPSAmZm94bGlua19mbDUwMHd2cjAwX2EwdCwKPiAgCX0sIHsKPiArCQkuY29tcGF0aWJsZSA9
+ICJnaWFudHBsdXMsZ3BnNDgyNzM5cXM1IiwKPiArCQkuZGF0YSA9ICZnaWFudHBsdXNfZ3BnNDgy
+NzM5cXM1Cj4gKwl9LCB7Cj4gIAkJLmNvbXBhdGlibGUgPSAiaGFubnN0YXIsaHNkMDcwcHd3MSIs
+Cj4gIAkJLmRhdGEgPSAmaGFubnN0YXJfaHNkMDcwcHd3MSwKPiAgCX0sIHsKCi0tIApQZW5ndXRy
+b25peCBlLksuICAgICAgICAgICAgIHwgTHVjYXMgU3RhY2ggICAgICAgICAgICAgICAgIHwKSW5k
+dXN0cmlhbCBMaW51eCBTb2x1dGlvbnMgICB8IGh0dHA6Ly93d3cucGVuZ3V0cm9uaXguZGUvICB8
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
+ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
