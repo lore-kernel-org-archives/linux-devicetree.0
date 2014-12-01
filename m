@@ -1,10 +1,10 @@
 From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH v5 5/7] devicetree: bindings: Add zynq ocmc node description
-Date: Mon,  1 Dec 2014 14:24:56 +0100
-Message-ID: <a408c70d8ce54e47e1b400dc2523b7886bf7fcef.1417440250.git.michal.simek@xilinx.com>
+Subject: [PATCH v5 7/7] ARM: zynq: DT: Add OCM controller node
+Date: Mon,  1 Dec 2014 14:24:58 +0100
+Message-ID: <897eae026fb7f601dd453941f178fae534ac7216.1417440250.git.michal.simek@xilinx.com>
 References: <cover.1417440250.git.michal.simek@xilinx.com>
 Content-Type: multipart/signed;
-    boundary="=_mimegpg-monstr-desktop-3305-1417440312-0001";
+    boundary="=_mimegpg-monstr-desktop-3328-1417440318-0001";
     micalg=pgp-sha1; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1417440250.git.michal.simek@xilinx.com>
@@ -12,7 +12,7 @@ In-Reply-To: <cover.1417440250.git.michal.simek@xilinx.com>
 References: <cover.1417440250.git.michal.simek@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, Soren Brinkmann <soren.brinkmann@xilinx.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
-Cc: Michal Simek <monstr@monstr.eu>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: monstr@monstr.eu, Josh Cartwright <josh.cartwright@ni.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 This is a MIME GnuPG-signed message.  If you see this text, it means that
@@ -21,63 +21,57 @@ The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
 To open this message correctly you will need to install E-mail or Usenet
 software that supports modern Internet standards.
 
---=_mimegpg-monstr-desktop-3305-1417440312-0001
+--=_mimegpg-monstr-desktop-3328-1417440318-0001
 
-Add binding for Zynq On Chip Memory controller driver
-which is taking care about On Chip Memory.
+Add the on-chip-memory controller node to the Zynq devicetree.
 
 Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-
 ---
 
-Changes in v5:
-- Separate binding from the driver
+Changes in v5: None
+Changes in v4:
+- Use memory-controller@... instead of ocmc@...
 
-Changes in v4: None
-Changes in v3: None
+Changes in v3:
+- Extract from OCM driver
+
 Changes in v2: None
 
- .../devicetree/bindings/arm/zynq/xlnx,zynq-ocmc.txt     | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocmc.txt
+ arch/arm/boot/dts/zynq-7000.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocmc.txt b/Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocmc.txt
-new file mode 100644
-index 000000000000..dcf221e8a16e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocmc.txt
-@@ -0,0 +1,17 @@
-+Device tree bindings for Zynq's OCM controller
+diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+index 24036c440440..040f95e817c8 100644
+--- a/arch/arm/boot/dts/zynq-7000.dtsi
++++ b/arch/arm/boot/dts/zynq-7000.dtsi
+@@ -151,6 +151,13 @@
+ 			reg = <0xf8006000 0x1000>;
+ 		} ;
+
++		ocmc: memory-controller@f800c000 {
++			compatible = "xlnx,zynq-ocmc-1.0";
++			interrupt-parent = <&intc>;
++			interrupts = <0 3 4>;
++			reg = <0xf800c000 0x1000>;
++		};
 +
-+The OCM is divided to 4 64kB segments which can be separately configured
-+to low or high location. Location is controlled via SLCR.
-+
-+Required properties:
-+ compatible: Compatibility string. Must be "xlnx,zynq-ocmc-1.0".
-+ reg: Specify the base and size of the OCMC registers in the memory map.
-+      E.g.: reg = <0xf800c000 0x1000>;
-+
-+Example:
-+ocmc: memory-controller@f800c000 {
-+	compatible =  "xlnx,zynq-ocmc-1.0";
-+	interrupt-parent = <&intc>;
-+	interrupts = <0 3 4>;
-+	reg = <0xf800c000 0x1000>;
-+};
+ 		uart0: serial@e0000000 {
+ 			compatible = "xlnx,xuartps", "cdns,uart-r1p8";
+ 			status = "disabled";
 --
 1.8.2.3
 
 
---=_mimegpg-monstr-desktop-3305-1417440312-0001
+--=_mimegpg-monstr-desktop-3328-1417440318-0001
 Content-Type: application/pgp-signature
 Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.10 (GNU/Linux)
 
-iEYEABECAAYFAlR8bDgACgkQykllyylKDCGGvgCfV94wcgB9JbiKDtUca023EeJA
-W14AmgKRNbzwEfyn6wVaH4n/XvmKTkQt
-=yTST
+iEYEABECAAYFAlR8bD4ACgkQykllyylKDCEH+gCfY3uSJN5Vzdvqa8rzpKHdGQ3T
+nmQAoIitRGekq+o/179eifI0fhDN1BlK
+=MJkz
 -----END PGP SIGNATURE-----
 
---=_mimegpg-monstr-desktop-3305-1417440312-0001--
+--=_mimegpg-monstr-desktop-3328-1417440318-0001--
