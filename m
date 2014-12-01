@@ -1,7 +1,7 @@
 From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] of: Add vendor prefix for OmniVision Technologies
-Date: Mon,  1 Dec 2014 21:38:37 -0200
-Message-ID: <1417477117-29638-1-git-send-email-festevam@gmail.com>
+Subject: [PATCH v2] of: Add vendor prefix for OmniVision Technologies
+Date: Mon,  1 Dec 2014 21:43:45 -0200
+Message-ID: <1417477425-29780-1-git-send-email-festevam@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
@@ -10,25 +10,28 @@ List-Id: devicetree@vger.kernel.org
 
 From: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-OmniVision is a manufacturer of CMOS Image Sensors.
+OmniVision Technologies is a manufacturer of CMOS Image Sensors.
 
 Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
+Changes since v1:
+- Keep the list sorted
+
  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 944fec9..036ba94 100644
+index 944fec9..3774bee 100644
 --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
 +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -116,6 +116,7 @@ nokia	Nokia
- nvidia	NVIDIA
+@@ -117,6 +117,7 @@ nvidia	NVIDIA
  nxp	NXP Semiconductors
  onnn	ON Semiconductor Corp.
-+ovti	OmniVision Technologies
  opencores	OpenCores.org
++ovti	OmniVision Technologies
  panasonic	Panasonic Corporation
  phytec	PHYTEC Messtechnik GmbH
+ picochip	Picochip Ltd
 -- 
 1.9.1
 
