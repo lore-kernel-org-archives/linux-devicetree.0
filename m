@@ -1,100 +1,127 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH v13 03/10] qcom: spm: Add Subsystem Power Manager driver
-Date: Mon, 1 Dec 2014 10:57:09 -0700
-Message-ID: <20141201175709.GA499@linaro.org>
-References: <1417065854-37745-1-git-send-email-lina.iyer@linaro.org>
- <1417065854-37745-4-git-send-email-lina.iyer@linaro.org>
- <1417077863.10282.3.camel@mm-sol.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] power: reset: read priority from device tree
+Date: Mon, 1 Dec 2014 17:59:08 +0000
+Message-ID: <20141201175908.GA22023@leverpostej>
+References: <1417453389-1588-1-git-send-email-stefan@agner.ch>
+ <1417453389-1588-2-git-send-email-stefan@agner.ch>
+ <20141201171126.GB22708@leverpostej>
+ <e5c5a44c84b95c4e48ed01c4dcffd35a@agner.ch>
+ <20141201174100.GC22708@leverpostej>
+ <20141201175134.GC24692@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1417077863.10282.3.camel@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
+In-Reply-To: <20141201175134.GC24692-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "fkan-qTEPVZfXA3Y@public.gmane.org" <fkan-qTEPVZfXA3Y@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ivan,
+On Mon, Dec 01, 2014 at 05:51:34PM +0000, Guenter Roeck wrote:
+> On Mon, Dec 01, 2014 at 05:41:00PM +0000, Mark Rutland wrote:
+> > On Mon, Dec 01, 2014 at 05:24:37PM +0000, Stefan Agner wrote:
+> > > On 2014-12-01 18:11, Mark Rutland wrote:
+> > > > On Mon, Dec 01, 2014 at 05:03:07PM +0000, Stefan Agner wrote:
+> > > >> This patch adds an optional property which allows to specify the
+> > > >> reset source priority. This priority is used by the kernel restart
+> > > >> handler call chain to sort out the proper reset/restart method.
+> > > >> Depending on the power design of a board or other machine/board
+> > > >> specific peculiarity, it is not possible to pick a generic priority.
+> > > >>
+> > > >> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+> > > >> ---
+> > > >>  Documentation/devicetree/bindings/power/reset/syscon-reboot.txt | 3 +++
+> > > >>  drivers/power/reset/syscon-reboot.c                             | 5 ++++-
+> > > >>  2 files changed, 7 insertions(+), 1 deletion(-)
+> > > >>
+> > > >> diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+> > > >> index 1190631..ee41d9c 100644
+> > > >> --- a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+> > > >> +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+> > > >> @@ -11,6 +11,9 @@ Required properties:
+> > > >>  - offset: offset in the register map for the reboot register (in bytes)
+> > > >>  - mask: the reset value written to the reboot register (32 bit access)
+> > > >>
+> > > >> +Optional properties:
+> > > >> +- priority: define the priority of the reset (0-255, defaults to 128)
+> > > >> +
+> > > > 
+> > > > NAK. This is a leak of Linux-internal details.
+> > > > 
+> > > > What is this necessary for?
+> > > > 
+> > > > Mark.
+> > > 
+> > > Hi Mark,
+> > > 
+> > > In my case, it is necessary to be called ahead of the watchdog, which
+> > > has a priority of 128. This syscon-reboot driver currently has a default
+> > > priority of 128 too. I could live with a higher default priority for the
+> > > syscon-reboot driver, in fact I proposed that in the discussion of v1 of
+> > > that patch:
+> > > https://lkml.org/lkml/2014/11/28/484
+> > 
+> > Thanks for the link.
+> > 
+> > > IMHO, this priority might make sense for most cases, I guess that
+> > > dedicated "syscon" capabilities are usually better suited as a reboot
+> > > source than watchdog.
+> > 
+> > I would think likewise.
+> > 
+> > > If dt, then the question which arises: If there are different
+> > > capabilities to reset/reboot a whole system, how do we reflect which is
+> > > the best suited one in dt?
+> > 
+> > I'm not sure, but I don't think that exposing a priority variable in
+> > this way is the best, because it implicitly relies on what the kernel
+> > may have selected for other devices and/or FW interfaces, which may not
+> > have been described in DT.
+> > 
+> > So if we can get away with a fixed priority for now, then I would prefer
+> > that.
+> > 
+> > Otherwise, I would imagine that most systems have a single preferred
+> > mechanism with some possible fallback(s), for which a single
+> > preferred-poweroff property might suffice, and has better interaction
+> > w.r.t. priority (in that it should _always_ be tried first). Even that's
+> > difficult to reconcile with FW bindings though, especially EFI (which we
+> > sometimes must use in preference for variable storage and capsule
+> > updates).
+> > 
+> Hi mark,
+> 
+> reboot, not poweroff, but I like that idea; it is system independent,
+> and I agree that there should be only one "preferred-reboot" mechanism.
+> If we need more we can always add something like "fallback-reboot".
 
-On Thu, Nov 27 2014 at 01:43 -0700, Ivan T. Ivanov wrote:
->
->Hi,
->
->On Wed, 2014-11-26 at 22:24 -0700, Lina Iyer wrote:
->>
->
->>  - compatible:
->> @@ -14,10 +23,13 @@ PROPERTIES
->>         Value type: <string>
->>         Definition: shall contain "qcom,saw2". A more specific value=
- should be
->>                                                 one of:
->
->Which driver is supposed to handle this property?
->
-drivers/soc/qcom/spm.c - SAW power controller driver.
->> -                               "qcom,saw2-v1"
->> -                               "qcom,saw2-v1.1"
->> -                               "qcom,saw2-v2"
->> -                               "qcom,saw2-v2.1"
->> +                       "qcom,saw2-v1"
->> +                       "qcom,saw2-v1.1"
->> +                       "qcom,saw2-v2"
->> +                       "qcom,saw2-v2.1"
->
->Doesn't seems to be used or supported?
->
-Used for identify the version of the SAW that does voltage changes.  An=
-y
-SAW that can change the voltage would use one of the above compatible
-strings. We only need a generic version number for regulator
-functionality as opposed to the ones used for idle control (like below)=
-,
-which needs to correctly identify the version number (saw2-v1.1), cpu/L=
-2
-(-cpu_variant of the SAW on a particlar SoC (qcom,apq/msmXXXX) to set
-the correct register values for that SoC.
+Ah, sorry, I got myself confused regarding reboot/poweroff. Goot to hear
+we agree on the preferred-$X (where X is reboot in this case).
 
-L2 SAW is currently not upstream or part of this series. Will follow
-suit, when we have the power domains to control cluster low power modes=
-=2E
-The regulator functionality is currently not available upstream, as wel=
-l
-for 8084 and 8074.
+> Not sure I understand the reference to EFI. Does EFI install a means
+> to restart the system ?
+
+Through EFI runtime services there's a mechanism to reset the machine.
+In certain cases this must be called so as to allow EFI to set things up
+to run after reboot (e.g. capsules for FW updates), while in other cases
+it's perfectly fine to call other mechanisms directly.
+
+> Also, doesn't the proprity question apply even if there is no dt
+> property to establish the preference ?
+
+Indeed.
+
+My concern is having some priorities described in DT and some being
+implicit in the kernel source, as the implicit priorities might change
+independently of the explicit ones given in DT. At least with a single
+preferred mechanism in DT we can force that to override all implicit
+ones (though I'm not entirely sure how that would interact with the EFI
+reboot case).
 
 Thanks,
-Lina
-
->> +                       "qcom,apq8064-saw2-v1.1-cpu"
->> +                       "qcom,msm8974-saw2-v2.1-cpu"
->> +                       "qcom,apq8084-saw2-v2.1-cpu"
->>
->
-><snip>
->
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0regulator@2099000 {
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0power-controller@2099000 =
-{
->>                 compatible =3D "qcom,saw2";
->>                 reg =3D <0x02099000 0x1000>, <0x02009000 0x1000>;
->> +               regulator;
->>
->
-><snip>
->
->> +static const struct of_device_id spm_match_table[] =3D {
->> +       { .compatible =3D "qcom,msm8974-saw2-v2.1-cpu",
->> +                       .data =3D &spm_reg_8974_8084_cpu },
->> +       { .compatible =3D "qcom,apq8084-saw2-v2.1-cpu",
->> +                       .data =3D &spm_reg_8974_8084_cpu },
->> +       { .compatible =3D "qcom,apq8064-saw2-v1.1-cpu",
->> +                       .data =3D &spm_reg_8064_cpu },
->> +       { },
->> +};
->> +
->
->Regards,
->Ivan
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
