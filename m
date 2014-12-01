@@ -1,67 +1,73 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 05/11] memory: add Atmel EBI (External Bus Interface)
- driver
-Date: Mon, 1 Dec 2014 11:50:06 +0100
-Message-ID: <20141201115006.08197c40@bbrezillon>
-References: <1417429647-3419-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1417429647-3419-6-git-send-email-boris.brezillon@free-electrons.com>
-	<19172687.eVxczUuuhC@ws-stein>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH] media: platform: add VPFE capture driver support for
+ AM437X
+Date: Mon, 01 Dec 2014 12:00:57 +0100
+Message-ID: <547C4A69.8020002@xs4all.nl>
+References: <1416791411-9731-1-git-send-email-prabhakar.csengg@gmail.com> <547C3ED3.1060205@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <19172687.eVxczUuuhC@ws-stein>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <547C3ED3.1060205-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexander,
-
-On Mon, 01 Dec 2014 11:40:03 +0100
-Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org> wrote:
-
-> Hi Boris,
+On 12/01/2014 11:11 AM, Hans Verkuil wrote:
+> Hi all,
 > 
-> On Monday 01 December 2014 11:27:21, Boris Brezillon wrote:
-> > The EBI (External Bus Interface) is used to access external peripherals
-> > (NOR, SRAM, NAND, and other specific devices like ethernet controllers).
-> > Each device is assigned a CS line and an address range and can have its
-> > own configuration (timings, access mode, bus width, ...).
-> > This driver provides a generic DT binding to configure a device according
-> > to its requirements.
-> > For specific device controllers (like the NAND one) the SMC timings
-> > should be configured by the controller driver through the matrix and
-> > smc syscon regmaps.
-> > 
-> > Signed-off-by: Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
-> > Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> >  drivers/memory/Kconfig     |  11 +
-> >  drivers/memory/Makefile    |   1 +
-> >  drivers/memory/atmel-ebi.c | 627 +++++++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 639 insertions(+)
-> >  create mode 100644 drivers/memory/atmel-ebi.c
+> Thanks for the patch, review comments are below.
 > 
-> While I like this feature, shouldn't this driver go to drivers/bus/ like the imx-weim driver? The latter one does the same, so I wonder why one is in drivers/bus while the other is in drivers/memory.
+> For the next version I would appreciate if someone can test this driver with
+> the latest v4l2-compliance from the v4l-utils git repo. If possible test streaming
+> as well (v4l2-compliance -s), ideally with both a sensor and a STD receiver input.
+> But that depends on the available hardware of course.
 > 
+> I'd like to see the v4l2-compliance output. It's always good to have that on
+> record.
+> 
+> 
+> On 11/24/2014 02:10 AM, Lad, Prabhakar wrote:
+>> From: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
+>>
+>> This patch adds Video Processing Front End (VPFE) driver for
+>> AM437X family of devices
+>> Driver supports the following:
+>> - V4L2 API using MMAP buffer access based on videobuf2 api
+>> - Asynchronous sensor/decoder sub device registration
+>> - DT support
+>>
+>> Signed-off-by: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
+>> Signed-off-by: Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>
+>> Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/media/ti-am437xx-vpfe.txt  |   61 +
+>>  MAINTAINERS                                        |    9 +
+>>  drivers/media/platform/Kconfig                     |    1 +
+>>  drivers/media/platform/Makefile                    |    2 +
+>>  drivers/media/platform/am437x/Kconfig              |   10 +
+>>  drivers/media/platform/am437x/Makefile             |    2 +
+>>  drivers/media/platform/am437x/vpfe.c               | 2764 ++++++++++++++++++++
+>>  drivers/media/platform/am437x/vpfe.h               |  286 ++
+>>  drivers/media/platform/am437x/vpfe_regs.h          |  140 +
+>>  include/uapi/linux/Kbuild                          |    1 +
+>>  include/uapi/linux/am437x_vpfe.h                   |  122 +
+>>  11 files changed, 3398 insertions(+)
 
-I don't have a strong opinion regarding where this driver should
-live (I even considered putting it in drivers/bus) :-).
-But note that there are other "external memory interface" drivers
-in drivers/memory too: TI AEMIF and Marvell DEVBUS  ;-).
+Can the source names be improved? There are too many 'vpfe' sources.
+Perhaps prefix all with 'am437x-'?
 
-Does anyone else think this driver should go in drivers/bus ?
+In general I prefer '-' over '_' in a source name: it's looks better
+IMHO.
+
+One question, unrelated to this patch series:
+
+Prabhakar, would it make sense to look at the various existing TI sources
+as well and rename them to make it more explicit for which SoCs they are
+meant? Most are pretty vague with variations on vpe, vpif, vpfe, etc. but
+no reference to the actual SoC they are for.
 
 Regards,
 
-Boris
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Hans
