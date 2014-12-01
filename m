@@ -1,71 +1,172 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] ARM: zynq: DT: Add USB to device tree
-Date: Mon, 1 Dec 2014 15:16:13 -0800
-Message-ID: <ec924523a1e047b59d13a7da868430be@BN1AFFO11FD015.protection.gbl>
-References: <1417459352-23401-1-git-send-email-soren.brinkmann@xilinx.com>
- <547CCEE3.6020806@suse.de>
- <fb6f17c51aef4a498eb2a3e01a81df34@BN1BFFO11FD017.protection.gbl>
- <e016ae7c103a4fbd844826c9e25fe9c2@BY2FFO11FD036.protection.gbl>
- <547CF650.4070907@suse.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <547CF650.4070907-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Ola Jeppson <ola-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>
+From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 00/16] tz1090: add clock components
+Date: Mon,  1 Dec 2014 23:19:50 +0000
+Message-ID: <1417476006-10407-1-git-send-email-james.hogan@imgtec.com>
+Return-path: <linux-metag-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-metag-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-metag-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-12-02 at 12:14AM +0100, Andreas F=C3=A4rber wrote:
-> Am 01.12.2014 um 23:56 schrieb S=C3=B6ren Brinkmann:
-> > On Mon, 2014-12-01 at 01:24PM -0800, S=C3=B6ren Brinkmann wrote:
-> >> On Mon, 2014-12-01 at 09:26PM +0100, Andreas F=C3=A4rber wrote:
-> >>> Am 01.12.2014 um 19:42 schrieb Soren Brinkmann:
-> >>>> Add USB nodes to zc702, zc706 and zed device trees.
-> >>>>
-> >>>> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> >>>> ---
-> >>>>  arch/arm/boot/dts/zynq-7000.dtsi | 22 +++++++++++++++++++++-
-> >>>>  arch/arm/boot/dts/zynq-zc702.dts | 11 +++++++++++
-> >>>>  arch/arm/boot/dts/zynq-zc706.dts | 10 ++++++++++
-> >>>>  arch/arm/boot/dts/zynq-zed.dts   | 10 ++++++++++
-> >>>>  4 files changed, 52 insertions(+), 1 deletion(-)
-> >>>>
-> >>>> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dt=
-s/zynq-7000.dtsi
-> >>>> index ce2ef5bec4f2..9ed60938f301 100644
-> >>>> --- a/arch/arm/boot/dts/zynq-7000.dtsi
-> >>>> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
-> > [...]
-> >>>> @@ -324,6 +344,6 @@
-> >>>>  			reg =3D <0xf8005000 0x1000>;
-> >>>>  			reset =3D <0>;
-> >>>>  			timeout-sec =3D <10>;
-> >>>> -		};
-> >>>> +		} ;
-> >>>>  	};
-> >>>>  };
-> >>>
-> >>> Unrelated accidental change here though. :)
-> >=20
-> > Since a v2 is needed now, does this really require a dedicated patc=
-h to
-> > fix this bogus space here or do we just look the other way?
->=20
-> Sorry, I don't understand the question: If as you say a v2 is needed,
-> why knowingly introduce a space between } and ; in your patch? Maybe =
-I'm
-> missing something or you're looking at the patch in reverse...?
+This patchset adds common clock framework support for the TZ1090 SoC.
 
-Oh, I thought I was removing it... That must have been some merge error=
-=2E
-=46orget what I said. This part will vanish.
+Patch 1 adds common code to simplify TZ1090 clock providers.
 
-	S=C3=B6ren
+Patches 2 to 6 add TZ1090 clock types, specifically:
+* Gate banks (a register containing clock gate bits)
+* Mux banks (a register containing clock mux bits)
+* Clock deleters (delete up to 1023 out of every 1024 clocks)
+* PLLs (True Circuits, but TZ1090 specific register interface)
+* Divider clock (pretty basic divider, but specific to TZ1090)
+
+Patches 7 to 14 add clock providers and DT bindings:
+* Top level register  (TOP) clocks
+* High end peripheral (HEP) clocks
+* Peripheral (PERIP) clocks
+* PowerDown Controller (PDC) clocks
+
+Finally patch 15 defines most of the TZ1090 clocks in DT using these
+clock providers, with a few placeholders for less interesting clocks
+from more complex components, and patch 16 hooks up the Meta core clock
+so that the precise frequency of the Meta clock source can be
+determined. These are mostly for reference to give an idea how the clock
+components are intended to be used, and I'll take this one through the
+metag tree when the drivers/clk/ stuff is accepted.
+
+Changes since v1:
+
+Rework (the main change):
+- Convert explicit DT representation of clock infrastructure using
+  generic bindings for individual components to several TZ1090 specific
+  bindings representing groups of TZ1090 clocks (thanks Heiko). This
+  results in more lines of code overall, but it is nicer and more
+  maintainable.
+- Add common code for allocating and registering TZ1090 specific clock
+  providers. Various tz1090_clk_register_*() helper functions are
+  provided to conveniently register various low level TZ1090 clocks in a
+  clock provider from static initialisation data, which can be
+  initialised statically using provided macros.
+- Drop DT bindings for TZ1090 gate banks, mux banks, deleters, dividers
+  and PLLs as they will be instantiated directly from a larger clock
+  provider rather than individually from DT.
+- Switch back to using clk_divider::width rather than clk_divider::mask.
+  Mask was only added to make it easier to be exposed in a DT binding,
+  which is no longer required.
+- Add DT bindings and clock providers for TZ1090 top level register
+  clocks (TOP), high end peripheral clocks (HEP), peripheral (PERIP)
+  clocks, and powerdown controller clocks (PDC).
+- Add headers in <dt-bindings/clock/> to enumerate provided clocks.
+- Move divider specific flags (policy) to clock providers as dividers
+  will be instantiated by a provider rather than directly from DT.
+
+Functional changes and corrections:
+- Tweak various clock names. A couple were wrong, some had the slightly
+  redundant text "clk" in them, and others were output clocks so were
+  better named without the "_en" which the output of clock gates tend to
+  be called.
+- Add TOP_CLKEN register to top clocks, which gates system clock to PDC.
+- Combine unrepresented AFE block clocks into single fixed-clock
+  placeholder.
+
+Other cleanups and refactorings:
+- Split out wrapped (meta exclusive locked) divider driver from PDC
+  clock driver to clk-tz1090-divider.c.
+- Change the PDC clocks DT bindings and driver to conceptually represent
+  all clocks provided by the PDC in TZ1090 rather than the same generic
+  arrangement of clocks as the PDC in TZ1090, since the driver will use
+  the common TZ1090 specific clock provider helpers to provide specific
+  clocks.
+- Change PDC clocks compatible string from "img,tz1090-pdc-clock" to
+  "img,tz1090-pdc-clocks" to match the intended purpose.
+- Add clock-names as required property to PDC clocks DT binding as used
+  by common TZ1090 clock provider code.
+- Mention standard clock-indices and clock-output-names in PDC clocks DT
+  binding as optional properties for when the clocks may be used by
+  other clock providers and should match the names used in the driver.
+- Split out use of Meta core clock into separate patch 16.
+- Renamed function prefixes from clk_tz1090_ to tz1090_clk_ for
+  consistency with the rest.
+- Tweak ascii art clock diagrams a little.
+
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-metag-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+
+James Hogan (16):
+  clk: tz1090: add clock provider common code
+  clk: tz1090: add gate bank clock driver
+  clk: tz1090: add mux bank clock driver
+  clk: tz1090: add deleter clock driver
+  clk: tz1090: add divider clock driver
+  clk: tz1090: add PLL clock driver
+  dt: binding: add binding for TZ1090 PDC clocks
+  clk: tz1090: add PDC clock provider driver
+  dt: binding: add binding for TZ1090 TOP clocks
+  clk: tz1090: add TOP clock provider driver
+  dt: binding: add binding for TZ1090 HEP clocks
+  clk: tz1090: add HEP clock provider driver
+  dt: binding: add binding for TZ1090 PERIP clocks
+  clk: tz1090: add PERIP clock provider driver
+  metag: tz1090: add TZ1090 clocks to device tree
+  metag: tz1090: connect Meta core clock
+
+ .../bindings/clock/img,tz1090-hep-cru.txt          |  53 +++
+ .../bindings/clock/img,tz1090-pdc-clocks.txt       |  59 ++++
+ .../bindings/clock/img,tz1090-perip-cru.txt        |  49 +++
+ .../bindings/clock/img,tz1090-top-clocks.txt       |  68 ++++
+ arch/metag/Kconfig.soc                             |   1 +
+ arch/metag/boot/dts/tz1090.dtsi                    |   4 +
+ arch/metag/boot/dts/tz1090_clk.dtsi                | 143 ++++++++
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/tz1090/Makefile                        |  13 +
+ drivers/clk/tz1090/clk-tz1090-deleter.c            | 132 ++++++++
+ drivers/clk/tz1090/clk-tz1090-divider.c            | 151 +++++++++
+ drivers/clk/tz1090/clk-tz1090-gate-bank.c          | 149 +++++++++
+ drivers/clk/tz1090/clk-tz1090-hep.c                |  46 +++
+ drivers/clk/tz1090/clk-tz1090-mux-bank.c           | 139 ++++++++
+ drivers/clk/tz1090/clk-tz1090-pdc.c                |  52 +++
+ drivers/clk/tz1090/clk-tz1090-perip.c              |  57 ++++
+ drivers/clk/tz1090/clk-tz1090-pll.c                | 276 ++++++++++++++++
+ drivers/clk/tz1090/clk-tz1090-top.c                | 364 +++++++++++++++++++++
+ drivers/clk/tz1090/clk.c                           |  89 +++++
+ drivers/clk/tz1090/clk.h                           | 254 ++++++++++++++
+ include/dt-bindings/clock/tz1090-hep.h             |  19 ++
+ include/dt-bindings/clock/tz1090-pdc.h             |  18 +
+ include/dt-bindings/clock/tz1090-perip.h           |  30 ++
+ include/dt-bindings/clock/tz1090-top.h             | 118 +++++++
+ 24 files changed, 2285 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/img,tz1090-hep-cru.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/img,tz1090-pdc-clocks.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/img,tz1090-perip-cru.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/img,tz1090-top-clocks.txt
+ create mode 100644 arch/metag/boot/dts/tz1090_clk.dtsi
+ create mode 100644 drivers/clk/tz1090/Makefile
+ create mode 100644 drivers/clk/tz1090/clk-tz1090-deleter.c
+ create mode 100644 drivers/clk/tz1090/clk-tz1090-divider.c
+ create mode 100644 drivers/clk/tz1090/clk-tz1090-gate-bank.c
+ create mode 100644 drivers/clk/tz1090/clk-tz1090-hep.c
+ create mode 100644 drivers/clk/tz1090/clk-tz1090-mux-bank.c
+ create mode 100644 drivers/clk/tz1090/clk-tz1090-pdc.c
+ create mode 100644 drivers/clk/tz1090/clk-tz1090-perip.c
+ create mode 100644 drivers/clk/tz1090/clk-tz1090-pll.c
+ create mode 100644 drivers/clk/tz1090/clk-tz1090-top.c
+ create mode 100644 drivers/clk/tz1090/clk.c
+ create mode 100644 drivers/clk/tz1090/clk.h
+ create mode 100644 include/dt-bindings/clock/tz1090-hep.h
+ create mode 100644 include/dt-bindings/clock/tz1090-pdc.h
+ create mode 100644 include/dt-bindings/clock/tz1090-perip.h
+ create mode 100644 include/dt-bindings/clock/tz1090-top.h
+
+-- 
+2.0.4
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe linux-metag" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
