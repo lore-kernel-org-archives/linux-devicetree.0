@@ -1,303 +1,144 @@
 From: James Hogan <james.hogan@imgtec.com>
-Subject: [PATCH v2 05/16] clk: tz1090: add divider clock driver
-Date: Mon,  1 Dec 2014 23:19:55 +0000
-Message-ID: <1417476006-10407-6-git-send-email-james.hogan@imgtec.com>
+Subject: [PATCH v2 07/16] dt: binding: add binding for TZ1090 PDC clocks
+Date: Mon,  1 Dec 2014 23:19:57 +0000
+Message-ID: <1417476006-10407-8-git-send-email-james.hogan@imgtec.com>
 References: <1417476006-10407-1-git-send-email-james.hogan@imgtec.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1417476006-10407-1-git-send-email-james.hogan@imgtec.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Mike Turquette <mturquette@linaro.org>, linux-metag@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Heiko Stuebner <heiko@sntech.de>, James Hogan <james.hogan@imgtec.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, James Hogan <james.hogan@imgtec.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a clock driver for dividers in the TZ1090 SoC, which divide an input
-clock by an integer. The generic divider operations are optionally
-wrapped in order to acquire and release the Meta global exclusive lock
-(__global_lock2) to ensure atomicity with other non-Linux cores and
-threads which may need to use some other fields in the same register.
+The TZ1090 PDC (PowerDown Controller) has a couple of clock components
+in order to generate its main 32.768KHz clock which the peripherals in
+the low power domain run off, especially while the SoC is otherwise
+powered down.
 
-The tz1090_clk_register_dividers() helper function can be used to
-register a set of dividers from static initialisation data. DIV(),
-DIV_FLAGS(), and DIV_SHARED() (for globally locked divider) macros are
-provided in tz1090/clk.h to aid the creation of this data.  For example:
+Create a clock binding for the provider of these clocks, and a header
+file in <dt-bindings/clock/> for enumerating the provided clocks.
 
-static const struct tz1090_clk_divider dividers[] __initconst = {
-	DIV(CLK_TOP_SYS_DIV, "sys_pll", "sys_div", TOP_SYSCLK_DIV, 8),
-	DIV_FLAGS(CLK_TOP_UART, "uart_en", "uart", TOP_UARTCLK_DIV, 8,
-		  CLK_SET_RATE_PARENT, 0),
-	DIV_SHARED(CLK_PDC_XTAL1_DIV, "@xtal1", "xtal1_div", PDC_SOC0,
-		   11, 16),
-	...
-};
-...
-tz1090_clk_register_dividers(p, dividers, ARRAY_SIZE(dividers));
+It essentially has just two clock inputs (xtal1 and xtal3), and two
+clock outputs, of which only "32khz" is likely to be used.
 
 Signed-off-by: James Hogan <james.hogan@imgtec.com>
 Cc: Mike Turquette <mturquette@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
 Cc: linux-metag@vger.kernel.org
+Cc: devicetree@vger.kernel.org
 ---
-Changes since v1 (patches 14 and 12):
-- Drop divider DT binding and divider specific flags (policy) as
-  dividers will be instantiated directly from a provider. These were the
-  only things in clk-tz1090-divider.c.
-- Split out wrapped (meta exclusive locked) divider driver from PDC
-  clock driver.
-- Renamed function prefixes from clk_tz1090_ to tz1090_clk_ for
-  consistency with the rest.
-- Switch back to using clk_divider::width rather than clk_divider::mask.
-  Mask was only added to make it easier to be exposed in a DT binding,
-  which is no longer required.
-- Add tz1090_clk_register_dividers() to conveniently register a set of
-  dividers in a clock provider from static initilisation data, either
-  wrapped or generic dividers.
-- Extend tz1090/clk.h interface for easy static initialisation with
-  macros.
+Changes since v1 (patch 11):
+- Change the binding to conceptually represent all clocks provided by
+  the PDC in TZ1090 rather than the same generic arrangement of clocks
+  as the PDC in TZ1090, since the driver will use the common TZ1090
+  specific clock provider helpers to provide specific clocks.
+- Change compatible string from "img,tz1090-pdc-clock" to
+  "img,tz1090-pdc-clocks" to match the intended purpose.
+- Add header in <dt-bindings/clock/> to enumerate the provided clocks.
+- Add clock-names as required property as used by common TZ1090 clock
+  provider code.
+- Mention standard clock-indices and clock-output-names optional
+  properties for when the clocks may be used by other clock providers
+  and should match the names used in the driver.
 ---
- drivers/clk/tz1090/Makefile             |   1 +
- drivers/clk/tz1090/clk-tz1090-divider.c | 151 ++++++++++++++++++++++++++++++++
- drivers/clk/tz1090/clk.h                |  63 +++++++++++++
- 3 files changed, 215 insertions(+)
- create mode 100644 drivers/clk/tz1090/clk-tz1090-divider.c
+ .../bindings/clock/img,tz1090-pdc-clocks.txt       | 59 ++++++++++++++++++++++
+ include/dt-bindings/clock/tz1090-pdc.h             | 18 +++++++
+ 2 files changed, 77 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/img,tz1090-pdc-clocks.txt
+ create mode 100644 include/dt-bindings/clock/tz1090-pdc.h
 
-diff --git a/drivers/clk/tz1090/Makefile b/drivers/clk/tz1090/Makefile
-index 39c29ac..a7127d9 100644
---- a/drivers/clk/tz1090/Makefile
-+++ b/drivers/clk/tz1090/Makefile
-@@ -2,5 +2,6 @@
- obj-y		+= clk.o
- 
- obj-y		+= clk-tz1090-deleter.o
-+obj-y		+= clk-tz1090-divider.o
- obj-y		+= clk-tz1090-gate-bank.o
- obj-y		+= clk-tz1090-mux-bank.o
-diff --git a/drivers/clk/tz1090/clk-tz1090-divider.c b/drivers/clk/tz1090/clk-tz1090-divider.c
+diff --git a/Documentation/devicetree/bindings/clock/img,tz1090-pdc-clocks.txt b/Documentation/devicetree/bindings/clock/img,tz1090-pdc-clocks.txt
 new file mode 100644
-index 0000000..22db67d
+index 0000000..2f3b4c9
 --- /dev/null
-+++ b/drivers/clk/tz1090/clk-tz1090-divider.c
-@@ -0,0 +1,151 @@
++++ b/Documentation/devicetree/bindings/clock/img,tz1090-pdc-clocks.txt
+@@ -0,0 +1,59 @@
++Binding for TZ1090 PDC clocks.
++
++This binding uses the common clock binding[1]. It represents the clocks
++required to generate the 32KHz PDC clock used by the devices in the low power
++domain:
++
++          ___________
++xtal1 ___| xtal1_div |____________________________
++         |___________|  |    ________   xtal1_div
++                        `--o| rtc_sw \____________
++xtal3 ----------------------|________/  32khz
++
++xtal1_div = xtal1 / (reg[26:16] + 1)
++xtal3 = reg[30] ? xtal3 : xtal1_div
++
++
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++Required properties:
++- compatible         : Shall be "img,tz1090-pdc-clocks".
++- #clock-cells       : From common clock binding; shall be set to 1.
++- reg                : Base address for registers controlling PDC clocks.
++- clocks             : Clock specifiers for each input clock.
++- clock-names        : Labels for each input clock specified in clocks.
++                       Can contain the following entries:
++                       "xtal1" : XTAL1 oscillator.
++                       "xtal3" : XTAL3 32KHz oscillator.
++
++Optional properties:
++- clock-indices      : From common clock binding. Allows clock-output-names to
++                       be sparse.
++- clock-output-names : From common clock binding. May be used to name specific
++                       output clocks so that other clock providers can find
++                       the clocks by name before the provider has been
++                       instantiated. Can contain:
++                       "32khz"     : 32khz PDC clock.
++
++Clock Specifier Definition:
++- <1st-cell>: Output clock number. Use constants from
++              <dt-bindings/clock/tz1090-pdc.h>.
++
++Examples:
++	pdc_clks: pdc_clks {
++		compatible = "img,tz1090-pdc-clocks";
++		#clock-cells = <1>;
++		reg = <0x02006500 0x4>;	/* SOC_GPIO_CONTROL0 */
++		clocks = <&xtal1>,
++			 <&xtal3>;
++		clock-names = "xtal1",
++			      "xtal3";
++	};
++
++	ir {
++		...
++		clocks = <&pdc_clks CLK_PDC_32KHZ>,
++			 <&top_clks CLK_TOP_PDC>;
++		clock-names = "core", "sys";
++		...
++	};
+diff --git a/include/dt-bindings/clock/tz1090-pdc.h b/include/dt-bindings/clock/tz1090-pdc.h
+new file mode 100644
+index 0000000..fa9a11c
+--- /dev/null
++++ b/include/dt-bindings/clock/tz1090-pdc.h
+@@ -0,0 +1,18 @@
 +/*
 + * Copyright (C) 2013-2014 Imagination Technologies Ltd.
 + *
-+ * This program is free software; you can redistribute it and/or modify it under
-+ * the terms of the GNU General Public License version 2 as published by the
-+ * Free Software Foundation.
-+ *
-+ * TZ1090 Divider Clock.
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
 + */
 +
-+#include <linux/clk-provider.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/slab.h>
-+#include <asm/global_lock.h>
++#ifndef _DT_BINDINGS_CLK_TZ1090_PDC_H
++#define _DT_BINDINGS_CLK_TZ1090_PDC_H
 +
-+#include "clk.h"
++/* Powerdown Controller clocks */
++#define CLK_PDC_XTAL1_DIV	0
++#define CLK_PDC_32KHZ		1
 +
-+/**
-+ * struct tz1090_clk_div_priv - tz1090 divider clock
-+ *
-+ * @div:	the parent class
-+ * @ops:	pointer to clk_ops of parent class
-+ *
-+ * Divider clock whose field shares a register with other fields which may be
-+ * used by multiple threads/cores and other drivers.
-+ */
-+struct tz1090_clk_div_priv {
-+	struct clk_divider	div;
-+	const struct clk_ops	*ops;
-+};
++#define CLK_PDC_MAX		2
 +
-+static inline struct tz1090_clk_div_priv *to_tz1090_clk_div(struct clk_hw *hw)
-+{
-+	struct clk_divider *div = container_of(hw, struct clk_divider, hw);
-+
-+	return container_of(div, struct tz1090_clk_div_priv, div);
-+}
-+
-+static unsigned long tz1090_clk_divider_recalc_rate(struct clk_hw *hw,
-+						    unsigned long parent_rate)
-+{
-+	struct tz1090_clk_div_priv *div = to_tz1090_clk_div(hw);
-+
-+	return div->ops->recalc_rate(&div->div.hw, parent_rate);
-+}
-+
-+static long tz1090_clk_divider_round_rate(struct clk_hw *hw, unsigned long rate,
-+					  unsigned long *prate)
-+{
-+	struct tz1090_clk_div_priv *div = to_tz1090_clk_div(hw);
-+
-+	return div->ops->round_rate(&div->div.hw, rate, prate);
-+}
-+
-+/* Acquire exclusive lock since other cores may access the same register */
-+static int tz1090_clk_divider_set_rate(struct clk_hw *hw, unsigned long rate,
-+				       unsigned long parent_rate)
-+{
-+	struct tz1090_clk_div_priv *div = to_tz1090_clk_div(hw);
-+	int ret;
-+	unsigned long flags;
-+
-+	__global_lock2(flags);
-+	ret = div->ops->set_rate(&div->div.hw, rate, parent_rate);
-+	__global_unlock2(flags);
-+
-+	return ret;
-+}
-+
-+static const struct clk_ops tz1090_clk_div_ops = {
-+	.recalc_rate	= tz1090_clk_divider_recalc_rate,
-+	.round_rate	= tz1090_clk_divider_round_rate,
-+	.set_rate	= tz1090_clk_divider_set_rate,
-+};
-+
-+static struct clk *__init __register_divider(const char *name,
-+					     const char *parent_name,
-+					     unsigned long flags,
-+					     void __iomem *reg, u8 shift,
-+					     u8 width, u8 clk_divider_flags)
-+{
-+	struct tz1090_clk_div_priv *div;
-+	struct clk *clk;
-+	struct clk_init_data init;
-+
-+	/* allocate the divider */
-+	div = kzalloc(sizeof(struct tz1090_clk_div_priv), GFP_KERNEL);
-+	if (!div)
-+		return ERR_PTR(-ENOMEM);
-+
-+	init.name = name;
-+	init.ops = &tz1090_clk_div_ops;
-+	init.flags = flags | CLK_IS_BASIC;
-+	init.parent_names = (parent_name ? &parent_name : NULL);
-+	init.num_parents = (parent_name ? 1 : 0);
-+
-+	/* struct clk_divider assignments */
-+	div->div.reg = reg;
-+	div->div.shift = shift;
-+	div->div.width = width;
-+	div->div.flags = clk_divider_flags;
-+	div->div.hw.init = &init;
-+
-+	/* struct tz1090_clk_div_priv assignments */
-+	div->ops = &clk_divider_ops;
-+
-+	/* register the clock */
-+	clk = clk_register(NULL, &div->div.hw);
-+
-+	if (IS_ERR(clk))
-+		kfree(div);
-+
-+	return clk;
-+}
-+
-+/**
-+ * tz1090_clk_register_dividers() - Register set of dividers with a provider.
-+ * @p:		TZ1090 clock provider.
-+ * @dividers:	Array of divider descriptions.
-+ * @count	Number of dividers described in the array.
-+ */
-+void __init tz1090_clk_register_dividers(struct tz1090_clk_provider *p,
-+				const struct tz1090_clk_divider *dividers,
-+				unsigned int count)
-+{
-+	const struct tz1090_clk_divider *div;
-+	struct clk *clk;
-+	unsigned int i;
-+
-+	for (div = dividers, i = 0; i < count; ++div, ++i) {
-+		/*
-+		 * Dividers in registers shared between OSes must protect the
-+		 * register with a global lock. Others with dedicated registers
-+		 * can just use a normal divider.
-+		 */
-+		if (div->shared)
-+			clk = __register_divider(tz1090_clk_xlate(p, div->name),
-+					tz1090_clk_xlate(p, div->parent),
-+					div->flags, p->base + div->reg,
-+					div->shift, div->width, div->div_flags);
-+		else
-+			clk = clk_register_divider(NULL,
-+					tz1090_clk_xlate(p, div->name),
-+					tz1090_clk_xlate(p, div->parent),
-+					div->flags, p->base + div->reg,
-+					div->shift, div->width, div->div_flags,
-+					NULL);
-+		p->clk_data.clks[div->id] = clk;
-+	}
-+}
-diff --git a/drivers/clk/tz1090/clk.h b/drivers/clk/tz1090/clk.h
-index 8f90908..ca51f87 100644
---- a/drivers/clk/tz1090/clk.h
-+++ b/drivers/clk/tz1090/clk.h
-@@ -166,4 +166,67 @@ void tz1090_clk_register_deleters(struct tz1090_clk_provider *p,
- 				  const struct tz1090_clk_deleter *deleters,
- 				  unsigned int count);
- 
-+
-+/* Dividers */
-+
-+/**
-+ * struct tz1090_clk_divider - Describes a clock divider.
-+ * @id:		Id of output clock in provider.
-+ * @reg:	Offset of divider register in the MMIO region.
-+ * @flags:	Clock flags.
-+ * @div_flags:	Divider flags.
-+ * @shift:	Shift of field controlling divider.
-+ * @width:	Width of field controlling divider.
-+ * @shared:	1 if register is shared with other important fields and requires
-+ *		global locking.
-+ * @name:	Name of divided clock to provide.
-+ * @parent:	Name of parent/source clocks.
-+ */
-+struct tz1090_clk_divider {
-+	unsigned int		id;
-+	unsigned long		reg;
-+	unsigned long		flags;
-+	u8			div_flags;
-+	u8			shift;
-+	u8			width;
-+	u8			shared;
-+	const char		*name;
-+	const char		*parent;
-+};
-+
-+#define DIV(_id, _parent, _name, _reg, _width)	\
-+	{								\
-+		.id		= (_id),				\
-+		.reg		= (_reg),				\
-+		.width		= (_width),				\
-+		.name		= (_name),				\
-+		.parent		= (_parent),				\
-+	}
-+
-+#define DIV_FLAGS(_id, _parent, _name, _reg, _width, _flags, _divflags)	\
-+	{								\
-+		.id		= (_id),				\
-+		.reg		= (_reg),				\
-+		.flags		= (_flags),				\
-+		.div_flags	= (_divflags),				\
-+		.width		= (_width),				\
-+		.name		= (_name),				\
-+		.parent		= (_parent),				\
-+	}
-+
-+#define DIV_SHARED(_id, _parent, _name, _reg, _width, _shift)		\
-+	{								\
-+		.id		= (_id),				\
-+		.reg		= (_reg),				\
-+		.shift		= (_shift),				\
-+		.width		= (_width),				\
-+		.shared		= 1,					\
-+		.name		= (_name),				\
-+		.parent		= (_parent),				\
-+	}
-+
-+void tz1090_clk_register_dividers(struct tz1090_clk_provider *p,
-+				  const struct tz1090_clk_divider *dividers,
-+				  unsigned int count);
-+
- #endif
++#endif
 -- 
 2.0.4
