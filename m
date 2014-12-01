@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v6 05/15] tpm/tpm_i2c_stm_st33: Move tpm registers to tpm_i2c_stm_st33.c
-Date: Mon,  1 Dec 2014 19:32:50 +0100
-Message-ID: <1417458780-25977-6-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v6 07/15] tpm/tpm_i2c_stm_st33: Remove reference to io_serirq
+Date: Mon,  1 Dec 2014 19:32:52 +0100
+Message-ID: <1417458780-25977-8-git-send-email-christophe-h.ricard@st.com>
 References: <1417458780-25977-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1417458780-25977-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
@@ -10,71 +10,76 @@ To: peterhuewe-Mmb7MZpHnFY@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@publi
 Cc: tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Move tpm registers to tpm_i2c_stm_st33.c.
+The serirq gpio pin is used only as interrupt. After driver initialization,
+the serirq signal is always used through interrupt and never with gpio
+kernel API.
+
+The irq can then be initialized during the platform_data definition within the client->irq pin.
 
 Reviewed-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/char/tpm/tpm_i2c_stm_st33.c | 17 +++++++++++++++++
- drivers/char/tpm/tpm_i2c_stm_st33.h | 17 -----------------
- 2 files changed, 17 insertions(+), 17 deletions(-)
+ drivers/char/tpm/tpm_i2c_stm_st33.c            | 13 +++----------
+ include/linux/platform_data/tpm_i2c_stm_st33.h |  1 -
+ 2 files changed, 3 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/char/tpm/tpm_i2c_stm_st33.c b/drivers/char/tpm/tpm_i2c_stm_st33.c
-index 68a45a9..2a1989b 100644
+index 4f72538..7286116 100644
 --- a/drivers/char/tpm/tpm_i2c_stm_st33.c
 +++ b/drivers/char/tpm/tpm_i2c_stm_st33.c
-@@ -49,6 +49,23 @@
- #include <linux/slab.h>
+@@ -103,7 +103,6 @@ struct tpm_stm_dev {
+ 	struct completion irq_detection;
+ 	struct tpm_chip *chip;
+ 	u8 buf[TPM_BUFSIZE + 1];
+-	int io_serirq;
+ 	int io_lpcpd;
+ };
  
- #include "tpm.h"
-+
-+#define TPM_ACCESS			0x0
-+#define TPM_STS				0x18
-+#define TPM_HASH_END			0x20
-+#define TPM_DATA_FIFO			0x24
-+#define TPM_HASH_DATA			0x24
-+#define TPM_HASH_START			0x28
-+#define TPM_INTF_CAPABILITY		0x14
-+#define TPM_INT_STATUS			0x10
-+#define TPM_INT_ENABLE			0x08
-+
-+#define TPM_DUMMY_BYTE			0xAA
-+#define TPM_WRITE_DIRECTION		0x80
-+#define TPM_HEADER_SIZE			10
-+#define TPM_BUFSIZE			2048
-+
-+#define LOCALITY0		0
- #include "tpm_i2c_stm_st33.h"
+@@ -688,18 +687,15 @@ tpm_st33_i2c_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 			err = -ENODEV;
+ 			goto _tpm_clean_answer;
+ 		}
+-		err = gpio_request(platform_data->io_serirq, "TPM IO_SERIRQ");
+-		if (err)
+-			goto _gpio_init2;
  
- enum stm33zp24_access {
-diff --git a/drivers/char/tpm/tpm_i2c_stm_st33.h b/drivers/char/tpm/tpm_i2c_stm_st33.h
-index 439a432..3041271 100644
---- a/drivers/char/tpm/tpm_i2c_stm_st33.h
-+++ b/drivers/char/tpm/tpm_i2c_stm_st33.h
-@@ -30,23 +30,6 @@
- #ifndef __STM_ST33_TPM_I2C_MAIN_H__
- #define __STM_ST33_TPM_I2C_MAIN_H__
+ 		clear_interruption(tpm_dev);
+-		err = request_irq(gpio_to_irq(platform_data->io_serirq),
++		err = request_irq(client->irq,
+ 				&tpm_ioserirq_handler,
+ 				IRQF_TRIGGER_HIGH,
+ 				"TPM SERIRQ management", chip);
+ 		if (err < 0) {
+ 			dev_err(chip->dev , "TPM SERIRQ signals %d not available\n",
+-				gpio_to_irq(platform_data->io_serirq));
++				client->irq);
+ 			goto _irq_set;
+ 		}
  
--#define TPM_ACCESS			(0x0)
--#define TPM_STS				(0x18)
--#define TPM_HASH_END			(0x20)
--#define TPM_DATA_FIFO			(0x24)
--#define TPM_HASH_DATA			(0x24)
--#define TPM_HASH_START			(0x28)
--#define TPM_INTF_CAPABILITY		(0x14)
--#define TPM_INT_STATUS			(0x10)
--#define TPM_INT_ENABLE			(0x08)
--
--#define TPM_DUMMY_BYTE			0xAA
--#define TPM_WRITE_DIRECTION		0x80
--#define TPM_HEADER_SIZE			10
--#define TPM_BUFSIZE			2048
--
--#define LOCALITY0		0
--
+@@ -739,10 +735,7 @@ tpm_st33_i2c_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 	dev_info(chip->dev, "TPM I2C Initialized\n");
+ 	return 0;
+ _irq_set:
+-	free_irq(gpio_to_irq(platform_data->io_serirq), (void *)chip);
+-_gpio_init2:
+-	if (interrupts)
+-		gpio_free(platform_data->io_serirq);
++	free_irq(client->irq, (void *)chip);
+ _gpio_init1:
+ 	if (power_mgt)
+ 		gpio_free(platform_data->io_lpcpd);
+diff --git a/include/linux/platform_data/tpm_i2c_stm_st33.h b/include/linux/platform_data/tpm_i2c_stm_st33.h
+index 88f9cb1..85775cf 100644
+--- a/include/linux/platform_data/tpm_i2c_stm_st33.h
++++ b/include/linux/platform_data/tpm_i2c_stm_st33.h
+@@ -33,7 +33,6 @@
  #define TPM_ST33_I2C			"st33zp24_i2c"
  
  struct st33zp24_platform_data {
+-	int io_serirq;
+ 	int io_lpcpd;
+ };
+ 
 -- 
 2.1.0
 
