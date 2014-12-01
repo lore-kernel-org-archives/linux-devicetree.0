@@ -1,276 +1,213 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: [PATCH v2 02/16] clk: tz1090: add gate bank clock driver
-Date: Mon,  1 Dec 2014 23:19:52 +0000
-Message-ID: <1417476006-10407-3-git-send-email-james.hogan@imgtec.com>
+From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 01/16] clk: tz1090: add clock provider common code
+Date: Mon,  1 Dec 2014 23:19:51 +0000
+Message-ID: <1417476006-10407-2-git-send-email-james.hogan@imgtec.com>
 References: <1417476006-10407-1-git-send-email-james.hogan@imgtec.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1417476006-10407-1-git-send-email-james.hogan@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, linux-metag@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Heiko Stuebner <heiko@sntech.de>, James Hogan <james.hogan@imgtec.com>
+Return-path: <linux-metag-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1417476006-10407-1-git-send-email-james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: linux-metag-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-metag-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a clock driver for banks of clock gates in the TZ1090 SoC. A single
-32 bit register controls up to 32 separate clock gates. The generic
-clock gate clock operations are wrapped in order to acquire and release
-the Meta global exclusive lock (__global_lock2) to ensure atomicity with
-other non-Linux cores and threads which may need to control some of the
-clocks.
+Add some common code for the TZ1090 SoC to allocate and register onecell
+based clock providers. These have some memory mapped registers and are
+instantiated from DT.
 
-The tz1090_clk_register_gate_bank() helper function can be used to
-register a gate bank from static initialisation data. Macros are
-provided in tz1090/clk.h to aid the creation of this data, for example:
+Also provided is a tz1090_clk_xlate() function to help handle external
+clocks from other clock providers by processing the internal clock
+names.
 
-GATE_BANK(tz1090_perip_clken, 0, PERIP_CLKEN,
-        /*   bit in      out */
-        GATE( 0, "@sys", "sys_scb0")
-        GATE( 1, "@sys", "sys_scb1")
-        GATE( 2, "@sys", "sys_scb2")
-        ...
-);
-...
-clk_register_gate_bank(p, &tz1090_perip_clken);
+Parent clocks from other providers can be specified as "@label" where
+label is the name of an input clock provided by the clock-names DT
+property. tz1090_clk_xlate() translates these strings by finding the
+actual name of the parent clock. It first uses
+of_property_match_string() to find the index of the matching parent
+clock, and then of_clk_get_parent_name() to get its name. Since
+of_clk_get_parent_name() uses the parent clock node's clock-output-names
+property, this should be specified for any complex input clocks which
+use this mechanism.
 
-Signed-off-by: James Hogan <james.hogan@imgtec.com>
-Cc: Mike Turquette <mturquette@linaro.org>
-Cc: linux-metag@vger.kernel.org
+Clock strings which don't start with '@' are used directly as the parent
+clock name. This is intended for other clocks within the clock provider.
+
+Signed-off-by: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-metag-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
-Changes since v1 (patch 6):
-- Renamed function prefixes from clk_tz1090_ to tz1090_clk_ for
-  consistency with the rest.
-- Drop DT binding as it will be instantiated directly from a provider.
-- Add tz1090_clk_register_gate_bank() to conveniently register a bank of
-  gates in a clock provider from static initilisation data.
-- Extend tz1090/clk.h interface for easy static initialisation with
-  macros.
+New patch in v2
 ---
- drivers/clk/tz1090/Makefile               |   2 +
- drivers/clk/tz1090/clk-tz1090-gate-bank.c | 149 ++++++++++++++++++++++++++++++
- drivers/clk/tz1090/clk.h                  |  49 ++++++++++
- 3 files changed, 200 insertions(+)
- create mode 100644 drivers/clk/tz1090/clk-tz1090-gate-bank.c
+ drivers/clk/Makefile        |  1 +
+ drivers/clk/tz1090/Makefile |  2 +
+ drivers/clk/tz1090/clk.c    | 89 +++++++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/tz1090/clk.h    | 37 +++++++++++++++++++
+ 4 files changed, 129 insertions(+)
+ create mode 100644 drivers/clk/tz1090/Makefile
+ create mode 100644 drivers/clk/tz1090/clk.c
+ create mode 100644 drivers/clk/tz1090/clk.h
 
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index d5fba5b..ca486ed 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -63,6 +63,7 @@ obj-$(CONFIG_PLAT_SPEAR)		+= spear/
+ obj-$(CONFIG_ARCH_STI)			+= st/
+ obj-$(CONFIG_ARCH_SUNXI)		+= sunxi/
+ obj-$(CONFIG_ARCH_TEGRA)		+= tegra/
++obj-$(CONFIG_SOC_TZ1090)		+= tz1090/
+ obj-$(CONFIG_ARCH_OMAP2PLUS)		+= ti/
+ obj-$(CONFIG_ARCH_U8500)		+= ux500/
+ obj-$(CONFIG_COMMON_CLK_VERSATILE)	+= versatile/
 diff --git a/drivers/clk/tz1090/Makefile b/drivers/clk/tz1090/Makefile
-index a2ace14..ab88f53 100644
---- a/drivers/clk/tz1090/Makefile
-+++ b/drivers/clk/tz1090/Makefile
-@@ -1,2 +1,4 @@
- # Makefile for TZ1090-specific clocks
- obj-y		+= clk.o
-+
-+obj-y		+= clk-tz1090-gate-bank.o
-diff --git a/drivers/clk/tz1090/clk-tz1090-gate-bank.c b/drivers/clk/tz1090/clk-tz1090-gate-bank.c
 new file mode 100644
-index 0000000..5834afd
+index 0000000..a2ace14
 --- /dev/null
-+++ b/drivers/clk/tz1090/clk-tz1090-gate-bank.c
-@@ -0,0 +1,149 @@
++++ b/drivers/clk/tz1090/Makefile
+@@ -0,0 +1,2 @@
++# Makefile for TZ1090-specific clocks
++obj-y		+= clk.o
+diff --git a/drivers/clk/tz1090/clk.c b/drivers/clk/tz1090/clk.c
+new file mode 100644
+index 0000000..5f4e8f28
+--- /dev/null
++++ b/drivers/clk/tz1090/clk.c
+@@ -0,0 +1,89 @@
 +/*
-+ * Copyright (C) 2013-2014 Imagination Technologies Ltd.
++ * Copyright (C) 2014 Google, Inc.
++ * Copyright (C) 2014 Imagination Technologies Ltd.
 + *
 + * This program is free software; you can redistribute it and/or modify it under
 + * the terms of the GNU General Public License version 2 as published by the
 + * Free Software Foundation.
 + *
-+ * TZ1090 Clock gate bank
++ * TZ1090 Clocks
 + */
 +
 +#include <linux/clk-provider.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
 +#include <linux/of.h>
 +#include <linux/of_address.h>
 +#include <linux/slab.h>
-+#include <asm/global_lock.h>
 +
 +#include "clk.h"
 +
-+/**
-+ * struct tz1090_clk_gate_priv - tz1090 gating clock
-+ *
-+ * @mux:	the parent class
-+ * @ops:	pointer to clk_ops of parent class
-+ *
-+ * Clock which can gate its output. Extends basic mux by using a global
-+ * exclusive lock when read-modify-writing the mux field so that multiple
-+ * threads/cores can use different fields in the same register.
-+ */
-+struct tz1090_clk_gate_priv {
-+	struct clk_gate		gate;
-+	const struct clk_ops	*ops;
-+};
-+
-+static inline struct tz1090_clk_gate_priv *to_tz1090_clk_gate(struct clk_hw *hw)
++struct tz1090_clk_provider *tz1090_clk_alloc_provider(struct device_node *node,
++						      unsigned int num_clks)
 +{
-+	struct clk_gate *gate = container_of(hw, struct clk_gate, hw);
++	struct tz1090_clk_provider *p;
 +
-+	return container_of(gate, struct tz1090_clk_gate_priv, gate);
-+}
++	p = kzalloc(sizeof(*p), GFP_KERNEL);
++	if (!p)
++		return p;
 +
-+/* Acquire exclusive lock since other cores may access the same register */
-+static int tz1090_clk_gate_enable(struct clk_hw *hw)
-+{
-+	struct tz1090_clk_gate_priv *gate = to_tz1090_clk_gate(hw);
-+	int ret;
-+	unsigned long flags;
-+
-+	__global_lock2(flags);
-+	ret = gate->ops->enable(&gate->gate.hw);
-+	__global_unlock2(flags);
-+
-+	return ret;
-+}
-+
-+/* Acquire exclusive lock since other cores may access the same register */
-+static void tz1090_clk_gate_disable(struct clk_hw *hw)
-+{
-+	struct tz1090_clk_gate_priv *gate = to_tz1090_clk_gate(hw);
-+	unsigned long flags;
-+
-+	__global_lock2(flags);
-+	gate->ops->disable(&gate->gate.hw);
-+	__global_unlock2(flags);
-+}
-+
-+static int tz1090_clk_gate_is_enabled(struct clk_hw *hw)
-+{
-+	struct tz1090_clk_gate_priv *gate = to_tz1090_clk_gate(hw);
-+
-+	return gate->ops->is_enabled(&gate->gate.hw);
-+}
-+
-+static const struct clk_ops tz1090_clk_gate_ops = {
-+	.enable = tz1090_clk_gate_enable,
-+	.disable = tz1090_clk_gate_disable,
-+	.is_enabled = tz1090_clk_gate_is_enabled,
-+};
-+
-+/**
-+ * __register_gate() - register a TZ1090 gate clock with clock framework.
-+ * @name: name of this clock
-+ * @parent_name: name of this clock's parent
-+ * @flags: framework-specific flags for this clock
-+ * @reg: register address to control gating of this clock
-+ * @bit_idx: which bit in the register controls gating of this clock
-+ * @clk_gate_flags: gate-specific flags for this clock
-+ */
-+static struct clk *__init __register_gate(const char *name,
-+					  const char *parent_name,
-+					  unsigned long flags,
-+					  void __iomem *reg,
-+					  u8 bit_idx,
-+					  u8 clk_gate_flags)
-+{
-+	struct tz1090_clk_gate_priv *gate;
-+	struct clk *clk;
-+	struct clk_init_data init;
-+
-+	/* allocate the gate */
-+	gate = kzalloc(sizeof(struct tz1090_clk_gate_priv), GFP_KERNEL);
-+	if (!gate)
-+		return ERR_PTR(-ENOMEM);
-+
-+	init.name = name;
-+	init.ops = &tz1090_clk_gate_ops;
-+	init.flags = flags | CLK_IS_BASIC;
-+	init.parent_names = (parent_name ? &parent_name : NULL);
-+	init.num_parents = (parent_name ? 1 : 0);
-+
-+	/* struct clk_gate assignments */
-+	gate->gate.reg = reg;
-+	gate->gate.bit_idx = bit_idx;
-+	gate->gate.flags = clk_gate_flags;
-+	gate->gate.hw.init = &init;
-+
-+	/* struct tz1090_clk_gate_priv assignments */
-+	gate->ops = &clk_gate_ops;
-+
-+	clk = clk_register(NULL, &gate->gate.hw);
-+
-+	if (IS_ERR(clk))
-+		kfree(gate);
-+
-+	return clk;
-+}
-+
-+/**
-+ * tz1090_clk_register_gate_bank() - Register bank of gates with a provider.
-+ * @p:		TZ1090 clock provider.
-+ * @bank:	Data describing gate bank.
-+ */
-+void __init tz1090_clk_register_gate_bank(struct tz1090_clk_provider *p,
-+					const struct tz1090_clk_gate_bank *bank)
-+{
-+	const struct tz1090_clk_gate *gate;
-+	struct clk *clk;
-+	unsigned int id = bank->id_base;
-+
-+	for (gate = bank->gates; gate->name; ++gate, ++id) {
-+		clk = __register_gate(tz1090_clk_xlate(p, gate->name),
-+				      tz1090_clk_xlate(p, gate->parent),
-+				      CLK_IGNORE_UNUSED | CLK_SET_RATE_PARENT,
-+				      p->base + bank->reg_base, gate->shift, 0);
-+		p->clk_data.clks[id] = clk;
++	p->clk_data.clks = kcalloc(num_clks, sizeof(struct clk *), GFP_KERNEL);
++	if (!p->clk_data.clks)
++		goto free_provider;
++	p->clk_data.clk_num = num_clks;
++	p->node = node;
++	p->base = of_iomap(node, 0);
++	if (!p->base) {
++		pr_err("%s: Failed to map clock provider registers\n",
++		       node->full_name);
++		goto free_clks;
 +	}
++
++	return p;
++
++free_clks:
++	kfree(p->clk_data.clks);
++free_provider:
++	kfree(p);
++	return NULL;
++}
++
++const char *tz1090_clk_xlate(struct tz1090_clk_provider *p,
++			     const char *clk_name)
++{
++	/*
++	 * If clock name begins with @, the rest refers to an external clock.
++	 *
++	 * Look for the index of the parent clock with a matching label in
++	 * clock-names. If found, find the name of the specified parent clock.
++	 *
++	 * If not found, we leave it unchanged. The @ at the beginning should
++	 * ensure it doesn't accidentally match a real clock.
++	 */
++	if (*clk_name == '@') {
++		const char *clk_label = clk_name + 1;
++		int idx = of_property_match_string(p->node, "clock-names",
++						   clk_label);
++		if (idx >= 0) {
++			clk_name = of_clk_get_parent_name(p->node, idx);
++			pr_debug("%s: Parent clock '%s' found as '%s'\n",
++				 p->node->full_name, clk_label, clk_name);
++		} else {
++			pr_err("%s: No parent clock '%s' found\n",
++			       p->node->full_name, clk_label);
++		}
++	}
++
++	return clk_name;
++}
++
++void tz1090_clk_register_provider(struct tz1090_clk_provider *p)
++{
++	unsigned int i;
++
++	for (i = 0; i < p->clk_data.clk_num; i++)
++		if (IS_ERR(p->clk_data.clks[i]))
++			pr_warn("%s: Failed to register clock %d: %ld\n",
++				p->node->full_name, i,
++				PTR_ERR(p->clk_data.clks[i]));
++
++	of_clk_add_provider(p->node, of_clk_src_onecell_get, &p->clk_data);
 +}
 diff --git a/drivers/clk/tz1090/clk.h b/drivers/clk/tz1090/clk.h
-index c20e7b4..06274b7 100644
---- a/drivers/clk/tz1090/clk.h
+new file mode 100644
+index 0000000..c20e7b4
+--- /dev/null
 +++ b/drivers/clk/tz1090/clk.h
-@@ -34,4 +34,53 @@ const char *tz1090_clk_xlate(struct tz1090_clk_provider *p,
- 			     const char *clk_name);
- void tz1090_clk_register_provider(struct tz1090_clk_provider *p);
- 
+@@ -0,0 +1,37 @@
++/*
++ * Copyright (C) 2014 Imagination Technologies Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify it under
++ * the terms of the GNU General Public License version 2 as published by the
++ * Free Software Foundation.
++ *
++ * TZ1090 Clocks
++ */
 +
-+/* Clock gate banks */
++#ifndef CLK_TZ1090_CLK_H
++#define CLK_TZ1090_CLK_H
++
++#include <linux/clk-provider.h>
++#include <linux/init.h>
++
++/* Generic TZ1090 clock provider */
 +
 +/**
-+ * struct tz1090_clk_gate - Describes an individual gate in a bank.
-+ * @shift:	Shift of bit controlling gate within the bank control register.
-+ * @name:	Name of gated clock to provide.
-+ * @parent:	Name of parent/source clock.
++ * struct tz1090_clk_provider - Clock provider data.
++ * @node:	Device tree node for the clock provider.
++ * @base:	IO remapped base address.
++ * @clk_data:	Standard onecell clock data including list of clocks.
 + */
-+struct tz1090_clk_gate {
-+	unsigned int	shift;
-+	const char	*name;
-+	const char	*parent;
++struct tz1090_clk_provider {
++	struct device_node		*node;
++	void __iomem			*base;
++	struct clk_onecell_data		clk_data;
 +};
 +
-+/**
-+ * struct tz1090_clk_gate_bank - Describes a gate bank.
-+ * @id_base:	Base id of bank in provider.
-+ *		Individual gates get the id id_base + index in gates array.
-+ * @reg_base:	Offset of gate bank register in the MMIO region.
-+ * @gates:	Pointer to array of gates in the bank, terminated by one with a
-+ *		NULL name field.
-+ */
-+struct tz1090_clk_gate_bank {
-+	unsigned int			id_base;
-+	unsigned long			reg_base;
-+	const struct tz1090_clk_gate	*gates;
-+};
++struct tz1090_clk_provider *tz1090_clk_alloc_provider(struct device_node *node,
++						      unsigned int num_clks);
++const char *tz1090_clk_xlate(struct tz1090_clk_provider *p,
++			     const char *clk_name);
++void tz1090_clk_register_provider(struct tz1090_clk_provider *p);
 +
-+#define GATE(_shift, _parent, _name)					\
-+	{								\
-+		.shift		= (_shift),				\
-+		.name		= (_name),				\
-+		.parent		= (_parent),				\
-+	},
-+
-+#define GATE_BANK(_name, _id, _reg, _gates)				\
-+	static const struct tz1090_clk_gate_bank _name __initconst = {	\
-+		.id_base	= (_id),				\
-+		.reg_base	= (_reg),				\
-+		.gates		= (const struct tz1090_clk_gate[]) {	\
-+			_gates						\
-+			{ .name	= NULL }				\
-+		},							\
-+	}
-+
-+void tz1090_clk_register_gate_bank(struct tz1090_clk_provider *p,
-+				   const struct tz1090_clk_gate_bank *bank);
-+
- #endif
++#endif
 -- 
 2.0.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-metag" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
