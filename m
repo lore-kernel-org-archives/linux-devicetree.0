@@ -1,125 +1,157 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] power: reset: read priority from device tree
-Date: Mon, 1 Dec 2014 10:12:55 -0800
-Message-ID: <20141201181255.GA25926@roeck-us.net>
-References: <1417453389-1588-1-git-send-email-stefan@agner.ch>
- <1417453389-1588-2-git-send-email-stefan@agner.ch>
- <20141201171126.GB22708@leverpostej>
- <e5c5a44c84b95c4e48ed01c4dcffd35a@agner.ch>
- <20141201174100.GC22708@leverpostej>
- <20141201175134.GC24692@roeck-us.net>
- <20141201175908.GA22023@leverpostej>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] mtd: hisilicon: add a new NAND controller driver
+ for hisilicon hip04 Soc
+Date: Mon, 1 Dec 2014 10:14:49 -0800
+Message-ID: <20141201181449.GG21347@ld-irv-0074>
+References: <1415105221-7732-1-git-send-email-wangzhou.bry@gmail.com>
+ <1415105221-7732-2-git-send-email-wangzhou.bry@gmail.com>
+ <20141130093529.GH3608@norris-Latitude-E6410>
+ <547C685A.3090804@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20141201175908.GA22023@leverpostej>
+In-Reply-To: <547C685A.3090804-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "fkan-qTEPVZfXA3Y@public.gmane.org" <fkan-qTEPVZfXA3Y@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, caizhiyong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 01, 2014 at 05:59:08PM +0000, Mark Rutland wrote:
-> On Mon, Dec 01, 2014 at 05:51:34PM +0000, Guenter Roeck wrote:
-> > On Mon, Dec 01, 2014 at 05:41:00PM +0000, Mark Rutland wrote:
-> > > On Mon, Dec 01, 2014 at 05:24:37PM +0000, Stefan Agner wrote:
-> > > > On 2014-12-01 18:11, Mark Rutland wrote:
-> > > > > On Mon, Dec 01, 2014 at 05:03:07PM +0000, Stefan Agner wrote:
-> > > > >> This patch adds an optional property which allows to specify the
-> > > > >> reset source priority. This priority is used by the kernel restart
-> > > > >> handler call chain to sort out the proper reset/restart method.
-> > > > >> Depending on the power design of a board or other machine/board
-> > > > >> specific peculiarity, it is not possible to pick a generic priority.
-> > > > >>
-> > > > >> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-> > > > >> ---
-> > > > >>  Documentation/devicetree/bindings/power/reset/syscon-reboot.txt | 3 +++
-> > > > >>  drivers/power/reset/syscon-reboot.c                             | 5 ++++-
-> > > > >>  2 files changed, 7 insertions(+), 1 deletion(-)
-> > > > >>
-> > > > >> diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
-> > > > >> index 1190631..ee41d9c 100644
-> > > > >> --- a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
-> > > > >> +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
-> > > > >> @@ -11,6 +11,9 @@ Required properties:
-> > > > >>  - offset: offset in the register map for the reboot register (in bytes)
-> > > > >>  - mask: the reset value written to the reboot register (32 bit access)
-> > > > >>
-> > > > >> +Optional properties:
-> > > > >> +- priority: define the priority of the reset (0-255, defaults to 128)
-> > > > >> +
-> > > > > 
-> > > > > NAK. This is a leak of Linux-internal details.
-> > > > > 
-> > > > > What is this necessary for?
-> > > > > 
-> > > > > Mark.
-> > > > 
-> > > > Hi Mark,
-> > > > 
-> > > > In my case, it is necessary to be called ahead of the watchdog, which
-> > > > has a priority of 128. This syscon-reboot driver currently has a default
-> > > > priority of 128 too. I could live with a higher default priority for the
-> > > > syscon-reboot driver, in fact I proposed that in the discussion of v1 of
-> > > > that patch:
-> > > > https://lkml.org/lkml/2014/11/28/484
-> > > 
-> > > Thanks for the link.
-> > > 
-> > > > IMHO, this priority might make sense for most cases, I guess that
-> > > > dedicated "syscon" capabilities are usually better suited as a reboot
-> > > > source than watchdog.
-> > > 
-> > > I would think likewise.
-> > > 
-> > > > If dt, then the question which arises: If there are different
-> > > > capabilities to reset/reboot a whole system, how do we reflect which is
-> > > > the best suited one in dt?
-> > > 
-> > > I'm not sure, but I don't think that exposing a priority variable in
-> > > this way is the best, because it implicitly relies on what the kernel
-> > > may have selected for other devices and/or FW interfaces, which may not
-> > > have been described in DT.
-> > > 
-> > > So if we can get away with a fixed priority for now, then I would prefer
-> > > that.
-> > > 
-> > > Otherwise, I would imagine that most systems have a single preferred
-> > > mechanism with some possible fallback(s), for which a single
-> > > preferred-poweroff property might suffice, and has better interaction
-> > > w.r.t. priority (in that it should _always_ be tried first). Even that's
-> > > difficult to reconcile with FW bindings though, especially EFI (which we
-> > > sometimes must use in preference for variable storage and capsule
-> > > updates).
-> > > 
-> > Hi mark,
-> > 
-> > reboot, not poweroff, but I like that idea; it is system independent,
-> > and I agree that there should be only one "preferred-reboot" mechanism.
-> > If we need more we can always add something like "fallback-reboot".
-> 
-> Ah, sorry, I got myself confused regarding reboot/poweroff. Goot to hear
-> we agree on the preferred-$X (where X is reboot in this case).
-> 
-In this context, note that the poweroff handler patchset is abandoned/dead.
-Neither the power maintainers nor Linus liked the idea of having prioritized
-poweroff handlers.
+On Mon, Dec 01, 2014 at 09:08:42PM +0800, Zhou Wang wrote:
+> On 2014=E5=B9=B411=E6=9C=8830=E6=97=A5 17:35, Brian Norris wrote:
+> >On Tue, Nov 04, 2014 at 08:47:00PM +0800, Zhou Wang wrote:
+> >>Signed-off-by: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+[...]
+> >>+static void hisi_nfc_dma_transfer(struct hinfc_host *host, int tod=
+ev)
+> >>+{
+> >>+	struct mtd_info	*mtd =3D &host->mtd;
+> >>+	struct nand_chip *chip =3D mtd->priv;
+> >>+	unsigned long val;
+> >>+	int ret;
+> >>+
+> >>+	hinfc_write(host, host->dma_buffer, HINFC504_DMA_ADDR_DATA);
+> >>+	hinfc_write(host, host->dma_oob, HINFC504_DMA_ADDR_OOB);
+> >>+
+> >>+	if (chip->ecc.mode =3D=3D NAND_ECC_NONE) {
+> >>+		hinfc_write(host, ((mtd->oobsize & HINFC504_DMA_LEN_OOB_MASK)
+> >>+			<< HINFC504_DMA_LEN_OOB_SHIFT), HINFC504_DMA_LEN);
+> >>+
+> >>+		hinfc_write(host, HINFC504_DMA_PARA_DATA_RW_EN
+> >>+			| HINFC504_DMA_PARA_OOB_RW_EN, HINFC504_DMA_PARA);
+> >>+	} else {
+> >>+		hinfc_write(host, HINFC504_DMA_PARA_DATA_RW_EN
+> >>+		| HINFC504_DMA_PARA_OOB_RW_EN | HINFC504_DMA_PARA_DATA_EDC_EN
+> >>+		| HINFC504_DMA_PARA_OOB_EDC_EN | HINFC504_DMA_PARA_DATA_ECC_EN
+> >>+		| HINFC504_DMA_PARA_OOB_ECC_EN, HINFC504_DMA_PARA);
+> >>+	}
+> >>+
+> >>+	val =3D (HINFC504_DMA_CTRL_DMA_START | HINFC504_DMA_CTRL_BURST4_E=
+N
+> >>+		| HINFC504_DMA_CTRL_BURST8_EN | HINFC504_DMA_CTRL_BURST16_EN
+> >>+		| HINFC504_DMA_CTRL_DATA_AREA_EN | HINFC504_DMA_CTRL_OOB_AREA_EN
+> >>+		| ((host->addr_cycle =3D=3D 4 ? 1 : 0)
+> >>+			<< HINFC504_DMA_CTRL_ADDR_NUM_SHIFT)
+> >>+		| ((host->chipselect & HINFC504_DMA_CTRL_CS_MASK)
+> >>+			<< HINFC504_DMA_CTRL_CS_SHIFT));
+> >>+
+> >>+	if (todev)
+> >>+		val |=3D HINFC504_DMA_CTRL_WE;
+> >>+
+> >>+	hinfc_write(host, val, HINFC504_DMA_CTRL);
+> >>+
+> >>+	init_completion(&host->cmd_complete);
+> >
+> >You need to run init_completion() *before* you kick off your I/O.
+> >Otherwise, your interrupt handler is racing with this function.
+> >
+>=20
+> Do you mean that it needs put init_completion() before hinfc_write()?
+> If not so, interrupt handler maybe execute before init_completion()
+> which will cause something wrong.
 
-> > Not sure I understand the reference to EFI. Does EFI install a means
-> > to restart the system ?
-> 
-> Through EFI runtime services there's a mechanism to reset the machine.
-> In certain cases this must be called so as to allow EFI to set things up
-> to run after reboot (e.g. capsules for FW updates), while in other cases
-> it's perfectly fine to call other mechanisms directly.
-> 
-Sounds like its priority depends on the context. That might be a bit tricky,
-but it might be possible if EFI uses the API to register its restart handler
-and re-registers itself if needed. Would that make sense ?
+Yes.
 
-Thanks,
-Guenter
+	init_completion(&host->cmd_complete);
+
+should come sometime before
+
+	hinfc_write(host, val, HINFC504_DMA_CTRL);
+
+> >>+	ret =3D wait_for_completion_timeout(&host->cmd_complete,
+> >>+			HINFC504_NFC_DMA_TIMEOUT);
+
+[...]
+
+> >>+static void set_addr(struct mtd_info *mtd, int column, int page_ad=
+dr)
+> >>+{
+> >>+	struct nand_chip *chip =3D mtd->priv;
+> >>+	struct hinfc_host *host =3D chip->priv;
+> >>+
+> >>+	host->addr_cycle    =3D 0;
+> >>+	host->addr_value[0] =3D 0;
+> >>+	host->addr_value[1] =3D 0;
+> >>+
+> >>+	/* Serially input address */
+> >>+	if (column !=3D -1) {
+> >>+		/* Adjust columns for 16 bit buswidth */
+> >>+		if (chip->options & NAND_BUSWIDTH_16)
+> >>+			column >>=3D 1;
+> >
+> >It doesn't look like you're supporting ONFI parameter pages yet, but=
+ you
+> >might consider checking for !nand_opcode_8bits(opcode) before adjust=
+ing the
+> >address. We had to fix some other drivers for this recently.
+> >
+>=20
+> sorry, could you give me more clue about this?  Do you mean that we
+> should first make sure it is not 8 bits bus width?
+
+Look for use of nand_opcode_8bits() in nand_base.c.
+
+I'm suggesting that you don't necessarily want to "adjust the column"
+for all commands; there are some opcodes that take their address only o=
+n
+the lower x8 bits, even if the flash has an x16 buswidth.
+
+> >>+
+> >>+		host->addr_value[0] =3D column & 0xffff;
+> >>+		host->addr_cycle    =3D 2;
+> >>+	}
+
+[...]
+
+> >>+	switch (mtd->writesize) {
+> >>+	case 2048:
+> >>+		flag |=3D (0x001 << HINFC504_CON_PAGEISZE_SHIFT);
+> >>+	/* add more pagesize support
+> >>+	 * default pagesize has been set in hisi_nfc_host_init
+> >>+	 */
+> >
+> >Does this mean you can't handle any other page size? You might want =
+to
+> >put the words 'TODO' or 'FIXME' in the comment, and you might want t=
+o
+> >print an error and exit if you see some other value for mtd->writesi=
+ze.
+> >
+>=20
+> Yes, this NAND controller can handle not only 2048 page size. But
+> the NAND controller on hip04-d01 board which I used to test this
+> driver connects with a NAND flash chip which is just 2048 page size.
+> So here I
+> just listed 'case 2048', Maybe I need indicate this by 'TODO:...'?
+
+Not just a TODO; make sure to also error out, so that users don't get
+unexplained failures if they find themselves with a non-2KB page size
+NAND.
+
+Brian
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
