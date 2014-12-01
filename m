@@ -1,64 +1,83 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH] i2c-qoriq: modified compatibility for correct prescaler
-Date: Mon, 1 Dec 2014 18:23:20 +0100
-Message-ID: <20141201172320.GC3212@katana>
-References: <1413538026-15739-1-git-send-email-valentin.longchamp@keymile.com>
- <1414537731.23458.120.camel@snotra.buserror.net>
- <5450AC85.40302@keymile.com>
- <20141113003418.GE2062@katana>
- <5465B285.7070005@keymile.com>
- <20141114082832.GA2180@katana>
- <1416274083.15957.96.camel@freescale.com>
- <20141125181347.GC9716@katana>
- <1416966097.15957.171.camel@freescale.com>
- <CAAVjN7fJyOh64p5UGRmv-UTnF47cERDfbHyHTuzQmQj8xTDEOQ@mail.gmail.com>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] power: reset: read priority from device tree
+Date: Mon, 01 Dec 2014 18:29:43 +0100
+Message-ID: <ea4f7a2bfdb9bea45cab9418c211083b@agner.ch>
+References: <1417453389-1588-1-git-send-email-stefan@agner.ch>
+ <1417453389-1588-2-git-send-email-stefan@agner.ch>
+ <CAL85gmBq30pWxP0buKbM8so6QqsJq2YojiSK1EWtMPsH_7foeg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="E13BgyNx05feLLmH"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAAVjN7fJyOh64p5UGRmv-UTnF47cERDfbHyHTuzQmQj8xTDEOQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Danielle Costantino <danielle.costantino-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, Linux PowerPC Kernel <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux device trees <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Brunck, Holger" <Holger.Brunck-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, "Boschung, Rainer" <Rainer.Boschung-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL85gmBq30pWxP0buKbM8so6QqsJq2YojiSK1EWtMPsH_7foeg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 2014-12-01 18:15, Feng Kan wrote:
+> On Mon, Dec 1, 2014 at 9:03 AM, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org> wrote:
+>> This patch adds an optional property which allows to specify the
+>> reset source priority. This priority is used by the kernel restart
+>> handler call chain to sort out the proper reset/restart method.
+>> Depending on the power design of a board or other machine/board
+>> specific peculiarity, it is not possible to pick a generic priority.
+>>
+>> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/power/reset/syscon-reboot.txt | 3 +++
+>>  drivers/power/reset/syscon-reboot.c                             | 5 ++++-
+>>  2 files changed, 7 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+>> index 1190631..ee41d9c 100644
+>> --- a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+>> +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+>> @@ -11,6 +11,9 @@ Required properties:
+>>  - offset: offset in the register map for the reboot register (in bytes)
+>>  - mask: the reset value written to the reboot register (32 bit access)
+>>
+>> +Optional properties:
+>> +- priority: define the priority of the reset (0-255, defaults to 128)
+>> +
+>>  Default will be little endian mode, 32 bit access only.
+>>
+>>  Examples:
+>> diff --git a/drivers/power/reset/syscon-reboot.c b/drivers/power/reset/syscon-reboot.c
+>> index 815b901..3060d6b 100644
+>> --- a/drivers/power/reset/syscon-reboot.c
+>> +++ b/drivers/power/reset/syscon-reboot.c
+>> @@ -67,8 +67,11 @@ static int syscon_reboot_probe(struct platform_device *pdev)
+>>         if (of_property_read_u32(pdev->dev.of_node, "mask", &ctx->mask))
+>>                 return -EINVAL;
+>>
+>> -       ctx->restart_handler.notifier_call = syscon_restart_handle;
+>>         ctx->restart_handler.priority = 128;
+>> +       of_property_read_u32(pdev->dev.of_node, "priority",
+>> +                            &ctx->restart_handler.priority);
+> 
+> What is this for?
 
---E13BgyNx05feLLmH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+What do you mean? The moved line "ctx->restart_handler.notifier_call =
+syscon_restart_handle;"? When one reads the diff, it looks like that
+line was moved, in fact I tried to keep the of_property_read function
+calls together. But I had to move the assignation of the default
+priority in front of restart_handler.priority. That's what is the
+outcome...
 
+--
+Stefan
 
-> I saw that this patch was marked as not applicable, but on most qoriq
-> devices the pre-scaler is 2 especially for p2020/p2010 devices
-> arch/powerpc/boot/dts/fsl/p2020si-post.dtsi
+>> +
+>> +       ctx->restart_handler.notifier_call = syscon_restart_handle;
+>>         err = register_restart_handler(&ctx->restart_handler);
+>>         if (err)
+>>                 dev_err(dev, "can't register restart notifier (err=%d)\n", err);
+>> --
+>> 2.1.3
+>>
 
-Just for completeness: "Not applicable" given from patchwork of the i2c
-subsystem means this patch is not for the i2c subsystem. In this case,
-it is for powerpc because it was modifying powerpc dts files only. That
-doesn't say anything about the patch itself.
-
-
---E13BgyNx05feLLmH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUfKQIAAoJEBQN5MwUoCm2M2YQAKt1jbo62vzgw+uocyTJENa0
-3XU2ax6GcrffnZymRmYvO/xyuWipwWrkE146NlzUXlQyK77BDVJcowDt51u0C0tO
-tJA4Tzik2g85k+/6DzqpXLdQlFWWuWIPnvbKUaTbRRvTRWEc3vO8AndVGlXkyIMy
-Wvgv6qh1QQzWjl8mQpGxN2eq5MsxAhKMVdVKSrb8YgAUbP7j0JQiKDU2sBHQ42eS
-Ryd5jVxqddUyEKDctoLXfF8TcOdU1PsrJyTCNrKGej3htCT2pnOZQXyyB/dxtsaO
-i1y+8nOQJHemcYuAC+0q/grzIZAW/zpTMNujLEU/tho4vOZgaKjelBf3rvFGMeM4
-JRyTt3f3tELVw28a9+i5tPEQNViCcx7vaeie7e6i35LgJaq5cymKZRgjV7uKXNMb
-OUazENr9HF+fp03GOOquMcphZQMwDsjy5BxDQB72x4LJ/HmgH9Zv4CWvp0wNskzd
-Twb0chGR2EYFaFbX34yM9t+d7z6ZVm2qXvng8kipxkLPniJIfXRCXyl3iIU4Hf81
-+6Vsl+ITQXNdwh47i3qljXA+ZACgN8jseMdtguB+EW17a/ExLQwpaNUmPgLryMDM
-15uX5crduWrfxbsSjSWO7n4IXj6ZoGEXeIXjwyQtJ/pr83sn5weDzdnmUQOFWyIT
-0SZAChYQ148sLyu348iS
-=WHGN
------END PGP SIGNATURE-----
-
---E13BgyNx05feLLmH--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
