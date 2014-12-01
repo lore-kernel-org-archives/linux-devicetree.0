@@ -1,54 +1,140 @@
-From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: dts: rockchip: Add input voltage supply regulators in pmic for Marsboard
-Date: Mon,  1 Dec 2014 18:37:26 +0000
-Message-ID: <1417459046-13725-1-git-send-email-romain.perier@gmail.com>
+From: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] ARM: zynq: DT: Add USB to device tree
+Date: Mon,  1 Dec 2014 10:42:32 -0800
+Message-ID: <1417459352-23401-1-git-send-email-soren.brinkmann@xilinx.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/rk3066a-marsboard.dts | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Add USB nodes to zc702, zc706 and zed device trees.
 
-diff --git a/arch/arm/boot/dts/rk3066a-marsboard.dts b/arch/arm/boot/dts/rk3066a-marsboard.dts
-index f766024..5999708 100644
---- a/arch/arm/boot/dts/rk3066a-marsboard.dts
-+++ b/arch/arm/boot/dts/rk3066a-marsboard.dts
-@@ -60,6 +60,14 @@
- 		startup-delay-us = <100000>;
- 		vin-supply = <&vcc_io>;
+Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/zynq-7000.dtsi | 22 +++++++++++++++++++++-
+ arch/arm/boot/dts/zynq-zc702.dts | 11 +++++++++++
+ arch/arm/boot/dts/zynq-zc706.dts | 10 ++++++++++
+ arch/arm/boot/dts/zynq-zed.dts   | 10 ++++++++++
+ 4 files changed, 52 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+index ce2ef5bec4f2..9ed60938f301 100644
+--- a/arch/arm/boot/dts/zynq-7000.dtsi
++++ b/arch/arm/boot/dts/zynq-7000.dtsi
+@@ -315,6 +315,26 @@
+ 			clocks = <&clkc 4>;
+ 		};
+ 
++		usb0: usb@e0002000 {
++			compatible = "xlnx,zynq-usb-2.20a", "chipidea,usb2";
++			status = "disabled";
++			clocks = <&clkc 28>;
++			interrupt-parent = <&intc>;
++			interrupts = <0 21 4>;
++			reg = <0xe0002000 0x1000>;
++			phy_type = "ulpi";
++		};
++
++		usb1: usb@e0003000 {
++			compatible = "xlnx,zynq-usb-2.20a", "chipidea,usb2";
++			status = "disabled";
++			clocks = <&clkc 29>;
++			interrupt-parent = <&intc>;
++			interrupts = <0 44 4>;
++			reg = <0xe0003000 0x1000>;
++			phy_type = "ulpi";
++		};
++
+ 		watchdog0: watchdog@f8005000 {
+ 			clocks = <&clkc 45>;
+ 			compatible = "xlnx,zynq-wdt-r1p2";
+@@ -324,6 +344,6 @@
+ 			reg = <0xf8005000 0x1000>;
+ 			reset = <0>;
+ 			timeout-sec = <10>;
+-		};
++		} ;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-zc702.dts
+index 94e2cda6f9b6..690d2b6bbada 100644
+--- a/arch/arm/boot/dts/zynq-zc702.dts
++++ b/arch/arm/boot/dts/zynq-zc702.dts
+@@ -36,6 +36,11 @@
+ 			linux,default-trigger = "heartbeat";
+ 		};
  	};
 +
-+	vsys: vsys-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vsys";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-boot-on;
++	usb_phy0: usb-phy@0 {
++		compatible = "usb-nop-xceiv";
++		#phy-cells = <0>;
 +	};
  };
  
- &i2c1 {
-@@ -72,8 +80,14 @@
- 		interrupt-parent = <&gpio6>;
- 		interrupts = <4 IRQ_TYPE_LEVEL_LOW>;
+ &can0 {
+@@ -135,3 +140,9 @@
+ &uart1 {
+ 	status = "okay";
+ };
++
++&usb0 {
++	status = "okay";
++	dr_mode = "host";
++	usb-phy = <&usb_phy0>;
++};
+diff --git a/arch/arm/boot/dts/zynq-zc706.dts b/arch/arm/boot/dts/zynq-zc706.dts
+index a8bbdfbc7093..e383c0a3f314 100644
+--- a/arch/arm/boot/dts/zynq-zc706.dts
++++ b/arch/arm/boot/dts/zynq-zc706.dts
+@@ -27,6 +27,10 @@
+ 		bootargs = "console=ttyPS0,115200 earlyprintk";
+ 	};
  
-+		vcc1-supply = <&vsys>;
-+		vcc2-supply = <&vsys>;
-+		vcc3-supply = <&vsys>;
-+		vcc4-supply = <&vsys>;
- 		vcc5-supply = <&vcc_io>;
- 		vcc6-supply = <&vcc_io>;
-+		vcc7-supply = <&vsys>;
-+		vccio-supply = <&vsys>;
++	usb_phy0: usb-phy@0 {
++		compatible = "usb-nop-xceiv";
++		#phy-cells = <0>;
++	};
+ };
  
- 		regulators {
- 			vcc_rtc: regulator@0 {
+ &gem0 {
+@@ -114,3 +118,9 @@
+ &uart1 {
+ 	status = "okay";
+ };
++
++&usb0 {
++	status = "okay";
++	dr_mode = "host";
++	usb-phy = <&usb_phy0>;
++};
+diff --git a/arch/arm/boot/dts/zynq-zed.dts b/arch/arm/boot/dts/zynq-zed.dts
+index 697779a353ed..b08ae18ad854 100644
+--- a/arch/arm/boot/dts/zynq-zed.dts
++++ b/arch/arm/boot/dts/zynq-zed.dts
+@@ -27,6 +27,10 @@
+ 		bootargs = "console=ttyPS0,115200 earlyprintk";
+ 	};
+ 
++	usb_phy0: usb-phy@0 {
++		compatible = "usb-nop-xceiv";
++		#phy-cells = <0>;
++	};
+ };
+ 
+ &gem0 {
+@@ -46,3 +50,9 @@
+ &uart1 {
+ 	status = "okay";
+ };
++
++&usb0 {
++	status = "okay";
++	dr_mode = "host";
++	usb-phy = <&usb_phy0>;
++};
 -- 
-1.9.1
+2.2.0.1.g9ee0458
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
