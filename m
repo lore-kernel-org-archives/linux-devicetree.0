@@ -1,86 +1,36 @@
-From: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] power: reset: read priority from device tree
-Date: Mon, 1 Dec 2014 09:38:09 -0800
-Message-ID: <CAL85gmBNE7oDbE+LX+V=AFJO61Ta0Gekoq6sDb8TkEnoPsNFVA@mail.gmail.com>
-References: <1417453389-1588-1-git-send-email-stefan@agner.ch>
-	<1417453389-1588-2-git-send-email-stefan@agner.ch>
-	<CAL85gmBq30pWxP0buKbM8so6QqsJq2YojiSK1EWtMPsH_7foeg@mail.gmail.com>
-	<ea4f7a2bfdb9bea45cab9418c211083b@agner.ch>
+From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V4 08/16] irqchip: Add new driver for BCM7038-style level
+ 1 interrupt controllers
+Date: Mon, 1 Dec 2014 09:39:26 -0800
+Message-ID: <CAJiQ=7D631F1wkegeKup7yeB-wgjKLjvD3V1-n8fu3aW=fOm0g@mail.gmail.com>
+References: <1417149142-3756-1-git-send-email-cernekee@gmail.com>
+ <1417149142-3756-9-git-send-email-cernekee@gmail.com> <CAOiHx=nb4Ub_bseHUrz+HrnJxDEKMijQ=r+ASZ-p5MtTi81Big@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ea4f7a2bfdb9bea45cab9418c211083b-XLVq0VzYD2Y@public.gmane.org>
+In-Reply-To: <CAOiHx=nb4Ub_bseHUrz+HrnJxDEKMijQ=r+ASZ-p5MtTi81Big-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Fraser <jfraser-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 1, 2014 at 9:29 AM, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org> wrote:
-> On 2014-12-01 18:15, Feng Kan wrote:
->> On Mon, Dec 1, 2014 at 9:03 AM, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org> wrote:
->>> This patch adds an optional property which allows to specify the
->>> reset source priority. This priority is used by the kernel restart
->>> handler call chain to sort out the proper reset/restart method.
->>> Depending on the power design of a board or other machine/board
->>> specific peculiarity, it is not possible to pick a generic priority.
->>>
->>> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
->>> ---
->>>  Documentation/devicetree/bindings/power/reset/syscon-reboot.txt | 3 +++
->>>  drivers/power/reset/syscon-reboot.c                             | 5 ++++-
->>>  2 files changed, 7 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
->>> index 1190631..ee41d9c 100644
->>> --- a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
->>> +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
->>> @@ -11,6 +11,9 @@ Required properties:
->>>  - offset: offset in the register map for the reboot register (in bytes)
->>>  - mask: the reset value written to the reboot register (32 bit access)
->>>
->>> +Optional properties:
->>> +- priority: define the priority of the reset (0-255, defaults to 128)
->>> +
->>>  Default will be little endian mode, 32 bit access only.
->>>
->>>  Examples:
->>> diff --git a/drivers/power/reset/syscon-reboot.c b/drivers/power/reset/syscon-reboot.c
->>> index 815b901..3060d6b 100644
->>> --- a/drivers/power/reset/syscon-reboot.c
->>> +++ b/drivers/power/reset/syscon-reboot.c
->>> @@ -67,8 +67,11 @@ static int syscon_reboot_probe(struct platform_device *pdev)
->>>         if (of_property_read_u32(pdev->dev.of_node, "mask", &ctx->mask))
->>>                 return -EINVAL;
->>>
->>> -       ctx->restart_handler.notifier_call = syscon_restart_handle;
->>>         ctx->restart_handler.priority = 128;
->>> +       of_property_read_u32(pdev->dev.of_node, "priority",
->>> +                            &ctx->restart_handler.priority);
->>
->> What is this for?
->
-> What do you mean? The moved line "ctx->restart_handler.notifier_call =
-> syscon_restart_handle;"? When one reads the diff, it looks like that
-> line was moved, in fact I tried to keep the of_property_read function
-> calls together. But I had to move the assignation of the default
-> priority in front of restart_handler.priority. That's what is the
-> outcome...
+On Mon, Dec 1, 2014 at 8:09 AM, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
+> I'm not that firm in interrupt controller terminology, but can this be
+> a level 1 interrupt controller if it has a parent interrupt
+> controller? Isn't the parent the level 1 interrupt controller? Or
+> would the parent then be a level 0 interrupt controller? ;-)
 
-I believe Guenter explained above already. Actually this help to solve one of
-my problem. Thanks.
->
-> --
-> Stefan
->
->>> +
->>> +       ctx->restart_handler.notifier_call = syscon_restart_handle;
->>>         err = register_restart_handler(&ctx->restart_handler);
->>>         if (err)
->>>                 dev_err(dev, "can't register restart notifier (err=%d)\n", err);
->>> --
->>> 2.1.3
->>>
->
+According to the register manual, this is an L1 controller and the
+"IRQ0" controller handled by irq-bcm7120-l2.c is an L2 controller.
+
+This terminology is used consistently across the MIPS and ARM STB
+chips, but it is worth noting that MIPS has a builtin "L0 controller"
+(not a published term) to demux the 5 HW IRQ lines, while ARM only
+uses a single IRQ input for peripherals.  On STB MIPS platforms it is
+typical to only use one HW IRQ input per CPU (TP).
+
+Also note that brcm,bcm3384-l2-intc can either be used for an L1
+(PERIPH INT block) or an L2/L3 (ZMIPS/CMIPS/IOP).
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
