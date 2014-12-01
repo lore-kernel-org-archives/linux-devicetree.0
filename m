@@ -1,135 +1,55 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v2 3/5] pinctrl: exynos: Fix GPIO setup failure because
- domain clock being gated
-Date: Mon, 1 Dec 2014 23:34:59 +0900
-Message-ID: <CA+Ln22H_a9CWxrYO_i9Esm6keXA8XLLYmE1Vg-8ynamJ1sAwpQ@mail.gmail.com>
-References: <1417011857-10419-1-git-send-email-k.kozlowski@samsung.com>
-	<1417011857-10419-4-git-send-email-k.kozlowski@samsung.com>
-	<CACRpkdb8F8YcvFeHPvOKHjx_p4HEpimck3XRabB3oHpZTdmRQQ@mail.gmail.com>
-	<1417183724.18249.36.camel@AMDC1943>
-	<CA+Ln22Ejo51VPWf6DmuRvV_fZr_H=-BXAshSPSOokNE1bz=-QA@mail.gmail.com>
-	<1417423043.4055.14.camel@AMDC1943>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] pinctrl: at91: allow disabled gpio controllers
+Date: Mon, 1 Dec 2014 15:39:27 +0100
+Message-ID: <20141201143927.GT2714@ldesroches-Latitude-E6320>
+References: <1417193367-12422-1-git-send-email-ludovic.desroches@atmel.com>
+ <CACRpkdbXuXyfwAyFTHVDGa4OS88KsHXZeDDAeXf6ZJ_JQmduoQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1417423043.4055.14.camel@AMDC1943>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <thomas.abraham@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Vivek Gautam <gautam.vivek@samsung.com>, Kevin Hilman <khilman@kernel.org>, Russell King <linux@arm.linux.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbXuXyfwAyFTHVDGa4OS88KsHXZeDDAeXf6ZJ_JQmduoQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-12-01 17:37 GMT+09:00 Krzysztof Kozlowski <k.kozlowski@samsung.com=
->:
->
-> On nie, 2014-11-30 at 21:19 +0900, Tomasz Figa wrote:
->> Hi Krzysztof,
->>
->> 2014-11-28 23:08 GMT+09:00 Krzysztof Kozlowski <k.kozlowski@samsung.=
-com>:
->> > On pi=C4=85, 2014-11-28 at 15:04 +0100, Linus Walleij wrote:
->> >> On Wed, Nov 26, 2014 at 3:24 PM, Krzysztof Kozlowski
->> >> <k.kozlowski@samsung.com> wrote:
->> >>
->> >> > The audio subsystem on Exynos 5420 has separate clocks and GPIO=
-=2E To
->> >> > operate properly on GPIOs the main block clock 'mau_epll' must =
-be
->> >> > enabled.
->> >> >
->> >> > This was observed on Peach Pi/Pit and Arndale Octa (after enabl=
-ing i2s0)
->> >> > after introducing runtime PM to pl330 DMA driver. After that co=
-mmit the
->> >> > 'mau_epll' was gated, because the "amba" clock was disabled and=
- there
->> >> > were no more users of mau_epll.
->> >> >
->> >> > The system hang just before probing i2s0 because
->> >> > samsung_pinmux_setup() tried to access memory from audss block =
-which was
->> >> > gated.
->> >> >
->> >> > Add a clock property to the pinctrl driver and enable the clock=
- during
->> >> > GPIO setup. During normal GPIO operations (set, get, set_direct=
-ion) the
->> >> > clock is not enabled.
->>
->> Could you make sure that possibility of gating this clock is worth t=
-he
->> effort of adding gating code to all affected drivers? If there is no
->> significant change in power consumption maybe it could be simply kee=
-p
->> running all the time?
->
-> I had an impression that last time you disliked such idea:
-> http://www.spinics.net/lists/arm-kernel/msg338127.html
-> That's why I developed these patches. Because keeping a clock always =
-on,
-> even when it is unused, is undesirable.
+On Mon, Dec 01, 2014 at 02:56:22PM +0100, Linus Walleij wrote:
+> On Fri, Nov 28, 2014 at 5:49 PM, Ludovic Desroches
+> <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
+> 
+> > This patch allows to have gpio controller with status set to disabled.
+> >
+> > gpio_banks represents all the gpio banks available on the device whereas
+> > nbanks represents the gpio banks used. Having a disabled gpio controller
+> > involves that nbanks value is lower than gpio_banks and that some
+> > pointers in the gpio_chips array are NULL. This patch deals with these
+> > specific cases.
+> >
+> > Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> 
+> (...)
+> >         /* We will handle a range of GPIO pins */
+> > -       for (i = 0; i < info->nbanks; i++)
+> > -               pinctrl_add_gpio_range(info->pctl, &gpio_chips[i]->range);
+> > +       for (i = 0; i < gpio_banks; i++)
+> > +               if (gpio_chips[i])
+> > +                       pinctrl_add_gpio_range(info->pctl, &gpio_chips[i]->range);
+> 
+> I highly suspect the real solution to this problem is to get rid
+> of the pinctrl_add_gpio_range() call from the driver.
+> 
+> Remobe these calls, and instead in at91_gpio_probe() in the same
+> file, call gpiochip_add_pingroup_range() for each GPIO chip.
+> 
+> That way the GPIO ranges are inserted from the GPIO side instead
+> of the pinctrl side, which is way better, since it is more relative,
+> and make you only add ranges for the gpio chips actually there.
 
-I was mostly concerned about the particular solution implemented by
-that patch that kept the clocks enabled on all platforms, not only the
-affected one. However...
+Thanks for your advices, I'll try to do it the way you recommend.
 
->
-> Anyway, I did some simple measurements (after booting Arndale Octa
-> to /bin/sh, idle):
->  - with mau_epll gated: ~523 mA
->  - with mau_epll always on: ~531 mA
->
-> Keeping it on increases energy usage by 1.5% in idle (with measuremen=
-t
-> uncertainty ~0.4%).
->
-
-=2E..this definitely shows that the effort isn't worthless, which means
-that your patch goes in the right direction.
-
->
->> Also isn't a similar problem happening due to power domains? I belie=
-ve
->> the whole maudio block is located in a separate power domain but
->> somehow it doesn't get turned off?
->
-> There is Maudio power domain... but I think it is not related here.
-
-Could you somehow check what happens when the maudio power domain is
-turned off and maudio pin controller is accessed? Could you also check
-the difference in power consumption with this domain powered on and
-off?
-
-> Pinctrl driver does not have runtime PM and is not attached to a doma=
-in.
-> I thought about other solution to this problem (with utilization of
-> power domains):
->  - add runtime PM to pinctrl and audss clocks,
->  - attach pinctrl and audss clocks to maudio power domain,
->  - enable the clock when power domain is turned on.
-> However almost the same changes had to be added to pinctrl and audss
-> clocks drivers (replace clock_enable() with pm_runtime_get_sync()).
-
-Well, if the dependency is there due to hardware design, I think it
-needs to be reflected in the drivers as well.
-
-=46ew other issues that came to my mind:
-
- - Your previous patch added clock control only to pinctrl operations.
-Shouldn't GPIO operations be included as well?
-
- - If power domain dependency is there too, what happens with GPIO
-pins if the domain is powered off? If they lose their states, wouldn't
-it necessary to keep the domain powered on whenever there is some GPIO
-pin requested (which usually =3D in use)? (I'd assume that special
-functions shouldn't take a reference on runtime PM, because they are
-related to IP blocks in the same PM domain, which will implicitly keep
-the domain powered on.)
-
- - Doesn't the clock controller also lose its state whenever the power
-domain is powered off? I guess that would be similar to ISP clock
-controller, issues of which are still not resolved in mainline.
-Sylwester could tell you more about this, I guess.
-
-Best regards,
-Tomasz
+Ludovic
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
