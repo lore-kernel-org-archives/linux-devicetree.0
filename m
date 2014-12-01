@@ -1,73 +1,45 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v14 02/12] drm: imx: imx-hdmi: return defer if can't get ddc
- i2c adapter
-Date: Mon,  1 Dec 2014 19:22:08 +0800
-Message-ID: <1417432928-12819-1-git-send-email-andy.yan@rock-chips.com>
-References: <1417432770-12719-1-git-send-email-andy.yan@rock-chips.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH] irqchip: gic: Allow interrupt level to be set for PPIs.
+Date: Mon, 1 Dec 2014 11:23:02 +0000
+Message-ID: <20141201112302.GC3836@n2100.arm.linux.org.uk>
+References: <1417197340-27298-1-git-send-email-Liviu.Dudau@arm.com>
+ <20141201104145.GY3836@n2100.arm.linux.org.uk>
+ <20141201104612.GM828@e106497-lin.cambridge.arm.com>
+ <20141201110358.GA3836@n2100.arm.linux.org.uk>
+ <547C4ECD.20802@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1417432770-12719-1-git-send-email-andy.yan@rock-chips.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: airlied@linux.ie, Philipp Zabel <p.zabel@pengutronix.de>, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
-Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, mark.yao@rock-chips.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Kumar Gala <galak@codeaurora.org>, Andy Yan <andy.yan@rock-chips.com>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <547C4ECD.20802-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-drm driver may probe before the i2c bus, so the driver should
-defer probing until it is available
+On Mon, Dec 01, 2014 at 11:19:41AM +0000, Marc Zyngier wrote:
+> Hi Russell,
+> 
+> On 01/12/14 11:03, Russell King - ARM Linux wrote:
+> > If all you want to do is to bypass the following check, what's wrong
+> > with actually doing that:
+> > 
+> > -	if (type != IRQ_TYPE_LEVEL_HIGH && type != IRQ_TYPE_EDGE_RISING)
+> > +	if (gicirq >= 32 && type != IRQ_TYPE_LEVEL_HIGH &&
+> > +	    type != IRQ_TYPE_EDGE_RISING)
+> > 		return -EINVAL;
+> > 
+> 
+> I think that will require some additional changes to gic_configure_irq
+> (in irq-gic-common.c).
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-Reviewed-by: Daniel Kurtz <djkurtz@chromium.org>
+I don't think so - gic_configure_irq() will treat it as a no-op as far
+as trying to configure the IRQ settings.
 
----
-
-Changes in v14: None
-Changes in v13: None
-Changes in v12:
-- refactor of_node_put(ddc_node)
-
-Changes in v11: None
-Changes in v10: None
-Changes in v9: None
-Changes in v8: None
-Changes in v7: None
-Changes in v6: None
-Changes in v5: None
-Changes in v4:
-- defer probe ddc i2c adapter
-
-Changes in v3: None
-
- drivers/gpu/drm/imx/imx-hdmi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/imx/imx-hdmi.c b/drivers/gpu/drm/imx/imx-hdmi.c
-index 79daec4..8029a07 100644
---- a/drivers/gpu/drm/imx/imx-hdmi.c
-+++ b/drivers/gpu/drm/imx/imx-hdmi.c
-@@ -1611,10 +1611,12 @@ static int imx_hdmi_bind(struct device *dev, struct device *master, void *data)
- 	ddc_node = of_parse_phandle(np, "ddc-i2c-bus", 0);
- 	if (ddc_node) {
- 		hdmi->ddc = of_find_i2c_adapter_by_node(ddc_node);
--		if (!hdmi->ddc)
-+		of_node_put(ddc_node);
-+		if (!hdmi->ddc) {
- 			dev_dbg(hdmi->dev, "failed to read ddc node\n");
-+			return -EPROBE_DEFER;
-+		}
- 
--		of_node_put(ddc_node);
- 	} else {
- 		dev_dbg(hdmi->dev, "no ddc property found\n");
- 	}
 -- 
-1.9.1
+FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
