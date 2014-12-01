@@ -1,24 +1,27 @@
 From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: rockchip: set FIFO size for SDMMC, SDIO and EMMC
-Date: Mon, 01 Dec 2014 01:05:16 +0100
-Message-ID: <3674430.hGHycMC0Vo@diego>
-References: <1417170254-13615-1-git-send-email-julien.chauveau@neo-technologies.fr>
+Subject: Re: [PATCH v1] ARM: dts: rockchip: Update LEDs to work with the last leds-gpio driver on radxarock
+Date: Mon, 01 Dec 2014 01:06:51 +0100
+Message-ID: <2199937.lXpYYkmmQM@diego>
+References: <1416759575-774-1-git-send-email-romain.perier@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417170254-13615-1-git-send-email-julien.chauveau-MwaZihP3oV2HdZQakrT3ElaPQRlvutdw@public.gmane.org>
+In-Reply-To: <1416759575-774-1-git-send-email-romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Julien CHAUVEAU <julien.chauveau-MwaZihP3oV2HdZQakrT3ElaPQRlvutdw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "moderated list:ARM/Rockchip SoC..." <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 28. November 2014, 11:24:14 schrieb Julien CHAUVEAU:
-> The SDMMC, SDIO and EMMC controllers use an external FIFO whose size is
-> 256x32bit. This patch set the corresponding fifo-depth properties for both
-> RK3066 and RK3188.
+Am Sonntag, 23. November 2014, 16:19:35 schrieb Romain Perier:
+> The leds-gpio driver recently switched to the device property API. The
+> device_node name is no longer retrieved if the "label" devicetree property
+> is not found. In this case the driver tries to create entries with (null)
+> name in /sys/class/leds, which is wrong and generates backtrace as several
+> gpio_leds have the same name. Also renamed subnode "yellow" to "blue" to
+> match the last schematics updates.
 > 
-> Signed-off-by: Julien CHAUVEAU <julien.chauveau-MwaZihP3oV2HdZQakrT3ElaPQRlvutdw@public.gmane.org>
+> Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
 applied to my dts branch
 --
