@@ -1,28 +1,49 @@
-From: Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH 0/2] rockchip: efuse: add driver to support rk3288 efuse
-Date: Mon,  1 Dec 2014 15:34:39 +0800
-Message-ID: <1417419281-9243-1-git-send-email-jay.xu@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, linux@arm.linux.org.uk, grant.likely@linaro.org, robh+dt@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jianqun Xu <jay.xu@rock-chips.com>
+From: arno@natisbad.org (Arnaud Ebalard)
+Subject: Re: [PATCHv1 6/6] rtc: rtc-isl12057: add alarm support to Intersil ISL12057 RTC driver
+Date: Mon, 01 Dec 2014 09:07:41 +0100
+Message-ID: <87r3wjkd2q.fsf@natisbad.org>
+References: <cover.1416006090.git.arno@natisbad.org>
+	<986ee8d9d3e6862007f398ffddc2a4bb2368933e.1416006090.git.arno@natisbad.org>
+	<5476ED9F.2070600@kleine-koenig.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5476ED9F.2070600@kleine-koenig.org> ("Uwe \=\?utf-8\?Q\?Kleine-K\?\=
+ \=\?utf-8\?Q\?\=C3\=B6nig\=22's\?\=
+	message of "Thu, 27 Nov 2014 10:23:43 +0100")
+Sender: linux-doc-owner@vger.kernel.org
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Andrew Morton <akpm@linux-foundation.org>
 List-Id: devicetree@vger.kernel.org
 
-In RK3288, there are two eFuse. One is organized as 32bits by 8 one-time
-programmable electrical fuses with random access interface, and the other
-is organized as 32bits by 32 one-time programmable electrical fuses.
+Hi Uwe,
 
-Jianqun Xu (2):
-  rockchip: efuse: add documentation for rk3288 efuse driver
-  rockchip: efuse: add efuse driver for rk3288 efuse
+Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig.org> writes:
 
- .../bindings/fuse/rockchip,rk3288-efuse.txt        |  14 ++
- arch/arm/mach-rockchip/efuse.c                     | 165 +++++++++++++++++++++
- arch/arm/mach-rockchip/efuse.h                     |  15 ++
- 3 files changed, 194 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fuse/rockchip,rk3288-efuse.txt
- create mode 100644 arch/arm/mach-rockchip/efuse.c
- create mode 100644 arch/arm/mach-rockchip/efuse.h
+> Hello,
+>
+> finally I managed to test this series on my (unmodified) rn104.
+>
+> For patch 1: Maybe point out that the issue with the century bit isn'=
+t
+> that critical, because this bit is not expected to be set before year=
+ 2100.
+>
+> For patch 3: This patch adds a few dev_err calls that get later amend=
+ed
+> in patch 5 to also include an error code. IMHO these should already b=
+e
+> added in patch 3. Patch 5 should only add it to the already existing
+> strings (if applicable).
+>
+> For patch 4: Maybe
+> s/obsolete/for backwards compatibility, don't use in new code/.
+>
+> Some further comments inline ...
 
--- 
-1.9.1
+Thanks for the tests. I'll take a look at your comments this evening.
+
+Cheers,
+
+a+
