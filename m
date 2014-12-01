@@ -1,11 +1,8 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v5 11/15] tpm/tpm_i2c_stm_st33/dts/st33zp24_i2c: Add DTS Documentation
-Date: Mon,  1 Dec 2014 01:20:43 +0100
-Message-ID: <1417393247-4479-12-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v5 15/15] tpm/tpm_i2c_stm_st33: Increment driver version to 1.2.1.
+Date: Mon,  1 Dec 2014 01:20:47 +0100
+Message-ID: <1417393247-4479-16-git-send-email-christophe-h.ricard@st.com>
 References: <1417393247-4479-1-git-send-email-christophe-h.ricard@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1417393247-4479-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
@@ -13,69 +10,46 @@ To: peterhuewe-Mmb7MZpHnFY@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@publi
 Cc: tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-st33zp24 tpm can be seen as a trivial i2c device as other i2c tpm.
-However several other properties needs to be documented such as lpcpd.
+Many changes were added to the driver so increment the version.
 
 Reviewed-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- .../devicetree/bindings/security/tpm/st33zp24.txt  | 36 ++++++++++++++=
-++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/security/tpm/st33=
-zp24.txt
+ drivers/char/tpm/tpm_i2c_stm_st33.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/security/tpm/st33zp24.tx=
-t b/Documentation/devicetree/bindings/security/tpm/st33zp24.txt
-new file mode 100644
-index 0000000..eb48222
---- /dev/null
-+++ b/Documentation/devicetree/bindings/security/tpm/st33zp24.txt
-@@ -0,0 +1,36 @@
-+* STMicroelectronics SAS. ST33ZP24 TPM SoC
-+
-+Required properties:
-+- compatible: Should be "st,st33zp24_i2c".
-+- clock-frequency: I=C2=B2C work frequency.
-+- reg: address on the bus
-+
-+Optional ST33ZP24 Properties:
-+- interrupt-parent: phandle for the interrupt gpio controller
-+- interrupts: GPIO interrupt to which the chip is connected
-+- lpcpd-gpios: Output GPIO pin used for ST33ZP24 power management D1/D=
-2 state.
-+If set vps must present when the platform is going into sleep/hibernat=
-e mode.
-+
-+Optional SoC Specific Properties:
-+- pinctrl-names: Contains only one value - "default".
-+- pintctrl-0: Specifies the pin control groups used for this controlle=
-r.
-+
-+Example (for ARM-based BeagleBoard xM with ST33ZP24 on I2C2):
-+
-+&i2c2 {
-+
-+        status =3D "okay";
-+
-+        st33zp24: st33zp24@13 {
-+
-+                compatible =3D "st,st33zp24_i2c";
-+
-+                reg =3D <0x013>;
-+                clock-frequency =3D <400000>;
-+
-+                interrupt-parent =3D <&gpio5>;
-+                interrupts =3D <7 IRQ_TYPE_LEVEL_HIGH>;
-+
-+                lpcpd-gpios =3D <&gpio5 15 GPIO_ACTIVE_HIGH>;
-+        };
-+};
---=20
+diff --git a/drivers/char/tpm/tpm_i2c_stm_st33.c b/drivers/char/tpm/tpm_i2c_stm_st33.c
+index 52f0b0d..473e149 100644
+--- a/drivers/char/tpm/tpm_i2c_stm_st33.c
++++ b/drivers/char/tpm/tpm_i2c_stm_st33.c
+@@ -1,6 +1,6 @@
+ /*
+  * STMicroelectronics TPM I2C Linux driver for TPM ST33ZP24
+- * Copyright (C) 2009, 2010  STMicroelectronics
++ * Copyright (C) 2009, 2010, 2014  STMicroelectronics
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+@@ -15,7 +15,7 @@
+  * You should have received a copy of the GNU General Public License
+  * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  *
+- * STMicroelectronics version 1.2.0, Copyright (C) 2010
++ * STMicroelectronics version 1.2.1, Copyright (C) 2014
+  * STMicroelectronics comes with ABSOLUTELY NO WARRANTY.
+  * This is free software, and you are welcome to redistribute it
+  * under certain conditions.
+@@ -918,5 +918,5 @@ module_i2c_driver(tpm_stm_i2c_driver);
+ 
+ MODULE_AUTHOR("Christophe Ricard (tpmsupport-qxv4g6HH51o@public.gmane.org)");
+ MODULE_DESCRIPTION("STM TPM I2C ST33 Driver");
+-MODULE_VERSION("1.2.0");
++MODULE_VERSION("1.2.1");
+ MODULE_LICENSE("GPL");
+-- 
 2.1.0
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
