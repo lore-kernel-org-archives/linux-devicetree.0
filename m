@@ -1,112 +1,45 @@
-From: Alexander Stein <alexander.stein@systec-electronic.com>
-Subject: [PATCH v2 1/1] gpio: mcp23s08: Add option to configure IRQ output polarity as active high
-Date: Mon,  1 Dec 2014 08:26:00 +0100
-Message-ID: <1417418760-17368-1-git-send-email-alexander.stein@systec-electronic.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>
-Cc: Alexander Stein <alexander.stein@systec-electronic.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+From: Jianqun Xu <jay.xu@rock-chips.com>
+Subject: [PATCH 1/2] rockchip: efuse: add documentation for rk3288 efuse driver
+Date: Mon,  1 Dec 2014 15:34:40 +0800
+Message-ID: <1417419281-9243-2-git-send-email-jay.xu@rock-chips.com>
+References: <1417419281-9243-1-git-send-email-jay.xu@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1417419281-9243-1-git-send-email-jay.xu@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de, linux@arm.linux.org.uk, grant.likely@linaro.org, robh+dt@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jianqun Xu <jay.xu@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Default is active low, but if property is specified in DT set INTPOL flag.
+In RK3288, there are two eFuse. One is organized as 32bits by 8 one-time programmable
+electrical fuses with random access interface, and the other is organized as 32bits by 32
+one-time programmable electrical fuses.
+The 32x32 eFuse can only be accessed by APB bus when IO_SECURITYsel is high.
 
-Signed-off-by: Alexander Stein <alexander.stein@systec-electronic.com>
+Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
 ---
-Changes in v2:
-* Modified the commit message and binding text slightly to indicate that
-  this features changes the IRQ output polarity.
+ .../devicetree/bindings/fuse/rockchip,rk3288-efuse.txt     | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fuse/rockchip,rk3288-efuse.txt
 
- .../devicetree/bindings/gpio/gpio-mcp23s08.txt     |  2 ++
- drivers/gpio/gpio-mcp23s08.c                       | 30 +++++++++++++++++-----
- 2 files changed, 25 insertions(+), 7 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt b/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
-index c306a2d0..f3332b9 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
-@@ -57,6 +57,8 @@ Optional device specific properties:
-         occurred on. If it is not set, the interrupt are only generated for the
-         bank they belong to.
-         On devices with only one interrupt output this property is useless.
-+- microchip,irq-active-high: Sets the INTPOL flag in the IOCON register. This
-+        configures the IRQ output polarity as active high.
- 
- Example I2C (with interrupt):
- gpiom1: gpio@20 {
-diff --git a/drivers/gpio/gpio-mcp23s08.c b/drivers/gpio/gpio-mcp23s08.c
-index 529025e..1d5ffb4 100644
---- a/drivers/gpio/gpio-mcp23s08.c
-+++ b/drivers/gpio/gpio-mcp23s08.c
-@@ -65,6 +65,7 @@ struct mcp23s08_ops {
- 
- struct mcp23s08 {
- 	u8			addr;
-+	bool			irq_active_high;
- 
- 	u16			cache[11];
- 	u16			irq_rise;
-@@ -476,6 +477,7 @@ static int mcp23s08_irq_setup(struct mcp23s08 *mcp)
- {
- 	struct gpio_chip *chip = &mcp->chip;
- 	int err, irq, j;
-+	unsigned long irqflags = IRQF_ONESHOT | IRQF_SHARED;
- 
- 	mutex_init(&mcp->irq_lock);
- 
-@@ -484,10 +486,13 @@ static int mcp23s08_irq_setup(struct mcp23s08 *mcp)
- 	if (!mcp->irq_domain)
- 		return -ENODEV;
- 
-+	if (mcp->irq_active_high)
-+		irqflags |= IRQF_TRIGGER_HIGH;
-+	else
-+		irqflags |= IRQF_TRIGGER_LOW;
+diff --git a/Documentation/devicetree/bindings/fuse/rockchip,rk3288-efuse.txt b/Documentation/devicetree/bindings/fuse/rockchip,rk3288-efuse.txt
+new file mode 100644
+index 0000000..82af730
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fuse/rockchip,rk3288-efuse.txt
+@@ -0,0 +1,14 @@
++ROCKCHIP RK3288 efuse block.
 +
- 	err = devm_request_threaded_irq(chip->dev, mcp->irq, NULL, mcp23s08_irq,
--					IRQF_TRIGGER_LOW | IRQF_ONESHOT |
--					IRQF_SHARED,
--					dev_name(chip->dev), mcp);
-+					irqflags, dev_name(chip->dev), mcp);
- 	if (err != 0) {
- 		dev_err(chip->dev, "unable to request IRQ#%d: %d\n",
- 			mcp->irq, err);
-@@ -589,6 +594,7 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
- 
- 	mcp->data = data;
- 	mcp->addr = addr;
-+	mcp->irq_active_high = false;
- 
- 	mcp->chip.direction_input = mcp23s08_direction_input;
- 	mcp->chip.get = mcp23s08_get;
-@@ -648,14 +654,24 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
- 		goto fail;
- 
- 	mcp->irq_controller = pdata->irq_controller;
--	if (mcp->irq && mcp->irq_controller && (type == MCP_TYPE_017))
--		mirror = pdata->mirror;
-+	if (mcp->irq && mcp->irq_controller) {
-+		mcp->irq_active_high = of_property_read_bool(mcp->chip.of_node,
-+				"microchip,irq-active-high");
- 
--	if ((status & IOCON_SEQOP) || !(status & IOCON_HAEN) || mirror) {
-+		if (type == MCP_TYPE_017)
-+			mirror = pdata->mirror;
-+	}
++Required properties:
++- compatible : should be:
++	"rockchip,rk3288-efuse"
++- reg: Should contain 1 entry: the entry gives the physical address and length
++       of the fuse registers.
 +
-+	if ((status & IOCON_SEQOP) || !(status & IOCON_HAEN) || mirror ||
-+	     mcp->irq_active_high) {
- 		/* mcp23s17 has IOCON twice, make sure they are in sync */
- 		status &= ~(IOCON_SEQOP | (IOCON_SEQOP << 8));
- 		status |= IOCON_HAEN | (IOCON_HAEN << 8);
--		status &= ~(IOCON_INTPOL | (IOCON_INTPOL << 8));
-+		if (mcp->irq_active_high)
-+			status |= IOCON_INTPOL | (IOCON_INTPOL << 8);
-+		else
-+			status &= ~(IOCON_INTPOL | (IOCON_INTPOL << 8));
++Example:
 +
- 		if (mirror)
- 			status |= IOCON_MIRROR | (IOCON_MIRROR << 8);
- 
++	efuse: efuse@ffb40000 {
++		compatible = "rockchip,rk3288-efuse";
++		reg = <0xffb40000 0x10000>;
++	};
 -- 
-2.0.4
-
+1.9.1
