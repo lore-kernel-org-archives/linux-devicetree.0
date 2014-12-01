@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v5 03/15] tpm/tpm_i2c_stm_st33: Change License header to have up to date address information
-Date: Mon,  1 Dec 2014 01:20:35 +0100
-Message-ID: <1417393247-4479-4-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v5 02/15] tpm/tpm_i2c_stm_st33: Update Kconfig in order to be inline to other similar product
+Date: Mon,  1 Dec 2014 01:20:34 +0100
+Message-ID: <1417393247-4479-3-git-send-email-christophe-h.ricard@st.com>
 References: <1417393247-4479-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1417393247-4479-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
@@ -10,32 +10,44 @@ To: peterhuewe-Mmb7MZpHnFY@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@publi
 Cc: tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Free Software Foundation may have mail address change.
-In order to be sure to have up to date mail address give an url to
-the license which includes accurate informations.
+STMicroelectronics i2c tpm is the only one to have a different tristate
+label.
+
+Rename it "TPM Interface Specification 1.2 Interface (I2C - STMicroelectronics)"
 
 Reviewed-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/char/tpm/tpm_i2c_stm_st33.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/char/tpm/Kconfig  | 4 ++--
+ drivers/char/tpm/Makefile | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/char/tpm/tpm_i2c_stm_st33.c b/drivers/char/tpm/tpm_i2c_stm_st33.c
-index 7d1c540..a205d5d 100644
---- a/drivers/char/tpm/tpm_i2c_stm_st33.c
-+++ b/drivers/char/tpm/tpm_i2c_stm_st33.c
-@@ -12,9 +12,8 @@
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  * GNU General Public License for more details.
-  *
-- * You should have received a copy of the GNU General Public License along
-- * with this program; if not, write to the Free Software Foundation, Inc.,
-- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
-  *
-  * STMicroelectronics version 1.2.0, Copyright (C) 2010
-  * STMicroelectronics comes with ABSOLUTELY NO WARRANTY.
+diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+index c54cac3..edfb45c 100644
+--- a/drivers/char/tpm/Kconfig
++++ b/drivers/char/tpm/Kconfig
+@@ -100,8 +100,8 @@ config TCG_IBMVTPM
+ 	  will be accessible from within Linux.  To compile this driver
+ 	  as a module, choose M here; the module will be called tpm_ibmvtpm.
+ 
+-config TCG_ST33_I2C
+-	tristate "STMicroelectronics ST33 I2C TPM"
++config TCG_TIS_I2C_ST33
++	tristate "TPM Interface Specification 1.2 Interface (I2C - STMicroelectronics)"
+ 	depends on I2C
+ 	depends on GPIOLIB
+ 	---help---
+diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+index 4d85dd6..7f54dae 100644
+--- a/drivers/char/tpm/Makefile
++++ b/drivers/char/tpm/Makefile
+@@ -20,5 +20,5 @@ obj-$(CONFIG_TCG_NSC) += tpm_nsc.o
+ obj-$(CONFIG_TCG_ATMEL) += tpm_atmel.o
+ obj-$(CONFIG_TCG_INFINEON) += tpm_infineon.o
+ obj-$(CONFIG_TCG_IBMVTPM) += tpm_ibmvtpm.o
+-obj-$(CONFIG_TCG_ST33_I2C) += tpm_i2c_stm_st33.o
++obj-$(CONFIG_TCG_TIS_I2C_ST33) += tpm_i2c_stm_st33.o
+ obj-$(CONFIG_TCG_XEN) += xen-tpmfront.o
 -- 
 2.1.0
 
