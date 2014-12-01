@@ -1,172 +1,61 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH/RFC v8 11/14] DT: Add documentation for the mfd Maxim
- max77693
-Date: Mon, 1 Dec 2014 11:15:35 +0000
-Message-ID: <20141201111535.GA15845@x1>
-References: <1417166286-27685-1-git-send-email-j.anaszewski@samsung.com>
- <1417166286-27685-12-git-send-email-j.anaszewski@samsung.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 8/8] ARM: dts: mt8135: Add support for MT6397 regulator
+Date: Mon, 1 Dec 2014 11:16:12 +0000
+Message-ID: <20141201111612.GF7712@sirena.org.uk>
+References: <1417146874-5232-1-git-send-email-flora.fu@mediatek.com>
+ <1417146874-5232-9-git-send-email-flora.fu@mediatek.com>
+ <20141128153008.GS7712@sirena.org.uk>
+ <1417403967.9547.2.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="fUAgMX1mmt35sX2N"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1417166286-27685-12-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, SangYoung Son <hello.son@smasung.com>, Samuel Ortiz <sameo@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+In-Reply-To: <1417403967.9547.2.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Flora Fu <flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Sandeep Nair <sandeep_n-l0cyMroinI0@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Joe.C" <yi>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 28 Nov 2014, Jacek Anaszewski wrote:
 
-> This patch adds device tree binding documentation for
-> the flash cell of the Maxim max77693 multifunctional device.
->=20
-> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: SangYoung Son <hello.son@smasung.com>
-> Cc: Samuel Ortiz <sameo@linux.intel.com>
-> Cc: Bryan Wu <cooloney@gmail.com>
-> Cc: Richard Purdie <rpurdie@rpsys.net>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: <devicetree@vger.kernel.org>
-> ---
->  Documentation/devicetree/bindings/mfd/max77693.txt |   74 ++++++++++=
-++++++++++
->  1 file changed, 74 insertions(+)
+--fUAgMX1mmt35sX2N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This definitely requires a DT Ack.
+On Mon, Dec 01, 2014 at 11:19:25AM +0800, Flora Fu wrote:
+> On Fri, 2014-11-28 at 15:30 +0000, Mark Brown wrote:=20
 
-> diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Doc=
-umentation/devicetree/bindings/mfd/max77693.txt
-> index 01e9f30..50a8dad 100644
-> --- a/Documentation/devicetree/bindings/mfd/max77693.txt
-> +++ b/Documentation/devicetree/bindings/mfd/max77693.txt
-> @@ -41,6 +41,62 @@ Optional properties:
->  	 To get more informations, please refer to documentaion.
->  	[*] refer Documentation/devicetree/bindings/pwm/pwm.txt
-> =20
-> +- led-flash : the LED submodule device node
-> +
-> +There are two led outputs available - fled1 and fled2. Each of them =
-can
-> +control a separate led or they can be connected together to double
-> +the maximum current for a single connected led. One led is represent=
-ed
-> +by one child node.
-> +
-> +Required properties:
-> +- compatible : must be "maxim,max77693-flash"
+> > This appears to be the DT fragment for a SoC but you are defining the
+> > system integration for the PMIC.  That's bad, the PMIC is a separate
+> > device so should be hooked up by the board using it.  If there's common
+> > elements from a reference design they should be in their own .dtsi.
 
-I'm not sure this compatible string is suitable.  It looks like
-NOR/NAND Flash to me.  Perhaps 'fled', or just 'led' would be better.
+> Do you mean that we should add a mt6397.dtsi and include it from
+> mt8135.dtsi? For board specific, update them in mt8135.dtsi?=20
 
-> +Optional properties:
-> +- maxim,fleds : array of current outputs in order: fled1, fled2
+More likely you should just add any integration needed in the board
+file.  There should be no need to specify anything generically for the
+regulators on a PMIC except registering the device.
 
-Nit: Sentences start with an uppercase character.
+--fUAgMX1mmt35sX2N
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-This is true for all other occurrences.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-> +	Note: both current outputs can be connected to a single led
-> +	Possible values:
-> +		0 - the output is left disconnected,
-> +		1 - a diode is connected to the output.
-> +- maxim,trigger-type : Array of trigger types in order: flash, torch
-> +	Possible trigger types:
-> +		0 - Rising edge of the signal triggers the flash/torch,
-> +		1 - Signal level controls duration of the flash/torch.
-> +- maxim,trigger : Array of flags indicating which trigger can activa=
-te given led
-> +	in order: fled1, fled2
-> +	Possible flag values (can be combined):
-> +		1 - FLASH pin of the chip,
-> +		2 - TORCH pin of the chip,
-> +		4 - software via I2C command.
-> +- maxim,boost-mode :
-> +	In boost mode the device can produce up to 1.2A of total current
-> +	on both outputs. The maximum current on each output is reduced
-> +	to 625mA then. If there are two child led nodes defined then boost
-> +	is enabled by default.
-> +	Possible values:
-> +		0 - no boost,
-> +		1 - adaptive mode,
-> +		2 - fixed mode.
-> +- maxim,boost-vout : Output voltage of the boost module in millivolt=
-s.
-> +- maxim,vsys-min : Low input voltage level in millivolts. Flash is n=
-ot fired
-> +	if chip estimates that system voltage could drop below this level d=
-ue
-> +	to flash power consumption.
-> +
-> +A child node must be defined per sub-led.
-> +
-> +Required properties of the LED child node:
-> +- label : see Documentation/devicetree/bindings/leds/common.txt
-> +- maxim,fled_id : identifier of the fled output the led is connected=
- to:
-> +		1 - FLED1,
-> +		2 - FLED2.
+iQEcBAEBAgAGBQJUfE37AAoJECTWi3JdVIfQi20H/im8teQUzpvlbmmrjqEIK63a
+HqY0GfzbjgID2Qfnt6hRrKwg7wmB9jy2iF0I0VuXhlNECm8lFLtlQTkhYr4AOmlO
+AgAbWIW0zezngY3XmiwCACgJnExUdLaSEPYFuOg6QsM51hMet+6c15mFA2m7SVhL
+1rWxLT0L5r9YaWhWPzbQlTBbr45CRHY2s2wuOFmSXTsALymqYM2rFSMmDaWlrXMA
+VdLit4jpcXbTmilAroblI/wrRsxvxbAN8/7g845mBeQZ9KsErbp3mZ21Zj37vIXj
+r4DrTMfkNfLhk6qexHR8OCcqPT0Xl1MNX/cW16D36U/qVe5UkNerHsv7z3SBjF8=
+=YkfB
+-----END PGP SIGNATURE-----
 
-Better to define all of these random numbers in include/dt-bindings.
-
-> +Optional properties of the LED child node:
-> +- max-microamp : see Documentation/devicetree/bindings/leds/common.t=
-xt
-> +		Range: 15625 - 250000
-> +- flash-max-microamp : see Documentation/devicetree/bindings/leds/co=
-mmon.txt
-> +		Range: 15625 - 1000000
-> +- flash-timeout-microsec : see Documentation/devicetree/bindings/led=
-s/common.txt
-> +		Range: 62500 - 1000000
-> +
->  Example:
->  	max77693@66 {
->  		compatible =3D "maxim,max77693";
-> @@ -73,4 +129,22 @@ Example:
->  			pwms =3D <&pwm 0 40000 0>;
->  			pwm-names =3D "haptic";
->  		};
-> +
-> +		led_flash: led-flash {
-
-Should both be underscore.  I believe the second portion here should
-be more generic "led" for instance.
-
-> +			compatible =3D "maxim,max77693-flash";
-> +			maxim,fleds =3D <1 0>;
-> +			maxim,trigger =3D <7 0>;
-> +			maxim,trigger-type =3D <0 1>;
-> +			maxim,boost-mode =3D <0>;
-> +			maxim,boost-vout =3D <5000>;
-> +			maxim,vsys-min =3D <2400>;
-
-These will all have to be signed off by a DT maintainer.
-
-> +			camera-flash {
-> +				maxim,fled_id =3D <1>
-> +				label =3D "max77693-flash";
-> +				max-microamp =3D <250000>;
-> +				flash-max-microamp =3D <1000000>;
-> +				flash-timeout-microsec =3D <1000000>;
-> +			}
-
-Missing ';'
-
-You should probably test your example code.
-
-> +		};
->  	};
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+--fUAgMX1mmt35sX2N--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
