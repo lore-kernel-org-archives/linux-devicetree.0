@@ -1,32 +1,149 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH] irqchip: gic: Allow interrupt level to be set for PPIs.
-Date: Mon, 1 Dec 2014 10:41:45 +0000
-Message-ID: <20141201104145.GY3836@n2100.arm.linux.org.uk>
-References: <1417197340-27298-1-git-send-email-Liviu.Dudau@arm.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [REVIEW PATCH v2.1 08/11] of: smiapp: Add documentation
+Date: Mon, 1 Dec 2014 10:42:01 +0000
+Message-ID: <20141201104200.GC17070@leverpostej>
+References: <1416289426-804-9-git-send-email-sakari.ailus@iki.fi>
+ <1417364809-4693-1-git-send-email-sakari.ailus@iki.fi>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1417197340-27298-1-git-send-email-Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1417364809-4693-1-git-send-email-sakari.ailus@iki.fi>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 28, 2014 at 05:55:40PM +0000, Liviu Dudau wrote:
-> +	/*
-> +	 * PPIs are optionally configurable, but we cannot distinguish
-> +	 * between high and low, nor falling and rising. Change the
-> +	 * type so that it passes the next check.
+On Sun, Nov 30, 2014 at 04:26:48PM +0000, Sakari Ailus wrote:
+> Document the smiapp device tree properties.
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
+> ---
+> since v2:
+> - Cleanups
+> - Removed clock-names property documentation
+> - Port node documentation was really endpoint node documentation
+> - Added remote-endpoint as mandatory endpoint node properties
+> 
+>  .../devicetree/bindings/media/i2c/nokia,smia.txt   |   64 ++++++++++++++++++++
+>  MAINTAINERS                                        |    1 +
+>  2 files changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt b/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
+> new file mode 100644
+> index 0000000..2114a4d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
+> @@ -0,0 +1,64 @@
+> +SMIA/SMIA++ sensor
+> +
+> +SMIA (Standard Mobile Imaging Architecture) is an image sensor standard
+> +defined jointly by Nokia and ST. SMIA++, defined by Nokia, is an extension
+> +of that. These definitions are valid for both types of sensors.
+> +
+> +More detailed documentation can be found in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt .
+> +
+> +
+> +Mandatory properties
+> +--------------------
+> +
+> +- compatible: "nokia,smia"
+> +- reg: I2C address (0x10, or an alternative address)
+> +- vana-supply: Analogue voltage supply (VANA), typically 2,8 volts (sensor
+> +  dependent).
+> +- clocks: External clock phandle
 
-This comment could do with a /lot/ of improvement.  It sounds like the
-only reason this code exists is to bypass the check.  If that's all
-that's being done, there's better ways to code it.
+Not just a phandle, there's a clock-specifier too.
 
--- 
-FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Just describe what the clock logically is, don't bother with describing
+the format of the property (whcih is standardised elsewhere).
+
+> +- clock-frequency: Frequency of the external clock to the sensor
+
+Is this the preferred frequency to operate the device at? Is there not a
+standard frequency to use? We can query the rate from the clock
+otherwise.
+
+> +- link-frequency: List of allowed data link frequencies. An array of 64-bit
+> +  elements.
+
+Something like 'allowed-link-frequencies' might be better, unlesss this
+is derived from another binding?
+
+> +
+> +
+> +Optional properties
+> +-------------------
+> +
+> +- nokia,nvm-size: The size of the NVM, in bytes. If the size is not given,
+> +  the NVM contents will not be read.
+
+Where 'NVM' standas for what?
+
+What is this used for?
+
+> +- reset-gpios: XSHUTDOWN GPIO
+> +
+> +
+> +Endpoint node mandatory properties
+> +----------------------------------
+> +
+> +- clock-lanes: <0>
+> +- data-lanes: <1..n>
+> +- remote-endpoint: A phandle to the bus receiver's endpoint node.
+> +
+> +
+> +Example
+> +-------
+> +
+> +&i2c2 {
+> +	clock-frequency = <400000>;
+> +
+> +	smiapp_1: camera@10 {
+> +		compatible = "nokia,smia";
+> +		reg = <0x10>;
+> +		reset-gpios = <&gpio3 20 0>;
+> +		vana-supply = <&vaux3>;
+> +		clocks = <&omap3_isp 0>;
+> +		clock-names = "ext_clk";
+
+This wasn't described above. Either mandate it in the binding (and
+define clock in terms of clock-names) or drop it.
+
+Thanks,
+Mark.
+
+> +		clock-frequency = <9600000>;
+> +		nokia,nvm-size = <512>; /* 8 * 64 */
+> +		link-frequency = /bits/ 64 <199200000 210000000 499200000>;
+> +		port {
+> +			smiapp_1_1: endpoint {
+> +				clock-lanes = <0>;
+> +				data-lanes = <1 2>;
+> +				remote-endpoint = <&csi2a_ep>;
+> +			};
+> +		};
+> +	};
+> +};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2378a5f..285c1ba 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8619,6 +8619,7 @@ F:	include/media/smiapp.h
+>  F:	drivers/media/i2c/smiapp-pll.c
+>  F:	drivers/media/i2c/smiapp-pll.h
+>  F:	include/uapi/linux/smiapp.h
+> +F:	Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
+>  
+>  SMM665 HARDWARE MONITOR DRIVER
+>  M:	Guenter Roeck <linux@roeck-us.net>
+> -- 
+> 1.7.10.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
