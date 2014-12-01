@@ -1,195 +1,81 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC V1 0/8] CPUFreq: create platform-dev for DT based cpufreq drivers
-Date: Mon, 01 Dec 2014 13:54:56 +0100
-Message-ID: <7885354.QleDlR7NUO@wuerfel>
-References: <cover.1417433163.git.viresh.kumar@linaro.org>
+From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH/RFC v8 11/14] DT: Add documentation for the mfd Maxim
+ max77693
+Date: Mon, 01 Dec 2014 13:58:31 +0100
+Message-ID: <547C65F7.4090801@samsung.com>
+References: <1417166286-27685-1-git-send-email-j.anaszewski@samsung.com>
+ <1417166286-27685-12-git-send-email-j.anaszewski@samsung.com>
+ <20141129192607.GB17355@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <cover.1417433163.git.viresh.kumar@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, Arnd Bergmann <arnd.bergmann@linaro.org>, Rob Herring <rob.herring@linaro.org>, Grant Likely <grant.likely@linaro.org>, Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, kesavan.abhilash@gmail.com, linaro-kernel@lists.linaro.org, ta.omasab@gmail.com, linux-pm@vger.kernel.org, catalin.marinas@arm.com, k.chander@samsung.com, santosh shilimkar <santosh.shilimkar@oracle.com>, Stephen Boyd <sboyd@codeaurora.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Mike Turquette <mike.turquette@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, olof@lixom.net
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <20141129192607.GB17355@amd>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, SangYoung Son <hello.son-T5JinQjy6aBBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 01 December 2014 17:11:21 Viresh Kumar wrote:
-> 
-> DT based cpufreq drivers doesn't require much support from platform code now a
-> days as most of the stuff is moved behind generic APIs. Like clk APIs for
-> changing clock rates, regulator APIs for changing voltages, etc.
-> 
-> One of the bottleneck still left was how to select which cpufreq driver to probe
-> for a given platform as there might be multiple drivers available.
-> 
-> Traditionally, we used to create platform devices from machine specific code
-> which binds with a cpufreq driver. And while we moved towards DT based device
-> creation, these devices stayed as is.
-> 
-> The problem is getting worse now as we have architectures now with Zero platform
-> specific code. Forcefully these platforms have to create a new file in
-> drivers/cpufreq/ to just add these platform devices in order to use the generic
-> drivers like cpufreq-dt.c.
-> 
-> This has been discussed again and again, but with no solution yet. Last it was
-> discussed here:
-> 
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/256154.html
-> 
-> This patch is an attempt towards getting the bindings.
-> 
-> We only need to have cpufreq drivers name string present in "compatible"
-> property for the root node.. If a cpufreq driver with DT support exists with
-> that name, then cpufreq core will create a platform device for that.
-> 
-> The first patch presents the new binding, second one creates another file
-> responsible for creating platform devices for all DT based cpufreq drivers.
-> 
-> And later patches update platforms to migrate to it one by one.
-> 
-> A BLACKLIST of platforms already supported by these drivers is also created for
-> backward compatibility of newer kernels with older DTs. And so for such
-> platforms DT files aren't updated.
-> 
-> An initial RFC that presented the idea was discussed here:
-> https://www.mail-archive.com/devicetree@vger.kernel.org/msg52509.html
-> 
-> Tested-ON: Exynos5250. (The last patch for exynos depends on some commits to be
-> upstreamed in 3.19, presented here just for testing).
+Hi Pavel,
 
-Thanks a lot for working on this, we really need to figure it out one day!
+Thanks for the review.
 
-Your patches seem well-implemented, so if everybody thinks the general
-approach is the best solution, we should do that. From my point of view,
-there are two things I would do differently:
+On 11/29/2014 08:26 PM, Pavel Machek wrote:
+> Hi!
+>
+>> diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Documentation/devicetree/bindings/mfd/max77693.txt
+>> index 01e9f30..50a8dad 100644
+>> --- a/Documentation/devicetree/bindings/mfd/max77693.txt
+>> +++ b/Documentation/devicetree/bindings/mfd/max77693.txt
+>> @@ -41,6 +41,62 @@ Optional properties:
+>>   	 To get more informations, please refer to documentaion.
+>>   	[*] refer Documentation/devicetree/bindings/pwm/pwm.txt
+>>
+>> +- led-flash : the LED submodule device node
+>> +
+>> +There are two led outputs available - fled1 and fled2. Each of them can
+>> +control a separate led or they can be connected together to double
+>> +the maximum current for a single connected led. One led is represented
+>> +by one child node.
+>> +
+>> +Required properties:
+>> +- compatible : must be "maxim,max77693-flash"
+>> +
+>> +Optional properties:
+>> +- maxim,fleds : array of current outputs in order: fled1, fled2
+>> +	Note: both current outputs can be connected to a single led
+>> +	Possible values:
+>> +		0 - the output is left disconnected,
+>> +		1 - a diode is connected to the output.
+>
+> Is this one needed? Just ommit child note if it is not there.
 
-- In the DT binding, I would strongly prefer anything but the root compatible
-  property as the key for the new platforms. Clearly we have to keep using
-  it for the backwards-compatibility case, as you do, but I think there
-  are more appropriate places to put it. Sorting from most favorite to least
-  favorite, my list would be:
-	1. a new property in /cpus/
-	2. a new property each /cpus/cpu@... node.
-	3. the compatible property of the /cpus node
-	4. a top-level device node that gets turned into a platform device
-	5. a new property in the / node
-	6. a new property in the /chosen node
-	7. the compatible property in the / node
+It is needed because you can have one led connected two both
+outputs. This allows to describe such a design.
 
-- Implementation-wise, I don't think it's helpful to have a global function
-  that registers a platform device to be consumed by the device driver. I'd
-  rather just see a module_init function in each driver that rather than
-  registering a platform_driver scans the DT properties. This is only really
-  necessary when not using DT (omap2, omap3, davinci, loongson) or when
-  passing additional resources or platform_data (kirkwood, but that can
-  look up the "marvell,orion-system-controller" node if necessary).
-  My preferred solution would be to eventually remove the platform_device
-  registration for all DT users. If a driver needs a platform device pointer
-  internally, it can use platform_create_bundle(), but that's probably not
-  even necessary.
+>> +- maxim,trigger-type : Array of trigger types in order: flash, torch
+>> +	Possible trigger types:
+>> +		0 - Rising edge of the signal triggers the flash/torch,
+>> +		1 - Signal level controls duration of the flash/torch.
+>> +- maxim,trigger : Array of flags indicating which trigger can activate given led
+>> +	in order: fled1, fled2
+>> +	Possible flag values (can be combined):
+>> +		1 - FLASH pin of the chip,
+>> +		2 - TORCH pin of the chip,
+>> +		4 - software via I2C command.
+>
+> Is it good idea to have bitfields like this?
+>
+> Make these required properties of the subnode?
 
-In short, I would suggest something along the lines of the patch below.
+This is related to a single property: trigger. I think that splitting
+it to three properties would make unnecessary noise in the
+binding.
 
-	Arnd
-8<-----
-[PATCH, RFC] cpufreq: dt: simplify and generalize probing
+Best Regards,
+Jacek Anaszewski
 
-We should not have to create a platform device from platform specific code
-in order to use the completely generic cpufreq-dt driver. This adds
-a simpler method by creating a new standard property of the "/cpus" node
-to look for, with a fallback for existing users. The list of existing
-users needs to be completed, and the same change done for the other
-DT based drivers.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
-index 6f5f5615fbf1..697b4dc47715 100644
---- a/drivers/cpufreq/cpufreq-dt.c
-+++ b/drivers/cpufreq/cpufreq-dt.c
-@@ -345,13 +345,50 @@ static struct cpufreq_driver dt_cpufreq_driver = {
- 	.attr = cpufreq_generic_attr,
- };
- 
--static int dt_cpufreq_probe(struct platform_device *pdev)
-+/*
-+ * these machines are using the driver but provide no standard
-+ * probing method, only for old machines with existing dtbs.
-+ */
-+static struct of_device_id legacy_machines = {
-+	{ .compatible = "calxeda,highbank" },
-+	{ .compatible = "renesas,sh7372" },
-+	{ .compatible = "renesas,sh73a0"  },
-+	{ .compatible = "samsung,exynos5250" },
-+	{ .compatible = "samsung,exynos4210" },
-+	{ .compatible = "xlnx,zynq-7000" },
-+};
-+
-+static bool dt_cpufreq_available(void)
-+{
-+	struct device_node *node;
-+	bool ret;
-+
-+	node = of_find_node_by_path("/cpus");
-+	if (!node)
-+		return 0;
-+
-+	/* the specific property needs to be debated */
-+	ret = of_property_read_bool("linux,cpu-frequency-scaling");
-+	of_node_put(node);
-+	if (ret)
-+		return 1;
-+
-+	node = of_find_node_by_path("/");
-+	ret = of_match_device(&legacy_machines, node);
-+	of_node_put(node);
-+
-+	return ret;
-+}
-+
-+static int __init dt_cpufreq_probe(void)
- {
- 	struct device *cpu_dev;
- 	struct regulator *cpu_reg;
- 	struct clk *cpu_clk;
- 	int ret;
- 
-+	if (!dt_cpufreq_available())
-+		return -ENXIO;
- 	/*
- 	 * All per-cluster (CPUs sharing clock/voltages) initialization is done
- 	 * from ->init(). In probe(), we just need to make sure that clk and
-@@ -367,29 +404,19 @@ static int dt_cpufreq_probe(struct platform_device *pdev)
- 	if (!IS_ERR(cpu_reg))
- 		regulator_put(cpu_reg);
- 
--	dt_cpufreq_driver.driver_data = dev_get_platdata(&pdev->dev);
--
- 	ret = cpufreq_register_driver(&dt_cpufreq_driver);
- 	if (ret)
- 		dev_err(cpu_dev, "failed register driver: %d\n", ret);
- 
- 	return ret;
- }
-+module_init(dt_cpufreq_probe);
- 
--static int dt_cpufreq_remove(struct platform_device *pdev)
-+static void __exit dt_cpufreq_remove(void)
- {
- 	cpufreq_unregister_driver(&dt_cpufreq_driver);
--	return 0;
- }
--
--static struct platform_driver dt_cpufreq_platdrv = {
--	.driver = {
--		.name	= "cpufreq-dt",
--	},
--	.probe		= dt_cpufreq_probe,
--	.remove		= dt_cpufreq_remove,
--};
--module_platform_driver(dt_cpufreq_platdrv);
-+module_exit(dt_cpufreq_remove);
- 
- MODULE_AUTHOR("Viresh Kumar <viresh.kumar@linaro.org>");
- MODULE_AUTHOR("Shawn Guo <shawn.guo@linaro.org>");
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
