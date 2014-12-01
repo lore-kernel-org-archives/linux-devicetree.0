@@ -1,88 +1,195 @@
-From: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] media: platform: add VPFE capture driver support for AM437X
-Date: Mon, 1 Dec 2014 22:27:28 +0000
-Message-ID: <CA+V-a8uL4J0Y2ZfDxe7jhxzGcCNe9QbCDUjDZrC+mZ5E6sX2jg@mail.gmail.com>
-References: <1416791411-9731-1-git-send-email-prabhakar.csengg@gmail.com>
- <547C3ED3.1060205@xs4all.nl> <547C4A69.8020002@xs4all.nl>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 2/4] media: ov2640: add primary dt support
+Date: Tue, 02 Dec 2014 00:33:21 +0200
+Message-ID: <2588866.n5Pjp1h670@avalon>
+References: <1417170507-11172-1-git-send-email-josh.wu@atmel.com> <1417170507-11172-3-git-send-email-josh.wu@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <547C4A69.8020002-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-api <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1417170507-11172-3-git-send-email-josh.wu@atmel.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Josh Wu <josh.wu@atmel.com>
+Cc: linux-media@vger.kernel.org, m.chehab@samsung.com, linux-arm-kernel@lists.infradead.org, g.liakhovetski@gmx.de, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+Hi Josh,
 
-On Mon, Dec 1, 2014 at 11:00 AM, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> wrote:
-> On 12/01/2014 11:11 AM, Hans Verkuil wrote:
->> Hi all,
->>
->> Thanks for the patch, review comments are below.
->>
->> For the next version I would appreciate if someone can test this driver with
->> the latest v4l2-compliance from the v4l-utils git repo. If possible test streaming
->> as well (v4l2-compliance -s), ideally with both a sensor and a STD receiver input.
->> But that depends on the available hardware of course.
->>
->> I'd like to see the v4l2-compliance output. It's always good to have that on
->> record.
->>
->>
->> On 11/24/2014 02:10 AM, Lad, Prabhakar wrote:
->>> From: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
->>>
->>> This patch adds Video Processing Front End (VPFE) driver for
->>> AM437X family of devices
->>> Driver supports the following:
->>> - V4L2 API using MMAP buffer access based on videobuf2 api
->>> - Asynchronous sensor/decoder sub device registration
->>> - DT support
->>>
->>> Signed-off-by: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
->>> Signed-off-by: Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>
->>> Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> ---
->>>  .../devicetree/bindings/media/ti-am437xx-vpfe.txt  |   61 +
->>>  MAINTAINERS                                        |    9 +
->>>  drivers/media/platform/Kconfig                     |    1 +
->>>  drivers/media/platform/Makefile                    |    2 +
->>>  drivers/media/platform/am437x/Kconfig              |   10 +
->>>  drivers/media/platform/am437x/Makefile             |    2 +
->>>  drivers/media/platform/am437x/vpfe.c               | 2764 ++++++++++++++++++++
->>>  drivers/media/platform/am437x/vpfe.h               |  286 ++
->>>  drivers/media/platform/am437x/vpfe_regs.h          |  140 +
->>>  include/uapi/linux/Kbuild                          |    1 +
->>>  include/uapi/linux/am437x_vpfe.h                   |  122 +
->>>  11 files changed, 3398 insertions(+)
->
-> Can the source names be improved? There are too many 'vpfe' sources.
-> Perhaps prefix all with 'am437x-'?
->
-I did think of it but, dropped it as anyway the source's are present
-in am437x folder, again naming the files am437x-xxx.x didn't make
-me feel good. If you still insists I'll do it.
+Thank you for the patch.
 
-> In general I prefer '-' over '_' in a source name: it's looks better
-> IMHO.
->
-I am almost done with all the review comments, if we take a decision
-on this quickly I can post a v2 soon.
+On Friday 28 November 2014 18:28:25 Josh Wu wrote:
+> Add device tree support for ov2640.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Josh Wu <josh.wu@atmel.com>
+> ---
+>  drivers/media/i2c/soc_camera/ov2640.c | 95 +++++++++++++++++++++++++++++---
+>  1 file changed, 89 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/soc_camera/ov2640.c
+> b/drivers/media/i2c/soc_camera/ov2640.c index 9ee910d..6506126 100644
+> --- a/drivers/media/i2c/soc_camera/ov2640.c
+> +++ b/drivers/media/i2c/soc_camera/ov2640.c
+> @@ -18,6 +18,8 @@
+>  #include <linux/i2c.h>
+>  #include <linux/slab.h>
+>  #include <linux/delay.h>
+> +#include <linux/gpio.h>
+> +#include <linux/of_gpio.h>
+>  #include <linux/v4l2-mediabus.h>
+>  #include <linux/videodev2.h>
+> 
+> @@ -283,6 +285,10 @@ struct ov2640_priv {
+>  	u32	cfmt_code;
+>  	struct v4l2_clk			*clk;
+>  	const struct ov2640_win_size	*win;
+> +
+> +	struct soc_camera_subdev_desc	ssdd_dt;
+> +	int reset_pin;
+> +	int pwr_down_pin;
+>  };
+> 
+>  /*
+> @@ -1047,6 +1053,70 @@ static struct v4l2_subdev_ops ov2640_subdev_ops = {
+>  	.video	= &ov2640_subdev_video_ops,
+>  };
+> 
+> +/* OF probe functions */
+> +static int ov2640_hw_power(struct device *dev, int on)
+> +{
+> +	struct i2c_client *client = to_i2c_client(dev);
+> +	struct ov2640_priv *priv = to_ov2640(client);
+> +
+> +	dev_dbg(&client->dev, "%s: %s the camera\n",
+> +			__func__, on ? "ENABLE" : "DISABLE");
+> +
+> +	/* enable or disable the camera */
+> +	gpio_direction_output(priv->pwr_down_pin, !on);
 
-> One question, unrelated to this patch series:
->
-> Prabhakar, would it make sense to look at the various existing TI sources
-> as well and rename them to make it more explicit for which SoCs they are
-> meant? Most are pretty vague with variations on vpe, vpif, vpfe, etc. but
-> no reference to the actual SoC they are for.
->
-vpe - definitely needs to be changed.
-vpif - under davinci is common for (Davinci series
-dm6467/dm6467t/omapl138/am1808)
-vpfe -  under davinci is common for (Davinci series dm36x/dm6446/dm355)
+Isn't there a delay required to wake the chip up ?
 
-I am falling short of names for renaming this common drivers :)
+> +
+> +	return 0;
+> +}
+> +
+> +static int ov2640_hw_reset(struct device *dev)
+> +{
+> +	struct i2c_client *client = to_i2c_client(dev);
+> +	struct ov2640_priv *priv = to_ov2640(client);
+> +
 
-Thanks,
---Prabhakar Lad
+If the reset GPIO isn't specified you should return immediately without 
+waiting 120ms.
+
+> +	/* If enabled, give a reset impulse */
+> +	gpio_direction_output(priv->reset_pin, 0);
+> +	msleep(20);
+
+Please use usleep_range().
+
+> +	gpio_direction_output(priv->reset_pin, 1);
+> +	msleep(100);
+
+Is the reset delay documented somewhere ? 100ms seems pretty large to me.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int ov2640_probe_dt(struct i2c_client *client,
+> +		struct ov2640_priv *priv)
+> +{
+> +	struct device_node *np = client->dev.of_node;
+> +	int ret;
+> +
+> +	priv->reset_pin = of_get_named_gpio(np, "reset-gpio", 0);
+> +	priv->pwr_down_pin = of_get_named_gpio(np, "power-down-gpio", 0);
+> +	if (!gpio_is_valid(priv->reset_pin) ||
+> +			!gpio_is_valid(priv->pwr_down_pin))
+> +		return -EINVAL;
+> +
+> +	ret = devm_gpio_request(&client->dev, priv->pwr_down_pin,
+> +			"power-down-pin");
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "request gpio pin %d failed\n",
+> +				priv->pwr_down_pin);
+> +		return ret;
+> +	}
+> +
+> +	ret = devm_gpio_request(&client->dev, priv->reset_pin, "reset_pin");
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "request gpio pin %d failed\n",
+> +				priv->reset_pin);
+> +		return ret;
+> +	}
+
+Please use the gpiod API with the devm_gpiod_get_index_optional() function, it 
+will simply your code and take care about GPIO polarity automatically. Don't 
+forget to specify the default state using the GPIOD_* flags.
+
+> +
+> +	/* Initialize the soc_camera_subdev_desc */
+> +	priv->ssdd_dt.power = ov2640_hw_power;
+> +	priv->ssdd_dt.reset = ov2640_hw_reset;
+> +	client->dev.platform_data = &priv->ssdd_dt;
+> +
+> +	return 0;
+> +}
+> +
+>  /*
+>   * i2c_driver functions
+>   */
+> @@ -1058,12 +1128,6 @@ static int ov2640_probe(struct i2c_client *client,
+>  	struct i2c_adapter	*adapter = to_i2c_adapter(client->dev.parent);
+>  	int			ret;
+> 
+> -	if (!ssdd) {
+> -		dev_err(&adapter->dev,
+> -			"OV2640: Missing platform_data for driver\n");
+> -		return -EINVAL;
+> -	}
+> -
+>  	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA)) {
+>  		dev_err(&adapter->dev,
+>  			"OV2640: I2C-Adapter doesn't support SMBUS\n");
+> @@ -1077,6 +1141,18 @@ static int ov2640_probe(struct i2c_client *client,
+>  		return -ENOMEM;
+>  	}
+> 
+> +	if (!ssdd) {
+> +		if (client->dev.of_node) {
+> +			ret = ov2640_probe_dt(client, priv);
+> +			if (ret)
+> +				return ret;
+> +		} else {
+> +			dev_err(&client->dev,
+> +				"Missing platform_data for driver\n");
+> +			return  -EINVAL;
+> +		}
+> +	}
+> +
+>  	v4l2_i2c_subdev_init(&priv->subdev, client, &ov2640_subdev_ops);
+>  	v4l2_ctrl_handler_init(&priv->hdl, 2);
+>  	v4l2_ctrl_new_std(&priv->hdl, &ov2640_ctrl_ops,
+> @@ -1123,9 +1199,16 @@ static const struct i2c_device_id ov2640_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, ov2640_id);
+> 
+> +static const struct of_device_id ov2640_of_match[] = {
+> +	{.compatible = "omnivision,ov2640", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, ov2640_of_match);
+> +
+>  static struct i2c_driver ov2640_i2c_driver = {
+>  	.driver = {
+>  		.name = "ov2640",
+> +		.of_match_table = of_match_ptr(ov2640_of_match),
+>  	},
+>  	.probe    = ov2640_probe,
+>  	.remove   = ov2640_remove,
+
+-- 
+Regards,
+
+Laurent Pinchart
