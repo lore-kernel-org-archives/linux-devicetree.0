@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v5 01/15] tpm/tpm_i2c_stm_st33: Fix potential bug in tpm_stm_i2c_send
-Date: Mon,  1 Dec 2014 01:20:33 +0100
-Message-ID: <1417393247-4479-2-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v5 03/15] tpm/tpm_i2c_stm_st33: Change License header to have up to date address information
+Date: Mon,  1 Dec 2014 01:20:35 +0100
+Message-ID: <1417393247-4479-4-git-send-email-christophe-h.ricard@st.com>
 References: <1417393247-4479-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1417393247-4479-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
@@ -10,33 +10,32 @@ To: peterhuewe-Mmb7MZpHnFY@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@publi
 Cc: tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-When sending data in tpm_stm_i2c_send, each loop iteration send buf.
-Send buf + i instead as the goal of this for loop is to send a number
-of byte from buf that fit in burstcnt. Once those byte are sent, we are
-supposed to send the next ones.
-
-The driver was working because the burstcount value returns always the maximum size for a TPM
-command or response. (0x800 for a command and 0x400 for a response).
+The Free Software Foundation may have mail address change.
+In order to be sure to have up to date mail address give an url to
+the license which includes accurate informations.
 
 Reviewed-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/char/tpm/tpm_i2c_stm_st33.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/char/tpm/tpm_i2c_stm_st33.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/char/tpm/tpm_i2c_stm_st33.c b/drivers/char/tpm/tpm_i2c_stm_st33.c
-index 4669e37..7d1c540 100644
+index 7d1c540..a205d5d 100644
 --- a/drivers/char/tpm/tpm_i2c_stm_st33.c
 +++ b/drivers/char/tpm/tpm_i2c_stm_st33.c
-@@ -487,7 +487,7 @@ static int tpm_stm_i2c_send(struct tpm_chip *chip, unsigned char *buf,
- 		if (burstcnt < 0)
- 			return burstcnt;
- 		size = min_t(int, len - i - 1, burstcnt);
--		ret = I2C_WRITE_DATA(client, TPM_DATA_FIFO, buf, size);
-+		ret = I2C_WRITE_DATA(client, TPM_DATA_FIFO, buf + i, size);
- 		if (ret < 0)
- 			goto out_err;
- 
+@@ -12,9 +12,8 @@
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+- * You should have received a copy of the GNU General Public License along
+- * with this program; if not, write to the Free Software Foundation, Inc.,
+- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  *
+  * STMicroelectronics version 1.2.0, Copyright (C) 2010
+  * STMicroelectronics comes with ABSOLUTELY NO WARRANTY.
 -- 
 2.1.0
 
