@@ -1,127 +1,88 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 3/4] media: ov2640: add a master clock for sensor
-Date: Tue, 02 Dec 2014 00:26:17 +0200
-Message-ID: <2284801.0jEi8Kph7L@avalon>
-References: <1417170507-11172-1-git-send-email-josh.wu@atmel.com> <1417170507-11172-4-git-send-email-josh.wu@atmel.com>
+From: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] media: platform: add VPFE capture driver support for AM437X
+Date: Mon, 1 Dec 2014 22:27:28 +0000
+Message-ID: <CA+V-a8uL4J0Y2ZfDxe7jhxzGcCNe9QbCDUjDZrC+mZ5E6sX2jg@mail.gmail.com>
+References: <1416791411-9731-1-git-send-email-prabhakar.csengg@gmail.com>
+ <547C3ED3.1060205@xs4all.nl> <547C4A69.8020002@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1417170507-11172-4-git-send-email-josh.wu@atmel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Josh Wu <josh.wu@atmel.com>
-Cc: linux-media@vger.kernel.org, m.chehab@samsung.com, linux-arm-kernel@lists.infradead.org, g.liakhovetski@gmx.de, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <547C4A69.8020002-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-api <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Josh,
+Hi Hans,
 
-(CC'ing the devicetree@vger.kernel.org mailing list)
+On Mon, Dec 1, 2014 at 11:00 AM, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> wrote:
+> On 12/01/2014 11:11 AM, Hans Verkuil wrote:
+>> Hi all,
+>>
+>> Thanks for the patch, review comments are below.
+>>
+>> For the next version I would appreciate if someone can test this driver with
+>> the latest v4l2-compliance from the v4l-utils git repo. If possible test streaming
+>> as well (v4l2-compliance -s), ideally with both a sensor and a STD receiver input.
+>> But that depends on the available hardware of course.
+>>
+>> I'd like to see the v4l2-compliance output. It's always good to have that on
+>> record.
+>>
+>>
+>> On 11/24/2014 02:10 AM, Lad, Prabhakar wrote:
+>>> From: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
+>>>
+>>> This patch adds Video Processing Front End (VPFE) driver for
+>>> AM437X family of devices
+>>> Driver supports the following:
+>>> - V4L2 API using MMAP buffer access based on videobuf2 api
+>>> - Asynchronous sensor/decoder sub device registration
+>>> - DT support
+>>>
+>>> Signed-off-by: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
+>>> Signed-off-by: Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>
+>>> Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> ---
+>>>  .../devicetree/bindings/media/ti-am437xx-vpfe.txt  |   61 +
+>>>  MAINTAINERS                                        |    9 +
+>>>  drivers/media/platform/Kconfig                     |    1 +
+>>>  drivers/media/platform/Makefile                    |    2 +
+>>>  drivers/media/platform/am437x/Kconfig              |   10 +
+>>>  drivers/media/platform/am437x/Makefile             |    2 +
+>>>  drivers/media/platform/am437x/vpfe.c               | 2764 ++++++++++++++++++++
+>>>  drivers/media/platform/am437x/vpfe.h               |  286 ++
+>>>  drivers/media/platform/am437x/vpfe_regs.h          |  140 +
+>>>  include/uapi/linux/Kbuild                          |    1 +
+>>>  include/uapi/linux/am437x_vpfe.h                   |  122 +
+>>>  11 files changed, 3398 insertions(+)
+>
+> Can the source names be improved? There are too many 'vpfe' sources.
+> Perhaps prefix all with 'am437x-'?
+>
+I did think of it but, dropped it as anyway the source's are present
+in am437x folder, again naming the files am437x-xxx.x didn't make
+me feel good. If you still insists I'll do it.
 
-Thank you for the patch.
+> In general I prefer '-' over '_' in a source name: it's looks better
+> IMHO.
+>
+I am almost done with all the review comments, if we take a decision
+on this quickly I can post a v2 soon.
 
-On Friday 28 November 2014 18:28:26 Josh Wu wrote:
-> The master clock can be optional. It's a common clock framework clock.
-> It can make sensor output a pixel clock to the camera interface.
-> 
-> If you just use a external oscillator clock as the master clock, then,
-> just don't need set 'mck' in dt node.
-> 
-> Signed-off-by: Josh Wu <josh.wu@atmel.com>
-> ---
->  drivers/media/i2c/soc_camera/ov2640.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
-> 
-> diff --git a/drivers/media/i2c/soc_camera/ov2640.c
-> b/drivers/media/i2c/soc_camera/ov2640.c index 6506126..06c2aa9 100644
-> --- a/drivers/media/i2c/soc_camera/ov2640.c
-> +++ b/drivers/media/i2c/soc_camera/ov2640.c
-> @@ -13,6 +13,7 @@
->   * published by the Free Software Foundation.
->   */
-> 
-> +#include <linux/clk.h>
->  #include <linux/init.h>
->  #include <linux/module.h>
->  #include <linux/i2c.h>
-> @@ -31,6 +32,8 @@
-> 
->  #define VAL_SET(x, mask, rshift, lshift)  \
->  		((((x) >> rshift) & mask) << lshift)
-> +#define DEFAULT_MASTER_CLK_FREQ		25000000
-> +
->  /*
->   * DSP registers
->   * register offset for BANK_SEL == BANK_SEL_DSP
-> @@ -284,6 +287,7 @@ struct ov2640_priv {
->  	struct v4l2_ctrl_handler	hdl;
->  	u32	cfmt_code;
->  	struct v4l2_clk			*clk;
-> +	struct clk			*master_clk;
->  	const struct ov2640_win_size	*win;
-> 
->  	struct soc_camera_subdev_desc	ssdd_dt;
-> @@ -746,6 +750,7 @@ static int ov2640_s_power(struct v4l2_subdev *sd, int
-> on) struct soc_camera_subdev_desc *ssdd = soc_camera_i2c_to_desc(client);
-> struct ov2640_priv *priv = to_ov2640(client);
->  	struct v4l2_clk *clk;
-> +	int ret = 0;
-> 
->  	if (!priv->clk) {
->  		clk = v4l2_clk_get(&client->dev, "mclk");
-> @@ -755,6 +760,16 @@ static int ov2640_s_power(struct v4l2_subdev *sd, int
-> on) priv->clk = clk;
->  	}
-> 
-> +	if (!IS_ERR(priv->master_clk)) {
+> One question, unrelated to this patch series:
+>
+> Prabhakar, would it make sense to look at the various existing TI sources
+> as well and rename them to make it more explicit for which SoCs they are
+> meant? Most are pretty vague with variations on vpe, vpif, vpfe, etc. but
+> no reference to the actual SoC they are for.
+>
+vpe - definitely needs to be changed.
+vpif - under davinci is common for (Davinci series
+dm6467/dm6467t/omapl138/am1808)
+vpfe -  under davinci is common for (Davinci series dm36x/dm6446/dm355)
 
-The clock should be mandatory, you can thus drop this check.
+I am falling short of names for renaming this common drivers :)
 
-> +		if (on)
-> +			ret = clk_prepare_enable(priv->master_clk);
-> +		else
-> +			clk_disable_unprepare(priv->master_clk);
-> +
-> +		if (ret)
-> +			return ret;
-
-You can move the error check inside the first branch of the if and remove the 
-ret = 0 initialization above.
-
-> +	}
-> +
->  	return soc_camera_set_power(&client->dev, ssdd, priv->clk, on);
-
-If this call fails you should disable or enable the clock to undo the 
-enable/disable above.
-
->  }
-> 
-> @@ -1153,6 +1168,16 @@ static int ov2640_probe(struct i2c_client *client,
->  		}
->  	}
-> 
-> +	priv->master_clk = devm_clk_get(&client->dev, "mck");
-> +	if (!IS_ERR(priv->master_clk)) {
-> +		/* Set ISI_MCK's frequency, it should be faster than pixel
-> +		 * clock.
-> +		 */
-> +		ret = clk_set_rate(priv->master_clk, DEFAULT_MASTER_CLK_FREQ);
-
-The clock frequency should be system-dependent. For the DT case an easy 
-implementation would be to use the assigned-clock-rates to set the desired 
-clock frequency is case of a variable clock, as adding a sensor-specific 
-property to specify the desired clock frequency only to read that property in 
-the driver and call clk_set_rate() seems a bit pointless to me.
-
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
->  	v4l2_i2c_subdev_init(&priv->subdev, client, &ov2640_subdev_ops);
->  	v4l2_ctrl_handler_init(&priv->hdl, 2);
->  	v4l2_ctrl_new_std(&priv->hdl, &ov2640_ctrl_ops,
-
--- 
-Regards,
-
-Laurent Pinchart
+Thanks,
+--Prabhakar Lad
