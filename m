@@ -1,121 +1,101 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH][RFC] spi: sh-msiof: Configure MSIOF sync signal timing in
- device tree
-Date: Mon, 1 Dec 2014 09:26:49 +0100
-Message-ID: <CAMuHMdVHJqzMhY28Cb65tzB0E2X8YW_moeJkWGaWYaUQUBhU7w@mail.gmail.com>
-References: <5477EFD7.50307@renesas.com>
-	<3485316.4muPRcz2if@avalon>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v2 3/5] pinctrl: exynos: Fix GPIO setup failure because
+ domain clock being gated
+Date: Mon, 01 Dec 2014 09:37:23 +0100
+Message-ID: <1417423043.4055.14.camel@AMDC1943>
+References: <1417011857-10419-1-git-send-email-k.kozlowski@samsung.com>
+ <1417011857-10419-4-git-send-email-k.kozlowski@samsung.com>
+ <CACRpkdb8F8YcvFeHPvOKHjx_p4HEpimck3XRabB3oHpZTdmRQQ@mail.gmail.com>
+ <1417183724.18249.36.camel@AMDC1943>
+ <CA+Ln22Ejo51VPWf6DmuRvV_fZr_H=-BXAshSPSOokNE1bz=-QA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3485316.4muPRcz2if@avalon>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <damm-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-reply-to: <CA+Ln22Ejo51VPWf6DmuRvV_fZr_H=-BXAshSPSOokNE1bz=-QA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <thomas.abraham@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Vivek Gautam <gautam.vivek@samsung.com>, Kevin Hilman <khilman@kernel.org>, Russell King <linux@arm.linux.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shimoda-san, Laurent,
 
-On Sun, Nov 30, 2014 at 9:23 PM, Laurent Pinchart
-<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
-> On Friday 28 November 2014 12:45:27 Yoshihiro Shimoda wrote:
->> The MSIOF controller has DTDL and SYNCDL in SITMDR1 and SIRMDR1
->> registers. So, this patch adds new properties like the following
->> commit:
->>   d0fb47a5237d8b9576113568bacfd27892308b62
->>   (spi: fsl-espi: Configure FSL eSPI CSBEF and CSAFT)
->>
->> The DTDL is the chip select (SYNC) setup time.
->>  b'000: No bit delay
->>  b'001: 1-clock-cycle delay
->>  b'010: 2-clock-cycle delay
->>  b'101: 0.5-clock-cycle delay
->>  b'110: 1.5-clock-cycle delay
->>
->> The SYNCDL is the chip select (SYNC) hold time.
->>  b'000: No bit delay
->>  b'001: 1-clock-cycle delay
->>  b'010: 2-clock-cycle delay
->>  b'011: 3-clock-cycle delay
->>  b'101: 0.5-clock-cycle delay
->>  b'110: 1.5-clock-cycle delay
+On nie, 2014-11-30 at 21:19 +0900, Tomasz Figa wrote:
+> Hi Krzysztof,
+>=20
+> 2014-11-28 23:08 GMT+09:00 Krzysztof Kozlowski <k.kozlowski@samsung.c=
+om>:
+> > On pi=C4=85, 2014-11-28 at 15:04 +0100, Linus Walleij wrote:
+> >> On Wed, Nov 26, 2014 at 3:24 PM, Krzysztof Kozlowski
+> >> <k.kozlowski@samsung.com> wrote:
+> >>
+> >> > The audio subsystem on Exynos 5420 has separate clocks and GPIO.=
+ To
+> >> > operate properly on GPIOs the main block clock 'mau_epll' must b=
+e
+> >> > enabled.
+> >> >
+> >> > This was observed on Peach Pi/Pit and Arndale Octa (after enabli=
+ng i2s0)
+> >> > after introducing runtime PM to pl330 DMA driver. After that com=
+mit the
+> >> > 'mau_epll' was gated, because the "amba" clock was disabled and =
+there
+> >> > were no more users of mau_epll.
+> >> >
+> >> > The system hang just before probing i2s0 because
+> >> > samsung_pinmux_setup() tried to access memory from audss block w=
+hich was
+> >> > gated.
+> >> >
+> >> > Add a clock property to the pinctrl driver and enable the clock =
+during
+> >> > GPIO setup. During normal GPIO operations (set, get, set_directi=
+on) the
+> >> > clock is not enabled.
+>=20
+> Could you make sure that possibility of gating this clock is worth th=
+e
+> effort of adding gating code to all affected drivers? If there is no
+> significant change in power consumption maybe it could be simply keep
+> running all the time?
 
-You forgot to quote the last line from the DTDL and SYNCDL paragraphs:
+I had an impression that last time you disliked such idea:
+http://www.spinics.net/lists/arm-kernel/msg338127.html
+That's why I developed these patches. Because keeping a clock always on=
+,
+even when it is unused, is undesirable.
 
-| In case of SPI mode, only 000 is allowed to set to this field.
+Anyway, I did some simple measurements (after booting Arndale Octa
+to /bin/sh, idle):
+ - with mau_epll gated: ~523 mA
+ - with mau_epll always on: ~531 mA
 
-And the spi-sh-msiof driver is using the MSIOF in SPI mode???
+Keeping it on increases energy usage by 1.5% in idle (with measurement
+uncertainty ~0.4%).
 
->> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
->> ---
->>
->>  I would like to add new properties for sh-msiof driver to adjust
->> the SYNC siginal timing using DTDL and SYNCDL. In the current driver,
->> these parameters are hardcoded to 0. And then, I checked other spi
->> drivers, and I found the following commit:
->>   d0fb47a5237d8b9576113568bacfd27892308b62
->>   (spi: fsl-espi: Configure FSL eSPI CSBEF and CSAFT)
->>
->> If this patch is reasonable, I will modify the sh-msiof driver.
->> Or, should we add a new function for this timing adjusting in the
->> spi framework?
->>
->>  Documentation/devicetree/bindings/spi/sh-msiof.txt |    8 ++++++++
->>  drivers/spi/spi-sh-msiof.c                         |    2 ++
->>  2 files changed, 10 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt
->> b/Documentation/devicetree/bindings/spi/sh-msiof.txt index d11c372..5fe8ffd
->> 100644
->> --- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
->> +++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
->> @@ -30,6 +30,14 @@ Optional properties:
->>                        specifiers, one for transmission, and one for
->>                        reception.
->>  - dma-names            : Must contain a list of two DMA names, "tx" and
->> "rx".
->> +- renesas,tdmr-dtdl    : delay sync signal (setup) in transmit mode
->> +                      (default is 0, we can set it to 0, 1, 2, 5, or 6)
->> +- renesas,tdmr-syncdl  : delay sync signal (hold) in transmit mode
->> +                      (default is 0, we can set it to 0, 1, 2, 3, 5, or 6)
->> +- renesas,rdmr-dtdl    : delay sync signal (setup) in receive mode
->> +                      (default is 0, we can set it to 0, 1, 2, 5, or 6)
->> +- renesas,rdmr-syncdl  : delay sync signal (hold) in receive mode
->> +                      (default is 0, we can set it to 0, 1, 2, 3, 5, or 6)
 
-In general, it's frowned upon the specify actual register values in DT.
-So I think it's better to specify the delay values instead of the
-bitfield values,
-and drop the "tdmr" and "rdmr" from the names.
-As DT supports integers only, that should become a fixed point value.
-E.g. delay in deci-clocks (0, 5, 10, 15, 20)?
-Or as a percentage of the clock cycle (0, 50, 100, 150, 200)?
+> Also isn't a similar problem happening due to power domains? I believ=
+e
+> the whole maudio block is located in a separate power domain but
+> somehow it doesn't get turned off?
 
-Do you really need two sets of values, for both transmit and receive?
-I.e. do you need different values for transmit and receive for your use case?
-SPI does both transmit and receive using the same clock and chip select.
-I know some MSIOF implementations can handle both indepedently.
+There is Maudio power domain... but I think it is not related here.
+Pinctrl driver does not have runtime PM and is not attached to a domain=
+=2E
+I thought about other solution to this problem (with utilization of
+power domains):
+ - add runtime PM to pinctrl and audss clocks,
+ - attach pinctrl and audss clocks to maudio power domain,
+ - enable the clock when power domain is turned on.
+However almost the same changes had to be added to pinctrl and audss
+clocks drivers (replace clock_enable() with pm_runtime_get_sync()).
 
-And to answer your last question: if several drivers need this, it makes sense
-to make this general, and add support in the SPI core. Mark?
+Best regards,
+Krzysztof
 
-> Was it really the intent of this patch to add DT properties without providing
-> an implementation in the sh-msiof driver ?
-
-Given the sentence "If this patch is reasonable, I will modify the sh-msiof
-driver." in the introduction, I think so.
-
-Gr{oetje,eeting}s,
-
-                        Geert
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
