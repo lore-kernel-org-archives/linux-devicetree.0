@@ -1,100 +1,67 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 11/15] tpm/tpm_i2c_stm_st33/dts/st33zp24_i2c: Add DTS
- Documentation
-Date: Mon, 1 Dec 2014 10:46:29 +0000
-Message-ID: <20141201104629.GD17070@leverpostej>
-References: <1417393247-4479-1-git-send-email-christophe-h.ricard@st.com>
- <1417393247-4479-12-git-send-email-christophe-h.ricard@st.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 05/11] memory: add Atmel EBI (External Bus Interface)
+ driver
+Date: Mon, 1 Dec 2014 11:50:06 +0100
+Message-ID: <20141201115006.08197c40@bbrezillon>
+References: <1417429647-3419-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1417429647-3419-6-git-send-email-boris.brezillon@free-electrons.com>
+	<19172687.eVxczUuuhC@ws-stein>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1417393247-4479-12-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <19172687.eVxczUuuhC@ws-stein>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "peterhuewe-Mmb7MZpHnFY@public.gmane.org" <peterhuewe-Mmb7MZpHnFY@public.gmane.org>, "ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org" <ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org>, "tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org" <tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org>, "tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "christophe-h.ricard-qxv4g6HH51o@public.gmane.org" <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>, "jean-luc.blanc-qxv4g6HH51o@public.gmane.org" <jean-luc.blanc-qxv4g6HH51o@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org" <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+To: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 01, 2014 at 12:20:43AM +0000, Christophe Ricard wrote:
-> st33zp24 tpm can be seen as a trivial i2c device as other i2c tpm.
-> However several other properties needs to be documented such as lpcpd=
-=2E
->=20
-> Reviewed-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-> Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-> ---
->  .../devicetree/bindings/security/tpm/st33zp24.txt  | 36 ++++++++++++=
-++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/security/tpm/st=
-33zp24.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/security/tpm/st33zp24.=
-txt b/Documentation/devicetree/bindings/security/tpm/st33zp24.txt
-> new file mode 100644
-> index 0000000..eb48222
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/security/tpm/st33zp24.txt
-> @@ -0,0 +1,36 @@
-> +* STMicroelectronics SAS. ST33ZP24 TPM SoC
-> +
-> +Required properties:
-> +- compatible: Should be "st,st33zp24_i2c".
+Hi Alexander,
 
-s/_/-/ in property names and compatible strings, please.
+On Mon, 01 Dec 2014 11:40:03 +0100
+Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org> wrote:
 
-> +- clock-frequency: I=C2=B2C work frequency.
-> +- reg: address on the bus
-> +
-> +Optional ST33ZP24 Properties:
-> +- interrupt-parent: phandle for the interrupt gpio controller
-> +- interrupts: GPIO interrupt to which the chip is connected
-> +- lpcpd-gpios: Output GPIO pin used for ST33ZP24 power management D1=
-/D2 state.
-> +If set vps must present when the platform is going into sleep/hibern=
-ate mode.
+> Hi Boris,
+> 
+> On Monday 01 December 2014 11:27:21, Boris Brezillon wrote:
+> > The EBI (External Bus Interface) is used to access external peripherals
+> > (NOR, SRAM, NAND, and other specific devices like ethernet controllers).
+> > Each device is assigned a CS line and an address range and can have its
+> > own configuration (timings, access mode, bus width, ...).
+> > This driver provides a generic DT binding to configure a device according
+> > to its requirements.
+> > For specific device controllers (like the NAND one) the SMC timings
+> > should be configured by the controller driver through the matrix and
+> > smc syscon regmaps.
+> > 
+> > Signed-off-by: Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
+> > Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> >  drivers/memory/Kconfig     |  11 +
+> >  drivers/memory/Makefile    |   1 +
+> >  drivers/memory/atmel-ebi.c | 627 +++++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 639 insertions(+)
+> >  create mode 100644 drivers/memory/atmel-ebi.c
+> 
+> While I like this feature, shouldn't this driver go to drivers/bus/ like the imx-weim driver? The latter one does the same, so I wonder why one is in drivers/bus while the other is in drivers/memory.
+> 
 
-What is 'vps'?
+I don't have a strong opinion regarding where this driver should
+live (I even considered putting it in drivers/bus) :-).
+But note that there are other "external memory interface" drivers
+in drivers/memory too: TI AEMIF and Marvell DEVBUS  ;-).
 
-Mark.
+Does anyone else think this driver should go in drivers/bus ?
 
-> +
-> +Optional SoC Specific Properties:
-> +- pinctrl-names: Contains only one value - "default".
-> +- pintctrl-0: Specifies the pin control groups used for this control=
-ler.
-> +
-> +Example (for ARM-based BeagleBoard xM with ST33ZP24 on I2C2):
-> +
-> +&i2c2 {
-> +
-> +        status =3D "okay";
-> +
-> +        st33zp24: st33zp24@13 {
-> +
-> +                compatible =3D "st,st33zp24_i2c";
-> +
-> +                reg =3D <0x013>;
-> +                clock-frequency =3D <400000>;
-> +
-> +                interrupt-parent =3D <&gpio5>;
-> +                interrupts =3D <7 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +                lpcpd-gpios =3D <&gpio5 15 GPIO_ACTIVE_HIGH>;
-> +        };
-> +};
-> --=20
-> 2.1.0
->=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree"=
- in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
+Regards,
+
+Boris
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
