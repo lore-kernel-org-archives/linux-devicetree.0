@@ -1,67 +1,42 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] ARM: hip04: set ARCH_NR_GPIO to 128
-Date: Mon, 01 Dec 2014 15:47:03 +0100
-Message-ID: <2571535.P78Okb1jGf@wuerfel>
-References: <1417156188-500-1-git-send-email-wangzhou.bry@gmail.com> <547971BF.1050706@gmail.com> <CACRpkdb1nZN-vOXLC-QFUAT9wDGM2Nm5YeH0qY_u2JV9toOaVg@mail.gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [RFC V1 0/8] CPUFreq: create platform-dev for DT based cpufreq drivers
+Date: Mon, 1 Dec 2014 20:18:10 +0530
+Message-ID: <CAKohpomsqCnEcSeuqtZcYOC6bgTrGmc8zXTm6cA72q+hr=LBsQ@mail.gmail.com>
+References: <cover.1417433163.git.viresh.kumar@linaro.org>
+	<7885354.QleDlR7NUO@wuerfel>
+	<CAKohpo=EPOH-WJ4mmAr-1BzzAEpvC-F0Y99Ox_yL7meUcRNx6Q@mail.gmail.com>
+	<5607434.rlEIdu4yyh@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdb1nZN-vOXLC-QFUAT9wDGM2Nm5YeH0qY_u2JV9toOaVg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <5607434.rlEIdu4yyh@wuerfel>
+Sender: linux-pm-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Nishanth Menon <nm@ti.com>, Rob Herring <rob.herring@linaro.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, Thomas Abraham <ta.omasab@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Chander Kashyap <k.chander@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "olof@lixom.net" <olof@lixom.net>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Mike Turquette <mike.turquette@linaro.org>, santosh shilimkar <santosh.shilimkar@oracle.com>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 01 December 2014 15:04:49 Linus Walleij wrote:
-> On Sat, Nov 29, 2014 at 8:11 AM, Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> w=
-rote:
-> > On 2014=E5=B9=B411=E6=9C=8828=E6=97=A5 17:33, Arnd Bergmann wrote:
-> >> On Friday 28 November 2014 14:29:47 Zhou Wang wrote:
->=20
-> >>>          default 264 if MACH_H4700
-> >>> +       default 128 if ARCH_HIP04
-> >>>          default 0
-> >>>          help
-> >>>            Maximum number of GPIOs in the system.
-> >>>
-> >>
-> >> If I remember correctly, you don't actually need to set this if al=
-l gpio
-> >> clients are using the new gpio descriptor interfaces instead of gp=
-io
-> >> numbers. Would that work for you? You'd have to know which devices
-> >
-> > If I don't set this, it will use the default ARCH_NR_GPIO(512), the=
-n
-> > the range of GPIO number will be 384~511 which is very strange to u=
-sers,
-> > because Hip04 based machines can only support 128 GPIOs.
->=20
-> That is a totally different problem.
->=20
-> Not that these numbers have ever been stable...
+On 1 December 2014 at 19:35, Arnd Bergmann <arnd@arndb.de> wrote:
+> I guess a string would be better here, the idea here was to
+> have a different bool property per driver, which would also
+> work.
 
-Right, in particular, it would be different between hisi_defconfig
-and multi_v7_defconfig.
+Hmm, I will prefer string as we don't need to define any more bindings then
+for new drivers.
 
-> Think of a patch to gpiochip_find_base() in
-> drivers/gpio/gpiolib.c to fix this so that numbers are
-> assigned a better way rather than doing
-> random hacks with numbers like this.
+>> > @@ -367,29 +404,19 @@ static int dt_cpufreq_probe(struct platform_device *pdev)
+>> >         if (!IS_ERR(cpu_reg))
+>> >                 regulator_put(cpu_reg);
+>> >
+>> > -       dt_cpufreq_driver.driver_data = dev_get_platdata(&pdev->dev);
+>> > -
+>>
+>> We still need this, and its about how clocks are shared between CPUs.
+>
+> I didn't see where this comes from. Who is setting up this platform
+> data?
 
-Maybe we can find the highest number that is ever allocated
-statically by any driver (since it's all from source code), and do
-the dynamic allocations forward from that number instead of allocating
-backward?
+Mvebu is using it to communicate that all CPUs have separate
+clock lines.
 
-Or could we try to find the drivers that use DT /and/ allocate a static
-number and then see if we can avoid the need for static numbers for
-those?
-
-	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+viresh
