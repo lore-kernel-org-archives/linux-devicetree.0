@@ -1,34 +1,24 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: [PATCH v2 13/16] dt: binding: add binding for TZ1090 PERIP clocks
-Date: Mon,  1 Dec 2014 23:20:03 +0000
-Message-ID: <1417476006-10407-14-git-send-email-james.hogan@imgtec.com>
+From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 12/16] clk: tz1090: add HEP clock provider driver
+Date: Mon,  1 Dec 2014 23:20:02 +0000
+Message-ID: <1417476006-10407-13-git-send-email-james.hogan@imgtec.com>
 References: <1417476006-10407-1-git-send-email-james.hogan@imgtec.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1417476006-10407-1-git-send-email-james.hogan@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, linux-metag@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Heiko Stuebner <heiko@sntech.de>, James Hogan <james.hogan@imgtec.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1417476006-10407-1-git-send-email-james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-metag-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The TZ1090 peripheral (PERIP) register region controls a bank of system
-clock gates for individual peripherals.
+The TZ1090 High End Peripheral (HEP) register region controls several
+clocks for the HEP peripherals.
 
-Create a clock binding for the provider of these clocks, and a header
-file in <dt-bindings/clock/> for enumerating the provided clocks.
+The set up is pretty straight forward, with only a clock gate bank
+(HEP_CLK_EN) needing to be configured.
 
-There is a single input clock, the main system clock, and multiple
-peripheral specific system clocks provided which should be referenced by
-the relevant peripheral device nodes.
-
-Signed-off-by: James Hogan <james.hogan@imgtec.com>
-Cc: Mike Turquette <mturquette@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: linux-metag@vger.kernel.org
-Cc: devicetree@vger.kernel.org
+Signed-off-by: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-metag-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
 Changes since v1 (patch 15):
 - New patch.
@@ -36,102 +26,78 @@ Changes since v1 (patch 15):
   generic bindings to several TZ1090 specific bindings representing
   groups of TZ1090 clocks.
 ---
- .../bindings/clock/img,tz1090-perip-cru.txt        | 49 ++++++++++++++++++++++
- include/dt-bindings/clock/tz1090-perip.h           | 30 +++++++++++++
- 2 files changed, 79 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/img,tz1090-perip-cru.txt
- create mode 100644 include/dt-bindings/clock/tz1090-perip.h
+ drivers/clk/tz1090/Makefile         |  1 +
+ drivers/clk/tz1090/clk-tz1090-hep.c | 46 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 47 insertions(+)
+ create mode 100644 drivers/clk/tz1090/clk-tz1090-hep.c
 
-diff --git a/Documentation/devicetree/bindings/clock/img,tz1090-perip-cru.txt b/Documentation/devicetree/bindings/clock/img,tz1090-perip-cru.txt
+diff --git a/drivers/clk/tz1090/Makefile b/drivers/clk/tz1090/Makefile
+index 873a8f6..1d3cd32 100644
+--- a/drivers/clk/tz1090/Makefile
++++ b/drivers/clk/tz1090/Makefile
+@@ -7,5 +7,6 @@ obj-y		+= clk-tz1090-gate-bank.o
+ obj-y		+= clk-tz1090-mux-bank.o
+ obj-y		+= clk-tz1090-pll.o
+ 
++obj-y		+= clk-tz1090-hep.o
+ obj-y		+= clk-tz1090-pdc.o
+ obj-y		+= clk-tz1090-top.o
+diff --git a/drivers/clk/tz1090/clk-tz1090-hep.c b/drivers/clk/tz1090/clk-tz1090-hep.c
 new file mode 100644
-index 0000000..3517737
+index 0000000..e5585b4
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/img,tz1090-perip-cru.txt
-@@ -0,0 +1,49 @@
-+Binding for TZ1090 Peripheral register clocks.
-+
-+This binding uses the common clock binding[1]. It represents the clocks
-+controlled from the peripheral registers of the TZ1090:
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+Required properties:
-+- compatible         : Shall be "img,tz1090-perip-cru".
-+- #clock-cells       : From common clock binding; shall be set to 1.
-+- reg                : Base address for clock registers in peripheral register
-+                       region.
-+- clocks             : Clock specifiers for each input clock.
-+- clock-names        : Labels for each input clock specified in clocks.
-+                       Can contain the following entries:
-+                       "sys" : Main system clock.
-+
-+Optional properties:
-+- clock-indices      : From common clock binding. Allows clock-output-names to
-+                       be sparse.
-+- clock-output-names : From common clock binding. May be used to name specific
-+                       output clocks so that other clock providers can find
-+                       the clocks by name before the provider has been
-+                       instantiated. Can contain:
-+                       "sys_scb0", "sys_scb1", "sys_scb2", "sys_sdio",
-+                       "sys_uart0", "sys_uart1", "sys_spim", "sys_spis",
-+                       "sys_spim1", "sys_i2sout", "sys_i2sin", "sys_lcd",
-+                       "sys_sdhost", "sys_usb"
-+
-+Clock Specifier Definition:
-+- <1st-cell>: Output clock number. Use constants from
-+              <dt-bindings/clock/tz1090-perip.h>.
-+
-+Examples:
-+	perip_cru: perip_cru {
-+		compatible = "img,tz1090-perip-cru";
-+		#clock-cells = <1>;
-+		reg = <0x02004000 0x18>;
-+		clocks = <&top_clks CLK_TOP_SYS>;
-+		clock-names = "sys";
-+	};
-+
-+	i2c {
-+		...
-+		clocks = <&top_clks CLK_TOP_SCB>,
-+			 <&perip_cru CLK_PERIP_SCB0>;
-+		clock-names = "scb", "sys";
-+		...
-+	};
-diff --git a/include/dt-bindings/clock/tz1090-perip.h b/include/dt-bindings/clock/tz1090-perip.h
-new file mode 100644
-index 0000000..b2990ea
---- /dev/null
-+++ b/include/dt-bindings/clock/tz1090-perip.h
-@@ -0,0 +1,30 @@
++++ b/drivers/clk/tz1090/clk-tz1090-hep.c
+@@ -0,0 +1,46 @@
 +/*
 + * Copyright (C) 2013-2014 Imagination Technologies Ltd.
 + *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
++ * This program is free software; you can redistribute it and/or modify it under
++ * the terms of the GNU General Public License version 2 as published by the
++ * Free Software Foundation.
++ *
++ * TZ1090 High End Peripheral (HEP) Clocks
 + */
 +
-+#ifndef _DT_BINDINGS_CLK_TZ1090_PERIP_H
-+#define _DT_BINDINGS_CLK_TZ1090_PERIP_H
++#include <dt-bindings/clock/tz1090-hep.h>
 +
-+/* CR_PERIP_CLKEN - Peripheral system clocks */
-+#define CLK_PERIP_SCB0		 0
-+#define CLK_PERIP_SCB1		 1
-+#define CLK_PERIP_SCB2		 2
-+#define CLK_PERIP_SDIO		 3
-+#define CLK_PERIP_UART0		 4
-+#define CLK_PERIP_UART1		 5
-+#define CLK_PERIP_SPIM		 6
-+#define CLK_PERIP_SPIS		 7
-+#define CLK_PERIP_SPIM1		 8
-+#define CLK_PERIP_I2SOUT	 9
-+#define CLK_PERIP_I2SIN		10
-+#define CLK_PERIP_LCD		11
-+#define CLK_PERIP_SDHOST	12
-+#define CLK_PERIP_USB		13
++#include "clk.h"
 +
-+#define CLK_PERIP_MAX		14
++/* Register offsets into high end peripheral memory region */
++#define HEP_CLK_EN		0x04
 +
-+#endif
++/*
++ *                      CR_HEP_CLK_EN
++ *                      =============
++ *
++ * sys              -+--[ 2d_en      ]--- 0 sys_2d
++ * sys_x2_undeleted -|--[ ddr_en     ]--- 1 ddr_en
++ * sys               `--[ pdp_pdi_en ]--- 2 sys_pdp
++ */
++GATE_BANK(tz1090_hep_clken, 0, HEP_CLK_EN,
++	/*   bit in			out	*/
++	GATE( 0, "@sys",		"sys_2d")
++	GATE( 1, "@sys_x2_undeleted",	"ddr_en")
++	GATE( 2, "@sys",		"sys_pdp")
++	/* bits 3..31 unused */
++);
++
++static void __init tz1090_hep_cru_init(struct device_node *np)
++{
++	struct tz1090_clk_provider *p;
++
++	p = tz1090_clk_alloc_provider(np, CLK_HEP_MAX);
++	if (!p)
++		return;
++
++	tz1090_clk_register_gate_bank(p, &tz1090_hep_clken);
++
++	tz1090_clk_register_provider(p);
++}
++CLK_OF_DECLARE(tz1090_hep_cru, "img,tz1090-hep-cru", tz1090_hep_cru_init);
 -- 
 2.0.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
