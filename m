@@ -1,101 +1,84 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v2 3/5] pinctrl: exynos: Fix GPIO setup failure because
- domain clock being gated
-Date: Mon, 01 Dec 2014 09:37:23 +0100
-Message-ID: <1417423043.4055.14.camel@AMDC1943>
-References: <1417011857-10419-1-git-send-email-k.kozlowski@samsung.com>
- <1417011857-10419-4-git-send-email-k.kozlowski@samsung.com>
- <CACRpkdb8F8YcvFeHPvOKHjx_p4HEpimck3XRabB3oHpZTdmRQQ@mail.gmail.com>
- <1417183724.18249.36.camel@AMDC1943>
- <CA+Ln22Ejo51VPWf6DmuRvV_fZr_H=-BXAshSPSOokNE1bz=-QA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-reply-to: <CA+Ln22Ejo51VPWf6DmuRvV_fZr_H=-BXAshSPSOokNE1bz=-QA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <thomas.abraham@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Vivek Gautam <gautam.vivek@samsung.com>, Kevin Hilman <khilman@kernel.org>, Russell King <linux@arm.linux.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH v10 0/4] This suspend patch is only support cut off the power of cpu and some external
+Date: Mon,  1 Dec 2014 16:52:16 +0800
+Message-ID: <1417423940-1669-1-git-send-email-zyw@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de, dianders@chromium.org
+Cc: mturquette@linaro.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, khilman@kernel.org, linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Tony Xie <xxx@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+devices, since we still lack power_domain driver, so the other power rail
+of rk3288 need keep power on.
+I have tested it on rk3288-evb board, atop next-20141112. goto suspend by type
+"echo mem > /sys/power/state", vdd_cpu is about 0mv by measuring, so it can be
+determined in sleep mode, then press power button to wakeup it.
 
-On nie, 2014-11-30 at 21:19 +0900, Tomasz Figa wrote:
-> Hi Krzysztof,
->=20
-> 2014-11-28 23:08 GMT+09:00 Krzysztof Kozlowski <k.kozlowski@samsung.c=
-om>:
-> > On pi=C4=85, 2014-11-28 at 15:04 +0100, Linus Walleij wrote:
-> >> On Wed, Nov 26, 2014 at 3:24 PM, Krzysztof Kozlowski
-> >> <k.kozlowski@samsung.com> wrote:
-> >>
-> >> > The audio subsystem on Exynos 5420 has separate clocks and GPIO.=
- To
-> >> > operate properly on GPIOs the main block clock 'mau_epll' must b=
-e
-> >> > enabled.
-> >> >
-> >> > This was observed on Peach Pi/Pit and Arndale Octa (after enabli=
-ng i2s0)
-> >> > after introducing runtime PM to pl330 DMA driver. After that com=
-mit the
-> >> > 'mau_epll' was gated, because the "amba" clock was disabled and =
-there
-> >> > were no more users of mau_epll.
-> >> >
-> >> > The system hang just before probing i2s0 because
-> >> > samsung_pinmux_setup() tried to access memory from audss block w=
-hich was
-> >> > gated.
-> >> >
-> >> > Add a clock property to the pinctrl driver and enable the clock =
-during
-> >> > GPIO setup. During normal GPIO operations (set, get, set_directi=
-on) the
-> >> > clock is not enabled.
->=20
-> Could you make sure that possibility of gating this clock is worth th=
-e
-> effort of adding gating code to all affected drivers? If there is no
-> significant change in power consumption maybe it could be simply keep
-> running all the time?
+Changes in v10:
+- remove regulator-suspend-mem-enabled and regulator-suspend-mem-microvolt
+- enable the lcd, codec, sdmmc power during suspend
 
-I had an impression that last time you disliked such idea:
-http://www.spinics.net/lists/arm-kernel/msg338127.html
-That's why I developed these patches. Because keeping a clock always on=
-,
-even when it is unused, is undesirable.
+Changes in v9:
+- fold Doug's patches
+- modify some print log
+- update the subject and description
 
-Anyway, I did some simple measurements (after booting Arndale Octa
-to /bin/sh, idle):
- - with mau_epll gated: ~523 mA
- - with mau_epll always on: ~531 mA
+Changes in v8:
+- use enum for define sleep mode
+- move rk3288_config_bootdata to the front of sram memcpy
+- add ddr pinctrl for suspend
+- keep all except cpu&tp power rail on during suspend
+- add regulator-on-in-suspend before set suspend voltage
+- add a reference of ddrio_pwroff and ddr0_retention
 
-Keeping it on increases energy usage by 1.5% in idle (with measurement
-uncertainty ~0.4%).
+Changes in v7:
+- get rid all of unused code
+- add regulator-state-mem sub node for suspend
 
+Changes in v6:
+- get rid of the save/restore of SRAM
+- doing the copy of resume code once at init time
+- remove ROCKCHIP_ARM_OFF_LOGIC_DEEP from rk3288_fill_in_bootram
+- add of_platform_populate in rockchip_dt_init
+- change pmu_intmem@ff720000 to sram@ff720000
+- change pmu_intmem@ff720000 to sram@ff720000
 
-> Also isn't a similar problem happening due to power domains? I believ=
-e
-> the whole maudio block is located in a separate power domain but
-> somehow it doesn't get turned off?
+Changes in v5:
+- use rk3288_bootram_sz for memcpy size
+- fixed error of sram save and restore
+- change the size of sram in example
+- change size to 4k
 
-There is Maudio power domain... but I think it is not related here.
-Pinctrl driver does not have runtime PM and is not attached to a domain=
-=2E
-I thought about other solution to this problem (with utilization of
-power domains):
- - add runtime PM to pinctrl and audss clocks,
- - attach pinctrl and audss clocks to maudio power domain,
- - enable the clock when power domain is turned on.
-However almost the same changes had to be added to pinctrl and audss
-clocks drivers (replace clock_enable() with pm_runtime_get_sync()).
+Changes in v4:
+- remove grf regmap
 
-Best regards,
-Krzysztof
+Changes in v3:
+- move the pinmux of gpio6_c6 save and restore to pinctrl-rockchip
 
+Changes in v2:
+- add the regulator calls in prepare and finish.
+- add the pinmux of gpio6_c6 save and restore
+- put "rockchip,rk3288-pmu-sram" to first
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Chris Zhong (4):
+  ARM: rockchip: add suspend and resume for RK3288
+  ARM: rockchip: Add pmu-sram binding
+  ARM: dts: add RK3288 suspend support
+  ARM: dts: rockchip: add suspend settings for rk3288-evb-rk808
+
+ .../devicetree/bindings/arm/rockchip/pmu-sram.txt  |  16 ++
+ arch/arm/boot/dts/rk3288-evb-rk808.dts             |  53 ++++-
+ arch/arm/boot/dts/rk3288.dtsi                      |  23 ++
+ arch/arm/mach-rockchip/Makefile                    |   1 +
+ arch/arm/mach-rockchip/pm.c                        | 260 +++++++++++++++++++++
+ arch/arm/mach-rockchip/pm.h                        |  99 ++++++++
+ arch/arm/mach-rockchip/rockchip.c                  |   2 +
+ arch/arm/mach-rockchip/sleep.S                     |  73 ++++++
+ 8 files changed, 526 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/rockchip/pmu-sram.txt
+ create mode 100644 arch/arm/mach-rockchip/pm.c
+ create mode 100644 arch/arm/mach-rockchip/pm.h
+ create mode 100644 arch/arm/mach-rockchip/sleep.S
+
+-- 
+1.9.1
