@@ -1,121 +1,55 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v12 0/3] ARM: rk3288: Add PM Domain support
-Date: Mon, 1 Dec 2014 23:57:01 +0900
-Message-ID: <CAAFQd5BvNKsuRmMkh7C9hYPQCwiDFXUuN2SwcxtfLu5KmHdymA@mail.gmail.com>
-References: <1416217842-4716-1-git-send-email-caesar.wang@rock-chips.com> <1454366.cVgT9MeyeC@diego>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC V1 0/8] CPUFreq: create platform-dev for DT based cpufreq drivers
+Date: Mon, 01 Dec 2014 15:59:14 +0100
+Message-ID: <3594266.ci9lGXQ9iA@wuerfel>
+References: <cover.1417433163.git.viresh.kumar@linaro.org> <5607434.rlEIdu4yyh@wuerfel> <CAKohpomsqCnEcSeuqtZcYOC6bgTrGmc8zXTm6cA72q+hr=LBsQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1454366.cVgT9MeyeC@diego>
-Sender: linux-doc-owner@vger.kernel.org
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc: Caesar Wang <caesar.wang@rock-chips.com>, khilman@kernel.org, linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, Ulf Hansson <ulf.hansson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, fzf@rock-chips.com, cf@rock-chips.com, chris.zhong@rock-chips.com, xxm@rock-chips.com, chm@rock-chips.com, djkurtz@chromium.org, "jinkun.hong" <jinkun.hong@rock-chips.com>, Jack Dai <jack.dai@rock-chips.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAKohpomsqCnEcSeuqtZcYOC6bgTrGmc8zXTm6cA72q+hr=LBsQ@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Nishanth Menon <nm@ti.com>, Rob Herring <rob.herring@linaro.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, Thomas Abraham <ta.omasab@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Chander Kashyap <k.chander@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "olof@lixom.net" <olof@lixom.net>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Mike Turquette <mike.turquette@linaro.org>, santosh shilimkar <santosh.shilimkar@oracle.com>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 28, 2014 at 6:57 PM, Heiko St=C3=BCbner <heiko@sntech.de> w=
-rote:
->
-> Am Montag, 17. November 2014, 17:50:38 schrieb Caesar Wang:
-> >     Add power domain drivers based on generic power domain for
-> >     Rockchip platform, and support RK3288.
-> >
-> >     https://chromium-review.googlesource.com/#/c/220253/9
-> >     This is the GPU driver, add the following information in DT,
-> >     and it can support the PMDOMAIN
->
-> I'm not sure what to do with this series. Kevin had concerns about th=
-e clocks
-> being part of the power-domains and I don't see them actually address=
-ed and/or
-> Kevin being satisfied - actually he isn't even on the recipients list=
- of this
-> version of the series.
->
->
-> @Ceasar: you should include people being part of important previous
-> conversations in new versions of patchsets - especially when they hav=
-e voiced
-> concerns.
->
->
-> I've added Tomasz whom I remember having previous experience on the E=
-xynos
-> Powerdomains, so maybe he can add some other perspective - new ideas.
->
+On Monday 01 December 2014 20:18:10 Viresh Kumar wrote:
+> On 1 December 2014 at 19:35, Arnd Bergmann <arnd@arndb.de> wrote:
+> > I guess a string would be better here, the idea here was to
+> > have a different bool property per driver, which would also
+> > work.
+> 
+> Hmm, I will prefer string as we don't need to define any more bindings then
+> for new drivers.
 
-Thanks Heiko for adding me to this thread.
+Right. You'd still need to define the known values though, so in
+effect it's not much of a difference. I have no problem with 
+a string property though.
 
->
-> @Tomasz: this is the part of Kevin's concerns from v10 of the powerdo=
-main
-> series:
->
-> Am Donnerstag, 13. November 2014, 12:24:47 schrieben Kevin Hilman:
-> > Heiko St=C3=BCbner <heiko@sntech.de> writes:
-> > > Am Dienstag, 11. November 2014, 08:53:13 schrieb Kevin Hilman:
-> > >> I still don't like having lists of clocks in the power-domain DT=
-=2E
-> > >>
-> > >> DT is supposed to describe the hardware, and clocks are properti=
-es of
-> > >> devices, not power-domains, so the DT description should follow =
-from
-> > >> that.
-> > >
-> > > on the policy side one could argue that if the clock needs to be =
-enabled
-> > > to
-> > > achieve sucessful domain state-changes, that it is also a propert=
-y of the
-> > > domain itself in addition to the device.
+> >> > @@ -367,29 +404,19 @@ static int dt_cpufreq_probe(struct platform_device *pdev)
+> >> >         if (!IS_ERR(cpu_reg))
+> >> >                 regulator_put(cpu_reg);
+> >> >
+> >> > -       dt_cpufreq_driver.driver_data = dev_get_platdata(&pdev->dev);
+> >> > -
+> >>
+> >> We still need this, and its about how clocks are shared between CPUs.
 > >
-> > You could, but from a hardware perspective, the clock is a property=
- of
-> > the device.
-> >
+> > I didn't see where this comes from. Who is setting up this platform
+> > data?
+> 
+> Mvebu is using it to communicate that all CPUs have separate
+> clock lines.
 
-Well, the system controller which control the power domains is also a
-device. In DT we do not represent the domains alone, but rather the
-system controller, which acts as a power domain provider. If it need
-certain clocks to do its work, then I believe it should have them
-listed in its node. However the dependencies between clocks and power
-domains are not clear to me either, so I don't have any strong opinion
-on whether this would be the best solution.
+I still don't see where it does that. All I see for mvebu is
 
-> > > And on the pratical side we don't have drivers nor bindings for a=
- big part
-> > > of the domain users - and this will probably be true for quite so=
-me time.
-> > > This of course makes it very impractical (or impossible) to colle=
-ct the
-> > > clocks for parts like the gpu (mali), hevc, vcodec (video
-> > > encoder/decoder), rga (2d stuff), iep, isp.
-> >
-> > This doesn't sound impossible at all.
-> >
-> > You have to collect the clocks anyways.  The only debate is whether=
- to
-> > list them in the device node or the power-domain node.
-> >
-> > Even for devices without drivers, you just need a minimal node in t=
-he DT if
-> > which lists the clocks and has a phandle to the parent power domain=
-=2E
-> >
-> > Sounds rather simple to me, and since the DT is supposed to describ=
-e the
-> > hardware, doing it this way makes looking at the DT actually help
-> > understand the hardware.
->
+	platform_device_register_simple("cpufreq-dt", -1, NULL, 0);
 
-If the dependency between clocks and power domain is kind of "all
-clocks of all devices in this domain should be enabled when performing
-operation on the domain" then IMHO it should be more reasonable to put
-the clocks only in nodes of respective devices and then follow the
-links from the domain to devices inside of it and retrieve the clocks
-from there, so that they don't have to be duplicated. AFAIK, we don't
-like redundancy in DT.
+without any platform data. I see this patch
+http://lists.linaro.org/pipermail/linaro-kernel/2014-September/017693.html
+on the mailing list, but it's not in linux-next, and it obviously
+would not work any more with the patch I proposed. Instead I suppose
+you would use a different string to match against for the case of
+separate clocks.
 
-Best regards,
-Tomasz
+	Arnd
