@@ -1,49 +1,45 @@
-From: arno@natisbad.org (Arnaud Ebalard)
-Subject: Re: [PATCHv1 6/6] rtc: rtc-isl12057: add alarm support to Intersil ISL12057 RTC driver
-Date: Mon, 01 Dec 2014 09:07:41 +0100
-Message-ID: <87r3wjkd2q.fsf@natisbad.org>
-References: <cover.1416006090.git.arno@natisbad.org>
-	<986ee8d9d3e6862007f398ffddc2a4bb2368933e.1416006090.git.arno@natisbad.org>
-	<5476ED9F.2070600@kleine-koenig.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [RFC] cpufreq: Add "dvfs-method" binding to probe cpufreq drivers
+Date: Mon, 1 Dec 2014 13:36:00 +0530
+Message-ID: <CAKohpo=YGGGTdX+5VELG62-nOkpH8qSyNv41RiuXS8=1UkVJLQ@mail.gmail.com>
+References: <596a6d49f2b3e2837aa9a54a3e1249161d3c9265.1416991009.git.viresh.kumar@linaro.org>
+	<5476071B.1060705@arm.com>
+	<CAKohpomFE6xg+HfOicha4Ntkr9osqDK2gxdKce=BU_q35jfBxA@mail.gmail.com>
+	<5476F4ED.6040206@arm.com>
+	<CAKohpok+M+HuuQBJ3EJ_3e+Uv-Me5za7EO2TVguU_tCXNtahvQ@mail.gmail.com>
+	<547707C8.3080108@arm.com>
+	<CAKohpokwKzJ1TJQu2YGS+veDPuGFKehWWbdYKrHyPz6vK-Vy3A@mail.gmail.com>
+	<547861C1.4040904@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5476ED9F.2070600@kleine-koenig.org> ("Uwe \=\?utf-8\?Q\?Kleine-K\?\=
- \=\?utf-8\?Q\?\=C3\=B6nig\=22's\?\=
-	message of "Thu, 27 Nov 2014 10:23:43 +0100")
-Sender: linux-doc-owner@vger.kernel.org
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <547861C1.4040904@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Santosh Shilimkar <santosh.shilimkar@oracle.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Arnd Bergmann <arnd.bergmann@linaro.org>, Mike Turquette <mike.turquette@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kesavan.abhilash@gmail.com" <kesavan.abhilash@gmail.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "k.chander@samsung.com" <k.chander@samsung.com>, "olof@lixom.net" <olof@lixom.net>, "ta.omasab@gmail.com" <ta.omasab@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Uwe,
-
-Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig.org> writes:
-
-> Hello,
+On 28 November 2014 at 17:21, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>> - Update those platforms to check if DT has "compatible" string in CPU
+>> node.
+>> If yes, don't create a device as this will be created by cpufreq-dt.
+>>
 >
-> finally I managed to test this series on my (unmodified) rn104.
->
-> For patch 1: Maybe point out that the issue with the century bit isn'=
-t
-> that critical, because this bit is not expected to be set before year=
- 2100.
->
-> For patch 3: This patch adds a few dev_err calls that get later amend=
-ed
-> in patch 5 to also include an error code. IMHO these should already b=
-e
-> added in patch 3. Patch 5 should only add it to the already existing
-> strings (if applicable).
->
-> For patch 4: Maybe
-> s/obsolete/for backwards compatibility, don't use in new code/.
->
-> Some further comments inline ...
+> This fixes how it will work with new DTs, how about old DTs ?
+> IMO we still need the blacklist kind of logic I sent before.
 
-Thanks for the tests. I'll take a look at your comments this evening.
+Yes..
 
-Cheers,
+> I don't think this is something acceptable, why will someone want to
+> lose a working feature with new kernel.
 
-a+
+If some platform maintainers care for cleaner/simpler code instead
+of backward compatibility ..
+
+For example, exynos has just started to use cpufreq-dt. Probably
+in 3.18 or may be 19 as well.. So, they might not care about
+backward compatibility at all.. Let me see if I can come up with
+a solution that looks reasonably clean.
+
+--
+viresh
