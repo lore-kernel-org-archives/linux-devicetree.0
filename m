@@ -1,108 +1,232 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v5 6/7] ARM: zynq: Add OCM controller driver
-Date: Mon, 01 Dec 2014 16:31:19 +0100
-Message-ID: <4151221.1fPmelvPbd@wuerfel>
-References: <cover.1417440250.git.michal.simek@xilinx.com> <4788755d350890d81f1bac4bf237c5ddfb68b795.1417440250.git.michal.simek@xilinx.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH 5/5] i2c: davinci: use ICPFUNC to toggle I2C as gpio for bus recovery
+Date: Mon, 1 Dec 2014 17:34:07 +0200
+Message-ID: <1417448047-15236-6-git-send-email-grygorii.strashko@ti.com>
+References: <1417448047-15236-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4788755d350890d81f1bac4bf237c5ddfb68b795.1417440250.git.michal.simek@xilinx.com>
+In-Reply-To: <1417448047-15236-1-git-send-email-grygorii.strashko@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: linux-arm-kernel@lists.infradead.org, Soren Brinkmann <soren.brinkmann@xilinx.com>, Olof Johansson <olof@lixom.net>, monstr@monstr.eu, Josh Cartwright <josh.cartwright@ni.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Antti Palosaari <crope@iki.fi>, Jingoo Han <jg1.han@samsung.com>, Sandeep Nair <sandeep_n@ti.com>, Kumar Gala <galak@codeaurora.org>, Santosh Shilimkar <santosh.shilimkar@gmail.com>, Andy Gross <agross@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>Thierry Reding <t>
+To: Wolfram Sang <wsa@the-dreams.de>, Sekhar Nori <nsekhar@ti.com>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Kevin Hilman <khilman@deeprootsystems.com>, Santosh Shilimkar <ssantosh@kernel.org>, Murali Karicheri <m-karicheri2@ti.com>, Mike Looijmans <info@milosoftware.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 01 December 2014 14:24:57 Michal Simek wrote:
-> The driver provide memory allocator which can
-> be used by others drivers to allocate memory inside OCM.
-> All locations for 64kB blocks are supported
-> and driver is trying to allocate the largest continuous
-> block of memory.
-> 
-> Checking mpcore addressing filterring is not done here
-> but could be added in future.
-> 
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Having a board where the I2C bus locks up occasionally made it clear
+that the bus recovery in the i2c-davinci driver will only work on
+some boards, because on regular boards, this will only toggle GPIO
+lines that aren't muxed to the actual pins.
 
-The driver doesn't actually have any interface as far as I can tell,
-so I wonder how you expect it to be used.
+The I2C controller on SoCs like da850 (and da830), Keystone 2 has the
+built-in capability to bit-bang its lines by using the ICPFUNC register=
+s
+of the i2c controller.
+Implement the suggested procedure by toggling SCL and checking SDA usin=
+g
+the ICPFUNC registers of the I2C controller when present. Allow platfor=
+ms
+to indicate the presence of the ICPFUNC registers with a has_pfunc plat=
+form
+data flag and add optional DT property "ti,has-pfunc" to indicate
+the same in DT.
 
-Do you have a list of drivers that would be using it?
+CC: Sekhar Nori <nsekhar@ti.com>
+CC: Kevin Hilman <khilman@deeprootsystems.com>
+CC: Santosh Shilimkar <ssantosh@kernel.org>
+CC: Murali Karicheri <m-karicheri2@ti.com>
+CC: Mike Looijmans <info@milosoftware.com>
+CC: <devicetree@vger.kernel.org>
+Reviewed-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Ben Gardiner <bengardiner@nanometrics.ca>
+Signed-off-by: Mike Looijmans <milo-software@users.sourceforge.net>
+[grygorii.strashko@ti.com: combined patches from Ben Gardiner and
+Mike Looijmans and reimplemented ICPFUNC bus recovery using I2C
+bus recovery infrastructure]
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ .../devicetree/bindings/i2c/i2c-davinci.txt        |   3 +
+ drivers/i2c/busses/i2c-davinci.c                   | 102 +++++++++++++=
++++++++-
+ include/linux/platform_data/i2c-davinci.h          |   1 +
+ 3 files changed, 105 insertions(+), 1 deletion(-)
 
-How does it relate to the generic "mmio-sram" binding? Is this
-meant as a specialization?
-
-> +/**
-> + * zynq_ocmc_irq_handler - Interrupt service routine of the OCM controller
-> + * @irq:	IRQ number
-> + * @data:	Pointer to the zynq_ocmc_dev structure
-> + *
-> + * Return:     IRQ_HANDLED always
-> + */
-> +static irqreturn_t zynq_ocmc_irq_handler(int irq, void *data)
-> +{
-> +	u32 sts;
-> +	u32 err_addr;
-> +	struct zynq_ocmc_dev *zynq_ocmc = data;
-> +
-> +	/* check status */
-> +	sts = readl(zynq_ocmc->base + ZYNQ_OCMC_IRQ_STS);
-> +	if (sts & ZYNQ_OCMC_IRQ_STS_ERR_MASK) {
-> +		/* check error address */
-> +		err_addr = readl(zynq_ocmc->base + ZYNQ_OCMC_PARITY_ERRADDRESS);
-> +		pr_err("%s: OCM err intr generated at 0x%04x (stat: 0x%08x).",
-> +		       __func__, err_addr, sts & ZYNQ_OCMC_IRQ_STS_ERR_MASK);
-> +	}
-> +	pr_warn("%s: Interrupt generated by OCM, but no error is found.",
-> +		__func__);
-> +
-> +	return IRQ_HANDLED;
-> +}
-
-I'm also puzzled by this: you don't really do anything here but print
-a message. What is the purpose of this interrupt? As this looks unrelated
-to the rest of the driver, maybe this should be part of drivers/edac
-instead?
-
-> +static int zynq_ocmc_probe(struct platform_device *pdev)
-> +{
-> +       int ret;
-> +       struct zynq_ocmc_dev *zynq_ocmc;
-> +       u32 i, ocm_config, curr;
-> +       struct resource *res;
-> +
-> +       ocm_config = zynq_slcr_get_ocm_config();
-> +
-> +       zynq_ocmc = devm_kzalloc(&pdev->dev, sizeof(*zynq_ocmc),
-> GFP_KERNEL);
-> +       if (!zynq_ocmc)
-> +               return -ENOMEM;
-> +
-> +       zynq_ocmc->pool = devm_gen_pool_create(&pdev->dev,
-> +                                              ilog2(ZYNQ_OCMC_GRANULARITY),
-> +                                              -1);
-> +       if (!zynq_ocmc->pool)
-> +               return -ENOMEM;
-> +
-> +       curr = 0; /* For storing current struct resource for OCM */
-> +       for (i = 0; i < ZYNQ_OCMC_BLOCKS; i++) {
-> +               u32 base, start, end;
-> +
-> +               /* Setup base address for 64kB OCM block */
-> +               if (ocm_config & BIT(i))
-> +                       base = ZYNQ_OCMC_HIGHADDR;
-> +               else
-> +                       base = ZYNQ_OCMC_LOWADDR;
-
-You write in the introductory mail that you want to support detecting the
-address from the slcr, and possibly even allow changing it at runtime,
-but I don't understand what that would be good for.
-
-It's not uncommon to describe in DT settings that one can also find
-out from hardware but that are set up by the boot loader in a particular
-way. Why not this one? For all I can tell, that would let you simply
-use one driver for the EDAC and the generic mmio-sram from the memory,
-without the need to do anything further.
-
-	Arnd
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-davinci.txt b/Do=
+cumentation/devicetree/bindings/i2c/i2c-davinci.txt
+index 2dc935b..a4e1cbc 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-davinci.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-davinci.txt
+@@ -10,6 +10,9 @@ Required properties:
+ Recommended properties :
+ - interrupts : standard interrupt property.
+ - clock-frequency : desired I2C bus clock frequency in Hz.
++- ti,has-pfunc: boolean; if defined, it indicates that SoC supports PF=
+UNC
++	registers. PFUNC registers allow to switch I2C pins to function as
++	GPIOs, so they can by toggled manually.
+=20
+ Example (enbw_cmc board):
+ 	i2c@1c22000 {
+diff --git a/drivers/i2c/busses/i2c-davinci.c b/drivers/i2c/busses/i2c-=
+davinci.c
+index 00aed63..a1bb587 100644
+--- a/drivers/i2c/busses/i2c-davinci.c
++++ b/drivers/i2c/busses/i2c-davinci.c
+@@ -64,6 +64,12 @@
+ #define DAVINCI_I2C_IVR_REG	0x28
+ #define DAVINCI_I2C_EMDR_REG	0x2c
+ #define DAVINCI_I2C_PSC_REG	0x30
++#define DAVINCI_I2C_FUNC_REG	0x48
++#define DAVINCI_I2C_DIR_REG	0x4c
++#define DAVINCI_I2C_DIN_REG	0x50
++#define DAVINCI_I2C_DOUT_REG	0x54
++#define DAVINCI_I2C_DSET_REG	0x58
++#define DAVINCI_I2C_DCLR_REG	0x5c
+=20
+ #define DAVINCI_I2C_IVR_AAS	0x07
+ #define DAVINCI_I2C_IVR_SCD	0x06
+@@ -97,6 +103,29 @@
+ #define DAVINCI_I2C_IMR_NACK	BIT(1)
+ #define DAVINCI_I2C_IMR_AL	BIT(0)
+=20
++/* set SDA and SCL as GPIO */
++#define DAVINCI_I2C_FUNC_PFUNC0	BIT(0)
++
++/* set SCL as output when used as GPIO*/
++#define DAVINCI_I2C_DIR_PDIR0	BIT(0)
++/* set SDA as output when used as GPIO*/
++#define DAVINCI_I2C_DIR_PDIR1	BIT(1)
++
++/* read SCL GPIO level */
++#define DAVINCI_I2C_DIN_PDIN0 BIT(0)
++/* read SDA GPIO level */
++#define DAVINCI_I2C_DIN_PDIN1 BIT(1)
++
++/*set the SCL GPIO high */
++#define DAVINCI_I2C_DSET_PDSET0	BIT(0)
++/*set the SDA GPIO high */
++#define DAVINCI_I2C_DSET_PDSET1	BIT(1)
++
++/* set the SCL GPIO low */
++#define DAVINCI_I2C_DCLR_PDCLR0	BIT(0)
++/* set the SDA GPIO low */
++#define DAVINCI_I2C_DCLR_PDCLR1	BIT(1)
++
+ struct davinci_i2c_dev {
+ 	struct device           *dev;
+ 	void __iomem		*base;
+@@ -257,6 +286,71 @@ static struct i2c_bus_recovery_info davinci_i2c_gp=
+io_recovery_info =3D {
+ 	.unprepare_recovery =3D davinci_i2c_unprepare_recovery,
+ };
+=20
++static void davinci_i2c_set_scl(struct i2c_adapter *adap, int val)
++{
++	struct davinci_i2c_dev *dev =3D i2c_get_adapdata(adap);
++
++	if (val)
++		davinci_i2c_write_reg(dev, DAVINCI_I2C_DSET_REG,
++				      DAVINCI_I2C_DSET_PDSET0);
++	else
++		davinci_i2c_write_reg(dev, DAVINCI_I2C_DCLR_REG,
++				      DAVINCI_I2C_DCLR_PDCLR0);
++}
++
++static int davinci_i2c_get_scl(struct i2c_adapter *adap)
++{
++	struct davinci_i2c_dev *dev =3D i2c_get_adapdata(adap);
++	int val;
++
++	/* read the state of SCL */
++	val =3D davinci_i2c_read_reg(dev, DAVINCI_I2C_DIN_REG);
++	return val & DAVINCI_I2C_DIN_PDIN0;
++}
++
++static int davinci_i2c_get_sda(struct i2c_adapter *adap)
++{
++	struct davinci_i2c_dev *dev =3D i2c_get_adapdata(adap);
++	int val;
++
++	/* read the state of SDA */
++	val =3D davinci_i2c_read_reg(dev, DAVINCI_I2C_DIN_REG);
++	return val & DAVINCI_I2C_DIN_PDIN1;
++}
++
++static void davinci_i2c_scl_prepare_recovery(struct i2c_adapter *adap)
++{
++	struct davinci_i2c_dev *dev =3D i2c_get_adapdata(adap);
++
++	davinci_i2c_prepare_recovery(adap);
++
++	/* SCL output, SDA input */
++	davinci_i2c_write_reg(dev, DAVINCI_I2C_DIR_REG, DAVINCI_I2C_DIR_PDIR0=
+);
++
++	/* change to GPIO mode */
++	davinci_i2c_write_reg(dev, DAVINCI_I2C_FUNC_REG,
++			      DAVINCI_I2C_FUNC_PFUNC0);
++}
++
++static void davinci_i2c_scl_unprepare_recovery(struct i2c_adapter *ada=
+p)
++{
++	struct davinci_i2c_dev *dev =3D i2c_get_adapdata(adap);
++
++	/* change back to I2C mode */
++	davinci_i2c_write_reg(dev, DAVINCI_I2C_FUNC_REG, 0);
++
++	davinci_i2c_unprepare_recovery(adap);
++}
++
++static struct i2c_bus_recovery_info davinci_i2c_scl_recovery_info =3D =
+{
++	.recover_bus =3D i2c_generic_scl_recovery,
++	.set_scl =3D davinci_i2c_set_scl,
++	.get_scl =3D davinci_i2c_get_scl,
++	.get_sda =3D davinci_i2c_get_sda,
++	.prepare_recovery =3D davinci_i2c_scl_prepare_recovery,
++	.unprepare_recovery =3D davinci_i2c_scl_unprepare_recovery,
++};
++
+ /*
+  * Waiting for bus not busy
+  */
+@@ -669,6 +763,10 @@ static int davinci_i2c_probe(struct platform_devic=
+e *pdev)
+ 		if (!of_property_read_u32(pdev->dev.of_node, "clock-frequency",
+ 			&prop))
+ 			dev->pdata->bus_freq =3D prop / 1000;
++
++		dev->pdata->has_pfunc =3D
++			of_property_read_bool(pdev->dev.of_node,
++					      "ti,has-pfunc");
+ 	} else if (!dev->pdata) {
+ 		dev->pdata =3D &davinci_i2c_platform_data_default;
+ 	}
+@@ -710,7 +808,9 @@ static int davinci_i2c_probe(struct platform_device=
+ *pdev)
+ 	adap->timeout =3D DAVINCI_I2C_TIMEOUT;
+ 	adap->dev.of_node =3D pdev->dev.of_node;
+=20
+-	if (dev->pdata->scl_pin) {
++	if (dev->pdata->has_pfunc)
++		adap->bus_recovery_info =3D &davinci_i2c_scl_recovery_info;
++	else if (dev->pdata->scl_pin) {
+ 		adap->bus_recovery_info =3D &davinci_i2c_gpio_recovery_info;
+ 		adap->bus_recovery_info->scl_gpio =3D dev->pdata->scl_pin;
+ 		adap->bus_recovery_info->sda_gpio =3D dev->pdata->sda_pin;
+diff --git a/include/linux/platform_data/i2c-davinci.h b/include/linux/=
+platform_data/i2c-davinci.h
+index 2312d19..89fd347 100644
+--- a/include/linux/platform_data/i2c-davinci.h
++++ b/include/linux/platform_data/i2c-davinci.h
+@@ -18,6 +18,7 @@ struct davinci_i2c_platform_data {
+ 	unsigned int	bus_delay;	/* post-transaction delay (usec) */
+ 	unsigned int    sda_pin;        /* GPIO pin ID to use for SDA */
+ 	unsigned int    scl_pin;        /* GPIO pin ID to use for SCL */
++	bool		has_pfunc;	/*chip has a ICPFUNC register */
+ };
+=20
+ /* for board setup code */
+--=20
+1.9.1
