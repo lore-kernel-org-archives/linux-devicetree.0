@@ -1,75 +1,195 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH v13 07/12] drm: bridge/dw_hdmi: add support for multi-byte
- register width access
-Date: Mon, 01 Dec 2014 20:46:36 +0800
-Message-ID: <547C632C.7000309@rock-chips.com>
-References: <1417008157-31861-1-git-send-email-andy.yan@rock-chips.com>
- <1417008759-32257-1-git-send-email-andy.yan@rock-chips.com>
- <1417019657.3177.10.camel@pengutronix.de> <547843B9.6000806@rock-chips.com>
- <1417435456.4624.12.camel@pengutronix.de>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC V1 0/8] CPUFreq: create platform-dev for DT based cpufreq drivers
+Date: Mon, 01 Dec 2014 13:54:56 +0100
+Message-ID: <7885354.QleDlR7NUO@wuerfel>
+References: <cover.1417433163.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1417435456.4624.12.camel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, rmk+kernel@arm.linux.org.uk, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, Dave Airlie <airlied@redhat.com>, mark.yao@rock-chips.com, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <cover.1417433163.git.viresh.kumar@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, Arnd Bergmann <arnd.bergmann@linaro.org>, Rob Herring <rob.herring@linaro.org>, Grant Likely <grant.likely@linaro.org>, Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, kesavan.abhilash@gmail.com, linaro-kernel@lists.linaro.org, ta.omasab@gmail.com, linux-pm@vger.kernel.org, catalin.marinas@arm.com, k.chander@samsung.com, santosh shilimkar <santosh.shilimkar@oracle.com>, Stephen Boyd <sboyd@codeaurora.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Mike Turquette <mike.turquette@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, olof@lixom.net
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGhpbGlwcDoKT24gMjAxNOW5tDEy5pyIMDHml6UgMjA6MDQsIFBoaWxpcHAgWmFiZWwgd3Jv
-dGU6Cj4gQW0gRnJlaXRhZywgZGVuIDI4LjExLjIwMTQsIDE3OjQzICswODAwIHNjaHJpZWIgQW5k
-eSBZYW46Cj4+IEhpIFphYmVsOgo+PiBPbiAyMDE05bm0MTHmnIgyN+aXpSAwMDozNCwgUGhpbGlw
-cCBaYWJlbCB3cm90ZToKPj4+IEFtIE1pdHR3b2NoLCBkZW4gMjYuMTEuMjAxNCwgMjE6MzIgKzA4
-MDAgc2NocmllYiBBbmR5IFlhbjoKPj4+PiBPbiByb2NrY2hpcCByazMyODgsIG9ubHkgd29yZCgz
-Mi1iaXQpIGFjY2Vzc2VzIGFyZQo+Pj4+IHBlcm1pdHRlZCBmb3IgaGRtaSByZWdpc3RlcnMuICBC
-eXRlIHdpZHRoIGFjY2Vzc2VzICh3cml0ZWIsCj4+Pj4gcmVhZGIpIGdlbmVyYXRlIGFuIGltcHJl
-Y2lzZSBleHRlcm5hbCBhYm9ydC4KPj4+Pgo+Pj4+IFNpZ25lZC1vZmYtYnk6IEFuZHkgWWFuIDxh
-bmR5LnlhbkByb2NrLWNoaXBzLmNvbT4KPj4+Pgo+Pj4+IC0tLQo+Pj4+Cj4+Pj4gQ2hhbmdlcyBp
-biB2MTM6IE5vbmUKPj4+PiBDaGFuZ2VzIGluIHYxMjogTm9uZQo+Pj4+IENoYW5nZXMgaW4gdjEx
-OiBOb25lCj4+Pj4gQ2hhbmdlcyBpbiB2MTA6IE5vbmUKPj4+PiBDaGFuZ2VzIGluIHY5OiBOb25l
-Cj4+Pj4gQ2hhbmdlcyBpbiB2ODogTm9uZQo+Pj4+IENoYW5nZXMgaW4gdjc6IE5vbmUKPj4+PiBD
-aGFuZ2VzIGluIHY2Ogo+Pj4+IC0gcmVmYWN0b3IgcmVnaXN0ZXIgYWNjZXNzIHdpdGhvdXQgcmVn
-X3NoaWZ0Cj4+Pj4KPj4+PiBDaGFuZ2VzIGluIHY1Ogo+Pj4+IC0gcmVmYWN0b3IgcmVnLWlvLXdp
-ZHRoCj4+Pj4KPj4+PiBDaGFuZ2VzIGluIHY0OiBOb25lCj4+Pj4gQ2hhbmdlcyBpbiB2MzoKPj4+
-PiAtIHNwbGl0IG11bHRpLXJlZ2lzdGVyIGFjY2VzcyB0byBvbmUgaW5kZXBlbnQgcGF0Y2gKPj4+
-Pgo+Pj4+ICAgIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvZHdfaGRtaS5jIHwgNTcgKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLQo+Pj4+ICAgIDEgZmlsZSBjaGFuZ2VkLCA1
-MSBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQo+Pj4+Cj4+Pj4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvZ3B1L2RybS9icmlkZ2UvZHdfaGRtaS5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9k
-d19oZG1pLmMKPj4+PiBpbmRleCBhNTNiZjYzLi41ZTg4YzhkIDEwMDY0NAo+Pj4+IC0tLSBhL2Ry
-aXZlcnMvZ3B1L2RybS9icmlkZ2UvZHdfaGRtaS5jCj4+Pj4gKysrIGIvZHJpdmVycy9ncHUvZHJt
-L2JyaWRnZS9kd19oZG1pLmMKPj4+PiBAQCAtMTAwLDYgKzEwMCwxMSBAQCBzdHJ1Y3QgaGRtaV9k
-YXRhX2luZm8gewo+Pj4+ICAgIAlzdHJ1Y3QgaGRtaV92bW9kZSB2aWRlb19tb2RlOwo+Pj4+ICAg
-IH07Cj4+Pj4gICAgCj4+Pj4gK3VuaW9uIGR3X3JlZ19wdHIgewo+Pj4+ICsJdTMyIF9faW9tZW0g
-KnAzMjsKPj4+PiArCXU4IF9faW9tZW0gKnA4Owo+Pj4+ICt9Owo+Pj4gSSBzZWUgbm8gbmVlZCB0
-byBpbnRyb2R1Y2UgdGhpcy4gSnVzdCBleHBsaWNpdGx5IG11bHRpcGx5IHRoZSBvZmZzZXQgaW4K
-Pj4+IGR3X2hkbWlfd3JpdGVsLgo+Pj4KPj4gICAgICAgSXMgdGhlcmUgYW55IGRpc2FkdmFudGFn
-ZSB0byBkbyBsaWtlIHRoaXM/Cj4+ICAgICAgIFRoZSBjb21waWxlciBjYW4gaGVscCB1cyBkbyB0
-aGUgZXhwbGljaXRseSBtdWx0aXBseSBieSB0aGlzIHdheS4KPiBGb3VyIGFkZGl0aW9uYWwgbGlu
-ZXMsIGEgbmV3IGRlZmluZWQgdHlwZSwgYSBmZXcgbW9yZSBjaGFuZ2VzIHRvIHN0cnVjdAo+IGR3
-X2hkbWkgYW5kIGR3X2hkbWlfYmluZCBuZWNlc3NhcnkuCj4KPiBUZWNobmljYWxseSBJIHNlZSBu
-byBwcm9ibGVtIHRvIGxldCB0aGUgY29tcGlsZXIgZG8gdGhlIG11bHRpcGxpY2F0aW9uLAo+IG15
-IGlzc3VlIGlzIHRoYXQgaXQgZXZlciBzbyBzbGlnaHRseSBvYmZ1c2NhdGVzIHRoZSBjb2RlLiBJ
-bnN0ZWFkIG9mCj4ganVzdCB3cml0aW5nICIqIDQiIGluIHR3byBmdW5jdGlvbnMsIHdlIGdldCBh
-IG5ldyB1bmlvbiB0aGF0IHlvdSBuZWVkIHRvCj4ga25vdyBhYm91dCB3aGVuIGxvb2tpbmcgYXQg
-c3RydWN0IGR3X2hkbWkgYW5kIGR3X2hkbWlfYmluZCwgcmVncy5wOCBpcwo+IHVzZWQgYnV0IG5l
-dmVyIGFzc2lnbmVkIGRpcmVjdGx5LCBpdCdzIGp1c3QgYSB0aW55IGJpdCBvZiBhZGRpdGlvbmFs
-Cj4gZWZmb3J0IG5lZWRlZCB0byB1bmRlcnN0YW5kIHRoZSBjb2RlLiBCdXQgd2hlbiB0aGUgY29z
-dCB0byBhdm9pZCB0aGF0IGlzCj4gc28gc21hbGwuLi4KPgo+IHJlZ2FyZHMKPiBQaGlsaXBwCj4K
-CiAgIFdoYXQgeW91IHNhaWQgaXMgcmlnaHQsIEkgd2lsbCBjaGFuZ2UgaXQgaW4gUEFUQ0ggVjE1
-CiAgICB0aGFua3MgLgo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCj4gTGludXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0Cj4gTGludXgtcm9ja2NoaXBAbGlz
-dHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
-dGluZm8vbGludXgtcm9ja2NoaXAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpkZXZlbCBtYWlsaW5nIGxpc3QKZGV2ZWxAbGludXhkcml2ZXJwcm9qZWN0
-Lm9yZwpodHRwOi8vZHJpdmVyZGV2LmxpbnV4ZHJpdmVycHJvamVjdC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9kcml2ZXJkZXYtZGV2ZWwK
+On Monday 01 December 2014 17:11:21 Viresh Kumar wrote:
+> 
+> DT based cpufreq drivers doesn't require much support from platform code now a
+> days as most of the stuff is moved behind generic APIs. Like clk APIs for
+> changing clock rates, regulator APIs for changing voltages, etc.
+> 
+> One of the bottleneck still left was how to select which cpufreq driver to probe
+> for a given platform as there might be multiple drivers available.
+> 
+> Traditionally, we used to create platform devices from machine specific code
+> which binds with a cpufreq driver. And while we moved towards DT based device
+> creation, these devices stayed as is.
+> 
+> The problem is getting worse now as we have architectures now with Zero platform
+> specific code. Forcefully these platforms have to create a new file in
+> drivers/cpufreq/ to just add these platform devices in order to use the generic
+> drivers like cpufreq-dt.c.
+> 
+> This has been discussed again and again, but with no solution yet. Last it was
+> discussed here:
+> 
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/256154.html
+> 
+> This patch is an attempt towards getting the bindings.
+> 
+> We only need to have cpufreq drivers name string present in "compatible"
+> property for the root node.. If a cpufreq driver with DT support exists with
+> that name, then cpufreq core will create a platform device for that.
+> 
+> The first patch presents the new binding, second one creates another file
+> responsible for creating platform devices for all DT based cpufreq drivers.
+> 
+> And later patches update platforms to migrate to it one by one.
+> 
+> A BLACKLIST of platforms already supported by these drivers is also created for
+> backward compatibility of newer kernels with older DTs. And so for such
+> platforms DT files aren't updated.
+> 
+> An initial RFC that presented the idea was discussed here:
+> https://www.mail-archive.com/devicetree@vger.kernel.org/msg52509.html
+> 
+> Tested-ON: Exynos5250. (The last patch for exynos depends on some commits to be
+> upstreamed in 3.19, presented here just for testing).
+
+Thanks a lot for working on this, we really need to figure it out one day!
+
+Your patches seem well-implemented, so if everybody thinks the general
+approach is the best solution, we should do that. From my point of view,
+there are two things I would do differently:
+
+- In the DT binding, I would strongly prefer anything but the root compatible
+  property as the key for the new platforms. Clearly we have to keep using
+  it for the backwards-compatibility case, as you do, but I think there
+  are more appropriate places to put it. Sorting from most favorite to least
+  favorite, my list would be:
+	1. a new property in /cpus/
+	2. a new property each /cpus/cpu@... node.
+	3. the compatible property of the /cpus node
+	4. a top-level device node that gets turned into a platform device
+	5. a new property in the / node
+	6. a new property in the /chosen node
+	7. the compatible property in the / node
+
+- Implementation-wise, I don't think it's helpful to have a global function
+  that registers a platform device to be consumed by the device driver. I'd
+  rather just see a module_init function in each driver that rather than
+  registering a platform_driver scans the DT properties. This is only really
+  necessary when not using DT (omap2, omap3, davinci, loongson) or when
+  passing additional resources or platform_data (kirkwood, but that can
+  look up the "marvell,orion-system-controller" node if necessary).
+  My preferred solution would be to eventually remove the platform_device
+  registration for all DT users. If a driver needs a platform device pointer
+  internally, it can use platform_create_bundle(), but that's probably not
+  even necessary.
+
+In short, I would suggest something along the lines of the patch below.
+
+	Arnd
+8<-----
+[PATCH, RFC] cpufreq: dt: simplify and generalize probing
+
+We should not have to create a platform device from platform specific code
+in order to use the completely generic cpufreq-dt driver. This adds
+a simpler method by creating a new standard property of the "/cpus" node
+to look for, with a fallback for existing users. The list of existing
+users needs to be completed, and the same change done for the other
+DT based drivers.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
+index 6f5f5615fbf1..697b4dc47715 100644
+--- a/drivers/cpufreq/cpufreq-dt.c
++++ b/drivers/cpufreq/cpufreq-dt.c
+@@ -345,13 +345,50 @@ static struct cpufreq_driver dt_cpufreq_driver = {
+ 	.attr = cpufreq_generic_attr,
+ };
+ 
+-static int dt_cpufreq_probe(struct platform_device *pdev)
++/*
++ * these machines are using the driver but provide no standard
++ * probing method, only for old machines with existing dtbs.
++ */
++static struct of_device_id legacy_machines = {
++	{ .compatible = "calxeda,highbank" },
++	{ .compatible = "renesas,sh7372" },
++	{ .compatible = "renesas,sh73a0"  },
++	{ .compatible = "samsung,exynos5250" },
++	{ .compatible = "samsung,exynos4210" },
++	{ .compatible = "xlnx,zynq-7000" },
++};
++
++static bool dt_cpufreq_available(void)
++{
++	struct device_node *node;
++	bool ret;
++
++	node = of_find_node_by_path("/cpus");
++	if (!node)
++		return 0;
++
++	/* the specific property needs to be debated */
++	ret = of_property_read_bool("linux,cpu-frequency-scaling");
++	of_node_put(node);
++	if (ret)
++		return 1;
++
++	node = of_find_node_by_path("/");
++	ret = of_match_device(&legacy_machines, node);
++	of_node_put(node);
++
++	return ret;
++}
++
++static int __init dt_cpufreq_probe(void)
+ {
+ 	struct device *cpu_dev;
+ 	struct regulator *cpu_reg;
+ 	struct clk *cpu_clk;
+ 	int ret;
+ 
++	if (!dt_cpufreq_available())
++		return -ENXIO;
+ 	/*
+ 	 * All per-cluster (CPUs sharing clock/voltages) initialization is done
+ 	 * from ->init(). In probe(), we just need to make sure that clk and
+@@ -367,29 +404,19 @@ static int dt_cpufreq_probe(struct platform_device *pdev)
+ 	if (!IS_ERR(cpu_reg))
+ 		regulator_put(cpu_reg);
+ 
+-	dt_cpufreq_driver.driver_data = dev_get_platdata(&pdev->dev);
+-
+ 	ret = cpufreq_register_driver(&dt_cpufreq_driver);
+ 	if (ret)
+ 		dev_err(cpu_dev, "failed register driver: %d\n", ret);
+ 
+ 	return ret;
+ }
++module_init(dt_cpufreq_probe);
+ 
+-static int dt_cpufreq_remove(struct platform_device *pdev)
++static void __exit dt_cpufreq_remove(void)
+ {
+ 	cpufreq_unregister_driver(&dt_cpufreq_driver);
+-	return 0;
+ }
+-
+-static struct platform_driver dt_cpufreq_platdrv = {
+-	.driver = {
+-		.name	= "cpufreq-dt",
+-	},
+-	.probe		= dt_cpufreq_probe,
+-	.remove		= dt_cpufreq_remove,
+-};
+-module_platform_driver(dt_cpufreq_platdrv);
++module_exit(dt_cpufreq_remove);
+ 
+ MODULE_AUTHOR("Viresh Kumar <viresh.kumar@linaro.org>");
+ MODULE_AUTHOR("Shawn Guo <shawn.guo@linaro.org>");
+
