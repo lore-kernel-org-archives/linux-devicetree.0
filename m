@@ -1,38 +1,69 @@
 From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: [PATCH v3 09/11] ARM: at91/dt: add matrix node in sama5d3 dtsi
-Date: Mon,  1 Dec 2014 11:27:25 +0100
-Message-ID: <1417429647-3419-10-git-send-email-boris.brezillon@free-electrons.com>
+Subject: [PATCH v3 02/11] mfd: syscon: Add Atmel Matrix bus DT binding
+ documentation
+Date: Mon,  1 Dec 2014 11:27:18 +0100
+Message-ID: <1417429647-3419-3-git-send-email-boris.brezillon@free-electrons.com>
 References: <1417429647-3419-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1417429647-3419-1-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Boris Brezillon <boris.brezillon@free-electrons.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add matrix node in sama5d3 dtsi so that it can be referenced by other
-devices.
+The Matrix registers are provided to configure internal bus behavior on
+at91 SoCs.
+Some registers might be access by several drivers (e.g. to configure
+external memory bus timings), hence we declare this register set as a
+syscon device.
 
 Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+Acked-by: Lee Jones <lee.jones@linaro.org>
 ---
- arch/arm/boot/dts/sama5d3.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../devicetree/bindings/mfd/atmel-matrix.txt       | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/atmel-matrix.txt
 
-diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-index 9f1eed5..d49dab7 100644
---- a/arch/arm/boot/dts/sama5d3.dtsi
-+++ b/arch/arm/boot/dts/sama5d3.dtsi
-@@ -425,6 +425,11 @@
- 				clock-names = "ddrck", "mpddr";
- 			};
- 
-+			matrix: matrix@ffffec00 {
-+				compatible = "atmel,sama5d3-matrix", "syscon";
-+				reg = <0xffffec00 0x200>;
-+			};
+diff --git a/Documentation/devicetree/bindings/mfd/atmel-matrix.txt b/Documentation/devicetree/bindings/mfd/atmel-matrix.txt
+new file mode 100644
+index 0000000..e56e27a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/atmel-matrix.txt
+@@ -0,0 +1,24 @@
++* Device tree bindings for Atmel Bus Matrix
 +
- 			dbgu: serial@ffffee00 {
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xffffee00 0x200>;
++The Bus Matrix registers are used to configure Atmel SoCs internal bus
++behavior (master/slave priorities, undefined burst length type, ...)
++
++Required properties:
++- compatible:		Should be one of the following
++			"atmel,at91sam9260-matrix", "syscon"
++			"atmel,at91sam9261-matrix", "syscon"
++			"atmel,at91sam9263-matrix", "syscon"
++			"atmel,at91sam9263-matrix", "syscon"
++			"atmel,at91sam9g45-matrix", "syscon"
++			"atmel,at91sam9n12-matrix", "syscon"
++			"atmel,at91sam9x5-matrix", "syscon"
++			"atmel,sama5d3-matrix", "syscon"
++- reg:			Contains offset/length value of the Bus Matrix
++			memory region.
++
++Example:
++
++matrix: matrix@ffffec00 {
++	compatible = "atmel,sama5d3-matrix", "syscon";
++	reg = <0xffffec00 0x200>;
++};
 -- 
 1.9.1
