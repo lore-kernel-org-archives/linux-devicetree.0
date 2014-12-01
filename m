@@ -1,283 +1,75 @@
-From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2] irqchip: gic: Allow interrupt level to be set for
- PPIs.
-Date: Mon, 1 Dec 2014 12:46:31 +0000
-Message-ID: <20141201124631.GR828@e106497-lin.cambridge.arm.com>
-References: <1417437545-20766-1-git-send-email-Liviu.Dudau@arm.com>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH v13 07/12] drm: bridge/dw_hdmi: add support for multi-byte
+ register width access
+Date: Mon, 01 Dec 2014 20:46:36 +0800
+Message-ID: <547C632C.7000309@rock-chips.com>
+References: <1417008157-31861-1-git-send-email-andy.yan@rock-chips.com>
+ <1417008759-32257-1-git-send-email-andy.yan@rock-chips.com>
+ <1417019657.3177.10.camel@pengutronix.de> <547843B9.6000806@rock-chips.com>
+ <1417435456.4624.12.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417437545-20766-1-git-send-email-Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1417435456.4624.12.camel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, rmk+kernel@arm.linux.org.uk, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, Dave Airlie <airlied@redhat.com>, mark.yao@rock-chips.com, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 01, 2014 at 12:39:05PM +0000, Liviu Dudau wrote:
-> During a recent cleanup of the arm64 DTs it has become clear that
-> the handling of PPIs in xxxx_set_type() is incorrect. The ARM TRMs
-> for GICv2 and later allow for "implementation defined" support for
-> setting the edge or level type of the PPI interrupts and don't restri=
-ct
-> the activation level of the signal. Current ARM implementations
-> do restrict the PPI level type to IRQ_TYPE_LEVEL_LOW, but licensees
-> of the IP can decide to shoot themselves in the foot at any time.
->=20
-> Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/gic.txt |  8 ++++++--
->  drivers/irqchip/irq-gic-common.c              | 21 +++++++++++++----=
-----
->  drivers/irqchip/irq-gic-common.h              |  2 +-
->  drivers/irqchip/irq-gic-v3.c                  |  8 ++++----
->  drivers/irqchip/irq-gic.c                     |  9 ++++++---
->  drivers/irqchip/irq-hip04.c                   |  9 ++++++---
->  6 files changed, 36 insertions(+), 21 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Document=
-ation/devicetree/bindings/arm/gic.txt
-> index 8112d0c..c97484b 100644
-> --- a/Documentation/devicetree/bindings/arm/gic.txt
-> +++ b/Documentation/devicetree/bindings/arm/gic.txt
-> @@ -32,12 +32,16 @@ Main node required properties:
->    The 3rd cell is the flags, encoded as follows:
->  	bits[3:0] trigger type and level flags.
->  		1 =3D low-to-high edge triggered
-> -		2 =3D high-to-low edge triggered
-> +		2 =3D high-to-low edge triggered (invalid for SPIs)
->  		4 =3D active high level-sensitive
-> -		8 =3D active low level-sensitive
-> +		8 =3D active low level-sensitive (invalid for SPIs).
->  	bits[15:8] PPI interrupt cpu mask.  Each bit corresponds to each of
->  	the 8 possible cpus attached to the GIC.  A bit set to '1' indicate=
-d
->  	the interrupt is wired to that CPU.  Only valid for PPI interrupts.
-> +	Also note that the configurability of PPI interrupts is IMPLEMENTAT=
-ION
-> +	DEFINED and as such not guaranteed to be present (most SoC availabl=
-e
-> +	in 2014 seem to ignore the setting of this flag and use the hardwar=
-e
-> +	default value).
-> =20
->  - reg : Specifies base physical address(s) and size of the GIC regis=
-ters. The
->    first region is the GIC distributor register base and size. The 2n=
-d region is
-> diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-g=
-ic-common.c
-> index 61541ff..468141d 100644
-> --- a/drivers/irqchip/irq-gic-common.c
-> +++ b/drivers/irqchip/irq-gic-common.c
-> @@ -21,7 +21,7 @@
-> =20
->  #include "irq-gic-common.h"
-> =20
-> -void gic_configure_irq(unsigned int irq, unsigned int type,
-> +int gic_configure_irq(unsigned int irq, unsigned int type,
->  		       void __iomem *base, void (*sync_access)(void))
->  {
->  	u32 enablemask =3D 1 << (irq % 32);
-> @@ -29,16 +29,17 @@ void gic_configure_irq(unsigned int irq, unsigned=
- int type,
->  	u32 confmask =3D 0x2 << ((irq % 16) * 2);
->  	u32 confoff =3D (irq / 16) * 4;
->  	bool enabled =3D false;
-> -	u32 val;
-> +	u32 val, oldval;
-> +	int ret =3D 0;
-> =20
->  	/*
->  	 * Read current configuration register, and insert the config
->  	 * for "irq", depending on "type".
->  	 */
-> -	val =3D readl_relaxed(base + GIC_DIST_CONFIG + confoff);
-> -	if (type =3D=3D IRQ_TYPE_LEVEL_HIGH)
-> +	val =3D oldval =3D readl_relaxed(base + GIC_DIST_CONFIG + confoff);
-> +	if (type && IRQ_TYPE_LEVEL_MASK)
->  		val &=3D ~confmask;
-> -	else if (type =3D=3D IRQ_TYPE_EDGE_RISING)
-> +	else if (type && IRQ_TYPE_EDGE_BOTH)
-
-And I managed to get the wrong type of test here :(=20
-
-I've sent a v3 patch to fix. Sorry for the noise.
-
-Best regards,
-Liviu
-
->  		val |=3D confmask;
-> =20
->  	/*
-> @@ -54,15 +55,19 @@ void gic_configure_irq(unsigned int irq, unsigned=
- int type,
-> =20
->  	/*
->  	 * Write back the new configuration, and possibly re-enable
-> -	 * the interrupt.
-> +	 * the interrupt. If we tried to write a new configuration and fail=
-ed,
-> +	 * return an error.
->  	 */
->  	writel_relaxed(val, base + GIC_DIST_CONFIG + confoff);
-> -
-> -	if (enabled)
-> +	if (readl_relaxed(base + GIC_DIST_CONFIG + confoff) !=3D val && val=
- !=3D oldval)
-> +		ret =3D -EINVAL;
-> +	else if (enabled)
->  		writel_relaxed(enablemask, base + GIC_DIST_ENABLE_SET + enableoff)=
-;
-> =20
->  	if (sync_access)
->  		sync_access();
-> +
-> +	return ret;
->  }
-> =20
->  void __init gic_dist_config(void __iomem *base, int gic_irqs,
-> diff --git a/drivers/irqchip/irq-gic-common.h b/drivers/irqchip/irq-g=
-ic-common.h
-> index b41f024..35a9884 100644
-> --- a/drivers/irqchip/irq-gic-common.h
-> +++ b/drivers/irqchip/irq-gic-common.h
-> @@ -20,7 +20,7 @@
->  #include <linux/of.h>
->  #include <linux/irqdomain.h>
-> =20
-> -void gic_configure_irq(unsigned int irq, unsigned int type,
-> +int gic_configure_irq(unsigned int irq, unsigned int type,
->                         void __iomem *base, void (*sync_access)(void)=
-);
->  void gic_dist_config(void __iomem *base, int gic_irqs,
->  		     void (*sync_access)(void));
-> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v=
-3.c
-> index 1a146cc..6e50803 100644
-> --- a/drivers/irqchip/irq-gic-v3.c
-> +++ b/drivers/irqchip/irq-gic-v3.c
-> @@ -238,7 +238,9 @@ static int gic_set_type(struct irq_data *d, unsig=
-ned int type)
->  	if (irq < 16)
->  		return -EINVAL;
-> =20
-> -	if (type !=3D IRQ_TYPE_LEVEL_HIGH && type !=3D IRQ_TYPE_EDGE_RISING=
-)
-> +	/* SPIs have restrictions on the supported types */
-> +	if (irq >=3D 32 && type !=3D IRQ_TYPE_LEVEL_HIGH &&
-> +			 type !=3D IRQ_TYPE_EDGE_RISING)
->  		return -EINVAL;
-> =20
->  	if (gic_irq_in_rdist(d)) {
-> @@ -249,9 +251,7 @@ static int gic_set_type(struct irq_data *d, unsig=
-ned int type)
->  		rwp_wait =3D gic_dist_wait_for_rwp;
->  	}
-> =20
-> -	gic_configure_irq(irq, type, base, rwp_wait);
-> -
-> -	return 0;
-> +	return gic_configure_irq(irq, type, base, rwp_wait);
->  }
-> =20
->  static u64 gic_mpidr_to_affinity(u64 mpidr)
-> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-> index d617ee5..4634cf7 100644
-> --- a/drivers/irqchip/irq-gic.c
-> +++ b/drivers/irqchip/irq-gic.c
-> @@ -188,12 +188,15 @@ static int gic_set_type(struct irq_data *d, uns=
-igned int type)
->  {
->  	void __iomem *base =3D gic_dist_base(d);
->  	unsigned int gicirq =3D gic_irq(d);
-> +	int ret;
-> =20
->  	/* Interrupt configuration for SGIs can't be changed */
->  	if (gicirq < 16)
->  		return -EINVAL;
-> =20
-> -	if (type !=3D IRQ_TYPE_LEVEL_HIGH && type !=3D IRQ_TYPE_EDGE_RISING=
-)
-> +	/* SPIs have restrictions on the supported types */
-> +	if (gicirq >=3D 32 && type !=3D IRQ_TYPE_LEVEL_HIGH &&
-> +			    type !=3D IRQ_TYPE_EDGE_RISING)
->  		return -EINVAL;
-> =20
->  	raw_spin_lock(&irq_controller_lock);
-> @@ -201,11 +204,11 @@ static int gic_set_type(struct irq_data *d, uns=
-igned int type)
->  	if (gic_arch_extn.irq_set_type)
->  		gic_arch_extn.irq_set_type(d, type);
-> =20
-> -	gic_configure_irq(gicirq, type, base, NULL);
-> +	ret =3D gic_configure_irq(gicirq, type, base, NULL);
-> =20
->  	raw_spin_unlock(&irq_controller_lock);
-> =20
-> -	return 0;
-> +	return ret;
->  }
-> =20
->  static int gic_retrigger(struct irq_data *d)
-> diff --git a/drivers/irqchip/irq-hip04.c b/drivers/irqchip/irq-hip04.=
-c
-> index 29b8f21..d059e66 100644
-> --- a/drivers/irqchip/irq-hip04.c
-> +++ b/drivers/irqchip/irq-hip04.c
-> @@ -120,21 +120,24 @@ static int hip04_irq_set_type(struct irq_data *=
-d, unsigned int type)
->  {
->  	void __iomem *base =3D hip04_dist_base(d);
->  	unsigned int irq =3D hip04_irq(d);
-> +	int ret;
-> =20
->  	/* Interrupt configuration for SGIs can't be changed */
->  	if (irq < 16)
->  		return -EINVAL;
-> =20
-> -	if (type !=3D IRQ_TYPE_LEVEL_HIGH && type !=3D IRQ_TYPE_EDGE_RISING=
-)
-> +	/* SPIs have restrictions on the supported types */
-> +	if (irq >=3D 32 && type !=3D IRQ_TYPE_LEVEL_HIGH &&
-> +			 type !=3D IRQ_TYPE_EDGE_RISING)
->  		return -EINVAL;
-> =20
->  	raw_spin_lock(&irq_controller_lock);
-> =20
-> -	gic_configure_irq(irq, type, base, NULL);
-> +	ret =3D gic_configure_irq(irq, type, base, NULL);
-> =20
->  	raw_spin_unlock(&irq_controller_lock);
-> =20
-> -	return 0;
-> +	return ret;
->  }
-> =20
->  #ifdef CONFIG_SMP
-> --=20
-> 2.1.3
->=20
->=20
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgUGhpbGlwcDoKT24gMjAxNOW5tDEy5pyIMDHml6UgMjA6MDQsIFBoaWxpcHAgWmFiZWwgd3Jv
+dGU6Cj4gQW0gRnJlaXRhZywgZGVuIDI4LjExLjIwMTQsIDE3OjQzICswODAwIHNjaHJpZWIgQW5k
+eSBZYW46Cj4+IEhpIFphYmVsOgo+PiBPbiAyMDE05bm0MTHmnIgyN+aXpSAwMDozNCwgUGhpbGlw
+cCBaYWJlbCB3cm90ZToKPj4+IEFtIE1pdHR3b2NoLCBkZW4gMjYuMTEuMjAxNCwgMjE6MzIgKzA4
+MDAgc2NocmllYiBBbmR5IFlhbjoKPj4+PiBPbiByb2NrY2hpcCByazMyODgsIG9ubHkgd29yZCgz
+Mi1iaXQpIGFjY2Vzc2VzIGFyZQo+Pj4+IHBlcm1pdHRlZCBmb3IgaGRtaSByZWdpc3RlcnMuICBC
+eXRlIHdpZHRoIGFjY2Vzc2VzICh3cml0ZWIsCj4+Pj4gcmVhZGIpIGdlbmVyYXRlIGFuIGltcHJl
+Y2lzZSBleHRlcm5hbCBhYm9ydC4KPj4+Pgo+Pj4+IFNpZ25lZC1vZmYtYnk6IEFuZHkgWWFuIDxh
+bmR5LnlhbkByb2NrLWNoaXBzLmNvbT4KPj4+Pgo+Pj4+IC0tLQo+Pj4+Cj4+Pj4gQ2hhbmdlcyBp
+biB2MTM6IE5vbmUKPj4+PiBDaGFuZ2VzIGluIHYxMjogTm9uZQo+Pj4+IENoYW5nZXMgaW4gdjEx
+OiBOb25lCj4+Pj4gQ2hhbmdlcyBpbiB2MTA6IE5vbmUKPj4+PiBDaGFuZ2VzIGluIHY5OiBOb25l
+Cj4+Pj4gQ2hhbmdlcyBpbiB2ODogTm9uZQo+Pj4+IENoYW5nZXMgaW4gdjc6IE5vbmUKPj4+PiBD
+aGFuZ2VzIGluIHY2Ogo+Pj4+IC0gcmVmYWN0b3IgcmVnaXN0ZXIgYWNjZXNzIHdpdGhvdXQgcmVn
+X3NoaWZ0Cj4+Pj4KPj4+PiBDaGFuZ2VzIGluIHY1Ogo+Pj4+IC0gcmVmYWN0b3IgcmVnLWlvLXdp
+ZHRoCj4+Pj4KPj4+PiBDaGFuZ2VzIGluIHY0OiBOb25lCj4+Pj4gQ2hhbmdlcyBpbiB2MzoKPj4+
+PiAtIHNwbGl0IG11bHRpLXJlZ2lzdGVyIGFjY2VzcyB0byBvbmUgaW5kZXBlbnQgcGF0Y2gKPj4+
+Pgo+Pj4+ICAgIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvZHdfaGRtaS5jIHwgNTcgKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLQo+Pj4+ICAgIDEgZmlsZSBjaGFuZ2VkLCA1
+MSBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQo+Pj4+Cj4+Pj4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvZ3B1L2RybS9icmlkZ2UvZHdfaGRtaS5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9k
+d19oZG1pLmMKPj4+PiBpbmRleCBhNTNiZjYzLi41ZTg4YzhkIDEwMDY0NAo+Pj4+IC0tLSBhL2Ry
+aXZlcnMvZ3B1L2RybS9icmlkZ2UvZHdfaGRtaS5jCj4+Pj4gKysrIGIvZHJpdmVycy9ncHUvZHJt
+L2JyaWRnZS9kd19oZG1pLmMKPj4+PiBAQCAtMTAwLDYgKzEwMCwxMSBAQCBzdHJ1Y3QgaGRtaV9k
+YXRhX2luZm8gewo+Pj4+ICAgIAlzdHJ1Y3QgaGRtaV92bW9kZSB2aWRlb19tb2RlOwo+Pj4+ICAg
+IH07Cj4+Pj4gICAgCj4+Pj4gK3VuaW9uIGR3X3JlZ19wdHIgewo+Pj4+ICsJdTMyIF9faW9tZW0g
+KnAzMjsKPj4+PiArCXU4IF9faW9tZW0gKnA4Owo+Pj4+ICt9Owo+Pj4gSSBzZWUgbm8gbmVlZCB0
+byBpbnRyb2R1Y2UgdGhpcy4gSnVzdCBleHBsaWNpdGx5IG11bHRpcGx5IHRoZSBvZmZzZXQgaW4K
+Pj4+IGR3X2hkbWlfd3JpdGVsLgo+Pj4KPj4gICAgICAgSXMgdGhlcmUgYW55IGRpc2FkdmFudGFn
+ZSB0byBkbyBsaWtlIHRoaXM/Cj4+ICAgICAgIFRoZSBjb21waWxlciBjYW4gaGVscCB1cyBkbyB0
+aGUgZXhwbGljaXRseSBtdWx0aXBseSBieSB0aGlzIHdheS4KPiBGb3VyIGFkZGl0aW9uYWwgbGlu
+ZXMsIGEgbmV3IGRlZmluZWQgdHlwZSwgYSBmZXcgbW9yZSBjaGFuZ2VzIHRvIHN0cnVjdAo+IGR3
+X2hkbWkgYW5kIGR3X2hkbWlfYmluZCBuZWNlc3NhcnkuCj4KPiBUZWNobmljYWxseSBJIHNlZSBu
+byBwcm9ibGVtIHRvIGxldCB0aGUgY29tcGlsZXIgZG8gdGhlIG11bHRpcGxpY2F0aW9uLAo+IG15
+IGlzc3VlIGlzIHRoYXQgaXQgZXZlciBzbyBzbGlnaHRseSBvYmZ1c2NhdGVzIHRoZSBjb2RlLiBJ
+bnN0ZWFkIG9mCj4ganVzdCB3cml0aW5nICIqIDQiIGluIHR3byBmdW5jdGlvbnMsIHdlIGdldCBh
+IG5ldyB1bmlvbiB0aGF0IHlvdSBuZWVkIHRvCj4ga25vdyBhYm91dCB3aGVuIGxvb2tpbmcgYXQg
+c3RydWN0IGR3X2hkbWkgYW5kIGR3X2hkbWlfYmluZCwgcmVncy5wOCBpcwo+IHVzZWQgYnV0IG5l
+dmVyIGFzc2lnbmVkIGRpcmVjdGx5LCBpdCdzIGp1c3QgYSB0aW55IGJpdCBvZiBhZGRpdGlvbmFs
+Cj4gZWZmb3J0IG5lZWRlZCB0byB1bmRlcnN0YW5kIHRoZSBjb2RlLiBCdXQgd2hlbiB0aGUgY29z
+dCB0byBhdm9pZCB0aGF0IGlzCj4gc28gc21hbGwuLi4KPgo+IHJlZ2FyZHMKPiBQaGlsaXBwCj4K
+CiAgIFdoYXQgeW91IHNhaWQgaXMgcmlnaHQsIEkgd2lsbCBjaGFuZ2UgaXQgaW4gUEFUQ0ggVjE1
+CiAgICB0aGFua3MgLgo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCj4gTGludXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0Cj4gTGludXgtcm9ja2NoaXBAbGlz
+dHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
+dGluZm8vbGludXgtcm9ja2NoaXAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkZXZlbCBtYWlsaW5nIGxpc3QKZGV2ZWxAbGludXhkcml2ZXJwcm9qZWN0
+Lm9yZwpodHRwOi8vZHJpdmVyZGV2LmxpbnV4ZHJpdmVycHJvamVjdC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcml2ZXJkZXYtZGV2ZWwK
