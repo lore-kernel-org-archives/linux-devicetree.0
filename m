@@ -1,79 +1,94 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [RFC V1 0/8] CPUFreq: create platform-dev for DT based cpufreq
- drivers
-Date: Mon, 01 Dec 2014 15:07:15 +0000
-Message-ID: <547C8423.2090300@arm.com>
-References: <cover.1417433163.git.viresh.kumar@linaro.org> <CAKohpo=EPOH-WJ4mmAr-1BzzAEpvC-F0Y99Ox_yL7meUcRNx6Q@mail.gmail.com> <547C6E9D.2090205@arm.com> <23115535.r6kXsReHU2@wuerfel>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 1/3] staging: imx-drm: document internal HDMI I2C master
+ controller DT binding
+Date: Mon, 01 Dec 2014 16:11:43 +0100
+Message-ID: <1417446703.4624.18.camel@pengutronix.de>
+References: <1416073759-19939-1-git-send-email-vladimir_zapolskiy@mentor.com>
+	 <1416073759-19939-2-git-send-email-vladimir_zapolskiy@mentor.com>
+	 <547C8113.3050100@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <23115535.r6kXsReHU2@wuerfel>
-Sender: linux-pm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, Nishanth Menon <nm@ti.com>, "rob.herring@linaro.org" <rob.herring@linaro.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, Thomas Abraham <ta.omasab@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Chander Kashyap <k.chander@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, "olof@lixom.net" <olof@lixom.net>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Mike Turquette <mike.turquette@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, santosh shilimkar <santosh.shilimkar@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <547C8113.3050100@mentor.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Am Montag, den 01.12.2014, 16:54 +0200 schrieb Vladimir Zapolskiy:
+> Hi Philipp and Shawn,
+> 
+> On 15.11.2014 19:49, Vladimir Zapolskiy wrote:
+> > Provide information about how to bind internal iMX6Q/DL HDMI DDC I2C
+> > master controller. The property is set as optional one, because iMX6
+> > HDMI DDC bus may be represented by one of general purpose I2C busses
+> > found on SoC.
+> > 
+> > Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+> > Cc: Wolfram Sang <wsa@the-dreams.de>
+> > Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> > Cc: Shawn Guo <shawn.guo@linaro.org>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-media@vger.kernel.org
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: linux-i2c@vger.kernel.org
+> > ---
+> >  Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt |   10 +++++++++-
+> >  1 file changed, 9 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt b/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
+> > index 1b756cf..43c8924 100644
+> > --- a/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
+> > +++ b/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
+> > @@ -10,6 +10,8 @@ Required properties:
+> >   - #address-cells : should be <1>
+> >   - #size-cells : should be <0>
+> >   - compatible : should be "fsl,imx6q-hdmi" or "fsl,imx6dl-hdmi".
+> > +   If internal HDMI DDC I2C master controller is supposed to be used,
+> > +   then "simple-bus" should be added to compatible value.
+> >   - gpr : should be <&gpr>.
+> >     The phandle points to the iomuxc-gpr region containing the HDMI
+> >     multiplexer control register.
+> > @@ -22,6 +24,7 @@ Required properties:
+> >  
+> >  Optional properties:
+> >   - ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
+> > + - ddc: internal HDMI DDC I2C master controller
+> >  
+> >  example:
+> >  
+> > @@ -32,7 +35,7 @@ example:
+> >          hdmi: hdmi@0120000 {
+> >                  #address-cells = <1>;
+> >                  #size-cells = <0>;
+> > -                compatible = "fsl,imx6q-hdmi";
+> > +                compatible = "fsl,imx6q-hdmi", "simple-bus";
+> >                  reg = <0x00120000 0x9000>;
+> >                  interrupts = <0 115 0x04>;
+> >                  gpr = <&gpr>;
+> > @@ -40,6 +43,11 @@ example:
+> >                  clock-names = "iahb", "isfr";
+> >                  ddc-i2c-bus = <&i2c2>;
+> >  
+> > +                hdmi_ddc: ddc {
+> > +                        compatible = "fsl,imx6q-hdmi-ddc";
+> > +                        status = "disabled";
+> > +                };
+> > +
+> >                  port@0 {
+> >                          reg = <0>;
+> >  
+> > 
+> 
+> knowing in advance that I2C framework lacks a graceful support of non
+> fully compliant I2C devices, do you have any objections to the proposed
+> iMX HDMI DTS change?
 
+I'm not sure about this. Have you seen "drm: Decouple EDID parsing from
+I2C adapter"? I feel like in the absence of a ddc-i2c-bus property the
+imx-hdmi/dw-hdmi driver should try to use the internal HDMI DDC I2C
+master controller, bypassing the I2C framework altogether.
 
-On 01/12/14 14:11, Arnd Bergmann wrote:
-> On Monday 01 December 2014 13:35:25 Sudeep Holla wrote:
->> On 01/12/14 13:29, Viresh Kumar wrote:
->>> On 1 December 2014 at 18:24, Arnd Bergmann <arnd@arndb.de> wrote:
->>>> Thanks a lot for working on this, we really need to figure it out one day!
->>>
->>>
->>>
->>>> Your patches seem well-implemented, so if everybody thinks the general
->>>> approach is the best solution, we should do that. From my point of view,
->>>> there are two things I would do differently:
->>>>
->>>> - In the DT binding, I would strongly prefer anything but the root compatible
->>>>     property as the key for the new platforms. Clearly we have to keep using
->>>>     it for the backwards-compatibility case, as you do, but I think there
->>>>     are more appropriate places to put it. Sorting from most favorite to least
->>>>     favorite, my list would be:
->>>>           1. a new property in /cpus/
->>>>           2. a new property each /cpus/cpu@... node.
->>>
->>> I did it this way earlier and named it dvfs-method but probably putting this
->>> into the /cpus/ node is far better. But then Sudeep asked to utilize
->>> compatible property only..
->>>
->>> Are you fine with the name here? "dvfs-method"
->>>
->>
->> That's right, I don't like driver specific method in the cpu node as you
->> initially did. But if it's a property in the chosen node (where we
->> usually put the Linux specific properties), I am fine with
->> that as Arnd has illustrated in his patch.
->
-> I would prefer the /cpus node over the /chosen node because the former
-> describes the hardware while the latter is supposed to be user-settable
-> (on real open-firmware at least). But I think either one is better than
-> using the / node compatible string.
->
-
-Agreed, the main reason for objection was that in the initial proposal
-it was more a Linux configuration rather than hardware property.
-
-<dvfs-method> = "cpufreq-dt";
-
-I don't see anything hardware feature presented with that. On the other
-hand, we could represent the some thing like whether the cpu share
-clock or are they independently clocked as a hardware property in the
-cpu nodes.
-
-> How about a "linux,cpu-dvfs-method" property in the root node? Would
-> that work better for you than a "linux,dvfs-method" in the "/cpus"
-> node?
->
-
-I will leave that to the DT maintainers for specific details though
-my preference is still chosen node as it's more related to Linux and
-it's driver choice and unlikely to be used by other OSes. IMO we just
-need single entry in the DT, so I am fine with either of your choice above.
-
-Regards,
-Sudeep
-
+regards
+Philipp
