@@ -1,60 +1,56 @@
-From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v8 2/4] ARM: mediatek: Add sysirq interrupt polarity
- support
-Date: Mon, 1 Dec 2014 22:09:33 +0800
-Message-ID: <1417442973.24330.6.camel@mtksdaap41>
-References: <1416902662-19281-1-git-send-email-yingjoe.chen@mediatek.com>
-	 <1416902662-19281-3-git-send-email-yingjoe.chen@mediatek.com>
-	 <20141129174030.GA4696@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC V1 0/8] CPUFreq: create platform-dev for DT based cpufreq drivers
+Date: Mon, 01 Dec 2014 15:11:10 +0100
+Message-ID: <23115535.r6kXsReHU2@wuerfel>
+References: <cover.1417433163.git.viresh.kumar@linaro.org> <CAKohpo=EPOH-WJ4mmAr-1BzzAEpvC-F0Y99Ox_yL7meUcRNx6Q@mail.gmail.com> <547C6E9D.2090205@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141129174030.GA4696-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yijing Wang <wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <547C6E9D.2090205@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, Nishanth Menon <nm@ti.com>, "rob.herring@linaro.org" <rob.herring@linaro.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, Thomas Abraham <ta.omasab@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Chander Kashyap <k.chander@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, "olof@lixom.net" <olof@lixom.net>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Mike Turquette <mike.turquette@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, santosh shilimkar <santosh.shilimkar@oracle.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2014-11-29 at 18:40 +0100, Beniamino Galvani wrote:
-> On Tue, Nov 25, 2014 at 04:04:20PM +0800, Yingjoe Chen wrote:
-> > Mediatek SoCs have interrupt polarity support in sysirq which
-> > allows to invert polarity for given interrupt. Add this support
-> > using hierarchy irq domain.
+On Monday 01 December 2014 13:35:25 Sudeep Holla wrote:
+> On 01/12/14 13:29, Viresh Kumar wrote:
+> > On 1 December 2014 at 18:24, Arnd Bergmann <arnd@arndb.de> wrote:
+> >> Thanks a lot for working on this, we really need to figure it out one day!
 > >
-> > [...]
 > > 
-> > +static int __init mtk_sysirq_of_init(struct device_node *node,
-> > +				     struct device_node *parent)
-> > +{
-> > +	struct irq_domain *domain, *domain_parent;
-> > +	struct mtk_sysirq_chip_data *chip_data;
-> > +	int ret = 0;
-> > +
-> > +	domain_parent = irq_find_host(parent);
-> > +	if (!domain_parent) {
-> > +		pr_err("mtk_sysirq: interrupt-parent not found\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	chip_data = kzalloc(sizeof(*chip_data), GFP_KERNEL);
-> > +	if (!chip_data)
-> > +		return -ENOMEM;
-> > +
-> > +	chip_data->intpol_base = of_io_request_and_map(node, 0, "intpol");
-> > +	if (!chip_data->intpol_base) {
+> >
+> >> Your patches seem well-implemented, so if everybody thinks the general
+> >> approach is the best solution, we should do that. From my point of view,
+> >> there are two things I would do differently:
+> >>
+> >> - In the DT binding, I would strongly prefer anything but the root compatible
+> >>    property as the key for the new platforms. Clearly we have to keep using
+> >>    it for the backwards-compatibility case, as you do, but I think there
+> >>    are more appropriate places to put it. Sorting from most favorite to least
+> >>    favorite, my list would be:
+> >>          1. a new property in /cpus/
+> >>          2. a new property each /cpus/cpu@... node.
+> >
+> > I did it this way earlier and named it dvfs-method but probably putting this
+> > into the /cpus/ node is far better. But then Sudeep asked to utilize
+> > compatible property only..
+> >
+> > Are you fine with the name here? "dvfs-method"
+> >
 > 
-> Hi,
-> 
-> you should use IS_ERR() to check the return value here.
+> That's right, I don't like driver specific method in the cpu node as you
+> initially did. But if it's a property in the chosen node (where we
+> usually put the Linux specific properties), I am fine with
+> that as Arnd has illustrated in his patch.
 
-Thanks for catching this. I think this is merged, so I'll prepare a new
-patch to fix this.
+I would prefer the /cpus node over the /chosen node because the former
+describes the hardware while the latter is supposed to be user-settable
+(on real open-firmware at least). But I think either one is better than
+using the / node compatible string.
 
-Joe.C
+How about a "linux,cpu-dvfs-method" property in the root node? Would
+that work better for you than a "linux,dvfs-method" in the "/cpus"
+node?
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
