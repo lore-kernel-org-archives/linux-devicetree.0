@@ -1,42 +1,47 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: [PATCH v3 07/11] ARM: at91: select ATMEL_EBI when compiling a kernel for at91sam9 or sama5d3
-Date: Mon,  1 Dec 2014 11:27:23 +0100
-Message-ID: <1417429647-3419-8-git-send-email-boris.brezillon@free-electrons.com>
-References: <1417429647-3419-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH v4 0/6] Touchscreen performance related fixes
+Date: Mon, 1 Dec 2014 15:59:19 +0530
+Message-ID: <547C42FF.5010700@ti.com>
+References: <1415941651-28962-1-git-send-email-vigneshr@ti.com> <20141124115116.GA14997@linutronix.de> <547C3A95.30605@ti.com> <547C3C19.5090501@linutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1417429647-3419-1-git-send-email-boris.brezillon@free-electrons.com>
+In-Reply-To: <547C3C19.5090501@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Boris Brezillon <boris.brezillon@free-electrons.com>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, richardcochran@gmail.com, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Samuel Ortiz <sameo@linux.intel.com>, Felipe Balbi <balbi@ti.com>, Brad Griffis <bgriffis@ti.com>, Sanjeev Sharma <sanjeev_sharma@mentor.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Jan Kardell <jan.kardell@telliq.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.orglinux
 List-Id: devicetree@vger.kernel.org
 
-at91sam9* and sama5d* SoCs have an EBI (External Bus Interface).
-Select the ATMEL_EBI driver when support for these SoCs is selected.
 
-Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
----
- arch/arm/mach-at91/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
+Hi,
 
-diff --git a/arch/arm/mach-at91/Kconfig b/arch/arm/mach-at91/Kconfig
-index 0e6d548..a72402a 100644
---- a/arch/arm/mach-at91/Kconfig
-+++ b/arch/arm/mach-at91/Kconfig
-@@ -49,6 +49,7 @@ config SOC_AT91SAM9
- 	select GENERIC_CLOCKEVENTS
- 	select MEMORY if USE_OF
- 	select ATMEL_SDRAMC if USE_OF
-+	select ATMEL_EBI if USE_OF
- 
- config SOC_SAMA5
- 	bool
-@@ -58,6 +59,7 @@ config SOC_SAMA5
- 	select USE_OF
- 	select MEMORY
- 	select ATMEL_SDRAMC
-+	select ATMEL_EBI
- 
- menu "Atmel AT91 System-on-Chip"
- 
--- 
-1.9.1
+On Monday 01 December 2014 03:29 PM, Sebastian Andrzej Siewior wrote:
+> On 12/01/2014 10:53 AM, Vignesh R wrote:
+>> Hi Sebastian,
+> 
+> Hi Vignesh,
+> 
+>> I fixed the issue that was triggering the WARN_ON(). I think it would be
+>> better if you tested these patches, before I posted them on the
+>> mainline. I don't want to clutter the list with too main versions. Here
+>> is the link to the tree with latest changes:
+> 
+> awesome, thank you.
+> 
+>>
+>> git clone -b tsc-devel git://git.ti.com/kernel/tsc-adc.git
+>> (tsc-devel branch)
+> 
+> I will and let you know.
+> 
+>> Please test the above tree and let me know the results.
+>> I will post new version(v5) if there are no issues wrt IIO and TSC
+>> working at the same time.
+> 
+> Cool. Were you able to get in touch with someone who has a 5-wire touch?
+
+I have asked Jeff Lance to verify 5-wire touch.
+
+Regards
+Vignesh
