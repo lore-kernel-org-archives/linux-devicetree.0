@@ -1,90 +1,88 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [Patch v2 1/2] gpio: add GPIO hogging mechanism
-Date: Mon, 1 Dec 2014 17:36:39 +0100
-Message-ID: <20141201163639.GI25249@lukather>
-References: <1416527684-19017-1-git-send-email-bparrot@ti.com>
- <1416527684-19017-2-git-send-email-bparrot@ti.com>
- <CAAVeFu+VZiuzobB7McSAUehKUHJjBv1o8ZpYjSHJAKjr3o5wTA@mail.gmail.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [RFC V1 0/8] CPUFreq: create platform-dev for DT based cpufreq
+ drivers
+Date: Mon, 01 Dec 2014 16:56:08 +0000
+Message-ID: <547C9DA8.3080403@arm.com>
+References: <cover.1417433163.git.viresh.kumar@linaro.org> <23115535.r6kXsReHU2@wuerfel> <547C8423.2090300@arm.com> <2342930.0NFoS1nEgv@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="b+chlBtRKJDCtqTb"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAAVeFu+VZiuzobB7McSAUehKUHJjBv1o8ZpYjSHJAKjr3o5wTA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexandre Courbot <gnurou@gmail.com>
-Cc: Benoit Parrot <bparrot@ti.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <2342930.0NFoS1nEgv@wuerfel>
+Sender: linux-pm-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Viresh Kumar <viresh.kumar@linaro.org>, Nishanth Menon <nm@ti.com>, "rob.herring@linaro.org" <rob.herring@linaro.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, Thomas Abraham <ta.omasab@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Chander Kashyap <k.chander@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, "olof@lixom.net" <olof@lixom.net>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Mike Turquette <mike.turquette@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, santosh
 List-Id: devicetree@vger.kernel.org
 
 
---b+chlBtRKJDCtqTb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On 01/12/14 16:03, Arnd Bergmann wrote:
+> On Monday 01 December 2014 15:07:15 Sudeep Holla wrote:
+>> On 01/12/14 14:11, Arnd Bergmann wrote:
+>>> On Monday 01 December 2014 13:35:25 Sudeep Holla wrote:
+>>>> On 01/12/14 13:29, Viresh Kumar wrote:
+>>>>> On 1 December 2014 at 18:24, Arnd Bergmann <arnd@arndb.de> wrote:
+>>>>>> Thanks a lot for working on this, we really need to figure it out one day!
+>>>>>
+>>>>>
+>>>>>
+>>>>>> Your patches seem well-implemented, so if everybody thinks the general
+>>>>>> approach is the best solution, we should do that. From my point of view,
+>>>>>> there are two things I would do differently:
+>>>>>>
+>>>>>> - In the DT binding, I would strongly prefer anything but the root compatible
+>>>>>>      property as the key for the new platforms. Clearly we have to keep using
+>>>>>>      it for the backwards-compatibility case, as you do, but I think there
+>>>>>>      are more appropriate places to put it. Sorting from most favorite to least
+>>>>>>      favorite, my list would be:
+>>>>>>            1. a new property in /cpus/
+>>>>>>            2. a new property each /cpus/cpu@... node.
+>>>>>
+>>>>> I did it this way earlier and named it dvfs-method but probably putting this
+>>>>> into the /cpus/ node is far better. But then Sudeep asked to utilize
+>>>>> compatible property only..
+>>>>>
+>>>>> Are you fine with the name here? "dvfs-method"
+>>>>>
+>>>>
+>>>> That's right, I don't like driver specific method in the cpu node as you
+>>>> initially did. But if it's a property in the chosen node (where we
+>>>> usually put the Linux specific properties), I am fine with
+>>>> that as Arnd has illustrated in his patch.
+>>>
+>>> I would prefer the /cpus node over the /chosen node because the former
+>>> describes the hardware while the latter is supposed to be user-settable
+>>> (on real open-firmware at least). But I think either one is better than
+>>> using the / node compatible string.
+>>>
+>>
+>> Agreed, the main reason for objection was that in the initial proposal
+>> it was more a Linux configuration rather than hardware property.
+>>
+>> <dvfs-method> = "cpufreq-dt";
+>>
+>> I don't see anything hardware feature presented with that. On the other
+>> hand, we could represent the some thing like whether the cpu share
+>> clock or are they independently clocked as a hardware property in the
+>> cpu nodes.
+>
+> My interpretation of the dvfs-method property is that the string states
+> how dvfs works. In particular, it would be used to tell the difference
+> between machines that just rely on the clocks and regulators properties
+> of the CPU nodes as defined in bindings/cpufreq/cpufreq-dt.txt compared
+> to those that need platform-specific properties beyond that. The value
+> of the string should indeed not be "cpufreq-dt", as that would be a linux
+> implementation detail and inappropriate here.
+>
 
-On Fri, Nov 28, 2014 at 04:30:01PM +0900, Alexandre Courbot wrote:
-> > +/**
-> > + * do_gpio_hog - Given node is a GPIO hog configuration, handle it
-> > + * @np:                device node to get GPIO from
-> > + *
-> > + * This is only used by of_gpiochip_add to request/set GPIO initial
-> > + * configuration.
-> > + */
-> > +static int do_gpio_hog(struct device_node *np)
-> > +{
-> > +       struct gpio_desc *desc =3D NULL;
-> > +       int err;
-> > +       const char *name;
-> > +       enum gpio_lookup_flags lflags;
-> > +       enum gpiod_flags dflags;
-> > +
-> > +       desc =3D of_get_gpio_hog(np, &name, &lflags, &dflags);
-> > +       if (!desc)
-> > +               return -ENOTSUPP;
-> > +       else if (IS_ERR(desc))
-> > +               return PTR_ERR(desc);
-> > +
-> > +       err =3D gpiod_request(desc, name);
->=20
-> Using this function means that a GPIO chip module cannot be unloaded
-> if it uses GPIO hogs. Is it the intended behavior? If not, please use
-> gpiochip_request_own_desc() instead, and make sure to call
-> gpiochip_free_own_desc() for each hog when the driver is unloaded.
+May be I misunderstood, but from Viresh's initial proposal my
+understanding was that the value of the property would indicate that it
+should use the cpufreq-dt driver and that sounded like Linux specific.
 
-The only thing I'd like to have would be that the request here would
-be non-exclusive, so that a later driver would still be allowed later
-on to request that GPIO later on and manage it itself (ideally using
-the usual gpiod_request function).
+If it's not going to be used in that manner and is what have explained
+above, I am fine with that as that's exactly what I am trying to convey
+in this thread(though I now realize that I have not been so clear :( )
 
-Maxime
+Regards,
+Sudeep
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---b+chlBtRKJDCtqTb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUfJkXAAoJEBx+YmzsjxAgqY0QAJbT5ky9AzUmJVMbI/JXLVEJ
-sRSHFLrRDQzD9VMaE8tVERMyKOW2KLVZKY74MY6qxhtokSgSa49KICJkSc5nIKIR
-J0Tp73BpB2XPcBHBahtvWiKSvvekpKn3+FslG0Fx4s+8UkgYdPlweNT9D7lWuuTx
-wgBhkU+c7ehPloiKFg4m1EDW0OhL3iAkrXGgh7zVcglGOb489B1sc8FvDvn+DL2o
-kQoxJkoc1ZQMlLV74Uf/fYLeDNWAGiB0f9sDLS3ZLYw0IPgxREV7UJJxXbJkTLZa
-rjKVfD0uDrlKt5THovz/Mw4jA1VAnnkGNJF3YvidPm0bsMoKimJ3i2YKK3ZKnU2F
-gRqA3Ew1AXNLLuBWaR6kfhX4TcJ6KoYIXQOLZYM02jhjkZkyuefunlnBMGiGDnOn
-wwIx6jhYtKIEWxolQBYcISBYnG5XPkxbmW+bb6pKObutlTQP/cPZr6Z4/whbjQvY
-Z3ClNygSoX2PlsvD4iC90o0X11rseJgaLZV0A6f/bFXxyfeTy2o8mmqLOOb+XkA7
-wILCrA8NAe9oKj744/qCj+obtwDd5rbNkm2XwXWEPs17xDyJzMT0QDskrABxNSTV
-N3wLFGE7jhy+fdHRS8GBdr6BQb+u8L6EQHyij6sNDtu5jbqEGqozjy1LzdFxFwlX
-84/vYq92GfF/7QNVUGp2
-=Oa5f
------END PGP SIGNATURE-----
-
---b+chlBtRKJDCtqTb--
