@@ -1,325 +1,128 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 16/19] arm64: dts: exynos: Add dts files for 64-bit
- Exynos5433 SoC
-Date: Mon, 01 Dec 2014 11:21:46 +0900
-Message-ID: <547BD0BA.7080809@samsung.com>
-References: <1417073716-22997-1-git-send-email-cw00.choi@samsung.com>
- <1417073716-22997-17-git-send-email-cw00.choi@samsung.com>
- <20141127111834.GB857@leverpostej> <54787621.4000503@samsung.com>
- <20141128140059.GH25883@leverpostej>
+From: Flora Fu <flora.fu@mediatek.com>
+Subject: Re: [PATCH v2 3/8] regulator: MT6397: Add support for MT6397 regulator
+Date: Mon, 1 Dec 2014 10:51:44 +0800
+Message-ID: <1417402305.30873.78.camel@mtksdaap41>
+References: <1417146874-5232-1-git-send-email-flora.fu@mediatek.com>
+ <1417146874-5232-4-git-send-email-flora.fu@mediatek.com>
+ <20141128152247.GR7712@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20141128140059.GH25883@leverpostej>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "arnd@arndb.de" <arnd@arndb.de>, "olof@lixom.net" <olof@lixom.net>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "s.nawrocki@samsung.com" <s.nawrocki@samsung.com>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "inki.dae@samsung.com" <inki.dae@samsung.com>, "chanho61.park@samsung.com" <chanho61.park@samsung.com>, "geunsik.lim@samsung.com" <geunsik.lim@samsung.com>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, a.kesavan@samsung.
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20141128152247.GR7712@sirena.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Sandeep Nair <sandeep_n@ti.com>, Grant Likely <grant.likely@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Stephen Warren <swarren@nvidia.com>, Eddie Huang <eddie.huang@mediatek.com>, linux-arm-kernel@lists.infradead.org, Dongdong Cheng <dongdong.cheng@mediatek.com>, srv_heupstream@mediatek.comPeter De Schrijver <p>
 List-Id: devicetree@vger.kernel.org
 
-Dear Mark,
+Hi, Mark
 
-On 11/28/2014 11:00 PM, Mark Rutland wrote:
-> On Fri, Nov 28, 2014 at 01:18:25PM +0000, Chanwoo Choi wrote:
->> Dear Mark,
->>
->> On 11/27/2014 08:18 PM, Mark Rutland wrote:
->>> On Thu, Nov 27, 2014 at 07:35:13AM +0000, Chanwoo Choi wrote:
->>>> This patch adds new Exynos5433 dtsi to support 64-bit Exynos5433 SoC
->>>> based on Octal core CPUs (quad Cortex-A57 and quad Cortex-A53).
->>>>
->>>> Cc: Kukjin Kim <kgene.kim@samsung.com>
->>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>> Cc: Arnd Bergmann <arnd@arndb.de>
->>>> Cc: Olof Johansson <olof@lixom.net>
->>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
->>>> Cc: Will Deacon <will.deacon@arm.com>
->>>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->>>> Acked-by: Inki Dae <inki.dae@samsung.com>
->>>> Acked-by: Geunsik Lim <geunsik.lim@samsung.com>
->>>> ---
->>>>  arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi | 698 +++++++++++++++++++++
->>>>  arch/arm64/boot/dts/exynos/exynos5433.dtsi         | 523 +++++++++++++++
->>>>  2 files changed, 1221 insertions(+)
->>>>  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi
->>>>  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433.dtsi
->>>
+On Fri, 2014-11-28 at 15:22 +0000, Mark Brown wrote:
+> On Fri, Nov 28, 2014 at 11:54:29AM +0800, Flora Fu wrote:
 > 
-> [...]
+> > @@ -96,5 +97,4 @@ obj-$(CONFIG_REGULATOR_WM8350) += wm8350-regulator.o
+> >  obj-$(CONFIG_REGULATOR_WM8400) += wm8400-regulator.o
+> >  obj-$(CONFIG_REGULATOR_WM8994) += wm8994-regulator.o
+> >  
+> > -
+> >  ccflags-$(CONFIG_REGULATOR_DEBUG) += -DDEBUG
 > 
->>>> +       cpus {
->>>> +               #address-cells = <2>;
->>>> +               #size-cells = <0>;
->>>> +
->>>> +               cpu0: cpu@100 {
->>>> +                       device_type = "cpu";
->>>> +                       compatible = "arm,cortex-a53", "arm,armv8";
->>>> +                       enable-method = "psci";
->>>
->>> While the CPU nodes have enable-methods, I didn't spot a PSCI node
->>> anywhere, so this dts cannot possibly have been used to bring up an SMP
->>> system.
->>>
->>> How has this dts been tested?
->>>
->>> What PSCI revision have you implemented? Have have you tested it?
->>
->> My mistake,
->> Exynos5433 supports PSCI v0.1. I'll add following PSCI nodes:
->> I tested the boot of secondary cpu.
->>
->>         psci {
->>                 compatible = "arm,psci";
->>                 method = "smc";
->>                 cpu_off = <0x84000002>;
->>                 cpu_on = <0xC4000003>;
->>         };
+> Random whitespace change here...
 > 
-> Ok. I take it _any_ CPU may be hotplugged (including CPU0), given that
-> you don't have MIGRATE_INFO_TYPE from PSCI 0.2 to tell you that this is
-> not possible? If not, attempting to hotplug CPU0 will result in a BUG()
-> and the kernel will explode.
+> > +	/* For HW design, buck voltage control register has two parts.
+> > +	 * part 1: vsel_reg for register mode
+> > +	 * part 2: voselon_reg or hw control mode
+> > +	 * Both parts should be updated and sync when user set voltage.
+> > +	 */
 > 
-> Has that been tested? 
+> Why does nothing else in the driver know about this "hw control mode" -
+> what does it actually mean, shouldn't it affect some of the other
+> operations?
 
-I just tested secondary CPU on during kernel booting after added 'psci' dt node.
-So, I got the ON state of Octa CPUs.
-
-Maybe I need more time to implement CPU0 and secondary cpu hotplugged dynamically on runtime.
+In the regulator, we have two parts of registers to control the output
+in voltage selection. The mode setting is done in boot loader stage
+before kernel.
+The hw control mode is used for external signal to control voltage
+selection. When the hw control mode is chosen, "voselon" register is the
+action register to do voltage selection if consumer make voltage
+selection. Without hw control mode, vsel_reg is the action register.
+To fit all mode selection, we update and sync two parts of registers in
+regulator framework.
 
 > 
-> Do all CPUs enter the kernel at EL2?
-
-I didn't consider EL2 for hypervisor mode.
-First role of this job, I'll implement CPU on/off and suspend by using PSCI.
-
+> > +static int mt6397_buck_get_voltage_sel(struct regulator_dev *rdev)
+> > +{
 > 
->>>> +       soc: soc {
->>>> +               compatible = "simple-bus";
->>>> +               #address-cells = <1>;
->>>> +               #size-cells = <1>;
->>>> +               ranges;
->>>> +
->>>> +               fixed-rate-clocks {
->>>> +                       #address-cells = <1>;
->>>> +                       #size-cells = <0>;
->>>> +
->>>> +                       xusbxti: clock@0 {
->>>> +                               compatible = "fixed-clock";
->>>> +                               clock-output-names = "xusbxti";
->>>> +                               #clock-cells = <0>;
->>>> +                       };
->>>> +               };
->>>
->>> Get rid of the fixed-rate-clocks container node. It's pointless and
->>> messy. Given you only have one there's no need for the bogus
->>> unit-address either.
->>
->> OK, I'll remove unneeded code and will add following dt node for fin_pll.
->>
->>         fin_pll: xxti {
->>                 compatible = "fixed-clock";
->>                 clock-output-names = "fin_pll";
->>                 #clock-cells = <0>;
->>         };
+> > +static int mt6397_regulator_is_enabled(struct regulator_dev *rdev)
+> > +{
 > 
-> That looks fine to me.
-> 
-> [...]
-> 
->>>> +               mct@101c0000 {
->>>> +                       compatible = "samsung,exynos4210-mct";
->>>> +                       reg = <0x101c0000 0x800>;
->>>> +                       interrupts = <0 102 0>, <0 103 0>, <0 104 0>, <0 105 0>,
->>>> +                               <0 106 0>, <0 107 0>, <0 108 0>, <0 109>,
->>>> +                               <0 110 0>, <0 111 0>, <0 112 0>, <0 113 0>;
->>>> +                       clocks = <&cmu_top CLK_FIN_PLL>, <&cmu_peris CLK_PCLK_MCT>;
->>>> +                       clock-names = "fin_pll", "mct";
->>>> +               };
->>>
->>> Hase this block had no changes whatsoever since its use in Exynos4210?
->>> Do we not need a "samsung,exynos5433-mct" comaptible string too?
->>
->> The type of Exynos5433's MCT(Multi-Core Timer) IP is the same with the type of Exynos4210 MCT.
->> Just Exynos5433 have eight local timer for Octa cores.
-> 
-> So "samsung,exynos4210-mct" should appear in the list. I'm just
-> wondering if it's worth having:
-> 
-> 	compatible = "samsung,exynos5433-mct", "samsung,exynos4210-mct";
-> 
-> Just in case we need to special-case the 5433 MCT for some reason later.
-
-OK, I'll add "samsung,exynos5433-mct" compatible string in exynos5433.dtsi
-according to your comment.
-
-> 
->>
->>            CPU0       CPU1       CPU2       CPU3       CPU4       CPU5       CPU6       CPU7
->> 134:          0          0          0          0          0          0          0          0       GIC 134  mct_comp_irq
->> 138:       3189          0          0          0          0          0          0          0       GIC 138  mct_tick0
->> 139:          0       2670          0          0          0          0          0          0       GIC 139  mct_tick1
->> 140:          0          0       2763          0          0          0          0          0       GIC 140  mct_tick2
->> 141:          0          0          0       2732          0          0          0          0       GIC 141  mct_tick3
->> 142:          0          0          0          0       2998          0          0          0       GIC 142  mct_tick4
->> 143:          0          0          0          0          0       2664          0          0       GIC 143  mct_tick5
->> 144:          0          0          0          0          0          0       2485          0       GIC 144  mct_tick6
->> 145:          0          0          0          0          0          0          0       2681       GIC 145  mct_tick7
->>
->> But, existing exynos-mct.c driver(drivers/clocksource/exynos-mct.c) used
->> 'register_current_timer_delay()' function which is supported on arm 32bit.
->> I fix it as following diff and then I'll send it to support 64-bit Exynos SoC on exynos-mct.c.
->>
->>  drivers/clocksource/Kconfig      | 1 -
->>  drivers/clocksource/exynos_mct.c | 4 ++++
->>  2 files changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
->> index 9042060..27ef3fa 100644
->> --- a/drivers/clocksource/Kconfig
->> +++ b/drivers/clocksource/Kconfig
->> @@ -134,7 +134,6 @@ config CLKSRC_METAG_GENERIC
->>
->>  config CLKSRC_EXYNOS_MCT
->>         def_bool y if ARCH_EXYNOS
->> -       depends on !ARM64
->>         help
->>           Support for Multi Core Timer controller on Exynos SoCs.
->>
->> diff --git a/drivers/clocksource/exynos_mct.c b/drivers/clocksource/exynos_mct.c
->> index 9403061..d9c7dbb 100644
->> --- a/drivers/clocksource/exynos_mct.c
->> +++ b/drivers/clocksource/exynos_mct.c
->> @@ -223,6 +223,7 @@ static u64 notrace exynos4_read_sched_clock(void)
->>         return exynos4_read_count_32();
->>  }
->>
->> +#if !defined(CONFIG_ARM64)
->>  static struct delay_timer exynos4_delay_timer;
->>
->>  static cycles_t exynos4_read_current_timer(void)
->> @@ -231,14 +232,17 @@ static cycles_t exynos4_read_current_timer(void)
->>                          "cycles_t needs to move to 32-bit for ARM64 usage");
->>         return exynos4_read_count_32();
->>  }
->> +#endif
->>
->>  static void __init exynos4_clocksource_init(void)
->>  {
->>         exynos4_mct_frc_start();
->>
->> +#if !defined(CONFIG_ARM64)
->>         exynos4_delay_timer.read_current_timer = &exynos4_read_current_timer;
->>         exynos4_delay_timer.freq = clk_rate;
->>         register_current_timer_delay(&exynos4_delay_timer);
->> +#endif
-> 
-> Why not make both of these depend on CONFIG_ARM, rather than
-> !CONFIG_ARM64? We care about the presence of the delay_timer struct and
-> functions, which (from grepping around) exist in arch/arm and nowhere
-> else.
-
-You're right.
-I'll fix it by using CONFIG_ARM instead of !CONFIG_ARM64.
-
-> 
->>>> +               gic:interrupt-controller@11001000 {
->>>> +                       compatible = "arm,cortex-a15-gic";
->>>
->>> Given this is multi-cluster, surely this is an external GIC-400, for
->>> which we have a supported compatible string?
->>>
->>> So this should at least be:
->>>
->>>       compatible = "arm,gic-400", "arm,cortex-a15-gic";
->>
->> Exynos5433 used GIC-400. I'll modify it as following:
->>
->>         compatible = "arm,gic-400";
-> 
-> Ok. The former variant (with "arm,cortex-a15-gic" later in the list) has
-> the benefit of working with KVM today (which doesn't currently look for
-> "arm,gic-400").
-> 
->>>> +                       #interrupt-cells = <3>;
->>>> +                       interrupt-controller;
->>>> +                       reg =   <0x11001000 0x1000>,
->>>> +                               <0x11002000 0x1000>,
->>>> +                               <0x11004000 0x2000>,
->>>> +                               <0x11006000 0x2000>;
->>>
->>> As far as I am aware, the GICC size is 8KiB. Regardless of whether we
->>> currently use the second page of registers, they should be described.
->>
->> The GICC (CPU Interface Register) register of Exynos5433 is range of 0x1100_2000 ~ 0x1100_2100.
-> 
-> That does not sound right. Per the GICv2 architecture, GICC is at least
-> 0x1004 bytes long (as GICC_DIR lives at offset 0x1000).
-
-You're right. I replied it on below .
-
-> 
->> But, I'll modify GICC size from 4KiB to 8KiB as following according to your comment:
->>         <0x11002000 0x1000> -> <0x11002000 0x2000>
-> 
-> To clarify: is GICC_DIR accessible in Exynos5433 systems, or is
-> everything past offset 0x100 not physically mapped?
+> To repeat my comments on the last version: please use the generic regmap
+> operations rather than copying them.
 > 
 
-I checked the base address of GICC_DIR on Exynos3250/Exynos5433/Exynos7 using gic-400.
+The generic helper function does not fit usage of the regulator. 
+In general function, it considers that the vsel_reg for selection
+voltage is also the register for querying voltage selection. The enable
+bit for enable function is the bit for querying the status. 
 
-GICC_DIR is 1048_3000 on Exynos3250.
-GICC_DIR is 1100_2100 on Exynos5433.
-GICC_DIR is 1100_2100 on Exynos7.
+In the hardware design, the output of voltage selection register is
+different from vsel_reg. Is is located in nivosel. The enable bit is
+locate in the other bit called "qi_mask".  
+Please check comment in MT6397 regulators' information. 
+/*
+ * MT6397 regulators' information
+ *
+ * @desc: standard fields of regulator description.
+ * @voselon_reg: Register sections for hardware control mode of bucks
+ * @nivosel_reg: Register for query output voltage selection of bucks
+ * @qi_mask: Mask for query enable signal status of regulators
+ */
+struct mt6397_regulator_info {
+	struct regulator_desc desc;
+	u32 voselon_reg;
+	u32 nivosel_reg;
+	u32 qi_mask;
+};
 
-I think that TRM includes incorrect base address of GICC_DIR on Exynos5433/Exynos7.
-GICC_DIR of Exynos3250 is GICC_DIR is 1048_2000 + 0x1000 offset as you commented.
-
-Thanks for your review.
-
-Best Regards,
-Chanwoo Choi
+That's whey ops ".get_voltage_sel" and ".is_enabled" is not able to use
+generic regamp.
 
 
->>>> +                       interrupts = <1 9 0xf04>;
->>>> +               };
->>>> +
->>>> +               serial_0: serial@14C10000 {
->>>
->>> Nit: Please be consistent with capitalisation of hex. IMO it's better
->>> to leave it all lower-case.
->>
->> I'll use the lower-case for all base address.
+> > +	np = of_node_get(pdev->dev.parent->of_node);
+> > +	if (!np)
+> > +		return -EINVAL;
+> > +
+> > +	regulators = of_get_child_by_name(np, "regulators");
 > 
-> Thanks.
+> To further repeat my
+
+>  previous review comments:
 > 
->>
->>>
->>> [...]
->>>
->>>> +               timer {
->>>> +                       compatible = "arm,armv8-timer";
->>>> +                       interrupts = <1 13 0xff01>,
->>>> +                                    <1 14 0xff01>,
->>>> +                                    <1 11 0xff01>,
->>>> +                                    <1 10 0xff01>;
->>>> +                       clock-frequency = <24000000>;
->>>> +                       use-clocksource-only;
->>>> +                       use-physical-timer;
->>>
->>> As Marc said, NAK for these last three properties.
->>>
->>> There is no excuse for not setting CNTFRQ_EL0, especially given a PSCI
->>> implementation. The last two properties have never been supported in
->>> mainline, and shouldn't be necessary regardless.
->>
->> OK, I'll remove last three properties.
+> | Define regulators_node and of_match in the regulator desc and you can
+> | remove both this table and all your DT matching code in the driver, the
+> | core will handle it for you.
 > 
-> Thanks.
-> 
-> Mark.
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+> Please don't ignore review comments.
+
+Sure, I think I completely misunderstood what you meant. Could you give
+more details about the comments?
+In this version, the table for DT matching is removed and merged into
+regulator info in table mt6397_regulators. To register every regulator
+by devm_regulator_register(), the of_node is parsed from
+of_regulator_match() by name. Here is to retrieves the device_node
+"regulators" for of_regulator_match() to get all regulator_init_data and
+corresponding of_node.
+Is any other mechanism I can use to achieve these part without
+of_regulstor_match()?
+
+
+Thanks,
+Flora
