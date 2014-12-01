@@ -1,136 +1,86 @@
-From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 2/2] backlight/lp855x: Add supply regulator to lp855x
-Date: Mon,  1 Dec 2014 13:07:59 -0800
-Message-ID: <1417468079-4990-1-git-send-email-seanpaul@chromium.org>
-References: <54767F43.2060901@ti.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH] ARM: zynq: DT: Add USB to device tree
+Date: Mon, 1 Dec 2014 13:24:59 -0800
+Message-ID: <fb6f17c51aef4a498eb2a3e01a81df34@BN1BFFO11FD017.protection.gbl>
+References: <1417459352-23401-1-git-send-email-soren.brinkmann@xilinx.com>
+ <547CCEE3.6020806@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54767F43.2060901-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, milo.kim-l0cyMroinI0@public.gmane.org
-Cc: jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Aaron Durbin <adurbin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <547CCEE3.6020806@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>
+Cc: Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Ola Jeppson <ola@adapteva.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a supply regulator to the lp855x platform data to facil=
-itate
-powering on/off the 3V rail attached to the controller.
+On Mon, 2014-12-01 at 09:26PM +0100, Andreas F=C3=A4rber wrote:
+> Hi S=C3=B6ren,
+>=20
+> Am 01.12.2014 um 19:42 schrieb Soren Brinkmann:
+> > Add USB nodes to zc702, zc706 and zed device trees.
+> >=20
+> > Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> > ---
+> >  arch/arm/boot/dts/zynq-7000.dtsi | 22 +++++++++++++++++++++-
+> >  arch/arm/boot/dts/zynq-zc702.dts | 11 +++++++++++
+> >  arch/arm/boot/dts/zynq-zc706.dts | 10 ++++++++++
+> >  arch/arm/boot/dts/zynq-zed.dts   | 10 ++++++++++
+> >  4 files changed, 52 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/z=
+ynq-7000.dtsi
+> > index ce2ef5bec4f2..9ed60938f301 100644
+> > --- a/arch/arm/boot/dts/zynq-7000.dtsi
+> > +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+> > @@ -315,6 +315,26 @@
+> >  			clocks =3D <&clkc 4>;
+> >  		};
+> > =20
+> > +		usb0: usb@e0002000 {
+> > +			compatible =3D "xlnx,zynq-usb-2.20a", "chipidea,usb2";
+> > +			status =3D "disabled";
+> > +			clocks =3D <&clkc 28>;
+> > +			interrupt-parent =3D <&intc>;
+> > +			interrupts =3D <0 21 4>;
+> > +			reg =3D <0xe0002000 0x1000>;
+> > +			phy_type =3D "ulpi";
+> > +		};
+> > +
+> > +		usb1: usb@e0003000 {
+> > +			compatible =3D "xlnx,zynq-usb-2.20a", "chipidea,usb2";
+> > +			status =3D "disabled";
+> > +			clocks =3D <&clkc 29>;
+> > +			interrupt-parent =3D <&intc>;
+> > +			interrupts =3D <0 44 4>;
+> > +			reg =3D <0xe0003000 0x1000>;
+> > +			phy_type =3D "ulpi";
+> > +		};
+> > +
+> >  		watchdog0: watchdog@f8005000 {
+> >  			clocks =3D <&clkc 45>;
+> >  			compatible =3D "xlnx,zynq-wdt-r1p2";
+>=20
+> This part looks good.
+>=20
+> > @@ -324,6 +344,6 @@
+> >  			reg =3D <0xf8005000 0x1000>;
+> >  			reset =3D <0>;
+> >  			timeout-sec =3D <10>;
+> > -		};
+> > +		} ;
+> >  	};
+> >  };
+>=20
+> Unrelated accidental change here though. :)
+>=20
+> Did I miss a matching series actually implementing the driver? I'd ne=
+ed
+> to test the latest version to determine how to update the Parallella
+> device tree - I assume that USB0 is in dr_mode=3D"host", but with the
+> previous patchsets I was unable to verify. CC'ing Ola.
 
-Cc: St=C3=A9phane Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Aaron Durbin <adurbin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
+It was merged to the USB tree recently. I tested this on linux-next.
 
-Changes in v2:
-	- Add NULL check in lp855x_remove
-
-
- .../devicetree/bindings/video/backlight/lp855x.txt     |  2 ++
- drivers/video/backlight/lp855x_bl.c                    | 18 ++++++++++=
-++++++++
- include/linux/platform_data/lp855x.h                   |  2 ++
- 3 files changed, 22 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/video/backlight/lp855x.t=
-xt b/Documentation/devicetree/bindings/video/backlight/lp855x.txt
-index 96e83a5..0a3ecbc 100644
---- a/Documentation/devicetree/bindings/video/backlight/lp855x.txt
-+++ b/Documentation/devicetree/bindings/video/backlight/lp855x.txt
-@@ -12,6 +12,7 @@ Optional properties:
-   - pwm-period: PWM period value. Set only PWM input mode used (u32)
-   - rom-addr: Register address of ROM area to be updated (u8)
-   - rom-val: Register value to be updated (u8)
-+  - power-supply: Regulator which controls the 3V rail
-=20
- Example:
-=20
-@@ -56,6 +57,7 @@ Example:
- 	backlight@2c {
- 		compatible =3D "ti,lp8557";
- 		reg =3D <0x2c>;
-+		power-supply =3D <&backlight_vdd>;
-=20
- 		dev-ctrl =3D /bits/ 8 <0x41>;
- 		init-brt =3D /bits/ 8 <0x0a>;
-diff --git a/drivers/video/backlight/lp855x_bl.c b/drivers/video/backli=
-ght/lp855x_bl.c
-index 257b3ba..a26d3bb 100644
---- a/drivers/video/backlight/lp855x_bl.c
-+++ b/drivers/video/backlight/lp855x_bl.c
-@@ -17,6 +17,7 @@
- #include <linux/of.h>
- #include <linux/platform_data/lp855x.h>
- #include <linux/pwm.h>
-+#include <linux/regulator/consumer.h>
-=20
- /* LP8550/1/2/3/6 Registers */
- #define LP855X_BRIGHTNESS_CTRL		0x00
-@@ -383,6 +384,13 @@ static int lp855x_parse_dt(struct lp855x *lp)
- 		pdata->rom_data =3D &rom[0];
- 	}
-=20
-+	pdata->supply =3D devm_regulator_get(dev, "power");
-+	if (IS_ERR(pdata->supply)) {
-+		if (PTR_ERR(pdata->supply) =3D=3D -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+		pdata->supply =3D NULL;
-+	}
-+
- 	lp->pdata =3D pdata;
-=20
- 	return 0;
-@@ -423,6 +431,14 @@ static int lp855x_probe(struct i2c_client *cl, con=
-st struct i2c_device_id *id)
- 	else
- 		lp->mode =3D REGISTER_BASED;
-=20
-+	if (lp->pdata->supply) {
-+		ret =3D regulator_enable(lp->pdata->supply);
-+		if (ret < 0) {
-+			dev_err(&cl->dev, "failed to enable supply: %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
- 	i2c_set_clientdata(cl, lp);
-=20
- 	ret =3D lp855x_configure(lp);
-@@ -454,6 +470,8 @@ static int lp855x_remove(struct i2c_client *cl)
-=20
- 	lp->bl->props.brightness =3D 0;
- 	backlight_update_status(lp->bl);
-+	if (lp->pdata->supply)
-+		regulator_disable(lp->pdata->supply);
- 	sysfs_remove_group(&lp->dev->kobj, &lp855x_attr_group);
-=20
- 	return 0;
-diff --git a/include/linux/platform_data/lp855x.h b/include/linux/platf=
-orm_data/lp855x.h
-index 1b2ba24..9c7fd1e 100644
---- a/include/linux/platform_data/lp855x.h
-+++ b/include/linux/platform_data/lp855x.h
-@@ -136,6 +136,7 @@ struct lp855x_rom_data {
- 		Only valid when mode is PWM_BASED.
-  * @size_program : total size of lp855x_rom_data
-  * @rom_data : list of new eeprom/eprom registers
-+ * @supply : regulator that supplies 3V input
-  */
- struct lp855x_platform_data {
- 	const char *name;
-@@ -144,6 +145,7 @@ struct lp855x_platform_data {
- 	unsigned int period_ns;
- 	int size_program;
- 	struct lp855x_rom_data *rom_data;
-+	struct regulator *supply;
- };
-=20
- #endif
---=20
-2.2.0.rc0.207.ga3a616c
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	S=C3=B6ren
