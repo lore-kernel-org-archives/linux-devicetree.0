@@ -1,157 +1,128 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] mtd: hisilicon: add a new NAND controller driver
- for hisilicon hip04 Soc
-Date: Mon, 1 Dec 2014 10:14:49 -0800
-Message-ID: <20141201181449.GG21347@ld-irv-0074>
-References: <1415105221-7732-1-git-send-email-wangzhou.bry@gmail.com>
- <1415105221-7732-2-git-send-email-wangzhou.bry@gmail.com>
- <20141130093529.GH3608@norris-Latitude-E6410>
- <547C685A.3090804@gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFC V1 0/8] CPUFreq: create platform-dev for DT based cpufreq drivers
+Date: Mon, 1 Dec 2014 12:14:54 -0600
+Message-ID: <CAL_JsqLgxPf2hoW5Q55P2M1bSg6S+pVwpSyBa2WmZBQvUZfAXA@mail.gmail.com>
+References: <cover.1417433163.git.viresh.kumar@linaro.org> <7885354.QleDlR7NUO@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <547C685A.3090804-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, caizhiyong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <7885354.QleDlR7NUO@wuerfel>
+Sender: linux-pm-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, Arnd Bergmann <arnd.bergmann@linaro.org>, Rob Herring <rob.herring@linaro.org>, Grant Likely <grant.likely@linaro.org>, Nishanth Menon <nm@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, kesavan.abhilash@gmail.com, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Thomas Abraham <ta.omasab@gmail.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, k.chander@samsung.com, santosh shilimkar <santosh.shilimkar@oracle.com>, Stephen Boyd <sboyd@codeaurora.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Mike Turquette <mike.turquette@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 01, 2014 at 09:08:42PM +0800, Zhou Wang wrote:
-> On 2014=E5=B9=B411=E6=9C=8830=E6=97=A5 17:35, Brian Norris wrote:
-> >On Tue, Nov 04, 2014 at 08:47:00PM +0800, Zhou Wang wrote:
-> >>Signed-off-by: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-[...]
-> >>+static void hisi_nfc_dma_transfer(struct hinfc_host *host, int tod=
-ev)
-> >>+{
-> >>+	struct mtd_info	*mtd =3D &host->mtd;
-> >>+	struct nand_chip *chip =3D mtd->priv;
-> >>+	unsigned long val;
-> >>+	int ret;
-> >>+
-> >>+	hinfc_write(host, host->dma_buffer, HINFC504_DMA_ADDR_DATA);
-> >>+	hinfc_write(host, host->dma_oob, HINFC504_DMA_ADDR_OOB);
-> >>+
-> >>+	if (chip->ecc.mode =3D=3D NAND_ECC_NONE) {
-> >>+		hinfc_write(host, ((mtd->oobsize & HINFC504_DMA_LEN_OOB_MASK)
-> >>+			<< HINFC504_DMA_LEN_OOB_SHIFT), HINFC504_DMA_LEN);
-> >>+
-> >>+		hinfc_write(host, HINFC504_DMA_PARA_DATA_RW_EN
-> >>+			| HINFC504_DMA_PARA_OOB_RW_EN, HINFC504_DMA_PARA);
-> >>+	} else {
-> >>+		hinfc_write(host, HINFC504_DMA_PARA_DATA_RW_EN
-> >>+		| HINFC504_DMA_PARA_OOB_RW_EN | HINFC504_DMA_PARA_DATA_EDC_EN
-> >>+		| HINFC504_DMA_PARA_OOB_EDC_EN | HINFC504_DMA_PARA_DATA_ECC_EN
-> >>+		| HINFC504_DMA_PARA_OOB_ECC_EN, HINFC504_DMA_PARA);
-> >>+	}
-> >>+
-> >>+	val =3D (HINFC504_DMA_CTRL_DMA_START | HINFC504_DMA_CTRL_BURST4_E=
-N
-> >>+		| HINFC504_DMA_CTRL_BURST8_EN | HINFC504_DMA_CTRL_BURST16_EN
-> >>+		| HINFC504_DMA_CTRL_DATA_AREA_EN | HINFC504_DMA_CTRL_OOB_AREA_EN
-> >>+		| ((host->addr_cycle =3D=3D 4 ? 1 : 0)
-> >>+			<< HINFC504_DMA_CTRL_ADDR_NUM_SHIFT)
-> >>+		| ((host->chipselect & HINFC504_DMA_CTRL_CS_MASK)
-> >>+			<< HINFC504_DMA_CTRL_CS_SHIFT));
-> >>+
-> >>+	if (todev)
-> >>+		val |=3D HINFC504_DMA_CTRL_WE;
-> >>+
-> >>+	hinfc_write(host, val, HINFC504_DMA_CTRL);
-> >>+
-> >>+	init_completion(&host->cmd_complete);
-> >
-> >You need to run init_completion() *before* you kick off your I/O.
-> >Otherwise, your interrupt handler is racing with this function.
-> >
->=20
-> Do you mean that it needs put init_completion() before hinfc_write()?
-> If not so, interrupt handler maybe execute before init_completion()
-> which will cause something wrong.
+On Mon, Dec 1, 2014 at 6:54 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Monday 01 December 2014 17:11:21 Viresh Kumar wrote:
+>>
+>> DT based cpufreq drivers doesn't require much support from platform code now a
+>> days as most of the stuff is moved behind generic APIs. Like clk APIs for
+>> changing clock rates, regulator APIs for changing voltages, etc.
+>>
+>> One of the bottleneck still left was how to select which cpufreq driver to probe
+>> for a given platform as there might be multiple drivers available.
+>>
+>> Traditionally, we used to create platform devices from machine specific code
+>> which binds with a cpufreq driver. And while we moved towards DT based device
+>> creation, these devices stayed as is.
+>>
+>> The problem is getting worse now as we have architectures now with Zero platform
+>> specific code. Forcefully these platforms have to create a new file in
+>> drivers/cpufreq/ to just add these platform devices in order to use the generic
+>> drivers like cpufreq-dt.c.
+>>
+>> This has been discussed again and again, but with no solution yet. Last it was
+>> discussed here:
+>>
+>> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/256154.html
+>>
+>> This patch is an attempt towards getting the bindings.
+>>
+>> We only need to have cpufreq drivers name string present in "compatible"
+>> property for the root node.. If a cpufreq driver with DT support exists with
+>> that name, then cpufreq core will create a platform device for that.
+>>
+>> The first patch presents the new binding, second one creates another file
+>> responsible for creating platform devices for all DT based cpufreq drivers.
+>>
+>> And later patches update platforms to migrate to it one by one.
+>>
+>> A BLACKLIST of platforms already supported by these drivers is also created for
+>> backward compatibility of newer kernels with older DTs. And so for such
+>> platforms DT files aren't updated.
+>>
+>> An initial RFC that presented the idea was discussed here:
+>> https://www.mail-archive.com/devicetree@vger.kernel.org/msg52509.html
+>>
+>> Tested-ON: Exynos5250. (The last patch for exynos depends on some commits to be
+>> upstreamed in 3.19, presented here just for testing).
+>
+> Thanks a lot for working on this, we really need to figure it out one day!
+>
+> Your patches seem well-implemented, so if everybody thinks the general
+> approach is the best solution, we should do that. From my point of view,
+> there are two things I would do differently:
 
-Yes.
+I think the changes here for the "legacy" DTs are fine, but they
+should be separated from the DT binding changes.
 
-	init_completion(&host->cmd_complete);
+> - In the DT binding, I would strongly prefer anything but the root compatible
+>   property as the key for the new platforms. Clearly we have to keep using
+>   it for the backwards-compatibility case, as you do, but I think there
+>   are more appropriate places to put it. Sorting from most favorite to least
+>   favorite, my list would be:
+>         1. a new property in /cpus/
+>         2. a new property each /cpus/cpu@... node.
+>         3. the compatible property of the /cpus node
+>         4. a top-level device node that gets turned into a platform device
+>         5. a new property in the / node
+>         6. a new property in the /chosen node
+>         7. the compatible property in the / node
 
-should come sometime before
+We already have some properties such as clocks and OPP in the cpu
+nodes. Granted, those are probably not sufficient to bind against. The
+current OPP binding has shown to be insufficient based on some of the
+past proposals on how to handle various different scenarios:
 
-	hinfc_write(host, val, HINFC504_DMA_CTRL);
+- Different topologies of OPPs: single shared clock vs. independent
+clock per core vs. shared clock per cluster; different OPP per cluster
+- Support for turbo modes
+- Other per OPP settings: transition latencies, disabled status, etc.?
 
-> >>+	ret =3D wait_for_completion_timeout(&host->cmd_complete,
-> >>+			HINFC504_NFC_DMA_TIMEOUT);
+I don't want to see band-aids that only fix one problem here and this
+series is included. We need to define a better way to define OPPs and
+deprecate the existing binding. I think we probably need something
+with a node per OPP so we can add new properties. These can have a
+compatible property including something generic for purposes of
+matching. So something like this:
 
-[...]
+opp@?? {
+  compatible = "highbank-opp", "generic-cpu-opp";
+  clocks = <&clk-controller 0>;
+  clock-frequency = <1000000000>;
+  opp-supply = <&cpu-supply>;
+  voltage-uV = <1000000>;
+  turbo-mode;
+  status = "disabled";
+};
 
-> >>+static void set_addr(struct mtd_info *mtd, int column, int page_ad=
-dr)
-> >>+{
-> >>+	struct nand_chip *chip =3D mtd->priv;
-> >>+	struct hinfc_host *host =3D chip->priv;
-> >>+
-> >>+	host->addr_cycle    =3D 0;
-> >>+	host->addr_value[0] =3D 0;
-> >>+	host->addr_value[1] =3D 0;
-> >>+
-> >>+	/* Serially input address */
-> >>+	if (column !=3D -1) {
-> >>+		/* Adjust columns for 16 bit buswidth */
-> >>+		if (chip->options & NAND_BUSWIDTH_16)
-> >>+			column >>=3D 1;
-> >
-> >It doesn't look like you're supporting ONFI parameter pages yet, but=
- you
-> >might consider checking for !nand_opcode_8bits(opcode) before adjust=
-ing the
-> >address. We had to fix some other drivers for this recently.
-> >
->=20
-> sorry, could you give me more clue about this?  Do you mean that we
-> should first make sure it is not 8 bits bus width?
+I've left how to map cpus and clusters with OPPs as an exercise for
+the reader. :)
 
-Look for use of nand_opcode_8bits() in nand_base.c.
+> - Implementation-wise, I don't think it's helpful to have a global function
+>   that registers a platform device to be consumed by the device driver. I'd
+>   rather just see a module_init function in each driver that rather than
+>   registering a platform_driver scans the DT properties. This is only really
+>   necessary when not using DT (omap2, omap3, davinci, loongson) or when
+>   passing additional resources or platform_data (kirkwood, but that can
+>   look up the "marvell,orion-system-controller" node if necessary).
+>   My preferred solution would be to eventually remove the platform_device
+>   registration for all DT users. If a driver needs a platform device pointer
+>   internally, it can use platform_create_bundle(), but that's probably not
+>   even necessary.
 
-I'm suggesting that you don't necessarily want to "adjust the column"
-for all commands; there are some opcodes that take their address only o=
-n
-the lower x8 bits, even if the flash has an x16 buswidth.
+This is essentially undoing what has been the general direction for
+cpufreq drivers. Not saying that is wrong, but we should have
+consistent direction here.
 
-> >>+
-> >>+		host->addr_value[0] =3D column & 0xffff;
-> >>+		host->addr_cycle    =3D 2;
-> >>+	}
-
-[...]
-
-> >>+	switch (mtd->writesize) {
-> >>+	case 2048:
-> >>+		flag |=3D (0x001 << HINFC504_CON_PAGEISZE_SHIFT);
-> >>+	/* add more pagesize support
-> >>+	 * default pagesize has been set in hisi_nfc_host_init
-> >>+	 */
-> >
-> >Does this mean you can't handle any other page size? You might want =
-to
-> >put the words 'TODO' or 'FIXME' in the comment, and you might want t=
-o
-> >print an error and exit if you see some other value for mtd->writesi=
-ze.
-> >
->=20
-> Yes, this NAND controller can handle not only 2048 page size. But
-> the NAND controller on hip04-d01 board which I used to test this
-> driver connects with a NAND flash chip which is just 2048 page size.
-> So here I
-> just listed 'case 2048', Maybe I need indicate this by 'TODO:...'?
-
-Not just a TODO; make sure to also error out, so that users don't get
-unexplained failures if they find themselves with a non-2KB page size
-NAND.
-
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
