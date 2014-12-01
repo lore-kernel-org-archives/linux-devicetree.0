@@ -1,51 +1,61 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [RFC V1 0/8] CPUFreq: create platform-dev for DT based cpufreq
- drivers
-Date: Mon, 01 Dec 2014 13:35:25 +0000
-Message-ID: <547C6E9D.2090205@arm.com>
-References: <cover.1417433163.git.viresh.kumar@linaro.org>	<7885354.QleDlR7NUO@wuerfel> <CAKohpo=EPOH-WJ4mmAr-1BzzAEpvC-F0Y99Ox_yL7meUcRNx6Q@mail.gmail.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH/RFC v8 11/14] DT: Add documentation for the mfd Maxim
+ max77693
+Date: Mon, 01 Dec 2014 14:43:51 +0100
+Message-ID: <547C7097.4040907@samsung.com>
+References: <1417166286-27685-1-git-send-email-j.anaszewski@samsung.com>
+ <1417166286-27685-12-git-send-email-j.anaszewski@samsung.com>
+ <20141129192607.GB17355@amd> <547C65F7.4090801@samsung.com>
+ <20141201130231.GA24737@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAKohpo=EPOH-WJ4mmAr-1BzzAEpvC-F0Y99Ox_yL7meUcRNx6Q@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rafael Wysocki <rjw@rjwysocki.net>, Arnd Bergmann <arnd.bergmann@linaro.org>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Nishanth Menon <nm@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, Thomas Abraham <ta.omasab@gmail.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Chander Kashyap <k.chander@samsung.com>, santosh shilimkar <santosh.shilimkar@oracle.com>, Stephen Boyd <sboyd@codeaurora.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Mike Turquette <mike.turquette@linaro.org>, "olof@lixom.net" <olof@lixom.net>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <20141201130231.GA24737@amd>
+Sender: linux-media-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, SangYoung Son <hello.son@smasung.com>, Samuel Ortiz <sameo@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Pavel,
 
-
-On 01/12/14 13:29, Viresh Kumar wrote:
-> On 1 December 2014 at 18:24, Arnd Bergmann <arnd@arndb.de> wrote:
->> Thanks a lot for working on this, we really need to figure it out one day!
+On 12/01/2014 02:02 PM, Pavel Machek wrote:
+> Hi!
 >
-> :)
->
->> Your patches seem well-implemented, so if everybody thinks the general
->> approach is the best solution, we should do that. From my point of view,
->> there are two things I would do differently:
+>>> Is this one needed? Just ommit child note if it is not there.
 >>
->> - In the DT binding, I would strongly prefer anything but the root compatible
->>    property as the key for the new platforms. Clearly we have to keep using
->>    it for the backwards-compatibility case, as you do, but I think there
->>    are more appropriate places to put it. Sorting from most favorite to least
->>    favorite, my list would be:
->>          1. a new property in /cpus/
->>          2. a new property each /cpus/cpu@... node.
+>> It is needed because you can have one led connected two both
+>> outputs. This allows to describe such a design.
 >
-> I did it this way earlier and named it dvfs-method but probably putting this
-> into the /cpus/ node is far better. But then Sudeep asked to utilize
-> compatible property only..
+> Ok.
 >
-> Are you fine with the name here? "dvfs-method"
+>>>> +- maxim,trigger-type : Array of trigger types in order: flash, torch
+>>>> +	Possible trigger types:
+>>>> +		0 - Rising edge of the signal triggers the flash/torch,
+>>>> +		1 - Signal level controls duration of the flash/torch.
+>>>> +- maxim,trigger : Array of flags indicating which trigger can activate given led
+>>>> +	in order: fled1, fled2
+>>>> +	Possible flag values (can be combined):
+>>>> +		1 - FLASH pin of the chip,
+>>>> +		2 - TORCH pin of the chip,
+>>>> +		4 - software via I2C command.
+>>>
+>>> Is it good idea to have bitfields like this?
+>>>
+>>> Make these required properties of the subnode?
+>>
+>> This is related to a single property: trigger. I think that splitting
+>> it to three properties would make unnecessary noise in the
+>> binding.
 >
+> Well, maybe it is not that much noise, and you'll have useful names
+> (not a bitfield).
 
-That's right, I don't like driver specific method in the cpu node as you
-initially did. But if it's a property in the chosen node (where we
-usually put the Linux specific properties), I am fine with
-that as Arnd has illustrated in his patch.
+I think we'd need an opinion of at least one more person :)
+
+> Should these properties move to the LED subnode?
+
+I would leave them device specific.
 
 Regards,
-Sudeep
-
+Jacek
