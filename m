@@ -1,36 +1,93 @@
-From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V4 08/16] irqchip: Add new driver for BCM7038-style level
- 1 interrupt controllers
-Date: Mon, 1 Dec 2014 09:39:26 -0800
-Message-ID: <CAJiQ=7D631F1wkegeKup7yeB-wgjKLjvD3V1-n8fu3aW=fOm0g@mail.gmail.com>
-References: <1417149142-3756-1-git-send-email-cernekee@gmail.com>
- <1417149142-3756-9-git-send-email-cernekee@gmail.com> <CAOiHx=nb4Ub_bseHUrz+HrnJxDEKMijQ=r+ASZ-p5MtTi81Big@mail.gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] power: reset: read priority from device tree
+Date: Mon, 1 Dec 2014 17:41:00 +0000
+Message-ID: <20141201174100.GC22708@leverpostej>
+References: <1417453389-1588-1-git-send-email-stefan@agner.ch>
+ <1417453389-1588-2-git-send-email-stefan@agner.ch>
+ <20141201171126.GB22708@leverpostej>
+ <e5c5a44c84b95c4e48ed01c4dcffd35a@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOiHx=nb4Ub_bseHUrz+HrnJxDEKMijQ=r+ASZ-p5MtTi81Big-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <e5c5a44c84b95c4e48ed01c4dcffd35a-XLVq0VzYD2Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Fraser <jfraser-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "fkan-qTEPVZfXA3Y@public.gmane.org" <fkan-qTEPVZfXA3Y@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 1, 2014 at 8:09 AM, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
-> I'm not that firm in interrupt controller terminology, but can this be
-> a level 1 interrupt controller if it has a parent interrupt
-> controller? Isn't the parent the level 1 interrupt controller? Or
-> would the parent then be a level 0 interrupt controller? ;-)
+On Mon, Dec 01, 2014 at 05:24:37PM +0000, Stefan Agner wrote:
+> On 2014-12-01 18:11, Mark Rutland wrote:
+> > On Mon, Dec 01, 2014 at 05:03:07PM +0000, Stefan Agner wrote:
+> >> This patch adds an optional property which allows to specify the
+> >> reset source priority. This priority is used by the kernel restart
+> >> handler call chain to sort out the proper reset/restart method.
+> >> Depending on the power design of a board or other machine/board
+> >> specific peculiarity, it is not possible to pick a generic priority.
+> >>
+> >> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+> >> ---
+> >>  Documentation/devicetree/bindings/power/reset/syscon-reboot.txt | 3 +++
+> >>  drivers/power/reset/syscon-reboot.c                             | 5 ++++-
+> >>  2 files changed, 7 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+> >> index 1190631..ee41d9c 100644
+> >> --- a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+> >> +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+> >> @@ -11,6 +11,9 @@ Required properties:
+> >>  - offset: offset in the register map for the reboot register (in bytes)
+> >>  - mask: the reset value written to the reboot register (32 bit access)
+> >>
+> >> +Optional properties:
+> >> +- priority: define the priority of the reset (0-255, defaults to 128)
+> >> +
+> > 
+> > NAK. This is a leak of Linux-internal details.
+> > 
+> > What is this necessary for?
+> > 
+> > Mark.
+> 
+> Hi Mark,
+> 
+> In my case, it is necessary to be called ahead of the watchdog, which
+> has a priority of 128. This syscon-reboot driver currently has a default
+> priority of 128 too. I could live with a higher default priority for the
+> syscon-reboot driver, in fact I proposed that in the discussion of v1 of
+> that patch:
+> https://lkml.org/lkml/2014/11/28/484
 
-According to the register manual, this is an L1 controller and the
-"IRQ0" controller handled by irq-bcm7120-l2.c is an L2 controller.
+Thanks for the link.
 
-This terminology is used consistently across the MIPS and ARM STB
-chips, but it is worth noting that MIPS has a builtin "L0 controller"
-(not a published term) to demux the 5 HW IRQ lines, while ARM only
-uses a single IRQ input for peripherals.  On STB MIPS platforms it is
-typical to only use one HW IRQ input per CPU (TP).
+> IMHO, this priority might make sense for most cases, I guess that
+> dedicated "syscon" capabilities are usually better suited as a reboot
+> source than watchdog.
 
-Also note that brcm,bcm3384-l2-intc can either be used for an L1
-(PERIPH INT block) or an L2/L3 (ZMIPS/CMIPS/IOP).
+I would think likewise.
+
+> If dt, then the question which arises: If there are different
+> capabilities to reset/reboot a whole system, how do we reflect which is
+> the best suited one in dt?
+
+I'm not sure, but I don't think that exposing a priority variable in
+this way is the best, because it implicitly relies on what the kernel
+may have selected for other devices and/or FW interfaces, which may not
+have been described in DT.
+
+So if we can get away with a fixed priority for now, then I would prefer
+that.
+
+Otherwise, I would imagine that most systems have a single preferred
+mechanism with some possible fallback(s), for which a single
+preferred-poweroff property might suffice, and has better interaction
+w.r.t. priority (in that it should _always_ be tried first). Even that's
+difficult to reconcile with FW bindings though, especially EFI (which we
+sometimes must use in preference for variable storage and capsule
+updates).
+
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
