@@ -1,109 +1,82 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [RFC V1 8/8] cpufreq: exynos: reuse dt_device.c to create cpufreq platform device
-Date: Mon,  1 Dec 2014 17:11:29 +0530
-Message-ID: <f90965f48ac15c6a857421301e659a941f5543ff.1417433163.git.viresh.kumar@linaro.org>
-References: <cover.1417433163.git.viresh.kumar@linaro.org>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <cover.1417433163.git.viresh.kumar@linaro.org>
-In-Reply-To: <cover.1417433163.git.viresh.kumar@linaro.org>
-References: <cover.1417433163.git.viresh.kumar@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rafael Wysocki <rjw@rjwysocki.net>, Arnd Bergmann <arnd.bergmann@linaro.org>, Rob Herring <rob.herring@linaro.org>, Grant Likely <grant.likely@linaro.org>
-Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, Nishanth Menon <nm@ti.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, santosh shilimkar <santosh.shilimkar@oracle.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Mike Turquette <mike.turquette@linaro.org>, kesavan.abhilash@gmail.com, catalin.marinas@arm.com, k.chander@samsung.com, olof@lixom.net, ta.omasab@gmail.com, linux-arm-kernel@lists.infradead.org, Viresh Kumar <viresh.kumar@linaro.org>
+From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] irqchip: gic: Allow interrupt level to be set for PPIs.
+Date: Mon, 1 Dec 2014 11:44:32 +0000
+Message-ID: <20141201114432.GP828@e106497-lin.cambridge.arm.com>
+References: <1417197340-27298-1-git-send-email-Liviu.Dudau@arm.com>
+ <20141201104145.GY3836@n2100.arm.linux.org.uk>
+ <20141201104612.GM828@e106497-lin.cambridge.arm.com>
+ <20141201110358.GA3836@n2100.arm.linux.org.uk>
+ <547C4ECD.20802@arm.com>
+ <20141201112302.GC3836@n2100.arm.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141201112302.GC3836-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-We now have a common interface for create platform device required to probe
-cpufreq-dt driver (and others as well). Lets create devices from dt_device.c
-instead of platform specific code.
+On Mon, Dec 01, 2014 at 11:23:02AM +0000, Russell King - ARM Linux wrot=
+e:
+> On Mon, Dec 01, 2014 at 11:19:41AM +0000, Marc Zyngier wrote:
+> > Hi Russell,
+> >=20
+> > On 01/12/14 11:03, Russell King - ARM Linux wrote:
+> > > If all you want to do is to bypass the following check, what's wr=
+ong
+> > > with actually doing that:
+> > >=20
+> > > -	if (type !=3D IRQ_TYPE_LEVEL_HIGH && type !=3D IRQ_TYPE_EDGE_RI=
+SING)
+> > > +	if (gicirq >=3D 32 && type !=3D IRQ_TYPE_LEVEL_HIGH &&
+> > > +	    type !=3D IRQ_TYPE_EDGE_RISING)
+> > > 		return -EINVAL;
+> > >=20
+> >=20
+> > I think that will require some additional changes to gic_configure_=
+irq
+> > (in irq-gic-common.c).
+>=20
+> I don't think so - gic_configure_irq() will treat it as a no-op as fa=
+r
+> as trying to configure the IRQ settings.
 
-For exynos, we are updating the blacklist instead of DT because the newer kernel
-should be backwards compatible with older DT as well. We can update the
-"compatible" property in DT but it wouldn't make a difference as we already have
-imx in the blacklist.
+Doesn't that assume then that reset value is correct for the type that
+we are trying to program the PPIs?
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- arch/arm/mach-exynos/exynos.c | 27 ++++++++-------------------
- drivers/cpufreq/dt_device.c   |  6 +++++-
- 2 files changed, 13 insertions(+), 20 deletions(-)
+This is all very academic, as I don't have any real example of a GIC do=
+ing
+this, but ...
 
-diff --git a/arch/arm/mach-exynos/exynos.c b/arch/arm/mach-exynos/exynos.c
-index a1be294..15a4bbd 100644
---- a/arch/arm/mach-exynos/exynos.c
-+++ b/arch/arm/mach-exynos/exynos.c
-@@ -283,30 +283,17 @@ static void __init exynos_init_irq(void)
- }
- 
- static const struct of_device_id exynos_cpufreq_matches[] = {
--	{ .compatible = "samsung,exynos5420", .data = "arm-bL-cpufreq-dt" },
--	{ .compatible = "samsung,exynos5250", .data = "cpufreq-dt" },
--	{ .compatible = "samsung,exynos4210", .data = "cpufreq-dt" },
--	{ .compatible = "samsung,exynos5440", .data = "exynos5440-cpufreq" },
-+	{ .compatible = "samsung,exynos5420" },
-+	{ .compatible = "samsung,exynos5250" },
-+	{ .compatible = "samsung,exynos4210" },
-+	{ .compatible = "samsung,exynos5440" },
- 	{ /* sentinel */ }
- };
- 
--static void __init exynos_cpufreq_init(void)
--{
--	struct device_node *root = of_find_node_by_path("/");
--	const struct of_device_id *match;
--
--	match = of_match_node(exynos_cpufreq_matches, root);
--	if (!match) {
--		platform_device_register_simple("exynos-cpufreq", -1, NULL, 0);
--		return;
--	}
--
--	platform_device_register_simple(match->data, -1, NULL, 0);
--}
--
- static void __init exynos_dt_machine_init(void)
- {
- 	struct device_node *i2c_np;
-+	struct device_node *root = of_find_node_by_path("/");
- 	const char *i2c_compat = "samsung,s3c2440-i2c";
- 	unsigned int tmp;
- 	int id;
-@@ -343,7 +330,9 @@ static void __init exynos_dt_machine_init(void)
- 			of_machine_is_compatible("samsung,exynos5250"))
- 		platform_device_register(&exynos_cpuidle);
- 
--	exynos_cpufreq_init();
-+	/* Other devices are created by dt_device.c */
-+	if (!of_match_node(exynos_cpufreq_matches, root))
-+		platform_device_register_simple("exynos-cpufreq", -1, NULL, 0);
- 
- 	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
- }
-diff --git a/drivers/cpufreq/dt_device.c b/drivers/cpufreq/dt_device.c
-index 8b5ac05..bc4bc97 100644
---- a/drivers/cpufreq/dt_device.c
-+++ b/drivers/cpufreq/dt_device.c
-@@ -24,6 +24,9 @@ static const struct of_device_id compatible_machine_match[] = {
- 	{ .compatible = "arm-bL-cpufreq-dt",	.data = "arm-bL-cpufreq-dt" },
- 
- 	/* BLACKLIST of existing users of cpufreq-dt below */
-+	{ .compatible = "samsung,exynos5250",	.data = "cpufreq-dt" },
-+	{ .compatible = "samsung,exynos4210",	.data = "cpufreq-dt" },
-+
- 	{ .compatible = "fsl,imx27",		.data = "cpufreq-dt" },
- 	{ .compatible = "fsl,imx51",		.data = "cpufreq-dt" },
- 
-@@ -38,9 +41,10 @@ static const struct of_device_id compatible_machine_match[] = {
- 	{ .compatible = "calxeda,ecx-2000",	.data = "cpufreq-dt" },
- 
- 	/* BLACKLIST of existing users of arm-bL-cpufreq-dt below */
-+	{ .compatible = "samsung,exynos5420",	.data = "arm-bL-cpufreq-dt" },
- 
- 	/* BLACKLIST of existing users of other drivers below */
--
-+	{ .compatible = "samsung,exynos5440",	.data = "exynos5440-cpufreq" },
- 	{},
- };
- 
--- 
-2.0.3.693.g996b0fd
+ - if the PPI is set at reset value to be level triggered
+ - and we want to set PPIx to be level LOW triggered
 
+with your proposed patch the change will not happen, right?
+
+Best regards,
+Liviu
+
+>=20
+> --=20
+> FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
+> according to speedtest.net.
+>=20
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
