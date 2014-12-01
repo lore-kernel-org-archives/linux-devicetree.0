@@ -1,56 +1,74 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] ARM: hip04: set ARCH_NR_GPIO to 128
-Date: Mon, 1 Dec 2014 15:04:49 +0100
-Message-ID: <CACRpkdb1nZN-vOXLC-QFUAT9wDGM2Nm5YeH0qY_u2JV9toOaVg@mail.gmail.com>
-References: <1417156188-500-1-git-send-email-wangzhou.bry@gmail.com>
-	<1417156188-500-2-git-send-email-wangzhou.bry@gmail.com>
-	<3094004.3WUKgY6xNz@wuerfel>
-	<547971BF.1050706@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC V1 0/8] CPUFreq: create platform-dev for DT based cpufreq drivers
+Date: Mon, 01 Dec 2014 15:05:57 +0100
+Message-ID: <5607434.rlEIdu4yyh@wuerfel>
+References: <cover.1417433163.git.viresh.kumar@linaro.org> <7885354.QleDlR7NUO@wuerfel> <CAKohpo=EPOH-WJ4mmAr-1BzzAEpvC-F0Y99Ox_yL7meUcRNx6Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <547971BF.1050706-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAKohpo=EPOH-WJ4mmAr-1BzzAEpvC-F0Y99Ox_yL7meUcRNx6Q@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Nishanth Menon <nm@ti.com>, Rob Herring <rob.herring@linaro.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, Thomas Abraham <ta.omasab@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Chander Kashyap <k.chander@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "olof@lixom.net" <olof@lixom.net>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Mike Turquette <mike.turquette@linaro.org>, santosh shilimkar <santosh.shilimkar@oracle.com>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 29, 2014 at 8:11 AM, Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wro=
-te:
-> On 2014=E5=B9=B411=E6=9C=8828=E6=97=A5 17:33, Arnd Bergmann wrote:
->> On Friday 28 November 2014 14:29:47 Zhou Wang wrote:
+On Monday 01 December 2014 18:59:20 Viresh Kumar wrote:
+> On 1 December 2014 at 18:24, Arnd Bergmann <arnd@arndb.de> wrote:
+> > Thanks a lot for working on this, we really need to figure it out one day!
+> 
+> :)
+> 
+> > Your patches seem well-implemented, so if everybody thinks the general
+> > approach is the best solution, we should do that. From my point of view,
+> > there are two things I would do differently:
+> >
+> > - In the DT binding, I would strongly prefer anything but the root compatible
+> >   property as the key for the new platforms. Clearly we have to keep using
+> >   it for the backwards-compatibility case, as you do, but I think there
+> >   are more appropriate places to put it. Sorting from most favorite to least
+> >   favorite, my list would be:
+> >         1. a new property in /cpus/
+> >         2. a new property each /cpus/cpu@... node.
+> 
+> I did it this way earlier and named it dvfs-method but probably putting this
+> into the /cpus/ node is far better. But then Sudeep asked to utilize
+> compatible property only..
+> 
+> Are you fine with the name here? "dvfs-method"
 
->>>          default 264 if MACH_H4700
->>> +       default 128 if ARCH_HIP04
->>>          default 0
->>>          help
->>>            Maximum number of GPIOs in the system.
->>>
->>
->> If I remember correctly, you don't actually need to set this if all =
-gpio
->> clients are using the new gpio descriptor interfaces instead of gpio
->> numbers. Would that work for you? You'd have to know which devices
->
-> If I don't set this, it will use the default ARCH_NR_GPIO(512), then
-> the range of GPIO number will be 384~511 which is very strange to use=
-rs,
-> because Hip04 based machines can only support 128 GPIOs.
+No objection here, whatever makes sense to you.
 
-That is a totally different problem.
+> > +static bool dt_cpufreq_available(void)
+> > +{
+> > +       struct device_node *node;
+> > +       bool ret;
+> > +
+> > +       node = of_find_node_by_path("/cpus");
+> > +       if (!node)
+> > +               return 0;
+> > +
+> > +       /* the specific property needs to be debated */
+> > +       ret = of_property_read_bool("linux,cpu-frequency-scaling");
+> 
+> How can this be a bool? We need to differentiate on which binding
+> wants to go for arm-bl or cupfreq-dt or any other driver. So we surely
+> need a string ?
 
-Not that these numbers have ever been stable...
+I guess a string would be better here, the idea here was to
+have a different bool property per driver, which would also
+work.
 
-Think of a patch to gpiochip_find_base() in
-drivers/gpio/gpiolib.c to fix this so that numbers are
-assigned a better way rather than doing
-random hacks with numbers like this.
+> > @@ -367,29 +404,19 @@ static int dt_cpufreq_probe(struct platform_device *pdev)
+> >         if (!IS_ERR(cpu_reg))
+> >                 regulator_put(cpu_reg);
+> >
+> > -       dt_cpufreq_driver.driver_data = dev_get_platdata(&pdev->dev);
+> > -
+> 
+> We still need this, and its about how clocks are shared between CPUs.
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I didn't see where this comes from. Who is setting up this platform
+data?
+
+	Arnd
