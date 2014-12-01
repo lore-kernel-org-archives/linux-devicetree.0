@@ -1,32 +1,31 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: Feng Kan <fkan@apm.com>
 Subject: Re: [PATCH v2 1/3] power: reset: read priority from device tree
-Date: Mon, 1 Dec 2014 17:11:26 +0000
-Message-ID: <20141201171126.GB22708@leverpostej>
+Date: Mon, 1 Dec 2014 09:15:21 -0800
+Message-ID: <CAL85gmBq30pWxP0buKbM8so6QqsJq2YojiSK1EWtMPsH_7foeg@mail.gmail.com>
 References: <1417453389-1588-1-git-send-email-stefan@agner.ch>
- <1417453389-1588-2-git-send-email-stefan@agner.ch>
+	<1417453389-1588-2-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1417453389-1588-2-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "fkan-qTEPVZfXA3Y@public.gmane.org" <fkan-qTEPVZfXA3Y@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1417453389-1588-2-git-send-email-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: shawn.guo@linaro.org, kernel@pengutronix.de, Guenter Roeck <linux@roeck-us.net>, Arnd Bergmann <arnd@arndb.de>, sre@kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 01, 2014 at 05:03:07PM +0000, Stefan Agner wrote:
+On Mon, Dec 1, 2014 at 9:03 AM, Stefan Agner <stefan@agner.ch> wrote:
 > This patch adds an optional property which allows to specify the
 > reset source priority. This priority is used by the kernel restart
 > handler call chain to sort out the proper reset/restart method.
 > Depending on the power design of a board or other machine/board
 > specific peculiarity, it is not possible to pick a generic priority.
-> 
-> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+>
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
 > ---
 >  Documentation/devicetree/bindings/power/reset/syscon-reboot.txt | 3 +++
 >  drivers/power/reset/syscon-reboot.c                             | 5 ++++-
 >  2 files changed, 7 insertions(+), 1 deletion(-)
-> 
+>
 > diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
 > index 1190631..ee41d9c 100644
 > --- a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
@@ -34,46 +33,32 @@ On Mon, Dec 01, 2014 at 05:03:07PM +0000, Stefan Agner wrote:
 > @@ -11,6 +11,9 @@ Required properties:
 >  - offset: offset in the register map for the reboot register (in bytes)
 >  - mask: the reset value written to the reboot register (32 bit access)
->  
+>
 > +Optional properties:
 > +- priority: define the priority of the reset (0-255, defaults to 128)
 > +
-
-NAK. This is a leak of Linux-internal details.
-
-What is this necessary for?
-
-Mark.
-
 >  Default will be little endian mode, 32 bit access only.
->  
+>
 >  Examples:
 > diff --git a/drivers/power/reset/syscon-reboot.c b/drivers/power/reset/syscon-reboot.c
 > index 815b901..3060d6b 100644
 > --- a/drivers/power/reset/syscon-reboot.c
 > +++ b/drivers/power/reset/syscon-reboot.c
 > @@ -67,8 +67,11 @@ static int syscon_reboot_probe(struct platform_device *pdev)
->  	if (of_property_read_u32(pdev->dev.of_node, "mask", &ctx->mask))
->  		return -EINVAL;
->  
-> -	ctx->restart_handler.notifier_call = syscon_restart_handle;
->  	ctx->restart_handler.priority = 128;
-> +	of_property_read_u32(pdev->dev.of_node, "priority",
-> +			     &ctx->restart_handler.priority);
+>         if (of_property_read_u32(pdev->dev.of_node, "mask", &ctx->mask))
+>                 return -EINVAL;
+>
+> -       ctx->restart_handler.notifier_call = syscon_restart_handle;
+>         ctx->restart_handler.priority = 128;
+> +       of_property_read_u32(pdev->dev.of_node, "priority",
+> +                            &ctx->restart_handler.priority);
+
+What is this for?
 > +
-> +	ctx->restart_handler.notifier_call = syscon_restart_handle;
->  	err = register_restart_handler(&ctx->restart_handler);
->  	if (err)
->  		dev_err(dev, "can't register restart notifier (err=%d)\n", err);
-> -- 
-> 2.1.3
-> 
+> +       ctx->restart_handler.notifier_call = syscon_restart_handle;
+>         err = register_restart_handler(&ctx->restart_handler);
+>         if (err)
+>                 dev_err(dev, "can't register restart notifier (err=%d)\n", err);
 > --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 2.1.3
+>
