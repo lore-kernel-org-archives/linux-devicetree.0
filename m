@@ -1,106 +1,90 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v8 0/3] Qualcomm Resource Power Manager
-Date: Tue, 02 Dec 2014 14:25:34 +0000
-Message-ID: <547DCBDE.6020504@linaro.org>
-References: <1417038661-30209-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [Patch v2 1/2] gpio: add GPIO hogging mechanism
+Date: Tue, 2 Dec 2014 15:28:11 +0100
+Message-ID: <CACRpkdZPd8w8wiP-dkY4X-jy5Gb7dx6vx3HPxTjHw4NM722NCw@mail.gmail.com>
+References: <1416527684-19017-1-git-send-email-bparrot@ti.com>
+	<1416527684-19017-2-git-send-email-bparrot@ti.com>
+	<CAAVeFu+VZiuzobB7McSAUehKUHJjBv1o8ZpYjSHJAKjr3o5wTA@mail.gmail.com>
+	<20141202002244.GB24551@ti.com>
+	<CAAVeFuJWPvdmO_KPXP2LrkAy4SQDZ+f7pvE6U8r7gPH+jE3Lrw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1417038661-30209-1-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>
-Cc: Josh Cartwright <joshc@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAVeFuJWPvdmO_KPXP2LrkAy4SQDZ+f7pvE6U8r7gPH+jE3Lrw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Jiri Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+On Tue, Dec 2, 2014 at 3:10 PM, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Tue, Dec 2, 2014 at 9:22 AM, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org> wrote:
+>>> > +       }
+>>> > +
+>>> > +       if (tmp > MAX_PHANDLE_ARGS) {
+>>> > +               desc = ERR_PTR(-EINVAL);
+>>> > +               goto out;
+>>> > +       }
+>>> > +
+>>> > +       gg_data.gpiospec.args_count = tmp;
+>>> > +       gg_data.gpiospec.np = chip_np;
+>>> > +       for (i = 0; i < tmp; i++) {
+>>> > +               ret = of_property_read_u32(np, "gpios",
+>>> > +                                          &gg_data.gpiospec.args[i]);
+>>> > +               if (ret) {
+>>> > +                       desc = ERR_PTR(ret);
+>>> > +                       goto out;
+>>> > +               }
+>>> > +       }
+>>> > +
+>>> > +       gpiochip_find(&gg_data, of_gpiochip_find_and_xlate);
+>>>
+>>> This seems to work but only supports one GPIO per hog node. It would
+>>> be nice to be able to specify several GPIOs to which the same settings
+>>> need to be applied.
+>>
+>> This is on purpose following Linus Walleij's comment.
+>
+> Could you point me to his comment? My bad for not remembering what he
+> said, but I'd like to understand why.
 
-Thanks for the patches, I tested few regulators which are connected to 
-IO devices with this series on IFC6410 with APQ8064 and they work fine. 
-Except one issue which you already are aware of "regulator dependencies 
-on each other" I guess this is another topic which can be discussed 
-separately to this patchset.
+Said in previous message I think: either one-per-node or lists directly
+in the gpiochip node.
 
-Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>>> Using this function means that a GPIO chip module cannot be unloaded
+>>> if it uses GPIO hogs. Is it the intended behavior? If not, please use
+>>> gpiochip_request_own_desc() instead, and make sure to call
+>>> gpiochip_free_own_desc() for each hog when the driver is unloaded.
+>>
+>> So I guess we could add a undo_gpio_hog() function and hook it up under of_gpiochip_remove().
+>> Now instead of maintaining a seperate structure just to keep track of hogged descriptor,
+>> would it be acceptable to add a new "gpio_desc.flags" value in gpiolib.h says:
+>>
+>>    #define FLAG_GPIO_IS_HOGGED 10
+>>
+>> And key on that at removal time instead of creating a list and having to maintain that?
+>
+> Definitely, that would be even better I think.
 
+Clever. Go for this.
 
---srini
-On 26/11/14 21:50, Bjorn Andersson wrote:
-> In order to support the SoC assisted power save features of the Qualcomm
-> platform some changes are most likely needed to the regulator part of the DT
-> bindings provided before.
+>>> I would suggest to factorize this code that is similar to the one
+>>> found in __gpiod_get_index(). Do all the DT parsing in a function that
+>>> just returns a descriptor and the
+>>
+>> I would tend to agree.
+>> But as Linus suggested I was trying to contain the changes to gpiolib_of.c only.
 >
-> This version of the patchset carries the RPM core part, which allows us to move
-> forward with merging Josh's patches [1] as well as aiding the discussion and
-> development of the additional patches needed to properly implement the power
-> save features being discussed.
->
-> It also carries the patch to the already merged regulator driver, to make it
-> compile.
->
-> [1] https://lkml.org/lkml/2014/11/20/629
->
-> Changes since v7:
->    - Mark merged the regulator part of the previous series
->    - Removed regulator part of dt binding, for further discussions
->
-> Changes since v6:
->    - Changed filenames from qcom,rpm.{txt,h} to qcom-rpm.{txt,h}
->
-> Changes since v5:
->    - Clarified dt binding
->    - Converted regulator qcom,force-mode to enum instead of multi-boolean
->    - Remove unecessary version handshake
->    - Cleaned up naming of RPM resources between different RPM versions
->    - Updated regulator qcom,force-mode parsing
->    - Updated regulator qcom,power-mode-* parsing
->    - Cleanups in rpm driver
->    - Dropped dev_get_qcom_rpm helper function
->
-> Changes since v4:
->    - Moved RPM driver to mfd
->
-> Changes since v3:
->    - IPC register is acquired through syscon, as it's shared with others
->
-> Changes since v2:
->    - Fix copy-paste error in dt binding
->    - Correct incomplete move from mfd to soc
->    - Correct const mistake in regulator driver
->
-> Changes since v1:
->    - Moved rpm driver to drivers/soc
->    - Extracted resource table structs from rpm struct, as per Srinivas request
->    - Dropped mode setting support for the regulators for now. Unsure if we need
->      it and it requires some rework from the codeaurora solution.
->    - Using set_voltage_sel instead of rolling my own "snapping", as per Marks
->      request
->    - Split regulator ops in mV, uV and swtich versions as per Marks request.
->    - Added devicetree property to enable pull down.
->
-> Bjorn Andersson (3):
->    mfd: devicetree: bindings: Add Qualcomm RPM DT binding
->    mfd: qcom-rpm: Driver for the Qualcomm RPM
->    regulator: qcom-rpm: Add missing state flag in call to RPM
->
->   Documentation/devicetree/bindings/mfd/qcom-rpm.txt |  70 +++
->   drivers/mfd/Kconfig                                |  14 +
->   drivers/mfd/Makefile                               |   1 +
->   drivers/mfd/qcom_rpm.c                             | 581 +++++++++++++++++++++
->   drivers/regulator/qcom_rpm-regulator.c             |   1 +
->   include/dt-bindings/mfd/qcom-rpm.h                 | 154 ++++++
->   include/linux/mfd/qcom_rpm.h                       |  13 +
->   7 files changed, 834 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/mfd/qcom-rpm.txt
->   create mode 100644 drivers/mfd/qcom_rpm.c
->   create mode 100644 include/dt-bindings/mfd/qcom-rpm.h
->   create mode 100644 include/linux/mfd/qcom_rpm.h
->
-> --
-> 1.8.2.2
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
+> If we add a FLAG_GPIO_IS_HOGGED and undo the hogs when the chip is
+> unloaded, I would say that this becomes a gpiolib feature. Moving it
+> here would also allow non-DT GPIO providers to implement hogs (it
+> should be particularly easy to implement for platform data). Linus, do
+> you agree?
+
+Yes, this is better and leaves the door open for other users.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
