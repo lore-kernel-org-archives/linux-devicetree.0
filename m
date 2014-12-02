@@ -1,96 +1,39 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v15 06/12] dt-bindings: add document for dw_hdmi
-Date: Tue,  2 Dec 2014 15:42:04 +0800
-Message-ID: <1417506124-18626-1-git-send-email-andy.yan@rock-chips.com>
-References: <1417505778-18341-1-git-send-email-andy.yan@rock-chips.com>
+From: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v8 7/8] regulator: sky81452: Modify Device Tree structure
+Date: Tue, 2 Dec 2014 16:42:39 +0900
+Message-ID: <20141202074239.GA13415@jack-ThinkPad-T520>
+References: <1416898986-24530-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1416898986-24530-8-git-send-email-jack.yoo@skyworksinc.com>
+ <20141125121916.GW7712@sirena.org.uk>
+ <20141126014007.GA2876@jack-ThinkPad-T520>
+ <20141126163702.GI7712@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1417505778-18341-1-git-send-email-andy.yan@rock-chips.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: airlied@linux.ie, Philipp Zabel <p.zabel@pengutronix.de>, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
-Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, mark.yao@rock-chips.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Kumar Gala <galak@codeaurora.org>, Andy Yan <andy.yan@rock-chips.com>, Shawn Guo <shawn.guo@linaro.org>, vladimir_zapolskiy@mentor.com, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141126163702.GI7712-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+On Wed, Nov 26, 2014 at 04:37:02PM +0000, Mark Brown wrote:
+> On Wed, Nov 26, 2014 at 10:40:07AM +0900, Gyungoh Yoo wrote:
+> > On Tue, Nov 25, 2014 at 12:19:16PM +0000, Mark Brown wrote:
+> > > On Tue, Nov 25, 2014 at 04:03:05PM +0900, gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> > > > From: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
+> 
+> > > This doesn't apply, please check and resend.
+> 
+> > Could you please explain why this doesn't?
+> 
+> When I tried to apply it to my topic/sky81452 branch git am barfed on
+> it, presumably because the code you based it on is different to that
+> branch.
 
----
-
-Changes in v15: None
-Changes in v14: None
-Changes in v13: None
-Changes in v12: None
-Changes in v11: None
-Changes in v10: None
-Changes in v9: None
-Changes in v8:
-- correct some spelling mistake
-- modify ddc-i2c-bus and interrupt description
-
-Changes in v7: None
-Changes in v6: None
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-
- .../devicetree/bindings/drm/bridge/dw_hdmi.txt     | 40 ++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt
-
-diff --git a/Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt b/Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt
-new file mode 100644
-index 0000000..107c1ca
---- /dev/null
-+++ b/Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt
-@@ -0,0 +1,40 @@
-+DesignWare HDMI bridge bindings
-+
-+Required properities:
-+- compatible: platform specific such as:
-+   * "fsl,imx6q-hdmi"
-+   * "fsl,imx6dl-hdmi"
-+   * "rockchip,rk3288-dw-hdmi"
-+- reg: Physical base address and length of the controller's registers.
-+- ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
-+- interrupts: The HDMI interrupt number
-+
-+Optional properties
-+- reg-io-width: the width of the reg:1,4, default set to 1 if not present
-+
-+Example:
-+	hdmi: hdmi@0120000 {
-+		compatible = "fsl,imx6q-hdmi";
-+		reg = <0x00120000 0x9000>;
-+		interrupts = <0 115 0x04>;
-+		gpr = <&gpr>;
-+		clocks = <&clks 123>, <&clks 124>;
-+		clock-names = "iahb", "isfr";
-+		ddc-i2c-bus = <&i2c2>;
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			hdmi_mux_0: endpoint {
-+				remote-endpoint = <&ipu1_di0_hdmi>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			hdmi_mux_1: endpoint {
-+				remote-endpoint = <&ipu1_di1_hdmi>;
-+			};
-+		};
-+	};
--- 
-1.9.1
+I checked it and I will resend it.
+Thank you.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
