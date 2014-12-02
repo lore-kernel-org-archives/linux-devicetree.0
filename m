@@ -1,72 +1,45 @@
-From: gyungoh@gmail.com
-Subject: [PATCH v9 8/8] devicetree: regulator: sky81452: Modify Device Tree structure
-Date: Tue,  2 Dec 2014 17:05:29 +0900
-Message-ID: <1417507529-13654-9-git-send-email-jack.yoo@skyworksinc.com>
-References: <1417507529-13654-1-git-send-email-jack.yoo@skyworksinc.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1417507529-13654-1-git-send-email-jack.yoo@skyworksinc.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sameo@linux.intel.com, lee.jones@linaro.org, jg1.han@samsung.com, cooloney@gmail.com, broonie@kernel.org, lgirdwood@gmail.com
-Cc: jack.yoo@skyworksinc.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, heiko@sntech.de, jason@lakedaemon.net, treding@nvidia.com, florian.vaussard@epfl.ch, trivial@kernel.org, linux@roeck-us.net, andrew@lunn.ch, jic23@kernel.org
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH V2 RESEND] arm: dts: Exynos5: Use pmu_system_controller
+ phandle for dp phy
+Date: Tue, 2 Dec 2014 09:17:28 +0100
+Message-ID: <CABxcv=mmJp2c=ZC8=0+TW0-x3g7RnELTAFY24KJRjUgf+QrDcQ@mail.gmail.com>
+References: <1416807683-2257-1-git-send-email-gautam.vivek@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1416807683-2257-1-git-send-email-gautam.vivek@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>
+Cc: Linux Kernel <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Jingoo Han <jg1.han@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Kukjin Kim <kgene@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
+Hello Kukjin,
 
-Signed-off-by: Gyungoh Yoo <jack.yoo@skyworksinc.com>
----
-Changes v9:
-Nothing
+On Mon, Nov 24, 2014 at 6:41 AM, Vivek Gautam <gautam.vivek@samsung.com> wrote:
+> DP PHY now require pmu-system-controller to handle PMU register
+> to control PHY's power isolation. Adding the same to dp-phy
+> node.
+>
+> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+> Reviewed-by: Jingoo Han <jg1.han@samsung.com>
+> Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> Cc: Kukjin Kim <kgene@kernel.org>
 
-Changes v8:
-Nothing
+Any opinions about $subject?
 
-Changes v7:
-Nothing
+This patch is -rc material since is needed after commit a5ec598 ("phy:
+exynos-dp-video: Use syscon
+support to control pmu register") which landed in 3.18. That means
+that display for Exynos is currently broken in 3.18.
 
-Changes v6:
-Nothing
+I think it's too late for the 3.18 -rc cycle but at least it would be
+great to have this merged for 3.19 and backport to stable kernels to
+have display working again.
 
-Changes v5:
-Changed DT for regulator : 'lout' node should be defined under 'regulator'
-Removed compatible string from sky81452-regulator driver
+Thierry had concerns that this change breaks DT backward compability
+but actually it was already been broken by a5ec598 which changed the
+DT binding for the phy-exynos-dp-video driver so we should either
+apply this patch now or revert a5ec598.
 
-Changes v4:
-Nothing
-
-Changes v3:
-Nothing
-
-Changes v2:
-Added 'compatible' attribute in the driver
-
- .../devicetree/bindings/regulator/sky81452-regulator.txt       | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt b/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt
-index 882455e..f9acbc1 100644
---- a/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt
-@@ -1,6 +1,7 @@
- SKY81452 voltage regulator
- 
- Required properties:
-+- regulator node named lout.
- - any required generic properties defined in regulator.txt
- 
- Optional properties:
-@@ -9,8 +10,9 @@ Optional properties:
- Example:
- 
- 	regulator {
--		/* generic regulator properties */
--		regulator-name = "touch_en";
--		regulator-min-microvolt = <4500000>;
--		regulator-max-microvolt = <8000000>;
-+		lout {
-+			regulator-name = "sky81452-lout";
-+			regulator-min-microvolt = <4500000>;
-+			regulator-max-microvolt = <8000000>;
-+		};
- 	};
--- 
-1.9.1
+Thanks a lot and best regards,
+Javier
