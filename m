@@ -1,71 +1,140 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH v13 03/10] qcom: spm: Add Subsystem Power Manager driver
-Date: Tue, 2 Dec 2014 08:52:59 -0700
-Message-ID: <20141202155259.GF499@linaro.org>
-References: <1417065854-37745-1-git-send-email-lina.iyer@linaro.org>
- <1417065854-37745-4-git-send-email-lina.iyer@linaro.org>
- <20141127150137.GA7889@red-moon>
- <20141201185705.GC499@linaro.org>
- <20141202111017.GC26306@e104818-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141202111017.GC26306@e104818-lin.cambridge.arm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "khilman@linaro.org" <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "msivasub@codeaurora.org" <msivasub@codeaurora.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3] ARM: zynq: DT: Add USB to device tree
+Date: Tue,  2 Dec 2014 08:07:11 -0800
+Message-ID: <1417536431-27759-1-git-send-email-soren.brinkmann@xilinx.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 02 2014 at 04:10 -0700, Catalin Marinas wrote:
->On Mon, Dec 01, 2014 at 06:57:05PM +0000, Lina Iyer wrote:
->> On Thu, Nov 27 2014 at 08:01 -0700, Lorenzo Pieralisi wrote:
->> >On Thu, Nov 27, 2014 at 05:24:07AM +0000, Lina Iyer wrote:
->> >
->> >[...]
->> >
->> >> +static int spm_set_low_power_mode(enum pm_sleep_mode mode)
->> >> +{
->> >> +       struct spm_driver_data *drv = per_cpu(cpu_spm_drv,
->> >> +                                               smp_processor_id());
->> >> +       u32 start_index;
->> >> +       u32 ctl_val;
->> >> +
->> >> +       if (!drv)
->> >> +               return -ENXIO;
->> >> +
->> >> +       start_index = drv->reg_data->start_index[mode];
->> >> +
->> >> +       ctl_val = spm_register_read(drv, SPM_REG_SPM_CTL);
->> >> +       ctl_val &= ~(SPM_CTL_INDEX << SPM_CTL_INDEX_SHIFT);
->> >> +       ctl_val |= start_index << SPM_CTL_INDEX_SHIFT;
->> >> +       ctl_val |= SPM_CTL_EN;
->> >> +       spm_register_write(drv, SPM_REG_SPM_CTL, ctl_val);
->> >> +
->> >> +       /* Ensure we have written the start address */
->> >> +       wmb();
->> >
->> >Can you explain please what this wmb is meant to achieve ? If it is there
->> >to make sure the write made it to the SPM that's not a proper way
->> >to achieve it, the barrier ensures ordering, not write completion.
->>
->> A write completion would be great, but assuming that the context switch
->> using SCM or WFI could ensure the flush, then ordering is probably good
->> enough for this.
->
->I assume you want the write to the device to complete (side-effects are
->observed) before the WFI (which would raise a StandbyWFI signal). The
->safer way is to read back from the device (or check/poll for the device
->state change) rather than a barrier.
+Add USB nodes to zc702, zc706 and zed device trees.
 
-Polling back to see if the register write was indeed successful, seems
-a bit more than what I would like on a low latency mode like Standby.
-Let me check with the hardware engineers, if a write ordering is
-required. It seems to me like I am not getting much out of the wmb()
-anyways. I will find out what kind of guarantees I would need to ensure
-the SPM write is successful.
+Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+v3:
+ - rename phy nodes: usb_phy -> phy0
+ - rebased onto zynq/dt
+v2:
+ - remove '@0' from phy node name
+ - don't add bogus space
+---
+ arch/arm/boot/dts/zynq-7000.dtsi | 20 ++++++++++++++++++++
+ arch/arm/boot/dts/zynq-zc702.dts | 11 +++++++++++
+ arch/arm/boot/dts/zynq-zc706.dts | 10 ++++++++++
+ arch/arm/boot/dts/zynq-zed.dts   | 10 ++++++++++
+ 4 files changed, 51 insertions(+)
 
-Thanks for your time, Catalin.
+diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+index f8e4a28adfc0..21aae01a3fe9 100644
+--- a/arch/arm/boot/dts/zynq-7000.dtsi
++++ b/arch/arm/boot/dts/zynq-7000.dtsi
+@@ -314,5 +314,25 @@
+ 			reg = <0xf8f00600 0x20>;
+ 			clocks = <&clkc 4>;
+ 		};
++
++		usb0: usb@e0002000 {
++			compatible = "xlnx,zynq-usb-2.20a", "chipidea,usb2";
++			status = "disabled";
++			clocks = <&clkc 28>;
++			interrupt-parent = <&intc>;
++			interrupts = <0 21 4>;
++			reg = <0xe0002000 0x1000>;
++			phy_type = "ulpi";
++		};
++
++		usb1: usb@e0003000 {
++			compatible = "xlnx,zynq-usb-2.20a", "chipidea,usb2";
++			status = "disabled";
++			clocks = <&clkc 29>;
++			interrupt-parent = <&intc>;
++			interrupts = <0 44 4>;
++			reg = <0xe0003000 0x1000>;
++			phy_type = "ulpi";
++		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-zc702.dts
+index 280f02dd4ddc..399fed4d9c19 100644
+--- a/arch/arm/boot/dts/zynq-zc702.dts
++++ b/arch/arm/boot/dts/zynq-zc702.dts
+@@ -36,6 +36,11 @@
+ 			linux,default-trigger = "heartbeat";
+ 		};
+ 	};
++
++	usb_phy0: phy0 {
++		compatible = "usb-nop-xceiv";
++		#phy-cells = <0>;
++	};
+ };
+ 
+ &can0 {
+@@ -139,3 +144,9 @@
+ &uart1 {
+ 	status = "okay";
+ };
++
++&usb0 {
++	status = "okay";
++	dr_mode = "host";
++	usb-phy = <&usb_phy0>;
++};
+diff --git a/arch/arm/boot/dts/zynq-zc706.dts b/arch/arm/boot/dts/zynq-zc706.dts
+index 34f7812d2ee8..89cc9adc569d 100644
+--- a/arch/arm/boot/dts/zynq-zc706.dts
++++ b/arch/arm/boot/dts/zynq-zc706.dts
+@@ -27,6 +27,10 @@
+ 		bootargs = "console=ttyPS0,115200 earlyprintk";
+ 	};
+ 
++	usb_phy0: phy0 {
++		compatible = "usb-nop-xceiv";
++		#phy-cells = <0>;
++	};
+ };
+ 
+ &clkc {
+@@ -118,3 +122,9 @@
+ &uart1 {
+ 	status = "okay";
+ };
++
++&usb0 {
++	status = "okay";
++	dr_mode = "host";
++	usb-phy = <&usb_phy0>;
++};
+diff --git a/arch/arm/boot/dts/zynq-zed.dts b/arch/arm/boot/dts/zynq-zed.dts
+index 1c7cc990b47a..e20956e5e720 100644
+--- a/arch/arm/boot/dts/zynq-zed.dts
++++ b/arch/arm/boot/dts/zynq-zed.dts
+@@ -27,6 +27,10 @@
+ 		bootargs = "console=ttyPS0,115200 earlyprintk";
+ 	};
+ 
++	usb_phy0: phy0 {
++		compatible = "usb-nop-xceiv";
++		#phy-cells = <0>;
++	};
+ };
+ 
+ &clkc {
+@@ -50,3 +54,9 @@
+ &uart1 {
+ 	status = "okay";
+ };
++
++&usb0 {
++	status = "okay";
++	dr_mode = "host";
++	usb-phy = <&usb_phy0>;
++};
+-- 
+2.2.0.1.g9ee0458
 
-Thanks,
-Lina.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
