@@ -1,726 +1,636 @@
-From: punnaiah choudary kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v6] edac: synps: Added EDAC support for zynq ddr ecc controller
-Date: Tue, 2 Dec 2014 10:51:22 +0530
-Message-ID: <CAGnW=BaRuZvFYCz0=s_ENn_sbH4YPxZiHt1x4GvRcUAyO0s+Jw@mail.gmail.com>
-References: <a1c485c3bb214d5699fdbfc6180f96f8@BN1AFFO11FD044.protection.gbl>
-	<20141201182611.GA4169@pd.tnic>
+From: Ajay kumar <ajaynumb@gmail.com>
+Subject: Re: [PATCH V8 03/14] drm/bridge: make bridge registration independent
+ of drm flow
+Date: Tue, 2 Dec 2014 11:31:35 +0530
+Message-ID: <CAEC9eQMhTv1hakk_y0a5AWhyvzPZgmicmRserfNubX99kzL19g@mail.gmail.com>
+References: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com>
+	<1416045309-13359-4-git-send-email-ajaykumar.rs@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141201182611.GA4169-fF5Pk5pvG8Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Punnaiah Choudary <kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1416045309-13359-4-git-send-email-ajaykumar.rs@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Daniel Vetter <daniel@ffwll.ch>
+Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Ajay Kumar <ajaykumar.rs@samsung.com>, InKi Dae <inki.dae@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Sean Paul <seanpaul@google.com>, Thierry Reding <thierry.reding@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris
-
-On Mon, Dec 1, 2014 at 11:56 PM, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org> wrote:
-> On Mon, Dec 01, 2014 at 09:35:09PM +0530, Punnaiah Choudary Kalluri wrote:
->> Added EDAC support for reporting the ecc errors of synopsys ddr controller.
->> The ddr ecc controller corrects single bit errors and detects double bit
->> errors.
->>
->> Signed-off-by: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->> ---
->> Changes for v6:
->> - Fixed indentation and typo errors
->> - Corrected the function and structure headers
->> Changes for v5:
->> - Removed dt binding info as already there is a binding info available
->>    under memorycontroller. so, updated ecc info there.
->> - corrected the ip version and function return types
->> Changes for v4:
->> - Shorten the macro definitions
->> - Corrected the ddr ip version
->> - Reverted the file name change
->> Changes for v3:
->> - Updated maintainer information
->> - Driver cleanup as per the review comments
->> - Shortened the prefix "sysnopsys" to "synps"
->> Changes for v2:
->> - Updated the commit header and message
->> - Renamed the filenames to synopsys_edac
->> - Corrected the compatilble string, commnets
->> - Renamed the macros,fucntions and data structures
->> ---
->>  MAINTAINERS                  |    1 +
->>  drivers/edac/Kconfig         |    7 +
->>  drivers/edac/Makefile        |    1 +
->>  drivers/edac/synopsys_edac.c |  542 ++++++++++++++++++++++++++++++++++++++++++
->>  4 files changed, 551 insertions(+), 0 deletions(-)
->>  create mode 100644 drivers/edac/synopsys_edac.c
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 0ff630d..7601298 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -1556,6 +1556,7 @@ N:      xilinx
->>  F:   drivers/clocksource/cadence_ttc_timer.c
->>  F:   drivers/i2c/busses/i2c-cadence.c
->>  F:   drivers/mmc/host/sdhci-of-arasan.c
->> +F:   drivers/edac/synopsys_edac.c
->>
->>  ARM SMMU DRIVER
->>  M:   Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
->> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
->> index 7072c28..c6d448e 100644
->> --- a/drivers/edac/Kconfig
->> +++ b/drivers/edac/Kconfig
->> @@ -385,4 +385,11 @@ config EDAC_ALTERA_MC
->>         preloader must initialize the SDRAM before loading
->>         the kernel.
->>
->> +config EDAC_SYNOPSYS
->> +     tristate "Synopsys DDR Memory Controller"
->> +     depends on EDAC_MM_EDAC && ARCH_ZYNQ
->> +     help
->> +       Support for EDAC on the ECC memory used with the Synopsys DDR
->> +       memory controller.
+On Sat, Nov 15, 2014 at 3:24 PM, Ajay Kumar <ajaykumar.rs@samsung.com> wrote:
+> Currently, third party bridge drivers(ptn3460) are dependent
+> on the corresponding encoder driver init, since bridge driver
+> needs a drm_device pointer to finish drm initializations.
+> The encoder driver passes the drm_device pointer to the
+> bridge driver. Because of this dependency, third party drivers
+> like ptn3460 doesn't adhere to the driver model.
 >
-> Just like the other drivers:
+> In this patch, we reframe the bridge registration framework
+> so that bridge initialization is split into 2 steps, and
+> bridge registration happens independent of drm flow:
+> --Step 1: gather all the bridge settings independent of drm and
+>           add the bridge onto a global list of bridges.
+> --Step 2: when the encoder driver is probed, call drm_bridge_attach
+>           for the corresponding bridge so that the bridge receives
+>           drm_device pointer and continues with connector and other
+>           drm initializations.
 >
-> "Support for error detection and correction on the Synopsys DDR memory
-> controller"
+> The old set of bridge helpers are removed, and a set of new helpers
+> are added to accomplish the 2 step initialization.
 >
->> +
->>  endif # EDAC
->> diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
->> index 359aa49..9b5a095 100644
->> --- a/drivers/edac/Makefile
->> +++ b/drivers/edac/Makefile
->> @@ -67,3 +67,4 @@ obj-$(CONFIG_EDAC_OCTEON_LMC)               += octeon_edac-lmc.o
->>  obj-$(CONFIG_EDAC_OCTEON_PCI)                += octeon_edac-pci.o
->>
->>  obj-$(CONFIG_EDAC_ALTERA_MC)         += altera_edac.o
->> +obj-$(CONFIG_EDAC_SYNOPSYS)          += synopsys_edac.o
->> diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
->> new file mode 100644
->> index 0000000..2a13a23
->> --- /dev/null
->> +++ b/drivers/edac/synopsys_edac.c
->> @@ -0,0 +1,542 @@
->> +/*
->> + * Synopsys DDR ECC Driver
->> + * This driver is based on ppc4xx_edac.c drivers
->> + *
->> + * Copyright (C) 2012 - 2014 Xilinx, Inc.
->> + *
->> + * This program is free software: you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation, either version 2 of the License, or
->> + * (at your option) any later version.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + *
->> + * This file is subject to the terms and conditions of the GNU General Public
->> + * License.  See the file "COPYING" in the main directory of this archive
->> + * for more details
->> + */
->> +
->> +#include <linux/edac.h>
->> +#include <linux/module.h>
->> +#include <linux/platform_device.h>
->> +
->> +#include "edac_core.h"
->> +
->> +/* Number of cs_rows needed per memory controller */
->> +#define SYNPS_EDAC_NR_CSROWS 1
->> +
->> +/* Number of channels per memory controller */
->> +#define SYNPS_EDAC_NR_CHANS  1
->> +
->> +/* Granularity of reported error in bytes */
->> +#define SYNPS_EDAC_ERR_GRAIN 1
->> +
->> +#define SYNPS_EDAC_MSG_SIZE  256
->> +
->> +#define SYNPS_EDAC_MOD_STRING        "synps_edac"
->> +#define SYNPS_EDAC_MOD_VER   "1"
->> +
->> +/* Synopsys DDR memory controller registers that are relevant to ECC */
->> +#define CTRL_OFST            0x0
->> +#define T_ZQ_OFST            0xA4
->> +
->> +/* ECC control register */
->> +#define ECC_CTRL_OFST                0xC4
->> +/* ECC log register */
->> +#define CE_LOG_OFST          0xC8
->> +/* ECC address register */
->> +#define CE_ADDR_OFST         0xCC
->> +/* ECC data[31:0] register */
->> +#define CE_DATA_31_0_OFST    0xD0
->> +
->> +/* Uncorrectable error info regsisters */
->> +#define UE_LOG_OFST          0xDC
->> +#define UE_ADDR_OFST         0xE0
->> +#define UE_DATA_31_0_OFST    0xE4
->> +
->> +#define STAT_OFST            0xF0
->> +#define SCRUB_OFST           0xF4
->> +
->> +/* Control regsiter bitfield definitions */
->> +#define CTRL_BW_MASK         0xC
->> +#define CTRL_BW_SHIFT                2
->> +
->> +#define DDRCTL_WDTH_16               1
->> +#define DDRCTL_WDTH_32               0
->> +
->> +/* ZQ register bitfield definitions */
->> +#define T_ZQ_DDRMODE_MASK    0x2
->> +
->> +/* ECC control register bitfield definitions */
->> +#define ECC_CTRL_CLR_CE_ERR  0x2
->> +#define ECC_CTRL_CLR_UE_ERR  0x1
->> +
->> +/* ECC correctable/uncorrectable error log register definitions */
->> +#define CE_LOG_VALID         0x1
->> +#define CE_LOG_BITPOS_MASK   0xFE
->> +#define CE_LOG_BITPOS_SHIFT  1
->> +
->> +/* ECC correctable/uncorrectable error address register definitions */
->> +#define ADDR_COL_MASK                0xFFF
->> +#define ADDR_ROW_MASK                0xFFFF000
->> +#define ADDR_ROW_SHIFT               12
->> +#define ADDR_BANK_MASK               0x70000000
->> +#define ADDR_BANK_SHIFT              28
->> +
->> +/* ECC statistic regsiter definitions */
->> +#define STAT_UECNT_MASK              0xFF
->> +#define STAT_CECNT_MASK              0xFF00
->> +#define STAT_CECNT_SHIFT     8
->> +
->> +/* ECC scrub regsiter definitions */
->> +#define SCRUB_MODE_MASK              0x7
->> +#define SCRUB_MODE_SECDED    0x4
->> +
->> +/**
->> + * struct ecc_error_info - ECC error log information
->> + * @row:     Row number
->> + * @col:     Column number
->> + * @bank:    Bank number
->> + * @bitpos:  Bit position
->> + * @data:    Data causing the error
->> + */
->> +struct ecc_error_info {
->> +     u32 row;
->> +     u32 col;
->> +     u32 bank;
->> +     u32 bitpos;
->> +     u32 data;
->> +};
->> +
->> +/**
->> + * struct synps_ecc_status - ECC status information to report
->> + * @ce_cnt:  Correctable error count
->> + * @ue_cnt:  Uncorrectable error count
->> + * @ceinfo:  Correctable error log information
->> + * @ueinfo:  Uncorrectable error log information
->> + */
->> +struct synps_ecc_status {
->> +     u32 ce_cnt;
->> +     u32 ue_cnt;
->> +     struct ecc_error_info ceinfo;
->> +     struct ecc_error_info ueinfo;
->> +};
->> +
->> +/**
->> + * struct synps_edac_priv - DDR memory controller private instance data
->> + * @baseaddr:                Base address of the DDR controller
->> + * @ce_cnt:          Correctable Error count
->> + * @ue_cnt:          Uncorrectable Error count
->> + */
->> +struct synps_edac_priv {
->> +     void __iomem *baseaddr;
->> +     u32 ce_cnt;
->> +     u32 ue_cnt;
->> +};
->> +
->> +/**
->> + * synps_edac_geterror_info - Get the current ecc error info
->> + * @base:    Pointer to the base address of the ddr memory controller
->> + * @p:               Pointer to the synopsys ecc status structure
->> + *
->> + * This routine determines there is any ecc error or not
->> + *
->> + * Return: one if there is no error otherwise returns zero
->> + */
->> +static int synps_edac_geterror_info(void __iomem *base,
->> +                                 struct synps_ecc_status *p)
->> +{
->> +     u32 regval;
->> +     u32 clearval = 0;
+> The bridge devices register themselves onto global list of bridges
+> when they get probed by calling "drm_bridge_add".
 >
-> Put them on a single line:
+> The parent encoder driver waits till the bridge is available
+> in the lookup table(by calling "of_drm_find_bridge") and then
+> continues with its initialization.
 >
->         u32 regval, clearval = 0;
+> The encoder driver should also call "drm_bridge_attach" to pass
+> on the drm_device to the bridge object.
 >
->> +
->> +     regval = readl(base + STAT_OFST) & (STAT_UECNT_MASK | STAT_CECNT_MASK);
->> +
+> drm_bridge_attach inturn calls "bridge->funcs->attach" so that
+> bridge can continue with drm related initializations.
 >
-> Superfluous newline.
+> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+> ---
+>  drivers/gpu/drm/Makefile               |    2 +-
+>  drivers/gpu/drm/bridge/ptn3460.c       |   27 +++++-----
+>  drivers/gpu/drm/drm_bridge.c           |   91 ++++++++++++++++++++++++++++++++
+>  drivers/gpu/drm/drm_crtc.c             |   65 -----------------------
+>  drivers/gpu/drm/msm/hdmi/hdmi.c        |    7 +--
+>  drivers/gpu/drm/msm/hdmi/hdmi.h        |    1 +
+>  drivers/gpu/drm/msm/hdmi/hdmi_bridge.c |    7 ++-
+>  drivers/gpu/drm/sti/sti_hda.c          |   10 +---
+>  drivers/gpu/drm/sti/sti_hdmi.c         |   10 +---
+>  include/drm/bridge/ptn3460.h           |    8 +++
+>  include/drm/drm_crtc.h                 |   26 ++++-----
+>  11 files changed, 136 insertions(+), 118 deletions(-)
+>  create mode 100644 drivers/gpu/drm/drm_bridge.c
 >
->> +     if (!regval)
->> +             return 1;
->> +
->> +     memset(p, 0, sizeof(*p));
+> diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+> index 9292a76..00f97a5 100644
+> --- a/drivers/gpu/drm/Makefile
+> +++ b/drivers/gpu/drm/Makefile
+> @@ -14,7 +14,7 @@ drm-y       :=        drm_auth.o drm_bufs.o drm_cache.o \
+>                 drm_info.o drm_debugfs.o drm_encoder_slave.o \
+>                 drm_trace_points.o drm_global.o drm_prime.o \
+>                 drm_rect.o drm_vma_manager.o drm_flip_work.o \
+> -               drm_modeset_lock.o
+> +               drm_modeset_lock.o drm_bridge.o
 >
-> See the comment below about when to memset this.
+>  drm-$(CONFIG_COMPAT) += drm_ioc32.o
+>  drm-$(CONFIG_DRM_GEM_CMA_HELPER) += drm_gem_cma_helper.o
+> diff --git a/drivers/gpu/drm/bridge/ptn3460.c b/drivers/gpu/drm/bridge/ptn3460.c
+> index a2ddc8d..4a818c1 100644
+> --- a/drivers/gpu/drm/bridge/ptn3460.c
+> +++ b/drivers/gpu/drm/bridge/ptn3460.c
+> @@ -176,24 +176,11 @@ static void ptn3460_post_disable(struct drm_bridge *bridge)
+>  {
+>  }
 >
->> +
->> +     p->ce_cnt = (regval & STAT_CECNT_MASK) >> STAT_CECNT_SHIFT;
->> +     p->ue_cnt = regval & STAT_UECNT_MASK;
+> -static void ptn3460_bridge_destroy(struct drm_bridge *bridge)
+> -{
+> -       struct ptn3460_bridge *ptn_bridge = bridge_to_ptn3460(bridge);
+> -
+> -       drm_bridge_cleanup(bridge);
+> -       if (gpio_is_valid(ptn_bridge->gpio_pd_n))
+> -               gpio_free(ptn_bridge->gpio_pd_n);
+> -       if (gpio_is_valid(ptn_bridge->gpio_rst_n))
+> -               gpio_free(ptn_bridge->gpio_rst_n);
+> -       /* Nothing else to free, we've got devm allocated memory */
+> -}
+> -
+>  static struct drm_bridge_funcs ptn3460_bridge_funcs = {
+>         .pre_enable = ptn3460_pre_enable,
+>         .enable = ptn3460_enable,
+>         .disable = ptn3460_disable,
+>         .post_disable = ptn3460_post_disable,
+> -       .destroy = ptn3460_bridge_destroy,
+>  };
 >
-> This looks clumsy. Just do this instead:
->
->         int ret = 0;
->
->         regval    = readl(base + STAT_OFST);
->         p->ce_cnt = (regval & STAT_CECNT_MASK) >> STAT_CECNT_SHIFT;
->         p->ue_cnt =  regval & STAT_UECNT_MASK;
->
->         if (pe->ce_cnt ... ) {
->                 __assign_error_info(CE, ...);
->                 ret = 1;
+>  static int ptn3460_get_modes(struct drm_connector *connector)
+> @@ -314,7 +301,7 @@ int ptn3460_init(struct drm_device *dev, struct drm_encoder *encoder,
 >         }
 >
->         if (pe->ue_cnt ...) {
->                 __assign_error_info(UE, ...);
->                 ret = 1;
->         }
->
->         ...
->
+>         ptn_bridge->bridge.funcs = &ptn3460_bridge_funcs;
+> -       ret = drm_bridge_init(dev, &ptn_bridge->bridge);
+> +       ret = drm_bridge_attach(dev, &ptn_bridge->bridge);
+>         if (ret) {
+>                 DRM_ERROR("Failed to initialize bridge with drm\n");
+>                 goto err;
+> @@ -343,3 +330,15 @@ err:
 >         return ret;
+>  }
+>  EXPORT_SYMBOL(ptn3460_init);
+> +
+> +void ptn3460_destroy(struct drm_bridge *bridge)
+> +{
+> +       struct ptn3460_bridge *ptn_bridge = bridge->driver_private;
+> +
+> +       if (gpio_is_valid(ptn_bridge->gpio_pd_n))
+> +               gpio_free(ptn_bridge->gpio_pd_n);
+> +       if (gpio_is_valid(ptn_bridge->gpio_rst_n))
+> +               gpio_free(ptn_bridge->gpio_rst_n);
+> +       /* Nothing else to free, we've got devm allocated memory */
+> +}
+> +EXPORT_SYMBOL(ptn3460_destroy);
+> diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
+> new file mode 100644
+> index 0000000..d1187e5
+> --- /dev/null
+> +++ b/drivers/gpu/drm/drm_bridge.c
+> @@ -0,0 +1,91 @@
+> +/*
+> + * Copyright (c) 2014 Samsung Electronics Co., Ltd
+> + *
+> + * Permission is hereby granted, free of charge, to any person obtaining a
+> + * copy of this software and associated documentation files (the "Software"),
+> + * to deal in the Software without restriction, including without limitation
+> + * the rights to use, copy, modify, merge, publish, distribute, sub license,
+> + * and/or sell copies of the Software, and to permit persons to whom the
+> + * Software is furnished to do so, subject to the following conditions:
+> + *
+> + * The above copyright notice and this permission notice (including the
+> + * next paragraph) shall be included in all copies or substantial portions
+> + * of the Software.
+> + *
+> + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+> + * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+> + * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+> + * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+> + * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+> + * DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/module.h>
+> +
+> +#include <drm/drm_crtc.h>
+> +
+> +#include "drm/drmP.h"
+> +
+> +static DEFINE_MUTEX(bridge_lock);
+> +static LIST_HEAD(bridge_list);
+> +
+> +int drm_bridge_add(struct drm_bridge *bridge)
+> +{
+> +       mutex_lock(&bridge_lock);
+> +       list_add_tail(&bridge->list, &bridge_list);
+> +       mutex_unlock(&bridge_lock);
+> +
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL(drm_bridge_add);
+> +
+> +void drm_bridge_remove(struct drm_bridge *bridge)
+> +{
+> +       mutex_lock(&bridge_lock);
+> +       list_del_init(&bridge->list);
+> +       mutex_unlock(&bridge_lock);
+> +}
+> +EXPORT_SYMBOL(drm_bridge_remove);
+> +
+> +extern int drm_bridge_attach(struct drm_device *dev, struct drm_bridge *bridge)
+> +{
+> +       if (!dev || !bridge)
+> +               return -EINVAL;
+> +
+> +       if (bridge->dev)
+> +               return -EBUSY;
+> +
+> +       bridge->dev = dev;
+> +
+> +       if (bridge->funcs->attach)
+> +               return bridge->funcs->attach(bridge);
+> +
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL(drm_bridge_attach);
+> +
+> +#ifdef CONFIG_OF
+> +struct drm_bridge *of_drm_find_bridge(struct device_node *np)
+> +{
+> +       struct drm_bridge *bridge;
+> +
+> +       mutex_lock(&bridge_lock);
+> +
+> +       list_for_each_entry(bridge, &bridge_list, list) {
+> +               if (bridge->of_node == np) {
+> +                       mutex_unlock(&bridge_lock);
+> +                       return bridge;
+> +               }
+> +       }
+> +
+> +       mutex_unlock(&bridge_lock);
+> +       return NULL;
+> +}
+> +EXPORT_SYMBOL(of_drm_find_bridge);
+> +#endif
+> +
+> +MODULE_AUTHOR("Ajay Kumar <ajaykumar.rs@samsung.com>");
+> +MODULE_DESCRIPTION("DRM bridge infrastructure");
+> +MODULE_LICENSE("GPL and additional rights");
+> diff --git a/drivers/gpu/drm/drm_crtc.c b/drivers/gpu/drm/drm_crtc.c
+> index 408c053..39d6100 100644
+> --- a/drivers/gpu/drm/drm_crtc.c
+> +++ b/drivers/gpu/drm/drm_crtc.c
+> @@ -1008,56 +1008,6 @@ void drm_connector_unplug_all(struct drm_device *dev)
+>  EXPORT_SYMBOL(drm_connector_unplug_all);
 >
-> and __assign_error_info() gets the needed register values and does only
-> the assignments according to the first argument which tells it what to
-> assign - a CE or an UE.
+>  /**
+> - * drm_bridge_init - initialize a drm transcoder/bridge
+> - * @dev: drm device
+> - * @bridge: transcoder/bridge to set up
+> - *
+> - * Initialises a preallocated bridge. Bridges should be
+> - * subclassed as part of driver connector objects.
+> - *
+> - * Returns:
+> - * Zero on success, error code on failure.
+> - */
+> -int drm_bridge_init(struct drm_device *dev, struct drm_bridge *bridge)
+> -{
+> -       int ret;
+> -
+> -       drm_modeset_lock_all(dev);
+> -
+> -       ret = drm_mode_object_get(dev, &bridge->base, DRM_MODE_OBJECT_BRIDGE);
+> -       if (ret)
+> -               goto out;
+> -
+> -       bridge->dev = dev;
+> -
+> -       list_add_tail(&bridge->head, &dev->mode_config.bridge_list);
+> -       dev->mode_config.num_bridge++;
+> -
+> - out:
+> -       drm_modeset_unlock_all(dev);
+> -       return ret;
+> -}
+> -EXPORT_SYMBOL(drm_bridge_init);
+> -
+> -/**
+> - * drm_bridge_cleanup - cleans up an initialised bridge
+> - * @bridge: bridge to cleanup
+> - *
+> - * Cleans up the bridge but doesn't free the object.
+> - */
+> -void drm_bridge_cleanup(struct drm_bridge *bridge)
+> -{
+> -       struct drm_device *dev = bridge->dev;
+> -
+> -       drm_modeset_lock_all(dev);
+> -       drm_mode_object_put(dev, &bridge->base);
+> -       list_del(&bridge->head);
+> -       dev->mode_config.num_bridge--;
+> -       drm_modeset_unlock_all(dev);
+> -}
+> -EXPORT_SYMBOL(drm_bridge_cleanup);
+> -
+> -/**
+>   * drm_encoder_init - Init a preallocated encoder
+>   * @dev: drm device
+>   * @encoder: the encoder to init
+> @@ -1539,7 +1489,6 @@ static int drm_mode_group_init(struct drm_device *dev, struct drm_mode_group *gr
+>         total_objects += dev->mode_config.num_crtc;
+>         total_objects += dev->mode_config.num_connector;
+>         total_objects += dev->mode_config.num_encoder;
+> -       total_objects += dev->mode_config.num_bridge;
 >
->> +
->> +     regval = readl(base + CE_LOG_OFST);
->> +     if (!(p->ce_cnt && (regval & CE_LOG_VALID)))
->> +             goto ue_err;
->> +     p->ceinfo.bitpos = (regval & CE_LOG_BITPOS_MASK) >> CE_LOG_BITPOS_SHIFT;
->> +     regval = readl(base + CE_ADDR_OFST);
->> +     p->ceinfo.row = (regval & ADDR_ROW_MASK) >> ADDR_ROW_SHIFT;
->> +     p->ceinfo.col = regval & ADDR_COL_MASK;
->> +     p->ceinfo.bank = (regval & ADDR_BANK_MASK) >> ADDR_BANK_SHIFT;
->> +     p->ceinfo.data = readl(base + CE_DATA_31_0_OFST);
+>         group->id_list = kzalloc(total_objects * sizeof(uint32_t), GFP_KERNEL);
+>         if (!group->id_list)
+> @@ -1548,7 +1497,6 @@ static int drm_mode_group_init(struct drm_device *dev, struct drm_mode_group *gr
+>         group->num_crtcs = 0;
+>         group->num_connectors = 0;
+>         group->num_encoders = 0;
+> -       group->num_bridges = 0;
+>         return 0;
+>  }
 >
-> Right so this [*]  ...
+> @@ -1568,7 +1516,6 @@ int drm_mode_group_init_legacy_group(struct drm_device *dev,
+>         struct drm_crtc *crtc;
+>         struct drm_encoder *encoder;
+>         struct drm_connector *connector;
+> -       struct drm_bridge *bridge;
+>         int ret;
 >
->> +     edac_dbg(3, "ce bitposition: %d data: %d\n", p->ceinfo.bitpos,
->> +              p->ceinfo.data);
->> +     clearval = ECC_CTRL_CLR_CE_ERR;
->> +
->> +ue_err:
->> +     regval = readl(base + UE_LOG_OFST);
->> +     if (!(p->ue_cnt && (regval & CE_LOG_VALID)))
->> +             goto out;
+>         if ((ret = drm_mode_group_init(dev, group)))
+> @@ -1585,11 +1532,6 @@ int drm_mode_group_init_legacy_group(struct drm_device *dev,
+>                 group->id_list[group->num_crtcs + group->num_encoders +
+>                                group->num_connectors++] = connector->base.id;
 >
-> This is funny: you do test CE_LOG_VALID here for UE and above for CE
-> errors. If it is the same bit, just call it ERR_VALID so that it is
-> clear.
+> -       list_for_each_entry(bridge, &dev->mode_config.bridge_list, head)
+> -               group->id_list[group->num_crtcs + group->num_encoders +
+> -                              group->num_connectors + group->num_bridges++] =
+> -                                       bridge->base.id;
+> -
+>         return 0;
+>  }
+>  EXPORT_SYMBOL(drm_mode_group_init_legacy_group);
+> @@ -5088,7 +5030,6 @@ void drm_mode_config_init(struct drm_device *dev)
+>         INIT_LIST_HEAD(&dev->mode_config.fb_list);
+>         INIT_LIST_HEAD(&dev->mode_config.crtc_list);
+>         INIT_LIST_HEAD(&dev->mode_config.connector_list);
+> -       INIT_LIST_HEAD(&dev->mode_config.bridge_list);
+>         INIT_LIST_HEAD(&dev->mode_config.encoder_list);
+>         INIT_LIST_HEAD(&dev->mode_config.property_list);
+>         INIT_LIST_HEAD(&dev->mode_config.property_blob_list);
+> @@ -5128,7 +5069,6 @@ void drm_mode_config_cleanup(struct drm_device *dev)
+>         struct drm_connector *connector, *ot;
+>         struct drm_crtc *crtc, *ct;
+>         struct drm_encoder *encoder, *enct;
+> -       struct drm_bridge *bridge, *brt;
+>         struct drm_framebuffer *fb, *fbt;
+>         struct drm_property *property, *pt;
+>         struct drm_property_blob *blob, *bt;
+> @@ -5139,11 +5079,6 @@ void drm_mode_config_cleanup(struct drm_device *dev)
+>                 encoder->funcs->destroy(encoder);
+>         }
 >
->> +
->> +     regval = readl(base + UE_ADDR_OFST);
->> +     p->ueinfo.row = (regval & ADDR_ROW_MASK) >> ADDR_ROW_SHIFT;
->> +     p->ueinfo.col = regval & ADDR_COL_MASK;
->> +     p->ueinfo.bank = (regval & ADDR_BANK_MASK) >> ADDR_BANK_SHIFT;
->> +     p->ueinfo.data = readl(base + UE_DATA_31_0_OFST);
+> -       list_for_each_entry_safe(bridge, brt,
+> -                                &dev->mode_config.bridge_list, head) {
+> -               bridge->funcs->destroy(bridge);
+> -       }
+> -
+>         list_for_each_entry_safe(connector, ot,
+>                                  &dev->mode_config.connector_list, head) {
+>                 connector->funcs->destroy(connector);
+> diff --git a/drivers/gpu/drm/msm/hdmi/hdmi.c b/drivers/gpu/drm/msm/hdmi/hdmi.c
+> index 9d00dcb..e4f249b 100644
+> --- a/drivers/gpu/drm/msm/hdmi/hdmi.c
+> +++ b/drivers/gpu/drm/msm/hdmi/hdmi.c
+> @@ -65,6 +65,9 @@ void hdmi_destroy(struct kref *kref)
+>         if (hdmi->i2c)
+>                 hdmi_i2c_destroy(hdmi->i2c);
 >
-> ... [*] and this looks pretty similar and could be carved out in a
-> __assign_error_info() function.
+> +       if (hdmi->bridge)
+> +               hdmi_bridge_destroy(hdmi->bridge);
+> +
+>         platform_set_drvdata(hdmi->pdev, NULL);
+>  }
 >
-> Also, you can slim down struct synps_ecc_status by having a single
-> struct ecc_error_info embedded in there and a flag which says what type
-> of error this struct is carrying.
+> @@ -234,9 +237,7 @@ struct hdmi *hdmi_init(struct drm_device *dev, struct drm_encoder *encoder)
 >
-> Or is it technically possible to have both a CE and an UE coming out of
-> the hardware so that you want to carry two errors at the same time?
+>  fail:
+>         if (hdmi) {
+> -               /* bridge/connector are normally destroyed by drm: */
+> -               if (hdmi->bridge)
+> -                       hdmi->bridge->funcs->destroy(hdmi->bridge);
+> +               /* bridge is normally destroyed by drm: */
+>                 if (hdmi->connector)
+>                         hdmi->connector->funcs->destroy(hdmi->connector);
+>                 hdmi_destroy(&hdmi->refcount);
+> diff --git a/drivers/gpu/drm/msm/hdmi/hdmi.h b/drivers/gpu/drm/msm/hdmi/hdmi.h
+> index b981995..d2cf7f4 100644
+> --- a/drivers/gpu/drm/msm/hdmi/hdmi.h
+> +++ b/drivers/gpu/drm/msm/hdmi/hdmi.h
+> @@ -163,6 +163,7 @@ void hdmi_audio_set_sample_rate(struct hdmi *hdmi, int rate);
+>   */
 >
-> In any case, you can split this synps_edac_geterror_info() function into
-> a helper which assigns to the different p-> fields and you hand-in only
-> the regvals you've read before, i.e. the __assign_error_info() example
-> above.
+>  struct drm_bridge *hdmi_bridge_init(struct hdmi *hdmi);
+> +void hdmi_bridge_destroy(struct drm_bridge *bridge);
 >
->> +     clearval |= ECC_CTRL_CLR_UE_ERR;
->> +
->> +out:
->> +     writel(clearval, base + ECC_CTRL_OFST);
->> +     writel(0x0, base + ECC_CTRL_OFST);
->> +
->> +     return 0;
->> +}
->> +
->> +/**
->> + * synps_edac_handle_error - Handle controller error types CE and UE
->> + * @mci:     Pointer to the edac memory controller instance
->> + * @p:               Pointer to the synopsys ecc status structure
->> + *
->> + * This routine handles the controller ECC correctable and un correctable
->> + * error.
->> + */
->> +static void synps_edac_handle_error(struct mem_ctl_info *mci,
->> +                                 struct synps_ecc_status *p)
->> +{
->> +     char message[SYNPS_EDAC_MSG_SIZE];
+>  /*
+>   * hdmi connector:
+> diff --git a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c b/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
+> index 0309539..26657a0 100644
+> --- a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
+> +++ b/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
+> @@ -23,11 +23,11 @@ struct hdmi_bridge {
+>  };
+>  #define to_hdmi_bridge(x) container_of(x, struct hdmi_bridge, base)
 >
-> You could preallocate this on driver init so you don't do relatively big
-> stack allocations on the error reporting path and remain lean.
+> -static void hdmi_bridge_destroy(struct drm_bridge *bridge)
+> +void hdmi_bridge_destroy(struct drm_bridge *bridge)
+>  {
+>         struct hdmi_bridge *hdmi_bridge = to_hdmi_bridge(bridge);
+> +
+>         hdmi_unreference(hdmi_bridge->hdmi);
+> -       drm_bridge_cleanup(bridge);
+>         kfree(hdmi_bridge);
+>  }
 >
->> +     struct ecc_error_info *pinf;
->> +
->> +     if (p->ce_cnt) {
->> +             pinf = &p->ceinfo;
->> +             snprintf(message, SYNPS_EDAC_MSG_SIZE,
->> +                      "DDR ECC error type :%s Row %d Bank %d Col %d ",
->> +                      "CE", pinf->row, pinf->bank, pinf->col);
->> +             edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci,
->> +                                  p->ce_cnt, 0, 0, 0, 0, 0, -1,
->> +                                  message, "");
->> +     }
->> +
->> +     if (p->ue_cnt) {
->> +             pinf = &p->ueinfo;
->> +             snprintf(message, SYNPS_EDAC_MSG_SIZE,
->> +                      "DDR ECC error type :%s Row %d Bank %d Col %d ",
->> +                      "UE", pinf->row, pinf->bank, pinf->col);
->> +             edac_mc_handle_error(HW_EVENT_ERR_UNCORRECTED, mci,
->> +                                  p->ue_cnt, 0, 0, 0, 0, 0, -1,
->> +                                  message, "");
->> +     }
+> @@ -201,7 +201,6 @@ static const struct drm_bridge_funcs hdmi_bridge_funcs = {
+>                 .disable = hdmi_bridge_disable,
+>                 .post_disable = hdmi_bridge_post_disable,
+>                 .mode_set = hdmi_bridge_mode_set,
+> -               .destroy = hdmi_bridge_destroy,
+>  };
 >
-> If you memset(p, 0,...) here, after consumption, you don't need to do it
-> anywhere else and be sure that *p would be always clean and ready for
-> the next error.
 >
->> +}
->> +
->> +/**
->> + * synps_edac_check - Check controller for ECC errors
->> + * @mci:     Pointer to the edac memory controller instance
->> + *
->> + * This routine is used to check and post ECC errors and is called by
+> @@ -223,7 +222,7 @@ struct drm_bridge *hdmi_bridge_init(struct hdmi *hdmi)
+>         bridge = &hdmi_bridge->base;
+>         bridge->funcs = &hdmi_bridge_funcs;
 >
-> All those comments start with the boilerplate "This rounine is
-> blabla...". Just write only the "blabla... " :) In this particular case:
+> -       drm_bridge_init(hdmi->dev, bridge);
+> +       drm_bridge_attach(hdmi->dev, bridge);
 >
-> "Check and post ECC errors. Called by the polling thread."
+>         return bridge;
 >
-> Much faster to read :)
+> diff --git a/drivers/gpu/drm/sti/sti_hda.c b/drivers/gpu/drm/sti/sti_hda.c
+> index 6cf145d..a9bbb08 100644
+> --- a/drivers/gpu/drm/sti/sti_hda.c
+> +++ b/drivers/gpu/drm/sti/sti_hda.c
+> @@ -508,19 +508,12 @@ static void sti_hda_bridge_nope(struct drm_bridge *bridge)
+>         /* do nothing */
+>  }
 >
->> + * the EDAC polling thread
->> + */
->> +static void synps_edac_check(struct mem_ctl_info *mci)
->> +{
->> +     struct synps_edac_priv *priv = mci->pvt_info;
->> +     struct synps_ecc_status stat;
->> +     int status;
->> +
->> +     status = synps_edac_geterror_info(priv->baseaddr, &stat);
->> +     if (status)
->> +             return;
->> +
->> +     priv->ce_cnt += stat.ce_cnt;
->> +     priv->ue_cnt += stat.ue_cnt;
->> +     synps_edac_handle_error(mci, &stat);
->> +
->> +     edac_dbg(3, "Total error count ce %d ue %d\n",
->> +              priv->ce_cnt, priv->ue_cnt);
->> +}
->> +
->> +/**
->> + * synps_edac_get_dtype - Return the controller memory width
->> + * @base:    Pointer to the ddr memory contoller base address
->> + *
->> + * This routine returns the EDAC device type width appropriate for the
->> + * current controller configuration.
->> + *
->> + * Return: a device type width enumeration.
->> + */
->> +static enum dev_type synps_edac_get_dtype(const void __iomem *base)
->> +{
->> +     enum dev_type dt;
->> +     u32 width;
->> +
->> +     width = readl(base + CTRL_OFST);
->> +     width = (width & CTRL_BW_MASK) >> CTRL_BW_SHIFT;
->> +
->> +     switch (width) {
->> +     case DDRCTL_WDTH_16:
->> +             dt = DEV_X2;
->> +             break;
->> +     case DDRCTL_WDTH_32:
->> +             dt = DEV_X4;
->> +             break;
->> +     default:
->> +             dt = DEV_UNKNOWN;
->> +     }
->> +
->> +     return dt;
->> +}
->> +
->> +/**
->> + * synps_edac_get_eccstate - Return the controller ecc enable/disable status
->> + * @base:    Pointer to the ddr memory contoller base address
->> + *
->> + * This routine returns the ECC enable/disable status for the controller
->> + *
->> + * Return: a ecc status boolean i.e true/false - enabled/disabled.
->> + */
->> +static bool synps_edac_get_eccstate(void __iomem *base)
->> +{
->> +     enum dev_type dt;
->> +     u32 ecctype;
->> +     bool state = false;
->> +
->> +     dt = synps_edac_get_dtype(base);
->> +     if (dt == DEV_UNKNOWN)
->> +             return state;
->> +
->> +     ecctype = readl(base + SCRUB_OFST) & SCRUB_MODE_MASK;
->> +
->> +     if ((ecctype == SCRUB_MODE_SECDED) && (dt == DEV_X2)) {
->> +             state = true;
->> +             writel(0x0, base + ECC_CTRL_OFST);
+> -static void sti_hda_brigde_destroy(struct drm_bridge *bridge)
+> -{
+> -       drm_bridge_cleanup(bridge);
+> -       kfree(bridge);
+> -}
+> -
+>  static const struct drm_bridge_funcs sti_hda_bridge_funcs = {
+>         .pre_enable = sti_hda_pre_enable,
+>         .enable = sti_hda_bridge_nope,
+>         .disable = sti_hda_disable,
+>         .post_disable = sti_hda_bridge_nope,
+>         .mode_set = sti_hda_set_mode,
+> -       .destroy = sti_hda_brigde_destroy,
+>  };
 >
-> Out of curiosity, why is that register write needed here? Maybe
-> forgotten? It looks unbalanced...
-
-This is needed to start capturing the correctable and uncorrectable errors.
-Writing 1 to this register bits will clear the counters and writing 0 will start
-the counters.
-
+>  static int sti_hda_connector_get_modes(struct drm_connector *connector)
+> @@ -665,7 +658,7 @@ static int sti_hda_bind(struct device *dev, struct device *master, void *data)
 >
->> +     }
->> +
->> +     return state;
->> +}
->> +
->> +/**
->> + * synps_edac_get_memsize - reads the size of the attached memory device
->> + *
->> + * Return: the memory size in bytes
->> + */
->> +static u32 synps_edac_get_memsize(void)
->> +{
->> +     struct sysinfo inf;
->> +
->> +     si_meminfo(&inf);
->> +
->> +     return inf.totalram * inf.mem_unit;
->> +}
->> +
->> +/**
->> + * synps_edac_get_mtype - Returns controller memory type
->> + * @base:    pointer to the synopsys ecc status structure
->> + *
->> + * This routine returns the EDAC memory type appropriate for the
->> + * current controller configuration.
->> + *
->> + * Return: a memory type enumeration.
->> + */
->> +static enum mem_type synps_edac_get_mtype(const void __iomem *base)
->> +{
->> +     enum mem_type mt;
->> +     u32 memtype;
->> +
->> +     memtype = readl(base + T_ZQ_OFST);
->> +
->> +     if (memtype & T_ZQ_DDRMODE_MASK)
->> +             mt = MEM_DDR3;
->> +     else
->> +             mt = MEM_DDR2;
->> +
->> +     return mt;
->> +}
->> +
->> +/**
->> + * synps_edac_init_csrows - Initialize the cs row data
->> + * @mci:     Pointer to the edac memory controller instance
->> + *
->> + * This routine initializes the chip select rows associated
->> + * with the EDAC memory controller instance
->> + *
->> + * Return: Unconditionally 0.
->> + */
->> +static int synps_edac_init_csrows(struct mem_ctl_info *mci)
->> +{
->> +     struct csrow_info *csi;
->> +     struct dimm_info *dimm;
->> +     struct synps_edac_priv *priv = mci->pvt_info;
->> +     u32 size;
->> +     int row, j;
->> +
->> +     for (row = 0; row < mci->nr_csrows; row++) {
->> +             csi = mci->csrows[row];
->> +             size = synps_edac_get_memsize();
->> +
->> +             for (j = 0; j < csi->nr_channels; j++) {
->> +                     dimm = csi->channels[j]->dimm;
->> +                     dimm->edac_mode = EDAC_FLAG_SECDED;
->> +                     dimm->mtype = synps_edac_get_mtype(priv->baseaddr);
->> +                     dimm->nr_pages =
->> +                         (size >> PAGE_SHIFT) / csi->nr_channels;
+>         bridge->driver_private = hda;
+>         bridge->funcs = &sti_hda_bridge_funcs;
+> -       drm_bridge_init(drm_dev, bridge);
+> +       drm_bridge_attach(drm_dev, bridge);
 >
-> No need for the linebreak here, even if it sticks out of 80 cols. The
-> break is uglier.
-
-It is crossing 80 cols. so, there is line break here. I feel the other
-way as the check patch
-throws warning for this.
-
-I will fix all the comments and send you the next version.Thanks for the review.
-
-Regards,
-Punnaiah
-
+>         encoder->bridge = bridge;
+>         connector->encoder = encoder;
+> @@ -694,7 +687,6 @@ static int sti_hda_bind(struct device *dev, struct device *master, void *data)
+>  err_sysfs:
+>         drm_connector_unregister(drm_connector);
+>  err_connector:
+> -       drm_bridge_cleanup(bridge);
+>         drm_connector_cleanup(drm_connector);
+>         return -EINVAL;
+>  }
+> diff --git a/drivers/gpu/drm/sti/sti_hdmi.c b/drivers/gpu/drm/sti/sti_hdmi.c
+> index 285f723..bf4cdb8 100644
+> --- a/drivers/gpu/drm/sti/sti_hdmi.c
+> +++ b/drivers/gpu/drm/sti/sti_hdmi.c
+> @@ -463,19 +463,12 @@ static void sti_hdmi_bridge_nope(struct drm_bridge *bridge)
+>         /* do nothing */
+>  }
 >
-> You could even align on the "=" signs for even better readability.
-
+> -static void sti_hdmi_brigde_destroy(struct drm_bridge *bridge)
+> -{
+> -       drm_bridge_cleanup(bridge);
+> -       kfree(bridge);
+> -}
+> -
+>  static const struct drm_bridge_funcs sti_hdmi_bridge_funcs = {
+>         .pre_enable = sti_hdmi_pre_enable,
+>         .enable = sti_hdmi_bridge_nope,
+>         .disable = sti_hdmi_disable,
+>         .post_disable = sti_hdmi_bridge_nope,
+>         .mode_set = sti_hdmi_set_mode,
+> -       .destroy = sti_hdmi_brigde_destroy,
+>  };
 >
->> +                     dimm->grain = SYNPS_EDAC_ERR_GRAIN;
->> +                     dimm->dtype = synps_edac_get_dtype(priv->baseaddr);
->> +             }
->> +     }
->> +
->> +     return 0;
->> +}
->> +
->> +/**
->> + * synps_edac_mc_init - Initialize driver instance
->> + * @mci:     Pointer to the edac memory controller instance
->> + * @pdev:    Pointer to the platform_device struct
->> + *
->> + * This routine performs initialization of the EDAC memory controller
->> + * instance and related driver-private data associated with the
->> + * memory controller the instance is bound to.
->> + *
->> + * Return: 0 if OK; otherwise, < 0 on error.
+>  static int sti_hdmi_connector_get_modes(struct drm_connector *connector)
+> @@ -629,7 +622,7 @@ static int sti_hdmi_bind(struct device *dev, struct device *master, void *data)
 >
-> Where do we even return < 0 since synps_edac_init_csrows() returns
-> "Unconditionally 0." ?
+>         bridge->driver_private = hdmi;
+>         bridge->funcs = &sti_hdmi_bridge_funcs;
+> -       drm_bridge_init(drm_dev, bridge);
+> +       drm_bridge_attach(drm_dev, bridge);
 >
->> + */
->> +static int synps_edac_mc_init(struct mem_ctl_info *mci,
->> +                              struct platform_device *pdev)
->> +{
->> +     int status;
->> +     struct synps_edac_priv *priv;
->> +
->> +     mci->pdev = &pdev->dev;
->> +     priv = mci->pvt_info;
->> +     platform_set_drvdata(pdev, mci);
->> +
->> +     /* Initialize controller capabilities and configuration */
->> +     mci->mtype_cap = MEM_FLAG_DDR3 | MEM_FLAG_DDR2;
->> +     mci->edac_ctl_cap = EDAC_FLAG_NONE | EDAC_FLAG_SECDED;
->> +     mci->scrub_cap = SCRUB_HW_SRC;
->> +     mci->scrub_mode = SCRUB_NONE;
->> +
->> +     mci->edac_cap = EDAC_FLAG_SECDED;
->> +     mci->ctl_name = "synps_ddr_controller";
->> +     mci->dev_name = SYNPS_EDAC_MOD_STRING;
->> +     mci->mod_name = SYNPS_EDAC_MOD_VER;
->> +     mci->mod_ver = "1";
->> +
->> +     edac_op_state = EDAC_OPSTATE_POLL;
->> +     mci->edac_check = synps_edac_check;
->> +     mci->ctl_page_to_phys = NULL;
->> +
->> +     /*
->> +      * Initialize the MC control structure 'csrows' table
->> +      * with the mapping and control information.
->> +      */
+>         encoder->bridge = bridge;
+>         connector->encoder = encoder;
+> @@ -661,7 +654,6 @@ static int sti_hdmi_bind(struct device *dev, struct device *master, void *data)
+>  err_sysfs:
+>         drm_connector_unregister(drm_connector);
+>  err_connector:
+> -       drm_bridge_cleanup(bridge);
+>         drm_connector_cleanup(drm_connector);
+>         return -EINVAL;
+>  }
+> diff --git a/include/drm/bridge/ptn3460.h b/include/drm/bridge/ptn3460.h
+> index ff62344..b11f8e1 100644
+> --- a/include/drm/bridge/ptn3460.h
+> +++ b/include/drm/bridge/ptn3460.h
+> @@ -15,6 +15,7 @@
+>  #define _DRM_BRIDGE_PTN3460_H_
 >
-> That is too much and too obvious a comment.
+>  struct drm_device;
+> +struct drm_bridge;
+>  struct drm_encoder;
+>  struct i2c_client;
+>  struct device_node;
+> @@ -23,6 +24,9 @@ struct device_node;
 >
->> +     status = synps_edac_init_csrows(mci);
->> +
->> +     return status;
->> +}
->> +
->> +/**
->> + * synps_edac_mc_probe - Check controller and bind driver
->> + * @pdev:    Pointer to the platform_device struct
->> + *
->> + * This routine probes a specific controller
->> + * instance for binding with the driver.
+>  int ptn3460_init(struct drm_device *dev, struct drm_encoder *encoder,
+>                 struct i2c_client *client, struct device_node *node);
+> +
+> +void ptn3460_destroy(struct drm_bridge *bridge);
+> +
+>  #else
 >
-> Ditto.
+>  static inline int ptn3460_init(struct drm_device *dev,
+> @@ -32,6 +36,10 @@ static inline int ptn3460_init(struct drm_device *dev,
+>         return 0;
+>  }
 >
->> + *
->> + * Return: 0 if the controller instance was successfully bound to the
->> + * driver; otherwise, < 0 on error.
->> + */
->> +static int synps_edac_mc_probe(struct platform_device *pdev)
->> +{
->> +     struct mem_ctl_info *mci;
->> +     struct edac_mc_layer layers[2];
->> +     struct synps_edac_priv *priv;
->> +     int rc;
->> +     struct resource *res;
->> +     void __iomem *baseaddr;
->> +
->> +     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +     baseaddr = devm_ioremap_resource(&pdev->dev, res);
->> +     if (IS_ERR(baseaddr))
->> +             return PTR_ERR(baseaddr);
->> +
->> +     if (synps_edac_get_eccstate(baseaddr) == false) {
+> +static inline void ptn3460_destroy(struct drm_bridge *bridge)
+> +{
+> +}
+> +
+>  #endif
 >
->         if (!synps_edac_get_eccstate(...)) {
+>  #endif
+> diff --git a/include/drm/drm_crtc.h b/include/drm/drm_crtc.h
+> index 5a3bce17..da2beaf 100644
+> --- a/include/drm/drm_crtc.h
+> +++ b/include/drm/drm_crtc.h
+> @@ -633,15 +633,16 @@ struct drm_plane {
 >
->> +             edac_printk(KERN_INFO, EDAC_MC, "ECC not enabled\n");
->> +             return -ENXIO;
->> +     }
->> +
->> +     layers[0].type = EDAC_MC_LAYER_CHIP_SELECT;
->> +     layers[0].size = SYNPS_EDAC_NR_CSROWS;
->> +     layers[0].is_virt_csrow = true;
->> +     layers[1].type = EDAC_MC_LAYER_CHANNEL;
->> +     layers[1].size = SYNPS_EDAC_NR_CHANS;
->> +     layers[1].is_virt_csrow = false;
->> +
->> +     mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
->> +                         sizeof(struct synps_edac_priv));
->> +     if (!mci) {
->> +             edac_printk(KERN_ERR, EDAC_MC,
->> +                         "Failed memory allocation for mc instance\n");
->> +             return -ENOMEM;
->> +     }
->> +
->> +     priv = mci->pvt_info;
->> +     priv->baseaddr = baseaddr;
->> +     rc = synps_edac_mc_init(mci, pdev);
->> +     if (rc) {
->> +             edac_printk(KERN_ERR, EDAC_MC,
->> +                         "Failed to initialize instance\n");
->> +             goto free_edac_mc;
->> +     }
->> +
->> +     rc = edac_mc_add_mc(mci);
->> +     if (rc) {
->> +             edac_printk(KERN_ERR, EDAC_MC,
->> +                         "Failed to register with EDAC core\n");
->> +             goto del_edac_mc;
+>  /**
+>   * drm_bridge_funcs - drm_bridge control functions
+> + * @attach: Called during drm_bridge_attach
+>   * @mode_fixup: Try to fixup (or reject entirely) proposed mode for this bridge
+>   * @disable: Called right before encoder prepare, disables the bridge
+>   * @post_disable: Called right after encoder prepare, for lockstepped disable
+>   * @mode_set: Set this mode to the bridge
+>   * @pre_enable: Called right before encoder commit, for lockstepped commit
+>   * @enable: Called right after encoder commit, enables the bridge
+> - * @destroy: make object go away
+>   */
+>  struct drm_bridge_funcs {
+> +       int (*attach)(struct drm_bridge *bridge);
+>         bool (*mode_fixup)(struct drm_bridge *bridge,
+>                            const struct drm_display_mode *mode,
+>                            struct drm_display_mode *adjusted_mode);
+> @@ -652,22 +653,24 @@ struct drm_bridge_funcs {
+>                          struct drm_display_mode *adjusted_mode);
+>         void (*pre_enable)(struct drm_bridge *bridge);
+>         void (*enable)(struct drm_bridge *bridge);
+> -       void (*destroy)(struct drm_bridge *bridge);
+>  };
 >
-> This should be free_edac_mc as you do edac_mc_del_mc() only if
-> edac_mc_add_mc() has succeeded.
+>  /**
+>   * drm_bridge - central DRM bridge control structure
+>   * @dev: DRM device this bridge belongs to
+> - * @head: list management
+> + * @of_node: device node pointer to the bridge
+> + * @list: to keep track of all added bridges
+>   * @base: base mode object
+>   * @funcs: control functions
+>   * @driver_private: pointer to the bridge driver's internal context
+>   */
+>  struct drm_bridge {
+>         struct drm_device *dev;
+> -       struct list_head head;
+> -
+> -       struct drm_mode_object base;
+> +       struct drm_encoder *encoder;
+> +#ifdef CONFIG_OF
+> +       struct device_node *of_node;
+> +#endif
+> +       struct list_head list;
 >
+>         const struct drm_bridge_funcs *funcs;
+>         void *driver_private;
+> @@ -733,7 +736,6 @@ struct drm_mode_group {
+>         uint32_t num_crtcs;
+>         uint32_t num_encoders;
+>         uint32_t num_connectors;
+> -       uint32_t num_bridges;
+>
+>         /* list of object IDs for this group */
+>         uint32_t *id_list;
+> @@ -748,8 +750,6 @@ struct drm_mode_group {
+>   * @fb_list: list of framebuffers available
+>   * @num_connector: number of connectors on this device
+>   * @connector_list: list of connector objects
+> - * @num_bridge: number of bridges on this device
+> - * @bridge_list: list of bridge objects
+>   * @num_encoder: number of encoders on this device
+>   * @encoder_list: list of encoder objects
+>   * @num_crtc: number of CRTCs on this device
+> @@ -789,8 +789,6 @@ struct drm_mode_config {
+>
+>         int num_connector;
+>         struct list_head connector_list;
+> -       int num_bridge;
+> -       struct list_head bridge_list;
+>         int num_encoder;
+>         struct list_head encoder_list;
+>
+> @@ -912,8 +910,10 @@ extern unsigned int drm_connector_index(struct drm_connector *connector);
+>  /* helper to unplug all connectors from sysfs for device */
+>  extern void drm_connector_unplug_all(struct drm_device *dev);
+>
+> -extern int drm_bridge_init(struct drm_device *dev, struct drm_bridge *bridge);
+> -extern void drm_bridge_cleanup(struct drm_bridge *bridge);
+> +extern int drm_bridge_add(struct drm_bridge *bridge);
+> +extern void drm_bridge_remove(struct drm_bridge *bridge);
+> +extern struct drm_bridge *of_drm_find_bridge(struct device_node *np);
+> +extern int drm_bridge_attach(struct drm_device *dev, struct drm_bridge *bridge);
+>
+>  extern int drm_encoder_init(struct drm_device *dev,
+>                             struct drm_encoder *encoder,
 > --
-> Regards/Gruss,
->     Boris.
+> 1.7.9.5
 >
-> Sent from a fat crate under my desk. Formatting is fine.
-> --
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
