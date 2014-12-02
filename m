@@ -1,45 +1,42 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [RFC V1 0/8] CPUFreq: create platform-dev for DT based cpufreq
- drivers
-Date: Tue, 2 Dec 2014 09:20:13 +0100
-Message-ID: <20141202092013.6017a9b0@free-electrons.com>
-References: <cover.1417433163.git.viresh.kumar@linaro.org>
-	<5607434.rlEIdu4yyh@wuerfel>
-	<CAKohpomsqCnEcSeuqtZcYOC6bgTrGmc8zXTm6cA72q+hr=LBsQ@mail.gmail.com>
-	<3594266.ci9lGXQ9iA@wuerfel>
+From: =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <uwe@kleine-koenig.org>
+Subject: Re: [PATCHv1 6/6] rtc: rtc-isl12057: add alarm support to Intersil
+ ISL12057 RTC driver
+Date: Tue, 02 Dec 2014 09:26:45 +0100
+Message-ID: <547D77C5.2080705@kleine-koenig.org>
+References: <cover.1416006090.git.arno@natisbad.org> <986ee8d9d3e6862007f398ffddc2a4bb2368933e.1416006090.git.arno@natisbad.org> <5476ED9F.2070600@kleine-koenig.org> <87tx1fnn9y.fsf@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <3594266.ci9lGXQ9iA@wuerfel>
-Sender: linux-pm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Nishanth Menon <nm@ti.com>, Rob Herring <rob.herring@linaro.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, Thomas Abraham <ta.omasab@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Chander Kashyap <k.chander@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, Grant Likely <grant.likely@linaro.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Mike Turquette <mike.turquette@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, "olof@lixom.net" <olof@lixom.net>, Arnd Bergmann <arnd.bergmann@linaro.org>, santosh shilimkar <santosh.shilimkar@oracle.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.in>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <87tx1fnn9y.fsf@natisbad.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: arno@natisbad.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Andrew Morton <akpm@linux-foundation.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Arnd Bergmann,
 
-On Mon, 01 Dec 2014 15:59:14 +0100, Arnd Bergmann wrote:
 
-> I still don't see where it does that. All I see for mvebu is
-> 
-> 	platform_device_register_simple("cpufreq-dt", -1, NULL, 0);
-> 
-> without any platform data. I see this patch
-> http://lists.linaro.org/pipermail/linaro-kernel/2014-September/017693.html
-> on the mailing list, but it's not in linux-next, and it obviously
-> would not work any more with the patch I proposed. Instead I suppose
-> you would use a different string to match against for the case of
-> separate clocks.
+On December 1, 2014 9:11:21 PM CET, arno@natisbad.org wrote:
+>Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig.org> writes:
+>> For patch 1: Maybe point out that the issue with the century bit
+>isn't
+>> that critical, because this bit is not expected to be set before yea=
+r
+>> 2100.
+>
+>It has:
+>
+>   This was tested by putting a device 100 years in the future (using =
+a
+> specific kernel due to the inability of userland tools such as date o=
+r
+>hwclock to pass year 2038), rebooting on a kernel w/ this patch applie=
+d
+>    and verifying the device was still 100 years in the future.
+>
+That describes your test, but it doesn't rule out that someone might us=
+e
+the century bit to distinguish 19** and 20**.
 
-Hum, right. Actually, only the cpufreq driver part has been taken, and
-I forgot to resubmit the mach-mvebu part of the solution. I'll do so
-today.
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Best regards
+Uwe
