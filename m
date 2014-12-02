@@ -1,71 +1,98 @@
-From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 09/13] NFC: dts: st21nfcb: Fix compatible string spelling to follow other drivers
-Date: Tue,  2 Dec 2014 21:27:54 +0100
-Message-ID: <1417552078-9269-10-git-send-email-christophe-h.ricard@st.com>
-References: <1417552078-9269-1-git-send-email-christophe-h.ricard@st.com>
+From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v7 0/3] net: Add Keystone NetCP ethernet driver support
+Date: Tue, 2 Dec 2014 16:41:40 -0500
+Message-ID: <1417556503-22290-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417552078-9269-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Sandeep Nair <sandeepn02-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Other drivers are following the following compatible string format for =
-dts:
-s/_/-/
+v6->v7
+Fixed some minor documentation error and also modified the netcp driver
+to fix the set* functions to include correct le/be macros.
 
-Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
----
- Documentation/devicetree/bindings/net/nfc/st21nfcb.txt | 4 ++--
- drivers/nfc/st21nfcb/i2c.c                             | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+v5->v6
+updated version after incorporating comments [6] from David Miller,
+David Laight & Geert Uytterhoeven on v5. I would like get this in
+for v3.19 merge window if the latest version is acceptable.
 
-diff --git a/Documentation/devicetree/bindings/net/nfc/st21nfcb.txt b/D=
-ocumentation/devicetree/bindings/net/nfc/st21nfcb.txt
-index 9005608..bb23707 100644
---- a/Documentation/devicetree/bindings/net/nfc/st21nfcb.txt
-+++ b/Documentation/devicetree/bindings/net/nfc/st21nfcb.txt
-@@ -1,7 +1,7 @@
- * STMicroelectronics SAS. ST21NFCB NFC Controller
-=20
- Required properties:
--- compatible: Should be "st,st21nfcb_i2c".
-+- compatible: Should be "st,st21nfcb-i2c".
- - clock-frequency: I=C2=B2C work frequency.
- - reg: address on the bus
- - interrupt-parent: phandle for the interrupt gpio controller
-@@ -20,7 +20,7 @@ Example (for ARM-based BeagleBoard xM with ST21NFCB o=
-n I2C2):
-=20
- 	st21nfcb: st21nfcb@8 {
-=20
--		compatible =3D "st,st21nfcb_i2c";
-+		compatible =3D "st,st21nfcb-i2c";
-=20
- 		reg =3D <0x08>;
- 		clock-frequency =3D <400000>;
-diff --git a/drivers/nfc/st21nfcb/i2c.c b/drivers/nfc/st21nfcb/i2c.c
-index 363c2fc..002420b 100644
---- a/drivers/nfc/st21nfcb/i2c.c
-+++ b/drivers/nfc/st21nfcb/i2c.c
-@@ -373,7 +373,7 @@ static int st21nfcb_nci_i2c_remove(struct i2c_clien=
-t *client)
-=20
- #ifdef CONFIG_OF
- static const struct of_device_id of_st21nfcb_i2c_match[] =3D {
--	{ .compatible =3D "st,st21nfcb_i2c", },
-+	{ .compatible =3D "st,st21nfcb-i2c", },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, of_st21nfcb_i2c_match);
---=20
-2.1.0
+v4->v5
+Sorry to spin v5 quickly but I missed few check-patch warnings which
+were pointed by Joe Perches(thanks). I folded his changes [5] along with
+few more check-patch warning fixes. I would like get this in for v3.18
+merge window if David is happy with this version.
+
+v3->v4
+Couple of fixes in in error path as pointed [4] out by David. Rest of
+the patches are unchanged from v3. 
+
+v2->v3
+Update v3 after incorporating Jamal and David Miller's comment/suggestion
+from earlier versions [1] [2].  After per the discussion here [3], the
+controversial custom exports have been dropped now. And for future
+future offload support additions, we will plug into generic frameworks
+as an when they are available.
+
+The network coprocessor (NetCP) is a hardware accelerator that processes
+Ethernet packets. NetCP has a gigabit Ethernet (GbE) subsystem with a ethernet
+switch sub-module to send and receive packets. NetCP also includes a packet
+accelerator (PA) module to perform packet classification operations such as
+header matching, and packet modification operations such as checksum
+generation. NetCP can also optionally include a Security Accelerator(SA)
+capable of performing IPSec operations on ingress/egress packets.
+    
+Keystone SoC's also have a 10 Gigabit Ethernet Subsystem (XGbE) which
+includes a 3-port Ethernet switch sub-module capable of 10Gb/s and
+1Gb/s rates per Ethernet port.
+    
+Both GBE and XGBE network processors supported using common driver. It
+is also designed to handle future variants of NetCP.
+
+Cc: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sandeep Nair <sandeepn02-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Santosh Shilimkar <santosh.shilimkar-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+Murali Karicheri (1):
+  MAINTAINER: net: Add TI NETCP Ethernet driver entry
+
+Sandeep Nair (2):
+  Documentation: dt: net: Add binding doc for Keystone NetCP ethernet
+    driver
+  net: Add Keystone NetCP ethernet driver
+
+ .../devicetree/bindings/net/keystone-netcp.txt     |  197 ++
+ MAINTAINERS                                        |    8 +
+ drivers/net/ethernet/ti/Kconfig                    |   12 +-
+ drivers/net/ethernet/ti/Makefile                   |    4 +
+ drivers/net/ethernet/ti/netcp.h                    |  227 ++
+ drivers/net/ethernet/ti/netcp_core.c               | 2262 ++++++++++++++++++++
+ drivers/net/ethernet/ti/netcp_ethss.c              | 2159 +++++++++++++++++++
+ drivers/net/ethernet/ti/netcp_sgmii.c              |  130 ++
+ drivers/net/ethernet/ti/netcp_xgbepcsr.c           |  501 +++++
+ 9 files changed, 5499 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/net/keystone-netcp.txt
+ create mode 100644 drivers/net/ethernet/ti/netcp.h
+ create mode 100644 drivers/net/ethernet/ti/netcp_core.c
+ create mode 100644 drivers/net/ethernet/ti/netcp_ethss.c
+ create mode 100644 drivers/net/ethernet/ti/netcp_sgmii.c
+ create mode 100644 drivers/net/ethernet/ti/netcp_xgbepcsr.c
+
+[1] https://lkml.org/lkml/2014/4/22/805
+[2] https://lkml.org/lkml/2014/8/15/218
+[3] https://lkml.org/lkml/2014/9/11/691
+[4] https://lkml.org/lkml/2014/9/15/403
+[5] https://lkml.org/lkml/2014/9/25/332
+[6] https://lkml.org/lkml/2014/9/29/639
+
+-- 
+1.7.9.5
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
