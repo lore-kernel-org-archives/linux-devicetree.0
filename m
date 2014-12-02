@@ -1,124 +1,103 @@
-From: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH] mtd: gpmi: Remove "We support only one NAND chip" from
- bindings doc
-Date: Tue, 02 Dec 2014 08:28:10 +0100
-Message-ID: <547D6A0A.70409@denx.de>
-References: <1417097929-17832-1-git-send-email-sr@denx.de> <20141128014832.GA3113@localhost.localdomain> <54781DD5.5030801@denx.de> <20141129024047.GA5056@localhost.localdomain> <20141130065326.GB3608@norris-Latitude-E6410> <20141130154255.GB14834@localhost.localdomain> <547C3BB9.1010706@denx.de> <20141202003840.GA11370@shldeISGChi005.sh.intel.com>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH] media: platform: add VPFE capture driver support for
+ AM437X
+Date: Tue, 02 Dec 2014 08:32:23 +0100
+Message-ID: <547D6B07.6050803@xs4all.nl>
+References: <1416791411-9731-1-git-send-email-prabhakar.csengg@gmail.com> <547C3ED3.1060205@xs4all.nl> <547C4A69.8020002@xs4all.nl> <CA+V-a8uL4J0Y2ZfDxe7jhxzGcCNe9QbCDUjDZrC+mZ5E6sX2jg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141202003840.GA11370-eV5aV+vWts7EmYkesOTNgGFmcEqAMTzPQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Huang Shijie <shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CA+V-a8uL4J0Y2ZfDxe7jhxzGcCNe9QbCDUjDZrC+mZ5E6sX2jg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-api <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02.12.2014 01:38, Huang Shijie wrote:
-> On Mon, Dec 01, 2014 at 10:58:17AM +0100, Stefan Roese wrote:
->> On 30.11.2014 16:42, Huang Shijie wrote:
->>> On Sat, Nov 29, 2014 at 10:53:26PM -0800, Brian Norris wrote:
->>>> On Sat, Nov 29, 2014 at 10:40:50AM +0800, Huang Shijie wrote:
->>>>> On Fri, Nov 28, 2014 at 08:01:41AM +0100, Stefan Roese wrote:
->>>>>> On 28.11.2014 02:48, Huang Shijie wrote:
->>>>>>> On Thu, Nov 27, 2014 at 03:18:49PM +0100, Stefan Roese wrote:
->>>>>>>> This sentence "We support only one NAND chip now" is not true any more.
->>>>>>>> Multiple chips are supported. So lets remove this sentence to not
->>>>>>>
->>>>>>> The gpmi can only supports one chip. Of course, there are maybe two dies
->>>>>>> in this single chip.
->>>>>>
->>>>>> Now I'm a bit confused. The i.MX6 supports 4 chips select signals. And isn't
->>>>>> "two dies in this single chip" not practically the same as connecting 2 (or
->>>>>> more) chips (same device) to multiple chip selects of the SoC? Where is the
->>>>>> difference here?
->>>>> The "one chip" here is means the "one package" (TSOP or BGA ....).
->>>>
->>>> Then why is this even in the DT binding doc? Isn't that a board-level
->>>> constraint (and not a chip property) which should be obvious to the
->>>> user? If so, then should we just drop the language? Or at a minimum,
->>>> make it more specific so it doesn't confuse readers.
->>>
->>> yes. It is okay to send a patch to make it more clear.
->>>
->>>>
->>>>> (In logic, "two dies in this single chip" is same as connecting 2 chips
->>>>> to the gpmi.)
->>>>
->>>> ...which means that logically, you can connect more than one chip to the
->>>> GPMI, right?
->>> The gpmi can only connect with one physical chip now, but there maybe
->>> two DIEs in this chip.
->>
->> I really fail to see why you make this distinction between two chips on a die
->> and two external chips. For the SoC this should really look identical, right?
->>
->> Please explain again, why exactly only two chips on one die are supported.
-> There are only 8 data lines for gpmi.  I guess there may bugs in the
-> gpmi driver to support the two external chips in such case:
->          Two different processes access different NAND chips at the same
-> 	time.
-
-I don't see why this should be a problem. All SoC's that support multiple
-NAND chips (I've seen so far) only use 8 data lines for this.
-
-> I even did not have enough time to test the "two chips on a die" case very carefully before
-> I left freescale.
-
-I see. Thanks for the hint. But this "two chips on a die" scenario did
-pass some basic tests, no?
- 
->>
->> BTW: We have a custom i.MX6DL based board with 2 NAND chips connected. And
+On 12/01/2014 11:27 PM, Prabhakar Lad wrote:
+> Hi Hans,
 > 
-> Very good. Please test this board with the UBIFS in the multi processes
-> case. (I ever used the bonnie++)
-
-We'll do that.
- 
->> Linux seems to support both chips just fine. Here the boot log:
+> On Mon, Dec 1, 2014 at 11:00 AM, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> wrote:
+>> On 12/01/2014 11:11 AM, Hans Verkuil wrote:
+>>> Hi all,
+>>>
+>>> Thanks for the patch, review comments are below.
+>>>
+>>> For the next version I would appreciate if someone can test this driver with
+>>> the latest v4l2-compliance from the v4l-utils git repo. If possible test streaming
+>>> as well (v4l2-compliance -s), ideally with both a sensor and a STD receiver input.
+>>> But that depends on the available hardware of course.
+>>>
+>>> I'd like to see the v4l2-compliance output. It's always good to have that on
+>>> record.
+>>>
+>>>
+>>> On 11/24/2014 02:10 AM, Lad, Prabhakar wrote:
+>>>> From: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
+>>>>
+>>>> This patch adds Video Processing Front End (VPFE) driver for
+>>>> AM437X family of devices
+>>>> Driver supports the following:
+>>>> - V4L2 API using MMAP buffer access based on videobuf2 api
+>>>> - Asynchronous sensor/decoder sub device registration
+>>>> - DT support
+>>>>
+>>>> Signed-off-by: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
+>>>> Signed-off-by: Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>
+>>>> Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>> ---
+>>>>  .../devicetree/bindings/media/ti-am437xx-vpfe.txt  |   61 +
+>>>>  MAINTAINERS                                        |    9 +
+>>>>  drivers/media/platform/Kconfig                     |    1 +
+>>>>  drivers/media/platform/Makefile                    |    2 +
+>>>>  drivers/media/platform/am437x/Kconfig              |   10 +
+>>>>  drivers/media/platform/am437x/Makefile             |    2 +
+>>>>  drivers/media/platform/am437x/vpfe.c               | 2764 ++++++++++++++++++++
+>>>>  drivers/media/platform/am437x/vpfe.h               |  286 ++
+>>>>  drivers/media/platform/am437x/vpfe_regs.h          |  140 +
+>>>>  include/uapi/linux/Kbuild                          |    1 +
+>>>>  include/uapi/linux/am437x_vpfe.h                   |  122 +
+>>>>  11 files changed, 3398 insertions(+)
 >>
->> [    1.085812] nand: device found, Manufacturer ID: 0x2c, Chip ID: 0xdc
->> [    1.092218] nand: Micron MT29F4G08ABADAH4
->> [    1.096245] nand: 512MiB, SLC, page size: 2048, OOB size: 64
->> [    1.102171] nand: 2 chips detected
->> [    1.106156] gpmi-nand 112000.gpmi-nand: enable the asynchronous EDO mode 5
->> [    1.113094] Scanning device for bad blocks
-> could you please post more log?
+>> Can the source names be improved? There are too many 'vpfe' sources.
+>> Perhaps prefix all with 'am437x-'?
+>>
+> I did think of it but, dropped it as anyway the source's are present
+> in am437x folder, again naming the files am437x-xxx.x didn't make
+> me feel good. If you still insists I'll do it.
 
-Sure.
+Yes, please do. If you look at most other drivers they all have a prefix.
 
-...
-[    1.068580] loop: module loaded
-[    1.085966] nand: device found, Manufacturer ID: 0x2c, Chip ID: 0xdc
-[    1.092372] nand: Micron MT29F4G08ABADAH4
-[    1.096401] nand: 512MiB, SLC, page size: 2048, OOB size: 64
-[    1.102331] nand: 2 chips detected
-[    1.106342] gpmi-nand 112000.gpmi-nand: enable the asynchronous EDO mode 5
-[    1.113279] Scanning device for bad blocks
-[    1.126196] Bad eraseblock 58 at 0x000000740000
-[    1.131074] Bad eraseblock 60 at 0x000000780000
-[    1.515182] random: nonblocking pool is initialized
-[    2.331738] 10 cmdlinepart partitions found on MTD device gpmi-nand
-[    2.338028] Creating 10 MTD partitions on "gpmi-nand":
-[    2.343210] 0x000000000000-0x000000e00000 : "spl"
-[    2.351695] 0x000000e00000-0x000001000000 : "uboot"
-[    2.359015] 0x000001000000-0x000001080000 : "env1"
-[    2.366272] 0x000001080000-0x000001100000 : "env2"
-[    2.373508] 0x000001100000-0x000020000000 : "ubi0"
-[    2.381521] 0x000020000000-0x000020e00000 : "res0"
-[    2.388781] 0x000020e00000-0x000021000000 : "res1"
-[    2.396131] 0x000021000000-0x000021080000 : "res2"
-[    2.403458] 0x000021080000-0x000021100000 : "res3"
-[    2.410657] 0x000021100000-0x000040000000 : "ubi1"
-[    2.418572] gpmi-nand 112000.gpmi-nand: driver registered.
-[    2.428911] spi_imx 2008000.ecspi: probed
-...
+Another reason is that the media_build system expects unique names.
 
-Thanks,
-Stefan
+Regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Hans
+
+>> In general I prefer '-' over '_' in a source name: it's looks better
+>> IMHO.
+>>
+> I am almost done with all the review comments, if we take a decision
+> on this quickly I can post a v2 soon.
+> 
+>> One question, unrelated to this patch series:
+>>
+>> Prabhakar, would it make sense to look at the various existing TI sources
+>> as well and rename them to make it more explicit for which SoCs they are
+>> meant? Most are pretty vague with variations on vpe, vpif, vpfe, etc. but
+>> no reference to the actual SoC they are for.
+>>
+> vpe - definitely needs to be changed.
+> vpif - under davinci is common for (Davinci series
+> dm6467/dm6467t/omapl138/am1808)
+> vpfe -  under davinci is common for (Davinci series dm36x/dm6446/dm355)
+> 
+> I am falling short of names for renaming this common drivers :)
+> 
+> Thanks,
+> --Prabhakar Lad
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-media" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
