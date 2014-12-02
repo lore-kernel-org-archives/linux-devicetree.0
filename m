@@ -1,146 +1,45 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: zynq: DT: Add USB to device tree
-Date: Tue, 2 Dec 2014 10:40:28 +0100
-Message-ID: <63f1ea2ffb3f49f29ec46183f3009817@BN1AFFO11FD032.protection.gbl>
-References: <1417509978-19060-1-git-send-email-soren.brinkmann@xilinx.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 05/11] memory: add Atmel EBI (External Bus Interface) driver
+Date: Tue, 02 Dec 2014 10:41:57 +0100
+Message-ID: <3316464.yrAZ5QMKbg@wuerfel>
+References: <1417429647-3419-1-git-send-email-boris.brezillon@free-electrons.com> <2417519.MDE3mu6n7n@wuerfel> <1724175.Jqk8gQW3pz@ws-stein>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417509978-19060-1-git-send-email-soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1724175.Jqk8gQW3pz@ws-stein>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?windows-1252?Q?Andreas_F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+To: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/02/2014 09:46 AM, Soren Brinkmann wrote:
-> Add USB nodes to zc702, zc706 and zed device trees.
+On Tuesday 02 December 2014 10:18:45 Alexander Stein wrote:
+> On Monday 01 December 2014 17:17:30, Arnd Bergmann wrote:
+> > On Monday 01 December 2014 11:50:06 Boris Brezillon wrote:
+> > > 
+> > > I don't have a strong opinion regarding where this driver should
+> > > live (I even considered putting it in drivers/bus) :-).
+> > > But note that there are other "external memory interface" drivers
+> > > in drivers/memory too: TI AEMIF and Marvell DEVBUS  ;-).
+> > > 
+> > > Does anyone else think this driver should go in drivers/bus ?
+> > > 
+> > 
+> > I think drivers/memory is better.
 > 
-> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
-> v2:
->  - remove '@0' from phy node name
->  - don't add bogus space
-> ---
->  arch/arm/boot/dts/zynq-7000.dtsi | 20 ++++++++++++++++++++
->  arch/arm/boot/dts/zynq-zc702.dts | 11 +++++++++++
->  arch/arm/boot/dts/zynq-zc706.dts | 10 ++++++++++
->  arch/arm/boot/dts/zynq-zed.dts   | 10 ++++++++++
->  4 files changed, 51 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
-> index ce2ef5bec4f2..68096bb027db 100644
-> --- a/arch/arm/boot/dts/zynq-7000.dtsi
-> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
-> @@ -315,6 +315,26 @@
->  			clocks = <&clkc 4>;
->  		};
->  
-> +		usb0: usb@e0002000 {
-> +			compatible = "xlnx,zynq-usb-2.20a", "chipidea,usb2";
-> +			status = "disabled";
-> +			clocks = <&clkc 28>;
-> +			interrupt-parent = <&intc>;
-> +			interrupts = <0 21 4>;
-> +			reg = <0xe0002000 0x1000>;
-> +			phy_type = "ulpi";
-> +		};
-> +
-> +		usb1: usb@e0003000 {
-> +			compatible = "xlnx,zynq-usb-2.20a", "chipidea,usb2";
-> +			status = "disabled";
-> +			clocks = <&clkc 29>;
-> +			interrupt-parent = <&intc>;
-> +			interrupts = <0 44 4>;
-> +			reg = <0xe0003000 0x1000>;
-> +			phy_type = "ulpi";
-> +		};
-> +
->  		watchdog0: watchdog@f8005000 {
->  			clocks = <&clkc 45>;
->  			compatible = "xlnx,zynq-wdt-r1p2";
-> diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-zc702.dts
-> index 94e2cda6f9b6..f80c6e65f6e8 100644
-> --- a/arch/arm/boot/dts/zynq-zc702.dts
-> +++ b/arch/arm/boot/dts/zynq-zc702.dts
-> @@ -36,6 +36,11 @@
->  			linux,default-trigger = "heartbeat";
->  		};
->  	};
-> +
-> +	usb_phy0: usb-phy {
-> +		compatible = "usb-nop-xceiv";
-> +		#phy-cells = <0>;
-> +	};
->  };
->  
->  &can0 {
-> @@ -135,3 +140,9 @@
->  &uart1 {
->  	status = "okay";
->  };
-> +
-> +&usb0 {
-> +	status = "okay";
-> +	dr_mode = "host";
-> +	usb-phy = <&usb_phy0>;
-> +};
-> diff --git a/arch/arm/boot/dts/zynq-zc706.dts b/arch/arm/boot/dts/zynq-zc706.dts
-> index a8bbdfbc7093..bece52e47cfe 100644
-> --- a/arch/arm/boot/dts/zynq-zc706.dts
-> +++ b/arch/arm/boot/dts/zynq-zc706.dts
-> @@ -27,6 +27,10 @@
->  		bootargs = "console=ttyPS0,115200 earlyprintk";
->  	};
->  
-> +	usb_phy0: usb-phy {
-> +		compatible = "usb-nop-xceiv";
-> +		#phy-cells = <0>;
-> +	};
->  };
->  
->  &gem0 {
-> @@ -114,3 +118,9 @@
->  &uart1 {
->  	status = "okay";
->  };
-> +
-> +&usb0 {
-> +	status = "okay";
-> +	dr_mode = "host";
-> +	usb-phy = <&usb_phy0>;
-> +};
-> diff --git a/arch/arm/boot/dts/zynq-zed.dts b/arch/arm/boot/dts/zynq-zed.dts
-> index 697779a353ed..efecb2379832 100644
-> --- a/arch/arm/boot/dts/zynq-zed.dts
-> +++ b/arch/arm/boot/dts/zynq-zed.dts
-> @@ -27,6 +27,10 @@
->  		bootargs = "console=ttyPS0,115200 earlyprintk";
->  	};
->  
-> +	usb_phy0: usb-phy {
-> +		compatible = "usb-nop-xceiv";
-> +		#phy-cells = <0>;
-> +	};
->  };
->  
->  &gem0 {
-> @@ -46,3 +50,9 @@
->  &uart1 {
->  	status = "okay";
->  };
-> +
-> +&usb0 {
-> +	status = "okay";
-> +	dr_mode = "host";
-> +	usb-phy = <&usb_phy0>;
-> +};
-> 
+> I don't mind if it's drivers/bus or drivers/memory. But I'm 
+> wondering: When is a driver a bus driver when it is a memory
+> driver? See imx-weim and atmel-ebi. Apparently both add support
+> for devices attached on a bus which can be accessed through memory
+> addresses.
 
-Based on Arnd comment please fix it and rebase it on the top of zynq/dt branch.
+I think drivers/memory should be used for external buses with an
+SRAM or DRAM interface that need to configure the timings.
 
-Thanks,
-Michal
+drivers/bus is more a collection for random other buses, usually
+internal to a chip, but it's less well-defined.
+
+	Arnd
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
