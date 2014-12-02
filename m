@@ -1,114 +1,46 @@
-From: =?UTF-8?B?S3J6eXN6dG9mIEtvesWCb3dza2k=?= <k.kozlowski@samsung.com>
-Subject: Re: [PATCH] mfd: max77686: Fix parent of rtc device
-Date: Tue, 02 Dec 2014 14:33:33 +0100
-Message-ID: <547DBFAD.30605@samsung.com>
-References: <1417523620-4311-1-git-send-email-yadi.brar@samsung.com>
- <1417524339-4604-1-git-send-email-yadi.brar@samsung.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v8 1/4] irqchip: gic: Support hierarchy irq domain.
+Date: Tue, 02 Dec 2014 13:37:59 +0000
+Message-ID: <547DC0B7.6050600@arm.com>
+References: <1416902662-19281-1-git-send-email-yingjoe.chen@mediatek.com>	<1416902662-19281-2-git-send-email-yingjoe.chen@mediatek.com> <CAMuHMdWj0Z66fya=7oN=ZUoz0TQOHFxBe0wyHmkDDVzU8Lafog@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1417524339-4604-1-git-send-email-yadi.brar@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Yadwinder Singh Brar <yadi.brar@samsung.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: lee.jones@linaro.org, sameo@linux.intel.com, akpm@linux-foundation.org, tomasz.figa@gmail.com, robh+dt@kernel.org, yadi.brar01@gmail.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdWj0Z66fya=7oN=ZUoz0TQOHFxBe0wyHmkDDVzU8Lafog-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yijing Wang <wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <eddie.huang-NuS5LvNUpcLQFizaE/u3fw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02.12.2014 13:45, Yadwinder Singh Brar wrote:
-> rtc have different i2c client than power(pmic) block. So rtc device should
-> sit under its own i2c client in device hierarchy, which reflects in sysfs also.
-> This patch modifies code to register rtc cell with rtc->dev as parent.
+On 02/12/14 13:27, Geert Uytterhoeven wrote:
+> On Tue, Nov 25, 2014 at 9:04 AM, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>> Add support to use gic as a parent for stacked irq domain.
+>>
+>> Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > 
-> Without this patch :
-> # ls /sys/class/i2c-adapter/i2c-0/0-0009/
-> driver         max77686-pmic  modalias       power          uevent
-> max77686-clk   max77686-rtc   name           subsystem
+> This change (which is now in -next as commit 9a1091ef0017c40a) breaks
+> booting on r8a7740/armadillo-legacy.
 > 
-> After applying patch :
-> # ls /sys/class/i2c-adapter/i2c-0/0-0006/
-> driver/        modalias       power/         uevent
-> max77686-rtc/  name           subsystem/
+> It hangs because the timers cannot get their interrupts:
 > 
-> Signed-off-by: Yadwinder Singh Brar <yadi.brar@samsung.com>
-> ---
-> 
-> Or Can we follow another (exhaustive but more cleaner) approach, which will
-> be more like code refactoring and cleanup rather than only fix:
-> Since rtc uses i2c client, which gets created using i2c_new_dummy() and is not
-> shared by any other cell of max77686. So we can covert rtc platform driver
-> itself to i2c client driver. It will also allow to expilicitly describe
-> max77686-rtc in DT which we can't do now.
-> It can be applicable to some other existing and new mfd pmic drivers.
-> Any suggestion/comments ?
+> console [tty0] enabled
+>  sh-tmu.0: ch0: used for clock events
+>  sh-tmu.0: ch0: used for periodic clock events
+>  sh-tmu.0: ch0: failed to request irq 230
+>  sh-tmu.0: ch1: used as clock source
+>  sh-cmt-48.1: ch0: failed to request irq 90
+>  sh-cmt-48.1: ch0: registration failed
+> earlytimer: unable to probe sh-cmt-48 early.
+> Calibrating delay loop...
 
-Hi,
+Grmbl... Are you, by any (lack of) chance, using a setup where the GIC
+is probed via DT, but the timers have their IRQs hardcoded?
 
-What kind of problem is solved by this patch?
-
-Best regards,
-Krzysztof
-
-
-> 
-> ---
->  drivers/mfd/max77686.c |   22 ++++++++++++++++++++--
->  1 files changed, 20 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/mfd/max77686.c b/drivers/mfd/max77686.c
-> index 929795e..22c0948 100644
-> --- a/drivers/mfd/max77686.c
-> +++ b/drivers/mfd/max77686.c
-> @@ -39,10 +39,13 @@
->  
->  static const struct mfd_cell max77686_devs[] = {
->  	{ .name = "max77686-pmic", },
-> -	{ .name = "max77686-rtc", },
->  	{ .name = "max77686-clk", },
->  };
->  
-> +static const struct mfd_cell max77686_rtc_dev[] = {
-> +	{ .name = "max77686-rtc", },
-> +};
-> +
->  static const struct mfd_cell max77802_devs[] = {
->  	{ .name = "max77802-pmic", },
->  	{ .name = "max77802-clk", },
-> @@ -332,14 +335,27 @@ static int max77686_i2c_probe(struct i2c_client *i2c,
->  		goto err_del_irqc;
->  	}
->  
-> +	if (max77686->type == TYPE_MAX77686) {
-> +		ret = mfd_add_devices(&max77686->rtc->dev, -1, max77686_rtc_dev,
-> +			1, NULL, 0, NULL);
-> +		if (ret < 0) {
-> +			dev_err(&max77686->rtc->dev,
-> +				"failed to add RTC device %d\n", ret);
-> +			goto err_del_rtc_irqc;
-> +		}
-> +	}
-> +
->  	ret = mfd_add_devices(max77686->dev, -1, cells, n_devs, NULL, 0, NULL);
->  	if (ret < 0) {
->  		dev_err(&i2c->dev, "failed to add MFD devices: %d\n", ret);
-> -		goto err_del_rtc_irqc;
-> +		goto err_del_rtc_dev;
->  	}
->  
->  	return 0;
->  
-> +err_del_rtc_dev:
-> +	if (max77686->type == TYPE_MAX77686)
-> +		mfd_remove_devices(&max77686->rtc->dev);
->  err_del_rtc_irqc:
->  	regmap_del_irq_chip(max77686->irq, max77686->rtc_irq_data);
->  err_del_irqc:
-> @@ -356,6 +372,8 @@ static int max77686_i2c_remove(struct i2c_client *i2c)
->  	struct max77686_dev *max77686 = i2c_get_clientdata(i2c);
->  
->  	mfd_remove_devices(max77686->dev);
-> +	if (max77686->type == TYPE_MAX77686)
-> +		mfd_remove_devices(&max77686->rtc->dev);
->  
->  	regmap_del_irq_chip(max77686->irq, max77686->rtc_irq_data);
->  	regmap_del_irq_chip(max77686->irq, max77686->irq_data);
-> 
+	M.
+-- 
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
