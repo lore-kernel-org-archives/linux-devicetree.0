@@ -1,136 +1,167 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCHv5 4/5] edac: altera: Add Altera L2 Cache and OCRAM EDAC
- Support
-Date: Tue, 2 Dec 2014 15:25:07 +0000
-Message-ID: <20141202152507.GO23671@leverpostej>
-References: <1415751263-1830-1-git-send-email-tthayer@opensource.altera.com>
- <1415751263-1830-5-git-send-email-tthayer@opensource.altera.com>
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: Re: [PATCH v13 03/10] qcom: spm: Add Subsystem Power Manager driver
+Date: Tue, 2 Dec 2014 08:35:48 -0700
+Message-ID: <20141202153548.GE499@linaro.org>
+References: <1417065854-37745-1-git-send-email-lina.iyer@linaro.org>
+ <1417065854-37745-4-git-send-email-lina.iyer@linaro.org>
+ <5476E653.4040007@linaro.org>
+ <20141201185023.GB499@linaro.org>
+ <547D8C1A.1010204@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1415751263-1830-5-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "tthayer@opensource.altera.com" <tthayer@opensource.altera.com>
-Cc: "bp@alien8.de" <bp@alien8.de>, "dougthompson@xmission.com" <dougthompson@xmission.com>, "m.chehab@samsung.com" <m.chehab@samsung.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "tthayer.linux@gmail.com" <tthayer.linux@gmail.com>
+In-Reply-To: <547D8C1A.1010204@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Dec 02 2014 at 02:53 -0700, Daniel Lezcano wrote:
+>On 12/01/2014 07:50 PM, Lina Iyer wrote:
+>>On Thu, Nov 27 2014 at 01:52 -0700, Daniel Lezcano wrote:
+>>>On 11/27/2014 06:24 AM, Lina Iyer wrote:
+>>
+>>>+    static bool cpuidle_drv_init;
+>>>
+>>>       ^^^^^^^^^
+>>>
+>>>As already said in a previous comment, please find a way to remove that.
+>>>
+>>I will look into it. Stephen and I wanted the cpuidle driver to be
+>>probed only after any of the SPMs are ready. And possibly, only for that
+>>cpu, for which the SPM has been probed.
+>>
+>>To achieve the SPM -> CPUIDLE Device relation, I havent found a good way
+>>to do that. Without using CPUIDLE_MULTIPLE_DRIVERS, initializing each
+>>cpuidle device, separate from the cpuidle driver, requires that I update
+>>the cpuidle_driver->cpumask after probing each SPM device, to allow for
+>>only one driver and cpuidle devices only for the probed cpus. Using the
+>>cpuidle_register_driver(), resets the drv->refcnt in
+>>__cpuidle_driver_init.
+>>
+>>I may need something like this in the else clause of
+>>CPUIDLE_MULTIPLE_DRIVERS -
+>>
+>>static inline struct cpuidle_driver *__cpuidle_get_cpu_driver(int cpu)
+>>{
+>>        struct cpuidle_driver *drv = cpuidle_curr_driver;
+>>
+>>        if (drv && !cpumask_test_cpu(cpu, drv->cpumask))
+>>                 drv = NULL;
+>>
+>>        return drv;
+>>}
+>
+>You don't have to deal with the drv->cpumask and 
+>CPUIDLE_MULTIPLE_DRIVERS. This field gives the list of the cpus the 
+>driver will have to potentially handle.
+>
+>Just register the driver at the first place with the platform device 
+>by using cpuidle_register_driver(drv), I suggest somewhere else than 
+>the spm code.
+>
+>The underlying code will do:
+>
+>        if (!drv->cpumask)
+>                drv->cpumask = (struct cpumask *)cpu_possible_mask;
+>
+>Until the cpuidle device is not initialized for a specific cpu, the 
+>cpuidle code will have no effect for this cpu. If you register the 
+>driver but without registering the cpuidle devices that will result in 
+>nothing more than a structure initialized but inoperative.
+>
+>For each SPM being probed:
+>
+>struct cpuidle_device *dev = &per_cpu(cpuidle_dev, cpu);
+>dev->cpu = cpu;
+>cpuidle_register_device(dev);
+>
+>Note cpuidle_dev is exported via cpuidle.h, so you don't have to 
+>redeclare a per cpu cpuidle device by your own.
+>
+>So rephrasing all that:
+>
+>(1) in cpuidle-qcom register the driver
+>(2) in the spm code register the device for each spm probe
+>
+>(1) being called before (2).
+>
+>If after that in the code you still have a "static bool 
+>cpuidle_drv_init", then I guess we have a problem in the init sequence 
+>somewhere else.
+>
+Okay, Thanks. Last night I was able to get a patch working with one
+cpuidle_register_driver and multiple cpuidle_register_device. The issue
+using an module_init() was -
 
-> +/* MPU L2 Register Defines */
-> +#define ALTR_MPUL2_CONTROL_OFFSET       0x100
-> +#define ALTR_MPUL2_CTL_CACHE_EN_MASK    BIT(0)
+1. Register a device to probe the cpuidle driver.
+2. Register cpuidle devices for every SPM probed.
 
-These are just standard PL310 register definitions, no?
+What used to happen is that the cpuidle driver probe always happens 
+after the cpuidle devices were created.
 
-[...]
+I have a solution where I register for the cpuidle device to probe a
+driver, at postcore_initcall() at which point, the cpuidle framework
+would also be available.
 
-> +static void *ocram_alloc_mem(size_t size, void **other)
-> +{
-> +       struct device_node *np;
-> +       struct gen_pool *gp;
-> +       void *sram_addr;
-> +
-> +       np = of_find_compatible_node(NULL, NULL, "altr,ocram-edac");
-> +       if (!np)
-> +               return NULL;
+I am not sure how elegant it looks, but thats the latest initcall I
+could get a consistent driver initialization before the SPM probe
+(therefore the device registration).
 
-Don't you need to have a corresponding of_node_put?
+I will send the patch this morning.
 
-Is this ever called before the code above has probed? Can't you keep
-this information around rather than probing it every time?
+>>void cpuidle_update_cpumask(struct cpumask *mask) {
+>>        struct cpuidle_driver *drv;
+>>
+>>        spin_lock(&cpuidle_driver_lock);
+>>        drv = cpuidle_get_driver();
+>>     if (drv)
+>>         drv->cpumask = mask ?: cpu_possible_mask;
+>>        spin_unlock(&cpuidle_driver_lock);
+>>}
+>>
+>>With that, I could register cpuidle driver the first time when the mask
+>>changes
+>>from empty and consequent updates would just update the cpumask. (I am not
+>>sure, if I missed anything in this change). It just seemed far too
+>>invasive at
+>>this time, in lieu of the static bool.
+>>
 
-> +
-> +       gp = of_get_named_gen_pool(np, "iram", 0);
-> +       if (!gp)
-> +               return NULL;
-> +
-> +       sram_addr = (void *)gen_pool_alloc(gp, size);
-> +       if (!sram_addr)
-> +               return NULL;
-> +
-> +       memset(sram_addr, 0, size);
+>>>>+    const struct platform_device_info qcom_cpuidle_info = {
+>>>>+        .name    = "qcom_cpuidle",
+>>>>+        .id    = -1,
+>>>>+        .data = &lpm_ops,
+>>>>+        .size_data = sizeof(lpm_ops),
+>>>>+    };
+>>>>+
+>>>>+    drv = spm_get_drv(pdev, &cpu);
+>>>>+    if (!drv || cpu < 0)
+>>>>+        return -EINVAL;
+>>>
+>>>As already said in a previous comment, it is not possible to have "cpu
+>>>< 0" with "drv != NULL", so except I am missing something the test
+>>>should be:
+>>>
+>>>    if (!drv)
+>>>        return -EINVAL;
+>>>
+>>Sorry, done.
+>>
+>>>There is something wrong with the init sequence. Don't you find weird
+>>>you have to backward search for the cpu belonging to the pdev each
+>>>time the probe function is called ?
+>>>
+>>>
+>>Well, it was that or the SPM device node pointing to the CPU that it
+>>references. It seems more common to have an iterator than the doubly
+>>linked device nodes. I dont have a strong preference either way, just
+>>chose the way that made device nodes easier.
+>>
+This one, I havent addressed. How strongly do you feel about this? I
+still have to iterate through all the cpus to find the cpu node that
+matches the handle specified in the SAW node.
 
-Is it safe to do a memset to the sram? How is it mapped?
-
-[...]
-
-> +static void *l2_alloc_mem(size_t size, void **other)
-> +{
-> +       struct device *dev = *other;
-> +       void *ptemp = devm_kzalloc(dev, size, GFP_KERNEL);
-> +
-> +       if (!ptemp)
-> +               return NULL;
-> +
-> +       /* Make sure everything is written out */
-> +       wmb();
-> +       flush_cache_all();
-
-Doesn't this just flush out _to_ the L2 (and not beyond)? Even then I
-don't think that's safe with the MMU enabled.
-
-Why is the flush necessary?
-
-[...]
-
-> +static int altr_l2_dependencies(struct platform_device *pdev,
-> +                               void __iomem *base)
-> +{
-> +       u32 control;
-> +       struct regmap *l2_vbase;
-> +
-> +       control = readl(base) & ALTR_L2_ECC_EN_MASK;
-> +       if (!control) {
-> +               edac_printk(KERN_ERR, EDAC_DEVICE,
-> +                           "L2: No ECC present, or ECC disabled\n");
-> +               return -ENODEV;
-> +       }
-> +
-> +       l2_vbase = syscon_regmap_lookup_by_compatible("arm,pl310-cache");
-> +       if (IS_ERR(l2_vbase)) {
-> +               edac_printk(KERN_ERR, EDAC_DEVICE,
-> +                           "L2:regmap for arm,pl310-cache lookup failed.\n");
-> +               return -ENODEV;
-> +       }
-
-I must NAK any use of the L2 as a syscon device. It's simply not a
-register file that was intended to be shared. I appreciate that you only
-want to check something very simple, but we should use a higher level
-API for that (and we should add one if we do not already have one)
-
-> +
-> +       regmap_read(l2_vbase, ALTR_MPUL2_CONTROL_OFFSET, &control);
-> +       if (!(control & ALTR_MPUL2_CTL_CACHE_EN_MASK)) {
-> +               edac_printk(KERN_ERR, EDAC_DEVICE, "L2: Cache disabled\n");
-> +               return -ENODEV;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +const struct edac_device_prv_data l2ecc_data = {
-> +       .setup = altr_l2_dependencies,
-> +       .ce_clear_mask = 0,
-> +       .ue_clear_mask = 0,
-> +#ifdef CONFIG_EDAC_DEBUG
-> +       .eccmgr_sysfs_attr = altr_l2_sysfs_attributes,
-> +       .alloc_mem = l2_alloc_mem,
-> +       .free_mem = l2_free_mem,
-> +       .ecc_enable_mask = ALTR_L2_ECC_EN_MASK,
-> +       .ce_set_mask = (ALTR_L2_ECC_EN_MASK | ALTR_L2_ECC_INJS_MASK),
-> +       .ue_set_mask = (ALTR_L2_ECC_EN_MASK | ALTR_L2_ECC_INJD_MASK),
-> +       .trig_alloc_sz = ALTR_TRIG_L2C_BYTE_SIZE,
-> +#endif
-> +};
-> +
-> +#endif /* #ifdef CONFIG_EDAC_ALTERA_L2C */
-> +
->  MODULE_LICENSE("GPL v2");
->  MODULE_AUTHOR("Thor Thayer");
-> -MODULE_DESCRIPTION("EDAC Driver for Altera SDRAM Controller");
-> +MODULE_DESCRIPTION("EDAC Driver for Altera Memories");
-> --
-> 1.7.9.5
-> 
-> 
+Thanks,
+Lina
