@@ -1,37 +1,85 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 1/2] ASoC: rockchip-i2s: dt: add an optional property "i2s_clk_out"
-Date: Tue, 2 Dec 2014 09:57:27 -0800
-Message-ID: <CAD=FV=UhV6gmR4dYUJdPB5tTP9abySCWZotZW_X8ZCtV1v8+cw@mail.gmail.com>
-References: <1417531766-29669-1-git-send-email-jay.xu@rock-chips.com>
-	<1417531766-29669-2-git-send-email-jay.xu@rock-chips.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v15 06/12] dt-bindings: add document for dw_hdmi
+Date: Tue, 02 Dec 2014 19:23:49 +0100
+Message-ID: <1417544629.3411.15.camel@pengutronix.de>
+References: <1417505778-18341-1-git-send-email-andy.yan@rock-chips.com>
+ <1417506124-18626-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417531766-29669-2-git-send-email-jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1417506124-18626-1-git-send-email-andy.yan@rock-chips.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Pawel Moll <pawel.moll@arm.com>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, rmk+kernel@arm.linux.org.uk, mark.yao@rock-chips.com, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, vladimir_zapolskiy@mentor.com
 List-Id: devicetree@vger.kernel.org
 
-Jianqun,
+Hi Andy,
 
-On Tue, Dec 2, 2014 at 6:49 AM, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> Add an property "i2s_clk_out", which enables to output clock to outside
-> of rockchip SoCs. Let's make it optional since not each board needs it.
->
-> Signed-off-by: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/sound/rockchip-i2s.txt | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+Am Dienstag, den 02.12.2014, 15:42 +0800 schrieb Andy Yan:
+> diff --git a/Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt b/Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt
+> new file mode 100644
+> index 0000000..107c1ca
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt
+> @@ -0,0 +1,40 @@
+> +DesignWare HDMI bridge bindings
+> +
+> +Required properities:
+> +- compatible: platform specific such as:
+> +   * "fsl,imx6q-hdmi"
+> +   * "fsl,imx6dl-hdmi"
+> +   * "rockchip,rk3288-dw-hdmi"
 
-You forgot to mention that this is a v3 in the subject line and forgot
-to mention what changed between v2 and v3 (nothing changed, but you
-should say that).
+I think we should add a common compatible value "snps,dw-hdmi-tx" here:
 
-Despite that, this patch looks reasonable to me.
+	compatible = "fsl,imx6q-hdmi", "snps,dw-hdmi-tx";
 
-Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +- reg: Physical base address and length of the controller's registers.
+> +- ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
+
+Better make ddc-i2c-bus optional, see the other thread about the ddc i2c
+master.
+
+> +- interrupts: The HDMI interrupt number
+> +
+> +Optional properties
+> +- reg-io-width: the width of the reg:1,4, default set to 1 if not present
+> +
+> +Example:
+> +	hdmi: hdmi@0120000 {
+> +		compatible = "fsl,imx6q-hdmi";
+> +		reg = <0x00120000 0x9000>;
+> +		interrupts = <0 115 0x04>;
+> +		gpr = <&gpr>;
+> +		clocks = <&clks 123>, <&clks 124>;
+> +		clock-names = "iahb", "isfr";
+> +		ddc-i2c-bus = <&i2c2>;
+> +
+> +		port@0 {
+> +			reg = <0>;
+> +
+> +			hdmi_mux_0: endpoint {
+> +				remote-endpoint = <&ipu1_di0_hdmi>;
+> +			};
+> +		};
+> +
+> +		port@1 {
+> +			reg = <1>;
+> +
+> +			hdmi_mux_1: endpoint {
+> +				remote-endpoint = <&ipu1_di1_hdmi>;
+> +			};
+> +		};
+> +	};
+
+regards
+Philipp
