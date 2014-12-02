@@ -1,88 +1,65 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v15 12/12] drm: bridge/dw_hdmi: add rockchip rk3288 support
-Date: Tue, 02 Dec 2014 14:00:57 +0100
-Message-ID: <1417525257.3411.12.camel@pengutronix.de>
-References: <1417505778-18341-1-git-send-email-andy.yan@rock-chips.com>
- <1417506327-18908-1-git-send-email-andy.yan@rock-chips.com>
- <1417515882.3411.8.camel@pengutronix.de> <547DB1ED.7000409@rock-chips.com>
+From: Roman Byshko <Roman.Byshko-boyO8OCvo7cFyTtuD1jkCg@public.gmane.org>
+Subject: Re: [PATCH v2 0/5] ARM: sunxi: Add support for USB OTG PHY
+Date: Tue, 2 Dec 2014 14:01:50 +0100
+Message-ID: <CAMXmWBkG50yq323T-EU8CredkoP2vaJwkvV6Df5t7bBS861q3Q@mail.gmail.com>
+References: <cover.1415645258.git.rbyshko@gmail.com> <5461D2C1.6020505@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <547DB1ED.7000409@rock-chips.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Pawel Moll <pawel.moll@arm.com>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, rmk+kernel@arm.linux.org.uk, mark.yao@rock-chips.com, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, vladimir_zapolskiy@mentor.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDJMXIOHZIFBBU7Q62RQKGQEO4UL44A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <5461D2C1.6020505-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW5keSwKCkFtIERpZW5zdGFnLCBkZW4gMDIuMTIuMjAxNCwgMjA6MzQgKzA4MDAgc2Nocmll
-YiBBbmR5IFlhbjoKPiBIaSBQaGlsaXBwOgo+IE9uIDIwMTTlubQxMuaciDAy5pelIDE4OjI0LCBQ
-aGlsaXBwIFphYmVsIHdyb3RlOgo+ID4gSGkgQW5keSwKPiA+Cj4gPiBBbSBEaWVuc3RhZywgZGVu
-IDAyLjEyLjIwMTQsIDE1OjQ1ICswODAwIHNjaHJpZWIgQW5keSBZYW46Cj4gPiBbLi4uXQo+ID4+
-ICtzdGF0aWMgaW50IGR3X2hkbWlfcm9ja2NoaXBfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0
-cnVjdCBkZXZpY2UgKm1hc3RlciwKPiA+PiArCQkJCSB2b2lkICpkYXRhKQo+ID4+ICt7Cj4gPj4g
-KwlzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2ID0gdG9fcGxhdGZvcm1fZGV2aWNlKGRldik7
-Cj4gPj4gKwljb25zdCBzdHJ1Y3QgZHdfaGRtaV9wbGF0X2RhdGEgKnBsYXRfZGF0YTsKPiA+PiAr
-CWNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgKm1hdGNoOwo+ID4+ICsJc3RydWN0IGRybV9kZXZp
-Y2UgKmRybSA9IGRhdGE7Cj4gPj4gKwlzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXI7Cj4gPj4g
-KwlzdHJ1Y3Qgcm9ja2NoaXBfaGRtaSAqaGRtaTsKPiA+PiArCWludCByZXQ7Cj4gPj4gKwo+ID4+
-ICsJaWYgKCFwZGV2LT5kZXYub2Zfbm9kZSkKPiA+PiArCQlyZXR1cm4gLUVOT0RFVjsKPiA+PiAr
-Cj4gPj4gKwloZG1pID0gZGV2bV9remFsbG9jKCZwZGV2LT5kZXYsIHNpemVvZigqaGRtaSksIEdG
-UF9LRVJORUwpOwo+ID4+ICsJaWYgKCFoZG1pKQo+ID4+ICsJCXJldHVybiAtRU5PTUVNOwo+ID4+
-ICsKPiA+PiArCW1hdGNoID0gb2ZfbWF0Y2hfbm9kZShkd19oZG1pX3JvY2tjaGlwX2lkcywgcGRl
-di0+ZGV2Lm9mX25vZGUpOwo+ID4+ICsJcGxhdF9kYXRhID0gbWF0Y2gtPmRhdGE7Cj4gPj4gKwlo
-ZG1pLT5kZXYgPSAmcGRldi0+ZGV2Owo+ID4+ICsJZW5jb2RlciA9ICZoZG1pLT5lbmNvZGVyOwo+
-ID4+ICsJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgaGRtaSk7Cj4gPj4gKwo+ID4+ICsJcmV0
-ID0gcm9ja2NoaXBfaGRtaV9wYXJzZV9kdChoZG1pKTsKPiA+PiArCWlmIChyZXQpIHsKPiA+PiAr
-CQlkZXZfZXJyKGhkbWktPmRldiwgIlVuYWJsZSB0byBwYXJzZSBPRiBkYXRhXG4iKTsKPiA+PiAr
-CQlyZXR1cm4gcmV0Owo+ID4+ICsJfQo+ID4+ICsKPiA+PiArCXJldCA9IGNsa19wcmVwYXJlX2Vu
-YWJsZShoZG1pLT5jbGspOwo+ID4+ICsJaWYgKHJldCkgewo+ID4+ICsJCWRldl9lcnIoaGRtaS0+
-ZGV2LCAiQ2Fubm90IGVuYWJsZSBIRE1JIGNsb2NrOiAlZFxuIiwgcmV0KTsKPiA+PiArCQlyZXR1
-cm4gcmV0Owo+ID4+ICsJfQo+ID4+ICsKPiA+PiArCXJldCA9IGNsa19wcmVwYXJlX2VuYWJsZSho
-ZG1pLT5oZGNwX2Nsayk7Cj4gPj4gKwlpZiAocmV0KSB7Cj4gPj4gKwkJZGV2X2VycihoZG1pLT5k
-ZXYsICJDYW5ub3QgZW5hYmxlIEhETUkgaGRjcCBjbG9jazogJWRcbiIsIHJldCk7Cj4gPj4gKwkJ
-cmV0dXJuIHJldDsKPiA+PiArCX0KPiA+IENvdWxkIHdlIGhhdmUgYSBsb29rIGF0IHRoZSBjbG9j
-a3MgYWdhaW4/IEJhc2ljYWxseSB0aGUgUm9ja2NoaXAgY2xvY2sKPiA+IGhhbmRsaW5nIGlzIGV4
-YWN0bHkgdGhlIHNhbWUsIGV4Y2VwdCB0aGUgY2xvY2tzIGFyZSBjYWxsZWQgYnkgb3RoZXIKPiA+
-IG5hbWVzLgo+ID4KPiA+IE9uIGkuTVg2LCBhY2NvcmRpbmcgdG8gdGhlIHJlZmVyZW5jZSBtYW51
-YWwsIHRoZSBIRE1JIFRYIG1vZHVsZSBoYXMgZm91cgo+ID4gY2xvY2sgaW5wdXRzOiAiaWFoYmNs
-ayIgKGJ1cyBjbG9jayksICJpY2VjY2xrIiAoMzIga0h6IENFQyBjbG9jayksCj4gPiAiaWhjbGsi
-IChtb2R1bGUgY2xvY2spLCBhbmQgImlzZnJjbGsiICgyNyBNSHogaW50ZXJuYWwgU0ZSIGNsb2Nr
-KS4KPiA+IFRoZSAiaWFoYmNsayIgYW5kICJpaGNsayIgYXJlIGJvdGggc291cmNlZCBmcm9tIHRo
-ZSBTb0MgQUhCIHJvb3QgY2xvY2ssCj4gPiB0aGUgMzIga0h6IHJlZmVyZW5jZSBpbnB1dCBjYW4n
-dCBiZSBnYXRlZCwgYW5kIHRoZSAiaXNmcmNsayIgaGFzIGl0cyBvd24KPiA+IGdhdGUuCj4gPgo+
-ID4gRG9lcyB0aGUgSERNSSBUWCBpbXBsZW1lbnRhdGlvbiBvbiBSb2NrY2hpcCBzdGlsbCBoYXZl
-IHRoZSBzZXBhcmF0ZQo+ID4gZXh0ZXJuYWwgc2ZyIGJ1cyBhbmQgbW9kdWxlIGNsb2NrIGlucHV0
-cz8gSSBhc3N1bWUgdGhhdCB5b3VyICJjbGsiIGlucHV0Cj4gPiBpcyBhIHNpbmdsZSBnYXRlIGJp
-dCBmb3IgYnVzIGFuZCBtb2R1bGUgY2xvY2tzIGF0IHRoZSBzYW1lIHRpbWU/Cj4gPiBJZiBwb3Nz
-aWJsZSwgSSdkIHByZWZlciB0byBmaW5kIGEgY29tbW9uIGJpbmRpbmcgZm9yIHRoZSBjbG9ja3Mg
-d2l0aAo+ID4gc29tZSBvZiB0aGUgY2xvY2tzIGJlaW5nIG9wdGlvbmFsLCBidXQgZm9yIHRoYXQg
-d2UgbmVlZCB0byBrbm93IHRoZQo+ID4gYWN0dWFsIGNsb2NrIGlucHV0cyB0byB0aGUgSERNSSBU
-WCBtb2R1bGUuCj4gPgo+ID4gcmVnYXJkcwo+ID4gUGhpbGlwcAo+ID4KPiAgICAgIFRoZXJlIGFy
-ZSB0aHJlZSAgaW5kaXZpZHVhbCBjbG9jayBpbnB1dHMgb24gUm9ja2NoaXAgUkszMjg4IEhETUk6
-IAo+ICJoZG1pX2N0cmxfY2xrIiwKPiAgICAgICJoZG1pX2NlY19jbGsiLCAiaGRtaV9oZGNwX2Ns
-ayIsIHRoZSB0aHJlZSBjbG9ja3MgYXJlIHJlc3BvbnNpYmxlIAo+IGZvciBkaWZmZXJlbnQKPiAg
-ICAgICBmdW5jdGlvbnMgYXMgdGhlaXIgbmFtZSBkZXNjcmliZWQsIGFuZCBoYXZlIHRoZWlyIG93
-biBwcml2YXRlIGdhdGUgCj4gYml0LiBUaGF0IGlzCj4gICAgICAgdG8gc2F5LCB0aGUgY2VjX2Ns
-ayBhbmQgaGRjcF9jbGsgY2FuIGFsbCBiZSBkaXNhYmxlZCBpZiB3ZSBkb24ndCAKPiBuZWVkIGhk
-Y3AgYW5kIGNlYwo+ICAgICAgIGZ1bmN0aW9uLgo+ICAgICAgIFNvIEkgdGhpbmsgaXQncyBiZXR0
-ZXIgdG8gbWFrZSB0aGUgY2xrIGNvbnRyb2wgcGxhdGZvcm0gaW5kZXBlbmRlbnQuCgpNeSBxdWVz
-dGlvbiBpcyBub3QgYWJvdXQgdGhlIGF2YWlsYWJsZSBnYXRlcyBhdCB0aGUgU29DIGxldmVsLCBi
-dXQgYWJvdXQKdGhlIGFjdHVhbCBjbG9jayBpbnB1dHMgZnJvbSBwb2ludCBvZiB2aWV3IG9mIHRo
-ZSBIRE1JIFRYIElQLgoKSXQgY291bGQgYmUgdGhhdCB0aGUgaGRtaV9jdHJsX2NsayBnYXRlcyBh
-bGwgaW5wdXRzIHRvIHRoZSBtb2R1bGUgYW5kCmJ1cyBjbG9ja3MgdG9nZXRoZXIuIElmIHNvLCB5
-b3UgY291bGQganVzdCByZXVzZSAiaXNmciIgYW5kICJpYWhiIiBhbmQKc2V0IGl0IHRvIHRoZSBz
-YW1lIGNsb2NrLiBJZiBub3QsIHdlJ2QgbmVlZCB0byB0aGluayBvZiBzb21ldGhpbmcgZWxzZS4K
-VW5mb3J0dW5hdGVseSBJIGRvbid0IGhhdmUgYW55IFN5bm9wc3lzIGRvY3VtZW50YXRpb24gb2Yg
-dGhlIEhETUkgVFggYXQKdGhhdCBsZXZlbC4KCnJlZ2FyZHMKUGhpbGlwcAoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2ZWwgbWFpbGluZyBsaXN0CmRl
-dmVsQGxpbnV4ZHJpdmVycHJvamVjdC5vcmcKaHR0cDovL2RyaXZlcmRldi5saW51eGRyaXZlcnBy
-b2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vZHJpdmVyZGV2LWRldmVsCg==
+On Tue, Nov 11, 2014 at 10:11 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> Hi,
+>
+> On 11/10/2014 07:55 PM, Roman Byshko wrote:
+>> Hi,
+>>
+>> There is already support for two USB phys, which are used for
+>> USB host controllers on Allwinner SoC aka sunxi.
+>>
+>> This patch series add support for the USB OTG phy (aka phy0).
+>>
+>> The code has been tested on Allwinner A20 aka sun7i (Cubietruck).
+>>
+>> Best regards,
+>> Roman Byshko
+>
+> First of all very cool that you're working on this, I somehow missed
+> v1, but I'm very happy to see this.
+>
+> Second some questions, this series seems to only add support for
+> initializing the phy, without adding the necessary magic for
+> switching from app to host mode, and without actually hooking up musb,
+> I assume you've a follow up series adding musb support, which actually
+> uses the phy ?
+
+Yes, there will be follow ups.
+
+> Also have you coordinated your work with ChenYu? ATM ChenYu is mostly
+> working on other stuff, but AFAIk he has been working on musb support
+> in the past.
+
+Yes.
+
+Best,
+Roman
+>
+> Regards,
+>
+> Hans
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
