@@ -1,100 +1,102 @@
-From: addy ke <addy.ke@rock-chips.com>
-Subject: Re: [PATCH v2] mmc: dw_mmc: add quirk for broken data transfer over
- scheme
-Date: Tue, 02 Dec 2014 15:50:14 +0800
-Message-ID: <547D6F36.50103@rock-chips.com>
-References: <1415970338-2637-1-git-send-email-addy.ke@rock-chips.com>	<1416903008-4160-1-git-send-email-addy.ke@rock-chips.com> <CAD=FV=UmG1okxJ5JV-1cuRRQJi7EEPXc7Q90sWjfMWBqb7VSMw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=UmG1okxJ5JV-1cuRRQJi7EEPXc7Q90sWjfMWBqb7VSMw@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: dianders@chromium.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, jh80.chung@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, heiko@sntech.de, olof@lixom.net, sonnyrao@chromium.org, amstan@chromium.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, zhenfu.fang@rock-chips.com, cf@rock-chips.com, lintao@rock-chips.com, chenfen@rock-chips.com, zyf@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, hj@rock-chips.com, kever.yang@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com
+From: gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH v9 0/8] Add Skyworks SKY81452 device drivers
+Date: Tue,  2 Dec 2014 17:05:21 +0900
+Message-ID: <1417507529-13654-1-git-send-email-jack.yoo@skyworksinc.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-On 2014/11/27 06:46, Doug Anderson wrote:
-> Hi,
-> 
-> On Tue, Nov 25, 2014 at 12:10 AM, Addy Ke <addy.ke@rock-chips.com> wrote:
->> This patch add a new quirk to add a s/w timer to notify the driver
->> to terminate current transfer and report a data timeout to the core,
->> if DTO interrupt does NOT come within the given time.
->>
->> dw_mmc call mmc_request_done func to finish transfer depends on
->> DTO interrupt. If DTO interrupt does not come in sending data state,
->> the current transfer will be blocked.
->>
->> But this case really exists, when driver reads tuning data from
->> card on RK3288-pink2 board. I measured waveforms by oscilloscope
->> and found that card clock was always on and data lines were always
->> holded high level in sending data state.
->>
->> We got the reply from synopsys:
->> There are two counters but both use the same value of [31:8] bits.
->> Data timeout counter doesn't wait for stop clock and you should get
->> DRTO even when the clock is not stopped.
->> Host Starvation timeout counter is triggered with stop clock condition.
->>
->> This means that host should get DRTO and DTO interrupt.
->>
->> But we really don't get any data-related interrupt in RK3X SoCs.
->> And driver can't get data transfer state, it can do nothing but wait for.
-> 
-> Have you asked someone on your IC team to confirm this is an SoC
-> errata on your SoC?  ...or is there something else we could be doing
-> wrong (overclocking?  jitter in the clock?  bad dividers?) that could
-> be causing this problem?
-> 
-> 
->>  #ifdef CONFIG_OF
->>  static struct dw_mci_of_quirks {
->>         char *quirk;
->> @@ -2513,6 +2549,9 @@ static struct dw_mci_of_quirks {
->>         }, {
->>                 .quirk  = "disable-wp",
->>                 .id     = DW_MCI_QUIRK_NO_WRITE_PROTECT,
->> +       }, {
->> +               .quirk  = "broken-dto",
->> +               .id     = DW_MCI_QUIRK_BROKEN_DTO,
-> 
-> You're adding a device tree property without any binding.  If you need
-> to add this please send a patch before this one modifying the device
-> tree bindings.
-> 
-> ...but that brings up the question: do you _really_ need to add a
-> property?  You already know that all rk3288 SoCs need this and you
-> already know that you're an rk3288 SoC.  Just add this quirk in the
-> rk3288 code always and be done with it.  ...and if this is also needed
-> on other Rockchip parts, add it there too.
-> 
-> -Doug
+From: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
 
-We don't know why we have this problem,
-but this problem is really exist, and we need patch to fix this problem now.
-I will post a follow up change when we find the root cause.
+This patch set includes regulator and backlight driver for SKY81452.
+Also it includes documents for device tree and module.
+The initial version of sky81452-regulator was applied. Fo this, incremental
+patches are included.
 
-And there is a little probability of this problem on RK SoC, such as RK3188, RK3066,
-when worse card inserted in.
-Maybe the other SoCs have the similar problem.
+v9:
+Removed the change to remove MODULE_VERSION() for sky81452-regulator
 
-So I will add this quirk in rockchip code(dw_mmc-rockchip.c) as follows:
-static int dw_mci_rockchip_parse_dt(struct dw_mci *host)
-{
-	host->quirk |= DW_MCI_QUIRK_BROKEN_DTO;
+v8:
+Renamed property names for backlight with vendor prefix
+Modified gpio-enable property to generic property for GPIO
+Made up the example for backlight DT
+Changed the DT parsing of regulator using regulator_node and of_match
 
-	return 0;
-}
+v7:
+Modified licensing text to GPLv2
+Splitted Kconfig renaming from DT patch
 
-......
-	.parse_dt = dw_mci_rockchip_parse_dt,
-......
+v6:
+Added new line character at the end of line of dev_err()
 
-is right?
+v5:
+Changed DT for regulator : 'lout' node should be defined under 'regulator'
+Removed compatible string from sky81452-regulator driver
+Modified sky81452-regulator to return EINVAL when of_node is NULL
+Move sky81452-backlight.h to include/linux/platform_data
 
-> 
-> 
-> 
+v4:
+Removed MODULE_VERSION()
+Modified license to GPLv2
+Removed calling to backlight_device_unregister() in sky81452-backlight
 
+v3:
+Cleaned-up DBG messages
+Cleaned-up DT
+Fixed the backlight name from 'sky81452-bl' to 'sky81452-backlight'
+Assigned mfd_cell.of_compatible for binding device node
+Modified error messages
+Modified sky81452-regulator to return ENODATA when of_node is NULL
+
+v2:
+Split the patches for each sub-system
+Added 'reg' attribute for I2C address in device tree documents
+Added 'compatible' attribute in child drivers
+Renamed CONFIG_SKY81452 to CONFIG_MFD_SKY81452
+Changed the dependency from I2C=y to I2C, for CONFIG_MFD_SKY81452
+Added message for exception or errors.
+Added vendor prefix for Skyworks Solutions, Inc.
+Add SKY81452 to the Trivial Devices list
+
+
+Gyungoh Yoo (8):
+  mfd: Add support for Skyworks SKY81452 driver
+  backlight: Add support Skyworks SKY81452 backlight driver
+  devicetree: mfd: Add new SKY81452 mfd binding
+  devicetree: backlight: Add new SKY81452 backlight binding
+  devicetree: Add vendor prefix for Skyworks Solutions, Inc.
+  devicetree: i2c: Add SKY81452 to the Trivial Devices list
+  regulator: sky81452: Modify Device Tree structure
+  devicetree: regulator: sky81452: Modify Device Tree structure
+
+ .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
+ Documentation/devicetree/bindings/mfd/sky81452.txt |  36 +++
+ .../bindings/regulator/sky81452-regulator.txt      |  10 +-
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ .../video/backlight/sky81452-backlight.txt         |  29 ++
+ drivers/mfd/Kconfig                                |  12 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/sky81452.c                             | 108 +++++++
+ drivers/regulator/sky81452-regulator.c             |  45 +--
+ drivers/video/backlight/Kconfig                    |  10 +
+ drivers/video/backlight/Makefile                   |   1 +
+ drivers/video/backlight/sky81452-backlight.c       | 340 +++++++++++++++++++++
+ include/linux/mfd/sky81452.h                       |  31 ++
+ include/linux/platform_data/sky81452-backlight.h   |  46 +++
+ 14 files changed, 631 insertions(+), 40 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/sky81452.txt
+ create mode 100644 Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
+ create mode 100644 drivers/mfd/sky81452.c
+ create mode 100644 drivers/video/backlight/sky81452-backlight.c
+ create mode 100644 include/linux/mfd/sky81452.h
+ create mode 100644 include/linux/platform_data/sky81452-backlight.h
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
