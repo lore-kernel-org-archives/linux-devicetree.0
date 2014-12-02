@@ -1,46 +1,48 @@
-From: Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH 1/2] ASoC: rockchip-i2s: dt: add an optional property "i2s_clk_out"
-Date: Tue,  2 Dec 2014 22:49:25 +0800
-Message-ID: <1417531766-29669-2-git-send-email-jay.xu@rock-chips.com>
-References: <1417531766-29669-1-git-send-email-jay.xu@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1417531766-29669-1-git-send-email-jay.xu@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.de, jay.xu@rock-chips.com, sonnyrao@chromium.org, heiko@sntech.de
-Cc: linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] pinctrl: at91: allow disabled gpio controllers
+Date: Tue, 2 Dec 2014 15:50:12 +0100
+Message-ID: <CACRpkdZAmqXVOfm6dF=FX7EJUqmAySpP2Kop2kcTzO5zf4Xg9g@mail.gmail.com>
+References: <1417193367-12422-1-git-send-email-ludovic.desroches@atmel.com>
+	<547C7446.1090909@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <547C7446.1090909-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add an property "i2s_clk_out", which enables to output clock to outside
-of rockchip SoCs. Let's make it optional since not each board needs it.
+On Mon, Dec 1, 2014 at 2:59 PM, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>=
+ wrote:
+> Le 28/11/2014 17:49, Ludovic Desroches a =C3=A9crit :
+>> This patch allows to have gpio controller with status set to disable=
+d.
+>>
+>> gpio_banks represents all the gpio banks available on the device whe=
+reas
+>> nbanks represents the gpio banks used. Having a disabled gpio contro=
+ller
+>> involves that nbanks value is lower than gpio_banks and that some
+>> pointers in the gpio_chips array are NULL. This patch deals with the=
+se
+>> specific cases.
+>>
+>> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>
+> Yes:
+>
+> Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>
+> Linus, is it too late for 3.18?
 
-Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
----
- Documentation/devicetree/bindings/sound/rockchip-i2s.txt | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+I think it's too late for any kernel as I think it's the wrong fix ;)
 
-diff --git a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
-index 9b82c20..c8f5ac0 100644
---- a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
-+++ b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
-@@ -22,6 +22,10 @@ Required properties:
-    - "i2s_hclk": clock for I2S BUS
-    - "i2s_clk" : clock for I2S controller
- 
-+Optional property:
-+- "i2s_clk_out" : clock output to outside of chip, usally as master clock for audio
-+	codec chip
-+
- Example for rk3288 I2S controller:
- 
- i2s@ff890000 {
-@@ -32,6 +36,6 @@ i2s@ff890000 {
- 	#size-cells = <0>;
- 	dmas = <&pdma1 0>, <&pdma1 1>;
- 	dma-names = "tx", "rx";
--	clock-names = "i2s_hclk", "i2s_clk";
--	clocks = <&cru HCLK_I2S0>, <&cru SCLK_I2S0>;
-+	clock-names = "i2s_hclk", "i2s_clk", "i2s_clk_out";
-+	clocks = <&cru HCLK_I2S0>, <&cru SCLK_I2S0>, <&cru SCLK_I2S0_CLKOUT>;
- };
--- 
-1.9.1
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
