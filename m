@@ -1,96 +1,47 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH 3/4] devicetree: bindings: Add defeature-repeated-start
- property for Cadence I2C
-Date: Tue, 2 Dec 2014 13:52:03 +0100
-Message-ID: <20141202125203.GA4072@katana>
-References: <1417514749-24319-1-git-send-email-harinik@xilinx.com>
- <1417514749-24319-4-git-send-email-harinik@xilinx.com>
- <20141202111907.GC23671@leverpostej>
- <CAFcVECLtPx6shBXJbg9Uf_8fnhkMoO1zpoxGcdda7PSA7z_2rA@mail.gmail.com>
+From: SF Markus Elfring <elfring@users.sourceforge.net>
+Subject: [PATCH 1/1] of-unittest: Deletion of an unnecessary check before
+ the function call "of_node_put"
+Date: Tue, 02 Dec 2014 14:00:51 +0100
+Message-ID: <547DB803.1080406@users.sourceforge.net>
+References: <5307CAA2.8060406@users.sourceforge.net> <alpine.DEB.2.02.1402212321410.2043@localhost6.localdomain6> <530A086E.8010901@users.sourceforge.net> <alpine.DEB.2.02.1402231635510.1985@localhost6.localdomain6> <530A72AA.3000601@users.sourceforge.net> <alpine.DEB.2.02.1402240658210.2090@localhost6.localdomain6> <530B5FB6.6010207@users.sourceforge.net> <alpine.DEB.2.10.1402241710370.2074@hadrien> <530C5E18.1020800@users.sourceforge.net> <alpine.DEB.2.10.1402251014170.2080@hadrien> <530CD2C4.4050903@users.sourceforge.net> <alpine.DEB.2.10.1402251840450.7035@hadrien> <530CF8FF.8080600@users.sourceforge.net> <alpine.DEB.2.02.1402252117150.2047@localhost6.localdomain6> <530DD06F.4090703@users.sourceforge.net> <alpine.DEB.2.02.1402262129250.2221@localhost6.localdomain6> <5317A59D.4@users.so
+ urceforge.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="RnlQjJ0d97Da+TV1"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAFcVECLtPx6shBXJbg9Uf_8fnhkMoO1zpoxGcdda7PSA7z_2rA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Harini Katakam <harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "vishnum-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <vishnum-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <kernel-janitors-owner@vger.kernel.org>
+In-Reply-To: <5317A59D.4@users.sourceforge.net>
+Sender: kernel-janitors-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>
 List-Id: devicetree@vger.kernel.org
 
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Tue, 2 Dec 2014 13:54:00 +0100
 
---RnlQjJ0d97Da+TV1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The of_node_put() function tests whether its argument is NULL and then
+returns immediately. Thus the test around the call is not needed.
 
-> >> +  - defeature-repeated-start: Include this property to defeature repe=
-ated start
-> >> +                           This defeature is due to a few bugs in the
-> >> +                           I2C controller.
-> >> +                           Completion interrupt after a read/receive
-> >> +                           operation is NOT obtained if HOLD bit is s=
-et
-> >> +                           at that time. Because of this bug, repeate=
-d start
-> >> +                           will only work if there are no transfers f=
-ollowing
-> >> +                           a read/receive transfer.
-> >> +                           If HOLD is held for long without a transfe=
-r,
-> >> +                           invalid read transactions are generated by=
- the
-> >> +                           controller due to a HW timeout related bug.
-> >
-> > I'm not keen on the name; it sounds like we're disabling a feature
-> > rather than describing the problem (and "defeature" is not a common
-> > term in this sense, "disable" would be better).
-> >
-> > It sounds like there are two issues with staying in the HOLD state? Lost
-> > completion IRQs and a separate HW timeout bug? Or are the two related?
-> >
->=20
-> Yes, there are two issues here and they are not related.
-> But a combination of both is leading to not using repeated start.
-> The intention was to defeature except that it works in some scenarios
-> (such as a typical write+read in that order with repeated start)
-> and there are people who already use the driver with slaves that need thi=
-s.
+This issue was detected by using the Coccinelle software.
 
-That should not be handled using a binding. If you get a transfer (at
-runtime) with criteria you don't support, return with -EOPNOTSUPP from
-the master xfer routine.
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+---
+ drivers/of/unittest.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-That being said, the number of broken/not-fully-compliant I2C
-controllers has increased a lot recent times (why can't we just use the
-established old ones?). Maybe we will have core support for a subset of
-I2C (wr+rd) in the future, but that's still ahead...
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index cc0c5ec..06ebe9d 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -486,8 +486,7 @@ static void __init of_selftest_changeset(void)
+ 	/* Make sure node names are constructed correctly */
+ 	selftest((np = of_find_node_by_path("/testcase-data/changeset/n2/n21")),
+ 		 "'%s' not added\n", n21->full_name);
+-	if (np)
+-		of_node_put(np);
++	of_node_put(np);
+ 
+ 	mutex_lock(&of_mutex);
+ 	selftest(!of_changeset_revert(&chgset), "revert failed\n");
+-- 
+2.1.3
 
-
---RnlQjJ0d97Da+TV1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUfbXzAAoJEBQN5MwUoCm2SVEQAKislH9uLpKzI/F6xVYHO86O
-wojbo5Mmrpx5sCZfFgfl2iK7emBL9zDUVrZbX1gelrCGuVmwP0f/n8LwLNweu9YZ
-B4hwRbnAusMaxxU95OdeHKDEYJN8NUY62bhmjhSFANZ1m03XK+YN+m+BUxvb8yfk
-hv2ORgRn+pXb9QMim7dAYaETRzNi6TRZ8orbRuckt9b8tYojzGUJcaDQRAB9xy35
-2kDVlxzPDodY9l/AZBt+yckhRUu0uJgUvcvO2NILqJDXAQwBtKMSKULaSMNVdJcc
-o8rVAjYXj57RAr2iNf+xNPgfFUGx13BK7gjxZJg1G/6wJtesz1sfa/MJ7ALFqrMt
-CnebxMTWOyMahU1AvZOZee4PDX4FU4pyh3kxKM51hgz2abNEaCb6Md9hrRy3Y0Z8
-isoyIds1RbluLkYMZLHFLJIZrU+bxECMnYsSPchZ4GFhB+yNKhkTLSE73vMcy1K2
-U/BIOLyaqHFmSK8GMYu1S6LoJMHG/enFcvaS9LHWBgLxXftx3qElgG+lK9NaaCfN
-MK2qz2hxmK+BE0a26wiDv6oA6aJs8Jj9bz3Hg1pEaNwN/dVZuHAjOwnbdHbaWl2J
-pIjS58EwjNyVDhHC5eQyWs2ZHxX7dYXkcpziy1uuPlB2j5sjrgIPfsgZupQ951CF
-NlZJ/ACPfhgk8lH33WGD
-=TJQZ
------END PGP SIGNATURE-----
-
---RnlQjJ0d97Da+TV1--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
