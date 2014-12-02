@@ -1,204 +1,124 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH] media: platform: add VPFE capture driver support for
- AM437X
-Date: Tue, 02 Dec 2014 08:26:58 +0100
-Message-ID: <547D69C2.20503@xs4all.nl>
-References: <1416791411-9731-1-git-send-email-prabhakar.csengg@gmail.com> <547C3ED3.1060205@xs4all.nl> <CA+V-a8vDGvSeSU9-EYx+U6j++WJWY7_59b2t9drqCCkPqR93mg@mail.gmail.com>
+From: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH] mtd: gpmi: Remove "We support only one NAND chip" from
+ bindings doc
+Date: Tue, 02 Dec 2014 08:28:10 +0100
+Message-ID: <547D6A0A.70409@denx.de>
+References: <1417097929-17832-1-git-send-email-sr@denx.de> <20141128014832.GA3113@localhost.localdomain> <54781DD5.5030801@denx.de> <20141129024047.GA5056@localhost.localdomain> <20141130065326.GB3608@norris-Latitude-E6410> <20141130154255.GB14834@localhost.localdomain> <547C3BB9.1010706@denx.de> <20141202003840.GA11370@shldeISGChi005.sh.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+V-a8vDGvSeSU9-EYx+U6j++WJWY7_59b2t9drqCCkPqR93mg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-api <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141202003840.GA11370-eV5aV+vWts7EmYkesOTNgGFmcEqAMTzPQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Huang Shijie <shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/01/2014 11:17 PM, Prabhakar Lad wrote:
-> Hi Hans,
-> 
-> Thanks for the review.
-> 
-> On Mon, Dec 1, 2014 at 10:11 AM, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> wrote:
->> Hi all,
+On 02.12.2014 01:38, Huang Shijie wrote:
+> On Mon, Dec 01, 2014 at 10:58:17AM +0100, Stefan Roese wrote:
+>> On 30.11.2014 16:42, Huang Shijie wrote:
+>>> On Sat, Nov 29, 2014 at 10:53:26PM -0800, Brian Norris wrote:
+>>>> On Sat, Nov 29, 2014 at 10:40:50AM +0800, Huang Shijie wrote:
+>>>>> On Fri, Nov 28, 2014 at 08:01:41AM +0100, Stefan Roese wrote:
+>>>>>> On 28.11.2014 02:48, Huang Shijie wrote:
+>>>>>>> On Thu, Nov 27, 2014 at 03:18:49PM +0100, Stefan Roese wrote:
+>>>>>>>> This sentence "We support only one NAND chip now" is not true any more.
+>>>>>>>> Multiple chips are supported. So lets remove this sentence to not
+>>>>>>>
+>>>>>>> The gpmi can only supports one chip. Of course, there are maybe two dies
+>>>>>>> in this single chip.
+>>>>>>
+>>>>>> Now I'm a bit confused. The i.MX6 supports 4 chips select signals. And isn't
+>>>>>> "two dies in this single chip" not practically the same as connecting 2 (or
+>>>>>> more) chips (same device) to multiple chip selects of the SoC? Where is the
+>>>>>> difference here?
+>>>>> The "one chip" here is means the "one package" (TSOP or BGA ....).
+>>>>
+>>>> Then why is this even in the DT binding doc? Isn't that a board-level
+>>>> constraint (and not a chip property) which should be obvious to the
+>>>> user? If so, then should we just drop the language? Or at a minimum,
+>>>> make it more specific so it doesn't confuse readers.
+>>>
+>>> yes. It is okay to send a patch to make it more clear.
+>>>
+>>>>
+>>>>> (In logic, "two dies in this single chip" is same as connecting 2 chips
+>>>>> to the gpmi.)
+>>>>
+>>>> ...which means that logically, you can connect more than one chip to the
+>>>> GPMI, right?
+>>> The gpmi can only connect with one physical chip now, but there maybe
+>>> two DIEs in this chip.
 >>
->> Thanks for the patch, review comments are below.
+>> I really fail to see why you make this distinction between two chips on a die
+>> and two external chips. For the SoC this should really look identical, right?
 >>
->> For the next version I would appreciate if someone can test this driver with
->> the latest v4l2-compliance from the v4l-utils git repo. If possible test streaming
->> as well (v4l2-compliance -s), ideally with both a sensor and a STD receiver input.
->> But that depends on the available hardware of course.
+>> Please explain again, why exactly only two chips on one die are supported.
+> There are only 8 data lines for gpmi.  I guess there may bugs in the
+> gpmi driver to support the two external chips in such case:
+>          Two different processes access different NAND chips at the same
+> 	time.
+
+I don't see why this should be a problem. All SoC's that support multiple
+NAND chips (I've seen so far) only use 8 data lines for this.
+
+> I even did not have enough time to test the "two chips on a die" case very carefully before
+> I left freescale.
+
+I see. Thanks for the hint. But this "two chips on a die" scenario did
+pass some basic tests, no?
+ 
 >>
->> I'd like to see the v4l2-compliance output. It's always good to have that on
->> record.
+>> BTW: We have a custom i.MX6DL based board with 2 NAND chips connected. And
+> 
+> Very good. Please test this board with the UBIFS in the multi processes
+> case. (I ever used the bonnie++)
+
+We'll do that.
+ 
+>> Linux seems to support both chips just fine. Here the boot log:
 >>
-> Following is the compliance output, missed it post it along with patch:
-> 
-> root@am437x-evm:~# ./v4l2-compliance -s -i 0 -v
-> Driver Info:
->         Driver name   : vpfe
->         Card type     :[   70.363908] vpfe 48326000.vpfe:
-> =================  START STATUS  =================
->  TI AM437x VPFE
->         Bus info      : platform:vpfe [   70.375576] vpfe
-> 48326000.vpfe: ==================  END STATUS  ==================
-> 48326000.vpfe
->         Driver version: 3.18.0
->         Capabil[   70.388485] vpfe 48326000.vpfe: invalid input index: 1
-> ities  : 0x85200001
->                 Video Capture
->                 Read/Write
->                 Streaming
->                 Extended Pix Format
->                 Device Capabilities
->         Device Caps   : 0x05200001
->                 Video Capture
->                 Read/Write
->                 Streaming
->                 Extended Pix Format
-> 
-> Compliance test for device /dev/video0 (not using libv4l2):
-> 
-> Required ioctls:
->         test VIDIOC_QUERYCAP: OK
-> 
-> Allow for multiple opens:
->         test second video open: OK
->         test VIDIOC_QUERYCAP: OK
->         test VIDIOC_G/S_PRIORITY: OK
-> 
-> Debug ioctls:
->         test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
->         test VIDIOC_LOG_STATUS: OK
-> 
-> Input ioctls:
->         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
->         test VIDIOC_ENUMAUDIO: OK (Not Supported)
->         test VIDIOC_G/S/ENUMINPUT: OK
->         test VIDIOC_G/S_AUDIO: OK (Not Supported)
->         Inputs: 1 Audio Inputs: 0 Tuners: 0
-> 
-> Output ioctls:
->         test VIDIOC_G/S_MODULATOR: OK (Not Supported)
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->         test VIDIOC_ENUMAUDOUT: OK (Not Supported)
->         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
->         test VIDIOC_G/S_AUDOUT: OK (Not Supported)
->         Outputs: 0 Audio Outputs: 0 Modulators: 0
-> 
-> Input/Output configuration ioctls:
->         test VIDIOC_ENUM/G/S/QUERY_STD: OK
->         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
->         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
->         test VIDIOC_G/S_EDID: OK (Not Supported)
-> 
-> Test input 0:
-> 
->         Control ioctls:
->                 test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
->                 test VIDIOC_QUERYCTRL: OK (Not Supported)
->                 test VIDIOC_G/S_CTRL: OK (Not Supported)
->                 test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
->                 test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
->                 test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
->                 Standard Controls: 0 Private Controls: 0
-> 
->         Format ioctls:
->                 info: found 7 framesizes for pixel format 56595559
->                 info: found 7 framesizes for pixel format 59565955
->                 info: found 7 framesizes for pixel format 52424752
->                 info: found 7 framesizes for pixel format 31384142
->                 info: found 4 formats for buftype 1
->                 test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
->                 test VIDIOC_G/S_PARM: OK
->                 test VIDIOC_G_FBUF: OK (Not Supported)
->                 test VIDIOC_G_FMT: OK
->                 test VIDIOC_TRY_FMT: OK
->                 info: Global format check succeeded for type 1
->                 test VIDIOC_S_FMT: OK
->                 test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-> 
->         Codec ioctls:
->                 test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
->                 test VIDIOC_G_ENC_INDEX: OK (Not Supported)
->                 test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-> 
->         Buffer ioctls:
->                 info: test buftype Video Capture
->                 test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
->                 test VIDIOC_EXPBUF: OK
-> 
-> Streaming ioctls:
->         test read/write: OK
->             Video Capture:
->                 Buffer: 0 Sequence: 0 Field: None Timestamp: 74.956437s
->                 Buffer: 1 Sequence: 0 Field: None Timestamp: 74.979310s
->                 Buffer: 2 Sequence: 0 Field: None Timestamp: 75.002191s
->                 Buffer: 3 Sequence: 0 Field: None Timestamp: 75.208114s
->                 Buffer: 0 Sequence: 0 Field: None Timestamp: 75.230998s
+>> [    1.085812] nand: device found, Manufacturer ID: 0x2c, Chip ID: 0xdc
+>> [    1.092218] nand: Micron MT29F4G08ABADAH4
+>> [    1.096245] nand: 512MiB, SLC, page size: 2048, OOB size: 64
+>> [    1.102171] nand: 2 chips detected
+>> [    1.106156] gpmi-nand 112000.gpmi-nand: enable the asynchronous EDO mode 5
+>> [    1.113094] Scanning device for bad blocks
+> could you please post more log?
 
-Hmm, sequence is always 0. Is the sequence field set? And why doesn't
-v4l2-compliance fail on this?
+Sure.
 
->                 Buffer: 1 Sequence: 0 Field: None Timestamp: 75.253877s
+...
+[    1.068580] loop: module loaded
+[    1.085966] nand: device found, Manufacturer ID: 0x2c, Chip ID: 0xdc
+[    1.092372] nand: Micron MT29F4G08ABADAH4
+[    1.096401] nand: 512MiB, SLC, page size: 2048, OOB size: 64
+[    1.102331] nand: 2 chips detected
+[    1.106342] gpmi-nand 112000.gpmi-nand: enable the asynchronous EDO mode 5
+[    1.113279] Scanning device for bad blocks
+[    1.126196] Bad eraseblock 58 at 0x000000740000
+[    1.131074] Bad eraseblock 60 at 0x000000780000
+[    1.515182] random: nonblocking pool is initialized
+[    2.331738] 10 cmdlinepart partitions found on MTD device gpmi-nand
+[    2.338028] Creating 10 MTD partitions on "gpmi-nand":
+[    2.343210] 0x000000000000-0x000000e00000 : "spl"
+[    2.351695] 0x000000e00000-0x000001000000 : "uboot"
+[    2.359015] 0x000001000000-0x000001080000 : "env1"
+[    2.366272] 0x000001080000-0x000001100000 : "env2"
+[    2.373508] 0x000001100000-0x000020000000 : "ubi0"
+[    2.381521] 0x000020000000-0x000020e00000 : "res0"
+[    2.388781] 0x000020e00000-0x000021000000 : "res1"
+[    2.396131] 0x000021000000-0x000021080000 : "res2"
+[    2.403458] 0x000021080000-0x000021100000 : "res3"
+[    2.410657] 0x000021100000-0x000040000000 : "ubi1"
+[    2.418572] gpmi-nand 112000.gpmi-nand: driver registered.
+[    2.428911] spi_imx 2008000.ecspi: probed
+...
 
-<snip>
+Thanks,
+Stefan
 
->         test MMAP: OK
->         test USERPTR: OK (Not Supported)
->         test DMABUF: Cannot test, specify --expbuf-device
-> 
-> Total: 42, Succeeded: 42, Failed: 0, Warnings: 0
->>
-> [Snip]
-
->>> +static int vpfe_enum_fmt(struct file *file, void  *priv,
->>> +                      struct v4l2_fmtdesc *f)
->>> +{
->>> +     struct vpfe_device *vpfe = video_drvdata(file);
->>> +     struct v4l2_subdev_mbus_code_enum mbus_code;
->>> +     struct vpfe_subdev_info *sdinfo;
->>> +     struct vpfe_fmt *fmt;
->>> +     int ret;
->>> +
->>> +     vpfe_dbg(2, vpfe, "vpfe_enum_format index:%d\n",
->>> +             f->index);
->>> +
->>> +     sdinfo = vpfe->current_subdev;
->>> +     if (!sdinfo->sd)
->>> +             return -EINVAL;
->>> +
->>> +     mbus_code.index = f->index;
->>> +     ret = v4l2_subdev_call(sdinfo->sd, pad, enum_mbus_code,
->>> +                            NULL, &mbus_code);
->>> +     if (ret)
->>> +             return -EINVAL;
->>> +
->>> +     /* convert mbus_format to v4l2_format */
->>> +     fmt = find_format_by_code(mbus_code.code);
->>> +     if (!fmt) {
->>> +             vpfe_err(vpfe, "mbus code 0x%08x not found\n",
->>> +                     mbus_code.code);
->>> +             return -EINVAL;
->>> +     }
->>
->> Hmm. If a subdev supports more media bus codes then are supported by this
->> driver, then the enumeration will stop as soon as such an unsupported code
->> is found.
->>
->> What you want to do here is enumerate over the pixelformats that are supported
->> by both this driver and the subdev. It is probably something you want to
->> determine at the time the subdev is loaded and just mark unsupported formats
->> at that time so that they can be skipped here.
->>
-> So probably populate the supported pixelformats in s_input call ,
-> by calling enm_mbus_code ?
-
-I would do this during driver initialization, it's a one time thing that can
-be done there.
-
-Regards,
-
-	Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
