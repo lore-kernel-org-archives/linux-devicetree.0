@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 03/13] NFC: nci: Add management for NCI state for machine rf_deactivate_ntf
-Date: Tue,  2 Dec 2014 21:27:48 +0100
-Message-ID: <1417552078-9269-4-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v2 06/13] NFC: Add se_io NFC operand
+Date: Tue,  2 Dec 2014 21:27:51 +0100
+Message-ID: <1417552078-9269-7-git-send-email-christophe-h.ricard@st.com>
 References: <1417552078-9269-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1417552078-9269-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
@@ -10,45 +10,78 @@ To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-A notification for rf deaction can be IDLE_MODE, SLEEP_MODE, SLEEP_AF_MODE
-and DISCOVERY. According to each type and the NCI state machine is
-different (see figure 10 RF Communication State Machine in NCI specification)
+se_io allows to send apdu over the CLF to the embedded Secure Element.
 
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- net/nfc/nci/ntf.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ net/nfc/netlink.c | 47 ++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 46 insertions(+), 1 deletion(-)
 
-diff --git a/net/nfc/nci/ntf.c b/net/nfc/nci/ntf.c
-index ccc3606..17ee28a 100644
---- a/net/nfc/nci/ntf.c
-+++ b/net/nfc/nci/ntf.c
-@@ -680,11 +680,21 @@ static void nci_rf_deactivate_ntf_packet(struct nci_dev *ndev,
- 	if (test_bit(NCI_DATA_EXCHANGE, &ndev->flags))
- 		nci_data_exchange_complete(ndev, NULL, -EIO);
- 
--	nci_clear_target_list(ndev);
--	if (ntf->type == NCI_DEACTIVATE_TYPE_DISCOVERY)
--		atomic_set(&ndev->state, NCI_DISCOVERY);
--	else
-+	switch (ntf->type) {
-+	case NCI_DEACTIVATE_TYPE_IDLE_MODE:
-+		nci_clear_target_list(ndev);
- 		atomic_set(&ndev->state, NCI_IDLE);
-+		break;
-+	case NCI_DEACTIVATE_TYPE_SLEEP_MODE:
-+	case NCI_DEACTIVATE_TYPE_SLEEP_AF_MODE:
-+		atomic_set(&ndev->state, NCI_W4_HOST_SELECT);
-+		break;
-+	case NCI_DEACTIVATE_TYPE_DISCOVERY:
-+		nci_clear_target_list(ndev);
-+		atomic_set(&ndev->state, NCI_DISCOVERY);
-+		break;
-+	}
-+
- 	nci_req_complete(ndev, NCI_STATUS_OK);
+diff --git a/net/nfc/netlink.c b/net/nfc/netlink.c
+index 9581831..44989fc 100644
+--- a/net/nfc/netlink.c
++++ b/net/nfc/netlink.c
+@@ -1310,6 +1310,51 @@ static int nfc_genl_dump_ses_done(struct netlink_callback *cb)
+ 	return 0;
  }
  
++static int nfc_se_io(struct nfc_dev *dev, u32 se_idx,
++		     u8 *apdu, size_t apdu_length,
++		     se_io_cb_t cb, void *cb_context)
++{
++	struct nfc_se *se;
++	int rc;
++
++	pr_debug("%s se index %d\n", dev_name(&dev->dev), se_idx);
++
++	device_lock(&dev->dev);
++
++	if (!device_is_registered(&dev->dev)) {
++		rc = -ENODEV;
++		goto error;
++	}
++
++	if (!dev->dev_up) {
++		rc = -ENODEV;
++		goto error;
++	}
++
++	if (!dev->ops->se_io) {
++		rc = -EOPNOTSUPP;
++		goto error;
++	}
++
++	se = nfc_find_se(dev, se_idx);
++	if (!se) {
++		rc = -EINVAL;
++		goto error;
++	}
++
++	if (se->state != NFC_SE_ENABLED) {
++		rc = -ENODEV;
++		goto error;
++	}
++
++	rc = dev->ops->se_io(dev, se_idx, apdu,
++			apdu_length, cb, cb_context);
++
++error:
++	device_unlock(&dev->dev);
++	return rc;
++}
++
+ struct se_io_ctx {
+ 	u32 dev_idx;
+ 	u32 se_idx;
+@@ -1392,7 +1437,7 @@ static int nfc_genl_se_io(struct sk_buff *skb, struct genl_info *info)
+ 	ctx->dev_idx = dev_idx;
+ 	ctx->se_idx = se_idx;
+ 
+-	return dev->ops->se_io(dev, se_idx, apdu, apdu_len, se_io_cb, ctx);
++	return nfc_se_io(dev, se_idx, apdu, apdu_len, se_io_cb, ctx);
+ }
+ 
+ static const struct genl_ops nfc_genl_ops[] = {
 -- 
 2.1.0
 
