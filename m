@@ -1,8 +1,10 @@
 From: Yadwinder Singh Brar <yadi.brar@samsung.com>
 Subject: [PATCH] mfd: max77686: Fix parent of rtc device
-Date: Tue, 02 Dec 2014 18:03:40 +0530
-Message-ID: <1417523620-4311-1-git-send-email-yadi.brar@samsung.com>
+Date: Tue, 02 Dec 2014 18:15:39 +0530
+Message-ID: <1417524339-4604-1-git-send-email-yadi.brar@samsung.com>
+References: <1417523620-4311-1-git-send-email-yadi.brar@samsung.com>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1417523620-4311-1-git-send-email-yadi.brar@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc: lee.jones@linaro.org, sameo@linux.intel.com, akpm@linux-foundation.org, tomasz.figa@gmail.com, robh+dt@kernel.org, yadi.brar01@gmail.com, Yadwinder Singh Brar <yadi.brar@samsung.com>
@@ -13,10 +15,12 @@ sit under its own i2c client in device hierarchy, which reflects in sysfs also.
 This patch modifies code to register rtc cell with rtc->dev as parent.
 
 Without this patch :
+# ls /sys/class/i2c-adapter/i2c-0/0-0009/
 driver         max77686-pmic  modalias       power          uevent
 max77686-clk   max77686-rtc   name           subsystem
 
 After applying patch :
+# ls /sys/class/i2c-adapter/i2c-0/0-0006/
 driver/        modalias       power/         uevent
 max77686-rtc/  name           subsystem/
 
