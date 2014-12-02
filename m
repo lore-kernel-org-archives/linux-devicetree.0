@@ -1,71 +1,148 @@
-From: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [GIT PULL] core drm support for Rockchip SoCs v15
-Date: Tue, 02 Dec 2014 17:39:35 +0800
-Message-ID: <547D88D7.5080005@rock-chips.com>
-References: <1417511600-7054-1-git-send-email-mark.yao@rock-chips.com>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: zynq: DT: Add USB to device tree
+Date: Tue, 2 Dec 2014 10:40:28 +0100
+Message-ID: <63f1ea2ffb3f49f29ec46183f3009817@BN1AFFO11FD032.protection.gbl>
+References: <1417509978-19060-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417511600-7054-1-git-send-email-mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rom Lemarchand <romlem-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dbehr-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yxj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1417509978-19060-1-git-send-email-soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?windows-1252?Q?Andreas_F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dave
+On 12/02/2014 09:46 AM, Soren Brinkmann wrote:
+> Add USB nodes to zc702, zc706 and zed device trees.
+> 
+> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> ---
+> v2:
+>  - remove '@0' from phy node name
+>  - don't add bogus space
+> ---
+>  arch/arm/boot/dts/zynq-7000.dtsi | 20 ++++++++++++++++++++
+>  arch/arm/boot/dts/zynq-zc702.dts | 11 +++++++++++
+>  arch/arm/boot/dts/zynq-zc706.dts | 10 ++++++++++
+>  arch/arm/boot/dts/zynq-zed.dts   | 10 ++++++++++
+>  4 files changed, 51 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+> index ce2ef5bec4f2..68096bb027db 100644
+> --- a/arch/arm/boot/dts/zynq-7000.dtsi
+> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+> @@ -315,6 +315,26 @@
+>  			clocks = <&clkc 4>;
+>  		};
+>  
+> +		usb0: usb@e0002000 {
+> +			compatible = "xlnx,zynq-usb-2.20a", "chipidea,usb2";
+> +			status = "disabled";
+> +			clocks = <&clkc 28>;
+> +			interrupt-parent = <&intc>;
+> +			interrupts = <0 21 4>;
+> +			reg = <0xe0002000 0x1000>;
+> +			phy_type = "ulpi";
+> +		};
+> +
+> +		usb1: usb@e0003000 {
+> +			compatible = "xlnx,zynq-usb-2.20a", "chipidea,usb2";
+> +			status = "disabled";
+> +			clocks = <&clkc 29>;
+> +			interrupt-parent = <&intc>;
+> +			interrupts = <0 44 4>;
+> +			reg = <0xe0003000 0x1000>;
+> +			phy_type = "ulpi";
+> +		};
+> +
+>  		watchdog0: watchdog@f8005000 {
+>  			clocks = <&clkc 45>;
+>  			compatible = "xlnx,zynq-wdt-r1p2";
+> diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-zc702.dts
+> index 94e2cda6f9b6..f80c6e65f6e8 100644
+> --- a/arch/arm/boot/dts/zynq-zc702.dts
+> +++ b/arch/arm/boot/dts/zynq-zc702.dts
+> @@ -36,6 +36,11 @@
+>  			linux,default-trigger = "heartbeat";
+>  		};
+>  	};
+> +
+> +	usb_phy0: usb-phy {
+> +		compatible = "usb-nop-xceiv";
+> +		#phy-cells = <0>;
+> +	};
+>  };
+>  
+>  &can0 {
+> @@ -135,3 +140,9 @@
+>  &uart1 {
+>  	status = "okay";
+>  };
+> +
+> +&usb0 {
+> +	status = "okay";
+> +	dr_mode = "host";
+> +	usb-phy = <&usb_phy0>;
+> +};
+> diff --git a/arch/arm/boot/dts/zynq-zc706.dts b/arch/arm/boot/dts/zynq-zc706.dts
+> index a8bbdfbc7093..bece52e47cfe 100644
+> --- a/arch/arm/boot/dts/zynq-zc706.dts
+> +++ b/arch/arm/boot/dts/zynq-zc706.dts
+> @@ -27,6 +27,10 @@
+>  		bootargs = "console=ttyPS0,115200 earlyprintk";
+>  	};
+>  
+> +	usb_phy0: usb-phy {
+> +		compatible = "usb-nop-xceiv";
+> +		#phy-cells = <0>;
+> +	};
+>  };
+>  
+>  &gem0 {
+> @@ -114,3 +118,9 @@
+>  &uart1 {
+>  	status = "okay";
+>  };
+> +
+> +&usb0 {
+> +	status = "okay";
+> +	dr_mode = "host";
+> +	usb-phy = <&usb_phy0>;
+> +};
+> diff --git a/arch/arm/boot/dts/zynq-zed.dts b/arch/arm/boot/dts/zynq-zed.dts
+> index 697779a353ed..efecb2379832 100644
+> --- a/arch/arm/boot/dts/zynq-zed.dts
+> +++ b/arch/arm/boot/dts/zynq-zed.dts
+> @@ -27,6 +27,10 @@
+>  		bootargs = "console=ttyPS0,115200 earlyprintk";
+>  	};
+>  
+> +	usb_phy0: usb-phy {
+> +		compatible = "usb-nop-xceiv";
+> +		#phy-cells = <0>;
+> +	};
+>  };
+>  
+>  &gem0 {
+> @@ -46,3 +50,9 @@
+>  &uart1 {
+>  	status = "okay";
+>  };
+> +
+> +&usb0 {
+> +	status = "okay";
+> +	dr_mode = "host";
+> +	usb-phy = <&usb_phy0>;
+> +};
+> 
 
-The following changes since commit 656d7077d8ffd1c2492d4a0a354367ab2e545059:
+Based on Arnd comment please fix it and rebase it on the top of zynq/dt branch.
 
-   dt-bindings: iommu: Add documentation for rockchip iommu (2014-11-03 
-17:29:09 +0100)
+Thanks,
+Michal
 
-are available in the git repository at:
-
-   https://github.com/markyzq/kernel-drm-rockchip.git drm_iommu_v15
-
-for you to fetch changes up to 5ac4837b12f533de5d9f8f66b45494c58e805536:
-
-   dt-bindings: video: Add documentation for rockchip vop (2014-12-02 
-17:29:33 +0800)
-
-----------------------------------------------------------------
-Mark Yao (3):
-       drm: rockchip: Add basic drm driver
-       dt-bindings: video: Add for rockchip display subsytem
-       dt-bindings: video: Add documentation for rockchip vop
-
-  .../devicetree/bindings/video/rockchip-drm.txt     |   19 +
-  .../devicetree/bindings/video/rockchip-vop.txt     |   58 +
-  drivers/gpu/drm/Kconfig                            |    2 +
-  drivers/gpu/drm/Makefile                           |    1 +
-  drivers/gpu/drm/rockchip/Kconfig                   |   17 +
-  drivers/gpu/drm/rockchip/Makefile                  |    8 +
-  drivers/gpu/drm/rockchip/rockchip_drm_drv.c        |  551 ++++++++
-  drivers/gpu/drm/rockchip/rockchip_drm_drv.h        |   68 +
-  drivers/gpu/drm/rockchip/rockchip_drm_fb.c         |  201 +++
-  drivers/gpu/drm/rockchip/rockchip_drm_fb.h         |   28 +
-  drivers/gpu/drm/rockchip/rockchip_drm_fbdev.c      |  210 +++
-  drivers/gpu/drm/rockchip/rockchip_drm_fbdev.h      |   21 +
-  drivers/gpu/drm/rockchip/rockchip_drm_gem.c        |  294 ++++
-  drivers/gpu/drm/rockchip/rockchip_drm_gem.h        |   54 +
-  drivers/gpu/drm/rockchip/rockchip_drm_vop.c        | 1455 
-++++++++++++++++++++
-  drivers/gpu/drm/rockchip/rockchip_drm_vop.h        |  201 +++
-  16 files changed, 3188 insertions(+)
-  create mode 100644 
-Documentation/devicetree/bindings/video/rockchip-drm.txt
-  create mode 100644 
-Documentation/devicetree/bindings/video/rockchip-vop.txt
-  create mode 100644 drivers/gpu/drm/rockchip/Kconfig
-  create mode 100644 drivers/gpu/drm/rockchip/Makefile
-  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_drv.c
-  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_drv.h
-  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_fb.h
-  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_fbdev.c
-  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_fbdev.h
-  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_gem.c
-  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_gem.h
-  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_vop.h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
