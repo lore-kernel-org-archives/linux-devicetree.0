@@ -1,100 +1,594 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [Patch v2 1/2] gpio: add GPIO hogging mechanism
-Date: Tue, 2 Dec 2014 17:12:27 +0100
-Message-ID: <20141202161227.GH30256@lukather>
-References: <1416527684-19017-1-git-send-email-bparrot@ti.com>
- <1416527684-19017-2-git-send-email-bparrot@ti.com>
- <CAAVeFu+VZiuzobB7McSAUehKUHJjBv1o8ZpYjSHJAKjr3o5wTA@mail.gmail.com>
- <20141201163639.GI25249@lukather>
- <CAAVeFuLTupDenZdSi8KO+dYsf-ekcqjsDaQ2GEzYpBG34oF7Zw@mail.gmail.com>
- <CACRpkdZcNcPBYQM438CZJx1gYst9BFBSTj-3Qv2aPGF9pdWa5g@mail.gmail.com>
+From: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [STLinux Kernel] [PATCH v2 1/4] spi: Add new driver for STMicroelectronics'
+ SPI Controller
+Date: Tue, 2 Dec 2014 17:16:58 +0100
+Message-ID: <547DE5FA.5000409@st.com>
+References: <1417534844-25080-1-git-send-email-lee.jones@linaro.org> <1417534844-25080-2-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="aYDVKSzuImP48n7V"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZcNcPBYQM438CZJx1gYst9BFBSTj-3Qv2aPGF9pdWa5g@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Benoit Parrot <bparrot@ti.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1417534844-25080-2-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Lee
 
---aYDVKSzuImP48n7V
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Some minors remarks below
 
-On Tue, Dec 02, 2014 at 03:29:46PM +0100, Linus Walleij wrote:
-> On Tue, Dec 2, 2014 at 3:13 PM, Alexandre Courbot <gnurou@gmail.com> wrot=
-e:
-> > On Tue, Dec 2, 2014 at 1:36 AM, Maxime Ripard
-> > <maxime.ripard@free-electrons.com> wrote:
->=20
-> >> The only thing I'd like to have would be that the request here would
-> >> be non-exclusive, so that a later driver would still be allowed later
-> >> on to request that GPIO later on and manage it itself (ideally using
-> >> the usual gpiod_request function).
-> >
-> > Actually we have a plan (and I have some code too) to allow multiple
-> > consumers per GPIO. Although like Benoit I wonder why you would want
-> > to hog a GPIO and then request it properly later. Also, that probably
-> > means we should abandon the hog since it actively drives the line and
-> > would interfere with the late requested. How to do that correctly is
-> > not really clear to me.
->=20
-> I don't get the usecase. A hogged GPIO is per definition hogged.
-> This sounds more like "initial settings" or something, which is another
-> usecase altogether.
+Thanks
 
-We do have one board where we have a pin (let's say GPIO14 of the bank
-A) that enables a regulator that will provide VCC the bank B.
+On 12/02/2014 04:40 PM, Lee Jones wrote:
+> This patch adds support for the SPI portion of ST's SSC device.
+>
+> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>   drivers/spi/Kconfig       |   7 +
+>   drivers/spi/Makefile      |   1 +
+>   drivers/spi/spi-st-ssc4.c | 509 ++++++++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 517 insertions(+)
+>   create mode 100644 drivers/spi/spi-st-ssc4.c
+>
+> diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+> index 84e7c9e..bd0a10f 100644
+> --- a/drivers/spi/Kconfig
+> +++ b/drivers/spi/Kconfig
+> @@ -488,6 +488,13 @@ config SPI_SIRF
+>   	help
+>   	  SPI driver for CSR SiRFprimaII SoCs
+>   
+> +config SPI_ST_SSC4
+> +	tristate "STMicroelectronics SPI SSC-based driver"
+> +	depends on ARCH_STI || COMPILE_TEST
+> +	help
+> +	  STMicroelectronics SoCs support for SPI. If you say yes to
+> +	  this option, support will be included for the SSC driven SPI.
+> +
+>   config SPI_SUN4I
+>   	tristate "Allwinner A10 SoCs SPI controller"
+>   	depends on ARCH_SUNXI || COMPILE_TEST
+> diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
+> index 78f24ca..c38e28c 100644
+> --- a/drivers/spi/Makefile
+> +++ b/drivers/spi/Makefile
+> @@ -74,6 +74,7 @@ obj-$(CONFIG_SPI_SH_HSPI)		+= spi-sh-hspi.o
+>   obj-$(CONFIG_SPI_SH_MSIOF)		+= spi-sh-msiof.o
+>   obj-$(CONFIG_SPI_SH_SCI)		+= spi-sh-sci.o
+>   obj-$(CONFIG_SPI_SIRF)		+= spi-sirf.o
+> +obj-$(CONFIG_SPI_ST_SSC4)		+= spi-st-ssc4.o
+>   obj-$(CONFIG_SPI_SUN4I)			+= spi-sun4i.o
+>   obj-$(CONFIG_SPI_SUN6I)			+= spi-sun6i.o
+>   obj-$(CONFIG_SPI_TEGRA114)		+= spi-tegra114.o
+> diff --git a/drivers/spi/spi-st-ssc4.c b/drivers/spi/spi-st-ssc4.c
+> new file mode 100644
+> index 0000000..566d86c
+> --- /dev/null
+> +++ b/drivers/spi/spi-st-ssc4.c
+> @@ -0,0 +1,509 @@
+> +/*
+> + *  Copyright (c) 2008-2014 STMicroelectronics Limited
+> + *
+> + *  Author: Angus Clark <Angus.Clark-qxv4g6HH51o@public.gmane.org>
+> + *          Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+> + *          Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> + *
+> + *  SPI master mode controller driver, used in STMicroelectronics devices.
+> + *
+> + *  May be copied or modified under the terms of the GNU General Public
+> + *  License Version 2.0 only.  See linux/COPYING for more information.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/spi/spi.h>
+> +#include <linux/spi/spi_bitbang.h>
+> +
+> +/* SSC registers */
+> +#define SSC_BRG				0x000
+> +#define SSC_TBUF			0x004
+> +#define SSC_RBUF			0x008
+> +#define SSC_CTL				0x00C
+> +#define SSC_IEN				0x010
+> +#define SSC_I2C				0x018
+> +
+> +/* SSC Control */
+> +#define SSC_CTL_DATA_WIDTH_9		0x8
+> +#define SSC_CTL_DATA_WIDTH_MSK		0xf
+> +#define SSC_CTL_BM			0xf
+> +#define SSC_CTL_HB			BIT(4)
+> +#define SSC_CTL_PH			BIT(5)
+> +#define SSC_CTL_PO			BIT(6)
+> +#define SSC_CTL_SR			BIT(7)
+> +#define SSC_CTL_MS			BIT(8)
+> +#define SSC_CTL_EN			BIT(9)
+> +#define SSC_CTL_LPB			BIT(10)
+> +#define SSC_CTL_EN_TX_FIFO		BIT(11)
+> +#define SSC_CTL_EN_RX_FIFO		BIT(12)
+> +#define SSC_CTL_EN_CLST_RX		BIT(13)
+> +
+> +/* SSC Interrupt Enable */
+> +#define SSC_IEN_TEEN			BIT(2)
+> +
+> +#define FIFO_SIZE			8
+> +
+> +struct spi_st {
+> +	/* SSC SPI Controller */
+> +	void __iomem		*base;
+> +	struct clk		*clk;
+> +	struct device		*dev;
+> +
+> +	/* SSC SPI current transaction */
+> +	const u8		*tx_ptr;
+> +	u8			*rx_ptr;
+> +	u16			bytes_per_word;
+> +	unsigned int		words_remaining;
+> +	unsigned int		baud;
+> +	struct completion	done;
+> +};
+> +
+> +static int spi_st_clk_enable(struct spi_st *spi_st)
+> +{
+> +	/*
+> +	 * Current platforms use one of the core clocks for SPI and I2C.
+> +	 * If we attempt to disable the clock, the system will hang.
+> +	 *
+> +	 * TODO: Remove this when platform supports power domains.
+> +	 */
+> +	return 0;
+> +
+> +	return clk_prepare_enable(spi_st->clk);
+> +}
+> +
+> +static void spi_st_clk_disable(struct spi_st *spi_st)
+> +{
+> +	/*
+> +	 * Current platforms use one of the core clocks for SPI and I2C.
+> +	 * If we attempt to disable the clock, the system will hang.
+> +	 *
+> +	 * TODO: Remove this when platform supports power domains.
+> +	 */
+> +	return;
+> +
+> +	clk_disable_unprepare(spi_st->clk);
+> +}
+> +
+> +/* Load the TX FIFO */
+> +static void ssc_write_tx_fifo(struct spi_st *spi_st)
+> +{
+> +	unsigned int count, i;
+> +	uint32_t word = 0;
+> +
+> +	if (spi_st->words_remaining > FIFO_SIZE)
+> +		count = FIFO_SIZE;
+> +	else
+> +		count = spi_st->words_remaining;
+> +
+> +	for (i = 0; i < count; i++) {
+> +		if (spi_st->tx_ptr) {
+> +			if (spi_st->bytes_per_word == 1) {
+> +				word = *spi_st->tx_ptr++;
+> +			} else {
+> +				word = *spi_st->tx_ptr++;
+> +				word = *spi_st->tx_ptr++ | (word << 8);
+> +			}
+> +		}
+> +		writel_relaxed(word, spi_st->base + SSC_TBUF);
+> +	}
+> +}
+> +
+> +/* Read the RX FIFO */
+> +static void ssc_read_rx_fifo(struct spi_st *spi_st)
+> +{
+> +	unsigned int count, i;
+> +	uint32_t word = 0;
+> +
+> +	if (spi_st->words_remaining > FIFO_SIZE)
+> +		count = FIFO_SIZE;
+> +	else
+> +		count = spi_st->words_remaining;
+> +
+> +	for (i = 0; i < count; i++) {
+> +		word = readl_relaxed(spi_st->base + SSC_RBUF);
+> +
+> +		if (spi_st->rx_ptr) {
+> +			if (spi_st->bytes_per_word == 1) {
+> +				*spi_st->rx_ptr++ = (uint8_t)word;
+> +			} else {
+> +				*spi_st->rx_ptr++ = (word >> 8);
+> +				*spi_st->rx_ptr++ = word & 0xff;
+> +			}
+> +		}
+> +	}
+> +	spi_st->words_remaining -= count;
+> +}
+> +
+> +static int spi_st_transfer_one(struct spi_master *master,
+> +			       struct spi_device *spi, struct spi_transfer *t)
+> +{
+> +	struct spi_st *spi_st = spi_master_get_devdata(master);
+> +	uint32_t ctl = 0;
+> +
+> +	/* Setup transfer */
+> +	spi_st->tx_ptr = t->tx_buf;
+> +	spi_st->rx_ptr = t->rx_buf;
+> +
+> +	if (spi->bits_per_word > 8) {
+> +		/*
+> +		 * Anything greater than 8 bits-per-word requires 2
+> +		 * bytes-per-word in the RX/TX buffers
+> +		 */
+> +		spi_st->bytes_per_word = 2;
+> +		spi_st->words_remaining = t->len / 2;
+> +
+> +	} else if (spi->bits_per_word == 8 && !(t->len & 0x1)) {
+> +		/*
+> +		 * If transfer is even-length, and 8 bits-per-word, then
+> +		 * implement as half-length 16 bits-per-word transfer
+> +		 */
+> +		spi_st->bytes_per_word = 2;
+> +		spi_st->words_remaining = t->len/2;
 
-Now, both banks are handled by the same driver, but in order to have a
-working output on the bank B, we do need to set GPIO14 as soon as
-we're probed.
+add space around "/"
 
-Just relying on the usual deferred probing introduces a circular
-dependency between the gpio-regulator that needs to grab its GPIO from
-a driver not there yet, and the gpio driver that needs to enable its
-gpio-regulator.
+> +
+> +		/* Set SSC_CTL to 16 bits-per-word */
+> +		ctl = readl_relaxed(spi_st->base + SSC_CTL);
+> +		writel_relaxed((ctl | 0xf), spi_st->base + SSC_CTL);
+> +
+> +		readl_relaxed(spi_st->base + SSC_RBUF);
+> +
+> +	} else {
+> +		spi_st->bytes_per_word = 1;
+> +		spi_st->words_remaining = t->len;
+> +	}
+> +
+> +	reinit_completion(&spi_st->done);
+> +
+> +	/* Start transfer by writing to the TX FIFO */
+> +	ssc_write_tx_fifo(spi_st);
+> +	writel_relaxed(SSC_IEN_TEEN, spi_st->base + SSC_IEN);
+> +
+> +	/* Wait for transfer to complete */
+> +	wait_for_completion(&spi_st->done);
+> +
+> +	/* Restore SSC_CTL if necessary */
+> +	if (ctl)
+> +		writel_relaxed(ctl, spi_st->base + SSC_CTL);
+> +
+> +	spi_finalize_current_transfer(spi->master);
+> +
+> +	return t->len;
+> +}
+> +
+> +static void spi_st_cleanup(struct spi_device *spi)
+> +{
+> +	int cs = spi->cs_gpio;
+> +
+> +	if (gpio_is_valid(cs))
+> +		devm_gpio_free(&spi->dev, cs);
+> +}
+> +
+> +/* the spi->mode bits understood by this driver: */
+> +#define MODEBITS  (SPI_CPOL | SPI_CPHA | SPI_LSB_FIRST | SPI_LOOP | SPI_CS_HIGH)
+> +static int spi_st_setup(struct spi_device *spi)
+> +{
+> +	struct spi_st *spi_st = spi_master_get_devdata(spi->master);
+> +	u32 spi_st_clk, sscbrg, var;
+> +	u32 hz = spi->max_speed_hz;
+> +	int cs = spi->cs_gpio;
+> +	int ret;
+> +
+> +	if (spi->mode & ~MODEBITS) {
+> +		dev_err(&spi->dev, "unsupported mode bits 0x%x\n",
+> +			spi->mode & ~MODEBITS);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (!hz)  {
+> +		dev_err(&spi->dev, "max_speed_hz unspecified\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (!gpio_is_valid(cs)) {
+> +		dev_err(&spi->dev, "%d is not a valid gpio\n", cs);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (devm_gpio_request(&spi->dev, cs, dev_name(&spi->dev))) {
+> +		dev_err(&spi->dev, "could not request gpio:%d\n", cs);
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = gpio_direction_output(cs, spi->mode & SPI_CS_HIGH);
+> +	if (ret)
+> +		return ret;
+> +
+> +	spi_st_clk = clk_get_rate(spi_st->clk);
+> +
+> +	/* Set SSC_BRF */
+> +	sscbrg = spi_st_clk / (2 * hz);
+> +	if (sscbrg < 0x07 || sscbrg > (0x1 << 16)) {
 
-GPIO hogging needs to be the ideal solution for that, since we can
-just enforce the GPIO14 value as the driver is probed, which provides
-the guarantee that any driver using the bank B will actually drive the
-GPIO it might use.
+(0x1 << 16) can be replaced by BIT(16)
 
-However, an exclusive request will prevent any representation of this
-as a regulator, which sounds a bit weird, since it really is just
-that.
 
-Maxime
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+> +		dev_err(&spi->dev,
+> +			"baudrate %d outside valid range %d\n", sscbrg, hz);
+> +		return -EINVAL;
+> +	}
+> +
+> +	spi_st->baud = spi_st_clk / (2 * sscbrg);
+> +	if (sscbrg == (0x1 << 16)) /* 16-bit counter wraps */
 
---aYDVKSzuImP48n7V
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+ditto
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+> +		sscbrg = 0x0;
+> +
+> +	writel_relaxed(sscbrg, spi_st->base + SSC_BRG);
+> +
+> +	dev_dbg(&spi->dev,
+> +		"setting baudrate:target= %u hz, actual= %u hz, sscbrg= %u\n",
+> +		hz, spi_st->baud, sscbrg);
+> +
+> +	 /* Set SSC_CTL and enable SSC */
+> +	 var = readl_relaxed(spi_st->base + SSC_CTL);
+> +	 var |= SSC_CTL_MS;
+> +
+> +	 if (spi->mode & SPI_CPOL)
+> +		var |= SSC_CTL_PO;
+> +	 else
+> +		var &= ~SSC_CTL_PO;
+> +
+> +	 if (spi->mode & SPI_CPHA)
+> +		var |= SSC_CTL_PH;
+> +	 else
+> +		var &= ~SSC_CTL_PH;
+> +
+> +	 if ((spi->mode & SPI_LSB_FIRST) == 0)
+> +		var |= SSC_CTL_HB;
+> +	 else
+> +		var &= ~SSC_CTL_HB;
+> +
+> +	 if (spi->mode & SPI_LOOP)
+> +		var |= SSC_CTL_LPB;
+> +	 else
+> +		var &= ~SSC_CTL_LPB;
+> +
+> +	 var &= ~SSC_CTL_DATA_WIDTH_MSK;
+> +	 var |= (spi->bits_per_word - 1);
+> +
+> +	 var |= SSC_CTL_EN_TX_FIFO | SSC_CTL_EN_RX_FIFO;
+> +	 var |= SSC_CTL_EN;
+> +
+> +	 writel_relaxed(var, spi_st->base + SSC_CTL);
+> +
+> +	 /* Clear the status register */
+> +	 readl_relaxed(spi_st->base + SSC_RBUF);
+> +
+> +	 return 0;
+> +}
+> +
+> +/* Interrupt fired when TX shift register becomes empty */
+> +static irqreturn_t spi_st_irq(int irq, void *dev_id)
+> +{
+> +	struct spi_st *spi_st = (struct spi_st *)dev_id;
+> +
+> +	/* Read RX FIFO */
+> +	ssc_read_rx_fifo(spi_st);
+> +
+> +	/* Fill TX FIFO */
+> +	if (spi_st->words_remaining) {
+> +		ssc_write_tx_fifo(spi_st);
+> +	} else {
+> +		/* TX/RX complete */
+> +		writel_relaxed(0x0, spi_st->base + SSC_IEN);
+> +		/*
+> +		 * read SSC_IEN to ensure that this bit is set
+> +		 * before re-enabling interrupt
+> +		 */
+> +		readl(spi_st->base + SSC_IEN);
+> +		complete(&spi_st->done);
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int spi_st_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct spi_master *master;
+> +	struct resource *res;
+> +	struct spi_st *spi_st;
+> +	int irq, ret = 0;
+> +	u32 var;
+> +
+> +	master = spi_alloc_master(&pdev->dev, sizeof(*spi_st));
+> +	if (!master)
+> +		return -ENOMEM;
+> +
+> +	master->dev.of_node		= np;
+> +	master->mode_bits		= MODEBITS;
+> +	master->setup			= spi_st_setup;
+> +	master->cleanup			= spi_st_cleanup;
+> +	master->transfer_one		= spi_st_transfer_one;
+> +	master->bits_per_word_mask	= SPI_BPW_MASK(8) | SPI_BPW_MASK(16);
+> +	master->auto_runtime_pm		= true;
+> +	master->bus_num			= pdev->id;
+> +	spi_st				= spi_master_get_devdata(master);
+> +
+> +	spi_st->clk = devm_clk_get(&pdev->dev, "ssc");
+> +	if (IS_ERR(spi_st->clk)) {
+> +		dev_err(&pdev->dev, "Unable to request clock\n");
+> +		return PTR_ERR(spi_st->clk);
+> +	}
+> +
+> +	ret = spi_st_clk_enable(spi_st);
+> +	if (ret)
+> +		return ret;
+> +
+> +	init_completion(&spi_st->done);
+> +
+> +	/* Get resources */
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	spi_st->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(spi_st->base)) {
+> +		ret = PTR_ERR(spi_st->base);
+> +		goto clk_disable;
+> +	}
+> +
+> +	/* Disable I2C and Reset SSC */
+> +	writel_relaxed(0x0, spi_st->base + SSC_I2C);
+> +	var = readw_relaxed(spi_st->base + SSC_CTL);
+> +	var |= SSC_CTL_SR;
+> +	writel_relaxed(var, spi_st->base + SSC_CTL);
+> +
+> +	udelay(1);
+> +	var = readl_relaxed(spi_st->base + SSC_CTL);
+> +	var &= ~SSC_CTL_SR;
+> +	writel_relaxed(var, spi_st->base + SSC_CTL);
+> +
+> +	/* Set SSC into slave mode before reconfiguring PIO pins */
+> +	var = readl_relaxed(spi_st->base + SSC_CTL);
+> +	var &= ~SSC_CTL_MS;
+> +	writel_relaxed(var, spi_st->base + SSC_CTL);
+> +
+> +	irq = irq_of_parse_and_map(np, 0);
+> +	if (!irq) {
+> +		dev_err(&pdev->dev, "IRQ missing or invalid\n");
+> +		ret = -EINVAL;
+> +		goto clk_disable;
+> +	}
+> +
+> +	ret = devm_request_irq(&pdev->dev, irq, spi_st_irq, 0,
+> +			       pdev->name, spi_st);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to request irq %d\n", irq);
+> +		goto clk_disable;
+> +	}
+> +
+> +	/* by default the device is on */
+> +	pm_runtime_set_active(&pdev->dev);
+> +	pm_runtime_enable(&pdev->dev);
+> +
+> +	platform_set_drvdata(pdev, master);
+> +
+> +	ret = devm_spi_register_master(&pdev->dev, master);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to register master\n");
+> +		goto clk_disable;
+> +	}
+> +
+> +	return 0;
+> +
+> +clk_disable:
+> +	spi_st_clk_disable(spi_st);
+> +
+> +	return ret;
+> +}
+> +
+> +static int spi_st_remove(struct platform_device *pdev)
+> +{
+> +	struct spi_master *master = platform_get_drvdata(pdev);
+> +	struct spi_st *spi_st = spi_master_get_devdata(master);
+> +
+> +	spi_st_clk_disable(spi_st);
+> +
+> +	pinctrl_pm_select_sleep_state(&pdev->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +#ifdef CONFIG_PM
+> +static int spi_st_runtime_suspend(struct device *dev)
+> +{
+> +	struct spi_master *master = dev_get_drvdata(dev);
+> +	struct spi_st *spi_st = spi_master_get_devdata(master);
+> +
+> +	writel_relaxed(0, spi_st->base + SSC_IEN);
+> +	pinctrl_pm_select_sleep_state(dev);
+> +
+> +	spi_st_clk_disable(spi_st);
+> +
+> +	return 0;
+> +}
+> +
+> +static int spi_st_runtime_resume(struct device *dev)
+> +{
+> +	struct spi_master *master = dev_get_drvdata(dev);
+> +	struct spi_st *spi_st = spi_master_get_devdata(master);
+> +	int ret;
+> +
+> +	ret = spi_st_clk_enable(spi_st);
+> +	pinctrl_pm_select_default_state(dev);
+> +
+> +	return ret;
+> +}
+> +#endif
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int spi_st_suspend(struct device *dev)
+> +{
+> +	struct spi_master *master = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	ret = spi_master_suspend(master);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return pm_runtime_force_suspend(dev);
+> +}
+> +
+> +static int spi_st_resume(struct device *dev)
+> +{
+> +	struct spi_master *master = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	ret = spi_master_resume(master);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return pm_runtime_force_resume(dev);
+> +}
+> +#endif
+> +
+> +static const struct dev_pm_ops spi_st_pm = {
+> +	SET_SYSTEM_SLEEP_PM_OPS(spi_st_suspend, spi_st_resume)
+> +	SET_RUNTIME_PM_OPS(spi_st_runtime_suspend, spi_st_runtime_resume, NULL)
+> +};
+> +
+> +static struct of_device_id stm_spi_match[] = {
+> +	{ .compatible = "st,comms-ssc4-spi", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, stm_spi_match);
+> +
+> +static struct platform_driver spi_st_driver = {
+> +	.driver = {
+> +		.name = "spi-st",
+> +		.pm = &spi_st_pm,
+> +		.of_match_table = of_match_ptr(stm_spi_match),
+> +	},
+> +	.probe = spi_st_probe,
+> +	.remove = spi_st_remove,
+> +};
+> +module_platform_driver(spi_st_driver);
+> +
+> +MODULE_AUTHOR("Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>");
+> +MODULE_DESCRIPTION("STM SSC SPI driver");
+> +MODULE_LICENSE("GPL v2");
 
-iQIcBAEBAgAGBQJUfeTrAAoJEBx+YmzsjxAg7wYQAJjqiXLHrQqwc+skXbprskOn
-rcVJePS4tpBlurQ53c3furPKW6R0LQNsyM9pMkllPceFCD7wvsbGvpg1z4yeuUaQ
-Wn7Lzu0fipLPHpCZhXc9bU4Db3CemEAhRoUrDwTV8fvSAcIS2zTxQmqcmGlBUCZQ
-1+mzoB5w3keBrEtkT7Zl9EZyq5Zs8neortY8/fePrPyE69o0dhZ57/uBgIIfXIbs
-BY9QC5Wm5cKMpB9VcERVWzV+VLzCZIJ4pSpWpm9S8qpXtQ/cMOmOT8aNYpNRkant
-mTcP0kVMGf81qyAn9ujD++IScXeM6eMaKdafryXMu8jkY7yVONobB7H3kAUFyG0U
-066z3SodJZ2jiA1O22Zy3TAXrquEw6xRQGZJq4g04me9W8w1LisfCx6MI6SQuZr2
-9rZ7jFgs9LGTtpihacok5xKT2cNafoGYz5U1rfgBkKJDtXGZM7aI4gpM1Td5efRM
-oEHmFWmx5tuINJojWVB8VBifad4z9WwPAyMmT7t8CiVsVyksnUIHrb04pZcYTvd7
-IMdVwIxqP/A0XTJ8nf/bNvib1hxr+whl/UDpLzpLxliexCaHonr5ADVH4QrFe2WU
-NmID1qMhXDAyKGeOElRwY14vQNTC/A/xiMDdcTQ9qFfXOVbozr/EbebiJgkOQWyg
-my+TgT1EUKb5R2YW7wyP
-=+AOe
------END PGP SIGNATURE-----
-
---aYDVKSzuImP48n7V--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
