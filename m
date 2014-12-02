@@ -1,113 +1,97 @@
-From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v15 12/12] drm: bridge/dw_hdmi: add rockchip rk3288 support
-Date: Tue, 02 Dec 2014 20:34:53 +0800
-Message-ID: <547DB1ED.7000409@rock-chips.com>
-References: <1417505778-18341-1-git-send-email-andy.yan@rock-chips.com>	 <1417506327-18908-1-git-send-email-andy.yan@rock-chips.com> <1417515882.3411.8.camel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417515882.3411.8.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: airlied-cv59FeDIM0c@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Josh Boyer <jwboyer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kuma
+From: Yadwinder Singh Brar <yadi.brar@samsung.com>
+Subject: [PATCH] mfd: max77686: Fix parent of rtc device
+Date: Tue, 02 Dec 2014 18:03:40 +0530
+Message-ID: <1417523620-4311-1-git-send-email-yadi.brar@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: lee.jones@linaro.org, sameo@linux.intel.com, akpm@linux-foundation.org, tomasz.figa@gmail.com, robh+dt@kernel.org, yadi.brar01@gmail.com, Yadwinder Singh Brar <yadi.brar@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp:
-On 2014=E5=B9=B412=E6=9C=8802=E6=97=A5 18:24, Philipp Zabel wrote:
-> Hi Andy,
->
-> Am Dienstag, den 02.12.2014, 15:45 +0800 schrieb Andy Yan:
-> [...]
->> +static int dw_hdmi_rockchip_bind(struct device *dev, struct device =
-*master,
->> +				 void *data)
->> +{
->> +	struct platform_device *pdev =3D to_platform_device(dev);
->> +	const struct dw_hdmi_plat_data *plat_data;
->> +	const struct of_device_id *match;
->> +	struct drm_device *drm =3D data;
->> +	struct drm_encoder *encoder;
->> +	struct rockchip_hdmi *hdmi;
->> +	int ret;
->> +
->> +	if (!pdev->dev.of_node)
->> +		return -ENODEV;
->> +
->> +	hdmi =3D devm_kzalloc(&pdev->dev, sizeof(*hdmi), GFP_KERNEL);
->> +	if (!hdmi)
->> +		return -ENOMEM;
->> +
->> +	match =3D of_match_node(dw_hdmi_rockchip_ids, pdev->dev.of_node);
->> +	plat_data =3D match->data;
->> +	hdmi->dev =3D &pdev->dev;
->> +	encoder =3D &hdmi->encoder;
->> +	platform_set_drvdata(pdev, hdmi);
->> +
->> +	ret =3D rockchip_hdmi_parse_dt(hdmi);
->> +	if (ret) {
->> +		dev_err(hdmi->dev, "Unable to parse OF data\n");
->> +		return ret;
->> +	}
->> +
->> +	ret =3D clk_prepare_enable(hdmi->clk);
->> +	if (ret) {
->> +		dev_err(hdmi->dev, "Cannot enable HDMI clock: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	ret =3D clk_prepare_enable(hdmi->hdcp_clk);
->> +	if (ret) {
->> +		dev_err(hdmi->dev, "Cannot enable HDMI hdcp clock: %d\n", ret);
->> +		return ret;
->> +	}
-> Could we have a look at the clocks again? Basically the Rockchip cloc=
-k
-> handling is exactly the same, except the clocks are called by other
-> names.
->
-> On i.MX6, according to the reference manual, the HDMI TX module has f=
-our
-> clock inputs: "iahbclk" (bus clock), "icecclk" (32 kHz CEC clock),
-> "ihclk" (module clock), and "isfrclk" (27 MHz internal SFR clock).
-> The "iahbclk" and "ihclk" are both sourced from the SoC AHB root cloc=
-k,
-> the 32 kHz reference input can't be gated, and the "isfrclk" has its =
-own
-> gate.
->
-> Does the HDMI TX implementation on Rockchip still have the separate
-> external sfr bus and module clock inputs? I assume that your "clk" in=
-put
-> is a single gate bit for bus and module clocks at the same time?
-> If possible, I'd prefer to find a common binding for the clocks with
-> some of the clocks being optional, but for that we need to know the
-> actual clock inputs to the HDMI TX module.
->
-> regards
-> Philipp
->
-     There are three  individual clock inputs on Rockchip RK3288 HDMI:=20
-"hdmi_ctrl_clk",
-     "hdmi_cec_clk", "hdmi_hdcp_clk", the three clocks are responsible=20
-for different
-      functions as their name described, and have their own private gat=
-e=20
-bit. That is
-      to say, the cec_clk and hdcp_clk can all be disabled if we don't=20
-need hdcp and cec
-      function.
-      So I think it's better to make the clk control platform independe=
-nt.
+rtc have different i2c client than power(pmic) block. So rtc device should
+sit under its own i2c client in device hierarchy, which reflects in sysfs also.
+This patch modifies code to register rtc cell with rtc->dev as parent.
 
-     Heiko, do you have any suggestions?
->
->
+Without this patch :
+driver         max77686-pmic  modalias       power          uevent
+max77686-clk   max77686-rtc   name           subsystem
 
+After applying patch :
+driver/        modalias       power/         uevent
+max77686-rtc/  name           subsystem/
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Yadwinder Singh Brar <yadi.brar@samsung.com>
+---
+
+Or Can we follow another (exhaustive but more cleaner) approach, which will
+be more like code refactoring and cleanup rather than only fix:
+Since rtc uses i2c client, which gets created using i2c_new_dummy() and is not
+shared by any other cell of max77686. So we can covert rtc platform driver
+itself to i2c client driver. It will also allow to expilicitly describe
+max77686-rtc in DT which we can't do now.
+It can be applicable to some other existing and new mfd pmic drivers.
+Any suggestion/comments ?
+
+---
+ drivers/mfd/max77686.c |   22 ++++++++++++++++++++--
+ 1 files changed, 20 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/mfd/max77686.c b/drivers/mfd/max77686.c
+index 929795e..22c0948 100644
+--- a/drivers/mfd/max77686.c
++++ b/drivers/mfd/max77686.c
+@@ -39,10 +39,13 @@
+ 
+ static const struct mfd_cell max77686_devs[] = {
+ 	{ .name = "max77686-pmic", },
+-	{ .name = "max77686-rtc", },
+ 	{ .name = "max77686-clk", },
+ };
+ 
++static const struct mfd_cell max77686_rtc_dev[] = {
++	{ .name = "max77686-rtc", },
++};
++
+ static const struct mfd_cell max77802_devs[] = {
+ 	{ .name = "max77802-pmic", },
+ 	{ .name = "max77802-clk", },
+@@ -332,14 +335,27 @@ static int max77686_i2c_probe(struct i2c_client *i2c,
+ 		goto err_del_irqc;
+ 	}
+ 
++	if (max77686->type == TYPE_MAX77686) {
++		ret = mfd_add_devices(&max77686->rtc->dev, -1, max77686_rtc_dev,
++			1, NULL, 0, NULL);
++		if (ret < 0) {
++			dev_err(&max77686->rtc->dev,
++				"failed to add RTC device %d\n", ret);
++			goto err_del_rtc_irqc;
++		}
++	}
++
+ 	ret = mfd_add_devices(max77686->dev, -1, cells, n_devs, NULL, 0, NULL);
+ 	if (ret < 0) {
+ 		dev_err(&i2c->dev, "failed to add MFD devices: %d\n", ret);
+-		goto err_del_rtc_irqc;
++		goto err_del_rtc_dev;
+ 	}
+ 
+ 	return 0;
+ 
++err_del_rtc_dev:
++	if (max77686->type == TYPE_MAX77686)
++		mfd_remove_devices(&max77686->rtc->dev);
+ err_del_rtc_irqc:
+ 	regmap_del_irq_chip(max77686->irq, max77686->rtc_irq_data);
+ err_del_irqc:
+@@ -356,6 +372,8 @@ static int max77686_i2c_remove(struct i2c_client *i2c)
+ 	struct max77686_dev *max77686 = i2c_get_clientdata(i2c);
+ 
+ 	mfd_remove_devices(max77686->dev);
++	if (max77686->type == TYPE_MAX77686)
++		mfd_remove_devices(&max77686->rtc->dev);
+ 
+ 	regmap_del_irq_chip(max77686->irq, max77686->rtc_irq_data);
+ 	regmap_del_irq_chip(max77686->irq, max77686->irq_data);
+-- 
+1.7.0.4
