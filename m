@@ -1,87 +1,48 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: [PATCH v14 09/10] arm: dts: qcom: Add idle states device nodes for 8084
-Date: Tue,  2 Dec 2014 10:39:17 -0700
-Message-ID: <1417541958-56907-10-git-send-email-lina.iyer@linaro.org>
-References: <1417541958-56907-1-git-send-email-lina.iyer@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1417541958-56907-1-git-send-email-lina.iyer@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org, Lina Iyer <lina.iyer@linaro.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2] mmc: dw_mmc: add quirk for broken data transfer over scheme
+Date: Tue, 2 Dec 2014 09:47:18 -0800
+Message-ID: <CAD=FV=V3BF8qv17n4_T5Lys1BnKsqE9NqOTB-6OwX0VOviWRrw@mail.gmail.com>
+References: <1415970338-2637-1-git-send-email-addy.ke@rock-chips.com>
+	<1416903008-4160-1-git-send-email-addy.ke@rock-chips.com>
+	<CAD=FV=UmG1okxJ5JV-1cuRRQJi7EEPXc7Q90sWjfMWBqb7VSMw@mail.gmail.com>
+	<547D6F36.50103@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <547D6F36.50103@rock-chips.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: addy ke <addy.ke@rock-chips.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Dinh Nguyen <dinguyen@altera.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, Sonny Rao <sonnyrao@chromium.org>, Alexandru Stan <amstan@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add ARM common idle states device bindings for cpuidle support for APQ
-8084.
+Addy,
 
-Support standby and standalone power collapse (power down that does not
-affect any SoC idle states) for each cpu.
+On Mon, Dec 1, 2014 at 11:50 PM, addy ke <addy.ke@rock-chips.com> wrote:
+> We don't know why we have this problem,
+> but this problem is really exist, and we need patch to fix this problem now.
+> I will post a follow up change when we find the root cause.
 
-Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
-Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
----
- arch/arm/boot/dts/qcom-apq8084.dtsi | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+To me that seems reasonable.  Certainly I would prefer to have this
+patch while waiting for the root cause, but it's up to Ulf.
 
-diff --git a/arch/arm/boot/dts/qcom-apq8084.dtsi b/arch/arm/boot/dts/qcom-apq8084.dtsi
-index 71182bf..a3c24ff 100644
---- a/arch/arm/boot/dts/qcom-apq8084.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8084.dtsi
-@@ -22,6 +22,7 @@
- 			next-level-cache = <&L2>;
- 			qcom,acc = <&acc0>;
- 			qcom,saw = <&saw0>;
-+			cpu-idle-states = <&CPU_STBY &CPU_SPC>;
- 		};
- 
- 		cpu@1 {
-@@ -32,6 +33,7 @@
- 			next-level-cache = <&L2>;
- 			qcom,acc = <&acc1>;
- 			qcom,saw = <&saw1>;
-+			cpu-idle-states = <&CPU_STBY &CPU_SPC>;
- 		};
- 
- 		cpu@2 {
-@@ -42,6 +44,7 @@
- 			next-level-cache = <&L2>;
- 			qcom,acc = <&acc2>;
- 			qcom,saw = <&saw2>;
-+			cpu-idle-states = <&CPU_STBY &CPU_SPC>;
- 		};
- 
- 		cpu@3 {
-@@ -52,6 +55,7 @@
- 			next-level-cache = <&L2>;
- 			qcom,acc = <&acc3>;
- 			qcom,saw = <&saw3>;
-+			cpu-idle-states = <&CPU_STBY &CPU_SPC>;
- 		};
- 
- 		L2: l2-cache {
-@@ -59,6 +63,24 @@
- 			cache-level = <2>;
- 			qcom,saw = <&saw_l2>;
- 		};
-+
-+		idle-states {
-+			CPU_STBY: standby {
-+				compatible = "qcom,idle-state-stby",
-+						"arm,idle-state";
-+				entry-latency-us = <1>;
-+				exit-latency-us = <1>;
-+				min-residency-us = <2>;
-+			};
-+
-+			CPU_SPC: spc {
-+				compatible = "qcom,idle-state-spc",
-+						"arm,idle-state";
-+				entry-latency-us = <150>;
-+				exit-latency-us = <200>;
-+				min-residency-us = <2000>;
-+			};
-+		};
- 	};
- 
- 	cpu-pmu {
--- 
-2.1.0
+
+> And there is a little probability of this problem on RK SoC, such as RK3188, RK3066,
+> when worse card inserted in.
+> Maybe the other SoCs have the similar problem.
+>
+> So I will add this quirk in rockchip code(dw_mmc-rockchip.c) as follows:
+> static int dw_mci_rockchip_parse_dt(struct dw_mci *host)
+> {
+>         host->quirk |= DW_MCI_QUIRK_BROKEN_DTO;
+>
+>         return 0;
+> }
+>
+> ......
+>         .parse_dt = dw_mci_rockchip_parse_dt,
+> ......
+>
+> is right?
+
+When you added "sdio_id0" you got feedback that you should use
+dw_mci_rockchip_init().  Why not do the same thing here?
