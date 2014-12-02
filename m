@@ -1,7 +1,7 @@
 From: gyungoh@gmail.com
-Subject: [PATCH v9 6/8] devicetree: i2c: Add SKY81452 to the Trivial Devices list
-Date: Tue,  2 Dec 2014 17:05:27 +0900
-Message-ID: <1417507529-13654-7-git-send-email-jack.yoo@skyworksinc.com>
+Subject: [PATCH v9 8/8] devicetree: regulator: sky81452: Modify Device Tree structure
+Date: Tue,  2 Dec 2014 17:05:29 +0900
+Message-ID: <1417507529-13654-9-git-send-email-jack.yoo@skyworksinc.com>
 References: <1417507529-13654-1-git-send-email-jack.yoo@skyworksinc.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1417507529-13654-1-git-send-email-jack.yoo@skyworksinc.com>
@@ -27,7 +27,8 @@ Changes v6:
 Nothing
 
 Changes v5:
-Nothing
+Changed DT for regulator : 'lout' node should be defined under 'regulator'
+Removed compatible string from sky81452-regulator driver
 
 Changes v4:
 Nothing
@@ -36,22 +37,36 @@ Changes v3:
 Nothing
 
 Changes v2:
-Add SKY81452 to the Trivial Devices list
+Added 'compatible' attribute in the driver
 
- Documentation/devicetree/bindings/i2c/trivial-devices.txt | 1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/regulator/sky81452-regulator.txt       | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-index fbde415..122fa1e 100644
---- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-@@ -77,6 +77,7 @@ ramtron,24c64		i2c serial eeprom  (24cxx)
- ricoh,rs5c372a		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
- samsung,24ad0xd1	S524AD0XF1 (128K/256K-bit Serial EEPROM for Low Power)
- sii,s35390a		2-wire CMOS real-time clock
-+skyworks,sky81452	Skyworks SKY81452: Six-Channel White LED Driver with Touch Panel Bias Supply
- st-micro,24c256		i2c serial eeprom  (24cxx)
- stm,m41t00		Serial Access TIMEKEEPER
- stm,m41t62		Serial real-time clock (RTC) with alarm
+diff --git a/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt b/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt
+index 882455e..f9acbc1 100644
+--- a/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt
+@@ -1,6 +1,7 @@
+ SKY81452 voltage regulator
+ 
+ Required properties:
++- regulator node named lout.
+ - any required generic properties defined in regulator.txt
+ 
+ Optional properties:
+@@ -9,8 +10,9 @@ Optional properties:
+ Example:
+ 
+ 	regulator {
+-		/* generic regulator properties */
+-		regulator-name = "touch_en";
+-		regulator-min-microvolt = <4500000>;
+-		regulator-max-microvolt = <8000000>;
++		lout {
++			regulator-name = "sky81452-lout";
++			regulator-min-microvolt = <4500000>;
++			regulator-max-microvolt = <8000000>;
++		};
+ 	};
 -- 
 1.9.1
