@@ -1,71 +1,103 @@
-From: Benoit Parrot <bparrot@ti.com>
-Subject: Re: [Patch v2 1/2] gpio: add GPIO hogging mechanism
-Date: Mon, 1 Dec 2014 18:27:59 -0600
-Message-ID: <20141202002758.GC24551@ti.com>
-References: <1416527684-19017-1-git-send-email-bparrot@ti.com>
- <1416527684-19017-2-git-send-email-bparrot@ti.com>
- <CAAVeFu+VZiuzobB7McSAUehKUHJjBv1o8ZpYjSHJAKjr3o5wTA@mail.gmail.com>
- <20141201163639.GI25249@lukather>
+From: Huang Shijie <shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] mtd: gpmi: Remove "We support only one NAND chip" from
+ bindings doc
+Date: Tue, 2 Dec 2014 08:38:40 +0800
+Message-ID: <20141202003840.GA11370@shldeISGChi005.sh.intel.com>
+References: <1417097929-17832-1-git-send-email-sr@denx.de>
+ <20141128014832.GA3113@localhost.localdomain>
+ <54781DD5.5030801@denx.de>
+ <20141129024047.GA5056@localhost.localdomain>
+ <20141130065326.GB3608@norris-Latitude-E6410>
+ <20141130154255.GB14834@localhost.localdomain>
+ <547C3BB9.1010706@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20141201163639.GI25249@lukather>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <547C3BB9.1010706-ynQEQJNshbs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
+Cc: Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Maxime Ripard <maxime.ripard@free-electrons.com> wrote on Mon [2014-Dec-01 17:36:39 +0100]:
-> Hi,
-> 
-> On Fri, Nov 28, 2014 at 04:30:01PM +0900, Alexandre Courbot wrote:
-> > > +/**
-> > > + * do_gpio_hog - Given node is a GPIO hog configuration, handle it
-> > > + * @np:                device node to get GPIO from
-> > > + *
-> > > + * This is only used by of_gpiochip_add to request/set GPIO initial
-> > > + * configuration.
-> > > + */
-> > > +static int do_gpio_hog(struct device_node *np)
-> > > +{
-> > > +       struct gpio_desc *desc = NULL;
-> > > +       int err;
-> > > +       const char *name;
-> > > +       enum gpio_lookup_flags lflags;
-> > > +       enum gpiod_flags dflags;
-> > > +
-> > > +       desc = of_get_gpio_hog(np, &name, &lflags, &dflags);
-> > > +       if (!desc)
-> > > +               return -ENOTSUPP;
-> > > +       else if (IS_ERR(desc))
-> > > +               return PTR_ERR(desc);
-> > > +
-> > > +       err = gpiod_request(desc, name);
+On Mon, Dec 01, 2014 at 10:58:17AM +0100, Stefan Roese wrote:
+> On 30.11.2014 16:42, Huang Shijie wrote:
+> > On Sat, Nov 29, 2014 at 10:53:26PM -0800, Brian Norris wrote:
+> >> On Sat, Nov 29, 2014 at 10:40:50AM +0800, Huang Shijie wrote:
+> >>> On Fri, Nov 28, 2014 at 08:01:41AM +0100, Stefan Roese wrote:
+> >>>> On 28.11.2014 02:48, Huang Shijie wrote:
+> >>>>> On Thu, Nov 27, 2014 at 03:18:49PM +0100, Stefan Roese wrote:
+> >>>>>> This sentence "We support only one NAND chip now" is not true any more.
+> >>>>>> Multiple chips are supported. So lets remove this sentence to not
+> >>>>>
+> >>>>> The gpmi can only supports one chip. Of course, there are maybe two dies
+> >>>>> in this single chip.
+> >>>>
+> >>>> Now I'm a bit confused. The i.MX6 supports 4 chips select signals. And isn't
+> >>>> "two dies in this single chip" not practically the same as connecting 2 (or
+> >>>> more) chips (same device) to multiple chip selects of the SoC? Where is the
+> >>>> difference here?
+> >>> The "one chip" here is means the "one package" (TSOP or BGA ....).
+> >>
+> >> Then why is this even in the DT binding doc? Isn't that a board-level
+> >> constraint (and not a chip property) which should be obvious to the
+> >> user? If so, then should we just drop the language? Or at a minimum,
+> >> make it more specific so it doesn't confuse readers.
 > > 
-> > Using this function means that a GPIO chip module cannot be unloaded
-> > if it uses GPIO hogs. Is it the intended behavior? If not, please use
-> > gpiochip_request_own_desc() instead, and make sure to call
-> > gpiochip_free_own_desc() for each hog when the driver is unloaded.
+> > yes. It is okay to send a patch to make it more clear.
+> > 
+> >>
+> >>> (In logic, "two dies in this single chip" is same as connecting 2 chips
+> >>> to the gpmi.)
+> >>
+> >> ...which means that logically, you can connect more than one chip to the
+> >> GPMI, right?
+> > The gpmi can only connect with one physical chip now, but there maybe
+> > two DIEs in this chip.
 > 
-> The only thing I'd like to have would be that the request here would
-> be non-exclusive, so that a later driver would still be allowed later
-> on to request that GPIO later on and manage it itself (ideally using
-> the usual gpiod_request function).
+> I really fail to see why you make this distinction between two chips on a die
+> and two external chips. For the SoC this should really look identical, right?
+> 
+> Please explain again, why exactly only two chips on one die are supported.
+There are only 8 data lines for gpmi.  I guess there may bugs in the
+gpmi driver to support the two external chips in such case:
+        Two different processes access different NAND chips at the same
+	time.
 
-I'll let Linus chime in on this.
-But the premise for the hogging mechanism is to have a mechanism to set GPIOs
-which do not need to be requested by any other entity.
-If a driver needs access to a specific GPIO then it should use the existing
-gpiolib API to request it and set it up.
+I even did not have enough time to test the "two chips on a die" case very carefully before
+I left freescale.
 
 > 
-> Maxime
-> 
-> -- 
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
+> BTW: We have a custom i.MX6DL based board with 2 NAND chips connected. And
 
-Regards,
-Benoit
+Very good. Please test this board with the UBIFS in the multi processes
+case. (I ever used the bonnie++) 
+
+
+> Linux seems to support both chips just fine. Here the boot log:
+> 
+> [    1.085812] nand: device found, Manufacturer ID: 0x2c, Chip ID: 0xdc
+> [    1.092218] nand: Micron MT29F4G08ABADAH4
+> [    1.096245] nand: 512MiB, SLC, page size: 2048, OOB size: 64
+> [    1.102171] nand: 2 chips detected
+> [    1.106156] gpmi-nand 112000.gpmi-nand: enable the asynchronous EDO mode 5
+> [    1.113094] Scanning device for bad blocks
+could you please post more log?
+
+thanks
+Huang Shijie
+
+> 
+> Comments welcome...
+> 
+> Thanks,
+> Stefan
+> 
+> 
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
