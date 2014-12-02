@@ -1,103 +1,125 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH] media: platform: add VPFE capture driver support for
- AM437X
-Date: Tue, 02 Dec 2014 08:32:23 +0100
-Message-ID: <547D6B07.6050803@xs4all.nl>
-References: <1416791411-9731-1-git-send-email-prabhakar.csengg@gmail.com> <547C3ED3.1060205@xs4all.nl> <547C4A69.8020002@xs4all.nl> <CA+V-a8uL4J0Y2ZfDxe7jhxzGcCNe9QbCDUjDZrC+mZ5E6sX2jg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+V-a8uL4J0Y2ZfDxe7jhxzGcCNe9QbCDUjDZrC+mZ5E6sX2jg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-api <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v15 0/12] dw-hdmi: convert imx hdmi to bridge/dw_hdmi
+Date: Tue,  2 Dec 2014 15:36:18 +0800
+Message-ID: <1417505778-18341-1-git-send-email-andy.yan@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: airlied-cv59FeDIM0c@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Josh Boyer <jwboyer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/01/2014 11:27 PM, Prabhakar Lad wrote:
-> Hi Hans,
-> 
-> On Mon, Dec 1, 2014 at 11:00 AM, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> wrote:
->> On 12/01/2014 11:11 AM, Hans Verkuil wrote:
->>> Hi all,
->>>
->>> Thanks for the patch, review comments are below.
->>>
->>> For the next version I would appreciate if someone can test this driver with
->>> the latest v4l2-compliance from the v4l-utils git repo. If possible test streaming
->>> as well (v4l2-compliance -s), ideally with both a sensor and a STD receiver input.
->>> But that depends on the available hardware of course.
->>>
->>> I'd like to see the v4l2-compliance output. It's always good to have that on
->>> record.
->>>
->>>
->>> On 11/24/2014 02:10 AM, Lad, Prabhakar wrote:
->>>> From: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
->>>>
->>>> This patch adds Video Processing Front End (VPFE) driver for
->>>> AM437X family of devices
->>>> Driver supports the following:
->>>> - V4L2 API using MMAP buffer access based on videobuf2 api
->>>> - Asynchronous sensor/decoder sub device registration
->>>> - DT support
->>>>
->>>> Signed-off-by: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
->>>> Signed-off-by: Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>
->>>> Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>> ---
->>>>  .../devicetree/bindings/media/ti-am437xx-vpfe.txt  |   61 +
->>>>  MAINTAINERS                                        |    9 +
->>>>  drivers/media/platform/Kconfig                     |    1 +
->>>>  drivers/media/platform/Makefile                    |    2 +
->>>>  drivers/media/platform/am437x/Kconfig              |   10 +
->>>>  drivers/media/platform/am437x/Makefile             |    2 +
->>>>  drivers/media/platform/am437x/vpfe.c               | 2764 ++++++++++++++++++++
->>>>  drivers/media/platform/am437x/vpfe.h               |  286 ++
->>>>  drivers/media/platform/am437x/vpfe_regs.h          |  140 +
->>>>  include/uapi/linux/Kbuild                          |    1 +
->>>>  include/uapi/linux/am437x_vpfe.h                   |  122 +
->>>>  11 files changed, 3398 insertions(+)
->>
->> Can the source names be improved? There are too many 'vpfe' sources.
->> Perhaps prefix all with 'am437x-'?
->>
-> I did think of it but, dropped it as anyway the source's are present
-> in am437x folder, again naming the files am437x-xxx.x didn't make
-> me feel good. If you still insists I'll do it.
 
-Yes, please do. If you look at most other drivers they all have a prefix.
+We found Freescale imx6 and Rockchip rk3288 and Ingenic JZ4780 (Xburst/MIPS)
+use the interface compatible Designware HDMI IP, but they also have some
+lightly differences, such as phy pll configuration, register width(imx hdmi
+register is one byte, but rk3288 is 4 bytes width and can only be accessed
+by word), 4K support(imx6 doesn't support 4k, but rk3288 does), and HDMI2.0
+support.
 
-Another reason is that the media_build system expects unique names.
+To reuse the imx-hdmi driver, we make this patch set:
+(1): fix some CodingStyle warning to make checkpatch happy
+(2): convert imx-hdmi to drm_bridge
+(3): split platform specific code
+(4): move imx-hdmi to bridge/dw_hdmi
+(5): extend dw_hdmi.c to support rk3288 hdmi
+(6): add rockchip rk3288 platform specific code dw_hdmi-rockchip.c
 
-Regards,
+Changes in v15:
+- add prefix dw_hdmi/DW_HDMI for public used dw_hdmi structs
+  adviced by Philipp Zabel
+- remove THIS_MODULE in platform driver
+- remove unio of the multi-byte register access, adviced by Philipp Zabel
 
-	Hans
+Changes in v14:
+- add defer probing, adviced by Philipp Zabel
+- remove drm_connector_register, because imx-drm core has registered
+connector
 
->> In general I prefer '-' over '_' in a source name: it's looks better
->> IMHO.
->>
-> I am almost done with all the review comments, if we take a decision
-> on this quickly I can post a v2 soon.
-> 
->> One question, unrelated to this patch series:
->>
->> Prabhakar, would it make sense to look at the various existing TI sources
->> as well and rename them to make it more explicit for which SoCs they are
->> meant? Most are pretty vague with variations on vpe, vpif, vpfe, etc. but
->> no reference to the actual SoC they are for.
->>
-> vpe - definitely needs to be changed.
-> vpif - under davinci is common for (Davinci series
-> dm6467/dm6467t/omapl138/am1808)
-> vpfe -  under davinci is common for (Davinci series dm36x/dm6446/dm355)
-> 
-> I am falling short of names for renaming this common drivers :)
-> 
-> Thanks,
-> --Prabhakar Lad
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-media" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+Changes in v13:
+- patch against drm-next
+- split platform specific phy configuration
+- split phy configuration from patch#4
+
+Changes in v12:
+- refactor of_node_put(ddc_node)
+- squash patch <convert dw_hdmi to drm_bridge>
+- add comment for the depend on patch
+
+Changes in v11:
+- squash patch  <split some phy configuration to platform driver>
+
+Changes in v10:
+- split generic dw_hdmi.c improvements from patch#11 (add rk3288 support)
+- add more display mode support mpll configuration for rk3288
+
+Changes in v9:
+- move some phy configuration to platform driver
+
+Changes in v8:
+- correct some spelling mistake
+- modify ddc-i2c-bus and interrupt description
+- Add documentation for rockchip dw hdmi
+
+Changes in v7:
+- remove unused variables from structure dw_hdmi
+- remove a wrong modification
+- add copyrights for dw_hdmi-imx.c
+
+Changes in v6:
+- rearrange the patch order
+- refactor register access without reg_shift
+
+Changes in v5:
+- refactor reg-io-width
+
+Changes in v4:
+- fix checkpatch CHECK
+- defer probe ddc i2c adapter
+
+Changes in v3:
+- split multi-register access to one indepent patch
+
+Andy Yan (12):
+  drm: imx: imx-hdmi: make checkpatch happy
+  drm: imx: imx-hdmi: return defer if can't get ddc i2c adapter
+  drm: imx: imx-hdmi: convert imx-hdmi to drm_bridge mode
+  drm: imx: imx-hdmi: split phy configuration to platform driver
+  drm: imx: imx-hdmi: move imx-hdmi to bridge/dw_hdmi
+  dt-bindings: add document for dw_hdmi
+  drm: bridge/dw_hdmi: add support for multi-byte register width access
+  drm: bridge/dw_hdmi: add mode_valid support
+  drm: bridge/dw_hdmi: clear i2cmphy_stat0 reg in hdmi_phy_wait_i2c_done
+  drm: bridge/dw_hdmi: add function dw_hdmi_phy_enable_spare
+  dt-bindings: Add documentation for rockchip dw hdmi
+  drm: bridge/dw_hdmi: add rockchip rk3288 support
+
+ .../devicetree/bindings/drm/bridge/dw_hdmi.txt     |  40 ++
+ .../devicetree/bindings/video/dw_hdmi-rockchip.txt |  43 ++
+ drivers/gpu/drm/bridge/Kconfig                     |   5 +
+ drivers/gpu/drm/bridge/Makefile                    |   1 +
+ .../gpu/drm/{imx/imx-hdmi.c => bridge/dw_hdmi.c}   | 745 +++++++++------------
+ .../gpu/drm/{imx/imx-hdmi.h => bridge/dw_hdmi.h}   |   4 +-
+ drivers/gpu/drm/imx/Kconfig                        |   1 +
+ drivers/gpu/drm/imx/Makefile                       |   2 +-
+ drivers/gpu/drm/imx/dw_hdmi-imx.c                  | 280 ++++++++
+ drivers/gpu/drm/rockchip/Kconfig                   |  10 +
+ drivers/gpu/drm/rockchip/Makefile                  |   2 +-
+ drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c        | 354 ++++++++++
+ include/drm/bridge/dw_hdmi.h                       |  60 ++
+ 13 files changed, 1129 insertions(+), 418 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt
+ create mode 100644 Documentation/devicetree/bindings/video/dw_hdmi-rockchip.txt
+ rename drivers/gpu/drm/{imx/imx-hdmi.c => bridge/dw_hdmi.c} (71%)
+ rename drivers/gpu/drm/{imx/imx-hdmi.h => bridge/dw_hdmi.h} (99%)
+ create mode 100644 drivers/gpu/drm/imx/dw_hdmi-imx.c
+ create mode 100644 drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+ create mode 100644 include/drm/bridge/dw_hdmi.h
+
+-- 
+1.9.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
