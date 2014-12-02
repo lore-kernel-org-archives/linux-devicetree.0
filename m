@@ -1,97 +1,204 @@
-From: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] ARM: hip04: set ARCH_NR_GPIO to 128
-Date: Tue, 02 Dec 2014 14:43:51 +0800
-Message-ID: <547D5FA7.3040307@gmail.com>
-References: <1417156188-500-1-git-send-email-wangzhou.bry@gmail.com> <1417156188-500-2-git-send-email-wangzhou.bry@gmail.com> <3094004.3WUKgY6xNz@wuerfel> <547971BF.1050706@gmail.com> <CACRpkdb1nZN-vOXLC-QFUAT9wDGM2Nm5YeH0qY_u2JV9toOaVg@mail.gmail.com>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH] media: platform: add VPFE capture driver support for
+ AM437X
+Date: Tue, 02 Dec 2014 08:26:58 +0100
+Message-ID: <547D69C2.20503@xs4all.nl>
+References: <1416791411-9731-1-git-send-email-prabhakar.csengg@gmail.com> <547C3ED3.1060205@xs4all.nl> <CA+V-a8vDGvSeSU9-EYx+U6j++WJWY7_59b2t9drqCCkPqR93mg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdb1nZN-vOXLC-QFUAT9wDGM2Nm5YeH0qY_u2JV9toOaVg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CA+V-a8vDGvSeSU9-EYx+U6j++WJWY7_59b2t9drqCCkPqR93mg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-api <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2014=E5=B9=B412=E6=9C=8801=E6=97=A5 22:04, Linus Walleij wrote:
-> On Sat, Nov 29, 2014 at 8:11 AM, Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> w=
-rote:
->> On 2014=E5=B9=B411=E6=9C=8828=E6=97=A5 17:33, Arnd Bergmann wrote:
->>> On Friday 28 November 2014 14:29:47 Zhou Wang wrote:
->
->>>>           default 264 if MACH_H4700
->>>> +       default 128 if ARCH_HIP04
->>>>           default 0
->>>>           help
->>>>             Maximum number of GPIOs in the system.
->>>>
->>>
->>> If I remember correctly, you don't actually need to set this if all=
- gpio
->>> clients are using the new gpio descriptor interfaces instead of gpi=
-o
->>> numbers. Would that work for you? You'd have to know which devices
+On 12/01/2014 11:17 PM, Prabhakar Lad wrote:
+> Hi Hans,
+> 
+> Thanks for the review.
+> 
+> On Mon, Dec 1, 2014 at 10:11 AM, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> wrote:
+>> Hi all,
 >>
->> If I don't set this, it will use the default ARCH_NR_GPIO(512), then
->> the range of GPIO number will be 384~511 which is very strange to us=
-ers,
->> because Hip04 based machines can only support 128 GPIOs.
->
-> That is a totally different problem.
->
-> Not that these numbers have ever been stable...
->
-> Think of a patch to gpiochip_find_base() in
-> drivers/gpio/gpiolib.c to fix this so that numbers are
-> assigned a better way rather than doing
-> random hacks with numbers like this.
->
-> Yours,
-> Linus Walleij
->
-Hi Linus,
+>> Thanks for the patch, review comments are below.
+>>
+>> For the next version I would appreciate if someone can test this driver with
+>> the latest v4l2-compliance from the v4l-utils git repo. If possible test streaming
+>> as well (v4l2-compliance -s), ideally with both a sensor and a STD receiver input.
+>> But that depends on the available hardware of course.
+>>
+>> I'd like to see the v4l2-compliance output. It's always good to have that on
+>> record.
+>>
+> Following is the compliance output, missed it post it along with patch:
+> 
+> root@am437x-evm:~# ./v4l2-compliance -s -i 0 -v
+> Driver Info:
+>         Driver name   : vpfe
+>         Card type     :[   70.363908] vpfe 48326000.vpfe:
+> =================  START STATUS  =================
+>  TI AM437x VPFE
+>         Bus info      : platform:vpfe [   70.375576] vpfe
+> 48326000.vpfe: ==================  END STATUS  ==================
+> 48326000.vpfe
+>         Driver version: 3.18.0
+>         Capabil[   70.388485] vpfe 48326000.vpfe: invalid input index: 1
+> ities  : 0x85200001
+>                 Video Capture
+>                 Read/Write
+>                 Streaming
+>                 Extended Pix Format
+>                 Device Capabilities
+>         Device Caps   : 0x05200001
+>                 Video Capture
+>                 Read/Write
+>                 Streaming
+>                 Extended Pix Format
+> 
+> Compliance test for device /dev/video0 (not using libv4l2):
+> 
+> Required ioctls:
+>         test VIDIOC_QUERYCAP: OK
+> 
+> Allow for multiple opens:
+>         test second video open: OK
+>         test VIDIOC_QUERYCAP: OK
+>         test VIDIOC_G/S_PRIORITY: OK
+> 
+> Debug ioctls:
+>         test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+>         test VIDIOC_LOG_STATUS: OK
+> 
+> Input ioctls:
+>         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+>         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+>         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+>         test VIDIOC_ENUMAUDIO: OK (Not Supported)
+>         test VIDIOC_G/S/ENUMINPUT: OK
+>         test VIDIOC_G/S_AUDIO: OK (Not Supported)
+>         Inputs: 1 Audio Inputs: 0 Tuners: 0
+> 
+> Output ioctls:
+>         test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+>         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+>         test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+>         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+>         test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+>         Outputs: 0 Audio Outputs: 0 Modulators: 0
+> 
+> Input/Output configuration ioctls:
+>         test VIDIOC_ENUM/G/S/QUERY_STD: OK
+>         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+>         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+>         test VIDIOC_G/S_EDID: OK (Not Supported)
+> 
+> Test input 0:
+> 
+>         Control ioctls:
+>                 test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+>                 test VIDIOC_QUERYCTRL: OK (Not Supported)
+>                 test VIDIOC_G/S_CTRL: OK (Not Supported)
+>                 test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+>                 test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+>                 test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+>                 Standard Controls: 0 Private Controls: 0
+> 
+>         Format ioctls:
+>                 info: found 7 framesizes for pixel format 56595559
+>                 info: found 7 framesizes for pixel format 59565955
+>                 info: found 7 framesizes for pixel format 52424752
+>                 info: found 7 framesizes for pixel format 31384142
+>                 info: found 4 formats for buftype 1
+>                 test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+>                 test VIDIOC_G/S_PARM: OK
+>                 test VIDIOC_G_FBUF: OK (Not Supported)
+>                 test VIDIOC_G_FMT: OK
+>                 test VIDIOC_TRY_FMT: OK
+>                 info: Global format check succeeded for type 1
+>                 test VIDIOC_S_FMT: OK
+>                 test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+> 
+>         Codec ioctls:
+>                 test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+>                 test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+>                 test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+> 
+>         Buffer ioctls:
+>                 info: test buftype Video Capture
+>                 test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+>                 test VIDIOC_EXPBUF: OK
+> 
+> Streaming ioctls:
+>         test read/write: OK
+>             Video Capture:
+>                 Buffer: 0 Sequence: 0 Field: None Timestamp: 74.956437s
+>                 Buffer: 1 Sequence: 0 Field: None Timestamp: 74.979310s
+>                 Buffer: 2 Sequence: 0 Field: None Timestamp: 75.002191s
+>                 Buffer: 3 Sequence: 0 Field: None Timestamp: 75.208114s
+>                 Buffer: 0 Sequence: 0 Field: None Timestamp: 75.230998s
 
-how about a patch like this, we read the base from the dts here.
+Hmm, sequence is always 0. Is the sequence field set? And why doesn't
+v4l2-compliance fail on this?
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index e8e98ca..0c40f53 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -107,11 +107,16 @@ struct gpio_chip *gpiod_to_chip(const struct=20
-gpio_desc *desc)
-  EXPORT_SYMBOL_GPL(gpiod_to_chip);
+>                 Buffer: 1 Sequence: 0 Field: None Timestamp: 75.253877s
 
-  /* dynamic allocation of GPIOs, e.g. on a hotplugged device */
--static int gpiochip_find_base(int ngpio)
-+static int gpiochip_find_base(struct gpio_chip *gpio_chip)
-  {
-         struct gpio_chip *chip;
-+       int ngpio =3D gpio_chip->ngpio;
-         int base =3D ARCH_NR_GPIOS - ngpio;
+<snip>
 
-+       /* just prototype */
-+       if (!of_property_read_u32(gpio_chip->dev->of_node, "base", &bas=
-e))
-+               return base;
-+
-         list_for_each_entry_reverse(chip, &gpio_chips, list) {
-                 /* found a free space? */
-                 if (chip->base + chip->ngpio <=3D base)
-@@ -236,7 +241,7 @@ int gpiochip_add(struct gpio_chip *chip)
-         spin_lock_irqsave(&gpio_lock, flags);
+>         test MMAP: OK
+>         test USERPTR: OK (Not Supported)
+>         test DMABUF: Cannot test, specify --expbuf-device
+> 
+> Total: 42, Succeeded: 42, Failed: 0, Warnings: 0
+>>
+> [Snip]
 
-         if (base < 0) {
--               base =3D gpiochip_find_base(chip->ngpio);
-+               base =3D gpiochip_find_base(chip);
-                 if (base < 0) {
-                         status =3D base;
-                         goto unlock;
+>>> +static int vpfe_enum_fmt(struct file *file, void  *priv,
+>>> +                      struct v4l2_fmtdesc *f)
+>>> +{
+>>> +     struct vpfe_device *vpfe = video_drvdata(file);
+>>> +     struct v4l2_subdev_mbus_code_enum mbus_code;
+>>> +     struct vpfe_subdev_info *sdinfo;
+>>> +     struct vpfe_fmt *fmt;
+>>> +     int ret;
+>>> +
+>>> +     vpfe_dbg(2, vpfe, "vpfe_enum_format index:%d\n",
+>>> +             f->index);
+>>> +
+>>> +     sdinfo = vpfe->current_subdev;
+>>> +     if (!sdinfo->sd)
+>>> +             return -EINVAL;
+>>> +
+>>> +     mbus_code.index = f->index;
+>>> +     ret = v4l2_subdev_call(sdinfo->sd, pad, enum_mbus_code,
+>>> +                            NULL, &mbus_code);
+>>> +     if (ret)
+>>> +             return -EINVAL;
+>>> +
+>>> +     /* convert mbus_format to v4l2_format */
+>>> +     fmt = find_format_by_code(mbus_code.code);
+>>> +     if (!fmt) {
+>>> +             vpfe_err(vpfe, "mbus code 0x%08x not found\n",
+>>> +                     mbus_code.code);
+>>> +             return -EINVAL;
+>>> +     }
+>>
+>> Hmm. If a subdev supports more media bus codes then are supported by this
+>> driver, then the enumeration will stop as soon as such an unsupported code
+>> is found.
+>>
+>> What you want to do here is enumerate over the pixelformats that are supported
+>> by both this driver and the subdev. It is probably something you want to
+>> determine at the time the subdev is loaded and just mark unsupported formats
+>> at that time so that they can be skipped here.
+>>
+> So probably populate the supported pixelformats in s_input call ,
+> by calling enm_mbus_code ?
 
-Best regards,
-Zhou Wang
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I would do this during driver initialization, it's a one time thing that can
+be done there.
+
+Regards,
+
+	Hans
