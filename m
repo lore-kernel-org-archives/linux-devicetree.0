@@ -1,54 +1,159 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 2/2] ASoC: rockchip: i2s: add support for grabbing output
- clock to codec
-Date: Tue, 2 Dec 2014 09:54:39 -0800
-Message-ID: <CAD=FV=Uwb1NxxCoXHzHu6DJCpnG_HV2RhCr3JaJaXbJja8kd7A@mail.gmail.com>
-References: <1417531766-29669-1-git-send-email-jay.xu@rock-chips.com>
-	<1417531977-30094-1-git-send-email-jay.xu@rock-chips.com>
+From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [PATCHv5 2/5] arm: socfpga: Enable OCRAM ECC on startup.
+Date: Tue, 2 Dec 2014 11:54:09 -0600
+Message-ID: <547DFCC1.3060805@opensource.altera.com>
+References: <1415751263-1830-1-git-send-email-tthayer@opensource.altera.com> <1415751263-1830-3-git-send-email-tthayer@opensource.altera.com> <20141202151145.GN23671@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417531977-30094-1-git-send-email-jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <20141202151145.GN23671@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org" <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, "dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org" <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, "m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Jianqun,
-
-This ought to be a "v3" patch and ideally ought to describe
-differences from v2 (after the cut).  Please have Kever or Chris
-review your next patch before sending it out since I think they are
-familiar with the process.
 
 
-On Tue, Dec 2, 2014 at 6:52 AM, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> From: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+On 12/02/2014 09:11 AM, Mark Rutland wrote:
+> On Wed, Nov 12, 2014 at 12:14:20AM +0000, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+>> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>>
+>> This patch enables the ECC for On-Chip RAM on machine
+>> startup.  The ECC has to be enabled before data is
+>> is stored in memory otherwise the ECC will fail on
+>> reads.
+>>
+>> Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>> ---
+>> v2: Split OCRAM ECC portion separately. Addition of iounmap()
+>> and reorganization of gen_pool_free. Remove defconfig from patch.
+>>
+>> v3/4: No change
+>>
+>> v5: Remove ocram.h, use io.h instead of clk-provider.h
+>>      Check prop in correct place. Add ECC EN defines.
+>> ---
+<snip>
+
+>> +
+>> +void socfpga_init_ocram_ecc(void)
+>> +{
+>> +	struct device_node *np;
+>> +	const __be32 *prop;
 >
-> We need to claim the clock which is driving the codec so that when we enable
-> clock gating, we continue to clock the codec when needed.  I make this an
-> optional clock since there might be some applications where we don't need it
-> but can still use the I2S block.
+> Please don't use accessors which return raw __be32s in drivers,
+> typically it's the wrong thing to do and leaves horrible bugs and/or
+> quirks that are painful to fix up.
+
+OK. Thanks.
+
+>> +	u32 ocr_edac_addr, iram_addr, len;
+>> +	void __iomem  *mapped_ocr_edac_addr;
+>> +	size_t size;
+>> +	struct gen_pool *gp;
+>> +
+>> +	np = of_find_compatible_node(NULL, NULL, "altr,ocram-edac");
+>> +	if (!np) {
+>> +		pr_err("SOCFPGA: Unable to find altr,ocram-edac in dtb\n");
+>> +		return;
+>> +	}
+>> +
+>> +	prop = of_get_property(np, "reg", &size);
+>> +	if (!prop || size < sizeof(*prop)) {
+>> +		pr_err("SOCFPGA: Unable to find OCRAM ECC mapping in dtb\n");
+>> +		return;
+>> +	}
+>> +	ocr_edac_addr = be32_to_cpup(prop++);
+>> +	len = be32_to_cpup(prop);
 >
-> Signed-off-by: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Use of_iomap(np, 0). You don't seem to pass the address around, so that
+> should be sufficient.
+>
+>> +
+>> +	gp = of_get_named_gen_pool(np, "iram", 0);
+>> +	if (!gp) {
+>> +		pr_err("SOCFPGA: OCRAM cannot find gen pool\n");
+>> +		return;
+>> +	}
+>> +
+>> +	np = of_find_compatible_node(NULL, NULL, "mmio-sram");
+>> +	if (!np) {
+>> +		pr_err("SOCFPGA: Unable to find mmio-sram in dtb\n");
+>> +		return;
+>> +	}
+>> +
+>> +	/* Determine the OCRAM address and size */
+>> +	prop = of_get_property(np, "reg", &size);
+>> +	if (!prop || size < sizeof(*prop)) {
+>> +		pr_err("SOCFPGA: Unable to find OCRAM mapping in dtb\n");
+>> +		return;
+>> +	}
+>> +	iram_addr = be32_to_cpup(prop++);
+>> +	len = be32_to_cpup(prop);
+>
+> This address is overwritten below. What's going on?
+>
 
-You still forgot your own signed-off-by.  Please try again.  See
-<https://patchwork.kernel.org/patch/5334991/>
+Thanks, leftovers from debugging. I will look for a different way of 
+getting the information without the be32 stuff.
 
+>> +
+>> +	iram_addr = gen_pool_alloc(gp, len);
+>> +	if (iram_addr == 0) {
+>> +		pr_err("SOCFPGA: cannot alloc from gen pool\n");
+>> +		return;
+>> +	}
+>> +
+>> +	memset((void *)iram_addr, 0, len);
+>
+> How is the iram mapped? Is memset to it safe (e.g. it unaligned accesses
+> are made)?
+>
 
-> +       i2s->oclk = devm_clk_get(&pdev->dev, "i2s_clk_out");
-> +       if (IS_ERR(i2s->oclk)) {
-> +               dev_dbg(&pdev->dev, "Didn't find output clock\n");
-> +               i2s->oclk = NULL;
-> +       }
+I will need to look at this further - good points. The entire iram 
+should be used as a pool so I didn't expect anything unusual even though 
+I just realized allocations are not contiguous.
 
-You still forgot the blank line here requested by Heiko.  Please try
-again.  See <https://patchwork.kernel.org/patch/5334991/>
+>> +
+>> +	gen_pool_free(gp, iram_addr, len);
+>> +
+>> +	mapped_ocr_edac_addr = ioremap(ocr_edac_addr, 4);
+>> +	if (!mapped_ocr_edac_addr) {
+>> +		pr_err("SOCFPGA: Unable to map OCRAM ecc regs.\n");
+>> +		return;
+>> +	}
+>> +
+>> +	/* Clear any pending OCRAM ECC interrupts, then enable ECC */
+>> +	writel(ALTR_OCRAM_CLEAR_ECC, mapped_ocr_edac_addr);
+>> +	writel(ALTR_OCRAM_ECC_EN, mapped_ocr_edac_addr);
+>> +
+>> +	iounmap(mapped_ocr_edac_addr);
+>> +
+>> +	pr_debug("SOCFPGA: Success Initializing OCRAM\n");
+>> +}
+>> diff --git a/arch/arm/mach-socfpga/socfpga.c b/arch/arm/mach-socfpga/socfpga.c
+>> index 0954011..065d80d 100644
+>> --- a/arch/arm/mach-socfpga/socfpga.c
+>> +++ b/arch/arm/mach-socfpga/socfpga.c
+>> @@ -100,6 +100,14 @@ static void socfpga_cyclone5_restart(enum reboot_mode mode, const char *cmd)
+>>   	writel(temp, rst_manager_base_addr + SOCFPGA_RSTMGR_CTRL);
+>>   }
+>>
+>> +static void __init socfpga_cyclone5_init(void)
+>> +{
+>> +	of_platform_populate(NULL, of_default_bus_match_table,
+>> +			     NULL, NULL);
+>> +	if (IS_ENABLED(CONFIG_EDAC_ALTERA_OCRAM))
+>> +		socfpga_init_ocram_ecc();
+>
+> If it's safe to do this after probing everything else, why can't this be
+> a normal device probe?
+>
+> Thanks,
+> Mark.
 
-
-> +       if (i2s->oclk)
-> +               ret = clk_prepare_enable(i2s->oclk);
-> +
+Good point. Thank you.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
