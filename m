@@ -1,8 +1,11 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 07/13] NFC: hci: Add specific hci macro to not create a pipe
-Date: Tue,  2 Dec 2014 21:27:52 +0100
-Message-ID: <1417552078-9269-8-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v2 08/13] NFC: dts: st21nfca: Fix compatible string spelling to follow other drivers
+Date: Tue,  2 Dec 2014 21:27:53 +0100
+Message-ID: <1417552078-9269-9-git-send-email-christophe-h.ricard@st.com>
 References: <1417552078-9269-1-git-send-email-christophe-h.ricard@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1417552078-9269-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
@@ -10,45 +13,59 @@ To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some pipe are only created by other host (different than the Terminal Host).
-The pipe values will for example be notified by NFC_HCI_ADM_NOTIFY_PIPE_CREATED.
+Other drivers are following the following compatible string format for =
+dts:
+s/_/-/
 
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- include/net/nfc/hci.h | 1 +
- net/nfc/hci/command.c | 3 +++
- 2 files changed, 4 insertions(+)
+ Documentation/devicetree/bindings/net/nfc/st21nfca.txt | 4 ++--
+ drivers/nfc/st21nfca/i2c.c                             | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/net/nfc/hci.h b/include/net/nfc/hci.h
-index 50bc66f..14bd0e1 100644
---- a/include/net/nfc/hci.h
-+++ b/include/net/nfc/hci.h
-@@ -64,6 +64,7 @@ struct nfc_hci_ops {
- 
- /* Pipes */
- #define NFC_HCI_INVALID_PIPE	0x80
-+#define NFC_HCI_DO_NOT_CREATE_PIPE	0x81
- #define NFC_HCI_LINK_MGMT_PIPE	0x00
- #define NFC_HCI_ADMIN_PIPE	0x01
- 
-diff --git a/net/nfc/hci/command.c b/net/nfc/hci/command.c
-index 677d24b..91df487 100644
---- a/net/nfc/hci/command.c
-+++ b/net/nfc/hci/command.c
-@@ -345,6 +345,9 @@ int nfc_hci_connect_gate(struct nfc_hci_dev *hdev, u8 dest_host, u8 dest_gate,
- 
- 	pr_debug("\n");
- 
-+	if (hdev->gate2pipe[dest_gate] == NFC_HCI_DO_NOT_CREATE_PIPE)
-+		return 0;
-+
- 	if (hdev->gate2pipe[dest_gate] != NFC_HCI_INVALID_PIPE)
- 		return -EADDRINUSE;
- 
--- 
+diff --git a/Documentation/devicetree/bindings/net/nfc/st21nfca.txt b/D=
+ocumentation/devicetree/bindings/net/nfc/st21nfca.txt
+index e4faa2e..db677fe 100644
+--- a/Documentation/devicetree/bindings/net/nfc/st21nfca.txt
++++ b/Documentation/devicetree/bindings/net/nfc/st21nfca.txt
+@@ -1,7 +1,7 @@
+ * STMicroelectronics SAS. ST21NFCA NFC Controller
+=20
+ Required properties:
+-- compatible: Should be "st,st21nfca_i2c".
++- compatible: Should be "st,st21nfca-i2c".
+ - clock-frequency: I=C2=B2C work frequency.
+ - reg: address on the bus
+ - interrupt-parent: phandle for the interrupt gpio controller
+@@ -20,7 +20,7 @@ Example (for ARM-based BeagleBoard xM with ST21NFCA o=
+n I2C2):
+=20
+ 	st21nfca: st21nfca@1 {
+=20
+-		compatible =3D "st,st21nfca_i2c";
++		compatible =3D "st,st21nfca-i2c";
+=20
+ 		reg =3D <0x01>;
+ 		clock-frequency =3D <400000>;
+diff --git a/drivers/nfc/st21nfca/i2c.c b/drivers/nfc/st21nfca/i2c.c
+index 44e1c76..a9188c2 100644
+--- a/drivers/nfc/st21nfca/i2c.c
++++ b/drivers/nfc/st21nfca/i2c.c
+@@ -661,7 +661,7 @@ static int st21nfca_hci_i2c_remove(struct i2c_clien=
+t *client)
+=20
+ #ifdef CONFIG_OF
+ static const struct of_device_id of_st21nfca_i2c_match[] =3D {
+-	{ .compatible =3D "st,st21nfca_i2c", },
++	{ .compatible =3D "st,st21nfca-i2c", },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, of_st21nfca_i2c_match);
+--=20
 2.1.0
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
