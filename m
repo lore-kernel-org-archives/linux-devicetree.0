@@ -1,59 +1,40 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: tegra: Enable the mic-detect gpio on Acer
- Chromebook 13
-Date: Tue, 2 Dec 2014 10:25:36 +0100
-Message-ID: <20141202092535.GA6135@ulmo>
-References: <1412268212-3458-1-git-send-email-dgreid@chromium.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v15 0/3] Add drm driver for Rockchip Socs
+Date: Tue, 02 Dec 2014 10:31:14 +0100
+Message-ID: <2556534.qktPW9tbxy@diego>
+References: <1417511600-7054-1-git-send-email-mark.yao@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1412268212-3458-1-git-send-email-dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1417511600-7054-1-git-send-email-mark.yao@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Yao <mark.yao@rock-chips.com>
+Cc: Boris BREZILLON <boris.brezillon@free-electrons.com>, David Airlie <airlied@gmail.com>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Rom Lemarchand <romlem@google.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-api@vger.kernel.org, linux-rockchip@lists.infradead.org, dianders@chromium.org, marcheu@chromium.org, dbehr@chromium.org, olof@lixom.net, djkurtz@chromium.org, cf@rock-chips.com, xxm@rock-chips.com, huangtao@rock-
 List-Id: devicetree@vger.kernel.org
 
+Hi Mark,
 
---vtzGhvizbBRQ85DL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Am Dienstag, 2. Dezember 2014, 17:13:20 schrieb Mark Yao:
+> This a series of patches is a DRM Driver for Rockchip Socs, add support
+> for vop devices. Future patches will add additional encoders/connectors,
+> such as eDP, HDMI.
+> 
+> The basic "crtc" for rockchip is a "VOP" - Video Output Processor.
+> the vop devices found on Rockchip rk3288 Soc, rk3288 soc have two similar
+> Vop devices. Vop devices support iommu mapping, we use dma-mapping API with
+> ARM_DMA_USE_IOMMU.
 
-On Thu, Oct 02, 2014 at 09:43:32AM -0700, Dylan Reid wrote:
-> Enables the gpio-base mic detection on the Acer Chromebook 13.  This
-> gpio is set by the jack-detection chip when it notices either of the
-> TRRS type headsets with a microphone.
->=20
-> Signed-off-by: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
->  arch/arm/boot/dts/tegra124-nyan-big.dts | 2 ++
->  1 file changed, 2 insertions(+)
+[...]
 
-Applied for v3.20, thanks.
+> Changes in v15:
+> - remove depends on ARM_DMA_USE_IOMMU & IOMMU_API which cause
+>   recursive dependency problem
+> - fix compile problems when build as a module.
 
-Thierry
+maybe you could also already create a new pull request for this version [like 
+the last one based on the iommu branch], so that we save time and Dave can 
+pull it in easily for testing if he likes.
 
---vtzGhvizbBRQ85DL
-Content-Type: application/pgp-signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUfYWPAAoJEN0jrNd/PrOhMCIQAMF3ZSLUlCENPRAEGHpnweFH
-I+R+Hl2kPos7EkgI4rTAtQVgAulSB11RPU6FTLpTTpTHaZKxcLFZe8imI1tuDxJu
-naWairJtTLgYJaUAhaHnKolFJBSkYSrwu1g4yzzHFGaKlc9Y/Xj0XHM/951QrmMu
-VaAf1RlURN8VMSr2DH9gQe4SRdQuijghggZ3Bes1MMeE7Z87zQm1YZaTD+BNkUIe
-Zt52ZC3pstp9bRwQB8pjc0vKRqgnzjmfWWlsi9Wzi6wS5P9sGSikmEQBKpLfWPm1
-4TgON8rgXiEou5TdkLJVx7kd3bAuj9jhh4RlIfm8dE6GSMbQOwMZ7ni3dW2Ydb2N
-1ESuxwSPm9W+1ElbqRfLa1/H2koZkPSAVFixxs6WHDJHg2oFN4Sfieee/sZD+Z8A
-qUN8Is2Aecy6UFGR9WdpE0kOfAANAcHshyMR15DK6R9nyOhhX/NDrzOfj/etvfN7
-0adjfakKR/HgUMtt/hMXgdqgh14lKQJ0Zx4VHS/2wCF2mPXcIeQx7f9pgpMuh7Y5
-Z+eb/RG5nFJwoogVCH9yknSNkmZOZM6/UPGrd/YoASUE8K7nw6f/Yt5R/Pa6z0H3
-nKXFFb/Y9HzZFKih2qhE5rpdEubKUhJKt7gqvgdPGIO7nhfTQ1HLvawG+ASVs3A0
-1yaUByTeQ1tohokbXcCC
-=NqGN
------END PGP SIGNATURE-----
-
---vtzGhvizbBRQ85DL--
+Heiko
