@@ -1,51 +1,34 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: [PATCH v7 3/3] MAINTAINER: net: Add TI NETCP Ethernet driver entry
-Date: Tue, 2 Dec 2014 16:41:43 -0500
-Message-ID: <1417556503-22290-4-git-send-email-m-karicheri2@ti.com>
-References: <1417556503-22290-1-git-send-email-m-karicheri2@ti.com>
+From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v2 08/13] NFC: dts: st21nfca: Fix compatible string
+ spelling to follow other drivers
+Date: Tue, 2 Dec 2014 22:52:52 +0100
+Message-ID: <20141202215252.GA23146@ribalta.ger.corp.intel.com>
+References: <1417552078-9269-1-git-send-email-christophe-h.ricard@st.com>
+ <1417552078-9269-9-git-send-email-christophe-h.ricard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1417556503-22290-1-git-send-email-m-karicheri2@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: davem@davemloft.net, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, grant.likely@linaro.org
-Cc: Murali Karicheri <m-karicheri2@ti.com>, Sandeep Nair <sandeep_n@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1417552078-9269-9-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-CC: David Miller <davem@davemloft.net>
-Signed-off-by: Sandeep Nair <sandeep_n@ti.com>
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
----
- MAINTAINERS |    8 ++++++++
- 1 file changed, 8 insertions(+)
+Hi Christophe,
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ea4d005..bc876f2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9337,6 +9337,14 @@ F:	drivers/power/lp8788-charger.c
- F:	drivers/regulator/lp8788-*.c
- F:	include/linux/mfd/lp8788*.h
- 
-+TI NETCP ETHERNET DRIVER
-+M:	Sandeep Nair <sandeepn02@gmail.com>
-+M:	Murali Karicheri <m-karicheri2@ti.com>
-+M:	Santosh Shilimkar <santosh.shilimkar@kernel.org>
-+L:	netdev@vger.kernel.org
-+S:	Maintained
-+F:	drivers/net/ethernet/ti/netcp*
-+
- TI TWL4030 SERIES SOC CODEC DRIVER
- M:	Peter Ujfalusi <peter.ujfalusi@ti.com>
- L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
--- 
-1.7.9.5
+On Tue, Dec 02, 2014 at 09:27:53PM +0100, Christophe Ricard wrote:
+> Other drivers are following the following compatible string format for dts:
+> s/_/-/
+You're basically breaking an ABI here. If anyone has built and shipped
+a DT binding firmware with the current compatible string, you're
+making sure 3.19 won't work with their firmware.
+I know it's very unlikely, but for the sake of it I prefer not taking
+that patch and the following one.
+
+Cheers,
+Samuel.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
