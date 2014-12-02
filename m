@@ -1,148 +1,90 @@
-From: Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 4/4] i2c: cadence: Defeature repeated start based on devicetree property
-Date: Tue,  2 Dec 2014 15:35:49 +0530
-Message-ID: <1417514749-24319-5-git-send-email-harinik@xilinx.com>
-References: <1417514749-24319-1-git-send-email-harinik@xilinx.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417514749-24319-1-git-send-email-harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, vishnum-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v15 12/12] drm: bridge/dw_hdmi: add rockchip rk3288 support
+Date: Tue, 02 Dec 2014 11:24:42 +0100
+Message-ID: <1417515882.3411.8.camel@pengutronix.de>
+References: <1417505778-18341-1-git-send-email-andy.yan@rock-chips.com>
+ <1417506327-18908-1-git-send-email-andy.yan@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1417506327-18908-1-git-send-email-andy.yan@rock-chips.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Pawel Moll <pawel.moll@arm.com>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, rmk+kernel@arm.linux.org.uk, mark.yao@rock-chips.com, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, vladimir_zapolskiy@mentor.com
 List-Id: devicetree@vger.kernel.org
 
-From: Vishnu Motghare <vishnum-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Hi Andy,
 
-This patch defeatures repeated start in the driver if
-"defeature-repeated-start" property is present in the devicetree.
+Am Dienstag, den 02.12.2014, 15:45 +0800 schrieb Andy Yan:
+[...]
+> +static int dw_hdmi_rockchip_bind(struct device *dev, struct device *master,
+> +				 void *data)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	const struct dw_hdmi_plat_data *plat_data;
+> +	const struct of_device_id *match;
+> +	struct drm_device *drm = data;
+> +	struct drm_encoder *encoder;
+> +	struct rockchip_hdmi *hdmi;
+> +	int ret;
+> +
+> +	if (!pdev->dev.of_node)
+> +		return -ENODEV;
+> +
+> +	hdmi = devm_kzalloc(&pdev->dev, sizeof(*hdmi), GFP_KERNEL);
+> +	if (!hdmi)
+> +		return -ENOMEM;
+> +
+> +	match = of_match_node(dw_hdmi_rockchip_ids, pdev->dev.of_node);
+> +	plat_data = match->data;
+> +	hdmi->dev = &pdev->dev;
+> +	encoder = &hdmi->encoder;
+> +	platform_set_drvdata(pdev, hdmi);
+> +
+> +	ret = rockchip_hdmi_parse_dt(hdmi);
+> +	if (ret) {
+> +		dev_err(hdmi->dev, "Unable to parse OF data\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = clk_prepare_enable(hdmi->clk);
+> +	if (ret) {
+> +		dev_err(hdmi->dev, "Cannot enable HDMI clock: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = clk_prepare_enable(hdmi->hdcp_clk);
+> +	if (ret) {
+> +		dev_err(hdmi->dev, "Cannot enable HDMI hdcp clock: %d\n", ret);
+> +		return ret;
+> +	}
 
-This defeature is proposed due to a few bugs in the controller
-- completion indication is not given to the driver at the end of
-a read/receive transfer with HOLD bit set.
-- Invalid read transaction are generated on the bus when HW timeout
-condition occurs with HOLD bit set.
+Could we have a look at the clocks again? Basically the Rockchip clock
+handling is exactly the same, except the clocks are called by other
+names.
 
-Signed-off-by: Vishnu Motghare <vishnum-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
----
- drivers/i2c/busses/i2c-cadence.c |   44 +++++++++++++++++++++++++++-----------
- 1 file changed, 31 insertions(+), 13 deletions(-)
+On i.MX6, according to the reference manual, the HDMI TX module has four
+clock inputs: "iahbclk" (bus clock), "icecclk" (32 kHz CEC clock),
+"ihclk" (module clock), and "isfrclk" (27 MHz internal SFR clock).
+The "iahbclk" and "ihclk" are both sourced from the SoC AHB root clock,
+the 32 kHz reference input can't be gated, and the "isfrclk" has its own
+gate.
 
-diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-cadence.c
-index 8065205..89335f7 100644
---- a/drivers/i2c/busses/i2c-cadence.c
-+++ b/drivers/i2c/busses/i2c-cadence.c
-@@ -135,6 +135,7 @@
-  * @bus_hold_flag:	Flag used in repeated start for clearing HOLD bit
-  * @clk:		Pointer to struct clk
-  * @clk_rate_change_nb:	Notifier block for clock rate changes
-+ * @defeature_repeated_start:	Flag to de feature repeated start
-  */
- struct cdns_i2c {
- 	void __iomem *membase;
-@@ -154,6 +155,7 @@ struct cdns_i2c {
- 	unsigned int bus_hold_flag;
- 	struct clk *clk;
- 	struct notifier_block clk_rate_change_nb;
-+	unsigned int defeature_repeated_start;
- };
- 
- #define to_cdns_i2c(_nb)	container_of(_nb, struct cdns_i2c, \
-@@ -246,7 +248,7 @@ static irqreturn_t cdns_i2c_isr(int irq, void *ptr)
- 		}
- 
- 		if ((isr_status & CDNS_I2C_IXR_COMP) && !id->recv_count) {
--			if (!id->bus_hold_flag)
-+			if (id->defeature_repeated_start || !id->bus_hold_flag)
- 				cdns_i2c_clear_bus_hold(id);
- 			done_flag = 1;
- 		}
-@@ -283,7 +285,8 @@ static irqreturn_t cdns_i2c_isr(int irq, void *ptr)
- 			 */
- 			done_flag = 1;
- 		}
--		if (!id->send_count && !id->bus_hold_flag)
-+		if ((id->defeature_repeated_start && !id->send_count) ||
-+		    (!id->send_count && !id->bus_hold_flag))
- 			cdns_i2c_clear_bus_hold(id);
- 
- 		status = IRQ_HANDLED;
-@@ -347,10 +350,15 @@ static void cdns_i2c_mrecv(struct cdns_i2c *id)
- 	} else
- 		cdns_i2c_writereg(id->recv_count, CDNS_I2C_XFER_SIZE_OFFSET);
- 	/* Clear the bus hold flag if bytes to receive is less than FIFO size */
--	if (!id->bus_hold_flag &&
--		((id->p_msg->flags & I2C_M_RECV_LEN) != I2C_M_RECV_LEN) &&
--		(id->recv_count <= CDNS_I2C_FIFO_DEPTH))
--			cdns_i2c_clear_bus_hold(id);
-+	if (id->defeature_repeated_start &&
-+	    (((id->p_msg->flags & I2C_M_RECV_LEN) != I2C_M_RECV_LEN) &&
-+	     (id->recv_count <= CDNS_I2C_FIFO_DEPTH)))
-+		cdns_i2c_clear_bus_hold(id);
-+	else if (!id->bus_hold_flag &&
-+		 ((id->p_msg->flags & I2C_M_RECV_LEN) != I2C_M_RECV_LEN) &&
-+		 (id->recv_count <= CDNS_I2C_FIFO_DEPTH))
-+		cdns_i2c_clear_bus_hold(id);
-+
- 	/* Set the slave address in address register - triggers operation */
- 	cdns_i2c_writereg(id->p_msg->addr & CDNS_I2C_ADDR_MASK,
- 						CDNS_I2C_ADDR_OFFSET);
-@@ -411,8 +419,10 @@ static void cdns_i2c_msend(struct cdns_i2c *id)
- 	 * Clear the bus hold flag if there is no more data
- 	 * and if it is the last message.
- 	 */
--	if (!id->bus_hold_flag && !id->send_count)
-+	 if ((id->defeature_repeated_start && !id->send_count) ||
-+	     (!id->send_count && !id->bus_hold_flag))
- 		cdns_i2c_clear_bus_hold(id);
-+
- 	/* Set the slave address in address register - triggers operation. */
- 	cdns_i2c_writereg(id->p_msg->addr & CDNS_I2C_ADDR_MASK,
- 						CDNS_I2C_ADDR_OFFSET);
-@@ -520,19 +530,25 @@ static int cdns_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
- 	/*
- 	 * Set the flag to one when multiple messages are to be
- 	 * processed with a repeated start.
-+	 * De feature repeated start when defeature_repeated_start flag is set
- 	 */
--	if (num > 1) {
--		id->bus_hold_flag = 1;
--		reg = cdns_i2c_readreg(CDNS_I2C_CR_OFFSET);
--		reg |= CDNS_I2C_CR_HOLD;
--		cdns_i2c_writereg(reg, CDNS_I2C_CR_OFFSET);
-+	if (!id->defeature_repeated_start && num > 1) {
-+			for (count = 0; count < num-1; count++) {
-+				if (msgs[count].flags & I2C_M_RD)
-+					return -EINVAL;
-+			}
-+			id->bus_hold_flag = 1;
-+			reg = cdns_i2c_readreg(CDNS_I2C_CR_OFFSET);
-+			reg |= CDNS_I2C_CR_HOLD;
-+			cdns_i2c_writereg(reg, CDNS_I2C_CR_OFFSET);
- 	} else {
- 		id->bus_hold_flag = 0;
- 	}
- 
- 	/* Process the msg one by one */
- 	for (count = 0; count < num; count++, msgs++) {
--		if (count == (num - 1))
-+		if (!id->defeature_repeated_start &&
-+		    (count == (num - 1)))
- 			id->bus_hold_flag = 0;
- 
- 		ret = cdns_i2c_process_msg(id, msgs, adap);
-@@ -840,6 +856,8 @@ static int cdns_i2c_probe(struct platform_device *pdev)
- 	cdns_i2c_writereg(CDNS_I2C_CR_ACK_EN | CDNS_I2C_CR_NEA | CDNS_I2C_CR_MS,
- 			  CDNS_I2C_CR_OFFSET);
- 
-+	of_property_read_u32(pdev->dev.of_node,	"defeature-repeated-start",
-+			     &id->defeature_repeated_start);
- 	ret = cdns_i2c_setclk(id->input_clk, id);
- 	if (ret) {
- 		dev_err(&pdev->dev, "invalid SCL clock: %u Hz\n", id->i2c_clk);
--- 
-1.7.9.5
+Does the HDMI TX implementation on Rockchip still have the separate
+external sfr bus and module clock inputs? I assume that your "clk" input
+is a single gate bit for bus and module clocks at the same time?
+If possible, I'd prefer to find a common binding for the clocks with
+some of the clocks being optional, but for that we need to know the
+actual clock inputs to the HDMI TX module.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards
+Philipp
