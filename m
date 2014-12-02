@@ -1,338 +1,198 @@
-From: Jianqun <xjq@rock-chips.com>
-Subject: Re: [PATCH 2/2] rockchip: efuse: add efuse driver for rk3288 efuse
-Date: Tue, 02 Dec 2014 23:04:57 +0800
-Message-ID: <547DD519.4080505@rock-chips.com>
-References: <1417419281-9243-1-git-send-email-jay.xu@rock-chips.com> <1417419281-9243-3-git-send-email-jay.xu@rock-chips.com> <1529852.GW1hFGtilD@diego>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCHv5 2/5] arm: socfpga: Enable OCRAM ECC on startup.
+Date: Tue, 2 Dec 2014 15:11:45 +0000
+Message-ID: <20141202151145.GN23671@leverpostej>
+References: <1415751263-1830-1-git-send-email-tthayer@opensource.altera.com>
+ <1415751263-1830-3-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529852.GW1hFGtilD@diego>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>, Jianqun Xu <jay.xu@rock-chips.com>
-Cc: xjq@rock-chips.com, linux@arm.linux.org.uk, grant.likely@linaro.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1415751263-1830-3-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: "bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org" <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, "dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org" <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, "m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko
+On Wed, Nov 12, 2014 at 12:14:20AM +0000, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> 
+> This patch enables the ECC for On-Chip RAM on machine
+> startup.  The ECC has to be enabled before data is
+> is stored in memory otherwise the ECC will fail on
+> reads.
+> 
+> Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> ---
+> v2: Split OCRAM ECC portion separately. Addition of iounmap()
+> and reorganization of gen_pool_free. Remove defconfig from patch.
+> 
+> v3/4: No change
+> 
+> v5: Remove ocram.h, use io.h instead of clk-provider.h
+>     Check prop in correct place. Add ECC EN defines.
+> ---
+>  arch/arm/mach-socfpga/Makefile  |    1 +
+>  arch/arm/mach-socfpga/core.h    |    1 +
+>  arch/arm/mach-socfpga/ocram.c   |   90 +++++++++++++++++++++++++++++++++++++++
+>  arch/arm/mach-socfpga/socfpga.c |    9 ++++
+>  4 files changed, 101 insertions(+)
+>  create mode 100644 arch/arm/mach-socfpga/ocram.c
+> 
+> diff --git a/arch/arm/mach-socfpga/Makefile b/arch/arm/mach-socfpga/Makefile
+> index 142609e..1552ca5 100644
+> --- a/arch/arm/mach-socfpga/Makefile
+> +++ b/arch/arm/mach-socfpga/Makefile
+> @@ -5,3 +5,4 @@
+>  obj-y					:= socfpga.o
+>  obj-$(CONFIG_SMP)	+= headsmp.o platsmp.o
+>  obj-$(CONFIG_EDAC_ALTERA_L2C) += l2_cache.o
+> +obj-$(CONFIG_EDAC_ALTERA_OCRAM) += ocram.o
+> diff --git a/arch/arm/mach-socfpga/core.h b/arch/arm/mach-socfpga/core.h
+> index 385baba..f3eee32 100644
+> --- a/arch/arm/mach-socfpga/core.h
+> +++ b/arch/arm/mach-socfpga/core.h
+> @@ -45,5 +45,6 @@ extern unsigned long cpu1start_addr;
+>  #define SOCFPGA_SCU_VIRT_BASE   0xfffec000
+>  
+>  void socfpga_init_l2_ecc(void);
+> +void socfpga_init_ocram_ecc(void);
+>  
+>  #endif
+> diff --git a/arch/arm/mach-socfpga/ocram.c b/arch/arm/mach-socfpga/ocram.c
+> new file mode 100644
+> index 0000000..a83b34f
+> --- /dev/null
+> +++ b/arch/arm/mach-socfpga/ocram.c
+> @@ -0,0 +1,90 @@
+> +/*
+> + * Copyright Altera Corporation (C) 2014. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License along with
+> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +#include <linux/io.h>
+> +#include <linux/genalloc.h>
+> +#include <linux/of_platform.h>
+> +
+> +#define ALTR_OCRAM_CLEAR_ECC          0x00000018
+> +#define ALTR_OCRAM_ECC_EN             0x00000019
+> +
+> +void socfpga_init_ocram_ecc(void)
+> +{
+> +	struct device_node *np;
+> +	const __be32 *prop;
 
-=E5=9C=A8 12/01/2014 10:10 PM, Heiko St=C3=BCbner =E5=86=99=E9=81=93:
-> Hi Jianqun,
->=20
-> Am Montag, 1. Dezember 2014, 15:34:41 schrieb Jianqun Xu:
->> Add driver for efuse found on rk3288 board based on rk3288 SoC.
->> Driver will read fuse information of chip at the boot stage of
->> kernel, this information new is for further usage.
->>
->> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
->=20
-> General question would be, what is the purpose of this driver?
-This driver will get efuse information, and other module will use it fo=
-r some useage,
-such as dvfs will ajust OPP according to the differences between chips,=
- that can make
-chips run on a powersave status
+Please don't use accessors which return raw __be32s in drivers,
+typically it's the wrong thing to do and leaves horrible bugs and/or
+quirks that are painful to fix up.
 
-Also can get the chip version... but this patch only show a part feathu=
-r
+> +	u32 ocr_edac_addr, iram_addr, len;
+> +	void __iomem  *mapped_ocr_edac_addr;
+> +	size_t size;
+> +	struct gen_pool *gp;
+> +
+> +	np = of_find_compatible_node(NULL, NULL, "altr,ocram-edac");
+> +	if (!np) {
+> +		pr_err("SOCFPGA: Unable to find altr,ocram-edac in dtb\n");
+> +		return;
+> +	}
+> +
+> +	prop = of_get_property(np, "reg", &size);
+> +	if (!prop || size < sizeof(*prop)) {
+> +		pr_err("SOCFPGA: Unable to find OCRAM ECC mapping in dtb\n");
+> +		return;
+> +	}
+> +	ocr_edac_addr = be32_to_cpup(prop++);
+> +	len = be32_to_cpup(prop);
 
-> I don't see any publically usable functions and the only thing happen=
-ing is=20
-> the
-> 	dev_info(efuse->dev, "leakage (%d %d %d)\n",...
-> output that emits some information from the efuse to the kernel log?
->=20
-can I make it a node under some debug directory ? For now only show it =
-in boot message.
->=20
-> In the dt-binding doc you write:
->> The 32x32 eFuse can only be accessed by APB bus when IO_SECURITYsel =
-is high.
->=20
-> While the TRM also says this, IO_SECURITY is not mentioned anywhere e=
-lse in=20
-> the document. Is this a pin or a bit somewhere in the GRF - i.e. some=
-thing=20
-> whichs state is readable?
->=20
->=20
-> Some more comments inline.
->=20
->> ---
->>  arch/arm/mach-rockchip/efuse.c | 165
->> +++++++++++++++++++++++++++++++++++++++++ arch/arm/mach-rockchip/efu=
-se.h |=20
->> 15 ++++
->>  2 files changed, 180 insertions(+)
->>  create mode 100644 arch/arm/mach-rockchip/efuse.c
->>  create mode 100644 arch/arm/mach-rockchip/efuse.h
->>
->> diff --git a/arch/arm/mach-rockchip/efuse.c b/arch/arm/mach-rockchip=
-/efuse.c
->> new file mode 100644
->> index 0000000..326d81e
->> --- /dev/null
->> +++ b/arch/arm/mach-rockchip/efuse.c
->=20
-> a driver like this should probably live in something like=20
-> drivers/soc/rockchip.
->=20
->=20
->> @@ -0,0 +1,165 @@
->> +/* mach-rockchip/efuse.c
->> + *
->> + * Copyright (c) 2014 Rockchip Electronics Co. Ltd.
->> + * Author: Jianqun Xu <jay.xu@rock-chips.com>
->> + *
->> + * Tmis program is free software; you can redistribute it and/or mo=
-dify it
->> + * under the terms of version 2 of the GNU General Public License a=
-s
->> + * published by the Free Software Foundation.
->> + *
->> + * Tmis program is distributed in the hope that it will be useful, =
-but
->=20
-> type Tmis -> This
->=20
->=20
->> WITHOUT + * ANY WARRANTY; without even the implied warranty of
->> MERCHANTABILITY or + * FITNESS FOR A PARTICULAR PURPOSE.  See the GN=
-U
->> General Public License for + * more details.
->> + *
->> + * You should have received a copy of the GNU General Public Licens=
-e along
->> with + * tmis program; if not, write to the Free Software Foundation=
-, Inc.,
->> + * 51 Franklin Street, Fifth Floor, Boston, MA 02110, USA
->> + *
->> + * Tme full GNU General Public License is included in this distribu=
-tion in
->> the + * file called LICENSE.
->> + */
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/device.h>
->> +#include <linux/delay.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/of_address.h>
->> +#include <linux/io.h>
->> +
->> +#include "efuse.h"
->> +
->> +#define EFUSE_BUF_SIZE	(32)
->> +#define EFUSE_BUF_LKG_CPU	(23)
->> +#define EFUSE_BUF_LKG_GPU	(24)
->> +#define EFUSE_BUF_LKG_LOG	(25)
->=20
-> no braces needed for those numbers
->=20
->=20
->> +
->> +struct rk_efuse_info {
->> +	/* Platform device */
->> +	struct device *dev;
->> +
->> +	/* Hardware resources */
->> +	void __iomem *regs;
->> +
->> +	/* buffer to store registers' values */
->> +	unsigned int buf[EFUSE_BUF_SIZE];
->> +};
->> +
->> +static void efuse_writel(struct rk_efuse_info *efuse,
->> +			 unsigned int value,
->> +			 unsigned int offset)
->> +{
->> +	writel_relaxed(value, efuse->regs + offset);
->> +}
->> +
->> +static unsigned int efuse_readl(struct rk_efuse_info *efuse,
->> +				unsigned int offset)
->> +{
->> +	return readl_relaxed(efuse->regs + offset);
->> +}
->=20
-> why these indirections for readl and writel? They don't seem to provi=
-de any=20
-> additional benefit over calling writel_relaxed/readl_relaxed directly=
- below.
->=20
->=20
->> +
->> +static unsigned int rockchip_efuse_leakage(struct rk_efuse_info *ef=
-use,
->> +					 int channel)
->> +{
->> +	switch (channel) {
->> +	case EFUSE_BUF_LKG_CPU:
->> +	case EFUSE_BUF_LKG_GPU:
->> +	case EFUSE_BUF_LKG_LOG:
->> +		return efuse->buf[channel];
->> +	default:
->> +		dev_err(efuse->dev, "unknown channel\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static void rockchip_efuse_info(struct rk_efuse_info *efuse)
->> +{
->> +	dev_info(efuse->dev, "leakage (%d %d %d)\n",
->> +		 rockchip_efuse_leakage(efuse, EFUSE_BUF_LKG_CPU),
->> +		 rockchip_efuse_leakage(efuse, EFUSE_BUF_LKG_GPU),
->> +		 rockchip_efuse_leakage(efuse, EFUSE_BUF_LKG_LOG));
->> +}
->> +
->> +static int rockchip_efuse_init(struct rk_efuse_info *efuse)
->> +{
->> +	int start =3D 0;
->> +	int ret =3D 0;
->> +
->> +	efuse_writel(efuse, EFUSE_CSB, REG_EFUSE_CTRL);
->> +	efuse_writel(efuse, EFUSE_LOAD | EFUSE_PGENB, REG_EFUSE_CTRL);
->> +	udelay(2);
->> +
->> +	for (start =3D 0; start <=3D EFUSE_BUF_SIZE; start++) {
->> +		efuse_writel(efuse, efuse_readl(efuse, REG_EFUSE_CTRL) &
->> +			     (~(EFUSE_A_MASK << EFUSE_A_SHIFT)),
->> +			     REG_EFUSE_CTRL);
->> +		efuse_writel(efuse, efuse_readl(efuse, REG_EFUSE_CTRL) |
->> +			     ((start & EFUSE_A_MASK) << EFUSE_A_SHIFT),
->> +			     REG_EFUSE_CTRL);
->> +		udelay(2);
->> +		efuse_writel(efuse, efuse_readl(efuse, REG_EFUSE_CTRL) |
->> +			     EFUSE_STROBE, REG_EFUSE_CTRL);
->> +		udelay(2);
->> +
->> +		efuse->buf[start] =3D efuse_readl(efuse, REG_EFUSE_DOUT);
->> +
->> +		efuse_writel(efuse, efuse_readl(efuse, REG_EFUSE_CTRL) &
->> +			     (~EFUSE_STROBE), REG_EFUSE_CTRL);
->> +		udelay(2);
->> +	}
->> +
->> +	udelay(2);
->> +	efuse_writel(efuse, efuse_readl(efuse, REG_EFUSE_CTRL) |
->> +		     EFUSE_CSB, REG_EFUSE_CTRL);
->> +	udelay(2);
->> +
->> +	return ret;
->> +}
->> +
->> +static int rockchip_efuse_probe(struct platform_device *pdev)
->> +{
->> +	struct rk_efuse_info *efuse;
->> +	struct resource *mem;
->> +	int ret =3D 0;
->> +
->> +	efuse =3D devm_kzalloc(&pdev->dev, sizeof(*efuse), GFP_KERNEL);
->> +	if (!efuse)
->> +		return -ENOMEM;
->> +
->> +	mem =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	efuse->regs =3D devm_ioremap_resource(&pdev->dev, mem);
->> +	if (IS_ERR(efuse->regs))
->> +		return PTR_ERR(efuse->regs);
->> +
->> +	platform_set_drvdata(pdev, efuse);
->> +	efuse->dev =3D &pdev->dev;
->> +
->> +	ret =3D rockchip_efuse_init(efuse);
->> +	if (!ret)
->> +		rockchip_efuse_info(efuse);
->> +
->> +	return ret;
->> +}
->> +
->> +static const struct of_device_id rockchip_efuse_match[] =3D {
->> +	{ .compatible =3D "rockchip,rk3288-efuse", },
->=20
-> what about other Rockchip SoCs? At least the rk3188 seems to contain =
-an efuse=20
-> [though the TRM I have only directs to a RK3188 eFuse.pdf without des=
-cribing=20
-> the component. So I don't know if it's the same type.
->=20
->=20
->> +	{},
->> +};
->> +
->> +static struct platform_driver rockchip_efuse_driver =3D {
->> +	.probe =3D rockchip_efuse_probe,
->> +	.driver =3D {
->> +		.name =3D "rk3288-efuse",
->> +		.owner =3D THIS_MODULE,
->=20
-> .owner gets already set through module_platform_driver
->=20
->=20
->> +		.of_match_table =3D of_match_ptr(rockchip_efuse_match),
->> +	},
->> +};
->> +
->> +module_platform_driver(rockchip_efuse_driver);
->> +
->> +MODULE_DESCRIPTION("Rockchip eFuse Driver");
->> +MODULE_AUTHOR("Jianqun Xu <jay.xu@rock-chips.com>");
->> +MODULE_LICENSE("GPL v2");
->> diff --git a/arch/arm/mach-rockchip/efuse.h b/arch/arm/mach-rockchip=
-/efuse.h
->> new file mode 100644
->> index 0000000..3fdcf6d
->> --- /dev/null
->> +++ b/arch/arm/mach-rockchip/efuse.h
->=20
-> why does this need to be a separate header? The stuff below could ver=
-y well=20
-> simply live inside the fuse.c
->=20
->=20
->> @@ -0,0 +1,15 @@
->> +#ifndef _ARCH_ROCKCHIP_EFUSE_H_
->> +#define _ARCH_ROCKCHIP_EFUSE_H_
->> +
->> +/* Rockchip eFuse controller register */
->> +#define EFUSE_A_SHIFT		(6)
->> +#define EFUSE_A_MASK		(0x3FF)
->> +#define EFUSE_PGENB		(1 << 3)
->=20
-> please use BIT(3) instead of (1 << 3)
-> Same for the bits below.
->=20
->=20
->> +#define EFUSE_LOAD		(1 << 2)
->> +#define EFUSE_STROBE		(1 << 1)
->> +#define EFUSE_CSB		(1 << 0)
->> +
->> +#define REG_EFUSE_CTRL		(0x0000)
->> +#define REG_EFUSE_DOUT		(0x0004)
->=20
-> no braces necessary for basic numerals
->=20
->=20
->> +
->> +#endif /* _ARCH_ROCKCHIP_EFUSE_H_ */
->=20
->=20
->=20
->=20
+Use of_iomap(np, 0). You don't seem to pass the address around, so that
+should be sufficient.
 
---=20
-Jianqun Xu
+> +
+> +	gp = of_get_named_gen_pool(np, "iram", 0);
+> +	if (!gp) {
+> +		pr_err("SOCFPGA: OCRAM cannot find gen pool\n");
+> +		return;
+> +	}
+> +
+> +	np = of_find_compatible_node(NULL, NULL, "mmio-sram");
+> +	if (!np) {
+> +		pr_err("SOCFPGA: Unable to find mmio-sram in dtb\n");
+> +		return;
+> +	}
+> +
+> +	/* Determine the OCRAM address and size */
+> +	prop = of_get_property(np, "reg", &size);
+> +	if (!prop || size < sizeof(*prop)) {
+> +		pr_err("SOCFPGA: Unable to find OCRAM mapping in dtb\n");
+> +		return;
+> +	}
+> +	iram_addr = be32_to_cpup(prop++);
+> +	len = be32_to_cpup(prop);
 
-***********************************************************************=
-*****
-*IMPORTANT NOTICE:*This email is from Fuzhou Rockchip Electronics Co.,
-Ltd .The contents of this email and any attachments may contain
-information that is privileged, confidential and/or exempt from
-disclosure under applicable law and relevant NDA. If you are not the
-intended recipient, you are hereby notified that any disclosure,
-copying, distribution, or use of the information is STRICTLY PROHIBITED=
-=2E
-Please immediately contact the sender as soon as possible and destroy
-the material in its entirety in any format. Thank you.
-***********************************************************************=
-*****
+This address is overwritten below. What's going on?
+
+> +
+> +	iram_addr = gen_pool_alloc(gp, len);
+> +	if (iram_addr == 0) {
+> +		pr_err("SOCFPGA: cannot alloc from gen pool\n");
+> +		return;
+> +	}
+> +
+> +	memset((void *)iram_addr, 0, len);
+
+How is the iram mapped? Is memset to it safe (e.g. it unaligned accesses
+are made)?
+
+> +
+> +	gen_pool_free(gp, iram_addr, len);
+> +
+> +	mapped_ocr_edac_addr = ioremap(ocr_edac_addr, 4);
+> +	if (!mapped_ocr_edac_addr) {
+> +		pr_err("SOCFPGA: Unable to map OCRAM ecc regs.\n");
+> +		return;
+> +	}
+> +
+> +	/* Clear any pending OCRAM ECC interrupts, then enable ECC */
+> +	writel(ALTR_OCRAM_CLEAR_ECC, mapped_ocr_edac_addr);
+> +	writel(ALTR_OCRAM_ECC_EN, mapped_ocr_edac_addr);
+> +
+> +	iounmap(mapped_ocr_edac_addr);
+> +
+> +	pr_debug("SOCFPGA: Success Initializing OCRAM\n");
+> +}
+> diff --git a/arch/arm/mach-socfpga/socfpga.c b/arch/arm/mach-socfpga/socfpga.c
+> index 0954011..065d80d 100644
+> --- a/arch/arm/mach-socfpga/socfpga.c
+> +++ b/arch/arm/mach-socfpga/socfpga.c
+> @@ -100,6 +100,14 @@ static void socfpga_cyclone5_restart(enum reboot_mode mode, const char *cmd)
+>  	writel(temp, rst_manager_base_addr + SOCFPGA_RSTMGR_CTRL);
+>  }
+>  
+> +static void __init socfpga_cyclone5_init(void)
+> +{
+> +	of_platform_populate(NULL, of_default_bus_match_table,
+> +			     NULL, NULL);
+> +	if (IS_ENABLED(CONFIG_EDAC_ALTERA_OCRAM))
+> +		socfpga_init_ocram_ecc();
+
+If it's safe to do this after probing everything else, why can't this be
+a normal device probe?
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
