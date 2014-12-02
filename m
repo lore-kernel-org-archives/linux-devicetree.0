@@ -1,65 +1,65 @@
-From: Roman Byshko <Roman.Byshko-boyO8OCvo7cFyTtuD1jkCg@public.gmane.org>
-Subject: Re: [PATCH v2 0/5] ARM: sunxi: Add support for USB OTG PHY
-Date: Tue, 2 Dec 2014 14:01:50 +0100
-Message-ID: <CAMXmWBkG50yq323T-EU8CredkoP2vaJwkvV6Df5t7bBS861q3Q@mail.gmail.com>
-References: <cover.1415645258.git.rbyshko@gmail.com> <5461D2C1.6020505@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Harini Katakam <harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/4] devicetree: bindings: Add defeature-repeated-start
+ property for Cadence I2C
+Date: Tue, 2 Dec 2014 18:40:13 +0530
+Message-ID: <CAFcVECJwFoFd6GrmF282CG+fELnYb=FNCTDq=RYKky_dHha=Jg@mail.gmail.com>
+References: <1417514749-24319-1-git-send-email-harinik@xilinx.com>
+	<1417514749-24319-4-git-send-email-harinik@xilinx.com>
+	<20141202111907.GC23671@leverpostej>
+	<CAFcVECLtPx6shBXJbg9Uf_8fnhkMoO1zpoxGcdda7PSA7z_2rA@mail.gmail.com>
+	<20141202125203.GA4072@katana>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDJMXIOHZIFBBU7Q62RQKGQEO4UL44A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <5461D2C1.6020505-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141202125203.GA4072@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "vishnum-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <vishnum-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 11, 2014 at 10:11 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> Hi,
->
-> On 11/10/2014 07:55 PM, Roman Byshko wrote:
->> Hi,
->>
->> There is already support for two USB phys, which are used for
->> USB host controllers on Allwinner SoC aka sunxi.
->>
->> This patch series add support for the USB OTG phy (aka phy0).
->>
->> The code has been tested on Allwinner A20 aka sun7i (Cubietruck).
->>
->> Best regards,
->> Roman Byshko
->
-> First of all very cool that you're working on this, I somehow missed
-> v1, but I'm very happy to see this.
->
-> Second some questions, this series seems to only add support for
-> initializing the phy, without adding the necessary magic for
-> switching from app to host mode, and without actually hooking up musb,
-> I assume you've a follow up series adding musb support, which actually
-> uses the phy ?
+Hi,
 
-Yes, there will be follow ups.
-
-> Also have you coordinated your work with ChenYu? ATM ChenYu is mostly
-> working on other stuff, but AFAIk he has been working on musb support
-> in the past.
-
-Yes.
-
-Best,
-Roman
+On Tue, Dec 2, 2014 at 6:22 PM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
+>> >> +  - defeature-repeated-start: Include this property to defeature repeated start
+>> >> +                           This defeature is due to a few bugs in the
+>> >> +                           I2C controller.
+>> >> +                           Completion interrupt after a read/receive
+>> >> +                           operation is NOT obtained if HOLD bit is set
+>> >> +                           at that time. Because of this bug, repeated start
+>> >> +                           will only work if there are no transfers following
+>> >> +                           a read/receive transfer.
+>> >> +                           If HOLD is held for long without a transfer,
+>> >> +                           invalid read transactions are generated by the
+>> >> +                           controller due to a HW timeout related bug.
+>> >
+>> > I'm not keen on the name; it sounds like we're disabling a feature
+>> > rather than describing the problem (and "defeature" is not a common
+>> > term in this sense, "disable" would be better).
+>> >
+>> > It sounds like there are two issues with staying in the HOLD state? Lost
+>> > completion IRQs and a separate HW timeout bug? Or are the two related?
+>> >
+>>
+>> Yes, there are two issues here and they are not related.
+>> But a combination of both is leading to not using repeated start.
+>> The intention was to defeature except that it works in some scenarios
+>> (such as a typical write+read in that order with repeated start)
+>> and there are people who already use the driver with slaves that need this.
 >
-> Regards,
+> That should not be handled using a binding. If you get a transfer (at
+> runtime) with criteria you don't support, return with -EOPNOTSUPP from
+> the master xfer routine.
 >
-> Hans
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+I put a check in place for one failure condition that we know (will
+change the error code returned).
+But given the bugs, it will be useful to just disable it if the system doesn't
+require repeated start.
+If you think DT entry is not the way to go, do you think a CONFIG option or
+something better will work?
+We chose a DT property because there is a good chance the user has multiple
+cadence I2C controllers - one connected to a slave that needs repeated start
+(like a power controller) and another that doesn't care.
+
+Regards,
+Harini
