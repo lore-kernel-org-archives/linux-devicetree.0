@@ -1,64 +1,50 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH V2 RESEND] arm: dts: Exynos5: Use pmu_system_controller
- phandle for dp phy
-Date: Tue, 02 Dec 2014 17:39:58 +0900
-Message-ID: <000501d00e0b$8e0e8610$aa2b9230$%han@samsung.com>
-References: <1416807683-2257-1-git-send-email-gautam.vivek@samsung.com>
- <CABxcv=mmJp2c=ZC8=0+TW0-x3g7RnELTAFY24KJRjUgf+QrDcQ@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] ARM: hip04: set ARCH_NR_GPIO to 128
+Date: Tue, 02 Dec 2014 09:42:31 +0100
+Message-ID: <142367414.tx9doeBDv9@wuerfel>
+References: <1417156188-500-1-git-send-email-wangzhou.bry@gmail.com> <CACRpkdb1nZN-vOXLC-QFUAT9wDGM2Nm5YeH0qY_u2JV9toOaVg@mail.gmail.com> <547D5FA7.3040307@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CABxcv=mmJp2c=ZC8=0+TW0-x3g7RnELTAFY24KJRjUgf+QrDcQ@mail.gmail.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Javier Martinez Canillas' <javier@dowhile0.org>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Vivek Gautam' <gautam.vivek@samsung.com>
-Cc: 'Linux Kernel' <linux-kernel@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, 'Javier Martinez Canillas' <javier.martinez@collabora.co.uk>, 'Ajay Kumar' <ajaykumar.rs@samsung.com>, 'Kukjin Kim' <kgene@kernel.org>, 'Thierry Reding' <thierry.reding@gmail.com>, 'Jingoo Han' <jg1.han@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <547D5FA7.3040307-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, December 02, 2014 5:17 PM, Javier Martinez Canillas wrote:
+On Tuesday 02 December 2014 14:43:51 Zhou Wang wrote:
 > 
-> Hello Kukjin,
+> how about a patch like this, we read the base from the dts here.
 > 
-> On Mon, Nov 24, 2014 at 6:41 AM, Vivek Gautam <gautam.vivek@samsung.com> wrote:
-> > DP PHY now require pmu-system-controller to handle PMU register
-> > to control PHY's power isolation. Adding the same to dp-phy
-> > node.
-> >
-> > Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
-> > Reviewed-by: Jingoo Han <jg1.han@samsung.com>
-> > Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-> > Cc: Kukjin Kim <kgene@kernel.org>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index e8e98ca..0c40f53 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -107,11 +107,16 @@ struct gpio_chip *gpiod_to_chip(const struct 
+> gpio_desc *desc)
+>   EXPORT_SYMBOL_GPL(gpiod_to_chip);
 > 
-> Any opinions about $subject?
+>   /* dynamic allocation of GPIOs, e.g. on a hotplugged device */
+> -static int gpiochip_find_base(int ngpio)
+> +static int gpiochip_find_base(struct gpio_chip *gpio_chip)
+>   {
+>          struct gpio_chip *chip;
+> +       int ngpio = gpio_chip->ngpio;
+>          int base = ARCH_NR_GPIOS - ngpio;
 > 
-> This patch is -rc material since is needed after commit a5ec598 ("phy:
-> exynos-dp-video: Use syscon
-> support to control pmu register") which landed in 3.18. That means
-> that display for Exynos is currently broken in 3.18.
-> 
-> I think it's too late for the 3.18 -rc cycle but at least it would be
-> great to have this merged for 3.19 and backport to stable kernels to
-> have display working again.
+> +       /* just prototype */
+> +       if (!of_property_read_u32(gpio_chip->dev->of_node, "base", &base))
+> +               return base;
+> +
 
-I agree with this suggestion.
+I don't think that would be appropriate. The concept of a gpio number
+base is implementation specific to current Linux versions and we want
+to get rid of that in the future, so it should not be part of an
+OS-independent spec.
 
-> 
-> Thierry had concerns that this change breaks DT backward compability
-> but actually it was already been broken by a5ec598 which changed the
-> DT binding for the phy-exynos-dp-video driver so we should either
-> apply this patch now or revert a5ec598.
-
-I think that very few people might use old properties for Exynos DP.
-Actually, DT backward compatibility will not be the considerable problem
-in my opinion.
-
-But, in order to keep the DT backward compatibility, we should revert
-a5ec598, and send another patch for keeping the DT backward compatibility.
-
-Best regards,
-Jingoo Han
-
-> 
-> Thanks a lot and best regards,
-> Javier
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
