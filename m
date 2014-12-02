@@ -1,111 +1,181 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 16/19] arm64: dts: exynos: Add dts files for 64-bit
- Exynos5433 SoC
-Date: Tue, 2 Dec 2014 10:42:39 +0000
-Message-ID: <20141202104239.GA23671@leverpostej>
-References: <1417073716-22997-1-git-send-email-cw00.choi@samsung.com>
- <1417073716-22997-17-git-send-email-cw00.choi@samsung.com>
- <20141127111834.GB857@leverpostej>
- <54787621.4000503@samsung.com>
- <20141128140059.GH25883@leverpostej>
- <547BD0BA.7080809@samsung.com>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v5 6/7] ARM: zynq: Add OCM controller driver
+Date: Tue, 2 Dec 2014 11:52:08 +0100
+Message-ID: <cb2f95cd81334264af358b7ca0ac201b@BN1BFFO11FD021.protection.gbl>
+References: <cover.1417440250.git.michal.simek@xilinx.com>
+ <4788755d350890d81f1bac4bf237c5ddfb68b795.1417440250.git.michal.simek@xilinx.com>
+ <4151221.1fPmelvPbd@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <547BD0BA.7080809@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "arnd@arndb.de" <arnd@arndb.de>, "olof@lixom.net" <olof@lixom.net>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "s.nawrocki@samsung.com" <s.nawrocki@samsung.com>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "inki.dae@samsung.com" <inki.dae@samsung.com>, "chanho61.park@samsung.com" <chanho61.park@samsung.com>, "geunsik.lim@samsung.com" <geunsik.lim@samsung.com>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, a.kesavan@samsung.
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4151221.1fPmelvPbd@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, Josh Cartwright <josh.cartwright-acOepvfBmUk@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sandeep Nair <sandeep_n-l0cyMroinI0@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 01, 2014 at 02:21:46AM +0000, Chanwoo Choi wrote:
-> Dear Mark,
+On 12/01/2014 04:31 PM, Arnd Bergmann wrote:
+> On Monday 01 December 2014 14:24:57 Michal Simek wrote:
+>> The driver provide memory allocator which can
+>> be used by others drivers to allocate memory inside OCM.
+>> All locations for 64kB blocks are supported
+>> and driver is trying to allocate the largest continuous
+>> block of memory.
+>>
+>> Checking mpcore addressing filterring is not done here
+>> but could be added in future.
+>>
+>> Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 > 
-> On 11/28/2014 11:00 PM, Mark Rutland wrote:
-> > On Fri, Nov 28, 2014 at 01:18:25PM +0000, Chanwoo Choi wrote:
-> >> Dear Mark,
-> >>
-> >> On 11/27/2014 08:18 PM, Mark Rutland wrote:
-> >>> On Thu, Nov 27, 2014 at 07:35:13AM +0000, Chanwoo Choi wrote:
-> >>>> This patch adds new Exynos5433 dtsi to support 64-bit Exynos5433 SoC
-> >>>> based on Octal core CPUs (quad Cortex-A57 and quad Cortex-A53).
-> >>>>
-> >>>> Cc: Kukjin Kim <kgene.kim@samsung.com>
-> >>>> Cc: Mark Rutland <mark.rutland@arm.com>
-> >>>> Cc: Arnd Bergmann <arnd@arndb.de>
-> >>>> Cc: Olof Johansson <olof@lixom.net>
-> >>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> >>>> Cc: Will Deacon <will.deacon@arm.com>
-> >>>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> >>>> Acked-by: Inki Dae <inki.dae@samsung.com>
-> >>>> Acked-by: Geunsik Lim <geunsik.lim@samsung.com>
-> >>>> ---
-> >>>>  arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi | 698 +++++++++++++++++++++
-> >>>>  arch/arm64/boot/dts/exynos/exynos5433.dtsi         | 523 +++++++++++++++
-> >>>>  2 files changed, 1221 insertions(+)
-> >>>>  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi
-> >>>>  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433.dtsi
-> >>>
-> >
-> > [...]
-> >
-> >>>> +       cpus {
-> >>>> +               #address-cells = <2>;
-> >>>> +               #size-cells = <0>;
-> >>>> +
-> >>>> +               cpu0: cpu@100 {
-> >>>> +                       device_type = "cpu";
-> >>>> +                       compatible = "arm,cortex-a53", "arm,armv8";
-> >>>> +                       enable-method = "psci";
-> >>>
-> >>> While the CPU nodes have enable-methods, I didn't spot a PSCI node
-> >>> anywhere, so this dts cannot possibly have been used to bring up an SMP
-> >>> system.
-> >>>
-> >>> How has this dts been tested?
-> >>>
-> >>> What PSCI revision have you implemented? Have have you tested it?
-> >>
-> >> My mistake,
-> >> Exynos5433 supports PSCI v0.1. I'll add following PSCI nodes:
-> >> I tested the boot of secondary cpu.
-> >>
-> >>         psci {
-> >>                 compatible = "arm,psci";
-> >>                 method = "smc";
-> >>                 cpu_off = <0x84000002>;
-> >>                 cpu_on = <0xC4000003>;
-> >>         };
-> >
-> > Ok. I take it _any_ CPU may be hotplugged (including CPU0), given that
-> > you don't have MIGRATE_INFO_TYPE from PSCI 0.2 to tell you that this is
-> > not possible? If not, attempting to hotplug CPU0 will result in a BUG()
-> > and the kernel will explode.
-> >
-> > Has that been tested?
+> The driver doesn't actually have any interface as far as I can tell,
+> so I wonder how you expect it to be used.
 > 
-> I just tested secondary CPU on during kernel booting after added 'psci' dt node.
-> So, I got the ON state of Octa CPUs.
+> Do you have a list of drivers that would be using it?
+
+For supporting suspend you have to save content to OCM memory
+and you need any driver which is providing generic functionality
+to allocate that memory for it.
+
+Here is example - it is not upstream because we need to get OCM driver
+to mainline first.
+https://github.com/Xilinx/linux-xlnx/blob/master/arch/arm/mach-zynq/pm.c
+
+The second example is to use OCM memory for storing BD for ethernet controller.
+OCM is fast memory accessible IRC in one cycle which increase bandwidth.
+
+For all of these you need the driver which provide you the way how to allocate
+memory from OCM.
+
+> How does it relate to the generic "mmio-sram" binding? Is this
+> meant as a specialization?
+
+This driver was based on mmio-sram which does the same. Provide you a way
+how to allocate memory space in any sram memory on chip.
+It is design for static case but not for dynamic one like this one.
+
+As I pointed in cover letter there could be an option to use mmio-sram driver
+but there must be any way how to create DT description at run-time or choose
+configuration at run-time.
+
+>> +/**
+>> + * zynq_ocmc_irq_handler - Interrupt service routine of the OCM controller
+>> + * @irq:	IRQ number
+>> + * @data:	Pointer to the zynq_ocmc_dev structure
+>> + *
+>> + * Return:     IRQ_HANDLED always
+>> + */
+>> +static irqreturn_t zynq_ocmc_irq_handler(int irq, void *data)
+>> +{
+>> +	u32 sts;
+>> +	u32 err_addr;
+>> +	struct zynq_ocmc_dev *zynq_ocmc = data;
+>> +
+>> +	/* check status */
+>> +	sts = readl(zynq_ocmc->base + ZYNQ_OCMC_IRQ_STS);
+>> +	if (sts & ZYNQ_OCMC_IRQ_STS_ERR_MASK) {
+>> +		/* check error address */
+>> +		err_addr = readl(zynq_ocmc->base + ZYNQ_OCMC_PARITY_ERRADDRESS);
+>> +		pr_err("%s: OCM err intr generated at 0x%04x (stat: 0x%08x).",
+>> +		       __func__, err_addr, sts & ZYNQ_OCMC_IRQ_STS_ERR_MASK);
+>> +	}
+>> +	pr_warn("%s: Interrupt generated by OCM, but no error is found.",
+>> +		__func__);
+>> +
+>> +	return IRQ_HANDLED;
+>> +}
 > 
-> Maybe I need more time to implement CPU0 and secondary cpu hotplugged dynamically on runtime.
+> I'm also puzzled by this: you don't really do anything here but print
+> a message. What is the purpose of this interrupt? As this looks unrelated
+> to the rest of the driver, maybe this should be part of drivers/edac
+> instead?
 
-So currently PSCI CPU_OFF is not implemented at all?
+yes - it is just showing that there is error in OCM.
+It can be added to edac - no problem to do so but the driver will be
+really simple that's why not sure if make sense to do it.
 
-> > Do all CPUs enter the kernel at EL2?
 > 
-> I didn't consider EL2 for hypervisor mode.
-> First role of this job, I'll implement CPU on/off and suspend by using PSCI.
+>> +static int zynq_ocmc_probe(struct platform_device *pdev)
+>> +{
+>> +       int ret;
+>> +       struct zynq_ocmc_dev *zynq_ocmc;
+>> +       u32 i, ocm_config, curr;
+>> +       struct resource *res;
+>> +
+>> +       ocm_config = zynq_slcr_get_ocm_config();
+>> +
+>> +       zynq_ocmc = devm_kzalloc(&pdev->dev, sizeof(*zynq_ocmc),
+>> GFP_KERNEL);
+>> +       if (!zynq_ocmc)
+>> +               return -ENOMEM;
+>> +
+>> +       zynq_ocmc->pool = devm_gen_pool_create(&pdev->dev,
+>> +                                              ilog2(ZYNQ_OCMC_GRANULARITY),
+>> +                                              -1);
+>> +       if (!zynq_ocmc->pool)
+>> +               return -ENOMEM;
+>> +
+>> +       curr = 0; /* For storing current struct resource for OCM */
+>> +       for (i = 0; i < ZYNQ_OCMC_BLOCKS; i++) {
+>> +               u32 base, start, end;
+>> +
+>> +               /* Setup base address for 64kB OCM block */
+>> +               if (ocm_config & BIT(i))
+>> +                       base = ZYNQ_OCMC_HIGHADDR;
+>> +               else
+>> +                       base = ZYNQ_OCMC_LOWADDR;
+> 
+> You write in the introductory mail that you want to support detecting the
+> address from the slcr, and possibly even allow changing it at runtime,
+> but I don't understand what that would be good for.
 
-Is there any reason not to enter the kernel at EL2?
+Note: PL means programmable logic
 
-PSCI 0.2 mandates entering at EL2 if present (and not under a
-hypervisor), and it gives the kernel a lot more flexibility to fix
-things up (and there's less for FW to restore) even when a hypervisor is
-not in use.
+On zynq you can use memory from fixed part which starts from 0 to ddr size.
+That's one configuration.
+The second is to add memory controller just to PL - the use case can be that
+memory controller in PL will provide better bandwidth (because of customization)
+for your application and this memory can't started from 0. Most of the time
+it starts from 0x40000000. But you need to have memory at 0 for adding reset vectors
+or standalone application running on the second ARM core that's why you can
+place there OCM.
 
-Implementing all that to EL2 is _simpler_ than implementing it to EL1.
-The kernel will restore what it needs to.
+It means it is up to users what configuration they want/need to use that's why
+OCM is divided to 4 64k blocks which you can place to any location you like.
+it is 16 combinations.
+
+Chip can be setup to use any of this combination without any capable bootloader
+that's why relating on bootloader is not solution. Also problematic for upgrading
+the system.
+
+> It's not uncommon to describe in DT settings that one can also find
+> out from hardware but that are set up by the boot loader in a particular
+> way. Why not this one? 
+
+It is 16 combinations how these 4 blocks can be placed together but only
+one reliable way is to check SLCR configuration and based on reg setup.
+
+I can add all these 16 combinations to DTS and detect configuration in SLCR
+and then change any status property for that particular configuration
+but it will be more ugly than this solution.
+
+Note: Just place there 4/8 blocks with low and high locations is not good
+because the maximum allocated size will be just 64k.
+
+> For all I can tell, that would let you simply
+> use one driver for the EDAC and the generic mmio-sram from the memory,
+> without the need to do anything further.
+
+EDAC driver - no problem to do it and make sense.
+Using mmio-sram for one fixed configuration is easy but not sure if this is
+the right thing to do.
+Listing all combinations in DTS file is quite easy to do but mechanism
+to select one combination is the key for it.
 
 Thanks,
-Mark.
+Michal
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
