@@ -1,160 +1,162 @@
-From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCHv5 2/5] arm: socfpga: Enable OCRAM ECC on startup.
-Date: Tue, 2 Dec 2014 11:54:09 -0600
-Message-ID: <547DFCC1.3060805@opensource.altera.com>
-References: <1415751263-1830-1-git-send-email-tthayer@opensource.altera.com> <1415751263-1830-3-git-send-email-tthayer@opensource.altera.com> <20141202151145.GN23671@leverpostej>
+From: Thor Thayer <tthayer@opensource.altera.com>
+Subject: Re: [PATCHv5 4/5] edac: altera: Add Altera L2 Cache and OCRAM EDAC
+ Support
+Date: Tue, 2 Dec 2014 11:55:03 -0600
+Message-ID: <547DFCF7.9000105@opensource.altera.com>
+References: <1415751263-1830-1-git-send-email-tthayer@opensource.altera.com> <1415751263-1830-5-git-send-email-tthayer@opensource.altera.com> <20141202152507.GO23671@leverpostej>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141202151145.GN23671@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org" <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, "dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org" <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, "m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20141202152507.GO23671@leverpostej>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "bp@alien8.de" <bp@alien8.de>, "dougthompson@xmission.com" <dougthompson@xmission.com>, "m.chehab@samsung.com" <m.chehab@samsung.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "tthayer.linux@gmail.com" <tthayer.linux@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 12/02/2014 09:11 AM, Mark Rutland wrote:
-> On Wed, Nov 12, 2014 at 12:14:20AM +0000, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
->> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>
->> This patch enables the ECC for On-Chip RAM on machine
->> startup.  The ECC has to be enabled before data is
->> is stored in memory otherwise the ECC will fail on
->> reads.
->>
->> Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->> ---
->> v2: Split OCRAM ECC portion separately. Addition of iounmap()
->> and reorganization of gen_pool_free. Remove defconfig from patch.
->>
->> v3/4: No change
->>
->> v5: Remove ocram.h, use io.h instead of clk-provider.h
->>      Check prop in correct place. Add ECC EN defines.
->> ---
-<snip>
+On 12/02/2014 09:25 AM, Mark Rutland wrote:
+> Hi,
+>
+>> +/* MPU L2 Register Defines */
+>> +#define ALTR_MPUL2_CONTROL_OFFSET       0x100
+>> +#define ALTR_MPUL2_CTL_CACHE_EN_MASK    BIT(0)
+>
+> These are just standard PL310 register definitions, no?
 
->> +
->> +void socfpga_init_ocram_ecc(void)
+Yes.
+
+> [...]
+>
+>> +static void *ocram_alloc_mem(size_t size, void **other)
 >> +{
->> +	struct device_node *np;
->> +	const __be32 *prop;
+>> +       struct device_node *np;
+>> +       struct gen_pool *gp;
+>> +       void *sram_addr;
+>> +
+>> +       np = of_find_compatible_node(NULL, NULL, "altr,ocram-edac");
+>> +       if (!np)
+>> +               return NULL;
 >
-> Please don't use accessors which return raw __be32s in drivers,
-> typically it's the wrong thing to do and leaves horrible bugs and/or
-> quirks that are painful to fix up.
-
-OK. Thanks.
-
->> +	u32 ocr_edac_addr, iram_addr, len;
->> +	void __iomem  *mapped_ocr_edac_addr;
->> +	size_t size;
->> +	struct gen_pool *gp;
->> +
->> +	np = of_find_compatible_node(NULL, NULL, "altr,ocram-edac");
->> +	if (!np) {
->> +		pr_err("SOCFPGA: Unable to find altr,ocram-edac in dtb\n");
->> +		return;
->> +	}
->> +
->> +	prop = of_get_property(np, "reg", &size);
->> +	if (!prop || size < sizeof(*prop)) {
->> +		pr_err("SOCFPGA: Unable to find OCRAM ECC mapping in dtb\n");
->> +		return;
->> +	}
->> +	ocr_edac_addr = be32_to_cpup(prop++);
->> +	len = be32_to_cpup(prop);
+> Don't you need to have a corresponding of_node_put?
 >
-> Use of_iomap(np, 0). You don't seem to pass the address around, so that
-> should be sufficient.
->
->> +
->> +	gp = of_get_named_gen_pool(np, "iram", 0);
->> +	if (!gp) {
->> +		pr_err("SOCFPGA: OCRAM cannot find gen pool\n");
->> +		return;
->> +	}
->> +
->> +	np = of_find_compatible_node(NULL, NULL, "mmio-sram");
->> +	if (!np) {
->> +		pr_err("SOCFPGA: Unable to find mmio-sram in dtb\n");
->> +		return;
->> +	}
->> +
->> +	/* Determine the OCRAM address and size */
->> +	prop = of_get_property(np, "reg", &size);
->> +	if (!prop || size < sizeof(*prop)) {
->> +		pr_err("SOCFPGA: Unable to find OCRAM mapping in dtb\n");
->> +		return;
->> +	}
->> +	iram_addr = be32_to_cpup(prop++);
->> +	len = be32_to_cpup(prop);
->
-> This address is overwritten below. What's going on?
+> Is this ever called before the code above has probed? Can't you keep
+> this information around rather than probing it every time?
 >
 
-Thanks, leftovers from debugging. I will look for a different way of 
-getting the information without the be32 stuff.
+This is only used for testing so it happens infrequently and always 
+after the probe has finished.
+
+These error injection functions will not be part of the standard 
+distribution for our board so it was cleaner to leave it out.
 
 >> +
->> +	iram_addr = gen_pool_alloc(gp, len);
->> +	if (iram_addr == 0) {
->> +		pr_err("SOCFPGA: cannot alloc from gen pool\n");
->> +		return;
->> +	}
+>> +       gp = of_get_named_gen_pool(np, "iram", 0);
+>> +       if (!gp)
+>> +               return NULL;
 >> +
->> +	memset((void *)iram_addr, 0, len);
+>> +       sram_addr = (void *)gen_pool_alloc(gp, size);
+>> +       if (!sram_addr)
+>> +               return NULL;
+>> +
+>> +       memset(sram_addr, 0, size);
 >
-> How is the iram mapped? Is memset to it safe (e.g. it unaligned accesses
-> are made)?
+> Is it safe to do a memset to the sram? How is it mapped?
 >
 
-I will need to look at this further - good points. The entire iram 
-should be used as a pool so I didn't expect anything unusual even though 
-I just realized allocations are not contiguous.
+I checked the gen_pool and the memory may not be contiguous. I will fix 
+this. Thanks!
+
+> [...]
+>
+>> +static void *l2_alloc_mem(size_t size, void **other)
+>> +{
+>> +       struct device *dev = *other;
+>> +       void *ptemp = devm_kzalloc(dev, size, GFP_KERNEL);
+>> +
+>> +       if (!ptemp)
+>> +               return NULL;
+>> +
+>> +       /* Make sure everything is written out */
+>> +       wmb();
+>> +       flush_cache_all();
+>
+> Doesn't this just flush out _to_ the L2 (and not beyond)? Even then I
+> don't think that's safe with the MMU enabled.
+>
+> Why is the flush necessary?
+>
+
+flush_cache_all() maps to flush_kern_all() which cleans all the cache 
+levels up to the level of coherency which includes L2 in it.
+
+This flush ensures the data is in a known state (zero) before I inject 
+the errors for testing L2 ECC.
+
+> [...]
+>
+>> +static int altr_l2_dependencies(struct platform_device *pdev,
+>> +                               void __iomem *base)
+>> +{
+>> +       u32 control;
+>> +       struct regmap *l2_vbase;
+>> +
+>> +       control = readl(base) & ALTR_L2_ECC_EN_MASK;
+>> +       if (!control) {
+>> +               edac_printk(KERN_ERR, EDAC_DEVICE,
+>> +                           "L2: No ECC present, or ECC disabled\n");
+>> +               return -ENODEV;
+>> +       }
+>> +
+>> +       l2_vbase = syscon_regmap_lookup_by_compatible("arm,pl310-cache");
+>> +       if (IS_ERR(l2_vbase)) {
+>> +               edac_printk(KERN_ERR, EDAC_DEVICE,
+>> +                           "L2:regmap for arm,pl310-cache lookup failed.\n");
+>> +               return -ENODEV;
+>> +       }
+>
+> I must NAK any use of the L2 as a syscon device. It's simply not a
+> register file that was intended to be shared. I appreciate that you only
+> want to check something very simple, but we should use a higher level
+> API for that (and we should add one if we do not already have one)
+>
+
+OK. I didn't know of a way to read that register otherwise. I will 
+rework this.
 
 >> +
->> +	gen_pool_free(gp, iram_addr, len);
+>> +       regmap_read(l2_vbase, ALTR_MPUL2_CONTROL_OFFSET, &control);
+>> +       if (!(control & ALTR_MPUL2_CTL_CACHE_EN_MASK)) {
+>> +               edac_printk(KERN_ERR, EDAC_DEVICE, "L2: Cache disabled\n");
+>> +               return -ENODEV;
+>> +       }
 >> +
->> +	mapped_ocr_edac_addr = ioremap(ocr_edac_addr, 4);
->> +	if (!mapped_ocr_edac_addr) {
->> +		pr_err("SOCFPGA: Unable to map OCRAM ecc regs.\n");
->> +		return;
->> +	}
->> +
->> +	/* Clear any pending OCRAM ECC interrupts, then enable ECC */
->> +	writel(ALTR_OCRAM_CLEAR_ECC, mapped_ocr_edac_addr);
->> +	writel(ALTR_OCRAM_ECC_EN, mapped_ocr_edac_addr);
->> +
->> +	iounmap(mapped_ocr_edac_addr);
->> +
->> +	pr_debug("SOCFPGA: Success Initializing OCRAM\n");
+>> +       return 0;
 >> +}
->> diff --git a/arch/arm/mach-socfpga/socfpga.c b/arch/arm/mach-socfpga/socfpga.c
->> index 0954011..065d80d 100644
->> --- a/arch/arm/mach-socfpga/socfpga.c
->> +++ b/arch/arm/mach-socfpga/socfpga.c
->> @@ -100,6 +100,14 @@ static void socfpga_cyclone5_restart(enum reboot_mode mode, const char *cmd)
->>   	writel(temp, rst_manager_base_addr + SOCFPGA_RSTMGR_CTRL);
->>   }
+>> +
+>> +const struct edac_device_prv_data l2ecc_data = {
+>> +       .setup = altr_l2_dependencies,
+>> +       .ce_clear_mask = 0,
+>> +       .ue_clear_mask = 0,
+>> +#ifdef CONFIG_EDAC_DEBUG
+>> +       .eccmgr_sysfs_attr = altr_l2_sysfs_attributes,
+>> +       .alloc_mem = l2_alloc_mem,
+>> +       .free_mem = l2_free_mem,
+>> +       .ecc_enable_mask = ALTR_L2_ECC_EN_MASK,
+>> +       .ce_set_mask = (ALTR_L2_ECC_EN_MASK | ALTR_L2_ECC_INJS_MASK),
+>> +       .ue_set_mask = (ALTR_L2_ECC_EN_MASK | ALTR_L2_ECC_INJD_MASK),
+>> +       .trig_alloc_sz = ALTR_TRIG_L2C_BYTE_SIZE,
+>> +#endif
+>> +};
+>> +
+>> +#endif /* #ifdef CONFIG_EDAC_ALTERA_L2C */
+>> +
+>>   MODULE_LICENSE("GPL v2");
+>>   MODULE_AUTHOR("Thor Thayer");
+>> -MODULE_DESCRIPTION("EDAC Driver for Altera SDRAM Controller");
+>> +MODULE_DESCRIPTION("EDAC Driver for Altera Memories");
+>> --
+>> 1.7.9.5
 >>
->> +static void __init socfpga_cyclone5_init(void)
->> +{
->> +	of_platform_populate(NULL, of_default_bus_match_table,
->> +			     NULL, NULL);
->> +	if (IS_ENABLED(CONFIG_EDAC_ALTERA_OCRAM))
->> +		socfpga_init_ocram_ecc();
->
-> If it's safe to do this after probing everything else, why can't this be
-> a normal device probe?
->
-> Thanks,
-> Mark.
-
-Good point. Thank you.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
