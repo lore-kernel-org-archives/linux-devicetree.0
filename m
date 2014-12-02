@@ -1,83 +1,276 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V6 05/12] mailbox: Add NVIDIA Tegra XUSB mailbox driver
-Date: Tue, 2 Dec 2014 10:47:42 +0100
-Message-ID: <20141202094741.GC6135@ulmo>
-References: <1416874644-12070-1-git-send-email-abrestic@chromium.org>
- <1416874644-12070-6-git-send-email-abrestic@chromium.org>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v13 03/10] qcom: spm: Add Subsystem Power Manager driver
+Date: Tue, 02 Dec 2014 10:53:30 +0100
+Message-ID: <547D8C1A.1010204@linaro.org>
+References: <1417065854-37745-1-git-send-email-lina.iyer@linaro.org> <1417065854-37745-4-git-send-email-lina.iyer@linaro.org> <5476E653.4040007@linaro.org> <20141201185023.GB499@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8NvZYKFJsRX2Djef"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1416874644-12070-6-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20141201185023.GB499@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>
+Cc: khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 12/01/2014 07:50 PM, Lina Iyer wrote:
+> On Thu, Nov 27 2014 at 01:52 -0700, Daniel Lezcano wrote:
+>> On 11/27/2014 06:24 AM, Lina Iyer wrote:
+>
+>> +    static bool cpuidle_drv_init;
+>>
+>>        ^^^^^^^^^
+>>
+>> As already said in a previous comment, please find a way to remove t=
+hat.
+>>
+> I will look into it. Stephen and I wanted the cpuidle driver to be
+> probed only after any of the SPMs are ready. And possibly, only for t=
+hat
+> cpu, for which the SPM has been probed.
+>
+> To achieve the SPM -> CPUIDLE Device relation, I havent found a good =
+way
+> to do that. Without using CPUIDLE_MULTIPLE_DRIVERS, initializing each
+> cpuidle device, separate from the cpuidle driver, requires that I upd=
+ate
+> the cpuidle_driver->cpumask after probing each SPM device, to allow f=
+or
+> only one driver and cpuidle devices only for the probed cpus. Using t=
+he
+> cpuidle_register_driver(), resets the drv->refcnt in
+> __cpuidle_driver_init.
+>
+> I may need something like this in the else clause of
+> CPUIDLE_MULTIPLE_DRIVERS -
+>
+> static inline struct cpuidle_driver *__cpuidle_get_cpu_driver(int cpu=
+)
+> {
+>         struct cpuidle_driver *drv =3D cpuidle_curr_driver;
+>
+>         if (drv && !cpumask_test_cpu(cpu, drv->cpumask))
+>                  drv =3D NULL;
+>
+>         return drv;
+> }
 
---8NvZYKFJsRX2Djef
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+You don't have to deal with the drv->cpumask and=20
+CPUIDLE_MULTIPLE_DRIVERS. This field gives the list of the cpus the=20
+driver will have to potentially handle.
 
-On Mon, Nov 24, 2014 at 04:17:17PM -0800, Andrew Bresticker wrote:
-> The Tegra xHCI controller's firmware communicates requests to the host
-> processor through a mailbox interface.  While there is only a single
-> physical channel, messages sent by the controller can be divided
-> into two groups: those intended for the PHY driver and those intended
-> for the host-controller driver.  The requesting driver is assigned
-> one of two virtual channels when the single physical channel is
-> requested.  All incoming messages are sent to both virtual channels.
->=20
-> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
-> Thierry,
->=20
-> I've left this as a separate driver because I don't think it should be
-> combined with the xHCI host.  Stephen and I discussed this earlier in
-> review of v1 of this series and he agreed that the mailbox belongs in
-> its own DT node and driver.
+Just register the driver at the first place with the platform device by=
+=20
+using cpuidle_register_driver(drv), I suggest somewhere else than the=20
+spm code.
 
-My objection wasn't strictly against merging the drivers. What I don't
-want to see is two devices sharing the same memory-mapped regions in DT.
+The underlying code will do:
 
-That's based on earlier discussion with Stephen as well, because we have
-had the same problem with USB and USB-PHY before. Unless I completely
-misinterpreted we came to the conclusion that we should avoid this in
-the future.
+         if (!drv->cpumask)
+                 drv->cpumask =3D (struct cpumask *)cpu_possible_mask;
 
-Like I said, this doesn't mean that both need to be in the same driver.
-We could use MFD for example, or provide an entry point in the mailbox
-driver that can be called from the XUSB driver to instantiate the
-mailbox (which is really the same as MFD).
+Until the cpuidle device is not initialized for a specific cpu, the=20
+cpuidle code will have no effect for this cpu. If you register the=20
+driver but without registering the cpuidle devices that will result in=20
+nothing more than a structure initialized but inoperative.
 
-Thierry
+=46or each SPM being probed:
 
---8NvZYKFJsRX2Djef
-Content-Type: application/pgp-signature
+struct cpuidle_device *dev =3D &per_cpu(cpuidle_dev, cpu);
+dev->cpu =3D cpu;
+cpuidle_register_device(dev);
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Note cpuidle_dev is exported via cpuidle.h, so you don't have to=20
+redeclare a per cpu cpuidle device by your own.
 
-iQIcBAEBAgAGBQJUfYq9AAoJEN0jrNd/PrOhAjsP/jQ382JNqadfDFsBPsWxQiqa
-pkYO8rripE9yDaU1NtK0601yfpQzganxugkl9OICZ6cU90MTI2hw3RWteaHvvD37
-DPhJ1R/13yvDO8OmdjcnAYhiUdNLxuSocEOTtgNuUetmMx83LCEGeOXmXSI+Zt92
-jDHHOWEfN+LJ8lY9U8qQ2r/ZzEY1QHnq1C0ACO4SbFku/ABWjtPVcOt67X0GhIit
-h1+bLLUC5mPQrdutyKWUy0+32ohIvfMCBkJ5yitxQJ42CSDd2n3DKDMY9xwtBjlx
-dxM5UQdajtoBuSd+FlWk0GyoH8EVJePaOBzGwLqTB6gv7DDT41bA+518wy5HMo4W
-hXG8zuFeV+Z83iD6tGXQL8Kx46oeRn9RvzVDfGcKQagkspyAHwEcvGfTIh/be9aG
-10ssMn8DgeK6nF4DufhMUj0UowNB60MGs1y8qyKgOSEA97p1VfHR9Cktv408sEml
-XSrSegN5Tt3ogHKLzfHIgyXTG6PJ3hOy5seMvmkztzzl2eOuMTWornjuQe33eq4U
-Rcrgjz03HW/yXF5BEEI0Nb/O/hV1t8RlsdFNmo+KdOaFeaJpjafQm280a9T2Zsr6
-uze/bGhT1Y4peOHdl30Nu8dKHpdCths53J3IrvHpQpMPtBI+1bf5Ihqi4wcJNyzT
-ByGCnw1O7FR8Pe2ZeIFV
-=vDMG
------END PGP SIGNATURE-----
+So rephrasing all that:
 
---8NvZYKFJsRX2Djef--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+(1) in cpuidle-qcom register the driver
+(2) in the spm code register the device for each spm probe
+
+(1) being called before (2).
+
+If after that in the code you still have a "static bool=20
+cpuidle_drv_init", then I guess we have a problem in the init sequence=20
+somewhere else.
+
+> void cpuidle_update_cpumask(struct cpumask *mask) {
+>         struct cpuidle_driver *drv;
+>
+>         spin_lock(&cpuidle_driver_lock);
+>         drv =3D cpuidle_get_driver();
+>      if (drv)
+>          drv->cpumask =3D mask ?: cpu_possible_mask;
+>         spin_unlock(&cpuidle_driver_lock);
+> }
+>
+> With that, I could register cpuidle driver the first time when the ma=
+sk
+> changes
+> from empty and consequent updates would just update the cpumask. (I a=
+m not
+> sure, if I missed anything in this change). It just seemed far too
+> invasive at
+> this time, in lieu of the static bool.
+>
+>>> +    const struct platform_device_info qcom_cpuidle_info =3D {
+>>> +        .name    =3D "qcom_cpuidle",
+>>> +        .id    =3D -1,
+>>> +        .data =3D &lpm_ops,
+>>> +        .size_data =3D sizeof(lpm_ops),
+>>> +    };
+>>> +
+>>> +    drv =3D spm_get_drv(pdev, &cpu);
+>>> +    if (!drv || cpu < 0)
+>>> +        return -EINVAL;
+>>
+>> As already said in a previous comment, it is not possible to have "c=
+pu
+>> < 0" with "drv !=3D NULL", so except I am missing something the test
+>> should be:
+>>
+>>     if (!drv)
+>>         return -EINVAL;
+>>
+> Sorry, done.
+>
+>> There is something wrong with the init sequence. Don't you find weir=
+d
+>> you have to backward search for the cpu belonging to the pdev each
+>> time the probe function is called ?
+>>
+>>
+> Well, it was that or the SPM device node pointing to the CPU that it
+> references. It seems more common to have an iterator than the doubly
+> linked device nodes. I dont have a strong preference either way, just
+> chose the way that made device nodes easier.
+>
+>>> +
+>>> +    res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>> +    drv->reg_base =3D devm_ioremap_resource(&pdev->dev, res);
+>>> +    if (IS_ERR(drv->reg_base))
+>>> +        return PTR_ERR(drv->reg_base);
+>>> +
+>>> +    match_id =3D of_match_node(spm_match_table, pdev->dev.of_node)=
+;
+>>> +    if (!match_id)
+>>> +        return -ENODEV;
+>>> +
+>>> +    drv->reg_data =3D match_id->data;
+>>> +
+>>> +    /* Write the SPM sequences first.. */
+>>> +    addr =3D drv->reg_base +
+>>> drv->reg_data->reg_offset[SPM_REG_SEQ_ENTRY];
+>>> +    __iowrite32_copy(addr, drv->reg_data->seq,
+>>> +            ARRAY_SIZE(drv->reg_data->seq) / 4);
+>>> +
+>>> +    /*
+>>> +     * ..and then the control registers.
+>>> +     * On some SoC's if the control registers are written first an=
+d
+>>> if the
+>>> +     * CPU was held in reset, the reset signal could trigger the S=
+PM
+>>> state
+>>> +     * machine, before the sequences are completely written.
+>>> +     */
+>>> +    spm_register_write(drv, SPM_REG_CFG, drv->reg_data->spm_cfg);
+>>> +    spm_register_write(drv, SPM_REG_DLY, drv->reg_data->spm_dly);
+>>> +    spm_register_write(drv, SPM_REG_PMIC_DLY, drv->reg_data->pmic_=
+dly);
+>>> +
+>>> +    spm_register_write(drv, SPM_REG_PMIC_DATA_0,
+>>> +                drv->reg_data->pmic_data[0]);
+>>> +    spm_register_write(drv, SPM_REG_PMIC_DATA_1,
+>>> +                drv->reg_data->pmic_data[1]);
+>>> +
+>>> +    /*
+>>> +     * Ensure all observers see the above register writes before t=
+he
+>>> +     * cpuidle driver is allowed to use the SPM.
+>>> +     */
+>>> +    wmb();
+>>> +    per_cpu(cpu_spm_drv, cpu) =3D drv;
+>>> +
+>>> +    if (!cpuidle_drv_init) {
+>>> +        platform_device_register_full(&qcom_cpuidle_info);
+>>> +        cpuidle_drv_init =3D true;
+>>> +    }
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static struct platform_driver spm_driver =3D {
+>>> +    .probe =3D spm_dev_probe,
+>>> +    .driver =3D {
+>>> +        .name =3D "saw",
+>>> +        .of_match_table =3D spm_match_table,
+>>> +    },
+>>> +};
+>>> +
+>>> +module_platform_driver(spm_driver);
+>>> +
+>>> +MODULE_LICENSE("GPL v2");
+>>> +MODULE_DESCRIPTION("SAW power controller driver");
+>>> +MODULE_ALIAS("platform:saw");
+>>> diff --git a/include/soc/qcom/pm.h b/include/soc/qcom/pm.h
+>>> new file mode 100644
+>>> index 0000000..d9a56d7
+>>> --- /dev/null
+>>> +++ b/include/soc/qcom/pm.h
+>>> @@ -0,0 +1,31 @@
+>>> +/*
+>>> + * Copyright (c) 2009-2014, The Linux Foundation. All rights reser=
+ved.
+>>> + *
+>>> + * This software is licensed under the terms of the GNU General Pu=
+blic
+>>> + * License version 2, as published by the Free Software Foundation=
+, and
+>>> + * may be copied, distributed, and modified under those terms.
+>>> + *
+>>> + * This program is distributed in the hope that it will be useful,
+>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>> + * GNU General Public License for more details.
+>>> + *
+>>> + */
+>>> +
+>>> +#ifndef __QCOM_PM_H
+>>> +#define __QCOM_PM_H
+>>> +
+>>> +enum pm_sleep_mode {
+>>> +    PM_SLEEP_MODE_STBY,
+>>> +    PM_SLEEP_MODE_RET,
+>>> +    PM_SLEEP_MODE_SPC,
+>>> +    PM_SLEEP_MODE_PC,
+>>> +    PM_SLEEP_MODE_NR,
+>>> +};
+>>> +
+>>> +struct qcom_cpu_pm_ops {
+>>> +    int (*standby)(void *data);
+>>> +    int (*spc)(void *data);
+>>> +};
+>>> +
+>>> +#endif  /* __QCOM_PM_H */
+>>>
+>>
+>>
+>> --
+>> <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software f=
+or ARM SoCs
+>>
+>> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+>> <http://twitter.com/#!/linaroorg> Twitter |
+>> <http://www.linaro.org/linaro-blog/> Blog
+>>
+
+
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
