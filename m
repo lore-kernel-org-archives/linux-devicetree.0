@@ -1,76 +1,88 @@
-From: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [Patch v2 1/2] gpio: add GPIO hogging mechanism
-Date: Tue, 2 Dec 2014 23:10:07 +0900
-Message-ID: <CAAVeFuJWPvdmO_KPXP2LrkAy4SQDZ+f7pvE6U8r7gPH+jE3Lrw@mail.gmail.com>
-References: <1416527684-19017-1-git-send-email-bparrot@ti.com>
- <1416527684-19017-2-git-send-email-bparrot@ti.com> <CAAVeFu+VZiuzobB7McSAUehKUHJjBv1o8ZpYjSHJAKjr3o5wTA@mail.gmail.com>
- <20141202002244.GB24551@ti.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v8 1/4] irqchip: gic: Support hierarchy irq domain.
+Date: Tue, 02 Dec 2014 14:12:03 +0000
+Message-ID: <547DC8B3.1000200@arm.com>
+References: <1416902662-19281-1-git-send-email-yingjoe.chen@mediatek.com>	<1416902662-19281-2-git-send-email-yingjoe.chen@mediatek.com>	<CAMuHMdWj0Z66fya=7oN=ZUoz0TQOHFxBe0wyHmkDDVzU8Lafog@mail.gmail.com>	<547DC0B7.6050600@arm.com> <CAMuHMdVkH_qshTfpXBcHx1FiEzL8055s1TiJqayWLXeFUf97NQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141202002244.GB24551-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <CAMuHMdVkH_qshTfpXBcHx1FiEzL8055s1TiJqayWLXeFUf97NQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
-Cc: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Jiri Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yijing Wang <wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, eddie.h
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 2, 2014 at 9:22 AM, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org> wrote:
->> > +       }
->> > +
->> > +       if (tmp > MAX_PHANDLE_ARGS) {
->> > +               desc = ERR_PTR(-EINVAL);
->> > +               goto out;
->> > +       }
->> > +
->> > +       gg_data.gpiospec.args_count = tmp;
->> > +       gg_data.gpiospec.np = chip_np;
->> > +       for (i = 0; i < tmp; i++) {
->> > +               ret = of_property_read_u32(np, "gpios",
->> > +                                          &gg_data.gpiospec.args[i]);
->> > +               if (ret) {
->> > +                       desc = ERR_PTR(ret);
->> > +                       goto out;
->> > +               }
->> > +       }
->> > +
->> > +       gpiochip_find(&gg_data, of_gpiochip_find_and_xlate);
+On 02/12/14 13:55, Geert Uytterhoeven wrote:
+> Hi Marc,
+> 
+> On Tue, Dec 2, 2014 at 2:37 PM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
+>> On 02/12/14 13:27, Geert Uytterhoeven wrote:
+>>> On Tue, Nov 25, 2014 at 9:04 AM, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>>>> Add support to use gic as a parent for stacked irq domain.
+>>>>
+>>>> Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>>
+>>> This change (which is now in -next as commit 9a1091ef0017c40a) breaks
+>>> booting on r8a7740/armadillo-legacy.
+>>>
+>>> It hangs because the timers cannot get their interrupts:
+>>>
+>>> console [tty0] enabled
+>>>  sh-tmu.0: ch0: used for clock events
+>>>  sh-tmu.0: ch0: used for periodic clock events
+>>>  sh-tmu.0: ch0: failed to request irq 230
+>>>  sh-tmu.0: ch1: used as clock source
+>>>  sh-cmt-48.1: ch0: failed to request irq 90
+>>>  sh-cmt-48.1: ch0: registration failed
+>>> earlytimer: unable to probe sh-cmt-48 early.
+>>> Calibrating delay loop...
 >>
->> This seems to work but only supports one GPIO per hog node. It would
->> be nice to be able to specify several GPIOs to which the same settings
->> need to be applied.
->
-> This is on purpose following Linus Walleij's comment.
+>> Grmbl... Are you, by any (lack of) chance, using a setup where the GIC
+>> is probed via DT, but the timers have their IRQs hardcoded?
+> 
+> Yes, the GIC is declared in arch/arm/boot/dts/r8a7740.dtsi:
+> 
+>         gic: interrupt-controller@c2800000 {
+>                 compatible = "arm,cortex-a9-gic";
+>                 #interrupt-cells = <3>;
+>                 interrupt-controller;
+>                 reg = <0xc2800000 0x1000>,
+>                       <0xc2000000 0x1000>;
+>         };
+> 
+> The timers come from legacy C board code in
+> arch/arm/mach-shmobile/setup-r8a7740.c:
+> 
+> /* CMT */
+> static struct sh_timer_config cmt1_platform_data = {
+>         .channels_mask = 0x3f,
+> };
+> 
+> static struct resource cmt1_resources[] = {
+>         DEFINE_RES_MEM(0xe6138000, 0x170),
+>         DEFINE_RES_IRQ(gic_spi(58)),
+> };
 
-Could you point me to his comment? My bad for not remembering what he
-said, but I'd like to understand why.
+Yup. This gic_spi() macro is completely doomed, as it computes a
+hardware interrupt where the kernel expects a virtual one. The only way
+to fix this is to init the GIC outside of DT, so that we stick to a
+legacy irqdomain. You can still use information from DT, but you can't
+rely on irqchip_init() to produce something that a legacy platform can use.
 
->> Using this function means that a GPIO chip module cannot be unloaded
->> if it uses GPIO hogs. Is it the intended behavior? If not, please use
->> gpiochip_request_own_desc() instead, and make sure to call
->> gpiochip_free_own_desc() for each hog when the driver is unloaded.
->
-> So I guess we could add a undo_gpio_hog() function and hook it up under of_gpiochip_remove().
-> Now instead of maintaining a seperate structure just to keep track of hogged descriptor,
-> would it be acceptable to add a new "gpio_desc.flags" value in gpiolib.h says:
->
->    #define FLAG_GPIO_IS_HOGGED 10
->
-> And key on that at removal time instead of creating a list and having to maintain that?
+> The corresponding r8a7740/armadillo-multiplatform works fine.
 
-Definitely, that would be even better I think.
+OK, that's indeed the expected result.
 
->> I would suggest to factorize this code that is similar to the one
->> found in __gpiod_get_index(). Do all the DT parsing in a function that
->> just returns a descriptor and the
->
-> I would tend to agree.
-> But as Linus suggested I was trying to contain the changes to gpiolib_of.c only.
+> Still, I'm wondering why sh73a0/kzm9g-legacy is not impacted by this
+> change...
 
-If we add a FLAG_GPIO_IS_HOGGED and undo the hogs when the chip is
-unloaded, I would say that this becomes a gpiolib feature. Moving it
-here would also allow non-DT GPIO providers to implement hogs (it
-should be particularly easy to implement for platform data). Linus, do
-you agree?
+I'm a bit lost looking at the shmobile code. But I agree, kzm9g should
+die a painful death, as it has the same level of breakage as armadillo.
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
