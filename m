@@ -1,140 +1,100 @@
-From: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3] ARM: zynq: DT: Add USB to device tree
-Date: Tue,  2 Dec 2014 08:07:11 -0800
-Message-ID: <1417536431-27759-1-git-send-email-soren.brinkmann@xilinx.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [Patch v2 1/2] gpio: add GPIO hogging mechanism
+Date: Tue, 2 Dec 2014 17:12:27 +0100
+Message-ID: <20141202161227.GH30256@lukather>
+References: <1416527684-19017-1-git-send-email-bparrot@ti.com>
+ <1416527684-19017-2-git-send-email-bparrot@ti.com>
+ <CAAVeFu+VZiuzobB7McSAUehKUHJjBv1o8ZpYjSHJAKjr3o5wTA@mail.gmail.com>
+ <20141201163639.GI25249@lukather>
+ <CAAVeFuLTupDenZdSi8KO+dYsf-ekcqjsDaQ2GEzYpBG34oF7Zw@mail.gmail.com>
+ <CACRpkdZcNcPBYQM438CZJx1gYst9BFBSTj-3Qv2aPGF9pdWa5g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="aYDVKSzuImP48n7V"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZcNcPBYQM438CZJx1gYst9BFBSTj-3Qv2aPGF9pdWa5g@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Benoit Parrot <bparrot@ti.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add USB nodes to zc702, zc706 and zed device trees.
 
-Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
----
-v3:
- - rename phy nodes: usb_phy -> phy0
- - rebased onto zynq/dt
-v2:
- - remove '@0' from phy node name
- - don't add bogus space
----
- arch/arm/boot/dts/zynq-7000.dtsi | 20 ++++++++++++++++++++
- arch/arm/boot/dts/zynq-zc702.dts | 11 +++++++++++
- arch/arm/boot/dts/zynq-zc706.dts | 10 ++++++++++
- arch/arm/boot/dts/zynq-zed.dts   | 10 ++++++++++
- 4 files changed, 51 insertions(+)
+--aYDVKSzuImP48n7V
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
-index f8e4a28adfc0..21aae01a3fe9 100644
---- a/arch/arm/boot/dts/zynq-7000.dtsi
-+++ b/arch/arm/boot/dts/zynq-7000.dtsi
-@@ -314,5 +314,25 @@
- 			reg = <0xf8f00600 0x20>;
- 			clocks = <&clkc 4>;
- 		};
-+
-+		usb0: usb@e0002000 {
-+			compatible = "xlnx,zynq-usb-2.20a", "chipidea,usb2";
-+			status = "disabled";
-+			clocks = <&clkc 28>;
-+			interrupt-parent = <&intc>;
-+			interrupts = <0 21 4>;
-+			reg = <0xe0002000 0x1000>;
-+			phy_type = "ulpi";
-+		};
-+
-+		usb1: usb@e0003000 {
-+			compatible = "xlnx,zynq-usb-2.20a", "chipidea,usb2";
-+			status = "disabled";
-+			clocks = <&clkc 29>;
-+			interrupt-parent = <&intc>;
-+			interrupts = <0 44 4>;
-+			reg = <0xe0003000 0x1000>;
-+			phy_type = "ulpi";
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-zc702.dts
-index 280f02dd4ddc..399fed4d9c19 100644
---- a/arch/arm/boot/dts/zynq-zc702.dts
-+++ b/arch/arm/boot/dts/zynq-zc702.dts
-@@ -36,6 +36,11 @@
- 			linux,default-trigger = "heartbeat";
- 		};
- 	};
-+
-+	usb_phy0: phy0 {
-+		compatible = "usb-nop-xceiv";
-+		#phy-cells = <0>;
-+	};
- };
- 
- &can0 {
-@@ -139,3 +144,9 @@
- &uart1 {
- 	status = "okay";
- };
-+
-+&usb0 {
-+	status = "okay";
-+	dr_mode = "host";
-+	usb-phy = <&usb_phy0>;
-+};
-diff --git a/arch/arm/boot/dts/zynq-zc706.dts b/arch/arm/boot/dts/zynq-zc706.dts
-index 34f7812d2ee8..89cc9adc569d 100644
---- a/arch/arm/boot/dts/zynq-zc706.dts
-+++ b/arch/arm/boot/dts/zynq-zc706.dts
-@@ -27,6 +27,10 @@
- 		bootargs = "console=ttyPS0,115200 earlyprintk";
- 	};
- 
-+	usb_phy0: phy0 {
-+		compatible = "usb-nop-xceiv";
-+		#phy-cells = <0>;
-+	};
- };
- 
- &clkc {
-@@ -118,3 +122,9 @@
- &uart1 {
- 	status = "okay";
- };
-+
-+&usb0 {
-+	status = "okay";
-+	dr_mode = "host";
-+	usb-phy = <&usb_phy0>;
-+};
-diff --git a/arch/arm/boot/dts/zynq-zed.dts b/arch/arm/boot/dts/zynq-zed.dts
-index 1c7cc990b47a..e20956e5e720 100644
---- a/arch/arm/boot/dts/zynq-zed.dts
-+++ b/arch/arm/boot/dts/zynq-zed.dts
-@@ -27,6 +27,10 @@
- 		bootargs = "console=ttyPS0,115200 earlyprintk";
- 	};
- 
-+	usb_phy0: phy0 {
-+		compatible = "usb-nop-xceiv";
-+		#phy-cells = <0>;
-+	};
- };
- 
- &clkc {
-@@ -50,3 +54,9 @@
- &uart1 {
- 	status = "okay";
- };
-+
-+&usb0 {
-+	status = "okay";
-+	dr_mode = "host";
-+	usb-phy = <&usb_phy0>;
-+};
--- 
-2.2.0.1.g9ee0458
+On Tue, Dec 02, 2014 at 03:29:46PM +0100, Linus Walleij wrote:
+> On Tue, Dec 2, 2014 at 3:13 PM, Alexandre Courbot <gnurou@gmail.com> wrot=
+e:
+> > On Tue, Dec 2, 2014 at 1:36 AM, Maxime Ripard
+> > <maxime.ripard@free-electrons.com> wrote:
+>=20
+> >> The only thing I'd like to have would be that the request here would
+> >> be non-exclusive, so that a later driver would still be allowed later
+> >> on to request that GPIO later on and manage it itself (ideally using
+> >> the usual gpiod_request function).
+> >
+> > Actually we have a plan (and I have some code too) to allow multiple
+> > consumers per GPIO. Although like Benoit I wonder why you would want
+> > to hog a GPIO and then request it properly later. Also, that probably
+> > means we should abandon the hog since it actively drives the line and
+> > would interfere with the late requested. How to do that correctly is
+> > not really clear to me.
+>=20
+> I don't get the usecase. A hogged GPIO is per definition hogged.
+> This sounds more like "initial settings" or something, which is another
+> usecase altogether.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+We do have one board where we have a pin (let's say GPIO14 of the bank
+A) that enables a regulator that will provide VCC the bank B.
+
+Now, both banks are handled by the same driver, but in order to have a
+working output on the bank B, we do need to set GPIO14 as soon as
+we're probed.
+
+Just relying on the usual deferred probing introduces a circular
+dependency between the gpio-regulator that needs to grab its GPIO from
+a driver not there yet, and the gpio driver that needs to enable its
+gpio-regulator.
+
+GPIO hogging needs to be the ideal solution for that, since we can
+just enforce the GPIO14 value as the driver is probed, which provides
+the guarantee that any driver using the bank B will actually drive the
+GPIO it might use.
+
+However, an exclusive request will prevent any representation of this
+as a regulator, which sounds a bit weird, since it really is just
+that.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--aYDVKSzuImP48n7V
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUfeTrAAoJEBx+YmzsjxAg7wYQAJjqiXLHrQqwc+skXbprskOn
+rcVJePS4tpBlurQ53c3furPKW6R0LQNsyM9pMkllPceFCD7wvsbGvpg1z4yeuUaQ
+Wn7Lzu0fipLPHpCZhXc9bU4Db3CemEAhRoUrDwTV8fvSAcIS2zTxQmqcmGlBUCZQ
+1+mzoB5w3keBrEtkT7Zl9EZyq5Zs8neortY8/fePrPyE69o0dhZ57/uBgIIfXIbs
+BY9QC5Wm5cKMpB9VcERVWzV+VLzCZIJ4pSpWpm9S8qpXtQ/cMOmOT8aNYpNRkant
+mTcP0kVMGf81qyAn9ujD++IScXeM6eMaKdafryXMu8jkY7yVONobB7H3kAUFyG0U
+066z3SodJZ2jiA1O22Zy3TAXrquEw6xRQGZJq4g04me9W8w1LisfCx6MI6SQuZr2
+9rZ7jFgs9LGTtpihacok5xKT2cNafoGYz5U1rfgBkKJDtXGZM7aI4gpM1Td5efRM
+oEHmFWmx5tuINJojWVB8VBifad4z9WwPAyMmT7t8CiVsVyksnUIHrb04pZcYTvd7
+IMdVwIxqP/A0XTJ8nf/bNvib1hxr+whl/UDpLzpLxliexCaHonr5ADVH4QrFe2WU
+NmID1qMhXDAyKGeOElRwY14vQNTC/A/xiMDdcTQ9qFfXOVbozr/EbebiJgkOQWyg
+my+TgT1EUKb5R2YW7wyP
+=+AOe
+-----END PGP SIGNATURE-----
+
+--aYDVKSzuImP48n7V--
