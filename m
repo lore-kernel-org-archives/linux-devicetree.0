@@ -1,44 +1,73 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v9 7/8] regulator: sky81452: Modify Device Tree structure
-Date: Tue, 2 Dec 2014 12:22:48 +0000
-Message-ID: <20141202122248.GT7712@sirena.org.uk>
-References: <1417507529-13654-1-git-send-email-jack.yoo@skyworksinc.com>
- <1417507529-13654-8-git-send-email-jack.yoo@skyworksinc.com>
+From: Madalin-Cristian Bucur <madalin.bucur@freescale.com>
+Subject: RE: [PATCH] Documentation: bindings: net: DPAA corenet binding
+ document
+Date: Tue, 2 Dec 2014 12:12:47 +0000
+Message-ID: <BL2PR03MB545CC342CA6A408D2FD5CF6E67A0@BL2PR03MB545.namprd03.prod.outlook.com>
+References: <1417169426-11823-1-git-send-email-madalin.bucur@freescale.com>
+ <1417495189.15957.209.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="kTUQj81Hp12rwe5j"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1417507529-13654-8-git-send-email-jack.yoo@skyworksinc.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gyungoh@gmail.com
-Cc: sameo@linux.intel.com, lee.jones@linaro.org, jg1.han@samsung.com, cooloney@gmail.com, lgirdwood@gmail.com, jack.yoo@skyworksinc.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, heiko@sntech.de, jason@lakedaemon.net, treding@nvidia.com, florian.vaussard@epfl.ch, trivial@kernel.org, linux@roeck-us.net, andrew@lunn.ch, jic23@kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1417495189.15957.209.camel@freescale.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Scott Wood <scottwood@freescale.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Emilian Medve <Emilian.Medve@freescale.com>, "Igal.Liberman@freescale.com" <Igal.Liberman@freescale.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-
---kTUQj81Hp12rwe5j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Dec 02, 2014 at 05:05:28PM +0900, gyungoh@gmail.com wrote:
-> From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
-
-Applied, thanks.
-
---kTUQj81Hp12rwe5j
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUfa8XAAoJECTWi3JdVIfQdXoH/iw+eYrYUYkiujAPha2Jg6kt
-7pK2VFLhoUP7OMjExpYVbXdB7hwIZcEB9oyy/GcMjE1rwPOZXJ+eaT7X73bQbFlI
-LaUngXUVfC871Esahrh7pTP614Mps+bENyCi0QiqGfpv6s+DvUJmLCRJE4FgqOiC
-fVzR68Afuth/QYZBxzJ9LR7qZUeZPaD4zxL6nkdBiJl68OZY9tKt39qYrx5A2blD
-mqQYAD7JhN6Jd1AerCrn5hkSnwkl2Jv6i74/C0+zOHt9WtFB+MDKfcZ/ryxNi28Q
-5R0U5jK7GN2rQCNLqVSpeYpeO5xI/HeEoE+HIVFdR3xEADukCDpyATnJknmV5Vw=
-=r8yW
------END PGP SIGNATURE-----
-
---kTUQj81Hp12rwe5j--
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBXb29kIFNjb3R0LUIwNzQyMQ0K
+PiBTZW50OiBUdWVzZGF5LCBEZWNlbWJlciAwMiwgMjAxNCA2OjQwIEFNDQo+IE9uIEZyaSwgMjAx
+NC0xMS0yOCBhdCAxMjoxMCArMDIwMCwgTWFkYWxpbiBCdWN1ciB3cm90ZToNCj4gPiBBZGQgdGhl
+IGRldmljZSB0cmVlIGJpbmRpbmcgZG9jdW1lbnQgZm9yIHRoZSBEUEFBIGNvcmVuZXQgbm9kZQ0K
+PiA+IGFuZCBEUEFBIEV0aGVybmV0IG5vZGVzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTWFk
+YWxpbiBCdWN1ciA8bWFkYWxpbi5idWN1ckBmcmVlc2NhbGUuY29tPg0KPiA+IC0tLQ0KPiA+ICBE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L2ZzbC1kcGFhLnR4dCB8IDMxDQo+
+ICsrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDMxIGluc2VydGlv
+bnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9uZXQvZnNsLWRwYWEudHh0DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9mc2wtZHBhYS50eHQNCj4gYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L2ZzbC1kcGFhLnR4dA0KPiA+IG5ldyBmaWxlIG1v
+ZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMC4uODIyYzY2OA0KPiA+IC0tLSAvZGV2L251bGwN
+Cj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L2ZzbC1kcGFh
+LnR4dA0KPiA+IEBAIC0wLDAgKzEsMzEgQEANCj4gPiArKkRQQUEgY29yZW5ldA0KPiA+ICsNCj4g
+PiArVGhlIGNvcmVuZXQgYnVzIGNvbnRhaW5pbmcgYWxsIERQQUEgRXRoZXJuZXQgbm9kZXMuDQo+
+IA0KPiBXaGF0IGRvZXMgdGhpcyBoYXZlIHRvIGRvIHdpdGggY29yZW5ldD8NCj4gDQpUaGUgY29y
+ZW5ldC1nZW5lcmljIHBsYXRmb3JtIGNvZGUgdXNlcyB0aGlzIGNvbXBhdGlibGUuIEhlcmUgYXJl
+IHNvbWUgZXhjZXJwdHMNCmZyb20gdGhlIHBsYXRmb3JtIGNvZGUgZm91bmQgaW4gU0RLIGFyY2gv
+cG93ZXJwYy9wbGF0Zm9ybXMvODV4eC9jb3JlbmV0X2dlbmVyaWMuYw0KLi4uDQogKiBDb3JlbmV0
+IGJhc2VkIFNvQyBEUyBTZXR1cA0KICoNCiAqIE1haW50YWluZWQgYnkgS3VtYXIgR2FsYSAoc2Vl
+IE1BSU5UQUlORVJTIGZvciBjb250YWN0IGluZm9ybWF0aW9uKQ0KICoNCiAqIENvcHlyaWdodCAy
+MDA5LTIwMTEgRnJlZXNjYWxlIFNlbWljb25kdWN0b3IgSW5jLg0KLi4uDQpzdGF0aWMgY29uc3Qg
+c3RydWN0IG9mX2RldmljZV9pZCBvZl9kZXZpY2VfaWRzW10gPSB7DQogICAgICAgIHsNCiAgICAg
+ICAgICAgICAgICAuY29tcGF0aWJsZSAgICAgPSAic2ltcGxlLWJ1cyINCiAgICAgICAgfSwNCiAg
+ICAgICAgew0KICAgICAgICAgICAgICAgIC5jb21wYXRpYmxlICAgICA9ICJmc2wsZHBhYSINCiAg
+ICAgICAgfSwNCi4uLg0KaW50IF9faW5pdCBjb3JlbmV0X2dlbl9wdWJsaXNoX2RldmljZXModm9p
+ZCkNCnsNCiAgICAgICAgcmV0dXJuIG9mX3BsYXRmb3JtX2J1c19wcm9iZShOVUxMLCBvZl9kZXZp
+Y2VfaWRzLCBOVUxMKTsNCn0NCi4uLg0KPiA+ICtSZXF1aXJlZCBwcm9wZXJ0eQ0KPiA+ICsgLSBj
+b21wYXRpYmxlOiBzdHJpbmcgcHJvcGVydHkuICBNdXN0IGluY2x1ZGUgImZzbCxkcGFhIi4gQ2Fu
+IGluY2x1ZGUNCj4gPiArICAgYWxzbyAiZnNsLDxTb0M+LWRwYWEiLg0KPiANCj4gTm8gbmVlZCBm
+b3IgdGhlIDxTb0M+IHBhcnQuICBBcyB3ZSBwcmV2aW91c2x5IGRpc2N1c3NlZCwgdGhlIG9ubHkN
+Cj4gcHVycG9zZSBvZiB0aGlzIG5vZGUgaXMgYmFja3dhcmRzIGNvbXBhdGliaWxpdHkgd2l0aCB0
+aGUgVS1Cb290IE1BQw0KPiBhZGRyZXNzIGZpeHVwIC0tIGlmIFUtQm9vdCBkb2Vzbid0IGxvb2sg
+Zm9yIHRoZSA8U29DPiB2ZXJzaW9uLCB0aGVuDQo+IGRvbid0IGNvbXBsaWNhdGUgdGhpbmdzLg0K
+PiANCj4gVGhvdWdoLCBJIGNhbid0IGZpbmQgd2hlcmUgVS1Cb290IHJlZmVyZW5jZXMgdGhpcyBu
+b2RlLiAgQXJlIHlvdSBzdXJlDQo+IGl0J3Mgbm90IHVzaW5nIHRoZSBldGhlcm5ldCVkIGFsaWFz
+ZXMgbGlrZSBldmVyeXRoaW5nIGVsc2UsIGluIHdoaWNoDQo+IGNhc2Ugd2h5IGRvIHdlIG5lZWQg
+dGhpcyBub2RlIGF0IGFsbD8NCj4gDQo+IC1TY290dA0KPiANCg0KVGhlIGluaXRpYWwgKEZyZWVz
+Y2FsZSBTREspIGJpbmRpbmcgZG9jdW1lbnQgY29udGFpbmVkIHRob3NlIGNvbXBhdGlibGVzLA0K
+bm90IHN1cmUgd2hhdCB0aGUgaW5pdGlhbCBpbnRlbnQgd2FzIGZvciB0aGUgPFNvQz4gdmFyaWFu
+dHMuDQoNClRoZSAiZnNsLGRwYWEiIG5vZGUgaXMgb2YgaW50ZXJlc3QgdG8gdGhlIERQQUEgRXRo
+ZXJuZXQgYmVjYXVzZSBpdCBpcw0KdGhlIHBhcmVudCBvZiB0aGUgImZzbCxkcGEtZXRoZXJuZXQi
+IG5vZGVzLg0KDQpNYWRhbGluDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5v
+emxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
