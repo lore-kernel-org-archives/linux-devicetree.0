@@ -1,78 +1,55 @@
-From: Thor Thayer <tthayer@opensource.altera.com>
-Subject: Re: [RESEND PATCHv5 5/5] arm: dts: Add Altera L2 Cache and OCRAM
- EDAC
-Date: Tue, 2 Dec 2014 11:51:44 -0600
-Message-ID: <547DFC30.304@opensource.altera.com>
-References: <1415751263-1830-1-git-send-email-tthayer@opensource.altera.com> <1415751263-1830-6-git-send-email-tthayer@opensource.altera.com> <546BB27A.20405@opensource.altera.com> <547CD3ED.1080804@opensource.altera.com> <20141202150118.GM23671@leverpostej>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 2/2] ASoC: rockchip: i2s: add support for grabbing output
+ clock to codec
+Date: Tue, 2 Dec 2014 09:54:39 -0800
+Message-ID: <CAD=FV=Uwb1NxxCoXHzHu6DJCpnG_HV2RhCr3JaJaXbJja8kd7A@mail.gmail.com>
+References: <1417531766-29669-1-git-send-email-jay.xu@rock-chips.com>
+	<1417531977-30094-1-git-send-email-jay.xu@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20141202150118.GM23671@leverpostej>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "bp@alien8.de" <bp@alien8.de>, "dougthompson@xmission.com" <dougthompson@xmission.com>, "m.chehab@samsung.com" <m.chehab@samsung.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "tthayer.linux@gmail.com" <tthayer.linux@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1417531977-30094-1-git-send-email-jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Jianqun,
+
+This ought to be a "v3" patch and ideally ought to describe
+differences from v2 (after the cut).  Please have Kever or Chris
+review your next patch before sending it out since I think they are
+familiar with the process.
 
 
-On 12/02/2014 09:01 AM, Mark Rutland wrote:
-> Hi Thor,
+On Tue, Dec 2, 2014 at 6:52 AM, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> From: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 >
-> On Mon, Dec 01, 2014 at 08:47:41PM +0000, Thor Thayer wrote:
->> Hi Boris,
->>
->> On 11/18/2014 02:56 PM, Thor Thayer wrote:
->>> Hi all,
->>>
->>> On 11/11/2014 06:14 PM, tthayer@opensource.altera.com wrote:
->>>> From: Thor Thayer<tthayer@opensource.altera.com>
->>>>
->>>> Adding the device tree entries and bindings needed to support
->>>> the Altera L2 cache and On-Chip RAM EDAC. This patch relies upon
->>>> an earlier patch to declare and setup On-chip RAM properly.
->>>> http://www.spinics.net/lists/devicetree/msg51117.html
->>>
->>> Any comments on these devicetree additions?
->>>
->>> Thanks,
->>> Thor
->>>> Signed-off-by: Thor Thayer<tthayer@opensource.altera.com>
->>>> ---
->>>> v2: Remove OCRAM declaration and reference prior patch.
->>>>
->>>> v3-5: No Change
->>>> ---
->>
->> I originally submitted this series on November 11, 2014.
->>
->> I haven't received any comments or ACKs on the device tree patch portion
->> (patch 5 of 5). According to
->> Documentation/devicetree/bindings/submitting-patches.txt, if the patch
->> hasn't been Acked after a couple of weeks, the maintainer can pull the
->> changes if they are comfortable with those changes.
+> We need to claim the clock which is driving the codec so that when we enable
+> clock gating, we continue to clock the codec when needed.  I make this an
+> optional clock since there might be some applications where we don't need it
+> but can still use the I2S block.
 >
-> Apologies it has taken so long for this to be looked at. Unfortunately
-> my inbox is overflowing (as are all of ours) and things fall by the
-> wayside. I am sorry that this has lead to such a delayed response,
-> especially given that it was negative.
->
-> I'll try to keep up with this a bit more actively.
->
-> Thanks,
-> Mark.
->
+> Signed-off-by: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-Hi Mark,
+You still forgot your own signed-off-by.  Please try again.  See
+<https://patchwork.kernel.org/patch/5334991/>
 
-Thank you for reviewing this. I have seen how busy the device tree ML is 
-so I completely understand.
 
-You have reviewed previous patch revisions in this series - thanks. I 
-thought that I'd addressed most of the issues (in some cases by 
-explaining my implementation) and since I hadn't heard anything, I 
-assumed there weren't concerns.
+> +       i2s->oclk = devm_clk_get(&pdev->dev, "i2s_clk_out");
+> +       if (IS_ERR(i2s->oclk)) {
+> +               dev_dbg(&pdev->dev, "Didn't find output clock\n");
+> +               i2s->oclk = NULL;
+> +       }
 
-Thanks again,
+You still forgot the blank line here requested by Heiko.  Please try
+again.  See <https://patchwork.kernel.org/patch/5334991/>
 
-Thor
+
+> +       if (i2s->oclk)
+> +               ret = clk_prepare_enable(i2s->oclk);
+> +
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
