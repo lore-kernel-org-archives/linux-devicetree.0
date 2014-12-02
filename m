@@ -1,57 +1,49 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 3/4] devicetree: bindings: Add defeature-repeated-start
- property for Cadence I2C
-Date: Tue, 2 Dec 2014 11:19:07 +0000
-Message-ID: <20141202111907.GC23671@leverpostej>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 4/4] i2c: cadence: Defeature repeated start based on
+ devicetree property
+Date: Tue, 2 Dec 2014 11:21:30 +0000
+Message-ID: <20141202112130.GD23671@leverpostej>
 References: <1417514749-24319-1-git-send-email-harinik@xilinx.com>
- <1417514749-24319-4-git-send-email-harinik@xilinx.com>
+ <1417514749-24319-5-git-send-email-harinik@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1417514749-24319-4-git-send-email-harinik@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Harini Katakam <harinik@xilinx.com>
-Cc: "wsa@the-dreams.de" <wsa@the-dreams.de>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "soren.brinkmann@xilinx.com" <soren.brinkmann@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "vishnum@xilinx.com" <vishnum@xilinx.com>
+In-Reply-To: <1417514749-24319-5-git-send-email-harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: "wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org" <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "vishnum-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <vishnum-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 02, 2014 at 10:05:48AM +0000, Harini Katakam wrote:
-> From: Vishnu Motghare <vishnum@xilinx.com>
+On Tue, Dec 02, 2014 at 10:05:49AM +0000, Harini Katakam wrote:
+> From: Vishnu Motghare <vishnum-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 > 
-> This patch adds "defeature-repeated-start" property in i2c-cadence.txt.
+> This patch defeatures repeated start in the driver if
+> "defeature-repeated-start" property is present in the devicetree.
 > 
-> Signed-off-by: Vishnu Motghare <vishnum@xilinx.com>
-> Signed-off-by: Harini Katakam <harinik@xilinx.com>
+> This defeature is proposed due to a few bugs in the controller
+> - completion indication is not given to the driver at the end of
+> a read/receive transfer with HOLD bit set.
+> - Invalid read transaction are generated on the bus when HW timeout
+> condition occurs with HOLD bit set.
+> 
+> Signed-off-by: Vishnu Motghare <vishnum-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 > ---
->  .../devicetree/bindings/i2c/i2c-cadence.txt        |   11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-cadence.txt b/Documentation/devicetree/bindings/i2c/i2c-cadence.txt
-> index 7cb0b56..9d417a7 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-cadence.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-cadence.txt
-> @@ -11,6 +11,17 @@ Required properties:
->  Optional properties:
->    - clock-frequency: Desired operating frequency, in Hz, of the bus.
->    - clock-names: Input clock name, should be 'pclk'.
-> +  - defeature-repeated-start: Include this property to defeature repeated start
-> +			      This defeature is due to a few bugs in the
-> +			      I2C controller.
-> +			      Completion interrupt after a read/receive
-> +			      operation is NOT obtained if HOLD bit is set
-> +			      at that time. Because of this bug, repeated start
-> +			      will only work if there are no transfers following
-> +			      a read/receive transfer.
-> +			      If HOLD is held for long without a transfer,
-> +			      invalid read transactions are generated by the
-> +			      controller due to a HW timeout related bug.
+>  drivers/i2c/busses/i2c-cadence.c |   44 +++++++++++++++++++++++++++-----------
+>  1 file changed, 31 insertions(+), 13 deletions(-)
 
-I'm not keen on the name; it sounds like we're disabling a feature
-rather than describing the problem (and "defeature" is not a common
-term in this sense, "disable" would be better).
+[...]
 
-It sounds like there are two issues with staying in the HOLD state? Lost
-completion IRQs and a separate HW timeout bug? Or are the two related?
+> @@ -840,6 +856,8 @@ static int cdns_i2c_probe(struct platform_device *pdev)
+>  	cdns_i2c_writereg(CDNS_I2C_CR_ACK_EN | CDNS_I2C_CR_NEA | CDNS_I2C_CR_MS,
+>  			  CDNS_I2C_CR_OFFSET);
+>  
+> +	of_property_read_u32(pdev->dev.of_node,	"defeature-repeated-start",
+> +			     &id->defeature_repeated_start);
+
+This will not work with the binding you described. You want to treat
+this as a bool, and use of_property_read_bool.
 
 Thanks,
 Mark.
