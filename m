@@ -1,48 +1,78 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2] mmc: dw_mmc: add quirk for broken data transfer over scheme
-Date: Tue, 2 Dec 2014 09:47:18 -0800
-Message-ID: <CAD=FV=V3BF8qv17n4_T5Lys1BnKsqE9NqOTB-6OwX0VOviWRrw@mail.gmail.com>
-References: <1415970338-2637-1-git-send-email-addy.ke@rock-chips.com>
-	<1416903008-4160-1-git-send-email-addy.ke@rock-chips.com>
-	<CAD=FV=UmG1okxJ5JV-1cuRRQJi7EEPXc7Q90sWjfMWBqb7VSMw@mail.gmail.com>
-	<547D6F36.50103@rock-chips.com>
+From: Thor Thayer <tthayer@opensource.altera.com>
+Subject: Re: [RESEND PATCHv5 5/5] arm: dts: Add Altera L2 Cache and OCRAM
+ EDAC
+Date: Tue, 2 Dec 2014 11:51:44 -0600
+Message-ID: <547DFC30.304@opensource.altera.com>
+References: <1415751263-1830-1-git-send-email-tthayer@opensource.altera.com> <1415751263-1830-6-git-send-email-tthayer@opensource.altera.com> <546BB27A.20405@opensource.altera.com> <547CD3ED.1080804@opensource.altera.com> <20141202150118.GM23671@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <547D6F36.50103@rock-chips.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: addy ke <addy.ke@rock-chips.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Dinh Nguyen <dinguyen@altera.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, Sonny Rao <sonnyrao@chromium.org>, Alexandru Stan <amstan@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20141202150118.GM23671@leverpostej>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "bp@alien8.de" <bp@alien8.de>, "dougthompson@xmission.com" <dougthompson@xmission.com>, "m.chehab@samsung.com" <m.chehab@samsung.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "tthayer.linux@gmail.com" <tthayer.linux@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Addy,
-
-On Mon, Dec 1, 2014 at 11:50 PM, addy ke <addy.ke@rock-chips.com> wrote:
-> We don't know why we have this problem,
-> but this problem is really exist, and we need patch to fix this problem now.
-> I will post a follow up change when we find the root cause.
-
-To me that seems reasonable.  Certainly I would prefer to have this
-patch while waiting for the root cause, but it's up to Ulf.
 
 
-> And there is a little probability of this problem on RK SoC, such as RK3188, RK3066,
-> when worse card inserted in.
-> Maybe the other SoCs have the similar problem.
+On 12/02/2014 09:01 AM, Mark Rutland wrote:
+> Hi Thor,
 >
-> So I will add this quirk in rockchip code(dw_mmc-rockchip.c) as follows:
-> static int dw_mci_rockchip_parse_dt(struct dw_mci *host)
-> {
->         host->quirk |= DW_MCI_QUIRK_BROKEN_DTO;
+> On Mon, Dec 01, 2014 at 08:47:41PM +0000, Thor Thayer wrote:
+>> Hi Boris,
+>>
+>> On 11/18/2014 02:56 PM, Thor Thayer wrote:
+>>> Hi all,
+>>>
+>>> On 11/11/2014 06:14 PM, tthayer@opensource.altera.com wrote:
+>>>> From: Thor Thayer<tthayer@opensource.altera.com>
+>>>>
+>>>> Adding the device tree entries and bindings needed to support
+>>>> the Altera L2 cache and On-Chip RAM EDAC. This patch relies upon
+>>>> an earlier patch to declare and setup On-chip RAM properly.
+>>>> http://www.spinics.net/lists/devicetree/msg51117.html
+>>>
+>>> Any comments on these devicetree additions?
+>>>
+>>> Thanks,
+>>> Thor
+>>>> Signed-off-by: Thor Thayer<tthayer@opensource.altera.com>
+>>>> ---
+>>>> v2: Remove OCRAM declaration and reference prior patch.
+>>>>
+>>>> v3-5: No Change
+>>>> ---
+>>
+>> I originally submitted this series on November 11, 2014.
+>>
+>> I haven't received any comments or ACKs on the device tree patch portion
+>> (patch 5 of 5). According to
+>> Documentation/devicetree/bindings/submitting-patches.txt, if the patch
+>> hasn't been Acked after a couple of weeks, the maintainer can pull the
+>> changes if they are comfortable with those changes.
 >
->         return 0;
-> }
+> Apologies it has taken so long for this to be looked at. Unfortunately
+> my inbox is overflowing (as are all of ours) and things fall by the
+> wayside. I am sorry that this has lead to such a delayed response,
+> especially given that it was negative.
 >
-> ......
->         .parse_dt = dw_mci_rockchip_parse_dt,
-> ......
+> I'll try to keep up with this a bit more actively.
 >
-> is right?
+> Thanks,
+> Mark.
+>
 
-When you added "sdio_id0" you got feedback that you should use
-dw_mci_rockchip_init().  Why not do the same thing here?
+Hi Mark,
+
+Thank you for reviewing this. I have seen how busy the device tree ML is 
+so I completely understand.
+
+You have reviewed previous patch revisions in this series - thanks. I 
+thought that I'd addressed most of the issues (in some cases by 
+explaining my implementation) and since I hadn't heard anything, I 
+assumed there weren't concerns.
+
+Thanks again,
+
+Thor
