@@ -1,71 +1,45 @@
-From: Harini Katakam <harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/4] devicetree: bindings: Add defeature-repeated-start
- property for Cadence I2C
-Date: Tue, 2 Dec 2014 17:43:44 +0530
-Message-ID: <CAFcVECLtPx6shBXJbg9Uf_8fnhkMoO1zpoxGcdda7PSA7z_2rA@mail.gmail.com>
-References: <1417514749-24319-1-git-send-email-harinik@xilinx.com>
-	<1417514749-24319-4-git-send-email-harinik@xilinx.com>
-	<20141202111907.GC23671@leverpostej>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v9 8/8] devicetree: regulator: sky81452: Modify Device
+ Tree structure
+Date: Tue, 2 Dec 2014 12:22:58 +0000
+Message-ID: <20141202122258.GU7712@sirena.org.uk>
+References: <1417507529-13654-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1417507529-13654-9-git-send-email-jack.yoo@skyworksinc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141202111907.GC23671@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org" <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "vishnum-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <vishnum-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="8e+elk6dDJQo2Rug"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1417507529-13654-9-git-send-email-jack.yoo@skyworksinc.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gyungoh@gmail.com
+Cc: sameo@linux.intel.com, lee.jones@linaro.org, jg1.han@samsung.com, cooloney@gmail.com, lgirdwood@gmail.com, jack.yoo@skyworksinc.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, heiko@sntech.de, jason@lakedaemon.net, treding@nvidia.com, florian.vaussard@epfl.ch, trivial@kernel.org, linux@roeck-us.net, andrew@lunn.ch, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
 
-On Tue, Dec 2, 2014 at 4:49 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Tue, Dec 02, 2014 at 10:05:48AM +0000, Harini Katakam wrote:
->> From: Vishnu Motghare <vishnum-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->>
->> This patch adds "defeature-repeated-start" property in i2c-cadence.txt.
->>
->> Signed-off-by: Vishnu Motghare <vishnum-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->> Signed-off-by: Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->> ---
->>  .../devicetree/bindings/i2c/i2c-cadence.txt        |   11 +++++++++++
->>  1 file changed, 11 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/i2c/i2c-cadence.txt b/Documentation/devicetree/bindings/i2c/i2c-cadence.txt
->> index 7cb0b56..9d417a7 100644
->> --- a/Documentation/devicetree/bindings/i2c/i2c-cadence.txt
->> +++ b/Documentation/devicetree/bindings/i2c/i2c-cadence.txt
->> @@ -11,6 +11,17 @@ Required properties:
->>  Optional properties:
->>    - clock-frequency: Desired operating frequency, in Hz, of the bus.
->>    - clock-names: Input clock name, should be 'pclk'.
->> +  - defeature-repeated-start: Include this property to defeature repeated start
->> +                           This defeature is due to a few bugs in the
->> +                           I2C controller.
->> +                           Completion interrupt after a read/receive
->> +                           operation is NOT obtained if HOLD bit is set
->> +                           at that time. Because of this bug, repeated start
->> +                           will only work if there are no transfers following
->> +                           a read/receive transfer.
->> +                           If HOLD is held for long without a transfer,
->> +                           invalid read transactions are generated by the
->> +                           controller due to a HW timeout related bug.
->
-> I'm not keen on the name; it sounds like we're disabling a feature
-> rather than describing the problem (and "defeature" is not a common
-> term in this sense, "disable" would be better).
->
-> It sounds like there are two issues with staying in the HOLD state? Lost
-> completion IRQs and a separate HW timeout bug? Or are the two related?
->
+--8e+elk6dDJQo2Rug
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Yes, there are two issues here and they are not related.
-But a combination of both is leading to not using repeated start.
-The intention was to defeature except that it works in some scenarios
-(such as a typical write+read in that order with repeated start)
-and there are people who already use the driver with slaves that need this.
+On Tue, Dec 02, 2014 at 05:05:29PM +0900, gyungoh@gmail.com wrote:
+> From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
 
-Regards,
-Harini
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied, thanks.
+
+--8e+elk6dDJQo2Rug
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUfa8hAAoJECTWi3JdVIfQde8H/3DM+edbbG2sHII2V4Su86iu
+n9fxZURPoWanVXHV984+iVCKInKdJyj6hgy8iloTCw0vuJCBWALUcxn9vL0j2Xjh
+Ju8/T8/lAQJsuANotlsFqHq0y2idned2O29jrI0GdTWtGjZ5XJTxE8bfyoaYs5ex
+Opdzyw2GiPorlIzdt2APWhVlCGME4H52FSAxXfB7/ypnLaPWdoT/gQyZlT1s6pK+
+6dYNCkt0B3CEnnMhx7BRom63sBWTS6m5qyDWcdSWxWVHUatL5AX9YyYQ9bxfnGnx
+AbHzDWnoIwlOFeg0MYlSTiHJNp6xd0XVwZW2YzE9VKAEFLet+2DD1XodMzUQBSc=
+=ahYc
+-----END PGP SIGNATURE-----
+
+--8e+elk6dDJQo2Rug--
