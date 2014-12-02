@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 06/13] NFC: Add se_io NFC operand
-Date: Tue,  2 Dec 2014 21:27:51 +0100
-Message-ID: <1417552078-9269-7-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v2 07/13] NFC: hci: Add specific hci macro to not create a pipe
+Date: Tue,  2 Dec 2014 21:27:52 +0100
+Message-ID: <1417552078-9269-8-git-send-email-christophe-h.ricard@st.com>
 References: <1417552078-9269-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1417552078-9269-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
@@ -10,78 +10,41 @@ To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-se_io allows to send apdu over the CLF to the embedded Secure Element.
+Some pipe are only created by other host (different than the Terminal Host).
+The pipe values will for example be notified by NFC_HCI_ADM_NOTIFY_PIPE_CREATED.
 
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- net/nfc/netlink.c | 47 ++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 46 insertions(+), 1 deletion(-)
+ include/net/nfc/hci.h | 1 +
+ net/nfc/hci/command.c | 3 +++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/net/nfc/netlink.c b/net/nfc/netlink.c
-index 9581831..44989fc 100644
---- a/net/nfc/netlink.c
-+++ b/net/nfc/netlink.c
-@@ -1310,6 +1310,51 @@ static int nfc_genl_dump_ses_done(struct netlink_callback *cb)
- 	return 0;
- }
+diff --git a/include/net/nfc/hci.h b/include/net/nfc/hci.h
+index 50bc66f..14bd0e1 100644
+--- a/include/net/nfc/hci.h
++++ b/include/net/nfc/hci.h
+@@ -64,6 +64,7 @@ struct nfc_hci_ops {
  
-+static int nfc_se_io(struct nfc_dev *dev, u32 se_idx,
-+		     u8 *apdu, size_t apdu_length,
-+		     se_io_cb_t cb, void *cb_context)
-+{
-+	struct nfc_se *se;
-+	int rc;
-+
-+	pr_debug("%s se index %d\n", dev_name(&dev->dev), se_idx);
-+
-+	device_lock(&dev->dev);
-+
-+	if (!device_is_registered(&dev->dev)) {
-+		rc = -ENODEV;
-+		goto error;
-+	}
-+
-+	if (!dev->dev_up) {
-+		rc = -ENODEV;
-+		goto error;
-+	}
-+
-+	if (!dev->ops->se_io) {
-+		rc = -EOPNOTSUPP;
-+		goto error;
-+	}
-+
-+	se = nfc_find_se(dev, se_idx);
-+	if (!se) {
-+		rc = -EINVAL;
-+		goto error;
-+	}
-+
-+	if (se->state != NFC_SE_ENABLED) {
-+		rc = -ENODEV;
-+		goto error;
-+	}
-+
-+	rc = dev->ops->se_io(dev, se_idx, apdu,
-+			apdu_length, cb, cb_context);
-+
-+error:
-+	device_unlock(&dev->dev);
-+	return rc;
-+}
-+
- struct se_io_ctx {
- 	u32 dev_idx;
- 	u32 se_idx;
-@@ -1392,7 +1437,7 @@ static int nfc_genl_se_io(struct sk_buff *skb, struct genl_info *info)
- 	ctx->dev_idx = dev_idx;
- 	ctx->se_idx = se_idx;
+ /* Pipes */
+ #define NFC_HCI_INVALID_PIPE	0x80
++#define NFC_HCI_DO_NOT_CREATE_PIPE	0x81
+ #define NFC_HCI_LINK_MGMT_PIPE	0x00
+ #define NFC_HCI_ADMIN_PIPE	0x01
  
--	return dev->ops->se_io(dev, se_idx, apdu, apdu_len, se_io_cb, ctx);
-+	return nfc_se_io(dev, se_idx, apdu, apdu_len, se_io_cb, ctx);
- }
+diff --git a/net/nfc/hci/command.c b/net/nfc/hci/command.c
+index 677d24b..91df487 100644
+--- a/net/nfc/hci/command.c
++++ b/net/nfc/hci/command.c
+@@ -345,6 +345,9 @@ int nfc_hci_connect_gate(struct nfc_hci_dev *hdev, u8 dest_host, u8 dest_gate,
  
- static const struct genl_ops nfc_genl_ops[] = {
+ 	pr_debug("\n");
+ 
++	if (hdev->gate2pipe[dest_gate] == NFC_HCI_DO_NOT_CREATE_PIPE)
++		return 0;
++
+ 	if (hdev->gate2pipe[dest_gate] != NFC_HCI_INVALID_PIPE)
+ 		return -EADDRINUSE;
+ 
 -- 
 2.1.0
 
