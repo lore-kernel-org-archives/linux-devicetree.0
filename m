@@ -1,60 +1,28 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [Patch v2 1/2] gpio: add GPIO hogging mechanism
-Date: Tue, 2 Dec 2014 23:13:31 +0900
-Message-ID: <CAAVeFuLTupDenZdSi8KO+dYsf-ekcqjsDaQ2GEzYpBG34oF7Zw@mail.gmail.com>
-References: <1416527684-19017-1-git-send-email-bparrot@ti.com>
- <1416527684-19017-2-git-send-email-bparrot@ti.com> <CAAVeFu+VZiuzobB7McSAUehKUHJjBv1o8ZpYjSHJAKjr3o5wTA@mail.gmail.com>
- <20141201163639.GI25249@lukather>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: vf610: enable watchdog for Cortex-A5 dt's
+Date: Tue, 2 Dec 2014 22:15:43 +0800
+Message-ID: <20141202141542.GL2411@dragon>
+References: <1417131336-3136-1-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20141201163639.GI25249@lukather>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Benoit Parrot <bparrot@ti.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1417131336-3136-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 2, 2014 at 1:36 AM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> Hi,
->
-> On Fri, Nov 28, 2014 at 04:30:01PM +0900, Alexandre Courbot wrote:
->> > +/**
->> > + * do_gpio_hog - Given node is a GPIO hog configuration, handle it
->> > + * @np:                device node to get GPIO from
->> > + *
->> > + * This is only used by of_gpiochip_add to request/set GPIO initial
->> > + * configuration.
->> > + */
->> > +static int do_gpio_hog(struct device_node *np)
->> > +{
->> > +       struct gpio_desc *desc = NULL;
->> > +       int err;
->> > +       const char *name;
->> > +       enum gpio_lookup_flags lflags;
->> > +       enum gpiod_flags dflags;
->> > +
->> > +       desc = of_get_gpio_hog(np, &name, &lflags, &dflags);
->> > +       if (!desc)
->> > +               return -ENOTSUPP;
->> > +       else if (IS_ERR(desc))
->> > +               return PTR_ERR(desc);
->> > +
->> > +       err = gpiod_request(desc, name);
->>
->> Using this function means that a GPIO chip module cannot be unloaded
->> if it uses GPIO hogs. Is it the intended behavior? If not, please use
->> gpiochip_request_own_desc() instead, and make sure to call
->> gpiochip_free_own_desc() for each hog when the driver is unloaded.
->
-> The only thing I'd like to have would be that the request here would
-> be non-exclusive, so that a later driver would still be allowed later
-> on to request that GPIO later on and manage it itself (ideally using
-> the usual gpiod_request function).
+On Fri, Nov 28, 2014 at 12:35:36AM +0100, Stefan Agner wrote:
+> During restructuring of the device tree files the watchdog was
+> changed to be disabled by default. However, since the watchdog
+> instance is dedicated to the Cortex-A5, enable the peripheral
+> by default in the base device tree vf500.dtsi.
+> 
+> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 
-Actually we have a plan (and I have some code too) to allow multiple
-consumers per GPIO. Although like Benoit I wonder why you would want
-to hog a GPIO and then request it properly later. Also, that probably
-means we should abandon the hog since it actively drives the line and
-would interfere with the late requested. How to do that correctly is
-not really clear to me.
+Applied, thanks. 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
