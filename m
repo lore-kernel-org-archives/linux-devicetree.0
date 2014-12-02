@@ -1,78 +1,188 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH 1/3] staging: imx-drm: document internal HDMI I2C master
- controller DT binding
-Date: Tue, 2 Dec 2014 14:21:59 +0100
-Message-ID: <20141202132158.GD4072@katana>
-References: <1416073759-19939-1-git-send-email-vladimir_zapolskiy@mentor.com>
- <1416073759-19939-2-git-send-email-vladimir_zapolskiy@mentor.com>
- <547C8113.3050100@mentor.com>
- <1417446703.4624.18.camel@pengutronix.de>
- <547C8B9E.8050605@mentor.com>
- <1417450979.4624.23.camel@pengutronix.de>
- <547D5DE2.2040704@rock-chips.com>
- <547DBA99.1010703@mentor.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v8 1/4] irqchip: gic: Support hierarchy irq domain.
+Date: Tue, 2 Dec 2014 14:27:57 +0100
+Message-ID: <CAMuHMdWj0Z66fya=7oN=ZUoz0TQOHFxBe0wyHmkDDVzU8Lafog@mail.gmail.com>
+References: <1416902662-19281-1-git-send-email-yingjoe.chen@mediatek.com>
+	<1416902662-19281-2-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+KJYzRxRHjYqLGl5"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <547DBA99.1010703-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1416902662-19281-2-git-send-email-yingjoe.chen@mediatek.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Thomas Gleixner <tglx@linutronix.de>, Jiang Liu <jiang.liu@linux.intel.com>, Marc Zyngier <marc.zyngier@arm.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, hc.yen@mediatek.com, srv_heupstream@mediatek.com, yh.chen@mediatek.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Yijing Wang <wangyijing@huawei.com>, Rob Herring <robh+dt@kernel.org>, nathan.chung@mediatek.com, yingjoe.chen@gmail.com, Matthias Brugger <matthias.bgg@gmail.com>, eddie.huang@mediatek.com, Bjorn Helgaas <bhelgaas@google.com>, Sascha Hauer <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Nov 25, 2014 at 9:04 AM, Yingjoe Chen <yingjoe.chen@mediatek.com> wrote:
+> Add support to use gic as a parent for stacked irq domain.
+>
+> Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
 
---+KJYzRxRHjYqLGl5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This change (which is now in -next as commit 9a1091ef0017c40a) breaks
+booting on r8a7740/armadillo-legacy.
 
+It hangs because the timers cannot get their interrupts:
 
-> Thank you for references.
+console [tty0] enabled
+ sh-tmu.0: ch0: used for clock events
+ sh-tmu.0: ch0: used for periodic clock events
+ sh-tmu.0: ch0: failed to request irq 230
+ sh-tmu.0: ch1: used as clock source
+ sh-cmt-48.1: ch0: failed to request irq 90
+ sh-cmt-48.1: ch0: registration failed
+earlytimer: unable to probe sh-cmt-48 early.
+Calibrating delay loop...
 
-Yes, thank you all. Really great to see this consolidation effort going
-on!
+> ---
+>  drivers/irqchip/Kconfig   |  1 +
+>  drivers/irqchip/irq-gic.c | 77 ++++++++++++++++++++++++++++++++---------------
+>  2 files changed, 54 insertions(+), 24 deletions(-)
+>
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index b21f12f..7f34138 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -5,6 +5,7 @@ config IRQCHIP
+>  config ARM_GIC
+>         bool
+>         select IRQ_DOMAIN
+> +       select IRQ_DOMAIN_HIERARCHY
+>         select MULTI_IRQ_HANDLER
+>
+>  config GIC_NON_BANKED
+> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+> index 38493ff..ab6069b 100644
+> --- a/drivers/irqchip/irq-gic.c
+> +++ b/drivers/irqchip/irq-gic.c
+> @@ -788,17 +788,16 @@ static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
+>  {
+>         if (hw < 32) {
+>                 irq_set_percpu_devid(irq);
+> -               irq_set_chip_and_handler(irq, &gic_chip,
+> -                                        handle_percpu_devid_irq);
+> +               irq_domain_set_info(d, irq, hw, &gic_chip, d->host_data,
+> +                                   handle_percpu_devid_irq, NULL, NULL);
+>                 set_irq_flags(irq, IRQF_VALID | IRQF_NOAUTOEN);
+>         } else {
+> -               irq_set_chip_and_handler(irq, &gic_chip,
+> -                                        handle_fasteoi_irq);
+> +               irq_domain_set_info(d, irq, hw, &gic_chip, d->host_data,
+> +                                   handle_fasteoi_irq, NULL, NULL);
+>                 set_irq_flags(irq, IRQF_VALID | IRQF_PROBE);
+>
+>                 gic_routable_irq_domain_ops->map(d, irq, hw);
+>         }
+> -       irq_set_chip_data(irq, d->host_data);
+>         return 0;
+>  }
+>
+> @@ -858,6 +857,31 @@ static struct notifier_block gic_cpu_notifier = {
+>  };
+>  #endif
+>
+> +static int gic_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+> +                               unsigned int nr_irqs, void *arg)
+> +{
+> +       int i, ret;
+> +       irq_hw_number_t hwirq;
+> +       unsigned int type = IRQ_TYPE_NONE;
+> +       struct of_phandle_args *irq_data = arg;
+> +
+> +       ret = gic_irq_domain_xlate(domain, irq_data->np, irq_data->args,
+> +                                  irq_data->args_count, &hwirq, &type);
+> +       if (ret)
+> +               return ret;
+> +
+> +       for (i = 0; i < nr_irqs; i++)
+> +               gic_irq_domain_map(domain, virq + i, hwirq + i);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct irq_domain_ops gic_irq_domain_hierarchy_ops = {
+> +       .xlate = gic_irq_domain_xlate,
+> +       .alloc = gic_irq_domain_alloc,
+> +       .free = irq_domain_free_irqs_top,
+> +};
+> +
+>  static const struct irq_domain_ops gic_irq_domain_ops = {
+>         .map = gic_irq_domain_map,
+>         .unmap = gic_irq_domain_unmap,
+> @@ -948,18 +972,6 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
+>                 gic_cpu_map[i] = 0xff;
+>
+>         /*
+> -        * For primary GICs, skip over SGIs.
+> -        * For secondary GICs, skip over PPIs, too.
+> -        */
+> -       if (gic_nr == 0 && (irq_start & 31) > 0) {
+> -               hwirq_base = 16;
+> -               if (irq_start != -1)
+> -                       irq_start = (irq_start & ~31) + 16;
+> -       } else {
+> -               hwirq_base = 32;
+> -       }
+> -
+> -       /*
+>          * Find out how many interrupts are supported.
+>          * The GIC only supports up to 1020 interrupt sources.
+>          */
+> @@ -969,10 +981,31 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
+>                 gic_irqs = 1020;
+>         gic->gic_irqs = gic_irqs;
+>
+> -       gic_irqs -= hwirq_base; /* calculate # of irqs to allocate */
+> +       if (node) {             /* DT case */
+> +               const struct irq_domain_ops *ops = &gic_irq_domain_hierarchy_ops;
+> +
+> +               if (!of_property_read_u32(node, "arm,routable-irqs",
+> +                                         &nr_routable_irqs)) {
+> +                       ops = &gic_irq_domain_ops;
+> +                       gic_irqs = nr_routable_irqs;
+> +               }
+> +
+> +               gic->domain = irq_domain_add_linear(node, gic_irqs, ops, gic);
+> +       } else {                /* Non-DT case */
+> +               /*
+> +                * For primary GICs, skip over SGIs.
+> +                * For secondary GICs, skip over PPIs, too.
+> +                */
+> +               if (gic_nr == 0 && (irq_start & 31) > 0) {
+> +                       hwirq_base = 16;
+> +                       if (irq_start != -1)
+> +                               irq_start = (irq_start & ~31) + 16;
+> +               } else {
+> +                       hwirq_base = 32;
+> +               }
+> +
+> +               gic_irqs -= hwirq_base; /* calculate # of irqs to allocate */
+>
+> -       if (of_property_read_u32(node, "arm,routable-irqs",
+> -                                &nr_routable_irqs)) {
+>                 irq_base = irq_alloc_descs(irq_start, 16, gic_irqs,
+>                                            numa_node_id());
+>                 if (IS_ERR_VALUE(irq_base)) {
+> @@ -983,10 +1016,6 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
+>
+>                 gic->domain = irq_domain_add_legacy(node, gic_irqs, irq_base,
+>                                         hwirq_base, &gic_irq_domain_ops, gic);
+> -       } else {
+> -               gic->domain = irq_domain_add_linear(node, nr_routable_irqs,
+> -                                                   &gic_irq_domain_ops,
+> -                                                   gic);
+>         }
+>
+>         if (WARN_ON(!gic->domain))
+> --
+> 1.8.1.1.dirty
 
-> I'll try to review all out of i2c/busses/* registered i2c adapters, may
-> be there is something in common between all of them.
+Gr{oetje,eeting}s,
 
-Yay, cool! Thanks!
+                        Geert
 
-> I'll prepare the change of the HDMI DDC support for review (will be able
-> to test it only on iMX6), Wolfram, please skip from your consideration
-> the published version of the i2c bus driver.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Okay, will do.
-
-> Wolfram, by the way is I2C_CLASS_DDC adapter class in operational use or
-> deprecated?
-
-Class based instantiation is NOT deprecated and will stay as far as I
-can see. Many platform bus drivers did set the class flag needlessly, so
-we had a deprecation mechanism to get rid of those flags in drivers in
-order to speed up boot time.
-
-
---+KJYzRxRHjYqLGl5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUfbz2AAoJEBQN5MwUoCm2VgcP/RgU3B7AYR+/Q8GqQkwmH/AH
-2rtjpgnOhZUTOVs4nq4J1LYdxdoW8rUKmupohD7uOz0+wySlWVl3GU8ahO5uzykp
-Q6OrsquSGvjfLbSyBCiZ/DvS40J4I5w0p1OwYK1IUbOYaIFdWzbjQrbctTPfsRBr
-QX9tSHh1nuknXMPShO/ePiV5qGRsadKBb8FUMOVoaOffgal9BtCWTfj4mwoHQMro
-Lj0qcC2duG2PuDnZW7/EWTnxQ8YczcaE/ABuxVnZoQoyKHvr/hXaN/2jn9aeTaqk
-fbq4mzHRdS+zN1x51pqbPsEe6aqZtFJ6oIWpO4CWzNI3llwT+BG5uyngrJ+X3r8B
-82aRSxoi1HJEm5P5mbjhOAo6YDCc9XPpq5qwp0JDVtxb9rfEE86kQaeabQEH+Mvi
-yCyFqPxaOTYwBB4JRb28Yrk10RsbEuIK1Y/zK/jcsEJgI5VkzZbEtgI9nuYvpOFW
-xV69Kbi0c5ys/PU4Dv5f3qdCL38CJCbz6p95BnWzJRyG1z4IRiLy9oUPF1yi5VyR
-0Hlc3TdrsNWcdVZbr7xfC6OPIvuhGojmhE2GoJVdxmMkh3Vza85WEgmyEO+OoUbd
-BQRBnk7FKCaIp2pWeBFPO9En7m1pVen1pl1xFlYJNX1VY1N1/79HR0rkdtFVe0y6
-8RTvBVrh6uMPt2FRNve5
-=Phgz
------END PGP SIGNATURE-----
-
---+KJYzRxRHjYqLGl5--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
