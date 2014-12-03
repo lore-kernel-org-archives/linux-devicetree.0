@@ -1,151 +1,45 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH 03/12] irqchip: gic: define =?UTF-8?Q?register=5Frouta?=
- =?UTF-8?Q?ble=5Fdomain=5Fops=20conditional?=
-Date: Wed, 03 Dec 2014 18:28:33 +0100
-Message-ID: <8eccedc781df2636a132dae449cbe774@agner.ch>
-References: <1417565531-4507-1-git-send-email-stefan@agner.ch>
- <1417565531-4507-4-git-send-email-stefan@agner.ch>
- <5174649.NxPq80uDz8@wuerfel> <alpine.DEB.2.11.1412031303000.16275@nanos>
+From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] backlight/lp855x: Add supply regulator to lp855x
+Date: Wed, 3 Dec 2014 09:28:19 -0800
+Message-ID: <CAOw6vbKWhonBV30HsQWebec4bE_ogoL6RkgfZrAeKq4+=VnpJQ@mail.gmail.com>
+References: <1417570752-23633-1-git-send-email-seanpaul@chromium.org>
+ <1417570752-23633-2-git-send-email-seanpaul@chromium.org> <5204192.bzM5jPIgHv@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.11.1412031303000.16275@nanos>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Arnd Bergmann <arnd@arndb.de>, shawn.guo@linaro.org, kernel@pengutronix.de, Russell King <linux@arm.linux.org.uk>, u.kleine-koenig@pengutronix.de, Jason Cooper <jason@lakedaemon.net>, olof@lixom.net, daniel.lezcano@linaro.org, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, LAK <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Sricharan R <r.sricharan@ti.com>, Marc Zyngier <marc.zyngier@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5204192.bzM5jPIgHv@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "Kim, Milo" <milo.kim-l0cyMroinI0@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-fbdev <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Aaron Durbin <adurbin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2014-12-03 14:04, Thomas Gleixner wrote:
-> On Wed, 3 Dec 2014, Arnd Bergmann wrote:
-> 
->> On Wednesday 03 December 2014 01:12:02 Stefan Agner wrote:
->> > The inline function register_routable_domain_ops is only usable if
->> > CONFIG_ARM_GIC is set. Make it depend on this configuration. This
->> > also allows other SoC interrupt controller to provide such a
->> > function.
->> >
->> > Signed-off-by: Stefan Agner <stefan@agner.ch>
+On Wed, Dec 3, 2014 at 6:11 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Tuesday 02 December 2014 17:39:12 Sean Paul wrote:
 >>
->> I don't think this is a good idea: either the interface is meant
->> to be generic and should work with any interrupt controller, or
->> it is specific to one irqchip and another irqchip should provide
->> a different interface that has a nonconflicting name.
->>
->> I suppose you want the latter here, given that the declaration
->> is part of the gic specific header file.
-> 
-> That routable_domain stuff should have never been invented. In
-> hindsight we should have done the stacked irq domains back then
-> already, but in hindsight ...
+>>  .../devicetree/bindings/video/backlight/lp855x.txt     |  2 ++
+>>  drivers/video/backlight/lp855x_bl.c                    | 18 ++++++++++++++++++
+>>  include/linux/platform_data/lp855x.h                   |  2 ++
+>>  3 files changed, 22 insertions(+)
+>
+> While your two patches are both correct (and applied already), I took
+> a look at the platform_data header and noticed that all users of this
+> file have been converted to DT a while ago, so it would be nice to clean
+> it up by integrating the linux/platform_data/lp855x.h header file into the
+> drivers/video/backlight/lp855x_bl.c itself.
+>
+> You can then merge struct lp855x_platform_data into lp855x to avoid the
+> extra dynamic allocation and remove all the 'pdata' references in the
+> driver.
+>
 
-I must admit that my first implementation even used arch_extn (through
-the mask/unmask stuff). Then I saw the routable domain stuff, which
-looked more like a fit. But when I realized that only GIC has support
-for that, I soon realized that this might either need a proper
-framework... my hackish NVIC extension probably won't be acceptable...
+Hi Arnd,
+Thanks for the suggestion. Indeed, that will be much cleaner, I'll
+send a follow-up patch.
 
-Stack-able IRQ domain sounds like exactly what I was looking for...
+Sean
 
-> 
-> If you look at the crossbar scheme what we have now:
-> 
->    GIC domain
-> |--------------|
-> |              |---------- private
-> | non routable |---------- peripheral
-> |              |---------- peripheral
-> |              |
-> |--------------|
-> |              |---------- peripheral
-> |   routable   |---------- peripheral
-> |    |         |---------- peripheral
-> |--------------|
->      |               |----------------|
->      |-------------->| crossbar magic |
->                      |----------------|
-> 
-> which is not how the hardware looks. The hardware actually looks like
-> this:
-> 
->    GIC domain
-> |--------------|
-> |              |---------- private
-> | non routable |---------- peripheral
-> |              |---------- peripheral
-> |              |
-> |--------------|           |--------------|
-> |              |           |              |---------- peripheral
-> |   routable   |-----------| crossbar     |---------- peripheral
-> |              |           | domain       |---------- peripheral
-> |--------------|           |--------------|
-> 
-> So it is completely obvious that the peripheral interrupts which need
-> to be routed through the crossbar belong to a different domain. We
-> really should convert crossbar to that scheme and get rid of the
-> routable domain stuff completely.
-> 
-> With vybrid thats not different according to the diagram in the
-> reference manual.
-> 
->   GIC domain
-> |--------------|
-> |              |---------- private
-> | non routable |---------- peripheral
-> |              |---------- peripheral
-> |              |
-> |--------------|           |--------------|
-> |              |           |              |
-> |   routable   |-----------|  IRQ router  |
-> |              |           |  domain      |
-> |              |           |              |
-> |--------------|           |--------------|
->                            | Shared state |---------- CPU to CPU 
->   NVIC domain              | and hardware |---------- peripheral
-> |--------------|           |              |---------- peripheral
-> |              |           |--------------|
-> |              |           |              |
-> |   routable   |-----------|  IRQ router  |
-> |              |           |  domain      |
-> |              |           |              |
-> |--------------|           |--------------|
-> |              |
-> |              |---------- private
-> | non routable |---------- peripheral
-> |              |---------- peripheral
-> |--------------|
-> 
-> The routable domain stuff is just an adhoc redirector which must be
-> tied to a particular base irq chip implementation (i.e. GIC). With
-> stacked irq domains there is no dependency on the underlying irq
-> chip. No ifdeffery, nothing. So you can use the same router domain
-> implementation for both the A5 and the M4 side.
-> 
-> On the A5 side the router domain has the gic domain as parent and on
-> the M4 side the nvic domain.
-> 
-> The shared interrupts are allocated through the router domain which
-> decides whether the interrupt can be assigned to a particular core or
-> not. If it can be assigned it allocates the corresponding interrupt in
-> the parent domain, sets up the routing and everything just works.
-
-What do you mean by the shared state in the drawing above? Currently, I
-check whether a interrupt is already used by the other core by reading
-the register (do this configuration register reflect the "shared state"
-in your drawing?).
-
-
-> 
-> See:
-> http://git.kernel.org/cgit/linux/kernel/git/tip/tip.git/log/?h=irq/irqdomain-arm
-> 
-
-Thanks for the link. So my work would involve to support domain
-hierarchy for NVIC (proper irq_domain_ops, introduce arm,routable-irqs
-property, anything else?) and then make use of the hierarchy code in my
-MSCM driver like for instance the mtk-sysirq driver...?
-
-What is the state of the IRQ domain hierarchy, when will it go upstream?
-
+>         Arnd
 --
-Stefan
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
