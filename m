@@ -1,228 +1,756 @@
 From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 06/11] memory: atmel-ebi: add DT bindings documentation
-Date: Wed, 3 Dec 2014 16:15:36 +0100
-Message-ID: <547F2918.3070803@atmel.com>
-References: <1417429647-3419-1-git-send-email-boris.brezillon@free-electrons.com> <1417429647-3419-7-git-send-email-boris.brezillon@free-electrons.com> <547F24B6.8070504@atmel.com>
+Subject: Re: [PATCH v4 05/11] memory: add Atmel EBI (External Bus Interface)
+ driver
+Date: Wed, 3 Dec 2014 16:24:03 +0100
+Message-ID: <547F2B13.8000609@atmel.com>
+References: <1417429647-3419-1-git-send-email-boris.brezillon@free-electrons.com> <1417510037-1060-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <547F24B6.8070504-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1417510037-1060-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 03/12/2014 15:56, Nicolas Ferre a =E9crit :
-> Le 01/12/2014 11:27, Boris Brezillon a =E9crit :
->> The EBI (External Bus Interface) is used to access external peripher=
-als
->> (NOR, SRAM, NAND, and other specific devices like ethernet controlle=
-rs).
->> Each device is assigned a CS line and an address range and can have =
-its
->> own configuration (timings, access mode, bus width, ...).
->> This driver provides a generic DT binding to configure a device acco=
-rding
->> to its requirements.
->> For specific device controllers (like the NAND one) the SMC timings
->> should be configured by the controller driver through the matrix and=
- smc
->> syscon regmaps.
->>
->> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> ---
->>  .../bindings/memory-controllers/atmel-ebi.txt      | 155 ++++++++++=
-+++++++++++
->>  1 file changed, 155 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/memory-control=
-lers/atmel-ebi.txt
->>
->> diff --git a/Documentation/devicetree/bindings/memory-controllers/at=
-mel-ebi.txt b/Documentation/devicetree/bindings/memory-controllers/atme=
-l-ebi.txt
->> new file mode 100644
->> index 0000000..3749ea1
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/memory-controllers/atmel-ebi=
-=2Etxt
->> @@ -0,0 +1,155 @@
->> +* Device tree bindings for Atmel EBI
->> +
->> +The External Bus Interface (EBI) controller is a bus where you can =
-connect
->> +asynchronous (NAND, NOR, SRAM, ....) and synchronous memories (SDR/=
-DDR SDRAMs).
->> +The EBI provides a glue-less interface to asynchronous memories tho=
-ugh the SMC
->> +(Static Memory Controller).
->> +Synchronous memories (and some asynchronous memories like NANDs) ca=
-n be
->> +attached to specialized controllers which are responsible for confi=
-guring the
->> +bus appropriately according to the connected device.
->> +In the other hand, the bus interface can be automated for simple as=
-ynchronous
->> +devices.
->> +
->> +Required properties:
->> +
->> +- compatible:		"atmel,at91sam9260-ebi"
->> +			"atmel,at91sam9261-ebi"
->> +			"atmel,at91sam9263-ebi0"
->> +			"atmel,at91sam9263-ebi1"
+Le 02/12/2014 09:47, Boris Brezillon a =E9crit :
+> The EBI (External Bus Interface) is used to access external periphera=
+ls
+> (NOR, SRAM, NAND, and other specific devices like ethernet controller=
+s).
+> Each device is assigned a CS line and an address range and can have i=
+ts
+> own configuration (timings, access mode, bus width, ...).
+> This driver provides a generic DT binding to configure a device accor=
+ding
+> to its requirements.
+> For specific device controllers (like the NAND one) the SMC timings
+> should be configured by the controller driver through the matrix and
+> smc syscon regmaps.
 >=20
-> Ditto: 9263 twice.
+> Signed-off-by: Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
+> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
 >=20
->> +			"atmel,at91sam9g45-ebi"
->> +			"atmel,at91sam9x5-ebi"
->> +			"atmel,sama5d3-ebi"
->> +
->> +- reg:			Contains offset/length value for EBI memory mapping.
->> +			This property might contain several entries if the EBI
->> +			memory range is not contiguous
->> +
->> +- #address-cells:	Must be 2.
->> +			The first cell encodes the CS.
->> +			The second cell encode the offset into the CS memory
->> +			range.
->> +
->> +- #size-cells:		Must be set to 1.
->> +
->> +- ranges:		Encodes CS to memory region association.
->> +
->> +- clocks:		Clock feeding the EBI controller.
->> +			See clock-bindings.txt
->> +
->> +Child chip-select (cs) nodes contain the memory devices nodes conne=
-cted to
->> +such as NOR (e.g. cfi-flash) and NAND.
->> +There might be board specific devices like FPGAs.
->> +You'll define you device requirements in these child nodes.
->> +
->> +Required child cs node properties:
->> +
->> +- #address-cells:	Must be 2.
->> +
->> +- #size-cells:		Must be 1.
->> +
->> +- ranges:		Empty property indicating that child nodes can inherit
->> +			memory layout.
->> +
->> +Optional child cs node properties:
->> +- atmel,generic-dev		boolean property specifying if the device is
->> +				a generic device.
+> Changes since v3:
+>  - use syscon_regmap_lookup_by_phandle instead of of_parse_phandle +
+>    syscon_node_to_regmap
+>  - drop AT91_EBICSA_REGFIELD and AT91_MULTI_EBICSA_REGFIELD macros
+>=20
+>  drivers/memory/Kconfig     |  11 +
+>  drivers/memory/Makefile    |   1 +
+>  drivers/memory/atmel-ebi.c | 618 +++++++++++++++++++++++++++++++++++=
+++++++++++
+>  3 files changed, 630 insertions(+)
+>  create mode 100644 drivers/memory/atmel-ebi.c
+>=20
+> diff --git a/drivers/memory/Kconfig b/drivers/memory/Kconfig
+> index 6d91c27..dfe24a2 100644
+> --- a/drivers/memory/Kconfig
+> +++ b/drivers/memory/Kconfig
+> @@ -17,6 +17,17 @@ config ATMEL_SDRAMC
+>  	  Starting with the at91sam9g45, this controller supports SDR, DDR =
+and
+>  	  LP-DDR memories.
+> =20
+> +config ATMEL_EBI
+> +	bool "Atmel EBI driver"
+> +	default y
+> +	depends on ARCH_AT91 && OF
+> +	select MFD_SYSCON
+> +	help
+> +	  Driver for Atmel EBI controller.
+> +	  Used to configure the EBI (external bus interface) when the devic=
+e-
+> +	  tree is used. This bus supports NANDs, external ethernet controll=
+er,
+> +	  SRAMs, ATA devices, etc.
+> +
+>  config TI_AEMIF
+>  	tristate "Texas Instruments AEMIF driver"
+>  	depends on (ARCH_DAVINCI || ARCH_KEYSTONE) && OF
+> diff --git a/drivers/memory/Makefile b/drivers/memory/Makefile
+> index c32d319..7ca2c19 100644
+> --- a/drivers/memory/Makefile
+> +++ b/drivers/memory/Makefile
+> @@ -6,6 +6,7 @@ ifeq ($(CONFIG_DDR),y)
+>  obj-$(CONFIG_OF)		+=3D of_memory.o
+>  endif
+>  obj-$(CONFIG_ATMEL_SDRAMC)	+=3D atmel-sdramc.o
+> +obj-$(CONFIG_ATMEL_EBI)		+=3D atmel-ebi.o
+>  obj-$(CONFIG_TI_AEMIF)		+=3D ti-aemif.o
+>  obj-$(CONFIG_TI_EMIF)		+=3D emif.o
+>  obj-$(CONFIG_FSL_CORENET_CF)	+=3D fsl-corenet-cf.o
+> diff --git a/drivers/memory/atmel-ebi.c b/drivers/memory/atmel-ebi.c
+> new file mode 100644
+> index 0000000..8702694
+> --- /dev/null
+> +++ b/drivers/memory/atmel-ebi.c
+> @@ -0,0 +1,618 @@
+> +/*
+> + * EBI driver for Atmel SAM9 chips
 
-Well... no real information, specify right here what a "generic device"=
- is.
+Not only SAM9: remove it or add SAMA5.
 
->> +				The following properties are only parsed if
->> +				this property is present.
->> +				Specialized devices are attached to specialized
->> +				controllers which are responsible for
->> +				configuring the bus appropriately.
->> +				Here are some examples of specialized
->> +				controllers: NAND, CompactFlash, SDR-SDRAM.
->> +
->> +- atmel,bus-width:		width of the asynchronous device's data bus
->> +				8, 16 or 32.
->> +				8 if not present.
->> +
->> +- atmel,byte-access-type	"write" or "select" (see Atmel datasheet).
->> +				"select" if not present.
->> +
->> +- atmel,read-mode		"nrd" or "ncs".
->> +				"ncs" is not present.
->> +
->> +- atmel,write-mode		"nwe" or "ncs".
->> +				"ncs" is not present.
->> +
->> +- atmel,exnw-mode		"disabled", "frozen" or "ready".
->> +				"disabled" if not present.
->> +
->> +- atmel,page-mode		enable page mode if present. The provided value
->> +				defines the page size (supported values: 4, 8,
->> +				16 and 32).
->> +
->> +Optional device timings expressed in nanoseconds (if the property i=
-s not
->> +present 0 is assumed):
->> +
->> +- atmel,ncs-rd-setup-ns
->> +- atmel,nrd-setup-ns
->> +- atmel,ncs-wr-setup-ns
->> +- atmel,nwe-setup-ns
->> +- atmel,ncs-rd-pulse-ns
->> +- atmel,nrd-pulse-ns
->> +- atmel,ncs-wr-pulse-ns
->> +- atmel,nwe-pulse-ns
->> +- atmel,nwe-cycle-ns
->> +- atmel,nrd-cycle-ns
->> +- atmel,tdf-ns
->> +
->> +- atmel,tdf-optimized		data float optimized mode. If present the da=
-ta
->> +				float time is optimized depending on the next
->> +				device being accessed (next device setup
->> +				time is substracted to the current devive data
->=20
-> Typo: subtract, device
->=20
->> +				float time).
->> +
->> +
->> +
->> +Example:
->> +
->> +	ebi: ebi@10000000 {
->> +		compatible =3D "atmel,sama5d3-ebi", "simple-bus";
->> +		#address-cells =3D <2>;
->> +		#size-cells =3D <1>;
->> +		atmel,smc =3D <&hsmc>;
->> +		atmel,matrix =3D <&matrix>;
->> +		reg =3D <0x10000000 0x10000000
->> +		       0x40000000 0x30000000>;
->> +		ranges =3D <0x0 0x0 0x10000000 0x10000000
->> +			  0x1 0x0 0x40000000 0x10000000
->> +			  0x2 0x0 0x50000000 0x10000000
->> +			  0x3 0x0 0x60000000 0x10000000>;
->> +		clocks =3D <&mck>;
->> +
->> +		pinctrl-names =3D "default";
->> +		pinctrl-0 =3D <&pinctrl_ebi_addr>;
->> +
->> +		cs@0 {
->> +			#address-cells =3D <2>;
->> +			#size-cells =3D <1>;
->> +			ranges;
->> +			atmel,generic-dev;
->> +			atmel,read-mode =3D "nrd";
->> +			atmel,write-mode =3D "nwe";
->> +			atmel,bus-width =3D <16>;
->> +			atmel,ncs-rd-setup-ns =3D <0>;
->> +			atmel,ncs-wr-setup-ns =3D <0>;
->> +			atmel,nwe-setup-ns =3D <8>;
->> +			atmel,nrd-setup-ns =3D <16>;
->> +			atmel,ncs-rd-pulse-ns =3D <84>;
->> +			atmel,ncs-wr-pulse-ns =3D <84>;
->> +			atmel,nrd-pulse-ns =3D <76>;
->> +			atmel,nwe-pulse-ns =3D <76>;
->> +			atmel,nrd-cycle-ns =3D <107>;
->> +			atmel,nwe-cycle-ns =3D <84>;
->> +			atmel,tdf-ns =3D <16>;
->> +
->> +			nor: flash@0,0 {
->> +				compatible =3D "cfi-flash";
->> +				#address-cells =3D <1>;
->> +				#size-cells =3D <1>;
->> +				reg =3D <0x0 0x0 0x1000000>;
->> +				bank-width =3D <2>;
->> +			};
->> +		};
->> +	};
->> +
->>
->=20
+> + * inspired by the fsl weim bus driver
+> + *
+> + * Copyright (C) 2013 JJ Hiblot.
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2. This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/mfd/syscon/atmel-matrix.h>
+> +#include <linux/mfd/syscon/atmel-smc.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/regmap.h>
+> +
+> +struct at91sam9_smc_timings {
+> +	u32 ncs_rd_setup_ns;
+> +	u32 nrd_setup_ns;
+> +	u32 ncs_wr_setup_ns;
+> +	u32 nwe_setup_ns;
+> +	u32 ncs_rd_pulse_ns;
+> +	u32 nrd_pulse_ns;
+> +	u32 ncs_wr_pulse_ns;
+> +	u32 nwe_pulse_ns;
+> +	u32 nrd_cycle_ns;
+> +	u32 nwe_cycle_ns;
+> +	u32 tdf_ns;
+> +};
+> +
+> +struct at91sam9_smc_generic_fields {
+> +	struct regmap_field *setup;
+> +	struct regmap_field *pulse;
+> +	struct regmap_field *cycle;
+> +	struct regmap_field *mode;
+> +};
+> +
+> +struct at91sam9_ebi_dev_config {
+> +	struct at91sam9_smc_timings timings;
+> +	u32 mode;
+> +};
+> +
+> +struct at91_ebi;
+> +
+> +struct at91_ebi_dev {
+> +	struct device_node *np;
+> +	struct at91_smc_timings *timings;
+> +	struct at91_ebi *ebi;
+> +	u32 mode;
+> +	int cs;
+> +	void *config;
+> +};
+> +
+> +struct at91_ebi_caps {
+> +	unsigned int available_cs;
+> +	const struct reg_field *ebi_csa;
+> +	int (*xlate_config)(struct at91_ebi_dev *ebid);
+> +	int (*apply_config)(struct at91_ebi_dev *ebid);
+> +	int (*init)(struct at91_ebi *ebi);
+> +};
+> +
+> +struct at91_ebi {
+> +	struct clk *clk;
+> +	struct regmap *smc;
+> +	struct regmap *matrix;
+> +
+> +	struct regmap_field *ebi_csa;
+> +
+> +	struct device *dev;
+> +	const struct at91_ebi_caps *caps;
+> +	struct at91_ebi_dev *devs[AT91_MATRIX_EBI_NUM_CS];
+> +	void *priv;
+> +};
+> +
+> +static u32 at91sam9_smc_setup_ns_to_cycles(unsigned int clk_rate,
+> +					   u32 timing_ns)
+> +{
+> +	u32 clk_period =3D DIV_ROUND_UP(NSEC_PER_SEC, clk_rate);
+> +	u32 coded_cycles =3D 0;
+> +	u32 cycles;
+> +
+> +	cycles =3D DIV_ROUND_UP(timing_ns, clk_period);
+> +	if (cycles / 32) {
+
+I know it is the formula from the datasheet but please add a note to
+refer to it.
+So, a comment here or at the beginning of the function is needed.
+
+> +		coded_cycles |=3D 1 << 5;
+> +		if (cycles < 128)
+> +			cycles =3D 0;
+> +	}
+> +
+> +	coded_cycles |=3D cycles % 32;
+> +
+> +	return coded_cycles;
+> +}
+> +
+> +static u32 at91sam9_smc_pulse_ns_to_cycles(unsigned int clk_rate,
+> +					   u32 timing_ns)
+> +{
+> +	u32 clk_period =3D DIV_ROUND_UP(NSEC_PER_SEC, clk_rate);
+> +	u32 coded_cycles =3D 0;
+> +	u32 cycles;
+> +
+> +	cycles =3D DIV_ROUND_UP(timing_ns, clk_period);
+> +	if (cycles / 64) {
+
+Ditto.
+
+> +		coded_cycles |=3D 1 << 6;
+> +		if (cycles < 256)
+> +			cycles =3D 0;
+> +	}
+> +
+> +	coded_cycles |=3D cycles % 64;
+> +
+> +	return coded_cycles;
+> +}
+> +
+> +static u32 at91sam9_smc_cycle_ns_to_cycles(unsigned int clk_rate,
+> +					   u32 timing_ns)
+> +{
+> +	u32 clk_period =3D DIV_ROUND_UP(NSEC_PER_SEC, clk_rate);
+> +	u32 coded_cycles =3D 0;
+> +	u32 cycles;
+> +
+> +	cycles =3D DIV_ROUND_UP(timing_ns, clk_period);
+> +	if (cycles / 128) {
+
+Ditto.
+
+> +		coded_cycles =3D cycles / 256;
+> +		cycles %=3D 256;
+> +		if (cycles >=3D 128) {
+> +			coded_cycles++;
+> +			cycles =3D 0;
+> +		}
+> +
+> +		if (coded_cycles > 0x3) {
+> +			coded_cycles =3D 0x3;
+> +			cycles =3D 0x7f;
+> +		}
+> +
+> +		coded_cycles <<=3D 7;
+> +	}
+> +
+> +	coded_cycles |=3D cycles % 128;
+> +
+> +	return coded_cycles;
+> +}
+> +
+> +static int at91sam9_ebi_apply_config(struct at91_ebi_dev *ebid)
+> +{
+> +	unsigned int clk_rate =3D clk_get_rate(ebid->ebi->clk);
+> +	struct at91sam9_ebi_dev_config *config =3D ebid->config;
+> +	struct at91sam9_smc_timings *timings =3D &config->timings;
+> +	struct at91sam9_smc_generic_fields *fields =3D ebid->ebi->priv;
+> +	u32 val;
+> +
+> +	val =3D at91sam9_smc_setup_ns_to_cycles(clk_rate,
+> +					      timings->ncs_rd_setup_ns) << 24;
+> +	val |=3D at91sam9_smc_setup_ns_to_cycles(clk_rate,
+> +					       timings->nrd_setup_ns) << 16;
+> +	val |=3D at91sam9_smc_setup_ns_to_cycles(clk_rate,
+> +					       timings->ncs_wr_setup_ns) << 8;
+
+Well, I know it's easy to retrieve the meaning of these constants but
+please I want a #define'd constant everywhere.
+
+
+> +	val |=3D at91sam9_smc_setup_ns_to_cycles(clk_rate,
+> +					       timings->nwe_setup_ns);
+> +	regmap_fields_write(fields->setup, ebid->cs, val);
+> +
+> +	val =3D at91sam9_smc_pulse_ns_to_cycles(clk_rate,
+> +					      timings->ncs_rd_pulse_ns) << 24;
+> +	val |=3D at91sam9_smc_pulse_ns_to_cycles(clk_rate,
+> +					       timings->nrd_pulse_ns) << 16;
+> +	val |=3D at91sam9_smc_pulse_ns_to_cycles(clk_rate,
+> +					       timings->ncs_wr_pulse_ns) << 8;
+> +	val |=3D at91sam9_smc_pulse_ns_to_cycles(clk_rate,
+> +					       timings->nwe_pulse_ns);
+> +	regmap_fields_write(fields->pulse, ebid->cs, val);
+> +
+> +	val =3D at91sam9_smc_cycle_ns_to_cycles(clk_rate,
+> +					      timings->nrd_cycle_ns) << 16;
+> +	val |=3D at91sam9_smc_cycle_ns_to_cycles(clk_rate,
+> +					       timings->nwe_cycle_ns);
+> +	regmap_fields_write(fields->cycle, ebid->cs, val);
+> +
+> +	val =3D DIV_ROUND_UP(timings->tdf_ns, clk_rate);
+> +	if (val > 16)
+> +		val =3D 16;
+
+Ditto.
+
+
+> +	regmap_fields_write(fields->mode, ebid->cs, config->mode | val << 1=
+6);
+> +
+> +	return 0;
+> +}
+> +
+> +static int at91sam9_smc_xslate_timings(struct at91_ebi_dev *ebid)
+> +{
+> +	struct at91sam9_ebi_dev_config *config =3D ebid->config;
+> +	struct at91sam9_smc_timings *timings;
+> +	struct device_node *np =3D ebid->np;
+> +
+> +	timings =3D &config->timings;
+> +
+> +	of_property_read_u32(np, "atmel,ncs-rd-setup-ns",
+> +			     &timings->ncs_rd_setup_ns);
+> +	of_property_read_u32(np, "atmel,nrd-setup-ns",
+> +			     &timings->nrd_setup_ns);
+> +	of_property_read_u32(np, "atmel,ncs-wr-setup-ns",
+> +			     &timings->ncs_wr_setup_ns);
+> +	of_property_read_u32(np, "atmel,nwe-setup-ns",
+> +			     &timings->nwe_setup_ns);
+> +	of_property_read_u32(np, "atmel,ncs-rd-pulse-ns",
+> +			     &timings->ncs_rd_pulse_ns);
+> +	of_property_read_u32(np, "atmel,nrd-pulse-ns",
+> +			     &timings->nrd_pulse_ns);
+> +	of_property_read_u32(np, "atmel,ncs-wr-pulse-ns",
+> +			     &timings->ncs_wr_pulse_ns);
+> +	of_property_read_u32(np, "atmel,nwe-pulse-ns", &timings->nwe_pulse_=
+ns);
+> +	of_property_read_u32(np, "atmel,nwe-cycle-ns", &timings->nwe_cycle_=
+ns);
+> +	of_property_read_u32(np, "atmel,nrd-cycle-ns", &timings->nrd_cycle_=
+ns);
+> +	of_property_read_u32(np, "atmel,tdf-ns", &timings->tdf_ns);
+> +
+> +	return 0;
+> +}
+> +
+> +static int at91sam9_ebi_xslate_config(struct at91_ebi_dev *ebid)
+> +{
+> +	struct at91sam9_ebi_dev_config *config =3D ebid->config;
+> +	struct device_node *np =3D ebid->np;
+> +	const char *tmp_str;
+> +	u32 tmp;
+> +	int ret;
+> +
+> +	config =3D devm_kzalloc(ebid->ebi->dev, sizeof(*config), GFP_KERNEL=
+);
+> +	if (!config)
+> +		return -ENOMEM;
+> +
+> +	ebid->config =3D config;
+> +
+> +	ret =3D of_property_read_u32(np, "atmel,bus-width", &tmp);
+> +	if (ret)
+> +		return ret;
+> +
+> +	switch (tmp) {
+> +	case 8:
+> +		config->mode |=3D AT91_SMC_DBW_8;
+> +		break;
+> +
+> +	case 16:
+> +		config->mode |=3D AT91_SMC_DBW_16;
+> +		break;
+> +
+> +	case 32:
+> +		config->mode |=3D AT91_SMC_DBW_32;
+> +		break;
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (of_property_read_bool(np, "atmel,tdf-optimized"))
+> +		config->mode |=3D AT91_SMC_TDFMODE_OPTIMIZED;
+> +
+> +	tmp_str =3D NULL;
+> +	of_property_read_string(np, "atmel,byte-access-type", &tmp_str);
+> +	if (tmp_str && !strcmp(tmp_str, "write"))
+> +		config->mode |=3D AT91_SMC_BAT_WRITE;
+> +
+> +	tmp_str =3D NULL;
+> +	of_property_read_string(np, "atmel,read-mode", &tmp_str);
+> +	if (tmp_str && !strcmp(tmp_str, "nrd"))
+> +		config->mode |=3D AT91_SMC_READMODE_NRD;
+> +
+> +	tmp_str =3D NULL;
+> +	of_property_read_string(np, "atmel,write-mode", &tmp_str);
+> +	if (tmp_str && !strcmp(tmp_str, "nwe"))
+> +		config->mode |=3D AT91_SMC_WRITEMODE_NWE;
+> +
+> +	tmp_str =3D NULL;
+> +	of_property_read_string(np, "atmel,exnw-mode", &tmp_str);
+> +	if (tmp_str) {
+> +		if (!strcmp(tmp_str, "frozen"))
+> +			config->mode |=3D AT91_SMC_EXNWMODE_FROZEN;
+> +		else if (!strcmp(tmp_str, "ready"))
+> +			config->mode |=3D AT91_SMC_EXNWMODE_READY;
+> +	}
+> +
+> +	tmp =3D 0;
+> +	ret =3D of_property_read_u32(np, "atmel,page-mode", &tmp);
+> +	if (!ret) {
+> +		switch (tmp) {
+> +		case 4:
+> +			config->mode |=3D AT91_SMC_PS_4;
+> +			break;
+> +
+> +		case 8:
+> +			config->mode |=3D AT91_SMC_PS_8;
+> +			break;
+> +
+> +		case 16:
+> +			config->mode |=3D AT91_SMC_PS_16;
+> +			break;
+> +
+> +		case 32:
+> +			config->mode |=3D AT91_SMC_PS_32;
+> +			break;
+> +
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +
+> +		config->mode |=3D AT91_SMC_PMEN;
+> +	}
+> +
+> +	return at91sam9_smc_xslate_timings(ebid);
+> +}
+> +
+> +static int at91sam9_ebi_init(struct at91_ebi *ebi)
+> +{
+> +	struct at91sam9_smc_generic_fields *fields;
+> +	struct reg_field field =3D REG_FIELD(0, 0, 31);
+> +
+> +	fields =3D devm_kzalloc(ebi->dev, sizeof(*fields), GFP_KERNEL);
+> +	if (!fields)
+> +		return -ENOMEM;
+> +
+> +	field.id_size =3D fls(ebi->caps->available_cs);
+> +	field.id_offset =3D 0x10;
+
+A #define'd constant here please...
+
+> +
+> +	field.reg =3D AT91SAM9_SMC_SETUP(AT91SAM9_SMC_GENERIC_OFFSET);
+> +	fields->setup =3D devm_regmap_field_alloc(ebi->dev, ebi->smc, field=
+);
+> +	if (IS_ERR(fields->setup))
+> +		return PTR_ERR(fields->setup);
+> +
+> +	field.reg =3D AT91SAM9_SMC_PULSE(AT91SAM9_SMC_GENERIC_OFFSET);
+> +	fields->pulse =3D devm_regmap_field_alloc(ebi->dev, ebi->smc, field=
+);
+> +	if (IS_ERR(fields->pulse))
+> +		return PTR_ERR(fields->pulse);
+> +
+> +	field.reg =3D AT91SAM9_SMC_CYCLE(AT91SAM9_SMC_GENERIC_OFFSET);
+> +	fields->cycle =3D devm_regmap_field_alloc(ebi->dev, ebi->smc, field=
+);
+> +	if (IS_ERR(fields->cycle))
+> +		return PTR_ERR(fields->cycle);
+> +
+> +	field.reg =3D AT91SAM9_SMC_MODE(AT91SAM9_SMC_GENERIC_OFFSET);
+> +	fields->mode =3D devm_regmap_field_alloc(ebi->dev, ebi->smc, field)=
+;
+> +	if (IS_ERR(fields->mode))
+> +		return PTR_ERR(fields->mode);
+> +
+> +	ebi->priv =3D fields;
+> +
+> +	return 0;
+> +}
+> +
+> +static int sama5d3_ebi_init(struct at91_ebi *ebi)
+> +{
+> +	struct at91sam9_smc_generic_fields *fields;
+> +	struct reg_field field =3D REG_FIELD(0, 0, 31);
+> +
+> +	fields =3D devm_kzalloc(ebi->dev, sizeof(*fields), GFP_KERNEL);
+> +	if (!fields)
+> +		return -ENOMEM;
+> +
+> +	field.id_size =3D fls(ebi->caps->available_cs);
+> +	field.id_offset =3D SAMA5_SMC_GENERIC_BLK_SZ;
+
+=2E..Just like here ^^^
+
+> +
+> +	field.reg =3D AT91SAM9_SMC_SETUP(SAMA5_SMC_GENERIC_OFFSET);
+> +	fields->setup =3D devm_regmap_field_alloc(ebi->dev, ebi->smc, field=
+);
+> +	if (IS_ERR(fields->setup))
+> +		return PTR_ERR(fields->setup);
+> +
+> +	field.reg =3D AT91SAM9_SMC_PULSE(SAMA5_SMC_GENERIC_OFFSET);
+> +	fields->pulse =3D devm_regmap_field_alloc(ebi->dev, ebi->smc, field=
+);
+> +	if (IS_ERR(fields->pulse))
+> +		return PTR_ERR(fields->pulse);
+> +
+> +	field.reg =3D AT91SAM9_SMC_CYCLE(SAMA5_SMC_GENERIC_OFFSET);
+> +	fields->cycle =3D devm_regmap_field_alloc(ebi->dev, ebi->smc, field=
+);
+> +	if (IS_ERR(fields->cycle))
+> +		return PTR_ERR(fields->cycle);
+> +
+> +	field.reg =3D SAMA5_SMC_MODE(SAMA5_SMC_GENERIC_OFFSET);
+> +	fields->mode =3D devm_regmap_field_alloc(ebi->dev, ebi->smc, field)=
+;
+> +	if (IS_ERR(fields->mode))
+> +		return PTR_ERR(fields->mode);
+> +
+> +	ebi->priv =3D fields;
+> +
+> +	return 0;
+> +}
+> +
+> +static int at91_ebi_dev_setup(struct at91_ebi *ebi, struct device_no=
+de *np)
+> +{
+> +	struct device *dev =3D ebi->dev;
+> +	struct device_node *dev_np;
+> +	struct at91_ebi_dev *ebid;
+> +	u32 tmp;
+> +	int ret;
+> +
+> +	dev_np =3D of_get_next_child(np, NULL);
+> +	if (!dev_np)
+> +		return -EINVAL;
+> +
+> +	if (!of_device_is_available(dev_np))
+> +		return 0;
+> +
+> +	ebid =3D devm_kzalloc(ebi->dev, sizeof(*ebid), GFP_KERNEL);
+> +	if (!ebid)
+> +		return -ENOMEM;
+> +
+> +	ret =3D of_property_read_u32(dev_np, "reg" , &tmp);
+> +	if (ret < 0) {
+> +		dev_err(dev, "missing mandatory reg property\n");
+> +		return ret;
+> +	}
+> +
+> +	if (tmp > AT91_MATRIX_EBI_NUM_CS ||
+> +	    !(BIT(tmp) & ebi->caps->available_cs)) {
+> +		dev_err(dev, "invalid reg property\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ebid->cs =3D tmp;
+> +	ebid->np =3D np;
+> +	ebid->ebi =3D ebi;
+> +
+> +	if (!of_property_read_bool(np, "atmel,generic-dev"))
+> +		goto populate;
+> +
+> +	if (ebid->ebi->ebi_csa)
+> +		regmap_field_update_bits(ebid->ebi->ebi_csa,
+> +					 BIT(ebid->cs),
+> +					 ~BIT(ebid->cs));
+> +
+> +	ret =3D ebid->ebi->caps->xlate_config(ebid);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D ebid->ebi->caps->apply_config(ebid);
+> +	if (ret)
+> +		return ret;
+> +	ebi->devs[ebid->cs] =3D ebid;
+> +
+> +populate:
+> +	return of_platform_populate(np, of_default_bus_match_table, NULL, d=
+ev);
+> +}
+> +
+> +static const struct reg_field at91sam9260_ebi_csa =3D
+> +				REG_FIELD(AT91SAM9260_MATRIX_EBICSA_OFF, 0,
+> +					  AT91_MATRIX_EBI_NUM_CS - 1);
+> +
+> +static const struct at91_ebi_caps at91sam9260_ebi_caps =3D {
+> +	.available_cs =3D 0xff,
+> +	.ebi_csa =3D &at91sam9260_ebi_csa,
+> +	.xlate_config =3D at91sam9_ebi_xslate_config,
+> +	.apply_config =3D at91sam9_ebi_apply_config,
+> +	.init =3D at91sam9_ebi_init,
+> +};
+> +
+> +static const struct reg_field at91sam9261_ebi_csa =3D
+> +				REG_FIELD(AT91SAM9261_MATRIX_EBICSA_OFF, 0,
+> +					  AT91_MATRIX_EBI_NUM_CS - 1);
+> +
+> +static const struct at91_ebi_caps at91sam9261_ebi_caps =3D {
+> +	.available_cs =3D 0xff,
+> +	.ebi_csa =3D &at91sam9261_ebi_csa,
+> +	.xlate_config =3D at91sam9_ebi_xslate_config,
+> +	.apply_config =3D at91sam9_ebi_apply_config,
+> +	.init =3D at91sam9_ebi_init,
+> +};
+> +
+> +static const struct reg_field at91sam9263_ebi0_csa =3D
+> +				REG_FIELD(AT91SAM9263_MATRIX_EBI0CSA_OFF, 0,
+> +					  AT91_MATRIX_EBI_NUM_CS - 1);
+> +
+> +static const struct at91_ebi_caps at91sam9263_ebi0_caps =3D {
+> +	.available_cs =3D 0x3f,
+> +	.ebi_csa =3D &at91sam9263_ebi0_csa,
+> +	.xlate_config =3D at91sam9_ebi_xslate_config,
+> +	.apply_config =3D at91sam9_ebi_apply_config,
+> +	.init =3D at91sam9_ebi_init,
+> +};
+> +
+> +static const struct reg_field at91sam9263_ebi1_csa =3D
+> +				REG_FIELD(AT91SAM9263_MATRIX_EBI1CSA_OFF, 0,
+> +					  AT91_MATRIX_EBI_NUM_CS - 1);
+> +
+> +static const struct at91_ebi_caps at91sam9263_ebi1_caps =3D {
+> +	.available_cs =3D 0x7,
+> +	.ebi_csa =3D &at91sam9263_ebi1_csa,
+> +	.xlate_config =3D at91sam9_ebi_xslate_config,
+> +	.apply_config =3D at91sam9_ebi_apply_config,
+> +	.init =3D at91sam9_ebi_init,
+> +};
+> +
+> +static const struct reg_field at91sam9g45_ebi_csa =3D
+> +				REG_FIELD(AT91SAM9G45_MATRIX_EBICSA_OFF, 0,
+> +					  AT91_MATRIX_EBI_NUM_CS - 1);
+> +
+> +static const struct at91_ebi_caps at91sam9g45_ebi_caps =3D {
+> +	.available_cs =3D 0x3f,
+> +	.ebi_csa =3D &at91sam9g45_ebi_csa,
+> +	.xlate_config =3D at91sam9_ebi_xslate_config,
+> +	.apply_config =3D at91sam9_ebi_apply_config,
+> +	.init =3D at91sam9_ebi_init,
+> +};
+> +
+> +static const struct at91_ebi_caps at91sam9x5_ebi_caps =3D {
+> +	.available_cs =3D 0x3f,
+> +	.ebi_csa =3D &at91sam9263_ebi0_csa,
+> +	.xlate_config =3D at91sam9_ebi_xslate_config,
+> +	.apply_config =3D at91sam9_ebi_apply_config,
+> +	.init =3D at91sam9_ebi_init,
+> +};
+> +
+> +static const struct at91_ebi_caps sama5d3_ebi_caps =3D {
+> +	.available_cs =3D 0xf,
+> +	.xlate_config =3D at91sam9_ebi_xslate_config,
+> +	.apply_config =3D at91sam9_ebi_apply_config,
+> +	.init =3D sama5d3_ebi_init,
+> +};
+> +
+> +static const struct of_device_id at91_ebi_id_table[] =3D {
+> +	{
+> +		.compatible =3D "atmel,at91sam9260-ebi",
+> +		.data =3D &at91sam9260_ebi_caps,
+> +	},
+> +	{
+> +		.compatible =3D "atmel,at91sam9261-ebi",
+> +		.data =3D &at91sam9261_ebi_caps,
+> +	},
+> +	{
+> +		.compatible =3D "atmel,at91sam9263-ebi0",
+> +		.data =3D &at91sam9263_ebi0_caps,
+> +	},
+> +	{
+> +		.compatible =3D "atmel,at91sam9263-ebi1",
+> +		.data =3D &at91sam9263_ebi1_caps,
+> +	},
+> +	{
+> +		.compatible =3D "atmel,at91sam9g45-ebi",
+> +		.data =3D &at91sam9g45_ebi_caps,
+> +	},
+> +	{
+> +		.compatible =3D "atmel,at91sam9x5-ebi",
+> +		.data =3D &at91sam9x5_ebi_caps,
+> +	},
+> +	{
+> +		.compatible =3D "atmel,sama5d3-ebi",
+> +		.data =3D &sama5d3_ebi_caps,
+> +	},
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, at91_ebi_id_table);
+> +
+> +static int at91_ebi_probe(struct platform_device *pdev)
+> +{
+> +	const struct of_device_id *match;
+> +	struct device_node *child;
+> +	struct at91_ebi *ebi;
+> +	struct clk *clk;
+> +	int ret;
+> +
+> +	match =3D of_match_device(at91_ebi_id_table, &pdev->dev);
+> +	if (!match || !match->data)
+> +		return -EINVAL;
+> +
+> +	ebi =3D devm_kzalloc(&pdev->dev, sizeof(*ebi), GFP_KERNEL);
+> +	if (!ebi)
+> +		return -ENOMEM;
+> +
+> +	ebi->caps =3D match->data;
+> +	ebi->dev =3D &pdev->dev;
+> +
+> +	clk =3D devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(clk))
+> +		return PTR_ERR(clk);
+> +
+> +	ebi->clk =3D clk;
+> +
+> +	ebi->smc =3D syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
+> +						   "atmel,smc");
+> +	if (IS_ERR(ebi->smc))
+> +		return PTR_ERR(ebi->smc);
+> +
+> +	/*
+> +	 * The sama5d3 does not provide an EBICSA register and thus does ne=
+ed
+> +	 * to access the matrix registers.
+> +	 */
+> +	if (ebi->caps->ebi_csa) {
+> +		ebi->matrix =3D
+> +			syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
+> +							"atmel,matrix");
+> +		if (IS_ERR(ebi->matrix))
+> +			return PTR_ERR(ebi->matrix);
+> +
+> +		ebi->ebi_csa =3D regmap_field_alloc(ebi->matrix,
+> +						  *ebi->caps->ebi_csa);
+> +		if (IS_ERR(ebi->ebi_csa))
+> +			return PTR_ERR(ebi->ebi_csa);
+> +	}
+> +
+> +	ret =3D ebi->caps->init(ebi);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for_each_child_of_node(pdev->dev.of_node, child) {
+> +		ret =3D at91_ebi_dev_setup(ebi, child);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static struct platform_driver at91_ebi_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "atmel-ebi",
+> +		.of_match_table	=3D at91_ebi_id_table,
+> +	},
+> +};
+> +module_platform_driver_probe(at91_ebi_driver, at91_ebi_probe);
+> +
+> +MODULE_AUTHOR("JJ Hiblot");
+> +MODULE_DESCRIPTION("Atmel's EBI driver");
+> +MODULE_LICENSE("GPL");
 >=20
 
 
