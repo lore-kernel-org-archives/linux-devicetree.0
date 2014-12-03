@@ -1,45 +1,153 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH 02/12] ARM: dts: vf610: add Miscellaneous System Control Module (MSCM)
-Date: Wed,  3 Dec 2014 01:12:01 +0100
-Message-ID: <1417565531-4507-3-git-send-email-stefan@agner.ch>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH 04/12] irqchip: nvic: support routable irq domain ops
+Date: Wed,  3 Dec 2014 01:12:03 +0100
+Message-ID: <1417565531-4507-5-git-send-email-stefan@agner.ch>
 References: <1417565531-4507-1-git-send-email-stefan@agner.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417565531-4507-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1417565531-4507-1-git-send-email-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-Add the Miscellaneous System Control Module (MSCM) to the base
-device tree for Vybrid SoCs. This module contains the peripheral
-interrupt router, which is handling the routing of the interrupts
-between the two cores.
+Add support for routable irq domain ops like the GIC interrupt
+controller provides. This is useful for asymmetrical multi-
+processor SoCs, such as Freescale Vybrid (VF6xx) which have
+a Cortex-M4 alongside a Cortex-A5 and a interrupt router to
+route the peripheral interrupts between them.
 
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- arch/arm/boot/dts/vfxxx.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/irqchip/irq-nvic.c       | 70 +++++++++++++++++++++++++++++++++++++++-
+ include/linux/irqchip/arm-nvic.h | 25 ++++++++++++++
+ 2 files changed, 94 insertions(+), 1 deletion(-)
+ create mode 100644 include/linux/irqchip/arm-nvic.h
 
-diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-index 505969a..85fb697 100644
---- a/arch/arm/boot/dts/vfxxx.dtsi
-+++ b/arch/arm/boot/dts/vfxxx.dtsi
-@@ -55,6 +55,11 @@
- 			#size-cells = <1>;
- 			ranges;
+diff --git a/drivers/irqchip/irq-nvic.c b/drivers/irqchip/irq-nvic.c
+index 4ff0805..dbfb5be 100644
+--- a/drivers/irqchip/irq-nvic.c
++++ b/drivers/irqchip/irq-nvic.c
+@@ -40,6 +40,7 @@
+ #define NVIC_MAX_IRQ		((NVIC_MAX_BANKS - 1) * 32 + 16)
  
-+			mscm: mscm@40001000 {
-+				compatible = "fsl,vf610-mscm";
-+				reg = <0x40001000 0x1000>;
-+			};
+ static struct irq_domain *nvic_irq_domain;
++const struct irq_domain_ops *nvic_routable_irq_domain_ops;
+ 
+ asmlinkage void __exception_irq_entry
+ nvic_handle_irq(irq_hw_number_t hwirq, struct pt_regs *regs)
+@@ -49,6 +50,73 @@ nvic_handle_irq(irq_hw_number_t hwirq, struct pt_regs *regs)
+ 	handle_IRQ(irq, regs);
+ }
+ 
++static int nvic_irq_domain_map(struct irq_domain *d, unsigned int irq,
++				irq_hw_number_t hw)
++{
++	int ret;
 +
- 			edma0: dma-controller@40018000 {
- 				#dma-cells = <2>;
- 				compatible = "fsl,vf610-edma";
++	ret = irq_map_generic_chip(d, irq, hw);
++
++	if (IS_ERR_VALUE(ret))
++		return ret;
++
++	return nvic_routable_irq_domain_ops->map(d, irq, hw);
++}
++
++static void nvic_irq_domain_unmap(struct irq_domain *d, unsigned int irq)
++{
++	nvic_routable_irq_domain_ops->unmap(d, irq);
++}
++
++static int nvic_irq_domain_xlate(struct irq_domain *d,
++				 struct device_node *controller,
++				 const u32 *intspec, unsigned int intsize,
++				 unsigned long *out_hwirq,
++				 unsigned int *out_type)
++{
++	*out_hwirq = intspec[0];
++	*out_type = IRQ_TYPE_NONE;
++
++	return nvic_routable_irq_domain_ops->xlate(d, controller, intspec,
++						  intsize, out_hwirq, out_type);
++}
++
++struct irq_domain_ops nvic_irq_domain_ops = {
++	.map	= nvic_irq_domain_map,
++	.unmap	= nvic_irq_domain_unmap,
++	.xlate	= nvic_irq_domain_xlate,
++};
++
++/* Default functions for routable irq domain */
++static int nvic_routable_irq_domain_map(struct irq_domain *d, unsigned int irq,
++			      irq_hw_number_t hw)
++{
++	return 0;
++}
++
++static void nvic_routable_irq_domain_unmap(struct irq_domain *d,
++					  unsigned int irq)
++{
++}
++
++static int nvic_routable_irq_domain_xlate(struct irq_domain *d,
++				struct device_node *controller,
++				const u32 *intspec, unsigned int intsize,
++				unsigned long *out_hwirq,
++				unsigned int *out_type)
++{
++	return 0;
++}
++
++static const struct irq_domain_ops nvic_default_routable_irq_domain_ops = {
++	.map = nvic_routable_irq_domain_map,
++	.unmap = nvic_routable_irq_domain_unmap,
++	.xlate = nvic_routable_irq_domain_xlate,
++};
++
++const struct irq_domain_ops *nvic_routable_irq_domain_ops =
++					&nvic_default_routable_irq_domain_ops;
++
+ static int __init nvic_of_init(struct device_node *node,
+ 			       struct device_node *parent)
+ {
+@@ -70,7 +138,7 @@ static int __init nvic_of_init(struct device_node *node,
+ 		irqs = NVIC_MAX_IRQ;
+ 
+ 	nvic_irq_domain =
+-		irq_domain_add_linear(node, irqs, &irq_generic_chip_ops, NULL);
++		irq_domain_add_linear(node, irqs, &nvic_irq_domain_ops, NULL);
+ 	if (!nvic_irq_domain) {
+ 		pr_warn("Failed to allocate irq domain\n");
+ 		return -ENOMEM;
+diff --git a/include/linux/irqchip/arm-nvic.h b/include/linux/irqchip/arm-nvic.h
+new file mode 100644
+index 0000000..0e92a14
+--- /dev/null
++++ b/include/linux/irqchip/arm-nvic.h
+@@ -0,0 +1,25 @@
++/*
++ *  include/linux/irqchip/arm-nvic.h
++ *
++ *  Copyright (C) 2014 Stefan Agner
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++#ifndef __LINUX_IRQCHIP_ARM_NVIC_H
++#define __LINUX_IRQCHIP_ARM_NVIC_H
++
++#ifndef __ASSEMBLY__
++
++#ifdef CONFIG_ARM_NVIC
++extern const struct irq_domain_ops *nvic_routable_irq_domain_ops;
++static inline void __init register_routable_domain_ops
++					(const struct irq_domain_ops *ops)
++{
++		nvic_routable_irq_domain_ops = ops;
++}
++#endif /* CONFIG_ARM_NVIC */
++
++#endif /* __ASSEMBLY__ */
++#endif /* __LINUX_IRQCHIP_ARM_NVIC_H */
 -- 
 2.1.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
