@@ -1,65 +1,92 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v15 06/12] dt-bindings: add document for dw_hdmi
-Date: Wed, 03 Dec 2014 10:19:58 +0100
-Message-ID: <1417598398.5124.2.camel@pengutronix.de>
-References: <1417505778-18341-1-git-send-email-andy.yan@rock-chips.com>
- <1417506124-18626-1-git-send-email-andy.yan@rock-chips.com>
- <1417544629.3411.15.camel@pengutronix.de> <547E5F51.2090800@rock-chips.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH] mfd: max77686: Fix parent of rtc device
+Date: Wed, 03 Dec 2014 10:25:34 +0100
+Message-ID: <1417598734.23732.11.camel@AMDC1943>
+References: <1417523620-4311-1-git-send-email-yadi.brar@samsung.com>
+ <1417524339-4604-1-git-send-email-yadi.brar@samsung.com>
+ <547DBFAD.30605@samsung.com> <000001d00ed7$db623bb0$9226b310$%brar@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <547E5F51.2090800@rock-chips.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, rmk+kernel@arm.linux.org.uk, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, Dave Airlie <airlied@redhat.com>, mark.yao@rock-chips.com, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, vladimir_zapolskiy@mentor.comLucas Stach <l>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <000001d00ed7$db623bb0$9226b310$%brar@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Yadwinder Singh Brar <yadi.brar@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lee.jones@linaro.org, sameo@linux.intel.com, akpm@linux-foundation.org, tomasz.figa@gmail.com, robh+dt@kernel.org, yadi.brar01@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
-
-Am Mittwoch, den 03.12.2014, 08:54 +0800 schrieb Andy Yan:
-> >> +Required properities:
-> >> +- compatible: platform specific such as:
-> >> +   * "fsl,imx6q-hdmi"
-> >> +   * "fsl,imx6dl-hdmi"
-> >> +   * "rockchip,rk3288-dw-hdmi"
-> > I think we should add a common compatible value "snps,dw-hdmi-tx" here:
+On =C5=9Bro, 2014-12-03 at 14:32 +0530, Yadwinder Singh Brar wrote:
+>=20
+> On Tuesday, December 02, 2014 7:04 PM, Krzysztof Koz=C5=82owski wrote=
+:=20
+> > On 02.12.2014 13:45, Yadwinder Singh Brar wrote:
+> > > rtc have different i2c client than power(pmic) block. So rtc devi=
+ce
+> > > should sit under its own i2c client in device hierarchy, which
+> > reflects in sysfs also.
+> > > This patch modifies code to register rtc cell with rtc->dev as
+> > parent.
+> > >
+> > > Without this patch :
+> > > # ls /sys/class/i2c-adapter/i2c-0/0-0009/
+> > > driver         max77686-pmic  modalias       power          ueven=
+t
+> > > max77686-clk   max77686-rtc   name           subsystem
+> > >
+> > > After applying patch :
+> > > # ls /sys/class/i2c-adapter/i2c-0/0-0006/
+> > > driver/        modalias       power/         uevent
+> > > max77686-rtc/  name           subsystem/
+> > >
+> > > Signed-off-by: Yadwinder Singh Brar <yadi.brar@samsung.com>
+> > > ---
+> > >
+> > > Or Can we follow another (exhaustive but more cleaner) approach,
+> > which
+> > > will be more like code refactoring and cleanup rather than only f=
+ix:
+> > > Since rtc uses i2c client, which gets created using i2c_new_dummy=
+()
+> > > and is not shared by any other cell of max77686. So we can covert=
+ rtc
+> > > platform driver itself to i2c client driver. It will also allow t=
+o
+> > > expilicitly describe max77686-rtc in DT which we can't do now.
+> > > It can be applicable to some other existing and new mfd pmic driv=
+ers.
+> > > Any suggestion/comments ?
+> >=20
+> > Hi,
+> >=20
+> > What kind of problem is solved by this patch?
 > >
-> > 	compatible = "fsl,imx6q-hdmi", "snps,dw-hdmi-tx";
-> >
->       How about "snps,dw-hdmi", because the driver is not only about
->    hdmi tx, but also include hdmi phy.
+>=20
+> Let me try to explain once again :)
+> After seeing a message "i2c i2c-0: .... , addr=3D0x06, .." in dmesg l=
+og,
+> I was not able to find any such device in sysfs as well as device tre=
+e.
+> There was no device under /sys/class/i2c-dev/i2c-0/device/0-0006/
+> Isn't something wrong or missing ?
+>=20
+> This patch fixes that missing parent child relation, which IMO
+> should be correct always, though it causes any major problem or not.
 
-Synopsys call the whole module
-"DesignWare HDMI Transmitter (TX) IP Solution":
+OK, I got your point. I'm fine with both solutions and the patch looks
+good, so:
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
-https://www.synopsys.com/dw/ipdir.php?ds=dwc_hdmi_14_csds_tx
-https://www.synopsys.com/dw/ipdir.php?ds=dwc_hdmi_20_csds_tx
+> Still I am thinking, 0-0006 slave device(rtc) shouldn't also appear i=
+n DT?
+> As DT should describe the hardware that we are using.
 
-That includes the PHY. I'd prefer keeping the -tx in there to
-differentiate from a possible future "snps,dw-hdmi-rx":
+Your patch properly describes the hardware. However from driver
+perspective, the RTC here is not an standalone driver and depends on
+parent (MFD) driver.
 
-https://www.synopsys.com/dw/ipdir.php?ds=dwc_hdmi_14_csds_rx
-https://www.synopsys.com/dw/ipdir.php?ds=dwc_hdmi_20_csds_rx
+Although max77686 RTC could have its own DeviceTree node, I think it
+should still be put under main MFD driver's node, because the parent
+manages stuff like interrupts.
 
->        If we add such compatible value, do we have to implement another
->     platform driver like dw_hdmi-pltfm.c with the 
-> compatible="snps,dw-hdmi" ,
->     or just include the compatible value in dw_hdmi-imx.c and 
-> dw_hdmi-rockchip.c?
-
-That common compatible doesn't have to be used by any driver. It's just
-there to show these are the same/similar IP core.
-If a common driver without any SoC specific knowledge could be written,
-that one would match against the common compatible.
-
-regards
-Philipp
+Best regards,
+Krzysztof
