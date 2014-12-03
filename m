@@ -1,73 +1,151 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/1] of-unittest: Deletion of an unnecessary check
- =?iso-8859-1?Q?before=0D?= the function call "of_node_put"
-Date: Wed, 03 Dec 2014 17:03:11 +0000
-Message-ID: <20141203170311.BADB8C40932@trevor.secretlab.ca>
-References: <5307CAA2.8060406@users.sourceforge.net>
-	<alpine.DEB.2.02.1402212321410.2043@localhost6.localdomain6>
-	<530A086E.8010901@users.sourceforge.net>
-	<alpine.DEB.2.02.1402231635510.1985@localhost6.localdomain6>
-	<530A72AA.3000601@users.sourceforge.net>
-	<alpine.DEB.2.02.1402240658210.2090@localhost6.localdomain6>
-	<530B5FB6.6010207@users.sourceforge.net>
-	<alpine.DEB.2.10.1402241710370.2074@hadrien>
-	<530C5E18.1020800@users.sourceforge.net>
-	<alpine.DEB.2.10.1402251014170.2080@hadrien>
-	<530CD2C4.4050903@users.sourceforge.net>
-	<alpine.DEB.2.10.1402251840450.7035@hadrien>
-	<530CF8FF.8080600@users.sourceforge.net>
-	<alpine.DEB.2.02.1402252117150.2047@localhost6.localdomain6>
-	<530DD06F.4090703@users.sourceforge.net>
-	<alpine.DEB.2.02.1402262129250.2221@localhost6.localdomain6>
-	<5317A59D.4@users.sourceforge.net>
-	<547DB803.1080406@users.sourceforge.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <547DB803.1080406-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: SF Markus Elfring <elfring-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH 03/12] irqchip: gic: define =?UTF-8?Q?register=5Frouta?=
+ =?UTF-8?Q?ble=5Fdomain=5Fops=20conditional?=
+Date: Wed, 03 Dec 2014 18:28:33 +0100
+Message-ID: <8eccedc781df2636a132dae449cbe774@agner.ch>
+References: <1417565531-4507-1-git-send-email-stefan@agner.ch>
+ <1417565531-4507-4-git-send-email-stefan@agner.ch>
+ <5174649.NxPq80uDz8@wuerfel> <alpine.DEB.2.11.1412031303000.16275@nanos>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.11.1412031303000.16275@nanos>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Arnd Bergmann <arnd@arndb.de>, shawn.guo@linaro.org, kernel@pengutronix.de, Russell King <linux@arm.linux.org.uk>, u.kleine-koenig@pengutronix.de, Jason Cooper <jason@lakedaemon.net>, olof@lixom.net, daniel.lezcano@linaro.org, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, LAK <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Sricharan R <r.sricharan@ti.com>, Marc Zyngier <marc.zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 02 Dec 2014 14:00:51 +0100
-, SF Markus Elfring <elfring-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
- wrote:
-> From: Markus Elfring <elfring-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-> Date: Tue, 2 Dec 2014 13:54:00 +0100
+On 2014-12-03 14:04, Thomas Gleixner wrote:
+> On Wed, 3 Dec 2014, Arnd Bergmann wrote:
 > 
-> The of_node_put() function tests whether its argument is NULL and then
-> returns immediately. Thus the test around the call is not needed.
+>> On Wednesday 03 December 2014 01:12:02 Stefan Agner wrote:
+>> > The inline function register_routable_domain_ops is only usable if
+>> > CONFIG_ARM_GIC is set. Make it depend on this configuration. This
+>> > also allows other SoC interrupt controller to provide such a
+>> > function.
+>> >
+>> > Signed-off-by: Stefan Agner <stefan@agner.ch>
+>>
+>> I don't think this is a good idea: either the interface is meant
+>> to be generic and should work with any interrupt controller, or
+>> it is specific to one irqchip and another irqchip should provide
+>> a different interface that has a nonconflicting name.
+>>
+>> I suppose you want the latter here, given that the declaration
+>> is part of the gic specific header file.
 > 
-> This issue was detected by using the Coccinelle software.
-> 
-> Signed-off-by: Markus Elfring <elfring-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+> That routable_domain stuff should have never been invented. In
+> hindsight we should have done the stacked irq domains back then
+> already, but in hindsight ...
 
-Applied, thanks.
+I must admit that my first implementation even used arch_extn (through
+the mask/unmask stuff). Then I saw the routable domain stuff, which
+looked more like a fit. But when I realized that only GIC has support
+for that, I soon realized that this might either need a proper
+framework... my hackish NVIC extension probably won't be acceptable...
 
-g.
+Stack-able IRQ domain sounds like exactly what I was looking for...
 
-> ---
->  drivers/of/unittest.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-> index cc0c5ec..06ebe9d 100644
-> --- a/drivers/of/unittest.c
-> +++ b/drivers/of/unittest.c
-> @@ -486,8 +486,7 @@ static void __init of_selftest_changeset(void)
->  	/* Make sure node names are constructed correctly */
->  	selftest((np = of_find_node_by_path("/testcase-data/changeset/n2/n21")),
->  		 "'%s' not added\n", n21->full_name);
-> -	if (np)
-> -		of_node_put(np);
-> +	of_node_put(np);
->  
->  	mutex_lock(&of_mutex);
->  	selftest(!of_changeset_revert(&chgset), "revert failed\n");
-> -- 
-> 2.1.3
+> If you look at the crossbar scheme what we have now:
 > 
+>    GIC domain
+> |--------------|
+> |              |---------- private
+> | non routable |---------- peripheral
+> |              |---------- peripheral
+> |              |
+> |--------------|
+> |              |---------- peripheral
+> |   routable   |---------- peripheral
+> |    |         |---------- peripheral
+> |--------------|
+>      |               |----------------|
+>      |-------------->| crossbar magic |
+>                      |----------------|
+> 
+> which is not how the hardware looks. The hardware actually looks like
+> this:
+> 
+>    GIC domain
+> |--------------|
+> |              |---------- private
+> | non routable |---------- peripheral
+> |              |---------- peripheral
+> |              |
+> |--------------|           |--------------|
+> |              |           |              |---------- peripheral
+> |   routable   |-----------| crossbar     |---------- peripheral
+> |              |           | domain       |---------- peripheral
+> |--------------|           |--------------|
+> 
+> So it is completely obvious that the peripheral interrupts which need
+> to be routed through the crossbar belong to a different domain. We
+> really should convert crossbar to that scheme and get rid of the
+> routable domain stuff completely.
+> 
+> With vybrid thats not different according to the diagram in the
+> reference manual.
+> 
+>   GIC domain
+> |--------------|
+> |              |---------- private
+> | non routable |---------- peripheral
+> |              |---------- peripheral
+> |              |
+> |--------------|           |--------------|
+> |              |           |              |
+> |   routable   |-----------|  IRQ router  |
+> |              |           |  domain      |
+> |              |           |              |
+> |--------------|           |--------------|
+>                            | Shared state |---------- CPU to CPU 
+>   NVIC domain              | and hardware |---------- peripheral
+> |--------------|           |              |---------- peripheral
+> |              |           |--------------|
+> |              |           |              |
+> |   routable   |-----------|  IRQ router  |
+> |              |           |  domain      |
+> |              |           |              |
+> |--------------|           |--------------|
+> |              |
+> |              |---------- private
+> | non routable |---------- peripheral
+> |              |---------- peripheral
+> |--------------|
+> 
+> The routable domain stuff is just an adhoc redirector which must be
+> tied to a particular base irq chip implementation (i.e. GIC). With
+> stacked irq domains there is no dependency on the underlying irq
+> chip. No ifdeffery, nothing. So you can use the same router domain
+> implementation for both the A5 and the M4 side.
+> 
+> On the A5 side the router domain has the gic domain as parent and on
+> the M4 side the nvic domain.
+> 
+> The shared interrupts are allocated through the router domain which
+> decides whether the interrupt can be assigned to a particular core or
+> not. If it can be assigned it allocates the corresponding interrupt in
+> the parent domain, sets up the routing and everything just works.
+
+What do you mean by the shared state in the drawing above? Currently, I
+check whether a interrupt is already used by the other core by reading
+the register (do this configuration register reflect the "shared state"
+in your drawing?).
+
+
+> 
+> See:
+> http://git.kernel.org/cgit/linux/kernel/git/tip/tip.git/log/?h=irq/irqdomain-arm
+> 
+
+Thanks for the link. So my work would involve to support domain
+hierarchy for NVIC (proper irq_domain_ops, introduce arm,routable-irqs
+property, anything else?) and then make use of the hierarchy code in my
+MSCM driver like for instance the mtk-sysirq driver...?
+
+What is the state of the IRQ domain hierarchy, when will it go upstream?
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Stefan
