@@ -1,118 +1,56 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v14 03/10] qcom: spm: Add Subsystem Power Manager driver
-Date: Wed, 03 Dec 2014 10:11:25 +0100
-Message-ID: <547ED3BD.5090209@linaro.org>
-References: <1417541958-56907-1-git-send-email-lina.iyer@linaro.org> <1417541958-56907-4-git-send-email-lina.iyer@linaro.org> <20141202230544.GG499@linaro.org>
+From: Lyra Zhang <zhang.lyra@gmail.com>
+Subject: Re: [PATCH v3 3/5] arm64: dts: Add support for Spreadtrum SC9836 SoC
+ in dts and Makefile
+Date: Wed, 3 Dec 2014 17:16:52 +0800
+Message-ID: <CAAfSe-tf8WMRPnPZuEsDYbjMjBHnkSud_aX4ksu6yvnEDD-SAw@mail.gmail.com>
+References: <1416917818-10506-1-git-send-email-chunyan.zhang@spreadtrum.com>
+	<1416917818-10506-4-git-send-email-chunyan.zhang@spreadtrum.com>
+	<20141127115042.GE857@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20141202230544.GG499@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Lina Iyer <lina.iyer@linaro.org>, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20141127115042.GE857@leverpostej>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "jslaby@suse.cz" <jslaby@suse.cz>, "galak@codeaurora.org" <galak@codeaurora.org>, "broonie@linaro.org" <broonie@linaro.org>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, Pawel Moll <Pawel.Moll@arm.com>, "artagnon@gmail.com" <artagnon@gmail.com>, "rrichter@cavium.com" <rrichter@cavium.com>, Will Deacon <Will.Deacon@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "gnomes@lxorguk.ukuu.org.uk" <gnomes@lxorguk.ukuu.org.uk>, "corbet@lwn.net" <corbet@lwn.net>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "broonie@kernel.org" <broonie@kernel.org>, "heiko@sntech.de" <heiko@>
 List-Id: devicetree@vger.kernel.org
 
-On 12/03/2014 12:05 AM, Lina Iyer wrote:
-> On Tue, Dec 02 2014 at 10:40 -0700, Lina Iyer wrote:
-> +
-> [...]
-
-[ ... ]
-
->> +static int __init qcom_spm_init(void)
->> +{
->> +    int ret;
->> +
->> +    /*
->> +     * cpuidle driver need to registered before the cpuidle device
->> +     * for any cpu. Register the device for the the cpuidle driver.
->> +     */
->> +    ret =3D platform_device_register(&qcom_cpuidle_drv);
->> +    if (ret)
->> +        return ret;
-> Stephen pointed out that we would have the platform device lying arou=
-nd
-> on a non-QCOM device when using multi_v7_defconfig.
-
-Perhaps I am missing the point, but this is not supposed to happen, no =
-?
-
-> So instead of doing this here, we could do this in the probe..
 >
-> if (!cpuidle_get_driver()) {
->          int ret =3D platform_device_register(&qcom_cpuidle_drv);
->          if (ret)
->                  return ret;
-> }
+>> +       gic: interrupt-controller@12001000 {
+>> +               compatible = "arm,cortex-a15-gic", "arm,cortex-a9-gic";
+>> +               #interrupt-cells = <3>;
+>> +               interrupt-controller;
+>> +               reg = <0 0x12001000 0 0x1000>,
+>> +                     <0 0x12002000 0 0x1000>,
+>> +                     <0 0x12004000 0 0x2000>,
+>> +                     <0 0x12006000 0 0x2000>;
+>> +       };
 >
-> Would that be okay?
+> I believe GICC should be 8KiB here.
 >
-> The successful probe indicates that we are on a QCOM SoC, and we have=
- not
-> registered a cpuidle_driver before this.
+Yes, I'll correct it in next patch.
+>> +
+>> +       psci {
+>> +               compatible = "arm,psci-0.2";
+>> +               method = "smc";
+>> +       };
 >
-> Thanks,
-> Lina
+> Do you have a complete PSCI 0.2 implementation (e.g. are all the
+> mandatory functions implemented)?
 >
->> +
->> +    return platform_driver_register(&spm_driver);
->> +}
->> +module_init(qcom_spm_init);
->> +
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_DESCRIPTION("SAW power controller driver");
->> +MODULE_ALIAS("platform:saw");
->> diff --git a/include/soc/qcom/pm.h b/include/soc/qcom/pm.h
->> new file mode 100644
->> index 0000000..d9a56d7
->> --- /dev/null
->> +++ b/include/soc/qcom/pm.h
->> @@ -0,0 +1,31 @@
->> +/*
->> + * Copyright (c) 2009-2014, The Linux Foundation. All rights reserv=
-ed.
->> + *
->> + * This software is licensed under the terms of the GNU General Pub=
-lic
->> + * License version 2, as published by the Free Software Foundation,=
- and
->> + * may be copied, distributed, and modified under those terms.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + *
->> + */
->> +
->> +#ifndef __QCOM_PM_H
->> +#define __QCOM_PM_H
->> +
->> +enum pm_sleep_mode {
->> +    PM_SLEEP_MODE_STBY,
->> +    PM_SLEEP_MODE_RET,
->> +    PM_SLEEP_MODE_SPC,
->> +    PM_SLEEP_MODE_PC,
->> +    PM_SLEEP_MODE_NR,
->> +};
->> +
->> +struct qcom_cpu_pm_ops {
->> +    int (*standby)(void *data);
->> +    int (*spc)(void *data);
->> +};
->> +
->> +#endif  /* __QCOM_PM_H */
->> --
->> 2.1.0
->>
+I was using the latest boot-wrapper as the bootloader for test,  I'll
+add a compatible string "arm,psci" in v4.
+We'll use u-boot on real hardware, the support for PSCI in our u-boot
+is in progress.
+We're intending to implement psci-0.1 at first, and psci-0.2 for the next step.
 
+> I take it CPUs enter the kernel at EL2?
+>
+yes, we've just do like this.
 
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
+> How have you tested this?
 
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+I'll test it on the SC9836 FPGA board before next submitting.
+
+Thanks for your patient review.
+Chunyan
