@@ -1,97 +1,235 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] devicetree: of: Add bindings for chosen node, stdout-path
-Date: Wed, 3 Dec 2014 15:12:03 +0000
-Message-ID: <CACxGe6vdbURE3=W3Uerwy90piGKhv7-m+-vpUhCiUTKB4AzTsw@mail.gmail.com>
-References: <1417110967-16284-1-git-send-email-leif.lindholm@linaro.org>
- <1417110967-16284-2-git-send-email-leif.lindholm@linaro.org> <547E7455.6090009@gmail.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 06/11] memory: atmel-ebi: add DT bindings documentation
+Date: Wed, 3 Dec 2014 16:15:36 +0100
+Message-ID: <547F2918.3070803@atmel.com>
+References: <1417429647-3419-1-git-send-email-boris.brezillon@free-electrons.com> <1417429647-3419-7-git-send-email-boris.brezillon@free-electrons.com> <547F24B6.8070504@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <547E7455.6090009-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <547F24B6.8070504-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 3, 2014 at 2:24 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 11/27/2014 9:56 AM, Leif Lindholm wrote:
->> Add a global binding for the chosen node.
->> Include a description of the stdout-path, and an explicit statement on
->> its extra options in the context of a UART console.
+Le 03/12/2014 15:56, Nicolas Ferre a =E9crit :
+> Le 01/12/2014 11:27, Boris Brezillon a =E9crit :
+>> The EBI (External Bus Interface) is used to access external peripher=
+als
+>> (NOR, SRAM, NAND, and other specific devices like ethernet controlle=
+rs).
+>> Each device is assigned a CS line and an address range and can have =
+its
+>> own configuration (timings, access mode, bus width, ...).
+>> This driver provides a generic DT binding to configure a device acco=
+rding
+>> to its requirements.
+>> For specific device controllers (like the NAND one) the SMC timings
+>> should be configured by the controller driver through the matrix and=
+ smc
+>> syscon regmaps.
 >>
->> Opening description stolen from www.devicetree.org, and part of the
->> remaining text provided by Mark Rutland.
->>
->> Signed-off-by: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 >> ---
->>  Documentation/devicetree/bindings/chosen.txt |   42 ++++++++++++++++++++++++++
->>  1 file changed, 42 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/chosen.txt
+>>  .../bindings/memory-controllers/atmel-ebi.txt      | 155 ++++++++++=
++++++++++++
+>>  1 file changed, 155 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/memory-control=
+lers/atmel-ebi.txt
 >>
->> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+>> diff --git a/Documentation/devicetree/bindings/memory-controllers/at=
+mel-ebi.txt b/Documentation/devicetree/bindings/memory-controllers/atme=
+l-ebi.txt
 >> new file mode 100644
->> index 0000000..9cd74e9
+>> index 0000000..3749ea1
 >> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/chosen.txt
->> @@ -0,0 +1,42 @@
->> +The chosen node
->> +---------------
+>> +++ b/Documentation/devicetree/bindings/memory-controllers/atmel-ebi=
+=2Etxt
+>> @@ -0,0 +1,155 @@
+>> +* Device tree bindings for Atmel EBI
 >> +
->> +The chosen node does not represent a real device, but serves as a place
->> +for passing data between firmware and the operating system, like boot
->> +arguments. Data in the chosen node does not represent the hardware.
+>> +The External Bus Interface (EBI) controller is a bus where you can =
+connect
+>> +asynchronous (NAND, NOR, SRAM, ....) and synchronous memories (SDR/=
+DDR SDRAMs).
+>> +The EBI provides a glue-less interface to asynchronous memories tho=
+ugh the SMC
+>> +(Static Memory Controller).
+>> +Synchronous memories (and some asynchronous memories like NANDs) ca=
+n be
+>> +attached to specialized controllers which are responsible for confi=
+guring the
+>> +bus appropriately according to the connected device.
+>> +In the other hand, the bus interface can be automated for simple as=
+ynchronous
+>> +devices.
 >> +
+>> +Required properties:
 >> +
->> +stdout-path property
->
-> The code in patch 3/3 adds the extra options feature to the properties:
->
->   stdout-path
->   linux,stdout-path
->   stdout  [if (IS_ENABLED(CONFIG_PPC) ... ]
+>> +- compatible:		"atmel,at91sam9260-ebi"
+>> +			"atmel,at91sam9261-ebi"
+>> +			"atmel,at91sam9263-ebi0"
+>> +			"atmel,at91sam9263-ebi1"
+>=20
+> Ditto: 9263 twice.
+>=20
+>> +			"atmel,at91sam9g45-ebi"
+>> +			"atmel,at91sam9x5-ebi"
+>> +			"atmel,sama5d3-ebi"
+>> +
+>> +- reg:			Contains offset/length value for EBI memory mapping.
+>> +			This property might contain several entries if the EBI
+>> +			memory range is not contiguous
+>> +
+>> +- #address-cells:	Must be 2.
+>> +			The first cell encodes the CS.
+>> +			The second cell encode the offset into the CS memory
+>> +			range.
+>> +
+>> +- #size-cells:		Must be set to 1.
+>> +
+>> +- ranges:		Encodes CS to memory region association.
+>> +
+>> +- clocks:		Clock feeding the EBI controller.
+>> +			See clock-bindings.txt
+>> +
+>> +Child chip-select (cs) nodes contain the memory devices nodes conne=
+cted to
+>> +such as NOR (e.g. cfi-flash) and NAND.
+>> +There might be board specific devices like FPGAs.
+>> +You'll define you device requirements in these child nodes.
+>> +
+>> +Required child cs node properties:
+>> +
+>> +- #address-cells:	Must be 2.
+>> +
+>> +- #size-cells:		Must be 1.
+>> +
+>> +- ranges:		Empty property indicating that child nodes can inherit
+>> +			memory layout.
+>> +
+>> +Optional child cs node properties:
+>> +- atmel,generic-dev		boolean property specifying if the device is
+>> +				a generic device.
 
-I don't understand what you mean here. Are you suggesting a change to
-this patch? Is there something deficient in it?
+Well... no real information, specify right here what a "generic device"=
+ is.
 
-g.
-
->
->> +--------------------
+>> +				The following properties are only parsed if
+>> +				this property is present.
+>> +				Specialized devices are attached to specialized
+>> +				controllers which are responsible for
+>> +				configuring the bus appropriately.
+>> +				Here are some examples of specialized
+>> +				controllers: NAND, CompactFlash, SDR-SDRAM.
 >> +
->> +Device trees may specify the device to be used for boot console output
->> +with a stdout-path property under /chosen, as described in ePAPR, e.g.
+>> +- atmel,bus-width:		width of the asynchronous device's data bus
+>> +				8, 16 or 32.
+>> +				8 if not present.
 >> +
->> +/ {
->> +     chosen {
->> +             stdout-path = "/serial@f00:115200";
->> +     };
+>> +- atmel,byte-access-type	"write" or "select" (see Atmel datasheet).
+>> +				"select" if not present.
 >> +
->> +     serial@f00 {
->> +             compatible = "vendor,some-uart";
->> +             reg = <0xf00 0x10>;
->> +     };
->> +};
+>> +- atmel,read-mode		"nrd" or "ncs".
+>> +				"ncs" is not present.
 >> +
->> +If the character ":" is present in the value, this terminates the path.
->> +The meaning of any characters following the ":" is device-specific, and
->> +must be specified in the relevant binding documentation.
+>> +- atmel,write-mode		"nwe" or "ncs".
+>> +				"ncs" is not present.
 >> +
->> +For UART devices, the format supported by uart_parse_options() is the
->> +expected one. In this case, the format of the string is:
+>> +- atmel,exnw-mode		"disabled", "frozen" or "ready".
+>> +				"disabled" if not present.
 >> +
->> +     <baud>{<parity>{<bits>{<flow>}}}
+>> +- atmel,page-mode		enable page mode if present. The provided value
+>> +				defines the page size (supported values: 4, 8,
+>> +				16 and 32).
 >> +
->> +where
+>> +Optional device timings expressed in nanoseconds (if the property i=
+s not
+>> +present 0 is assumed):
 >> +
->> +     baud    - baud rate in decimal
->> +     parity  - 'n' (none), 'o', (odd) or 'e' (even)
->> +     bits    - number of data bits
->> +     flow    - 'r' (rts)
+>> +- atmel,ncs-rd-setup-ns
+>> +- atmel,nrd-setup-ns
+>> +- atmel,ncs-wr-setup-ns
+>> +- atmel,nwe-setup-ns
+>> +- atmel,ncs-rd-pulse-ns
+>> +- atmel,nrd-pulse-ns
+>> +- atmel,ncs-wr-pulse-ns
+>> +- atmel,nwe-pulse-ns
+>> +- atmel,nwe-cycle-ns
+>> +- atmel,nrd-cycle-ns
+>> +- atmel,tdf-ns
 >> +
->> +For example: 115200n8r
+>> +- atmel,tdf-optimized		data float optimized mode. If present the da=
+ta
+>> +				float time is optimized depending on the next
+>> +				device being accessed (next device setup
+>> +				time is substracted to the current devive data
+>=20
+> Typo: subtract, device
+>=20
+>> +				float time).
+>> +
+>> +
+>> +
+>> +Example:
+>> +
+>> +	ebi: ebi@10000000 {
+>> +		compatible =3D "atmel,sama5d3-ebi", "simple-bus";
+>> +		#address-cells =3D <2>;
+>> +		#size-cells =3D <1>;
+>> +		atmel,smc =3D <&hsmc>;
+>> +		atmel,matrix =3D <&matrix>;
+>> +		reg =3D <0x10000000 0x10000000
+>> +		       0x40000000 0x30000000>;
+>> +		ranges =3D <0x0 0x0 0x10000000 0x10000000
+>> +			  0x1 0x0 0x40000000 0x10000000
+>> +			  0x2 0x0 0x50000000 0x10000000
+>> +			  0x3 0x0 0x60000000 0x10000000>;
+>> +		clocks =3D <&mck>;
+>> +
+>> +		pinctrl-names =3D "default";
+>> +		pinctrl-0 =3D <&pinctrl_ebi_addr>;
+>> +
+>> +		cs@0 {
+>> +			#address-cells =3D <2>;
+>> +			#size-cells =3D <1>;
+>> +			ranges;
+>> +			atmel,generic-dev;
+>> +			atmel,read-mode =3D "nrd";
+>> +			atmel,write-mode =3D "nwe";
+>> +			atmel,bus-width =3D <16>;
+>> +			atmel,ncs-rd-setup-ns =3D <0>;
+>> +			atmel,ncs-wr-setup-ns =3D <0>;
+>> +			atmel,nwe-setup-ns =3D <8>;
+>> +			atmel,nrd-setup-ns =3D <16>;
+>> +			atmel,ncs-rd-pulse-ns =3D <84>;
+>> +			atmel,ncs-wr-pulse-ns =3D <84>;
+>> +			atmel,nrd-pulse-ns =3D <76>;
+>> +			atmel,nwe-pulse-ns =3D <76>;
+>> +			atmel,nrd-cycle-ns =3D <107>;
+>> +			atmel,nwe-cycle-ns =3D <84>;
+>> +			atmel,tdf-ns =3D <16>;
+>> +
+>> +			nor: flash@0,0 {
+>> +				compatible =3D "cfi-flash";
+>> +				#address-cells =3D <1>;
+>> +				#size-cells =3D <1>;
+>> +				reg =3D <0x0 0x0 0x1000000>;
+>> +				bank-width =3D <2>;
+>> +			};
+>> +		};
+>> +	};
+>> +
 >>
->
+>=20
+>=20
+
+
+--=20
+Nicolas Ferre
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
