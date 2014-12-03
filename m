@@ -1,98 +1,71 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 2/4] i2c: cadence: Set the hardware time-out register to
- maximum value
-Date: Wed, 3 Dec 2014 12:28:30 +0100
-Message-ID: <20141203112830.GD1039@katana>
-References: <1417514749-24319-1-git-send-email-harinik@xilinx.com>
- <1417514749-24319-3-git-send-email-harinik@xilinx.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zbGR4y+acU1DwHSi"
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: [PATCH 11/11] ARM: at91/dt: fix at91 udc compatible strings
+Date: Wed,  3 Dec 2014 12:32:10 +0100
+Message-ID: <1417606330-17753-12-git-send-email-boris.brezillon@free-electrons.com>
+References: <1417606330-17753-1-git-send-email-boris.brezillon@free-electrons.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1417514749-24319-3-git-send-email-harinik@xilinx.com>
+In-Reply-To: <1417606330-17753-1-git-send-email-boris.brezillon@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Harini Katakam <harinik@xilinx.com>
-Cc: grant.likely@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, vishnum@xilinx.com
+To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
+The at91rm9200, at91sam9260, at91sam9261 and at91sam9263 SoCs have slightly
+different UDC IPs.
+Those differences were previously handled with cpu_is_at91xx macro which
+are about to be dropped for multi-platform support, thus we need to
+change compatible strings.
 
---zbGR4y+acU1DwHSi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+---
+ arch/arm/boot/dts/at91sam9260.dtsi | 2 +-
+ arch/arm/boot/dts/at91sam9261.dtsi | 3 ++-
+ arch/arm/boot/dts/at91sam9263.dtsi | 2 +-
+ 3 files changed, 4 insertions(+), 3 deletions(-)
 
-On Tue, Dec 02, 2014 at 03:35:47PM +0530, Harini Katakam wrote:
-> From: Vishnu Motghare <vishnum@xilinx.com>
->=20
-> Cadence I2C controller has bug wherein it generates invalid read transact=
-ions
-> after time-out in master receiver mode. This driver does not use the HW
-> timeout and this interrupt is disabled but the feature itself cannot be
-> disabled. Hence, this patch writes the maximum value (0xFF) to this regis=
-ter.
-> This is one of the workarounds to this bug and it will not avoid the issue
-> completely but reduce the chances of error.
-
-This is a good description and should be in a comment in the driver.
-
->=20
-> Signed-off-by: Vishnu Motghare <vishnum@xilinx.com>
-> Signed-off-by: Harini Katakam <harinik@xilinx.com>
-> ---
->  drivers/i2c/busses/i2c-cadence.c |    4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-ca=
-dence.c
-> index e54899e..8065205 100644
-> --- a/drivers/i2c/busses/i2c-cadence.c
-> +++ b/drivers/i2c/busses/i2c-cadence.c
-> @@ -111,6 +111,8 @@
->  #define CDNS_I2C_DIVA_MAX	4
->  #define CDNS_I2C_DIVB_MAX	64
-> =20
-> +#define CDNS_I2C_TIMEOUT_MAX	0xFF
-> +
->  #define cdns_i2c_readreg(offset)       readl_relaxed(id->membase + offse=
-t)
->  #define cdns_i2c_writereg(val, offset) writel_relaxed(val, id->membase +=
- offset)
-> =20
-> @@ -858,6 +860,8 @@ static int cdns_i2c_probe(struct platform_device *pde=
-v)
->  		goto err_clk_dis;
->  	}
-> =20
-> +	cdns_i2c_writereg(CDNS_I2C_TIMEOUT_MAX, CDNS_I2C_TIME_OUT_OFFSET);
-> +
->  	dev_info(&pdev->dev, "%u kHz mmio %08lx irq %d\n",
->  		 id->i2c_clk / 1000, (unsigned long)r_mem->start, id->irq);
-> =20
-> --=20
-> 1.7.9.5
->=20
-
---zbGR4y+acU1DwHSi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUfvPeAAoJEBQN5MwUoCm2BlIQAIyiQ/Cl6ZY9TjwtUoS+uq3R
-xJR0pS+CzzWlC9zv7YTATu9FyngTpTOM9f0sWjpPWQ03hLxkrouZoyqk3wXR2xpa
-hLVvYOekLia6eSmI25Xr9/tsKsS6QN4ToQbTvB2T7fcphcRAsQPdUm7O9f62D8SA
-nvAvH9qalBL82P4qA0K3YYBHU/y9PUx7TkCT8c6otPb2C5lSSb9HY9PSAvwbJgii
-aDwHuJfT8w3e+1JeCtpk2PDvx/NuLCv1s1KCWGi6IRcPvAEhVDsb+B6lsaKg/h8U
-Ycooe2IyDrF6bAtjrTAFITDAFS+4j8eAXQJ+8NKxCAVJSw+zIgYuTMtvq0QrUmmy
-jaNtaq1M+5w5pbpsMPx2fIRe9yCgWXf1/t/dYkPxDKsvVvpcRnAaAdadsqhldIsx
-4aJcMFFA41IgPqR0lpEaVotint/ahCjh9LUHldRiKfytfIY7LvZEpJ8EaxVdf/r5
-FbBVdMra4WkV35bPaX91uFb1PwDvOaWW6VkryAsmBhaQZTh68VS4xy3Ft6zxxwXz
-w2Rabclu3mmQQL7puQeaxHqDql2Hv9oaXA2qmixvtflX2rth+6rRQW0S9y1uahkN
-ZKFyTwKCzQaWK/RwPySG+9xJocdFwddJvsIAaiu0P1qEqIFArBo/ok7iB1XTJ7oF
-h8xXeWqvjmGPWOFCBTfc
-=HoJW
------END PGP SIGNATURE-----
-
---zbGR4y+acU1DwHSi--
+diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
+index cb100b0..b43de88 100644
+--- a/arch/arm/boot/dts/at91sam9260.dtsi
++++ b/arch/arm/boot/dts/at91sam9260.dtsi
+@@ -848,7 +848,7 @@
+ 			};
+ 
+ 			usb1: gadget@fffa4000 {
+-				compatible = "atmel,at91rm9200-udc";
++				compatible = "atmel,at91sam9260-udc";
+ 				reg = <0xfffa4000 0x4000>;
+ 				interrupts = <10 IRQ_TYPE_LEVEL_HIGH 2>;
+ 				clocks = <&udc_clk>, <&udpck>;
+diff --git a/arch/arm/boot/dts/at91sam9261.dtsi b/arch/arm/boot/dts/at91sam9261.dtsi
+index e52ae97..90f0b59 100644
+--- a/arch/arm/boot/dts/at91sam9261.dtsi
++++ b/arch/arm/boot/dts/at91sam9261.dtsi
+@@ -119,11 +119,12 @@
+ 			};
+ 
+ 			usb1: gadget@fffa4000 {
+-				compatible = "atmel,at91rm9200-udc";
++				compatible = "atmel,at91sam9261-udc";
+ 				reg = <0xfffa4000 0x4000>;
+ 				interrupts = <10 IRQ_TYPE_LEVEL_HIGH 2>;
+ 				clocks = <&udc_clk>, <&udpck>;
+ 				clock-names = "pclk", "hclk";
++				atmel,matrix = <&matrix>;
+ 				status = "disabled";
+ 			};
+ 
+diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
+index 51416c7d..2c7ed05 100644
+--- a/arch/arm/boot/dts/at91sam9263.dtsi
++++ b/arch/arm/boot/dts/at91sam9263.dtsi
+@@ -817,7 +817,7 @@
+ 			};
+ 
+ 			usb1: gadget@fff78000 {
+-				compatible = "atmel,at91rm9200-udc";
++				compatible = "atmel,at91sam9263-udc";
+ 				reg = <0xfff78000 0x4000>;
+ 				interrupts = <24 IRQ_TYPE_LEVEL_HIGH 2>;
+ 				clocks = <&udc_clk>, <&udpck>;
+-- 
+1.9.1
