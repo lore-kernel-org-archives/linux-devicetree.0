@@ -1,81 +1,141 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 02/11] mfd: syscon: Add Atmel Matrix bus DT binding
- documentation
-Date: Wed, 3 Dec 2014 15:52:35 +0100
-Message-ID: <20141203155235.5c5b4a2d@bbrezillon>
-References: <1417429647-3419-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1417429647-3419-3-git-send-email-boris.brezillon@free-electrons.com>
-	<547F1F11.5090803@atmel.com>
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: Re: [PATCH v14 03/10] qcom: spm: Add Subsystem Power Manager driver
+Date: Wed, 3 Dec 2014 07:55:08 -0700
+Message-ID: <20141203145508.GJ499@linaro.org>
+References: <1417541958-56907-1-git-send-email-lina.iyer@linaro.org>
+ <1417541958-56907-4-git-send-email-lina.iyer@linaro.org>
+ <20141202230544.GG499@linaro.org>
+ <547ED3BD.5090209@linaro.org>
+ <20141203143122.GH499@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <547F1F11.5090803-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141203143122.GH499@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Nicolas,
+On Wed, Dec 03 2014 at 07:31 -0700, Lina Iyer wrote:
+>On Wed, Dec 03 2014 at 02:11 -0700, Daniel Lezcano wrote:
+>>On 12/03/2014 12:05 AM, Lina Iyer wrote:
+>>>On Tue, Dec 02 2014 at 10:40 -0700, Lina Iyer wrote:
+>>>+
+>>>[...]
+>>
+>>[ ... ]
+>>
+>>>>+static int __init qcom_spm_init(void)
+>>>>+{
+>>>>+    int ret;
+>>>>+
+>>>>+    /*
+>>>>+     * cpuidle driver need to registered before the cpuidle device
+>>>>+     * for any cpu. Register the device for the the cpuidle driver=
+=2E
+>>>>+     */
+>>>>+    ret =3D platform_device_register(&qcom_cpuidle_drv);
+>>>>+    if (ret)
+>>>>+        return ret;
+>>>Stephen pointed out that we would have the platform device lying aro=
+und
+>>>on a non-QCOM device when using multi_v7_defconfig.
+>>
+>>Perhaps I am missing the point, but this is not supposed to happen, n=
+o ?
+>>
+>This would happen, since the file would compile on multi_v7 and we wou=
+ld
+>initialize and register this device regardless. The cpuidle-qcom.c
+>driver probe would bail out looking for a matching compatible property=
+=2E
+>So we would not register a cpuidle driver but the device would lay
+>around.
+>
+Not the best thing to do, but I noticed that ACPI driver does reference
+count to register cpuidle driver for the first device and remove them a=
+s
+the reference count decreases. I am not sure, if we need to reference
+count here, since the SPM devices themselves are not removable.
 
-On Wed, 3 Dec 2014 15:32:49 +0100
-Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
-
-> Le 01/12/2014 11:27, Boris Brezillon a =C3=A9crit :
-> > The Matrix registers are provided to configure internal bus behavio=
-r on
-> > at91 SoCs.
-> > Some registers might be access by several drivers (e.g. to configur=
-e
-> > external memory bus timings), hence we declare this register set as=
- a
-> > syscon device.
-> >=20
-> > Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/mfd/atmel-matrix.txt       | 24 ++++++++++=
-++++++++++++
-> >  1 file changed, 24 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/atmel-mat=
-rix.txt
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/mfd/atmel-matrix.txt=
- b/Documentation/devicetree/bindings/mfd/atmel-matrix.txt
-> > new file mode 100644
-> > index 0000000..e56e27a
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/atmel-matrix.txt
-> > @@ -0,0 +1,24 @@
-> > +* Device tree bindings for Atmel Bus Matrix
-> > +
-> > +The Bus Matrix registers are used to configure Atmel SoCs internal=
- bus
-> > +behavior (master/slave priorities, undefined burst length type, ..=
-=2E)
-> > +
-> > +Required properties:
-> > +- compatible:		Should be one of the following
-> > +			"atmel,at91sam9260-matrix", "syscon"
-> > +			"atmel,at91sam9261-matrix", "syscon"
-> > +			"atmel,at91sam9263-matrix", "syscon"
-> > +			"atmel,at91sam9263-matrix", "syscon"
->=20
-> Same string as the preceding one: shouldn't it be at91sam9rl?
-
-Indeed, and macro definitions for the 9rl are also missing in the
-atmel-matrix.h header.
-
-Thanks,
-
-Boris
-
---=20
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>So instead of doing this here, we could do this in the probe..
+>>>
+>>>if (!cpuidle_get_driver()) {
+>>>        int ret =3D platform_device_register(&qcom_cpuidle_drv);
+>>>        if (ret)
+>>>                return ret;
+>>>}
+>>>
+>>>Would that be okay?
+>>>
+>>>The successful probe indicates that we are on a QCOM SoC, and we hav=
+e not
+>>>registered a cpuidle_driver before this.
+>>>
+>>>Thanks,
+>>>Lina
+>>>
+>>>>+
+>>>>+    return platform_driver_register(&spm_driver);
+>>>>+}
+>>>>+module_init(qcom_spm_init);
+>>>>+
+>>>>+MODULE_LICENSE("GPL v2");
+>>>>+MODULE_DESCRIPTION("SAW power controller driver");
+>>>>+MODULE_ALIAS("platform:saw");
+>>>>diff --git a/include/soc/qcom/pm.h b/include/soc/qcom/pm.h
+>>>>new file mode 100644
+>>>>index 0000000..d9a56d7
+>>>>--- /dev/null
+>>>>+++ b/include/soc/qcom/pm.h
+>>>>@@ -0,0 +1,31 @@
+>>>>+/*
+>>>>+ * Copyright (c) 2009-2014, The Linux Foundation. All rights reser=
+ved.
+>>>>+ *
+>>>>+ * This software is licensed under the terms of the GNU General Pu=
+blic
+>>>>+ * License version 2, as published by the Free Software Foundation=
+, and
+>>>>+ * may be copied, distributed, and modified under those terms.
+>>>>+ *
+>>>>+ * This program is distributed in the hope that it will be useful,
+>>>>+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>>>>+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>>>+ * GNU General Public License for more details.
+>>>>+ *
+>>>>+ */
+>>>>+
+>>>>+#ifndef __QCOM_PM_H
+>>>>+#define __QCOM_PM_H
+>>>>+
+>>>>+enum pm_sleep_mode {
+>>>>+    PM_SLEEP_MODE_STBY,
+>>>>+    PM_SLEEP_MODE_RET,
+>>>>+    PM_SLEEP_MODE_SPC,
+>>>>+    PM_SLEEP_MODE_PC,
+>>>>+    PM_SLEEP_MODE_NR,
+>>>>+};
+>>>>+
+>>>>+struct qcom_cpu_pm_ops {
+>>>>+    int (*standby)(void *data);
+>>>>+    int (*spc)(void *data);
+>>>>+};
+>>>>+
+>>>>+#endif  /* __QCOM_PM_H */
+>>>>--
+>>>>2.1.0
+>>>>
+>>
+>>
+>>--=20
+>><http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+>>
+>>Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+>><http://twitter.com/#!/linaroorg> Twitter |
+>><http://www.linaro.org/linaro-blog/> Blog
+>>
