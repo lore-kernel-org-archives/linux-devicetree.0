@@ -1,245 +1,67 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: [PATCH] media: i2c/adp1653: devicetree support for adp1653
-Date: Wed, 3 Dec 2014 22:46:41 +0100
-Message-ID: <20141203214641.GA1390@amd>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH] Documentation: bindings: net: DPAA corenet binding
+ document
+Date: Wed, 3 Dec 2014 16:01:28 -0600
+Message-ID: <1417644088.15957.235.camel@freescale.com>
+References: <1417169426-11823-1-git-send-email-madalin.bucur@freescale.com>
+	 <1417495189.15957.209.camel@freescale.com>
+	 <BL2PR03MB545CC342CA6A408D2FD5CF6E67A0@BL2PR03MB545.namprd03.prod.outlook.com>
+	 <1417561420.15957.221.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-media-owner@vger.kernel.org
-To: pali.rohar@gmail.com, sre@debian.org, sre@ring0.de, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, freemangordon@abv.bg, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, sakari.ailus@iki.fi, m.chehab@samsung.com, devicetree@vger.kernel.org, linux-media@vger.kernel.org
-Cc: j.anaszewski@samsung.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1417561420.15957.221.camel@freescale.com>
+Sender: netdev-owner@vger.kernel.org
+To: Bucur Madalin-Cristian-B32716 <madalin.bucur@freescale.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Medve Emilian-EMMEDVE1 <Emilian.Medve@freescale.com>, Liberman Igal-B31950 <Igal.Liberman@freescale.com>, "galak@codeaurora.org" <galak@codeaurora.org>, Shaohui Xie <Shaohui.Xie@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 2014-12-02 at 17:03 -0600, Scott Wood wrote:
+> On Tue, 2014-12-02 at 06:12 -0600, Bucur Madalin-Cristian-B32716 wrote:
+> > > -----Original Message-----
+> > > From: Wood Scott-B07421
+> > > Sent: Tuesday, December 02, 2014 6:40 AM
+> > >
+> > > No need for the <SoC> part.  As we previously discussed, the only
+> > > purpose of this node is backwards compatibility with the U-Boot MAC
+> > > address fixup -- if U-Boot doesn't look for the <SoC> version, then
+> > > don't complicate things.
+> > > 
+> > > Though, I can't find where U-Boot references this node.  Are you sure
+> > > it's not using the ethernet%d aliases like everything else, in which
+> > > case why do we need this node at all?
+> > > 
+> > > -Scott
+> > > 
+> > 
+> > The initial (Freescale SDK) binding document contained those compatibles,
+> > not sure what the initial intent was for the <SoC> variants.
+> > 
+> > The "fsl,dpaa" node is of interest to the DPAA Ethernet because it is
+> > the parent of the "fsl,dpa-ethernet" nodes.
+> 
+> I'm not interested in what the SDK binding says, or what the SDK kernel
+> does.  I'm interested in whether there's a U-Boot compatibility issue,
+> as was previously alleged.  If there isn't, then there's no need for
+> fsl,dpaa *or* fsl,dpa-ethernet.
 
-We are moving to device tree support on OMAP3, but that currently
-breaks ADP1653 driver. This adds device tree support, plus required
-documentation.
+OK, I found the U-Boot fixup in question.  It's not for MAC addresses,
+but for marking disabled ports as disabled.  It marks the dpa-ethernet
+node as disabled, based on it having an fsl,fman-mac property that
+points to the MAC node.
 
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
+U-Boot also disables the MAC node itself, so it doesn't matter if it
+doesn't find fsl,fman-mac -- except for the special case of fm1-dtsec1,
+which is always kept enabled because it's used for MDIO for all ports.
 
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/adp1653.txt
-@@ -0,0 +1,38 @@
-+* Analog Devices ADP1653 flash LED driver
-+
-+Required Properties:
-+
-+  - compatible: Must contain one of the following
-+    - "adi,adp1653"
-+
-+  - reg: I2C slave address
-+
-+  - gpios: References to the GPIO that controls the power for the chip.
-+
-+There are two led outputs available - flash and indicator. One led is
-+represented by one child node, nodes need to be named "flash" and "indicator".
-+
-+Required properties of the LED child node:
-+- max-microamp : see Documentation/devicetree/bindings/leds/common.txt
-+
-+Required properties of the flash LED child node:
-+
-+- flash-max-microamp : see Documentation/devicetree/bindings/leds/common.txt
-+- flash-timeout-microsec : see Documentation/devicetree/bindings/leds/common.txt
-+
-+Example:
-+
-+        adp1653: led-controller@30 {
-+                compatible = "adi,adp1653";
-+		reg = <0x30>;
-+                gpios = <&gpio3 24 GPIO_ACTIVE_HIGH>; /* 88 */
-+
-+		flash {
-+                        flash-timeout-microsec = <500000>;
-+                        flash-max-microamp = <320000>;
-+                        max-microamp = <50000>;
-+		};
-+                indicator {
-+                        max-microamp = <17500>;
-+		};
-+        };
-diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
-index cfddc3d..11d8afd 100644
---- a/arch/arm/boot/dts/omap3-n900.dts
-+++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -560,6 +567,22 @@
- 
- 		ti,usb-charger-detection = <&isp1704>;
- 	};
-+
-+	adp1653: led-controller@30 {
-+		compatible = "adi,adp1653";
-+		reg = <0x30>;
-+		gpios = <&gpio3 24 GPIO_ACTIVE_HIGH>; /* 88 */
-+
-+		flash {
-+			flash-timeout-microsec = <500000>;
-+			flash-max-microamp = <320000>;
-+			max-microamp = <50000>;
-+		};
-+
-+		indicator {
-+			max-microamp = <17500>;
-+		};
-+	};
- };
- 
- &i2c3 {
-diff --git a/drivers/media/i2c/adp1653.c b/drivers/media/i2c/adp1653.c
-index 873fe19..62601b2 100644
---- a/drivers/media/i2c/adp1653.c
-+++ b/drivers/media/i2c/adp1653.c
-@@ -8,6 +8,7 @@
-  * Contributors:
-  *	Sakari Ailus <sakari.ailus@iki.fi>
-  *	Tuukka Toivonen <tuukkat76@gmail.com>
-+ *      Pavel Machek <pavel@ucw.cz>
-  *
-  * This program is free software; you can redistribute it and/or
-  * modify it under the terms of the GNU General Public License
-@@ -34,9 +35,11 @@
- #include <linux/module.h>
- #include <linux/i2c.h>
- #include <linux/slab.h>
-+#include <linux/of_gpio.h>
-+#include <linux/gpio.h>
- #include <media/adp1653.h>
- #include <media/v4l2-device.h>
- 
- #define TIMEOUT_MAX		820000
- #define TIMEOUT_STEP		54600
- #define TIMEOUT_MIN		(TIMEOUT_MAX - ADP1653_REG_CONFIG_TMR_SET_MAX \
-@@ -306,9 +318,18 @@ adp1653_init_device(struct adp1653_flash *flash)
- static int
- __adp1653_set_power(struct adp1653_flash *flash, int on)
- {
--	int ret;
-+	int ret = 0;
- 
--	ret = flash->platform_data->power(&flash->subdev, on);
-+	if (flash->platform_data->power)
-+		ret = flash->platform_data->power(&flash->subdev, on);
-+	else {
-+		gpio_set_value(flash->platform_data->power_gpio, on);
-+		if (on) {
-+			/* Some delay is apparently required. */
-+			udelay(20);
-+		}
-+	}
-+			
- 	if (ret < 0)
- 		return ret;
- 
-@@ -316,8 +337,13 @@ __adp1653_set_power(struct adp1653_flash *flash, int on)
- 		return 0;
- 
- 	ret = adp1653_init_device(flash);
--	if (ret < 0)
-+	if (ret >= 0)
-+		return ret;
-+
-+	if (flash->platform_data->power)
- 		flash->platform_data->power(&flash->subdev, 0);
-+	else
-+		gpio_set_value(flash->platform_data->power_gpio, 0);
- 
- 	return ret;
- }
-@@ -407,21 +433,69 @@ static int adp1653_resume(struct device *dev)
- 
- #endif /* CONFIG_PM */
- 
-+static int adp1653_of_init(struct i2c_client *client, struct adp1653_flash *flash, 
-+			   struct device_node *node)
-+{
-+	u32 val;
-+	struct adp1653_platform_data *pd;
-+	enum of_gpio_flags flags;
-+	int gpio;
-+	struct device_node *child;
-+
-+	if (!node)
-+		return -EINVAL;
-+
-+	pd = devm_kzalloc(&client->dev, sizeof(*pd), GFP_KERNEL);
-+	if (!pd)
-+		return -ENOMEM;
-+	flash->platform_data = pd;
-+
-+	child = of_get_child_by_name(node, "flash");
-+	if (!child) return -EINVAL;
-+	if (of_property_read_u32(child, "flash-timeout-microsec", &val)) return -EINVAL;
-+	pd->max_flash_timeout = val;
-+	if (of_property_read_u32(child, "flash-max-microamp", &val)) return -EINVAL;
-+	pd->max_flash_intensity = val/1000;
-+	if (of_property_read_u32(child, "max-microamp", &val)) return -EINVAL;
-+	pd->max_torch_intensity = val/1000;
-+
-+	child = of_get_child_by_name(node, "indicator");
-+	if (!child) return -EINVAL;
-+	if (of_property_read_u32(child, "max-microamp", &val)) return -EINVAL;
-+	pd->max_indicator_intensity = val;
-+
-+	if (!of_find_property(node, "gpios", NULL)) {
-+		dev_err(&client->dev, "No gpio node\n");
-+		return -EINVAL;
-+	}
-+
-+	gpio = of_get_gpio_flags(node, 0, &flags);
-+	if (gpio < 0) {
-+		dev_err(&client->dev, "Error getting GPIO\n"); 
-+		return -EINVAL;
-+	}
-+
-+	pd->power_gpio = gpio;
-+	return 0;
-+}
-+
-+
- static int adp1653_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *devid)
- {
- 	struct adp1653_flash *flash;
- 	int ret;
- 
--	/* we couldn't work without platform data */
--	if (client->dev.platform_data == NULL)
--		return -ENODEV;
--
- 	flash = devm_kzalloc(&client->dev, sizeof(*flash), GFP_KERNEL);
- 	if (flash == NULL)
- 		return -ENOMEM;
- 
- 	flash->platform_data = client->dev.platform_data;
-+	if (!flash->platform_data) {
-+		ret = adp1653_of_init(client, flash, client->dev.of_node);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	mutex_init(&flash->power_lock);
- 
-diff --git a/include/media/adp1653.h b/include/media/adp1653.h
-index 1d9b48a..b556580 100644
---- a/include/media/adp1653.h
-+++ b/include/media/adp1653.h
-@@ -100,9 +100,11 @@ struct adp1653_platform_data {
- 	int (*power)(struct v4l2_subdev *sd, int on);
- 
- 	u32 max_flash_timeout;		/* flash light timeout in us */
--	u32 max_flash_intensity;	/* led intensity, flash mode */
--	u32 max_torch_intensity;	/* led intensity, torch mode */
--	u32 max_indicator_intensity;	/* indicator led intensity */
-+	u32 max_flash_intensity;	/* led intensity, flash mode, mA */
-+	u32 max_torch_intensity;	/* led intensity, torch mode, mA */
-+	u32 max_indicator_intensity;	/* indicator led intensity, uA */
-+
-+	int power_gpio;			/* for device-tree based boot */
- };
- 
- #define to_adp1653_flash(sd)	container_of(sd, struct adp1653_flash, subdev)
+Based on http://patchwork.ozlabs.org/patch/410770/ there's a separate
+node for mdio, so why can't we mark the MAC disabled?  Assuming that
+there's no real problem in marking the fm1-dtsec1 MAC node disabled, we
+can consider this to be a bug in U-Boot which can be worked around by
+having the fm1-dtsec1 mac node have an fsl,fman-mac property that points
+to itself.  This property would only go on the fm1-dtsec1 mac node and
+would only be in device trees for SoCs that are supported by U-Boots old
+enough to not have had the bug be fixed.
 
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+-Scott
