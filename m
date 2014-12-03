@@ -1,46 +1,69 @@
-From: Oliver Neukum <oneukum@suse.de>
-Subject: Re: [PATCH v10 2/6] backlight: Add support Skyworks SKY81452
- backlight driver
-Date: Wed, 03 Dec 2014 11:02:29 +0100
-Message-ID: <1417600949.12511.7.camel@linux-0dmf.site>
-References: <1417590332-4912-1-git-send-email-jack.yoo@skyworksinc.com>
-	 <1417590332-4912-3-git-send-email-jack.yoo@skyworksinc.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v3 5/5] tty/serial: Add Spreadtrum sc9836-uart driver
+ support
+Date: Wed, 3 Dec 2014 10:11:09 +0000
+Message-ID: <20141203101109.GB11285@n2100.arm.linux.org.uk>
+References: <1416917818-10506-1-git-send-email-chunyan.zhang@spreadtrum.com>
+ <54761BFC.4020705@ti.com>
+ <CAAfSe-u+g0mYGi9Adrd+YwwZ=q0-s79yCg_paB1UAVqFoufXEA@mail.gmail.com>
+ <3212776.kDbe7yX4eX@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1417590332-4912-3-git-send-email-jack.yoo@skyworksinc.com>
+Content-Disposition: inline
+In-Reply-To: <3212776.kDbe7yX4eX@wuerfel>
 Sender: linux-kernel-owner@vger.kernel.org
-To: gyungoh@gmail.com
-Cc: sameo@linux.intel.com, lee.jones@linaro.org, grant.likely@linaro.org, robh+dt@kernel.org, jg1.han@samsung.com, cooloney@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, trivial@kernel.org, akpm@linux-foundation.org, jic23@kernel.org, thomas.petazzoni@free-electrons.com, ktsai@capellamicro.com, hs@denx.de, stwiss.opensource@diasemi.com, matti.vaittinen@nsn.com, broonie@kernel.org, jason@lakedaemon.net, heiko@sntech.de, shawn.guo@freescale.com, florian.vaussard@epfl.ch, andrew@lunn.ch, antonynpavlov@gmail.com, hytszk@gmail.com, plagnioj@jcrosoft.com, tomi.valkeinen@ti.com, jack.yoo@skyworksinc.com, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Lyra Zhang <zhang.lyra@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "gnomes@lxorguk.ukuu.org.uk" <gnomes@lxorguk.ukuu.org.uk>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Mark Brown <broonie@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "andrew@lunn.ch" <andrew@lunn.ch>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, "jslaby@suse.cz" <jslaby@suse.cz>, Ramkumar Ramachandra <artagnon@gmail.com>, "lanqing.liu@spreadtrum.com" <lanqing.liu@spreadtrum.com>, Wei Qiao =?utf-8?B?KOS5lOS8nyk=?= <wei.qiao@spreadtrum.com>, Jonathan Corbet <corbet@lwn.net>, Chunyan Zhang <chunyan.zhang@spreadtrum.com>, "zhizhou.zhang" <zhizhou.zhang@spreadtrum.com>, "geng.ren@spreadtrum.com" <geng.ren@spreadtrum.com>, Murali Karicheri <m-karicheri2@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradea>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-12-03 at 16:05 +0900, gyungoh@gmail.com wrote:
-> +static ssize_t sky81452_bl_store_enable(struct device *dev,
-> +               struct device_attribute *attr, const char *buf, size_t
-> count)
-> +{
-> +       struct regmap *regmap = bl_get_data(to_backlight_device(dev));
-> +       unsigned long value;
-> +       int ret;
-> +
-> +       ret = kstrtoul(buf, 16, &value);
-> +       if (IS_ERR_VALUE(ret))
-> +               return ret;
-> +
-> +       ret = regmap_update_bits(regmap, SKY81452_REG1, SKY81452_EN,
-> +                                       value << CTZ(SKY81452_EN));
+On Wed, Dec 03, 2014 at 10:50:17AM +0100, Arnd Bergmann wrote:
+> On Wednesday 03 December 2014 17:17:13 Lyra Zhang wrote:
+>=20
+> > 2014-11-27 2:29 GMT+08:00 Murali Karicheri <m-karicheri2@ti.com>:
+> > > How about sorting this includes? asm/irq.h go first followed linu=
+x/ in alphabatical order?
+> >
+> > There are a few compile warnings if I moved asm/irq.h to the top of
+> > all included files.
+>=20
+> The order that Murali meant is
+>=20
+> - first all linux/*.h headers, sorted alphabetically
+> - then all asm/*.h headers, again sorted alphabetically
+>=20
+> This is the recommended style in general.
+>=20
+> > Warning details are below:
+> >=20
+> > In file included from drivers/tty/serial/sprd_serial.c:14:0:
+> > ./arch/arm64/include/asm/irq.h:6:39: warning: =E2=80=98struct pt_re=
+gs=E2=80=99
+> > declared inside parameter list [enabled by default]
+> >  extern void (*handle_arch_irq)(struct pt_regs *);
+> >                                        ^
+> > ./arch/arm64/include/asm/irq.h:6:39: warning: its scope is only thi=
+s
+> > definition or declaration, which is probably not what you want
+> > [enabled by default]
+> > ./arch/arm64/include/asm/irq.h:8:54: warning: =E2=80=98struct pt_re=
+gs=E2=80=99
+> > declared inside parameter list [enabled by default]
+> >  extern void set_handle_irq(void (*handle_irq)(struct pt_regs *));
+> >=20
+>=20
+> I would consider this a (minor) bug in asm/irq.h. If you don't mind,
+> please submit a patch to add a line with 'struct pt_regs;' to
+> asm/irq.h.
 
-No range checking for value?
+A better question is: why is a modern driver using asm/irq.h in the
+first place.
 
-> +       if (IS_ERR_VALUE(ret))
-> +               return ret;
-> +
-> +       return count;
-> +}
+We used to include that file when platforms defined IRQ numbers
+statically, but modern platforms don't do that, so it shouldn't be
+required anymore.
 
-	Regards
-		Oliver
-
--- 
-Oliver Neukum <oneukum@suse.de>
+--=20
+=46TTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
+according to speedtest.net.
