@@ -1,463 +1,263 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [PATCH v2 2/3] PM / devfreq: tegra: add devfreq driver for Tegra
- Activity Monitor
-Date: Wed, 3 Dec 2014 16:09:00 +0100
-Message-ID: <CAAObsKB9hqU5F6ptJn=qC_AEE8YW7yGKhNaTY6RfJPxOt1y-VQ@mail.gmail.com>
-References: <1416832111-367-1-git-send-email-tomeu.vizoso@collabora.com>
- <1416832111-367-3-git-send-email-tomeu.vizoso@collabora.com> <20141202111501.GE6135@ulmo>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] Patch to improve device tree structure
+Date: Wed, 3 Dec 2014 15:09:43 +0000
+Message-ID: <CACxGe6v-=nWamWbbe0EBk_X5D1M3LSo_CZ_w95NSVS5jcio=NA@mail.gmail.com>
+References: <1416199976-21147-1-git-send-email-gaurav.minocha.os@gmail.com>
+ <20141118151026.D2D63C40966@trevor.secretlab.ca> <546BF447.6080300@gmail.com>
+ <CACxGe6u1YwQAivktwmiOZx1K1Ch0F1ofx3EriBi1qEAU99X9PQ@mail.gmail.com>
+ <546CEFC4.805@gmail.com> <20141128164829.CC876C40884@trevor.secretlab.ca> <547E85DF.5000200@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20141202111501.GE6135@ulmo>
-Sender: linux-pm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <547E85DF.5000200-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2 December 2014 at 12:15, Thierry Reding <thierry.reding@gmail.com> wrote:
-> On Mon, Nov 24, 2014 at 01:28:17PM +0100, Tomeu Vizoso wrote:
->> The ACTMON block can monitor several counters, providing averaging and firing
->> interrupts based on watermarking configuration. This implementation monitors
->> the MCALL and MCCPU counters to choose an appropriate frequency for the
->> external memory clock.
+On Wed, Dec 3, 2014 at 3:39 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 11/28/2014 8:48 AM, Grant Likely wrote:
+>> On Wed, 19 Nov 2014 11:30:12 -0800
+>> , Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>  wrote:
+>>> On 11/19/2014 5:56 AM, Grant Likely wrote:
+>>>> On Wed, Nov 19, 2014 at 1:37 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>> On 11/18/2014 7:10 AM, Grant Likely wrote:
+>>>>>> On Sun, 16 Nov 2014 20:52:56 -0800
+>>>>>> , Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>>>  wrote:
+>>>>>>> This patch improves the implementation of device tree structure.
+>>>>>>>
+>>>>>>> Traditional child and sibling linked list in device tree structure
+>>>>>>> is removed and is replaced by list_head (i.e. circular doubly linked
+>>>>>>>  list) already available in Linux kernel.
+>>>>>>>
+>>>>>>> Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>>>
+>>>>>> Hi Gaurav,
+>>>>>>
+>>>>>> So, after you've done this work, I need to you rebase it (and of course
+>>>>>> it is non-trivial) onto linux-next. I've already got a patch queued up
+>>>>>> which gets rid of the of_allnodes/allnext list which will have conflicts
+>>>>>> with this patch.
+>>>>>>
+>>>>>> I'll make comments below where still relevant.
+>>>>>
+>>>>> Grant,
+>>>>>
+>>>>> My first reaction to this patch was that moving to using struct list_head
+>>>>> made the code less readable plus increased the size of struct device_node.
+>>>>>
+>>>>> I reworked the changes to drivers/of/base.c to see if I could make
+>>>>> it a little more readable.  And I see below that you also have some
+>>>>> suggestions that make it more readable.
+>>>>>
+>>>>> Even after that, I'm still feeling that the gain of moving to a more
+>>>>> standard list data type might not be greater than the downsides in
+>>>>> terms of readability and space.  The current list implementation does
+>>>>> seem like a decent fit to the problem space.
+>>>>
+>>>> Moving to list_head has a couple of nice benefits. The prime
+>>>> motification is that using a standard list_head means that the OF code
+>>>> can be migrated to use the standard rcu operations and get rid of manual
+>>>> of_node_{get,put} management in the majority of code paths.
+>>>
+>>> Oh yeah, I remember you mentioning that before.  That is what was missing
+>>> from Gaurav's patch header, explaining the value of the change.  If this
+>>> is the end goal, then I think it would be valuable to add a second patch
+>>> to the series that shows what the actual changes for rcu will be so that
+>>> the cost vs benefit of the end result can be evaluated.
+>>>
+>>>
+>>>> A second reason to do this is it becomes easy to add nodes to the end of
+>>>> the list instead of the beginning. It's a small thing, but it makes
+>>>> unflattening simpler.
+>>>
+>>> Not a big change.  In the unflatten_dt_node() part of the patch, the
+>>> result was 4 lines deleted, 3 lines added.  With my attached patch to
+>>> remove the next field, it would have been 8 lines deleted, 3 lines
+>>> added -- thus list_head is an even greater simplification.  But still
+>>> tiny.
+>>>
+>>>
+>>>> I've also considered switching to a hlist_head/hlist_node to keep the
+>>>> footprint the same.* With an hlist_head the cost is a wash, but looses
+>>>> the ability to do O(1) addition to the end of the list.
+>>>>
+>>>> * Gaurav's patch removes the *child and *sibling pointers, but doesn't
+>>>>   remove the *next pointer which can also be dropped. So, three pointers
+>>>>   get dropped from the structure. Using list_head adds 4 pointers (Net
+>>>>   +1). hlist_head adds 3 (Net 0).
+>>>
+>>> I include a patch below to also drop the *next pointer.  Not to actually
+>>> propose submitting the patch, but to suggest that Gaurav's patch should be
+>>> counted as a net of +2 pointers.  I expect that you will accept either a
+>>> list_head of an hlist_head patch, but if you do not then I will submit the
+>>> below patch to remove *next or a patch to rename *next to match the actual
+>>> usage of the field.
+>>>
+>>> I still do not have a strong opinion, but I am still feeling that the gain
+>>> probably does not outweigh the cost.
+>>>
+>>> -Frank
+>>>
+>>>>
+>>>> g.
+>>>>
+>>>
+>>> From: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+>>>
+>>> Decrease size of struct device_node by one pointer.
+>>> The pointer is only used during the unflattening of the
+>>> device tree at boot.
+>>>
+>>> The cost of removing the pointer is chasing through the
+>>> sibling list to add new nodes instead of using the
+>>> cached 'last_child'.  The cost is expected to be in the
+>>> noise level.
+>>>
+>>> Signed-off-by: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+>>> ---
+>>>  drivers/of/fdt.c   |   14 +++++++++-----
+>>>  include/linux/of.h |    1 -
+>>>  2 files changed, 9 insertions(+), 6 deletions(-)
+>>>
+>>> Index: b/include/linux/of.h
+>>> ===================================================================
+>>> --- a/include/linux/of.h
+>>> +++ b/include/linux/of.h
+>>> @@ -55,7 +55,6 @@ struct device_node {
+>>>      struct  device_node *parent;
+>>>      struct  device_node *child;
+>>>      struct  device_node *sibling;
+>>> -    struct  device_node *next;      /* next device of same type */
+>>>      struct  device_node *allnext;   /* next in list of all nodes */
+>>>      struct  kobject kobj;
+>>>      unsigned long _flags;
+>>> Index: b/drivers/of/fdt.c
+>>> ===================================================================
+>>> --- a/drivers/of/fdt.c
+>>> +++ b/drivers/of/fdt.c
+>>> @@ -226,12 +226,16 @@ static void * unflatten_dt_node(void *bl
+>>>              *allnextpp = &np->allnext;
+>>>              if (dad != NULL) {
+>>>                      np->parent = dad;
+>>> -                    /* we temporarily use the next field as `last_child'*/
+>>> -                    if (dad->next == NULL)
+>>> +                    if (dad->child == NULL)
+>>>                              dad->child = np;
+>>> -                    else
+>>> -                            dad->next->sibling = np;
+>>> -                    dad->next = np;
+>>> +                    else {
+>>> +                            struct device_node *next;
+>>> +
+>>> +                            next = dad->child;
+>>> +                            while (next->sibling)
+>>> +                                    next = next->sibling;
+>>> +                            next->sibling = np;
+>>> +                    }
+>>>              }
+>>>      }
+>>>      /* process properties */
 >>
->> This patch is based on work by Alex Frid <afrid@nvidia.com> and Mikko
->> Perttunen <mikko.perttunen@kapsi.fi>.
+>> Instead of keeping it always in order, what about reordering the whole
+>> list after all the nodes at a given level are unflattened? That would
+>> avoid traversing the entire sibling list on every node addition. Like
+>> this:
+>
+> Seems pretty close to a wash to me.  Either one would work.  Though
+> mine would benefit from the comment you added in yours.
+>
+> -Frank
+
+Okay, if I can take that as an 'acked-by' from you then I'll merge my
+version of the patch. I prefer doing the post processing to sort the
+list because it is theoretically less costly.
+
+g.
+
 >>
->> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+>> g.
 >>
+>>>From de46de766eb4d2240208bf83fdae955361069352 Mon Sep 17 00:00:00 2001
+>> From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Date: Fri, 28 Nov 2014 16:03:33 +0000
+>> Subject: [PATCH] of: Drop ->next pointer from struct device_node
+>>
+>> The ->next pointer in struct device_node is a hanger-on from when it was
+>> used to iterate over the whole tree by a particular device_type property
+>> value. Those days are long over, but the fdt unflattening code still
+>> uses it to put nodes in the unflattened tree into the same order as node
+>> in the flat tree. By reworking the unflattening code to reverse the list
+>> after unflattening all the children of a node, the pointer can be
+>> dropped which gives a small amount of memory savings.
+>>
+>> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 >> ---
+>>  drivers/of/fdt.c   | 24 ++++++++++++++++++------
+>>  include/linux/of.h |  1 -
+>>  2 files changed, 18 insertions(+), 7 deletions(-)
 >>
->> v2:   * Use devfreq
->> ---
->>  drivers/devfreq/Kconfig         |  10 +
->>  drivers/devfreq/Makefile        |   1 +
->>  drivers/devfreq/tegra-devfreq.c | 718 ++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 729 insertions(+)
->>  create mode 100644 drivers/devfreq/tegra-devfreq.c
+>> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+>> index 7f6ee31d5650..a41f9fdb1aa0 100644
+>> --- a/drivers/of/fdt.c
+>> +++ b/drivers/of/fdt.c
+>> @@ -226,12 +226,8 @@ static void * unflatten_dt_node(void *blob,
+>>               prev_pp = &np->properties;
+>>               if (dad != NULL) {
+>>                       np->parent = dad;
+>> -                     /* we temporarily use the next field as `last_child'*/
+>> -                     if (dad->next == NULL)
+>> -                             dad->child = np;
+>> -                     else
+>> -                             dad->next->sibling = np;
+>> -                     dad->next = np;
+>> +                     np->sibling = dad->child;
+>> +                     dad->child = np;
+>>               }
+>>       }
+>>       /* process properties */
+>> @@ -329,6 +325,22 @@ static void * unflatten_dt_node(void *blob,
 >>
->> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
->> index faf4e70..4aab799 100644
->> --- a/drivers/devfreq/Kconfig
->> +++ b/drivers/devfreq/Kconfig
->> @@ -87,4 +87,14 @@ config ARM_EXYNOS5_BUS_DEVFREQ
->>         It reads PPMU counters of memory controllers and adjusts the
->>         operating frequencies and voltages with OPP support.
+>>       if (*poffset < 0 && *poffset != -FDT_ERR_NOTFOUND)
+>>               pr_err("unflatten: error %d processing FDT\n", *poffset);
+>> +
+>> +     /*
+>> +      * Reverse the child list. Some drivers assumes node order matches .dts
+>> +      * node order
+>> +      */
+>> +     if (!dryrun && np->child) {
+>> +             struct device_node *child = np->child;
+>> +             np->child = NULL;
+>> +             while (child) {
+>> +                     struct device_node *next = child->sibling;
+>> +                     child->sibling = np->child;
+>> +                     np->child = child;
+>> +                     child = next;
+>> +             }
+>> +     }
+>> +
+>>       if (nodepp)
+>>               *nodepp = np;
 >>
->> +config ARM_TEGRA_DEVFREQ
->> +       tristate "Tegra DEVFREQ Driver"
->> +       depends on ARCH_TEGRA_124_SOC
+>> diff --git a/include/linux/of.h b/include/linux/of.h
+>> index 8b021db3e16e..3f0f0ffbd5e5 100644
+>> --- a/include/linux/of.h
+>> +++ b/include/linux/of.h
+>> @@ -56,7 +56,6 @@ struct device_node {
+>>       struct  device_node *parent;
+>>       struct  device_node *child;
+>>       struct  device_node *sibling;
+>> -     struct  device_node *next;      /* next device of same type */
+>>       struct  kobject kobj;
+>>       unsigned long _flags;
+>>       void    *data;
+>>
 >
-> I think ACTMON exists at least on Tegra30 and Tegra114 as well and it
-> would be surprising if it didn't exist on Tegra132, so perhaps make this
-> dependency simply ARCH_TEGRA?
-
-Ok.
-
->> +       select DEVFREQ_GOV_SIMPLE_ONDEMAND
->> +       select PM_OPP
->> +       help
->> +         This adds the DEVFREQ driver for the Tegra family of SoCs.
->> +         It reads ACTMON counters of memory controllers and adjusts the
->> +         operating frequencies and voltages with OPP support.
->> +
->>  endif # PM_DEVFREQ
->> diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
->> index 16138c9..0ea991f 100644
->> --- a/drivers/devfreq/Makefile
->> +++ b/drivers/devfreq/Makefile
->> @@ -7,3 +7,4 @@ obj-$(CONFIG_DEVFREQ_GOV_USERSPACE)   += governor_userspace.o
->>  # DEVFREQ Drivers
->>  obj-$(CONFIG_ARM_EXYNOS4_BUS_DEVFREQ)        += exynos/
->>  obj-$(CONFIG_ARM_EXYNOS5_BUS_DEVFREQ)        += exynos/
->> +obj-$(CONFIG_ARM_TEGRA_DEVFREQ)              += tegra-devfreq.o
->> diff --git a/drivers/devfreq/tegra-devfreq.c b/drivers/devfreq/tegra-devfreq.c
->> new file mode 100644
->> index 0000000..3479096
->> --- /dev/null
->> +++ b/drivers/devfreq/tegra-devfreq.c
->> @@ -0,0 +1,718 @@
->> +/*
->> + * A devfreq driver for NVIDIA Tegra SoCs
->> + *
->> + * Copyright (c) 2014 NVIDIA CORPORATION. All rights reserved.
->> + * Copyright (C) 2014 Google, Inc
->> + *
->> + * This program is free software; you can redistribute it and/or modify it
->> + * under the terms and conditions of the GNU General Public License,
->> + * version 2, as published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope it will be useful, but WITHOUT
->> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
->> + * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
->> + * more details.
->> + *
->> + * You should have received a copy of the GNU General Public License
->> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
->> + *
->> + */
->> +
-> [...]
->> +/* activity counter is incremented every 256 memory transactions, and each
->
-> Proper block-comments should be:
->
->         /*
->          * activity counter...
->          * ...
->          */
->
-> Also it's a sentence, therefore should start with a capital 'A'.
-
-Done.
-
->> + * transaction takes 4 EMC clocks for Tegra124; So the COUNT_WEIGHT is
->> + * 4 * 256 = 1024.
->> + */
->> +#define ACTMON_COUNT_WEIGHT                                  0x400
->> +
->> +/*
->> + * ACTMON_AVERAGE_WINDOW_LOG2: default value for @DEV_CTRL_K_VAL, which
->> + * translates to 2 ^ (K_VAL + 1). ex: 2 ^ (6 + 1) = 128
->> + */
->> +#define ACTMON_AVERAGE_WINDOW_LOG2                   6
->> +#define ACTMON_SAMPLING_PERIOD                               12 /* ms */
->> +#define ACTMON_DEFAULT_AVG_BAND                              6  /* 1/10 of % */
->> +
->> +#define KHZ                                                  1000
->> +
->> +/* Assume that the bus is saturated if the utilization is 25% */
->> +#define BUS_SATURATION_RATIO                                 25
-> [...]
->> +static void tegra_actmon_configure_device(struct tegra_devfreq *tegra,
->> +                                       struct tegra_devfreq_device *dev)
->> +{
->> +     u32 val;
->> +
->> +     dev->avg_band_freq = tegra->max_freq * ACTMON_DEFAULT_AVG_BAND / KHZ;
->> +     dev->target_freq = tegra->cur_freq;
->> +
->> +     dev->avg_count = tegra->cur_freq * ACTMON_SAMPLING_PERIOD;
->> +     writel(dev->avg_count, dev->regs + ACTMON_DEV_INIT_AVG);
->> +
->> +     tegra_devfreq_update_avg_wmark(dev);
->> +     tegra_devfreq_update_wmark(tegra, dev);
->> +
->> +     writel(ACTMON_COUNT_WEIGHT, dev->regs + ACTMON_DEV_COUNT_WEIGHT);
->> +     writel(ACTMON_INTR_STATUS_CLEAR, dev->regs + ACTMON_DEV_INTR_STATUS);
->> +
->> +     val = 0;
->
-> You could initialize this to 0 and then save this one line.
-
-Cool.
-
->> +     val |= ACTMON_DEV_CTRL_ENB_PERIODIC |
->> +            ACTMON_DEV_CTRL_AVG_ABOVE_WMARK_EN |
->> +            ACTMON_DEV_CTRL_AVG_BELOW_WMARK_EN;
->> +     val |= (ACTMON_AVERAGE_WINDOW_LOG2 - 1)
->> +             << ACTMON_DEV_CTRL_K_VAL_SHIFT;
->> +     val |= (ACTMON_BELOW_WMARK_WINDOW - 1)
->> +             << ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_NUM_SHIFT;
->> +     val |= (ACTMON_ABOVE_WMARK_WINDOW - 1)
->> +             << ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_NUM_SHIFT;
->> +     val |= ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN |
->> +            ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
->> +
->> +     writel(val, dev->regs + ACTMON_DEV_CTRL);
->> +
->> +     actmon_write_barrier(tegra);
->> +
->> +     val = readl(dev->regs + ACTMON_DEV_CTRL);
->> +     val |= ACTMON_DEV_CTRL_ENB;
->> +     writel(val, dev->regs + ACTMON_DEV_CTRL);
->> +
->> +     actmon_write_barrier(tegra);
->> +}
->> +
->> +static int tegra_devfreq_suspend(struct device *dev)
->> +{
->> +     struct platform_device *pdev;
->> +     struct tegra_devfreq *tegra;
->> +     struct tegra_devfreq_device *actmon_dev;
->> +     unsigned int i;
->> +     u32 val;
->> +
->> +     pdev = container_of(dev, struct platform_device, dev);
->> +     tegra = platform_get_drvdata(pdev);
->
-> This is equivalent to just:
->
->         struct tegra_devfreq *tegra = dev_get_drvdata(dev);
->
-> which you can then simply put at the top of the local variable
-> declarations.
-
-Good, thanks.
-
->> +
->> +     for (i = 0; i < ARRAY_SIZE(tegra->devices); i++) {
->> +             actmon_dev = &tegra->devices[i];
->> +
->> +             val = readl(actmon_dev->regs + ACTMON_DEV_CTRL);
->> +             val &= ~ACTMON_DEV_CTRL_ENB;
->> +             writel(val, actmon_dev->regs + ACTMON_DEV_CTRL);
->> +
->> +             writel(ACTMON_INTR_STATUS_CLEAR,
->> +                    actmon_dev->regs + ACTMON_DEV_INTR_STATUS);
->
-> Why do you need to clear pending interrupts on suspend? Isn't this going
-> to cause pending ones to be missed upon resume?
-
-We are completely reconfiguring the ACTMON devices on resume, so I
-think we want to ignore any pending interrupts.
-
->> +
->> +             actmon_write_barrier(tegra);
->> +     }
->> +
->> +     return 0;
->> +}
->> +
->> +static int tegra_devfreq_resume(struct device *dev)
->> +{
->> +     struct platform_device *pdev;
->> +     struct tegra_devfreq *tegra;
->> +     struct tegra_devfreq_device *actmon_dev;
->> +     unsigned int i;
->> +
->> +     pdev = container_of(dev, struct platform_device, dev);
->> +     tegra = platform_get_drvdata(pdev);
->
-> Same here. And in a few other places as well.
->
->> +
->> +     for (i = 0; i < ARRAY_SIZE(tegra->devices); i++) {
->> +             actmon_dev = &tegra->devices[i];
->> +
->> +             tegra_actmon_configure_device(tegra, actmon_dev);
->> +     }
->> +
->> +     return 0;
->> +}
->
-> You'll want to protect the tegra_devfreq_{suspend,resume}() with an
-> #ifdef CONFIG_PM_SLEEP to avoid potential build warnings (in randconfig
-> builds for example).
->
-> These are also somewhat oddly placed. Perhaps move them below
-> tegra_devfreq_remove() for more natural ordering?
-
-Good, thanks.
-
->> +static int tegra_devfreq_probe(struct platform_device *pdev)
->> +{
->> +     struct tegra_devfreq *tegra;
->> +     struct tegra_devfreq_device *dev;
->> +     struct resource *res;
->> +     unsigned long max_freq;
->> +     unsigned int i;
->> +     int irq;
->> +     int err;
->> +
->> +     tegra = devm_kzalloc(&pdev->dev, sizeof(*tegra), GFP_KERNEL);
->> +     if (!tegra)
->> +             return -ENOMEM;
->> +
->> +     spin_lock_init(&tegra->lock);
->> +
->> +     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +     if (!res) {
->> +             dev_err(&pdev->dev, "Failed to get regs resource\n");
->> +             return -ENODEV;
->> +     }
->
-> No need for this check, devm_ioremap_resource() does it for you.
->
->> +
->> +     tegra->regs = devm_ioremap_resource(&pdev->dev, res);
->> +     if (IS_ERR(tegra->regs)) {
->> +             dev_err(&pdev->dev, "Failed to get IO memory\n");
->
-> No need for the error message either.
-
-Nice.
-
->> +             return PTR_ERR(tegra->regs);
->> +     }
->> +
->> +     tegra->reset = devm_reset_control_get(&pdev->dev, "actmon");
->> +     if (IS_ERR(tegra->reset)) {
->> +             dev_err(&pdev->dev, "Failed to get reset\n");
->> +             return PTR_ERR(tegra->reset);
->> +     }
->> +
->> +     tegra->clock = devm_clk_get(&pdev->dev, "actmon");
->> +     if (IS_ERR(tegra->clock)) {
->> +             dev_err(&pdev->dev, "Failed to get actmon clock\n");
->> +             return PTR_ERR(tegra->clock);
->> +     }
->> +
->> +     tegra->emc_clock = devm_clk_get(&pdev->dev, "emc");
->> +     if (IS_ERR(tegra->emc_clock)) {
->> +             dev_err(&pdev->dev, "Failed to get emc clock\n");
->> +             return PTR_ERR(tegra->emc_clock);
->> +     }
->> +
->> +     err = of_init_opp_table(&pdev->dev);
->> +     if (err) {
->> +             dev_err(&pdev->dev, "Failed to init operating point table\n");
->> +             return err;
->> +     }
->> +
->> +     tegra->rate_change_nb.notifier_call = tegra_actmon_rate_notify_cb;
->> +     err = clk_notifier_register(tegra->emc_clock, &tegra->rate_change_nb);
->> +     if (err) {
->> +             dev_err(&pdev->dev,
->> +                     "Failed to register rate change notifier\n");
->> +             return err;
->> +     }
->> +
->> +     reset_control_assert(tegra->reset);
->> +
->> +     err = clk_prepare_enable(tegra->clock);
->> +     if (err) {
->> +             reset_control_deassert(tegra->reset);
->
-> I'm not so sure if it makes much sense to deassert reset when the driver
-> fails to probe.
-
-Ok.
-
->> +             return err;
->> +     }
->> +
->> +     reset_control_deassert(tegra->reset);
->> +
->> +     max_freq = clk_round_rate(tegra->emc_clock, ULONG_MAX);
->> +     tegra->max_freq = max_freq / KHZ;
->> +
->> +     clk_set_rate(tegra->emc_clock, max_freq);
->> +
->> +     tegra->cur_freq = clk_get_rate(tegra->emc_clock) / KHZ;
->> +
->> +     writel(ACTMON_SAMPLING_PERIOD - 1,
->> +            tegra->regs + ACTMON_GLB_PERIOD_CTRL);
->> +
->> +     for (i = 0; i < ARRAY_SIZE(actmon_device_configs); i++) {
->> +             dev = tegra->devices + i;
->> +             dev->config = actmon_device_configs + i;
->> +             dev->regs = tegra->regs + dev->config->offset;
->> +
->> +             tegra_actmon_configure_device(tegra, tegra->devices + i);
->
-> The second parameter can simply be "dev" here, can't it?
-
-You are right.
-
->> +     }
->> +
->> +     err = devfreq_add_governor(&tegra_devfreq_governor);
->> +     if (err) {
->> +             dev_err(&pdev->dev, "Failed to add governor\n");
->> +             return err;
->> +     }
->> +
->> +     tegra_devfreq_profile.initial_freq = clk_get_rate(tegra->emc_clock);
->> +     tegra->devfreq = devm_devfreq_add_device(&pdev->dev,
->> +                                              &tegra_devfreq_profile,
->> +                                              "tegra",
->> +                                              NULL);
->> +
->> +     irq = platform_get_irq(pdev, 0);
->> +     err = devm_request_threaded_irq(&pdev->dev, irq, actmon_isr,
->> +                                     actmon_thread_isr, IRQF_SHARED,
->> +                                     "tegra-devfreq", tegra);
->> +     if (err) {
->> +             dev_err(&pdev->dev, "Interrupt request failed\n");
->> +             return err;
->> +     }
->> +
->> +     platform_set_drvdata(pdev, tegra);
->> +
->> +     return 0;
->> +}
->> +
->> +static int tegra_devfreq_remove(struct platform_device *pdev)
->> +{
->> +     struct tegra_devfreq *tegra = platform_get_drvdata(pdev);
->> +
->> +     clk_notifier_unregister(tegra->emc_clock, &tegra->rate_change_nb);
->> +
->> +     clk_disable_unprepare(tegra->clock);
->> +
->> +     return 0;
->> +}
->
-> You'll need to be wary about using devm_request_threaded_irq(). You have
-> to make sure that the interrupt handler isn't accessing any data that
-> could be freed via the devres mechanism before the IRQ is freed. Given
-> that devres frees resources in the opposite order than they were
-> allocated, and given that you request the interrupt last it /should be/
-> safe.
->
-> Then again you do disable and unprepare the clock, so if you were to
-> access registers from the interrupt handler (called after clock disable
-> and before IRQ free) you could possibly cause a hang.
->
-> Often the simplest is to just explicitly call devm_free_irq() in your
-> .remove().
-
-Thanks for the explanation.
-
->> +static SIMPLE_DEV_PM_OPS(tegra_devfreq_pm_ops,
->> +                      tegra_devfreq_suspend,
->> +                      tegra_devfreq_resume);
->> +
->> +static struct of_device_id tegra_devfreq_of_match[] = {
->> +     { .compatible = "nvidia,tegra124-actmon" },
->> +     { },
->> +};
->> +
->> +static struct platform_driver tegra_devfreq_driver = {
->> +     .probe  = tegra_devfreq_probe,
->> +     .remove = tegra_devfreq_remove,
->> +     .driver = {
->> +             .name           = "tegra-devfreq",
->> +             .owner          = THIS_MODULE,
->
-> No need for this with module_platform_driver().
-
-I see.
-
->> +             .of_match_table = tegra_devfreq_of_match,
->> +             .pm             = &tegra_devfreq_pm_ops,
->
-> Also you use tabs and spaces inconsistently here. I'd just get rid of
-> any attempt to align these and simply use a single space on either side
-> of the '='.
-
-Agreed.
-
->> +     },
->> +};
->> +module_platform_driver(tegra_devfreq_driver);
->> +
->> +MODULE_LICENSE("GPL");
->
-> According to the header comment this should be "GPL v2".
-
-Oops.
-
->> +MODULE_DESCRIPTION("Tegra devfreq driver");
->> +MODULE_AUTHOR("Tomeu Vizoso <tomeu.vizoso@collabora.com>");
->> +MODULE_DEVICE_TABLE(of, tegra_devfreq_of_match);
->
-> I think it's more common to have this immediately below the OF match
-> table.
-
-Cool, thanks a lot!
-
-Regards,
-
-Tomeu
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
