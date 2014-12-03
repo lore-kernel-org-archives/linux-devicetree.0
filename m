@@ -1,66 +1,83 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v16 03/12] drm: imx: imx-hdmi: convert imx-hdmi to
- drm_bridge mode
-Date: Wed, 3 Dec 2014 23:40:00 +0000
-Message-ID: <20141203234000.GJ11285@n2100.arm.linux.org.uk>
-References: <1417620408-30354-1-git-send-email-andy.yan@rock-chips.com>
- <1417620566-30496-1-git-send-email-andy.yan@rock-chips.com>
- <20141203153847.GC11285@n2100.arm.linux.org.uk>
- <547F3495.9070206@rock-chips.com>
- <20141203161122.GF11285@n2100.arm.linux.org.uk>
- <547F3A9F.30701@rock-chips.com>
- <20141203163318.GH11285@n2100.arm.linux.org.uk>
- <547F40B8.6060706@rock-chips.com>
+From: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH v2 2/2] ASoC: rockchip: i2s: add support for
+ grabbing output clock to codec
+Date: Wed, 3 Dec 2014 15:52:59 -0800
+Message-ID: <CAPz6YkULCXPL=E+Kabp8S7LuH4dzwtQUb-Hbm+uMzOW8=Scq0A@mail.gmail.com>
+References: <1417531766-29669-1-git-send-email-jay.xu@rock-chips.com>
+ <1417591118-18695-1-git-send-email-jay.xu@rock-chips.com> <1417591118-18695-3-git-send-email-jay.xu@rock-chips.com>
+ <20141203192024.GL7712@sirena.org.uk> <CAPz6YkXRmRzYpW7xuDsq69A9H-Qm2-j6t-a+B1w9+OLOPf_YnA@mail.gmail.com>
+ <20141203200307.GM7712@sirena.org.uk> <CAPz6YkWSQhqX-wAp5hZReo==MuG_Tju_0mk+kGrJo9XhjQ3ttA@mail.gmail.com>
+ <CAEUnVG4qbnNaV26N9AgeKDJkEEvqi1QqdcYh=cLwjxY-aPor4w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <547F40B8.6060706@rock-chips.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Pawel Moll <pawel.moll@arm.com>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, mark.yao@rock-chips.com, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, vladimir_zapolskiy@mentor.com, Luc
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAEUnVG4qbnNaV26N9AgeKDJkEEvqi1QqdcYh=cLwjxY-aPor4w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBEZWMgMDQsIDIwMTQgYXQgMTI6NTY6MjRBTSArMDgwMCwgQW5keSBZYW4gd3JvdGU6
-Cj4gSGkgUnVzc2VsbDoKPiBPbiAyMDE05bm0MTLmnIgwNOaXpSAwMDozMywgUnVzc2VsbCBLaW5n
-IC0gQVJNIExpbnV4IHdyb3RlOgo+ID5PbiBUaHUsIERlYyAwNCwgMjAxNCBhdCAxMjozMDoyM0FN
-ICswODAwLCBBbmR5IFlhbiB3cm90ZToKPiA+Pk9uIDIwMTTlubQxMuaciDA05pelIDAwOjExLCBS
-dXNzZWxsIEtpbmcgLSBBUk0gTGludXggd3JvdGU6Cj4gPj4+SSBtZWFudCB0aGF0IGlteF9oZG1p
-X2JpbmQgc2hvdWxkIGJlIHBhc3NlZCB0aGVzZSwgc28gdGhhdCBpdCBuZWVkcyB0bwo+ID4+Pmtu
-b3cgbm90aGluZyBhYm91dCB0aGUgc3RydWN0IGRldmljZSBiZXlvbmQgdGhlIGdlbmVyaWMgZGV2
-aWNlIHN0cnVjdHVyZS4KPiA+Pj5JbiBvdGhlciB3b3JkcywgdGhlIGR3LWhkbWkgY29yZSBzaG91
-bGQgbm90IGFzc3VtZSB0aGF0IHRoZSBzdHJ1Y3QgZGV2aWNlCj4gPj4+aXMgcGFydCBvZiBhIHBs
-YXRmb3JtIGRldmljZS4KPiA+Pj4KPiA+PiAgICBpZiBzbywgaG93IGFib3V0IHRoZSBkZXZpY2Ug
-dHJlZSBwcm9wZXJ0aWVzICBkZGMtaTJjLWJ1cywgcmVnLWlvLXdpZHRoLAo+ID4+aWFoYiwgaXNm
-ciwKPiA+PiAgIHRoZXkgYXJlIGFsbCBmb3VuZCBieSBkZXZpY2U/Cj4gPklmIHRoZSBkZXZpY2Ug
-aGFzIGEgZGV2aWNlIHRyZWUgbm9kZSBhc3NvY2lhdGVkIHdpdGggaXQsIGl0IHdpbGwgaGF2ZSBh
-Cj4gPm5vbi1OVUxMIGRldi0+b2Zfbm9kZSAtIHdoaWNoIGlzIHBhcnQgb2YgdGhlIGdlbmVyaWMg
-ZGV2aWNlIHN0cnVjdHVyZS4KPiA+Cj4gICBzbyAsIEkganVzdCBuZWVkIGdldCB0aGUgcmVzb3Vy
-Y2UgYW5kIGlycSBudW1iZXIgaW4gdGhlCj4gZHdfaGRtaS1pbXgvcm9ja2NoaXAgLHRoYW4KPiAg
-IHBhc3MgdGhlbSB0byBpbXhfaGRtaV9iaW5kLCBhcyB0aGUgcHJvcGVydGllcyBkZGMtaTJjLWJ1
-cywgcmVnLWlvLXdpZHRoLAo+IGlhaGIsaXNmciwgdGhleQo+ICAgYXJlIHN0aWxsIGNhbiBiZSBo
-YW5kbGVkIGluIGlteF9oZG1pX2JpbmQgPwoKQmFzaWNhbGx5LCB3aGF0IEknbSBzdWdnZXN0aW5n
-IGlzIGp1c3QgdGhpcyBjaGFuZ2UgdG8gaW14X2hkbWlfYmluZCgpOgoKIGludCBpbXhfaGRtaV9i
-aW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLAoJCSAgdm9pZCAq
-ZGF0YSwgc3RydWN0IGRybV9lbmNvZGVyICplbmNvZGVyLAorCQkgIGNvbnN0IHN0cnVjdCByZXNv
-dXJjZSAqaW9yZXMsIGludCBpcnEsCgkJICBjb25zdCBzdHJ1Y3QgaW14X2hkbWlfcGxhdF9kYXRh
-ICpwbGF0X2RhdGEpCiB7Ci0Jc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiA9IHRvX3BsYXRm
-b3JtX2RldmljZShkZXYpOwouLi4KCX0KCi0JaXJxID0gcGxhdGZvcm1fZ2V0X2lycShwZGV2LCAw
-KTsKCWlmIChpcnEgPCAwKQoJCXJldHVybiBpcnE7Ci4uLgoJCXJldHVybiByZXQ7CgotCWlvcmVz
-ID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYsIElPUkVTT1VSQ0VfTUVNLCAwKTsKCWhkbWkt
-PnJlZ3MgPSBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoZGV2LCBpb3Jlcyk7CglpZiAoSVNfRVJSKGhk
-bWktPnJlZ3MpKQoKYW5kIHN1cHBseWluZyB0aG9zZSBhcyBhcmd1bWVudHMgZnJvbSB0aGUgY2Fs
-bGVyLgoKLS0gCkZUVEMgYnJvYWRiYW5kIGZvciAwLjhtaWxlIGxpbmU6IGN1cnJlbnRseSBhdCA5
-LjVNYnBzIGRvd24gNDAwa2JwcyB1cAphY2NvcmRpbmcgdG8gc3BlZWR0ZXN0Lm5ldC4KX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2ZWwgbWFpbGluZyBs
-aXN0CmRldmVsQGxpbnV4ZHJpdmVycHJvamVjdC5vcmcKaHR0cDovL2RyaXZlcmRldi5saW51eGRy
-aXZlcnByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vZHJpdmVyZGV2LWRldmVsCg==
+On Wed, Dec 3, 2014 at 3:22 PM, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> On Wed, Dec 3, 2014 at 3:03 PM, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+>> On Wed, Dec 3, 2014 at 12:03 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>> On Wed, Dec 03, 2014 at 11:38:13AM -0800, Sonny Rao wrote:
+>>>> On Wed, Dec 3, 2014 at 11:20 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>>
+>>>> > I would expect that the clock for the CODEC should be managed by the
+>>>> > CODEC if at all possible - that seems more logical than having the CPU
+>>>> > I2S controller request and manage it if it's a separate clock.  Why add
+>>>> > this to the CPU side driver?
+>>>
+>>>> This output clock has a mux and can either be a fixed 12Mhz output or
+>>>> can be derived from the same fractional divider which drives the i2s
+>>>> block.   I thought it was simpler to keep them all the same, but need
+>>>> to put ownership in the i2s in anticipation of the i2s driver setting
+>>>> it's own clock rate.
+>>>
+>>>> If you think this is an implementation detail and this output clock
+>>>> should just be owned by the codec driver, even though I'm guessing it
+>>>> will just have to be the same as i2s, then I think we can drop this
+>>>> and make sure simple card (or whatever other codec driver) claims this
+>>>> clock.
+>>>
+>>> simple-card obviously isn't a CODEC driver...
+>>
+>> Yeah, sorry.
+>>
+>>> For generality I think
+>>> the clock does need to be exposed to the CODEC driver, otherwise this
+>>> will work differently to how other systems are working and we can't
+>>> substitute in a different clock on the CODEC side so easily if it
+>>> doesn't happen to use the output from the I2S block.
+>>
+>> Ok, then I think what we will do is abandon this patch and I will send
+>> something that adds this functionality to the particular codec that
+>> I'm interested in -- max98090.
+>
+> Sorry I didn't read this earlier.  I don't think that this belongs in
+> the max98090.  The original patch description is a bit confusing.  The
+> clock being grabbed here is actually i2s mclk.  My understanding is
+> that, on this SoC, the mclk is driven from a different IP block than
+> the rest of the i2s signals.  The i2s driver needs to be told about
+> the clock and enable/disable it at the appropriate times.  I'm
+> assuming it's optional because there are boards using this SoC with
+> i2s slave mode that don't drive mclk at all.
+>
+> Please correct me if I'm wrong on any of the above.
+
+I don't think you're wrong, and I'm an audio/i2s neophyte so I think
+you're probably right and hopefully Mark can confirm that this is how
+we want it.
+
+One important thing to point out, which might be causing confusion, is
+that this driver is claiming a clock which it internally calls "mclk"
+but the way it's specified for rk3288 in the DT, that one is just the
+one which drives the internal logic and has a gate.
+
+This clock I'm adding is the actual mclk which is being driven to the
+i2s slave device, and it has it's own gate and also has a mux, and we
+need to claim both to be able to enable proper clock gating.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
