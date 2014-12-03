@@ -1,68 +1,49 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH v15 06/12] dt-bindings: add document for dw_hdmi
-Date: Wed, 03 Dec 2014 08:54:41 +0800
-Message-ID: <547E5F51.2090800@rock-chips.com>
-References: <1417505778-18341-1-git-send-email-andy.yan@rock-chips.com>
- <1417506124-18626-1-git-send-email-andy.yan@rock-chips.com>
- <1417544629.3411.15.camel@pengutronix.de>
+From: "Kim, Milo" <milo.kim-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] backlight/lp855x: Add supply regulator to lp855x
+Date: Wed, 3 Dec 2014 09:54:52 +0900
+Message-ID: <547E5F5C.40406@ti.com>
+References: <54767F43.2060901@ti.com> <1417468079-4990-1-git-send-email-seanpaul@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1417544629.3411.15.camel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, rmk+kernel@arm.linux.org.uk, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, Dave Airlie <airlied@redhat.com>, mark.yao@rock-chips.com, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, vladimir_zapolskiy@mentor.comLucas Stach <l>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1417468079-4990-1-git-send-email-seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, =?UTF-8?B?U3TDqXBoYW5lIE1hcmNoZXNpbg==?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Aaron Durbin <adurbin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGhpbGlwcDoKT24gMjAxNOW5tDEy5pyIMDPml6UgMDI6MjMsIFBoaWxpcHAgWmFiZWwgd3Jv
-dGU6Cj4gSGkgQW5keSwKPgo+IEFtIERpZW5zdGFnLCBkZW4gMDIuMTIuMjAxNCwgMTU6NDIgKzA4
-MDAgc2NocmllYiBBbmR5IFlhbjoKPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3X2hkbWkudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2RybS9icmlkZ2UvZHdfaGRtaS50eHQKPj4gbmV3IGZpbGUgbW9kZSAx
-MDA2NDQKPj4gaW5kZXggMDAwMDAwMC4uMTA3YzFjYQo+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3X2hkbWkudHh0
-Cj4+IEBAIC0wLDAgKzEsNDAgQEAKPj4gK0Rlc2lnbldhcmUgSERNSSBicmlkZ2UgYmluZGluZ3MK
-Pj4gKwo+PiArUmVxdWlyZWQgcHJvcGVyaXRpZXM6Cj4+ICstIGNvbXBhdGlibGU6IHBsYXRmb3Jt
-IHNwZWNpZmljIHN1Y2ggYXM6Cj4+ICsgICAqICJmc2wsaW14NnEtaGRtaSIKPj4gKyAgICogImZz
-bCxpbXg2ZGwtaGRtaSIKPj4gKyAgICogInJvY2tjaGlwLHJrMzI4OC1kdy1oZG1pIgo+IEkgdGhp
-bmsgd2Ugc2hvdWxkIGFkZCBhIGNvbW1vbiBjb21wYXRpYmxlIHZhbHVlICJzbnBzLGR3LWhkbWkt
-dHgiIGhlcmU6Cj4KPiAJY29tcGF0aWJsZSA9ICJmc2wsaW14NnEtaGRtaSIsICJzbnBzLGR3LWhk
-bWktdHgiOwo+CiAgICAgIEhvdyBhYm91dCAic25wcyxkdy1oZG1pIiwgYmVjYXVzZSB0aGUgZHJp
-dmVyIGlzIG5vdCBvbmx5IGFib3V0CiAgIGhkbWkgdHgsIGJ1dCBhbHNvIGluY2x1ZGUgaGRtaSBw
-aHkuCiAgICAgICBJZiB3ZSBhZGQgc3VjaCBjb21wYXRpYmxlIHZhbHVlLCBkbyB3ZSBoYXZlIHRv
-IGltcGxlbWVudCBhbm90aGVyCiAgICBwbGF0Zm9ybSBkcml2ZXIgbGlrZSBkd19oZG1pLXBsdGZt
-LmMgd2l0aCB0aGUgCmNvbXBhdGlibGU9InNucHMsZHctaGRtaSIgLAogICAgb3IganVzdCBpbmNs
-dWRlIHRoZSBjb21wYXRpYmxlIHZhbHVlIGluIGR3X2hkbWktaW14LmMgYW5kIApkd19oZG1pLXJv
-Y2tjaGlwLmM/Cj4+ICstIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2Yg
-dGhlIGNvbnRyb2xsZXIncyByZWdpc3RlcnMuCj4+ICstIGRkYy1pMmMtYnVzOiBwaGFuZGxlIG9m
-IGFuIEkyQyBjb250cm9sbGVyIHVzZWQgZm9yIEREQyBFRElEIHByb2JpbmcKPiBCZXR0ZXIgbWFr
-ZSBkZGMtaTJjLWJ1cyBvcHRpb25hbCwgc2VlIHRoZSBvdGhlciB0aHJlYWQgYWJvdXQgdGhlIGRk
-YyBpMmMKPiBtYXN0ZXIuCj4KPj4gKy0gaW50ZXJydXB0czogVGhlIEhETUkgaW50ZXJydXB0IG51
-bWJlcgo+PiArCj4+ICtPcHRpb25hbCBwcm9wZXJ0aWVzCj4+ICstIHJlZy1pby13aWR0aDogdGhl
-IHdpZHRoIG9mIHRoZSByZWc6MSw0LCBkZWZhdWx0IHNldCB0byAxIGlmIG5vdCBwcmVzZW50Cj4+
-ICsKPj4gK0V4YW1wbGU6Cj4+ICsJaGRtaTogaGRtaUAwMTIwMDAwIHsKPj4gKwkJY29tcGF0aWJs
-ZSA9ICJmc2wsaW14NnEtaGRtaSI7Cj4+ICsJCXJlZyA9IDwweDAwMTIwMDAwIDB4OTAwMD47Cj4+
-ICsJCWludGVycnVwdHMgPSA8MCAxMTUgMHgwND47Cj4+ICsJCWdwciA9IDwmZ3ByPjsKPj4gKwkJ
-Y2xvY2tzID0gPCZjbGtzIDEyMz4sIDwmY2xrcyAxMjQ+Owo+PiArCQljbG9jay1uYW1lcyA9ICJp
-YWhiIiwgImlzZnIiOwo+PiArCQlkZGMtaTJjLWJ1cyA9IDwmaTJjMj47Cj4+ICsKPj4gKwkJcG9y
-dEAwIHsKPj4gKwkJCXJlZyA9IDwwPjsKPj4gKwo+PiArCQkJaGRtaV9tdXhfMDogZW5kcG9pbnQg
-ewo+PiArCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmaXB1MV9kaTBfaGRtaT47Cj4+ICsJCQl9Owo+
-PiArCQl9Owo+PiArCj4+ICsJCXBvcnRAMSB7Cj4+ICsJCQlyZWcgPSA8MT47Cj4+ICsKPj4gKwkJ
-CWhkbWlfbXV4XzE6IGVuZHBvaW50IHsKPj4gKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmlwdTFf
-ZGkxX2hkbWk+Owo+PiArCQkJfTsKPj4gKwkJfTsKPj4gKwl9Owo+IHJlZ2FyZHMKPiBQaGlsaXBw
-Cj4KPgo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4g
-TGludXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0Cj4gTGludXgtcm9ja2NoaXBAbGlzdHMuaW5mcmFk
-ZWFkLm9yZwo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
-dXgtcm9ja2NoaXAKPgo+Cj4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkZXZlbCBtYWlsaW5nIGxpc3QKZGV2ZWxAbGludXhkcml2ZXJwcm9qZWN0Lm9y
-ZwpodHRwOi8vZHJpdmVyZGV2LmxpbnV4ZHJpdmVycHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcml2ZXJkZXYtZGV2ZWwK
+On 12/2/2014 6:07 AM, Sean Paul wrote:
+> This patch adds a supply regulator to the lp855x platform data to fac=
+ilitate
+> powering on/off the 3V rail attached to the controller.
+>
+> Cc: St=C3=A9phane Marchesin<marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Cc: Aaron Durbin<adurbin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Sean Paul<seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+
+Acked-by: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
+
+=46or effective power consumption, regulator could be enabled/disabled=20
+based on backlight control flow.
+=46or example, when the brightness is 0, then call regulator_disable()
+when the brightness is > 0 and regulator is off, then call=20
+regulator_enable().
+However, I'd like to send ACK to this patch.
+
+Sean,
+Could you send the patch-set with the first one - 'backlight/lp855x:=20
+Refactor dt parsing code'? I'll send my ACK as well.
+=46or the backlight maintainers, it would be better to apply them toget=
+her.
+
+Thanks!
+
+Best regards,
+Milo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
