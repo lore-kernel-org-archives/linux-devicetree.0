@@ -1,150 +1,118 @@
-From: Yadwinder Singh Brar <yadi.brar@samsung.com>
-Subject: RE: [PATCH] mfd: max77686: Fix parent of rtc device
-Date: Wed, 03 Dec 2014 14:32:02 +0530
-Message-ID: <000001d00ed7$db623bb0$9226b310$%brar@samsung.com>
-References: <1417523620-4311-1-git-send-email-yadi.brar@samsung.com>
- <1417524339-4604-1-git-send-email-yadi.brar@samsung.com>
- <547DBFAD.30605@samsung.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v14 03/10] qcom: spm: Add Subsystem Power Manager driver
+Date: Wed, 03 Dec 2014 10:11:25 +0100
+Message-ID: <547ED3BD.5090209@linaro.org>
+References: <1417541958-56907-1-git-send-email-lina.iyer@linaro.org> <1417541958-56907-4-git-send-email-lina.iyer@linaro.org> <20141202230544.GG499@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <547DBFAD.30605@samsung.com>
-Content-language: en-us
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: =?utf-8?Q?'Krzysztof_Koz=C5=82owski'?= <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: lee.jones@linaro.org, sameo@linux.intel.com, akpm@linux-foundation.org, tomasz.figa@gmail.com, robh+dt@kernel.org, yadi.brar01@gmail.com
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20141202230544.GG499@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 12/03/2014 12:05 AM, Lina Iyer wrote:
+> On Tue, Dec 02 2014 at 10:40 -0700, Lina Iyer wrote:
+> +
+> [...]
 
+[ ... ]
 
-On Tuesday, December 02, 2014 7:04 PM, Krzysztof Koz=C5=82owski wrote:=20
-> On 02.12.2014 13:45, Yadwinder Singh Brar wrote:
-> > rtc have different i2c client than power(pmic) block. So rtc device
-> > should sit under its own i2c client in device hierarchy, which
-> reflects in sysfs also.
-> > This patch modifies code to register rtc cell with rtc->dev as
-> parent.
-> >
-> > Without this patch :
-> > # ls /sys/class/i2c-adapter/i2c-0/0-0009/
-> > driver         max77686-pmic  modalias       power          uevent
-> > max77686-clk   max77686-rtc   name           subsystem
-> >
-> > After applying patch :
-> > # ls /sys/class/i2c-adapter/i2c-0/0-0006/
-> > driver/        modalias       power/         uevent
-> > max77686-rtc/  name           subsystem/
-> >
-> > Signed-off-by: Yadwinder Singh Brar <yadi.brar@samsung.com>
-> > ---
-> >
-> > Or Can we follow another (exhaustive but more cleaner) approach,
-> which
-> > will be more like code refactoring and cleanup rather than only fix=
-:
-> > Since rtc uses i2c client, which gets created using i2c_new_dummy()
-> > and is not shared by any other cell of max77686. So we can covert r=
-tc
-> > platform driver itself to i2c client driver. It will also allow to
-> > expilicitly describe max77686-rtc in DT which we can't do now.
-> > It can be applicable to some other existing and new mfd pmic driver=
-s.
-> > Any suggestion/comments ?
->=20
-> Hi,
->=20
-> What kind of problem is solved by this patch?
+>> +static int __init qcom_spm_init(void)
+>> +{
+>> +    int ret;
+>> +
+>> +    /*
+>> +     * cpuidle driver need to registered before the cpuidle device
+>> +     * for any cpu. Register the device for the the cpuidle driver.
+>> +     */
+>> +    ret =3D platform_device_register(&qcom_cpuidle_drv);
+>> +    if (ret)
+>> +        return ret;
+> Stephen pointed out that we would have the platform device lying arou=
+nd
+> on a non-QCOM device when using multi_v7_defconfig.
+
+Perhaps I am missing the point, but this is not supposed to happen, no =
+?
+
+> So instead of doing this here, we could do this in the probe..
 >
+> if (!cpuidle_get_driver()) {
+>          int ret =3D platform_device_register(&qcom_cpuidle_drv);
+>          if (ret)
+>                  return ret;
+> }
+>
+> Would that be okay?
+>
+> The successful probe indicates that we are on a QCOM SoC, and we have=
+ not
+> registered a cpuidle_driver before this.
+>
+> Thanks,
+> Lina
+>
+>> +
+>> +    return platform_driver_register(&spm_driver);
+>> +}
+>> +module_init(qcom_spm_init);
+>> +
+>> +MODULE_LICENSE("GPL v2");
+>> +MODULE_DESCRIPTION("SAW power controller driver");
+>> +MODULE_ALIAS("platform:saw");
+>> diff --git a/include/soc/qcom/pm.h b/include/soc/qcom/pm.h
+>> new file mode 100644
+>> index 0000000..d9a56d7
+>> --- /dev/null
+>> +++ b/include/soc/qcom/pm.h
+>> @@ -0,0 +1,31 @@
+>> +/*
+>> + * Copyright (c) 2009-2014, The Linux Foundation. All rights reserv=
+ed.
+>> + *
+>> + * This software is licensed under the terms of the GNU General Pub=
+lic
+>> + * License version 2, as published by the Free Software Foundation,=
+ and
+>> + * may be copied, distributed, and modified under those terms.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + *
+>> + */
+>> +
+>> +#ifndef __QCOM_PM_H
+>> +#define __QCOM_PM_H
+>> +
+>> +enum pm_sleep_mode {
+>> +    PM_SLEEP_MODE_STBY,
+>> +    PM_SLEEP_MODE_RET,
+>> +    PM_SLEEP_MODE_SPC,
+>> +    PM_SLEEP_MODE_PC,
+>> +    PM_SLEEP_MODE_NR,
+>> +};
+>> +
+>> +struct qcom_cpu_pm_ops {
+>> +    int (*standby)(void *data);
+>> +    int (*spc)(void *data);
+>> +};
+>> +
+>> +#endif  /* __QCOM_PM_H */
+>> --
+>> 2.1.0
+>>
 
-Let me try to explain once again :)
-After seeing a message "i2c i2c-0: .... , addr=3D0x06, .." in dmesg log=
-,
-I was not able to find any such device in sysfs as well as device tree.
-There was no device under /sys/class/i2c-dev/i2c-0/device/0-0006/
-Isn't something wrong or missing ?
 
-This patch fixes that missing parent child relation, which IMO
-should be correct always, though it causes any major problem or not.
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
 
-Still I am thinking, 0-0006 slave device(rtc) shouldn't also appear in =
-DT?
-As DT should describe the hardware that we are using.
-
-Warm regards,
-Yadwinder
-
-> Best regards,
-> Krzysztof
->=20
->=20
-> >
-> > ---
-> >  drivers/mfd/max77686.c |   22 ++++++++++++++++++++--
-> >  1 files changed, 20 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/mfd/max77686.c b/drivers/mfd/max77686.c index
-> > 929795e..22c0948 100644
-> > --- a/drivers/mfd/max77686.c
-> > +++ b/drivers/mfd/max77686.c
-> > @@ -39,10 +39,13 @@
-> >
-> >  static const struct mfd_cell max77686_devs[] =3D {
-> >  	{ .name =3D "max77686-pmic", },
-> > -	{ .name =3D "max77686-rtc", },
-> >  	{ .name =3D "max77686-clk", },
-> >  };
-> >
-> > +static const struct mfd_cell max77686_rtc_dev[] =3D {
-> > +	{ .name =3D "max77686-rtc", },
-> > +};
-> > +
-> >  static const struct mfd_cell max77802_devs[] =3D {
-> >  	{ .name =3D "max77802-pmic", },
-> >  	{ .name =3D "max77802-clk", },
-> > @@ -332,14 +335,27 @@ static int max77686_i2c_probe(struct i2c_clie=
-nt
-> *i2c,
-> >  		goto err_del_irqc;
-> >  	}
-> >
-> > +	if (max77686->type =3D=3D TYPE_MAX77686) {
-> > +		ret =3D mfd_add_devices(&max77686->rtc->dev, -1,
-> max77686_rtc_dev,
-> > +			1, NULL, 0, NULL);
-> > +		if (ret < 0) {
-> > +			dev_err(&max77686->rtc->dev,
-> > +				"failed to add RTC device %d\n", ret);
-> > +			goto err_del_rtc_irqc;
-> > +		}
-> > +	}
-> > +
-> >  	ret =3D mfd_add_devices(max77686->dev, -1, cells, n_devs, NULL, 0=
-,
-> NULL);
-> >  	if (ret < 0) {
-> >  		dev_err(&i2c->dev, "failed to add MFD devices: %d\n", ret);
-> > -		goto err_del_rtc_irqc;
-> > +		goto err_del_rtc_dev;
-> >  	}
-> >
-> >  	return 0;
-> >
-> > +err_del_rtc_dev:
-> > +	if (max77686->type =3D=3D TYPE_MAX77686)
-> > +		mfd_remove_devices(&max77686->rtc->dev);
-> >  err_del_rtc_irqc:
-> >  	regmap_del_irq_chip(max77686->irq, max77686->rtc_irq_data);
-> >  err_del_irqc:
-> > @@ -356,6 +372,8 @@ static int max77686_i2c_remove(struct i2c_clien=
-t
-> *i2c)
-> >  	struct max77686_dev *max77686 =3D i2c_get_clientdata(i2c);
-> >
-> >  	mfd_remove_devices(max77686->dev);
-> > +	if (max77686->type =3D=3D TYPE_MAX77686)
-> > +		mfd_remove_devices(&max77686->rtc->dev);
-> >
-> >  	regmap_del_irq_chip(max77686->irq, max77686->rtc_irq_data);
-> >  	regmap_del_irq_chip(max77686->irq, max77686->irq_data);
-> >
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
