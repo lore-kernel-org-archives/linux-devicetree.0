@@ -1,74 +1,99 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v3 2/3] Documentation: DT: Add documentation for ti,opa362
- bindings
-Date: Wed, 3 Dec 2014 14:18:25 +0200
-Message-ID: <547EFF91.7040405@ti.com>
-References: <1417352867-7436-1-git-send-email-marek@goldelico.com> <1417352867-7436-3-git-send-email-marek@goldelico.com>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH v15 12/12] drm: bridge/dw_hdmi: add rockchip rk3288 support
+Date: Wed, 03 Dec 2014 20:32:15 +0800
+Message-ID: <547F02CF.9010804@rock-chips.com>
+References: <1417505778-18341-1-git-send-email-andy.yan@rock-chips.com>		
+ <1417506327-18908-1-git-send-email-andy.yan@rock-chips.com>	
+ <1417515882.3411.8.camel@pengutronix.de> <547DB1ED.7000409@rock-chips.com>
+ <1417525257.3411.12.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="FGD71uUJv2Mt07HihEmfgkv9rcNFNp7eh"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1417352867-7436-3-git-send-email-marek@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Belisko <marek@goldelico.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, tony@atomide.com, linux@arm.linux.org.uk, plagnioj@jcrosoft.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, hns@goldelico.com
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1417525257.3411.12.camel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Pawel Moll <pawel.moll@arm.com>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, rmk+kernel@arm.linux.org.uk, mark.yao@rock-chips.com, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, vladimir_zapolskiy@mentor.com
 List-Id: devicetree@vger.kernel.org
 
---FGD71uUJv2Mt07HihEmfgkv9rcNFNp7eh
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
-
-On 30/11/14 15:07, Marek Belisko wrote:
-> Signed-off-by: Marek Belisko <marek@goldelico.com>
-> ---
->  .../devicetree/bindings/video/ti,opa362.txt        | 38 ++++++++++++++=
-++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/video/ti,opa362.t=
-xt
->=20
-> diff --git a/Documentation/devicetree/bindings/video/ti,opa362.txt b/Do=
-cumentation/devicetree/bindings/video/ti,opa362.txt
-> new file mode 100644
-> index 0000000..4747ef9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/ti,opa362.txt
-> @@ -0,0 +1,38 @@
-> +OPA362 analog video amplifier
-> +
-> +Required properties:
-> +- compatible: "ti,opa362"
-> +- gpio: enable/disable output gpio
-
-Either this or the example is wrong. If I'm not mistaken 'gpios' is the
-correct form.
-
- Tomi
-
-
-
---FGD71uUJv2Mt07HihEmfgkv9rcNFNp7eh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUfv+RAAoJEPo9qoy8lh71PyoP/jH0TKf2mTKRM0mk3KY08LJb
-yfnzOFb0GybghvFvdf9c415HFa0zReQkw1d/zSIpLU9ZC3jWcH5vUR+oxsSpBiZM
-xhvU3hAqUm4P4NjIekWpOI7vhnk3NdQLVGYrIMFzSTHaLigi7xzKTnbEYlVsfQaU
-0AwRsU7/hkx8aKFUSYxsFvo28CCYROjmwodnnq4B53GnsErdIJsKtqjlwY0i706p
-6S7CHUNzj+mQah7gJAFcBgQ/rmnRNXc+NZ3hmRgpeJVDP3XgqFfadjTvveYB1saz
-TchQjXTwwE6/bKIxj1eQ0U+Y9UJ5qikyTMfe2OaTNr7eHH73CKLpQbmid41u7cXW
-/Mjv9Zs5PvOI4B/bsOZR5AuXfKBvMTzA8Pqp1JMx3oybAFG605AXxuTTONDk7XH3
-QdoXo8IEdaRejqsr5CATQLjIdzH2yGrdg7iZjWvmKSPblj8pZ4TGapMqpr0kOgBg
-oIwR2Z4mHN6BQLfbmfBMCWvCZlv3zJpv1xP7wuRsp4fnnTGs5aIcvHq73MKxtvk6
-0oYmSSnyDIljJu8taPeYVoCjt9e4yM0doetiRFGRzj0/5rPCW2/CcHkC/l9alvnx
-pcvI403wi9x4V/GWrlKTu04GK2JWt0TjJdgEP15G60tcHKfYJ1ARwj+hWVUyfyjq
-E5r+OHo3sNbjjUy7NvMz
-=IY7P
------END PGP SIGNATURE-----
-
---FGD71uUJv2Mt07HihEmfgkv9rcNFNp7eh--
+SGkgUGhpbGlwcDoKT24gMjAxNOW5tDEy5pyIMDLml6UgMjE6MDAsIFBoaWxpcHAgWmFiZWwgd3Jv
+dGU6Cj4gSGkgQW5keSwKPgo+IEFtIERpZW5zdGFnLCBkZW4gMDIuMTIuMjAxNCwgMjA6MzQgKzA4
+MDAgc2NocmllYiBBbmR5IFlhbjoKPj4gSGkgUGhpbGlwcDoKPj4gT24gMjAxNOW5tDEy5pyIMDLm
+l6UgMTg6MjQsIFBoaWxpcHAgWmFiZWwgd3JvdGU6Cj4+PiBIaSBBbmR5LAo+Pj4KPj4+IEFtIERp
+ZW5zdGFnLCBkZW4gMDIuMTIuMjAxNCwgMTU6NDUgKzA4MDAgc2NocmllYiBBbmR5IFlhbjoKPj4+
+IFsuLi5dCj4+Pj4gK3N0YXRpYyBpbnQgZHdfaGRtaV9yb2NrY2hpcF9iaW5kKHN0cnVjdCBkZXZp
+Y2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLAo+Pj4+ICsJCQkJIHZvaWQgKmRhdGEpCj4+
+Pj4gK3sKPj4+PiArCXN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYgPSB0b19wbGF0Zm9ybV9k
+ZXZpY2UoZGV2KTsKPj4+PiArCWNvbnN0IHN0cnVjdCBkd19oZG1pX3BsYXRfZGF0YSAqcGxhdF9k
+YXRhOwo+Pj4+ICsJY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCAqbWF0Y2g7Cj4+Pj4gKwlzdHJ1
+Y3QgZHJtX2RldmljZSAqZHJtID0gZGF0YTsKPj4+PiArCXN0cnVjdCBkcm1fZW5jb2RlciAqZW5j
+b2RlcjsKPj4+PiArCXN0cnVjdCByb2NrY2hpcF9oZG1pICpoZG1pOwo+Pj4+ICsJaW50IHJldDsK
+Pj4+PiArCj4+Pj4gKwlpZiAoIXBkZXYtPmRldi5vZl9ub2RlKQo+Pj4+ICsJCXJldHVybiAtRU5P
+REVWOwo+Pj4+ICsKPj4+PiArCWhkbWkgPSBkZXZtX2t6YWxsb2MoJnBkZXYtPmRldiwgc2l6ZW9m
+KCpoZG1pKSwgR0ZQX0tFUk5FTCk7Cj4+Pj4gKwlpZiAoIWhkbWkpCj4+Pj4gKwkJcmV0dXJuIC1F
+Tk9NRU07Cj4+Pj4gKwo+Pj4+ICsJbWF0Y2ggPSBvZl9tYXRjaF9ub2RlKGR3X2hkbWlfcm9ja2No
+aXBfaWRzLCBwZGV2LT5kZXYub2Zfbm9kZSk7Cj4+Pj4gKwlwbGF0X2RhdGEgPSBtYXRjaC0+ZGF0
+YTsKPj4+PiArCWhkbWktPmRldiA9ICZwZGV2LT5kZXY7Cj4+Pj4gKwllbmNvZGVyID0gJmhkbWkt
+PmVuY29kZXI7Cj4+Pj4gKwlwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBoZG1pKTsKPj4+PiAr
+Cj4+Pj4gKwlyZXQgPSByb2NrY2hpcF9oZG1pX3BhcnNlX2R0KGhkbWkpOwo+Pj4+ICsJaWYgKHJl
+dCkgewo+Pj4+ICsJCWRldl9lcnIoaGRtaS0+ZGV2LCAiVW5hYmxlIHRvIHBhcnNlIE9GIGRhdGFc
+biIpOwo+Pj4+ICsJCXJldHVybiByZXQ7Cj4+Pj4gKwl9Cj4+Pj4gKwo+Pj4+ICsJcmV0ID0gY2xr
+X3ByZXBhcmVfZW5hYmxlKGhkbWktPmNsayk7Cj4+Pj4gKwlpZiAocmV0KSB7Cj4+Pj4gKwkJZGV2
+X2VycihoZG1pLT5kZXYsICJDYW5ub3QgZW5hYmxlIEhETUkgY2xvY2s6ICVkXG4iLCByZXQpOwo+
+Pj4+ICsJCXJldHVybiByZXQ7Cj4+Pj4gKwl9Cj4+Pj4gKwo+Pj4+ICsJcmV0ID0gY2xrX3ByZXBh
+cmVfZW5hYmxlKGhkbWktPmhkY3BfY2xrKTsKPj4+PiArCWlmIChyZXQpIHsKPj4+PiArCQlkZXZf
+ZXJyKGhkbWktPmRldiwgIkNhbm5vdCBlbmFibGUgSERNSSBoZGNwIGNsb2NrOiAlZFxuIiwgcmV0
+KTsKPj4+PiArCQlyZXR1cm4gcmV0Owo+Pj4+ICsJfQo+Pj4gQ291bGQgd2UgaGF2ZSBhIGxvb2sg
+YXQgdGhlIGNsb2NrcyBhZ2Fpbj8gQmFzaWNhbGx5IHRoZSBSb2NrY2hpcCBjbG9jawo+Pj4gaGFu
+ZGxpbmcgaXMgZXhhY3RseSB0aGUgc2FtZSwgZXhjZXB0IHRoZSBjbG9ja3MgYXJlIGNhbGxlZCBi
+eSBvdGhlcgo+Pj4gbmFtZXMuCj4+Pgo+Pj4gT24gaS5NWDYsIGFjY29yZGluZyB0byB0aGUgcmVm
+ZXJlbmNlIG1hbnVhbCwgdGhlIEhETUkgVFggbW9kdWxlIGhhcyBmb3VyCj4+PiBjbG9jayBpbnB1
+dHM6ICJpYWhiY2xrIiAoYnVzIGNsb2NrKSwgImljZWNjbGsiICgzMiBrSHogQ0VDIGNsb2NrKSwK
+Pj4+ICJpaGNsayIgKG1vZHVsZSBjbG9jayksIGFuZCAiaXNmcmNsayIgKDI3IE1IeiBpbnRlcm5h
+bCBTRlIgY2xvY2spLgo+Pj4gVGhlICJpYWhiY2xrIiBhbmQgImloY2xrIiBhcmUgYm90aCBzb3Vy
+Y2VkIGZyb20gdGhlIFNvQyBBSEIgcm9vdCBjbG9jaywKPj4+IHRoZSAzMiBrSHogcmVmZXJlbmNl
+IGlucHV0IGNhbid0IGJlIGdhdGVkLCBhbmQgdGhlICJpc2ZyY2xrIiBoYXMgaXRzIG93bgo+Pj4g
+Z2F0ZS4KPj4+Cj4+PiBEb2VzIHRoZSBIRE1JIFRYIGltcGxlbWVudGF0aW9uIG9uIFJvY2tjaGlw
+IHN0aWxsIGhhdmUgdGhlIHNlcGFyYXRlCj4+PiBleHRlcm5hbCBzZnIgYnVzIGFuZCBtb2R1bGUg
+Y2xvY2sgaW5wdXRzPyBJIGFzc3VtZSB0aGF0IHlvdXIgImNsayIgaW5wdXQKPj4+IGlzIGEgc2lu
+Z2xlIGdhdGUgYml0IGZvciBidXMgYW5kIG1vZHVsZSBjbG9ja3MgYXQgdGhlIHNhbWUgdGltZT8K
+Pj4+IElmIHBvc3NpYmxlLCBJJ2QgcHJlZmVyIHRvIGZpbmQgYSBjb21tb24gYmluZGluZyBmb3Ig
+dGhlIGNsb2NrcyB3aXRoCj4+PiBzb21lIG9mIHRoZSBjbG9ja3MgYmVpbmcgb3B0aW9uYWwsIGJ1
+dCBmb3IgdGhhdCB3ZSBuZWVkIHRvIGtub3cgdGhlCj4+PiBhY3R1YWwgY2xvY2sgaW5wdXRzIHRv
+IHRoZSBIRE1JIFRYIG1vZHVsZS4KPj4+Cj4+PiByZWdhcmRzCj4+PiBQaGlsaXBwCj4+Pgo+PiAg
+ICAgICBUaGVyZSBhcmUgdGhyZWUgIGluZGl2aWR1YWwgY2xvY2sgaW5wdXRzIG9uIFJvY2tjaGlw
+IFJLMzI4OCBIRE1JOgo+PiAiaGRtaV9jdHJsX2NsayIsCj4+ICAgICAgICJoZG1pX2NlY19jbGsi
+LCAiaGRtaV9oZGNwX2NsayIsIHRoZSB0aHJlZSBjbG9ja3MgYXJlIHJlc3BvbnNpYmxlCj4+IGZv
+ciBkaWZmZXJlbnQKPj4gICAgICAgIGZ1bmN0aW9ucyBhcyB0aGVpciBuYW1lIGRlc2NyaWJlZCwg
+YW5kIGhhdmUgdGhlaXIgb3duIHByaXZhdGUgZ2F0ZQo+PiBiaXQuIFRoYXQgaXMKPj4gICAgICAg
+IHRvIHNheSwgdGhlIGNlY19jbGsgYW5kIGhkY3BfY2xrIGNhbiBhbGwgYmUgZGlzYWJsZWQgaWYg
+d2UgZG9uJ3QKPj4gbmVlZCBoZGNwIGFuZCBjZWMKPj4gICAgICAgIGZ1bmN0aW9uLgo+PiAgICAg
+ICAgU28gSSB0aGluayBpdCdzIGJldHRlciB0byBtYWtlIHRoZSBjbGsgY29udHJvbCBwbGF0Zm9y
+bSBpbmRlcGVuZGVudC4KPiBNeSBxdWVzdGlvbiBpcyBub3QgYWJvdXQgdGhlIGF2YWlsYWJsZSBn
+YXRlcyBhdCB0aGUgU29DIGxldmVsLCBidXQgYWJvdXQKPiB0aGUgYWN0dWFsIGNsb2NrIGlucHV0
+cyBmcm9tIHBvaW50IG9mIHZpZXcgb2YgdGhlIEhETUkgVFggSVAuCj4KPiBJdCBjb3VsZCBiZSB0
+aGF0IHRoZSBoZG1pX2N0cmxfY2xrIGdhdGVzIGFsbCBpbnB1dHMgdG8gdGhlIG1vZHVsZSBhbmQK
+PiBidXMgY2xvY2tzIHRvZ2V0aGVyLiBJZiBzbywgeW91IGNvdWxkIGp1c3QgcmV1c2UgImlzZnIi
+IGFuZCAiaWFoYiIgYW5kCj4gc2V0IGl0IHRvIHRoZSBzYW1lIGNsb2NrLiBJZiBub3QsIHdlJ2Qg
+bmVlZCB0byB0aGluayBvZiBzb21ldGhpbmcgZWxzZS4KPiBVbmZvcnR1bmF0ZWx5IEkgZG9uJ3Qg
+aGF2ZSBhbnkgU3lub3BzeXMgZG9jdW1lbnRhdGlvbiBvZiB0aGUgSERNSSBUWCBhdAo+IHRoYXQg
+bGV2ZWwuCgogICAgQWZ0ZXIgY29uZmlybWluZyB3aXRoIHRoZSBJQyBkZXNpZ25lciwgd2UgZmlu
+YWxseSBtYWtlIGNsZWFyIHRoYXQKICAgIFJvY2tjaGlwIFJLMzI4OCBhbG1vc3QgdXNlIHRoZSBz
+YW1lIGNsb2NrIGRlc2lnbiB3aXRoIGlteDoKICAgIGNsay0tLS0taWFoYmNsaywgdXNlZCBmb3Ig
+aGRtaSBtb2R1bGUgYW5kIGJ1cwogICAgaGRjcF9jbGstLS0tLWlzZnJjbGssIHVzZWQgZm9yIGhk
+Y3AgYW5kIGkyY20KICAgIGNlY2NsayAtLS0tLWNlY2NsaywgYnV0IHRoaXMgY2xrIGNhbiBiZSBn
+YXRlZCBvbiByb2NrY2hpcCwgdGhpcyBpcyAKZGlmZmVyZW50IHdpdGggaW14LAogICAgYnV0IHdl
+IGRvbid0IGhhbmRsZSB0aGUgY2VjIHN0dWZmIG5vdy4gU28gaSB3aWxsIHRyeSB0byByZXVzZSB0
+aGUgCmlteCBjbGsgYmluZHMuIGRvIHlvdQogICB0aGluayB0aGF0IGlzIG9rPwo+IHJlZ2FyZHMK
+PiBQaGlsaXBwCj4KPgo+Cj4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkZXZlbCBtYWlsaW5nIGxpc3QKZGV2ZWxAbGludXhkcml2ZXJwcm9qZWN0Lm9y
+ZwpodHRwOi8vZHJpdmVyZGV2LmxpbnV4ZHJpdmVycHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9kcml2ZXJkZXYtZGV2ZWwK
