@@ -1,515 +1,90 @@
-From: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v9 2/8] backlight: Add support Skyworks SKY81452 backlight
- driver
-Date: Wed, 03 Dec 2014 11:19:06 +0900
-Message-ID: <001401d00e9f$83d6b660$8b842320$%han@samsung.com>
-References: <1417507529-13654-1-git-send-email-jack.yoo@skyworksinc.com>
- <1417507529-13654-3-git-send-email-jack.yoo@skyworksinc.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] devicetree: of: Add bindings for chosen node,
+ stdout-path
+Date: Tue, 02 Dec 2014 18:24:21 -0800
+Message-ID: <547E7455.6090009@gmail.com>
+References: <1417110967-16284-1-git-send-email-leif.lindholm@linaro.org> <1417110967-16284-2-git-send-email-leif.lindholm@linaro.org>
+Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1417507529-13654-3-git-send-email-jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
-Content-language: ko
+In-Reply-To: <1417110967-16284-2-git-send-email-leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, 'Jingoo Han' <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, December 02, 2014 5:05 PM, Gyungoh Yoo wrote:
+On 11/27/2014 9:56 AM, Leif Lindholm wrote:
+> Add a global binding for the chosen node.
+> Include a description of the stdout-path, and an explicit statement on
+> its extra options in the context of a UART console.
 > 
-> From: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
+> Opening description stolen from www.devicetree.org, and part of the
+> remaining text provided by Mark Rutland.
 > 
-> Signed-off-by: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
+> Signed-off-by: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
-> Changes v9:
-> Nothing
+>  Documentation/devicetree/bindings/chosen.txt |   42 ++++++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/chosen.txt
 > 
-> Changes v8:
-> Renamed property names for backlight with vendor prefix
-> Modified gpio-enable property to generic property for GPIO
-> 
-> Changes v7:
-> Modified licensing text to GPLv2
-> 
-> Changes v6:
-> Added new line character at the end of line of dev_err()
-> 
-> Changes v5:
-> Move sky81452-backlight.h to include/linux/platform_data
-> 
-> Changes v4:
-> Reordering header files for readability
-> Removed calling to backlight_device_unregister()
-> Removed MODULE_VERSION()
-> Modified license to GPLv2
-> 
-> Changes v3:
-> Modified DBG messages
-> 
-> Changes v2:
-> Added 'compatible' attribute in the driver
-> Added message for exception or errors
-> 
->  drivers/video/backlight/Kconfig                  |  10 +
->  drivers/video/backlight/Makefile                 |   1 +
->  drivers/video/backlight/sky81452-backlight.c     | 340 +++++++++++++++++++++++
->  include/linux/platform_data/sky81452-backlight.h |  46 +++
->  4 files changed, 397 insertions(+)
->  create mode 100644 drivers/video/backlight/sky81452-backlight.c
->  create mode 100644 include/linux/platform_data/sky81452-backlight.h
-> 
-> diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
-> index 8d03924..2586fdd 100644
-> --- a/drivers/video/backlight/Kconfig
-> +++ b/drivers/video/backlight/Kconfig
-> @@ -409,6 +409,16 @@ config BACKLIGHT_PANDORA
->  	  If you have a Pandora console, say Y to enable the
->  	  backlight driver.
-> 
-> +config BACKLIGHT_SKY81452
-> +	tristate "Backlight driver for SKY81452"
-> +	depends on BACKLIGHT_CLASS_DEVICE && MFD_SKY81452
-> +	help
-> +	  If you have a Skyworks SKY81452, say Y to enable the
-> +	  backlight driver.
-> +
-> +	  To compile this driver as a module, choose M here: the module will
-> +	  be called sky81452-backlight
-> +
->  config BACKLIGHT_TPS65217
->  	tristate "TPS65217 Backlight"
->  	depends on BACKLIGHT_CLASS_DEVICE && MFD_TPS65217
-> diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
-> index fcd50b73..d67073f 100644
-> --- a/drivers/video/backlight/Makefile
-> +++ b/drivers/video/backlight/Makefile
-> @@ -50,6 +50,7 @@ obj-$(CONFIG_BACKLIGHT_PANDORA)		+= pandora_bl.o
->  obj-$(CONFIG_BACKLIGHT_PCF50633)	+= pcf50633-backlight.o
->  obj-$(CONFIG_BACKLIGHT_PWM)		+= pwm_bl.o
->  obj-$(CONFIG_BACKLIGHT_SAHARA)		+= kb3886_bl.o
-> +obj-$(CONFIG_BACKLIGHT_SKY81452)	+= sky81452-backlight.o
->  obj-$(CONFIG_BACKLIGHT_TOSA)		+= tosa_bl.o
->  obj-$(CONFIG_BACKLIGHT_TPS65217)	+= tps65217_bl.o
->  obj-$(CONFIG_BACKLIGHT_WM831X)		+= wm831x_bl.o
-> diff --git a/drivers/video/backlight/sky81452-backlight.c b/drivers/video/backlight/sky81452-
-> backlight.c
+> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
 > new file mode 100644
-> index 0000000..45e575f
+> index 0000000..9cd74e9
 > --- /dev/null
-> +++ b/drivers/video/backlight/sky81452-backlight.c
-> @@ -0,0 +1,340 @@
-> +/*
-> + * sky81452-backlight.c	SKY81452 backlight driver
-> + *
-> + * Copyright 2014 Skyworks Solutions Inc.
-> + * Author : Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License version 2
-> + * as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful, but
-> + * WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-> + * General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along
-> + * with this program; if not, see <http://www.gnu.org/licenses/>.
-> + */
+> +++ b/Documentation/devicetree/bindings/chosen.txt
+> @@ -0,0 +1,42 @@
+> +The chosen node
+> +---------------
 > +
-> +#include <linux/backlight.h>
-> +#include <linux/err.h>
-> +#include <linux/gpio.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/platform_data/sky81452-backlight.h>
-> +#include <linux/slab.h>
+> +The chosen node does not represent a real device, but serves as a place
+> +for passing data between firmware and the operating system, like boot
+> +arguments. Data in the chosen node does not represent the hardware.
 > +
-> +/* registers */
-> +#define SKY81452_REG0	0x00
-> +#define SKY81452_REG1	0x01
-> +#define SKY81452_REG2	0x02
-> +#define SKY81452_REG4	0x04
-> +#define SKY81452_REG5	0x05
 > +
-> +/* bit mask */
-> +#define SKY81452_CS	0xFF
-> +#define SKY81452_EN	0x3F
-> +#define SKY81452_IGPW	0x20
-> +#define SKY81452_PWMMD	0x10
-> +#define SKY81452_PHASE	0x08
-> +#define SKY81452_ILIM	0x04
-> +#define SKY81452_VSHRT	0x03
-> +#define SKY81452_OCP	0x80
-> +#define SKY81452_OTMP	0x40
-> +#define SKY81452_SHRT	0x3F
-> +#define SKY81452_OPN	0x3F
-> +
-> +#define SKY81452_DEFAULT_NAME "lcd-backlight"
-> +#define SKY81452_MAX_BRIGHTNESS	(SKY81452_CS + 1)
-> +
-> +#define CTZ(b) __builtin_ctz(b)
-> +
-> +static int sky81452_bl_update_status(struct backlight_device *bd)
-> +{
-> +	const struct sky81452_bl_platform_data *pdata =
-> +			dev_get_platdata(bd->dev.parent);
-> +	const unsigned int brightness = (unsigned int)bd->props.brightness;
-> +	struct regmap *regmap = bl_get_data(bd);
-> +	int ret;
-> +
-> +	if (brightness > 0) {
-> +		ret = regmap_write(regmap, SKY81452_REG0, brightness - 1);
-> +		if (IS_ERR_VALUE(ret))
-> +			return ret;
-> +
-> +		return regmap_update_bits(regmap, SKY81452_REG1, SKY81452_EN,
-> +					pdata->enable << CTZ(SKY81452_EN));
-> +	}
-> +
-> +	return regmap_update_bits(regmap, SKY81452_REG1, SKY81452_EN, 0);
-> +}
-> +
-> +static int sky81452_bl_get_brightness(struct backlight_device *bd)
-> +{
-> +	return bd->props.brightness;
-> +}
+> +stdout-path property
 
-Please remove sky81452_bl_get_brightness().
-In the case of just returning 'props.brightness',
-backglight core can also return 'props.brightness'.
-So, there is no need to add sky81452_bl_get_brightness().
+The code in patch 3/3 adds the extra options feature to the properties:
 
-Please refer to the following patches.
-  backlight: Remove trivial get_brightness implementations
-  backlight: Show brightness even if get_brightness is not implemented
+  stdout-path
+  linux,stdout-path
+  stdout  [if (IS_ENABLED(CONFIG_PPC) ... ]
 
-Others look good.
-Thanks.
-
-Best regards,
-Jingoo Han
-
+> +--------------------
 > +
-> +static const struct backlight_ops sky81452_bl_ops = {
-> +	.update_status = sky81452_bl_update_status,
-> +	.get_brightness = sky81452_bl_get_brightness,
+> +Device trees may specify the device to be used for boot console output
+> +with a stdout-path property under /chosen, as described in ePAPR, e.g.
+> +
+> +/ {
+> +	chosen {
+> +		stdout-path = "/serial@f00:115200";
+> +	};
+> +
+> +	serial@f00 {
+> +		compatible = "vendor,some-uart";
+> +		reg = <0xf00 0x10>;
+> +	};
 > +};
 > +
-> +static ssize_t sky81452_bl_store_enable(struct device *dev,
-> +		struct device_attribute *attr, const char *buf, size_t count)
-> +{
-> +	struct regmap *regmap = bl_get_data(to_backlight_device(dev));
-> +	unsigned long value;
-> +	int ret;
+> +If the character ":" is present in the value, this terminates the path.
+> +The meaning of any characters following the ":" is device-specific, and
+> +must be specified in the relevant binding documentation.
 > +
-> +	ret = kstrtoul(buf, 16, &value);
-> +	if (IS_ERR_VALUE(ret))
-> +		return ret;
+> +For UART devices, the format supported by uart_parse_options() is the
+> +expected one. In this case, the format of the string is:
 > +
-> +	ret = regmap_update_bits(regmap, SKY81452_REG1, SKY81452_EN,
-> +					value << CTZ(SKY81452_EN));
-> +	if (IS_ERR_VALUE(ret))
-> +		return ret;
+> +	<baud>{<parity>{<bits>{<flow>}}}
 > +
-> +	return count;
-> +}
+> +where
 > +
-> +static ssize_t sky81452_bl_show_open_short(struct device *dev,
-> +		struct device_attribute *attr, char *buf)
-> +{
-> +	struct regmap *regmap = bl_get_data(to_backlight_device(dev));
-> +	unsigned int reg, value = 0;
-> +	char tmp[3];
-> +	int i, ret;
+> +	baud	- baud rate in decimal
+> +	parity	- 'n' (none), 'o', (odd) or 'e' (even)
+> +	bits	- number of data bits
+> +	flow	- 'r' (rts)
 > +
-> +	reg = !strcmp(attr->attr.name, "open") ? SKY81452_REG5 : SKY81452_REG4;
-> +	ret = regmap_read(regmap, reg, &value);
-> +	if (IS_ERR_VALUE(ret))
-> +		return ret;
-> +
-> +	if (value & SKY81452_SHRT) {
-> +		*buf = 0;
-> +		for (i = 0; i < 6; i++) {
-> +			if (value & 0x01) {
-> +				sprintf(tmp, "%d ", i + 1);
-> +				strcat(buf, tmp);
-> +			}
-> +			value >>= 1;
-> +		}
-> +		strcat(buf, "\n");
-> +	} else {
-> +		strcpy(buf, "none\n");
-> +	}
-> +
-> +	return strlen(buf);
-> +}
-> +
-> +static ssize_t sky81452_bl_show_fault(struct device *dev,
-> +		struct device_attribute *attr, char *buf)
-> +{
-> +	struct regmap *regmap = bl_get_data(to_backlight_device(dev));
-> +	unsigned int value = 0;
-> +	int ret;
-> +
-> +	ret = regmap_read(regmap, SKY81452_REG4, &value);
-> +	if (IS_ERR_VALUE(ret))
-> +		return ret;
-> +
-> +	*buf = 0;
-> +
-> +	if (value & SKY81452_OCP)
-> +		strcat(buf, "over-current ");
-> +
-> +	if (value & SKY81452_OTMP)
-> +		strcat(buf, "over-temperature");
-> +
-> +	strcat(buf, "\n");
-> +	return strlen(buf);
-> +}
-> +
-> +static DEVICE_ATTR(enable, S_IWGRP | S_IWUSR, NULL, sky81452_bl_store_enable);
-> +static DEVICE_ATTR(open, S_IRUGO, sky81452_bl_show_open_short, NULL);
-> +static DEVICE_ATTR(short, S_IRUGO, sky81452_bl_show_open_short, NULL);
-> +static DEVICE_ATTR(fault, S_IRUGO, sky81452_bl_show_fault, NULL);
-> +
-> +static struct attribute *sky81452_bl_attribute[] = {
-> +	&dev_attr_enable.attr,
-> +	&dev_attr_open.attr,
-> +	&dev_attr_short.attr,
-> +	&dev_attr_fault.attr,
-> +	NULL
-> +};
-> +
-> +static const struct attribute_group sky81452_bl_attr_group = {
-> +	.attrs = sky81452_bl_attribute,
-> +};
-> +
-> +#ifdef CONFIG_OF
-> +static struct sky81452_bl_platform_data *sky81452_bl_parse_dt(
-> +							struct device *dev)
-> +{
-> +	struct device_node *np = of_node_get(dev->of_node);
-> +	struct sky81452_bl_platform_data *pdata;
-> +	int ret;
-> +
-> +	if (!np) {
-> +		dev_err(dev, "backlight node not found.\n");
-> +		return ERR_PTR(-ENODATA);
-> +	}
-> +
-> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-> +	if (!pdata) {
-> +		of_node_put(np);
-> +		return ERR_PTR(-ENOMEM);
-> +	}
-> +
-> +	of_property_read_string(np, "name", &pdata->name);
-> +	pdata->ignore_pwm = of_property_read_bool(np, "skyworks,ignore-pwm");
-> +	pdata->dpwm_mode = of_property_read_bool(np, "skyworks,dpwm-mode");
-> +	pdata->phase_shift = of_property_read_bool(np, "skyworks,phase-shift");
-> +	pdata->gpio_enable = of_get_gpio(np, 0);
-> +
-> +	ret = of_property_read_u32(np, "skyworks,en-channels", &pdata->enable);
-> +	if (IS_ERR_VALUE(ret))
-> +		pdata->enable = SKY81452_EN >> CTZ(SKY81452_EN);
-> +
-> +	ret = of_property_read_u32(np, "skyworks,short-detection-threshold",
-> +			&pdata->short_detection_threshold);
-> +	if (IS_ERR_VALUE(ret))
-> +		pdata->short_detection_threshold = 7;
-> +
-> +	ret = of_property_read_u32(np, "skyworks,current-limit",
-> +			&pdata->boost_current_limit);
-> +	if (IS_ERR_VALUE(ret))
-> +		pdata->boost_current_limit = 2750;
-> +
-> +	of_node_put(np);
-> +	return pdata;
-> +}
-> +#else
-> +static struct sky81452_bl_platform_data *sky81452_bl_parse_dt(
-> +							struct device *dev)
-> +{
-> +	return ERR_PTR(-EINVAL);
-> +}
-> +#endif
-> +
-> +static int sky81452_bl_init_device(struct regmap *regmap,
-> +		struct sky81452_bl_platform_data *pdata)
-> +{
-> +	unsigned int value;
-> +
-> +	value = pdata->ignore_pwm ? SKY81452_IGPW : 0;
-> +	value |= pdata->dpwm_mode ? SKY81452_PWMMD : 0;
-> +	value |= pdata->phase_shift ? 0 : SKY81452_PHASE;
-> +
-> +	if (pdata->boost_current_limit == 2300)
-> +		value |= SKY81452_ILIM;
-> +	else if (pdata->boost_current_limit != 2750)
-> +		return -EINVAL;
-> +
-> +	if (pdata->short_detection_threshold < 4 ||
-> +				pdata->short_detection_threshold > 7)
-> +		return -EINVAL;
-> +	value |= (7 - pdata->short_detection_threshold) << CTZ(SKY81452_VSHRT);
-> +
-> +	return regmap_write(regmap, SKY81452_REG2, value);
-> +}
-> +
-> +static int sky81452_bl_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct regmap *regmap = dev_get_drvdata(dev->parent);
-> +	struct sky81452_bl_platform_data *pdata = dev_get_platdata(dev);
-> +	struct backlight_device *bd;
-> +	struct backlight_properties props;
-> +	const char *name;
-> +	int ret;
-> +
-> +	if (!pdata) {
-> +		pdata = sky81452_bl_parse_dt(dev);
-> +		if (IS_ERR(pdata))
-> +			return PTR_ERR(pdata);
-> +	}
-> +
-> +	if (gpio_is_valid(pdata->gpio_enable)) {
-> +		ret = devm_gpio_request_one(dev, pdata->gpio_enable,
-> +					GPIOF_OUT_INIT_HIGH, "sky81452-en");
-> +		if (IS_ERR_VALUE(ret)) {
-> +			dev_err(dev, "failed to request GPIO. err=%d\n", ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	ret = sky81452_bl_init_device(regmap, pdata);
-> +	if (IS_ERR_VALUE(ret)) {
-> +		dev_err(dev, "failed to initialize. err=%d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	memset(&props, 0, sizeof(props));
-> +	props.max_brightness = SKY81452_MAX_BRIGHTNESS,
-> +	name = pdata->name ? pdata->name : SKY81452_DEFAULT_NAME;
-> +	bd = devm_backlight_device_register(dev, name, dev, regmap,
-> +						&sky81452_bl_ops, &props);
-> +	if (IS_ERR(bd)) {
-> +		dev_err(dev, "failed to register. err=%ld\n", PTR_ERR(bd));
-> +		return PTR_ERR(bd);
-> +	}
-> +
-> +	platform_set_drvdata(pdev, bd);
-> +
-> +	ret  = sysfs_create_group(&bd->dev.kobj, &sky81452_bl_attr_group);
-> +	if (IS_ERR_VALUE(ret)) {
-> +		dev_err(dev, "failed to create attribute. err=%d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int sky81452_bl_remove(struct platform_device *pdev)
-> +{
-> +	const struct sky81452_bl_platform_data *pdata =
-> +						dev_get_platdata(&pdev->dev);
-> +	struct backlight_device *bd = platform_get_drvdata(pdev);
-> +
-> +	sysfs_remove_group(&bd->dev.kobj, &sky81452_bl_attr_group);
-> +
-> +	bd->props.power = FB_BLANK_UNBLANK;
-> +	bd->props.brightness = 0;
-> +	backlight_update_status(bd);
-> +
-> +	if (gpio_is_valid(pdata->gpio_enable))
-> +		gpio_set_value_cansleep(pdata->gpio_enable, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id sky81452_bl_of_match[] = {
-> +	{ .compatible = "skyworks,sky81452-backlight", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, sky81452_bl_of_match);
-> +#endif
-> +
-> +static struct platform_driver sky81452_bl_driver = {
-> +	.driver = {
-> +		.name = "sky81452-backlight",
-> +		.of_match_table = of_match_ptr(sky81452_bl_of_match),
-> +	},
-> +	.probe = sky81452_bl_probe,
-> +	.remove = sky81452_bl_remove,
-> +};
-> +
-> +module_platform_driver(sky81452_bl_driver);
-> +
-> +MODULE_DESCRIPTION("Skyworks SKY81452 backlight driver");
-> +MODULE_AUTHOR("Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/include/linux/platform_data/sky81452-backlight.h b/include/linux/platform_data/sky81452-
-> backlight.h
-> new file mode 100644
-> index 0000000..1231e9b
-> --- /dev/null
-> +++ b/include/linux/platform_data/sky81452-backlight.h
-> @@ -0,0 +1,46 @@
-> +/*
-> + * sky81452.h	SKY81452 backlight driver
-> + *
-> + * Copyright 2014 Skyworks Solutions Inc.
-> + * Author : Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License version 2
-> + * as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful, but
-> + * WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-> + * General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along
-> + * with this program; if not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#ifndef _SKY81452_BACKLIGHT_H
-> +#define _SKY81452_BACKLIGHT_H
-> +
-> +/**
-> + * struct sky81452_platform_data
-> + * @name:	backlight driver name.
-> +		If it is not defined, default name is lcd-backlight.
-> + * @gpio_enable:GPIO number which control EN pin
-> + * @enable:	Enable mask for current sink channel 1, 2, 3, 4, 5 and 6.
-> + * @ignore_pwm:	true if DPWMI should be ignored.
-> + * @dpwm_mode:	true is DPWM dimming mode, otherwise Analog dimming mode.
-> + * @phase_shift:true is phase shift mode.
-> + * @short_detecion_threshold:	It should be one of 4, 5, 6 and 7V.
-> + * @boost_current_limit:	It should be one of 2300, 2750mA.
-> + */
-> +struct sky81452_bl_platform_data {
-> +	const char *name;
-> +	int gpio_enable;
-> +	unsigned int enable;
-> +	bool ignore_pwm;
-> +	bool dpwm_mode;
-> +	bool phase_shift;
-> +	unsigned int short_detection_threshold;
-> +	unsigned int boost_current_limit;
-> +};
-> +
-> +#endif
-> --
-> 1.9.1
+> +For example: 115200n8r
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
