@@ -1,64 +1,56 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 0/6] ARM: shmobile: Change to using clock-indices
-Date: Wed, 3 Dec 2014 12:27:13 +0100
-Message-ID: <CAMuHMdX+EfnjZvnDyUprtuQ05Ekpnr7bxgTZA=2_CHMFTq1Y9A@mail.gmail.com>
-References: <1415645379-3366-1-git-send-email-geert+renesas@glider.be>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH v15 06/12] dt-bindings: add document for dw_hdmi
+Date: Wed, 03 Dec 2014 19:58:30 +0800
+Message-ID: <547EFAE6.9050404@rock-chips.com>
+References: <1417505778-18341-1-git-send-email-andy.yan@rock-chips.com>	
+ <1417506124-18626-1-git-send-email-andy.yan@rock-chips.com>	
+ <1417544629.3411.15.camel@pengutronix.de> <547EDBEE.70700@rock-chips.com>
+ <1417607520.5124.8.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1415645379-3366-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Mike Turquette <mturquette@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1417607520.5124.8.camel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, rmk+kernel@arm.linux.org.uk, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, Dave Airlie <airlied@redhat.com>, mark.yao@rock-chips.com, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, vladimir_zapolskiy@mentor.comLucas Stach <l>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
-
-On Mon, Nov 10, 2014 at 7:49 PM, Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
-> This patch series finalizes the conversion from the vendor-specific
-> "renesas,clock-indices" to the generic "clock-indices", started by Ben Dooks.
->
-> The patches for r8a7790 and r8a7791 were extracted from a patch that Ben sent
-> before ("[PATCH 2/3] renesas: change to using clock-indices"), but it was never
-> split/updated.
->
-> Changes in v2:
->   - Drop the reference to "renesas,clock-indices" completely,
->   - Add Acked-by.
->
-> Thanks for applying!
-
-As Mike has accepted the bindings update in clk-next, can you please apply
-the dtsi updates?
-
-Thanks!
-
-> Ben Dooks (2):
->   ARM: shmobile: r8a7790 dtsi: Change to using clock-indices
->   ARM: shmobile: r8a7791 dtsi: Change to using clock-indices
->
-> Geert Uytterhoeven (4):
->   clk: shmobile: Deprecate renesas,clock-indices
->   ARM: shmobile: r8a7740 dtsi: Change to using clock-indices
->   ARM: shmobile: r8a7779 dtsi: Change to using clock-indices
->   ARM: shmobile: r8a7794 dtsi: Change to using clock-indices
->
->  .../bindings/clock/renesas,cpg-mstp-clocks.txt     |  8 ++++----
->  arch/arm/boot/dts/r8a7740.dtsi                     | 10 +++++-----
->  arch/arm/boot/dts/r8a7779.dtsi                     |  6 +++---
->  arch/arm/boot/dts/r8a7790.dtsi                     | 20 +++++++++++---------
->  arch/arm/boot/dts/r8a7791.dtsi                     | 22 ++++++++++++----------
->  arch/arm/boot/dts/r8a7794.dtsi                     | 14 +++++++-------
->  6 files changed, 42 insertions(+), 38 deletions(-)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Ck9uIDIwMTTlubQxMuaciDAz5pelIDE5OjUyLCBQaGlsaXBwIFphYmVsIHdyb3RlOgo+IEFtIE1p
+dHR3b2NoLCBkZW4gMDMuMTIuMjAxNCwgMTc6NDYgKzA4MDAgc2NocmllYiBBbmR5IFlhbjoKPj4g
+T24gMjAxNOW5tDEy5pyIMDPml6UgMDI6MjMsIFBoaWxpcHAgWmFiZWwgd3JvdGU6Cj4+PiBIaSBB
+bmR5LAo+Pj4KPj4+IEFtIERpZW5zdGFnLCBkZW4gMDIuMTIuMjAxNCwgMTU6NDIgKzA4MDAgc2No
+cmllYiBBbmR5IFlhbjoKPj4+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2RybS9icmlkZ2UvZHdfaGRtaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZHJtL2JyaWRnZS9kd19oZG1pLnR4dAo+Pj4+IG5ldyBmaWxlIG1vZGUgMTAw
+NjQ0Cj4+Pj4gaW5kZXggMDAwMDAwMC4uMTA3YzFjYQo+Pj4+IC0tLSAvZGV2L251bGwKPj4+PiAr
+KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2JyaWRnZS9kd19oZG1p
+LnR4dAo+Pj4+IEBAIC0wLDAgKzEsNDAgQEAKPj4+PiArRGVzaWduV2FyZSBIRE1JIGJyaWRnZSBi
+aW5kaW5ncwo+Pj4+ICsKPj4+PiArUmVxdWlyZWQgcHJvcGVyaXRpZXM6Cj4+Pj4gKy0gY29tcGF0
+aWJsZTogcGxhdGZvcm0gc3BlY2lmaWMgc3VjaCBhczoKPj4+PiArICAgKiAiZnNsLGlteDZxLWhk
+bWkiCj4+Pj4gKyAgICogImZzbCxpbXg2ZGwtaGRtaSIKPj4+PiArICAgKiAicm9ja2NoaXAscmsz
+Mjg4LWR3LWhkbWkiCj4+PiBJIHRoaW5rIHdlIHNob3VsZCBhZGQgYSBjb21tb24gY29tcGF0aWJs
+ZSB2YWx1ZSAic25wcyxkdy1oZG1pLXR4IiBoZXJlOgo+Pj4KPj4+IAljb21wYXRpYmxlID0gImZz
+bCxpbXg2cS1oZG1pIiwgInNucHMsZHctaGRtaS10eCI7Cj4+Pgo+Pj4+ICstIHJlZzogUGh5c2lj
+YWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIGNvbnRyb2xsZXIncyByZWdpc3RlcnMu
+Cj4+Pj4gKy0gZGRjLWkyYy1idXM6IHBoYW5kbGUgb2YgYW4gSTJDIGNvbnRyb2xsZXIgdXNlZCBm
+b3IgRERDIEVESUQgcHJvYmluZwo+Pj4gQmV0dGVyIG1ha2UgZGRjLWkyYy1idXMgb3B0aW9uYWws
+IHNlZSB0aGUgb3RoZXIgdGhyZWFkIGFib3V0IHRoZSBkZGMgaTJjCj4+PiBtYXN0ZXIuCj4+ICAg
+ICAgIEkgaGF2ZSB0aGUgc2FtZSBpZGVhIHRvbywgYnV0IHRoZSBwYXRjaCBhYm91dCBkZGMgaTJj
+IG1hc3RlciBoYXMgbm90Cj4+ICAgIGxhbmRlZCB5ZXQsICBjYW4gd2UgY2hhbmdlIHRoZSBkZGMt
+aTJjLWJ1cyB0byBvcHRpb25hbCAgYWZ0ZXIgdGhlIGRkYwo+PiBpMmMgbWFzdGVyCj4+ICAgIHBh
+dGNoIGxhbmQ/Cj4gQ2hlY2sgb3V0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+cm0vaW14L2hkbWkudHh0LCBpdCB3YXMKPiBhbHJlYWR5IG1hcmtlZCBhcyBvcHRpb25hbC4gV2Ug
+Y2FuJ3QgbWFrZSBpdCByZXF1aXJlZCBub3cuCj4KPiByZWdhcmRzCj4gUGhpbGlwcAo+Cj4KPgog
+ICBPSywgZ290IGl0LCB0aGFua3MKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmRldmVsIG1haWxpbmcgbGlzdApkZXZlbEBsaW51eGRyaXZlcnByb2plY3Qu
+b3JnCmh0dHA6Ly9kcml2ZXJkZXYubGludXhkcml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaXZlcmRldi1kZXZlbAo=
