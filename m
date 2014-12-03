@@ -1,122 +1,69 @@
 From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: [PATCH v5 10/11] ARM: at91/dt: add EBI (External Bus Interface) node in sama5d3 dtsi
-Date: Wed,  3 Dec 2014 21:44:14 +0100
-Message-ID: <1417639455-17410-11-git-send-email-boris.brezillon@free-electrons.com>
+Subject: [PATCH v5 02/11] mfd: syscon: Add Atmel Matrix bus DT binding
+ documentation
+Date: Wed,  3 Dec 2014 21:44:06 +0100
+Message-ID: <1417639455-17410-3-git-send-email-boris.brezillon@free-electrons.com>
 References: <1417639455-17410-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1417639455-17410-1-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Boris Brezillon <boris.brezillon@free-electrons.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add EBI node and EBI pin muxing.
+The Matrix registers are provided to configure internal bus behavior on
+at91 SoCs.
+Some registers might be accessed by several drivers (e.g. to configure
+external memory bus timings), hence we declare this register set as a
+syscon device.
 
 Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+Acked-by: Lee Jones <lee.jones@linaro.org>
 ---
- arch/arm/boot/dts/sama5d3.dtsi | 83 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 83 insertions(+)
+ .../devicetree/bindings/mfd/atmel-matrix.txt       | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/atmel-matrix.txt
 
-diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-index d49dab7..d011ade 100644
---- a/arch/arm/boot/dts/sama5d3.dtsi
-+++ b/arch/arm/boot/dts/sama5d3.dtsi
-@@ -530,6 +530,63 @@
- 					};
- 				};
- 
-+				ebi {
-+					pinctrl_ebi_addr: ebi-addr-0 {
-+						atmel,pins =
-+							<AT91_PIOE 0 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 1 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 2 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 3 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 4 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 5 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 6 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 7 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 8 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 9 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 10 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 11 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 12 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 13 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 14 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 15 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 16 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 17 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 18 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 19 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 20 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 21 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 22 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 23 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 24 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOE 25 AT91_PERIPH_A AT91_PINCTRL_NONE>;
-+					};
+diff --git a/Documentation/devicetree/bindings/mfd/atmel-matrix.txt b/Documentation/devicetree/bindings/mfd/atmel-matrix.txt
+new file mode 100644
+index 0000000..e3ef50c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/atmel-matrix.txt
+@@ -0,0 +1,24 @@
++* Device tree bindings for Atmel Bus Matrix
 +
-+					pinctrl_ebi_cs0: ebi-cs0-0 {
-+						atmel,pins =
-+							<AT91_PIOE 26 AT91_PERIPH_A AT91_PINCTRL_NONE>;
-+					};
++The Bus Matrix registers are used to configure Atmel SoCs internal bus
++behavior (master/slave priorities, undefined burst length type, ...)
 +
-+					pinctrl_ebi_cs1: ebi-cs1-0 {
-+						atmel,pins =
-+							<AT91_PIOE 27 AT91_PERIPH_A AT91_PINCTRL_NONE>;
-+					};
++Required properties:
++- compatible:		Should be one of the following
++			"atmel,at91sam9260-matrix", "syscon"
++			"atmel,at91sam9261-matrix", "syscon"
++			"atmel,at91sam9263-matrix", "syscon"
++			"atmel,at91sam9rl-matrix", "syscon"
++			"atmel,at91sam9g45-matrix", "syscon"
++			"atmel,at91sam9n12-matrix", "syscon"
++			"atmel,at91sam9x5-matrix", "syscon"
++			"atmel,sama5d3-matrix", "syscon"
++- reg:			Contains offset/length value of the Bus Matrix
++			memory region.
 +
-+					pinctrl_ebi_cs2: ebi-cs2-0 {
-+						atmel,pins =
-+							<AT91_PIOE 28 AT91_PERIPH_A AT91_PINCTRL_NONE>;
-+					};
++Example:
 +
-+					pinctrl_ebi_nwr1_nbs1: ebi-nwr1-nbs1-0 {
-+						atmel,pins =
-+							<AT91_PIOE 29 AT91_PERIPH_A AT91_PINCTRL_NONE>;
-+					};
-+
-+					pinctrl_ebi_nwait: ebi-nwait-0 {
-+						atmel,pins =
-+							<AT91_PIOE 30 AT91_PERIPH_A AT91_PINCTRL_NONE>;
-+					};
-+				};
-+
- 				i2c0 {
- 					pinctrl_i2c0: i2c0-0 {
- 						atmel,pins =
-@@ -1407,6 +1464,32 @@
- 			status = "disabled";
- 		};
- 
-+		ebi: ebi@10000000 {
-+			compatible = "atmel,sama5d3-ebi", "simple-bus";
-+			#address-cells = <2>;
-+			#size-cells = <1>;
-+			atmel,smc = <&hsmc>;
-+			atmel,matrix = <&matrix>;
-+			reg = <0x10000000 0x10000000
-+			       0x40000000 0x30000000>;
-+			ranges = <0x0 0x0 0x10000000 0x10000000
-+				  0x1 0x0 0x40000000 0x10000000
-+				  0x2 0x0 0x50000000 0x10000000
-+				  0x3 0x0 0x60000000 0x10000000>;
-+			clocks = <&mck>;
-+
-+			/*
-+			 * TODO: EBI pins should be referenced here, but they
-+			 * conflict with NAND pins, which should actually be a
-+			 * sub device of the EBI bus and thus should not
-+			 * request it's own set of pins as they are shared
-+			 * with other devices connected on the EBI bus.
-+			 *
-+			 * pinctrl-names = "default";
-+			 * pinctrl-0 = <&pinctrl_ebi_addr>;
-+			 */
-+		};
-+
- 		nand0: nand@60000000 {
- 			compatible = "atmel,at91rm9200-nand";
- 			#address-cells = <1>;
++matrix: matrix@ffffec00 {
++	compatible = "atmel,sama5d3-matrix", "syscon";
++	reg = <0xffffec00 0x200>;
++};
 -- 
 1.9.1
