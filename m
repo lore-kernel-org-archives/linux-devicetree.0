@@ -1,608 +1,68 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [STLinux Kernel] [PATCH v2 1/4] spi: Add new driver for
- STMicroelectronics' SPI Controller
-Date: Wed, 3 Dec 2014 09:17:07 +0000
-Message-ID: <20141203091707.GH22522@x1>
-References: <1417534844-25080-1-git-send-email-lee.jones@linaro.org>
- <1417534844-25080-2-git-send-email-lee.jones@linaro.org>
- <547DE5FA.5000409@st.com>
+From: Lyra Zhang <zhang.lyra@gmail.com>
+Subject: Re: [PATCH v3 5/5] tty/serial: Add Spreadtrum sc9836-uart driver
+ support
+Date: Wed, 3 Dec 2014 17:17:13 +0800
+Message-ID: <CAAfSe-u+g0mYGi9Adrd+YwwZ=q0-s79yCg_paB1UAVqFoufXEA@mail.gmail.com>
+References: <1416917818-10506-1-git-send-email-chunyan.zhang@spreadtrum.com>
+ <1416917818-10506-6-git-send-email-chunyan.zhang@spreadtrum.com>
+ <54761BFC.4020705@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <547DE5FA.5000409@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Patrice Chotard <patrice.chotard@st.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, broonie@kernel.org, kernel@stlinux.com, linux-spi@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <54761BFC.4020705@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "gnomes@lxorguk.ukuu.org.uk" <gnomes@lxorguk.ukuu.org.uk>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Mark Brown <broonie@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "andrew@lunn.ch" <andrew@lunn.ch>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, "jslaby@suse.cz" <jslaby@suse.cz>, Ramkumar Ramachandra <artagnon@gmail.com>, "lanqing.liu@spreadtrum.com" <lanqing.liu@spreadtrum.com>, Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, Chunyan Zhang <chunyan.zhang@spreadtrum.com>, "zhizhou.zhang" <zhizhou.zhang@spreadtrum.com>, "geng.ren@spreadtrum.com" <geng.ren@spreadtrum.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Or
 List-Id: devicetree@vger.kernel.org
 
-> Some minors remarks below
-
-Thanks Patrice.  I will fix these up in v3.
-
-Mark,
-
-  Would you mind casting your eye over this submission prior to
-the v3 please?
-
-> On 12/02/2014 04:40 PM, Lee Jones wrote:
-> >This patch adds support for the SPI portion of ST's SSC device.
-> >
-> >Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> >---
-> >  drivers/spi/Kconfig       |   7 +
-> >  drivers/spi/Makefile      |   1 +
-> >  drivers/spi/spi-st-ssc4.c | 509 ++++++++++++++++++++++++++++++++++=
-++++++++++++
-> >  3 files changed, 517 insertions(+)
-> >  create mode 100644 drivers/spi/spi-st-ssc4.c
-> >
-> >diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-> >index 84e7c9e..bd0a10f 100644
-> >--- a/drivers/spi/Kconfig
-> >+++ b/drivers/spi/Kconfig
-> >@@ -488,6 +488,13 @@ config SPI_SIRF
-> >  	help
-> >  	  SPI driver for CSR SiRFprimaII SoCs
-> >+config SPI_ST_SSC4
-> >+	tristate "STMicroelectronics SPI SSC-based driver"
-> >+	depends on ARCH_STI || COMPILE_TEST
-> >+	help
-> >+	  STMicroelectronics SoCs support for SPI. If you say yes to
-> >+	  this option, support will be included for the SSC driven SPI.
-> >+
-> >  config SPI_SUN4I
-> >  	tristate "Allwinner A10 SoCs SPI controller"
-> >  	depends on ARCH_SUNXI || COMPILE_TEST
-> >diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
-> >index 78f24ca..c38e28c 100644
-> >--- a/drivers/spi/Makefile
-> >+++ b/drivers/spi/Makefile
-> >@@ -74,6 +74,7 @@ obj-$(CONFIG_SPI_SH_HSPI)		+=3D spi-sh-hspi.o
-> >  obj-$(CONFIG_SPI_SH_MSIOF)		+=3D spi-sh-msiof.o
-> >  obj-$(CONFIG_SPI_SH_SCI)		+=3D spi-sh-sci.o
-> >  obj-$(CONFIG_SPI_SIRF)		+=3D spi-sirf.o
-> >+obj-$(CONFIG_SPI_ST_SSC4)		+=3D spi-st-ssc4.o
-> >  obj-$(CONFIG_SPI_SUN4I)			+=3D spi-sun4i.o
-> >  obj-$(CONFIG_SPI_SUN6I)			+=3D spi-sun6i.o
-> >  obj-$(CONFIG_SPI_TEGRA114)		+=3D spi-tegra114.o
-> >diff --git a/drivers/spi/spi-st-ssc4.c b/drivers/spi/spi-st-ssc4.c
-> >new file mode 100644
-> >index 0000000..566d86c
-> >--- /dev/null
-> >+++ b/drivers/spi/spi-st-ssc4.c
-> >@@ -0,0 +1,509 @@
-> >+/*
-> >+ *  Copyright (c) 2008-2014 STMicroelectronics Limited
-> >+ *
-> >+ *  Author: Angus Clark <Angus.Clark@st.com>
-> >+ *          Patrice Chotard <patrice.chotard@st.com>
-> >+ *          Lee Jones <lee.jones@linaro.org>
-> >+ *
-> >+ *  SPI master mode controller driver, used in STMicroelectronics d=
-evices.
-> >+ *
-> >+ *  May be copied or modified under the terms of the GNU General Pu=
-blic
-> >+ *  License Version 2.0 only.  See linux/COPYING for more informati=
-on.
-> >+ */
-> >+
-> >+#include <linux/clk.h>
-> >+#include <linux/delay.h>
-> >+#include <linux/interrupt.h>
-> >+#include <linux/io.h>
-> >+#include <linux/module.h>
-> >+#include <linux/platform_device.h>
-> >+#include <linux/of.h>
-> >+#include <linux/of_gpio.h>
-> >+#include <linux/of_irq.h>
-> >+#include <linux/pm_runtime.h>
-> >+#include <linux/spi/spi.h>
-> >+#include <linux/spi/spi_bitbang.h>
-> >+
-> >+/* SSC registers */
-> >+#define SSC_BRG				0x000
-> >+#define SSC_TBUF			0x004
-> >+#define SSC_RBUF			0x008
-> >+#define SSC_CTL				0x00C
-> >+#define SSC_IEN				0x010
-> >+#define SSC_I2C				0x018
-> >+
-> >+/* SSC Control */
-> >+#define SSC_CTL_DATA_WIDTH_9		0x8
-> >+#define SSC_CTL_DATA_WIDTH_MSK		0xf
-> >+#define SSC_CTL_BM			0xf
-> >+#define SSC_CTL_HB			BIT(4)
-> >+#define SSC_CTL_PH			BIT(5)
-> >+#define SSC_CTL_PO			BIT(6)
-> >+#define SSC_CTL_SR			BIT(7)
-> >+#define SSC_CTL_MS			BIT(8)
-> >+#define SSC_CTL_EN			BIT(9)
-> >+#define SSC_CTL_LPB			BIT(10)
-> >+#define SSC_CTL_EN_TX_FIFO		BIT(11)
-> >+#define SSC_CTL_EN_RX_FIFO		BIT(12)
-> >+#define SSC_CTL_EN_CLST_RX		BIT(13)
-> >+
-> >+/* SSC Interrupt Enable */
-> >+#define SSC_IEN_TEEN			BIT(2)
-> >+
-> >+#define FIFO_SIZE			8
-> >+
-> >+struct spi_st {
-> >+	/* SSC SPI Controller */
-> >+	void __iomem		*base;
-> >+	struct clk		*clk;
-> >+	struct device		*dev;
-> >+
-> >+	/* SSC SPI current transaction */
-> >+	const u8		*tx_ptr;
-> >+	u8			*rx_ptr;
-> >+	u16			bytes_per_word;
-> >+	unsigned int		words_remaining;
-> >+	unsigned int		baud;
-> >+	struct completion	done;
-> >+};
-> >+
-> >+static int spi_st_clk_enable(struct spi_st *spi_st)
-> >+{
-> >+	/*
-> >+	 * Current platforms use one of the core clocks for SPI and I2C.
-> >+	 * If we attempt to disable the clock, the system will hang.
-> >+	 *
-> >+	 * TODO: Remove this when platform supports power domains.
-> >+	 */
-> >+	return 0;
-> >+
-> >+	return clk_prepare_enable(spi_st->clk);
-> >+}
-> >+
-> >+static void spi_st_clk_disable(struct spi_st *spi_st)
-> >+{
-> >+	/*
-> >+	 * Current platforms use one of the core clocks for SPI and I2C.
-> >+	 * If we attempt to disable the clock, the system will hang.
-> >+	 *
-> >+	 * TODO: Remove this when platform supports power domains.
-> >+	 */
-> >+	return;
-> >+
-> >+	clk_disable_unprepare(spi_st->clk);
-> >+}
-> >+
-> >+/* Load the TX FIFO */
-> >+static void ssc_write_tx_fifo(struct spi_st *spi_st)
-> >+{
-> >+	unsigned int count, i;
-> >+	uint32_t word =3D 0;
-> >+
-> >+	if (spi_st->words_remaining > FIFO_SIZE)
-> >+		count =3D FIFO_SIZE;
-> >+	else
-> >+		count =3D spi_st->words_remaining;
-> >+
-> >+	for (i =3D 0; i < count; i++) {
-> >+		if (spi_st->tx_ptr) {
-> >+			if (spi_st->bytes_per_word =3D=3D 1) {
-> >+				word =3D *spi_st->tx_ptr++;
-> >+			} else {
-> >+				word =3D *spi_st->tx_ptr++;
-> >+				word =3D *spi_st->tx_ptr++ | (word << 8);
-> >+			}
-> >+		}
-> >+		writel_relaxed(word, spi_st->base + SSC_TBUF);
-> >+	}
-> >+}
-> >+
-> >+/* Read the RX FIFO */
-> >+static void ssc_read_rx_fifo(struct spi_st *spi_st)
-> >+{
-> >+	unsigned int count, i;
-> >+	uint32_t word =3D 0;
-> >+
-> >+	if (spi_st->words_remaining > FIFO_SIZE)
-> >+		count =3D FIFO_SIZE;
-> >+	else
-> >+		count =3D spi_st->words_remaining;
-> >+
-> >+	for (i =3D 0; i < count; i++) {
-> >+		word =3D readl_relaxed(spi_st->base + SSC_RBUF);
-> >+
-> >+		if (spi_st->rx_ptr) {
-> >+			if (spi_st->bytes_per_word =3D=3D 1) {
-> >+				*spi_st->rx_ptr++ =3D (uint8_t)word;
-> >+			} else {
-> >+				*spi_st->rx_ptr++ =3D (word >> 8);
-> >+				*spi_st->rx_ptr++ =3D word & 0xff;
-> >+			}
-> >+		}
-> >+	}
-> >+	spi_st->words_remaining -=3D count;
-> >+}
-> >+
-> >+static int spi_st_transfer_one(struct spi_master *master,
-> >+			       struct spi_device *spi, struct spi_transfer *t)
-> >+{
-> >+	struct spi_st *spi_st =3D spi_master_get_devdata(master);
-> >+	uint32_t ctl =3D 0;
-> >+
-> >+	/* Setup transfer */
-> >+	spi_st->tx_ptr =3D t->tx_buf;
-> >+	spi_st->rx_ptr =3D t->rx_buf;
-> >+
-> >+	if (spi->bits_per_word > 8) {
-> >+		/*
-> >+		 * Anything greater than 8 bits-per-word requires 2
-> >+		 * bytes-per-word in the RX/TX buffers
-> >+		 */
-> >+		spi_st->bytes_per_word =3D 2;
-> >+		spi_st->words_remaining =3D t->len / 2;
-> >+
-> >+	} else if (spi->bits_per_word =3D=3D 8 && !(t->len & 0x1)) {
-> >+		/*
-> >+		 * If transfer is even-length, and 8 bits-per-word, then
-> >+		 * implement as half-length 16 bits-per-word transfer
-> >+		 */
-> >+		spi_st->bytes_per_word =3D 2;
-> >+		spi_st->words_remaining =3D t->len/2;
->=20
-> add space around "/"
->=20
-> >+
-> >+		/* Set SSC_CTL to 16 bits-per-word */
-> >+		ctl =3D readl_relaxed(spi_st->base + SSC_CTL);
-> >+		writel_relaxed((ctl | 0xf), spi_st->base + SSC_CTL);
-> >+
-> >+		readl_relaxed(spi_st->base + SSC_RBUF);
-> >+
-> >+	} else {
-> >+		spi_st->bytes_per_word =3D 1;
-> >+		spi_st->words_remaining =3D t->len;
-> >+	}
-> >+
-> >+	reinit_completion(&spi_st->done);
-> >+
-> >+	/* Start transfer by writing to the TX FIFO */
-> >+	ssc_write_tx_fifo(spi_st);
-> >+	writel_relaxed(SSC_IEN_TEEN, spi_st->base + SSC_IEN);
-> >+
-> >+	/* Wait for transfer to complete */
-> >+	wait_for_completion(&spi_st->done);
-> >+
-> >+	/* Restore SSC_CTL if necessary */
-> >+	if (ctl)
-> >+		writel_relaxed(ctl, spi_st->base + SSC_CTL);
-> >+
-> >+	spi_finalize_current_transfer(spi->master);
-> >+
-> >+	return t->len;
-> >+}
-> >+
-> >+static void spi_st_cleanup(struct spi_device *spi)
-> >+{
-> >+	int cs =3D spi->cs_gpio;
-> >+
-> >+	if (gpio_is_valid(cs))
-> >+		devm_gpio_free(&spi->dev, cs);
-> >+}
-> >+
-> >+/* the spi->mode bits understood by this driver: */
-> >+#define MODEBITS  (SPI_CPOL | SPI_CPHA | SPI_LSB_FIRST | SPI_LOOP |=
- SPI_CS_HIGH)
-> >+static int spi_st_setup(struct spi_device *spi)
-> >+{
-> >+	struct spi_st *spi_st =3D spi_master_get_devdata(spi->master);
-> >+	u32 spi_st_clk, sscbrg, var;
-> >+	u32 hz =3D spi->max_speed_hz;
-> >+	int cs =3D spi->cs_gpio;
-> >+	int ret;
-> >+
-> >+	if (spi->mode & ~MODEBITS) {
-> >+		dev_err(&spi->dev, "unsupported mode bits 0x%x\n",
-> >+			spi->mode & ~MODEBITS);
-> >+		return -EINVAL;
-> >+	}
-> >+
-> >+	if (!hz)  {
-> >+		dev_err(&spi->dev, "max_speed_hz unspecified\n");
-> >+		return -EINVAL;
-> >+	}
-> >+
-> >+	if (!gpio_is_valid(cs)) {
-> >+		dev_err(&spi->dev, "%d is not a valid gpio\n", cs);
-> >+		return -EINVAL;
-> >+	}
-> >+
-> >+	if (devm_gpio_request(&spi->dev, cs, dev_name(&spi->dev))) {
-> >+		dev_err(&spi->dev, "could not request gpio:%d\n", cs);
-> >+		return -EINVAL;
-> >+	}
-> >+
-> >+	ret =3D gpio_direction_output(cs, spi->mode & SPI_CS_HIGH);
-> >+	if (ret)
-> >+		return ret;
-> >+
-> >+	spi_st_clk =3D clk_get_rate(spi_st->clk);
-> >+
-> >+	/* Set SSC_BRF */
-> >+	sscbrg =3D spi_st_clk / (2 * hz);
-> >+	if (sscbrg < 0x07 || sscbrg > (0x1 << 16)) {
->=20
-> (0x1 << 16) can be replaced by BIT(16)
->=20
->=20
->=20
-> >+		dev_err(&spi->dev,
-> >+			"baudrate %d outside valid range %d\n", sscbrg, hz);
-> >+		return -EINVAL;
-> >+	}
-> >+
-> >+	spi_st->baud =3D spi_st_clk / (2 * sscbrg);
-> >+	if (sscbrg =3D=3D (0x1 << 16)) /* 16-bit counter wraps */
->=20
-> ditto
->=20
-> >+		sscbrg =3D 0x0;
-> >+
-> >+	writel_relaxed(sscbrg, spi_st->base + SSC_BRG);
-> >+
-> >+	dev_dbg(&spi->dev,
-> >+		"setting baudrate:target=3D %u hz, actual=3D %u hz, sscbrg=3D %u\=
-n",
-> >+		hz, spi_st->baud, sscbrg);
-> >+
-> >+	 /* Set SSC_CTL and enable SSC */
-> >+	 var =3D readl_relaxed(spi_st->base + SSC_CTL);
-> >+	 var |=3D SSC_CTL_MS;
-> >+
-> >+	 if (spi->mode & SPI_CPOL)
-> >+		var |=3D SSC_CTL_PO;
-> >+	 else
-> >+		var &=3D ~SSC_CTL_PO;
-> >+
-> >+	 if (spi->mode & SPI_CPHA)
-> >+		var |=3D SSC_CTL_PH;
-> >+	 else
-> >+		var &=3D ~SSC_CTL_PH;
-> >+
-> >+	 if ((spi->mode & SPI_LSB_FIRST) =3D=3D 0)
-> >+		var |=3D SSC_CTL_HB;
-> >+	 else
-> >+		var &=3D ~SSC_CTL_HB;
-> >+
-> >+	 if (spi->mode & SPI_LOOP)
-> >+		var |=3D SSC_CTL_LPB;
-> >+	 else
-> >+		var &=3D ~SSC_CTL_LPB;
-> >+
-> >+	 var &=3D ~SSC_CTL_DATA_WIDTH_MSK;
-> >+	 var |=3D (spi->bits_per_word - 1);
-> >+
-> >+	 var |=3D SSC_CTL_EN_TX_FIFO | SSC_CTL_EN_RX_FIFO;
-> >+	 var |=3D SSC_CTL_EN;
-> >+
-> >+	 writel_relaxed(var, spi_st->base + SSC_CTL);
-> >+
-> >+	 /* Clear the status register */
-> >+	 readl_relaxed(spi_st->base + SSC_RBUF);
-> >+
-> >+	 return 0;
-> >+}
-> >+
-> >+/* Interrupt fired when TX shift register becomes empty */
-> >+static irqreturn_t spi_st_irq(int irq, void *dev_id)
-> >+{
-> >+	struct spi_st *spi_st =3D (struct spi_st *)dev_id;
-> >+
-> >+	/* Read RX FIFO */
-> >+	ssc_read_rx_fifo(spi_st);
-> >+
-> >+	/* Fill TX FIFO */
-> >+	if (spi_st->words_remaining) {
-> >+		ssc_write_tx_fifo(spi_st);
-> >+	} else {
-> >+		/* TX/RX complete */
-> >+		writel_relaxed(0x0, spi_st->base + SSC_IEN);
-> >+		/*
-> >+		 * read SSC_IEN to ensure that this bit is set
-> >+		 * before re-enabling interrupt
-> >+		 */
-> >+		readl(spi_st->base + SSC_IEN);
-> >+		complete(&spi_st->done);
-> >+	}
-> >+
-> >+	return IRQ_HANDLED;
-> >+}
-> >+
-> >+static int spi_st_probe(struct platform_device *pdev)
-> >+{
-> >+	struct device_node *np =3D pdev->dev.of_node;
-> >+	struct spi_master *master;
-> >+	struct resource *res;
-> >+	struct spi_st *spi_st;
-> >+	int irq, ret =3D 0;
-> >+	u32 var;
-> >+
-> >+	master =3D spi_alloc_master(&pdev->dev, sizeof(*spi_st));
-> >+	if (!master)
-> >+		return -ENOMEM;
-> >+
-> >+	master->dev.of_node		=3D np;
-> >+	master->mode_bits		=3D MODEBITS;
-> >+	master->setup			=3D spi_st_setup;
-> >+	master->cleanup			=3D spi_st_cleanup;
-> >+	master->transfer_one		=3D spi_st_transfer_one;
-> >+	master->bits_per_word_mask	=3D SPI_BPW_MASK(8) | SPI_BPW_MASK(16);
-> >+	master->auto_runtime_pm		=3D true;
-> >+	master->bus_num			=3D pdev->id;
-> >+	spi_st				=3D spi_master_get_devdata(master);
-> >+
-> >+	spi_st->clk =3D devm_clk_get(&pdev->dev, "ssc");
-> >+	if (IS_ERR(spi_st->clk)) {
-> >+		dev_err(&pdev->dev, "Unable to request clock\n");
-> >+		return PTR_ERR(spi_st->clk);
-> >+	}
-> >+
-> >+	ret =3D spi_st_clk_enable(spi_st);
-> >+	if (ret)
-> >+		return ret;
-> >+
-> >+	init_completion(&spi_st->done);
-> >+
-> >+	/* Get resources */
-> >+	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >+	spi_st->base =3D devm_ioremap_resource(&pdev->dev, res);
-> >+	if (IS_ERR(spi_st->base)) {
-> >+		ret =3D PTR_ERR(spi_st->base);
-> >+		goto clk_disable;
-> >+	}
-> >+
-> >+	/* Disable I2C and Reset SSC */
-> >+	writel_relaxed(0x0, spi_st->base + SSC_I2C);
-> >+	var =3D readw_relaxed(spi_st->base + SSC_CTL);
-> >+	var |=3D SSC_CTL_SR;
-> >+	writel_relaxed(var, spi_st->base + SSC_CTL);
-> >+
-> >+	udelay(1);
-> >+	var =3D readl_relaxed(spi_st->base + SSC_CTL);
-> >+	var &=3D ~SSC_CTL_SR;
-> >+	writel_relaxed(var, spi_st->base + SSC_CTL);
-> >+
-> >+	/* Set SSC into slave mode before reconfiguring PIO pins */
-> >+	var =3D readl_relaxed(spi_st->base + SSC_CTL);
-> >+	var &=3D ~SSC_CTL_MS;
-> >+	writel_relaxed(var, spi_st->base + SSC_CTL);
-> >+
-> >+	irq =3D irq_of_parse_and_map(np, 0);
-> >+	if (!irq) {
-> >+		dev_err(&pdev->dev, "IRQ missing or invalid\n");
-> >+		ret =3D -EINVAL;
-> >+		goto clk_disable;
-> >+	}
-> >+
-> >+	ret =3D devm_request_irq(&pdev->dev, irq, spi_st_irq, 0,
-> >+			       pdev->name, spi_st);
-> >+	if (ret) {
-> >+		dev_err(&pdev->dev, "Failed to request irq %d\n", irq);
-> >+		goto clk_disable;
-> >+	}
-> >+
-> >+	/* by default the device is on */
-> >+	pm_runtime_set_active(&pdev->dev);
-> >+	pm_runtime_enable(&pdev->dev);
-> >+
-> >+	platform_set_drvdata(pdev, master);
-> >+
-> >+	ret =3D devm_spi_register_master(&pdev->dev, master);
-> >+	if (ret) {
-> >+		dev_err(&pdev->dev, "Failed to register master\n");
-> >+		goto clk_disable;
-> >+	}
-> >+
-> >+	return 0;
-> >+
-> >+clk_disable:
-> >+	spi_st_clk_disable(spi_st);
-> >+
-> >+	return ret;
-> >+}
-> >+
-> >+static int spi_st_remove(struct platform_device *pdev)
-> >+{
-> >+	struct spi_master *master =3D platform_get_drvdata(pdev);
-> >+	struct spi_st *spi_st =3D spi_master_get_devdata(master);
-> >+
-> >+	spi_st_clk_disable(spi_st);
-> >+
-> >+	pinctrl_pm_select_sleep_state(&pdev->dev);
-> >+
-> >+	return 0;
-> >+}
-> >+
-> >+#ifdef CONFIG_PM
-> >+static int spi_st_runtime_suspend(struct device *dev)
-> >+{
-> >+	struct spi_master *master =3D dev_get_drvdata(dev);
-> >+	struct spi_st *spi_st =3D spi_master_get_devdata(master);
-> >+
-> >+	writel_relaxed(0, spi_st->base + SSC_IEN);
-> >+	pinctrl_pm_select_sleep_state(dev);
-> >+
-> >+	spi_st_clk_disable(spi_st);
-> >+
-> >+	return 0;
-> >+}
-> >+
-> >+static int spi_st_runtime_resume(struct device *dev)
-> >+{
-> >+	struct spi_master *master =3D dev_get_drvdata(dev);
-> >+	struct spi_st *spi_st =3D spi_master_get_devdata(master);
-> >+	int ret;
-> >+
-> >+	ret =3D spi_st_clk_enable(spi_st);
-> >+	pinctrl_pm_select_default_state(dev);
-> >+
-> >+	return ret;
-> >+}
-> >+#endif
-> >+
-> >+#ifdef CONFIG_PM_SLEEP
-> >+static int spi_st_suspend(struct device *dev)
-> >+{
-> >+	struct spi_master *master =3D dev_get_drvdata(dev);
-> >+	int ret;
-> >+
-> >+	ret =3D spi_master_suspend(master);
-> >+	if (ret)
-> >+		return ret;
-> >+
-> >+	return pm_runtime_force_suspend(dev);
-> >+}
-> >+
-> >+static int spi_st_resume(struct device *dev)
-> >+{
-> >+	struct spi_master *master =3D dev_get_drvdata(dev);
-> >+	int ret;
-> >+
-> >+	ret =3D spi_master_resume(master);
-> >+	if (ret)
-> >+		return ret;
-> >+
-> >+	return pm_runtime_force_resume(dev);
-> >+}
-> >+#endif
-> >+
-> >+static const struct dev_pm_ops spi_st_pm =3D {
-> >+	SET_SYSTEM_SLEEP_PM_OPS(spi_st_suspend, spi_st_resume)
-> >+	SET_RUNTIME_PM_OPS(spi_st_runtime_suspend, spi_st_runtime_resume, =
-NULL)
-> >+};
-> >+
-> >+static struct of_device_id stm_spi_match[] =3D {
-> >+	{ .compatible =3D "st,comms-ssc4-spi", },
-> >+	{},
-> >+};
-> >+MODULE_DEVICE_TABLE(of, stm_spi_match);
-> >+
-> >+static struct platform_driver spi_st_driver =3D {
-> >+	.driver =3D {
-> >+		.name =3D "spi-st",
-> >+		.pm =3D &spi_st_pm,
-> >+		.of_match_table =3D of_match_ptr(stm_spi_match),
-> >+	},
-> >+	.probe =3D spi_st_probe,
-> >+	.remove =3D spi_st_remove,
-> >+};
-> >+module_platform_driver(spi_st_driver);
-> >+
-> >+MODULE_AUTHOR("Patrice Chotard <patrice.chotard@st.com>");
-> >+MODULE_DESCRIPTION("STM SSC SPI driver");
-> >+MODULE_LICENSE("GPL v2");
->=20
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+MjAxNC0xMS0yNyAyOjI5IEdNVCswODowMCBNdXJhbGkgS2FyaWNoZXJpIDxtLWthcmljaGVyaTJA
+dGkuY29tPjoKPgo+IE9uIDExLzI1LzIwMTQgMDc6MTYgQU0sIENodW55YW4gWmhhbmcgd3JvdGU6
+Cj4+Cj4+IEFkZCBhIGZ1bGwgc2M5ODM2LXVhcnQgZHJpdmVyIGZvciBTQzk4MzYgU29DIHdoaWNo
+IGlzIGJhc2VkIG9uIHRoZQo+PiBzcHJlYWR0cnVtIHNoYXJrbDY0IHBsYXRmb3JtLgo+PiBUaGlz
+IGRyaXZlciBhbHNvIHN1cHBvcnQgZWFybHljb24uCj4+Cj4+IFsuLi5dCgoKPj4KPj4gKysrIGIv
+ZHJpdmVycy90dHkvc2VyaWFsL3NwcmRfc2VyaWFsLmMKPj4gQEAgLTAsMCArMSw3NTIgQEAKPj4g
+Ky8qCj4+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTIgU3ByZWFkdHJ1bSBDb21tdW5pY2F0aW9ucyBJ
+bmMuCj4+ICsgKgo+PiArICogVGhpcyBzb2Z0d2FyZSBpcyBsaWNlbnNlZCB1bmRlciB0aGUgdGVy
+bXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYwo+PiArICogTGljZW5zZSB2ZXJzaW9uIDIsIGFz
+IHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uLCBhbmQKPj4gKyAqIG1h
+eSBiZSBjb3BpZWQsIGRpc3RyaWJ1dGVkLCBhbmQgbW9kaWZpZWQgdW5kZXIgdGhvc2UgdGVybXMu
+Cj4+ICsgKgo+PiArICogVGhpcyBwcm9ncmFtIGlzIGRpc3RyaWJ1dGVkIGluIHRoZSBob3BlIHRo
+YXQgaXQgd2lsbCBiZSB1c2VmdWwsCj4+ICsgKiBidXQgV0lUSE9VVCBBTlkgV0FSUkFOVFk7IHdp
+dGhvdXQgZXZlbiB0aGUgaW1wbGllZCB3YXJyYW50eSBvZgo+PiArICogTUVSQ0hBTlRBQklMSVRZ
+IG9yIEZJVE5FU1MgRk9SIEEgUEFSVElDVUxBUiBQVVJQT1NFLiAgU2VlIHRoZQo+PiArICogR05V
+IEdlbmVyYWwgUHVibGljIExpY2Vuc2UgZm9yIG1vcmUgZGV0YWlscy4KPj4gKyAqLwo+PiArCj4+
+ICsjaW5jbHVkZTxsaW51eC9tb2R1bGUuaD4KPj4gKyNpbmNsdWRlPGxpbnV4L3R0eS5oPgo+PiAr
+I2luY2x1ZGU8bGludXgvaW9wb3J0Lmg+Cj4+ICsjaW5jbHVkZTxsaW51eC9jb25zb2xlLmg+Cj4+
+ICsjaW5jbHVkZTxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4KPj4gKyNpbmNsdWRlPGxpbnV4L3R0
+eV9mbGlwLmg+Cj4+ICsjaW5jbHVkZTxsaW51eC9zZXJpYWxfY29yZS5oPgo+PiArI2luY2x1ZGU8
+bGludXgvc2VyaWFsLmg+Cj4+ICsjaW5jbHVkZTxsaW51eC9kZWxheS5oPgo+PiArI2luY2x1ZGU8
+bGludXgvaW8uaD4KPj4gKyNpbmNsdWRlPGFzbS9pcnEuaD4KPj4gKyNpbmNsdWRlPGxpbnV4L3Ns
+YWIuaD4KPj4gKyNpbmNsdWRlPGxpbnV4L29mLmg+Cj4+ICsjaW5jbHVkZTxsaW51eC9rZXJuZWwu
+aD4KPj4gKyNpbmNsdWRlPGxpbnV4L3NsYWIuaD4KPj4gKyNpbmNsdWRlPGxpbnV4L2Nsay5oPgo+
+Cj4gSG93IGFib3V0IHNvcnRpbmcgdGhpcyBpbmNsdWRlcz8gYXNtL2lycS5oIGdvIGZpcnN0IGZv
+bGxvd2VkIGxpbnV4LyBpbiBhbHBoYWJhdGljYWwgb3JkZXI/CgoKVGhlcmUgYXJlIGEgZmV3IGNv
+bXBpbGUgd2FybmluZ3MgaWYgSSBtb3ZlZCBhc20vaXJxLmggdG8gdGhlIHRvcCBvZgphbGwgaW5j
+bHVkZWQgZmlsZXMuCldhcm5pbmcgZGV0YWlscyBhcmUgYmVsb3c6CgpJbiBmaWxlIGluY2x1ZGVk
+IGZyb20gZHJpdmVycy90dHkvc2VyaWFsL3NwcmRfc2VyaWFsLmM6MTQ6MDoKLi9hcmNoL2FybTY0
+L2luY2x1ZGUvYXNtL2lycS5oOjY6Mzk6IHdhcm5pbmc6IOKAmHN0cnVjdCBwdF9yZWdz4oCZCmRl
+Y2xhcmVkIGluc2lkZSBwYXJhbWV0ZXIgbGlzdCBbZW5hYmxlZCBieSBkZWZhdWx0XQogZXh0ZXJu
+IHZvaWQgKCpoYW5kbGVfYXJjaF9pcnEpKHN0cnVjdCBwdF9yZWdzICopOwogICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBeCi4vYXJjaC9hcm02NC9pbmNsdWRlL2FzbS9pcnEu
+aDo2OjM5OiB3YXJuaW5nOiBpdHMgc2NvcGUgaXMgb25seSB0aGlzCmRlZmluaXRpb24gb3IgZGVj
+bGFyYXRpb24sIHdoaWNoIGlzIHByb2JhYmx5IG5vdCB3aGF0IHlvdSB3YW50CltlbmFibGVkIGJ5
+IGRlZmF1bHRdCi4vYXJjaC9hcm02NC9pbmNsdWRlL2FzbS9pcnEuaDo4OjU0OiB3YXJuaW5nOiDi
+gJhzdHJ1Y3QgcHRfcmVnc+KAmQpkZWNsYXJlZCBpbnNpZGUgcGFyYW1ldGVyIGxpc3QgW2VuYWJs
+ZWQgYnkgZGVmYXVsdF0KIGV4dGVybiB2b2lkIHNldF9oYW5kbGVfaXJxKHZvaWQgKCpoYW5kbGVf
+aXJxKShzdHJ1Y3QgcHRfcmVncyAqKSk7CgpUaGFua3MsCkNodW55YW4KCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGlu
+ZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
+aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
