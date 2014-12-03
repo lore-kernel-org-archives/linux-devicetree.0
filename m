@@ -1,72 +1,74 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ASoC: rockchip: i2s: add support for grabbing
- output clock to codec
-Date: Wed, 3 Dec 2014 20:03:07 +0000
-Message-ID: <20141203200307.GM7712@sirena.org.uk>
-References: <1417531766-29669-1-git-send-email-jay.xu@rock-chips.com>
- <1417591118-18695-1-git-send-email-jay.xu@rock-chips.com>
- <1417591118-18695-3-git-send-email-jay.xu@rock-chips.com>
- <20141203192024.GL7712@sirena.org.uk>
- <CAPz6YkXRmRzYpW7xuDsq69A9H-Qm2-j6t-a+B1w9+OLOPf_YnA@mail.gmail.com>
+From: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v3 3/4] powerpc/mpc85xx: Add FSL QorIQ DPAA BMan support
+ to device tree(s)
+Date: Wed, 3 Dec 2014 14:19:23 -0600
+Message-ID: <547F704B.5070400@Freescale.com>
+References: <1417428135-12895-1-git-send-email-Emilian.Medve@Freescale.com>
+ <1417566777.15957.227.camel@freescale.com> <547EC183.2070005@Freescale.com>
+ <7923839.hEiWgLtlCl@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gz7Dl29304g/DuvU"
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAPz6YkXRmRzYpW7xuDsq69A9H-Qm2-j6t-a+B1w9+OLOPf_YnA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <7923839.hEiWgLtlCl@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Scott Wood <scottwood-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Geoff Thorpe <Geoff.Thorpe-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Hai-Ying Wang <Haiying.Wang-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Chunhe Lan <Chunhe.Lan-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Poonam Aggrwal <poonam.aggrwal-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello Arnd,
 
---gz7Dl29304g/DuvU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Wed, Dec 03, 2014 at 11:38:13AM -0800, Sonny Rao wrote:
-> On Wed, Dec 3, 2014 at 11:20 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+Thanks for taking the time to review this
 
-> > I would expect that the clock for the CODEC should be managed by the
-> > CODEC if at all possible - that seems more logical than having the CPU
-> > I2S controller request and manage it if it's a separate clock.  Why add
-> > this to the CPU side driver?
+On 12/03/2014 01:42 PM, Arnd Bergmann wrote:
+> On Wednesday 03 December 2014 01:53:39 Emil Medve wrote:
+>> On 12/02/2014 06:32 PM, Scott Wood wrote:
+>>> On Mon, 2014-12-01 at 04:02 -0600, Emil Medve wrote:
+>>>> diff --git a/arch/powerpc/boot/dts/t4240rdb.dts b/arch/powerpc/boot/dts/t4240rdb.dts
+>>>> index 53761d4..431bf4e 100644
+>>>> --- a/arch/powerpc/boot/dts/t4240rdb.dts
+>>>> +++ b/arch/powerpc/boot/dts/t4240rdb.dts
+>>>> @@ -69,10 +69,27 @@
+>>>>              device_type = "memory";
+>>>>      };
+>>>>  
+>>>> +    reserved-memory {
+>>>> +            #address-cells = <2>;
+>>>> +            #size-cells = <2>;
+>>>> +            ranges;
+>>>> +
+>>>> +            bman_fbpr: bman-fbpr {
+>>>> +                    compatible = "fsl,bman-fbpr";
+>>>> +                    alloc-ranges = <0 0 0xffff 0xffffffff>;
+>>>> +                    size = <0 0x1000000>;
+>>>> +                    alignment = <0 0x1000000>;
+>>>> +            };
+>>>> +    };
+>>>
+>>> Can't this be done at the SoC level rather than board level?
+>>
+>> The size of the memory is not SoC specific. Among other things is
+>> determined by the number of MACs that are pinned-out on the board
+> 
+> Is this really a hardware property then, or some setting?
 
-> This output clock has a mux and can either be a fixed 12Mhz output or
-> can be derived from the same fractional divider which drives the i2s
-> block.   I thought it was simpler to keep them all the same, but need
-> to put ownership in the i2s in anticipation of the i2s driver setting
-> it's own clock rate.
+I'm unsure how to answer this. It is my opinion it's a hardware property
+and that we're not stretching the intent of the reserved-memory binding
 
-> If you think this is an implementation detail and this output clock
-> should just be owned by the codec driver, even though I'm guessing it
-> will just have to be the same as i2s, then I think we can drop this
-> and make sure simple card (or whatever other codec driver) claims this
-> clock.
+> Also, if you use the name 'ranges', I would assume that the second
+> set of two cells is a length and should be <0 0 0x10000 0>.
 
-simple-card obviously isn't a CODEC driver...  For generality I think
-the clock does need to be exposed to the CODEC driver, otherwise this
-will work differently to how other systems are working and we can't
-substitute in a different clock on the CODEC side so easily if it
-doesn't happen to use the output from the I2S block.
+Uh... Right. I'll fix it
 
---gz7Dl29304g/DuvU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> Finally, you add a label here, so anything that is not board
+> specific could just stay in the per-soc file, with the board
+> specific properties added at teh board level.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+I will do that
 
-iQEcBAEBAgAGBQJUf2x6AAoJECTWi3JdVIfQor4H/R8QlkqfCU1Ht8Ka0ICFucYS
-I79180Ndm9Ulbi7VE7FusGljeVINcXw1GWWw34nkG5zjGVoFlVY3flV7ZNbfOlyM
-5LQHM8j11BUqQB7WQ1AGtBJ3XTB3yO74MXMva4zCufePubbG72HNgn1CdkvgMXT5
-Ty5JrgwWMBxeLZ77xrt4zVZMlGSNPgk/fKGiGxE8qb82kHMZYeodDRXnU/GR4LHC
-UPGDFvzILh7eZXGUKtmG33+YRay44JLW3gfLZd27iDoPmxoVCNzvS7CIn1yUls0I
-cQbklM9JMBlt/bjzWs8g9aOFeqZ8IKzwGzMlqTrWcgwEpW2PXpBhmHxFlj9hUnw=
-=Bt5J
------END PGP SIGNATURE-----
 
---gz7Dl29304g/DuvU--
+Cheers,
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
