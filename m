@@ -1,50 +1,56 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 0/2] ARM: dts: dra7-evm: Regulator max voltage fixes
-Date: Wed, 3 Dec 2014 07:04:23 -0600
-Message-ID: <547F0A57.7040806@ti.com>
-References: <1417608237-12258-1-git-send-email-rk@ti.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v15 12/12] drm: bridge/dw_hdmi: add rockchip rk3288 support
+Date: Wed, 03 Dec 2014 14:09:57 +0100
+Message-ID: <1417612197.5124.12.camel@pengutronix.de>
+References: <1417505778-18341-1-git-send-email-andy.yan@rock-chips.com>
+ <1417506327-18908-1-git-send-email-andy.yan@rock-chips.com>
+ <1417515882.3411.8.camel@pengutronix.de> <547DB1ED.7000409@rock-chips.com>
+ <1417525257.3411.12.camel@pengutronix.de> <547F02CF.9010804@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417608237-12258-1-git-send-email-rk-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ravikumar Kattekola <rk-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?windows-1252?Q?Beno=EEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <547F02CF.9010804@rock-chips.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Pawel Moll <pawel.moll@arm.com>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, rmk+kernel@arm.linux.org.uk, mark.yao@rock-chips.com, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, vladimir_zapolskiy@mentor.com
 List-Id: devicetree@vger.kernel.org
 
-On 12/03/2014 06:03 AM, Ravikumar Kattekola wrote:
-> Hi,
-> 
-> This set does a minor fix and an update:
-> 
->    - Fix a typo in the max voltage property of smps6 (vdd_gpu) regulator node added by
->      the patch : c56a831ca47e ("ARM: dts: DRA7: Add TPS659038 PMIC nodes")
-> 
->    - Update max voltage property of smps7 (vdd_core) regulator node to align with the 
->      latest Data Manual
-> 
-> Regards,
-> RK
-> 
-> Ravikumar Kattekola (2):
->   ARM: dts: dra7-evm: Fix typo in SMPS6 (VDD_GPU) max voltage
->   ARM: dts: dra7-evm: Update SMPS7 (VDD_CORE) max voltage to match DM
-> 
->  arch/arm/boot/dts/dra7-evm.dts  |    4 ++--
->  arch/arm/boot/dts/dra72-evm.dts |    2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-These apply to
+Hi Andy,
 
-https://git.kernel.org/cgit/linux/kernel/git/tmlind/linux-omap.git/log/?h=omap-for-v3.19/dt-v2
+Am Mittwoch, den 03.12.2014, 20:32 +0800 schrieb Andy Yan:
+> > My question is not about the available gates at the SoC level, but about
+> > the actual clock inputs from point of view of the HDMI TX IP.
+> >
+> > It could be that the hdmi_ctrl_clk gates all inputs to the module and
+> > bus clocks together. If so, you could just reuse "isfr" and "iahb" and
+> > set it to the same clock. If not, we'd need to think of something else.
+> > Unfortunately I don't have any Synopsys documentation of the HDMI TX at
+> > that level.
+> 
+>     After confirming with the IC designer, we finally make clear that
+>     Rockchip RK3288 almost use the same clock design with imx:
+>     clk-----iahbclk, used for hdmi module and bus
+>     hdcp_clk-----isfrclk, used for hdcp and i2cm
+>     cecclk -----cecclk, but this clk can be gated on rockchip, this is 
+> different with imx,
+>     but we don't handle the cec stuff now. So i will try to reuse the 
+> imx clk binds. do you
+>    think that is ok?
 
-Acked-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Thank you for taking the time to verify this. So we should move the
+clock handling out of the soc specific parts into the common driver and
+reuse the existing clock bindings ("iahb", "isfr").
+I'd suggest to add the "cec" clock now to the binding document as an
+optional clock, then you can already specify it in the rockchip dtsi.
 
--- 
-Regards,
-Nishanth Menon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards
+Philipp
