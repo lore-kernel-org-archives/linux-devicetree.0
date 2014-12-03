@@ -1,75 +1,32 @@
-From: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v3 3/4] powerpc/mpc85xx: Add FSL QorIQ DPAA BMan support
- to device tree(s)
-Date: Wed, 3 Dec 2014 14:19:23 -0600
-Message-ID: <547F704B.5070400@Freescale.com>
-References: <1417428135-12895-1-git-send-email-Emilian.Medve@Freescale.com>
- <1417566777.15957.227.camel@freescale.com> <547EC183.2070005@Freescale.com>
- <7923839.hEiWgLtlCl@wuerfel>
+From: Tyler Baker <tyler.baker@linaro.org>
+Subject: Re: [PATCH] ARM: dts: Add dts file for odroid XU3 board
+Date: Wed, 3 Dec 2014 12:24:07 -0800
+Message-ID: <CANMBJr4B-c-eMCvwexW5_WhfK=xsJ0-Cjo_OApTpUXP3zBG-kw@mail.gmail.com>
+References: <1417438770-28696-1-git-send-email-sjoerd.simons@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7923839.hEiWgLtlCl@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Scott Wood <scottwood-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Geoff Thorpe <Geoff.Thorpe-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Hai-Ying Wang <Haiying.Wang-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Chunhe Lan <Chunhe.Lan-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Poonam Aggrwal <poonam.aggrwal-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1417438770-28696-1-git-send-email-sjoerd.simons@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Arnd,
+On 1 December 2014 at 04:59, Sjoerd Simons
+<sjoerd.simons@collabora.co.uk> wrote:
+> Add DTS for the Hardkernel Odroid XU3. The name of the DTS file is kept the
+> same as the vendors naming, which means it's prefixed with exynos5422
+> instead of exynos5800 as the SoC name even though it includes the
+> exyno5800 dtsi.
+>
+> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
 
+Tested-by: Tyler Baker <tyler.baker@linaro.org>
 
-Thanks for taking the time to review this
+Tested this atop of next-20141203 both on exynos_defconfig and
+multi_v7_defconfig. All configurations boot fine on my odroid-xu3
+board, no imprecise aborts observed either.
 
-On 12/03/2014 01:42 PM, Arnd Bergmann wrote:
-> On Wednesday 03 December 2014 01:53:39 Emil Medve wrote:
->> On 12/02/2014 06:32 PM, Scott Wood wrote:
->>> On Mon, 2014-12-01 at 04:02 -0600, Emil Medve wrote:
->>>> diff --git a/arch/powerpc/boot/dts/t4240rdb.dts b/arch/powerpc/boot/dts/t4240rdb.dts
->>>> index 53761d4..431bf4e 100644
->>>> --- a/arch/powerpc/boot/dts/t4240rdb.dts
->>>> +++ b/arch/powerpc/boot/dts/t4240rdb.dts
->>>> @@ -69,10 +69,27 @@
->>>>              device_type = "memory";
->>>>      };
->>>>  
->>>> +    reserved-memory {
->>>> +            #address-cells = <2>;
->>>> +            #size-cells = <2>;
->>>> +            ranges;
->>>> +
->>>> +            bman_fbpr: bman-fbpr {
->>>> +                    compatible = "fsl,bman-fbpr";
->>>> +                    alloc-ranges = <0 0 0xffff 0xffffffff>;
->>>> +                    size = <0 0x1000000>;
->>>> +                    alignment = <0 0x1000000>;
->>>> +            };
->>>> +    };
->>>
->>> Can't this be done at the SoC level rather than board level?
->>
->> The size of the memory is not SoC specific. Among other things is
->> determined by the number of MACs that are pinned-out on the board
-> 
-> Is this really a hardware property then, or some setting?
+Thanks!
 
-I'm unsure how to answer this. It is my opinion it's a hardware property
-and that we're not stretching the intent of the reserved-memory binding
-
-> Also, if you use the name 'ranges', I would assume that the second
-> set of two cells is a length and should be <0 0 0x10000 0>.
-
-Uh... Right. I'll fix it
-
-> Finally, you add a label here, so anything that is not board
-> specific could just stay in the per-soc file, with the board
-> specific properties added at teh board level.
-
-I will do that
-
-
-Cheers,
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tyler
