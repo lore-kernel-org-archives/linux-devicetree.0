@@ -1,63 +1,35 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v3 1/3] devicetree: of: Add bindings for chosen node,
- stdout-path
-Date: Wed, 03 Dec 2014 11:46:09 -0800
-Message-ID: <547F6881.20400@gmail.com>
-References: <1417110967-16284-1-git-send-email-leif.lindholm@linaro.org> <1417110967-16284-2-git-send-email-leif.lindholm@linaro.org> <547E7455.6090009@gmail.com> <CACxGe6vdbURE3=W3Uerwy90piGKhv7-m+-vpUhCiUTKB4AzTsw@mail.gmail.com>
-Reply-To: frowand.list@gmail.com
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH] ARM: dts: Add dts file for odroid XU3 board
+Date: Wed, 03 Dec 2014 11:53:10 -0800
+Message-ID: <7hzjb4y0gp.fsf@deeprootsystems.com>
+References: <1417438770-28696-1-git-send-email-sjoerd.simons@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACxGe6vdbURE3=W3Uerwy90piGKhv7-m+-vpUhCiUTKB4AzTsw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Leif Lindholm <leif.lindholm@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc@debian.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Content-Type: text/plain
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1417438770-28696-1-git-send-email-sjoerd.simons@collabora.co.uk>
+	(Sjoerd Simons's message of "Mon, 1 Dec 2014 13:59:30 +0100")
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/3/2014 7:12 AM, Grant Likely wrote:
-> On Wed, Dec 3, 2014 at 2:24 AM, Frank Rowand <frowand.list@gmail.com> wrote:
->> On 11/27/2014 9:56 AM, Leif Lindholm wrote:
->>> Add a global binding for the chosen node.
->>> Include a description of the stdout-path, and an explicit statement on
->>> its extra options in the context of a UART console.
->>>
->>> Opening description stolen from www.devicetree.org, and part of the
->>> remaining text provided by Mark Rutland.
->>>
->>> Signed-off-by: Leif Lindholm <leif.lindholm@linaro.org>
->>> ---
->>>  Documentation/devicetree/bindings/chosen.txt |   42 ++++++++++++++++++++++++++
->>>  1 file changed, 42 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/chosen.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
->>> new file mode 100644
->>> index 0000000..9cd74e9
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/chosen.txt
->>> @@ -0,0 +1,42 @@
->>> +The chosen node
->>> +---------------
->>> +
->>> +The chosen node does not represent a real device, but serves as a place
->>> +for passing data between firmware and the operating system, like boot
->>> +arguments. Data in the chosen node does not represent the hardware.
->>> +
->>> +
->>> +stdout-path property
->>
->> The code in patch 3/3 adds the extra options feature to the properties:
->>
->>   stdout-path
->>   linux,stdout-path
->>   stdout  [if (IS_ENABLED(CONFIG_PPC) ... ]
-> 
-> I don't understand what you mean here. Are you suggesting a change to
-> this patch? Is there something deficient in it?
+Sjoerd Simons <sjoerd.simons@collabora.co.uk> writes:
 
-Assuming that the code change in patch 3 is as desired, then the chosen.txt
-documentation applies to all three properties, not just stdout-path.  So
-yes, a change is suggested for the documentation.
+> Add DTS for the Hardkernel Odroid XU3. The name of the DTS file is kept the
+> same as the vendors naming, which means it's prefixed with exynos5422
+> instead of exynos5800 as the SoC name even though it includes the
+> exyno5800 dtsi.
+>
+> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
 
--Frank
+Tested-by: Kevin Hilman <khilman@linaro.org>
+
+Tried this on top of linux-next (next-20141125 and next20141203) and
+boots fine on my odroid-xu3. 
+
+Thanks for doing this, I've been meaning to get a DTS upstream for this
+platform myself.  I also noticed that the imprecise aborts I've been
+seeing when booting this board with the smdk5420 DTS are gone, so I
+don't have to dig into those now either.  Thanks!  :)
+
+Kevin
