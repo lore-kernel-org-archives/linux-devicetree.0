@@ -1,121 +1,53 @@
-From: Josh Wu <josh.wu@atmel.com>
-Subject: Re: [PATCH 4/4] media: ov2640: dt: add the device tree binding document
-Date: Wed, 3 Dec 2014 17:49:34 +0800
-Message-ID: <547EDCAE.50001@atmel.com>
-References: <1417170507-11172-1-git-send-email-josh.wu@atmel.com> <1417170507-11172-5-git-send-email-josh.wu@atmel.com> <3353234.ED9pHT6goB@avalon>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 5/5] tty/serial: Add Spreadtrum sc9836-uart driver support
+Date: Wed, 03 Dec 2014 10:50:17 +0100
+Message-ID: <3212776.kDbe7yX4eX@wuerfel>
+References: <1416917818-10506-1-git-send-email-chunyan.zhang@spreadtrum.com> <54761BFC.4020705@ti.com> <CAAfSe-u+g0mYGi9Adrd+YwwZ=q0-s79yCg_paB1UAVqFoufXEA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <3353234.ED9pHT6goB@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, m.chehab@samsung.com, linux-arm-kernel@lists.infradead.org, g.liakhovetski@gmx.de, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAfSe-u+g0mYGi9Adrd+YwwZ=q0-s79yCg_paB1UAVqFoufXEA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lyra Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "jslaby-AlSwsSmVLrQ@public.gmane.org" <jslaby-AlSwsSmVLrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ramkumar Ramachandra <artagnon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org" <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, shawn.guo@freescal
 List-Id: devicetree@vger.kernel.org
 
-Hi, Laurent
+On Wednesday 03 December 2014 17:17:13 Lyra Zhang wrote:
 
-On 12/2/2014 6:14 AM, Laurent Pinchart wrote:
-> Hi Josh,
+> 2014-11-27 2:29 GMT+08:00 Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>:
+> > How about sorting this includes? asm/irq.h go first followed linux/=
+ in alphabatical order?
 >
-> Thank you for the patch.
->
-> On Friday 28 November 2014 18:28:27 Josh Wu wrote:
->> Add the document for ov2640 dt.
->>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Josh Wu <josh.wu@atmel.com>
->> ---
->>   .../devicetree/bindings/media/i2c/ov2640.txt       | 43 +++++++++++++++++++
->>   1 file changed, 43 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/media/i2c/ov2640.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/ov2640.txt
->> b/Documentation/devicetree/bindings/media/i2c/ov2640.txt new file mode
->> 100644
->> index 0000000..adec147
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/i2c/ov2640.txt
->> @@ -0,0 +1,43 @@
->> +* Omnivision ov2640 CMOS sensor
->> +
->> +The Omnivision OV2640 sensor support multiple resolutions output, such as
->> +CIF, SVGA, UXGA. It also can support YUV422/420, RGB565/555 or raw RGB
->> +output format.
->> +
->> +Required Properties :
->> +- compatible      : Must be "omnivision,ov2640"
-> The usual practice is to use the company's stock ticker as a prefix. In this
-> case the compatible string would be "ovti,ov2640". You need to add the prefix
-> to Documentation/devicetree/bindings/vendor-prefixes.txt.
->
->> +- reset-gpio      : reset pin
->> +- power-down-gpio : power down pin
-> That should be reset-gpios and power-down-gpios, even if there's a single
-> GPIO. Furthermore, given that the power down pin is named PWDN you might want
-> to name the property pwdn-gpios.
->
-> The reset and pwdn signals won't be connected on all boards, so the two
-> properties should be optional.
->
->> +Optional Properties:
->> +- clocks          : reference master clock, if using external fixed clock,
->> you
->> +                    no need to have such property.
-> The clock is required by the chip, so even when using an external fixed clock
-> the property should be present, and reference a fixed clock node. The clocks
-> and clock-names properties should thus be mandatory.
->
->> +- clock-names     : Must be "mck", it means the master clock for ov2640.
-> The clock input is named xvclk in the datasheet, you should use the same name
-> here.
->
->> +
->> +For further reading of port node refer
->> Documentation/devicetree/bindings/media/
->> +video-interfaces.txt.
-> Even if you reference that document you should still mention what port node(s)
-> these bindings require. Something like the following text should be enough.
->
-> "The device node must contain one 'port' child node for its digital output
-> video port, in accordance with the video interface bindings defined in
-> Documentation/devicetree/bindings/media/video-interfaces.txt."
->
->> +
->> +Example:
->> +
->> +	i2c1: i2c@f0018000 {
->> +		ov2640: camera@0x30 {
->> +			compatible = "omnivision,ov2640";
->> +			reg = <0x30>;
->> +
->> +			... ...
-> No need for an ellipsis, what are you trying to hide ? :-)
+> There are a few compile warnings if I moved asm/irq.h to the top of
+> all included files.
 
-I just emit the pinctrl property here. Will add it back.
->
->> +
->> +			reset-gpio = <&pioE 24 GPIO_ACTIVE_HIGH>;
->> +			power-down-gpio = <&pioE 29 GPIO_ACTIVE_HIGH>;
->> +
->> +			/* use pck1 for the master clock of ov2640 */
-> I think you can drop the comment.
+The order that Murali meant is
 
-I will send a new version which will fix all above.
-Thanks for your time to review the patch. That help me a lot.
+- first all linux/*.h headers, sorted alphabetically
+- then all asm/*.h headers, again sorted alphabetically
 
-Best Regards,
-Josh Wu
+This is the recommended style in general.
 
->
->> +			clocks = <&pck1>;
->> +			clock-names = "mck";
->> +
->> +			port {
->> +				ov2640_0: endpoint {
->> +					remote-endpoint = <&isi_0>;
->> +					bus-width = <8>;
->> +				};
->> +			};
->> +		};
->> +	};
+> Warning details are below:
+>=20
+> In file included from drivers/tty/serial/sprd_serial.c:14:0:
+> ./arch/arm64/include/asm/irq.h:6:39: warning: =E2=80=98struct pt_regs=
+=E2=80=99
+> declared inside parameter list [enabled by default]
+>  extern void (*handle_arch_irq)(struct pt_regs *);
+>                                        ^
+> ./arch/arm64/include/asm/irq.h:6:39: warning: its scope is only this
+> definition or declaration, which is probably not what you want
+> [enabled by default]
+> ./arch/arm64/include/asm/irq.h:8:54: warning: =E2=80=98struct pt_regs=
+=E2=80=99
+> declared inside parameter list [enabled by default]
+>  extern void set_handle_irq(void (*handle_irq)(struct pt_regs *));
+>=20
+
+I would consider this a (minor) bug in asm/irq.h. If you don't mind,
+please submit a patch to add a line with 'struct pt_regs;' to
+asm/irq.h.
+
+	Arnd
