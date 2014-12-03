@@ -1,182 +1,129 @@
-From: Addy Ke <addy.ke@rock-chips.com>
-Subject: [PATCH v3] mmc: dw_mmc: add quirk for broken data transfer over scheme
-Date: Wed,  3 Dec 2014 11:16:03 +0800
-Message-ID: <1417576563-5033-1-git-send-email-addy.ke@rock-chips.com>
-References: <1415970338-2637-1-git-send-email-addy.ke@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415970338-2637-1-git-send-email-addy.ke@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, jh80.chung@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, heiko@sntech.de, olof@lixom.net, dianders@chromium.org, sonnyrao@chromium.org, amstan@chromium.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, zhenfu.fang@rock-chips.com, cf@rock-chips.com, lintao@rock-chips.com, chenfen@rock-chips.com, zyf@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, hj@rock-chips.com, kever.yang@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com, Addy Ke <addy.ke@rock-chips.com>
+From: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v9 3/8] devicetree: mfd: Add new SKY81452 mfd binding
+Date: Wed, 03 Dec 2014 12:39:55 +0900
+Message-ID: <001701d00eaa$cdd0d970$69728c50$%han@samsung.com>
+References: <1417507529-13654-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1417507529-13654-4-git-send-email-jack.yoo@skyworksinc.com>
+ <20141202140727.GD22522@x1> <20141203030905.GA4352@jack-ThinkPad-T520>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <20141203030905.GA4352@jack-ThinkPad-T520>
+Content-language: ko
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: 'Gyungoh Yoo' <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Lee Jones' <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, 'Jingoo Han' <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch add a new quirk to add a s/w timer to notify the driver
-to terminate current transfer and report a data timeout to the core,
-if DTO interrupt does NOT come within the given time.
+On Wednesday, December 03, 2014 12:09 PM, Gyungoh Yoo wrote:
+> On Tue, Dec 02, 2014 at 02:07:27PM +0000, Lee Jones wrote:
+> > This requires a DT Ack.
+>=20
+> I think I need to double-check the recipients.
+> Thank you for the comment.
 
-dw_mmc call mmc_request_done func to finish transfer depends on
-DTO interrupt. If DTO interrupt does not come in sending data state,
-the current transfer will be blocked.
+Yes, right.
+We should be careful when creating new DT properties.
+This is because DT can be handled as ABI. Thus, Ack from
+DT maintainers is necessary for merging new DT properties,
+even though other subsystem maintainers or reviews gave
+Ack for this.
 
-But this case really exists, when driver reads tuning data from
-card on RK3288-pink2 board. I measured waveforms by oscilloscope
-and found that card clock was always on and data lines were always
-holded high level in sending data state.
+Best regards,
+Jingoo Han
 
-We got the reply from synopsys:
-There are two counters but both use the same value of [31:8] bits.
-Data timeout counter doesn't wait for stop clock and you should get
-DRTO even when the clock is not stopped.
-Host Starvation timeout counter is triggered with stop clock condition.
+>=20
+> >
+> > > From: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
+> > >
+> > > Signed-off-by: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
+> > > ---
+> > > Changes v9:
+> > > Nothing
+> > >
+> > > Changes v8:
+> > > Made up the example for backlight DT
+> > >
+> > > Changes v7:
+> > > Nothing
+> > >
+> > > Changes v6:
+> > > Nothing
+> > >
+> > > Changes v5:
+> > > Changed DT for regulator : 'lout' node should be defined under 'r=
+egulator'
+> > > Removed compatible string from sky81452-regulator driver
+> > >
+> > > Changes v4:
+> > > Nothing
+> > >
+> > > Changes v3:
+> > > Nothing
+> > >
+> > > Changes v2:
+> > > Added reg attribute for I2C slave address
+> > >
+> > >  Documentation/devicetree/bindings/mfd/sky81452.txt | 36 ++++++++=
+++++++++++++++
+> > >  1 file changed, 36 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/mfd/sky8145=
+2.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/mfd/sky81452.txt
+> b/Documentation/devicetree/bindings/mfd/sky81452.txt
+> > > new file mode 100644
+> > > index 0000000..ab71473
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/mfd/sky81452.txt
+> > > @@ -0,0 +1,36 @@
+> > > +SKY81452 bindings
+> > > +
+> > > +Required properties:
+> > > +- compatible	: Must be "skyworks,sky81452"
+> > > +- reg		: I2C slave address
+> > > +
+> > > +Required child nodes:
+> > > +- backlight	: container node for backlight following the binding
+> > > +		in video/backlight/sky81452-backlight.txt
+> > > +- regulator	: container node for regulators following the bindin=
+g
+> > > +		in regulator/sky81452-regulator.txt
+> > > +
+> > > +Example:
+> > > +
+> > > +	sky81452@2c {
+> > > +		compatible =3D "skyworks,sky81452";
+> > > +		reg =3D <0x2c>;
+> > > +
+> > > +		backlight {
+> > > +			compatible =3D "skyworks,sky81452-backlight";
+> > > +			name =3D "pwm-backlight";
+> > > +			skyworks,en-channels =3D <0x3f>;
+> > > +			skyworks,ignore-pwm;
+> > > +			skyworks,phase-shift;
+> > > +			skyworks,ovp-level =3D <20>;
+> > > +			skyworks,current-limit =3D <2300>;
+> > > +		};
+> > > +
+> > > +		regulator {
+> > > +			lout {
+> > > +				regulator-name =3D "sky81452-lout";
+> > > +				regulator-min-microvolt =3D <4500000>;
+> > > +				regulator-max-microvolt =3D <8000000>;
+> > > +			};
+> > > +		};
+> > > +	};
+> >
+> > --
+> > Lee Jones
+> > Linaro STMicroelectronics Landing Team Lead
+> > Linaro.org =E2=94=82 Open source software for ARM SoCs
+> > Follow Linaro: Facebook | Twitter | Blog
 
-This means that host should get DRTO and DTO interrupt.
-
-But we really don't get any data-related interrupt in RK3X SoCs.
-And driver can't get data transfer state, it can do nothing but wait for.
-
-We don't know why we have this problem, but we need it to fix this problem now.
-And I will post a follow up change when we find the root cause.
-
-Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
----
-Changes in v2:
-- fix some typo.
-- remove extra timeout value (250ms).
-- remove dw_mci_dto_start_monitor func.
-- use "broken-dto" for new quirk and change Subject for it.
-
-Changes in v3:
-- Remove dts for broken-dto, just add this quirk in dw_mci_rockchip_init
-
- drivers/mmc/host/dw_mmc-rockchip.c |  3 +++
- drivers/mmc/host/dw_mmc.c          | 41 +++++++++++++++++++++++++++++++++++++-
- include/linux/mmc/dw_mmc.h         |  5 +++++
- 3 files changed, 48 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mmc/host/dw_mmc-rockchip.c b/drivers/mmc/host/dw_mmc-rockchip.c
-index 5650ac4..ba92ebd 100644
---- a/drivers/mmc/host/dw_mmc-rockchip.c
-+++ b/drivers/mmc/host/dw_mmc-rockchip.c
-@@ -73,6 +73,9 @@ static int dw_mci_rockchip_init(struct dw_mci *host)
- 	/* It is slot 8 on Rockchip SoCs */
- 	host->sdio_id0 = 8;
- 
-+	/* It needs this quirk on all Rockchip SoCs */
-+	host->pdata->quirks |= DW_MCI_QUIRK_BROKEN_DTO;
-+
- 	return 0;
- }
- 
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index 67c0451..e222122 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -1464,6 +1464,8 @@ static void dw_mci_tasklet_func(unsigned long priv)
- 	enum dw_mci_state state;
- 	enum dw_mci_state prev_state;
- 	unsigned int err;
-+	unsigned int drto_clks;
-+	unsigned int drto_ms;
- 
- 	spin_lock(&host->lock);
- 
-@@ -1529,8 +1531,17 @@ static void dw_mci_tasklet_func(unsigned long priv)
- 			}
- 
- 			if (!test_and_clear_bit(EVENT_XFER_COMPLETE,
--						&host->pending_events))
-+						&host->pending_events)) {
-+				if (host->quirks & DW_MCI_QUIRK_BROKEN_DTO) {
-+					drto_clks = mci_readl(host, TMOUT) >> 8;
-+					drto_ms = DIV_ROUND_UP(drto_clks * 1000,
-+							       host->bus_hz);
-+
-+					mod_timer(&host->dto_timer, jiffies +
-+						msecs_to_jiffies(drto_ms));
-+				}
- 				break;
-+			}
- 
- 			set_bit(EVENT_XFER_COMPLETE, &host->completed_events);
- 
-@@ -2122,6 +2133,9 @@ static irqreturn_t dw_mci_interrupt(int irq, void *dev_id)
- 		}
- 
- 		if (pending & SDMMC_INT_DATA_OVER) {
-+			if (host->quirks & DW_MCI_QUIRK_BROKEN_DTO)
-+				del_timer(&host->dto_timer);
-+
- 			mci_writel(host, RINTSTS, SDMMC_INT_DATA_OVER);
- 			if (!host->data_status)
- 				host->data_status = pending;
-@@ -2509,6 +2523,28 @@ ciu_out:
- 	return ret;
- }
- 
-+static void dw_mci_dto_timer(unsigned long arg)
-+{
-+	struct dw_mci *host = (struct dw_mci *)arg;
-+
-+	switch (host->state) {
-+	case STATE_SENDING_DATA:
-+	case STATE_DATA_BUSY:
-+		/*
-+		* If DTO interrupt does NOT come in sending data state,
-+		* we should notify the driver to terminate current transfer
-+		* and report a data timeout to the core.
-+		*/
-+		host->data_status = SDMMC_INT_DRTO;
-+		set_bit(EVENT_DATA_ERROR, &host->pending_events);
-+		set_bit(EVENT_DATA_COMPLETE, &host->pending_events);
-+		tasklet_schedule(&host->tasklet);
-+		break;
-+	default:
-+		break;
-+	}
-+}
-+
- #ifdef CONFIG_OF
- static struct dw_mci_of_quirks {
- 	char *quirk;
-@@ -2661,6 +2697,9 @@ int dw_mci_probe(struct dw_mci *host)
- 
- 	spin_lock_init(&host->lock);
- 	INIT_LIST_HEAD(&host->queue);
-+	if (host->quirks & DW_MCI_QUIRK_BROKEN_DTO)
-+		setup_timer(&host->dto_timer,
-+			    dw_mci_dto_timer, (unsigned long)host);
- 
- 	/*
- 	 * Get the host data width - this assumes that HCON has been set with
-diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
-index 42b724e..ff9bd1e 100644
---- a/include/linux/mmc/dw_mmc.h
-+++ b/include/linux/mmc/dw_mmc.h
-@@ -98,6 +98,7 @@ struct mmc_data;
-  * @irq_flags: The flags to be passed to request_irq.
-  * @irq: The irq value to be passed to request_irq.
-  * @sdio_id0: Number of slot0 in the SDIO interrupt registers.
-+ * @dto_timer: Timer for broken data transfer over scheme.
-  *
-  * Locking
-  * =======
-@@ -196,6 +197,8 @@ struct dw_mci {
- 	int			irq;
- 
- 	int			sdio_id0;
-+
-+	struct timer_list	dto_timer;
- };
- 
- /* DMA ops for Internal/External DMAC interface */
-@@ -220,6 +223,8 @@ struct dw_mci_dma_ops {
- #define DW_MCI_QUIRK_BROKEN_CARD_DETECTION	BIT(3)
- /* No write protect */
- #define DW_MCI_QUIRK_NO_WRITE_PROTECT		BIT(4)
-+/* Timer for broken data transfer over scheme */
-+#define DW_MCI_QUIRK_BROKEN_DTO			BIT(5)
- 
- /* Slot level quirks */
- /* This slot has no write protect */
--- 
-1.8.3.2
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
