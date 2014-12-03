@@ -1,7 +1,7 @@
 From: gyungoh@gmail.com
-Subject: [PATCH v10 4/6] devicetree: backlight: Add new SKY81452 backlight binding
-Date: Wed,  3 Dec 2014 16:05:30 +0900
-Message-ID: <1417590332-4912-5-git-send-email-jack.yoo@skyworksinc.com>
+Subject: [PATCH v10 6/6] devicetree: i2c: Add SKY81452 to the Trivial Devices list
+Date: Wed,  3 Dec 2014 16:05:32 +0900
+Message-ID: <1417590332-4912-7-git-send-email-jack.yoo@skyworksinc.com>
 References: <1417590332-4912-1-git-send-email-jack.yoo@skyworksinc.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1417590332-4912-1-git-send-email-jack.yoo@skyworksinc.com>
@@ -13,7 +13,6 @@ List-Id: devicetree@vger.kernel.org
 From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
 
 Signed-off-by: Gyungoh Yoo <jack.yoo@skyworksinc.com>
-Acked-by: Bryan Wu <cooloney@gmail.com>
 ---
 Changes v10:
 Nothing
@@ -22,9 +21,7 @@ Changes v9:
 Nothing
 
 Changes v8:
-Renamed property names for backlight with vendor prefix
-Modified gpio-enable property to generic property for GPIO
-Made up the example for backlight DT
+Nothing
 
 Changes v7:
 Nothing
@@ -42,46 +39,22 @@ Changes v3:
 Nothing
 
 Changes v2:
-Added reg attribute for I2C slave address
+Add SKY81452 to the Trivial Devices list
 
- .../video/backlight/sky81452-backlight.txt         | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
+ Documentation/devicetree/bindings/i2c/trivial-devices.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt b/Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
-new file mode 100644
-index 0000000..8daebf5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
-@@ -0,0 +1,29 @@
-+SKY81452-backlight bindings
-+
-+Required properties:
-+- compatible		: Must be "skyworks,sky81452-backlight"
-+
-+Optional properties:
-+- name			: Name of backlight device. Default is 'lcd-backlight'.
-+- gpios			: GPIO to use to EN pin.
-+			See Documentation/devicetree/bindings/gpio/gpio.txt
-+- skyworks,en-channels	: Enable mask for current sink channel 1 to 6.
-+- skyworks,ignore-pwm	: Ignore both PWM input
-+- skyworks,dpwm-mode	: Enable DPWM dimming mode, otherwise Analog dimming.
-+- skyworks,phase-shift	: Enable phase shift mode
-+- skyworks,ovp-level	: Over-voltage protection level.
-+			Should be between 14 or 28V.
-+- skyworks,short-detection-threshold	: It should be one of 4, 5, 6 and 7V.
-+- skyworks,current-limit	: It should be 2300mA or 2750mA.
-+
-+Example:
-+
-+	backlight {
-+		compatible = "skyworks,sky81452-backlight";
-+		name = "pwm-backlight";
-+		skyworks,en-channels = <0x3f>;
-+		skyworks,ignore-pwm;
-+		skyworks,phase-shift;
-+		skyworks,ovp-level = <20>;
-+		skyworks,current-limit = <2300>;
-+	};
+diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+index fbde415..122fa1e 100644
+--- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
++++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+@@ -77,6 +77,7 @@ ramtron,24c64		i2c serial eeprom  (24cxx)
+ ricoh,rs5c372a		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
+ samsung,24ad0xd1	S524AD0XF1 (128K/256K-bit Serial EEPROM for Low Power)
+ sii,s35390a		2-wire CMOS real-time clock
++skyworks,sky81452	Skyworks SKY81452: Six-Channel White LED Driver with Touch Panel Bias Supply
+ st-micro,24c256		i2c serial eeprom  (24cxx)
+ stm,m41t00		Serial Access TIMEKEEPER
+ stm,m41t62		Serial real-time clock (RTC) with alarm
 -- 
 1.9.1
