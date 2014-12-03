@@ -1,44 +1,50 @@
-From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] backlight/lp855x: Add supply regulator to lp855x
-Date: Wed, 3 Dec 2014 09:28:19 -0800
-Message-ID: <CAOw6vbKWhonBV30HsQWebec4bE_ogoL6RkgfZrAeKq4+=VnpJQ@mail.gmail.com>
-References: <1417570752-23633-1-git-send-email-seanpaul@chromium.org>
- <1417570752-23633-2-git-send-email-seanpaul@chromium.org> <5204192.bzM5jPIgHv@wuerfel>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: Re: [PATCH 04/12] irqchip: nvic: support routable irq domain ops
+Date: Wed, 03 Dec 2014 18:32:22 +0100
+Message-ID: <2586ebb42daf66877335adaad4b4d3e6@agner.ch>
+References: <1417565531-4507-1-git-send-email-stefan@agner.ch>
+ <1417565531-4507-5-git-send-email-stefan@agner.ch>
+ <4576226.8jDcZiCptE@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5204192.bzM5jPIgHv@wuerfel>
+In-Reply-To: <4576226.8jDcZiCptE@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "Kim, Milo" <milo.kim-l0cyMroinI0@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-fbdev <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Aaron Durbin <adurbin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 3, 2014 at 6:11 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Tuesday 02 December 2014 17:39:12 Sean Paul wrote:
+On 2014-12-03 11:49, Arnd Bergmann wrote:
+> On Wednesday 03 December 2014 01:12:03 Stefan Agner wrote:
+>> +#ifdef CONFIG_ARM_NVIC
+>> +extern const struct irq_domain_ops *nvic_routable_irq_domain_ops;
+>> +static inline void __init register_routable_domain_ops
+>> +                                       (const struct irq_domain_ops *ops)
+>> +{
+>> +               nvic_routable_irq_domain_ops = ops;
+>> +}
+>> +#endif /* CONFIG_ARM_NVIC */
 >>
->>  .../devicetree/bindings/video/backlight/lp855x.txt     |  2 ++
->>  drivers/video/backlight/lp855x_bl.c                    | 18 ++++++++++++++++++
->>  include/linux/platform_data/lp855x.h                   |  2 ++
->>  3 files changed, 22 insertions(+)
->
-> While your two patches are both correct (and applied already), I took
-> a look at the platform_data header and noticed that all users of this
-> file have been converted to DT a while ago, so it would be nice to clean
-> it up by integrating the linux/platform_data/lp855x.h header file into the
-> drivers/video/backlight/lp855x_bl.c itself.
->
-> You can then merge struct lp855x_platform_data into lp855x to avoid the
-> extra dynamic allocation and remove all the 'pdata' references in the
-> driver.
->
+> 
+> As you mentioned, this conflicts with the gic specific declaration.
+> Why not remove the #ifdef here and rename the function to
+> nvic_register_routable_domain_ops() ?
+> 
+> If that doesn't work, I guess we need something more generic
+> and move the routable_irq_domain_ops to some common location.
+> 
 
-Hi Arnd,
-Thanks for the suggestion. Indeed, that will be much cleaner, I'll
-send a follow-up patch.
+This would move the ifdef to the MSCM driver code. I thought of having a
+generic function to call, no matter what base IRQ chip is used.
 
-Sean
+Anyway, as tglx suggested in patch 3/12, I will try to use the IRQ
+domain hierarchy stuff...
 
->         Arnd
+--
+Stefan
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
