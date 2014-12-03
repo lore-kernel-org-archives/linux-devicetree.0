@@ -1,69 +1,78 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v3 5/5] tty/serial: Add Spreadtrum sc9836-uart driver
- support
-Date: Wed, 3 Dec 2014 10:11:09 +0000
-Message-ID: <20141203101109.GB11285@n2100.arm.linux.org.uk>
-References: <1416917818-10506-1-git-send-email-chunyan.zhang@spreadtrum.com>
- <54761BFC.4020705@ti.com>
- <CAAfSe-u+g0mYGi9Adrd+YwwZ=q0-s79yCg_paB1UAVqFoufXEA@mail.gmail.com>
- <3212776.kDbe7yX4eX@wuerfel>
+From: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v4 0/6] powerpc/mpc85xx: Add FSL QorIQ DPAA B/QMan support to device tree(s)
+Date: Wed, 3 Dec 2014 04:02:38 -0600
+Message-ID: <1417600964-24647-1-git-send-email-Emilian.Medve@Freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <3212776.kDbe7yX4eX@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Lyra Zhang <zhang.lyra@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "gnomes@lxorguk.ukuu.org.uk" <gnomes@lxorguk.ukuu.org.uk>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Mark Brown <broonie@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "andrew@lunn.ch" <andrew@lunn.ch>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, "jslaby@suse.cz" <jslaby@suse.cz>, Ramkumar Ramachandra <artagnon@gmail.com>, "lanqing.liu@spreadtrum.com" <lanqing.liu@spreadtrum.com>, Wei Qiao =?utf-8?B?KOS5lOS8nyk=?= <wei.qiao@spreadtrum.com>, Jonathan Corbet <corbet@lwn.net>, Chunyan Zhang <chunyan.zhang@spreadtrum.com>, "zhizhou.zhang" <zhizhou.zhang@spreadtrum.com>, "geng.ren@spreadtrum.com" <geng.ren@spreadtrum.com>, Murali Karicheri <m-karicheri2@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradea>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: scottwood-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 03, 2014 at 10:50:17AM +0100, Arnd Bergmann wrote:
-> On Wednesday 03 December 2014 17:17:13 Lyra Zhang wrote:
->=20
-> > 2014-11-27 2:29 GMT+08:00 Murali Karicheri <m-karicheri2@ti.com>:
-> > > How about sorting this includes? asm/irq.h go first followed linu=
-x/ in alphabatical order?
-> >
-> > There are a few compile warnings if I moved asm/irq.h to the top of
-> > all included files.
->=20
-> The order that Murali meant is
->=20
-> - first all linux/*.h headers, sorted alphabetically
-> - then all asm/*.h headers, again sorted alphabetically
->=20
-> This is the recommended style in general.
->=20
-> > Warning details are below:
-> >=20
-> > In file included from drivers/tty/serial/sprd_serial.c:14:0:
-> > ./arch/arm64/include/asm/irq.h:6:39: warning: =E2=80=98struct pt_re=
-gs=E2=80=99
-> > declared inside parameter list [enabled by default]
-> >  extern void (*handle_arch_irq)(struct pt_regs *);
-> >                                        ^
-> > ./arch/arm64/include/asm/irq.h:6:39: warning: its scope is only thi=
-s
-> > definition or declaration, which is probably not what you want
-> > [enabled by default]
-> > ./arch/arm64/include/asm/irq.h:8:54: warning: =E2=80=98struct pt_re=
-gs=E2=80=99
-> > declared inside parameter list [enabled by default]
-> >  extern void set_handle_irq(void (*handle_irq)(struct pt_regs *));
-> >=20
->=20
-> I would consider this a (minor) bug in asm/irq.h. If you don't mind,
-> please submit a patch to add a line with 'struct pt_regs;' to
-> asm/irq.h.
+v4:	Add binding for the portals phandle
+	Fix portals phandle
 
-A better question is: why is a modern driver using asm/irq.h in the
-first place.
+v3:	Remove no-map
+	Adjust alloc-ranges for the 32-/36-bit SoC(s)
 
-We used to include that file when platforms defined IRQ numbers
-statically, but modern platforms don't do that, so it shouldn't be
-required anymore.
+v2:	Remove some reserved-memory properties
+	Split the patchset per IP block
+	Refined patch assignment
 
---=20
-=46TTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
-according to speedtest.net.
+Emil Medve (2):
+  dt/bindings: bman: Add phandle to the portals
+  dt/bindings: qman: Add phandle to the portals
+
+Kumar Gala (4):
+  powerpc/mpc85xx: Create dts components for the FSL QorIQ DPAA BMan
+  powerpc/mpc85xx: Create dts components for the FSL QorIQ DPAA QMan
+  powerpc/mpc85xx: Add FSL QorIQ DPAA BMan support to device tree(s)
+  powerpc/mpc85xx: Add FSL QorIQ DPAA QMan support to device tree(s)
+
+ Documentation/devicetree/bindings/soc/fsl/bman.txt |  10 +
+ Documentation/devicetree/bindings/soc/fsl/qman.txt |  10 +
+ arch/powerpc/boot/dts/b4qds.dtsi                   |  35 +-
+ arch/powerpc/boot/dts/fsl/b4860si-post.dtsi        | 129 ++++-
+ arch/powerpc/boot/dts/fsl/b4si-post.dtsi           | 180 ++++++-
+ arch/powerpc/boot/dts/fsl/p1023si-post.dtsi        |  61 ++-
+ arch/powerpc/boot/dts/fsl/p2041si-post.dtsi        |   9 +-
+ arch/powerpc/boot/dts/fsl/p3041si-post.dtsi        |   9 +-
+ arch/powerpc/boot/dts/fsl/p4080si-post.dtsi        |   9 +-
+ arch/powerpc/boot/dts/fsl/p5020si-post.dtsi        |   9 +-
+ arch/powerpc/boot/dts/fsl/p5040si-post.dtsi        |   9 +-
+ arch/powerpc/boot/dts/fsl/qoriq-bman1-portals.dtsi |  90 ++++
+ arch/powerpc/boot/dts/fsl/qoriq-bman1.dtsi         |  41 ++
+ arch/powerpc/boot/dts/fsl/qoriq-qman1-portals.dtsi | 101 ++++
+ arch/powerpc/boot/dts/fsl/qoriq-qman1.dtsi         |  41 ++
+ arch/powerpc/boot/dts/fsl/qoriq-qman3.dtsi         |  41 ++
+ arch/powerpc/boot/dts/fsl/t1040si-post.dtsi        | 128 ++++-
+ arch/powerpc/boot/dts/fsl/t2081si-post.dtsi        | 216 +++++++-
+ arch/powerpc/boot/dts/fsl/t4240si-post.dtsi        | 568 ++++++++++++++++++++-
+ arch/powerpc/boot/dts/kmcoge4.dts                  |  33 ++
+ arch/powerpc/boot/dts/oca4080.dts                  |  33 ++
+ arch/powerpc/boot/dts/p1023rdb.dts                 |  36 +-
+ arch/powerpc/boot/dts/p2041rdb.dts                 |  35 +-
+ arch/powerpc/boot/dts/p3041ds.dts                  |  35 +-
+ arch/powerpc/boot/dts/p4080ds.dts                  |  35 +-
+ arch/powerpc/boot/dts/p5020ds.dts                  |  35 +-
+ arch/powerpc/boot/dts/p5040ds.dts                  |  35 +-
+ arch/powerpc/boot/dts/t104xqds.dtsi                |  35 +-
+ arch/powerpc/boot/dts/t104xrdb.dtsi                |  32 ++
+ arch/powerpc/boot/dts/t208xqds.dtsi                |  35 +-
+ arch/powerpc/boot/dts/t208xrdb.dtsi                |  33 ++
+ arch/powerpc/boot/dts/t4240qds.dts                 |  35 +-
+ arch/powerpc/boot/dts/t4240rdb.dts                 |  33 ++
+ 33 files changed, 2154 insertions(+), 22 deletions(-)
+ create mode 100644 arch/powerpc/boot/dts/fsl/qoriq-bman1-portals.dtsi
+ create mode 100644 arch/powerpc/boot/dts/fsl/qoriq-bman1.dtsi
+ create mode 100644 arch/powerpc/boot/dts/fsl/qoriq-qman1-portals.dtsi
+ create mode 100644 arch/powerpc/boot/dts/fsl/qoriq-qman1.dtsi
+ create mode 100644 arch/powerpc/boot/dts/fsl/qoriq-qman3.dtsi
+
+-- 
+2.2.0
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
