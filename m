@@ -1,67 +1,51 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH] Documentation: bindings: net: DPAA corenet binding
- document
-Date: Wed, 3 Dec 2014 16:01:28 -0600
-Message-ID: <1417644088.15957.235.camel@freescale.com>
-References: <1417169426-11823-1-git-send-email-madalin.bucur@freescale.com>
-	 <1417495189.15957.209.camel@freescale.com>
-	 <BL2PR03MB545CC342CA6A408D2FD5CF6E67A0@BL2PR03MB545.namprd03.prod.outlook.com>
-	 <1417561420.15957.221.camel@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1417561420.15957.221.camel@freescale.com>
-Sender: netdev-owner@vger.kernel.org
-To: Bucur Madalin-Cristian-B32716 <madalin.bucur@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Medve Emilian-EMMEDVE1 <Emilian.Medve@freescale.com>, Liberman Igal-B31950 <Igal.Liberman@freescale.com>, "galak@codeaurora.org" <galak@codeaurora.org>, Shaohui Xie <Shaohui.Xie@freescale.com>
+From: vishnupatekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/3] ARM:sun7i:ps2 added support for A20 PS/2 host controller
+Date: Thu,  4 Dec 2014 04:09:21 +0530
+Message-ID: <1417646361-27610-1-git-send-email-VishnuPatekar0510@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vishnupatekar <VishnuPatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-12-02 at 17:03 -0600, Scott Wood wrote:
-> On Tue, 2014-12-02 at 06:12 -0600, Bucur Madalin-Cristian-B32716 wrote:
-> > > -----Original Message-----
-> > > From: Wood Scott-B07421
-> > > Sent: Tuesday, December 02, 2014 6:40 AM
-> > >
-> > > No need for the <SoC> part.  As we previously discussed, the only
-> > > purpose of this node is backwards compatibility with the U-Boot MAC
-> > > address fixup -- if U-Boot doesn't look for the <SoC> version, then
-> > > don't complicate things.
-> > > 
-> > > Though, I can't find where U-Boot references this node.  Are you sure
-> > > it's not using the ethernet%d aliases like everything else, in which
-> > > case why do we need this node at all?
-> > > 
-> > > -Scott
-> > > 
-> > 
-> > The initial (Freescale SDK) binding document contained those compatibles,
-> > not sure what the initial intent was for the <SoC> variants.
-> > 
-> > The "fsl,dpaa" node is of interest to the DPAA Ethernet because it is
-> > the parent of the "fsl,dpa-ethernet" nodes.
-> 
-> I'm not interested in what the SDK binding says, or what the SDK kernel
-> does.  I'm interested in whether there's a U-Boot compatibility issue,
-> as was previously alleged.  If there isn't, then there's no need for
-> fsl,dpaa *or* fsl,dpa-ethernet.
+This series adds support for Allwinner's A20 PS2 host controller driver.
+I've done basic testing on A20 Lime 2 Board.
+This needs to be further tested.
 
-OK, I found the U-Boot fixup in question.  It's not for MAC addresses,
-but for marking disabled ports as disabled.  It marks the dpa-ethernet
-node as disabled, based on it having an fsl,fman-mac property that
-points to the MAC node.
+Patch 0 Summary: Allwinner A20 PS2 is dual role controller(PS2 host and PS2 device). These modifications are for PS2 host controller.
+IBM compliant IBM PS2 and AT-compatible keyboard and mouse can be connected.
 
-U-Boot also disables the MAC node itself, so it doesn't matter if it
-doesn't find fsl,fman-mac -- except for the special case of fm1-dtsec1,
-which is always kept enabled because it's used for MDIO for all ports.
+Patch 1 device tree bindings.
 
-Based on http://patchwork.ozlabs.org/patch/410770/ there's a separate
-node for mdio, so why can't we mark the MAC disabled?  Assuming that
-there's no real problem in marking the fm1-dtsec1 MAC node disabled, we
-can consider this to be a bug in U-Boot which can be worked around by
-having the fm1-dtsec1 mac node have an fsl,fman-mac property that points
-to itself.  This property would only go on the fm1-dtsec1 mac node and
-would only be in device trees for SoCs that are supported by U-Boots old
-enough to not have had the bug be fixed.
+Patch 2 adds support for sun7i ps2 driver. 
 
--Scott
+Patch 3 device tree support for PS2 controller.
+ 1) Added ps2 nodes to the dtsi 
+ 2) Added ps2 pinmux to the dtsi 
+ 3) Added ps2 nodes to the lime2 dts file.
+
+vishnupatekar (3):
+  dts-binding: input: sun7ips2: Device tree bindings for Allwinner
+    sun7i A20 PS2 host controller
+  drivers:input:ps2 Added sunxi A20 ps2 driver, changed makefile and
+    Kconfig
+  ARM:dts:sun7i:ps2 added nodes for Sun7i A20 PS2 controller.     
+    added ps2 nodes in lime2 board dts.
+
+ .../bindings/input/allwinner,sun7i-a20-ps2.txt     |   22 ++
+ arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts    |   10 +
+ arch/arm/boot/dts/sun7i-a20.dtsi                   |   30 +-
+ drivers/input/serio/Kconfig                        |    9 +
+ drivers/input/serio/Makefile                       |    1 +
+ drivers/input/serio/sunxi-ps2.c                    |  305 ++++++++++++++++++++
+ 6 files changed, 376 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/input/allwinner,sun7i-a20-ps2.txt
+ create mode 100644 drivers/input/serio/sunxi-ps2.c
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
