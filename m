@@ -1,111 +1,78 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 05/12] irqchip: nvic: increase number of external
- interrupts to 112
-Date: Wed, 3 Dec 2014 09:12:45 +0100
-Message-ID: <20141203081245.GH2129@pengutronix.de>
-References: <1417565531-4507-1-git-send-email-stefan@agner.ch>
- <1417565531-4507-6-git-send-email-stefan@agner.ch>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH RFC v2 08/12] soc: samsung: pm_domain: Add support for
+ parent power domain
+Date: Wed, 03 Dec 2014 09:36:27 +0100
+Message-ID: <547ECB8B.3040905@samsung.com>
+References: <1416833572-6880-1-git-send-email-amit.daniel@samsung.com>
+ <1416834256-11225-1-git-send-email-amit.daniel@samsung.com>
+ <1416834256-11225-8-git-send-email-amit.daniel@samsung.com>
+ <CAPDyKFoBnViXQF=wDYp0x4gaOO4ht3a8KBeY6=k6_Zkkav28pQ@mail.gmail.com>
+ <CADGdYn4Vi2wV1y3Y0cTbPL0cFR2EEV7jT=82fHNYu+=xwZ7mBA@mail.gmail.com>
+ <CAMuHMdX+rcmUM+_4c72b16Zs_c5KMhO3bYSH5-AUp087cwGdeA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1417565531-4507-6-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAMuHMdX+rcmUM+_4c72b16Zs_c5KMhO3bYSH5-AUp087cwGdeA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, amit daniel kachhap <amit.daniel@samsung.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Kevin Hilman <khilman@kernel.org>, Pankaj Dubey <pankaj.dubey@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hallo Stefan,
+Hello,
 
-On Wed, Dec 03, 2014 at 01:12:04AM +0100, Stefan Agner wrote:
-> So far only vectors for up to 48 external interrupts have been
-> registred in the vector table. Increase the amount of registred
-s/registred/registered/
+On 2014-11-25 10:19, Geert Uytterhoeven wrote:
+> On Tue, Nov 25, 2014 at 9:57 AM, amit daniel kachhap
+> <amit.daniel@samsung.com>  wrote:
+>>>> diff --git a/Documentation/devicetree/bindings/arm/exynos/power_domain.txt b/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
+>>>> index 00ebda1..0160bdc 100644
+>>>> --- a/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
+>>>> +++ b/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
+>>>> @@ -24,6 +24,7 @@ Optional Properties:
+>>>>          - pclkN, clkN: Pairs of parent of input clock and input clock to the
+>>>>                  devices in this power domain. Maximum of 4 pairs (N = 0 to 3)
+>>>>                  are supported currently.
+>>>> +- parents: phandle of parent power domains.
+> Why not using just "power-domains = <&pd_top>"?
+> This is consistent with how clocks refer to their parent clocks.
 
-> external vectors to 112. Also, add a warning in case NVIC reports
-> support for more interrupts than 128.
-s/interrupts than 128/than 128 interrupts/ (not sure about this one)
+I agree. The only question is weather exynos dts should keep using 
+samsung,power-domain
+property, or switch to generic 'power-domains' approach. I assume that 
+exynos-pm driver
+should support both.
 
-> Note: the vector table must align to the number of entires in the
-s/entires/entries/
+>>>>   Node of a device using power domains must have a samsung,power-domain property
+>>>>   defined with a phandle to respective power domain.
+>>>> @@ -48,6 +49,7 @@ Example:
+>>>>          mfc_pd: power-domain@10044060 {
+>>>>                  compatible = "samsung,exynos4210-pd", "samsung,exynos7-pd-mfc";
+>>>>                  reg = <0x10044060 0x20>;
+>>>> +               parents = <&pd_top>;
+>>>>                  #power-domain-cells = <0>;
+>>>>          };
+>>> This seems like a good and generic approach to describe that a PM
+>>> domain could have a parent. I would suggest to rename it, such it
+>>> reflects its a PM domain binding though.
+>> I am not sure if this is generic. I guess PD's represented like below
+>> are more generic.
+>> PD1 {
+>>          PD2 {
+>>                  PD3 {
+>>                  };
+>>          };
+>> };
+> Such a representation is not always possible.
+> If you have one power-controller for a hierarchy of PM domains, you can
+> use it.
+> If you have multiple power-controllers, the power controller nodes are at the
+> same level in DT, so you'll have to use "power-domains" properties to link
+> them together.
 
-Maybe point out that "X external interrupts" corresponds to "X + 16
-vectors".
-
-> vector table, hence increase the alignment to 0x200.
->=20
-> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-> ---
->  arch/arm/kernel/entry-v7m.S | 6 +++---
->  drivers/irqchip/irq-nvic.c  | 2 ++
->  2 files changed, 5 insertions(+), 3 deletions(-)
->=20
-> diff --git a/arch/arm/kernel/entry-v7m.S b/arch/arm/kernel/entry-v7m.=
-S
-> index 2260f18..754a1fa 100644
-> --- a/arch/arm/kernel/entry-v7m.S
-> +++ b/arch/arm/kernel/entry-v7m.S
-> @@ -115,7 +115,7 @@ ENTRY(__switch_to)
->  ENDPROC(__switch_to)
-> =20
->  	.data
-> -	.align	8
-> +	.align	9
->  /*
->   * Vector table (64 words =3D> 256 bytes natural alignment)
-This comment needs fixing
-
->   */
-> @@ -136,6 +136,6 @@ ENTRY(vector_table)
->  	.long	__invalid_entry		@ 13 - Reserved
->  	.long	__pendsv_entry		@ 14 - PendSV
->  	.long	__invalid_entry		@ 15 - SysTick
-> -	.rept	64 - 16
-> -	.long	__irq_entry		@ 16..64 - External Interrupts
-> +	.rept	128 - 16
-> +	.long	__irq_entry		@ 16..128 - External Interrupts
->  	.endr
-> diff --git a/drivers/irqchip/irq-nvic.c b/drivers/irqchip/irq-nvic.c
-> index dbfb5be..40f62a9 100644
-> --- a/drivers/irqchip/irq-nvic.c
-> +++ b/drivers/irqchip/irq-nvic.c
-> @@ -137,6 +137,8 @@ static int __init nvic_of_init(struct device_node=
- *node,
->  	if (irqs > NVIC_MAX_IRQ)
->  		irqs =3D NVIC_MAX_IRQ;
-> =20
-> +	WARN(irqs > 128, "vector table in entry-v7m.S configured for 128 ir=
-qs");
-> +
-That's pointless. Better do:
-
-	if (WARN(irqs > 128, "vector table in entry-v7m.S configured for 128 i=
-rqs"))
-		irqs =3D 128;
-
-Hmm, I wonder if that is correct. The first 16 exceptions are the syste=
-m
-exception that will not be registered be drivers and so exception 16
-(i.e. the first regular irq) is reported as hwirq 0. So I think we can
-(in a separate patch) pass irqs - 16 to irq_domain_add_linear. Didn't
-test that though.
-
->  	nvic_irq_domain =3D
->  		irq_domain_add_linear(node, irqs, &nvic_irq_domain_ops, NULL);
->  	if (!nvic_irq_domain) {
+I agree. I will send updated patch for this purpose for existing exynos4 
+power domain driver.
 
 Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
