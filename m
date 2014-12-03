@@ -1,93 +1,75 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH 12/12] ARM: vf610m4: add defconfig for Linux on Vybrids Cortex-M4
-Date: Wed,  3 Dec 2014 01:12:11 +0100
-Message-ID: <1417565531-4507-13-git-send-email-stefan@agner.ch>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH 05/12] irqchip: nvic: increase number of external interrupts
+ to 112
+Date: Wed,  3 Dec 2014 01:12:04 +0100
+Message-ID: <1417565531-4507-6-git-send-email-stefan@agner.ch>
 References: <1417565531-4507-1-git-send-email-stefan@agner.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417565531-4507-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1417565531-4507-1-git-send-email-stefan@agner.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: devicetree@vger.kernel.org, Stefan Agner <stefan@agner.ch>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add defconfig for Linux on Vybrid (vf610) on the secondary Cortex-
-M4 CPU. The use of a XIP image has been tested which needs to be
-loaded (e.g. using the custom m4boot loader) to the end of the
-available RAM at address 0x8f000000. The Cortex-M4 has a code-alias
-which makes sure that the instructions get fetched through the code
-bus (alias starts at 0x00800000 => 0x80800000 in system address).
-Hence, to get optimal performance, use 0x0f000000 as XIP_PHYS_ADDR.
-This address is additionally shifted by the length of the minimal
-loader which is inserted by m4boot. Currently, this offset is 0x80.
+So far only vectors for up to 48 external interrupts have been
+registred in the vector table. Increase the amount of registred
+external vectors to 112. Also, add a warning in case NVIC reports
+support for more interrupts than 128.
 
-The standard DRAM base address is configured to 0x8C000000, which
-gives the Cortex-M4 48MiB of RAM.
+Note: the vector table must align to the number of entires in the
+vector table, hence increase the alignment to 0x200.
 
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- arch/arm/configs/vf610m4_defconfig | 49 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
- create mode 100644 arch/arm/configs/vf610m4_defconfig
+ arch/arm/kernel/entry-v7m.S | 6 +++---
+ drivers/irqchip/irq-nvic.c  | 2 ++
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/configs/vf610m4_defconfig b/arch/arm/configs/vf610m4_defconfig
-new file mode 100644
-index 0000000..121908b
---- /dev/null
-+++ b/arch/arm/configs/vf610m4_defconfig
-@@ -0,0 +1,49 @@
-+CONFIG_NAMESPACES=y
-+CONFIG_BLK_DEV_INITRD=y
-+CONFIG_RD_LZO=y
-+# CONFIG_KALLSYMS is not set
-+CONFIG_EMBEDDED=y
-+# CONFIG_MMU is not set
-+CONFIG_ARCH_MXCM4=y
-+CONFIG_SOC_VF610M4=y
-+# CONFIG_KUSER_HELPERS is not set
-+CONFIG_SET_MEM_PARAM=y
-+CONFIG_DRAM_BASE=0x8c000000
-+CONFIG_FLASH_MEM_BASE=0x8f000000
-+CONFIG_FLASH_SIZE=0x01000000
-+CONFIG_CMDLINE="console=/dev/ttyLP0 earlyprintk"
-+CONFIG_XIP_KERNEL=y
-+CONFIG_XIP_PHYS_ADDR=0x0f000080
-+CONFIG_BINFMT_FLAT=y
-+CONFIG_BINFMT_ZFLAT=y
-+CONFIG_BINFMT_SHARED_FLAT=y
-+# CONFIG_SUSPEND is not set
-+# CONFIG_UEVENT_HELPER is not set
-+# CONFIG_STANDALONE is not set
-+# CONFIG_PREVENT_FIRMWARE_BUILD is not set
-+# CONFIG_FIRMWARE_IN_KERNEL is not set
-+CONFIG_BLK_DEV_RAM=y
-+CONFIG_BLK_DEV_RAM_COUNT=4
-+CONFIG_BLK_DEV_XIP=y
-+CONFIG_SRAM=y
-+# CONFIG_INPUT_MOUSEDEV is not set
-+# CONFIG_KEYBOARD_ATKBD is not set
-+CONFIG_KEYBOARD_GPIO=y
-+CONFIG_KEYBOARD_GPIO_POLLED=y
-+# CONFIG_INPUT_MOUSE is not set
-+# CONFIG_SERIO is not set
-+CONFIG_SERIAL_FSL_LPUART=y
-+CONFIG_SERIAL_FSL_LPUART_CONSOLE=y
-+# CONFIG_HW_RANDOM is not set
-+# CONFIG_HID is not set
-+# CONFIG_USB_SUPPORT is not set
-+CONFIG_MMC=y
-+CONFIG_MMC_SDHCI=y
-+CONFIG_MMC_SDHCI_PLTFM=y
-+CONFIG_MMC_SDHCI_ESDHC_IMX=y
-+# CONFIG_IOMMU_SUPPORT is not set
-+CONFIG_EXT4_FS=y
-+# CONFIG_MISC_FILESYSTEMS is not set
-+CONFIG_DEBUG_MEMORY_INIT=y
-+# CONFIG_FTRACE is not set
-+# CONFIG_CRYPTO_HW is not set
+diff --git a/arch/arm/kernel/entry-v7m.S b/arch/arm/kernel/entry-v7m.S
+index 2260f18..754a1fa 100644
+--- a/arch/arm/kernel/entry-v7m.S
++++ b/arch/arm/kernel/entry-v7m.S
+@@ -115,7 +115,7 @@ ENTRY(__switch_to)
+ ENDPROC(__switch_to)
+ 
+ 	.data
+-	.align	8
++	.align	9
+ /*
+  * Vector table (64 words => 256 bytes natural alignment)
+  */
+@@ -136,6 +136,6 @@ ENTRY(vector_table)
+ 	.long	__invalid_entry		@ 13 - Reserved
+ 	.long	__pendsv_entry		@ 14 - PendSV
+ 	.long	__invalid_entry		@ 15 - SysTick
+-	.rept	64 - 16
+-	.long	__irq_entry		@ 16..64 - External Interrupts
++	.rept	128 - 16
++	.long	__irq_entry		@ 16..128 - External Interrupts
+ 	.endr
+diff --git a/drivers/irqchip/irq-nvic.c b/drivers/irqchip/irq-nvic.c
+index dbfb5be..40f62a9 100644
+--- a/drivers/irqchip/irq-nvic.c
++++ b/drivers/irqchip/irq-nvic.c
+@@ -137,6 +137,8 @@ static int __init nvic_of_init(struct device_node *node,
+ 	if (irqs > NVIC_MAX_IRQ)
+ 		irqs = NVIC_MAX_IRQ;
+ 
++	WARN(irqs > 128, "vector table in entry-v7m.S configured for 128 irqs");
++
+ 	nvic_irq_domain =
+ 		irq_domain_add_linear(node, irqs, &nvic_irq_domain_ops, NULL);
+ 	if (!nvic_irq_domain) {
 -- 
 2.1.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
