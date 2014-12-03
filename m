@@ -1,62 +1,62 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v16 05/12] drm: imx: imx-hdmi: move imx-hdmi to
- bridge/dw_hdmi
-Date: Wed, 3 Dec 2014 15:45:03 +0000
-Message-ID: <20141203154503.GD11285@n2100.arm.linux.org.uk>
-References: <1417620408-30354-1-git-send-email-andy.yan@rock-chips.com>
- <1417620732-30593-1-git-send-email-andy.yan@rock-chips.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: [GIT PULL] devicetree bug fix for v3.18
+Date: Wed, 3 Dec 2014 15:46:34 +0000
+Message-ID: <CACxGe6uENpFc7ARarxo3_AfrzejVsyqm0WRN4ovJk5M4NfZjJw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <1417620732-30593-1-git-send-email-andy.yan@rock-chips.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Pawel Moll <pawel.moll@arm.com>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, mark.yao@rock-chips.com, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, vladimir_zapolskiy@mentor.com, Luc
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ian.campbell@citrix.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 03, 2014 at 11:32:12PM +0800, Andy Yan wrote:
-> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-> index 884923f..26162ef 100644
-> --- a/drivers/gpu/drm/bridge/Kconfig
-> +++ b/drivers/gpu/drm/bridge/Kconfig
-> @@ -3,3 +3,8 @@ config DRM_PTN3460
->  	depends on DRM
->  	select DRM_KMS_HELPER
->  	---help---
-> +
-> +config DRM_DW_HDMI
-> +	bool "Synopsys DesignWare High-Definition Multimedia Interface"
-> +	depends on DRM
-> +	select DRM_KMS_HELPER
-...
-> diff --git a/drivers/gpu/drm/imx/Kconfig b/drivers/gpu/drm/imx/Kconfig
-> index 82fb758..7070077 100644
-> --- a/drivers/gpu/drm/imx/Kconfig
-> +++ b/drivers/gpu/drm/imx/Kconfig
-> @@ -48,6 +48,7 @@ config DRM_IMX_IPUV3
->  
->  config DRM_IMX_HDMI
->  	tristate "Freescale i.MX DRM HDMI"
-> +	select DRM_DW_HDMI
->  	depends on DRM_IMX
->  	help
->  	  Choose this if you want to use HDMI on i.MX6.
+Hi Linus,
 
-I'd recommend that if you want to select DRM_DW_HDMI, then don't give
-DRM_DW_HDMI a prompt message.  I assume you're going to do something
-similar with your Rockchip driver too - in which case DRM_DW_HDMI is
-really about building a library module.
+One more bug fix for v3.18. I debated whether or not to send you this
+merge request because we're at such a late rc. The bug isn't critical
+in that there is only one system known to be affected and the patch is
+easy to backport. The codepath is used by pretty much every DT based
+system, so there is risk a of regression (it /should/ be safe, but
+I've been bitten by stuff that should be safe before). I've had it in
+linux-next for a week and haven't received any complaints.
 
--- 
-FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
-according to speedtest.net.
+I think it probably should just be merged right away rather than
+waiting for the merge window and backporting. It does fix a real bug
+and the code is theoretically safer after the change. I can't think of
+any situation where it would be dangerous to reserve the DT memory an
+extra time. However, I won't be upset if you feel differently and
+decide not to pull. If that's the case then I'll add it to my queue
+for v3.19.
+
+Cheers,
+g.
+
+The following changes since commit 5d01410fe4d92081f349b013a2e7a95429e4f2c9:
+
+  Linux 3.18-rc6 (2014-11-23 15:25:20 -0800)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/glikely/linux
+tags/devicetree-for-linus
+
+for you to fetch changes up to 094cb98179f19b75acf9ff471daabf3948ce98e6:
+
+  of/fdt: memblock_reserve /memreserve/ regions in the case of partial
+overlap (2014-11-26 12:35:52 +0000)
+
+----------------------------------------------------------------
+Devicetree bugfix for v3.18
+
+Single bugfix for boot failure seen in the wild. The memory reserve code
+tries to be clever about reserving the FDT, but it should just go ahead
+and reserve it unconditionally to avoid the problem of partial overlap
+described in the patch.
+
+----------------------------------------------------------------
+Ian Campbell (1):
+      of/fdt: memblock_reserve /memreserve/ regions in the case of
+partial overlap
+
+ drivers/of/fdt.c | 2 --
+ 1 file changed, 2 deletions(-)
