@@ -1,69 +1,74 @@
-From: Lyra Zhang <zhang.lyra@gmail.com>
-Subject: Re: [PATCH v3 5/5] tty/serial: Add Spreadtrum sc9836-uart driver support
-Date: Wed, 3 Dec 2014 20:15:48 +0800
-Message-ID: <CAAfSe-smHeyRyaPYD7NsT8WNRhu+5uofc-oZ9rKX9Mkc2WV7Bg@mail.gmail.com>
-References: <1416917818-10506-1-git-send-email-chunyan.zhang@spreadtrum.com>
-	<54761BFC.4020705@ti.com>
-	<CAAfSe-u+g0mYGi9Adrd+YwwZ=q0-s79yCg_paB1UAVqFoufXEA@mail.gmail.com>
-	<3212776.kDbe7yX4eX@wuerfel>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v3 2/3] Documentation: DT: Add documentation for ti,opa362
+ bindings
+Date: Wed, 3 Dec 2014 14:18:25 +0200
+Message-ID: <547EFF91.7040405@ti.com>
+References: <1417352867-7436-1-git-send-email-marek@goldelico.com> <1417352867-7436-3-git-send-email-marek@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="FGD71uUJv2Mt07HihEmfgkv9rcNFNp7eh"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3212776.kDbe7yX4eX@wuerfel>
+In-Reply-To: <1417352867-7436-3-git-send-email-marek@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Murali Karicheri <m-karicheri2@ti.com>, Chunyan Zhang <chunyan.zhang@spreadtrum.com>, Grant Likely <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "jslaby@suse.cz" <jslaby@suse.cz>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ramkumar Ramachandra <artagnon@gmail.com>, "rrichter@cavium.com" <rrichter@cavium.com>, Will Deacon <will.deacon@arm.com>, "gnomes@lxorguk.ukuu.org.uk" <gnomes@lxorguk.ukuu.org.uk>, Jonathan Corbet <corbet@lwn.net>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Mark Brown <broonie@kernel.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, "florian.vaussard@epfl.ch" <florian.vaussard@epfl.ch>
+To: Marek Belisko <marek@goldelico.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, tony@atomide.com, linux@arm.linux.org.uk, plagnioj@jcrosoft.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, hns@goldelico.com
 List-Id: devicetree@vger.kernel.org
 
-2014-12-03 17:50 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
-> On Wednesday 03 December 2014 17:17:13 Lyra Zhang wrote:
->
->> 2014-11-27 2:29 GMT+08:00 Murali Karicheri <m-karicheri2@ti.com>:
->> > How about sorting this includes? asm/irq.h go first followed linux=
-/ in alphabatical order?
->>
->> There are a few compile warnings if I moved asm/irq.h to the top of
->> all included files.
->
-> The order that Murali meant is
->
-> - first all linux/*.h headers, sorted alphabetically
-> - then all asm/*.h headers, again sorted alphabetically
->
-> This is the recommended style in general.
->
->> Warning details are below:
->>
->> In file included from drivers/tty/serial/sprd_serial.c:14:0:
->> ./arch/arm64/include/asm/irq.h:6:39: warning: =E2=80=98struct pt_reg=
-s=E2=80=99
->> declared inside parameter list [enabled by default]
->>  extern void (*handle_arch_irq)(struct pt_regs *);
->>                                        ^
->> ./arch/arm64/include/asm/irq.h:6:39: warning: its scope is only this
->> definition or declaration, which is probably not what you want
->> [enabled by default]
->> ./arch/arm64/include/asm/irq.h:8:54: warning: =E2=80=98struct pt_reg=
-s=E2=80=99
->> declared inside parameter list [enabled by default]
->>  extern void set_handle_irq(void (*handle_irq)(struct pt_regs *));
->>
->
-> I would consider this a (minor) bug in asm/irq.h. If you don't mind,
-> please submit a patch to add a line with 'struct pt_regs;' to
-> asm/irq.h.
+--FGD71uUJv2Mt07HihEmfgkv9rcNFNp7eh
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-OK, I would like to send another separate patch for this.
+On 30/11/14 15:07, Marek Belisko wrote:
+> Signed-off-by: Marek Belisko <marek@goldelico.com>
+> ---
+>  .../devicetree/bindings/video/ti,opa362.txt        | 38 ++++++++++++++=
+++++++++
+>  1 file changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/video/ti,opa362.t=
+xt
+>=20
+> diff --git a/Documentation/devicetree/bindings/video/ti,opa362.txt b/Do=
+cumentation/devicetree/bindings/video/ti,opa362.txt
+> new file mode 100644
+> index 0000000..4747ef9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/video/ti,opa362.txt
+> @@ -0,0 +1,38 @@
+> +OPA362 analog video amplifier
+> +
+> +Required properties:
+> +- compatible: "ti,opa362"
+> +- gpio: enable/disable output gpio
 
-Best regards,
-Chunyan
+Either this or the example is wrong. If I'm not mistaken 'gpios' is the
+correct form.
 
->
->         Arnd
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kerne=
-l" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+ Tomi
+
+
+
+--FGD71uUJv2Mt07HihEmfgkv9rcNFNp7eh
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUfv+RAAoJEPo9qoy8lh71PyoP/jH0TKf2mTKRM0mk3KY08LJb
+yfnzOFb0GybghvFvdf9c415HFa0zReQkw1d/zSIpLU9ZC3jWcH5vUR+oxsSpBiZM
+xhvU3hAqUm4P4NjIekWpOI7vhnk3NdQLVGYrIMFzSTHaLigi7xzKTnbEYlVsfQaU
+0AwRsU7/hkx8aKFUSYxsFvo28CCYROjmwodnnq4B53GnsErdIJsKtqjlwY0i706p
+6S7CHUNzj+mQah7gJAFcBgQ/rmnRNXc+NZ3hmRgpeJVDP3XgqFfadjTvveYB1saz
+TchQjXTwwE6/bKIxj1eQ0U+Y9UJ5qikyTMfe2OaTNr7eHH73CKLpQbmid41u7cXW
+/Mjv9Zs5PvOI4B/bsOZR5AuXfKBvMTzA8Pqp1JMx3oybAFG605AXxuTTONDk7XH3
+QdoXo8IEdaRejqsr5CATQLjIdzH2yGrdg7iZjWvmKSPblj8pZ4TGapMqpr0kOgBg
+oIwR2Z4mHN6BQLfbmfBMCWvCZlv3zJpv1xP7wuRsp4fnnTGs5aIcvHq73MKxtvk6
+0oYmSSnyDIljJu8taPeYVoCjt9e4yM0doetiRFGRzj0/5rPCW2/CcHkC/l9alvnx
+pcvI403wi9x4V/GWrlKTu04GK2JWt0TjJdgEP15G60tcHKfYJ1ARwj+hWVUyfyjq
+E5r+OHo3sNbjjUy7NvMz
+=IY7P
+-----END PGP SIGNATURE-----
+
+--FGD71uUJv2Mt07HihEmfgkv9rcNFNp7eh--
