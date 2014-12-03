@@ -1,60 +1,84 @@
-From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] backlight/lp855x: Add supply regulator to lp855x
-Date: Tue, 2 Dec 2014 17:01:25 -0800
-Message-ID: <CAOw6vbLB=3An9+Juda=5Yx1vnuCgDsp=ucKNQ3B6AtiLv=FLYg@mail.gmail.com>
-References: <54767F43.2060901@ti.com> <1417468079-4990-1-git-send-email-seanpaul@chromium.org>
- <547E5F5C.40406@ti.com>
+From: Jianqun <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 2/2] ASoC: rockchip: i2s: add support for grabbing output
+ clock to codec
+Date: Wed, 03 Dec 2014 09:03:40 +0800
+Message-ID: <547E616C.1020503@rock-chips.com>
+References: <1417531766-29669-1-git-send-email-jay.xu@rock-chips.com>	<1417531977-30094-1-git-send-email-jay.xu@rock-chips.com> <CAD=FV=Uwb1NxxCoXHzHu6DJCpnG_HV2RhCr3JaJaXbJja8kd7A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <547E5F5C.40406-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <CAD=FV=Uwb1NxxCoXHzHu6DJCpnG_HV2RhCr3JaJaXbJja8kd7A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Kim, Milo" <milo.kim-l0cyMroinI0@public.gmane.org>
-Cc: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-fbdev <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Aaron Durbin <adurbin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 2, 2014 at 4:54 PM, Kim, Milo <milo.kim-l0cyMroinI0@public.gmane.org> wrote:
-> On 12/2/2014 6:07 AM, Sean Paul wrote:
+Hi Doug:
+
+=E5=9C=A8 12/03/2014 01:54 AM, Doug Anderson =E5=86=99=E9=81=93:
+> Jianqun,
+>=20
+> This ought to be a "v3" patch and ideally ought to describe
+> differences from v2 (after the cut).  Please have Kever or Chris
+> review your next patch before sending it out since I think they are
+> familiar with the process.
+>=20
+>=20
+> On Tue, Dec 2, 2014 at 6:52 AM, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wr=
+ote:
+>> From: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 >>
->> This patch adds a supply regulator to the lp855x platform data to
->> facilitate
->> powering on/off the 3V rail attached to the controller.
+>> We need to claim the clock which is driving the codec so that when w=
+e enable
+>> clock gating, we continue to clock the codec when needed.  I make th=
+is an
+>> optional clock since there might be some applications where we don't=
+ need it
+>> but can still use the I2S block.
 >>
->> Cc: St=C3=A9phane Marchesin<marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> Cc: Aaron Durbin<adurbin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> Signed-off-by: Sean Paul<seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->
->
-> Acked-by: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
->
-> For effective power consumption, regulator could be enabled/disabled =
-based
-> on backlight control flow.
-> For example, when the brightness is 0, then call regulator_disable()
-> when the brightness is > 0 and regulator is off, then call
-> regulator_enable().
-> However, I'd like to send ACK to this patch.
->
-> Sean,
-> Could you send the patch-set with the first one - 'backlight/lp855x:
-> Refactor dt parsing code'? I'll send my ACK as well.
+>> Signed-off-by: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>=20
+> You still forgot your own signed-off-by.  Please try again.  See
+> <https://patchwork.kernel.org/patch/5334991/>
+ok, I will add my signed-off-by
+>=20
+>=20
+>> +       i2s->oclk =3D devm_clk_get(&pdev->dev, "i2s_clk_out");
+>> +       if (IS_ERR(i2s->oclk)) {
+>> +               dev_dbg(&pdev->dev, "Didn't find output clock\n");
+>> +               i2s->oclk =3D NULL;
+>> +       }
+>=20
+> You still forgot the blank line here requested by Heiko.  Please try
+> again.  See <https://patchwork.kernel.org/patch/5334991/>
+Although I thought there needn't a blank ~, I wll add it next patch
+>=20
+>=20
+>> +       if (i2s->oclk)
+>> +               ret =3D clk_prepare_enable(i2s->oclk);
+>> +
+>=20
+>=20
+>=20
 
-Hi Milo,
-Thanks for looking at these. There aren't any changes to PATCH 1/2, is
-there any value in resending the same patches?
+--=20
+Jianqun Xu
 
-Sean
+***********************************************************************=
+*****
+*IMPORTANT NOTICE:*This email is from Fuzhou Rockchip Electronics Co.,
+Ltd .The contents of this email and any attachments may contain
+information that is privileged, confidential and/or exempt from
+disclosure under applicable law and relevant NDA. If you are not the
+intended recipient, you are hereby notified that any disclosure,
+copying, distribution, or use of the information is STRICTLY PROHIBITED=
+=2E
+Please immediately contact the sender as soon as possible and destroy
+the material in its entirety in any format. Thank you.
+***********************************************************************=
+*****
 
-
-
-> For the backlight maintainers, it would be better to apply them toget=
-her.
->
-> Thanks!
->
-> Best regards,
-> Milo
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
