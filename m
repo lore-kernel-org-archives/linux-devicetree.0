@@ -1,32 +1,44 @@
-From: Tyler Baker <tyler.baker@linaro.org>
-Subject: Re: [PATCH] ARM: dts: Add dts file for odroid XU3 board
-Date: Wed, 3 Dec 2014 12:24:07 -0800
-Message-ID: <CANMBJr4B-c-eMCvwexW5_WhfK=xsJ0-Cjo_OApTpUXP3zBG-kw@mail.gmail.com>
-References: <1417438770-28696-1-git-send-email-sjoerd.simons@collabora.co.uk>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v14 03/10] qcom: spm: Add Subsystem Power Manager driver
+Date: Wed, 03 Dec 2014 21:35:34 +0100
+Message-ID: <2596381.rFt35NU3oS@wuerfel>
+References: <1417541958-56907-1-git-send-email-lina.iyer@linaro.org> <547ED3BD.5090209@linaro.org> <20141203143122.GH499@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1417438770-28696-1-git-send-email-sjoerd.simons@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20141203143122.GH499@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 1 December 2014 at 04:59, Sjoerd Simons
-<sjoerd.simons@collabora.co.uk> wrote:
-> Add DTS for the Hardkernel Odroid XU3. The name of the DTS file is kept the
-> same as the vendors naming, which means it's prefixed with exynos5422
-> instead of exynos5800 as the SoC name even though it includes the
-> exyno5800 dtsi.
->
-> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+On Wednesday 03 December 2014 07:31:22 Lina Iyer wrote:
+> >>>+static int __init qcom_spm_init(void)
+> >>>+{
+> >>>+    int ret;
+> >>>+
+> >>>+    /*
+> >>>+     * cpuidle driver need to registered before the cpuidle device
+> >>>+     * for any cpu. Register the device for the the cpuidle driver.
+> >>>+     */
+> >>>+    ret = platform_device_register(&qcom_cpuidle_drv);
+> >>>+    if (ret)
+> >>>+        return ret;
+> >>Stephen pointed out that we would have the platform device lying around
+> >>on a non-QCOM device when using multi_v7_defconfig.
+> >
+> >Perhaps I am missing the point, but this is not supposed to happen, no ?
+> >
+> This would happen, since the file would compile on multi_v7 and we would
+> initialize and register this device regardless. The cpuidle-qcom.c
+> driver probe would bail out looking for a matching compatible property.
+> So we would not register a cpuidle driver but the device would lay
+> around.
 
-Tested-by: Tyler Baker <tyler.baker@linaro.org>
+I think the problem is registering a platform_device. I've complained
+about this before, but it still seems to get copied all over the
+place. Please don't do this but have a driver that looks at DT to
+figure out whether to access hardware or not.
 
-Tested this atop of next-20141203 both on exynos_defconfig and
-multi_v7_defconfig. All configurations boot fine on my odroid-xu3
-board, no imprecise aborts observed either.
-
-Thanks!
-
-Tyler
+	Arnd
