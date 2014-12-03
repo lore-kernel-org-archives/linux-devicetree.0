@@ -1,8 +1,7 @@
 From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: [PATCH 04/11] ARM: at91/dt: at91sam9261: fix clocks and clock-names
- in udc definition
-Date: Wed,  3 Dec 2014 12:32:03 +0100
-Message-ID: <1417606330-17753-5-git-send-email-boris.brezillon@free-electrons.com>
+Subject: [PATCH 01/11] usb: gadget: at91_udc: Fix clock names
+Date: Wed,  3 Dec 2014 12:32:00 +0100
+Message-ID: <1417606330-17753-2-git-send-email-boris.brezillon@free-electrons.com>
 References: <1417606330-17753-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,31 +21,31 @@ To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <p
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Boris Brezillon <boris.brezillon@free-electrons.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Peripheral clock is named pclk and system clock is named hclk (those are
-the names expected by the at91_udc driver).
+The driver is requesting clock by their global name (those declared in the
+clk_lookup list), but this only works with !CCF kernels.
 
-Drop the deprecated usb_clk (formerly used to configure the usb clock rate
-which is now directly configurable through hclk).
+Now that all SoCs have moved to CCF, fix the driver to use local names
+(hclk and pclk).
 
 Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
 ---
- arch/arm/boot/dts/at91sam9261.dtsi | 4 ++--
+ drivers/usb/gadget/udc/at91_udc.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/at91sam9261.dtsi b/arch/arm/boot/dts/at91sam9261.dtsi
-index a81aab4..7119f1f 100644
---- a/arch/arm/boot/dts/at91sam9261.dtsi
-+++ b/arch/arm/boot/dts/at91sam9261.dtsi
-@@ -122,8 +122,8 @@
- 				compatible = "atmel,at91rm9200-udc";
- 				reg = <0xfffa4000 0x4000>;
- 				interrupts = <10 IRQ_TYPE_LEVEL_HIGH 2>;
--				clocks = <&usb>, <&udc_clk>, <&udpck>;
--				clock-names = "usb_clk", "udc_clk", "udpck";
-+				clocks = <&udc_clk>, <&udpck>;
-+				clock-names = "pclk", "hclk";
- 				status = "disabled";
- 			};
+diff --git a/drivers/usb/gadget/udc/at91_udc.c b/drivers/usb/gadget/udc/at91_udc.c
+index 0716c19..ca6a4b8 100644
+--- a/drivers/usb/gadget/udc/at91_udc.c
++++ b/drivers/usb/gadget/udc/at91_udc.c
+@@ -1766,8 +1766,8 @@ static int at91udc_probe(struct platform_device *pdev)
+ 	udc_reinit(udc);
  
+ 	/* get interface and function clocks */
+-	udc->iclk = clk_get(dev, "udc_clk");
+-	udc->fclk = clk_get(dev, "udpck");
++	udc->iclk = clk_get(dev, "pclk");
++	udc->fclk = clk_get(dev, "hclk");
+ 	if (IS_ENABLED(CONFIG_COMMON_CLK))
+ 		udc->uclk = clk_get(dev, "usb_clk");
+ 	if (IS_ERR(udc->iclk) || IS_ERR(udc->fclk) ||
 -- 
 1.9.1
