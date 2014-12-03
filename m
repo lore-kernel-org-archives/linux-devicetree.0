@@ -1,129 +1,255 @@
-From: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v9 3/8] devicetree: mfd: Add new SKY81452 mfd binding
-Date: Wed, 03 Dec 2014 12:39:55 +0900
-Message-ID: <001701d00eaa$cdd0d970$69728c50$%han@samsung.com>
-References: <1417507529-13654-1-git-send-email-jack.yoo@skyworksinc.com>
- <1417507529-13654-4-git-send-email-jack.yoo@skyworksinc.com>
- <20141202140727.GD22522@x1> <20141203030905.GA4352@jack-ThinkPad-T520>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] Patch to improve device tree structure
+Date: Tue, 02 Dec 2014 19:39:11 -0800
+Message-ID: <547E85DF.5000200@gmail.com>
+References: <1416199976-21147-1-git-send-email-gaurav.minocha.os@gmail.com> <20141118151026.D2D63C40966@trevor.secretlab.ca> <546BF447.6080300@gmail.com> <CACxGe6u1YwQAivktwmiOZx1K1Ch0F1ofx3EriBi1qEAU99X9PQ@mail.gmail.com> <546CEFC4.805@gmail.com> <20141128164829.CC876C40884@trevor.secretlab.ca>
+Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20141203030905.GA4352@jack-ThinkPad-T520>
-Content-language: ko
+In-Reply-To: <20141128164829.CC876C40884-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Gyungoh Yoo' <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Lee Jones' <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, 'Jingoo Han' <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, December 03, 2014 12:09 PM, Gyungoh Yoo wrote:
-> On Tue, Dec 02, 2014 at 02:07:27PM +0000, Lee Jones wrote:
-> > This requires a DT Ack.
->=20
-> I think I need to double-check the recipients.
-> Thank you for the comment.
+On 11/28/2014 8:48 AM, Grant Likely wrote:
+> On Wed, 19 Nov 2014 11:30:12 -0800
+> , Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>  wrote:
+>> On 11/19/2014 5:56 AM, Grant Likely wrote:
+>>> On Wed, Nov 19, 2014 at 1:37 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>> On 11/18/2014 7:10 AM, Grant Likely wrote:
+>>>>> On Sun, 16 Nov 2014 20:52:56 -0800
+>>>>> , Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>>  wrote:
+>>>>>> This patch improves the implementation of device tree structure.
+>>>>>>
+>>>>>> Traditional child and sibling linked list in device tree structure
+>>>>>> is removed and is replaced by list_head (i.e. circular doubly linked
+>>>>>>  list) already available in Linux kernel.
+>>>>>>
+>>>>>> Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>>
+>>>>> Hi Gaurav,
+>>>>>
+>>>>> So, after you've done this work, I need to you rebase it (and of course
+>>>>> it is non-trivial) onto linux-next. I've already got a patch queued up
+>>>>> which gets rid of the of_allnodes/allnext list which will have conflicts
+>>>>> with this patch.
+>>>>>
+>>>>> I'll make comments below where still relevant.
+>>>>
+>>>> Grant,
+>>>>
+>>>> My first reaction to this patch was that moving to using struct list_head
+>>>> made the code less readable plus increased the size of struct device_node.
+>>>>
+>>>> I reworked the changes to drivers/of/base.c to see if I could make
+>>>> it a little more readable.  And I see below that you also have some
+>>>> suggestions that make it more readable.
+>>>>
+>>>> Even after that, I'm still feeling that the gain of moving to a more
+>>>> standard list data type might not be greater than the downsides in
+>>>> terms of readability and space.  The current list implementation does
+>>>> seem like a decent fit to the problem space.
+>>>
+>>> Moving to list_head has a couple of nice benefits. The prime
+>>> motification is that using a standard list_head means that the OF code
+>>> can be migrated to use the standard rcu operations and get rid of manual
+>>> of_node_{get,put} management in the majority of code paths.
+>>
+>> Oh yeah, I remember you mentioning that before.  That is what was missing
+>> from Gaurav's patch header, explaining the value of the change.  If this
+>> is the end goal, then I think it would be valuable to add a second patch
+>> to the series that shows what the actual changes for rcu will be so that
+>> the cost vs benefit of the end result can be evaluated.
+>>
+>>
+>>> A second reason to do this is it becomes easy to add nodes to the end of
+>>> the list instead of the beginning. It's a small thing, but it makes
+>>> unflattening simpler.
+>>
+>> Not a big change.  In the unflatten_dt_node() part of the patch, the
+>> result was 4 lines deleted, 3 lines added.  With my attached patch to
+>> remove the next field, it would have been 8 lines deleted, 3 lines
+>> added -- thus list_head is an even greater simplification.  But still
+>> tiny.
+>>
+>>
+>>> I've also considered switching to a hlist_head/hlist_node to keep the
+>>> footprint the same.* With an hlist_head the cost is a wash, but looses
+>>> the ability to do O(1) addition to the end of the list.
+>>>
+>>> * Gaurav's patch removes the *child and *sibling pointers, but doesn't
+>>>   remove the *next pointer which can also be dropped. So, three pointers
+>>>   get dropped from the structure. Using list_head adds 4 pointers (Net
+>>>   +1). hlist_head adds 3 (Net 0).
+>>
+>> I include a patch below to also drop the *next pointer.  Not to actually
+>> propose submitting the patch, but to suggest that Gaurav's patch should be
+>> counted as a net of +2 pointers.  I expect that you will accept either a
+>> list_head of an hlist_head patch, but if you do not then I will submit the
+>> below patch to remove *next or a patch to rename *next to match the actual
+>> usage of the field.
+>>
+>> I still do not have a strong opinion, but I am still feeling that the gain
+>> probably does not outweigh the cost.
+>>
+>> -Frank
+>>
+>>>
+>>> g.
+>>>
+>>
+>> From: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+>>
+>> Decrease size of struct device_node by one pointer.
+>> The pointer is only used during the unflattening of the
+>> device tree at boot.
+>>
+>> The cost of removing the pointer is chasing through the
+>> sibling list to add new nodes instead of using the
+>> cached 'last_child'.  The cost is expected to be in the
+>> noise level.
+>>
+>> Signed-off-by: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+>> ---
+>>  drivers/of/fdt.c   |   14 +++++++++-----
+>>  include/linux/of.h |    1 -
+>>  2 files changed, 9 insertions(+), 6 deletions(-)
+>>
+>> Index: b/include/linux/of.h
+>> ===================================================================
+>> --- a/include/linux/of.h
+>> +++ b/include/linux/of.h
+>> @@ -55,7 +55,6 @@ struct device_node {
+>>  	struct	device_node *parent;
+>>  	struct	device_node *child;
+>>  	struct	device_node *sibling;
+>> -	struct	device_node *next;	/* next device of same type */
+>>  	struct	device_node *allnext;	/* next in list of all nodes */
+>>  	struct	kobject kobj;
+>>  	unsigned long _flags;
+>> Index: b/drivers/of/fdt.c
+>> ===================================================================
+>> --- a/drivers/of/fdt.c
+>> +++ b/drivers/of/fdt.c
+>> @@ -226,12 +226,16 @@ static void * unflatten_dt_node(void *bl
+>>  		*allnextpp = &np->allnext;
+>>  		if (dad != NULL) {
+>>  			np->parent = dad;
+>> -			/* we temporarily use the next field as `last_child'*/
+>> -			if (dad->next == NULL)
+>> +			if (dad->child == NULL)
+>>  				dad->child = np;
+>> -			else
+>> -				dad->next->sibling = np;
+>> -			dad->next = np;
+>> +			else {
+>> +				struct device_node *next;
+>> +
+>> +				next = dad->child;
+>> +				while (next->sibling)
+>> +					next = next->sibling;
+>> +				next->sibling = np;
+>> +			}
+>>  		}
+>>  	}
+>>  	/* process properties */
+> 
+> Instead of keeping it always in order, what about reordering the whole
+> list after all the nodes at a given level are unflattened? That would
+> avoid traversing the entire sibling list on every node addition. Like
+> this:
 
-Yes, right.
-We should be careful when creating new DT properties.
-This is because DT can be handled as ABI. Thus, Ack from
-DT maintainers is necessary for merging new DT properties,
-even though other subsystem maintainers or reviews gave
-Ack for this.
+Seems pretty close to a wash to me.  Either one would work.  Though
+mine would benefit from the comment you added in yours.
 
-Best regards,
-Jingoo Han
+-Frank
 
->=20
-> >
-> > > From: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
-> > >
-> > > Signed-off-by: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
-> > > ---
-> > > Changes v9:
-> > > Nothing
-> > >
-> > > Changes v8:
-> > > Made up the example for backlight DT
-> > >
-> > > Changes v7:
-> > > Nothing
-> > >
-> > > Changes v6:
-> > > Nothing
-> > >
-> > > Changes v5:
-> > > Changed DT for regulator : 'lout' node should be defined under 'r=
-egulator'
-> > > Removed compatible string from sky81452-regulator driver
-> > >
-> > > Changes v4:
-> > > Nothing
-> > >
-> > > Changes v3:
-> > > Nothing
-> > >
-> > > Changes v2:
-> > > Added reg attribute for I2C slave address
-> > >
-> > >  Documentation/devicetree/bindings/mfd/sky81452.txt | 36 ++++++++=
-++++++++++++++
-> > >  1 file changed, 36 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/mfd/sky8145=
-2.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/mfd/sky81452.txt
-> b/Documentation/devicetree/bindings/mfd/sky81452.txt
-> > > new file mode 100644
-> > > index 0000000..ab71473
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/mfd/sky81452.txt
-> > > @@ -0,0 +1,36 @@
-> > > +SKY81452 bindings
-> > > +
-> > > +Required properties:
-> > > +- compatible	: Must be "skyworks,sky81452"
-> > > +- reg		: I2C slave address
-> > > +
-> > > +Required child nodes:
-> > > +- backlight	: container node for backlight following the binding
-> > > +		in video/backlight/sky81452-backlight.txt
-> > > +- regulator	: container node for regulators following the bindin=
-g
-> > > +		in regulator/sky81452-regulator.txt
-> > > +
-> > > +Example:
-> > > +
-> > > +	sky81452@2c {
-> > > +		compatible =3D "skyworks,sky81452";
-> > > +		reg =3D <0x2c>;
-> > > +
-> > > +		backlight {
-> > > +			compatible =3D "skyworks,sky81452-backlight";
-> > > +			name =3D "pwm-backlight";
-> > > +			skyworks,en-channels =3D <0x3f>;
-> > > +			skyworks,ignore-pwm;
-> > > +			skyworks,phase-shift;
-> > > +			skyworks,ovp-level =3D <20>;
-> > > +			skyworks,current-limit =3D <2300>;
-> > > +		};
-> > > +
-> > > +		regulator {
-> > > +			lout {
-> > > +				regulator-name =3D "sky81452-lout";
-> > > +				regulator-min-microvolt =3D <4500000>;
-> > > +				regulator-max-microvolt =3D <8000000>;
-> > > +			};
-> > > +		};
-> > > +	};
-> >
-> > --
-> > Lee Jones
-> > Linaro STMicroelectronics Landing Team Lead
-> > Linaro.org =E2=94=82 Open source software for ARM SoCs
-> > Follow Linaro: Facebook | Twitter | Blog
+> 
+> g.
+> 
+>>From de46de766eb4d2240208bf83fdae955361069352 Mon Sep 17 00:00:00 2001
+> From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Date: Fri, 28 Nov 2014 16:03:33 +0000
+> Subject: [PATCH] of: Drop ->next pointer from struct device_node
+> 
+> The ->next pointer in struct device_node is a hanger-on from when it was
+> used to iterate over the whole tree by a particular device_type property
+> value. Those days are long over, but the fdt unflattening code still
+> uses it to put nodes in the unflattened tree into the same order as node
+> in the flat tree. By reworking the unflattening code to reverse the list
+> after unflattening all the children of a node, the pointer can be
+> dropped which gives a small amount of memory savings.
+> 
+> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/of/fdt.c   | 24 ++++++++++++++++++------
+>  include/linux/of.h |  1 -
+>  2 files changed, 18 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 7f6ee31d5650..a41f9fdb1aa0 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -226,12 +226,8 @@ static void * unflatten_dt_node(void *blob,
+>  		prev_pp = &np->properties;
+>  		if (dad != NULL) {
+>  			np->parent = dad;
+> -			/* we temporarily use the next field as `last_child'*/
+> -			if (dad->next == NULL)
+> -				dad->child = np;
+> -			else
+> -				dad->next->sibling = np;
+> -			dad->next = np;
+> +			np->sibling = dad->child;
+> +			dad->child = np;
+>  		}
+>  	}
+>  	/* process properties */
+> @@ -329,6 +325,22 @@ static void * unflatten_dt_node(void *blob,
+>  
+>  	if (*poffset < 0 && *poffset != -FDT_ERR_NOTFOUND)
+>  		pr_err("unflatten: error %d processing FDT\n", *poffset);
+> +
+> +	/*
+> +	 * Reverse the child list. Some drivers assumes node order matches .dts
+> +	 * node order
+> +	 */
+> +	if (!dryrun && np->child) {
+> +		struct device_node *child = np->child;
+> +		np->child = NULL;
+> +		while (child) {
+> +			struct device_node *next = child->sibling;
+> +			child->sibling = np->child;
+> +			np->child = child;
+> +			child = next;
+> +		}
+> +	}
+> +
+>  	if (nodepp)
+>  		*nodepp = np;
+>  
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 8b021db3e16e..3f0f0ffbd5e5 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -56,7 +56,6 @@ struct device_node {
+>  	struct	device_node *parent;
+>  	struct	device_node *child;
+>  	struct	device_node *sibling;
+> -	struct	device_node *next;	/* next device of same type */
+>  	struct	kobject kobj;
+>  	unsigned long _flags;
+>  	void	*data;
+> 
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
