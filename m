@@ -1,62 +1,77 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [GIT PULL] devicetree bug fix for v3.18
-Date: Wed, 3 Dec 2014 15:46:34 +0000
-Message-ID: <CACxGe6uENpFc7ARarxo3_AfrzejVsyqm0WRN4ovJk5M4NfZjJw@mail.gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH] Add attributes neccessary for LED flashes to
+ devicetree/bindings/leds/common.txt
+Date: Wed, 3 Dec 2014 16:51:55 +0100
+Message-ID: <20141203155155.GA22783@amd>
+References: <20141120131713.GC27527@amd>
+ <546DEEC3.7090508@samsung.com>
+ <546DFF3A.7020702@samsung.com>
+ <20141120205254.GA19174@amd>
+ <546EF4A3.2000101@samsung.com>
+ <20141124225319.GA22383@amd>
+ <CAK5ve-+FBoHD+CPy8GmNDOd3BxvTn_6UB0ZOmjCrEJCpWGyAww@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ian.campbell@citrix.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAK5ve-+FBoHD+CPy8GmNDOd3BxvTn_6UB0ZOmjCrEJCpWGyAww@mail.gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Bryan Wu <cooloney@gmail.com>
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On Tue 2014-11-25 22:09:49, Bryan Wu wrote:
+> On Mon, Nov 24, 2014 at 2:53 PM, Pavel Machek <pavel@ucw.cz> wrote:
+> > On Fri 2014-11-21 09:15:31, Jacek Anaszewski wrote:
+> >> Hi Pavel,
+> >>
+> >> On 11/20/2014 09:52 PM, Pavel Machek wrote:
+> >> >On Thu 2014-11-20 15:48:26, Jacek Anaszewski wrote:
+> >> >>On 11/20/2014 02:38 PM, Jacek Anaszewski wrote:
+> >> >>>Hi Pavel,
+> >> >>>
+> >> >>>On 11/20/2014 02:17 PM, Pavel Machek wrote:
+> >> >>>>
+> >> >>>>Add attributes neccessary for LED flashes to
+> >> >>>>devicetree/bindings/leds/common.txt .
+> >> >>>>
+> >> >>>>This will allow me to add device tree support for adp1653 i2c flash
+> >> >>>>LED driver, and allow Jacek Anaszewski to add support for more LED
+> >> >>>>drivers..
+> >> >..
+> >> >>
+> >> >>Actually, we've agreed with Sakari that we can handle
+> >> >>indicator-pattern later.
+> >> >
+> >> >Good.
+> >> >
+> >> >>I would remove references to you, me and adp1653 driver from the commit
+> >> >>message and mention that this modifications adjust the led common
+> >> >>bindings to the LED Flash class that is to be added.
+> >> >
+> >> >Ok, who can take this patch? Can you edit the changelog, or should I
+> >> >do it? Anything else that needs changing?
+> >>
+> >> It's your patch :) For me the contents of the patch are ok.
+> >> It requires device tree maintainer approval anyway.
+> >
+> > Yeah, I was hoping relevant maintainers would speak up. I was not
+> > asking you to edit the changelog, sorry I was unclear.
+> >
+> > Bryan Wu, Richard Purdie: You are the maintainers. Can you take the
+> > patch?
+> 
+> I'm OK for this patch, but since Jacek and Sakari are working on
+> pushing LED Flash class and driver into our LED subsystem. I need you
+> guys' Ack for this. Then I can take it in my tree.
 
-One more bug fix for v3.18. I debated whether or not to send you this
-merge request because we're at such a late rc. The bug isn't critical
-in that there is only one system known to be affected and the patch is
-easy to backport. The codepath is used by pretty much every DT based
-system, so there is risk a of regression (it /should/ be safe, but
-I've been bitten by stuff that should be safe before). I've had it in
-linux-next for a week and haven't received any complaints.
+Jacek acked it (provided I modify changelog).
 
-I think it probably should just be merged right away rather than
-waiting for the merge window and backporting. It does fix a real bug
-and the code is theoretically safer after the change. I can't think of
-any situation where it would be dangerous to reserve the DT memory an
-extra time. However, I won't be upset if you feel differently and
-decide not to pull. If that's the case then I'll add it to my queue
-for v3.19.
+I can't get Sakari to get explicit ACK, but he was cc-ed on the
+discussion, and was ok with the idea. That should be enough...?
 
-Cheers,
-g.
-
-The following changes since commit 5d01410fe4d92081f349b013a2e7a95429e4f2c9:
-
-  Linux 3.18-rc6 (2014-11-23 15:25:20 -0800)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/glikely/linux
-tags/devicetree-for-linus
-
-for you to fetch changes up to 094cb98179f19b75acf9ff471daabf3948ce98e6:
-
-  of/fdt: memblock_reserve /memreserve/ regions in the case of partial
-overlap (2014-11-26 12:35:52 +0000)
-
-----------------------------------------------------------------
-Devicetree bugfix for v3.18
-
-Single bugfix for boot failure seen in the wild. The memory reserve code
-tries to be clever about reserving the FDT, but it should just go ahead
-and reserve it unconditionally to avoid the problem of partial overlap
-described in the patch.
-
-----------------------------------------------------------------
-Ian Campbell (1):
-      of/fdt: memblock_reserve /memreserve/ regions in the case of
-partial overlap
-
- drivers/of/fdt.c | 2 --
- 1 file changed, 2 deletions(-)
+Thanks,
+								Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
