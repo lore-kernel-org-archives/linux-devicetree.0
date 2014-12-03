@@ -1,53 +1,68 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH v16 05/12] drm: imx: imx-hdmi: move imx-hdmi to
- bridge/dw_hdmi
-Date: Thu, 04 Dec 2014 00:01:25 +0800
-Message-ID: <547F33D5.2000905@rock-chips.com>
-References: <1417620408-30354-1-git-send-email-andy.yan@rock-chips.com>
- <1417620732-30593-1-git-send-email-andy.yan@rock-chips.com>
- <20141203154503.GD11285@n2100.arm.linux.org.uk>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH] Add attributes neccessary for LED flashes to
+ devicetree/bindings/leds/common.txt
+Date: Wed, 3 Dec 2014 18:03:52 +0200
+Message-ID: <20141203160352.GK14746@valkosipuli.retiisi.org.uk>
+References: <20141120131713.GC27527@amd>
+ <20141120150349.GZ8907@valkosipuli.retiisi.org.uk>
+ <546EEBF9.9080006@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20141203154503.GD11285@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Pawel Moll <pawel.moll@arm.com>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, mark.yao@rock-chips.com, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, vladimir_zapolskiy@mentor.com, Luc
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <546EEBF9.9080006@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-doc@vger.kernel.org, cooloney@gmail.com, rpurdie@rpsys.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net
 List-Id: devicetree@vger.kernel.org
 
-SGkgUnVzc2VsbDoKCk9uIDIwMTTlubQxMuaciDAz5pelIDIzOjQ1LCBSdXNzZWxsIEtpbmcgLSBB
-Uk0gTGludXggd3JvdGU6Cj4gT24gV2VkLCBEZWMgMDMsIDIwMTQgYXQgMTE6MzI6MTJQTSArMDgw
-MCwgQW5keSBZYW4gd3JvdGU6Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdl
-L0tjb25maWcgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcKPj4gaW5kZXggODg0OTIz
-Zi4uMjYxNjJlZiAxMDA2NDQKPj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9LY29uZmln
-Cj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvS2NvbmZpZwo+PiBAQCAtMywzICszLDgg
-QEAgY29uZmlnIERSTV9QVE4zNDYwCj4+ICAgCWRlcGVuZHMgb24gRFJNCj4+ICAgCXNlbGVjdCBE
-Uk1fS01TX0hFTFBFUgo+PiAgIAktLS1oZWxwLS0tCj4+ICsKPj4gK2NvbmZpZyBEUk1fRFdfSERN
-SQo+PiArCWJvb2wgIlN5bm9wc3lzIERlc2lnbldhcmUgSGlnaC1EZWZpbml0aW9uIE11bHRpbWVk
-aWEgSW50ZXJmYWNlIgo+PiArCWRlcGVuZHMgb24gRFJNCj4+ICsJc2VsZWN0IERSTV9LTVNfSEVM
-UEVSCj4gLi4uCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vaW14L0tjb25maWcgYi9k
-cml2ZXJzL2dwdS9kcm0vaW14L0tjb25maWcKPj4gaW5kZXggODJmYjc1OC4uNzA3MDA3NyAxMDA2
-NDQKPj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2lteC9LY29uZmlnCj4+ICsrKyBiL2RyaXZlcnMv
-Z3B1L2RybS9pbXgvS2NvbmZpZwo+PiBAQCAtNDgsNiArNDgsNyBAQCBjb25maWcgRFJNX0lNWF9J
-UFVWMwo+PiAgIAo+PiAgIGNvbmZpZyBEUk1fSU1YX0hETUkKPj4gICAJdHJpc3RhdGUgIkZyZWVz
-Y2FsZSBpLk1YIERSTSBIRE1JIgo+PiArCXNlbGVjdCBEUk1fRFdfSERNSQo+PiAgIAlkZXBlbmRz
-IG9uIERSTV9JTVgKPj4gICAJaGVscAo+PiAgIAkgIENob29zZSB0aGlzIGlmIHlvdSB3YW50IHRv
-IHVzZSBIRE1JIG9uIGkuTVg2Lgo+IEknZCByZWNvbW1lbmQgdGhhdCBpZiB5b3Ugd2FudCB0byBz
-ZWxlY3QgRFJNX0RXX0hETUksIHRoZW4gZG9uJ3QgZ2l2ZQo+IERSTV9EV19IRE1JIGEgcHJvbXB0
-IG1lc3NhZ2UuICBJIGFzc3VtZSB5b3UncmUgZ29pbmcgdG8gZG8gc29tZXRoaW5nCj4gc2ltaWxh
-ciB3aXRoIHlvdXIgUm9ja2NoaXAgZHJpdmVyIHRvbyAtIGluIHdoaWNoIGNhc2UgRFJNX0RXX0hE
-TUkgaXMKPiByZWFsbHkgYWJvdXQgYnVpbGRpbmcgYSBsaWJyYXJ5IG1vZHVsZS4KICAgRG8geW91
-IG1lYW4gSSBqdXN0IG5lZXQgdG8gZG8gbGlrZSBiZWxsb3c/CgorCitjb25maWcgRFJNX0RXX0hE
-TUkKKwlib29sCisJZGVwZW5kcyBvbiBEUk0KKwlzZWxlY3QgRFJNX0tNU19IRUxQRVIKCgoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2ZWwgbWFpbGlu
-ZyBsaXN0CmRldmVsQGxpbnV4ZHJpdmVycHJvamVjdC5vcmcKaHR0cDovL2RyaXZlcmRldi5saW51
-eGRyaXZlcnByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vZHJpdmVyZGV2LWRldmVsCg==
+Hi Jacek,
+
+On Fri, Nov 21, 2014 at 08:38:33AM +0100, Jacek Anaszewski wrote:
+> Hi Pavel, Sakari,
+> 
+> On 11/20/2014 04:03 PM, Sakari Ailus wrote:
+> >Hi Pavel,
+> >
+> >On Thu, Nov 20, 2014 at 02:17:13PM +0100, Pavel Machek wrote:
+> >>
+> >>Add attributes neccessary for LED flashes to
+> >>devicetree/bindings/leds/common.txt .
+> >>
+> >>This will allow me to add device tree support for adp1653 i2c flash
+> >>LED driver, and allow Jacek Anaszewski to add support for more LED
+> >>drivers..
+> >>
+> >>Signed-off-by: Pavel Machek <pavel@ucw.cz>
+> >>
+> >>diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+> >>index 2d88816..e9acbbc 100644
+> >>--- a/Documentation/devicetree/bindings/leds/common.txt
+> >>+++ b/Documentation/devicetree/bindings/leds/common.txt
+> >>@@ -14,6 +14,15 @@ Optional properties for child nodes:
+> >>       "ide-disk" - LED indicates disk activity
+> >>       "timer" - LED flashes at a fixed, configurable rate
+> >>
+> >>+- max-microamp : maximum intensity in microamperes of the LED
+> >>+  	         (torch LED for flash devices)
+> >>+- flash-max-microamp : maximum intensity in microamperes of the
+> >>+                       flash LED; it is mandatory if the LED should
+> >>+		       support the flash mode
+> >>+- flash-timeout-microsec : timeout in microseconds after which the flash
+> >>+                           LED is turned off
+> >
+> >It might be good to add a note that these may be arrays, depending on the
+> >device.
+> >
+> 
+> This binding is for a sub-node representing a single led.
+> Do you know devices which would require an array of max currents
+> for a sub-led?
+
+Oops, I missed to reply to this one.
+
+No, if this is just a single LED then I think it's fine.
+
+-- 
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
