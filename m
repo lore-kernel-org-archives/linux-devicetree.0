@@ -1,35 +1,73 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH] ARM: dts: Add dts file for odroid XU3 board
-Date: Wed, 03 Dec 2014 11:53:10 -0800
-Message-ID: <7hzjb4y0gp.fsf@deeprootsystems.com>
-References: <1417438770-28696-1-git-send-email-sjoerd.simons@collabora.co.uk>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ASoC: rockchip: i2s: add support for grabbing
+ output clock to codec
+Date: Wed, 3 Dec 2014 20:03:07 +0000
+Message-ID: <20141203200307.GM7712@sirena.org.uk>
+References: <1417531766-29669-1-git-send-email-jay.xu@rock-chips.com>
+ <1417591118-18695-1-git-send-email-jay.xu@rock-chips.com>
+ <1417591118-18695-3-git-send-email-jay.xu@rock-chips.com>
+ <20141203192024.GL7712@sirena.org.uk>
+ <CAPz6YkXRmRzYpW7xuDsq69A9H-Qm2-j6t-a+B1w9+OLOPf_YnA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1417438770-28696-1-git-send-email-sjoerd.simons@collabora.co.uk>
-	(Sjoerd Simons's message of "Mon, 1 Dec 2014 13:59:30 +0100")
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="gz7Dl29304g/DuvU"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAPz6YkXRmRzYpW7xuDsq69A9H-Qm2-j6t-a+B1w9+OLOPf_YnA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Sjoerd Simons <sjoerd.simons@collabora.co.uk> writes:
 
-> Add DTS for the Hardkernel Odroid XU3. The name of the DTS file is kept the
-> same as the vendors naming, which means it's prefixed with exynos5422
-> instead of exynos5800 as the SoC name even though it includes the
-> exyno5800 dtsi.
->
-> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+--gz7Dl29304g/DuvU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Tested-by: Kevin Hilman <khilman@linaro.org>
+On Wed, Dec 03, 2014 at 11:38:13AM -0800, Sonny Rao wrote:
+> On Wed, Dec 3, 2014 at 11:20 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-Tried this on top of linux-next (next-20141125 and next20141203) and
-boots fine on my odroid-xu3. 
+> > I would expect that the clock for the CODEC should be managed by the
+> > CODEC if at all possible - that seems more logical than having the CPU
+> > I2S controller request and manage it if it's a separate clock.  Why add
+> > this to the CPU side driver?
 
-Thanks for doing this, I've been meaning to get a DTS upstream for this
-platform myself.  I also noticed that the imprecise aborts I've been
-seeing when booting this board with the smdk5420 DTS are gone, so I
-don't have to dig into those now either.  Thanks!  :)
+> This output clock has a mux and can either be a fixed 12Mhz output or
+> can be derived from the same fractional divider which drives the i2s
+> block.   I thought it was simpler to keep them all the same, but need
+> to put ownership in the i2s in anticipation of the i2s driver setting
+> it's own clock rate.
 
-Kevin
+> If you think this is an implementation detail and this output clock
+> should just be owned by the codec driver, even though I'm guessing it
+> will just have to be the same as i2s, then I think we can drop this
+> and make sure simple card (or whatever other codec driver) claims this
+> clock.
+
+simple-card obviously isn't a CODEC driver...  For generality I think
+the clock does need to be exposed to the CODEC driver, otherwise this
+will work differently to how other systems are working and we can't
+substitute in a different clock on the CODEC side so easily if it
+doesn't happen to use the output from the I2S block.
+
+--gz7Dl29304g/DuvU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUf2x6AAoJECTWi3JdVIfQor4H/R8QlkqfCU1Ht8Ka0ICFucYS
+I79180Ndm9Ulbi7VE7FusGljeVINcXw1GWWw34nkG5zjGVoFlVY3flV7ZNbfOlyM
+5LQHM8j11BUqQB7WQ1AGtBJ3XTB3yO74MXMva4zCufePubbG72HNgn1CdkvgMXT5
+Ty5JrgwWMBxeLZ77xrt4zVZMlGSNPgk/fKGiGxE8qb82kHMZYeodDRXnU/GR4LHC
+UPGDFvzILh7eZXGUKtmG33+YRay44JLW3gfLZd27iDoPmxoVCNzvS7CIn1yUls0I
+cQbklM9JMBlt/bjzWs8g9aOFeqZ8IKzwGzMlqTrWcgwEpW2PXpBhmHxFlj9hUnw=
+=Bt5J
+-----END PGP SIGNATURE-----
+
+--gz7Dl29304g/DuvU--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
