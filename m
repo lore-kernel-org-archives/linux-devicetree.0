@@ -1,179 +1,133 @@
-From: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v4 3/6] powerpc/mpc85xx: Create dts components for the FSL QorIQ DPAA BMan
-Date: Wed, 3 Dec 2014 04:02:41 -0600
-Message-ID: <1417600964-24647-4-git-send-email-Emilian.Medve@Freescale.com>
-References: <1417600964-24647-1-git-send-email-Emilian.Medve@Freescale.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] backlight/lp855x: Refactor dt parsing code
+Date: Wed, 3 Dec 2014 10:15:31 +0000
+Message-ID: <20141203101531.GB327@x1>
+References: <1417570752-23633-1-git-send-email-seanpaul@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417600964-24647-1-git-send-email-Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1417570752-23633-1-git-send-email-seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: scottwood-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Geoff Thorpe <Geoff.Thorpe-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Hai-Ying Wang <Haiying.Wang-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: milo.kim-l0cyMroinI0@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, =?iso-8859-1?Q?St=E9phane?= Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+On Tue, 02 Dec 2014, Sean Paul wrote:
 
-Change-Id: I16e63db731e55a3d60d4e147573c1af8718082d3
-Signed-off-by: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Signed-off-by: Geoff Thorpe <Geoff.Thorpe-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Hai-Ying Wang <Haiying.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-[Emil Medve: Sync with the upstream binding]
-Signed-off-by: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
----
- arch/powerpc/boot/dts/fsl/qoriq-bman1-portals.dtsi | 90 ++++++++++++++++++++++
- arch/powerpc/boot/dts/fsl/qoriq-bman1.dtsi         | 41 ++++++++++
- 2 files changed, 131 insertions(+)
- create mode 100644 arch/powerpc/boot/dts/fsl/qoriq-bman1-portals.dtsi
- create mode 100644 arch/powerpc/boot/dts/fsl/qoriq-bman1.dtsi
+> This patch refactors the dt parsing code to avoid setting platform_da=
+ta,
+> instead just setting lp->pdata directly. This facilitates easier
+> probe deferral since the current scheme would require us to clear out
+> dev->platform_data before deferring.
+>=20
+> Cc: St=C3=A9phane Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+>  drivers/video/backlight/lp855x_bl.c | 37 ++++++++++++++++++---------=
+----------
+>  1 file changed, 18 insertions(+), 19 deletions(-)
 
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-bman1-portals.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-bman1-portals.dtsi
-new file mode 100644
-index 0000000..5022432
---- /dev/null
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-bman1-portals.dtsi
-@@ -0,0 +1,90 @@
-+/*
-+ * QorIQ BMan Portal device tree stub for 10 portals
-+ *
-+ * Copyright 2011 - 2014 Freescale Semiconductor Inc.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions are met:
-+ *     * Redistributions of source code must retain the above copyright
-+ *	 notice, this list of conditions and the following disclaimer.
-+ *     * Redistributions in binary form must reproduce the above copyright
-+ *	 notice, this list of conditions and the following disclaimer in the
-+ *	 documentation and/or other materials provided with the distribution.
-+ *     * Neither the name of Freescale Semiconductor nor the
-+ *	 names of its contributors may be used to endorse or promote products
-+ *	 derived from this software without specific prior written permission.
-+ *
-+ *
-+ * ALTERNATIVELY, this software may be distributed under the terms of the
-+ * GNU General Public License ("GPL") as published by the Free Software
-+ * Foundation, either version 2 of that License or (at your option) any
-+ * later version.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
-+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-+ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
-+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+&bportals {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "simple-bus";
-+
-+	bman-portal@0 {
-+		compatible = "fsl,bman-portal";
-+		reg = <0x0 0x4000>, <0x100000 0x1000>;
-+		interrupts = <105 2 0 0>;
-+	};
-+	bman-portal@4000 {
-+		compatible = "fsl,bman-portal";
-+		reg = <0x4000 0x4000>, <0x101000 0x1000>;
-+		interrupts = <107 2 0 0>;
-+	};
-+	bman-portal@8000 {
-+		compatible = "fsl,bman-portal";
-+		reg = <0x8000 0x4000>, <0x102000 0x1000>;
-+		interrupts = <109 2 0 0>;
-+	};
-+	bman-portal@c000 {
-+		compatible = "fsl,bman-portal";
-+		reg = <0xc000 0x4000>, <0x103000 0x1000>;
-+		interrupts = <111 2 0 0>;
-+	};
-+	bman-portal@10000 {
-+		compatible = "fsl,bman-portal";
-+		reg = <0x10000 0x4000>, <0x104000 0x1000>;
-+		interrupts = <113 2 0 0>;
-+	};
-+	bman-portal@14000 {
-+		compatible = "fsl,bman-portal";
-+		reg = <0x14000 0x4000>, <0x105000 0x1000>;
-+		interrupts = <115 2 0 0>;
-+	};
-+	bman-portal@18000 {
-+		compatible = "fsl,bman-portal";
-+		reg = <0x18000 0x4000>, <0x106000 0x1000>;
-+		interrupts = <117 2 0 0>;
-+	};
-+	bman-portal@1c000 {
-+		compatible = "fsl,bman-portal";
-+		reg = <0x1c000 0x4000>, <0x107000 0x1000>;
-+		interrupts = <119 2 0 0>;
-+	};
-+	bman-portal@20000 {
-+		compatible = "fsl,bman-portal";
-+		reg = <0x20000 0x4000>, <0x108000 0x1000>;
-+		interrupts = <121 2 0 0>;
-+	};
-+	bman-portal@24000 {
-+		compatible = "fsl,bman-portal";
-+		reg = <0x24000 0x4000>, <0x109000 0x1000>;
-+		interrupts = <123 2 0 0>;
-+	};
-+};
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-bman1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-bman1.dtsi
-new file mode 100644
-index 0000000..3b5e350
---- /dev/null
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-bman1.dtsi
-@@ -0,0 +1,41 @@
-+/*
-+ * QorIQ BMan device tree stub [ controller @ offset 0x31a000 ]
-+ *
-+ * Copyright 2011 - 2014 Freescale Semiconductor Inc.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions are met:
-+ *     * Redistributions of source code must retain the above copyright
-+ *	 notice, this list of conditions and the following disclaimer.
-+ *     * Redistributions in binary form must reproduce the above copyright
-+ *	 notice, this list of conditions and the following disclaimer in the
-+ *	 documentation and/or other materials provided with the distribution.
-+ *     * Neither the name of Freescale Semiconductor nor the
-+ *	 names of its contributors may be used to endorse or promote products
-+ *	 derived from this software without specific prior written permission.
-+ *
-+ *
-+ * ALTERNATIVELY, this software may be distributed under the terms of the
-+ * GNU General Public License ("GPL") as published by the Free Software
-+ * Foundation, either version 2 of that License or (at your option) any
-+ * later version.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
-+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-+ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
-+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+bman: bman@31a000 {
-+	compatible = "fsl,bman";
-+	reg = <0x31a000 0x1000>;
-+	interrupts = <16 2 1 2>;
-+	fsl,bman-portals = <&bportals>;
-+	memory-region = <&bman_fbpr>;
-+};
--- 
-2.2.0
+Applied with Acks, thanks.
 
+> diff --git a/drivers/video/backlight/lp855x_bl.c b/drivers/video/back=
+light/lp855x_bl.c
+> index 25fb8e3..257b3ba 100644
+> --- a/drivers/video/backlight/lp855x_bl.c
+> +++ b/drivers/video/backlight/lp855x_bl.c
+> @@ -341,8 +341,10 @@ static const struct attribute_group lp855x_attr_=
+group =3D {
+>  };
+> =20
+>  #ifdef CONFIG_OF
+> -static int lp855x_parse_dt(struct device *dev, struct device_node *n=
+ode)
+> +static int lp855x_parse_dt(struct lp855x *lp)
+>  {
+> +	struct device *dev =3D lp->dev;
+> +	struct device_node *node =3D dev->of_node;
+>  	struct lp855x_platform_data *pdata;
+>  	int rom_length;
+> =20
+> @@ -381,12 +383,12 @@ static int lp855x_parse_dt(struct device *dev, =
+struct device_node *node)
+>  		pdata->rom_data =3D &rom[0];
+>  	}
+> =20
+> -	dev->platform_data =3D pdata;
+> +	lp->pdata =3D pdata;
+> =20
+>  	return 0;
+>  }
+>  #else
+> -static int lp855x_parse_dt(struct device *dev, struct device_node *n=
+ode)
+> +static int lp855x_parse_dt(struct lp855x *lp)
+>  {
+>  	return -EINVAL;
+>  }
+> @@ -395,18 +397,8 @@ static int lp855x_parse_dt(struct device *dev, s=
+truct device_node *node)
+>  static int lp855x_probe(struct i2c_client *cl, const struct i2c_devi=
+ce_id *id)
+>  {
+>  	struct lp855x *lp;
+> -	struct lp855x_platform_data *pdata =3D dev_get_platdata(&cl->dev);
+> -	struct device_node *node =3D cl->dev.of_node;
+>  	int ret;
+> =20
+> -	if (!pdata) {
+> -		ret =3D lp855x_parse_dt(&cl->dev, node);
+> -		if (ret < 0)
+> -			return ret;
+> -
+> -		pdata =3D dev_get_platdata(&cl->dev);
+> -	}
+> -
+>  	if (!i2c_check_functionality(cl->adapter, I2C_FUNC_SMBUS_I2C_BLOCK)=
+)
+>  		return -EIO;
+> =20
+> @@ -414,16 +406,23 @@ static int lp855x_probe(struct i2c_client *cl, =
+const struct i2c_device_id *id)
+>  	if (!lp)
+>  		return -ENOMEM;
+> =20
+> -	if (pdata->period_ns > 0)
+> -		lp->mode =3D PWM_BASED;
+> -	else
+> -		lp->mode =3D REGISTER_BASED;
+> -
+>  	lp->client =3D cl;
+>  	lp->dev =3D &cl->dev;
+> -	lp->pdata =3D pdata;
+>  	lp->chipname =3D id->name;
+>  	lp->chip_id =3D id->driver_data;
+> +	lp->pdata =3D dev_get_platdata(&cl->dev);
+> +
+> +	if (!lp->pdata) {
+> +		ret =3D lp855x_parse_dt(lp);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+> +	if (lp->pdata->period_ns > 0)
+> +		lp->mode =3D PWM_BASED;
+> +	else
+> +		lp->mode =3D REGISTER_BASED;
+> +
+>  	i2c_set_clientdata(cl, lp);
+> =20
+>  	ret =3D lp855x_configure(lp);
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
