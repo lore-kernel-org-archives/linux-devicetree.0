@@ -1,52 +1,36 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 2/2] ASoC: rockchip: i2s: add support for grabbing output
- clock to codec
-Date: Tue, 2 Dec 2014 21:18:35 -0800
-Message-ID: <CAD=FV=VtYU5Pdz-xvjSdsReyCqMQaMtw=ZXmH4PO5wFnGVPY1g@mail.gmail.com>
-References: <1417531766-29669-1-git-send-email-jay.xu@rock-chips.com>
-	<1417531977-30094-1-git-send-email-jay.xu@rock-chips.com>
-	<CAD=FV=Uwb1NxxCoXHzHu6DJCpnG_HV2RhCr3JaJaXbJja8kd7A@mail.gmail.com>
-	<547E616C.1020503@rock-chips.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCHv3 1/1] thermal: cpu_cooling: check for the readiness of
+ cpufreq layer
+Date: Wed, 3 Dec 2014 12:00:58 +0530
+Message-ID: <CAKohpomv8fXqVEBWkmJTHKrkdVUbZCodV_D_pu3hjRqH0wUEeg@mail.gmail.com>
+References: <1417186410-24551-1-git-send-email-edubezval@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <547E616C.1020503-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jianqun <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1417186410-24551-1-git-send-email-edubezval@gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: Linux PM <linux-pm@vger.kernel.org>, Lukasz Majewski <l.majewski@samsung.com>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 2, 2014 at 5:03 PM, Jianqun <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> Hi Doug:
+On 28 November 2014 at 20:23, Eduardo Valentin <edubezval@gmail.com> wrote:
+> diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
+> index 1ab0018..88d2775 100644
+> --- a/drivers/thermal/cpu_cooling.c
+> +++ b/drivers/thermal/cpu_cooling.c
+> @@ -440,6 +440,9 @@ __cpufreq_cooling_register(struct device_node *np,
+>         int ret = 0, i;
+>         struct cpufreq_policy policy;
 >
-> =E5=9C=A8 12/03/2014 01:54 AM, Doug Anderson =E5=86=99=E9=81=93:
->> Jianqun,
->>
->> This ought to be a "v3" patch and ideally ought to describe
->> differences from v2 (after the cut).  Please have Kever or Chris
->> review your next patch before sending it out since I think they are
->> familiar with the process.
+> +       if (!cpufreq_frequency_get_table(0))
 
-You still seem to be missing versions in your subject line and missing
-info on what changed version to version.  The latest version you just
-sent (v4?) is still missing it.
+Please add a pr_debug() here, that will be quite useful while debugging.
 
-Unless Mark says so then I don't think you need to spin this series,
-but please try to add that in the future.
+Also, you can't simply pass 0 to get_table() above. We might be
+registering the cooling device for some other cluster as well..
 
+This is what I have done in my patch earlier.
 
->> You still forgot the blank line here requested by Heiko.  Please try
->> again.  See <https://patchwork.kernel.org/patch/5334991/>
-> Although I thought there needn't a blank ~, I wll add it next patch
+cpufreq_frequency_get_table(cpumask_first(clip_cpus));
 
-That would have been OK, but in that case you should have responded to
-Heiko's patch and explained that you weren't taking his feedback (and
-why you weren't).
-
--Doug
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+And this will work for all cases.
