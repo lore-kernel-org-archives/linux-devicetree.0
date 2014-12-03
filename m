@@ -1,7 +1,8 @@
 From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v16 06/12] dt-bindings: add document for dw_hdmi
-Date: Wed,  3 Dec 2014 23:32:55 +0800
-Message-ID: <1417620775-30640-1-git-send-email-andy.yan@rock-chips.com>
+Subject: [PATCH v16 07/12] drm: bridge/dw_hdmi: add support for multi-byte
+ register width access
+Date: Wed,  3 Dec 2014 23:33:33 +0800
+Message-ID: <1417620813-30688-1-git-send-email-andy.yan@rock-chips.com>
 References: <1417620408-30354-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,85 +22,117 @@ To: airlied@linux.ie, Philipp Zabel <p.zabel@pengutronix.de>, heiko@sntech.de, f
 Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, mark.yao@rock-chips.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Kumar Gala <galak@codeaurora.org>, Andy Yan <andy.yan@rock-chips.com>, Shawn Guo <shawn.guo@linaro.org>, vladimir_zapolskiy@mentor.com, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
+On rockchip rk3288, only word(32-bit) accesses are
+permitted for hdmi registers.  Byte width accesses (writeb,
+readb) generate an imprecise external abort.
+
 Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
 
 ---
 
-Changes in v16:
-- describe ddc-i2c-bus as optional
-- add common clocks bindings
+Changes in v16: None
+Changes in v15:
+- remove unio of the multi-byte register access, adviced by Philipp Zabel
 
-Changes in v15: None
 Changes in v14: None
 Changes in v13: None
 Changes in v12: None
 Changes in v11: None
 Changes in v10: None
 Changes in v9: None
-Changes in v8:
-- correct some spelling mistake
-- modify ddc-i2c-bus and interrupt description
-
+Changes in v8: None
 Changes in v7: None
-Changes in v6: None
-Changes in v5: None
+Changes in v6:
+- refactor register access without reg_shift
+
+Changes in v5:
+- refactor reg-io-width
+
 Changes in v4: None
-Changes in v3: None
+Changes in v3:
+- split multi-register access to one indepent patch
 
- .../devicetree/bindings/drm/bridge/dw_hdmi.txt     | 45 ++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt
+ drivers/gpu/drm/bridge/dw_hdmi.c | 44 ++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 42 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt b/Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt
-new file mode 100644
-index 0000000..fb14730
---- /dev/null
-+++ b/Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt
-@@ -0,0 +1,45 @@
-+DesignWare HDMI bridge bindings
+diff --git a/drivers/gpu/drm/bridge/dw_hdmi.c b/drivers/gpu/drm/bridge/dw_hdmi.c
+index ac5f5e2..d2c6ba8 100644
+--- a/drivers/gpu/drm/bridge/dw_hdmi.c
++++ b/drivers/gpu/drm/bridge/dw_hdmi.c
+@@ -128,18 +128,41 @@ struct dw_hdmi {
+ 
+ 	unsigned int sample_rate;
+ 	int ratio;
 +
-+Required properities:
-+- compatible: platform specific such as:
-+   * "snps,dw-hdmi-tx"
-+   * "fsl,imx6q-hdmi"
-+   * "fsl,imx6dl-hdmi"
-+   * "rockchip,rk3288-dw-hdmi"
-+- reg: Physical base address and length of the controller's registers.
-+- interrupts: The HDMI interrupt number
-+- clocks, clock-names : must have the phandles to the HDMI iahb and isrf clocks,
-+  as described in Documentation/devicetree/bindings/clock/clock-bindings.txt,
-+  the clock-names should be "iahb", "isfr"
++	void (*write)(struct dw_hdmi *hdmi, u8 val, int offset);
++	u8 (*read)(struct dw_hdmi *hdmi, int offset);
+ };
+ 
+-static inline void hdmi_writeb(struct dw_hdmi *hdmi, u8 val, int offset)
++static void dw_hdmi_writel(struct dw_hdmi *hdmi, u8 val, int offset)
++{
++	writel(val, hdmi->regs + (offset << 2));
++}
 +
-+Optional properties
-+- reg-io-width: the width of the reg:1,4, default set to 1 if not present
-+- ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
-+- clkocks, clock-names: phandle to the HDMI cec clock, name should be "cec"
++static u8 dw_hdmi_readl(struct dw_hdmi *hdmi, int offset)
++{
++	return readl(hdmi->regs + (offset << 2));
++}
 +
-+Example:
-+	hdmi: hdmi@0120000 {
-+		compatible = "fsl,imx6q-hdmi";
-+		reg = <0x00120000 0x9000>;
-+		interrupts = <0 115 0x04>;
-+		gpr = <&gpr>;
-+		clocks = <&clks 123>, <&clks 124>;
-+		clock-names = "iahb", "isfr";
-+		ddc-i2c-bus = <&i2c2>;
++static void dw_hdmi_writeb(struct dw_hdmi *hdmi, u8 val, int offset)
+ {
+ 	writeb(val, hdmi->regs + offset);
+ }
+ 
+-static inline u8 hdmi_readb(struct dw_hdmi *hdmi, int offset)
++static u8 dw_hdmi_readb(struct dw_hdmi *hdmi, int offset)
+ {
+ 	return readb(hdmi->regs + offset);
+ }
+ 
++static inline void hdmi_writeb(struct dw_hdmi *hdmi, u8 val, int offset)
++{
++	hdmi->write(hdmi, val, offset);
++}
 +
-+		port@0 {
-+			reg = <0>;
++static inline u8 hdmi_readb(struct dw_hdmi *hdmi, int offset)
++{
++	return hdmi->read(hdmi, offset);
++}
 +
-+			hdmi_mux_0: endpoint {
-+				remote-endpoint = <&ipu1_di0_hdmi>;
-+			};
-+		};
+ static void hdmi_modb(struct dw_hdmi *hdmi, u8 data, u8 mask, unsigned reg)
+ {
+ 	u8 val = hdmi_readb(hdmi, reg) & ~mask;
+@@ -1512,6 +1535,7 @@ int dw_hdmi_bind(struct device *dev, struct device *master,
+ 	struct dw_hdmi *hdmi;
+ 	struct resource *iores;
+ 	int ret, irq;
++	u32 val = 1;
+ 
+ 	hdmi = devm_kzalloc(&pdev->dev, sizeof(*hdmi), GFP_KERNEL);
+ 	if (!hdmi)
+@@ -1524,6 +1548,22 @@ int dw_hdmi_bind(struct device *dev, struct device *master,
+ 	hdmi->ratio = 100;
+ 	hdmi->encoder = encoder;
+ 
++	of_property_read_u32(np, "reg-io-width", &val);
 +
-+		port@1 {
-+			reg = <1>;
++	switch (val) {
++	case 4:
++		hdmi->write = dw_hdmi_writel;
++		hdmi->read = dw_hdmi_readl;
++		break;
++	case 1:
++		hdmi->write = dw_hdmi_writeb;
++		hdmi->read = dw_hdmi_readb;
++		break;
++	default:
++		dev_err(dev, "reg-io-width must be 1 or 4\n");
++		return -EINVAL;
++	}
 +
-+			hdmi_mux_1: endpoint {
-+				remote-endpoint = <&ipu1_di1_hdmi>;
-+			};
-+		};
-+	};
+ 	ddc_node = of_parse_phandle(np, "ddc-i2c-bus", 0);
+ 	if (ddc_node) {
+ 		hdmi->ddc = of_find_i2c_adapter_by_node(ddc_node);
 -- 
 1.9.1
