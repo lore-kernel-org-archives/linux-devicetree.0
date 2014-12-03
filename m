@@ -1,39 +1,55 @@
-From: Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: [PATCH] ARM: samsung: add exynos-chipid binding information
-Date: Wed, 03 Dec 2014 13:14:24 +0530
-Message-ID: <1417592664-10672-1-git-send-email-pankaj.dubey@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Cc: kgene.kim@samsung.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, pawel.moll@arm.com, thomas.ab@samsung.com, Pankaj Dubey <pankaj.dubey@samsung.com>
+From: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v3 3/4] powerpc/mpc85xx: Add FSL QorIQ DPAA BMan support
+ to device tree(s)
+Date: Wed, 3 Dec 2014 01:53:39 -0600
+Message-ID: <547EC183.2070005@Freescale.com>
+References: <1417428135-12895-1-git-send-email-Emilian.Medve@Freescale.com>
+	 <1417428135-12895-4-git-send-email-Emilian.Medve@Freescale.com>
+ <1417566777.15957.227.camel@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1417566777.15957.227.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scottwood-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Geoff Thorpe <Geoff.Thorpe-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Hai-Ying Wang <Haiying.Wang-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Chunhe Lan <Chunhe.Lan-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Poonam Aggrwal <poonam.aggrwal-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Exynos SoC's DT files are using Chipid device nodes, but it's binding
-information is missing. This patch adds exynos-chipid binding information.
+Hello Scott,
 
-Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
----
- .../bindings/arm/samsung/exynos-chipid.txt         |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt
 
-diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt
-new file mode 100644
-index 0000000..85c5dfd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt
-@@ -0,0 +1,12 @@
-+SAMSUNG Exynos SoCs Chipid driver.
-+
-+Required properties:
-+- compatible : Should at least contain "samsung,exynos4210-chipid".
-+
-+- reg: offset and length of the register set
-+
-+Example:
-+	chipid@10000000 {
-+		compatible = "samsung,exynos4210-chipid";
-+		reg = <0x10000000 0x100>;
-+	};
--- 
-1.7.9.5
+On 12/02/2014 06:32 PM, Scott Wood wrote:
+> On Mon, 2014-12-01 at 04:02 -0600, Emil Medve wrote:
+>> diff --git a/arch/powerpc/boot/dts/t4240rdb.dts b/arch/powerpc/boot/dts/t4240rdb.dts
+>> index 53761d4..431bf4e 100644
+>> --- a/arch/powerpc/boot/dts/t4240rdb.dts
+>> +++ b/arch/powerpc/boot/dts/t4240rdb.dts
+>> @@ -69,10 +69,27 @@
+>>  		device_type = "memory";
+>>  	};
+>>  
+>> +	reserved-memory {
+>> +		#address-cells = <2>;
+>> +		#size-cells = <2>;
+>> +		ranges;
+>> +
+>> +		bman_fbpr: bman-fbpr {
+>> +			compatible = "fsl,bman-fbpr";
+>> +			alloc-ranges = <0 0 0xffff 0xffffffff>;
+>> +			size = <0 0x1000000>;
+>> +			alignment = <0 0x1000000>;
+>> +		};
+>> +	};
+> 
+> Can't this be done at the SoC level rather than board level?
+
+The size of the memory is not SoC specific. Among other things is
+determined by the number of MACs that are pinned-out on the board
+
+
+Cheers,
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
