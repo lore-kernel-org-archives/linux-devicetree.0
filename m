@@ -1,201 +1,62 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 04/12] irqchip: nvic: support routable irq domain ops
-Date: Wed, 3 Dec 2014 10:39:00 +0100
-Message-ID: <20141203093900.GL2129@pengutronix.de>
-References: <1417565531-4507-1-git-send-email-stefan@agner.ch>
- <1417565531-4507-5-git-send-email-stefan@agner.ch>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH v15 06/12] dt-bindings: add document for dw_hdmi
+Date: Wed, 03 Dec 2014 17:43:23 +0800
+Message-ID: <547EDB3B.9010907@rock-chips.com>
+References: <1417505778-18341-1-git-send-email-andy.yan@rock-chips.com>
+ <1417506124-18626-1-git-send-email-andy.yan@rock-chips.com>
+ <1417544629.3411.15.camel@pengutronix.de> <547E5F51.2090800@rock-chips.com>
+ <1417598398.5124.2.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1417565531-4507-5-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1417598398.5124.2.camel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Pawel Moll <pawel.moll@arm.com>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, rmk+kernel@arm.linux.org.uk, mark.yao@rock-chips.com, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, vladimir_zapolskiy@mentor.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Stefan,
-
-On Wed, Dec 03, 2014 at 01:12:03AM +0100, Stefan Agner wrote:
-> Add support for routable irq domain ops like the GIC interrupt
-> controller provides. This is useful for asymmetrical multi-
-> processor SoCs, such as Freescale Vybrid (VF6xx) which have
-> a Cortex-M4 alongside a Cortex-A5 and a interrupt router to
-> route the peripheral interrupts between them.
->=20
-> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-> ---
->  drivers/irqchip/irq-nvic.c       | 70 ++++++++++++++++++++++++++++++=
-+++++++++-
->  include/linux/irqchip/arm-nvic.h | 25 ++++++++++++++
->  2 files changed, 94 insertions(+), 1 deletion(-)
->  create mode 100644 include/linux/irqchip/arm-nvic.h
->=20
-> diff --git a/drivers/irqchip/irq-nvic.c b/drivers/irqchip/irq-nvic.c
-> index 4ff0805..dbfb5be 100644
-> --- a/drivers/irqchip/irq-nvic.c
-> +++ b/drivers/irqchip/irq-nvic.c
-> @@ -40,6 +40,7 @@
->  #define NVIC_MAX_IRQ		((NVIC_MAX_BANKS - 1) * 32 + 16)
-> =20
->  static struct irq_domain *nvic_irq_domain;
-> +const struct irq_domain_ops *nvic_routable_irq_domain_ops;
-Can you reshuffle the order of functions to make this forward
-declaration unnecessary?
- =20
->  asmlinkage void __exception_irq_entry
->  nvic_handle_irq(irq_hw_number_t hwirq, struct pt_regs *regs)
-> @@ -49,6 +50,73 @@ nvic_handle_irq(irq_hw_number_t hwirq, struct pt_r=
-egs *regs)
->  	handle_IRQ(irq, regs);
->  }
-> =20
-> +static int nvic_irq_domain_map(struct irq_domain *d, unsigned int ir=
-q,
-> +				irq_hw_number_t hw)
-> +{
-> +	int ret;
-> +
-> +	ret =3D irq_map_generic_chip(d, irq, hw);
-> +
-> +	if (IS_ERR_VALUE(ret))
-if (ret < 0)
-
-> +		return ret;
-> +
-> +	return nvic_routable_irq_domain_ops->map(d, irq, hw);
-You could save the default implementations if you do:
-
-	if (nvic_routable_irq_domain_ops)
-		return nvic_routable_irq_domain_ops->map(d, irq, hw);
-
-(maybe also check for map?)
-
-> +}
-> +
-> +static void nvic_irq_domain_unmap(struct irq_domain *d, unsigned int=
- irq)
-> +{
-> +	nvic_routable_irq_domain_ops->unmap(d, irq);
-> +}
-> +
-> +static int nvic_irq_domain_xlate(struct irq_domain *d,
-> +				 struct device_node *controller,
-> +				 const u32 *intspec, unsigned int intsize,
-> +				 unsigned long *out_hwirq,
-> +				 unsigned int *out_type)
-> +{
-> +	*out_hwirq =3D intspec[0];
-> +	*out_type =3D IRQ_TYPE_NONE;
-If you demand from the callback to set this, you can just do
-
-	nvic_irq_domain_ops.xlate =3D new_callback;
-
-not sure this is sensible though. Up to you.
-
-> +	return nvic_routable_irq_domain_ops->xlate(d, controller, intspec,
-> +						  intsize, out_hwirq, out_type);
-> +}
-> +
-> +struct irq_domain_ops nvic_irq_domain_ops =3D {
-> +	.map	=3D nvic_irq_domain_map,
-> +	.unmap	=3D nvic_irq_domain_unmap,
-> +	.xlate	=3D nvic_irq_domain_xlate,
-> +};
-> +
-> +/* Default functions for routable irq domain */
-> +static int nvic_routable_irq_domain_map(struct irq_domain *d, unsign=
-ed int irq,
-> +			      irq_hw_number_t hw)
-> +{
-> +	return 0;
-> +}
-> +
-> +static void nvic_routable_irq_domain_unmap(struct irq_domain *d,
-> +					  unsigned int irq)
-> +{
-> +}
-> +
-> +static int nvic_routable_irq_domain_xlate(struct irq_domain *d,
-> +				struct device_node *controller,
-> +				const u32 *intspec, unsigned int intsize,
-> +				unsigned long *out_hwirq,
-> +				unsigned int *out_type)
-> +{
-> +	return 0;
-> +}
-> +
-> +static const struct irq_domain_ops nvic_default_routable_irq_domain_=
-ops =3D {
-> +	.map =3D nvic_routable_irq_domain_map,
-> +	.unmap =3D nvic_routable_irq_domain_unmap,
-> +	.xlate =3D nvic_routable_irq_domain_xlate,
-> +};
-> +
-> +const struct irq_domain_ops *nvic_routable_irq_domain_ops =3D
-> +					&nvic_default_routable_irq_domain_ops;
-> +
->  static int __init nvic_of_init(struct device_node *node,
->  			       struct device_node *parent)
->  {
-> @@ -70,7 +138,7 @@ static int __init nvic_of_init(struct device_node =
-*node,
->  		irqs =3D NVIC_MAX_IRQ;
-> =20
->  	nvic_irq_domain =3D
-> -		irq_domain_add_linear(node, irqs, &irq_generic_chip_ops, NULL);
-> +		irq_domain_add_linear(node, irqs, &nvic_irq_domain_ops, NULL);
->  	if (!nvic_irq_domain) {
->  		pr_warn("Failed to allocate irq domain\n");
->  		return -ENOMEM;
-> diff --git a/include/linux/irqchip/arm-nvic.h b/include/linux/irqchip=
-/arm-nvic.h
-> new file mode 100644
-> index 0000000..0e92a14
-> --- /dev/null
-> +++ b/include/linux/irqchip/arm-nvic.h
-> @@ -0,0 +1,25 @@
-> +/*
-> + *  include/linux/irqchip/arm-nvic.h
-Don't add the filename to a comment. There are more reliable means to
-find it out than looking for that comment.
-
-> + *
-> + *  Copyright (C) 2014 Stefan Agner
-Is this indented differently to the paragraph below on purpose?
-
-> + *
-> + * This program is free software; you can redistribute it and/or mod=
-ify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +#ifndef __LINUX_IRQCHIP_ARM_NVIC_H
-> +#define __LINUX_IRQCHIP_ARM_NVIC_H
-> +
-> +#ifndef __ASSEMBLY__
-> +
-> +#ifdef CONFIG_ARM_NVIC
-> +extern const struct irq_domain_ops *nvic_routable_irq_domain_ops;
-> +static inline void __init register_routable_domain_ops
-> +					(const struct irq_domain_ops *ops)
-> +{
-> +		nvic_routable_irq_domain_ops =3D ops;
-> +}
-> +#endif /* CONFIG_ARM_NVIC */
-> +
-> +#endif /* __ASSEMBLY__ */
-> +#endif /* __LINUX_IRQCHIP_ARM_NVIC_H */
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgUGhpbGlwcDoKT24gMjAxNOW5tDEy5pyIMDPml6UgMTc6MTksIFBoaWxpcHAgWmFiZWwgd3Jv
+dGU6Cj4gSGkgQW5keSwKPgo+IEFtIE1pdHR3b2NoLCBkZW4gMDMuMTIuMjAxNCwgMDg6NTQgKzA4
+MDAgc2NocmllYiBBbmR5IFlhbjoKPj4+PiArUmVxdWlyZWQgcHJvcGVyaXRpZXM6Cj4+Pj4gKy0g
+Y29tcGF0aWJsZTogcGxhdGZvcm0gc3BlY2lmaWMgc3VjaCBhczoKPj4+PiArICAgKiAiZnNsLGlt
+eDZxLWhkbWkiCj4+Pj4gKyAgICogImZzbCxpbXg2ZGwtaGRtaSIKPj4+PiArICAgKiAicm9ja2No
+aXAscmszMjg4LWR3LWhkbWkiCj4+PiBJIHRoaW5rIHdlIHNob3VsZCBhZGQgYSBjb21tb24gY29t
+cGF0aWJsZSB2YWx1ZSAic25wcyxkdy1oZG1pLXR4IiBoZXJlOgo+Pj4KPj4+IAljb21wYXRpYmxl
+ID0gImZzbCxpbXg2cS1oZG1pIiwgInNucHMsZHctaGRtaS10eCI7Cj4+Pgo+PiAgICAgICAgSG93
+IGFib3V0ICJzbnBzLGR3LWhkbWkiLCBiZWNhdXNlIHRoZSBkcml2ZXIgaXMgbm90IG9ubHkgYWJv
+dXQKPj4gICAgIGhkbWkgdHgsIGJ1dCBhbHNvIGluY2x1ZGUgaGRtaSBwaHkuCj4gU3lub3BzeXMg
+Y2FsbCB0aGUgd2hvbGUgbW9kdWxlCj4gIkRlc2lnbldhcmUgSERNSSBUcmFuc21pdHRlciAoVFgp
+IElQIFNvbHV0aW9uIjoKPgo+IGh0dHBzOi8vd3d3LnN5bm9wc3lzLmNvbS9kdy9pcGRpci5waHA/
+ZHM9ZHdjX2hkbWlfMTRfY3Nkc190eAo+IGh0dHBzOi8vd3d3LnN5bm9wc3lzLmNvbS9kdy9pcGRp
+ci5waHA/ZHM9ZHdjX2hkbWlfMjBfY3Nkc190eAo+Cj4gVGhhdCBpbmNsdWRlcyB0aGUgUEhZLiBJ
+J2QgcHJlZmVyIGtlZXBpbmcgdGhlIC10eCBpbiB0aGVyZSB0bwo+IGRpZmZlcmVudGlhdGUgZnJv
+bSBhIHBvc3NpYmxlIGZ1dHVyZSAic25wcyxkdy1oZG1pLXJ4IjoKPgo+IGh0dHBzOi8vd3d3LnN5
+bm9wc3lzLmNvbS9kdy9pcGRpci5waHA/ZHM9ZHdjX2hkbWlfMTRfY3Nkc19yeAo+IGh0dHBzOi8v
+d3d3LnN5bm9wc3lzLmNvbS9kdy9pcGRpci5waHA/ZHM9ZHdjX2hkbWlfMjBfY3Nkc19yeAoKICAg
+T2ssIEkgd2lsbCBhZGQgdGhlIGNvbXBhdGlibGUgInNucHMsIGR3LWhkbWktdHgiLAogICAgU28g
+ZG8gSSBuZWVkIHRvIGFkZCB0aGlzIHZhbHVlIHRvIGlteDZkbC5kdHNpPwo+PiAgICAgICAgIElm
+IHdlIGFkZCBzdWNoIGNvbXBhdGlibGUgdmFsdWUsIGRvIHdlIGhhdmUgdG8gaW1wbGVtZW50IGFu
+b3RoZXIKPj4gICAgICBwbGF0Zm9ybSBkcml2ZXIgbGlrZSBkd19oZG1pLXBsdGZtLmMgd2l0aCB0
+aGUKPj4gY29tcGF0aWJsZT0ic25wcyxkdy1oZG1pIiAsCj4+ICAgICAgb3IganVzdCBpbmNsdWRl
+IHRoZSBjb21wYXRpYmxlIHZhbHVlIGluIGR3X2hkbWktaW14LmMgYW5kCj4+IGR3X2hkbWktcm9j
+a2NoaXAuYz8KPiBUaGF0IGNvbW1vbiBjb21wYXRpYmxlIGRvZXNuJ3QgaGF2ZSB0byBiZSB1c2Vk
+IGJ5IGFueSBkcml2ZXIuIEl0J3MganVzdAo+IHRoZXJlIHRvIHNob3cgdGhlc2UgYXJlIHRoZSBz
+YW1lL3NpbWlsYXIgSVAgY29yZS4KPiBJZiBhIGNvbW1vbiBkcml2ZXIgd2l0aG91dCBhbnkgU29D
+IHNwZWNpZmljIGtub3dsZWRnZSBjb3VsZCBiZSB3cml0dGVuLAo+IHRoYXQgb25lIHdvdWxkIG1h
+dGNoIGFnYWluc3QgdGhlIGNvbW1vbiBjb21wYXRpYmxlLgo+Cj4gcmVnYXJkcwo+IFBoaWxpcHAK
+Pgo+Cj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBM
+aW51eC1yb2NrY2hpcCBtYWlsaW5nIGxpc3QKPiBMaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRl
+YWQub3JnCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
+eC1yb2NrY2hpcAo+Cj4KPgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmRldmVsIG1haWxpbmcgbGlzdApkZXZlbEBsaW51eGRyaXZlcnByb2plY3Qub3Jn
+Cmh0dHA6Ly9kcml2ZXJkZXYubGludXhkcml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2RyaXZlcmRldi1kZXZlbAo=
