@@ -1,99 +1,130 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH v15 12/12] drm: bridge/dw_hdmi: add rockchip rk3288 support
-Date: Wed, 03 Dec 2014 20:32:15 +0800
-Message-ID: <547F02CF.9010804@rock-chips.com>
-References: <1417505778-18341-1-git-send-email-andy.yan@rock-chips.com>		
- <1417506327-18908-1-git-send-email-andy.yan@rock-chips.com>	
- <1417515882.3411.8.camel@pengutronix.de> <547DB1ED.7000409@rock-chips.com>
- <1417525257.3411.12.camel@pengutronix.de>
+From: Yadwinder Singh Brar <yadi.brar@samsung.com>
+Subject: RE: [PATCH] mfd: max77686: Fix parent of rtc device
+Date: Wed, 03 Dec 2014 18:18:57 +0530
+Message-ID: <001d01d00ef7$9dc2ba80$d9482f80$%brar@samsung.com>
+References: <1417523620-4311-1-git-send-email-yadi.brar@samsung.com>
+ <1417524339-4604-1-git-send-email-yadi.brar@samsung.com>
+ <547DBFAD.30605@samsung.com>
+ <000001d00ed7$db623bb0$9226b310$%brar@samsung.com>
+ <1417598734.23732.11.camel@AMDC1943>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1417525257.3411.12.camel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Pawel Moll <pawel.moll@arm.com>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, rmk+kernel@arm.linux.org.uk, mark.yao@rock-chips.com, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, vladimir_zapolskiy@mentor.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1417598734.23732.11.camel@AMDC1943>
+Content-language: en-us
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Krzysztof Kozlowski' <k.kozlowski@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lee.jones@linaro.org, sameo@linux.intel.com, akpm@linux-foundation.org, tomasz.figa@gmail.com, robh+dt@kernel.org, yadi.brar01@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGhpbGlwcDoKT24gMjAxNOW5tDEy5pyIMDLml6UgMjE6MDAsIFBoaWxpcHAgWmFiZWwgd3Jv
-dGU6Cj4gSGkgQW5keSwKPgo+IEFtIERpZW5zdGFnLCBkZW4gMDIuMTIuMjAxNCwgMjA6MzQgKzA4
-MDAgc2NocmllYiBBbmR5IFlhbjoKPj4gSGkgUGhpbGlwcDoKPj4gT24gMjAxNOW5tDEy5pyIMDLm
-l6UgMTg6MjQsIFBoaWxpcHAgWmFiZWwgd3JvdGU6Cj4+PiBIaSBBbmR5LAo+Pj4KPj4+IEFtIERp
-ZW5zdGFnLCBkZW4gMDIuMTIuMjAxNCwgMTU6NDUgKzA4MDAgc2NocmllYiBBbmR5IFlhbjoKPj4+
-IFsuLi5dCj4+Pj4gK3N0YXRpYyBpbnQgZHdfaGRtaV9yb2NrY2hpcF9iaW5kKHN0cnVjdCBkZXZp
-Y2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLAo+Pj4+ICsJCQkJIHZvaWQgKmRhdGEpCj4+
-Pj4gK3sKPj4+PiArCXN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYgPSB0b19wbGF0Zm9ybV9k
-ZXZpY2UoZGV2KTsKPj4+PiArCWNvbnN0IHN0cnVjdCBkd19oZG1pX3BsYXRfZGF0YSAqcGxhdF9k
-YXRhOwo+Pj4+ICsJY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCAqbWF0Y2g7Cj4+Pj4gKwlzdHJ1
-Y3QgZHJtX2RldmljZSAqZHJtID0gZGF0YTsKPj4+PiArCXN0cnVjdCBkcm1fZW5jb2RlciAqZW5j
-b2RlcjsKPj4+PiArCXN0cnVjdCByb2NrY2hpcF9oZG1pICpoZG1pOwo+Pj4+ICsJaW50IHJldDsK
-Pj4+PiArCj4+Pj4gKwlpZiAoIXBkZXYtPmRldi5vZl9ub2RlKQo+Pj4+ICsJCXJldHVybiAtRU5P
-REVWOwo+Pj4+ICsKPj4+PiArCWhkbWkgPSBkZXZtX2t6YWxsb2MoJnBkZXYtPmRldiwgc2l6ZW9m
-KCpoZG1pKSwgR0ZQX0tFUk5FTCk7Cj4+Pj4gKwlpZiAoIWhkbWkpCj4+Pj4gKwkJcmV0dXJuIC1F
-Tk9NRU07Cj4+Pj4gKwo+Pj4+ICsJbWF0Y2ggPSBvZl9tYXRjaF9ub2RlKGR3X2hkbWlfcm9ja2No
-aXBfaWRzLCBwZGV2LT5kZXYub2Zfbm9kZSk7Cj4+Pj4gKwlwbGF0X2RhdGEgPSBtYXRjaC0+ZGF0
-YTsKPj4+PiArCWhkbWktPmRldiA9ICZwZGV2LT5kZXY7Cj4+Pj4gKwllbmNvZGVyID0gJmhkbWkt
-PmVuY29kZXI7Cj4+Pj4gKwlwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBoZG1pKTsKPj4+PiAr
-Cj4+Pj4gKwlyZXQgPSByb2NrY2hpcF9oZG1pX3BhcnNlX2R0KGhkbWkpOwo+Pj4+ICsJaWYgKHJl
-dCkgewo+Pj4+ICsJCWRldl9lcnIoaGRtaS0+ZGV2LCAiVW5hYmxlIHRvIHBhcnNlIE9GIGRhdGFc
-biIpOwo+Pj4+ICsJCXJldHVybiByZXQ7Cj4+Pj4gKwl9Cj4+Pj4gKwo+Pj4+ICsJcmV0ID0gY2xr
-X3ByZXBhcmVfZW5hYmxlKGhkbWktPmNsayk7Cj4+Pj4gKwlpZiAocmV0KSB7Cj4+Pj4gKwkJZGV2
-X2VycihoZG1pLT5kZXYsICJDYW5ub3QgZW5hYmxlIEhETUkgY2xvY2s6ICVkXG4iLCByZXQpOwo+
-Pj4+ICsJCXJldHVybiByZXQ7Cj4+Pj4gKwl9Cj4+Pj4gKwo+Pj4+ICsJcmV0ID0gY2xrX3ByZXBh
-cmVfZW5hYmxlKGhkbWktPmhkY3BfY2xrKTsKPj4+PiArCWlmIChyZXQpIHsKPj4+PiArCQlkZXZf
-ZXJyKGhkbWktPmRldiwgIkNhbm5vdCBlbmFibGUgSERNSSBoZGNwIGNsb2NrOiAlZFxuIiwgcmV0
-KTsKPj4+PiArCQlyZXR1cm4gcmV0Owo+Pj4+ICsJfQo+Pj4gQ291bGQgd2UgaGF2ZSBhIGxvb2sg
-YXQgdGhlIGNsb2NrcyBhZ2Fpbj8gQmFzaWNhbGx5IHRoZSBSb2NrY2hpcCBjbG9jawo+Pj4gaGFu
-ZGxpbmcgaXMgZXhhY3RseSB0aGUgc2FtZSwgZXhjZXB0IHRoZSBjbG9ja3MgYXJlIGNhbGxlZCBi
-eSBvdGhlcgo+Pj4gbmFtZXMuCj4+Pgo+Pj4gT24gaS5NWDYsIGFjY29yZGluZyB0byB0aGUgcmVm
-ZXJlbmNlIG1hbnVhbCwgdGhlIEhETUkgVFggbW9kdWxlIGhhcyBmb3VyCj4+PiBjbG9jayBpbnB1
-dHM6ICJpYWhiY2xrIiAoYnVzIGNsb2NrKSwgImljZWNjbGsiICgzMiBrSHogQ0VDIGNsb2NrKSwK
-Pj4+ICJpaGNsayIgKG1vZHVsZSBjbG9jayksIGFuZCAiaXNmcmNsayIgKDI3IE1IeiBpbnRlcm5h
-bCBTRlIgY2xvY2spLgo+Pj4gVGhlICJpYWhiY2xrIiBhbmQgImloY2xrIiBhcmUgYm90aCBzb3Vy
-Y2VkIGZyb20gdGhlIFNvQyBBSEIgcm9vdCBjbG9jaywKPj4+IHRoZSAzMiBrSHogcmVmZXJlbmNl
-IGlucHV0IGNhbid0IGJlIGdhdGVkLCBhbmQgdGhlICJpc2ZyY2xrIiBoYXMgaXRzIG93bgo+Pj4g
-Z2F0ZS4KPj4+Cj4+PiBEb2VzIHRoZSBIRE1JIFRYIGltcGxlbWVudGF0aW9uIG9uIFJvY2tjaGlw
-IHN0aWxsIGhhdmUgdGhlIHNlcGFyYXRlCj4+PiBleHRlcm5hbCBzZnIgYnVzIGFuZCBtb2R1bGUg
-Y2xvY2sgaW5wdXRzPyBJIGFzc3VtZSB0aGF0IHlvdXIgImNsayIgaW5wdXQKPj4+IGlzIGEgc2lu
-Z2xlIGdhdGUgYml0IGZvciBidXMgYW5kIG1vZHVsZSBjbG9ja3MgYXQgdGhlIHNhbWUgdGltZT8K
-Pj4+IElmIHBvc3NpYmxlLCBJJ2QgcHJlZmVyIHRvIGZpbmQgYSBjb21tb24gYmluZGluZyBmb3Ig
-dGhlIGNsb2NrcyB3aXRoCj4+PiBzb21lIG9mIHRoZSBjbG9ja3MgYmVpbmcgb3B0aW9uYWwsIGJ1
-dCBmb3IgdGhhdCB3ZSBuZWVkIHRvIGtub3cgdGhlCj4+PiBhY3R1YWwgY2xvY2sgaW5wdXRzIHRv
-IHRoZSBIRE1JIFRYIG1vZHVsZS4KPj4+Cj4+PiByZWdhcmRzCj4+PiBQaGlsaXBwCj4+Pgo+PiAg
-ICAgICBUaGVyZSBhcmUgdGhyZWUgIGluZGl2aWR1YWwgY2xvY2sgaW5wdXRzIG9uIFJvY2tjaGlw
-IFJLMzI4OCBIRE1JOgo+PiAiaGRtaV9jdHJsX2NsayIsCj4+ICAgICAgICJoZG1pX2NlY19jbGsi
-LCAiaGRtaV9oZGNwX2NsayIsIHRoZSB0aHJlZSBjbG9ja3MgYXJlIHJlc3BvbnNpYmxlCj4+IGZv
-ciBkaWZmZXJlbnQKPj4gICAgICAgIGZ1bmN0aW9ucyBhcyB0aGVpciBuYW1lIGRlc2NyaWJlZCwg
-YW5kIGhhdmUgdGhlaXIgb3duIHByaXZhdGUgZ2F0ZQo+PiBiaXQuIFRoYXQgaXMKPj4gICAgICAg
-IHRvIHNheSwgdGhlIGNlY19jbGsgYW5kIGhkY3BfY2xrIGNhbiBhbGwgYmUgZGlzYWJsZWQgaWYg
-d2UgZG9uJ3QKPj4gbmVlZCBoZGNwIGFuZCBjZWMKPj4gICAgICAgIGZ1bmN0aW9uLgo+PiAgICAg
-ICAgU28gSSB0aGluayBpdCdzIGJldHRlciB0byBtYWtlIHRoZSBjbGsgY29udHJvbCBwbGF0Zm9y
-bSBpbmRlcGVuZGVudC4KPiBNeSBxdWVzdGlvbiBpcyBub3QgYWJvdXQgdGhlIGF2YWlsYWJsZSBn
-YXRlcyBhdCB0aGUgU29DIGxldmVsLCBidXQgYWJvdXQKPiB0aGUgYWN0dWFsIGNsb2NrIGlucHV0
-cyBmcm9tIHBvaW50IG9mIHZpZXcgb2YgdGhlIEhETUkgVFggSVAuCj4KPiBJdCBjb3VsZCBiZSB0
-aGF0IHRoZSBoZG1pX2N0cmxfY2xrIGdhdGVzIGFsbCBpbnB1dHMgdG8gdGhlIG1vZHVsZSBhbmQK
-PiBidXMgY2xvY2tzIHRvZ2V0aGVyLiBJZiBzbywgeW91IGNvdWxkIGp1c3QgcmV1c2UgImlzZnIi
-IGFuZCAiaWFoYiIgYW5kCj4gc2V0IGl0IHRvIHRoZSBzYW1lIGNsb2NrLiBJZiBub3QsIHdlJ2Qg
-bmVlZCB0byB0aGluayBvZiBzb21ldGhpbmcgZWxzZS4KPiBVbmZvcnR1bmF0ZWx5IEkgZG9uJ3Qg
-aGF2ZSBhbnkgU3lub3BzeXMgZG9jdW1lbnRhdGlvbiBvZiB0aGUgSERNSSBUWCBhdAo+IHRoYXQg
-bGV2ZWwuCgogICAgQWZ0ZXIgY29uZmlybWluZyB3aXRoIHRoZSBJQyBkZXNpZ25lciwgd2UgZmlu
-YWxseSBtYWtlIGNsZWFyIHRoYXQKICAgIFJvY2tjaGlwIFJLMzI4OCBhbG1vc3QgdXNlIHRoZSBz
-YW1lIGNsb2NrIGRlc2lnbiB3aXRoIGlteDoKICAgIGNsay0tLS0taWFoYmNsaywgdXNlZCBmb3Ig
-aGRtaSBtb2R1bGUgYW5kIGJ1cwogICAgaGRjcF9jbGstLS0tLWlzZnJjbGssIHVzZWQgZm9yIGhk
-Y3AgYW5kIGkyY20KICAgIGNlY2NsayAtLS0tLWNlY2NsaywgYnV0IHRoaXMgY2xrIGNhbiBiZSBn
-YXRlZCBvbiByb2NrY2hpcCwgdGhpcyBpcyAKZGlmZmVyZW50IHdpdGggaW14LAogICAgYnV0IHdl
-IGRvbid0IGhhbmRsZSB0aGUgY2VjIHN0dWZmIG5vdy4gU28gaSB3aWxsIHRyeSB0byByZXVzZSB0
-aGUgCmlteCBjbGsgYmluZHMuIGRvIHlvdQogICB0aGluayB0aGF0IGlzIG9rPwo+IHJlZ2FyZHMK
-PiBQaGlsaXBwCj4KPgo+Cj4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkZXZlbCBtYWlsaW5nIGxpc3QKZGV2ZWxAbGludXhkcml2ZXJwcm9qZWN0Lm9y
-ZwpodHRwOi8vZHJpdmVyZGV2LmxpbnV4ZHJpdmVycHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcml2ZXJkZXYtZGV2ZWwK
+On Wednesday, December 03, 2014 2:56 PM, Krzysztof Kozlowski wrote:
+>=20
+> On =C5=9Bro, 2014-12-03 at 14:32 +0530, Yadwinder Singh Brar wrote:
+> >
+> > On Tuesday, December 02, 2014 7:04 PM, Krzysztof Koz=C5=82owski wro=
+te:
+> > > On 02.12.2014 13:45, Yadwinder Singh Brar wrote:
+> > > > rtc have different i2c client than power(pmic) block. So rtc
+> > > > device should sit under its own i2c client in device hierarchy,
+> > > > which
+> > > reflects in sysfs also.
+> > > > This patch modifies code to register rtc cell with rtc->dev as
+> > > parent.
+> > > >
+> > > > Without this patch :
+> > > > # ls /sys/class/i2c-adapter/i2c-0/0-0009/
+> > > > driver         max77686-pmic  modalias       power
+> uevent
+> > > > max77686-clk   max77686-rtc   name           subsystem
+> > > >
+> > > > After applying patch :
+> > > > # ls /sys/class/i2c-adapter/i2c-0/0-0006/
+> > > > driver/        modalias       power/         uevent
+> > > > max77686-rtc/  name           subsystem/
+> > > >
+> > > > Signed-off-by: Yadwinder Singh Brar <yadi.brar@samsung.com>
+> > > > ---
+> > > >
+> > > > Or Can we follow another (exhaustive but more cleaner) approach=
+,
+> > > which
+> > > > will be more like code refactoring and cleanup rather than only
+> fix:
+> > > > Since rtc uses i2c client, which gets created using
+> > > > i2c_new_dummy() and is not shared by any other cell of max77686=
+=2E
+> > > > So we can covert rtc platform driver itself to i2c client drive=
+r.
+> > > > It will also allow to expilicitly describe max77686-rtc in DT
+> which we can't do now.
+> > > > It can be applicable to some other existing and new mfd pmic
+> drivers.
+> > > > Any suggestion/comments ?
+> > >
+> > > Hi,
+> > >
+> > > What kind of problem is solved by this patch?
+> > >
+> >
+> > Let me try to explain once again :)
+> > After seeing a message "i2c i2c-0: .... , addr=3D0x06, .." in dmesg
+> log,
+> > I was not able to find any such device in sysfs as well as device
+> tree.
+> > There was no device under /sys/class/i2c-dev/i2c-0/device/0-0006/
+> > Isn't something wrong or missing ?
+> >
+> > This patch fixes that missing parent child relation, which IMO shou=
+ld
+> > be correct always, though it causes any major problem or not.
+>=20
+> OK, I got your point. I'm fine with both solutions and the patch look=
+s
+> good, so:
+> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>=20
+
+Thanks for reviewing :).
+
+> > Still I am thinking, 0-0006 slave device(rtc) shouldn't also appear
+> in DT?
+> > As DT should describe the hardware that we are using.
+>=20
+> Your patch properly describes the hardware. However from driver
+> perspective, the RTC here is not an standalone driver and depends on
+> parent (MFD) driver.
+>=20
+
+Hmm ... I can't see any hard dependency. I think rtc can survive as ind=
+ependent i2c device.
+And rtc(@06) is more like a sibling of existing MFD driver(max77686@09)
+
+> Although max77686 RTC could have its own DeviceTree node, I think it
+> should still be put under main MFD driver's node, because the parent
+> manages stuff like interrupts.
+>=20
+
+I think it will not sound good to have something like max77686-rtc@06
+node under max77686@09 node, since both are kind of siblings.
+And interrupts should not be a restricting factor, In case of
+max77686 interrupt source and mask registers for rtc also lie in rtc
+i2c register bank so we can add an irq_chip from rtc driver itself.
+
+Only thing I can see which can be little bit tricky, is providing
+alarm->pending info(pending interrupt) in alarm_read() callback
+in rtc as currently its based on MAX77686_REG_STATUS2 which is
+only common register in power(pmic) register bank of max77686.
+Though in practical scenarios it may not be non zero, since
+reading once source register clears this status also, but we may
+have to keep it for sake of functionality completeness.
+
+I can=E2=80=99t see any way(something similar to syscon) for sharing
+i2c regmap between independent drivers, other than getting
+reference to regmap from i2c device found by of_find_i2c_device_by_node=
+().
+Anyone can suggest better idea?
+
+
+Best Regards,
+Yadwinder
