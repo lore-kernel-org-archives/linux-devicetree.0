@@ -1,102 +1,81 @@
-From: vishnupatekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/3] ARM:dts:sun7i:ps2 added nodes for Sun7i A20
- PS2 controller. 	added ps2 nodes in lime2 board dts.
-Date: Thu,  4 Dec 2014 04:36:03 +0530
-Message-ID: <1417647963-28077-1-git-send-email-VishnuPatekar0510@gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] devicetree: of: Add bindings for chosen node,
+ stdout-path
+Date: Wed, 03 Dec 2014 15:07:49 -0800
+Message-ID: <547F97C5.7020202@gmail.com>
+References: <1417110967-16284-1-git-send-email-leif.lindholm@linaro.org> <1417110967-16284-2-git-send-email-leif.lindholm@linaro.org> <547E7455.6090009@gmail.com> <CACxGe6vdbURE3=W3Uerwy90piGKhv7-m+-vpUhCiUTKB4AzTsw@mail.gmail.com> <547F6881.20400@gmail.com> <CACxGe6ugLyV50gKCe83wCL0=qy+oHeExf9murW+qFuoVQ_TzsA@mail.gmail.com>
+Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD64TFVR3YIBB55O72RQKGQEE5X5L6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, inux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vishnupatekar <VishnuPatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACxGe6ugLyV50gKCe83wCL0=qy+oHeExf9murW+qFuoVQ_TzsA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
----
- arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts |   10 ++++++++
- arch/arm/boot/dts/sun7i-a20.dtsi                |   30 ++++++++++++++++++++++-
- 2 files changed, 39 insertions(+), 1 deletion(-)
+On 12/3/2014 1:45 PM, Grant Likely wrote:
+> On Wed, Dec 3, 2014 at 7:46 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On 12/3/2014 7:12 AM, Grant Likely wrote:
+>>> On Wed, Dec 3, 2014 at 2:24 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>> On 11/27/2014 9:56 AM, Leif Lindholm wrote:
+>>>>> Add a global binding for the chosen node.
+>>>>> Include a description of the stdout-path, and an explicit statement on
+>>>>> its extra options in the context of a UART console.
+>>>>>
+>>>>> Opening description stolen from www.devicetree.org, and part of the
+>>>>> remaining text provided by Mark Rutland.
+>>>>>
+>>>>> Signed-off-by: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>>> ---
+>>>>>  Documentation/devicetree/bindings/chosen.txt |   42 ++++++++++++++++++++++++++
+>>>>>  1 file changed, 42 insertions(+)
+>>>>>  create mode 100644 Documentation/devicetree/bindings/chosen.txt
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+>>>>> new file mode 100644
+>>>>> index 0000000..9cd74e9
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/chosen.txt
+>>>>> @@ -0,0 +1,42 @@
+>>>>> +The chosen node
+>>>>> +---------------
+>>>>> +
+>>>>> +The chosen node does not represent a real device, but serves as a place
+>>>>> +for passing data between firmware and the operating system, like boot
+>>>>> +arguments. Data in the chosen node does not represent the hardware.
+>>>>> +
+>>>>> +
+>>>>> +stdout-path property
+>>>>
+>>>> The code in patch 3/3 adds the extra options feature to the properties:
+>>>>
+>>>>   stdout-path
+>>>>   linux,stdout-path
+>>>>   stdout  [if (IS_ENABLED(CONFIG_PPC) ... ]
+>>>
+>>> I don't understand what you mean here. Are you suggesting a change to
+>>> this patch? Is there something deficient in it?
+>>
+>> Assuming that the code change in patch 3 is as desired, then the chosen.txt
+>> documentation applies to all three properties, not just stdout-path.  So
+>> yes, a change is suggested for the documentation.
+> 
+> how about if this is added:
+> 
+> Implementation note: Linux will look for the property "linux,stdout-path" or
+> on PowerPC "stdout" if "stdout-path" is not found.  However, the
+> "linux,stdout-path" and "stdout" properties are deprecated. New platforms
+> should only use the "stdout-path" property.
+> 
+> g.
+> 
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-index ed364d5..374897b 100644
---- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-@@ -112,6 +112,16 @@
- 			pinctrl-0 = <&uart0_pins_a>;
- 			status = "okay";
- 		};
-+		ps20: ps2@0x01c2a000 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&ps2_0_pins>;
-+			status = "okay";
-+		};
-+		ps21: ps2@0x01c2a400 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&ps2_1_pins>;
-+			status = "okay";
-+		};
- 
- 		i2c0: i2c@01c2ac00 {
- 			pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 8605f2b..c77635d 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -357,7 +357,7 @@
- 
- 		usb_clk: clk@01c200cc {
- 			#clock-cells = <1>;
--		        #reset-cells = <1>;
-+			#reset-cells = <1>;
- 			compatible = "allwinner,sun4i-a10-usb-clk";
- 			reg = <0x01c200cc 0x4>;
- 			clocks = <&pll6 1>;
-@@ -852,6 +852,19 @@
- 				    allwinner,drive = <0>;
- 				    allwinner,pull = <0>;
- 			};
-+			ps2_0_pins: ps2_0@0 {
-+				    allwinner,pins = "PI20","PI21";
-+				    allwinner,function = "ps2";
-+				    allwinner,drive = <0>;
-+				    allwinner,pull = <0>;
-+			};
-+			ps2_1_pins: ps2_1@0 {
-+				    allwinner,pins = "PH12","PH13";
-+				    allwinner,function = "ps2";
-+				    allwinner,drive = <0>;
-+				    allwinner,pull = <0>;
-+			};
-+
- 		};
- 
- 		timer@01c20c00 {
-@@ -1079,5 +1092,20 @@
- 			#interrupt-cells = <3>;
- 			interrupts = <1 9 0xf04>;
- 		};
-+		ps20: ps2@0x01c2a000 {
-+			compatible = "allwinner,sun7i-a20-ps2";
-+			reg = <0x01c2a000 0x400>;
-+			interrupts = <0 62 4>;
-+			clocks = <&apb1_gates 6>;
-+			status = "disabled";
-+		};
-+		ps21: ps2@0x01c2a400 {
-+			compatible = "allwinner,sun7i-a20-ps2";
-+			reg = <0x01c2a400 0x400>;
-+			interrupts = <0 63 4>;
-+			clocks = <&apb1_gates 7>;
-+			status = "disabled";
-+		};
-+
- 	};
- };
--- 
-1.7.9.5
+Yep, perfect.
+
+-Frank
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
