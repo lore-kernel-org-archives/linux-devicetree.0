@@ -1,48 +1,39 @@
-From: Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH v2 1/2] ASoC: dt-bindings: rockchip-i2s: add an optional property "i2s_clk_out"
-Date: Wed,  3 Dec 2014 15:18:37 +0800
-Message-ID: <1417591118-18695-2-git-send-email-jay.xu@rock-chips.com>
-References: <1417531766-29669-1-git-send-email-jay.xu@rock-chips.com>
- <1417591118-18695-1-git-send-email-jay.xu@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1417591118-18695-1-git-send-email-jay.xu@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.de, sonnyrao@chromium.org, heiko@sntech.de
-Cc: linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Jianqun Xu <jay.xu@rock-chips.com>
+From: Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: [PATCH] ARM: samsung: add exynos-chipid binding information
+Date: Wed, 03 Dec 2014 13:14:24 +0530
+Message-ID: <1417592664-10672-1-git-send-email-pankaj.dubey@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Cc: kgene.kim@samsung.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, pawel.moll@arm.com, thomas.ab@samsung.com, Pankaj Dubey <pankaj.dubey@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Add an property "i2s_clk_out", which enables to output clock to outside
-of rockchip SoCs. Let's make it optional since not each board needs it.
+Exynos SoC's DT files are using Chipid device nodes, but it's binding
+information is missing. This patch adds exynos-chipid binding information.
 
-Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
-Reviewed-by: Doug Anderson <dianders@chromium.org>
+Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
 ---
- Documentation/devicetree/bindings/sound/rockchip-i2s.txt | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ .../bindings/arm/samsung/exynos-chipid.txt         |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt
 
-diff --git a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
-index 9b82c20..c8f5ac0 100644
---- a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
-+++ b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
-@@ -22,6 +22,10 @@ Required properties:
-    - "i2s_hclk": clock for I2S BUS
-    - "i2s_clk" : clock for I2S controller
- 
-+Optional property:
-+- "i2s_clk_out" : clock output to outside of chip, usally as master clock for audio
-+	codec chip
+diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt
+new file mode 100644
+index 0000000..85c5dfd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt
+@@ -0,0 +1,12 @@
++SAMSUNG Exynos SoCs Chipid driver.
 +
- Example for rk3288 I2S controller:
- 
- i2s@ff890000 {
-@@ -32,6 +36,6 @@ i2s@ff890000 {
- 	#size-cells = <0>;
- 	dmas = <&pdma1 0>, <&pdma1 1>;
- 	dma-names = "tx", "rx";
--	clock-names = "i2s_hclk", "i2s_clk";
--	clocks = <&cru HCLK_I2S0>, <&cru SCLK_I2S0>;
-+	clock-names = "i2s_hclk", "i2s_clk", "i2s_clk_out";
-+	clocks = <&cru HCLK_I2S0>, <&cru SCLK_I2S0>, <&cru SCLK_I2S0_CLKOUT>;
- };
++Required properties:
++- compatible : Should at least contain "samsung,exynos4210-chipid".
++
++- reg: offset and length of the register set
++
++Example:
++	chipid@10000000 {
++		compatible = "samsung,exynos4210-chipid";
++		reg = <0x10000000 0x100>;
++	};
 -- 
-1.9.1
+1.7.9.5
