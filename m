@@ -1,55 +1,151 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 11/12] ARM: dts: add support for Vybrid running on Cortex-M4
-Date: Wed, 03 Dec 2014 12:03:37 +0100
-Message-ID: <2994970.DCfUQgtmcD@wuerfel>
-References: <1417565531-4507-1-git-send-email-stefan@agner.ch> <1417565531-4507-12-git-send-email-stefan@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1417565531-4507-12-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Stefan Agner <stefan@agner.ch>, shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 01/11] mfd: syscon: Add atmel-matrix registers definition
+Date: Wed,  3 Dec 2014 12:14:57 +0100
+Message-ID: <1417605297-17310-1-git-send-email-boris.brezillon@free-electrons.com>
+References: <1417429647-3419-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1417429647-3419-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 03 December 2014 01:12:10 Stefan Agner wrote:
-> diff --git a/arch/arm/boot/dts/vf610m4-colibri.dts b/arch/arm/boot/dts/vf610m4-colibri.dts
-> new file mode 100644
-> index 0000000..051ee0f
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/vf610m4-colibri.dts
-> @@ -0,0 +1,52 @@
-> +/*
-> + * Device tree for Colibri VF61 Cortex-M4 support
-> + *
-> + * Copyright 2014 Stefan Agner
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +/dts-v1/;
-> +#include "vf610m4.dtsi"
-> +
-> +/ {
-> +       model = "VF610 Cortex-M4";
-> +       compatible = "fsl,vf610m4";
-> +
-> +       chosen {
-> +               bootargs = "console=ttyLP2,115200 ihash_entries=64 dhash_entries=64 earlyprintk clk_ignore_unused init=/linuxrc rw";
-> +       };
-> +
+AT91 SoCs have a memory range reserved for internal bus configuration.
+Expose those registers so that drivers can make use of the matrix syscon
+declared in at91 DTs.
 
-Starting with v3.19, you should be able to use the earlycon framework on
-arm32, so it would be better to replace earlyprintk with earlycon here
-and add a stdout-path property in chosen that points to the console
-uart.
+Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+Changes since v3:
+ - added AT91_MATRIX_USBPUCR_PUON definition
+ - removed useless macros (those directly returning SoC specific register
+   offsets)
 
-64 hash table entries sounds extremely small, doesn't that impact
-performance? If you have 50MB of actual RAM available, I don't think
-you need that.
+ include/linux/mfd/syscon/atmel-matrix.h | 110 ++++++++++++++++++++++++++++++++
+ 1 file changed, 110 insertions(+)
+ create mode 100644 include/linux/mfd/syscon/atmel-matrix.h
 
-	Arnd
+diff --git a/include/linux/mfd/syscon/atmel-matrix.h b/include/linux/mfd/syscon/atmel-matrix.h
+new file mode 100644
+index 0000000..fc9bdca
+--- /dev/null
++++ b/include/linux/mfd/syscon/atmel-matrix.h
+@@ -0,0 +1,110 @@
++/*
++ *  Copyright (C) 2014 Atmel Corporation.
++ *
++ * Memory Controllers (MATRIX, EBI) - System peripherals registers.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#ifndef _LINUX_MFD_SYSCON_ATMEL_MATRIX_H
++#define _LINUX_MFD_SYSCON_ATMEL_MATRIX_H
++
++#define AT91SAM9260_MATRIX_MCFG_OFF	0x00
++#define AT91SAM9260_MATRIX_SCFG_OFF	0x40
++#define AT91SAM9260_MATRIX_PRS_OFF	0x80
++#define AT91SAM9260_MATRIX_MRCR_OFF	0x100
++#define AT91SAM9260_MATRIX_EBICSA_OFF	0x11c
++
++#define AT91SAM9261_MATRIX_MRCR_OFF	0x0
++#define AT91SAM9261_MATRIX_SCFG_OFF	0x4
++#define AT91SAM9261_MATRIX_TCR_OFF	0x24
++#define AT91SAM9261_MATRIX_EBICSA_OFF	0x30
++#define AT91SAM9261_MATRIX_USBPUCR_OFF	0x34
++
++#define AT91SAM9263_MATRIX_MCFG_OFF	0x00
++#define AT91SAM9263_MATRIX_SCFG_OFF	0x40
++#define AT91SAM9263_MATRIX_PRS_OFF	0x80
++#define AT91SAM9263_MATRIX_MRCR_OFF	0x100
++#define AT91SAM9263_MATRIX_TCR_OFF	0x114
++#define AT91SAM9263_MATRIX_EBI0CSA_OFF	0x120
++#define AT91SAM9263_MATRIX_EBI1CSA_OFF	0x124
++
++#define AT91SAM9G45_MATRIX_MCFG_OFF	0x00
++#define AT91SAM9G45_MATRIX_SCFG_OFF	0x40
++#define AT91SAM9G45_MATRIX_PRS_OFF	0x80
++#define AT91SAM9G45_MATRIX_MRCR_OFF	0x100
++#define AT91SAM9G45_MATRIX_TCR_OFF	0x110
++#define AT91SAM9G45_MATRIX_DDRMPR_OFF	0x118
++#define AT91SAM9G45_MATRIX_EBICSA_OFF	0x128
++
++#define AT91SAM9N12_MATRIX_MCFG_OFF	0x00
++#define AT91SAM9N12_MATRIX_SCFG_OFF	0x40
++#define AT91SAM9N12_MATRIX_PRS_OFF	0x80
++#define AT91SAM9N12_MATRIX_MRCR_OFF	0x100
++#define AT91SAM9N12_MATRIX_EBICSA_OFF	0x118
++
++#define AT91SAM9X5_MATRIX_MCFG_OFF	0x00
++#define AT91SAM9X5_MATRIX_SCFG_OFF	0x40
++#define AT91SAM9X5_MATRIX_PRS_OFF	0x80
++#define AT91SAM9X5_MATRIX_MRCR_OFF	0x100
++#define AT91SAM9X5_MATRIX_EBICSA_OFF	0x120
++
++#define SAMA5D3_MATRIX_MCFG_OFF		0x00
++#define SAMA5D3_MATRIX_SCFG_OFF		0x40
++#define SAMA5D3_MATRIX_PRS_OFF		0x80
++#define SAMA5D3_MATRIX_MRCR_OFF		0x100
++
++#define AT91_MATRIX_MCFG(o, x)		((o) + ((x) * 0x4))
++#define AT91_MATRIX_ULBT		(7 << 0)
++#define AT91_MATRIX_ULBT_INFINITE	(0 << 0)
++#define AT91_MATRIX_ULBT_SINGLE		(1 << 0)
++#define AT91_MATRIX_ULBT_FOUR		(2 << 0)
++#define AT91_MATRIX_ULBT_EIGHT		(3 << 0)
++#define AT91_MATRIX_ULBT_SIXTEEN	(4 << 0)
++
++#define AT91_MATRIX_SCFG(o, x)		((o) + ((x) * 0x4))
++#define AT91_MATRIX_SLOT_CYCLE		(0xff <<  0)
++#define AT91_MATRIX_DEFMSTR_TYPE	(3 << 16)
++#define AT91_MATRIX_DEFMSTR_TYPE_NONE	(0 << 16)
++#define AT91_MATRIX_DEFMSTR_TYPE_LAST	(1 << 16)
++#define AT91_MATRIX_DEFMSTR_TYPE_FIXED	(2 << 16)
++#define AT91_MATRIX_FIXED_DEFMSTR	(7 << 18)
++#define AT91_MATRIX_ARBT		(3 << 24)
++#define AT91_MATRIX_ARBT_ROUND_ROBIN	(0 << 24)
++#define AT91_MATRIX_ARBT_FIXED_PRIORITY	(1 << 24)
++
++#define AT91_MATRIX_ITCM_SIZE		(0xf << 0)
++#define AT91_MATRIX_ITCM_0		(0 << 0)
++#define AT91_MATRIX_ITCM_16		(5 << 0)
++#define AT91_MATRIX_ITCM_32		(6 << 0)
++#define AT91_MATRIX_ITCM_64		(7 << 0)
++#define	AT91_MATRIX_DTCM_SIZE		(0xf << 4)
++#define	AT91_MATRIX_DTCM_0		(0 << 4)
++#define	AT91_MATRIX_DTCM_16		(5 << 4)
++#define AT91_MATRIX_DTCM_32		(6 << 4)
++#define AT91_MATRIX_DTCM_64		(7 << 4)
++
++#define AT91_MATRIX_PRAS(o, x)		((o) + ((x) * 0x8))
++#define AT91_MATRIX_PRBS(o, x)		((o) + ((x) * 0x8) + 0x4)
++#define AT91_MATRIX_MPR_MSK(x)		(3 << ((x) * 0x4))
++
++#define AT91_MATRIX_RCB(x)		BIT(x)
++
++#define AT91_MATRIX_CSA(cs, val)	(val << (cs))
++#define AT91_MATRIX_DBPUC		BIT(8)
++#define AT91_MATRIX_DBPDC		BIT(9)
++#define AT91_MATRIX_VDDIOMSEL		BIT(16)
++#define AT91_MATRIX_VDDIOMSEL_1_8V	(0 << 16)
++#define AT91_MATRIX_VDDIOMSEL_3_3V	(1 << 16)
++#define AT91_MATRIX_EBI_IOSR		BIT(17)
++#define AT91_MATRIX_DDR_IOSR		BIT(18)
++#define AT91_MATRIX_NFD0_SELECT		BIT(24)
++#define AT91_MATRIX_DDR_MP_EN		BIT(25)
++#define AT91_MATRIX_EBI_NUM_CS		8
++
++#define AT91_MATRIX_USBPUCR_PUON	BIT(30)
++
++#endif /* _LINUX_MFD_SYSCON_ATMEL_MATRIX_H */
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
