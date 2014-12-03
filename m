@@ -1,53 +1,135 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 5/5] tty/serial: Add Spreadtrum sc9836-uart driver support
-Date: Wed, 03 Dec 2014 10:50:17 +0100
-Message-ID: <3212776.kDbe7yX4eX@wuerfel>
-References: <1416917818-10506-1-git-send-email-chunyan.zhang@spreadtrum.com> <54761BFC.4020705@ti.com> <CAAfSe-u+g0mYGi9Adrd+YwwZ=q0-s79yCg_paB1UAVqFoufXEA@mail.gmail.com>
+From: Josh Wu <josh.wu@atmel.com>
+Subject: Re: [PATCH 3/4] media: ov2640: add a master clock for sensor
+Date: Wed, 3 Dec 2014 17:54:49 +0800
+Message-ID: <547EDDE9.7070107@atmel.com>
+References: <1417170507-11172-1-git-send-email-josh.wu@atmel.com> <1417170507-11172-4-git-send-email-josh.wu@atmel.com> <2284801.0jEi8Kph7L@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAfSe-u+g0mYGi9Adrd+YwwZ=q0-s79yCg_paB1UAVqFoufXEA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lyra Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "jslaby-AlSwsSmVLrQ@public.gmane.org" <jslaby-AlSwsSmVLrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ramkumar Ramachandra <artagnon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org" <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, shawn.guo@freescal
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <2284801.0jEi8Kph7L@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, m.chehab@samsung.com, linux-arm-kernel@lists.infradead.org, g.liakhovetski@gmx.de, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 03 December 2014 17:17:13 Lyra Zhang wrote:
+Hi, Laurent
 
-> 2014-11-27 2:29 GMT+08:00 Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>:
-> > How about sorting this includes? asm/irq.h go first followed linux/=
- in alphabatical order?
+On 12/2/2014 6:26 AM, Laurent Pinchart wrote:
+> Hi Josh,
 >
-> There are a few compile warnings if I moved asm/irq.h to the top of
-> all included files.
+> (CC'ing the devicetree@vger.kernel.org mailing list)
+>
+> Thank you for the patch.
+>
+> On Friday 28 November 2014 18:28:26 Josh Wu wrote:
+>> The master clock can be optional. It's a common clock framework clock.
+>> It can make sensor output a pixel clock to the camera interface.
+>>
+>> If you just use a external oscillator clock as the master clock, then,
+>> just don't need set 'mck' in dt node.
+>>
+>> Signed-off-by: Josh Wu <josh.wu@atmel.com>
+>> ---
+>>   drivers/media/i2c/soc_camera/ov2640.c | 25 +++++++++++++++++++++++++
+>>   1 file changed, 25 insertions(+)
+>>
+>> diff --git a/drivers/media/i2c/soc_camera/ov2640.c
+>> b/drivers/media/i2c/soc_camera/ov2640.c index 6506126..06c2aa9 100644
+>> --- a/drivers/media/i2c/soc_camera/ov2640.c
+>> +++ b/drivers/media/i2c/soc_camera/ov2640.c
+>> @@ -13,6 +13,7 @@
+>>    * published by the Free Software Foundation.
+>>    */
+>>
+>> +#include <linux/clk.h>
+>>   #include <linux/init.h>
+>>   #include <linux/module.h>
+>>   #include <linux/i2c.h>
+>> @@ -31,6 +32,8 @@
+>>
+>>   #define VAL_SET(x, mask, rshift, lshift)  \
+>>   		((((x) >> rshift) & mask) << lshift)
+>> +#define DEFAULT_MASTER_CLK_FREQ		25000000
+>> +
+>>   /*
+>>    * DSP registers
+>>    * register offset for BANK_SEL == BANK_SEL_DSP
+>> @@ -284,6 +287,7 @@ struct ov2640_priv {
+>>   	struct v4l2_ctrl_handler	hdl;
+>>   	u32	cfmt_code;
+>>   	struct v4l2_clk			*clk;
+>> +	struct clk			*master_clk;
+>>   	const struct ov2640_win_size	*win;
+>>
+>>   	struct soc_camera_subdev_desc	ssdd_dt;
+>> @@ -746,6 +750,7 @@ static int ov2640_s_power(struct v4l2_subdev *sd, int
+>> on) struct soc_camera_subdev_desc *ssdd = soc_camera_i2c_to_desc(client);
+>> struct ov2640_priv *priv = to_ov2640(client);
+>>   	struct v4l2_clk *clk;
+>> +	int ret = 0;
+>>
+>>   	if (!priv->clk) {
+>>   		clk = v4l2_clk_get(&client->dev, "mclk");
+>> @@ -755,6 +760,16 @@ static int ov2640_s_power(struct v4l2_subdev *sd, int
+>> on) priv->clk = clk;
+>>   	}
+>>
+>> +	if (!IS_ERR(priv->master_clk)) {
+> The clock should be mandatory, you can thus drop this check.
+OK. sure.
 
-The order that Murali meant is
+>
+>> +		if (on)
+>> +			ret = clk_prepare_enable(priv->master_clk);
+>> +		else
+>> +			clk_disable_unprepare(priv->master_clk);
+>> +
+>> +		if (ret)
+>> +			return ret;
+> You can move the error check inside the first branch of the if and remove the
+> ret = 0 initialization above.
+>
+>> +	}
+>> +
+>>   	return soc_camera_set_power(&client->dev, ssdd, priv->clk, on);
+> If this call fails you should disable or enable the clock to undo the
+> enable/disable above.
 
-- first all linux/*.h headers, sorted alphabetically
-- then all asm/*.h headers, again sorted alphabetically
+ah, I totally forget this. will fix in next version. Thanks.
 
-This is the recommended style in general.
+>
+>>   }
+>>
+>> @@ -1153,6 +1168,16 @@ static int ov2640_probe(struct i2c_client *client,
+>>   		}
+>>   	}
+>>
+>> +	priv->master_clk = devm_clk_get(&client->dev, "mck");
+>> +	if (!IS_ERR(priv->master_clk)) {
+>> +		/* Set ISI_MCK's frequency, it should be faster than pixel
+>> +		 * clock.
+>> +		 */
+>> +		ret = clk_set_rate(priv->master_clk, DEFAULT_MASTER_CLK_FREQ);
+> The clock frequency should be system-dependent. For the DT case an easy
+> implementation would be to use the assigned-clock-rates to set the desired
+> clock frequency is case of a variable clock, as adding a sensor-specific
+> property to specify the desired clock frequency only to read that property in
+> the driver and call clk_set_rate() seems a bit pointless to me.
 
-> Warning details are below:
->=20
-> In file included from drivers/tty/serial/sprd_serial.c:14:0:
-> ./arch/arm64/include/asm/irq.h:6:39: warning: =E2=80=98struct pt_regs=
-=E2=80=99
-> declared inside parameter list [enabled by default]
->  extern void (*handle_arch_irq)(struct pt_regs *);
->                                        ^
-> ./arch/arm64/include/asm/irq.h:6:39: warning: its scope is only this
-> definition or declaration, which is probably not what you want
-> [enabled by default]
-> ./arch/arm64/include/asm/irq.h:8:54: warning: =E2=80=98struct pt_regs=
-=E2=80=99
-> declared inside parameter list [enabled by default]
->  extern void set_handle_irq(void (*handle_irq)(struct pt_regs *));
->=20
+I tried assigned-clock-rates and it works fine.
+The only issue is the it cannot used by multiple nodes. But I think I 
+can put a comments in the dt node for this.
+Thanks.
 
-I would consider this a (minor) bug in asm/irq.h. If you don't mind,
-please submit a patch to add a line with 'struct pt_regs;' to
-asm/irq.h.
+Best Regards,
+Josh Wu
 
-	Arnd
+>
+>> +		if (ret < 0)
+>> +			return ret;
+>> +	}
+>> +
+>>   	v4l2_i2c_subdev_init(&priv->subdev, client, &ov2640_subdev_ops);
+>>   	v4l2_ctrl_handler_init(&priv->hdl, 2);
+>>   	v4l2_ctrl_new_std(&priv->hdl, &ov2640_ctrl_ops,
