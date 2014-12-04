@@ -1,206 +1,67 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [RFC] OPP: Redefine bindings to overcome shortcomings
-Date: Thu,  4 Dec 2014 16:44:03 +0530
-Message-ID: <52c403454c3b8fc201abe7ac74cf657638479311.1417691389.git.viresh.kumar@linaro.org>
-Return-path: <linux-pm-owner@vger.kernel.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rafael Wysocki <rjw@rjwysocki.net>, arnd.bergmann@linaro.org, rob.herring@linaro.org, grant.likely@linaro.org, olof@lixom.net
-Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, nm@ti.com, Sudeep.Holla@arm.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, santosh.shilimkar@oracle.com, mike.turquette@linaro.org, kesavan.abhilash@gmail.com, catalin.marinas@arm.com, ta.omasab@gmail.com, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com, Viresh Kumar <viresh.kumar@linaro.org>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: kbuild: Fix forced rebuild after 'make dtbs'
+Date: Thu, 04 Dec 2014 11:22:01 +0000
+Message-ID: <20141204112201.C824AC40992@trevor.secretlab.ca>
+References: <CACRpkdYmJWy1_vs0tWRA7SvkQnvbXXKqf7pHpH5b5tZ6vR+KJg@mail.gmail.com>
+	<1414961549-31666-1-git-send-email-jason@lakedaemon.net>
+	<5474F78F.2060906@suse.cz> <20141125235150.GH3836@n2100.arm.linux.org.uk>
+	<20141126005710.GE22670@titan.lakedaemon.net>
+	<CACRpkdZJoWbQeuZ4ZXGbQr0+SNG_9ZA+cQkAA0C2F9rnZDYtyQ@mail.gmail.com>
+	<20141126144153.GK3836@n2100.arm.linux.org.uk>
+	<CACRpkdYwQT3+RLxP_b_kYJoHV4L7sZ7yiU=JZWVq_zHKz0EY_g@mail.gmail.com>
+	<547C7364.8000009@suse.cz>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <547C7364.8000009-AlSwsSmVLrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob, et al..
+On Mon, 01 Dec 2014 14:55:48 +0100
+, Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>
+ wrote:
+> On 2014-11-28 15:10, Linus Walleij wrote:
+> > On Wed, Nov 26, 2014 at 3:41 PM, Russell King - ARM Linux
+> > <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> >> On Wed, Nov 26, 2014 at 02:57:42PM +0100, Linus Walleij wrote:
+> >>> make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+> >>> KBUILD_OUTPUT=build-u300 u300_defconfig
+> >>> make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+> >>> KBUILD_OUTPUT=build-u300 zImage CONFIG_DEBUG_SECTION_MISMATCH=y
+> >>> make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+> >>> KBUILD_OUTPUT=build-u300 dtbs
+> >>> make -f Makefile -j5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+> >>> KBUILD_OUTPUT=build-u300 zImage CONFIG_DEBUG_SECTION_MISMATCH=y
+> >>>
+> >>> -> Rebuilds everything.
+> >>>
+> >>> This doesn't occur before the offending commit. So it only happens
+> >>> when specifying extra environment variables on the command line.
+> >>
+> >> I suspect if you also provide the CONFIG_DEBUG_SECTION_MISMATCH=y on the
+> >> dtbs line, everything will work properly.
+> > 
+> > Yay, it works! :)
+> > 
+> >> The problem is that dtbs line executes a prepare, which I guess rebuilds
+> >> the bounds stuff.  So, the dtbs target results in it being rebuilt without
+> >> the section mismatch, and then you re-execute a make with it, causing
+> >> the bounds stuff to be rebuilt again.
+> > 
+> > Yep. Not very intuitive to require passing section mismatch debug
+> > flags to DTB rebuilding but whatever, it's not so bad I can't live with
+> > it.
+> 
+> Still, the dependency on the 'prepare' target is superfluous, if the
+> only requirement is that $(KERNELRELEASE) be set properly.
 
-Current OPP (Operating performance point) DT bindings are proven to be
-insufficient at multiple instances.
+So, I've lost track of where things stand on this issue. What is the
+current proposed fix? Make dtbs depend on 'scripts' and dtbs_install
+depend on 'prepare scripts'? Or is there a better way to make sure
+KERNELRELEASE is set for the dtbs_install target?
 
-There had been multiple band-aid approaches to get them fixed (The latest one
-being: http://www.mail-archive.com/devicetree@vger.kernel.org/msg53398.html).
-For obvious reasons Rob rejected them and shown the right path forward. And this
-is the first try to get those with a pen and paper.
-
-The shortcomings we are trying to solve here:
-
-- Some kind of compatibility string to probe the right cpufreq driver for
-  platforms, when multiple drivers are available. For example: how to choose
-  between cpufreq-dt and arm_big_little drivers.
-
-- Getting clock sharing information between CPUs. Single shared clock vs.
-  independent clock per core vs. shared clock per cluster.
-
-- Support for turbo modes
-
-- Other per OPP settings: transition latencies, disabled status, etc.?
-
-The below document should be enough to describe how I am trying to fix these.
-Please let me know what all I need to fix, surely there would be lots of
-obstacles. I am prepared to get beaten up :)
-
-I accept in advance that naming is extremely bad here, I need some suggestions
-for sure.
-
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- Documentation/devicetree/bindings/power/opp.txt | 147 ++++++++++++++++++++++++
- 1 file changed, 147 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp.txt
-index 74499e5..5efd8d4 100644
---- a/Documentation/devicetree/bindings/power/opp.txt
-+++ b/Documentation/devicetree/bindings/power/opp.txt
-@@ -4,6 +4,153 @@ SoCs have a standard set of tuples consisting of frequency and
- voltage pairs that the device will support per voltage domain. These
- are called Operating Performance Points or OPPs.
- 
-+This documents defines OPP bindings with its required/optional properties.
-+OPPs can be defined for any device, this file uses CPU device as an example to
-+illustrate how to define OPPs.
-+
-+linux,operating-points, opp-lists and opps:
-+
-+- linux,operating-points:
-+  Container of all OPP nodes.
-+
-+  Required properties:
-+  - opp nodes (explained below)
-+
-+  Optional properties:
-+  - compatible: allow OPPs to express their compatibility with devices
-+
-+
-+- opp-list@*:
-+  List of nodes defining performance points. Following belong to the nodes
-+  within the opp-lists.
-+
-+  Required properties:
-+  - frequency-kHz: Frequency in kHz
-+  - voltage-uV: voltage in micro Volts
-+
-+  Optional properties:
-+  - turbo-mode: Marks the volt-freq pair as turbo pair.
-+  - status: Marks the node enabled/disabled.
-+
-+
-+- opp@*:
-+  Operating performance point node per device. Multiple devices sharing it can
-+  use its phandle in their 'opp' property.
-+
-+  Required properties:
-+  - opp-list: phandle to opp-list defined above.
-+
-+  Optional properties:
-+  - clocks: Tuple of clock providers
-+  - clock-names: Clock names
-+  - opp-supply: phandle to the parent supply/regulator node
-+  - voltage-tolerance: Specify the CPU voltage tolerance in percentage.
-+  - clock-latency: Specify the possible maximum transition latency for clock,
-+    in unit of nanoseconds.
-+
-+Example: Multi-cluster system with separate clock lines for clusters. All CPUs
-+         in the clusters share same clock lines.
-+
-+/ {
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		linux,operating-points {
-+			compatible = "linux,cpufreq-dt";
-+
-+			opp-list0: opp-list@0 {
-+				{
-+					frequency-kHz = <1000000>;
-+					voltage-uV = <975000>;
-+					status = "okay";
-+				};
-+				{
-+					frequency-kHz = <1100000>;
-+					voltage-uV = <1000000>;
-+					status = "okay";
-+				};
-+				{
-+					frequency-kHz = <1200000>;
-+					voltage-uV = <1025000>;
-+					status = "okay";
-+					turbo-mode;
-+				};
-+			};
-+
-+			opp-list1: opp-list@1 {
-+				{
-+					frequency-kHz = <1300000>;
-+					voltage-uV = <1050000>;
-+					status = "okay";
-+				};
-+				{
-+					frequency-kHz = <1400000>;
-+					voltage-uV = <1075000>;
-+					status = "disabled";
-+				};
-+				{
-+					frequency-kHz = <1500000>;
-+					voltage-uV = <1100000>;
-+					status = "okay";
-+					turbo-mode;
-+				};
-+			};
-+
-+			opp0: opp@0 {
-+				clocks = <&clk-controller 0>;
-+				clock-names = "cpu";
-+				opp-supply = <&cpu-supply0>;
-+				voltage-tolerance = <2>; /* percentage */
-+				clock-latency = <300000>;
-+				opp-list = <&opp-list0>;
-+			};
-+
-+			opp1: opp@1 {
-+				clocks = <&clk-controller 1>;
-+				clock-names = "cpu";
-+				opp-supply = <&cpu-supply1>;
-+				voltage-tolerance = <2>; /* percentage */
-+				clock-latency = <400000>;
-+				opp-list = <&opp-list1>;
-+			};
-+		};
-+
-+		cpu@0 {
-+			compatible = "arm,cortex-a7";
-+			reg = <0>;
-+			next-level-cache = <&L2>;
-+			opps = <opp0>;
-+		};
-+
-+		cpu@1 {
-+			compatible = "arm,cortex-a7";
-+			reg = <1>;
-+			next-level-cache = <&L2>;
-+			opps = <opp0>;
-+		};
-+
-+		cpu@100 {
-+			compatible = "arm,cortex-a15";
-+			reg = <100>;
-+			next-level-cache = <&L2>;
-+			opps = <opp1>;
-+		};
-+
-+		cpu@101 {
-+			compatible = "arm,cortex-a15";
-+			reg = <101>;
-+			next-level-cache = <&L2>;
-+			opps = <opp1>;
-+		};
-+	};
-+};
-+
-+
-+
-+Deprecated Bindings
-+-------------------
-+
- Properties:
- - operating-points: An array of 2-tuples items, and each item consists
-   of frequency and voltage like <freq-kHz vol-uV>.
--- 
-2.0.3.693.g996b0fd
-
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
