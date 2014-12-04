@@ -1,185 +1,141 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 1/4] mtd: nand: atmel: Rework driver to separate nfc and nand nodes
-Date: Thu,  4 Dec 2014 23:30:11 +0100
-Message-ID: <1417732214-3292-2-git-send-email-boris.brezillon@free-electrons.com>
-References: <1417732214-3292-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417732214-3292-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Ray Jui <rjui@broadcom.com>
+Subject: Re: [PATCH 1/4] pinctrl: Broadcom Cygnus pinctrl device tree binding
+Date: Thu, 4 Dec 2014 14:35:22 -0800
+Message-ID: <5480E1AA.4060108@broadcom.com>
+References: <rjui@broadcom.com>	<1417730171-30455-1-git-send-email-rjui@broadcom.com>	<1417730171-30455-2-git-send-email-rjui@broadcom.com> <CAAfyv37Z=Bs1Ggydg5bX5z=005P+LOXNp0qNMA43a3BsAPSA7w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAAfyv37Z=Bs1Ggydg5bX5z=005P+LOXNp0qNMA43a3BsAPSA7w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Belisko Marek <marek.belisko@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Scott Branden <sbranden@broadcom.com>, LKML <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-mtd: nand: atmel: Update DT documentation after splitting NFC and NAND
 
-The NAND and NFC (NAND Flash Controller) were linked together with a
-parent <-> child relationship.
 
-This model has several drawbacks:
-- it does not allow for multiple NAND chip handling while the controller
-  support multi-chip (even though the driver is not ready yet)
-- it mixes NAND partitions and NFC nodes at the same level (which is a bit
-  disturbing)
-- the introduction of the EBI bus implies defining NAND chips under the
-  EBI node, and the ranges available under the EBI node should be
-  restricted to EBI address space, while the NFC references several
-  registers outside of these EBI ranges.
-
-Move the NFC node outside of the NAND node, to get a more future-proof
-DT representation.
-
-Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- drivers/mtd/nand/atmel_nand.c | 76 ++++++++++++++++++++++++++++++++++---------
- 1 file changed, 61 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/mtd/nand/atmel_nand.c b/drivers/mtd/nand/atmel_nand.c
-index 19d1e9d..0239fe6 100644
---- a/drivers/mtd/nand/atmel_nand.c
-+++ b/drivers/mtd/nand/atmel_nand.c
-@@ -123,6 +123,7 @@ struct atmel_nand_host {
- 	struct dma_chan		*dma_chan;
- 
- 	struct atmel_nfc	*nfc;
-+	bool			wait_for_nfc;
- 
- 	bool			has_pmecc;
- 	u8			pmecc_corr_cap;
-@@ -1423,6 +1424,12 @@ static void atmel_nand_hwctl(struct mtd_info *mtd, int mode)
- 		ecc_writel(host->ecc, CR, ATMEL_ECC_RST);
- }
- 
-+static const struct of_device_id atmel_nand_nfc_match[] = {
-+	{ .compatible = "atmel,sama5d3-nfc" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, atmel_nand_nfc_match);
-+
- static int atmel_of_init_port(struct atmel_nand_host *host,
- 			      struct device_node *np)
- {
-@@ -1431,6 +1438,7 @@ static int atmel_of_init_port(struct atmel_nand_host *host,
- 	int ecc_mode;
- 	struct atmel_nand_data *board = &host->board;
- 	enum of_gpio_flags flags = 0;
-+	struct device_node *child;
- 
- 	if (of_property_read_u32(np, "atmel,nand-addr-offset", &val) == 0) {
- 		if (val >= 32) {
-@@ -1467,8 +1475,30 @@ static int atmel_of_init_port(struct atmel_nand_host *host,
- 
- 	host->has_pmecc = of_property_read_bool(np, "atmel,has-pmecc");
- 
--	/* load the nfc driver if there is */
--	of_platform_populate(np, NULL, NULL, host->dev);
-+	/*
-+	 * Backward compatibility with DTs defining the NFC node as their
-+	 * child.
-+	 * The new model reference the NFC so that we can define several
-+	 * chip controlled by the same controller.
-+	 */
-+	for_each_available_child_of_node(np, child) {
-+		/*
-+		 * If we find an NFC node under the NAND node, then populate
-+		 * the device so that it can be probed, and wait for it.
-+		 */
-+		if (of_match_node(atmel_nand_nfc_match, child)) {
-+			of_platform_populate(np, NULL, NULL, host->dev);
-+			host->wait_for_nfc = true;
-+			break;
-+		}
-+	}
-+
-+	/*
-+	 * If there's an atmel,nfc property we should access the NAND
-+	 * through the NFC.
-+	 */
-+	if (of_property_read_bool(np, "atmel,nfc"))
-+		host->wait_for_nfc = true;
- 
- 	if (!(board->ecc_mode == NAND_ECC_HW) || !host->has_pmecc)
- 		return 0;	/* Not using PMECC */
-@@ -2032,10 +2062,6 @@ static int atmel_nand_probe(struct platform_device *pdev)
- 	if (!host)
- 		return -ENOMEM;
- 
--	res = platform_driver_register(&atmel_nand_nfc_driver);
--	if (res)
--		dev_err(&pdev->dev, "atmel_nand: can't register NFC driver\n");
--
- 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	host->io_base = devm_ioremap_resource(&pdev->dev, mem);
- 	if (IS_ERR(host->io_base)) {
-@@ -2089,6 +2115,13 @@ static int atmel_nand_probe(struct platform_device *pdev)
- 			goto err_nand_ioremap;
- 		}
- 	} else {
-+		/*
-+		 * If the NFC is not initialized (or not probed) and the device
-+		 * is asking to be accessed through the NFC then defer the
-+		 * probe.
-+		 */
-+		if (host->wait_for_nfc)
-+			return -EPROBE_DEFER;
- 		res = atmel_nand_set_enable_ready_pins(mtd);
- 		if (res)
- 			goto err_nand_ioremap;
-@@ -2230,8 +2263,6 @@ static int atmel_nand_remove(struct platform_device *pdev)
- 	if (host->dma_chan)
- 		dma_release_channel(host->dma_chan);
- 
--	platform_driver_unregister(&atmel_nand_nfc_driver);
--
- 	return 0;
- }
- 
-@@ -2303,12 +2334,6 @@ static int atmel_nand_nfc_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static const struct of_device_id atmel_nand_nfc_match[] = {
--	{ .compatible = "atmel,sama5d3-nfc" },
--	{ /* sentinel */ }
--};
--MODULE_DEVICE_TABLE(of, atmel_nand_nfc_match);
--
- static struct platform_driver atmel_nand_nfc_driver = {
- 	.driver = {
- 		.name = "atmel_nand_nfc",
-@@ -2329,7 +2354,28 @@ static struct platform_driver atmel_nand_driver = {
- 	},
- };
- 
--module_platform_driver(atmel_nand_driver);
-+static int __init atmel_nand_init(void)
-+{
-+	int ret;
-+
-+	ret = platform_driver_register(&atmel_nand_nfc_driver);
-+	if (ret)
-+		return ret;
-+
-+	ret = platform_driver_register(&atmel_nand_driver);
-+	if (ret)
-+		platform_driver_unregister(&atmel_nand_nfc_driver);
-+
-+	return ret;
-+}
-+module_init(atmel_nand_init);
-+
-+static void __exit atmel_nand_exit(void)
-+{
-+	platform_driver_unregister(&atmel_nand_driver);
-+	platform_driver_unregister(&atmel_nand_nfc_driver);
-+}
-+module_exit(atmel_nand_exit);
- 
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Rick Bronson");
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 12/4/2014 2:16 PM, Belisko Marek wrote:
+> On Thu, Dec 4, 2014 at 10:56 PM, Ray Jui <rjui@broadcom.com> wrote:
+>> Device tree binding documentation for Broadcom Cygnus pinctrl driver
+>>
+>> Signed-off-by: Ray Jui <rjui@broadcom.com>
+>> Reviewed-by: Scott Branden <sbranden@broadcom.com>
+>> ---
+>>   .../bindings/pinctrl/brcm,cygnus-pinctrl.txt       |   92 ++++++++++++++++++++
+>>   1 file changed, 92 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,cygnus-pinctrl.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-pinctrl.txt
+>> new file mode 100644
+>> index 0000000..86e4579
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-pinctrl.txt
+>> @@ -0,0 +1,92 @@
+>> +Broadcom Cygnus Pin Controller
+>> +
+>> +The Cygnus pin controller supports setting the alternate functions of groups
+>> +of pins. Pinmux configuration on individual pins is not supported by the
+>> +Cygnus A0 SoC.
+>> +
+>> +Required properties:
+>> +
+>> +- compatible:
+>> +    Must be "brcm,cygnus-pinctrl"
+>> +
+>> +- reg:
+>> +    Define the base and range of the I/O address space that contain the Cygnus
+>> +pin control registers
+>> +
+>> +- brcm,groups:
+>> +    This can be strings of one or more group names. This defines the group(s)
+>> +that one wants to configure
+>> +
+>> +- brcm,function:
+>> +    This is the alternate function that one wants to configure to. Valid
+>> +alternate functions are "alt1", "alt2", "alt3", "alt4"
+>> +
+>> +Each child node represents a configuration. Client devices reference the the
+>> +child node to enable the mux configuration.
+>> +
+>> +For example:
+>> +
+>> +       pinctrl: pinctrl@0x0301d0c8 {
+>> +               compatible = "brcm,cygnus-pinctrl";
+>> +               reg = <0x0301d0c8 0x2c>;
+>> +
+>> +               i2s_0: i2s_0 {
+>> +                       brcm,groups = "smart_card0", "smart_card0_fcb";
+>> +                       brcm,function = "alt2";
+>> +               };
+>> +
+>> +               i2s_1: i2s_1 {
+>> +                       brcm,groups = "smart_card1", "smart_card1_fcb";
+>> +                       brcm,function = "alt2";
+>> +               };
+>> +
+>> +               spi_0: spi_0 {
+>> +                       brcm,groups = "spi0";
+>> +                       brcm,function = "alt1";
+>> +               };
+>> +       }
+>> +
+>> +       spi0@18028000 {
+>> +                       compatible = "arm,pl022", "arm,primecell";
+>> +                       reg = <0x18028000 0x1000>;
+>> +                       #address-cells = <1>;
+>> +                       #size-cells = <0>;
+>> +                       interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
+>> +                       pinctrl-0 = <&spi_0>;
+>> +                       clocks = <&axi81_clk>;
+>> +                       clock-names = "apb_pclk";
+>> +       };
+>> +
+>> +Consider the following snapshot of Cygnus pinmux table:
+>> +
+>> +number    pin            group              alt1             alt2        alt3        alt4
+>> +------    ---            ----               ----             ----        ----        ----
+>> +42        sc0_clk        smart_card0        SMART CARD0      I2S_0       N/A         chip_gpio24
+>> +43        sc0_cmdvcc_l   smart_card0        SMART CARD0      I2S_0       N/A         STRAP
+>> +44        sc0_detect     smart_card0        SMART CARD0      I2S_0       N/A         chip_gpio25
+>> +45        sc0_fcb        smart_card0_fcb    SMART CARD0_FCB  I2S_0       N/A         chip_gpio26
+>> +46        sc0_io         smart_card0        SMART CARD0      I2S_0       N/A         chip_gpio27
+>> +47        sc0_rst_l      smart_card0        SMART CARD0      SPDIF       N/A         STRAP
+>> +
+>> +Note due to limitation of the Cygnus hardware, pinmux configuration can only
+>> +be group based. To enable I2S_0 function, one needs the following child node
+>> +configuration:
+>> +
+>> +       i2s_0: i2s_0 {
+>> +               brcm,groups = "smart_card0", "smart_card0_fcb";
+>> +               brcm,function = "alt2";
+>> +       };
+>> +
+>> +This tells the Cygnus pin controller to configure groups "smart_card0" and
+>> +"smart_card0_fcb" to I2S_0. With this configuration, pins 42, 43, 44, 45, 46
+>> +become I2C_0, and pin 47 becomes SPDIF
+>                    ^^^^ typo - should be I2S_0
+Oh yeah. Will change from I2C_0 to I2S_0. Thanks.
+>> +
+>> +Consider another example, that one wants to configure the above pins as GPIO:
+>> +
+>> +       gpio_24_27: gpio_24_27 {
+>> +               brcm,groups = "smart_card0", "smart_card0_fcb";
+>> +               brcm,function = "alt4";
+>> +       };
+>> +
+>> +With the above configuration, pins 42, 44, 45, 46 become GPIO, and 43 and 47
+>> +become reserved for STRAP
+>> --
+>> 1.7.9.5
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
+> BR,
+>
+> marek
+>
