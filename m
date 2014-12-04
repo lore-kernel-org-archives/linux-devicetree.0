@@ -1,69 +1,53 @@
-From: "Wang, Yalin" <Yalin.Wang@sonymobile.com>
-Subject: RE: [RFC] fdt:free the fdt reserved memory
-Date: Thu, 4 Dec 2014 18:23:19 +0800
-Message-ID: <35FD53F367049845BC99AC72306C23D103E688B313E9@CNBJMBX05.corpusers.net>
-References: <35FD53F367049845BC99AC72306C23D103D6DB49161A@CNBJMBX05.corpusers.net>
-	<20140924144520.697A8C40738@trevor.secretlab.ca>
-	<35FD53F367049845BC99AC72306C23D103E688B313E7@CNBJMBX05.corpusers.net>
- <20141204100453.49DF2C40992@trevor.secretlab.ca>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 0/6] ARM: shmobile: Change to using clock-indices
+Date: Thu, 4 Dec 2014 11:22:04 +0100
+Message-ID: <CAMuHMdWXiMEEGXb3o+oo=H912o5wCgLD7WCWQMpRDueD6FxphQ@mail.gmail.com>
+References: <1415645379-3366-1-git-send-email-geert+renesas@glider.be>
+	<CAMuHMdX+EfnjZvnDyUprtuQ05Ekpnr7bxgTZA=2_CHMFTq1Y9A@mail.gmail.com>
+	<20141204041144.GA9241@verge.net.au>
+	<20141204070043.GA25806@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141204100453.49DF2C40992@trevor.secretlab.ca>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Grant Likely' <grant.likely@linaro.org>, "'robh+dt@kernel.org'" <robh+dt@kernel.org>, "'devicetree@vger.kernel.org'" <devicetree@vger.kernel.org>, "'pawel.moll@arm.com'" <pawel.moll@arm.com>, "'mark.rutland@arm.com'" <mark.rutland@arm.com>, "'ijc+devicetree@hellion.org.uk'" <ijc+devicetree@hellion.org.uk>, "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20141204070043.GA25806@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Mike Turquette <mturquette@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Grant Likely [mailto:glikely@secretlab.ca] On Behalf Of Grant Likely
-> Sent: Thursday, December 04, 2014 6:05 PM
-> To: Wang, Yalin; 'robh+dt@kernel.org'; 'devicetree@vger.kernel.org';
-> 'pawel.moll@arm.com'; 'mark.rutland@arm.com';
-> 'ijc+devicetree@hellion.org.uk'; 'linux-kernel@vger.kernel.org'
-> Subject: RE: [RFC] fdt:free the fdt reserved memory
-> 
-> On Thu, 4 Dec 2014 14:56:11 +0800
-> , "Wang, Yalin" <Yalin.Wang@sonymobile.com>
->  wrote:
-> > > -----Original Message-----
-> > > From: Grant Likely [mailto:glikely@secretlab.ca] On Behalf Of Grant
-> > > Likely
-> > > Sent: Wednesday, September 24, 2014 10:45 PM
-> > > To: Wang, Yalin; 'robh+dt@kernel.org'; 'devicetree@vger.kernel.org';
-> > > 'pawel.moll@arm.com'; 'mark.rutland@arm.com';
-> > > 'ijc+devicetree@hellion.org.uk'; 'linux-kernel@vger.kernel.org'
-> > > Subject: Re: [RFC] fdt:free the fdt reserved memory
-> > >
-> > > On Thu, 18 Sep 2014 17:25:12 +0800, "Wang, Yalin"
-> > > <Yalin.Wang@sonymobile.com> wrote:
-> > > > This patch make some change to unflatten_dt_node(), make sure the
-> > > > device_node don't reference to fdt raw blob memory, so that we can
-> > > > free the raw blob reserved memory after initcalls.
-> > > >
-> > > > Signed-off-by: Yalin Wang <yalin.wang@sonymobile.com>
-> > >
-> > > Do you have any measurements showing a change in available memory
-> > > before and after the patch?
-> > >
-> > Does anyone have a look at this patch?
-> > It can save 12K on my platform,
-> > My dtb is 164K
-> 
-> Yes, I've been thinking about this one. Unfortunately there is a conflict
-> with another feature that I'm merging for v3.19. See commit 08d53aa5,
-> "of/fdt: export fdt blob as /sys/firmware/fdt" in linux-next.
-> That commit requires the original blob to be kept around.
-> 
-> In order to free the original dtb, the /sys/firmware/fdt feature will need
-> to be changed to let it be configured out. All things considered, that is
-> probably the right thing to do, but doing so increases the memory load for
-> the platforms that want /sys/firmware/fdt. I'd like to see what the impact
-> would be on the code to switch to this method when /sys/firmware/fdt is
-> configured out.
-> 
-Oh, I understand,
-If enable /sys/firmware/fdt feature patch, doesn't need 
-My patch is fine,
-So need 2 method to unflatten dtb blob.
+Hi Simon,
+
+On Thu, Dec 4, 2014 at 8:00 AM, Simon Horman <horms@verge.net.au> wrote:
+> On Thu, Dec 04, 2014 at 01:11:44PM +0900, Simon Horman wrote:
+>> On Wed, Dec 03, 2014 at 12:27:13PM +0100, Geert Uytterhoeven wrote:
+>> > On Mon, Nov 10, 2014 at 7:49 PM, Geert Uytterhoeven
+>> > <geert+renesas@glider.be> wrote:
+>> > > This patch series finalizes the conversion from the vendor-specific
+>> > > "renesas,clock-indices" to the generic "clock-indices", started by Ben Dooks.
+>> > >
+>> > > The patches for r8a7790 and r8a7791 were extracted from a patch that Ben sent
+>> > > before ("[PATCH 2/3] renesas: change to using clock-indices"), but it was never
+>> > > split/updated.
+>> >
+>> > As Mike has accepted the bindings update in clk-next, can you please apply
+>> > the dtsi updates?
+>>
+>> Sure, I will look into doing so; most likely tomorrow.
+>
+> Thanks, I have now done so.
+>
+> There was some fuzz when applying most of the patches,
+> I'd appreciate it if you could check that I got things right.
+
+Thanks, the result looks fine, both in devel and dt-for-v3.20.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
