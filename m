@@ -1,90 +1,90 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH v17 06/12] dt-bindings: add document for dw_hdmi
-Date: Thu, 04 Dec 2014 21:27:44 +0800
-Message-ID: <54806150.6020206@rock-chips.com>
-References: <1417686826-12687-1-git-send-email-andy.yan@rock-chips.com>	
- <1417687565-13206-1-git-send-email-andy.yan@rock-chips.com>
- <1417692637.3744.5.camel@pengutronix.de>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v2] pwm: atmel-hlcdc: add at91sam9x5 and sama5d3 errata
+ handling
+Date: Thu, 4 Dec 2014 14:29:23 +0100
+Message-ID: <20141204142923.29eecfc6@bbrezillon>
+References: <1416407589-8157-1-git-send-email-boris.brezillon@free-electrons.com>
+	<20141204131229.GA7262@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1417692637.3744.5.camel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Pawel Moll <pawel.moll@arm.com>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, rmk+kernel@arm.linux.org.uk, mark.yao@rock-chips.com, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, vladimir_zapolskiy@mentor.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20141204131229.GA7262@ulmo.nvidia.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-pwm@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGhpbGlwcDoKT24gMjAxNOW5tDEy5pyIMDTml6UgMTk6MzAsIFBoaWxpcHAgWmFiZWwgd3Jv
-dGU6Cj4gSGkgQW5keSwKPgo+IEFtIERvbm5lcnN0YWcsIGRlbiAwNC4xMi4yMDE0LCAxODowNiAr
-MDgwMCBzY2hyaWViIEFuZHkgWWFuOgo+PiBTaWduZWQtb2ZmLWJ5OiBBbmR5IFlhbiA8YW5keS55
-YW5Acm9jay1jaGlwcy5jb20+Cj4+Cj4+IC0tLQo+Pgo+PiBDaGFuZ2VzIGluIHYxNzogTm9uZQo+
-PiBDaGFuZ2VzIGluIHYxNjoKPj4gLSBkZXNjcmliZSBkZGMtaTJjLWJ1cyBhcyBvcHRpb25hbAo+
-PiAtIGFkZCBjb21tb24gY2xvY2tzIGJpbmRpbmdzCj4+Cj4+IENoYW5nZXMgaW4gdjE1OiBOb25l
-Cj4+IENoYW5nZXMgaW4gdjE0OiBOb25lCj4+IENoYW5nZXMgaW4gdjEzOiBOb25lCj4+IENoYW5n
-ZXMgaW4gdjEyOiBOb25lCj4+IENoYW5nZXMgaW4gdjExOiBOb25lCj4+IENoYW5nZXMgaW4gdjEw
-OiBOb25lCj4+IENoYW5nZXMgaW4gdjk6IE5vbmUKPj4gQ2hhbmdlcyBpbiB2ODoKPj4gLSBjb3Jy
-ZWN0IHNvbWUgc3BlbGxpbmcgbWlzdGFrZQo+PiAtIG1vZGlmeSBkZGMtaTJjLWJ1cyBhbmQgaW50
-ZXJydXB0IGRlc2NyaXB0aW9uCj4+Cj4+IENoYW5nZXMgaW4gdjc6IE5vbmUKPj4gQ2hhbmdlcyBp
-biB2NjogTm9uZQo+PiBDaGFuZ2VzIGluIHY1OiBOb25lCj4+IENoYW5nZXMgaW4gdjQ6IE5vbmUK
-Pj4gQ2hhbmdlcyBpbiB2MzogTm9uZQo+Pgo+PiAgIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Ry
-bS9icmlkZ2UvZHdfaGRtaS50eHQgICAgIHwgNDUgKysrKysrKysrKysrKysrKysrKysrKwo+PiAg
-IDEgZmlsZSBjaGFuZ2VkLCA0NSBpbnNlcnRpb25zKCspCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3X2hkbWkudHh0
-Cj4+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJt
-L2JyaWRnZS9kd19oZG1pLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-cm0vYnJpZGdlL2R3X2hkbWkudHh0Cj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+IGluZGV4IDAw
-MDAwMDAuLmZiMTQ3MzAKPj4gLS0tIC9kZXYvbnVsbAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZHJtL2JyaWRnZS9kd19oZG1pLnR4dAo+PiBAQCAtMCwwICsxLDQ1
-IEBACj4+ICtEZXNpZ25XYXJlIEhETUkgYnJpZGdlIGJpbmRpbmdzCj4+ICsKPj4gK1JlcXVpcmVk
-IHByb3Blcml0aWVzOgo+PiArLSBjb21wYXRpYmxlOiBwbGF0Zm9ybSBzcGVjaWZpYyBzdWNoIGFz
-Ogo+PiArICAgKiAic25wcyxkdy1oZG1pLXR4Igo+PiArICAgKiAiZnNsLGlteDZxLWhkbWkiCj4+
-ICsgICAqICJmc2wsaW14NmRsLWhkbWkiCj4+ICsgICAqICJyb2NrY2hpcCxyazMyODgtZHctaGRt
-aSIKPj4gKy0gcmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgY29u
-dHJvbGxlcidzIHJlZ2lzdGVycy4KPj4gKy0gaW50ZXJydXB0czogVGhlIEhETUkgaW50ZXJydXB0
-IG51bWJlcgo+PiArLSBjbG9ja3MsIGNsb2NrLW5hbWVzIDogbXVzdCBoYXZlIHRoZSBwaGFuZGxl
-cyB0byB0aGUgSERNSSBpYWhiIGFuZCBpc3JmIGNsb2NrcywKPj4gKyAgYXMgZGVzY3JpYmVkIGlu
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9jbG9jay1iaW5kaW5ncy50
-eHQsCj4+ICsgIHRoZSBjbG9jay1uYW1lcyBzaG91bGQgYmUgImlhaGIiLCAiaXNmciIKPiBUaGlz
-IGlzIG1pc3NpbmcgdGhlIHBvcnQgYmluZGluZ3MsIEkgdGhpbmsgaXQgc2hvdWxkIG1lbnRpb24g
-dGhlIHBvcnQKPiBwcm9wZXJ0eSBoZXJlIGFuZCByZWZlciB0byB0aGUgc29jIHNwZWNpZmljIGJp
-bmRpbmcgZG9jdW1lbnQuCj4KPiAgIC0gcG9ydEAuLi46IFNvQyBzcGVjaWZpYyBwb3J0IG5vZGVz
-IHdpdGggZW5kcG9pbnQgZGVmaW5pdGlvbnMgYXMgZGVmaW5lZAo+ICAgICBpbiBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQsCj4gICAg
-IHBsZWFzZSByZWZlciB0byB0aGUgU29DIHNwZWNpZmljIGJpbmRpbmcgZG9jdW1lbnQ6Cj4gICAg
-ICAqIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vaW14L2hkbWkudHh0Cj4g
-ICAgICAqIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9kd19oZG1pLXJv
-Y2tjaGlwLnR4dAo+Cj4gVGhpcyBhbHNvIG1ha2VzIGJlIHdvbmRlciwgc2hvdWxkbid0IGR3X2hk
-bWktcm9ja2NoaXAgYmUgdW5kZXIgZHJtLz8KICAgIG9rLCBJIHdpbGwgYWRkIHRoZSBwb3J0IGJp
-bmRpbmdzCiAgICBiZWNhdXNlIHJvY2tjaGlwIGRybSBiaW5kcyBhcmUgdW5kZXIgdmlkZW8sIHNv
-IEkgcHV0IHRoZSAKZHdfaGRtaS1yb2NrY2hpcAogICAgdW5kZXIgdmlkZW8gdG8ga2VlcCBjb25z
-aXN0ZW5jeS4KPgo+PiArT3B0aW9uYWwgcHJvcGVydGllcwo+PiArLSByZWctaW8td2lkdGg6IHRo
-ZSB3aWR0aCBvZiB0aGUgcmVnOjEsNCwgZGVmYXVsdCBzZXQgdG8gMSBpZiBub3QgcHJlc2VudAo+
-PiArLSBkZGMtaTJjLWJ1czogcGhhbmRsZSBvZiBhbiBJMkMgY29udHJvbGxlciB1c2VkIGZvciBE
-REMgRURJRCBwcm9iaW5nCj4+ICstIGNsa29ja3MsIGNsb2NrLW5hbWVzOiBwaGFuZGxlIHRvIHRo
-ZSBIRE1JIGNlYyBjbG9jaywgbmFtZSBzaG91bGQgYmUgImNlYyIKPiBzL2Nsa29ja3MvY2xvY2tz
-LywgYW5kIEknZCB1cHBlcmNhc2UgdGhlIEhETUkgQ0VDIGNsb2NrIGZvciBjb25zaXN0ZW5jeS4K
-ICAgICB0aGFua3MgZm9yIHBvaW50IGl0LCBJIHdpbGwgY29ycmVjdCBpdCBpbiBuZXh0IHZlcnNp
-b24KPgo+PiArCj4+ICtFeGFtcGxlOgo+PiArCWhkbWk6IGhkbWlAMDEyMDAwMCB7Cj4+ICsJCWNv
-bXBhdGlibGUgPSAiZnNsLGlteDZxLWhkbWkiOwo+IENvdWxkIHlvdSBjaGFuZ2UgdGhpcyBleGFt
-cGxlIHRvOgo+IAkJY29tcGF0aWJsZSA9ICJmc2wsaW14NnEtaGRtaSIsICJzbnBzLGR3LWhkbWkt
-dHgiCj4KPj4gKwkJcmVnID0gPDB4MDAxMjAwMDAgMHg5MDAwPjsKPj4gKwkJaW50ZXJydXB0cyA9
-IDwwIDExNSAweDA0PjsKPj4gKwkJZ3ByID0gPCZncHI+Owo+PiArCQljbG9ja3MgPSA8JmNsa3Mg
-MTIzPiwgPCZjbGtzIDEyND47Cj4+ICsJCWNsb2NrLW5hbWVzID0gImlhaGIiLCAiaXNmciI7Cj4+
-ICsJCWRkYy1pMmMtYnVzID0gPCZpMmMyPjsKPj4gKwo+PiArCQlwb3J0QDAgewo+PiArCQkJcmVn
-ID0gPDA+Owo+PiArCj4+ICsJCQloZG1pX211eF8wOiBlbmRwb2ludCB7Cj4+ICsJCQkJcmVtb3Rl
-LWVuZHBvaW50ID0gPCZpcHUxX2RpMF9oZG1pPjsKPj4gKwkJCX07Cj4+ICsJCX07Cj4+ICsKPj4g
-KwkJcG9ydEAxIHsKPj4gKwkJCXJlZyA9IDwxPjsKPj4gKwo+PiArCQkJaGRtaV9tdXhfMTogZW5k
-cG9pbnQgewo+PiArCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmaXB1MV9kaTFfaGRtaT47Cj4+ICsJ
-CQl9Owo+PiArCQl9Owo+PiArCX07Cj4KPgo+Cj4KCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpkZXZlbCBtYWlsaW5nIGxpc3QKZGV2ZWxAbGludXhkcml2
-ZXJwcm9qZWN0Lm9yZwpodHRwOi8vZHJpdmVyZGV2LmxpbnV4ZHJpdmVycHJvamVjdC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcml2ZXJkZXYtZGV2ZWwK
+Hi Thierry
+
+On Thu, 4 Dec 2014 14:12:31 +0100
+Thierry Reding <thierry.reding@gmail.com> wrote:
+
+> On Wed, Nov 19, 2014 at 03:33:09PM +0100, Boris Brezillon wrote:
+> > at91sam9x5 has an errata forbidding the use of slow clk as a clk source and
+> > sama5d3 SoCs has another errata forbidding the use of div1 prescaler.
+> > 
+> > Take both of these erratas into account.
+> > 
+> > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> > ---
+> > Hi Thierry,
+> > 
+> > I've addressed the "erratas stored in of_device_id data" part, but still
+> > haven't modified the compatible strings of the HLCDC subdevices.
+> > 
+> > Please let me know if you really want to handle erratas through pwm
+> > compatibles instead of parent device compatibles.
+> > 
+> > Regards,
+> > 
+> > Boris
+> > 
+> > Changes since v1:
+> > - use data field in of_device_id to attach erratas to an IP revision
+> > 
+> >  drivers/pwm/pwm-atmel-hlcdc.c | 50 ++++++++++++++++++++++++++++++++++++++-----
+> >  1 file changed, 45 insertions(+), 5 deletions(-)
+> 
+> I applied this, but this was really much more difficult than I would've
+> wanted. Since the MFD driver hasn't been merged into Linus' tree yet I
+> wasn't able to actually build test this driver at all without manually
+> pulling in the patches that add the MFD support. I went through this
+> trouble this time because it's what we had agreed upon, but for the
+> record, next time I'll request a stable branch that I can pull into the
+> PWM tree to resolve this kind of dependency. Or patches will have to
+> wait until the next merge window. I don't want to have to jump through
+> hoops just to make sure the code in my tree actually compiles.
+
+Thanks for doing that.
+Just for my understanding, am I the one responsible for providing this
+stable branch, or were you expecting Lee to provide it ?
+
+> 
+> Oh, and it's good that I do compile tests because...
+> 
+> > diff --git a/drivers/pwm/pwm-atmel-hlcdc.c b/drivers/pwm/pwm-atmel-hlcdc.c
+> [...]
+> > +const struct atmel_hlcdc_pwm_erratas atmel_hlcdc_pwm_at91sam9x5_erratas = {
+> > +	.slow_clk_errata = true,
+> > +};
+> > +
+> > +const struct atmel_hlcdc_pwm_erratas atmel_hlcdc_pwm_sama5d3_erratas = {
+> > +	.div1_clk_errata = true,
+> > +};
+> 
+> ... these actually should be static.
+> 
+> Also I took the liberty of substituting "erratum" for "errata" and
+> "errata" for "erratas".
+
+Indeed, thanks for fixing those problems.
+
+Best Regards,
+
+Boris
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
