@@ -1,126 +1,142 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v17 06/12] dt-bindings: add document for dw_hdmi
-Date: Thu, 04 Dec 2014 12:30:37 +0100
-Message-ID: <1417692637.3744.5.camel@pengutronix.de>
-References: <1417686826-12687-1-git-send-email-andy.yan@rock-chips.com>
- <1417687565-13206-1-git-send-email-andy.yan@rock-chips.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [RFC] OPP: Redefine bindings to overcome shortcomings
+Date: Thu, 04 Dec 2014 12:34:28 +0100
+Message-ID: <1417692868.9037.4.camel@pengutronix.de>
+References: <52c403454c3b8fc201abe7ac74cf657638479311.1417691389.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1417687565-13206-1-git-send-email-andy.yan@rock-chips.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Pawel Moll <pawel.moll@arm.com>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, rmk+kernel@arm.linux.org.uk, mark.yao@rock-chips.com, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, vladimir_zapolskiy@mentor.com
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <52c403454c3b8fc201abe7ac74cf657638479311.1417691389.git.viresh.kumar@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, arnd.bergmann@linaro.org, rob.herring@linaro.org, grant.likely@linaro.org, olof@lixom.net, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, nm@ti.com, Sudeep.Holla@arm.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, santosh.shilimkar@oracle.com, mike.turquette@linaro.org, kesavan.abhilash@gmail.com, catalin.marinas@arm.com, ta.omasab@gmail.com, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
+Hi Viresh,
 
-Am Donnerstag, den 04.12.2014, 18:06 +0800 schrieb Andy Yan:
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+not commenting on the overall structure as I have to think a bit more
+about this. But small comments below.
+
+Am Donnerstag, den 04.12.2014, 16:44 +0530 schrieb Viresh Kumar:
+> Hi Rob, et al..
 > 
+> Current OPP (Operating performance point) DT bindings are proven to be
+> insufficient at multiple instances.
+> 
+> There had been multiple band-aid approaches to get them fixed (The latest one
+> being: http://www.mail-archive.com/devicetree@vger.kernel.org/msg53398.html).
+> For obvious reasons Rob rejected them and shown the right path forward. And this
+> is the first try to get those with a pen and paper.
+> 
+> The shortcomings we are trying to solve here:
+> 
+> - Some kind of compatibility string to probe the right cpufreq driver for
+>   platforms, when multiple drivers are available. For example: how to choose
+>   between cpufreq-dt and arm_big_little drivers.
+> 
+> - Getting clock sharing information between CPUs. Single shared clock vs.
+>   independent clock per core vs. shared clock per cluster.
+> 
+> - Support for turbo modes
+> 
+> - Other per OPP settings: transition latencies, disabled status, etc.?
+> 
+> The below document should be enough to describe how I am trying to fix these.
+> Please let me know what all I need to fix, surely there would be lots of
+> obstacles. I am prepared to get beaten up :)
+> 
+> I accept in advance that naming is extremely bad here, I need some suggestions
+> for sure.
+> 
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 > ---
+>  Documentation/devicetree/bindings/power/opp.txt | 147 ++++++++++++++++++++++++
+>  1 file changed, 147 insertions(+)
 > 
-> Changes in v17: None
-> Changes in v16:
-> - describe ddc-i2c-bus as optional
-> - add common clocks bindings
-> 
-> Changes in v15: None
-> Changes in v14: None
-> Changes in v13: None
-> Changes in v12: None
-> Changes in v11: None
-> Changes in v10: None
-> Changes in v9: None
-> Changes in v8:
-> - correct some spelling mistake
-> - modify ddc-i2c-bus and interrupt description
-> 
-> Changes in v7: None
-> Changes in v6: None
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3: None
-> 
->  .../devicetree/bindings/drm/bridge/dw_hdmi.txt     | 45 ++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt b/Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt
-> new file mode 100644
-> index 0000000..fb14730
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt
-> @@ -0,0 +1,45 @@
-> +DesignWare HDMI bridge bindings
+> diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp.txt
+> index 74499e5..5efd8d4 100644
+> --- a/Documentation/devicetree/bindings/power/opp.txt
+> +++ b/Documentation/devicetree/bindings/power/opp.txt
+> @@ -4,6 +4,153 @@ SoCs have a standard set of tuples consisting of frequency and
+>  voltage pairs that the device will support per voltage domain. These
+>  are called Operating Performance Points or OPPs.
+>  
+> +This documents defines OPP bindings with its required/optional properties.
+> +OPPs can be defined for any device, this file uses CPU device as an example to
+> +illustrate how to define OPPs.
 > +
-> +Required properities:
-> +- compatible: platform specific such as:
-> +   * "snps,dw-hdmi-tx"
-> +   * "fsl,imx6q-hdmi"
-> +   * "fsl,imx6dl-hdmi"
-> +   * "rockchip,rk3288-dw-hdmi"
-> +- reg: Physical base address and length of the controller's registers.
-> +- interrupts: The HDMI interrupt number
-> +- clocks, clock-names : must have the phandles to the HDMI iahb and isrf clocks,
-> +  as described in Documentation/devicetree/bindings/clock/clock-bindings.txt,
-> +  the clock-names should be "iahb", "isfr"
+> +linux,operating-points, opp-lists and opps:
+> +
+> +- linux,operating-points:
+> +  Container of all OPP nodes.
+> +
+> +  Required properties:
+> +  - opp nodes (explained below)
+> +
+> +  Optional properties:
+> +  - compatible: allow OPPs to express their compatibility with devices
+> +
+> +
+> +- opp-list@*:
+> +  List of nodes defining performance points. Following belong to the nodes
+> +  within the opp-lists.
+> +
+> +  Required properties:
+> +  - frequency-kHz: Frequency in kHz
+> +  - voltage-uV: voltage in micro Volts
+> +
+> +  Optional properties:
+> +  - turbo-mode: Marks the volt-freq pair as turbo pair.
+> +  - status: Marks the node enabled/disabled.
 
-This is missing the port bindings, I think it should mention the port
-property here and refer to the soc specific binding document.
-
- - port@...: SoC specific port nodes with endpoint definitions as defined
-   in Documentation/devicetree/bindings/media/video-interfaces.txt,
-   please refer to the SoC specific binding document:
-    * Documentation/devicetree/bindings/drm/imx/hdmi.txt
-    * Documentation/devicetree/bindings/video/dw_hdmi-rockchip.txt
-
-This also makes be wonder, shouldn't dw_hdmi-rockchip be under drm/?
-
-> +Optional properties
-> +- reg-io-width: the width of the reg:1,4, default set to 1 if not present
-> +- ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
-> +- clkocks, clock-names: phandle to the HDMI cec clock, name should be "cec"
-
-s/clkocks/clocks/, and I'd uppercase the HDMI CEC clock for consistency.
+What about devices with multiple different turbo states? We have seen
+CPUs that boost to different states in the x86 world, surely we will
+encounter something like this in the ARM world too. Do we just mark them
+all as turbo OPPs and let the driver decide what to do? If we want to
+keep using cpufreq-dt for as much devices as possible is it really
+sufficient to know that this is a turbo state, without knowing the
+conditions required for activating the state?
 
 > +
-> +Example:
-> +	hdmi: hdmi@0120000 {
-> +		compatible = "fsl,imx6q-hdmi";
+> +
+> +- opp@*:
+> +  Operating performance point node per device. Multiple devices sharing it can
+> +  use its phandle in their 'opp' property.
+> +
+> +  Required properties:
+> +  - opp-list: phandle to opp-list defined above.
+> +
+> +  Optional properties:
+> +  - clocks: Tuple of clock providers
+> +  - clock-names: Clock names
+> +  - opp-supply: phandle to the parent supply/regulator node
+> +  - voltage-tolerance: Specify the CPU voltage tolerance in percentage.
 
-Could you change this example to:
-		compatible = "fsl,imx6q-hdmi", "snps,dw-hdmi-tx"
+This is extremely ill defined. It doesn't say in which direction the
+tolerance is to be applied. Can you go below or above the OPP specified
+voltage? For now everyone just assumes that it has to work both ways.
+Also with this binding the tolerance is applied for all OPPs, where is
+very much depends on the individual OPP.
 
-> +		reg = <0x00120000 0x9000>;
-> +		interrupts = <0 115 0x04>;
-> +		gpr = <&gpr>;
-> +		clocks = <&clks 123>, <&clks 124>;
-> +		clock-names = "iahb", "isfr";
-> +		ddc-i2c-bus = <&i2c2>;
-> +
-> +		port@0 {
-> +			reg = <0>;
-> +
-> +			hdmi_mux_0: endpoint {
-> +				remote-endpoint = <&ipu1_di0_hdmi>;
-> +			};
-> +		};
-> +
-> +		port@1 {
-> +			reg = <1>;
-> +
-> +			hdmi_mux_1: endpoint {
-> +				remote-endpoint = <&ipu1_di1_hdmi>;
-> +			};
-> +		};
-> +	};
+If you are going to redefine OPPs anyway I would really like to see this
+property die and rather have a min/max voltage per OPP. That way you can
+properly express the OPP constraints. Most OPPs will likely allow a much
+higher voltage than their minimal specified one, except when you go over
+thermal limits with a high clock/voltage combination.
+
+> +  - clock-latency: Specify the possible maximum transition latency for clock,
+> +    in unit of nanoseconds.
+
+Why do we need this? This is property of the clock. We should be able to
+handle this completely internally in the kernel. I don't know if the
+clock API has something like this right now, but it should be a trivial
+addition.
+
+Regards,
+Lucas
+
+-- 
+Pengutronix e.K.             | Lucas Stach                 |
+Industrial Linux Solutions   | http://www.pengutronix.de/  |
+
