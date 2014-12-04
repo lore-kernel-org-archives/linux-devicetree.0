@@ -1,70 +1,79 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH v14 03/10] qcom: spm: Add Subsystem Power Manager driver
-Date: Thu, 4 Dec 2014 09:28:34 -0700
-Message-ID: <20141204162834.GA2995@linaro.org>
-References: <1417541958-56907-1-git-send-email-lina.iyer@linaro.org>
- <2596381.rFt35NU3oS@wuerfel>
- <548020D7.8030003@linaro.org>
- <8625951.Wbs2MxLnhi@wuerfel>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 5/5] ARM: dts: sun6i: Add dts file for CSQ
+ CS908 board
+Date: Thu, 4 Dec 2014 17:33:09 +0100
+Message-ID: <20141204163309.GS30256@lukather>
+References: <1416747283-13489-1-git-send-email-hdegoede@redhat.com>
+ <1416747283-13489-6-git-send-email-hdegoede@redhat.com>
+ <20141125182147.GD25249@lukather>
+ <5475962A.4090508@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="szdyR02yM8NCQUEm"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBOE2QKSAKGQE3MV3J2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <8625951.Wbs2MxLnhi@wuerfel>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
+In-Reply-To: <5475962A.4090508-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 04 2014 at 02:02 -0700, Arnd Bergmann wrote:
->On Thursday 04 December 2014 09:52:39 Daniel Lezcano wrote:
->> On 12/03/2014 09:35 PM, Arnd Bergmann wrote:
->> > On Wednesday 03 December 2014 07:31:22 Lina Iyer wrote:
->> >>>>> +static int __init qcom_spm_init(void)
->> >>>>> +{
->> >>>>> +    int ret;
->> >>>>> +
->> >>>>> +    /*
->> >>>>> +     * cpuidle driver need to registered before the cpuidle device
->> >>>>> +     * for any cpu. Register the device for the the cpuidle driver.
->> >>>>> +     */
->> >>>>> +    ret = platform_device_register(&qcom_cpuidle_drv);
->> >>>>> +    if (ret)
->> >>>>> +        return ret;
->> >>>> Stephen pointed out that we would have the platform device lying around
->> >>>> on a non-QCOM device when using multi_v7_defconfig.
->> >>>
->> >>> Perhaps I am missing the point, but this is not supposed to happen, no ?
->> >>>
->> >> This would happen, since the file would compile on multi_v7 and we would
->> >> initialize and register this device regardless. The cpuidle-qcom.c
->> >> driver probe would bail out looking for a matching compatible property.
->> >> So we would not register a cpuidle driver but the device would lay
->> >> around.
->> >
->> > I think the problem is registering a platform_device. I've complained
->> > about this before, but it still seems to get copied all over the
->> > place. Please don't do this but have a driver that looks at DT to
->> > figure out whether to access hardware or not.
->>
->> We did this approach but, I can remember why, someone was complaining
->> about it also
->>
->> The platform device/driver paradigm allowed us to split the arch
->> specific parts by passing the pm ops through the platform data.
->>
->> Would make sense to have a single common place for the ARM arch where we
->> initialize the platform device for cpuidle ?
->
->No. It's really not a device, and if you pretend that it is, you get
->into problems like this.
+--szdyR02yM8NCQUEm
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Arnd, the problem is that the provides function pointers to the SoC code
-that the cpuilde driver uses to call based on the idle state.
+Hi,
 
-After much discussions, we came down to using function pointers from
-translating from DT strings, other than using that again, I dont see a
-good way of achieving the ability of cpuidle driver staying a separate
-driver from the SPM driver.
+On Wed, Nov 26, 2014 at 09:58:18AM +0100, Hans de Goede wrote:
+> Hi,
+> 
+> On 11/25/2014 07:21 PM, Maxime Ripard wrote:
+> >On Sun, Nov 23, 2014 at 01:54:43PM +0100, Hans de Goede wrote:
+> >>The CSQ CS908 is an A31s based top-set box, with 1G RAM, 8G NAND,
+> >>rtl8188etv usb wifi, 2 USB A receptacles (1 connected through the OTG
+> >>controller), ethernet, 3.5 mm jack with a/v out and hdmi out:
+> >>
+> >>http://www.geekbuying.com/item/CS908-Allwinner-A31S-Quad-Core-1-2GHz-Android-4-4-Mini-TV-Box-HDMI-HDD-Player-1G-8G-WIFI-Miracast---Black-333395.html
+> >>
+> >>Note it has no sdcard slot and therefore can only be fel booted.
+> >
+> >Thanks a lot for working on this!
+> >
+> >I also bought another board with an A31s, but it ended up having
+> >neither USB OTG or MMC, which rendered it pretty useless.
+> 
+> Are you sure ? The cs908 also does not have an otg connector,
+> as said it has 2 usb-a receptacles, with the following usb "routing":
+> 
+> usb0 (otg): usb-a receptacle 1 (labeled 1 on the box, 0 on the print)
+> usb1 (ehci): routed to internal wifi
+> usb2 (ehci): usb-a receptacle 2 (labeled 2 on both the box and the print)
+> 
+> I'm using fel mode with an usb-a <-> usb-a cable connected to usb0 on
+> the cs908. The cs908 has no fel button, so I've hooked up the serial console,
+> and then keep 2 pressed on the serial console while inserting the usb-a into
+> the PC (which will also power the board). boot0 from the nand will then jump
+> into fel mode when it sees the 2 keypress.
+> 
+> This was an interesting exercise to confirm that everything on the A31s just
+> works with A31 code, but now that is confirms A31s devices are not all that
+> interesting anymore :)
 
-Daniel, thoughts?
+Ah, that's very interesting... I'll dig this board out then, and try
+both USB-A connector. It might very well be just that.
+
+Thanks!
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--szdyR02yM8NCQUEm--
