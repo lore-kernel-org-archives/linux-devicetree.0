@@ -1,51 +1,60 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH/RFC v9 06/19] DT: Add documentation for the mfd Maxim
- max77693
-Date: Thu, 4 Dec 2014 17:12:02 +0100
-Message-ID: <20141204161201.GB29080@amd>
-References: <1417622814-10845-1-git-send-email-j.anaszewski@samsung.com>
- <1417622814-10845-7-git-send-email-j.anaszewski@samsung.com>
- <20141204100706.GP14746@valkosipuli.retiisi.org.uk>
- <54804840.4030202@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54804840.4030202@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org
+From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH v3 0/3] Add support for Tegra Activity Monitor
+Date: Thu,  4 Dec 2014 17:14:40 +0100
+Message-ID: <1417709696-29281-1-git-send-email-tomeu.vizoso@collabora.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+Hello,
 
-> >>+- maxim,boost-mode :
-> >>+	In boost mode the device can produce up to 1.2A of total current
-> >>+	on both outputs. The maximum current on each output is reduced
-> >>+	to 625mA then. If there are two child led nodes defined then boost
-> >>+	is enabled by default.
-> >>+	Possible values:
-> >>+		MAX77693_LED_BOOST_OFF - no boost,
-> >>+		MAX77693_LED_BOOST_ADAPTIVE - adaptive mode,
-> >>+		MAX77693_LED_BOOST_FIXED - fixed mode.
-> >>+- maxim,boost-vout : Output voltage of the boost module in millivolts.
-> >>+- maxim,vsys-min : Low input voltage level in millivolts. Flash is not fired
-> >>+	if chip estimates that system voltage could drop below this level due
-> >>+	to flash power consumption.
-> >>+
-> >>+Required properties of the LED child node:
-> >>+- label : see Documentation/devicetree/bindings/leds/common.txt
-> >>+- maxim,fled_id : Identifier of the fled output the led is connected to;
-> >
-> >I'm pretty sure this will be needed for about every chip that can drive
-> >multiple LEDs. Shouldn't it be documented in the generic documentation?
-> 
-> OK.
+this v3 addresses the comments that the devfreq implementation got, namely:
 
-Well... "fled_id" is not exactly suitable name. On other busses, it
-would be "reg = <1>"?
+* Address misc. style issues found by Thierry and Alexander
+* Added helpers for register i/o
+* Further documented the structs
+* Enable the ACTMON after the IRQ handler has been installed
+* Disable the ACTMON before removing the IRQ handler
+* Add governor in a subsys initcall
 
-								Pavel
+There's an open question on whether some functionality currently in this
+devfreq driver should be moved into the devfreq framework, but without knowing
+of other SoC family that would benefit from it, I'm reticent. It would be
+great to hear from the devfreq maintainers if they have any plans regarding
+this, or if they have any suggestion.
+
+These patches implement support for setting the rate of the EMC clock based on
+stats collected from the ACTMON, a piece of hw in the Tegra124 that counts
+memory accesses (among others).
+
+It depends on the following in-flight patches:
+
+* EMC driver: http://thread.gmane.org/gmane.linux.drivers.devicetree/99304
+* CPUFreq driver: http://thread.gmane.org/gmane.linux.kernel/1812962
+
+I have pushed a branch here for testing:
+
+http://cgit.collabora.com/git/user/tomeu/linux.git/log/?h=actmon-v3
+
+Regards,
+
+Tomeu
+
+Tomeu Vizoso (3):
+  of: Add binding for NVIDIA Tegra ACTMON node
+  PM / devfreq: tegra: add devfreq driver for Tegra Activity Monitor
+  ARM: tegra: Add Tegra124 ACTMON support
+
+ .../devicetree/bindings/arm/tegra/actmon.txt       |  38 +
+ arch/arm/boot/dts/tegra124.dtsi                    |  23 +
+ drivers/devfreq/Kconfig                            |   9 +
+ drivers/devfreq/Makefile                           |   1 +
+ drivers/devfreq/tegra-actmon-devfreq.c             | 777 +++++++++++++++++++++
+ 5 files changed, 848 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/tegra/actmon.txt
+ create mode 100644 drivers/devfreq/tegra-actmon-devfreq.c
+
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+1.9.3
