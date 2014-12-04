@@ -1,29 +1,50 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [GIT PULL] Broadcom STB GISB bus driver for 3.19 (v2)
-Date: Thu, 04 Dec 2014 16:44:54 +0100
-Message-ID: <2910464.KM7dWcxCmJ@wuerfel>
-References: <1417220370-469-1-git-send-email-f.fainelli@gmail.com>
+From: Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH v4] scsi: ufs: add support of generic PHY and ICE in
+ Qualcomm chips
+Date: Thu, 4 Dec 2014 07:54:51 -0800
+Message-ID: <20141204155451.GA29255@infradead.org>
+References: <1417104021-2997-1-git-send-email-ygardi@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417220370-469-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-scsi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1417104021-2997-1-git-send-email-ygardi@codeaurora.org>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Yaniv Gardi <ygardi@codeaurora.org>
+Cc: James.Bottomley@HansenPartnership.com, hch@infradead.org, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, linux-arm-msm@vger.kernel.org, santoshsy@gmail.com, linux-scsi-owner@vger.kernel.org, subhashj@codeaurora.org, noag@codeaurora.org, draviv@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kishon Vijay Abraham I <kishon@ti.com>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <JBottomley@parallels.com>, Grant Likely <grant.likely@linaro.org>, Christoph Hellwig <hch@lst.de>, Sujit Reddy Thumma <sthumma@codeaurora.org>, Raviv Shvili <rshvili@codeaurora.org>, Sahitya Tummala <stummala@codeaurora.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 28 November 2014 16:19:30 Florian Fainelli wrote:
-> This pull request contains the following changes to the Broadcom GISB bus
-> arbiter from Kevin Cernekee:
+On Thu, Nov 27, 2014 at 05:59:58PM +0200, Yaniv Gardi wrote:
+> In this change we add support to the generic PHY framework.
+> Two UFS phys are implemented:
+> qmp-20nm and qmp-28nm.
 > 
-> - Extend brcmstb GISB bus driver to work on MIPS (currently ARM-only) and support
->   65nm and 40nm MIPS-based chips such as: BCM7038, BCM7400 and BCM7435
+> Also, the files in this change implement the UFS HW (controller & PHY)
+> specific behavior in Qualcomm chips.
+> Relocation of a few header files is needed in order to expose routines
+> and data structures between PHY driver and UFS driver.
+> 
+> Also, this change include the implementation of Inline Crypto Engine (ICE)
+> in Qualcomm chips.
 
-Pulled into next/drivers, thanks!
+This whole patch is a mess.  It does way to many things in one patch,
+and it doesn't explain enough of it.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Please explain why you need it.  Especially as the PHY API is a generic
+phy abstraction, so having to share defintions between the provider and
+consumer seems wrong.  Even if you need some shared bits keep them to an
+absolute minium insted of moving so much out of the driver directory.
+Also if at all possible keep the shared data in a single header under
+include/linux instead of having lots of global headers in a deep
+directory structure.
+
+Second split this into patches that do a single things, and explain why
+you're doing each:
+
+ 1) header move if/as needed
+ 2) add 20nm phy driver
+ 3) add 28nm phy driver
+ 4) add ufs-qcom driver
+ 5) add ufs-qcom-ice support
+
+and so on.
