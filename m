@@ -1,82 +1,38 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 0/6] ARM: shmobile: Change to using clock-indices
-Date: Thu, 4 Dec 2014 16:00:44 +0900
-Message-ID: <20141204070043.GA25806@verge.net.au>
-References: <1415645379-3366-1-git-send-email-geert+renesas@glider.be>
- <CAMuHMdX+EfnjZvnDyUprtuQ05Ekpnr7bxgTZA=2_CHMFTq1Y9A@mail.gmail.com>
- <20141204041144.GA9241@verge.net.au>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 0/4] clk: mediatek: Add common clock support for
+ Mediatek MT8135.
+Date: Thu, 4 Dec 2014 15:15:49 +0800
+Message-ID: <1417677349.31427.26.camel@mtksdaap41>
+References: <1417675942-10502-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141204041144.GA9241@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mike Turquette <mturquette@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1417675942-10502-1-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Eddie Huang =?euc-kr?Q?=28=FC=DC=F2=AA=CB=F8=29?= <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, HenryC Chen =?iso-2022-jp?Q?=28=1B=24BDD7z9k=1B=28B=29?= <HenryC.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yingjoe Chen =?iso-2022-jp?Q?=28=1B=24BDD1Q=3D=27=1B=28B=29?= <Yingjoe.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 04, 2014 at 01:11:44PM +0900, Simon Horman wrote:
-> On Wed, Dec 03, 2014 at 12:27:13PM +0100, Geert Uytterhoeven wrote:
-> > Hi Simon,
-> > 
-> > On Mon, Nov 10, 2014 at 7:49 PM, Geert Uytterhoeven
-> > <geert+renesas@glider.be> wrote:
-> > > This patch series finalizes the conversion from the vendor-specific
-> > > "renesas,clock-indices" to the generic "clock-indices", started by Ben Dooks.
-> > >
-> > > The patches for r8a7790 and r8a7791 were extracted from a patch that Ben sent
-> > > before ("[PATCH 2/3] renesas: change to using clock-indices"), but it was never
-> > > split/updated.
-> > >
-> > > Changes in v2:
-> > >   - Drop the reference to "renesas,clock-indices" completely,
-> > >   - Add Acked-by.
-> > >
-> > > Thanks for applying!
-> > 
-> > As Mike has accepted the bindings update in clk-next, can you please apply
-> > the dtsi updates?
+Hi,
+
+On Thu, 2014-12-04 at 14:52 +0800, James Liao wrote:
+> This patchset contains the initial common clock support for Mediatek SoCs.
+> Mediatek SoC's clock architecture comprises of various PLLs, dividers,
+> muxes and clock gates.
 > 
-> Sure, I will look into doing so; most likely tomorrow.
-
-Thanks, I have now done so.
-
-There was some fuzz when applying most of the patches,
-I'd appreciate it if you could check that I got things right.
-
-> > Thanks!
-> > 
-> > > Ben Dooks (2):
-> > >   ARM: shmobile: r8a7790 dtsi: Change to using clock-indices
-> > >   ARM: shmobile: r8a7791 dtsi: Change to using clock-indices
-> > >
-> > > Geert Uytterhoeven (4):
-> > >   clk: shmobile: Deprecate renesas,clock-indices
-> > >   ARM: shmobile: r8a7740 dtsi: Change to using clock-indices
-> > >   ARM: shmobile: r8a7779 dtsi: Change to using clock-indices
-> > >   ARM: shmobile: r8a7794 dtsi: Change to using clock-indices
-> > >
-> > >  .../bindings/clock/renesas,cpg-mstp-clocks.txt     |  8 ++++----
-> > >  arch/arm/boot/dts/r8a7740.dtsi                     | 10 +++++-----
-> > >  arch/arm/boot/dts/r8a7779.dtsi                     |  6 +++---
-> > >  arch/arm/boot/dts/r8a7790.dtsi                     | 20 +++++++++++---------
-> > >  arch/arm/boot/dts/r8a7791.dtsi                     | 22 ++++++++++++----------
-> > >  arch/arm/boot/dts/r8a7794.dtsi                     | 14 +++++++-------
-> > >  6 files changed, 42 insertions(+), 38 deletions(-)
-> > 
-> > Gr{oetje,eeting}s,
-> > 
-> >                         Geert
-> > 
-> > --
-> > Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> > 
-> > In personal conversations with technical people, I call myself a hacker. But
-> > when I'm talking to journalists I just say "programmer" or something like that.
-> >                                 -- Linus Torvalds
-> > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> This patchset also contains a basic clock support for Mediatek MT8135.
 > 
+> This driver is based on 3.18-rc1 + MT8135 basic support.
+> 
+
+Changein v2:
+- Re-ordered patchset. Fold include/dt-bindings and DT document in 1st
+patch.
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
