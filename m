@@ -1,68 +1,57 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH v16 03/12] drm: imx: imx-hdmi: convert imx-hdmi to
- drm_bridge mode
-Date: Thu, 04 Dec 2014 08:51:02 +0800
-Message-ID: <547FAFF6.3050800@rock-chips.com>
-References: <1417620408-30354-1-git-send-email-andy.yan@rock-chips.com>
- <1417620566-30496-1-git-send-email-andy.yan@rock-chips.com>
- <20141203153847.GC11285@n2100.arm.linux.org.uk>
- <547F3495.9070206@rock-chips.com>
- <20141203161122.GF11285@n2100.arm.linux.org.uk>
- <547F3A9F.30701@rock-chips.com>
- <20141203163318.GH11285@n2100.arm.linux.org.uk>
- <547F40B8.6060706@rock-chips.com>
- <20141203234000.GJ11285@n2100.arm.linux.org.uk>
+From: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v10 2/6] backlight: Add support Skyworks SKY81452
+ backlight driver
+Date: Thu, 4 Dec 2014 11:04:49 +0900
+Message-ID: <20141204020449.GA2939@jack-ThinkPad-T520>
+References: <1417590332-4912-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1417590332-4912-3-git-send-email-jack.yoo@skyworksinc.com>
+ <1417600949.12511.7.camel@linux-0dmf.site>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20141203234000.GJ11285@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Pawel Moll <pawel.moll@arm.com>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, mark.yao@rock-chips.com, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, vladimir_zapolskiy@mentor.com, Luc
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1417600949.12511.7.camel-AfvqVibwNMkMNNZnWhT/Jw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Oliver Neukum <oneukum-l3A5Bk7waGM@public.gmane.org>
+Cc: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org, matti.vaittinen-OYasijW0DpE@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUnVzc2VsOgpPbiAyMDE05bm0MTLmnIgwNOaXpSAwNzo0MCwgUnVzc2VsbCBLaW5nIC0gQVJN
-IExpbnV4IHdyb3RlOgo+IE9uIFRodSwgRGVjIDA0LCAyMDE0IGF0IDEyOjU2OjI0QU0gKzA4MDAs
-IEFuZHkgWWFuIHdyb3RlOgo+PiBIaSBSdXNzZWxsOgo+PiBPbiAyMDE05bm0MTLmnIgwNOaXpSAw
-MDozMywgUnVzc2VsbCBLaW5nIC0gQVJNIExpbnV4IHdyb3RlOgo+Pj4gT24gVGh1LCBEZWMgMDQs
-IDIwMTQgYXQgMTI6MzA6MjNBTSArMDgwMCwgQW5keSBZYW4gd3JvdGU6Cj4+Pj4gT24gMjAxNOW5
-tDEy5pyIMDTml6UgMDA6MTEsIFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eCB3cm90ZToKPj4+Pj4g
-SSBtZWFudCB0aGF0IGlteF9oZG1pX2JpbmQgc2hvdWxkIGJlIHBhc3NlZCB0aGVzZSwgc28gdGhh
-dCBpdCBuZWVkcyB0bwo+Pj4+PiBrbm93IG5vdGhpbmcgYWJvdXQgdGhlIHN0cnVjdCBkZXZpY2Ug
-YmV5b25kIHRoZSBnZW5lcmljIGRldmljZSBzdHJ1Y3R1cmUuCj4+Pj4+IEluIG90aGVyIHdvcmRz
-LCB0aGUgZHctaGRtaSBjb3JlIHNob3VsZCBub3QgYXNzdW1lIHRoYXQgdGhlIHN0cnVjdCBkZXZp
-Y2UKPj4+Pj4gaXMgcGFydCBvZiBhIHBsYXRmb3JtIGRldmljZS4KPj4+Pj4KPj4+PiAgICAgaWYg
-c28sIGhvdyBhYm91dCB0aGUgZGV2aWNlIHRyZWUgcHJvcGVydGllcyAgZGRjLWkyYy1idXMsIHJl
-Zy1pby13aWR0aCwKPj4+PiBpYWhiLCBpc2ZyLAo+Pj4+ICAgIHRoZXkgYXJlIGFsbCBmb3VuZCBi
-eSBkZXZpY2U/Cj4+PiBJZiB0aGUgZGV2aWNlIGhhcyBhIGRldmljZSB0cmVlIG5vZGUgYXNzb2Np
-YXRlZCB3aXRoIGl0LCBpdCB3aWxsIGhhdmUgYQo+Pj4gbm9uLU5VTEwgZGV2LT5vZl9ub2RlIC0g
-d2hpY2ggaXMgcGFydCBvZiB0aGUgZ2VuZXJpYyBkZXZpY2Ugc3RydWN0dXJlLgo+Pj4KPj4gICAg
-c28gLCBJIGp1c3QgbmVlZCBnZXQgdGhlIHJlc291cmNlIGFuZCBpcnEgbnVtYmVyIGluIHRoZQo+
-PiBkd19oZG1pLWlteC9yb2NrY2hpcCAsdGhhbgo+PiAgICBwYXNzIHRoZW0gdG8gaW14X2hkbWlf
-YmluZCwgYXMgdGhlIHByb3BlcnRpZXMgZGRjLWkyYy1idXMsIHJlZy1pby13aWR0aCwKPj4gaWFo
-Yixpc2ZyLCB0aGV5Cj4+ICAgIGFyZSBzdGlsbCBjYW4gYmUgaGFuZGxlZCBpbiBpbXhfaGRtaV9i
-aW5kID8KPiBCYXNpY2FsbHksIHdoYXQgSSdtIHN1Z2dlc3RpbmcgaXMganVzdCB0aGlzIGNoYW5n
-ZSB0byBpbXhfaGRtaV9iaW5kKCk6Cj4KPiAgIGludCBpbXhfaGRtaV9iaW5kKHN0cnVjdCBkZXZp
-Y2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLAo+IAkJICB2b2lkICpkYXRhLCBzdHJ1Y3Qg
-ZHJtX2VuY29kZXIgKmVuY29kZXIsCj4gKwkJICBjb25zdCBzdHJ1Y3QgcmVzb3VyY2UgKmlvcmVz
-LCBpbnQgaXJxLAo+IAkJICBjb25zdCBzdHJ1Y3QgaW14X2hkbWlfcGxhdF9kYXRhICpwbGF0X2Rh
-dGEpCj4gICB7Cj4gLQlzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2ID0gdG9fcGxhdGZvcm1f
-ZGV2aWNlKGRldik7Cj4gLi4uCj4gCX0KPgo+IC0JaXJxID0gcGxhdGZvcm1fZ2V0X2lycShwZGV2
-LCAwKTsKPiAJaWYgKGlycSA8IDApCj4gCQlyZXR1cm4gaXJxOwo+IC4uLgo+IAkJcmV0dXJuIHJl
-dDsKPgo+IC0JaW9yZXMgPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2UocGRldiwgSU9SRVNPVVJDRV9N
-RU0sIDApOwo+IAloZG1pLT5yZWdzID0gZGV2bV9pb3JlbWFwX3Jlc291cmNlKGRldiwgaW9yZXMp
-Owo+IAlpZiAoSVNfRVJSKGhkbWktPnJlZ3MpKQo+Cj4gYW5kIHN1cHBseWluZyB0aG9zZSBhcyBh
-cmd1bWVudHMgZnJvbSB0aGUgY2FsbGVyLgo+CiAgIGdvdCBpdCwgdGhhbmtzLCBhbmQgYWxzbyBt
-YW55IHRoYW5rcyBmb3IgUGhpbGlwcAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRldmVsIG1haWxpbmcgbGlzdApkZXZlbEBsaW51eGRyaXZlcnByb2pl
-Y3Qub3JnCmh0dHA6Ly9kcml2ZXJkZXYubGludXhkcml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2RyaXZlcmRldi1kZXZlbAo=
+On Wed, Dec 03, 2014 at 11:02:29AM +0100, Oliver Neukum wrote:
+> On Wed, 2014-12-03 at 16:05 +0900, gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> > +static ssize_t sky81452_bl_store_enable(struct device *dev,
+> > +               struct device_attribute *attr, const char *buf, size_t
+> > count)
+> > +{
+> > +       struct regmap *regmap = bl_get_data(to_backlight_device(dev));
+> > +       unsigned long value;
+> > +       int ret;
+> > +
+> > +       ret = kstrtoul(buf, 16, &value);
+> > +       if (IS_ERR_VALUE(ret))
+> > +               return ret;
+> > +
+> > +       ret = regmap_update_bits(regmap, SKY81452_REG1, SKY81452_EN,
+> > +                                       value << CTZ(SKY81452_EN));
+> 
+> No range checking for value?
+
+Avaiable range is from 0 to SKY81452_EN.
+regmap_update_bits() is masking the value.
+
+> 
+> > +       if (IS_ERR_VALUE(ret))
+> > +               return ret;
+> > +
+> > +       return count;
+> > +}
+> 
+> 	Regards
+> 		Oliver
+> 
+> -- 
+> Oliver Neukum <oneukum-l3A5Bk7waGM@public.gmane.org>
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
