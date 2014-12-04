@@ -1,46 +1,51 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: rockchip: set dw_mmc max-freq 150Mhz
-Date: Thu, 4 Dec 2014 08:08:57 -0800
-Message-ID: <CAD=FV=U8eGRFs5G+QfuRF0z1y_7G540r+uCQzPtgOT=KKD7s0g@mail.gmail.com>
-References: <1417661375-2872-1-git-send-email-addy.ke@rock-chips.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH/RFC v9 06/19] DT: Add documentation for the mfd Maxim
+ max77693
+Date: Thu, 4 Dec 2014 17:12:02 +0100
+Message-ID: <20141204161201.GB29080@amd>
+References: <1417622814-10845-1-git-send-email-j.anaszewski@samsung.com>
+ <1417622814-10845-7-git-send-email-j.anaszewski@samsung.com>
+ <20141204100706.GP14746@valkosipuli.retiisi.org.uk>
+ <54804840.4030202@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417661375-2872-1-git-send-email-addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Alexandru Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, han jiang <hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Chris <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?B?5aea5pm65oOF?= <yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhenfu.
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54804840.4030202@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Addy,
+Hi!
 
-On Wed, Dec 3, 2014 at 6:49 PM, Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> All of mmc controllers include SDMMC, SDIO0, SDIO1, and EMMC on RK3288
-> are limited to 150Mhz. It was mainly caused by two reasons:
-> - RK3288's IO pad(except DDR IO pad) is generic, which can only support
->   the max of 150Mhz.
-> - Mmc controller was designed at 150Mhz, and the pressure test by IC team
->   was based on this freequency point.
->
-> Signed-off-by: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
->  arch/arm/boot/dts/rk3288.dtsi | 4 ++++
->  1 file changed, 4 insertions(+)
+> >>+- maxim,boost-mode :
+> >>+	In boost mode the device can produce up to 1.2A of total current
+> >>+	on both outputs. The maximum current on each output is reduced
+> >>+	to 625mA then. If there are two child led nodes defined then boost
+> >>+	is enabled by default.
+> >>+	Possible values:
+> >>+		MAX77693_LED_BOOST_OFF - no boost,
+> >>+		MAX77693_LED_BOOST_ADAPTIVE - adaptive mode,
+> >>+		MAX77693_LED_BOOST_FIXED - fixed mode.
+> >>+- maxim,boost-vout : Output voltage of the boost module in millivolts.
+> >>+- maxim,vsys-min : Low input voltage level in millivolts. Flash is not fired
+> >>+	if chip estimates that system voltage could drop below this level due
+> >>+	to flash power consumption.
+> >>+
+> >>+Required properties of the LED child node:
+> >>+- label : see Documentation/devicetree/bindings/leds/common.txt
+> >>+- maxim,fled_id : Identifier of the fled output the led is connected to;
+> >
+> >I'm pretty sure this will be needed for about every chip that can drive
+> >multiple LEDs. Shouldn't it be documented in the generic documentation?
+> 
+> OK.
 
-Your explanation is reasonable.  The 150MHz rate is also listed in the
-latest datasheet.  It's unfortunate that we won't get full speed of
-SDR104 or hs200 on this SoC, but correctness certainly outweighs
-performance.
+Well... "fled_id" is not exactly suitable name. On other busses, it
+would be "reg = <1>"?
 
-Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-
-I have tested that this prevents the speed from going above 150MHz on
-rk3288-pinky on SD Cards, so:
-
-Tested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-
--Doug
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+								Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
