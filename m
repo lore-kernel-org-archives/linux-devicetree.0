@@ -1,11 +1,14 @@
 From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v17 0/12] dw-hdmi: convert imx hdmi to bridge/dw_hdmi
-Date: Thu,  4 Dec 2014 17:53:46 +0800
-Message-ID: <1417686826-12687-1-git-send-email-andy.yan@rock-chips.com>
+Subject: [PATCH v17 02/12] drm: imx: imx-hdmi: return defer if can't get ddc
+ i2c adapter
+Date: Thu,  4 Dec 2014 18:01:44 +0800
+Message-ID: <1417687304-13014-1-git-send-email-andy.yan@rock-chips.com>
+References: <1417686826-12687-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1417686826-12687-1-git-send-email-andy.yan@rock-chips.com>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -19,124 +22,55 @@ To: airlied@linux.ie, Philipp Zabel <p.zabel@pengutronix.de>, heiko@sntech.de, f
 Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, mark.yao@rock-chips.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Kumar Gala <galak@codeaurora.org>, Andy Yan <andy.yan@rock-chips.com>, Shawn Guo <shawn.guo@linaro.org>, vladimir_zapolskiy@mentor.com, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
+drm driver may probe before the i2c bus, so the driver should
+defer probing until it is available
 
-We found Freescale imx6 and Rockchip rk3288 and Ingenic JZ4780 (Xburst/MIPS)
-use the interface compatible Designware HDMI IP, but they also have some
-lightly differences, such as phy pll configuration, register width(imx hdmi
-register is one byte, but rk3288 is 4 bytes width and can only be accessed
-by word), 4K support(imx6 doesn't support 4k, but rk3288 does), and HDMI2.0
-support.
+Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+Reviewed-by: Daniel Kurtz <djkurtz@chromium.org>
 
-To reuse the imx-hdmi driver, we make this patch set:
-(1): fix some CodingStyle warning to make checkpatch happy
-(2): convert imx-hdmi to drm_bridge
-(3): split platform specific code
-(4): move imx-hdmi to bridge/dw_hdmi
-(5): extend dw_hdmi.c to support rk3288 hdmi
-(6): add rockchip rk3288 platform specific code dw_hdmi-rockchip.c
+---
 
-Changes in v17:
-- remove platform device stuff from dw_hdmi core, adviced by Russell King
-- remove prompt message of dw_hdmi kconfig, adviced by Russel King
-- parse resource and irq in platform driver
-
-Changes in v16:
-- use the common binding for the clocks
-- describe ddc-i2c-bus as optional
-- add common clocks bindings
-- modify clocks bindings
-
-Changes in v15:
-- add prefix dw_hdmi/DW_HDMI for public used dw_hdmi structs
-  adviced by Philipp Zabel
-- remove THIS_MODULE in platform driver
-- remove unio of the multi-byte register access, adviced by Philipp Zabel
-- remove THIS_MODULE in platform driver
-
-Changes in v14:
-- add defer probing, adviced by Philipp Zabel
-- remove drm_connector_register, because imx-drm core has registered
-connector
-
-Changes in v13:
-- patch against drm-next
-- split platform specific phy configuration
-- split phy configuration from patch#4
-
+Changes in v17: None
+Changes in v16: None
+Changes in v15: None
+Changes in v14: None
+Changes in v13: None
 Changes in v12:
 - refactor of_node_put(ddc_node)
-- squash patch <convert dw_hdmi to drm_bridge>
-- add comment for the depend on patch
 
-Changes in v11:
-- squash patch  <split some phy configuration to platform driver>
-
-Changes in v10:
-- split generic dw_hdmi.c improvements from patch#11 (add rk3288 support)
-- add more display mode support mpll configuration for rk3288
-
-Changes in v9:
-- move some phy configuration to platform driver
-
-Changes in v8:
-- correct some spelling mistake
-- modify ddc-i2c-bus and interrupt description
-- Add documentation for rockchip dw hdmi
-
-Changes in v7:
-- remove unused variables from structure dw_hdmi
-- remove a wrong modification
-- add copyrights for dw_hdmi-imx.c
-
-Changes in v6:
-- rearrange the patch order
-- refactor register access without reg_shift
-
-Changes in v5:
-- refactor reg-io-width
-
+Changes in v11: None
+Changes in v10: None
+Changes in v9: None
+Changes in v8: None
+Changes in v7: None
+Changes in v6: None
+Changes in v5: None
 Changes in v4:
-- fix checkpatch CHECK
 - defer probe ddc i2c adapter
 
-Changes in v3:
-- split multi-register access to one indepent patch
+Changes in v3: None
 
-Andy Yan (12):
-  drm: imx: imx-hdmi: make checkpatch happy
-  drm: imx: imx-hdmi: return defer if can't get ddc i2c adapter
-  drm: imx: imx-hdmi: convert imx-hdmi to drm_bridge mode
-  drm: imx: imx-hdmi: split phy configuration to platform driver
-  drm: imx: imx-hdmi: move imx-hdmi to bridge/dw_hdmi
-  dt-bindings: add document for dw_hdmi
-  drm: bridge/dw_hdmi: add support for multi-byte register width access
-  drm: bridge/dw_hdmi: add mode_valid support
-  drm: bridge/dw_hdmi: clear i2cmphy_stat0 reg in hdmi_phy_wait_i2c_done
-  drm: bridge/dw_hdmi: add function dw_hdmi_phy_enable_spare
-  dt-bindings: Add documentation for rockchip dw hdmi
-  drm: bridge/dw_hdmi: add rockchip rk3288 support
+ drivers/gpu/drm/imx/imx-hdmi.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
- .../devicetree/bindings/drm/bridge/dw_hdmi.txt     |  45 ++
- .../devicetree/bindings/video/dw_hdmi-rockchip.txt |  46 ++
- drivers/gpu/drm/bridge/Kconfig                     |   5 +
- drivers/gpu/drm/bridge/Makefile                    |   1 +
- .../gpu/drm/{imx/imx-hdmi.c => bridge/dw_hdmi.c}   | 716 ++++++++++-----------
- .../gpu/drm/{imx/imx-hdmi.h => bridge/dw_hdmi.h}   |   4 +-
- drivers/gpu/drm/imx/Kconfig                        |   1 +
- drivers/gpu/drm/imx/Makefile                       |   2 +-
- drivers/gpu/drm/imx/dw_hdmi-imx.c                  | 258 ++++++++
- drivers/gpu/drm/rockchip/Kconfig                   |  10 +
- drivers/gpu/drm/rockchip/Makefile                  |   2 +
- drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c        | 340 ++++++++++
- include/drm/bridge/dw_hdmi.h                       |  61 ++
- 13 files changed, 1105 insertions(+), 386 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt
- create mode 100644 Documentation/devicetree/bindings/video/dw_hdmi-rockchip.txt
- rename drivers/gpu/drm/{imx/imx-hdmi.c => bridge/dw_hdmi.c} (72%)
- rename drivers/gpu/drm/{imx/imx-hdmi.h => bridge/dw_hdmi.h} (99%)
- create mode 100644 drivers/gpu/drm/imx/dw_hdmi-imx.c
- create mode 100644 drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
- create mode 100644 include/drm/bridge/dw_hdmi.h
-
+diff --git a/drivers/gpu/drm/imx/imx-hdmi.c b/drivers/gpu/drm/imx/imx-hdmi.c
+index 7fd90ae..7a54d20 100644
+--- a/drivers/gpu/drm/imx/imx-hdmi.c
++++ b/drivers/gpu/drm/imx/imx-hdmi.c
+@@ -1611,10 +1611,12 @@ static int imx_hdmi_bind(struct device *dev, struct device *master, void *data)
+ 	ddc_node = of_parse_phandle(np, "ddc-i2c-bus", 0);
+ 	if (ddc_node) {
+ 		hdmi->ddc = of_find_i2c_adapter_by_node(ddc_node);
+-		if (!hdmi->ddc)
++		of_node_put(ddc_node);
++		if (!hdmi->ddc) {
+ 			dev_dbg(hdmi->dev, "failed to read ddc node\n");
++			return -EPROBE_DEFER;
++		}
+ 
+-		of_node_put(ddc_node);
+ 	} else {
+ 		dev_dbg(hdmi->dev, "no ddc property found\n");
+ 	}
 -- 
 1.9.1
