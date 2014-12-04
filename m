@@ -1,90 +1,69 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v2] pwm: atmel-hlcdc: add at91sam9x5 and sama5d3 errata
- handling
-Date: Thu, 4 Dec 2014 14:29:23 +0100
-Message-ID: <20141204142923.29eecfc6@bbrezillon>
-References: <1416407589-8157-1-git-send-email-boris.brezillon@free-electrons.com>
-	<20141204131229.GA7262@ulmo.nvidia.com>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: Re: [PATCH 03/12] irqchip: gic: define =?UTF-8?Q?register=5Frouta?=
+ =?UTF-8?Q?ble=5Fdomain=5Fops=20conditional?=
+Date: Thu, 04 Dec 2014 14:35:25 +0100
+Message-ID: <a62b856866915f6939da79bdbcdabb39@agner.ch>
+References: <1417565531-4507-1-git-send-email-stefan@agner.ch>
+ <1417565531-4507-4-git-send-email-stefan@agner.ch>
+ <5174649.NxPq80uDz8@wuerfel> <alpine.DEB.2.11.1412031303000.16275@nanos>
+ <8eccedc781df2636a132dae449cbe774@agner.ch> <547F5EBD.6040705@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20141204131229.GA7262@ulmo.nvidia.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: linux-pwm@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <547F5EBD.6040705-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry
-
-On Thu, 4 Dec 2014 14:12:31 +0100
-Thierry Reding <thierry.reding@gmail.com> wrote:
-
-> On Wed, Nov 19, 2014 at 03:33:09PM +0100, Boris Brezillon wrote:
-> > at91sam9x5 has an errata forbidding the use of slow clk as a clk source and
-> > sama5d3 SoCs has another errata forbidding the use of div1 prescaler.
-> > 
-> > Take both of these erratas into account.
-> > 
-> > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-> > ---
-> > Hi Thierry,
-> > 
-> > I've addressed the "erratas stored in of_device_id data" part, but still
-> > haven't modified the compatible strings of the HLCDC subdevices.
-> > 
-> > Please let me know if you really want to handle erratas through pwm
-> > compatibles instead of parent device compatibles.
-> > 
-> > Regards,
-> > 
-> > Boris
-> > 
-> > Changes since v1:
-> > - use data field in of_device_id to attach erratas to an IP revision
-> > 
-> >  drivers/pwm/pwm-atmel-hlcdc.c | 50 ++++++++++++++++++++++++++++++++++++++-----
-> >  1 file changed, 45 insertions(+), 5 deletions(-)
+On 2014-12-03 20:04, Marc Zyngier wrote:
+<snip>
+>> What do you mean by the shared state in the drawing above? Currently, I
+>> check whether a interrupt is already used by the other core by reading
+>> the register (do this configuration register reflect the "shared state"
+>> in your drawing?).
 > 
-> I applied this, but this was really much more difficult than I would've
-> wanted. Since the MFD driver hasn't been merged into Linus' tree yet I
-> wasn't able to actually build test this driver at all without manually
-> pulling in the patches that add the MFD support. I went through this
-> trouble this time because it's what we had agreed upon, but for the
-> record, next time I'll request a stable branch that I can pull into the
-> PWM tree to resolve this kind of dependency. Or patches will have to
-> wait until the next merge window. I don't want to have to jump through
-> hoops just to make sure the code in my tree actually compiles.
+> I think that is basically it. It should only be the register that
+> decides on the actual routing. BTW, how do you arbitrate between
+> concurrent accesses to this register? Or is only the A5 allowed to
+> change it?
+ 
+No arbitration so far... The whole Vybrid on M4 stuff is quite a hack
+right now. For instance also the concurrent access to the clock
+registers is not handled. Currently, I start the M4 from a booted A5
+Linux. To avoid half of the clocks get turned of by the M4 clock driver,
+I need to specify clk_ignore_unused. Beside that, peripherals have to be
+enabled/disabled in a non conflicting manor in the device trees...
 
-Thanks for doing that.
-Just for my understanding, am I the one responsible for providing this
-stable branch, or were you expecting Lee to provide it ?
+For the interrupt router in MSCM, it would be nice if the access could
+be done an atomic way, which would avoid the use of a lock mechanism.
+But I guess this is not possible, since peripherals only support
+standard ldr/str...?
 
-> 
-> Oh, and it's good that I do compile tests because...
-> 
-> > diff --git a/drivers/pwm/pwm-atmel-hlcdc.c b/drivers/pwm/pwm-atmel-hlcdc.c
-> [...]
-> > +const struct atmel_hlcdc_pwm_erratas atmel_hlcdc_pwm_at91sam9x5_erratas = {
-> > +	.slow_clk_errata = true,
-> > +};
-> > +
-> > +const struct atmel_hlcdc_pwm_erratas atmel_hlcdc_pwm_sama5d3_erratas = {
-> > +	.div1_clk_errata = true,
-> > +};
-> 
-> ... these actually should be static.
-> 
-> Also I took the liberty of substituting "erratum" for "errata" and
-> "errata" for "erratas".
+There is the SEMA4 module which provides hardware semaphores. I'm aware
+of the hardware spinlock drivers (drivers/hwspinlock/), I started to
+implement such a driver for Vybrid. But so far a grep through the kernel
+does not show one usage of that framework... I guess we could add dt
+support for that, so we can assign the locks to individual drivers.
 
-Indeed, thanks for fixing those problems.
+I also plan to have a deeper look into remoteproc/rpmsg, not sure if
+locking of shared peripherals is part (or planned to be part) of that
+framework.
 
-Best Regards,
+For the clock stuff, the problem is more complex: I guess the would need
+some kind of master/slave definition, where we disallow the change of
+the shared clocks for the slave.
 
-Boris
+If you are aware of patches/solutions, I'm happy to hear it...
 
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+--
+Stefan
+
+
+<snip>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
