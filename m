@@ -1,97 +1,178 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
+From: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [Patch v2 1/2] gpio: add GPIO hogging mechanism
-Date: Thu, 4 Dec 2014 15:52:06 +0100
-Message-ID: <20141204145206.GR30256@lukather>
+Date: Thu, 4 Dec 2014 23:58:54 +0900
+Message-ID: <CAAVeFuKx1uWVh-TQeFKN4uS9TyzQH4BbQ2q1yM4uJsnQdfdzPQ@mail.gmail.com>
 References: <1416527684-19017-1-git-send-email-bparrot@ti.com>
- <1416527684-19017-2-git-send-email-bparrot@ti.com>
- <CAAVeFu+VZiuzobB7McSAUehKUHJjBv1o8ZpYjSHJAKjr3o5wTA@mail.gmail.com>
- <20141201163639.GI25249@lukather>
- <CAAVeFuLTupDenZdSi8KO+dYsf-ekcqjsDaQ2GEzYpBG34oF7Zw@mail.gmail.com>
+ <1416527684-19017-2-git-send-email-bparrot@ti.com> <CAAVeFu+VZiuzobB7McSAUehKUHJjBv1o8ZpYjSHJAKjr3o5wTA@mail.gmail.com>
+ <20141201163639.GI25249@lukather> <CAAVeFuLTupDenZdSi8KO+dYsf-ekcqjsDaQ2GEzYpBG34oF7Zw@mail.gmail.com>
  <CACRpkdZcNcPBYQM438CZJx1gYst9BFBSTj-3Qv2aPGF9pdWa5g@mail.gmail.com>
- <20141202161227.GH30256@lukather>
- <CAAVeFu+Gms6ptyK6j1Zy_wWg+9URs+9zBu=pOiwiEERO=8NjNw@mail.gmail.com>
+ <20141202161227.GH30256@lukather> <CAAVeFu+Gms6ptyK6j1Zy_wWg+9URs+9zBu=pOiwiEERO=8NjNw@mail.gmail.com>
+ <0EF6A712-5FF1-41BE-B8A9-21ABE7FE37F9@antoniou-consulting.com>
+ <CAAVeFu+kfPi8CUR-YergQv9P1wMBzOik_Q1KBKMTVY1Gg_FBzg@mail.gmail.com> <C9DBE2F0-A725-4D05-BEC6-F083F3F83B9F@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="kAOhhqH5290wydqT"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAAVeFu+Gms6ptyK6j1Zy_wWg+9URs+9zBu=pOiwiEERO=8NjNw@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexandre Courbot <gnurou@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Benoit Parrot <bparrot@ti.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <C9DBE2F0-A725-4D05-BEC6-F083F3F83B9F-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Jiri Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Dec 4, 2014 at 11:47 PM, Pantelis Antoniou
+<panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
+> Hi Alexandre,
+>
+>> On Dec 4, 2014, at 16:41 , Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrot=
+e:
+>>
+>> On Thu, Dec 4, 2014 at 11:27 PM, Pantelis Antoniou
+>> <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
+>>> Hi Alexandre,
+>>>
+>>> I tried to stay away while things are being fleshed out but=E2=80=A6
+>>>
+>>>> On Dec 4, 2014, at 16:15 , Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wr=
+ote:
+>>>>
+>>>> On Wed, Dec 3, 2014 at 1:12 AM, Maxime Ripard
+>>>> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>>>>> On Tue, Dec 02, 2014 at 03:29:46PM +0100, Linus Walleij wrote:
+>>>>>> On Tue, Dec 2, 2014 at 3:13 PM, Alexandre Courbot <gnurou@gmail.=
+com> wrote:
+>>>>>>> On Tue, Dec 2, 2014 at 1:36 AM, Maxime Ripard
+>>>>>>> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>>>>>>
+>>>>>>>> The only thing I'd like to have would be that the request here=
+ would
+>>>>>>>> be non-exclusive, so that a later driver would still be allowe=
+d later
+>>>>>>>> on to request that GPIO later on and manage it itself (ideally=
+ using
+>>>>>>>> the usual gpiod_request function).
+>>>>>>>
+>>>>>>> Actually we have a plan (and I have some code too) to allow mul=
+tiple
+>>>>>>> consumers per GPIO. Although like Benoit I wonder why you would=
+ want
+>>>>>>> to hog a GPIO and then request it properly later. Also, that pr=
+obably
+>>>>>>> means we should abandon the hog since it actively drives the li=
+ne and
+>>>>>>> would interfere with the late requested. How to do that correct=
+ly is
+>>>>>>> not really clear to me.
+>>>>>>
+>>>>>> I don't get the usecase. A hogged GPIO is per definition hogged.
+>>>>>> This sounds more like "initial settings" or something, which is =
+another
+>>>>>> usecase altogether.
+>>>>>
+>>>>> We do have one board where we have a pin (let's say GPIO14 of the=
+ bank
+>>>>> A) that enables a regulator that will provide VCC the bank B.
+>>>>>
+>>>>> Now, both banks are handled by the same driver, but in order to h=
+ave a
+>>>>> working output on the bank B, we do need to set GPIO14 as soon as
+>>>>> we're probed.
+>>>>>
+>>>>> Just relying on the usual deferred probing introduces a circular
+>>>>> dependency between the gpio-regulator that needs to grab its GPIO=
+ from
+>>>>> a driver not there yet, and the gpio driver that needs to enable =
+its
+>>>>> gpio-regulator.
+>>>>
+>>>> I don't get it. According to what you said, the following order sh=
+ould
+>>>> go through IIUC:
+>>>>
+>>>> 1) bank A is probed, gpio 14 is available
+>>>> 2) gpio-regulator is probed, acquires GPIO 14, regulator for Bank =
+B is available
+>>>> 3) bank B is probed, grabs its regulator and turn it on, probes.
+>>>>
+>>>> What am I missing?
+>>>>
+>>>>>
+>>>>> GPIO hogging needs to be the ideal solution for that, since we ca=
+n
+>>>>> just enforce the GPIO14 value as the driver is probed, which prov=
+ides
+>>>>> the guarantee that any driver using the bank B will actually driv=
+e the
+>>>>> GPIO it might use.
+>>>>
+>>>> At this point I start wondering if such initial setup should not b=
+e
+>>>> the job of the bootloader? GPIO hogging ought to be simple and
+>>>> definitive, adding the possibility to have it just as an initial v=
+alue
+>>>> would considerably complexify it. E.g. when is the gpio chip drive=
+r
+>>>> supposed to release the hogged descriptor in such a case?
+>>>>
+>>>
+>>> Do not count on the bootloader setting up anything. The trend is
+>>> for the bootloader to setup the minimal environment to load your ke=
+rnel
+>>> and jump to it.
+>>>
+>>> http://www.denx.de/wiki/pub/U-Boot/MiniSummitELCE2013/2013-ELCE-U-B=
+oot-Falcon-Boot.pdf
+>>
+>> Just wondering. :)
+>>
+>> But yeah, there are some use-cases (such as this one or
+>> Linux-as-a-bootloader) for which this would not play nicely.
+>>
+>>>
+>>>
+>>>> Note that if the multiple GPIO consumer feature we are planning go=
+es
+>>>> through, you should be able to use both hogging *and* a regulator =
+on
+>>>> the same GPIO and achieve what you want. The expectation of multip=
+le
+>>>> consumers is that the board designers know what they are doing, an=
+d
+>>>> this case would certainly fit (chip hogs the line and doesn't touc=
+h
+>>>> the value after that, letting the regulator control it without any
+>>>> conflict afterwards), although it would of course be better to sol=
+ve
+>>>> the issue through regular probing...
+>>>
+>>>
+>>> That=E2=80=99s why I was advocating a simple probing driver for all=
+ this.
+>>> Figure out a way for this driver to be probed first would be an eas=
+ier
+>>> solution that what=E2=80=99s going on here.
+>>
+>> Do you mean, a driver whose sole job is to probe other drivers in th=
+e
+>> right order? :/
+>
+> $DEITY no :)
+>
+> I mean instead of having the gpio hog in the gpio adapter driver, hav=
+e
+> a gpio-hog driver, that=E2=80=99s using an undisclosed method to make=
+ sure that
+> it=E2=80=99s the first one to be probed afterwards.
 
---kAOhhqH5290wydqT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+IIUC that would not solve this particular issue - here the GPIO
+controller is both a provider and (indirect) consumer of a GPIO for
+itself. If the hog is in a separate node, if would have to be probed
+from inside the probe() function of the GPIO controller to do the job,
+which would be the same effect as having the hogs directly under the
+controller node, only with more hassle.
 
-Hi again,
-
-It looks like I missed some part of it.
-
-On Thu, Dec 04, 2014 at 11:15:38PM +0900, Alexandre Courbot wrote:
-> > GPIO hogging needs to be the ideal solution for that, since we can
-> > just enforce the GPIO14 value as the driver is probed, which provides
-> > the guarantee that any driver using the bank B will actually drive the
-> > GPIO it might use.
->=20
-> At this point I start wondering if such initial setup should not be
-> the job of the bootloader? GPIO hogging ought to be simple and
-> definitive, adding the possibility to have it just as an initial value
-> would considerably complexify it. E.g. when is the gpio chip driver
-> supposed to release the hogged descriptor in such a case?
-
-Relying on the bootloader for such trivial (and critical) things may
-not work at all. You don't always have the option to replace it,
-either because you physically can't, or just because you don't have
-any alternative.
-
-I agree that in general this is something that should go in the
-bootloader, but we should have a way to deal with the case where it's
-not done.
-
-> Note that if the multiple GPIO consumer feature we are planning goes
-> through, you should be able to use both hogging *and* a regulator on
-> the same GPIO and achieve what you want. The expectation of multiple
-> consumers is that the board designers know what they are doing, and
-> this case would certainly fit (chip hogs the line and doesn't touch
-> the value after that, letting the regulator control it without any
-> conflict afterwards), although it would of course be better to solve
-> the issue through regular probing...
-
-If such an effort is on-going, then I'm totally fine waiting for it
-and leaving that outside the hogging mechanism. As long as it works,
-I'm happy.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---kAOhhqH5290wydqT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUgHUWAAoJEBx+YmzsjxAgTBoP/0cyxruXX3Z2vhWeZIQ/Hy0b
-y8bh9eN+pvm4/d0X/qyf6RgfOS+brBOPaQfsMykaRs4QrKwa433a6W0xWk3lP/zR
-evZQZhWxij/QsnXmlLt6jEkXrX+Eqrgro7pb5X2FHyV6RuXBumKxitx/bXpnN1qt
-9GLBOxdZtXW3xukbDPawaDEu5OxazT87bd7PtVRRdhEvqiVSnPGShQXY7kDWbGvd
-uFybcTt79awAxEJwOivCKWuA2NQufGo/xbSa68Kl3/dwIEKI+vRf/aUhvg2ATM8x
-XWs8X4eZaHpofC1lKlBdOKo40rkcqrpW7NrFo6VEv/euf/I841BRo9tM/CoAgqD5
-LchQ8BBlraOK0SZiPd+zKURrYQN7uC0NLX1G/paU2dWnWM6ncADVWS1ywqPH5q1z
-0OEtlkLORhjcxVd/BkHcZEVyvioQaR98kS7AKqeN7L57+bYktRM5KCGA4q1WZi1Q
-+l5ry9xGBlu8pw5jY5o9UHgd+2TcGnve7kcUY4K/koir75IgEFfBmCkVJDeeJ3j7
-xcGF2XwORQS8Vlse4/CPZ5kO/I+9+IIpw43O8R3vB2dkJASGzrp/6qIbuRXvJNvJ
-wRapCKuG1lrer/AQtG9pe0ftbw6+z49jQYfesYroxljutjopxZUM7Mviv6S49UY6
-TQJk65eCo8DitpMSxlMi
-=gYz0
------END PGP SIGNATURE-----
-
---kAOhhqH5290wydqT--
+Again, IIUC. >_<
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
