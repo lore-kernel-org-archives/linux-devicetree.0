@@ -1,193 +1,47 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH/RFC v9 06/19] DT: Add documentation for the mfd Maxim
- max77693
-Date: Thu, 04 Dec 2014 12:40:48 +0100
-Message-ID: <54804840.4030202@samsung.com>
-References: <1417622814-10845-1-git-send-email-j.anaszewski@samsung.com>
- <1417622814-10845-7-git-send-email-j.anaszewski@samsung.com>
- <20141204100706.GP14746@valkosipuli.retiisi.org.uk>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 0/6] ARM: shmobile: Change to using clock-indices
+Date: Thu, 4 Dec 2014 20:50:03 +0900
+Message-ID: <20141204115003.GE19465@verge.net.au>
+References: <1415645379-3366-1-git-send-email-geert+renesas@glider.be>
+ <CAMuHMdX+EfnjZvnDyUprtuQ05Ekpnr7bxgTZA=2_CHMFTq1Y9A@mail.gmail.com>
+ <20141204041144.GA9241@verge.net.au>
+ <20141204070043.GA25806@verge.net.au>
+ <CAMuHMdWXiMEEGXb3o+oo=H912o5wCgLD7WCWQMpRDueD6FxphQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <20141204100706.GP14746@valkosipuli.retiisi.org.uk>
-Sender: linux-leds-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWXiMEEGXb3o+oo=H912o5wCgLD7WCWQMpRDueD6FxphQ@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mike Turquette <mturquette@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+On Thu, Dec 04, 2014 at 11:22:04AM +0100, Geert Uytterhoeven wrote:
+> Hi Simon,
+> 
+> On Thu, Dec 4, 2014 at 8:00 AM, Simon Horman <horms@verge.net.au> wrote:
+> > On Thu, Dec 04, 2014 at 01:11:44PM +0900, Simon Horman wrote:
+> >> On Wed, Dec 03, 2014 at 12:27:13PM +0100, Geert Uytterhoeven wrote:
+> >> > On Mon, Nov 10, 2014 at 7:49 PM, Geert Uytterhoeven
+> >> > <geert+renesas@glider.be> wrote:
+> >> > > This patch series finalizes the conversion from the vendor-specific
+> >> > > "renesas,clock-indices" to the generic "clock-indices", started by Ben Dooks.
+> >> > >
+> >> > > The patches for r8a7790 and r8a7791 were extracted from a patch that Ben sent
+> >> > > before ("[PATCH 2/3] renesas: change to using clock-indices"), but it was never
+> >> > > split/updated.
+> >> >
+> >> > As Mike has accepted the bindings update in clk-next, can you please apply
+> >> > the dtsi updates?
+> >>
+> >> Sure, I will look into doing so; most likely tomorrow.
+> >
+> > Thanks, I have now done so.
+> >
+> > There was some fuzz when applying most of the patches,
+> > I'd appreciate it if you could check that I got things right.
+> 
+> Thanks, the result looks fine, both in devel and dt-for-v3.20.
 
-Thanks for the review.
-
-On 12/04/2014 11:07 AM, Sakari Ailus wrote:
-> Hi Jacek,
->
-> On Wed, Dec 03, 2014 at 05:06:41PM +0100, Jacek Anaszewski wrote:
->> This patch adds device tree binding documentation for
->> the flash cell of the Maxim max77693 multifunctional device.
->>
->> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
->> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
->> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->> Cc: Lee Jones <lee.jones@linaro.org>
->> Cc: Chanwoo Choi <cw00.choi@samsung.com>
->> Cc: Bryan Wu <cooloney@gmail.com>
->> Cc: Richard Purdie <rpurdie@rpsys.net>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Pawel Moll <pawel.moll@arm.com>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
->> Cc: Kumar Gala <galak@codeaurora.org>
->> Cc: <devicetree@vger.kernel.org>
->> ---
->>   Documentation/devicetree/bindings/mfd/max77693.txt |   89 ++++++++++++++++++++
->>   1 file changed, 89 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Documentation/devicetree/bindings/mfd/max77693.txt
->> index 01e9f30..25a6e78 100644
->> --- a/Documentation/devicetree/bindings/mfd/max77693.txt
->> +++ b/Documentation/devicetree/bindings/mfd/max77693.txt
->> @@ -41,7 +41,66 @@ Optional properties:
->>   	 To get more informations, please refer to documentaion.
->>   	[*] refer Documentation/devicetree/bindings/pwm/pwm.txt
->>
->> +- led : the LED submodule device node
->> +
->> +There are two led outputs available - fled1 and fled2. Each of them can
->> +control a separate led or they can be connected together to double
->> +the maximum current for a single connected led. One led is represented
->> +by one child node.
->> +
->> +Required properties:
->> +- compatible : Must be "maxim,max77693-led".
->> +
->> +Optional properties:
->> +- maxim,fleds : Array of current outputs in order: fled1, fled2.
->> +	Note: both current outputs can be connected to a single led
->> +	Possible values:
->> +		MAX77693_LED_FLED_UNUSED - the output is left disconnected,
->> +		MAX77693_LED_FLED_USED - a diode is connected to the output.
->
-> As you have a LED sub-nodes for each LED already, isn't this redundant?
-
-Well, it seems so :)
-
->> +- maxim,trigger-type : Array of trigger types in order: flash, torch.
->> +	Possible trigger types:
->> +		MAX77693_LED_TRIG_TYPE_EDGE - Rising edge of the signal triggers
->> +			the flash/torch,
->> +		MAX77693_LED_TRIG_TYPE_LEVEL - Signal level controls duration of
->
-> How about: "Strobe pulse length ..."?
-
-OK, it will be more clear.
-
-> How long does the torch stay on if you use edge trigger for it? I've always
-> thought the torch enable pin was a practical joke. :-)
-
-There is a torch timer available but I don't expose it to the user.
-
-> If you need it this for torch as well, I'd use separate properties for the
-> purpose, i.e. trigger-type-flash and trigger-type-torch.
-
-OK.
-
->> +			the flash/torch.
->> +- maxim,trigger : Array of flags indicating which trigger can activate given led
->> +	in order: fled1, fled2.
->> +	Possible flag values (can be combined):
->> +		MAX77693_LED_TRIG_FLASHEN - FLASHEN pin of the chip,
->> +		MAX77693_LED_TRIG_TORCHEN - TORCHEN pin of the chip,
->> +		MAX77693_LED_TRIG_SOFTWARE - software via I2C command.
->
-> Is there a need to prevent strobing using a certain method? Just wondering.
-
-In some cases it could be convenient to prevent some options through
-device tree.
-
->> +- maxim,boost-mode :
->> +	In boost mode the device can produce up to 1.2A of total current
->> +	on both outputs. The maximum current on each output is reduced
->> +	to 625mA then. If there are two child led nodes defined then boost
->> +	is enabled by default.
->> +	Possible values:
->> +		MAX77693_LED_BOOST_OFF - no boost,
->> +		MAX77693_LED_BOOST_ADAPTIVE - adaptive mode,
->> +		MAX77693_LED_BOOST_FIXED - fixed mode.
->> +- maxim,boost-vout : Output voltage of the boost module in millivolts.
->> +- maxim,vsys-min : Low input voltage level in millivolts. Flash is not fired
->> +	if chip estimates that system voltage could drop below this level due
->> +	to flash power consumption.
->> +
->> +Required properties of the LED child node:
->> +- label : see Documentation/devicetree/bindings/leds/common.txt
->> +- maxim,fled_id : Identifier of the fled output the led is connected to;
->
-> I'm pretty sure this will be needed for about every chip that can drive
-> multiple LEDs. Shouldn't it be documented in the generic documentation?
-
-OK.
-
->> +		MAX77693_LED_FLED1 - FLED1 output of the device - it has to be
->> +			used also if a single LED is connected to both outputs,
->> +		MAX77693_LED_FLED2 - FLED2 output of the device.
->> +
->> +Optional properties of the LED child node:
->> +- max-microamp : see Documentation/devicetree/bindings/leds/common.txt
->> +		Range: 15625 - 250000
->> +- flash-max-microamp : see Documentation/devicetree/bindings/leds/common.txt
->> +		Range: 15625 - 1000000
->> +- flash-timeout-microsec : see Documentation/devicetree/bindings/leds/common.txt
->> +		Range: 62500 - 1000000
->> +
->>   Example:
->> +#include <dt-bindings/mfd/max77693.h>
->> +
->>   	max77693@66 {
->>   		compatible = "maxim,max77693";
->>   		reg = <0x66>;
->> @@ -73,4 +132,34 @@ Example:
->>   			pwms = <&pwm 0 40000 0>;
->>   			pwm-names = "haptic";
->>   		};
->> +
->> +		led {
->> +			compatible = "maxim,max77693-led";
->> +			maxim,fleds = <MAX77693_LED_FLED_USED
->> +				       MAX77693_LED_FLED_USED>;
->> +			maxim,trigger = <MAX77693_LED_TRIG_ALL
->> +					 (MAX77693_LED_TRIG_TORCHEN |
->> +					 MAX77693_LED_TRIG_SOFTWARE)>;
->> +			maxim,trigger-type = <MAX77693_LED_TRIG_TYPE_EDGE
->> +					      MAX77693_LED_TRIG_TYPE_LEVEL>;
->> +			maxim,boost-mode = <MAX77693_LED_BOOST_ADAPTIVE>;
->> +			maxim,boost-vout = <5000>;
->> +			maxim,vsys-min = <2400>;
->> +
->> +			camera1_flash: led1 {
->> +				maxim,fled_id = <MAX77693_LED_FLED1>;
->> +				label = "max77693-flash1";
->> +				max-microamp = <250000>;
->> +				flash-max-microamp = <625000>;
->> +				flash-timeout-microsec = <1000000>;
->> +			};
->> +
->> +			camera2_flash: led2 {
->> +				maxim,fled_id = <MAX77693_LED_FLED2>;
->> +				label = "max77693-flash2";
->> +				max-microamp = <250000>;
->> +				flash-max-microamp = <500000>;
->> +				flash-timeout-microsec = <1000000>;
->> +			};
->> +		};
->
-> I like how this looks like in general.
-
-Nice :)
-
->>   	};
->
-
-Best Regards,
-Jacek Anaszewski
+Thanks for checking.
