@@ -1,113 +1,82 @@
-From: =?ISO-8859-2?Q?Janusz_U=BFycki?= <j.uzycki@elproma.com.pl>
-Subject: Re: [PATCH v2] clk: Add PWM clock driver
-Date: Thu, 04 Dec 2014 19:00:18 +0100
-Message-ID: <5480A132.2010103@elproma.com.pl>
-References: <1415007078-7947-1-git-send-email-p.zabel@pengutronix.de>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v14 03/10] qcom: spm: Add Subsystem Power Manager driver
+Date: Thu, 04 Dec 2014 19:20:34 +0100
+Message-ID: <2519415.GklIQeMgWR@wuerfel>
+References: <1417541958-56907-1-git-send-email-lina.iyer@linaro.org> <8625951.Wbs2MxLnhi@wuerfel> <20141204162834.GA2995@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1415007078-7947-1-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, Mike Turquette <mturquette@linaro.org>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20141204162834.GA2995@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thursday 04 December 2014 09:28:34 Lina Iyer wrote:
+> On Thu, Dec 04 2014 at 02:02 -0700, Arnd Bergmann wrote:
+> >On Thursday 04 December 2014 09:52:39 Daniel Lezcano wrote:
+> >> On 12/03/2014 09:35 PM, Arnd Bergmann wrote:
+> >> > On Wednesday 03 December 2014 07:31:22 Lina Iyer wrote:
+> >> >>>>> +static int __init qcom_spm_init(void)
+> >> >>>>> +{
+> >> >>>>> +    int ret;
+> >> >>>>> +
+> >> >>>>> +    /*
+> >> >>>>> +     * cpuidle driver need to registered before the cpuidle device
+> >> >>>>> +     * for any cpu. Register the device for the the cpuidle driver.
+> >> >>>>> +     */
+> >> >>>>> +    ret = platform_device_register(&qcom_cpuidle_drv);
+> >> >>>>> +    if (ret)
+> >> >>>>> +        return ret;
+> >> >>>> Stephen pointed out that we would have the platform device lying around
+> >> >>>> on a non-QCOM device when using multi_v7_defconfig.
+> >> >>>
+> >> >>> Perhaps I am missing the point, but this is not supposed to happen, no ?
+> >> >>>
+> >> >> This would happen, since the file would compile on multi_v7 and we would
+> >> >> initialize and register this device regardless. The cpuidle-qcom.c
+> >> >> driver probe would bail out looking for a matching compatible property.
+> >> >> So we would not register a cpuidle driver but the device would lay
+> >> >> around.
+> >> >
+> >> > I think the problem is registering a platform_device. I've complained
+> >> > about this before, but it still seems to get copied all over the
+> >> > place. Please don't do this but have a driver that looks at DT to
+> >> > figure out whether to access hardware or not.
+> >>
+> >> We did this approach but, I can remember why, someone was complaining
+> >> about it also
+> >>
+> >> The platform device/driver paradigm allowed us to split the arch
+> >> specific parts by passing the pm ops through the platform data.
+> >>
+> >> Would make sense to have a single common place for the ARM arch where we
+> >> initialize the platform device for cpuidle ?
+> >
+> >No. It's really not a device, and if you pretend that it is, you get
+> >into problems like this.
+> 
+> Arnd, the problem is that the provides function pointers to the SoC code
+> that the cpuilde driver uses to call based on the idle state.
+> 
+> After much discussions, we came down to using function pointers from
+> translating from DT strings, other than using that again, I dont see a
+> good way of achieving the ability of cpuidle driver staying a separate
+> driver from the SPM driver.
+> 
+> Daniel, thoughts?
 
-W dniu 2014-11-03 o 10:31, Philipp Zabel pisze:
-> Some board designers, when running out of clock output pads, decide to
-> (mis)use PWM output pads to provide a clock to external components.
-> This driver supports this practice by providing an adapter between the
-> PWM and clock bindings in the device tree. As the PWM bindings specify
-> the period in the device tree, this is a fixed clock.
->
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
-> I'm resending this because last time the linux-pwm list was not in Cc:
-> So far I have not received any comments on the patch itself. I have used
-> it on a BoundaryDevices Nitrogen6X board to produce a master clock for
-> the OV5640 MIPI CSI-2 camera module.
->
-> Changes since v1:
->   - none (rebased onto v3.18-rc3)
-> ---
->   .../devicetree/bindings/clock/pwm-clock.txt        |  23 +++++
->   drivers/clk/Kconfig                                |   7 ++
->   drivers/clk/Makefile                               |   1 +
->   drivers/clk/clk-pwm.c                              | 110 +++++++++++++++++++++
->   4 files changed, 141 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/clock/pwm-clock.txt
->   create mode 100644 drivers/clk/clk-pwm.c
->
-> diff --git a/Documentation/devicetree/bindings/clock/pwm-clock.txt b/Documentation/devicetree/bindings/clock/pwm-clock.txt
-> new file mode 100644
-> index 0000000..d127d17
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/pwm-clock.txt
-> @@ -0,0 +1,23 @@
-> +Binding for an external clock signal driven by a PWM pin.
-> +
-> +This binding uses the common clock binding[1] and the common PWM binding[2].
-> +
-> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +[2] Documentation/devicetree/bindings/pwm/pwm.txt
-> +
-> +Required properties:
-> +- compatible : shall be "pwm-clock".
-> +- #clock-cells : from common clock binding; shall be set to 0.
-> +- pwms : from common PWM binding; this determines the clock frequency
-> +  via the PWM period given in the pwm-specifier.
-> +
-> +Optional properties:
-> +- clock-output-names : From common clock binding.
-> +
-> +Example:
-> +	clock {
-> +		compatible = "pwm-clock";
-> +		#clock-cells = <0>;
-> +		clock-output-names = "mipi_mclk";
-> +		pwms = <&pwm2 0 40>; /* 1 / 40 ns = 25 MHz */
+Maybe the problem is trying too hard to separate two things that really
+belong together then. In general, the strategy of coming up with subsystems
+for a class of devices and them turning platform code into drivers for
+that subsystem has worked out really well, but I think for cpufreq, cpuidle
+and smp, it really hasn't, and in the third case we haven't even tried
+coming up with a subsystem for that reason.
 
-Before I asked about [MHz/kHz] <-> [ns] conversion problem but I didn't 
-noticed
-you've just used [ns] in dt. As Thierry wrote:
-"Also the PWM chips will most likely use the concept of period and 
-duty-cycle
-internally anyway, so it will convert back from Hz/percentage to nanoseconds
-and fall victim to similar rounding effects."
+Having all cpuidle code generally live in drivers/cpuidle is still a good
+idea IMO, but using a platform device just for the purpose of passing
+data between some platform specific code and another platform specific
+driver hasn't worked out that well here.
 
-Unfortunately I discovered that many pwm drivers are buggy around upper 
-freqs limit.
-The example is pwm-mxs.c. PWM has 24MHz clock. There is no problem to set
-registers directly for 12MHz 50% output (period_cycles=2-1=1, 
-inactive_c=1, active_c=0).
-
-When I set pwm-mxs period to 83ns / duty to 42ns the output is low because
-it sets inactive_c=0!
-For 125ns/63ns I got about 6MHz instead of 8MHz, and +width=42ns.
-When I set 42ns/42ns I got 12MHz 50%.
-It means new patches for pwms...
-
-I will test the patch backported to 3.14 using the mxs platform.
-However as I wrote I  need to patch pwm-mxs first.
-
-> [...]
->
-> +static struct platform_driver clk_pwm_driver = {
-> +	.probe = clk_pwm_probe,
-> +	.driver = {
-> +		.name = "pwm-clock",
-> +		.owner = THIS_MODULE,
-
-AFAIR new drivers don't need to set .owner.
-
-thanks
-Janusz
-
-> +		.of_match_table = of_match_ptr(clk_pwm_dt_ids),
-> +	},
-> +};
-> +
-> +module_platform_driver(clk_pwm_driver);
-
+	Arnd
