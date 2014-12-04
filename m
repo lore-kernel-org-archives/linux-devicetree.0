@@ -1,77 +1,68 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH 03/12] irqchip: gic: define register_routable_domain_ops
- conditional
-Date: Thu, 4 Dec 2014 01:03:10 +0100 (CET)
-Message-ID: <alpine.DEB.2.11.1412040057090.16275@nanos>
-References: <1417565531-4507-1-git-send-email-stefan@agner.ch> <1417565531-4507-4-git-send-email-stefan@agner.ch> <5174649.NxPq80uDz8@wuerfel> <alpine.DEB.2.11.1412031303000.16275@nanos> <8eccedc781df2636a132dae449cbe774@agner.ch>
- <547F5EBD.6040705@arm.com>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH v16 03/12] drm: imx: imx-hdmi: convert imx-hdmi to
+ drm_bridge mode
+Date: Thu, 04 Dec 2014 08:51:02 +0800
+Message-ID: <547FAFF6.3050800@rock-chips.com>
+References: <1417620408-30354-1-git-send-email-andy.yan@rock-chips.com>
+ <1417620566-30496-1-git-send-email-andy.yan@rock-chips.com>
+ <20141203153847.GC11285@n2100.arm.linux.org.uk>
+ <547F3495.9070206@rock-chips.com>
+ <20141203161122.GF11285@n2100.arm.linux.org.uk>
+ <547F3A9F.30701@rock-chips.com>
+ <20141203163318.GH11285@n2100.arm.linux.org.uk>
+ <547F40B8.6060706@rock-chips.com>
+ <20141203234000.GJ11285@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <547F5EBD.6040705-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20141203234000.GJ11285@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Pawel Moll <pawel.moll@arm.com>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, mark.yao@rock-chips.com, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, vladimir_zapolskiy@mentor.com, Luc
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 3 Dec 2014, Marc Zyngier wrote:
-> On 03/12/14 17:28, Stefan Agner wrote:
-> > On 2014-12-03 14:04, Thomas Gleixner wrote:
-> >> The shared interrupts are allocated through the router domain which
-> >> decides whether the interrupt can be assigned to a particular core or
-> >> not. If it can be assigned it allocates the corresponding interrupt in
-> >> the parent domain, sets up the routing and everything just works.
-> > 
-> > What do you mean by the shared state in the drawing above? Currently, I
-> > check whether a interrupt is already used by the other core by reading
-> > the register (do this configuration register reflect the "shared state"
-> > in your drawing?).
-> 
-> I think that is basically it. It should only be the register that
-> decides on the actual routing. BTW, how do you arbitrate between
-> concurrent accesses to this register? Or is only the A5 allowed to
-> change it?
-
-What I meant with 'shared state' is basically the configuration
-register space. Plus depending on the mechanism you want to use for
-correlating the routing between the A5 and the M4 some shared memory
-state, locking, IPC or whatever you need for this.
- 
-> >> http://git.kernel.org/cgit/linux/kernel/git/tip/tip.git/log/?h=irq/irqdomain-arm
-> >>
-> > 
-> > Thanks for the link. So my work would involve to support domain
-> > hierarchy for NVIC (proper irq_domain_ops, introduce arm,routable-irqs
-> > property, anything else?) and then make use of the hierarchy code in my
-> > MSCM driver like for instance the mtk-sysirq driver...?
-> 
-> I don't think we need the arm,routable-irq property at all, and I'm
-> looking at refactoring the crossbar thingy to remove most of its
-> entanglement with the GIC.
-> 
-> All you need to know is the range of interrupts you're allowed to
-> request through the "routable" domain. The inner-most irqchip shouldn't
-> even know about it (after all, they are just wires coming in). It should
-> be the duty of the outer-most irqchip (the "router") to generate the
-> correct request to the GIC/NVIC. So all the knowledge should be at the
-> router level.
-> 
-> The mtk-sysrq code is indeed a good example of what you can do.
-
-The gic-v2m MSI stuff is probably helpful as well.
- 
-> > What is the state of the IRQ domain hierarchy, when will it go upstream?
-> 
-> Scheduled for 3.19, if everything goes according to plan. Don't think we
-> can go back anyway... ;-)
-
-Indeed. That would be a major headache...
-
-Thanks,
-
-	tglx
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgUnVzc2VsOgpPbiAyMDE05bm0MTLmnIgwNOaXpSAwNzo0MCwgUnVzc2VsbCBLaW5nIC0gQVJN
+IExpbnV4IHdyb3RlOgo+IE9uIFRodSwgRGVjIDA0LCAyMDE0IGF0IDEyOjU2OjI0QU0gKzA4MDAs
+IEFuZHkgWWFuIHdyb3RlOgo+PiBIaSBSdXNzZWxsOgo+PiBPbiAyMDE05bm0MTLmnIgwNOaXpSAw
+MDozMywgUnVzc2VsbCBLaW5nIC0gQVJNIExpbnV4IHdyb3RlOgo+Pj4gT24gVGh1LCBEZWMgMDQs
+IDIwMTQgYXQgMTI6MzA6MjNBTSArMDgwMCwgQW5keSBZYW4gd3JvdGU6Cj4+Pj4gT24gMjAxNOW5
+tDEy5pyIMDTml6UgMDA6MTEsIFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eCB3cm90ZToKPj4+Pj4g
+SSBtZWFudCB0aGF0IGlteF9oZG1pX2JpbmQgc2hvdWxkIGJlIHBhc3NlZCB0aGVzZSwgc28gdGhh
+dCBpdCBuZWVkcyB0bwo+Pj4+PiBrbm93IG5vdGhpbmcgYWJvdXQgdGhlIHN0cnVjdCBkZXZpY2Ug
+YmV5b25kIHRoZSBnZW5lcmljIGRldmljZSBzdHJ1Y3R1cmUuCj4+Pj4+IEluIG90aGVyIHdvcmRz
+LCB0aGUgZHctaGRtaSBjb3JlIHNob3VsZCBub3QgYXNzdW1lIHRoYXQgdGhlIHN0cnVjdCBkZXZp
+Y2UKPj4+Pj4gaXMgcGFydCBvZiBhIHBsYXRmb3JtIGRldmljZS4KPj4+Pj4KPj4+PiAgICAgaWYg
+c28sIGhvdyBhYm91dCB0aGUgZGV2aWNlIHRyZWUgcHJvcGVydGllcyAgZGRjLWkyYy1idXMsIHJl
+Zy1pby13aWR0aCwKPj4+PiBpYWhiLCBpc2ZyLAo+Pj4+ICAgIHRoZXkgYXJlIGFsbCBmb3VuZCBi
+eSBkZXZpY2U/Cj4+PiBJZiB0aGUgZGV2aWNlIGhhcyBhIGRldmljZSB0cmVlIG5vZGUgYXNzb2Np
+YXRlZCB3aXRoIGl0LCBpdCB3aWxsIGhhdmUgYQo+Pj4gbm9uLU5VTEwgZGV2LT5vZl9ub2RlIC0g
+d2hpY2ggaXMgcGFydCBvZiB0aGUgZ2VuZXJpYyBkZXZpY2Ugc3RydWN0dXJlLgo+Pj4KPj4gICAg
+c28gLCBJIGp1c3QgbmVlZCBnZXQgdGhlIHJlc291cmNlIGFuZCBpcnEgbnVtYmVyIGluIHRoZQo+
+PiBkd19oZG1pLWlteC9yb2NrY2hpcCAsdGhhbgo+PiAgICBwYXNzIHRoZW0gdG8gaW14X2hkbWlf
+YmluZCwgYXMgdGhlIHByb3BlcnRpZXMgZGRjLWkyYy1idXMsIHJlZy1pby13aWR0aCwKPj4gaWFo
+Yixpc2ZyLCB0aGV5Cj4+ICAgIGFyZSBzdGlsbCBjYW4gYmUgaGFuZGxlZCBpbiBpbXhfaGRtaV9i
+aW5kID8KPiBCYXNpY2FsbHksIHdoYXQgSSdtIHN1Z2dlc3RpbmcgaXMganVzdCB0aGlzIGNoYW5n
+ZSB0byBpbXhfaGRtaV9iaW5kKCk6Cj4KPiAgIGludCBpbXhfaGRtaV9iaW5kKHN0cnVjdCBkZXZp
+Y2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLAo+IAkJICB2b2lkICpkYXRhLCBzdHJ1Y3Qg
+ZHJtX2VuY29kZXIgKmVuY29kZXIsCj4gKwkJICBjb25zdCBzdHJ1Y3QgcmVzb3VyY2UgKmlvcmVz
+LCBpbnQgaXJxLAo+IAkJICBjb25zdCBzdHJ1Y3QgaW14X2hkbWlfcGxhdF9kYXRhICpwbGF0X2Rh
+dGEpCj4gICB7Cj4gLQlzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2ID0gdG9fcGxhdGZvcm1f
+ZGV2aWNlKGRldik7Cj4gLi4uCj4gCX0KPgo+IC0JaXJxID0gcGxhdGZvcm1fZ2V0X2lycShwZGV2
+LCAwKTsKPiAJaWYgKGlycSA8IDApCj4gCQlyZXR1cm4gaXJxOwo+IC4uLgo+IAkJcmV0dXJuIHJl
+dDsKPgo+IC0JaW9yZXMgPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2UocGRldiwgSU9SRVNPVVJDRV9N
+RU0sIDApOwo+IAloZG1pLT5yZWdzID0gZGV2bV9pb3JlbWFwX3Jlc291cmNlKGRldiwgaW9yZXMp
+Owo+IAlpZiAoSVNfRVJSKGhkbWktPnJlZ3MpKQo+Cj4gYW5kIHN1cHBseWluZyB0aG9zZSBhcyBh
+cmd1bWVudHMgZnJvbSB0aGUgY2FsbGVyLgo+CiAgIGdvdCBpdCwgdGhhbmtzLCBhbmQgYWxzbyBt
+YW55IHRoYW5rcyBmb3IgUGhpbGlwcAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRldmVsIG1haWxpbmcgbGlzdApkZXZlbEBsaW51eGRyaXZlcnByb2pl
+Y3Qub3JnCmh0dHA6Ly9kcml2ZXJkZXYubGludXhkcml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaXZlcmRldi1kZXZlbAo=
