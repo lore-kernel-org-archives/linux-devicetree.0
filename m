@@ -1,40 +1,149 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: [PATCH 4/4] ARM: dts: enable pinctrl for Broadcom Cygnus
-Date: Thu, 4 Dec 2014 13:56:11 -0800
-Message-ID: <1417730171-30455-5-git-send-email-rjui@broadcom.com>
-References: <Ray Jui <rjui@broadcom.com>
- <1417730171-30455-1-git-send-email-rjui@broadcom.com>
+From: Belisko Marek <marek.belisko@gmail.com>
+Subject: Re: [PATCH 1/4] pinctrl: Broadcom Cygnus pinctrl device tree binding
+Date: Thu, 4 Dec 2014 23:16:30 +0100
+Message-ID: <CAAfyv37Z=Bs1Ggydg5bX5z=005P+LOXNp0qNMA43a3BsAPSA7w@mail.gmail.com>
+References: <rjui@broadcom.com>
+	<1417730171-30455-1-git-send-email-rjui@broadcom.com>
+	<1417730171-30455-2-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1417730171-30455-1-git-send-email-rjui@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>
-Cc: Scott Branden <sbranden@broadcom.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1417730171-30455-2-git-send-email-rjui@broadcom.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Ray Jui <rjui@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Scott Branden <sbranden@broadcom.com>, LKML <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This enables the pinctrl support for Broadcom Cygnus SoC
+On Thu, Dec 4, 2014 at 10:56 PM, Ray Jui <rjui@broadcom.com> wrote:
+> Device tree binding documentation for Broadcom Cygnus pinctrl driver
+>
+> Signed-off-by: Ray Jui <rjui@broadcom.com>
+> Reviewed-by: Scott Branden <sbranden@broadcom.com>
+> ---
+>  .../bindings/pinctrl/brcm,cygnus-pinctrl.txt       |   92 ++++++++++++++++++++
+>  1 file changed, 92 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,cygnus-pinctrl.txt
+>
+> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-pinctrl.txt
+> new file mode 100644
+> index 0000000..86e4579
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-pinctrl.txt
+> @@ -0,0 +1,92 @@
+> +Broadcom Cygnus Pin Controller
+> +
+> +The Cygnus pin controller supports setting the alternate functions of groups
+> +of pins. Pinmux configuration on individual pins is not supported by the
+> +Cygnus A0 SoC.
+> +
+> +Required properties:
+> +
+> +- compatible:
+> +    Must be "brcm,cygnus-pinctrl"
+> +
+> +- reg:
+> +    Define the base and range of the I/O address space that contain the Cygnus
+> +pin control registers
+> +
+> +- brcm,groups:
+> +    This can be strings of one or more group names. This defines the group(s)
+> +that one wants to configure
+> +
+> +- brcm,function:
+> +    This is the alternate function that one wants to configure to. Valid
+> +alternate functions are "alt1", "alt2", "alt3", "alt4"
+> +
+> +Each child node represents a configuration. Client devices reference the the
+> +child node to enable the mux configuration.
+> +
+> +For example:
+> +
+> +       pinctrl: pinctrl@0x0301d0c8 {
+> +               compatible = "brcm,cygnus-pinctrl";
+> +               reg = <0x0301d0c8 0x2c>;
+> +
+> +               i2s_0: i2s_0 {
+> +                       brcm,groups = "smart_card0", "smart_card0_fcb";
+> +                       brcm,function = "alt2";
+> +               };
+> +
+> +               i2s_1: i2s_1 {
+> +                       brcm,groups = "smart_card1", "smart_card1_fcb";
+> +                       brcm,function = "alt2";
+> +               };
+> +
+> +               spi_0: spi_0 {
+> +                       brcm,groups = "spi0";
+> +                       brcm,function = "alt1";
+> +               };
+> +       }
+> +
+> +       spi0@18028000 {
+> +                       compatible = "arm,pl022", "arm,primecell";
+> +                       reg = <0x18028000 0x1000>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
+> +                       pinctrl-0 = <&spi_0>;
+> +                       clocks = <&axi81_clk>;
+> +                       clock-names = "apb_pclk";
+> +       };
+> +
+> +Consider the following snapshot of Cygnus pinmux table:
+> +
+> +number    pin            group              alt1             alt2        alt3        alt4
+> +------    ---            ----               ----             ----        ----        ----
+> +42        sc0_clk        smart_card0        SMART CARD0      I2S_0       N/A         chip_gpio24
+> +43        sc0_cmdvcc_l   smart_card0        SMART CARD0      I2S_0       N/A         STRAP
+> +44        sc0_detect     smart_card0        SMART CARD0      I2S_0       N/A         chip_gpio25
+> +45        sc0_fcb        smart_card0_fcb    SMART CARD0_FCB  I2S_0       N/A         chip_gpio26
+> +46        sc0_io         smart_card0        SMART CARD0      I2S_0       N/A         chip_gpio27
+> +47        sc0_rst_l      smart_card0        SMART CARD0      SPDIF       N/A         STRAP
+> +
+> +Note due to limitation of the Cygnus hardware, pinmux configuration can only
+> +be group based. To enable I2S_0 function, one needs the following child node
+> +configuration:
+> +
+> +       i2s_0: i2s_0 {
+> +               brcm,groups = "smart_card0", "smart_card0_fcb";
+> +               brcm,function = "alt2";
+> +       };
+> +
+> +This tells the Cygnus pin controller to configure groups "smart_card0" and
+> +"smart_card0_fcb" to I2S_0. With this configuration, pins 42, 43, 44, 45, 46
+> +become I2C_0, and pin 47 becomes SPDIF
+                  ^^^^ typo - should be I2S_0
+> +
+> +Consider another example, that one wants to configure the above pins as GPIO:
+> +
+> +       gpio_24_27: gpio_24_27 {
+> +               brcm,groups = "smart_card0", "smart_card0_fcb";
+> +               brcm,function = "alt4";
+> +       };
+> +
+> +With the above configuration, pins 42, 44, 45, 46 become GPIO, and 43 and 47
+> +become reserved for STRAP
+> --
+> 1.7.9.5
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-Signed-off-by: Ray Jui <rjui@broadcom.com>
----
- arch/arm/boot/dts/bcm-cygnus.dtsi |    5 +++++
- 1 file changed, 5 insertions(+)
+BR,
 
-diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
-index 5126f9e..4c6bf4d 100644
---- a/arch/arm/boot/dts/bcm-cygnus.dtsi
-+++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
-@@ -54,6 +54,11 @@
- 
- 	/include/ "bcm-cygnus-clock.dtsi"
- 
-+	pinctrl: pinctrl@0x0301d0c8 {
-+		compatible = "brcm,cygnus-pinctrl";
-+		reg = <0x0301d0c8 0x2c>;
-+	};
-+
- 	amba {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
+marek
+
 -- 
-1.7.9.5
+as simple and primitive as possible
+-------------------------------------------------
+Marek Belisko - OPEN-NANDRA
+Freelance Developer
+
+Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
+Tel: +421 915 052 184
+skype: marekwhite
+twitter: #opennandra
+web: http://open-nandra.com
